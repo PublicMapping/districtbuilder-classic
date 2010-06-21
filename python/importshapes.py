@@ -13,19 +13,19 @@ from publicmapping.redistricting.models import *
 setup_environ(settings)
 
 county = {
-    'shapepath' : '/home/ajennings/ohio_shapes/OH_39_census_county_web_mercator.shp',
+    'shapepath' : '/projects/publicmapping/local/data/OH_39_census_county_web_mercator.shp',
     'geolevel' : 'county',
     'name_field' : 'NAMELSAD00',
     'subject_fields' : {'POPTOT':'Total Population','PRES_DEM':'Democrats','PRES_REP':'Republicans'},
 }
 block = {
-    'shapepath' : '/home/ajennings/ohio_shapes/OH_39_census_block_web_mercator.shp',
+    'shapepath' : '/projects/publicmapping/local/data/OH_39_census_block_web_mercator.shp',
     'geolevel' : 'block',
     'name_field' : 'NAME00',
     'subject_fields' : {'POPTOT':'Total Population','PRES_DEM':'Democrats','PRES_REP':'Republicans'},
 }
 tract = {
-    'shapepath' : '/home/ajennings/ohio_shapes/OH_39_census_tract_web_mercator.shp',
+    'shapepath' : '/projects/publicmapping/local/data/OH_39_census_tract_web_mercator.shp',
     'geolevel' : 'tract',
     'name_field' : 'NAMELSAD00',
     'subject_fields' : {'POPTOT':'Total Population','PRES_DEM':'Democrats','PRES_REP':'Republicans'},

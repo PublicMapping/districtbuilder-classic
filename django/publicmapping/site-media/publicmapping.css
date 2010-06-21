@@ -1,0 +1,32 @@
+div#welcome_header {
+  background-image: url('/site-media/gmu_banner.png');
+  height: 300px;
+  width: 1000px;
+  border: solid 1px black;
+}
+div#welcome_header h1 {
+  background: rgba( 255, 255, 255, 0.75 );
+  margin-left: auto;
+  margin-right: 20px;
+  text-align: center;
+  width: 250px;
+}
+div#welcome_header h2 {
+  background: rgba( 255, 255, 255, 0.75 );
+  margin-left: auto;
+  margin-right: 20px;
+  text-align: center;
+  width: 385px;
+}
+div#tour_news {
+  position: absolute;
+  top: 325px;
+  left: 20px;
+  width: 350px;
+}
+div#user {
+  position: absolute;
+  top: 325px;
+  right: 20px;
+  width: 650px;
+}
