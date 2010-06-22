@@ -1,40 +1,50 @@
 <html>
   <head>
-    <title>YUP</title>
+    <title>Welcome to PublicMapping</title>
     <link rel="stylesheet" type="text/css" href="/site-media/publicmapping.css"/>
     
   </head>
   <body>
-    <div id="welcome_header">
-      <p>&nbsp;</p>
-      <h1>District Mapping</h1>
-      <h2>Draw Your Own Legislative Districts</h2>
-      <p>&nbsp;</p>
-    </div>
-
-    <div id="tour_news">
-      <div id="take_a_tour">
-        <p>New to Redistricting?</p>
-        <p>Take a Tour</p>
+    <div id="box_content">
+      <div id="welcome_header" style="background-image:url(http://10.0.0.10:8080/geoserver/wms?WIDTH=1000&SRS=EPSG%3A900913&LAYERS=oh_group&HEIGHT=300&STYLES=&FORMAT=image%2Fpng&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&EXCEPTIONS=application%2Fvnd.ogc.se_inimage&BBOX={{ bbox }});">
+        <h1>District Mapping</h1>
+        <h2>Draw Your Own Legislative Districts</h2>
       </div>
 
-      <div id="news">
-        <ul>
-          <li>6/21/2010 - First web page written.</li>
-          <li>6/18/2010 - Commit #1!</li>
-        </ul>
+      <div id="tour_news">
+        <div id="take_a_tour">
+          <div>New to Redistricting?</div>
+          <h3>Take a Tour</h3>
+        </div>
+
+        <div id="news">
+          <ul>
+            <li>6/21/2010 - First web page written.</li>
+            <li>6/18/2010 - Commit #1!</li>
+          </ul>
+        </div>
       </div>
-    </div>
 
-    <div id="user">
-      <h2>Get Started</h2>
+      <div id="user">
+        <h2>Get Started</h2>
 
-      <div id="login">
-        <h3>Log In</h3>
-      </div>
+        <div id="login">
+          <form action="/user/login" method="post">
+            <h3>Log In</h3>
+            <table>
+              <tr><td>Login:</td><td><input id="login" name="login"/></td></tr>
+              <tr><td>Password:</td><td><input id="pass" name="pass" type="password"/></td></tr>
+            </table>
+            <input type="submit" value="Login"/>
+          </form>
+        </div>
 
-      <div id="signup">
-        <h3>Don't have an account?</h3>
+        <div id="signup">
+          <form action="/user/register" method="post">
+            <h3>Don't have an account?</h3>
+            
+          </form>
+        </div>
       </div>
     </div>
   </body>

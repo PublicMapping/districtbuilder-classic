@@ -1,8 +1,16 @@
+body {
+  margin: 0;
+}
 div#welcome_header {
-  background-image: url('/site-media/gmu_banner.png');
   height: 300px;
+  border: solid 1px #666666;
+}
+div#box_content {
   width: 1000px;
-  border: solid 1px black;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+  position:relative;
 }
 div#welcome_header h1 {
   background: rgba( 255, 255, 255, 0.75 );
@@ -20,13 +28,43 @@ div#welcome_header h2 {
 }
 div#tour_news {
   position: absolute;
-  top: 325px;
-  left: 20px;
+  top: 315px;
+  border: solid 1px #666666;
   width: 350px;
+  height: 250px;
+}
+div#take_a_tour {
+  border: solid 1px #cccccc;
+  background-color: #cceeff;
+  text-align: center;
+  margin: 15px auto;
+  width: 60%;
+}
+div#take_a_tour:hover {
+  background-color: #ddeeff;
+}
+div#news ul {
+  list-style-type: none;
+  padding: 15px;
 }
 div#user {
   position: absolute;
-  top: 325px;
-  right: 20px;
-  width: 650px;
+  top: 315px;
+  right: 0px;
+  width: 630px;
+  border: solid 1px #666666;
+  height: 250px;
+}
+div#user h2 {
+  margin-left: 5px;
+}
+div#login {
+  position: absolute;
+  top: 50px;
+  left: 5px;
+}
+div#signup {
+  position: absolute;
+  top: 50px;
+  right: 5px;
 }
