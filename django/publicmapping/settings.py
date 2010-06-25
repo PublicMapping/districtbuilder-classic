@@ -81,3 +81,5 @@ INSTALLED_APPS = (
     'django.contrib.gis',
     'redistricting',
 )
+
+LOGIN_URL = '/'

@@ -5,12 +5,14 @@
     
   </head>
   <body>
-    <div id="box_content">
-      <div id="welcome_header" style="background-image:url(http://10.0.0.10:8080/geoserver/wms?WIDTH=1000&SRS=EPSG%3A900913&LAYERS=oh_group&HEIGHT=300&STYLES=&FORMAT=image%2Fpng&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&EXCEPTIONS=application%2Fvnd.ogc.se_inimage&BBOX={{ bbox }});">
-        <h1>District Mapping</h1>
-        <h2>Draw Your Own Legislative Districts</h2>
+      <div id="header_box">
+          <div id="welcome_header" style="background-image:url(http://10.0.0.10:8080/geoserver/wms?WIDTH=1000&SRS=EPSG%3A900913&LAYERS=oh_group&HEIGHT=300&STYLES=&FORMAT=image%2Fpng&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&EXCEPTIONS=application%2Fvnd.ogc.se_inimage&BBOX={{ bbox }});">
+            <h1>District Mapping</h1>
+            <h2>Draw Your Own Legislative Districts</h2>
+          </div>
       </div>
 
+      <div id="body_box">
       <div id="tour_news">
         <div id="take_a_tour">
           <div>New to Redistricting?</div>
@@ -18,7 +20,9 @@
         </div>
 
         <div id="news">
+          <span>Latest Redistricting News</span>
           <ul>
+            <li>6/25/2010 - Second web page written, now with authentication.</li>
             <li>6/21/2010 - First web page written.</li>
             <li>6/18/2010 - Commit #1!</li>
           </ul>
@@ -29,23 +33,31 @@
         <h2>Get Started</h2>
 
         <div id="login">
-          <form action="/user/login" method="post">
+          <form action="/accounts/login/" method="post">
+            <input type="hidden" name="next" value="/districtmapping/"/>
             <h3>Log In</h3>
             <table>
-              <tr><td>Login:</td><td><input id="login" name="login"/></td></tr>
-              <tr><td>Password:</td><td><input id="pass" name="pass" type="password"/></td></tr>
+              <tr><td>Login:</td><td><input id="username" name="username"/></td></tr>
+              <tr><td>Password:</td><td><input id="password" name="password" type="password"/></td></tr>
             </table>
             <input type="submit" value="Login"/>
           </form>
         </div>
 
         <div id="signup">
-          <form action="/user/register" method="post">
-            <h3>Don't have an account?</h3>
-            
+          <h3>Don't have an account?</h3>
+
+          <div>To make your own maps...</div>
+          <form action="/user/register" method="get">
+            <input type="submit" value="Sign Up"/>
+          </form>
+
+          <div>To view other users' maps...</div>
+          <form action="/user/register" method="get">
+            <input type="submit" value="Enter as a guest"/>
           </form>
         </div>
       </div>
-    </div>
+      </div>
   </body>
 </html>

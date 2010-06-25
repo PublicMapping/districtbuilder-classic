@@ -16,5 +16,8 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     (r'^admin/', include(admin.site.urls)),
     (r'^site-media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT }),
+    (r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'index.html'}),
+    (r'^accounts/logout/$', 'publicmapping.views.userlogout'),
+    (r'^districtmapping/$', 'publicmapping.views.mapping'),
     (r'^$', 'publicmapping.views.index'),
 )
