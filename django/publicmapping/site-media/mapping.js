@@ -12,7 +12,7 @@ function init() {
     });
 
     var layer = new OpenLayers.Layer.WMS('PublicMapping',
-        'http://10.0.0.10:8080/geoserver/gwc/service/wms',
+        'http://' + MAP_SERVER + '/geoserver/gwc/service/wms',
         { srs: 'EPSG:900913',
           layers: 'oh_group',
           tiles: 'true',

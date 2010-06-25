@@ -2,6 +2,7 @@ from django.shortcuts import render_to_response
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
+from django.conf import settings
 
 import random
 
@@ -20,7 +21,7 @@ def index(request):
 
     bbox = "%d,%d,%d,%d" % ( xmin, ymin, xmax, ymax )
 
-    return render_to_response('index.html', { 'bbox': bbox })
+    return render_to_response('index.html', { 'bbox': bbox, 'mapserver': settings.MAP_SERVER })
 
 def userlogout(request):
     logout(request)
@@ -28,4 +29,4 @@ def userlogout(request):
 
 @login_required
 def mapping(request):
-    return render_to_response('mapping.html', {})
+    return render_to_response('mapping.html', { 'mapserver': settings.MAP_SERVER })
