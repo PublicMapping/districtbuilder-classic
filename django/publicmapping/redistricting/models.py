@@ -57,3 +57,12 @@ class Plan(models.Model):
     def __unicode__(self):
         return self.name
 
+class District(models.Model):
+    name = models.CharField(max_length=200)
+    plan = models.ForeignKey(Plan)
+    geounits = models.ManyToManyField(Geounit)
+    version = models.PositiveIntegerField()
+
+    def __unicode__(self):
+        return self.name
+
