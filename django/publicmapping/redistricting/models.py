@@ -46,7 +46,6 @@ class Target(models.Model):
 
 class Plan(models.Model):
     name = models.CharField(max_length=200,unique=True)
-    geoms = models.ManyToManyField(Geounit)
     is_template = models.BooleanField(default=False)
     is_temporary = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
