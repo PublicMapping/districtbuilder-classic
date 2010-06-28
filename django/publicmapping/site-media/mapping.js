@@ -13,7 +13,7 @@ function init() {
     var layer = new OpenLayers.Layer.WMS('PublicMapping',
         'http://' + MAP_SERVER + '/geoserver/gwc/service/wms',
         { srs: 'EPSG:3785',
-          layers: 'oh_group',
+          layers: 'gmu_group',
           tiles: 'true',
           tilesOrigin: olmap.maxExtent.left + ',' + olmap.maxExtent.bottom,
           format: 'image/png'
