@@ -10,6 +10,7 @@ div#header_box {
 div#welcome_header {
   height: 300px;
   border: solid 1px #666666;
+  background-image: url('/site-media/gmu_banner.png');
 }
 div#welcome_header h1 {
   background: rgb(255, 255, 255);

@@ -1,3 +1,15 @@
+function createLayer( name, layer, extents ) {
+    return new OpenLayers.Layer.WMS( name,
+        'http://' + MAP_SERVER + '/geoserver/gwc/service/wms',
+        { srs: 'EPSG:3785',
+          layers: layer,
+          tiles: 'true',
+          tilesOrigin: extents.left + ',' + extents.bottom,
+          format: 'image/png'
+        }
+    );
+}
+
 function init() {
     // set up sizing for dynamic map size that fills the pg
     resizemap();
@@ -10,21 +22,20 @@ function init() {
         units: 'm'
     });
 
-    var layer = new OpenLayers.Layer.WMS('PublicMapping',
-        'http://' + MAP_SERVER + '/geoserver/gwc/service/wms',
-        { srs: 'EPSG:3785',
-          layers: 'gmu:census_county',
-          tiles: 'true',
-          tilesOrigin: olmap.maxExtent.left + ',' + olmap.maxExtent.bottom,
-          format: 'image/png'
-        },
-        {
-            buffer: 1,
-            displayOutsideMaxExtent: true
-        }
-    );
-    olmap.addLayers([layer]);
-
+    var layers = [
+        createLayer( 'Counties & Districts', 'gmu_district_county', 
+            olmap.maxExtent ),
+        createLayer( 'Counties', 'gmu:census_county',
+            olmap.maxExtent ),
+        createLayer( 'Census Tracts & Districts', 'gmu_district_tract', 
+            olmap.maxExtent ),
+        createLayer( 'Census Tracts', 'gmu:census_tract', 
+            olmap.maxExtent ),
+        createLayer( 'Districts', 'gmu:gmu_districts_demo',
+            olmap.maxExtent ) 
+    ];
+    olmap.addLayers(layers);
+    olmap.addControls([new OpenLayers.Control.LayerSwitcher()]);
     olmap.zoomToExtent(new OpenLayers.Bounds(-9467000,4570000,-8930000,5170000));
 }
 
