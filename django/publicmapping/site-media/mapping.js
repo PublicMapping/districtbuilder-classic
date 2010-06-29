@@ -6,7 +6,10 @@ function createLayer( name, layer, extents ) {
           tiles: 'true',
           tilesOrigin: extents.left + ',' + extents.bottom,
           format: 'image/png'
-        }
+        },
+	{
+	  displayOutsideMaxExtent: true
+	}
     );
 }
 
@@ -15,25 +18,29 @@ function init() {
     resizemap();
     window.onresize = resizemap;
 
+    var layerExtent = new OpenLayers.Bounds(-9928290.0,4104345.0,-8278222.0,5754413.0);
+
     var olmap = new OpenLayers.Map('map', {
-        resolutions: [2240.372355468753, 1120.1861777343765, 560.0930888671883, 280.04654443359414, 140.02327221679707, 70.01163610839853, 35.00581805419927, 17.502909027099633, 8.751454513549817, 4.375727256774908, 2.187863628387454, 1.093931814193727, 0.5469659070968635, 0.2734829535484318, 0.1367414767742159, 0.06837073838710794, 0.03418536919355397, 0.017092684596776986, 0.008546342298388493, 0.0042731711491942465, 0.0021365855745971232, 0.0010682927872985616, 5.341463936492808E-4, 2.670731968246404E-4, 1.335365984123202E-4],
-        maxExtent: new OpenLayers.Bounds(-9442153.668,4636574.817,-8868618.344999999,5210110.140000001),
+	resolutions: [6445.578125, 3222.7890625, 1611.39453125, 805.697265625, 402.8486328125, 201.42431640625, 100.712158203125, 50.3560791015625, 25.17803955078125, 12.589019775390625, 6.2945098876953125, 3.1472549438476562, 1.5736274719238281, 0.7868137359619141, 0.39340686798095703, 0.19670343399047852, 0.09835171699523926, 0.04917585849761963, 0.024587929248809814, 0.012293964624404907, 0.006146982312202454, 0.003073491156101227, 0.0015367455780506134, 7.683727890253067E-4, 3.8418639451265335E-4],
+
+        maxExtent: layerExtent,
         projection: new OpenLayers.Projection('EPSG:3785'),
         units: 'm'
     });
 
     var layers = [
         createLayer( 'Counties & Districts', 'gmu_district_county', 
-            olmap.maxExtent ),
+            layerExtent ),
         createLayer( 'Counties', 'gmu:census_county',
-            olmap.maxExtent ),
+            layerExtent ),
         createLayer( 'Census Tracts & Districts', 'gmu_district_tract', 
-            olmap.maxExtent ),
+            layerExtent ),
         createLayer( 'Census Tracts', 'gmu:census_tract', 
-            olmap.maxExtent ),
+            layerExtent ),
         createLayer( 'Districts', 'gmu:gmu_districts_demo',
-            olmap.maxExtent ) 
+            layerExtent ) 
     ];
+
     olmap.addLayers(layers);
     olmap.addControls([new OpenLayers.Control.LayerSwitcher()]);
     olmap.zoomToExtent(new OpenLayers.Bounds(-9467000,4570000,-8930000,5170000));
