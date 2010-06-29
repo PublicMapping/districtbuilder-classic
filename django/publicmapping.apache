@@ -1,0 +1,20 @@
+<VirtualHost *:80>
+	ServerAdmin AzaveaDev@azavea.com
+
+        WSGIScriptAlias / /projects/publicmapping/trunk/django/publicmapping.wsgi
+
+        Alias /site-media/ /projects/publicmapping/trunk/django/publicmapping/site-media/
+        <Directory /projects/publicmapping/trunk/django/publicmapping/site-media>
+            Order deny,allow
+            Allow from all
+        </Directory>
+
+	ErrorLog /var/log/apache2/publicmapping-error.log
+
+	# Possible values include: debug, info, notice, warn, error, crit,
+	# alert, emerg.
+	LogLevel warn
+
+	CustomLog /var/log/apache2/publicmapping-access.log combined
+
+</VirtualHost>
