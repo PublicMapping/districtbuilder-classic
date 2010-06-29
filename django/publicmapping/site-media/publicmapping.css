@@ -55,11 +55,6 @@ div#news span {
     font-weight: bold;
     padding: 3px;
 }
-div#news ul {
-  list-style-type: none;
-  padding: 15px;
-  margin: 0;
-}
 div#user {
   position: absolute;
   right: 0px;
