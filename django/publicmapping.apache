@@ -9,6 +9,12 @@
             Allow from all
         </Directory>
 
+        Alias /media/ /projects/publicmapping/trunk/django/publicmapping/admin-media/
+        <Directory /projects/publicmapping/trunk/django/publicmapping/admin-media>
+            Order deny,allow
+            Allow from all
+        </Directory>
+
 	ErrorLog /var/log/apache2/publicmapping-error.log
 
 	# Possible values include: debug, info, notice, warn, error, crit,

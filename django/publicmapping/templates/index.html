@@ -2,17 +2,31 @@
   <head>
     <title>Welcome to PublicMapping</title>
     <link rel="stylesheet" type="text/css" href="/site-media/publicmapping.css"/>
-    
+    <link rel="stylesheet" type="text/css" href="/site-media/css/ui-lightness/jquery-ui-1.8.2.custom.css"/>
+    <script type="text/javascript" src="/site-media/jquery/jquery-1.4.2.js"></script>
+    <script type="text/javascript" src="/site-media/jquery/external/jquery.bgiframe-2.1.1.js"></script>
+    <script type="text/javascript" src="/site-media/jquery/ui/jquery.ui.core.js"></script>
+    <script type="text/javascript" src="/site-media/jquery/ui/jquery.ui.widget.js"></script>
+    <script type="text/javascript" src="/site-media/jquery/ui/jquery.ui.mouse.js"></script>
+    <script type="text/javascript" src="/site-media/jquery/ui/jquery.ui.draggable.js"></script>
+    <script type="text/javascript" src="/site-media/jquery/ui/jquery.ui.position.js"></script>
+    <script type="text/javascript" src="/site-media/jquery/ui/jquery.ui.resizable.js"></script>
+    <script type="text/javascript" src="/site-media/jquery/ui/jquery.ui.dialog.js"></script>
+    <script type="text/javascript">
+    $(function(){
+        $('#register').dialog({'autoOpen':false,'width':350,'modal':true});
+    });
+    </script>
   </head>
   <body>
-      <div id="header_box">
-          <div id="welcome_header">
-            <h1>District Mapping</h1>
-            <h2>Draw Your Own Legislative Districts</h2>
-          </div>
-      </div>
+    <div id="header_box">
+        <div id="welcome_header">
+          <h1>District Mapping</h1>
+          <h2>Draw Your Own Legislative Districts</h2>
+        </div>
+    </div>
 
-      <div id="body_box">
+    <div id="body_box">
       <div id="tour_news">
         <div id="take_a_tour">
           <div>New to Redistricting?</div>
@@ -49,16 +63,45 @@
           <h3>Don't have an account?</h3>
 
           <div>To make your own maps...</div>
-          <form action="/user/register" method="get">
-            <input type="submit" value="Sign Up"/>
-          </form>
+          <input type="button" value="Sign Up" onclick="$('#register').dialog('open');"/>
 
           <div>To view other users' maps...</div>
-          <form action="/user/register" method="get">
+          <form action="/accounts/register/" method="post">
+            <input type="hidden" name="newusername" value="anonymous"/>
+            <input type="hidden" name="newpassword1" value="anonymous"/>
+            <input type="hidden" name="email" value=""/>
             <input type="submit" value="Enter as a guest"/>
           </form>
         </div>
       </div>
-      </div>
+    </div>
+    <div id="register" title="Sign Up For An Account">
+        <form action="/accounts/register/" method="post">
+            <table>
+                <tr>
+                    <td>User Name *</td>
+                    <td><input id="newusername" name="newusername"/></td>
+                </tr>
+                <tr>
+                    <td>Password *</td>
+                    <td><input id="newpassword1" name="newpassword1"/></td>
+                </tr>
+                <tr>
+                    <td>Confirm Password *</td>
+                    <td><input id="newpassword2" name="newpassword2"/></td>
+                </tr>
+                <tr>
+                    <td>Email Address</td>
+                    <td><input id="email" name="email"/></td>
+                </tr>
+            </table>
+            <div id="signUpButton">
+                <input type="submit" value="Sign Up"/>
+            </div>
+            <div id="requiredNote">
+                * Indicates required field
+            </div>
+        </form>
+    </div>
   </body>
 </html>

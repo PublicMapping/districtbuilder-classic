@@ -77,6 +77,13 @@ div#signup {
   right: 5px;
   width: 315px;
 }
+div#signUpButton {
+    text-align: right;
+}
+div#requiredNote {
+    font-size: 0.75em;
+    text-align: left;
+}
 
 /* mapping styles */
 div#header {
