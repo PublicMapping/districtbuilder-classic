@@ -1,3 +1,10 @@
+/*
+ * Create an OpenLayers.Layer.WMS type layer.
+ *
+ * @param name The name of the layer (appears in the layer switcher).
+ * @param layer The layer name (or array of names) served by the WMS server.
+ * @param extents The extents of the layer -- must be used for GeoWebCache.
+ */
 function createLayer( name, layer, extents ) {
     return new OpenLayers.Layer.WMS( name,
         'http://' + MAP_SERVER + '/geoserver/gwc/service/wms',
@@ -13,21 +20,61 @@ function createLayer( name, layer, extents ) {
     );
 }
 
+/*
+ * Resize the map. This is a fix for IE, which does not assign a height
+ * to the map div if it is not explicitly set.
+ */
+function resizemap() {
+    var mapElem = document.getElementById('mapandmenu');
+    if(!window.innerHeight) {
+        mapElem.style.height = (window.document.body.clientHeight - 76) + 'px';
+    }
+    else {
+        mapElem.style.height = (window.innerHeight - 79) + 'px';
+    }
+}
+
+/*
+ * Initialize the map. This method is called by the onload page event.
+ */
 function init() {
     // set up sizing for dynamic map size that fills the pg
     resizemap();
     window.onresize = resizemap;
 
-    var layerExtent = new OpenLayers.Bounds(-9928290.0,4104345.0,-8278222.0,5754413.0);
+    // The extents of the layers. These extents will depend on the study
+    // area; the following are the bounds for the web cache around Ohio.
+    // TODO Make the initial layer extents configurable. Maybe fetch them
+    // from geowebcache
+    var layerExtent = new OpenLayers.Bounds(
+        -9928290.0,
+        4104345.0,
+        -8278222.0,
+        5754413.0
+    );
 
+    // Create a slippy map.
     var olmap = new OpenLayers.Map('map', {
-	resolutions: [6445.578125, 3222.7890625, 1611.39453125, 805.697265625, 402.8486328125, 201.42431640625, 100.712158203125, 50.3560791015625, 25.17803955078125, 12.589019775390625, 6.2945098876953125, 3.1472549438476562, 1.5736274719238281, 0.7868137359619141, 0.39340686798095703, 0.19670343399047852, 0.09835171699523926, 0.04917585849761963, 0.024587929248809814, 0.012293964624404907, 0.006146982312202454, 0.003073491156101227, 0.0015367455780506134, 7.683727890253067E-4, 3.8418639451265335E-4],
-
+        // The resolutions here must match the settings in geowebcache.
+        // TODO Fetch these resolutions from geowebcache
+	resolutions: [
+            6445.578125, 3222.7890625, 1611.39453125, 
+            805.697265625, 402.8486328125, 201.42431640625, 
+            100.712158203125, 50.3560791015625, 25.17803955078125, 
+            12.589019775390625, 6.2945098876953125, 3.1472549438476562, 
+            1.5736274719238281, 0.7868137359619141, 0.39340686798095703, 
+            0.19670343399047852, 0.09835171699523926, 0.04917585849761963, 
+            0.024587929248809814, 0.012293964624404907, 0.006146982312202454, 
+            0.003073491156101227, 0.0015367455780506134, 7.683727890253067E-4, 
+            3.8418639451265335E-4],
         maxExtent: layerExtent,
+        // This projection is web mercator
         projection: new OpenLayers.Projection('EPSG:3785'),
         units: 'm'
     });
 
+    // These layers are dependent on the layers available in geowebcache
+    // TODO Fetch a list of layers from geowebcache
     var layers = [
         createLayer( 'Counties & Districts', 'gmu_district_county', 
             layerExtent ),
@@ -42,16 +89,12 @@ function init() {
     ];
 
     olmap.addLayers(layers);
-    olmap.addControls([new OpenLayers.Control.LayerSwitcher()]);
-    olmap.zoomToExtent(new OpenLayers.Bounds(-9467000,4570000,-8930000,5170000));
-}
+    olmap.addControls([
+        new OpenLayers.Control.LayerSwitcher(),
+        new OpenLayers.Control.EditingToolbar()
+    ]);
 
-function resizemap() {
-    var mapElem = document.getElementById('mapandmenu');
-    if(!window.innerHeight) {
-        mapElem.style.height = (window.document.body.clientHeight - 76) + 'px';
-    }
-    else {
-        mapElem.style.height = (window.innerHeight - 79) + 'px';
-    }
+    // Set the initial map extents to the bounds around the study area.
+    // TODO Make these configurable.
+    olmap.zoomToExtent(new OpenLayers.Bounds(-9467000,4570000,-8930000,5170000));
 }
