@@ -38,6 +38,8 @@ function resizemap() {
  * Initialize the map. This method is called by the onload page event.
  */
 function init() {
+    OpenLayers.ProxyHost= "/proxy?url=";
+
     // set up sizing for dynamic map size that fills the pg
     resizemap();
     window.onresize = resizemap;
@@ -75,7 +77,7 @@ function init() {
 
     // These layers are dependent on the layers available in geowebcache
     // TODO Fetch a list of layers from geowebcache
-    var layers = [
+    var wmsLayers = [
         createLayer( 'Counties & Districts', 'gmu_district_county', 
             layerExtent ),
         createLayer( 'Counties', 'gmu:census_county',
@@ -83,15 +85,29 @@ function init() {
         createLayer( 'Census Tracts & Districts', 'gmu_district_tract', 
             layerExtent ),
         createLayer( 'Census Tracts', 'gmu:census_tract', 
-            layerExtent ),
+            layerExtent ) /*,
         createLayer( 'Districts', 'gmu:gmu_districts_demo',
-            layerExtent ) 
+            layerExtent ) */
     ];
 
-    olmap.addLayers(layers);
+    var wfsLayer = new OpenLayers.Layer.Vector(
+        'Current Plan',
+        {
+            strategies: [new OpenLayers.Strategy.Refresh()],
+            protocol: new OpenLayers.Protocol.WFS({
+                url: 'http://' + MAP_SERVER + '/geoserver/wfs',
+                featureType: 'gmu_districts_demo',
+                featureNS: 'http://gmu.azavea.com/'
+            })
+        }
+    );
+
+    olmap.addLayers([wfsLayer]);
+    olmap.addLayers(wmsLayers);
+
     olmap.addControls([
         new OpenLayers.Control.LayerSwitcher(),
-        new OpenLayers.Control.EditingToolbar()
+        new OpenLayers.Control.SelectFeature(wfsLayer)
     ]);
 
     // Set the initial map extents to the bounds around the study area.
