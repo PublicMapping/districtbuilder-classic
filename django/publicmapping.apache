@@ -1,6 +1,8 @@
 <VirtualHost *:80>
 	ServerAdmin AzaveaDev@azavea.com
 
+        WSGIDaemonProcess geodjango user=www-data group=www-data processes=5 threads=1
+        WSGIProcessGroup geodjango
         WSGIScriptAlias / /projects/publicmapping/trunk/django/publicmapping.wsgi
 
         Alias /site-media/ /projects/publicmapping/trunk/django/publicmapping/site-media/
