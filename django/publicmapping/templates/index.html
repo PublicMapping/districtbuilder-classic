@@ -3,20 +3,6 @@
     <title>Welcome to PublicMapping</title>
     <link rel="stylesheet" type="text/css" href="/site-media/publicmapping.css"/>
     <link rel="stylesheet" type="text/css" href="/site-media/css/ui-lightness/jquery-ui-1.8.2.custom.css"/>
-    <script type="text/javascript" src="/site-media/jquery/jquery-1.4.2.js"></script>
-    <script type="text/javascript" src="/site-media/jquery/external/jquery.bgiframe-2.1.1.js"></script>
-    <script type="text/javascript" src="/site-media/jquery/ui/jquery.ui.core.js"></script>
-    <script type="text/javascript" src="/site-media/jquery/ui/jquery.ui.widget.js"></script>
-    <script type="text/javascript" src="/site-media/jquery/ui/jquery.ui.mouse.js"></script>
-    <script type="text/javascript" src="/site-media/jquery/ui/jquery.ui.draggable.js"></script>
-    <script type="text/javascript" src="/site-media/jquery/ui/jquery.ui.position.js"></script>
-    <script type="text/javascript" src="/site-media/jquery/ui/jquery.ui.resizable.js"></script>
-    <script type="text/javascript" src="/site-media/jquery/ui/jquery.ui.dialog.js"></script>
-    <script type="text/javascript">
-    $(function(){
-        $('#register').dialog({'autoOpen':false,'width':350,'modal':true});
-    });
-    </script>
   </head>
   <body>
     <div id="header_box">
@@ -66,42 +52,133 @@
           <input type="button" value="Sign Up" onclick="$('#register').dialog('open');"/>
 
           <div>To view other users' maps...</div>
-          <form action="/accounts/register/" method="post">
-            <input type="hidden" name="newusername" value="anonymous"/>
-            <input type="hidden" name="newpassword1" value="anonymous"/>
-            <input type="hidden" name="email" value=""/>
-            <input type="submit" value="Enter as a guest"/>
+          <form id="anonymousForm" action="/accounts/register/" method="post">
+            <input id="doAnonymous" type="button" value="Enter as a guest"/>
           </form>
         </div>
       </div>
     </div>
     <div id="register" title="Sign Up For An Account">
-        <form action="/accounts/register/" method="post">
+        <form id="registerForm" action="/accounts/register/" method="post">
             <table>
                 <tr>
                     <td>User Name *</td>
-                    <td><input id="newusername" name="newusername"/></td>
+                    <td><input id="newusername" name="newusername" class="field"/></td>
                 </tr>
                 <tr>
                     <td>Password *</td>
-                    <td><input id="newpassword1" name="newpassword1"/></td>
+                    <td><input id="newpassword1" name="newpassword1" type="password" class="field"/></td>
                 </tr>
                 <tr>
                     <td>Confirm Password *</td>
-                    <td><input id="newpassword2" name="newpassword2"/></td>
+                    <td><input id="newpassword2" name="newpassword2" type="password" class="field"/></td>
                 </tr>
                 <tr>
                     <td>Email Address</td>
-                    <td><input id="email" name="email"/></td>
+                    <td><input id="email" name="email" class="field"/></td>
                 </tr>
             </table>
             <div id="signUpButton">
-                <input type="submit" value="Sign Up"/>
+                <input id="doRegister" type="button" value="Sign Up"/>
             </div>
             <div id="requiredNote">
                 * Indicates required field
             </div>
         </form>
     </div>
+    <script type="text/javascript" src="/site-media/jquery/jquery-1.4.2.js"></script>
+    <script type="text/javascript" src="/site-media/jquery/external/jquery.bgiframe-2.1.1.js"></script>
+    <script type="text/javascript" src="/site-media/jquery/ui/jquery.ui.core.js"></script>
+    <script type="text/javascript" src="/site-media/jquery/ui/jquery.ui.widget.js"></script>
+    <script type="text/javascript" src="/site-media/jquery/ui/jquery.ui.mouse.js"></script>
+    <script type="text/javascript" src="/site-media/jquery/ui/jquery.ui.draggable.js"></script>
+    <script type="text/javascript" src="/site-media/jquery/ui/jquery.ui.position.js"></script>
+    <script type="text/javascript" src="/site-media/jquery/ui/jquery.ui.resizable.js"></script>
+    <script type="text/javascript" src="/site-media/jquery/ui/jquery.ui.dialog.js"></script>
+    <script type="text/javascript">
+    $(function(){
+        $('#register').dialog({'autoOpen':false,'width':350,'modal':true});
+        $('#doRegister').click(function(evt) {
+            var frm = $('#registerForm'),
+                username = frm.find('#newusername'),
+                newpassword1 = frm.find('#newpassword1'),
+                newpassword2 = frm.find('#newpassword2');
+
+            if (username.val() == '') {
+                username.removeClass('field');
+                username.addClass('error');
+                return;
+            }
+            else {
+                username.removeClass('error');
+                username.addClass('field');
+            }
+
+            if (newpassword1.val() == '' ||
+                newpassword1.val() != newpassword2.val()) {
+                newpassword1.removeClass('field');
+                newpassword1.addClass('error');
+                newpassword2.removeClass('field');
+                newpassword2.addClass('error');
+                return;
+            }
+            else {
+                newpassword1.removeClass('error');
+                newpassword1.addClass('field');
+                newpassword2.removeClass('error');
+                newpassword2.addClass('field');
+            }
+            
+            jQuery.ajax({
+                context:frm[0],
+                data: { 
+                    newusername:$('#newusername').val(),
+                    newpassword1:$('#newpassword1').val(),
+                    newpassword2:$('#newpassword2').val(),
+                    email:$('#email').val()
+                },
+                dataType:'json',
+                type:'POST',
+                url:frm[0].action,
+                success:function(data,textStatus,xhr){
+                    if (data.success) {
+                        window.location.href = data.redirect;
+                        return;
+                    }
+
+                    var newusername = $('#newusername');
+                    newusername.removeClass('field');
+                    newusername.addClass('error');
+                },
+                error:function(xhr,textStatus,error){
+                    $('#doRegister').attr('disabled',true);
+                }
+            });
+        });
+        $('#doAnonymous').click(function(evt) {
+            var frm = $('#anonymousForm')[0];
+            jQuery.ajax({
+                context:frm,
+                data: {
+                    newusername:'anonymous',
+                    newpassword1:'anonymous',
+                    email:''
+                },
+                dataType:'json',
+                type:'POST',
+                url:frm.action,
+                success:function(data,textStatus,xhr){
+                    if (data.success) {
+                        window.location.href = data.redirect;
+                        return;
+                    }
+                },
+                error:function(xhr,textStatus,error){
+                    $('#doAnonymous').attr('disabled',true);
+                }
+            });
+        });
+    });
+    </script>
   </body>
 </html>

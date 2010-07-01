@@ -80,6 +80,12 @@ div#signup {
 div#signUpButton {
     text-align: right;
 }
+form#registerForm input.field {
+    border: solid 1px #666666;
+}
+form#registerForm input.error {
+    border: solid 1px #ff0000;
+}
 div#requiredNote {
     font-size: 0.75em;
     text-align: left;

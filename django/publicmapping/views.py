@@ -1,9 +1,10 @@
 from django.shortcuts import render_to_response
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
+from django.utils import simplejson
 
 def index(request):
     return render_to_response('index.html', { })
@@ -24,9 +25,21 @@ def userregister(request):
 
             user = authenticate(username=username, password=password)
             login( request, user )
-            return HttpResponseRedirect('/districtmapping/')
+            return HttpResponse(simplejson.dumps({
+                    'success':True,
+                    'redirect':'/districtmapping/'
+                }), 
+                mimetype='application/json')
+        else:
+            msg = 'User with that name already exists.'
+    else:
+        msg = 'Username cannot be empty.'
 
-    return HttpResponseRedirect('/')
+    return HttpResponse(simplejson.dumps({
+            'success':False,
+            'message':msg
+        }), 
+        mimetype='application/json')
 
 def userlogout(request):
     logout(request)
