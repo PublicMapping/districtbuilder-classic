@@ -21,4 +21,5 @@ urlpatterns = patterns('',
     (r'^districtmapping/$', 'publicmapping.views.mapping'),
     (r'^districtmapping/plan/(?P<planid>\d*)$', 'publicmapping.views.plan'),
     (r'^$', 'publicmapping.views.index'),
+    (r'^proxy$', 'publicmapping.views.proxy'),
 )
