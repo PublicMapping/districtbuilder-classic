@@ -50,7 +50,13 @@ def import_shape(config):
     # Create the subjects we need
     subject_objects = {}
     for attr, name in config['subject_fields'].iteritems():
-        sub = Subject(name=attr, display=name, short_display=name, is_displayed=True)
+        # don't recreate any subjects that already exist
+        # (in another geolevel, for instance)
+        sub = Subject.objects.filter(name=attr, display=name)
+        if len(sub) == 0:
+            sub = Subject(name=attr, display=name, short_display=name, is_displayed=True)
+        else:
+            sub = sub[0]
         sub.save()
         subject_objects[attr] = sub
 

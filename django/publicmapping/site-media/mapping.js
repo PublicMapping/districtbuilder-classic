@@ -79,11 +79,13 @@ function init() {
 
     // These layers are dependent on the layers available in geowebcache
     // TODO Fetch a list of layers from geowebcache
-    var countyLayer = createLayer( 'Counties', 'gmu:census_county',
+    var countyLayer = createLayer( 'Counties', 'gmu_basemap_county',
             layerExtent );
-    var tractLayer = createLayer( 'Census Tracts', 'gmu:census_tract', 
+    var tractLayer = createLayer( 'Census Tracts', 'gmu_basemap_tract', 
             layerExtent );
-/*
+    var blockLayer = createLayer( 'Census Blocks', 'gmu_basemap_block',
+            layerExtent );
+    
     var districtLayer = new OpenLayers.Layer.Vector(
         'Current Plan',
         {
@@ -93,7 +95,7 @@ function init() {
             ],
             protocol: new OpenLayers.Protocol.WFS({
                 url: 'http://' + MAP_SERVER + '/geoserver/wfs',
-                featureType: 'gmu_plans_collected',
+                featureType: 'gmu_plan',
                 featureNS: 'http://gmu.azavea.com/',
                 geometryName: 'geom'
             }),
@@ -106,12 +108,12 @@ function init() {
             projection:projection 
         }
     );
-*/
+/*
     var districtLayer = new OpenLayers.Layer.WMS(
         'Current Plan',
         'http://' + MAP_SERVER + '/geoserver/wms',
         { srs: 'EPSG:3785',
-          layers: 'gmu_plans_collected',
+          layers: 'gmu:gmu_plan',
           format: 'image/png',
           cql_Filter: 'plan_id=1'  
         },
@@ -123,17 +125,19 @@ function init() {
             opacity: 0.5
         }
     );
+*/
 
     var selection = new OpenLayers.Layer.Vector('Selection');
 
-    olmap.addLayers([selection, districtLayer, countyLayer, tractLayer]);
+    olmap.addLayers([selection, districtLayer, countyLayer, tractLayer, blockLayer]);
 
     var getControl = new OpenLayers.Control.GetFeature({
         protocol: new OpenLayers.Protocol.WFS({
             url: 'http://' + MAP_SERVER + '/geoserver/wfs',
-            featureType: 'census_county',
+            featureType: 'gmu_county',
             featureNS: 'http://gmu.azavea.com/',
-            srsName: 'EPSG:3785'
+            srsName: 'EPSG:3785',
+            geometryName: 'geom'
         })
     });
 
