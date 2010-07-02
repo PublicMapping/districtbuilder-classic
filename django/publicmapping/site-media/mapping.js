@@ -93,11 +93,12 @@ function init() {
     var wfsLayer = new OpenLayers.Layer.Vector(
         'Current Plan',
         {
-            strategies: [new OpenLayers.Strategy.Refresh()],
+            strategies: [new OpenLayers.Strategy.BBOX()],
             protocol: new OpenLayers.Protocol.WFS({
                 url: 'http://' + MAP_SERVER + '/geoserver/wfs',
-                featureType: 'gmu_districts_demo',
-                featureNS: 'http://gmu.azavea.com/'
+                featureType: 'gmu_plans_collected',
+                featureNS: 'http://gmu.azavea.com/',
+                geometryName: 'geom'
             })
         }
     );
