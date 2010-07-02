@@ -55,6 +55,9 @@ function init() {
         5754413.0
     );
 
+    // This projection is web mercator
+    var projection = new OpenLayers.Projection('EPSG:3785');
+
     // Create a slippy map.
     var olmap = new OpenLayers.Map('map', {
         // The resolutions here must match the settings in geowebcache.
@@ -70,46 +73,84 @@ function init() {
             0.003073491156101227, 0.0015367455780506134, 7.683727890253067E-4, 
             3.8418639451265335E-4],
         maxExtent: layerExtent,
-        // This projection is web mercator
-        projection: new OpenLayers.Projection('EPSG:3785'),
+        projection: projection,
         units: 'm'
     });
 
     // These layers are dependent on the layers available in geowebcache
     // TODO Fetch a list of layers from geowebcache
-    var wmsLayers = [
-        createLayer( 'Counties & Districts', 'gmu_district_county', 
-            layerExtent ),
-        createLayer( 'Counties', 'gmu:census_county',
-            layerExtent ),
-        createLayer( 'Census Tracts & Districts', 'gmu_district_tract', 
-            layerExtent ),
-        createLayer( 'Census Tracts', 'gmu:census_tract', 
-            layerExtent ) /*,
-        createLayer( 'Districts', 'gmu:gmu_districts_demo',
-            layerExtent ) */
-    ];
-
-    var wfsLayer = new OpenLayers.Layer.Vector(
+    var countyLayer = createLayer( 'Counties', 'gmu:census_county',
+            layerExtent );
+    var tractLayer = createLayer( 'Census Tracts', 'gmu:census_tract', 
+            layerExtent );
+/*
+    var districtLayer = new OpenLayers.Layer.Vector(
         'Current Plan',
         {
-            strategies: [new OpenLayers.Strategy.BBOX()],
+            strategies: [
+                new OpenLayers.Strategy.BBOX(),
+                new OpenLayers.Strategy.Refresh()
+            ],
             protocol: new OpenLayers.Protocol.WFS({
                 url: 'http://' + MAP_SERVER + '/geoserver/wfs',
                 featureType: 'gmu_plans_collected',
                 featureNS: 'http://gmu.azavea.com/',
                 geometryName: 'geom'
-            })
+            }),
+            styleMap: new OpenLayers.StyleMap({
+                fill: false,
+                strokeColor: '#ee9900',
+                strokeOpacity: 1,
+                strokeWidth: 2
+            }),
+            projection:projection 
+        }
+    );
+*/
+    var districtLayer = new OpenLayers.Layer.WMS(
+        'Current Plan',
+        'http://' + MAP_SERVER + '/geoserver/wms',
+        { srs: 'EPSG:3785',
+          layers: 'gmu_plans_collected',
+          format: 'image/png',
+          cql_Filter: 'plan_id=1'  
+        },
+        {
+            singleTile: true,
+            buffer: 0,
+            projection: projection,
+            isBaseLayer: false,
+            opacity: 0.5
         }
     );
 
-    olmap.addLayers([wfsLayer]);
-    olmap.addLayers(wmsLayers);
+    var selection = new OpenLayers.Layer.Vector('Selection');
+
+    olmap.addLayers([selection, districtLayer, countyLayer, tractLayer]);
+
+    var getControl = new OpenLayers.Control.GetFeature({
+        protocol: new OpenLayers.Protocol.WFS({
+            url: 'http://' + MAP_SERVER + '/geoserver/wfs',
+            featureType: 'census_county',
+            featureNS: 'http://gmu.azavea.com/',
+            srsName: 'EPSG:3785'
+        })
+    });
+
+    getControl.events.register('featureselected', this, function(e){
+        selection.addFeatures([e.feature]);
+    });
+    getControl.events.register('featureunselected', this, function(e){
+        selection.removeFeatures([e.feature]);
+    });
 
     olmap.addControls([
         new OpenLayers.Control.LayerSwitcher(),
-        new OpenLayers.Control.SelectFeature(wfsLayer)
+        //new OpenLayers.Control.SelectFeature(districtLayer),
+        getControl
     ]);
+
+    getControl.activate();
 
     // Set the initial map extents to the bounds around the study area.
     // TODO Make these configurable.
