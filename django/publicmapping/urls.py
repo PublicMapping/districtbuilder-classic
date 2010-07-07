@@ -15,6 +15,7 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     (r'^admin/', include(admin.site.urls)),
+    (r'^site-media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT }),
     (r'^accounts/register/$', 'publicmapping.views.userregister'),
     (r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'index.html'}),
     (r'^accounts/logout/$', 'publicmapping.views.userlogout'),
@@ -22,4 +23,10 @@ urlpatterns = patterns('',
     (r'^districtmapping/plan/(?P<planid>\d*)$', 'publicmapping.views.plan'),
     (r'^$', 'publicmapping.views.index'),
     (r'^proxy$', 'publicmapping.views.proxy'),
+    (r'^districtmapping/plan/create/$', 'publicmapping.redistricting.views.createplan'),
+    (r'^districtmapping/plan/choose/$', 'publicmapping.redistricting.views.chooseplan'),
+    (r'^districtmapping/plan/(?P<planid>\d*)/edit/$', 'publicmapping.redistricting.views.editplan'),
+    (r'^districtmapping/plan/(?P<planid>\d*)/copy/$', 'publicmapping.redistricting.views.copyplan'),
+    (r'^districtmapping/plan/(?P<planid>\d*)/district/(?P<districtid>\d*)/add/$', 'publicmapping.redistricting.views.addtodistrict'),
+    (r'^districtmapping/plan/(?P<planid>\d*)/district/(?P<districtid>\d*)/delete/$', 'publicmapping.redistricting.views.deletefromdistrict'),
 )

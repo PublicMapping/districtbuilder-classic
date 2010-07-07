@@ -83,4 +83,5 @@ INSTALLED_APPS = (
 )
 
 LOGIN_URL = '/'
-MAP_SERVER = '10.0.0.10:8080'
+MAP_SERVER = 'eldorado:8080'
+TEST_RUNNER = 'django.contrib.gis.tests.run_gis_tests'

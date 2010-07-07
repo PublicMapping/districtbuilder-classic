@@ -1,5 +1,6 @@
 from django.contrib.gis.db import models
 from django.contrib.auth.models import User
+from django.forms import ModelForm
 
 class Subject(models.Model):
     name = models.CharField(max_length=50)
@@ -20,7 +21,7 @@ class Geolevel(models.Model):
 
 class Geounit(models.Model):
     name = models.CharField(max_length=200)
-    geom = models.MultiPolygonField(srid=900913)
+    geom = models.MultiPolygonField(srid=3785)
     geolevel = models.ForeignKey(Geolevel)
     objects = models.GeoManager()
 
@@ -55,6 +56,45 @@ class Plan(models.Model):
 
     def __unicode__(self):
         return self.name
+
+    def add_geounits(self, districtid, geounit_ids):
+        """Add the requested geounits to the given district, and remove
+        them from whichever district they're currently in
+       
+        Will return the number of districts effected by the operation
+        """
+        target = District.objects.get(pk=districtid)
+        fixed = self.delete_geounits(districtid, geounit_ids)
+        geounits = list(Geounit.objects.filter(id__in=geounit_ids))
+        for geounit in geounits:
+            if not target.geounits.filter(id=geounit.id):
+                target.geounits.add(geounit) 
+                target.save();
+                fixed += 1
+        return fixed
+
+
+    def delete_geounits(self, districtid, geounit_ids):
+        """Delete the requested geounits from given district       
+        Will return the number of districts effected by the operation
+        """
+        target = District.objects.get(pk=districtid)
+        fixed = 0
+        geounits = list(Geounit.objects.filter(id__in=geounit_ids))
+        for geounit in geounits:
+            districts = self.district_set.filter(geounits__id__exact=geounit.id)
+            # first, remove from the current district if necessary
+            if len(districts.all()) == 1 and districts[0] != target:
+                districts[0].geounits.remove(geounit)            
+                districts[0].save()
+                fixed += 1
+
+        return fixed
+
+class PlanForm(ModelForm):
+    class Meta:
+        model=Plan
+    
 
 class District(models.Model):
     name = models.CharField(max_length=200)

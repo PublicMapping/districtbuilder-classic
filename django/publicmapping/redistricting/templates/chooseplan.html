@@ -1,0 +1,57 @@
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" >
+</script>
+<div id="PlanChooser" >
+<h1>Choose a Plan.  Start Drawing.</h1>
+
+Start with a...
+<div id="TemplateTypeButtons">
+    <input id="btnBlank"  type="button" value="Blank Map" />
+    <input id="btnTemplate" type="button" value="Template" />
+    <input id="btnShared" type="button" value="Plan by Other User" />
+    <input id="btnMine" type="button" value="Plans saved by {{ user }}" />
+</div>
+
+<div id="SelectorsHelp">
+    To start, click on a button to determine which kind of template you'll be using.
+</div>
+
+<div id="TemplateSelectors">
+    <select id="ddlTemplate" class="Selectors" >
+    {% for plan in templates %}
+        <option value="{{ plan.id }}">{{ plan.name }}</option>
+    {% endfor %}
+    </select>
+    <select id="ddlShared" class="Selectors">
+    {% for plan in shared %}
+        <option value="{{ plan.id }}">{{ plan.name }}</option>
+    {% endfor %}
+    </select>
+    <select id="ddlMine" class="Selectors">
+    {% for plan in mine %}
+        <option value="{{ plan.id }}">{{ plan.name }}</option>
+    {% endfor %}
+    </select>
+</div>
+
+<input id="btnSelectPlan" type="submit" value="Start Drawing" />
+
+</div>
+
+<script type="text/javascript">
+$(function() {
+    $('.Selectors').hide();
+    $('#SelectorHelp').show();
+    $('#btnBlank').click(function() { window.open('/districtmapping/plan/create'); });
+    $('#btnTemplate').click(function() { showOnly('#ddlTemplate'); });
+    $('#btnShared').click(function() { showOnly('#ddlShared'); });
+    $('#btnMine').click(function() { showOnly('#ddlMine'); });
+    $('#btnSelectPlan').click(function() { selectPlan(); });
+});
+
+function showOnly(selectorId) {
+    $('#SelectorsHelp').hide();
+    $('.Selectors').hide().removeClass('active');
+    $(selectorId).addClass('active').show();
+}
+
+</script>

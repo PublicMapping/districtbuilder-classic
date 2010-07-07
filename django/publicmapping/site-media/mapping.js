@@ -49,10 +49,10 @@ function init() {
     // TODO Make the initial layer extents configurable. Maybe fetch them
     // from geowebcache
     var layerExtent = new OpenLayers.Bounds(
-        -9928290.0,
-        4104345.0,
-        -8278222.0,
-        5754413.0
+        -9442154.0,
+        4636574.5,
+        -8868618.0,
+        5210110.5
     );
 
     // This projection is web mercator
@@ -62,16 +62,15 @@ function init() {
     var olmap = new OpenLayers.Map('map', {
         // The resolutions here must match the settings in geowebcache.
         // TODO Fetch these resolutions from geowebcache
-	resolutions: [
-            6445.578125, 3222.7890625, 1611.39453125, 
-            805.697265625, 402.8486328125, 201.42431640625, 
-            100.712158203125, 50.3560791015625, 25.17803955078125, 
-            12.589019775390625, 6.2945098876953125, 3.1472549438476562, 
-            1.5736274719238281, 0.7868137359619141, 0.39340686798095703, 
-            0.19670343399047852, 0.09835171699523926, 0.04917585849761963, 
-            0.024587929248809814, 0.012293964624404907, 0.006146982312202454, 
-            0.003073491156101227, 0.0015367455780506134, 7.683727890253067E-4, 
-            3.8418639451265335E-4],
+        resolutions: [2240.375, 1120.1875, 560.09375,
+            280.046875, 140.0234375, 70.01171875,
+            35.005859375, 17.5029296875, 8.75146484375,
+            4.375732421875, 2.1878662109375, 1.09393310546875,
+            0.546966552734375, 0.2734832763671875, 0.13674163818359375,
+            0.06837081909179688, 0.03418540954589844,
+            0.01709270477294922, 0.00854635238647461, 0.004273176193237305,
+            0.0021365880966186523, 0.0010682940483093262,
+            5.341470241546631E-4, 2.6707351207733154E-4, 1.3353675603866577E-4],
         maxExtent: layerExtent,
         projection: projection,
         units: 'm'
@@ -79,13 +78,17 @@ function init() {
 
     // These layers are dependent on the layers available in geowebcache
     // TODO Fetch a list of layers from geowebcache
-    var countyLayer = createLayer( 'Counties', 'gmu_basemap_county',
+    var layers = [];
+    for (layer in MAP_LAYERS) {
+        layers.push(createLayer( MAP_LAYERS[layer], MAP_LAYERS[layer], layerExtent ));
+    }
+    /* var countyLayer = createLayer( 'Counties', 'gmu_basemap_county',
             layerExtent );
     var tractLayer = createLayer( 'Census Tracts', 'gmu_basemap_tract', 
             layerExtent );
     var blockLayer = createLayer( 'Census Blocks', 'gmu_basemap_block',
             layerExtent );
-    
+   */ 
     var districtLayer = new OpenLayers.Layer.Vector(
         'Current Plan',
         {
@@ -129,7 +132,9 @@ function init() {
 
     var selection = new OpenLayers.Layer.Vector('Selection');
 
-    olmap.addLayers([selection, districtLayer, countyLayer, tractLayer, blockLayer]);
+    layers.push(selection);
+    // olmap.addLayers([selection, districtLayer, countyLayer, tractLayer, blockLayer]);
+    olmap.addLayers(layers);
 
     var getControl = new OpenLayers.Control.GetFeature({
         protocol: new OpenLayers.Protocol.WFS({

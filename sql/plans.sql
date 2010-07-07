@@ -2,15 +2,27 @@
 
 -- DROP VIEW redistricting_county_geounits;
 
-CREATE OR REPLACE VIEW redistricting_county_geounits AS 
+CREATE OR REPLACE VIEW county AS 
  SELECT redistricting_geounit.id, redistricting_geounit.name, redistricting_geounit.geolevel_id, redistricting_geounit.geom
    FROM redistricting_geounit
   WHERE redistricting_geounit.geolevel_id = 1;
 
-ALTER TABLE redistricting_county_geounits OWNER TO publicmapping;
+ALTER TABLE county OWNER TO publicmapping;
 
 
--- View: redistricting_plan_collect_geom
+CREATE OR REPLACE VIEW tract AS 
+ SELECT redistricting_geounit.id, redistricting_geounit.name, redistricting_geounit.geolevel_id, redistricting_geounit.geom
+   FROM redistricting_geounit
+  WHERE redistricting_geounit.geolevel_id = 2;
+
+ALTER TABLE tract OWNER TO publicmapping;
+
+CREATE OR REPLACE VIEW block AS 
+ SELECT redistricting_geounit.id, redistricting_geounit.name, redistricting_geounit.geolevel_id, redistricting_geounit.geom
+   FROM redistricting_geounit
+  WHERE redistricting_geounit.geolevel_id = 3;
+
+ALTER TABLE block OWNER TO publicmapping;
 
 -- DROP VIEW redistricting_plan_collect_geom;
 
@@ -22,5 +34,3 @@ CREATE OR REPLACE VIEW redistricting_plan_collect_geom AS
   GROUP BY r_d.id, r_d.plan_id, r_d.name;
 
 ALTER TABLE redistricting_plan_collect_geom OWNER TO publicmapping;
-
-
