@@ -2,20 +2,25 @@ from django.http import *
 from django.core import serializers
 from django.db import IntegrityError
 from django.shortcuts import render_to_response
+from django.contrib.auth.decorators import login_required
 from django import forms
 from publicmapping.redistricting.models import *
 import random, string
 
+@login_required
 def copyplan(request, planid):
    #  return HttpResponse("You are copying plan %s" % planid)
     p = Plan.objects.get(pk=planid)
+    newname = p.name + " " + str(random.random()) 
+    if (request.method == "POST" ):
+        newname = request.POST["name"]
     copy = Plan(
-        name = p.name + " " + str(random.random()), owner=request.user
+        name = newname, owner=request.user
     )
     try:
         copy.save()
     except IntegrityError:
-        return HttpResponse("{ success: false; message: 'Can\'t create a plan with a duplicate name' }")
+        return HttpResponse("[{ \"success\" : false, \"message\" : \"Can't create a plan with a duplicate name\" }]")
     districts = p.district_set.all()
     for district in districts:
         district_copy = District(name = district.name, plan = copy, version = 0)
@@ -24,6 +29,7 @@ def copyplan(request, planid):
     data = serializers.serialize("json", [ copy ])
     return HttpResponse(data)    
     
+@login_required
 def editplan(request, planid):
     plan = Plan.objects.get(pk=planid)
     layers = Geolevel.objects.values_list("name", flat=True)
@@ -33,6 +39,7 @@ def editplan(request, planid):
         'layers': layers,
     })
 
+@login_required
 def createplan(request):
     if request.method == "POST":
         form = PlanForm(request.POST)
@@ -46,6 +53,7 @@ def createplan(request):
         'form': form,
     })
 
+@login_required
 def addtodistrict(request, planid, districtid):
     if len(request.GET.items()) > 0: 
         geounit_ids = string.split(request.REQUEST["geounits"], "|")
@@ -55,6 +63,7 @@ def addtodistrict(request, planid, districtid):
     else:
         return HttpResponse("Geounits weren't found in a district")
 
+@login_required
 def deletefromdistrict(request, planid, districtid):
     if len(request.GET.items()) > 0:
         geounit_ids = string.split(request.REQUEST["geounits"], "|")
@@ -64,6 +73,7 @@ def deletefromdistrict(request, planid, districtid):
     else:
         return HttpResponse("Geounits weren't found in a district")
 
+@login_required
 def chooseplan(request):
     if request.method == "POST":
         return HttpResponse("looking for the requested plan")

@@ -1,5 +1,5 @@
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" >
-</script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" ></script>
+<script type="text/javascript" src="/site-media/publicmapping.chooseplan.js" ></script>
 <div id="PlanChooser" >
 <h1>Choose a Plan.  Start Drawing.</h1>
 
@@ -16,42 +16,50 @@ Start with a...
 </div>
 
 <div id="TemplateSelectors">
-    <select id="ddlTemplate" class="Selectors" >
-    {% for plan in templates %}
-        <option value="{{ plan.id }}">{{ plan.name }}</option>
-    {% endfor %}
-    </select>
-    <select id="ddlShared" class="Selectors">
-    {% for plan in shared %}
-        <option value="{{ plan.id }}">{{ plan.name }}</option>
-    {% endfor %}
-    </select>
-    <select id="ddlMine" class="Selectors">
-    {% for plan in mine %}
-        <option value="{{ plan.id }}">{{ plan.name }}</option>
-    {% endfor %}
-    </select>
+        <div id="TemplateSelection" class="SelectionGroup" >
+    {% if templates %}
+        <select id="ddlTemplate" class="Selectors" >
+        {% for plan in templates %}
+            <option value="{{ plan.id }}">{{ plan.name }}</option>
+        {% endfor %}
+        </select>
+    {% else %}<span class="Selectors">Sorry, no templates of that type available</span>
+    {% endif %}
+        </div>
+        <div id="SharedSelection" class="SelectionGroup" >
+    {% if shared %}
+        <select id="ddlShared" class="Selectors">
+        {% for plan in shared %}
+            <option value="{{ plan.id }}">{{ plan.name }}</option>
+        {% endfor %}
+        </select>
+    {% else %}<span class="Selectors">Sorry, no templates of that type available</span>
+    {% endif %}
+        </div>
+        <div id="MineSelection" class="SelectionGroup" >
+    {% if mine %}
+        <select id="ddlMine" class="Selectors">
+        {% for plan in mine %}
+            <option value="{{ plan.id }}">{{ plan.name }}</option>
+        {% endfor %}
+        </select>
+
+        <input type="radio" name="Edit" value="edit" checked>Edit Selected Plan</input>
+        <input type="radio" name="Edit" value="saveas">Copy and Save Selected Plan</input>
+
+    {% else %}<span class="Selectors">Sorry, no templates of that type available</span>
+    {% endif %}
+        </div>
 </div>
 
+<div id="NewName">
+    <label for="txtNewName" id="lblNewName">Template copy name:</label>
+    <input type="text" id="txtNewName" />
+</div>
 <input id="btnSelectPlan" type="submit" value="Start Drawing" />
 
 </div>
-
 <script type="text/javascript">
-$(function() {
-    $('.Selectors').hide();
-    $('#SelectorHelp').show();
-    $('#btnBlank').click(function() { window.open('/districtmapping/plan/create'); });
-    $('#btnTemplate').click(function() { showOnly('#ddlTemplate'); });
-    $('#btnShared').click(function() { showOnly('#ddlShared'); });
-    $('#btnMine').click(function() { showOnly('#ddlMine'); });
-    $('#btnSelectPlan').click(function() { selectPlan(); });
-});
-
-function showOnly(selectorId) {
-    $('#SelectorsHelp').hide();
-    $('.Selectors').hide().removeClass('active');
-    $(selectorId).addClass('active').show();
-}
-
+var choose = publicmapping.chooseplan();
+choose.init();
 </script>
