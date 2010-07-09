@@ -100,7 +100,8 @@ function init() {
                 url: 'http://' + MAP_SERVER + '/geoserver/wfs',
                 featureType: 'gmu_plan',
                 featureNS: 'http://gmu.azavea.com/',
-                geometryName: 'geom'
+                geometryName: 'geom',
+                version:"1.1.0"
             }),
             styleMap: new OpenLayers.StyleMap({
                 fill: false,
@@ -132,6 +133,7 @@ function init() {
 
     var selection = new OpenLayers.Layer.Vector('Selection');
 
+    layers.push(districtLayer);
     layers.push(selection);
     // olmap.addLayers([selection, districtLayer, countyLayer, tractLayer, blockLayer]);
     olmap.addLayers(layers);

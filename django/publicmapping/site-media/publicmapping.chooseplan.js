@@ -9,6 +9,7 @@ publicmapping.chooseplan = function(options) {
         }, options),
         // bunch o variables
         
+        _nameRequired,
         _editType,
         _selectionType;
 
@@ -25,12 +26,16 @@ publicmapping.chooseplan = function(options) {
         $('input:radio').click( function() {
             if ($(this).val() == 'edit') {
                 $('#NewName').hide(); 
+                _nameRequired = false;
             } else {
                 $('#NewName').show();
+                _nameRequired = true;
             }
         });
+
+        _nameRequired = false;
+
         return _self;
-l
     };
 
     var showOnly = function(selectorId) {
@@ -42,15 +47,19 @@ l
         if (selectorId == '#TemplateSelection' || selectorId == '#SharedSelection' ||
             ( selectorId == '#MineSelection' && $('input:radio:checked').val() == 'saveas'  )) {
             $('#NewName').show();
+            _nameRequired = true;
         } else {
+            _nameRequired = false;
             $('#NewName').hide();
         }
     };
 
     var selectPlan = function () {
         var activeSelector = $('.active');
-        if ($('#txtNewName').val() != '') {
+        if (_nameRequired) {
+            var name = $('#txtNewName').val();
             var url = '/districtmapping/plan/' + activeSelector.val() + '/copy/'
+            if (name.trim().length == 0) { alert ('A name for the copied template is required'); return; }
             $.post(url, { name: $('#txtNewName').val() }, copyCallback, 'json');
         }
         else {
@@ -63,7 +72,7 @@ l
         if (data.pk) {
             window.location = '/districtmapping/plan/' + data.pk + '/edit/';
         } else {
-            alert ('Error: ' + data.message);
+            alert (data.message);
         }
     };
 
