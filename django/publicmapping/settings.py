@@ -85,4 +85,5 @@ INSTALLED_APPS = (
 LOGIN_URL = '/'
 MAP_SERVER = 'eldorado:8080'
 BASE_GEOLEVEL = 3
-TEST_RUNNER = 'django.contrib.gis.tests.run_gis_tests'
+TEST_RUNNER = 'django.contrib.gis.tests.run_tests'
+POSTGIS_TEMPLATE='template_postgis'
