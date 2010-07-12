@@ -82,13 +82,7 @@ function init() {
     for (layer in MAP_LAYERS) {
         layers.push(createLayer( MAP_LAYERS[layer], MAP_LAYERS[layer], layerExtent ));
     }
-    /* var countyLayer = createLayer( 'Counties', 'gmu_basemap_county',
-            layerExtent );
-    var tractLayer = createLayer( 'Census Tracts', 'gmu_basemap_tract', 
-            layerExtent );
-    var blockLayer = createLayer( 'Census Blocks', 'gmu_basemap_block',
-            layerExtent );
-   */ 
+    
     var districtLayer = new OpenLayers.Layer.Vector(
         'Current Plan',
         {
@@ -136,14 +130,14 @@ function init() {
 
     layers.push(districtLayer);
     layers.push(selection);
-    // olmap.addLayers([selection, districtLayer, countyLayer, tractLayer, blockLayer]);
     olmap.addLayers(layers);
 
     var getControl = new OpenLayers.Control.GetFeature({
         protocol: new OpenLayers.Protocol.WFS({
             url: 'http://' + MAP_SERVER + '/geoserver/wfs',
-            featureType: 'gmu_county',
+            featureType: 'county',
             featureNS: 'http://gmu.azavea.com/',
+            featurePrefix: 'gmu',
             srsName: 'EPSG:3785',
             geometryName: 'geom'
         })
@@ -156,9 +150,16 @@ function init() {
         selection.removeFeatures([e.feature]);
     });
 
+    olmap.events.register('changelayer', getControl, function(e){
+        if ( e.layer.isBaseLayer && e.layer[e.property]) {
+            var newOpts = getControl.protocol.options;
+            newOpts.featureType = e.layer.name.substring( getControl.protocol.featurePrefix.length + 1 );
+            getControl.protocol = new OpenLayers.Protocol.WFS( newOpts );
+        }
+    });
+
     olmap.addControls([
         new OpenLayers.Control.LayerSwitcher(),
-        //new OpenLayers.Control.SelectFeature(districtLayer),
         getControl
     ]);
 

@@ -2,13 +2,14 @@
   <head>
     <title>Open Source District Mapping Tool</title>
     <link rel="stylesheet" type="text/css" href="/site-media/publicmapping.css"/>
-    <script type="text/javascript" src="/site-media/openlayers/OpenLayers.js"></script>
+    <script type="text/javascript" src="/site-media/openlayers/OpenLayers.js"></script><!-- production -->
+    <!-- <script type="text/javascript" src="/site-media/OpenLayers-2.9.1/lib/OpenLayers.js"></script> debug -->
     <script type="text/javascript">
         var MAP_SERVER = '{{ mapserver }}';
         var MAP_LAYERS = [ {% for layer in layers %} 'gmu:{{ layer }}', {% endfor %} ];   
     </script>
+    <script type="text/javascript" src="/site-media/jquery/jquery-1.4.2.js"></script>
     <script type="text/javascript" src="/site-media/mapping.js"></script>
-    
   </head>
   <body onload="init();">
     <div id="header">
