@@ -100,6 +100,7 @@ function init() {
                 url: 'http://' + MAP_SERVER + '/geoserver/wfs',
                 featureType: 'gmu_plan',
                 featureNS: 'http://gmu.azavea.com/',
+                featurePrefix: 'gmu',
                 geometryName: 'geom',
                 version:"1.1.0"
             }),
