@@ -215,3 +215,15 @@ div.graph div.bar {
     line-height: 8px;            
 }
 
+/* district assignment control styles */
+div.controlDiv {
+    padding: 5px;
+    background-color: #ffffff;
+}
+div.controlDiv span {
+    font-size: 0.8em;
+    margin: auto 5px;
+}
+div.controlDiv select {
+    font-size: 0.7em;
+}

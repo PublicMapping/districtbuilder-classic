@@ -168,7 +168,11 @@ function init() {
 
     olmap.addControls([
         new OpenLayers.Control.LayerSwitcher(),
-        getControl
+        getControl,
+        new DistrictAssignment({
+            selection: selection,
+            districts: districtLayer
+        })
     ]);
 
     getControl.activate();
@@ -177,3 +181,275 @@ function init() {
     // TODO Make these configurable.
     olmap.zoomToExtent(new OpenLayers.Bounds(-9467000,4570000,-8930000,5170000));
 }
+
+/************************************************************************/
+/* DistrictAssignment
+/* A control for assigning a district after it's been selected.
+/***********************************************************************/
+/** 
+ * @requires OpenLayers/Control.js
+ */
+
+/**
+ * Class: DistrictAssignment
+ * The DistrictAssignment control shows a drop-down of available districts
+ * that can accept the currently selected district. This control appears
+ * in the upper right of the map automatically when a feature is selected.
+ * 
+ * Inherits from:
+ *  - <OpenLayers.Control>
+ */
+DistrictAssignment = 
+  OpenLayers.Class(OpenLayers.Control, {    
+    /**
+     * Property: selectionLayer
+     * The layer that contains the selection features and fires pick events.
+     */
+    selectionLayer: null,
+
+    /**
+     * Property: districtLayer
+     * The layer that contains the districts that have already been mapped.
+     */
+    districtLayer: null,
+ 
+  // DOM Elements
+    
+    /** 
+     * Property: controlDiv
+     * {DOMElement}
+     */
+    controlDiv: null,
+
+    /**
+     * Property: selectElem
+     * {DOMElement}
+     */
+    selectElem: null,
+    
+    /**
+     * Constructor: OpenLayers.Control.LayerSwitcher
+     * 
+     * Parameters:
+     * options - {Object}
+     */
+    initialize: function(options) {
+        OpenLayers.Control.prototype.initialize.apply(this, arguments);
+        this.selectionLayer = options.selection;
+        this.districtLayer = options.districts;
+
+        if (this.selectionLayer) {
+          this.selectionLayer.events.on({
+              "featureadded": this.showList,
+              "featureremoved": this.hideList,
+              scope: this
+          });
+        }
+    },
+
+    /**
+     * APIMethod: destroy 
+     */    
+    destroy: function() {
+        
+        OpenLayers.Event.stopObservingElement(this.div);
+        OpenLayers.Event.stopObservingElement(this.controlDiv);
+        
+        this.selectionLayer.events.un({
+            "featureadded": this.showList,
+            "featureremoved": this.hideList,
+            scope: this
+        });
+        
+        OpenLayers.Control.prototype.destroy.apply(this, arguments);
+    },
+
+    showList: function(feat) {
+        this.controlDiv.style.display = 'block';
+        this.selectElem.options.length = 2;
+        for (var i = 0; i < this.districtLayer.features.length; i++) {
+            var dFeat = this.districtLayer.features[i];
+            if (dFeat.geometry.intersects &&
+                dFeat.geometry.intersects(feat.feature.geometry)) {
+                this.selectElem.options[this.selectElem.options.length] =
+                    new Option( dFeat.attributes.name );
+            }
+        }
+    },
+
+    hideList: function(feat) {
+        this.controlDiv.style.display = 'none';
+    },
+
+    /** 
+     * Method: setMap
+     *
+     * Properties:
+     * map - {<OpenLayers.Map>} 
+     */
+    setMap: function(map) {
+        OpenLayers.Control.prototype.setMap.apply(this, arguments);
+    },
+
+    /**
+     * Method: onDistrictSelect
+     *
+     * Parameters:
+     * e - {Event}
+     *
+     * Context:
+     *  - {DOMElement} selectElem
+     *  - {<OpenLayers.Layer>} selectionLayer
+     *  - {DistrictAssignment} districtAssigner
+     */
+    onDistrictSelect: function(e) {
+      alert('Selection made.');
+    },
+
+    /**
+     * Method: draw
+     *
+     * Returns:
+     * {DOMElement} A reference to the DIV DOMElement containing the 
+     *     switcher tabs.
+     */  
+    draw: function() {
+        OpenLayers.Control.prototype.draw.apply(this);
+
+        this.loadContents();
+
+        // populate div with current info
+        this.redraw();    
+
+        return this.div;
+    },
+    
+    /** 
+     * Method: redraw
+     * Goes through and takes the current state of the Map and rebuilds the
+     *     control to display that state. Groups base layers into a 
+     *     radio-button group and lists each data layer with a checkbox.
+     *
+     * Returns: 
+     * {DOMElement} A reference to the DIV DOMElement containing the control
+     */  
+    redraw: function() {
+        // create input element
+        this.selectElem = document.createElement("select");
+        this.selectElem.id = this.id + "_select";
+        this.selectElem.name = this.id + "_select";
+        this.selectElem.options[0] = new Option('-- Select One --');
+        this.selectElem.options[1] = new Option('Unassigned','-1');
+
+        var context = {
+            'selectElem': this.selectElem,
+            'selectionLayer': this.selectionLayer,
+            'districtAssigner': this
+        };
+        OpenLayers.Event.observe(this.selectElem, "change", 
+            OpenLayers.Function.bindAsEventListener(this.onDistrictSelect,
+                                                    context)
+        );
+                
+        // create span
+        var labelSpan = document.createElement("span");
+        OpenLayers.Element.addClass(labelSpan, "labelSpan")
+        
+        labelSpan.innerHTML = 'Assign to District';
+        labelSpan.style.verticalAlign = "bottom";
+        OpenLayers.Event.observe(labelSpan, "click", 
+            OpenLayers.Function.bindAsEventListener(this.onDistrictSelect,
+                                                    context)
+        );
+        
+        this.controlDiv.appendChild(labelSpan);
+        this.controlDiv.appendChild(this.selectElem);
+        this.controlDiv.style.display = 'none';
+
+        this.div.style.right = '0';
+        this.div.style.top = '0';
+        return this.div;
+    },
+
+    /**
+     * Method: showControls
+     * Hide/Show all LayerSwitcher controls depending on whether we are
+     *     minimized or not
+     * 
+     * Parameters:
+     * minimize - {Boolean}
+     */
+    showControls: function(minimize) {
+
+        this.maximizeDiv.style.display = minimize ? "" : "none";
+        this.minimizeDiv.style.display = minimize ? "none" : "";
+
+        this.controlDiv.style.display = minimize ? "none" : "";
+    },
+    
+    /** 
+     * Method: loadContents
+     * Set up the labels and divs for the control
+     */
+    loadContents: function() {
+
+        //configure main div
+
+        OpenLayers.Event.observe(this.div, "mouseup", 
+            OpenLayers.Function.bindAsEventListener(this.mouseUp, this));
+        OpenLayers.Event.observe(this.div, "click",
+                      this.ignoreEvent);
+        OpenLayers.Event.observe(this.div, "mousedown",
+            OpenLayers.Function.bindAsEventListener(this.mouseDown, this));
+        OpenLayers.Event.observe(this.div, "dblclick", this.ignoreEvent);
+
+        // layers list div        
+        this.controlDiv = document.createElement("div");
+        this.controlDiv.id = this.id + "_controlDiv";
+        OpenLayers.Element.addClass(this.controlDiv, "controlDiv");
+
+        this.div.appendChild(this.controlDiv);
+    },
+    
+    /** 
+     * Method: ignoreEvent
+     * 
+     * Parameters:
+     * evt - {Event} 
+     */
+    ignoreEvent: function(evt) {
+        OpenLayers.Event.stop(evt);
+    },
+
+    /** 
+     * Method: mouseDown
+     * Register a local 'mouseDown' flag so that we'll know whether or not
+     *     to ignore a mouseUp event
+     * 
+     * Parameters:
+     * evt - {Event}
+     */
+    mouseDown: function(evt) {
+        this.isMouseDown = true;
+        this.ignoreEvent(evt);
+    },
+
+    /** 
+     * Method: mouseUp
+     * If the 'isMouseDown' flag has been set, that means that the drag was 
+     *     started from within the LayerSwitcher control, and thus we can 
+     *     ignore the mouseup. Otherwise, let the Event continue.
+     *  
+     * Parameters:
+     * evt - {Event} 
+     */
+    mouseUp: function(evt) {
+        if (this.isMouseDown) {
+            this.isMouseDown = false;
+            this.ignoreEvent(evt);
+        }
+    },
+
+    CLASS_NAME: "DistrictAssignment"
+});
+
