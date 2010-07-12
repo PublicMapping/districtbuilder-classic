@@ -86,7 +86,7 @@ class Plan(models.Model):
         for geounit in geounits:
             if not target.geounits.filter(id=geounit.id):
                 target.geounits.add(geounit) 
-                target.geom = target.geounits.collect()
+                # target.geom = target.geounits.collect()
                 target.save();
                 fixed += 1
         return fixed
@@ -126,10 +126,10 @@ class District(models.Model):
     version = models.PositiveIntegerField(default=0)
     objects = models.GeoManager()
     
-    def save(self):
-        super(District, self).save()
-        self.geom = self.geounits.collect()
-        super(District, self).save()
+#    def save(self):
+#        super(District, self).save()
+#        self.geom = self.geounits.collect()
+#        super(District, self).save()
 
     def __unicode__(self):
         return self.name
