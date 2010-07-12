@@ -33,9 +33,9 @@ class Geounit(models.Model):
             target = Geounit.objects.get(pk=geounit_id).geom
             envelope = target.envelope
             base_geounits = Geounit.objects.filter(geolevel=settings.BASE_GEOLEVEL)
-            # base_geounits = base_geounits.filter(geom__bboverlaps=envelope)
-            base_geounits = base_geounits.filter(geom__bboverlaps=envelope).values_list('id', flat=True)
-            #base_geounits = base_geounits.filter(geom__within=target).values_list('id', flat=True)
+            base_geounits = base_geounits.filter(geom__bboverlaps=envelope)
+            # base_geounits = base_geounits.filter(geom__bboverlaps=envelope).values_list('id', flat=True)
+            base_geounits = base_geounits.filter(geom__within=target).values_list('id', flat=True)
             new_geounit_ids.extend(base_geounits)
         return new_geounit_ids
 
@@ -63,7 +63,7 @@ class Plan(models.Model):
     name = models.CharField(max_length=200,unique=True)
     is_template = models.BooleanField(default=False)
     is_temporary = models.BooleanField(default=False)
-    version = models.PositiveIntegerField()
+    version = models.PositiveIntegerField(default=0)
     created = models.DateTimeField(auto_now_add=True)
     edited = models.DateTimeField(auto_now=True)
     owner = models.ForeignKey(User)
@@ -123,7 +123,7 @@ class District(models.Model):
     plan = models.ForeignKey(Plan)
     geounits = models.ManyToManyField(Geounit)
     geom = models.GeometryCollectionField(srid=3785, blank=True, null=True)
-    version = models.PositiveIntegerField()
+    version = models.PositiveIntegerField(default=0)
     objects = models.GeoManager()
     
     def save(self):
