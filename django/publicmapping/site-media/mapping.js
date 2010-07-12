@@ -82,6 +82,9 @@ function init() {
     for (layer in MAP_LAYERS) {
         layers.push(createLayer( MAP_LAYERS[layer], MAP_LAYERS[layer], layerExtent ));
     }
+
+    var match = window.location.href.match(new RegExp('/plan\/(\\d+)\/edit/'));
+    var plan_id = match[1];
     
     var districtLayer = new OpenLayers.Layer.Vector(
         'Current Plan',
@@ -92,11 +95,11 @@ function init() {
             ],
             protocol: new OpenLayers.Protocol.WFS({
                 url: 'http://' + MAP_SERVER + '/geoserver/wfs',
-                featureType: 'gmu_plan',
+                featureType: 'district',
                 featureNS: 'http://gmu.azavea.com/',
                 featurePrefix: 'gmu',
                 geometryName: 'geom',
-                version:"1.1.0"
+                srsName: 'EPSG:3785'
             }),
             styleMap: new OpenLayers.StyleMap({
                 fill: false,
@@ -104,7 +107,12 @@ function init() {
                 strokeOpacity: 1,
                 strokeWidth: 2
             }),
-            projection:projection 
+            projection:projection,
+            filter: new OpenLayers.Filter.Comparison({
+                type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                property: 'plan_id',
+                value: plan_id
+            })
         }
     );
 /*
