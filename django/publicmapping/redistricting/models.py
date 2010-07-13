@@ -89,7 +89,7 @@ class Plan(models.Model):
 
         # incremental is the geometry that is changing
 
-        target = District.objects.get(pk=districtid)
+        target = District.objects.filter(district_id=districtid)[0]
 
         fixed = self.delete_geounits_prefetch(base_geounit_ids, incremental, districtid)
         geounits = list(Geounit.objects.filter(id__in=base_geounit_ids))
@@ -125,7 +125,7 @@ class Plan(models.Model):
 
     def delete_geounits_prefetch(self, base_geounit_ids, incremental, districtid):
 
-        target = District.objects.get(pk=districtid)
+        target = District.objects.filter(district_id=districtid)[0]
         neighbors = District.objects.filter(plan=target.plan)
         fixed = 0
         for neighbor in neighbors:
