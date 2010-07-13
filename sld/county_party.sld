@@ -3,17 +3,17 @@
   xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.0.0/StyledLayerDescriptor.xsd">
   <NamedLayer>
-    <Name>Block Demographic - Party</Name>
+    <Name>County Demographic - Party</Name>
     <UserStyle>
-      <Title>Block Demographic - Political Party Chloropleth</Title>
+      <Title>County Demographic - Political Party Chloropleth</Title>
       <Abstract>A grayscale style showing the number of identified members of a party in a given geounit</Abstract>
       <FeatureTypeStyle>
         <Rule>
-        <Title>&gt; 250K</Title>
+        <Title>&gt; 150K</Title>
     <ogc:Filter>
        <ogc:PropertyIsGreaterThanOrEqualTo>
           <ogc:PropertyName>number</ogc:PropertyName>
-          <ogc:Literal>250000</ogc:Literal>
+          <ogc:Literal>150000</ogc:Literal>
         </ogc:PropertyIsGreaterThanOrEqualTo>
     </ogc:Filter>
     <PolygonSymbolizer>
@@ -36,7 +36,7 @@
         </ogc:PropertyIsGreaterThanOrEqualTo>
         <ogc:PropertyIsLessThan>
           <ogc:PropertyName>number</ogc:PropertyName>
-          <ogc:Literal>25000</ogc:Literal>
+          <ogc:Literal>150000</ogc:Literal>
         </ogc:PropertyIsLessThan>
       </ogc:And>
     </ogc:Filter>          
@@ -51,11 +51,11 @@
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-        <Title>&lt; 25K</Title>
+        <Title>&lt; 50K</Title>
     <ogc:Filter>
         <ogc:PropertyIsLessThan>
           <ogc:PropertyName>number</ogc:PropertyName>
-          <ogc:Literal>25000</ogc:Literal>
+          <ogc:Literal>50000</ogc:Literal>
         </ogc:PropertyIsLessThan>
     </ogc:Filter>          
     <PolygonSymbolizer>

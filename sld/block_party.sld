@@ -36,7 +36,7 @@
         </ogc:PropertyIsGreaterThanOrEqualTo>
         <ogc:PropertyIsLessThan>
           <ogc:PropertyName>number</ogc:PropertyName>
-          <ogc:Literal>15</ogc:Literal>
+          <ogc:Literal>50</ogc:Literal>
         </ogc:PropertyIsLessThan>
       </ogc:And>
     </ogc:Filter>          
@@ -51,11 +51,11 @@
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-        <Title>&lt; 15</Title>
+        <Title>&lt; 35</Title>
     <ogc:Filter>
         <ogc:PropertyIsLessThan>
           <ogc:PropertyName>number</ogc:PropertyName>
-          <ogc:Literal>15</ogc:Literal>
+          <ogc:Literal>35</ogc:Literal>
         </ogc:PropertyIsLessThan>
     </ogc:Filter>          
     <PolygonSymbolizer>
