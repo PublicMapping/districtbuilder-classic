@@ -312,6 +312,7 @@ DistrictAssignment =
 
     showList: function(feat) {
         this.controlDiv.style.display = 'block';
+        this.selectElem.selectedIndex = 0;
         this.selectElem.options.length = 2;
         for (var i = 0; i < this.districtLayer.features.length; i++) {
             var dFeat = this.districtLayer.features[i];
@@ -349,7 +350,7 @@ DistrictAssignment =
      *  - {DistrictAssignment} districtAssigner
      */
     onDistrictSelect: function(e) {
-        if (this.selectElem.selectedIndex > 1) {
+        if (this.selectElem.selectedIndex > 0) {
             this.districtAssigner.events.triggerEvent('geounitadded', {
                 selection: this.selectionLayer.features,
                 district: this.selectElem.value
@@ -398,7 +399,7 @@ DistrictAssignment =
         this.selectElem.id = this.id + "_select";
         this.selectElem.name = this.id + "_select";
         this.selectElem.options[0] = new Option('-- Select One --');
-        this.selectElem.options[1] = new Option('Unassigned','-1');
+        this.selectElem.options[1] = new Option('Unassigned','0');
 
         var context = {
             'selectElem': this.selectElem,
