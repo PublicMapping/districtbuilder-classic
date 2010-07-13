@@ -2,6 +2,7 @@ from django.contrib.gis.db import models
 from django.contrib.auth.models import User
 from django.forms import ModelForm
 from django.conf import settings
+from datetime import datetime
 
 class Subject(models.Model):
     name = models.CharField(max_length=50)
@@ -31,11 +32,7 @@ class Geounit(models.Model):
         new_geounit_ids = []
         for geounit_id in geounit_ids:
             target = Geounit.objects.get(pk=geounit_id).geom
-            envelope = target.envelope
-            base_geounits = Geounit.objects.filter(geolevel=settings.BASE_GEOLEVEL)
-            base_geounits = base_geounits.filter(geom__bboverlaps=envelope)
-            # base_geounits = base_geounits.filter(geom__bboverlaps=envelope).values_list('id', flat=True)
-            base_geounits = base_geounits.filter(geom__within=target).values_list('id', flat=True)
+            base_geounits = Geounit.objects.filter(geom__within=target, geolevel=settings.BASE_GEOLEVEL).values_list('id', flat=True)
             new_geounit_ids.extend(base_geounits)
         return new_geounit_ids
 
