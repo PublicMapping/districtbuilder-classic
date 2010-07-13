@@ -98,7 +98,9 @@ class Plan(models.Model):
                 target.geounits.add(geounit) 
                 fixed += 1
 
-        target.geom = GeometryCollection(target.geom.union(incremental))
+        if not target.geom is None:
+            target.geom = GeometryCollection(target.geom.union(incremental))
+            
         target.save();
         return fixed
 
@@ -137,7 +139,7 @@ class Plan(models.Model):
                 fixed += 1
                 changed = True
 
-            if changed:
+            if changed and not neighbor.geom is None:
                 neighbor.geom = GeometryCollection(neighbor.geom.difference(incremental))
                 neighbor.save()
 
