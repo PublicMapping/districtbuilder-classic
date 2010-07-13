@@ -86,6 +86,22 @@ form#registerForm input.field {
 form#registerForm input.error {
     border: solid 1px #ff0000;
 }
+table#registerTable {
+    margin-bottom: 0.8em;
+}
+td.fname {
+    white-space:nowrap;
+}
+span.recommended {
+    font-size: 0.75em;
+    text-align: center;
+}
+label {
+    font-size: 0.8em;
+}
+label.required {
+    color: #ff0000;
+}
 div#requiredNote {
     font-size: 0.75em;
     text-align: left;

@@ -60,22 +60,48 @@
     </div>
     <div id="register" title="Sign Up For An Account">
         <form id="registerForm" action="/accounts/register/" method="post">
-            <table>
+            <table id="registerTable">
                 <tr>
-                    <td>User Name *</td>
+                    <td class="fname">User Name *</td>
                     <td><input id="newusername" name="newusername" class="field"/></td>
                 </tr>
                 <tr>
-                    <td>Password *</td>
+                    <td class="fname">Password *</td>
                     <td><input id="newpassword1" name="newpassword1" type="password" class="field"/></td>
                 </tr>
                 <tr>
-                    <td>Confirm Password *</td>
+                    <td class="fname">Confirm Password *</td>
                     <td><input id="newpassword2" name="newpassword2" type="password" class="field"/></td>
                 </tr>
                 <tr>
-                    <td>Email Address</td>
+                    <td class="fname">Password Hint *</td>
+                    <td><input id="passwordhint" name="passwordhint" class="field"/></td>
+                </tr>
+                <tr>
+                    <td class="fname">Email Address</td>
                     <td><input id="email" name="email" class="field"/></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><span class="recommended">Recommended to allow you to recover a password you have lost.</span></td>
+                </tr>
+                <tr>
+                    <td class="fname">First Name</td>
+                    <td><input id="firstname" name="firstname" class="field"/></td>
+                </tr>
+                <tr>
+                    <td class="fname">Last Name</td>
+                    <td><input id="lastname" name="lastname" class="field"/></td>
+                </tr>
+                <tr>
+                    <td class="fname">Organization</td>
+                    <td><input id="organization" name="organization" class="field"/></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <input id="agree" name="agree" type="checkbox"/>
+                        <label id="agreelabel" for="agree">I have read the <a href="#">Privacy Policy</a> and <a href="#">Terms of Use</a></label>
+                    </td>
                 </tr>
             </table>
             <div id="signUpButton">
@@ -102,7 +128,9 @@
             var frm = $('#registerForm'),
                 username = frm.find('#newusername'),
                 newpassword1 = frm.find('#newpassword1'),
-                newpassword2 = frm.find('#newpassword2');
+                newpassword2 = frm.find('#newpassword2'),
+                passwordhint = frm.find('#passwordhint'),
+                agree = frm.find('#agree');
 
             if (username.val() == '') {
                 username.removeClass('field');
@@ -128,6 +156,21 @@
                 newpassword2.removeClass('error');
                 newpassword2.addClass('field');
             }
+
+            if (passwordhint.val() == '') {
+                passwordhint.removeClass('field');
+                passwordhint.addClass('error');
+                return;
+            }
+            else {
+                passwordhint.addClass('field');
+                passwordhint.removeClass('error');
+            }
+
+            if (!agree[0].checked) {
+                $('#agreelabel').addClass('required');
+                return;
+            }
             
             jQuery.ajax({
                 context:frm[0],
@@ -135,7 +178,11 @@
                     newusername:$('#newusername').val(),
                     newpassword1:$('#newpassword1').val(),
                     newpassword2:$('#newpassword2').val(),
-                    email:$('#email').val()
+                    email:$('#email').val(),
+                    passwordhint:$('#passwordhint').val(),
+                    firstname:$('#firstname').val(),
+                    lastname:$('#lastname').val(),
+                    organization:$('#organization').val()
                 },
                 dataType:'json',
                 type:'POST',
