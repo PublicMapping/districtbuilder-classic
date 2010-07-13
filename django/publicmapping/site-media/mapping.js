@@ -85,13 +85,13 @@ function init() {
 
     var match = window.location.href.match(new RegExp('/plan\/(\\d+)\/edit/'));
     var plan_id = match[1];
-    var districtStrategy = new OpenLayers.Strategy.Refresh({force:true});
+    var districtStrategy = new OpenLayers.Strategy.Fixed({preload:true});
     
     var districtLayer = new OpenLayers.Layer.Vector(
         'Current Plan',
         {
             strategies: [
-                new OpenLayers.Strategy.BBOX(), districtStrategy
+                districtStrategy
             ],
             protocol: new OpenLayers.Protocol.WFS({
                 url: 'http://' + MAP_SERVER + '/geoserver/wfs',
@@ -115,31 +115,29 @@ function init() {
             })
         }
     );
-/*
-    var districtLayer = new OpenLayers.Layer.WMS(
-        'Current Plan',
-        'http://' + MAP_SERVER + '/geoserver/wms',
-        { srs: 'EPSG:3785',
-          layers: 'gmu:gmu_plan',
-          format: 'image/png',
-          cql_Filter: 'plan_id=1'  
-        },
-        {
-            singleTile: true,
-            buffer: 0,
-            projection: projection,
-            isBaseLayer: false,
-            opacity: 0.5
-        }
-    );
-*/
 
     var selection = new OpenLayers.Layer.Vector('Selection',{
         styleMap: new OpenLayers.StyleMap({
-            fill: false,
-            strokeColor: '#ffff00',
-            strokeOpacity: 0.75,
-            strokeWidth: 3
+            "default": new OpenLayers.Style(
+                OpenLayers.Util.applyDefaults(
+                    { 
+                        fill: false, 
+                        strokeColor: '#ffff00', 
+                        strokeWidth: 3 
+                    }, 
+                    OpenLayers.Feature.Vector.style["default"]
+                )
+            ),
+            "select":  new OpenLayers.Style(
+                OpenLayers.Util.applyDefaults(
+                    { 
+                        fill: true, 
+                        fillColor: '#ee9900',
+                        strokeColor: '#ee9900'
+                    }, 
+                    OpenLayers.Feature.Vector.style["select"]
+                )
+            )
         })
     });
 
@@ -170,11 +168,20 @@ function init() {
         districts: districtLayer
     });
 
+    districtLayer.events.register('loadstart',districtLayer,function(){
+        OpenLayers.Element.addClass(olmap.viewPortDiv, 'olCursorWait');
+    });
+    districtLayer.events.register('loadend',districtLayer,function(){
+        OpenLayers.Element.removeClass(olmap.viewPortDiv, 'olCursorWait');
+        selection.removeFeatures(selection.features);
+    });
+
     var jsonParser = new OpenLayers.Format.JSON();
 
     assignControl.events.register('geounitadded', this, function(e){
         var district_id = e.district;
         var feature = e.selection[0];
+        OpenLayers.Element.addClass(olmap.viewPortDiv,'olCursorWait');
         OpenLayers.Request.POST({
             method: 'POST',
             url: '/districtmapping/plan/' + plan_id + '/district/' + district_id + '/add',
@@ -185,9 +192,9 @@ function init() {
             success: function(xhr) {
                 var data = jsonParser.read(xhr.responseText);
                 if (data.success) {
-                    districtStrategy.refresh();
-                    selection.removeFeatures(selection.features);
+                    districtStrategy.load();
                 }
+                selection.drawFeature(selection.features[0], 'select');
             },
             failure: function(xhr) {
                 assignControl.reset();
@@ -214,6 +221,7 @@ function init() {
     // Set the initial map extents to the bounds around the study area.
     // TODO Make these configurable.
     olmap.zoomToExtent(new OpenLayers.Bounds(-9467000,4570000,-8930000,5170000));
+    OpenLayers.Element.addClass(olmap.viewPortDiv, 'olCursorWait');
 }
 
 /************************************************************************/
@@ -316,7 +324,8 @@ DistrictAssignment =
         this.selectElem.options.length = 2;
         for (var i = 0; i < this.districtLayer.features.length; i++) {
             var dFeat = this.districtLayer.features[i];
-            if (dFeat.geometry.intersects &&
+            if (dFeat.geometry &&
+                dFeat.geometry.intersects &&
                 dFeat.geometry.intersects(feat.feature.geometry)) {
                 this.selectElem.options[this.selectElem.options.length] =
                     new Option( dFeat.attributes.name, dFeat.attributes.district_id );
