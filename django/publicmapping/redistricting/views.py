@@ -32,7 +32,12 @@ def copyplan(request, planid):
 @login_required
 def editplan(request, planid):
     plan = Plan.objects.get(pk=planid)
-    layers = Geolevel.objects.values_list("name", flat=True)
+    levels = Geolevel.objects.values_list("name", flat=True)
+    demos = Subject.objects.values_list("name", flat=True)
+    layers = []
+    for level in levels:
+        for demo in demos:
+            layers.append(string.lower('demo_%s_%s' % ( level, demo)) )
     return render_to_response('editplan.html', {
         'plan': plan,
         'mapserver': settings.MAP_SERVER,
