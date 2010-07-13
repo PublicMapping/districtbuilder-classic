@@ -35,6 +35,22 @@ CREATE OR REPLACE VIEW plan AS
 
 ALTER TABLE plan OWNER TO publicmapping;
 
+-- View: simple_district
+
+-- DROP VIEW simple_district;
+
+CREATE OR REPLACE VIEW simple_district AS 
+ SELECT sum(c.number) AS computed_value, d.id AS district_id, d.name, st_simplifypreservetopology(d.geom, 100.0::double precision) AS geom, d.plan_id
+   FROM redistricting_characteristic c
+   JOIN redistricting_subject s ON c.subject_id = s.id
+   JOIN redistricting_district_geounits dg ON c.geounit_id = dg.geounit_id
+   JOIN redistricting_district d ON dg.district_id = d.id
+  WHERE d.plan_id = 2 AND c.subject_id = 1
+  GROUP BY d.id, d.name, d.geom, d.plan_id;
+
+ALTER TABLE simple_district OWNER TO publicmapping;
+
+
 -- Demographic Views
 
 -- View: demo_block_poptot
