@@ -5,28 +5,31 @@
     <link rel="stylesheet" type="text/css" href="/site-media/jquery/themes/ui-lightness/jquery-ui-1.8.2.custom.css"/>
   </head>
   <body>
+    <div id="banner">
+      This space is to be occupied by a branded logo and/or banner.
+    </div> 
     <div id="header_box">
         <div id="welcome_header">
-          <h1>District Mapping</h1>
-          <h2>Draw Your Own Legislative Districts</h2>
+          <h1>Public Mapping Project</h1>
+          <h2>Pulling Back the Curtain on Redistricting</h2>
         </div>
     </div>
 
     <div id="body_box">
       <div id="tour_news">
-        <div id="take_a_tour">
-          <div>New to Redistricting?</div>
-          <h3>Take a Tour</h3>
-        </div>
-
         <div id="news">
-          <span>Learn About Redistricting</span>
+          <h3>About the Public Mapping Project</h3>
           <ul>
             <li>Frequently Asked Questions</li>
             <li>Quick Start Guide</li>
             <li>Redistricting Resources</li>
             <li>... more ...</li>
           </ul>
+        </div>
+
+        <div id="take_a_tour">
+          <div>New to Redistricting?</div>
+          <h3>Take a Tour</h3>
         </div>
       </div>
 
@@ -38,23 +41,38 @@
             <input type="hidden" name="next" value="/districtmapping/"/>
             <h3>Log In</h3>
             <table>
-              <tr><td>Login:</td><td><input id="username" name="username"/></td></tr>
+              <tr><td>User Name:</td><td><input id="username" name="username"/></td></tr>
               <tr><td>Password:</td><td><input id="password" name="password" type="password"/></td></tr>
+              <tr>
+                <td></td>
+                <td><div class="rightlink"><a href="#">Forgot your password?</a></div></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td><div class="rightlink"><a href="#">Privacy Policy</a></div></td>
+              </tr>
             </table>
-            <input type="submit" value="Login"/>
+            <input type="submit" value="Login" id="loginbutton"/>
           </form>
         </div>
 
         <div id="signup">
           <h3>Don't have an account?</h3>
 
-          <div>To make your own maps...</div>
-          <input type="button" value="Sign Up" onclick="$('#register').dialog('open');"/>
+          <div>To Draw Your Own Maps...</div>
+          <div id="signupbuttondiv">
+            <input type="button" value="Sign Up" onclick="$('#register').dialog('open');"/>
+          </div>
 
-          <div>To view other users' maps...</div>
-          <form id="anonymousForm" action="/accounts/register/" method="post">
-            <input id="doAnonymous" type="button" value="Enter as a guest"/>
-          </form>
+          <div id="ordiv">OR</div>
+
+          <div>To View Other Users' Maps...</div>
+          <div id="anonymousbuttondiv">
+            <form id="anonymousForm" action="/accounts/register/" method="post">
+              <input id="doAnonymous" type="button" value="Enter as a guest"/>
+
+            </form>
+          </div>
         </div>
       </div>
     </div>
@@ -111,6 +129,10 @@
                 * Indicates required field
             </div>
         </form>
+    </div>
+
+    <div id="footer">
+        This is a footer element, with logos and contact information.
     </div>
     <script type="text/javascript" src="/site-media/jquery/jquery-1.4.2.js"></script>
     <script type="text/javascript" src="/site-media/jquery/external/jquery.bgiframe-2.1.1.js"></script>

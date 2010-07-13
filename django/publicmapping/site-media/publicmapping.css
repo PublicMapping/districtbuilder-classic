@@ -2,6 +2,13 @@ body {
   margin: 0;
   text-align:center;
 }
+div#banner {
+    text-align: left;
+    padding: 10px;
+    height: 75px;
+    border: solid 2px black;
+    margin-bottom: 10px;
+}
 div#header_box {
   width: 1000px;
   margin: 0 auto;
@@ -13,16 +20,16 @@ div#welcome_header {
   background-image: url('/site-media/gmu_banner.png');
 }
 div#welcome_header h1 {
-  background: rgb(255, 255, 255);
+  background: rgb(224, 224, 224);
   margin: 20px 20px 0 auto;
   text-align: center;
-  width: 250px;
+  width: 350px;
 }
 div#welcome_header h2 {
-  background: rgb(255, 255, 255);
+  background: rgb(224, 224, 224);
   margin: 20px 20px 0 auto;
   text-align: center;
-  width: 385px;
+  width: 480px;
 }
 div#body_box {
     width: 1000px;
@@ -55,6 +62,9 @@ div#news span {
     font-weight: bold;
     padding: 3px;
 }
+div#news h3 {
+    margin: 10px;
+}
 div#user {
   position: absolute;
   right: 0px;
@@ -71,14 +81,34 @@ div#login {
   left: 5px;
   width: 315px;
 }
+div.rightlink {
+    text-align: right;
+    font-size: 0.8em;
+}
+input#loginbutton {
+    position: relative;
+    left: 170px;
+    top: 10px;
+}
 div#signup {
   position: absolute;
   top: 50px;
   right: 5px;
   width: 315px;
 }
+div#signupbuttondiv {
+    text-align: center;
+    margin-right: 50px;
+}
+div#anonymousbuttondiv {
+    text-align: center;
+    margin-right: 50px;
+}
 div#signUpButton {
     text-align: right;
+}
+div#ordiv {
+    margin: 10px auto;
 }
 form#registerForm input.field {
     border: solid 1px #666666;
@@ -105,6 +135,14 @@ label.required {
 div#requiredNote {
     font-size: 0.75em;
     text-align: left;
+}
+div#footer {
+  height: 25px;
+  border: 2px solid black;
+  width: 1000px;
+  margin: 0 auto;
+  position: relative;
+  top: 260px;
 }
 
 /* mapping styles */
