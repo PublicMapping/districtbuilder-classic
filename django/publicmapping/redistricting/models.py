@@ -79,16 +79,19 @@ class Plan(models.Model):
         if (geolevel != settings.BASE_GEOLEVEL):
             base_geounit_ids = Geounit.get_base_geounits(geounit_ids, geolevel)
         # get the geometry of all these geounits that are being added
-        geounits = list(Geounit.objects.filter(id__in=geounit_ids))
-        incremental = geounits[0].geom
-        for i in range(1,len(geounits)):
-            incremental = geounits[i].geom.union(incremental)
+        geounits = Geounit.objects.filter(id__in=geounit_ids).iterator()
+        incremental = None
+        for geounit in geounits:
+            if incremental is None:
+                incremental = geounit.geom
+            else:
+                incremental = geounit.geom.union(incremental)
 
         # incremental is the geometry that is changing
 
         target = District.objects.get(pk=districtid)
 
-        fixed = self.delete_geounits(districtid, base_geounit_ids, 'block')
+        fixed = self.delete_geounits_prefetch(base_geounit_ids, incremental, districtid)
         geounits = list(Geounit.objects.filter(id__in=base_geounit_ids))
         for geounit in geounits:
             if not target.geounits.filter(id=geounit.id):
@@ -108,10 +111,17 @@ class Plan(models.Model):
             base_geounit_ids = Geounit.get_base_geounits(geounit_ids, geolevel)
 
         # get the geometry of all the geounits that are being removed
-        geounits = list(Geounit.objects.filter(id__in=geounit_ids))
-        incremental = geounits[0].geom
-        for i in range(1,len(geounits)):
-            incremental = geounits[i].geom.union(incremental)
+        geounits = Geounit.objects.filter(id__in=geounit_ids).iterator()
+        incremental = None
+        for geounit in geounits:
+            if incremental is None:
+                incremental = geounit.geom
+            else:
+                incremental = geounit.geom.union(incremental)
+
+        return self.delete_geounits_prefetch(base_geounit_ids, geounits, incremental, districtid)
+
+    def delete_geounits_prefetch(self, base_geounit_ids, incremental, districtid):
 
         target = District.objects.get(pk=districtid)
         neighbors = District.objects.filter(plan=target.plan)

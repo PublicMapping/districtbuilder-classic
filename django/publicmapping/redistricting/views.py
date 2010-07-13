@@ -67,19 +67,19 @@ def addtodistrict(request, planid, districtid):
     else:
         return HttpResponse("Geounits weren't found in a district")
 
-#@login_required
-#def deletefromdistrict(request, planid, districtid):
-#    """ This method, when called, required a "geolevel" and a "geounits" parameter.  
-#    The geolevel must be a valid geolevel name and the geounits parameters should be a pipe-separated list of geounit ids
-#    """
-#    if len(request.REQUEST.items()) >= 2: 
-#        geolevel = request.REQUEST["geolevel"];
-#        geounit_ids = string.split(request.REQUEST["geounits"], "|")
-#        plan = Plan.objects.get(pk=planid)
-#        fixed = plan.delete_geounits(districtid, geounit_ids, geolevel)
-#        return HttpResponse("{\"success\": true, \"message\":\"Updated " + str(fixed) + " districts\"}")
-#    else:
-#        return HttpResponse("Geounits weren't found in a district")
+@login_required
+def deletefromdistrict(request, planid, districtid):
+    """ This method, when called, required a "geolevel" and a "geounits" parameter.  
+    The geolevel must be a valid geolevel name and the geounits parameters should be a pipe-separated list of geounit ids
+    """
+    if len(request.REQUEST.items()) >= 2: 
+        geolevel = request.REQUEST["geolevel"];
+        geounit_ids = string.split(request.REQUEST["geounits"], "|")
+        plan = Plan.objects.get(pk=planid)
+        fixed = plan.delete_geounits(districtid, geounit_ids, geolevel)
+        return HttpResponse("{\"success\": true, \"message\":\"Updated " + str(fixed) + " districts\"}")
+    else:
+        return HttpResponse("Geounits weren't found in a district")
 
 @login_required
 def chooseplan(request):
