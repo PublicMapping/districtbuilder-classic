@@ -85,17 +85,17 @@ function init() {
 
     var match = window.location.href.match(new RegExp('/plan\/(\\d+)\/edit/'));
     var plan_id = match[1];
+    var districtStrategy = new OpenLayers.Strategy.Refresh({force:true});
     
     var districtLayer = new OpenLayers.Layer.Vector(
         'Current Plan',
         {
             strategies: [
-                new OpenLayers.Strategy.BBOX(),
-                new OpenLayers.Strategy.Refresh()
+                new OpenLayers.Strategy.BBOX(), districtStrategy
             ],
             protocol: new OpenLayers.Protocol.WFS({
                 url: 'http://' + MAP_SERVER + '/geoserver/wfs',
-                featureType: 'district',
+                featureType: 'simple_district',
                 featureNS: 'http://gmu.azavea.com/',
                 featurePrefix: 'gmu',
                 geometryName: 'geom',
@@ -134,7 +134,14 @@ function init() {
     );
 */
 
-    var selection = new OpenLayers.Layer.Vector('Selection');
+    var selection = new OpenLayers.Layer.Vector('Selection',{
+        styleMap: new OpenLayers.StyleMap({
+            fill: false,
+            strokeColor: '#ffff00',
+            strokeOpacity: 0.75,
+            strokeWidth: 3
+        })
+    });
 
     layers.push(districtLayer);
     layers.push(selection);
@@ -158,6 +165,36 @@ function init() {
         selection.removeFeatures([e.feature]);
     });
 
+    var assignControl = new DistrictAssignment({
+        selection: selection,
+        districts: districtLayer
+    });
+
+    var jsonParser = new OpenLayers.Format.JSON();
+
+    assignControl.events.register('geounitadded', this, function(e){
+        var district_id = e.district;
+        var feature = e.selection[0];
+        OpenLayers.Request.POST({
+            method: 'POST',
+            url: '/districtmapping/plan/' + plan_id + '/district/' + district_id + '/add',
+            params: {
+                geolevel: feature.attributes.geolevel_id,
+                geounits: feature.attributes.id
+            },
+            success: function(xhr) {
+                var data = jsonParser.read(xhr.responseText);
+                if (data.success) {
+                    districtStrategy.refresh();
+                    selection.removeFeatures(selection.features);
+                }
+            },
+            failure: function(xhr) {
+                assignControl.reset();
+            }
+        });
+    });
+
     olmap.events.register('changelayer', getControl, function(e){
         if ( e.layer.isBaseLayer && e.layer[e.property]) {
             var newOpts = getControl.protocol.options;
@@ -169,10 +206,7 @@ function init() {
     olmap.addControls([
         new OpenLayers.Control.LayerSwitcher(),
         getControl,
-        new DistrictAssignment({
-            selection: selection,
-            districts: districtLayer
-        })
+        assignControl
     ]);
 
     getControl.activate();
@@ -200,7 +234,15 @@ function init() {
  *  - <OpenLayers.Control>
  */
 DistrictAssignment = 
-  OpenLayers.Class(OpenLayers.Control, {    
+  OpenLayers.Class(OpenLayers.Control, { 
+    /**
+     * Constant: EVENT_TYPES
+     *
+     * Supported event types:
+     *  - *geounitadded* Triggered when a geounit is added.
+     */
+    EVENT_TYPES: ["geounitadded"],
+
     /**
      * Property: selectionLayer
      * The layer that contains the selection features and fires pick events.
@@ -228,12 +270,16 @@ DistrictAssignment =
     selectElem: null,
     
     /**
-     * Constructor: OpenLayers.Control.LayerSwitcher
+     * Constructor: DistrictAssignment
      * 
      * Parameters:
      * options - {Object}
      */
     initialize: function(options) {
+        this.EVENT_TYPES = 
+            DistrictAssignment.prototype.EVENT_TYPES.concat(
+            OpenLayers.Control.prototype.EVENT_TYPES
+        );
         OpenLayers.Control.prototype.initialize.apply(this, arguments);
         this.selectionLayer = options.selection;
         this.districtLayer = options.districts;
@@ -272,7 +318,7 @@ DistrictAssignment =
             if (dFeat.geometry.intersects &&
                 dFeat.geometry.intersects(feat.feature.geometry)) {
                 this.selectElem.options[this.selectElem.options.length] =
-                    new Option( dFeat.attributes.name );
+                    new Option( dFeat.attributes.name, dFeat.attributes.district_id );
             }
         }
     },
@@ -303,8 +349,21 @@ DistrictAssignment =
      *  - {DistrictAssignment} districtAssigner
      */
     onDistrictSelect: function(e) {
-      alert('Selection made.');
+        if (this.selectElem.selectedIndex > 1) {
+            this.districtAssigner.events.triggerEvent('geounitadded', {
+                selection: this.selectionLayer.features,
+                district: this.selectElem.value
+            });
+        }
     },
+
+    /**
+     * Method: reset
+     * Reset the selection box after a district has been assigned.
+     */
+    reset: function() {
+        this.selectElem.selectedIndex = 0;
+    }, 
 
     /**
      * Method: draw

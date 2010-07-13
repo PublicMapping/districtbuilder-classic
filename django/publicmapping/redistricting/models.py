@@ -2,6 +2,7 @@ from django.contrib.gis.db import models
 from django.contrib.auth.models import User
 from django.forms import ModelForm
 from django.conf import settings
+from django.contrib.gis.geos import GeometryCollection
 from datetime import datetime
 
 class Subject(models.Model):
@@ -76,16 +77,26 @@ class Plan(models.Model):
         Will return the number of districts effected by the operation
         """
         if (geolevel != settings.BASE_GEOLEVEL):
-            geounit_ids = Geounit.get_base_geounits(geounit_ids, geolevel)
-        target = District.objects.get(pk=districtid)
-        fixed = self.delete_geounits(districtid, geounit_ids, 'block')
+            base_geounit_ids = Geounit.get_base_geounits(geounit_ids, geolevel)
+        # get the geometry of all these geounits that are being added
         geounits = list(Geounit.objects.filter(id__in=geounit_ids))
+        incremental = geounits[0].geom
+        for i in range(1,len(geounits)):
+            incremental = geounits[i].geom.union(incremental)
+
+        # incremental is the geometry that is changing
+
+        target = District.objects.get(pk=districtid)
+
+        fixed = self.delete_geounits(districtid, base_geounit_ids, 'block')
+        geounits = list(Geounit.objects.filter(id__in=base_geounit_ids))
         for geounit in geounits:
             if not target.geounits.filter(id=geounit.id):
                 target.geounits.add(geounit) 
-                # target.geom = target.geounits.collect()
-                target.save();
                 fixed += 1
+
+        target.geom = GeometryCollection(target.geom.union(incremental))
+        target.save();
         return fixed
 
 
@@ -94,18 +105,31 @@ class Plan(models.Model):
         Will return the number of districts effected by the operation
         """
         if (geolevel != settings.BASE_GEOLEVEL):
-            geounit_ids = Geounit.get_base_geounits(geounit_ids, geolevel)
-        target = District.objects.get(pk=districtid)
-        fixed = 0
+            base_geounit_ids = Geounit.get_base_geounits(geounit_ids, geolevel)
+
+        # get the geometry of all the geounits that are being removed
         geounits = list(Geounit.objects.filter(id__in=geounit_ids))
-        for geounit in geounits:
-            districts = self.district_set.filter(geounits__id__exact=geounit.id)
-            # first, remove from the current district if necessary
-            if len(districts.all()) == 1 and districts[0] != target:
-                districts[0].geounits.remove(geounit)            
-                districts[0].geom = districts[0].geounits.collect()
-                districts[0].save()
+        incremental = geounits[0].geom
+        for i in range(1,len(geounits)):
+            incremental = geounits[i].geom.union(incremental)
+
+        target = District.objects.get(pk=districtid)
+        neighbors = District.objects.filter(plan=target.plan)
+        fixed = 0
+        for neighbor in neighbors:
+            if neighbor == target:
+                continue
+
+            geounits = neighbor.geounits.filter(id__in=base_geounit_ids).iterator()
+            changed = False
+            for geounit in geounits:
+                neighbor.geounits.remove(geounit)
                 fixed += 1
+                changed = True
+
+            if changed:
+                neighbor.geom = GeometryCollection(neighbor.geom.difference(incremental))
+                neighbor.save()
 
         return fixed
 
