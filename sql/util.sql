@@ -1,6 +1,9 @@
 -- update the district with the ID of 1
 -- emulate a district by adding all the geounits contained in
 -- geounit 25, geolevel 1 (all blocks in a country)
+insert into redistricting_district (district_id,name,plan_id,version) values (0, 'Unassigned', 1, 0);
+
+insert into redistricting_district (district_id,name,plan_id,version) values (1, 'District 1', 1, 0);
 insert into redistricting_district_geounits (district_id, geounit_id) (
     select 1, gu1.id from redistricting_geounit as gu1
         inner join redistricting_geounit as gu2 on st_contains(gu2.geom, gu1.geom)
@@ -11,6 +14,7 @@ insert into redistricting_district_geounits (district_id, geounit_id) (
 -- update the district with the ID of 2
 -- emulate a district by adding all the geounits contained in
 -- geounit 46, geolevel 1 (all blocks in a county)
+insert into redistricting_district (district_id,name,plan_id,version) values (2, 'District 2', 1, 0);
 insert into redistricting_district_geounits (district_id, geounit_id) (
     select 2, gu1.id from redistricting_geounit as gu1
         inner join redistricting_geounit as gu2 on st_contains(gu2.geom, gu1.geom)
