@@ -99,7 +99,7 @@ function init() {
                 featureNS: 'http://gmu.azavea.com/',
                 featurePrefix: 'gmu',
                 geometryName: 'geom',
-                srsName: 'EPSG:3785'
+                srsName: 'EPSG:3785' 
             }),
             styleMap: new OpenLayers.StyleMap({
                 fill: false,
@@ -148,7 +148,7 @@ function init() {
     var getControl = new OpenLayers.Control.GetFeature({
         protocol: new OpenLayers.Protocol.WFS({
             url: 'http://' + MAP_SERVER + '/geoserver/wfs',
-            featureType: 'county',
+            featureType: layers[0].name.substring( 'gmu:'.length ),
             featureNS: 'http://gmu.azavea.com/',
             featurePrefix: 'gmu',
             srsName: 'EPSG:3785',
