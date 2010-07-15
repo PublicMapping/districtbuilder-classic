@@ -5,15 +5,35 @@ publicmapping.chooseplan = function(options) {
 
     var _self = {},
         _options = $.extend({
-            // my defaults here
+            target: {},
+            container: {},
+            callback: function() {},
+            autoOpen: false,
+            modal: true
         }, options),
         // bunch o variables
         
         _nameRequired,
         _editType,
-        _selectionType;
+        _selectionType,
+        _dialog;
 
     _self.init = function() {
+        _options.container.load('/districtmapping/plan/choose/', function() { setUpTarget(); setUpEvents(); _options.callback(); })
+        
+        _nameRequired = false;
+        
+        return _self;
+    };
+    var setUpTarget = function() {
+        $('#PlanChooser').dialog(_options);
+        _options.target.click( function() {
+            $('#PlanChooser').dialog('open');
+        });
+    };
+
+
+    var setUpEvents = function() {
         $('.Selectors').hide();
         $('.SelectionGroup').hide();
         $('#SelectorHelp').show();
@@ -32,10 +52,6 @@ publicmapping.chooseplan = function(options) {
                 _nameRequired = true;
             }
         });
-
-        _nameRequired = false;
-
-        return _self;
     };
 
     var showOnly = function(selectorId) {

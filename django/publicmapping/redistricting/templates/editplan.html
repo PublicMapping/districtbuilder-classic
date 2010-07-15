@@ -3,6 +3,8 @@
   <head>
     <title>Open Source District Mapping Tool</title>
     <link rel="stylesheet" type="text/css" href="/site-media/css/publicmapping.css"/>
+    <link rel="stylesheet" type="text/css" href="/site-media/jquery/themes/ui-lightness/jquery-ui-1.8.2.custom.css" />
+
     <script type="text/javascript" src="/site-media/openlayers/OpenLayers.js"></script><!-- production -->
     <!-- <script type="text/javascript" src="/site-media/OpenLayers-2.9.1/lib/OpenLayers.js"></script> debug -->
     <script type="text/javascript">
@@ -10,7 +12,9 @@
         var MAP_LAYERS = [ {% for layer in layers %} 'gmu:{{ layer }}', {% endfor %} ];   
     </script>
     <script type="text/javascript" src="/site-media/jquery/jquery-1.4.2.js"></script>
+    <script type="text/javascript" src="/site-media/jquery/jquery-ui-1.8.2.custom.min.js"></script>
     <script type="text/javascript" src="/site-media/mapping.js"></script>
+    <script type="text/javascript" src="/site-media/publicmapping.chooseplan.js"></script>
   </head>
   <body onload="init();">
     <div id="header">
@@ -26,12 +30,16 @@
             <input id="sharebtn" type="button" value="Step 3: Share"/>
         </div>
         <div id="toolbar_plans">
-            <input id="difplanbtn" type="button" value="Edit Different Plan" onClick="window.location = '/districtmapping/plan/choose/';" />
+            <input id="difplanbtn" type="button" value="Edit Different Plan" />
             <input id="saveplanbtn" type="button" value="Save Plan"/>
         </div>
     </div>
     <div id="planname">
+        {% if plan.name %}
         Plan Name: {{ plan.name }}
+        {% else %}
+        Please Choose to edit a plan
+        {% endif %}
     </div>
     <div id="mapandmenu">
         <div id="map"></div>
@@ -149,5 +157,18 @@
             </div>
         </div>
     </div>
+    <div id="DialogContainer"> </div>
+    <script type="text/javascript">
+    $( function() {
+        var choose = publicmapping.chooseplan( {
+             target: $('#difplanbtn'),
+             container: $('#DialogContainer'),
+             modal: true,
+    {% if not plan.name %}
+            callback : function()  { $('#difplanbtn').click() }
+    {% endif %}
+        } ).init();
+    });
+    </script>
   </body>
 </html>

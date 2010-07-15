@@ -31,7 +31,10 @@ def copyplan(request, planid):
     
 @login_required
 def editplan(request, planid):
-    plan = Plan.objects.get(pk=planid)
+    try:
+        plan = Plan.objects.get(pk=planid)
+    except:
+        plan = {}
     levels = Geolevel.objects.values_list("name", flat=True)
     demos = Subject.objects.values_list("name", flat=True)
     layers = []
