@@ -6,4 +6,6 @@ mouse
 position
 draggable
 resizable
+button
 dialog
+tabs
