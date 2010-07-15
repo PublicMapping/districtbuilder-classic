@@ -1,8 +1,8 @@
 from django.contrib.gis.db import models
+from django.contrib.gis.geos import MultiPolygon
 from django.contrib.auth.models import User
 from django.forms import ModelForm
 from django.conf import settings
-from django.contrib.gis.geos import GeometryCollection
 from datetime import datetime
 
 class Subject(models.Model):
@@ -99,7 +99,11 @@ class Plan(models.Model):
                 fixed += 1
 
         if not target.geom is None:
-            target.geom = GeometryCollection(target.geom.union(incremental))
+            union = target.geom.union(incremental)
+            if union.geom_type != 'MultiPolygon':
+                target.geom = MultiPolygon(union)
+            else:
+                target.geom = union
             
         target.save();
         return fixed
@@ -140,7 +144,7 @@ class Plan(models.Model):
                 changed = True
 
             if changed and not neighbor.geom is None:
-                neighbor.geom = GeometryCollection(neighbor.geom.difference(incremental))
+                neighbor.geom = neighbor.geom.difference(incremental)
                 neighbor.save()
 
         return fixed
@@ -155,7 +159,7 @@ class District(models.Model):
     name = models.CharField(max_length=200)
     plan = models.ForeignKey(Plan)
     geounits = models.ManyToManyField(Geounit)
-    geom = models.GeometryCollectionField(srid=3785, blank=True, null=True)
+    geom = models.MultiPolygonField(srid=3785, blank=True, null=True)
     version = models.PositiveIntegerField(default=0)
     objects = models.GeoManager()
     

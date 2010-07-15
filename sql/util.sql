@@ -24,14 +24,14 @@ insert into redistricting_district_geounits (district_id, geounit_id) (
 
 -- set the geometry of each district to a simplified version from the view
 update redistricting_district as static set geom = (
-    select st_force_collection(geom)
+    select st_multi(geom)
         from redistricting_plan_collect_geom as computed
         where computed.district_id::character varying = static.district_id
 );
 
 -- set the geometry of each district to a non-simplified version
 update redistricting_district as static set geom = (
-    select st_force_collection(geom) from (
+    select st_multi(geom) from (
         SELECT r_d.id AS district_id, r_d.plan_id, r_d.name AS district_name, st_union(r_g.geom) AS geom
            FROM redistricting_district r_d
            JOIN redistricting_district_geounits r_dg ON r_dg.district_id = r_d.id
