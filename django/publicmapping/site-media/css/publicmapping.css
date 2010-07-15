@@ -19,7 +19,10 @@ div#static_header {
   margin: 0 0 20px;
   background: url(/site-media/images/divider.png) 0 100% repeat-x;
 }  
-  
+div#app_header {
+  padding: 0;
+  margin: 0 10px;
+} 
 div#logo {
   float: left;
 }
@@ -176,7 +179,6 @@ div#ordiv {
 }
 div#register {
   display:none;
-  font-family: Arial, Helvetica, sans-serif;
   font-size: 14px;
   color: #6a6a6a;
   font-weight: bold;
@@ -235,39 +237,28 @@ div #sponsors {
 
 
 /* mapping styles */
-div#header {
-    background-color: #000000;
-    text-align:right;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 50px;
-    width: 100%;
+
+div#steps {
+  background:none;
+  border:none;
+  padding:0;
+  margin: 10px;
+  position:relative;
 }
-ul#header_menu {
-    margin: 15px 0;
-    list-style-type: none;
-    color: #ffffff;
+ul#steps_tabs {
+  background:none;
+  border:none;
+  padding:0;
 }
-ul#header_menu li {
-    display: inline;
-    margin: 0px 5px;
+ul#steps_tabs li {
+  -moz-border-radius: 10px 10px 0 0;
+  -webkit-border-radius: 10px 10px 0 0 ;
+  border-radius: 10px 10px 0 0;
+  font-size: 14px;
+  font-weight: bold;
+  margin: 0 7px 0 0;
 }
-ul#header_menu li a {
-    color: #ffffff;
-}
-div#toolbar {
-    position: absolute;
-    top: 50px;
-    left: 0px;
-    right: 250px;
-    height: 25px;
-    padding: 1px;
-}
-div#toolbar_steps {
-    float: left;
-}
+
 input#drawbtn {
     color: #ffffff;
     border: 1px solid #000000;
@@ -289,32 +280,36 @@ input#saveplanbtn {
     background-color: #00ee00;
 }
 div#toolbar_plans {
-    float: right;
+    background: url(/site-media/images/bg-body-home.png) 0 0 repeat-x;
+    position: absolute;
+    z-index: 1000;
+    bottom: 0;
+    left: 0;
+    padding: 10px
 }
 div#planname {
-    position: absolute;
-    top: 50px;
-    right: 0;
-    width: 250px;
-    text-align: center;
 }
 div#mapandmenu {
     position: relative;
-    top: 77px;
 }
 div#map {
     position: absolute;
-    left: 2px;
-    bottom: 2px;
-    right: 250px;
-    border: 1px solid #cccccc;
-    height: 100%;
+    top: 51px;
+    left:0;
+    right: 0;
+    bottom:0;
+    background: #ccc;  
 }
+div.toolbar {
+  height: 51px;
+}
+
 div#mapmenu {
-    position: absolute;
-    right: 1px;
-    width: 248px;
-    height: 100%;
+    float:right;
+    margin: 0 10px 0 0;
+    position:relative;
+    width:248px;
+    z-index:1000;
 }
 div#mapmenuheader {
     background-color: #000099;
@@ -322,6 +317,10 @@ div#mapmenuheader {
     text-align: left;
     height: 30px;
     padding: 5px;
+    cursor: pointer;
+}
+div#mapmenucontent {
+    display:none
 }
 div#plansummary {
     text-align:left;
@@ -372,13 +371,13 @@ div.controlDiv select {
 }
 
 
-/* JQUERY UI OVERRIDE */
-
+/* JQUERY UI GLOBAL OVERRIDE */
+.ui-widget {font-family: Arial, Helvetica, sans-serif;}
 .ui-dialog {
   border: none;
-  -moz-border-radius:10px 10px 0 0;
-  -webkit-border-radius:10px 10px 0 0;
-  border-radius:10px 10px 0 0;
+  -moz-border-radius:10px;
+  -webkit-border-radius:10px;
+  border-radius:10px;
  }
 
 .ui-dialog .ui-dialog-titlebar {

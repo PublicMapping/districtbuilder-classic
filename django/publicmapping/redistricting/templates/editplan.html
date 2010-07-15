@@ -2,9 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <title>Open Source District Mapping Tool</title>
+ <link rel="stylesheet" type="text/css" href="/site-media/css/reset.css"/>
+    <link rel="stylesheet" type="text/css" href="/site-media/jquery/themes/ui-lightness/jquery-ui-1.8.2.custom.css"/>
     <link rel="stylesheet" type="text/css" href="/site-media/css/publicmapping.css"/>
-    <link rel="stylesheet" type="text/css" href="/site-media/jquery/themes/ui-lightness/jquery-ui-1.8.2.custom.css" />
-
     <script type="text/javascript" src="/site-media/openlayers/OpenLayers.js"></script><!-- production -->
     <!-- <script type="text/javascript" src="/site-media/OpenLayers-2.9.1/lib/OpenLayers.js"></script> debug -->
     <script type="text/javascript">
@@ -12,163 +12,170 @@
         var MAP_LAYERS = [ {% for layer in layers %} 'gmu:{{ layer }}', {% endfor %} ];   
     </script>
     <script type="text/javascript" src="/site-media/jquery/jquery-1.4.2.js"></script>
-    <script type="text/javascript" src="/site-media/jquery/jquery-ui-1.8.2.custom.min.js"></script>
+    <script type="text/javascript" src="/site-media/jquery/ui/jquery.ui.core.js"></script>
+    <script type="text/javascript" src="/site-media/jquery/ui/jquery.ui.widget.js"></script>
+    <script type="text/javascript" src="/site-media/jquery/ui/jquery.ui.tabs.js"></script>
+    <script type="text/javascript" src="/site-media/ui.js"></script>
     <script type="text/javascript" src="/site-media/mapping.js"></script>
-    <script type="text/javascript" src="/site-media/publicmapping.chooseplan.js"></script>
   </head>
   <body onload="init();">
-    <div id="header">
-        <ul id="header_menu">
-            <li>My Account</li>
-            <li><a href="/accounts/logout/">Logout</a></li>
+  
+  <div id="app_header">
+    <div id="logo">Public Mapping Project</div>
+    <div id="site_nav">
+        <ul>
+            <li><a href="">My Account</a></li>
+            <li><a  class="last" href="/accounts/logout/">Logout</a></li>
         </ul>
     </div>
-    <div id="toolbar">
-        <div id="toolbar_steps">
-            <input id="drawbtn" type="button" value="Step 1: Draw"/>
-            <input id="evalbtn" type="button" value="Step 2: Evaluate"/>
-            <input id="sharebtn" type="button" value="Step 3: Share"/>
-        </div>
-        <div id="toolbar_plans">
-            <input id="difplanbtn" type="button" value="Edit Different Plan" />
-            <input id="saveplanbtn" type="button" value="Save Plan"/>
-        </div>
+    <div class="clear"></div>
+  </div>
+
+<div id="steps">
+          <ul id="steps_tabs">
+            <li id="drawbtn"><a href="#step-1"> Step 1: Draw</a></li>
+            <li id="evalbtn"><a href="#step-2">Step 2: Evaluate</a></li>
+            <li id="sharebtn"><a href="#step-2">Step 3: Share</a></li>
+          </ul>
+
+
+
+       
+
+   <div id="step1" class="main_content">
+ 
+      <div id="mapandmenu">
+         <div class="toolbar ui-widget-header">fdjkaf
+          
+            <div id="mapmenu">
+                <div id="mapmenuheader">
+                    Current District Stats
+                </div>
+                <div id="mapmenucontent">
+                  <div id="plansummary">
+                      <div>{{ plan.name }}</div>
+                      <div>Population Equality: <span id="eqmetric">92%</span></div>
+                      <div>Contiguity: <span id="contmetric">79%</span></div>
+                      <div>Compactness: <span id="compmetric">85%</span></div>
+                  </div>
+                  <div id="plantable">
+                      <table>
+                          <thead>
+                              <tr>
+                                  <th>District</th>
+                                  <th>Population</th>
+                                  <th>Contiguity</th>
+                                  <th>Compactness</th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              <tr>
+                                  <td class="distid">1</td>
+                                  <td>
+                                      <div class="graph"> 
+                                          <div class="bar" style="width: 50%;">&nbsp;</div>
+                                      </div>
+                                      <div>34,000</div>
+                                  </td>
+                                  <td>98%</td>
+                                  <td>79%</td>
+                              </tr>
+                              <tr>
+                                  <td class="distid">2</td>
+                                  <td>
+                                      <div class="graph"> 
+                                          <div class="bar" style="width: 50%;">&nbsp;</div>
+                                      </div>
+                                      <div>34,323</div>
+                                  </td>
+                                  <td>79%</td>
+                                  <td>85%</td>
+                              </tr>
+                              <tr>
+                                  <td class="distid">3</td>
+                                  <td>
+                                      <div class="graph"> 
+                                          <div class="bar" style="width: 54%;">&nbsp;</div>
+                                      </div>
+                                      <div>37,000</div>
+                                  </td>
+                                  <td>85%</td>
+                                  <td>98%</td>
+                              </tr>
+                              <tr>
+                                  <td class="distid">4</td>
+                                  <td>
+                                      <div class="graph"> 
+                                          <div class="bar" style="width: 22%;">&nbsp;</div>
+                                      </div>
+                                      <div>15,000</div>
+                                  </td>
+                                  <td>99%</td>
+                                  <td>85%</td>
+                              </tr>
+                              <tr>
+                                  <td class="distid">5</td>
+                                  <td>
+                                      <div class="graph"> 
+                                          <div class="bar" style="width: 41%;">&nbsp;</div>
+                                      </div>
+                                      <div>28,000</div>
+                                  </td>
+                                  <td>98%</td>
+                                  <td>79%</td>
+                              </tr>
+                              <tr>
+                                  <td class="distid">6</td>
+                                  <td>
+                                      <div class="graph"> 
+                                          <div class="bar" style="width: 62%;">&nbsp;</div>
+                                      </div>
+                                      <div>42,000</div>
+                                  </td>
+                                  <td>79%</td>
+                                  <td>85%</td>
+                              </tr>
+                              <tr>
+                                  <td class="distid">7</td>
+                                  <td>
+                                      <div class="graph"> 
+                                          <div class="bar" style="width: 52%;">&nbsp;</div>
+                                      </div>
+                                      <div>35,000</div>
+                                  </td>
+                                  <td>85%</td>
+                                  <td>98%</td>
+                              </tr>
+                              <tr>
+                                  <td class="distid">8</td>
+                                  <td>
+                                      <div class="graph"> 
+                                          <div class="bar" style="width: 46%;">&nbsp;</div>
+                                      </div>
+                                      <div>31,587</div>
+                                  </td>
+                                  <td>99%</td>
+                                  <td>85%</td>
+                              </tr>
+                          </tbody>
+                      </table>
+                  </div>
+                </div>
+            </div>
+          </div>
+          <div id="map"></div>
+      </div>
     </div>
-    <div id="planname">
-        {% if plan.name %}
+</div>  
+<div id="toolbar_plans">
+      
+      
+      <span id="planname">
         Plan Name: {{ plan.name }}
-        {% else %}
-        Please Choose to edit a plan
-        {% endif %}
-    </div>
-    <div id="mapandmenu">
-        <div id="map"></div>
-        <div id="mapmenu">
-            <div id="mapmenuheader">
-                Current District Stats
-            </div>
-            <div id="plansummary">
-                <div>{{ plan.name }}</div>
-                <div>Population Equality: <span id="eqmetric">92%</span></div>
-                <div>Contiguity: <span id="contmetric">79%</span></div>
-                <div>Compactness: <span id="compmetric">85%</span></div>
-            </div>
-            <div id="plantable">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>District</th>
-                            <th>Population</th>
-                            <th>Contiguity</th>
-                            <th>Compactness</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="distid">1</td>
-                            <td>
-                                <div class="graph"> 
-                                    <div class="bar" style="width: 50%;">&nbsp;</div>
-                                </div>
-                                <div>34,000</div>
-                            </td>
-                            <td>98%</td>
-                            <td>79%</td>
-                        </tr>
-                        <tr>
-                            <td class="distid">2</td>
-                            <td>
-                                <div class="graph"> 
-                                    <div class="bar" style="width: 50%;">&nbsp;</div>
-                                </div>
-                                <div>34,323</div>
-                            </td>
-                            <td>79%</td>
-                            <td>85%</td>
-                        </tr>
-                        <tr>
-                            <td class="distid">3</td>
-                            <td>
-                                <div class="graph"> 
-                                    <div class="bar" style="width: 54%;">&nbsp;</div>
-                                </div>
-                                <div>37,000</div>
-                            </td>
-                            <td>85%</td>
-                            <td>98%</td>
-                        </tr>
-                        <tr>
-                            <td class="distid">4</td>
-                            <td>
-                                <div class="graph"> 
-                                    <div class="bar" style="width: 22%;">&nbsp;</div>
-                                </div>
-                                <div>15,000</div>
-                            </td>
-                            <td>99%</td>
-                            <td>85%</td>
-                        </tr>
-                        <tr>
-                            <td class="distid">5</td>
-                            <td>
-                                <div class="graph"> 
-                                    <div class="bar" style="width: 41%;">&nbsp;</div>
-                                </div>
-                                <div>28,000</div>
-                            </td>
-                            <td>98%</td>
-                            <td>79%</td>
-                        </tr>
-                        <tr>
-                            <td class="distid">6</td>
-                            <td>
-                                <div class="graph"> 
-                                    <div class="bar" style="width: 62%;">&nbsp;</div>
-                                </div>
-                                <div>42,000</div>
-                            </td>
-                            <td>79%</td>
-                            <td>85%</td>
-                        </tr>
-                        <tr>
-                            <td class="distid">7</td>
-                            <td>
-                                <div class="graph"> 
-                                    <div class="bar" style="width: 52%;">&nbsp;</div>
-                                </div>
-                                <div>35,000</div>
-                            </td>
-                            <td>85%</td>
-                            <td>98%</td>
-                        </tr>
-                        <tr>
-                            <td class="distid">8</td>
-                            <td>
-                                <div class="graph"> 
-                                    <div class="bar" style="width: 46%;">&nbsp;</div>
-                                </div>
-                                <div>31,587</div>
-                            </td>
-                            <td>99%</td>
-                            <td>85%</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-    <div id="DialogContainer"> </div>
-    <script type="text/javascript">
-    $( function() {
-        var choose = publicmapping.chooseplan( {
-             target: $('#difplanbtn'),
-             container: $('#DialogContainer'),
-             modal: true,
-    {% if not plan.name %}
-            callback : function()  { $('#difplanbtn').click() }
-    {% endif %}
-        } ).init();
-    });
-    </script>
+    </span>
+            <input id="difplanbtn" type="button" value="Edit Different Plan" onClick="window.location = '/districtmapping/plan/choose/';" />
+            <input id="saveplanbtn" type="button" value="Save Plan"/>
+</div>
+    
   </body>
 </html>
