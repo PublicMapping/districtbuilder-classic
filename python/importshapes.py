@@ -7,15 +7,16 @@ from decimal import Decimal
 from django.contrib.gis.gdal import *
 from django.contrib.gis.geos import *
 from django.core.management import setup_environ
-from publicmapping import settings
-from publicmapping.redistricting.models import *
+import settings
 
 setup_environ(settings)
 
+from redistricting.models import *
+
 county = {
-    'shapepath' : '/projects/publicmapping/local/data/OH_39_census_county_web_mercator.shp',
+    'shapepath' : '/projects/publicmapping/local/data/OH_counties_dtl_web_mercator.shp',
     'geolevel' : 'county',
-    'name_field' : 'NAMELSAD00',
+    'name_field' : 'NAME',
     'subject_fields' : {'POPTOT':'Total Population','PRES_DEM':'Democrats','PRES_REP':'Republicans'},
 }
 block = {
@@ -25,7 +26,7 @@ block = {
     'subject_fields' : {'POPTOT':'Total Population','PRES_DEM':'Democrats','PRES_REP':'Republicans'},
 }
 tract = {
-    'shapepath' : '/projects/publicmapping/local/data/OH_39_census_tract_web_mercator.shp',
+    'shapepath' : '/projects/publicmapping/local/data/OH_tracts_2000_web_mercator.shp',
     'geolevel' : 'tract',
     'name_field' : 'NAMELSAD00',
     'subject_fields' : {'POPTOT':'Total Population','PRES_DEM':'Democrats','PRES_REP':'Republicans'},
@@ -63,10 +64,13 @@ def import_shape(config):
     for feat in lyr:
         try :
             if feat.geom_type == 'MultiPolygon' :
-                my_geom = GEOSGeometry(feat.geom.wkt)
+                my_geom = feat.geom.geos
             elif feat.geom_type == 'Polygon' :
-                my_geom = MultiPolygon([GEOSGeometry(feat.geom.wkt)])
-            g = Geounit(geom = my_geom, name = feat.get(config['name_field']), geolevel = level)
+                my_geom = MultiPolygon(feat.geom.geos)
+            simple = my_geom.simplify(tolerance=10.0,preserve_topology=True)
+            if simple.geom_type != 'MultiPolygon':
+                simple = MultiPolygon(simple)
+            g = Geounit(geom = my_geom, name = feat.get(config['name_field']), geolevel = level, simple = simple)
             g.save()
         except Exception as ex:
             print 'Failed to import geometry for feature ', feat.fid, type(ex), ex
