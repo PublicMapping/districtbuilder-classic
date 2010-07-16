@@ -2,51 +2,35 @@
 
 -- DROP VIEW redistricting_county_geounits;
 
-CREATE OR REPLACE VIEW county AS 
- SELECT redistricting_geounit.id, redistricting_geounit.name, redistricting_geounit.geolevel_id, redistricting_geounit.geom
+CREATE OR REPLACE VIEW simple_county AS 
+ SELECT redistricting_geounit.id, redistricting_geounit.name, redistricting_geounit.geolevel_id, redistricting_geounit.simple as geom
    FROM redistricting_geounit
   WHERE redistricting_geounit.geolevel_id = 1;
 
-ALTER TABLE county OWNER TO publicmapping;
+ALTER TABLE simple_county OWNER TO publicmapping;
 
 
-CREATE OR REPLACE VIEW tract AS 
- SELECT redistricting_geounit.id, redistricting_geounit.name, redistricting_geounit.geolevel_id, redistricting_geounit.geom
+CREATE OR REPLACE VIEW simple_tract AS 
+ SELECT redistricting_geounit.id, redistricting_geounit.name, redistricting_geounit.geolevel_id, redistricting_geounit.simple as geom
    FROM redistricting_geounit
   WHERE redistricting_geounit.geolevel_id = 2;
 
-ALTER TABLE tract OWNER TO publicmapping;
+ALTER TABLE simple_tract OWNER TO publicmapping;
 
-CREATE OR REPLACE VIEW block AS 
- SELECT redistricting_geounit.id, redistricting_geounit.name, redistricting_geounit.geolevel_id, redistricting_geounit.geom
+CREATE OR REPLACE VIEW simple_block AS 
+ SELECT redistricting_geounit.id, redistricting_geounit.name, redistricting_geounit.geolevel_id, redistricting_geounit.simple as geom
    FROM redistricting_geounit
   WHERE redistricting_geounit.geolevel_id = 3;
 
-ALTER TABLE block OWNER TO publicmapping;
-
--- DROP VIEW redistricting_plan_collect_geom;
-
-CREATE OR REPLACE VIEW plan AS 
- SELECT r_d.id AS district_id, r_d.plan_id, r_d.name AS district_name, st_simplifypreservetopology(st_union(r_g.geom),100) AS geom
-   FROM redistricting_district r_d
-   JOIN redistricting_district_geounits r_dg ON r_dg.district_id = r_d.id
-   JOIN redistricting_geounit r_g ON r_g.id = r_dg.geounit_id
-  GROUP BY r_d.id, r_d.plan_id, r_d.name;
-
-ALTER TABLE plan OWNER TO publicmapping;
+ALTER TABLE simple_block OWNER TO publicmapping;
 
 -- View: simple_district
 
 -- DROP VIEW simple_district;
 
 CREATE OR REPLACE VIEW simple_district AS 
- SELECT sum(c.number) AS computed_value, d.id AS district_id, d.name, st_simplifypreservetopology(d.geom, 100.0::double precision) AS geom, d.plan_id
-   FROM redistricting_characteristic c
-   JOIN redistricting_subject s ON c.subject_id = s.id
-   JOIN redistricting_district_geounits dg ON c.geounit_id = dg.geounit_id
-   JOIN redistricting_district d ON dg.district_id = d.id
-  WHERE d.plan_id = 2 AND c.subject_id = 1
-  GROUP BY d.id, d.name, d.geom, d.plan_id;
+ SELECT id, district_id, name, version, simple AS geom, plan_id
+   FROM redistricting_district; 
 
 ALTER TABLE simple_district OWNER TO publicmapping;
 
