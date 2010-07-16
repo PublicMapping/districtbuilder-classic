@@ -20,6 +20,10 @@ function createLayer( name, layer, extents ) {
     );
 }
 
+function getSnapLayer() {
+    return $('#snapto').val();
+}
+
 /*
  * Resize the map. This is a fix for IE, which does not assign a height
  * to the map div if it is not explicitly set.
@@ -148,7 +152,7 @@ function init() {
     var getControl = new OpenLayers.Control.GetFeature({
         protocol: new OpenLayers.Protocol.WFS({
             url: 'http://' + MAP_SERVER + '/geoserver/wfs',
-            featureType: layers[0].name.substring( 'gmu:'.length ),
+            featureType: getSnapLayer(),
             featureNS: 'http://gmu.azavea.com/',
             featurePrefix: 'gmu',
             srsName: 'EPSG:3785',
@@ -205,7 +209,7 @@ function init() {
     olmap.events.register('changelayer', getControl, function(e){
         if ( e.layer.isBaseLayer && e.layer[e.property]) {
             var newOpts = getControl.protocol.options;
-            newOpts.featureType = e.layer.name.substring( getControl.protocol.featurePrefix.length + 1 );
+            newOpts.featureType = getSnapLayer();
             getControl.protocol = new OpenLayers.Protocol.WFS( newOpts );
         }
     });
