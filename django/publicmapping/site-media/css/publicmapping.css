@@ -1,9 +1,11 @@
 body {
   margin: 0;
   text-align:center;
-  background: url(/site-media/images/bg-body-home.png) 0 0 repeat-x;
   font-family: Arial, Helvetica, sans-serif;
 }
+
+body#static {  background: url(/site-media/images/bg-body-home.png) 0 0 repeat-x;}
+body#app {  background: url(/site-media/images/bg-app.png) 0 0 repeat;}
 
 .clear_left  {clear:left}
 .clear_right {clear: right}
@@ -25,6 +27,10 @@ div#app_header {
 } 
 div#logo {
   float: left;
+}
+
+#app div#logo {
+  margin: 15px 0 0 5px
 }
 
 div#site_nav {
@@ -239,17 +245,25 @@ div #sponsors {
 /* mapping styles */
 
 div#steps {
-  background:none;
-  border:none;
-  padding:0;
-  margin: 10px;
-  position:relative;
+background:none repeat scroll 0 0 transparent;
+border:medium none;
+bottom:10px;
+left:10px;
+padding:0;
+position:absolute;
+right:10px;
+top:50px;
 }
 ul#steps_tabs {
   background:none;
   border:none;
   padding:0;
 }
+
+li#tab_step1, div#step1 .toolbar {background: #87aea9}
+li#tab_step2, div#step2 .toolbar {background: #87ae8b}
+li#tab_step3, div#step3 .toolbar {background: #acae87}
+
 ul#steps_tabs li {
   -moz-border-radius: 10px 10px 0 0;
   -webkit-border-radius: 10px 10px 0 0 ;
@@ -257,6 +271,11 @@ ul#steps_tabs li {
   font-size: 14px;
   font-weight: bold;
   margin: 0 7px 0 0;
+  border: none;
+}
+
+ul#steps_tabs li a {
+color: #fff
 }
 
 input#drawbtn {
@@ -280,7 +299,7 @@ input#saveplanbtn {
     background-color: #00ee00;
 }
 div#toolbar_plans {
-    background: url(/site-media/images/bg-body-home.png) 0 0 repeat-x;
+    background: url(/site-media/images/bg-app.png) 0 0 repeat;
     position: absolute;
     z-index: 1000;
     bottom: 0;
@@ -300,26 +319,92 @@ div#map {
     bottom:0;
     background: #ccc;  
 }
+
+div#shadow_left {
+background:url(/site-media/images/map-shadow-left.png) no-repeat scroll 0 0 transparent;
+bottom:0;
+left:0;
+position:absolute;
+top:0;
+width:11px;
+z-index:50;
+}
+
+div#shadow_top {
+background:url(/site-media/images/map-shadow-top.png) repeat-x scroll 0 0 transparent;
+height:11px;
+left:11px;
+position:absolute;
+right:0;
+top:0;
+z-index:50;
+}
+
+
 div.toolbar {
   height: 51px;
+  border: none;
+  -moz-border-radius: 0 10px 0 0;
+  -webkit-border-radius: 0 10px 0 0;
+  border-radius: 0 10px 0 0;
 }
+
+div.toolset {
+    position: absolute;
+    right: 280px;
+    left: 0;
+    padding: 5px 0 0 0;
+    overflow: hidden;
+    }
+
+div#toolset_edit {display:none}
+
+div.toolset .ui-icon {
+background-color: transparent;
+border:none;
+}
+    
+#app button {
+    font-size: 11px;
+    font-weight: bold;
+    text-shadow: 0 -1px #000;
+    color: #fff;
+    }
+
+button.toolbar_toggle {
+    float:right;
+    text-transform: uppercase;
+    padding: 5px 8px;
+    margin-top: 3px;
+}
+
+    
+button#edit_map_settings ,
+button#start_drawing   {
+    background: #1f8cbe
+    }
 
 div#mapmenu {
     float:right;
     margin: 0 10px 0 0;
     position:relative;
-    width:248px;
+    height: 100%;
     z-index:1000;
+    width: 261px;
 }
 div#mapmenuheader {
     background-color: #000099;
     color: #ffffff;
-    text-align: left;
     height: 30px;
     padding: 5px;
     cursor: pointer;
-}
-div#mapmenucontent {
+    margin-top: 11px;
+    -moz-border-radius:10px 10px 0 0;
+    -webkit-border-radius:10px 10px 0 0;
+    border-radius:10px 10px 0 0;
+    }
+    
+ div#mapmenucontent {
     display:none
 }
 div#plansummary {
@@ -372,7 +457,8 @@ div.controlDiv select {
 
 
 /* JQUERY UI GLOBAL OVERRIDE */
-.ui-widget {font-family: Arial, Helvetica, sans-serif;}
+.ui-widget, .ui-widget button {font-family: Arial, Helvetica, sans-serif;}
+
 .ui-dialog {
   border: none;
   -moz-border-radius:10px;

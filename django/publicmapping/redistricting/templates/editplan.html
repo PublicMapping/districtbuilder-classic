@@ -12,16 +12,14 @@
         var MAP_LAYERS = [ {% for layer in layers %} 'gmu:{{ layer }}', {% endfor %} ];   
     </script>
     <script type="text/javascript" src="/site-media/jquery/jquery-1.4.2.js"></script>
-    <script type="text/javascript" src="/site-media/jquery/ui/jquery.ui.core.js"></script>
-    <script type="text/javascript" src="/site-media/jquery/ui/jquery.ui.widget.js"></script>
-    <script type="text/javascript" src="/site-media/jquery/ui/jquery.ui.tabs.js"></script>
+    <script type="text/javascript" src="/site-media/jquery/jquery-ui-1.8.2.custom.min.js"></script>
     <script type="text/javascript" src="/site-media/ui.js"></script>
     <script type="text/javascript" src="/site-media/mapping.js"></script>
   </head>
-  <body onload="init();">
+  <body onload="init();" id="app">
   
   <div id="app_header">
-    <div id="logo">Public Mapping Project</div>
+    <div id="logo"><img src="/site-media/images/title-app.png" /></div>
     <div id="site_nav">
         <ul>
             <li><a href="">My Account</a></li>
@@ -33,9 +31,9 @@
 
 <div id="steps">
           <ul id="steps_tabs">
-            <li id="drawbtn"><a href="#step-1"> Step 1: Draw</a></li>
-            <li id="evalbtn"><a href="#step-2">Step 2: Evaluate</a></li>
-            <li id="sharebtn"><a href="#step-2">Step 3: Share</a></li>
+            <li id="tab_step1"><a href="#step-1"> Step 1: Draw</a></li>
+            <li id="tab_step2"><a href="#step-2">Step 2: Evaluate</a></li>
+            <li id="tab_step3"><a href="#step-2">Step 3: Share</a></li>
           </ul>
 
 
@@ -45,8 +43,15 @@
    <div id="step1" class="main_content">
  
       <div id="mapandmenu">
-         <div class="toolbar ui-widget-header">fdjkaf
-          
+         <div class="toolbar ui-widget-header">
+            <div class="toolset" id="toolset_edit">
+
+              <button class="toolbar_toggle" id="edit_map_settings">Edit Map Settings</button>
+            </div>
+            <div class="toolset" id="toolset_draw">
+
+              <button class="toolbar_toggle" id="start_drawing">Start Drawing</button>
+            </div>
             <div id="mapmenu">
                 <div id="mapmenuheader">
                     Current District Stats
@@ -163,7 +168,10 @@
                 </div>
             </div>
           </div>
-          <div id="map"></div>
+          <div id="map">
+            <div id="shadow_left"></div>
+            <div id="shadow_top"></div>
+          </div>
       </div>
     </div>
 </div>  
