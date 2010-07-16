@@ -1,9 +1,11 @@
 from django.contrib.gis.db import models
+from django.contrib.gis.db.models import Max
 from django.contrib.gis.geos import MultiPolygon
 from django.contrib.auth.models import User
 from django.forms import ModelForm
 from django.conf import settings
 from datetime import datetime
+from django.db.models.signals import pre_save
 
 class Subject(models.Model):
     name = models.CharField(max_length=50)
@@ -110,15 +112,17 @@ class Plan(models.Model):
         return fixed
 
 
-    def delete_geounits(self, districtid, geounit_ids, geolevel):
+    def delete_geounits(self, geounit_ids, geolevel):
         """Delete the requested geounits from given district       
         Will return the number of districts effected by the operation
         """
         if (geolevel != settings.BASE_GEOLEVEL):
             base_geounit_ids = Geounit.get_base_geounits(geounit_ids, geolevel)
+        else:
+            base_geounit_ids = geounit_ids
 
         # get the geometry of all the geounits that are being removed
-        geounits = Geounit.objects.filter(id__in=geounit_ids).iterator()
+        geounits = Geounit.objects.filter(id__in=base_geounit_ids).iterator()
         incremental = None
         for geounit in geounits:
             if incremental is None:
@@ -126,12 +130,15 @@ class Plan(models.Model):
             else:
                 incremental = geounit.geom.union(incremental)
 
-        return self.delete_geounits_prefetch(base_geounit_ids, geounits, incremental, districtid)
+        return self.delete_geounits_prefetch(base_geounit_ids, incremental, None)
 
     def delete_geounits_prefetch(self, base_geounit_ids, incremental, districtid):
-
-        target = District.objects.filter(district_id=districtid)[0]
-        neighbors = District.objects.filter(plan=target.plan)
+        neighbors = self.district_set.all()
+        if districtid:
+            target = District.objects.filter(district_id=districtid)[0]
+        else:
+            target = {}
+        # neighbors = District.objects.filter(plan=target.plan)
         fixed = 0
         for neighbor in neighbors:
             if neighbor == target:
@@ -156,7 +163,7 @@ class PlanForm(ModelForm):
     
 
 class District(models.Model):
-    district_id = models.CharField(max_length=200)
+    district_id = models.PositiveIntegerField(default=1)
     name = models.CharField(max_length=200)
     plan = models.ForeignKey(Plan)
     geounits = models.ManyToManyField(Geounit)
@@ -165,18 +172,8 @@ class District(models.Model):
     version = models.PositiveIntegerField(default=0)
     objects = models.GeoManager()
     
-#    def save(self):
-#        super(District, self).save()
-#        self.geom = self.geounits.collect()
-#        super(District, self).save()
-
     def __unicode__(self):
         return self.name
-
-def collect_geom(sender, **kwargs):
-    kwargs['instance'].geom = kwargs['instance'].geounits.collect()
-
-#// pre_save.connect(collect_geom, sender=District)
 
 class ComputedCharacteristic(models.Model):
     subject = models.ForeignKey(Subject)
@@ -185,3 +182,16 @@ class ComputedCharacteristic(models.Model):
     percentage = models.DecimalField(max_digits=6,decimal_places=6, null=True, blank=True)
     objects = models.GeoManager()
 
+def collect_geom(sender, **kwargs):
+    kwargs['instance'].geom = kwargs['instance'].geounits.collect()
+
+def set_district_id(sender, **kwargs):
+    """When a new district is saved, it should get an incremented id that is unique to the plan
+    """
+    district = kwargs['instance']
+    if (not district.id):
+        max_id = District.objects.filter(plan = district.plan).aggregate(Max('district_id'))['district_id__max']
+        if max_id:
+            district.district_id = max_id + 1
+
+pre_save.connect(set_district_id, sender=District)

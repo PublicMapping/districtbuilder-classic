@@ -84,12 +84,12 @@ class RedistrictingTest(unittest.TestCase):
         p.save()
         self.p = p
         
-        d1 = District(name="District 1")
+        d1 = District(name="District 1", district_id = 1)
         d1.plan = p
         d1.save()
         self.d1 = d1
 
-        d2 = District(name="District 2") 
+        d2 = District(name="District 2", district_id = 2) 
         d2.plan = p
         d2.save()
         self.d2 = d2
@@ -99,11 +99,10 @@ class RedistrictingTest(unittest.TestCase):
         self.user.delete()
 
     def test_add_to_plan(self):
-        self.p.add_geounits(self.d2.id, [ self.geounit_b1.id ], self.levelb)        
-        self.p.save()
-        self.assertEqual(3, self.d2.geounits.all().count(), 'Geounit count not correct after adding larger geounit')
-        self.assertEqual(1, self.d2.geounits.filter(id__exact=self.geounit_a1.id).count(), 'Geounit a1 not in set after enclosing geounit added; contains ' + str(self.d2.geounits.all()))
-        self.p.add_geounits(self.d2.id, [ self.geounit_a4.id], self.levela)
+        self.p.add_geounits(self.d2.district_id, [ self.geounit_b1.id ], self.levelb)        
+        self.assertEqual(3, self.d2.geounits.all().count(), 'Geounit count not correct after adding larger geounit, expected 3, got ' + str(self.d2.geounits.all().count()))
+        self.assertEqual(1, self.d2.geounits.filter(id__exact=self.geounit_a1.id).count(), "Geounit a1 not in set after enclosing geounit added")
+        self.p.add_geounits(self.d2.district_id, [ self.geounit_a4.id], self.levela)
         self.assertEqual(4, self.d2.geounits.all().count(), 'Geounit count not correct after adding single geounit')
 
     def test_get_base_geounits(self):
@@ -113,3 +112,22 @@ class RedistrictingTest(unittest.TestCase):
         self.assertEqual(2, len(geounit_ids), "Didn't get base geounits of large polys correctly; got " + str(len(geounit_ids)) + str(geounit_ids))
         geounit_ids = Geounit.get_base_geounits( [ self.geounit_b1.id, self.geounit_b2.id ], self.levelb)
         self.assertEqual(5, len(geounit_ids), "Didn't get base geounits of large polys correctly; got " + str(len(geounit_ids)) + str(geounit_ids))
+
+    def test_delete_geounits_from_plan(self):
+        self.p.add_geounits(self.d2.district_id, [ self.geounit_b1.id ], self.levelb)        
+        self.assertEquals(3, self.d2.geounits.all().count(), "Couldn't add a geounit so can't test deletion")
+        deleted = self.p.delete_geounits([ self.geounit_a1.id ], self.geounit_a1.geolevel)
+        self.assertEqual(1, deleted, "More than one geounit effected during deletion of base geounit")
+        self.assertEqual(0, self.d2.geounits.filter(id__exact=self.geounit_b1.id).count(), "Geounit wasn't deleted correctly")
+        self.assertEqual(1, self.d2.geounits.filter(id__exact=self.geounit_a2.id).count(), "Too many sub-geounits deleted during request to delete parent")
+
+    def test_district_id_increment(self):
+        d3 = District(name="District 3")
+        d3.plan = self.p
+        d3.save()
+        latest = d3.district_id
+        d4 = District(name = "District 4")
+        d4.plan = self.p
+        d4.save()
+        incremented = d4.district_id
+        self.assertTrue(latest + 1 == incremented, "New district did not have an id greater than the previous district")
