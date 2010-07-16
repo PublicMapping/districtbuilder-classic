@@ -47,7 +47,7 @@
       <div id="mapandmenu">
          <div class="toolbar ui-widget-header">
             <div class="toolset" id="toolset_edit">
-                Snap to:
+ Snap to:
                 <select id="snapto">
                     <script type="text/javascript">
                     for (var i = 0; i < SNAP_LAYERS.length; i++) {
@@ -55,119 +55,127 @@
                         document.write('<option value="' + snap.layer + '">' + snap.name + '</option>');
                     }
                     </script>
-                </select>
-                <button class="toolbar_toggle" id="edit_map_settings">Edit Map Settings</button>
+                <
+              <button class="toolbar_toggle" id="edit_map_settings">Edit Map Settings</button>
             </div>
             <div class="toolset" id="toolset_draw">
 
               <button class="toolbar_toggle" id="start_drawing">Start Drawing</button>
             </div>
-            <div id="mapmenu">
-                <div id="mapmenuheader">
-                    Current District Stats
+            <div id="map_menu">
+                <div id="map_menu_header">
+                    <button class="menu_toggle ui-icon"></button>
+                    <label>Current<br/> District</label>
+                    <select>
+                      <option>Demographics</option>
+                      <option>Geography</option>
+                    </select>
                 </div>
-                <div id="mapmenucontent">
-                  <div id="plansummary">
-                      <div>{{ plan.name }}</div>
-                      <div>Population Equality: <span id="eqmetric">92%</span></div>
-                      <div>Contiguity: <span id="contmetric">79%</span></div>
-                      <div>Compactness: <span id="compmetric">85%</span></div>
+                <div class="map_menu_content demographics">
+                  <div class="plansummary">
+                      <h3>{{ plan.name }}</h3>
+                      <div><label>Population Equality:</label> <span class="value" id="eqmetric">92%</span></div>
+                      <div><label>Contiguity:</label> <span class="value" id="contmetric">79%</span></div>
+                      <div><label>Compactness:</label> <span class="value" id="compmetric">85%</span></div>
+
                   </div>
-                  <div id="plantable">
-                      <table>
-                          <thead>
-                              <tr>
-                                  <th>District</th>
-                                  <th>Population</th>
-                                  <th>Contiguity</th>
-                                  <th>Compactness</th>
-                              </tr>
-                          </thead>
+                  <div class="plantable header">
+                     <table>
+                      <thead>
+                          <tr>
+                              <th class="celldist">Dist.</th>
+                              <th class="cellpop">Population</th>
+                              <th class="cellcontig">Contiguity</th>
+                              <th class="cellcompact">Compactness</th>
+                          </tr>
+                      </thead>
+                   </table>
+                  </div>
+                  <div class="plantable body">
+                       <table>
                           <tbody>
-                              <tr>
-                                  <td class="distid">1</td>
-                                  <td>
-                                      <div class="graph"> 
-                                          <div class="bar" style="width: 50%;">&nbsp;</div>
-                                      </div>
-                                      <div>34,000</div>
+                              <tr class="odd">
+                                  <td class="celldist">1</td>
+                                  <td class="cellpop">
+                                      <span class="popstatus target"> 
+                                          34,000
+                                      </span>
                                   </td>
-                                  <td>98%</td>
-                                  <td>79%</td>
+                                  <td class="cellcontig">98%</td>
+                                  <td class="cellcompact">79%</td>
                               </tr>
-                              <tr>
-                                  <td class="distid">2</td>
+                              <tr class="even">
+                                  <td class="celldist">2</td>
                                   <td>
-                                      <div class="graph"> 
-                                          <div class="bar" style="width: 50%;">&nbsp;</div>
-                                      </div>
-                                      <div>34,323</div>
+                                      <span class="popstatus under"> 
+                                          34,323
+                                      </span>
+                                      <div></div>
                                   </td>
                                   <td>79%</td>
                                   <td>85%</td>
                               </tr>
-                              <tr>
-                                  <td class="distid">3</td>
+                              <tr class="odd">
+                                  <td class="celldist">3</td>
                                   <td>
-                                      <div class="graph"> 
-                                          <div class="bar" style="width: 54%;">&nbsp;</div>
-                                      </div>
-                                      <div>37,000</div>
+                                      <span class="popstatus over"> 
+                                          37,000
+                                      </span>
+                                      <div></div>
                                   </td>
                                   <td>85%</td>
                                   <td>98%</td>
                               </tr>
-                              <tr>
-                                  <td class="distid">4</td>
+                              <tr class="even">
+                                  <td class="celldist">4</td>
                                   <td>
-                                      <div class="graph"> 
-                                          <div class="bar" style="width: 22%;">&nbsp;</div>
-                                      </div>
-                                      <div>15,000</div>
+                                      <span class="popstatus target">                                          15,000
+                                      </span>
+                                      <div></div>
                                   </td>
                                   <td>99%</td>
                                   <td>85%</td>
                               </tr>
-                              <tr>
-                                  <td class="distid">5</td>
+                              <tr class="odd">
+                                  <td class="celldist">5</td>
                                   <td>
-                                      <div class="graph"> 
-                                          <div class="bar" style="width: 41%;">&nbsp;</div>
-                                      </div>
-                                      <div>28,000</div>
+                                      <span class="popstatus target"> 
+                                          28,000
+                                      </span>
+                                      <div></div>
                                   </td>
                                   <td>98%</td>
                                   <td>79%</td>
                               </tr>
-                              <tr>
-                                  <td class="distid">6</td>
+                              <tr class="even">
+                                  <td class="celldist">6</td>
                                   <td>
-                                      <div class="graph"> 
-                                          <div class="bar" style="width: 62%;">&nbsp;</div>
-                                      </div>
-                                      <div>42,000</div>
+                                      <span class="popstatus target"> 
+                                          42,000
+                                      </span>
+                                      <div></div>
                                   </td>
                                   <td>79%</td>
                                   <td>85%</td>
                               </tr>
-                              <tr>
-                                  <td class="distid">7</td>
+                              <tr class="odd">
+                                  <td class="celldist">7</td>
                                   <td>
-                                      <div class="graph"> 
-                                          <div class="bar" style="width: 52%;">&nbsp;</div>
-                                      </div>
-                                      <div>35,000</div>
+                                      <span class="popstatus target"> 
+                                          35,000
+                                      </span>
+                                      <div></div>
                                   </td>
                                   <td>85%</td>
                                   <td>98%</td>
                               </tr>
-                              <tr>
-                                  <td class="distid">8</td>
+                              <tr class="even">
+                                  <td class="celldist">8</td>
                                   <td>
-                                      <div class="graph"> 
-                                          <div class="bar" style="width: 46%;">&nbsp;</div>
-                                      </div>
-                                      <div>31,587</div>
+                                      <span class="popstatus target"> 
+                                          31,587
+                                      </span>
+                                      <div></div>
                                   </td>
                                   <td>99%</td>
                                   <td>85%</td>

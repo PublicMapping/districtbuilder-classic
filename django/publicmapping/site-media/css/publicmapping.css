@@ -1,6 +1,4 @@
 body {
-  margin: 0;
-  text-align:center;
   font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -384,62 +382,145 @@ button#start_drawing   {
     background: #1f8cbe
     }
 
-div#mapmenu {
+div#map_menu {
     float:right;
     margin: 0 10px 0 0;
-    position:relative;
     height: 100%;
     z-index:1000;
-    width: 261px;
 }
-div#mapmenuheader {
+div#map_menu_header {
     background-color: #000099;
     color: #ffffff;
     height: 30px;
-    padding: 5px;
+    padding: 5px 0;
     cursor: pointer;
     margin-top: 11px;
+
+    width: 262px;
+
     -moz-border-radius:10px 10px 0 0;
     -webkit-border-radius:10px 10px 0 0;
     border-radius:10px 10px 0 0;
     }
     
- div#mapmenucontent {
-    display:none
+div#map_menu_header label {
+  margin-left: 10px; 
+  display: inline-block;
+  font-size: 11px; 
+  font-weight:bold;
+  line-height: 14px;
+  }
+    
+ div.map_menu_content {
+     width: 262px;
+    position:absolute; 
+    bottom: 30px;
+    top: 51px;
+    z-index: 100;
 }
-div#plansummary {
-    text-align:left;
-    padding: 10px;
-    background-color: #00bbff;
-    border-top: 2px solid #999999;
-    border-bottom: 2px solid #999999;
+div.map_menu_content.demographics {
+    background: #badcbf
+  }
+div.map_menu_content.geometry {
+    background: #efe8cb
 }
-div#plantable table thead tr th {
-    font-size: 8pt;
+
+div.plansummary {
+    padding: 10px 10px 15px;
+    background: url(/site-media/images/divider.png) 0 100% repeat-x;
+    color: #3c3c3c;
+    line-height: 16px;
+    position:relative;
 }
-div#plantable table tbody tr td {
-    font-size: 10pt;
-    text-align: center;
+div.plansummary h3 {
+  font-size: 19px;
+  line-height: 26px;
+  font-weight: bold;
+
 }
-div#plantable table tbody tr td.distid {
-    font-size: 12pt;
+div.plansummary label {
+  font-size: 12px;
+  font-weight: bold;
+
+  }
+div.plansummary  .value {
+  font-size: 12px;
+  font-weight: normal
+  }
+
+div.plantable table {
+    color: #717171;
+    width: 100%;
+    table-layout: fixed;
+    }
+div.plantable.header {
+    left: 5px; 
+    right: 5px; 
+    position: relative;
+    font-size: 11px;
     font-weight: bold;
 }
-div.graph { 
-    position: relative; /* IE is dumb */
-    width: 60px; 
-    border: 1px solid #666666; 
-    padding: 2px; 
-    text-align: left;
+div.plantable.header table tr th {
+    text-align:center;
+    padding: 3px;
+    }
+div.plantable.body  {
+    background: #f7f4e5;
+    border: 1px solid #aaa;
+    overflow: auto;
+    position: absolute;
+    top:134px;
+    bottom:5px;
+    left: 5px; 
+    right: 5px;
 }
-div.graph div.bar { 
-    display: block;
-    position: relative;
-    background: #B1D632; 
-    text-align: center; 
-    color: #333; 
-    height: 8px; 
-    line-height: 8px;            
+div.plantable .body table  tr.even {
+  background: #fff;
+}
+div.plantable .body table tr td {
+    font-size: 10pt;
+    text-align: center;
+    padding: 5px 3px;
+}
+div.plantable .body table tr td.celldist {
+    font-size: 12pt;
+    font-weight: bold;
+    }
+ 
+div.plantable .celldist{  
+    width: 16%;
+    overflow: hidden;
+}
+div.plantable .cellpop{  
+    width: 24%;
+}
+div.plantable .cellcontig{  
+    width: 20%;
+}
+div.plantable .compact{  
+    width: 40%;
+}
+
+span.popstatus { 
+  -moz-border-radius:2px;
+  -webkit-border-radius:2px;
+  border-radius:2px;
+  padding: 3px 8px;
+  color: #3c3c3c;
+  font-size: 11px;
+  }
+span.popstatus.over {
+  background: #ee807c;
+  color: #fff;
+  border: 1px solid #bf716b
+  }
+span.popstatus.under {
+  background: #f2dc9e;
+  border: 1px solid #d2c28a;
+}
+span.popstatus.target {
+  background: #ade786;
+  border: 1px solid #a6cc88;
 }
 
 /* district assignment control styles */
