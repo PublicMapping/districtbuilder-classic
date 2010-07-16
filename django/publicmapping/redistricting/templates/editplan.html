@@ -5,11 +5,12 @@
  <link rel="stylesheet" type="text/css" href="/site-media/css/reset.css"/>
     <link rel="stylesheet" type="text/css" href="/site-media/jquery/themes/ui-lightness/jquery-ui-1.8.2.custom.css"/>
     <link rel="stylesheet" type="text/css" href="/site-media/css/publicmapping.css"/>
-    <script type="text/javascript" src="/site-media/openlayers/OpenLayers.js"></script><!-- production -->
-    <!-- <script type="text/javascript" src="/site-media/OpenLayers-2.9.1/lib/OpenLayers.js"></script> debug -->
+    <!-- <script type="text/javascript" src="/site-media/openlayers/OpenLayers.js"></script> production -->
+    <script type="text/javascript" src="/site-media/OpenLayers-2.9.1/lib/OpenLayers.js"></script><!-- debug -->
     <script type="text/javascript">
         var MAP_SERVER = '{{ mapserver }}';
-        var MAP_LAYERS = [ {% for layer in layers %} 'gmu:{{ layer }}', {% endfor %} ];   
+        var MAP_LAYERS = [ {% for layer in layers %} 'gmu:{{ layer }}'{% if not forloop.last %},{% endif %} {% endfor %} ];
+        var SNAP_LAYERS = [ {% for snap in snaplayers %} { layer: 'simple_{{ snap.layer }}', name: '{{ snap.name }}' }{% if not forloop.last %},{% endif %} {% endfor %} ];
     </script>
     <script type="text/javascript" src="/site-media/jquery/jquery-1.4.2.js"></script>
     <script type="text/javascript" src="/site-media/jquery/jquery-ui-1.8.2.custom.min.js"></script>
@@ -45,8 +46,16 @@
       <div id="mapandmenu">
          <div class="toolbar ui-widget-header">
             <div class="toolset" id="toolset_edit">
-
-              <button class="toolbar_toggle" id="edit_map_settings">Edit Map Settings</button>
+                Snap to:
+                <select id="snapto">
+                    <script type="text/javascript">
+                    for (var i = 0; i < SNAP_LAYERS.length; i++) {
+                        var snap = SNAP_LAYERS[i];
+                        document.write('<option value="' + snap.layer + '">' + snap.name + '</option>');
+                    }
+                    </script>
+                </select>
+                <button class="toolbar_toggle" id="edit_map_settings">Edit Map Settings</button>
             </div>
             <div class="toolset" id="toolset_draw">
 
