@@ -16,6 +16,7 @@
     <script type="text/javascript" src="/site-media/jquery/jquery-ui-1.8.2.custom.min.js"></script>
     <script type="text/javascript" src="/site-media/ui.js"></script>
     <script type="text/javascript" src="/site-media/mapping.js"></script>
+    <script type="text/javascript" src="/site-media/publicmapping.chooseplan.js"></script>
   </head>
   <body onload="init();" id="app">
   
@@ -188,11 +189,28 @@
       
       
       <span id="planname">
+        {% if plan.name %}
         Plan Name: {{ plan.name }}
+        {% else %}
+        Please Choose to edit a plan
+        {% endif %}
     </span>
-            <input id="difplanbtn" type="button" value="Edit Different Plan" onClick="window.location = '/districtmapping/plan/choose/';" />
+            <input id="difplanbtn" type="button" value="Edit Different Plan"/>
             <input id="saveplanbtn" type="button" value="Save Plan"/>
 </div>
+<div id="DialogContainer"></div>
+<script type="text/javascript">
+    $( function() {
+        var choose = publicmapping.chooseplan({
+            target: $('#difplanbtn'),
+            container: $('#DialogContainer'),
+            modal: true,
+    {% if not plan.name %}
+            callback: function() { $('#difplanbtn').click() }
+    {% endif %}
+        }).init();
+    });
+</script>
     
   </body>
 </html>
