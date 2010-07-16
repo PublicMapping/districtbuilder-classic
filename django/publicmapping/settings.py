@@ -5,7 +5,7 @@ config.read('/projects/publicmapping/local/settings.ini')
 
 # Django settings for publicmapping project.
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -92,3 +92,5 @@ MAP_SERVER = config.get('publicmapping', 'MAP_SERVER')
 BASE_GEOLEVEL = 3
 TEST_RUNNER = 'django.contrib.gis.tests.run_tests'
 POSTGIS_TEMPLATE='template_postgis'
+MAX_DISTRICTS = 18
+PLAN_TEMPLATE = 'default'

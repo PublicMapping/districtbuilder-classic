@@ -7,6 +7,7 @@ from decimal import Decimal
 from django.contrib.gis.gdal import *
 from django.contrib.gis.geos import *
 from django.core.management import setup_environ
+from django.contrib.auth.models import User
 import settings
 
 setup_environ(settings)
@@ -17,19 +18,19 @@ county = {
     'shapepath' : '/projects/publicmapping/local/data/OH_counties_dtl_web_mercator.shp',
     'geolevel' : 'county',
     'name_field' : 'NAME',
-    'subject_fields' : {'POPTOT':'Total Population','PRES_DEM':'Democrats','PRES_REP':'Republicans'},
+    'subject_fields' : { 'POP2005' : 'Total Population' , 'BLACK' : 'Black Persons' , 'HISPANIC' : 'Hispanic or Latino' },
 }
 block = {
     'shapepath' : '/projects/publicmapping/local/data/OH_39_census_block_web_mercator.shp',
     'geolevel' : 'block',
     'name_field' : 'NAME00',
-    'subject_fields' : {'POPTOT':'Total Population','PRES_DEM':'Democrats','PRES_REP':'Republicans'},
+    'subject_fields' : { 'POPTOT' : 'Total Population' , 'POPBLK' : 'Black Persons' , 'POPHISP' : 'Hispanic or Latino' },
 }
 tract = {
     'shapepath' : '/projects/publicmapping/local/data/OH_tracts_2000_web_mercator.shp',
     'geolevel' : 'tract',
     'name_field' : 'NAMELSAD00',
-    'subject_fields' : {'POPTOT':'Total Population','PRES_DEM':'Democrats','PRES_REP':'Republicans'},
+    'subject_fields' : { 'POPTOT' : 'Total Population' , 'POPBLK' : 'Black Persons' , 'POPHISP' : 'Hispanic or Latino' },
 }
 
 configs = { 'county' : county, 'block': block, 'tract' : tract }
@@ -53,7 +54,7 @@ def import_shape(config):
     for attr, name in config['subject_fields'].iteritems():
         # don't recreate any subjects that already exist
         # (in another geolevel, for instance)
-        sub = Subject.objects.filter(name=attr, display=name)
+        sub = Subject.objects.filter(display=name)
         if len(sub) == 0:
             sub = Subject(name=attr, display=name, short_display=name, is_displayed=True)
         else:
@@ -89,7 +90,22 @@ def import_shape(config):
             # print 'Value  for ', obj.name, ' is ', c.number
         g.save()
 
+def create_basic_template():
+    """If the MAX_DISTRICTS settings is set, create a default plan with that number of districts created already
+    """
+    if settings.MAX_DISTRICTS and settings.PLAN_TEMPLATE:
+        admin = User.objects.get(pk = 1)
+        p = Plan(name=settings.PLAN_TEMPLATE, owner=admin, is_template=True)
+        p.save()
+        for district_num in range(1, settings.MAX_DISTRICTS + 1):
+            district = District(name="District " + str(district_num) , district_id = district_num, plan = p) 
+            district.save()
+        district = District(name="Unassigned", district_id = settings.MAX_DISTRICTS + 1, plan = p)
+        district.save()
+
 # for config in configs: 
+create_basic_template()
+
 import_shape(county)
 import_shape(tract)
 import_shape(block)
