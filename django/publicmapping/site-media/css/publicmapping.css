@@ -255,18 +255,29 @@ ul#steps_tabs {
   padding:0;
 }
 
-li#tab_step1, div#step1 .toolbar {background: #87aea9}
-li#tab_step2, div#step2 .toolbar {background: #87ae8b}
-li#tab_step3, div#step3 .toolbar {background: #acae87}
+li#tab_step1 {background-color: #93B6B2}
+li#tab_step2 {background-color: #87ae8b}
+li#tab_step3{background-color: #acae87}
+
+div#step1 .toolbar {background: url(/site-media/images/bg-toolbar.png) 0 0 repeat-x #87aea9}
+div#step2 .toolbar {background: url(/site-media/images/bg-toolbar.png) 0 0 repeat-x  #87ae8b}
+div#step3 .toolbar {background: url(/site-media/images/bg-toolbar.png) 0 0 repeat-x #acae87}
 
 ul#steps_tabs li {
   -moz-border-radius: 10px 10px 0 0;
-  -webkit-border-radius: 10px 10px 0 0 ;
+  -webkit-border-radius: 10px 10px 0 0;
   border-radius: 10px 10px 0 0;
   font-size: 14px;
   font-weight: bold;
   margin: 0 7px 0 0;
   border: none;
+  background-image: url(/site-media/images/bg-tab-inactive.png) ;
+  background-position:0 0;
+  background-repeat:repeat-x;
+}
+
+ul#steps_tabs li.ui-state-default.ui-tabs-selected {
+background-image:none
 }
 
 ul#steps_tabs li a {
@@ -359,7 +370,7 @@ left:11px;
 position:absolute;
 right:0;
 top:0;
-z-index:50;
+z-index:1500;
 }
 
 
@@ -419,6 +430,9 @@ border:none;
 }
     
 #app button {
+    background-image: url(/site-media/images/bg-button-sm.png);
+    background-position: 0 0; 
+    background-repeat: repeat-x;
     font-size: 11px;
     font-weight: bold;
     text-shadow: 0 -1px #000;
@@ -436,7 +450,7 @@ button.toolbar_toggle {
     
 button#edit_map_settings ,
 button#start_drawing   {
-    background: #1f8cbe;
+    background-color: #1f8cbe;
     }
 
 div#map_menu {
@@ -445,8 +459,8 @@ div#map_menu {
     height: 100%;
     z-index:1000;
 }
-div#map_menu_header {
-    background-color: #5b8a62;
+div#map_menu_header { 
+    background: url(/site-media/images/bg-toolbar.png) 0 0 repeat-x #5b8a62;
     color: #ffffff;
     height: 30px;
     padding: 8px 0;
@@ -608,7 +622,7 @@ left: 5px;
 right: 5px;
 }
 button#stats_legend {
-background: #bb9160;
+background-color: #bb9160;
 width: 100%;
 }
 
