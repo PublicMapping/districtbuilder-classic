@@ -5,8 +5,8 @@
  <link rel="stylesheet" type="text/css" href="/site-media/css/reset.css"/>
     <link rel="stylesheet" type="text/css" href="/site-media/jquery/themes/ui-lightness/jquery-ui-1.8.2.custom.css"/>
     <link rel="stylesheet" type="text/css" href="/site-media/css/publicmapping.css"/>
-    <!-- <script type="text/javascript" src="/site-media/openlayers/OpenLayers.js"></script> production -->
-    <script type="text/javascript" src="/site-media/OpenLayers-2.9.1/lib/OpenLayers.js"></script><!-- debug -->
+     <script type="text/javascript" src="/site-media/openlayers/OpenLayers.js"></script> <!--production -->
+   <!-- <script type="text/javascript" src="/site-media/OpenLayers-2.9.1/lib/OpenLayers.js"></script> debug -->
     <script type="text/javascript">
         var MAP_SERVER = '{{ mapserver }}';
         var MAP_LAYERS = [ {% for layer in layers %} 'gmu:{{ layer }}'{% if not forloop.last %},{% endif %} {% endfor %} ];
@@ -55,7 +55,8 @@
                         document.write('<option value="' + snap.layer + '">' + snap.name + '</option>');
                     }
                     </script>
-                <
+                 </select>
+                
               <button class="toolbar_toggle" id="edit_map_settings">Edit Map Settings</button>
             </div>
             <div class="toolset" id="toolset_draw">

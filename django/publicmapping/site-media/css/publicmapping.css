@@ -474,18 +474,18 @@ div.plantable.body  {
     left: 5px; 
     right: 5px;
 }
-div.plantable .body table  tr.even {
+div.plantable.body table  tr.even {
   background: #fff;
 }
-div.plantable .body table tr td {
+div.plantable.body table tr td {
     font-size: 10pt;
     text-align: center;
     padding: 5px 3px;
 }
-div.plantable .body table tr td.celldist {
-    font-size: 12pt;
+div.plantable.body .celldist {
+    font-size: 12px;
     font-weight: bold;
-    }
+}
  
 div.plantable .celldist{  
     width: 16%;
@@ -497,7 +497,7 @@ div.plantable .cellpop{
 div.plantable .cellcontig{  
     width: 20%;
 }
-div.plantable .compact{  
+div.plantable .cellcompact{  
     width: 40%;
 }
 
