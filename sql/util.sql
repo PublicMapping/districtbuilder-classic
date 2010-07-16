@@ -26,7 +26,7 @@ insert into redistricting_district_geounits (district_id, geounit_id) (
 update redistricting_district as static set geom = (
     select st_multi(geom)
         from redistricting_plan_collect_geom as computed
-        where computed.district_id::character varying = static.district_id
+        where computed.district_id = static.district_id
 );
 
 -- set the geometry of each district to a non-simplified version
@@ -37,5 +37,6 @@ update redistricting_district as static set geom = (
            JOIN redistricting_district_geounits r_dg ON r_dg.district_id = r_d.id
            JOIN redistricting_geounit r_g ON r_g.id = r_dg.geounit_id
           GROUP BY r_d.id, r_d.plan_id, r_d.name) as computed
-        where computed.district_id::character varying = static.district_id
-)
+        where computed.district_id = static.district_id
+);
+update redistricting_district set simple = st_simplifypreservetopology(geom,10.0);
