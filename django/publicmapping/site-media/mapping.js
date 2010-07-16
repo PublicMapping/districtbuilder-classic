@@ -24,11 +24,11 @@ function getSnapLayer() {
     return $('#snapto').val();
 }
 
-/*
+/* USING CSS METHODS INSTEAD
  * Resize the map. This is a fix for IE, which does not assign a height
  * to the map div if it is not explicitly set.
  */
-function resizemap() {
+/* function resizemap() {
     var mapElem = document.getElementById('mapandmenu');
     if(!window.innerHeight) {
         mapElem.style.height = (window.document.body.clientHeight - 76) + 'px';
@@ -36,7 +36,7 @@ function resizemap() {
     else {
         mapElem.style.height = (window.innerHeight - 79) + 'px';
     }
-}
+} */
 
 /*
  * Initialize the map. This method is called by the onload page event.
@@ -45,8 +45,8 @@ function init() {
     OpenLayers.ProxyHost= "/proxy?url=";
 
     // set up sizing for dynamic map size that fills the pg
-    resizemap();
-    window.onresize = resizemap;
+    //resizemap();
+    //window.onresize = resizemap;
 
     // The extents of the layers. These extents will depend on the study
     // area; the following are the bounds for the web cache around Ohio.

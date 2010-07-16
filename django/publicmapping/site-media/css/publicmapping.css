@@ -213,9 +213,6 @@ span.recommended {
     font-size: 0.75em;
     text-align: center;
 }
-label {
-    font-size: 0.8em;
-}
 label.required {
     color: #ff0000;
 }
@@ -286,28 +283,55 @@ input#evalbtn, input#sharebtn {
     border: 1px solid #000000;
     background-color: #dddddd;
 }
-input#difplanbtn {
-    color: #000000;
-    border: 1px solid #000000;
-    background-color: #ffffff;
-}
-input#saveplanbtn {
-    color: #000000;
-    border: 1px solid #000000;
-    background-color: #00ee00;
-}
+
+
+/* toolbar buttonsset stying */
+
+
+
+
 div#toolbar_plans {
     background: url(/site-media/images/bg-app.png) 0 0 repeat;
     position: absolute;
     z-index: 1000;
     bottom: 0;
     left: 0;
-    padding: 10px
+    color: #fff;
+    padding: 0 0 0 10px;
+    -moz-box-shadow: 5px -5px 7px -5px #777;
+    -webkit-box-shadow: 5px -5px 7px -5px #777;
+    box-shadow: 5px -5px 7px -5px #777;
+    -moz-border-radius: 0 10px 0 0;
+    -webkit-border-radius: 0 10px 0 0;
+    border-radius: 0 10px 0 0;
 }
-div#planname {
+
+  
+div#toolbar_plans .planname{
+  font-size: 14px;
+  font-weight:normal;
+  cursor:normal;
+  padding-left: 0;
+  line-height: 14px;
 }
+div#toolbar_plans .planname label{font-weight:bold;}
+
+div#toolbar_plans #saveplanbtn {
+  background: url(/site-media/images/icon-save.png) 0 0 no-repeat;
+  padding-left:20px;
+  
+}
+div#toolbar_plans #difplanbtn {
+  background: url(/site-media/images/icon-open.png) 0 0 no-repeat;
+  padding-left:20px;
+}
+
 div#mapandmenu {
-    position: relative;
+    bottom:0;
+    left:0;
+    position:absolute;
+    right:0;
+    top:33px;
 }
 div#map {
     position: absolute;
@@ -347,15 +371,47 @@ div.toolbar {
   border-radius: 0 10px 0 0;
 }
 
-div.toolset {
+div#toolsets {
     position: absolute;
     right: 280px;
+    height: 51px;
     left: 0;
-    padding: 5px 0 0 0;
     overflow: hidden;
     }
+div.toolset {
+  width: 100%
+  }
 
-div#toolset_edit {display:none}
+    
+div.toolset#toolset_draw {
+  position:absolute;
+  top:51px;
+}
+
+div.toolset_group{
+  float:left;
+  font-size: 11px;
+  font-weight:bold;
+  cursor:pointer;
+  background: url(/site-media/images/divider-vert.png) 100% 0 repeat-y;
+    padding: 8px 12px;
+  }
+div.toolset_group.first {padding-left: 0}
+div .toolset_group.last {background: none}
+
+div.toolset_group .help {
+  float:right;
+}
+
+div.toolset_group label {
+  font-size: 11px; 
+  font-weight:bold;
+}
+
+div.toolset_group select {
+  width: 100%;
+  font-size: 11px;
+  }
 
 div.toolset .ui-icon {
 background-color: transparent;
@@ -370,16 +426,17 @@ border:none;
     }
 
 button.toolbar_toggle {
-    float:right;
+    position:absolute;
+    right:0;
     text-transform: uppercase;
     padding: 5px 8px;
-    margin-top: 3px;
+    margin-top: 8px;
 }
 
     
 button#edit_map_settings ,
 button#start_drawing   {
-    background: #1f8cbe
+    background: #1f8cbe;
     }
 
 div#map_menu {
@@ -389,40 +446,61 @@ div#map_menu {
     z-index:1000;
 }
 div#map_menu_header {
-    background-color: #000099;
+    background-color: #5b8a62;
     color: #ffffff;
     height: 30px;
-    padding: 5px 0;
+    padding: 8px 0;
     cursor: pointer;
     margin-top: 11px;
-
     width: 262px;
-
     -moz-border-radius:10px 10px 0 0;
     -webkit-border-radius:10px 10px 0 0;
     border-radius:10px 10px 0 0;
     }
+div#map_menu_header button.menu_toggle{
+width: 20px;
+height: 20px;
+float:left;
+margin: 2px 0 0 5px;
+}
+div#map_menu_header select {
+  font-size: 14px;
+  font-weight:bold;
+  float:left;
+  height: 25px;
+  width: 170px;
+}
     
 div#map_menu_header label {
-  margin-left: 10px; 
-  display: inline-block;
+  margin: 0 5px 0 10px;
+  display: block;
+  float:left;
   font-size: 11px; 
   font-weight:bold;
-  line-height: 14px;
+  line-height: 12px;
   }
     
  div.map_menu_content {
      width: 262px;
     position:absolute; 
-    bottom: 30px;
+    bottom: 9px;
     top: 51px;
     z-index: 100;
+    -moz-border-radius: 0 0 10px 10px;
+    -webkit-border-radius: 0 0 10px 10px;
+    border-radius: 0 0 10px 10px;
+    -moz-box-shadow: 0 8px 17px -6px #333333;
+    -webkit-box-shadow: 0 8px 17px -6px #333333;
+    box-shadow: 0 8px 17px -6px #333333;
 }
-div.map_menu_content.demographics {
-    background: #badcbf
+div.map_menu_content.geography {
+    background: #badcbf;
+    border:1px solid #77b280;
   }
-div.map_menu_content.geometry {
-    background: #efe8cb
+div.map_menu_content.demographics {
+    background: #efe8cb;
+    border: 1px solid #ada176;
+    display:none
 }
 
 div.plansummary {
@@ -457,12 +535,12 @@ div.plantable.header {
     left: 5px; 
     right: 5px; 
     position: relative;
-    font-size: 11px;
-    font-weight: bold;
 }
 div.plantable.header table tr th {
     text-align:center;
     padding: 3px;
+    font-weight: bold;
+    font-size: 11px;
     }
 div.plantable.body  {
     background: #f7f4e5;
@@ -470,7 +548,7 @@ div.plantable.body  {
     overflow: auto;
     position: absolute;
     top:134px;
-    bottom:5px;
+    bottom:33px;
     left: 5px; 
     right: 5px;
 }
@@ -488,17 +566,17 @@ div.plantable.body .celldist {
 }
  
 div.plantable .celldist{  
-    width: 16%;
+    width: 12%;
     overflow: hidden;
 }
 div.plantable .cellpop{  
     width: 24%;
 }
 div.plantable .cellcontig{  
-    width: 20%;
+    width: 26%;
 }
 div.plantable .cellcompact{  
-    width: 40%;
+    width: 38%;
 }
 
 span.popstatus { 
@@ -523,6 +601,18 @@ span.popstatus.target {
   border: 1px solid #a6cc88;
 }
 
+div.menu_footer {
+position: absolute;
+bottom: 5px;
+left: 5px;
+right: 5px;
+}
+button#stats_legend {
+background: #bb9160;
+width: 100%;
+}
+
+
 /* district assignment control styles */
 div.controlDiv {
     padding: 5px;
@@ -538,7 +628,7 @@ div.controlDiv select {
 
 
 /* JQUERY UI GLOBAL OVERRIDE */
-.ui-widget, .ui-widget button {font-family: Arial, Helvetica, sans-serif;}
+.ui-widget, .ui-widget button, .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button {font-family: Arial, Helvetica, sans-serif;}
 
 .ui-dialog {
   border: none;
@@ -552,6 +642,74 @@ div.controlDiv select {
   -moz-border-radius:10px 10px 0 0;
   -webkit-border-radius:10px 10px 0 0;
   border-radius:10px 10px 0 0;
-  
+}
 
+/* OPENLAYERS MAP CONTROLS OVERRIDE */
+
+/*PAN*/
+
+#map-panel .olControlPanPanel{
+	left: 10px;
+	top: 10px;
+}
+
+#map-panel .olControlPanPanel div {
+	background-image: url(http://cdn.azavea.com/org.walkshed/images/walkshed/images/pan-panel.png) 
+}
+
+
+#map-panel .olControlPanPanel .olControlPanNorthItemInactive {
+	width: 38px;
+	height: 13px;
+	left: 0;
+}
+
+#map-panel .olControlPanPanel .olControlPanSouthItemInactive {
+	background-position:  0 -25px;
+	width: 38px;
+	height: 13px;
+	top: 25px;
+	left: 0;
+}
+	
+#map-panel .olControlPanPanel .olControlPanWestItemInactive {
+	background-position:  0 -13px;
+	width: 19px;
+	height: 12px;
+	top: 13px;
+}
+
+#map-panel .olControlPanPanel .olControlPanEastItemInactive {
+	background-position:  -19px -13px;
+	width: 19px;
+	height: 12px;
+	left: 19px;
+	top: 13px;
+}
+
+
+/*ZOOM*/
+
+#map-panel .olControlZoomPanel{
+left:19px;
+top:58px;
+}
+
+#map-panel .olControlZoomPanel div {
+	background-image: url(http://cdn.azavea.com/org.walkshed/images/walkshed/images/zoom-panel.png) ;
+	height: 19px;
+	width: 21px;
+}
+
+
+
+#map-panel .olControlZoomPanel .olControlZoomToMaxExtentItemInactive  
+{
+	height:20px;
+	top: 19px;
+}
+	
+#map-panel .olControlZoomPanel .olControlZoomOutItemInactive  
+{
+	top: 39px;
 }

@@ -46,8 +46,11 @@
  
       <div id="mapandmenu">
          <div class="toolbar ui-widget-header">
+          <div id="toolsets">
             <div class="toolset" id="toolset_edit">
- Snap to:
+              <div class="toolset_group">
+                <img src="/site-media/images/icon-help.png" class="help">
+                <label>Snap to:</label>
                 <select id="snapto">
                     <script type="text/javascript">
                     for (var i = 0; i < SNAP_LAYERS.length; i++) {
@@ -56,12 +59,60 @@
                     }
                     </script>
                  </select>
+                </div>
+                              <div class="toolset_group">
+                <img src="/site-media/images/icon-help.png" class="help">
+                <label>Snap to:</label>
+                <select id="snapto">
+                    <script type="text/javascript">
+                    for (var i = 0; i < SNAP_LAYERS.length; i++) {
+                        var snap = SNAP_LAYERS[i];
+                        document.write('<option value="' + snap.layer + '">' + snap.name + '</option>');
+                    }
+                    </script>
+                 </select>
+                </div>
                 
-              <button class="toolbar_toggle" id="edit_map_settings">Edit Map Settings</button>
+                
+        <button class="toolbar_toggle" id="start_drawing">Start Drawing</button>
             </div>
-            <div class="toolset" id="toolset_draw">
 
-              <button class="toolbar_toggle" id="start_drawing">Start Drawing</button>
+            <div class="toolset" id="toolset_draw">
+              <div class="toolset_group">
+                <label>Map Tools</label>
+                <div>
+                  <button id=""></button>
+                  <button id=""></button>
+                  <button id=""></button>
+                </div>
+              </div>
+              <div class="toolset_group">
+                <label>Drawing Tools</label>
+                <div>
+                  <button id=""></button>
+                  <button id=""></button>
+                  <button id=""></button>
+                </div>
+              </div>
+              <div class="toolset_group">
+                <label>Assigning Tools</label>
+                <div>
+                  <button id=""></button>
+                  <button id=""></button>
+                  <button id=""></button>
+                </div>
+              </div>
+              <div class="toolset_group">
+                <label>History</label>
+                <div>
+                  <button id=""></button>
+                  <button id=""></button>
+                </div>
+              </div>
+
+              <button class="toolbar_toggle" id="edit_map_settings">Edit Map Settings</button>
+            
+            </div>
             </div>
             <div id="map_menu">
                 <div id="map_menu_header">
@@ -102,8 +153,8 @@
                                           34,000
                                       </span>
                                   </td>
-                                  <td class="cellcontig">98%</td>
-                                  <td class="cellcompact">79%</td>
+                                  <td class="cellcontig"><img src="/site-media/images/icon-check.png" class="yes-contiguous"></td>
+                                  <td class="cellcompact">9%</td>
                               </tr>
                               <tr class="even">
                                   <td class="celldist">2</td>
@@ -113,7 +164,7 @@
                                       </span>
                                       <div></div>
                                   </td>
-                                  <td>79%</td>
+                                  <td><img src="/site-media/images/icon-warning.png" class="no-contiguous"></td>
                                   <td>85%</td>
                               </tr>
                               <tr class="odd">
@@ -124,7 +175,7 @@
                                       </span>
                                       <div></div>
                                   </td>
-                                  <td>85%</td>
+                                  <td><img src="/site-media/images/icon-check.png" class="yes-contiguous"></td>
                                   <td>98%</td>
                               </tr>
                               <tr class="even">
@@ -134,7 +185,7 @@
                                       </span>
                                       <div></div>
                                   </td>
-                                  <td>99%</td>
+                                  <td><img src="/site-media/images/icon-check.png" class="yes-contiguous"></td>
                                   <td>85%</td>
                               </tr>
                               <tr class="odd">
@@ -145,7 +196,7 @@
                                       </span>
                                       <div></div>
                                   </td>
-                                  <td>98%</td>
+                                  <td><img src="/site-media/images/icon-check.png" class="yes-contiguous"></td>
                                   <td>79%</td>
                               </tr>
                               <tr class="even">
@@ -156,7 +207,7 @@
                                       </span>
                                       <div></div>
                                   </td>
-                                  <td>79%</td>
+                                  <td><img src="/site-media/images/icon-check.png" class="yes-contiguous"></td>
                                   <td>85%</td>
                               </tr>
                               <tr class="odd">
@@ -167,7 +218,7 @@
                                       </span>
                                       <div></div>
                                   </td>
-                                  <td>85%</td>
+                                  <td><img src="/site-media/images/icon-check.png" class="yes-contiguous"></td>
                                   <td>98%</td>
                               </tr>
                               <tr class="even">
@@ -178,8 +229,54 @@
                                       </span>
                                       <div></div>
                                   </td>
-                                  <td>99%</td>
+                                  <td><img src="/site-media/images/icon-check.png" class="yes-contiguous"></td>
                                   <td>85%</td>
+                              </tr>
+                          </tbody>
+                      </table>
+                  </div>
+                 <div class="menu_footer">
+                    <button id="stats_legend">Stats Legend</button>
+                </div>
+                </div>
+                <div class="map_menu_content geography">
+                  <div class="plansummary">
+                      <h3>{{ plan.name }}</h3>
+                      <div><label>Total Population:</label> <span class="value" id="totalpop">92%</span></div>
+                      <div><label>Hispanic or Latino:</label> <span class="value" id="hispanicmetric">79%</span></div>
+                      <div><label>Black:</label> <span class="value" id="blackmetric">85%</span></div>
+
+                  </div>
+                  <div class="plantable header">
+                     <table>
+                      <thead>
+                          <tr>
+                              <th class="celldist">Dist.</th>
+                              <th class="cellhispanic">Hispanic</th>
+                              <th class="cellblack">Black</th>
+                              <th class="cellother">Other</th>
+                          </tr>
+                      </thead>
+                   </table>
+                  </div>
+                  <div class="plantable body">
+                       <table>
+                          <tbody>
+                              <tr class="odd">
+                                  <td class="celldist">1</td>
+                                  <td class="cellhispanic">
+                                      8.6%
+                                  </td>
+                                  <td class="cellblack">8.6%</td>
+                                  <td class="cellother">9%</td>
+                              </tr>
+                              <tr class="even">
+                                  <td class="celldist">1</td>
+                                  <td class="cellhispanic">
+                                      8.6%
+                                  </td>
+                                  <td class="cellblack">8.6%</td>
+                                  <td class="cellother">9%</td>
                               </tr>
                           </tbody>
                       </table>
@@ -195,17 +292,21 @@
     </div>
 </div>  
 <div id="toolbar_plans">
-      
-      
-      <span id="planname">
-        {% if plan.name %}
-        Plan Name: {{ plan.name }}
-        {% else %}
-        Please Choose to edit a plan
-        {% endif %}
-    </span>
-            <input id="difplanbtn" type="button" value="Edit Different Plan"/>
-            <input id="saveplanbtn" type="button" value="Save Plan"/>
+     <div class="toolset_group first"> 
+       <div class="planname">
+          {% if plan.name %}
+          <label>Plan Name:</label> {{ plan.name }}
+          {% else %}
+          Please Choose to edit a plan
+          {% endif %}
+      </div>
+     </div>
+     <div class="toolset_group"> 
+          <div id="saveplanbtn">Save Plan</div>
+      </div>
+      <div class="toolset_group last"> 
+          <div id="difplanbtn">Open New Plan</div>
+      </div>
 </div>
 <div id="DialogContainer"></div>
 <script type="text/javascript">
