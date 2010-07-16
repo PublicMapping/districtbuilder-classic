@@ -25,6 +25,7 @@ class Geolevel(models.Model):
 class Geounit(models.Model):
     name = models.CharField(max_length=200)
     geom = models.MultiPolygonField(srid=3785)
+    simple = models.MultiPolygonField(srid=3785)
     geolevel = models.ForeignKey(Geolevel)
     objects = models.GeoManager()
 
@@ -160,6 +161,7 @@ class District(models.Model):
     plan = models.ForeignKey(Plan)
     geounits = models.ManyToManyField(Geounit)
     geom = models.MultiPolygonField(srid=3785, blank=True, null=True)
+    simple = models.MultiPolygonField(srid=3785, blank=True, null=True)
     version = models.PositiveIntegerField(default=0)
     objects = models.GeoManager()
     
@@ -175,3 +177,11 @@ def collect_geom(sender, **kwargs):
     kwargs['instance'].geom = kwargs['instance'].geounits.collect()
 
 #// pre_save.connect(collect_geom, sender=District)
+
+class ComputedCharacteristic(models.Model):
+    subject = models.ForeignKey(Subject)
+    district = models.ForeignKey(District)
+    number = models.DecimalField(max_digits=12,decimal_places=4)
+    percentage = models.DecimalField(max_digits=6,decimal_places=6, null=True, blank=True)
+    objects = models.GeoManager()
+
