@@ -14,13 +14,13 @@ class GeounitAdmin(admin.OSMGeoAdmin):
     ordering = ('name',)
 
 class DistrictInline(admin.TabularInline):
+    fields = ('district_id','name','version',)
     model = District
-    #raw_id_fields = ('geounits',)
 
 class DistrictAdmin(admin.OSMGeoAdmin):
+    fields = ('district_id','name','plan','version','geom',)
     list_display = ('name','plan','version',)
     list_filter = ('plan',)
-#     raw_id_fields = ('geounits',)
     ordering = ('name',)
 
 class PlanAdmin(admin.ModelAdmin):
