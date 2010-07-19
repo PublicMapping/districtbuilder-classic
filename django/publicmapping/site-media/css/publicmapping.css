@@ -620,14 +620,18 @@ span.popstatus.target {
 }
 
 div.menu_footer {
-position: absolute;
-bottom: 5px;
-left: 5px;
-right: 5px;
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+  right: 5px;
+}
+div#stats_legend_panel{
+  width: 240px;
+  max-width:none;
 }
 button#stats_legend {
-background-color: #bb9160;
-width: 100%;
+  background-color: #bb9160;
+  width: 100%;
 }
 
 
@@ -643,6 +647,21 @@ div.controlDiv span {
 div.controlDiv select {
     font-size: 0.7em;
 }
+
+
+/* JQUERY TOOLS TOOLTIPS */
+/* tooltip styling */
+.tooltip {
+	display:none;
+	background:#000;
+  padding: 5px;
+  border: 1px solid #666;
+	font-size:11px;
+	color:#fff;
+  z-index: 10000;
+  max-width: 141px;
+}
+
 
 
 /* JQUERY UI GLOBAL OVERRIDE */

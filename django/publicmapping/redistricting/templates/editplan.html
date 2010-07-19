@@ -20,7 +20,7 @@
     </script>
     <script type="text/javascript" src="/site-media/jquery/jquery-1.4.2.js"></script>
     <script type="text/javascript" src="/site-media/jquery/jquery-ui-1.8.2.custom.min.js"></script>
-    <script type="text/javascript" src="/site-media/jquery/external/jquery.tools.tooltip.min.js"></script>
+    <script type="text/javascript" src="/site-media/jquery/external/jquery.tools.tooltip.slide.min.js"></script>
     <script type="text/javascript" src="/site-media/ui.js"></script>
     <script type="text/javascript" src="/site-media/mapping.js"></script>
     <script type="text/javascript" src="/site-media/publicmapping.chooseplan.js"></script>
@@ -57,6 +57,7 @@
             <div class="toolset" id="toolset_edit">
               <div class="toolset_group">
                 <img src="/site-media/images/icon-help.png" class="help">
+                <div class="tooltip">This is a tooltip.</div>
                 <label>Snap Map to:</label>
                 <select id="snapto">
                   <script type="text/javascript">
@@ -69,6 +70,7 @@
               </div>
               <div class="toolset_group">
                 <img src="/site-media/images/icon-help.png" class="help">
+                <div class="tooltip">This is a tooltip.</div>                
                 <label>Show Layer by:</label>
                 <select id="showby">
                   <script type="text/javascript">
@@ -81,6 +83,7 @@
               </div>
               <div class="toolset_group">
                 <img src="/site-media/images/icon-help.png" class="help">
+                <div class="tooltip">This is a tooltip.</div>                
                 <label>Show Boundaries for:</label>
                 <select id="boundfor">
                   <script type="text/javascript">
@@ -136,8 +139,8 @@
                     <button class="menu_toggle ui-icon"></button>
                     <label>Current<br/> District</label>
                     <select>
-                      <option>Demographics</option>
-                      <option>Geography</option>
+                      <option value="demographics">Demographics</option>
+                      <option value="geography">Geography</option>
                     </select>
                 </div>
                 <div class="map_menu_content demographics">
@@ -170,7 +173,8 @@
                                           34,000
                                       </span>
                                   </td>
-                                  <td class="cellcontig"><img src="/site-media/images/icon-check.png" class="yes-contiguous"></td>
+                                  <td class="cellcontig"><img src="/site-media/images/icon-check.png" class="yes-contiguous help"><div class="tooltip">this is a tooltip</div>
+                                  </td>
                                   <td class="cellcompact">9%</td>
                               </tr>
                               <tr class="even">
@@ -181,7 +185,9 @@
                                       </span>
                                       <div></div>
                                   </td>
-                                  <td><img src="/site-media/images/icon-warning.png" class="no-contiguous"></td>
+                                  <td><img src="/site-media/images/icon-warning.png" class="no-contiguous help">
+                                  <div class="tooltip">this is a tooltip</div>
+                                  </td>
                                   <td>85%</td>
                               </tr>
                               <tr class="odd">
@@ -192,7 +198,9 @@
                                       </span>
                                       <div></div>
                                   </td>
-                                  <td><img src="/site-media/images/icon-check.png" class="yes-contiguous"></td>
+                                  <td><img src="/site-media/images/icon-check.png" class="yes-contiguous help">
+                                  <div class="tooltip">this is a tooltip</div>
+                                  </td>
                                   <td>98%</td>
                               </tr>
                               <tr class="even">
@@ -202,7 +210,10 @@
                                       </span>
                                       <div></div>
                                   </td>
-                                  <td><img src="/site-media/images/icon-check.png" class="yes-contiguous"></td>
+                                  <td>
+                                  <img src="/site-media/images/icon-check.png" class="yes-contiguous help">
+                                  <div class="tooltip">this is a tooltip</div>
+                                  </td>
                                   <td>85%</td>
                               </tr>
                               <tr class="odd">
@@ -213,7 +224,9 @@
                                       </span>
                                       <div></div>
                                   </td>
-                                  <td><img src="/site-media/images/icon-check.png" class="yes-contiguous"></td>
+                                  <td><img src="/site-media/images/icon-check.png" class="yes-contiguous help">
+                                  <div class="tooltip">this is a tooltip</div>
+                                  </td>
                                   <td>79%</td>
                               </tr>
                               <tr class="even">
@@ -224,7 +237,9 @@
                                       </span>
                                       <div></div>
                                   </td>
-                                  <td><img src="/site-media/images/icon-check.png" class="yes-contiguous"></td>
+                                  <td><img src="/site-media/images/icon-check.png" class="yes-contiguous help">
+                                  <div class="tooltip">this is a tooltip</div>
+                                  </td>
                                   <td>85%</td>
                               </tr>
                               <tr class="odd">
@@ -235,7 +250,9 @@
                                       </span>
                                       <div></div>
                                   </td>
-                                  <td><img src="/site-media/images/icon-check.png" class="yes-contiguous"></td>
+                                  <td><img src="/site-media/images/icon-check.png" class="yes-contiguous help">
+                                  <div class="tooltip">this is a tooltip</div>
+                                  </td>
                                   <td>98%</td>
                               </tr>
                               <tr class="even">
@@ -246,7 +263,9 @@
                                       </span>
                                       <div></div>
                                   </td>
-                                  <td><img src="/site-media/images/icon-check.png" class="yes-contiguous"></td>
+                                  <td><img src="/site-media/images/icon-check.png" class="yes-contiguous help">
+                                  <div class="tooltip">this is a tooltip</div>
+                                  </td>
                                   <td>85%</td>
                               </tr>
                           </tbody>
@@ -254,6 +273,7 @@
                   </div>
                  <div class="menu_footer">
                     <button id="stats_legend">Stats Legend</button>
+                    <div class="tooltip" id="stats_legend_panel">dflkdjlkfjdklf</div>
                 </div>
                 </div>
                 <div class="map_menu_content geography">
