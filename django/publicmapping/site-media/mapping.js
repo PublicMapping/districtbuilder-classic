@@ -174,7 +174,8 @@ function init() {
 
     var getControl = new OpenLayers.Control.GetFeature({
         autoActivate: false,
-        protocol: getProtocol
+        protocol: getProtocol,
+        multipleKey: 'shiftKey'
     });
 
     var boxControl = new OpenLayers.Control.GetFeature({
@@ -182,6 +183,27 @@ function init() {
         protocol: getProtocol,
         box: true
     });
+
+    var polyControl = new OpenLayers.Control.DrawFeature( 
+        selection,
+        OpenLayers.Handler.Polygon,
+        {
+            featureAdded: function(feature){
+                getProtocol.read({
+                    filter: new OpenLayers.Filter.Spatial({
+                        type: OpenLayers.Filter.Spatial.INTERSECTS,
+                        value: feature.geometry,
+                        projection: getProtocol.options.srsName
+                    }),
+                    callback: function(rsp){
+                        selection.removeFeatures(selection.features);
+                        selection.addFeatures(rsp.features);
+                    }
+                });
+            }
+        }
+    );
+
 
     var featureSelected = function(e){
         selection.addFeatures([e.feature]);
@@ -209,6 +231,7 @@ function init() {
         navigate.activate();
         getControl.deactivate();
         boxControl.deactivate();
+        polyControl.deactivate();
         selection.removeFeatures(selection.features);
     });
 
@@ -216,6 +239,7 @@ function init() {
         getControl.activate();
         boxControl.deactivate();
         navigate.deactivate();
+        polyControl.deactivate();
         selection.removeFeatures(selection.features);
     });
 
@@ -223,6 +247,15 @@ function init() {
         boxControl.activate();
         getControl.deactivate();
         navigate.deactivate();
+        polyControl.deactivate();
+        selection.removeFeatures(selection.features);
+    });
+
+    $('#polygon_drawing_tool').click(function(evt){
+        boxControl.deactivate();
+        getControl.deactivate();
+        navigate.deactivate();
+        polyControl.activate();
         selection.removeFeatures(selection.features);
     });
 
@@ -260,7 +293,8 @@ function init() {
 */
     olmap.addControls([
         getControl,
-        boxControl
+        boxControl,
+        polyControl
     ]);
 
     $('#snapto').change(function(evt){
