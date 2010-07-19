@@ -15,7 +15,7 @@ class GeounitAdmin(admin.OSMGeoAdmin):
 
 class DistrictInline(admin.TabularInline):
     model = District
-    raw_id_fields = ('geounits',)
+    #raw_id_fields = ('geounits',)
 
 class DistrictAdmin(admin.OSMGeoAdmin):
     list_display = ('name','plan','version',)
