@@ -70,6 +70,11 @@ function init() {
     // This projection is web mercator
     var projection = new OpenLayers.Projection('EPSG:3785');
 
+    var navigate = new OpenLayers.Control.Navigation({
+        autoActivate: true,
+        handleRightClicks: true
+    });
+
     // Create a slippy map.
     var olmap = new OpenLayers.Map('map', {
         // The resolutions here must match the settings in geowebcache.
@@ -78,14 +83,15 @@ function init() {
             280.046875, 140.0234375, 70.01171875,
             35.005859375, 17.5029296875, 8.75146484375,
             4.375732421875, 2.1878662109375, 1.09393310546875,
-            0.546966552734375, 0.2734832763671875, 0.13674163818359375,
-            0.06837081909179688, 0.03418540954589844,
-            0.01709270477294922, 0.00854635238647461, 0.004273176193237305,
-            0.0021365880966186523, 0.0010682940483093262,
-            5.341470241546631E-4, 2.6707351207733154E-4, 1.3353675603866577E-4],
+            0.546966552734375, 0.2734832763671875, 0.13674163818359375
+        ],
         maxExtent: layerExtent,
         projection: projection,
-        units: 'm'
+        units: 'm',
+        controls: [
+            navigate,
+            new OpenLayers.Control.PanZoomBar()
+        ]
     });
 
     // These layers are dependent on the layers available in geowebcache
@@ -157,30 +163,37 @@ function init() {
     layers.push(selection);
     olmap.addLayers(layers);
 
+    var getProtocol = new OpenLayers.Protocol.WFS({
+        url: 'http://' + MAP_SERVER + '/geoserver/wfs',
+        featureType: getSnapLayer(),
+        featureNS: 'http://gmu.azavea.com/',
+        featurePrefix: 'gmu',
+        srsName: 'EPSG:3785',
+        geometryName: 'geom'
+    });
+
     var getControl = new OpenLayers.Control.GetFeature({
-        protocol: new OpenLayers.Protocol.WFS({
-            url: 'http://' + MAP_SERVER + '/geoserver/wfs',
-            featureType: getSnapLayer(),
-            featureNS: 'http://gmu.azavea.com/',
-            featurePrefix: 'gmu',
-            srsName: 'EPSG:3785',
-            geometryName: 'geom'
-        })
+        autoActivate: false,
+        protocol: getProtocol
     });
 
-    getControl.events.register('featureselected', this, function(e){
+    var boxControl = new OpenLayers.Control.GetFeature({
+        autoActivate: false,
+        protocol: getProtocol,
+        box: true
+    });
+
+    var featureSelected = function(e){
         selection.addFeatures([e.feature]);
-    });
-    getControl.events.register('featureunselected', this, function(e){
-        selection.removeFeatures([e.feature]);
-    });
+    };
+    getControl.events.register('featureselected', this, featureSelected);
+    boxControl.events.register('featureselected', this, featureSelected);
 
-/*
-    var assignControl = new DistrictAssignment({
-        selection: selection,
-        districts: districtLayer
-    });
-*/
+    var featureUnselected = function(e){
+        selection.removeFeatures([e.feature]);
+    };
+    getControl.events.register('featureunselected', this, featureUnselected);
+    boxControl.events.register('featureunselected', this, featureUnselected);
 
     districtLayer.events.register('loadstart',districtLayer,function(){
         OpenLayers.Element.addClass(olmap.viewPortDiv, 'olCursorWait');
@@ -192,8 +205,36 @@ function init() {
 
     var jsonParser = new OpenLayers.Format.JSON();
 
+    $('#navigate_map_tool').click(function(evt){
+        navigate.activate();
+        getControl.deactivate();
+        boxControl.deactivate();
+        selection.removeFeatures(selection.features);
+    });
+
+    $('#single_drawing_tool').click(function(evt){
+        getControl.activate();
+        boxControl.deactivate();
+        navigate.deactivate();
+        selection.removeFeatures(selection.features);
+    });
+
+    $('#rectangle_drawing_tool').click(function(evt){
+        boxControl.activate();
+        getControl.deactivate();
+        navigate.deactivate();
+        selection.removeFeatures(selection.features);
+    });
+
 /*
-    assignControl.events.register('geounitadded', this, function(e){
+    assignControl.events.register('geounitadded', this, fu
+    getControl.deactivate();
+    getControl.deactivate();
+    getControl.deactivate();
+    getControl.deactivate();n
+    getControl.deactivate();
+    getControl.deactivate();c
+    getControl.deactivate();tion(e){
         var district_id = e.district;
         var feature = e.selection[0];
         OpenLayers.Element.addClass(olmap.viewPortDiv,'olCursorWait');
@@ -218,10 +259,9 @@ function init() {
     });
 */
     olmap.addControls([
-        getControl
+        getControl,
+        boxControl
     ]);
-
-    getControl.activate();
 
     $('#snapto').change(function(evt){
         var newOpts = getControl.protocol.options;
@@ -246,303 +286,3 @@ function init() {
     olmap.zoomToExtent(new OpenLayers.Bounds(-9467000,4570000,-8930000,5170000));
     OpenLayers.Element.addClass(olmap.viewPortDiv, 'olCursorWait');
 }
-
-
-/************************************************************************/
-/* DistrictAssignment
-/* A control for assigning a district after it's been selected.
-/***********************************************************************/
-/** 
- * @requires OpenLayers/Control.js
- */
-
-/**
- * Class: DistrictAssignment
- * The DistrictAssignment control shows a drop-down of available districts
- * that can accept the currently selected district. This control appears
- * in the upper right of the map automatically when a feature is selected.
- * 
- * Inherits from:
- *  - <OpenLayers.Control>
- */
-DistrictAssignment = 
-  OpenLayers.Class(OpenLayers.Control, { 
-    /**
-     * Constant: EVENT_TYPES
-     *
-     * Supported event types:
-     *  - *geounitadded* Triggered when a geounit is added.
-     */
-    EVENT_TYPES: ["geounitadded"],
-
-    /**
-     * Property: selectionLayer
-     * The layer that contains the selection features and fires pick events.
-     */
-    selectionLayer: null,
-
-    /**
-     * Property: districtLayer
-     * The layer that contains the districts that have already been mapped.
-     */
-    districtLayer: null,
- 
-  // DOM Elements
-    
-    /** 
-     * Property: controlDiv
-     * {DOMElement}
-     */
-    controlDiv: null,
-
-    /**
-     * Property: selectElem
-     * {DOMElement}
-     */
-    selectElem: null,
-    
-    /**
-     * Constructor: DistrictAssignment
-     * 
-     * Parameters:
-     * options - {Object}
-     */
-    initialize: function(options) {
-        this.EVENT_TYPES = 
-            DistrictAssignment.prototype.EVENT_TYPES.concat(
-            OpenLayers.Control.prototype.EVENT_TYPES
-        );
-        OpenLayers.Control.prototype.initialize.apply(this, arguments);
-        this.selectionLayer = options.selection;
-        this.districtLayer = options.districts;
-
-        if (this.selectionLayer) {
-          this.selectionLayer.events.on({
-              "featureadded": this.showList,
-              "featureremoved": this.hideList,
-              scope: this
-          });
-        }
-    },
-
-    /**
-     * APIMethod: destroy 
-     */    
-    destroy: function() {
-        
-        OpenLayers.Event.stopObservingElement(this.div);
-        OpenLayers.Event.stopObservingElement(this.controlDiv);
-        
-        this.selectionLayer.events.un({
-            "featureadded": this.showList,
-            "featureremoved": this.hideList,
-            scope: this
-        });
-        
-        OpenLayers.Control.prototype.destroy.apply(this, arguments);
-    },
-
-    showList: function(feat) {
-        this.controlDiv.style.display = 'block';
-        this.selectElem.selectedIndex = 0;
-        this.selectElem.options.length = 2;
-        for (var i = 0; i < this.districtLayer.features.length; i++) {
-            var dFeat = this.districtLayer.features[i];
-            if (dFeat.geometry &&
-                dFeat.geometry.intersects &&
-                dFeat.geometry.intersects(feat.feature.geometry)) {
-                this.selectElem.options[this.selectElem.options.length] =
-                    new Option( dFeat.attributes.name, dFeat.attributes.district_id );
-            }
-        }
-    },
-
-    hideList: function(feat) {
-        this.controlDiv.style.display = 'none';
-    },
-
-    /** 
-     * Method: setMap
-     *
-     * Properties:
-     * map - {<OpenLayers.Map>} 
-     */
-    setMap: function(map) {
-        OpenLayers.Control.prototype.setMap.apply(this, arguments);
-    },
-
-    /**
-     * Method: onDistrictSelect
-     *
-     * Parameters:
-     * e - {Event}
-     *
-     * Context:
-     *  - {DOMElement} selectElem
-     *  - {<OpenLayers.Layer>} selectionLayer
-     *  - {DistrictAssignment} districtAssigner
-     */
-    onDistrictSelect: function(e) {
-        if (this.selectElem.selectedIndex > 0) {
-            this.districtAssigner.events.triggerEvent('geounitadded', {
-                selection: this.selectionLayer.features,
-                district: this.selectElem.value
-            });
-        }
-    },
-
-    /**
-     * Method: reset
-     * Reset the selection box after a district has been assigned.
-     */
-    reset: function() {
-        this.selectElem.selectedIndex = 0;
-    }, 
-
-    /**
-     * Method: draw
-     *
-     * Returns:
-     * {DOMElement} A reference to the DIV DOMElement containing the 
-     *     switcher tabs.
-     */  
-    draw: function() {
-        OpenLayers.Control.prototype.draw.apply(this);
-
-        this.loadContents();
-
-        // populate div with current info
-        this.redraw();    
-
-        return this.div;
-    },
-    
-    /** 
-     * Method: redraw
-     * Goes through and takes the current state of the Map and rebuilds the
-     *     control to display that state. Groups base layers into a 
-     *     radio-button group and lists each data layer with a checkbox.
-     *
-     * Returns: 
-     * {DOMElement} A reference to the DIV DOMElement containing the control
-     */  
-    redraw: function() {
-        // create input element
-        this.selectElem = document.createElement("select");
-        this.selectElem.id = this.id + "_select";
-        this.selectElem.name = this.id + "_select";
-        this.selectElem.options[0] = new Option('-- Select One --');
-        this.selectElem.options[1] = new Option('Unassigned','0');
-
-        var context = {
-            'selectElem': this.selectElem,
-            'selectionLayer': this.selectionLayer,
-            'districtAssigner': this
-        };
-        OpenLayers.Event.observe(this.selectElem, "change", 
-            OpenLayers.Function.bindAsEventListener(this.onDistrictSelect,
-                                                    context)
-        );
-                
-        // create span
-        var labelSpan = document.createElement("span");
-        OpenLayers.Element.addClass(labelSpan, "labelSpan")
-        
-        labelSpan.innerHTML = 'Assign to District';
-        labelSpan.style.verticalAlign = "bottom";
-        OpenLayers.Event.observe(labelSpan, "click", 
-            OpenLayers.Function.bindAsEventListener(this.onDistrictSelect,
-                                                    context)
-        );
-        
-        this.controlDiv.appendChild(labelSpan);
-        this.controlDiv.appendChild(this.selectElem);
-        this.controlDiv.style.display = 'none';
-
-        this.div.style.right = '0';
-        this.div.style.top = '0';
-        return this.div;
-    },
-
-    /**
-     * Method: showControls
-     * Hide/Show all LayerSwitcher controls depending on whether we are
-     *     minimized or not
-     * 
-     * Parameters:
-     * minimize - {Boolean}
-     */
-    showControls: function(minimize) {
-
-        this.maximizeDiv.style.display = minimize ? "" : "none";
-        this.minimizeDiv.style.display = minimize ? "none" : "";
-
-        this.controlDiv.style.display = minimize ? "none" : "";
-    },
-    
-    /** 
-     * Method: loadContents
-     * Set up the labels and divs for the control
-     */
-    loadContents: function() {
-
-        //configure main div
-
-        OpenLayers.Event.observe(this.div, "mouseup", 
-            OpenLayers.Function.bindAsEventListener(this.mouseUp, this));
-        OpenLayers.Event.observe(this.div, "click",
-                      this.ignoreEvent);
-        OpenLayers.Event.observe(this.div, "mousedown",
-            OpenLayers.Function.bindAsEventListener(this.mouseDown, this));
-        OpenLayers.Event.observe(this.div, "dblclick", this.ignoreEvent);
-
-        // layers list div        
-        this.controlDiv = document.createElement("div");
-        this.controlDiv.id = this.id + "_controlDiv";
-        OpenLayers.Element.addClass(this.controlDiv, "controlDiv");
-
-        this.div.appendChild(this.controlDiv);
-    },
-    
-    /** 
-     * Method: ignoreEvent
-     * 
-     * Parameters:
-     * evt - {Event} 
-     */
-    ignoreEvent: function(evt) {
-        OpenLayers.Event.stop(evt);
-    },
-
-    /** 
-     * Method: mouseDown
-     * Register a local 'mouseDown' flag so that we'll know whether or not
-     *     to ignore a mouseUp event
-     * 
-     * Parameters:
-     * evt - {Event}
-     */
-    mouseDown: function(evt) {
-        this.isMouseDown = true;
-        this.ignoreEvent(evt);
-    },
-
-    /** 
-     * Method: mouseUp
-     * If the 'isMouseDown' flag has been set, that means that the drag was 
-     *     started from within the LayerSwitcher control, and thus we can 
-     *     ignore the mouseup. Otherwise, let the Event continue.
-     *  
-     * Parameters:
-     * evt - {Event} 
-     */
-    mouseUp: function(evt) {
-        if (this.isMouseDown) {
-            this.isMouseDown = false;
-            this.ignoreEvent(evt);
-        }
-    },
-
-    CLASS_NAME: "DistrictAssignment"
-});
-
