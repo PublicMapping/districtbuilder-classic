@@ -399,6 +399,7 @@ div.toolset#toolset_draw {
   top:51px;
 }
 
+
 div.toolset_group{
   float:left;
   font-size: 11px;
@@ -407,6 +408,9 @@ div.toolset_group{
   background: url(/site-media/images/divider-vert.png) 100% 0 repeat-y;
     padding: 8px 12px;
   }
+  
+div#toolsets div.toolset_group  {width: 142px }
+ 
 div.toolset_group.first {padding-left: 0}
 div .toolset_group.last {background: none}
 
