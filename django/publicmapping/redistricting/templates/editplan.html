@@ -5,8 +5,8 @@
  <link rel="stylesheet" type="text/css" href="/site-media/css/reset.css"/>
     <link rel="stylesheet" type="text/css" href="/site-media/jquery/themes/ui-lightness/jquery-ui-1.8.2.custom.css"/>
     <link rel="stylesheet" type="text/css" href="/site-media/css/publicmapping.css"/>
-    <!-- <script type="text/javascript" src="/site-media/openlayers/OpenLayers.js"></script> production -->
-    <script type="text/javascript" src="/site-media/OpenLayers-2.9.1/lib/OpenLayers.js"></script> <!-- debug -->
+    <script type="text/javascript" src="/site-media/openlayers/OpenLayers.js"></script><!-- production -->
+    <!-- <script type="text/javascript" src="/site-media/OpenLayers-2.9.1/lib/OpenLayers.js"></script>  debug -->
     <script type="text/javascript">
         var MAP_SERVER = '{{ mapserver }}';
         var SNAP_LAYERS = [ {% for snap in snaplayers %} { level: '{{ snap.layer }}',layer: 'simple_{{ snap.layer }}', name: '{{ snap.name }}' }{% if not forloop.last %},{% endif %} {% endfor %} ];
