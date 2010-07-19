@@ -32,20 +32,6 @@ function getBoundLayer() {
     return $('#boundfor').val();
 }
 
-/* USING CSS METHODS INSTEAD
- * Resize the map. This is a fix for IE, which does not assign a height
- * to the map div if it is not explicitly set.
- */
-/* function resizemap() {
-    var mapElem = document.getElementById('mapandmenu');
-    if(!window.innerHeight) {
-        mapElem.style.height = (window.document.body.clientHeight - 76) + 'px';
-    }
-    else {
-        mapElem.style.height = (window.innerHeight - 79) + 'px';
-    }
-} */
-
 /*
  * Initialize the map. This method is called by the onload page event.
  */
@@ -120,7 +106,8 @@ function init() {
                 srsName: 'EPSG:3785' 
             }),
             styleMap: new OpenLayers.StyleMap({
-                fill: false,
+                fill: true,
+                fillOpacity: 0.01,
                 strokeColor: '#ee9900',
                 strokeOpacity: 1,
                 strokeWidth: 2
@@ -184,12 +171,67 @@ function init() {
         box: true
     });
 
+    var jsonParser = new OpenLayers.Format.JSON();
+    var lastTool = null;
+
+    var assignOnSelect = function(feature) {
+        if (selection.features.length == 0)
+            return;
+
+        var district_id = feature.data.district_id;
+        var geolevel_id = selection.features[0].attributes.geolevel_id;
+        var geounit_ids = [];
+        for (var i = 0; i < selection.features.length; i++) {
+            geounit_ids.push( selection.features[i].attributes.id );
+        }
+        geounit_ids = geounit_ids.join('|');
+        OpenLayers.Element.addClass(olmap.viewPortDiv,'olCursorWait');
+        OpenLayers.Request.POST({
+            method: 'POST',
+            url: '/districtmapping/plan/' + plan_id + '/district/' + district_id + '/add',
+            params: {
+                geolevel: geolevel_id,
+                geounits: geounit_ids
+            },
+            success: function(xhr) {
+                var data = jsonParser.read(xhr.responseText);
+                if (data.success) {
+                    districtStrategy.load();
+                }
+                selection.drawFeature(selection.features[0], 'select');
+
+                var selector = olmap.getControlsByClass('OpenLayers.Control.SelectFeature')[0];
+                selector.deactivate();
+
+                if (lastTool !== null) {
+                    lastTool.activate();
+                }
+
+                $('#assign_district').val('-1');
+            },
+            failure: function(xhr) {
+                window.status = 'failed to select';
+            }
+        });
+    };
+
+    var assignControl = new OpenLayers.Control.SelectFeature(
+        districtLayer,
+        {
+            autoActivate: false,
+            onSelect: assignOnSelect
+        }
+    );
+
     var polyControl = new OpenLayers.Control.DrawFeature( 
         selection,
         OpenLayers.Handler.Polygon,
         {
             featureAdded: function(feature){
-                getProtocol.read({
+                var newOpts = getControl.protocol.options;
+                newOpts.featureType = getSnapLayer();
+                getControl.protocol = new OpenLayers.Protocol.WFS( newOpts );
+                getControl.protocol.read({
                     filter: new OpenLayers.Filter.Spatial({
                         type: OpenLayers.Filter.Spatial.INTERSECTS,
                         value: feature.geometry,
@@ -223,15 +265,26 @@ function init() {
     districtLayer.events.register('loadend',districtLayer,function(){
         OpenLayers.Element.removeClass(olmap.viewPortDiv, 'olCursorWait');
         selection.removeFeatures(selection.features);
-    });
+        
+        $('#assign_district').empty();
+        $('<option />').attr('value', '-1').text('-- Select One --').appendTo('#assign_district');
 
-    var jsonParser = new OpenLayers.Format.JSON();
+        var sorted = districtLayer.features.slice(0,districtLayer.features.length);
+        sorted.sort(function(a,b){
+            return a.attributes.name > b.attributes.name;
+        });
+
+        $.each(sorted, function(n, feature) {
+            $('<option />').attr('value', feature.attributes.id).text( feature.attributes.name).appendTo('#assign_district');
+        });
+    });
 
     $('#navigate_map_tool').click(function(evt){
         navigate.activate();
         getControl.deactivate();
         boxControl.deactivate();
         polyControl.deactivate();
+        assignControl.deactivate();
         selection.removeFeatures(selection.features);
     });
 
@@ -240,6 +293,7 @@ function init() {
         boxControl.deactivate();
         navigate.deactivate();
         polyControl.deactivate();
+        assignControl.deactivate();
         selection.removeFeatures(selection.features);
     });
 
@@ -248,6 +302,7 @@ function init() {
         getControl.deactivate();
         navigate.deactivate();
         polyControl.deactivate();
+        assignControl.deactivate();
         selection.removeFeatures(selection.features);
     });
 
@@ -256,51 +311,31 @@ function init() {
         getControl.deactivate();
         navigate.deactivate();
         polyControl.activate();
+        assignControl.deactivate();
         selection.removeFeatures(selection.features);
     });
 
-/*
-    assignControl.events.register('geounitadded', this, fu
-    getControl.deactivate();
-    getControl.deactivate();
-    getControl.deactivate();
-    getControl.deactivate();n
-    getControl.deactivate();
-    getControl.deactivate();c
-    getControl.deactivate();tion(e){
-        var district_id = e.district;
-        var feature = e.selection[0];
-        OpenLayers.Element.addClass(olmap.viewPortDiv,'olCursorWait');
-        OpenLayers.Request.POST({
-            method: 'POST',
-            url: '/districtmapping/plan/' + plan_id + '/district/' + district_id + '/add',
-            params: {
-                geolevel: feature.attributes.geolevel_id,
-                geounits: feature.attributes.id
-            },
-            success: function(xhr) {
-                var data = jsonParser.read(xhr.responseText);
-                if (data.success) {
-                    districtStrategy.load();
-                }
-                selection.drawFeature(selection.features[0], 'select');
-            },
-            failure: function(xhr) {
-                assignControl.reset();
-            }
-        });
+    $('#assign_tool').click(function(evt){
+        lastTool = olmap.getControlsBy('active',true)[0];
+        boxControl.deactivate();
+        getControl.deactivate();
+        navigate.deactivate();
+        polyControl.deactivate();
+        assignControl.activate();
     });
-*/
+
     olmap.addControls([
         getControl,
         boxControl,
-        polyControl
+        polyControl,
+        assignControl
     ]);
 
     $('#snapto').change(function(evt){
         var newOpts = getControl.protocol.options;
         newOpts.featureType = getSnapLayer();
-        getControl.protocol = new OpenLayers.Protocol.WFS( newOpts );
+        getControl.protocol = 
+            boxControl.protocol = new OpenLayers.Protocol.WFS( newOpts );
     });
 
     $('#showby').change(function(evt){
@@ -313,6 +348,15 @@ function init() {
         var show = getShowBy();
         var layers = olmap.getLayersByName('gmu:demo_' + evt.target.value + '_' + show);
         olmap.setBaseLayer(layers[0]);
+    });
+
+    $('#assign_district').change(function(evt){
+        if (this.value == '-1'){
+            return;
+        }
+
+        var feature = { data:{ district_id: this.value } };
+        assignOnSelect(feature);
     });
 
     // Set the initial map extents to the bounds around the study area.
