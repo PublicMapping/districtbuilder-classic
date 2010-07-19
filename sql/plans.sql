@@ -154,3 +154,11 @@ CREATE OR REPLACE VIEW demo_county_popblk AS
   WHERE rc.subject_id = 2 AND rg.geolevel_id = 1;
 
 ALTER TABLE demo_county_popblk OWNER TO publicmapping;
+
+-- This will create your default district and update the shapes and computedcharacteristics - but only for plan 1, district 19
+
+-- update redistricting_district as dist set geom = (select st_multi(st_union(geom)) from redistricting_geounit as geo where geo.geolevel_id = 1), simple = (select (st_multi(st_simplify(st_union(geom), 10.0))) from redistricting_geounit as geo where geo.geolevel_id = 1) where dist.id = 19;
+
+-- insert into redistricting_districtgeounitmapping (district_id, geounit_id, plan_id) (Select 19 as district_id, id as geounit_id, 1 as plan_id from redistricting_geounit as unit where unit.geolevel_id = 3)
+
+-- insert into redistricting_computedcharacteristic (subject_id, district_id, number) (Select rc.subject_id as subject_id, 19 as district_id, sum(rc.number) as number from redistricting_characteristic as rc join redistricting_geounit as rg on rc.geounit_id = rg.id join redistricting_geolevel as lev on rg.geolevel_id = lev.id where lev.id = 1 group by rc.subject_id)
