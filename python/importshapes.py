@@ -7,6 +7,7 @@ from decimal import Decimal
 from django.contrib.gis.gdal import *
 from django.contrib.gis.geos import *
 from django.core.management import setup_environ
+from django.contrib.gis.db.models import Union 
 from django.contrib.auth.models import User
 import settings
 
@@ -100,12 +101,26 @@ def create_basic_template():
         for district_num in range(1, settings.MAX_DISTRICTS + 1):
             district = District(name="District " + str(district_num) , district_id = district_num, plan = p) 
             district.save()
-        district = District(name="Unassigned", district_id = settings.MAX_DISTRICTS + 1, plan = p)
+
+def add_unassigned_to_template():
+        p = Plan.objects.get(pk=1)
+        geom = Geounit.objects.filter(geolevel = 1).aggregate(Union('geom'))
+        geom = MultiPolygon(geom["geom__union"])
+        simple = geom.simplify(tolerance=10.0,preserve_topology=True)
+        simple = MultiPolygon(simple)
+        district = District(name="Unassigned", district_id = settings.MAX_DISTRICTS + 1, plan = p, geom = geom, simple = simple)
         district.save()
 
-# for config in configs: 
-create_basic_template()
+        blocks = Geounit.objects.filter(geolevel=3).all()
+        for block in blocks:
+            mapping = DistrictGeounitMapping(plan = p, district = district, geounit = block)
+            mapping.save()
 
-import_shape(county)
-import_shape(tract)
-import_shape(block)
+# for config in configs: 
+# create_basic_template()
+
+# import_shape(county)
+# import_shape(tract)
+# import_shape(block)
+
+add_unassigned_to_template()

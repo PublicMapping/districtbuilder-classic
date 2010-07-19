@@ -107,3 +107,52 @@ def chooseplan(request):
             'mine': mine,
             'user': request.user,
         })
+
+def getdemographics(request, planid):
+    plan = Plan.objects.get(pk = planid)
+    if plan == None:
+        return HttpResponse ( "{ \"success\": false, \"message\":\"Couldn't get demographic info from the server. Please try again later.\" }" )
+    targets, aggregate, district_values = ({},)*3
+
+    district_ids = plan.district_set.values_list('id')
+    characteristics = ComputedCharacteristic.objects.filter(id__in=district_ids) 
+    for characteristic in characteristics:
+        if not characteristic.district.name in district_values: 
+            district_values[characteristic.district.name] = {}
+        district_values[characteristic.district.name][characteristic.subject.name] = characteristic.number        
+
+    for target in Target.objects.all():
+        targets[target.subject.name] = target.value
+        aggregate[target.subject.name] = characteristics.filter(subject = target.subject).aggregate(Sum('number')) 
+    return render_to_response('demographics.html', {
+        'plan': plan,
+        'district_values': district_values,
+        'characteristics': characteristics,
+        'targets': targets,
+    })
+
+
+def getgeography(request, planid):
+    plan = Plan.objects.get(pk = planid)
+    if plan == None:
+        return HttpResponse ( "{ \"success\": false, \"message\":\"Couldn't get geography info from the server. Please try again later.\" }" )
+    targets, aggregate, district_values = ({},)*3
+
+    district_ids = plan.district_set.values_list('id')
+    characteristics = ComputedCharacteristic.objects.filter(id__in=district_ids, subject__exact=3) 
+    for characteristic in characteristics:
+        if not characteristic.district.name in district_values: 
+            district_values[characteristic.district.name] = {}
+        district_values[characteristic.district.name][characteristic.subject.name] = characteristic.number        
+        district_values[characteristic.district.name]['contiguity'] = random.choice( [True, False] )
+        district_values[characteristic.district.name]['compactness'] = 'N/A'
+
+    for target in Target.objects.all():
+        targets[target.subject.name] = target.value
+        aggregate[target.subject.name] = characteristics.filter(subject = target.subject).aggregate(Sum('number')) 
+    return render_to_response('geography.html', {
+        'plan': plan,
+        'district_values': district_values,
+        'characteristics': characteristics,
+        'targets': targets,
+    })

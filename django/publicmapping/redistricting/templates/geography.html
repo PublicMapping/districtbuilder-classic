@@ -1,0 +1,50 @@
+                  <div class="plansummary">
+                      <h3>{{ plan.name }}</h3>
+                      <div><label>Population Equality:</label> <span id="eqmetric" class="value">92%</span></div>
+                      <div><label>Contiguity:</label> <span id="contmetric" class="value">79%</span></div>
+                      <div><label>Compactness:</label> <span id="compmetric" class="value">85%</span></div>
+
+                  </div>
+                  <div class="plantable header">
+                     <table>
+                      <thead>
+                          <tr>
+                              <th class="celldist">Dist.</th>
+                              <th class="cellpop">Population</th>
+                              <th class="cellcontig">Contiguity</th>
+                              <th class="cellcompact">Compactness</th>
+                          </tr>
+                      </thead>
+                   </table>
+                  </div>
+                  <div class="plantable body">
+                    {% if district_values %}
+                       <table>
+                          <tbody>
+                              {% for key, value in district_values %}
+                              <tr class="{% cycle 'odd' 'even' %}">
+                                  <td class="celldist">{{ key }}</td>
+                                  <td class="cellpop">
+                                      <span class="popstatus target"> 
+                                          {{ value['POP2005'] }}
+                                      </span>
+                                  </td>
+                                  {% if value['contiguity'] %}
+                                  <td class="cellcontig"><img class="yes-contiguous" src="/site-media/images/icon-check.png">
+                                  {% else %}
+                                  <td class="cellcontig"><img class="no-contiguous" src="/site-media/images/icon-warning.png">
+                                  {% endif %}
+                                  <div class="tooltip">this is a tooltip</div>
+                                  </td>                             
+                                  <td class="cellcompact">{{ value['compactness'] }}</td>
+                              </tr>
+                              {% endfor %}
+                          </tbody>
+                      </table>
+                    {% else %}
+                        <div class="error"> Sorry, there is no geographic data for this plan</div>
+                    {% endif %}                    
+                  </div>
+                 <div class="menu_footer">
+                    <button id="stats_legend" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false"><span class="ui-button-text">Stats Legend</span></button>
+                </div>

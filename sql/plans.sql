@@ -46,7 +46,7 @@ CREATE OR REPLACE VIEW demo_block_poptot AS
  SELECT rg.id, rg.name, rg.geolevel_id, rg.geom, rc.number, rc.percentage
    FROM redistricting_geounit rg
    JOIN redistricting_characteristic rc ON rg.id = rc.geounit_id
-  WHERE rc.subject_id = 1 AND rg.geolevel_id = 3;
+  WHERE rc.subject_id = 3 AND rg.geolevel_id = 3;
 
 ALTER TABLE demo_block_poptot OWNER TO publicmapping;
 
@@ -59,7 +59,7 @@ CREATE OR REPLACE VIEW demo_tract_poptot AS
  SELECT rg.id, rg.name, rg.geolevel_id, rg.geom, rc.number, rc.percentage
    FROM redistricting_geounit rg
    JOIN redistricting_characteristic rc ON rg.id = rc.geounit_id
-  WHERE rc.subject_id = 1 AND rg.geolevel_id = 2;
+  WHERE rc.subject_id = 3 AND rg.geolevel_id = 2;
 
 ALTER TABLE demo_tract_poptot OWNER TO publicmapping;
 
@@ -72,85 +72,85 @@ CREATE OR REPLACE VIEW demo_county_poptot AS
  SELECT rg.id, rg.name, rg.geolevel_id, rg.geom, rc.number, rc.percentage
    FROM redistricting_geounit rg
    JOIN redistricting_characteristic rc ON rg.id = rc.geounit_id
-  WHERE rc.subject_id = 1 AND rg.geolevel_id = 1;
+  WHERE rc.subject_id = 3 AND rg.geolevel_id = 1;
 
 ALTER TABLE demo_county_poptot OWNER TO publicmapping;
 
--- View: demo_block_pres_rep
+-- View: demo_block_pophisp
 
--- DROP VIEW demo_block_pres_rep;
+-- DROP VIEW demo_block_pophisp;
 
-CREATE OR REPLACE VIEW demo_block_pres_rep AS 
+CREATE OR REPLACE VIEW demo_block_pophisp AS 
+
+ SELECT rg.id, rg.name, rg.geolevel_id, rg.geom, rc.number, rc.percentage
+   FROM redistricting_geounit rg
+   JOIN redistricting_characteristic rc ON rg.id = rc.geounit_id
+  WHERE rc.subject_id = 1 AND rg.geolevel_id = 3;
+
+ALTER TABLE demo_block_pophisp OWNER TO publicmapping;
+
+-- View: demo_tract_pophisp
+
+-- DROP VIEW demo_tract_pophisp;
+
+CREATE OR REPLACE VIEW demo_tract_pophisp AS 
+
+ SELECT rg.id, rg.name, rg.geolevel_id, rg.geom, rc.number, rc.percentage
+   FROM redistricting_geounit rg
+   JOIN redistricting_characteristic rc ON rg.id = rc.geounit_id
+  WHERE rc.subject_id = 1 AND rg.geolevel_id = 2;
+
+ALTER TABLE demo_tract_pophisp OWNER TO publicmapping;
+
+-- View: demo_county_pophisp
+
+-- DROP VIEW demo_county_pophisp;
+
+CREATE OR REPLACE VIEW demo_county_pophisp AS 
+
+ SELECT rg.id, rg.name, rg.geolevel_id, rg.geom, rc.number, rc.percentage
+   FROM redistricting_geounit rg
+   JOIN redistricting_characteristic rc ON rg.id = rc.geounit_id
+  WHERE rc.subject_id = 1 AND rg.geolevel_id = 1;
+
+ALTER TABLE demo_county_pophisp OWNER TO publicmapping;
+
+
+-- View: demo_block_popblk
+
+-- DROP VIEW demo_block_popblk;
+
+CREATE OR REPLACE VIEW demo_block_popblk AS 
 
  SELECT rg.id, rg.name, rg.geolevel_id, rg.geom, rc.number, rc.percentage
    FROM redistricting_geounit rg
    JOIN redistricting_characteristic rc ON rg.id = rc.geounit_id
   WHERE rc.subject_id = 2 AND rg.geolevel_id = 3;
 
-ALTER TABLE demo_block_pres_rep OWNER TO publicmapping;
+ALTER TABLE demo_block_popblk OWNER TO publicmapping;
 
--- View: demo_tract_pres_rep
+-- View: demo_tract_popblk
 
--- DROP VIEW demo_tract_pres_rep;
+-- DROP VIEW demo_tract_popblk;
 
-CREATE OR REPLACE VIEW demo_tract_pres_rep AS 
+CREATE OR REPLACE VIEW demo_tract_popblk AS 
 
  SELECT rg.id, rg.name, rg.geolevel_id, rg.geom, rc.number, rc.percentage
    FROM redistricting_geounit rg
    JOIN redistricting_characteristic rc ON rg.id = rc.geounit_id
   WHERE rc.subject_id = 2 AND rg.geolevel_id = 2;
 
-ALTER TABLE demo_tract_pres_rep OWNER TO publicmapping;
+ALTER TABLE demo_tract_popblk OWNER TO publicmapping;
 
--- View: demo_county_pres_rep
+-- View: demo_county_popblk
 
--- DROP VIEW demo_county_pres_rep;
+-- DROP VIEW demo_county_popblk;
 
-CREATE OR REPLACE VIEW demo_county_pres_rep AS 
+CREATE OR REPLACE VIEW demo_county_popblk AS 
 
  SELECT rg.id, rg.name, rg.geolevel_id, rg.geom, rc.number, rc.percentage
    FROM redistricting_geounit rg
    JOIN redistricting_characteristic rc ON rg.id = rc.geounit_id
   WHERE rc.subject_id = 2 AND rg.geolevel_id = 1;
 
-ALTER TABLE demo_county_pres_rep OWNER TO publicmapping;
-
-
--- View: demo_block_pres_dem
-
--- DROP VIEW demo_block_pres_dem;
-
-CREATE OR REPLACE VIEW demo_block_pres_dem AS 
-
- SELECT rg.id, rg.name, rg.geolevel_id, rg.geom, rc.number, rc.percentage
-   FROM redistricting_geounit rg
-   JOIN redistricting_characteristic rc ON rg.id = rc.geounit_id
-  WHERE rc.subject_id = 3 AND rg.geolevel_id = 3;
-
-ALTER TABLE demo_block_pres_dem OWNER TO publicmapping;
-
--- View: demo_tract_pres_dem
-
--- DROP VIEW demo_tract_pres_dem;
-
-CREATE OR REPLACE VIEW demo_tract_pres_dem AS 
-
- SELECT rg.id, rg.name, rg.geolevel_id, rg.geom, rc.number, rc.percentage
-   FROM redistricting_geounit rg
-   JOIN redistricting_characteristic rc ON rg.id = rc.geounit_id
-  WHERE rc.subject_id = 3 AND rg.geolevel_id = 2;
-
-ALTER TABLE demo_tract_pres_dem OWNER TO publicmapping;
-
--- View: demo_county_pres_dem
-
--- DROP VIEW demo_county_pres_dem;
-
-CREATE OR REPLACE VIEW demo_county_pres_dem AS 
-
- SELECT rg.id, rg.name, rg.geolevel_id, rg.geom, rc.number, rc.percentage
-   FROM redistricting_geounit rg
-   JOIN redistricting_characteristic rc ON rg.id = rc.geounit_id
-  WHERE rc.subject_id = 3 AND rg.geolevel_id = 1;
-
-ALTER TABLE demo_county_pres_dem OWNER TO publicmapping;
+ALTER TABLE demo_county_popblk OWNER TO publicmapping;

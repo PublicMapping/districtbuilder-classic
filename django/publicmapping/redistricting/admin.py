@@ -20,7 +20,7 @@ class DistrictInline(admin.TabularInline):
 class DistrictAdmin(admin.OSMGeoAdmin):
     list_display = ('name','plan','version',)
     list_filter = ('plan',)
-    raw_id_fields = ('geounits',)
+#     raw_id_fields = ('geounits',)
     ordering = ('name',)
 
 class PlanAdmin(admin.ModelAdmin):
