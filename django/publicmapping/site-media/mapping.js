@@ -77,7 +77,12 @@ function init() {
             5.341470241546631E-4, 2.6707351207733154E-4, 1.3353675603866577E-4],
         maxExtent: layerExtent,
         projection: projection,
-        units: 'm'
+        units: 'm',
+        controls: [
+            new OpenLayers.Control.Navigation(),
+            new OpenLayers.Control.PanPanel(),
+            new OpenLayers.Control.ZoomPanel()
+        ]
     });
 
     // These layers are dependent on the layers available in geowebcache
@@ -206,14 +211,6 @@ function init() {
         });
     });
 
-    olmap.events.register('changelayer', getControl, function(e){
-        if ( e.layer.isBaseLayer && e.layer[e.property]) {
-            var newOpts = getControl.protocol.options;
-            newOpts.featureType = getSnapLayer();
-            getControl.protocol = new OpenLayers.Protocol.WFS( newOpts );
-        }
-    });
-
     olmap.addControls([
         new OpenLayers.Control.LayerSwitcher(),
         getControl,
@@ -222,11 +219,18 @@ function init() {
 
     getControl.activate();
 
+    $('#snapto').change(function(evt){
+        var newOpts = getControl.protocol.options;
+        newOpts.featureType = getSnapLayer();
+        getControl.protocol = new OpenLayers.Protocol.WFS( newOpts );
+    });
+
     // Set the initial map extents to the bounds around the study area.
     // TODO Make these configurable.
     olmap.zoomToExtent(new OpenLayers.Bounds(-9467000,4570000,-8930000,5170000));
     OpenLayers.Element.addClass(olmap.viewPortDiv, 'olCursorWait');
 }
+
 
 /************************************************************************/
 /* DistrictAssignment
