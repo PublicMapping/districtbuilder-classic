@@ -9,8 +9,14 @@
    <!-- <script type="text/javascript" src="/site-media/OpenLayers-2.9.1/lib/OpenLayers.js"></script> debug -->
     <script type="text/javascript">
         var MAP_SERVER = '{{ mapserver }}';
-        var MAP_LAYERS = [ {% for layer in layers %} 'gmu:{{ layer }}'{% if not forloop.last %},{% endif %} {% endfor %} ];
-        var SNAP_LAYERS = [ {% for snap in snaplayers %} { layer: 'simple_{{ snap.layer }}', name: '{{ snap.name }}' }{% if not forloop.last %},{% endif %} {% endfor %} ];
+        var SNAP_LAYERS = [ {% for snap in snaplayers %} { level: '{{ snap.layer }}',layer: 'simple_{{ snap.layer }}', name: '{{ snap.name }}' }{% if not forloop.last %},{% endif %} {% endfor %} ];
+        var DEMOGRAPHICS = [{% for demo in demographics %} { text: '{{ demo.text }}', value: '{{ demo.value }}' }{% if not forloop.last %},{% endif %} {% endfor %} ];
+        var MAP_LAYERS = [];
+        for (var i = 0; i < SNAP_LAYERS.length; i++) {
+            for (var j = 0; j < DEMOGRAPHICS.length; j++) {
+                MAP_LAYERS.push( 'gmu:demo_' + SNAP_LAYERS[i].level + '_' + DEMOGRAPHICS[j].value );
+            }
+        }
     </script>
     <script type="text/javascript" src="/site-media/jquery/jquery-1.4.2.js"></script>
     <script type="text/javascript" src="/site-media/jquery/jquery-ui-1.8.2.custom.min.js"></script>
@@ -50,28 +56,40 @@
             <div class="toolset" id="toolset_edit">
               <div class="toolset_group">
                 <img src="/site-media/images/icon-help.png" class="help">
-                <label>Snap to:</label>
+                <label>Snap Map to:</label>
                 <select id="snapto">
-                    <script type="text/javascript">
+                  <script type="text/javascript">
                     for (var i = 0; i < SNAP_LAYERS.length; i++) {
                         var snap = SNAP_LAYERS[i];
                         document.write('<option value="' + snap.layer + '">' + snap.name + '</option>');
                     }
-                    </script>
-                 </select>
-                </div>
-                              <div class="toolset_group">
+                  </script>
+                </select>
+              </div>
+              <div class="toolset_group">
                 <img src="/site-media/images/icon-help.png" class="help">
-                <label>Snap to:</label>
-                <select id="snapto">
-                    <script type="text/javascript">
+                <label>Show Layer by:</label>
+                <select id="showby">
+                  <script type="text/javascript">
+                    for (var i = 0; i < DEMOGRAPHICS.length; i++) {
+                        var demo = DEMOGRAPHICS[i];
+                        document.write('<option value="' + demo.value + '">' + demo.text + '</option>');
+                    }
+                  </script>
+                </select>
+              </div>
+              <div class="toolset_group">
+                <img src="/site-media/images/icon-help.png" class="help">
+                <label>Show Boundaries for:</label>
+                <select id="boundfor">
+                  <script type="text/javascript">
                     for (var i = 0; i < SNAP_LAYERS.length; i++) {
                         var snap = SNAP_LAYERS[i];
-                        document.write('<option value="' + snap.layer + '">' + snap.name + '</option>');
+                        document.write('<option value="' + snap.level + '">' + snap.name + '</option>');
                     }
-                    </script>
-                 </select>
-                </div>
+                  </script>
+                </select>
+              </div>
                 
                 
         <button class="toolbar_toggle" id="start_drawing">Start Drawing</button>

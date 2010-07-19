@@ -24,6 +24,14 @@ function getSnapLayer() {
     return $('#snapto').val();
 }
 
+function getShowBy() {
+    return $('#showby').val();
+}
+
+function getBoundLayer() {
+    return $('#boundfor').val();
+}
+
 /* USING CSS METHODS INSTEAD
  * Resize the map. This is a fix for IE, which does not assign a height
  * to the map div if it is not explicitly set.
@@ -77,12 +85,7 @@ function init() {
             5.341470241546631E-4, 2.6707351207733154E-4, 1.3353675603866577E-4],
         maxExtent: layerExtent,
         projection: projection,
-        units: 'm',
-        controls: [
-            new OpenLayers.Control.Navigation(),
-            new OpenLayers.Control.PanPanel(),
-            new OpenLayers.Control.ZoomPanel()
-        ]
+        units: 'm'
     });
 
     // These layers are dependent on the layers available in geowebcache
@@ -172,10 +175,12 @@ function init() {
         selection.removeFeatures([e.feature]);
     });
 
+/*
     var assignControl = new DistrictAssignment({
         selection: selection,
         districts: districtLayer
     });
+*/
 
     districtLayer.events.register('loadstart',districtLayer,function(){
         OpenLayers.Element.addClass(olmap.viewPortDiv, 'olCursorWait');
@@ -187,6 +192,7 @@ function init() {
 
     var jsonParser = new OpenLayers.Format.JSON();
 
+/*
     assignControl.events.register('geounitadded', this, function(e){
         var district_id = e.district;
         var feature = e.selection[0];
@@ -210,11 +216,9 @@ function init() {
             }
         });
     });
-
+*/
     olmap.addControls([
-        new OpenLayers.Control.LayerSwitcher(),
-        getControl,
-        assignControl
+        getControl
     ]);
 
     getControl.activate();
@@ -223,6 +227,18 @@ function init() {
         var newOpts = getControl.protocol.options;
         newOpts.featureType = getSnapLayer();
         getControl.protocol = new OpenLayers.Protocol.WFS( newOpts );
+    });
+
+    $('#showby').change(function(evt){
+        var boundary = getBoundLayer();
+        var layers = olmap.getLayersByName('gmu:demo_' + boundary + '_' + evt.target.value);
+        olmap.setBaseLayer(layers[0]);
+    });
+
+    $('#boundfor').change(function(evt){
+        var show = getShowBy();
+        var layers = olmap.getLayersByName('gmu:demo_' + evt.target.value + '_' + show);
+        olmap.setBaseLayer(layers[0]);
     });
 
     // Set the initial map extents to the bounds around the study area.
