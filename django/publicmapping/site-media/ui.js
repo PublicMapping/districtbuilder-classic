@@ -74,9 +74,11 @@ $(function() {
             .toggle(
               function(){
                 $(this).button({icons: {primary: 'ui-icon-arrow-right'}})
+                $('#updatestatsbtn').hide();
               },
               function(){
-                $(this).button({icons: {primary: 'ui-icon-arrow-down'}})
+                $(this).button({icons: {primary: 'ui-icon-arrow-down'}});
+                $('#updatestatsbtn').show();
               })
             .click(function(){
               if ( $(".map_menu_content:visible'").length === 0) {

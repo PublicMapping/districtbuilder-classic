@@ -397,6 +397,14 @@ div#TemplateTypeContent {
   box-shadow: 0 0 20px -5px #000000;   
 }  
 
+div#TemplateTypeContent label {
+display:block;
+font-size:14px;
+font-weight:bold;
+margin-bottom:5px;
+}
+
+
 div #TemplateTypeContent div {
    margin-top: 15px;
 }
@@ -653,11 +661,11 @@ div#map_menu_header {
     border-radius:10px 10px 0 0;
     }
 div#map_menu_header button.menu_toggle{
-width: 20px;
-height: 20px;
-float:left;
-margin: 2px 0 0 5px;
-background-color: #6B9571;
+    width: 20px;
+    height: 20px;
+    float:left;
+    margin: 2px 0 0 7px;
+    background-color: #6B9571;
 }
 button.menu_toggle .ui-icon {margin-top: -11px;}
 button.menu_toggle .ui-icon-arrow-right {
@@ -676,7 +684,7 @@ div#map_menu_header select {
 }
     
 div#map_menu_header label {
-  margin: 0 5px 0 10px;
+  margin: 0 5px 0 7px;
   display: block;
   float:left;
   font-size: 11px; 

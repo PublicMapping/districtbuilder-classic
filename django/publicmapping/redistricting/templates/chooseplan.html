@@ -16,6 +16,7 @@
 <div id="TemplateSelectors">
         <div id="TemplateSelection" class="SelectionGroup" >
     {% if templates %}
+        <label>Select a Template</label>
         <select id="ddlTemplate" class="Selectors" >
         {% for plan in templates %}
             <option value="{{ plan.id }}">{{ plan.name }}</option>
@@ -35,13 +36,14 @@
     {% endif %}
         </div>
         <div id="MineSelection" class="SelectionGroup" >
+        <label>Select a Plan</label>
     {% if mine %}
         <select id="ddlMine" class="Selectors">
         {% for plan in mine %}
             <option value="{{ plan.id }}">{{ plan.name }}</option>
         {% endfor %}
         </select>
-
+        <br/>
         <input type="radio" name="Edit" value="edit" checked>Edit Selected Plan</input>
         <input type="radio" name="Edit" value="saveas">Copy and Save Selected Plan</input>
 
@@ -51,7 +53,7 @@
 </div>
 
 <div id="NewName">
-    <label for="txtNewName" id="lblNewName">Template copy name:</label>
+    <label for="txtNewName" id="lblNewName">Template copy name:</label><br/>
     <input type="text" id="txtNewName" />
 </div>
 <button id="btnSelectPlan" type="submit">Start Drawing</button>
