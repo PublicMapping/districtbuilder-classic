@@ -34,21 +34,7 @@ function loadTooltips() {
           this.getTip().appendTo(this.getTrigger());
           }
       });    
-}
-
-
-$(function() {
-    // jQuery-UI tab layout
-		$('#steps').tabs();
-    
-    // jQuery Tools tooltips   
-     // tooltip divs need to be placed directly after an itemed classed "help"
-    loadTooltips();
-    
-         
       
-    
-     
      $("#stats_legend").tooltip({
        position: 'top center',
        effect: 'slide',
@@ -63,7 +49,17 @@ $(function() {
           // restore original DOM placement
           this.getTip().appendTo(this.getTrigger());
           }
-     })
+     })  
+}
+
+
+$(function() {
+    // jQuery-UI tab layout
+		$('#steps').tabs();
+    
+    // jQuery Tools tooltips   
+    loadTooltips();
+
     
     
     // jQuery-UI buttons   
