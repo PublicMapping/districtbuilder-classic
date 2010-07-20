@@ -23,12 +23,22 @@ def copyplan(request, planid):
         copy.save()
     except IntegrityError:
         pass
-        #         return HttpResponse("[{ \"success\" : false, \"message\" : \"Can't create a plan with a duplicate name\" }]")
+
     districts = p.district_set.all()
     for district in districts:
         district_copy = District(name = district.name, plan = copy, version = 0, geom = district.geom, simple = district.simple)
         district_copy.save() 
+
+        # clone all the geounits
+        from django.db import connection, transaction
+        cursor = connection.cursor()
+
+        sql = "insert into redistricting_districtgeounitmapping (plan_id, district_id, geounit_id) select %d, %d, geounit_id from redistricting_districtgeounitmapping where plan_id = %d and district_id = %d;" % (copy.id, district_copy.id, p.id, district.id)
+        cursor.execute(sql)
+        transaction.commit_unless_managed()
+
     data = serializers.serialize("json", [ copy ])
+
     return HttpResponse(data)    
     
 @login_required
@@ -120,7 +130,7 @@ def getdemographics(request, planid):
     district_values = {}
 
     district_ids = plan.district_set.values_list('id')
-    characteristics = ComputedCharacteristic.objects.filter(id__in=district_ids) 
+    characteristics = ComputedCharacteristic.objects.filter(district__in=district_ids) 
     for characteristic in characteristics:
         dist_name = characteristic.district.name
         if dist_name == "Unassigned":
@@ -154,7 +164,7 @@ def getgeography(request, planid):
     district_values = {}
 
     district_ids = plan.district_set.values_list('id')
-    characteristics = ComputedCharacteristic.objects.filter(id__in=district_ids, subject__exact=3) 
+    characteristics = ComputedCharacteristic.objects.filter(district__in=district_ids, subject__exact=3) 
     for characteristic in characteristics:
         dist_name = characteristic.district.name
         if dist_name == "Unassigned":
@@ -191,3 +201,12 @@ def updatestats(request, planid):
         return HttpResponse("{\"success\": true, \"message\":\"Updated stats for " + str(plan.name)+  "\"}")
     except:
         return HttpResponse("{\"success\": false, \"message\":\"Couldn't update stats\"}")
+
+def updatedistrict(request, planid, districtid):
+    plan = Plan.objects.get(pk=planid)
+    district = plan.district_set.get(district_id=districtid)
+    try:
+        district.update_stats()
+        return HttpResponse("{\"success\": true}")
+    except:
+        return HttpResponse("{\"success\": false}")
