@@ -50,6 +50,8 @@ $(function() {
     // jQuery-UI buttons   
     loadButtons();
     
+    
+        
         // stats dropdown button
         $('.menu_toggle')
             .button({
@@ -86,7 +88,7 @@ $(function() {
         
         
         // map editing buttons
-        $('#toolset_draw .toolset_group button').button({
+        $('#toolset_draw .toolset_group button, #toolset_draw .toolset_group_w button').button({
             icons: {primary: 'ui-icon'},
             text:false
         });    

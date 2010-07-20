@@ -507,11 +507,50 @@ div#toolsets {
 div.toolset {
   width: 100%
   }
-
     
 div.toolset#toolset_draw {
   position:absolute;
   top:51px;
+}
+
+div.toolset#toolset_draw .ui-button-icon-only {
+text-align:center;
+height: 20px;
+background-color:transparent;
+background-image:none;
+border:none;
+padding:0;
+margin-top: 2px
+}
+div.toolset#toolset_draw .ui-icon {
+ margin-top: -12px;
+ background-position: 50% 50%;
+ background-repeat:none;
+}
+
+#navigate_map_tool  .ui-icon {
+  background-image: url(/site-media/images/icon-pan.png);
+}
+#identify_map_tool  .ui-icon {
+  background-image: url(/site-media/images/icon-identify.png);
+}
+#single_drawing_tool  .ui-icon {
+  background-image: url(/site-media/images/icon-select.png);
+}
+#rectangle_drawing_tool  .ui-icon {
+  background-image:  url(/site-media/images/icon-select-rect.png);
+}
+#polygon_drawing_tool  .ui-icon {
+  background-image:  url(/site-media/images/icon-select-poly.png);
+}
+#assign_tool .ui-icon {
+  background-image:  url(/site-media/images/icon-assign.png);
+}
+#history_undo .ui-icon {
+  background-image: url(/site-media/images/icon-undo.png);
+}
+#history_redo  .ui-icon {
+  background-image: url(/site-media/images/icon-redo.png);
 }
 
 
@@ -521,12 +560,12 @@ div.toolset_group, div.toolset_group_w {
   font-weight:bold;
   cursor:pointer;
   background: url(/site-media/images/divider-vert.png) 100% 0 repeat-y;
-    padding: 8px 12px;
+  padding: 8px 12px;
   }
   
 div#toolset_edit div.toolset_group  {width: 142px }
-div#toolset_draw div.toolset_group  {width: auto; }
-div#toolsets div.toolset_group_w  { }
+div#toolset_draw div.toolset_group  {padding-top: 5px; width: auto; }
+div#toolset_draw div.toolset_group_w  {padding-top: 5px; }
 
 div.toolset_group.first, div.toolset_group_w.first {padding-left: 0}
 div .toolset_group.last, div .toolset_group_w.last {background: none}
