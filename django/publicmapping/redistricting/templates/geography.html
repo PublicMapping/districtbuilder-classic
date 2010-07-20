@@ -9,10 +9,14 @@
                       <thead>
                          {% if targets %}
                           <tr>
-                             <th class="celldist">Dist.</th>
-                              {% for key, value in targets.items %}
+                              <th class="celldist">Dist.</th>
+                              <th class="cellsubjects">Population</th>
+                              <th class="cellsubjects">Contiguity</th>
+                              <th class="cellsubjects">Compactness</th>
+                           <!--    {% for key, value in targets.items %}
                               <th class="cellsubjects">{{ key }}</th>
                               {% endfor %}
+                            -->
                           </tr>
                         {% endif %}
                       </thead>

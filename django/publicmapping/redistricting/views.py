@@ -131,13 +131,11 @@ def getdemographics(request, planid):
 
     for target in Target.objects.all():
         targets[target.subject.short_display] = target.value
-        aggregate[target.subject.short_display] = "%.0f" % characteristics.filter(subject = target.subject).aggregate(Sum('number'))['number__sum']
     return render_to_response('demographics.html', {
         'plan': plan,
-        'district_values': district_values,
-        'aggregate': aggregate,
-        'characteristics': characteristics,
         'targets': targets,
+        'district_values': district_values,
+        'aggregate': getaggregate(district_ids),
     })
 
 
@@ -170,13 +168,20 @@ def getgeography(request, planid):
 
     for target in Target.objects.all():
         targets[target.subject.short_display] = target.value
-        aggregate[target.subject.short_display]= characteristics.filter(subject = target.subject).aggregate(Sum('number'))['number__sum'] 
     return render_to_response('geography.html', {
         'plan': plan,
         'district_values': district_values,
-        'characteristics': characteristics,
+        'aggregate': getaggregate(district_ids),
         'targets': targets,
     })
+
+
+def getaggregate(district_ids):
+    aggregate = {}
+    characteristics = ComputedCharacteristic.objects.filter(id__in=district_ids) 
+    for target in Target.objects.all():
+        aggregate[target.subject.short_display]= "%.0f" % characteristics.filter(subject = target.subject).aggregate(Sum('number'))['number__sum'] 
+    return aggregate
 
 def updatestats(request, planid):
     plan = Plan.objects.get(pk=planid)
