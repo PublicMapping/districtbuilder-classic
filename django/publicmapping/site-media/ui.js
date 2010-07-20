@@ -4,11 +4,26 @@ function loadButtons() {
 }
 
 function loadTooltips() {
-    $(".help").tooltip({ 
+    $(".divtip").tooltip({ 
       position: 'bottom left',
       offset: [8,10],
       delay: 200,
       predelay: 50,
+      opacity: .8,      
+      onBeforeShow:  function() {
+          // ensure proper DOM placement
+          this.getTip().appendTo('body');
+          },
+      onHide:  function() {
+          // restore original DOM placement
+          this.getTip().appendTo(this.getTrigger());
+          }
+      });    
+  
+    $(".titletip[title]").tooltip({
+      position: 'bottom right',
+      delay: 250,
+      predelay: 600,
       opacity: .8,      
       onBeforeShow:  function() {
           // ensure proper DOM placement
@@ -29,6 +44,10 @@ $(function() {
     // jQuery Tools tooltips   
      // tooltip divs need to be placed directly after an itemed classed "help"
     loadTooltips();
+    
+         
+      
+    
      
      $("#stats_legend").tooltip({
        position: 'top center',
@@ -94,9 +113,9 @@ $(function() {
               text:false
           })
           .click(function(){
-            if($(this).hasClass('toggle')) {
-              $('.toolset_group button.toggle').removeClass('active');
-              $(this).addClass('active');
+            if($(this).hasClass('btntoggle')) {
+              $('.toolset_group button.btntoggle').removeClass('toggle');
+              $(this).addClass('toggle');
             }
           });    
         

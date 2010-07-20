@@ -395,7 +395,6 @@ div#TemplateTypeContent {
   -moz-box-shadow: 0 0 20px -5px #000000;
   -webkit-box-shadow: 0 0 20px -5px #000000; 
   box-shadow: 0 0 20px -5px #000000;   
-
 }  
 
 div #TemplateTypeContent div {
@@ -406,7 +405,8 @@ div#PlanChooser button#btnSelectPlan {display:none; margin-top: 15px; font-size:
 
 
 div#SharedSelection, div#SelectorsHelp{
-  font-size: 12px;
+  font-size: 16px;
+  font-weight:bold;
 }
 
 
@@ -522,9 +522,20 @@ padding:0;
 margin-top: 2px
 }
 
-div.toolset#toolset_draw .ui-button-icon-only.active {
+div.toolset#toolset_draw .ui-button-icon-only.toggle, div.toolset#toolset_draw .ui-button-icon-only.ui-state-active{
   background:none repeat scroll 0 0 #A8CFCB;
   border:1px solid #DFFFFB;
+}
+div.toolset#toolset_draw .ui-button-icon-only.ui-state-hover {
+  background:none;
+  border:1px solid #C2EFE9;
+}
+
+div.toolset#toolset_draw .ui-button-icon-only.disabled, div.toolset#toolset_draw .ui-button-icon-only.ui-state-hover.disabled {
+opacity: .5;
+border:none;
+background-color:#6B8F8B;
+cursor: not-allowed;
 }
 
 div.toolset#toolset_draw .ui-icon {
@@ -575,7 +586,7 @@ div#toolset_draw div.toolset_group  {padding-top: 5px; width: auto; }
 div.toolset_group.first {padding-left: 0}
 div .toolset_group.last {background: none}
 
-div.toolset_group .help, div.toolset_group_w .help {
+div.toolset_group .help{
   float:right;
 }
 
@@ -872,6 +883,7 @@ div.controlDiv select {
   padding: 5px;
   border: 1px solid #666;
 	font-size:11px;
+  line-height: 14px;
 	color:#fff;
   z-index: 10000;
   max-width: 141px;
