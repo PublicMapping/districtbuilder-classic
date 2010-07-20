@@ -29,4 +29,6 @@ urlpatterns = patterns('',
     (r'^districtmapping/plan/(?P<planid>\d*)/copy/$', 'publicmapping.redistricting.views.copyplan'),
     (r'^districtmapping/plan/(?P<planid>\d*)/district/(?P<districtid>\d*)/add', 'publicmapping.redistricting.views.addtodistrict'),
     (r'^districtmapping/plan/(?P<planid>\d*)/demographics', 'publicmapping.redistricting.views.getdemographics'),
-    (r'^districtmapping/plan/(?P<planid>\d*)/geography', 'publicmapping.redistricting.views.getgeography'),)
+    (r'^districtmapping/plan/(?P<planid>\d*)/geography', 'publicmapping.redistricting.views.getgeography'),
+    (r'^districtmapping/plan/(?P<planid>\d*)/updatestats', 'publicmapping.redistricting.views.updatestats'),
+)

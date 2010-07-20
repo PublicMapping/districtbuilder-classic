@@ -1,19 +1,20 @@
                   <div class="plansummary">
                       <h3>{{ plan.name }}</h3>
-                      <div><label>Population Equality:</label> <span id="eqmetric" class="value">92%</span></div>
-                      <div><label>Contiguity:</label> <span id="contmetric" class="value">79%</span></div>
-                      <div><label>Compactness:</label> <span id="compmetric" class="value">85%</span></div>
-
+                    {% for key,value in aggregate.items %}
+                      <div><label>{{ key }}</label> <span id="totalpop" class="value">{{ value  }}</span></div>
+                    {% endfor %}
                   </div>
                   <div class="plantable header">
                      <table>
                       <thead>
+                         {% if targets %}
                           <tr>
-                              <th class="celldist">Dist.</th>
-                              <th class="cellpop">Population</th>
-                              <th class="cellcontig">Contiguity</th>
-                              <th class="cellcompact">Compactness</th>
+                             <th class="celldist">Dist.</th>
+                              {% for key, value in targets.items %}
+                              <th class="cellsubjects">{{ key }}</th>
+                              {% endfor %}
                           </tr>
+                        {% endif %}
                       </thead>
                    </table>
                   </div>

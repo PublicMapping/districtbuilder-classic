@@ -169,11 +169,15 @@ def getgeography(request, planid):
         district_values[dist_name]['compactness'] = str( random.randint(50, 80)) + "%"
 
     for target in Target.objects.all():
-        targets[target.subject.name] = target.value
-        aggregate[target.subject.name] = characteristics.filter(subject = target.subject).aggregate(Sum('number')) 
+        targets[target.subject.short_display] = target.value
+        aggregate[target.subject.short_display]= characteristics.filter(subject = target.subject).aggregate(Sum('number'))['number__sum'] 
     return render_to_response('geography.html', {
         'plan': plan,
         'district_values': district_values,
         'characteristics': characteristics,
         'targets': targets,
     })
+
+def updatestats(request, planid):
+    plan = Plan.objects.get(pk=planid)
+    plan.update_stats()

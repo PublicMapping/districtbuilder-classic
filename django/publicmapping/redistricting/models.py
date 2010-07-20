@@ -6,6 +6,7 @@ from django.forms import ModelForm
 from django.conf import settings
 from datetime import datetime
 from django.db.models.signals import pre_save
+from django.db.models import Sum
 
 class Subject(models.Model):
     name = models.CharField(max_length=50)
@@ -127,7 +128,7 @@ class Plan(models.Model):
             district.save()
             fixed += 1
 
-        if not target.geom is None:
+        
             union = target.geom.union(incremental)
             if union.geom_type != 'MultiPolygon':
                 target.geom = MultiPolygon(union)
@@ -145,6 +146,11 @@ class Plan(models.Model):
 
         return fixed
 
+
+    def update_stats(self):
+        districts = self.district_set.all()
+        for district in districts:
+            district.update_stats()
 
 #    def delete_geounits(self, geounit_ids, geolevel):
 #        """Delete the requested geounits from given district       
@@ -215,6 +221,17 @@ class District(models.Model):
     
     def __unicode__(self):
         return self.name
+
+
+    def update_stats(self):
+        all_subjects = Subject.objects.all()
+        my_geounits = DistrictGeounitMapping.objects.filter(district = self).values_list('geounit', flat=True)
+        for subject in all_subjects:
+            aggregate = Characteristic.objects.filter(geounit__in=my_geounits, subject__exact = subject).aggregate(Sum('number'))['number__sum']
+            if aggregate:
+                computed = ComputedCharacteristic(subject = subject, district = self, number = aggregate)
+                computed.save()
+
 
 class DistrictGeounitMapping(models.Model):
     district = models.ForeignKey(District)
