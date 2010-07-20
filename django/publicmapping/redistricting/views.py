@@ -5,6 +5,7 @@ from django.db.models import Sum
 from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import login_required
 from django import forms
+from publicmapping import settings
 from publicmapping.redistricting.models import *
 import random, string
 
@@ -25,9 +26,8 @@ def copyplan(request, planid):
         #         return HttpResponse("[{ \"success\" : false, \"message\" : \"Can't create a plan with a duplicate name\" }]")
     districts = p.district_set.all()
     for district in districts:
-        district_copy = District(name = district.name, plan = copy, version = 0)
+        district_copy = District(name = district.name, plan = copy, version = 0, geom = district.geom, simple = district.simple)
         district_copy.save() 
-        district_copy.geounits = district.geounits.all()
     data = serializers.serialize("json", [ copy ])
     return HttpResponse(data)    
     
@@ -100,8 +100,9 @@ def chooseplan(request):
         return HttpResponse("looking for the requested plan")
         # plan has been chosen.  Open it up
     else:
-        templates = Plan.objects.filter(is_template=True, owner = 1)
-        shared = Plan.objects.exclude(owner = 1).exclude(owner=request.user).filter(is_template=True)
+        owner = User.objects.get(username=settings.ADMINS[0][0])
+        templates = Plan.objects.filter(is_template=True, owner=owner)
+        shared = Plan.objects.exclude(owner=owner).exclude(owner=request.user).filter(is_template=True)
         mine = Plan.objects.filter(owner=request.user)
         return render_to_response('chooseplan.html', {
             'templates': templates,

@@ -108,7 +108,7 @@ class Plan(models.Model):
 
         # incremental is the geometry that is changing
 
-        target = District.objects.get(district_id=districtid)
+        target = District.objects.get(district_id=districtid,plan=self)
 
         DistrictGeounitMapping.objects.filter(geounit__in=base_geounit_ids, plan=self).update(district=target)
 
