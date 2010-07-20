@@ -342,12 +342,26 @@ function init() {
         new GlobalZoom()
     ]);
 
+    var boundforChange = function(evt) {
+        var show = getShowBy();
+        var layers = olmap.getLayersByName('gmu:demo_' + evt.target.value + '_' + show);
+        olmap.setBaseLayer(layers[0]);
+    };
+
     $('#snapto').change(function(evt){
         var newOpts = getControl.protocol.options;
         newOpts.featureType = getSnapLayer();
         getControl.protocol = 
             boxControl.protocol = new OpenLayers.Protocol.WFS( newOpts );
-        $('#boundfor').val( getSnapLayer() );
+        var opts = $('#boundfor option');
+        for (var i = 0; i < opts.length; i++) {
+            if (newOpts.featureType.indexOf(opts[i].value) > 0) {
+                var select = $('#boundfor')[0];
+                select.selectedIndex = i;
+                boundforChange( { target:select } );
+                return;
+            }
+        }
     });
 
     $('#showby').change(function(evt){
@@ -356,11 +370,7 @@ function init() {
         olmap.setBaseLayer(layers[0]);
     });
 
-    $('#boundfor').change(function(evt){
-        var show = getShowBy();
-        var layers = olmap.getLayersByName('gmu:demo_' + evt.target.value + '_' + show);
-        olmap.setBaseLayer(layers[0]);
-    });
+    $('#boundfor').change(boundforChange);
 
     $('#assign_district').change(function(evt){
         if (this.value == '-1'){
