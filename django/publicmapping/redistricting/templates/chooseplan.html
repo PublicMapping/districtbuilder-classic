@@ -1,12 +1,14 @@
 <div id="PlanChooser" title = "Choose a Plan.  Start Drawing.">
 
-<div id="TemplateTypeButtons">
-    <div id="btnBlank">Blank Map</div>
-    <div id="btnTemplate">Template</div>
-    <div id="btnShared">Plan by Other User</div>
-    <div id="btnMine">Plans saved by {{ user }}</div>
-</div>
 
+  <ul id="TemplateTypeButtons">
+    <li id="btnBlank">Blank Map</li>
+    <li id="btnTemplate">Template</li>
+    <li id="btnShared">Plan by Other User</li>
+    <li id="btnMine">Plans saved by {{ user }}</li
+   </ul>
+
+<div id="TemplateTypeContent">
 <div id="SelectorsHelp">
     To start, click on a button to determine which kind of template you'll be using.
 </div>
@@ -53,5 +55,7 @@
     <input type="text" id="txtNewName" />
 </div>
 <button id="btnSelectPlan" type="submit">Start Drawing</button>
+
+</div>
 
 </div>

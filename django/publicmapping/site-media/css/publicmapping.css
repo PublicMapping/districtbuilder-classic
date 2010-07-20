@@ -334,21 +334,77 @@ input#evalbtn, input#sharebtn {
 /*choose a plan overlay */
 
 div#PlanChooser {
-  padding: -10px -5px;
+  margin: -10px -5px 0 -3px;
+  padding:0;
+  height: 250px !important;
+  overflow:hidden;
 }
 
-div#TemplateTypeButtons {
+ul#TemplateTypeButtons {
+
   width: 170px;
   float:left;
-  margin: 10px 15px 0 0;
+  overflow:hidden;
+  height: 100%;
+  background: #eee;
+  -moz-border-radius: 0 0 0 10px ;
+  -webkit-border-radius:   0 0 0 10px;
+  border-radius:   0 0 0 10px;
+  
 }
-button#btnSelectPlan {display:none}
 
-div#TemplateTypeButtons  button{
-  width: 100%;
-  margin-bottom: 10px;
-  font-size: 12px;
+ul#TemplateTypeButtons li {
+  color:#fff;
+  background-color:#8BD1BC;
+  border-bottom:1px solid #FFFFFF;
+  cursor:pointer;
+  display:block;
+  font-size:14px;
+  font-weight:bold;
+  padding:13px 0;
+  text-align:center;
+  position:relative;
+  background-image: url(/site-media/images/bg-button-lg.png);
+  background-position: center center;
+  background-repeat:  repeat-x;
+  }
+ul#TemplateTypeButtons li:hover {
+  background-color: #98dbc7;
+  }
+  
+ul#TemplateTypeButtons li.active {
+  color:#333;
+  background-image:none;
+  background-color: #fff;
+  -moz-box-shadow: 0 0 20px -5px #000000;
+  -webkit-box-shadow: 0 0 20px -5px #000000;
+  box-shadow: 0 0 20px -5px #000000;  
+  z-index:10;
 }
+  
+div#TemplateTypeContent {
+  background-color:#FFFFFF;
+  float:left;
+  font-size:12px;
+  height:100%;
+  margin-top:0;
+  padding:0 15px;
+  position:relative;
+  width:408px;
+  z-index:9;
+  overflow:auto;
+  -moz-box-shadow: 0 0 20px -5px #000000;
+  -webkit-box-shadow: 0 0 20px -5px #000000; 
+  box-shadow: 0 0 20px -5px #000000;   
+
+}  
+
+div #TemplateTypeContent div {
+   margin-top: 15px;
+}
+  
+div#PlanChooser button#btnSelectPlan {display:none; margin-top: 15px; font-size: 14px;}
+
 
 div#SharedSelection, div#SelectorsHelp{
   font-size: 12px;

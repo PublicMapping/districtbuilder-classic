@@ -10,7 +10,7 @@ publicmapping.chooseplan = function(options) {
             callback: function() {},
             autoOpen: false,
             modal: true,
-            width:600
+            width:600,
         }, options),
         // bunch o variables
         
@@ -40,9 +40,9 @@ publicmapping.chooseplan = function(options) {
         $('.SelectionGroup').hide();
         $('#SelectorHelp').show();
         $('#btnBlank').click(function() { window.location = '/districtmapping/plan/create'; });
-        $('#btnTemplate').click(function() { showOnly('#TemplateSelection'); });
-        $('#btnShared').click(function() { showOnly('#SharedSelection'); });
-        $('#btnMine').click(function() { showOnly('#MineSelection'); });
+        $('#btnTemplate').click(function() { showOnly('#TemplateSelection','#btnTemplate'); });
+        $('#btnShared').click(function() { showOnly('#SharedSelection','#btnShared'); });
+        $('#btnMine').click(function() { showOnly('#MineSelection','#btnMine'); });
         $('#btnSelectPlan').click(function() { selectPlan(); });
         $('#NewName').hide();
         $('input:radio').click( function() {
@@ -56,7 +56,10 @@ publicmapping.chooseplan = function(options) {
         });
     };
 
-    var showOnly = function(selectorId) {
+    var showOnly = function(selectorId,buttonID) {
+        $('#TemplateTypeButtons li').removeClass('active');
+        $(buttonID).addClass('active');
+        
         $('#SelectorsHelp').hide();
         $('.SelectionGroup').hide();
         $('.Selectors').removeClass('active');
