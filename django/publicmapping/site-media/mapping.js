@@ -323,7 +323,8 @@ function init() {
         getControl,
         boxControl,
         polyControl,
-        assignControl
+        assignControl,
+        new GlobalZoom()
     ]);
 
     $('#snapto').change(function(evt){
@@ -331,6 +332,7 @@ function init() {
         newOpts.featureType = getSnapLayer();
         getControl.protocol = 
             boxControl.protocol = new OpenLayers.Protocol.WFS( newOpts );
+        $('#boundfor').val( getSnapLayer() );
     });
 
     $('#showby').change(function(evt){
@@ -359,3 +361,104 @@ function init() {
     olmap.zoomToExtent(new OpenLayers.Bounds(-9467000,4570000,-8930000,5170000));
     OpenLayers.Element.addClass(olmap.viewPortDiv, 'olCursorWait');
 }
+
+
+GlobalZoom = OpenLayers.Class(OpenLayers.Control, { 
+  // DOM Elements
+    
+    /** 
+     * Property: controlDiv
+     * {DOMElement}
+     */
+    controlDiv: null,
+
+    /*
+     * Constructor: GlobalZoom
+     * 
+     * Parameters:
+     * options - {Object}
+     */
+    initialize: function(options) {
+        OpenLayers.Control.prototype.initialize.apply(this, arguments);
+    },
+
+    /**
+     * APIMethod: destroy 
+     */    
+    destroy: function() {
+        OpenLayers.Event.stopObservingElement(this.controlDiv);
+        OpenLayers.Control.prototype.destroy.apply(this, arguments);
+    },
+
+    /** 
+     * Method: setMap
+     *
+     * Properties:
+     * map - {<OpenLayers.Map>} 
+     */
+    setMap: function(map) {
+        OpenLayers.Control.prototype.setMap.apply(this, arguments);
+    },
+
+    /**
+     * Method: onZoomToExtent
+     *
+     * Parameters:
+     * e - {Event}
+     */
+    onZoomToExtent: function(e) {
+        this.map.zoomToMaxExtent();
+    },
+
+    /**
+     * Method: draw
+     *
+     * Returns:
+     * {DOMElement} A reference to the DIV DOMElement containing the 
+     *     switcher tabs.
+     */  
+    draw: function() {
+        OpenLayers.Control.prototype.draw.apply(this);
+
+        this.loadContents();
+
+        // populate div with current info
+        this.redraw();    
+
+        return this.div;
+    },
+    
+    /** 
+     * Method: redraw
+     * Goes through and takes the current state of the Map and rebuilds the
+     *     control to display that state. Groups base layers into a 
+     *     radio-button group and lists each data layer with a checkbox.
+     *
+     * Returns: 
+     * {DOMElement} A reference to the DIV DOMElement containing the control
+     */  
+    redraw: function() {
+        return this.div;
+    },
+
+    /** 
+     * Method: loadContents
+     * Set up the labels and divs for the control
+     */
+    loadContents: function() {
+
+        //configure main div
+
+        OpenLayers.Event.observe(this.div, "click", this.onZoomToExtent);
+
+        // layers list div        
+        this.controlDiv = document.createElement("div");
+        this.controlDiv.id = this.id + "_controlDiv";
+        OpenLayers.Element.addClass(this.controlDiv, "controlDiv");
+
+        this.div.appendChild(this.controlDiv);
+    },
+    
+    CLASS_NAME: "GlobalZoom"
+});
+
