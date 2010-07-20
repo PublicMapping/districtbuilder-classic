@@ -258,6 +258,37 @@ function init() {
         }
     );
 
+    var hoverControl = new OpenLayers.Control.SelectFeature(
+        districtLayer,
+        {
+            hover: true,
+            onSelect: function(feature){
+                var getCellText = function(cell) {
+                    if (cell.textContent) {
+                        return cell.textContent;
+                    }
+                    else {
+                        return cell.innerHTML;
+                    }
+                }
+                var highlightFunc = function(idx, cell) {
+                    if (getCellText(cell) == feature.attributes.name) {
+                        cell.parentNode.style.backgroundColor = '#ffffbb';
+                    }
+                    else
+                    {
+                        cell.parentNode.style.backgroundColor = '';
+                    }
+                }
+                var names = $('.demographics .plantable .celldistrictname');
+                $.each(names,highlightFunc);
+                names = $('.geography .plantable .celldist');
+                $.each(names, highlightFunc);
+                window.status = feature.attributes.name;
+            },
+            autoActivate: true
+        }
+    );
 
     var featureSelected = function(e){
         selection.addFeatures([e.feature]);
@@ -341,7 +372,8 @@ function init() {
         boxControl,
         polyControl,
         assignControl,
-        new GlobalZoom()
+        new GlobalZoom(),
+        hoverControl
     ]);
 
     var boundforChange = function(evt) {
@@ -439,6 +471,7 @@ GlobalZoom = OpenLayers.Class(OpenLayers.Control, {
      */
     onZoomToExtent: function(e) {
         this.map.zoomToMaxExtent();
+        OpenLayers.Event.stop(e);
     },
 
     /**
@@ -480,7 +513,9 @@ GlobalZoom = OpenLayers.Class(OpenLayers.Control, {
 
         //configure main div
 
-        OpenLayers.Event.observe(this.div, "click", this.onZoomToExtent);
+        OpenLayers.Event.observe(this.div, "click", 
+            OpenLayers.Function.bindAsEventListener(
+                this.onZoomToExtent, this) );
 
         // layers list div        
         this.controlDiv = document.createElement("div");
