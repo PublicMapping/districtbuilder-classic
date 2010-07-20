@@ -21,7 +21,8 @@ def copyplan(request, planid):
     try:
         copy.save()
     except IntegrityError:
-        return HttpResponse("[{ \"success\" : false, \"message\" : \"Can't create a plan with a duplicate name\" }]")
+        pass
+        #         return HttpResponse("[{ \"success\" : false, \"message\" : \"Can't create a plan with a duplicate name\" }]")
     districts = p.district_set.all()
     for district in districts:
         district_copy = District(name = district.name, plan = copy, version = 0)
@@ -120,13 +121,17 @@ def getdemographics(request, planid):
     district_ids = plan.district_set.values_list('id')
     characteristics = ComputedCharacteristic.objects.filter(id__in=district_ids) 
     for characteristic in characteristics:
-        if not characteristic.district.name in district_values: 
-            district_values[characteristic.district.name] = {}
-        district_values[characteristic.district.name][characteristic.subject.name] = characteristic.number        
+        dist_name = characteristic.district.name
+        if dist_name == "Unassigned":
+            dist_name = "U"
+        subject_name = characteristic.subject.short_display
+        if not dist_name in district_values: 
+            district_values[dist_name] = {}
+        district_values[dist_name][subject_name] = "%.0f" % characteristic.number       
 
     for target in Target.objects.all():
-        targets[target.subject.display] = target.value
-        aggregate[target.subject.display] = characteristics.filter(subject = target.subject).aggregate(Sum('number'))['number__sum']
+        targets[target.subject.short_display] = target.value
+        aggregate[target.subject.short_display] = "%.0f" % characteristics.filter(subject = target.subject).aggregate(Sum('number'))['number__sum']
     return render_to_response('demographics.html', {
         'plan': plan,
         'district_values': district_values,
@@ -141,6 +146,10 @@ def getgeography(request, planid):
     if plan == None:
         return HttpResponse ( "{ \"success\": false, \"message\":\"Couldn't get geography info from the server. Please try again later.\" }" )
     
+#    filter_demo = 'poptot'
+#    if request['filter'] not none: 
+#        filter_demo = request['filter']
+
     targets = {}
     aggregate = {}
     district_values = {}
@@ -148,11 +157,16 @@ def getgeography(request, planid):
     district_ids = plan.district_set.values_list('id')
     characteristics = ComputedCharacteristic.objects.filter(id__in=district_ids, subject__exact=3) 
     for characteristic in characteristics:
-        if not characteristic.district.name in district_values: 
-            district_values[characteristic.district.name] = {}
-        district_values[characteristic.district.name][characteristic.subject.name] = characteristic.number        
-        district_values[characteristic.district.name]['contiguity'] = random.choice( [True, False] )
-        district_values[characteristic.district.name]['compactness'] = 'N/A'
+        dist_name = characteristic.district.name
+        if dist_name == "Unassigned":
+            dist_name = "U"
+        subject_name = characteristic.subject.short_display
+        
+        if not dist_name in district_values: 
+            district_values[dist_name] = {}
+        district_values[dist_name][characteristic.subject.name] = "%.0f" % characteristic.number        
+        district_values[dist_name]['contiguity'] = random.choice( [True, False] )
+        district_values[dist_name]['compactness'] = str( random.randint(50, 80)) + "%"
 
     for target in Target.objects.all():
         targets[target.subject.name] = target.value

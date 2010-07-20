@@ -25,7 +25,7 @@
                               <tr class="{% cycle 'odd' 'even' %}">
                                   <td class="celldist">{{ key }}</td>
                                   <td class="cellpop">
-                                      <span class="popstatus target"> 
+                                      <span class="popstatus {% cycle 'target' 'under' 'over' %}"> 
                                          {{ value.POPTOT }}
                                       </span>
                                   </td>
@@ -34,6 +34,7 @@
                                   {% else %}
                                   <td class="cellcontig"><img class="no-contiguous" src="/site-media/images/icon-warning.png">
                                   {% endif %}
+                                  <div class="tooltip">this is a tooltip</div>
                                   </td>                             
                                   <td class="cellcompact">{{ value.compactness }}</td>
                               </tr>
@@ -45,5 +46,7 @@
                     {% endif %}                    
                   </div>
                  <div class="menu_footer">
-                    <button id="stats_legend" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false"><span class="ui-button-text">Stats Legend</span></button>
+                    <button aria-disabled="false" role="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" id="stats_legend"><span class="ui-button-text">Stats Legend</span></button>
+                    <div class="tooltip" id="stats_legend_panel">dflkdjlkfjdklf</div>
                 </div>
+                

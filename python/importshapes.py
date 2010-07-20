@@ -115,9 +115,15 @@ def add_unassigned_to_template():
         for block in blocks:
             mapping = DistrictGeounitMapping(plan = p, district = district, geounit = block)
             mapping.save()
+        subjects = Subject.objects.all()
+        for subject in subjects:
+            agg = Characteristic.objects.filter(geolevel = 1, subject = subject.id).aggregate(Sum('value'))
+            characteristic = ComputedCharacteristic(subject = subject, district = district, number = agg['value__sum'], percentage = 100)
+            characteristic.save()
+        
 
 # for config in configs: 
-# create_basic_template()
+ # create_basic_template()
 
 # import_shape(county)
 # import_shape(tract)
