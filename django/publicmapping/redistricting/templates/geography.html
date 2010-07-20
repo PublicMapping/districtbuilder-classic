@@ -55,6 +55,23 @@
                   </div>
                  <div class="menu_footer">
                     <button aria-disabled="false" role="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" id="stats_legend"><span class="ui-button-text">Stats Legend</span></button>
-                    <div class="tooltip" id="stats_legend_panel"></div>
+                    <div class="tooltip" id="stats_legend_panel">
+                                          <div class="legend_item">
+                        <h5>Population</h5>
+                        <ul>
+                          <li><span class="swatch popstatus over"></span> Over target</li>
+                          <li><span class="swatch popstatus under" id="swatch-under"></span> Under target</li>                       
+                          <li><span class="swatch popstatus target" id="swatch-target"></span> Meets target</li>  
+                        </ul>
+                      </div>
+                      <div class="legend_item last">
+                        <h5>Contiguity</h5>
+                        <ul>
+                          <li><img src="/site-media/images/icon-check.png" class="yes-contiguous"> Contiguous</li>
+                          <li><img src="/site-media/images/icon-warning.png" class="no-contiguous"> Non-contiguous</li>                 
+ 
+                        </ul>
+                      </div>   
+                    </div>
                 </div>
                 
