@@ -70,13 +70,13 @@ $(function() {
         // stats dropdown button
         $('.menu_toggle')
             .button({
-              icons: {primary: 'ui-icon-triangle-1-s'},text: false})
+              icons: {primary: 'ui-icon-arrow-down'},text: false})
             .toggle(
               function(){
-                $(this).button({icons: {primary: 'ui-icon-triangle-1-e'}})
+                $(this).button({icons: {primary: 'ui-icon-arrow-right'}})
               },
               function(){
-                $(this).button({icons: {primary: 'ui-icon-triangle-1-s'}})
+                $(this).button({icons: {primary: 'ui-icon-arrow-down'}})
               })
             .click(function(){
               if ( $(".map_menu_content:visible'").length === 0) {

@@ -544,6 +544,8 @@ div.toolset#toolset_draw .ui-icon {
  background-repeat:none;
 }
 
+
+
 #navigate_map_tool  .ui-icon {
   background-image: url(/site-media/images/icon-pan.png);
 }
@@ -655,7 +657,16 @@ width: 20px;
 height: 20px;
 float:left;
 margin: 2px 0 0 5px;
+background-color: #6B9571;
 }
+button.menu_toggle .ui-icon {margin-top: -11px;}
+button.menu_toggle .ui-icon-arrow-right {
+background: url(/site-media/images/icon-arrow.png) 4px 0 no-repeat;
+}
+button.menu_toggle .ui-icon-arrow-down {
+background: url(/site-media/images/icon-arrow.png) 2px -14px no-repeat;
+}
+
 div#map_menu_header select {
   font-size: 14px;
   font-weight:bold;
