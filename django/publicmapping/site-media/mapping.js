@@ -348,6 +348,7 @@ function init() {
         var show = getShowBy();
         var layers = olmap.getLayersByName('gmu:demo_' + evt.target.value + '_' + show);
         olmap.setBaseLayer(layers[0]);
+        doMapStyling();
     };
 
     $('#snapto').change(function(evt){
