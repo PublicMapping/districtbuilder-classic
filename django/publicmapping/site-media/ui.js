@@ -99,7 +99,7 @@ $(function() {
                   $(this).slideUp(200);
               }
             });  
-        });
+        }).val("demographics").attr("selected", "selected");
         
         
         // map editing buttons

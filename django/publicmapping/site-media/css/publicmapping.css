@@ -741,6 +741,7 @@ div.plantable.header table tr th {
     padding: 3px;
     font-weight: bold;
     font-size: 11px;
+    line-height: 11px;
     }
 div.plantable.body  {
     background: #f7f4e5;
