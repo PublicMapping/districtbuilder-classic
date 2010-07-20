@@ -77,7 +77,7 @@ publicmapping.chooseplan = function(options) {
     };
 
     var selectPlan = function () {
-        var activeSelector = $('.active');
+        var activeSelector = $('select.active');
         if (_nameRequired) {
             var name = $('#txtNewName').val();
             var url = '/districtmapping/plan/' + activeSelector.val() + '/copy/'
