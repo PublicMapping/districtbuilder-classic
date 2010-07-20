@@ -377,6 +377,8 @@
             callback: function() { $('#difplanbtn').click() }
     {% endif %}
         }).init();
+        $('.geography').load('/districtmapping/plan/{{plan.id}}/geography');
+        $('.demographics').load('/districtmapping/plan/{{plan.id}}/demographics');        
     });
 </script>
     
