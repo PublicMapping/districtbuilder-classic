@@ -208,7 +208,9 @@ function init() {
                 if (data.success) {
                     districtStrategy.load();
                 }
-                selection.drawFeature(selection.features[0], 'select');
+                for (var i = 0; i < selection.features.length; i++) {
+                    selection.drawFeature(selection.features[i], 'select');
+                }
 
                 var selector = olmap.getControlsByClass('OpenLayers.Control.SelectFeature')[0];
                 selector.deactivate();
