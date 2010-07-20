@@ -608,6 +608,12 @@ div.plansummary  .value {
   font-weight: normal
   }
 
+#updatestatsbtn {
+  position: absolute;
+  right: 290px;
+  top:150px;
+}
+
 div.plantable table {
     color: #717171;
     width: 100%;
