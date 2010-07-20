@@ -468,8 +468,9 @@ div.toolset_group, div.toolset_group_w {
     padding: 8px 12px;
   }
   
-div#toolsets div.toolset_group  {width: 142px }
-div#toolsets div.toolset_group_w  {width: 175px }
+div#toolset_edit div.toolset_group  {width: 142px }
+div#toolset_draw div.toolset_group  {width: auto; }
+div#toolsets div.toolset_group_w  { }
 
 div.toolset_group.first, div.toolset_group_w.first {padding-left: 0}
 div .toolset_group.last, div .toolset_group_w.last {background: none}
@@ -739,7 +740,12 @@ button#stats_legend {
 
 /* district assignment control styles */
 div.controlDiv {
-    padding: 5px;
+    position:absolute; 
+    width: 16px;
+    height: 17px;
+    left: 27px;
+    top:27px;
+    background: url(/site-media/openlayers/img/full-extent-mini.png) 0 0 no-repeat;
     background-color: #ffffff;
 }
 div.controlDiv span {
@@ -795,9 +801,9 @@ div.controlDiv select {
 
 /*PAN*/
 
-.olControlZoomBoxActive{
-	left: 10px;
-	top: 10px;
+.olControlPanZoomBar{
+	left: 10px !important;
+	top: 10px !important;
 }
 
 .olControlPanUpItemInactive {
@@ -847,7 +853,6 @@ div.controlDiv select {
 }
 
 .olControlZoomOutInactive {
-  top: 247px !important;
 }
 
 .olControlZoomOutInactive img {
