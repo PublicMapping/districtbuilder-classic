@@ -180,4 +180,8 @@ def getgeography(request, planid):
 
 def updatestats(request, planid):
     plan = Plan.objects.get(pk=planid)
-    plan.update_stats()
+    try:
+        plan.update_stats()
+        return HttpResponse("{\"success\": true, \"message\":\"Updated stats for " + str(plan.name)+  "\"}")
+    except:
+        return HttpResponse("{\"success\": false, \"message\":\"Couldn't update stats\"}")
