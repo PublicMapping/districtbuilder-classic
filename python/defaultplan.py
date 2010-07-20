@@ -10,7 +10,7 @@ name_field = 'C_DIST_ID'
 datasource = DataSource(shapepath)
 layer = datasource[0]
 
-# whoever user #1 is, they get this template
+# whoever admin is, they get this template
 owner = User.objects.get(username='admin')
 
 plan = Plan( name='Congressional', is_template=True, version=0, owner=owner )
@@ -41,3 +41,10 @@ for feature in layer:
         geom=geom,
         simple=simple)
     district.save()
+
+    geounits = list(Geounit.objects.filter(geom__within=geom).values_list('id',flat=True))
+    print 'Assigning %d geounits to district %d' % (len(geounits), district.id)
+    for geounit in geounits:
+        gu_qs = Geounit.objects.get(id=geounit)
+        dgm = DistrictGeounitMapping(plan=plan, district=district, geounit=gu_qs)
+        dgm.save()
