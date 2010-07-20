@@ -391,7 +391,6 @@ div#TemplateTypeContent {
   padding:0 15px;
   position:relative;
   width:408px;
-  z-index:9;
   overflow:auto;
   -moz-box-shadow: 0 0 20px -5px #000000;
   -webkit-box-shadow: 0 0 20px -5px #000000; 
@@ -518,10 +517,16 @@ text-align:center;
 height: 20px;
 background-color:#6B8F8B;
 background-image:none;
-border:none;
+border:1px solid #5F7F7B;
 padding:0;
 margin-top: 2px
 }
+
+div.toolset#toolset_draw .ui-button-icon-only.active {
+  background:none repeat scroll 0 0 #A8CFCB;
+  border:1px solid #DFFFFB;
+}
+
 div.toolset#toolset_draw .ui-icon {
  margin-top: -12px;
  background-position: 50% 50%;
@@ -554,7 +559,7 @@ div.toolset#toolset_draw .ui-icon {
 }
 
 
-div.toolset_group, div.toolset_group_w {
+div.toolset_group {
   float:left;
   font-size: 11px;
   font-weight:bold;
@@ -565,16 +570,16 @@ div.toolset_group, div.toolset_group_w {
   
 div#toolset_edit div.toolset_group  {width: 142px }
 div#toolset_draw div.toolset_group  {padding-top: 5px; width: auto; }
-div#toolset_draw div.toolset_group_w  {padding-top: 5px; }
 
-div.toolset_group.first, div.toolset_group_w.first {padding-left: 0}
-div .toolset_group.last, div .toolset_group_w.last {background: none}
+
+div.toolset_group.first {padding-left: 0}
+div .toolset_group.last {background: none}
 
 div.toolset_group .help, div.toolset_group_w .help {
   float:right;
 }
 
-div.toolset_group label, div.toolset_group_w label {
+div.toolset_group label {
   font-size: 11px; 
   font-weight:bold;
   color: #fff
@@ -673,11 +678,12 @@ div#map_menu_header label {
 div.map_menu_content.geography {
     background: #badcbf;
     border:1px solid #77b280;
+    display:none
   }
 div.map_menu_content.demographics {
     background: #efe8cb;
     border: 1px solid #ada176;
-    display:none
+
 }
 
 div.plansummary {

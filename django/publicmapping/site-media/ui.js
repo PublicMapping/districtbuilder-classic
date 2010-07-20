@@ -88,10 +88,17 @@ $(function() {
         
         
         // map editing buttons
-        $('#toolset_draw .toolset_group button, #toolset_draw .toolset_group_w button').button({
-            icons: {primary: 'ui-icon'},
-            text:false
-        });    
+        $('#toolset_draw .toolset_group button')
+          .button({
+              icons: {primary: 'ui-icon'},
+              text:false
+          })
+          .click(function(){
+            if($(this).hasClass('toggle')) {
+              $('.toolset_group button.toggle').removeClass('active');
+              $(this).addClass('active');
+            }
+          });    
         
         //toolset toggle button
         $('.toolbar_toggle').click(function(){
