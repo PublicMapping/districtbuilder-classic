@@ -1,33 +1,31 @@
 <!-- incoming variables: plan, district_values, targets, aggregate -->
   <div class="plansummary">
       <h3>{{ plan.name }}</h3>
-    {% for key, value in aggregate %}
-      <div><label>{{ key }}</label> <span id="totalpop" class="value">{{ value }}</span></div>
+    {% for key,value in aggregate.items %}
+      <div><label>{{ key }}</label> <span id="totalpop" class="value">{{ value  }}</span></div>
     {% endfor %}
   </div>
   <div class="plantable header">
      <table>
       <thead>
+         {% if targets %}
           <tr>
              <th class="celldist">Dist.</th>
-              {% for key, value in targets %}
+              {% for key, value in targets.items %}
               <th class="cellsubjects">{{ key }}</th>
-              {% empty %}
-              <th class="cellsubjects"></th>
-              <th class="cellsubjects"></th>
-              <th class="cellsubjects"></th>
               {% endfor %}
           </tr>
+        {% endif %}
       </thead>
    </table>
   </div>
   <div class="plantable body">
        <table>
           <tbody>
-                {% for key, value in district_values %}
+                {% for key, value in district_values.items %}
               <tr class="{% cycle 'odd' 'even' %}">
-                  <td class="celldistricname">{{ key }}</td>
-                    {% for key, number in value %}
+                  <td class="celldistrictname">{{ key }}</td>
+                    {% for key, number in value.items %}
                   <td class="cellvalue">
                       {{ number }}
                   </td>
@@ -35,7 +33,7 @@
               </tr>
                 {% empty %}
                <tr class="error">
-                  <td>Sorry, no values for this plan</td>
+                  <td>Sorry, data for this plan could not be retrieved from the server</td>
                </tr> 
                 {% endfor %}
           </tbody>

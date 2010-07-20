@@ -1,6 +1,7 @@
 from django.http import *
 from django.core import serializers
 from django.db import IntegrityError
+from django.db.models import Sum
 from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import login_required
 from django import forms
@@ -112,7 +113,9 @@ def getdemographics(request, planid):
     plan = Plan.objects.get(pk = planid)
     if plan == None:
         return HttpResponse ( "{ \"success\": false, \"message\":\"Couldn't get demographic info from the server. Please try again later.\" }" )
-    targets, aggregate, district_values = ({},)*3
+    targets = {}
+    aggregate = {}
+    district_values = {}
 
     district_ids = plan.district_set.values_list('id')
     characteristics = ComputedCharacteristic.objects.filter(id__in=district_ids) 
@@ -122,11 +125,12 @@ def getdemographics(request, planid):
         district_values[characteristic.district.name][characteristic.subject.name] = characteristic.number        
 
     for target in Target.objects.all():
-        targets[target.subject.name] = target.value
-        aggregate[target.subject.name] = characteristics.filter(subject = target.subject).aggregate(Sum('number')) 
+        targets[target.subject.display] = target.value
+        aggregate[target.subject.display] = characteristics.filter(subject = target.subject).aggregate(Sum('number'))['number__sum']
     return render_to_response('demographics.html', {
         'plan': plan,
         'district_values': district_values,
+        'aggregate': aggregate,
         'characteristics': characteristics,
         'targets': targets,
     })
@@ -136,7 +140,10 @@ def getgeography(request, planid):
     plan = Plan.objects.get(pk = planid)
     if plan == None:
         return HttpResponse ( "{ \"success\": false, \"message\":\"Couldn't get geography info from the server. Please try again later.\" }" )
-    targets, aggregate, district_values = ({},)*3
+    
+    targets = {}
+    aggregate = {}
+    district_values = {}
 
     district_ids = plan.district_set.values_list('id')
     characteristics = ComputedCharacteristic.objects.filter(id__in=district_ids, subject__exact=3) 

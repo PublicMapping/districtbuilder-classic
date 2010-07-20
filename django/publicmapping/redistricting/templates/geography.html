@@ -21,22 +21,21 @@
                     {% if district_values %}
                        <table>
                           <tbody>
-                              {% for key, value in district_values %}
+                              {% for key, value in district_values.items %}
                               <tr class="{% cycle 'odd' 'even' %}">
                                   <td class="celldist">{{ key }}</td>
                                   <td class="cellpop">
                                       <span class="popstatus target"> 
-                                          {{ value['POP2005'] }}
+                                         {{ value.POPTOT }}
                                       </span>
                                   </td>
-                                  {% if value['contiguity'] %}
+                                  {% if value.contiguity %}
                                   <td class="cellcontig"><img class="yes-contiguous" src="/site-media/images/icon-check.png">
                                   {% else %}
                                   <td class="cellcontig"><img class="no-contiguous" src="/site-media/images/icon-warning.png">
                                   {% endif %}
-                                  <div class="tooltip">this is a tooltip</div>
                                   </td>                             
-                                  <td class="cellcompact">{{ value['compactness'] }}</td>
+                                  <td class="cellcompact">{{ value.compactness }}</td>
                               </tr>
                               {% endfor %}
                           </tbody>
