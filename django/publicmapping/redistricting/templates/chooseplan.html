@@ -1,11 +1,10 @@
 <div id="PlanChooser" title = "Choose a Plan.  Start Drawing.">
 
-Start with a...
 <div id="TemplateTypeButtons">
-    <input id="btnBlank"  type="button" value="Blank Map" />
-    <input id="btnTemplate" type="button" value="Template" />
-    <input id="btnShared" type="button" value="Plan by Other User" />
-    <input id="btnMine" type="button" value="Plans saved by {{ user }}" />
+    <div id="btnBlank">Blank Map</div>
+    <div id="btnTemplate">Template</div>
+    <div id="btnShared">Plan by Other User</div>
+    <div id="btnMine">Plans saved by {{ user }}</div>
 </div>
 
 <div id="SelectorsHelp">
@@ -53,6 +52,6 @@ Start with a...
     <label for="txtNewName" id="lblNewName">Template copy name:</label>
     <input type="text" id="txtNewName" />
 </div>
-<input id="btnSelectPlan" type="submit" value="Start Drawing" />
+<button id="btnSelectPlan" type="submit">Start Drawing</button>
 
 </div>

@@ -9,7 +9,8 @@ publicmapping.chooseplan = function(options) {
             container: {},
             callback: function() {},
             autoOpen: false,
-            modal: true
+            modal: true,
+            width:600
         }, options),
         // bunch o variables
         
@@ -29,6 +30,7 @@ publicmapping.chooseplan = function(options) {
         $('#PlanChooser').dialog(_options);
         _options.target.click( function() {
             $('#PlanChooser').dialog('open');
+            loadButtons();
         });
     };
 
@@ -59,6 +61,7 @@ publicmapping.chooseplan = function(options) {
         $('.SelectionGroup').hide();
         $('.Selectors').removeClass('active');
         $(selectorId).show();
+        $('#btnSelectPlan').show();
         $(selectorId + ' .Selectors').show().addClass('active');
         if (selectorId == '#TemplateSelection' || selectorId == '#SharedSelection' ||
             ( selectorId == '#MineSelection' && $('input:radio:checked').val() == 'saveas'  )) {

@@ -1,14 +1,15 @@
-$(function() {
-    // jQuery-UI tab layout
-		$('#steps').tabs();
-    
-    // jQuery Tools tooltips   
-     // tooltip divs need to be placed directly after an itemed classed "help"
+
+function loadButtons() {
+    $('button, input[button]').button();
+}
+
+function loadTooltips() {
     $(".help").tooltip({ 
       position: 'bottom left',
       offset: [8,10],
       delay: 200,
       predelay: 50,
+      opacity: .8,      
       onBeforeShow:  function() {
           // ensure proper DOM placement
           this.getTip().appendTo('body');
@@ -18,12 +19,23 @@ $(function() {
           this.getTip().appendTo(this.getTrigger());
           }
       });    
+}
+
+
+$(function() {
+    // jQuery-UI tab layout
+		$('#steps').tabs();
+    
+    // jQuery Tools tooltips   
+     // tooltip divs need to be placed directly after an itemed classed "help"
+    loadTooltips();
      
      $("#stats_legend").tooltip({
        position: 'top center',
        effect: 'slide',
        delay: 200,
        offset: [10,0],
+       opacity: .8,
              onBeforeShow:  function() {
           // ensure proper DOM placement
           this.getTip().appendTo('body');
@@ -36,7 +48,7 @@ $(function() {
     
     
     // jQuery-UI buttons   
-    $('button').button();
+    loadButtons();
     
         // stats dropdown button
         $('.menu_toggle')
@@ -51,10 +63,10 @@ $(function() {
               })
             .click(function(){
               if ( $(".map_menu_content:visible'").length === 0) {
-                  var selectedVal = $("#map_menu_header option:selected").attr('value');
-                 $('.map_menu_content[class*=selectedVal]').slideDown(200); // WHY DOESNT THIS WORK????
+                 $storedPanel.slideDown(200);
               } else {
               $('.map_menu_content:visible').each(function() {
+                  $storedPanel = $(this);
                   $(this).slideUp(200);
                 });
               }  
@@ -91,6 +103,7 @@ $(function() {
                })
             }
          });
+
             
  
 	});

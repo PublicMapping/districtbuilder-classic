@@ -32,6 +32,21 @@ function getBoundLayer() {
     return $('#boundfor').val();
 }
 
+
+function doMapStyling() {
+    //adding proper class names so css may style the PanZoom controls
+    $('#OpenLayers\\.Control\\.PanZoomBar_3_panup').addClass('olControlPan olControlPanUpItemInactive');
+    $('#OpenLayers\\.Control\\.PanZoomBar_3_panright').addClass('olControlPan olControlPanRightItemInactive');
+    $('#OpenLayers\\.Control\\.PanZoomBar_3_pandown').addClass('olControlPan olControlPanDownItemInactive');    
+    $('#OpenLayers\\.Control\\.PanZoomBar_3_panleft').addClass('olControlPan olControlPanLeftItemInactive');
+    $('#OpenLayers\\.Control\\.PanZoomBar_3_zoomin').addClass('olControlZoom olControlZoomInInactive');   
+    $('#OpenLayers\\.Control\\.PanZoomBar_3_zoomout').addClass('olControlZoom olControlZoomOutInactive'); 
+    $('#OpenLayers\\.Control\\.PanZoomBar_3_OpenLayers\\.Map_4').addClass('olControlZoom olControlZoomGrabInactive'); 
+    $('#OpenLayers_Control_PanZoomBar_ZoombarOpenLayers\\.Map_4').addClass('olControlZoom olControlZoomBarInactive');     
+
+    
+    }
+
 /*
  * Initialize the map. This method is called by the onload page event.
  */
@@ -360,6 +375,9 @@ function init() {
     // TODO Make these configurable.
     olmap.zoomToExtent(new OpenLayers.Bounds(-9467000,4570000,-8930000,5170000));
     OpenLayers.Element.addClass(olmap.viewPortDiv, 'olCursorWait');
+    
+    //apply the PanZoom classes
+    doMapStyling();
 }
 
 
