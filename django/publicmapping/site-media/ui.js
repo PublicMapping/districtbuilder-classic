@@ -1,4 +1,3 @@
-
 function loadButtons() {
     $('button, input[button]').button();
 }

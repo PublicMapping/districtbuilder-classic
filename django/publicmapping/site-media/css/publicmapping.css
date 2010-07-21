@@ -780,23 +780,29 @@ div.plantable.body table tr td {
     text-align: center;
     padding: 5px 3px;
 }
-div.plantable.body .celldist {
+div.plantable.body .cell1 {
     font-size: 12px;
     font-weight: bold;
 }
  
-div.plantable .celldist{  
+div.plantable .cell1{  
     width: 12%;
     overflow: hidden;
 }
-div.plantable .cellpop{  
+div.plantable .cell2{  
     width: 24%;
 }
-div.plantable .cellcontig{  
+div.plantable .cell3{  
     width: 26%;
 }
-div.plantable .cellcompact{  
+div.plantable .cell4{  
     width: 38%;
+}
+div.plantable .error {
+  font-size: 12px; 
+  font-weight: bold;
+  color:#333; 
+  padding: 8px;
 }
 
 span.popstatus { 

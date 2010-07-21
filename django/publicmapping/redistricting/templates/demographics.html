@@ -15,9 +15,9 @@
       <thead>
          {% if targets %}
           <tr>
-             <th class="celldist">Dist.</th>
+             <th class="celldist cell1">Dist.</th>
               {% for key, value in targets.items %}
-              <th class="cellsubjects">{{ key }}</th>
+              <th class="cellsubjects {% cycle 'cell2' 'cell3' 'cell4' %}">{{ key }}</th>
               {% endfor %}
           </tr>
         {% endif %}
@@ -29,9 +29,9 @@
           <tbody>
                 {% for key, value in district_values.items %}
               <tr class="{% cycle 'odd' 'even' %}">
-                  <td class="celldistrictname">{{ key }}</td>
+                  <td class="celldistrictname cell1">{{ key }}</td>
                     {% for key, number in value.items %}
-                  <td class="cellvalue">
+                  <td class="cellvalue {% cycle 'cell2' 'cell3' 'cell4'%}">
                       {{ number }}
                   </td>
                     {% endfor %}

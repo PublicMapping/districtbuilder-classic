@@ -12,10 +12,10 @@
                       <thead>
                          {% if targets %}
                           <tr>
-                              <th class="celldist">Dist.</th>
-                              <th class="cellpop">Population</th>
-                              <th class="cellcontig">Contiguity</th>
-                              <th class="cellcompact">Compactness</th>
+                              <th class="celldist cell1">Dist.</th>
+                              <th class="cellpop cell2">Population</th>
+                              <th class="cellcontig cell3">Contiguity</th>
+                              <th class="cellcompact cell4">Compactness</th>
                            <!--    {% for key, value in targets.items %}
                               <th class="cellsubjects">{{ key }}</th>
                               {% endfor %}
@@ -31,20 +31,20 @@
                           <tbody>
                               {% for key, value in district_values.items %}
                               <tr class="{% cycle 'odd' 'even' %}">
-                                  <td class="celldist">{{ key }}</td>
-                                  <td class="cellpop">
+                                  <td class="celldist cell1">{{ key }}</td>
+                                  <td class="cellpop cell2">
                                       <span class="popstatus {% cycle 'target' 'under' 'over' %}"> 
                                          {{ value.POPTOT }}
                                       </span>
                                   </td>
                                   {% if value.contiguity %}
-                                  <td class="cellcontig"><img class="yes-contiguous" src="/site-media/images/icon-check.png">
+                                  <td class="cellcontig cell3"><img class="yes-contiguous" src="/site-media/images/icon-check.png">
                                   {% else %}
-                                  <td class="cellcontig"><img class="no-contiguous" src="/site-media/images/icon-warning.png">
+                                  <td class="cellcontig cell3"><img class="no-contiguous" src="/site-media/images/icon-warning.png">
                                   {% endif %}
                                   <div class="tooltip">this is a tooltip</div>
                                   </td>                             
-                                  <td class="cellcompact">{{ value.compactness }}</td>
+                                  <td class="cellcompact cell4">{{ value.compactness }}</td>
                               </tr>
                               {% endfor %}
                           </tbody>
