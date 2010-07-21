@@ -425,6 +425,7 @@ function init() {
         var boundary = getBoundLayer();
         var layers = olmap.getLayersByName('gmu:demo_' + boundary + '_' + evt.target.value);
         olmap.setBaseLayer(layers[0]);
+        doMapStyling();
     });
 
     $('#boundfor').change(boundforChange);
