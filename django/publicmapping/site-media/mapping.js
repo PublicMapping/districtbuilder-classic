@@ -152,6 +152,15 @@ function init() {
                     }, 
                     OpenLayers.Feature.Vector.style["select"]
                 )
+            ),
+            "error": new OpenLayers.Style(
+                OpenLayers.Util.applyDefaults(
+                    {
+                        fill: false,
+                        strokeColor: '#ee0000'
+                    },
+                    OpenLayers.Feature.Vector.style["select"]
+                )
             )
         })
     });
@@ -205,11 +214,16 @@ function init() {
             },
             success: function(xhr) {
                 var data = jsonParser.read(xhr.responseText);
+                var mode = data.success ? 'select' : 'error';
                 if (data.success) {
                     districtStrategy.load();
                 }
+                else {
+                    OpenLayers.Element.removeClass(olmap.viewPortDiv, 'olCursorWait');
+                }
+
                 for (var i = 0; i < selection.features.length; i++) {
-                    selection.drawFeature(selection.features[i], 'select');
+                    selection.drawFeature(selection.features[i], mode);
                 }
 
                 var selector = olmap.getControlsByClass('OpenLayers.Control.SelectFeature')[0];
@@ -328,7 +342,7 @@ function init() {
         boxControl.deactivate();
         polyControl.deactivate();
         assignControl.deactivate();
-	hoverControl.activate();
+        hoverControl.activate();
         selection.removeFeatures(selection.features);
     });
 
@@ -338,7 +352,7 @@ function init() {
         navigate.deactivate();
         polyControl.deactivate();
         assignControl.deactivate();
-	hoverControl.activate();
+        hoverControl.activate();
         selection.removeFeatures(selection.features);
     });
 
@@ -348,7 +362,7 @@ function init() {
         navigate.deactivate();
         polyControl.deactivate();
         assignControl.deactivate();
-	hoverControl.activate();
+        hoverControl.activate();
         selection.removeFeatures(selection.features);
     });
 
@@ -358,7 +372,7 @@ function init() {
         navigate.deactivate();
         polyControl.activate();
         assignControl.deactivate();
-	hoverControl.activate();
+        hoverControl.activate();
         selection.removeFeatures(selection.features);
     });
 
@@ -368,7 +382,7 @@ function init() {
         getControl.deactivate();
         navigate.deactivate();
         polyControl.deactivate();
-	hoverControl.deactivate();
+        hoverControl.deactivate();
         assignControl.activate();
     });
 

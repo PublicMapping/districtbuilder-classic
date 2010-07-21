@@ -85,10 +85,13 @@ def addtodistrict(request, planid, districtid):
         geolevel = request.REQUEST["geolevel"];
         geounit_ids = string.split(request.REQUEST["geounits"], "|")
         plan = Plan.objects.get(pk=planid)
-        fixed = plan.add_geounits(districtid, geounit_ids, geolevel)
-        return HttpResponse("{\"success\": true, \"message\":\"Updated " + str(fixed) + " districts\"}")
+        try:
+            fixed = plan.add_geounits(districtid, geounit_ids, geolevel)
+            return HttpResponse("{\"success\": true, \"message\":\"Updated " + str(fixed) + " districts\"}")
+        except: 
+            return HttpResponse("{\"success\": false, \"message\":\"Could not add units to district.\"}")
     else:
-        return HttpResponse("Geounits weren't found in a district")
+        return HttpResponse("{\"success\": false, \"messag\":\"Geounits weren't found in a district\"}")
 
 #@login_required
 #def deletefromplan(request, planid, geounit_ids):
