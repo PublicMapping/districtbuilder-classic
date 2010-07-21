@@ -228,6 +228,8 @@
                     $('#doRegister').attr('disabled',true);
                 }
             });
+
+            return false;
         });
         $('#doAnonymous').click(function(evt) {
             var frm = $('#anonymousForm')[0];
@@ -251,6 +253,8 @@
                     $('#doAnonymous').attr('disabled',true);
                 }
             });
+
+            return false;
         });
     });
     </script>
