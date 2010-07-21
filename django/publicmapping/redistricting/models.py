@@ -128,18 +128,20 @@ class Plan(models.Model):
             district.save()
             fixed += 1
 
-        
+        if target.geom is None:
+            target.geom = incremental
+        else:
             union = target.geom.union(incremental)
             if union.geom_type != 'MultiPolygon':
                 target.geom = MultiPolygon(union)
             else:
                 target.geom = union
 
-            simple = target.geom.simplify(tolerance=100.0,preserve_topology=True)
-            if simple.geom_type != 'MultiPolygon':
-                target.simple = MultiPolygon(simple)
-            else:
-                target.simple = simple
+        simple = target.geom.simplify(tolerance=100.0,preserve_topology=True)
+        if simple.geom_type != 'MultiPolygon':
+            target.simple = MultiPolygon(simple)
+        else:
+            target.simple = simple
             
         target.save();
         fixed += 1
