@@ -272,6 +272,8 @@ function init() {
         }
     );
 
+    /* this hover control seems to conflict with the map panning tool */
+    /*
     var hoverControl = new OpenLayers.Control.SelectFeature(
         districtLayer,
         {
@@ -303,6 +305,7 @@ function init() {
             autoActivate: true
         }
     );
+    */
 
     var featureSelected = function(e){
         selection.addFeatures([e.feature]);
@@ -342,7 +345,7 @@ function init() {
         boxControl.deactivate();
         polyControl.deactivate();
         assignControl.deactivate();
-        hoverControl.activate();
+        //hoverControl.activate();
         selection.removeFeatures(selection.features);
     });
 
@@ -352,7 +355,7 @@ function init() {
         navigate.deactivate();
         polyControl.deactivate();
         assignControl.deactivate();
-        hoverControl.activate();
+        //hoverControl.activate();
         selection.removeFeatures(selection.features);
     });
 
@@ -362,7 +365,7 @@ function init() {
         navigate.deactivate();
         polyControl.deactivate();
         assignControl.deactivate();
-        hoverControl.activate();
+        //hoverControl.activate();
         selection.removeFeatures(selection.features);
     });
 
@@ -372,7 +375,7 @@ function init() {
         navigate.deactivate();
         polyControl.activate();
         assignControl.deactivate();
-        hoverControl.activate();
+        //hoverControl.activate();
         selection.removeFeatures(selection.features);
     });
 
@@ -382,7 +385,7 @@ function init() {
         getControl.deactivate();
         navigate.deactivate();
         polyControl.deactivate();
-        hoverControl.deactivate();
+        //hoverControl.deactivate();
         assignControl.activate();
     });
 
@@ -391,8 +394,8 @@ function init() {
         boxControl,
         polyControl,
         assignControl,
-        new GlobalZoom(),
-        hoverControl
+        new GlobalZoom() /*,
+        hoverControl */
     ]);
 
     var boundforChange = function(evt) {
