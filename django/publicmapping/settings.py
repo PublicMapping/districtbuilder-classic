@@ -5,11 +5,12 @@ config.read('/projects/publicmapping/local/settings.ini')
 
 # Django settings for publicmapping project.
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    ('admin', 'AzaveaDev@azavea.com'),
+    (config.get('publicmapping','ADMIN_USER'), 
+     config.get('publicmapping','ADMIN_EMAIL')),
 )
 
 MANAGERS = ADMINS
