@@ -272,8 +272,13 @@ function init() {
         }
     );
 
-    /* this hover control seems to conflict with the map panning tool */
-    /*
+    var tipdiv = document.createElement('div');
+    tipdiv.appendChild(document.createTextNode(''));
+    tipdiv.style.zIndex = 100000;
+    tipdiv.style.position = 'absolute';
+    tipdiv.style.opacity = '0.8';
+    tipdiv.className = 'tooltip';
+    olmap.div.insertBefore(tipdiv,olmap.div.firstChild);
     var hoverControl = new OpenLayers.Control.SelectFeature(
         districtLayer,
         {
@@ -301,11 +306,35 @@ function init() {
                 names = $('.geography .plantable .celldist');
                 $.each(names, highlightFunc);
                 window.status = feature.attributes.name;
+
+                var centroid = feature.geometry.getCentroid();
+                var lonlat = new OpenLayers.LonLat( centroid.x, centroid.y );
+                var pixel = olmap.getPixelFromLonLat(lonlat);
+                tipdiv.style.display = 'block';
+                tipdiv.firstChild.nodeValue = feature.attributes.name;
+                var halfWidth = tipdiv.clientWidth/2;
+                var halfHeight = tipdiv.clientHeight/2;
+                if (pixel.x < halfWidth) { 
+                    pixel.x = halfWidth;
+                }
+                else if (pixel.x > olmap.div.clientWidth - halfWidth) {
+                    pixel.x = olmap.div.clientWidth - halfWidth;
+                }
+                if (pixel.y < halfHeight) {
+                    pixel.y = halfHeight;
+                }
+                else if (pixel.y > (olmap.div.clientHeight-29) - halfHeight) {
+                    pixel.y = (olmap.div.clientHeight-29) - halfHeight;
+                }
+        
+                tipdiv.style.left = (pixel.x - halfWidth) + 'px';
+                tipdiv.style.top = (pixel.y - halfHeight) + 'px';
             },
-            autoActivate: true
+            onUnselect: function(feature) {
+                tipdiv.style.display = '';
+            }
         }
     );
-    */
 
     var featureSelected = function(e){
         selection.addFeatures([e.feature]);
@@ -345,8 +374,17 @@ function init() {
         boxControl.deactivate();
         polyControl.deactivate();
         assignControl.deactivate();
-        //hoverControl.activate();
+        hoverControl.deactivate();
         selection.removeFeatures(selection.features);
+    });
+
+    $('#identify_map_tool').click(function(evt){
+        navigate.deactivate();
+        getControl.deactivate();
+        boxControl.deactivate();
+        polyControl.deactivate();
+        assignControl.deactivate();
+        hoverControl.activate();
     });
 
     $('#single_drawing_tool').click(function(evt){
@@ -355,7 +393,7 @@ function init() {
         navigate.deactivate();
         polyControl.deactivate();
         assignControl.deactivate();
-        //hoverControl.activate();
+        hoverControl.deactivate();
         selection.removeFeatures(selection.features);
     });
 
@@ -365,7 +403,7 @@ function init() {
         navigate.deactivate();
         polyControl.deactivate();
         assignControl.deactivate();
-        //hoverControl.activate();
+        hoverControl.deactivate();
         selection.removeFeatures(selection.features);
     });
 
@@ -375,7 +413,7 @@ function init() {
         navigate.deactivate();
         polyControl.activate();
         assignControl.deactivate();
-        //hoverControl.activate();
+        hoverControl.deactivate();
         selection.removeFeatures(selection.features);
     });
 
@@ -385,7 +423,7 @@ function init() {
         getControl.deactivate();
         navigate.deactivate();
         polyControl.deactivate();
-        //hoverControl.deactivate();
+        hoverControl.deactivate();
         assignControl.activate();
     });
 
@@ -394,8 +432,8 @@ function init() {
         boxControl,
         polyControl,
         assignControl,
-        new GlobalZoom() /*,
-        hoverControl */
+        new GlobalZoom(),
+        hoverControl
     ]);
 
     var boundforChange = function(evt) {
