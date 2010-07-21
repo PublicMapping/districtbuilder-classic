@@ -318,7 +318,7 @@ function init() {
         });
 
         $.each(sorted, function(n, feature) {
-            $('<option />').attr('value', feature.attributes.id).text( feature.attributes.name).appendTo('#assign_district');
+            $('<option />').attr('value', feature.attributes.district_id).text( feature.attributes.name).appendTo('#assign_district');
         });
     });
 
@@ -328,6 +328,7 @@ function init() {
         boxControl.deactivate();
         polyControl.deactivate();
         assignControl.deactivate();
+	hoverControl.activate();
         selection.removeFeatures(selection.features);
     });
 
@@ -337,6 +338,7 @@ function init() {
         navigate.deactivate();
         polyControl.deactivate();
         assignControl.deactivate();
+	hoverControl.activate();
         selection.removeFeatures(selection.features);
     });
 
@@ -346,6 +348,7 @@ function init() {
         navigate.deactivate();
         polyControl.deactivate();
         assignControl.deactivate();
+	hoverControl.activate();
         selection.removeFeatures(selection.features);
     });
 
@@ -355,6 +358,7 @@ function init() {
         navigate.deactivate();
         polyControl.activate();
         assignControl.deactivate();
+	hoverControl.activate();
         selection.removeFeatures(selection.features);
     });
 
@@ -364,6 +368,7 @@ function init() {
         getControl.deactivate();
         navigate.deactivate();
         polyControl.deactivate();
+	hoverControl.deactivate();
         assignControl.activate();
     });
 
