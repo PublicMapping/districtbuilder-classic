@@ -104,7 +104,7 @@
                 <label>Map Tools</label>
                 <div>
                   <button id="navigate_map_tool" class="active btntoggle toggle"></button>
-                  <button id="identify_map_tool" class="disabled"></button>
+                  <button id="identify_map_tool" title="Click on a district to find its name." class="btntoggle titletip"></button>
                 </div>
               </div>
               <div class="toolset_group">
@@ -378,8 +378,10 @@
             callback: function() { $('#difplanbtn').click() }
     {% endif %}
         }).init();
+    {% if plan.name %}
         $('.geography').load('/districtmapping/plan/{{plan.id}}/geography');
         $('.demographics').load('/districtmapping/plan/{{plan.id}}/demographics');      
+    {% endif %}
 
         
         $('#updatestatsbtn').click( function() {
