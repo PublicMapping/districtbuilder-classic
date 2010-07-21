@@ -82,6 +82,10 @@ publicmapping.chooseplan = function(options) {
             var name = $('#txtNewName').val();
             var url = '/districtmapping/plan/' + activeSelector.val() + '/copy/'
             if (name.trim().length == 0) { alert ('A name for the copied template is required'); return; }
+            if (OpenLayers) {
+                OpenLayers.Element.addClass(document.body,'olCursorWait');
+            }
+            window.status = 'Please standby while creating new plan ...';
             $.post(url, { name: $('#txtNewName').val() }, copyCallback, 'json');
         }
         else {
