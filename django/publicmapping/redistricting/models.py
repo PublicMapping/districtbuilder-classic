@@ -231,7 +231,12 @@ class District(models.Model):
         for subject in all_subjects:
             aggregate = Characteristic.objects.filter(geounit__in=my_geounits, subject__exact = subject).aggregate(Sum('number'))['number__sum']
             if aggregate:
-                computed = ComputedCharacteristic(subject = subject, district = self, number = aggregate)
+                computed = ComputedCharacteristic.objects.filter(subject=subject,district=self)
+                if len(computed) == 0: 
+                    computed = ComputedCharacteristic(subject = subject, district = self, number = aggregate)
+                else:
+                    computed = computed[0]
+                    computed.number = aggregate
                 computed.save()
 
 

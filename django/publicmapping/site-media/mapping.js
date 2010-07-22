@@ -225,7 +225,7 @@ function init() {
         OpenLayers.Element.addClass(olmap.viewPortDiv,'olCursorWait');
         OpenLayers.Request.POST({
             method: 'POST',
-            url: '/districtmapping/plan/' + plan_id + '/district/' + district_id + '/add',
+            url: '/districtmapping/plan/' + PLAN_ID + '/district/' + district_id + '/add',
             params: {
                 geolevel: geolevel_id,
                 geounits: geounit_ids
@@ -439,11 +439,21 @@ function init() {
         selection.removeFeatures(selection.features);
         
         $('#assign_district').empty();
-        $('<option />').attr('value', '-1').text('-- Select One --').appendTo('#assign_district');
+        $('<option />').
+            attr('value', '-1').
+            text('-- Select One --').
+            appendTo('#assign_district');
 
         var sorted = districtLayer.features.slice(0,districtLayer.features.length);
         sorted.sort(function(a,b){
             return a.attributes.name > b.attributes.name;
+        });
+
+        $.each(sorted, function(n, feature) {
+            $('<option />').
+                attr('value', feature.attributes.district_id).
+                text(feature.attributes.name).
+                appendTo('#assign_district');
         });
     });
 
