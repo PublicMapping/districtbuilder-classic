@@ -9,6 +9,7 @@
     <!-- <script type="text/javascript" src="/site-media/OpenLayers-2.9.1/lib/OpenLayers.js"></script>  debug -->
     <script type="text/javascript">
         var MAP_SERVER = '{{ mapserver }}';
+        var PLAN_ID = {{ plan.id }};
         var SNAP_LAYERS = [ {% for snap in snaplayers %} { level: '{{ snap.layer }}',layer: 'simple_{{ snap.layer }}', name: '{{ snap.name }}' }{% if not forloop.last %},{% endif %} {% endfor %} ];
         var DEMOGRAPHICS = [{% for demo in demographics %} { text: '{{ demo.text }}', value: '{{ demo.value }}' }{% if not forloop.last %},{% endif %} {% endfor %} ];
         var MAP_LAYERS = [];

@@ -97,8 +97,6 @@ function init() {
         layers.push(createLayer( MAP_LAYERS[layer], MAP_LAYERS[layer], layerExtent ));
     }
 
-    var match = window.location.href.match(new RegExp('/plan\/(\\d+)\/edit/'));
-    var plan_id = match[1];
     var districtStrategy = new OpenLayers.Strategy.Fixed({preload:true});
     
     var districtLayer = new OpenLayers.Layer.Vector(
@@ -126,7 +124,7 @@ function init() {
             filter: new OpenLayers.Filter.Comparison({
                 type: OpenLayers.Filter.Comparison.EQUAL_TO,
                 property: 'plan_id',
-                value: plan_id
+                value: PLAN_ID
             })
         }
     );
