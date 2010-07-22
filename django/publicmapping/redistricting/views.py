@@ -183,31 +183,41 @@ def getgeography(request, planid):
     district_values = {}
 
     district_ids = plan.district_set.values_list('id')
+    districts = plan.district_set.all()
     try:
         subject = Subject.objects.get(pk=demo)
     except:
         return HttpResponse ( "{ \"success\": false, \"message\":\"Couldn't get geography info from the server. No Subject exists with the given id.\" }" )
-    characteristics = ComputedCharacteristic.objects.filter(district__in=district_ids, subject = subject) 
-    for characteristic in characteristics:
-        dist_name = characteristic.district.name
-        
+    for district in districts:
+        dist_name = district.name
         if dist_name == "Unassigned":
             dist_name = "U"
         if not dist_name in district_values: 
             district_values[dist_name] = {}
 
-        district_values[dist_name]['demo'] = "%.0f" % characteristic.number        
-        district_values[dist_name]['contiguity'] = random.choice( [True, False] )
-        district_values[dist_name]['compactness'] = str( random.randint(50, 80)) + "%"
+        stats = district_values[dist_name]
 
-        target = Target.objects.get(subject = subject)
-        if characteristic.number < target.lower:
-            css_class = 'under'
-        elif characteristic.number > target.upper:
-            css_class = 'over'
-        else:
-            css_class = 'target'
-        district_values[dist_name]['css_class'] = css_class
+        characteristics = ComputedCharacteristic.objects.filter(district = district, subject = subject)
+
+        if not characteristics.count() == 0:
+            stats['demo'] = 'n/a'        
+            stats['contiguity'] = 'n/a'
+            stats['compactness'] = 'n/a'
+            stats['css_class'] = 'under'
+
+        for characteristic in characteristics:
+            stats['demo'] = "%.0f" % characteristic.number        
+            stats['contiguity'] = random.choice( [True, False] )
+            stats['compactness'] = str( random.randint(50, 80)) + "%"
+
+            target = Target.objects.get(subject = subject)
+            if characteristic.number < target.lower:
+                css_class = 'under'
+            elif characteristic.number > target.upper:
+                css_class = 'over'
+            else:
+                css_class = 'target'
+            stats['css_class'] = css_class
 
     return render_to_response('geography.html', {
         'plan': plan,
