@@ -29,7 +29,7 @@
                               <tr class="{% cycle 'odd' 'even' %}">
                                   <td class="celldist cell1">{{ key }}</td>
                                   <td class="celldemo cell2">
-                                    <span class="demostatus {{ value.css_class }}"> 
+                                    <span class="popstatus {{ value.css_class }}"> 
                                          {{ stat.demo }}
                                     </span>
                                   </td>
@@ -55,9 +55,9 @@
                       <div class="legend_item">
                         <h5>Population</h5>
                         <ul>
-                          <li><span class="swatch demostatus over"></span> Over target</li>
-                          <li><span id="swatch-under" class="swatch demostatus under"></span> Under target</li>                       
-                          <li><span id="swatch-target" class="swatch demostatus target"></span> Meets target</li>  
+                          <li><span class="swatch popstatus over"></span> Over target</li>
+                          <li><span id="swatch-under" class="swatch popstatus under"></span> Under target</li>                       
+                          <li><span id="swatch-target" class="swatch popstatus target"></span> Meets target</li>  
                         </ul>
                       </div>
                       <div class="legend_item last">

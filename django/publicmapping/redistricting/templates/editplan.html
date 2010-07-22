@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+D<!OCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <title>Open Source District Mapping Tool</title>
@@ -395,14 +395,14 @@
     {% endif %}
         }).init();
     {% if plan.name %}
-        $('.geography').load('/districtmapping/plan/{{plan.id}}/geography');
+        $('.geography').load('/districtmapping/plan/{{plan.id}}/geography?demo=3');
         $('.demographics').load('/districtmapping/plan/{{plan.id}}/demographics');      
     {% endif %}
 
         
         $('#updatestatsbtn').click( function() {
             $.ajax({ url: '/districtmapping/plan/{{plan.id}}/updatestats', success: function() {
-                    $('.geography').load('/districtmapping/plan/{{plan.id}}/geography', loadTooltips);
+                    $('.geography').load('/districtmapping/plan/{{plan.id}}/geography?demo=' + $('#districtby').val(), loadTooltips);
                     $('.demographics').load('/districtmapping/plan/{{plan.id}}/demographics', loadTooltips); 
                     
                }});

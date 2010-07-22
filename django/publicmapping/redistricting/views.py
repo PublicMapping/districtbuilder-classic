@@ -171,21 +171,22 @@ def getgeography(request, planid):
     try:
         plan = Plan.objects.get(pk = planid)
     except:
-        return HttpResponse ( "{ \"success\": false, \"message\":\"Couldn't get geography info from the server. Please try again later.\" }" )
+        return HttpResponse ( "{ \"success\": false, \"message\":\"Couldn't get geography info from the server. No plan with the given id.\" }" )
     
-    demo = 'POPTOT'
     if 'demo' in request.REQUEST: 
         demo = request.REQUEST['demo']
-
+    else:
+        return HttpResponse ( "{ \"success\": false, \"message\":\"Couldn't get geography info from the server. Please use the 'demo' parameter with a Subject id.\" }" )
+        
     targets = {}
     aggregate = {}
     district_values = {}
 
     district_ids = plan.district_set.values_list('id')
     try:
-        subject = Subject.objects.get(name__exact = demo)
+        subject = Subject.objects.get(pk=demo)
     except:
-        subject = Subject.objects.get(pk=1)
+        return HttpResponse ( "{ \"success\": false, \"message\":\"Couldn't get geography info from the server. No Subject exists with the given id.\" }" )
     characteristics = ComputedCharacteristic.objects.filter(district__in=district_ids, subject = subject) 
     for characteristic in characteristics:
         dist_name = characteristic.district.name
@@ -199,7 +200,7 @@ def getgeography(request, planid):
         district_values[dist_name]['contiguity'] = random.choice( [True, False] )
         district_values[dist_name]['compactness'] = str( random.randint(50, 80)) + "%"
 
-        target = Target.objects.get(subject = characteristic.subject)
+        target = Target.objects.get(subject = subject)
         if characteristic.number < target.lower:
             css_class = 'under'
         elif characteristic.number > target.upper:
@@ -212,7 +213,6 @@ def getgeography(request, planid):
         'plan': plan,
         'district_values': district_values,
         'aggregate': getaggregate(district_ids),
-        'targets': targets,
         'name': subject.short_display
     })
 
