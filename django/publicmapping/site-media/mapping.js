@@ -283,7 +283,7 @@ function init() {
         districtLayer,
         {
             hover: true,
-            onSelect: function(feature){
+            onSelect: (function(){
                 var getCellText = function(cell) {
                     if (cell.textContent) {
                         return cell.textContent;
@@ -291,47 +291,60 @@ function init() {
                     else {
                         return cell.innerHTML;
                     }
-                }
-                var highlightFunc = function(idx, cell) {
-                    if (getCellText(cell) == feature.attributes.name) {
-                        cell.parentNode.style.backgroundColor = '#ffffbb';
+                };
+                var highlightFunc = function(highlightFeature) {
+                    return function(idx, cell) {
+                        if (getCellText(cell) == highlightFeature.attributes.name) {
+                            cell.parentNode.style.backgroundColor = '#ffffbb';
+                        }
+                        else
+                        {
+                            cell.parentNode.style.backgroundColor = '';
+                        }
+                    };
+                };
+                var showTip = function(tipFeature) {
+                    var centroid = tipFeature.geometry.getCentroid();
+                    var lonlat = new OpenLayers.LonLat( centroid.x, centroid.y );
+                    var pixel = olmap.getPixelFromLonLat(lonlat);
+                    tipdiv.style.display = 'block';
+                    tipdiv.firstChild.nodeValue = tipFeature.attributes.name;
+                    var halfWidth = tipdiv.clientWidth/2;
+                    var halfHeight = tipdiv.clientHeight/2;
+                    if (pixel.x < halfWidth) { 
+                        pixel.x = halfWidth;
                     }
-                    else
-                    {
-                        cell.parentNode.style.backgroundColor = '';
+                    else if (pixel.x > olmap.div.clientWidth - halfWidth) {
+                        pixel.x = olmap.div.clientWidth - halfWidth;
                     }
-                }
-                var names = $('.demographics .plantable .celldistrictname');
-                $.each(names,highlightFunc);
-                names = $('.geography .plantable .celldist');
-                $.each(names, highlightFunc);
-                window.status = feature.attributes.name;
-
-                var centroid = feature.geometry.getCentroid();
-                var lonlat = new OpenLayers.LonLat( centroid.x, centroid.y );
-                var pixel = olmap.getPixelFromLonLat(lonlat);
-                tipdiv.style.display = 'block';
-                tipdiv.firstChild.nodeValue = feature.attributes.name;
-                var halfWidth = tipdiv.clientWidth/2;
-                var halfHeight = tipdiv.clientHeight/2;
-                if (pixel.x < halfWidth) { 
-                    pixel.x = halfWidth;
-                }
-                else if (pixel.x > olmap.div.clientWidth - halfWidth) {
-                    pixel.x = olmap.div.clientWidth - halfWidth;
-                }
-                if (pixel.y < halfHeight) {
-                    pixel.y = halfHeight;
-                }
-                else if (pixel.y > (olmap.div.clientHeight-29) - halfHeight) {
-                    pixel.y = (olmap.div.clientHeight-29) - halfHeight;
-                }
-        
-                tipdiv.style.left = (pixel.x - halfWidth) + 'px';
-                tipdiv.style.top = (pixel.y - halfHeight) + 'px';
-            },
+                    if (pixel.y < halfHeight) {
+                        pixel.y = halfHeight;
+                    }
+                    else if (pixel.y > (olmap.div.clientHeight-29) - halfHeight) {
+                        pixel.y = (olmap.div.clientHeight-29) - halfHeight;
+                    }
+            
+                    tipdiv.style.left = (pixel.x - halfWidth) + 'px';
+                    tipdiv.style.top = (pixel.y - halfHeight) + 'px';
+                    if (tipdiv.pending) {
+                        clearTimeout(tipdiv.timeout);
+                        tipdiv.pending = false;
+                    }
+                };
+                return function(feature){
+                    var names = $('.demographics .plantable .celldistrictname');
+                    $.each(names,highlightFunc(feature));
+                    names = $('.geography .plantable .celldist');
+                    $.each(names, highlightFunc(feature));
+                    window.status = feature.attributes.name;
+                    showTip(feature);
+                };
+            })(),
             onUnselect: function(feature) {
-                tipdiv.style.display = '';
+                tipdiv.pending = true;
+                tipdiv.timeout = setTimeout(function(){
+                    tipdiv.style.display = '';
+                }, 1000);
             }
         }
     );
