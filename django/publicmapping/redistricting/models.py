@@ -68,10 +68,11 @@ class Characteristic(models.Model):
 
 class Target(models.Model):
     subject = models.ForeignKey(Subject)
-    value = models.PositiveIntegerField()
+    lower = models.PositiveIntegerField()
+    upper = models.PositiveIntegerField()
 
     def __unicode__(self):
-        return u'%s : %s' % (self.subject, self.value)
+        return u'%s : %s - %s' % (self.subject, self.lower, self.upper)
 
 class Plan(models.Model):
     name = models.CharField(max_length=200,unique=True)
@@ -226,7 +227,7 @@ class District(models.Model):
 
 
     def update_stats(self):
-        all_subjects = Subject.objects.all()
+        all_subjects = Subject.objects.all().order_by('name').reverse()
         my_geounits = DistrictGeounitMapping.objects.filter(district = self).values_list('geounit', flat=True)
         for subject in all_subjects:
             aggregate = Characteristic.objects.filter(geounit__in=my_geounits, subject__exact = subject).aggregate(Sum('number'))['number__sum']

@@ -144,7 +144,9 @@ def getdemographics(request, planid):
         district_values[dist_name][subject_name] = "%.0f" % characteristic.number       
 
     for target in Target.objects.all():
-        targets[target.subject.short_display] = target.value
+        targets[target.subject.short_display] = {}
+        targets[target.subject.short_display]['upper'] = target.upper
+        targets[target.subject.short_display]['lower'] = target.lower
     return render_to_response('demographics.html', {
         'plan': plan,
         'targets': targets,
@@ -173,15 +175,26 @@ def getgeography(request, planid):
         if dist_name == "Unassigned":
             dist_name = "U"
         subject_name = characteristic.subject.short_display
+        target = Target.objects.get(subject = characteristic.subject)
         
         if not dist_name in district_values: 
             district_values[dist_name] = {}
         district_values[dist_name][characteristic.subject.name] = "%.0f" % characteristic.number        
+
+        if (characteristic.number < target.lower):
+            css_class = 'under'
+        elif characteristic.number > target.upper:
+            css_class = 'over'
+        else:
+            css_class = 'target'
+        district_values[dist_name]['css_class'] = css_class
         district_values[dist_name]['contiguity'] = random.choice( [True, False] )
         district_values[dist_name]['compactness'] = str( random.randint(50, 80)) + "%"
 
     for target in Target.objects.all():
-        targets[target.subject.short_display] = target.value
+        targets[target.subject.short_display] = {}
+        targets[target.subject.short_display]['upper'] = target.upper
+        targets[target.subject.short_display]['lower'] = target.lower
     return render_to_response('geography.html', {
         'plan': plan,
         'district_values': district_values,
