@@ -52,15 +52,21 @@ def editplan(request, planid):
     demos = Subject.objects.values_list("id","name", "short_display")
     layers = []
     snaplayers = []
+    rules = []
+    targets = Target.objects.all()
     for level in levels:
         snaplayers.append( {'layer':level,'name':level.capitalize()} )
     for demo in demos:
         layers.append( {'id':demo[0],'text':demo[2],'value':demo[1].lower()} )
+    for target in targets:
+        rules.append( {'subject_id':target.subject_id,'lower':target.lower,'upper':target.upper} )
+
     return render_to_response('editplan.html', {
         'plan': plan,
         'mapserver': settings.MAP_SERVER,
         'demographics': layers,
         'snaplayers': snaplayers,
+        'rules': rules,
     })
 
 @login_required

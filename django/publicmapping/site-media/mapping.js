@@ -432,6 +432,9 @@ function init() {
             max = (value > max) ? value : max;
         });
 
+        var subject = getDistrictBy();
+        var lowerColor = $('.under').css('background-color');
+        var upperColor = $('.over').css('background-color');
         var newOptions = OpenLayers.Util.extend({}, districtStyle);
         var newStyle = new OpenLayers.Style(newOptions,{
             rules:[
@@ -439,10 +442,10 @@ function init() {
                     filter: new OpenLayers.Filter.Comparison({
                         type: OpenLayers.Filter.Comparison.LESS_THAN_OR_EQUAL_TO,
                         property: 'number',
-                        value: ((max - min) * 0.25) + min
+                        value: RULES[subject].lower
                     }),
                     symbolizer: {
-                        fillColor: '#000000',
+                        fillColor: lowerColor,
                         fillOpacity: 0.5
                     }
                 }),
@@ -450,10 +453,10 @@ function init() {
                     filter: new OpenLayers.Filter.Comparison({
                         type: OpenLayers.Filter.Comparison.GREATER_THAN_OR_EQUAL_TO,
                         property: 'number',
-                        value: max - ((max - min) * 0.25)
+                        value: RULES[subject].upper
                     }),
                     symbolizer: {
-                        fillColor: '#FFFFFF',
+                        fillColor: upperColor,
                         fillOpacity: 0.5
                     }
                 }),
@@ -461,8 +464,8 @@ function init() {
                     filter: new OpenLayers.Filter.Comparison({
                         type: OpenLayers.Filter.Comparison.BETWEEN,
                         property: 'number',
-                        lowerBoundary: ((max - min) * 0.25) + min,
-                        upperBoundary: max - ((max - min) * 0.25) + min
+                        lowerBoundary: RULES[subject].lower,
+                        upperBoundary: RULES[subject].upper
                     })
                 })
             ]
