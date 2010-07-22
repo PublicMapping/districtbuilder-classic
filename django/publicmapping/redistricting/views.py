@@ -5,6 +5,7 @@ from django.db.models import Sum
 from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import login_required
 from django import forms
+from django.utils import simplejson as json
 from publicmapping import settings
 from publicmapping.redistricting.models import *
 import random, string
@@ -81,17 +82,21 @@ def addtodistrict(request, planid, districtid):
     """ This method, when called, required a "geolevel" and a "geounits" parameter.  
     The geolevel must be a valid geolevel name and the geounits parameters should be a pipe-separated list of geounit ids
     """
+    status = { 'success': False, 'message': 'Unspecified error.' }
     if len(request.REQUEST.items()) >= 2: 
         geolevel = request.REQUEST["geolevel"];
         geounit_ids = string.split(request.REQUEST["geounits"], "|")
         plan = Plan.objects.get(pk=planid)
         try:
             fixed = plan.add_geounits(districtid, geounit_ids, geolevel)
-            return HttpResponse("{\"success\": true, \"message\":\"Updated " + str(fixed) + " districts\"}")
+            status['success'] = True;
+            status['message'] = 'Updated %d districts' % fixed
         except: 
-            return HttpResponse("{\"success\": false, \"message\":\"Could not add units to district.\"}")
+            status['message'] = 'Could not add units to district.'
     else:
-        return HttpResponse("{\"success\": false, \"messag\":\"Geounits weren't found in a district\"}")
+        status['message'] = 'Geounits weren\'t found in a district.'
+
+    return HttpResponse(json.dumps(status),mimetype='application/json')
 
 #@login_required
 #def deletefromplan(request, planid, geounit_ids):
@@ -214,18 +219,26 @@ def getaggregate(district_ids):
     return aggregate
 
 def updatestats(request, planid):
+    status = { 'success': False }
     plan = Plan.objects.get(pk=planid)
     try:
         plan.update_stats()
-        return HttpResponse("{\"success\": true, \"message\":\"Updated stats for " + str(plan.name)+  "\"}")
+        status['success'] = True
+        status['message'] = 'Updated stats for %s.' % plan.name
     except:
-        return HttpResponse("{\"success\": false, \"message\":\"Couldn't update stats\"}")
+        status['message'] = 'Couldn\'t update plan stats.'
+
+    return HttpResponse(json.dumps(status), mimetype='application/json')
 
 def updatedistrict(request, planid, districtid):
+    status = { 'success': False }
     plan = Plan.objects.get(pk=planid)
     district = plan.district_set.get(district_id=districtid)
     try:
         district.update_stats()
-        return HttpResponse("{\"success\": true}")
+        status['success'] = True
+        status['message'] = 'Updated stats for %s.' % district.name
     except:
-        return HttpResponse("{\"success\": false}")
+        status['message'] = 'Couldn\'t update district stats.'
+    
+    return HttpResponse(json.dumps(status),mimetype='application/json')

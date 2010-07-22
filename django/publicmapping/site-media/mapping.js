@@ -502,7 +502,7 @@ function init() {
     $('#navigate_map_tool').click(function(evt){
         var active = olmap.getControlsBy('active',true);
         for (var i = 0; i < active.length; i++) {
-            active.deactivate();
+            active[i].deactivate();
         }
         navigate.activate();
         selection.removeFeatures(selection.features);
@@ -513,7 +513,7 @@ function init() {
     $('#identify_map_tool').click(function(evt){
         var active = olmap.getControlsBy('active',true);
         for (var i = 0; i < active.length; i++) {
-            active.deactivate();
+            active[i].deactivate();
         }
         hoverControl.activate();
     });
@@ -523,7 +523,7 @@ function init() {
     $('#single_drawing_tool').click(function(evt){
         var active = olmap.getControlsBy('active',true);
         for (var i = 0; i < active.length; i++) {
-            active.deactivate();
+            active[i].deactivate();
         }
         getControl.activate();
         selection.removeFeatures(selection.features);
@@ -534,7 +534,7 @@ function init() {
     $('#rectangle_drawing_tool').click(function(evt){
         var active = olmap.getControlsBy('active',true);
         for (var i = 0; i < active.length; i++) {
-            active.deactivate();
+            active[i].deactivate();
         }
         boxControl.activate();
         selection.removeFeatures(selection.features);
@@ -545,7 +545,7 @@ function init() {
     $('#polygon_drawing_tool').click(function(evt){
         var active = olmap.getControlsBy('active',true);
         for (var i = 0; i < active.length; i++) {
-            active.deactivate();
+            active[i].deactivate();
         }
         polyControl.activate();
         selection.removeFeatures(selection.features);
@@ -557,7 +557,7 @@ function init() {
     $('#assign_tool').click(function(evt){
         var active = olmap.getControlsBy('active',true);
         for (var i = 0; i < active.length; i++) {
-            active.deactivate();
+            active[i].deactivate();
         }
         assignControl.activate();
     });
