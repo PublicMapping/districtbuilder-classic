@@ -400,8 +400,9 @@
         
         $('#updatestatsbtn').click( function() {
             $.ajax({ url: '/districtmapping/plan/{{plan.id}}/updatestats', success: function() {
-                    $('.geography').load('/districtmapping/plan/{{plan.id}}/geography');
-                    $('.demographics').load('/districtmapping/plan/{{plan.id}}/demographics'); 
+                    $('.geography').load('/districtmapping/plan/{{plan.id}}/geography', loadTooltips);
+                    $('.demographics').load('/districtmapping/plan/{{plan.id}}/demographics', loadTooltips); 
+                    
                }});
         }); 
         

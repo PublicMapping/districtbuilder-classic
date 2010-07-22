@@ -207,7 +207,10 @@ def getaggregate(district_ids):
     aggregate = {}
     characteristics = ComputedCharacteristic.objects.filter(district__in=district_ids) 
     for target in Target.objects.all():
-        aggregate[target.subject.short_display]= "%.0f" % characteristics.filter(subject = target.subject).aggregate(Sum('number'))['number__sum'] 
+        try:
+            aggregate[target.subject.short_display]= "%.0f" % characteristics.filter(subject = target.subject).aggregate(Sum('number'))['number__sum'] 
+        except:
+            aggregate[target.subject.short_display]= "Data unavailable" 
     return aggregate
 
 def updatestats(request, planid):
