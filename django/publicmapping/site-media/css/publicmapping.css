@@ -1011,3 +1011,6 @@ div.controlDiv select {
   width: 23px !important;
   height: 10px !important;
 }
+#working {
+    font-size: 12pt;
+}

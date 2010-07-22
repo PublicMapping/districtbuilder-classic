@@ -54,7 +54,6 @@ function getPlanAndSubjectFilters() {
     });
 }
 
-
 function doMapStyling() {
     //adding proper class names so css may style the PanZoom controls
     $('#OpenLayers\\.Control\\.PanZoomBar_3_panup').addClass('olControlPan olControlPanUpItemInactive');
@@ -242,6 +241,7 @@ function init() {
         }
         geounit_ids = geounit_ids.join('|');
         OpenLayers.Element.addClass(olmap.viewPortDiv,'olCursorWait');
+        $('#working').dialog('open');
         OpenLayers.Request.POST({
             method: 'POST',
             url: '/districtmapping/plan/' + PLAN_ID + '/district/' + district_id + '/add',
@@ -257,6 +257,7 @@ function init() {
                 }
                 else {
                     OpenLayers.Element.removeClass(olmap.viewPortDiv, 'olCursorWait');
+                    $('#working').dialog('close');
                 }
 
                 for (var i = 0; i < selection.features.length; i++) {
@@ -498,6 +499,11 @@ function init() {
                 text(feature.attributes.name).
                 appendTo('#assign_district');
         });
+
+        var working = $('#working');
+        if (working.dialog('isOpen')) {
+            working.dialog('close');
+        }
     });
 
     // When the navigate map tool is clicked, disable all the 
@@ -629,6 +635,24 @@ function init() {
         var feature = { data:{ district_id: this.value } };
         assignOnSelect(feature);
     });
+
+    // A method for manually refreshing the statistics in the sidebar
+    $('#updatestatsbtn').click( function() {
+        var geourl = '/districtmapping/plan/' + PLAN_ID + '/geography?demo=' + $('#districtby').val();
+        var demourl = '/districtmapping/plan/' + PLAN_ID + '/demographics';
+        $('#working').dialog('open');
+        $.ajax({ 
+            url: '/districtmapping/plan/' + PLAN_ID + '/updatestats', 
+            success: function() {
+                $('.geography').load(geourl, loadTooltips);
+                $('.demographics').load(demourl, loadTooltips); 
+
+                districtLayer.destroyFeatures();
+                districtLayer.filter = getPlanAndSubjectFilters();
+                districtLayer.strategies[0].load();
+            }
+        });
+    }); 
 
     // Set the initial map extents to the bounds around the study area.
     // TODO Make these configurable.

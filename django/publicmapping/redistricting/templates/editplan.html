@@ -41,16 +41,12 @@
     <div class="clear"></div>
   </div>
 
-<div id="steps">
-          <ul id="steps_tabs">
-            <li id="tab_step1"><a href="#step-1"> Step 1: Draw</a></li>
-            <li id="tab_step2"><a href="#step-2">Step 2: Evaluate</a></li>
-            <li id="tab_step3"><a href="#step-2">Step 3: Share</a></li>
-          </ul>
-
-
-
-       
+  <div id="steps">
+      <ul id="steps_tabs">
+        <li id="tab_step1"><a href="#step-1"> Step 1: Draw</a></li>
+        <li id="tab_step2"><a href="#step-2">Step 2: Evaluate</a></li>
+        <li id="tab_step3"><a href="#step-2">Step 3: Share</a></li>
+      </ul>
 
    <div id="step1" class="main_content">
  
@@ -383,9 +379,17 @@
           <div id="difplanbtn">Open New Plan</div>
       </div>
 </div>
+<div id="working" title="Please Wait">Please wait while new districts are computed...</div>
 <div id="DialogContainer"></div>
 <script type="text/javascript">
     $( function() {
+        $('#working').dialog({
+            resizable:false,
+            modal:true,
+            draggable:false,
+            closeOnEscape:false,
+            autoOpen:false
+        });
         var choose = publicmapping.chooseplan({
             target: $('#difplanbtn'),
             container: $('#DialogContainer'),
@@ -398,16 +402,6 @@
         $('.geography').load('/districtmapping/plan/{{plan.id}}/geography?demo=3');
         $('.demographics').load('/districtmapping/plan/{{plan.id}}/demographics');      
     {% endif %}
-
-        
-        $('#updatestatsbtn').click( function() {
-            $.ajax({ url: '/districtmapping/plan/{{plan.id}}/updatestats', success: function() {
-                    $('.geography').load('/districtmapping/plan/{{plan.id}}/geography?demo=' + $('#districtby').val(), loadTooltips);
-                    $('.demographics').load('/districtmapping/plan/{{plan.id}}/demographics', loadTooltips); 
-                    
-               }});
-        }); 
-        
     });
 </script>
     
