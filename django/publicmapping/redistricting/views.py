@@ -130,8 +130,9 @@ def chooseplan(request):
         })
 
 def getdemographics(request, planid):
-    plan = Plan.objects.get(pk = planid)
-    if plan == None:
+    try:
+        plan = Plan.objects.get(pk = planid)
+    except:
         return HttpResponse ( "{ \"success\": false, \"message\":\"Couldn't get demographic info from the server. Please try again later.\" }" )
     targets = {}
     aggregate = {}
@@ -161,50 +162,52 @@ def getdemographics(request, planid):
 
 
 def getgeography(request, planid):
-    plan = Plan.objects.get(pk = planid)
-    if plan == None:
+    try:
+        plan = Plan.objects.get(pk = planid)
+    except:
         return HttpResponse ( "{ \"success\": false, \"message\":\"Couldn't get geography info from the server. Please try again later.\" }" )
     
-#    filter_demo = 'poptot'
-#    if request['filter'] not none: 
-#        filter_demo = request['filter']
+    demo = 'POPTOT'
+    if 'demo' in request.REQUEST: 
+        demo = request.REQUEST['demo']
 
     targets = {}
     aggregate = {}
     district_values = {}
 
     district_ids = plan.district_set.values_list('id')
-    characteristics = ComputedCharacteristic.objects.filter(district__in=district_ids, subject__exact=3) 
+    try:
+        subject = Subject.objects.get(name__exact = demo)
+    except:
+        subject = Subject.objects.get(pk=1)
+    characteristics = ComputedCharacteristic.objects.filter(district__in=district_ids, subject = subject) 
     for characteristic in characteristics:
         dist_name = characteristic.district.name
+        
         if dist_name == "Unassigned":
             dist_name = "U"
-        subject_name = characteristic.subject.short_display
-        target = Target.objects.get(subject = characteristic.subject)
-        
         if not dist_name in district_values: 
             district_values[dist_name] = {}
-        district_values[dist_name][characteristic.subject.name] = "%.0f" % characteristic.number        
 
-        if (characteristic.number < target.lower):
+        district_values[dist_name]['demo'] = "%.0f" % characteristic.number        
+        district_values[dist_name]['contiguity'] = random.choice( [True, False] )
+        district_values[dist_name]['compactness'] = str( random.randint(50, 80)) + "%"
+
+        target = Target.objects.get(subject = characteristic.subject)
+        if characteristic.number < target.lower:
             css_class = 'under'
         elif characteristic.number > target.upper:
             css_class = 'over'
         else:
             css_class = 'target'
         district_values[dist_name]['css_class'] = css_class
-        district_values[dist_name]['contiguity'] = random.choice( [True, False] )
-        district_values[dist_name]['compactness'] = str( random.randint(50, 80)) + "%"
 
-    for target in Target.objects.all():
-        targets[target.subject.short_display] = {}
-        targets[target.subject.short_display]['upper'] = target.upper
-        targets[target.subject.short_display]['lower'] = target.lower
     return render_to_response('geography.html', {
         'plan': plan,
         'district_values': district_values,
         'aggregate': getaggregate(district_ids),
         'targets': targets,
+        'name': subject.short_display
     })
 
 

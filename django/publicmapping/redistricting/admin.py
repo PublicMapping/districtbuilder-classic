@@ -34,6 +34,7 @@ class SubjectAdmin(admin.ModelAdmin):
     list_filter = ('is_displayed',)
 
 admin.site.register(Geounit, GeounitAdmin)
+admin.site.register(ComputedCharacteristic) 
 admin.site.register(Characteristic, CharacteristicAdmin)
 admin.site.register(Subject, SubjectAdmin)
 admin.site.register(Geolevel)

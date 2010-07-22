@@ -10,16 +10,12 @@
                   <div class="plantable header">
                      <table>
                       <thead>
-                         {% if targets %}
+                         {% if district_values %}
                           <tr>
                               <th class="celldist cell1">Dist.</th>
-                              <th class="cellpop cell2">Population</th>
+                              <th class="celldemo cell2">{{ name }}</th>
                               <th class="cellcontig cell3">Contiguity</th>
                               <th class="cellcompact cell4">Compactness</th>
-                           <!--    {% for key, value in targets.items %}
-                              <th class="cellsubjects">{{ key }}</th>
-                              {% endfor %}
-                            -->
                           </tr>
                         {% endif %}
                       </thead>
@@ -29,22 +25,22 @@
                     {% if district_values %}
                        <table>
                           <tbody>
-                              {% for key, value in district_values.items %}
+                              {% for key, stat in district_values.items %}
                               <tr class="{% cycle 'odd' 'even' %}">
                                   <td class="celldist cell1">{{ key }}</td>
-                                  <td class="cellpop cell2">
-                                    <span class="popstatus {{ value.css_class }}"> 
-                                         {{ value.POPTOT }}
+                                  <td class="celldemo cell2">
+                                    <span class="demostatus {{ value.css_class }}"> 
+                                         {{ stat.demo }}
                                     </span>
                                   </td>
-                                  {% if value.contiguity %}
+                                  {% if stat.contiguity %}
                                   <td class="cellcontig cell3"><img class="yes-contiguous" src="/site-media/images/icon-check.png">
                                   {% else %}
                                   <td class="cellcontig cell3"><img class="no-contiguous" src="/site-media/images/icon-warning.png">
                                   {% endif %}
                                   <div class="tooltip">this is a tooltip</div>
                                   </td>                             
-                                  <td class="cellcompact cell4">{{ value.compactness }}</td>
+                                  <td class="cellcompact cell4">{{ stat.compactness }}</td>
                               </tr>
                               {% endfor %}
                           </tbody>
@@ -59,9 +55,9 @@
                       <div class="legend_item">
                         <h5>Population</h5>
                         <ul>
-                          <li><span class="swatch popstatus over"></span> Over target</li>
-                          <li><span id="swatch-under" class="swatch popstatus under"></span> Under target</li>                       
-                          <li><span id="swatch-target" class="swatch popstatus target"></span> Meets target</li>  
+                          <li><span class="swatch demostatus over"></span> Over target</li>
+                          <li><span id="swatch-under" class="swatch demostatus under"></span> Under target</li>                       
+                          <li><span id="swatch-target" class="swatch demostatus target"></span> Meets target</li>  
                         </ul>
                       </div>
                       <div class="legend_item last">
