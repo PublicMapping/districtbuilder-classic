@@ -199,7 +199,7 @@ def getgeography(request, planid):
 
         characteristics = ComputedCharacteristic.objects.filter(district = district, subject = subject)
 
-        if not characteristics.count() == 0:
+        if characteristics.count() == 0:
             stats['demo'] = 'n/a'        
             stats['contiguity'] = 'n/a'
             stats['compactness'] = 'n/a'
