@@ -36,6 +36,24 @@ function getDistrictBy() {
     return $('#districtby').val();
 }
 
+function getPlanAndSubjectFilters() {
+    return new OpenLayers.Filter.Logical({
+        type: OpenLayers.Filter.Logical.AND,
+        filters: [
+            new OpenLayers.Filter.Comparison({
+                type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                property: 'plan_id',
+                value: PLAN_ID
+            }),
+            new OpenLayers.Filter.Comparison({
+                type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                property: 'subject_id',
+                value: getDistrictBy()
+            })
+        ]
+    });
+}
+
 
 function doMapStyling() {
     //adding proper class names so css may style the PanZoom controls
@@ -101,7 +119,7 @@ function init() {
         layers.push(createLayer( MAP_LAYERS[layer], MAP_LAYERS[layer], layerExtent ));
     }
 
-    var districtStrategy = new OpenLayers.Strategy.Fixed({preload:true});
+    var districtStrategy = new OpenLayers.Strategy.Fixed();
 
     var districtStyle = {
         fill: true,
@@ -126,22 +144,8 @@ function init() {
                 srsName: 'EPSG:3785' 
             }),
             styleMap: new OpenLayers.StyleMap(new OpenLayers.Style(districtStyle)),
-            projection:projection,
-            filter: new OpenLayers.Filter.Logical({
-                type: OpenLayers.Filter.Logical.AND,
-                filters: [
-                    new OpenLayers.Filter.Comparison({
-                        type: OpenLayers.Filter.Comparison.EQUAL_TO,
-                        property: 'plan_id',
-                        value: PLAN_ID
-                    }),
-                    new OpenLayers.Filter.Comparison({
-                        type: OpenLayers.Filter.Comparison.EQUAL_TO,
-                        property: 'subject_id',
-                        value: getDistrictBy()
-                    })
-                ]
-            })
+            projection: projection,
+            filter: getPlanAndSubjectFilters()
         }
     );
 
@@ -537,23 +541,9 @@ function init() {
     $('#boundfor').change(boundforChange);
 
     $('#districtby').change(function(evt){
-        districtLayer.protocol.read({
-            filter: new OpenLayers.Filter.Logical({
-                type: OpenLayers.Filter.Logical.AND,
-                filters: [
-                    new OpenLayers.Filter.Comparison({
-                        type: OpenLayers.Filter.Comparison.EQUAL_TO,
-                        property: 'plan_id',
-                        value: PLAN_ID
-                    }),
-                    new OpenLayers.Filter.Comparison({
-                        type: OpenLayers.Filter.Comparison.EQUAL_TO,
-                        property: 'subject_id',
-                        value: getDistrictBy()
-                    })
-                ]
-            })
-        });
+        districtLayer.destroyFeatures();
+        districtLayer.filter = getPlanAndSubjectFilters();
+        districtLayer.strategies[0].load();
     });
 
     $('#assign_district').change(function(evt){
@@ -569,7 +559,7 @@ function init() {
     // TODO Make these configurable.
     olmap.zoomToExtent(new OpenLayers.Bounds(-9467000,4570000,-8930000,5170000));
     OpenLayers.Element.addClass(olmap.viewPortDiv, 'olCursorWait');
-    
+
     //apply the PanZoom classes
     doMapStyling();
 }
