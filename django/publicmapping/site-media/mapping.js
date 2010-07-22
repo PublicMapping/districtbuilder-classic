@@ -291,7 +291,9 @@ function init() {
     );
 
     var tipdiv = document.createElement('div');
-    tipdiv.appendChild(document.createTextNode(''));
+    tipdiv.appendChild(document.createTextNode('District Name'));
+    tipdiv.appendChild(document.createElement('br'));
+    tipdiv.appendChild(document.createTextNode('District Display By:'));
     tipdiv.style.zIndex = 100000;
     tipdiv.style.position = 'absolute';
     tipdiv.style.opacity = '0.8';
@@ -326,7 +328,12 @@ function init() {
                     var lonlat = new OpenLayers.LonLat( centroid.x, centroid.y );
                     var pixel = olmap.getPixelFromLonLat(lonlat);
                     tipdiv.style.display = 'block';
-                    tipdiv.firstChild.nodeValue = tipFeature.attributes.name;
+                    tipdiv.childNodes[0].nodeValue = tipFeature.attributes.name;
+                    var select = $('#districtby')[0];
+                    var value = parseInt(tipFeature.attributes.number, 10);
+                    tipdiv.childNodes[2].nodeValue = 
+                        select.options[select.selectedIndex].text + ': ' +
+                        value.toLocaleString();
                     var halfWidth = tipdiv.clientWidth/2;
                     var halfHeight = tipdiv.clientHeight/2;
                     if (pixel.x < halfWidth) { 
