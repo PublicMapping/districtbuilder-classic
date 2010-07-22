@@ -93,6 +93,8 @@ function init() {
     // This projection is web mercator
     var projection = new OpenLayers.Projection('EPSG:3785');
 
+    // Explicitly create the navigation control, since
+    // we'll want to deactivate it in the future.
     var navigate = new OpenLayers.Control.Navigation({
         autoActivate: true,
         handleRightClicks: true
@@ -119,8 +121,13 @@ function init() {
         layers.push(createLayer( MAP_LAYERS[layer], MAP_LAYERS[layer], layerExtent ));
     }
 
+    // The strategy for loading the districts. This is effectively
+    // a manual refresh, with no automatic reloading of district
+    // boundaries except when explicitly loaded.
     var districtStrategy = new OpenLayers.Strategy.Fixed();
 
+    // The style for the districts. This serves as the base
+    // style for all rules that apply to the districtLayer
     var districtStyle = {
         fill: true,
         fillOpacity: 0.00,
@@ -129,6 +136,8 @@ function init() {
         strokeWidth: 2
     };
     
+    // A vector layer that holds all the districts in
+    // the current plan.
     var districtLayer = new OpenLayers.Layer.Vector(
         'Current Plan',
         {
@@ -149,6 +158,8 @@ function init() {
         }
     );
 
+    // Create a vector layer to hold the current selection
+    // of features that are to be manipulated/added to a district.
     var selection = new OpenLayers.Layer.Vector('Selection',{
         styleMap: new OpenLayers.StyleMap({
             "default": new OpenLayers.Style(
@@ -183,10 +194,13 @@ function init() {
         })
     });
 
+    // add these layers to the map
     layers.push(districtLayer);
     layers.push(selection);
     olmap.addLayers(layers);
 
+    // Create a protocol that is used by all picking controls
+    // that picks geography at the specified snap layer.
     var getProtocol = new OpenLayers.Protocol.WFS({
         url: 'http://' + MAP_SERVER + '/geoserver/wfs',
         featureType: getSnapLayer(),
@@ -196,21 +210,26 @@ function init() {
         geometryName: 'geom'
     });
 
+    // Create a simple point and click control for selecting
+    // geounits one at a time.
     var getControl = new OpenLayers.Control.GetFeature({
         autoActivate: false,
         protocol: getProtocol,
         multipleKey: 'shiftKey'
     });
 
+    // Create a rectangular drag control for selecting
+    // geounits that intersect a box.
     var boxControl = new OpenLayers.Control.GetFeature({
         autoActivate: false,
         protocol: getProtocol,
         box: true
     });
 
+    // Create a parser that knows how to read JSON
     var jsonParser = new OpenLayers.Format.JSON();
-    var lastTool = null;
 
+    // An assignment function that adds geounits to a district
     var assignOnSelect = function(feature) {
         if (selection.features.length == 0)
             return;
@@ -244,13 +263,6 @@ function init() {
                     selection.drawFeature(selection.features[i], mode);
                 }
 
-                var selector = olmap.getControlsByClass('OpenLayers.Control.SelectFeature')[0];
-                selector.deactivate();
-
-                if (lastTool !== null) {
-                    lastTool.activate();
-                }
-
                 $('#assign_district').val('-1');
             },
             failure: function(xhr) {
@@ -259,6 +271,9 @@ function init() {
         });
     };
 
+    // Create a control that assigns all currently selected
+    // (by way of single, rectangle, or polygon tools) units
+    // to a district on the map.
     var assignControl = new OpenLayers.Control.SelectFeature(
         districtLayer,
         {
@@ -267,6 +282,7 @@ function init() {
         }
     );
 
+    // Create a polygon select control for free-form selections.
     var polyControl = new OpenLayers.Control.DrawFeature( 
         selection,
         OpenLayers.Handler.Polygon,
@@ -290,6 +306,8 @@ function init() {
         }
     );
 
+    // Create a div for tooltips on the map itself; these are used
+    // when the info tool is activated.
     var tipdiv = document.createElement('div');
     tipdiv.appendChild(document.createTextNode('District Name'));
     tipdiv.appendChild(document.createElement('br'));
@@ -299,6 +317,9 @@ function init() {
     tipdiv.style.opacity = '0.8';
     tipdiv.className = 'tooltip';
     olmap.div.insertBefore(tipdiv,olmap.div.firstChild);
+
+    // Create a control that shows the details of the district
+    // underneath the cursor.
     var hoverControl = new OpenLayers.Control.SelectFeature(
         districtLayer,
         {
@@ -374,21 +395,35 @@ function init() {
         }
     );
 
+    // A callback for feature selection in different controls.
     var featureSelected = function(e){
         selection.addFeatures([e.feature]);
     };
+
+    // Connect the featureSelected callback above to the featureselected
+    // events in the point and rectangle control.
     getControl.events.register('featureselected', this, featureSelected);
     boxControl.events.register('featureselected', this, featureSelected);
 
+    // A callback for deselecting features from different controls.
     var featureUnselected = function(e){
         selection.removeFeatures([e.feature]);
     };
+
+    // Connect the featureUnselected callback above to the featureunselected
+    // events in the point and rectangle control.
     getControl.events.register('featureunselected', this, featureUnselected);
     boxControl.events.register('featureunselected', this, featureUnselected);
 
+    // Connect a method for indicating work when the district layer
+    // is reloaded.
     districtLayer.events.register('loadstart',districtLayer,function(){
         OpenLayers.Element.addClass(olmap.viewPortDiv, 'olCursorWait');
     });
+
+    // Recompute the rules for the district styling prior to the adding
+    // of the features to the district layer.  This is done at this time
+    // to prevent 2 renderings from being triggered on the district layer.
     districtLayer.events.register('beforefeaturesadded',districtLayer,function(context){
         var min = Number.MAX_VALUE, max = 0;
         $.each(context.features, function(n, feature) {
@@ -434,6 +469,11 @@ function init() {
         });
         districtLayer.styleMap = new OpenLayers.StyleMap(newStyle);
     });
+
+    // Connect an event to the district layer that updates the 
+    // list of possible districts to assign to.
+    // TODO: this doesn't account for districts with null geometries
+    // which will not come back from the WFS query
     districtLayer.events.register('loadend',districtLayer,function(){
         OpenLayers.Element.removeClass(olmap.viewPortDiv, 'olCursorWait');
         selection.removeFeatures(selection.features);
@@ -457,65 +497,72 @@ function init() {
         });
     });
 
+    // When the navigate map tool is clicked, disable all the 
+    // controls except the navigation control.
     $('#navigate_map_tool').click(function(evt){
+        var active = olmap.getControlsBy('active',true);
+        for (var i = 0; i < active.length; i++) {
+            active.deactivate();
+        }
         navigate.activate();
-        getControl.deactivate();
-        boxControl.deactivate();
-        polyControl.deactivate();
-        assignControl.deactivate();
-        hoverControl.deactivate();
         selection.removeFeatures(selection.features);
     });
 
+    // When the identify map tool is clicked, disable all the
+    // controls except the identify control.
     $('#identify_map_tool').click(function(evt){
-        navigate.deactivate();
-        getControl.deactivate();
-        boxControl.deactivate();
-        polyControl.deactivate();
-        assignControl.deactivate();
+        var active = olmap.getControlsBy('active',true);
+        for (var i = 0; i < active.length; i++) {
+            active.deactivate();
+        }
         hoverControl.activate();
     });
 
+    // When the single pick tool is clicked, disable all the
+    // controls except for the single pick tool.
     $('#single_drawing_tool').click(function(evt){
+        var active = olmap.getControlsBy('active',true);
+        for (var i = 0; i < active.length; i++) {
+            active.deactivate();
+        }
         getControl.activate();
-        boxControl.deactivate();
-        navigate.deactivate();
-        polyControl.deactivate();
-        assignControl.deactivate();
-        hoverControl.deactivate();
         selection.removeFeatures(selection.features);
     });
 
+    // When the rectangle selection tool is clicked, disable all the
+    // controls except for the rectangle selection tool.
     $('#rectangle_drawing_tool').click(function(evt){
+        var active = olmap.getControlsBy('active',true);
+        for (var i = 0; i < active.length; i++) {
+            active.deactivate();
+        }
         boxControl.activate();
-        getControl.deactivate();
-        navigate.deactivate();
-        polyControl.deactivate();
-        assignControl.deactivate();
-        hoverControl.deactivate();
         selection.removeFeatures(selection.features);
     });
 
+    // When the polygon selection tool is clicked, disable all the
+    // controls except for the polygon selection tool.
     $('#polygon_drawing_tool').click(function(evt){
-        boxControl.deactivate();
-        getControl.deactivate();
-        navigate.deactivate();
+        var active = olmap.getControlsBy('active',true);
+        for (var i = 0; i < active.length; i++) {
+            active.deactivate();
+        }
         polyControl.activate();
-        assignControl.deactivate();
-        hoverControl.deactivate();
         selection.removeFeatures(selection.features);
     });
 
+    // When the assignment tool is clicked, disable all the
+    // controls except for the assignment tool.  Also remember the
+    // last tool that is active.
     $('#assign_tool').click(function(evt){
-        lastTool = olmap.getControlsBy('active',true)[0];
-        boxControl.deactivate();
-        getControl.deactivate();
-        navigate.deactivate();
-        polyControl.deactivate();
-        hoverControl.deactivate();
+        var active = olmap.getControlsBy('active',true);
+        for (var i = 0; i < active.length; i++) {
+            active.deactivate();
+        }
         assignControl.activate();
     });
 
+    // Add the created controls to the map
     olmap.addControls([
         getControl,
         boxControl,
@@ -525,6 +572,8 @@ function init() {
         hoverControl
     ]);
 
+    // Create a callback to update the base layer when the
+    // 'Show Boundaries for' dropdown is changed.
     var boundforChange = function(evt) {
         var show = getShowBy();
         var layers = olmap.getLayersByName('gmu:demo_' + evt.target.value + '_' + show);
@@ -532,6 +581,8 @@ function init() {
         doMapStyling();
     };
 
+    // Logic for the 'Snap Map to' dropdown, note that this logic
+    // calls the boundsforChange callback
     $('#snapto').change(function(evt){
         var newOpts = getControl.protocol.options;
         newOpts.featureType = getSnapLayer();
@@ -548,6 +599,7 @@ function init() {
         }
     });
 
+    // Logic for the 'Show Map by' dropdown
     $('#showby').change(function(evt){
         var boundary = getBoundLayer();
         var layers = olmap.getLayersByName('gmu:demo_' + boundary + '_' + evt.target.value);
@@ -555,14 +607,17 @@ function init() {
         doMapStyling();
     });
 
+    // Logic for the 'Show Boundaries by' dropdown
     $('#boundfor').change(boundforChange);
 
+    // Logic for the 'Show Districts by' dropdown
     $('#districtby').change(function(evt){
         districtLayer.destroyFeatures();
         districtLayer.filter = getPlanAndSubjectFilters();
         districtLayer.strategies[0].load();
     });
 
+    // Logic for the 'Assign District to' dropdown
     $('#assign_district').change(function(evt){
         if (this.value == '-1'){
             return;
