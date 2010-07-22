@@ -32,6 +32,10 @@ function getBoundLayer() {
     return $('#boundfor').val();
 }
 
+function getDistrictBy() {
+    return $('#districtby').val();
+}
+
 
 function doMapStyling() {
     //adding proper class names so css may style the PanZoom controls
@@ -98,6 +102,14 @@ function init() {
     }
 
     var districtStrategy = new OpenLayers.Strategy.Fixed({preload:true});
+
+    var districtStyle = {
+        fill: true,
+        fillOpacity: 0.00,
+        strokeColor: '#ee9900',
+        strokeOpacity: 1,
+        strokeWidth: 2
+    };
     
     var districtLayer = new OpenLayers.Layer.Vector(
         'Current Plan',
@@ -113,18 +125,22 @@ function init() {
                 geometryName: 'geom',
                 srsName: 'EPSG:3785' 
             }),
-            styleMap: new OpenLayers.StyleMap({
-                fill: true,
-                fillOpacity: 0.01,
-                strokeColor: '#ee9900',
-                strokeOpacity: 1,
-                strokeWidth: 2
-            }),
+            styleMap: new OpenLayers.StyleMap(new OpenLayers.Style(districtStyle)),
             projection:projection,
-            filter: new OpenLayers.Filter.Comparison({
-                type: OpenLayers.Filter.Comparison.EQUAL_TO,
-                property: 'plan_id',
-                value: PLAN_ID
+            filter: new OpenLayers.Filter.Logical({
+                type: OpenLayers.Filter.Logical.AND,
+                filters: [
+                    new OpenLayers.Filter.Comparison({
+                        type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                        property: 'plan_id',
+                        value: PLAN_ID
+                    }),
+                    new OpenLayers.Filter.Comparison({
+                        type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                        property: 'subject_id',
+                        value: getDistrictBy()
+                    })
+                ]
             })
         }
     );
@@ -362,6 +378,51 @@ function init() {
     districtLayer.events.register('loadstart',districtLayer,function(){
         OpenLayers.Element.addClass(olmap.viewPortDiv, 'olCursorWait');
     });
+    districtLayer.events.register('beforefeaturesadded',districtLayer,function(context){
+        var min = Number.MAX_VALUE, max = 0;
+        $.each(context.features, function(n, feature) {
+            var value = parseInt(feature.attributes.number,10);
+            min = (value < min) ? value : min;
+            max = (value > max) ? value : max;
+        });
+
+        var newOptions = OpenLayers.Util.extend({}, districtStyle);
+        var newStyle = new OpenLayers.Style(newOptions,{
+            rules:[
+                new OpenLayers.Rule({
+                    filter: new OpenLayers.Filter.Comparison({
+                        type: OpenLayers.Filter.Comparison.LESS_THAN_OR_EQUAL_TO,
+                        property: 'number',
+                        value: ((max - min) * 0.25) + min
+                    }),
+                    symbolizer: {
+                        fillColor: '#000000',
+                        fillOpacity: 0.5
+                    }
+                }),
+                new OpenLayers.Rule({
+                    filter: new OpenLayers.Filter.Comparison({
+                        type: OpenLayers.Filter.Comparison.GREATER_THAN_OR_EQUAL_TO,
+                        property: 'number',
+                        value: max - ((max - min) * 0.25)
+                    }),
+                    symbolizer: {
+                        fillColor: '#FFFFFF',
+                        fillOpacity: 0.5
+                    }
+                }),
+                new OpenLayers.Rule({
+                    filter: new OpenLayers.Filter.Comparison({
+                        type: OpenLayers.Filter.Comparison.BETWEEN,
+                        property: 'number',
+                        lowerBoundary: ((max - min) * 0.25) + min,
+                        upperBoundary: max - ((max - min) * 0.25) + min
+                    })
+                })
+            ]
+        });
+        districtLayer.styleMap = new OpenLayers.StyleMap(newStyle);
+    });
     districtLayer.events.register('loadend',districtLayer,function(){
         OpenLayers.Element.removeClass(olmap.viewPortDiv, 'olCursorWait');
         selection.removeFeatures(selection.features);
@@ -372,10 +433,6 @@ function init() {
         var sorted = districtLayer.features.slice(0,districtLayer.features.length);
         sorted.sort(function(a,b){
             return a.attributes.name > b.attributes.name;
-        });
-
-        $.each(sorted, function(n, feature) {
-            $('<option />').attr('value', feature.attributes.district_id).text( feature.attributes.name).appendTo('#assign_district');
         });
     });
 
@@ -478,6 +535,26 @@ function init() {
     });
 
     $('#boundfor').change(boundforChange);
+
+    $('#districtby').change(function(evt){
+        districtLayer.protocol.read({
+            filter: new OpenLayers.Filter.Logical({
+                type: OpenLayers.Filter.Logical.AND,
+                filters: [
+                    new OpenLayers.Filter.Comparison({
+                        type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                        property: 'plan_id',
+                        value: PLAN_ID
+                    }),
+                    new OpenLayers.Filter.Comparison({
+                        type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                        property: 'subject_id',
+                        value: getDistrictBy()
+                    })
+                ]
+            })
+        });
+    });
 
     $('#assign_district').change(function(evt){
         if (this.value == '-1'){

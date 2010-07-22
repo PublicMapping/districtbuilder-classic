@@ -6,12 +6,12 @@
     <link rel="stylesheet" type="text/css" href="/site-media/jquery/themes/custom-theme/jquery-ui-1.8.2.custom.css"/>
     <link rel="stylesheet" type="text/css" href="/site-media/css/publicmapping.css"/>
     <script type="text/javascript" src="/site-media/openlayers/OpenLayers.js"></script><!-- production -->
-    <!-- <script type="text/javascript" src="/site-media/OpenLayers-2.9.1/lib/OpenLayers.js"></script>  debug -->
+    <!-- <script type="text/javascript" src="/site-media/OpenLayers-2.9.1/lib/OpenLayers.js"></script> debug -->
     <script type="text/javascript">
         var MAP_SERVER = '{{ mapserver }}';
         var PLAN_ID = {{ plan.id }};
         var SNAP_LAYERS = [ {% for snap in snaplayers %} { level: '{{ snap.layer }}',layer: 'simple_{{ snap.layer }}', name: '{{ snap.name }}' }{% if not forloop.last %},{% endif %} {% endfor %} ];
-        var DEMOGRAPHICS = [{% for demo in demographics %} { text: '{{ demo.text }}', value: '{{ demo.value }}' }{% if not forloop.last %},{% endif %} {% endfor %} ];
+        var DEMOGRAPHICS = [{% for demo in demographics %} { id: {{ demo.id }}, text: '{{ demo.text }}', value: '{{ demo.value }}' }{% if not forloop.last %},{% endif %} {% endfor %} ];
         var MAP_LAYERS = [];
         for (var i = 0; i < SNAP_LAYERS.length; i++) {
             for (var j = 0; j < DEMOGRAPHICS.length; j++) {
@@ -91,6 +91,19 @@
                     for (var i = 0; i < SNAP_LAYERS.length; i++) {
                         var snap = SNAP_LAYERS[i];
                         document.write('<option value="' + snap.level + '">' + snap.name + '</option>');
+                    }
+                  </script>
+                </select>
+              </div>
+              <div class="toolset_group">
+                <img src="/site-media/images/icon-help.png" class="help divtip">
+                <div class="tooltip">The appearance of the districts on the map</div>                
+                <label>Show Districts by:</label>
+                <select id="districtby">
+                  <script type="text/javascript">
+                    for (var i = 0; i < DEMOGRAPHICS.length; i++) {
+                        var demo = DEMOGRAPHICS[i];
+                        document.write('<option value="' + demo.id + '">' + demo.text + '</option>');
                     }
                   </script>
                 </select>

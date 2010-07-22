@@ -48,13 +48,13 @@ def editplan(request, planid):
     except:
         plan = {}
     levels = Geolevel.objects.values_list("name", flat=True)
-    demos = Subject.objects.values_list("name", "short_display")
+    demos = Subject.objects.values_list("id","name", "short_display")
     layers = []
     snaplayers = []
     for level in levels:
         snaplayers.append( {'layer':level,'name':level.capitalize()} )
     for demo in demos:
-        layers.append( {'text':demo[1],'value':demo[0].lower()} )
+        layers.append( {'id':demo[0],'text':demo[2],'value':demo[1].lower()} )
     return render_to_response('editplan.html', {
         'plan': plan,
         'mapserver': settings.MAP_SERVER,

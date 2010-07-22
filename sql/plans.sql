@@ -29,11 +29,11 @@ ALTER TABLE simple_block OWNER TO publicmapping;
 -- DROP VIEW simple_district;
 
 CREATE OR REPLACE VIEW simple_district AS 
- SELECT id, district_id, name, version, simple AS geom, plan_id
-   FROM redistricting_district; 
+ SELECT rd.id, rd.district_id, rd.name, rd.version, rd.plan_id, rc.subject_id, rc.number, rd.simple AS geom
+   FROM redistricting_district rd
+   JOIN redistricting_computedcharacteristic rc ON rd.id = rc.district_id;
 
 ALTER TABLE simple_district OWNER TO publicmapping;
-
 
 -- Demographic Views
 
