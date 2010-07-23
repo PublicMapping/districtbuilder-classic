@@ -126,6 +126,8 @@ class Plan(models.Model):
                 district.simple = MultiPolygon(simple)
             else:
                 district.simple = simple
+
+            ComputedCharacteristic.objects.filter(district=district).delete()
             district.save()
             fixed += 1
 
@@ -144,6 +146,7 @@ class Plan(models.Model):
         else:
             target.simple = simple
            
+        ComputedCharacteristic.objects.filter(district=target).delete()
         target.save();
         fixed += 1
 
@@ -152,8 +155,11 @@ class Plan(models.Model):
 
     def update_stats(self):
         districts = self.district_set.all()
+        numchanged = 0
         for district in districts:
-            district.update_stats()
+            if district.update_stats():
+                numchanged += 1
+        return numchanged
 
 #    def delete_geounits(self, geounit_ids, geolevel):
 #        """Delete the requested geounits from given district       
@@ -228,19 +234,17 @@ class District(models.Model):
 
     def update_stats(self):
         all_subjects = Subject.objects.all().order_by('name').reverse()
-        my_geounits = DistrictGeounitMapping.objects.filter(district=self).values_list('geounit', flat=True)
+        updated = False
         for subject in all_subjects:
-            aggregate = Characteristic.objects.filter(geounit__in=my_geounits, subject__exact = subject).aggregate(Sum('number'))['number__sum']
-            if aggregate:
-                computed = ComputedCharacteristic.objects.filter(subject=subject,district=self)
-                if len(computed) == 0: 
+            computed = ComputedCharacteristic.objects.filter(subject=subject,district=self).count()
+            if computed == 0:
+                my_geounits = DistrictGeounitMapping.objects.filter(district=self).values_list('geounit', flat=True)
+                aggregate = Characteristic.objects.filter(geounit__in=my_geounits, subject__exact = subject).aggregate(Sum('number'))['number__sum']
+                if aggregate:
                     computed = ComputedCharacteristic(subject = subject, district = self, number = aggregate)
-                else:
-                    computed = computed[0]
-                    computed.number = aggregate
-                computed.save()
-        self.save()
-
+                    computed.save()
+                    updated = True
+        return updated
 
 class DistrictGeounitMapping(models.Model):
     district = models.ForeignKey(District)

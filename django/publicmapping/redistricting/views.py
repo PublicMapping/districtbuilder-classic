@@ -243,9 +243,9 @@ def updatestats(request, planid):
     status = { 'success': False }
     plan = Plan.objects.get(pk=planid)
     try:
-        plan.update_stats()
+        numdistricts = plan.update_stats()
         status['success'] = True
-        status['message'] = 'Updated stats for %s.' % plan.name
+        status['message'] = 'Updated stats for %s; %d districts updated.' % (plan.name, numdistricts)
     except:
         status['message'] = 'Couldn\'t update plan stats.'
 
@@ -256,7 +256,6 @@ def updatedistrict(request, planid, districtid):
     plan = Plan.objects.get(pk=planid)
     district = plan.district_set.get(district_id=districtid)
     try:
-        district.update_stats()
         status['success'] = True
         status['message'] = 'Updated stats for %s.' % district.name
     except:
