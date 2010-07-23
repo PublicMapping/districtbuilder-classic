@@ -160,131 +160,26 @@
                 </div>
                 <div class="map_menu_content geography">
                   <div class="plansummary">
-                      <h3>{{ plan.name }}</h3>
-                      <div><label>Population Equality:</label> <span class="value" id="eqmetric">92%</span></div>
-                      <div><label>Contiguity:</label> <span class="value" id="contmetric">79%</span></div>
-                      <div><label>Compactness:</label> <span class="value" id="compmetric">85%</span></div>
+                      <h3>Geography</h3>
+                      <div><label>Population Equality:</label> <span class="value" >N/A</span></div>
+                      <div><label>Contiguity:</label> <span class="value">N/A</span></div>
+                      <div><label>Compactness:</label> <span class="value" >N/A</span></div>
 
                   </div>
                   <div class="plantable header">
                      <table>
                       <thead>
                           <tr>
-                              <th class="celldist">Dist.</th>
-                              <th class="cellpop">Population</th>
-                              <th class="cellcontig">Contiguity</th>
-                              <th class="cellcompact">Compactness</th>
+                              <th class="celldist cell1"></th>
+                              <th class="cellpop cell2"></th>
+                              <th class="cellcontig cell3"></th>
+                              <th class="cellcompact cell4"></th>
                           </tr>
                       </thead>
                    </table>
                   </div>
                   <div class="plantable body">
-                       <table>
-                          <tbody>
-                              <tr class="odd">
-                                  <td class="celldist">1</td>
-                                  <td class="cellpop">
-                                      <span class="popstatus target"> 
-                                          34,000
-                                      </span>
-                                  </td>
-                                  <td class="cellcontig"><img src="/site-media/images/icon-check.png" class="yes-contiguous divtip"><div class="tooltip">this is a tooltip</div>
-                                  </td>
-                                  <td class="cellcompact">9%</td>
-                              </tr>
-                              <tr class="even">
-                                  <td class="celldist">2</td>
-                                  <td>
-                                      <span class="popstatus under"> 
-                                          34,323
-                                      </span>
-                                      <div></div>
-                                  </td>
-                                  <td><img src="/site-media/images/icon-warning.png" class="no-contiguous divtip">
-                                  <div class="tooltip">this is a tooltip</div>
-                                  </td>
-                                  <td>85%</td>
-                              </tr>
-                              <tr class="odd">
-                                  <td class="celldist">3</td>
-                                  <td>
-                                      <span class="popstatus over"> 
-                                          37,000
-                                      </span>
-                                      <div></div>
-                                  </td>
-                                  <td><img src="/site-media/images/icon-check.png" class="yes-contiguous divtip">
-                                  <div class="tooltip">this is a tooltip</div>
-                                  </td>
-                                  <td>98%</td>
-                              </tr>
-                              <tr class="even">
-                                  <td class="celldist">4</td>
-                                  <td>
-                                      <span class="popstatus target">                                          15,000
-                                      </span>
-                                      <div></div>
-                                  </td>
-                                  <td>
-                                  <img src="/site-media/images/icon-check.png" class="yes-contiguous divtip">
-                                  <div class="tooltip">this is a tooltip</div>
-                                  </td>
-                                  <td>85%</td>
-                              </tr>
-                              <tr class="odd">
-                                  <td class="celldist">5</td>
-                                  <td>
-                                      <span class="popstatus target"> 
-                                          28,000
-                                      </span>
-                                      <div></div>
-                                  </td>
-                                  <td><img src="/site-media/images/icon-check.png" class="yes-contiguous divtip">
-                                  <div class="tooltip">this is a tooltip</div>
-                                  </td>
-                                  <td>79%</td>
-                              </tr>
-                              <tr class="even">
-                                  <td class="celldist">6</td>
-                                  <td>
-                                      <span class="popstatus target"> 
-                                          42,000
-                                      </span>
-                                      <div></div>
-                                  </td>
-                                  <td><img src="/site-media/images/icon-check.png" class="yes-contiguous divtip">
-                                  <div class="tooltip">this is a tooltip</div>
-                                  </td>
-                                  <td>85%</td>
-                              </tr>
-                              <tr class="odd">
-                                  <td class="celldist">7</td>
-                                  <td>
-                                      <span class="popstatus target"> 
-                                          35,000
-                                      </span>
-                                      <div></div>
-                                  </td>
-                                  <td><img src="/site-media/images/icon-check.png" class="yes-contiguous divtip">
-                                  <div class="tooltip">this is a tooltip</div>
-                                  </td>
-                                  <td>98%</td>
-                              </tr>
-                              <tr class="even">
-                                  <td class="celldist">8</td>
-                                  <td>
-                                      <span class="popstatus target"> 
-                                          31,587
-                                      </span>
-                                      <div></div>
-                                  </td>
-                                  <td><img src="/site-media/images/icon-check.png" class="yes-contiguous divtip">
-                                  <div class="tooltip">this is a tooltip</div>
-                                  </td>
-                                  <td>85%</td>
-                              </tr>
-                          </tbody>
-                      </table>
+                    <div id="nogeography" class="error">Please select a plan to see district data</div>
                   </div>
                  <div class="menu_footer">
                     <button id="stats_legend">Stats Legend</button>
@@ -311,45 +206,25 @@
                 </div>
                 <div class="map_menu_content demographics">
                   <div class="plansummary">
-                      <h3>{{ plan.name }}</h3>
-                      <div><label>Total Population:</label> <span class="value" id="totalpop">92%</span></div>
-                      <div><label>Hispanic or Latino:</label> <span class="value" id="hispanicmetric">79%</span></div>
-                      <div><label>Black:</label> <span class="value" id="blackmetric">85%</span></div>
-
+                      <h3>Demographics</h3>
+                      <div><label></label> <span class="value" ></span></div>
+                      <div><label></label> <span class="value" ></span></div>
+                      <div><label></label> <span class="value" ></span></div>
                   </div>
                   <div class="plantable header">
                      <table>
                       <thead>
                           <tr>
-                              <th class="celldist">Dist.</th>
-                              <th class="cellhispanic">Hispanic</th>
-                              <th class="cellblack">Black</th>
-                              <th class="cellother">Other</th>
+                              <th class="celldist cell1"></th>
+                              <th class="cellpop cell2"></th>
+                              <th class="cellcontig cell3"></th>
+                              <th class="cellcompact cell4"></th>
                           </tr>
                       </thead>
                    </table>
                   </div>
                   <div class="plantable body">
-                       <table>
-                          <tbody>
-                              <tr class="odd">
-                                  <td class="celldist">1</td>
-                                  <td class="cellhispanic">
-                                      8.6%
-                                  </td>
-                                  <td class="cellblack">8.6%</td>
-                                  <td class="cellother">9%</td>
-                              </tr>
-                              <tr class="even">
-                                  <td class="celldist">1</td>
-                                  <td class="cellhispanic">
-                                      8.6%
-                                  </td>
-                                  <td class="cellblack">8.6%</td>
-                                  <td class="cellother">9%</td>
-                              </tr>
-                          </tbody>
-                      </table>
+                    <div id="nogeography" class="error">Please select a plan to see district data</div>
                   </div>
                 </div>
             </div>
