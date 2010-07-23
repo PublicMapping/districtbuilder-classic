@@ -43,7 +43,7 @@ publicmapping.chooseplan = function(options) {
         $('#btnTemplate').click(function() { showOnly('#TemplateSelection','#btnTemplate'); });
         $('#btnShared').click(function() { showOnly('#SharedSelection','#btnShared'); });
         $('#btnMine').click(function() { showOnly('#MineSelection','#btnMine'); });
-        $('#btnSelectPlan').click(function() { selectPlan(); });
+        $('#btnSelectPlan').click(selectPlan);
         $('#NewName').hide();
         $('input:radio').click( function() {
             if ($(this).val() == 'edit') {
@@ -77,12 +77,15 @@ publicmapping.chooseplan = function(options) {
     };
 
     var selectPlan = function () {
+        $('#btnSelectPlan').attr('disabled','true');
+        $('#btnSelectPlan span').text('Please Wait...');
         var activeSelector = $('select.active');
         if (_nameRequired) {
             var name = $('#txtNewName').val();
             var url = '/districtmapping/plan/' + activeSelector.val() + '/copy/'
             if (name.trim().length == 0) { alert ('A name for the copied template is required'); return; }
             if (OpenLayers) {
+                OpenLayers.Element.addClass(document.getElementById('btnSelectPlan'),'olCursorWait');
                 OpenLayers.Element.addClass(document.body,'olCursorWait');
             }
             window.status = 'Please standby while creating new plan ...';
