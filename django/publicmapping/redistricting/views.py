@@ -12,7 +12,6 @@ import random, string
 
 @login_required
 def copyplan(request, planid):
-   #  return HttpResponse("You are copying plan %s" % planid)
     p = Plan.objects.get(pk=planid)
     newname = p.name + " " + str(random.random()) 
     if (request.method == "POST" ):
@@ -30,7 +29,7 @@ def copyplan(request, planid):
         district_copy = District(name = district.name, plan = copy, version = 0, geom = district.geom, simple = district.simple)
         district_copy.save() 
 
-        # clone all the geounits
+        # clone all the geounits manually
         from django.db import connection, transaction
         cursor = connection.cursor()
 

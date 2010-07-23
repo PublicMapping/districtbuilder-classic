@@ -3,6 +3,7 @@
 from django.contrib.gis.gdal import *
 from django.contrib.gis.geos import *
 from redistricting.models import *
+import settings
 
 shapepath = '/projects/publicmapping/local/data/OH_congressional_web_mercator.shp'
 name_field = 'C_DIST_ID'
@@ -42,7 +43,7 @@ for feature in layer:
         simple=simple)
     district.save()
 
-    geounits = list(Geounit.objects.filter(geom__within=geom).values_list('id',flat=True))
+    geounits = list(Geounit.objects.filter(geom__within=geom,geolevel=settings.BASE_GEOLEVEL).values_list('id',flat=True))
     print 'Assigning %d geounits to district %d' % (len(geounits), district.id)
     for geounit in geounits:
         gu_qs = Geounit.objects.get(id=geounit)
