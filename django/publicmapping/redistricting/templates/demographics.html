@@ -1,4 +1,3 @@
-<!-- incoming variables: plan, district_values, targets, aggregate -->
 <script type="text/javascript">
          loadTooltips();
 </script>
@@ -13,10 +12,10 @@
   <div class="plantable header">
      <table>
       <thead>
-         {% if targets %}
+         {% if aggregate %}
           <tr>
              <th class="celldist cell1">Dist.</th>
-              {% for key, value in targets.items %}
+              {% for key, value in aggregate.items %}
               <th class="cellsubjects {% cycle 'cell2' 'cell3' 'cell4' %}">{{ key }}</th>
               {% endfor %}
           </tr>

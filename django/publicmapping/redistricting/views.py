@@ -144,26 +144,29 @@ def getdemographics(request, planid):
     aggregate = {}
     district_values = {}
 
-    district_ids = plan.district_set.values_list('id')
-    characteristics = ComputedCharacteristic.objects.filter(district__in=district_ids) 
-    for characteristic in characteristics:
-        dist_name = characteristic.district.name
+    subjects = Subject.objects.all()
+    districts = plan.district_set.all()
+    for district in districts:
+        dist_name = district.name
         if dist_name == "Unassigned":
             dist_name = "U"
-        subject_name = characteristic.subject.short_display
         if not dist_name in district_values: 
             district_values[dist_name] = {}
-        district_values[dist_name][subject_name] = "%.0f" % characteristic.number       
 
-    for target in Target.objects.all():
-        targets[target.subject.short_display] = {}
-        targets[target.subject.short_display]['upper'] = target.upper
-        targets[target.subject.short_display]['lower'] = target.lower
+        stats = district_values[dist_name]
+
+        for subject in subjects:
+            subject_name = subject.short_display
+            characteristics = ComputedCharacteristic.objects.filter(subject = subject, district = district) 
+            if characteristics.count() == 0:
+                stats[subject_name] = "N/A"
+            else:
+                stats[subject_name] = "%.0f" % characteristics[0].number       
+
     return render_to_response('demographics.html', {
         'plan': plan,
-        'targets': targets,
         'district_values': district_values,
-        'aggregate': getaggregate(district_ids),
+        'aggregate': getaggregate(districts),
     })
 
 
@@ -182,7 +185,6 @@ def getgeography(request, planid):
     aggregate = {}
     district_values = {}
 
-    district_ids = plan.district_set.values_list('id')
     districts = plan.district_set.all()
     try:
         subject = Subject.objects.get(pk=demo)
@@ -222,14 +224,14 @@ def getgeography(request, planid):
     return render_to_response('geography.html', {
         'plan': plan,
         'district_values': district_values,
-        'aggregate': getaggregate(district_ids),
+        'aggregate': getaggregate(districts),
         'name': subject.short_display
     })
 
 
-def getaggregate(district_ids):
+def getaggregate(districts):
     aggregate = {}
-    characteristics = ComputedCharacteristic.objects.filter(district__in=district_ids) 
+    characteristics = ComputedCharacteristic.objects.filter(district__in=districts) 
     for target in Target.objects.all():
         try:
             aggregate[target.subject.short_display]= "%.0f" % characteristics.filter(subject = target.subject).aggregate(Sum('number'))['number__sum'] 
