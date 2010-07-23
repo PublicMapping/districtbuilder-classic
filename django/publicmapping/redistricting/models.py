@@ -7,6 +7,7 @@ from django.conf import settings
 from datetime import datetime
 from django.db.models.signals import pre_save
 from django.db.models import Sum
+from math import sqrt, pi
 
 class Subject(models.Model):
     name = models.CharField(max_length=50)
@@ -245,6 +246,18 @@ class District(models.Model):
                     computed.save()
                     updated = True
         return updated
+
+    def get_schwartzberg(self):
+        """This is the Schwartzberg measure of compactness, which is the measure of the perimeter of the district 
+        to the circumference of the circle whose area is equal to the area of the district
+        """
+        try:
+            r = sqrt(self.geom.area / pi)
+            perimeter = 2 * pi * r
+            ratio = perimeter / self.geom.length
+            return "%.2f%%" % (ratio * 100)
+        except:
+            return "n/a"
 
 class DistrictGeounitMapping(models.Model):
     district = models.ForeignKey(District)

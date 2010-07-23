@@ -209,7 +209,7 @@ def getgeography(request, planid):
         for characteristic in characteristics:
             stats['demo'] = "%.0f" % characteristic.number        
             stats['contiguity'] = random.choice( [True, False] )
-            stats['compactness'] = str( random.randint(50, 80)) + "%"
+            stats['compactness'] = district.get_schwartzberg()
 
             target = Target.objects.get(subject = subject)
             if characteristic.number < target.lower:
@@ -261,3 +261,9 @@ def updatedistrict(request, planid, districtid):
         status['message'] = 'Couldn\'t update district stats.'
     
     return HttpResponse(json.dumps(status),mimetype='application/json')
+
+def getcompactness(district):
+    """This is the Schwartzberg measure of compactness, which is the measure of the perimeter of the district 
+    to the circumference of the circle whose area is equal to the area of the district
+    """
+        
