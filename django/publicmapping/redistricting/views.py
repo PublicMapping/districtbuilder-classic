@@ -28,7 +28,6 @@ def copyplan(request, planid):
     districts = p.district_set.all()
     for district in districts:
         district_copy = District(name = district.name, plan = copy, version = 0, geom = district.geom, simple = district.simple)
-        district.calculate = True
         district_copy.save() 
 
         # clone all the geounits
