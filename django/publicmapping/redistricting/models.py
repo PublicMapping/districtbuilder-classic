@@ -109,12 +109,12 @@ class Plan(models.Model):
 
         # incremental is the geometry that is changing
 
-        target = District.objects.get(district_id=districtid,plan=self)
+        target = self.district_set.get(district_id=districtid)
 
         DistrictGeounitMapping.objects.filter(geounit__in=base_geounit_ids, plan=self).update(district=target)
 
         fixed = 0
-        districts = District.objects.filter(geom__intersects=incremental)
+        districts = self.district_set.filter(geom__intersects=incremental)
         for district in districts:
             difference = district.geom.difference(incremental)
             if difference.geom_type != 'MultiPolygon':
@@ -126,6 +126,7 @@ class Plan(models.Model):
                 district.simple = MultiPolygon(simple)
             else:
                 district.simple = simple
+            district.calculate = True
             district.save()
             fixed += 1
 
@@ -143,7 +144,8 @@ class Plan(models.Model):
             target.simple = MultiPolygon(simple)
         else:
             target.simple = simple
-            
+           
+        target.calculate = True
         target.save();
         fixed += 1
 
@@ -220,6 +222,7 @@ class District(models.Model):
     geom = models.MultiPolygonField(srid=3785, blank=True, null=True)
     simple = models.MultiPolygonField(srid=3785, blank=True, null=True)
     version = models.PositiveIntegerField(default=0)
+    calculate = models.BooleanField()
     objects = models.GeoManager()
     
     def __unicode__(self):
@@ -227,6 +230,10 @@ class District(models.Model):
 
 
     def update_stats(self):
+        # bypass if this district does not need to be recalculated
+        if not self.calculate:
+            return
+
         all_subjects = Subject.objects.all().order_by('name').reverse()
         my_geounits = DistrictGeounitMapping.objects.filter(district = self).values_list('geounit', flat=True)
         for subject in all_subjects:
@@ -239,6 +246,8 @@ class District(models.Model):
                     computed = computed[0]
                     computed.number = aggregate
                 computed.save()
+        self.calculate = False
+        self.save()
 
 
 class DistrictGeounitMapping(models.Model):
