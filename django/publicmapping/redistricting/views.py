@@ -159,7 +159,7 @@ def getdemographics(request, planid):
             subject_name = subject.short_display
             characteristics = ComputedCharacteristic.objects.filter(subject = subject, district = district) 
             if characteristics.count() == 0:
-                stats[subject_name] = "N/A"
+                stats[subject_name] = "n/a"
             else:
                 stats[subject_name] = "%.0f" % characteristics[0].number       
 
