@@ -36,6 +36,12 @@ function getDistrictBy() {
     return $('#districtby').val();
 }
 
+/*
+ * The URLs for updating the calculated geography and demographics.
+ */
+var geourl = '/districtmapping/plan/' + PLAN_ID + '/geography';
+var demourl = '/districtmapping/plan/' + PLAN_ID + '/demographics';
+
 function getPlanAndSubjectFilters() {
     return new OpenLayers.Filter.Logical({
         type: OpenLayers.Filter.Logical.AND,
@@ -64,9 +70,7 @@ function doMapStyling() {
     $('#OpenLayers\\.Control\\.PanZoomBar_3_zoomout').addClass('olControlZoom olControlZoomOutInactive'); 
     $('#OpenLayers\\.Control\\.PanZoomBar_3_OpenLayers\\.Map_4').addClass('olControlZoom olControlZoomGrabInactive'); 
     $('#OpenLayers_Control_PanZoomBar_ZoombarOpenLayers\\.Map_4').addClass('olControlZoom olControlZoomBarInactive');     
-
-    
-    }
+}
 
 /*
  * Initialize the map. This method is called by the onload page event.
@@ -225,8 +229,24 @@ function init() {
         box: true
     });
 
-    // Create a parser that knows how to read JSON
-    var jsonParser = new OpenLayers.Format.JSON();
+    // Update the statistics for the plan.
+    var updateStats = function() {
+        if (! $('#working').dialog('isOpen')){ 
+            $('#working').dialog('open');
+        }
+
+        $.ajax({ 
+            url: '/districtmapping/plan/' + PLAN_ID + '/updatestats', 
+            success: function() {
+                $('.geography').load(geourl, {demo: getDistrictBy()}, loadTooltips);
+                $('.demographics').load(demourl, loadTooltips);
+
+                districtLayer.destroyFeatures();
+                districtLayer.filter = getPlanAndSubjectFilters();
+                districtLayer.strategies[0].load();
+            }
+        });
+    } 
 
     // An assignment function that adds geounits to a district
     var assignOnSelect = function(feature) {
@@ -242,18 +262,17 @@ function init() {
         geounit_ids = geounit_ids.join('|');
         OpenLayers.Element.addClass(olmap.viewPortDiv,'olCursorWait');
         $('#working').dialog('open');
-        OpenLayers.Request.POST({
-            method: 'POST',
+        $.ajax({
+            type: 'POST',
             url: '/districtmapping/plan/' + PLAN_ID + '/district/' + district_id + '/add',
-            params: {
+            data: {
                 geolevel: geolevel_id,
                 geounits: geounit_ids
             },
-            success: function(xhr) {
-                var data = jsonParser.read(xhr.responseText);
+            success: function(data, textStatus, xhr) {
                 var mode = data.success ? 'select' : 'error';
                 if (data.success) {
-                    districtStrategy.load();
+                    updateStats();
                 }
                 else {
                     OpenLayers.Element.removeClass(olmap.viewPortDiv, 'olCursorWait');
@@ -266,7 +285,7 @@ function init() {
 
                 $('#assign_district').val('-1');
             },
-            failure: function(xhr) {
+            error: function(xhr, textStatus, error) {
                 window.status = 'failed to select';
             }
         });
@@ -637,22 +656,7 @@ function init() {
     });
 
     // A method for manually refreshing the statistics in the sidebar
-    $('#updatestatsbtn').click( function() {
-        var geourl = '/districtmapping/plan/' + PLAN_ID + '/geography?demo=' + $('#districtby').val();
-        var demourl = '/districtmapping/plan/' + PLAN_ID + '/demographics';
-        $('#working').dialog('open');
-        $.ajax({ 
-            url: '/districtmapping/plan/' + PLAN_ID + '/updatestats', 
-            success: function() {
-                $('.geography').load(geourl, loadTooltips);
-                $('.demographics').load(demourl, loadTooltips); 
-
-                districtLayer.destroyFeatures();
-                districtLayer.filter = getPlanAndSubjectFilters();
-                districtLayer.strategies[0].load();
-            }
-        });
-    }); 
+    $('#updatestatsbtn').click( updateStats );
 
     // Set the initial map extents to the bounds around the study area.
     // TODO Make these configurable.

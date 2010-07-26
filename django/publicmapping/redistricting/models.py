@@ -231,10 +231,11 @@ class District(models.Model):
         all_subjects = Subject.objects.all().order_by('name').reverse()
         my_geounits = DistrictGeounitMapping.objects.filter(district=self).values_list('geounit', flat=True)
         for subject in all_subjects:
-            aggregate = Characteristic.objects.filter(geounit__in=my_geounits, subject__exact = subject).aggregate(Sum('number'))['number__sum']
-            if aggregate:
-                computed = ComputedCharacteristic.objects.filter(subject=subject,district=self)
-                if len(computed) == 0: 
+            computed = self.computedcharacteristic_set.filter(subject=subject).count()
+            if computed == 0:
+                my_geounits = DistrictGeounitMapping.objects.filter(district=self).values_list('geounit', flat=True)
+                aggregate = Characteristic.objects.filter(geounit__in=my_geounits, subject__exact = subject).aggregate(Sum('number'))['number__sum']
+                if aggregate:
                     computed = ComputedCharacteristic(subject = subject, district = self, number = aggregate)
                 else:
                     computed = computed[0]
