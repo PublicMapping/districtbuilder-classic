@@ -128,6 +128,8 @@ class Plan(models.Model):
             else:
                 district.simple = simple
             district.save()
+
+            district.computedcharacteristic_set.all().delete()
             fixed += 1
 
         if target.geom is None:
@@ -146,6 +148,8 @@ class Plan(models.Model):
             target.simple = simple
            
         target.save();
+
+        target.computedcharacteristic_set.all().delete()
         fixed += 1
 
         return fixed
@@ -153,61 +157,12 @@ class Plan(models.Model):
 
     def update_stats(self):
         districts = self.district_set.all()
+        changed = 0
         for district in districts:
-            district.update_stats()
+            if district.update_stats():
+                changed += 1
+        return changed
 
-#    def delete_geounits(self, geounit_ids, geolevel):
-#        """Delete the requested geounits from given district       
-#        Will return the number of districts effected by the operation
-#        """
-#        if (geolevel != settings.BASE_GEOLEVEL):
-#            base_geounit_qs = Geounit.get_base_geounits(geounit_ids, geolevel).iterator()
-#            base_geounit_ids = []
-#            for base_geounit_id in base_geounit_qs:
-#                base_geounit_ids.append(base_geounit_id)
-#        else:
-#            base_geounit_ids = geounit_ids
-#
-#
-#        # get the geometry of all the geounits that are being removed
-#        geounits = Geounit.objects.filter(id__in=base_geounit_ids).iterator()
-#        incremental = None
-#        for geounit in geounits:
-#            if incremental is None:
-#                incremental = geounit.geom
-#            else:
-#                incremental = geounit.geom.union(incremental)
-#
-#        return self.delete_geounits_prefetch(base_geounit_ids, incremental, None)
-#
-#    def delete_geounits_prefetch(self, base_geounit_ids, incremental, districtid):
-#        neighbors = self.district_set.all()
-#        if districtid:
-#            target = District.objects.filter(district_id=districtid)[0]
-#        else:
-#            target = {}
-#        # neighbors = District.objects.filter(plan=target.plan)
-#        fixed = 0
-#        for neighbor in neighbors:
-#            if neighbor == target:
-#                continue
-#
-#            geounits = neighbor.geounits.filter(id__in=base_geounit_ids).iterator()
-#            changed = False
-#            for geounit in geounits:
-#                neighbor.geounits.remove(geounit)
-#                fixed += 1
-#                changed = True
-#
-#            if changed and not neighbor.geom is None:
-#                difference = neighbor.geom.difference(incremental)
-#                if difference.geom_type != 'MultiPolygon':
-#                    neighbor.geom = MultiPolygon(difference)
-#                else:
-#                    neighbor.geom = difference
-#                neighbor.save()
-#
-#        return fixed
 
 class PlanForm(ModelForm):
     class Meta:
@@ -229,7 +184,7 @@ class District(models.Model):
 
     def update_stats(self):
         all_subjects = Subject.objects.all().order_by('name').reverse()
-        my_geounits = DistrictGeounitMapping.objects.filter(district=self).values_list('geounit', flat=True)
+        changed = False
         for subject in all_subjects:
             computed = self.computedcharacteristic_set.filter(subject=subject).count()
             if computed == 0:
@@ -237,11 +192,9 @@ class District(models.Model):
                 aggregate = Characteristic.objects.filter(geounit__in=my_geounits, subject__exact = subject).aggregate(Sum('number'))['number__sum']
                 if aggregate:
                     computed = ComputedCharacteristic(subject = subject, district = self, number = aggregate)
-                else:
-                    computed = computed[0]
-                    computed.number = aggregate
-                computed.save()
-        self.save()
+                    computed.save()
+                    changed = True
+        return changed
 
     def get_schwartzberg(self):
         """This is the Schwartzberg measure of compactness, which is the measure of the perimeter of the district 
