@@ -1,12 +1,11 @@
 from django.contrib.gis.db import models
-from django.contrib.gis.db.models import Max
 from django.contrib.gis.geos import MultiPolygon
 from django.contrib.auth.models import User
+from django.db.models import Sum, Max
+from django.db.models.signals import pre_save, post_save
 from django.forms import ModelForm
 from django.conf import settings
 from datetime import datetime
-from django.db.models.signals import pre_save
-from django.db.models import Sum
 from math import sqrt, pi
 
 class Subject(models.Model):
@@ -165,7 +164,7 @@ class Plan(models.Model):
 
 
 class PlanForm(ModelForm):
-    class Meta:
+    class _meta:
         model=Plan
     
 
@@ -250,3 +249,37 @@ def set_district_id(sender, **kwargs):
             district.district_id = max_id + 1
 
 pre_save.connect(set_district_id, sender=District)
+
+def set_geounit_mapping(sender, **kwargs):
+    """When a new plan is saved, all geounits must be inserted into the Unassigned districts and a 
+    corresponding set of DistrictGeounitMappings should be applied to it.
+    """
+    plan = kwargs['instance']
+    created = kwargs['created']
+    
+    if created:
+        unassigned = District(name="Unassigned", version = 0, plan = plan)
+        unassigned.save()
+        
+        # clone all the geounits manually
+        from django.db import connection, transaction
+        cursor = connection.cursor()
+
+        sql = "insert into %s (district_id, geounit_id, plan_id) select %s as district_id, geounit.id as geounit_id, %s as plan_id from %s as geounit where geounit.geolevel_id = %s" % (DistrictGeounitMapping._meta.db_table, unassigned.id, plan.id, Geounit._meta.db_table, settings.BASE_GEOLEVEL)
+        cursor.execute(sql)
+        transaction.commit_unless_managed()
+
+# don't remove the dispatch_uid or this signal is sent twice.
+post_save.connect(set_geounit_mapping, sender=Plan, dispatch_uid="publicmapping.redistricting.Plan")
+
+def can_edit(user, plan):
+    """Return whether a user can edit the given plan.  They must own it or be a staff member.  Templates
+    cannot be edited, only copied
+    """
+    return (plan.owner == user or user.is_staff) and not plan.is_template
+
+def can_copy(user, plan):
+    """Return whether a user can copy the given plan.  The user must be the owner, or a staff member to copy
+    a plan they own.  Anyone can copy a template
+    """
+    return plan.is_template or plan.owner == user or user.is_staff

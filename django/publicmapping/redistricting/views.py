@@ -13,6 +13,11 @@ import random, string
 @login_required
 def copyplan(request, planid):
     p = Plan.objects.get(pk=planid)
+    status = { 'success': False }
+    if not can_copy(request.user, p):
+        status['success'] = False;
+        status['message'] = "User %s doesn't have permission to copy this model" % request.user.username
+        return HttpResponse(json.dumps(status),mimetype='application/json')
     newname = p.name + " " + str(random.random()) 
     if (request.method == "POST" ):
         newname = request.POST["name"]
@@ -24,8 +29,11 @@ def copyplan(request, planid):
     districts = p.district_set.all()
     for district in districts:
         district_copy = District(name = district.name, plan = copy, version = 0, geom = district.geom, simple = district.simple)
-        district_copy.save() 
-
+        try:
+            district_copy.save() 
+        except:
+            status["success"] = false
+            status["message"] = "Could not save district copies"
         # clone all the geounits manually
         from django.db import connection, transaction
         cursor = connection.cursor()
@@ -42,6 +50,8 @@ def copyplan(request, planid):
 def editplan(request, planid):
     try:
         plan = Plan.objects.get(pk=planid)
+        if not can_edit(request.user, p, plan):
+            plan = {}
     except:
         plan = {}
     levels = Geolevel.objects.values_list("name", flat=True)
@@ -120,10 +130,9 @@ def chooseplan(request):
         return HttpResponse("looking for the requested plan")
         # plan has been chosen.  Open it up
     else:
-        owner = User.objects.get(username=settings.ADMINS[0][0])
-        templates = Plan.objects.filter(is_template=True, owner=owner)
-        shared = Plan.objects.exclude(owner=owner).exclude(owner=request.user).filter(is_template=True)
-        mine = Plan.objects.filter(owner=request.user)
+        templates = Plan.objects.filter(is_template=True, owner__is_staff = True)
+        shared = Plan.objects.filter(is_template=True, owner__is_staff = False).exclude(owner = request.user)
+        mine = Plan.objects.filter(is_template=False, owner=request.user)
         return render_to_response('chooseplan.html', {
             'templates': templates,
             'shared': shared,
