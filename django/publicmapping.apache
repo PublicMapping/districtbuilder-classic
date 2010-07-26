@@ -5,6 +5,13 @@
         WSGIProcessGroup geodjango
         WSGIScriptAlias / /projects/publicmapping/trunk/django/publicmapping.wsgi
 
+	<Directory /projects/publicmapping/trunk/django>
+		AuthType Basic
+		AuthName "Django Testing"
+		AuthUserFile /etc/apache2/passwd/passwords
+		Require valid-user
+	</Directory>
+
         Alias /site-media/ /projects/publicmapping/trunk/django/publicmapping/site-media/
         <Directory /projects/publicmapping/trunk/django/publicmapping/site-media>
             Order deny,allow
@@ -13,6 +20,7 @@
 
         Alias /media/ /projects/publicmapping/trunk/django/publicmapping/admin-media/
         <Directory /projects/publicmapping/trunk/django/publicmapping/admin-media>
+	    Options Indexes FollowSymLinks
             Order deny,allow
             Allow from all
         </Directory>
