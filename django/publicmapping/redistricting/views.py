@@ -19,10 +19,7 @@ def copyplan(request, planid):
     copy = Plan(
         name = newname, owner=request.user
     )
-    try:
-        copy.save()
-    except IntegrityError:
-        pass
+    copy.save()
 
     districts = p.district_set.all()
     for district in districts:
@@ -33,7 +30,7 @@ def copyplan(request, planid):
         from django.db import connection, transaction
         cursor = connection.cursor()
 
-        sql = "insert into redistricting_districtgeounitmapping (plan_id, district_id, geounit_id) select %d, %d, geounit_id from redistricting_districtgeounitmapping where plan_id = %d and district_id = %d;" % (copy.id, district_copy.id, p.id, district.id)
+        sql = "insert into redistricting_districtgeounitmapping (plan_id, district_id, geounit_id) select %d, %d, geounit_id from redistricting_districtgeounitmapping where plan_id = %d and district_id = %d;" % (copy.id, district_copy.id, p.id, district_copy.id)
         cursor.execute(sql)
         transaction.commit_unless_managed()
 
@@ -202,13 +199,13 @@ def getgeography(request, planid):
 
         if characteristics.count() == 0:
             stats['demo'] = 'n/a'        
-            stats['contiguity'] = 'n/a'
-            stats['compactness'] = 'n/a'
+            stats['contiguity'] = district.is_contiguous()
+            stats['compactness'] = district.get_schwartzberg()
             stats['css_class'] = 'under'
 
         for characteristic in characteristics:
             stats['demo'] = "%.0f" % characteristic.number        
-            stats['contiguity'] = random.choice( [True, False] )
+            stats['contiguity'] = district.is_contiguous()
             stats['compactness'] = district.get_schwartzberg()
 
             target = Target.objects.get(subject = subject)

@@ -127,8 +127,6 @@ class Plan(models.Model):
                 district.simple = MultiPolygon(simple)
             else:
                 district.simple = simple
-
-            ComputedCharacteristic.objects.filter(district=district).delete()
             district.save()
             fixed += 1
 
@@ -147,7 +145,6 @@ class Plan(models.Model):
         else:
             target.simple = simple
            
-        ComputedCharacteristic.objects.filter(district=target).delete()
         target.save();
         fixed += 1
 
@@ -156,11 +153,8 @@ class Plan(models.Model):
 
     def update_stats(self):
         districts = self.district_set.all()
-        numchanged = 0
         for district in districts:
-            if district.update_stats():
-                numchanged += 1
-        return numchanged
+            district.update_stats()
 
 #    def delete_geounits(self, geounit_ids, geolevel):
 #        """Delete the requested geounits from given district       
@@ -235,17 +229,18 @@ class District(models.Model):
 
     def update_stats(self):
         all_subjects = Subject.objects.all().order_by('name').reverse()
-        updated = False
+        my_geounits = DistrictGeounitMapping.objects.filter(district=self).values_list('geounit', flat=True)
         for subject in all_subjects:
-            computed = ComputedCharacteristic.objects.filter(subject=subject,district=self).count()
-            if computed == 0:
-                my_geounits = DistrictGeounitMapping.objects.filter(district=self).values_list('geounit', flat=True)
-                aggregate = Characteristic.objects.filter(geounit__in=my_geounits, subject__exact = subject).aggregate(Sum('number'))['number__sum']
-                if aggregate:
+            aggregate = Characteristic.objects.filter(geounit__in=my_geounits, subject__exact = subject).aggregate(Sum('number'))['number__sum']
+            if aggregate:
+                computed = ComputedCharacteristic.objects.filter(subject=subject,district=self)
+                if len(computed) == 0: 
                     computed = ComputedCharacteristic(subject = subject, district = self, number = aggregate)
-                    computed.save()
-                    updated = True
-        return updated
+                else:
+                    computed = computed[0]
+                    computed.number = aggregate
+                computed.save()
+        self.save()
 
     def get_schwartzberg(self):
         """This is the Schwartzberg measure of compactness, which is the measure of the perimeter of the district 
@@ -258,6 +253,18 @@ class District(models.Model):
             return "%.2f%%" % (ratio * 100)
         except:
             return "n/a"
+
+    def is_contiguous(self):
+        """Checks to see if the district is contiguous.  The district is already a unioned geom.  Any multipolygon
+        with more than one poly in it will not be contiguous.  There is one case where this test may give a false 
+        negative - if all of the polys in a multipolygon each meet another poly at one point. In GIS terms, this is
+        connected but not contiguous.  But the real-word case may be different.
+        http://webhelp.esri.com/arcgisdesktop/9.2/index.cfm?TopicName=Coverage_topology
+        """
+        if not self.geom == None:
+            return len(self.geom) == 1
+        else:
+            return False
 
 class DistrictGeounitMapping(models.Model):
     district = models.ForeignKey(District)
