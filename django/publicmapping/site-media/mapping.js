@@ -501,32 +501,32 @@ function init() {
         OpenLayers.Element.removeClass(olmap.viewPortDiv, 'olCursorWait');
         selection.removeFeatures(selection.features);
         
-        $('#assign_district').empty();
-        $('<option />').
-            attr('value', '-1').
-            text('-- Select One --').
-            appendTo('#assign_district');
-
+//        $('#assign_district').empty();
+//        $('<option />').
+//            attr('value', '-1').
+//            text('-- Select One --').
+//            appendTo('#assign_district');
+//
         var sorted = districtLayer.features.slice(0,districtLayer.features.length);
         sorted.sort(function(a,b){
             return a.attributes.name > b.attributes.name;
         });
 
-        var containsUnassigned = false;
-        $.each(sorted, function(n, feature) {
-            containsUnassigned = containsUnassigned || (feature.attributes.name == 'Unassigned');
-            $('<option />').
-                attr('value', feature.attributes.district_id).
-                text(feature.attributes.name).
-                appendTo('#assign_district');
-        });
-
-        if (!containsUnassigned) {
-            $('<option />').
-                attr('value',UNASSIGNED_DISTRICT_ID).
-                text('Unassigned').
-                appendTo('#assign_district');
-        }
+//        var containsUnassigned = false;
+//        $.each(sorted, function(n, feature) {
+//            containsUnassigned = containsUnassigned || (feature.attributes.name == 'Unassigned');
+//            $('<option />').
+//                attr('value', feature.attributes.district_id).
+//                text(feature.attributes.name).
+//                appendTo('#assign_district');
+//        });
+//
+//        if (!containsUnassigned) {
+//            $('<option />').
+//                attr('value',UNASSIGNED_DISTRICT_ID).
+//                text('Unassigned').
+//                appendTo('#assign_district');
+//        }
 
         var working = $('#working');
         if (working.dialog('isOpen')) {
@@ -659,10 +659,37 @@ function init() {
         if (this.value == '-1'){
             return;
         }
-
-        var feature = { data:{ district_id: this.value } };
-        assignOnSelect(feature);
+        else if (this.value == 'new'){
+            createNewDistrict();
+        }
+        else {
+            var feature = { data:{ district_id: this.value } };
+            assignOnSelect(feature);
+        }
     });
+
+    var createNewDistrict = function() {
+        var callServer = function(name) {
+            $.post('/districtmapping/plan/' + PLAN_ID + '/district/new', { name: name }, assignToNewDistrict, 'json');
+        };
+        var assignToNewDistrict = function(data, textStatus, XMLHttpRequest) {
+            if (data.success) {
+                $('#assign_select').append('<option value="' + data.district_id + '">' + data.district_name + '</option>');
+                assignOnSelect({data: data});
+            } else {
+                $('<div class="error">' + data.message + '</div>').dialog({ title: "Sorry", autoOpen: true });
+            }
+        };
+        $('<div>Please enter a name for your new district<input id="newdistrictname" type="text" /></div>').dialog({
+            modal: true,
+            autoOpen: true,
+            title: 'New District',
+            buttons: { 
+                'OK': function() { callServer($('#newdistrictname').val()); $(this).dialog("close"); },
+                'Cancel': function() { $(this).dialog("close"); }
+            }
+         });
+    };
 
     // A method for manually refreshing the statistics in the sidebar
     $('#updatestatsbtn').click( updateStats );

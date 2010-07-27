@@ -134,7 +134,10 @@
                   <button id="assign_tool" class="btntoggle titletip" title="After selecting your districts on the map, click this button to select target district"></button>
                   <select id="assign_district" class="titletip" title="Assign districts currently selected on map by choosing district from drop down list">
                     <option value="-1">-- Select One --</option>
-                    <option value="0">Unassigned</option>
+                    {% for d in districts %}
+                        <option value="{{ d.district_id }}">{{ d.name }}</option>
+                    {% endfor %}
+                    <option value="new">New District</option>
                   </select>
                 </div>
               </div>

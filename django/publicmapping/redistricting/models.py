@@ -187,6 +187,15 @@ class District(models.Model):
     def __unicode__(self):
         return self.name
 
+#    def clean(self):
+#        from django.core.exceptions import ValidationError
+#        raise ValidationError('Maximum districts for this plan have been created')
+#        if (not self.id):
+#            max_id = District.objects.filter(plan = self.plan).aggregate(Max('district_id'))['district_id__max']
+#            if max_id:
+#                self.district_id = max_id + 1
+#            if self.district_id > settings.MAX_DISTRICTS:
+#                raise ValidationError('Maximum districts for this plan have been created')
 
     def update_stats(self):
         all_subjects = Subject.objects.all().order_by('name').reverse()
@@ -249,11 +258,14 @@ def collect_geom(sender, **kwargs):
 def set_district_id(sender, **kwargs):
     """When a new district is saved, it should get an incremented id that is unique to the plan
     """
+    from django.core.exceptions import ValidationError
     district = kwargs['instance']
     if (not district.id):
         max_id = District.objects.filter(plan = district.plan).aggregate(Max('district_id'))['district_id__max']
         if max_id:
             district.district_id = max_id + 1
+        if district.district_id > settings.MAX_DISTRICTS:
+            raise ValidationError("Too many districts already.  Reached Max Districts setting")
 
 pre_save.connect(set_district_id, sender=District)
 

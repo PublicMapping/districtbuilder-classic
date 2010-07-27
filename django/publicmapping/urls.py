@@ -32,4 +32,5 @@ urlpatterns = patterns('',
     (r'^districtmapping/plan/(?P<planid>\d*)/geography', 'publicmapping.redistricting.views.getgeography'),
     (r'^districtmapping/plan/(?P<planid>\d*)/updatestats', 'publicmapping.redistricting.views.updatestats'),
     (r'^districtmapping/plan/(?P<planid>\d*)/district/(?P<districtid>\d*)/updatestats', 'publicmapping.redistricting.views.updatedistrict'),
+    (r'^districtmapping/plan/(?P<planid>\d*)/district/new', 'publicmapping.redistricting.views.newdistrict'),
 )

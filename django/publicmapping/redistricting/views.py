@@ -1,5 +1,6 @@
 from django.http import *
 from django.core import serializers
+from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.db.models import Sum
 from django.shortcuts import render_to_response
@@ -53,10 +54,12 @@ def copyplan(request, planid):
 def editplan(request, planid):
     try:
         plan = Plan.objects.get(pk=planid)
-        if not can_edit(request.user, p, plan):
+        districts = plan.district_set.all()
+        if not can_edit(request.user, plan):
             plan = {}
     except:
         plan = {}
+        districts = {}
     levels = Geolevel.objects.values_list("name", flat=True)
     demos = Subject.objects.values_list("id","name", "short_display")
     layers = []
@@ -76,6 +79,7 @@ def editplan(request, planid):
 
     return render_to_response('editplan.html', {
         'plan': plan,
+        'districts': districts,
         'mapserver': settings.MAP_SERVER,
         'demographics': layers,
         'snaplayers': snaplayers,
@@ -96,6 +100,34 @@ def createplan(request):
     return render_to_response('createplan.html', {
         'form': form,
     })
+
+
+@login_required
+def newdistrict(request, planid):
+    """Create a new district.  Optionally, add the given geounits to the 
+    district to start.  Returns the new District's name and district_id.
+    """
+    status = { 'success': False, 'message': 'Unspecified error.' }
+    plan = Plan.objects.get(pk=planid)
+    if not plan:
+        status['message'] = 'No plan with that ID'
+        return HttpResponse(json.dumps(status),mimetype='application/json')
+    if len(request.REQUEST.items()) >= 1:
+        if request.REQUEST.__contains__('name'):
+            try: 
+                district = District(name = request.REQUEST['name'], plan=plan)
+                district.save()
+                status['success'] = True
+                status['message'] = 'Created new district'
+                status['district_id'] = district.district_id
+                status['district_name'] = district.name
+            except ValidationError:
+                status['message'] = 'Reached Max districts already'
+            except:
+                status['message'] = 'Couldn\'t save new district.'
+        else:
+            status['message'] = 'Must specify name for district'
+    return HttpResponse(json.dumps(status),mimetype='application/json')
 
 @login_required
 def addtodistrict(request, planid, districtid):
