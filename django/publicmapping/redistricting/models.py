@@ -117,10 +117,14 @@ class Plan(models.Model):
         districts = self.district_set.filter(geom__intersects=incremental)
         for district in districts:
             difference = district.geom.difference(incremental)
-            if difference.geom_type != 'MultiPolygon':
+            if difference.geom_type == 'MultiPolygon':
+                district.geom = difference
+            elif difference.geom_type == 'Polygon':
                 district.geom = MultiPolygon(difference)
             else:
-                district.geom = difference
+                # can't process this geometry, so don't change it
+                continue
+
             simple = district.geom.simplify(tolerance=100.0,preserve_topology=True)
             if simple.geom_type != 'MultiPolygon':
                 district.simple = MultiPolygon(simple)
@@ -132,18 +136,21 @@ class Plan(models.Model):
             fixed += 1
 
         if target.geom is None:
-            target.geom = incremental
+            if incremental.geom_type == 'Polygon':
+                target.geom = MultiPolygon(incremental)
+            elif incremental.geom_type == 'MultiPolygon':
+                target.geom = incremental
         else:
             union = target.geom.union(incremental)
-            if union.geom_type != 'MultiPolygon':
+            if union.geom_type == 'Polygon':
                 target.geom = MultiPolygon(union)
-            else:
+            elif union.geom_type == 'MultiPolygon':
                 target.geom = union
 
         simple = target.geom.simplify(tolerance=100.0,preserve_topology=True)
-        if simple.geom_type != 'MultiPolygon':
+        if simple.geom_type == 'Polygon':
             target.simple = MultiPolygon(simple)
-        else:
+        elif simple.geom_type == 'MultiPolygon':
             target.simple = simple
            
         target.save();
