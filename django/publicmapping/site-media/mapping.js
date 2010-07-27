@@ -136,7 +136,13 @@ function init() {
         fillOpacity: 0.00,
         strokeColor: '#ee9900',
         strokeOpacity: 1,
-        strokeWidth: 2
+        strokeWidth: 2,
+        label: '${name}',
+        fontColor: '#ffffff',
+        fontSize: '11px',
+        fontFamily: 'Arial,Helvetica,sans-serif',
+        fontWeight: '400',
+        labelAlign: 'cm'
     };
     
     // A vector layer that holds all the districts in
