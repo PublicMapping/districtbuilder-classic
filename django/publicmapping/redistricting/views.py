@@ -8,7 +8,7 @@ from django import forms
 from django.utils import simplejson as json
 from publicmapping import settings
 from publicmapping.redistricting.models import *
-import random, string
+import random, string, types
 
 @login_required
 def copyplan(request, planid):
@@ -38,7 +38,10 @@ def copyplan(request, planid):
         from django.db import connection, transaction
         cursor = connection.cursor()
 
-        sql = "insert into redistricting_districtgeounitmapping (plan_id, district_id, geounit_id) select %d, %d, geounit_id from redistricting_districtgeounitmapping where plan_id = %d and district_id = %d;" % (copy.id, district_copy.id, p.id, district_copy.id)
+        sql = "insert into redistricting_districtgeounitmapping (plan_id, district_id, geounit_id) select %d, %d, geounit_id from redistricting_districtgeounitmapping where plan_id = %d and district_id = %d;" % (copy.id, district_copy.id, p.id, district.id)
+        cursor.execute(sql)
+
+        sql = 'insert into redistricting_computedcharacteristic (subject_id,district_id,"number",percentage) select subject_id, %d, number, percentage from redistricting_computedcharacteristic where district_id = %d' % (district_copy.id, district.id)
         cursor.execute(sql)
         transaction.commit_unless_managed()
 
@@ -67,12 +70,17 @@ def editplan(request, planid):
     for target in targets:
         rules.append( {'subject_id':target.subject_id,'lower':target.lower,'upper':target.upper} )
 
+    unassigned_id = 0
+    if type(plan) != types.DictType:
+        unassigned_id = plan.district_set.filter(name='Unassigned').values_list('district_id',flat=True)[0]
+
     return render_to_response('editplan.html', {
         'plan': plan,
         'mapserver': settings.MAP_SERVER,
         'demographics': layers,
         'snaplayers': snaplayers,
         'rules': rules,
+        'unassigned_id': unassigned_id,
     })
 
 @login_required
@@ -110,19 +118,6 @@ def addtodistrict(request, planid, districtid):
 
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
-#@login_required
-#def deletefromplan(request, planid, geounit_ids):
-#    """ This method, when called, requires "geolevel" and a "geounits" parameter. The requested geounits will be removed from all districts in the given plan. 
-#    The geolevel must be a valid geolevel name and the geounits parameters should be a pipe-separated list of geounit ids
-#    """
-#    if len(request.REQUEST.items()) >= 2: 
-#        geolevel = request.REQUEST["geolevel"];
-#        geounit_ids = string.split(request.REQUEST["geounits"], "|")
-#        plan = Plan.objects.get(pk=planid)
-#        fixed = plan.delete_geounits(districtid, geounit_ids, geolevel)
-#        return HttpResponse("{\"success\": true, \"message\":\"Updated " + str(fixed) + " districts\"}")
-#    else:
-#        return HttpResponse("{ \"success\:: false, \"message\": \"Geounits weren't found in the given plan\" }")
 
 @login_required
 def chooseplan(request):
@@ -162,7 +157,7 @@ def getdemographics(request, planid):
 
         for subject in subjects:
             subject_name = subject.short_display
-            characteristics = ComputedCharacteristic.objects.filter(subject = subject, district = district) 
+            characteristics = district.computedcharacteristic_set.filter(subject = subject) 
             if characteristics.count() == 0:
                 stats[subject_name] = "n/a"
             else:
@@ -204,7 +199,7 @@ def getgeography(request, planid):
 
         stats = district_values[dist_name]
 
-        characteristics = ComputedCharacteristic.objects.filter(district = district, subject = subject)
+        characteristics = district.computedcharacteristic_set.filter(subject = subject)
 
         if characteristics.count() == 0:
             stats['demo'] = 'n/a'        
