@@ -12,9 +12,9 @@ datasource = DataSource(shapepath)
 layer = datasource[0]
 
 # whoever admin is, they get this template
-owner = User.objects.get(username='admin')
+owner = User.objects.get(username=settings.ADMINS[0][0])
 
-plan = Plan( name='Congressional', is_template=True, version=0, owner=owner )
+plan = Plan(name='Congressional', is_template=True, version=0, owner=owner)
 plan.save()
 
 district = District(
@@ -44,8 +44,11 @@ for feature in layer:
     district.save()
 
     geounits = list(Geounit.objects.filter(geom__within=geom,geolevel=settings.BASE_GEOLEVEL).values_list('id',flat=True))
-    print 'Assigning %d geounits to district %d' % (len(geounits), district.id)
+    print '\tAssigning %d geounits to district %d' % (len(geounits), district.id)
     for geounit in geounits:
         gu_qs = Geounit.objects.get(id=geounit)
         dgm = DistrictGeounitMapping(plan=plan, district=district, geounit=gu_qs)
         dgm.save()
+
+    print '\tUpdating district statistics...'
+    district.update_stats()
