@@ -11,6 +11,7 @@
         var MAP_SERVER = '{{ mapserver }}';
 
         var PLAN_ID = {% if plan %}{{ plan.id }}{% else %}0{% endif %};
+        var UNASSIGNED_DISTRICT_ID = {% if unassigned_id %}{{ unassigned_id }}{% else %}0{% endif %};
         var SNAP_LAYERS = [ {% for snap in snaplayers %} { level: '{{ snap.layer }}',layer: 'simple_{{ snap.layer }}', name: '{{ snap.name }}' }{% if not forloop.last %},{% endif %} {% endfor %} ];
         var DEMOGRAPHICS = [{% for demo in demographics %} { id: {{ demo.id }}, text: '{{ demo.text }}', value: '{{ demo.value }}' }{% if not forloop.last %},{% endif %} {% endfor %} ];
         var MAP_LAYERS = [];
