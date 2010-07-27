@@ -512,12 +512,21 @@ function init() {
             return a.attributes.name > b.attributes.name;
         });
 
+        var containsUnassigned = false;
         $.each(sorted, function(n, feature) {
+            containsUnassigned = containsUnassigned || (feature.attributes.name == 'Unassigned');
             $('<option />').
                 attr('value', feature.attributes.district_id).
                 text(feature.attributes.name).
                 appendTo('#assign_district');
         });
+
+        if (!containsUnassigned) {
+            $('<option />').
+                attr('value',UNASSIGNED_DISTRICT_ID).
+                text('Unassigned').
+                appendTo('#assign_district');
+        }
 
         var working = $('#working');
         if (working.dialog('isOpen')) {
