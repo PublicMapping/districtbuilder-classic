@@ -28,6 +28,7 @@
     <script type="text/javascript" src="/site-media/ui.js"></script>
     <script type="text/javascript" src="/site-media/mapping.js"></script>
     <script type="text/javascript" src="/site-media/publicmapping.chooseplan.js"></script>
+    <script type="text/javascript" src="/site-media/publishplan.js"></script>
   </head>
   <body onload="init();" id="app">
   
@@ -279,6 +280,11 @@
     {% if plan.name %}
         $('.geography').load('/districtmapping/plan/{{plan.id}}/geography?demo=3');
         $('.demographics').load('/districtmapping/plan/{{plan.id}}/demographics');      
+        var publish = publishplan({
+            target: $('#saveplanbtn'),
+            container: $('#DialogContainer'),
+            modal: true,
+        }).init();
     {% endif %}
     });
 </script>
