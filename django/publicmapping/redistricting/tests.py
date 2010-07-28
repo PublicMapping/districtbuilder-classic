@@ -1,4 +1,5 @@
 import unittest
+from django.test.client import Client
 from django.contrib.gis.geos import *
 from django.contrib.auth.models import User
 from publicmapping.redistricting.models import *
@@ -146,3 +147,25 @@ class RedistrictingTest(unittest.TestCase):
         d4.save()
         incremented = d4.district_id
         self.assertTrue(latest + 1 == incremented, "New district did not have an id greater than the previous district")
+
+    def test_copyplan(self):
+        self.p.add_geounits(self.d2.district_id, [ self.geounit_b1.id ], self.levelb)        
+        geounits = DistrictGeounitMapping.objects.filter(district = self.d2)
+        district_map  = DistrictGeounitMapping.objects.filter(plan = self.p)
+        geounit_count = district_map.count()
+        district_count = district_map.values('district').distinct().count()
+        client = Client()
+        response = client.post('/districtmapping/plan/%d/copy' % self.p.id, { 'name':'MyTestCopy' })
+        self.assertEqual(200, response.status_code, 'Copy handler didn\'t return 200:' + str(response))
+        copy = Plan.objects.get(name='MyTestCopy')
+        self.assertNotEqual(copy, None, "Copied plan doesn't exist")
+        copy_map  = DistrictGeounitMapping.objects(plan = copy)
+        self.assertEqual(geounit_count, copy_map.count(), 'Copy wasn\'t mapped to all geounits')
+        self.assertEqual(district_count, copy_map.values('district').distinct().count(), 'Copy didn\'t have same number of districts')
+   
+    def test_unassigned(self):
+        unassigned = District.objects.filter(name="Unassigned", plan = self.p)
+        self.assertEqual(1, unassigned.count(), 'New Plan didn\'t have one value on saving')
+        district_map = DistrictGeounitMapping.objects.filter(plan = self.p, district = unassigned)
+        base_geounit_count = Geounit.objects.filter(geolevel = settings.BASE_GEOLEVEL).count()
+        self.assertEqual(district_map.count(), base_geounit_count, 'Test plan was not mapped to all districts on saving') 

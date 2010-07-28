@@ -33,8 +33,9 @@ def copyplan(request, planid):
         try:
             district_copy.save() 
         except:
-            status["success"] = false
+            status["success"] = False
             status["message"] = "Could not save district copies"
+            return HttpResponse(json.dumps(status),mimetype='application/json')
         # clone all the geounits manually
         from django.db import connection, transaction
         cursor = connection.cursor()
