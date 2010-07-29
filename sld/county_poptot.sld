@@ -9,14 +9,14 @@
       <Abstract>A grayscale style showing the population numbers in a given geounit</Abstract>
       <FeatureTypeStyle>
         <Rule>
-        <Title>&gt; 500K</Title>
-    <ogc:Filter>
-       <ogc:PropertyIsGreaterThanOrEqualTo>
-          <ogc:PropertyName>number</ogc:PropertyName>
-          <ogc:Literal>500000</ogc:Literal>
-        </ogc:PropertyIsGreaterThanOrEqualTo>
-    </ogc:Filter>
-    <PolygonSymbolizer>
+          <Title>&gt; 500K</Title>
+          <ogc:Filter>
+            <ogc:PropertyIsGreaterThanOrEqualTo>
+              <ogc:PropertyName>number</ogc:PropertyName>
+              <ogc:Literal>500000</ogc:Literal>
+            </ogc:PropertyIsGreaterThanOrEqualTo>
+          </ogc:Filter>
+          <PolygonSymbolizer>
             <Fill>
               <CssParameter name="fill">#666666</CssParameter>
             </Fill>
@@ -27,20 +27,20 @@
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-        <Title>&gt; 100K</Title>
-    <ogc:Filter>
-      <ogc:And>
-       <ogc:PropertyIsGreaterThanOrEqualTo>
-          <ogc:PropertyName>number</ogc:PropertyName>
-          <ogc:Literal>100000</ogc:Literal>
-        </ogc:PropertyIsGreaterThanOrEqualTo>
-        <ogc:PropertyIsLessThan>
-          <ogc:PropertyName>number</ogc:PropertyName>
-          <ogc:Literal>500001</ogc:Literal>
-        </ogc:PropertyIsLessThan>
-      </ogc:And>
-    </ogc:Filter>          
-    <PolygonSymbolizer>
+          <Title>&gt; 100K</Title>
+            <ogc:Filter>
+              <ogc:And>
+                <ogc:PropertyIsGreaterThanOrEqualTo>
+                  <ogc:PropertyName>number</ogc:PropertyName>
+                  <ogc:Literal>100000</ogc:Literal>
+                </ogc:PropertyIsGreaterThanOrEqualTo>
+                <ogc:PropertyIsLessThan>
+                  <ogc:PropertyName>number</ogc:PropertyName>
+                  <ogc:Literal>500001</ogc:Literal>
+                </ogc:PropertyIsLessThan>
+              </ogc:And>
+            </ogc:Filter>          
+            <PolygonSymbolizer>
             <Fill>
               <CssParameter name="fill">#ABABAB</CssParameter>
             </Fill>
@@ -51,14 +51,14 @@
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-        <Title>&lt; 100K</Title>
-    <ogc:Filter>
-        <ogc:PropertyIsLessThan>
-          <ogc:PropertyName>number</ogc:PropertyName>
-          <ogc:Literal>100000</ogc:Literal>
-        </ogc:PropertyIsLessThan>
-    </ogc:Filter>          
-    <PolygonSymbolizer>
+          <Title>&lt; 100K</Title>
+            <ogc:Filter>
+              <ogc:PropertyIsLessThan>
+                <ogc:PropertyName>number</ogc:PropertyName>
+                <ogc:Literal>100000</ogc:Literal>
+              </ogc:PropertyIsLessThan>
+            </ogc:Filter>          
+            <PolygonSymbolizer>
             <Fill>
               <CssParameter name="fill">#DCDCDC</CssParameter>
             </Fill>
