@@ -814,17 +814,16 @@ span.popstatus {
   font-size: 11px;
   }
 span.popstatus.over {
-  background: #ee807c;
-  color: #fff;
-  border: 1px solid #bf716b
+  background: #ead3a7;
+  border: 1px solid #d9c296;
   }
 span.popstatus.under {
-  background: #f2dc9e;
-  border: 1px solid #d2c28a;
+  background: #a2d5d0;
+  border: 1px solid #91c4b9;
 }
 span.popstatus.target {
-  background: #ade786;
-  border: 1px solid #a6cc88;
+  background: #eeeeee;
+  border: 1px solid #cccccc;
 }
 
 div.menu_footer {
