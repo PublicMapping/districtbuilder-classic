@@ -33,7 +33,12 @@ function getBoundLayer() {
 }
 
 function getDistrictBy() {
-    return $('#districtby').val();
+    var orig = $('#districtby').val();
+    var mod = new RegExp('^(.*)\.None').test(orig);
+    if (mod) {
+        orig = RegExp.$1;
+    }
+    return { by: orig, modified: mod }; 
 }
 
 /*
@@ -43,6 +48,7 @@ var geourl = '/districtmapping/plan/' + PLAN_ID + '/geography';
 var demourl = '/districtmapping/plan/' + PLAN_ID + '/demographics';
 
 function getPlanAndSubjectFilters() {
+    var dby = getDistrictBy();
     return new OpenLayers.Filter.Logical({
         type: OpenLayers.Filter.Logical.AND,
         filters: [
@@ -54,7 +60,7 @@ function getPlanAndSubjectFilters() {
             new OpenLayers.Filter.Comparison({
                 type: OpenLayers.Filter.Comparison.EQUAL_TO,
                 property: 'subject_id',
-                value: getDistrictBy()
+                value: dby.by
             })
         ]
     });
@@ -244,7 +250,7 @@ function init() {
         $.ajax({ 
             url: '/districtmapping/plan/' + PLAN_ID + '/updatestats', 
             success: function() {
-                $('.geography').load(geourl, {demo: getDistrictBy()}, loadTooltips);
+                $('.geography').load(geourl, {demo: getDistrictBy().by}, loadTooltips);
                 $('.demographics').load(demourl, loadTooltips);
 
                 districtLayer.destroyFeatures();
@@ -451,24 +457,18 @@ function init() {
     // of the features to the district layer.  This is done at this time
     // to prevent 2 renderings from being triggered on the district layer.
     districtLayer.events.register('beforefeaturesadded',districtLayer,function(context){
-        var min = Number.MAX_VALUE, max = 0;
-        $.each(context.features, function(n, feature) {
-            var value = parseInt(feature.attributes.number,10);
-            min = (value < min) ? value : min;
-            max = (value > max) ? value : max;
-        });
-
-        var subject = getDistrictBy();
         var lowerColor = $('.under').css('background-color');
         var upperColor = $('.over').css('background-color');
         var newOptions = OpenLayers.Util.extend({}, districtStyle);
-        var newStyle = new OpenLayers.Style(newOptions,{
-            rules:[
+        var dby = getDistrictBy();
+        var rules = [];
+        if (!dby.modified) {
+            rules = [
                 new OpenLayers.Rule({
                     filter: new OpenLayers.Filter.Comparison({
                         type: OpenLayers.Filter.Comparison.LESS_THAN_OR_EQUAL_TO,
                         property: 'number',
-                        value: RULES[subject].lower
+                        value: RULES[dby.by].lower
                     }),
                     symbolizer: {
                         fillColor: lowerColor,
@@ -479,7 +479,7 @@ function init() {
                     filter: new OpenLayers.Filter.Comparison({
                         type: OpenLayers.Filter.Comparison.GREATER_THAN_OR_EQUAL_TO,
                         property: 'number',
-                        value: RULES[subject].upper
+                        value: RULES[dby.by].upper
                     }),
                     symbolizer: {
                         fillColor: upperColor,
@@ -490,11 +490,14 @@ function init() {
                     filter: new OpenLayers.Filter.Comparison({
                         type: OpenLayers.Filter.Comparison.BETWEEN,
                         property: 'number',
-                        lowerBoundary: RULES[subject].lower,
-                        upperBoundary: RULES[subject].upper
+                        lowerBoundary: RULES[dby.by].lower,
+                        upperBoundary: RULES[dby.by].upper
                     })
                 })
-            ]
+            ];
+        }
+        var newStyle = new OpenLayers.Style(newOptions,{
+            rules:rules
         });
         districtLayer.styleMap = new OpenLayers.StyleMap(newStyle);
     });
