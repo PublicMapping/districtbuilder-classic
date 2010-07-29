@@ -112,20 +112,20 @@ class RedistrictingTest(unittest.TestCase):
         self.assertEqual(5, unassigned.count(), "Expected 5, got %s geounits placed in unassigned to start %s" % (unassigned.count(), unassigned))
 
     def test_add_to_plan(self):
-        self.p.add_geounits(self.d2.district_id, [ self.geounit_b1.id ], self.levelb)        
+        self.p.add_geounits(self.d2.district_id, ( self.geounit_b1.id, ), self.levelb.id)        
         geounits = DistrictGeounitMapping.objects.filter(district = self.d2)
         self.assertEqual(3, geounits.all().count(), 'Geounit count not correct after adding larger geounit, expected 3, got ' + str(geounits.all().count()))
         self.assertEqual(1, geounits.filter(geounit = self.geounit_a1).count(), "Geounit a1 not in set after enclosing geounit added")
-        self.p.add_geounits(self.d2.district_id, [ self.geounit_a4.id], self.levela)
+        self.p.add_geounits(self.d2.district_id, ( self.geounit_a4.id, ), self.levela.id)
         geounits = DistrictGeounitMapping.objects.filter(district = self.d2)
         self.assertEqual(4, geounits.all().count(), 'Geounit count not correct after adding single geounit')
 
     def test_get_base_geounits(self):
-        geounit_ids = Geounit.get_base_geounits( [ self.geounit_b1.id ], self.levelb)
+        geounit_ids = Geounit.get_base_geounits( ( self.geounit_b1.id, ), self.levelb.id)
         self.assertEqual(3, len(geounit_ids), "Didn't get base geounits of large polys correctly; got " + str(len(geounit_ids)) + str(geounit_ids))
-        geounit_ids = Geounit.get_base_geounits( [ self.geounit_b2.id ], self.levelb)
+        geounit_ids = Geounit.get_base_geounits( ( self.geounit_b2.id, ), self.levelb.id)
         self.assertEqual(2, len(geounit_ids), "Didn't get base geounits of large polys correctly; got " + str(len(geounit_ids)) + str(geounit_ids))
-        geounit_ids = Geounit.get_base_geounits( [ self.geounit_b1.id, self.geounit_b2.id ], self.levelb)
+        geounit_ids = Geounit.get_base_geounits( ( self.geounit_b1.id, self.geounit_b2.id ), self.levelb.id)
         self.assertEqual(5, len(geounit_ids), "Didn't get base geounits of large polys correctly; got " + str(len(geounit_ids)) + str(geounit_ids))
 
 #    def test_delete_geounits_from_plan(self):
@@ -149,7 +149,7 @@ class RedistrictingTest(unittest.TestCase):
         self.assertTrue(latest + 1 == incremented, "New district did not have an id greater than the previous district")
 
     def test_copyplan(self):
-        self.p.add_geounits(self.d2.district_id, [ self.geounit_b1.id ], self.levelb)        
+        self.p.add_geounits(self.d2.district_id, ( self.geounit_b1.id, ), self.levelb.id)        
         geounits = DistrictGeounitMapping.objects.filter(district = self.d2)
         district_map  = DistrictGeounitMapping.objects.filter(plan = self.p)
         geounit_count = district_map.count()

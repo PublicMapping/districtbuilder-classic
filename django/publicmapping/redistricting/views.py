@@ -150,7 +150,7 @@ def addtodistrict(request, planid, districtid):
     status = { 'success': False, 'message': 'Unspecified error.' }
     if len(request.REQUEST.items()) >= 2: 
         geolevel = request.REQUEST["geolevel"];
-        geounit_ids = string.split(request.REQUEST["geounits"], "|")
+        geounit_ids = tuple(string.split(request.REQUEST["geounits"], "|"))
         plan = Plan.objects.get(pk=planid)
         try:
             fixed = plan.add_geounits(districtid, geounit_ids, geolevel)

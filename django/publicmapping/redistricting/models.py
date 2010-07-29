@@ -34,24 +34,14 @@ class Geounit(models.Model):
 
     @staticmethod
     def get_base_geounits(geounit_ids, geolevel):
-        targets = Geounit.objects.filter(id__in=geounit_ids)
-        if len(targets) > 0:
-            whole_geom = targets[0].geom
-            if len(targets) > 1:
-                for i in range(1,len(targets)):
-                    for target_geom in targets[i].geom:
-                        whole_geom.append(target_geom)
-
-        else:
-            return []
-
-        qs = Geounit.objects.filter(geom__within=whole_geom, geolevel=settings.BASE_GEOLEVEL)
-
-        # this is frustrating!  this forces the DB query to executue
-        # but it would be awesome to use these IDs as a subquery filter
-        # instead of fetching the values and sending them back again
-        # this is a django bug, I suspect (dz)
-        return list(qs.values_list('id', flat=True))
+        from django.db import connection, transaction
+        cursor = connection.cursor()
+        cursor.execute('SELECT id from redistricting_geounit where geolevel_id = %s and St_within(st_centroid(geom), (select st_simplify(st_union(geom), 10) from redistricting_geounit where geolevel_id = %s and id in %s))', [int(settings.BASE_GEOLEVEL), int(geolevel), geounit_ids])
+        results = []
+        ids = cursor.fetchall()
+        for row in ids:
+            results += row
+        return results
 
     def __unicode__(self):
         return self.name
