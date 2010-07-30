@@ -5,6 +5,7 @@ from django.db import IntegrityError
 from django.db.models import Sum
 from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import login_required
+from django.contrib import humanize
 from django import forms
 from django.utils import simplejson as json
 from publicmapping import settings
@@ -210,6 +211,8 @@ def getdemographics(request, planid):
         dist_name = district.name
         if dist_name == "Unassigned":
             dist_name = "U"
+        if dist_name.startswith('District '):
+            dist_name = district.name.rsplit(' ', 1)[1]
         if not dist_name in district_values: 
             district_values[dist_name] = {}
 
@@ -254,6 +257,8 @@ def getgeography(request, planid):
         dist_name = district.name
         if dist_name == "Unassigned":
             dist_name = "U"
+        if dist_name.startswith('District '):
+            dist_name = district.name.rsplit(' ', 1)[1]
         if not dist_name in district_values: 
             district_values[dist_name] = {}
 

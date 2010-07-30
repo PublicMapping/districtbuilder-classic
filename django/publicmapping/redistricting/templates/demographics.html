@@ -2,11 +2,11 @@
          loadTooltips();
 </script>
 
-
+    {% load humanize %}
   <div class="plansummary">
       <h3>{{ plan.name }}</h3>
     {% for key,value in aggregate.items %}
-      <div><label>{{ key }}</label> <span id="totalpop" class="value">{{ value  }}</span></div>
+      <div><label>{{ key }}</label> <span id="totalpop" class="value">{{ value|intcomma  }}</span></div>
     {% endfor %}
   </div>
   <div class="plantable header">
@@ -16,7 +16,7 @@
           <tr>
              <th class="celldist cell1">Dist.</th>
               {% for key, value in aggregate.items %}
-              <th class="cellsubjects {% cycle 'cell2' 'cell3' 'cell4' %}">{{ key }}</th>
+              <th class="cellsubjects {% cycle 'cell2' 'cell3' 'cell4' %}">{{ key|intcomma }}</th>
               {% endfor %}
           </tr>
         {% endif %}
@@ -31,7 +31,7 @@
                   <td class="celldistrictname cell1">{{ key }}</td>
                     {% for key, number in value.items %}
                   <td class="cellvalue {% cycle 'cell2' 'cell3' 'cell4'%}">
-                      {{ number }}
+                      {{ number|intcomma }}
                   </td>
                     {% endfor %}
               </tr>
