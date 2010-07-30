@@ -4,8 +4,8 @@
                     {% load humanize %}
                   <div class="plansummary">
                       <h3>{{ plan.name }}</h3>
-                    {% for key,value in aggregate.items %}
-                      <div><label>{{ key }}</label> <span id="totalpop" class="value">{{ value|intcomma  }}</span></div>
+                    {% for subject in aggregate|dictsort:'name' %}
+                      <div><label>{{ subject.name }}</label> <span id="totalpop" class="value">{{ subject.value|intcomma  }}</span></div>
                     {% endfor %}
                   </div>
                   <div class="plantable header">
@@ -26,9 +26,9 @@
                     {% if district_values %}
                        <table>
                           <tbody>
-                              {% for key, stat in district_values.items %}
+                              {% for stat in district_values|dictsort:'name' %}
                               <tr class="{% cycle 'odd' 'even' %}">
-                                  <td class="celldist cell1">{{ key }}</td>
+                                  <td class="celldist cell1">{{ stat.name}}</td>
                                   <td class="celldemo cell2">
                                     <span class="popstatus {{ stat.css_class }}"> 
                                          {{ stat.demo|intcomma }}

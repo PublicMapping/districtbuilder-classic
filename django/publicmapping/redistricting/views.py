@@ -201,31 +201,29 @@ def getdemographics(request, planid):
         plan = Plan.objects.get(pk = planid)
     except:
         return HttpResponse ( "{ \"success\": false, \"message\":\"Couldn't get demographic info from the server. Please try again later.\" }" )
-    targets = {}
-    aggregate = {}
-    district_values = {}
-
     subjects = Subject.objects.all()
     districts = plan.district_set.all()
+    district_values = []
+
     for district in districts:
         dist_name = district.name
         if dist_name == "Unassigned":
             dist_name = "U"
         if dist_name.startswith('District '):
             dist_name = district.name.rsplit(' ', 1)[1]
-        if not dist_name in district_values: 
-            district_values[dist_name] = {}
 
-        stats = district_values[dist_name]
-
+        stats = { 'name': dist_name, 'characteristics': [] }
         for subject in subjects:
             subject_name = subject.short_display
             characteristics = district.computedcharacteristic_set.filter(subject = subject) 
+            characteristic = { 'name': subject_name }
             if characteristics.count() == 0:
-                stats[subject_name] = "n/a"
+                characteristic['value'] = "n/a"
             else:
-                stats[subject_name] = "%.0f" % characteristics[0].number       
+                characteristic['value'] = "%.0f" % characteristics[0].number       
+            stats['characteristics'].append(characteristic)            
 
+        district_values.append(stats)
     return render_to_response('demographics.html', {
         'plan': plan,
         'district_values': district_values,
@@ -243,27 +241,22 @@ def getgeography(request, planid):
         demo = request.REQUEST['demo']
     else:
         return HttpResponse ( "{ \"success\": false, \"message\":\"Couldn't get geography info from the server. Please use the 'demo' parameter with a Subject id.\" }" )
-        
-    targets = {}
-    aggregate = {}
-    district_values = {}
 
     districts = plan.district_set.all()
     try:
         subject = Subject.objects.get(pk=demo)
     except:
         return HttpResponse ( "{ \"success\": false, \"message\":\"Couldn't get geography info from the server. No Subject exists with the given id.\" }" )
+
+    district_values = []
     for district in districts:
         dist_name = district.name
         if dist_name == "Unassigned":
             dist_name = "U"
         if dist_name.startswith('District '):
             dist_name = district.name.rsplit(' ', 1)[1]
-        if not dist_name in district_values: 
-            district_values[dist_name] = {}
 
-        stats = district_values[dist_name]
-
+        stats = { 'name': dist_name }
         characteristics = district.computedcharacteristic_set.filter(subject = subject)
 
         if characteristics.count() == 0:
@@ -286,6 +279,8 @@ def getgeography(request, planid):
                 css_class = 'target'
             stats['css_class'] = css_class
 
+        district_values.append(stats)
+
     return render_to_response('geography.html', {
         'plan': plan,
         'district_values': district_values,
@@ -295,13 +290,15 @@ def getgeography(request, planid):
 
 
 def getaggregate(districts):
-    aggregate = {}
+    aggregate = []
     characteristics = ComputedCharacteristic.objects.filter(district__in=districts) 
     for target in Target.objects.all():
+        data = { 'name': target.subject.short_display } 
         try:
-            aggregate[target.subject.short_display]= "%.0f" % characteristics.filter(subject = target.subject).aggregate(Sum('number'))['number__sum'] 
+            data['value']= "%.0f" % characteristics.filter(subject = target.subject).aggregate(Sum('number'))['number__sum'] 
         except:
-            aggregate[target.subject.short_display]= "Data unavailable" 
+            data['value']= "Data unavailable" 
+        aggregate.append(data)
     return aggregate
 
 def updatestats(request, planid):

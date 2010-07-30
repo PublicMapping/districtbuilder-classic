@@ -5,8 +5,8 @@
     {% load humanize %}
   <div class="plansummary">
       <h3>{{ plan.name }}</h3>
-    {% for key,value in aggregate.items %}
-      <div><label>{{ key }}</label> <span id="totalpop" class="value">{{ value|intcomma  }}</span></div>
+    {% for target in aggregate|dictsort:'name' %}
+      <div><label>{{ target.name }}</label> <span id="totalpop" class="value">{{ target.value|intcomma  }}</span></div>
     {% endfor %}
   </div>
   <div class="plantable header">
@@ -15,8 +15,8 @@
          {% if aggregate %}
           <tr>
              <th class="celldist cell1">Dist.</th>
-              {% for key, value in aggregate.items %}
-              <th class="cellsubjects {% cycle 'cell2' 'cell3' 'cell4' %}">{{ key|intcomma }}</th>
+              {% for target in aggregate|dictsort:'name' %}
+                      <th class="cellsubjects {% cycle 'cell2' 'cell3' 'cell4' %}">{{ target.name|intcomma }}</th>
               {% endfor %}
           </tr>
         {% endif %}
@@ -26,12 +26,12 @@
   <div class="plantable body">
        <table>
           <tbody>
-                {% for key, value in district_values.items %}
+                {% for district in district_values|dictsort:'name' %}
               <tr class="{% cycle 'odd' 'even' %}">
-                  <td class="celldistrictname cell1">{{ key }}</td>
-                    {% for key, number in value.items %}
+                  <td class="celldistrictname cell1">{{ district.name }}</td>
+                    {% for characteristic in district.characteristics|dictsort:'name' %}
                   <td class="cellvalue {% cycle 'cell2' 'cell3' 'cell4'%}">
-                      {{ number|intcomma }}
+                      {{ characteristic.value|intcomma }}
                   </td>
                     {% endfor %}
               </tr>
