@@ -14,9 +14,9 @@ function createLayer( name, layer, extents ) {
           tilesOrigin: extents.left + ',' + extents.bottom,
           format: 'image/png'
         },
-	{
-	  displayOutsideMaxExtent: true
-	}
+        {
+            displayOutsideMaxExtent: true
+        }
     );
 }
 
@@ -245,7 +245,8 @@ function init() {
     var getControl = new OpenLayers.Control.GetFeature({
         autoActivate: false,
         protocol: getProtocol,
-        multipleKey: 'shiftKey'
+        multipleKey: 'shiftKey',
+        toggleKey: 'ctrlKey'
     });
 
     // Create a rectangular drag control for selecting
@@ -253,8 +254,10 @@ function init() {
     var boxControl = new OpenLayers.Control.GetFeature({
         autoActivate: false,
         protocol: getProtocol,
+        click: false,
         box: true,
-        multipleKey: 'shiftKey'
+        multipleKey: 'shiftKey',
+        toggleKey: 'ctrlKey'
     });
 
     // Update the statistics for the plan.
@@ -340,29 +343,6 @@ function init() {
         }
     );
 
-    // create a div with the box selection style, so that we
-    // can copy the style into the openlayers control for polygon
-    // selection
-    var tmp = document.createElement('div');
-    tmp.className = 'olHandlerBoxSelectFeature';
-    tmp.style.height='1px';
-    tmp.style.width='1px';
-    tmp.style.left='100px';
-    tmp.style.top='100px';
-    document.body.appendChild(tmp);
-
-    jtmp = $('.olHandlerBoxSelectFeature');
-
-    var polySelectStyle = {
-        strokeWidth: parseInt(jtmp.css('borderTopWidth').slice(0,1),10),
-        strokeColor: jtmp.css('borderTopColor'),
-        strokeOpacity: parseFloat(jtmp.css('opacity')),
-        fillColor: jtmp.css('background-color'),
-        fillOpacity: parseFloat(jtmp.css('opacity'))
-    };
-
-    document.body.removeChild(tmp);
-
     // Create a polygon select control for free-form selections.
     var polyControl = new OpenLayers.Control.DrawFeature( 
         selection,
@@ -370,12 +350,12 @@ function init() {
         {
             handlerOptions: {
                 freehand: true,
-                freehandToggle: null,
-                style: polySelectStyle
+                freehandToggle: null
             },
             featureAdded: function(feature){
                 // WARNING: not a part of the API!
                 var append = this.handler.evt.shiftKey;
+                var subtract = this.handler.evt.ctrlKey;
                 var newOpts = getControl.protocol.options;
                 newOpts.featureType = getSnapLayer();
                 getControl.protocol = new OpenLayers.Protocol.WFS( newOpts );
@@ -386,24 +366,45 @@ function init() {
                         projection: getProtocol.options.srsName
                     }),
                     callback: function(rsp){
-                        if (append){
-                            var lasso = selection.features[selection.features.length - 1];
-                            selection.removeFeatures([lasso]);
-                        }
-                        else {
+                        // first, remove the lasso feature
+                        var lasso = selection.features[selection.features.length - 1];
+                        selection.removeFeatures([lasso]);
+
+                        if (!(append || subtract)){
+                            // if this is a new lasso, remove all the 
+                            // old selected features
                             selection.removeFeatures(selection.features);
                         }
-                        for (var i = 0; i < rsp.features.length; i++) {
-                            var addflag = true;
-                            var rspFeature = rsp.features[i];
-                            for (var j = 0; j < selection.features.length; j++) {
-                                if (selection.features[j].data.id == rspFeature.data.id) {
-                                    addflag = false;
+
+                        if (subtract) {
+                            var removeMe = [];
+                            for (var i = 0; i < rsp.features.length; i++) {
+                                var rspFeature = rsp.features[i];
+                                for (var j = 0; j < selection.features.length; j++) {
+                                    if (selection.features[j].data.id == rspFeature.data.id) {
+                                        removeMe.push(selection.features[j]);
+                                    }
                                 }
                             }
-                            if (addflag) {
-                                selection.addFeatures([rspFeature]);
-                                selection.features[rspFeature.fid || rspFeature.id] = rspFeature;
+                            selection.removeFeatures(removeMe);
+                        }
+                        else {
+                            // check the selection feature IDs against the
+                            // feature IDs from our feature query, so that
+                            // features are not added to the selection more
+                            // than once
+                            for (var i = 0; i < rsp.features.length; i++) {
+                                var addflag = true;
+                                var rspFeature = rsp.features[i];
+                                for (var j = 0; j < selection.features.length; j++) {
+                                    if (selection.features[j].data.id == rspFeature.data.id) {
+                                        addflag = false;
+                                    }
+                                }
+                                if (addflag) {
+                                    selection.addFeatures([rspFeature]);
+                                    selection.features[rspFeature.fid || rspFeature.id] = rspFeature;
+                                }
                             }
                         }
                     }
@@ -411,6 +412,24 @@ function init() {
             }
         }
     );
+
+    // set this timeout function, since jquery is apparently not ready
+    // to select the elements based on this class during regular init.
+    // also, the reference to the polyControl is used in this init method
+    setTimeout(function(){
+        var jtmp = $('.olHandlerBoxSelectFeature');
+
+        var polySelectStyle = {
+            pointRadius: 0,
+            strokeWidth: parseInt(jtmp.css('borderTopWidth').slice(0,1),10),
+            strokeColor: jtmp.css('borderTopColor'),
+            strokeOpacity: parseFloat(jtmp.css('opacity')),
+            fillColor: jtmp.css('background-color'),
+            fillOpacity: parseFloat(jtmp.css('opacity'))
+        };
+
+        polyControl.handler.style = polySelectStyle;
+    }, 100);
 
     // Create a div for tooltips on the map itself; these are used
     // when the info tool is activated.
@@ -503,20 +522,40 @@ function init() {
 
     // A callback for feature selection in different controls.
     var featureSelected = function(e){
-        for (var i = 0; i < selection.features.length; i++) {
-            if (selection.features[i].data.id == e.feature.data.id) {
-                window.status = 'Duplicate feature selected.';
-                return;
+        // WARNING: not a part of the API!
+        var subtract = false;
+        for (var type in this.handlers) {
+            if ( this.handlers[type].evt ) {
+                subtract = subtract || this.handlers[type].evt.ctrlKey;
+            }
+            else {
+                subtract = subtract || this.handlers[type].dragHandler.evt.ctrlKey;
             }
         }
-        window.status = '';
-        selection.addFeatures([e.feature]);
+
+        if (subtract) {
+            var removeme = [];
+            for (var i = 0; i < selection.features.length; i++) {
+                if (selection.features[i].data.id == e.feature.data.id) {
+                    removeme.push(selection.features[i]);
+                }
+            }
+            selection.removeFeatures(removeme);
+        }
+        else {
+            for (var i = 0; i < selection.features.length; i++) {
+                if (selection.features[i].data.id == e.feature.data.id) {
+                    return;
+                }
+            }
+            selection.addFeatures([e.feature]);
+        }
     };
 
     // Connect the featureSelected callback above to the featureselected
     // events in the point and rectangle control.
-    getControl.events.register('featureselected', this, featureSelected);
-    boxControl.events.register('featureselected', this, featureSelected);
+    getControl.events.register('featureselected', getControl, featureSelected);
+    boxControl.events.register('featureselected', boxControl, featureSelected);
 
     // A callback for deselecting features from different controls.
     var featureUnselected = function(e){
