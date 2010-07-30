@@ -79,6 +79,7 @@ def editplan(request, planid):
         districts = {}
     levels = Geolevel.objects.values_list("name", flat=True)
     demos = Subject.objects.values_list("id","name", "short_display")
+    default_demo = getdefaultsubject()
     layers = []
     snaplayers = []
     rules = []
@@ -86,7 +87,7 @@ def editplan(request, planid):
     for level in levels:
         snaplayers.append( {'layer':level,'name':level.capitalize()} )
     for demo in demos:
-        layers.append( {'id':demo[0],'text':demo[2],'value':demo[1].lower()} )
+        layers.append( {'id':demo[0],'text':demo[2],'value':demo[1].lower(), 'isdefault':str(demo[0] == default_demo.id).lower()} )
     for target in targets:
         rules.append( {'subject_id':target.subject_id,'lower':target.lower,'upper':target.upper} )
 
@@ -329,4 +330,40 @@ def getcompactness(district):
     """This is the Schwartzberg measure of compactness, which is the measure of the perimeter of the district 
     to the circumference of the circle whose area is equal to the area of the district
     """
-        
+    pass
+
+def getdefaultsubject():
+    """Get the default subject to display. This reads the settings
+    for the value 'DEFAULT_DISTRICT_DISPLAY', which can be the ID of
+    a subject, a name of a subject, or the display of a subject.
+    """
+    key = settings.DEFAULT_DISTRICT_DISPLAY
+    try:
+        subject = Subject.objects.filter(id__exact=key)
+        if len(subject) == 1:
+            return subject[0]
+    except:
+        pass
+
+    try:
+        subject = Subject.objects.filter(name__exact=key)
+        if len(subject) == 1:
+            return subject[0]
+    except:
+        pass
+
+    try:
+        subject = Subject.objects.filter(display__exact=key)
+        if len(subject) == 1:
+            return subject[0]
+    except:
+        pass
+
+    try:
+        subject = Subject.objects.filter(short_display__exact=key)
+        if len(subject) == 1:
+            return subject[0]
+    except:
+        pass
+
+    return None
