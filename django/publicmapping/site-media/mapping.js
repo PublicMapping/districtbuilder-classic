@@ -20,18 +20,33 @@ function createLayer( name, layer, extents ) {
     );
 }
 
+/*
+ * Get the value of the "Snap Map to:" dropdown.
+ */
 function getSnapLayer() {
     return $('#snapto').val();
 }
 
+/* 
+ * Get the value of the "Show Layer by:" dropdown.
+ */
 function getShowBy() {
     return $('#showby').val();
 }
 
+/*
+ * Get the value of the "Show Boundaries for:" dropdown.
+ */
 function getBoundLayer() {
     return $('#boundfor').val();
 }
 
+/*
+ * Get the value of the "Show Districts by:" dropdown. This returns
+ * an object with a 'by' and 'modified' property, since the selection
+ * of this dropdown may also be 'None' but for performance and query
+ * reasons, the subject ID may not be empty.
+ */
 function getDistrictBy() {
     var orig = $('#districtby').val();
     var mod = new RegExp('^(.*)\.None').test(orig);
@@ -238,7 +253,8 @@ function init() {
     var boxControl = new OpenLayers.Control.GetFeature({
         autoActivate: false,
         protocol: getProtocol,
-        box: true
+        box: true,
+        multipleKey: 'shiftKey'
     });
 
     // Update the statistics for the plan.
@@ -319,7 +335,13 @@ function init() {
         selection,
         OpenLayers.Handler.Polygon,
         {
+            handlerOptions: {
+                freehand: true,
+                freehandToggle: null
+            },
             featureAdded: function(feature){
+                // WARNING: not a part of the API!
+                var append = this.handler.evt.shiftKey;
                 var newOpts = getControl.protocol.options;
                 newOpts.featureType = getSnapLayer();
                 getControl.protocol = new OpenLayers.Protocol.WFS( newOpts );
@@ -330,8 +352,26 @@ function init() {
                         projection: getProtocol.options.srsName
                     }),
                     callback: function(rsp){
-                        selection.removeFeatures(selection.features);
-                        selection.addFeatures(rsp.features);
+                        if (append){
+                            var lasso = selection.features[selection.features.length - 1];
+                            selection.removeFeatures([lasso]);
+                        }
+                        else {
+                            selection.removeFeatures(selection.features);
+                        }
+                        for (var i = 0; i < rsp.features.length; i++) {
+                            var addflag = true;
+                            var rspFeature = rsp.features[i];
+                            for (var j = 0; j < selection.features.length; j++) {
+                                if (selection.features[j].data.id == rspFeature.data.id) {
+                                    addflag = false;
+                                }
+                            }
+                            if (addflag) {
+                                selection.addFeatures([rspFeature]);
+                                selection.features[rspFeature.fid || rspFeature.id] = rspFeature;
+                            }
+                        }
                     }
                 });
             }
@@ -429,6 +469,13 @@ function init() {
 
     // A callback for feature selection in different controls.
     var featureSelected = function(e){
+        for (var i = 0; i < selection.features.length; i++) {
+            if (selection.features[i].data.id == e.feature.data.id) {
+                window.status = 'Duplicate feature selected.';
+                return;
+            }
+        }
+        window.status = '';
         selection.addFeatures([e.feature]);
     };
 
@@ -510,32 +557,10 @@ function init() {
         OpenLayers.Element.removeClass(olmap.viewPortDiv, 'olCursorWait');
         selection.removeFeatures(selection.features);
         
-//        $('#assign_district').empty();
-//        $('<option />').
-//            attr('value', '-1').
-//            text('-- Select One --').
-//            appendTo('#assign_district');
-//
         var sorted = districtLayer.features.slice(0,districtLayer.features.length);
         sorted.sort(function(a,b){
             return a.attributes.name > b.attributes.name;
         });
-
-//        var containsUnassigned = false;
-//        $.each(sorted, function(n, feature) {
-//            containsUnassigned = containsUnassigned || (feature.attributes.name == 'Unassigned');
-//            $('<option />').
-//                attr('value', feature.attributes.district_id).
-//                text(feature.attributes.name).
-//                appendTo('#assign_district');
-//        });
-//
-//        if (!containsUnassigned) {
-//            $('<option />').
-//                attr('value',UNASSIGNED_DISTRICT_ID).
-//                text('Unassigned').
-//                appendTo('#assign_district');
-//        }
 
         var working = $('#working');
         if (working.dialog('isOpen')) {
@@ -551,7 +576,6 @@ function init() {
             active[i].deactivate();
         }
         navigate.activate();
-        selection.removeFeatures(selection.features);
     });
 
     // When the identify map tool is clicked, disable all the
@@ -572,7 +596,7 @@ function init() {
             active[i].deactivate();
         }
         getControl.activate();
-        selection.removeFeatures(selection.features);
+        getControl.features = selection.features;
     });
 
     // When the rectangle selection tool is clicked, disable all the
@@ -583,7 +607,7 @@ function init() {
             active[i].deactivate();
         }
         boxControl.activate();
-        selection.removeFeatures(selection.features);
+        boxControl.features = selection.features;
     });
 
     // When the polygon selection tool is clicked, disable all the
@@ -594,7 +618,6 @@ function init() {
             active[i].deactivate();
         }
         polyControl.activate();
-        selection.removeFeatures(selection.features);
     });
 
     // When the assignment tool is clicked, disable all the
