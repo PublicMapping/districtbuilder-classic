@@ -330,6 +330,29 @@ function init() {
         }
     );
 
+    // create a div with the box selection style, so that we
+    // can copy the style into the openlayers control for polygon
+    // selection
+    var tmp = document.createElement('div');
+    tmp.className = 'olHandlerBoxSelectFeature';
+    tmp.style.height='1px';
+    tmp.style.width='1px';
+    tmp.style.left='100px';
+    tmp.style.top='100px';
+    document.body.appendChild(tmp);
+
+    jtmp = $('.olHandlerBoxSelectFeature');
+
+    var polySelectStyle = {
+        strokeWidth: parseInt(jtmp.css('borderTopWidth').slice(0,1),10),
+        strokeColor: jtmp.css('borderTopColor'),
+        strokeOpacity: parseFloat(jtmp.css('opacity')),
+        fillColor: jtmp.css('background-color'),
+        fillOpacity: parseFloat(jtmp.css('opacity'))
+    };
+
+    document.body.removeChild(tmp);
+
     // Create a polygon select control for free-form selections.
     var polyControl = new OpenLayers.Control.DrawFeature( 
         selection,
@@ -337,7 +360,8 @@ function init() {
         {
             handlerOptions: {
                 freehand: true,
-                freehandToggle: null
+                freehandToggle: null,
+                style: polySelectStyle
             },
             featureAdded: function(feature){
                 // WARNING: not a part of the API!
