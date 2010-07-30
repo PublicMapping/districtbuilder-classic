@@ -276,6 +276,16 @@ function init() {
         });
     } 
 
+    // Reload the information tabs and reload the filters
+    var updateInfoDisplay = function() {
+        $('.geography').load(geourl, {demo: getDistrictBy().by}, loadTooltips);
+        $('.demographics').load(demourl, loadTooltips);
+
+        districtLayer.destroyFeatures();
+        districtLayer.filter = getPlanAndSubjectFilters();
+        districtLayer.strategies[0].load();
+    };
+
     // An assignment function that adds geounits to a district
     var assignOnSelect = function(feature) {
         if (selection.features.length == 0)
@@ -300,7 +310,7 @@ function init() {
             success: function(data, textStatus, xhr) {
                 var mode = data.success ? 'select' : 'error';
                 if (data.success) {
-                    updateStats();
+                    updateInfoDisplay();
                 }
                 else {
                     OpenLayers.Element.removeClass(olmap.viewPortDiv, 'olCursorWait');
@@ -730,7 +740,7 @@ function init() {
         };
         var assignToNewDistrict = function(data, textStatus, XMLHttpRequest) {
             if (data.success) {
-                $('#assign_select').append('<option value="' + data.district_id + '">' + data.district_name + '</option>');
+                $('#assign_district').append('<option value="' + data.district_id + '">' + data.district_name + '</option>');
                 assignOnSelect({data: data});
             } else {
                 $('<div class="error">' + data.message + '</div>').dialog({ title: "Sorry", autoOpen: true });

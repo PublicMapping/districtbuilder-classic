@@ -102,8 +102,3 @@ def proxy(request):
 
     return httprsp
 
-"""The view for a plan. This is a data endpoint, and will be used
-to return the geometries of plans as they are dynamically constructed."""
-@login_required
-def plan(request, planid):
-    return render_to_response('plan.json', {});

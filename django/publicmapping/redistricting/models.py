@@ -123,6 +123,7 @@ class Plan(models.Model):
             district.save()
 
             district.computedcharacteristic_set.all().delete()
+            district.update_stats()
             fixed += 1
 
         if target.geom is None:
@@ -146,6 +147,7 @@ class Plan(models.Model):
         target.save();
 
         target.computedcharacteristic_set.all().delete()
+        target.update_stats()
         fixed += 1
 
         return fixed
@@ -176,16 +178,6 @@ class District(models.Model):
     
     def __unicode__(self):
         return self.name
-
-#    def clean(self):
-#        from django.core.exceptions import ValidationError
-#        raise ValidationError('Maximum districts for this plan have been created')
-#        if (not self.id):
-#            max_id = District.objects.filter(plan = self.plan).aggregate(Max('district_id'))['district_id__max']
-#            if max_id:
-#                self.district_id = max_id + 1
-#            if self.district_id > settings.MAX_DISTRICTS:
-#                raise ValidationError('Maximum districts for this plan have been created')
 
     def update_stats(self):
         all_subjects = Subject.objects.all().order_by('name').reverse()
@@ -254,7 +246,8 @@ def set_district_id(sender, **kwargs):
         max_id = District.objects.filter(plan = district.plan).aggregate(Max('district_id'))['district_id__max']
         if max_id:
             district.district_id = max_id + 1
-        if district.district_id > settings.MAX_DISTRICTS:
+        # Unassigned is not counted in MAX_DISTRICTS
+        if district.district_id > settings.MAX_DISTRICTS + 1:
             raise ValidationError("Too many districts already.  Reached Max Districts setting")
 
 pre_save.connect(set_district_id, sender=District)

@@ -9,7 +9,14 @@ from django import forms
 from django.utils import simplejson as json
 from publicmapping import settings
 from publicmapping.redistricting.models import *
-import random, string, types
+import random, string, types, copy
+
+"""The view for a plan. This is a data endpoint, and will be used
+to return the geometries of plans as they are dynamically constructed."""
+@login_required
+def plan(request, planid):
+    return render_to_response('plan.json', {});
+
 
 @login_required
 def copyplan(request, planid):
@@ -22,32 +29,40 @@ def copyplan(request, planid):
     newname = p.name + " " + str(random.random()) 
     if (request.method == "POST" ):
         newname = request.POST["name"]
-    copy = Plan(
+    plan_copy = Plan(
         name = newname, owner=request.user
     )
-    copy.save()
+    plan_copy.save()
 
     districts = p.district_set.all()
     for district in districts:
-        district_copy = District(name = district.name, plan = copy, version = 0, geom = district.geom, simple = district.simple)
+        # Skip Unassigned, we already have that
+        if district.name == "Unassigned":
+            continue
+#        district_copy = District(name = district.name, plan = copy, version = 0, geom = district.geom, simple = district.simple)
+        district_copy = copy.copy(district)
+
+        district_copy.id = None
+        district_copy.version = 0
+        district_copy.plan = plan_copy
+
         try:
             district_copy.save() 
-        except:
+        except Exception as inst:
             status["success"] = False
             status["message"] = "Could not save district copies"
+            status["exception"] = inst.message
             return HttpResponse(json.dumps(status),mimetype='application/json')
-        # clone all the geounits manually
-        from django.db import connection, transaction
-        cursor = connection.cursor()
 
-        sql = "insert into redistricting_districtgeounitmapping (plan_id, district_id, geounit_id) select %d, %d, geounit_id from redistricting_districtgeounitmapping where plan_id = %d and district_id = %d;" % (copy.id, district_copy.id, p.id, district.id)
-        cursor.execute(sql)
+        district_geounits = DistrictGeounitMapping.objects.filter(plan = p, district = district)
+        DistrictGeounitMapping.objects.filter(plan = plan_copy, geounit__in=district_geounits).update(district = district_copy)
 
-        sql = 'insert into redistricting_computedcharacteristic (subject_id,district_id,"number",percentage) select subject_id, %d, number, percentage from redistricting_computedcharacteristic where district_id = %d' % (district_copy.id, district.id)
-        cursor.execute(sql)
-        transaction.commit_unless_managed()
-
-    data = serializers.serialize("json", [ copy ])
+        stats = ComputedCharacteristic.objects.filter(district = district)
+        for stat in stats:
+            stat.district = district_copy
+            stat.id = None
+            stat.save()
+    data = serializers.serialize("json", [ plan_copy ])
 
     return HttpResponse(data)    
     
