@@ -674,7 +674,66 @@ background: url(/site-media/images/icon-arrow.png) 4px 0 no-repeat;
 button.menu_toggle .ui-icon-arrow-down {
 background: url(/site-media/images/icon-arrow.png) 2px -14px no-repeat;
 }
-
+button#legend_toggle {
+    background-color: #606060;
+    position: absolute;
+    bottom: 8px;
+    right: 280px;
+    font-size: 7pt;
+    -moz-box-shadow: 2px 2px 2px #888888;
+    -webkit-box-shadow: 2px 2px 2px #888888;
+    box-shadow: 2px 2px 2px #888888;
+}
+div#map_legend_content {
+    position: absolute;
+    bottom: 35px;
+    right: 280px;
+    width: 200px;
+    height: 240px;
+    background-color: #efe8cb;
+    border: solid 1px #999999;
+    display: none;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    -moz-box-shadow: 2px 2px 2px #888888;
+    -webkit-box-shadow: 2px 2px 2px #888888;
+    box-shadow: 2px 2px 2px #888888;
+}
+div#map_legend_content h1 {
+    font-size: 11pt;
+    font-weight: bold;
+    text-align:center;
+}
+div#map_legend_content table td {
+    font-size: 9pt;
+}
+div#map_legend_content table th {
+    font-size: 9pt;
+    font-weight: bold;
+}
+div#map_legend_content table {
+    margin: 10px 3px;
+}
+div#map_legend_content .swatch {
+    width: 30px;
+    height: 16px;
+    margin: 1px 5px 1px 1px;
+}
+div#map_legend_content .basemap_swatch {
+    border: solid 1px #555555;
+}
+div#map_legend_content .district_swatch {
+    border: solid 2px #ee9900;
+}
+div#legend_swatch_1 {
+    background-color: #dcdcdc;
+}
+div#legend_swatch_2 {
+    background-color: #ababab;
+}
+div#legend_swatch_3 {
+    background-color: #666666;
+}
 div#map_menu_header select {
   font-size: 14px;
   font-weight:bold;
@@ -813,15 +872,15 @@ span.popstatus {
   color: #3c3c3c;
   font-size: 11px;
   }
-span.popstatus.over {
+.over {
   background: #ead3a7;
   border: 1px solid #d9c296;
   }
-span.popstatus.under {
+.under {
   background: #a2d5d0;
   border: 1px solid #91c4b9;
 }
-span.popstatus.target {
+.target {
   background: #eeeeee;
   border: 1px solid #cccccc;
 }

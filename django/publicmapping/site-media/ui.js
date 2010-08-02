@@ -54,7 +54,7 @@ function loadTooltips() {
 
 $(function() {
     // jQuery-UI tab layout
-		$('#steps').tabs();
+    $('#steps').tabs();
     
     // jQuery Tools tooltips   
     loadTooltips();
@@ -83,7 +83,7 @@ $(function() {
               } else {
               $('.map_menu_content:visible').each(function() {
                   $storedPanel = $(this);
-                  $(this).slideUp(200);
+                  $storedPanel.slideUp(200);
                 });
               }  
               });
@@ -126,6 +126,19 @@ $(function() {
                })
             }
          });
+
+        $('#map_legend').click(function(){
+            var toggle = $(this);
+            var panel = $('#map_legend_content');
+            if(toggle.hasClass('active')) {
+                toggle.removeClass('active');
+                panel.slideUp(240);
+            }
+            else {
+                toggle.addClass('active');
+                panel.slideDown(240);
+            }
+        });
 
             
  
