@@ -77,7 +77,7 @@ def editplan(request, planid):
     except:
         plan = {}
         districts = {}
-    levels = Geolevel.objects.values_list("name", flat=True)
+    levels = Geolevel.objects.values_list("id", "name")
     demos = Subject.objects.values_list("id","name", "short_display")
     default_demo = getdefaultsubject()
     layers = []
@@ -85,7 +85,7 @@ def editplan(request, planid):
     rules = []
     targets = Target.objects.all()
     for level in levels:
-        snaplayers.append( {'layer':level,'name':level.capitalize()} )
+        snaplayers.append( {'geolevel':level[0],'layer':level[1],'name':level[1].capitalize()} )
     for demo in demos:
         layers.append( {'id':demo[0],'text':demo[2],'value':demo[1].lower(), 'isdefault':str(demo[0] == default_demo.id).lower()} )
     for target in targets:

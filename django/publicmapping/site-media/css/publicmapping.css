@@ -916,6 +916,13 @@ div.controlDiv select {
   -webkit-border-radius:5px;
   border-radius:5px;  
 }
+.tooltip h1 {
+    font-size: 11pt;
+    margin-bottom: 0.5em;
+}
+.tooltip div {
+    white-space: nowrap;
+}
 
 
 

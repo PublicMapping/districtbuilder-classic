@@ -229,11 +229,20 @@ function init() {
     layers.push(selection);
     olmap.addLayers(layers);
 
-    // Create a protocol that is used by all picking controls
-    // that picks geography at the specified snap layer.
+    // Create a protocol that is used by all editing controls
+    // that selects geography at the specified snap layer.
     var getProtocol = new OpenLayers.Protocol.WFS({
         url: 'http://' + MAP_SERVER + '/geoserver/wfs',
         featureType: getSnapLayer(),
+        featureNS: 'http://gmu.azavea.com/',
+        featurePrefix: 'gmu',
+        srsName: 'EPSG:3785',
+        geometryName: 'geom'
+    });
+
+    var idProtocol = new OpenLayers.Protocol.WFS({
+        url: 'http://' + MAP_SERVER + '/geoserver/wfs',
+        featureType: 'identify_geounit',
         featureNS: 'http://gmu.azavea.com/',
         featurePrefix: 'gmu',
         srsName: 'EPSG:3785',
@@ -434,9 +443,18 @@ function init() {
     // Create a div for tooltips on the map itself; these are used
     // when the info tool is activated.
     var tipdiv = document.createElement('div');
-    tipdiv.appendChild(document.createTextNode('District Name'));
-    tipdiv.appendChild(document.createElement('br'));
-    tipdiv.appendChild(document.createTextNode('District Display By:'));
+    var tipelem = document.createElement('h1');
+    tipelem.appendChild(document.createTextNode('District Name'));
+    tipdiv.appendChild(tipelem);
+    tipelem = document.createElement('div');
+    tipelem.appendChild(document.createTextNode('Demographic 1:'));
+    tipdiv.appendChild(tipelem);
+    tipelem = document.createElement('div');
+    tipelem.appendChild(document.createTextNode('Demographic 2:'));
+    tipdiv.appendChild(tipelem);
+    tipelem = document.createElement('div');
+    tipelem.appendChild(document.createTextNode('Demographic 3:'));
+    tipdiv.appendChild(tipelem);
     tipdiv.style.zIndex = 100000;
     tipdiv.style.position = 'absolute';
     tipdiv.style.opacity = '0.8';
@@ -445,82 +463,92 @@ function init() {
 
     // Create a control that shows the details of the district
     // underneath the cursor.
-    var hoverControl = new OpenLayers.Control.SelectFeature(
-        districtLayer,
-        {
-            hover: true,
-            onSelect: (function(){
-                var getCellText = function(cell) {
-                    if (cell.textContent) {
-                        return cell.textContent;
-                    }
-                    else {
-                        return cell.innerHTML;
-                    }
-                };
-                var highlightFunc = function(highlightFeature) {
-                    return function(idx, cell) {
-                        if (getCellText(cell) == highlightFeature.attributes.name) {
-                            cell.parentNode.style.backgroundColor = '#ffffbb';
+    var idControl = new IdGeounit({
+        autoActivate: false,
+        protocol: idProtocol
+    });
+
+    // A callback to create a popup window on the map after a peice
+    // of geography is selected.
+    var idFeature = function(e) {
+        var snapto = getSnapLayer();
+
+        // get the range of geolevels
+        var maxGeolevel = 0, minGeolevel = 9999;
+        for (var i = 0; i < SNAP_LAYERS.length; i++) {
+            if (snapto == 'simple_' + SNAP_LAYERS[i].level) {
+                maxGeolevel = SNAP_LAYERS[i].geolevel;
+            }
+            minGeolevel = Math.min(minGeolevel, SNAP_LAYERS[i].geolevel);
+        }
+        // get the breadcrumbs to this geounit, starting at the
+        // largest area (lowest geolevel) first, down to the
+        // most specific geolevel
+        var crumbs = {};
+        var ctics = {};
+        var tipFeature = e.features[0];
+        for (var glvl = minGeolevel; glvl <= maxGeolevel; glvl++) {
+            for (var feat = 0; feat < e.features.length; feat++) {
+                if (e.features[feat].data.geolevel_id == glvl) {
+                    crumbs[e.features[feat].data.id] = e.features[feat].data.name;
+                }
+                if (e.features[feat].data.geolevel_id == maxGeolevel) {
+                    tipFeature = e.features[feat];
+                    for (var demo = 0; demo < DEMOGRAPHICS.length; demo++) {
+                        if (e.features[feat].data.subject_id == DEMOGRAPHICS[demo].id) {
+                            ctics[DEMOGRAPHICS[demo].text] = parseFloat(e.features[feat].data.number);
                         }
-                        else
-                        {
-                            cell.parentNode.style.backgroundColor = '';
-                        }
-                    };
-                };
-                var showTip = function(tipFeature) {
-                    var centroid = tipFeature.geometry.getCentroid();
-                    var lonlat = new OpenLayers.LonLat( centroid.x, centroid.y );
-                    var pixel = olmap.getPixelFromLonLat(lonlat);
-                    tipdiv.style.display = 'block';
-                    tipdiv.childNodes[0].nodeValue = tipFeature.attributes.name;
-                    var select = $('#districtby')[0];
-                    var value = parseInt(tipFeature.attributes.number, 10);
-                    tipdiv.childNodes[2].nodeValue = 
-                        select.options[select.selectedIndex].text + ': ' +
-                        value.toLocaleString();
-                    var halfWidth = tipdiv.clientWidth/2;
-                    var halfHeight = tipdiv.clientHeight/2;
-                    if (pixel.x < halfWidth) { 
-                        pixel.x = halfWidth;
                     }
-                    else if (pixel.x > olmap.div.clientWidth - halfWidth) {
-                        pixel.x = olmap.div.clientWidth - halfWidth;
-                    }
-                    if (pixel.y < halfHeight) {
-                        pixel.y = halfHeight;
-                    }
-                    else if (pixel.y > (olmap.div.clientHeight-29) - halfHeight) {
-                        pixel.y = (olmap.div.clientHeight-29) - halfHeight;
-                    }
-            
-                    tipdiv.style.left = (pixel.x - halfWidth) + 'px';
-                    tipdiv.style.top = (pixel.y - halfHeight) + 'px';
-                    if (tipdiv.pending) {
-                        clearTimeout(tipdiv.timeout);
-                        tipdiv.pending = false;
-                    }
-                };
-                return function(feature){
-                    var names = $('.demographics .plantable .celldistrictname');
-                    $.each(names,highlightFunc(feature));
-                    names = $('.geography .plantable .celldist');
-                    $.each(names, highlightFunc(feature));
-                    window.status = feature.attributes.name;
-                    showTip(feature);
-                };
-            })(),
-            onUnselect: function(feature) {
-                tipdiv.pending = true;
-                tipdiv.timeout = setTimeout(function(){
-                    tipdiv.style.display = '';
-                }, 1000);
+                }
             }
         }
-    );
 
-    // A callback for feature selection in different controls.
+        // truncate the breadcrumbs into a single string
+        var place = [];
+        for (var key in crumbs) {
+            place.push(crumbs[key]);
+        }
+        place = place.join(' / ');
+
+        var centroid = tipFeature.geometry.getCentroid();
+        var lonlat = new OpenLayers.LonLat( centroid.x, centroid.y );
+        var pixel = olmap.getPixelFromLonLat(lonlat);
+        tipdiv.style.display = 'block';
+        tipdiv.childNodes[0].childNodes[0].nodeValue = place;
+        var select = $('#districtby')[0];
+        var value = parseInt(tipFeature.attributes.number, 10);
+
+        var node = 1;
+        for (var key in ctics) {
+            tipdiv.childNodes[node].firstChild.nodeValue = 
+                key + ': ' + ctics[key].toLocaleString();
+            node ++;
+        }
+
+        var halfWidth = tipdiv.clientWidth/2;
+        var halfHeight = tipdiv.clientHeight/2;
+        if (pixel.x < halfWidth) { 
+            pixel.x = halfWidth;
+        }
+        else if (pixel.x > olmap.div.clientWidth - halfWidth) {
+            pixel.x = olmap.div.clientWidth - halfWidth;
+        }
+        if (pixel.y < halfHeight) {
+            pixel.y = halfHeight;
+        }
+        else if (pixel.y > (olmap.div.clientHeight-29) - halfHeight) {
+            pixel.y = (olmap.div.clientHeight-29) - halfHeight;
+        }
+
+        tipdiv.style.left = (pixel.x - halfWidth) + 'px';
+        tipdiv.style.top = (pixel.y - halfHeight) + 'px';
+        if (tipdiv.pending) {
+            clearTimeout(tipdiv.timeout);
+            tipdiv.pending = false;
+        }
+    };
+
+        // A callback for feature selection in different controls.
     var featureSelected = function(e){
         // WARNING: not a part of the API!
         var subtract = false;
@@ -556,6 +584,7 @@ function init() {
     // events in the point and rectangle control.
     getControl.events.register('featureselected', getControl, featureSelected);
     boxControl.events.register('featureselected', boxControl, featureSelected);
+    idControl.events.register('featuresselected', idControl, idFeature);
 
     // A callback for deselecting features from different controls.
     var featureUnselected = function(e){
@@ -641,6 +670,10 @@ function init() {
         }
     });
 
+    olmap.events.register('movestart',olmap,function(){
+        tipdiv.style.display = 'none';
+    });
+
     // When the navigate map tool is clicked, disable all the 
     // controls except the navigation control.
     $('#navigate_map_tool').click(function(evt){
@@ -658,7 +691,7 @@ function init() {
         for (var i = 0; i < active.length; i++) {
             active[i].deactivate();
         }
-        hoverControl.activate();
+        idControl.activate();
     });
 
     // When the single pick tool is clicked, disable all the
@@ -711,7 +744,7 @@ function init() {
         polyControl,
         assignControl,
         new GlobalZoom(),
-        hoverControl
+        idControl
     ]);
 
     // Create a callback to update the base layer when the
@@ -808,6 +841,48 @@ function init() {
     doMapStyling();
 }
 
+IdGeounit = OpenLayers.Class(OpenLayers.Control.GetFeature, {
+    /*
+     * Initialize this control, enabling multiple selects with a single
+     * click.
+     */
+    initialize: function(options) {
+        options = options || {};
+        OpenLayers.Util.extend(options, {
+            multiple: true,
+            clickTolerance: 0.5,
+            maxFeatures: 25,
+            filterType: OpenLayers.Filter.Spatial.INTERSECTS
+        });
+
+        // concatenate events specific to vector with those from the base
+        this.EVENT_TYPES =
+            OpenLayers.Control.GetFeature.prototype.EVENT_TYPES.concat(
+            OpenLayers.Control.prototype.EVENT_TYPES
+        );
+
+        options.handlerOptions = options.handlerOptions || {};
+
+        OpenLayers.Control.prototype.initialize.apply(this, [options]);
+        
+        this.features = {};
+
+        this.handlers = {};
+        
+        this.handlers.click = new OpenLayers.Handler.Click(this,
+            {click: this.selectClick}, this.handlerOptions.click || {});
+    },
+
+    selectClick: function(evt) {
+        // Set the cursor to "wait" to tell the user we're working on their click.
+        OpenLayers.Element.addClass(this.map.viewPortDiv, "olCursorWait");
+                        
+        var bounds = this.pixelToBounds(evt.xy);
+                                        
+        this.setModifiers(evt);
+        this.request(bounds, {single: false});
+    }
+});
 
 GlobalZoom = OpenLayers.Class(OpenLayers.Control, { 
   // DOM Elements
