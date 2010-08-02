@@ -6,8 +6,8 @@
     <Name>hispanic</Name>
     <IsDefault>1</IsDefault>
     <UserStyle>
-      <Title>Tract Demographic - Political Party Chloropleth</Title>
-      <Abstract>A grayscale style showing the number of identified members of a party in a given geounit</Abstract>
+      <Title>Percent Hispanic Population</Title>
+      <Abstract>A grayscale style showing the number of identified members of a party in a given geounit.</Abstract>
       <FeatureTypeStyle>
         <Rule>
           <Title>&gt; 2.5K</Title>

@@ -4,9 +4,10 @@
   xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.0.0/StyledLayerDescriptor.xsd">
   <NamedLayer>
     <Name>pop2005</Name>
+    <IsDefault>1</IsDefault>
     <UserStyle>
-      <Title>Tract Population Chloropleth</Title>
-      <Abstract>A grayscale style showing the population numbers in a given geounit</Abstract>
+      <Title>Population</Title>
+      <Abstract>A grayscale style showing the population numbers in a given geounit.</Abstract>
       <FeatureTypeStyle>
         <Rule>
           <Title>&gt; 5K</Title>

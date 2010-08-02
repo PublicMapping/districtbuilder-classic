@@ -6,8 +6,8 @@
     <Name>black</Name>
     <IsDefault>1</IsDefault>
     <UserStyle>
-      <Title>Block Demographic - Chloropleth</Title>
-      <Abstract>A grayscale style showing the number of identified members of a population group in a given geounit</Abstract>
+      <Title>Percent Black Population</Title>
+      <Abstract>A grayscale style showing the number of identified members of a population group in a given geounit.</Abstract>
       <FeatureTypeStyle>
         <Rule>
         <Title>&gt; 25</Title>

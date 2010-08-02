@@ -6,8 +6,8 @@
     <Name>pop2005</Name>
     <IsDefault>1</IsDefault>
     <UserStyle>
-      <Title>County Population Chloropleth</Title>
-      <Abstract>A grayscale style showing the population numbers in a given geounit</Abstract>
+      <Title>Population</Title>
+      <Abstract>A grayscale style showing the population numbers in a given geounit.</Abstract>
       <FeatureTypeStyle>
         <Rule>
           <Title>&gt; 500K</Title>
