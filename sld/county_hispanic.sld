@@ -3,7 +3,8 @@
   xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.0.0/StyledLayerDescriptor.xsd">
   <NamedLayer>
-    <Name>County Demographic - Party</Name>
+    <Name>hispanic</Name>
+    <IsDefault>1</IsDefault>
     <UserStyle>
       <Title>County Demographic - Political Party Chloropleth</Title>
       <Abstract>A grayscale style showing the number of identified members of a party in a given geounit</Abstract>

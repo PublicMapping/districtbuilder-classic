@@ -3,20 +3,21 @@
   xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.0.0/StyledLayerDescriptor.xsd">
   <NamedLayer>
-    <Name>County Population</Name>
+    <Name>black</Name>
+    <IsDefault>1</IsDefault>
     <UserStyle>
-      <Title>County Population Chloropleth</Title>
-      <Abstract>A grayscale style showing the population numbers in a given geounit</Abstract>
+      <Title>Block Demographic - Chloropleth</Title>
+      <Abstract>A grayscale style showing the number of identified members of a population group in a given geounit</Abstract>
       <FeatureTypeStyle>
         <Rule>
-          <Title>&gt; 500K</Title>
-          <ogc:Filter>
-            <ogc:PropertyIsGreaterThanOrEqualTo>
-              <ogc:PropertyName>number</ogc:PropertyName>
-              <ogc:Literal>500000</ogc:Literal>
-            </ogc:PropertyIsGreaterThanOrEqualTo>
-          </ogc:Filter>
-          <PolygonSymbolizer>
+        <Title>&gt; 25</Title>
+    <ogc:Filter>
+       <ogc:PropertyIsGreaterThanOrEqualTo>
+          <ogc:PropertyName>number</ogc:PropertyName>
+          <ogc:Literal>25</ogc:Literal>
+        </ogc:PropertyIsGreaterThanOrEqualTo>
+    </ogc:Filter>
+    <PolygonSymbolizer>
             <Fill>
               <CssParameter name="fill">#666666</CssParameter>
             </Fill>
@@ -27,20 +28,20 @@
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Title>&gt; 100K</Title>
-            <ogc:Filter>
-              <ogc:And>
-                <ogc:PropertyIsGreaterThanOrEqualTo>
-                  <ogc:PropertyName>number</ogc:PropertyName>
-                  <ogc:Literal>100000</ogc:Literal>
-                </ogc:PropertyIsGreaterThanOrEqualTo>
-                <ogc:PropertyIsLessThan>
-                  <ogc:PropertyName>number</ogc:PropertyName>
-                  <ogc:Literal>500001</ogc:Literal>
-                </ogc:PropertyIsLessThan>
-              </ogc:And>
-            </ogc:Filter>          
-            <PolygonSymbolizer>
+        <Title>&gt; 10</Title>
+    <ogc:Filter>
+      <ogc:And>
+       <ogc:PropertyIsGreaterThanOrEqualTo>
+          <ogc:PropertyName>number</ogc:PropertyName>
+          <ogc:Literal>10</ogc:Literal>
+        </ogc:PropertyIsGreaterThanOrEqualTo>
+        <ogc:PropertyIsLessThan>
+          <ogc:PropertyName>number</ogc:PropertyName>
+          <ogc:Literal>25</ogc:Literal>
+        </ogc:PropertyIsLessThan>
+      </ogc:And>
+    </ogc:Filter>          
+    <PolygonSymbolizer>
             <Fill>
               <CssParameter name="fill">#ABABAB</CssParameter>
             </Fill>
@@ -51,14 +52,14 @@
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Title>&lt; 100K</Title>
-            <ogc:Filter>
-              <ogc:PropertyIsLessThan>
-                <ogc:PropertyName>number</ogc:PropertyName>
-                <ogc:Literal>100000</ogc:Literal>
-              </ogc:PropertyIsLessThan>
-            </ogc:Filter>          
-            <PolygonSymbolizer>
+        <Title>&lt; 10</Title>
+    <ogc:Filter>
+        <ogc:PropertyIsLessThan>
+          <ogc:PropertyName>number</ogc:PropertyName>
+          <ogc:Literal>10</ogc:Literal>
+        </ogc:PropertyIsLessThan>
+    </ogc:Filter>          
+    <PolygonSymbolizer>
             <Fill>
               <CssParameter name="fill">#DCDCDC</CssParameter>
             </Fill>
@@ -72,4 +73,3 @@
     </UserStyle>
   </NamedLayer>
 </StyledLayerDescriptor>
-

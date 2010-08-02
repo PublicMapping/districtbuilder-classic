@@ -3,7 +3,7 @@
   xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.0.0/StyledLayerDescriptor.xsd">
   <NamedLayer>
-    <Name>Block Population</Name>
+    <Name>pop2005</Name>
     <UserStyle>
       <Title>Block Population Chloropleth</Title>
       <Abstract>A grayscale style showing the population numbers in a given geounit</Abstract>

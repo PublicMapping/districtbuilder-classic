@@ -3,17 +3,18 @@
   xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.0.0/StyledLayerDescriptor.xsd">
   <NamedLayer>
-    <Name>County Demographic</Name>
+    <Name>black</Name>
+    <IsDefault>1</IsDefault>
     <UserStyle>
-      <Title>County Demographic - Chloropleth</Title>
+      <Title>Tract Demographic - Chloropleth</Title>
       <Abstract>A grayscale style showing the number of identified members of a population group in a given geounit</Abstract>
       <FeatureTypeStyle>
         <Rule>
-        <Title>&gt; 5K</Title>
+        <Title>&gt; 250</Title>
     <ogc:Filter>
        <ogc:PropertyIsGreaterThanOrEqualTo>
           <ogc:PropertyName>number</ogc:PropertyName>
-          <ogc:Literal>5000</ogc:Literal>
+          <ogc:Literal>250</ogc:Literal>
         </ogc:PropertyIsGreaterThanOrEqualTo>
     </ogc:Filter>
     <PolygonSymbolizer>
@@ -27,16 +28,16 @@
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-        <Title>&gt; 1000</Title>
+        <Title>&gt; 50</Title>
     <ogc:Filter>
       <ogc:And>
        <ogc:PropertyIsGreaterThanOrEqualTo>
           <ogc:PropertyName>number</ogc:PropertyName>
-          <ogc:Literal>1000</ogc:Literal>
+          <ogc:Literal>50</ogc:Literal>
         </ogc:PropertyIsGreaterThanOrEqualTo>
         <ogc:PropertyIsLessThan>
           <ogc:PropertyName>number</ogc:PropertyName>
-          <ogc:Literal>5000</ogc:Literal>
+          <ogc:Literal>250</ogc:Literal>
         </ogc:PropertyIsLessThan>
       </ogc:And>
     </ogc:Filter>          
@@ -51,11 +52,11 @@
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-        <Title>&lt; 1000</Title>
+        <Title>&lt; 50</Title>
     <ogc:Filter>
         <ogc:PropertyIsLessThan>
           <ogc:PropertyName>number</ogc:PropertyName>
-          <ogc:Literal>1000</ogc:Literal>
+          <ogc:Literal>50</ogc:Literal>
         </ogc:PropertyIsLessThan>
     </ogc:Filter>          
     <PolygonSymbolizer>
