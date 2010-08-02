@@ -25,6 +25,13 @@
             Allow from all
         </Directory>
 
+        Alias /sld/ /projects/publicmapping/trunk/sld/
+        <Directory /projects/publicmapping/trunk/sld/>
+            Options Indexes
+            Order deny,allow
+            Allow from all
+        </Directory>
+
 	ErrorLog /var/log/apache2/publicmapping-error.log
 
 	# Possible values include: debug, info, notice, warn, error, crit,

@@ -5,8 +5,8 @@
  <link rel="stylesheet" type="text/css" href="/site-media/css/reset.css"/>
     <link rel="stylesheet" type="text/css" href="/site-media/jquery/themes/custom-theme/jquery-ui-1.8.2.custom.css"/>
     <link rel="stylesheet" type="text/css" href="/site-media/css/publicmapping.css"/>
-    <script type="text/javascript" src="/site-media/openlayers/OpenLayers.js"></script><!-- production -->
-    <!-- <script type="text/javascript" src="/site-media/OpenLayers-2.9.1/lib/OpenLayers.js"></script> debug -->
+    <!--<script type="text/javascript" src="/site-media/openlayers/OpenLayers.js"></script> production -->
+    <script type="text/javascript" src="/site-media/OpenLayers-2.9.1/lib/OpenLayers.js"></script><!-- debug -->
     <script type="text/javascript">
         var MAP_SERVER = '{{ mapserver }}';
 
@@ -254,10 +254,10 @@
           </div>
           <div id="map_legend_content">
             <h1>Map Legend</h1>
-            <table>
+            <table id="basemap_legend">
                 <thead>
                     <tr>
-                        <th colspan="2">Total Population</th>
+                        <th colspan="2" id="legend_title">Total Population</th>
                     </tr>
                 </thead>
                 <tbody>

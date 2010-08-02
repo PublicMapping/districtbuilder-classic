@@ -93,6 +93,7 @@ function doMapStyling() {
     $('#OpenLayers_Control_PanZoomBar_ZoombarOpenLayers\\.Map_4').addClass('olControlZoom olControlZoomBarInactive');     
 }
 
+
 /*
  * Initialize the map. This method is called by the onload page event.
  */
@@ -747,6 +748,73 @@ function init() {
         idControl
     ]);
 
+    // get a format parser for SLDs and the legend
+    var sldFormat = new OpenLayers.Format.SLD();
+
+    // a method that will read the named layer, and return
+    // the default style
+    var getDefaultStyle = function(sld, layerName) {
+        var styles = sld.namedLayers[layerName].userStyles;
+        var style;
+        for(var i=0; i<styles.length; ++i) {
+            style = styles[i];
+            if(style.isDefault) {
+                break;
+            }
+        }
+        return style;
+    }
+
+    //
+    // get the styles associated with the current map configuration
+    //
+    var getMapStyles = function() {
+        var snap = getSnapLayer().split('simple_')[1];
+        var show = getShowBy();
+        OpenLayers.Request.GET({
+            url: '/sld/' + snap + '_' + show + '.sld',
+            method: 'GET',
+            callback: function(xhr){
+                var sld = sldFormat.read(xhr.responseXML || xhr.responseText);
+                var userStyle = getDefaultStyle(sld,getShowBy());
+                $('#legend_title').empty().append(userStyle.title);
+
+                var lbody = $('#basemap_legend tbody');
+                lbody.empty();
+
+                var rules = userStyle.rules;
+                for (var i = 0; i < rules.length; i++) {
+                    var rule = rules[i];
+                    var div = $('<div/>');
+                    div.css('background-color',rule.symbolizer.Polygon.fillColor);
+                    div.css('border-width',rule.symbolizer.Polygon.strokeWidth);
+                    div.css('border-color',rule.symbolizer.Polygon.strokeColor);
+                    div.addClass('swatch');
+                    div.addClass('basemap_swatch');
+                    var swatch = $('<td/>');
+                    swatch.width(32);
+                    swatch.append(div);
+
+                    var row = $('<tr/>');
+                    row.append(swatch);
+
+                    var title = $('<td/>');
+                    title.append( rule.title );
+
+                    row.append(title);
+
+                    lbody.append(row);
+                }
+                // foreach rule:
+                // rule.title in legend
+                // rule.filter.value <- raw value
+                // rule.symbolizer.Polygon.fillColor
+                // rule.symbolizer.Polygon.strokeColor
+                // rule.symbolizer.Polygon.strokeWidth
+            }
+        });
+    };
+
     // Create a callback to update the base layer when the
     // 'Show Boundaries for' dropdown is changed.
     var boundforChange = function(evt) {
@@ -754,6 +822,7 @@ function init() {
         var layers = olmap.getLayersByName('gmu:demo_' + evt.target.value + '_' + show);
         olmap.setBaseLayer(layers[0]);
         doMapStyling();
+        getMapStyles();
     };
 
     // Logic for the 'Snap Map to' dropdown, note that this logic
@@ -881,7 +950,9 @@ IdGeounit = OpenLayers.Class(OpenLayers.Control.GetFeature, {
                                         
         this.setModifiers(evt);
         this.request(bounds, {single: false});
-    }
+    },
+
+    CLASS_NAME: 'IdGeounit'
 });
 
 GlobalZoom = OpenLayers.Class(OpenLayers.Control, { 
