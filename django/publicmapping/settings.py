@@ -42,6 +42,7 @@ USE_I18N = True
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
 MEDIA_ROOT = '/projects/publicmapping/trunk/django/publicmapping/site-media/'
+SLD_ROOT = '/projects/publicmapping/trunk/sld/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
@@ -54,7 +55,7 @@ MEDIA_URL = '/site-media/'
 ADMIN_MEDIA_PREFIX = '/media/'
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = 'azscw8%!^i+((pwgvobc)peppb=hx3hmd7yo)3rxxqehe5d(v!'
+SECRET_KEY = config.get('publicmapping','SECRET_KEY')
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (

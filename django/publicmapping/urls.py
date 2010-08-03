@@ -22,4 +22,5 @@ urlpatterns = patterns('',
     (r'^districtmapping/', include('publicmapping.redistricting.urls')),
     (r'^$', 'publicmapping.views.index'),
     (r'^proxy$', 'publicmapping.views.proxy'),
+    (r'^sld/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.SLD_ROOT }),
 )

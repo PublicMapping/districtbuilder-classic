@@ -5,8 +5,8 @@
  <link rel="stylesheet" type="text/css" href="/site-media/css/reset.css"/>
     <link rel="stylesheet" type="text/css" href="/site-media/jquery/themes/custom-theme/jquery-ui-1.8.2.custom.css"/>
     <link rel="stylesheet" type="text/css" href="/site-media/css/publicmapping.css"/>
-    <!--<script type="text/javascript" src="/site-media/openlayers/OpenLayers.js"></script> production -->
-    <script type="text/javascript" src="/site-media/OpenLayers-2.9.1/lib/OpenLayers.js"></script><!-- debug -->
+    <script type="text/javascript" src="/site-media/openlayers/OpenLayers.js"></script><!-- production -->
+    <!-- <script type="text/javascript" src="/site-media/OpenLayers-2.9.1/lib/OpenLayers.js"></script> debug -->
     <script type="text/javascript">
         var MAP_SERVER = '{{ mapserver }}';
 
@@ -64,7 +64,7 @@
                   <script type="text/javascript">
                     for (var i = 0; i < SNAP_LAYERS.length; i++) {
                         var snap = SNAP_LAYERS[i];
-                        document.write('<option value="' + snap.layer + '">' + snap.name + '</option>');
+                        document.write('<option value="' + snap.layer + ';' + snap.level + '">' + snap.name + '</option>');
                     }
                   </script>
                 </select>
@@ -86,6 +86,7 @@
                   </script>
                 </select>
               </div>
+              <!--
               <div class="toolset_group">
                 <img src="/site-media/images/icon-help.png" class="help divtip">
                 <div class="tooltip">The selected layer's boundaries will be displayed on the map</div>                
@@ -99,6 +100,7 @@
                   </script>
                 </select>
               </div>
+              -->
               <div class="toolset_group">
                 <img src="/site-media/images/icon-help.png" class="help divtip">
                 <div class="tooltip">The appearance of the districts on the map</div>                

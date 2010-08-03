@@ -24,7 +24,9 @@ function createLayer( name, layer, extents ) {
  * Get the value of the "Snap Map to:" dropdown.
  */
 function getSnapLayer() {
-    return $('#snapto').val();
+    var orig = $('#snapto').val();
+    var items = orig.split(';');
+    return { layer: items[0], level: items[1] };
 }
 
 /* 
@@ -37,9 +39,9 @@ function getShowBy() {
 /*
  * Get the value of the "Show Boundaries for:" dropdown.
  */
-function getBoundLayer() {
-    return $('#boundfor').val();
-}
+//function getBoundLayer() {
+//    return $('#boundfor').val();
+//}
 
 /*
  * Get the value of the "Show Districts by:" dropdown. This returns
@@ -234,7 +236,7 @@ function init() {
     // that selects geography at the specified snap layer.
     var getProtocol = new OpenLayers.Protocol.WFS({
         url: 'http://' + MAP_SERVER + '/geoserver/wfs',
-        featureType: getSnapLayer(),
+        featureType: getSnapLayer().layer,
         featureNS: 'http://gmu.azavea.com/',
         featurePrefix: 'gmu',
         srsName: 'EPSG:3785',
@@ -367,7 +369,7 @@ function init() {
                 var append = this.handler.evt.shiftKey;
                 var subtract = this.handler.evt.ctrlKey;
                 var newOpts = getControl.protocol.options;
-                newOpts.featureType = getSnapLayer();
+                newOpts.featureType = getSnapLayer().layer;
                 getControl.protocol = new OpenLayers.Protocol.WFS( newOpts );
                 getControl.protocol.read({
                     filter: new OpenLayers.Filter.Spatial({
@@ -472,7 +474,7 @@ function init() {
     // A callback to create a popup window on the map after a peice
     // of geography is selected.
     var idFeature = function(e) {
-        var snapto = getSnapLayer();
+        var snapto = getSnapLayer().layer;
 
         // get the range of geolevels
         var maxGeolevel = 0, minGeolevel = 9999;
@@ -769,7 +771,7 @@ function init() {
     // get the styles associated with the current map configuration
     //
     var getMapStyles = function() {
-        var snap = getSnapLayer().split('simple_')[1];
+        var snap = getSnapLayer().layer.split('simple_')[1];
         var show = getShowBy();
         OpenLayers.Request.GET({
             url: '/sld/' + snap + '_' + show + '.sld',
@@ -785,6 +787,10 @@ function init() {
                 var rules = userStyle.rules;
                 for (var i = 0; i < rules.length; i++) {
                     var rule = rules[i];
+                    if (!('Polygon' in rule.symbolizer)) {
+                        continue;
+                    }
+
                     var div = $('<div/>');
                     div.css('background-color',rule.symbolizer.Polygon.fillColor);
                     div.css('border-width',rule.symbolizer.Polygon.strokeWidth);
@@ -805,54 +811,34 @@ function init() {
 
                     lbody.append(row);
                 }
-                // foreach rule:
-                // rule.title in legend
-                // rule.filter.value <- raw value
-                // rule.symbolizer.Polygon.fillColor
-                // rule.symbolizer.Polygon.strokeColor
-                // rule.symbolizer.Polygon.strokeWidth
             }
         });
-    };
-
-    // Create a callback to update the base layer when the
-    // 'Show Boundaries for' dropdown is changed.
-    var boundforChange = function(evt) {
-        var show = getShowBy();
-        var layers = olmap.getLayersByName('gmu:demo_' + evt.target.value + '_' + show);
-        olmap.setBaseLayer(layers[0]);
-        doMapStyling();
-        getMapStyles();
     };
 
     // Logic for the 'Snap Map to' dropdown, note that this logic
     // calls the boundsforChange callback
     $('#snapto').change(function(evt){
         var newOpts = getControl.protocol.options;
-        newOpts.featureType = getSnapLayer();
+        var show = getShowBy();
+        var snap = getSnapLayer();
+        var layers = olmap.getLayersByName('gmu:demo_' + snap.level + '_' + show);
+
+        newOpts.featureType = snap.layer;
         getControl.protocol = 
             boxControl.protocol = new OpenLayers.Protocol.WFS( newOpts );
-        var opts = $('#boundfor option');
-        for (var i = 0; i < opts.length; i++) {
-            if (newOpts.featureType.indexOf(opts[i].value) > 0) {
-                var select = $('#boundfor')[0];
-                select.selectedIndex = i;
-                boundforChange( { target:select } );
-                return;
-            }
-        }
+        olmap.setBaseLayer(layers[0]);
+        doMapStyling();
+        getMapStyles();
     });
 
     // Logic for the 'Show Map by' dropdown
     $('#showby').change(function(evt){
-        var boundary = getBoundLayer();
+        var boundary = getSnapLayer().level;
         var layers = olmap.getLayersByName('gmu:demo_' + boundary + '_' + evt.target.value);
         olmap.setBaseLayer(layers[0]);
         doMapStyling();
+        getMapStyles();
     });
-
-    // Logic for the 'Show Boundaries by' dropdown
-    $('#boundfor').change(boundforChange);
 
     // Logic for the 'Show Districts by' dropdown
     $('#districtby').change(function(evt){
