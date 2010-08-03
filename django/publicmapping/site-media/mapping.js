@@ -875,10 +875,16 @@ function init() {
         }
     });
 
+    /*
+    * Ask the user for a new district name, then assign the current selection to the new district upon 
+    * successful creation of the district
+    */
     var createNewDistrict = function() {
+        // Once we have the district name, post a request to the server to create it in the DB
         var callServer = function(name) {
             $.post('/districtmapping/plan/' + PLAN_ID + '/district/new', { name: name }, assignToNewDistrict, 'json');
         };
+        // Take the new district info and add the current selection to that districts
         var assignToNewDistrict = function(data, textStatus, XMLHttpRequest) {
             if (data.success) {
                 $('#assign_district').append('<option value="' + data.district_id + '">' + data.district_name + '</option>');
@@ -887,13 +893,14 @@ function init() {
                 $('<div class="error">' + data.message + '</div>').dialog({ title: "Sorry", autoOpen: true });
             }
         };
-        $('<div>Please enter a name for your new district<input id="newdistrictname" type="text" /></div>').dialog({
+        // Create a dialog to get the new district's name from the user.  On close, destroy the dialog.
+        $('<div id="newdistrictdialog">Please enter a name for your new district<input id="newdistrictname" type="text" /></div>').dialog({
             modal: true,
             autoOpen: true,
             title: 'New District',
             buttons: { 
-                'OK': function() { callServer($('#newdistrictname').val()); $(this).dialog("close"); },
-                'Cancel': function() { $(this).dialog("close"); }
+                'OK': function() { callServer($('#newdistrictname').val()); $(this).dialog("close"); $('#newdistrictdialog').remove(); },
+                'Cancel': function() { $(this).dialog("close"); $('#newdistrictdialog').remove(); }
             }
          });
     };
