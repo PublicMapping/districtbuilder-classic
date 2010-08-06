@@ -170,7 +170,7 @@ class Plan(models.Model):
 
 
 class PlanForm(ModelForm):
-    class _meta:
+    class Meta:
         model=Plan
     
 

@@ -16,7 +16,6 @@ publicmapping.chooseplan = function(options) {
         
         _nameRequired,
         _editType,
-        _selectionType,
         _dialog;
 
     _self.init = function() {
@@ -39,10 +38,10 @@ publicmapping.chooseplan = function(options) {
         $('.Selectors').hide();
         $('.SelectionGroup').hide();
         $('#SelectorHelp').show();
-        $('#btnBlank').click(function() { window.location = '/districtmapping/plan/create'; });
-        $('#btnTemplate').click(function() { showOnly('#TemplateSelection','#btnTemplate'); });
-        $('#btnShared').click(function() { showOnly('#SharedSelection','#btnShared'); });
-        $('#btnMine').click(function() { showOnly('#MineSelection','#btnMine'); });
+        $('#btnBlank').click(function() { _editType = 'blank'; showOnly('#BlankSelection', '#btnBlank'); });
+        $('#btnTemplate').click(function() { _editType = 'template'; showOnly('#TemplateSelection','#btnTemplate'); });
+        $('#btnShared').click(function() { _editType = 'shared'; showOnly('#SharedSelection','#btnShared'); });
+        $('#btnMine').click(function() { _editType = 'mine'; showOnly('#MineSelection','#btnMine'); });
         $('#btnSelectPlan').click(selectPlan);
         $('#NewName').hide();
         $('input:radio').click( function() {
@@ -66,7 +65,7 @@ publicmapping.chooseplan = function(options) {
         $(selectorId).show();
         $('#btnSelectPlan').show();
         $(selectorId + ' .Selectors').show().addClass('active');
-        if (selectorId == '#TemplateSelection' || selectorId == '#SharedSelection' ||
+        if (_editType == 'blank' || _editType == 'template' || _editType == 'shared' ||
             ( selectorId == '#MineSelection' && $('input:radio:checked').val() == 'saveas'  )) {
             $('#NewName').show();
             _nameRequired = true;
@@ -82,7 +81,8 @@ publicmapping.chooseplan = function(options) {
         var activeSelector = $('select.active');
         if (_nameRequired) {
             var name = $('#txtNewName').val();
-            var url = '/districtmapping/plan/' + activeSelector.val() + '/copy/'
+            var url = '/districtmapping/plan/' + activeSelector.val() + '/copy/';
+            if (_editType == 'blank') url = '/districtmapping/plan/create/';
             if (name.trim().length == 0) { alert ('A name for the copied template is required'); return; }
             if (OpenLayers) {
                 OpenLayers.Element.addClass(document.getElementById('btnSelectPlan'),'olCursorWait');

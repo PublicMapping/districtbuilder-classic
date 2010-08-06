@@ -108,17 +108,19 @@ def editplan(request, planid):
 
 @login_required
 def createplan(request):
+    status = { 'success': False, 'message': 'Unspecified Error' }
     if request.method == "POST":
-        form = PlanForm(request.POST)
-        if form.is_valid():
-            # make a new plan
-            model = form.save()
-            return HttpResponseRedirect('/districtmapping/plan/%s/edit' % model.id)
-    else:
-        form = PlanForm()
-    return render_to_response('createplan.html', {
-        'form': form,
-    })
+        name = request.POST['name']
+        plan = Plan(name = name, owner = request.user)
+        try:
+            plan.save()
+            data = serializers.serialize("json", [ plan ])
+            return HttpResponse(data)    
+        except:
+            status = { 'success': False, 'message': 'Couldn\'t save new plan' }
+            return HttpResponse(json.dumps(status),mimetype='application/json')
+    status['message'] = 'Didn\'t submit name through POST'
+    return HttpResponse(json.dumps(status),mimetype='application/json')
 
 @login_required
 def publishplan(request, planid):
