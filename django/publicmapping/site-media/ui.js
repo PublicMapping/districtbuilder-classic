@@ -139,7 +139,4 @@ $(function() {
                 panel.slideDown(240);
             }
         });
-
-            
- 
 	});

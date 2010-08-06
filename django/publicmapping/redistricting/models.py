@@ -168,6 +168,8 @@ class PlanForm(ModelForm):
     
 
 class District(models.Model):
+    class Meta:
+        ordering = ['name']
     district_id = models.PositiveIntegerField(default=1)
     name = models.CharField(max_length=200)
     plan = models.ForeignKey(Plan)
@@ -176,6 +178,18 @@ class District(models.Model):
     version = models.PositiveIntegerField(default=0)
     objects = models.GeoManager()
     
+    
+    def sortKey(self):
+        """This can be used to sort districts by name, with numbered districts first
+        """
+        name = self.name;
+        if name.startswith('District '):
+            name = name.rsplit(' ', 1)[1]
+        if name.isdigit():
+            return '%03d' % int(name)
+        return name 
+
+
     def __unicode__(self):
         return self.name
 

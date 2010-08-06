@@ -72,6 +72,7 @@ def editplan(request, planid):
     try:
         plan = Plan.objects.get(pk=planid)
         districts = plan.district_set.all()
+        districts = sorted(list(districts), key = lambda district: district.sortKey())
         if not can_edit(request.user, plan):
             plan = {}
     except:
@@ -213,7 +214,7 @@ def getdemographics(request, planid):
         if dist_name.startswith('District '):
             dist_name = district.name.rsplit(' ', 1)[1]
 
-        stats = { 'name': dist_name, 'characteristics': [] }
+        stats = { 'name': dist_name, 'district_id': district.district_id, 'characteristics': [] }
         for subject in subjects:
             subject_name = subject.short_display
             characteristics = district.computedcharacteristic_set.filter(subject = subject) 
@@ -257,7 +258,7 @@ def getgeography(request, planid):
         if dist_name.startswith('District '):
             dist_name = district.name.rsplit(' ', 1)[1]
 
-        stats = { 'name': dist_name }
+        stats = { 'name': dist_name, 'district_id': district.district_id }
         characteristics = district.computedcharacteristic_set.filter(subject = subject)
 
         if characteristics.count() == 0:

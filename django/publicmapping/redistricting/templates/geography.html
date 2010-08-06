@@ -13,7 +13,7 @@
                       <thead>
                          {% if district_values %}
                           <tr>
-                              <th class="celldist cell1">Dist.</th>
+                              <th class="celldistrictname cell1">Dist.</th>
                               <th class="celldemo cell2">{{ name }}</th>
                               <th class="cellcontig cell3">Contiguity</th>
                               <th class="cellcompact cell4">Compactness</th>
@@ -26,9 +26,9 @@
                     {% if district_values %}
                        <table>
                           <tbody>
-                              {% for stat in district_values|dictsort:'name' %}
-                              <tr class="{% cycle 'odd' 'even' %}">
-                                  <td class="celldist cell1">{{ stat.name}}</td>
+                              {% for stat in district_values %}
+                              <tr class="{% cycle 'odd' 'even' %} inforow_{{ stat.district_id }}">
+                                  <td class="celldistrictname cell1">{{ stat.name}}</td>
                                   <td class="celldemo cell2">
                                     <span class="popstatus {{ stat.css_class }}"> 
                                          {{ stat.demo|intcomma }}

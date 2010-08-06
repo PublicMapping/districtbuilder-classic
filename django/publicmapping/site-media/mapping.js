@@ -583,6 +583,38 @@ function init() {
         }
     };
 
+
+    /*
+    * This will return the maps's truly visible bounds; if the info
+    * tabs on the right are up, that's the usual map bounds. If the 
+    * info tabs are showing, it's the visible area of the map to the 
+    * left of those tabs
+    */
+    var getVisibleBounds = function() {
+        if ($('.map_menu_content:visible').length > 0) {
+            var offset = $('#map_menu_header').position();
+            var bounds = olmap.getExtent();
+            var lonLat = olmap.getLonLatFromPixel(new OpenLayers.Pixel(offset.left, offset.top));
+            bounds.right = lonLat.lon;
+            return bounds;
+        }
+        return undefined;
+    }
+    
+    /*
+    * This method is useful to determine whether an item is visible
+    * to the user - pass in the bounds from getVisibleBounds if the 
+    * info tabs are showing
+    */ 
+    var featureOnScreen = function(feature, bounds) {
+        if (bounds) {
+            return bounds.intersectsBounds(feature.geometry.getBounds());
+        } else {
+            return feature.onScreen();
+        }
+    
+    }
+
     // Connect the featureSelected callback above to the featureselected
     // events in the point and rectangle control.
     getControl.events.register('featureselected', getControl, featureSelected);
@@ -890,7 +922,38 @@ function init() {
             }
          });
     };
+    /*
+    * After the map has finished moving, this method updates the jQuery data 
+    * attributes of the geography and demographics tables if different
+    * districts are now visible
+    */
 
+    olmap.prevVisibleDistricts = '';
+    var sortByVisibility = function() {
+        var visibleDistricts = '';
+        var visible, notvisible = '';
+        for (feature in districtLayer.features) {
+            var feature = districtLayer.features[feature];
+            var inforow = $('.inforow_' + feature.attributes.district_id);
+            if (featureOnScreen(feature, getVisibleBounds())) {
+                inforow.data('isVisibleOnMap', true);
+                visibleDistricts += feature.id;
+            } else {
+                inforow.data('isVisibleOnMap', false);
+            }
+        }
+        if (visibleDistricts != olmap.prevVisibleDistricts) {
+            var demosorter = viewablesorter({ target: '.demographics tbody' }).init();
+            var geosorter = viewablesorter({ target: '.geography tbody' }).init();
+            demosorter.sortTable();
+            geosorter.sortTable();
+            olmap.prevVisibleDistricts = visibleDistricts;
+        }
+    };
+
+    districtLayer.events.register("loadend", districtLayer, sortByVisibility);
+    olmap.events.register("moveend", olmap, sortByVisibility);
+    
     // A method for manually refreshing the statistics in the sidebar
     $('#updatestatsbtn').click( updateStats );
 
