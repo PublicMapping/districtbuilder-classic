@@ -14,7 +14,11 @@ class Subject(models.Model):
     short_display = models.CharField(max_length = 25, blank=True)
     description = models.CharField(max_length= 500, blank=True)
     is_displayed = models.BooleanField(default=True)
+    sort_key = models.PositiveIntegerField(default=1)
     format_string = models.CharField(max_length=50, blank=True)
+
+    class Meta:
+        ordering = ['sort_key']
 
     def __unicode__(self):
         return self.display
@@ -60,6 +64,9 @@ class Target(models.Model):
     subject = models.ForeignKey(Subject)
     lower = models.PositiveIntegerField()
     upper = models.PositiveIntegerField()
+
+    class Meta:
+        ordering = ['subject']
 
     def __unicode__(self):
         return u'%s : %s - %s' % (self.subject, self.lower, self.upper)
@@ -247,6 +254,9 @@ class ComputedCharacteristic(models.Model):
     number = models.DecimalField(max_digits=12,decimal_places=4)
     percentage = models.DecimalField(max_digits=6,decimal_places=6, null=True, blank=True)
     objects = models.GeoManager()
+
+    class Meta:
+        ordering = ['subject']
 
 def collect_geom(sender, **kwargs):
     kwargs['instance'].geom = kwargs['instance'].geounits.collect()

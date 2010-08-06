@@ -5,7 +5,7 @@
     {% load humanize %}
   <div class="plansummary">
       <h3>{{ plan.name }}</h3>
-    {% for target in aggregate|dictsort:'name' %}
+    {% for target in aggregate %}
       <div><label>{{ target.name }}</label> <span id="totalpop" class="value">{{ target.value|intcomma  }}</span></div>
     {% endfor %}
   </div>
@@ -15,7 +15,7 @@
          {% if aggregate %}
           <tr>
              <th class="celldist cell1">Dist.</th>
-              {% for target in aggregate|dictsort:'name' %}
+              {% for target in aggregate %}
                       <th class="cellsubjects {% cycle 'cell2' 'cell3' 'cell4' %}">{{ target.name|intcomma }}</th>
               {% endfor %}
           </tr>
@@ -29,7 +29,7 @@
                 {% for district in district_values %}
               <tr class="{% cycle 'odd' 'even' %} inforow_{{ district.district_id }}">
                   <td class="celldistrictname cell1">{{ district.name }}</td>
-                    {% for characteristic in district.characteristics|dictsort:'name' %}
+                    {% for characteristic in district.characteristics %}
                   <td class="cellvalue {% cycle 'cell2' 'cell3' 'cell4'%}">
                       {{ characteristic.value|intcomma }}
                   </td>

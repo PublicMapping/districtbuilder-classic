@@ -4,7 +4,7 @@
                     {% load humanize %}
                   <div class="plansummary">
                       <h3>{{ plan.name }}</h3>
-                    {% for subject in aggregate|dictsort:'name' %}
+                    {% for subject in aggregate %}
                       <div><label>{{ subject.name }}</label> <span id="totalpop" class="value">{{ subject.value|intcomma  }}</span></div>
                     {% endfor %}
                   </div>
