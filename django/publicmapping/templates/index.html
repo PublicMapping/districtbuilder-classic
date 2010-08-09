@@ -162,7 +162,7 @@
             if (username.val() == '') {
                 username.removeClass('field');
                 username.addClass('error');
-                return;
+                return false;
             }
             else {
                 username.removeClass('error');
@@ -175,7 +175,7 @@
                 newpassword1.addClass('error');
                 newpassword2.removeClass('field');
                 newpassword2.addClass('error');
-                return;
+                return false;
             }
             else {
                 newpassword1.removeClass('error');
@@ -187,7 +187,7 @@
             if (passwordhint.val() == '') {
                 passwordhint.removeClass('field');
                 passwordhint.addClass('error');
-                return;
+                return false;
             }
             else {
                 passwordhint.addClass('field');
@@ -196,7 +196,7 @@
 
             if (!agree[0].checked) {
                 $('#agreelabel').addClass('required');
-                return;
+                return false;
             }
             
             jQuery.ajax({
