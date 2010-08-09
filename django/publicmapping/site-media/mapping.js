@@ -326,6 +326,7 @@ function init() {
                 var mode = data.success ? 'select' : 'error';
                 if (data.success) {
                     updateInfoDisplay();
+                    $('#saveplaninfo').trigger('planSaved', [ data.edited ]);
                 }
                 else {
                     OpenLayers.Element.removeClass(olmap.viewPortDiv, 'olCursorWait');

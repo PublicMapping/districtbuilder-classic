@@ -127,6 +127,13 @@ $(function() {
             }
          });
 
+        $('#saveplaninfo').bind('planSaved', function(event, time) {
+            var date = new Date(time);
+            var hours = date.getHours();
+            var minutes = date.getMinutes();
+            $('#saveplaninfo').text('Last Saved at ' + hours + ':' + minutes < 10 ? '0' + minutes : minutes);
+        });
+
         $('#map_legend').click(function(){
             var toggle = $(this);
             var panel = $('#map_legend_content');

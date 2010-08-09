@@ -274,7 +274,14 @@ def set_district_id(sender, **kwargs):
         if district.district_id > settings.MAX_DISTRICTS + 1:
             raise ValidationError("Too many districts already.  Reached Max Districts setting")
 
+def update_plan_edited_time(sender, **kwargs):
+    district = kwargs['instance']
+    plan = district.plan;
+    plan.edited = datetime.now()
+    plan.save()
+
 pre_save.connect(set_district_id, sender=District)
+post_save.connect(update_plan_edited_time, sender=District)
 
 def set_geounit_mapping(sender, **kwargs):
     """When a new plan is saved, all geounits must be inserted into the Unassigned districts and a 

@@ -152,6 +152,8 @@ def newdistrict(request, planid):
                 district.save()
                 status['success'] = True
                 status['message'] = 'Created new district'
+                plan = Plan.objects.get(pk=planid)
+                status['edited'] = plan.edited.isoformat()
                 status['district_id'] = district.district_id
                 status['district_name'] = district.name
             except ValidationError:
@@ -176,6 +178,8 @@ def addtodistrict(request, planid, districtid):
             fixed = plan.add_geounits(districtid, geounit_ids, geolevel)
             status['success'] = True;
             status['message'] = 'Updated %d districts' % fixed
+            plan = Plan.objects.get(pk=planid)
+            status['edited'] = plan.edited.isoformat()
         except: 
             status['message'] = 'Could not add units to district.'
     else:

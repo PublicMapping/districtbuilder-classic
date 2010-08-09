@@ -314,7 +314,11 @@
       </div>
      </div>
      <div class="toolset_group"> 
-          <div id="saveplanbtn">Save Plan</div>
+        {% if plan.edited %}
+          <div id="saveplaninfo" class="savedat">Plan saved at {{ plan.edited|date:"m/d P" }} </div>
+        {% else %}
+          <div id="saveplaninfo" class="savedat">Plan not saved</div>
+        {% endif %}
       </div>
       <div class="toolset_group last"> 
           <div id="difplanbtn">Open New Plan</div>
@@ -343,11 +347,11 @@
     {% if plan.name %}
         $('.geography').load('/districtmapping/plan/{{plan.id}}/geography?demo=3');
         $('.demographics').load('/districtmapping/plan/{{plan.id}}/demographics');      
-        var publish = publishplan({
-            target: $('#saveplanbtn'),
-            container: $('#DialogContainer'),
-            modal: true,
-        }).init();
+//        var publish = publishplan({
+//            target: $('#saveplanbtn'),
+//            container: $('#DialogContainer'),
+//            modal: true,
+//        }).init();
     {% endif %}
     });
 </script>

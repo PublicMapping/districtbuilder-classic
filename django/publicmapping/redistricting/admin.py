@@ -25,7 +25,7 @@ class DistrictAdmin(admin.OSMGeoAdmin):
 
 class PlanAdmin(admin.ModelAdmin):
     inlines = [DistrictInline]
-    list_display = ('name','is_template','is_temporary','owner',)
+    list_display = ('name','is_template','is_temporary','owner','created','edited',)
     list_filter = ('is_template','is_temporary',)
     ordering = ('name',)
 
