@@ -97,4 +97,4 @@ TEST_RUNNER = 'django.contrib.gis.tests.run_tests'
 POSTGIS_TEMPLATE='template_postgis'
 MAX_DISTRICTS = 18
 PLAN_TEMPLATE = 'default'
-DEFAULT_DISTRICT_DISPLAY = 'POPTOT' # can be subject id, name, or display
+DEFAULT_DISTRICT_DISPLAY = 'POP2005' # can be subject id, name, or display

@@ -169,3 +169,88 @@ class RedistrictingTest(unittest.TestCase):
         district_map = DistrictGeounitMapping.objects.filter(plan = self.p, district = unassigned)
         base_geounit_count = Geounit.objects.filter(geolevel = settings.BASE_GEOLEVEL).count()
         self.assertEqual(district_map.count(), base_geounit_count, 'Test plan was not mapped to all districts on saving') 
+
+
+class GeounitMixTester(unittest.TestCase):
+    def setUp(self):
+        self.longMessage = True
+
+        # need geounits for ids & geometries
+        self.geolevels = [
+            Geolevel(name='first level'),
+            Geolevel(name='second level'),
+            Geolevel(name='third level')
+        ]
+
+        self.geounits = {}
+
+        dim = 3.0
+        for gl in self.geolevels:
+            gl.save()
+
+            self.geounits[gl.id] = []
+            for x in range(0,int(dim)):
+                for y in range(0,int(dim)):
+                    ring = LinearRing( 
+                        Point(((x/dim),(y/dim))), 
+                        Point((((x+1)/dim),(y/dim))), 
+                        Point((((x+1)/dim),((y+1)/dim))), 
+                        Point(((x/dim),((y+1)/dim))), 
+                        Point(((x/dim),(y/dim))) )
+                    gu = Geounit(
+                        name=('Unit %d-%d' % (gl.id,(y * int(dim) + x))), 
+                        geolevel=gl,
+                        geom=MultiPolygon(Polygon(ring)),
+                        simple=MultiPolygon(Polygon(ring))
+                    )
+                    gu.save()
+                    self.geounits[gl.id].append(gu)
+            dim *= 3.0
+        settings.BASE_GEOLEVEL = self.geolevels[2].id
+
+    def test_numgeolevels(self):
+        self.assertEquals(3, len(self.geolevels), 'Number of geolevels for mixed geounits is incorrect.')
+
+    def test_numgeounits1(self):
+        self.assertEquals(9, len(self.geounits[self.geolevels[0].id]), 'Number of geounits at geolevel "%s" is incorrect.' % self.geolevels[0].name)
+
+    def test_numgeounits2(self):
+        self.assertEquals(81, len(self.geounits[self.geolevels[1].id]), 'Number of geounits at geolevel "%s" is incorrect.' % self.geolevels[1].name)
+
+    def test_numgeounits3(self):
+        self.assertEquals(729, len(self.geounits[self.geolevels[2].id]), 'Number of geounits at geolevel "%s" is incorrect.' % self.geolevels[2].name)
+
+    def test_allunitscount(self):
+        unit1 = self.geounits[self.geolevels[0].id][0]
+        #print "EWKT %s %s" % (self.geolevels[0].name, unit1.geom.ewkt)
+
+        unit2 = self.geounits[self.geolevels[1].id][0]
+        #print "EWKT %s %s" % (self.geolevels[1].name, unit2.geom.ewkt)
+
+        self.assertTrue(unit1.geom.contains(unit2.geom), "First unit does not contain secont unit.")
+
+        unit3 = self.geounits[self.geolevels[2].id][0]
+        #print "EWKT %s %s" % (self.geolevels[2].name, unit3.geom.ewkt)
+
+        self.assertTrue(unit1.geom.contains(unit3.geom), "First unit does not contain second unit.")
+        self.assertTrue(unit2.geom.contains(unit3.geom), "Second unit does not contain third unit.")
+
+    def test_get_all_in(self):
+        level = self.geolevels[0]
+        units = self.geounits[level.id]
+        geounit_ids = tuple([units[0].id, units[1].id])
+
+        units = Geounit.objects.filter(geom__within=units[0].geom,geolevel__gt=level.id)
+
+        numunits = len(units)
+        self.assertEquals(90, numunits, "Number of geounits within a high-level geounit is incorrect. (%d)" % numunits)
+
+    def test_get_base(self):
+        level = self.geolevels[0]
+        units = self.geounits[level.id]
+        geounit_ids = tuple([units[0].id, units[1].id])
+
+        units = Geounit.objects.filter(geom__within=units[0].geom,geolevel=settings.BASE_GEOLEVEL)
+
+        numunits = len(units)
+        self.assertEquals(81, numunits, "Number of geounits within a high-level geounit is incorrect. (%d)" % numunits)

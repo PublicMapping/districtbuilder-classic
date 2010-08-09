@@ -1,7 +1,7 @@
 from django.contrib.gis.db import models
 from django.contrib.gis.geos import MultiPolygon
 from django.contrib.auth.models import User
-from django.db.models import Sum, Max
+from django.db.models import Sum, Max, Q
 from django.db.models.signals import pre_save, post_save
 from django.forms import ModelForm
 from django.conf import settings
@@ -38,6 +38,11 @@ class Geounit(models.Model):
 
     @staticmethod
     def get_base_geounits(geounit_ids, geolevel):
+        """Get the geounits at the base geolevel that comprise the
+        geometry described by the list of geounit_ids. This means
+        that the geounit_ids for blocks are returned if a list of
+        county ids are passed in along with the county geolevel.
+        """
         from django.db import connection, transaction
         cursor = connection.cursor()
         cursor.execute('SELECT id from redistricting_geounit where geolevel_id = %s and St_within(st_centroid(geom), (select st_simplify(st_union(geom), 10) from redistricting_geounit where geolevel_id = %s and id in %s))', [int(settings.BASE_GEOLEVEL), int(geolevel), geounit_ids])
@@ -46,6 +51,79 @@ class Geounit(models.Model):
         for row in ids:
             results += row
         return results
+
+    @staticmethod
+    def get_mixed_geounits(geounit_ids, geolevel, boundary, inside):
+        """Get the geounit ids that are inside or outside of the boundary, 
+        starting at the highest geolevel, and drilling down to get the 
+        edge cases. These geounits comprise the incremental change to 
+        the boundary.
+        """
+
+        levels = Geolevel.objects.all().values_list('id',flat=True).order_by('id')
+        current = None
+        selection = None
+        units = []
+        for level in levels:
+            # if this geolevel is the requested geolevel
+            if geolevel == level:
+                guFilter = Q(id__in=geounit_ids)
+
+                selection = Geounit.objects.filter(guFilter).unionagg()
+
+                print "Initial filter: %s" % guFilter
+
+                if not inside:
+                    # select the geounits at the geolevel, but outside 
+                    # the boundary
+                    guFilter = (~Q(geom__within=boundary) & guFilter)
+                    return []
+                else:
+                    guFilter = (Q(geom__within=boundary) & guFilter)
+
+                units += list(Geounit.objects.filter(guFilter))
+
+                # if we're at the base level, and haven't collected any
+                # geometries, return the units here
+                if level == settings.BASE_GEOLEVEL:
+                    return units
+
+            # only query geolevels at or below (smaller in size, bigger
+            # in id) the geolevel parameter
+            elif geolevel < level:
+                # union the selected geometries
+                union = None
+                for selected in units:
+                    if union is None:
+                        union = selected.geom
+                    else:
+                        union = union.union(selected.geom)
+
+                # set or merge this onto the existing selection
+                if current is None and union is None:
+                    intersects = selection
+                else:
+                    if current is None:
+                        current = union
+                    else:
+                        current.union(union)
+                    intersects = selection.difference(current)
+
+                # the remainder geometry is the intersection of the district
+                # and the difference of the selected geounits and the 
+                # current extent
+                remainder = boundary.intersection(intersects)
+
+                print "Getting geounits at level %d, within a %s with %d points." % (level,remainder.geom_type,remainder.num_coords)
+                guFilter = Q(geolevel=level) & Q(geom__within=remainder)
+                units += list(Geounit.objects.filter(guFilter))
+
+                print "Units are now %d geounits." % len(units)
+
+        return units
+
+
+        
 
     def __unicode__(self):
         return self.name
@@ -72,6 +150,10 @@ class Target(models.Model):
         return u'%s : %s - %s' % (self.subject, self.lower, self.upper)
 
 class Plan(models.Model):
+    """A plan contains a collection of districts that divide up a state.
+    A plan may also be a template, in which case it is usable as a starting
+    point by all other users on the system.
+    """
     name = models.CharField(max_length=200,unique=True)
     is_template = models.BooleanField(default=False)
     is_temporary = models.BooleanField(default=False)
@@ -86,9 +168,8 @@ class Plan(models.Model):
 
     def add_geounits(self, districtid, geounit_ids, geolevel):
         """Add the requested geounits to the given district, and remove
-        them from whichever district they're currently in
-       
-        Will return the number of districts effected by the operation
+        them from whichever district they're currently in. 
+        Will return the number of districts effected by the operation.
         """
         if (geolevel != settings.BASE_GEOLEVEL):
             base_geounit_ids = Geounit.get_base_geounits(geounit_ids, geolevel)

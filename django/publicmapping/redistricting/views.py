@@ -1,7 +1,7 @@
 from django.http import *
 from django.core import serializers
 from django.core.exceptions import ValidationError
-from django.db import IntegrityError
+from django.db import IntegrityError, connection
 from django.db.models import Sum
 from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import login_required
@@ -184,6 +184,9 @@ def addtodistrict(request, planid, districtid):
             status['message'] = 'Could not add units to district.'
     else:
         status['message'] = 'Geounits weren\'t found in a district.'
+
+    # debug the times used for each query
+    #status['queries'] = json.dumps(connection.queries)
 
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
