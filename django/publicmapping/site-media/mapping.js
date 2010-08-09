@@ -965,6 +965,9 @@ function init() {
 
     //apply the PanZoom classes
     doMapStyling();
+
+    // update the legend
+    getMapStyles();
 }
 
 IdGeounit = OpenLayers.Class(OpenLayers.Control.GetFeature, {
