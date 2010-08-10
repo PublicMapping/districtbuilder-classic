@@ -60,6 +60,7 @@ class Geounit(models.Model):
         the boundary.
         """
 
+        geolevel = int(geolevel)
         levels = Geolevel.objects.all().values_list('id',flat=True).order_by('id')
         current = None
         selection = None
@@ -70,13 +71,13 @@ class Geounit(models.Model):
                 guFilter = Q(id__in=geounit_ids)
 
                 selection = Geounit.objects.filter(guFilter).unionagg()
-
+                simple = boundary.simplify(tolerance=100.0,preserve_topology=True)
                 if not inside:
                     # select the geounits at the geolevel, but outside 
                     # the boundary
-                    guFilter = (~Q(geom__overlaps=boundary) & guFilter)
+                    guFilter = (~Q(geom__overlaps=simple) & guFilter)
                 else:
-                    guFilter = (Q(geom__within=boundary) & guFilter)
+                    guFilter = (Q(geom__within=simple) & guFilter)
 
                 units += list(Geounit.objects.filter(guFilter))
 
@@ -121,9 +122,30 @@ class Geounit(models.Model):
 
                     remainder = remainder.intersection(intersects)
 
+                if remainder.geom_type == 'GeometryCollection':
+                    union = None
+                    for i in range(0,remainder.num_geom):
+                        if remainder[i].geom_type == 'MultiPolygon':
+                            if union is None:
+                                union = remainder[i]
+                            else:
+                                for poly in remainder[i]:
+                                    union.append(poly)
+                        elif remainder[i].geom_type == 'Polygon':
+                            if union is None:
+                                union = MultiPolygon(remainder[i])
+                            else:
+                                union.append(remainder[i])
+                        else:
+                            # do nothing if it's not some kind of poly
+                            pass
 
-                guFilter = Q(geolevel=level) & Q(geom__within=remainder)
-                units += list(Geounit.objects.filter(guFilter))
+                    remainder = union
+
+                if not remainder is None:
+                    simple = remainder.simplify(tolerance=100.0,preserve_topology=True)
+                    guFilter = Q(geolevel=level) & Q(geom__within=simple)
+                    units += list(Geounit.objects.filter(guFilter))
 
         return units
 
@@ -176,29 +198,18 @@ class Plan(models.Model):
         them from whichever district they're currently in. 
         Will return the number of districts effected by the operation.
         """
-        if (geolevel != settings.BASE_GEOLEVEL):
-            base_geounit_ids = Geounit.get_base_geounits(geounit_ids, geolevel)
-        else:
-            base_geounit_ids = geounit_ids
-
-        # get the geometry of all these geounits that are being added
-        geounits = Geounit.objects.filter(id__in=geounit_ids).iterator()
-        incremental = None
-        for geounit in geounits:
-            if incremental is None:
-                incremental = geounit.geom
-            else:
-                incremental = geounit.geom.union(incremental)
+        
+        incremental = Geounit.objects.filter(id__in=geounit_ids).unionagg()
 
         # incremental is the geometry that is changing
 
         target = self.district_set.get(district_id=districtid)
 
-        DistrictGeounitMapping.objects.filter(geounit__in=base_geounit_ids, plan=self).update(district=target)
-
         fixed = 0
-        districts = self.district_set.filter(geom__intersects=incremental)
+        districts = self.district_set.filter(~Q(id=target.id),geom__intersects=incremental)
         for district in districts:
+            # compute the geounits before changing the boundary
+            geounits = Geounit.get_mixed_geounits(geounit_ids, geolevel, district.geom, True)
             difference = district.geom.difference(incremental)
             if difference.geom_type == 'MultiPolygon':
                 district.geom = difference
@@ -215,9 +226,10 @@ class Plan(models.Model):
                 district.simple = simple
             district.save()
 
-            district.computedcharacteristic_set.all().delete()
-            district.update_stats()
-            fixed += 1
+            if district.delta_stats(geounits,False):
+                fixed += 1
+        # get the geounits before changing the target geometry
+        geounits = Geounit.get_mixed_geounits(geounit_ids, geolevel, target.geom, False)
 
         if target.geom is None:
             if incremental.geom_type == 'Polygon':
@@ -239,9 +251,8 @@ class Plan(models.Model):
            
         target.save();
 
-        target.computedcharacteristic_set.all().delete()
-        target.update_stats()
-        fixed += 1
+        if target.delta_stats(geounits,True):
+            fixed += 1
 
         return fixed
 
@@ -287,6 +298,10 @@ class District(models.Model):
         return self.name
 
     def update_stats(self):
+        """Update the stats for this district, and save them in the
+        ComputedCharacteristic table. This method aggregates the statistics
+        for all the geounits in the mapping table for this district.
+        """
         all_subjects = Subject.objects.all().order_by('name').reverse()
         changed = False
         for subject in all_subjects:
@@ -299,6 +314,28 @@ class District(models.Model):
                     computed.save()
                     changed = True
         return changed
+
+    def delta_stats(self,geounits,combine):
+        """Update the stats for this district incrementally. This method
+        iterates over all the computed characteristics and adds or removes
+        the characteristic values for the specific geounits only.
+        """
+        all_subjects = Subject.objects.all()
+        changed = False
+        for subject in all_subjects:
+            aggregate = Characteristic.objects.filter(geounit__in=geounits, subject__exact=subject).aggregate(Sum('number'))['number__sum']
+            if aggregate:
+                computed = ComputedCharacteristic.objects.filter(subject=subject,district=self)
+                if computed:
+                    computed = computed[0]
+                    if combine:
+                        computed.number += aggregate
+                    else:
+                        computed.number -= aggregate
+                    computed.save();
+                    changed = True
+        return changed
+        
 
     def get_schwartzberg(self):
         """This is the Schwartzberg measure of compactness, which is the measure of the perimeter of the district 
