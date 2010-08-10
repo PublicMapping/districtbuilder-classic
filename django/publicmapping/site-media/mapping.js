@@ -608,7 +608,7 @@ function init() {
     * info tabs are showing
     */ 
     var featureOnScreen = function(feature, bounds) {
-        if (bounds) {
+        if (bounds && feature.geometry) {
             return bounds.intersectsBounds(feature.geometry.getBounds());
         } else {
             return feature.onScreen();
