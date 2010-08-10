@@ -3,7 +3,7 @@
   xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.0.0/StyledLayerDescriptor.xsd">
   <NamedLayer>
-    <Name>black</Name>
+    <Name>popblk</Name>
     <IsDefault>1</IsDefault>
     <UserStyle>
       <Title>Percent Black Population</Title>

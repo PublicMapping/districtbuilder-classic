@@ -3,7 +3,7 @@
   xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.0.0/StyledLayerDescriptor.xsd">
   <NamedLayer>
-    <Name>hispanic</Name>
+    <Name>pophisp</Name>
     <IsDefault>1</IsDefault>
     <UserStyle>
       <Title>Percent Hispanic Population</Title>
