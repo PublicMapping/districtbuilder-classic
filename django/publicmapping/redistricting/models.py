@@ -71,13 +71,10 @@ class Geounit(models.Model):
 
                 selection = Geounit.objects.filter(guFilter).unionagg()
 
-                print "Initial filter: %s" % guFilter
-
                 if not inside:
                     # select the geounits at the geolevel, but outside 
                     # the boundary
-                    guFilter = (~Q(geom__within=boundary) & guFilter)
-                    return []
+                    guFilter = (~Q(geom__overlaps=boundary) & guFilter)
                 else:
                     guFilter = (Q(geom__within=boundary) & guFilter)
 
@@ -109,16 +106,24 @@ class Geounit(models.Model):
                         current.union(union)
                     intersects = selection.difference(current)
 
-                # the remainder geometry is the intersection of the district
-                # and the difference of the selected geounits and the 
-                # current extent
-                remainder = boundary.intersection(intersects)
+                if inside:
+                    # the remainder geometry is the intersection of the 
+                    # district and the difference of the selected geounits
+                    # and the current extent
+                    remainder = boundary.intersection(intersects)
+                else:
+                    # the remainder geometry is the geounit selection 
+                    # differenced with the boundary (leaving the selection
+                    # that lies outside the boundary) differenced with
+                    # the intersection (the selection outside the boundary
+                    # and outside the accumulated geometry)
+                    remainder = selection.difference(boundary)
 
-                print "Getting geounits at level %d, within a %s with %d points." % (level,remainder.geom_type,remainder.num_coords)
+                    remainder = remainder.intersection(intersects)
+
+
                 guFilter = Q(geolevel=level) & Q(geom__within=remainder)
                 units += list(Geounit.objects.filter(guFilter))
-
-                print "Units are now %d geounits." % len(units)
 
         return units
 

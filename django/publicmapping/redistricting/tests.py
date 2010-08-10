@@ -176,21 +176,33 @@ class GeounitMixTester(unittest.TestCase):
         self.longMessage = True
 
         # need geounits for ids & geometries
-        self.geolevels = [
-            Geolevel(name='first level'),
-            Geolevel(name='second level'),
-            Geolevel(name='third level')
-        ]
+        self.geolevels = Geolevel.objects.filter( 
+            Q(name='first level') |
+            Q(name='second level') |
+            Q(name='third level')
+        ).order_by('id')
+        if len(self.geolevels) == 0:
+            self.geolevels = [
+                Geolevel(name='first level'),
+                Geolevel(name='second level'),
+                Geolevel(name='third level')
+            ]
+        else:
+            self.geolevels = list(self.geolevels)
 
         self.geounits = {}
 
         dim = 3.0
         for gl in self.geolevels:
-            gl.save()
+            if not gl.id:
+                gl.save()
 
-            self.geounits[gl.id] = []
-            for x in range(0,int(dim)):
-                for y in range(0,int(dim)):
+            self.geounits[gl.id] = list(Geounit.objects.filter(geolevel=gl).order_by('id'))
+            if len(self.geounits[gl.id]) > 0:
+                continue
+
+            for y in range(0,int(dim)):
+                for x in range(0,int(dim)):
                     ring = LinearRing( 
                         Point(((x/dim),(y/dim))), 
                         Point((((x+1)/dim),(y/dim))), 
@@ -198,7 +210,7 @@ class GeounitMixTester(unittest.TestCase):
                         Point(((x/dim),((y+1)/dim))), 
                         Point(((x/dim),(y/dim))) )
                     gu = Geounit(
-                        name=('Unit %d-%d' % (gl.id,(y * int(dim) + x))), 
+                        name=('Unit %d-%d' % (gl.id,(y * int(dim) + x))),
                         geolevel=gl,
                         geom=MultiPolygon(Polygon(ring)),
                         simple=MultiPolygon(Polygon(ring))
@@ -254,3 +266,79 @@ class GeounitMixTester(unittest.TestCase):
 
         numunits = len(units)
         self.assertEquals(81, numunits, "Number of geounits within a high-level geounit is incorrect. (%d)" % numunits)
+
+    def test_get_mixed1(self):
+        level = self.geolevels[0]
+        bigunits = self.geounits[level.id]
+        ltlunits = self.geounits[self.geolevels[1].id]
+        boundary = bigunits[0].geom.difference(ltlunits[9].geom)
+
+        units = Geounit.get_mixed_geounits([bigunits[0].id], level.id, boundary, True)
+        numunits = len(units)
+        self.assertEquals(8, numunits, "Number of geounits inside boundary is incorrect. (%d)" % numunits)
+
+    def test_get_imixed1(self):
+        level = self.geolevels[0]
+        bigunits = self.geounits[level.id]
+        ltlunits = self.geounits[self.geolevels[1].id]
+        boundary = bigunits[0].geom.difference(ltlunits[9].geom)
+
+        units = Geounit.get_mixed_geounits([bigunits[0].id], level.id, boundary, False)
+        numunits = len(units)
+        self.assertEquals(1, numunits, "Number of geounits outside boundary is incorrect. (%d)" % numunits)
+
+    def test_get_mixed2(self):
+        level = self.geolevels[1]
+        bigunits = self.geounits[level.id]
+        ltlunits = self.geounits[self.geolevels[2].id]
+        boundary = bigunits[0].geom.difference(ltlunits[27].geom)
+
+        units = Geounit.get_mixed_geounits([bigunits[0].id], level.id, boundary, True)
+        numunits = len(units)
+        self.assertEquals(8, numunits, "Number of geounits inside boundary is incorrect. (%d)" % numunits)
+
+    def test_get_imixed2(self):
+        level = self.geolevels[1]
+        bigunits = self.geounits[level.id]
+        ltlunits = self.geounits[self.geolevels[2].id]
+        boundary = bigunits[0].geom.difference(ltlunits[27].geom)
+
+        units = Geounit.get_mixed_geounits([bigunits[0].id], level.id, boundary, False)
+        numunits = len(units)
+        self.assertEquals(1, numunits, "Number of geounits outside boundary is incorrect. (%d)" % numunits)
+
+    def test_get_mixed3(self):
+        level = self.geolevels[0]
+        bigunits = self.geounits[level.id]
+        boundary = MultiPolygon(Polygon(LinearRing(
+            Point((0,0)),
+            Point((1,0)),
+            Point((1,1)),
+            Point((0,0))
+        )))
+        
+        units = Geounit.get_mixed_geounits([bigunits[1].id,bigunits[2].id,bigunits[5].id], level.id, boundary, True)
+        numunits = len(units)
+        self.assertEquals(3, numunits, "Number of geounits inside boundary is incorrect. (%d)" % numunits)
+
+        units = Geounit.get_mixed_geounits([bigunits[0].id,bigunits[4].id,bigunits[8].id], level.id, boundary, True)
+        numunits = len(units)
+        self.assertEquals(36, numunits, "Number of geounits inside boundary is incorrect. (%d)" % numunits)
+
+    def test_get_imixed3(self):
+        level = self.geolevels[0]
+        bigunits = self.geounits[level.id]
+        boundary = MultiPolygon(Polygon(LinearRing(
+            Point((0,0)),
+            Point((1,0)),
+            Point((1,1)),
+            Point((0,0))
+        )))
+        
+        units = Geounit.get_mixed_geounits([bigunits[3].id,bigunits[6].id,bigunits[7].id], level.id, boundary, False)
+        numunits = len(units)
+        self.assertEquals(3, numunits, "Number of geounits outside boundary is incorrect. (%d)" % numunits)
+
+        units = Geounit.get_mixed_geounits([bigunits[0].id,bigunits[4].id,bigunits[8].id], level.id, boundary, False)
+        numunits = len(units)
+        self.assertEquals(36, numunits, "Number of geounits outside boundary is incorrect. (%d)" % numunits)
