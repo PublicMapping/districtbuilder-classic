@@ -309,11 +309,14 @@
           {% if plan.name %}
           <label>Plan Name:</label> {{ plan.name }}
           {% else %}
-          Please Choose to edit a plan
+          Please select a plan
           {% endif %}
       </div>
      </div>
      <div class="toolset_group"> 
+        <div id="saveplanbtn">Save Plan</div>
+     </div>
+     <div class="toolset_group">
         {% if plan.edited %}
           <div id="saveplaninfo" class="savedat">Plan saved at {{ plan.edited|date:"m/d P" }} </div>
         {% else %}
