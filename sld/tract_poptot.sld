@@ -4,7 +4,6 @@
   xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.0.0/StyledLayerDescriptor.xsd">
   <NamedLayer>
     <Name>poptot</Name>
-    <IsDefault>1</IsDefault>
     <UserStyle>
       <Title>Population</Title>
       <Abstract>A grayscale style showing the population numbers in a given geounit.</Abstract>

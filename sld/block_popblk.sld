@@ -4,7 +4,6 @@
   xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.0.0/StyledLayerDescriptor.xsd">
   <NamedLayer>
     <Name>popblk</Name>
-    <IsDefault>1</IsDefault>
     <UserStyle>
       <Title>Black Population</Title>
       <Abstract>A grayscale style showing the number of identified members of a population group in a given geounit.</Abstract>

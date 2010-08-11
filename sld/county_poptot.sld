@@ -4,7 +4,6 @@
   xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.0.0/StyledLayerDescriptor.xsd">
   <NamedLayer>
     <Name>poptot</Name>
-    <IsDefault>1</IsDefault>
     <UserStyle>
       <Title>Population</Title>
       <Abstract>A grayscale style showing the population numbers in a given geounit.</Abstract>
@@ -45,13 +44,13 @@
         </Rule>
         <Rule>
           <Title>&lt; 100K</Title>
-            <ogc:Filter>
-              <ogc:PropertyIsLessThan>
-                <ogc:PropertyName>number</ogc:PropertyName>
-                <ogc:Literal>100000</ogc:Literal>
-              </ogc:PropertyIsLessThan>
-            </ogc:Filter>          
-            <PolygonSymbolizer>
+          <ogc:Filter>
+            <ogc:PropertyIsLessThan>
+              <ogc:PropertyName>number</ogc:PropertyName>
+              <ogc:Literal>100000</ogc:Literal>
+            </ogc:PropertyIsLessThan>
+          </ogc:Filter>          
+          <PolygonSymbolizer>
             <Fill>
               <CssParameter name="fill">#DCDCDC</CssParameter>
             </Fill>
@@ -64,7 +63,7 @@
               <CssParameter name="stroke">#555555</CssParameter>
               <CssParameter name="stroke-width">0.25</CssParameter>
             </Stroke>
-          <LineSymbolizer>
+          </LineSymbolizer>
         </Rule>
       </FeatureTypeStyle>
     </UserStyle>

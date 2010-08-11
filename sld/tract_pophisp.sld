@@ -4,7 +4,6 @@
   xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.0.0/StyledLayerDescriptor.xsd">
   <NamedLayer>
     <Name>pophisp</Name>
-    <IsDefault>1</IsDefault>
     <UserStyle>
       <Title>Hispanic Population</Title>
       <Abstract>A grayscale style showing the number of identified members of a party in a given geounit.</Abstract>
