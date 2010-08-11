@@ -790,7 +790,7 @@ div.plansummary h3 {
 }
 div.plansummary label {
   display:inline-block;
-  width: 60px;
+  width: 116px;
   text-align:left;
   font-size: 12px;
   font-weight: bold;
@@ -798,7 +798,7 @@ div.plansummary label {
   }
 div.plansummary  .value {
   display:inline-block;
-  width: 60px;
+  width: 116px;
   text-align:right;
   font-size: 12px;
   font-weight: normal
