@@ -21,34 +21,26 @@
             <Fill>
               <CssParameter name="fill">#666666</CssParameter>
             </Fill>
-            <Stroke>
-              <CssParameter name="stroke">#000000</CssParameter>
-              <CssParameter name="stroke-width">1</CssParameter>
-            </Stroke>
           </PolygonSymbolizer>
         </Rule>
         <Rule>
           <Title>&gt; 100K</Title>
-            <ogc:Filter>
-              <ogc:And>
-                <ogc:PropertyIsGreaterThanOrEqualTo>
-                  <ogc:PropertyName>number</ogc:PropertyName>
-                  <ogc:Literal>100000</ogc:Literal>
-                </ogc:PropertyIsGreaterThanOrEqualTo>
-                <ogc:PropertyIsLessThan>
-                  <ogc:PropertyName>number</ogc:PropertyName>
-                  <ogc:Literal>500001</ogc:Literal>
-                </ogc:PropertyIsLessThan>
-              </ogc:And>
-            </ogc:Filter>          
-            <PolygonSymbolizer>
+          <ogc:Filter>
+            <ogc:And>
+              <ogc:PropertyIsGreaterThanOrEqualTo>
+                <ogc:PropertyName>number</ogc:PropertyName>
+                <ogc:Literal>100000</ogc:Literal>
+              </ogc:PropertyIsGreaterThanOrEqualTo>
+              <ogc:PropertyIsLessThan>
+                <ogc:PropertyName>number</ogc:PropertyName>
+                <ogc:Literal>500001</ogc:Literal>
+              </ogc:PropertyIsLessThan>
+            </ogc:And>
+          </ogc:Filter>          
+          <PolygonSymbolizer>
             <Fill>
               <CssParameter name="fill">#ABABAB</CssParameter>
             </Fill>
-            <Stroke>
-              <CssParameter name="stroke">#000000</CssParameter>
-              <CssParameter name="stroke-width">1</CssParameter>
-            </Stroke>
           </PolygonSymbolizer>
         </Rule>
         <Rule>
@@ -63,11 +55,16 @@
             <Fill>
               <CssParameter name="fill">#DCDCDC</CssParameter>
             </Fill>
-            <Stroke>
-              <CssParameter name="stroke">#000000</CssParameter>
-              <CssParameter name="stroke-width">1</CssParameter>
-            </Stroke>
           </PolygonSymbolizer>
+        </Rule>
+        <Rule>
+          <Title>Boundary</Title>
+          <LineSymbolizer>
+            <Stroke>
+              <CssParameter name="stroke">#555555</CssParameter>
+              <CssParameter name="stroke-width">0.25</CssParameter>
+            </Stroke>
+          <LineSymbolizer>
         </Rule>
       </FeatureTypeStyle>
     </UserStyle>

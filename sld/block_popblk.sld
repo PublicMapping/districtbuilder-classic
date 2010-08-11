@@ -6,68 +6,65 @@
     <Name>popblk</Name>
     <IsDefault>1</IsDefault>
     <UserStyle>
-      <Title>Percent Black Population</Title>
+      <Title>Black Population</Title>
       <Abstract>A grayscale style showing the number of identified members of a population group in a given geounit.</Abstract>
       <FeatureTypeStyle>
         <Rule>
-        <Title>&gt; 25</Title>
-    <ogc:Filter>
-       <ogc:PropertyIsGreaterThanOrEqualTo>
-          <ogc:PropertyName>number</ogc:PropertyName>
-          <ogc:Literal>25</ogc:Literal>
-        </ogc:PropertyIsGreaterThanOrEqualTo>
-    </ogc:Filter>
-    <PolygonSymbolizer>
+          <Title>&gt; 25</Title>
+          <ogc:Filter>
+            <ogc:PropertyIsGreaterThanOrEqualTo>
+              <ogc:PropertyName>number</ogc:PropertyName>
+              <ogc:Literal>25</ogc:Literal>
+            </ogc:PropertyIsGreaterThanOrEqualTo>
+          </ogc:Filter>
+          <PolygonSymbolizer>
             <Fill>
               <CssParameter name="fill">#666666</CssParameter>
             </Fill>
-            <Stroke>
-              <CssParameter name="stroke">#000000</CssParameter>
-              <CssParameter name="stroke-width">1</CssParameter>
-            </Stroke>
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-        <Title>&gt; 10</Title>
-    <ogc:Filter>
-      <ogc:And>
-       <ogc:PropertyIsGreaterThanOrEqualTo>
-          <ogc:PropertyName>number</ogc:PropertyName>
-          <ogc:Literal>10</ogc:Literal>
-        </ogc:PropertyIsGreaterThanOrEqualTo>
-        <ogc:PropertyIsLessThan>
-          <ogc:PropertyName>number</ogc:PropertyName>
-          <ogc:Literal>25</ogc:Literal>
-        </ogc:PropertyIsLessThan>
-      </ogc:And>
-    </ogc:Filter>          
-    <PolygonSymbolizer>
+          <Title>&gt; 10</Title>
+          <ogc:Filter>
+            <ogc:And>
+              <ogc:PropertyIsGreaterThanOrEqualTo>
+                <ogc:PropertyName>number</ogc:PropertyName>
+                <ogc:Literal>10</ogc:Literal>
+              </ogc:PropertyIsGreaterThanOrEqualTo>
+              <ogc:PropertyIsLessThan>
+                <ogc:PropertyName>number</ogc:PropertyName>
+                <ogc:Literal>25</ogc:Literal>
+              </ogc:PropertyIsLessThan>
+            </ogc:And>
+          </ogc:Filter>          
+          <PolygonSymbolizer>
             <Fill>
               <CssParameter name="fill">#ABABAB</CssParameter>
             </Fill>
-            <Stroke>
-              <CssParameter name="stroke">#000000</CssParameter>
-              <CssParameter name="stroke-width">1</CssParameter>
-            </Stroke>
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-        <Title>&lt; 10</Title>
-    <ogc:Filter>
-        <ogc:PropertyIsLessThan>
-          <ogc:PropertyName>number</ogc:PropertyName>
-          <ogc:Literal>10</ogc:Literal>
-        </ogc:PropertyIsLessThan>
-    </ogc:Filter>          
-    <PolygonSymbolizer>
+          <Title>&lt; 10</Title>
+          <ogc:Filter>
+            <ogc:PropertyIsLessThan>
+              <ogc:PropertyName>number</ogc:PropertyName>
+              <ogc:Literal>10</ogc:Literal>
+            </ogc:PropertyIsLessThan>
+          </ogc:Filter>          
+          <PolygonSymbolizer>
             <Fill>
               <CssParameter name="fill">#DCDCDC</CssParameter>
             </Fill>
-            <Stroke>
-              <CssParameter name="stroke">#000000</CssParameter>
-              <CssParameter name="stroke-width">1</CssParameter>
-            </Stroke>
           </PolygonSymbolizer>
+        </Rule>
+        <Rule>
+          <Title>Boundary</Title>
+          <LineSymbolizer>
+            <Stroke>
+              <CssParameter name="stroke">#555555</CssParameter>
+              <CssParameter name="stroke-width">0.25</CssParameter>
+            </Stroke>
+          </LineSymbolizer>
         </Rule>
       </FeatureTypeStyle>
     </UserStyle>

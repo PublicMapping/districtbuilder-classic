@@ -27,7 +27,7 @@
           <Title>&gt; 2.5K</Title>
           <ogc:Filter>
             <ogc:And>
-             <ogc:PropertyIsGreaterThanOrEqualTo>
+              <ogc:PropertyIsGreaterThanOrEqualTo>
                 <ogc:PropertyName>number</ogc:PropertyName>
                 <ogc:Literal>2500</ogc:Literal>
               </ogc:PropertyIsGreaterThanOrEqualTo>
@@ -45,13 +45,13 @@
         </Rule>
         <Rule>
           <Title>&lt; 2.5K</Title>
-            <ogc:Filter>
-              <ogc:PropertyIsLessThan>
-                <ogc:PropertyName>number</ogc:PropertyName>
-                <ogc:Literal>2500</ogc:Literal>
-              </ogc:PropertyIsLessThan>
-            </ogc:Filter>          
-            <PolygonSymbolizer>
+          <ogc:Filter>
+            <ogc:PropertyIsLessThan>
+              <ogc:PropertyName>number</ogc:PropertyName>
+              <ogc:Literal>2500</ogc:Literal>
+            </ogc:PropertyIsLessThan>
+          </ogc:Filter>          
+          <PolygonSymbolizer>
             <Fill>
               <CssParameter name="fill">#DCDCDC</CssParameter>
             </Fill>

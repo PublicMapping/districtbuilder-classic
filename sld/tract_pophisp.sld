@@ -6,7 +6,7 @@
     <Name>pophisp</Name>
     <IsDefault>1</IsDefault>
     <UserStyle>
-      <Title>Percent Hispanic Population</Title>
+      <Title>Hispanic Population</Title>
       <Abstract>A grayscale style showing the number of identified members of a party in a given geounit.</Abstract>
       <FeatureTypeStyle>
         <Rule>
@@ -44,7 +44,7 @@
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-        <Title>&lt; 1.25K</Title>
+          <Title>&lt; 1.25K</Title>
           <ogc:Filter>
             <ogc:PropertyIsLessThan>
               <ogc:PropertyName>number</ogc:PropertyName>

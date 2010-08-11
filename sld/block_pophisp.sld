@@ -6,16 +6,16 @@
     <Name>pophisp</Name>
     <IsDefault>1</IsDefault>
     <UserStyle>
-      <Title>Percent Hispanic Population</Title>
+      <Title>Hispanic Population</Title>
       <Abstract>A grayscale style showing the number of identified members of a party in a given geounit.</Abstract>
       <FeatureTypeStyle>
         <Rule>
           <Title>&gt; 50</Title>
           <ogc:Filter>
-             <ogc:PropertyIsGreaterThanOrEqualTo>
-                <ogc:PropertyName>number</ogc:PropertyName>
-                <ogc:Literal>50</ogc:Literal>
-              </ogc:PropertyIsGreaterThanOrEqualTo>
+            <ogc:PropertyIsGreaterThanOrEqualTo>
+              <ogc:PropertyName>number</ogc:PropertyName>
+              <ogc:Literal>50</ogc:Literal>
+            </ogc:PropertyIsGreaterThanOrEqualTo>
           </ogc:Filter>
           <PolygonSymbolizer>
             <Fill>
@@ -27,7 +27,7 @@
           <Title>&gt; 35</Title>
           <ogc:Filter>
             <ogc:And>
-             <ogc:PropertyIsGreaterThanOrEqualTo>
+              <ogc:PropertyIsGreaterThanOrEqualTo>
                 <ogc:PropertyName>number</ogc:PropertyName>
                 <ogc:Literal>35</ogc:Literal>
               </ogc:PropertyIsGreaterThanOrEqualTo>
@@ -44,12 +44,12 @@
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-        <Title>&lt; 35</Title>
+          <Title>&lt; 35</Title>
           <ogc:Filter>
-              <ogc:PropertyIsLessThan>
-                <ogc:PropertyName>number</ogc:PropertyName>
-                <ogc:Literal>35</ogc:Literal>
-              </ogc:PropertyIsLessThan>
+            <ogc:PropertyIsLessThan>
+              <ogc:PropertyName>number</ogc:PropertyName>
+              <ogc:Literal>35</ogc:Literal>
+            </ogc:PropertyIsLessThan>
           </ogc:Filter>          
           <PolygonSymbolizer>
             <Fill>
