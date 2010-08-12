@@ -70,6 +70,11 @@ class Geounit(models.Model):
         edge cases. These geounits comprise the incremental change to 
         the boundary.
         """
+
+        if not boundary and inside:
+            # there are 0 geounits inside a non-existant boundary
+            return []
+
         from django.db import connection
 
         geolevel = int(geolevel)
@@ -83,22 +88,20 @@ class Geounit(models.Model):
                 guFilter = Q(id__in=geounit_ids)
 
                 selection = Geounit.objects.filter(guFilter).unionagg()
-                simple = boundary.simplify(tolerance=100.0,preserve_topology=True)
-                
-                query = "SELECT id,st_ashexewkb(geom,'NDR') FROM redistricting_geounit WHERE id IN (%s) AND " % (','.join(geounit_ids))
-
-                if not inside:
-                    # select the geounits at the geolevel, but outside 
-                    # the boundary
-                    # guFilter = (~Q(geom__overlaps=simple) & guFilter)
-                    # overlaps does not work with centroid!
-                    query += "NOT st_intersects(st_centroid(geom), geomfromewkt('%s'))" % simple.ewkt
-                    #print "Getting geometry outside of boundary."
+                if boundary:
+                    simple = boundary.simplify(tolerance=100.0,preserve_topology=True)
                 else:
-                    #guFilter = (Q(geom__within=simple) & guFilter)
-                    query += "st_intersects(st_centroid(geom), geomfromewkt('%s'))" % simple.ewkt
+                    boundary = empty_geom(selection.srid)
+                    simple = boundary
+                
+                query = "SELECT id,st_ashexewkb(geom,'NDR') FROM redistricting_geounit WHERE id IN (%s)" % (','.join(geounit_ids))
 
-                #qset = Geounit.objects.filter(guFilter).values_list('id',flat=True)
+                query += " AND "
+                if not inside:
+                    query += "NOT "
+
+                query += "st_intersects(st_centroid(geom), geomfromewkt('%s'))" % simple.ewkt
+
                 cursor = connection.cursor()
                 cursor.execute(query)
                 rows = cursor.fetchall()
@@ -142,38 +145,43 @@ class Geounit(models.Model):
                     # and the current extent
                     try:
                         remainder = boundary.intersection(intersects)
-                    except GEOSException:
+                    except GEOSException, ex:
+                        #print 'GEOSException, line 152:'
+                        #print ex
                         # it is not clear what this means, or why it happens
-                        remainder = None
+                        remainder = empty_geom(boundary.srid)
                 else:
                     # the remainder geometry is the geounit selection 
-                    # differenced with the boundary (leaving the selection
-                    # that lies outside the boundary) differenced with
-                    # the intersection (the selection outside the boundary
-                    # and outside the accumulated geometry)
+                    # differenced with the boundary (leaving the 
+                    # selection that lies outside the boundary) 
+                    # differenced with the intersection (the selection
+                    # outside the boundary and outside the accumulated
+                    # geometry)
                     try:
                         remainder = selection.difference(boundary)
 
                         remainder = remainder.intersection(intersects)
-                    except GEOSException:
+                    except GEOSException, ex:
+                        #print 'GEOSException, line 168:'
+                        #print ex
                         # it is not clear what this means, or why it happens
-                        remainder = None
+                        remainder = empty_geom(boundary.srid)
 
-                if remainder and remainder.geom_type == 'GeometryCollection':
+                if remainder.geom_type == 'GeometryCollection' and not remainder.empty:
                     srid = remainder.srid
                     union = None
-                    for i in range(0,remainder.num_geom):
-                        if remainder[i].geom_type == 'MultiPolygon':
+                    for geom in remainder:
+                        if geom.geom_type == 'MultiPolygon':
                             if union is None:
-                                union = remainder[i]
+                                union = geom
                             else:
-                                for poly in remainder[i]:
+                                for poly in geom:
                                     union.append(poly)
-                        elif remainder[i].geom_type == 'Polygon':
+                        elif geom.geom_type == 'Polygon':
                             if union is None:
-                                union = MultiPolygon(remainder[i])
+                                union = MultiPolygon(geom)
                             else:
-                                union.append(remainder[i])
+                                union.append(geom)
                         else:
                             # do nothing if it's not some kind of poly
                             #print "Cannot intersect non-area: %s" % remainder[i].geom_type
@@ -182,10 +190,12 @@ class Geounit(models.Model):
                     remainder = union
                     if remainder:
                         remainder.srid = srid
+                    else:
+                        remainder = empty_geom(srid)
                 else:
-                    remainder = None
+                    remainder = empty_geom(boundary.srid)
 
-                if not remainder is None:
+                if not remainder.empty:
                     simple = remainder.simplify(tolerance=100.0,preserve_topology=True)
                     query = "SELECT id,st_ashexewkb(geom,'NDR') FROM redistricting_geounit WHERE geolevel_id = %d AND st_within(st_centroid(geom), geomfromewkt('%s'))" % (level, simple.ewkt)
                     #guFilter = Q(geolevel=level) & Q(geom__within=simple)
@@ -263,64 +273,58 @@ class Plan(models.Model):
         for district in districts:
             # compute the geounits before changing the boundary
             geounits = Geounit.get_mixed_geounits(geounit_ids, geolevel, district.geom, True)
-            difference = district.geom.difference(incremental)
-            if difference.geom_type == 'MultiPolygon':
-                district.geom = difference
-            elif difference.geom_type == 'Polygon':
-                district.geom = MultiPolygon(difference)
-            else:
-                # can't process this geometry, so don't change it
-                #print "Difference geometry is: %s" % difference.geom_type
-                continue
+            try:
+                geom = district.geom.difference(incremental)
+            except GEOSException, ex:
+                #print 'GEOSException, line 280:'
+                #print ex
+                # this geometry cannot be computed, move on to the 
+                # next district
+                geom = empty_geom(incremental.srid)
 
-            simple = district.geom.simplify(tolerance=100.0,preserve_topology=True)
-            if simple.geom_type == 'MultiPolygon':
-                district.simple = simple
-            elif simple.geom_type == 'Polygon':
-                district.simple = MultiPolygon(simple)
+            geom = enforce_multi(geom)
+
+            if not geom.empty:
+                district.geom = geom
+                simple = geom.simplify(tolerance=100.0,preserve_topology=True)
+                district.simple = enforce_multi(simple)
             else:
-                #print "Simple geometry is: %s" % simple.geom_type
-                pass
+                district.geom = None
+                district.simple = None
 
             district.save()
 
-            if district.delta_stats(geounits,False):
+            if not district.geom:
+                # clear out computed stats for null geoms
+                ComputedCharacteristic.objects.filter(district=district).delete()
+                fixed += 1
+            elif district.delta_stats(geounits,False):
                 fixed += 1
         # get the geounits before changing the target geometry
         geounits = Geounit.get_mixed_geounits(geounit_ids, geolevel, target.geom, False)
 
-        #print "Number of geounits outside target geometry: %d" % len(geounits)
-
         if target.geom is None:
-            if incremental.geom_type == 'Polygon':
-                target.geom = MultiPolygon(incremental)
-            elif incremental.geom_type == 'MultiPolygon':
-                target.geom = incremental
-            else:
-                #print "Incremental geometry is: %s" % incremental.geom_type
-                pass
+            target.geom = enforce_multi(incremental)
         else:
-            union = target.geom.union(incremental)
-            if union.geom_type == 'Polygon':
-                target.geom = MultiPolygon(union)
-            elif union.geom_type == 'MultiPolygon':
-                target.geom = union
-            else:
-                #print "Union geometry is: %s" % union.geom_type
-                pass
+            try:
+                union = target.geom.union(incremental)
+                target.geom = enforce_multi(union)
+            except GEOSException, ex:
+                #print 'GEOSException, line 307:'
+                #print ex
+                # can't process the union, so don't change the
+                # target geometry
+                target.geom = None
 
-        simple = target.geom.simplify(tolerance=100.0,preserve_topology=True)
-        if simple.geom_type == 'Polygon':
-            target.simple = MultiPolygon(simple)
-        elif simple.geom_type == 'MultiPolygon':
-            target.simple = simple
+        if target.geom:
+            simple = target.geom.simplify(tolerance=100.0,preserve_topology=True)
+            target.simple = enforce_multi(simple)
         else:
-            #print "Simple geometry is: %s" % simple.geom_type
-            pass
-           
+            target.simple = None
+          
         target.save();
 
-        if target.delta_stats(geounits,True):
+        if target.geom and target.delta_stats(geounits,True):
             fixed += 1
 
         return fixed
@@ -416,12 +420,17 @@ class District(models.Model):
                 computed = ComputedCharacteristic.objects.filter(subject=subject,district=self)
                 if computed:
                     computed = computed[0]
-                    if combine:
-                        computed.number += aggregate
-                    else:
-                        computed.number -= aggregate
-                    computed.save();
-                    changed = True
+                else:
+                    computed = ComputedCharacteristic(subject=subject,district=self,number=0)
+
+                if combine:
+                    #print "Adding %f to district '%s' for subject '%s'" % (aggregate, self.name, subject.display)
+                    computed.number += aggregate
+                else:
+                    #print "Removing %f from district '%s' for subject '%s'" % (aggregate, self.name, subject.display)
+                    computed.number -= aggregate
+                computed.save();
+                changed = True
         return changed
         
 
@@ -529,3 +538,22 @@ def can_copy(user, plan):
     a plan they own.  Anyone can copy a template
     """
     return plan.is_template or plan.owner == user or user.is_staff
+
+# this constant is used in places where geometry exceptions occur, or where
+# geometry types are incompatible
+def empty_geom(srid):
+    geom = GEOSGeometry('POINT(0 0)')
+    geom = geom.intersection(GEOSGeometry('POINT(1 1)'))
+    geom.srid = srid
+    return geom
+
+def enforce_multi(geom):
+    if geom:
+        if geom.geom_type == 'MultiPolygon':
+            return geom
+        elif geom.geom_type == 'Polygon':
+            return MultiPolygon(geom)
+        else:
+            return empty_geom(geom.srid)
+    else:
+        return geom
