@@ -1,5 +1,5 @@
 from django.contrib.gis.db import models
-from django.contrib.gis.geos import MultiPolygon
+from django.contrib.gis.geos import MultiPolygon,GEOSGeometry,GEOSException
 from django.contrib.auth.models import User
 from django.db.models import Sum, Max, Q
 from django.db.models.signals import pre_save, post_save
@@ -43,9 +43,20 @@ class Geounit(models.Model):
         that the geounit_ids for blocks are returned if a list of
         county ids are passed in along with the county geolevel.
         """
-        from django.db import connection, transaction
+        from django.db import connection
         cursor = connection.cursor()
         cursor.execute('SELECT id from redistricting_geounit where geolevel_id = %s and St_within(st_centroid(geom), (select st_simplify(st_union(geom), 10) from redistricting_geounit where geolevel_id = %s and id in %s))', [int(settings.BASE_GEOLEVEL), int(geolevel), geounit_ids])
+        results = []
+        ids = cursor.fetchall()
+        for row in ids:
+            results += row
+        return results
+
+    @staticmethod
+    def get_base_geounits_within(geom):
+        from django.db import connection
+        cursor = connection.cursor()
+        cursor.execute("select id from redistricting_geounit where geolevel_id = %s and st_within(st_centroid(geom), geomfromewkt(%s))",[settings.BASE_GEOLEVEL, str(geom.ewkt)])
         results = []
         ids = cursor.fetchall()
         for row in ids:
@@ -59,6 +70,7 @@ class Geounit(models.Model):
         edge cases. These geounits comprise the incremental change to 
         the boundary.
         """
+        from django.db import connection
 
         geolevel = int(geolevel)
         levels = Geolevel.objects.all().values_list('id',flat=True).order_by('id')
@@ -72,14 +84,31 @@ class Geounit(models.Model):
 
                 selection = Geounit.objects.filter(guFilter).unionagg()
                 simple = boundary.simplify(tolerance=100.0,preserve_topology=True)
+                
+                query = "SELECT id,st_ashexewkb(geom,'NDR') FROM redistricting_geounit WHERE id IN (%s) AND " % (','.join(geounit_ids))
+
                 if not inside:
                     # select the geounits at the geolevel, but outside 
                     # the boundary
-                    guFilter = (~Q(geom__overlaps=simple) & guFilter)
+                    # guFilter = (~Q(geom__overlaps=simple) & guFilter)
+                    # overlaps does not work with centroid!
+                    query += "NOT st_intersects(st_centroid(geom), geomfromewkt('%s'))" % simple.ewkt
+                    #print "Getting geometry outside of boundary."
                 else:
-                    guFilter = (Q(geom__within=simple) & guFilter)
+                    #guFilter = (Q(geom__within=simple) & guFilter)
+                    query += "st_intersects(st_centroid(geom), geomfromewkt('%s'))" % simple.ewkt
 
-                units += list(Geounit.objects.filter(guFilter))
+                #qset = Geounit.objects.filter(guFilter).values_list('id',flat=True)
+                cursor = connection.cursor()
+                cursor.execute(query)
+                rows = cursor.fetchall()
+                count = 0
+                for row in rows:
+                    count += 1
+                    geom = GEOSGeometry(row[1])
+                    units.append(Geounit(id=row[0],geom=geom))
+
+                #print "Found %d geounits at geolevel %d (by id)" % (count, level)
 
                 # if we're at the base level, and haven't collected any
                 # geometries, return the units here
@@ -111,18 +140,27 @@ class Geounit(models.Model):
                     # the remainder geometry is the intersection of the 
                     # district and the difference of the selected geounits
                     # and the current extent
-                    remainder = boundary.intersection(intersects)
+                    try:
+                        remainder = boundary.intersection(intersects)
+                    except GEOSException:
+                        # it is not clear what this means, or why it happens
+                        remainder = None
                 else:
                     # the remainder geometry is the geounit selection 
                     # differenced with the boundary (leaving the selection
                     # that lies outside the boundary) differenced with
                     # the intersection (the selection outside the boundary
                     # and outside the accumulated geometry)
-                    remainder = selection.difference(boundary)
+                    try:
+                        remainder = selection.difference(boundary)
 
-                    remainder = remainder.intersection(intersects)
+                        remainder = remainder.intersection(intersects)
+                    except GEOSException:
+                        # it is not clear what this means, or why it happens
+                        remainder = None
 
-                if remainder.geom_type == 'GeometryCollection':
+                if remainder and remainder.geom_type == 'GeometryCollection':
+                    srid = remainder.srid
                     union = None
                     for i in range(0,remainder.num_geom):
                         if remainder[i].geom_type == 'MultiPolygon':
@@ -138,14 +176,29 @@ class Geounit(models.Model):
                                 union.append(remainder[i])
                         else:
                             # do nothing if it's not some kind of poly
+                            #print "Cannot intersect non-area: %s" % remainder[i].geom_type
                             pass
 
                     remainder = union
+                    if remainder:
+                        remainder.srid = srid
+                else:
+                    remainder = None
 
                 if not remainder is None:
                     simple = remainder.simplify(tolerance=100.0,preserve_topology=True)
-                    guFilter = Q(geolevel=level) & Q(geom__within=simple)
-                    units += list(Geounit.objects.filter(guFilter))
+                    query = "SELECT id,st_ashexewkb(geom,'NDR') FROM redistricting_geounit WHERE geolevel_id = %d AND st_within(st_centroid(geom), geomfromewkt('%s'))" % (level, simple.ewkt)
+                    #guFilter = Q(geolevel=level) & Q(geom__within=simple)
+                    #qset = Geounit.objects.filter(guFilter).values_list('id',flat=True)
+                    cursor = connection.cursor()
+                    cursor.execute(query)
+                    rows = cursor.fetchall()
+                    count = 0
+                    for row in rows:
+                        count += 1
+                        units.append(Geounit(id=row[0],geom=GEOSGeometry(row[1])))
+
+                    #print "Found %d geounits at geolevel %d (w/in)" % (count, level)
 
         return units
 
@@ -217,13 +270,17 @@ class Plan(models.Model):
                 district.geom = MultiPolygon(difference)
             else:
                 # can't process this geometry, so don't change it
+                #print "Difference geometry is: %s" % difference.geom_type
                 continue
 
             simple = district.geom.simplify(tolerance=100.0,preserve_topology=True)
-            if simple.geom_type != 'MultiPolygon':
+            if simple.geom_type == 'MultiPolygon':
+                district.simple = simple
+            elif simple.geom_type == 'Polygon':
                 district.simple = MultiPolygon(simple)
             else:
-                district.simple = simple
+                #print "Simple geometry is: %s" % simple.geom_type
+
             district.save()
 
             if district.delta_stats(geounits,False):
@@ -231,23 +288,31 @@ class Plan(models.Model):
         # get the geounits before changing the target geometry
         geounits = Geounit.get_mixed_geounits(geounit_ids, geolevel, target.geom, False)
 
+        #print "Number of geounits outside target geometry: %d" % len(geounits)
+
         if target.geom is None:
             if incremental.geom_type == 'Polygon':
                 target.geom = MultiPolygon(incremental)
             elif incremental.geom_type == 'MultiPolygon':
                 target.geom = incremental
+            else:
+                #print "Incremental geometry is: %s" % incremental.geom_type
         else:
             union = target.geom.union(incremental)
             if union.geom_type == 'Polygon':
                 target.geom = MultiPolygon(union)
             elif union.geom_type == 'MultiPolygon':
                 target.geom = union
+            else:
+                #print "Union geometry is: %s" % union.geom_type
 
         simple = target.geom.simplify(tolerance=100.0,preserve_topology=True)
         if simple.geom_type == 'Polygon':
             target.simple = MultiPolygon(simple)
         elif simple.geom_type == 'MultiPolygon':
             target.simple = simple
+        else:
+            #print "Simple geometry is: %s" % simple.geom_type
            
         target.save();
 
@@ -257,13 +322,13 @@ class Plan(models.Model):
         return fixed
 
 
-    def update_stats(self):
-        districts = self.district_set.all()
-        changed = 0
-        for district in districts:
-            if district.update_stats():
-                changed += 1
-        return changed
+#    def update_stats(self,force=False):
+#        districts = self.district_set.all()
+#        changed = 0
+#        for district in districts:
+#            if district.update_stats(force):
+#                changed += 1
+#        return changed
 
 
 class PlanForm(ModelForm):
@@ -297,23 +362,42 @@ class District(models.Model):
     def __unicode__(self):
         return self.name
 
-    def update_stats(self):
-        """Update the stats for this district, and save them in the
-        ComputedCharacteristic table. This method aggregates the statistics
-        for all the geounits in the mapping table for this district.
-        """
-        all_subjects = Subject.objects.all().order_by('name').reverse()
-        changed = False
-        for subject in all_subjects:
-            computed = self.computedcharacteristic_set.filter(subject=subject).count()
-            if computed == 0:
-                my_geounits = DistrictGeounitMapping.objects.filter(district=self).values_list('geounit', flat=True)
-                aggregate = Characteristic.objects.filter(geounit__in=my_geounits, subject__exact = subject).aggregate(Sum('number'))['number__sum']
-                if aggregate:
-                    computed = ComputedCharacteristic(subject = subject, district = self, number = aggregate)
-                    computed.save()
-                    changed = True
-        return changed
+#    def update_stats(self,force=False):
+#        """Update the stats for this district, and save them in the
+#        ComputedCharacteristic table. This method aggregates the statistics
+#        for all the geounits in the mapping table for this district.
+#        """
+#        all_subjects = Subject.objects.all().order_by('name').reverse()
+#        changed = False
+#        for subject in all_subjects:
+#            computed = self.computedcharacteristic_set.filter(subject=subject).count()
+#            if computed > 0 and not force:
+#                continue
+#
+#            if force:
+#                my_geounits = Geounit.get_base_geounits_within(self.geom)
+#                DistrictGeounitMapping.objects.filter(geounit__in=my_geounits,plan=self.plan).update(district=self)
+#            else:
+#                my_geounits = DistrictGeounitMapping.objects.filter(district=self).values_list('geounit', flat=True)
+#
+#            aggregate = Characteristic.objects.filter(geounit__in=my_geounits, subject__exact = subject).aggregate(Sum('number'))['number__sum']
+#
+#            if aggregate:
+#                computed = None
+#                if force:
+#                    computed = ComputedCharacteristic.objects.filter(subject=subject, district=self)
+#                    if computed.count() > 0:
+#                        computed.update(number=aggregate)
+#                        changed = True
+#                    else:
+#                        computed = None
+#
+#                if computed is None:
+#                    computed = ComputedCharacteristic(subject = subject, district = self, number = aggregate)
+#                    computed.save()
+#                    changed = True
+#
+#        return changed
 
     def delta_stats(self,geounits,combine):
         """Update the stats for this district incrementally. This method
@@ -381,8 +465,8 @@ class ComputedCharacteristic(models.Model):
     class Meta:
         ordering = ['subject']
 
-def collect_geom(sender, **kwargs):
-    kwargs['instance'].geom = kwargs['instance'].geounits.collect()
+#def collect_geom(sender, **kwargs):
+#    kwargs['instance'].geom = kwargs['instance'].geounits.collect()
 
 def set_district_id(sender, **kwargs):
     """When a new district is saved, it should get an incremented id that is unique to the plan
@@ -393,6 +477,8 @@ def set_district_id(sender, **kwargs):
         max_id = District.objects.filter(plan = district.plan).aggregate(Max('district_id'))['district_id__max']
         if max_id:
             district.district_id = max_id + 1
+        else:
+            district.district_id = 1
         # Unassigned is not counted in MAX_DISTRICTS
         if district.district_id > settings.MAX_DISTRICTS + 1:
             raise ValidationError("Too many districts already.  Reached Max Districts setting")
@@ -417,13 +503,13 @@ def set_geounit_mapping(sender, **kwargs):
         unassigned = District(name="Unassigned", version = 0, plan = plan)
         unassigned.save()
         
-        # clone all the geounits manually
-        from django.db import connection, transaction
-        cursor = connection.cursor()
-
-        sql = "insert into %s (district_id, geounit_id, plan_id) select %s as district_id, geounit.id as geounit_id, %s as plan_id from %s as geounit where geounit.geolevel_id = %s" % (DistrictGeounitMapping._meta.db_table, unassigned.id, plan.id, Geounit._meta.db_table, settings.BASE_GEOLEVEL)
-        cursor.execute(sql)
-        transaction.commit_unless_managed()
+#        # clone all the geounits manually
+#        from django.db import connection, transaction
+#        cursor = connection.cursor()
+#
+#        sql = "insert into %s (district_id, geounit_id, plan_id) select %s as district_id, geounit.id as geounit_id, %s as plan_id from %s as geounit where geounit.geolevel_id = %s" % (DistrictGeounitMapping._meta.db_table, unassigned.id, plan.id, Geounit._meta.db_table, settings.BASE_GEOLEVEL)
+#        cursor.execute(sql)
+#        transaction.commit_unless_managed()
 
 # don't remove the dispatch_uid or this signal is sent twice.
 post_save.connect(set_geounit_mapping, sender=Plan, dispatch_uid="publicmapping.redistricting.Plan")

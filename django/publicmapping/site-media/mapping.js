@@ -272,25 +272,6 @@ function init() {
         toggleKey: 'ctrlKey'
     });
 
-    // Update the statistics for the plan.
-    var updateStats = function() {
-        if (! $('#working').dialog('isOpen')){ 
-            $('#working').dialog('open');
-        }
-
-        $.ajax({ 
-            url: '/districtmapping/plan/' + PLAN_ID + '/updatestats', 
-            success: function() {
-                $('.geography').load(geourl, {demo: getDistrictBy().by}, loadTooltips);
-                $('.demographics').load(demourl, loadTooltips);
-
-                districtLayer.destroyFeatures();
-                districtLayer.filter = getPlanAndSubjectFilters();
-                districtLayer.strategies[0].load();
-            }
-        });
-    } 
-
     // Reload the information tabs and reload the filters
     var updateInfoDisplay = function() {
         $('.geography').load(geourl, {demo: getDistrictBy().by}, loadTooltips);
@@ -955,9 +936,6 @@ function init() {
     districtLayer.events.register("loadend", districtLayer, sortByVisibility);
     olmap.events.register("moveend", olmap, sortByVisibility);
     
-    // A method for manually refreshing the statistics in the sidebar
-    $('#updatestatsbtn').click( updateStats );
-
     // Set the initial map extents to the bounds around the study area.
     // TODO Make these configurable.
     olmap.zoomToExtent(new OpenLayers.Bounds(-9467000,4570000,-8930000,5170000));

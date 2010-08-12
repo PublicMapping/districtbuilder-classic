@@ -12,11 +12,29 @@ from publicmapping import settings
 from publicmapping.redistricting.models import *
 import random, string, types, copy
 
-"""The view for a plan. This is a data endpoint, and will be used
-to return the geometries of plans as they are dynamically constructed."""
-@login_required
-def plan(request, planid):
-    return render_to_response('plan.json', {});
+#"""The view for a plan. This is a data endpoint, and will be used
+#to return the geometries of plans as they are dynamically constructed."""
+#@login_required
+#def plan(request, planid):
+#    status = { 'success': False, 'message': 'Unspecified Error' }
+#    if request.method == 'POST':
+#        status = saveplan(planid)
+#    return HttpResponse(json.dumps(status),mimetype='application/json')
+
+#def saveplan(planid):
+#    """This is a private method called by the initial plan method,
+#    when a plan is POSTed restfully to the endpoint.
+#    """
+#    status = { 'success': False }
+#    plan = Plan.objects.get(pk=planid)
+#    try:
+#        numdistricts = plan.update_stats(True)
+#        status['success'] = True
+#        status['message'] = "Saved plan '%s'; %d districts updated." % (plan.name, numdistricts)
+#    except:
+#        status['message'] = "Couldn't update plan stats."
+#
+#    return status
 
 
 @login_required
@@ -27,12 +45,11 @@ def copyplan(request, planid):
         status['success'] = False;
         status['message'] = "User %s doesn't have permission to copy this model" % request.user.username
         return HttpResponse(json.dumps(status),mimetype='application/json')
+
     newname = p.name + " " + str(random.random()) 
     if (request.method == "POST" ):
         newname = request.POST["name"]
-    plan_copy = Plan(
-        name = newname, owner=request.user
-    )
+    plan_copy = Plan(name = newname, owner=request.user)
     plan_copy.save()
 
     districts = p.district_set.all()
@@ -47,16 +64,19 @@ def copyplan(request, planid):
         district_copy.version = 0
         district_copy.plan = plan_copy
 
-        try:
+        #try:
+        if True:
+            #print "Saving district '%s' in plan %s" % (district_copy.name, plan_copy.id)
             district_copy.save() 
-        except Exception as inst:
+        #except Exception as inst:
+        else:
             status["success"] = False
             status["message"] = "Could not save district copies"
             status["exception"] = inst.message
             return HttpResponse(json.dumps(status),mimetype='application/json')
 
-        district_geounits = DistrictGeounitMapping.objects.filter(plan = p, district = district)
-        DistrictGeounitMapping.objects.filter(plan = plan_copy, geounit__in=district_geounits).update(district = district_copy)
+        #district_geounits = DistrictGeounitMapping.objects.filter(plan = p, district = district)
+        #DistrictGeounitMapping.objects.filter(plan = plan_copy, geounit__in=district_geounits).update(district = district_copy)
 
         stats = ComputedCharacteristic.objects.filter(district = district)
         for stat in stats:
@@ -134,7 +154,6 @@ def publishplan(request, planid):
         'plan': plan,
     })
 
-
 @login_required
 def newdistrict(request, planid):
     """Create a new district.  Optionally, add the given geounits to the 
@@ -174,19 +193,20 @@ def addtodistrict(request, planid, districtid):
         geolevel = request.REQUEST["geolevel"];
         geounit_ids = string.split(request.REQUEST["geounits"], "|")
         plan = Plan.objects.get(pk=planid)
-        try:
+        if True: #try:
             fixed = plan.add_geounits(districtid, geounit_ids, geolevel)
             status['success'] = True;
             status['message'] = 'Updated %d districts' % fixed
             plan = Plan.objects.get(pk=planid)
             status['edited'] = plan.edited.isoformat()
-        except: 
+        else: #except: 
             status['message'] = 'Could not add units to district.'
+
+        # debug the times used for each query
+        #status['queries'] = json.dumps(connection.queries)
+
     else:
         status['message'] = 'Geounits weren\'t found in a district.'
-
-    # debug the times used for each query
-    #status['queries'] = json.dumps(connection.queries)
 
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
@@ -311,18 +331,6 @@ def getaggregate(districts):
             data['value']= "Data unavailable" 
         aggregate.append(data)
     return aggregate
-
-def updatestats(request, planid):
-    status = { 'success': False }
-    plan = Plan.objects.get(pk=planid)
-    try:
-        numdistricts = plan.update_stats()
-        status['success'] = True
-        status['message'] = 'Updated stats for %s; %d districts updated.' % (plan.name, numdistricts)
-    except:
-        status['message'] = 'Couldn\'t update plan stats.'
-
-    return HttpResponse(json.dumps(status), mimetype='application/json')
 
 def updatedistrict(request, planid, districtid):
     status = { 'success': False }

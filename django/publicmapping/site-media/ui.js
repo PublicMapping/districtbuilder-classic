@@ -131,7 +131,7 @@ $(function() {
             var date = new Date(time);
             var hours = date.getHours();
             var minutes = date.getMinutes();
-            $('#saveplaninfo').text('Last Saved at ' + hours + ':' + minutes < 10 ? '0' + minutes : minutes);
+            $('#saveplaninfo').text('Last Saved at ' + hours + ':' + ((minutes < 10) ? ('0' + minutes) : minutes));
         });
 
         $('#map_legend').click(function(){
@@ -146,4 +146,24 @@ $(function() {
                 panel.slideDown(240);
             }
         });
-	});
+/*
+        $('#saveplanbtn').click(function(){
+            $('#working').dialog('open');
+
+            $.ajax({
+                url: '/districtmapping/plan/' + PLAN_ID,
+                type: 'POST',
+                success: function(data, textStatus, xhr) {
+                    $('#working').dialog('close');
+                    if (data.success) {
+                        $('#saveplaninfo').trigger('planSaved', new Date().valueOf());
+                    }
+                    else {
+                        // how to notify that the plan was not saved?
+                        window.status = data.message;
+                    }
+                }
+            });
+        });
+*/
+    });
