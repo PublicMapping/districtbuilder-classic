@@ -280,6 +280,7 @@ class Plan(models.Model):
                 district.simple = MultiPolygon(simple)
             else:
                 #print "Simple geometry is: %s" % simple.geom_type
+                pass
 
             district.save()
 
@@ -297,6 +298,7 @@ class Plan(models.Model):
                 target.geom = incremental
             else:
                 #print "Incremental geometry is: %s" % incremental.geom_type
+                pass
         else:
             union = target.geom.union(incremental)
             if union.geom_type == 'Polygon':
@@ -305,6 +307,7 @@ class Plan(models.Model):
                 target.geom = union
             else:
                 #print "Union geometry is: %s" % union.geom_type
+                pass
 
         simple = target.geom.simplify(tolerance=100.0,preserve_topology=True)
         if simple.geom_type == 'Polygon':
@@ -313,6 +316,7 @@ class Plan(models.Model):
             target.simple = simple
         else:
             #print "Simple geometry is: %s" % simple.geom_type
+            pass
            
         target.save();
 
