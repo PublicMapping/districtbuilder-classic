@@ -57,7 +57,10 @@ def copyplan(request, planid):
         # Skip Unassigned, we already have that
         if district.name == "Unassigned":
             continue
-#        district_copy = District(name = district.name, plan = copy, version = 0, geom = district.geom, simple = district.simple)
+        # only copy the most recent version of this district, not the
+        # entire history
+        if not district.is_latest_version():
+            continue
         district_copy = copy.copy(district)
 
         district_copy.id = None
@@ -91,7 +94,11 @@ def copyplan(request, planid):
 def editplan(request, planid):
     try:
         plan = Plan.objects.get(pk=planid)
-        districts = plan.district_set.all()
+        allversions = plan.district_set.all()
+        districts = []
+        for district in allversions:
+            if district.is_latest_version():
+                districts.append( district )
         districts = sorted(list(districts), key = lambda district: district.sortKey())
         if not can_edit(request.user, plan):
             plan = {}
@@ -167,7 +174,7 @@ def newdistrict(request, planid):
     if len(request.REQUEST.items()) >= 1:
         if request.REQUEST.__contains__('name'):
             try: 
-                district = District(name = request.REQUEST['name'], plan=plan)
+                district = District(name = request.REQUEST['name'], plan=plan, district_id = None)
                 district.save()
                 status['success'] = True
                 status['message'] = 'Created new district'
@@ -237,6 +244,9 @@ def getdemographics(request, planid):
     district_values = []
 
     for district in districts:
+        if not district.is_latest_version():
+            # skip districts that are not at the max version
+            continue
         dist_name = district.name
         if dist_name == "Unassigned":
             dist_name = "U"
@@ -281,6 +291,9 @@ def getgeography(request, planid):
 
     district_values = []
     for district in districts:
+        if not district.is_latest_version():
+            # skip districts that are not at the max version
+            continue
         dist_name = district.name
         if dist_name == "Unassigned":
             dist_name = "U"

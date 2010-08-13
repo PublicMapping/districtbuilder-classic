@@ -11,6 +11,7 @@ class CharacteristicInline(admin.TabularInline):
 class GeounitAdmin(admin.OSMGeoAdmin):
     inlines = [CharacteristicInline]
     list_display = ('name','geolevel',)
+    fields = ('name','geolevel','geom',)
     ordering = ('name',)
 
 class DistrictInline(admin.TabularInline):

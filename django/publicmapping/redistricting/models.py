@@ -7,6 +7,7 @@ from django.forms import ModelForm
 from django.conf import settings
 from datetime import datetime
 from math import sqrt, pi
+from copy import copy
 
 class Subject(models.Model):
     name = models.CharField(max_length=50)
@@ -33,6 +34,7 @@ class Geounit(models.Model):
     name = models.CharField(max_length=200)
     geom = models.MultiPolygonField(srid=3785)
     simple = models.MultiPolygonField(srid=3785)
+    center = models.PointField(srid=3785)
     geolevel = models.ForeignKey(Geolevel)
     objects = models.GeoManager()
 
@@ -45,7 +47,7 @@ class Geounit(models.Model):
         """
         from django.db import connection
         cursor = connection.cursor()
-        cursor.execute('SELECT id from redistricting_geounit where geolevel_id = %s and St_within(st_centroid(geom), (select st_simplify(st_union(geom), 10) from redistricting_geounit where geolevel_id = %s and id in %s))', [int(settings.BASE_GEOLEVEL), int(geolevel), geounit_ids])
+        cursor.execute('SELECT id from redistricting_geounit where geolevel_id = %s and St_within(center, (select st_simplify(st_union(geom), 10) from redistricting_geounit where geolevel_id = %s and id in %s))', [int(settings.BASE_GEOLEVEL), int(geolevel), geounit_ids])
         results = []
         ids = cursor.fetchall()
         for row in ids:
@@ -56,7 +58,7 @@ class Geounit(models.Model):
     def get_base_geounits_within(geom):
         from django.db import connection
         cursor = connection.cursor()
-        cursor.execute("select id from redistricting_geounit where geolevel_id = %s and st_within(st_centroid(geom), geomfromewkt(%s))",[settings.BASE_GEOLEVEL, str(geom.ewkt)])
+        cursor.execute("select id from redistricting_geounit where geolevel_id = %s and st_within(center, geomfromewkt(%s))",[settings.BASE_GEOLEVEL, str(geom.ewkt)])
         results = []
         ids = cursor.fetchall()
         for row in ids:
@@ -100,7 +102,7 @@ class Geounit(models.Model):
                 if not inside:
                     query += "NOT "
 
-                query += "st_intersects(st_centroid(geom), geomfromewkt('%s'))" % simple.ewkt
+                query += "st_intersects(center, geomfromewkt('%s'))" % simple.ewkt
 
                 cursor = connection.cursor()
                 cursor.execute(query)
@@ -197,9 +199,7 @@ class Geounit(models.Model):
 
                 if not remainder.empty:
                     simple = remainder.simplify(tolerance=100.0,preserve_topology=True)
-                    query = "SELECT id,st_ashexewkb(geom,'NDR') FROM redistricting_geounit WHERE geolevel_id = %d AND st_within(st_centroid(geom), geomfromewkt('%s'))" % (level, simple.ewkt)
-                    #guFilter = Q(geolevel=level) & Q(geom__within=simple)
-                    #qset = Geounit.objects.filter(guFilter).values_list('id',flat=True)
+                    query = "SELECT id,st_ashexewkb(geom,'NDR') FROM redistricting_geounit WHERE geolevel_id = %d AND st_within(center, geomfromewkt('%s'))" % (level, simple.ewkt)
                     cursor = connection.cursor()
                     cursor.execute(query)
                     rows = cursor.fetchall()
@@ -262,15 +262,27 @@ class Plan(models.Model):
         Will return the number of districts effected by the operation.
         """
         
+        # incremental is the geometry that is changing
         incremental = Geounit.objects.filter(id__in=geounit_ids).unionagg()
 
-        # incremental is the geometry that is changing
-
-        target = self.district_set.get(district_id=districtid)
+        # get the most recent version of the target
+        tversion = self.district_set.filter(district_id=districtid).aggregate(Max('version'))['version__max']
+        target = self.district_set.get(district_id=districtid,version=tversion)
 
         fixed = 0
-        districts = self.district_set.filter(~Q(id=target.id),geom__intersects=incremental)
+        districts = self.district_set.filter(~Q(id=target.id))
         for district in districts:
+            # find the max version of the district. this uses the non-
+            # unique district_id field to determine the max version
+            dversion = self.district_set.filter(district_id=district.district_id).aggregate(Max('version'))['version__max']
+            if district.version != dversion:
+                # the version of this district is not the most recent; skip
+                continue
+            if not (district.geom and (district.geom.overlaps(incremental) or district.geom.contains(incremental))):
+                # if this district does not overlap the selection or
+                # if this district does not contain the selection; skip
+                continue
+
             # compute the geounits before changing the boundary
             geounits = Geounit.get_mixed_geounits(geounit_ids, geolevel, district.geom, True)
             try:
@@ -292,14 +304,25 @@ class Plan(models.Model):
                 district.geom = None
                 district.simple = None
 
+            # save the original district id for copyingi
+            # ComputedCharacteristics 
+            oldid = district.id
+
+            district = copy(district)
+            district.version += 1
+            district.id = None
             district.save()
 
-            if not district.geom:
-                # clear out computed stats for null geoms
-                ComputedCharacteristic.objects.filter(district=district).delete()
+            # Clone the computed stats to this newly versioned district
+            computedChars = ComputedCharacteristic.objects.filter(district=oldid)
+            for computed in computedChars:
+                computed.id = None
+                computed.district = district
+                computed.save()
+
+            if district.delta_stats(geounits,False):
                 fixed += 1
-            elif district.delta_stats(geounits,False):
-                fixed += 1
+
         # get the geounits before changing the target geometry
         geounits = Geounit.get_mixed_geounits(geounit_ids, geolevel, target.geom, False)
 
@@ -321,8 +344,22 @@ class Plan(models.Model):
             target.simple = enforce_multi(simple)
         else:
             target.simple = None
-          
+
+        # save the original district id for copyingi
+        # ComputedCharacteristics 
+        oldid = target.id
+
+        target = copy(target)
+        target.version += 1
+        target.id = None
         target.save();
+
+        # Clone the computed stats to this newly versioned district
+        computedChars = ComputedCharacteristic.objects.filter(district=oldid)
+        for computed in computedChars:
+            computed.id = None
+            computed.district = target
+            computed.save()
 
         if target.geom and target.delta_stats(geounits,True):
             fixed += 1
@@ -366,6 +403,17 @@ class District(models.Model):
             return '%03d' % int(name)
         return name 
 
+    def is_latest_version(self):
+        """Determine if this district is the latest version of the district
+        stored. If a district is not assigned to a plan, it is always 
+        considered the latest version.
+        """
+        if self.plan:
+            qset = self.plan.district_set.filter(district_id=self.district_id)
+            maxver = qset.aggregate(Max('version'))['version__max']
+
+            return self.version == maxver
+        return true
 
     def __unicode__(self):
         return self.name
@@ -424,10 +472,10 @@ class District(models.Model):
                     computed = ComputedCharacteristic(subject=subject,district=self,number=0)
 
                 if combine:
-                    #print "Adding %f to district '%s' for subject '%s'" % (aggregate, self.name, subject.display)
+                    print "Adding %f to district '%s' for subject '%s'" % (aggregate, self.name, subject.display)
                     computed.number += aggregate
                 else:
-                    #print "Removing %f from district '%s' for subject '%s'" % (aggregate, self.name, subject.display)
+                    print "Removing %f from district '%s' for subject '%s'" % (aggregate, self.name, subject.display)
                     computed.number -= aggregate
                 computed.save();
                 changed = True
@@ -486,8 +534,9 @@ def set_district_id(sender, **kwargs):
     """
     from django.core.exceptions import ValidationError
     district = kwargs['instance']
-    if (not district.id):
+    if (not district.district_id):
         max_id = District.objects.filter(plan = district.plan).aggregate(Max('district_id'))['district_id__max']
+        print 'Max id for plan %d' % district.plan_id
         if max_id:
             district.district_id = max_id + 1
         else:

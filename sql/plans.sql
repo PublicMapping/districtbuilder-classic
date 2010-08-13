@@ -31,9 +31,13 @@ ALTER TABLE simple_block OWNER TO publicmapping;
 CREATE OR REPLACE VIEW simple_district AS 
  SELECT rd.id, rd.district_id, rd.name, rd.version, rd.plan_id, rc.subject_id, rc.number, rd.simple AS geom
    FROM redistricting_district rd
-   JOIN redistricting_computedcharacteristic rc ON rd.id = rc.district_id;
+   JOIN redistricting_computedcharacteristic rc ON rd.id = rc.district_id
+  WHERE rd.version = (( SELECT max(redistricting_district.version) AS max
+      FROM redistricting_district
+     WHERE redistricting_district.district_id = rd.district_id));
 
 ALTER TABLE simple_district OWNER TO publicmapping;
+
 
 -- Demographic Views
 
