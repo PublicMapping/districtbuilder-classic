@@ -254,11 +254,23 @@ def getdemographics(request, planid):
         return HttpResponse ( "{ \"success\": false, \"message\":\"Couldn't get demographic info from the server. Please try again later.\" }" )
     subjects = Subject.objects.all()
     districts = plan.district_set.all()
+    districts = sorted(list(districts), key=lambda d: d.sortVer())
     district_values = []
 
-    for district in districts:
-        if not district.is_latest_version():
-            # skip districts that are not at the max version
+    if 'version' in request.REQUEST:
+        version = request.REQUEST['version']
+    else:
+        version = plan.version
+
+    for i in range(0, len(districts)):
+        district = districts[i]
+        if district.version != version and i < (len(districts) - 1) and district.district_id == districts[i+1].district_id:
+            # skip districts that are not at the same version, with the
+            # exception of the last district with the district_id -- if
+            # no district has been found with the version number, use
+            # the last district, as it has been sorted earlier to return
+            # the most recent district last, even if it's not at the
+            # version specified
             continue
         dist_name = district.name
         if dist_name == "Unassigned":
@@ -296,16 +308,28 @@ def getgeography(request, planid):
     else:
         return HttpResponse ( "{ \"success\": false, \"message\":\"Couldn't get geography info from the server. Please use the 'demo' parameter with a Subject id.\" }" )
 
+    if 'version' in request.REQUEST:
+        version = request.REQUEST['version']
+    else:
+        version = plan.version
+
     districts = plan.district_set.all()
+    districts = sorted(list(districts), key=lambda d: d.sortVer())
     try:
         subject = Subject.objects.get(pk=demo)
     except:
         return HttpResponse ( "{ \"success\": false, \"message\":\"Couldn't get geography info from the server. No Subject exists with the given id.\" }" )
 
     district_values = []
-    for district in districts:
-        if not district.is_latest_version():
-            # skip districts that are not at the max version
+    for i in range(0, len(districts)):
+        district = districts[i]
+        if district.version != version and i < (len(districts) - 1) and district.district_id == districts[i+1].district_id:
+            # skip districts that are not at the same version, with the
+            # exception of the last district with the district_id -- if
+            # no district has been found with the version number, use
+            # the last district, as it has been sorted earlier to return
+            # the most recent district last, even if it's not at the
+            # version specified
             continue
         dist_name = district.name
         if dist_name == "Unassigned":

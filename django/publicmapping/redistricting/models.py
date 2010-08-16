@@ -439,6 +439,11 @@ class District(models.Model):
             return '%03d' % int(name)
         return name 
 
+    def sortVer(self):
+        """This method generates a key that is used to sort a list of
+        districts first by district_id, then by version number."""
+        return self.district_id * 10000 + self.version
+
     def is_latest_version(self):
         """Determine if this district is the latest version of the district
         stored. If a district is not assigned to a plan, it is always 

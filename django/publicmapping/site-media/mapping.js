@@ -278,8 +278,8 @@ function init() {
 
     // Reload the information tabs and reload the filters
     var updateInfoDisplay = function() {
-        $('.geography').load(geourl, {demo: getDistrictBy().by}, loadTooltips);
-        $('.demographics').load(demourl, loadTooltips);
+        $('.geography').load(geourl, {demo: getDistrictBy().by, version: getPlanVersion()}, loadTooltips);
+        $('.demographics').load(demourl, {version: getPlanVersion()}, loadTooltips);
 
         districtLayer.destroyFeatures();
         districtLayer.filter = getVersionAndSubjectFilters();
@@ -310,6 +310,11 @@ function init() {
             success: function(data, textStatus, xhr) {
                 var mode = data.success ? 'select' : 'error';
                 if (data.success) {
+                    // update the max version of this plan
+                    PLAN_VERSION = data.version;
+                    // set the version cursor, too!
+                    $('#history_cursor').val(data.version);
+
                     updateInfoDisplay();
                     $('#saveplaninfo').trigger('planSaved', [ data.edited ]);
                 }
