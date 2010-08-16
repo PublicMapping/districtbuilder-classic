@@ -58,25 +58,32 @@ function getDistrictBy() {
     return { by: orig, modified: mod }; 
 }
 
+function getPlanVersion() {
+    var ver = $('#history_cursor').val();
+    return ver;
+}
+
+
 /*
  * The URLs for updating the calculated geography and demographics.
  */
 var geourl = '/districtmapping/plan/' + PLAN_ID + '/geography';
 var demourl = '/districtmapping/plan/' + PLAN_ID + '/demographics';
 
-function getPlanAndSubjectFilters() {
+function getVersionAndSubjectFilters() {
     var dby = getDistrictBy();
+    var ver = getPlanVersion();
     return new OpenLayers.Filter.Logical({
         type: OpenLayers.Filter.Logical.AND,
         filters: [
             new OpenLayers.Filter.Comparison({
                 type: OpenLayers.Filter.Comparison.EQUAL_TO,
-                property: 'plan_id',
-                value: PLAN_ID
+                property: 'version',
+                value: ver
             }),
             new OpenLayers.Filter.Comparison({
                 type: OpenLayers.Filter.Comparison.EQUAL_TO,
-                property: 'subject_id',
+                property: 'subject',
                 value: dby.by
             })
         ]
@@ -177,17 +184,14 @@ function init() {
             strategies: [
                 districtStrategy
             ],
-            protocol: new OpenLayers.Protocol.WFS({
-                url: 'http://' + MAP_SERVER + '/geoserver/wfs',
-                featureType: 'simple_district',
-                featureNS: 'http://gmu.azavea.com/',
-                featurePrefix: 'gmu',
-                geometryName: 'geom',
-                srsName: 'EPSG:3785' 
+            protocol: new OpenLayers.Protocol.HTTP({
+                url: '/districtmapping/plan/' + PLAN_ID + '/district/versioned',
+                format: new OpenLayers.Format.GeoJSON(),
+                readWithPOST: true
             }),
             styleMap: new OpenLayers.StyleMap(new OpenLayers.Style(districtStyle)),
             projection: projection,
-            filter: getPlanAndSubjectFilters()
+            filter: getVersionAndSubjectFilters()
         }
     );
 
@@ -278,7 +282,7 @@ function init() {
         $('.demographics').load(demourl, loadTooltips);
 
         districtLayer.destroyFeatures();
-        districtLayer.filter = getPlanAndSubjectFilters();
+        districtLayer.filter = getVersionAndSubjectFilters();
         districtLayer.strategies[0].load();
     };
 
@@ -857,7 +861,7 @@ function init() {
     // Logic for the 'Show Districts by' dropdown
     $('#districtby').change(function(evt){
         districtLayer.destroyFeatures();
-        districtLayer.filter = getPlanAndSubjectFilters();
+        districtLayer.filter = getVersionAndSubjectFilters();
         districtLayer.strategies[0].load();
     });
 
@@ -872,6 +876,46 @@ function init() {
         else {
             var feature = { data:{ district_id: this.value } };
             assignOnSelect(feature);
+        }
+    });
+
+    // Logic for the history back button
+    $('#history_undo').click(function(evt){
+        var cursor = $('#history_cursor');
+        var ver = cursor.val();
+        if (ver > 0) {
+            ver--;
+            if (ver == 0) {
+                $(this).addClass('disabled');
+            }
+            cursor.val(ver);
+
+            $('#history_redo').removeClass('disabled');
+
+            window.status = 'At version ' + ver;
+            districtLayer.destroyFeatures();
+            districtLayer.filter = getVersionAndSubjectFilters();
+            districtLayer.strategies[0].load();
+        }
+    });
+
+    // Logic for history redo button
+    $('#history_redo').click(function(evt){
+        var cursor = $('#history_cursor');
+        var ver = cursor.val();
+        if (ver < PLAN_VERSION) {
+            ver++;
+            if (ver == PLAN_VERSION) {
+                $(this).addClass('disabled');
+            }
+            cursor.val(ver);
+
+            $('#history_undo').removeClass('disabled');
+
+            window.status = 'At version ' + ver;
+            districtLayer.destroyFeatures();
+            districtLayer.filter = getVersionAndSubjectFilters();
+            districtLayer.strategies[0].load();
         }
     });
 

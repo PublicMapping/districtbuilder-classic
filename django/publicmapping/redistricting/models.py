@@ -5,6 +5,7 @@ from django.db.models import Sum, Max, Q
 from django.db.models.signals import pre_save, post_save
 from django.forms import ModelForm
 from django.conf import settings
+from django.utils import simplejson as json
 from datetime import datetime
 from math import sqrt, pi
 from copy import copy
@@ -376,19 +377,40 @@ class Plan(models.Model):
             fixed += 1
 
         # save any changes to the version of this plan
+        self.version += 1
         self.save()
 
         return fixed
 
 
-#    def update_stats(self,force=False):
-#        districts = self.district_set.all()
-#        changed = 0
-#        for district in districts:
-#            if district.update_stats(force):
-#                changed += 1
-#        return changed
+    def get_versioned_districts(self,version,subject_id):
+        """Get the districts in this plan at a specific version. This 
+        method behaves much like a WFS service, returning the GeoJSON for
+        each district. This is due to the limitations of filtering and the
+        complexity of the version query -- it makes it impossible to use
+        the WFS layer in Geoserver automatically.
+        """
+        
+        from django.db import connection
+        cursor = connection.cursor()
 
+        query = 'SELECT rd.id, rd.district_id, rd.name, rd.version, rd.plan_id, rc.subject_id, rc.number, st_asgeojson(rd.simple) AS geom FROM redistricting_district rd JOIN redistricting_computedcharacteristic rc ON rd.id = rc.district_id WHERE rd.version = (SELECT max(redistricting_district.version) FROM redistricting_district WHERE redistricting_district.district_id = rd.district_id AND redistricting_district.version <= %d ) AND rd.plan_id = %d AND rc.subject_id = %d' % (int(version), int(self.id), int(subject_id))
+
+        cursor.execute(query)
+        rows = cursor.fetchall()
+        features = []
+        for row in rows:
+            features.append({ 
+                'id': row[0],
+                'properties': {
+                    'district_id': row[1],
+                    'name': row[2],
+                    'version': row[3],
+                    'number': float(row[6])
+                },
+                'geometry': json.loads( row[7] )
+            })
+        return features
 
 class PlanForm(ModelForm):
     class Meta:

@@ -67,12 +67,10 @@ def copyplan(request, planid):
         district_copy.version = 0
         district_copy.plan = plan_copy
 
-        #try:
-        if True:
+        try:
             #print "Saving district '%s' in plan %s" % (district_copy.name, plan_copy.id)
             district_copy.save() 
-        #except Exception as inst:
-        else:
+        except Exception as inst:
             status["success"] = False
             status["message"] = "Could not save district copies"
             status["exception"] = inst.message
@@ -200,17 +198,15 @@ def addtodistrict(request, planid, districtid):
         geolevel = request.REQUEST["geolevel"];
         geounit_ids = string.split(request.REQUEST["geounits"], "|")
         plan = Plan.objects.get(pk=planid)
-        if True: #try:
+        try:
             fixed = plan.add_geounits(districtid, geounit_ids, geolevel)
             status['success'] = True;
             status['message'] = 'Updated %d districts' % fixed
             plan = Plan.objects.get(pk=planid)
             status['edited'] = plan.edited.isoformat()
-        else: #except: 
+            status['version'] = plan.version
+        except: 
             status['message'] = 'Could not add units to district.'
-
-        # debug the times used for each query
-        #status['queries'] = json.dumps(connection.queries)
 
     else:
         status['message'] = 'Geounits weren\'t found in a district.'
@@ -233,6 +229,23 @@ def chooseplan(request):
             'mine': mine,
             'user': request.user,
         })
+
+@login_required
+def simple_district_versioned(request,planid):
+    version = request.REQUEST['version__eq']
+    subject_id = request.REQUEST['subject__eq']
+
+    status = {'success':False,'type':'FeatureCollection'}
+    try:
+        plan = Plan.objects.get(id=planid)
+        status['features'] = plan.get_versioned_districts(version, subject_id)
+        status['success'] = True
+    except:
+        status['features'] = []
+        status['message'] = 'Query failed.'
+
+    return HttpResponse(json.dumps(status),mimetype='application/json')
+    
 
 def getdemographics(request, planid):
     try:

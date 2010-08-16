@@ -15,4 +15,5 @@ urlpatterns = patterns('publicmapping.redistricting.views',
     (r'^plan/(?P<planid>\d*)/updatestats', 'updatestats'),
     (r'^plan/(?P<planid>\d*)/district/(?P<districtid>\d*)/updatestats', 'updatedistrict'),
     (r'^plan/(?P<planid>\d*)/district/new', 'newdistrict'),
+    (r'^plan/(?P<planid>\d*)/district/versioned', 'simple_district_versioned'),
 )
