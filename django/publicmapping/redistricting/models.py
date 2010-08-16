@@ -85,24 +85,30 @@ class Geounit(models.Model):
         selection = None
         units = []
         for level in levels:
+            #print 'Looking in geolevel: %d (%d)' % (level,len(units))
             # if this geolevel is the requested geolevel
             if geolevel == level:
                 guFilter = Q(id__in=geounit_ids)
 
                 selection = Geounit.objects.filter(guFilter).unionagg()
-                if boundary:
-                    simple = boundary.simplify(tolerance=100.0,preserve_topology=True)
-                else:
-                    boundary = empty_geom(selection.srid)
-                    simple = boundary
                 
-                query = "SELECT id,st_ashexewkb(geom,'NDR') FROM redistricting_geounit WHERE id IN (%s)" % (','.join(geounit_ids))
+                query = "SELECT id,st_ashexewkb(geom,'NDR') FROM redistricting_geounit WHERE id IN (%s) AND " % (','.join(geounit_ids))
 
-                query += " AND "
-                if not inside:
-                    query += "NOT "
+                if not boundary:
+                    boundary = empty_geom(selection.srid)
 
-                query += "st_intersects(center, geomfromewkt('%s'))" % simple.ewkt
+                if inside:
+                    if level != settings.BASE_GEOLEVEL:
+                        query += "st_within(geom, geomfromewkt('%s'))" % boundary.ewkt
+                    else:
+                        query += "st_intersects(center, geomfromewkt('%s'))" % center.ewkt
+                else:
+                    if level != settings.BASE_GEOLEVEL:
+                        query += "NOT st_intersects(geom, geomfromewkt('%s'))" % boundary.ewkt
+                    else:
+                        query += "NOT st_intersects(center, geomfromewkt('%s')" % center.ewkt
+
+                #print "Query: '%s'" % query
 
                 cursor = connection.cursor()
                 cursor.execute(query)
@@ -126,29 +132,32 @@ class Geounit(models.Model):
                 # union the selected geometries
                 union = None
                 for selected in units:
+                    # this always rebuilts the current extent of all the
+                    # selected geounits
                     if union is None:
                         union = selected.geom
                     else:
                         union = union.union(selected.geom)
 
+                #print 'Union: %s' % union
+
                 # set or merge this onto the existing selection
-                if current is None and union is None:
+                if union is None:
                     intersects = selection
                 else:
-                    if current is None:
-                        current = union
-                    else:
-                        current.union(union)
-                    intersects = selection.difference(current)
+                    intersects = selection.difference(union)
+
+                #print 'Intersection %s' % intersects
 
                 if inside:
                     # the remainder geometry is the intersection of the 
                     # district and the difference of the selected geounits
                     # and the current extent
                     try:
+                        #print 'Intersecting selection with %s' % boundary
                         remainder = boundary.intersection(intersects)
                     except GEOSException, ex:
-                        #print 'GEOSException, line 152:'
+                        #print 'GEOSException, line 148:'
                         #print ex
                         # it is not clear what this means, or why it happens
                         remainder = empty_geom(boundary.srid)
@@ -164,7 +173,7 @@ class Geounit(models.Model):
 
                         remainder = remainder.intersection(intersects)
                     except GEOSException, ex:
-                        #print 'GEOSException, line 168:'
+                        #print 'GEOSException, line 163:'
                         #print ex
                         # it is not clear what this means, or why it happens
                         remainder = empty_geom(boundary.srid)
@@ -173,17 +182,13 @@ class Geounit(models.Model):
                     srid = remainder.srid
                     union = None
                     for geom in remainder:
-                        if geom.geom_type == 'MultiPolygon':
+                        mgeom = enforce_multi(geom)
+                        if mgeom.geom_type == 'MultiPolygon':
                             if union is None:
-                                union = geom
+                                union = mgeom
                             else:
-                                for poly in geom:
+                                for poly in mgeom:
                                     union.append(poly)
-                        elif geom.geom_type == 'Polygon':
-                            if union is None:
-                                union = MultiPolygon(geom)
-                            else:
-                                union.append(geom)
                         else:
                             # do nothing if it's not some kind of poly
                             #print "Cannot intersect non-area: %s" % remainder[i].geom_type
@@ -194,12 +199,20 @@ class Geounit(models.Model):
                         remainder.srid = srid
                     else:
                         remainder = empty_geom(srid)
-                else:
+                elif remainder.empty or (remainder.geom_type != 'MultiPolygon' and remainder.geom_type != 'Polygon'):
                     remainder = empty_geom(boundary.srid)
 
+                #print 'Remainder: %s' % remainder
+
                 if not remainder.empty:
-                    simple = remainder.simplify(tolerance=100.0,preserve_topology=True)
-                    query = "SELECT id,st_ashexewkb(geom,'NDR') FROM redistricting_geounit WHERE geolevel_id = %d AND st_within(center, geomfromewkt('%s'))" % (level, simple.ewkt)
+                    query = "SELECT id,st_ashexewkb(geom,'NDR') FROM redistricting_geounit WHERE geolevel_id = %d AND " % level
+
+                    if level == settings.BASE_GEOLEVEL:
+                        query += "st_intersects(center, geomfromewkt('%s'))" % remainder.ewkt
+                    else:
+                        query += "st_within(geom, geomfromewkt('%s'))" % remainder.ewkt
+
+                    #print "geounit q: %s" % query
                     cursor = connection.cursor()
                     cursor.execute(query)
                     rows = cursor.fetchall()
@@ -272,12 +285,10 @@ class Plan(models.Model):
         fixed = 0
         districts = self.district_set.filter(~Q(id=target.id))
         for district in districts:
-            # find the max version of the district. this uses the non-
-            # unique district_id field to determine the max version
-            dversion = self.district_set.filter(district_id=district.district_id).aggregate(Max('version'))['version__max']
-            if district.version != dversion:
+            if not district.is_latest_version():
                 # the version of this district is not the most recent; skip
                 continue
+
             if not (district.geom and (district.geom.overlaps(incremental) or district.geom.contains(incremental))):
                 # if this district does not overlap the selection or
                 # if this district does not contain the selection; skip
@@ -309,7 +320,7 @@ class Plan(models.Model):
             oldid = district.id
 
             district = copy(district)
-            district.version += 1
+            district.version = self.version + 1
             district.id = None
             district.save()
 
@@ -350,7 +361,7 @@ class Plan(models.Model):
         oldid = target.id
 
         target = copy(target)
-        target.version += 1
+        target.version = self.version + 1
         target.id = None
         target.save();
 
@@ -363,6 +374,9 @@ class Plan(models.Model):
 
         if target.geom and target.delta_stats(geounits,True):
             fixed += 1
+
+        # save any changes to the version of this plan
+        self.save()
 
         return fixed
 
@@ -472,10 +486,10 @@ class District(models.Model):
                     computed = ComputedCharacteristic(subject=subject,district=self,number=0)
 
                 if combine:
-                    print "Adding %f to district '%s' for subject '%s'" % (aggregate, self.name, subject.display)
+                    # #print "Adding %f to district '%s' for subject '%s'" % (aggregate, self.name, subject.display)
                     computed.number += aggregate
                 else:
-                    print "Removing %f from district '%s' for subject '%s'" % (aggregate, self.name, subject.display)
+                    # #print "Removing %f from district '%s' for subject '%s'" % (aggregate, self.name, subject.display)
                     computed.number -= aggregate
                 computed.save();
                 changed = True
@@ -536,7 +550,7 @@ def set_district_id(sender, **kwargs):
     district = kwargs['instance']
     if (not district.district_id):
         max_id = District.objects.filter(plan = district.plan).aggregate(Max('district_id'))['district_id__max']
-        print 'Max id for plan %d' % district.plan_id
+        #print 'Max id for plan %d' % district.plan_id
         if max_id:
             district.district_id = max_id + 1
         else:
@@ -597,6 +611,7 @@ def empty_geom(srid):
     return geom
 
 def enforce_multi(geom):
+    #print "Enforcing on %s" % geom
     if geom:
         if geom.geom_type == 'MultiPolygon':
             return geom
