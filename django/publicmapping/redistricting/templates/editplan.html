@@ -350,7 +350,7 @@
     {% endif %}
         }).init();
     {% if plan.name %}
-        $('.geography').load('/districtmapping/plan/{{plan.id}}/geography?demo=3');
+        $('.geography').load('/districtmapping/plan/{{plan.id}}/geography', { demo: 3 });
         $('.demographics').load('/districtmapping/plan/{{plan.id}}/demographics');      
 //        var publish = publishplan({
 //            target: $('#saveplanbtn'),

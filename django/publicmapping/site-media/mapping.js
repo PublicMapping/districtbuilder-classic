@@ -186,8 +186,7 @@ function init() {
             ],
             protocol: new OpenLayers.Protocol.HTTP({
                 url: '/districtmapping/plan/' + PLAN_ID + '/district/versioned',
-                format: new OpenLayers.Format.GeoJSON(),
-                readWithPOST: true
+                format: new OpenLayers.Format.GeoJSON()
             }),
             styleMap: new OpenLayers.StyleMap(new OpenLayers.Style(districtStyle)),
             projection: projection,
@@ -281,7 +280,6 @@ function init() {
         $('.geography').load(geourl, {demo: getDistrictBy().by, version: getPlanVersion()}, loadTooltips);
         $('.demographics').load(demourl, {version: getPlanVersion()}, loadTooltips);
 
-        districtLayer.destroyFeatures();
         districtLayer.filter = getVersionAndSubjectFilters();
         districtLayer.strategies[0].load();
     };
@@ -865,7 +863,7 @@ function init() {
 
     // Logic for the 'Show Districts by' dropdown
     $('#districtby').change(function(evt){
-        districtLayer.destroyFeatures();
+        //districtLayer.destroyFeatures();
         districtLayer.filter = getVersionAndSubjectFilters();
         districtLayer.strategies[0].load();
     });
@@ -898,9 +896,8 @@ function init() {
             $('#history_redo').removeClass('disabled');
 
             window.status = 'At version ' + ver;
-            districtLayer.destroyFeatures();
-            districtLayer.filter = getVersionAndSubjectFilters();
-            districtLayer.strategies[0].load();
+
+            updateInfoDisplay();
         }
     });
 
@@ -918,9 +915,8 @@ function init() {
             $('#history_undo').removeClass('disabled');
 
             window.status = 'At version ' + ver;
-            districtLayer.destroyFeatures();
-            districtLayer.filter = getVersionAndSubjectFilters();
-            districtLayer.strategies[0].load();
+
+            updateInfoDisplay();
         }
     });
 

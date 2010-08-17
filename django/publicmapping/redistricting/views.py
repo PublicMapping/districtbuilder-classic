@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import humanize
 from django import forms
 from django.utils import simplejson as json
+from django.views.decorators.cache import cache_page
 from publicmapping import settings
 from publicmapping.redistricting.models import *
 import random, string, types, copy
@@ -89,6 +90,7 @@ def copyplan(request, planid):
     return HttpResponse(data)    
     
 @login_required
+@cache_page(3600)
 def editplan(request, planid):
     try:
         plan = Plan.objects.get(pk=planid)
@@ -231,6 +233,7 @@ def chooseplan(request):
         })
 
 @login_required
+@cache_page(3600)
 def simple_district_versioned(request,planid):
     version = request.REQUEST['version__eq']
     subject_id = request.REQUEST['subject__eq']
