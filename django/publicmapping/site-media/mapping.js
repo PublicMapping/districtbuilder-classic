@@ -303,7 +303,8 @@ function init() {
             url: '/districtmapping/plan/' + PLAN_ID + '/district/' + district_id + '/add',
             data: {
                 geolevel: geolevel_id,
-                geounits: geounit_ids
+                geounits: geounit_ids,
+                version: getPlanVersion()
             },
             success: function(data, textStatus, xhr) {
                 var mode = data.success ? 'select' : 'error';
@@ -863,7 +864,6 @@ function init() {
 
     // Logic for the 'Show Districts by' dropdown
     $('#districtby').change(function(evt){
-        //districtLayer.destroyFeatures();
         districtLayer.filter = getVersionAndSubjectFilters();
         districtLayer.strategies[0].load();
     });

@@ -53,15 +53,12 @@ def copyplan(request, planid):
     plan_copy = Plan(name = newname, owner=request.user)
     plan_copy.save()
 
-    districts = p.district_set.all()
+    districts = p.get_districts_at_version(p.version)
     for district in districts:
         # Skip Unassigned, we already have that
         if district.name == "Unassigned":
             continue
-        # only copy the most recent version of this district, not the
-        # entire history
-        if not district.is_latest_version():
-            continue
+
         district_copy = copy.copy(district)
 
         district_copy.id = None
@@ -69,7 +66,6 @@ def copyplan(request, planid):
         district_copy.plan = plan_copy
 
         try:
-            #print "Saving district '%s' in plan %s" % (district_copy.name, plan_copy.id)
             district_copy.save() 
         except Exception as inst:
             status["success"] = False
@@ -77,29 +73,18 @@ def copyplan(request, planid):
             status["exception"] = inst.message
             return HttpResponse(json.dumps(status),mimetype='application/json')
 
-        #district_geounits = DistrictGeounitMapping.objects.filter(plan = p, district = district)
-        #DistrictGeounitMapping.objects.filter(plan = plan_copy, geounit__in=district_geounits).update(district = district_copy)
+        # clone the characteristics from the original district to the copy 
+        district_copy.clone_characteristics_from(district)
 
-        stats = ComputedCharacteristic.objects.filter(district = district)
-        for stat in stats:
-            stat.district = district_copy
-            stat.id = None
-            stat.save()
     data = serializers.serialize("json", [ plan_copy ])
 
     return HttpResponse(data)    
     
 @login_required
-@cache_page(3600)
 def editplan(request, planid):
     try:
         plan = Plan.objects.get(pk=planid)
-        allversions = plan.district_set.all()
-        districts = []
-        for district in allversions:
-            if district.is_latest_version():
-                districts.append( district )
-        districts = sorted(list(districts), key = lambda district: district.sortKey())
+        districts = plan.get_districts_at_version(plan.version)
         if not can_edit(request.user, plan):
             plan = {}
     except:
@@ -168,13 +153,11 @@ def newdistrict(request, planid):
     """
     status = { 'success': False, 'message': 'Unspecified error.' }
     plan = Plan.objects.get(pk=planid)
-    if not plan:
-        status['message'] = 'No plan with that ID'
-        return HttpResponse(json.dumps(status),mimetype='application/json')
+    plan.version += 1
     if len(request.REQUEST.items()) >= 1:
         if request.REQUEST.__contains__('name'):
             try: 
-                district = District(name = request.REQUEST['name'], plan=plan, district_id = None)
+                district = District(name = request.REQUEST['name'], plan=plan, district_id = None, version=plan.version + 1)
                 district.save()
                 status['success'] = True
                 status['message'] = 'Created new district'
@@ -182,6 +165,7 @@ def newdistrict(request, planid):
                 status['edited'] = plan.edited.isoformat()
                 status['district_id'] = district.district_id
                 status['district_name'] = district.name
+                status['version'] = plan.version
             except ValidationError:
                 status['message'] = 'Reached Max districts already'
             except:
@@ -197,17 +181,24 @@ def addtodistrict(request, planid, districtid):
     """
     status = { 'success': False, 'message': 'Unspecified error.' }
     if len(request.REQUEST.items()) >= 2: 
-        geolevel = request.REQUEST["geolevel"];
+        geolevel = request.REQUEST["geolevel"]
         geounit_ids = string.split(request.REQUEST["geounits"], "|")
         plan = Plan.objects.get(pk=planid)
-        try:
-            fixed = plan.add_geounits(districtid, geounit_ids, geolevel)
+
+        # get the version from the request or the plan
+        if 'version' in request.REQUEST:
+            version = request.REQUEST['version']
+        else:
+            version = plan.version
+
+        if True: #try:
+            fixed = plan.add_geounits(districtid, geounit_ids, geolevel, version)
             status['success'] = True;
             status['message'] = 'Updated %d districts' % fixed
             plan = Plan.objects.get(pk=planid)
             status['edited'] = plan.edited.isoformat()
             status['version'] = plan.version
-        except: 
+        else: #except: 
             status['message'] = 'Could not add units to district.'
 
     else:
@@ -241,7 +232,7 @@ def simple_district_versioned(request,planid):
     status = {'success':False,'type':'FeatureCollection'}
     try:
         plan = Plan.objects.get(id=planid)
-        status['features'] = plan.get_versioned_districts(version, subject_id)
+        status['features'] = plan.get_wfs_districts(version, subject_id)
         status['success'] = True
     except:
         status['features'] = []
@@ -256,8 +247,6 @@ def getdemographics(request, planid):
     except:
         return HttpResponse ( "{ \"success\": false, \"message\":\"Couldn't get demographic info from the server. Please try again later.\" }" )
     subjects = Subject.objects.all()
-    districts = plan.district_set.all()
-    districts = sorted(list(districts), key=lambda d: d.sortVer())
     district_values = []
 
     if 'version' in request.REQUEST:
@@ -265,16 +254,9 @@ def getdemographics(request, planid):
     else:
         version = plan.version
 
-    for i in range(0, len(districts)):
-        district = districts[i]
-        if district.version != version and i < (len(districts) - 1) and district.district_id == districts[i+1].district_id:
-            # skip districts that are not at the same version, with the
-            # exception of the last district with the district_id -- if
-            # no district has been found with the version number, use
-            # the last district, as it has been sorted earlier to return
-            # the most recent district last, even if it's not at the
-            # version specified
-            continue
+    districts = plan.get_districts_at_version(version)
+
+    for district in districts:
         dist_name = district.name
         if dist_name == "Unassigned":
             dist_name = "U"
@@ -316,24 +298,14 @@ def getgeography(request, planid):
     else:
         version = plan.version
 
-    districts = plan.district_set.all()
-    districts = sorted(list(districts), key=lambda d: d.sortVer())
+    districts = plan.get_districts_at_version(version)
     try:
         subject = Subject.objects.get(pk=demo)
     except:
         return HttpResponse ( "{ \"success\": false, \"message\":\"Couldn't get geography info from the server. No Subject exists with the given id.\" }" )
 
     district_values = []
-    for i in range(0, len(districts)):
-        district = districts[i]
-        if district.version != version and i < (len(districts) - 1) and district.district_id == districts[i+1].district_id:
-            # skip districts that are not at the same version, with the
-            # exception of the last district with the district_id -- if
-            # no district has been found with the version number, use
-            # the last district, as it has been sorted earlier to return
-            # the most recent district last, even if it's not at the
-            # version specified
-            continue
+    for district in districts:
         dist_name = district.name
         if dist_name == "Unassigned":
             dist_name = "U"

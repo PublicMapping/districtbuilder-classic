@@ -86,7 +86,6 @@ class Geounit(models.Model):
         selection = None
         units = []
         for level in levels:
-            #print 'Looking in geolevel: %d (%d)' % (level,len(units))
             # if this geolevel is the requested geolevel
             if geolevel == level:
                 guFilter = Q(id__in=geounit_ids)
@@ -97,19 +96,19 @@ class Geounit(models.Model):
 
                 if not boundary:
                     boundary = empty_geom(selection.srid)
+                simple = boundary.simplify(tolerance=100.0,preserve_topology=True)
 
                 if inside:
                     if level != settings.BASE_GEOLEVEL:
-                        query += "st_within(geom, geomfromewkt('%s'))" % boundary.ewkt
+                        query += "st_within(geom, geomfromewkt('%s'))" % simple.ewkt
                     else:
                         query += "st_intersects(center, geomfromewkt('%s'))" % center.ewkt
                 else:
                     if level != settings.BASE_GEOLEVEL:
-                        query += "NOT st_intersects(geom, geomfromewkt('%s'))" % boundary.ewkt
+                        query += "NOT st_intersects(geom, geomfromewkt('%s'))" % simple.ewkt
                     else:
                         query += "NOT st_intersects(center, geomfromewkt('%s')" % center.ewkt
 
-                #print "Query: '%s'" % query
 
                 cursor = connection.cursor()
                 cursor.execute(query)
@@ -119,8 +118,6 @@ class Geounit(models.Model):
                     count += 1
                     geom = GEOSGeometry(row[1])
                     units.append(Geounit(id=row[0],geom=geom))
-
-                #print "Found %d geounits at geolevel %d (by id)" % (count, level)
 
                 # if we're at the base level, and haven't collected any
                 # geometries, return the units here
@@ -140,7 +137,6 @@ class Geounit(models.Model):
                     else:
                         union = union.union(selected.geom)
 
-                #print 'Union: %s' % union
 
                 # set or merge this onto the existing selection
                 if union is None:
@@ -148,18 +144,13 @@ class Geounit(models.Model):
                 else:
                     intersects = selection.difference(union)
 
-                #print 'Intersection %s' % intersects
-
                 if inside:
                     # the remainder geometry is the intersection of the 
                     # district and the difference of the selected geounits
                     # and the current extent
                     try:
-                        #print 'Intersecting selection with %s' % boundary
                         remainder = boundary.intersection(intersects)
                     except GEOSException, ex:
-                        #print 'GEOSException, line 148:'
-                        #print ex
                         # it is not clear what this means, or why it happens
                         remainder = empty_geom(boundary.srid)
                 else:
@@ -174,8 +165,6 @@ class Geounit(models.Model):
 
                         remainder = remainder.intersection(intersects)
                     except GEOSException, ex:
-                        #print 'GEOSException, line 163:'
-                        #print ex
                         # it is not clear what this means, or why it happens
                         remainder = empty_geom(boundary.srid)
 
@@ -192,7 +181,6 @@ class Geounit(models.Model):
                                     union.append(poly)
                         else:
                             # do nothing if it's not some kind of poly
-                            #print "Cannot intersect non-area: %s" % remainder[i].geom_type
                             pass
 
                     remainder = union
@@ -203,17 +191,16 @@ class Geounit(models.Model):
                 elif remainder.empty or (remainder.geom_type != 'MultiPolygon' and remainder.geom_type != 'Polygon'):
                     remainder = empty_geom(boundary.srid)
 
-                #print 'Remainder: %s' % remainder
-
                 if not remainder.empty:
                     query = "SELECT id,st_ashexewkb(geom,'NDR') FROM redistricting_geounit WHERE geolevel_id = %d AND " % level
 
-                    if level == settings.BASE_GEOLEVEL:
-                        query += "st_intersects(center, geomfromewkt('%s'))" % remainder.ewkt
-                    else:
-                        query += "st_within(geom, geomfromewkt('%s'))" % remainder.ewkt
+                    simple = remainder.simplify(tolerance=100.0, preserve_topology=True)
 
-                    #print "geounit q: %s" % query
+                    if level == settings.BASE_GEOLEVEL:
+                        query += "st_intersects(center, geomfromewkt('%s'))" % simple.ewkt
+                    else:
+                        query += "st_within(geom, geomfromewkt('%s'))" % simple.ewkt
+
                     cursor = connection.cursor()
                     cursor.execute(query)
                     rows = cursor.fetchall()
@@ -221,8 +208,6 @@ class Geounit(models.Model):
                     for row in rows:
                         count += 1
                         units.append(Geounit(id=row[0],geom=GEOSGeometry(row[1])))
-
-                    #print "Found %d geounits at geolevel %d (w/in)" % (count, level)
 
         return units
 
@@ -270,7 +255,7 @@ class Plan(models.Model):
     def __unicode__(self):
         return self.name
 
-    def add_geounits(self, districtid, geounit_ids, geolevel):
+    def add_geounits(self, districtid, geounit_ids, geolevel, version):
         """Add the requested geounits to the given district, and remove
         them from whichever district they're currently in. 
         Will return the number of districts effected by the operation.
@@ -279,20 +264,29 @@ class Plan(models.Model):
         # incremental is the geometry that is changing
         incremental = Geounit.objects.filter(id__in=geounit_ids).unionagg()
 
-        # get the most recent version of the target
-        tversion = self.district_set.filter(district_id=districtid).aggregate(Max('version'))['version__max']
-        target = self.district_set.get(district_id=districtid,version=tversion)
-
         fixed = 0
-        districts = self.district_set.filter(~Q(id=target.id))
+        districts = self.get_districts_at_version(int(version))
         for district in districts:
-            if not district.is_latest_version():
-                # the version of this district is not the most recent; skip
+            if district.district_id == int(districtid):
+                target = district
                 continue
 
             if not (district.geom and (district.geom.overlaps(incremental) or district.geom.contains(incremental))):
                 # if this district does not overlap the selection or
-                # if this district does not contain the selection; skip
+                # if this district does not contain the selection
+                if not district.is_latest_version():
+                    # if this district has later edits, REVERT them to
+                    # this version of the district
+                    district_copy = copy(district)
+                    district_copy.version = self.version + 1
+                    district_copy.id = None
+                    district_copy.save()
+
+                    district_copy.clone_characteristics_from(district)
+
+                    fixed += 1
+
+                # go onto the next district
                 continue
 
             # compute the geounits before changing the boundary
@@ -300,10 +294,6 @@ class Plan(models.Model):
             try:
                 geom = district.geom.difference(incremental)
             except GEOSException, ex:
-                #print 'GEOSException, line 280:'
-                #print ex
-                # this geometry cannot be computed, move on to the 
-                # next district
                 geom = empty_geom(incremental.srid)
 
             geom = enforce_multi(geom)
@@ -316,23 +306,14 @@ class Plan(models.Model):
                 district.geom = None
                 district.simple = None
 
-            # save the original district id for copyingi
-            # ComputedCharacteristics 
-            oldid = district.id
+            district_copy = copy(district)
+            district_copy.version = self.version + 1
+            district_copy.id = None
+            district_copy.save()
 
-            district = copy(district)
-            district.version = self.version + 1
-            district.id = None
-            district.save()
+            district_copy.clone_characteristics_from(district)
 
-            # Clone the computed stats to this newly versioned district
-            computedChars = ComputedCharacteristic.objects.filter(district=oldid)
-            for computed in computedChars:
-                computed.id = None
-                computed.district = district
-                computed.save()
-
-            if district.delta_stats(geounits,False):
+            if district_copy.delta_stats(geounits,False):
                 fixed += 1
 
         # get the geounits before changing the target geometry
@@ -345,10 +326,6 @@ class Plan(models.Model):
                 union = target.geom.union(incremental)
                 target.geom = enforce_multi(union)
             except GEOSException, ex:
-                #print 'GEOSException, line 307:'
-                #print ex
-                # can't process the union, so don't change the
-                # target geometry
                 target.geom = None
 
         if target.geom:
@@ -357,23 +334,14 @@ class Plan(models.Model):
         else:
             target.simple = None
 
-        # save the original district id for copyingi
-        # ComputedCharacteristics 
-        oldid = target.id
+        target_copy = copy(target)
+        target_copy.version = self.version + 1
+        target_copy.id = None
+        target_copy.save();
 
-        target = copy(target)
-        target.version = self.version + 1
-        target.id = None
-        target.save();
+        target_copy.clone_characteristics_from(target)
 
-        # Clone the computed stats to this newly versioned district
-        computedChars = ComputedCharacteristic.objects.filter(district=oldid)
-        for computed in computedChars:
-            computed.id = None
-            computed.district = target
-            computed.save()
-
-        if target.geom and target.delta_stats(geounits,True):
+        if target_copy.geom and target_copy.delta_stats(geounits,True):
             fixed += 1
 
         # save any changes to the version of this plan
@@ -383,7 +351,7 @@ class Plan(models.Model):
         return fixed
 
 
-    def get_versioned_districts(self,version,subject_id):
+    def get_wfs_districts(self,version,subject_id):
         """Get the districts in this plan at a specific version. This 
         method behaves much like a WFS service, returning the GeoJSON for
         each district. This is due to the limitations of filtering and the
@@ -411,6 +379,30 @@ class Plan(models.Model):
                 'geometry': json.loads( row[7] )
             })
         return features
+
+    def get_districts_at_version(self, version):
+        """Get the districts in this plan at the specified version.
+        The districts are versioned to the current plan version when
+        they are changed, so this method searches all the districts
+        in the plan, returning the districts that have the highest
+        version number at or below the version passed in.
+        """
+        districts = self.district_set.all()
+        districts = sorted(list(districts), key=lambda d: d.sortVer())
+        dvers = {}
+        for i in range(0, len(districts)):
+            district = districts[i]
+            if district.version > version:
+                continue
+
+            dvers[district.district_id] = district
+
+        districts = []
+        for value in dvers.itervalues():
+            districts.append(value)
+
+        return districts
+        
 
 class PlanForm(ModelForm):
     class Meta:
@@ -513,10 +505,8 @@ class District(models.Model):
                     computed = ComputedCharacteristic(subject=subject,district=self,number=0)
 
                 if combine:
-                    # #print "Adding %f to district '%s' for subject '%s'" % (aggregate, self.name, subject.display)
                     computed.number += aggregate
                 else:
-                    # #print "Removing %f from district '%s' for subject '%s'" % (aggregate, self.name, subject.display)
                     computed.number -= aggregate
                 computed.save();
                 changed = True
@@ -546,6 +536,18 @@ class District(models.Model):
             return len(self.geom) == 1
         else:
             return False
+
+    def clone_characteristics_from(self, origin):
+        """Copy the computed characteristics from one district to another.
+        This is required when cloning, copying, or instantiating a template
+        district.
+        """
+        cc = ComputedCharacteristic.objects.filter(district=origin)
+        for c in cc:
+            c.id = None
+            c.district = self
+            c.save()
+
 
 class DistrictGeounitMapping(models.Model):
     district = models.ForeignKey(District)
@@ -577,7 +579,6 @@ def set_district_id(sender, **kwargs):
     district = kwargs['instance']
     if (not district.district_id):
         max_id = District.objects.filter(plan = district.plan).aggregate(Max('district_id'))['district_id__max']
-        #print 'Max id for plan %d' % district.plan_id
         if max_id:
             district.district_id = max_id + 1
         else:
@@ -638,7 +639,6 @@ def empty_geom(srid):
     return geom
 
 def enforce_multi(geom):
-    #print "Enforcing on %s" % geom
     if geom:
         if geom.geom_type == 'MultiPolygon':
             return geom
