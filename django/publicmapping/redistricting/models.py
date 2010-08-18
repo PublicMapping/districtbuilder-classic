@@ -362,7 +362,7 @@ class Plan(models.Model):
         from django.db import connection
         cursor = connection.cursor()
 
-        query = 'SELECT rd.id, rd.district_id, rd.name, rd.version, rd.plan_id, rc.subject_id, rc.number, st_asgeojson(rd.simple) AS geom FROM redistricting_district rd JOIN redistricting_computedcharacteristic rc ON rd.id = rc.district_id WHERE rd.version = (SELECT max(redistricting_district.version) FROM redistricting_district WHERE redistricting_district.district_id = rd.district_id AND redistricting_district.version <= %d ) AND rd.plan_id = %d AND rc.subject_id = %d' % (int(version), int(self.id), int(subject_id))
+        query = 'SELECT rd.id, rd.district_id, rd.name, lmt.version, rd.plan_id, rc.subject_id, rc.number, st_asgeojson(rd.simple) AS geom FROM redistricting_district rd JOIN redistricting_computedcharacteristic rc ON rd.id = rc.district_id JOIN (SELECT max(version) as version, district_id FROM redistricting_district WHERE plan_id = %d AND version <= %d GROUP BY district_id) AS lmt ON rd.district_id = lmt.district_id WHERE rd.plan_id = %d AND rc.subject_id = %d AND lmt.version = rd.version' % (int(self.id), int(version), int(self.id), int(subject_id))
 
         cursor.execute(query)
         rows = cursor.fetchall()
