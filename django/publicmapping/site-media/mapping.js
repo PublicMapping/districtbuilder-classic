@@ -311,10 +311,17 @@ function init() {
                 if (data.success) {
                     // update the max version of this plan
                     PLAN_VERSION = data.version;
-                    // set the version cursor, too!
+
+                    // set the version cursor
                     $('#history_cursor').val(data.version);
 
+                    // update the UI buttons to show that you can
+                    // perform an undo now, but not a redo
+                    $('#history_redo').addClass('disabled');
+                    $('#history_undo').removeClass('disabled');
+
                     updateInfoDisplay();
+
                     $('#saveplaninfo').trigger('planSaved', [ data.edited ]);
                 }
                 else {
@@ -895,8 +902,6 @@ function init() {
 
             $('#history_redo').removeClass('disabled');
 
-            window.status = 'At version ' + ver;
-
             updateInfoDisplay();
         }
     });
@@ -913,8 +918,6 @@ function init() {
             cursor.val(ver);
 
             $('#history_undo').removeClass('disabled');
-
-            window.status = 'At version ' + ver;
 
             updateInfoDisplay();
         }
