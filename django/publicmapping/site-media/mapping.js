@@ -924,40 +924,100 @@ function init() {
     });
 
     /*
-    * Ask the user for a new district name, then assign the current selection to the new district upon 
-    * successful creation of the district
+    * Ask the user for a new district name, then assign the current 
+    * selection to the new district upon successful creation of the
+    * district
     */
     var createNewDistrict = function() {
-        // Once we have the district name, post a request to the server to create it in the DB
-        var callServer = function(name) {
-            $.post('/districtmapping/plan/' + PLAN_ID + '/district/new', { name: name }, assignToNewDistrict, 'json');
-        };
-        // Take the new district info and add the current selection to that districts
-        var assignToNewDistrict = function(data, textStatus, XMLHttpRequest) {
-            if (data.success) {
-                $('#assign_district').append('<option value="' + data.district_id + '">' + data.district_name + '</option>');
-                assignOnSelect({data: data});
-            } else {
-                $('<div class="error">' + data.message + '</div>').dialog({ title: "Sorry", autoOpen: true });
+        if (selection.features.length == 0) {
+            $('#assign_district').val('-1');
+            return;
+        }
+
+        if (getPlanVersion() != PLAN_VERSION) {
+            // unsupported at this time is creating a district based
+            // of a previous version of the plan. Inform the user.
+            $('<div id="newdistrictdialog">Districts may only be created from the most current plan at this time.</div>').dialog({
+                modal: true,
+                autoOpen: true,
+                title: 'Sorry',
+                buttons: { 
+                    'OK': function() {
+                        $('#newdistrictdialog').remove();
+                    }
+                }
+            });
+            $('#assign_district').val('-1');
+            return;
+        }
+
+        // Once we have the district name, post a request to the 
+        // server to create it in the DB
+        var createDistrict = function(name) {
+            var geolevel_id = selection.features[0].attributes.geolevel_id;
+            var geounit_ids = [];
+            for (var i = 0; i < selection.features.length; i++) {
+                geounit_ids.push( selection.features[i].attributes.id );
             }
+            geounit_ids = geounit_ids.join('|');
+            OpenLayers.Element.addClass(olmap.viewPortDiv,'olCursorWait');
+            $('#working').dialog('open');
+            $.ajax({
+                type: 'POST',
+                url: '/districtmapping/plan/' + PLAN_ID + '/district/new',
+                data: {
+                    name: name,
+                    geolevel: geolevel_id,
+                    geounits: geounit_ids,
+                    version: getPlanVersion()
+                },
+                success: function(data, textStatus, xhr) {
+                    // update the max version of this plan
+                    PLAN_VERSION = data.version;
+
+                    $('#history_cursor').val(data.version);
+
+                    // update the UI buttons to show that you can
+                    // perform an undo now, but not a redo
+                    $('#history_redo').addClass('disabled');
+                    $('#history_undo').removeClass('disabled');
+
+                    $('#assign_district').append('<option value="' + data.district_id + '">' + data.district_name + '</option>');
+
+                    updateInfoDisplay();
+
+                    $('#working').dialog('close');
+                    $('#assign_district').val('-1');
+                    OpenLayers.Element.removeClass(olmap.viewPortDiv,'olCursorWait'); 
+                }
+            });
         };
-        // Create a dialog to get the new district's name from the user.  On close, destroy the dialog.
-        $('<div id="newdistrictdialog">Please enter a name for your new district<input id="newdistrictname" type="text" /></div>').dialog({
+
+        // Create a dialog to get the new district's name from the user.
+        // On close, destroy the dialog.
+        $('<div id="newdistrictdialog">Please enter a name for your new district<br/><input id="newdistrictname" type="text" /></div>').dialog({
             modal: true,
             autoOpen: true,
             title: 'New District',
             buttons: { 
-                'OK': function() { callServer($('#newdistrictname').val()); $(this).dialog("close"); $('#newdistrictdialog').remove(); },
-                'Cancel': function() { $(this).dialog("close"); $('#newdistrictdialog').remove(); }
+                'OK': function() { 
+                    createDistrict($('#newdistrictname').val()); 
+                    $(this).dialog("close"); 
+                    $('#newdistrictdialog').remove(); 
+                },
+                'Cancel': function() { 
+                    $(this).dialog("close"); 
+                    $('#newdistrictdialog').remove(); 
+                }
             }
          });
     };
-    /*
-    * After the map has finished moving, this method updates the jQuery data 
-    * attributes of the geography and demographics tables if different
-    * districts are now visible
-    */
 
+    /*
+    * After the map has finished moving, this method updates the jQuery
+    * data attributes of the geography and demographics tables if 
+    * different districts are now visible
+    */
     olmap.prevVisibleDistricts = '';
     var sortByVisibility = function() {
         var visibleDistricts = '';

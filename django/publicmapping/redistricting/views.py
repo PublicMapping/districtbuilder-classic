@@ -153,31 +153,60 @@ def newdistrict(request, planid):
     """
     status = { 'success': False, 'message': 'Unspecified error.' }
     plan = Plan.objects.get(pk=planid)
-    plan.version += 1
-    if len(request.REQUEST.items()) >= 1:
-        if request.REQUEST.__contains__('name'):
-            try: 
-                district = District(name = request.REQUEST['name'], plan=plan, district_id = None, version=plan.version + 1)
+
+    if len(request.REQUEST.items()) >= 3:
+        if 'geolevel' in request.REQUEST:
+            geolevel = request.REQUEST['geolevel']
+        else:
+            geolevel = None
+        if 'geounits' in request.REQUEST:
+            geounit_ids = string.split(request.REQUEST['geounits'], '|')
+        else:
+            geounit_ids = None
+
+        if 'name' in request.REQUEST:
+            name = request.REQUEST['name']
+        else:
+            name = None
+
+        if 'version' in request.REQUEST:
+            version = request.REQUEST['version']
+        else:
+            version = plan.version
+
+        if geolevel and geounit_ids and name:
+            if True: #try: 
+                # create a temporary district
+                district = District(name=name, plan=plan, district_id=None, version=plan.version)
                 district.save()
+
+                # save the district_id generated during save
+                district_id = district.district_id
+
+                # add the geounits selected to this district -- this will
+                # create a new district w/1 version higher
+                fixed = plan.add_geounits(district.district_id, geounit_ids, geolevel, version)
+
                 status['success'] = True
-                status['message'] = 'Created new district'
+                status['message'] = 'Created %d new district' % fixed
                 plan = Plan.objects.get(pk=planid)
                 status['edited'] = plan.edited.isoformat()
-                status['district_id'] = district.district_id
-                status['district_name'] = district.name
+                status['district_id'] = district_id
+                status['district_name'] = name
                 status['version'] = plan.version
-            except ValidationError:
-                status['message'] = 'Reached Max districts already'
-            except:
+            #except ValidationError:
+            #    status['message'] = 'Reached Max districts already'
+            else: #except:
                 status['message'] = 'Couldn\'t save new district.'
         else:
-            status['message'] = 'Must specify name for district'
+            status['message'] = 'Must specify name, geolevel, and geounit ids for new district.'
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
 @login_required
 def addtodistrict(request, planid, districtid):
-    """ This method, when called, required a "geolevel" and a "geounits" parameter.  
-    The geolevel must be a valid geolevel name and the geounits parameters should be a pipe-separated list of geounit ids
+    """ This method, when called, required a "geolevel" and a "geounits"
+    parameter. The geolevel must be a valid geolevel name and the geounits 
+    parameters should be a pipe-separated list of geounit ids
     """
     status = { 'success': False, 'message': 'Unspecified error.' }
     if len(request.REQUEST.items()) >= 2: 
@@ -250,7 +279,7 @@ def getdemographics(request, planid):
     district_values = []
 
     if 'version' in request.REQUEST:
-        version = request.REQUEST['version']
+        version = int(request.REQUEST['version'])
     else:
         version = plan.version
 
@@ -260,6 +289,11 @@ def getdemographics(request, planid):
         dist_name = district.name
         if dist_name == "Unassigned":
             dist_name = "U"
+        elif not district.geom:
+            # skip any districts with null geom that are not the special
+            # 'Unassigned' district
+            continue
+
         if dist_name.startswith('District '):
             dist_name = district.name.rsplit(' ', 1)[1]
 
@@ -294,7 +328,7 @@ def getgeography(request, planid):
         return HttpResponse ( "{ \"success\": false, \"message\":\"Couldn't get geography info from the server. Please use the 'demo' parameter with a Subject id.\" }" )
 
     if 'version' in request.REQUEST:
-        version = request.REQUEST['version']
+        version = int(request.REQUEST['version'])
     else:
         version = plan.version
 
@@ -309,6 +343,11 @@ def getgeography(request, planid):
         dist_name = district.name
         if dist_name == "Unassigned":
             dist_name = "U"
+        elif not district.geom:
+            # skip any districts with null geom that are not the special
+            # 'Unassigned' district
+            continue
+
         if dist_name.startswith('District '):
             dist_name = district.name.rsplit(' ', 1)[1]
 
@@ -336,6 +375,8 @@ def getgeography(request, planid):
             stats['css_class'] = css_class
 
         district_values.append(stats)
+
+    print "district_values = %d" % len(district_values)
 
     return render_to_response('geography.html', {
         'plan': plan,
