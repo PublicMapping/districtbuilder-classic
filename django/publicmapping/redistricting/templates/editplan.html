@@ -1,364 +1,44 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <title>Open Source District Mapping Tool</title>
- <link rel="stylesheet" type="text/css" href="/site-media/css/reset.css"/>
-    <link rel="stylesheet" type="text/css" href="/site-media/jquery/themes/custom-theme/jquery-ui-1.8.2.custom.css"/>
-    <link rel="stylesheet" type="text/css" href="/site-media/css/publicmapping.css"/>
-    <script type="text/javascript" src="/site-media/openlayers/OpenLayers.js"></script><!-- production -->
-    <!-- <script type="text/javascript" src="/site-media/OpenLayers-2.9.1/lib/OpenLayers.js"></script> debug -->
-    <script type="text/javascript">
-        var MAP_SERVER = '{{ mapserver }}';
-
-        var PLAN_ID = {% if plan %}{{ plan.id }}{% else %}0{% endif %};
-        var PLAN_VERSION = {% if plan %}{{ plan.version }}{% else %}0{% endif %};
-        var UNASSIGNED_DISTRICT_ID = {% if unassigned_id %}{{ unassigned_id }}{% else %}0{% endif %};
-        var SNAP_LAYERS = [ {% for snap in snaplayers %} { geolevel: {{ snap.geolevel }}, level: '{{ snap.layer }}',layer: 'simple_{{ snap.layer }}', name: '{{ snap.name }}' }{% if not forloop.last %},{% endif %} {% endfor %} ];
-        var DEMOGRAPHICS = [{% for demo in demographics %} { id: {{ demo.id }}, text: '{{ demo.text }}', value: '{{ demo.value }}', isdefault: {{ demo.isdefault }} }{% if not forloop.last %},{% endif %} {% endfor %} ];
-        var MAP_LAYERS = [];
-        for (var i = 0; i < SNAP_LAYERS.length; i++) {
-            for (var j = 0; j < DEMOGRAPHICS.length; j++) {
-                MAP_LAYERS.push( 'gmu:demo_' + SNAP_LAYERS[i].level + '_' + DEMOGRAPHICS[j].value );
-            }
-        }
-        var RULES = { {% for rule in rules %}'{{ rule.subject_id }}': {lower:{{ rule.lower }}, upper:{{ rule.upper }} }{% if not forloop.last %},{% endif %}{% endfor %}};
-    </script>
-    <script type="text/javascript" src="/site-media/jquery/jquery-1.4.2.js"></script>
-    <script type="text/javascript" src="/site-media/jquery/jquery-ui-1.8.2.custom.min.js"></script>
-    <script type="text/javascript" src="/site-media/jquery/external/jquery.tools.tooltip.slide.min.js"></script>
-    <script type="text/javascript" src="/site-media/ui.js"></script>
-    <script type="text/javascript" src="/site-media/viewablesorter.js"></script>
-    <script type="text/javascript" src="/site-media/mapping.js"></script>
-    <script type="text/javascript" src="/site-media/chooseplan.js"></script>
-    <script type="text/javascript" src="/site-media/publishplan.js"></script>
-  </head>
-  <body onload="init();" id="app">
-  
-  <div id="app_header">
-    <div id="logo"><img src="/site-media/images/title-app.png" /></div>
+{% extends "viewplan.html" %}
+    {% block site_nav %}
     <div id="site_nav">
         <ul>
-            <li><a href="">My Account</a></li>
             <li><a  class="last" href="/accounts/logout/">Logout</a></li>
         </ul>
     </div>
-    <div class="clear"></div>
-  </div>
+    {% endblock %}
+               
+    {% block mode_toggle %}
+    <button class="toolbar_toggle" id="start_drawing">Start Drawing</button>
+    {% endblock %}
 
-  <div id="steps">
-      <ul id="steps_tabs">
-        <li id="tab_step1"><a href="#step-1"> Step 1: Draw</a></li>
-        <li id="tab_step2"><a href="#step-2">Step 2: Evaluate</a></li>
-        <li id="tab_step3"><a href="#step-2">Step 3: Share</a></li>
-      </ul>
-
-   <div id="step1" class="main_content">
- 
-      <div id="mapandmenu">
-         <div class="toolbar ui-widget-header">
-          <div id="toolsets">
-            <div class="toolset" id="toolset_edit">
-              <div class="toolset_group">
-                <img src="/site-media/images/icon-help.png" class="help divtip">
-                <div class="tooltip">The selected layer will be editable.  You will use the features in the selected layer to edit districts</div>
-                <label>Snap Map to:</label>
-                <select id="snapto">
-                  <script type="text/javascript">
-                    for (var i = 0; i < SNAP_LAYERS.length; i++) {
-                        var snap = SNAP_LAYERS[i];
-                        document.write('<option value="' + snap.layer + ';' + snap.level + '">' + snap.name + '</option>');
-                    }
-                  </script>
-                </select>
-              </div>
-              <div class="toolset_group">
-                <img src="/site-media/images/icon-help.png" class="help divtip">
-                <div class="tooltip">The selected demographic attribute of current layer will be displayed on the map as a grayscale 'choropleth' overlay</div>                
-                <label>Show Layer by:</label>
-                <select id="showby">
-                  <script type="text/javascript">
-                    for (var i = 0; i < DEMOGRAPHICS.length; i++) {
-                        var demo = DEMOGRAPHICS[i];
-                        document.write('<option value="' + demo.value + '"');
-                        if (demo.isdefault) {
-                            document.write(' selected="true"');
-                        }
-                        document.write('>' + demo.text + '</option>');
-                    }
-                  </script>
-                </select>
-              </div>
-              <!--
-              <div class="toolset_group">
-                <img src="/site-media/images/icon-help.png" class="help divtip">
-                <div class="tooltip">The selected layer's boundaries will be displayed on the map</div>                
-                <label>Show Boundaries for:</label>
-                <select id="boundfor">
-                  <script type="text/javascript">
-                    for (var i = 0; i < SNAP_LAYERS.length; i++) {
-                        var snap = SNAP_LAYERS[i];
-                        document.write('<option value="' + snap.level + '">' + snap.name + '</option>');
-                    }
-                  </script>
-                </select>
-              </div>
-              -->
-              <div class="toolset_group">
-                <img src="/site-media/images/icon-help.png" class="help divtip">
-                <div class="tooltip">The appearance of the districts on the map</div>                
-                <label>Show Districts by:</label>
-                <select id="districtby">
-                  <script type="text/javascript">
-                    for (var i = 0; i < DEMOGRAPHICS.length; i++) {
-                        var demo = DEMOGRAPHICS[i];
-                        if ( i == 0 ) {
-                            document.write('<option value="' + demo.id + '.None">None</option>');
-                        }
-                        document.write('<option value="' + demo.id + '"');
-                        if (demo.isdefault) {
-                            document.write(' selected="true"');
-                        }
-                        document.write('>' + demo.text + '</option>');
-                    }
-                  </script>
-                </select>
-              </div>
-                
-                
-        <button class="toolbar_toggle" id="start_drawing">Start Drawing</button>
-            </div>
-
-            <div class="toolset" id="toolset_draw">
-              <div class="toolset_group">
-                <label>Map Tools</label>
-                <div>
-                  <button id="navigate_map_tool" class="active btntoggle toggle"></button>
-                  <button id="identify_map_tool" title="Click on a district to find its name." class="btntoggle titletip"></button>
-                </div>
-              </div>
-              <div class="toolset_group">
-                <label>Selecting Tools</label>
-                <div>
-                  <button id="single_drawing_tool" title="Single district select; +Shift to select multiple districts" class="btntoggle titletip" ></button>
-                  <button id="rectangle_drawing_tool" title="Select by rectangle" class="btntoggle titletip" ></button>
-                  <button id="polygon_drawing_tool" title="Select by drawing a polygon" class="btntoggle titletip"></button>
-                </div>
-              </div>
-              <div class="toolset_group toolset_group_w">
-                <label>Assigning Tools</label>
-                <div>
-                  <button id="assign_tool" class="btntoggle titletip" title="After selecting your districts on the map, click this button to select target district"></button>
-                  <select id="assign_district" class="titletip" title="Assign districts currently selected on map by choosing district from drop down list">
-                    <option value="-1">-- Select One --</option>
-                    {% for d in districts %}
-                        <option value="{{ d.district_id }}">{{ d.name }}</option>
-                    {% endfor %}
-                    <option value="new">New District</option>
-                  </select>
-                </div>
-              </div>
-              <div class="toolset_group">
-                <label>History</label>
-                <div>
-                  <button id="history_undo" class="{% if not plan %}disabled{% else %}{% ifequal plan.version 0 %}disabled{% endifequal %}{% endif %}"></button>
-                  <button id="history_redo" class="disabled"></button>
-                  <input id="history_cursor" type="hidden" value="{% if plan %}{{ plan.version}}{% else %}0{% endif %}"/>
-                </div>
-              </div>
-
-              <button class="toolbar_toggle" id="edit_map_settings">Edit Map Settings</button>
-            
-            </div>
-            </div>
-            <div id="map_menu">
-                <div id="map_menu_header">
-                    <button class="menu_toggle ui-icon"></button>
-                    <label>Current<br/> District</label>
-                    <select>
-                      <option value="demographics">Demographics</option>
-                      <option value="geography">Geography</option>
-                    </select>
-                </div>
-                <div class="map_menu_content geography">
-                  <div class="plansummary">
-                      <h3>Geography</h3>
-                      <div><label>Population Equality:</label> <span class="value" >N/A</span></div>
-                      <div><label>Contiguity:</label> <span class="value">N/A</span></div>
-                      <div><label>Compactness:</label> <span class="value" >N/A</span></div>
-
-                  </div>
-                  <div class="plantable header">
-                     <table>
-                      <thead>
-                          <tr>
-                              <th class="celldist cell1"></th>
-                              <th class="cellpop cell2"></th>
-                              <th class="cellcontig cell3"></th>
-                              <th class="cellcompact cell4"></th>
-                          </tr>
-                      </thead>
-                   </table>
-                  </div>
-                  <div class="plantable body">
-                    <div id="nogeography" class="error">Please select a plan to see district data</div>
-                  </div>
-                 <div class="menu_footer">
-                    <button id="stats_legend">Stats Legend</button>
-                    <div class="tooltip" id="stats_legend_panel">
-                      <div class="legend_item">
-                        <h5>Population</h5>
-                        <ul>
-                          <li><span class="swatch popstatus over"></span> Over target</li>
-                          <li><span class="swatch popstatus under" id="swatch-under"></span> Under target</li>                       
-                          <li><span class="swatch popstatus target" id="swatch-target"></span> Meets target</li>  
-                        </ul>
-                      </div>
-                      <div class="legend_item last">
-                        <h5>Contiguity</h5>
-                        <ul>
-                          <li><img src="/site-media/images/icon-check.png" class="yes-contiguous"> Contiguous</li>
-                          <li><img src="/site-media/images/icon-warning.png" class="no-contiguous"> Non-contiguous</li>                 
- 
-                        </ul>
-                      </div>                    
-                    
-                    </div>
-                </div>
-                </div>
-                <div class="map_menu_content demographics">
-                  <div class="plansummary">
-                      <h3>Demographics</h3>
-                      <div><label></label> <span class="value" ></span></div>
-                      <div><label></label> <span class="value" ></span></div>
-                      <div><label></label> <span class="value" ></span></div>
-                  </div>
-                  <div class="plantable header">
-                     <table>
-                      <thead>
-                          <tr>
-                              <th class="celldist cell1"></th>
-                              <th class="cellpop cell2"></th>
-                              <th class="cellcontig cell3"></th>
-                              <th class="cellcompact cell4"></th>
-                          </tr>
-                      </thead>
-                   </table>
-                  </div>
-                  <div class="plantable body">
-                    <div id="nogeography" class="error">Please select a plan to see district data</div>
-                  </div>
-                </div>
-            </div>
-          </div>
-          <div id="map">
-            <div id="shadow_left"></div>
-            <div id="shadow_top"></div>
-          </div>
-          <div id="map_legend">
-              <button id="legend_toggle">Map Legend</button>
-          </div>
-          <div id="map_legend_content">
-            <h1>Map Legend</h1>
-            <table id="basemap_legend">
-                <thead>
-                    <tr>
-                        <th colspan="2" id="legend_title">Total Population</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><div id="legend_swatch_1" class="swatch basemap_swatch">&nbsp;</div></td>
-                        <td>0 - 100,000</td>
-                    </tr>
-                    <tr>
-                        <td><div id="legend_swatch_2" class="swatch basemap_swatch">&nbsp;</div></td>
-                        <td>100,000 - 500,000</td>
-                    </tr>
-                    <tr>
-                        <td><div id="legend_swatch_3" class="swatch basemap_swatch">&nbsp;</div></td>
-                        <td>&gt; 500,000</td>
-                    </tr>
-                </tbody>
-            </table>
-            <table>
-                <thead>
-                    <tr>
-                        <th colspan="2">District</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><div id="district_swatch_over" class="swatch over district_swatch">&nbsp;</div></td>
-                        <td>Over Target</td>
-                    </tr>
-                    <tr>
-                        <td><div id="district_swatch_within" class="swatch target district_swatch">&nbsp;</div></td>
-                        <td>Within Target</td>
-                    </tr>
-                    <tr>
-                        <td><div id="district_swatch_under" class="swatch under district_swatch">&nbsp;</div></td>
-                        <td>Under Target</td>
-                    </tr>
-                </tbody>
-            </table>
-          </div>
+      {% block toolset_draw %}
+      <div class="toolset_group">
+        <label>Selecting Tools</label>
+        <div>
+          <button id="single_drawing_tool" title="Single district select; +Shift to select multiple districts" class="btntoggle titletip" ></button>
+          <button id="rectangle_drawing_tool" title="Select by rectangle" class="btntoggle titletip" ></button>
+          <button id="polygon_drawing_tool" title="Select by drawing a polygon" class="btntoggle titletip"></button>
+        </div>
       </div>
-    </div>
-</div>  
-<div id="toolbar_plans">
-     <div class="toolset_group first"> 
-       <div class="planname">
-          {% if plan.name %}
-          <label>Plan Name:</label> {{ plan.name }}
-          {% else %}
-          Please select a plan
-          {% endif %}
+      <div class="toolset_group toolset_group_w">
+        <label>Assigning Tools</label>
+        <div>
+          <button id="assign_tool" class="btntoggle titletip" title="After selecting your districts on the map, click this button to select target district"></button>
+          <select id="assign_district" class="titletip" title="Assign districts currently selected on map by choosing district from drop down list">
+            <option value="-1">-- Select One --</option>
+            {% for d in districts %}
+                <option value="{{ d.district_id }}">{{ d.name }}</option>
+            {% endfor %}
+            <option value="new">New District</option>
+          </select>
+        </div>
       </div>
-     </div>
-     <!--<div class="toolset_group"> 
-        <div id="saveplanbtn">Save Plan</div>
-     </div>-->
-     <div class="toolset_group">
-        {% if plan.edited %}
-          <div id="saveplaninfo" class="savedat">Plan saved at {{ plan.edited|date:"m/d P" }} </div>
-        {% else %}
-          <div id="saveplaninfo" class="savedat">Plan not saved</div>
-        {% endif %}
+      <div class="toolset_group">
+        <label>History</label>
+        <div>
+          <button id="history_undo" class="{% if not plan %}disabled{% else %}{% ifequal plan.version 0 %}disabled{% endifequal %}{% endif %}"></button>
+          <button id="history_redo" class="disabled"></button>
+          <input id="history_cursor" type="hidden" value="{% if plan %}{{ plan.version}}{% else %}0{% endif %}"/>
+        </div>
       </div>
-      <div class="toolset_group last"> 
-          <div id="difplanbtn">Open New Plan</div>
-      </div>
-</div>
-<div id="working" title="Please Wait">Please wait while new districts are computed...</div>
-<div id="DialogContainer"></div>
-<div class="olHandlerBoxSelectFeature" style="display:none;"></div>
-<script type="text/javascript">
-    $( function() {
-        $('#working').dialog({
-            resizable:false,
-            modal:true,
-            draggable:false,
-            closeOnEscape:false,
-            autoOpen:false
-        });
-        var choose = publicmapping.chooseplan({
-            target: $('#difplanbtn'),
-            container: $('#DialogContainer'),
-            modal: true,
-    {% if not plan.name %}
-            callback: function() { $('#difplanbtn').click() }
-    {% endif %}
-        }).init();
-    {% if plan.name %}
-        $('.geography').load('/districtmapping/plan/{{plan.id}}/geography', { demo: 3 });
-        $('.demographics').load('/districtmapping/plan/{{plan.id}}/demographics');      
-//        var publish = publishplan({
-//            target: $('#saveplanbtn'),
-//            container: $('#DialogContainer'),
-//            modal: true,
-//        }).init();
-    {% endif %}
-    });
-</script>
-  </body>
-</html>
+      {% endblock %}
