@@ -22,6 +22,7 @@
             }
         }
         var RULES = { {% for rule in rules %}'{{ rule.subject_id }}': {lower:{{ rule.lower }}, upper:{{ rule.upper }} }{% if not forloop.last %},{% endif %}{% endfor %}};
+        var MAX_DISTRICTS = {{ max_dists }};
     </script>
     <script type="text/javascript" src="/site-media/jquery/jquery-1.4.2.js"></script>
     <script type="text/javascript" src="/site-media/jquery/jquery-ui-1.8.2.custom.min.js"></script>
@@ -134,7 +135,6 @@
             </div>
 
             <div class="toolset" id="toolset_draw">
-              {% block toolset_draw %}
               <div class="toolset_group">
                 <label>Map Tools</label>
                 <div>
@@ -142,6 +142,7 @@
                   <button id="identify_map_tool" title="Click on a district to find its name." class="btntoggle titletip"></button>
                 </div>
               </div>
+              {% block toolset_draw %}
               {% endblock %}
 
               <button class="toolbar_toggle" id="edit_map_settings">Edit Map Settings</button>

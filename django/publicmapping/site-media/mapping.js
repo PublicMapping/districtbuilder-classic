@@ -965,7 +965,7 @@ function init() {
 
         // Once we have the district name, post a request to the 
         // server to create it in the DB
-        var createDistrict = function(name) {
+        var createDistrict = function(district_id) {
             var geolevel_id = selection.features[0].attributes.geolevel_id;
             var geounit_ids = [];
             for (var i = 0; i < selection.features.length; i++) {
@@ -978,7 +978,7 @@ function init() {
                 type: 'POST',
                 url: '/districtmapping/plan/' + PLAN_ID + '/district/new',
                 data: {
-                    name: name,
+                    district_id: district_id,
                     geolevel: geolevel_id,
                     geounits: geounit_ids,
                     version: getPlanVersion()
@@ -994,7 +994,30 @@ function init() {
                     $('#history_redo').addClass('disabled');
                     $('#history_undo').removeClass('disabled');
 
+                    // add the new district entry to the list
                     $('#assign_district').append('<option value="' + data.district_id + '">' + data.district_name + '</option>');
+
+                    // detach the list of districts from the DOM
+                    var all_options = $('#assign_district option').detach();
+                    // if max # of districts has been reached, remove the
+                    // 'New District' option
+                    if (all_options.length > (MAX_DISTRICTS + 1)) {
+                        // the second to last item will be 'new', the last
+                        // item will be the option just added
+                        all_options[all_options.length-2] = all_options[all_options.length-1];
+                    }
+
+                    // sort the options
+                    all_options.sort(function(a,b){
+                        if (a.value == 'new') {
+                            return -1;
+                        }
+                        else {
+                            return parseInt(a.value,10) > parseInt(b.value,10);
+                        }
+                    });
+                    // attach the options back to the DOM (in order, now)
+                    all_options.appendTo('#assign_district');
 
                     updateInfoDisplay();
 
@@ -1005,9 +1028,23 @@ function init() {
             });
         };
 
+        // create a list of available districts, based on the districts
+        // that are already in the plan
+        var options = $('#assign_district')[0].options;
+        var avail = []
+        for (var d = 1; d <= MAX_DISTRICTS; d++) {
+            var dtaken = false;
+            for (var o = 0; o < options.length && !dtaken; o++) {
+                dtaken = dtaken || ( options[o].text == 'District ' + d)
+            }
+            if (!dtaken) {
+                avail.push('<option value="'+(d+1)+'">District '+d+'</option>');
+            }
+        }
+
         // Create a dialog to get the new district's name from the user.
         // On close, destroy the dialog.
-        $('<div id="newdistrictdialog">Please enter a name for your new district<br/><input id="newdistrictname" type="text" /></div>').dialog({
+        $('<div id="newdistrictdialog">Please select a district name:<br/><select id="newdistrictname">' + avail.join('') + '</select></div>').dialog({
             modal: true,
             autoOpen: true,
             title: 'New District',
@@ -1020,6 +1057,7 @@ function init() {
                 'Cancel': function() { 
                     $(this).dialog("close"); 
                     $('#newdistrictdialog').remove(); 
+                    $('#assign_district').val('-1');
                 }
             }
          });

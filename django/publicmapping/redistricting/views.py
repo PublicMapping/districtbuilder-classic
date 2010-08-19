@@ -124,7 +124,8 @@ def commonplan(request, planid):
         'rules': rules,
         'unassigned_id': unassigned_id,
         'is_anonymous': request.user.username == 'anonymous',
-        'is_editable': editable
+        'is_editable': editable,
+        'max_dists': settings.MAX_DISTRICTS
     }
 
 
@@ -136,7 +137,9 @@ def viewplan(request, planid):
 @login_required
 def editplan(request, planid):
     "Edit a plan. This template enables editing tools and functionality."
-    return render_to_response('editplan.html', commonplan(request, planid))
+    plan = commonplan(request, planid)
+    plan['dists_maxed'] = len(plan['districts']) > settings.MAX_DISTRICTS
+    return render_to_response('editplan.html', plan)
 
 @login_required
 def createplan(request):
@@ -257,20 +260,20 @@ def newdistrict(request, planid):
         else:
             geounit_ids = None
 
-        if 'name' in request.REQUEST:
-            name = request.REQUEST['name']
+        if 'district_id' in request.REQUEST:
+            district_id = int(request.REQUEST['district_id'])
         else:
-            name = None
+            district_id = None
 
         if 'version' in request.REQUEST:
             version = request.REQUEST['version']
         else:
             version = plan.version
 
-        if geolevel and geounit_ids and name:
+        if geolevel and geounit_ids and district_id:
             try: 
                 # create a temporary district
-                district = District(name=name, plan=plan, district_id=None, version=plan.version)
+                district = District(name='District %d' % (district_id - 1), plan=plan, district_id=district_id, version=plan.version)
                 district.save()
 
                 # save the district_id generated during save
@@ -285,7 +288,7 @@ def newdistrict(request, planid):
                 plan = Plan.objects.get(pk=planid)
                 status['edited'] = plan.edited.isoformat()
                 status['district_id'] = district_id
-                status['district_name'] = name
+                status['district_name'] = district.name
                 status['version'] = plan.version
             except ValidationError:
                 status['message'] = 'Reached Max districts already'
