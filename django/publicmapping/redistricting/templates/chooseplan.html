@@ -1,12 +1,15 @@
-<div id="PlanChooser" title = "Choose a Plan.  Start Drawing.">
+<div id="PlanChooser" title = "Choose a Plan. {% if not is_anonymous %} Start Drawing.{% endif %}">
 
 
   <ul id="TemplateTypeButtons">
-
+    {% if not is_anonymous %}
     <li id="btnTemplate">Template</li>
+    {% endif %}
     <li id="btnShared">Plan by Other User</li>
+    {% if not is_anonymous %}
     <li id="btnMine">Plans saved by {{ user }}</li>
     <li id="btnBlank">Blank Map</li>  
+    {% endif %}
   </ul>
 
 <div id="TemplateTypeContent">
@@ -23,7 +26,7 @@
             <option value="{{ plan.id }}">{{ plan.name }}</option>
         {% endfor %}
         </select>
-    {% else %}<span class="Selectors">Sorry, no templates of that type available</span>
+    {% else %}<span class="Selectors">Sorry, no templates are available at this time.</span>
     {% endif %}
         </div>
         <div id="SharedSelection" class="SelectionGroup" >
@@ -33,7 +36,7 @@
             <option value="{{ plan.id }}">{{ plan.name }}</option>
         {% endfor %}
         </select>
-    {% else %}<span class="Selectors">Sorry, no templates of that type available</span>
+    {% else %}<span class="Selectors">Sorry, no shared plans are available at this time.</span>
     {% endif %}
         </div>
         <div id="MineSelection" class="SelectionGroup" >
@@ -48,17 +51,22 @@
         <input type="radio" name="Edit" value="edit" checked>Edit Selected Plan</input>
         <input type="radio" name="Edit" value="saveas">Copy and Save Selected Plan</input>
         </div>
-    {% else %}<span class="Selectors">Sorry, no templates of that type available</span>
+    {% else %}<span class="Selectors">Sorry, you have no plans available at this time.</span>
     {% endif %}
         </div>
 </div>
 
+{% if not is_anonymous %}
 <div id="NewName">
     <label for="txtNewName" id="lblNewName">Name your new plan:</label>
     <input type="text" id="txtNewName" />
 </div>
 <button id="btnSelectPlan" type="submit">Start Drawing</button>
-
+{% else %}
+{% if shared %}
+<button id="btnSelectPlan" type="submit">View Plan</button>
+{% endif %}
+{% endif %}
 </div>
 
 </div>

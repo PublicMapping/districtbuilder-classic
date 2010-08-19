@@ -47,7 +47,7 @@ def userregister(request):
             login( request, user )
             return HttpResponse(simplejson.dumps({
                     'success':True,
-                    'redirect':'/districtmapping/plan/0/edit'
+                    'redirect':'/districtmapping/plan/0/view'
                 }), 
                 mimetype='application/json')
         else:

@@ -78,10 +78,12 @@ def copyplan(request, planid):
 
     data = serializers.serialize("json", [ plan_copy ])
 
-    return HttpResponse(data)    
-    
-@login_required
-def editplan(request, planid):
+    return HttpResponse(data)
+
+def commonplan(request, planid):
+    """A common method that gets the same data structures for viewing
+    and editing. This method is called by the viewplan and editplan 
+    views."""
     try:
         plan = Plan.objects.get(pk=planid)
         districts = plan.get_districts_at_version(plan.version)
@@ -108,7 +110,7 @@ def editplan(request, planid):
     if type(plan) != types.DictType:
         unassigned_id = plan.district_set.filter(name='Unassigned').values_list('district_id',flat=True)[0]
 
-    return render_to_response('editplan.html', {
+    return {
         'plan': plan,
         'districts': districts,
         'mapserver': settings.MAP_SERVER,
@@ -117,7 +119,18 @@ def editplan(request, planid):
         'rules': rules,
         'unassigned_id': unassigned_id,
         'is_anonymous': request.user.username == 'anonymous'
-    })
+    }
+
+
+@login_required
+def viewplan(request, planid):
+    "View a plan"
+    return render_to_response('viewplan.html', commonplan(request, planid)) 
+    
+@login_required
+def editplan(request, planid):
+    "Edit a plan. This template enables editing tools and functionality."
+    return render_to_response('editplan.html', commonplan(request, planid))
 
 @login_required
 def createplan(request):
