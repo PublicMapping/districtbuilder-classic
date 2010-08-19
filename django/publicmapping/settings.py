@@ -107,3 +107,4 @@ POSTGIS_TEMPLATE='template_postgis'
 MAX_DISTRICTS = 18
 PLAN_TEMPLATE = 'default'
 DEFAULT_DISTRICT_DISPLAY = 'POPTOT' # can be subject id, name, or display
+TEMP_DIR = config.get('publicmapping', 'TEMP_DIR')

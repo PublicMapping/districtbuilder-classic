@@ -31,6 +31,7 @@
     <script type="text/javascript" src="/site-media/mapping.js"></script>
     <script type="text/javascript" src="/site-media/chooseplan.js"></script>
     <script type="text/javascript" src="/site-media/publishplan.js"></script>
+    <script type="text/javascript" src="/site-media/reports.js"></script>
   </head>
   <body onload="init();" id="app">
   
@@ -52,10 +53,10 @@
       <ul id="steps_tabs">
         <li id="tab_step1"><a href="#step-1">Step 1: Draw</a></li>
         <li id="tab_step2"><a href="#step-2">Step 2: Evaluate</a></li>
-        <li id="tab_step3"><a href="#step-2">Step 3: Share</a></li>
+        <li id="tab_step3"><a href="#step-3">Step 3: Share</a></li>
       </ul>
 
-   <div id="step1" class="main_content">
+   <div id="step-1" class="main_content">
  
       <div id="mapandmenu">
          <div class="toolbar ui-widget-header">
@@ -283,6 +284,60 @@
           </div>
       </div>
     </div>
+    <div id="step-2" class="main_content evaluate">
+        <div id="reportdescription">
+            <div id="description">
+               <h3> Introduction to the reporting tool</h3>
+                <p>This is the reporting tool. Select your options, then click "View Report" to see your report.</p>
+            </div>
+            <div id="options">
+                <div id="options1">
+                    <span><input id="numDistricts" type="checkbox" /><label for="numDistricts">Number Of Districts</label></span>
+                    <span><input id="countySplits" type="checkbox" /><label for="countySplits">County Splits</label></span>
+                    <span><input id="popSummaries" type="checkbox" /><label for="populationSummaries">Population Summaries</label></span>
+                    <span><input id="popDistrict" type="checkbox" /><label for="popDistrict">Population for District</label></span>
+                    <span><input id="popDeviation" type="checkbox" /><label for="popDeviation">Population - Deviation from Mean</label></span>
+                    <span><input id="partisanComposition" type="checkbox" /><label for="partisanComposition">Partisan Composition</label></span>
+                    <span><input id="partStrongRepublican" type="checkbox" /><label for="partStrongRepublican">Percent Strong Republican</label></span>
+                    <span><input id="partLeanRepublican" type="checkbox" /><label for="partLeanRepublican">Percent Lean Republican</label></span>
+                    <span><input id="partStrongDemocrat" type="checkbox" /><label for="partStrongDemocrat">Percent Strong Democrat</label></span>
+                    <span><input id="partLeanDemocrat" type="checkbox" /><label for="partLeanDemocrat">Percent Lean Democrat</label></span>
+                </div>
+                <div id="options2">
+                    <span><input id="racialComp" type="checkbox" /><label for="racialComp">Racial Composition</label></span>
+                    <span><input id="racialBlack" type="checkbox" /><label for="racialBlack">Majority Black</label></span>
+                    <span><input id="racialHisp" type="checkbox" /><label for="racialHisp">Majority Hispanic</label></span>
+                    <span><input id="racialOther" type="checkbox" /><label for="racialOther">Majority Other</label></span>
+                    <span><input id="compactness" type="checkbox" /><label for="compactness">Compactness Scores</label></span>
+                    <span><input id="reock" type="checkbox" /><label for="reock">Reock</label></span>
+                    <span><input id="polsbypopper" type="checkbox" /><label for="polsbypopper">Polsby-Popper</label></span>
+                    <span><input id="3" type="checkbox" /><label for="3">3</label></span>
+                    <span><input id="4" type="checkbox" /><label for="4">4</label></span>
+                </div>
+            </div>
+            <div id="plans">
+                <h3>Choose Plans for comparison</h3>
+                <div><button id="btnViewReport">View Report</button></div>
+            </div>
+        </div>
+    </div>
+    <div id="step-3" class="main_content share">
+        <div id="saveandshare">
+            <div class="explanation">
+                <h3>Explanation of Shared Documents</h3>
+            </div>
+            <div id="nameandshare">
+                <label for="txtPlanName">Name My Plan</label>
+                <input id="txtPlanName" />
+                <button id="btnSaveAndShare">Save and Share</button>
+            </div>
+        </div>
+        <div id="preview">
+            <div id="reportPreview">
+            </div>
+            <button id="btnPrintReport">Print</button>
+        </div>
+    </div>
 </div>  
 <div id="toolbar_plans">
      <div class="toolset_group first"> 
@@ -339,6 +394,12 @@
 //            modal: true,
 //        }).init();
     {% endif %}
+        var report = reports({
+            reportUrl: '/districtmapping/plan/{{plan.id}}/getreport/',
+            callback: function() { 
+                $('#steps').tabs('select', '#step-3');            
+            }
+        }).init();
     });
 </script>
   </body>

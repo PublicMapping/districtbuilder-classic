@@ -5,10 +5,13 @@ from django.db import IntegrityError, connection
 from django.db.models import Sum
 from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import login_required
+from django.contrib.gis.gdal import *
+from django.contrib.gis.gdal.libgdal import lgdal
 from django.contrib import humanize
 from django import forms
 from django.utils import simplejson as json
 from django.views.decorators.cache import cache_page
+from rpy2.robjects import *
 from publicmapping import settings
 from publicmapping.redistricting.models import *
 import random, string, types, copy
@@ -149,6 +152,79 @@ def createplan(request):
             status = { 'success': False, 'message': 'Couldn\'t save new plan' }
             return HttpResponse(json.dumps(status),mimetype='application/json')
     status['message'] = 'Didn\'t submit name through POST'
+    return HttpResponse(json.dumps(status),mimetype='application/json')
+
+
+bardWorkSpaceLoaded = False
+if not bardWorkSpaceLoaded:
+    r.library('BARD')
+    bardWorkSpaceLoaded = True
+    # r.load('/projects/publicmapping/local/data/oh.RData')
+
+@login_required
+def getreport(request, planid):
+    """ This will return an HTML blob from BARD's PMPReport method.  Should be suitable for planting
+    into a <div>
+    """
+    
+#  PMP reporrt interface
+#    PMPreport<-function(
+#       bardMap,
+#       blockAssignmentID="BARDPlanID",
+#       popVar=list("Total Population"="POPTOT",tolerance=.01),
+#       popVarExtra=list("Voting Age Population"="VAPTOT","Voting Age
+#Population Black"="VAPHWHT"),
+#       ratioVars=list(
+#               "Majority Minority Districts"=list(
+#                       denominator=list("Total Population"="POPTOT"),
+#                       threshold=.6,
+#                       numerators=list("Black Population"="POPBLK", "Hispanic Population"="POPHISP")
+#                  ),
+#               "Party-Controlled Districts"=list(
+#                       threshold=.55,
+#                       numerators=list("Democratic Votes"="PRES_DEM", "Republican Votes"="PRES_REP")
+#                  )
+#       ),
+#       splitVars = list("County"="COUNTY", "Tract"="TRACT"),
+#       blockLabelVar="CTID",
+#       repCompactness=TRUE,
+#       repCompactnessExtra=FALSE,
+#       repSpatial=TRUE,
+#       repSpatialExtra=FALSE,
+#       useHTML=TRUE,
+#       ...)  {
+#...
+#}
+
+    status = { 'success': False }
+    try:
+        plan = Plan.objects.get(pk=planid)
+        districts = plan.get_districts_at_version(plan.version)
+    except:
+        status['message'] = 'Couldn\'t retrieve plan information'
+        return HttpResponse(json.dumps(status),mimetype='application/json')
+    #Get the variables from the request
+    if request.method == 'POST':
+        popVar = request.POST.get('popVar', 'POPTOT')
+        popVarExtra = request.POST.get('popVarExtra', None)
+        ratioVars = request.POST.get('ratioVars', None)
+        splitVars = request.POST.get('splitVars', None)
+        blockLabelVar = request.POST.get('blockLabelVar', 'CTID')
+        repCompactness = request.POST.get('repCompactness', None)
+        repCompactnessExtra = request.POST.get('repCompactnessExtra', None)
+        repSpatial = request.POST.get('repSpatial', None)
+        repSpatialExtra = request.POST.get('repSpatialExtra', None)
+
+    # TODO Create an R vector to feed into createAssignedPlan
+    district_list = list()
+    # Find the blocks for each districts
+    for district in districts:
+        id_list = district.get_base_geounits_within()
+        district_list.append(id_list)
+    
+    # return the result
+    status = { 'success': True }
+    status['preview'] = '<div id="report">Here is a bard report.</div>'
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
 @login_required
@@ -447,6 +523,30 @@ def getcompactness(district):
     """
     pass
 
+#def createShapeFile(planid):
+#    """ Given a plan id, this function will create a shape file in the temp folder
+#    that contains the district geometry and all available computed characteristics. 
+#    This shapefile is suitable for importing to BARD
+#    """
+#    import os
+#    query = 'select %s b.*, b.name as BARDPlanID from ( select district_id, max(version) as version from redistricting_district group by district_id ) as a join redistricting_district as b on a.district_id = b.district_id and a.version = b.version where geom is not null' % getSubjectQueries()
+#    shape = settings.TEMP_DIR + str(planid) + '.shp'
+#    cmd = 'pgsql2shp -k -u %s -P %s -f %s %s "%s"' % (settings.DATABASE_USER, settings.DATABASE_PASSWORD, shape, settings.DATABASE_NAME, query)
+#    try:
+#        if os.system(cmd) == 0:
+#            return shape
+#        else:
+#            return None
+#    except doh as Exception:
+#        print "%s; %s", query, doh.message
+
+#def get_subject_queries():
+#    all = Subject.objects.all()
+#    query = '';
+#    for subject in all:
+#        query += 'getsubjectfordistrict(b.id, \'%s\') as %s, ' % (subject.name, subject.name)
+#    return query
+     
 def getdefaultsubject():
     """Get the default subject to display. This reads the settings
     for the value 'DEFAULT_DISTRICT_DISPLAY', which can be the ID of

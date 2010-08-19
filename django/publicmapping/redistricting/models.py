@@ -548,6 +548,16 @@ class District(models.Model):
             c.district = self
             c.save()
 
+    def get_base_geounits_within(self):
+        """This will return a list of the geounit ids of the geounits that comprise this district
+        at the base level.  We'll check this by seeing whether the centroid of each geounits
+        fits within the simplified geometry of this district
+        """    
+        if not self.simple:
+           return list()
+        return Geounit.objects.filter(geolevel = settings.BASE_GEOLEVEL, center__within = self.simple).values_list('id')
+        
+
 
 class DistrictGeounitMapping(models.Model):
     district = models.ForeignKey(District)

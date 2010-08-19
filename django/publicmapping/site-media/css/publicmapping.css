@@ -942,9 +942,53 @@ button#stats_legend {
   width: 100%;
 }
 
+/* Evaluate page */
+div.evaluate {
+    background: #87AE8B !important;
+    position:absolute;
+    top:33px;
+}
+.evaluate #description,
+.evaluate #options {
+    display:inline-block;
+    width:65%;
+}
+.evaluate #plans {
+    display:inline-block;
+    width: 30%;
+}
 
+.evaluate #options span {
+    display: block;
+}
 
+.evaluate #options1, .evaluate #options2 {
+    display:inline-block;
+    vertical-align:top;
+    width: 45%;
+}
 
+/* Share page */
+div.share {
+    background: #ACAE87 !important;
+    height:100%;
+}
+
+.share #saveandshare {
+    
+}
+.share #saveandshare,
+.share #preview {
+    display:inline-block;
+    width:45%;
+}
+.share #nameandshare {
+    position:relative;
+    top:80%;
+}
+.share #reportpreview {
+    height:600px;
+}
 
 /* district assignment control styles */
 div.controlDiv {
