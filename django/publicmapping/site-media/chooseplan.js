@@ -11,11 +11,11 @@ publicmapping.chooseplan = function(options) {
             autoOpen: false,
             modal: true,
             width: 600,
-            type: 'shared',
             resizable: false
         }, options),
         // bunch o variables
-        
+       
+        _eventType,
         _nameRequired,
         _dialog;
 
@@ -43,10 +43,22 @@ publicmapping.chooseplan = function(options) {
         $('.Selectors').hide();
         $('.SelectionGroup').hide();
         $('#SelectorHelp').show();
-        $('#btnBlank').click(function() { _options.type = 'blank'; showOnly('#BlankSelection', '#btnBlank'); });
-        $('#btnTemplate').click(function() { _options.type = 'template'; showOnly('#TemplateSelection','#btnTemplate'); });
-        $('#btnShared').click(function() { _options.type = 'shared'; showOnly('#SharedSelection','#btnShared'); });
-        $('#btnMine').click(function() { _options.type = 'mine'; showOnly('#MineSelection','#btnMine'); });
+        $('#btnBlank').click(function() { 
+            _eventType = 'blank'; 
+            showOnly('#BlankSelection', '#btnBlank'); 
+        });
+        $('#btnTemplate').click(function() { 
+            _eventType = 'template'; 
+            showOnly('#TemplateSelection','#btnTemplate'); 
+        });
+        $('#btnShared').click(function() { 
+            _eventType = 'shared'; 
+            showOnly('#SharedSelection','#btnShared'); 
+        });
+        $('#btnMine').click(function() { 
+            _eventType = 'mine'; 
+            showOnly('#MineSelection','#btnMine');
+        });
         $('#btnSelectPlan').click(selectPlan);
         $('#NewName').hide();
         $('input:radio').click( function() {
@@ -68,9 +80,15 @@ publicmapping.chooseplan = function(options) {
         $('.SelectionGroup').hide();
         $('.Selectors').removeClass('active');
         $(selectorId).show();
-        $('#btnSelectPlan').show();
-        $(selectorId + ' .Selectors').show().addClass('active');
-        if (_options.type == 'blank' || _options.type == 'template' || 
+        var selectors = $(selectorId + ' .Selectors'); 
+        selectors.show().addClass('active');
+        if ( selectors.length > 0 && selectors[0].nodeName != 'SELECT' ) {
+            $('#btnSelectPlan').hide();
+        }
+        else {
+            $('#btnSelectPlan').show();
+        }
+        if (_eventType == 'blank' || _eventType == 'template' || 
             ( selectorId == '#MineSelection' && $('input:radio:checked').val() == 'saveas'  )) {
             $('#NewName').show();
             _nameRequired = true;
@@ -82,19 +100,31 @@ publicmapping.chooseplan = function(options) {
 
     var selectPlan = function () {
         $('#btnSelectPlan').attr('disabled','true');
+        var activeText = $('#btnSelectPlan span').text();
         $('#btnSelectPlan span').text('Please Wait...');
         var activeSelector = $('select.active');
         if (_nameRequired) {
             var name = $('#txtNewName').val();
             var url = '/districtmapping/plan/' + activeSelector.val() + '/copy/';
-            if (_options.type == 'blank') url = '/districtmapping/plan/create/';
-            if (name.trim().length == 0) { alert ('A name for the copied template is required'); return; }
+            if (_eventType == 'blank') {
+                url = '/districtmapping/plan/create/';
+            }
+
+            if (name.trim().length == 0) { 
+                alert ('A name for the copied template is required'); 
+                $('#btnSelectPlan').attr('disabled',null);
+                $('#btnSelectPlan span').text(activeText);
+                return; 
+            }
             if (OpenLayers) {
                 OpenLayers.Element.addClass(document.getElementById('btnSelectPlan'),'olCursorWait');
                 OpenLayers.Element.addClass(document.body,'olCursorWait');
             }
             window.status = 'Please standby while creating new plan ...';
             $.post(url, { name: $('#txtNewName').val() }, copyCallback, 'json');
+        }
+        else if ( _eventType == 'mine' ) {
+            window.location = '/districtmapping/plan/' + activeSelector.val() + '/edit/';
         }
         else {
             window.location = '/districtmapping/plan/' + activeSelector.val() + '/view/';

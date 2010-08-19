@@ -326,9 +326,6 @@
             {% if not plan.name %}
             callback: function() { $('#difplanbtn').click() },
             {% endif %}
-            {% if is_anonymous %}
-            type: 'shared',
-            {% endif %}
             target: $('#difplanbtn'),
             container: $('#DialogContainer'),
             modal: true
