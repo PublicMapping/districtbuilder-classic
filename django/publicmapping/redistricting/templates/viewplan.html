@@ -36,13 +36,15 @@
   
   <div id="app_header">
     <div id="logo"><img src="/site-media/images/title-app.png" /></div>
-    {% block site_nav %}
     <div id="site_nav">
         <ul>
+            {% if is_anonymous %}
             <li><a class="last" href="/">Login</a></li>
+            {% else %}
+            <li><a class="last" href="/accounts/logout/">Logout</a></li>
+            {% endif %}
         </ul>
     </div>
-    {% endblock %}
     <div class="clear"></div>
   </div>
 
@@ -295,7 +297,7 @@
      <!--<div class="toolset_group"> 
         <div id="saveplanbtn">Save Plan</div>
      </div>-->
-     {% if plan %}
+     {% if plan and is_editable %}
      <div class="toolset_group">
         {% if plan.edited %}
           <div id="saveplaninfo" class="savedat">Plan saved at {{ plan.edited|date:"m/d P" }} </div>
@@ -321,12 +323,15 @@
             autoOpen:false
         });
         var choose = publicmapping.chooseplan({
+            {% if not plan.name %}
+            callback: function() { $('#difplanbtn').click() },
+            {% endif %}
+            {% if is_anonymous %}
+            type: 'shared',
+            {% endif %}
             target: $('#difplanbtn'),
             container: $('#DialogContainer'),
-            modal: true,
-    {% if not plan.name %}
-            callback: function() { $('#difplanbtn').click() }
-    {% endif %}
+            modal: true
         }).init();
     {% if plan.name %}
         $('.geography').load('/districtmapping/plan/{{plan.id}}/geography', { demo: 3 });

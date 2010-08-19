@@ -245,7 +245,7 @@ class Plan(models.Model):
     """
     name = models.CharField(max_length=200,unique=True)
     is_template = models.BooleanField(default=False)
-    is_temporary = models.BooleanField(default=False)
+    is_shared = models.BooleanField(default=False)
     version = models.PositiveIntegerField(default=0)
     created = models.DateTimeField(auto_now_add=True)
     edited = models.DateTimeField(auto_now=True)
@@ -619,14 +619,22 @@ def set_geounit_mapping(sender, **kwargs):
 post_save.connect(set_geounit_mapping, sender=Plan, dispatch_uid="publicmapping.redistricting.Plan")
 
 def can_edit(user, plan):
-    """Return whether a user can edit the given plan.  They must own it or be a staff member.  Templates
-    cannot be edited, only copied
+    """Return whether a user can edit the given plan.  They must own it or 
+    be a staff member.  Templates cannot be edited, only copied.
     """
     return (plan.owner == user or user.is_staff) and not plan.is_template
 
+def can_view(user, plan):
+    """Return whether a user can view a given plan. The plan must have the
+    shared flag set.
+    """
+    return plan.is_shared and not plan.is_template
+
+
 def can_copy(user, plan):
-    """Return whether a user can copy the given plan.  The user must be the owner, or a staff member to copy
-    a plan they own.  Anyone can copy a template
+    """Return whether a user can copy the given plan.  The user must be 
+    the owner, or a staff member to copy a plan they own.  Any registered
+    user can copy a template.
     """
     return plan.is_template or plan.owner == user or user.is_staff
 

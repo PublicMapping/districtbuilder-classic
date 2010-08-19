@@ -87,11 +87,13 @@ def commonplan(request, planid):
     try:
         plan = Plan.objects.get(pk=planid)
         districts = plan.get_districts_at_version(plan.version)
-        if not can_edit(request.user, plan):
+        editable = can_edit(request.user, plan)
+        if not editable and not can_view(request.user, plan):
             plan = {}
     except:
         plan = {}
         districts = {}
+        editable = False
     levels = Geolevel.objects.values_list("id", "name")
     demos = Subject.objects.values_list("id","name", "short_display")
     default_demo = getdefaultsubject()
@@ -118,7 +120,8 @@ def commonplan(request, planid):
         'snaplayers': snaplayers,
         'rules': rules,
         'unassigned_id': unassigned_id,
-        'is_anonymous': request.user.username == 'anonymous'
+        'is_anonymous': request.user.username == 'anonymous',
+        'is_editable': editable
     }
 
 
@@ -257,7 +260,7 @@ def chooseplan(request):
         # plan has been chosen.  Open it up
     else:
         templates = Plan.objects.filter(is_template=True, owner__is_staff = True)
-        shared = Plan.objects.filter(is_template=True, owner__is_staff = False).exclude(owner = request.user)
+        shared = Plan.objects.filter(is_shared=True).exclude(owner = request.user)
         mine = Plan.objects.filter(is_template=False, owner=request.user)
 
         return render_to_response('chooseplan.html', {

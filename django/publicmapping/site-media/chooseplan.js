@@ -10,16 +10,21 @@ publicmapping.chooseplan = function(options) {
             callback: function() {},
             autoOpen: false,
             modal: true,
-            width:600,
+            width: 600,
+            type: 'shared',
+            resizable: false
         }, options),
         // bunch o variables
         
         _nameRequired,
-        _editType,
         _dialog;
 
     _self.init = function() {
-        _options.container.load('/districtmapping/plan/choose/', function() { setUpTarget(); setUpEvents(); _options.callback(); })
+        _options.container.load('/districtmapping/plan/choose/', function() {
+            setUpTarget(); 
+            setUpEvents(); 
+            _options.callback(); 
+        });
         
         _nameRequired = false;
         
@@ -38,10 +43,10 @@ publicmapping.chooseplan = function(options) {
         $('.Selectors').hide();
         $('.SelectionGroup').hide();
         $('#SelectorHelp').show();
-        $('#btnBlank').click(function() { _editType = 'blank'; showOnly('#BlankSelection', '#btnBlank'); });
-        $('#btnTemplate').click(function() { _editType = 'template'; showOnly('#TemplateSelection','#btnTemplate'); });
-        $('#btnShared').click(function() { _editType = 'shared'; showOnly('#SharedSelection','#btnShared'); });
-        $('#btnMine').click(function() { _editType = 'mine'; showOnly('#MineSelection','#btnMine'); });
+        $('#btnBlank').click(function() { _options.type = 'blank'; showOnly('#BlankSelection', '#btnBlank'); });
+        $('#btnTemplate').click(function() { _options.type = 'template'; showOnly('#TemplateSelection','#btnTemplate'); });
+        $('#btnShared').click(function() { _options.type = 'shared'; showOnly('#SharedSelection','#btnShared'); });
+        $('#btnMine').click(function() { _options.type = 'mine'; showOnly('#MineSelection','#btnMine'); });
         $('#btnSelectPlan').click(selectPlan);
         $('#NewName').hide();
         $('input:radio').click( function() {
@@ -65,7 +70,7 @@ publicmapping.chooseplan = function(options) {
         $(selectorId).show();
         $('#btnSelectPlan').show();
         $(selectorId + ' .Selectors').show().addClass('active');
-        if (_editType == 'blank' || _editType == 'template' || _editType == 'shared' ||
+        if (_options.type == 'blank' || _options.type == 'template' || 
             ( selectorId == '#MineSelection' && $('input:radio:checked').val() == 'saveas'  )) {
             $('#NewName').show();
             _nameRequired = true;
@@ -82,7 +87,7 @@ publicmapping.chooseplan = function(options) {
         if (_nameRequired) {
             var name = $('#txtNewName').val();
             var url = '/districtmapping/plan/' + activeSelector.val() + '/copy/';
-            if (_editType == 'blank') url = '/districtmapping/plan/create/';
+            if (_options.type == 'blank') url = '/districtmapping/plan/create/';
             if (name.trim().length == 0) { alert ('A name for the copied template is required'); return; }
             if (OpenLayers) {
                 OpenLayers.Element.addClass(document.getElementById('btnSelectPlan'),'olCursorWait');
@@ -92,7 +97,7 @@ publicmapping.chooseplan = function(options) {
             $.post(url, { name: $('#txtNewName').val() }, copyCallback, 'json');
         }
         else {
-            window.location = '/districtmapping/plan/' + activeSelector.val() + '/edit/';
+            window.location = '/districtmapping/plan/' + activeSelector.val() + '/view/';
         }
     };
 
