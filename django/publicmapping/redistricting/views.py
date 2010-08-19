@@ -116,6 +116,7 @@ def editplan(request, planid):
         'snaplayers': snaplayers,
         'rules': rules,
         'unassigned_id': unassigned_id,
+        'is_anonymous': request.user.username == 'anonymous'
     })
 
 @login_required
@@ -175,7 +176,7 @@ def newdistrict(request, planid):
             version = plan.version
 
         if geolevel and geounit_ids and name:
-            if True: #try: 
+            try: 
                 # create a temporary district
                 district = District(name=name, plan=plan, district_id=None, version=plan.version)
                 district.save()
@@ -194,9 +195,9 @@ def newdistrict(request, planid):
                 status['district_id'] = district_id
                 status['district_name'] = name
                 status['version'] = plan.version
-            #except ValidationError:
-            #    status['message'] = 'Reached Max districts already'
-            else: #except:
+            except ValidationError:
+                status['message'] = 'Reached Max districts already'
+            except:
                 status['message'] = 'Couldn\'t save new district.'
         else:
             status['message'] = 'Must specify name, geolevel, and geounit ids for new district.'
@@ -220,14 +221,14 @@ def addtodistrict(request, planid, districtid):
         else:
             version = plan.version
 
-        if True: #try:
+        try:
             fixed = plan.add_geounits(districtid, geounit_ids, geolevel, version)
             status['success'] = True;
             status['message'] = 'Updated %d districts' % fixed
             plan = Plan.objects.get(pk=planid)
             status['edited'] = plan.edited.isoformat()
             status['version'] = plan.version
-        else: #except: 
+        except: 
             status['message'] = 'Could not add units to district.'
 
     else:
@@ -245,24 +246,38 @@ def chooseplan(request):
         templates = Plan.objects.filter(is_template=True, owner__is_staff = True)
         shared = Plan.objects.filter(is_template=True, owner__is_staff = False).exclude(owner = request.user)
         mine = Plan.objects.filter(is_template=False, owner=request.user)
+
         return render_to_response('chooseplan.html', {
             'templates': templates,
             'shared': shared,
             'mine': mine,
             'user': request.user,
+            'is_anonymous': request.user.username == 'anonymous'
         })
 
 @login_required
 @cache_page(3600)
 def simple_district_versioned(request,planid):
-    version = request.REQUEST['version__eq']
-    subject_id = request.REQUEST['subject__eq']
-
     status = {'success':False,'type':'FeatureCollection'}
     try:
         plan = Plan.objects.get(id=planid)
-        status['features'] = plan.get_wfs_districts(version, subject_id)
-        status['success'] = True
+        if 'version__eq' in request.REQUEST:
+            version = request.REQUEST['version__eq']
+        else:
+            version = plan.version
+
+        subject_id = None
+        if 'subject__eq' in request.REQUEST:
+            subject_id = request.REQUEST['subject__eq']
+        elif getdefaultsubject():
+            subject_id = getdefaultsubject().id
+
+        if subject_id:
+            status['features'] = plan.get_wfs_districts(version, subject_id)
+            status['success'] = True
+        else:
+            status['features'] = []
+            status['message'] = 'Subject for districts is required.'
     except:
         status['features'] = []
         status['message'] = 'Query failed.'
