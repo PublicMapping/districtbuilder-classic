@@ -127,12 +127,16 @@ $(function() {
             }
          });
 
+        var dashRE = new RegExp('\-','g');
+        var milliRE = new RegExp('\.\\d*$');
+        var tzRE = new RegExp('T');
         $('#saveplaninfo').bind('planSaved', function(event, time) {
             var date = new Date(time);
             if (isNaN(date)) {
                 // additional text wrangling for IE
-                time = time.replace(new RegExp('\-','g'),'\/')
-                    .replace(new RegExp('\.\\d*$'),'');
+                time = time.replace(dashRE,'\/')
+                    .replace(milliRE,'')
+                    .replace(tzRE, ' ');
                 date = new Date(time);
             }
             var hours = date.getHours();
