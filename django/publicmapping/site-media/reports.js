@@ -31,7 +31,41 @@ reports = function(options) {
     };
 
     var getReportOptions = function() {
-        var data = { _popVar: 'POPTOT' };
+        var getConcatenated = function(class) {
+            var value = '';
+            $('.' + class + '.reportVar').each( function() { 
+                $this = $(this);
+                if ($this.children('input:checked').length > 0) {
+                    value += $this.children('label').text();
+                    value += "|";
+                    value += $this.children('input').val();
+                    value += '^';
+                }
+            });
+            return value.substring(0, value.length - 1);
+        };
+
+        _popVar = $('#popVar').val();
+        _popVarExtra = getConcatenated('popVarExtra');
+        _partyControl = getConcatenated('partyControl');
+        _racialComp = getConcatenated('racialComp');
+        _splitVar = getConcatenated('splitVar');
+        _repCompactness = $('#repCompactness input').attr('checked');
+        _repCompactnessExtra = $('#repCompactnessExtra input').attr('checked');
+        _repSpatial = $('#repSpatial input').attr('checked');
+        _repSpatialExtra = $('#repSpatialExtra input').attr('checked');
+        var data = { 
+            popVar: _popVar,
+            popVarExtra: _popVarExtra,
+            racialComp: _racialComp,
+            partyControl: _partyControl,
+            splitVars: _splitVars,
+            repCompactness: _repCompactness,
+            repCompactnessExtra: _repCompactnessExtra,
+            prepSpatial: _repSpatial,
+            repSpatialExtra: _repSpatialExtra
+        };
+        
         return data;
     };
 

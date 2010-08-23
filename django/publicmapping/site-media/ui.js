@@ -156,6 +156,25 @@ $(function() {
                 panel.slideDown(240);
             }
         });
+        
+        // report category parents toggling
+        $('#reportdescription .master input').click( function() {
+            $this = $(this);
+            var id = $this.attr('id');
+            var category = id.substring(0, id.indexOf('_'));
+            var checked = $this.attr('checked');
+            $('#reportdescription .' + category + ' input').attr('checked', $this.attr('checked'));     
+        });
+        $('#reportdescription .reportVar input').click( function() {
+            $this = $(this).closest('span');
+            var id = $this.attr('id');
+            var categories = $this.attr('class');
+            var category = categories.split(' ')[0]; 
+            if ($this.find('input').attr('checked') == false) {
+                $('#' + category + '_master').attr('checked', false);     
+            }
+        });
+
 /*
         $('#saveplanbtn').click(function(){
             $('#working').dialog('open');

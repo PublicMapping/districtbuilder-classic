@@ -207,27 +207,84 @@ def getreport(request, planid):
         status['message'] = 'Couldn\'t retrieve plan information'
         return HttpResponse(json.dumps(status),mimetype='application/json')
     #Get the variables from the request
-    if request.method == 'POST':
-        popVar = request.POST.get('popVar', 'POPTOT')
-        popVarExtra = request.POST.get('popVarExtra', None)
-        ratioVars = request.POST.get('ratioVars', None)
-        splitVars = request.POST.get('splitVars', None)
-        blockLabelVar = request.POST.get('blockLabelVar', 'CTID')
-        repCompactness = request.POST.get('repCompactness', None)
-        repCompactnessExtra = request.POST.get('repCompactnessExtra', None)
-        repSpatial = request.POST.get('repSpatial', None)
-        repSpatialExtra = request.POST.get('repSpatialExtra', None)
+    if request.method != 'POST':
+        status['message'] = 'Information for report wasn\'t sent via POST'
+        return HttpResponse(json.dumps(status),mimetype='application/json')
 
-    # TODO Create an R vector to feed into createAssignedPlan
-    district_list = list()
-    # Find the blocks for each districts
-    for district in districts:
-        id_list = district.get_base_geounits_within()
-        district_list.append(id_list)
+    def get_parameters_from_list(parameter_string):
+        """ Helper method to break up the strings that represents lists of variables
+        """
+        myVars = dict()
+        extras = parameter_string.split('^')
+        for extra in extras:
+            pair = extra.split('|')
+            myVars[pair[0]] = pair[1]
+        return myVars
     
-    # return the result
-    status = { 'success': True }
-    status['preview'] = '<div id="report">Here is a bard report.</div>'
+    params = dict()
+    popVar = request.POST.get('popVar')
+    if popVar:
+        var = get_parameters_from_list(popVar)
+        var['tolerance'] = .1
+        params['popVar'] = params
+
+    popVarExtra = request.POST.get('popVarExtra', None)
+    if popVarExtra:
+        params['popVarExtra'] = get_parameters_from_list(popVarExtra)
+    
+    racialComp = request.POST.get('ratioVars', None)
+    partyControl = request.POST.get('partyControl', None)
+    if racialComp or partyControl:
+        ratioVars = dict()
+        if racialComp:
+            mmd = dict()
+            mmd['denominator'] = params['popVar']
+            mmd['threshhold'] = .6
+            mmd['numerators'] = get_parameters_from_list(racialComp)
+            ratioVars['Majority Minority Districts'] = mmd
+
+        if partyControl:
+            pc = dict()
+            pc['denominator'] = params['popVar']
+            pc['threshhold'] = .55
+            pc['numerators'] = get_parameters_from_list(partyControl)
+            ratioVars['Party-controlled Districts'] = pc
+        params['ratioVars'] = ratioVars
+
+    splitVars = request.POST.get('splitVars', None)
+    if splitVars:
+        params['splitVars'] = get_parameters_from_list(splitVars)
+    
+    blockLabelVar = request.POST.get('blockLabelVar', 'CTID')
+
+    repCompactness = request.POST.get('repCompactness', None)
+    if repCompactness:
+        params['repCompactness'] = repCompactness
+
+    repCompactnessExtra = request.POST.get('repCompactnessExtra', None)
+    if repCompactnessExtra:
+        params['repCompactnessExtra'] = repCompactnessExtra
+
+    repSpatial = request.POST.get('repSpatial', None)
+    if repSpatial:
+        params['repSpatial'] = repSpatial
+
+    repSpatialExtra = request.POST.get('repSpatialExtra', None)
+    if repSpatialExtra:
+        params['repSpatialExtra'] = repSpatialExtra
+
+    # for testing, we're using tracts and forcing a limit of 1 so tracts aren't split
+    geolevel = 2
+    district_vector = Geounit.objects.filter(geolevel = geolevel).extra(select={ 'district': "SELECT district_id from redistricting_district as d where st_contains(d.simple, center) limit 1" }).order_by('id').values_list('district', flat=True)
+    params['blockAssignmentID'] = district_vector
+
+    try:
+        #result = r.PMPrequest(params)
+        status = { 'success': True }
+        # status['preview'] = result[0]
+        status['preview'] = '<div id="report">Here\'s the R function to run for the requested options: PMPrequest( %s )</div>' % params
+    except Exception as ex:
+        status['message'] = '<div class="error" title="error">Sorry, there was an error with the report: %s' % ex.message    
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
 @login_required

@@ -968,6 +968,9 @@ div.evaluate {
     width: 45%;
 }
 
+.reportVar {
+    padding-left:15px;
+}
 /* Share page */
 div.share {
     background: #ACAE87 !important;

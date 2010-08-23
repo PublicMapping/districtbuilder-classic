@@ -256,10 +256,7 @@
                         <td>100,000 - 500,000</td>
                     </tr>
                     <tr>
-                        <td><div id="legend_swatch_3" class="swatch basemap_swatch">&nbsp;</div></td>
-                        <td>&gt; 500,000</td>
-                    </tr>
-                </tbody>
+                        <td><div id="legend_swatch_3" class="swatch basemap_swatch">&nbsp;</div></td> <td>&gt; 500,000</td> </tr> </tbody>
             </table>
             <table>
                 <thead>
@@ -293,27 +290,28 @@
             </div>
             <div id="options">
                 <div id="options1">
-                    <span><input id="numDistricts" type="checkbox" /><label for="numDistricts">Number Of Districts</label></span>
-                    <span><input id="countySplits" type="checkbox" /><label for="countySplits">County Splits</label></span>
-                    <span><input id="popSummaries" type="checkbox" /><label for="populationSummaries">Population Summaries</label></span>
-                    <span><input id="popDistrict" type="checkbox" /><label for="popDistrict">Population for District</label></span>
-                    <span><input id="popDeviation" type="checkbox" /><label for="popDeviation">Population - Deviation from Mean</label></span>
-                    <span><input id="partisanComposition" type="checkbox" /><label for="partisanComposition">Partisan Composition</label></span>
-                    <span><input id="partStrongRepublican" type="checkbox" /><label for="partStrongRepublican">Percent Strong Republican</label></span>
-                    <span><input id="partLeanRepublican" type="checkbox" /><label for="partLeanRepublican">Percent Lean Republican</label></span>
-                    <span><input id="partStrongDemocrat" type="checkbox" /><label for="partStrongDemocrat">Percent Strong Democrat</label></span>
-                    <span><input id="partLeanDemocrat" type="checkbox" /><label for="partLeanDemocrat">Percent Lean Democrat</label></span>
+                    <input type="hidden" id = "popVar" value="Total Population|POPTOT">
+                    <span class="split master" ><input id="split_master" type="checkbox" /><label for="split_master">Split Geographies</label></span>
+                    <span class="split child reportVar" ><input id="countySplits" type="checkbox" value = "COUNTY" /><label for="countySplits">County Splits</label></span>
+                    <span class="split child reportVar" ><input id="tractSplits" type="checkbox" value="TRACT" /><label for="tractSplits">Tract Splits</label></span>
+                    <span class="popVarExtra master" ><input id="popVarExtra_master" type="checkbox" /><label for="popVarExtra_master">Population Extra data</label></span>
+                    <span class="popVarExtra child reportVar" ><input id="VAPTOT" type="checkbox"  value="VAPTOT" /><label for="VAPTOT">Voting Age Population</label></span>
+                    <span class="popVarExtra child reportVar" ><input id="VAPWHT" type="checkbox"  value="VAPWHT" /><label for="VAPWHT">Voting Age Population - White</label></span>
+                    <span class="popVarExtra child reportVar" ><input id="VAPBLK" type="checkbox"  value="VAPBLK" /><label for="VAPBLK">Voting Age Population - Black</label></span>
+                    <span class="popVarExtra child reportVar" ><input id="VAPHISP" type="checkbox"  value="VAPHISP" /><label for="VAPHISP">Voting Age Population - Hispanic</label></span>
+                    <span class="partyControl master" ><input id="partyControl_master" type="checkbox" /><label for="partyControl_master">Party Control</label></span> <span class="partyControl child reportVar"><INPUT id="PRES_DEM" type="checkbox" value="PRES_DEM" /><label for="PRES_DEM">Democratic Votes</label></span>
+                    <span class="partyControl child reportVar"><INPUT id="PRES_REP" type="checkbox" value="PRES_REP" /><label for="PRES_REP">Republican Votes</label></span>
                 </div>
                 <div id="options2">
-                    <span><input id="racialComp" type="checkbox" /><label for="racialComp">Racial Composition</label></span>
-                    <span><input id="racialBlack" type="checkbox" /><label for="racialBlack">Majority Black</label></span>
-                    <span><input id="racialHisp" type="checkbox" /><label for="racialHisp">Majority Hispanic</label></span>
-                    <span><input id="racialOther" type="checkbox" /><label for="racialOther">Majority Other</label></span>
-                    <span><input id="compactness" type="checkbox" /><label for="compactness">Compactness Scores</label></span>
-                    <span><input id="reock" type="checkbox" /><label for="reock">Reock</label></span>
-                    <span><input id="polsbypopper" type="checkbox" /><label for="polsbypopper">Polsby-Popper</label></span>
-                    <span><input id="3" type="checkbox" /><label for="3">3</label></span>
-                    <span><input id="4" type="checkbox" /><label for="4">4</label></span>
+                    <span class="racialComp master" ><input id="racialComp_master" type="checkbox" /><label for="racialComp_master">Racial Composition</label></span>
+                    <span class="racialComp child reportVar"><input id="racialComp" type="checkbox" value="POPBLK"/><label for="POPBLK" >Majority Black</label></span>
+                    <span class="racialComp child reportVar"><input id="racialComp" type="checkbox" value="POPHISP"/><label for="POPHISP" >Majority Hispanic</label></span>
+                    <span class="compactness master" ><input id="compactness_master" type="checkbox" /><label for="compactness_master">Compactness</label></span>
+                    <span class="compactness child reportVar"><input id="repCompactness" type="checkbox" value="repCompactness" /><label for="repCompactness">Compactness</label></span>
+                    <span class="compactness child reportVar"><input id="repCompactnessExtra" type="checkbox" value="repCompactnessExtra" /><label for="repCompactnessExtra">Extra Compactness Measurements</label></span>
+                    <span class="spatial master" ><input id="spatial_master" type="checkbox" /><label for="spatial_master">Spatial Analysis</label></span>
+                    <span class="spatial child reportVar"><input id="repSpatial" type="checkbox" value="repSpatial" /><label for="repSpatial">Spatial Analysis</label></span>
+                    <span class="spatial child reportVar"><input id="repSpatialExtra" type="checkbox" value="repSpatialExtra" /><label for="repSpatialExtra">Extra Spatial Analysis</label></span>
                 </div>
             </div>
             <div id="plans">
