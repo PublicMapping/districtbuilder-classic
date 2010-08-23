@@ -21,9 +21,11 @@
             {% for d in districts %}
                 <option value="{{ d.district_id }}">{{ d.name }}</option>
             {% endfor %}
-            {% ifequal max_dists districts|length %}
+            <!-- max_dists: {{ max_dists }} -->
+            <!-- districts|length: {{ districts|length }} -->
+            {% ifnotequal max_dists districts|length %}
                 <option value="new">New District</option>
-            {% endifequal %}
+            {% endifnotequal %}
           </select>
         </div>
       </div>

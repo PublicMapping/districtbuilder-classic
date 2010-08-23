@@ -125,7 +125,7 @@ def commonplan(request, planid):
         'unassigned_id': unassigned_id,
         'is_anonymous': request.user.username == 'anonymous',
         'is_editable': editable,
-        'max_dists': settings.MAX_DISTRICTS
+        'max_dists': settings.MAX_DISTRICTS + 1
     }
 
 
