@@ -1,76 +1,73 @@
 <script type="text/javascript">
          loadTooltips();
 </script>
-                    {% load humanize %}
-                  <div class="plansummary">
-                      <h3>{{ plan.name }}</h3>
-                    {% for subject in aggregate %}
-                      <div><label>{{ subject.name }}</label> <span id="totalpop" class="value">{{ subject.value|intcomma  }}</span></div>
-                    {% endfor %}
-                  </div>
-                  <div class="plantable header">
-                     <table>
-                      <thead>
-                         {% if district_values %}
-                          <tr>
-                              <th class="celldistrictname cell1">Dist.</th>
-                              <th class="celldemo cell2">{{ name }}</th>
-                              <th class="cellcontig cell3">Contiguity</th>
-                              <th class="cellcompact cell4">Compactness</th>
-                          </tr>
-                        {% endif %}
-                      </thead>
-                   </table>
-                  </div>
-                  <div class="plantable body">
-                    {% if district_values %}
-                       <table>
-                          <tbody>
-                              {% for stat in district_values %}
-                              <tr class="{% cycle 'odd' 'even' %} inforow_{{ stat.district_id }}">
-                                  <td class="celldistrictname cell1">{{ stat.name}}</td>
-                                  <td class="celldemo cell2">
-                                    <span class="popstatus {{ stat.css_class }}"> 
-                                         {{ stat.demo|intcomma }}
-                                    </span>
-                                  </td>
-                                  {% if stat.contiguity %}
-                                  <td class="cellcontig cell3"><img class="yes-contiguous" src="/site-media/images/icon-check.png">
-                                  {% else %}
-                                  <td class="cellcontig cell3"><img class="no-contiguous" src="/site-media/images/icon-warning.png">
-                                  {% endif %}
-                                  <div class="tooltip">this is a tooltip</div>
-                                  </td>                             
-                                  <td class="cellcompact cell4">{{ stat.compactness }}</td>
-                              </tr>
-                              {% endfor %}
-                          </tbody>
-                      </table>
-                    {% else %}
-                        <div class="error"> Sorry, there is no geographic data for this plan</div>
-                    {% endif %}                    
-                  </div>
+
+{% load humanize %}
+<div class="plansummary">
+    <h3>{{ plan.name }}</h3>
+    {% for subject in aggregate %}
+    <div><label>{{ subject.name }}</label> <span id="totalpop" class="value">{{ subject.value|intcomma  }}</span></div>
+    {% endfor %}
+</div>
+<div class="plantable header">
+    <table>
+        <thead>
+            {% if district_values %}
+            <tr>
+                <th class="celldistrictname cell1">Dist.</th>
+                <th class="celldemo cell2">{{ name }}</th>
+                <th class="cellcontig cell3">Contiguity</th>
+                <th class="cellcompact cell4">Compactness</th>
+            </tr>
+            {% endif %}
+        </thead>
+    </table>
+</div>
+<div class="plantable body">
+    {% if district_values %}
+    <table>
+        <tbody>
+            {% for stat in district_values %}
+            <tr class="{% cycle 'odd' 'even' %} inforow_{{ stat.district_id }}">
+                <td class="celldistrictname cell1">{{ stat.name}}</td>
+                <td class="celldemo cell2">
+                    <span class="popstatus {{ stat.css_class }}"> 
+                        {{ stat.demo|intcomma }}
+                    </span>
+                </td>
+                {% if stat.contiguity %}
+                <td class="cellcontig cell3"><img class="yes-contiguous" src="/site-media/images/icon-check.png">
+                {% else %}
+                <td class="cellcontig cell3"><img class="no-contiguous" src="/site-media/images/icon-warning.png">
+                {% endif %}
+                    <div class="tooltip">this is a tooltip</div>
+                </td>                             
+                <td class="cellcompact cell4">{{ stat.compactness }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="error"> Sorry, there is no geographic data for this plan</div>
+    {% endif %}                    
+</div>
 <div class="menu_footer">
-                    <button id="stats_legend" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false"><span class="ui-button-text">Stats Legend</span></button>
-                    <div id="stats_legend_panel" class="tooltip">
-                      <div class="legend_item">
-                        <h5>Population</h5>
-                        <ul>
-                          <li><span class="swatch popstatus over"></span> Over target</li>
-                          <li><span id="swatch-under" class="swatch popstatus under"></span> Under target</li>                       
-                          <li><span id="swatch-target" class="swatch popstatus target"></span> Meets target</li>  
-                        </ul>
-                      </div>
-                      <div class="legend_item last">
-                        <h5>Contiguity</h5>
-                        <ul>
-                          <li><img class="yes-contiguous" src="/site-media/images/icon-check.png"> Contiguous</li>
-                          <li><img class="no-contiguous" src="/site-media/images/icon-warning.png"> Non-contiguous</li>                 
- 
-                        </ul>
-                      </div>                    
-                    
-                    </div>
-                </div>
-                </div>
-            </div>
+    <button id="stats_legend" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false"><span class="ui-button-text">Stats Legend</span></button>
+    <div id="stats_legend_panel" class="tooltip">
+        <div class="legend_item">
+            <h5>Population</h5>
+            <ul>
+                <li><span class="swatch popstatus over"></span> Over target</li>
+                <li><span id="swatch-under" class="swatch popstatus under"></span> Under target</li>                       
+                <li><span id="swatch-target" class="swatch popstatus target"></span> Meets target</li>  
+            </ul>
+        </div>
+        <div class="legend_item last">
+            <h5>Contiguity</h5>
+            <ul>
+                <li><img class="yes-contiguous" src="/site-media/images/icon-check.png"> Contiguous</li>
+                <li><img class="no-contiguous" src="/site-media/images/icon-warning.png"> Non-contiguous</li>                 
+            </ul>
+        </div>                    
+    </div>
+</div>

@@ -1,45 +1,45 @@
 <script type="text/javascript">
-         loadTooltips();
+    loadTooltips();
 </script>
 
-    {% load humanize %}
-  <div class="plansummary">
-      <h3>{{ plan.name }}</h3>
+{% load humanize %}
+<div class="plansummary">
+    <h3>{{ plan.name }}</h3>
     {% for target in aggregate %}
-      <div><label>{{ target.name }}</label> <span id="totalpop" class="value">{{ target.value|intcomma  }}</span></div>
+        <div><label>{{ target.name }}</label> <span id="totalpop" class="value">{{ target.value|intcomma  }}</span></div>
     {% endfor %}
-  </div>
-  <div class="plantable header">
-     <table>
-      <thead>
-         {% if aggregate %}
-          <tr>
-             <th class="celldist cell1">Dist.</th>
-              {% for target in aggregate %}
-                      <th class="cellsubjects {% cycle 'cell2' 'cell3' 'cell4' %}">{{ target.name|intcomma }}</th>
-              {% endfor %}
-          </tr>
-        {% endif %}
-      </thead>
-   </table>
-  </div>
-  <div class="plantable body">
-       <table>
-          <tbody>
-                {% for district in district_values %}
-              <tr class="{% cycle 'odd' 'even' %} inforow_{{ district.district_id }}">
-                  <td class="celldistrictname cell1">{{ district.name }}</td>
-                    {% for characteristic in district.characteristics %}
-                  <td class="cellvalue {% cycle 'cell2' 'cell3' 'cell4'%}">
-                      {{ characteristic.value|intcomma }}
-                  </td>
-                    {% endfor %}
-              </tr>
-                {% empty %}
-               <tr class="error">
-                  <td>Sorry, data for this plan could not be retrieved from the server</td>
-               </tr> 
+</div>
+<div class="plantable header">
+    <table>
+        <thead>
+            {% if aggregate %}
+            <tr>
+                <th class="celldist cell1">Dist.</th>
+                {% for target in aggregate %}
+                <th class="cellsubjects {% cycle 'cell2' 'cell3' 'cell4' %}">{{ target.name|intcomma }}</th>
                 {% endfor %}
-          </tbody>
-      </table>
-  </div>
+            </tr>
+            {% endif %}
+        </thead>
+    </table>
+</div>
+<div class="plantable body">
+    <table>
+        <tbody>
+            {% for district in district_values %}
+            <tr class="{% cycle 'odd' 'even' %} inforow_{{ district.district_id }}">
+                <td class="celldistrictname cell1">{{ district.name }}</td>
+                {% for characteristic in district.characteristics %}
+                <td class="cellvalue {% cycle 'cell2' 'cell3' 'cell4'%}">
+                    {{ characteristic.value|intcomma }}
+                </td>
+                {% endfor %}
+            </tr>
+            {% empty %}
+            <tr class="error">
+                <td>Sorry, data for this plan could not be retrieved from the server</td>
+            </tr> 
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
