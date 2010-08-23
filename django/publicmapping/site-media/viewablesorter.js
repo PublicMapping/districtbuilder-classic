@@ -53,7 +53,7 @@ viewablesorter = function(options) {
             // the first element comes after the second, and a 0 means they're equal.
             sort: viewableSort,
             // optional callback when sorting is done
-            callback: reClassRows,
+            callback: reClassRows
         }, options),
         // the given target as a table / jquery object
         _table;

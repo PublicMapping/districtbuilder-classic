@@ -5,7 +5,7 @@ reports = function(options) {
             previewContainer: $('#reportPreview'),
             trigger: $('#btnViewReport'),
             reportUrl: '',
-            callback: function() {},
+            callback: function() {}
         }, options),
         _popVar,
         _popVarExtra,
