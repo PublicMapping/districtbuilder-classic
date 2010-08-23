@@ -102,16 +102,33 @@ function doMapStyling() {
     $('#OpenLayers_Control_PanZoomBar_ZoombarOpenLayers\\.Map_4').addClass('olControlZoom olControlZoomBarInactive');     
 }
 
+/*
+ * Resize the map. This is a fix for IE 7, which does not assign a height
+ * to the map div if it is not explicitly set.
+ */
+function initializeResizeFix() {
+    var vp = $('.olMapViewport')[0];
+    if( vp.clientHeight > 0 ) {
+        return;
+    }
+
+    var resizemap = function() {
+        var mapElem = $('#mapandmenu')[0]
+        if(!window.innerHeight) {
+            mapElem.style.height = (window.document.body.clientHeight - 90) + 'px';
+            vp.style.height = (window.document.body.clientHeight - 150) + 'px';
+        }
+    };
+   
+    resizemap();
+    window.onresize = resizemap;
+}
 
 /*
  * Initialize the map. This method is called by the onload page event.
  */
 function init() {
     OpenLayers.ProxyHost= "/proxy?url=";
-
-    // set up sizing for dynamic map size that fills the pg
-    //resizemap();
-    //window.onresize = resizemap;
 
     // The extents of the layers. These extents will depend on the study
     // area; the following are the bounds for the web cache around Ohio.
@@ -1089,6 +1106,9 @@ function init() {
     // TODO Make these configurable.
     olmap.zoomToExtent(new OpenLayers.Bounds(-9467000,4570000,-8930000,5170000));
     OpenLayers.Element.addClass(olmap.viewPortDiv, 'olCursorWait');
+
+    // set up sizing for dynamic map size that fills the pg
+    initializeResizeFix();
 
     //apply the PanZoom classes
     doMapStyling();
