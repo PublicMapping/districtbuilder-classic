@@ -7,7 +7,7 @@ publishplan = function(options) {
             callback: function() {},
             autoOpen: false,
             modal: true,
-            width:600,
+            width:600
         }, options),
         // bunch o variables
         
@@ -45,7 +45,7 @@ publishplan = function(options) {
         var notImplemented = function() {
             $('<div class="error" title="Sorry">This feature has not yet been implemented. Stay tuned.</div>)').dialog({
                 autoOpen:true,
-                modal:true,
+                modal:true
             });
         };
 
