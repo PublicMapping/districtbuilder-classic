@@ -1,56 +1,108 @@
 The Public Mapping Project
 http://sourceforge.net/projects/publicmapping/
 
-This software requires a few other pieces of free software to run.  Before you can run the public mapping
-web site, you'll need to install and configure:
+== Prerequisites ==
 
+This software requires a few other pieces of free software to run.  Before 
+you can run the public mapping web site, you'll need to install and 
+configure:
+
+Apache v 2.2
 Geoserver v 2.0.2
 Postgresql v 8.4 w/ PostGIS
 Python v 2.6
 Django v 1.1
 
-Once these pieces are installed, check out the public mapping projects to the /projects directory of your 
-linux installation.
-mkdir /projects
-cd /projects
-svn co https://publicmapping.svn.sourceforge.net/svnroot/publicmapping publicmapping
+== Installation ==
 
-Create a "local" directory next to the trunk - this is where your machine-specific settings and data will go
-mkdir /projects/publicmapping/local
+  1. Check out the public mapping projects to the /projects directory of 
+     your linux installation.
 
-Copy the settings_sample.ini file to your local settings folder and name it settings.ini
-cp /projects/publicmapping/trunk/docs/settings_sample.ini /projects/publicmapping/local/settings.ini
+    > mkdir /projects
+    > cd /projects
+    > svn co https://publicmapping.svn.sourceforge.net/svnroot/publicmapping publicmapping
 
-Run the publicmapping_db.sql script in the sql directory.
-sudo -s postgres psql -f /projects/publicmapping/trunk/sql/publicmapping_db.sql
+  2. Create a "local" directory next to the trunk - this is where your 
+     machine-specific settings and data will go
 
-This will create a publicmapping db from the template_postgis template, along with a publicmapping
-user role.  The publicmapping user will be assigned all permissions and ownership on the db.
+    > mkdir /projects/publicmapping/local
 
-Check out your settings.ini folder and make sure it's pointing to the correct DB and that your DB
-is accessible. You may want to adjust the value of the map server, too.
-Run the python command in the settings file to generate a secret key for your application and copy
-it into the settings.ini file.
+  3. Copy the settings_sample.ini file to your local settings folder and 
+     name it settings.ini
 
-Run the django syncdb command to create the database
-python /projects/publicmapping/trunk/django/publicmapping/manage.py syncdb
+    > cp /projects/publicmapping/trunk/docs/settings_sample.ini /projects/publicmapping/local/settings.ini
 
-To import your data, you'll need to configure the importshape.py script in the "python" directory.
-Using your favorite text editor, update the shapefile paths and subject configuration to match your data.
+  4. Run the publicmapping_db.sql script in the sql directory.
 
-Run the importshapes script from withing the django shell
-cd /projects/publicmapping/trunk/python
-python ../django/publicmapping/manage.py shell
-execfile('importshapes.py')
+    > sudo -s postgres psql -f /projects/publicmapping/trunk/sql/publicmapping_db.sql
 
-The script may take a long time to run.  It will import the geographic data from the shapes and 
-create the links and django models necessary to run the application.  Once it's run, you can exit
-the shell by typing:
-quit()
+  5. This will create a publicmapping db from the template_postgis 
+     template, along with a publicmapping user role.  The publicmapping 
+     user will be assigned all permissions and ownership on the db.
 
-Now that you have the app configured and your data imported, you can run the app using Django's testing server
-python /projects/publicmapping/trunk/django/publicmapping/manage.py runserver
+  6. Check out your settings.ini folder and make sure it's pointing to the
+     correct DB and that your DB is accessible. You may want to adjust the 
+     value of the map server, too.
+     
+  7. Run the python command in the settings file to generate a secret key 
+     for your application and copy it into the settings.ini file.
 
-You will see a notice that your server is running and you can access your application
-at 127.0.0.1:8000  Enter that location into your browser on the local machine and you should be
-able to use the application.
+  8. Run the django syncdb command to create the database
+  
+    > python /projects/publicmapping/trunk/django/publicmapping/manage.py syncdb
+
+  9. To import your data, you'll need to configure the importshape.py 
+     script in the "python" directory. Using your favorite text editor, 
+     update the shapefile paths and subject configuration to match your 
+     data.
+
+ 10. Run the importshapes script from withing the django shell
+
+    > cd /projects/publicmapping/trunk/python
+    > python ../django/publicmapping/manage.py shell
+    >>> execfile('importshapes.py')
+
+ 11. The script may take a long time to run.  It will import the geographic
+     data from the shapes and create the links and django models necessary 
+     to run the application.  Once it's run, you can exit the shell by 
+     typing:
+
+    >>> quit()
+
+ 12. Django serves up SLD files to clients, and need this mime type added
+     to the system's known mime types in order to serve the content
+     properly.
+
+     a. Open the file /etc/mime.types in your favorite editor.
+     b. Find the line that starts with "application/xml"
+     c. Add " sld" to the end of this line, after "xml xsl xsd"
+
+ 13. Now that you have the app configured and your data imported, you can 
+     run the app using Django's testing server
+     
+    > python /projects/publicmapping/trunk/django/publicmapping/manage.py runserver
+
+ 14. You will see a notice that your server is running and you can access 
+     your application at 127.0.0.1:8000  Enter that location into your 
+     browser on the local machine and you should be able to use the 
+     application.
+
+ 15. Running the application from the django development server is good for
+     setup, but for a production environment, you will want to configure
+     Apache:
+
+     a. Copy the file "publicmapping.apache" into the "sites-available" 
+        Apache config directory (typically /etc/apache2/sites-available/)
+     b. Create a symbolic link to this file from the "sites-enabled"
+        directory:
+
+       > cd /etc/apache2/sites-enabled/
+       > sudo ln -s /etc/apache2/sites-available/publicmapping.apache 001-publicmapping
+
+     c. If you are NOT running the public mapping project as the default
+        web site in Apache, you will have to edit publicmapping.apache to
+        reflect your configuration (e.g. VirtualHost directives).
+     d. If you ARE running the public mapping project as the default web
+        site in Apache, remove the default site configuration:
+
+       > sudo rm /etc/apache2/sites-enabled/000-default
