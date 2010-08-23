@@ -562,16 +562,7 @@ function init() {
 
         // A callback for feature selection in different controls.
     var featureSelected = function(e){
-        // WARNING: not a part of the API!
-        var subtract = false;
-        for (var type in this.handlers) {
-            if ( this.handlers[type].evt ) {
-                subtract = subtract || this.handlers[type].evt.ctrlKey;
-            }
-            else {
-                subtract = subtract || this.handlers[type].dragHandler.evt.ctrlKey;
-            }
-        }
+        var subtract = e.object.modifiers.toggle;
 
         if (subtract) {
             var removeme = [];
