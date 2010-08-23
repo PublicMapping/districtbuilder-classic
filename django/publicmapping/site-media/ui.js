@@ -129,6 +129,12 @@ $(function() {
 
         $('#saveplaninfo').bind('planSaved', function(event, time) {
             var date = new Date(time);
+            if (isNaN(date)) {
+                // additional text wrangling for IE
+                time = time.replace(new RegExp('\-','g'),'\/')
+                    .replace(new RegExp('\.\\d*$'),'');
+                date = new Date(time);
+            }
             var hours = date.getHours();
             var minutes = date.getMinutes();
             $('#saveplaninfo').text('Last Saved at ' + hours + ':' + ((minutes < 10) ? ('0' + minutes) : minutes));
