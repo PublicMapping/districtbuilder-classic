@@ -297,11 +297,11 @@ ul#steps_tabs {
 
 li#tab_step1 {background-color: #93B6B2}
 li#tab_step2 {background-color: #87ae8b}
-li#tab_step3{background-color: #acae87}
+li#tab_step3 {background-color: #acae87}
 
-div#step1 .toolbar {background: url(/site-media/images/bg-toolbar.png) 0 0 repeat-x #87aea9}
-div#step2 .toolbar {background: url(/site-media/images/bg-toolbar.png) 0 0 repeat-x  #87ae8b}
-div#step3 .toolbar {background: url(/site-media/images/bg-toolbar.png) 0 0 repeat-x #acae87}
+div#step-1 .toolbar { background: url(/site-media/images/bg-toolbar.png) 0 0 repeat-x #87aea9}
+div#step-2 .toolbar {background: url(/site-media/images/bg-toolbar.png) 0 0 repeat-x  #87ae8b}
+div#step-3 .toolbar {background: url(/site-media/images/bg-toolbar.png) 0 0 repeat-x #acae87}
 
 ul#steps_tabs li {
   -moz-border-radius: 10px 10px 0 0;
@@ -817,6 +817,7 @@ div.plansummary  .value {
 }
 
 div.plantable table {
+    border-collapse: collapse;
     color: #717171;
     width: 100%;
     table-layout: fixed;
