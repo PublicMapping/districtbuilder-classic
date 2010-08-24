@@ -543,8 +543,6 @@ def getgeography(request, planid):
 
         district_values.append(stats)
 
-    print "district_values = %d" % len(district_values)
-
     return render_to_response('geography.html', {
         'plan': plan,
         'district_values': district_values,
