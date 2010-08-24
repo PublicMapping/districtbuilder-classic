@@ -4,51 +4,43 @@ function loadButtons() {
 
 function loadTooltips() {
     $(".divtip").tooltip({ 
-      position: 'bottom left',
-      offset: [8,10],
-      delay: 200,
-      predelay: 50,
-      opacity: .8,      
-      onBeforeShow:  function() {
-          // ensure proper DOM placement
-          this.getTip().appendTo('body');
-          },
-      onHide:  function() {
-          // restore original DOM placement
-          this.getTip().appendTo(this.getTrigger());
-          }
-      });    
+        position: 'bottom left',
+        offset: [8,10],
+        delay: 200,
+        predelay: 50,
+        opacity: .8,      
+        onBeforeShow:  function() {
+            // ensure proper DOM placement
+            this.getTip().appendTo('body');
+        },
+        onHide:  function() {
+            // restore original DOM placement
+            this.getTip().appendTo(this.getTrigger());
+        }
+    });    
   
     $(".titletip[title]").tooltip({
-      position: 'bottom right',
-      delay: 250,
-      predelay: 600,
-      opacity: .8,      
-      onBeforeShow:  function() {
-          // ensure proper DOM placement
-          this.getTip().appendTo('body');
-          },
-      onHide:  function() {
-          // restore original DOM placement
-          this.getTip().appendTo(this.getTrigger());
-          }
-      });    
+        position: 'bottom right',
+        delay: 250,
+        predelay: 600,
+        opacity: .8
+    });    
       
-     $("#stats_legend").tooltip({
-       position: 'top center',
-       effect: 'slide',
-       delay: 200,
-       offset: [10,0],
-       opacity: .8,
-             onBeforeShow:  function() {
-          // ensure proper DOM placement
-          this.getTip().appendTo('body');
-          },
-      onHide:  function() {
-          // restore original DOM placement
-          this.getTip().appendTo(this.getTrigger());
-          }
-     })  
+    $("#stats_legend").tooltip({
+        position: 'top center',
+        effect: 'slide',
+        delay: 200,
+        offset: [10,0],
+        opacity: .8,
+        onBeforeShow:  function() {
+            // ensure proper DOM placement
+            this.getTip().appendTo('body');
+        },
+        onHide:  function() {
+            // restore original DOM placement
+            this.getTip().appendTo(this.getTrigger());
+        }
+    })  
 }
 
 
