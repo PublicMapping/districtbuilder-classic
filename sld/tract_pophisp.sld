@@ -6,53 +6,93 @@
     <Name>pophisp</Name>
     <UserStyle>
       <Title>Hispanic Population</Title>
-      <Abstract>A grayscale style showing the number of identified members of a party in a given geounit.</Abstract>
+      <Abstract>A grayscale style showing the number of identified members of a population group in a given geounit.</Abstract>
       <FeatureTypeStyle>
         <Rule>
-          <Title>&gt; 2.5K</Title>
+          <Title>&gt; 2,000</Title>
           <ogc:Filter>
             <ogc:PropertyIsGreaterThanOrEqualTo>
               <ogc:PropertyName>number</ogc:PropertyName>
-              <ogc:Literal>2500</ogc:Literal>
+              <ogc:Literal>2000</ogc:Literal>
             </ogc:PropertyIsGreaterThanOrEqualTo>
           </ogc:Filter>
           <PolygonSymbolizer>
             <Fill>
-              <CssParameter name="fill">#666666</CssParameter>
+              <CssParameter name="fill">#252525</CssParameter>
             </Fill>
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Title>&gt; 1.25K</Title>
+          <Title>&gt; 1,000</Title>
           <ogc:Filter>
             <ogc:And>
-              <ogc:PropertyIsGreaterThanOrEqualTo>
-                <ogc:PropertyName>number</ogc:PropertyName>
-                <ogc:Literal>1250</ogc:Literal>
-              </ogc:PropertyIsGreaterThanOrEqualTo>
               <ogc:PropertyIsLessThan>
                 <ogc:PropertyName>number</ogc:PropertyName>
-                <ogc:Literal>2500</ogc:Literal>
+                <ogc:Literal>2000</ogc:Literal>
               </ogc:PropertyIsLessThan>
+              <ogc:PropertyIsGreaterThanOrEqualTo>
+                <ogc:PropertyName>number</ogc:PropertyName>
+                <ogc:Literal>1000</ogc:Literal>
+              </ogc:PropertyIsGreaterThanOrEqualTo>
             </ogc:And>
           </ogc:Filter>          
           <PolygonSymbolizer>
             <Fill>
-              <CssParameter name="fill">#ABABAB</CssParameter>
+              <CssParameter name="fill">#636363</CssParameter>
             </Fill>
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Title>&lt; 1.25K</Title>
+          <Title>&gt; 500</Title>
+          <ogc:Filter>
+            <ogc:And>
+              <ogc:PropertyIsLessThan>
+                <ogc:PropertyName>number</ogc:PropertyName>
+                <ogc:Literal>1000</ogc:Literal>
+              </ogc:PropertyIsLessThan>
+              <ogc:PropertyIsGreaterThanOrEqualTo>
+                <ogc:PropertyName>number</ogc:PropertyName>
+                <ogc:Literal>500</ogc:Literal>
+              </ogc:PropertyIsGreaterThanOrEqualTo>
+            </ogc:And>
+          </ogc:Filter>          
+          <PolygonSymbolizer>
+            <Fill>
+              <CssParameter name="fill">#969696</CssParameter>
+            </Fill>
+          </PolygonSymbolizer>
+        </Rule>
+        <Rule>
+          <Title>&gt; 100</Title>
+          <ogc:Filter>
+            <ogc:And>
+              <ogc:PropertyIsLessThan>
+                <ogc:PropertyName>number</ogc:PropertyName>
+                <ogc:Literal>500</ogc:Literal>
+              </ogc:PropertyIsLessThan>
+              <ogc:PropertyIsGreaterThanOrEqualTo>
+                <ogc:PropertyName>number</ogc:PropertyName>
+                <ogc:Literal>100</ogc:Literal>
+              </ogc:PropertyIsGreaterThanOrEqualTo>
+            </ogc:And>
+          </ogc:Filter>          
+          <PolygonSymbolizer>
+            <Fill>
+              <CssParameter name="fill">#CCCCCC</CssParameter>
+            </Fill>
+          </PolygonSymbolizer>
+        </Rule>
+        <Rule>
+          <Title>&lt; 100</Title>
           <ogc:Filter>
             <ogc:PropertyIsLessThan>
               <ogc:PropertyName>number</ogc:PropertyName>
-              <ogc:Literal>1250</ogc:Literal>
+              <ogc:Literal>100</ogc:Literal>
             </ogc:PropertyIsLessThan>
           </ogc:Filter>          
           <PolygonSymbolizer>
             <Fill>
-              <CssParameter name="fill">#DCDCDC</CssParameter>
+              <CssParameter name="fill">#F7F7F7</CssParameter>
             </Fill>
           </PolygonSymbolizer>
         </Rule>

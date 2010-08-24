@@ -9,50 +9,90 @@
       <Abstract>A grayscale style showing the number of identified members of a population group in a given geounit.</Abstract>
       <FeatureTypeStyle>
         <Rule>
-          <Title>&gt; 5K</Title>
+          <Title>&gt; 100,000</Title>
           <ogc:Filter>
             <ogc:PropertyIsGreaterThanOrEqualTo>
               <ogc:PropertyName>number</ogc:PropertyName>
-              <ogc:Literal>5000</ogc:Literal>
+              <ogc:Literal>100000</ogc:Literal>
             </ogc:PropertyIsGreaterThanOrEqualTo>
           </ogc:Filter>
           <PolygonSymbolizer>
             <Fill>
-              <CssParameter name="fill">#666666</CssParameter>
+              <CssParameter name="fill">#000000</CssParameter>
             </Fill>
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Title>&gt; 1000</Title>
+          <Title>&gt; 50,000</Title>
           <ogc:Filter>
             <ogc:And>
-              <ogc:PropertyIsGreaterThanOrEqualTo>
-                <ogc:PropertyName>number</ogc:PropertyName>
-                <ogc:Literal>1000</ogc:Literal>
-              </ogc:PropertyIsGreaterThanOrEqualTo>
               <ogc:PropertyIsLessThan>
                 <ogc:PropertyName>number</ogc:PropertyName>
-                <ogc:Literal>5000</ogc:Literal>
+                <ogc:Literal>100000</ogc:Literal>
               </ogc:PropertyIsLessThan>
+              <ogc:PropertyIsGreaterThanOrEqualTo>
+                <ogc:PropertyName>number</ogc:PropertyName>
+                <ogc:Literal>50000</ogc:Literal>
+              </ogc:PropertyIsGreaterThanOrEqualTo>
             </ogc:And>
           </ogc:Filter>          
           <PolygonSymbolizer>
             <Fill>
-              <CssParameter name="fill">#ABABAB</CssParameter>
+              <CssParameter name="fill">#444444</CssParameter>
             </Fill>
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Title>&lt; 1000</Title>
+          <Title>&gt; 20,000</Title>
+          <ogc:Filter>
+            <ogc:And>
+              <ogc:PropertyIsLessThan>
+                <ogc:PropertyName>number</ogc:PropertyName>
+                <ogc:Literal>50000</ogc:Literal>
+              </ogc:PropertyIsLessThan>
+              <ogc:PropertyIsGreaterThanOrEqualTo>
+                <ogc:PropertyName>number</ogc:PropertyName>
+                <ogc:Literal>20000</ogc:Literal>
+              </ogc:PropertyIsGreaterThanOrEqualTo>
+            </ogc:And>
+          </ogc:Filter>          
+          <PolygonSymbolizer>
+            <Fill>
+              <CssParameter name="fill">#777777</CssParameter>
+            </Fill>
+          </PolygonSymbolizer>
+        </Rule>
+        <Rule>
+          <Title>&gt; 10,000</Title>
+          <ogc:Filter>
+            <ogc:And>
+              <ogc:PropertyIsLessThan>
+                <ogc:PropertyName>number</ogc:PropertyName>
+                <ogc:Literal>200000</ogc:Literal>
+              </ogc:PropertyIsLessThan>
+              <ogc:PropertyIsGreaterThanOrEqualTo>
+                <ogc:PropertyName>number</ogc:PropertyName>
+                <ogc:Literal>10000</ogc:Literal>
+              </ogc:PropertyIsGreaterThanOrEqualTo>
+            </ogc:And>
+          </ogc:Filter>          
+          <PolygonSymbolizer>
+            <Fill>
+              <CssParameter name="fill">#aaaaaa</CssParameter>
+            </Fill>
+          </PolygonSymbolizer>
+        </Rule>
+        <Rule>
+          <Title>&lt; 10,000</Title>
           <ogc:Filter>
             <ogc:PropertyIsLessThan>
               <ogc:PropertyName>number</ogc:PropertyName>
-              <ogc:Literal>1000</ogc:Literal>
+              <ogc:Literal>10000</ogc:Literal>
             </ogc:PropertyIsLessThan>
           </ogc:Filter>          
           <PolygonSymbolizer>
             <Fill>
-              <CssParameter name="fill">#DCDCDC</CssParameter>
+              <CssParameter name="fill">#eeeeee</CssParameter>
             </Fill>
           </PolygonSymbolizer>
         </Rule>
