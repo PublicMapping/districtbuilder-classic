@@ -25,7 +25,7 @@
 </div>
 <div class="plantable body">
     {% if district_values %}
-    <table>
+    <table id="geography_table">
         <tbody>
             {% for stat in district_values %}
             <tr class="{% cycle 'odd' 'even' %} inforow_{{ stat.district_id }}">

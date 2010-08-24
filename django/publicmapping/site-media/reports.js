@@ -31,9 +31,9 @@ reports = function(options) {
     };
 
     var getReportOptions = function() {
-        var getConcatenated = function(class) {
+        var getConcatenated = function(cls) {
             var value = '';
-            $('.' + class + '.reportVar').each( function() { 
+            $('.' + cls + '.reportVar').each( function() { 
                 $this = $(this);
                 if ($this.children('input:checked').length > 0) {
                     value += $this.children('label').text();

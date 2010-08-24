@@ -1091,8 +1091,8 @@ function init() {
             }
         }
         if (visibleDistricts != olmap.prevVisibleDistricts) {
-            var demosorter = viewablesorter({ target: '.demographics tbody' }).init();
-            var geosorter = viewablesorter({ target: '.geography tbody' }).init();
+            var demosorter = viewablesorter({ target: '#demographic_table tbody' }).init();
+            var geosorter = viewablesorter({ target: '#geography_table tbody' }).init();
             demosorter.sortTable();
             geosorter.sortTable();
             olmap.prevVisibleDistricts = visibleDistricts;
