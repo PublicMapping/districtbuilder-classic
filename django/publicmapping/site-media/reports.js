@@ -3,7 +3,7 @@ reports = function(options) {
     var _self = {},
         _options = $.extend({
             previewContainer: $('#reportPreview'),
-            trigger: $('#btnViewReport'),
+            trigger: $('#btnPrintReport'),
             reportUrl: '',
             callback: function() {}
         }, options),

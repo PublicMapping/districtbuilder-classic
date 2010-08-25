@@ -98,13 +98,33 @@ INSTALLED_APPS = (
     'django.contrib.gis',
     'redistricting',
 )
-
-LOGIN_URL = '/'
-MAP_SERVER = config.get('publicmapping', 'MAP_SERVER')
-BASE_GEOLEVEL = 3
 TEST_RUNNER = 'django.contrib.gis.tests.run_tests'
+""" Use the gis test runner
+"""
 POSTGIS_TEMPLATE='template_postgis'
+""" The database template to use to create test databases
+"""
+LOGIN_URL = '/'
+""" This is the base url for the application, where the login page is
+"""
+MAP_SERVER = config.get('publicmapping', 'MAP_SERVER')
+"""  The url of the geoserver instance where maps are stored
+"""
+BASE_GEOLEVEL = 3
+""" The id of the 'base geolevel', the smallest geounit of which the other geounits are composed
+"""
 MAX_DISTRICTS = 18
-PLAN_TEMPLATE = 'default'
+""" Declare the maximum number of districts allowed in a plan
+"""
+# PLAN_TEMPLATE = 'default'
 DEFAULT_DISTRICT_DISPLAY = 'POPTOT' # can be subject id, name, or display
-TEMP_DIR = config.get('publicmapping', 'TEMP_DIR')
+""" The default subject to use when displaying maps on application entry
+"""
+# TEMP_DIR = config.get('publicmapping', 'TEMP_DIR')
+BARD_BASESHAPE = '/projects/publicmapping/local/data/h_blocks.bardmap_bard_image.Rdata'
+""" The bard base shape that will be used to create bard reports.  This should be a bardmap image
+containing data for the base geounits
+"""
+BARD_BASEMAP = 'oh_blocks.bardmap'
+""" The R variable of the basemap included in the BARD_BASESHAPE image.  Use to create BARD reports
+"""

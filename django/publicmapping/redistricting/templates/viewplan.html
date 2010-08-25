@@ -147,7 +147,7 @@
               {% block toolset_draw %}
               {% endblock %}
 
-              <button class="toolbar_toggle" id="edit_map_settings">Edit Map Settings</button>
+              <button class="toolbar_toggle" id="edit_map_settings">Select Map View</button>
             
             </div>
             </div>
@@ -158,7 +158,7 @@
                     <label>Current<br/> District</label>
                     <select>
                       <option value="demographics">Demographics</option>
-                      <option value="geography">Geography</option>
+                      <option value="geography">Basic Information</option>
                     </select>
                 </div>
                 <div class="map_menu_content geography">
@@ -289,6 +289,7 @@
             <div id="description">
                <h3> Introduction to the reporting tool</h3>
                 <p>This is the reporting tool. Select your options, then click "View Report" to see your report.</p>
+                <p>Select your options below to view a comprehensive report on your redistricting plan.  Once you choose the statistics you want to see, click "Print Report" to get a paper copy of your report, or "Download Report" to download a text file with the information</p>
             </div>
             <div id="options">
                 <div id="options1">
@@ -316,25 +317,39 @@
                     <span class="spatial child reportVar"><input id="repSpatialExtra" type="checkbox" value="repSpatialExtra" /><label for="repSpatialExtra">Extra Spatial Analysis</label></span>
                 </div>
             </div>
-            <div id="plans">
-                <h3>Choose Plans for comparison</h3>
-                <div><button id="btnViewReport">View Report</button></div>
+            <div id="reportButtons">
+                <button id="btnPrintReport">Print Report</button>
+                <button id="btnDownloadReport">Download Report</button>
             </div>
+        </div>
+        <div id="evaluateMapContainer">
+            <div id="evaluateMap" class="bardmap">
+            </div>
+            <div><button id="btnSharePlans">Go to Share Plan options</button></div>
         </div>
     </div>
     <div id="step-3" class="main_content share">
         <div id="saveandshare">
             <div class="explanation">
                 <h3>Explanation of Shared Documents</h3>
+                <p>You can share your plan with other users here.  Your plan will be available for other users so that they can view reports about your plan or create a plan of their own using yours as a base.</p>
+                <p>Share your plan by choosing a new name for it or by keeping the name you've given it.<p> 
             </div>
             <div id="nameandshare">
-                <label for="txtPlanName">Name My Plan</label>
-                <input id="txtPlanName" />
-                <button id="btnSaveAndShare">Save and Share</button>
+                <div>
+                    <input id="chkNewPlanName" type="checkbox" />
+                    <label for="txtPlanName">Rename My Plan</label>
+                    <input id="txtPlanName" />
+                </div>
+                <div>
+                    <input id="chkKeepName" type="checkbox" />
+                    <label for="chkKeepName">Keep Current Plan Name</label>
+                    <button id="btnSaveAndShare">Save and Share</button>
+                </div>
             </div>
         </div>
         <div id="preview">
-            <div id="reportPreview">
+            <div id="shareMap" class="bardmap">
             </div>
             <button id="btnPrintReport">Print</button>
         </div>

@@ -651,7 +651,8 @@ button.toolbar_toggle {
 button#edit_map_settings ,
 button#start_drawing   {
     background-color: #1f8cbe;
-    }
+    width:145px;
+}
 
 div#map_menu {
     float:right;
@@ -706,11 +707,11 @@ div#map_legend_content {
     bottom: 35px;
     right: 280px;
     width: 200px;
-    height: 240px;
+    height: 280px;
     background-color: #efe8cb;
     border: solid 1px #999999;
     display: none;
-    overflow-y: scroll;
+    overflow-y: hidden;
     overflow-x: hidden;
     -moz-box-shadow: 2px 2px 2px #888888;
     -webkit-box-shadow: 2px 2px 2px #888888;
@@ -830,7 +831,6 @@ div.plansummary  .value {
 div.plantable table {
     border-collapse: collapse;
     color: #717171;
-    width: 100%;
     table-layout: fixed;
     }
 div.plantable.header {
@@ -887,7 +887,11 @@ div.plantable .error {
   color:#333; 
   padding: 8px;
 }
-
+div.demographics div.plantable .cell2,
+div.demographics div.plantable .cell3,
+div.demographics div.plantable .cell4 {
+    text-align:right;
+}
 span.popstatus { 
   -moz-border-radius:2px;
   -webkit-border-radius:2px;
@@ -895,7 +899,11 @@ span.popstatus {
   padding: 3px 8px;
   color: #3c3c3c;
   font-size: 11px;
+  display:inline-block;
   }
+.plantable span.popstatus {
+  width:45px;
+}
 .over {
   background: #ead3a7;
   border: 1px solid #d9c296;
@@ -960,6 +968,15 @@ button#stats_legend {
   width: 100%;
 }
 
+/* bard map previews */
+div.bardmap {
+    position:absolute;
+    right:30;
+    top:40;
+    height:600px;
+    background-color: #FFFFFF;
+}
+
 /* Evaluate page */
 div.evaluate {
     background: #87AE8B !important;
@@ -988,6 +1005,11 @@ div.evaluate {
 
 .reportVar {
     padding-left:15px;
+}
+#evaluateMapContainer {
+    position:absolute;
+    top:0;
+    right;0;
 }
 /* Share page */
 div.share {

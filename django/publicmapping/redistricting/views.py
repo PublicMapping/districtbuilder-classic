@@ -14,7 +14,7 @@ from django.views.decorators.cache import cache_page
 from rpy2.robjects import *
 from publicmapping import settings
 from publicmapping.redistricting.models import *
-import random, string, types, copy
+import random, string, types, copy, time, threading
 
 #"""The view for a plan. This is a data endpoint, and will be used
 #to return the geometries of plans as they are dynamically constructed."""
@@ -53,6 +53,7 @@ def copyplan(request, planid):
     newname = p.name + " " + str(random.random()) 
     if (request.method == "POST" ):
         newname = request.POST["name"]
+        shared = request.POST["shared"]
     plan_copy = Plan(name = newname, owner=request.user)
     plan_copy.save()
 
@@ -157,19 +158,34 @@ def createplan(request):
     status['message'] = 'Didn\'t submit name through POST'
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
-
-bardWorkSpaceLoaded = False
-if not bardWorkSpaceLoaded:
-    r.library('BARD')
-    bardWorkSpaceLoaded = True
+def load_bard_workspace():
+    # r.library('BARD')
+    # r.load(settings.BARD_BASESHAPE)
     # r.load('/projects/publicmapping/local/data/oh.RData')
+    global bardWorkSpaceLoaded
+    bardWorkSpaceLoaded = True
+    
+bardWorkSpaceLoaded = False
+bardLoadingThread = threading.Thread(target=load_bard_workspace, name='loading_bard') 
+bardLoadingThread.daemon = True
+bardLoadingThread.start()
+
 
 @login_required
 def getreport(request, planid):
     """ This will return an HTML blob from BARD's PMPReport method.  Should be suitable for planting
     into a <div>
     """
-    
+    bardTries = 0
+    status = { 'success': False, 'message': 'Unspecified Error' }
+    while not bardWorkSpaceLoaded:
+        if bardTries < 3:
+            bardTries += 1
+            time.sleep(5)
+        else:
+            status['message'] = 'Couldn\'t load BARD'
+            return HttpResponse(json.dumps(status),mimetype='application/json')
+              
 #  PMP reporrt interface
 #    PMPreport<-function(
 #       bardMap,
@@ -199,7 +215,6 @@ def getreport(request, planid):
 #...
 #}
 
-    status = { 'success': False }
     try:
         plan = Plan.objects.get(pk=planid)
         districts = plan.get_districts_at_version(plan.version)
@@ -278,8 +293,12 @@ def getreport(request, planid):
     district_vector = Geounit.objects.filter(geolevel = geolevel).extra(select={ 'district': "SELECT district_id from redistricting_district as d where st_contains(d.simple, center) limit 1" }).order_by('id').values_list('district', flat=True)
     params['blockAssignmentID'] = district_vector
 
+    params['bardMap'] = settings.BARD_BASEMAP
+
     try:
+        pmp_report = r['BARD:::PMPreport']
         #result = r.PMPrequest(params)
+        #result = pmp_report(params)
         status = { 'success': True }
         # status['preview'] = result[0]
         status['preview'] = '<div id="report">Here\'s the R function to run for the requested options: PMPrequest( %s )</div>' % params
