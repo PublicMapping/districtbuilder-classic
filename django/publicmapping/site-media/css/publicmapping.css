@@ -557,8 +557,10 @@ div.toolset#toolset_draw .ui-icon {
  background-position: 50% 50%;
  background-repeat:none;
 }
-
-
+div.toolset#toolset_draw .ui-icon {
+    /* IE specific hack */
+    margin-top/*\**/: -8px\9
+}
 
 #navigate_map_tool  .ui-icon {
   background-image: url(/site-media/images/icon-pan.png);
@@ -673,7 +675,13 @@ div#map_menu_header button.menu_toggle{
     margin: 2px 0 0 7px;
     background-color: #6B9571;
 }
-button.menu_toggle .ui-icon {margin-top: -11px;}
+button.menu_toggle .ui-icon {
+    margin-top: -11px;
+}
+button.menu_toggle .ui-icon {
+    /* IE hack */
+    margin-top/*\**/: -8px\9
+}
 button.menu_toggle .ui-icon-arrow-right {
 background: url(/site-media/images/icon-arrow.png) 4px 0 no-repeat;
 }
