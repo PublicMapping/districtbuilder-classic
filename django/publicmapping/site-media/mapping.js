@@ -234,7 +234,8 @@ function init() {
             "default": new OpenLayers.Style(
                 OpenLayers.Util.applyDefaults(
                     { 
-                        fill: false, 
+                        fill: true, 
+                        fillOpacity: 0.0,
                         strokeColor: '#ffff00', 
                         strokeWidth: 3 
                     }, 
@@ -371,11 +372,74 @@ function init() {
                 if (assignMode == null) {
                     $('#assign_district').val('-1');
                 }
+                else if (assignMode == 'dragdrop') {
+                    $('#assign_district').val('-1');
+                    dragdropControl.deactivate();
+                    dragdropControl.resumeTool.activate();
+                }
             },
             error: function(xhr, textStatus, error) {
                 window.status = 'failed to select';
             }
         });
+    };
+
+    // When the selection is changed, perform the addition or subtraction
+    // to the current geounit selection. Also, if the assignment mode is
+    // either 'paint' or 'dragdrop', do some more processing.
+    var unitsSelected = function(features, subtract) {
+        if (subtract) {
+            var removeme = [];
+            for (var i = 0; i < selection.features.length; i++) {
+                for (var j = 0; j < features.length; j++) {
+                    if (selection.features[i].data.id == features[j].data.id) {
+                        removeme.push(selection.features[i]);
+                    }
+                }
+            }
+            selection.removeFeatures(removeme);
+        }
+        else {
+            var addme = [];
+            for (var i = 0; i < features.length; i++) {
+                var match = false;
+                for (var j = 0; j < selection.features.length; j++) {
+                    if (features[i].data.id == selection.features[j].data.id) {
+                        match = true;
+                        break;
+                    }
+                }
+                if (!match) {
+                    addme.push(features[i])
+                }
+            }
+            selection.addFeatures(addme);
+
+            // this is necessary because a feature may be selected more
+            // than once, and the js feature object is different, but the
+            // actual feature itself is the same geometry and attributes.
+            for (var i = 0; i < addme.length; i++) {
+                selection.features[addme[i].fid || addme[i].id] = addme[i];
+            }
+        }
+
+        if (assignMode == null) {
+            return;
+        }
+        else if (assignMode == 'paint') {
+            var d_id = $('#assign_district').val();
+            if (parseInt(d_id,10) > 0) {
+                var feature = { data:{ district_id: d_id } };
+                assignOnSelect(feature);
+            }
+        }
+        else if (assignMode == 'dragdrop') {
+            var currentTool = olmap.getControlsBy('active',true)[0];
+            currentTool.deactivate();
+
+            dragdropControl.resumeTool = currentTool;
+            dragdropControl.activate();
+        }
     };
 
     // Create a polygon select control for free-form selections.
@@ -411,46 +475,7 @@ function init() {
                             selection.removeFeatures(selection.features);
                         }
 
-                        if (subtract) {
-                            var removeMe = [];
-                            for (var i = 0; i < rsp.features.length; i++) {
-                                var rspFeature = rsp.features[i];
-                                for (var j = 0; j < selection.features.length; j++) {
-                                    if (selection.features[j].data.id == rspFeature.data.id) {
-                                        removeMe.push(selection.features[j]);
-                                    }
-                                }
-                            }
-                            selection.removeFeatures(removeMe);
-                        }
-                        else {
-                            // check the selection feature IDs against the
-                            // feature IDs from our feature query, so that
-                            // features are not added to the selection more
-                            // than once
-                            for (var i = 0; i < rsp.features.length; i++) {
-                                var addflag = true;
-                                var rspFeature = rsp.features[i];
-                                for (var j = 0; j < selection.features.length; j++) {
-                                    if (selection.features[j].data.id == rspFeature.data.id) {
-                                        addflag = false;
-                                    }
-                                }
-                                if (addflag) {
-                                    selection.addFeatures([rspFeature]);
-                                    selection.features[rspFeature.fid || rspFeature.id] = rspFeature;
-                                }
-                            }
-                        }
-
-                        if (assignMode == null) {
-                            return;
-                        }
-
-                        if (assignMode == 'paint') {
-                            var feature = { data:{ district_id: $('#assign_district').val() } };
-                            assignOnSelect(feature);
-                        }
+                        unitsSelected( rsp.features, subtract );
                     }
                 });
             }
@@ -502,6 +527,71 @@ function init() {
         autoActivate: false,
         protocol: idProtocol
     });
+
+    // Get the feature at the point in the layer.
+    var featureAtPoint = function(pt, lyr) {
+        for (var i = 0; i < lyr.features.length; i++) {
+            if (pt.intersects(lyr.features[i].geometry)) {
+                return lyr.features[i];
+            }
+        }
+
+        return null;
+    };
+
+    // Test if the provided point lays within the features in the provided
+    // layer.
+    var pointInFeatures = function(pt, lyr) {
+        return featureAtPoint(pt, lyr) != null;
+    };
+
+    // Create a control that shows where a drag selection is
+    // traveling.
+    var dragdropControl = new OpenLayers.Control.DragFeature(
+        selection,
+        {
+            documentDrag: true,
+            onStart: function(feature, pixel) {
+                var ll = olmap.getLonLatFromPixel(pixel);
+                dragdropControl.lastPt = new OpenLayers.Geometry.Point(ll.lon, ll.lat);
+            },
+            onDrag: function(feature, pixel) {
+                var ll = olmap.getLonLatFromPixel(pixel);
+                var pt = new OpenLayers.Geometry.Point(ll.lon, ll.lat);
+                var dist = featureAtPoint(pt, districtLayer);
+                if (dist == null) {
+                    dist = { data: { district_id: 1 } };
+                }
+                $('#assign_district').val(dist.data.district_id);
+                for (var i = 0; i < selection.features.length; i++) {
+                    if (selection.features[i].fid != feature.fid) {
+                        selection.features[i].geometry.move(
+                            pt.x - dragdropControl.lastPt.x,
+                            pt.y - dragdropControl.lastPt.y
+                        );
+                        selection.drawFeature(selection.features[i]);
+                    }
+                }
+                dragdropControl.lastPt = pt;
+            },
+            onComplete: function(feature, pixel) {
+                var ll = olmap.getLonLatFromPixel(pixel);
+                var pt = new OpenLayers.Geometry.Point(ll.lon, ll.lat);
+                
+                if (pointInFeatures(pt, districtLayer)) {
+                    var dfeat = { data:{ district_id: $('#assign_district').val() } };
+                    assignOnSelect(dfeat);
+                }
+                else {
+                    selection.removeFeatures(selection.features);
+
+                    $('#assign_district').val('-1');               
+                    dragdropControl.deactivate();
+                    dragdropControl.resumeTool.activate();
+                }
+            }
+        }
+    );
 
     // A callback to create a popup window on the map after a peice
     // of geography is selected.
@@ -584,45 +674,10 @@ function init() {
     };
 
     // A callback for feature selection in different controls.
-    var featureSelected = function(e){
+    var featuresSelected = function(e){
         var subtract = e.object.modifiers.toggle && (assignMode == null);
 
-        if (subtract) {
-            var removeme = [];
-            for (var i = 0; i < selection.features.length; i++) {
-                for (var j = 0; j < e.features.length; j++) {
-                    if (selection.features[i].data.id == e.features[j].data.id) {
-                        removeme.push(selection.features[i]);
-                    }
-                }
-            }
-            selection.removeFeatures(removeme);
-        }
-        else {
-            var addme = [];
-            for (var i = 0; i < e.features.length; i++) {
-                var match = false;
-                for (var j = 0; j < selection.features.length; j++) {
-                    if (e.features[i].data.id == selection.features[j].data.id) {
-                        match = true;
-                        break;
-                    }
-                }
-                if (!match) {
-                    addme.push(e.features[i])
-                }
-            }
-            selection.addFeatures(addme);
-        }
-
-        if (assignMode == null) {
-            return;
-        }
-
-        if (assignMode == 'paint') {
-            var feature = { data:{ district_id: $('#assign_district').val() } };
-            assignOnSelect(feature);
-        }
+        unitsSelected(e.features, subtract);
     };
 
 
@@ -657,10 +712,10 @@ function init() {
     
     }
 
-    // Connect the featureSelected callback above to the featureselected
+    // Connect the featuresSelected callback above to the featureselected
     // events in the point and rectangle control.
-    getControl.events.register('featuresselected', getControl, featureSelected);
-    boxControl.events.register('featuresselected', boxControl, featureSelected);
+    getControl.events.register('featuresselected', getControl, featuresSelected);
+    boxControl.events.register('featuresselected', boxControl, featuresSelected);
     idControl.events.register('featuresselected', idControl, idFeature);
 
     // A callback for deselecting features from different controls.
@@ -818,10 +873,22 @@ function init() {
         if (me.hasClass('toggle')) {
             me.removeClass('toggle');
             assignMode = null;
+            dragdropControl.deactivate();
+            if (dragdropControl.resumeTool) {
+                dragdropControl.resumeTool.activate();
+            }
         }
         else {
             me.addClass('toggle');
             assignMode = 'dragdrop';
+            if (selection.features.length > 0) {
+                var active = olmap.getControlsBy('active',true);
+                for (var i = 0; i < active.length; i++) {
+                    active[i].deactivate();
+                }
+                dragdropControl.activate();
+                dragdropControl.resumeTool = active[0];
+            }
         }
         $('#navigate_map_tool').removeClass('toggle');
         navigate.deactivate();
@@ -835,6 +902,7 @@ function init() {
         if (me.hasClass('toggle')) {
             me.removeClass('toggle');
             assignMode = null;
+            $('#assign_district').val(-1);
         }
         else {
             me.addClass('toggle');
@@ -853,7 +921,8 @@ function init() {
         boxControl,
         polyControl,
         new GlobalZoom(),
-        idControl
+        idControl,
+        dragdropControl
     ]);
 
     // get a format parser for SLDs and the legend
