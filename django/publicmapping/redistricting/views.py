@@ -98,7 +98,7 @@ def commonplan(request, planid):
         districts = {}
         editable = False
     levels = Geolevel.objects.values_list("id", "name")
-    demos = Subject.objects.values_list("id","name", "short_display")
+    demos = Subject.objects.values_list("id","name", "short_display","is_displayed")
     default_demo = getdefaultsubject()
     layers = []
     snaplayers = []
@@ -107,7 +107,7 @@ def commonplan(request, planid):
     for level in levels:
         snaplayers.append( {'geolevel':level[0],'layer':level[1],'name':level[1].capitalize()} )
     for demo in demos:
-        layers.append( {'id':demo[0],'text':demo[2],'value':demo[1].lower(), 'isdefault':str(demo[0] == default_demo.id).lower()} )
+        layers.append( {'id':demo[0],'text':demo[2],'value':demo[1].lower(), 'isdefault':str(demo[0] == default_demo.id).lower(), 'isdisplayed':str(demo[3]).lower()} )
     for target in targets:
         rules.append( {'subject_id':target.subject_id,'lower':target.lower,'upper':target.upper} )
 

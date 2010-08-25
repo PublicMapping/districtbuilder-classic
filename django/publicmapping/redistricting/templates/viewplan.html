@@ -14,7 +14,7 @@
         var PLAN_VERSION = {% if plan %}{{ plan.version }}{% else %}0{% endif %};
         var UNASSIGNED_DISTRICT_ID = {% if unassigned_id %}{{ unassigned_id }}{% else %}0{% endif %};
         var SNAP_LAYERS = [ {% for snap in snaplayers %} { geolevel: {{ snap.geolevel }}, level: '{{ snap.layer }}',layer: 'simple_{{ snap.layer }}', name: '{{ snap.name }}' }{% if not forloop.last %},{% endif %} {% endfor %} ];
-        var DEMOGRAPHICS = [{% for demo in demographics %} { id: {{ demo.id }}, text: '{{ demo.text }}', value: '{{ demo.value }}', isdefault: {{ demo.isdefault }} }{% if not forloop.last %},{% endif %} {% endfor %} ];
+        var DEMOGRAPHICS = [{% for demo in demographics %} { id: {{ demo.id }}, text: '{{ demo.text }}', value: '{{ demo.value }}', isdefault: {{ demo.isdefault }}, isdisplayed: {{ demo.isdisplayed }} }{% if not forloop.last %},{% endif %} {% endfor %} ];
         var MAP_LAYERS = [];
         for (var i = 0; i < SNAP_LAYERS.length; i++) {
             for (var j = 0; j < DEMOGRAPHICS.length; j++) {
@@ -119,11 +119,13 @@
                         if ( i == 0 ) {
                             document.write('<option value="' + demo.id + '.None">None</option>');
                         }
-                        document.write('<option value="' + demo.id + '"');
-                        if (demo.isdefault) {
-                            document.write(' selected="true"');
+                        if ( demo.isdisplayed ) {
+                            document.write('<option value="' + demo.id + '"');
+                            if (demo.isdefault) {
+                                document.write(' selected="true"');
+                            }
+                            document.write('>' + demo.text + '</option>');
                         }
-                        document.write('>' + demo.text + '</option>');
                     }
                   </script>
                 </select>
