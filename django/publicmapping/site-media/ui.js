@@ -167,24 +167,44 @@ $(function() {
             }
         });
 
-/*
-        $('#saveplanbtn').click(function(){
-            $('#working').dialog('open');
+        $('#btnSaveAndShare').click( function() {
+            var getData = function() {
+                var name = $('#txtPlanName').val();
+                if (name == '') { return false; }
+                return { name: name, shared: true }; 
+            };
+            var $waitPublishing = $('<div title="Please Wait">Publishing with the server</div>').dialog({ autoOpen: true });
+            var data = getData();
+            if (!data) {
+                $waitPublishing.dialog('close');
+                $('<div title="Error">Please enter a new name to publish your plan</div>').dialog({ autoOpen: true });
+                return false;
+            } else {
+                $.ajax({
+                    url: '/districtmapping/plan/' + PLAN_ID + '/copy/',
+                    type: 'POST',
+                    data: data,
+                    success: function(data, textStatus, xhr) {
+                        $waitPublishing.dialog('close');
+                        if (textStatus == 'success') {
+                            $('#continueEditing').click( function() {
+                                $('#successfulShare').dialog('close');
+                                $('#steps').tabs('select', '#step-1');
+                            });
+                            $('#successfulShare').dialog({autoOpen: true});
+                        }
+                        else {
+                            // how to notify that the plan was not saved?
+                            window.status = data.message;
+                    
+                        }
+                    },
+                    error: function() {
+                        $waitPublishing.dialog('close');
+                        $('<div title="Server Failure">Sorry, we weren\'t able to contact the server.  Please try again later.</div>').dialog({autoOpen:true});
+                    }
 
-            $.ajax({
-                url: '/districtmapping/plan/' + PLAN_ID,
-                type: 'POST',
-                success: function(data, textStatus, xhr) {
-                    $('#working').dialog('close');
-                    if (data.success) {
-                        $('#saveplaninfo').trigger('planSaved', new Date().valueOf());
-                    }
-                    else {
-                        // how to notify that the plan was not saved?
-                        window.status = data.message;
-                    }
-                }
-            });
+                });
+            }
         });
-*/
     });

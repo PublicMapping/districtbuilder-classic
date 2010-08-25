@@ -53,8 +53,8 @@ def copyplan(request, planid):
     newname = p.name + " " + str(random.random()) 
     if (request.method == "POST" ):
         newname = request.POST["name"]
-        shared = request.POST["shared"]
-    plan_copy = Plan(name = newname, owner=request.user)
+        shared = request.POST.get("shared", False)
+    plan_copy = Plan(name = newname, owner=request.user, is_shared = shared)
     plan_copy.save()
 
     districts = p.get_districts_at_version(p.version)
@@ -415,7 +415,7 @@ def chooseplan(request):
         # plan has been chosen.  Open it up
     else:
         templates = Plan.objects.filter(is_template=True, owner__is_staff = True)
-        shared = Plan.objects.filter(is_shared=True).exclude(owner = request.user)
+        shared = Plan.objects.filter(is_shared=True)
         mine = Plan.objects.filter(is_template=False, owner=request.user)
 
         return render_to_response('chooseplan.html', {

@@ -970,10 +970,9 @@ button#stats_legend {
 
 /* bard map previews */
 div.bardmap {
-    position:absolute;
-    right:30;
     top:40;
-    height:600px;
+    height:95%;
+    width: 95%;
     background-color: #FFFFFF;
 }
 
@@ -986,7 +985,14 @@ div.evaluate {
 .evaluate #description,
 .evaluate #options {
     display:inline-block;
-    width:65%;
+    width:50%;
+}
+.evaluate #options {
+    padding-top: 10px;
+    
+}
+.evaluate #description p{
+    font-size:80%;
 }
 .evaluate #plans {
     display:inline-block;
@@ -1008,8 +1014,10 @@ div.evaluate {
 }
 #evaluateMapContainer {
     position:absolute;
-    top:0;
-    right;0;
+    top:10px;
+    right:10px;
+    height:500px;
+    width: 40%;
 }
 /* Share page */
 div.share {
@@ -1017,7 +1025,8 @@ div.share {
     height:100%;
 }
 
-.share #saveandshare {
+.share #successfulShare {
+    display: none;
     
 }
 .share #saveandshare,

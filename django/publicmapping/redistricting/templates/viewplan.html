@@ -325,7 +325,8 @@
         <div id="evaluateMapContainer">
             <div id="evaluateMap" class="bardmap">
             </div>
-            <div><button id="btnSharePlans">Go to Share Plan options</button></div>
+            <div><button id="btnSharePlans" onClick="$('#steps').tabs('select', '#step-3');return false;" >Go to Share Plan options</button></div>
+                           
         </div>
     </div>
     <div id="step-3" class="main_content share">
@@ -333,19 +334,19 @@
             <div class="explanation">
                 <h3>Explanation of Shared Documents</h3>
                 <p>You can share your plan with other users here.  Your plan will be available for other users so that they can view reports about your plan or create a plan of their own using yours as a base.</p>
-                <p>Share your plan by choosing a new name for it or by keeping the name you've given it.<p> 
+                <p>Give your plan a unique name in order to share it. A copy of your current plan will be added to the "Shared Plans" section of the plan chooser.</p>
             </div>
             <div id="nameandshare">
                 <div>
-                    <input id="chkNewPlanName" type="checkbox" />
-                    <label for="txtPlanName">Rename My Plan</label>
+                    <label for="chkNewPlanName">Name your shared plan</label>
                     <input id="txtPlanName" />
                 </div>
-                <div>
-                    <input id="chkKeepName" type="checkbox" />
-                    <label for="chkKeepName">Keep Current Plan Name</label>
-                    <button id="btnSaveAndShare">Save and Share</button>
-                </div>
+                <button id="btnSaveAndShare">Save and Share</button>
+            </div>
+            <div id="successfulShare" title="Congratulations!" >
+                <p>You have successfully shared your plan</p>
+                <div><button id="continueEditing">Continue Editing Current Plan</button></div>
+                <div><a href="/districtmapping/plan/0/view/"><button id="selectNew">Select New Plan to Edit</button></a></div>
             </div>
         </div>
         <div id="preview">
