@@ -572,13 +572,16 @@ div.toolset#toolset_draw .ui-icon {
   background-image: url(/site-media/images/icon-select.png);
 }
 #rectangle_drawing_tool  .ui-icon {
-  background-image:  url(/site-media/images/icon-select-rect.png);
+  background-image: url(/site-media/images/icon-select-rect.png);
 }
 #polygon_drawing_tool  .ui-icon {
-  background-image:  url(/site-media/images/icon-select-poly.png);
+  background-image: url(/site-media/images/icon-select-poly.png);
 }
-#assign_tool .ui-icon {
-  background-image:  url(/site-media/images/icon-assign.png);
+#dragdrop_tool .ui-icon {
+  background-image: url(/site-media/images/icon-assign.png);
+}
+#paint_tool .ui-icon {
+  background-image: url(/site-media/images/icon-assign.png);
 }
 #history_undo .ui-icon {
   background-image: url(/site-media/images/icon-undo.png);

@@ -15,18 +15,18 @@
       <div class="toolset_group toolset_group_w">
         <label>Assigning Tools</label>
         <div>
-          <button id="assign_tool" class="btntoggle titletip" title="After selecting your districts on the map, click this button to select target district"></button>
+          <button id="dragdrop_tool" class="titletip" title="Select areas, then drag them to a district"></button>
           <select id="assign_district" class="titletip" title="Assign districts currently selected on map by choosing district from drop down list">
             <option value="-1">-- Select One --</option>
             {% for d in districts %}
                 <option value="{{ d.district_id }}">{{ d.name }}</option>
             {% endfor %}
-            <!-- max_dists: {{ max_dists }} -->
-            <!-- districts|length: {{ districts|length }} -->
             {% ifnotequal max_dists districts|length %}
                 <option value="new">New District</option>
             {% endifnotequal %}
           </select>
+          <button id="paint_tool" class="titletip" title="Choose adistrict and select this mode to assign areas to the designated district">
+          </button>
         </div>
       </div>
       <div class="toolset_group">

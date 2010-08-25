@@ -102,13 +102,12 @@ class Geounit(models.Model):
                     if level != settings.BASE_GEOLEVEL:
                         query += "st_within(geom, geomfromewkt('%s'))" % simple.ewkt
                     else:
-                        query += "st_intersects(center, geomfromewkt('%s'))" % center.ewkt
+                        query += "st_intersects(center, geomfromewkt('%s'))" % simple.ewkt
                 else:
                     if level != settings.BASE_GEOLEVEL:
                         query += "NOT st_intersects(geom, geomfromewkt('%s'))" % simple.ewkt
                     else:
-                        query += "NOT st_intersects(center, geomfromewkt('%s')" % center.ewkt
-
+                        query += "NOT st_intersects(center, geomfromewkt('%s'))" % simple.ewkt
 
                 cursor = connection.cursor()
                 cursor.execute(query)

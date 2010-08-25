@@ -130,6 +130,10 @@ function initializeResizeFix() {
 function init() {
     OpenLayers.ProxyHost= "/proxy?url=";
 
+    // The assignment mode -- the map is initially in navigation mode,
+    // so the assignment mode is null.
+    var assignMode = null;
+
     // The extents of the layers. These extents will depend on the study
     // area; the following are the bounds for the web cache around Ohio.
     // TODO Make the initial layer extents configurable. Maybe fetch them
@@ -160,7 +164,7 @@ function init() {
             254.4091796875, 127.20458984375, 63.602294921875,
             31.8011474609375, 15.90057373046875, 7.950286865234375,
             3.9751434326171875, 1.9875717163085938, 0.9937858581542969
-            /* These are valid resolutions, but way to detailed for
+            /* These are valid resolutions, but way too detailed for
                this application.
             0.49689292907714844, 0.24844646453857422, 0.12422323226928711,
             0.062111616134643555, 0.031055808067321777, 0.015527904033660889,
@@ -315,8 +319,10 @@ function init() {
 
     // An assignment function that adds geounits to a district
     var assignOnSelect = function(feature) {
-        if (selection.features.length == 0)
+        if (selection.features.length == 0) {
+            $('#assign_district').val('-1');
             return;
+        }
 
         var district_id = feature.data.district_id;
         var geolevel_id = selection.features[0].attributes.geolevel_id;
@@ -362,24 +368,15 @@ function init() {
                     selection.drawFeature(selection.features[i], mode);
                 }
 
-                $('#assign_district').val('-1');
+                if (assignMode == null) {
+                    $('#assign_district').val('-1');
+                }
             },
             error: function(xhr, textStatus, error) {
                 window.status = 'failed to select';
             }
         });
     };
-
-    // Create a control that assigns all currently selected
-    // (by way of single, rectangle, or polygon tools) units
-    // to a district on the map.
-    var assignControl = new OpenLayers.Control.SelectFeature(
-        districtLayer,
-        {
-            autoActivate: false,
-            onSelect: assignOnSelect
-        }
-    );
 
     // Create a polygon select control for free-form selections.
     var polyControl = new OpenLayers.Control.DrawFeature( 
@@ -393,7 +390,7 @@ function init() {
             featureAdded: function(feature){
                 // WARNING: not a part of the API!
                 var append = this.handler.evt.shiftKey;
-                var subtract = this.handler.evt.ctrlKey;
+                var subtract = this.handler.evt.ctrlKey && (assignMode == null);
                 var newOpts = getControl.protocol.options;
                 newOpts.featureType = getSnapLayer().layer;
                 getControl.protocol = new OpenLayers.Protocol.WFS( newOpts );
@@ -444,6 +441,15 @@ function init() {
                                     selection.features[rspFeature.fid || rspFeature.id] = rspFeature;
                                 }
                             }
+                        }
+
+                        if (assignMode == null) {
+                            return;
+                        }
+
+                        if (assignMode == 'paint') {
+                            var feature = { data:{ district_id: $('#assign_district').val() } };
+                            assignOnSelect(feature);
                         }
                     }
                 });
@@ -577,26 +583,45 @@ function init() {
         }
     };
 
-        // A callback for feature selection in different controls.
+    // A callback for feature selection in different controls.
     var featureSelected = function(e){
-        var subtract = e.object.modifiers.toggle;
+        var subtract = e.object.modifiers.toggle && (assignMode == null);
 
         if (subtract) {
             var removeme = [];
             for (var i = 0; i < selection.features.length; i++) {
-                if (selection.features[i].data.id == e.feature.data.id) {
-                    removeme.push(selection.features[i]);
+                for (var j = 0; j < e.features.length; j++) {
+                    if (selection.features[i].data.id == e.features[j].data.id) {
+                        removeme.push(selection.features[i]);
+                    }
                 }
             }
             selection.removeFeatures(removeme);
         }
         else {
-            for (var i = 0; i < selection.features.length; i++) {
-                if (selection.features[i].data.id == e.feature.data.id) {
-                    return;
+            var addme = [];
+            for (var i = 0; i < e.features.length; i++) {
+                var match = false;
+                for (var j = 0; j < selection.features.length; j++) {
+                    if (e.features[i].data.id == selection.features[j].data.id) {
+                        match = true;
+                        break;
+                    }
+                }
+                if (!match) {
+                    addme.push(e.features[i])
                 }
             }
-            selection.addFeatures([e.feature]);
+            selection.addFeatures(addme);
+        }
+
+        if (assignMode == null) {
+            return;
+        }
+
+        if (assignMode == 'paint') {
+            var feature = { data:{ district_id: $('#assign_district').val() } };
+            assignOnSelect(feature);
         }
     };
 
@@ -634,8 +659,8 @@ function init() {
 
     // Connect the featureSelected callback above to the featureselected
     // events in the point and rectangle control.
-    getControl.events.register('featureselected', getControl, featureSelected);
-    boxControl.events.register('featureselected', boxControl, featureSelected);
+    getControl.events.register('featuresselected', getControl, featureSelected);
+    boxControl.events.register('featuresselected', boxControl, featureSelected);
     idControl.events.register('featuresselected', idControl, idFeature);
 
     // A callback for deselecting features from different controls.
@@ -734,6 +759,10 @@ function init() {
             active[i].deactivate();
         }
         navigate.activate();
+        $('#dragdrop_tool').removeClass('toggle');
+        $('#paint_tool').removeClass('toggle');
+        assignMode = null;
+        $('#assign_district').val(-1);
     });
 
     // When the identify map tool is clicked, disable all the
@@ -744,6 +773,10 @@ function init() {
             active[i].deactivate();
         }
         idControl.activate();
+        $('#dragdrop_tool').removeClass('toggle');
+        $('#paint_tool').removeClass('toggle');
+        assignMode = null;
+        $('#assign_district').val(-1);
     });
 
     // When the single pick tool is clicked, disable all the
@@ -779,14 +812,39 @@ function init() {
     });
 
     // When the assignment tool is clicked, disable all the
-    // controls except for the assignment tool.  Also remember the
-    // last tool that is active.
-    $('#assign_tool').click(function(evt){
-        var active = olmap.getControlsBy('active',true);
-        for (var i = 0; i < active.length; i++) {
-            active[i].deactivate();
+    // controls except for the assignment tool.  
+    $('#dragdrop_tool').click(function(evt){
+        var me = $(this);
+        if (me.hasClass('toggle')) {
+            me.removeClass('toggle');
+            assignMode = null;
         }
-        assignControl.activate();
+        else {
+            me.addClass('toggle');
+            assignMode = 'dragdrop';
+        }
+        $('#navigate_map_tool').removeClass('toggle');
+        navigate.deactivate();
+        $('#identify_map_tool').removeClass('toggle');
+        idControl.deactivate();
+        $('#paint_tool').removeClass('toggle');
+    });
+
+    $('#paint_tool').click(function(evt){
+        var me = $(this);
+        if (me.hasClass('toggle')) {
+            me.removeClass('toggle');
+            assignMode = null;
+        }
+        else {
+            me.addClass('toggle');
+            assignMode = 'paint';
+        }
+        $('#navigate_map_tool').removeClass('toggle');
+        navigate.deactivate();
+        $('#identify_map_tool').removeClass('toggle');
+        idControl.deactivate();
+        $('#dragdrop_tool').removeClass('toggle');
     });
 
     // Add the created controls to the map
@@ -794,7 +852,6 @@ function init() {
         getControl,
         boxControl,
         polyControl,
-        assignControl,
         new GlobalZoom(),
         idControl
     ]);
@@ -898,12 +955,12 @@ function init() {
     // Logic for the 'Assign District to' dropdown
     $('#assign_district').change(function(evt){
         if (this.value == '-1'){
-            return;
+            return true;
         }
         else if (this.value == 'new'){
             createNewDistrict();
         }
-        else {
+        else if (assignMode == null) {
             var feature = { data:{ district_id: this.value } };
             assignOnSelect(feature);
         }
