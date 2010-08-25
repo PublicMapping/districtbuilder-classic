@@ -500,11 +500,19 @@ function init() {
         polyControl.handler.style = polySelectStyle;
     }, 100);
 
-    // Create a div for tooltips on the map itself; these are used
+    // Create a div for tooltips on the map itself; this is used
     // when the info tool is activated.
     var tipdiv = document.createElement('div');
     var tipelem = document.createElement('h1');
     tipelem.appendChild(document.createTextNode('District Name'));
+    tipdiv.appendChild(tipelem);
+    tipelem = document.createElement('div');
+    tipelem.id = 'tipclose';
+    tipelem.onclick = function(e){
+        OpenLayers.Event.stop(e);
+        tipdiv.style.display = 'none';
+    };
+    tipelem.appendChild(document.createTextNode('[x]'));
     tipdiv.appendChild(tipelem);
     tipelem = document.createElement('div');
     tipelem.appendChild(document.createTextNode('Demographic 1:'));
@@ -643,7 +651,7 @@ function init() {
         var select = $('#districtby')[0];
         var value = parseInt(tipFeature.attributes.number, 10);
 
-        var node = 1;
+        var node = 2;
         for (var key in ctics) {
             tipdiv.childNodes[node].firstChild.nodeValue = 
                 key + ': ' + ctics[key].toLocaleString();
@@ -818,6 +826,7 @@ function init() {
         $('#paint_tool').removeClass('toggle');
         assignMode = null;
         $('#assign_district').val(-1);
+        tipdiv.style.display = 'none';
     });
 
     // When the identify map tool is clicked, disable all the
@@ -843,6 +852,7 @@ function init() {
         }
         getControl.activate();
         getControl.features = selection.features;
+        tipdiv.style.display = 'none';
     });
 
     // When the rectangle selection tool is clicked, disable all the
@@ -854,6 +864,7 @@ function init() {
         }
         boxControl.activate();
         boxControl.features = selection.features;
+        tipdiv.style.display = 'none';
     });
 
     // When the polygon selection tool is clicked, disable all the
@@ -864,6 +875,7 @@ function init() {
             active[i].deactivate();
         }
         polyControl.activate();
+        tipdiv.style.display = 'none';
     });
 
     // When the assignment tool is clicked, disable all the
@@ -895,6 +907,7 @@ function init() {
         $('#identify_map_tool').removeClass('toggle');
         idControl.deactivate();
         $('#paint_tool').removeClass('toggle');
+        tipdiv.style.display = 'none';
     });
 
     $('#paint_tool').click(function(evt){
@@ -913,6 +926,7 @@ function init() {
         $('#identify_map_tool').removeClass('toggle');
         idControl.deactivate();
         $('#dragdrop_tool').removeClass('toggle');
+        tipdiv.style.display = 'none';
     });
 
     // Add the created controls to the map

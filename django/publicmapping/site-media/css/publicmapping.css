@@ -1028,6 +1028,12 @@ div.controlDiv span {
 div.controlDiv select {
     font-size: 0.7em;
 }
+div#tipclose {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    cursor: pointer;
+}
 
 
 /* JQUERY TOOLS TOOLTIPS */
