@@ -228,6 +228,7 @@
                         email.addClass('error');
                     } else {
                         $('#register').append($('<div class="error">Sorry, registration is not available at this time.  Please try again later</div>'));
+                    }
                 },
                 error:function(xhr,textStatus,error){
                     $('#doRegister').attr('disabled',true);
