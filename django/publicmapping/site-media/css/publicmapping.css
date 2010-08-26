@@ -621,7 +621,8 @@ div.toolset_group select {
   font-size: 11px;
   }
 div.toolset_group_w select#assign_district {
-    width: 100px; 
+    width: 100px;
+    margin-right: 20px;
 }
 div.toolset .ui-icon {
 background-color: transparent;

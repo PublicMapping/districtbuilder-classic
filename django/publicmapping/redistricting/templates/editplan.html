@@ -15,8 +15,8 @@
       <div class="toolset_group toolset_group_w">
         <label>Assigning Tools</label>
         <div>
-          <button id="dragdrop_tool" class="titletip" title="Select areas, then drag them to a district"></button>
-          <select id="assign_district" class="titletip" title="Assign districts currently selected on map by choosing district from drop down list">
+          <button id="paint_tool" class="titletip" title="Enable anchor mode, then select a district name to repeatedly assign areas to a district"></button>
+          <select id="assign_district" class="titletip" title="Assign districts currently selected on map by choosing a district name from drop down list">
             <option value="-1">-- Select One --</option>
             {% for d in districts %}
                 <option value="{{ d.district_id }}">{{ d.name }}</option>
@@ -25,8 +25,7 @@
                 <option value="new">New District</option>
             {% endifnotequal %}
           </select>
-          <button id="paint_tool" class="titletip" title="Choose adistrict and select this mode to assign areas to the designated district">
-          </button>
+          <button id="dragdrop_tool" class="titletip" title="Select areas on the map then drag them to into a district for reassignment"></button>
         </div>
       </div>
       <div class="toolset_group">
