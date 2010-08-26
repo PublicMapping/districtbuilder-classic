@@ -578,10 +578,10 @@ div.toolset#toolset_draw .ui-icon {
   background-image: url(/site-media/images/icon-select-poly.png);
 }
 #dragdrop_tool .ui-icon {
-  background-image: url(/site-media/images/icon-assign.png);
+  background-image: url(/site-media/images/icon-drop.png);
 }
 #paint_tool .ui-icon {
-  background-image: url(/site-media/images/icon-assign.png);
+  background-image: url(/site-media/images/icon-anchor.png);
 }
 #history_undo .ui-icon {
   background-image: url(/site-media/images/icon-undo.png);
