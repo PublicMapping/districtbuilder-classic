@@ -93,39 +93,39 @@
             <table id="registerTable">
                 <tr>
                     <td class="fname">User Name *</td>
-                    <td><input id="newusername" name="newusername" class="field"/></td>
+                    <td><input id="newusername" name="newusername" class="field" maxlength="30" /></td>
                 </tr>
                 <tr>
                     <td class="fname">Password *</td>
-                    <td><input id="newpassword1" name="newpassword1" type="password" class="field"/></td>
+                    <td><input id="newpassword1" name="newpassword1" type="password" class="field" maxlength="128" /></td>
                 </tr>
                 <tr>
                     <td class="fname">Confirm Password *</td>
-                    <td><input id="newpassword2" name="newpassword2" type="password" class="field"/></td>
+                    <td><input id="newpassword2" name="newpassword2" type="password" class="field" maxlength="128" /></td>
                 </tr>
-                <tr>
+            <!-- <tr>
                     <td class="fname">Password Hint *</td>
-                    <td><input id="passwordhint" name="passwordhint" class="field"/></td>
+                    <td><input id="passwordhint" name="passwordhint" class="field" maxlength="30" /></td>
+                </tr> -->
+                <tr>
+                    <td colspan="2"><span class="recommended">An email address is recommended to recover a forgotten password</span></td>
                 </tr>
                 <tr>
                     <td class="fname">Email Address</td>
-                    <td><input id="email" name="email" class="field"/></td>
-                </tr>
-                <tr>
-                    <td colspan="2"><span class="recommended">Recommended to allow you to recover a password you have lost.</span></td>
+                    <td><input id="email" name="email" class="field" maxlength="75" /></td>
                 </tr>
                 <tr>
                     <td class="fname">First Name</td>
-                    <td><input id="firstname" name="firstname" class="field"/></td>
+                    <td><input id="firstname" name="firstname" class="field" maxlength="30"/></td>
                 </tr>
                 <tr>
                     <td class="fname">Last Name</td>
-                    <td><input id="lastname" name="lastname" class="field"/></td>
+                    <td><input id="lastname" name="lastname" class="field" maxlength="30"/></td>
                 </tr>
-                <tr>
+                <!-- <tr>
                     <td class="fname">Organization</td>
                     <td><input id="organization" name="organization" class="field"/></td>
-                </tr>
+                </tr> -->
                 <tr>
                     <td></td>
                     <td>
@@ -150,7 +150,7 @@
    </div>
     <script type="text/javascript">
     $(function(){
-        $('#register').dialog({'autoOpen':false,'width':425,'modal':true, resizable: false});
+        $('#register').dialog({'autoOpen':false,'width':425,'modal':true, resizable: false, draggable:false});
         $('#doRegister').click(function(evt) {
             var frm = $('#registerForm'),
                 username = frm.find('#newusername'),
@@ -218,11 +218,16 @@
                     if (data.success) {
                         window.location.href = data.redirect;
                         return;
-                    }
-
-                    var newusername = $('#newusername');
-                    newusername.removeClass('field');
-                    newusername.addClass('error');
+                    } else if (data.message == 'name exists') {
+                        var newusername = $('#newusername');
+                        newusername.removeClass('field');
+                        newusername.addClass('error');
+                    } else if (data.message == 'email exists') {
+                        var email = $('#email');
+                        email.removeClass('field');
+                        email.addClass('error');
+                    } else {
+                        $('#register').append($('<div class="error">Sorry, registration is not available at this time.  Please try again later</div>'));
                 },
                 error:function(xhr,textStatus,error){
                     $('#doRegister').attr('disabled',true);

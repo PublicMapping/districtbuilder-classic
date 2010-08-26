@@ -30,36 +30,39 @@ If registration was unsuccessful, the JSON script also contains
 a 'message' property, describing why the registration failed.
 """
 def userregister(request):
-    username = request.POST['newusername']
-    password = request.POST['newpassword1']
+    username = request.POST.get('newusername', None)
+    password = request.POST.get('newpassword1', None)
+    email = request.POST.get('email', None)
     anonymous = False
+    status = { 'success':False }
     if username != '' and password != '':
         anonymous = (username == 'anonymous' and password == 'anonymous')
 
-        exists = User.objects.filter(username__exact=username)
+        name_exists = User.objects.filter(username__exact=username)
+        if name_exists:
+            status['message'] ='name exists'
+            return HttpResponse(simplejson.dumps(status), mimetype='application/json')
 
-        if len(exists) == 0 or anonymous:
-            if not anonymous:
-                email = request.POST['email']
+        email_exists = email != '' and User.objects.filter(email__exact = email)
+        if email_exists:
+            status['message'] ='email exists'
+            return HttpResponse(simplejson.dumps(status), mimetype='application/json')
+
+        if not anonymous:
+            try:
                 User.objects.create_user(username, email, password)
+            except Exception as error:
+                status['message'] = 'Sorry, we weren\'t able to create your account.'
+                return HttpResponse(simplejson.dumps(status), mimetype='application/json')
 
-            user = authenticate(username=username, password=password)
-            login( request, user )
-            return HttpResponse(simplejson.dumps({
-                    'success':True,
-                    'redirect':'/districtmapping/plan/0/view'
-                }), 
-                mimetype='application/json')
-        else:
-            msg = 'User with that name already exists.'
+        user = authenticate(username=username, password=password)
+        login( request, user )
+        status['success'] = True
+        status['redirect'] = '/districtmapping/plan/0/view'
+        return HttpResponse(simplejson.dumps(status), mimetype='application/json')
     else:
-        msg = 'Username cannot be empty.'
-
-    return HttpResponse(simplejson.dumps({
-            'success':False,
-            'message':msg
-        }), 
-        mimetype='application/json')
+        status['message'] = 'Username cannot be empty.'
+        return HttpResponse(simplejson.dumps(status), mimetype='application/json')
 
 """Log out a client from the application. This uses django's
 authentication system to clear the session, etc. The view will
