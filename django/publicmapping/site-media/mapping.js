@@ -203,9 +203,9 @@ function init() {
         strokeWidth: 2,
         label: '${name}',
         fontColor: '#ffffff',
-        fontSize: '11px',
+        fontSize: '10pt',
         fontFamily: 'Arial,Helvetica,sans-serif',
-        fontWeight: '400',
+        fontWeight: '800',
         labelAlign: 'cm'
     };
     
