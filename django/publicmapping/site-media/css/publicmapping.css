@@ -861,7 +861,7 @@ div.plantable.body table  tr.even {
 }
 div.plantable.body table tr td {
     font-size: 10pt;
-    text-align: center;
+    text-align: right;
     padding: 5px 3px;
 }
 div.plantable.body .cell1 {
