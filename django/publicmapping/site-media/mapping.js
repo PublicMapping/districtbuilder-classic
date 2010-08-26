@@ -1010,7 +1010,11 @@ function init() {
         var newOpts = getControl.protocol.options;
         var show = getShowBy();
         var snap = getSnapLayer();
-        var layers = olmap.getLayersByName('gmu:demo_' + snap.level + '_' + show);
+        var layername = 'gmu:demo_' + snap.level;
+        if (show != 'none') {
+            layername += '_' + show;
+        }
+        var layers = olmap.getLayersByName(layername);
 
         newOpts.featureType = snap.layer;
         getControl.protocol = 
@@ -1022,8 +1026,14 @@ function init() {
 
     // Logic for the 'Show Map by' dropdown
     $('#showby').change(function(evt){
-        var boundary = getSnapLayer().level;
-        var layers = olmap.getLayersByName('gmu:demo_' + boundary + '_' + evt.target.value);
+        var snap = getSnapLayer();
+        var show = evt.target.value;
+        var layername = 'gmu:demo_' + snap.level;
+        if (show != 'none') {
+            layername += '_' + show;
+        }
+
+        var layers = olmap.getLayersByName(layername);
         olmap.setBaseLayer(layers[0]);
         doMapStyling();
         getMapStyles();
@@ -1241,7 +1251,15 @@ function init() {
 
     districtLayer.events.register("loadend", districtLayer, sortByVisibility);
     olmap.events.register("moveend", olmap, sortByVisibility);
-    
+   
+    // triggering this event here will configure the map to correspond
+    // with the initial dropdown values (jquery will set them to different
+    // values than the default on a reload). A desirable side effect is
+    // that the map styling and legend info will get loaded, too, so there
+    // is no need to explicitly perform doMapStyling() or getMapStyles()
+    // in this init method.
+    $('#snapto').trigger('change');
+
     // Set the initial map extents to the bounds around the study area.
     // TODO Make these configurable.
     olmap.zoomToExtent(new OpenLayers.Bounds(-9467000,4570000,-8930000,5170000));
@@ -1249,12 +1267,6 @@ function init() {
 
     // set up sizing for dynamic map size that fills the pg
     initializeResizeFix();
-
-    //apply the PanZoom classes
-    doMapStyling();
-
-    // update the legend
-    getMapStyles();
 }
 
 IdGeounit = OpenLayers.Class(OpenLayers.Control.GetFeature, {

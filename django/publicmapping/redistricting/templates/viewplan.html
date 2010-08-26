@@ -17,6 +17,7 @@
         var DEMOGRAPHICS = [{% for demo in demographics %} { id: {{ demo.id }}, text: '{{ demo.text }}', value: '{{ demo.value }}', isdefault: {{ demo.isdefault }}, isdisplayed: {{ demo.isdisplayed }} }{% if not forloop.last %},{% endif %} {% endfor %} ];
         var MAP_LAYERS = [];
         for (var i = 0; i < SNAP_LAYERS.length; i++) {
+            MAP_LAYERS.push( 'gmu:demo_' + SNAP_LAYERS[i].level );
             for (var j = 0; j < DEMOGRAPHICS.length; j++) {
                 MAP_LAYERS.push( 'gmu:demo_' + SNAP_LAYERS[i].level + '_' + DEMOGRAPHICS[j].value );
             }
@@ -84,6 +85,9 @@
                   <script type="text/javascript">
                     for (var i = 0; i < DEMOGRAPHICS.length; i++) {
                         var demo = DEMOGRAPHICS[i];
+                        if ( i == 0 ) {
+                            document.write('<option value="none">None</option>');
+                        }
                         document.write('<option value="' + demo.value + '"');
                         if (demo.isdefault) {
                             document.write(' selected="true"');
