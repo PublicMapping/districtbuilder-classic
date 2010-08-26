@@ -399,9 +399,14 @@
             autoOpen:false
         });
         var choose = publicmapping.chooseplan({
+            {% if not plan.name %}
+            callback: function() { $('#difplanbtn').click(); $(".ui-dialog-titlebar-close").hide();  },
+            closeOnEscape:false,
+            {% endif %}
             target: $('#difplanbtn'),
             container: $('#DialogContainer'),
-            modal: true
+            modal: true,
+            resizable: false
         }).init();
     {% if plan.name %}
         $('.geography').load('/districtmapping/plan/{{plan.id}}/geography', { demo: 3 });
