@@ -746,8 +746,10 @@ function init() {
     // of the features to the district layer.  This is done at this time
     // to prevent 2 renderings from being triggered on the district layer.
     districtLayer.events.register('beforefeaturesadded',districtLayer,function(context){
+        var lowestColor = $('.farunder').css('background-color');
         var lowerColor = $('.under').css('background-color');
         var upperColor = $('.over').css('background-color');
+        var highestColor = $('.farover').css('background-color');
         var newOptions = OpenLayers.Util.extend({}, districtStyle);
         var dby = getDistrictBy();
         var rules = [];
@@ -757,21 +759,22 @@ function init() {
                     filter: new OpenLayers.Filter.Comparison({
                         type: OpenLayers.Filter.Comparison.LESS_THAN_OR_EQUAL_TO,
                         property: 'number',
-                        value: RULES[dby.by].lower
+                        value: RULES[dby.by].lowest
                     }),
                     symbolizer: {
-                        fillColor: lowerColor,
+                        fillColor: lowestColor,
                         fillOpacity: 0.5
                     }
                 }),
                 new OpenLayers.Rule({
                     filter: new OpenLayers.Filter.Comparison({
-                        type: OpenLayers.Filter.Comparison.GREATER_THAN_OR_EQUAL_TO,
+                        type: OpenLayers.Filter.Comparison.BETWEEN,
                         property: 'number',
-                        value: RULES[dby.by].upper
+                        lowerBoundary: RULES[dby.by].lowest,
+                        upperBoundary: RULES[dby.by].lower
                     }),
                     symbolizer: {
-                        fillColor: upperColor,
+                        fillColor: lowerColor,
                         fillOpacity: 0.5
                     }
                 }),
@@ -782,6 +785,29 @@ function init() {
                         lowerBoundary: RULES[dby.by].lower,
                         upperBoundary: RULES[dby.by].upper
                     })
+                }),
+                new OpenLayers.Rule({
+                    filter: new OpenLayers.Filter.Comparison({
+                        type: OpenLayers.Filter.Comparison.BETWEEN,
+                        property: 'number',
+                        lowerBoundary: RULES[dby.by].upper,
+                        upperBoundary: RULES[dby.by].highest
+                    }),
+                    symbolizer: {
+                        fillColor: upperColor,
+                        fillOpacity: 0.5
+                    }
+                }),
+                new OpenLayers.Rule({
+                    filter: new OpenLayers.Filter.Comparison({
+                        type: OpenLayers.Filter.Comparison.GREATER_THAN_OR_EQUAL_TO,
+                        property: 'number',
+                        value: RULES[dby.by].highest
+                    }),
+                    symbolizer: {
+                        fillColor: highestColor,
+                        fillOpacity: 0.5
+                    }
                 })
             ];
         }

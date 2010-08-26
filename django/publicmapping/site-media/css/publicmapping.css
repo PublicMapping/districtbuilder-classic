@@ -908,10 +908,18 @@ span.popstatus {
 .over {
   background: #ead3a7;
   border: 1px solid #d9c296;
-  }
+}
+.farover {
+  background: #EBB95E;
+  border: 1px solid #D8962B;
+}
 .under {
   background: #a2d5d0;
   border: 1px solid #91c4b9;
+}
+.farunder {
+  background: #CED6D5;
+  border: 1px solid #B4BFBD;
 }
 .target {
   background: #eeeeee;

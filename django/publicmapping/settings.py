@@ -128,3 +128,15 @@ containing data for the base geounits
 BARD_BASEMAP = 'oh_blocks.bardmap'
 """ The R variable of the basemap included in the BARD_BASESHAPE image.  Use to create BARD reports
 """
+POPTARGET_RANGE1 = .1
+""" The POPTARGET RANGE variables are used to determine the class breaks for the district choropleths
+Example: if the target is 100, POPTARGET_RANGE1 is .1 and POPTARGET_RANGE2 is .2, anything between
+90 and 110 is "on target", anything between 80 and 90 or 110 and 120 is "under" or "over", respectively,
+and anything less than 80 or more than 120 is "farunder" or "farover", respectively
+"""
+POPTARGET_RANGE2 = .2
+""" The POPTARGET RANGE variables are used to determine the class breaks for the district choropleths
+Example: if the target is 100, POPTARGET_RANGE1 is .1 and POPTARGET_RANGE2 is .2, anything between
+90 and 110 is "on target", anything between 80 and 90 or 110 and 120 is "under" or "over", respectively,
+and anything less than 80 or more than 120 is "farunder" or "farover", respectively
+"""

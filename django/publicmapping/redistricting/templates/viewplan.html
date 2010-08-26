@@ -22,7 +22,7 @@
                 MAP_LAYERS.push( 'gmu:demo_' + SNAP_LAYERS[i].level + '_' + DEMOGRAPHICS[j].value );
             }
         }
-        var RULES = { {% for rule in rules %}'{{ rule.subject_id }}': {lower:{{ rule.lower }}, upper:{{ rule.upper }} }{% if not forloop.last %},{% endif %}{% endfor %}};
+        var RULES = { {% for rule in rules %}'{{ rule.subject_id }}': {lowest: {{ rule.lowest }}, lower:{{ rule.lower }}, upper:{{ rule.upper }}, highest: {{ rule.highest }} }{% if not forloop.last %},{% endif %}{% endfor %}};
         var MAX_DISTRICTS = {{ max_dists }};
     </script>
     <script type="text/javascript" src="/site-media/jquery/jquery-1.4.2.js"></script>

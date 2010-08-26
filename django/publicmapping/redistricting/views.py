@@ -110,7 +110,11 @@ def commonplan(request, planid):
     for demo in demos:
         layers.append( {'id':demo[0],'text':demo[2],'value':demo[1].lower(), 'isdefault':str(demo[0] == default_demo.id).lower(), 'isdisplayed':str(demo[3]).lower()} )
     for target in targets:
-        rules.append( {'subject_id':target.subject_id,'lower':target.lower,'upper':target.upper} )
+        # The "in there" range
+        range1 = target.lower * settings.POPTARGET_RANGE1  
+        # The "out of there" range
+        range2 = target.lower * settings.POPTARGET_RANGE2
+        rules.append( {'subject_id':target.subject_id,'lowest': target.lower - range2,'lower':target.lower - range1,'upper':target.lower + range1,'highest': target.lower + range2} )
 
     unassigned_id = 0
     if type(plan) != types.DictType:
@@ -552,13 +556,23 @@ def getgeography(request, planid):
             stats['compactness'] = district.get_schwartzberg()
 
             target = Target.objects.get(subject = subject)
-            if characteristic.number < target.lower:
+            
+            # The "in there" range
+            range1 = target.lower * settings.POPTARGET_RANGE1  
+            # The "out of there" range
+            range2 = target.lower * settings.POPTARGET_RANGE2
+            number = int(characteristic.number)
+            if number < (target.lower - range2):
+                css_class = 'farunder'
+            elif number < (target.lower - range1):
                 css_class = 'under'
-            elif characteristic.number > target.upper:
-                css_class = 'over'
-            else:
+            elif number <= (target.lower + range1):
                 css_class = 'target'
-            stats['css_class'] = css_class
+            elif number <= (target.lower + range2):
+                css_class = 'over'
+            elif number > (target.lower + range2):
+                css_class = 'farover'
+            stats['css_class'] = css_class 
 
         district_values.append(stats)
 
