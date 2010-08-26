@@ -7,35 +7,39 @@ publicmapping.chooseplan = function(options) {
         _options = $.extend({
             target: {},
             container: {},
-            callback: function() {},
             autoOpen: false,
             modal: true,
             width: 600,
-            resizable: false
+            resizable: false,
+            close: function(event, ui) {
+                $('#PlanChooser').dialog('destroy').detach();
+            }
         }, options),
         // bunch o variables
        
         _eventType,
-        _nameRequired,
-        _dialog;
+        _nameRequired;
 
     _self.init = function() {
-        _options.container.load('/districtmapping/plan/choose/', function() {
-            setUpTarget(); 
-            setUpEvents(); 
-            _options.callback(); 
-        });
-        
+        _options.target.click(_self.show);
+
         _nameRequired = false;
         
         return _self;
     };
-    var setUpTarget = function() {
-        $('#PlanChooser').dialog(_options);
-        _options.target.click( function() {
+
+    _self.show = function() {
+        _options.container.load('/districtmapping/plan/choose/',function(){
+            setUpTarget(); 
+            setUpEvents(); 
+        
             $('#PlanChooser').dialog('open');
             loadButtons();
         });
+    };
+
+    var setUpTarget = function() {
+        $('#PlanChooser').dialog(_options);
     };
 
 

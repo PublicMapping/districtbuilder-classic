@@ -399,9 +399,6 @@
             autoOpen:false
         });
         var choose = publicmapping.chooseplan({
-            {% if not plan.name %}
-            callback: function() { $('#difplanbtn').click() },
-            {% endif %}
             target: $('#difplanbtn'),
             container: $('#DialogContainer'),
             modal: true
@@ -409,11 +406,8 @@
     {% if plan.name %}
         $('.geography').load('/districtmapping/plan/{{plan.id}}/geography', { demo: 3 });
         $('.demographics').load('/districtmapping/plan/{{plan.id}}/demographics');      
-//        var publish = publishplan({
-//            target: $('#saveplanbtn'),
-//            container: $('#DialogContainer'),
-//            modal: true,
-//        }).init();
+    {% else %}
+        choose.show();
     {% endif %}
         var report = reports({
             reportUrl: '/districtmapping/plan/{{plan.id}}/getreport/',
