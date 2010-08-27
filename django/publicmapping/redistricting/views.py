@@ -286,18 +286,6 @@ def getreport(request, planid):
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
 @login_required
-def publishplan(request, planid):
-    status = { 'success': False, 'message': 'Unspecified Error' }
-    try:
-        plan = Plan.objects.get(pk=planid)
-    except:
-        status['message'] = 'No plan with the given ID exists'
-        return HttpResponse(json.dumps(status),mimetype='application/json')
-    return render_to_response('publishplan.html', {
-        'plan': plan,
-    })
-
-@login_required
 def newdistrict(request, planid):
     """Create a new district.  Optionally, add the given geounits to the 
     district to start.  Returns the new District's name and district_id.
