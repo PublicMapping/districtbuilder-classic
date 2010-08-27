@@ -61,7 +61,7 @@
 <input id="password" name="password" type="password"/>
 <button id="login" type="submit" />Login</button>
           </form>
-<p><a href="#">Forgot your password?</a></p>
+<p><a href="#" onclick="$('#forgotpass').dialog('open');">Forgot your password?</a></p>
 
           </div>
 
@@ -93,7 +93,7 @@
             <table id="registerTable">
                 <tr>
                     <td class="fname">User Name *</td>
-                    <td><input id="newusername" name="newusername" class="field" maxlength="30" /></td>
+                    <td><input id="newusername" name="newusername" class="field" maxlength="30"/></td>
                 </tr>
                 <tr>
                     <td class="fname">Password *</td>
@@ -112,7 +112,7 @@
                 </tr>
                 <tr>
                     <td class="fname">Email Address</td>
-                    <td><input id="email" name="email" class="field" maxlength="75" /></td>
+                    <td><input id="email" name="email" class="field" maxlength="75"/></td>
                 </tr>
                 <tr>
                     <td class="fname">First Name</td>
@@ -142,127 +142,54 @@
             </div>
         </form>
     </div>
+    <div id="forgotpass">
+        <form id="forgotForm" action="/accounts/forgot/" method="POST">
+            <div id="forgotprompt">
+                Enter your username or email address, and we will
+                help you retrieve your password.
+                <p>&nbsp;</p>
+                <table id="forgotTable">
+                    <tr>
+                        <td class="fname">Username</td>
+                        <td><input id="forgotusername" name="forgotusername" class="field" maxlength="30"/></td>
+                    </tr>
+                    <tr>
+                        <td class="fname">Email</td>
+                        <td><input id="forgotemail" name="forgotemail" class="field"/></td>
+                    </tr>
+                </table>
+            </div>
+            <div id="forgotButton">
+                <button id="doRemind">Begin</button>
+            </div>
+
+            <div id="forgothint">
+                <p>Below is your password hint. If this helps you remember
+                your password, you can close this dialog and log in.</p>
+
+                <input id="forgothintbox" name="forgothintbox" class="field"/>
+
+                <p>If you still can't recall your password, click on the
+                'Back' button, and enter your email address, so we can
+                email your password to you.</p>
+
+            </div>
+            <div id="forgotsent">
+                <p>Your password has been emailed to you. You should receive
+                your password in your inbox in the next few minutes.</p>
+            </div>
+            <div id="forgotButton2">
+                <button id="doBack">Back</button>
+                <button id="doClose">Close</button>
+            </div>
+        </form>
+    </div>
 
     <div id="footer">
         <div id="copyright">Copyright &copy; 2010. All Rights Reserved</div>
         <div id="sponsors">Sponsor Logos</div>
     </div>
-   </div>
-    <script type="text/javascript">
-    $(function(){
-        $('#register').dialog({'autoOpen':false,'width':425,'modal':true, resizable: false, draggable:false});
-        $('#doRegister').click(function(evt) {
-            var frm = $('#registerForm'),
-                username = frm.find('#newusername'),
-                newpassword1 = frm.find('#newpassword1'),
-                newpassword2 = frm.find('#newpassword2'),
-                passwordhint = frm.find('#passwordhint'),
-                agree = frm.find('#agree');
-
-            if (username.val() == '') {
-                username.removeClass('field');
-                username.addClass('error');
-                return false;
-            }
-            else {
-                username.removeClass('error');
-                username.addClass('field');
-            }
-
-            if (newpassword1.val() == '' ||
-                newpassword1.val() != newpassword2.val()) {
-                newpassword1.removeClass('field');
-                newpassword1.addClass('error');
-                newpassword2.removeClass('field');
-                newpassword2.addClass('error');
-                return false;
-            }
-            else {
-                newpassword1.removeClass('error');
-                newpassword1.addClass('field');
-                newpassword2.removeClass('error');
-                newpassword2.addClass('field');
-            }
-
-            if (passwordhint.val() == '') {
-                passwordhint.removeClass('field');
-                passwordhint.addClass('error');
-                return false;
-            }
-            else {
-                passwordhint.addClass('field');
-                passwordhint.removeClass('error');
-            }
-
-            if (!agree[0].checked) {
-                $('#agreelabel').addClass('required');
-                return false;
-            }
-            
-            jQuery.ajax({
-                context:frm[0],
-                data: { 
-                    newusername:$('#newusername').val(),
-                    newpassword1:$('#newpassword1').val(),
-                    newpassword2:$('#newpassword2').val(),
-                    email:$('#email').val(),
-                    passwordhint:$('#passwordhint').val(),
-                    firstname:$('#firstname').val(),
-                    lastname:$('#lastname').val(),
-                    organization:$('#organization').val()
-                },
-                dataType:'json',
-                type:'POST',
-                url:frm[0].action,
-                success:function(data,textStatus,xhr){
-                    if (data.success) {
-                        window.location.href = data.redirect;
-                        return;
-                    } else if (data.message == 'name exists') {
-                        var newusername = $('#newusername');
-                        newusername.removeClass('field');
-                        newusername.addClass('error');
-                    } else if (data.message == 'email exists') {
-                        var email = $('#email');
-                        email.removeClass('field');
-                        email.addClass('error');
-                    } else {
-                        $('#register').append($('<div class="error">Sorry, registration is not available at this time.  Please try again later</div>'));
-                    }
-                },
-                error:function(xhr,textStatus,error){
-                    $('#doRegister').attr('disabled',true);
-                }
-            });
-
-            return false;
-        });
-        $('#doAnonymous').click(function(evt) {
-            var frm = $('#anonymousForm')[0];
-            jQuery.ajax({
-                context:frm,
-                data: {
-                    newusername:'anonymous',
-                    newpassword1:'anonymous',
-                    email:''
-                },
-                dataType:'json',
-                type:'POST',
-                url:frm.action,
-                success:function(data,textStatus,xhr){
-                    if (data.success) {
-                        window.location.href = data.redirect;
-                        return;
-                    }
-                },
-                error:function(xhr,textStatus,error){
-                    $('#doAnonymous').attr('disabled',true);
-                }
-            });
-
-            return false;
-        });
-    });
-    </script>
+    </div>
+    <script type="text/javascript" src="/site-media/register.js"></script>
   </body>
 </html>

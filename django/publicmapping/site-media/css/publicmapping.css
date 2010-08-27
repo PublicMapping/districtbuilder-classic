@@ -227,18 +227,24 @@ div#register {
   color: #6a6a6a;
   font-weight: bold;
 }
-
-form#registerForm input.field, form#registerForm input.error {
-      padding: 0 0 0 8px;
-  width: 230px;
-  height: 30px;
-  border: 1px solid #ccc;
-  margin: 0 0 10px 15px;
-  -moz-border-radius: 8px;
-  -webkit-border-radius: 8px
-  border-radius: 8px;
+div#forgotpass {
+    display: none;
+    font-size: 14px;
+    color: #6a6a6a;
+    font-weight: bold;
 }
-form#registerForm input.error {
+form#registerForm input.field, form#registerForm input.error, 
+form#forgotForm input.field, form#forgotForm input.error {
+    padding: 0 0 0 8px;
+    width: 230px;
+    height: 30px;
+    border: 1px solid #ccc;
+    margin: 0 0 10px 15px;
+    -moz-border-radius: 8px;
+    -webkit-border-radius: 8px
+    border-radius: 8px;
+}
+form#registerForm input.error, form#forgotForm input.error {
     border: solid 1px #ff0000;
 }
 table#registerTable {
@@ -259,6 +265,16 @@ label.required {
 div#requiredNote {
     font-size: 0.75em;
     text-align: left;
+}
+div#forgothint, div#forgotButton2, div#forgotsent {
+    display: none;
+}
+form#forgotForm input#forgothintbox {
+    margin: 10px;
+    width: 360px;
+}
+div#forgotButton, div#forgotButton2 {
+    margin-top: 15px;
 }
 div#footer {
 clear: both;
