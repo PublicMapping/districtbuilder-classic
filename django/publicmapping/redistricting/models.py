@@ -578,6 +578,20 @@ class ComputedCharacteristic(models.Model):
     class Meta:
         ordering = ['subject']
 
+class Profile(models.Model):
+    user = models.OneToOneField(User)
+    organization = models.CharField(max_length=256)
+    pass_hint = models.CharField(max_length=256)
+
+def update_profile(sender, **kwargs):
+    created = kwargs['created']
+    user = kwargs['instance']
+    if created:
+        profile = Profile(user=user, organization='', pass_hint='')
+        profile.save()
+
+post_save.connect(update_profile, sender=User, dispatch_uid="publicmapping.redistricting.User")
+
 #def collect_geom(sender, **kwargs):
 #    kwargs['instance'].geom = kwargs['instance'].geounits.collect()
 
