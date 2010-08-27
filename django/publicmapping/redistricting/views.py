@@ -10,36 +10,11 @@ from django.contrib.gis.gdal.libgdal import lgdal
 from django.contrib import humanize
 from django import forms
 from django.utils import simplejson as json
-from django.views.decorators.cache import cache_page
+from django.views.decorators.cache import cache_control
 from rpy2.robjects import *
 from publicmapping import settings
 from publicmapping.redistricting.models import *
 import random, string, types, copy, time, threading
-
-#"""The view for a plan. This is a data endpoint, and will be used
-#to return the geometries of plans as they are dynamically constructed."""
-#@login_required
-#def plan(request, planid):
-#    status = { 'success': False, 'message': 'Unspecified Error' }
-#    if request.method == 'POST':
-#        status = saveplan(planid)
-#    return HttpResponse(json.dumps(status),mimetype='application/json')
-
-#def saveplan(planid):
-#    """This is a private method called by the initial plan method,
-#    when a plan is POSTed restfully to the endpoint.
-#    """
-#    status = { 'success': False }
-#    plan = Plan.objects.get(pk=planid)
-#    try:
-#        numdistricts = plan.update_stats(True)
-#        status['success'] = True
-#        status['message'] = "Saved plan '%s'; %d districts updated." % (plan.name, numdistricts)
-#    except:
-#        status['message'] = "Couldn't update plan stats."
-#
-#    return status
-
 
 @login_required
 def copyplan(request, planid):
@@ -413,6 +388,7 @@ def addtodistrict(request, planid, districtid):
 
 
 @login_required
+@cache_control(no_cache=True)
 def chooseplan(request):
     if request.method == "POST":
         return HttpResponse("looking for the requested plan")
@@ -431,7 +407,7 @@ def chooseplan(request):
         })
 
 @login_required
-@cache_page(3600)
+@cache_control(private=True)
 def simple_district_versioned(request,planid):
     status = {'success':False,'type':'FeatureCollection'}
     try:
