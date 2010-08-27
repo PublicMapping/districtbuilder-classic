@@ -1,4 +1,12 @@
 #!/usr/bin/python
+#
+#   This file is part of the Public Mapping Project
+#   http://sourceforge.net/projects/publicmapping/
+#
+#   Purpose:
+#       This file is added automatically by the Django administrative
+#       tools.  Do not modify.
+#
 from django.core.management import execute_manager
 try:
     import settings # Assumed to be in the same directory.
