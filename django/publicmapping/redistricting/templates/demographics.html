@@ -28,7 +28,7 @@
         <tbody>
             {% for district in district_values %}
             <tr class="{% cycle 'odd' 'even' %} inforow_{{ district.district_id }}">
-                <td class="celldistrictname cell1">{{ district.name }}</td>
+                <td class="celldistrictname cell1">{{ district.name|safe }}</td>
                 {% for characteristic in district.characteristics %}
                 <td class="cellvalue {% cycle 'cell2' 'cell3' 'cell4'%}">
                     {{ characteristic.value|intcomma }}

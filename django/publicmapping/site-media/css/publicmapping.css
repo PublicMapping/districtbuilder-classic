@@ -906,11 +906,6 @@ div.plantable .error {
   color:#333; 
   padding: 8px;
 }
-div.demographics div.plantable .cell2,
-div.demographics div.plantable .cell3,
-div.demographics div.plantable .cell4 {
-    text-align:right;
-}
 span.popstatus { 
   -moz-border-radius:2px;
   -webkit-border-radius:2px;

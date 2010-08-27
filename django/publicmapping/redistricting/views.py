@@ -454,7 +454,7 @@ def getdemographics(request, planid):
     for district in districts:
         dist_name = district.name
         if dist_name == "Unassigned":
-            dist_name = "U"
+            dist_name = '&#216;' 
         elif not district.geom:
             # skip any districts with null geom that are not the special
             # 'Unassigned' district
@@ -508,7 +508,7 @@ def getgeography(request, planid):
     for district in districts:
         dist_name = district.name
         if dist_name == "Unassigned":
-            dist_name = "U"
+            dist_name = '&#216;'
         elif not district.geom:
             # skip any districts with null geom that are not the special
             # 'Unassigned' district

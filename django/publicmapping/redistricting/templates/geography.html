@@ -29,7 +29,7 @@
         <tbody>
             {% for stat in district_values %}
             <tr class="{% cycle 'odd' 'even' %} inforow_{{ stat.district_id }}">
-                <td class="celldistrictname cell1">{{ stat.name}}</td>
+                <td class="celldistrictname cell1">{{ stat.name|safe }}</td>
                 <td class="celldemo cell2">
                     <span class="popstatus {{ stat.css_class }}"> 
                         {{ stat.demo|intcomma }}
