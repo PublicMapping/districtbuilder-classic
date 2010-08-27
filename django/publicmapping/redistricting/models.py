@@ -1,8 +1,39 @@
+"""
+Define the models used by the redistricting app.
+
+The classes in redistricting.models define the data models used in the 
+application. Each class relates to one table in the database; foreign key
+fields may define a second, intermediate table to map the records to one
+another.
+
+This file is part of The Public Mapping Project
+http://sourceforge.net/projects/publicmapping/
+
+License:
+    Copyright 2010 Micah Altman, Michael McDonald
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+Author: 
+    David Zwarg, Andrew Jennings
+"""
+
 from django.contrib.gis.db import models
 from django.contrib.gis.geos import MultiPolygon,GEOSGeometry,GEOSException
 from django.contrib.auth.models import User
 from django.db.models import Sum, Max, Q
 from django.db.models.signals import pre_save, post_save
+from django.db import connection
 from django.forms import ModelForm
 from django.conf import settings
 from django.utils import simplejson as json
@@ -11,43 +42,130 @@ from math import sqrt, pi
 from copy import copy
 
 class Subject(models.Model):
+    """
+    A classification of a set of Characteristics.
+
+    A Subject classifies theC haracteristics of a Geounit. Or, each Geounit
+    has one Characteristic per Subject.
+
+    If you think about it in GIS terms: 
+        a Geounit is a Feature,
+        a Subject is an Attribute on a Geounit, and
+        a Characteristic is a Data Value for a Subject.
+    """
+
+    # The name of the subject (POPTOT)
     name = models.CharField(max_length=50)
+
+    # The display name of the subject (Total Population)
     display = models.CharField(max_length=200, blank=True)
+
+    # A short display name of the subject (Tot. Pop.)
     short_display = models.CharField(max_length = 25, blank=True)
+
+    # A description of this subject
     description = models.CharField(max_length= 500, blank=True)
+
+    # A flag that indicates if this subject should be displayed.
     is_displayed = models.BooleanField(default=True)
+
+    # The position that this subject should be in, relative to all other
+    # Subjects, when viewing the subjects in a list.
     sort_key = models.PositiveIntegerField(default=1)
+
+    # The way this Subject's values should be represented.
     format_string = models.CharField(max_length=50, blank=True)
 
     class Meta:
+        """
+        Additional information about the Subject model.
+        """
+
+        # The default method of sorting Subjects should be by 'sort_key'
         ordering = ['sort_key']
 
     def __unicode__(self):
+        """
+        Represent the Subject as a unicode string. This is the Geounit's 
+        display name.
+        """
         return self.display
 
 class Geolevel(models.Model):
+    """
+    A geographic classification for Geounits.
+
+    For example, a Geolevel is the concept of 'Counties', where each 
+    Geounit is an instance of a county.  There are many Geounits at a
+    Geolevel.
+    """
+
+    # The name of the geolevel
     name = models.CharField(max_length = 50)
 
     def __unicode__(self):
+        """
+        Represent the Geolevel as a unicode string. This is the Geolevel's 
+        name.
+        """
         return self.name
 
 class Geounit(models.Model):
+    """
+    A discrete areal unit.
+
+    A Geounit represents an area at a Geolevel. There are many Geounits at
+    a Geolevel. If 'Counties' was a Geolevel, 'Adams County' would be a
+    Geounit at that Geolevel.
+    """
+
+    # The name of the geounit. If a geounit doesn't have a name (in the
+    # instance of a census tract or block), this can be the ID or FIPS code.
     name = models.CharField(max_length=200)
+
+    # The full geometry of the geounit (high detail).
     geom = models.MultiPolygonField(srid=3785)
+
+    # The lite geometry of the geounit (generated from geom via simplify).
     simple = models.MultiPolygonField(srid=3785)
+
+    # The centroid of the geometry (generated from geom via centroid).
     center = models.PointField(srid=3785)
+
+    # The geographic level of this Geounit
     geolevel = models.ForeignKey(Geolevel)
+
+    # Manage the instances of this class with a geographically aware manager
     objects = models.GeoManager()
 
     @staticmethod
     def get_base_geounits(geounit_ids, geolevel):
-        """Get the geounits at the base geolevel that comprise the
-        geometry described by the list of geounit_ids. This means
-        that the geounit_ids for blocks are returned if a list of
-        county ids are passed in along with the county geolevel.
+        """Get the list of geounits at the base geolevel inside the 
+        geometry of geounit_ids.
+        
+        This method performs a spatial query to find all the small
+        Geounits that are contained within the combined extend of the
+        Geounits that are in the list of geounit_ids.
+        
+        The spatial query unionizes the geometry of the geounit_ids,
+        simplifies that geometry, then returns all geounits at the base
+        geolevel whose centroid falls within the unionized geometry.
+
+        The performance of this method is directly related to the complexity
+        of the geometry of the Geounits. This method will perform the best
+        on simplified geometry, or geometries with fewer vertices.
+
+        Parameters:
+            geounit_ids -- A list of Geounit IDs. Please note that these 
+            must be int datatypes, and not str.
+            geolevel -- The ID of the Geolevel that contains geounit_ids
+
+        Returns:
+            A list of Geounit ids.
         """
-        from django.db import connection
         cursor = connection.cursor()
+
+        # craft a custom sql query to get the IDs of the geounits
         cursor.execute('SELECT id from redistricting_geounit where geolevel_id = %s and St_within(center, (select st_simplify(st_union(geom), 10) from redistricting_geounit where geolevel_id = %s and id in %s))', [int(settings.BASE_GEOLEVEL), int(geolevel), geounit_ids])
         results = []
         ids = cursor.fetchall()
@@ -57,8 +175,28 @@ class Geounit(models.Model):
 
     @staticmethod
     def get_base_geounits_within(geom):
-        from django.db import connection
+        """
+        Get the  list of geounits at the base geolevel inside a geometry.
+
+        This method performs a spatial query to find all the small
+        Geounits that are contained within the geometry provided.
+
+        The spatial query returns all Geounits at the base Geolevel whose
+        centroid falls within the geometry.
+
+        The performance of this method is directly related to the complexity
+        of the geometry of the Geounits. This method will perform the best
+        on simplified geometry, or geometries with fewer vertices.
+
+        Parameters:
+            geom -- The GEOSGeometry that describe the limits for the base 
+            Geounits.
+
+        Returns:
+            A list of Geounit ids.
+        """
         cursor = connection.cursor()
+        # craft a custom sql query to get the IDs of the geounits
         cursor.execute("select id from redistricting_geounit where geolevel_id = %s and st_within(center, geomfromewkt(%s))",[settings.BASE_GEOLEVEL, str(geom.ewkt)])
         results = []
         ids = cursor.fetchall()
@@ -68,21 +206,37 @@ class Geounit(models.Model):
 
     @staticmethod
     def get_mixed_geounits(geounit_ids, geolevel, boundary, inside):
-        """Get the geounit ids that are inside or outside of the boundary, 
-        starting at the highest geolevel, and drilling down to get the 
-        edge cases. These geounits comprise the incremental change to 
-        the boundary.
+        """
+        Spatially search for the largest Geounits inside or outside a 
+        boundary.
+
+        Search for Geounits in a multipass search. The searching method
+        gets Geounits inside a boundary at a Geolevel, then determines
+        if there is a geographic remainder, then repeats the search at
+        a smaller Geolevel, until the base Geolevel is reached.
+
+        Parameters:
+            geounit_ids -- A list of Geounit IDs. Please note that these
+                must be int datatypes, and not str.
+            geolevel -- The ID of the Geolevel that contains geounit_ids
+            boundary -- The GEOSGeometry that defines the edge of the
+                spatial search area.
+            inside -- True or False to search inside or outside of the 
+                boundary, respectively.
+
+        Returns:
+            A list of Geounit objects, with only the ID and Geometry
+            fields populated.
         """
 
         if not boundary and inside:
             # there are 0 geounits inside a non-existant boundary
             return []
 
-        from django.db import connection
 
+        # Make sure the geolevel is a number
         geolevel = int(geolevel)
         levels = Geolevel.objects.all().values_list('id',flat=True).order_by('id')
-        current = None
         selection = None
         units = []
         for level in levels:
@@ -90,25 +244,35 @@ class Geounit(models.Model):
             if geolevel == level:
                 guFilter = Q(id__in=geounit_ids)
 
+                # Get the area defined by the union of the geounits
                 selection = Geounit.objects.filter(guFilter).unionagg()
-                
+               
+                # Begin crafting the query to get the id and geom
                 query = "SELECT id,st_ashexewkb(geom,'NDR') FROM redistricting_geounit WHERE id IN (%s) AND " % (','.join(geounit_ids))
 
+                # create a boundary if one doesn't exist
                 if not boundary:
                     boundary = empty_geom(selection.srid)
                 simple = boundary.simplify(tolerance=100.0,preserve_topology=True)
 
                 if inside:
+                    # Searching inside the boundary
                     if level != settings.BASE_GEOLEVEL:
+                        # Search by geometry
                         query += "st_within(geom, geomfromewkt('%s'))" % simple.ewkt
                     else:
+                        # Search by centroid
                         query += "st_intersects(center, geomfromewkt('%s'))" % simple.ewkt
                 else:
+                    # Searching outside the boundary
                     if level != settings.BASE_GEOLEVEL:
+                        # Search by geometry
                         query += "NOT st_intersects(geom, geomfromewkt('%s'))" % simple.ewkt
                     else:
+                        # Search by centroid
                         query += "NOT st_intersects(center, geomfromewkt('%s'))" % simple.ewkt
 
+                # Execute our custom SQL
                 cursor = connection.cursor()
                 cursor.execute(query)
                 rows = cursor.fetchall()
@@ -116,6 +280,7 @@ class Geounit(models.Model):
                 for row in rows:
                     count += 1
                     geom = GEOSGeometry(row[1])
+                    # Create a geounit, and add it to the list of units
                     units.append(Geounit(id=row[0],geom=geom))
 
                 # if we're at the base level, and haven't collected any
@@ -129,7 +294,7 @@ class Geounit(models.Model):
                 # union the selected geometries
                 union = None
                 for selected in units:
-                    # this always rebuilts the current extent of all the
+                    # this always rebuilds the current extent of all the
                     # selected geounits
                     if union is None:
                         union = selected.geom
@@ -167,6 +332,9 @@ class Geounit(models.Model):
                         # it is not clear what this means, or why it happens
                         remainder = empty_geom(boundary.srid)
 
+                # Check if the remainder is a geometry collection. If it is,
+                # munge it into a multi-polygon so that we can use it in our
+                # custom sql query
                 if remainder.geom_type == 'GeometryCollection' and not remainder.empty:
                     srid = remainder.srid
                     union = None
@@ -190,16 +358,23 @@ class Geounit(models.Model):
                 elif remainder.empty or (remainder.geom_type != 'MultiPolygon' and remainder.geom_type != 'Polygon'):
                     remainder = empty_geom(boundary.srid)
 
+                # Check if the remainder is empty -- it may have been 
+                # converted, or errored out above, in which case we just
+                # have to move on.
                 if not remainder.empty:
                     query = "SELECT id,st_ashexewkb(geom,'NDR') FROM redistricting_geounit WHERE geolevel_id = %d AND " % level
 
+                    # Simplify the remainder before performing the query
                     simple = remainder.simplify(tolerance=100.0, preserve_topology=True)
 
                     if level == settings.BASE_GEOLEVEL:
+                        # Query by center
                         query += "st_intersects(center, geomfromewkt('%s'))" % simple.ewkt
                     else:
+                        # Query by geom
                         query += "st_within(geom, geomfromewkt('%s'))" % simple.ewkt
 
+                    # Execute our custom SQL
                     cursor = connection.cursor()
                     cursor.execute(query)
                     rows = cursor.fetchall()
@@ -208,12 +383,14 @@ class Geounit(models.Model):
                         count += 1
                         units.append(Geounit(id=row[0],geom=GEOSGeometry(row[1])))
 
+        # Send back the collected Geounits
         return units
 
-
-        
-
     def __unicode__(self):
+        """
+        Represent the Geounit as a unicode string. This is the Geounit's 
+        name.
+        """
         return self.name
 
 class Characteristic(models.Model):
