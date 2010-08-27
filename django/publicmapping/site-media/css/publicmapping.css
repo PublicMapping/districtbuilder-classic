@@ -190,8 +190,10 @@ div#login input {
   -moz-border-radius: 8px;
   -webkit-border-radius: 8px
   border-radius: 8px;
-
-  }
+}
+div#login input.error {
+    border: 1px solid #ff0000;
+}
 
 div.rightlink {
     text-align: right;
