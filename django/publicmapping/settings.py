@@ -22,6 +22,11 @@ DATABASE_PASSWORD = config.get('database', 'DATABASE_PASSWORD')   # Not used wit
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
 DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
 
+MAIL_SERVER = config.get('mailer', 'SERVER')
+MAIL_PORT = config.get('mailer', 'PORT')
+MAIL_USERNAME = config.get('mailer', 'USERNAME')
+MAIL_PASSWORD = config.get('mailer', 'PASSWORD')
+
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
@@ -78,6 +83,8 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.gzip.GZipMiddleware',
     'django.middleware.cache.FetchFromCacheMiddleware',
 )
+
+AUTH_PROFILE_MODULE = 'redistricting.Profile'
 
 ROOT_URLCONF = 'publicmapping.urls'
 
