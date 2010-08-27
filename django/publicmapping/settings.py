@@ -94,19 +94,19 @@ TEMPLATE_LOADERS = (
 
 # configure cache, according to guidelines for configuring django's
 # cache framework: http://docs.djangoproject.com/en/1.0/topics/cache
-CACHE_BACKEND = 'locmem:///?timeout=3600&max_entries=400'
-CACHE_MIDDLEWARE_SECONDS = 3600
-CACHE_MIDDLEWARE_KEY_PREFIX = ''
+#CACHE_BACKEND = 'locmem:///?timeout=3600&max_entries=400'
+#CACHE_MIDDLEWARE_SECONDS = 3600
+#CACHE_MIDDLEWARE_KEY_PREFIX = ''
 
 # Middleware classes. Please note that cache middleware MUST be placed in
 # the first and last positions of the middleware classes.  Order matters.
 MIDDLEWARE_CLASSES = (
-    'django.middleware.cache.UpdateCacheMiddleware',
+#    'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.gzip.GZipMiddleware',
-    'django.middleware.cache.FetchFromCacheMiddleware',
+#    'django.middleware.cache.FetchFromCacheMiddleware',
 )
 
 AUTH_PROFILE_MODULE = 'redistricting.Profile'
