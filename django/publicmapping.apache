@@ -24,7 +24,7 @@
 #       addition, the static media for the django web application is
 #       served up through a set of aliased paths.
 #  
-#   Author: David Zwarg
+#   Author: David Zwarg, Andrew Jennings
 #
 <VirtualHost *:80>
 	ServerAdmin AzaveaDev@azavea.com

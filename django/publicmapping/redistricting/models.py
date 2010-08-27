@@ -394,24 +394,61 @@ class Geounit(models.Model):
         return self.name
 
 class Characteristic(models.Model):
+    """
+    A data value for a Geounit's Subject.
+
+    A Characteristic is the numerical data value measured for a Geounit for
+    a specific Subject. For example, this could be 1,200 for the Total 
+    Population of Ada County.
+    """
+
+    # The subject that this value relates to
     subject = models.ForeignKey(Subject)
+    # The Geounit that this value relates to
     geounit = models.ForeignKey(Geounit)
+    # The value as a raw decimal number
     number = models.DecimalField(max_digits=12,decimal_places=4)
+    # The value as a percentage
     percentage = models.DecimalField(max_digits=6,decimal_places=6, null=True, blank=True)
-    objects = models.GeoManager()
 
     def __unicode__(self):
+        """
+        Represent the Characteristic as a unicode string. The 
+        Characteristic string is in the form of "Subject for Geounit: 
+        Number"
+        """
         return u'%s for %s: %s' % (self.subject, self.geounit, self.number)
 
 class Target(models.Model):
+    """
+    A set of data values that bound the ComputedCharacteristics of a 
+    District.
+
+    A Target contains the upper and lower bounds for a Subject. When 
+    editing districts, these targets are used by the symbolizers to 
+    represent districts as over or under the target range.
+    """
+
+    # The subject that this target relates to
     subject = models.ForeignKey(Subject)
+
+    # The lower data value
     lower = models.PositiveIntegerField()
+
+    # The upper data value
     upper = models.PositiveIntegerField()
 
     class Meta:
+        """
+        Additional information about the Target model.
+        """
         ordering = ['subject']
 
     def __unicode__(self):
+        """
+        Represent the Target as a unicode string. The Target string is
+        in the form of "Subject : Lower - Upper"
+        """
         return u'%s : %s - %s' % (self.subject, self.lower, self.upper)
 
 class Plan(models.Model):
@@ -426,7 +463,6 @@ class Plan(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     edited = models.DateTimeField(auto_now=True)
     owner = models.ForeignKey(User)
-    objects = models.GeoManager()
 
     def __unicode__(self):
         return self.name
@@ -627,43 +663,6 @@ class District(models.Model):
     def __unicode__(self):
         return self.name
 
-#    def update_stats(self,force=False):
-#        """Update the stats for this district, and save them in the
-#        ComputedCharacteristic table. This method aggregates the statistics
-#        for all the geounits in the mapping table for this district.
-#        """
-#        all_subjects = Subject.objects.all().order_by('name').reverse()
-#        changed = False
-#        for subject in all_subjects:
-#            computed = self.computedcharacteristic_set.filter(subject=subject).count()
-#            if computed > 0 and not force:
-#                continue
-#
-#            if force:
-#                my_geounits = Geounit.get_base_geounits_within(self.geom)
-#                DistrictGeounitMapping.objects.filter(geounit__in=my_geounits,plan=self.plan).update(district=self)
-#            else:
-#                my_geounits = DistrictGeounitMapping.objects.filter(district=self).values_list('geounit', flat=True)
-#
-#            aggregate = Characteristic.objects.filter(geounit__in=my_geounits, subject__exact = subject).aggregate(Sum('number'))['number__sum']
-#
-#            if aggregate:
-#                computed = None
-#                if force:
-#                    computed = ComputedCharacteristic.objects.filter(subject=subject, district=self)
-#                    if computed.count() > 0:
-#                        computed.update(number=aggregate)
-#                        changed = True
-#                    else:
-#                        computed = None
-#
-#                if computed is None:
-#                    computed = ComputedCharacteristic(subject = subject, district = self, number = aggregate)
-#                    computed.save()
-#                    changed = True
-#
-#        return changed
-
     def delta_stats(self,geounits,combine):
         """Update the stats for this district incrementally. This method
         iterates over all the computed characteristics and adds or removes
@@ -735,22 +734,11 @@ class District(models.Model):
         
 
 
-class DistrictGeounitMapping(models.Model):
-    district = models.ForeignKey(District)
-    geounit = models.ForeignKey(Geounit)
-    plan = models.ForeignKey(Plan)
-    objects = models.GeoManager()
-
-    def __unicode__(self):
-        return "Plan '%s', district '%s': '%s'" % (self.plan.name,self.district.name, self.geounit.name)
-
-
 class ComputedCharacteristic(models.Model):
     subject = models.ForeignKey(Subject)
     district = models.ForeignKey(District)
     number = models.DecimalField(max_digits=12,decimal_places=4)
     percentage = models.DecimalField(max_digits=6,decimal_places=6, null=True, blank=True)
-    objects = models.GeoManager()
 
     class Meta:
         ordering = ['subject']
