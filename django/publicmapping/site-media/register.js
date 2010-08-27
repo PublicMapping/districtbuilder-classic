@@ -122,8 +122,7 @@ $(function(){
 
     $('#doRemind').click(function(evt){
         var frm = $('#forgotForm')[0];
-        $('#forgotusername').removeClass('error');
-        $('#forgotemail').removeClass('error');
+        $('#forgotusername, #forgotemail').removeClass('error');
 
         $.ajax({
             context:frm,
@@ -137,17 +136,13 @@ $(function(){
             success: function(data,textStatus,xhr){
                 if (data.success) {
                     if (data.mode == 'hinting') {
-                        $('#forgotprompt').css('display','none');
-                        $('#forgotButton').css('display','none');
-                        $('#forgothint').css('display','block');
-                        $('#forgotButton2').css('display','block');
+                        $('#forgotprompt, #forgotButton').css('display','none');
+                        $('#forgothint, #forgotButton2').css('display','block');
                         $('#forgothintbox').val( data.hint );
                     }
                     else if (data.mode == 'sending') {
-                        $('#forgotprompt').css('display','none');
-                        $('#forgotButton').css('display','none');
-                        $('#forgotsent').css('display','block');
-                        $('#forgotButton2').css('display','block');
+                        $('#forgotprompt, #forgotButton').css('display','none');
+                        $('#forgotsent, #forgotButton2').css('display','block');
                     }
                 }
                 else if (data.field) {
@@ -168,21 +163,19 @@ $(function(){
     });
 
     $('#doBack').click(function(){
-        $('#forgotprompt').css('display','block');
-        $('#forgotButton').css('display','block');
-        $('#forgothint').css('display','none');
-        $('#forgotsent').css('display','none');
-        $('#forgotButton2').css('display','none');
+        $('#forgotprompt, #forgotButton').css('display','block');
+        $('#forgothint, #forgotsent, #forgotButton2').css('display','none');
         return false;
     });
 
     $('#doClose').click(function(){
         $('#forgotpass').dialog('close');
-        $('#forgotprompt').css('display','block');
-        $('#forgotButton').css('display','block');
-        $('#forgothint').css('display','none');
-        $('#forgotsent').css('display','none');
-        $('#forgotButton2').css('display','none');
+        $('#forgotprompt, #forgotButton').css('display','block');
+        $('#forgothint, #forgotsent, #forgotButton2').css('display','none');
         return false;
     });
+
+    if (new RegExp('.*/accounts/login/$').test(window.location.href)) {
+        $('#username, #password').addClass('error');
+    }
 });
