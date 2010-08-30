@@ -69,7 +69,7 @@ def import_shape(config):
                 my_geom = feat.geom.geos
             elif feat.geom_type == 'Polygon' :
                 my_geom = MultiPolygon(feat.geom.geos)
-            simple = my_geom.simplify(tolerance=10.0,preserve_topology=True)
+            simple = my_geom.simplify(tolerance=settings.SIMPLE_TOLERANCE,preserve_topology=True)
             if simple.geom_type != 'MultiPolygon':
                 simple = MultiPolygon(simple)
             g = Geounit(geom = my_geom, name = feat.get(config['name_field']), geolevel = level, simple = simple)
@@ -106,7 +106,7 @@ def add_unassigned_to_template():
         p = Plan.objects.get(pk=1)
         geom = Geounit.objects.filter(geolevel = 1).aggregate(Union('geom'))
         geom = MultiPolygon(geom["geom__union"])
-        simple = geom.simplify(tolerance=10.0,preserve_topology=True)
+        simple = geom.simplify(tolerance=settings.SIMPLE_TOLERANCE,preserve_topology=True)
         simple = MultiPolygon(simple)
         district = District(name="Unassigned", district_id = settings.MAX_DISTRICTS + 1, plan = p, geom = geom, simple = simple)
         district.save()

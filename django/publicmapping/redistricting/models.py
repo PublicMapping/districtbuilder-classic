@@ -30,7 +30,7 @@ Author:
 
 from django.core.exceptions import ValidationError
 from django.contrib.gis.db import models
-from django.contrib.gis.geos import MultiPolygon,GEOSGeometry,GEOSException
+from django.contrib.gis.geos import MultiPolygon,GEOSGeometry,GEOSException,GeometryCollection
 from django.contrib.auth.models import User
 from django.db.models import Sum, Max, Q
 from django.db.models.signals import pre_save, post_save
@@ -254,7 +254,7 @@ class Geounit(models.Model):
                 # create a boundary if one doesn't exist
                 if not boundary:
                     boundary = empty_geom(selection.srid)
-                simple = boundary.simplify(tolerance=100.0,preserve_topology=True)
+                simple = boundary.simplify(tolerance=settings.SIMPLE_TOLERANCE,preserve_topology=True)
 
                 if inside:
                     # Searching inside the boundary
@@ -366,7 +366,7 @@ class Geounit(models.Model):
                     query = "SELECT id,st_ashexewkb(geom,'NDR') FROM redistricting_geounit WHERE geolevel_id = %d AND " % level
 
                     # Simplify the remainder before performing the query
-                    simple = remainder.simplify(tolerance=100.0, preserve_topology=True)
+                    simple = remainder.simplify(tolerance=settings.SIMPLE_TOLERANCE, preserve_topology=True)
 
                     if level == settings.BASE_GEOLEVEL:
                         # Query by center
@@ -572,7 +572,7 @@ class Plan(models.Model):
                 # The district geometry exists, so save the updated 
                 # versions of the geom and simple fields
                 district.geom = geom
-                simple = geom.simplify(tolerance=100.0,preserve_topology=True)
+                simple = geom.simplify(tolerance=settings.SIMPLE_TOLERANCE,preserve_topology=True)
                 district.simple = enforce_multi(simple)
 
             # Clone the district to a new version, with a different shape
@@ -610,7 +610,7 @@ class Plan(models.Model):
         # If the target geometry exists (no errors from above)
         if target.geom:
             # Simplify the district geometry.
-            simple = target.geom.simplify(tolerance=100.0,preserve_topology=True)
+            simple = target.geom.simplify(tolerance=settings.SIMPLE_TOLERANCE,preserve_topology=True)
             target.simple = enforce_multi(simple)
         else:
             # The simplified target geometry is empty, too.

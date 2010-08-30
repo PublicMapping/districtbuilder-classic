@@ -195,3 +195,9 @@ MAIL_PASSWORD = config.get('mailer', 'PASSWORD')
 # Configure the location of the SLD files. These are used by the application
 # to generate legend information regarding map choropleths.
 SLD_ROOT = '/projects/publicmapping/trunk/sld/'
+
+# Simplification tolerance. This determines just how much detail should be
+# included in the 'simple' versions of the geometries in the District
+# and Geounit models. The value is the amount, in spatial units, that the
+# geometries will be simplified.
+SIMPLE_TOLERANCE = 100.0

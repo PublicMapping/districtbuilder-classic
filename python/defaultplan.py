@@ -30,7 +30,7 @@ for feature in layer:
     geom = feature.geom.geos
     if geom.geom_type != 'MultiPolygon':
         geom = MultiPolygon(geom)
-    simple = geom.simplify(tolerance=100.0,preserve_topology=True)
+    simple = geom.simplify(tolerance=settings.SIMPLE_TOLERANCE,preserve_topology=True)
     if simple.geom_type != 'MultiPolygon':
         simple = MultiPolygon(simple)
 
