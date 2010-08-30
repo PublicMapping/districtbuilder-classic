@@ -33,10 +33,10 @@ from django.contrib.gis.gdal import *
 from django.contrib.gis.geos import *
 from django.contrib.gis.db.models import Union 
 from django.contrib.auth.models import User
-import settings
-from redistricting.models import *
 from django.core.management.base import BaseCommand, CommandError
+from django.conf import settings
 from optparse import make_option
+from redistricting.models import *
 
 class Command(BaseCommand):
     """
@@ -45,8 +45,8 @@ class Command(BaseCommand):
     args = '<layer ...>'
     help = 'Imports specific layers into the redistricting django app.'
     option_list = BaseCommand.option_list + (
-        make_option('--basic', dest='create_basic', action='store_true', default=False, 
-            help='Create an initial template with MAX_DISTRICTS empty districts.'),
+        make_option('--basic', dest='basic_template', default='', 
+            help='Create an initial template with this name. It will have MAX_DISTRICTS empty districts.'),
     )
 
     configs = {
@@ -70,7 +70,7 @@ class Command(BaseCommand):
         }
     }
 
-    def import_shape(config):
+    def import_shape(self,config):
         """
         Import a shapefile, based on a config.
 
@@ -112,7 +112,8 @@ class Command(BaseCommand):
                 simple = my_geom.simplify(tolerance=settings.SIMPLE_TOLERANCE,preserve_topology=True)
                 if simple.geom_type != 'MultiPolygon':
                     simple = MultiPolygon(simple)
-                g = Geounit(geom = my_geom, name = feat.get(config['name_field']), geolevel = level, simple = simple)
+                center = my_geom.centroid
+                g = Geounit(geom = my_geom, name = feat.get(config['name_field']), geolevel = level, simple = simple, center = center)
                 g.save()
             except Exception as ex:
                 print 'Failed to import geometry for feature ', feat.fid, type(ex), ex
@@ -131,26 +132,26 @@ class Command(BaseCommand):
                 # print 'Value  for ', obj.name, ' is ', c.number
             g.save()
 
-    def create_basic_template():
+    def create_basic_template(self,name):
         """
         Create a default plan with that number of districts created already.
 
-        Only works if MAX_DISTRICTS and PLAN_TEMPLATE are set.
+        Only works if MAX_DISTRICTS is set. 
         """
-        if settings.MAX_DISTRICTS and settings.PLAN_TEMPLATE:
+        if settings.MAX_DISTRICTS:
             admin = User.objects.get(pk = 1)
-            p = Plan(name=settings.PLAN_TEMPLATE, owner=admin, is_template=True)
+            p = Plan(name=name, owner=admin, is_template=True)
             p.save()
             for district_num in range(1, settings.MAX_DISTRICTS + 1):
                 district = District(name="District " + str(district_num) , district_id = district_num, plan = p) 
                 district.save()
 
-    def add_unassigned_to_template():
+    def add_unassigned_to_template(self,name):
         """
         Add all geounits to one large, unassigned district for the default
         template.
         """
-        p = Plan.objects.get(pk=1)
+        p = Plan.objects.get(name__exact=name)
         geom = Geounit.objects.filter(geolevel = 1).aggregate(Union('geom'))
         geom = MultiPolygon(geom["geom__union"])
         simple = geom.simplify(tolerance=settings.SIMPLE_TOLERANCE,preserve_topology=True)
@@ -159,9 +160,10 @@ class Command(BaseCommand):
         district.save()
 
         subjects = Subject.objects.all()
+        bigunits = Geounit.objects.filter(geolevel=1)
         for subject in subjects:
-            agg = Characteristic.objects.filter(geolevel = 1, subject = subject.id).aggregate(Sum('value'))
-            characteristic = ComputedCharacteristic(subject = subject, district = district, number = agg['value__sum'], percentage = 100)
+            agg = Characteristic.objects.filter(geounit__in = bigunits, subject = subject.id).aggregate(Sum('number'))
+            characteristic = ComputedCharacteristic(subject = subject, district = district, number = agg['number__sum'])
             characteristic.save()
             
 
@@ -170,15 +172,16 @@ class Command(BaseCommand):
         Perform the command. Import the shapes and assign to unassigned,
         based on configuration options.
         """
-        if options.get('create_basic'):
+        tpl_name = options.get('basic_template')
+        if tpl_name != '':
             print 'Import creating basic template.'
-            create_basic_template()
+            self.create_basic_template(tpl_name)
 
         for lyr in args:
             if lyr in self.configs:
                 print 'Importing "%s"' % lyr
-                import_shape(self.configs[lyr])
+                self.import_shape(self.configs[lyr])
 
-        if options.get('create_basic'):
+        if tpl_name != '':
             print 'Import assigning unassigned to template.'
-            add_unassigned_to_template()
+            self.add_unassigned_to_template(tpl_name)
