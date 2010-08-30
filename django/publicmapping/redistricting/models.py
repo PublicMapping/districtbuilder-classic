@@ -28,6 +28,7 @@ Author:
     David Zwarg, Andrew Jennings
 """
 
+from django.core.exceptions import ValidationError
 from django.contrib.gis.db import models
 from django.contrib.gis.geos import MultiPolygon,GEOSGeometry,GEOSException
 from django.contrib.auth.models import User
@@ -452,48 +453,94 @@ class Target(models.Model):
         return u'%s : %s - %s' % (self.subject, self.lower, self.upper)
 
 class Plan(models.Model):
-    """A plan contains a collection of districts that divide up a state.
-    A plan may also be a template, in which case it is usable as a starting
-    point by all other users on the system.
     """
+    A collection of Districts for an area of coverage, like a state.
+
+    A Plan is created by a user to represent multiple Districts. A Plan
+    may be a template (created by admins, copyable by all users), or shared
+    (created by users, copyable by all users).  In addition, Plans are 
+    versioned; the Plan version is the most recent version of all Districts
+    that are a part of this Plan.
+    """
+
+    # The name of this plan
     name = models.CharField(max_length=200,unique=True)
+
+    # Is this plan a template?
     is_template = models.BooleanField(default=False)
+
+    # Is this plan shared?
     is_shared = models.BooleanField(default=False)
+
+    # The most recent version of the districts in this plan.
     version = models.PositiveIntegerField(default=0)
+
+    # The time when this Plan was created.
     created = models.DateTimeField(auto_now_add=True)
+
+    # The time when this Plan was edited.
     edited = models.DateTimeField(auto_now=True)
+
+    # The owner of this Plan
     owner = models.ForeignKey(User)
 
     def __unicode__(self):
+        """
+        Represent the Plan as a unicode string. This is the Plan's name.
+        """
         return self.name
 
     def add_geounits(self, districtid, geounit_ids, geolevel, version):
-        """Add the requested geounits to the given district, and remove
-        them from whichever district they're currently in. 
-        Will return the number of districts effected by the operation.
+        """
+        Add Geounits to a District. When geounits are added to one District,
+        they are also removed from whichever district they're currently in. 
+
+        NOTE: All calls to 'simplify' use the spatial units -- the map units
+        in web mercator are meters, so simplify(tolerance=100.0) simplifies 
+        geometries to 100 meters between points (-ish).
+
+        Parameters:
+            districtid -- The district_id (NOT the id) of the
+                destination District.
+            geounit_ids -- A list of Geounit ids that are to be added
+                to the District.
+            geolevel -- The Geolevel of the geounit_ids.
+            version -- The version of the Plan that is being modified.
+
+        Returns:
+            The number of Districts changed.
         """
         
         # incremental is the geometry that is changing
         incremental = Geounit.objects.filter(id__in=geounit_ids).unionagg()
 
         fixed = 0
+
+        # Get the districts in this plan, at the specified version.
         districts = self.get_districts_at_version(int(version))
+
+        # First, remove the aggregate values from districts that are
+        # not the target, and intersect the geounits provided
         for district in districts:
             if district.district_id == int(districtid):
+                # If the district_id is the target, save the target.
                 target = district
                 continue
 
+            # if this district does not overlap the selection or
+            # if this district does not contain the selection
             if not (district.geom and (district.geom.overlaps(incremental) or district.geom.contains(incremental))):
-                # if this district does not overlap the selection or
-                # if this district does not contain the selection
+                # if this district has later edits, REVERT them to
+                # this version of the district
                 if not district.is_latest_version():
-                    # if this district has later edits, REVERT them to
-                    # this version of the district
+                    # Clone the district to a new version, with a different
+                    # shape
                     district_copy = copy(district)
                     district_copy.version = self.version + 1
                     district_copy.id = None
                     district_copy.save()
 
+                    # Clone the characteristings to this new version
                     district_copy.clone_characteristics_from(district)
 
                     fixed += 1
@@ -504,55 +551,81 @@ class Plan(models.Model):
             # compute the geounits before changing the boundary
             geounits = Geounit.get_mixed_geounits(geounit_ids, geolevel, district.geom, True)
             try:
+                # Difference the district with the selection
                 geom = district.geom.difference(incremental)
             except GEOSException, ex:
+                # If there's an error, create an empty geometry 
+                # in it's place.
                 geom = empty_geom(incremental.srid)
 
+            # Make sure the geom is a multi-polygon.
             geom = enforce_multi(geom)
 
-            if not geom.empty:
+            # If the geometry of this district is empty
+            if geom.empty:
+                # The district geometry is empty (probably all geounits in
+                # the district were removed); empty the geom and simple 
+                # fields
+                district.geom = None
+                district.simple = None
+            else:
+                # The district geometry exists, so save the updated 
+                # versions of the geom and simple fields
                 district.geom = geom
                 simple = geom.simplify(tolerance=100.0,preserve_topology=True)
                 district.simple = enforce_multi(simple)
-            else:
-                district.geom = None
-                district.simple = None
 
+            # Clone the district to a new version, with a different shape
             district_copy = copy(district)
             district_copy.version = self.version + 1
             district_copy.id = None
             district_copy.save()
 
+            # Clone the characteristings to this new version
             district_copy.clone_characteristics_from(district)
 
+            # If the district stats change, update the counter.
             if district_copy.delta_stats(geounits,False):
                 fixed += 1
 
         # get the geounits before changing the target geometry
         geounits = Geounit.get_mixed_geounits(geounit_ids, geolevel, target.geom, False)
 
-        if target.geom is None:
-            target.geom = enforce_multi(incremental)
-        else:
+        # If there exists geometry in the target district
+        if target.geom:
+            # Combine the incremental (changing) geometry with the existing
+            # target geometry
             try:
                 union = target.geom.union(incremental)
                 target.geom = enforce_multi(union)
             except GEOSException, ex:
+                # If there's an error, create an empty geometry 
+                # in it's place
                 target.geom = None
+        else:
+            # Set the target district's geometry to the sum of the changing
+            # Geounits
+            target.geom = enforce_multi(incremental)
 
+        # If the target geometry exists (no errors from above)
         if target.geom:
+            # Simplify the district geometry.
             simple = target.geom.simplify(tolerance=100.0,preserve_topology=True)
             target.simple = enforce_multi(simple)
         else:
+            # The simplified target geometry is empty, too.
             target.simple = None
 
+        # Clone the district to a new version, with a different shape.
         target_copy = copy(target)
         target_copy.version = self.version + 1
         target_copy.id = None
         target_copy.save();
 
+        # Clone the characteristics to this new version
         target_copy.clone_characteristics_from(target)
 
+        # If the district stats change, update the counter
         if target_copy.geom and target_copy.delta_stats(geounits,True):
             fixed += 1
 
@@ -560,22 +633,31 @@ class Plan(models.Model):
         self.version += 1
         self.save()
 
+        # Return the number of changed districts
         return fixed
 
 
     def get_wfs_districts(self,version,subject_id):
-        """Get the districts in this plan at a specific version. This 
-        method behaves much like a WFS service, returning the GeoJSON for
-        each district. This is due to the limitations of filtering and the
-        complexity of the version query -- it makes it impossible to use
-        the WFS layer in Geoserver automatically.
+        """
+        Get the districts in this plan as a GeoJSON WFS response.
+        
+        This method behaves much like a WFS service, returning the GeoJSON 
+        for each district. This manual view exists because the limitations
+        of filtering and the complexity of the version query -- it is 
+        impossible to use the WFS layer in Geoserver automatically.
+
+        Parameters:
+            version -- The Plan version.
+            subject_id -- The Subject attributes to attach to the district.
+
+        Returns:
+            GeoJSON describing the Plan.
         """
         
-        from django.db import connection
         cursor = connection.cursor()
-
         query = 'SELECT rd.id, rd.district_id, rd.name, lmt.version, rd.plan_id, rc.subject_id, rc.number, st_asgeojson(rd.simple) AS geom FROM redistricting_district rd JOIN redistricting_computedcharacteristic rc ON rd.id = rc.district_id JOIN (SELECT max(version) as version, district_id FROM redistricting_district WHERE plan_id = %d AND version <= %d GROUP BY district_id) AS lmt ON rd.district_id = lmt.district_id WHERE rd.plan_id = %d AND rc.subject_id = %d AND lmt.version = rd.version' % (int(self.id), int(version), int(self.id), int(subject_id))
 
+        # Execute our custom query
         cursor.execute(query)
         rows = cursor.fetchall()
         features = []
@@ -590,25 +672,46 @@ class Plan(models.Model):
                 },
                 'geometry': json.loads( row[7] )
             })
+
+        # Return a python dict, which gets serialized into geojson
         return features
 
     def get_districts_at_version(self, version):
-        """Get the districts in this plan at the specified version.
+        """
+        Get Plan Districts at a specified version.
+
         The districts are versioned to the current plan version when
         they are changed, so this method searches all the districts
         in the plan, returning the districts that have the highest
         version number at or below the version passed in.
+
+        Parameters:
+            version -- The version of the Districts to fetch.
+
+        Returns:
+            An array of districts that exist in the plan at the version.
         """
+
+        # Get all the districts
         districts = self.district_set.all()
+
+        # Sort the districts by district_id, then version
         districts = sorted(list(districts), key=lambda d: d.sortVer())
         dvers = {}
+
+        # For each district
         for i in range(0, len(districts)):
             district = districts[i]
+
+            # If the district version is higher than the version requested
             if district.version > version:
+                # Skip it
                 continue
 
+            # Save this district, keyed by the district_id
             dvers[district.district_id] = district
 
+        # Convert the dict of districts into an array of districts
         districts = []
         for value in dvers.itervalues():
             districts.append(value)
@@ -617,24 +720,64 @@ class Plan(models.Model):
         
 
 class PlanForm(ModelForm):
+    """
+    A form for displaying and editing a Plan.
+    """
     class Meta:
+        """
+        A helper class that describes the PlanForm.
+        """
+
+        # This form's model is a Plan
         model=Plan
     
 
 class District(models.Model):
+    """
+    A collection of Geounits, aggregated together.
+
+    A District is a part of a Plan, and is composed of many Geounits. 
+    Districts have geometry, simplified geometry, and pre-computed data
+    values for Characteristics.
+    """
+
     class Meta:
+        """
+        A helper class that describes the District class.
+        """
+
+        # Order districts by name, by default.
         ordering = ['name']
+
+    # The district_id of the district, this is not the primary key ID,
+    # but rather, an ID of the district that remains constant over all
+    # versions of the district.
     district_id = models.PositiveIntegerField(default=1)
+
+    # The name of the district
     name = models.CharField(max_length=200)
+
+    # The parent Plan that contains this District
     plan = models.ForeignKey(Plan)
+
+    # The geometry of this district (high detail)
     geom = models.MultiPolygonField(srid=3785, blank=True, null=True)
+
+    # The simplified geometry of this district
     simple = models.MultiPolygonField(srid=3785, blank=True, null=True)
+
+    # The version of this district.
     version = models.PositiveIntegerField(default=0)
+
+    # This is a geographic model, so use the geomanager for objects
     objects = models.GeoManager()
     
-    
     def sortKey(self):
-        """This can be used to sort districts by name, with numbered districts first
+        """
+        Sort districts by name, with numbered districts first.
+
+        Returns:
+            The Districts, sorted in numerical order.
         """
         name = self.name;
         if name.startswith('District '):
@@ -644,12 +787,18 @@ class District(models.Model):
         return name 
 
     def sortVer(self):
-        """This method generates a key that is used to sort a list of
-        districts first by district_id, then by version number."""
+        """
+        Sort a list of districts first by district_id, then by 
+        version number.
+
+        Returns:
+            district_id * 1000 + self.version
+        """
         return self.district_id * 10000 + self.version
 
     def is_latest_version(self):
-        """Determine if this district is the latest version of the district
+        """
+        Determine if this district is the latest version of the district
         stored. If a district is not assigned to a plan, it is always 
         considered the latest version.
         """
@@ -661,36 +810,70 @@ class District(models.Model):
         return true
 
     def __unicode__(self):
+        """
+        Represent the District as a unicode string. This is the District's 
+        name.
+        """
         return self.name
 
     def delta_stats(self,geounits,combine):
-        """Update the stats for this district incrementally. This method
+        """
+        Update the stats for this district incrementally. This method
         iterates over all the computed characteristics and adds or removes
         the characteristic values for the specific geounits only.
+
+        Parameters:
+            geounits -- The Geounits to add or remove to this districts
+                ComputedCharacteristic value.
+            combine -- The aggregate value computed should be added or
+                removed from the ComputedCharacteristicValue
+
+        Returns:
+            True if the stats for this district have changed.
         """
         all_subjects = Subject.objects.all()
         changed = False
+
+        # For all subjects
         for subject in all_subjects:
+            # Aggregate all Geounits Characteristic values
             aggregate = Characteristic.objects.filter(geounit__in=geounits, subject__exact=subject).aggregate(Sum('number'))['number__sum']
+            # If there are aggregate values for the subject and geounits.
             if aggregate:
+                # Get the pre-computed values
                 computed = ComputedCharacteristic.objects.filter(subject=subject,district=self)
+
+                # If precomputed values exist
                 if computed:
+                    # Grab the first one. (One value should be returned)
                     computed = computed[0]
                 else:
+                    # Create a new computed value
                     computed = ComputedCharacteristic(subject=subject,district=self,number=0)
 
                 if combine:
+                    # Add the aggregate to the computed value
                     computed.number += aggregate
                 else:
+                    # Subtract the aggregate from the computed value
                     computed.number -= aggregate
                 computed.save();
+
                 changed = True
+
         return changed
         
 
     def get_schwartzberg(self):
-        """This is the Schwartzberg measure of compactness, which is the measure of the perimeter of the district 
-        to the circumference of the circle whose area is equal to the area of the district
+        """
+        Generate Schwartzberg measure of compactness.
+        
+        The Schwartzberg measure of compactness measures the perimeter of 
+        the district to the circumference of the circle whose area is 
+        equal to the area of the district.
+
+        Returns:
+            The Schwartzberg measure.
         """
         try:
             r = sqrt(self.geom.area / pi)
@@ -701,11 +884,20 @@ class District(models.Model):
             return "n/a"
 
     def is_contiguous(self):
-        """Checks to see if the district is contiguous.  The district is already a unioned geom.  Any multipolygon
-        with more than one poly in it will not be contiguous.  There is one case where this test may give a false 
-        negative - if all of the polys in a multipolygon each meet another poly at one point. In GIS terms, this is
-        connected but not contiguous.  But the real-word case may be different.
-        http://webhelp.esri.com/arcgisdesktop/9.2/index.cfm?TopicName=Coverage_topology
+        """
+        Checks to see if the district is contiguous.
+        
+        The district is already a unioned geom.  Any multipolygon with 
+        more than one poly in it will not be contiguous.  There is one 
+        case where this test may give a false negative - if all of the 
+        polys in a multipolygon each meet another poly at one point. In 
+        GIS terms, this is connected but not contiguous.  But the 
+        real-word case may be different.  
+
+        http://webhelp.esri.com/arcgisdesktop/9.2/index.cfm?TopicName=Coverage_topology.
+
+        Returns:
+            True if the district is contiguous.
         """
         if not self.geom == None:
             return len(self.geom) == 1
@@ -713,9 +905,14 @@ class District(models.Model):
             return False
 
     def clone_characteristics_from(self, origin):
-        """Copy the computed characteristics from one district to another.
-        This is required when cloning, copying, or instantiating a template
-        district.
+        """
+        Copy the computed characteristics from one district to another.
+
+        Cloning District Characteristics is required when cloning, 
+        copying, or instantiating a template district.
+
+        Parameters:
+            origin -- The source District.
         """
         cc = ComputedCharacteristic.objects.filter(district=origin)
         for c in cc:
@@ -724,9 +921,16 @@ class District(models.Model):
             c.save()
 
     def get_base_geounits_within(self):
-        """This will return a list of the geounit ids of the geounits that comprise this district
-        at the base level.  We'll check this by seeing whether the centroid of each geounits
-        fits within the simplified geometry of this district
+        """
+        Get a list of the geounit ids of the geounits that comprise 
+        this district at the base level.  
+        
+        We'll check this by seeing whether the centroid of each geounits 
+        fits within the simplified geometry of this district.
+
+        Returns:
+            An array of Geounit IDs of Geounits that lie within this 
+            District. 
         """    
         if not self.simple:
            return list()
@@ -735,35 +939,67 @@ class District(models.Model):
 
 
 class ComputedCharacteristic(models.Model):
+    """
+    ComputedCharacteristics are cached, aggregate values of Characteristics
+    for Districts.
+
+    ComputedCharacteristics represent the sum of the Characteristic values
+    for all Geounits in a District. There will be one 
+    ComputedCharacteristic per District per Subject.
+    """
+
+    # The subject
     subject = models.ForeignKey(Subject)
+
+    # The district and area
     district = models.ForeignKey(District)
+
+    # The total aggregate as a raw value
     number = models.DecimalField(max_digits=12,decimal_places=4)
+
+    # The aggregate as a percentage. Of what? Dunno.
     percentage = models.DecimalField(max_digits=6,decimal_places=6, null=True, blank=True)
 
     class Meta:
+        """
+        A helper class that describes the ComputedCharacteristic class.
+        """
         ordering = ['subject']
 
+
 class Profile(models.Model):
+    """
+    Extra user information that doesn't fit in Django's default user
+    table.
+
+    Profiles for The Public Mapping Project include a password hint,
+    and an organization name.
+    """
     user = models.OneToOneField(User)
+
+    # A user's organization
     organization = models.CharField(max_length=256)
+
+    # A user's password hint.
     pass_hint = models.CharField(max_length=256)
 
 def update_profile(sender, **kwargs):
+    """
+    A trigger that creates profiles when a user is saved.
+    """
     created = kwargs['created']
     user = kwargs['instance']
     if created:
         profile = Profile(user=user, organization='', pass_hint='')
         profile.save()
 
-post_save.connect(update_profile, sender=User, dispatch_uid="publicmapping.redistricting.User")
-
-#def collect_geom(sender, **kwargs):
-#    kwargs['instance'].geom = kwargs['instance'].geounits.collect()
-
 def set_district_id(sender, **kwargs):
-    """When a new district is saved, it should get an incremented id that is unique to the plan
     """
-    from django.core.exceptions import ValidationError
+    Incremented the district_id (NOT the primary key id) when a district
+    is saved. The district_id is unique to the plan/version.  The 
+    district_id may already be set, but this method ensures that it is set
+    when saved.
+    """
     district = kwargs['instance']
     if (not district.district_id):
         max_id = District.objects.filter(plan = district.plan).aggregate(Max('district_id'))['district_id__max']
@@ -776,17 +1012,18 @@ def set_district_id(sender, **kwargs):
             raise ValidationError("Too many districts already.  Reached Max Districts setting")
 
 def update_plan_edited_time(sender, **kwargs):
+    """
+    Update the time that the plan was edited whenever the plan is saved.
+    """
     district = kwargs['instance']
     plan = district.plan;
     plan.edited = datetime.now()
     plan.save()
 
-pre_save.connect(set_district_id, sender=District)
-post_save.connect(update_plan_edited_time, sender=District)
-
 def set_geounit_mapping(sender, **kwargs):
-    """When a new plan is saved, all geounits must be inserted into the Unassigned districts and a 
-    corresponding set of DistrictGeounitMappings should be applied to it.
+    """
+    When a new plan is saved, all geounits must be inserted into the 
+    Unassigned districts.
     """
     plan = kwargs['instance']
     created = kwargs['created']
@@ -795,46 +1032,95 @@ def set_geounit_mapping(sender, **kwargs):
         unassigned = District(name="Unassigned", version = 0, plan = plan)
         unassigned.save()
         
-#        # clone all the geounits manually
-#        from django.db import connection, transaction
-#        cursor = connection.cursor()
-#
-#        sql = "insert into %s (district_id, geounit_id, plan_id) select %s as district_id, geounit.id as geounit_id, %s as plan_id from %s as geounit where geounit.geolevel_id = %s" % (DistrictGeounitMapping._meta.db_table, unassigned.id, plan.id, Geounit._meta.db_table, settings.BASE_GEOLEVEL)
-#        cursor.execute(sql)
-#        transaction.commit_unless_managed()
-
-# don't remove the dispatch_uid or this signal is sent twice.
+# Connect the post_save signal from a User object to the update_profile
+# helper method
+post_save.connect(update_profile, sender=User, dispatch_uid="publicmapping.redistricting.User")
+# Connect the pre_save signal to the set_district_id helper method
+pre_save.connect(set_district_id, sender=District)
+# Connect the post_save signal to the update_plan_edited_time helper method
+post_save.connect(update_plan_edited_time, sender=District)
+# Connect the post_save signal from a Plan object to the 
+# set_geounit_mapping helper method (don't remove the dispatch_uid or 
+# this signal is sent twice)
 post_save.connect(set_geounit_mapping, sender=Plan, dispatch_uid="publicmapping.redistricting.Plan")
 
 def can_edit(user, plan):
-    """Return whether a user can edit the given plan.  They must own it or 
-    be a staff member.  Templates cannot be edited, only copied.
+    """
+    Can a user edit a plan?
+    
+    In order to edit a plan, Users must own it or be a staff member.  
+    Templates cannot be edited, only copied.
+
+    Parameters:
+        user -- A User
+        plan -- A Plan
+
+    Returns:
+        True if the User has permissions to edit the Plan.
+
     """
     return (plan.owner == user or user.is_staff) and not plan.is_template
 
 def can_view(user, plan):
-    """Return whether a user can view a given plan. The plan must have the
-    shared flag set.
+    """
+    Can a user view a plan?
+
+    In order to view a plan, the plan must have the shared flag set.
+
+    Parameters:
+        user -- A User
+        plan -- A Plan
+
+    Returns:
+        True if the User has permissions to view the Plan.
     """
     return plan.is_shared and not plan.is_template
 
 
 def can_copy(user, plan):
-    """Return whether a user can copy the given plan.  The user must be 
-    the owner, or a staff member to copy a plan they own.  Any registered
-    user can copy a template.
+    """
+    Can a user copy a plan?
+
+    In order to copy a plan, the user must be the owner, or a staff 
+    member to copy a plan they own.  Any registered user can copy a 
+    template.
+
+    Parameters:
+        user -- A User
+        plan -- A Plan
+
+    Returns:
+        True if the User has permission to copy the Plan.
     """
     return plan.is_template or plan.owner == user or user.is_staff
 
-# this constant is used in places where geometry exceptions occur, or where
-# geometry types are incompatible
 def empty_geom(srid):
-    geom = GEOSGeometry('POINT(0 0)')
-    geom = geom.intersection(GEOSGeometry('POINT(1 1)'))
+    """
+    Create an empty GeometryCollection.
+
+    Parameters:
+        srid -- The spatial reference for this empty geometry.
+
+    Returns:
+        An empty geometry.
+    """
+    geom = GeometryCollection([])
     geom.srid = srid
     return geom
 
 def enforce_multi(geom):
+    """
+    Make a geometry a multi-polygon geometry.
+
+    This method wraps Polygons in MultiPolygons. If geometry exists, but is
+    neither polygon or multipolygon, an empty geometry is returned. If no
+    geometry is provided, no geometry (None) is returned.
+
+    Parameters:
+        geom -- The geometry to check/enforce.
+    Returns:
+        A multi-polygon from any polygon type.
+    """
     if geom:
         if geom.geom_type == 'MultiPolygon':
             return geom
