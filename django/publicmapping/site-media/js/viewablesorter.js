@@ -43,6 +43,13 @@ viewablesorter = function(options) {
     var reClassRows = function(table) {
         table.children('tr:odd').addClass('odd').removeClass('even');
         table.children('tr:even').addClass('even').removeClass('odd');
+        table.children('tr').each( function() {
+            if ($(this).data('isVisibleOnMap') == false) {
+                $(this).addClass('notOnMap');
+            } else {
+                $(this).removeClass('notOnMap');
+            }            
+        });
     }
 
     var _self = {},

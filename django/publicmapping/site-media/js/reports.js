@@ -2,7 +2,7 @@ reports = function(options) {
 
     var _self = {},
         _options = $.extend({
-            previewContainer: $('#reportPreview'),
+            previewContainer: $('#evaluateMap'),
             trigger: $('#btnPrintReport'),
             reportUrl: '',
             callback: function() {}
@@ -42,7 +42,9 @@ reports = function(options) {
                     value += '^';
                 }
             });
-            return value.substring(0, value.length - 1);
+            if (value.length > 0) {
+                return value.substring(0, value.length - 1);
+            }
         };
 
         _popVar = $('#popVar').val();
