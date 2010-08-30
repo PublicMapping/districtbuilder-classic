@@ -11,6 +11,7 @@ publicmapping.chooseplan = function(options) {
             modal: true,
             width: 600,
             resizable: false,
+            closable: true,
             close: function(event, ui) {
                 $('#PlanChooser').dialog('destroy').detach();
             }
@@ -39,7 +40,13 @@ publicmapping.chooseplan = function(options) {
     };
 
     var setUpTarget = function() {
+        if (!_options.closable) { 
+            _options.closeOnEscape = false;
+        }
         $('#PlanChooser').dialog(_options);
+        if (!_options.closable) { 
+            $('.ui-dialog-titlebar-close').hide();
+        }    
     };
 
 
@@ -51,18 +58,33 @@ publicmapping.chooseplan = function(options) {
             _eventType = 'blank'; 
             showOnly('#BlankSelection', '#btnBlank'); 
         });
-        $('#btnTemplate').click(function() { 
-            _eventType = 'template'; 
-            showOnly('#TemplateSelection','#btnTemplate'); 
-        });
-        $('#btnShared').click(function() { 
-            _eventType = 'shared'; 
-            showOnly('#SharedSelection','#btnShared'); 
-        });
-        $('#btnMine').click(function() { 
-            _eventType = 'mine'; 
-            showOnly('#MineSelection','#btnMine');
-        });
+        if ($('#ddlTemplate option').length == 0) {
+            $('#btnTemplate').button('option', 'disabled', true);
+            $('#btnTemplate').addClass('inactive');
+        } else {
+            $('#btnTemplate').click(function() { 
+                _eventType = 'template'; 
+                showOnly('#TemplateSelection','#btnTemplate'); 
+            });
+        }
+        if ($('#ddlShared option').length == 0) {
+            $('#btnShared').button('option', 'disabled', true);
+            $('#btnShared').addClass('inactive');
+        } else {
+            $('#btnShared').click(function() { 
+                _eventType = 'shared'; 
+                showOnly('#SharedSelection','#btnShared'); 
+            });
+        }
+        if ($('#ddlMine option').length == 0) {
+            $('#btnMine').button('option', 'disabled', true);
+            $('#btnMine').addClass('inactive');
+        } else {
+            $('#btnMine').click(function() { 
+                _eventType = 'mine'; 
+                showOnly('#MineSelection','#btnMine');
+            });
+        }
         $('#btnSelectPlan').click(selectPlan);
         $('#NewName').hide();
         $('input:radio').click( function() {
@@ -92,7 +114,7 @@ publicmapping.chooseplan = function(options) {
         else {
             $('#btnSelectPlan').show();
         }
-        if (_eventType == 'blank' || _eventType == 'template' || 
+        if (_eventType == 'blank' || _eventType == 'template' || _eventType == 'shared' || 
             ( selectorId == '#MineSelection' && $('input:radio:checked').val() == 'saveas'  )) {
             $('#NewName').show();
             _nameRequired = true;

@@ -432,8 +432,7 @@
         });
         var choose = publicmapping.chooseplan({
             {% if not plan.name %}
-            callback: function() { $('#difplanbtn').click(); $(".ui-dialog-titlebar-close").hide();  },
-            closeOnEscape:false,
+            closable: false,
             {% endif %}
             target: $('#difplanbtn'),
             container: $('#DialogContainer'),

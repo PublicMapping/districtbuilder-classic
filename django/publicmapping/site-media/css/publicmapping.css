@@ -441,6 +441,10 @@ div#SharedSelection, div#SelectorsHelp{
   font-weight:bold;
 }
 
+div#PlanChooser li.inactive {
+    opacity:.7;
+    cursor: not-allowed;
+}
 
 /* toolbar buttonsset stying */
 
