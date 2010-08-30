@@ -42,11 +42,12 @@ publicmapping.chooseplan = function(options) {
     var setUpTarget = function() {
         if (!_options.closable) { 
             _options.closeOnEscape = false;
+            _options.open = function(event, ui) {
+                $(".ui-dialog-titlebar-close", $(this).parent()).hide();
+            }
+
         }
         $('#PlanChooser').dialog(_options);
-        if (!_options.closable) { 
-            $('.ui-dialog-titlebar-close').hide();
-        }    
     };
 
 

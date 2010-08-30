@@ -943,6 +943,10 @@ span.popstatus {
   border: 1px solid #cccccc;
 }
 
+.plantable .notOnMap {
+    opacity:.5;
+}
+
 div.menu_footer {
   position: absolute;
   bottom: 5px;
@@ -1048,7 +1052,6 @@ div.evaluate {
 /* Share page */
 div.share {
     background: #ACAE87 !important;
-    height:100%;
 }
 
 .share #successfulShare {

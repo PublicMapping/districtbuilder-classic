@@ -61,7 +61,7 @@
     {% if shared %}
         <select id="ddlShared" class="Selectors">
         {% for plan in shared %}
-            <option value="{{ plan.id }}">{{ plan.name }}</option>
+            <option value="{{ plan.id }}">{{ plan.owner.username}}'s plan: {{ plan.name }}</option>
         {% endfor %}
         </select>
     {% else %}<span class="Selectors">Sorry, no shared plans are available at this time.</span>

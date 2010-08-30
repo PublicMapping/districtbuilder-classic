@@ -11,9 +11,12 @@ from django.contrib import humanize
 from django import forms
 from django.utils import simplejson as json
 from django.views.decorators.cache import cache_control
-from rpy2.robjects import *
+from rpy2 import robjects
+from rpy2.robjects import r, rinterface
+from rpy2.rlike import container as rpc
 from publicmapping import settings
 from publicmapping.redistricting.models import *
+from datetime import datetime
 import random, string, types, copy, time, threading
 
 @login_required
@@ -57,7 +60,7 @@ def copyplan(request, planid):
 
     data = serializers.serialize("json", [ plan_copy ])
 
-    return HttpResponse(data)
+    return HttpResponse(data, mimetype='application/json')
 
 def commonplan(request, planid):
     """A common method that gets the same data structures for viewing
@@ -138,13 +141,18 @@ def createplan(request):
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
 def load_bard_workspace():
-    # r.library('BARD')
-    # r.load(settings.BARD_BASESHAPE)
-    # r.load('/projects/publicmapping/local/data/oh.RData')
+    r.library('BARD')
+    r.library('R2HTML')
+    r.gpclibPermit()
+
+    global bardmap
+    bardmap = r.readBardMap(settings.BARD_BASESHAPE)
+
     global bardWorkSpaceLoaded
     bardWorkSpaceLoaded = True
     
 bardWorkSpaceLoaded = False
+bardmap = {}
 bardLoadingThread = threading.Thread(target=load_bard_workspace, name='loading_bard') 
 bardLoadingThread.daemon = True
 bardLoadingThread.start()
@@ -205,82 +213,112 @@ def getreport(request, planid):
         status['message'] = 'Information for report wasn\'t sent via POST'
         return HttpResponse(json.dumps(status),mimetype='application/json')
 
-    def get_parameters_from_list(parameter_string):
+    def get_tagged_list(parameter_string):
         """ Helper method to break up the strings that represents lists of variables
+        Give it a string and get a TaggedList suitable for rpy2 use
         """
-        myVars = dict()
+        tl = rpc.TaggedList(list())
         extras = parameter_string.split('^')
         for extra in extras:
             pair = extra.split('|')
-            myVars[pair[0]] = pair[1]
-        return myVars
+            tl.append(robjects.StrVector(pair[1]), pair[0])
+        return tl
     
-    params = dict()
-    popVar = request.POST.get('popVar')
+    geolevel = settings.BASE_GEOLEVEL
+    district_list = Geounit.objects.filter(geolevel = geolevel).extra(select={ 'district': "SELECT district_id from redistricting_district as d where st_contains(d.simple, center) limit 1" }).order_by('id').values_list('district', flat=True)
+
+    district_list = r.createKmeansPlan(bardmap, len(districts))
+    # Now we need an R Vector
+    block_ids = r['as.integer'](district_list)
+
+    # Get the other report varialbes from the POST request.  We'll only add them to the report if they're in the request
+    popVar = request.POST.get('popVar', None)
     if popVar:
-        var = get_parameters_from_list(popVar)
-        var['tolerance'] = .1
-        params['popVar'] = params
+        var = get_tagged_list(popVar)
+        var.append(.1, 'tolerance')
+        pop_var = robjects.StrVector(var)
 
     popVarExtra = request.POST.get('popVarExtra', None)
     if popVarExtra:
-        params['popVarExtra'] = get_parameters_from_list(popVarExtra)
+        pop_var_extra = get_tagged_list(popVarExtra)
+    else:
+        pop_var_extra = r('as.null()')
     
     racialComp = request.POST.get('ratioVars', None)
     partyControl = request.POST.get('partyControl', None)
     if racialComp or partyControl:
-        ratioVars = dict()
+        ratioVars = rpc.TaggedList(list())
         if racialComp:
-            mmd = dict()
-            mmd['denominator'] = params['popVar']
-            mmd['threshhold'] = .6
-            mmd['numerators'] = get_parameters_from_list(racialComp)
-            ratioVars['Majority Minority Districts'] = mmd
+            mmd = rpc.TaggedList(list())
+            mmd.append(pop_var, 'denominator')
+            mmd.append(.6, 'threshhold')
+            mmdappend( get_tagged_list(racialComp), 'numerators')
+            ratioVars.append(mmd, 'Majority Minority Districts')
 
         if partyControl:
-            pc = dict()
-            pc['denominator'] = params['popVar']
-            pc['threshhold'] = .55
-            pc['numerators'] = get_parameters_from_list(partyControl)
-            ratioVars['Party-controlled Districts'] = pc
-        params['ratioVars'] = ratioVars
+            pc = rpc.TaggedList(list())
+            pc.append(pop_var, 'denominator')
+            pc.append(.55, 'threshhold')
+            pc.append(get_tagged_list(partyControl), 'numerators')
+            ratioVars.append(pc, 'Party-controlled Districts')
+        ratio_vars = ratioVars
+    else:
+        ratio_vars = r('as.null()')
 
     splitVars = request.POST.get('splitVars', None)
     if splitVars:
-        params['splitVars'] = get_parameters_from_list(splitVars)
+        split_vars = get_tagged_list(splitVars)
+    else:
+        split_vars = r('as.null()')
     
     blockLabelVar = request.POST.get('blockLabelVar', 'CTID')
 
     repCompactness = request.POST.get('repCompactness', None)
-    if repCompactness:
-        params['repCompactness'] = repCompactness
+    if 'true' == repCompactness:
+        rep_compactness = r(True)
+    else:
+        rep_compactness = r(False)
 
     repCompactnessExtra = request.POST.get('repCompactnessExtra', None)
-    if repCompactnessExtra:
-        params['repCompactnessExtra'] = repCompactnessExtra
+    if 'true' == repCompactnessExtra:
+        rep_compactness_extra = r(True)
+    else:
+        rep_compactness_extra = r(False)
 
     repSpatial = request.POST.get('repSpatial', None)
-    if repSpatial:
-        params['repSpatial'] = repSpatial
+    if 'true' == repSpatial:
+        rep_spatial = r(True)
+    else:
+        rep_spatial = r(False)
+    print 'repSpatial: %s ;rep_spatial value: %s' % (repSpatial, rep_spatial)
 
     repSpatialExtra = request.POST.get('repSpatialExtra', None)
-    if repSpatialExtra:
-        params['repSpatialExtra'] = repSpatialExtra
+    if 'true' == repSpatialExtra:
+        rep_spatial_extra = r(True)
+    else:
+        rep_spatial_extra = r(False)
 
-    # for testing, we're using tracts and forcing a limit of 1 so tracts aren't split
-    geolevel = 2
-    district_vector = Geounit.objects.filter(geolevel = geolevel).extra(select={ 'district': "SELECT district_id from redistricting_district as d where st_contains(d.simple, center) limit 1" }).order_by('id').values_list('district', flat=True)
-    params['blockAssignmentID'] = district_vector
+     try:
+        # set up the temp dir and filename
+        tempdir = settings.BARD_TEMP
+        filename = '%s_%s_%s' % (plan.owner.username, plan.name, datetime.now())
+        r.copyR2HTMLfiles(tempdir)
+        report = r.HTMLInitFile(tempdir, filename=filename, BackGroundColor="#BBBBEE", Title="Plan Analysis")
+        title = r['HTML.title']
+        r['HTML.title']("Plan Analysis", HR=2, file=report)
+        # Now write the report to the temp dir
+        print datetime.now()
+        r.PMPreport( bardmap, block_ids, file = report, popVar = pop_var, popVarExtra = pop_var_extra, ratioVars = ratio_vars, splitVars = split_vars, repCompactness = rep_compactness, repCompactnessExtra = rep_compactness_extra, repSpatial = rep_spatial, repSpatialExtra = rep_spatial_extra)
+        print datetime.now()
+        r.HTMLEndFile()
 
-    params['bardMap'] = settings.BARD_BASEMAP
+        # BARD has written the report to file - read it
+        f = open(report[0], 'r')
+        status['preview'] = f.read()
+        status['message'] = 'Report successful'
+        f.close()
 
-    try:
-        pmp_report = r['BARD:::PMPreport']
-        #result = r.PMPrequest(params)
-        #result = pmp_report(params)
-        status = { 'success': True }
-        # status['preview'] = result[0]
-        status['preview'] = '<div id="report">Here\'s the R function to run for the requested options: PMPrequest( %s )</div>' % params
+        status['success'] = True
     except Exception as ex:
         status['message'] = '<div class="error" title="error">Sorry, there was an error with the report: %s' % ex.message    
     return HttpResponse(json.dumps(status),mimetype='application/json')
@@ -384,7 +422,7 @@ def chooseplan(request):
     else:
         templates = Plan.objects.filter(is_template=True, owner__is_staff = True)
         shared = Plan.objects.filter(is_shared=True)
-        mine = Plan.objects.filter(is_template=False, owner=request.user)
+        mine = Plan.objects.filter(is_template=False, is_shared=False, owner=request.user)
 
         return render_to_response('chooseplan.html', {
             'templates': templates,

@@ -355,7 +355,6 @@
             </div>
             <div id="reportButtons">
                 <button id="btnPrintReport">Print Report</button>
-                <button id="btnDownloadReport">Download Report</button>
             </div>
         </div>
         <div id="evaluateMapContainer">
@@ -365,32 +364,15 @@
                            
         </div>
     </div>
+    {% block share_panel %}
     <div id="step-3" class="main_content share">
         <div id="saveandshare">
             <div class="explanation">
                 <h3>Explanation of Shared Documents</h3>
-                <p>You can share your plan with other users here.  Your plan will be available for other users so that they can view reports about your plan or create a plan of their own using yours as a base.</p>
-                <p>Give your plan a unique name in order to share it. A copy of your current plan will be added to the "Shared Plans" section of the plan chooser.</p>
-            </div>
-            <div id="nameandshare">
-                <div>
-                    <label for="chkNewPlanName">Name your shared plan</label>
-                    <input id="txtPlanName" />
-                </div>
-                <button id="btnSaveAndShare">Save and Share</button>
-            </div>
-            <div id="successfulShare" title="Congratulations!" >
-                <p>You have successfully shared your plan</p>
-                <div><button id="continueEditing">Continue Editing Current Plan</button></div>
-                <div><a href="/districtmapping/plan/0/view/"><button id="selectNew">Select New Plan to Edit</button></a></div>
-            </div>
-        </div>
-        <div id="preview">
-            <div id="shareMap" class="bardmap">
-            </div>
-            <button id="btnPrintReport">Print</button>
+                <p>If you were editing a plan, you could use this tab to share your plan with others<p>
         </div>
     </div>
+    {% endblock %}
 </div>  
 <div id="toolbar_plans">
      <div class="toolset_group first"> 
@@ -447,9 +429,6 @@
     {% endif %}
         var report = reports({
             reportUrl: '/districtmapping/plan/{{plan.id}}/getreport/',
-            callback: function() { 
-                $('#steps').tabs('select', '#step-3');            
-            }
         }).init();
     });
 </script>

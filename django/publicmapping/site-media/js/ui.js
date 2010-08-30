@@ -167,13 +167,16 @@ $(function() {
             }
         });
 
-        $('#btnSaveAndShare').click( function() {
+        /* The Save and Share button.  */
+        $('#btnSaveAndShare').click( function() { 
+            // Helper function to get name for shared plan
             var getData = function() {
                 var name = $('#txtPlanName').val();
                 if (name == '') { return false; }
                 return { name: name, shared: true }; 
             };
-            var $waitPublishing = $('<div title="Please Wait">Publishing with the server</div>').dialog({ autoOpen: true });
+            // The dialog to display while contacting the server.  Shouldn't be closable
+            var $waitPublishing = $('<div title="Please Wait">Publishing with the server</div>').dialog({ autoOpen: true, escapeOnClose: false, resizable:false, open: function(event, ui) { $(".ui-dialog-titlebar-close", $(this).parent()).hide(); } });
             var data = getData();
             if (!data) {
                 $waitPublishing.dialog('close');
@@ -187,6 +190,8 @@ $(function() {
                     success: function(data, textStatus, xhr) {
                         $waitPublishing.dialog('close');
                         if (textStatus == 'success') {
+                            var link ='http://' + location.host + '/districtmapping/plan/' + data[0].pk + '/view/' 
+                            $('#sharedPermalink').html('<a href="' + link + '">' + link + '</a>')
                             $('#continueEditing').click( function() {
                                 $('#successfulShare').dialog('close');
                                 $('#steps').tabs('select', '#step-1');

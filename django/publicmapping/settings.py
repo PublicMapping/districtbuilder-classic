@@ -160,7 +160,8 @@ DEFAULT_DISTRICT_DISPLAY = 'POPTOT'
 
 # The bard base shape that will be used to create bard reports.  This 
 # should be a bardmap image containing data for the base geounits
-BARD_BASESHAPE = '/projects/publicmapping/local/data/h_blocks.bardmap_bard_image.Rdata'
+
+BARD_BASESHAPE = '/projects/publicmapping/local/data/ohblock_bard_save.Rdata'
 
 # The R variable of the basemap included in the BARD_BASESHAPE image.  
 # Used to create BARD reports
@@ -174,6 +175,9 @@ BARD_BASEMAP = 'oh_blocks.bardmap'
 # anything between 80 and 90 or 110 and 120 is "under" or "over", 
 # respectively, and anything less than 80 or more than 120 is "farunder" 
 # or "farover", respectively
+BARD_TEMP = '/projects/publicmapping/local/temp'
+""" This temp directory is where BARD will write HTML reports
+"""
 POPTARGET_RANGE1 = .1
 
 # The POPTARGET RANGE variables are used to determine the class breaks for

@@ -1059,7 +1059,7 @@ def can_edit(user, plan):
         True if the User has permissions to edit the Plan.
 
     """
-    return (plan.owner == user or user.is_staff) and not plan.is_template
+    return (plan.owner == user or user.is_staff) and not plan.is_template and not plan.is_shared
 
 def can_view(user, plan):
     """
@@ -1074,7 +1074,7 @@ def can_view(user, plan):
     Returns:
         True if the User has permissions to view the Plan.
     """
-    return plan.is_shared and not plan.is_template
+    return plan.is_shared or plan.is_template
 
 
 def can_copy(user, plan):
@@ -1092,7 +1092,7 @@ def can_copy(user, plan):
     Returns:
         True if the User has permission to copy the Plan.
     """
-    return plan.is_template or plan.owner == user or user.is_staff
+    return plan.is_template or plan.is_shared or plan.owner == user or user.is_staff
 
 def empty_geom(srid):
     """

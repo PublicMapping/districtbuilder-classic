@@ -25,7 +25,17 @@ reports = function(options) {
         return _self;
     };
     
+    var $working = $('<div title="Working">Please wait while your report is created</div>').dialog({ 
+        autoOpen: false,
+        escapeOnClose: false,
+        resizable:false,
+        open: function(event, ui) { 
+            $(".ui-dialog-titlebar-close", $(this).parent()).hide();
+        }
+    });
+
     var submitReportRequestToServer = function() {
+        $working.dialog('open');
         data = getReportOptions();
         $.post(_options.reportUrl, data, loadPreviewContent);
     };
@@ -52,10 +62,10 @@ reports = function(options) {
         _partyControl = getConcatenated('partyControl');
         _racialComp = getConcatenated('racialComp');
         _splitVar = getConcatenated('splitVar');
-        _repCompactness = $('#repCompactness input').attr('checked');
-        _repCompactnessExtra = $('#repCompactnessExtra input').attr('checked');
-        _repSpatial = $('#repSpatial input').attr('checked');
-        _repSpatialExtra = $('#repSpatialExtra input').attr('checked');
+        _repCompactness = $('#repCompactness').attr('checked');
+        _repCompactnessExtra = $('#repCompactnessExtra').attr('checked');
+        _repSpatial = $('#repSpatial').attr('checked');
+        _repSpatialExtra = $('#repSpatialExtra').attr('checked');
         var data = { 
             popVar: _popVar,
             popVarExtra: _popVarExtra,
@@ -64,7 +74,7 @@ reports = function(options) {
             splitVars: _splitVars,
             repCompactness: _repCompactness,
             repCompactnessExtra: _repCompactnessExtra,
-            prepSpatial: _repSpatial,
+            repSpatial: _repSpatial,
             repSpatialExtra: _repSpatialExtra
         };
         
@@ -72,6 +82,7 @@ reports = function(options) {
     };
 
     var loadPreviewContent = function(data, textStatus, XMLHttpRequest) {
+        $working.dialog('close');
         if (data.success) {
             _options.previewContainer.html(data.preview); 
         } 
