@@ -298,7 +298,7 @@ def getreport(request, planid):
     else:
         rep_spatial_extra = r(False)
 
-     try:
+    try:
         # set up the temp dir and filename
         tempdir = settings.BARD_TEMP
         filename = '%s_%s_%s' % (plan.owner.username, plan.name, datetime.now())
