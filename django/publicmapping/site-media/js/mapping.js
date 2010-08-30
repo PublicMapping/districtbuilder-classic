@@ -295,7 +295,8 @@ function init() {
         autoActivate: false,
         protocol: getProtocol,
         multipleKey: 'shiftKey',
-        toggleKey: 'ctrlKey'
+        toggleKey: 'ctrlKey',
+        filterType: OpenLayers.Filter.Spatial.INTERSECTS
     });
 
     // Create a rectangular drag control for selecting
@@ -306,7 +307,8 @@ function init() {
         click: false,
         box: true,
         multipleKey: 'shiftKey',
-        toggleKey: 'ctrlKey'
+        toggleKey: 'ctrlKey',
+        filterType: OpenLayers.Filter.Spatial.INTERSECTS
     });
 
     // Reload the information tabs and reload the filters
