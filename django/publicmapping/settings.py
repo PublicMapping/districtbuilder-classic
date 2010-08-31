@@ -144,8 +144,12 @@ POSTGIS_TEMPLATE='template_postgis'
 # This is the base url for the application, where the login page is
 LOGIN_URL = '/'
 
-# The url of the geoserver instance where maps are stored
+# The url of the geoserver instance where maps are stored. The NS and
+# NSHREF configuration parameters must match the namespace stored in
+# geoserver to match the correct feature types.
 MAP_SERVER = config.get('publicmapping', 'MAP_SERVER')
+MAP_SERVER_NS = config.get('publicmapping', 'MAP_SERVER_NS')
+MAP_SERVER_NSHREF = config.get('publicmapping', 'MAP_SERVER_NSHREF')
 
 # The id of the 'base geolevel', the smallest geounit of which the 
 # other geounits are composed

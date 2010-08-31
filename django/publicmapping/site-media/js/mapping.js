@@ -2,7 +2,7 @@
  * Create an OpenLayers.Layer.WMS type layer.
  *
  * @param name The name of the layer (appears in the layer switcher).
- * @param layer The layer name (or array of names) served by the WMS server.
+ * @param layer The layer name (or array of names) served by the WMS server
  * @param extents The extents of the layer -- must be used for GeoWebCache.
  */
 function createLayer( name, layer, srs, extents ) {
@@ -58,6 +58,9 @@ function getDistrictBy() {
     return { by: orig, modified: mod }; 
 }
 
+/**
+ * Get the value of the history cursor.
+ */
 function getPlanVersion() {
     var ver = $('#history_cursor').val();
     return ver;
@@ -70,6 +73,10 @@ function getPlanVersion() {
 var geourl = '/districtmapping/plan/' + PLAN_ID + '/geography';
 var demourl = '/districtmapping/plan/' + PLAN_ID + '/demographics';
 
+/**
+ * Get the OpenLayers filters that describe the version and subject
+ * criteria for the district layer.
+ */
 function getVersionAndSubjectFilters() {
     var dby = getDistrictBy();
     var ver = getPlanVersion();
@@ -90,8 +97,10 @@ function getVersionAndSubjectFilters() {
     });
 }
 
+/**
+ * Add proper class names so css may style the PanZoom controls.
+ */
 function doMapStyling() {
-    //adding proper class names so css may style the PanZoom controls
     $('#OpenLayers\\.Control\\.PanZoomBar_3_panup').addClass('olControlPan olControlPanUpItemInactive');
     $('#OpenLayers\\.Control\\.PanZoomBar_3_panright').addClass('olControlPan olControlPanRightItemInactive');
     $('#OpenLayers\\.Control\\.PanZoomBar_3_pandown').addClass('olControlPan olControlPanDownItemInactive');    
@@ -124,24 +133,63 @@ function initializeResizeFix() {
     window.onresize = resizemap;
 }
 
+/* 
+ * Create a div for tooltips on the map itself; this is used
+ * when the info tool is activated.
+ */
+function createMapTipDiv() {
+    var tipdiv = document.createElement('div');
+    var tipelem = document.createElement('h1');
+    tipelem.appendChild(document.createTextNode('District Name'));
+    tipdiv.appendChild(tipelem);
+    tipelem = document.createElement('div');
+    tipelem.id = 'tipclose';
+    tipelem.onclick = function(e){
+        OpenLayers.Event.stop(e);
+        tipdiv.style.display = 'none';
+    };
+    tipelem.appendChild(document.createTextNode('[x]'));
+    tipdiv.appendChild(tipelem);
+    tipelem = document.createElement('div');
+    tipelem.appendChild(document.createTextNode('Demographic 1:'));
+    tipdiv.appendChild(tipelem);
+    tipelem = document.createElement('div');
+    tipelem.appendChild(document.createTextNode('Demographic 2:'));
+    tipdiv.appendChild(tipelem);
+    tipelem = document.createElement('div');
+    tipelem.appendChild(document.createTextNode('Demographic 3:'));
+    tipdiv.appendChild(tipelem);
+    tipdiv.style.zIndex = 100000;
+    tipdiv.style.position = 'absolute';
+    tipdiv.style.opacity = '0.8';
+    tipdiv.className = 'tooltip';
+
+    return tipdiv;
+}
+
+
 /**
  * Initialize the map from WMS GetCapabilities.
  */
 function init() {
     OpenLayers.ProxyHost= "/proxy?url=";
 
-    var layer = getSnapLayer().layer;
     $.ajax({
-        url: OpenLayers.ProxyHost + encodeURIComponent('http://' + MAP_SERVER + '/geoserver/ows?service=wms&version=1.1.1&request=GetCapabilities'),
+        url: OpenLayers.ProxyHost + encodeURIComponent('http://' + 
+            MAP_SERVER + '/geoserver/ows?service=wms&version=1.1.1' +
+            '&request=GetCapabilities&namespace=' + NAMESPACE),
         type: 'GET',
         success: function(data, textStatus, xhr) {
+            var layer = getSnapLayer().layer;
             // get the layers in the response
             var layers = $('Layer > Layer',data);
             for (var i = 0; i < layers.length; i++) {
                 // get the title of the layer
-                var title = $('> Title',layers[i])[0];
+                var title = $('> Title',layers[i])[0].firstChild.nodeValue;
+                var name = $('> Name', layers[i])[0].firstChild.nodeValue;
+
                 // if the title is the displayed snap layer
-                if (title.firstChild.nodeValue == layer) {
+                if (title == layer) {
                     // get the SRS and extent, then init the map
                     var bbox = $('> BoundingBox',layers[i]);
                     var srs = bbox.attr('SRS');
@@ -290,8 +338,8 @@ function mapinit(srs,maxExtent) {
     var getProtocol = new OpenLayers.Protocol.WFS({
         url: 'http://' + MAP_SERVER + '/geoserver/wfs',
         featureType: getSnapLayer().layer,
-        featureNS: 'http://gmu.azavea.com/',
-        featurePrefix: 'gmu',
+        featureNS: NS_HREF,
+        featurePrefix: NAMESPACE,
         srsName: srs,
         geometryName: 'geom'
     });
@@ -299,8 +347,8 @@ function mapinit(srs,maxExtent) {
     var idProtocol = new OpenLayers.Protocol.WFS({
         url: 'http://' + MAP_SERVER + '/geoserver/wfs',
         featureType: 'identify_geounit',
-        featureNS: 'http://gmu.azavea.com/',
-        featurePrefix: 'gmu',
+        featureNS: NS_HREF,
+        featurePrefix: NAMESPACE,
         srsName: srs,
         geometryName: 'geom'
     });
@@ -518,33 +566,8 @@ function mapinit(srs,maxExtent) {
         polyControl.handler.style = polySelectStyle;
     }, 100);
 
-    // Create a div for tooltips on the map itself; this is used
-    // when the info tool is activated.
-    var tipdiv = document.createElement('div');
-    var tipelem = document.createElement('h1');
-    tipelem.appendChild(document.createTextNode('District Name'));
-    tipdiv.appendChild(tipelem);
-    tipelem = document.createElement('div');
-    tipelem.id = 'tipclose';
-    tipelem.onclick = function(e){
-        OpenLayers.Event.stop(e);
-        tipdiv.style.display = 'none';
-    };
-    tipelem.appendChild(document.createTextNode('[x]'));
-    tipdiv.appendChild(tipelem);
-    tipelem = document.createElement('div');
-    tipelem.appendChild(document.createTextNode('Demographic 1:'));
-    tipdiv.appendChild(tipelem);
-    tipelem = document.createElement('div');
-    tipelem.appendChild(document.createTextNode('Demographic 2:'));
-    tipdiv.appendChild(tipelem);
-    tipelem = document.createElement('div');
-    tipelem.appendChild(document.createTextNode('Demographic 3:'));
-    tipdiv.appendChild(tipelem);
-    tipdiv.style.zIndex = 100000;
-    tipdiv.style.position = 'absolute';
-    tipdiv.style.opacity = '0.8';
-    tipdiv.className = 'tooltip';
+    // Create a tooltip inside of the map div
+    var tipdiv = createMapTipDiv();
     olmap.div.insertBefore(tipdiv,olmap.div.firstChild);
 
     // Create a control that shows the details of the district
@@ -740,9 +763,15 @@ function mapinit(srs,maxExtent) {
 
     // Connect the featuresSelected callback above to the featureselected
     // events in the point and rectangle control.
-    getControl.events.register('featuresselected', getControl, featuresSelected);
-    boxControl.events.register('featuresselected', boxControl, featuresSelected);
-    idControl.events.register('featuresselected', idControl, idFeature);
+    getControl.events.register('featuresselected', 
+        getControl,
+        featuresSelected);
+    boxControl.events.register('featuresselected', 
+        boxControl, 
+        featuresSelected);
+    idControl.events.register('featuresselected', 
+        idControl, 
+        idFeature);
 
     // A callback for deselecting features from different controls.
     var featureUnselected = function(e){
@@ -751,8 +780,12 @@ function mapinit(srs,maxExtent) {
 
     // Connect the featureUnselected callback above to the featureunselected
     // events in the point and rectangle control.
-    getControl.events.register('featureunselected', this, featureUnselected);
-    boxControl.events.register('featureunselected', this, featureUnselected);
+    getControl.events.register('featureunselected', 
+        this, 
+        featureUnselected);
+    boxControl.events.register('featureunselected', 
+        this, 
+        featureUnselected);
 
     // Connect a method for indicating work when the district layer
     // is reloaded.
@@ -1066,7 +1099,7 @@ function mapinit(srs,maxExtent) {
         var newOpts = getControl.protocol.options;
         var show = getShowBy();
         var snap = getSnapLayer();
-        var layername = 'gmu:demo_' + snap.level;
+        var layername = NAMESPACE + ':demo_' + snap.level;
         if (show != 'none') {
             layername += '_' + show;
         }
@@ -1084,7 +1117,7 @@ function mapinit(srs,maxExtent) {
     $('#showby').change(function(evt){
         var snap = getSnapLayer();
         var show = evt.target.value;
-        var layername = 'gmu:demo_' + snap.level;
+        var layername = NAMESPACE + ':demo_' + snap.level;
         if (show != 'none') {
             layername += '_' + show;
         }

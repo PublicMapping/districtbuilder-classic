@@ -102,6 +102,8 @@ def commonplan(request, planid):
         'plan': plan,
         'districts': districts,
         'mapserver': settings.MAP_SERVER,
+        'namespace': settings.MAP_SERVER_NS,
+        'ns_href': settings.MAP_SERVER_NSHREF,
         'demographics': layers,
         'snaplayers': snaplayers,
         'rules': rules,

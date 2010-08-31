@@ -41,6 +41,8 @@
     <!-- <script type="text/javascript" src="/site-media/OpenLayers-2.9.1/lib/OpenLayers.js"></script> debug -->
     <script type="text/javascript">
         var MAP_SERVER = '{{ mapserver }}';
+        var NAMESPACE = '{{ namespace }}';
+        var NS_HREF = '{{ ns_href }}';
 
         var PLAN_ID = {% if plan %}{{ plan.id }}{% else %}0{% endif %};
         var PLAN_VERSION = {% if plan %}{{ plan.version }}{% else %}0{% endif %};
@@ -410,7 +412,10 @@
             modal:true,
             draggable:false,
             closeOnEscape:false,
-            autoOpen:false
+            autoOpen:false,
+            open: function(event,ui) {
+                $('.ui-dialog-titlebar-close', $(this).parent()).hide();
+            }
         });
         var choose = publicmapping.chooseplan({
             {% if not plan.name %}
