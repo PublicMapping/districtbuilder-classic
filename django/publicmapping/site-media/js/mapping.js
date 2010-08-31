@@ -404,7 +404,7 @@ function mapinit(srs,maxExtent) {
 
     // When the selection is changed, perform the addition or subtraction
     // to the current geounit selection. Also, if the assignment mode is
-    // either 'paint' or 'dragdrop', do some more processing.
+    // either 'anchor' or 'dragdrop', do some more processing.
     var unitsSelected = function(features, subtract) {
         if (subtract) {
             var removeme = [];
@@ -444,7 +444,7 @@ function mapinit(srs,maxExtent) {
         if (assignMode == null) {
             return;
         }
-        else if (assignMode == 'paint') {
+        else if (assignMode == 'anchor') {
             var d_id = $('#assign_district').val();
             if (parseInt(d_id,10) > 0) {
                 var feature = { data:{ district_id: d_id } };
@@ -867,7 +867,7 @@ function mapinit(srs,maxExtent) {
         }
         navigate.activate();
         $('#dragdrop_tool').removeClass('toggle');
-        $('#paint_tool').removeClass('toggle');
+        $('#anchor_tool').removeClass('toggle');
         assignMode = null;
         $('#assign_district').val(-1);
         tipdiv.style.display = 'none';
@@ -882,7 +882,7 @@ function mapinit(srs,maxExtent) {
         }
         idControl.activate();
         $('#dragdrop_tool').removeClass('toggle');
-        $('#paint_tool').removeClass('toggle');
+        $('#anchor_tool').removeClass('toggle');
         assignMode = null;
         $('#assign_district').val(-1);
     });
@@ -950,11 +950,11 @@ function mapinit(srs,maxExtent) {
         navigate.deactivate();
         $('#identify_map_tool').removeClass('toggle');
         idControl.deactivate();
-        $('#paint_tool').removeClass('toggle');
+        $('#anchor_tool').removeClass('toggle');
         tipdiv.style.display = 'none';
     });
 
-    $('#paint_tool').click(function(evt){
+    $('#anchor_tool').click(function(evt){
         var me = $(this);
         if (me.hasClass('toggle')) {
             me.removeClass('toggle');
@@ -963,7 +963,7 @@ function mapinit(srs,maxExtent) {
         }
         else {
             me.addClass('toggle');
-            assignMode = 'paint';
+            assignMode = 'anchor';
         }
         $('#navigate_map_tool').removeClass('toggle');
         navigate.deactivate();
