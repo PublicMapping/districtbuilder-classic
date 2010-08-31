@@ -5,10 +5,10 @@
  * @param layer The layer name (or array of names) served by the WMS server.
  * @param extents The extents of the layer -- must be used for GeoWebCache.
  */
-function createLayer( name, layer, extents ) {
+function createLayer( name, layer, srs, extents ) {
     return new OpenLayers.Layer.WMS( name,
         'http://' + MAP_SERVER + '/geoserver/gwc/service/wms',
-        { srs: 'EPSG:3785',
+        { srs: srs,
           layers: layer,
           tiles: 'true',
           tilesOrigin: extents.left + ',' + extents.bottom,
@@ -124,29 +124,52 @@ function initializeResizeFix() {
     window.onresize = resizemap;
 }
 
-/*
- * Initialize the map. This method is called by the onload page event.
+/**
+ * Initialize the map from WMS GetCapabilities.
  */
 function init() {
     OpenLayers.ProxyHost= "/proxy?url=";
+
+    var layer = getSnapLayer().layer;
+    $.ajax({
+        url: OpenLayers.ProxyHost + encodeURIComponent('http://' + MAP_SERVER + '/geoserver/ows?service=wms&version=1.1.1&request=GetCapabilities'),
+        type: 'GET',
+        success: function(data, textStatus, xhr) {
+            // get the layers in the response
+            var layers = $('Layer > Layer',data);
+            for (var i = 0; i < layers.length; i++) {
+                // get the title of the layer
+                var title = $('> Title',layers[i])[0];
+                // if the title is the displayed snap layer
+                if (title.firstChild.nodeValue == layer) {
+                    // get the SRS and extent, then init the map
+                    var bbox = $('> BoundingBox',layers[i]);
+                    var srs = bbox.attr('SRS');
+                    var extent = new OpenLayers.Bounds(
+                        bbox.attr('minx'),
+                        bbox.attr('miny'),
+                        bbox.attr('maxx'),
+                        bbox.attr('maxy')
+                    );
+                    mapinit( srs, extent );
+                    return;
+                }
+            }
+        }
+    });
+}
+
+/*
+ * Initialize the map with extents and SRS pulled from WMS.
+ */
+function mapinit(srs,maxExtent) {
 
     // The assignment mode -- the map is initially in navigation mode,
     // so the assignment mode is null.
     var assignMode = null;
 
-    // The extents of the layers. These extents will depend on the study
-    // area; the following are the bounds for the web cache around Ohio.
-    // TODO Make the initial layer extents configurable. Maybe fetch them
-    // from geowebcache
-    var layerExtent = new OpenLayers.Bounds(
-        -9442154.0,
-        4636574.5,
-        -8868618.0,
-        5210110.5
-    );
-
     // This projection is web mercator
-    var projection = new OpenLayers.Projection('EPSG:3785');
+    var projection = new OpenLayers.Projection(srs);
 
     // Explicitly create the navigation control, since
     // we'll want to deactivate it in the future.
@@ -155,24 +178,17 @@ function init() {
         handleRightClicks: true
     });
 
+    // Dynamically compute the resolutions, based on the map extents.
+    var rez = [(maxExtent.right - maxExtent.left) / 256.0];
+    while (rez.length < 12) {
+        rez.push( rez[rez.length - 1] / 2.0 );
+    }
+
     // Create a slippy map.
     var olmap = new OpenLayers.Map('map', {
         // The resolutions here must match the settings in geowebcache.
-        // TODO Fetch these resolutions from geowebcache
-	resolutions: [
-            2035.2734375, 1017.63671875, 508.818359375, 
-            254.4091796875, 127.20458984375, 63.602294921875,
-            31.8011474609375, 15.90057373046875, 7.950286865234375,
-            3.9751434326171875, 1.9875717163085938, 0.9937858581542969
-            /* These are valid resolutions, but way too detailed for
-               this application.
-            0.49689292907714844, 0.24844646453857422, 0.12422323226928711,
-            0.062111616134643555, 0.031055808067321777, 0.015527904033660889,
-            0.007763952016830444, 0.003881976008415222, 0.001940988004207611,
-            9.704940021038055E-4, 4.8524700105190277E-4, 2.4262350052595139E-4,
-            1.2131175026297569E-4 */
-        ],
-        maxExtent: layerExtent,
+	resolutions: rez,
+        maxExtent: maxExtent,
         projection: projection,
         units: 'm',
         controls: [
@@ -185,7 +201,7 @@ function init() {
     // TODO Fetch a list of layers from geowebcache
     var layers = [];
     for (layer in MAP_LAYERS) {
-        layers.push(createLayer( MAP_LAYERS[layer], MAP_LAYERS[layer], layerExtent ));
+        layers.push(createLayer( MAP_LAYERS[layer], MAP_LAYERS[layer], srs, maxExtent ));
     }
 
     // The strategy for loading the districts. This is effectively
@@ -202,7 +218,7 @@ function init() {
         strokeOpacity: 1,
         strokeWidth: 2,
         label: '${name}',
-        fontColor: '#ffffff',
+        fontColor: '#663300',
         fontSize: '10pt',
         fontFamily: 'Arial,Helvetica,sans-serif',
         fontWeight: '800',
@@ -276,7 +292,7 @@ function init() {
         featureType: getSnapLayer().layer,
         featureNS: 'http://gmu.azavea.com/',
         featurePrefix: 'gmu',
-        srsName: 'EPSG:3785',
+        srsName: srs,
         geometryName: 'geom'
     });
 
@@ -285,7 +301,7 @@ function init() {
         featureType: 'identify_geounit',
         featureNS: 'http://gmu.azavea.com/',
         featurePrefix: 'gmu',
-        srsName: 'EPSG:3785',
+        srsName: srs,
         geometryName: 'geom'
     });
 
@@ -1290,7 +1306,7 @@ function init() {
 
     // Set the initial map extents to the bounds around the study area.
     // TODO Make these configurable.
-    olmap.zoomToExtent(new OpenLayers.Bounds(-9467000,4570000,-8930000,5170000));
+    olmap.zoomToExtent(maxExtent);
     OpenLayers.Element.addClass(olmap.viewPortDiv, 'olCursorWait');
 
     // set up sizing for dynamic map size that fills the pg
