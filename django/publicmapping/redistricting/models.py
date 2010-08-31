@@ -662,6 +662,11 @@ class Plan(models.Model):
         rows = cursor.fetchall()
         features = []
         for row in rows:
+            # Maybe the most recent district is empty
+            if row[7]:
+                geom = json.loads( row[7] )
+            else:
+                geom = None
             features.append({ 
                 'id': row[0],
                 'properties': {
@@ -670,7 +675,7 @@ class Plan(models.Model):
                     'version': row[3],
                     'number': float(row[6])
                 },
-                'geometry': json.loads( row[7] )
+                'geometry': geom
             })
 
         # Return a python dict, which gets serialized into geojson
