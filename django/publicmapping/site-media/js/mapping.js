@@ -241,7 +241,8 @@ function mapinit(srs,maxExtent) {
         units: 'm',
         controls: [
             navigate,
-            new OpenLayers.Control.PanZoomBar()
+            new OpenLayers.Control.PanZoomBar(),
+            new OpenLayers.Control.KeyboardDefaults()
         ]
     });
 
