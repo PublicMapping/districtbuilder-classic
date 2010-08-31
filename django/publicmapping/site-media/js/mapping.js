@@ -952,6 +952,12 @@ function mapinit(srs,maxExtent) {
         idControl.deactivate();
         $('#anchor_tool').removeClass('toggle');
         tipdiv.style.display = 'none';
+
+        // enable single select tool if no selection tool is enabled
+        if (!(getControl.active || boxControl.active || polyControl.active)) {
+            getControl.activate();
+            $('#single_drawing_tool').addClass('toggle');
+        }
     });
 
     $('#anchor_tool').click(function(evt){
@@ -971,6 +977,12 @@ function mapinit(srs,maxExtent) {
         idControl.deactivate();
         $('#dragdrop_tool').removeClass('toggle');
         tipdiv.style.display = 'none';
+
+        // enable single select tool if no selection tool is enabled
+        if (!(getControl.active || boxControl.active || polyControl.active)) {
+            getControl.activate();
+            $('#single_drawing_tool').addClass('toggle');
+        }
     });
 
     // Add the created controls to the map
