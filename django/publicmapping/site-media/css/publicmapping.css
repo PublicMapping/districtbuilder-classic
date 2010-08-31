@@ -602,7 +602,7 @@ div.toolset#toolset_draw .ui-icon {
 #dragdrop_tool .ui-icon {
   background-image: url(/site-media/images/icon-drop.png);
 }
-#paint_tool .ui-icon {
+#anchor_tool .ui-icon {
   background-image: url(/site-media/images/icon-anchor.png);
 }
 #history_undo .ui-icon {
