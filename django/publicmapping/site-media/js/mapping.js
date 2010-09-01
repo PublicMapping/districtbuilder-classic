@@ -1107,11 +1107,9 @@ function mapinit(srs,maxExtent) {
             if (selection.features.length > 0) {
                 var active = olmap.getControlsBy('active',true);
                 dragdropControl.resumeTool = null;
-                for (var i = 0; i < active.length; i++) {
+                for (var i = 0; i < active.length && dragdropControl.resumeTool == null; i++) {
                     if (active[i].CLASS_NAME != 'OpenLayers.Control.KeyboardDefaults') {
-                        if (dragdropControl.resumeTool == null) {
-                            dragdropControl.resumeTool = active[i];
-                        }
+                        dragdropControl.resumeTool = active[i];
                         active[i].deactivate();
                     }
                 }
