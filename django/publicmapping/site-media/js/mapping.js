@@ -757,7 +757,7 @@ function mapinit(srs,maxExtent) {
     */ 
     var featureOnScreen = function(feature, bounds) {
         if (bounds && feature.geometry) {
-            return bounds.intersectsBounds(feature.geometry.getBounds());
+            return feature.geometry.intersects(bounds.toGeometry());
         } else {
             return feature.onScreen();
         }
@@ -1353,7 +1353,6 @@ function mapinit(srs,maxExtent) {
     $('#snapto').trigger('change');
 
     // Set the initial map extents to the bounds around the study area.
-    // TODO Make these configurable.
     olmap.zoomToExtent(maxExtent);
     OpenLayers.Element.addClass(olmap.viewPortDiv, 'olCursorWait');
 
