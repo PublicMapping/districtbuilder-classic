@@ -32,7 +32,7 @@
 <VirtualHost *:80>
 	ServerAdmin AzaveaDev@azavea.com
 
-        WSGIDaemonProcess geodjango user=www-data group=www-data processes=1 threads=25 display-name=publicmapping
+        WSGIDaemonProcess geodjango user=www-data group=www-data threads=2 display-name=publicmapping
         WSGIProcessGroup geodjango
         WSGIScriptAlias / /projects/publicmapping/trunk/django/publicmapping.wsgi
 
@@ -73,7 +73,7 @@
 
 	# Possible values include: debug, info, notice, warn, error, crit,
 	# alert, emerg.
-	LogLevel warn
+	LogLevel debug
 
 	CustomLog /var/log/apache2/publicmapping-access.log combined
 
