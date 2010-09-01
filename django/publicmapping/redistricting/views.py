@@ -286,7 +286,6 @@ def getreport(request, planid):
     for i in range(min_id, max_id + 1):
         if i in district_list:
             district_id = district_list[i]
-            sorted_district_list.append(district_list[i])
         else:
             district_id = None
         sorted_district_list.append(district_id)

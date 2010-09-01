@@ -92,7 +92,7 @@ reports = function(options) {
             $('button', $btnOpenReport).button();
         } 
         else {
-            $('<div title="Report Error>Sorry, we weren\'t able to preview this report; <p>' + data.message + '</p></div>').dialog({ autoOpen:true });
+            $('<div title="Report Error">Sorry, we weren\'t able to preview this report; <p>' + data.message + '</p></div>').dialog({ autoOpen:true });
         }
     };
 
