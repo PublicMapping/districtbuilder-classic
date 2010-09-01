@@ -26,10 +26,13 @@
 #  
 #   Author: David Zwarg, Andrew Jennings
 #
+        
+        # Necessary to keep rPy2 from throwing exceptions
+        WSGIRestrictStdout Off
 <VirtualHost *:80>
 	ServerAdmin AzaveaDev@azavea.com
 
-        WSGIDaemonProcess geodjango user=www-data group=www-data processes=5 threads=1
+        WSGIDaemonProcess geodjango user=www-data group=www-data processes=1 threads=25 display-name=publicmapping
         WSGIProcessGroup geodjango
         WSGIScriptAlias / /projects/publicmapping/trunk/django/publicmapping.wsgi
 
@@ -48,6 +51,12 @@
 
         Alias /media/ /projects/publicmapping/trunk/django/publicmapping/admin-media/
         <Directory /projects/publicmapping/trunk/django/publicmapping/admin-media>
+	    Options Indexes FollowSymLinks
+            Order deny,allow
+            Allow from all
+        </Directory>
+
+        <Directory /projects/publicmapping/local/reports/>
 	    Options Indexes FollowSymLinks
             Order deny,allow
             Allow from all

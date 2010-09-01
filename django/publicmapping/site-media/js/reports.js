@@ -2,8 +2,8 @@ reports = function(options) {
 
     var _self = {},
         _options = $.extend({
-            previewContainer: $('#evaluateMap'),
-            trigger: $('#btnPrintReport'),
+            previewContainer: $('#reportPreview'),
+            trigger: $('#btnPreviewReport'),
             reportUrl: '',
             callback: function() {}
         }, options),
@@ -85,6 +85,11 @@ reports = function(options) {
         $working.dialog('close');
         if (data.success) {
             _options.previewContainer.html(data.preview); 
+            var link = 'http://' + location.host + data.file
+            $btnOpenReport = $('<a href="' + link + '" target="report" ><button id="btnOpenReport">Open report in a new window</button></a>');
+            $('#reportButtons #btnOpenReport').remove();
+            $('#reportButtons').append($btnOpenReport);  
+            $('button', $btnOpenReport).button();
         } 
         else {
             $('<div title="Report Error>Sorry, we weren\'t able to preview this report; <p>' + data.message + '</p></div>').dialog({ autoOpen:true });

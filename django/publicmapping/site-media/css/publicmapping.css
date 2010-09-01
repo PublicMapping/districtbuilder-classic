@@ -941,8 +941,8 @@ span.popstatus {
   border: 1px solid #91c4b9;
 }
 .farunder {
-  background: #CED6D5;
-  border: 1px solid #B4BFBD;
+  background: #0AAC98;
+  border: 1px solid #048474;
 }
 .target {
   background: #eeeeee;
@@ -1004,12 +1004,13 @@ button#stats_legend {
   width: 100%;
 }
 
-/* bard map previews */
-div.bardmap {
+/* bard report previews */
+div.report {
     top:40;
     height:95%;
     width: 95%;
-    background-color: #FFFFFF;
+    background-color: #779E7B;
+    overflow: auto;
 }
 
 /* Evaluate page */
@@ -1048,16 +1049,28 @@ div.evaluate {
 .reportVar {
     padding-left:15px;
 }
-#evaluateMapContainer {
+#reportPreviewContainer {
     position:absolute;
     top:10px;
     right:10px;
     height:500px;
     width: 40%;
 }
+#btnSharePlans {
+    float:right;
+}
 /* Share page */
 div.share {
     background: #ACAE87 !important;
+}
+
+div.share p {
+    font-size:80%;
+}
+
+div#nameandshare,
+#btnSaveAndShare {
+    margin:10px;
 }
 
 .share #successfulShare {

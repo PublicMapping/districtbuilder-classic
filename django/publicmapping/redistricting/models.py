@@ -662,6 +662,7 @@ class Plan(models.Model):
         rows = cursor.fetchall()
         features = []
         for row in rows:
+            district = District.objects.get(pk=int(row[0]))
             # Maybe the most recent district is empty
             if row[7]:
                 geom = json.loads( row[7] )
@@ -673,7 +674,10 @@ class Plan(models.Model):
                     'district_id': row[1],
                     'name': row[2],
                     'version': row[3],
-                    'number': float(row[6])
+                    'number': float(row[6]),
+                    'contiguous': district.is_contiguous(),
+                    'compactness': district.get_schwartzberg_raw()
+                    
                 },
                 'geometry': geom
             })
@@ -869,6 +873,25 @@ class District(models.Model):
         return changed
         
 
+    def get_schwartzberg_raw(self):
+        """
+        Generate Schwartzberg measure of compactness.
+        
+        The Schwartzberg measure of compactness measures the perimeter of 
+        the district to the circumference of the circle whose area is 
+        equal to the area of the district.
+
+        Returns:
+            The Schwartzberg measure as a raw number.
+        """
+        try:
+            r = sqrt(self.geom.area / pi)
+            perimeter = 2 * pi * r
+            ratio = perimeter / self.geom.length
+            return ratio
+        except:
+            return None
+        
     def get_schwartzberg(self):
         """
         Generate Schwartzberg measure of compactness.
@@ -878,14 +901,12 @@ class District(models.Model):
         equal to the area of the district.
 
         Returns:
-            The Schwartzberg measure.
+            The Schwartzberg measure, formatted as a percentage.
         """
-        try:
-            r = sqrt(self.geom.area / pi)
-            perimeter = 2 * pi * r
-            ratio = perimeter / self.geom.length
+        ratio = self.get_schwartzberg_raw()
+        if ratio:
             return "%.2f%%" % (ratio * 100)
-        except:
+        else: 
             return "n/a"
 
     def is_contiguous(self):

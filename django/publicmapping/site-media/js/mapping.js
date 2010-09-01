@@ -46,14 +46,15 @@ function getShowBy() {
 /*
  * Get the value of the "Show Districts by:" dropdown. This returns
  * an object with a 'by' and 'modified' property, since the selection
- * of this dropdown may also be 'None' but for performance and query
- * reasons, the subject ID may not be empty.
+ * of this dropdown may also be 'None', 'Compactness' or 'Contiguity'
+ *  but for performance and query reasons, the subject ID may not be empty.
  */
 function getDistrictBy() {
     var orig = $('#districtby').val();
-    var mod = new RegExp('^(.*)\.None').test(orig);
+    var mod = new RegExp('^(.*)\.(None|Compactness|Contiguity)').test(orig);
     if (mod) {
         orig = RegExp.$1;
+        mod = RegExp.$2;
     }
     return { by: orig, modified: mod }; 
 }
@@ -816,18 +817,41 @@ function mapinit(srs,maxExtent) {
         OpenLayers.Element.addClass(olmap.viewPortDiv, 'olCursorWait');
     });
 
-    // Recompute the rules for the district styling prior to the adding
-    // of the features to the district layer.  This is done at this time
-    // to prevent 2 renderings from being triggered on the district layer.
-    districtLayer.events.register('beforefeaturesadded',districtLayer,function(context){
+
+    // This objec holds the mean and standard deviation for the compactness
+    // scores, calculated when the features are loaded.
+    var compactnessAvg = {};
+
+
+    var getCompactnessAvg = function(features) {
+        var average = function(a){
+            //+ Carlos R. L. Rodrigues
+            //@ http://jsfromhell.com/array/average [rev. #1]
+            var r = {mean: 0, variance: 0, deviation: 0}, t = a.length;
+            for(var m, s = 0, l = t; l--; s += a[l]);
+            for(m = r.mean = s / t, l = t, s = 0; l--; s += Math.pow(a[l] - m, 2));
+            return r.deviation = Math.sqrt(r.variance = s / t), r;
+        };
+
+        var scores = [];
+        for (var i = 0; i < features.length; i++) {
+            var feature = features[i];
+            scores.push(feature.attributes.compactness);
+        }
+        return average(scores);
+
+    };
+
+    // Get the OpenLayers styling rules for the map, given the district 
+    // layer and/or modification (e.g. No styling compactness) taken from
+    // the District By: dropdown.
+    var getStylingRules = function(typeName, dby) {
+        var rules = [];
         var lowestColor = $('.farunder').css('background-color');
         var lowerColor = $('.under').css('background-color');
         var upperColor = $('.over').css('background-color');
         var highestColor = $('.farover').css('background-color');
-        var newOptions = OpenLayers.Util.extend({}, districtStyle);
-        var dby = getDistrictBy();
-        var rules = [];
-        if (!dby.modified) {
+        if (typeName == 'demographics') {
             rules = [
                 new OpenLayers.Rule({
                     filter: new OpenLayers.Filter.Comparison({
@@ -884,7 +908,82 @@ function mapinit(srs,maxExtent) {
                     }
                 })
             ];
+        } else if (typeName == 'Contiguity') {
+            rules = [
+                new OpenLayers.Rule({
+                    filter: new OpenLayers.Filter.Comparison({
+                        type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                        property: 'contiguous',
+                        value: false
+                    }),
+                    symbolizer: {
+                        fillColor: highestColor,
+                        fillOpacity: 0.5
+                    }
+                }),
+                new OpenLayers.Rule({
+                    filter: new OpenLayers.Filter.Comparison({
+                        type: OpenLayers.Filter.Comparison.NOT_EQUAL_TO,
+                        property: 'contiguity',
+                        value: false
+                    })
+                })
+        
+            ];
+        } else if (typeName == 'Compactness') {
+            if (compactnessAvg) {
+                var upper = compactnessAvg.mean + (2 * compactnessAvg.deviation);
+                var lower = compactnessAvg.mean - (2 * compactnessAvg.deviation); 
+                rules = [
+                    new OpenLayers.Rule({
+                        filter: new OpenLayers.Filter.Comparison({
+                            type: OpenLayers.Filter.Comparison.LESS_THAN,
+                            property: 'compactness',
+                            value: lower 
+                        }),
+                        symbolizer: {
+                            fillColor: lowestColor,
+                            fillOpacity: 0.5
+                        }
+                    }),
+                    new OpenLayers.Rule({
+                        filter: new OpenLayers.Filter.Comparison({
+                            type: OpenLayers.Filter.Comparison.BETWEEN,
+                            property: 'compactness',
+                            lowerBoundary: lower,
+                            upperBoundary: upper
+                        })
+                    }),
+                    new OpenLayers.Rule({
+                        filter: new OpenLayers.Filter.Comparison({
+                            type: OpenLayers.Filter.Comparison.GREATER_THAN,
+                            property: 'compactness',
+                            value: upper 
+                        }),
+                        symbolizer: {
+                            fillColor: highestColor,
+                            fillOpacity: 0.5
+                        }
+                    }),
+                ];
+            }
+
         }
+        return rules;
+    };
+    // Recompute the rules for the district styling prior to the adding
+    // of the features to the district layer.  This is done at this time
+    // to prevent 2 renderings from being triggered on the district layer.
+    districtLayer.events.register('beforefeaturesadded',districtLayer,function(context){
+        var newOptions = OpenLayers.Util.extend({}, districtStyle);
+        var dby = getDistrictBy();
+        var rules = []
+        if (!dby.modified) {
+            rules = getStylingRules('demographics', dby);
+        } else {
+            rules = getStylingRules(dby.modified, dby);
+        }
+        
         var newStyle = new OpenLayers.Style(newOptions,{
             rules:rules
         });
@@ -903,6 +1002,7 @@ function mapinit(srs,maxExtent) {
         sorted.sort(function(a,b){
             return a.attributes.name > b.attributes.name;
         });
+        compactnessAvg = getCompactnessAvg(sorted);
 
         var working = $('#working');
         if (working.dialog('isOpen')) {

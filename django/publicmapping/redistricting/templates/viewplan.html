@@ -48,10 +48,7 @@
         var PLAN_VERSION = {% if plan %}{{ plan.version }}{% else %}0{% endif %};
         var UNASSIGNED_DISTRICT_ID = {% if unassigned_id %}{{ unassigned_id }}{% else %}0{% endif %};
         var SNAP_LAYERS = [ {% for snap in snaplayers %} { geolevel: {{ snap.geolevel }}, level: '{{ snap.layer }}',layer: 'simple_{{ snap.layer }}', name: '{{ snap.name }}' }{% if not forloop.last %},{% endif %} {% endfor %} ];
-        var DEMOGRAPHICS = [{% for demo in demographics %} { id: {{ demo.id }}, text: '{{ demo.text }}', value: '{{ demo.value }}', isdefault: {{ demo.isdefault }}, isdisplayed: {{ demo.isdisplayed }} }{% if not forloop.last %},{% endif %} {% endfor %} ];
-        var MAP_LAYERS = [];
-        for (var i = 0; i < SNAP_LAYERS.length; i++) {
-            MAP_LAYERS.push( 'gmu:demo_' + SNAP_LAYERS[i].level );
+        var DEMOGRAPHICS = [{% for demo in demographics %} { id: {{ demo.id }}, text: '{{ demo.text }}', value: '{{ demo.value }}', isdefault: {{ demo.isdefault }}, isdisplayed: {{ demo.isdisplayed }} }{% if not forloop.last %},{% endif %} {% endfor %} ]; var MAP_LAYERS = []; for (var i = 0; i < SNAP_LAYERS.length; i++) { MAP_LAYERS.push( 'gmu:demo_' + SNAP_LAYERS[i].level );
             for (var j = 0; j < DEMOGRAPHICS.length; j++) {
                 MAP_LAYERS.push( 'gmu:demo_' + SNAP_LAYERS[i].level + '_' + DEMOGRAPHICS[j].value );
             }
@@ -156,6 +153,8 @@
                         var demo = DEMOGRAPHICS[i];
                         if ( i == 0 ) {
                             document.write('<option value="' + demo.id + '.None">None</option>');
+                            document.write('<option value="' + demo.id + '.Compactness">Compactness</option>');
+                            document.write('<option value="' + demo.id + '.Contiguity">Contiguity</option>');
                         }
                         if ( demo.isdisplayed ) {
                             document.write('<option value="' + demo.id + '"');
@@ -356,14 +355,14 @@
                 </div>
             </div>
             <div id="reportButtons">
-                <button id="btnPrintReport">Print Report</button>
+                <button id="btnPreviewReport">Create and Preview Report</button>
+                <button id="btnSharePlans" onClick="$('#steps').tabs('select', '#step-3');return false;" >Go to Share Plan options</button>
+                           
             </div>
         </div>
-        <div id="evaluateMapContainer">
-            <div id="evaluateMap" class="bardmap">
+        <div id="reportPreviewContainer">
+            <div id="reportPreview" class="report">
             </div>
-            <div><button id="btnSharePlans" onClick="$('#steps').tabs('select', '#step-3');return false;" >Go to Share Plan options</button></div>
-                           
         </div>
     </div>
     {% block share_panel %}

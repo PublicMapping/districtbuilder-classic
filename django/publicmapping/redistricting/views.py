@@ -31,7 +31,7 @@ from django.http import *
 from django.core import serializers
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError, connection
-from django.db.models import Sum
+from django.db.models import Sum, Min, Max
 from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import login_required
 from django.contrib.gis.gdal import *
@@ -172,16 +172,20 @@ def createplan(request):
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
 def load_bard_workspace():
-    r.library('BARD')
-    r.library('R2HTML')
-    r.gpclibPermit()
+    try:
+        r.library('BARD')
+        r.library('R2HTML')
+        r.gpclibPermit()
 
-    global bardmap
-    bardmap = r.readBardMap(settings.BARD_BASESHAPE)
+        global bardmap
+        bardmap = r.readBardMap(settings.BARD_BASESHAPE)
 
-    global bardWorkSpaceLoaded
-    bardWorkSpaceLoaded = True
-    
+        global bardWorkSpaceLoaded
+        bardWorkSpaceLoaded = True
+    except:
+        sys.stderr.write('BARD Could not be loaded.  Check your configuration and available memory')
+        return
+ 
 bardWorkSpaceLoaded = False
 bardmap = {}
 bardLoadingThread = threading.Thread(target=load_bard_workspace, name='loading_bard') 
@@ -204,34 +208,34 @@ def getreport(request, planid):
             status['message'] = 'Couldn\'t load BARD'
             return HttpResponse(json.dumps(status),mimetype='application/json')
               
-#  PMP reporrt interface
-#    PMPreport<-function(
-#       bardMap,
-#       blockAssignmentID="BARDPlanID",
-#       popVar=list("Total Population"="POPTOT",tolerance=.01),
-#       popVarExtra=list("Voting Age Population"="VAPTOT","Voting Age
-#Population Black"="VAPHWHT"),
-#       ratioVars=list(
-#               "Majority Minority Districts"=list(
-#                       denominator=list("Total Population"="POPTOT"),
-#                       threshold=.6,
-#                       numerators=list("Black Population"="POPBLK", "Hispanic Population"="POPHISP")
-#                  ),
-#               "Party-Controlled Districts"=list(
-#                       threshold=.55,
-#                       numerators=list("Democratic Votes"="PRES_DEM", "Republican Votes"="PRES_REP")
-#                  )
-#       ),
-#       splitVars = list("County"="COUNTY", "Tract"="TRACT"),
-#       blockLabelVar="CTID",
-#       repCompactness=TRUE,
-#       repCompactnessExtra=FALSE,
-#       repSpatial=TRUE,
-#       repSpatialExtra=FALSE,
-#       useHTML=TRUE,
-#       ...)  {
-#...
-#}
+        #  PMP reporrt interface
+        #    PMPreport<-function(
+        #       bardMap,
+        #       blockAssignmentID="BARDPlanID",
+        #       popVar=list("Total Population"="POPTOT",tolerance=.01),
+        #       popVarExtra=list("Voting Age Population"="VAPTOT","Voting Age
+        #Population Black"="VAPHWHT"),
+        #       ratioVars=list(
+        #               "Majority Minority Districts"=list(
+        #                       denominator=list("Total Population"="POPTOT"),
+        #                       threshold=.6,
+        #                       numerators=list("Black Population"="POPBLK", "Hispanic Population"="POPHISP")
+        #                  ),
+        #               "Party-Controlled Districts"=list(
+        #                       threshold=.55,
+        #                       numerators=list("Democratic Votes"="PRES_DEM", "Republican Votes"="PRES_REP")
+        #                  )
+        #       ),
+        #       splitVars = list("County"="COUNTY", "Tract"="TRACT"),
+        #       blockLabelVar="CTID",
+        #       repCompactness=TRUE,
+        #       repCompactnessExtra=FALSE,
+        #       repSpatial=TRUE,
+        #       repSpatialExtra=FALSE,
+        #       useHTML=TRUE,
+        #       ...)  {
+        #...
+        #}
 
     try:
         plan = Plan.objects.get(pk=planid)
@@ -252,22 +256,49 @@ def getreport(request, planid):
         extras = parameter_string.split('^')
         for extra in extras:
             pair = extra.split('|')
-            tl.append(robjects.StrVector(pair[1]), pair[0])
+            tl.append(pair[1], pair[0])
         return tl
     
+    district_list = dict()
+    district_names = { None: 'Unassigned' }
     geolevel = settings.BASE_GEOLEVEL
-    district_list = Geounit.objects.filter(geolevel = geolevel).extra(select={ 'district': "SELECT district_id from redistricting_district as d where st_contains(d.simple, center) limit 1" }).order_by('id').values_list('district', flat=True)
+    geounits = Geounit.objects.filter(geolevel = settings.BASE_GEOLEVEL)
+    # For each district, add to the district_list a dictionary of district_ids using the geounit_ids as keys
+    for district in districts:
+        if district.simple:
+            intersecting = geounits.filter(center__bboverlaps=district.simple).values_list('id', flat=True)
+            intersecting = dict.fromkeys(intersecting, district.district_id)
+            district_list.update(intersecting)
+            district_names[district.district_id] = district.name
 
-    district_list = r.createKmeansPlan(bardmap, len(districts))
+    # Get the min and max ids of the geounits in this level
+    max_and_min = geounits.aggregate(Min('id'), Max('id'))
+    min_id = int(max_and_min['id__min'])
+    max_id = int(max_and_min['id__max'])
+
+    sorted_district_list = list()
+    names = list()
+    # Sort the geounit_id list and add them to the district_list in order.
+    # This ordering depends on the geounits in the shapefile matching the order of the imported geounits.
+    # If this ordering is the same, the geounits' ids don't have to match their fids in the shapefile
+    for i in range(min_id, max_id + 1):
+        if i in district_list:
+            district_id = district_list[i]
+            sorted_district_list.append(district_list[i])
+        else:
+            district_id = None
+        sorted_district_list.append(district_id)
+        # Add the names for the districts so we can display them later
+        names.append(district_names[district_id])
     # Now we need an R Vector
-    block_ids = r['as.integer'](district_list)
+    block_ids = robjects.IntVector(sorted_district_list)
+    block_ids.names = robjects.StrVector(names)
 
     # Get the other report varialbes from the POST request.  We'll only add them to the report if they're in the request
     popVar = request.POST.get('popVar', None)
     if popVar:
-        var = get_tagged_list(popVar)
-        var.append(.1, 'tolerance')
-        pop_var = robjects.StrVector(var)
+        pop_var = get_tagged_list(popVar)
+        pop_var.append(.1, 'tolerance')
 
     popVarExtra = request.POST.get('popVarExtra', None)
     if popVarExtra:
@@ -321,7 +352,6 @@ def getreport(request, planid):
         rep_spatial = r(True)
     else:
         rep_spatial = r(False)
-    print 'repSpatial: %s ;rep_spatial value: %s' % (repSpatial, rep_spatial)
 
     repSpatialExtra = request.POST.get('repSpatialExtra', None)
     if 'true' == repSpatialExtra:
@@ -332,26 +362,25 @@ def getreport(request, planid):
     try:
         # set up the temp dir and filename
         tempdir = settings.BARD_TEMP
-        filename = '%s_%s_%s' % (plan.owner.username, plan.name, datetime.now())
+        filename = '%s_%s_%s' % (plan.owner.username, plan.name, datetime.now().strftime('%y%m%d_%H%M'))
         r.copyR2HTMLfiles(tempdir)
         report = r.HTMLInitFile(tempdir, filename=filename, BackGroundColor="#BBBBEE", Title="Plan Analysis")
         title = r['HTML.title']
         r['HTML.title']("Plan Analysis", HR=2, file=report)
         # Now write the report to the temp dir
-        print datetime.now()
         r.PMPreport( bardmap, block_ids, file = report, popVar = pop_var, popVarExtra = pop_var_extra, ratioVars = ratio_vars, splitVars = split_vars, repCompactness = rep_compactness, repCompactnessExtra = rep_compactness_extra, repSpatial = rep_spatial, repSpatialExtra = rep_spatial_extra)
-        print datetime.now()
         r.HTMLEndFile()
 
-        # BARD has written the report to file - read it
+        # BARD has written the report to file - read it and put it in as the preview
         f = open(report[0], 'r')
         status['preview'] = f.read()
+        status['file'] = '/reports/%s.html' % filename
         status['message'] = 'Report successful'
         f.close()
 
         status['success'] = True
     except Exception as ex:
-        status['message'] = '<div class="error" title="error">Sorry, there was an error with the report: %s' % ex.message    
+        status['message'] = '<div class="error" title="error">Sorry, there was an error with the report: %s' % ex    
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
 @login_required
