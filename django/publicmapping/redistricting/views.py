@@ -195,8 +195,10 @@ bardLoadingThread.start()
 
 @login_required
 def getreport(request, planid):
-    """ This will return an HTML blob from BARD's PMPReport method.  Should be suitable for planting
-    into a <div>
+    """ This method takes a request with given variables and a plan id.  It will write out an 
+    HTML-formatted BARD report to the directory given in the settings, and return that same
+    HTML for use as a preview in the web application, along with the web address of the 
+    BARD report.
     """
     bardTries = 0
     status = { 'success': False, 'message': 'Unspecified Error' }
