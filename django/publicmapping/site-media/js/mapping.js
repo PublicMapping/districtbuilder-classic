@@ -179,7 +179,23 @@ function init() {
             MAP_SERVER + '/geoserver/ows?service=wms&version=1.1.1' +
             '&request=GetCapabilities&namespace=' + NAMESPACE),
         type: 'GET',
-        success: function(data, textStatus, xhr) {
+        // success does not get called by jquery in IE,
+        // use complete instead
+        complete: function(xhr, textStatus) {
+            var data = null;
+            if (xhr.responseXML == null) {
+                var parser = new DOMParser();
+                data = parser.parseFromString(xhr.responseText, 'text/xml');
+            }
+            else if (xhr.responseXML.childNodes.length == 0) {
+                data = new ActiveXObject('Microsoft.XMLDOM');
+                data.async = 'false';
+                data.loadXML(xhr.responseText);
+            }
+            else {
+                data = xhr.responseXML;
+            }
+                
             var layer = getSnapLayer().layer;
             // get the layers in the response
             var layers = $('Layer > Layer',data);
