@@ -188,9 +188,10 @@ def load_bard_workspace():
  
 bardWorkSpaceLoaded = False
 bardmap = {}
-bardLoadingThread = threading.Thread(target=load_bard_workspace, name='loading_bard') 
-bardLoadingThread.daemon = True
-bardLoadingThread.start()
+if settings.REPORTS_ENABLED:
+    bardLoadingThread = threading.Thread(target=load_bard_workspace, name='loading_bard') 
+    bardLoadingThread.daemon = True
+    bardLoadingThread.start()
 
 
 @login_required
@@ -200,15 +201,13 @@ def getreport(request, planid):
     HTML for use as a preview in the web application, along with the web address of the 
     BARD report.
     """
-    bardTries = 0
     status = { 'success': False, 'message': 'Unspecified Error' }
-    while not bardWorkSpaceLoaded:
-        if bardTries < 3:
-            bardTries += 1
-            time.sleep(5)
+    if not bardWorkSpaceLoaded:
+        if not settings.REPORTS_ENABLED:
+            status['message'] = 'Reports functionality is turned off.'
         else:
-            status['message'] = 'Couldn\'t load BARD'
-            return HttpResponse(json.dumps(status),mimetype='application/json')
+            status['message'] = 'Reports funcionality is not ready. Please try again later.'
+        return HttpResponse(json.dumps(status),mimetype='application/json')
               
         #  PMP reporrt interface
         #    PMPreport<-function(

@@ -162,6 +162,11 @@ MAX_DISTRICTS = 18
 # This may be a subject ID, name, or display field
 DEFAULT_DISTRICT_DISPLAY = 'POPTOT'
 
+# This settings determines whether reports are runnning.  If they are
+# not running, the user will get a friendly error message when they 
+# attempt to run a report
+REPORTS_ENABLED = True
+
 # The bard base shape that will be used to create bard reports.  This 
 # should be a bardmap image containing data for the base geounits
 
