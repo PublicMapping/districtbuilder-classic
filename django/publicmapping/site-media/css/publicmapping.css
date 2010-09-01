@@ -575,9 +575,12 @@ cursor: not-allowed;
 }
 
 div.toolset#toolset_draw .ui-icon {
- margin-top: -12px;
- background-position: 50% 50%;
- background-repeat:none;
+    margin-top: -12px;
+    background-position: 50% 50%;
+    background-repeat:none;
+    /* Chrome hack */
+    [margin-top: -12px;
+    margin-top: -8px;]
 }
 div.toolset#toolset_draw .ui-icon {
     /* IE specific hack */
@@ -704,6 +707,9 @@ div#map_menu_header button.menu_toggle{
 }
 button.menu_toggle .ui-icon {
     margin-top: -11px;
+    /* Chrome hack */
+    [margin-top: -11px;
+    margin-top: -8px;]
 }
 button.menu_toggle .ui-icon {
     /* IE hack */
