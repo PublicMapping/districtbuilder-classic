@@ -422,6 +422,7 @@
             callback: function() { $(".ui-dialog-titlebar-close").hide();  $('#difplanbtn').click(); },
             closeOnEscape:false,
             {% endif %}
+            anonymous: {% if is_anonymous %}true{% else %}false{% endif %},
             target: $('#difplanbtn'),
             container: $('#DialogContainer'),
             modal: true,

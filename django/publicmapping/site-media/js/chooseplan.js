@@ -115,7 +115,7 @@ publicmapping.chooseplan = function(options) {
         else {
             $('#btnSelectPlan').show();
         }
-        if (_eventType == 'blank' || _eventType == 'template' || _eventType == 'shared' || 
+        if (_eventType == 'blank' || _eventType == 'template' || (_eventType == 'shared' && !_options.anonymous) || 
             ( selectorId == '#MineSelection' && $('input:radio:checked').val() == 'saveas'  )) {
             $('#NewName').show();
             _nameRequired = true;
