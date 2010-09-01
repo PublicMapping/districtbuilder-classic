@@ -107,8 +107,8 @@ function doMapStyling() {
     $('#OpenLayers\\.Control\\.PanZoomBar_3_panleft').addClass('olControlPan olControlPanLeftItemInactive');
     $('#OpenLayers\\.Control\\.PanZoomBar_3_zoomin').addClass('olControlZoom olControlZoomInInactive');   
     $('#OpenLayers\\.Control\\.PanZoomBar_3_zoomout').addClass('olControlZoom olControlZoomOutInactive'); 
-    $('#OpenLayers\\.Control\\.PanZoomBar_3_OpenLayers\\.Map_4').addClass('olControlZoom olControlZoomGrabInactive'); 
-    $('#OpenLayers_Control_PanZoomBar_ZoombarOpenLayers\\.Map_4').addClass('olControlZoom olControlZoomBarInactive');     
+    $('#OpenLayers\\.Control\\.PanZoomBar_3_OpenLayers\\.Map_5').addClass('olControlZoom olControlZoomGrabInactive'); 
+    $('#OpenLayers_Control_PanZoomBar_ZoombarOpenLayers\\.Map_5').addClass('olControlZoom olControlZoomBarInactive');
 }
 
 /*
