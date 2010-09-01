@@ -56,7 +56,7 @@ DATABASE_PORT = ''             # Set to empty string for default. Not used with 
 # although not all choices may be available on all operating systems.
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
-TIME_ZONE = 'America/Chicago'
+TIME_ZONE = 'US/Eastern'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
@@ -179,7 +179,7 @@ BARD_BASEMAP = 'oh_blocks.bardmap'
 # anything between 80 and 90 or 110 and 120 is "under" or "over", 
 # respectively, and anything less than 80 or more than 120 is "farunder" 
 # or "farover", respectively
-BARD_TEMP = '/projects/publicmapping/local/temp'
+BARD_TEMP = '/projects/publicmapping/local/reports'
 """ This temp directory is where BARD will write HTML reports
 """
 POPTARGET_RANGE1 = .1
