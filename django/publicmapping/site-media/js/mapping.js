@@ -487,10 +487,9 @@ function mapinit(srs,maxExtent) {
             var addme = [];
             for (var i = 0; i < features.length; i++) {
                 var match = false;
-                for (var j = 0; j < selection.features.length; j++) {
+                for (var j = 0; j < selection.features.length && !match; j++) {
                     if (features[i].data.id == selection.features[j].data.id) {
                         match = true;
-                        break;
                     }
                 }
                 if (!match) {
@@ -518,7 +517,13 @@ function mapinit(srs,maxExtent) {
             }
         }
         else if (assignMode == 'dragdrop') {
-            var currentTool = olmap.getControlsBy('active',true)[0];
+            var active = olmap.getControlsBy('active',true);
+            var currentTool = null;
+            for (var i = 0; i < active.length && currentTool == null; i++) {
+                if (active[i].CLASS_NAME != 'OpenLayers.Control.KeyboardDefaults') {
+                    currentTool = active[i];
+                }
+            }
             currentTool.deactivate();
 
             dragdropControl.resumeTool = currentTool;
@@ -1070,12 +1075,9 @@ function mapinit(srs,maxExtent) {
     // the default style
     var getDefaultStyle = function(sld, layerName) {
         var styles = sld.namedLayers[layerName].userStyles;
-        var style;
-        for(var i=0; i<styles.length; ++i) {
+        var style = { isDefault:false };
+        for(var i=0; i<styles.length && !style.isDefault; ++i) {
             style = styles[i];
-            if(style.isDefault) {
-                break;
-            }
         }
         return style;
     }
