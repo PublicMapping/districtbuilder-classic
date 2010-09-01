@@ -258,6 +258,7 @@ function mapinit(srs,maxExtent) {
         maxExtent: maxExtent,
         projection: projection,
         units: 'm',
+        panMethod: null,
         controls: [
             navigate,
             new OpenLayers.Control.PanZoomBar(),
