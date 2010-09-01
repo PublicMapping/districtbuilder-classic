@@ -227,7 +227,9 @@ function mapinit(srs,maxExtent) {
     });
 
     // Dynamically compute the resolutions, based on the map extents.
-    var rez = [(maxExtent.right - maxExtent.left) / 256.0];
+    // NOTE: Geoserver computes the resolution with the top and the bottom
+    // components of the extent, NOT the left/right.
+    var rez = [(maxExtent.top - maxExtent.bottom) / 256.0];
     while (rez.length < 12) {
         rez.push( rez[rez.length - 1] / 2.0 );
     }
