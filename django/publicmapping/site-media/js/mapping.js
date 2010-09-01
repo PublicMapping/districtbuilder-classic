@@ -1142,6 +1142,18 @@ function mapinit(srs,maxExtent) {
         else {
             me.addClass('toggle');
             assignMode = 'anchor';
+
+            var anchorTip = $('#anchor_tool').data('tooltip');
+            anchorTip.hide();
+            var assignTip = $('#assign_district').data('tooltip');
+            assignTip.show();
+            // must show before grabbing text
+            var origText = assignTip.getTip().text();
+            assignTip.getTip().text('Select the destination district');
+            setTimeout(function(){
+                assignTip.getTip().hide();
+                assignTip.getTip().text(origText);
+            }, 5000);
         }
         $('#navigate_map_tool').removeClass('toggle');
         navigate.deactivate();
