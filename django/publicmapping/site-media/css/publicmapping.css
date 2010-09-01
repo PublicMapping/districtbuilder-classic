@@ -1232,6 +1232,9 @@ div#tipclose {
   width: 23px !important;
   height: 10px !important;
 }
+#ui-dialog-title-working {
+    font-size: 9pt;
+}
 #working {
-    font-size: 12pt;
+    font-size: 9pt;
 }
