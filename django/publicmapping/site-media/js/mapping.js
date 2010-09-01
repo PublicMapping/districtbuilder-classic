@@ -265,7 +265,6 @@ function mapinit(srs,maxExtent) {
     });
 
     // These layers are dependent on the layers available in geowebcache
-    // TODO Fetch a list of layers from geowebcache
     var layers = [];
     for (layer in MAP_LAYERS) {
         layers.push(createLayer( MAP_LAYERS[layer], MAP_LAYERS[layer], srs, maxExtent ));
@@ -915,7 +914,9 @@ function mapinit(srs,maxExtent) {
     $('#navigate_map_tool').click(function(evt){
         var active = olmap.getControlsBy('active',true);
         for (var i = 0; i < active.length; i++) {
-            active[i].deactivate();
+            if (active[i].CLASS_NAME != 'OpenLayers.Control.KeyboardDefaults') {
+                active[i].deactivate();
+            }
         }
         navigate.activate();
         $('#dragdrop_tool').removeClass('toggle');
@@ -930,7 +931,9 @@ function mapinit(srs,maxExtent) {
     $('#identify_map_tool').click(function(evt){
         var active = olmap.getControlsBy('active',true);
         for (var i = 0; i < active.length; i++) {
-            active[i].deactivate();
+            if (active[i].CLASS_NAME != 'OpenLayers.Control.KeyboardDefaults') {
+                active[i].deactivate();
+            }
         }
         idControl.activate();
         $('#dragdrop_tool').removeClass('toggle');
@@ -944,7 +947,9 @@ function mapinit(srs,maxExtent) {
     $('#single_drawing_tool').click(function(evt){
         var active = olmap.getControlsBy('active',true);
         for (var i = 0; i < active.length; i++) {
-            active[i].deactivate();
+            if (active[i].CLASS_NAME != 'OpenLayers.Control.KeyboardDefaults') {
+                active[i].deactivate();
+            }
         }
         getControl.activate();
         getControl.features = selection.features;
@@ -956,7 +961,9 @@ function mapinit(srs,maxExtent) {
     $('#rectangle_drawing_tool').click(function(evt){
         var active = olmap.getControlsBy('active',true);
         for (var i = 0; i < active.length; i++) {
-            active[i].deactivate();
+            if (active[i].CLASS_NAME != 'OpenLayers.Control.KeyboardDefaults') {
+                active[i].deactivate();
+            }
         }
         boxControl.activate();
         boxControl.features = selection.features;
@@ -968,7 +975,9 @@ function mapinit(srs,maxExtent) {
     $('#polygon_drawing_tool').click(function(evt){
         var active = olmap.getControlsBy('active',true);
         for (var i = 0; i < active.length; i++) {
-            active[i].deactivate();
+            if (active[i].CLASS_NAME != 'OpenLayers.Control.KeyboardDefaults') {
+                active[i].deactivate();
+            }
         }
         polyControl.activate();
         tipdiv.style.display = 'none';
@@ -978,6 +987,7 @@ function mapinit(srs,maxExtent) {
     // controls except for the assignment tool.  
     $('#dragdrop_tool').click(function(evt){
         var me = $(this);
+        var selectionAlready = false;
         if (me.hasClass('toggle')) {
             me.removeClass('toggle');
             assignMode = null;
@@ -991,11 +1001,17 @@ function mapinit(srs,maxExtent) {
             assignMode = 'dragdrop';
             if (selection.features.length > 0) {
                 var active = olmap.getControlsBy('active',true);
+                dragdropControl.resumeTool = null;
                 for (var i = 0; i < active.length; i++) {
-                    active[i].deactivate();
+                    if (active[i].CLASS_NAME != 'OpenLayers.Control.KeyboardDefaults') {
+                        if (dragdropControl.resumeTool == null) {
+                            dragdropControl.resumeTool = active[i];
+                        }
+                        active[i].deactivate();
+                    }
                 }
                 dragdropControl.activate();
-                dragdropControl.resumeTool = active[0];
+                selectionAlready = true;
             }
         }
         $('#navigate_map_tool').removeClass('toggle');
@@ -1006,7 +1022,7 @@ function mapinit(srs,maxExtent) {
         tipdiv.style.display = 'none';
 
         // enable single select tool if no selection tool is enabled
-        if (!(getControl.active || boxControl.active || polyControl.active)) {
+        if (!(getControl.active || boxControl.active || polyControl.active) && !selectionAlready) {
             getControl.activate();
             $('#single_drawing_tool').addClass('toggle');
         }
