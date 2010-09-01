@@ -530,6 +530,7 @@ def getdemographics(request, planid):
     except:
         return HttpResponse ( "{ \"success\": false, \"message\":\"Couldn't get demographic info from the server. Please try again later.\" }" )
     subjects = Subject.objects.all()
+    headers = list(Subject.objects.all().values_list('short_display', flat=True))
     district_values = []
 
     if 'version' in request.REQUEST:
@@ -566,7 +567,8 @@ def getdemographics(request, planid):
     return render_to_response('demographics.html', {
         'plan': plan,
         'district_values': district_values,
-        'aggregate': getaggregate(districts),
+        'aggregate': getcompliance(districts),
+        'headers': headers
     })
 
 
@@ -643,12 +645,77 @@ def getgeography(request, planid):
     return render_to_response('geography.html', {
         'plan': plan,
         'district_values': district_values,
-        'aggregate': getaggregate(districts),
+        'aggregate': getcompliance(districts),
         'name': subject.short_display
     })
 
 
+def getcompliance(districts):
+    """ Returns compliance information about the districts, including contiguity and population 
+    target data, and minority districts
+    """
+    compliance = []
+
+    # Check each district for contiguity
+    contiguity = { 'name': 'Noncontiguous', 'value': 0 }
+    noncontiguous = 0
+    for district in districts:
+        if not district.is_contiguous():
+            noncontiguous += 1
+    if noncontiguous > 0:
+        contiguity['value'] = '%d districts' % noncontiguous
+    compliance.append(contiguity);
+
+    #Population targets
+    displayed = Subject.objects.filter(is_displayed__exact = True)
+    targets = Target.objects.filter(subject__in = displayed)
+    for target in targets:
+        data = { 'name': '%s (%s)' % (target.subject.short_display, target.lower), 'value': 'All meet target' } 
+        noncompliant = 0
+        for district in districts:
+            try:
+                characteristic = district.computedcharacteristic_set.get(subject__exact = target.subject) 
+                allowance = target.lower * settings.POPTARGET_RANGE1
+                number = int(characteristic.number)
+                if number < target.lower - allowance or number > target.lower + range2:
+                    noncompliant += 1
+            except:
+                # District has no characteristics - unassigned
+                continue
+        if noncompliant > 0:
+            data['value'] = '%d miss target' % noncompliant
+        compliance.append(data)
+
+    #Minority districts
+    population = Subject.objects.get(name=settings.DEFAULT_DISTRICT_DISPLAY)
+    minority = Subject.objects.exclude(name=settings.DEFAULT_DISTRICT_DISPLAY)
+    data = {}
+    for subject in minority:
+        data[subject]  = { 'name': '%s Majority' % subject.short_display, 'value': 0 }
+
+    for district in districts:
+        try:
+            characteristics = district.computedcharacteristic_set
+            population_value = characteristics.get(subject = population).number
+            for subject in minority:
+                minority_value = characteristics.get(subject__exact = minority).number
+                if minority_value / population_value > .5:
+                    data[subject]['value'] += 1   
+        except:
+            # District has no characteristics - unassigned
+            continue
+            
+
+    for v in data.values():
+        compliance.append(v)
+        
+    return compliance
+        
+
 def getaggregate(districts):
+    """ 
+    Returns aggregated data based on the districts given and all available subjects
+    """
     aggregate = []
     characteristics = ComputedCharacteristic.objects.filter(district__in=districts) 
     for target in Target.objects.all():

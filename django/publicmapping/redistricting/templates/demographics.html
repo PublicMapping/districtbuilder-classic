@@ -41,11 +41,11 @@
 <div class="plantable header">
     <table>
         <thead>
-            {% if aggregate %}
+            {% if headers %}
             <tr>
                 <th class="celldist cell1">Dist.</th>
-                {% for target in aggregate %}
-                <th class="cellsubjects {% cycle 'cell2' 'cell3' 'cell4' %}">{{ target.name|intcomma }}</th>
+                {% for header in headers %}
+                <th class="cellsubjects {% cycle 'cell2' 'cell3' 'cell4' %}">{{ header|intcomma }}</th>
                 {% endfor %}
             </tr>
             {% endif %}
