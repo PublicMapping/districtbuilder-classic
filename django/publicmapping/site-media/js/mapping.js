@@ -819,8 +819,8 @@ function mapinit(srs,maxExtent) {
     });
 
 
-    // This objec holds the mean and standard deviation for the compactness
-    // scores, calculated when the features are loaded.
+    // This object holds the mean and standard deviation for the 
+    // compactness scores, calculated when the features are loaded.
     var compactnessAvg = {};
 
 
@@ -1241,6 +1241,75 @@ function mapinit(srs,maxExtent) {
         });
     };
 
+    //
+    // Update the styles of the districts based on the 'Show District By'
+    // dropdown in the menu.
+    //
+    var makeDistrictLegendRow = function(id, cls, label) {
+        var div = $('<div id="' + id + '">&nbsp;</div>');
+        div.addClass('swatch');
+        div.addClass('district_swatch');
+        div.addClass(cls)
+        var swatch = $('<td/>');
+        swatch.width(32);
+        swatch.append(div);
+
+        var row = $('<tr/>');
+        row.append(swatch);
+
+        var title = $('<td/>');
+        title.append( label );
+
+        row.append(title);
+
+        return row;
+    };
+    
+    var updateDistrictStyles = function() {
+        var distDisplay = getDistrictBy();
+        var lbody = $('#district_legend tbody');
+
+        if (distDisplay.modified == 'None') {
+            lbody.empty();
+
+            var row = makeDistrictLegendRow('district_swatch_within','target','Boundary');
+
+            lbody.append(row);
+        }
+        else if (distDisplay.modified == 'Contiguity') {
+            lbody.empty();
+
+            var row = makeDistrictLegendRow('district_swatch_farover','farover','Noncontiguous');
+            lbody.append(row);
+            row = makeDistrictLegendRow('district_swatch_within','target','Contiguous');
+            lbody.append(row);
+        }
+        else if (distDisplay.modified == 'Compactness') {
+            lbody.empty();
+
+            var row = makeDistrictLegendRow('district_swatch_farover','farover','Very Compact');
+            lbody.append(row);
+            row = makeDistrictLegendRow('district_swatch_within','target','Average');
+            lbody.append(row);
+            row = makeDistrictLegendRow('district_swatch_farunder','farunder','Hardly Compact');
+            lbody.append(row);
+        }
+        else {
+            lbody.empty();
+
+            var row = makeDistrictLegendRow('district_swatch_farover','farover','Far Over Target');
+            lbody.append(row);
+            row = makeDistrictLegendRow('district_swatch_over','over','Over Target');
+            lbody.append(row);
+            row = makeDistrictLegendRow('district_swatch_within','target','Within Target');
+            lbody.append(row);
+            row = makeDistrictLegendRow('district_swatch_under','under','Under Target');
+            lbody.append(row);
+            row = makeDistrictLegendRow('district_swatch_farunder','farunder','Far Under Target');
+            lbody.append(row);
+        }
+    };
+
     // Logic for the 'Snap Map to' dropdown, note that this logic
     // calls the boundsforChange callback
     $('#snapto').change(function(evt){
@@ -1484,6 +1553,8 @@ function mapinit(srs,maxExtent) {
             geosorter.sortTable();
             olmap.prevVisibleDistricts = visibleDistricts;
         }
+
+        updateDistrictStyles();
     };
 
     districtLayer.events.register("loadend", districtLayer, sortByVisibility);
