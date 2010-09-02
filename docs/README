@@ -106,8 +106,12 @@ Django v 1.1
         site in Apache, remove the default site configuration:
 
        > sudo rm /etc/apache2/sites-enabled/000-default
+
      e. Make sure you have the following modules for apache enabled: proxy, 
         proxy_http, rewrite, and wsgi
+        
+       > a2enmod proxy proxy_http rewrite wsgi
+
      f. To support reports, you'll need to run a separate virtual host on a port
         other than your public mapping project application.  You can set this in
         your main apache config, or in /etc/apache2/ports.conf in some linux distros. 
