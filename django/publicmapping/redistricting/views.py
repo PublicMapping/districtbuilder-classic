@@ -696,10 +696,13 @@ def getcompliance(districts):
     contiguity = { 'name': 'Noncontiguous', 'value': 0 }
     noncontiguous = 0
     for district in districts:
-        if not district.is_contiguous():
+        if not district.is_contiguous() and district.name != 'Unassigned':
             noncontiguous += 1
     if noncontiguous > 0:
-        contiguity['value'] = '%d districts' % noncontiguous
+        if noncontiguous == 1:
+            contiguity['value'] = '%d district' % noncontiguous
+        else:
+            contiguity['value'] = '%d districts' % noncontiguous
     compliance.append(contiguity);
 
     #Population targets
@@ -713,7 +716,7 @@ def getcompliance(districts):
                 characteristic = district.computedcharacteristic_set.get(subject__exact = target.subject) 
                 allowance = target.lower * settings.POPTARGET_RANGE1
                 number = int(characteristic.number)
-                if number < target.lower - allowance or number > target.lower + range2:
+                if (number < (target.lower - allowance)) or (number > (target.lower + allowance)):
                     noncompliant += 1
             except:
                 # District has no characteristics - unassigned
