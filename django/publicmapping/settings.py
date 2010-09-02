@@ -176,6 +176,9 @@ BARD_BASESHAPE = '/projects/publicmapping/local/data/ohblock_bard_save.Rdata'
 # Used to create BARD reports
 BARD_BASEMAP = 'oh_blocks.bardmap'
 
+# The temp directory where BARD will write HTML reports
+BARD_TEMP = '/projects/publicmapping/local/reports'
+
 # The POPTARGET RANGE variables are used to determine the class breaks for 
 # the district choropleths
 #
@@ -184,9 +187,6 @@ BARD_BASEMAP = 'oh_blocks.bardmap'
 # anything between 80 and 90 or 110 and 120 is "under" or "over", 
 # respectively, and anything less than 80 or more than 120 is "farunder" 
 # or "farover", respectively
-BARD_TEMP = '/projects/publicmapping/local/reports'
-""" This temp directory is where BARD will write HTML reports
-"""
 POPTARGET_RANGE1 = .1
 
 # The POPTARGET RANGE variables are used to determine the class breaks for
@@ -213,4 +213,4 @@ SLD_ROOT = '/projects/publicmapping/trunk/sld/'
 # included in the 'simple' versions of the geometries in the District
 # and Geounit models. The value is the amount, in spatial units, that the
 # geometries will be simplified.
-SIMPLE_TOLERANCE = 100.0
+SIMPLE_TOLERANCE = 10.0
