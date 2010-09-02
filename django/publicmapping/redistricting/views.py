@@ -46,7 +46,7 @@ from rpy2.rlike import container as rpc
 from publicmapping import settings
 from publicmapping.redistricting.models import *
 from datetime import datetime
-import random, string, types, copy, time, threading
+import random, string, types, copy, time, threading, traceback
 
 @login_required
 def copyplan(request, planid):
@@ -523,129 +523,167 @@ def simple_district_versioned(request,planid):
     
 
 def getdemographics(request, planid):
+    status = { 'success':False }
     try:
         plan = Plan.objects.get(pk = planid)
     except:
-        return HttpResponse ( "{ \"success\": false, \"message\":\"Couldn't get demographic info from the server. Please try again later.\" }" )
+        status['message'] = "Couldn't get demographic info from the server. Please try again later."
+        return HttpResponse( json.dumps(status), mimetype='application/json', status=500 )
+
     subjects = Subject.objects.all()
     headers = list(Subject.objects.all().values_list('short_display', flat=True))
-    district_values = []
 
     if 'version' in request.REQUEST:
         version = int(request.REQUEST['version'])
     else:
         version = plan.version
 
-    districts = plan.get_districts_at_version(version)
+    try:
+        districts = plan.get_districts_at_version(version)
+    except:
+        status['message'] = "Couldn't get districts at the specified version."
+        return HttpResponse( json.dumps(status), mimetype='applicatio/json')
 
-    for district in districts:
-        dist_name = district.name
-        if dist_name == "Unassigned":
-            dist_name = '&#216;' 
-        elif not district.geom:
-            # skip any districts with null geom that are not the special
-            # 'Unassigned' district
-            continue
-
-        if dist_name.startswith('District '):
-            dist_name = district.name.rsplit(' ', 1)[1]
-
-        stats = { 'name': dist_name, 'district_id': district.district_id, 'characteristics': [] }
-        for subject in subjects:
-            subject_name = subject.short_display
-            characteristics = district.computedcharacteristic_set.filter(subject = subject) 
-            characteristic = { 'name': subject_name }
-            if characteristics.count() == 0:
-                characteristic['value'] = "n/a"
+    try:
+        district_values = []
+        for district in districts:
+            dist_name = district.name
+            if dist_name == "Unassigned":
+                dist_name = '&#216;' 
             else:
-                characteristic['value'] = "%.0f" % characteristics[0].number       
-            stats['characteristics'].append(characteristic)            
+                try:
+                    if not district.geom:
+                        # skip any districts with null geom that are not the 
+                        # special 'Unassigned' district
+                        continue
+                except:
+                    # Sometimes a GEOSException happens here. Can't explain why.
+                    # Sometimes it's a ParseException. Dunno about that either.
+                    continue
 
-        district_values.append(stats)
-    return render_to_response('demographics.html', {
-        'plan': plan,
-        'district_values': district_values,
-        'aggregate': getcompliance(districts),
-        'headers': headers
-    })
+            if dist_name.startswith('District '):
+                dist_name = district.name.rsplit(' ', 1)[1]
+
+            stats = { 'name': dist_name, 'district_id': district.district_id, 'characteristics': [] }
+            for subject in subjects:
+                subject_name = subject.short_display
+                characteristics = district.computedcharacteristic_set.filter(subject = subject) 
+                characteristic = { 'name': subject_name }
+                if characteristics.count() == 0:
+                    characteristic['value'] = "n/a"
+                else:
+                    characteristic['value'] = "%.0f" % characteristics[0].number       
+                stats['characteristics'].append(characteristic)            
+
+            district_values.append(stats)
+        return render_to_response('demographics.html', {
+            'plan': plan,
+            'district_values': district_values,
+            'aggregate': getcompliance(districts),
+            'headers': headers
+        })
+    except:
+        status['exception'] = traceback.format_exc()
+        status['message'] = "Couldn't get district demographics."
+        return HttpResponse( json.dumps(status), mimetype='application/json', status=500 )
 
 
 def getgeography(request, planid):
+    status = { 'success': False }
     try:
         plan = Plan.objects.get(pk = planid)
     except:
-        return HttpResponse ( "{ \"success\": false, \"message\":\"Couldn't get geography info from the server. No plan with the given id.\" }" )
-    
+        status['message'] = "Couldn't get geography info from the server. No plan with the given id."
+        return HttpResponse( json.dumps(status), mimetype='application/json', status=500)
+
     if 'demo' in request.REQUEST: 
         demo = request.REQUEST['demo']
     else:
-        return HttpResponse ( "{ \"success\": false, \"message\":\"Couldn't get geography info from the server. Please use the 'demo' parameter with a Subject id.\" }" )
+        status['message'] = "Couldn't get geography info from the server. Please use the 'demo' parameter with a Subject id."
+        return HttpResponse( json.dumps(status), mimetype='application/json', status=500)
 
     if 'version' in request.REQUEST:
         version = int(request.REQUEST['version'])
     else:
         version = plan.version
 
-    districts = plan.get_districts_at_version(version)
+    try:
+        districts = plan.get_districts_at_version(version)
+    except:
+        status['message'] = "Couldn't get districts at the specified version."
+        return HttpResponse( json.dumps(status), mimetype='applicatio/json', status=500)
+
     try:
         subject = Subject.objects.get(pk=demo)
     except:
-        return HttpResponse ( "{ \"success\": false, \"message\":\"Couldn't get geography info from the server. No Subject exists with the given id.\" }" )
+        status['message'] = "Couldn't get geography info from the server. No Subject exists with the given id."
+        return HttpResponse ( json.dumps(status), mimetype='application/json', status=500)
 
-    district_values = []
-    for district in districts:
-        dist_name = district.name
-        if dist_name == "Unassigned":
-            dist_name = '&#216;'
-        elif not district.geom:
-            # skip any districts with null geom that are not the special
-            # 'Unassigned' district
-            continue
+    try:
+        district_values = []
+        for district in districts:
+            dist_name = district.name
+            if dist_name == "Unassigned":
+                dist_name = '&#216;'
+            else:
+                try:
+                    if not district.geom:
+                        # skip any districts with null geom that are not the 
+                        # special 'Unassigned' district
+                        continue
+                except:
+                    # Sometimes a GEOSException happens here. Can't explain why.
+                    # Sometimes it's a ParseException. Dunno about that either.
+                    continue
 
-        if dist_name.startswith('District '):
-            dist_name = district.name.rsplit(' ', 1)[1]
+            if dist_name.startswith('District '):
+                dist_name = district.name.rsplit(' ', 1)[1]
 
-        stats = { 'name': dist_name, 'district_id': district.district_id }
-        characteristics = district.computedcharacteristic_set.filter(subject = subject)
+            stats = { 'name': dist_name, 'district_id': district.district_id }
+            characteristics = district.computedcharacteristic_set.filter(subject = subject)
 
-        if characteristics.count() == 0:
-            stats['demo'] = 'n/a'        
-            stats['contiguity'] = district.is_contiguous()
-            stats['compactness'] = district.get_schwartzberg()
-            stats['css_class'] = 'under'
+            if characteristics.count() == 0:
+                stats['demo'] = 'n/a'        
+                stats['contiguity'] = district.is_contiguous()
+                stats['compactness'] = district.get_schwartzberg()
+                stats['css_class'] = 'under'
 
-        for characteristic in characteristics:
-            stats['demo'] = "%.0f" % characteristic.number        
-            stats['contiguity'] = district.is_contiguous()
-            stats['compactness'] = district.get_schwartzberg()
+            for characteristic in characteristics:
+                stats['demo'] = "%.0f" % characteristic.number        
+                stats['contiguity'] = district.is_contiguous()
+                stats['compactness'] = district.get_schwartzberg()
 
-            target = Target.objects.get(subject = subject)
-            
-            # The "in there" range
-            range1 = target.lower * settings.POPTARGET_RANGE1  
-            # The "out of there" range
-            range2 = target.lower * settings.POPTARGET_RANGE2
-            number = int(characteristic.number)
-            if number < (target.lower - range2):
-                css_class = 'farunder'
-            elif number < (target.lower - range1):
-                css_class = 'under'
-            elif number <= (target.lower + range1):
-                css_class = 'target'
-            elif number <= (target.lower + range2):
-                css_class = 'over'
-            elif number > (target.lower + range2):
-                css_class = 'farover'
-            stats['css_class'] = css_class 
+                target = Target.objects.get(subject = subject)
+                
+                # The "in there" range
+                range1 = target.lower * settings.POPTARGET_RANGE1  
+                # The "out of there" range
+                range2 = target.lower * settings.POPTARGET_RANGE2
+                number = int(characteristic.number)
+                if number < (target.lower - range2):
+                    css_class = 'farunder'
+                elif number < (target.lower - range1):
+                    css_class = 'under'
+                elif number <= (target.lower + range1):
+                    css_class = 'target'
+                elif number <= (target.lower + range2):
+                    css_class = 'over'
+                elif number > (target.lower + range2):
+                    css_class = 'farover'
+                stats['css_class'] = css_class 
 
-        district_values.append(stats)
+            district_values.append(stats)
 
-    return render_to_response('geography.html', {
-        'plan': plan,
-        'district_values': district_values,
-        'aggregate': getcompliance(districts),
-        'name': subject.short_display
-    })
+        return render_to_response('geography.html', {
+            'plan': plan,
+            'district_values': district_values,
+            'aggregate': getcompliance(districts),
+            'name': subject.short_display
+        })
+    except:
+        status['exception'] = traceback.format_exc()
+        status['message'] = "Couldn't get district geography."
+        return HttpResponse( json.dumps(status), mimetype='application/json', status=500)
 
 
 def getcompliance(districts):
