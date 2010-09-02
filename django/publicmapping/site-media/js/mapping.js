@@ -1328,6 +1328,11 @@ function mapinit(srs,maxExtent) {
         olmap.setBaseLayer(layers[0]);
         doMapStyling();
         getMapStyles();
+
+        // Since keyboard defaults are on, if focus remains on this
+        // dropdown after change, the keyboard may change the selection
+        // inadvertently
+        $('#snapto').blur();
     });
 
     // Logic for the 'Show Map by' dropdown
@@ -1343,12 +1348,22 @@ function mapinit(srs,maxExtent) {
         olmap.setBaseLayer(layers[0]);
         doMapStyling();
         getMapStyles();
+
+        // Since keyboard defaults are on, if focus remains on this
+        // dropdown after change, the keyboard may change the selection
+        // inadvertently
+        $('#showby').blur();
     });
 
     // Logic for the 'Show Districts by' dropdown
     $('#districtby').change(function(evt){
         districtLayer.filter = getVersionAndSubjectFilters();
         districtLayer.strategies[0].load();
+
+        // Since keyboard defaults are on, if focus remains on this
+        // dropdown after change, the keyboard may change the selection
+        // inadvertently
+        $('#districtby').blur();
     });
 
     // Logic for the 'Assign District to' dropdown
@@ -1363,6 +1378,11 @@ function mapinit(srs,maxExtent) {
             var feature = { data:{ district_id: this.value } };
             assignOnSelect(feature);
         }
+
+        // Since keyboard defaults are on, if focus remains on this
+        // dropdown after change, the keyboard may change the selection
+        // inadvertently
+        $('#assign_district').blur();
     });
 
     // Logic for the history back button
