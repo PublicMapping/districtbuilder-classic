@@ -189,7 +189,11 @@ $(function() {
                     data: data,
                     success: function(data, textStatus, xhr) {
                         $waitPublishing.dialog('close');
-                        if (textStatus == 'success') {
+                        if (('success' in data) && !data.success) {
+                            $waitPublishing.dialog('close');
+                            $('<div title="Oops!">' + data.message + '</div>').dialog({autoOpen:true});
+                        }
+                        else if (textStatus == 'success') {
                             var link ='http://' + location.host + '/districtmapping/plan/' + data[0].pk + '/view/' 
                             $('#sharedPermalink').html('<a href="' + link + '">' + link + '</a>')
                             $('#continueEditing').click( function() {
@@ -197,11 +201,6 @@ $(function() {
                                 $('#steps').tabs('select', '#step-1');
                             });
                             $('#successfulShare').dialog({autoOpen: true});
-                        }
-                        else {
-                            // how to notify that the plan was not saved?
-                            window.status = data.message;
-                    
                         }
                     },
                     error: function() {

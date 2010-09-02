@@ -34,7 +34,7 @@ from django.contrib.gis.geos import MultiPolygon,GEOSGeometry,GEOSException,Geom
 from django.contrib.auth.models import User
 from django.db.models import Sum, Max, Q
 from django.db.models.signals import pre_save, post_save
-from django.db import connection
+from django.db import connection, transaction
 from django.forms import ModelForm
 from django.conf import settings
 from django.utils import simplejson as json
@@ -464,7 +464,7 @@ class Plan(models.Model):
     """
 
     # The name of this plan
-    name = models.CharField(max_length=200,unique=True)
+    name = models.CharField(max_length=200)
 
     # Is this plan a template?
     is_template = models.BooleanField(default=False)
@@ -490,6 +490,10 @@ class Plan(models.Model):
         """
         return self.name
 
+    class Meta:
+        unique_together = (('name','owner'),)
+
+    @transaction.commit_on_success
     def add_geounits(self, districtid, geounit_ids, geolevel, version):
         """
         Add Geounits to a District. When geounits are added to one District,
@@ -550,13 +554,15 @@ class Plan(models.Model):
 
             # compute the geounits before changing the boundary
             geounits = Geounit.get_mixed_geounits(geounit_ids, geolevel, district.geom, True)
+            # Difference the district with the selection
+            # This may throw a GEOSException, in which case this function
+            # will not complete successfully, and all changes will be
+            # rolled back, thanks to the decorator commit_on_success
             try:
-                # Difference the district with the selection
                 geom = district.geom.difference(incremental)
             except GEOSException, ex:
-                # If there's an error, create an empty geometry 
-                # in it's place.
-                geom = empty_geom(incremental.srid)
+                # Can this be logged?
+                raise ex
 
             # Make sure the geom is a multi-polygon.
             geom = enforce_multi(geom)
@@ -595,13 +601,15 @@ class Plan(models.Model):
         if target.geom:
             # Combine the incremental (changing) geometry with the existing
             # target geometry
+            # This may throw a GEOSException, in which case this function
+            # will not complete successfully, and all changes will be
+            # rolled back, thanks to the decorator commit_on_success
             try:
                 union = target.geom.union(incremental)
                 target.geom = enforce_multi(union)
             except GEOSException, ex:
-                # If there's an error, create an empty geometry 
-                # in it's place
-                target.geom = None
+                # Can this be logged?
+                raise ex
         else:
             # Set the target district's geometry to the sum of the changing
             # Geounits
@@ -626,7 +634,7 @@ class Plan(models.Model):
         target_copy.clone_characteristics_from(target)
 
         # If the district stats change, update the counter
-        if target_copy.geom and target_copy.delta_stats(geounits,True):
+        if target_copy.delta_stats(geounits,True):
             fixed += 1
 
         # save any changes to the version of this plan

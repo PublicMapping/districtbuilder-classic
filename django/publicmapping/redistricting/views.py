@@ -53,7 +53,6 @@ def copyplan(request, planid):
     p = Plan.objects.get(pk=planid)
     status = { 'success': False }
     if not can_copy(request.user, p):
-        status['success'] = False;
         status['message'] = "User %s doesn't have permission to copy this model" % request.user.username
         return HttpResponse(json.dumps(status),mimetype='application/json')
 
@@ -61,6 +60,12 @@ def copyplan(request, planid):
     if (request.method == "POST" ):
         newname = request.POST["name"]
         shared = request.POST.get("shared", False)
+
+    plan_copy = Plan.objects.filter(name__exact=newname, owner=request.user)
+    if len(plan_copy) > 0:
+        status['message'] = "You already have a plan named that. Please pick a unique name."
+        return HttpResponse(json.dumps(status),mimetype='application/json')
+
     plan_copy = Plan(name = newname, owner=request.user, is_shared = shared)
     plan_copy.save()
 
@@ -79,7 +84,6 @@ def copyplan(request, planid):
         try:
             district_copy.save() 
         except Exception as inst:
-            status["success"] = False
             status["message"] = "Could not save district copies"
             status["exception"] = inst.message
             return HttpResponse(json.dumps(status),mimetype='application/json')
@@ -465,6 +469,7 @@ def addtodistrict(request, planid, districtid):
             status['edited'] = plan.edited.isoformat()
             status['version'] = plan.version
         except: 
+            status['exception'] = traceback.format_exc()
             status['message'] = 'Could not add units to district.'
 
     else:
