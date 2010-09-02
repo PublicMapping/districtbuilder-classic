@@ -192,25 +192,37 @@ def load_bard_workspace():
  
 bardWorkSpaceLoaded = False
 bardmap = {}
-if settings.REPORTS_ENABLED:
-    bardLoadingThread = threading.Thread(target=load_bard_workspace, name='loading_bard') 
-    bardLoadingThread.daemon = True
-    bardLoadingThread.start()
+bardLoadingThread = threading.Thread(target=load_bard_workspace, name='loading_bard') 
+
+def loadbard(request):
+    if type(request) == bool:
+       threaded = True
+    elif type(request) == HttpRequest:
+       threaded = request.META['mod_wsgi.application_group'] == 'bard-reports'
+    if bardWorkSpaceLoaded:
+        return HttpResponse('Bard is already loaded')
+    elif bardLoadingThread.is_alive():
+        return HttpResponse( 'Bard is already building')
+    elif threaded and not bardWorkSpaceLoaded and settings.REPORTS_ENABLED:
+        bardLoadingThread.daemon = True
+        bardLoadingThread.start()
+        return HttpResponse( 'Building bard workspace now ')
+    return HttpResponse('Bard will not be loaded - wrong server config or reports off')
 
 
-@login_required
 def getreport(request, planid):
     """ This method takes a request with given variables and a plan id.  It will write out an 
     HTML-formatted BARD report to the directory given in the settings, and return that same
     HTML for use as a preview in the web application, along with the web address of the 
     BARD report.
     """
+
     status = { 'success': False, 'message': 'Unspecified Error' }
     if not bardWorkSpaceLoaded:
         if not settings.REPORTS_ENABLED:
             status['message'] = 'Reports functionality is turned off.'
         else:
-            status['message'] = 'Reports funcionality is not ready. Please try again later.'
+            status['message'] = 'Reports functionality is not ready. Please try again later.'
         return HttpResponse(json.dumps(status),mimetype='application/json')
               
         #  PMP reporrt interface
@@ -714,7 +726,7 @@ def getcompliance(districts):
     displayed = Subject.objects.filter(is_displayed__exact = True)
     targets = Target.objects.filter(subject__in = displayed)
     for target in targets:
-        data = { 'name': '%s (%s)' % (target.subject.short_display, target.lower), 'value': 'All meet target' } 
+        data = { 'name': 'Target Pop. %s' % target.lower, 'value': 'All meet target' } 
         noncompliant = 0
         for district in districts:
             try:

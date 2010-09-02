@@ -26,22 +26,14 @@
 #  
 #   Author: David Zwarg, Andrew Jennings
 #
+
         
-        # Necessary to keep rPy2 from throwing exceptions
-        WSGIRestrictStdout Off
+# The main publicmapping host serves the web application
 <VirtualHost *:80>
 	ServerAdmin AzaveaDev@azavea.com
-
         WSGIDaemonProcess geodjango user=www-data group=www-data processes=10 threads=1 display-name=publicmapping
         WSGIProcessGroup geodjango
         WSGIScriptAlias / /projects/publicmapping/trunk/django/publicmapping.wsgi
-
-	<Directory /projects/publicmapping/trunk/django>
-		AuthType Basic
-		AuthName "Django Testing"
-		AuthUserFile /etc/apache2/passwd/passwords
-		Require valid-user
-	</Directory>
 
         Alias /site-media/ /projects/publicmapping/trunk/django/publicmapping/site-media/
         <Directory /projects/publicmapping/trunk/django/publicmapping/site-media>
@@ -56,6 +48,7 @@
             Allow from all
         </Directory>
 
+        Alias /reports/ /projects/publicmapping/local/reports/
         <Directory /projects/publicmapping/local/reports/>
 	    Options Indexes FollowSymLinks
             Order deny,allow
@@ -73,8 +66,30 @@
 
 	# Possible values include: debug, info, notice, warn, error, crit,
 	# alert, emerg.
-	LogLevel debug
+	LogLevel warn
 
 	CustomLog /var/log/apache2/publicmapping-access.log combined
 
+    # This redirects report requests to an alternate port.
+    RewriteEngine On
+    RewriteRule /districtmapping/(.*)/getreport/ http://%{HTTP_HOST}:8081/districtmapping/$1/getreport/ [NC,P]
+    RewriteLog /var/log/apache2/publicmapping-rewrite.log
+    RewriteLogLevel 0
+
 </VirtualHost>
+
+# Necessary to keep rPy2 from throwing exceptions
+WSGIRestrictStdout Off
+
+# This virtual host is responsible for running a multithreaded environment for reports
+<VirtualHost *:8081>
+
+	ServerAdmin AzaveaDev@azavea.com
+        WSGIDaemonProcess bard-reports user=www-data group=www-data threads=10 display-name=publicmapping-reports
+        WSGIScriptAlias / /projects/publicmapping/trunk/django/reports.wsgi
+        WSGIProcessGroup bard-reports
+        WSGIApplicationGroup bard-reports
+	    ErrorLog /var/log/apache2/bard-reporting-error.log
+	    CustomLog /var/log/apache2/bard-reporting-access.log combined
+</VirtualHost>
+
