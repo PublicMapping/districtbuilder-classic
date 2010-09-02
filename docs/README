@@ -123,8 +123,7 @@ Django v 1.1
      f. To support reports, you'll need to run a separate virtual host on a port
         other than your public mapping project application.  You can set this in
         your main apache config, or in /etc/apache2/ports.conf in some linux distros. 
-        Add these two lines to run reports on port 8081.  If you choose a different 
-        port, you'll need to update your publicmapping apache file
+        Add these two lines to run reports on port 8081.
 
             NameVirtualHost: *:8081
             Listen 8081
