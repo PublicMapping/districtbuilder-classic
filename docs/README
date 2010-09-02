@@ -112,6 +112,14 @@ Django v 1.1
         
        > a2enmod proxy proxy_http rewrite wsgi
 
+     f. You may need to update /etc/apache2/mods-available/proxy.conf  If you see
+
+            Deny from All
+
+        change it to
+
+            Allow from All
+
      f. To support reports, you'll need to run a separate virtual host on a port
         other than your public mapping project application.  You can set this in
         your main apache config, or in /etc/apache2/ports.conf in some linux distros. 
