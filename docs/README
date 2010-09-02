@@ -125,6 +125,6 @@ Django v 1.1
         your main apache config, or in /etc/apache2/ports.conf in some linux distros. 
         Add these two lines to run reports on port 8081.
 
-            NameVirtualHost: *:8081
+            NameVirtualHost *:8081
             Listen 8081
 
