@@ -1483,25 +1483,27 @@ function mapinit(srs,maxExtent) {
 
                     // detach the list of districts from the DOM
                     var all_options = $('#assign_district option').detach();
-                    // if max # of districts has been reached, remove the
-                    // 'New District' option
-                    if (all_options.length > (MAX_DISTRICTS + 1)) {
-                        // the second to last item will be 'new', the last
-                        // item will be the option just added
-                        all_options[all_options.length-2] = all_options[all_options.length-1];
-                    }
 
                     // sort the options
                     all_options.sort(function(a,b){
                         if (a.value == 'new') {
+                            return 1;
+                        } else if (b.value == 'new') {
                             return -1;
-                        }
-                        else {
+                        } else {
                             return parseInt(a.value,10) > parseInt(b.value,10);
                         }
                     });
                     // attach the options back to the DOM (in order, now)
                     all_options.appendTo('#assign_district');
+
+                    // if max # of districts has been reached, remove the
+                    // 'New District' option
+                    if (all_options.length > (MAX_DISTRICTS + 1 /* --select-- */ )) {
+                        // the second to last item will be 'new', the last
+                        // item will be the option just added
+                        all_options.filter('option[value=new]').remove();
+                    }
 
                     updateInfoDisplay();
 
