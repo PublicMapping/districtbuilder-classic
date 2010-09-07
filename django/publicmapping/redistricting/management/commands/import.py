@@ -37,6 +37,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 from optparse import make_option
 from redistricting.models import *
+import traceback
 
 class Command(BaseCommand):
     """
@@ -84,7 +85,7 @@ class Command(BaseCommand):
         lyr = ds[0]
         print len(lyr), ' objects in shapefile'
         # print 'Data is in srs: ', lyr.srs, lyr.srs.name
-        print 'Fields contained in layer: ', lyr.fields
+        # print 'Fields contained in layer: ', lyr.fields
 
         # Create a level
         level = Geolevel(name=config['geolevel'])
@@ -105,31 +106,43 @@ class Command(BaseCommand):
 
         for feat in lyr:
             try :
-                if feat.geom_type == 'MultiPolygon' :
-                    my_geom = feat.geom.geos
-                elif feat.geom_type == 'Polygon' :
-                    my_geom = MultiPolygon(feat.geom.geos)
+                # Store the geos geometry
+                geos = feat.geom.geos
+                # Coerce the geometry into a MultiPolygon
+                if geos.geom_type == 'MultiPolygon':
+                    my_geom = geos
+                elif geos.geom_type == 'Polygon':
+                    my_geom = MultiPolygon(geos)
                 simple = my_geom.simplify(tolerance=settings.SIMPLE_TOLERANCE,preserve_topology=True)
                 if simple.geom_type != 'MultiPolygon':
                     simple = MultiPolygon(simple)
                 center = my_geom.centroid
+
+                if not my_geom.simple:
+                    print 'Geometry %d is not simple.' % feat.fid
+                if not my_geom.valid:
+                    print 'Geometry %d is not valid.' % feat.fid
+                if not simple.simple:
+                    print 'Simplified Geometry %d is not simple.' % feat.fid
+                if not simple.valid:
+                    print 'Simplified Geometry %d is not valid.' % feat.fid
+
                 g = Geounit(geom = my_geom, name = feat.get(config['name_field']), geolevel = level, simple = simple, center = center)
                 g.save()
             except Exception as ex:
-                print 'Failed to import geometry for feature ', feat.fid, type(ex), ex
+                print 'Failed to import geometry for feature %d' % feat.fid
+                traceback.print_exc()
                 continue
-                # print feat.get(name_field), feat.geom.num_points
+
             for attr, obj in subject_objects.iteritems():
                 value = Decimal(str(feat.get(attr))).quantize(Decimal('000000.0000', 'ROUND_DOWN'))
                 try:
-                    c = Characteristic(subject=obj, number=value, geounit = g)
+                    c = Characteristic(subject=obj, number=value, geounit=g)
                     c.save()
-                    # print 'Value for ', feat.get(name_field), ' is ', value
                 except:
-                    c = Characteristic(subject=obj, number='0.0', geounit = g)
+                    c = Characteristic(subject=obj, number='0.0', geounit=g)
                     c.save()
-                    print 'Failed to set value ', attr, ' to ', feat.get(attr), ' in feature ', feat.get(config['name_field'])
-                # print 'Value  for ', obj.name, ' is ', c.number
+                    print 'Failed to set value "%s" to %d in feature "%s"' % (attr, feat.get(attr), feat.get(config['name_field']),)
             g.save()
 
     def create_basic_template(self,name):
