@@ -199,6 +199,9 @@ def loadbard(request):
        threaded = True
     elif type(request) == HttpRequest:
        threaded = request.META['mod_wsgi.application_group'] == 'bard-reports'
+    else:
+        threaded = False
+
     if bardWorkSpaceLoaded:
         return HttpResponse('Bard is already loaded')
     elif bardLoadingThread.is_alive():
