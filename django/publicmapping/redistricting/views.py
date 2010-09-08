@@ -24,7 +24,7 @@ License:
     limitations under the License.
 
 Author: 
-    David Zwarg, Andrew Jennings
+    Andrew Jennings, David Zwarg
 """
 
 from django.http import *
@@ -50,18 +50,36 @@ import random, string, types, copy, time, threading, traceback
 
 @login_required
 def copyplan(request, planid):
+    """
+    Copy a plan to a new, editable plan.
+
+    This view is called by the plan chooser and the share plan tab. These
+    actions take a template or shared plan, and copy the plan without its
+    history into an editable plan in the current user's account.
+
+    Parameters:
+        request -- The HttpRequest, which includes the user.
+        planid -- The original plan to copy.
+
+    Returns:
+        A JSON HttpResponse which includes either an error message or the
+        copied plan ID.
+    """
     p = Plan.objects.get(pk=planid)
     status = { 'success': False }
+    # Check if this plan is copyable by the current user.
     if not can_copy(request.user, p):
         status['message'] = "User %s doesn't have permission to copy this model" % request.user.username
         return HttpResponse(json.dumps(status),mimetype='application/json')
 
+    # Create a random name if there is no name provided
     newname = p.name + " " + str(random.random()) 
     if (request.method == "POST" ):
         newname = request.POST["name"]
         shared = request.POST.get("shared", False)
 
     plan_copy = Plan.objects.filter(name__exact=newname, owner=request.user)
+    # Check that the copied plan's name doesn't already exist.
     if len(plan_copy) > 0:
         status['message'] = "You already have a plan named that. Please pick a unique name."
         return HttpResponse(json.dumps(status),mimetype='application/json')
@@ -69,9 +87,12 @@ def copyplan(request, planid):
     plan_copy = Plan(name = newname, owner=request.user, is_shared = shared)
     plan_copy.save()
 
+    # Get all the districts in the original plan at the most recent version
+    # of the original plan.
     districts = p.get_districts_at_version(p.version)
     for district in districts:
-        # Skip Unassigned, we already have that
+        # Skip Unassigned, we already have that -- created automatically
+        # when saving a new plan.
         if district.name == "Unassigned":
             continue
 
@@ -91,6 +112,7 @@ def copyplan(request, planid):
         # clone the characteristics from the original district to the copy 
         district_copy.clone_characteristics_from(district)
 
+    # Serialize the plan object to the response.
     data = serializers.serialize("json", [ plan_copy ])
 
     return HttpResponse(data, mimetype='application/json')
@@ -100,12 +122,14 @@ def commonplan(request, planid):
     and editing. This method is called by the viewplan and editplan 
     views."""
     try:
+        # Get the plan and districts in the plan.
         plan = Plan.objects.get(pk=planid)
         districts = plan.get_districts_at_version(plan.version)
         editable = can_edit(request.user, plan)
         if not editable and not can_view(request.user, plan):
             plan = {}
     except:
+        # If said plan doesn't exist, use an empty plan & district list.
         plan = {}
         districts = {}
         editable = False
@@ -149,18 +173,53 @@ def commonplan(request, planid):
 
 @login_required
 def viewplan(request, planid):
-    "View a plan"
+    """
+    View a plan. 
+    
+    This template has no editing capability.
+    
+    Parameters:
+        request -- An HttpRequest, which includes the current user.
+        planid -- The plan to view
+
+    Returns:
+        A rendered HTML page for viewing a plan.
+    """
     return render_to_response('viewplan.html', commonplan(request, planid)) 
     
 @login_required
 def editplan(request, planid):
-    "Edit a plan. This template enables editing tools and functionality."
+    """
+    Edit a plan. 
+    
+    This template enables editing tools and functionality.
+    
+    Parameters:
+        request -- An HttpRequest, which includes the current user.
+        planid -- The plan to edit.
+
+    Returns:
+        A rendered HTML page for editing a plan.
+    """
     plan = commonplan(request, planid)
     plan['dists_maxed'] = len(plan['districts']) > settings.MAX_DISTRICTS
     return render_to_response('editplan.html', plan)
 
 @login_required
 def createplan(request):
+    """
+    Create a plan.
+
+    Create a plan from a POST request. This plan will be 'blank', and will
+    contain only the Unassigned district initially.
+
+    Parameters:
+        request -- An HttpRequest, which contains the current user.
+
+    Returns:
+        A JSON HttpResponse, including the new plan's information, or an
+        error describing why the plan could not be created.
+    """
     status = { 'success': False, 'message': 'Unspecified Error' }
     if request.method == "POST":
         name = request.POST['name']
@@ -176,6 +235,15 @@ def createplan(request):
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
 def load_bard_workspace():
+    """
+    Load the workspace and setup R.
+
+    This function is called by the thread loading function. The workspace
+    setup incurs a significant amount of overhead and processing time to
+    load the basemaps into BARD. This method starts up these processes in
+    a separate process & thread, in order to keep the web application 
+    responsive during R initialization.
+    """
     try:
         r.library('BARD')
         r.library('R2HTML')
@@ -189,12 +257,28 @@ def load_bard_workspace():
     except:
         sys.stderr.write('BARD Could not be loaded.  Check your configuration and available memory')
         return
- 
+
+# A flag that indicates that the workspace was loaded
 bardWorkSpaceLoaded = False
+# An object that holds the bardmap for later analysis
 bardmap = {}
+# The loading thread for the BARD setup
 bardLoadingThread = threading.Thread(target=load_bard_workspace, name='loading_bard') 
 
 def loadbard(request):
+    """
+    Load BARD and it's workspace.
+
+    BARD is loaded in a separate thread in order to free resources for
+    the web processing thread. This method is called by the wsgi application
+    setup file, 'reports.wsgi'.
+
+    Parameters:
+        request -- An HttpRequest OR True
+
+    Returns:
+        A simple text response informing the client what BARD is up to.
+    """
     if type(request) == bool:
        threaded = True
     elif type(request) == HttpRequest:
@@ -214,10 +298,15 @@ def loadbard(request):
 
 
 def getreport(request, planid):
-    """ This method takes a request with given variables and a plan id.  It will write out an 
-    HTML-formatted BARD report to the directory given in the settings, and return that same
-    HTML for use as a preview in the web application, along with the web address of the 
-    BARD report.
+    """
+    Get a BARD report.
+
+    This view will write out an HTML-formatted BARD report to the directory
+    given in the settings.
+    
+    Returns:
+        The HTML for use as a preview in the web application, along with 
+        the web address of the BARD report.
     """
 
     status = { 'success': False, 'message': 'Unspecified Error' }
@@ -269,8 +358,10 @@ def getreport(request, planid):
         return HttpResponse(json.dumps(status),mimetype='application/json')
 
     def get_tagged_list(parameter_string):
-        """ Helper method to break up the strings that represents lists of variables
-        Give it a string and get a TaggedList suitable for rpy2 use
+        """
+        Helper method to break up the strings that represents lists of 
+        variables. Give it a string and get a TaggedList suitable for 
+        rpy2 use.
         """
         tl = rpc.TaggedList(list())
         extras = parameter_string.split('^')
@@ -283,7 +374,8 @@ def getreport(request, planid):
     district_names = { None: 'Unassigned' }
     geolevel = settings.BASE_GEOLEVEL
     geounits = Geounit.objects.filter(geolevel = settings.BASE_GEOLEVEL)
-    # For each district, add to the district_list a dictionary of district_ids using the geounit_ids as keys
+    # For each district, add to the district_list a dictionary of 
+    # district_ids using the geounit_ids as keys
     for district in districts:
         if district.simple:
             intersecting = geounits.filter(center__bboverlaps=district.simple).values_list('id', flat=True)
@@ -299,8 +391,9 @@ def getreport(request, planid):
     sorted_district_list = list()
     names = list()
     # Sort the geounit_id list and add them to the district_list in order.
-    # This ordering depends on the geounits in the shapefile matching the order of the imported geounits.
-    # If this ordering is the same, the geounits' ids don't have to match their fids in the shapefile
+    # This ordering depends on the geounits in the shapefile matching the 
+    # order of the imported geounits. If this ordering is the same, the 
+    # geounits' ids don't have to match their fids in the shapefile
     for i in range(min_id, max_id + 1):
         if i in district_list:
             district_id = district_list[i]
@@ -313,7 +406,8 @@ def getreport(request, planid):
     block_ids = robjects.IntVector(sorted_district_list)
     block_ids.names = robjects.StrVector(names)
 
-    # Get the other report varialbes from the POST request.  We'll only add them to the report if they're in the request
+    # Get the other report varialbes from the POST request.  We'll only add
+    # them to the report if they're in the request
     popVar = request.POST.get('popVar', None)
     if popVar:
         pop_var = get_tagged_list(popVar)
@@ -390,7 +484,8 @@ def getreport(request, planid):
         r.PMPreport( bardmap, block_ids, file = report, popVar = pop_var, popVarExtra = pop_var_extra, ratioVars = ratio_vars, splitVars = split_vars, repCompactness = rep_compactness, repCompactnessExtra = rep_compactness_extra, repSpatial = rep_spatial, repSpatialExtra = rep_spatial_extra)
         r.HTMLEndFile()
 
-        # BARD has written the report to file - read it and put it in as the preview
+        # BARD has written the report to file - read it and put it in as
+        # the preview
         f = open(report[0], 'r')
         status['preview'] = f.read()
         status['file'] = '/reports/%s.html' % filename
@@ -404,8 +499,19 @@ def getreport(request, planid):
 
 @login_required
 def newdistrict(request, planid):
-    """Create a new district.  Optionally, add the given geounits to the 
-    district to start.  Returns the new District's name and district_id.
+    """
+    Create a new district.
+
+    The 'geolevel' parameter is required to create a new district. Geounits
+    may be added to this new district by setting the 'geounits' key in the
+    request.  
+
+    Parameters:
+        request - An HttpRequest, with the current user.
+        planid - The plan id to which the district should be added.
+    
+    Returns:
+        The new District's name and district_id.
     """
     status = { 'success': False, 'message': 'Unspecified error.' }
     plan = Plan.objects.get(pk=planid)
@@ -460,9 +566,22 @@ def newdistrict(request, planid):
 
 @login_required
 def addtodistrict(request, planid, districtid):
-    """ This method, when called, required a "geolevel" and a "geounits"
-    parameter. The geolevel must be a valid geolevel name and the geounits 
-    parameters should be a pipe-separated list of geounit ids
+    """
+    Add geounits to a district.
+
+    This method requires both "geolevel" and "geounits" URL parameters. 
+    The geolevel must be a valid geolevel name and the geounits parameters 
+    should be a pipe-separated list of geounit ids.
+
+    Parameters:
+        request -- An HttpRequest, with the current user, the geolevel, and
+        the pipe-separated geounit list.
+        planid -- The plan ID that contains the district.
+        districtid -- The district ID to which the geounits will be added.
+
+    Returns:
+        A JSON HttpResponse that contains the number of districts modified,
+        or an error message if adding fails.
     """
     status = { 'success': False, 'message': 'Unspecified error.' }
     if len(request.REQUEST.items()) >= 2: 
@@ -496,6 +615,13 @@ def addtodistrict(request, planid, districtid):
 @login_required
 @cache_control(no_cache=True)
 def chooseplan(request):
+    """
+    Generate an HTML fragment that lists the plans available to the
+    current user.
+
+    Parameters:
+        request -- An HttpRequest, with the current user.
+    """
     if request.method == "POST":
         return HttpResponse("looking for the requested plan")
         # plan has been chosen.  Open it up
@@ -515,6 +641,23 @@ def chooseplan(request):
 @login_required
 @cache_control(private=True)
 def simple_district_versioned(request,planid):
+    """
+    Emulate a WFS service for versioned districts.
+
+    This function retrieves one version of the districts in a plan, with
+    the value of the subject attached to the feature. This function is
+    necessary because a traditional view could not be used to get the
+    districts in a versioned fashion.
+
+    This method accepts 'version__eq' and 'subjects__eq' URL parameters.
+
+    Parameters:
+        request -- An HttpRequest, with the current user.
+        planid -- The plan ID from which to get the districts.
+
+    Returns:
+        A GeoJSON HttpResponse, describing the districts in the plan.
+    """
     status = {'success':False,'type':'FeatureCollection'}
     try:
         plan = Plan.objects.get(id=planid)
@@ -543,6 +686,19 @@ def simple_district_versioned(request,planid):
     
 
 def getdemographics(request, planid):
+    """
+    Get the demographics of a plan.
+
+    This function retrieves the calculated values for the demographic 
+    statistics of a plan.
+
+    Parameters:
+        request -- An HttpRequest, with the current user
+        planid -- The plan ID
+
+    Returns:
+        An HTML fragment that contains the demographic information.
+    """
     status = { 'success':False }
     try:
         plan = Plan.objects.get(pk = planid)

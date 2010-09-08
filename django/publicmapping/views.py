@@ -1,16 +1,27 @@
-# Copyright 2010 Micah Altman, Michael McDonald
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+"""
+Define project views for this django project.
+
+This file is part of The Public Mapping Project
+http://sourceforge.net/projects/publicmapping/
+
+License:
+    Copyright 2010 Micah Altman, Michael McDonald
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+Author:
+    Andrew Jennings, David Zwarg
+"""
 
 from django.shortcuts import render_to_response
 from django.contrib.auth import authenticate, login, logout
@@ -109,7 +120,10 @@ def userlogout(request):
 def emailpassword(user):
     """Send a user an email with a new, auto-generated password.
     We cannot decrypt the current password stored with the user record,
-    so create a new one, and send it to the user."""
+    so create a new one, and send it to the user.
+    
+    This method is used within the forgotpassword form endpoint, but not
+    as a user facing view."""
 
     tpl = """To: %s
 From: "%s" <%s>
@@ -150,8 +164,9 @@ The Public Mapping Team
 
 @cache_control(no_cache=True)
 def forgotpassword(request):
-    """If someone has forgotten their password, provide a facility
-    for retrieving it."""
+    """A form endpoint to provide a facility for retrieving a forgotten
+    password. If someone has forgotten their password, this form will email
+    them a replacement password."""
     status = {'success':False}
     if 'username' in request.REQUEST and not request.REQUEST['username'] == '':
         username = request.REQUEST['username']
@@ -177,13 +192,6 @@ def forgotpassword(request):
         status['message'] = 'Missing username or email.'
 
     return HttpResponse(json.dumps(status), mimetype='application/json')
-
-@login_required
-def mapping(request):
-    """The view for the mapping page. The mapping page requires
-    a valid user, and as such, is decorated with login_required."""
-    return render_to_response('mapping.html', 
-        { 'mapserver': settings.MAP_SERVER })
 
 @login_required
 @cache_control(no_cache=True)

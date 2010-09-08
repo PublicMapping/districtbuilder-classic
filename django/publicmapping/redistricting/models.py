@@ -25,7 +25,7 @@ License:
     limitations under the License.
 
 Author: 
-    David Zwarg, Andrew Jennings
+    Andrew Jennings, David Zwarg
 """
 
 from django.core.exceptions import ValidationError
