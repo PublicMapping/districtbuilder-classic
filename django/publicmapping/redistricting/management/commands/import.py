@@ -87,9 +87,13 @@ class Command(BaseCommand):
         # print 'Data is in srs: ', lyr.srs, lyr.srs.name
         # print 'Fields contained in layer: ', lyr.fields
 
-        # Create a level
-        level = Geolevel(name=config['geolevel'])
-        level.save()
+        # don't recreate any geolevels that already exist
+        level = Geolevel.objects.filter(name__exact=config['geolevel'])
+        if len(level) == 0:
+            level = Geolevel(name=config['geolevel'])
+            level.save()
+        else:
+            level = level[0]
 
         # Create the subjects we need
         subject_objects = {}
@@ -99,9 +103,9 @@ class Command(BaseCommand):
             sub = Subject.objects.filter(display=name)
             if len(sub) == 0:
                 sub = Subject(name=attr, display=name, short_display=name, is_displayed=True)
+                sub.save()
             else:
                 sub = sub[0]
-            sub.save()
             subject_objects[attr] = sub
 
         for feat in lyr:
