@@ -26,12 +26,20 @@ function loadTooltips() {
         opacity: .8
     });    
       
+    // If the user left the stats_legend_panel up when it's refreshed, it may be
+    // attached in a weird place.
+    $('body > #stats_legend_panel').remove();
+
+    // This shows the legend on click
     $("#stats_legend").tooltip({
         position: 'top center',
         effect: 'slide',
         delay: 200,
         offset: [10,0],
         opacity: .8,
+        events: {
+            widget: 'click,',
+        },
         onBeforeShow:  function() {
             // ensure proper DOM placement
             this.getTip().appendTo('body');
@@ -40,7 +48,17 @@ function loadTooltips() {
             // restore original DOM placement
             this.getTip().appendTo(this.getTrigger());
         }
-    })  
+    });  
+    
+    // On click, hide the tooltip
+    $('#stats_legend').click( function() {
+        var tip = $('#stats_legend').tooltip();
+        if (tip.isShown(true)) {
+            tip.hide();
+        }
+        return false;
+    });
+            
 }
 
 
