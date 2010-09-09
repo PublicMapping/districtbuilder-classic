@@ -637,6 +637,7 @@ function mapinit(srs,maxExtent) {
                 var showTip = function(tipFeature, pixel) {
                     districtIdDiv = $('<div></div>');
                     districtIdDiv.addClass('tooltip');
+                    districtIdDiv.addClass('districtidtip');
                     var headline = $('<h1></h1>');
                     headline.text(tipFeature.attributes.name);
                     districtIdDiv.append(headline);
@@ -670,10 +671,14 @@ function mapinit(srs,maxExtent) {
                 };
             })(),
             onUnselect: function(feature) {
-                districtIdDiv.fadeOut(1000);
+                $('.districtidtip').fadeOut(1000);
+                $('.districtidtip').remove();
             }
         }
     );
+    districtIdControl.events.register('deactivate', districtIdControl, function() {
+        $('.districtidtip').remove();
+    });
 
     // Get the feature at the point in the layer.
     var featureAtPoint = function(pt, lyr) {
