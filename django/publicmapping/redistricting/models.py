@@ -141,7 +141,8 @@ class Geounit(models.Model):
 
     @staticmethod
     def get_base_geounits(geounit_ids, geolevel):
-        """Get the list of geounits at the base geolevel inside the 
+        """
+        Get the list of geounits at the base geolevel inside the 
         geometry of geounit_ids.
         
         This method performs a spatial query to find all the small
@@ -491,6 +492,9 @@ class Plan(models.Model):
         return self.name
 
     class Meta:
+        """
+        Define a unique constraint on 2 fields of this model.
+        """
         unique_together = (('name','owner'),)
 
     @transaction.commit_on_success

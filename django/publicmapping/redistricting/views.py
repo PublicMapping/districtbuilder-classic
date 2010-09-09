@@ -118,9 +118,18 @@ def copyplan(request, planid):
     return HttpResponse(data, mimetype='application/json')
 
 def commonplan(request, planid):
-    """A common method that gets the same data structures for viewing
+    """
+    A common method that gets the same data structures for viewing
     and editing. This method is called by the viewplan and editplan 
-    views."""
+    views.
+    
+    Parameters:
+        request -- An HttpRequest
+        planid -- The plan ID to fetch.
+        
+    Returns:
+        A python dict with common plan attributes set to the plan's values.
+    """
     try:
         # Get the plan and districts in the plan.
         plan = Plan.objects.get(pk=planid)
@@ -304,6 +313,10 @@ def getreport(request, planid):
     This view will write out an HTML-formatted BARD report to the directory
     given in the settings.
     
+    Parameters:
+        request -- An HttpRequest
+        planid -- The plan to be reported.
+    
     Returns:
         The HTML for use as a preview in the web application, along with 
         the web address of the BARD report.
@@ -360,8 +373,13 @@ def getreport(request, planid):
     def get_tagged_list(parameter_string):
         """
         Helper method to break up the strings that represents lists of 
-        variables. Give it a string and get a TaggedList suitable for 
-        rpy2 use.
+        variables.
+        
+        Parameters:
+            parameter_string -- A string of parameters
+            
+        Returns:
+            A TaggedList suitable for rpy2 use.
         """
         tl = rpc.TaggedList(list())
         extras = parameter_string.split('^')
@@ -621,6 +639,9 @@ def chooseplan(request):
 
     Parameters:
         request -- An HttpRequest, with the current user.
+        
+    Returns:
+        A rendered HTML fragment that contains available plans.
     """
     if request.method == "POST":
         return HttpResponse("looking for the requested plan")
@@ -765,6 +786,19 @@ def getdemographics(request, planid):
 
 
 def getgeography(request, planid):
+    """
+    Get the geography of a plan.
+
+    This function retrieves the calculated values for the geographic 
+    statistics of a plan.
+
+    Parameters:
+        request -- An HttpRequest, with the current user
+        planid -- The plan ID
+
+    Returns:
+        An HTML fragment that contains the geographic information.
+    """
     status = { 'success': False }
     try:
         plan = Plan.objects.get(pk = planid)
@@ -863,8 +897,15 @@ def getgeography(request, planid):
 
 
 def getcompliance(districts):
-    """ Returns compliance information about the districts, including contiguity and population 
-    target data, and minority districts
+    """
+    Get compliance information about a set of districts. Compliance
+    includes contiguity, population target data, and minority districts.
+    
+    Parameters:
+        districts -- A list of districts
+        
+    Returns:
+        A set of contiguity and data values.
     """
     compliance = []
 
@@ -928,8 +969,15 @@ def getcompliance(districts):
         
 
 def getaggregate(districts):
-    """ 
-    Returns aggregated data based on the districts given and all available subjects
+    """
+    Get the aggregate data for the districts. This will aggregate all
+    available subjects for the given districts.
+    
+    Parameters:
+        districts -- A list of districts
+        
+    Returns:
+        Aggregated data based on the districts given and all available subjects
     """
     aggregate = []
     characteristics = ComputedCharacteristic.objects.filter(district__in=districts) 
@@ -942,21 +990,19 @@ def getaggregate(districts):
         aggregate.append(data)
     return aggregate
 
-def updatedistrict(request, planid, districtid):
-    status = { 'success': False }
-    plan = Plan.objects.get(pk=planid)
-    district = plan.district_set.get(district_id=districtid)
-    try:
-        status['success'] = True
-        status['message'] = 'Updated stats for %s.' % district.name
-    except:
-        status['message'] = 'Couldn\'t update district stats.'
-    
-    return HttpResponse(json.dumps(status),mimetype='application/json')
-
 def getcompactness(district):
-    """This is the Schwartzberg measure of compactness, which is the measure of the perimeter of the district 
-    to the circumference of the circle whose area is equal to the area of the district
+    """
+    Get the Schwartzberg measure of compactness. Schwartzberg is the 
+    measure of the perimeter of the district to the circumference of the 
+    circle whose area is equal to the area of the district.
+    
+    NOTE: This function is empty.
+    
+    Parameters:
+        district -- A list of districts
+        
+    Returns:
+        Nothing
     """
     pass
 
@@ -985,9 +1031,13 @@ def getcompactness(district):
 #    return query
      
 def getdefaultsubject():
-    """Get the default subject to display. This reads the settings
+    """
+    Get the default subject to display. This reads the settings
     for the value 'DEFAULT_DISTRICT_DISPLAY', which can be the ID of
     a subject, a name of a subject, or the display of a subject.
+    
+    Returns:
+        The default subject, based on the application settings.
     """
     key = settings.DEFAULT_DISTRICT_DISPLAY
     try:

@@ -23,7 +23,7 @@ License:
     limitations under the License.
 
 Author: 
-    David Zwarg, Andrew Jennings
+    Andrew Jennings, David Zwarg
 """
 
 import unittest
@@ -34,8 +34,15 @@ from publicmapping.redistricting.models import *
 from django.conf import settings
 
 class RedistrictingTest(unittest.TestCase):
-
+    """
+    General unit tests for the redistricting application.
+    """
+    
     def setUp(self):
+        """
+        Setup the general tests. This fabricates a set of data in the 
+        test database for use later.
+        """
         user = User(username='test_user')
         user.save()
         self.user = user
@@ -62,10 +69,10 @@ class RedistrictingTest(unittest.TestCase):
         p11 = Point((13,3))
         p12 = Point((9,3))    
 
-        """ Here are some multipolys that emulate our tiered setup
-        b1 = a1 + a2 + a3
-        b2 = a4 + a5
-        """
+        # Here are some multipolys that emulate our tiered setup
+        # b1 = a1 + a2 + a3
+        # b2 = a4 + a5
+        
         b1 = MultiPolygon( [ Polygon ( LinearRing(p1, p3, p8, p5, p1)) ] )
         b2 = MultiPolygon( [ Polygon ( LinearRing(p3, p4, p10, p9, p3)) ] )
         a1 = MultiPolygon( [ Polygon ( LinearRing(p1, p6, p5, p1)) ] )
@@ -138,15 +145,24 @@ class RedistrictingTest(unittest.TestCase):
         self.d2 = d2
     
     def tearDown(self):
+        """
+        Clean up after testing.
+        """
         DistrictGeounitMapping.objects.filter(plan = self.p).delete()
         self.p.delete()
         self.user.delete()
 
     def test_initial_geounit_set(self):
+        """
+        Test the initial set of geounits.
+        """
         unassigned = DistrictGeounitMapping.objects.filter(plan = self.p)
         self.assertEqual(5, unassigned.count(), "Expected 5, got %s geounits placed in unassigned to start %s" % (unassigned.count(), unassigned))
 
     def test_add_to_plan(self):
+        """
+        Test the logic for adding geounits to a district.
+        """
         self.p.add_geounits(self.d2.district_id, [str(self.geounit_b1.id)], self.levelb.id)        
         geounits = DistrictGeounitMapping.objects.filter(district = self.d2)
         self.assertEqual(3, geounits.all().count(), 'Geounit count not correct after adding larger geounit, expected 3, got ' + str(geounits.all().count()))
@@ -156,6 +172,9 @@ class RedistrictingTest(unittest.TestCase):
         self.assertEqual(4, geounits.all().count(), 'Geounit count not correct after adding single geounit')
 
     def test_get_base_geounits(self):
+        """
+        Test the logic for retrieving base geounits.
+        """
         geounit_ids = Geounit.get_base_geounits( ( self.geounit_b1.id, ), self.levelb.id)
         self.assertEqual(3, len(geounit_ids), "Didn't get base geounits of large polys correctly; got " + str(len(geounit_ids)) + str(geounit_ids))
         geounit_ids = Geounit.get_base_geounits( ( self.geounit_b2.id, ), self.levelb.id)
@@ -173,6 +192,9 @@ class RedistrictingTest(unittest.TestCase):
 #        self.assertEqual(1, geounits.filter(id__exact=self.geounit_a2.id).count(), "Too many sub-geounits deleted during request to delete parent")
 #
     def test_district_id_increment(self):
+        """
+        Test the logic for the automatically generated district_id
+        """
         d3 = District(name="District 3")
         d3.plan = self.p
         d3.save()
@@ -184,6 +206,9 @@ class RedistrictingTest(unittest.TestCase):
         self.assertTrue(latest + 1 == incremented, "New district did not have an id greater than the previous district")
 
     def test_copyplan(self):
+        """
+        Test the logic for copying plans.
+        """
         self.p.add_geounits(self.d2.district_id, [str(self.geounit_b1.id)], self.levelb.id)
         geounits = DistrictGeounitMapping.objects.filter(district = self.d2)
         district_map  = DistrictGeounitMapping.objects.filter(plan = self.p)
@@ -199,6 +224,9 @@ class RedistrictingTest(unittest.TestCase):
         self.assertEqual(district_count, copy_map.values('district').distinct().count(), 'Copy didn\'t have same number of districts')
    
     def test_unassigned(self):
+        """
+        Test the logic for an unassigned district.
+        """
         unassigned = District.objects.filter(name="Unassigned", plan = self.p)
         self.assertEqual(1, unassigned.count(), 'New Plan didn\'t have one value on saving')
         district_map = DistrictGeounitMapping.objects.filter(plan = self.p, district = unassigned)
@@ -207,7 +235,15 @@ class RedistrictingTest(unittest.TestCase):
 
 
 class GeounitMixTester(unittest.TestCase):
+    """
+    Unit tests to test the mixed geounit spatial queries.
+    """
+    
     def setUp(self):
+        """
+        Setup the spatial query tests. This fabricates some test data and
+        changes the base geolevel and the simple tolerance.
+        """
         self.longMessage = True
 
         # need geounits for ids & geometries
@@ -255,36 +291,53 @@ class GeounitMixTester(unittest.TestCase):
                     gu.save()
                     self.geounits[gl.id].append(gu)
             dim *= 3.0
+            
         settings.BASE_GEOLEVEL = self.geolevels[2].id
+        settings.SIMPLE_TOLERANCE = 0.1
 
     def test_numgeolevels(self):
+        """
+        Test the number of geolevels created.
+        """
         self.assertEquals(3, len(self.geolevels), 'Number of geolevels for mixed geounits is incorrect.')
 
     def test_numgeounits1(self):
+        """
+        Test the number of geounits in the first tier of geounits.
+        """
         self.assertEquals(9, len(self.geounits[self.geolevels[0].id]), 'Number of geounits at geolevel "%s" is incorrect.' % self.geolevels[0].name)
 
     def test_numgeounits2(self):
+        """
+        Test the number of geounits in the second tier of geounits.
+        """
         self.assertEquals(81, len(self.geounits[self.geolevels[1].id]), 'Number of geounits at geolevel "%s" is incorrect.' % self.geolevels[1].name)
 
     def test_numgeounits3(self):
+        """
+        Test the number of geounits in the third tier of geounits.
+        """
         self.assertEquals(729, len(self.geounits[self.geolevels[2].id]), 'Number of geounits at geolevel "%s" is incorrect.' % self.geolevels[2].name)
 
     def test_allunitscount(self):
+        """
+        Test that known geounits are spatially contained within other geounits.
+        """
         unit1 = self.geounits[self.geolevels[0].id][0]
-        #print "EWKT %s %s" % (self.geolevels[0].name, unit1.geom.ewkt)
 
         unit2 = self.geounits[self.geolevels[1].id][0]
-        #print "EWKT %s %s" % (self.geolevels[1].name, unit2.geom.ewkt)
 
         self.assertTrue(unit1.geom.contains(unit2.geom), "First unit does not contain secont unit.")
 
         unit3 = self.geounits[self.geolevels[2].id][0]
-        #print "EWKT %s %s" % (self.geolevels[2].name, unit3.geom.ewkt)
 
         self.assertTrue(unit1.geom.contains(unit3.geom), "First unit does not contain second unit.")
         self.assertTrue(unit2.geom.contains(unit3.geom), "Second unit does not contain third unit.")
 
     def test_get_all_in(self):
+        """
+        Test the spatial query to get geounits within a known boundary.
+        """
         level = self.geolevels[0]
         units = self.geounits[level.id]
 
@@ -294,6 +347,9 @@ class GeounitMixTester(unittest.TestCase):
         self.assertEquals(90, numunits, "Number of geounits within a high-level geounit is incorrect. (%d)" % numunits)
 
     def test_get_in_gu0(self):
+        """
+        Test the spatial query to get geounits within a known boundary.
+        """
         level = self.geolevels[0]
         units = self.geounits[level.id]
 
@@ -302,6 +358,9 @@ class GeounitMixTester(unittest.TestCase):
         self.assertEquals(9, numunits, "Number of geounits within geounit 1 is incorrect. (%d)" % numunits)
 
     def test_get_base(self):
+        """
+        Test the spatial query to get all geounits at the base geolevel within a boundary.
+        """
         level = self.geolevels[0]
         units = self.geounits[level.id]
         geounit_ids = tuple([units[0].id, units[1].id])
@@ -312,6 +371,10 @@ class GeounitMixTester(unittest.TestCase):
         self.assertEquals(81, numunits, "Number of geounits within a high-level geounit is incorrect. (%d)" % numunits)
 
     def test_get_mixed1(self):
+        """
+        Test the logic for getting mixed geounits inside a boundary at the
+        highest geolevel.
+        """
         level = self.geolevels[0]
         bigunits = self.geounits[level.id]
         ltlunits = self.geounits[self.geolevels[1].id]
@@ -322,6 +385,10 @@ class GeounitMixTester(unittest.TestCase):
         self.assertEquals(8, numunits, "Number of geounits inside boundary is incorrect. (%d)" % numunits)
 
     def test_get_imixed1(self):
+        """
+        Test the logic for getting mixed geounits outside a boundary at the
+        highest geolevel.
+        """
         level = self.geolevels[0]
         bigunits = self.geounits[level.id]
         ltlunits = self.geounits[self.geolevels[1].id]
@@ -332,6 +399,10 @@ class GeounitMixTester(unittest.TestCase):
         self.assertEquals(1, numunits, "Number of geounits outside boundary is incorrect. (%d)" % numunits)
 
     def test_get_mixed2(self):
+        """
+        Test the logic for getting mixed geounits inside a boundary at the
+        middle geolevel.
+        """
         level = self.geolevels[1]
         bigunits = self.geounits[level.id]
         ltlunits = self.geounits[self.geolevels[2].id]
@@ -342,6 +413,10 @@ class GeounitMixTester(unittest.TestCase):
         self.assertEquals(8, numunits, "Number of geounits inside boundary is incorrect. (%d)" % numunits)
 
     def test_get_imixed2(self):
+        """
+        Test the logic for getting mixed geounits outside a boundary at the
+        middle geolevel.
+        """
         level = self.geolevels[1]
         bigunits = self.geounits[level.id]
         ltlunits = self.geounits[self.geolevels[2].id]
@@ -352,6 +427,10 @@ class GeounitMixTester(unittest.TestCase):
         self.assertEquals(1, numunits, "Number of geounits outside boundary is incorrect. (%d)" % numunits)
 
     def test_get_mixed3(self):
+        """
+        Test the logic for getting mixed geounits inside a boundary at the
+        lowest geolevel.
+        """
         level = self.geolevels[0]
         bigunits = self.geounits[level.id]
         boundary = MultiPolygon(Polygon(LinearRing(
@@ -371,6 +450,10 @@ class GeounitMixTester(unittest.TestCase):
         self.assertEquals(63, numunits, "Number of geounits inside boundary is incorrect. (%d)" % numunits)
 
     def test_get_imixed3(self):
+        """
+        Test the logic for getting mixed geounits outside a boundary at the
+        lowest geolevel.
+        """
         level = self.geolevels[0]
         bigunits = self.geounits[level.id]
         boundary = MultiPolygon(Polygon(LinearRing(
