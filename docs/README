@@ -87,16 +87,15 @@ the necessary software using the command:
  7. Run the python command in the settings file to generate a secret key 
     for your application and copy it into the settings.ini file.
 
- 8. Run the django syncdb command to create the database
+ 8. Run the django syncdb command to create the database:
   
-    > python /projects/publicmapping/trunk/django/publicmapping/manage.py \
-        syncdb
+    > cd /projects/publicmapping/trunk/django/publicmapping
+    > python ./manage.py syncdb
 
- 9. Run the plan.sql script against your newly minted database to create 
-    the spatial views needed by the application
+ 9. Run the demographics admin command to create the spatial views needed 
+    by the application:
 
-    > psql -U publicmapping -d publicmapping -f \
-        /projects/publicmapping/trunk/sql/plans.sql
+    > python ./manage.py demographics
 
 10. To import your data, you'll need to configure the import.py command 
     in the "/trunk/publicmapping/redistricting/management/commands" 
@@ -104,7 +103,6 @@ the necessary software using the command:
     and subject configuration to match your data. Then run the import 
     script admin command:
 
-    > cd /projects/publicmapping/trunk/django/publicmapping
     > python ./manage.py import county tract block
 
 11. The script may take a long time to run.  It will import the geographic
