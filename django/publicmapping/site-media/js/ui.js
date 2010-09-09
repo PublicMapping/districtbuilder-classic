@@ -27,10 +27,10 @@ function loadTooltips() {
     });    
       
     // If the user left the stats_legend_panel up when it's refreshed, it may be
-    // attached in a weird place.
+    // attached to the body rather than appended to the trigger.
     $('body > #stats_legend_panel').remove();
 
-    // This shows the legend on click
+    // This shows the legend when the trigger is clicked
     $("#stats_legend").tooltip({
         position: 'top center',
         effect: 'slide',
@@ -43,6 +43,15 @@ function loadTooltips() {
         onBeforeShow:  function() {
             // ensure proper DOM placement
             this.getTip().appendTo('body');
+            // close on the next trigger click - putting this here as a "one()"
+            // method keeps the handlers from piling up as the tabs are refreshed.
+            $('#stats_legend').one('click', function() {
+                var tip = $('#stats_legend').tooltip();
+                if (tip.isShown(true)) {
+                    tip.hide();
+                }
+                return false;
+            });
         },
         onHide:  function() {
             // restore original DOM placement
@@ -51,13 +60,6 @@ function loadTooltips() {
     });  
     
     // On click, hide the tooltip
-    $('#stats_legend').click( function() {
-        var tip = $('#stats_legend').tooltip();
-        if (tip.isShown(true)) {
-            tip.hide();
-        }
-        return false;
-    });
             
 }
 
