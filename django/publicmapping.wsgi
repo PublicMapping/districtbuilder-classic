@@ -25,7 +25,8 @@
 #       publicmapping.apache, which configures an Apache web server for
 #       The Public Mapping Project.
 #
-#   Author: David Zwarg, Andrew Jennings
+#   Author: 
+#       Andrew Jennings, David Zwarg
 #
 
 

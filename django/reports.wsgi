@@ -18,14 +18,15 @@
 #   http://sourceforge.net/projects/publicmapping/
 #
 #   Purpose:
-#       publicmapping.wsgi is a mod_wsgi web application configuration file
+#       reports.wsgi is a mod_wsgi web application configuration file
 #
-#       This file configures mod_wsgi to run the Python Django web 
-#       application.  This file is referenced by the file 
-#       publicmapping.apache, which configures an Apache web server for
+#       This file configures mod_wsgi to run the reporting component of
+#       the Python Django web application.  This file is referenced by the 
+#       file publicmapping.apache, which configures an Apache web server for
 #       The Public Mapping Project.
 #
-#   Author: David Zwarg, Andrew Jennings
+#   Author: 
+#       Andrew Jennings, David Zwarg
 #
 
 

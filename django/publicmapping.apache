@@ -24,51 +24,52 @@
 #       addition, the static media for the django web application is
 #       served up through a set of aliased paths.
 #  
-#   Author: David Zwarg, Andrew Jennings
+#   Author: 
+#       Andrew Jennings, David Zwarg
 #
 
         
 # The main publicmapping host serves the web application
 <VirtualHost *:80>
-	ServerAdmin AzaveaDev@azavea.com
-        WSGIDaemonProcess geodjango user=www-data group=www-data processes=10 threads=1 display-name=publicmapping
-        WSGIProcessGroup geodjango
-        WSGIScriptAlias / /projects/publicmapping/trunk/django/publicmapping.wsgi
+    ServerAdmin AzaveaDev@azavea.com
+    WSGIDaemonProcess geodjango user=www-data group=www-data processes=10 threads=1 display-name=publicmapping
+    WSGIProcessGroup geodjango
+    WSGIScriptAlias / /projects/publicmapping/trunk/django/publicmapping.wsgi
 
-        Alias /site-media/ /projects/publicmapping/trunk/django/publicmapping/site-media/
-        <Directory /projects/publicmapping/trunk/django/publicmapping/site-media>
-            Order deny,allow
-            Allow from all
-        </Directory>
+    Alias /site-media/ /projects/publicmapping/trunk/django/publicmapping/site-media/
+    <Directory /projects/publicmapping/trunk/django/publicmapping/site-media>
+        Order deny,allow
+        Allow from all
+    </Directory>
 
-        Alias /media/ /projects/publicmapping/trunk/django/publicmapping/admin-media/
-        <Directory /projects/publicmapping/trunk/django/publicmapping/admin-media>
-	    Options Indexes FollowSymLinks
-            Order deny,allow
-            Allow from all
-        </Directory>
+    Alias /media/ /projects/publicmapping/trunk/django/publicmapping/admin-media/
+    <Directory /projects/publicmapping/trunk/django/publicmapping/admin-media>
+    Options Indexes FollowSymLinks
+        Order deny,allow
+        Allow from all
+    </Directory>
 
-        Alias /reports/ /projects/publicmapping/local/reports/
-        <Directory /projects/publicmapping/local/reports/>
-	    Options Indexes FollowSymLinks
-            Order deny,allow
-            Allow from all
-        </Directory>
+    Alias /reports/ /projects/publicmapping/local/reports/
+    <Directory /projects/publicmapping/local/reports/>
+    Options Indexes FollowSymLinks
+        Order deny,allow
+        Allow from all
+    </Directory>
 
-        Alias /sld/ /projects/publicmapping/trunk/sld/
-        <Directory /projects/publicmapping/trunk/sld/>
-            Options Indexes
-            Order deny,allow
-            Allow from all
-        </Directory>
+    Alias /sld/ /projects/publicmapping/trunk/sld/
+    <Directory /projects/publicmapping/trunk/sld/>
+        Options Indexes
+        Order deny,allow
+        Allow from all
+    </Directory>
 
-	ErrorLog /var/log/apache2/publicmapping-error.log
+    ErrorLog /var/log/apache2/publicmapping-error.log
 
-	# Possible values include: debug, info, notice, warn, error, crit,
-	# alert, emerg.
-	LogLevel warn
+    # Possible values include: debug, info, notice, warn, error, crit,
+    # alert, emerg.
+    LogLevel warn
 
-	CustomLog /var/log/apache2/publicmapping-access.log combined
+    CustomLog /var/log/apache2/publicmapping-access.log combined
 
     # This redirects report requests to an alternate port.
     RewriteEngine On
@@ -83,13 +84,12 @@ WSGIRestrictStdout Off
 
 # This virtual host is responsible for running a multithreaded environment for reports
 <VirtualHost *:8081>
-
-	ServerAdmin AzaveaDev@azavea.com
-        WSGIDaemonProcess bard-reports user=www-data group=www-data threads=10 display-name=publicmapping-reports
-        WSGIScriptAlias / /projects/publicmapping/trunk/django/reports.wsgi
-        WSGIProcessGroup bard-reports
-        WSGIApplicationGroup bard-reports
-	    ErrorLog /var/log/apache2/bard-reporting-error.log
-	    CustomLog /var/log/apache2/bard-reporting-access.log combined
+    ServerAdmin AzaveaDev@azavea.com
+    WSGIDaemonProcess bard-reports user=www-data group=www-data threads=10 display-name=publicmapping-reports
+    WSGIScriptAlias / /projects/publicmapping/trunk/django/reports.wsgi
+    WSGIProcessGroup bard-reports
+    WSGIApplicationGroup bard-reports
+    ErrorLog /var/log/apache2/bard-reporting-error.log
+    CustomLog /var/log/apache2/bard-reporting-access.log combined
 </VirtualHost>
 
