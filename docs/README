@@ -92,24 +92,26 @@ the necessary software using the command:
     > cd /projects/publicmapping/trunk/django/publicmapping
     > python ./manage.py syncdb
 
- 9. Run the demographics admin command to create the spatial views needed 
-    by the application:
-
-    > python ./manage.py demographics
-
-10. To import your data, you'll need to configure the import.py command 
+ 9. To import your data, you'll need to configure the import.py command 
     in the "/trunk/publicmapping/redistricting/management/commands" 
     directory. Using your favorite text editor, update the shapefile paths 
     and subject configuration to match your data. Then run the import 
     script admin command:
 
     > python ./manage.py import county tract block
-
-11. The script may take a long time to run.  It will import the geographic
+    
+    The script may take a long time to run.  It will import the geographic
     data from the shapes and create the links and django models necessary 
-    to run the application.  
+    to run the application. 
+    
+10. Run the demographics admin command to create the spatial views needed 
+    by the application. This MUST occur after the data import, as the 
+    subjects and geography from the import process are used to construct 
+    the views.
 
-12. Django serves up SLD files to clients, and need this mime type added
+    > python ./manage.py demographics
+
+11. Django serves up SLD files to clients, and need this mime type added
     to the system's known mime types in order to serve the content
     properly.
 
@@ -117,13 +119,12 @@ the necessary software using the command:
     b. Find the line that starts with "application/xml"
     c. Add " sld" to the end of this line, after "xml xsl xsd"
 
-13. Now that you have the app configured and your data imported, you can 
+12. Now that you have the app configured and your data imported, you can 
     run the app using Django's testing server
      
-    > python /projects/publicmapping/trunk/django/publicmapping/manage.py \
-        runserver
+    > python ./manage.py runserver
 
-14. You will see a notice that your server is running and you can access 
+13. You will see a notice that your server is running and you can access 
     your application at 127.0.0.1:8000  Enter that location into your 
     browser on the local machine and you should be able to use the 
     application.
