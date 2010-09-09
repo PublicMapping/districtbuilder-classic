@@ -33,7 +33,8 @@ Author:
 """
 
 from django.core.management.base import BaseCommand
-from django.db import connection
+from django.db import connection,transaction
+from redistricting.models import *
 
 class Command(BaseCommand):
     """
@@ -41,47 +42,37 @@ class Command(BaseCommand):
     """
     args = None
     help = 'Create redistricting database views.'
-    
+
+    @transaction.commit_manually
     def handle(self, *args, **options):
         """
         Perform the command. Run the SQL for creating redistricting views.
         """
         cursor = connection.cursor()
         
-        sql = """CREATE OR REPLACE VIEW simple_district AS 
- SELECT rd.id, rd.district_id, rd.name, rd.version, rd.plan_id, rc.subject_id, rc.number, rd.simple AS geom
-   FROM redistricting_district rd
-   JOIN redistricting_computedcharacteristic rc ON rd.id = rc.district_id
-  WHERE rd.version = (( SELECT max(redistricting_district.version) AS max
-      FROM redistricting_district
-     WHERE redistricting_district.district_id = rd.district_id));"""
+        sql = "CREATE OR REPLACE VIEW simple_district AS SELECT rd.id, rd.district_id, rd.name, rd.version, rd.plan_id, rc.subject_id, rc.number, rd.simple AS geom FROM redistricting_district rd JOIN redistricting_computedcharacteristic rc ON rd.id = rc.district_id WHERE rd.version = (( SELECT max(redistricting_district.version) AS max FROM redistricting_district WHERE redistricting_district.district_id = rd.district_id));"
         cursor.execute(sql)
+        transaction.commit()
         print '\tCreated simple_district view ...'
         
-        sql = """CREATE OR REPLACE VIEW identify_geounit AS
- SELECT rg.id, rg.name, rg.geolevel_id, rg.geom, rc.number, rc.percentage, rc.subject_id
-   FROM redistricting_geounit rg
-   JOIN redistricting_characteristic rc ON rg.id = rc.geounit_id;"""
+        sql = "CREATE OR REPLACE VIEW identify_geounit AS SELECT rg.id, rg.name, rg.geolevel_id, rg.geom, rc.number, rc.percentage, rc.subject_id FROM redistricting_geounit rg JOIN redistricting_characteristic rc ON rg.id = rc.geounit_id;"
         cursor.execute(sql)
+        transaction.commit()
         print '\tCreated identify_geounit view ...'
 
         for geolevel in Geolevel.objects.all():
-            sql = """CREATE OR REPLACE VIEW simple_%s AS 
- SELECT id, name, geolevel_id, simple as geom
-   FROM redistricting_geounit
-  WHERE geolevel_id = %d;""" % (geolevel.name, geolevel.id,)
+            sql = "CREATE OR REPLACE VIEW simple_%s AS SELECT id, name, geolevel_id, simple as geom FROM redistricting_geounit WHERE geolevel_id = %d;" % (geolevel.name.lower(), geolevel.id,)
             cursor.execute(sql)
-            print '\tCreated simple_%s view ...' % geolevel.name
+            transaction.commit()
+            print '\tCreated simple_%s view ...' % geolevel.name.lower()
             
             for subject in Subject.objects.all():
-                sql = """CREATE OR REPLACE VIEW demo_%s_%s AS 
- SELECT rg.id, rg.name, rg.geolevel_id, rg.geom, rc.number, rc.percentage
-   FROM redistricting_geounit rg
-   JOIN redistricting_characteristic rc ON rg.id = rc.geounit_id
-  WHERE rc.subject_id = %d AND rg.geolevel_id = %d;""" % 
-                    (geolevel.name, subject.name, subject.id, geolevel.id,)
+                sql = "CREATE OR REPLACE VIEW demo_%s_%s AS SELECT rg.id, rg.name, rg.geolevel_id, rg.geom, rc.number, rc.percentage FROM redistricting_geounit rg JOIN redistricting_characteristic rc ON rg.id = rc.geounit_id WHERE rc.subject_id = %d AND rg.geolevel_id = %d;" % \
+                    (geolevel.name.lower(), subject.name.lower(), 
+                     subject.id, geolevel.id,)
                 cursor.execute(sql)
-                
-                print '\tCreated demo_%s_%s view ...' % (geolevel.name, subject.name)
-               
+                transaction.commit()
+                print '\tCreated demo_%s_%s view ...' % \
+                    (geolevel.name.lower(), subject.name.lower())
+              
         print '\tDone.'
