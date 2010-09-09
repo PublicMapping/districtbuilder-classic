@@ -13,6 +13,11 @@ Postgresql v 8.4 w/ PostGIS
 Python v 2.6
 Django v 1.1
 
+
+On a debian-based system with aptitude installed, you can install most of the necessary software using the command:
+    > sudo aptitude install apache2 libapache2-mod-wsgi python-django python-gdal python-rpy2 python-psycopg2 postgresql-8.4-postgis sun-java6-jdk tomcat6 tomcat6-admin
+
+
 == Installation ==
 
   1. Check out the public mapping projects to the /projects directory of 
@@ -20,8 +25,21 @@ Django v 1.1
 
     > mkdir /projects
     > cd /projects
-    > svn co https://publicmapping.svn.sourceforge.net/svnroot/publicmapping publicmapping
 
+     You can download the publicmapping source from the website or use SVN to grab the code
+        
+     a. If you have subversion installed, you can export the source if you're not going to update
+        the code with contributions to the open-source project:
+
+       > svn export https://publicmapping.svn.sourceforge.net/svnroot/publicmapping publicmapping
+
+     b. If you want to contribute to the project, do a checkout so you can commit later:
+
+       > svn co https://publicmapping.svn.sourceforge.net/svnroot/publicmapping publicmapping
+
+     c. If you don't have subversion installed, download the project and expand it
+        into /projects/publicmapping
+    
   2. Create a "local" directory next to the trunk - this is where your 
      machine-specific settings and data will go
 
@@ -32,9 +50,15 @@ Django v 1.1
 
     > cp /projects/publicmapping/trunk/docs/settings_sample.ini /projects/publicmapping/local/settings.ini
 
-  4. Run the publicmapping_db.sql script in the sql directory.
+  4. At this point, make sure that you have postgres and postgis installed.  You may need to run the postgis
+     install script if you don't have a postgis template db.
+     Check the postgis site for installation instructions if you're not familiar with postgis:
 
-    > sudo -s postgres psql -f /projects/publicmapping/trunk/sql/publicmapping_db.sql
+        http://postgis.refractions.net/docs/ch02.html
+
+     Once postgis is intalled, run the publicmapping_db.sql script in the sql directory.
+
+    > sudo -u postgres psql -f /projects/publicmapping/trunk/sql/publicmapping_db.sql
 
   5. This will create a publicmapping db from the template_postgis 
      template, along with a publicmapping user role.  The publicmapping 
@@ -42,7 +66,13 @@ Django v 1.1
 
   6. Check out your settings.ini folder and make sure it's pointing to the
      correct DB and that your DB is accessible. You may want to adjust the 
-     value of the map server, too.
+     value of the map server, too.  Finally, make sure your pg_hba file in your 
+     postgres configuration allows password-based authentication on the local machine
+
+        http://developer.postgresql.org/pgdocs/postgres/auth-pg-hba-conf.html
+
+     You will need a row that looks like this in your pg_hba file:
+        local   all   all   md5
      
   7. Run the python command in the settings file to generate a secret key 
      for your application and copy it into the settings.ini file.
@@ -51,23 +81,22 @@ Django v 1.1
   
     > python /projects/publicmapping/trunk/django/publicmapping/manage.py syncdb
 
-  9. To import your data, you'll need to configure the importshape.py 
-     script in the "python" directory. Using your favorite text editor, 
-     update the shapefile paths and subject configuration to match your 
-     data.
+  9. Run the plan.sql script against your newly minted database to create the
+     spatial views needed by the application
 
- 10. Run the importshapes script from withing the django shell
+    > psql -U publicmapping -d publicmapping -f /projects/publicmapping/trunk/sql/plans.sql
 
-    > cd /projects/publicmapping/trunk/python
-    > python ../django/publicmapping/manage.py shell
-    >>> execfile('importshapes.py')
+ 10. To import your data, you'll need to configure the import.py script in the
+     "/trunk/publicmapping/redistricting/management/commands" directory. Using
+     your favorite text editor, update the shapefile paths and subject configuration
+     to match your data. Then run the importshapes script admin command
+
+    > cd /projects/publicmapping/trunk/django/publicmapping
+    > python ./manage.py import county tract block
 
  11. The script may take a long time to run.  It will import the geographic
      data from the shapes and create the links and django models necessary 
-     to run the application.  Once it's run, you can exit the shell by 
-     typing:
-
-    >>> quit()
+     to run the application.  
 
  12. Django serves up SLD files to clients, and need this mime type added
      to the system's known mime types in order to serve the content
@@ -87,44 +116,102 @@ Django v 1.1
      browser on the local machine and you should be able to use the 
      application.
 
- 15. Running the application from the django development server is good for
-     setup, but for a production environment, you will want to configure
-     Apache:
+== Apache Configuration ++
 
-     a. Copy the file "publicmapping.apache" into the "sites-available" 
-        Apache config directory (typically /etc/apache2/sites-available/)
-     b. Create a symbolic link to this file from the "sites-enabled"
-        directory:
+ 1. Running the application from the django development server is good for
+    setup, but for a production environment, you will want to configure
+    Apache.  First, copy the apache file into the "sites-available" 
+    Apache config directory (typically /etc/apache2/sites-available/)
 
-       > cd /etc/apache2/sites-enabled/
-       > sudo ln -s /etc/apache2/sites-available/publicmapping.apache 001-publicmapping
+  > cp /projects/publicmapping/trunk/django/publicmapping.apache /etc/apache2/sites-enabled/publicmapping
 
-     c. If you are NOT running the public mapping project as the default
-        web site in Apache, you will have to edit publicmapping.apache to
-        reflect your configuration (e.g. VirtualHost directives).
-     d. If you ARE running the public mapping project as the default web
-        site in Apache, remove the default site configuration:
+ 2. Enable the new publicmapping site in apache
 
-       > sudo rm /etc/apache2/sites-enabled/000-default
+  > a2ensite publicmapping
 
-     e. Make sure you have the following modules for apache enabled: proxy, 
-        proxy_http, rewrite, and wsgi
-        
-       > a2enmod proxy proxy_http rewrite wsgi
+ 3. If you are NOT running the public mapping project as the default
+    web site in Apache, you will have to edit publicmapping.apache to
+    reflect your configuration (e.g. VirtualHost directives).
 
-     f. You may need to update /etc/apache2/mods-available/proxy.conf  If you see
+ 4. If you ARE running the public mapping project as the default web
+    site in Apache, remove the default site configuration:
 
-            Deny from All
+   > a2dissite default
 
-        change it to
+ 5. Make sure you have the following modules for apache enabled: proxy, 
+    proxy_http, rewrite, and wsgi
+    
+   > a2enmod proxy proxy_http rewrite wsgi
 
-            Allow from All
+ 6. You may need to update /etc/apache2/mods-available/proxy.conf  If you see
 
-     f. To support reports, you'll need to run a separate virtual host on a port
-        other than your public mapping project application.  You can set this in
-        your main apache config, or in /etc/apache2/ports.conf in some linux distros. 
-        Add these two lines to run reports on port 8081.
+        Deny from All
 
-            NameVirtualHost *:8081
-            Listen 8081
+    change it to
 
+        Allow from All
+
+ 7. To support reports, you'll need to run a separate virtual host on a port
+    other than your public mapping project application.  You can set this in
+    your main apache config, or in /etc/apache2/ports.conf in some linux distros. 
+    Add these two lines to run reports on port 8081.
+
+        NameVirtualHost *:8081
+        Listen 8081
+
+== Geoserver configuration ==
+  
+  1. To install geoserver, first make sure Tomcat is installed and running properly;
+     that means you can get to http://yourComputerName:8080/ and see the "It works" page.
+     You will also need to set up a tomcat user that can manage and administer your site.  You can edit
+     the /var/lib/tomcat6/conf/tomcat-users.xml file to create this user.
+
+  2. Download Geoserver in WAR (Web Archive) format from http://geoserver.org/display/GEOS/Stable
+
+  3. Unzip the downloaded zip file so you can access the geoserver.war file.
+
+  4. Open the tomcat manager app (usually at http://yourComputerName:8080/manager/html) and use the Deploy section
+      to deploy Geoserver.
+      a. In the Context Path section, type "/geoserver"
+      b. In the WAR or Directory URL section, type the full path to your war file, e.g. "/home/publicmapping/geoserver.war"
+      c. Click Deploy. You should see the message "OK - Deployed application at context
+           path /geoserver" near the top of the page.
+
+
+  5. Now you should be able to go to http://yourComputerName:8080/geoserver/web and log in 
+     with the default name and password - admin/geoserver.  You should change the administrator
+     name and password in the Security > Users section of the Geoserver menu.
+
+  6. Configure the SLD files for the layers for use in geoserver.  You'll find all of these SLD files 
+     in the /projects/publicmapping/trunk/sld folder.
+     
+      a. Click on the Data > Styles option in the GeoServer menu
+      b. Click on "Add a new style" at the top of the screen
+      c. Click the "Browse" button, browse to the SLD, then click "Open" in the file dialog.
+      d. Click the "Upload" link to upload the style.
+      e. Now you'll see the SLD in the document editor Window.  Click the "Submit" button.
+      f. Repeat the process for each of the styles in the SLD folder
+
+  7. Now that the styling for each layer is configured, you can add the layers from the database.
+     Click on Data > Layers in the GeoServer menu on the left. Add a new workspace.  The default
+     is "gmu" with a namespace of "http://gmu.azavea.com"  You can use a different workspace if you
+     edit your settings.ini file appropriately.
+
+  8. Add a new store in the workspace you just created. You can do this from the Data > Stores option.
+     This store should point to your local PostGIS server.  Type in the appropriate name and password.
+
+  9. Now add each of the layers in the database.  Click on Data > Layers.  For each layer, start by
+     clicking the "Add a new resource" link.
+      a. For each of the layers, select the appropriate view from the data store you just created.
+         For the demographic layers, you'll need to set the appropriate styling from the "Publishing"
+         tab before you deploy them. Each of the demo layers will have a similarly named SLD
+         from those you just published.
+      b. You may need to use the links to generate Bounding Boxes for each layer. Just click the
+         "Compute from data" then "Compute from native bounds" links to do so.  Make sure that you're
+         using the proper SRS (EPSG:3785, aka Web Mercator, for the demo data)
+      c. In addition to each "demo" layer, you'll need to add the "simple" layers, too.  The styling
+         for these layers in the Publishing section is not important - their styling it will be
+         done by OpenLayers at runtime.
+
+  10. Now that your GeoServer is configured, you should use the Services > GWC link in the menu
+      to seed some of your layers.  This will make the base map layers appear faster.
