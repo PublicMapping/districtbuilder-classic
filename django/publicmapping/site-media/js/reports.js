@@ -1,3 +1,36 @@
+/*
+   Copyright 2010 Micah Altman, Michael McDonald
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+   This file is part of The Public Mapping Project
+   http://sourceforge.net/projects/publicmapping/
+
+   Purpose:
+       This script file defines the behaviors for generating reports of
+       Plans.
+
+   Author: 
+        Andrew Jennings, David Zwarg
+*/
+
+/**
+ * Create a jQuery compatible object that contains functionality for
+ * generating plan reports.
+ *
+ * Parameters:
+ *   options -- Configuration options for the dialog.
+ */
 reports = function(options) {
 
     var _self = {},
@@ -17,6 +50,12 @@ reports = function(options) {
         _repSpatial,
         _repSpatialExtra;
 
+    /**
+     * Initialize the reporting interface.
+     *
+     * Returns:
+     *   The reporting interface.
+     */
     _self.init = function() {
         _options.trigger.click( function() {
             submitReportRequestToServer();
@@ -25,6 +64,7 @@ reports = function(options) {
         return _self;
     };
     
+    // the working dialog
     var $working = $('<div title="Working">Please wait while your report is created</div>').dialog({ 
         autoOpen: false,
         escapeOnClose: false,
@@ -34,12 +74,21 @@ reports = function(options) {
         }
     });
 
+    /**
+     * Submit a request to the server to generate a report.
+     */
     var submitReportRequestToServer = function() {
         $working.dialog('open');
         data = getReportOptions();
         $.post(_options.reportUrl, data, loadPreviewContent);
     };
 
+    /**
+     * Get the options set in the UI for this report.
+     *
+     * Returns:
+     *   The report options with properties set to form values.
+     */
     var getReportOptions = function() {
         var getConcatenated = function(cls) {
             var value = '';
@@ -81,6 +130,15 @@ reports = function(options) {
         return data;
     };
 
+    /**
+     * Load the report's content as a preview. This is a callback function
+     * that is triggered when a report is generated successfully.
+     *
+     * Parameters:
+     *   data -- The JSON server response.
+     *   textStatus -- The text status of the HTTP ajax call.
+     *   XMLHttpRequest -- The XmlHTTPRequest object.
+     */
     var loadPreviewContent = function(data, textStatus, XMLHttpRequest) {
         $working.dialog('close');
         if (data.success) {

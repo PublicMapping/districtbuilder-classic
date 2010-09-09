@@ -1,7 +1,36 @@
+/*
+   Copyright 2010 Micah Altman, Michael McDonald
 
-var publicmapping = {};
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
 
-publicmapping.chooseplan = function(options) {
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+   This file is part of The Public Mapping Project
+   http://sourceforge.net/projects/publicmapping/
+
+   Purpose:
+       This script file defines behaviors of the 'Choose Plan' dialog.
+   
+   Author: 
+        Andrew Jennings, David Zwarg
+*/
+
+/**
+ * Create a jQuery compatible object that contains functionality for
+ * displaying available plans and instantiating templates.
+ *
+ * Parameters:
+ *   options -- Configuration options for the chooser.
+ */
+chooseplan = function(options) {
 
     var _self = {},
         _options = $.extend({
@@ -21,6 +50,13 @@ publicmapping.chooseplan = function(options) {
         _eventType,
         _nameRequired;
 
+    /**
+     * Initialize the chooser. Setup the click event for the target to
+     * show the chooser.
+     *
+     * Returns:
+     *   The chooser.
+     */
     _self.init = function() {
         _options.target.click(_self.show);
 
@@ -29,6 +65,11 @@ publicmapping.chooseplan = function(options) {
         return _self;
     };
 
+    /**
+     * Show the chooser. This method makes an AJAX call to get the most
+     * recent plans (templates, shared plans, etc) immediately prior to
+     * showing the dialog.
+     */
     _self.show = function() {
         _options.container.load('/districtmapping/plan/choose/',function(){
             setUpTarget(); 
@@ -39,6 +80,10 @@ publicmapping.chooseplan = function(options) {
         });
     };
 
+    /**
+     * Setup and show the dialog. This function is called from within
+     * the callback of the show's load function.
+     */
     var setUpTarget = function() {
         if (!_options.closable) { 
             _options.closeOnEscape = false;
@@ -50,7 +95,11 @@ publicmapping.chooseplan = function(options) {
         $('#PlanChooser').dialog(_options);
     };
 
-
+    /**
+     * Set up the events and configure the chooser for operation. This
+     * function is called from within the callback of the show's load
+     * function.
+     */
     var setUpEvents = function() {
         $('.Selectors').hide();
         $('.SelectionGroup').hide();
@@ -99,6 +148,15 @@ publicmapping.chooseplan = function(options) {
         });
     };
 
+    /**
+     * Show one choosing mode. This function is called from within the
+     * setUpEvents function.
+     *
+     * Parameters:
+     *   selectorId -- The selector of the panel body.
+     *   buttonID -- The selector of the button that corresponds to this
+     *               panel.
+     */
     var showOnly = function(selectorId,buttonID) {
         $('#TemplateTypeButtons li').removeClass('active');
         $(buttonID).addClass('active');
@@ -125,6 +183,12 @@ publicmapping.chooseplan = function(options) {
         }
     };
 
+    /**
+     * Select a plan. If a plan is a template, copy it and open that copy.
+     * If a plan is shared, copy it and open that copy. If a plan is owned,
+     * either open it for editing, or copy it to a new plan, then open it
+     * for editing.
+     */
     var selectPlan = function () {
         $('#btnSelectPlan').attr('disabled','true');
         var activeText = $('#btnSelectPlan span').text();
@@ -158,6 +222,12 @@ publicmapping.chooseplan = function(options) {
         }
     };
 
+    /**
+     * A callback that redirects to the new copy of a plan, or displays an error message.
+     *
+     * Parameters:
+     *   data -- The JSON data object returned by the server.
+     */
     var copyCallback = function(data) {
         data = data[0];
         if (data.pk) {

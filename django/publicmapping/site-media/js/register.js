@@ -1,3 +1,32 @@
+/*
+   Copyright 2010 Micah Altman, Michael McDonald
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+   This file is part of The Public Mapping Project
+   http://sourceforge.net/projects/publicmapping/
+
+   Purpose:
+       This script file defines the behaviors and components used for
+       the user registration and login process.
+
+   Author: 
+        Andrew Jennings, David Zwarg
+*/
+
+/**
+ * Define an anonymous function to be called when the document is ready.
+ */
 $(function(){
     var dOptions = {
         autoOpen:false,
@@ -120,6 +149,8 @@ $(function(){
         return false;
     });
 
+    // when the remind button is clicked, display a dialog for options
+    // available for password recovery.
     $('#doRemind').click(function(evt){
         var frm = $('#forgotForm')[0];
         $('#forgotusername, #forgotemail').removeClass('error');
@@ -162,12 +193,14 @@ $(function(){
         return false;
     });
 
+    // do this operation when a user goes 'back' in the dialog
     $('#doBack').click(function(){
         $('#forgotprompt, #forgotButton').css('display','block');
         $('#forgothint, #forgotsent, #forgotButton2').css('display','none');
         return false;
     });
 
+    // do this operation when a user closes the dialog
     $('#doClose').click(function(){
         $('#forgotpass').dialog('close');
         $('#forgotprompt, #forgotButton').css('display','block');
@@ -175,6 +208,9 @@ $(function(){
         return false;
     });
 
+    // if the location of this page has /account/login/ in it, it must have
+    // been the result of a failed login redirect. display error notices
+    // around the username and password fields
     if (new RegExp('.*/accounts/login/$').test(window.location.href)) {
         $('#username, #password').addClass('error');
     }
