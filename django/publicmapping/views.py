@@ -42,23 +42,40 @@ import smtplib
 from random import choice
 
 def index(request):
-    """Generate the index page for the application. The
+    """
+    Generate the index page for the application. The
     index template contains a login button, a register
     button, and an anonymous button, all of which interact
-    with django's authentication system."""
+    with django's authentication system.
+    
+    Parameters:
+        request -- An HttpRequest
+    
+    Returns:
+        An HTML welcome page.
+    """
     return render_to_response('index.html', { })
 
 def userregister(request):
-    """The view to process when a client attempts to register.
-    A user can log in if their username is unique, and their
-    password is not empty. An email address is optional. This
-    view returns a JSON nugget, with a 'success' property.
+    """
+    A registration form endpoint for registering and logging in.
+    
+    This view will permit a user to register if their username is unique, 
+    their password is not empty, and an email address is provided. 
+    This view returns JSON, with a 'success' property if registration or
+    login was successful.
 
-    If registration was successful, the JSON nugget also contains
+    If registration was successful, the JSON also contains
     a 'redirect' property.
 
-    If registration was unsuccessful, the JSON script also contains
+    If registration was unsuccessful, the JSON also contains
     a 'message' property, describing why the registration failed.
+    
+    Parameters:
+        request -- An HttpRequest, with the form submitted parameters.
+        
+    Returns:
+        A JSON object indicating if registration/login was successful.
     """
     username = request.POST.get('newusername', None)
     password = request.POST.get('newpassword1', None)
@@ -111,19 +128,38 @@ def userregister(request):
         return HttpResponse(json.dumps(status), mimetype='application/json')
 
 def userlogout(request):
-    """Log out a client from the application. This uses django's
-    authentication system to clear the session, etc. The view will
-    redirect the user to the index page after logging out."""
+    """
+    Log out a client from the application. 
+    
+    This funtion uses django's authentication system to clear the session, 
+    etc. The view will redirect the user to the index page after logging 
+    out.
+    
+    Parameters:
+        request -- An HttpRequest
+        
+    Returns:
+        An HttpResponseRedirect to the root url.
+    """
     logout(request)
     return HttpResponseRedirect('/')
 
 def emailpassword(user):
-    """Send a user an email with a new, auto-generated password.
+    """
+    Send a user an email with a new, auto-generated password.
+    
     We cannot decrypt the current password stored with the user record,
     so create a new one, and send it to the user.
     
     This method is used within the forgotpassword form endpoint, but not
-    as a user facing view."""
+    as a user facing view.
+    
+    Parameters:
+        user -- The django user whose password will be changed.
+        
+    Returns:
+        True if the user was modified and notified successfully.
+    """
 
     tpl = """To: %s
 From: "%s" <%s>
@@ -164,9 +200,18 @@ The Public Mapping Team
 
 @cache_control(no_cache=True)
 def forgotpassword(request):
-    """A form endpoint to provide a facility for retrieving a forgotten
+    """
+    A form endpoint to provide a facility for retrieving a forgotten
     password. If someone has forgotten their password, this form will email
-    them a replacement password."""
+    them a replacement password.
+    
+    Parameters:
+        request -- An HttpRequest
+        
+    Returns:
+        A JSON object with a password hint or a message indicating that an
+        email was sent with their new password.
+    """
     status = {'success':False}
     if 'username' in request.REQUEST and not request.REQUEST['username'] == '':
         username = request.REQUEST['username']
@@ -196,8 +241,19 @@ def forgotpassword(request):
 @login_required
 @cache_control(no_cache=True)
 def proxy(request):
-    """A proxy view that proxies all requests to the map server through
-    this django app. This is required for WFS requests and queries."""
+    """
+    A proxy for all requests to the map server.
+    
+    This proxy is required for WFS requests and queries, since geoserver
+    is on a different port, and browser javascript is restricted to
+    same origin policies.
+    
+    Parameters:
+        request -- An HttpRequest, with an URL parameter.
+        
+    Returns:
+        The content of the URL.
+    """
     url = request.GET['url']
 
     host = url.split('/')[2]
