@@ -426,7 +426,7 @@
                 $('.ui-dialog-titlebar-close', $(this).parent()).hide();
             }
         });
-        var choose = publicmapping.chooseplan({
+        var choose = chooseplan({
             {% if not plan.name %}
             closable: false,
             {% endif %}
