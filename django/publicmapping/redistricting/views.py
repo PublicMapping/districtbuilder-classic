@@ -45,7 +45,7 @@ from rpy2.robjects import r, rinterface
 from rpy2.rlike import container as rpc
 from publicmapping import settings
 from publicmapping.redistricting.models import *
-from datetime import datetime
+from datetime import datetime, time
 import random, string, types, copy, time, threading, traceback
 
 @login_required
@@ -133,6 +133,7 @@ def commonplan(request, planid):
     try:
         # Get the plan and districts in the plan.
         plan = Plan.objects.get(pk=planid)
+        plan.edited = getutc(plan.edited)
         districts = plan.get_districts_at_version(plan.version)
         editable = can_edit(request.user, plan)
         if not editable and not can_view(request.user, plan):
@@ -570,7 +571,7 @@ def newdistrict(request, planid):
                 status['success'] = True
                 status['message'] = 'Created %d new district' % fixed
                 plan = Plan.objects.get(pk=planid)
-                status['edited'] = plan.edited.isoformat()
+                status['edited'] = getutc(plan.edited).isoformat()
                 status['district_id'] = district_id
                 status['district_name'] = district.name
                 status['version'] = plan.version
@@ -618,7 +619,7 @@ def addtodistrict(request, planid, districtid):
             status['success'] = True;
             status['message'] = 'Updated %d districts' % fixed
             plan = Plan.objects.get(pk=planid)
-            status['edited'] = plan.edited.isoformat()
+            status['edited'] = getutc(plan.edited).isoformat()
             status['version'] = plan.version
         except: 
             status['exception'] = traceback.format_exc()
@@ -1069,3 +1070,11 @@ def getdefaultsubject():
         pass
 
     return None
+
+
+def getutc(t):
+    """Given a datetime object, translate to a datetime object for UTC time.
+    """
+    t_tuple = t.timetuple()
+    t_seconds = time.mktime(t_tuple)
+    return t.utcfromtimestamp(t_seconds)

@@ -91,14 +91,33 @@ function loadTooltips() {
             this.getTip().appendTo(this.getTrigger());
         }
     });  
-    
-    // On click, hide the tooltip
-            
 }
 
 /**
  * Configure the tooltips and buttons
  */
+// Given a UTC time in ISO format, translate to browser local time
+function getLocalTimeFromIsoformat(time) {
+    var dashRE = new RegExp('\-','g');
+    var milliRE = new RegExp('\.\\d*$');
+    var tzRE = new RegExp('T');
+    var date = new Date(time);
+    if (isNaN(date)) {
+        // additional text wrangling for IE
+        time = time.replace(dashRE,'\/')
+            .replace(milliRE,'')
+            .replace(tzRE, ' ');
+        date = new Date(time);
+    }
+    // get the time zone offset in minutes, then multiply to get milliseconds
+    var offset = date.getTimezoneOffset() * 60000;
+    date = new Date(date - offset);
+    var hours = date.getHours() ;
+    var minutes = date.getMinutes();
+    var day = date.getMonth() + "/" + date.getDate();
+    return { hours: hours, minutes: minutes, day: day };
+}
+
 $(function() {
     // jQuery-UI tab layout
     $('#steps').tabs();
@@ -145,13 +164,31 @@ $(function() {
         });  
     }).val("demographics").attr("selected", "selected");
         
-    // map editing buttons
-    $('#toolset_draw .toolset_group button')
-        .button({
-            icons: {primary: 'ui-icon'},
-            text:false
-        })
-        .click(function(){
+        $("#map_menu_header select").change(function(){
+            var selectedVal = this.value;
+            $('.map_menu_content').each(function() {       
+              if($(this).hasClass(selectedVal)) {
+                  $(this).slideDown(200);
+              }
+              else {
+                  $(this).slideUp(200);
+              }
+            });  
+        }).val("demographics").attr("selected", "selected");
+        
+        
+        $('#snapto').change( function() {
+            $('#showby').siblings('label').text('Show ' + $('#snapto option:selected').text() + ' by:');
+
+        });
+
+        // map editing buttons
+        $('#toolset_draw .toolset_group button')
+          .button({
+              icons: {primary: 'ui-icon'},
+              text:false
+          })
+          .click(function(){
             if($(this).hasClass('btntoggle')) {
                 $('.toolset_group button.btntoggle').removeClass('toggle');
                 $(this).addClass('toggle');
@@ -172,35 +209,32 @@ $(function() {
         }
     });
 
-    var dashRE = new RegExp('\-','g');
-    var milliRE = new RegExp('\.\\d*$');
-    var tzRE = new RegExp('T');
-    $('#saveplaninfo').bind('planSaved', function(event, time) {
-        var date = new Date(time);
-        if (isNaN(date)) {
-            // additional text wrangling for IE
-            time = time.replace(dashRE,'\/')
-                .replace(milliRE,'')
-                .replace(tzRE, ' ');
-            date = new Date(time);
-        }
-        var hours = date.getHours();
-        var minutes = date.getMinutes();
-        $('#saveplaninfo').text('Last Saved at ' + hours + ':' + ((minutes < 10) ? ('0' + minutes) : minutes));
-    });
+        $('#saveplaninfo').bind('planSaved', function(event, time) {
+            var local = getLocalTimeFromIsoformat(time);
+            $('#saveplaninfo').text('Last Saved at ' + (local.hours % 12) + ':' + ((local.minutes < 10) ? ('0' + local.minutes) : local.minutes));
+        });
 
-    $('#map_legend').click(function(){
-        var toggle = $(this);
-        var panel = $('#map_legend_content');
-        if(toggle.hasClass('active')) {
-            toggle.removeClass('active');
-            panel.slideUp(240);
+
+        try {
+            var saved = $('#saveplaninfo').text().trim();
+            var local = getLocalTimeFromIsoformat(saved);
+            $('#saveplaninfo').text('Plan saved ' + local.day + ' at ' + (local.hours % 12) + ':' + ((local.minutes < 10) ? ('0' + local.minutes) : local.minutes));
+        } catch (error) {
+           // Just leave it: "no plan selected"
         }
-        else {
-            toggle.addClass('active');
-            panel.slideDown(240);
-        }
-    });
+
+        $('#map_legend').click(function(){
+            var toggle = $(this);
+            var panel = $('#map_legend_content');
+            if(toggle.hasClass('active')) {
+                toggle.removeClass('active');
+                panel.slideUp(240);
+            }
+            else {
+                toggle.addClass('active');
+                panel.slideDown(240);
+            }
+        });
         
     // report category parents toggling
     $('#reportdescription .master input').click( function() {

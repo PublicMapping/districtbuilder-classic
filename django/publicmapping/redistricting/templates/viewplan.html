@@ -179,7 +179,8 @@
                 <label>Map Tools</label>
                 <div>
                   <button id="navigate_map_tool" class="active btntoggle toggle"></button>
-                  <button id="identify_map_tool" title="Click on a district to find its name." class="btntoggle titletip"></button>
+                  <button id="identify_map_tool" title="Click on a geounit to see its demographic info." class="btntoggle titletip"></button>
+                  <button id="district_id_map_tool" title="Hover over a district to see its ID." class="btntoggle titletip"></button>
                 </div>
               </div>
               {% block toolset_draw %}
@@ -400,7 +401,7 @@
      {% if plan and is_editable %}
      <div class="toolset_group">
         {% if plan.edited %}
-          <div id="saveplaninfo" class="savedat">Plan saved at {{ plan.edited|date:"m/d P" }} </div>
+          <div id="saveplaninfo" class="savedat">{{ plan.edited.isoformat }} </div>
         {% else %}
           <div id="saveplaninfo" class="savedat">Plan not saved</div>
         {% endif %}

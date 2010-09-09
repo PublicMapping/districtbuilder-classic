@@ -628,6 +628,53 @@ function mapinit(srs,maxExtent) {
         protocol: idProtocol
     });
 
+    var districtIdDiv;
+    var districtIdControl = new OpenLayers.Control.SelectFeature(
+        districtLayer,
+        {
+            hover: false,
+            onSelect: (function(){
+                var showTip = function(tipFeature, pixel) {
+                    districtIdDiv = $('<div></div>');
+                    districtIdDiv.addClass('tooltip');
+                    var headline = $('<h1></h1>');
+                    headline.text(tipFeature.attributes.name);
+                    districtIdDiv.append(headline);
+                    districtIdDiv.css('display', 'block');
+                    districtIdDiv.css('zIndex', 100000);
+                    districtIdDiv.css('position', 'absolute');
+                    districtIdDiv.css('opacity', '0.8');
+                    $(olmap.div).after(districtIdDiv);
+
+                    var leftOffset = districtIdDiv.width() + 15 ;
+                    var topOffset = districtIdDiv.height() + 15;
+                    if (pixel.x < leftOffset) { 
+                        pixel.x = leftOffset;
+                    }
+                    else if (pixel.x > olmap.div.clientWidth - leftOffset) {
+                        pixel.x = olmap.div.clientWidth - leftOffset;
+                    }
+                    if (pixel.y < topOffset) {
+                        pixel.y = topOffset;
+                    }
+                    else if (pixel.y > (olmap.div.clientHeight-29) - topOffset) {
+                        pixel.y = (olmap.div.clientHeight-29) - topOffset;
+                    }
+                    var mapOffset = $(olmap.div).offset()
+                    districtIdDiv.offset({ top:pixel.y - topOffset + mapOffset.top, left: pixel.x - leftOffset + mapOffset.left});
+                };
+                return function(feature, event){
+                    window.status = feature.attributes.name;
+                    var pixel = this.handlers.feature.evt.xy;
+                    showTip(feature, pixel);
+                };
+            })(),
+            onUnselect: function(feature) {
+                districtIdDiv.fadeOut(1000);
+            }
+        }
+    );
+
     // Get the feature at the point in the layer.
     var featureAtPoint = function(pt, lyr) {
         for (var i = 0; i < lyr.features.length; i++) {
@@ -1074,6 +1121,21 @@ function mapinit(srs,maxExtent) {
         $('#assign_district').val(-1);
     });
 
+    // When the district id  map tool is clicked, disable all the
+    // controls except the district id control.
+    $('#district_id_map_tool').click(function(evt){
+        var active = olmap.getControlsBy('active',true);
+        for (var i = 0; i < active.length; i++) {
+            if (active[i].CLASS_NAME != 'OpenLayers.Control.KeyboardDefaults') {
+                active[i].deactivate();
+            }
+        }
+        districtIdControl.activate();
+        $('#dragdrop_tool').removeClass('toggle');
+        $('#anchor_tool').removeClass('toggle');
+        assignMode = null;
+        $('#assign_district').val(-1);
+    });
     // When the single pick tool is clicked, disable all the
     // controls except for the single pick tool.
     $('#single_drawing_tool').click(function(evt){
@@ -1148,6 +1210,8 @@ function mapinit(srs,maxExtent) {
         navigate.deactivate();
         $('#identify_map_tool').removeClass('toggle');
         idControl.deactivate();
+        $('#district_id_map_tool').removeClass('toggle');
+        districtIdControl.deactivate();
         $('#anchor_tool').removeClass('toggle');
         tipdiv.style.display = 'none';
 
@@ -1185,6 +1249,8 @@ function mapinit(srs,maxExtent) {
         navigate.deactivate();
         $('#identify_map_tool').removeClass('toggle');
         idControl.deactivate();
+        $('#district_id_map_tool').removeClass('toggle');
+        districtIdControl.deactivate();
         $('#dragdrop_tool').removeClass('toggle');
         tipdiv.style.display = 'none';
 
@@ -1202,6 +1268,7 @@ function mapinit(srs,maxExtent) {
         polyControl,
         new GlobalZoom(),
         idControl,
+        districtIdControl,
         dragdropControl
     ]);
 
