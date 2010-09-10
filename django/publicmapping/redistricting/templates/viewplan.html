@@ -66,6 +66,7 @@
     <script type="text/javascript" src="/site-media/js/chooseplan.js"></script>
     <script type="text/javascript" src="/site-media/js/publishplan.js"></script>
     <script type="text/javascript" src="/site-media/js/reports.js"></script>
+    <script type="text/javascript" src="/site-media/js/register.js"></script>
   </head>
   <body onload="init();" id="app">
   
@@ -76,6 +77,7 @@
             {% if is_anonymous %}
             <li><a class="last" href="/">Login</a></li>
             {% else %}
+            <li><a href="#" onclick="$('#register').dialog('open');return false;">My Account</a></li>
             <li><a class="last" href="/accounts/logout/">Logout</a></li>
             {% endif %}
         </ul>
@@ -414,6 +416,7 @@
 <div id="working" title="Please Wait">Please wait while new districts are computed...</div>
 <div id="DialogContainer"></div>
 <div class="olHandlerBoxSelectFeature" style="display:none;"></div>
+{% include "account.html" %}
 <script type="text/javascript" defer="true">
     $( function() {
         $('#working').dialog({

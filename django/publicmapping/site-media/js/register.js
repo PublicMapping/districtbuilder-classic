@@ -35,7 +35,7 @@ $(function(){
         resizable: false
     };
     // configure the registration dialog
-    $('#register').dialog($.extend({title:'Register'},dOptions));
+    $('#register').dialog(dOptions);
     $('#forgotpass').dialog($.extend({title:'Forgot Password'},dOptions));
 
     // when the register form is submitted, do some client side validation
@@ -46,7 +46,8 @@ $(function(){
             newpassword1 = frm.find('#newpassword1'),
             newpassword2 = frm.find('#newpassword2'),
             passwordhint = frm.find('#passwordhint'),
-            agree = frm.find('#agree');
+            agree = frm.find('#agree'),
+            userid = frm.find('#userid');
 
         if (username.val() == '' || username.val().length > 30) {
             username.removeClass('field');
@@ -83,19 +84,20 @@ $(function(){
             passwordhint.removeClass('error');
         }
 
-        if (!agree[0].checked) {
+        if (agree.length > 0 && !agree[0].checked) {
             $('#agreelabel').addClass('required');
             return false;
         }
-        
+
         jQuery.ajax({
             context:frm[0],
             data: { 
-                newusername:$('#newusername').val(),
-                newpassword1:$('#newpassword1').val(),
-                newpassword2:$('#newpassword2').val(),
+                userid:$('#userid').val(),
+                newusername:username.val(),
+                newpassword1:newpassword1.val(),
+                newpassword2:newpassword2.val(),
                 email:$('#email').val(),
-                passwordhint:$('#passwordhint').val(),
+                passwordhint:passwordhint.val(),
                 firstname:$('#firstname').val(),
                 lastname:$('#lastname').val(),
                 organization:$('#organization').val()
@@ -104,14 +106,26 @@ $(function(){
             type:'POST',
             url:frm[0].action,
             success:function(data,textStatus,xhr){
-                if (data.success) {
-                    window.location.href = data.redirect;
-                    return;
-                }
+                if ($('#userid').val() == '') {
+                    if (data.success) {
+                        window.location.href = data.redirect;
+                        return;
+                    }
 
-                var newusername = $('#newusername');
-                newusername.removeClass('field');
-                newusername.addClass('error');
+                    var newusername = $('#newusername');
+                    newusername.removeClass('field');
+                    newusername.addClass('error');
+                }
+                else {
+                    if (data.success) {
+                        newpassword1.val('');
+                        newpassword2.val('');
+                        $('#register').dialog('close');
+                    }
+                    else {
+                        alert(data.message);
+                    }
+                }
             },
             error:function(xhr,textStatus,error){
                 $('#doRegister').attr('disabled',true);

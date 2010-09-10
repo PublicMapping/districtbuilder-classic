@@ -54,7 +54,7 @@ def index(request):
     Returns:
         An HTML welcome page.
     """
-    return render_to_response('index.html', { })
+    return render_to_response('index.html', {'is_anonymous':True} )
 
 def userregister(request):
     """
@@ -126,6 +126,57 @@ def userregister(request):
     else:
         status['message'] = 'Username cannot be empty.'
         return HttpResponse(json.dumps(status), mimetype='application/json')
+
+def userupdate(request):
+    """
+    Update a user's information.
+
+    This function will update the user's account based on the contents of
+    the form, much the same way the register function works.
+
+    Parameters:
+        request -- An HttpRequest with parameters for user information.
+
+    Returns:
+        JSON indicating success or failure.
+    """
+    username = request.POST.get('newusername', None)
+    password = request.POST.get('newpassword1', None)
+    email = request.POST.get('email', None)
+    fname = request.POST.get('firstname', None)
+    lname = request.POST.get('lastname', None)
+    hint = request.POST.get('passwordhint', None)
+    org = request.POST.get('organization', None)
+    id = request.POST.get('userid', None)
+
+    status = { 'success':False, 'message':'Unspecified error.' }
+    
+    if username == 'anonymous':
+        status['message'] = 'Cannot update anonymous account information.'
+    else:
+        try:
+            user = User.objects.get(id=id)
+            if user.username != username:
+                status['message'] = 'Cannot change username.'
+            elif not user.check_password(password):
+                status['message'] = 'Passwords do not match.'
+            else:
+                user.email = email
+                user.first_name = fname
+                user.last_name = lname
+                user.save()
+
+                profile = user.get_profile()
+                profile.pass_hint = hint
+                profile.organization = org
+                profile.save()
+
+                status['success'] = True
+                status['message'] = 'Information updated.'
+        except:
+            status['message'] = 'No user for that account.'
+
+    return HttpResponse(json.dumps(status), mimetype='application/json')
 
 def userlogout(request):
     """

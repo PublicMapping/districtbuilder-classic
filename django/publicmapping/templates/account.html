@@ -1,0 +1,89 @@
+{% if is_anonymous %}
+<div id="register" title="Sign Up For An Account">
+    <form id="registerForm" action="/accounts/register/" method="post">
+{% else %}
+<div id="register" title="Account Information">
+    <form id="registerForm" action="/accounts/update/" method="post">
+{% endif %}
+        <table id="registerTable">
+            <tr>
+                <td class="fname">User Name *</td>
+                <td><input id="newusername" name="newusername" class="field" maxlength="30"
+                {% if not is_anonymous %}
+                    disabled="true" value="{{ userinfo.username }}"
+                {% endif %}/></td>
+            </tr>
+            <tr>
+                <td class="fname">Password *</td>
+                <td><input id="newpassword1" name="newpassword1" type="password" class="field" maxlength="128" /></td>
+            </tr>
+            <tr>
+                <td class="fname">Confirm Password *</td>
+                <td><input id="newpassword2" name="newpassword2" type="password" class="field" maxlength="128" /></td>
+            </tr>
+            <tr>
+                <td class="fname">Password Hint *</td>
+                <td><input id="passwordhint" name="passwordhint" class="field" maxlength="30" 
+                {% if not is_anonymous %}
+                    value="{{ userinfo.password_hint }}"
+                {% endif %}/></td>
+            </tr>
+            <tr>
+                <td colspan="2"><span class="recommended">An email address is recommended to recover a forgotten password</span></td>
+            </tr>
+            <tr>
+                <td class="fname">Email Address</td>
+                <td><input id="email" name="email" class="field" maxlength="75"
+                {% if not is_anonymous %}
+                    value="{{ userinfo.email }}"
+                {% endif %}/></td>
+            </tr>
+            <tr>
+                <td class="fname">First Name</td>
+                <td><input id="firstname" name="firstname" class="field" maxlength="30"
+                {% if not is_anonymous %}
+                    value="{{ userinfo.firstname }}"
+                {% endif %}/></td>
+            </tr>
+            <tr>
+                <td class="fname">Last Name</td>
+                <td><input id="lastname" name="lastname" class="field" maxlength="30"
+                {% if not is_anonymous %}
+                    value="{{ userinfo.lastname }}"
+                {% endif %}/></td>
+            </tr>
+            <tr>
+                <td class="fname">Organization</td>
+                <td><input id="organization" name="organization" class="field"
+                {% if not is_anonymous %}
+                    value="{{ userinfo.organization }}"
+                {% endif %}/></td>
+            </tr>
+            {% if is_anonymous %}
+            <tr>
+                <td></td>
+                <td>
+                    <input id="agree" name="agree" type="checkbox"/>
+                    <label id="agreelabel" for="agree">I have read the <a href="#">Privacy Policy</a> and <a href="#">Terms of Use</a></label>
+                </td>
+            </tr>
+            {% endif %}
+            <input type="hidden" id="userid" name="userid" 
+            {% if not is_anonymous %}
+                value="{{ userinfo.id }}"
+            {% else %}
+                value=""
+            {% endif %}/>
+        </table>
+        <div id="signUpButton">
+            {% if is_anonymous %}
+            <button id="doRegister">Sign Up</button>
+            {% else %}
+            <button id="doRegister">Update</button>
+            {% endif %}
+        </div>
+        <div id="requiredNote">
+            * Indicates required field
+        </div>
+    </form>
+</div>

@@ -117,6 +117,31 @@ def copyplan(request, planid):
 
     return HttpResponse(data, mimetype='application/json')
 
+def get_user_info(user):
+    """
+    Get extended user information for the current user.
+
+    Parameters:
+        user -- The user attached to the HttpRequest
+
+    Returns:
+        A dict with user information, including profile information.
+    """
+    if user.username == 'anonymous':
+        return None
+
+    profile = user.get_profile()
+
+    return {
+        'username':user.username,
+        'email':user.email,
+        'password_hint':profile.pass_hint,
+        'firstname':user.first_name,
+        'lastname':user.last_name,
+        'organization':profile.organization,
+        'id':user.id
+    }
+
 def commonplan(request, planid):
     """
     A common method that gets the same data structures for viewing
@@ -176,6 +201,7 @@ def commonplan(request, planid):
         'rules': rules,
         'unassigned_id': unassigned_id,
         'is_anonymous': request.user.username == 'anonymous',
+        'userinfo': get_user_info(request.user),
         'is_editable': editable,
         'max_dists': settings.MAX_DISTRICTS + 1
     }

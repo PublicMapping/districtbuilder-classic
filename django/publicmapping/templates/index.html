@@ -113,60 +113,7 @@
         <div class="clear_left"></div>
       </div>
     </div>
-    <div id="register" title="Sign Up For An Account">
-        <form id="registerForm" action="/accounts/register/" method="post">
-            <table id="registerTable">
-                <tr>
-                    <td class="fname">User Name *</td>
-                    <td><input id="newusername" name="newusername" class="field" maxlength="30"/></td>
-                </tr>
-                <tr>
-                    <td class="fname">Password *</td>
-                    <td><input id="newpassword1" name="newpassword1" type="password" class="field" maxlength="128" /></td>
-                </tr>
-                <tr>
-                    <td class="fname">Confirm Password *</td>
-                    <td><input id="newpassword2" name="newpassword2" type="password" class="field" maxlength="128" /></td>
-                </tr>
-                <tr>
-                    <td class="fname">Password Hint *</td>
-                    <td><input id="passwordhint" name="passwordhint" class="field" maxlength="30" /></td>
-                </tr>
-                <tr>
-                    <td colspan="2"><span class="recommended">An email address is recommended to recover a forgotten password</span></td>
-                </tr>
-                <tr>
-                    <td class="fname">Email Address</td>
-                    <td><input id="email" name="email" class="field" maxlength="75"/></td>
-                </tr>
-                <tr>
-                    <td class="fname">First Name</td>
-                    <td><input id="firstname" name="firstname" class="field" maxlength="30"/></td>
-                </tr>
-                <tr>
-                    <td class="fname">Last Name</td>
-                    <td><input id="lastname" name="lastname" class="field" maxlength="30"/></td>
-                </tr>
-                <tr>
-                    <td class="fname">Organization</td>
-                    <td><input id="organization" name="organization" class="field"/></td>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td>
-                        <input id="agree" name="agree" type="checkbox"/>
-                        <label id="agreelabel" for="agree">I have read the <a href="#">Privacy Policy</a> and <a href="#">Terms of Use</a></label>
-                    </td>
-                </tr>
-            </table>
-            <div id="signUpButton">
-                <button id="doRegister">Sign Up</button>
-            </div>
-            <div id="requiredNote">
-                * Indicates required field
-            </div>
-        </form>
-    </div>
+    {% include "account.html" %}
     <div id="forgotpass">
         <form id="forgotForm" action="/accounts/forgot/" method="POST">
             <div id="forgotprompt">
