@@ -18,7 +18,8 @@ the necessary software using the command:
 
 > sudo aptitude install apache2 libapache2-mod-wsgi python-django \
     python-gdal python-rpy2 python-psycopg2 postgresql-8.4-postgis \
-    sun-java6-jdk tomcat6 tomcat6-admin
+    sun-java6-jdk tomcat6 tomcat6-admin r-base-dev build-essential \
+    
 
 == Installation ==
 
@@ -254,3 +255,41 @@ the necessary software using the command:
 10. Now that your GeoServer is configured, you should use the Services > 
     GWC link in the menu to seed some of your layers.  This will make the 
     base map layers appear faster.
+
+    
+== BARD / Reports Configuration ==
+ 1. The publicmapping project uses the BARD packages, written in the 
+    R statistical language, to create customizable reports.  In order to 
+    use these features (you can turn them off by changing the ENABLE_REPORTS
+    setting in settings.py to "False"), you will need to install BARD and R2HTML
+    as the root user so that it's accessible to the django process
+    
+    > sudo R
+    >> install.packages('BARD')
+    >> install.packages('R2HTML')
+    >> install.packages('gpclib')
+    >> q()
+    > n #Answer no when asked to save workspace
+
+    If you have trouble installing any of these packages, you may need to 
+    hunt down and install a dependency or two, depending on your linux 
+    distribution.  NB: R packages are installed from source so you'll need
+    the build-essential package to install BARD.
+    
+    
+== Data Configuration ==
+    Depending on your data, you may want to use the admin interface in 
+    the application to edit the display names of your subjects and add
+    reasonable "targets" so that the districts are properly display.
+    
+    You can also use the admin interface to determine which subjects
+    will be displayed as viewable on the map.  If you make a subject
+    visible on the map, be sure to set the target value so that styling
+    can be applied to the district values.
+    
+    You can reach the admin interface by going to http://<yourServerName>/admin
+    
+== Amazon EC2 instances ==
+    If you're launching the publicmapping project from an EC2 instance, you may have
+    to change some of the settings (such as the mail and map servers in settings.ini) 
+    to reflect the public DNS address of your instance.
