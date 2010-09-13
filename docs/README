@@ -243,7 +243,10 @@ the necessary software using the command:
         layer. Just click the "Compute from data" then "Compute from 
         native bounds" links to do so.  Make sure that you're using the 
         proper SRS (EPSG:3785, aka Web Mercator, for the demo data).
-     c. In addition to each "demo" layer, you'll need to add the "simple" 
+     c. For each geographic level, click on one of the layers already 
+        published, and click on "Publish Again". Rename the layer to exclude
+        the subject, and select the "_none" style.
+     d. In addition to each "demo" layer, you'll need to add the "simple" 
         layers, too.  The styling for these layers in the Publishing 
         section is not important - their styling it will be done by 
         OpenLayers at runtime.
