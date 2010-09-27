@@ -1046,28 +1046,30 @@ div.evaluate {
     background: #87AE8B !important;
     position:absolute;
     top:33px;
+    bottom:0px;
+    -moz-border-radius: 0 10px 10px 10px;
 }
 .evaluate #description,
 .evaluate #options {
-    display:inline-block;
     width:50%;
 }
 .evaluate #options {
     padding-top: 10px;
-    
+    font-size:x-small; 
 }
 .evaluate #description p{
-    font-size:80%;
+    font-size:smaller;
 }
-.evaluate #plans {
-    display:inline-block;
-    width: 30%;
+.evaluate #description .child {
+    font-weight:normal;
 }
-
+.evaluate #reportButtons {
+    position:relative;
+    top:75px;
+}
 .evaluate #options span {
     display: block;
 }
-
 .evaluate #options1, .evaluate #options2 {
     display:inline-block;
     vertical-align:top;
@@ -1090,6 +1092,10 @@ div.evaluate {
 /* Share page */
 div.share {
     background: #ACAE87 !important;
+    position:absolute;
+    top:33px;
+    bottom:0px;
+    -moz-border-radius: 0 10px 10px 10px;
 }
 
 div.share p {
