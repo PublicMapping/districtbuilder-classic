@@ -68,6 +68,7 @@ reports = function(options) {
     var $working = $('<div title="Working">Please wait while your report is created</div>').dialog({ 
         autoOpen: false,
         escapeOnClose: false,
+        modal:true,
         resizable:false,
         open: function(event, ui) { 
             $(".ui-dialog-titlebar-close", $(this).parent()).hide();
