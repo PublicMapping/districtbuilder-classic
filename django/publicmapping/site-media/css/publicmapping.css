@@ -1051,8 +1051,13 @@ div.evaluate {
 }
 .evaluate #description,
 .evaluate #options {
-    width:50%;
+    width:55%;
 }
+
+.evaluate #description p {
+
+}
+
 .evaluate #options {
     padding-top: 10px;
     font-size:x-small; 
@@ -1123,6 +1128,26 @@ div#nameandshare,
 .share #reportpreview {
     height:600px;
 }
+
+
+
+/* Johnny's Fixes
+==================================*/
+
+.master {
+	font-size: 1.5em;
+	font-weight: bold;
+	margin: 1em 0 .4em 0;
+}
+
+.child {
+	font-size: 1.2em;
+}
+
+#reportButtons {
+	margin-top: 2em;
+}
+
 
 /* district assignment control styles */
 div.controlDiv {
