@@ -1149,6 +1149,35 @@ div#nameandshare,
 }
 
 
+/* Report Table Styles
+=======================================*/
+
+
+#reportPreview h2 {
+	background: #4e6651;
+	font-weight: bold;
+}
+
+#reportPreview h2.BARDtitle {
+	background: none;
+	font-size: 1em;
+}
+
+#reportPreview td.cellinside {
+	text-align: center;
+}
+
+#reportPreview table {
+	border-spacing: 2px;
+}
+
+tr.firstline th {
+	background: #000;
+	color: #fff;
+	padding: 5px;
+}
+
+
 /* district assignment control styles */
 div.controlDiv {
     position:absolute; 
