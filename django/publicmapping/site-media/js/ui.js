@@ -71,7 +71,7 @@ function loadTooltips() {
         offset: [10,0],
         opacity: .8,
         events: {
-            widget: 'click,',
+            widget: 'click,click'
         },
         onBeforeShow:  function() {
             // ensure proper DOM placement
