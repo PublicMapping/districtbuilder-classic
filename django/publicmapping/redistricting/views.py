@@ -46,6 +46,7 @@ from rpy2.rlike import container as rpc
 from publicmapping import settings
 from publicmapping.redistricting.models import *
 from datetime import datetime, time
+from operator import attrgetter
 import random, string, types, copy, time, threading, traceback
 
 @login_required
@@ -281,6 +282,8 @@ def load_bard_workspace():
     responsive during R initialization.
     """
     try:
+        r.library('rgeos')
+        r.library('gpclib')
         r.library('BARD')
         r.library('R2HTML')
         r.gpclibPermit()
@@ -290,6 +293,9 @@ def load_bard_workspace():
 
         global bardWorkSpaceLoaded
         bardWorkSpaceLoaded = True
+
+
+        r('trace(PMPreport, at=1, tracer=function()print(sys.calls()))')
     except:
         sys.stderr.write('BARD Could not be loaded.  Check your configuration and available memory')
         return
@@ -330,6 +336,7 @@ def loadbard(request):
         bardLoadingThread.daemon = True
         bardLoadingThread.start()
         return HttpResponse( 'Building bard workspace now ')
+    raise Exception    
     return HttpResponse('Bard will not be loaded - wrong server config or reports off')
 
 
@@ -397,7 +404,7 @@ def getreport(request, planid):
         status['message'] = 'Information for report wasn\'t sent via POST'
         return HttpResponse(json.dumps(status),mimetype='application/json')
 
-    def get_tagged_list(parameter_string):
+    def get_named_vector(parameter_string, tag = None):
         """
         Helper method to break up the strings that represents lists of 
         variables.
@@ -406,27 +413,25 @@ def getreport(request, planid):
             parameter_string -- A string of parameters
             
         Returns:
-            A TaggedList suitable for rpy2 use.
+            A StrVector with names, suitable for rpy2 use.
         """
-        tl = rpc.TaggedList(list())
+        vec = robjects.StrVector(())
         extras = parameter_string.split('^')
         for extra in extras:
             pair = extra.split('|')
-            tl.append(pair[1], pair[0])
-        return tl
+            vec += r('list("%s"="%s")' % (pair[0], pair[1]))
+        return vec
     
     district_list = dict()
-    district_names = { None: 'Unassigned' }
     geolevel = settings.BASE_GEOLEVEL
     geounits = Geounit.objects.filter(geolevel = settings.BASE_GEOLEVEL)
     # For each district, add to the district_list a dictionary of 
     # district_ids using the geounit_ids as keys
     for district in districts:
-        if district.simple:
+        if district.simple and district.name != 'Unassigned':
             intersecting = geounits.filter(center__bboverlaps=district.simple).values_list('id', flat=True)
             intersecting = dict.fromkeys(intersecting, district.district_id)
             district_list.update(intersecting)
-            district_names[district.district_id] = district.name
 
     # Get the min and max ids of the geounits in this level
     max_and_min = geounits.aggregate(Min('id'), Max('id'))
@@ -434,7 +439,7 @@ def getreport(request, planid):
     max_id = int(max_and_min['id__max'])
 
     sorted_district_list = list()
-    names = list()
+
     # Sort the geounit_id list and add them to the district_list in order.
     # This ordering depends on the geounits in the shapefile matching the 
     # order of the imported geounits. If this ordering is the same, the 
@@ -443,51 +448,59 @@ def getreport(request, planid):
         if i in district_list:
             district_id = district_list[i]
         else:
-            district_id = None
+            district_id = 'NA'
         sorted_district_list.append(district_id)
-        # Add the names for the districts so we can display them later
-        names.append(district_names[district_id])
     # Now we need an R Vector
-    block_ids = robjects.IntVector(sorted_district_list)
-    block_ids.names = robjects.StrVector(names)
+    block_ids = robjects.RVector(sorted_district_list)
 
-    # Get the other report varialbes from the POST request.  We'll only add
+    names = sorted(districts, key=attrgetter('district_id'))
+    sorted_name_list = robjects.StrVector(())
+    for district in names:
+       if district.name != "Unassigned":
+            sorted_name_list += district.name 
+    # sorted_name_list = map(attrgetter('name'), names)
+    bardplan = r.createAssignedPlan(bardmap, block_ids)
+    # bardplan.do_slot_assign('levels', sorted_name_list)
+    sys.stderr.write('bard plan:\n %s: \n' % bardplan.r_repr())
+    sys.stderr.write('sorted_name_list len: %s; contents: %s\n' % (len(sorted_name_list), sorted_name_list))
+
+    # Get the other report variables from the POST request.  We'll only add
     # them to the report if they're in the request
     popVar = request.POST.get('popVar', None)
     if popVar:
-        pop_var = get_tagged_list(popVar)
-        pop_var.append(.1, 'tolerance')
+        pop_var = get_named_vector(popVar, 'popVar')
+        pop_var += r('list("tolerance"=.01)')
 
     popVarExtra = request.POST.get('popVarExtra', None)
     if popVarExtra:
-        pop_var_extra = get_tagged_list(popVarExtra)
+        pop_var_extra = get_named_vector(popVarExtra)
     else:
         pop_var_extra = r('as.null()')
     
-    racialComp = request.POST.get('ratioVars', None)
+    racialComp = request.POST.get('racialComp', None)
     partyControl = request.POST.get('partyControl', None)
     if racialComp or partyControl:
-        ratioVars = rpc.TaggedList(list())
+        ratioVars = robjects.StrVector(())
         if racialComp:
-            mmd = rpc.TaggedList(list())
-            mmd.append(pop_var, 'denominator')
-            mmd.append(.6, 'threshhold')
-            mmdappend( get_tagged_list(racialComp), 'numerators')
-            ratioVars.append(mmd, 'Majority Minority Districts')
+            mmd = robjects.StrVector(())
+            mmd += r('list("denominator"=%s)' % pop_var.r_repr())
+            mmd += r('list("threshhold"=.6)')
+            mmd += r('list("numerators"=%s)' % get_named_vector(racialComp).r_repr())
+            ratioVars += r('list("Majority Minority Districts"=%s)' % mmd.r_repr())
 
         if partyControl:
-            pc = rpc.TaggedList(list())
-            pc.append(pop_var, 'denominator')
-            pc.append(.55, 'threshhold')
-            pc.append(get_tagged_list(partyControl), 'numerators')
-            ratioVars.append(pc, 'Party-controlled Districts')
+            pc = robjects.StrVector(())
+            pc += r('list("denominator"=%s)' % pop_var.r_repr())
+            pc += r('list("threshhold"=.6)')
+            pc += r('list("numerators"=%s)' % get_named_vector(partyControl).r_repr())
+            ratioVars += r('list("Party-controlled Districts"=%s)' % pc.r_repr())
         ratio_vars = ratioVars
     else:
         ratio_vars = r('as.null()')
 
     splitVars = request.POST.get('splitVars', None)
     if splitVars:
-        split_vars = get_tagged_list(splitVars)
+        split_vars = get_named_vector(splitVars)
     else:
         split_vars = r('as.null()')
     
@@ -525,8 +538,10 @@ def getreport(request, planid):
         report = r.HTMLInitFile(tempdir, filename=filename, BackGroundColor="#BBBBEE", Title="Plan Analysis")
         title = r['HTML.title']
         r['HTML.title']("Plan Analysis", HR=2, file=report)
+        if (settings.DEBUG):
+            sys.stderr.write(bardplan.r_repr())
         # Now write the report to the temp dir
-        r.PMPreport( bardmap, block_ids, file = report, popVar = pop_var, popVarExtra = pop_var_extra, ratioVars = ratio_vars, splitVars = split_vars, repCompactness = rep_compactness, repCompactnessExtra = rep_compactness_extra, repSpatial = rep_spatial, repSpatialExtra = rep_spatial_extra)
+        r.PMPreport( bardplan, block_ids, file = report, popVar = pop_var, popVarExtra = pop_var_extra, ratioVars = ratio_vars, splitVars = split_vars, repCompactness = rep_compactness, repCompactnessExtra = rep_compactness_extra, repSpatial = rep_spatial, repSpatialExtra = rep_spatial_extra)
         r.HTMLEndFile()
 
         # BARD has written the report to file - read it and put it in as

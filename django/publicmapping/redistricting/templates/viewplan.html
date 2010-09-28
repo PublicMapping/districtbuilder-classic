@@ -337,8 +337,7 @@
         <div id="reportdescription">
             <div id="description">
                <h3> Introduction to the reporting tool</h3>
-                <p>This is the reporting tool. Select your options, then click "View Report" to see your report.</p>
-                <p>Select your options below to view a comprehensive report on your redistricting plan.  Once you choose the statistics you want to see, click "Print Report" to get a paper copy of your report, or "Download Report" to download a text file with the information</p>
+                <p>Select the plan statistics you'd like included in a comprehensive report on your redistricting plan. After you've made your selections click "Create and Preview Report" to view the final report.</p>
             </div>
             <div id="options">
                 <div id="options1">
@@ -346,7 +345,7 @@
                     <span class="split master" ><input id="split_master" type="checkbox" /><label for="split_master">Split Geographies</label></span>
                     <span class="split child reportVar" ><input id="countySplits" type="checkbox" value = "COUNTY" /><label for="countySplits">County Splits</label></span>
                     <span class="split child reportVar" ><input id="tractSplits" type="checkbox" value="TRACT" /><label for="tractSplits">Tract Splits</label></span>
-                    <span class="popVarExtra master" ><input id="popVarExtra_master" type="checkbox" /><label for="popVarExtra_master">Population Extra data</label></span>
+                    <span class="popVarExtra master" ><input id="popVarExtra_master" type="checkbox" /><label for="popVarExtra_master">Population</label></span>
                     <span class="popVarExtra child reportVar" ><input id="VAPTOT" type="checkbox"  value="VAPTOT" /><label for="VAPTOT">Voting Age Population</label></span>
                     <span class="popVarExtra child reportVar" ><input id="VAPWHT" type="checkbox"  value="VAPWHT" /><label for="VAPWHT">Voting Age Population - White</label></span>
                     <span class="popVarExtra child reportVar" ><input id="VAPBLK" type="checkbox"  value="VAPBLK" /><label for="VAPBLK">Voting Age Population - Black</label></span>
@@ -359,11 +358,11 @@
                     <span class="racialComp child reportVar"><input id="racialComp" type="checkbox" value="POPBLK"/><label for="POPBLK" >Majority Black</label></span>
                     <span class="racialComp child reportVar"><input id="racialComp" type="checkbox" value="POPHISP"/><label for="POPHISP" >Majority Hispanic</label></span>
                     <span class="compactness master" ><input id="compactness_master" type="checkbox" /><label for="compactness_master">Compactness</label></span>
-                    <span class="compactness child reportVar"><input id="repCompactness" type="checkbox" value="repCompactness" /><label for="repCompactness">Compactness</label></span>
-                    <span class="compactness child reportVar"><input id="repCompactnessExtra" type="checkbox" value="repCompactnessExtra" /><label for="repCompactnessExtra">Extra Compactness Measurements</label></span>
-                    <span class="spatial master" ><input disabled id="spatial_master" type="checkbox" /><label for="spatial_master">Spatial Analysis</label></span>
-                    <span class="spatial child reportVar"><input disabled id="repSpatial" type="checkbox" value="repSpatial" /><label for="repSpatial">Spatial Analysis</label></span>
-                    <span class="spatial child reportVar"><input disabled id="repSpatialExtra" type="checkbox" value="repSpatialExtra" /><label for="repSpatialExtra">Extra Spatial Analysis</label></span>
+                    <span class="compactness child reportVar"><input id="repCompactness" type="checkbox" value="repCompactness" /><label for="repCompactness">Compactness - Length/Width</label></span>
+                    <span class="compactness child reportVar"><input id="repCompactnessExtra" type="checkbox" value="repCompactnessExtra" /><label for="repCompactnessExtra">Compactness - Bounding Circle</label></span>
+                    <span class="spatial master" ><input  id="spatial_master" type="checkbox" /><label for="spatial_master">Spatial Analysis</label></span>
+                    <span class="spatial child reportVar"><input  id="repSpatial" type="checkbox" value="repSpatial" /><label for="repSpatial">Spatial Analysis</label></span>
+                    <span class="spatial child reportVar"><input  id="repSpatialExtra" type="checkbox" value="repSpatialExtra" /><label for="repSpatialExtra">Extra Spatial Analysis</label></span>
                 </div>
             </div>
             
