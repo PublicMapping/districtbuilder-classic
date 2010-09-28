@@ -9,7 +9,7 @@
       <Abstract>A grayscale style showing the population numbers in a given geounit.</Abstract>
       <FeatureTypeStyle>
         <Rule>
-          <Title>&gt; 10,0005</Title>
+          <Title>&gt; 10,000</Title>
           <ogc:Filter>
             <ogc:PropertyIsGreaterThanOrEqualTo>
               <ogc:PropertyName>number</ogc:PropertyName>
