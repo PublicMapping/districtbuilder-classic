@@ -59,7 +59,7 @@ function loadTooltips() {
         opacity: .8
     });    
 
-    $('.evaluate .disabled').attr('title', 'Sorry, this measure is not available');
+    $('.evaluate .disabled').attr('title', 'Coming Soon...');
 
     // If the user left the stats_legend_panel up when it's refreshed, it may be
     // attached to the body rather than appended to the trigger.
