@@ -172,7 +172,7 @@ function createMapTipDiv() {
     tipelem = document.createElement('div');
     tipelem.id = 'tipclose';
     tipelem.onclick = function(e){
-        OpenLayers.Event.stop(e);
+        OpenLayers.Event.stop(e || event);
         tipdiv.style.display = 'none';
     };
     tipelem.appendChild(document.createTextNode('[x]'));
@@ -190,6 +190,29 @@ function createMapTipDiv() {
     tipdiv.style.position = 'absolute';
     tipdiv.style.opacity = '0.8';
     tipdiv.className = 'tooltip';
+
+    return tipdiv;
+}
+
+function createDistrictTipDiv() {
+    var tipdiv = document.createElement('div');
+    var tipelem = document.createElement('h1');
+    tipelem.appendChild(document.createTextNode('District Name'));
+    tipdiv.appendChild(tipelem);
+    tipelem = document.createElement('div');
+    tipelem.id = 'tipclose';
+    tipelem.onclick = function(e){
+        OpenLayers.Event.stop(e || event);
+        tipdiv.style.display = 'none';
+    };
+    tipelem.appendChild(document.createTextNode('[x]'));
+    tipdiv.appendChild(tipelem);
+
+    tipdiv.style.zIndex = 100000;
+    tipdiv.style.position = 'absolute';
+    tipdiv.style.opacity = '0.8';
+    tipdiv.style.width = '85px';
+    tipdiv.className = 'tooltip districtidtip';
 
     return tipdiv;
 }
@@ -628,27 +651,18 @@ function mapinit(srs,maxExtent) {
         protocol: idProtocol
     });
 
-    var districtIdDiv;
+    var districtIdDiv = createDistrictTipDiv();
+    olmap.div.insertBefore(districtIdDiv,olmap.div.firstChild);
     var districtIdControl = new OpenLayers.Control.SelectFeature(
         districtLayer,
         {
             hover: false,
             onSelect: (function(){
                 var showTip = function(tipFeature, pixel) {
-                    districtIdDiv = $('<div></div>');
-                    districtIdDiv.addClass('tooltip');
-                    districtIdDiv.addClass('districtidtip');
-                    var headline = $('<h1></h1>');
-                    headline.text(tipFeature.attributes.name);
-                    districtIdDiv.append(headline);
-                    districtIdDiv.css('display', 'block');
-                    districtIdDiv.css('zIndex', 100000);
-                    districtIdDiv.css('position', 'absolute');
-                    districtIdDiv.css('opacity', '0.8');
-                    $(olmap.div).after(districtIdDiv);
+                    $(districtIdDiv.firstChild).text(tipFeature.attributes.name);
 
-                    var leftOffset = districtIdDiv.width() + 15 ;
-                    var topOffset = districtIdDiv.height() + 15;
+                    var leftOffset = $(districtIdDiv).width() + 15;
+                    var topOffset = $(districtIdDiv).height() + 15;
                     if (pixel.x < leftOffset) { 
                         pixel.x = leftOffset;
                     }
@@ -661,8 +675,12 @@ function mapinit(srs,maxExtent) {
                     else if (pixel.y > (olmap.div.clientHeight-29) - topOffset) {
                         pixel.y = (olmap.div.clientHeight-29) - topOffset;
                     }
-                    var mapOffset = $(olmap.div).offset()
-                    districtIdDiv.offset({ top:pixel.y - topOffset + mapOffset.top, left: pixel.x - leftOffset + mapOffset.left});
+                    $(districtIdDiv).css('top',pixel.y - topOffset);
+                    $(districtIdDiv).css('left',pixel.x - leftOffset);
+                    districtIdDiv.style.display = 'block';
+
+                    // hide the other tip
+                    tipdiv.style.display = 'none';
                 };
                 return function(feature, event){
                     window.status = feature.attributes.name;
@@ -671,13 +689,12 @@ function mapinit(srs,maxExtent) {
                 };
             })(),
             onUnselect: function(feature) {
-                $('.districtidtip').fadeOut(1000);
-                $('.districtidtip').remove();
+                districtIdDiv.style.display = 'none';
             }
         }
     );
     districtIdControl.events.register('deactivate', districtIdControl, function() {
-        $('.districtidtip').remove();
+        districtIdDiv.style.display = 'none';
     });
 
     // Get the feature at the point in the layer.
@@ -823,6 +840,9 @@ function mapinit(srs,maxExtent) {
             clearTimeout(tipdiv.timeout);
             tipdiv.pending = false;
         }
+
+        // hide the other tip
+        districtIdDiv.style.display = 'none';
     };
 
     // A callback for feature selection in different controls.
@@ -1090,6 +1110,7 @@ function mapinit(srs,maxExtent) {
     });
 
     olmap.events.register('movestart',olmap,function(){
+        districtIdDiv.style.display = 'none';
         tipdiv.style.display = 'none';
     });
 
@@ -1108,6 +1129,7 @@ function mapinit(srs,maxExtent) {
         assignMode = null;
         $('#assign_district').val(-1);
         tipdiv.style.display = 'none';
+        districtIdDiv.style.display = 'none';
     });
 
     // When the identify map tool is clicked, disable all the
@@ -1153,6 +1175,7 @@ function mapinit(srs,maxExtent) {
         getControl.activate();
         getControl.features = selection.features;
         tipdiv.style.display = 'none';
+        districtIdDiv.style.display = 'none';
     });
 
     // When the rectangle selection tool is clicked, disable all the
@@ -1167,6 +1190,7 @@ function mapinit(srs,maxExtent) {
         boxControl.activate();
         boxControl.features = selection.features;
         tipdiv.style.display = 'none';
+        districtIdDiv.style.display = 'none';
     });
 
     // When the polygon selection tool is clicked, disable all the
@@ -1180,6 +1204,7 @@ function mapinit(srs,maxExtent) {
         }
         polyControl.activate();
         tipdiv.style.display = 'none';
+        districtIdDiv.style.display = 'none';
     });
 
     // When the assignment tool is clicked, disable all the
@@ -1219,6 +1244,7 @@ function mapinit(srs,maxExtent) {
         districtIdControl.deactivate();
         $('#anchor_tool').removeClass('toggle');
         tipdiv.style.display = 'none';
+        districtIdDiv.style.display = 'none';
 
         // enable single select tool if no selection tool is enabled
         if (!(getControl.active || boxControl.active || polyControl.active) && !selectionAlready) {
@@ -1258,6 +1284,7 @@ function mapinit(srs,maxExtent) {
         districtIdControl.deactivate();
         $('#dragdrop_tool').removeClass('toggle');
         tipdiv.style.display = 'none';
+        districtIdDiv.style.display = 'none';
 
         // enable single select tool if no selection tool is enabled
         if (!(getControl.active || boxControl.active || polyControl.active)) {
