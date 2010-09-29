@@ -166,37 +166,24 @@ $(function() {
         });  
     }).val("demographics").attr("selected", "selected");
         
-        $("#map_menu_header select").change(function(){
-            var selectedVal = this.value;
-            $('.map_menu_content').each(function() {       
-              if($(this).hasClass(selectedVal)) {
-                  $(this).slideDown(200);
-              }
-              else {
-                  $(this).slideUp(200);
-              }
-            });  
-        }).val("demographics").attr("selected", "selected");
-        
-        
-        $('#snapto').change( function() {
-            $('#showby').siblings('label').text('Show ' + $('#snapto option:selected').text() + ' by:');
+    $('#snapto').change( function() {
+        $('#showby').siblings('label').text('Show ' + $('#snapto option:selected').text() + ' by:');
 
-        });
+    });
 
-        // map editing buttons
-        $('#toolset_draw .toolset_group button')
-          .button({
-              icons: {primary: 'ui-icon'},
-              text:false
-          })
-          .click(function(){
-            if($(this).hasClass('btntoggle')) {
-                $('.toolset_group button.btntoggle').removeClass('toggle');
-                $(this).addClass('toggle');
-            }
-        });    
-        
+    // map editing buttons
+    $('#toolset_draw .toolset_group button')
+      .button({
+          icons: {primary: 'ui-icon'},
+          text:false
+      })
+      .click(function(){
+        if($(this).hasClass('btntoggle')) {
+            $('.toolset_group button.btntoggle').removeClass('toggle');
+            $(this).addClass('toggle');
+        }
+    });    
+    
     //toolset toggle button
     $('.toolbar_toggle').click(function(){
         if($('.toolset').hasClass('active')) {
@@ -211,33 +198,33 @@ $(function() {
         }
     });
 
-        $('#saveplaninfo').bind('planSaved', function(event, time) {
-            var local = getLocalTimeFromIsoformat(time);
-            $('#saveplaninfo').text('Last Saved at ' + (local.hours % 12) + ':' + ((local.minutes < 10) ? ('0' + local.minutes) : local.minutes));
-        });
+    $('#saveplaninfo').bind('planSaved', function(event, time) {
+        var local = getLocalTimeFromIsoformat(time);
+        $('#saveplaninfo').text('Last Saved at ' + (local.hours % 12) + ':' + ((local.minutes < 10) ? ('0' + local.minutes) : local.minutes));
+    });
 
 
-        try {
-            var saved = $('#saveplaninfo').text().trim();
-            var local = getLocalTimeFromIsoformat(saved);
-            $('#saveplaninfo').text('Plan saved ' + local.day + ' at ' + (local.hours % 12) + ':' + ((local.minutes < 10) ? ('0' + local.minutes) : local.minutes));
-        } catch (error) {
-           // Just leave it: "no plan selected"
+    try {
+        var saved = $('#saveplaninfo').text().trim();
+        var local = getLocalTimeFromIsoformat(saved);
+        $('#saveplaninfo').text('Plan saved ' + local.day + ' at ' + (local.hours % 12) + ':' + ((local.minutes < 10) ? ('0' + local.minutes) : local.minutes));
+    } catch (error) {
+       // Just leave it: "no plan selected"
+    }
+
+    $('#map_legend').click(function(){
+        var toggle = $(this);
+        var panel = $('#map_legend_content');
+        if(toggle.hasClass('active')) {
+            toggle.removeClass('active');
+            panel.slideUp(240);
         }
-
-        $('#map_legend').click(function(){
-            var toggle = $(this);
-            var panel = $('#map_legend_content');
-            if(toggle.hasClass('active')) {
-                toggle.removeClass('active');
-                panel.slideUp(240);
-            }
-            else {
-                toggle.addClass('active');
-                panel.slideDown(240);
-            }
-        });
-        
+        else {
+            toggle.addClass('active');
+            panel.slideDown(240);
+        }
+    });
+    
     // report category parents toggling
     $('#reportdescription .master input').click( function() {
         $this = $(this);

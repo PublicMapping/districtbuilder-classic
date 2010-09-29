@@ -951,10 +951,7 @@ span.popstatus {
   padding: 3px 8px;
   color: #3c3c3c;
   font-size: 11px;
-  display:inline-block;
-  }
-.plantable span.popstatus {
-  width:45px;
+  display:block;
 }
 .over {
   background: #ead3a7;
