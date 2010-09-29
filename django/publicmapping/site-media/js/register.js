@@ -133,8 +133,22 @@ $(function(){
             success:function(data,textStatus,xhr){
                 if ($('#userid').val() == '') {
                     if (data.success) {
-                        window.location.href = data.redirect;
-                        return;
+                        $('#register').dialog('close');
+                        $('<div>You\'ve been registered for the public mapping project.</div>').dialog({
+                            modal:true,
+                            width:300,
+                            title:'Success!',
+                            buttons: {
+                                "Start Mapping": function() {
+                                    window.location.href = data.redirect;
+                                    return;
+                                }
+                            },
+                            resizable:false,
+                            open: function(event, ui) {
+                                $(".ui-dialog-titlebar-close", $(this).parent()).hide();
+                            }
+                        });
                     } else if (data.message == 'name exists') {
                         var newusername = $('#newusername');
                         newusername.removeClass('field');
