@@ -263,6 +263,12 @@ $(function(){
     // been the result of a failed login redirect. display error notices
     // around the username and password fields
     if (new RegExp('.*/accounts/login/$').test(window.location.href)) {
+        $('<div class="error">You entered an incorrect user name or password</div>').dialog({
+            modal:true,
+            width:300,
+            resizable:false,
+            title:'Login Error'
+        });
         $('#username, #password').addClass('error');
     }
 });
