@@ -451,24 +451,27 @@ def getreport(request, planid):
             district_id = 'NA'
         sorted_district_list.append(district_id)
     # Now we need an R Vector
-    block_ids = robjects.RVector(sorted_district_list)
+    block_ids = robjects.IntVector(sorted_district_list)
 
+    bardplan = r.createAssignedPlan(bardmap, block_ids)
+
+    # assign names to the districts
     names = sorted(districts, key=attrgetter('district_id'))
     sorted_name_list = robjects.StrVector(())
     for district in names:
        if district.name != "Unassigned":
             sorted_name_list += district.name 
-    # sorted_name_list = map(attrgetter('name'), names)
-    bardplan = r.createAssignedPlan(bardmap, block_ids)
     # bardplan.do_slot_assign('levels', sorted_name_list)
-    sys.stderr.write('bard plan:\n %s: \n' % bardplan.r_repr())
-    sys.stderr.write('sorted_name_list len: %s; contents: %s\n' % (len(sorted_name_list), sorted_name_list))
+
+    if settings.DEBUG:
+        sys.stderr.write('bard plan:\n %s: \n' % bardplan.r_repr())
+        sys.stderr.write('sorted_name_list len: %s; contents: %s\n' % (len(sorted_name_list), sorted_name_list))
 
     # Get the other report variables from the POST request.  We'll only add
     # them to the report if they're in the request
     popVar = request.POST.get('popVar', None)
     if popVar:
-        pop_var = get_named_vector(popVar, 'popVar')
+        pop_var = get_named_vector(popVar)
         pop_var += r('list("tolerance"=.01)')
 
     popVarExtra = request.POST.get('popVarExtra', None)
@@ -483,14 +486,14 @@ def getreport(request, planid):
         ratioVars = robjects.StrVector(())
         if racialComp:
             mmd = robjects.StrVector(())
-            mmd += r('list("denominator"=%s)' % pop_var.r_repr())
+            mmd += r('list("denominator"=%s)' % get_named_vector(popVar).r_repr())
             mmd += r('list("threshhold"=.6)')
             mmd += r('list("numerators"=%s)' % get_named_vector(racialComp).r_repr())
             ratioVars += r('list("Majority Minority Districts"=%s)' % mmd.r_repr())
 
         if partyControl:
             pc = robjects.StrVector(())
-            pc += r('list("denominator"=%s)' % pop_var.r_repr())
+            pc += r('list("denominator"=%s)' % get_named_vector(popVar).r_repr())
             pc += r('list("threshhold"=.6)')
             pc += r('list("numerators"=%s)' % get_named_vector(partyControl).r_repr())
             ratioVars += r('list("Party-controlled Districts"=%s)' % pc.r_repr())

@@ -58,7 +58,9 @@ function loadTooltips() {
         predelay: 600,
         opacity: .8
     });    
-      
+
+    $('.evaluate .disabled').attr('title', 'Sorry, this measure is not available');
+
     // If the user left the stats_legend_panel up when it's refreshed, it may be
     // attached to the body rather than appended to the trigger.
     $('body > #stats_legend_panel').remove();
