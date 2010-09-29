@@ -14,11 +14,11 @@
                 {% endif %}/></td>
             </tr>
             <tr>
-                <td class="fname">Password *</td>
+                <td class="fname">Password{% if is_anonymous %} *{% endif %}</td>
                 <td><input id="newpassword1" name="newpassword1" type="password" class="field" maxlength="128" /></td>
             </tr>
             <tr>
-                <td class="fname">Confirm Password *</td>
+                <td class="fname">Confirm Password{% if is_anonymous %} *{% endif %}</td>
                 <td><input id="newpassword2" name="newpassword2" type="password" class="field" maxlength="128" /></td>
             </tr>
             <tr>

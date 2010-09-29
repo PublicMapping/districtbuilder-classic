@@ -59,7 +59,7 @@ $(function(){
             username.addClass('field');
         }
 
-        if (newpassword1.val() == '' ||
+        if ((newpassword1.val() == '' && userid.val() == '') ||
             newpassword1.val() != newpassword2.val()) {
             newpassword1.removeClass('field');
             newpassword1.addClass('error');

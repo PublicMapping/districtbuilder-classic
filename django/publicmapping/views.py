@@ -141,7 +141,8 @@ def userupdate(request):
         JSON indicating success or failure.
     """
     username = request.POST.get('newusername', None)
-    password = request.POST.get('newpassword1', None)
+    password1 = request.POST.get('newpassword1', None)
+    password2 = request.POST.get('newpassword2', None)
     email = request.POST.get('email', None)
     fname = request.POST.get('firstname', None)
     lname = request.POST.get('lastname', None)
@@ -158,12 +159,14 @@ def userupdate(request):
             user = User.objects.get(id=id)
             if user.username != username:
                 status['message'] = 'Cannot change username.'
-            elif not user.check_password(password):
+            elif password1 != password2:
                 status['message'] = 'Passwords do not match.'
             else:
                 user.email = email
                 user.first_name = fname
                 user.last_name = lname
+                if password1 != '':
+                    user.set_password(password1)
                 user.save()
 
                 profile = user.get_profile()
