@@ -865,7 +865,7 @@ div.plansummary h3 {
 }
 div.plansummary label {
   display:inline-block;
-  width: 116px;
+  width: 132px;
   text-align:left;
   font-size: 12px;
   font-weight: bold;
@@ -873,7 +873,7 @@ div.plansummary label {
   }
 div.plansummary  .value {
   display:inline-block;
-  width: 116px;
+  width: 100px;
   text-align:right;
   font-size: 12px;
   font-weight: normal
@@ -907,7 +907,7 @@ div.plantable.body  {
     border: 1px solid #aaa;
     overflow: auto;
     position: absolute;
-    top:150px;
+    top:180px;
     bottom:33px;
     left: 5px; 
     right: 5px;
