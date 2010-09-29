@@ -461,7 +461,7 @@ def getreport(request, planid):
     for district in names:
        if district.name != "Unassigned":
             sorted_name_list += district.name 
-    # bardplan.do_slot_assign('levels', sorted_name_list)
+    bardplan.do_slot_assign('levels', sorted_name_list)
 
     if settings.DEBUG:
         sys.stderr.write('bard plan:\n %s: \n' % bardplan.r_repr())
@@ -487,14 +487,14 @@ def getreport(request, planid):
         if racialComp:
             mmd = robjects.StrVector(())
             mmd += r('list("denominator"=%s)' % get_named_vector(popVar).r_repr())
-            mmd += r('list("threshhold"=.6)')
+            mmd += r('list("threshold"=.6)')
             mmd += r('list("numerators"=%s)' % get_named_vector(racialComp).r_repr())
             ratioVars += r('list("Majority Minority Districts"=%s)' % mmd.r_repr())
 
         if partyControl:
             pc = robjects.StrVector(())
             pc += r('list("denominator"=%s)' % get_named_vector(popVar).r_repr())
-            pc += r('list("threshhold"=.6)')
+            pc += r('list("threshold"=.6)')
             pc += r('list("numerators"=%s)' % get_named_vector(partyControl).r_repr())
             ratioVars += r('list("Party-controlled Districts"=%s)' % pc.r_repr())
         ratio_vars = ratioVars
