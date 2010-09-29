@@ -38,6 +38,19 @@ $(function(){
     $('#register').dialog(dOptions);
     $('#forgotpass').dialog($.extend({title:'Forgot Password'},dOptions));
 
+    // generic dialog in case registration is unavailable
+    var genericRegistrationError = function() {
+        $('#register').dialog('close');
+        $('#doRegister').attr('disabled',true);
+        $('#sign_up').attr('disabled',true);
+        $('<div class="error">Sorry, registration is not available at this time.  Please try logging in anonymously or coming back later.</div>').dialog({
+            modal: true,
+            title: 'Signup Unavailable',
+            resizable:false, 
+            width:300
+        });
+    };
+
     // when the register form is submitted, do some client side validation
     // first, before sending it up to the server
     $('#doRegister').click(function(evt) {
@@ -119,7 +132,7 @@ $(function(){
                         email.removeClass('field');
                         email.addClass('error');
                     } else {
-                        $('#register').append($('<div class="error">Sorry, registration is not available at this time.  Please try again later</div>'));
+                        genericRegistrationError();
                     }
                 }
                 else {
@@ -134,7 +147,7 @@ $(function(){
                 }
             },
             error:function(xhr,textStatus,error){
-                $('#doRegister').attr('disabled',true);
+                genericRegistrationError();
             }
         });
 
@@ -163,6 +176,12 @@ $(function(){
             },
             error:function(xhr,textStatus,error){
                 $('#doAnonymous').attr('disabled',true);
+                $('<div class="error">Sorry, anonymous access is not available at this time.  Please come back later.</div>').dialog({
+                    modal: true,
+                    title: 'Anonymous Unavailable',
+                    resizable:false, 
+                    width:300
+                });
             }
         });
 
