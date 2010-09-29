@@ -110,11 +110,17 @@ $(function(){
                     if (data.success) {
                         window.location.href = data.redirect;
                         return;
+                    } else if (data.message == 'name exists') {
+                        var newusername = $('#newusername');
+                        newusername.removeClass('field');
+                        newusername.addClass('error');
+                    } else if (data.message == 'email exists') {
+                        var email = $('#email');
+                        email.removeClass('field');
+                        email.addClass('error');
+                    } else {
+                        $('#register').append($('<div class="error">Sorry, registration is not available at this time.  Please try again later</div>'));
                     }
-
-                    var newusername = $('#newusername');
-                    newusername.removeClass('field');
-                    newusername.addClass('error');
                 }
                 else {
                     if (data.success) {
