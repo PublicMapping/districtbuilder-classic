@@ -41,8 +41,8 @@ $(function(){
     // generic dialog in case registration is unavailable
     var genericRegistrationError = function() {
         $('#register').dialog('close');
-        $('#doRegister').attr('disabled',true);
-        $('#sign_up').attr('disabled',true);
+        $('#doRegister').attr('disabled',true).css('cursor', 'not-allowed');
+        $('#sign_up').attr('disabled',true).css('cursor', 'not-allowed');
         $('<div class="error">Sorry, registration is not available at this time.  Please try logging in anonymously or coming back later.</div>').dialog({
             modal: true,
             title: 'Signup Unavailable',
@@ -59,6 +59,7 @@ $(function(){
             newpassword1 = frm.find('#newpassword1'),
             newpassword2 = frm.find('#newpassword2'),
             passwordhint = frm.find('#passwordhint'),
+            email = frm.find('#email'),
             agree = frm.find('#agree'),
             userid = frm.find('#userid');
 
@@ -96,6 +97,17 @@ $(function(){
             passwordhint.addClass('field');
             passwordhint.removeClass('error');
         }
+        if (email.val().trim() != '') {
+            if (!(email.val().match(/^([\w\-\.])+\@([\w\-\.])+\.([A-Za-z]{2,4})$/))) {
+                email.removeClass('field');
+                email.addClass('error');
+                return false;
+            }
+            else {
+                email.addClass('field');
+                email.removeClass('error');
+            }            
+        }
 
         if (agree.length > 0 && !agree[0].checked) {
             $('#agreelabel').addClass('required');
@@ -109,7 +121,7 @@ $(function(){
                 newusername:username.val(),
                 newpassword1:newpassword1.val(),
                 newpassword2:newpassword2.val(),
-                email:$('#email').val(),
+                email:email.val(),
                 passwordhint:passwordhint.val(),
                 firstname:$('#firstname').val(),
                 lastname:$('#lastname').val(),
@@ -175,7 +187,7 @@ $(function(){
                 }
             },
             error:function(xhr,textStatus,error){
-                $('#doAnonymous').attr('disabled',true);
+                $('#doAnonymous').attr('disabled',true).css('cursor', 'not-allowed');
                 $('<div class="error">Sorry, anonymous access is not available at this time.  Please come back later.</div>').dialog({
                     modal: true,
                     title: 'Anonymous Unavailable',
