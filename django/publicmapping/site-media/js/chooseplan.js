@@ -48,7 +48,8 @@ chooseplan = function(options) {
         // bunch o variables
        
         _eventType,
-        _nameRequired;
+        _nameRequired,
+        _activeText;
 
     /**
      * Initialize the chooser. Setup the click event for the target to
@@ -191,7 +192,7 @@ chooseplan = function(options) {
      */
     var selectPlan = function () {
         $('#btnSelectPlan').attr('disabled','true');
-        var activeText = $('#btnSelectPlan span').text();
+        _activeText = $('#btnSelectPlan span').text();
         $('#btnSelectPlan span').text('Please Wait...');
         var activeSelector = $('select.active');
         if (_nameRequired) {
@@ -204,7 +205,7 @@ chooseplan = function(options) {
             if (name.trim().length == 0) { 
                 alert ('A name for the copied template is required'); 
                 $('#btnSelectPlan').attr('disabled',null);
-                $('#btnSelectPlan span').text(activeText);
+                $('#btnSelectPlan span').text(_activeText);
                 return; 
             }
             if (OpenLayers) {
@@ -229,6 +230,19 @@ chooseplan = function(options) {
      *   data -- The JSON data object returned by the server.
      */
     var copyCallback = function(data) {
+        if ('success' in data && !data.success) {
+            alert( data.message + '\n\nTip: Make sure the new plan\'s name is unique.' );
+
+            $('#btnSelectPlan').attr('disabled',null);
+            $('#btnSelectPlan span').text(_activeText);
+
+            if (OpenLayers) {
+                OpenLayers.Element.removeClass(document.getElementById('btnSelectPlan'),'olCursorWait');
+                OpenLayers.Element.removeClass(document.body,'olCursorWait');
+            }
+            return;
+        }
+
         data = data[0];
         if (data.pk) {
             window.location = '/districtmapping/plan/' + data.pk + '/edit/';
