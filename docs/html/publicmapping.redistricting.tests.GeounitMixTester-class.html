@@ -1,0 +1,548 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>publicmapping.redistricting.tests.GeounitMixTester</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="publicmapping-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a href="http://publicmapping.sf.net">Publicmapping on SourceForge</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="publicmapping-module.html">Package&nbsp;publicmapping</a> ::
+        <a href="publicmapping.redistricting-module.html">Package&nbsp;redistricting</a> ::
+        <a href="publicmapping.redistricting.tests-module.html">Module&nbsp;tests</a> ::
+        Class&nbsp;GeounitMixTester
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="publicmapping.redistricting.tests.GeounitMixTester-class.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS DESCRIPTION ==================== -->
+<h1 class="epydoc">Class GeounitMixTester</h1><p class="nomargin-top"><span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#GeounitMixTester">source&nbsp;code</a></span></p>
+<center>
+<center>  <map id="uml_class_diagram_for_publicma_21" name="uml_class_diagram_for_publicma_21">
+<area shape="rect" href="exceptions.AssertionError-class.html" title="Assertion failed." alt="" coords="17,28,236,47"/>
+<area shape="rect" href="javascript:void(0);" title="Create an instance of the class that will use the named test method when &#160;executed." alt="" coords="17,49,236,68"/>
+<area shape="rect" href="javascript:void(0);" title="Hook method for deconstructing the test fixture after testing it." alt="" coords="17,68,236,87"/>
+<area shape="rect" href="javascript:void(0);" title="unittest.TestCase.countTestCases" alt="" coords="17,87,236,105"/>
+<area shape="rect" href="javascript:void(0);" title="unittest.TestCase.defaultTestResult" alt="" coords="17,105,236,124"/>
+<area shape="rect" href="javascript:void(0);" title="Returns a one&#45;line description of the test, or None if no description has &#160;been provided." alt="" coords="17,124,236,143"/>
+<area shape="rect" href="javascript:void(0);" title="unittest.TestCase.id" alt="" coords="17,143,236,161"/>
+<area shape="rect" href="javascript:void(0);" title="unittest.TestCase.__eq__" alt="" coords="17,161,236,180"/>
+<area shape="rect" href="javascript:void(0);" title="unittest.TestCase.__ne__" alt="" coords="17,180,236,199"/>
+<area shape="rect" href="javascript:void(0);" title="unittest.TestCase.__hash__" alt="" coords="17,199,236,217"/>
+<area shape="rect" href="javascript:void(0);" title="unittest.TestCase.__str__" alt="" coords="17,217,236,236"/>
+<area shape="rect" href="javascript:void(0);" title="unittest.TestCase.__repr__" alt="" coords="17,236,236,255"/>
+<area shape="rect" href="javascript:void(0);" title="unittest.TestCase.run" alt="" coords="17,255,236,273"/>
+<area shape="rect" href="javascript:void(0);" title="unittest.TestCase.__call__" alt="" coords="17,273,236,292"/>
+<area shape="rect" href="javascript:void(0);" title="Fail the test if the expression is true." alt="" coords="17,311,236,329"/>
+<area shape="rect" href="javascript:void(0);" title="A class whose instances are single test cases." alt="" coords="16,11,237,331"/>
+<area shape="rect" href="publicmapping.redistricting.tests.GeounitMixTester-class.html#setUp" title="Setup the spatial query tests." alt="" coords="55,385,199,404"/>
+<area shape="rect" href="publicmapping.redistricting.tests.GeounitMixTester-class.html#test_numgeolevels" title="Test the number of geolevels created." alt="" coords="55,404,199,423"/>
+<area shape="rect" href="publicmapping.redistricting.tests.GeounitMixTester-class.html#test_numgeounits1" title="Test the number of geounits in the first tier of geounits." alt="" coords="55,423,199,441"/>
+<area shape="rect" href="publicmapping.redistricting.tests.GeounitMixTester-class.html#test_numgeounits2" title="Test the number of geounits in the second tier of geounits." alt="" coords="55,441,199,460"/>
+<area shape="rect" href="publicmapping.redistricting.tests.GeounitMixTester-class.html#test_numgeounits3" title="Test the number of geounits in the third tier of geounits." alt="" coords="55,460,199,479"/>
+<area shape="rect" href="publicmapping.redistricting.tests.GeounitMixTester-class.html#test_allunitscount" title="Test that known geounits are spatially contained within other geounits." alt="" coords="55,479,199,497"/>
+<area shape="rect" href="publicmapping.redistricting.tests.GeounitMixTester-class.html#test_get_all_in" title="Test the spatial query to get geounits within a known boundary." alt="" coords="55,497,199,516"/>
+<area shape="rect" href="publicmapping.redistricting.tests.GeounitMixTester-class.html#test_get_in_gu0" title="Test the spatial query to get geounits within a known boundary." alt="" coords="55,516,199,535"/>
+<area shape="rect" href="publicmapping.redistricting.tests.GeounitMixTester-class.html#test_get_base" title="Test the spatial query to get all geounits at the base geolevel within a &#160;boundary." alt="" coords="55,535,199,553"/>
+<area shape="rect" href="publicmapping.redistricting.tests.GeounitMixTester-class.html#test_get_mixed1" title="Test the logic for getting mixed geounits inside a boundary at the highest &#160;geolevel." alt="" coords="55,553,199,572"/>
+<area shape="rect" href="publicmapping.redistricting.tests.GeounitMixTester-class.html#test_get_imixed1" title="Test the logic for getting mixed geounits outside a boundary at the highest geolevel." alt="" coords="55,572,199,591"/>
+<area shape="rect" href="publicmapping.redistricting.tests.GeounitMixTester-class.html#test_get_mixed2" title="Test the logic for getting mixed geounits inside a boundary at the middle &#160;geolevel." alt="" coords="55,591,199,609"/>
+<area shape="rect" href="publicmapping.redistricting.tests.GeounitMixTester-class.html#test_get_imixed2" title="Test the logic for getting mixed geounits outside a boundary at the middle &#160;geolevel." alt="" coords="55,609,199,628"/>
+<area shape="rect" href="publicmapping.redistricting.tests.GeounitMixTester-class.html#test_get_mixed3" title="Test the logic for getting mixed geounits inside a boundary at the lowest &#160;geolevel." alt="" coords="55,628,199,647"/>
+<area shape="rect" href="publicmapping.redistricting.tests.GeounitMixTester-class.html#test_get_imixed3" title="Test the logic for getting mixed geounits outside a boundary at the lowest &#160;geolevel." alt="" coords="55,647,199,665"/>
+<area shape="rect" href="publicmapping.redistricting.tests.GeounitMixTester-class.html" title="Unit tests to test the mixed geounit spatial queries." alt="" coords="53,360,200,667"/>
+</map>
+  <img src="uml_class_diagram_for_publicma_21.gif" alt='' usemap="#uml_class_diagram_for_publicma_21" ismap="ismap" class="graph-without-title" />
+</center>
+</center>
+<hr />
+<p>Unit tests to test the mixed geounit spatial queries.</p>
+
+<!-- ==================== NESTED CLASSES ==================== -->
+<a name="section-NestedClasses"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Nested Classes</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-NestedClasses"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code>unittest.TestCase</code></b>:
+      <code><a href="exceptions.AssertionError-class.html">failureException</a></code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== INSTANCE METHODS ==================== -->
+<a name="section-InstanceMethods"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Instance Methods</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceMethods"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.tests.GeounitMixTester-class.html#setUp" class="summary-sig-name">setUp</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Setup the spatial query tests.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#GeounitMixTester.setUp">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_numgeolevels"></a><span class="summary-sig-name">test_numgeolevels</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Test the number of geolevels created.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#GeounitMixTester.test_numgeolevels">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_numgeounits1"></a><span class="summary-sig-name">test_numgeounits1</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Test the number of geounits in the first tier of geounits.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#GeounitMixTester.test_numgeounits1">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_numgeounits2"></a><span class="summary-sig-name">test_numgeounits2</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Test the number of geounits in the second tier of geounits.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#GeounitMixTester.test_numgeounits2">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_numgeounits3"></a><span class="summary-sig-name">test_numgeounits3</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Test the number of geounits in the third tier of geounits.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#GeounitMixTester.test_numgeounits3">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_allunitscount"></a><span class="summary-sig-name">test_allunitscount</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Test that known geounits are spatially contained within other 
+      geounits.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#GeounitMixTester.test_allunitscount">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_get_all_in"></a><span class="summary-sig-name">test_get_all_in</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Test the spatial query to get geounits within a known boundary.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#GeounitMixTester.test_get_all_in">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_get_in_gu0"></a><span class="summary-sig-name">test_get_in_gu0</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Test the spatial query to get geounits within a known boundary.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#GeounitMixTester.test_get_in_gu0">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_get_base"></a><span class="summary-sig-name">test_get_base</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Test the spatial query to get all geounits at the base geolevel 
+      within a boundary.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#GeounitMixTester.test_get_base">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_get_mixed1"></a><span class="summary-sig-name">test_get_mixed1</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Test the logic for getting mixed geounits inside a boundary at the 
+      highest geolevel.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#GeounitMixTester.test_get_mixed1">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_get_imixed1"></a><span class="summary-sig-name">test_get_imixed1</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Test the logic for getting mixed geounits outside a boundary at the 
+      highest geolevel.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#GeounitMixTester.test_get_imixed1">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_get_mixed2"></a><span class="summary-sig-name">test_get_mixed2</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Test the logic for getting mixed geounits inside a boundary at the 
+      middle geolevel.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#GeounitMixTester.test_get_mixed2">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_get_imixed2"></a><span class="summary-sig-name">test_get_imixed2</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Test the logic for getting mixed geounits outside a boundary at the 
+      middle geolevel.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#GeounitMixTester.test_get_imixed2">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_get_mixed3"></a><span class="summary-sig-name">test_get_mixed3</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Test the logic for getting mixed geounits inside a boundary at the 
+      lowest geolevel.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#GeounitMixTester.test_get_mixed3">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_get_imixed3"></a><span class="summary-sig-name">test_get_imixed3</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Test the logic for getting mixed geounits outside a boundary at the 
+      lowest geolevel.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#GeounitMixTester.test_get_imixed3">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code>unittest.TestCase</code></b>:
+      <code>__call__</code>,
+      <code>__eq__</code>,
+      <code>__hash__</code>,
+      <code>__init__</code>,
+      <code>__ne__</code>,
+      <code>__repr__</code>,
+      <code>__str__</code>,
+      <code>assertAlmostEqual</code>,
+      <code>assertAlmostEquals</code>,
+      <code>assertEqual</code>,
+      <code>assertEquals</code>,
+      <code>assertFalse</code>,
+      <code>assertNotAlmostEqual</code>,
+      <code>assertNotAlmostEquals</code>,
+      <code>assertNotEqual</code>,
+      <code>assertNotEquals</code>,
+      <code>assertRaises</code>,
+      <code>assertTrue</code>,
+      <code>assert_</code>,
+      <code>countTestCases</code>,
+      <code>debug</code>,
+      <code>defaultTestResult</code>,
+      <code>fail</code>,
+      <code>failIf</code>,
+      <code>failIfAlmostEqual</code>,
+      <code>failIfEqual</code>,
+      <code>failUnless</code>,
+      <code>failUnlessAlmostEqual</code>,
+      <code>failUnlessEqual</code>,
+      <code>failUnlessRaises</code>,
+      <code>id</code>,
+      <code>run</code>,
+      <code>shortDescription</code>,
+      <code>tearDown</code>
+      </p>
+    <div class="private">    <p class="indent-wrapped-lines"><b>Inherited from <code>unittest.TestCase</code></b> (private):
+      <code>_exc_info</code>
+      </p></div>
+    </td>
+  </tr>
+</table>
+<!-- ==================== METHOD DETAILS ==================== -->
+<a name="section-MethodDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Method Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-MethodDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="setUp"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">setUp</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#GeounitMixTester.setUp">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Setup the spatial query tests. This fabricates some test data and 
+  changes the base geolevel and the simple tolerance.</p>
+  <dl class="fields">
+    <dt>Overrides:
+        unittest.TestCase.setUp
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="publicmapping-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a href="http://publicmapping.sf.net">Publicmapping on SourceForge</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Thu Sep 30 11:57:57 2010
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

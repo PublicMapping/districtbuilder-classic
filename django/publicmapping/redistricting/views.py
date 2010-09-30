@@ -389,9 +389,7 @@ def getreport(request, planid):
         #       repSpatial=TRUE,
         #       repSpatialExtra=FALSE,
         #       useHTML=TRUE,
-        #       ...)  {
-        #...
-        #}
+        #       ...)  
 
     try:
         plan = Plan.objects.get(pk=planid)

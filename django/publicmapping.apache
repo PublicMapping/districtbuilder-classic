@@ -63,6 +63,13 @@
         Allow from all
     </Directory>
 
+    Alias /docs/ /projects/publicmapping/trunk/docs/html/
+    <Directory /projects/publicmapping/trunk/docs/html/>
+        Options Indexes
+        Order deny,allow
+        Allow from all
+    </Directory>
+
     ErrorLog /var/log/apache2/publicmapping-error.log
 
     # Possible values include: debug, info, notice, warn, error, crit,
@@ -74,9 +81,9 @@
     # This redirects report requests to an alternate port.
     RewriteEngine On
     RewriteRule /districtmapping/(.*)/getreport/ http://%{HTTP_HOST}:8081/districtmapping/$1/getreport/ [NC,P]
-    # You can use a rewrite rule like this to redirect geoserver requests on 8082 in case of firewalls
-    # Don't forget to sync up your mapserver name to work with your local machine; don't include "geoserver" in that url
-    # RewriteRule /geoserver/(.*) http://%{HTTP_HOST}:8082/geoserver/$1 [NC,P]
+    # You can comment out this rewriterule and adjust your map server name accordingly to stop proxying
+    # map requests through apache
+    RewriteRule /geoserver/(.*) http://%{HTTP_HOST}:8082/geoserver/$1 [NC,P]
     RewriteLog /var/log/apache2/publicmapping-rewrite.log
     RewriteLogLevel 0
 
