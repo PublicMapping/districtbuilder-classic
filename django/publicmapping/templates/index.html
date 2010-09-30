@@ -117,14 +117,27 @@
     <div id="forgotpass">
         <form id="forgotForm" action="/accounts/forgot/" method="POST">
             <div id="forgotprompt">
-                Enter your username or email address, and we will
-                help you retrieve your password.
+                <div id="username_hint">Get A Hint</div>
+                <div>
+                    Enter your username to retrieve your password hint that
+                    you used when registering for an account.
+                </div>
                 <p>&nbsp;</p>
-                <table id="forgotTable">
+                <table class="forgotTable">
                     <tr>
                         <td class="fname">Username</td>
                         <td><input id="forgotusername" name="forgotusername" class="field" maxlength="30"/></td>
                     </tr>
+                </table>
+                <div id="or">OR</div>
+
+                <div id="email_reset">Reset Your Password</div>
+                <div>
+                    Enter your email address to reset your password if you
+                    have forgotten your username.
+                </div>
+                <p>&nbsp;</p>
+                <table class="forgotTable">
                     <tr>
                         <td class="fname">Email</td>
                         <td><input id="forgotemail" name="forgotemail" class="field"/></td>
@@ -136,8 +149,9 @@
             </div>
 
             <div id="forgothint">
-                <p>Below is your password hint. If this helps you remember
-                your password, you can close this dialog and log in.</p>
+                <div id="got_hint">Here Is Your Hint</div>
+                <p>If this helps you remember your password, you can close 
+                this dialog and log in.</p>
 
                 <input id="forgothintbox" name="forgothintbox" class="field"/>
 
@@ -147,6 +161,7 @@
 
             </div>
             <div id="forgotsent">
+                <div id="reset_sent">Email Sent</div>
                 <p>Your password has been emailed to you. You should receive
                 your password in your inbox in the next few minutes.</p>
             </div>

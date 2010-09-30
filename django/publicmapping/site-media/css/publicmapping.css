@@ -303,11 +303,27 @@ form#forgotForm input#forgothintbox {
 div#forgotButton, div#forgotButton2 {
     margin-top: 15px;
 }
+div#forgotprompt, div#forgothint, div#forgotsent {
+    font-weight: normal;
+}
+div#forgotprompt td.fname {
+    width: 125px;
+    text-align: right;
+}
+div#username_hint, div#email_reset, div#got_hint, div#reset_sent {
+    font-weight: bold;
+}
+div#or {
+    font-size: 12pt;
+    font-weight: bolder;
+    color: #000000;
+    text-align: center;
+}
 div#footer {
-clear: both;
-margin: 20px 0 0 0;
-background: url(/site-media/images/divider.png) 0 0 repeat-x;
-padding: 20px 0 0 0;
+    clear: both;
+    margin: 20px 0 0 0;
+    background: url(/site-media/images/divider.png) 0 0 repeat-x;
+    padding: 20px 0 0 0;
 }
 div#copyright {
   float:left;
@@ -323,14 +339,14 @@ div #sponsors {
 /* mapping styles */
 
 div#steps {
-background:none repeat scroll 0 0 transparent;
-border:medium none;
-bottom:10px;
-left:10px;
-padding:0;
-position:absolute;
-right:10px;
-top:50px;
+    background:none repeat scroll 0 0 transparent;
+    border:medium none;
+    bottom:10px;
+    left:10px;
+    padding:0;
+    position:absolute;
+    right:10px;
+    top:50px;
 }
 ul#steps_tabs {
   background:none;

@@ -98,7 +98,7 @@ $(function(){
             passwordhint.removeClass('error');
         }
         if (email.val().trim() != '') {
-            if (!(email.val().match(/^([\w\-\.])+\@([\w\-\.])+\.([A-Za-z]{2,4})$/))) {
+            if (!(email.val().match(/^([\w\-\.\+])+\@([\w\-\.])+\.([A-Za-z]{2,4})$/))) {
                 email.removeClass('field');
                 email.addClass('error');
                 return false;
@@ -220,6 +220,11 @@ $(function(){
         var frm = $('#forgotForm')[0];
         $('#forgotusername, #forgotemail').removeClass('error');
 
+        var remindBtn = $('#doRemind');
+        remindBtn.attr('disabled',true);
+        var btnText = remindBtn.text();
+        remindBtn.html('<span class="ui-button-text">Please Wait...</span>');
+
         $.ajax({
             context:frm,
             data: {
@@ -230,7 +235,11 @@ $(function(){
             type:'POST',
             url:frm.action,
             success: function(data,textStatus,xhr){
+                var remindBtn = $('#doRemind');
+                remindBtn.attr('disabled',null);
+                remindBtn.html('<span class="ui-button-text">'+btnText+'</span>');
                 if (data.success) {
+
                     if (data.mode == 'hinting') {
                         $('#forgotprompt, #forgotButton').css('display','none');
                         $('#forgothint, #forgotButton2').css('display','block');
@@ -251,7 +260,9 @@ $(function(){
                 }
             },
             error:function(xhr,textStatus,error){
-                $('#doRemind').attr('disabled',true);
+                var remindBtn = $('#doRemind');
+                remindBtn.html('<span class="ui-button-text">'+btnText+'</span>');
+                remindBtn.attr('disabled',true);
             }
         });
 
