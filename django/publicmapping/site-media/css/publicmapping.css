@@ -31,6 +31,8 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   height: 100%;
   width: 100%;
+  min-width: 980px;
+  min-height: 655px;
 }
 
 body#static {  background: url(/site-media/images/bg-body-home.png) 0 0 repeat-x;}
@@ -494,7 +496,7 @@ div#PlanChooser li.inactive {
 
 div#toolbar_plans {
     background: url(/site-media/images/bg-app.png) 0 0 repeat;
-    position: absolute;
+    position: fixed;
     z-index: 1000;
     bottom: 0;
     left: 0;
@@ -534,6 +536,12 @@ div#mapandmenu {
     position:absolute;
     right:0;
     top:33px;
+    min-width:990px;
+    min-height:560px;
+}
+div#step-2, div#step-3 {
+    min-width: 910px;
+    min-height: 530px;
 }
 div#map {
     position: absolute;
@@ -1083,8 +1091,9 @@ div.evaluate {
     font-weight:normal;
 }
 .evaluate #reportButtons {
-    position:relative;
-    top:75px;
+    position:absolute;
+    bottom:35px;
+    width: 900px;
 }
 .evaluate #options span {
     display: block;
@@ -1102,7 +1111,7 @@ div.evaluate {
     position:absolute;
     top:10px;
     right:10px;
-    height:500px;
+    height:480px;
     width: 40%;
 }
 #btnSharePlans {
