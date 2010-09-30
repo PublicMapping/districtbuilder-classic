@@ -32,7 +32,7 @@ body {
   height: 100%;
   width: 100%;
   min-width: 980px;
-  min-height: 655px;
+  min-height: 640px;
 }
 
 body#static {  background: url(/site-media/images/bg-body-home.png) 0 0 repeat-x;}
@@ -536,12 +536,12 @@ div#mapandmenu {
     position:absolute;
     right:0;
     top:33px;
-    min-width:990px;
-    min-height:560px;
+    min-width:980px;
+    min-height:550px;
 }
 div#step-2, div#step-3 {
     min-width: 910px;
-    min-height: 530px;
+    min-height: 510px;
 }
 div#map {
     position: absolute;
@@ -1098,7 +1098,8 @@ div.evaluate {
     display: block;
 }
 .evaluate #options1, .evaluate #options2 {
-    display:inline-block;
+    display:block;
+    float:left;
     vertical-align:top;
     width: 45%;
 }
@@ -1144,8 +1145,6 @@ div#nameandshare,
     width:45%;
 }
 .share #nameandshare {
-    position:relative;
-    top:80%;
 }
 .share #reportpreview {
     height:600px;
