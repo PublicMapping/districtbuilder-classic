@@ -459,13 +459,9 @@ def getreport(request, planid):
     for district in names:
        if district.name != "Unassigned":
             sorted_name_list += district.name 
-    bardplan.do_slot_assign('levels', sorted_name_list)
+    # bardplan.do_slot_assign('levels', sorted_name_list)
 
     if settings.DEBUG:
-        sys.stderr.write('bard plan:\n %s: \n' % bardplan.r_repr())
-        sys.stderr.write('sorted_name_list len: %s; contents: %s\n' % (len(sorted_name_list), sorted_name_list))
-    else:
-	sys.stderr.write('settings.DEBUG: %s' %  settings.DEBUG)
         sys.stderr.write('bard plan:\n %s: \n' % bardplan.r_repr())
         sys.stderr.write('sorted_name_list len: %s; contents: %s\n' % (len(sorted_name_list), sorted_name_list))
 
