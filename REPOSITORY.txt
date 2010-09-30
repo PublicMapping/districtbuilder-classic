@@ -1,0 +1,40 @@
+The Public Mapping Project
+http://sourceforge.net/projects/publicmapping/
+
+== Repository Layout ==
+
+The Public Mapping Project repository contains all the sourcecode necessary
+for deploying a functional redistricting web application. This document
+describes the organization and layout of the project's SVN repository.
+
+root/
+  |
+  +- django/        Contains all program code relevant to the web 
+  |                 application, which is powered by the django framework.
+  |
+  +- docs/          Contains documentation of the Public Mapping Project.
+  |                 This directory contains the project's README file,
+  |                 which contains information on installation and
+  |                 configuration of the web application. 
+  |
+  |                 The ADDING_LAYERS document describes the process of
+  |                 adding a new set of geography for display and editing.
+  |
+  |                 A set of automatically generated python class 
+  |                 documentation is contained in the html/ directory.
+  |
+  +- example_data/  Contains the sample data used to power the reference
+  |                 implementation at http://gmu.azavea.com/, as well as
+  |                 the Amazon Web Services machine AMI: ami-5cf40135.
+  |
+  +- python/        Contains any auxiliary python code required for the
+  |                 application. This was used for custom tools during
+  |                 development, and is currently empty.
+  |
+  +- sld/           Contains the style descriptors for the geographic
+  |                 data served up by geoserver. These files are also
+  |                 served up by the web application for display in the
+  |                 map legend.
+  |
+  +- sql/           Contains sql setup scripts for creating the initial
+                    spatial database.
