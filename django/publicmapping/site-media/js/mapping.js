@@ -222,12 +222,16 @@ function createDistrictTipDiv() {
  * Initialize the map from WMS GetCapabilities.
  */
 function init() {
-    OpenLayers.ProxyHost= "/proxy?url=";
+    var url = 'http://' + MAP_SERVER + '/geoserver/ows?service=wms&' +
+        'version=1.1.1&request=GetCapabilities&namespace=' + NAMESPACE;
+
+    if (window.location.host != MAP_SERVER) {
+        OpenLayers.ProxyHost= "/proxy?url=";
+        url = OpenLayers.ProxyHost + encodeURIComponent(url);
+    }
 
     $.ajax({
-        url: OpenLayers.ProxyHost + encodeURIComponent('http://' + 
-            MAP_SERVER + '/geoserver/ows?service=wms&version=1.1.1' +
-            '&request=GetCapabilities&namespace=' + NAMESPACE),
+        url: url,
         type: 'GET',
         // success does not get called by jquery in IE,
         // use complete instead
