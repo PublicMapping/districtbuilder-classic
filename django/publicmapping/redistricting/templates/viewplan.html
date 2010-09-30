@@ -40,26 +40,58 @@
     <link rel="stylesheet" type="text/css" href="/site-media/css/publicmapping.css"/>
     <script type="text/javascript" src="/site-media/openlayers/OpenLayers.js"></script><!-- production -->
     <!-- <script type="text/javascript" src="/site-media/OpenLayers-2.9.1/lib/OpenLayers.js"></script> debug -->
+
+    {% comment %}
+
+    Initialize the variables required for rendering the map on this page.
+    These variables are pulled from the django settings module, and 
+    dynamically computed from the current plan of interest.
+    
+    {% endcomment %}
     <script type="text/javascript">
+        // The name of the map server that serves up map tiles.
         var MAP_SERVER = '{{ mapserver }}';
+        // The namespace configured for WFS requests
         var NAMESPACE = '{{ namespace }}';
+        // The namespace HREF configured for WFS requests
         var NS_HREF = '{{ ns_href }}';
 
+        // The ID of the plan that this page is viewing
         var PLAN_ID = {% if plan %}{{ plan.id }}{% else %}0{% endif %};
+        // The most current version of the plan. When viewing a plan,
+        // the most current plan version is initially displayed.
         var PLAN_VERSION = {% if plan %}{{ plan.version }}{% else %}0{% endif %};
+        // The id of the special 'unassigned' district.
         var UNASSIGNED_DISTRICT_ID = {% if unassigned_id %}{{ unassigned_id }}{% else %}0{% endif %};
+        // An array of configuration settings for the layers that are
+        // used to select geography.
         var SNAP_LAYERS = [ {% for snap in snaplayers %} { geolevel: {{ snap.geolevel }}, level: '{{ snap.layer }}',layer: 'simple_{{ snap.layer }}', name: '{{ snap.name }}' }{% if not forloop.last %},{% endif %} {% endfor %} ];
+        // An array of demographic settings for the choropleth variations 
+        // of the snap layer
         var DEMOGRAPHICS = [{% for demo in demographics %} { id: {{ demo.id }}, text: '{{ demo.text }}', value: '{{ demo.value }}', isdefault: {{ demo.isdefault }}, isdisplayed: {{ demo.isdisplayed }} }{% if not forloop.last %},{% endif %} {% endfor %} ]; var MAP_LAYERS = []; for (var i = 0; i < SNAP_LAYERS.length; i++) { MAP_LAYERS.push( 'gmu:demo_' + SNAP_LAYERS[i].level );
             for (var j = 0; j < DEMOGRAPHICS.length; j++) {
                 MAP_LAYERS.push( 'gmu:demo_' + SNAP_LAYERS[i].level + '_' + DEMOGRAPHICS[j].value );
             }
         }
+        // The style rules for all subjects. Each subject has a different
+        // set of ranges, and they are pulled from the django db.
         var RULES = { {% for rule in rules %}'{{ rule.subject_id }}': {lowest: {{ rule.lowest }}, lower:{{ rule.lower }}, upper:{{ rule.upper }}, highest: {{ rule.highest }} }{% if not forloop.last %},{% endif %}{% endfor %}};
+        // The maximum number of districts that can exist in this plan.
         var MAX_DISTRICTS = {{ max_dists }};
     </script>
+    {% comment %}
+
+    Load external javascript libraries.
+
+    {% endcomment %}
     <script type="text/javascript" src="/site-media/jquery/jquery-1.4.2.js"></script>
     <script type="text/javascript" src="/site-media/jquery/jquery-ui-1.8.2.custom.min.js"></script>
     <script type="text/javascript" src="/site-media/jquery/external/jquery.tools.tooltip.slide.min.js"></script>
+    {% comment %}
+
+    Load internal javascript logic.
+
+    {% endcomment %}
     <script type="text/javascript" src="/site-media/js/ui.js"></script>
     <script type="text/javascript" src="/site-media/js/viewablesorter.js"></script>
     <script type="text/javascript" src="/site-media/js/mapping.js"></script>
@@ -69,14 +101,25 @@
     <script type="text/javascript" src="/site-media/js/register.js"></script>
   </head>
   <body onload="init();" id="app">
-  
+ 
   <div id="app_header">
     <div id="logo"><img src="/site-media/images/title-app.png" /></div>
     <div id="site_nav">
         <ul>
             {% if is_anonymous %}
+            {% comment %}
+
+            If the user is anonymous, display a login link.
+
+            {% endcomment %}
             <li><a class="last" href="/">Login</a></li>
             {% else %}
+            {% comment %}
+
+            If the user is logged in, display a link to an account 
+            management panel, and a logout link.
+
+            {% endcomment %}
             <li><a href="#" onclick="$('#register').dialog('open');return false;">My Account</a></li>
             <li><a class="last" href="/accounts/logout/">Logout</a></li>
             {% endif %}
@@ -102,6 +145,12 @@
                 <img src="/site-media/images/icon-help.png" class="help divtip">
                 <div class="tooltip">The selected layer will be editable.  You will use the features in the selected layer to edit districts</div>
                 <label>Snap Map to:</label>
+                {% comment %}
+
+                Dynamically populate the 'Snap Map to:' dropdown, based
+                on the layers that are configured in the application.
+
+                {% endcomment %}
                 <select id="snapto">
                   <script type="text/javascript">
                     for (var i = 0; i < SNAP_LAYERS.length; i++) {
@@ -115,6 +164,12 @@
                 <img src="/site-media/images/icon-help.png" class="help divtip">
                 <div class="tooltip">The selected demographic attribute of current layer will be displayed on the map as a grayscale 'choropleth' overlay</div>                
                 <label>Show Layer by:</label>
+                {% comment %}
+
+                Dynamically populate the "Show Layer by:" dropdown, based
+                on the demographics that are configured in the application.
+
+                {% endcomment %}
                 <select id="showby">
                   <script type="text/javascript">
                     for (var i = 0; i < DEMOGRAPHICS.length; i++) {
@@ -131,25 +186,18 @@
                   </script>
                 </select>
               </div>
-              <!--
-              <div class="toolset_group">
-                <img src="/site-media/images/icon-help.png" class="help divtip">
-                <div class="tooltip">The selected layer's boundaries will be displayed on the map</div>                
-                <label>Show Boundaries for:</label>
-                <select id="boundfor">
-                  <script type="text/javascript">
-                    for (var i = 0; i < SNAP_LAYERS.length; i++) {
-                        var snap = SNAP_LAYERS[i];
-                        document.write('<option value="' + snap.level + '">' + snap.name + '</option>');
-                    }
-                  </script>
-                </select>
-              </div>
-              -->
+
               <div class="toolset_group">
                 <img src="/site-media/images/icon-help.png" class="help divtip">
                 <div class="tooltip">The appearance of the districts on the map</div>                
                 <label>Show Districts by:</label>
+                {% comment %}
+
+                Dynamically populate the "Show Districts by:" dropdown,
+                based on the demographics that are configured in the 
+                application.
+
+                {% endcomment %}
                 <select id="districtby">
                   <script type="text/javascript">
                     for (var i = 0; i < DEMOGRAPHICS.length; i++) {
@@ -170,8 +218,16 @@
                   </script>
                 </select>
               </div>
-                
+           
         {% block mode_toggle %}        
+        {% comment %}
+
+        Define a block named 'mode_toggle': this section can be overridden
+        to change the name of the button. It is entitled "Navigation" by
+        default, for viewing. For an editing interface, this button could
+        be changed to another, more informative label, such as "Edit Map".
+
+        {% endcomment %}
         <button class="toolbar_toggle" id="start_drawing">Navigation</button>
         {% endblock %}
             </div>
@@ -186,6 +242,14 @@
                 </div>
               </div>
               {% block toolset_draw %}
+              {% comment %}
+
+              Define a block named 'toolset_draw': this section is a place-
+              holder for drawing/editing tools. By default, the viewer has
+              no editing capability, so these elements would have to be
+              implemented in an editor template that extends this viewer.
+
+              {% endcomment %}
               {% endblock %}
 
               <button class="toolbar_toggle" id="edit_map_settings">Select Map View</button>
@@ -193,6 +257,11 @@
             </div>
             </div>
             {% if plan %}
+            {% comment %}
+
+            If a plan exists, show the map sidebar menu.
+
+            {% endcomment %}
             <div id="map_menu">
                 <div id="map_menu_header">
                     <button class="menu_toggle ui-icon"></button>
@@ -380,6 +449,13 @@
 		
     </div>
     {% block share_panel %}
+    {% comment %}
+
+    Define a block entitled 'share_panel': this panel would show sharing
+    options in an editor interface, but the default viewer does not have
+    that capability.
+
+    {% endcomment %}
     <div id="step-3" class="main_content share">
         <div id="saveandshare">
             <div class="explanation">
@@ -393,20 +469,45 @@
      <div class="toolset_group first"> 
        <div class="planname">
           {% if plan.name %}
+          {% comment %}
+
+          If a plan exists and has a name, show the plan name at the 
+          bottom left of the map.
+
+          {% endcomment %}
           <label>Plan Name:</label> {{ plan.name }}
           {% else %}
+          {% comment %}
+
+          No plan exists, so indicate to the user that they must select
+          a plan before anything else can happen.
+
+          {% endcomment %}
           Please select a plan
           {% endif %}
       </div>
      </div>
-     <!--<div class="toolset_group"> 
-        <div id="saveplanbtn">Save Plan</div>
-     </div>-->
      {% if plan and is_editable %}
+     {% comment %}
+
+     When a plan exists, and is editable, show a section that reflects the
+     time that the plan was saved.
+
+     {% endcomment %}
      <div class="toolset_group">
         {% if plan.edited %}
+          {% comment %}
+
+          Show the edited time of the plan.
+
+          {% endcomment %}
           <div id="saveplaninfo" class="savedat">{{ plan.edited.isoformat }} </div>
         {% else %}
+          {% comment %}
+
+          Indicate that the plan has not yet been saved.
+
+          {% endcomment %}
           <div id="saveplaninfo" class="savedat">Plan not saved</div>
         {% endif %}
       </div>
@@ -418,9 +519,18 @@
 <div id="working" title="Please Wait">Please wait while new districts are computed...</div>
 <div id="DialogContainer"></div>
 <div class="olHandlerBoxSelectFeature" style="display:none;"></div>
+
+{% comment %}
+
+Include the markup for the account management panel.
+
+{% endcomment %}
 {% include "account.html" %}
+
 <script type="text/javascript" defer="true">
+    // run the initialization for these components when the page is ready
     $( function() {
+        // initialize a working dialog
         $('#working').dialog({
             resizable:false,
             modal:false,
@@ -433,6 +543,7 @@
                 $('.ui-dialog-titlebar-close', $(this).parent()).hide();
             }
         });
+        // initialize the plan chooser
         var choose = chooseplan({
             {% if not plan.name %}
             closable: false,
@@ -444,11 +555,24 @@
             resizable: false
         }).init();
     {% if plan.name %}
+    {% comment %}
+
+    If a plan exists, then load the geographic and demographic information
+    about this plan, for display in the sidebar menu.
+
+    {% endcomment %}
         $('.geography').load('/districtmapping/plan/{{plan.id}}/geography', { demo: 3 });
         $('.demographics').load('/districtmapping/plan/{{plan.id}}/demographics');      
     {% else %}
+    {% comment %}
+
+    If no plan, show the plan chooser, to prompt the user to create some
+    plan to edit or view.
+
+    {% endcomment %}
         choose.show();
     {% endif %}
+        // initialize the reporting interface
         var report = reports({
             reportUrl: '/districtmapping/plan/{{plan.id}}/getreport/'
         }).init();
