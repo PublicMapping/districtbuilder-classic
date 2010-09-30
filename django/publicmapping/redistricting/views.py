@@ -464,6 +464,10 @@ def getreport(request, planid):
     if settings.DEBUG:
         sys.stderr.write('bard plan:\n %s: \n' % bardplan.r_repr())
         sys.stderr.write('sorted_name_list len: %s; contents: %s\n' % (len(sorted_name_list), sorted_name_list))
+    else:
+	sys.stderr.write('settings.DEBUG: %s' %  settings.DEBUG)
+        sys.stderr.write('bard plan:\n %s: \n' % bardplan.r_repr())
+        sys.stderr.write('sorted_name_list len: %s; contents: %s\n' % (len(sorted_name_list), sorted_name_list))
 
     # Get the other report variables from the POST request.  We'll only add
     # them to the report if they're in the request
