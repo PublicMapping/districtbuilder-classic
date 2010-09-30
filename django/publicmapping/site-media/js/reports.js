@@ -149,11 +149,32 @@ reports = function(options) {
             $('#reportButtons #btnOpenReport').remove();
             $('#reportButtons').append($btnOpenReport);  
             $('button', $btnOpenReport).button();
+
+            // do some formatting
+            $('#reportPreview td.cellinside').each( function() {
+                $(this).text(addCommas($(this).text()));
+            });
         } 
         else {
             $('<div title="Report Error">Sorry, we weren\'t able to preview this report; <p>' + data.message + '</p></div>').dialog({ autoOpen:true });
         }
     };
+
+    /**
+     * Add commas to unformatted numbers in the reports preview
+     * from http://www.mredkj.com/javascript/nfbasic.html
+     */
+    var addCommas = function(nStr) {
+        nStr += '';
+        x = nStr.split('.');
+        x1 = x[0];
+        x2 = x.length > 1 ? '.' + x[1] : '';
+        var rgx = /(\d+)(\d{3})/;
+        while (rgx.test(x1)) {
+            x1 = x1.replace(rgx, '$1' + ',' + '$2');
+        }
+        return x1 + x2;
+    }
 
     return _self;
 };

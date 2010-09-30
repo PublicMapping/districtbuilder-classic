@@ -1055,8 +1055,7 @@ button#stats_legend {
 
 /* bard report previews */
 div.report {
-	background: #5e7661;
-/*	border: 3px solid #779e7b;*/
+	border: 3px solid #779e7b;
     top:40;
     height:95%;
     width: 95%;
@@ -1193,7 +1192,7 @@ table.dataframe {
 }
 
 #reportPreview td.cellinside {
-	text-align: center;
+	text-align: right;
 }
 
 #reportPreview table {
