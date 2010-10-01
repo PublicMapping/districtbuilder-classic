@@ -1,0 +1,38 @@
+== Amazon EC2 instances ==
+    If you want to launch a publicmapping instance from an AMI, you can do so from the 
+    AWS Management Console (https://console.aws.amazon.com/ec2/home)
+
+    1. Find the Amazon Machine Image (AMI) you want to use.  Check publicmapping.org to
+        get the ID of the latest AMI.
+
+    2. Right-click on the AMI and click Launch Instance.  You can choose whichever size
+        image you'd like.  You must also choose a key pair from those you've created in
+        Amazon.  Make sure your firewall rules allow web access on port 80 and SSH access
+        on port 22.
+
+    3. Once the Instance is created and running, you can view it on the Instances window
+        in the AWS Console.
+
+    4. Right-click on your instance in the console and select "Connect".  You'll be shown
+        the command to SSH to your new Instance.  You'll have to have your private key
+        for the AWS keypair you chose earlier.
+      
+        NB: The instances do not use the name "root" for the ssh account to connect with.
+        These servers are made from Canonical images and use the account name "ubuntu", e.g.
+
+             ssh -i publicmapping.pem ubuntu@ec2-75-101-251-183.compute-1.amazonaws.com 
+
+    5. Once you've connected to the AMI, you'll need to change the MAP_SERVER value in your 
+        settings.ini file to the public DNS name of your instance.  This name can be 
+        found in the AWS console in the instance description.  It's called "Public DNS"
+    
+    6. Once you've changed your map server settings, retart apache with the command:
+        
+        sudo service apache2 restart
+
+    7. You should now be able to connect to your web application at the public DNS address.
+
+    8. By default, there is an administrator account on the web app called "Admin" with the
+       password "admin".  You should change this through either the publicmapping app (Use the
+       "My Account" link in the corner) or through the Django admin application (accessible
+       through the URL http://<public DNS>/admin/)
