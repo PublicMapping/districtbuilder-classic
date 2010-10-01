@@ -294,8 +294,8 @@ def load_bard_workspace():
         global bardWorkSpaceLoaded
         bardWorkSpaceLoaded = True
 
-
-        r('trace(PMPreport, at=1, tracer=function()print(sys.calls()))')
+	if settings.DEBUG:
+	        r('trace(PMPreport, at=1, tracer=function()print(sys.calls()))')
     except:
         sys.stderr.write('BARD Could not be loaded.  Check your configuration and available memory')
         return
@@ -427,7 +427,7 @@ def getreport(request, planid):
     # district_ids using the geounit_ids as keys
     for district in districts:
         if district.simple and district.name != 'Unassigned':
-            intersecting = geounits.filter(center__bboverlaps=district.simple).values_list('id', flat=True)
+            intersecting = geounits.filter(center__within=district.simple).values_list('id', flat=True)
             intersecting = dict.fromkeys(intersecting, district.district_id)
             district_list.update(intersecting)
 
@@ -450,7 +450,6 @@ def getreport(request, planid):
         sorted_district_list.append(district_id)
     # Now we need an R Vector
     block_ids = robjects.IntVector(sorted_district_list)
-
     bardplan = r.createAssignedPlan(bardmap, block_ids)
 
     # assign names to the districts
@@ -459,11 +458,7 @@ def getreport(request, planid):
     for district in names:
        if district.name != "Unassigned":
             sorted_name_list += district.name 
-    # bardplan.do_slot_assign('levels', sorted_name_list)
-
-    if settings.DEBUG:
-        sys.stderr.write('bard plan:\n %s: \n' % bardplan.r_repr())
-        sys.stderr.write('sorted_name_list len: %s; contents: %s\n' % (len(sorted_name_list), sorted_name_list))
+    bardplan.do_slot_assign('levels', sorted_name_list)
 
     # Get the other report variables from the POST request.  We'll only add
     # them to the report if they're in the request
@@ -539,8 +534,6 @@ def getreport(request, planid):
         report = r.HTMLInitFile(tempdir, filename=filename, BackGroundColor="#BBBBEE", Title="Plan Analysis")
         title = r['HTML.title']
         r['HTML.title']("Plan Analysis", HR=2, file=report)
-        if (settings.DEBUG):
-            sys.stderr.write(bardplan.r_repr())
         # Now write the report to the temp dir
         r.PMPreport( bardplan, block_ids, file = report, popVar = pop_var, popVarExtra = pop_var_extra, ratioVars = ratio_vars, splitVars = split_vars, repCompactness = rep_compactness, repCompactnessExtra = rep_compactness_extra, repSpatial = rep_spatial, repSpatialExtra = rep_spatial_extra)
         r.HTMLEndFile()
