@@ -89,6 +89,9 @@ SECRET_KEY = config.get('publicmapping','SECRET_KEY')
 # Sessions expire when browser is close
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
+# Require https connections to send cookies
+SESSION_COOKIE_SECURE = True
+
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.load_template_source',

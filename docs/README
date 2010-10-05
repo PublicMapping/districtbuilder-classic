@@ -169,9 +169,9 @@ the necessary software using the command:
    > a2dissite default
 
  5. Make sure you have the following modules for apache enabled: proxy, 
-    proxy_http, rewrite, and wsgi
+    proxy_http, rewrite, wsgi and ssl
     
-   > a2enmod proxy proxy_http rewrite wsgi
+   > a2enmod proxy proxy_http rewrite wsgi ssl
 
  6. You may need to update /etc/apache2/mods-available/proxy.conf  
     If you see:
@@ -182,13 +182,16 @@ the necessary software using the command:
 
         Allow from All
 
- 7. To support reports, you'll need to run a separate virtual host on a 
-    port other than your public mapping project application.  You can set 
-    this in your main apache config, or in /etc/apache2/ports.conf in some
-    linux distros. Add these two lines to run reports on port 8081:
+ 7. This application requires SSL. You will need to generate your
+    own publicmapping certficate and key and place them in the /etc/ssl/certs 
+    directory with the names publicmapping.crt and publicmapping.key.
+    If you have trusted certificates created (or you prefer different names),
+    you can edit the location of the files in the publicmapping apache file.
 
-        NameVirtualHost *:8081
-        Listen 8081
+    Generating SSL certificates is beyond the scope of this README.  Check
+    the Apache web site for more info:
+
+    http://httpd.apache.org/docs/2.0/ssl/ssl_faq.html
 
 == Geoserver configuration ==
   
