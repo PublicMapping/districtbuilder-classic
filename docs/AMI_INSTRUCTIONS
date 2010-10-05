@@ -7,8 +7,7 @@
 
     2. Right-click on the AMI and click Launch Instance.  You can choose whichever size
         image you'd like.  You must also choose a key pair from those you've created in
-        Amazon.  Make sure your firewall rules allow web access on port 80 and SSH access
-        on port 22.
+        Amazon.  Make sure your firewall rules allow web access on port 80 (http), port 443 (https), 	   port 25 (smtp), port 465 (smtps)  and SSH access on port 22.
 
     3. Once the Instance is created and running, you can view it on the Instances window
         in the AWS Console.
@@ -23,8 +22,14 @@
              ssh -i publicmapping.pem ubuntu@ec2-75-101-251-183.compute-1.amazonaws.com 
 
     5. Once you've connected to the AMI, you'll need to change the MAP_SERVER value in your 
-        settings.ini file to the public DNS name of your instance.  This name can be 
+        /projects/publicmapping/local/settings.ini file to the public DNS name of your instance.
+
+
+  This name can be 
         found in the AWS console in the instance description.  It's called "Public DNS"
+
+       You'll also need to change MAP_SERVER_NSHREF to the public URL of your instance. 
+       (Note: Do not change MAP_SERVER_NS )	
     
     6. Once you've changed your map server settings, retart apache with the command:
         

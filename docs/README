@@ -26,22 +26,27 @@ the necessary software using the command:
  1. Check out the public mapping projects to the /projects directory of 
     your linux installation.
 
-    > mkdir /projects
+    > sudo mkdir /projects
     > cd /projects
 
     You can download the publicmapping source from the website or use SVN 
     to grab the code
         
-     a. If you have subversion installed, you can export the source if 
+      
+     a. If you do not have subversion installed use:
+
+		 > sudo apt-get install subversion
+
+        If you have subversion installed, you can export the source if 
         you're not going to update the code with contributions to the 
         open-source project:
 
-       > svn export https://publicmapping.svn.sourceforge.net/svnroot/publicmapping publicmapping
+       > sudo svn export https://publicmapping.svn.sourceforge.net/svnroot/publicmapping publicmapping
 
      b. If you want to contribute to the project, do a checkout so you can 
         commit later:
 
-       > svn co https://publicmapping.svn.sourceforge.net/svnroot/publicmapping publicmapping
+       > sudo svn co https://publicmapping.svn.sourceforge.net/svnroot/publicmapping publicmapping
 
      c. If you don't have subversion installed, download the project and 
         expand it into /projects/publicmapping
@@ -49,22 +54,32 @@ the necessary software using the command:
  2. Create a "local" directory next to the trunk - this is where your 
     machine-specific settings and data will go:
 
-    > mkdir /projects/publicmapping/local
+    > sudo mkdir /projects/publicmapping/local
 
  3. Copy the settings_sample.ini file to your local settings folder and 
     name it settings.ini
 
-    > cp /projects/publicmapping/trunk/docs/settings_sample.ini \
+    > sudo cp /projects/publicmapping/trunk/docs/settings_sample.ini \
         /projects/publicmapping/local/settings.ini
 
- 4. At this point, make sure that you have postgres and postgis installed.  
+ 4. a. At this point, make sure that you have postgres and postgis installed.  
     You may need to run the postgis install script if you don't have a 
     postgis template db. Check the postgis site for installation 
     instructions if you're not familiar with postgis:
 
         http://postgis.refractions.net/docs/ch02.html
 
-    Once postgis is intalled, run the publicmapping_db.sql script in the 
+   Not that the aptitude install above will not generate templates to generate templates:
+
+   >  sudo su postgres 
+   > createdb template_postgis
+   > createlang plpgsql template_postgis
+   > psql -d template_postgis -f /usr/share/postgresql/8.4/contrib/postgis.sql
+   > psql -d template_postgis -f /usr/share/postgresql/8.4/contrib/spatial_ref_sys.sql 
+   > exit
+  
+
+    b.  Once postgis is intalled, run the publicmapping_db.sql script in the 
     sql directory:
 
     > sudo -u postgres psql -f /projects/publicmapping/trunk/sql/publicmapping_db.sql
@@ -265,11 +280,8 @@ the necessary software using the command:
     as the root user so that it's accessible to the django process
     
     > sudo R
-    >> install.packages('BARD')
-    >> install.packages('R2HTML')
-    >> install.packages('gpclib')
-    >> q()
-    > n #Answer no when asked to save workspace
+    >> install.packages('BARD', dependencies=TRUE)
+    >> q("no")
 
     If you have trouble installing any of these packages, you may need to 
     hunt down and install a dependency or two, depending on your linux 
