@@ -33,7 +33,7 @@
  */
 function createLayer( name, layer, srs, extents ) {
     return new OpenLayers.Layer.WMS( name,
-        'http://' + MAP_SERVER + '/geoserver/gwc/service/wms',
+        'https://' + MAP_SERVER + '/geoserver/gwc/service/wms',
         { srs: srs,
           layers: layer,
           tiles: 'true',
@@ -222,7 +222,7 @@ function createDistrictTipDiv() {
  * Initialize the map from WMS GetCapabilities.
  */
 function init() {
-    var url = 'http://' + MAP_SERVER + '/geoserver/ows?service=wms&' +
+    var url = 'https://' + MAP_SERVER + '/geoserver/ows?service=wms&' +
         'version=1.1.1&request=GetCapabilities&namespace=' + NAMESPACE;
 
     if (window.location.host != MAP_SERVER) {
@@ -409,7 +409,7 @@ function mapinit(srs,maxExtent) {
     // Create a protocol that is used by all editing controls
     // that selects geography at the specified snap layer.
     var getProtocol = new OpenLayers.Protocol.WFS({
-        url: 'http://' + MAP_SERVER + '/geoserver/wfs',
+        url: 'https://' + MAP_SERVER + '/geoserver/wfs',
         featureType: getSnapLayer().layer,
         featureNS: NS_HREF,
         featurePrefix: NAMESPACE,
@@ -418,7 +418,7 @@ function mapinit(srs,maxExtent) {
     });
 
     var idProtocol = new OpenLayers.Protocol.WFS({
-        url: 'http://' + MAP_SERVER + '/geoserver/wfs',
+        url: 'https://' + MAP_SERVER + '/geoserver/wfs',
         featureType: 'identify_geounit',
         featureNS: NS_HREF,
         featurePrefix: NAMESPACE,

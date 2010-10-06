@@ -144,7 +144,7 @@ reports = function(options) {
         $working.dialog('close');
         if (data.success) {
             _options.previewContainer.html(data.preview); 
-            var link = 'http://' + location.host + data.file
+            var link = 'https://' + location.host + data.file
             $btnOpenReport = $('<a href="' + link + '" target="report" ><button id="btnOpenReport">Open report in a new window</button></a>');
             $('#reportButtons #btnOpenReport').remove();
             $('#reportButtons').append($btnOpenReport);  

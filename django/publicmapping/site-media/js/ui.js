@@ -271,7 +271,7 @@ $(function() {
                         $('<div title="Oops!">' + data.message + '</div>').dialog({autoOpen:true});
                     }
                     else if (textStatus == 'success') {
-                        var link ='http://' + location.host + '/districtmapping/plan/' + data[0].pk + '/view/' 
+                        var link ='https://' + location.host + '/districtmapping/plan/' + data[0].pk + '/view/' 
                         $('#sharedPermalink').html('<a href="' + link + '">' + link + '</a>')
                         $('#continueEditing').click( function() {
                             $('#successfulShare').dialog('close');
