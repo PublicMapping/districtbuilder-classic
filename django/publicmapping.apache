@@ -93,7 +93,7 @@
     RewriteEngine On
 
     # This redirects report requests to an alternate port.
-    RewriteRule /districtmapping/(.*)/getreport/ http://%{HTTP_HOST}:8081/districtmapping/$1/getreport/ [NC,P]
+    RewriteRule /districtmapping/(.*)/getreport/ http://localhost:8081/districtmapping/$1/getreport/ [NC,P]
 
     # You can comment out this rewriterule and adjust your map server name accordingly to stop proxying
     # map requests through apache
