@@ -29,8 +29,20 @@
 #
 
         
-# The main publicmapping host serves the web application
-<VirtualHost *:80>
+# The main publicmapping host securely serves the web application. If you 
+# haven't enabled SSL on your web server, the app will not run
+<IfModule mod_ssl.c>
+<VirtualHost *:443>
+    # require SSL
+    SSLEngine on
+    SSLCertificateFile /etc/ssl/certs/publicmapping.crt
+    SSLCertificateKeyFile /etc/ssl/certs/publicmapping.key
+    CustomLog ssl_request_log "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \"%r\" %b"
+
+    # Directives from ubuntu's default-ssl site to make IE connections work
+	BrowserMatch "MSIE [2-6]" nokeepalive ssl-unclean-shutdown downgrade-1.0 force-response-1.0
+	BrowserMatch "MSIE [17-9]" ssl-unclean-shutdown
+
     ServerAdmin AzaveaDev@azavea.com
     WSGIDaemonProcess geodjango user=www-data group=www-data processes=10 threads=1 display-name=publicmapping
     WSGIProcessGroup geodjango
@@ -78,21 +90,34 @@
 
     CustomLog /var/log/apache2/publicmapping-access.log combined
 
-    # This redirects report requests to an alternate port.
     RewriteEngine On
+
+    # This redirects report requests to an alternate port.
     RewriteRule /districtmapping/(.*)/getreport/ http://%{HTTP_HOST}:8081/districtmapping/$1/getreport/ [NC,P]
+
     # You can comment out this rewriterule and adjust your map server name accordingly to stop proxying
     # map requests through apache
     RewriteRule /geoserver/(.*) http://%{HTTP_HOST}:8082/geoserver/$1 [NC,P]
+
     RewriteLog /var/log/apache2/publicmapping-rewrite.log
     RewriteLogLevel 0
 
+</VirtualHost>
+</IfModule>
+
+# All traffic on port 80 should be redirected to a secure port
+<VirtualHost *:80>
+    RewriteEngine On
+    RewriteCond %{SERVER_PORT} 80
+    RewriteRule ^(.*) https://%{HTTP_HOST}$1 [R,L]
 </VirtualHost>
 
 # Necessary to keep rPy2 from throwing exceptions
 WSGIRestrictStdout Off
 
 # This virtual host is responsible for running a multithreaded environment for reports
+NameVirtualHost *:8081
+Listen 8081
 <VirtualHost *:8081>
     ServerAdmin AzaveaDev@azavea.com
     WSGIDaemonProcess bard-reports user=www-data group=www-data threads=10 display-name=publicmapping-reports
@@ -101,5 +126,13 @@ WSGIRestrictStdout Off
     WSGIApplicationGroup bard-reports
     ErrorLog /var/log/apache2/bard-reporting-error.log
     CustomLog /var/log/apache2/bard-reporting-access.log combined
+    
+    # These requests are proxied through the secure server.  Non-local access forbidden.
+    <Directory />
+        Order deny,allow
+        Deny from all
+        Allow from 127.0.0.1/16
+    </Directory>
+    
 </VirtualHost>
 
