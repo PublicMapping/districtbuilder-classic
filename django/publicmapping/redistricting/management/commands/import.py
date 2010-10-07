@@ -122,6 +122,24 @@ class Command(BaseCommand):
                     simple = MultiPolygon(simple)
                 center = my_geom.centroid
 
+                # Ensure the centroid is within the geometry
+                if not center.within(my_geom):
+                    # Get the first polygon in the multipolygon
+                    first_poly = my_geom[0]
+                    # Get the extent of the first poly
+                    first_poly_extent = first_poly.extent
+                    min_x = first_poly_extent[0]
+                    max_x = first_poly_extent[2]
+                    # Create a line through the bbox and the poly center
+                    my_y = first_poly.centroid.y
+                    centerline = LineString( (min_x, my_y), (max_x, my_y))
+                    # Get the intersection of that line and the poly
+                    intersection = centerline.intersection(first_poly)
+                    if type(intersection) is MultiLineString:
+                        intersection = intersection[0]
+                    # the center of that line is my within-the-poly centroid.
+                    center = intersection.centroid
+                    
                 if not my_geom.simple:
                     print 'Geometry %d is not simple.' % feat.fid
                 if not my_geom.valid:
