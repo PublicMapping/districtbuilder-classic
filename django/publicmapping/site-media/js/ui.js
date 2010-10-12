@@ -277,6 +277,7 @@ $(function() {
                             $('#successfulShare').dialog('close');
                             $('#steps').tabs('select', '#step-1');
                         });
+                        if (typeof(_gaq) != 'undefined') { _gaq.push(['_trackEvent', 'Plans', 'Shared']); }
                         $('#successfulShare').dialog({autoOpen: true});
                     }
                 },

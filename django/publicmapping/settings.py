@@ -35,7 +35,7 @@ config.read('/projects/publicmapping/local/settings.ini')
 
 # Django settings for publicmapping project.
 
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -221,3 +221,10 @@ SLD_ROOT = '/projects/publicmapping/trunk/sld/'
 # and Geounit models. The value is the amount, in spatial units, that the
 # geometries will be simplified.
 SIMPLE_TOLERANCE = 10.0
+
+# Google analytics values
+GA_ACCOUNT = None
+GA_DOMAIN = None
+if config.has_section('analytics'):
+    GA_ACCOUNT = config.get('analytics', 'GA_ACCOUNT')
+    GA_DOMAIN = config.get('analytics', 'GA_DOMAIN')

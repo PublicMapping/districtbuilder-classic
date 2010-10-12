@@ -204,7 +204,9 @@ def commonplan(request, planid):
         'is_anonymous': request.user.username == 'anonymous',
         'userinfo': get_user_info(request.user),
         'is_editable': editable,
-        'max_dists': settings.MAX_DISTRICTS + 1
+        'max_dists': settings.MAX_DISTRICTS + 1,
+        'ga_account': settings.GA_ACCOUNT,
+        'ga_domain': settings.GA_DOMAIN
     }
 
 

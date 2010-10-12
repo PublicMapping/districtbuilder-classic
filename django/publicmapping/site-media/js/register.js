@@ -133,6 +133,7 @@ $(function(){
             success:function(data,textStatus,xhr){
                 if ($('#userid').val() == '') {
                     if (data.success) {
+                        if (typeof(_gaq) != 'undefined') { _gaq.push(['_trackEvent', 'Users', 'Registered']); }
                         $('#register').dialog('close');
                         $('<div>You\'ve been registered for the public mapping project.</div>').dialog({
                             modal:true,

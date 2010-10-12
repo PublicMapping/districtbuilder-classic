@@ -54,7 +54,13 @@ def index(request):
     Returns:
         An HTML welcome page.
     """
-    return render_to_response('index.html', {'is_anonymous':True} )
+
+    return render_to_response('index.html', {
+        'is_anonymous':True,
+        'ga_account': settings.GA_ACCOUNT,
+        'ga_domain': settings.GA_DOMAIN
+    })
+
 
 def userregister(request):
     """

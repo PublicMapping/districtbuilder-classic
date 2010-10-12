@@ -141,6 +141,7 @@ reports = function(options) {
      *   XMLHttpRequest -- The XmlHTTPRequest object.
      */
     var loadPreviewContent = function(data, textStatus, XMLHttpRequest) {
+        if (typeof(_gaq) != 'undefined') { _gaq.push(['_trackEvent', 'Reports', 'RanReport']); }
         $working.dialog('close');
         if (data.success) {
             _options.previewContainer.html(data.preview); 

@@ -49,7 +49,8 @@ chooseplan = function(options) {
        
         _eventType,
         _nameRequired,
-        _activeText;
+        _activeText,
+        _copiedPlan;
 
     /**
      * Initialize the chooser. Setup the click event for the target to
@@ -195,6 +196,7 @@ chooseplan = function(options) {
         _activeText = $('#btnSelectPlan span').text();
         $('#btnSelectPlan span').text('Please Wait...');
         var activeSelector = $('select.active');
+        _copiedPlan = activeSelector.text();
         if (_nameRequired) {
             var name = $('#txtNewName').val();
             var url = '/districtmapping/plan/' + activeSelector.val() + '/copy/';
@@ -241,6 +243,14 @@ chooseplan = function(options) {
                 OpenLayers.Element.removeClass(document.body,'olCursorWait');
             }
             return;
+        }
+
+        if (typeof(_gaq) != 'undefined' ) {
+            if (_eventType == 'template' || _eventType == 'mine') {
+                _gaq.push(['_trackEvent', 'Plans', 'Copied', _copiedPlan]);
+            } else if (_eventType == 'blank') {
+                _gaq.push(['_trackEvent', 'Plans', 'FromBlank']);
+            }
         }
 
         data = data[0];
