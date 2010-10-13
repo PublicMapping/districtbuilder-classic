@@ -27,15 +27,12 @@
 
     5. Once you've connected to the AMI, you'll need to change the MAP_SERVER value in your 
         /projects/publicmapping/local/settings.ini file to the public DNS name of your instance.
-
-
-  This name can be 
-        found in the AWS console in the instance description.  It's called "Public DNS"
-
-       You'll also need to change MAP_SERVER_NSHREF to the public URL of your instance. 
-       (Note: Do not change MAP_SERVER_NS )	
+        This name can be found in the AWS console in the instance description as "Public DNS" or
+        by running the following command on the instance
+         
+        curl http://169.254.169.254/latest/meta-data/public-dns
     
-    6. Once you've changed your map server settings, retart apache with the command:
+    6. Once you've changed your map server settings, restart apache with the command:
         
         sudo service apache2 restart
 

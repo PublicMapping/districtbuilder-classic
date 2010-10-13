@@ -25,7 +25,7 @@ License:
     limitations under the License.
  
 Author: 
-    Andrew Jennings, David Zwarg
+    David Zwarg, Andrew Jennings
 """
 
 from ConfigParser import RawConfigParser
