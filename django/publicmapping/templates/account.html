@@ -54,7 +54,7 @@
             </tr>
             <tr>
                 <td class="fname">Organization</td>
-                <td><input id="organization" name="organization" class="field"
+                <td><input id="organization" name="organization" class="field" maxlength="30"
                 {% if not is_anonymous %}
                     value="{{ userinfo.organization }}"
                 {% endif %}/></td>
