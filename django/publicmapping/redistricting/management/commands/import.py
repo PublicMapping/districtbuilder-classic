@@ -55,18 +55,21 @@ class Command(BaseCommand):
             'shapepath' : '/projects/publicmapping/local/data/OH_counties_dtl_web_mercator.shp',
             'geolevel' : 'county',
             'name_field' : 'NAME',
+            'supplemental_id_field' : 'FIPS',
             'subject_fields' : { 'POP2005' : 'Total Population' , 'BLACK' : 'Black Persons' , 'HISPANIC' : 'Hispanic or Latino' },
         },
         'block': {
             'shapepath' : '/projects/publicmapping/local/data/OH_39_census_block_web_mercator.shp',
             'geolevel' : 'block',
             'name_field' : 'NAME00',
+            'supplemental_id_field' : 'BLKIDFP00',
             'subject_fields' : { 'POPTOT' : 'Total Population' , 'POPBLK' : 'Black Persons' , 'POPHISP' : 'Hispanic or Latino' },
         },
         'tract': {
             'shapepath' : '/projects/publicmapping/local/data/OH_tracts_2000_web_mercator.shp',
             'geolevel' : 'tract',
             'name_field' : 'NAMELSAD00',
+            'supplemental_id_field' : 'CTIDFP00',
             'subject_fields' : { 'POPTOT' : 'Total Population' , 'POPBLK' : 'Black Persons' , 'POPHISP' : 'Hispanic or Latino' },
         }
     }
@@ -94,6 +97,8 @@ class Command(BaseCommand):
             level.save()
         else:
             level = level[0]
+
+        supplemental_id_field = config.get('supplemental_id_field', False)
 
         # Create the subjects we need
         subject_objects = {}
@@ -150,6 +155,8 @@ class Command(BaseCommand):
                     print 'Simplified Geometry %d is not valid.' % feat.fid
 
                 g = Geounit(geom = my_geom, name = feat.get(config['name_field']), geolevel = level, simple = simple, center = center)
+                if supplemental_id_field:
+                    g.supplemental_id = feat.get(supplemental_id_field)
                 g.save()
             except Exception as ex:
                 print 'Failed to import geometry for feature %d' % feat.fid

@@ -124,6 +124,10 @@ class Geounit(models.Model):
     # instance of a census tract or block), this can be the ID or FIPS code.
     name = models.CharField(max_length=200)
 
+    # An optional identifier that can be used with a nested id system such
+    # as census block ids or voting division ids
+    supplemental_id = models.CharField(max_length=50, db_index=True, blank=True, null=True)
+
     # The full geometry of the geounit (high detail).
     geom = models.MultiPolygonField(srid=3785)
 
@@ -1058,7 +1062,7 @@ def update_plan_edited_time(sender, **kwargs):
     plan.edited = datetime.now()
     plan.save()
 
-def set_geounit_mapping(sender, **kwargs):
+def create_unassigned_district(sender, **kwargs):
     """
     When a new plan is saved, all geounits must be inserted into the 
     Unassigned districts.
@@ -1078,9 +1082,9 @@ pre_save.connect(set_district_id, sender=District)
 # Connect the post_save signal to the update_plan_edited_time helper method
 post_save.connect(update_plan_edited_time, sender=District)
 # Connect the post_save signal from a Plan object to the 
-# set_geounit_mapping helper method (don't remove the dispatch_uid or 
+# create_unassigned_district helper method (don't remove the dispatch_uid or 
 # this signal is sent twice)
-post_save.connect(set_geounit_mapping, sender=Plan, dispatch_uid="publicmapping.redistricting.Plan")
+post_save.connect(create_unassigned_district, sender=Plan, dispatch_uid="publicmapping.redistricting.Plan")
 
 def can_edit(user, plan):
     """
