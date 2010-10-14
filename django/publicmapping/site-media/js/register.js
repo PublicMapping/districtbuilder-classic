@@ -88,6 +88,23 @@ $(function(){
             newpassword2.addClass('field');
         }
 
+        // A basic password complexity test; At least 8 characters and at least
+        // one number, one lower-case letter and one upper-case letter
+        var isComplex = function(password) {
+            return /\d/.test(password) &&
+                 /[a-z]/.test(password) &&
+                 /[A-Z]/.test(password) &&
+                 password.length >= 8;
+        };
+
+        if (!isComplex(newpassword1.val())) {
+            $('#passwordinstructions').css('color', 'red');
+            return false;
+        }
+        else {
+            $('#passwordinstructions').css('color', '');
+        }
+
         if (passwordhint.val() == '') {
             passwordhint.removeClass('field');
             passwordhint.addClass('error');
