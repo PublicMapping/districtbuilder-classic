@@ -149,6 +149,7 @@ $(function(){
             url:frm[0].action,
             success:function(data,textStatus,xhr){
                 if ($('#userid').val() == '') {
+                    $('#dupemail').css('display','none');
                     if (data.success) {
                         if (typeof(_gaq) != 'undefined') { _gaq.push(['_trackEvent', 'Users', 'Registered']); }
                         $('#register').dialog('close');
@@ -175,6 +176,7 @@ $(function(){
                         var email = $('#email');
                         email.removeClass('field');
                         email.addClass('error');
+                        $('#dupemail').css('display','block');
                     } else {
                         genericRegistrationError();
                     }

@@ -288,6 +288,9 @@ span.recommended {
     font-size: 0.75em;
     text-align: center;
 }
+div#dupemail {
+    display: none;
+}
 label.required {
     color: #ff0000;
 }

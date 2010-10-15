@@ -39,7 +39,8 @@
                 <td><input id="email" name="email" class="field" maxlength="75"
                 {% if not is_anonymous %}
                     value="{{ userinfo.email }}"
-                {% endif %}/></td>
+                {% endif %}/><br/>
+		<div id="dupemail"><span class="recommended">Sorry, that email address is already registered. Please use a different email address.</span></div></td>
             </tr>
             <tr>
                 <td class="fname">First Name</td>
