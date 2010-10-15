@@ -156,7 +156,8 @@ def import_via_blockfile(name, blockfile):
             if dist_id in new_districts:
                 new_districts[dist_id].append(row['code'])
             else:
-                new_districts[dist_id] = list(row['code'])
+                new_districts[dist_id] = list()
+                new_districts[dist_id].append(row['code'])
         except Exception as ex:
             print 'Didn\'t import row: %s' % row 
             print '\t%s' % ex
