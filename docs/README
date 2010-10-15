@@ -193,6 +193,11 @@ the necessary software using the command:
 
     http://httpd.apache.org/docs/2.0/ssl/ssl_faq.html
 
+ 8. This application runs as the apache user, usually www-data.  Be sure the your
+    file permissions allow for the www-data to read the project directories.  Only
+    the reports directory needs to be writable by www-data.  No files are required
+    to be readable by "all".
+
 == Geoserver configuration ==
   
  1. To install geoserver, first make sure Tomcat is installed and running
@@ -290,6 +295,14 @@ the necessary software using the command:
     hunt down and install a dependency or two, depending on your linux 
     distribution.  NB: R packages are installed from source so you'll need
     the build-essential package to install BARD.
+
+  2. By default, reports are served from /projects/publicmapping/local/reports.
+     You can make this directory and give it the appropriate permissions with the 
+     command:
+        
+      sudo mkdir /projects/publicmapping/local/reports
+      sudo chgrp www-data /projects/publicmapping/local/reports
+      sudo chmod 770 /projects/publicmapping/local/reports
     
     
 == Data Configuration ==

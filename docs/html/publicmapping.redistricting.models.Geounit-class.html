@@ -66,16 +66,17 @@
 <center>
 <center>  <map id="uml_class_diagram_for_publicma_15" name="uml_class_diagram_for_publicma_15">
 <area shape="rect" href="publicmapping.redistricting.models.Geounit-class.html#name" title="publicmapping.redistricting.models.Geounit.name" alt="" coords="17,28,369,47"/>
-<area shape="rect" href="publicmapping.redistricting.models.Geounit-class.html#geom" title="publicmapping.redistricting.models.Geounit.geom" alt="" coords="17,47,369,65"/>
-<area shape="rect" href="publicmapping.redistricting.models.Geounit-class.html#simple" title="publicmapping.redistricting.models.Geounit.simple" alt="" coords="17,65,369,84"/>
-<area shape="rect" href="publicmapping.redistricting.models.Geounit-class.html#center" title="publicmapping.redistricting.models.Geounit.center" alt="" coords="17,84,369,103"/>
-<area shape="rect" href="publicmapping.redistricting.models.Geounit-class.html#geolevel" title="publicmapping.redistricting.models.Geounit.geolevel" alt="" coords="17,103,369,121"/>
-<area shape="rect" href="publicmapping.redistricting.models.Geounit-class.html#objects" title="publicmapping.redistricting.models.Geounit.objects" alt="" coords="17,121,369,140"/>
-<area shape="rect" href="publicmapping.redistricting.models.Geounit-class.html#get_base_geounits" title="Get the list of geounits at the base geolevel inside the &#160;geometry of geounit_ids." alt="" coords="17,143,369,161"/>
-<area shape="rect" href="publicmapping.redistricting.models.Geounit-class.html#get_base_geounits_within" title="Get the &#160;list of geounits at the base geolevel inside a geometry." alt="" coords="17,161,369,180"/>
-<area shape="rect" href="publicmapping.redistricting.models.Geounit-class.html#get_mixed_geounits" title="Spatially search for the largest Geounits inside or outside a &#160;boundary." alt="" coords="17,180,369,199"/>
-<area shape="rect" href="publicmapping.redistricting.models.Geounit-class.html#__unicode__" title="Represent the Geounit as a unicode string." alt="" coords="17,199,369,217"/>
-<area shape="rect" href="publicmapping.redistricting.models.Geounit-class.html" title="A discrete areal unit." alt="" coords="16,11,371,219"/>
+<area shape="rect" href="publicmapping.redistricting.models.Geounit-class.html#supplemental_id" title="publicmapping.redistricting.models.Geounit.supplemental_id" alt="" coords="17,47,369,65"/>
+<area shape="rect" href="publicmapping.redistricting.models.Geounit-class.html#geom" title="publicmapping.redistricting.models.Geounit.geom" alt="" coords="17,65,369,84"/>
+<area shape="rect" href="publicmapping.redistricting.models.Geounit-class.html#simple" title="publicmapping.redistricting.models.Geounit.simple" alt="" coords="17,84,369,103"/>
+<area shape="rect" href="publicmapping.redistricting.models.Geounit-class.html#center" title="publicmapping.redistricting.models.Geounit.center" alt="" coords="17,103,369,121"/>
+<area shape="rect" href="publicmapping.redistricting.models.Geounit-class.html#geolevel" title="publicmapping.redistricting.models.Geounit.geolevel" alt="" coords="17,121,369,140"/>
+<area shape="rect" href="publicmapping.redistricting.models.Geounit-class.html#objects" title="publicmapping.redistricting.models.Geounit.objects" alt="" coords="17,140,369,159"/>
+<area shape="rect" href="publicmapping.redistricting.models.Geounit-class.html#get_base_geounits" title="Get the list of geounits at the base geolevel inside the &#160;geometry of geounit_ids." alt="" coords="17,161,369,180"/>
+<area shape="rect" href="publicmapping.redistricting.models.Geounit-class.html#get_base_geounits_within" title="Get the &#160;list of geounits at the base geolevel inside a geometry." alt="" coords="17,180,369,199"/>
+<area shape="rect" href="publicmapping.redistricting.models.Geounit-class.html#get_mixed_geounits" title="Spatially search for the largest Geounits inside or outside a &#160;boundary." alt="" coords="17,199,369,217"/>
+<area shape="rect" href="publicmapping.redistricting.models.Geounit-class.html#__unicode__" title="Represent the Geounit as a unicode string." alt="" coords="17,217,369,236"/>
+<area shape="rect" href="publicmapping.redistricting.models.Geounit-class.html" title="A discrete areal unit." alt="" coords="16,11,371,237"/>
 </map>
   <img src="uml_class_diagram_for_publicma_15.gif" alt='' usemap="#uml_class_diagram_for_publicma_15" ismap="ismap" class="graph-without-title" />
 </center>
@@ -218,6 +219,14 @@ boundary.</td>
       <span class="summary-type">&nbsp;</span>
     </td><td class="summary">
         <a name="name"></a><span class="summary-name">name</span> = <code title="models.CharField(max_length= 200)">models.CharField(max_length= 200)</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="publicmapping.redistricting.models.Geounit-class.html#supplemental_id" class="summary-name">supplemental_id</a> = <code title="models.CharField(max_length= 50, db_index= True, blank= True, null= Tr\
+ue)">models.CharField(max_length= 50, db_index= T<code class="variable-ellipsis">...</code></code>
     </td>
   </tr>
 <tr>
@@ -428,6 +437,44 @@ Returns:
 </td></tr></table>
 </div>
 <br />
+<!-- ==================== CLASS VARIABLE DETAILS ==================== -->
+<a name="section-ClassVariableDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Class Variable Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-ClassVariableDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="supplemental_id"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">supplemental_id</h3>
+  
+  <dl class="fields">
+  </dl>
+  <dl class="fields">
+    <dt>Value:</dt>
+      <dd><table><tr><td><pre class="variable">
+models.CharField(max_length= 50, db_index= True, blank= True, null= Tr<span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
+ue)
+</pre></td></tr></table>
+</dd>
+  </dl>
+</td></tr></table>
+</div>
+<br />
 <!-- ==================== NAVIGATION BAR ==================== -->
 <table class="navbar" border="0" width="100%" cellpadding="0"
        bgcolor="#a0c0ff" cellspacing="0">
@@ -459,7 +506,7 @@ Returns:
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">
-    Generated by Epydoc 3.0.1 on Thu Sep 30 16:14:57 2010
+    Generated by Epydoc 3.0.1 on Thu Oct 14 18:01:31 2010
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

@@ -4,13 +4,16 @@ publicmapping.redistricting.admin	publicmapping.redistricting.admin-module.html
 publicmapping.redistricting.management	publicmapping.redistricting.management-module.html
 publicmapping.redistricting.management.commands	publicmapping.redistricting.management.commands-module.html
 publicmapping.redistricting.management.commands.defaultplan	publicmapping.redistricting.management.commands.defaultplan-module.html
+publicmapping.redistricting.management.commands.defaultplan.create_default_plan	publicmapping.redistricting.management.commands.defaultplan-module.html#create_default_plan
+publicmapping.redistricting.management.commands.defaultplan.import_via_shapefile	publicmapping.redistricting.management.commands.defaultplan-module.html#import_via_shapefile
+publicmapping.redistricting.management.commands.defaultplan.import_via_blockfile	publicmapping.redistricting.management.commands.defaultplan-module.html#import_via_blockfile
 publicmapping.redistricting.management.commands.demographics	publicmapping.redistricting.management.commands.demographics-module.html
 publicmapping.redistricting.management.commands.import	publicmapping.redistricting.management.commands.import-module.html
 publicmapping.redistricting.models	publicmapping.redistricting.models-module.html
-publicmapping.redistricting.models.set_geounit_mapping	publicmapping.redistricting.models-module.html#set_geounit_mapping
 publicmapping.redistricting.models.update_profile	publicmapping.redistricting.models-module.html#update_profile
 publicmapping.redistricting.models.update_plan_edited_time	publicmapping.redistricting.models-module.html#update_plan_edited_time
 publicmapping.redistricting.models.set_district_id	publicmapping.redistricting.models-module.html#set_district_id
+publicmapping.redistricting.models.create_unassigned_district	publicmapping.redistricting.models-module.html#create_unassigned_district
 publicmapping.redistricting.models.enforce_multi	publicmapping.redistricting.models-module.html#enforce_multi
 publicmapping.redistricting.models.can_edit	publicmapping.redistricting.models-module.html#can_edit
 publicmapping.redistricting.models.empty_geom	publicmapping.redistricting.models-module.html#empty_geom
@@ -135,7 +138,7 @@ publicmapping.redistricting.models.Geolevel	publicmapping.redistricting.models.G
 publicmapping.redistricting.models.Geolevel.name	publicmapping.redistricting.models.Geolevel-class.html#name
 publicmapping.redistricting.models.Geolevel.__unicode__	publicmapping.redistricting.models.Geolevel-class.html#__unicode__
 publicmapping.redistricting.models.Geounit	publicmapping.redistricting.models.Geounit-class.html
-publicmapping.redistricting.models.Geounit.name	publicmapping.redistricting.models.Geounit-class.html#name
+publicmapping.redistricting.models.Geounit.center	publicmapping.redistricting.models.Geounit-class.html#center
 publicmapping.redistricting.models.Geounit.simple	publicmapping.redistricting.models.Geounit-class.html#simple
 publicmapping.redistricting.models.Geounit.get_base_geounits_within	publicmapping.redistricting.models.Geounit-class.html#get_base_geounits_within
 publicmapping.redistricting.models.Geounit.geolevel	publicmapping.redistricting.models.Geounit-class.html#geolevel
@@ -143,8 +146,9 @@ publicmapping.redistricting.models.Geounit.get_mixed_geounits	publicmapping.redi
 publicmapping.redistricting.models.Geounit.objects	publicmapping.redistricting.models.Geounit-class.html#objects
 publicmapping.redistricting.models.Geounit.geom	publicmapping.redistricting.models.Geounit-class.html#geom
 publicmapping.redistricting.models.Geounit.get_base_geounits	publicmapping.redistricting.models.Geounit-class.html#get_base_geounits
+publicmapping.redistricting.models.Geounit.supplemental_id	publicmapping.redistricting.models.Geounit-class.html#supplemental_id
 publicmapping.redistricting.models.Geounit.__unicode__	publicmapping.redistricting.models.Geounit-class.html#__unicode__
-publicmapping.redistricting.models.Geounit.center	publicmapping.redistricting.models.Geounit-class.html#center
+publicmapping.redistricting.models.Geounit.name	publicmapping.redistricting.models.Geounit-class.html#name
 publicmapping.redistricting.models.Plan	publicmapping.redistricting.models.Plan-class.html
 publicmapping.redistricting.models.Plan.edited	publicmapping.redistricting.models.Plan-class.html#edited
 publicmapping.redistricting.models.Plan.Meta	publicmapping.redistricting.models.Plan.Meta-class.html
