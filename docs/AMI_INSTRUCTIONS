@@ -30,7 +30,7 @@
         This name can be found in the AWS console in the instance description as "Public DNS" or
         by running the following command on the instance
          
-        curl http://169.254.169.254/latest/meta-data/public-dns
+        curl http://169.254.169.254/latest/meta-data/public-hostname/
     
     6. Once you've changed your map server settings, restart apache with the command:
         
