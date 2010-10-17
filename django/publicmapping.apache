@@ -97,7 +97,7 @@
 
     # You can comment out this rewriterule and adjust your map server name accordingly to stop proxying
     # map requests through apache
-    RewriteRule /geoserver/(.*) http://%{HTTP_HOST}:8082/geoserver/$1 [NC,P]
+    RewriteRule /geoserver/(.*) http://%{HTTP_HOST}:8080/geoserver/$1 [NC,P]
 
     RewriteLog /var/log/apache2/publicmapping-rewrite.log
     RewriteLogLevel 0

@@ -222,6 +222,11 @@ function createDistrictTipDiv() {
  * Initialize the map from WMS GetCapabilities.
  */
 function init() {
+    // default map_server is on same host unless otherwise specified 
+    if (MAP_SERVER=="") {
+	MAP_SERVER=window.location.host
+    }
+
     var url = 'https://' + MAP_SERVER + '/geoserver/ows?service=wms&' +
         'version=1.1.1&request=GetCapabilities&namespace=' + NAMESPACE;
 

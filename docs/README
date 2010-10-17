@@ -20,6 +20,26 @@ the necessary software using the command:
     python-gdal python-rpy2 python-psycopg2 postgresql-8.4-postgis \
     sun-java6-jdk tomcat6 tomcat6-admin r-base-dev build-essential \
     
+In order to allow recovery of passwords, a mail server is recommended. By default 
+the application will use a locally running mailserver. To install on a debian-based system:
+
+> sudo apt-get install sendmail-bin
+> sugo apt-get install mailx 
+
+( The latter is used for external applications such as cron-apt to send mail. )
+
+It is also recommended to keep your system up to date with security patches. One way to
+enable automatic updates with debian-based systems:
+
+> sudo apt-get install cron-apt
+
+You may also want to enable automatic upgrades with cron-apt. To do so create
+/etc/cron-apt/action.d/2-upgrade with the following contents:
+
+---
+autoclean -y
+upgrade -y -o quiet=2
+---
 
 == Installation ==
 
@@ -71,7 +91,7 @@ the necessary software using the command:
 
    Not that the aptitude install above will not generate templates to generate templates:
 
-   >  sudo su postgres 
+   > sudo su postgres 
    > createdb template_postgis
    > createlang plpgsql template_postgis
    > psql -d template_postgis -f /usr/share/postgresql/8.4/contrib/postgis.sql
@@ -109,10 +129,18 @@ the necessary software using the command:
     > python ./manage.py syncdb
 
  9. To import your data, you'll need to configure the import.py command 
-    in the "/trunk/publicmapping/redistricting/management/commands" 
-    directory. Using your favorite text editor, update the shapefile paths 
-    and subject configuration to match your data. Then run the import 
-    script admin command:
+    in the "/trunk/publicmapping/django/redistricting/management/commands" 
+    directory. 
+   
+   Unzip the datafile in /projects/publicmapping/trunk/data to the import directory: /projects/local/data/:
+
+    >  mkdir /projects/publicmapping/local/data 
+    > (cd  /projects/publicmapping/local/data ; unzip /projects/publicmapping/trunk/data/2010_07_15_OHdata.zip )
+
+   OR, Using your favorite text editor, update the shapefile paths 
+    and subject configuration to match your data. 
+
+    Then run the import script admin command:
 
     > python ./manage.py import county tract block
     
@@ -153,7 +181,11 @@ the necessary software using the command:
     Apache config directory (typically /etc/apache2/sites-available/)
 
     > cp /projects/publicmapping/trunk/django/publicmapping.apache \
-        /etc/apache2/sites-enabled/publicmapping
+        /etc/apache2/sites-available/publicmapping
+
+    Thenk link this file to the sites-enabled directory
+
+    > ln -s /etc/apache2/sites-available/publicmapping  /etc/apache2/sites-enabled/publicmapping
 
  2. Enable the new publicmapping site in apache
 
@@ -197,6 +229,12 @@ the necessary software using the command:
     file permissions allow for the www-data to read the project directories.  Only
     the reports directory needs to be writable by www-data.  No files are required
     to be readable by "all".
+
+      sudo mkdir /projects/publicmapping/local/reports
+      sudo chgrp -R www-data /projects/publicmapping/
+      sudo chmod -R 750 /projects/publicmapping/
+      sudo chmod 770 /projects/publicmapping/local/reports
+   
 
 == Geoserver configuration ==
   
@@ -320,7 +358,7 @@ the necessary software using the command:
 
 == EMail ==
     If you'd like to allow users to retrieve forgotten passwords, make sure you 
-    set the MAIL options in the settings.py file.
+    set the MAIL options in the settings.py file, if you are using an extrenal mail server. 
 
 == Documentation ==
     The class documentation is available on any instance at http://hostname/docs/. 

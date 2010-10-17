@@ -37,6 +37,7 @@
         sudo service apache2 restart
 
     7. You should now be able to connect to your web application at the public DNS address.
+       (This is viewable from the EC2 console) 
 
     8. By default, there is an administrator account on the web app called "Admin" with the
        password "admin".  You should change this through either the publicmapping app (Use the
