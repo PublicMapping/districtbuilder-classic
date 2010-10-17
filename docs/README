@@ -24,7 +24,7 @@ In order to allow recovery of passwords, a mail server is recommended. By defaul
 the application will use a locally running mailserver. To install on a debian-based system:
 
 > sudo apt-get install sendmail-bin
-> sugo apt-get install mailx 
+> sugo apt-get install mailutils
 
 ( The latter is used for external applications such as cron-apt to send mail. )
 
