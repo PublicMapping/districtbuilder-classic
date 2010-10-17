@@ -16,7 +16,21 @@
     3. Once the Instance is created and running, you can view it on the Instances window
         in the AWS Console.
 
-    4. Right-click on your instance in the console and select "Connect".  You'll be shown
+    4. You should now be able to connect to your web application at the public DNS address.
+       (This is viewable from the EC2 console) 
+
+    5. By default, there is an administrator account on the web app called "Admin" with the
+       password "admin".  You should change this through either the publicmapping app (Use the
+       "My Account" link in the corner) or through the Django admin application (accessible
+       through the URL http://<public DNS>/admin/)
+
+
+Optional: 
+
+You can connect to your instance and change any of the settings.ini configuration values 
+from their defaults. 
+
+    1. Right-click on your instance in the console and select "Connect".  You'll be shown
         the command to SSH to your new Instance.  You'll have to have your private key
         for the AWS keypair you chose earlier.
       
@@ -25,10 +39,7 @@
 
              ssh -i publicmapping.pem ubuntu@ec2-75-101-251-183.compute-1.amazonaws.com 
 
-    5. Once you've connected to the AMI, you'll need to change the MAP_SERVER value in your 
-        /projects/publicmapping/local/settings.ini file to the public DNS name of your instance.
-        This name can be found in the AWS console in the instance description as "Public DNS" or
-        by running the following command on the instance
+    2. To check the public DNS name of your instance,  run the following command on the instance
          
         curl http://169.254.169.254/latest/meta-data/public-hostname/
     
@@ -36,10 +47,7 @@
         
         sudo service apache2 restart
 
-    7. You should now be able to connect to your web application at the public DNS address.
-       (This is viewable from the EC2 console) 
+    (Note: using "touch /projects/publicmapping/trunk/django/publicmapping.wsgi" should
+   	also reload the app if changes are limited to the django site )
 
-    8. By default, there is an administrator account on the web app called "Admin" with the
-       password "admin".  You should change this through either the publicmapping app (Use the
-       "My Account" link in the corner) or through the Django admin application (accessible
-       through the URL http://<public DNS>/admin/)
+
