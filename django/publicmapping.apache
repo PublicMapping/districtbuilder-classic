@@ -118,6 +118,7 @@ WSGIRestrictStdout Off
 # This virtual host is responsible for running a multithreaded environment for reports
 NameVirtualHost *:8081
 Listen 8081
+WSGIImportScript /projects/publicmapping/trunk/django/reports.wsgi process-group=bard-reports application-group=bard-reports
 <VirtualHost *:8081>
     ServerAdmin AzaveaDev@azavea.com
     WSGIDaemonProcess bard-reports user=www-data group=www-data threads=10 display-name=publicmapping-reports

@@ -135,7 +135,7 @@ upgrade -y -o quiet=2
    Unzip the datafile in /projects/publicmapping/trunk/data to the import directory: /projects/local/data/:
 
     >  mkdir /projects/publicmapping/local/data 
-    > (cd  /projects/publicmapping/local/data ; unzip /projects/publicmapping/trunk/data/2010_07_15_OHdata.zip )
+    > (cd  /projects/publicmapping/local/data ; unzip /projects/publicmapping/data/2010_07_15_OHdata.zip )
 
    OR, Using your favorite text editor, update the shapefile paths 
     and subject configuration to match your data. 
@@ -182,10 +182,6 @@ upgrade -y -o quiet=2
 
     > cp /projects/publicmapping/trunk/django/publicmapping.apache \
         /etc/apache2/sites-available/publicmapping
-
-    Thenk link this file to the sites-enabled directory
-
-    > ln -s /etc/apache2/sites-available/publicmapping  /etc/apache2/sites-enabled/publicmapping
 
  2. Enable the new publicmapping site in apache
 
