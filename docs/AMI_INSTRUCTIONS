@@ -8,7 +8,11 @@
     2. Right-click on the AMI and click Launch Instance.  You can choose whichever size
         image you'd like.  You must also choose a key pair from those you've created in
         Amazon.  Make sure your firewall rules allow access on ports 80 and 443 (http(s)),
-        22 (SSH for administration), 25 (smtp) and 465 (smtps) for all users of the site.
+        22 (SSH for administration)
+
+       Allow ports 25 (smtp) and 465 (smtps) for all users of the site if you wish the
+	system to receive incoming mail.
+
         To administer geoserver, you'll need to allow connections on port 8080 for your
         administrators. Port 8081 may also be useful in troubleshooting if BARD reporting
         does not work.
