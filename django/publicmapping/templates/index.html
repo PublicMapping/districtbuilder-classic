@@ -33,7 +33,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="author" content="David Zwarg, Andrew Jennings" />
     <meta name="copyright" content="&copy; 2010 Micah Altman, Michael McDonald"/>
-    <title>Welcome to PublicMapping</title>
+    <title>Welcome to DistrictBuilder</title>
     <link rel="stylesheet" type="text/css" href="/site-media/css/reset.css"/>
     <link rel="stylesheet" type="text/css" href="/site-media/jquery/themes/custom-theme/jquery-ui-1.8.2.custom.css"/>
     <link rel="stylesheet" type="text/css" href="/site-media/css/publicmapping.css"/>
@@ -65,14 +65,17 @@
    
    <div id="static_header">
       <div id="logo">
-               <img src="/site-media/images/title-static.png" />
+               <!--<img src="/site-media/images/title-static.png" />-->
+	       <span style="font-size:250%; font-family:arial,sans-serif; font-weight:bold; color:white">DistrictBuilder</span>	
       </div>
       <div id="site_nav">
+        <!--
         <ul>
           <li><a href="">item</a></li>
           <li><a href="">item</a></li>
           <li><a class="last" href="">item</a></li>    
         </ul>
+	-->
       </div>
       <div class="clear"></div>
     </div>
@@ -86,15 +89,14 @@
         <div id="news">
           <h3>About the Public Mapping Project</h3>
           <ul>
-            <li>Frequently Asked Questions</li>
-            <li>Quick Start Guide</li>
-            <li>Redistricting Resources</li>
-            <li>... more ...</li>
+            <li><a href="http://www.publicmapping.org/faq">Frequently Asked Questions</a></li>
+            <li><a href="http://www.publicmapping.org/resources/software">Quick Start Guide</a></li>
+            <li><a href="http://www.publicmapping.org/resources/redistricting">Redistricting Resources</a></li>
           </ul>
         </div>
 
 
-          <button id="new_to_redistricting">NEW TO REDISTRICTING?<br/><span class="take_a_tour">Take a Tour</span></button>
+          <a href="http://www.publicmapping.org"><button id="new_to_redistricting">NEW TO REDISTRICTING?<br/><span class="take_a_tour">Take a Tour</span></button></a>
 
       </div>
 
@@ -195,8 +197,8 @@
     </div>
 
     <div id="footer">
-        <div id="copyright">Copyright &copy; 2010. All Rights Reserved</div>
-        <div id="sponsors">Sponsor Logos</div>
+        <div id="copyright"><a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png" /></a><!--<br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.-->  </div>
+        <div id="sponsors"><!--Sponsor Logos--></div>
     </div>
     </div>
     <script type="text/javascript" src="/site-media/jquery/jquery-1.4.2.js"></script>
