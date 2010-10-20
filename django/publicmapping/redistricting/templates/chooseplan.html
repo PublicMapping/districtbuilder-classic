@@ -27,15 +27,15 @@
         Andrew Jennings, David Zwarg
 
 {% endcomment %}
-<div id="PlanChooser" title = "Choose a Plan. {% if not is_anonymous %} Start Drawing.{% endif %}">
+<div id="PlanChooser" title = "Choose a Plan. {% if is_registered %} Start Drawing.{% endif %}">
 
 
   <ul id="TemplateTypeButtons">
-    {% if not is_anonymous %}
+    {% if is_registered %}
     <li id="btnTemplate">Template</li>
     {% endif %}
     <li id="btnShared">Shared Plans</li>
-    {% if not is_anonymous %}
+    {% if is_registered %}
     <li id="btnMine">Plans saved by {{ user }}</li>
     <li id="btnBlank">Blank Map</li>  
     {% endif %}
@@ -85,7 +85,7 @@
         </div>
 </div>
 
-{% if not is_anonymous %}
+{% if is_registered %}
 <div id="NewName">
     <label for="txtNewName" id="lblNewName">Name your new plan:</label>
     <input type="text" id="txtNewName" />

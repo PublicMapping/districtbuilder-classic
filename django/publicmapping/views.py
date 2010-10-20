@@ -56,7 +56,7 @@ def index(request):
     """
 
     return render_to_response('index.html', {
-        'is_anonymous':True,
+        'is_registered':False,
         'ga_account': settings.GA_ACCOUNT,
         'ga_domain': settings.GA_DOMAIN
     })

@@ -128,7 +128,7 @@
     <div id="logo"><img src="/site-media/images/title-app.png" /></div>
     <div id="site_nav">
         <ul>
-            {% if is_anonymous %}
+            {% if not is_registered %}
             {% comment %}
 
             If the user is anonymous, display a login link.
@@ -570,7 +570,7 @@ Include the markup for the account management panel.
             {% if not plan.name %}
             closable: false,
             {% endif %}
-            anonymous: {% if is_anonymous %}true{% else %}false{% endif %},
+            anonymous: {% if is_registered %}false{% else %}true{% endif %},
             target: $('#difplanbtn'),
             container: $('#DialogContainer'),
             modal: true,

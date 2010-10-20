@@ -201,7 +201,7 @@ def commonplan(request, planid):
         'snaplayers': snaplayers,
         'rules': rules,
         'unassigned_id': unassigned_id,
-        'is_anonymous': request.user.username == 'anonymous',
+        'is_registered': request.user.username != 'anonymous' and request.user.username != '',
         'userinfo': get_user_info(request.user),
         'is_editable': editable,
         'max_dists': settings.MAX_DISTRICTS + 1,
@@ -694,7 +694,7 @@ def chooseplan(request):
             'shared': shared,
             'mine': mine,
             'user': request.user,
-            'is_anonymous': request.user.username == 'anonymous'
+            'is_registered': request.user.username != 'anonymous' and request.user.username != ''
         })
 
 @login_required
