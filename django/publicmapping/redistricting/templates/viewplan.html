@@ -55,6 +55,8 @@
         var NAMESPACE = '{{ namespace }}';
         // The namespace HREF configured for WFS requests
         var NS_HREF = '{{ ns_href }}';
+        // The maximum number of features that can be manipulated at once.
+        var FEATURE_LIMIT = {{ feature_limit }};
 
         // The ID of the plan that this page is viewing
         var PLAN_ID = {% if plan %}{{ plan.id }}{% else %}0{% endif %};

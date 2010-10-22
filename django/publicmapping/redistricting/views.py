@@ -1,5 +1,5 @@
 """
-Define the views used by the redistricting app.
+Django views used by the redistricting application.
 
 The methods in redistricting.views define the views used to interact with
 the models in the redistricting application. Each method relates to one 
@@ -197,6 +197,7 @@ def commonplan(request, planid):
         'mapserver': settings.MAP_SERVER,
         'namespace': settings.MAP_SERVER_NS,
         'ns_href': settings.MAP_SERVER_NSHREF,
+        'feature_limit': settings.FEATURE_LIMIT,
         'demographics': layers,
         'snaplayers': snaplayers,
         'rules': rules,

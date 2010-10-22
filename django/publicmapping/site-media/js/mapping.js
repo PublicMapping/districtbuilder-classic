@@ -544,6 +544,11 @@ function mapinit(srs,maxExtent) {
             selection.removeFeatures(removeme);
         }
         else {
+            if (features.length > FEATURE_LIMIT) {
+                alert('You cannot select that many features.\n\nConsider drawing a smaller area with the selection tool.');
+                return;
+            }
+
             var addme = [];
             for (var i = 0; i < features.length; i++) {
                 var match = false;
@@ -553,7 +558,13 @@ function mapinit(srs,maxExtent) {
                     }
                 }
                 if (!match) {
-                    addme.push(features[i])
+                    if (selection.features.length > FEATURE_LIMIT) {
+                        alert('You cannot select any more features.\n\nConsider assigning your current selection to a district first.');
+                        break;
+                    }
+                    else {
+                        addme.push(features[i]);
+                    }
                 }
             }
             selection.addFeatures(addme);
