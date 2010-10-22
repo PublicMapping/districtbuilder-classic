@@ -422,7 +422,8 @@ function mapinit(srs,maxExtent) {
         featureNS: NS_HREF,
         featurePrefix: NAMESPACE,
         srsName: srs,
-        geometryName: 'geom'
+        geometryName: 'geom',
+	maxFeatures: FEATURE_LIMIT + 1
     });
 
     var idProtocol = new OpenLayers.Protocol.WFS({
@@ -547,10 +548,14 @@ function mapinit(srs,maxExtent) {
             selection.removeFeatures(removeme);
         }
         else {
+	    // Check to make sure we haven't exceeded the FEATURE_LIMIT in this selection or total selection
             if (features.length > FEATURE_LIMIT) {
-                alert('You cannot select that many features.\n\nConsider drawing a smaller area with the selection tool.');
+                alert('You cannot select that many features at once.\n\nConsider drawing a smaller area with the selection tool.');
                 return;
-            }
+            } else if (features.length + selection.features.length > FEATURE_LIMIT) {
+		alert('You cannot select any more features.\n\nConsider assigning your current selection to a district first.');
+		return;
+	    }
 
             var addme = [];
             for (var i = 0; i < features.length; i++) {
@@ -561,13 +566,7 @@ function mapinit(srs,maxExtent) {
                     }
                 }
                 if (!match) {
-                    if (selection.features.length > FEATURE_LIMIT) {
-                        alert('You cannot select any more features.\n\nConsider assigning your current selection to a district first.');
-                        break;
-                    }
-                    else {
-                        addme.push(features[i]);
-                    }
+		    addme.push(features[i]);
                 }
             }
             selection.addFeatures(addme);

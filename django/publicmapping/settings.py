@@ -35,7 +35,7 @@ config.read('/projects/publicmapping/local/settings.ini')
 
 # Django settings for publicmapping project.
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -159,7 +159,7 @@ MAP_SERVER_NS = config.get('publicmapping', 'MAP_SERVER_NS')
 MAP_SERVER_NSHREF = config.get('publicmapping', 'MAP_SERVER_NSHREF')
 
 # The maximum number of features that can be manipulated at once
-FEATURE_LIMIT = 100
+FEATURE_LIMIT = 500
 
 # The id of the 'base geolevel', the smallest geounit of which the 
 # other geounits are composed
