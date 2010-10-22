@@ -59,6 +59,8 @@
           <button id="dragdrop_tool" class="titletip" title="Select areas on the map then drag them to into a district for reassignment"></button>
         </div>
       </div>
+      {% comment %}
+        Removed History block here so feature doesn't appear
       <div class="toolset_group">
         <label>History</label>
         <div>
@@ -67,6 +69,7 @@
           <input id="history_cursor" type="hidden" value="{% if plan %}{{ plan.version}}{% else %}0{% endif %}"/>
         </div>
       </div>
+      {% endcomment %}
       {% endblock %}
 
     {% block share_panel %}
