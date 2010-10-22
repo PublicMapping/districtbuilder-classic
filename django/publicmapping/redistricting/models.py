@@ -541,7 +541,8 @@ class Plan(models.Model):
 
             # if this district does not overlap the selection or
             # if this district does not contain the selection
-            if not (district.geom and (district.geom.overlaps(incremental) or district.geom.contains(incremental))):
+            if not (district.geom and (district.geom.overlaps(incremental) or district.geom.contains(incremental) or 
+            district.geom.within(incremental))):
                 # if this district has later edits, REVERT them to
                 # this version of the district
                 if not district.is_latest_version():
