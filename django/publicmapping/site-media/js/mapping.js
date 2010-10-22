@@ -89,8 +89,11 @@ function getDistrictBy() {
  * Get the value of the history cursor.
  */
 function getPlanVersion() {
+    /* While history is disabled, this simply returns the plan version
+    from the view
     var ver = $('#history_cursor').val();
     return ver;
+    */ return PLAN_VERSION;
 }
 
 
