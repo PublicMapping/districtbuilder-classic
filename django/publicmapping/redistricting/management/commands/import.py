@@ -52,24 +52,24 @@ class Command(BaseCommand):
 
     configs = {
         'county': {
-            'shapepath' : '/projects/publicmapping/local/data/OH_counties_dtl_web_mercator.shp',
+            'shapepath' : '/projects/publicmapping/local/data/OH_39_census_countiesviablocks_WM.shp',
             'geolevel' : 'county',
-            'name_field' : 'NAME',
-            'supplemental_id_field' : 'FIPS',
-            'subject_fields' : { 'POP2005' : 'Total Population' , 'BLACK' : 'Black Persons' , 'HISPANIC' : 'Hispanic or Latino' },
+            'name_field' : 'COUNTYNAME',
+            'supplemental_id_field' : 'COUNTYFP00',
+            'subject_fields' : { 'POPTOT' : 'Total Population' , 'POPBLK' : 'Black Persons' , 'POPHIS' : 'Hispanic or Latino' },
+        },
+        'tract': {
+            'shapepath' : '/projects/publicmapping/local/data/OH_39_census_tractsviablocks2_wm.shp',
+            'geolevel' : 'tract',
+            'name_field' : 'TRACTNAME',
+            'supplemental_id_field' : 'TRACTID',
+            'subject_fields' : { 'POPTOT' : 'Total Population' , 'POPBLK' : 'Black Persons' , 'POPHIS' : 'Hispanic or Latino' },
         },
         'block': {
             'shapepath' : '/projects/publicmapping/local/data/OH_39_census_block_web_mercator.shp',
             'geolevel' : 'block',
             'name_field' : 'NAME00',
             'supplemental_id_field' : 'BLKIDFP00',
-            'subject_fields' : { 'POPTOT' : 'Total Population' , 'POPBLK' : 'Black Persons' , 'POPHISP' : 'Hispanic or Latino' },
-        },
-        'tract': {
-            'shapepath' : '/projects/publicmapping/local/data/OH_tracts_2000_web_mercator.shp',
-            'geolevel' : 'tract',
-            'name_field' : 'NAMELSAD00',
-            'supplemental_id_field' : 'CTIDFP00',
             'subject_fields' : { 'POPTOT' : 'Total Population' , 'POPBLK' : 'Black Persons' , 'POPHISP' : 'Hispanic or Latino' },
         }
     }
