@@ -550,12 +550,30 @@ function mapinit(srs,maxExtent) {
         else {
 	    // Check to make sure we haven't exceeded the FEATURE_LIMIT in this selection or total selection
             if (features.length > FEATURE_LIMIT) {
-                alert('You cannot select that many features at once.\n\nConsider drawing a smaller area with the selection tool.');
+                $('<div id="toomanyfeaturesdialog">You cannot select that many features at once.\n\nConsider drawing a smaller area with the selection tool.</div>').dialog({
+                    modal: true,
+                    autoOpen: true,
+                    title: 'Sorry',
+                    buttons: { 
+                        'OK': function() {
+                        $('#toomanyfeaturesdialog').remove();
+                        }
+                    }
+                });
                 return;
             } else if (features.length + selection.features.length > FEATURE_LIMIT) {
-		alert('You cannot select any more features.\n\nConsider assigning your current selection to a district first.');
-		return;
-	    }
+                $('<div id="toomanyfeaturesdialog">You cannot select any more features.\n\nConsider assigning your current selection to a district first.</div>').dialog({
+                    modal: true,
+                    autoOpen: true,
+                    title: 'Sorry',
+                    buttons: { 
+                        'OK': function() {
+                        $('#toomanyfeaturesdialog').remove();
+                        }
+                    }
+                });
+                return;
+            }
 
             var addme = [];
             for (var i = 0; i < features.length; i++) {
@@ -1580,13 +1598,13 @@ function mapinit(srs,maxExtent) {
         if (getPlanVersion() != PLAN_VERSION) {
             // unsupported at this time is creating a district based
             // of a previous version of the plan. Inform the user.
-            $('<div id="newdistrictdialog">Districts may only be created from the most current plan at this time.</div>').dialog({
+            $('<div id="nonewdistrictdialog">Districts may only be created from the most current plan at this time.</div>').dialog({
                 modal: true,
                 autoOpen: true,
                 title: 'Sorry',
                 buttons: { 
                     'OK': function() {
-                        $('#newdistrictdialog').remove();
+                        $('#nonewdistrictdialog').remove();
                     }
                 }
             });
