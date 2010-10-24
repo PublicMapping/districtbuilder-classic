@@ -21,25 +21,12 @@ the necessary software using the command:
     sun-java6-jdk tomcat6 tomcat6-admin r-base-dev build-essential \
     
 In order to allow recovery of passwords, a mail server is recommended. By default 
-the application will use a locally running mailserver. To install on a debian-based system:
-
-> sudo apt-get install sendmail-bin
-> sugo apt-get install mailutils
-
-( The latter is used for external applications such as cron-apt to send mail. )
+the application will use a locally running mailserver. 
 
 It is also recommended to keep your system up to date with security patches. One way to
-enable automatic updates with debian-based systems:
+enable automatic updates with debian-based systems.
 
-> sudo apt-get install cron-apt
-
-You may also want to enable automatic upgrades with cron-apt. To do so create
-/etc/cron-apt/action.d/2-upgrade with the following contents:
-
----
-autoclean -y
-upgrade -y -o quiet=2
----
+Running inst_extra.sh will install and configure mail and automatic update support. 
 
 == Installation ==
 
