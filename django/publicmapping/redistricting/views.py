@@ -423,34 +423,34 @@ def getreport(request, planid):
             vec += r('list("%s"="%s")' % (pair[0], pair[1]))
         return vec
     
-    district_list = dict()
     geolevel = settings.BASE_GEOLEVEL
-    geounits = Geounit.objects.filter(geolevel = settings.BASE_GEOLEVEL)
-    # For each district, add to the district_list a dictionary of 
-    # district_ids using the geounit_ids as keys
-    for district in districts:
-        if district.simple and district.name != 'Unassigned':
-            intersecting = geounits.filter(center__within=district.simple).values_list('id', flat=True)
-            intersecting = dict.fromkeys(intersecting, district.district_id)
-            district_list.update(intersecting)
 
-    # Get the min and max ids of the geounits in this level
+    # This query gets all of the geounit and district ids for the current plan 
+    query = 'select g.id, l.district_id from redistricting_geounit as g join (select d.* from redistricting_district as d join (select max(version) as latest, district_id, plan_id from redistricting_district where plan_id = %s and version <= %s group by district_id, plan_id) as v on d.district_id = v.district_id and d.plan_id = v.plan_id and d.version = v.latest) as l on ST_Contains(l.geom, g.center) where geolevel_id = %s order by g.id'
+    cursor = connection.cursor()
+    cursor.execute(query, [plan.id, plan.version, geolevel])
+
+    # Get the geounit ids we'll be iterating through
+    geounits = Geounit.objects.filter(geolevel = settings.BASE_GEOLEVEL)
     max_and_min = geounits.aggregate(Min('id'), Max('id'))
     min_id = int(max_and_min['id__min'])
     max_id = int(max_and_min['id__max'])
 
-    sorted_district_list = list()
-
-    # Sort the geounit_id list and add them to the district_list in order.
+    # Iterate through the query results to create the district_id list
     # This ordering depends on the geounits in the shapefile matching the 
     # order of the imported geounits. If this ordering is the same, the 
     # geounits' ids don't have to match their fids in the shapefile
+    sorted_district_list = list()
+    row = cursor.fetchone()
     for i in range(min_id, max_id + 1):
-        if i in district_list:
-            district_id = district_list[i]
+        if row and row[0] == i:
+            district_id = row[1]
+            row = cursor.fetchone()
         else:
             district_id = 'NA'
         sorted_district_list.append(district_id)
+    cursor.close()
+
     # Now we need an R Vector
     block_ids = robjects.IntVector(sorted_district_list)
     bardplan = r.createAssignedPlan(bardmap, block_ids)

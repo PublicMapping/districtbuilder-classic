@@ -65,7 +65,7 @@ reports = function(options) {
     };
     
     // the working dialog
-    var $working = $('<div title="Working">Please wait while your report is created</div>').dialog({ 
+    var $working = $('<div title="Working">Please wait while your report is created. This will take a few minutes.</div>').dialog({ 
         autoOpen: false,
         escapeOnClose: false,
         modal:true,
