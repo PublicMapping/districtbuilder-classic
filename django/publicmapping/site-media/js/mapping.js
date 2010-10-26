@@ -740,7 +740,8 @@ function mapinit(srs,maxExtent) {
     // Get the feature at the point in the layer.
     var featureAtPoint = function(pt, lyr) {
         for (var i = 0; i < lyr.features.length; i++) {
-            if (pt.intersects(lyr.features[i].geometry)) {
+            if (lyr.features[i].geometry != null &&
+                pt.intersects(lyr.features[i].geometry)) {
                 return lyr.features[i];
             }
         }
