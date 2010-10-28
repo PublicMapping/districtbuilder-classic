@@ -20,7 +20,7 @@ apt-get -y install sendmail-bin
 # 
 echo "Installing mail support"
 apt-get -y install tmpreaper
-echo "5 0 * * *      /usr/sbin/tmpreaper 5h /projects/publicmapping/local/reports/" > /tmp/wwwcron
+echo "5 0 * * *      /usr/sbin/tmpreaper 2d /projects/publicmapping/local/reports/ /tmp/ > /dev/null 2>&1" > /tmp/wwwcron
 crontab -u www-data /tmp/wwwcron
 
 
