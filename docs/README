@@ -26,7 +26,10 @@ the application will use a locally running mailserver.
 It is also recommended to keep your system up to date with security patches. One way to
 enable automatic updates with debian-based systems.
 
-Running inst_extra.sh will install and configure mail and automatic update support. 
+Installing tmpreaper to securely clean your reports directory regularly (see below) should be considered.
+
+Running inst_extra.sh will install and configure mail, automatic security update support, and
+install tmpreaper and cron jobs. 
 
 == Installation ==
 

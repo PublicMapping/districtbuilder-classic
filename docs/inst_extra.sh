@@ -1,8 +1,11 @@
 #!/bin/bash -x
 
 #
-# This will install mail support, configure automated installation of security patches, and
-# install all needed security patches
+# This will
+#  - install mail support
+#  - configure automated installation of security patches, and
+#  - install automatic cleanup of the reports directory
+#  - install all needed security patches
 # 
 
 #
@@ -11,6 +14,15 @@
 echo "Installing mail support"
 apt-get -y install mailutils
 apt-get -y install sendmail-bin
+
+#
+# Install report directory cleanup
+# 
+echo "Installing mail support"
+apt-get -y install tmpreaper
+echo "5 0 * * *      /usr/sbin/tmpreaper 5h /projects/publicmapping/local/reports/" > /tmp/wwwcron
+crontab -u www-data /tmp/wwwcron
+
 
 # Configure Automatic Security Updates 
 #
