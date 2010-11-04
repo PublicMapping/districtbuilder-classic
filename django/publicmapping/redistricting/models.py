@@ -30,6 +30,7 @@ Author:
 
 from django.core.exceptions import ValidationError
 from django.contrib.gis.db import models
+from django.contrib.gis.gdal import DataSource
 from django.contrib.gis.geos import MultiPolygon,GEOSGeometry,GEOSException,GeometryCollection
 from django.contrib.auth.models import User
 from django.db.models import Sum, Max, Q
@@ -41,6 +42,7 @@ from django.utils import simplejson as json
 from datetime import datetime
 from math import sqrt, pi
 from copy import copy
+from csv import DictReader
 
 class Subject(models.Model):
     """
@@ -504,12 +506,13 @@ class Plan(models.Model):
     @transaction.commit_on_success
     def add_geounits(self, districtid, geounit_ids, geolevel, version):
         """
-        Add Geounits to a District. When geounits are added to one District,
-        they are also removed from whichever district they're currently in. 
+        Add Geounits to a District. When geounits are added to one 
+        District, they are also removed from whichever district they're 
+        currently in. 
 
-        NOTE: All calls to 'simplify' use the spatial units -- the map units
-        in web mercator are meters, so simplify(tolerance=100.0) simplifies 
-        geometries to 100 meters between points (-ish).
+        NOTE: All calls to 'simplify' use the spatial units -- the map 
+        units in web mercator are meters, so simplify(tolerance=100.0) 
+        simplifies geometries to 100 meters between points (-ish).
 
         Parameters:
             districtid -- The district_id (NOT the id) of the
@@ -743,7 +746,181 @@ class Plan(models.Model):
             districts.append(value)
 
         return districts
+      
+    @staticmethod
+    def create_default(name,owner=None):
+        """
+        Create a default plan. This method supports the static "from_"
+        creation methods.
+
+        Parameters:
+            name - The name of the plan to create.
+            owner - The system user that will own this plan.
+
+        Returns:
+            A new plan, owned by owner, with one district named 
+            "Unassigned".
+        """
+
+        if not owner:
+            # if no owner, admin gets this template
+            owner = User.objects.get(username=settings.ADMINS[0][0])
+
+        # Create a new plan. This will also create an Unassigned district
+        # in the the plan.
+        plan = Plan(name=name, is_template=True, version=0, owner=owner)
+        try:
+            plan.save()
+        except Exception as ex:
+            print 'Couldn\'t save plan: %s' % ex 
+            return None
+
+        return plan
+
+    @staticmethod
+    def from_shapefile(name, shapefile, idfield, owner=None):
+        """
+        Import a shapefile into a plan. The plan shapefile must contain
+        an ID field.
+
+        Parameters:
+            name - The name of the plan
+            shapefile - The path to the shapefile
+            idfield - The name of the field in the shapefile that contains
+                the district ID of each district.
+            owner - Optional. The user who owns this plan. If not 
+                specified, defaults to the system admin.
+
+        Returns:
+            A new plan.
+        """
+        plan = Plan.create_default(name,owner)
+
+        if not plan:
+            return False
+
+        datasource = DataSource(shapefile)
+        layer = datasource[0]
+
+        # Import each feature in the new plan. 
+        # Sort by the district ID field
+        for feature in sorted(layer,key=lambda f:int(f.get(idfield))):
+            print '\tImporting "District %s"' % (feature.get(idfield),)
+
+            # Import only multipolygon shapes
+            geom = feature.geom.geos
+            if geom.geom_type == 'Polygon':
+                geom = MultiPolygon(geom)
+            elif geom.geom_type == 'MultiPolygon':
+                geom = geom
+            else:
+                geom = None
+
+            simple = geom.simplify(tolerance=settings.SIMPLE_TOLERANCE,preserve_topology=True)
+
+            # Import only multipolygon shapes
+            if simple.geom_type == 'Polygon':
+                simple = MultiPolygon(simple)
+            elif geom.geom_type == 'MultiPolygon':
+                simple  = simple
+            else:
+                simple = None
+
+            district = District(
+                district_id=int(feature.get(idfield)) + 1,
+                name='District %s' % feature.get(idfield),
+                plan=plan,
+                version=0,
+                geom=geom,
+                simple=simple)
+            district.save()
+
+            geounits = list(district.get_base_geounits_within())
+
+            print '\tUpdating district statistics...'
+            district.delta_stats(geounits,True)
+
+    @staticmethod
+    def from_blockfile(name, blockfile, owner=None):
+        """
+        Imports a plan using a block equivalency file in csv format. 
+        There should be only two columns: a CODE matching the 
+        supplemental ids of geounits and a DISTRICT integer
+        representing the district to which the geounit should belong.
+
+        Parameters:
+            name - The name of the Plan.
+            blockfile - The path to the block equivalency file.
+            owner - Optional. The user who owns this plan. If not 
+                specified, defaults to the system admin.
+
+        Returns:
+            A new plan.
+        """
+        plan = Plan.create_default(name, owner)
+
+        if not plan:
+            return None
+                
+        # initialize the dicts we'll use to store the supplemental_ids,
+        # keyed on the district_id of this plan
+        new_districts = dict()
         
+        csv_file = open(blockfile)
+        reader = DictReader(csv_file, fieldnames = ['code', 'district']) 
+        for row in reader:
+            try:
+                dist_id = int(row['district'])
+                # If the district key is present, add this row's code; 
+                # else make a new list
+                if dist_id in new_districts:
+                    new_districts[dist_id].append(row['code'])
+                else:
+                    new_districts[dist_id] = list()
+                    new_districts[dist_id].append(row['code'])
+            except Exception as ex:
+                print 'Didn\'t import row: %s' % row 
+                print '\t%s' % ex
+        csv_file.close()
+
+        
+        subjects = Subject.objects.all()
+
+        # Create the district geometry from the lists of geounits
+        for district_id in new_districts.keys():
+            # Get a filter using supplemental_id
+            code_list = new_districts[district_id]
+            guFilter = Q(supplemental_id__in = code_list)
+
+            try:
+                # Build our new geometry from the union of our geounit geometries
+                new_geom = Geounit.objects.filter(guFilter).unionagg()
+                new_simple = new_geom.simplify(tolerance = settings.SIMPLE_TOLERANCE, preserve_topology=True)
+
+                # Create a new district and save it
+                new_district = District(name='District %s' % district_id, 
+                    district_id = district_id + 1, plan=plan, 
+                    geom=enforce_multi(new_geom), 
+                    simple = enforce_multi(new_simple))
+                new_district.save()
+                print 'Created %s at %s' % (new_district.name, datetime.now())
+            except Exception as ex:
+                print 'Wasn\'t able to create district %s: %s' % (district_id, ex)
+                continue
+        
+            # For each district, create the ComputedCharacteristics
+            geounit_ids = Geounit.objects.filter(guFilter).values_list('id', flat=True).order_by('id')
+            for subject in subjects:
+                try:
+                    cc_value = Characteristic.objects.filter(geounit__in = geounit_ids, 
+                        subject = subject).aggregate(Sum('number'))
+                    cc = ComputedCharacteristic(subject = subject, 
+                        number = cc_value['number__sum'], 
+                        district = new_district)
+                    cc.save()
+                except Exception as ex:
+                    print 'Wasn\'t able to create ComputedCharacteristic for district %, subject %s: %s' % (district_id, subject.name, ex)
+
 
 class PlanForm(ModelForm):
     """
