@@ -20,16 +20,17 @@ the necessary software using the command:
     python-gdal python-rpy2 python-psycopg2 postgresql-8.4-postgis \
     sun-java6-jdk tomcat6 tomcat6-admin r-base-dev build-essential \
     
-In order to allow recovery of passwords, a mail server is recommended. By default 
-the application will use a locally running mailserver. 
+In order to allow recovery of passwords, a mail server is recommended. 
+By default the application will use a locally running mailserver. 
 
-It is also recommended to keep your system up to date with security patches. One way to
-enable automatic updates with debian-based systems.
+It is also recommended to keep your system up to date with security 
+patches. One way to enable automatic updates with debian-based systems.
 
-Installing tmpreaper to securely clean your reports directory regularly (see below) should be considered.
+Installing tmpreaper to securely clean your reports directory regularly 
+(see below) should be considered.
 
-Running inst_extra.sh will install and configure mail, automatic security update support, and
-install tmpreaper and cron jobs. 
+Running inst_extra.sh will install and configure mail, automatic security 
+update support, and install tmpreaper and cron jobs. 
 
 == Installation ==
 
@@ -45,18 +46,18 @@ install tmpreaper and cron jobs.
       
      a. If you do not have subversion installed use:
 
-		 > sudo apt-get install subversion
+        > sudo apt-get install subversion
 
         If you have subversion installed, you can export the source if 
         you're not going to update the code with contributions to the 
         open-source project:
 
-       > sudo svn export https://publicmapping.svn.sourceforge.net/svnroot/publicmapping publicmapping
+        > sudo svn export https://publicmapping.svn.sourceforge.net/svnroot/publicmapping publicmapping
 
      b. If you want to contribute to the project, do a checkout so you can 
         commit later:
 
-       > sudo svn co https://publicmapping.svn.sourceforge.net/svnroot/publicmapping publicmapping
+        > sudo svn co https://publicmapping.svn.sourceforge.net/svnroot/publicmapping publicmapping
 
      c. If you don't have subversion installed, download the project and 
         expand it into /projects/publicmapping
@@ -72,29 +73,31 @@ install tmpreaper and cron jobs.
     > sudo cp /projects/publicmapping/trunk/docs/settings_sample.ini \
         /projects/publicmapping/local/settings.ini
 
- 4. a. At this point, make sure that you have postgres and postgis installed.  
+ 4. At this point, make sure that you have postgres and postgis 
+    installed.
+
     You may need to run the postgis install script if you don't have a 
     postgis template db. Check the postgis site for installation 
     instructions if you're not familiar with postgis:
 
-        http://postgis.refractions.net/docs/ch02.html
+       http://postgis.refractions.net/docs/ch02.html
 
-   Not that the aptitude install above will not generate templates to generate templates:
+    Note that the aptitude install above will not generate templates to 
+    generate templates:
 
-   > sudo su postgres 
-   > createdb template_postgis
-   > createlang plpgsql template_postgis
-   > psql -d template_postgis -f /usr/share/postgresql/8.4/contrib/postgis.sql
-   > psql -d template_postgis -f /usr/share/postgresql/8.4/contrib/spatial_ref_sys.sql 
-   > exit
-  
+    > sudo su postgres 
+    > createdb template_postgis
+    > createlang plpgsql template_postgis
+    > psql -d template_postgis -f /usr/share/postgresql/8.4/contrib/postgis.sql
+    > psql -d template_postgis -f /usr/share/postgresql/8.4/contrib/spatial_ref_sys.sql 
+    > exit
 
-    b.  Once postgis is intalled, run the publicmapping_db.sql script in the 
-    sql directory:
+ 5. Once postgis is intalled, run the publicmapping_db.sql script in 
+    the sql directory:
 
     > sudo -u postgres psql -f /projects/publicmapping/trunk/sql/publicmapping_db.sql
 
- 5. This will create a publicmapping db from the template_postgis 
+    This will create a publicmapping db from the template_postgis 
     template, along with a publicmapping user role.  The publicmapping 
     user will be assigned all permissions and ownership on the db.
 
@@ -122,12 +125,13 @@ install tmpreaper and cron jobs.
     in the "/trunk/publicmapping/django/redistricting/management/commands" 
     directory. 
    
-   Unzip the datafile in /projects/publicmapping/trunk/data to the import directory: /projects/local/data/:
+    Unzip the datafile in /projects/publicmapping/trunk/data to the import 
+    directory: /projects/local/data/:
 
     >  mkdir /projects/publicmapping/local/data 
     > (cd  /projects/publicmapping/local/data ; unzip /projects/publicmapping/data/2010_07_15_OHdata.zip )
 
-   OR, Using your favorite text editor, update the shapefile paths 
+    OR, Using your favorite text editor, update the shapefile paths 
     and subject configuration to match your data. 
 
     Then run the import script admin command:
@@ -201,20 +205,23 @@ install tmpreaper and cron jobs.
         Allow from All
 
  7. This application requires SSL. You will need to generate your
-    own publicmapping certficate and key and place them in the /etc/ssl/certs 
-    directory with the names publicmapping.crt and publicmapping.key.
-    If you have trusted certificates created (or you prefer different names),
-    you can edit the location of the files in the publicmapping apache file.
+    own publicmapping certficate and key and place them in the 
+    /etc/ssl/certs directory with the names publicmapping.crt and 
+    publicmapping.key.
+
+    If you have trusted certificates created (or you prefer different 
+    names), you can edit the location of the files in the publicmapping 
+    apache file.
 
     Generating SSL certificates is beyond the scope of this README.  Check
     the Apache web site for more info:
 
     http://httpd.apache.org/docs/2.0/ssl/ssl_faq.html
 
- 8. This application runs as the apache user, usually www-data.  Be sure the your
-    file permissions allow for the www-data to read the project directories.  Only
-    the reports directory needs to be writable by www-data.  No files are required
-    to be readable by "all".
+ 8. This application runs as the apache user, usually www-data.  Be sure 
+    the file permissions allow for the www-data to read the project 
+    directories.  Only the reports directory needs to be writable by 
+    www-data.  No files are required to be readable by "all".
 
       sudo mkdir /projects/publicmapping/local/reports
       sudo chgrp -R www-data /projects/publicmapping/
@@ -303,13 +310,35 @@ install tmpreaper and cron jobs.
     GWC link in the menu to seed some of your layers.  This will make the 
     base map layers appear faster.
 
+11. Add the REST Extension to GeoServer.
+
+     a. Change to the WEB-INF/lib directory inside of the GeoServer webapp,
+        inside of tomcat. This folder may be:
+
+        > cd /var/lib/tomcat6/webapps/geoserver/WEB-INF/lib
+
+     b. Download the GeoServer REST Extension that matches your installed
+        version of GeoServer. As of this writing, the most recent stable
+        version of GeoServer is 2.0.2
+
+        > sudo wget http://downloads.sourceforge.net/project/geoserver/GeoServer%20Extensions/2.0.2/geoserver-2.0.2-restconfig-plugin.zip
+
+     c. Extract this plugin in the current folder (lib):
+
+        > sudo unzip geoserver-2.0.2-restconfig-plugin.zip
+
+     d. Restart tomcat to pick up the changes to the geoserver application:
+     
+        > sudo /etc/init.d/tomcat6 restart
+
     
 == BARD / Reports Configuration ==
  1. The publicmapping project uses the BARD packages, written in the 
     R statistical language, to create customizable reports.  In order to 
-    use these features (you can turn them off by changing the ENABLE_REPORTS
-    setting in settings.py to "False"), you will need to install BARD and R2HTML
-    as the root user so that it's accessible to the django process
+    use these features (you can turn them off by changing the 
+    ENABLE_REPORTS setting in settings.py to "False"), you will need to 
+    install BARD and R2HTML as the root user so that it's accessible to 
+    the django process:
     
     > sudo R
     >> install.packages('BARD', dependencies=TRUE)
@@ -320,9 +349,12 @@ install tmpreaper and cron jobs.
     distribution.  NB: R packages are installed from source so you'll need
     the build-essential package to install BARD.
 
-  2. By default, reports are served from /projects/publicmapping/local/reports.
-     You can make this directory and give it the appropriate permissions with the 
-     command:
+  2. By default, reports are served from the following directory:
+
+     /projects/publicmapping/local/reports
+
+     You can make this directory and give it the appropriate permissions 
+     with the command:
         
       sudo mkdir /projects/publicmapping/local/reports
       sudo chgrp www-data /projects/publicmapping/local/reports
@@ -339,18 +371,23 @@ install tmpreaper and cron jobs.
     visible on the map, be sure to set the target value so that styling
     can be applied to the district values.
     
-    You can reach the admin interface by going to http://<yourServerName>/admin
+    You can reach the admin interface by going to:
+    
+    http://<yourServerName>/admin
     
 
-== EMail ==
-    If you'd like to allow users to retrieve forgotten passwords, make sure you 
-    set the MAIL options in the settings.py file, if you are using an extrenal mail server. 
+== E-mail ==
+    If you'd like to allow users to retrieve forgotten passwords, make 
+    sure you set the MAIL options in the settings.py file, if you are using
+    an external mail server. 
 
 == Documentation ==
-    The class documentation is available on any instance at http://hostname/docs/. 
-    Documentation is generated by epydoc.  If you make any changes to the documentation
-    or code, you can use the epydoc.config file to regenerate the documentation in the
-    docs/html folder.
+    The class documentation is available on any instance at 
+    http://hostname/docs/. Documentation is generated by epydoc. If you 
+    make any changes to the documentation or code, you can use the 
+    epydoc.config file to regenerate the documentation in the docs/html 
+    folder.
 
-    The database schema image (schema.png) was generated using postgresql autodoc
-    and graphviz.
+    The database schema image (schema.png) was generated using postgresql 
+    autodoc and graphviz.
+
