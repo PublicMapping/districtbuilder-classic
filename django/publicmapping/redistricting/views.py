@@ -1151,15 +1151,19 @@ def getutc(t):
 
 @login_required
 def getdistrictindexfile(request, planid):
+    """
+    Given a plan id, email the user a zipped copy of 
+    the district index file
+    """
     # Get the districtindexfile and create a response
     plan = Plan.objects.get(pk=planid)
     if not can_copy(request.user, plan):
         return Http404ResponseForbidden()
-    archive = DistrictIndexFile.plan2index(plan)
-    response = HttpResponse(open(archive.name).read(), content_type='application/zip')
-    response['Content-Disposition'] = 'attachment; filename=%s.zip' % plan.name
     
-    # Delete the archive file from the temp filesystem
-    os.unlink(archive.name)
+    # Start a thread to email the district index file
+    plan2indexThread = threading.Thread(target=DistrictIndexFile.plan2index, args=(plan, request.user), name='emailindex2%s' % request.user.email)
+    plan2indexThread.daemon = True
+    plan2indexThread.start()
 
-    return response
+    status = { 'success':True, 'message': 'Your district index file will be mailed to you.' }
+    return HttpResponse(json.dumps(status),mimetype='application/json')

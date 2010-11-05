@@ -25,7 +25,10 @@ Author:
 """
 
 from redistricting.models import *
-import csv, datetime, zipfile, tempfile, os
+from email.mime.application import MIMEApplication
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+import csv, datetime, zipfile, tempfile, os, smtplib, email
 
 
 class DistrictIndexFile():
@@ -122,7 +125,7 @@ class DistrictIndexFile():
                     print 'Wasn\'t able to create ComputedCharacteristic for district %, subject %s: %s' % (district_id, subject.name, ex)
 
     @staticmethod
-    def plan2index (plan):
+    def plan2index (plan, user):
         """
         Gets a zipped copy of the district index file for the
         given plan.
@@ -155,6 +158,65 @@ class DistrictIndexFile():
         
         # delete the temporary csv file
         os.unlink(f.name)
+        template = """Hello, %s.
 
-        # return the archive file to the view
-        return archive
+Here's the district index file you requested for the plan %s. Thank you for using the Public Mapping Project.
+
+Happy Redistricting!
+The Public Mapping Team"""
+        msg = template % (user.username, plan.name)
+        Email.send_email(user, msg, 'District index file for %s' % plan.name, archive)
+
+class Email():
+    @staticmethod
+    def send_email(user, text, subject, zipfile=None):
+        """
+        Send an email to a user with an optional subject and attached
+        district index file 
+
+        Parameters:
+            user -- The django user whose password will be changed.
+            subject -- the subject of the message
+            text -- the text of the message
+            zipfile -- a zip file to attach to the message            
+        Returns:
+            True if the user was emailed successfully.
+        """
+
+        admin = settings.ADMINS[0][0]
+        sender = settings.ADMINS[0][1]
+
+        text = MIMEText(text)
+
+        if zipfile:
+            msg = MIMEMultipart()
+            msg.attach(text)
+            tach = MIMEApplication(open(zipfile.name).read(), 'zip')
+            tach.add_header('Content-Disposition', 'attachment; filename=DistrictIndexFile.zip')
+            msg.attach(tach)
+        else:
+            msg = text
+
+        if subject:
+            msg['Subject'] = subject
+
+        msg['From'] = sender
+        msg['To'] = user.email
+
+        try:
+            smtp = smtplib.SMTP( settings.MAIL_SERVER, settings.MAIL_PORT )
+            smtp.ehlo()
+            if settings.MAIL_PORT == '587':
+                smtp.starttls()
+            if settings.MAIL_USERNAME != '' and settings.MAIL_PASSWORD != '':
+                smtp.login( settings.MAIL_USERNAME, settings.MAIL_PASSWORD )
+
+            smtp.sendmail( sender, [user.email], msg.as_string() )
+            smtp.quit()
+
+            if zipfile:
+                os.unlink(zipfile.name)
+
+            return True
+        except:
+            return False

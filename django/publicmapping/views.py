@@ -31,6 +31,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
 from django.conf import settings
 from django.utils import simplejson as json
+from redistricting.utils import Email
 
 # for proxy
 import urllib2
@@ -221,11 +222,7 @@ def emailpassword(user):
         True if the user was modified and notified successfully.
     """
 
-    tpl = """To: %s
-From: "%s" <%s>
-Subject: Your Password Reset Request
-
-Hello %s,
+    tpl = """Hello %s,
 
 You requested a new password for the Public Mapping Project. Sorry for the
 inconvenience!  This is your new password: "%s"
@@ -239,25 +236,15 @@ The Public Mapping Team
     sender = settings.ADMINS[0][1]
 
     newpw = ''.join([choice('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_=+') for i in range(8)])
+    msg = tpl % (user.username, newpw)
 
     try:
-        smtp = smtplib.SMTP( settings.MAIL_SERVER, settings.MAIL_PORT )
-        smtp.ehlo()
-        if settings.MAIL_PORT == '587':
-            smtp.starttls()
-        if settings.MAIL_USERNAME != '' and settings.MAIL_PASSWORD != '':
-            smtp.login( settings.MAIL_USERNAME, settings.MAIL_PASSWORD )
-
-        msg = tpl % (user.email, admin, sender, user.username, newpw)
-        smtp.sendmail( sender, user.email, msg )
-        smtp.quit()
-
         user.set_password(newpw)
         user.save()
-        return True
     except:
         return False
-
+    return Email.send_email(user, msg, 'Your Password Reset Request')
+    
 @cache_control(no_cache=True)
 def forgotpassword(request):
     """

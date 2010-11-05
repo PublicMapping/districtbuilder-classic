@@ -498,9 +498,7 @@
                 with each line listing a geounit (such as a census block) and the district to which it belongs. This file
                 can be imported to other instances of the publicmapping software or used in analysis of the plan using
                 your favorite GIS software.</p>
-                <a href="/districtmapping/plan/{{ plan.id }}/districtindexfile/">
-                   <button id="btnExportBlockfile" onclick="$('<div title=\'Exporting\'>Creating your file now. You can do other work on the site while waiting</div>').dialog({ modal:true, resizable:false });">Export</button>
-                </a>
+                <button id="btnExportBlockfile" onclick="$.post('/districtmapping/plan/{{ plan.id }}/districtindexfile/', function(data) { $('<div title=\'Exporting\'>' + data.message + '</div>').dialog({ modal:true, resizable:false }); });">Export</button>
             </div>
         </div>
     </div>
