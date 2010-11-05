@@ -472,22 +472,34 @@
         </div>
 		
     </div>
-    {% block share_panel %}
-    {% comment %}
-
-    Define a block entitled 'share_panel': this panel would show sharing
-    options in an editor interface, but the default viewer does not have
-    that capability.
-
-    {% endcomment %}
     <div id="step-3" class="main_content share">
         <div id="saveandshare">
+            {% block share_panel %}
+            {% comment %}
+
+            Define a block entitled 'share_panel': this panel would show sharing
+            options in an editor interface, but the default viewer does not have
+            that capability.
+
+            {% endcomment %}
             <div class="explanation">
                 <h3>Explanation of Shared Documents</h3>
                 <p>If you were editing a plan, you could use this tab to share your plan with others<p>
+            </div>
+            {% endblock %}
+            <hr />
+            <div class="blockfile">
+                <h3>Blockfile export</h3>
+                <p>You can export this plan to a block-equivalency file. The block file is a comma-separated-value file (csv) 
+                with each line listing a geounit (such as a census block) and the district to which it belongs. This file
+                can be imported to other instances of the publicmapping software or used in analysis of the plan using
+                your favorite GIS software.</p>
+                <a href="/districtmapping/plan/{{ plan.id }}/districtindexfile/">
+                   <button id="btnExportBlockfile" onclick="$('<div title=\'Exporting\'>Creating your file now. You can do other work on the site while waiting</div>').dialog({ modal:true, resizable:false });">Export</button>
+                </a>
+            </div>
         </div>
     </div>
-    {% endblock %}
 </div>  
 <div id="toolbar_plans">
      <div class="toolset_group first"> 

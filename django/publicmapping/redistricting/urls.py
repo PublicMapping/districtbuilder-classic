@@ -43,4 +43,5 @@ urlpatterns = patterns('publicmapping.redistricting.views',
     (r'^plan/(?P<planid>\d*)/geography', 'getgeography'),
     (r'^plan/(?P<planid>\d*)/district/new', 'newdistrict'),
     (r'^plan/(?P<planid>\d*)/district/versioned', 'simple_district_versioned'),
+    (r'^plan/(?P<planid>\d*)/districtindexfile/', 'getdistrictindexfile'),
 )

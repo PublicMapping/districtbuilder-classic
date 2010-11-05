@@ -777,6 +777,29 @@ class Plan(models.Model):
 
         return plan
 
+    def district_mapping_cursor (self, geounit_id_field="supplemental_id"):
+        """
+        Given a plan, get the district mapping info.  Each row 
+        of the returned cursor represents a geounit id and a
+        district_id.
+
+        Parameters:
+            geounit_id_field - which id field to return from the geounits
+
+        Returns:
+            A database cursor with each row containing a geounit id
+            and a district_id, respectively.
+        """
+
+        geolevel = settings.BASE_GEOLEVEL
+
+        # This query gets all of the geounit and district ids for the current plan 
+        query = 'select g.' + geounit_id_field + ', l.district_id from redistricting_geounit as g join (select d.* from redistricting_district as d join (select max(version) as latest, district_id, plan_id from redistricting_district where plan_id = %s and version <= %s group by district_id, plan_id) as v on d.district_id = v.district_id and d.plan_id = v.plan_id and d.version = v.latest) as l on ST_Contains(l.geom, g.center) where geolevel_id = %s order by g.' + geounit_id_field
+        cursor = connection.cursor()
+        cursor.execute(query, [self.id, self.version, settings.BASE_GEOLEVEL])
+
+        return cursor
+
     @staticmethod
     def from_shapefile(name, shapefile, idfield, owner=None):
         """
@@ -839,88 +862,6 @@ class Plan(models.Model):
 
             print '\tUpdating district statistics...'
             district.delta_stats(geounits,True)
-
-    @staticmethod
-    def from_blockfile(name, blockfile, owner=None):
-        """
-        Imports a plan using a block equivalency file in csv format. 
-        There should be only two columns: a CODE matching the 
-        supplemental ids of geounits and a DISTRICT integer
-        representing the district to which the geounit should belong.
-
-        Parameters:
-            name - The name of the Plan.
-            blockfile - The path to the block equivalency file.
-            owner - Optional. The user who owns this plan. If not 
-                specified, defaults to the system admin.
-
-        Returns:
-            A new plan.
-        """
-        plan = Plan.create_default(name, owner)
-
-        if not plan:
-            return None
-                
-        # initialize the dicts we'll use to store the supplemental_ids,
-        # keyed on the district_id of this plan
-        new_districts = dict()
-        
-        csv_file = open(blockfile)
-        reader = DictReader(csv_file, fieldnames = ['code', 'district']) 
-        for row in reader:
-            try:
-                dist_id = int(row['district'])
-                # If the district key is present, add this row's code; 
-                # else make a new list
-                if dist_id in new_districts:
-                    new_districts[dist_id].append(row['code'])
-                else:
-                    new_districts[dist_id] = list()
-                    new_districts[dist_id].append(row['code'])
-            except Exception as ex:
-                print 'Didn\'t import row: %s' % row 
-                print '\t%s' % ex
-        csv_file.close()
-
-        
-        subjects = Subject.objects.all()
-
-        # Create the district geometry from the lists of geounits
-        for district_id in new_districts.keys():
-            # Get a filter using supplemental_id
-            code_list = new_districts[district_id]
-            guFilter = Q(supplemental_id__in = code_list)
-
-            try:
-                # Build our new geometry from the union of our geounit geometries
-                new_geom = Geounit.objects.filter(guFilter).unionagg()
-                new_simple = new_geom.simplify(tolerance = settings.SIMPLE_TOLERANCE, preserve_topology=True)
-
-                # Create a new district and save it
-                new_district = District(name='District %s' % district_id, 
-                    district_id = district_id + 1, plan=plan, 
-                    geom=enforce_multi(new_geom), 
-                    simple = enforce_multi(new_simple))
-                new_district.save()
-                print 'Created %s at %s' % (new_district.name, datetime.now())
-            except Exception as ex:
-                print 'Wasn\'t able to create district %s: %s' % (district_id, ex)
-                continue
-        
-            # For each district, create the ComputedCharacteristics
-            geounit_ids = Geounit.objects.filter(guFilter).values_list('id', flat=True).order_by('id')
-            for subject in subjects:
-                try:
-                    cc_value = Characteristic.objects.filter(geounit__in = geounit_ids, 
-                        subject = subject).aggregate(Sum('number'))
-                    cc = ComputedCharacteristic(subject = subject, 
-                        number = cc_value['number__sum'], 
-                        district = new_district)
-                    cc.save()
-                except Exception as ex:
-                    print 'Wasn\'t able to create ComputedCharacteristic for district %, subject %s: %s' % (district_id, subject.name, ex)
-
 
 class PlanForm(ModelForm):
     """

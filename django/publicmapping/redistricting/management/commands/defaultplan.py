@@ -33,6 +33,7 @@ Author:
 from django.contrib.gis.gdal import *
 from django.contrib.gis.geos import *
 from redistricting.models import *
+from redistricting.utils import *
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth.models import User
@@ -53,8 +54,8 @@ class Command(BaseCommand):
             help='The field in the shapefile with the district ID.'),
         make_option('--name', dest='name', default='Congressional',
             help='The name of the default plan, defaults to "Congressional".'),
-        make_option('--blockfile', dest='blockfile', default='',
-            help='The path to a block equivalency file.'),
+        make_option('--districtindexfile', dest='districtindexfile', default='',
+            help='The path to a district index file.'),
     )
 
     def handle(self, *args, **options):
@@ -66,14 +67,14 @@ class Command(BaseCommand):
         shapefile = options.get('shapefile')
         idfield = options.get('idfield')
         name = options.get('name')
-        blockfile = options.get('blockfile')
+        districtindexfile = options.get('districtindexfile')
 
-        if blockfile == '' and shapefile == '':
-            print 'Please provide the path to a shapefile or a blockfile.'
+        if districtindexfile == '' and shapefile == '':
+            print 'Please provide the path to a shapefile or a district index file.'
             return
 
-        if blockfile != '':
-            Plan.from_blockfile(name, blockfile)
+        if districtindexfile != '':
+            DistrictIndexFile.index2plan(name, districtindexfile)
             return
 
         if shapefile == '':

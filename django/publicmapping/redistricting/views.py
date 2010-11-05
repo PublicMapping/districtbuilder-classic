@@ -43,11 +43,11 @@ from django.views.decorators.cache import cache_control
 from rpy2 import robjects
 from rpy2.robjects import r, rinterface
 from rpy2.rlike import container as rpc
-from publicmapping import settings
-from publicmapping.redistricting.models import *
 from datetime import datetime, time
 from operator import attrgetter
-import random, string, types, copy, time, threading, traceback
+from redistricting.models import *
+from redistricting.utils import *
+import settings, random, string, types, copy, time, threading, traceback, os, sys
 
 @login_required
 def copyplan(request, planid):
@@ -423,14 +423,11 @@ def getreport(request, planid):
             vec += r('list("%s"="%s")' % (pair[0], pair[1]))
         return vec
     
-    geolevel = settings.BASE_GEOLEVEL
-
-    # This query gets all of the geounit and district ids for the current plan 
-    query = 'select g.id, l.district_id from redistricting_geounit as g join (select d.* from redistricting_district as d join (select max(version) as latest, district_id, plan_id from redistricting_district where plan_id = %s and version <= %s group by district_id, plan_id) as v on d.district_id = v.district_id and d.plan_id = v.plan_id and d.version = v.latest) as l on ST_Contains(l.geom, g.center) where geolevel_id = %s order by g.id'
-    cursor = connection.cursor()
-    cursor.execute(query, [plan.id, plan.version, geolevel])
+    # Use the utility query to get the district mapping for geounit ids
+    cursor = plan.district_mapping_cursor(geounit_id_type='id')
 
     # Get the geounit ids we'll be iterating through
+    geolevel = settings.BASE_GEOLEVEL
     geounits = Geounit.objects.filter(geolevel = settings.BASE_GEOLEVEL)
     max_and_min = geounits.aggregate(Min('id'), Max('id'))
     min_id = int(max_and_min['id__min'])
@@ -1116,3 +1113,18 @@ def getutc(t):
     t_tuple = t.timetuple()
     t_seconds = time.mktime(t_tuple)
     return t.utcfromtimestamp(t_seconds)
+
+@login_required
+def getdistrictindexfile(request, planid):
+    # Get the districtindexfile and create a response
+    plan = Plan.objects.get(pk=planid)
+    if not can_copy(request.user, plan):
+        return Http404ResponseForbidden()
+    archive = DistrictIndexFile.plan2index(plan)
+    response = HttpResponse(open(archive.name).read(), content_type='application/zip')
+    response['Content-Disposition'] = 'attachment; filename=%s.zip' % plan.name
+    
+    # Delete the archive file from the temp filesystem
+    os.unlink(archive.name)
+
+    return response
