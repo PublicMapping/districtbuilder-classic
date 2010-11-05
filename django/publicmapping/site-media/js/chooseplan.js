@@ -73,7 +73,14 @@ chooseplan = function(options) {
      * showing the dialog.
      */
     _self.show = function() {
-        _options.container.load('/districtmapping/plan/choose/',function(){
+        var data = {};
+        if (window.UPLOADED) {
+            data.upload = true;
+            data.upload_status = UPLOAD_STATUS;
+        }
+        _options.container.load('/districtmapping/plan/choose/',
+            data,
+            function(){
             setUpTarget(); 
             setUpEvents(); 
         
@@ -109,6 +116,10 @@ chooseplan = function(options) {
         $('#btnBlank').click(function() { 
             _eventType = 'blank'; 
             showOnly('#BlankSelection', '#btnBlank'); 
+        });
+        $('#btnUpload').click(function() {
+            _eventType = 'upload';
+            showOnly('#UploadSelection', '#btnUpload');
         });
         if ($('#ddlTemplate option').length == 0) {
             $('#btnTemplate').button('option', 'disabled', true);
@@ -175,7 +186,7 @@ chooseplan = function(options) {
         else {
             $('#btnSelectPlan').show();
         }
-        if (_eventType == 'blank' || _eventType == 'template' || (_eventType == 'shared' && !_options.anonymous) || 
+        if (_eventType == 'blank' || _eventType == 'template' || _eventType == 'upload' || (_eventType == 'shared' && !_options.anonymous) || 
             ( selectorId == '#MineSelection' && $('input:radio:checked').val() == 'saveas'  )) {
             $('#NewName').show();
             _nameRequired = true;
@@ -208,14 +219,20 @@ chooseplan = function(options) {
                 alert ('A name for the copied template is required'); 
                 $('#btnSelectPlan').attr('disabled',null);
                 $('#btnSelectPlan span').text(_activeText);
-                return; 
+                return false; 
             }
             if (OpenLayers) {
                 OpenLayers.Element.addClass(document.getElementById('btnSelectPlan'),'olCursorWait');
                 OpenLayers.Element.addClass(document.body,'olCursorWait');
             }
-            window.status = 'Please standby while creating new plan ...';
-            $.post(url, { name: $('#txtNewName').val() }, copyCallback, 'json');
+            if (_eventType == 'upload') {
+                $('#frmUpload').submit();
+                return true;
+            }
+            else {
+                window.status = 'Please standby while creating new plan ...';
+                $.post(url, { name: $('#txtNewName').val() }, copyCallback, 'json');
+            }
         }
         else if ( _eventType == 'mine' ) {
             window.location = '/districtmapping/plan/' + activeSelector.val() + '/edit/';
@@ -223,6 +240,8 @@ chooseplan = function(options) {
         else {
             window.location = '/districtmapping/plan/' + activeSelector.val() + '/view/';
         }
+
+        return false;
     };
 
     /**
@@ -250,6 +269,8 @@ chooseplan = function(options) {
                 _gaq.push(['_trackEvent', 'Plans', 'Copied', _copiedPlan]);
             } else if (_eventType == 'blank') {
                 _gaq.push(['_trackEvent', 'Plans', 'FromBlank']);
+            } else if (_eventType == 'upload') {
+                _gaq.push(['_trackEvent', 'Plans', 'Uploaded']);
             }
         }
 

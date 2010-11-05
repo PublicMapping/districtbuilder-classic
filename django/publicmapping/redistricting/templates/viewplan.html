@@ -80,6 +80,10 @@
         var RULES = { {% for rule in rules %}'{{ rule.subject_id }}': {lowest: {{ rule.lowest }}, lower:{{ rule.lower }}, upper:{{ rule.upper }}, highest: {{ rule.highest }} }{% if not forloop.last %},{% endif %}{% endfor %}};
         // The maximum number of districts that can exist in this plan.
         var MAX_DISTRICTS = {{ max_dists }};
+        {% if upload %}
+        var UPLOADED = true;
+        var UPLOAD_STATUS = {% if upload_status %}true{% else %}false{% endif %};
+        {% endif %}
     </script>
     {% comment %}
 

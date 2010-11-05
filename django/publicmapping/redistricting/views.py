@@ -274,6 +274,37 @@ def createplan(request):
     status['message'] = 'Didn\'t submit name through POST'
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
+@login_required
+def uploadfile(request):
+    """
+    Accept a block equivalency file, and create a plan based on that
+    file.
+
+    Parameters:
+        request -- An HttpRequest, with a file upload and plan name.
+
+    Returns:
+        A plan view, with additional information about the upload status.
+    """
+
+    status = commonplan(request,0)
+    status['upload'] = True
+
+    try:
+        dest = open('/tmp/%s_%s_%s' % (request.user.username, request.POST['txtNewName'], request.FILES['indexFile'].name), 'wb+')
+        for chunk in request.FILES['indexFile'].chunks():
+            dest.write(chunk)
+        dest.close()
+
+        status['upload_status'] = False
+
+    except Exception as ex:
+        sys.stderr.write( '%s' % ex )
+        status['upload_status'] = False
+
+    return render_to_response('viewplan.html', status) 
+
+
 def load_bard_workspace():
     """
     Load the workspace and setup R.
@@ -679,21 +710,25 @@ def chooseplan(request):
     Returns:
         A rendered HTML fragment that contains available plans.
     """
-    if request.method == "POST":
-        return HttpResponse("looking for the requested plan")
-        # plan has been chosen.  Open it up
-    else:
-        templates = Plan.objects.filter(is_template=True, owner__is_staff = True)
-        shared = Plan.objects.filter(is_shared=True)
-        mine = Plan.objects.filter(is_template=False, is_shared=False, owner=request.user)
+    templates = Plan.objects.filter(is_template=True, owner__is_staff = True)
+    shared = Plan.objects.filter(is_shared=True)
+    mine = Plan.objects.filter(is_template=False, is_shared=False, owner=request.user)
 
-        return render_to_response('chooseplan.html', {
-            'templates': templates,
-            'shared': shared,
-            'mine': mine,
-            'user': request.user,
-            'is_registered': request.user.username != 'anonymous' and request.user.username != ''
-        })
+    upload = False
+    upload_status = False
+    if 'upload' in request.POST:
+        upload = True
+        upload_status = request.POST['upload_status'] == 'true';
+
+    return render_to_response('chooseplan.html', {
+        'templates': templates,
+        'shared': shared,
+        'mine': mine,
+        'user': request.user,
+        'is_registered': request.user.username != 'anonymous' and request.user.username != '',
+        'upload': upload,
+        'upload_status': upload_status
+    })
 
 @login_required
 @cache_control(private=True)

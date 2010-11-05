@@ -37,17 +37,27 @@
     <li id="btnShared">Shared Plans</li>
     {% if is_registered %}
     <li id="btnMine">Plans saved by {{ user }}</li>
-    <li id="btnBlank">Blank Map</li>  
+    <li id="btnBlank">Blank Map</li> 
+    <li id="btnUpload">Upload Blockfile</li>
     {% endif %}
   </ul>
 
 <div id="TemplateTypeContent">
-<div id="SelectorsHelp">
-    To start, click on a button to determine which kind of template you'll be using.
-</div>
+    <div id="SelectorsHelp">
+        {% if upload %}
+            {% if upload_status %}
+        Thanks! Your file has been uploaded, and your plan is being constructed. When your plan is completely constructed, you will receive an email from us.
+            {% else %}
+        We're sorry! Your file was transferred to us, but there was a problem converting it into a plan. Make sure the file is a zipped block equivalency file, and please try again.
+            {% endif %}
+        {% else %}
+        To start, click on a button to determine which kind of template you'll be using.
+        {% endif %}
+    </div>
 
-<div id="TemplateSelectors">
-        <div id="TemplateSelection" class="SelectionGroup" >
+    <form method="POST" enctype="multipart/form-data" action="/districtmapping/plan/upload/" id="frmUpload">
+    <div id="TemplateSelectors">
+    <div id="TemplateSelection" class="SelectionGroup" >
     {% if templates %}
         <label>Select a Template</label>
         <select id="ddlTemplate" class="Selectors" >
@@ -55,7 +65,8 @@
             <option value="{{ plan.id }}">{{ plan.name }}</option>
         {% endfor %}
         </select>
-    {% else %}<span class="Selectors">Sorry, no templates are available at this time.</span>
+    {% else %}
+        <span class="Selectors">Sorry, no templates are available at this time.</span>
     {% endif %}
         </div>
         <div id="SharedSelection" class="SelectionGroup" >
@@ -69,33 +80,39 @@
     {% endif %}
         </div>
         <div id="MineSelection" class="SelectionGroup" >
-        <label>Select a Plan</label>
+            <label>Select a Plan</label>
     {% if mine %}
-        <select id="ddlMine" class="Selectors">
-        {% for plan in mine %}
-            <option value="{{ plan.id }}">{{ plan.name }}</option>
-        {% endfor %}
-        </select>
-        <div>
-        <input type="radio" name="Edit" value="edit" checked>Edit Selected Plan</input>
-        <input type="radio" name="Edit" value="saveas">Copy and Save Selected Plan</input>
-        </div>
-    {% else %}<span class="Selectors">Sorry, you have no plans available at this time.</span>
+            <select id="ddlMine" class="Selectors">
+            {% for plan in mine %}
+                <option value="{{ plan.id }}">{{ plan.name }}</option>
+            {% endfor %}
+            </select>
+            <div>
+                <input type="radio" name="Edit" value="edit" checked>Edit Selected Plan</input>
+                <input type="radio" name="Edit" value="saveas">Copy and Save Selected Plan</input>
+            </div>
+    {% else %}
+            <span class="Selectors">Sorry, you have no plans available at this time.</span>
     {% endif %}
         </div>
-</div>
+        <div id="UploadSelection" class="SelectionGroup">
+            <label>Upload a Blockfile:</label>
+            <input type="file" id="indexFile" name="indexFile"/>
+        </div>
+    </div>
 
 {% if is_registered %}
-<div id="NewName">
-    <label for="txtNewName" id="lblNewName">Name your new plan:</label>
-    <input type="text" id="txtNewName" />
-</div>
-<button id="btnSelectPlan" type="submit">Start Drawing</button>
+    <div id="NewName">
+        <label for="txtNewName" id="lblNewName">Name your new plan:</label>
+        <input type="text" id="txtNewName" name="txtNewName"/>
+    </div>
+    <button id="btnSelectPlan" type="submit">Start Drawing</button>
 {% else %}
 {% if shared %}
-<button id="btnSelectPlan" type="submit">View Plan</button>
+    <button id="btnSelectPlan" type="submit">View Plan</button>
 {% endif %}
 {% endif %}
+    </form>
 </div>
 
 </div>
