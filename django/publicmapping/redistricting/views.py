@@ -1221,10 +1221,21 @@ def getdistrictindexfile(request, planid):
     if not can_copy(request.user, plan):
         return Http404ResponseForbidden()
     
-    # Start a thread to email the district index file
-    plan2indexThread = threading.Thread(target=DistrictIndexFile.plan2index, args=(plan, request.user), name='emailindex2%s' % request.user.email)
-    plan2indexThread.daemon = True
-    plan2indexThread.start()
+    status = { 'success':False }
+    if request.method == 'POST':
+        posted_email = request.POST.get('email', False)
 
-    status = { 'success':True, 'message': 'Your district index file will be mailed to you.' }
+    if ((not posted_email) and (request.user.username == 'anonymous' or request.user.email == '')):
+        status['askforemail'] = True 
+    else:
+        if posted_email:
+            receiver = posted_email
+        else: 
+            receiver = request.user
+        # Start a thread to email the district index file
+        plan2indexThread = threading.Thread(target=DistrictIndexFile.plan2index, args=(plan, receiver), name='emailindex2%s' % request.user.email)
+        plan2indexThread.daemon = True
+        plan2indexThread.start()
+        status['success'] = True
+        status['message'] = 'Your district index file will be emailed to you.'
     return HttpResponse(json.dumps(status),mimetype='application/json')

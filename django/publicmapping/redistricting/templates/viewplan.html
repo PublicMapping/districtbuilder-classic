@@ -102,7 +102,7 @@
     <script type="text/javascript" src="/site-media/js/viewablesorter.js"></script>
     <script type="text/javascript" src="/site-media/js/mapping.js"></script>
     <script type="text/javascript" src="/site-media/js/chooseplan.js"></script>
-    <script type="text/javascript" src="/site-media/js/publishplan.js"></script>
+    <script type="text/javascript" src="/site-media/js/districtindexfile.js"></script>
     <script type="text/javascript" src="/site-media/js/reports.js"></script>
     <script type="text/javascript" src="/site-media/js/register.js"></script>
     {% comment %}
@@ -487,18 +487,18 @@
 
             {% endcomment %}
             <div class="explanation">
-                <h3>Explanation of Shared Documents</h3>
+                <h3>Shared Documents not available</h3>
                 <p>If you were editing a plan, you could use this tab to share your plan with others<p>
             </div>
             {% endblock %}
             <hr />
             <div class="blockfile">
-                <h3>Blockfile export</h3>
-                <p>You can export this plan to a block-equivalency file. The block file is a comma-separated-value file (csv) 
+                <h3>District Index File export</h3>
+                <p>You can export this plan to a district index file. The index file is a comma-separated-value file (csv) 
                 with each line listing a geounit (such as a census block) and the district to which it belongs. This file
                 can be imported to other instances of the publicmapping software or used in analysis of the plan using
                 your favorite GIS software.</p>
-                <button id="btnExportBlockfile" onclick="$.post('/districtmapping/plan/{{ plan.id }}/districtindexfile/', function(data) { $('<div title=\'Exporting\'>' + data.message + '</div>').dialog({ modal:true, resizable:false }); });">Export</button>
+                <button id="btnExportDistrictIndexFile">Export</button>
             </div>
         </div>
     </div>
@@ -613,6 +613,9 @@ Include the markup for the account management panel.
         // initialize the reporting interface
         var report = reports({
             reportUrl: '/districtmapping/plan/{{plan.id}}/getreport/'
+        }).init();
+        var exportIndexFile = districtindexfile({
+            target: $('#btnExportDistrictIndexFile')
         }).init();
     });
 </script>

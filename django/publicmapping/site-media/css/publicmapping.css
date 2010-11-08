@@ -1152,6 +1152,13 @@ div#nameandshare,
 .share #reportpreview {
     height:600px;
 }
+#dlgMail input.error {
+    border: 1px solid #ff0000;
+}
+#dlgMail div.error {
+    font-size:small;
+    color:red;
+}
 
 
 

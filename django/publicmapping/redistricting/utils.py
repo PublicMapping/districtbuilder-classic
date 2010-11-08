@@ -167,7 +167,10 @@ Here's the district index file you requested for the plan %s. Thank you for usin
 
 Happy Redistricting!
 The Public Mapping Team"""
-        msg = template % (user.username, plan.name)
+        if type(user) == User:
+            msg = template % (user.username, plan.name)
+        else:
+            msg = template % (user, plan.name)
         Email.send_email(user, msg, 'District index file for %s' % plan.name, archive)
 
 class Email():
@@ -178,7 +181,7 @@ class Email():
         district index file 
 
         Parameters:
-            user -- The django user whose password will be changed.
+            user -- The user to whom email should be sent
             subject -- the subject of the message
             text -- the text of the message
             zipfile -- a zip file to attach to the message            
@@ -204,7 +207,12 @@ class Email():
             msg['Subject'] = subject
 
         msg['From'] = sender
-        msg['To'] = user.email
+        
+        # If given a user object, use the email address
+        if type(user) == User:
+            msg['To'] = user.email
+        else:
+            msg['To'] = user
 
         try:
             smtp = smtplib.SMTP( settings.MAIL_SERVER, settings.MAIL_PORT )
@@ -214,7 +222,7 @@ class Email():
             if settings.MAIL_USERNAME != '' and settings.MAIL_PASSWORD != '':
                 smtp.login( settings.MAIL_USERNAME, settings.MAIL_PASSWORD )
 
-            smtp.sendmail( sender, [user.email], msg.as_string() )
+            smtp.sendmail( sender, [msg['To']], msg.as_string() )
             smtp.quit()
 
             if zipfile:
