@@ -47,7 +47,7 @@ from datetime import datetime, time
 from operator import attrgetter
 from redistricting.models import *
 from redistricting.utils import *
-import settings, random, string, types, copy, time, threading, traceback, os, sys
+import settings, random, string, types, copy, time, threading, traceback, os, sys, tempfile
 
 @login_required
 def copyplan(request, planid):
@@ -289,18 +289,79 @@ def uploadfile(request):
 
     status = commonplan(request,0)
     status['upload'] = True
+    status['upload_status'] = True
 
-    try:
-        dest = open('/tmp/%s_%s_%s' % (request.user.username, request.POST['txtNewName'], request.FILES['indexFile'].name), 'wb+')
-        for chunk in request.FILES['indexFile'].chunks():
-            dest.write(chunk)
-        dest.close()
-
+    filename = request.FILES['indexFile'].name
+    if not filename.endswith(('.csv','.zip')):
+        sys.stderr.write('Uploaded file must be ".csv" or ".zip".')
         status['upload_status'] = False
+    else:
+        try:
+            dest = tempfile.NamedTemporaryFile(mode='wb+', delete=False)
+            for chunk in request.FILES['indexFile'].chunks():
+                dest.write(chunk)
+            dest.close()
+        except Exception as ex:
+            sys.stderr.write( 'Could not save uploaded file: %s' % ex )
+            status['upload_status'] = False
+            return render_to_response('viewplan.html', status)
 
-    except Exception as ex:
-        sys.stderr.write( '%s' % ex )
-        status['upload_status'] = False
+        # Is this uploaded file a zip archive?
+        if filename.endswith('.zip'):
+            try:
+                archive = zipfile.ZipFile(dest.name,'r')
+
+                # Does the zip file contain more than one entry?
+                if len(archive.namelist()) > 1:
+                    archive.close()
+                    os.unlink(dest.name)
+                    sys.stderr.write('Uploaded archive must have only 1 file.')
+                    status['upload_status'] = False
+                    return render_to_response('viewplan.html', status)
+
+                item = archive.namelist()[0]
+                # Does the first entry in the zipfile end in ".csv"?
+                if not item.endswith('.csv'):
+                    archive.close()
+                    os.unlink(dest.name)
+                    sys.stderr.write('Uploaded archive must contain a .csv file.')
+                    status['upload_status'] = False
+                    return render_to_response('viewplan.html', status)
+
+                # Now extract entry
+                dest1 = tempfile.NamedTemporaryFile(mode='w+b+', delete=False)
+
+                # Open the item in the archive
+                indexItem = archive.open(item)
+                for line in indexItem:
+                    # Write the archive data to the filesystem
+                    dest1.write(line)
+                # Close the item in the archive
+                indexItem.close()
+                # Close the filesystem (extracted) item
+                dest1.close()
+                # Close the archive
+                archive.close()
+
+                indexFile = dest1.name
+
+            except Exception as ex:
+                # Some problem opening the zip file, bail now
+                sys.stderr.write('Could not examine uploaded zip file: %s' % ex)
+                status['upload_status'] = False
+       
+        else:
+            indexFile = dest.name
+        sys.stderr.write('Using index file %s as basis for new plan.' % indexFile)
+
+        plan = DistrictIndexFile.index2plan(request.POST['txtNewName'], indexFile, request.user)
+        plan.is_template = False
+        plan.is_shared = False
+        plan.save()
+        os.unlink(indexFile)
+
+        status['upload_status'] = not (plan is None)
+
 
     return render_to_response('viewplan.html', status) 
 

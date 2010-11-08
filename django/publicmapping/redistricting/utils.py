@@ -28,7 +28,7 @@ from redistricting.models import *
 from email.mime.application import MIMEApplication
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-import csv, datetime, zipfile, tempfile, os, smtplib, email
+import csv, datetime, zipfile, tempfile, os, smtplib, email, sys
 
 
 class DistrictIndexFile():
@@ -82,8 +82,8 @@ class DistrictIndexFile():
                     new_districts[dist_id] = list()
                     new_districts[dist_id].append(row['code'])
             except Exception as ex:
-                print 'Didn\'t import row: %s' % row 
-                print '\t%s' % ex
+                sys.stderr.write( 'Didn\'t import row: %s' % row )
+                sys.stderr.write( '\t%s' % ex )
         csv_file.close()
 
         
@@ -106,9 +106,9 @@ class DistrictIndexFile():
                     geom=enforce_multi(new_geom), 
                     simple = enforce_multi(new_simple))
                 new_district.save()
-                print 'Created %s at %s' % (new_district.name, datetime.datetime.now())
+                sys.stderr.write( 'Created %s at %s' % (new_district.name, datetime.datetime.now()))
             except Exception as ex:
-                print 'Wasn\'t able to create district %s: %s' % (district_id, ex)
+                sys.stderr.write('Wasn\'t able to create district %s: %s' % (district_id, ex))
                 continue
         
             # For each district, create the ComputedCharacteristics
@@ -122,7 +122,10 @@ class DistrictIndexFile():
                         district = new_district)
                     cc.save()
                 except Exception as ex:
-                    print 'Wasn\'t able to create ComputedCharacteristic for district %, subject %s: %s' % (district_id, subject.name, ex)
+                    sys.stderr.write( 'Wasn\'t able to create ComputedCharacteristic for district %, subject %s: %s' % (district_id, subject.name, ex))
+
+        # Return the plan just created
+        return plan
 
     @staticmethod
     def plan2index (plan, user):
