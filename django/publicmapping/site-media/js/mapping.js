@@ -1747,6 +1747,44 @@ function mapinit(srs,maxExtent) {
 
     districtLayer.events.register("loadend", districtLayer, sortByVisibility);
     olmap.events.register("moveend", olmap, sortByVisibility);
+    
+    /**
+     * When the base layer changes or the map is zoomed, this
+     * function should be used to check whether editing is allowed
+     * at the given geolevel
+     */
+    var checkForEditingByZoom = function ( olevent ) {
+        try { /* We don't want a js error to prevent editing */
+            var level = getSnapLayer().level;
+            var zoom = olmap.zoom;
+            if (DEBUG) {
+                var debug = $("<div id='zoom_debug'>You are at zoom level " + olmap.zoom + ".</div>");
+                if ($('#logo #zoom_debug').length > 0) {
+                    $('#zoom_debug').replaceWith($(debug));
+                } else {
+                    $('#logo').append($(debug));
+                }
+            }
+            for (i in SNAP_LAYERS) {
+                var snap_layer = SNAP_LAYERS[i];
+                if (snap_layer.level == level) {
+                    if (zoom < snap_layer.min_zoom || zoom > snap_layer.max_zoom) {
+                        hideEditingTools(true);
+                    } else {
+                        hideEditingTools(false);
+                    }
+                return;
+                }
+            }
+        } catch (err) { /* In case of error, let the user edit */
+            hideEditingTools(false);
+        }
+    };
+
+    // Add the listeners for editing whenever a base layer is changed
+    // or the zoom level is changed
+    olmap.events.register("changebaselayer", olmap, checkForEditingByZoom);
+    olmap.events.register("zoomend", olmap, checkForEditingByZoom);
    
     // triggering this event here will configure the map to correspond
     // with the initial dropdown values (jquery will set them to different

@@ -67,7 +67,7 @@
         var UNASSIGNED_DISTRICT_ID = {% if unassigned_id %}{{ unassigned_id }}{% else %}0{% endif %};
         // An array of configuration settings for the layers that are
         // used to select geography.
-        var SNAP_LAYERS = [ {% for snap in snaplayers %} { geolevel: {{ snap.geolevel }}, level: '{{ snap.layer }}',layer: 'simple_{{ snap.layer }}', name: '{{ snap.name }}' }{% if not forloop.last %},{% endif %} {% endfor %} ];
+        var SNAP_LAYERS = [ {% for snap in snaplayers %} { geolevel: {{ snap.geolevel }}, level: '{{ snap.layer }}',layer: 'simple_{{ snap.layer }}', name: '{{ snap.name }}', min_zoom: {{ snap.min_zoom }}, max_zoom: {{ snap.max_zoom }} }{% if not forloop.last %},{% endif %} {% endfor %} ];
         // An array of demographic settings for the choropleth variations 
         // of the snap layer
         var DEMOGRAPHICS = [{% for demo in demographics %} { id: {{ demo.id }}, text: '{{ demo.text }}', value: '{{ demo.value }}', isdefault: {{ demo.isdefault }}, isdisplayed: {{ demo.isdisplayed }} }{% if not forloop.last %},{% endif %} {% endfor %} ]; var MAP_LAYERS = []; for (var i = 0; i < SNAP_LAYERS.length; i++) { MAP_LAYERS.push( 'gmu:demo_' + SNAP_LAYERS[i].level );
@@ -80,6 +80,9 @@
         var RULES = { {% for rule in rules %}'{{ rule.subject_id }}': {lowest: {{ rule.lowest }}, lower:{{ rule.lower }}, upper:{{ rule.upper }}, highest: {{ rule.highest }} }{% if not forloop.last %},{% endif %}{% endfor %}};
         // The maximum number of districts that can exist in this plan.
         var MAX_DISTRICTS = {{ max_dists }};
+        // This settings determines whether a staff member is viewing the page in debug mode. 
+        // It can be used to display messages to help with debugging and/or configuration
+        var DEBUG = {{ debugging_staff|lower }};
         {% if upload %}
         var UPLOADED = true;
         var UPLOAD_STATUS = {% if upload_status %}true{% else %}false{% endif %};

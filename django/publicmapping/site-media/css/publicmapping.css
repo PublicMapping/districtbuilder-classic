@@ -709,6 +709,15 @@ background-color: transparent;
 border:none;
 }
     
+div#no_edit_at_zoom_level {
+  height: 51px;
+  width: 70%;
+  font-size:small;
+  position:relative;
+  left:15px;
+  top:5px;
+}
+
 #app button, .ui-dialog button {
     background-image: url(/site-media/images/bg-button-sm.png);
     background-position: 0 0; 
@@ -1370,3 +1379,10 @@ div#tipclose {
 #working {
     font-size: 9pt;
 }
+
+#zoom_debug {
+    position:relative;
+    left:200px;
+    top:-20px;
+}
+    

@@ -106,6 +106,11 @@ class Geolevel(models.Model):
     # The name of the geolevel
     name = models.CharField(max_length = 50)
 
+    # Each geolevel has a maximum and a minimum zoom level at which features
+    # on the map can be selected and added to districts
+    min_zoom = models.PositiveIntegerField(default=0)
+    max_zoom = models.PositiveIntegerField(default=20)
+
     def __unicode__(self):
         """
         Represent the Geolevel as a unicode string. This is the Geolevel's 
