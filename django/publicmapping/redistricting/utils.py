@@ -44,7 +44,7 @@ class DistrictIndexFile():
     """
 
     @staticmethod
-    def index2plan(name, filename, owner=None, template=False, purge=False):
+    def index2plan(name, filename, owner=None, template=False, purge=False, email=None):
         """
         Imports a plan using a district index file in csv format. 
         There should be only two columns: a CODE matching the 
@@ -60,6 +60,8 @@ class DistrictIndexFile():
                 is a template that other users can instantiate.
             purge - Optional. A flag indicating that the index file that
                 was converted should be disposed.
+            email - Optional. If provided, feedback should be directed
+                through email, otherwise, output to the console.
         """
 
         usertitle = "Problem importing your uploaded file."
@@ -106,13 +108,17 @@ Thank you.
                     archive.close()
                     if purge:
                         os.unlink(filename)
-                    # report error to owner and admin
-                    txt = usertpl % (owner.username, "The zip file contains too many files.")
-                    Email.send_email(owner, txt, usertitle)
 
-                    adm = User.objects.filter(is_staff=True)[0]
-                    txt = admintpl % (owner.username, "The zip file contains too many files.")
-                    Email.send_email(adm, txt, admintitle)
+                    if email:
+                        # report error to owner and admin
+                        txt = usertpl % (owner.username, "The zip file contains too many files.")
+                        Email.send_email(owner, txt, usertitle)
+
+                        adm = User.objects.filter(is_staff=True)[0]
+                        txt = admintpl % (owner.username, "The zip file contains too many files.")
+                        Email.send_email(adm, txt, admintitle)
+                    else:
+                        sys.stderr.write('District Index .zip file contains too many files.\n')
 
                     return
 
@@ -122,12 +128,17 @@ Thank you.
                     archive.close()
                     if purge:
                         os.unlink(filename)
-                    # report error to owner and admin
-                    txt = usertpl % (owner.username, "The zip file must contain a comma separated value (.csv) file.")
-                    Email.send_email(owner, txt, usertitle)
-                    adm = User.objects.filter(is_staff=True)[0]
-                    txt = admintpl % (owner.username, "The zip file must contain a comma separated value (.csv) file.")
-                    Email.send_email(adm, txt, admintitle)
+
+                    if email:
+                        # report error to owner and admin
+                        txt = usertpl % (owner.username, "The zip file must contain a comma separated value (.csv) file.")
+                        Email.send_email(owner, txt, usertitle)
+                        adm = User.objects.filter(is_staff=True)[0]
+                        txt = admintpl % (owner.username, "The zip file must contain a comma separated value (.csv) file.")
+                        Email.send_email(adm, txt, admintitle)
+                    else:
+                        sys.stderr.write('District Index .zip file does not contain a .csv file.\n')
+
                     return
 
                 # Now extract entry
@@ -151,13 +162,17 @@ Thank you.
                 indexFile = dest.name
 
             except Exception as ex:
-                # Some problem opening the zip file, bail now
-                # report error to owner and admin
-                txt = usertpl % (owner.username, "Unspecified error during zip file processing.")
-                Email.send_email(owner, txt, usertitle)
-                adm = User.objects.filter(is_staff=True)[0]
-                txt = admintpl % (owner.username, traceback.format_exc())
-                Email.send_email(adm, txt, admintitle)
+                if email:
+                    # Some problem opening the zip file, bail now
+                    # report error to owner and admin
+                    txt = usertpl % (owner.username, "Unspecified error during zip file processing.")
+                    Email.send_email(owner, txt, usertitle)
+                    adm = User.objects.filter(is_staff=True)[0]
+                    txt = admintpl % (owner.username, traceback.format_exc())
+                    Email.send_email(adm, txt, admintitle)
+                else:
+                    sys.stderr.write('The .zip file could not be imported:\n%s\n' % traceback.format_exc())
+
                 if purge:
                     os.unlink(filename)
                 return
@@ -168,11 +183,14 @@ Thank you.
         plan = Plan.create_default(name, owner=owner, template=template)
 
         if not plan:
-            txt = usertpl % (owner.username, "Plan could not be created, please ensure the plan name is unique.")
-            Email.send_email(owner, txt, usertitle)
-            adm = User.objects.filter(is_staff=True)[0]
-            txt = admintpl % (owner.username, "Plan could no:t be created. Probably a duplicate plan name.")
-            Email.send_email(adm,txt,admintitle)
+            if email:
+                txt = usertpl % (owner.username, "Plan could not be created, please ensure the plan name is unique.")
+                Email.send_email(owner, txt, usertitle)
+                adm = User.objects.filter(is_staff=True)[0]
+                txt = admintpl % (owner.username, "Plan could no:t be created. Probably a duplicate plan name.")
+                Email.send_email(adm,txt,admintitle)
+            else:
+                sys.stderr.write('The plan "%s" could not be created:\n%s\n' % (name, traceback.format_exc()))
             return
                 
         # initialize the dicts we'll use to store the supplemental_ids,
@@ -194,8 +212,11 @@ Thank you.
                     new_districts[dist_id] = list()
                     new_districts[dist_id].append(row['code'])
             except Exception as ex:
-                accum_errors.append( "Did not import row:\n  '%s'" % row )
-                admin_errors.append( "Did not import row:\n  '%s'\nReason:\n  %s" % (row, traceback.format_exc() ) )
+                if email:
+                    accum_errors.append( "Did not import row:\n  '%s'" % row )
+                    admin_errors.append( "Did not import row:\n  '%s'\nReason:\n  %s" % (row, traceback.format_exc() ) )
+                else:
+                    sys.stderr.write("Did not import row:\n  '%s'\nReason:\n  %s\n" % (row, traceback.format_exc()))
         csv_file.close()
 
         if purge:
@@ -221,8 +242,11 @@ Thank you.
                     simple = enforce_multi(new_simple))
                 new_district.save()
             except Exception as ex:
-                accum_errors.append('Unable to create district %s.' % district_id)
-                admin_errors.append('Unable to create district %s.\nReason:\n%s' % (district_id, traceback.format_exc()))
+                if email:
+                    accum_errors.append('Unable to create district %s.' % district_id)
+                    admin_errors.append('Unable to create district %s.\nReason:\n%s' % (district_id, traceback.format_exc()))
+                else:
+                    sys.stderr.write('Unable to create district %s.\nReason:\n  %s\n' % (district_id, traceback.format_exc()))
                 continue
         
             # For each district, create the ComputedCharacteristics
@@ -236,20 +260,24 @@ Thank you.
                         district = new_district)
                     cc.save()
                 except Exception as ex:
-                    accum_errors.append('Unable to create ComputedCharacteristic for district %s, subject %s' % (district_id, subject.name))
-                    admin_errors.append('Unable to create ComputedCharacteristic for district %s, subject %s\nReason:\n%s' % (district_id, subject.name, traceback.format_exc()))
+                    if email:
+                        accum_errors.append('Unable to create ComputedCharacteristic for district %s, subject %s' % (district_id, subject.name))
+                        admin_errors.append('Unable to create ComputedCharacteristic for district %s, subject %s\nReason:\n%s' % (district_id, subject.name, traceback.format_exc()))
+                    else:
+                        sys.stderr.write('Unable to create ComputedCharacteristic for district %s, subject %s\nReason:\n  %s\n' % (district_id, subject.name, traceback.format_exc()))
 
-        # Plan operations completed successfully. It's unclear if the
-        # accumulated messages are problems or not. Let's assume they are.
-        if len(accum_errors) > 0:
-            txt = usertpl % (owner.username, '\n'.join(accum_errors))
-            Email.send_email(owner, txt, usertitle)
-            adm = User.objects.filter(is_staff=True)[0]
-            txt = admintpl % (owner.username, '\n'.join(admin_errors))
-            Email.send_email(adm, txt, admintitle)
-        else:
-            txt = successtpl % (owner.username, plan.name)
-            Email.send_email(owner, txt, successtitle)
+        if email:
+            # Plan operations completed successfully. It's unclear if the
+            # accumulated messages are problems or not. Let's assume they are.
+            if len(accum_errors) > 0:
+                txt = usertpl % (owner.username, '\n'.join(accum_errors))
+                Email.send_email(owner, txt, usertitle)
+                adm = User.objects.filter(is_staff=True)[0]
+                txt = admintpl % (owner.username, '\n'.join(admin_errors))
+                Email.send_email(adm, txt, admintitle)
+            else:
+                txt = successtpl % (owner.username, plan.name)
+                Email.send_email(owner, txt, successtitle)
 
 
     @staticmethod

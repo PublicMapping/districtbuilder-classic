@@ -221,6 +221,18 @@ chooseplan = function(options) {
                 $('#btnSelectPlan span').text(_activeText);
                 return false; 
             }
+            if (_eventType == 'upload') {
+                var email = $('#userEmail').val();
+                if (email.trim() != '') {
+                    if (!(email.match(/^([\w\-\.\+])+\@([\w\-\.])+\.([A-Za-z]{2,4})$/))) 
+                    {
+                        alert('Please provide a valid email address.');
+                        $('#btnSelectPlan').attr('disabled',null);
+                        $('#btnSelectPlan span').text(_activeText);
+                        return false;
+                    }
+                }
+            }
             if (OpenLayers) {
                 OpenLayers.Element.addClass(document.getElementById('btnSelectPlan'),'olCursorWait');
                 OpenLayers.Element.addClass(document.body,'olCursorWait');

@@ -295,6 +295,9 @@ def uploadfile(request):
     if not filename.endswith(('.csv','.zip')):
         sys.stderr.write('Uploaded file must be ".csv" or ".zip".\n')
         status['upload_status'] = False
+    elif request.POST['userEmail'] == '':
+        sys.stderr.write('No email provided for user notification.\n')
+        status['upload_status'] = False
     else:
         try:
             dest = tempfile.NamedTemporaryFile(mode='wb+', delete=False)
@@ -312,7 +315,7 @@ def uploadfile(request):
             status['upload_status'] = False
             return render_to_response('viewplan.html', status)
 
-        index2planThread = threading.Thread(target=DistrictIndexFile.index2plan, args=(request.POST['txtNewName'], filename, request.user, False, True), name='emailplan2%s' % request.user.email)
+        index2planThread = threading.Thread(target=DistrictIndexFile.index2plan, args=(request.POST['txtNewName'], filename, request.user, False, True, request.POST['userEmail']), name='emailplan2%s' % request.user.email)
         index2planThread.daemon = True
         index2planThread.start()
 

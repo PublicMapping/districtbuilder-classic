@@ -49,6 +49,10 @@
         Thanks! Your file has been uploaded, and your plan is being constructed. When your plan is completely constructed, you will receive an email from us.
             {% else %}
         We're sorry! Your file was transferred to us, but there was a problem converting it into a plan. Make sure the file is a zipped block equivalency file, and please try again.
+                {% if not user.email %}
+                <br/><br/>
+        In addition, please ensure that you provided an email address in the upload form, so we can let you know when your plan is ready.
+                {% endif %}
             {% endif %}
         {% else %}
         To start, click on a button to determine which kind of template you'll be using.
@@ -96,8 +100,16 @@
     {% endif %}
         </div>
         <div id="UploadSelection" class="SelectionGroup">
-            <label>Upload a Blockfile:</label>
+            <label>Upload a District Index file:</label>
             <input type="file" id="indexFile" name="indexFile"/>
+            {% if user.email %}
+            <input type="hidden" id="userEmail" name="userEmail" value="{{ user.email }}"/>
+            {% else %}
+            <div>
+                <p>Please enter your email address. It will not be saved or shared.</p>
+                <input type="text" id="userEmail" name="userEmail"/>
+            </div>
+            {% endif %}
         </div>
     </div>
 
