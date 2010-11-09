@@ -727,9 +727,9 @@ def chooseplan(request):
     Returns:
         A rendered HTML fragment that contains available plans.
     """
-    templates = Plan.objects.filter(is_template=True, owner__is_staff = True)
-    shared = Plan.objects.filter(is_shared=True)
-    mine = Plan.objects.filter(is_template=False, is_shared=False, owner=request.user)
+    templates = Plan.objects.filter(is_template=True, owner__is_staff = True, is_pending=False)
+    shared = Plan.objects.filter(is_shared=True, is_pending=False)
+    mine = Plan.objects.filter(is_template=False, is_shared=False, owner=request.user, is_pending=False)
 
     upload = False
     upload_status = False

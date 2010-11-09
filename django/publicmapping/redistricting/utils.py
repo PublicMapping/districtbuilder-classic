@@ -180,7 +180,7 @@ Thank you.
         else: # filename.endswith('.csv'):
             indexFile = filename
 
-        plan = Plan.create_default(name, owner=owner, template=template)
+        plan = Plan.create_default(name, owner=owner, template=template, is_pending=True)
 
         if not plan:
             if email:
@@ -265,6 +265,10 @@ Thank you.
                         admin_errors.append('Unable to create ComputedCharacteristic for district %s, subject %s\nReason:\n%s' % (district_id, subject.name, traceback.format_exc()))
                     else:
                         sys.stderr.write('Unable to create ComputedCharacteristic for district %s, subject %s\nReason:\n  %s\n' % (district_id, subject.name, traceback.format_exc()))
+
+        # this plan is complete, and no longer pending
+        plan.is_pending = False
+        plan.save()
 
         if email:
             # Plan operations completed successfully. It's unclear if the

@@ -479,6 +479,10 @@ class Plan(models.Model):
     # Is this plan shared?
     is_shared = models.BooleanField(default=False)
 
+    # Is this plan 'pending'? Pending plans are being constructed in the
+    # backend, and should not be visible in the UI
+    is_pending = models.BooleanField(default=False)
+
     # The most recent version of the districts in this plan.
     version = models.PositiveIntegerField(default=0)
 
@@ -748,7 +752,7 @@ class Plan(models.Model):
         return districts
       
     @staticmethod
-    def create_default(name,owner=None,template=True):
+    def create_default(name,owner=None,template=True,is_pending=True):
         """
         Create a default plan. This method supports the static "from_"
         creation methods.
@@ -768,7 +772,7 @@ class Plan(models.Model):
 
         # Create a new plan. This will also create an Unassigned district
         # in the the plan.
-        plan = Plan(name=name, is_template=template, version=0, owner=owner)
+        plan = Plan(name=name, is_template=template, version=0, owner=owner, is_pending=is_pending)
         try:
             plan.save()
         except Exception as ex:
