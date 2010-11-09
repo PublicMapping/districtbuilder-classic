@@ -74,7 +74,8 @@ class Command(BaseCommand):
             return
 
         if districtindexfile != '':
-            DistrictIndexFile.index2plan(name, districtindexfile)
+            admin = User.objects.get(username=settings.ADMINS[0][0])
+            DistrictIndexFile.index2plan(name, districtindexfile, owner=admin, template=True, purge=False)
             return
 
         if shapefile == '':

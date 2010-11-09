@@ -748,7 +748,7 @@ class Plan(models.Model):
         return districts
       
     @staticmethod
-    def create_default(name,owner=None):
+    def create_default(name,owner=None,template=True):
         """
         Create a default plan. This method supports the static "from_"
         creation methods.
@@ -768,11 +768,11 @@ class Plan(models.Model):
 
         # Create a new plan. This will also create an Unassigned district
         # in the the plan.
-        plan = Plan(name=name, is_template=True, version=0, owner=owner)
+        plan = Plan(name=name, is_template=template, version=0, owner=owner)
         try:
             plan.save()
         except Exception as ex:
-            print 'Couldn\'t save plan: %s' % ex 
+            sys.stderr.write( "Couldn't save plan: %s\n" % ex )
             return None
 
         return plan

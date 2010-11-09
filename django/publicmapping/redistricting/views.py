@@ -293,7 +293,7 @@ def uploadfile(request):
 
     filename = request.FILES['indexFile'].name
     if not filename.endswith(('.csv','.zip')):
-        sys.stderr.write('Uploaded file must be ".csv" or ".zip".')
+        sys.stderr.write('Uploaded file must be ".csv" or ".zip".\n')
         status['upload_status'] = False
     else:
         try:
@@ -301,67 +301,20 @@ def uploadfile(request):
             for chunk in request.FILES['indexFile'].chunks():
                 dest.write(chunk)
             dest.close()
+            if request.FILES['indexFile'].name.endswith('.zip'):
+                os.rename(dest.name, '%s%s' % (dest.name,'.zip'))
+                filename = '%s%s' % (dest.name,'.zip')
+            else:
+                filename = dest.name
+
         except Exception as ex:
-            sys.stderr.write( 'Could not save uploaded file: %s' % ex )
+            sys.stderr.write( 'Could not save uploaded file: %s\n' % ex )
             status['upload_status'] = False
             return render_to_response('viewplan.html', status)
 
-        # Is this uploaded file a zip archive?
-        if filename.endswith('.zip'):
-            try:
-                archive = zipfile.ZipFile(dest.name,'r')
-
-                # Does the zip file contain more than one entry?
-                if len(archive.namelist()) > 1:
-                    archive.close()
-                    os.unlink(dest.name)
-                    sys.stderr.write('Uploaded archive must have only 1 file.')
-                    status['upload_status'] = False
-                    return render_to_response('viewplan.html', status)
-
-                item = archive.namelist()[0]
-                # Does the first entry in the zipfile end in ".csv"?
-                if not item.endswith('.csv'):
-                    archive.close()
-                    os.unlink(dest.name)
-                    sys.stderr.write('Uploaded archive must contain a .csv file.')
-                    status['upload_status'] = False
-                    return render_to_response('viewplan.html', status)
-
-                # Now extract entry
-                dest1 = tempfile.NamedTemporaryFile(mode='w+b+', delete=False)
-
-                # Open the item in the archive
-                indexItem = archive.open(item)
-                for line in indexItem:
-                    # Write the archive data to the filesystem
-                    dest1.write(line)
-                # Close the item in the archive
-                indexItem.close()
-                # Close the filesystem (extracted) item
-                dest1.close()
-                # Close the archive
-                archive.close()
-
-                indexFile = dest1.name
-
-            except Exception as ex:
-                # Some problem opening the zip file, bail now
-                sys.stderr.write('Could not examine uploaded zip file: %s' % ex)
-                status['upload_status'] = False
-       
-        else:
-            indexFile = dest.name
-        sys.stderr.write('Using index file %s as basis for new plan.' % indexFile)
-
-        plan = DistrictIndexFile.index2plan(request.POST['txtNewName'], indexFile, request.user)
-        plan.is_template = False
-        plan.is_shared = False
-        plan.save()
-        os.unlink(indexFile)
-
-        status['upload_status'] = not (plan is None)
-
+        index2planThread = threading.Thread(target=DistrictIndexFile.index2plan, args=(request.POST['txtNewName'], filename, request.user, False, True), name='emailplan2%s' % request.user.email)
+        index2planThread.daemon = True
+        index2planThread.start()
 
     return render_to_response('viewplan.html', status) 
 
