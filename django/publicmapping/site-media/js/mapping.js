@@ -1770,6 +1770,9 @@ function mapinit(srs,maxExtent) {
                 if (snap_layer.level == level) {
                     if (zoom < snap_layer.min_zoom || zoom > snap_layer.max_zoom) {
                         hideEditingTools(true);
+                        // If we're hiding the tools, remove the selection, too
+                        var selection = olmap.getLayersByName('Selection')[0];
+                        selection.removeFeatures(selection.features);
                     } else {
                         hideEditingTools(false);
                     }

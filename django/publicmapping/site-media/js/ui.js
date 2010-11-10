@@ -104,6 +104,11 @@ function hideEditingTools(bool) {
     var tools = $('#toolset_draw .toolset_group').slice(1, 3);         
     var no_edit = $('#toolset_draw #no_edit_at_zoom_level');
     if (bool == true && $(tools).is(':visible')) {
+        // Change back to the navigate tool
+        //  if a deactivated tool is in use
+        if ($(tools).find('.toggle').length > 0) {
+            $('#navigate_map_tool').click();
+        }
         $(tools).hide();
         $(no_edit).show();
         $(toggle).css('margin-top', '-43px');
