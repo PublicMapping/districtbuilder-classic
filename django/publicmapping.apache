@@ -118,13 +118,20 @@ WSGIRestrictStdout Off
 # This virtual host is responsible for running a multithreaded environment for reports
 NameVirtualHost *:8081
 Listen 8081
+
+# If you're using mod_wsgi version 3 or later, this will throw a configtest error when starting apache.
+# In that case only, delete or comment out this line and use the one within the virtual host
+# More info here: http://code.google.com/p/modwsgi/wiki/ChangesInVersion0300
 WSGIImportScript /projects/publicmapping/trunk/django/reports.wsgi process-group=bard-reports application-group=bard-reports
+
 <VirtualHost *:8081>
     ServerAdmin AzaveaDev@azavea.com
     WSGIDaemonProcess bard-reports user=www-data group=www-data threads=10 display-name=publicmapping-reports
     WSGIScriptAlias / /projects/publicmapping/trunk/django/reports.wsgi
     WSGIProcessGroup bard-reports
     WSGIApplicationGroup bard-reports
+    # mod_wsgi v3 only!  see above.
+    # WSGIImportScript /projects/publicmapping/trunk/django/reports.wsgi process-group=bard-reports application-group=bard-reports
     ErrorLog /var/log/apache2/bard-reporting-error.log
     CustomLog /var/log/apache2/bard-reporting-access.log combined
     
