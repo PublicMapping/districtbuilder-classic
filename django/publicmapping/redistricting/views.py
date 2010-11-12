@@ -85,7 +85,10 @@ def copyplan(request, planid):
         status['message'] = "You already have a plan named that. Please pick a unique name."
         return HttpResponse(json.dumps(status),mimetype='application/json')
 
-    plan_copy = Plan(name = newname, owner=request.user, is_shared = shared)
+    # Get the legislative body that this plan will be in
+    body = LegislativeBody.objects.get(id=int(request.POST['legislativeBody']))
+
+    plan_copy = Plan(name = newname, owner=request.user, is_shared = shared, legislative_body = body)
     plan_copy.save()
 
     # Get all the districts in the original plan at the most recent version
@@ -264,7 +267,8 @@ def createplan(request):
     status = { 'success': False, 'message': 'Unspecified Error' }
     if request.method == "POST":
         name = request.POST['name']
-        plan = Plan(name = name, owner = request.user)
+        body = LegislativeBody.objects.get(id=int(request.POST['legislativeBody']))
+        plan = Plan(name = name, owner = request.user, legislative_body = body)
         try:
             plan.save()
             data = serializers.serialize("json", [ plan ])
@@ -316,7 +320,7 @@ def uploadfile(request):
             status['upload_status'] = False
             return render_to_response('viewplan.html', status)
 
-        index2planThread = threading.Thread(target=DistrictIndexFile.index2plan, args=(request.POST['txtNewName'], filename, request.user, False, True, request.POST['userEmail']), name='emailplan2%s' % request.user.email)
+        index2planThread = threading.Thread(target=DistrictIndexFile.index2plan, args=(request.POST['txtNewName'], request.POST['legislativeBody'], filename, request.user, False, True, request.POST['userEmail']), name='emailplan2%s' % request.user.email)
         index2planThread.daemon = True
         index2planThread.start()
 
@@ -731,6 +735,7 @@ def chooseplan(request):
     templates = Plan.objects.filter(is_template=True, owner__is_staff = True, is_pending=False)
     shared = Plan.objects.filter(is_shared=True, is_pending=False)
     mine = Plan.objects.filter(is_template=False, is_shared=False, owner=request.user, is_pending=False)
+    bodies = LegislativeBody.objects.all()
 
     upload = False
     upload_status = False
@@ -745,7 +750,8 @@ def chooseplan(request):
         'user': request.user,
         'is_registered': request.user.username != 'anonymous' and request.user.username != '',
         'upload': upload,
-        'upload_status': upload_status
+        'upload_status': upload_status,
+        'bodies': bodies
     })
 
 @login_required

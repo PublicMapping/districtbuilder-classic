@@ -28,7 +28,8 @@ from redistricting.models import *
 from email.mime.application import MIMEApplication
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-import csv, datetime, zipfile, tempfile, os, smtplib, email, sys, traceback
+import csv, datetime, zipfile, tempfile, os, smtplib, email, sys, traceback, types
+
 
 
 class DistrictIndexFile():
@@ -44,7 +45,7 @@ class DistrictIndexFile():
     """
 
     @staticmethod
-    def index2plan(name, filename, owner=None, template=False, purge=False, email=None):
+    def index2plan(name, body, filename, owner=None, template=False, purge=False, email=None):
         """
         Imports a plan using a district index file in csv format. 
         There should be only two columns: a CODE matching the 
@@ -180,7 +181,12 @@ Thank you.
         else: # filename.endswith('.csv'):
             indexFile = filename
 
-        plan = Plan.create_default(name, owner=owner, template=template, is_pending=True)
+        if type(body) is types.IntType:
+            body = LegislativeBody.objects.get(id=body)
+        elif type(body) is types.StringType:
+            body = LegislativeBody.objects.get(id=int(body))
+
+        plan = Plan.create_default(name, body, owner=owner, template=template, is_pending=True)
 
         if not plan:
             if email:
@@ -200,7 +206,7 @@ Thank you.
         admin_errors = []
         
         csv_file = open(indexFile)
-        reader = DictReader(csv_file, fieldnames = ['code', 'district']) 
+        reader = csv.DictReader(csv_file, fieldnames = ['code', 'district']) 
         for row in reader:
             try:
                 dist_id = int(row['district'])
@@ -253,7 +259,8 @@ Thank you.
             geounit_ids = Geounit.objects.filter(guFilter).values_list('id', flat=True).order_by('id')
             for subject in subjects:
                 try:
-                    cc_value = Characteristic.objects.filter(geounit__in = geounit_ids, 
+                    cc_value = Characteristic.objects.filter(
+                        geounit__in = geounit_ids, 
                         subject = subject).aggregate(Sum('number'))
                     cc = ComputedCharacteristic(subject = subject, 
                         number = cc_value['number__sum'], 

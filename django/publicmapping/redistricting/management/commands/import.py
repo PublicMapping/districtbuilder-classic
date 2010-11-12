@@ -214,6 +214,10 @@ class Command(BaseCommand):
         Perform the command. Import the shapes and assign to unassigned,
         based on configuration options.
         """
+
+        print "This management command is disabled with the introduction of LegislativeBodies."
+        return
+
         tpl_name = options.get('basic_template')
         if tpl_name != '':
             print 'Import creating basic template.'

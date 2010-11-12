@@ -123,6 +123,13 @@
         <label for="txtNewName" id="lblNewName">Name your new plan:</label>
         <input type="text" id="txtNewName" name="txtNewName"/>
     </div>
+    {% for body in bodies %}
+        {% if forloop.first and forloop.last %}
+            <input type="hidden" id="legislativeBody" name="legislativeBody" value="{{ body.id }}"/>
+        {% else %}
+            <!-- more that one legislative body! what to do? -->
+        {% endif %}
+    {% endfor %}
     <button id="btnSelectPlan" type="submit">Start Drawing</button>
 {% else %}
 {% if shared %}

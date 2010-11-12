@@ -56,6 +56,8 @@ class Command(BaseCommand):
             help='The name of the default plan, defaults to "Congressional".'),
         make_option('--districtindexfile', dest='districtindexfile', default='',
             help='The path to a district index file.'),
+        make_option('--body', dest='legislativebody', default='',
+            help='The legislative body that this plan belongs to.'),
     )
 
     def handle(self, *args, **options):
@@ -68,6 +70,11 @@ class Command(BaseCommand):
         idfield = options.get('idfield')
         name = options.get('name')
         districtindexfile = options.get('districtindexfile')
+        body = options.get('legislativebody')
+
+        if body == '':
+            print 'Please provide a legislative body to apply to this plan.'
+            return
 
         if districtindexfile == '' and shapefile == '':
             print 'Please provide the path to a shapefile or a district index file.'
@@ -75,7 +82,7 @@ class Command(BaseCommand):
 
         if districtindexfile != '':
             admin = User.objects.get(username=settings.ADMINS[0][0])
-            DistrictIndexFile.index2plan(name, districtindexfile, owner=admin, template=True, purge=False, email=None)
+            DistrictIndexFile.index2plan(name, body, districtindexfile, owner=admin, template=True, purge=False, email=None)
             return
 
         if shapefile == '':
@@ -86,5 +93,5 @@ class Command(BaseCommand):
             print 'Please provide the field in the shapefile to use as the district ID.'
             return
         
-        Plan.from_shapefile(name, shapefile, idfield)
+        Plan.from_shapefile(name, body, shapefile, idfield)
 

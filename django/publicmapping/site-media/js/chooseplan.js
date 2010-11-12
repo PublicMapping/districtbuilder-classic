@@ -251,7 +251,14 @@ chooseplan = function(options) {
             }
             else {
                 window.status = 'Please standby while creating new plan ...';
-                $.post(url, { name: $('#txtNewName').val() }, copyCallback, 'json');
+                $.post(
+                    url, 
+                    { 
+                        name: $('#txtNewName').val(),
+                        legislativeBody: $('#legislativeBody').val()
+                    }, 
+                    copyCallback, 
+                    'json');
             }
         }
         else if ( _eventType == 'mine' ) {

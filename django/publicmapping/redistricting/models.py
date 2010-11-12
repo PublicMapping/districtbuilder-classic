@@ -42,7 +42,8 @@ from django.utils import simplejson as json
 from datetime import datetime
 from math import sqrt, pi
 from copy import copy
-from csv import DictReader
+import sys
+
 
 class Subject(models.Model):
     """
@@ -94,6 +95,34 @@ class Subject(models.Model):
         """
         return self.display
 
+
+class LegislativeBody(models.Model):
+    """
+    A legislative body that plans belong to. This is to support the
+    scenario where one application is supporting both "Congressional"
+    and "School District" contests, for example.
+    """
+
+    # The name of this legislative body
+    name = models.CharField(max_length=256)
+
+    # The name of the units in a plan -- "Districts", for example.
+    member = models.CharField(max_length=32)
+
+    # The subjects that exist in this legislative body
+    subjects = models.ManyToManyField(Subject, through='LegislativeSubject')
+
+    def __unicode__(self):
+        """
+        Represent the LegislativeBody as a unicode string. This is the 
+        LegislativeBody's name.
+        """
+        return self.name
+
+    class Meta:
+        verbose_name_plural = "LegislativeBodies"
+
+
 class Geolevel(models.Model):
     """
     A geographic classification for Geounits.
@@ -106,9 +135,13 @@ class Geolevel(models.Model):
     # The name of the geolevel
     name = models.CharField(max_length = 50)
 
-    # Each geolevel has a maximum and a minimum zoom level at which features
-    # on the map can be selected and added to districts
+    # Each geolevel has a maximum and a minimum zoom level at which 
+    # features on the map can be selected and added to districts
+
+    # The minimum zoom level
     min_zoom = models.PositiveIntegerField(default=0)
+
+    # The maximum zoom level
     max_zoom = models.PositiveIntegerField(default=20)
 
     def __unicode__(self):
@@ -117,6 +150,48 @@ class Geolevel(models.Model):
         name.
         """
         return self.name
+
+
+class LegislativeSubject(models.Model):
+    """
+    A subject available in a legislative body.
+
+    A subject is something like "Total Population", and this subject can
+    exist in both "State Senate" and "State House" legislative bodies.
+    """
+
+    # The legislative body
+    legislative_body = models.ForeignKey(LegislativeBody)
+
+    # The subject for characteristics in this body
+    subject = models.ForeignKey(Subject)
+
+
+class LegislativeLevel(models.Model):
+    """
+    A geographic classification in a legislative body.
+
+    A geographic classification can be "Counties", and this classification
+    can exist in both "State Senate" and "State House" legislative
+    bodies.
+    """
+
+    # The geographic classification
+    geolevel = models.ForeignKey(Geolevel)
+
+    # The legislative body
+    legislative_body = models.ForeignKey(LegislativeBody)
+
+    # Parent geographic classification in this legislative level
+    parent = models.ForeignKey('LegislativeLevel',null=True)
+
+    def __unicode__(self):
+        """
+        Represent the LegislativeLevel as a unicode string. This is the
+        LegislativeLevel's LegislativeBody and Geolevel
+        """
+        return self.legislative_body + self.geolevel
+
 
 class Geounit(models.Model):
     """
@@ -500,6 +575,9 @@ class Plan(models.Model):
     # The owner of this Plan
     owner = models.ForeignKey(User)
 
+    # The legislative body that this plan is for
+    legislative_body = models.ForeignKey(LegislativeBody)
+
     def __unicode__(self):
         """
         Represent the Plan as a unicode string. This is the Plan's name.
@@ -757,10 +835,9 @@ class Plan(models.Model):
         return districts
       
     @staticmethod
-    def create_default(name,owner=None,template=True,is_pending=True):
+    def create_default(name,body,owner=None,template=True,is_pending=True):
         """
-        Create a default plan. This method supports the static "from_"
-        creation methods.
+        Create a default plan.
 
         Parameters:
             name - The name of the plan to create.
@@ -777,7 +854,7 @@ class Plan(models.Model):
 
         # Create a new plan. This will also create an Unassigned district
         # in the the plan.
-        plan = Plan(name=name, is_template=template, version=0, owner=owner, is_pending=is_pending)
+        plan = Plan(name=name, legislative_body=body, is_template=template, version=0, owner=owner, is_pending=is_pending)
         try:
             plan.save()
         except Exception as ex:
@@ -810,7 +887,7 @@ class Plan(models.Model):
         return cursor
 
     @staticmethod
-    def from_shapefile(name, shapefile, idfield, owner=None):
+    def from_shapefile(name, body, shapefile, idfield, owner=None):
         """
         Import a shapefile into a plan. The plan shapefile must contain
         an ID field.
@@ -826,7 +903,7 @@ class Plan(models.Model):
         Returns:
             A new plan.
         """
-        plan = Plan.create_default(name,owner)
+        plan = Plan.create_default(name,body,owner)
 
         if not plan:
             return False
@@ -1152,6 +1229,7 @@ class Profile(models.Model):
 
     # A user's password hint.
     pass_hint = models.CharField(max_length=256)
+
 
 def update_profile(sender, **kwargs):
     """
