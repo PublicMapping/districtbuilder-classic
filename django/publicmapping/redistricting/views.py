@@ -1176,7 +1176,7 @@ def getdistrictindexfile(request, planid):
     # Get the districtindexfile and create a response
     plan = Plan.objects.get(pk=planid)
     if not can_copy(request.user, plan):
-        return Http404ResponseForbidden()
+        return HttpResponseForbidden()
     
     status = { 'success':False }
     if request.method == 'POST':
@@ -1196,3 +1196,32 @@ def getdistrictindexfile(request, planid):
         status['success'] = True
         status['message'] = 'Your district index file will be emailed to you.'
     return HttpResponse(json.dumps(status),mimetype='application/json')
+
+@login_required
+def getplans(request):
+    """
+    Get the plans for the given user and return the data in a format readable
+    by the jqgrid
+    """
+    if request.method == 'POST':
+        page = int(request.POST.get('page', 1))
+        rows = int(request.POST.get('rows', 10))
+        sidx = request.POST.get('sidx', 'id')
+        sord = request.POST.get('sord', 'asc')
+    else:
+        return HttpResponseForbidden()
+    end = page * rows
+    start = end - rows
+    
+    available = Q(owner__exact=request.user) | Q(is_template=True) | Q(is_shared=True)
+    not_pending = Q(is_pending=False)
+
+    all_plans = Plan.objects.filter(available, not_pending)
+    total_pages = (all_plans.count() / rows) + 1
+
+    plans = all_plans[start:end]
+
+    json_response = "{ \"total\":\"%d\", \"page\":\"%d\", \"records\":\"%d\", \"rows\":%s }" % (total_pages, page, len(plans), serializers.serialize('json', plans))
+    return HttpResponse(json_response,mimetype='application/json') 
+
+

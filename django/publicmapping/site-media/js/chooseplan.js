@@ -148,6 +148,11 @@ chooseplan = function(options) {
                 showOnly('#MineSelection','#btnMine');
             });
         }
+        /* $('#btnPlanTable').click(function() {
+            _eventType = 'table';
+            showOnly('#TableSelection', '#btnPlanTable');
+        }); */
+    
         $('#btnSelectPlan').click(selectPlan);
         $('#NewName').hide();
         $('input:radio').click( function() {
@@ -193,6 +198,9 @@ chooseplan = function(options) {
         } else {
             _nameRequired = false;
             $('#NewName').hide();
+        }
+        if (_eventType == 'table') {
+            loadTable();
         }
     };
 
@@ -293,6 +301,33 @@ chooseplan = function(options) {
             alert (data.message);
         }
     };
+
+    /**
+     * Set up the jqGrid table and make the initial call to the server for data
+     */
+    var loadTable = function() {
+        $('#tblPlans').jqGrid({
+            url:'/districtmapping/getplans/',
+            datatype: 'json',
+            jsonReader: {
+                repeatitems: false,
+                id: 'pk',
+            },
+            colModel: [
+                {name:'fields.name', label:'Name', sortable:true},
+                {name:'fields.owner', label:'Author', sortable:true},
+                {name:'fields.edited', label:'Last Edited', sortable:true, datefmt:'MM/DD/Y'}
+            ],
+            rowNum:10,
+            rowList:[10,20,30],
+            pager:'#tblPlansPager',
+            sortname: 'id',
+            viewrecords:true,
+            caption: 'All Plans',
+            mtype: 'POST'
+        });
+        $('#tblPlans').jqGrid('navGrid', '#tblPlansPager', {edit:false,add:false,del:false});
+    }
 
     return _self;
 };

@@ -39,6 +39,7 @@
     <li id="btnMine">Plans saved by {{ user }}</li>
     <li id="btnBlank">Blank Map</li> 
     <li id="btnUpload">Upload Blockfile</li>
+    <li id="btnPlanTable">View Table</li>
     {% endif %}
   </ul>
 
@@ -83,6 +84,10 @@
     {% else %}<span class="Selectors">Sorry, no shared plans are available at this time.</span>
     {% endif %}
         </div>
+        <div id="TableSelection" class="SelectionGroup">
+            <table id="tblPlans"></table>
+            <div id="tblPlansPager"></div>
+        </div>    
         <div id="MineSelection" class="SelectionGroup" >
             <label>Select a Plan</label>
     {% if mine %}

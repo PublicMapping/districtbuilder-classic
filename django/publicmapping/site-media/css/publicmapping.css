@@ -406,7 +406,7 @@ input#evalbtn, input#sharebtn {
 div#PlanChooser {
   margin: -10px -5px 0 -3px;
   padding:0;
-  height: 250px !important;
+  height: 315px !important;
   overflow:hidden;
 }
 
