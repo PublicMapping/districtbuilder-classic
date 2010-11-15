@@ -680,7 +680,7 @@ div.toolset_group {
   padding: 8px 12px;
   }
   
-div#toolset_edit div.toolset_group  {width: 142px }
+div#toolset_edit div.toolset_group  {width: 115px }
 div#toolset_draw div.toolset_group  {padding-top: 5px; width: auto; }
 
 
@@ -800,7 +800,7 @@ div#map_legend_content {
     bottom: 35px;
     right: 280px;
     width: 200px;
-    height: 300px;
+    height: 340px;
     background-color: #efe8cb;
     border: solid 1px #999999;
     display: none;
@@ -844,6 +844,11 @@ div#legend_swatch_2 {
 }
 div#legend_swatch_3 {
     background-color: #666666;
+}
+div.boundary_swatch {
+    background-color: transparent;
+    border-style: solid;
+    border-width: thin;
 }
 div#map_menu_header select {
   font-size: 14px;

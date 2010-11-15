@@ -31,16 +31,20 @@
  * @param layer The layer name (or array of names) served by the WMS server
  * @param extents The extents of the layer -- must be used for GeoWebCache.
  */
-function createLayer( name, layer, srs, extents ) {
+function createLayer( name, layer, srs, extents, transparent, visibility, isBaseLayer ) {
     return new OpenLayers.Layer.WMS( name,
         window.location.protocol + '//' + MAP_SERVER + '/geoserver/gwc/service/wms',
-        { srs: srs,
+        {
+          srs: srs,
           layers: layer,
           tiles: 'true',
           tilesOrigin: extents.left + ',' + extents.bottom,
-          format: 'image/png'
+          format: 'image/png',
+          transparent: transparent
         },
         {
+            visibility: visibility,
+            isBaseLayer: isBaseLayer,
             displayOutsideMaxExtent: true
         }
     );
@@ -63,11 +67,11 @@ function getShowBy() {
 }
 
 /*
- * Get the value of the "Show Boundaries for:" dropdown.
+ * Get the value of the "Show Boundaries:" dropdown.
  */
-//function getBoundLayer() {
-//    return $('#boundfor').val();
-//}
+function getBoundLayer() {
+    return $('#boundfor').val();
+}
 
 /*
  * Get the value of the "Show Districts by:" dropdown. This returns
@@ -329,8 +333,13 @@ function mapinit(srs,maxExtent) {
 
     // These layers are dependent on the layers available in geowebcache
     var layers = [];
-    for (layer in MAP_LAYERS) {
-        layers.push(createLayer( MAP_LAYERS[layer], MAP_LAYERS[layer], srs, maxExtent ));
+    for (i in MAP_LAYERS) {
+        var layerName = MAP_LAYERS[i];
+        if (layerName.indexOf('boundaries') == -1) {
+            layers.push(createLayer( layerName, layerName, srs, maxExtent, false, true, true ));
+        } else {
+            layers.push(createLayer( layerName, layerName, srs, maxExtent, true, false, false ));
+        }
     }
 
     // The strategy for loading the districts. This is effectively
@@ -1408,6 +1417,60 @@ function mapinit(srs,maxExtent) {
     };
 
     //
+    // Update the part of the legend associated with the 
+    // Show Boundaries: control
+    //
+    var updateBoundaryLegend = function() {
+        var boundary = getBoundLayer();
+        if (boundary == '') {
+            $('#boundary_legend').hide();
+            $('#map_legend_content').css('height', '300px');
+             return;
+        }
+
+        OpenLayers.Request.GET({
+            url: '/sld/' + boundary.substr(4) + '.sld',
+            method: 'GET',
+            callback: function(xhr){
+                var sld = sldFormat.read(xhr.responseXML || xhr.responseText);
+                var userStyle = getDefaultStyle(sld,'Boundaries');
+                $('#boundary_title').empty().append(userStyle.title);
+
+                var lbody = $('#boundary_legend tbody');
+                lbody.empty();
+
+                var rules = userStyle.rules;
+                for (var i = 0; i < rules.length; i++) {
+                    var rule = rules[i];
+                    if (!('Polygon' in rule.symbolizer)) {
+                        continue;
+                    }
+
+                    var div = $('<div/>');
+                    div.css('border-color',rule.symbolizer.Polygon.strokeColor);
+                    div.addClass('swatch');
+                    div.addClass('boundary_swatch');
+                    var swatch = $('<td/>');
+                    swatch.width(32);
+                    swatch.append(div);
+
+                    var row = $('<tr/>');
+                    row.append(swatch);
+
+                    var title = $('<td/>');
+                    title.append( rule.title );
+
+                    row.append(title);
+
+                    lbody.append(row);
+                    $('#map_legend_content').css('height', '340px');
+                    $('#boundary_legend').show();
+                }
+            }
+        });
+    };
+
+    //
     // Update the styles of the districts based on the 'Show District By'
     // dropdown in the menu.
     //
@@ -1494,6 +1557,7 @@ function mapinit(srs,maxExtent) {
         olmap.setBaseLayer(layers[0]);
         doMapStyling();
         getMapStyles();
+        updateBoundaryLegend();
 
         // Since keyboard defaults are on, if focus remains on this
         // dropdown after change, the keyboard may change the selection
@@ -1514,6 +1578,7 @@ function mapinit(srs,maxExtent) {
         olmap.setBaseLayer(layers[0]);
         doMapStyling();
         getMapStyles();
+        updateBoundaryLegend();
 
         // Since keyboard defaults are on, if focus remains on this
         // dropdown after change, the keyboard may change the selection
@@ -1530,6 +1595,30 @@ function mapinit(srs,maxExtent) {
         // dropdown after change, the keyboard may change the selection
         // inadvertently
         $('#districtby').blur();
+    });
+
+    boundaryLayer = {};
+    $('#boundfor').change(function(evt){
+        try {
+            boundaryLayer.setVisibility(false);
+        } catch (err) {
+            // That's ok - just initializing.
+        }
+        var name = getBoundLayer();
+        if (name != '') {
+            var layer = olmap.getLayersByName(name)[0];
+            olmap.setLayerIndex(layer, 1);
+            boundaryLayer = layer;
+            layer.setVisibility(true);
+        }
+        doMapStyling();
+        getMapStyles();
+        updateBoundaryLegend();
+
+        // Since keyboard defaults are on, if focus remains on this
+        // dropdown after change, the keyboard may change the selection
+        // inadvertently
+        $('#boundfor').blur();
     });
 
     // Logic for the 'Assign District to' dropdown

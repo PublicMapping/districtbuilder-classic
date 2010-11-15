@@ -305,6 +305,10 @@ update support, and install tmpreaper and cron jobs.
         layers, too.  The styling for these layers in the Publishing 
         section is not important - their styling it will be done by 
         OpenLayers at runtime.
+     e. To create the layers that display only the borders for each
+        geolevel, you'll want to publish the redistricting_geounit layer
+        with the names geolevel_boundaries, e.g., tract_boundaries.
+        Assign the sld with the same name to each of these layers.
 
 10. Now that your GeoServer is configured, you should use the Services > 
     GWC link in the menu to seed some of your layers.  This will make the 

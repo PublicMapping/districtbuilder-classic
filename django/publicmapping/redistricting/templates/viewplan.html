@@ -71,10 +71,16 @@
         var SNAP_LAYERS = [ {% for snap in snaplayers %} { geolevel: {{ snap.geolevel }}, level: '{{ snap.layer }}',layer: 'simple_{{ snap.layer }}', name: '{{ snap.name }}', min_zoom: {{ snap.min_zoom }}, max_zoom: {{ snap.max_zoom }} }{% if not forloop.last %},{% endif %} {% endfor %} ];
         // An array of demographic settings for the choropleth variations 
         // of the snap layer
-        var DEMOGRAPHICS = [{% for demo in demographics %} { id: {{ demo.id }}, text: '{{ demo.text }}', value: '{{ demo.value }}', isdefault: {{ demo.isdefault }}, isdisplayed: {{ demo.isdisplayed }} }{% if not forloop.last %},{% endif %} {% endfor %} ]; var MAP_LAYERS = []; for (var i = 0; i < SNAP_LAYERS.length; i++) { MAP_LAYERS.push( 'gmu:demo_' + SNAP_LAYERS[i].level );
+        var DEMOGRAPHICS = [{% for demo in demographics %} { id: {{ demo.id }}, text: '{{ demo.text }}', value: '{{ demo.value }}', isdefault: {{ demo.isdefault }}, isdisplayed: {{ demo.isdisplayed }} }{% if not forloop.last %},{% endif %} {% endfor %} ];         var MAP_LAYERS = []; for (var i = 0; i < SNAP_LAYERS.length; i++) { MAP_LAYERS.push( 'gmu:demo_' + SNAP_LAYERS[i].level );
             for (var j = 0; j < DEMOGRAPHICS.length; j++) {
                 MAP_LAYERS.push( 'gmu:demo_' + SNAP_LAYERS[i].level + '_' + DEMOGRAPHICS[j].value );
             }
+        }
+        // The baselayer is a visible layer without selectable features or attribute information
+        // Currently, only boundaries are supported
+        var BASE_LAYERS = [{% for layer in boundaries %} { id: 'gmu:{{layer.id}}', name: '{{ layer.name }}' }{% if not forloop.last %},{% endif %} {%endfor %} ];
+        for (i in BASE_LAYERS) {
+            MAP_LAYERS.push( BASE_LAYERS[i].id );
         }
         // The style rules for all subjects. Each subject has a different
         // set of ranges, and they are pulled from the django db.
@@ -220,7 +226,6 @@
                   </script>
                 </select>
               </div>
-
               <div class="toolset_group">
                 <img src="/site-media/images/icon-help.png" class="help divtip">
                 <div class="tooltip">The appearance of the districts on the map</div>                
@@ -248,6 +253,26 @@
                             }
                             document.write('>' + demo.text + '</option>');
                         }
+                    }
+                  </script>
+                </select>
+              </div>
+             <div class="toolset_group">
+              <img src="/site-media/images/icon-help.png" class="help divtip">
+              <div class="tooltip">View the boundaries of the selected layer. This layer is viewable but doesn't affect selection.</div>
+                <label>Show Boundaries:</label>
+                {% comment %}
+
+                Show a boundary, which is visible but has no attribute
+                data.
+
+                {% endcomment %}
+                <select id="boundfor">
+                  <option value=''>None</option>
+                  <script type="text/javascript">
+                    for (var i = 0; i < BASE_LAYERS.length; i++) {
+                        var base = BASE_LAYERS[i];
+                        document.write('<option value="' + base.id + '">' + base.name + '</option>');
                     }
                   </script>
                 </select>
@@ -431,6 +456,19 @@
                         <td><div id="district_swatch_farunder" class="swatch farunder district_swatch">&nbsp;</div></td>
                         <td>Far Under Target</td>
                     </tr>
+                </tbody>
+            </table>
+            <table id="boundary_legend">
+                <thead>
+                    <tr>
+                        <th colspan="2">Boundary</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><div id="boundary_swatch" class="swatch boundary border">&nbsp;</div></td>
+                        <td id="boundary_title" >Boundary</td>
+                    <tr>
                 </tbody>
             </table>
           </div>
