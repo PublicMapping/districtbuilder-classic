@@ -109,6 +109,9 @@ class LegislativeBody(models.Model):
     # The name of the units in a plan -- "Districts", for example.
     member = models.CharField(max_length=32)
 
+    # The maximum number of districts in this body
+    max_districts = models.PositiveIntegerField()
+
     # The subjects that exist in this legislative body
     subjects = models.ManyToManyField(Subject, through='LegislativeSubject')
 
