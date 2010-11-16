@@ -542,7 +542,7 @@
                 with each line listing a geounit (such as a census block) and the district to which it belongs. This file
                 can be imported to other instances of the publicmapping software or used in analysis of the plan using
                 your favorite GIS software.</p>
-                <button id="btnExportDistrictIndexFile">Export</button>
+                <div id='districtIndexFileTarget' />
             </div>
         </div>
     </div>
@@ -658,9 +658,18 @@ Include the markup for the account management panel.
         var report = reports({
             reportUrl: '/districtmapping/plan/{{plan.id}}/getreport/'
         }).init();
+        
+        // Load up the district index file checker whenever the 
+        // appropriate tab is clicked.
         var exportIndexFile = districtindexfile({
-            target: $('#btnExportDistrictIndexFile')
-        }).init();
+            target: $('#districtIndexFileTarget')
+        });
+        $('#steps').tabs({ show: function(event, ui) {
+            if ($(this).tabs('option', 'selected') == 2) {
+                exportIndexFile.init();
+            }
+        }
+        });
     });
 </script>
   </body>

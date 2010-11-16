@@ -1177,6 +1177,24 @@ def getutc(t):
     return t.utcfromtimestamp(t_seconds)
 
 @login_required
+def getdistrictindexfilestatus(request, planid):
+    """
+    Given a plan id, return the status of the district index file
+    """    
+    plan = Plan.objects.get(pk=planid)
+    if not can_copy(request.user, plan):
+        return HttpResponseForbidden()
+    status = { 'success':False }
+    try:
+        file_status = DistrictIndexFile.get_index_file_status(plan)
+        status['success'] = True
+        status['status'] = file_status 
+    except Exception as ex:
+        status['message'] = 'Failed to get file status'
+        status['exception'] = ex 
+    return HttpResponse(json.dumps(status),mimetype='application/json')
+        
+@login_required
 def getdistrictindexfile(request, planid):
     """
     Given a plan id, email the user a zipped copy of 
@@ -1187,24 +1205,18 @@ def getdistrictindexfile(request, planid):
     if not can_copy(request.user, plan):
         return HttpResponseForbidden()
     
-    status = { 'success':False }
-    if request.method == 'POST':
-        posted_email = request.POST.get('email', False)
-
-    if ((not posted_email) and (request.user.username == 'anonymous' or request.user.email == '')):
-        status['askforemail'] = True 
+    file_status = DistrictIndexFile.get_index_file_status(plan)
+    if file_status == 'done':
+        archive = DistrictIndexFile.plan2index(plan)
+        response = HttpResponse(open(archive.name).read(), content_type='application/zip')
+        response['Content-Disposition'] = 'attachment; filename=%s.zip' % plan.name
     else:
-        if posted_email:
-            receiver = posted_email
-        else: 
-            receiver = request.user
-        # Start a thread to email the district index file
-        plan2indexThread = threading.Thread(target=DistrictIndexFile.plan2index, args=(plan, receiver), name='emailindex2%s' % request.user.email)
+        # Start a thread to create the district index file
+        plan2indexThread = threading.Thread(target=DistrictIndexFile.plan2index, args=[plan], name='createindex4%s' % request.user.email)
         plan2indexThread.daemon = True
         plan2indexThread.start()
-        status['success'] = True
-        status['message'] = 'Your district index file will be emailed to you.'
-    return HttpResponse(json.dumps(status),mimetype='application/json')
+        response = HttpResponse('File is not yet ready. Please try again in a few minutes');
+    return response
 
 @login_required
 def getplans(request):

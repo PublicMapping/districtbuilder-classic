@@ -1173,7 +1173,13 @@ div#nameandshare,
     font-size:small;
     color:red;
 }
-
+#districtIndexFileTarget {
+    margin: 10px;
+}
+#step-3 .loading {
+    background: url('/site-media/images/step-3-loading.gif') no-repeat left center;
+    text-align: right;
+}
 
 
 /* Johnny's Fixes

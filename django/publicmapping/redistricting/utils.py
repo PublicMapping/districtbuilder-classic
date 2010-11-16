@@ -28,7 +28,7 @@ from redistricting.models import *
 from email.mime.application import MIMEApplication
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-import csv, datetime, zipfile, tempfile, os, smtplib, email, sys, traceback, types
+import csv, datetime, time, zipfile, tempfile, os, smtplib, email, sys, traceback, types
 
 
 
@@ -292,7 +292,7 @@ Thank you.
 
 
     @staticmethod
-    def plan2index (plan, user):
+    def plan2index (plan, user=None):
         """
         Gets a zipped copy of the district index file for the
         given plan.
@@ -303,28 +303,35 @@ Thank you.
         Returns:
             A file object representing the zipped index file
         """
+        status = DistrictIndexFile.get_index_file_status(plan)
+        while status == 'pending':
+            time.sleep(15)
+            status = DistrictIndexFile.get_index_file_status(plan)
+        if status == 'none':
+            pending = ('%s/plan%dv%d_pending.zip' % (tempfile.gettempdir(), plan.id, plan.version)) 
+            archive = open(pending, 'w')
 
-        # Get the necessary district/geounit map from the db
-        cursor = plan.district_mapping_cursor()
-        
-        f = tempfile.NamedTemporaryFile(delete=False)
-        difile = csv.writer(f)
-        # The cursor is iterable so just write each row as a row in the csv file
-        difile.writerows(cursor)
-        cursor.close()
-        f.close()
+            # Get the necessary district/geounit map from the db
+            cursor = plan.district_mapping_cursor()
+            
+            f = tempfile.NamedTemporaryFile(delete=False)
+            difile = csv.writer(f)
+            # The cursor is iterable so just write each row as a row in the csv file
+            difile.writerows(cursor)
+            cursor.close()
+            f.close()
 
-        # Create a temporary file for the archive
-        archive = tempfile.NamedTemporaryFile(delete=False)
+            # Zip up the file 
+            zipwriter = zipfile.ZipFile(archive, 'w')
+            zipwriter.write(f.name, plan.name + '.csv')
+            zipwriter.close()
+            archive.close()
+            # delete the temporary csv file
+            os.unlink(f.name)
+            os.rename(archive.name, '%s/plan%dv%d.zip' % (tempfile.gettempdir(), plan.id, plan.version))
 
-        # Zip up the file 
-        zipwriter = zipfile.ZipFile(archive, 'w')
-        zipwriter.write(f.name, plan.name + '.csv')
-        zipwriter.close()
-        archive.close()
-        
-        # delete the temporary csv file
-        os.unlink(f.name)
+        return DistrictIndexFile.get_index_file(plan)
+
         template = """Hello, %s.
 
 Here's the district index file you requested for the plan %s. Thank you for using the Public Mapping Project.
@@ -335,7 +342,44 @@ The Public Mapping Team"""
             msg = template % (user.username, plan.name)
         else:
             msg = template % (user, plan.name)
-        Email.send_email(user, msg, 'District index file for %s' % plan.name, archive)
+        Email.send_email(user, msg, 'District index file for %s' % plan.name, DistrictIndexFile.get_index_file(plan))
+
+    @staticmethod
+    def get_index_file_status(plan):
+        """
+        Given a plan, this method will check to see whether the district index file
+        for the given plan exists, is pending, or has not been created.
+        
+        Parameters:
+            plan - the Plan for which an index file has been requested
+
+        Returns:
+            A string representing the file's status: "none", "pending", "done"
+        """
+        basename = "%s/plan%dv%d" % (tempfile.gettempdir(), plan.id, plan.version)
+        if os.path.exists('%s.zip' % basename):
+            return 'done'
+        if os.path.exists('%s_pending.zip' % basename):
+            return 'pending'
+        else:
+            return 'none'        
+    @staticmethod
+    def get_index_file(plan):
+        """
+        Given a plan, return the district index file for the plan at the current
+        version
+        
+        Parameters:
+            plan - the Plan for which an index file has been requested
+
+        Returns:
+            A file object representing the district index file. If the 
+            file requested doesn't exist, nothing is returned
+        """
+        if (DistrictIndexFile.get_index_file_status(plan) == 'done'):
+            index_file = open('%s/plan%dv%d.zip' % (tempfile.gettempdir(), plan.id, plan.version), 'r')
+            index_file.close()
+            return index_file
 
 class Email():
     @staticmethod
@@ -389,8 +433,8 @@ class Email():
             smtp.sendmail( sender, [msg['To']], msg.as_string() )
             smtp.quit()
 
-            if zipfile:
-                os.unlink(zipfile.name)
+#            if zipfile:
+#                os.unlink(zipfile.name)
 
             return True
         except:

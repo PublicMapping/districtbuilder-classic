@@ -35,7 +35,13 @@ districtindexfile = function(options) {
     var _self = {},
         _options = $.extend({
             target: {},
-            callback: function() {}
+            callback: function() {},
+            /* how often (in milliseconds) to check the index file status */
+            timer: 15000, 
+            /* The url to check the server for the status of the file */
+            statusUrl: '/districtmapping/plan/' + PLAN_ID + '/districtindexfilestatus/',
+             /* The url to fetch the district index file */
+            fetchUrl:'/districtmapping/plan/' + PLAN_ID + '/districtindexfile/'
         }, options);
      
     /**
@@ -46,14 +52,39 @@ districtindexfile = function(options) {
      *   The publisher.
      */
     _self.init = function() {
-        _options.target.click( function() {
-            $.post('/districtmapping/plan/' + PLAN_ID + '/districtindexfile/', fileRequestCallback);
-        });
+        $.post(_options.statusUrl, statusRequestCallback);
         _options.callback();
         
         return _self;
     };
     
+    /**
+     * The callback after getting the status of the file
+     */
+    var statusRequestCallback = function(data) {
+        if (data.success) {
+            var fileStatus = data.status;
+            // If the file is ready, add a button/link to download
+            if (fileStatus == 'done') {
+                _options.target.empty();
+                var link = $('<a href="' + _options.fetchUrl + '" />');
+                var button = $('<button id="btnExportDistrictIndexFile" class="button">Download</button>').button();
+                $(link).append(button);
+                _options.target.append(link);    
+            // If the file is in progress, show that
+            } else if (fileStatus == 'pending') {
+                indicatePending(data);
+            // Else let the user request the file, then move to pending
+            } else if (fileStatus == 'none') {
+                _options.target.empty();
+                var button = $('<button id="btnExportDistrictIndexFile" class="button">Request File</button>').button();
+                button.click( function() {
+                    $.post(_options.fetchUrl, indicatePending(data));
+                });
+                _options.target.append(button);    
+            }
+        }
+    };
     /**
      * The callback after the initial attempt to get a district index file
      * If the user has not defined an email address, they'll be asked to 
@@ -67,6 +98,26 @@ districtindexfile = function(options) {
                 askForEmail();
             }
         }
+    };
+
+    /** 
+     * Show the loading indicator.  If the file is loaded totally, show 
+     * a button to download the file
+     */
+    var indicatePending = function(data) {
+        if (!_options.target.children().hasClass('pending')) {
+            _options.target.empty();
+            var pending = $('<div id="pendingMessage" class="loading">Please wait. File is being created on the server.</div>');
+            _options.target.append(pending);
+        }
+        
+        // Request the status again after the timer time has passed
+        var checkagain = function() {
+            if ($('#steps').tabs('option', 'selected') == 2) {
+                $.post(_options.statusUrl, statusRequestCallback);
+            }
+        };
+        setTimeout(checkagain, _options.timer);
     };
 
     /**
