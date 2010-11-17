@@ -323,9 +323,8 @@ def uploadfile(request):
             status['upload_status'] = False
             return render_to_response('viewplan.html', status)
 
-        index2planThread = threading.Thread(target=DistrictIndexFile.index2plan, args=(request.POST['txtNewName'], request.POST['legislativeBody'], filename, request.user, False, True, request.POST['userEmail']), name='emailplan2%s' % request.user.email)
-        index2planThread.daemon = True
-        index2planThread.start()
+        # Put in a celery task to create the plan and email user on completion
+        DistrictIndexFile.index2plan.delay(request.POST['txtNewName'], request.POST['legislativeBody'], filename, request.user, False, True, request.POST['userEmail'])
 
     return render_to_response('viewplan.html', status) 
 

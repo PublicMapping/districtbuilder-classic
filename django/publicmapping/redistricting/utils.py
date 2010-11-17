@@ -46,6 +46,7 @@ class DistrictIndexFile():
     """
 
     @staticmethod
+    @task
     def index2plan(name, body, filename, owner=None, template=False, purge=False, email=None):
         """
         Imports a plan using a district index file in csv format. 
@@ -182,12 +183,12 @@ Thank you.
         else: # filename.endswith('.csv'):
             indexFile = filename
 
-        if type(body) is types.IntType:
-            body = LegislativeBody.objects.get(id=body)
-        elif type(body) is types.StringType:
-            body = LegislativeBody.objects.get(id=int(body))
-
-        plan = Plan.create_default(name, body, owner=owner, template=template, is_pending=True)
+        try:
+            legislative_body = LegislativeBody.objects.get(id=int(body))
+        except:
+            raise Exception('body parameter could not be cast to an integer. Type: %s, %s' % (type(body), body))
+        
+        plan = Plan.create_default(name, legislative_body, owner=owner, template=template, is_pending=True)
 
         if not plan:
             if email:
