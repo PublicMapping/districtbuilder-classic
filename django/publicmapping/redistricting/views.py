@@ -85,10 +85,7 @@ def copyplan(request, planid):
         status['message'] = "You already have a plan named that. Please pick a unique name."
         return HttpResponse(json.dumps(status),mimetype='application/json')
 
-    # Get the legislative body that this plan will be in
-    body = LegislativeBody.objects.get(id=int(request.POST['legislativeBody']))
-
-    plan_copy = Plan(name = newname, owner=request.user, is_shared = shared, legislative_body = body)
+    plan_copy = Plan(name = newname, owner=request.user, is_shared = shared, legislative_body = p.legislative_body)
     plan_copy.save()
 
     # Get all the districts in the original plan at the most recent version
@@ -479,7 +476,7 @@ def getreport(request, planid):
         return vec
     
     # Use the utility query to get the district mapping for geounit ids
-    cursor = plan.district_mapping_cursor(geounit_id_type='id')
+    cursor = plan.district_mapping_cursor(geounit_id_field='id')
 
     # Get the geounit ids we'll be iterating through
     geolevel = settings.BASE_GEOLEVEL
@@ -584,7 +581,7 @@ def getreport(request, planid):
     try:
         # set up the temp dir and filename
         tempdir = settings.BARD_TEMP
-        filename = '%s_%s_%s' % (plan.owner.username, plan.name, datetime.now().strftime('%y%m%d_%H%M'))
+        filename = '%s_%s_%s' % (plan.owner.username, plan.name, datetime.datetime.now().strftime('%y%m%d_%H%M'))
         r.copyR2HTMLfiles(tempdir)
         report = r.HTMLInitFile(tempdir, filename=filename, BackGroundColor="#BBBBEE", Title="Plan Analysis")
         title = r['HTML.title']
