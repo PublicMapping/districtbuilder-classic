@@ -581,7 +581,7 @@ def getreport(request, planid):
     try:
         # set up the temp dir and filename
         tempdir = settings.BARD_TEMP
-        filename = '%s_%s_%s' % (plan.owner.username, plan.name, datetime.datetime.now().strftime('%y%m%d_%H%M'))
+        filename = '%s_%s_%s' % (plan.owner.username, plan.name, datetime.now().strftime('%y%m%d_%H%M'))
         r.copyR2HTMLfiles(tempdir)
         report = r.HTMLInitFile(tempdir, filename=filename, BackGroundColor="#BBBBEE", Title="Plan Analysis")
         title = r['HTML.title']
