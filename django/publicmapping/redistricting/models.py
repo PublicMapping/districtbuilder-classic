@@ -193,7 +193,7 @@ class LegislativeLevel(models.Model):
         Represent the LegislativeLevel as a unicode string. This is the
         LegislativeLevel's LegislativeBody and Geolevel
         """
-        return self.legislative_body + self.geolevel
+        return self.legislative_body.name + self.geolevel.name
 
 
 class Geounit(models.Model):
