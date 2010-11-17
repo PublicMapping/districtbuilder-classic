@@ -1211,11 +1211,9 @@ def getdistrictindexfile(request, planid):
         response = HttpResponse(open(archive.name).read(), content_type='application/zip')
         response['Content-Disposition'] = 'attachment; filename=%s.zip' % plan.name
     else:
-        # Start a thread to create the district index file
-        plan2indexThread = threading.Thread(target=DistrictIndexFile.plan2index, args=[plan], name='createindex4%s' % request.user.email)
-        plan2indexThread.daemon = True
-        plan2indexThread.start()
-        response = HttpResponse('File is not yet ready. Please try again in a few minutes');
+        # Put in a celery task to create this file
+        DistrictIndexFile.plan2index.delay(plan)
+        response = HttpResponse('File is not yet ready. Please try again in a few minutes')
     return response
 
 @login_required

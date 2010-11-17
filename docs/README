@@ -17,9 +17,16 @@ On a debian-based system with aptitude installed, you can install most of
 the necessary software using the command:
 
 > sudo aptitude install apache2 libapache2-mod-wsgi python-django \
-    python-gdal python-rpy2 python-psycopg2 postgresql-8.4-postgis \
-    sun-java6-jdk tomcat6 tomcat6-admin r-base-dev build-essential \
+    python-gdal python-rpy2 python-psycopg2 python-setuptools \
+    postgresql-8.4-postgis sun-java6-jdk tomcat6 tomcat6-admin \
+    r-base-dev build-essential
     
+For python libraries that aren't in the ubuntu repositories, you can
+use easy_install (part of python-setuptools) to get celery, which
+is used for background processes:
+
+> sudo easy_install django-celery ghettoq
+
 In order to allow recovery of passwords, a mail server is recommended. 
 By default the application will use a locally running mailserver. 
 
@@ -364,7 +371,53 @@ update support, and install tmpreaper and cron jobs.
       sudo chgrp www-data /projects/publicmapping/local/reports
       sudo chmod 770 /projects/publicmapping/local/reports
     
+== Celery Configuration ==
+    Some processes take to long to happen over a synchronous  web 
+    connection. The app uses a process queue called celery to make
+    these actions happen in the background so the web application 
+    stays performant.  After installing the celery components using
+    easy_install as stated at the top of the README, there's a bit more
+    configuration you need to do to get celeryd (the celery daemon) 
+    running when your server starts.
     
+  1. Download the celery init.d script from github, put it into your 
+     init.d folder, and enable it for startup
+     
+     > sudo wget --no-check-certificate -O /etc/init.d/celeryd \
+       https://github.com/ask/celery/raw/master/contrib/debian/init.d/celeryd
+     > sudo chmod a+x /etc/init.d/celeryd
+     > sudo update-rc.d celeryd defaults
+   
+  2. Configure celeryd to run as the www-data user rather than root
+     by creating a settings file in /etc/defaults
+
+     > gksu gedit /etc/default/celeryd
+
+  3. Paste the following configuration info into the file:
+
+        # Where to chdir at start.
+        CELERYD_CHDIR='/projects/publicmapping/trunk/django/publicmapping/'
+        # Path to celeryd
+        CELERYD='/projects/publicmapping/trunk/django/publicmapping/manage.py celeryd'
+        # Name of the projects settings module.
+        export DJANGO_SETTINGS_MODULE='settings'
+        # User to run celeryd as. Default is current user.
+        CELERYD_USER='www-data'
+        # Group to run celeryd as. Default is current user.
+        CELERYD_GROUP='www-data'
+
+  4. Save your file and close your text editor
+
+  5. Create your log and pid files so that www-data can read and 
+     write them.
+
+     > sudo touch /var/run/celeryd.pid /var/log/celeryd.log
+     > sudo chown www-data /var/run/celeryd.pid /var/log/celeryd.log
+     > sudo chgrp www-data /var/run/celeryd.pid /var/log/celeryd.log
+
+  6. Celery should be ready to go
+     > sudo service celeryd start
+
 == Data Configuration ==
     Depending on your data, you may want to use the admin interface in 
     the application to edit the display names of your subjects and add

@@ -128,6 +128,13 @@ TEMPLATE_DIRS = (
     '/projects/publicmapping/trunk/django/publicmapping/templates',
 )
 
+# Settings for django-celery process queue
+import djcelery
+djcelery.setup_loader()
+
+CARROT_BACKEND = 'ghettoq.taproot.Database'
+CELERY_IMPORTS = ( 'redistricting.utils', )
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -136,6 +143,8 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.gis',
+    'djcelery',
+    'ghettoq',
     'redistricting',
 )
 

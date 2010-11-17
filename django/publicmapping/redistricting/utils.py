@@ -28,6 +28,7 @@ from redistricting.models import *
 from email.mime.application import MIMEApplication
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from celery.decorators import task
 import csv, datetime, time, zipfile, tempfile, os, smtplib, email, sys, traceback, types
 
 
@@ -290,8 +291,8 @@ Thank you.
                 txt = successtpl % (owner.username, plan.name)
                 Email.send_email(owner, txt, successtitle)
 
-
     @staticmethod
+    @task
     def plan2index (plan, user=None):
         """
         Gets a zipped copy of the district index file for the
