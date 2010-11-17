@@ -302,7 +302,7 @@ $(function() {
                         $('#sharedPermalink').html('<a href="' + link + '">' + link + '</a>')
                         $('#continueEditing').click( function() {
                             $('#successfulShare').dialog('close');
-                            $('#steps').tabs('select', '#step-1');
+                            $('#steps').tabs('select', '#step_draw');
                         });
                         if (typeof(_gaq) != 'undefined') { _gaq.push(['_trackEvent', 'Plans', 'Shared']); }
                         $('#successfulShare').dialog({autoOpen: true});

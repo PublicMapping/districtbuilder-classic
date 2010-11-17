@@ -359,13 +359,13 @@ ul#steps_tabs {
   padding:0;
 }
 
-li#tab_step1 {background-color: #93B6B2}
-li#tab_step2 {background-color: #87ae8b}
-li#tab_step3 {background-color: #acae87}
+li#tab_draw {background-color: #93B6B2}
+li#tab_evaluate {background-color: #87ae8b}
+li#tab_share {background-color: #acae87}
 
-div#step-1 .toolbar { background: url(/site-media/images/bg-toolbar.png) 0 0 repeat-x #87aea9}
-div#step-2 .toolbar {background: url(/site-media/images/bg-toolbar.png) 0 0 repeat-x  #87ae8b}
-div#step-3 .toolbar {background: url(/site-media/images/bg-toolbar.png) 0 0 repeat-x #acae87}
+div#step_draw .toolbar { background: url(/site-media/images/bg-toolbar.png) 0 0 repeat-x #87aea9}
+div#step_evaluate .toolbar {background: url(/site-media/images/bg-toolbar.png) 0 0 repeat-x  #87ae8b}
+div#step_share .toolbar {background: url(/site-media/images/bg-toolbar.png) 0 0 repeat-x #acae87}
 
 ul#steps_tabs li {
   -moz-border-radius: 10px 10px 0 0;
@@ -542,7 +542,7 @@ div#mapandmenu {
     min-width:980px;
     min-height:550px;
 }
-div#step-2, div#step-3 {
+div#step_evaluate, div#step_share, {
     min-width: 910px;
     min-height: 510px;
 }
@@ -1176,8 +1176,8 @@ div#nameandshare,
 #districtIndexFileTarget {
     margin: 10px;
 }
-#step-3 .loading {
-    background: url('/site-media/images/step-3-loading.gif') no-repeat left center;
+#step_share .loading {
+    background: url('/site-media/images/share-loading.gif') no-repeat left center;
     text-align: right;
 }
 

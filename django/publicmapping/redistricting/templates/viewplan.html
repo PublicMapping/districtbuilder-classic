@@ -170,12 +170,12 @@
 
   <div id="steps">
       <ul id="steps_tabs">
-        <li id="tab_step1"><a href="#step-1">Step 1: Draw</a></li>
-        <li id="tab_step2"><a href="#step-2">Step 2: Evaluate</a></li>
-        <li id="tab_step3"><a href="#step-3">Step 3: Share</a></li>
+        <li id="tab_draw"><a href="#step_draw">Step 1: Draw</a></li>
+        <li id="tab_evaluate"><a href="#step_evaluate">Step 2: Evaluate</a></li>
+        <li id="tab_share"><a href="#step_share">Step 3: Share</a></li>
       </ul>
 
-   <div id="step-1" class="main_content">
+   <div id="step_draw" class="main_content">
  
       <div id="mapandmenu">
          <div class="toolbar ui-widget-header">
@@ -474,7 +474,7 @@
           </div>
       </div>
     </div>
-    <div id="step-2" class="main_content evaluate">
+    <div id="step_evaluate" class="main_content evaluate">
         <div id="reportdescription">
             <div id="description">
                <h3> Introduction to the reporting tool</h3>
@@ -515,12 +515,12 @@
         </div>
 		<div id="reportButtons">
             <button id="btnPreviewReport">Create and Preview Report</button>
-            <button id="btnSharePlans" onClick="$('#steps').tabs('select', '#step-3');return false;" >Go to Share Plan options</button>
+            <button id="btnSharePlans" onClick="$('#steps').tabs('select', '#step_share');return false;" >Go to Share Plan options</button>
                        
         </div>
 		
     </div>
-    <div id="step-3" class="main_content share">
+    <div id="step_share" class="main_content share">
         <div id="saveandshare">
             {% block share_panel %}
             {% comment %}
