@@ -29,7 +29,7 @@ from email.mime.application import MIMEApplication
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from celery.decorators import task
-import csv, datetime, time, zipfile, tempfile, os, smtplib, email, sys, traceback, types
+import csv, time, zipfile, tempfile, os, smtplib, email, sys, traceback
 
 
 
