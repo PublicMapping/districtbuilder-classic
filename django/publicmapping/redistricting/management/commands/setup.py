@@ -90,20 +90,20 @@ contents of the file and try again.
         # config is now a XSD validated and id-ref checked configuration
         #
 
-        #self.import_prereq(config)
+        self.import_prereq(config)
 
         # Begin the import process
-        #geolevels = config.xpath('/DistrictBuilder/GeoLevel')
+        geolevels = config.xpath('/DistrictBuilder/GeoLevel')
 
-        #for geolevel in geolevels:
-        #    self.import_geolevel(config, geolevel, None)
+        for geolevel in geolevels:
+            self.import_geolevel(config, geolevel, None)
 
         # Create views based on the subjects and geolevels
-        #self.create_views()
+        extent = self.create_views()
 
-        self.configure_geoserver(config)
+        self.configure_geoserver(config, extent)
 
-    def configure_geoserver(self, config):
+    def configure_geoserver(self, config, extent):
         """
         Create the workspace and layers in geoserver, based on the
         imported data.
@@ -146,17 +146,26 @@ contents of the file and try again.
 
         if not self.rest_config( 'POST', host,
             '/geoserver/rest/workspaces/%s/datastores/%s/featuretypes' % (namespace, datastore),
-            '<?xml version="1.0" encoding="UTF-8"?><featureType><name>identify_geounit</name></featureType>',
+            '<?xml version="1.0" encoding="UTF-8"?><featureType><name>identify_geounit</name><nativeBoundingBox><minx>%0.1f</minx><miny>%0.1f</miny><maxx>%0.1f</maxx><maxy>%0.1f</maxy></nativeBoundingBox></featureType>' % extent,
             headers,
             'Could not create "identify_geounit" layer.'):
             return False
 
         print "Created 'identify_geounit' layer."
 
+        if not self.rest_config( 'POST', host,
+            '/geoserver/rest/workspaces/%s/datastores/%s/featuretypes' % (namespace, datastore),
+            '<?xml version="1.0" encoding="UTF-8"?><featureType><name>simple_district</name><nativeBoundingBox><minx>%0.1f</minx><miny>%0.1f</miny><maxx>%0.1f</maxx><maxy>%0.1f</maxy></nativeBoundingBox></featureType>' % extent,
+            headers,
+            'Could not create "simple_district" layer.'):
+            return False
+
+        print "Created 'simple_district' layer."
+
         for geolevel in Geolevel.objects.all():
             if not self.rest_config( 'POST', host,
                 '/geoserver/rest/workspaces/%s/datastores/%s/featuretypes' % (namespace, datastore),
-                '<?xml version="1.0" encoding="UTF-8"?><featureType><name>simple_%s</name></featureType>' % geolevel.name,
+                '<?xml version="1.0" encoding="UTF-8"?><featureType><name>simple_%s</name><nativeBoundingBox><minx>%0.1f</minx><miny>%0.1f</miny><maxx>%0.1f</maxx><maxy>%0.1f</maxy></nativeBoundingBox></featureType>' % (geolevel.name, extent[0], extent[1], extent[2], extent[3]),
                 headers,
                 'Could not create picking layer "simple_%s".' % geolevel.name):
                 return False
@@ -169,7 +178,7 @@ contents of the file and try again.
             for subject in Subject.objects.all():
                 if not self.rest_config( 'POST', host,
                     '/geoserver/rest/workspaces/%s/datastores/%s/featuretypes' % (namespace, datastore),
-                    '<?xml version="1.0" encoding="UTF-8"?><featureType><name>demo_%s_%s</name></featureType>' % (geolevel.name, subject.name),
+                    '<?xml version="1.0" encoding="UTF-8"?><featureType><name>demo_%s_%s</name><nativeBoundingBox><minx>%0.1f</minx><miny>%0.1f</miny><maxx>%0.1f</maxx><maxy>%0.1f</maxy></nativeBoundingBox></featureType>' % (geolevel.name, subject.name, extent[0], extent[1], extent[2], extent[3]),
                     headers,
                     "Could not create demographic layer 'demo_%s_%s'" % (geolevel.name, subject.name)):
                     return False
@@ -216,7 +225,7 @@ contents of the file and try again.
                     firstsubj = False
                     if not self.rest_config( 'POST', host,
                         '/geoserver/rest/workspaces/%s/datastores/%s/featuretypes' % (namespace, datastore),
-                        '<?xml version="1.0" encoding="UTF-8"?><featureType><name>demo_%s</name><nativeName>demo_%s_%s</nativeName></featureType>' % (geolevel.name, geolevel.name, subject.name),
+                        '<?xml version="1.0" encoding="UTF-8"?><featureType><name>demo_%s</name><nativeName>demo_%s_%s</nativeName><nativeBoundingBox><minx>%0.1f</minx><miny>%0.1f</miny><maxx>%0.1f</maxx><maxy>%0.1f</maxy></nativeBoundingBox></featureType>' % (geolevel.name, geolevel.name, subject.name, extent[0], extent[1], extent[2], extent[3]),
                         headers,
                         "Could not create demographic layer 'demo_%s'" % geolevel.name):
                         return False
@@ -342,6 +351,8 @@ ERROR:
                 transaction.commit()
                 print 'Created demo_%s_%s view ...' % \
                     (geolevel.name, subject.name)
+
+        return Geounit.objects.all().extent()
 
     def import_geolevel(self, config, geolevel, parent):
         """
