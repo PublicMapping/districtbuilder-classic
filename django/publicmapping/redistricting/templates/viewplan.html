@@ -699,6 +699,14 @@ Include the markup for the account management panel.
         $('.geography').load('/districtmapping/plan/{{plan.id}}/geography', { demo: 3 });
         $('.demographics').load('/districtmapping/plan/{{plan.id}}/demographics');      
         $('#steps').tabs('select', '#step_draw');
+
+        $('#steps').tabs({ show: function(event, ui) {
+            if ($(this).tabs('option', 'selected') == 2) {
+                exportIndexFile.init();
+            }
+        }});
+    {% else %}
+        $('#steps').tabs('option', 'disabled', [ 1,2,3 ]);
     {% endif %}
         // initialize the reporting interface
         var report = reports({
@@ -709,12 +717,6 @@ Include the markup for the account management panel.
         // appropriate tab is clicked.
         var exportIndexFile = districtindexfile({
             target: $('#districtIndexFileTarget')
-        });
-        $('#steps').tabs({ show: function(event, ui) {
-            if ($(this).tabs('option', 'selected') == 2) {
-                exportIndexFile.init();
-            }
-        }
         });
     });
 </script>
