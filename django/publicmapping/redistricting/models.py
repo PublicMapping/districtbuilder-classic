@@ -556,6 +556,9 @@ class Plan(models.Model):
     # The name of this plan
     name = models.CharField(max_length=200)
 
+    # A description of the plan
+    description = models.CharField(max_length=500, db_index=True, blank=True)
+
     # Is this plan a template?
     is_template = models.BooleanField(default=False)
 

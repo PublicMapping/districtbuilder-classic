@@ -1256,7 +1256,7 @@ def getplans(request):
     # Create the objects that will be serialized for presentation in the plan chooser
     plans_list = list()
     for plan in plans:
-        plans_list.append( { 'pk': plan.id, 'fields': { 'name': plan.name, 'edited': str(plan.edited), 'is_template': plan.is_template, 'owner': plan.owner.username, 'districtCount': len(plan.get_districts_at_version(plan.version)) - 1 }})
+        plans_list.append( { 'pk': plan.id, 'fields': { 'name': plan.name, 'description': plan.description, 'edited': str(plan.edited), 'is_template': plan.is_template, 'owner': plan.owner.username, 'districtCount': len(plan.get_districts_at_version(plan.version)) - 1 }})
         
     # json_response = "{ \"total\":\"%d\", \"page\":\"%d\", \"records\":\"%d\", \"rows\":%s }" % (total_pages, page, len(plans), serializers.serialize('json', plans))
     json_response = "{ \"total\":\"%d\", \"page\":\"%d\", \"records\":\"%d\", \"rows\":%s }" % (total_pages, page, len(plans), json.dumps(plans_list))

@@ -243,6 +243,7 @@ chooseplan = function(options) {
             },
             colModel: [
                 {name:'fields.name', label:'Name', search:true, sortable:true, editable:true},
+                {name:'fields.description', label:'Description', hidden:true, search:true, editable:true},
                 {name:'fields.owner', label:'Author', search:true, sortable:true},
                 {name:'fields.edited', label:'Last Edited', search:true, sortable:true, datefmt:'MM/DD/Y'},
                 {name:'fields.is_shared', label:'Shared', search:true, sortable:true, formatter:'checkbox', width:'60'},
