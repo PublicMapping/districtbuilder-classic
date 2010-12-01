@@ -75,8 +75,8 @@ class GeounitAdmin(admin.OSMGeoAdmin):
     # When displayed as a list, show the name and geolevel
     list_display = ('name','geolevel',)
 
-    # In admin view, show the name, geolevel, and geom fields.
-    fields = ('name','geolevel','geom',)
+    # In admin view, show the name, supplemental_id, geolevel, and geom fields.
+    fields = ('name','supplemental_id','geolevel','geom',)
 
     # Order geounits by name by default.
     ordering = ('name',)
@@ -164,6 +164,7 @@ admin.site.register(ComputedCharacteristic)
 admin.site.register(Characteristic, CharacteristicAdmin)
 admin.site.register(Subject, SubjectAdmin)
 admin.site.register(Geolevel)
+admin.site.register(LegislativeBody)
 admin.site.register(Plan, PlanAdmin)
 admin.site.register(District, DistrictAdmin)
 admin.site.register(Target)
