@@ -36,8 +36,8 @@
     <meta name="copyright" content="&copy; 2010 Micah Altman, Michael McDonald"/>
     <title>Open Source District Mapping Tool</title>
     <link rel="stylesheet" type="text/css" href="/site-media/css/reset.css"/>
+    <link rel="stylesheet" type="text/css" href="/site-media/jqGrid/css/ui.jqgrid.css"/>
     <link rel="stylesheet" type="text/css" href="/site-media/jquery/themes/custom-theme/jquery-ui-1.8.2.custom.css"/>
-    <!-- <link rel="stylesheet" type="text/css" href="/site-media/jqGrid/css/ui.jqgrid.css"/> -->
     <link rel="stylesheet" type="text/css" href="/site-media/css/publicmapping.css"/>
     <script type="text/javascript" src="/site-media/openlayers/OpenLayers.js"></script><!-- production -->
     <!-- <script type="text/javascript" src="/site-media/OpenLayers-2.9.1/lib/OpenLayers.js"></script> debug -->
@@ -170,14 +170,66 @@
 
   <div id="steps">
       <ul id="steps_tabs">
-        <li id="tab_draw"><a href="#step_draw">Step 1: Draw</a></li>
-        <li id="tab_evaluate"><a href="#step_evaluate">Step 2: Evaluate</a></li>
-        <li id="tab_share"><a href="#step_share">Step 3: Share</a></li>
+        <li id="tab_plan"><a href="#step_plan">Step 1: Plan</a><li>
+        <li id="tab_draw"><a href="#step_draw">Step 2: Draw</a></li>
+        <li id="tab_evaluate"><a href="#step_evaluate">Step 3: Evaluate</a></li>
+        <li id="tab_share"><a href="#step_share">Step 4: Share</a></li>
       </ul>
-
+   <div id="step_plan" class="main_content plan fulltab">
+        <div id="leg_selector_container">
+            <span id="leg_selector_instructions">
+                Step 1: Select Legislative Body
+            </span>
+            <select id="leg_selector">
+                {% for body in bodies %}
+                    <option value="{{ body.id }}">{{ body.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div id="plan_buttons">
+            <button id="filter_templates">Template</button>
+            <button id="filter_shared">Shared</button>
+            <button id="filter_mine">My Plans</button>
+            <button id="new_from_blank">From Blank</button>
+            <button id="new_from_file">Import File</button>
+        </div>
+        <div id="table_container" class="middlecolumn" >
+            <table id="plan_table"></table>
+            <div id="plan_table_pager"></div>
+        </div>
+        <div id="upload_selection" class="middlecolumn" >
+            <label>Upload a District Index file:</label>
+            <form method="POST" enctype="multipart/form-data" action="/districtmapping/plan/upload/" id="frmUpload">
+                <input type="file" id="indexFile" name="indexFile"/>
+                <input type="hidden" id="userEmail" name="userEmail" value="{{ userinfo.email }}"/>
+            </form>
+            <div>
+                <p>Please enter your email address. It will not be saved or shared.</p>
+                <input type="text" id="userEmail" name="userEmail"/>
+            </div>
+        </div>
+        <div id="form_container">
+            <form id="plan_form">
+                <label id="name_label" for="name">Name</label><input disabled type="text" id="name" name="fields.name" />
+                <label id="owner_label" for="owner">Owner</label><input disabled type="text" id="owner" name="fields.owner" />
+                <label id="edited_label" for="edited">Edited</label><input disabled type="text" id="edited" name="fields.edited" />
+                <label id="is_shared_label" for="is_shared">Shared:</label><input disabled type="text" id="is_shared" name="fields.is_shared" />
+                <label id="districtCount_label" for="districtCount"># of Districts:</label><input disabled type="text" id="districtCount" name="fields.districtCount" />
+            </form>
+            <div id='radCopyOrEdit'>
+                <input type="radio" name="Edit" value="edit" checked>Edit Selected Plan</input>
+                <input type="radio" name="Edit" value="saveas">Copy and Save Selected Plan</input>
+            </div>
+            <div id="newName">
+                <label for="txtNewName" id="lblNewName">Name your new plan:</label>
+                <input type="text" id="txtNewName" name="txtNewName"/>
+            </div>
+            <button id="start_mapping">Start Mapping</button>
+            <button id="edit_plan">Edit Selected</button>
+        </div>
+   </div>
    <div id="step_draw" class="main_content">
- 
-      <div id="mapandmenu">
+      <div id="mapandmenu" class="fulltab" >
          <div class="toolbar ui-widget-header">
           <div id="toolsets">
             <div class="toolset" id="toolset_edit">
@@ -474,7 +526,7 @@
           </div>
       </div>
     </div>
-    <div id="step_evaluate" class="main_content evaluate">
+    <div id="step_evaluate" class="main_content evaluate fulltab">
         <div id="reportdescription">
             <div id="description">
                <h3> Introduction to the reporting tool</h3>
@@ -520,7 +572,7 @@
         </div>
 		
     </div>
-    <div id="step_share" class="main_content share">
+    <div id="step_share" class="main_content share fulltab">
         <div id="saveandshare">
             {% block share_panel %}
             {% comment %}
@@ -576,7 +628,7 @@
      time that the plan was saved.
 
      {% endcomment %}
-     <div class="toolset_group">
+     <div class="toolset_group last">
         {% if plan.edited %}
           {% comment %}
 
@@ -594,9 +646,6 @@
         {% endif %}
       </div>
       {% endif %}
-      <div class="toolset_group last"> 
-          <div id="difplanbtn">Open New Plan</div>
-      </div>
 </div>
 <div id="working" title="Please Wait">Please wait while new districts are computed...</div>
 <div id="DialogContainer"></div>
@@ -634,25 +683,21 @@ Include the markup for the account management panel.
             target: $('#difplanbtn'),
             container: $('#DialogContainer'),
             modal: true,
-            resizable: false
+            resizable: false,
+            table: $('#plan_table'),
+            pager: $('#plan_table_pager'),
+            dataUrl: '/districtmapping/getplans/'
         }).init();
     {% if plan.name %}
     {% comment %}
 
     If a plan exists, then load the geographic and demographic information
-    about this plan, for display in the sidebar menu.
+    about this plan for display in the sidebar menu and display the draw tab. 
 
     {% endcomment %}
         $('.geography').load('/districtmapping/plan/{{plan.id}}/geography', { demo: 3 });
         $('.demographics').load('/districtmapping/plan/{{plan.id}}/demographics');      
-    {% else %}
-    {% comment %}
-
-    If no plan, show the plan chooser, to prompt the user to create some
-    plan to edit or view.
-
-    {% endcomment %}
-        choose.show();
+        $('#steps').tabs('select', '#step_draw');
     {% endif %}
         // initialize the reporting interface
         var report = reports({

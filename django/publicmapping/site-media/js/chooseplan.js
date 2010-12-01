@@ -43,14 +43,20 @@ chooseplan = function(options) {
             closable: true,
             close: function(event, ui) {
                 $('#PlanChooser').dialog('destroy').detach();
-            }
+            },
+            table: {},
+            pager: {},
+            dataUrl: ''
         }, options),
         // bunch o variables
        
-        _eventType,
+        _table,
+        _selectedPlanId,
+        _eventType = 'template',
         _nameRequired,
         _activeText,
-        _copiedPlan;
+        _selectedPlanName,
+        _copyOrCreate;
 
     /**
      * Initialize the chooser. Setup the click event for the target to
@@ -62,108 +68,16 @@ chooseplan = function(options) {
     _self.init = function() {
         _options.target.click(_self.show);
 
+        _table = _options.table;
         _nameRequired = false;
+        loadTable();
+        initButtons();
         
-        return _self;
-    };
-
-    /**
-     * Show the chooser. This method makes an AJAX call to get the most
-     * recent plans (templates, shared plans, etc) immediately prior to
-     * showing the dialog.
-     */
-    _self.show = function() {
-        var data = {};
         if (window.UPLOADED) {
-            data.upload = true;
-            data.upload_status = UPLOAD_STATUS;
+            var text = window.UPLOAD_STATUS ? 'Thanks! Your file has been uploaded, and your plan is being constructed. When your plan is completely constructed, you will receive an email from us.' : 'We\'re sorry! Your file was transferred to us, but there was a problem converting it into a plan. Make sure the file is a zipped block equivalency file, and please try again.';
+            $('<div title="Uploaded">' + text + '</div>').dialog({modal:true})
         }
-        _options.container.load('/districtmapping/plan/choose/',
-            data,
-            function(){
-            setUpTarget(); 
-            setUpEvents(); 
-        
-            $('#PlanChooser').dialog('open');
-            loadButtons();
-        });
-    };
-
-    /**
-     * Setup and show the dialog. This function is called from within
-     * the callback of the show's load function.
-     */
-    var setUpTarget = function() {
-        if (!_options.closable) { 
-            _options.closeOnEscape = false;
-            _options.open = function(event, ui) {
-                $(".ui-dialog-titlebar-close", $(this).parent()).hide();
-            }
-
-        }
-        $('#PlanChooser').dialog(_options);
-    };
-
-    /**
-     * Set up the events and configure the chooser for operation. This
-     * function is called from within the callback of the show's load
-     * function.
-     */
-    var setUpEvents = function() {
-        $('.Selectors').hide();
-        $('.SelectionGroup').hide();
-        $('#SelectorHelp').show();
-        $('#btnBlank').click(function() { 
-            _eventType = 'blank'; 
-            showOnly('#BlankSelection', '#btnBlank'); 
-        });
-        $('#btnUpload').click(function() {
-            _eventType = 'upload';
-            showOnly('#UploadSelection', '#btnUpload');
-        });
-        if ($('#ddlTemplate option').length == 0) {
-            $('#btnTemplate').button('option', 'disabled', true);
-            $('#btnTemplate').addClass('inactive');
-        } else {
-            $('#btnTemplate').click(function() { 
-                _eventType = 'template'; 
-                showOnly('#TemplateSelection','#btnTemplate'); 
-            });
-        }
-        if ($('#ddlShared option').length == 0) {
-            $('#btnShared').button('option', 'disabled', true);
-            $('#btnShared').addClass('inactive');
-        } else {
-            $('#btnShared').click(function() { 
-                _eventType = 'shared'; 
-                showOnly('#SharedSelection','#btnShared'); 
-            });
-        }
-        if ($('#ddlMine option').length == 0) {
-            $('#btnMine').button('option', 'disabled', true);
-            $('#btnMine').addClass('inactive');
-        } else {
-            $('#btnMine').click(function() { 
-                _eventType = 'mine'; 
-                showOnly('#MineSelection','#btnMine');
-            });
-        }
-        /* $('#btnPlanTable').click(function() {
-            _eventType = 'table';
-            showOnly('#TableSelection', '#btnPlanTable');
-        }); */
-    
-        $('#btnSelectPlan').click(selectPlan);
-        $('#NewName').hide();
-        $('input:radio').click( function() {
-            if ($(this).val() == 'edit') {
-                $('#NewName').hide(); 
-                _nameRequired = false;
-            } else {
-                $('#NewName').show();
-                _nameRequired = true;
-            }
-        });
+        return _self;
     };
 
     /**
@@ -211,24 +125,25 @@ chooseplan = function(options) {
      * for editing.
      */
     var selectPlan = function () {
-        $('#btnSelectPlan').attr('disabled','true');
-        _activeText = $('#btnSelectPlan span').text();
-        $('#btnSelectPlan span').text('Please Wait...');
-        var activeSelector = $('select.active');
-        _copiedPlan = activeSelector.text();
+        // If the user is using a template, they should have clicked the table first
+        if (typeof(_selectedPlanId) == 'undefined' && 'blankupload'.indexOf(_eventType) == -1 ) {
+            alert('Choose a plan from the table first');
+            return false;
+        }
+
+        // If a name for a new plan is required, be certain it exists
         if (_nameRequired) {
             var name = $('#txtNewName').val();
-            var url = '/districtmapping/plan/' + activeSelector.val() + '/copy/';
+            if (name.trim().length == 0) { 
+                alert ('A name for the copied template is required'); 
+                return false; 
+            }
+
+            var url = '/districtmapping/plan/' + _selectedPlanId + '/copy/';
             if (_eventType == 'blank') {
                 url = '/districtmapping/plan/create/';
             }
 
-            if (name.trim().length == 0) { 
-                alert ('A name for the copied template is required'); 
-                $('#btnSelectPlan').attr('disabled',null);
-                $('#btnSelectPlan span').text(_activeText);
-                return false; 
-            }
             if (_eventType == 'upload') {
                 var email = $('#userEmail').val();
                 if (email.trim() != '') {
@@ -241,13 +156,14 @@ chooseplan = function(options) {
                     }
                 }
             }
-            if (OpenLayers) {
-                OpenLayers.Element.addClass(document.getElementById('btnSelectPlan'),'olCursorWait');
-                OpenLayers.Element.addClass(document.body,'olCursorWait');
-            }
             if (_eventType == 'upload') {
-                $('#frmUpload').submit();
-                return true;
+                // Get the form for uploading.  Be sure not to move the input:file element
+                // out of the form - you can't clone it in javascript.
+                var $form = $('#frmUpload');
+                $('#txtNewName').clone().appendTo($form);
+                $('#leg_selector').clone().attr('name', 'legislativeBody').appendTo($form);
+                $form.submit();
+                return false;
             }
             else {
                 window.status = 'Please standby while creating new plan ...';
@@ -255,17 +171,18 @@ chooseplan = function(options) {
                     url, 
                     { 
                         name: $('#txtNewName').val(),
-                        legislativeBody: $('#legislativeBody').val()
+                        legislativeBody: $('#leg_selector').val()
                     }, 
                     copyCallback, 
                     'json');
+                return false;
             }
         }
         else if ( _eventType == 'mine' ) {
-            window.location = '/districtmapping/plan/' + activeSelector.val() + '/edit/';
+            window.location = '/districtmapping/plan/' + _selectedPlanId + '/edit/';
         }
         else {
-            window.location = '/districtmapping/plan/' + activeSelector.val() + '/view/';
+            window.location = '/districtmapping/plan/' + _selectedPlanId + '/view/';
         }
 
         return false;
@@ -281,9 +198,6 @@ chooseplan = function(options) {
         if ('success' in data && !data.success) {
             alert( data.message + '\n\nTip: Make sure the new plan\'s name is unique.' );
 
-            $('#btnSelectPlan').attr('disabled',null);
-            $('#btnSelectPlan span').text(_activeText);
-
             if (OpenLayers) {
                 OpenLayers.Element.removeClass(document.getElementById('btnSelectPlan'),'olCursorWait');
                 OpenLayers.Element.removeClass(document.body,'olCursorWait');
@@ -293,7 +207,7 @@ chooseplan = function(options) {
 
         if (typeof(_gaq) != 'undefined' ) {
             if (_eventType == 'template' || _eventType == 'mine') {
-                _gaq.push(['_trackEvent', 'Plans', 'Copied', _copiedPlan]);
+                _gaq.push(['_trackEvent', 'Plans', 'Copied', _selectedPlanName]);
             } else if (_eventType == 'blank') {
                 _gaq.push(['_trackEvent', 'Plans', 'FromBlank']);
             } else if (_eventType == 'upload') {
@@ -313,28 +227,131 @@ chooseplan = function(options) {
      * Set up the jqGrid table and make the initial call to the server for data
      */
     var loadTable = function() {
-        $('#tblPlans').jqGrid({
-            url:'/districtmapping/getplans/',
+        _table.jqGrid({
+            pager:_options.pager,
+            url:_options.dataUrl,
+            caption: 'All Plans',
+            hidegrid: false,
+            /* scroll: true, /* dynamically scroll grid instead of using pager */
+            gridview: true,
+            altRows: true,
+
             datatype: 'json',
             jsonReader: {
                 repeatitems: false,
                 id: 'pk',
             },
             colModel: [
-                {name:'fields.name', label:'Name', sortable:true},
-                {name:'fields.owner', label:'Author', sortable:true},
-                {name:'fields.edited', label:'Last Edited', sortable:true, datefmt:'MM/DD/Y'}
+                {name:'fields.name', label:'Name', search:true, sortable:true, editable:true},
+                {name:'fields.owner', label:'Author', search:true, sortable:true},
+                {name:'fields.edited', label:'Last Edited', search:true, sortable:true, datefmt:'MM/DD/Y'},
+                {name:'fields.is_shared', label:'Shared', search:true, sortable:true, formatter:'checkbox', width:'60'},
+                {name:'fields.districtCount', label:'# Districts', sortable:true, hidden:true},
             ],
+
+            onSelectRow: rowSelected,
+            beforeRequest: appendExtraParamsToRequest,
+            height: 'auto',
+            autowidth: true,
             rowNum:10,
             rowList:[10,20,30],
-            pager:'#tblPlansPager',
             sortname: 'id',
             viewrecords:true,
-            caption: 'All Plans',
             mtype: 'POST'
-        });
-        $('#tblPlans').jqGrid('navGrid', '#tblPlansPager', {edit:false,add:false,del:false});
+        }).jqGrid(
+            'navGrid',
+            '#' + _options.pager.attr('id'),
+            {search:true,edit:true,add:false,del:false,searchText:"Search",refreshText:"Clear Search"},
+            {}, //edit
+            {}, //add
+            {}, //del
+            {sopt: ['cn', 'ge', 'le'], closeAfterSearch: true, closeOnEscape: true }, // search
+            {} //view
+        );
     }
+
+    var rowSelected = function(id) {
+        // Set the internal variables for later use
+        _selectedPlanId = id;
+        _selectedPlanName = _table.jqGrid('getCell', id, 'fields.name');
+        // Update the data editing form
+        _table.jqGrid('GridToForm', id, '#plan_form');
+    };
+    
+    var appendExtraParamsToRequest = function(xhr) {
+        _table.setPostDataItem( 'owner_filter', _eventType );
+        _table.setPostDataItem( 'legislative_body', $('#leg_selector').val() );
+        _selectedPlanId = undefined;
+        _selectedPlanName = undefined;
+    };
+
+    var showItems = function (input, radio, table, sharedCol, ownerCol) {
+        $('#newName').toggle(input);
+        $('#radCopyOrEdit').toggle(radio);
+        $('#table_container').toggle(table);
+
+        if (sharedCol) {
+            _options.table.jqGrid('showCol', 'fields.is_shared');
+        } else {
+            _options.table.jqGrid('hideCol', 'fields.is_shared');
+        }
+        if (ownerCol) {
+            _options.table.jqGrid('showCol', 'fields.owner');
+        } else {
+            _options.table.jqGrid('hideCol', 'fields.owner');
+        }
+        $('#upload_selection').toggle(_eventType == 'upload'); 
+    };
+
+    var initButtons = function() {
+    
+        $('#filter_templates').button().click( function () {
+            _eventType = 'template';
+            _nameRequired = true;
+            _table.jqGrid().trigger('reloadGrid').setCaption('Templates');
+            showItems(true, false, true, false, true);
+        });        
+        $('#filter_shared').button().click( function () {
+            _eventType = 'shared';
+            _nameRequired = true;
+            _table.jqGrid().trigger('reloadGrid').setCaption('Shared Plans');
+            showItems(true, false, true, false, true);
+        });        
+        $('#filter_mine').button().click( function () {
+            _eventType = 'mine';
+            _nameRequired = true;
+            _table.jqGrid().trigger('reloadGrid').setCaption('My Plans');
+            $('input:radio[name=Edit]').filter('[value=edit]').attr('checked', true);
+            _nameRequired = false;
+            showItems(false, true, true, true, false);
+        });        
+        $('#new_from_blank').button().click( function() {
+            _eventType = 'blank';
+            showItems(true, false, false, false, true);
+        });
+        $('#new_from_file').button().click( function() {
+            _eventType = 'upload';
+            showItems(true, false, false, false, true);
+        });
+
+        $('#edit_plan').button().click( function() {
+            ('#plan_form #name').removeAttr('disabled');
+        });
+        
+        $('#radCopyOrEdit input:radio').change( function() {
+            if ($(this).val() == 'edit') {
+                $('#newName').hide(); 
+                _nameRequired = false;
+            } else {
+                $('#newName').show();
+                _nameRequired = true;
+            }
+        });
+        $('#filter_templates').button().click();
+
+        $('#start_mapping').click(selectPlan);
+    };
+
 
     return _self;
 };

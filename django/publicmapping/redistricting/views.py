@@ -194,6 +194,7 @@ def commonplan(request, planid):
         unassigned_id = plan.district_set.filter(name='Unassigned').values_list('district_id',flat=True)[0]
 
     return {
+        'bodies': LegislativeBody.objects.all(),
         'plan': plan,
         'districts': districts,
         'mapserver': settings.MAP_SERVER,
@@ -1223,20 +1224,42 @@ def getplans(request):
         rows = int(request.POST.get('rows', 10))
         sidx = request.POST.get('sidx', 'id')
         sord = request.POST.get('sord', 'asc')
+        owner_filter = request.POST.get('owner_filter');
+        body_pk = int(request.POST.get('legislative_body'));
     else:
         return HttpResponseForbidden()
     end = page * rows
     start = end - rows
     
-    available = Q(owner__exact=request.user) | Q(is_template=True) | Q(is_shared=True)
+    if owner_filter == 'template':
+        available = Q(is_template=True)
+    elif owner_filter == 'shared':
+        available = Q(is_shared=True)
+    elif owner_filter == 'mine':
+        available = Q(owner__exact=request.user)
+    else:
+        return HttpResponseBadRequest
+        
     not_pending = Q(is_pending=False)
+    body_filter = Q(legislative_body=body_pk)
+    
+    # Set up the order_by parameter from sidx and sord in the request
+    if sidx.startswith('fields.'):
+        sidx = sidx[len('fields.'):]
+    if sord == 'desc':
+        sidx = '-' + sidx
 
-    all_plans = Plan.objects.filter(available, not_pending)
+    all_plans = Plan.objects.filter(available, not_pending, body_filter).order_by(sidx)
     total_pages = (all_plans.count() / rows) + 1
 
     plans = all_plans[start:end]
-
-    json_response = "{ \"total\":\"%d\", \"page\":\"%d\", \"records\":\"%d\", \"rows\":%s }" % (total_pages, page, len(plans), serializers.serialize('json', plans))
+    # Create the objects that will be serialized for presentation in the plan chooser
+    plans_list = list()
+    for plan in plans:
+        plans_list.append( { 'pk': plan.id, 'fields': { 'name': plan.name, 'edited': str(plan.edited), 'is_template': plan.is_template, 'owner': plan.owner.username, 'districtCount': len(plan.get_districts_at_version(plan.version)) - 1 }})
+        
+    # json_response = "{ \"total\":\"%d\", \"page\":\"%d\", \"records\":\"%d\", \"rows\":%s }" % (total_pages, page, len(plans), serializers.serialize('json', plans))
+    json_response = "{ \"total\":\"%d\", \"page\":\"%d\", \"records\":\"%d\", \"rows\":%s }" % (total_pages, page, len(plans), json.dumps(plans_list))
     return HttpResponse(json_response,mimetype='application/json') 
 
 

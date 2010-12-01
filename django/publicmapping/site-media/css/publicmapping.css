@@ -359,9 +359,10 @@ ul#steps_tabs {
   padding:0;
 }
 
-li#tab_draw {background-color: #93B6B2}
-li#tab_evaluate {background-color: #87ae8b}
-li#tab_share {background-color: #acae87}
+li#tab_plan {background-color: #993333;}
+li#tab_draw {background-color: #93B6B2;}
+li#tab_evaluate {background-color: #87ae8b;}
+li#tab_share {background-color: #acae87;}
 
 div#step_draw .toolbar { background: url(/site-media/images/bg-toolbar.png) 0 0 repeat-x #87aea9}
 div#step_evaluate .toolbar {background: url(/site-media/images/bg-toolbar.png) 0 0 repeat-x  #87ae8b}
@@ -399,8 +400,34 @@ input#evalbtn, input#sharebtn {
     background-color: #dddddd;
 }
 
+/* Plan Page */
+div#step_plan {
+    background-color:#993333;
+}
 
 
+div#plan_buttons {
+    width: 95px;
+    float: left;
+}
+div#plan_buttons button {
+    width: 100%;
+}
+
+div#step_plan div.middlecolumn {
+    width: 600px;
+    padding-left:10px;
+    display: inline-block;
+}
+
+div#upload_selection {
+    display:none;
+}
+
+div#form_container {
+    float:right;
+    width:265px;
+}
 /*choose a plan overlay */
 
 div#PlanChooser {
@@ -533,19 +560,17 @@ div#toolbar_plans #difplanbtn {
   padding-left:20px;
 }
 
-div#mapandmenu {
-    bottom:0;
-    left:0;
+div.fulltab {
     position:absolute;
-    right:0;
     top:33px;
+    right:0;
+    left:0;
+    bottom:0px;
+    border-radius: 0 10px 10px 10px;
     min-width:980px;
     min-height:550px;
 }
-div#step_evaluate, div#step_share, {
-    min-width: 910px;
-    min-height: 510px;
-}
+
 div#map {
     position: absolute;
     top: 51px;
@@ -1082,10 +1107,6 @@ div.report {
 /* Evaluate page */
 div.evaluate {
     background: #87AE8B !important;
-    position:absolute;
-    top:33px;
-    bottom:0px;
-    -moz-border-radius: 0 10px 10px 10px;
 }
 .evaluate #description,
 .evaluate #options {
@@ -1137,10 +1158,6 @@ div.evaluate {
 /* Share page */
 div.share {
     background: #ACAE87 !important;
-    position:absolute;
-    top:33px;
-    bottom:0px;
-    -moz-border-radius: 0 10px 10px 10px;
 }
 
 div.share p {

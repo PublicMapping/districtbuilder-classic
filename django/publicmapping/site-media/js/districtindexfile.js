@@ -113,7 +113,7 @@ districtindexfile = function(options) {
         
         // Request the status again after the timer time has passed
         var checkagain = function() {
-            if ($('#steps').tabs('option', 'selected') == 2) {
+            if ($('#steps').tabs('option', 'selected') == 3) {
                 $.post(_options.statusUrl, statusRequestCallback);
             }
         };
