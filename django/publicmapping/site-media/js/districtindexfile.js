@@ -83,6 +83,7 @@ districtindexfile = function(options) {
                 var button = $('<button id="btnExportDistrictIndexFile" class="button">Request File</button>').button();
                 button.click( function() {
                     $.post(_options.fetchUrl, indicatePending(data));
+                    return false;
                 });
                 _options.target.append(button);    
             }

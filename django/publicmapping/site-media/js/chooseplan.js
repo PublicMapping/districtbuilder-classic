@@ -304,10 +304,10 @@ chooseplan = function(options) {
         // Set the internal variables for later use
         _selectedPlanId = id;
         _selectedPlanName = _table.jqGrid('getCell', id, 'fields.name');
-        var editable = _table.jqGrid('getCell', id, 'fields.can_edit');
+        var can_edit = _table.jqGrid('getCell', id, 'fields.can_edit');
         _table.jqGrid('GridToForm', id, '#plan_form'); 
 
-        if (editable) {
+        if (can_edit == "true") {
             editState('view');
             // clear previous handlers
             _saveButton.die();
@@ -380,10 +380,12 @@ chooseplan = function(options) {
         // Set up the cancel button when editing;
         _editButton.click( function() {
             editState('edit');
+            return false;
         });
         _cancelButton.button().click( function() {
             _table.jqGrid('GridToForm', _selectedPlanId, '#plan_form'); 
             editState('view');
+            return false;
         });
 
         // Set up the filter buttons
