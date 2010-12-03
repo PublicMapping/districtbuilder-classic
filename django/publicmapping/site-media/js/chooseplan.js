@@ -272,10 +272,10 @@ chooseplan = function(options) {
             },
             colModel: [
                 {name:'fields.name', label:'Name', searchable: true, sortable:true},
-                {name:'fields.owner', label:'Author', search:true, width: '110', fixed: 'true', sortable:true},
+                {name:'fields.owner', label:'Author', search:true, width: '110', fixed: true, sortable:true},
                 {name:'fields.description', label:'Description', hidden:true, search:true},
-                {name:'fields.is_shared', label:'Shared', search:true, sortable:true, formatter:'checkbox', width:'60', fixed: 'true', align: 'center'},
-                {name:'fields.edited', label:'Last Edited', search:true, sortable:true, width:'110', align: 'center', formatter:'date', formatoptions: { srcformat: 'UniversalSortableDateTime', newformat:'d/m/Y g:i A'}},
+                {name:'fields.is_shared', label:'Shared', search:true, sortable:true, formatter:'checkbox', width:'70', fixed: true, align: 'center'},
+                {name:'fields.edited', label:'Last Edited', search:true, sortable:true, width:'130', fixed: true, align: 'center', formatter:'date', formatoptions: { srcformat: 'UniversalSortableDateTime', newformat:'d/m/Y g:i A'}},
                 {name:'fields.can_edit', label:'Edit', hidden: true},
                 {name:'fields.districtCount', label:'# Districts', sortable:true, hidden:true},
             ],
