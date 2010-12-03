@@ -1238,7 +1238,7 @@ def getplans(request):
     elif owner_filter == 'mine':
         available = Q(owner__exact=request.user)
     else:
-        return HttpResponseBadRequest
+        return HttpResponseBadRequest()
         
     not_pending = Q(is_pending=False)
     body_filter = Q(legislative_body=body_pk)
@@ -1256,10 +1256,33 @@ def getplans(request):
     # Create the objects that will be serialized for presentation in the plan chooser
     plans_list = list()
     for plan in plans:
-        plans_list.append( { 'pk': plan.id, 'fields': { 'name': plan.name, 'description': plan.description, 'edited': str(plan.edited), 'is_template': plan.is_template, 'owner': plan.owner.username, 'districtCount': len(plan.get_districts_at_version(plan.version)) - 1 }})
-        
+        plans_list.append( { 'pk': plan.id, 'fields': { 'name': plan.name, 'description': plan.description, 'edited': str(plan.edited), 'is_template': plan.is_template, 'owner': plan.owner.username, 'districtCount': len(plan.get_districts_at_version(plan.version)) - 1, 'can_edit': can_edit(request.user, plan) }})
     # json_response = "{ \"total\":\"%d\", \"page\":\"%d\", \"records\":\"%d\", \"rows\":%s }" % (total_pages, page, len(plans), serializers.serialize('json', plans))
     json_response = "{ \"total\":\"%d\", \"page\":\"%d\", \"records\":\"%d\", \"rows\":%s }" % (total_pages, page, len(plans), json.dumps(plans_list))
     return HttpResponse(json_response,mimetype='application/json') 
 
+@login_required
+def editplanattributes(request, planid):
+    if request.method != 'POST':
+        return HttpResponseNotAllowed(['POST'])
+    new_name = request.POST.get('name', None)
+    new_description = request.POST.get('description', None)
 
+    if not planid or not (new_name or new_description):
+        return HttpResponseBadRequest('Must declare planId, name and description')
+
+    status = { 'success': False }
+    try:
+        plan = Plan.objects.get(pk=planid)
+        if new_name: 
+            plan.name = new_name
+        if new_description:
+            plan.description = new_description
+        plan.save()
+    except Exception as ex:
+        status['message'] = 'Failed to save the changes to your plan'
+        status['exception'] = ex
+    else:
+        status['success'] = True
+        status['message'] = 'Updated plan attributes'
+    return HttpResponse(json.dumps(status), mimetype='application/json')

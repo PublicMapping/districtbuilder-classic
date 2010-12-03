@@ -56,7 +56,10 @@ chooseplan = function(options) {
         _nameRequired,
         _activeText,
         _selectedPlanName,
-        _copyOrCreate;
+        _editButton,
+        _saveButton,
+        _cancelButton,
+        _resetForm;
 
     /**
      * Initialize the chooser. Setup the click event for the target to
@@ -79,6 +82,31 @@ chooseplan = function(options) {
         }
         return _self;
     };
+
+    /**
+     * Show the edit button, the save/cancel buttons, or none
+     */
+    var editState = function(state) {
+        if (state === 'view') {
+            $('#plan_form #name').attr('disabled', 'disabled');
+            $('#plan_form #description').attr('disabled', 'disabled');
+            _editButton.button('enable').show();
+            _saveButton.button('disable').hide();
+            _cancelButton.button('disable').hide();
+        } else if (state === 'edit') {
+            $('#plan_form #name').removeAttr('disabled');
+            $('#plan_form #description').removeAttr('disabled');
+            _editButton.button('disable').hide();
+            _saveButton.button('enable').show();
+            _cancelButton.button('enable').show();
+        } else {
+            $('#plan_form #name').attr('disabled', 'disabled');
+            $('#plan_form #description').attr('disabled', 'disabled');
+            _editButton.button('disable').hide();
+            _saveButton.button('disable').hide();
+            _cancelButton.button('disable').hide();
+        }
+    }
 
     /**
      * Show one choosing mode. This function is called from within the
@@ -245,8 +273,9 @@ chooseplan = function(options) {
                 {name:'fields.name', label:'Name', search:true, sortable:true, editable:true},
                 {name:'fields.description', label:'Description', hidden:true, search:true, editable:true},
                 {name:'fields.owner', label:'Author', search:true, sortable:true},
-                {name:'fields.edited', label:'Last Edited', search:true, sortable:true, datefmt:'MM/DD/Y'},
+                {name:'fields.edited', label:'Last Edited', search:true, sortable:true, formatter:'date', formatoptions: { srcformat: 'UniversalSortableDateTime', newformat:'d/m/Y g:i A'}},
                 {name:'fields.is_shared', label:'Shared', search:true, sortable:true, formatter:'checkbox', width:'60'},
+                {name:'fields.can_edit', label:'Edit', hidden: true},
                 {name:'fields.districtCount', label:'# Districts', sortable:true, hidden:true},
             ],
 
@@ -275,8 +304,35 @@ chooseplan = function(options) {
         // Set the internal variables for later use
         _selectedPlanId = id;
         _selectedPlanName = _table.jqGrid('getCell', id, 'fields.name');
-        // Update the data editing form
-        _table.jqGrid('GridToForm', id, '#plan_form');
+        var editable = _table.jqGrid('getCell', id, 'fields.can_edit');
+        _table.jqGrid('GridToForm', id, '#plan_form'); 
+
+        if (editable) {
+            editState('view');
+            // clear previous handlers
+            _saveButton.die();
+            // On save click, submit new plan attribute data to server
+            _saveButton.click( function() {
+                $.post('/districtmapping/plan/' + _selectedPlanId + '/attributes/',
+                    {
+                        name: $('#plan_form #name').val(),
+                        description: $('#plan_form #description').val()
+                    }, function(data) {
+                        if (data.success) {
+                            _table.jqGrid().trigger('reloadGrid');
+                            _table.jqGrid('GridToForm', _selectedPlanId, '#plan_form'); 
+                            editState('view');
+                        }
+                    });
+            });
+        } else {
+            editState('none');
+        }
+
+        districtindexfile({
+            target: $('#chooserFileDownloadTarget'),
+            planId: id
+        }).init();
     };
     
     var appendExtraParamsToRequest = function(xhr) {
@@ -290,6 +346,8 @@ chooseplan = function(options) {
         $('#newName').toggle(input);
         $('#radCopyOrEdit').toggle(radio);
         $('#table_container').toggle(table);
+
+        editState('none');
 
         if (sharedCol) {
             _options.table.jqGrid('showCol', 'fields.is_shared');
@@ -313,6 +371,21 @@ chooseplan = function(options) {
     
     var initButtons = function() {
     
+        // Save these for later        
+        _editButton = $('#edit_plan_attr');
+        _saveButton = $('#save_plan_attr');
+        _cancelButton = $('#cancel_edit_plan_attr');
+
+        // Set up the cancel button when editing;
+        _editButton.click( function() {
+            editState('edit');
+        });
+        _cancelButton.button().click( function() {
+            _table.jqGrid('GridToForm', _selectedPlanId, '#plan_form'); 
+            editState('view');
+        });
+
+        // Set up the filter buttons
         $('#filter_templates').click( function () {
             _eventType = 'template';
             _nameRequired = true;
@@ -365,9 +438,12 @@ chooseplan = function(options) {
                 _nameRequired = true;
             }
         });
-        $('#filter_templates').click();
 
+        // set the start mapping button to select the plan
         $('#start_mapping').click(selectPlan);
+
+        // Start the chooser with templates
+        $('#filter_templates').click();
     };
 
 

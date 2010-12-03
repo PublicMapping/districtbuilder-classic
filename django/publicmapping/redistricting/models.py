@@ -147,6 +147,18 @@ class Geolevel(models.Model):
     # The maximum zoom level
     max_zoom = models.PositiveIntegerField(default=20)
 
+    # The position that this geolevel should be in, relative to all other
+    # geolevels, when viewing the geolevels in a list.
+    sort_key = models.PositiveIntegerField(default=1)
+
+    class Meta:
+        """
+        Additional information about the Subject model.
+        """
+
+        # The default method of sorting Geolevels should be by 'sort_key'
+        ordering = ['sort_key']
+
     def __unicode__(self):
         """
         Represent the Geolevel as a unicode string. This is the Geolevel's 

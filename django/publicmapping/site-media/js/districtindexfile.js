@@ -36,12 +36,14 @@ districtindexfile = function(options) {
         _options = $.extend({
             target: {},
             callback: function() {},
+            /* the id for the plan to which this checker applies. by default, the current plan */
+            planId: PLAN_ID,
             /* how often (in milliseconds) to check the index file status */
             timer: 15000, 
             /* The url to check the server for the status of the file */
-            statusUrl: '/districtmapping/plan/' + PLAN_ID + '/districtindexfilestatus/',
+            statusUrl: '/districtmapping/plan/' + ( typeof(options.planId) != 'undefined' ? options.planId : PLAN_ID ) + '/districtindexfilestatus/',
              /* The url to fetch the district index file */
-            fetchUrl:'/districtmapping/plan/' + PLAN_ID + '/districtindexfile/'
+            fetchUrl:'/districtmapping/plan/' + ( typeof(options.planId) != 'undefined' ? options.planId : PLAN_ID ) + '/districtindexfile/'
         }, options);
      
     /**
@@ -71,6 +73,7 @@ districtindexfile = function(options) {
                 var button = $('<button id="btnExportDistrictIndexFile" class="button">Download</button>').button();
                 $(link).append(button);
                 _options.target.append(link);    
+                $(link).click();
             // If the file is in progress, show that
             } else if (fileStatus == 'pending') {
                 indicatePending(data);
