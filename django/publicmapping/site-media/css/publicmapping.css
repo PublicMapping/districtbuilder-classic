@@ -631,7 +631,7 @@ width: 100%;
 form#plan_form {
 }
 
-div#form_container label {display:block}
+div#form_container label#name_label,div#form_container label#description_label  {display:block}
 
 div#form_container label, div#radCopyOrEdit {
   font-size: 12px;
@@ -646,7 +646,10 @@ div#form_container textarea {
   width: 95%;
 }
 
-div#form_container input[disabled='disabled'] {
+
+
+
+div#form_container input#edited {
   background: #000000
 }
 
