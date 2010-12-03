@@ -324,6 +324,7 @@ chooseplan = function(options) {
                             editState('view');
                         }
                     });
+                return false;
             });
         } else {
             editState('none');
