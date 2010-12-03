@@ -549,7 +549,7 @@ div#step_plan div.middlecolumn  {
 }  
 
 div#gbox_plan_table {
-  min-height: 454px;
+  min-height: 395px;
 }
 
 div#gbox_plan_table div#plan_table_pager {
@@ -582,7 +582,16 @@ cursor:pointer;
 
 div#upload_selection {
   display:none;
+   font-weight:bold;
 }
+
+
+
+div#upload_selection #indexFile {
+  margin-bottom: 10px;
+}
+
+
 
 div#form_column{
     float:right;
@@ -640,17 +649,22 @@ div#form_container label, div#radCopyOrEdit {
   }
 div#radCopyOrEdit {margin-bottom: 5px}
   
-div#form_container input , 
+div#form_container input, 
 div#form_container textarea {
-  margin: 0 0 5px 0;
+  margin: 0 0 8px 0;
   width: 95%;
 }
 
-
-
-
-div#form_container input#edited {
-  background: #000000
+div#form_container input#owner,
+div#form_container input#edited,
+div#form_container input#is_shared,
+div#form_container input#districtCount
+{
+  background:none repeat scroll 0 0 transparent;
+  border:medium none;
+  color:#888888;
+  margin-left:5px;
+  width:auto;
 }
 
 div#form_column textarea {

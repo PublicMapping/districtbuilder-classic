@@ -391,7 +391,6 @@ chooseplan = function(options) {
             _nameRequired = true;
             _table.jqGrid().trigger('reloadGrid').setCaption('Templates');
             showItems(true, false, true, false, true);
-            $('#edit_plan').hide()
             setActiveTab($(this));
            
         });        
@@ -400,7 +399,6 @@ chooseplan = function(options) {
             _nameRequired = true;
             _table.jqGrid().trigger('reloadGrid').setCaption('Shared Plans');
             showItems(true, false, true, false, true);
-            $('#edit_plan').hide()
             setActiveTab($(this));
         });        
         $('#filter_mine').click( function () {
@@ -410,7 +408,6 @@ chooseplan = function(options) {
             $('input:radio[name=Edit]').filter('[value=edit]').attr('checked', true);
             _nameRequired = false;
             showItems(false, true, true, true, false);
-             $('#edit_plan').show()
             setActiveTab($(this));            
         });        
         $('#new_from_blank').click( function() {
