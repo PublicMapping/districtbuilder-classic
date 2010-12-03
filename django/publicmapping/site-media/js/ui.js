@@ -154,16 +154,6 @@ $(function() {
     // jQuery-UI buttons   
     loadButtons();
     
-    //resize grid to fit window
-    $(window).resize(function() {
-        $('#table_container').width(parseInt($(window).width() - 550))
-        var tblContainerWidth = parseInt($('#table_container').width())
-        if (tblContainerWidth > 420) {
-          $('#plan_table').setGridWidth(tblContainerWidth + 15)
-        }
-    });
-    
-    
     
     // stats dropdown button
     $('.menu_toggle')

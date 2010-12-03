@@ -74,6 +74,7 @@ chooseplan = function(options) {
         _table = _options.table;
         _nameRequired = false;
         loadTable();
+        resizeToFit();
         initButtons();
         
         if (window.UPLOADED) {
@@ -270,11 +271,11 @@ chooseplan = function(options) {
                 id: 'pk',
             },
             colModel: [
-                {name:'fields.name', label:'Name', search:true, sortable:true, editable:true},
-                {name:'fields.description', label:'Description', hidden:true, search:true, editable:true},
-                {name:'fields.owner', label:'Author', search:true, sortable:true},
-                {name:'fields.edited', label:'Last Edited', search:true, sortable:true, formatter:'date', formatoptions: { srcformat: 'UniversalSortableDateTime', newformat:'d/m/Y g:i A'}},
-                {name:'fields.is_shared', label:'Shared', search:true, sortable:true, formatter:'checkbox', width:'60'},
+                {name:'fields.name', label:'Name', searchable: true, sortable:true},
+                {name:'fields.owner', label:'Author', search:true, width: '110', fixed: 'true', sortable:true},
+                {name:'fields.description', label:'Description', hidden:true, search:true},
+                {name:'fields.is_shared', label:'Shared', search:true, sortable:true, formatter:'checkbox', width:'60', fixed: 'true', align: 'center'},
+                {name:'fields.edited', label:'Last Edited', search:true, sortable:true, width:'110', align: 'center', formatter:'date', formatoptions: { srcformat: 'UniversalSortableDateTime', newformat:'d/m/Y g:i A'}},
                 {name:'fields.can_edit', label:'Edit', hidden: true},
                 {name:'fields.districtCount', label:'# Districts', sortable:true, hidden:true},
             ],
@@ -282,16 +283,15 @@ chooseplan = function(options) {
             onSelectRow: rowSelected,
             beforeRequest: appendExtraParamsToRequest,
             height: 'auto',
-            autowidth: true,
-            rowNum:10,
-            rowList:[10,20,30],
+            autowidth: 'true',
+            rowNum:15,
             sortname: 'id',
             viewrecords:true,
             mtype: 'POST'
         }).jqGrid(
             'navGrid',
             '#' + _options.pager.attr('id'),
-            {search:true,edit:true,add:false,del:false,searchText:"Search",refreshText:"Clear Search"},
+            {search:true,edit:false,add:false,del:false,searchText:"Search",refreshText:"Clear Search"},
             {}, //edit
             {}, //add
             {}, //del
@@ -360,6 +360,9 @@ chooseplan = function(options) {
         } else {
             _options.table.jqGrid('hideCol', 'fields.owner');
         }
+        // There's a bug in hiding/showing columns. Tables get a pixel smaller each time
+        resizeToFit();
+
         $('#upload_selection').toggle(_eventType == 'upload'); 
     };
 
@@ -446,6 +449,18 @@ chooseplan = function(options) {
         $('#filter_templates').click();
     };
 
+    //resize grid to fit window
+    var resizeToFit = function() {
+        // Shrink the container and allow for padding
+        $('#table_container').width(parseInt($(window).width() - 550));
+        var tblContainerWidth = parseInt($('#table_container').width());
+        // if it's bigger than the minwidth, resize
+        if (tblContainerWidth > 420) {
+            _table.jqGrid('setGridWidth', tblContainerWidth + 15);
+        }
+    };
+    
+    $(window).resize( resizeToFit );
 
     return _self;
 };

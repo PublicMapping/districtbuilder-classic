@@ -1246,6 +1246,8 @@ def getplans(request):
     # Set up the order_by parameter from sidx and sord in the request
     if sidx.startswith('fields.'):
         sidx = sidx[len('fields.'):]
+    if sidx == 'owner':
+        sidx = 'owner__username'
     if sord == 'desc':
         sidx = '-' + sidx
 
@@ -1257,7 +1259,6 @@ def getplans(request):
     plans_list = list()
     for plan in plans:
         plans_list.append( { 'pk': plan.id, 'fields': { 'name': plan.name, 'description': plan.description, 'edited': str(plan.edited), 'is_template': plan.is_template, 'is_shared': plan.is_shared, 'owner': plan.owner.username, 'districtCount': len(plan.get_districts_at_version(plan.version)) - 1, 'can_edit': can_edit(request.user, plan) }})
-    # json_response = "{ \"total\":\"%d\", \"page\":\"%d\", \"records\":\"%d\", \"rows\":%s }" % (total_pages, page, len(plans), serializers.serialize('json', plans))
     json_response = "{ \"total\":\"%d\", \"page\":\"%d\", \"records\":\"%d\", \"rows\":%s }" % (total_pages, page, len(plans), json.dumps(plans_list))
     return HttpResponse(json_response,mimetype='application/json') 
 
