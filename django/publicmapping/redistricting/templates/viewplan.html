@@ -10,9 +10,9 @@
 
    Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
    See the License for the specific language governing permissions and
-   limitations under the License.
+   limitations under the License. 
 
    This file is part of The Public Mapping Project
    http://sourceforge.net/projects/publicmapping/
@@ -23,7 +23,7 @@
        This template provides basic mapping functionality for viewing and
        navigating districts and plans. The editplan template extends this
        functionality by providing editing tools.
-
+ 
    Author: 
        Andrew Jennings, David Zwarg
 
@@ -176,9 +176,15 @@
         <li id="tab_share"><a href="#step_share">Step 4: Share</a></li>
       </ul>
    <div id="step_plan" class="main_content plan fulltab">
+            <div class="shadow_left"></div>
+            <div class="shadow_top"></div>
+         <div class="toolbar ui-widget-header"><h1>Choose a Plan. Start Drawing.</h1></div>
+         <div id="plan_content">
+
+         
         <div id="leg_selector_container">
             <span id="leg_selector_instructions">
-                Step 1: Select Legislative Body
+               1. Select Legislative Body
             </span>
             <select id="leg_selector">
                 {% for body in bodies %}
@@ -186,48 +192,67 @@
                 {% endfor %}
             </select>
         </div>
-        <div id="plan_buttons">
-            <button id="filter_templates">Template</button>
-            <button id="filter_shared">Shared</button>
-            <button id="filter_mine">My Plans</button>
-            <button id="new_from_blank">From Blank</button>
-            <button id="new_from_file">Import File</button>
+        <div id="plan_type">
+          <h3>2. Select Plan Type</h3>
+          <ul id="plan_buttons">
+              <li id="filter_templates">Template</li>
+              <li id="filter_shared">Shared</li>
+              <li id="filter_mine">My Plans</li>
+              <li id="new_from_file">Upload Plan</li>
+          </ul>
         </div>
-        <div id="table_container" class="middlecolumn" >
-            <table id="plan_table"></table>
-            <div id="plan_table_pager"></div>
-        </div>
-        <div id="upload_selection" class="middlecolumn" >
-            <label>Upload a District Index file:</label>
-            <form method="POST" enctype="multipart/form-data" action="/districtmapping/plan/upload/" id="frmUpload">
-                <input type="file" id="indexFile" name="indexFile"/>
-                <input type="hidden" id="userEmail" name="userEmail" value="{{ userinfo.email }}"/>
-            </form>
-            <div>
-                <p>Please enter your email address. It will not be saved or shared.</p>
-                <input type="text" id="userEmail" name="userEmail"/>
+        <div>
+          <div id="content_container">
+            <div id="table_container" class="middlecolumn" >
+                      <h3>3. Select Plan</h3>
+                <table id="plan_table"></table>
+                <div id="plan_table_pager"></div>  
             </div>
+          <div id="upload_selection" class="middlecolumn" >
+              <label>Upload a District Index file:</label>
+              <form method="POST" enctype="multipart/form-data" action="/districtmapping/plan/upload/" id="frmUpload">
+                  <input type="file" id="indexFile" name="indexFile"/>
+                  <input type="hidden" id="userEmail" name="userEmail" value="{{ userinfo.email }}"/>
+              </form>
+              <div>
+                  <p>Please enter your email address. It will not be saved or shared.</p>
+                  <input type="text" id="userEmail" name="userEmail"/>
+              </div>
+          </div>      
+          
+            <div id="form_column">
+
+                <div id="form_container">
+                  <form id="plan_form">
+                    <h3>Plan Details</h3>
+                      <label id="name_label" for="name">Name</label><input disabled type="text" id="name" name="fields.name" />
+                      <label id="description_label" for="description">Description</label><textarea disabled type="text" id="description" name="fields.description" rows="5" ></textarea>
+                      <label id="owner_label" for="owner">Owner</label><input disabled type="text" id="owner" name="fields.owner" />
+                      <label id="edited_label" for="edited">Edited</label><input disabled type="text" id="edited" name="fields.edited" />
+                      <label id="is_shared_label" for="is_shared">Shared:</label><input disabled type="text" id="is_shared" name="fields.is_shared" />
+                      <label id="districtCount_label" for="districtCount"># of Districts:</label><input disabled type="text" id="districtCount" name="fields.districtCount" />
+                                 <button id="edit_plan">Edit Selected</button>
+                  </form>
+
+                </div>
+                <div id="form_action">
+                  <div id='radCopyOrEdit'>
+                      <input type="radio" name="Edit" value="edit" checked>Edit Selected Plan</input><br/>
+                      <input type="radio" name="Edit" value="saveas">Copy and Save Selected Plan</input>
+                  </div>
+                  <div id="newName">
+                      <label for="txtNewName" id="lblNewName">4. Name your new plan:</label>
+                      <input type="text" id="txtNewName" name="txtNewName"/>
+                  </div>
+                  <button id="start_mapping">Start Drawing</button>
+                </div>              
+             </div>
         </div>
-        <div id="form_container">
-            <form id="plan_form">
-                <label id="name_label" for="name">Name</label><input disabled type="text" id="name" name="fields.name" />
-                <label id="description_label" for="description">Description</label><textarea disabled type="text" id="description" name="fields.description" rows="5" ></textarea>
-                <label id="owner_label" for="owner">Owner</label><input disabled type="text" id="owner" name="fields.owner" />
-                <label id="edited_label" for="edited">Edited</label><input disabled type="text" id="edited" name="fields.edited" />
-                <label id="is_shared_label" for="is_shared">Shared:</label><input disabled type="text" id="is_shared" name="fields.is_shared" />
-                <label id="districtCount_label" for="districtCount"># of Districts:</label><input disabled type="text" id="districtCount" name="fields.districtCount" />
-            </form>
-            <div id='radCopyOrEdit'>
-                <input type="radio" name="Edit" value="edit" checked>Edit Selected Plan</input>
-                <input type="radio" name="Edit" value="saveas">Copy and Save Selected Plan</input>
-            </div>
-            <div id="newName">
-                <label for="txtNewName" id="lblNewName">Name your new plan:</label>
-                <input type="text" id="txtNewName" name="txtNewName"/>
-            </div>
-            <button id="start_mapping">Start Mapping</button>
-            <button id="edit_plan">Edit Selected</button>
-        </div>
+
+        
+        <div class="clear"></div>
+      </div>
+   </div>
    </div>
    <div id="step_draw" class="main_content">
       <div id="mapandmenu" class="fulltab" >
@@ -456,8 +481,8 @@
             {% endif %}
           </div>
           <div id="map">
-            <div id="shadow_left"></div>
-            <div id="shadow_top"></div>
+            <div class="shadow_left"></div>
+            <div class="shadow_top"></div>
           </div>
           <div id="map_legend">
               <button id="legend_toggle">Map Legend</button>
@@ -701,7 +726,7 @@ Include the markup for the account management panel.
         $('#steps').tabs('select', '#step_draw');
 
         $('#steps').tabs({ show: function(event, ui) {
-            if ($(this).tabs('option', 'selected') == 2) {
+            if ($(this).tabs('option', 'selected') == 3) {
                 exportIndexFile.init();
             }
         }});

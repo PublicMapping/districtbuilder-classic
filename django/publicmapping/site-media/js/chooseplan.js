@@ -304,39 +304,56 @@ chooseplan = function(options) {
         $('#upload_selection').toggle(_eventType == 'upload'); 
     };
 
+    var setActiveTab = function($currTab) {
+        $('#plan_buttons li').each(function() {
+          $(this).removeClass('active');
+        });
+        $currTab.addClass('active');
+     };
+    
     var initButtons = function() {
     
-        $('#filter_templates').button().click( function () {
+        $('#filter_templates').click( function () {
             _eventType = 'template';
             _nameRequired = true;
             _table.jqGrid().trigger('reloadGrid').setCaption('Templates');
             showItems(true, false, true, false, true);
+            $('#edit_plan').hide()
+            setActiveTab($(this));
+           
         });        
-        $('#filter_shared').button().click( function () {
+        $('#filter_shared').click( function () {
             _eventType = 'shared';
             _nameRequired = true;
             _table.jqGrid().trigger('reloadGrid').setCaption('Shared Plans');
             showItems(true, false, true, false, true);
+            $('#edit_plan').hide()
+            setActiveTab($(this));
         });        
-        $('#filter_mine').button().click( function () {
+        $('#filter_mine').click( function () {
             _eventType = 'mine';
             _nameRequired = true;
             _table.jqGrid().trigger('reloadGrid').setCaption('My Plans');
             $('input:radio[name=Edit]').filter('[value=edit]').attr('checked', true);
             _nameRequired = false;
             showItems(false, true, true, true, false);
+             $('#edit_plan').show()
+            setActiveTab($(this));            
         });        
-        $('#new_from_blank').button().click( function() {
+        $('#new_from_blank').click( function() {
             _eventType = 'blank';
             showItems(true, false, false, false, true);
+             setActiveTab($(this));           
         });
-        $('#new_from_file').button().click( function() {
+        $('#new_from_file').click( function() {
             _eventType = 'upload';
             showItems(true, false, false, false, true);
+            setActiveTab($(this));           
         });
 
         $('#edit_plan').button().click( function() {
             ('#plan_form #name').removeAttr('disabled');
+             setActiveTab($(this));           
         });
         
         $('#radCopyOrEdit input:radio').change( function() {
@@ -348,7 +365,7 @@ chooseplan = function(options) {
                 _nameRequired = true;
             }
         });
-        $('#filter_templates').button().click();
+        $('#filter_templates').click();
 
         $('#start_mapping').click(selectPlan);
     };
