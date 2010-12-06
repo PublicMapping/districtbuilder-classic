@@ -53,6 +53,13 @@ class Command(BaseCommand):
         make_option('-d', '--debug', dest="debug",
             help="Generate verbose debug output", default=False, 
             action='store_true'),
+        make_option('-g', '--geolevel', dest="geolevels",
+            action="append", help="Geolevels to import"),
+        make_option('-v', '--views', dest="views", default=False,
+            action="store_true", help="Create database views."),
+        make_option('-G', '--geoserver', dest="geoserver",
+            action="store_true", help="Create spatial layers in Geoserver.",
+            default=False),
     )
 
 
@@ -60,7 +67,6 @@ class Command(BaseCommand):
         """
         Perform the command. 
         """
-
         if options.get('config') is None:
             print """
 ERROR:
@@ -92,16 +98,23 @@ contents of the file and try again.
 
         self.import_prereq(config)
 
-        # Begin the import process
-        geolevels = config.xpath('/DistrictBuilder/GeoLevel')
+        optlevels = options.get("geolevels")
+        if optlevels is not None:
+            # Begin the import process
+            geolevels = config.xpath('/DistrictBuilder/GeoLevel')
 
-        for geolevel in geolevels:
-            self.import_geolevel(config, geolevel, None)
+            for i,geolevel in enumerate(geolevels):
+                importme = len(optlevels) == 0
+                importme = importme or (i in optlevels)
+                if importme:
+                    self.import_geolevel(config, geolevel, None)
 
-        # Create views based on the subjects and geolevels
-        extent = self.create_views()
+        if options.get("views"):
+            # Create views based on the subjects and geolevels
+            extent = self.create_views()
 
-        self.configure_geoserver(config, extent)
+        if options.get("geoserver"):
+            self.configure_geoserver(config, extent)
 
     def configure_geoserver(self, config, extent):
         """
@@ -503,8 +516,6 @@ ERROR:
         sys.stdout.flush()
         for i,feat in enumerate(lyr):
             if (float(i) / len(lyr)) > (progress + 0.1):
-                break
-
                 progress += 0.1
                 sys.stdout.write('%2.0f%% .. ' % (progress * 100))
                 sys.stdout.flush()

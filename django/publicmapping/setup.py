@@ -32,7 +32,7 @@ from optparse import OptionParser, OptionGroup
 from os.path import exists
 from lxml.etree import parse, XMLSchema
 from xml.dom import minidom
-import traceback, pprint, os, sys
+import traceback, pprint, os, sys, random
 
 def main():
     """
@@ -40,11 +40,25 @@ def main():
     """
     usage = "usage: %prog [options] SCHEMA CONFIG"
     parser = OptionParser(usage=usage)
-    parser.add_option('-d', '--debug', dest="debug",
+    parser.add_option('-d', '--database', dest="database",
+            help="Generate the database schema", default=False,
+            action='store_true')
+    parser.add_option('-g', '--geolevel', dest="geolevels",
+            help="Import the geography from the Nth GeoLevel.", 
+            action="append", type="int")
+    parser.add_option('-v', '--views', dest="views",
+            help="Create database views based on all geographies.",
+            action='store_true', default=False)
+    parser.add_option('-V', '--verbose', dest="verbose",
             help="Generate verbose debug output", default=False, 
             action='store_true')
+    parser.add_option('-G', '--geoserver', dest="geoserver",
+            help="Create spatial data layers in Geoserver.",
+            default=False, action='store_true')
 
     (options, args) = parser.parse_args()
+
+    allops = (not options.database) and (not options.geolevels) and (not options.views) and (not options.geoserver)
 
     if len(args) != 2:
         print """
@@ -55,19 +69,17 @@ ERROR:
 """
         return
 
-    config = validate_config(args[0], args[1], options.debug)
+    config = validate_config(args[0], args[1], options.verbose)
 
     if not config:
        return
 
     print "Validated config."
 
-    if setup_db(config):
-        print "Database setup."
+    if merge_config(config, options.verbose):
+        print "Generated django settings."
     else:
         return
-
-
 
     os.environ['DJANGO_SETTINGS_MODULE'] = 'publicmapping.settings'
     
@@ -75,9 +87,19 @@ ERROR:
 
     from django.core import management
 
-    management.call_command('syncdb')
+    if allops or options.database:
+        management.call_command('syncdb')
 
-    management.call_command('setup', config=args[1], debug=options.debug)
+    if allops:
+        geolevels = []
+        views = True
+        geoserver = True
+    else:
+        geolevels = options.geolevels
+        views = options.views
+        geoserver = options.geoserver
+
+    management.call_command('setup', config=args[1], debug=options.verbose, geolevels=geolevels, views=views, geoserver=geoserver)
 
     return
 
@@ -191,28 +213,82 @@ the configuration file and make sure all <Subject> tags reference a
     return elem_tree
 
 
-def setup_db(config):
+def merge_config(config, verbose):
     """
     Set up the database connection, based on the values in the provided
     configuration file.
     """
-    dbconfig = config.xpath('//Project/Database')[0]
 
     try:
-        settings = open('settings.py','a')
-        settings.write('\n#\n# Automatically generated settings.\n#\n')
-        settings.write("DATABASE_ENGINE = 'postgresql_psycopg2'\n")
-        settings.write("DATABASE_NAME = '%s'\n" % dbconfig.get('name'))
-        settings.write("DATABASE_USER = '%s'\n" % dbconfig.get('user'))
-        settings.write("DATABASE_PASSWORD = '%s'\n" % dbconfig.get('password'))
-        settings.close()
+        settings_in = open('settings.py.in','r')
+        settings_out = open('settings.py','w')
+
+        for line in settings_in.readlines():
+            settings_out.write(line)
+
+        settings_in.close()
+
+        cfg = config.xpath('//Project/Database')[0]
+        settings_out.write('\n#\n# Automatically generated settings.\n#\n')
+        settings_out.write("DATABASE_ENGINE = 'postgresql_psycopg2'\n")
+        settings_out.write("DATABASE_NAME = '%s'\n" % cfg.get('name'))
+        settings_out.write("DATABASE_USER = '%s'\n" % cfg.get('user'))
+        settings_out.write("DATABASE_PASSWORD = '%s'\n" % cfg.get('password'))
+
+        cfg = config.xpath('//MapServer')[0]
+        settings_out.write("\nMAP_SERVER = '%s'\n" % cfg.get('hostname'))
+        settings_out.write("MAP_SERVER_NS = '%s'\n" % cfg.get('ns'))
+        settings_out.write("MAP_SERVER_NSHREF = '%s'\n" % cfg.get('nshref'))
+        settings_out.write("FEATURE_LIMIT = %d\n" % int(cfg.get('maxfeatures')))
+        
+        cfg = config.xpath('//Admin')[0]
+        settings_out.write("\nADMINS = (\n  ('%s',\n  '%s'),\n)" % (cfg.get('user'), cfg.get('email')))
+        settings_out.write("\nMANAGERS = ADMINS\n")
+
+        cfg = config.xpath('//Mailer')[0]
+        settings_out.write("\nMAIL_SERVER = '%s'\n" % cfg.get('server'))
+        settings_out.write("MAIL_PORT = %d\n" % int(cfg.get('port')))
+        settings_out.write("MAIL_USERNAME = '%s'\n" % cfg.get('username'))
+        settings_out.write("MAIL_PASSWORD = '%s'\n" % cfg.get('password'))
+
+        settings_out.write("\nSECRET_KEY = '%s'\n" % "".join([random.choice("abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)") for i in range(50)]))
+
+        cfg = config.xpath('//Project')[0]
+        settings_out.write("\nMEDIA_ROOT = '%s/django/publicmapping/site-media/'\n" % cfg.get('root'))
+
+        settings_out.write("\nTEMPLATE_DIRS = (\n  '%s/django/publicmapping/templates',\n)\n" % cfg.get('root'))
+        settings_out.write("\nSLD_ROOT = '%s/sld/'\n" % cfg.get('root'))
+
+        cfg = config.xpath('//Redistricting')[0]
+        settings_out.write("\nSIMPLE_TOLERANCE = %0.1f\n" % float(cfg.get('tolerance')))
+
+        cfg = config.xpath('//Reporting')[0]
+        settings_out.write("\nREPORTS_ENABLED = %s\n" % (cfg.get('enabled') == 'true'))
+        if cfg.get('engine').lower() == 'bard':
+            cfg = cfg.xpath('Data')[0]
+
+            settings_out.write("\nBARD_BASESHAPE = '%s'\n" % cfg.get('shape'))
+            settings_out.write("BARD_BASEMAP = '%s'\n" % cfg.get('map'))
+            settings_out.write("BARD_TEMP = '%s'\n" % cfg.get('temp'))
+
+        cfg = config.xpath('//GoogleAnalytics')
+        if len(cfg) > 0:
+            cfg = cfg[0]
+            settings_out.write("\nGA_ACCOUNT = '%s'\n" % cfg.get('account'))
+            settings_out.write("GA_DOMAIN = '%s'\n" % cfg.get('domain'))
+        else:
+            settings_out.write("\nGA_ACCOUNT = None\nGA_DOMAIN = None\n")
+
+        settings_out.close()
     except Exception, ex:
         print """
 ERROR:
 
     The database settings could not be written. Please check the 
-    permissions of settings.py and try again.
+    permissions of the django directory and settings.py and try again.
 """
+        if verbose:
+            print traceback.format_exc()
         return False
 
     return True
