@@ -480,7 +480,11 @@ chooseplan = function(options) {
             $('#new_from_blank').hide();
             $('#new_from_file').hide();
             $('#start_mapping').button('option', 'label', 'View Map');
-            $('#start_mapping').before($('<div>4. Click the button to view the map anonymously</div>'));
+            if ($('#leg_selector option').length > 1) {
+                $('#start_mapping').before($('<div>4. Click the button to view the map as a guest</div>'));
+            } else {
+                $('#start_mapping').before($('<div>3. Click the button to view the map as a guest</div>'));
+            }
         }
 
         // set the start mapping button to select the plan
@@ -501,7 +505,7 @@ chooseplan = function(options) {
         }
     };
     
-    $(window).resize( resizeToFit );
+        $(window).resize( resizeToFit );
 
     return _self;
 };
