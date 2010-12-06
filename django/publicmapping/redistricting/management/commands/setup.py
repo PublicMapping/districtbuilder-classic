@@ -236,6 +236,9 @@ contents of the file and try again.
 
                 if firstsubj:
                     firstsubj = False
+                    #
+                    # Create NONE demographic layer, based on first subject
+                    #
                     if not self.rest_config( 'POST', host,
                         '/geoserver/rest/workspaces/%s/datastores/%s/featuretypes' % (namespace, datastore),
                         '<?xml version="1.0" encoding="UTF-8"?><featureType><name>demo_%s</name><nativeName>demo_%s_%s</nativeName><nativeBoundingBox><minx>%0.1f</minx><miny>%0.1f</miny><maxx>%0.1f</maxx><maxy>%0.1f</maxy></nativeBoundingBox></featureType>' % (geolevel.name, geolevel.name, subject.name, extent[0], extent[1], extent[2], extent[3]),
@@ -278,7 +281,55 @@ contents of the file and try again.
                         "Could not assign style '%s_none' to layer 'demo_%s'." % (geolevel.name, geolevel.name)):
                         return False
 
-                print "Assigned style '%s_none' to layer 'demo_%s'." % (geolevel.name, geolevel.name)
+                    print "Assigned style '%s_none' to layer 'demo_%s'." % (geolevel.name, geolevel.name)
+
+                    #
+                    # Create boundary layer, based on geographic boundaries
+                    #
+                    if not self.rest_config( 'POST', host,
+                        '/geoserver/rest/workspaces/%s/datastores/%s/featuretypes' % (namespace, datastore),
+                        '<?xml version="1.0" encoding="UTF-8"?><featureType><name>%s_boundaries</name><nativeName>demo_%s_%s</nativeName><nativeBoundingBox><minx>%0.1f</minx><miny>%0.1f</miny><maxx>%0.1f</maxx><maxy>%0.1f</maxy></nativeBoundingBox></featureType>' % (geolevel.name, geolevel.name, subject.name, extent[0], extent[1], extent[2], extent[3]),
+                        headers,
+                        "Could not create boundary layer '%s_boundaries'" % geolevel.name):
+                        return False
+
+                    print "Created '%s_boundaries' layer." % geolevel.name
+
+                    sld = self.get_style_contents( styledir, 
+                        geolevel.name, 
+                        'boundaries' )
+                    if sld is None:
+                        return False
+
+                    if not self.rest_config( 'POST', host,
+                        '/geoserver/rest/styles',
+                        '<?xml version="1.0" encoding="UTF-8"?><style><name>%s_boundaries</name><filename>%s_boundaries.sld</filename></style>' % (geolevel.name, geolevel.name),
+                        headers,
+                        "Could not create style '%s_boundaries'." % geolevel.name):
+                        return False
+
+                    print "Created style '%s_boundaries'." % geolevel.name
+
+                    headers['Content-Type'] = 'application/vnd.ogc.sld+xml'
+                    if not self.rest_config( 'PUT', host,
+                        '/geoserver/rest/styles/%s_boundaries' % geolevel.name,
+                        sld,
+                        headers,
+                        "Could not upload style file '%s_boundaries.sld'" % geolevel.name):
+                        return False
+
+                    print "Uploaded '%s_boundaries.sld' file." % geolevel.name
+
+                    headers['Content-Type'] = 'application/xml'
+                    if not self.rest_config( 'PUT', host,
+                        '/geoserver/rest/layers/%s:%s_boundaries' % (namespace, geolevel.name),
+                        '<?xml version="1.0" encoding="UTF-8"?><layer><defaultStyle><name>%s_boundaries</name></defaultStyle><enabled>true</enabled></layer>' % geolevel.name,
+                        headers,
+                        "Could not assign style '%s_boundaries' to layer '%s_boundaries'." % (geolevel.name, geolevel.name)):
+                        return False
+
+                    print "Assigned style '%s_boundaries' to layer '%s_boundaries'." % (geolevel.name, geolevel.name)
+
 
         return True
 
