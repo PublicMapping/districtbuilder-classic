@@ -155,6 +155,16 @@ chooseplan = function(options) {
      * for editing.
      */
     var selectPlan = function () {
+        // If we're anonymous, just view the selected map
+        if (_options.anonymous) {
+            if (typeof(_selectedPlanId) == 'undefined') {
+                alert('Choose a plan from the table first');
+                return false;
+            }
+            window.location = '/districtmapping/plan/' + _selectedPlanId + '/view/';
+            return false;
+        }
+
         // If the user is using a template, they should have clicked the table first
         if (typeof(_selectedPlanId) == 'undefined' && 'blankupload'.indexOf(_eventType) == -1 ) {
             alert('Choose a plan from the table first');
@@ -439,7 +449,11 @@ chooseplan = function(options) {
             _eventType = 'template';
             _nameRequired = true;
             _table.jqGrid().trigger('reloadGrid');
-            showItems(true, false, true, false, true);
+            if (_options.anonymous) {
+                showItems(false, false, true, false, true);
+            } else {
+                showItems(true, false, true, false, true);
+            }
             setActiveTab($(this));
            
         });        
@@ -447,7 +461,12 @@ chooseplan = function(options) {
             _eventType = 'shared';
             _nameRequired = true;
             _table.jqGrid().trigger('reloadGrid');
-            showItems(true, false, true, false, true);
+            if (_options.anonymous) {
+                showItems(false, false, true, false, true);
+            } else {
+                showItems(true, false, true, false, true);
+            }
+                
             setActiveTab($(this));
         });        
         $('#filter_mine').click( function () {
@@ -484,6 +503,15 @@ chooseplan = function(options) {
                 _nameRequired = true;
             }
         });
+
+        // If anonymous, hide the "new plan" options
+        if (_options.anonymous) {
+            $('#filter_mine').hide();
+            $('#new_from_blank').hide();
+            $('#new_from_file').hide();
+            $('#start_mapping').button('option', 'label', 'View Map');
+            $('#start_mapping').before($('<div>4. Click the button to view the map anonymously</div>'));
+        }
 
         // set the start mapping button to select the plan
         $('#start_mapping').click(selectPlan);

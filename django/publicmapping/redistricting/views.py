@@ -247,8 +247,10 @@ def editplan(request, planid):
         A rendered HTML page for editing a plan.
     """
     plan = commonplan(request, planid)
+    if plan['is_editable'] == False:
+        return HttpResponseRedirect('/districtmapping/plan/%s/view/' % planid)
     plan['dists_maxed'] = len(plan['districts']) > settings.MAX_DISTRICTS
-    return render_to_response('editplan.html', plan)
+    return render_to_response('viewplan.html', plan) 
 
 @login_required
 def createplan(request):
