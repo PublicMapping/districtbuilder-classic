@@ -44,7 +44,9 @@ districtindexfile = function(options) {
             statusUrl: '/districtmapping/plan/' + ( typeof(options.planId) != 'undefined' ? options.planId : PLAN_ID ) + '/districtindexfilestatus/',
              /* The url to fetch the district index file */
             fetchUrl:'/districtmapping/plan/' + ( typeof(options.planId) != 'undefined' ? options.planId : PLAN_ID ) + '/districtindexfile/'
-        }, options);
+        }, options),
+        
+        _autoDownload = false;
      
     /**
      * Initialize the publisher. Load the publisher's contents and set up
@@ -73,7 +75,9 @@ districtindexfile = function(options) {
                 var button = $('<button id="btnExportDistrictIndexFile" class="button">Download</button>').button();
                 $(link).append(button);
                 _options.target.append(link);    
-                $(link).click();
+                if (_autoDownload) {
+                    window.location = _options.fetchUrl;
+                }
             // If the file is in progress, show that
             } else if (fileStatus == 'pending') {
                 indicatePending(data);
@@ -117,10 +121,9 @@ districtindexfile = function(options) {
         
         // Request the status again after the timer time has passed
         var checkagain = function() {
-            if ($('#steps').tabs('option', 'selected') == 3) {
-                $.post(_options.statusUrl, statusRequestCallback);
-            }
+            $.post(_options.statusUrl, statusRequestCallback);
         };
+        _autoDownload = true;
         setTimeout(checkagain, _options.timer);
     };
 

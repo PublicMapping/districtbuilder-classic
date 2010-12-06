@@ -35,7 +35,7 @@ config.read('/projects/publicmapping/local/settings.ini')
 
 # Django settings for publicmapping project.
 
-DEBUG = False
+DEBUG = False 
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
