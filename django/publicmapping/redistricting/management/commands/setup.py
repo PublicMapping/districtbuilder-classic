@@ -99,9 +99,9 @@ contents of the file and try again.
         self.import_prereq(config)
 
         optlevels = options.get("geolevels")
-        if optlevels is not None:
+        if not optlevels is None:
             # Begin the import process
-            geolevels = config.xpath('/DistrictBuilder/GeoLevel')
+            geolevels = config.xpath('/DistrictBuilder/GeoLevels/GeoLevel')
 
             for i,geolevel in enumerate(geolevels):
                 importme = len(optlevels) == 0
@@ -111,9 +111,10 @@ contents of the file and try again.
 
         if options.get("views"):
             # Create views based on the subjects and geolevels
-            extent = self.create_views()
+            self.create_views()
 
         if options.get("geoserver"):
+            extent = Geounit.objects.all().extent()
             self.configure_geoserver(config, extent)
 
     def configure_geoserver(self, config, extent):
@@ -380,6 +381,7 @@ ERROR:
 
         return True
 
+    @transaction.commit_manually
     def create_views(self):
         """
         Create specialized views for GIS and mapping layers.
@@ -415,8 +417,6 @@ ERROR:
                 transaction.commit()
                 print 'Created demo_%s_%s view ...' % \
                     (geolevel.name, subject.name)
-
-        return Geounit.objects.all().extent()
 
     def import_geolevel(self, config, geolevel, parent):
         """
@@ -471,22 +471,28 @@ ERROR:
         # Import legislative bodies first.
         bodies = config.xpath('//LegislativeBody[@id]')
         for body in bodies:
-            legislative_body = LegislativeBody(name=body.get('name'), member=body.get('member'), max_districts=body.get('maxdistricts'))
-            legislative_body.save()
+            tmp = LegislativeBody.objects.filter(name=body.get('name'), member=body.get('member'), max_districts=body.get('maxdistricts'))
+            if len(tmp) == 0:
+                legislative_body = LegislativeBody(name=body.get('name'), member=body.get('member'), max_districts=body.get('maxdistricts'))
+                legislative_body.save()
 
         # Import subjects second
         subjs = config.xpath('//Subject[@id]')
         for subj in subjs:
             if 'aliasfor' in subj.attrib:
                 continue
-            subject = Subject(
-                name = subj.get('id'),
-                display = subj.get('name'),
-                short_display = subj.get('short_name'),
-                is_displayed = (subj.get('displayed')=='true'),
-                sort_key = subj.get('sortkey')
-            )
-            subject.save()
+            tmp = Subject.objects.filter(name=subj.get('id'), display=subj.get('name'), short_display=subj.get('short_name'), is_displayed=(subj.get('displayed')=='true'), sort_key=subj.get('sortkey'))
+            if len(tmp) == 0:
+                subject = Subject(
+                    name = subj.get('id'),
+                    display = subj.get('name'),
+                    short_display = subj.get('short_name'),
+                    is_displayed = (subj.get('displayed')=='true'),
+                    sort_key = subj.get('sortkey')
+                )
+                subject.save()
+            else:
+                subject = tmp[0]
 
             # map this subject to its legislative body
             lbodies = subj.xpath('LegislativeBody')
@@ -494,9 +500,11 @@ ERROR:
                 # de-reference
                 lbconfig = config.xpath('//LegislativeBody[@id="%s"]' % lbody.get('ref'))[0]
                 legislative_body = LegislativeBody.objects.get(name=lbconfig.get('name'))
-                legislative_subject = LegislativeSubject(legislative_body=legislative_body, subject=subject)
+                tmp = LegislativeSubject.objects.filter(legislative_body=legislative_body, subject=subject)
+                if len(tmp) == 0:
+                    legislative_subject = LegislativeSubject(legislative_body=legislative_body, subject=subject)
 
-                subject.legislativesubject_set.add(legislative_subject)
+                    subject.legislativesubject_set.add(legislative_subject)
 
             # save the subject, with the mapping to legislative bodies
             subject.save()
@@ -506,22 +514,28 @@ ERROR:
         # themselves need to be imported top-down
         geolevels = config.xpath('//GeoLevel')
         for geolevel in geolevels:
-            glvl = Geolevel(name=geolevel.get('name'))
-            glvl.save()
+            tmp = Geolevel.objects.filter(name=geolevel.get('name'))
+            if len(tmp) == 0:
+                glvl = Geolevel(name=geolevel.get('name'))
+                glvl.save()
+            else:
+                glvl = tmp[0]
 
             lbodies = geolevel.xpath('LegislativeBody')
             for lbody in lbodies:
                 # de-reference
                 lbconfig = config.xpath('//LegislativeBody[@id="%s"]' % lbody.get('ref'))[0]
                 legislative_body = LegislativeBody.objects.get(name=lbconfig.get('name'))
-                legislative_level = LegislativeLevel(legislative_body=legislative_body, geolevel=glvl)
+                tmp = LegislativeLevel.objects.filter(legislative_body=legislative_body, geolevel=glvl)
+                if len(tmp) == 0:
+                    legislative_level = LegislativeLevel(legislative_body=legislative_body, geolevel=glvl)
 
-                gparent = geolevel.xpath('..')[0]
-                if gparent.tag == 'GeoLevel':
-                    parent = LegislativeLevel.objects.get(geolevel__name=gparent.get('name'), legislative_body=legislative_body)
-                    legislative_level.parent = parent
+                    gparent = geolevel.xpath('..')[0]
+                    if gparent.tag == 'GeoLevel':
+                        parent = LegislativeLevel.objects.get(geolevel__name=gparent.get('name'), legislative_body=legislative_body)
+                        legislative_level.parent = parent
 
-                glvl.legislativelevel_set.add(legislative_level)
+                    glvl.legislativelevel_set.add(legislative_level)
 
             # save the geolevel, with the mapping to legislative bodies
             glvl.save()
