@@ -76,6 +76,7 @@ chooseplan = function(options) {
         loadTable();
         resizeToFit();
         initButtons();
+        setUpSearch();
         
         if (window.UPLOADED) {
             var text = window.UPLOAD_STATUS ? 'Thanks! Your file has been uploaded, and your plan is being constructed. When your plan is completely constructed, you will receive an email from us.' : 'We\'re sorry! Your file was transferred to us, but there was a problem converting it into a plan. Make sure the file is a zipped block equivalency file, and please try again.';
@@ -259,7 +260,6 @@ chooseplan = function(options) {
         _table.jqGrid({
             pager:_options.pager,
             url:_options.dataUrl,
-            caption: 'All Plans',
             hidegrid: false,
             /* scroll: true, /* dynamically scroll grid instead of using pager */
             gridview: true,
@@ -271,13 +271,13 @@ chooseplan = function(options) {
                 id: 'pk',
             },
             colModel: [
-                {name:'fields.name', label:'Name', searchable: true, sortable:true},
+                {name:'fields.name', label:'Name', search: true, sortable:true},
                 {name:'fields.owner', label:'Author', search:true, width: '110', fixed: true, sortable:true},
                 {name:'fields.description', label:'Description', hidden:true, search:true},
-                {name:'fields.is_shared', label:'Shared', search:true, sortable:true, formatter:'checkbox', width:'70', fixed: true, align: 'center'},
-                {name:'fields.edited', label:'Last Edited', search:true, sortable:true, width:'130', fixed: true, align: 'center', formatter:'date', formatoptions: { srcformat: 'UniversalSortableDateTime', newformat:'d/m/Y g:i A'}},
-                {name:'fields.can_edit', label:'Edit', hidden: true},
-                {name:'fields.districtCount', label:'# Districts', sortable:true, hidden:true},
+                {name:'fields.is_shared', label:'Shared', sortable:true, search:false, formatter:'checkbox', width:'70', fixed: true, align: 'center'},
+                {name:'fields.edited', label:'Last Edited', sortable:true, search:false, width:'130', fixed: true, align: 'center', formatter:'date', formatoptions: { srcformat: 'UniversalSortableDateTime', newformat:'d/m/Y g:i A'}},
+                {name:'fields.can_edit', label:'Edit', search:false, hidden: true},
+                {name:'fields.districtCount', label:'# Districts', search:false, sortable:true, hidden:true},
             ],
 
             onSelectRow: rowSelected,
@@ -291,11 +291,11 @@ chooseplan = function(options) {
         }).jqGrid(
             'navGrid',
             '#' + _options.pager.attr('id'),
-            {search:true,edit:false,add:false,del:false,searchText:"Search",refreshText:"Clear Search"},
+            {search:false,edit:false,add:false,del:false,searchText:"Search",refreshText:"Clear Search"},
             {}, //edit
             {}, //add
             {}, //del
-            {sopt: ['cn', 'ge', 'le'], closeAfterSearch: true, closeOnEscape: true }, // search
+            {}, //search
             {} //view
         );
     }
@@ -339,8 +339,51 @@ chooseplan = function(options) {
     var appendExtraParamsToRequest = function(xhr) {
         _table.setPostDataItem( 'owner_filter', _eventType );
         _table.setPostDataItem( 'legislative_body', $('#leg_selector').val() );
+        /* If the search box has a value, apply that to any filter */
+        var search = $('#plan_search');
+        if (search.val() != '') {
+                _table.setPostDataItem( '_search', true );
+                _table.setPostDataItem( 'searchString', $('#plan_search').val() );
+        } else {
+                _table.setPostDataItem( '_search', false );
+                _table.removePostDataItem( 'searchString' );
+        }
         _selectedPlanId = undefined;
         _selectedPlanName = undefined;
+    };
+
+    /**
+     * Set up the search box feature
+     */
+    var setUpSearch = function() {
+        // On enter key, search
+        var searchBox = $('#plan_search');
+        searchBox.keyup( function(event) {
+            if (event.which == 13) {
+                _table.jqGrid().trigger('reloadGrid');
+            }
+        });
+
+        // watermark for non-html5 browsers
+        if (document.getElementById('plan_search').getAttribute('placeholder') != 'Search') {
+            searchBox.focus( function() {
+                if ($(this).val() == 'Search') {
+                    $(this).val('');
+                    $(this).css('font', '');
+                }
+            });
+            searchBox.blur( function() {
+                if ($(this).val() == '') {
+                    $(this).css('font', 'gray');
+                    $(this).val('Search');
+                }
+            });
+
+            // initial state showing watermark
+            searchBox.css('font', 'gray');
+            searchBox.val('Search');
+        }
+        
     };
 
     var showItems = function (input, radio, table, sharedCol, ownerCol) {
@@ -371,7 +414,7 @@ chooseplan = function(options) {
           $(this).removeClass('active');
         });
         $currTab.addClass('active');
-     };
+    };
     
     var initButtons = function() {
     
@@ -395,7 +438,7 @@ chooseplan = function(options) {
         $('#filter_templates').click( function () {
             _eventType = 'template';
             _nameRequired = true;
-            _table.jqGrid().trigger('reloadGrid').setCaption('Templates');
+            _table.jqGrid().trigger('reloadGrid');
             showItems(true, false, true, false, true);
             setActiveTab($(this));
            
@@ -403,14 +446,14 @@ chooseplan = function(options) {
         $('#filter_shared').click( function () {
             _eventType = 'shared';
             _nameRequired = true;
-            _table.jqGrid().trigger('reloadGrid').setCaption('Shared Plans');
+            _table.jqGrid().trigger('reloadGrid');
             showItems(true, false, true, false, true);
             setActiveTab($(this));
         });        
         $('#filter_mine').click( function () {
             _eventType = 'mine';
             _nameRequired = true;
-            _table.jqGrid().trigger('reloadGrid').setCaption('My Plans');
+            _table.jqGrid().trigger('reloadGrid');
             $('input:radio[name=Edit]').filter('[value=edit]').attr('checked', true);
             _nameRequired = false;
             showItems(false, true, true, true, false);

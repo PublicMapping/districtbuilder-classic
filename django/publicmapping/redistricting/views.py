@@ -1226,6 +1226,8 @@ def getplans(request):
         sord = request.POST.get('sord', 'asc')
         owner_filter = request.POST.get('owner_filter');
         body_pk = int(request.POST.get('legislative_body'));
+        search = request.POST.get('_search', False);
+        search_string = request.POST.get('searchString', '');
     else:
         return HttpResponseForbidden()
     end = page * rows
@@ -1240,6 +1242,7 @@ def getplans(request):
     else:
         return HttpResponseBadRequest()
         
+       
     not_pending = Q(is_pending=False)
     body_filter = Q(legislative_body=body_pk)
     
@@ -1251,7 +1254,13 @@ def getplans(request):
     if sord == 'desc':
         sidx = '-' + sidx
 
-    all_plans = Plan.objects.filter(available, not_pending, body_filter).order_by(sidx)
+    if search:
+        search_filter = Q(name__icontains = search_string) | Q(description__icontains = search_string) | Q(owner__username__icontains = search_string)
+    else:
+        search_filter = None
+
+    all_plans = Plan.objects.filter(available, not_pending, body_filter, search_filter).order_by(sidx)
+
     total_pages = (all_plans.count() / rows) + 1
 
     plans = all_plans[start:end]

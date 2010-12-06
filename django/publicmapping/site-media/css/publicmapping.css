@@ -548,6 +548,13 @@ div#step_plan div.middlecolumn  {
   
 }  
 
+input#plan_search {
+    position:relative;
+    top: -2.5em;
+    left: 70%;
+    width: 30%;
+}
+
 div#gbox_plan_table {
   min-height: 395px;
 }
