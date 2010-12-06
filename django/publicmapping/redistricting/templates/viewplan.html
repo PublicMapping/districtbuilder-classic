@@ -180,8 +180,12 @@
             <div class="shadow_top"></div>
          <div class="toolbar ui-widget-header"><h1>Choose a Plan. Start Drawing.</h1></div>
          <div id="plan_content">
-
          
+        {% comment %}
+        If there is only one legislative body, we won't display selectors or force
+        the user to choose one
+        {% endcomment %}
+        {% ifnotequal bodies|length 1 %}
         <div id="leg_selector_container">
             <span id="leg_selector_instructions">
                1. Select Legislative Body
@@ -192,8 +196,13 @@
                 {% endfor %}
             </select>
         </div>
+        {% endifnotequal %}
         <div id="plan_type">
+        {% ifnotequal bodies|length 1 %}
           <h3>2. Select Plan Type</h3>
+        {% else %}
+          <h3>1. Select Plan Type</h3>
+        {% endifnotequal %}
           <ul id="plan_buttons">
               <li id="filter_templates">Template</li>
               <li id="filter_shared">Shared</li>
@@ -204,7 +213,11 @@
         <div>
           <div id="content_container">
             <div id="table_container" class="middlecolumn" >
+                    {% ifnotequal bodies|length 1 %}
                       <h3>3. Select Plan</h3>
+                    {% else %}
+                      <h3>2. Select Plan</h3>
+                    {% endifnotequal %}
                 <input id="plan_search" type="search" placeholder="Search" />
                 <table id="plan_table"></table>
                 <div id="plan_table_pager"></div>  
@@ -212,13 +225,32 @@
           <div id="upload_selection" class="middlecolumn" >
               <label>Upload a District Index file:</label>
               <form method="POST" enctype="multipart/form-data" action="/districtmapping/plan/upload/" id="frmUpload">
-                  <input type="file" id="indexFile" name="indexFile"/>
-                  <input type="hidden" id="userEmail" name="userEmail" value="{{ userinfo.email }}"/>
+                <input type="file" id="indexFile" name="indexFile"/>
+                {% ifnotequal bodies|length 1 %}
+                <div>
+                    <p>You must choose a legislative body to which the new plan will be applied.</p>
+                </div>
+                <select id="leg_selector_upload" name="legislativeBody">
+                    <option value="">Select a body</option>
+                    {% for body in bodies %}
+                        <option value="{{ body.id }}">{{ body.name }}</option>
+                    {% endfor %}
+                </select>
+                {% else %}
+                    {% for body in bodies %}
+                    <input type="hidden" id="leg_selector" name="legislativeBody" value="{{ body.id }}" />
+                    {% endfor %}
+                </select>
+                {% endifnotequal %}
+                {% if userinfo.email %}
+                <input type="hidden" id="userEmail" name="userEmail" value="{{ userinfo.email }}"/>
+                  {% else %}
+                  <div>
+                      <p>Please enter your email address so District Builder can send you a confirmation when your plan has been uploaded. Your email will not be saved or shared.</p>
+                      <input type="text" id="userEmail" name="userEmail"/>
+                  </div>
+                  {% endif %}
               </form>
-              <div>
-                  <p>Please enter your email address so District Builder can send you a confirmation when your plan has been uploaded. Your email will not be saved or shared.</p>
-                  <input type="text" id="userEmail" name="userEmail"/>
-              </div>
           </div>      
           
             <div id="form_column">
@@ -248,7 +280,11 @@
                       <input type="radio" name="Edit" value="saveas">Copy and Save Selected Plan</input>
                   </div>
                   <div id="newName">
+                    {% ifnotequal bodies|length 1 %}
                       <label for="txtNewName" id="lblNewName">4. Name your new plan:</label>
+                    {% else %}
+                      <label for="txtNewName" id="lblNewName">3. Name your new plan:</label>
+                    {% endifnotequal %}
                       <input type="text" id="txtNewName" name="txtNewName"/>
                   </div>
                   <button id="start_mapping">Start Drawing</button> 

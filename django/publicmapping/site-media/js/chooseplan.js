@@ -111,44 +111,6 @@ chooseplan = function(options) {
     }
 
     /**
-     * Show one choosing mode. This function is called from within the
-     * setUpEvents function.
-     *
-     * Parameters:
-     *   selectorId -- The selector of the panel body.
-     *   buttonID -- The selector of the button that corresponds to this
-     *               panel.
-     */
-    var showOnly = function(selectorId,buttonID) {
-        $('#TemplateTypeButtons li').removeClass('active');
-        $(buttonID).addClass('active');
-        
-        $('#SelectorsHelp').hide();
-        $('.SelectionGroup').hide();
-        $('.Selectors').removeClass('active');
-        $(selectorId).show();
-        var selectors = $(selectorId + ' .Selectors'); 
-        selectors.show().addClass('active');
-        if ( selectors.length > 0 && selectors[0].nodeName != 'SELECT' ) {
-            $('#btnSelectPlan').hide();
-        }
-        else {
-            $('#btnSelectPlan').show();
-        }
-        if (_eventType == 'blank' || _eventType == 'template' || _eventType == 'upload' || (_eventType == 'shared' && !_options.anonymous) || 
-            ( selectorId == '#MineSelection' && $('input:radio:checked').val() == 'saveas'  )) {
-            $('#NewName').show();
-            _nameRequired = true;
-        } else {
-            _nameRequired = false;
-            $('#NewName').hide();
-        }
-        if (_eventType == 'table') {
-            loadTable();
-        }
-    };
-
-    /**
      * Select a plan. If a plan is a template, copy it and open that copy.
      * If a plan is shared, copy it and open that copy. If a plan is owned,
      * either open it for editing, or copy it to a new plan, then open it
@@ -166,7 +128,7 @@ chooseplan = function(options) {
         }
 
         // If the user is using a template, they should have clicked the table first
-        if (typeof(_selectedPlanId) == 'undefined' && 'blankupload'.indexOf(_eventType) == -1 ) {
+        if (typeof(_selectedPlanId) == 'undefined' && 'blank|upload'.indexOf(_eventType) == -1 ) {
             alert('Choose a plan from the table first');
             return false;
         }
@@ -186,23 +148,24 @@ chooseplan = function(options) {
 
             if (_eventType == 'upload') {
                 var email = $('#userEmail').val();
-                if (email.trim() != '') {
-                    if (!(email.match(/^([\w\-\.\+])+\@([\w\-\.])+\.([A-Za-z]{2,4})$/))) 
-                    {
-                        alert('Please provide a valid email address.');
-                        $('#btnSelectPlan').attr('disabled',null);
-                        $('#btnSelectPlan span').text(_activeText);
-                        return false;
-                    }
+                if (email.trim() == '' || !email.match(/^([\w\-\.\+])+\@([\w\-\.])+\.([A-Za-z]{2,4})$/)) {
+                    alert('Please provide a valid email address.');
+                    return false;
                 }
-            }
-            if (_eventType == 'upload') {
+                if ($('#indexFile').val() == '') {
+                    alert('Please provide a zipped district index file.');
+                    return false;
+                } 
+                if ($('#leg_selector_upload').val() == '') {
+                    alert('You must select a legislative body from the dropdown in the upload form');
+                    return false;
+                }
                 // Get the form for uploading.  Be sure not to move the input:file element
                 // out of the form - you can't clone it in javascript.
-                var $form = $('#frmUpload');
-                $('#txtNewName').clone().appendTo($form);
-                $('#leg_selector').clone().attr('name', 'legislativeBody').appendTo($form);
-                $form.submit();
+                var form = $('#frmUpload');
+                $('#txtNewName').clone().appendTo(form).hide();
+                
+                form.submit();
                 return false;
             }
             else {
@@ -239,7 +202,6 @@ chooseplan = function(options) {
             alert( data.message + '\n\nTip: Make sure the new plan\'s name is unique.' );
 
             if (OpenLayers) {
-                OpenLayers.Element.removeClass(document.getElementById('btnSelectPlan'),'olCursorWait');
                 OpenLayers.Element.removeClass(document.body,'olCursorWait');
             }
             return;
@@ -320,7 +282,7 @@ chooseplan = function(options) {
         if (can_edit == "true") {
             editState('view');
             // clear previous handlers
-            _saveButton.die();
+            _saveButton.unbind();
             // On save click, submit new plan attribute data to server
             _saveButton.click( function() {
                 $.post('/districtmapping/plan/' + _selectedPlanId + '/attributes/',
@@ -329,8 +291,7 @@ chooseplan = function(options) {
                         description: $('#plan_form #description').val()
                     }, function(data) {
                         if (data.success) {
-                            _table.jqGrid().trigger('reloadGrid');
-                            _table.jqGrid('GridToForm', _selectedPlanId, '#plan_form'); 
+                            _table.jqGrid('FormToGrid', _selectedPlanId, '#plan_form');
                             editState('view');
                         }
                     });
@@ -444,6 +405,10 @@ chooseplan = function(options) {
             return false;
         });
 
+        $('#leg_selector').change( function() {
+            _table.jqGrid().trigger('reloadGrid');
+        });
+
         // Set up the filter buttons
         $('#filter_templates').click( function () {
             _eventType = 'template';
@@ -502,6 +467,11 @@ chooseplan = function(options) {
                 $('#newName').show();
                 _nameRequired = true;
             }
+        });
+    
+        // When switching tabs, clear the details form
+        $('#plan_buttons li').click( function() {
+            $('#plan_form *[type=text]').val('');
         });
 
         // If anonymous, hide the "new plan" options

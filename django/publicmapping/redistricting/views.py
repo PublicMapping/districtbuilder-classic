@@ -250,7 +250,7 @@ def editplan(request, planid):
     if plan['is_editable'] == False:
         return HttpResponseRedirect('/districtmapping/plan/%s/view/' % planid)
     plan['dists_maxed'] = len(plan['districts']) > settings.MAX_DISTRICTS
-    return render_to_response('viewplan.html', plan) 
+    return render_to_response('editplan.html', plan) 
 
 @login_required
 def createplan(request):
@@ -299,7 +299,12 @@ def uploadfile(request):
     status['upload'] = True
     status['upload_status'] = True
 
-    filename = request.FILES['indexFile'].name
+    index_file = request.FILES.get('indexFile', False)
+    if not index_file:
+        status['upload_status'] = False
+        return render_to_response('viewplan.html', status)
+    else:
+        filename = index_file.name
     if not filename.endswith(('.csv','.zip')):
         sys.stderr.write('Uploaded file must be ".csv" or ".zip".\n')
         status['upload_status'] = False
