@@ -549,20 +549,22 @@ div#step_plan div.middlecolumn  {
 }  
 
 input#plan_search {
-    position:relative;
-    top: -2.5em;
-    left: 70%;
+    position:absolute;
+    top: 16px;
+    right: -16px;
     width: 30%;
+    color: #666;
+    border:1px solid #CCCCCC;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
 }
 
 div#gbox_plan_table {
   min-height: 395px;
 }
 
-div#gbox_plan_table div#plan_table_pager {
- position: absolute;
- bottom: 0;
-}
 /*jQgrid customization */
 .ui-jqgrid .ui-jqgrid-titlebar {
 display:none !important;
@@ -610,13 +612,13 @@ div#form_column{
 div#form_container {
   background-color: #ecf6f5;
   margin-top: 15px;
- padding: 12px 18px 15px;
-border: 1px solid #ddd;
+  padding: 12px 18px 15px;
+  border: 1px solid #ddd;
   font-size:14px;
-    -moz-border-radius: 4px ;
+  -moz-border-radius: 4px ;
   -webkit-border-radius:   4px;
   border-radius:   4px;
-}
+  }
 
 div#chooserFileDownloadTarget {
   float:right;

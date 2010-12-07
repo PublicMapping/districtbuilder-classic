@@ -47,7 +47,7 @@ from datetime import datetime, time
 from operator import attrgetter
 from redistricting.models import *
 from redistricting.utils import *
-import settings, random, string, types, copy, time, threading, traceback, os, sys, tempfile
+import settings, random, string, math, types, copy, time, threading, traceback, os, sys, tempfile
 
 @login_required
 def copyplan(request, planid):
@@ -1268,7 +1268,10 @@ def getplans(request):
 
     all_plans = Plan.objects.filter(available, not_pending, body_filter, search_filter).order_by(sidx)
 
-    total_pages = (all_plans.count() / rows) + 1
+    if all_plans.count() > 0:
+        total_pages = math.ceil(all_plans.count() / float(rows))
+    else:
+        total_pages = 1
 
     plans = all_plans[start:end]
     # Create the objects that will be serialized for presentation in the plan chooser
