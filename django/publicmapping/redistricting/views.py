@@ -166,7 +166,8 @@ def commonplan(request, planid):
         max_dists = plan.legislative_body.max_districts
         if not editable and not can_view(request.user, plan):
             plan = {}
-    except:
+    except Exception, ex:
+        print "Exception?! %s" % ex
         # If said plan doesn't exist, use an empty plan & district list.
         plan = {}
         districts = {}
@@ -184,7 +185,7 @@ def commonplan(request, planid):
         snaplayers.append( {'geolevel':level.id,'layer':level.name,'name':level.name.capitalize(),'min_zoom':level.min_zoom} )
         boundaries.append( {'id':'%s_boundaries' % level.name.lower(), 'name':level.name.capitalize()} )
     for demo in demos:
-        isdefault = (not default_demo is None) and demo[0] == default_demo.id
+        isdefault = str((not default_demo is None) and (demo[0] == default_demo.id)).lower()
         layers.append( {'id':demo[0],'text':demo[2],'value':demo[1].lower(), 'isdefault':isdefault, 'isdisplayed':str(demo[3]).lower()} )
     for target in targets:
         # The "in there" range
@@ -250,11 +251,12 @@ def editplan(request, planid):
     Returns:
         A rendered HTML page for editing a plan.
     """
-    plan = commonplan(request, planid)
-    if plan['is_editable'] == False:
+    cfg = commonplan(request, planid)
+    if cfg['is_editable'] == False:
         return HttpResponseRedirect('/districtmapping/plan/%s/view/' % planid)
-    plan['dists_maxed'] = len(plan['districts']) > plan.legislative_body.max_districts
-    return render_to_response('editplan.html', plan) 
+    plan = Plan.objects.get(id=planid)
+    cfg['dists_maxed'] = len(cfg['districts']) > plan.legislative_body.max_districts
+    return render_to_response('editplan.html', cfg) 
 
 @login_required
 def createplan(request):
@@ -1149,7 +1151,7 @@ def getdefaultsubject(legislative_body):
     Returns:
         The default subject, based on the application settings.
     """
-    lsub = LegislativeSubject.objects.filter( legislative_body=legislative_body, is_default = True)
+    lsub = LegislativeSubject.objects.filter( legislative_body=legislative_body, is_default = True)[0]
     return lsub.subject
 
 def getutc(t):

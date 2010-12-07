@@ -39,6 +39,7 @@ from os.path import exists
 from lxml.etree import parse
 from xml.dom import minidom
 from redistricting.models import *
+from redistricting.utils import *
 import traceback, pprint, httplib, string, base64, json
 
 class Command(BaseCommand):
@@ -60,6 +61,8 @@ class Command(BaseCommand):
         make_option('-G', '--geoserver', dest="geoserver",
             action="store_true", help="Create spatial layers in Geoserver.",
             default=False),
+        make_option('-t', '--templates', dest="templates",
+            action="store_true", help="Create system templates based on district index files.", default=False),
     )
 
 
@@ -116,6 +119,10 @@ contents of the file and try again.
         if options.get("geoserver"):
             extent = Geounit.objects.all().extent()
             self.configure_geoserver(config, extent)
+
+        if options.get("templates"):
+            print "Creating templates..."
+            self.create_template(config)
 
     def configure_geoserver(self, config, extent):
         """
@@ -560,8 +567,6 @@ ERROR:
         Parameters:
             config -- A dictionary with 'shapepath', 'geolevel', 'name_field', and 'subject_fields' keys.
         """
-        #gc.enable()
-
         ds = DataSource(config['shapepath'])
 
         print 'Importing from ', ds
@@ -662,12 +667,27 @@ ERROR:
             g.save()
             g = feat = None
 
-            #gc.collect()
-
         ds = None
 
         sys.stdout.write('100%\n')
 
-        #print gc.garbage
+    def create_template(self, config):
+        templates = config.xpath('/DistrictBuilder/Templates/Template')
+        print "Found %d templates..." % len(templates)
+        for template in templates:
+            templateplan = Plan.objects.filter(name=template.get('name'))
+            if len(templateplan) > 0:
+                print "Plan '%s' exists, skipping." % template.get('name')
+                continue
 
-        #gc.disable()
+            lbconfig = config.xpath('//LegislativeBody[@id="%s"]' % template.xpath('LegislativeBody')[0].get('ref'))[0]
+            legislative_body = LegislativeBody.objects.filter(name=lbconfig.get('name'))
+            if len(legislative_body) == 0:
+                print "LegislativeBody '%s' does not exist, skipping." % lbconfig.get('ref')
+                continue
+
+            fconfig = template.xpath('Blockfile')[0]
+            path = fconfig.get('path')
+
+            admin = User.objects.get(username=settings.ADMINS[0][0])
+            DistrictIndexFile.index2plan( template.get('name'), legislative_body[0].id, path, owner=admin, template=True, purge=False, email=None)

@@ -55,10 +55,13 @@ def main():
     parser.add_option('-G', '--geoserver', dest="geoserver",
             help="Create spatial data layers in Geoserver.",
             default=False, action='store_true')
+    parser.add_option('-t', '--templates', dest="templates",
+            help="Create the system-wide templates.",
+            default=False, action='store_true')
 
     (options, args) = parser.parse_args()
 
-    allops = (not options.database) and (not options.geolevels) and (not options.views) and (not options.geoserver)
+    allops = (not options.database) and (not options.geolevels) and (not options.views) and (not options.geoserver) and (not options.templates)
 
     if len(args) != 2:
         print """
@@ -94,12 +97,14 @@ ERROR:
         geolevels = []
         views = True
         geoserver = True
+        templates = True
     else:
         geolevels = options.geolevels
         views = options.views
         geoserver = options.geoserver
+        templates = options.templates
 
-    management.call_command('setup', config=args[1], debug=options.verbose, geolevels=geolevels, views=views, geoserver=geoserver)
+    management.call_command('setup', config=args[1], debug=options.verbose, geolevels=geolevels, views=views, geoserver=geoserver, templates=templates)
 
     return
 
