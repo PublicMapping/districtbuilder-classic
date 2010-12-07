@@ -23,3 +23,7 @@ CREATE DATABASE publicmapping
 ALTER TABLE geometry_columns OWNER TO publicmapping;
 ALTER TABLE spatial_ref_sys OWNER TO publicmapping;
 
+-- See: http://www.postgresql.org/docs/8.4/static/ddl-schemas.html
+-- for the reasons for creating a schema with the same name as the 
+-- user name.
+CREATE SCHEMA publicmapping AUTHORIZATION publicmapping;
