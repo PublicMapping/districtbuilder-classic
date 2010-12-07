@@ -62,6 +62,10 @@
       <xs:field xpath="@ref" />
     </xs:keyref>
     <xs:keyref name="GeoLevelLegislativeBody" refer="DistrictBuilderLegislativeBodyKey">
+      <xs:selector xpath="GeoLevels/GeoLevel/LegislativeBody" />
+      <xs:field xpath="@ref" />
+    </xs:keyref>
+    <xs:keyref name="GeoLevelParentLegislativeBody" refer="DistrictBuilderLegislativeBodyKey">
       <xs:selector xpath="GeoLevels/GeoLevel/Parent" />
       <xs:field xpath="@legislativebodyref" />
     </xs:keyref>
@@ -199,6 +203,7 @@
               <xs:element name="LegislativeBody" minOccurs="0" maxOccurs="unbounded">
                 <xs:complexType>
                   <xs:attribute name="ref" type="xs:IDREF" use="required" />
+                  <xs:attribute name="default" type="xs:boolean" use="optional" />
                 </xs:complexType>
               </xs:element>
               <xs:element name="SubjectType" minOccurs="0" maxOccurs="1">
@@ -229,7 +234,6 @@
             <xs:attribute name="displayed" type="xs:boolean" use="optional" />
             <xs:attribute name="sortkey" type="xs:integer" use="optional" />
             <xs:attribute name="aliasfor" type="xs:IDREF" use="optional" />
-            <xs:attribute name="default" type="xs:boolean" use="optional" />
           </xs:complexType>
         </xs:element>
       </xs:sequence>
@@ -246,12 +250,19 @@
                   <xs:attribute name="ref" type="xs:IDREF" use="required" />
                 </xs:complexType>
               </xs:element>
-              <xs:element name="Parent">
-                <xs:complexType>
-                  <xs:attribute name="geolevelref" type="xs:IDREF" use="required" />
-                  <xs:attribute name="legislativebodyref" type="xs:IDREF" use="required" />
-                </xs:complexType>
-              </xs:element>
+              <xs:choice>
+                <xs:element name="Parent">
+                  <xs:complexType>
+                    <xs:attribute name="geolevelref" type="xs:IDREF" use="required" />
+                    <xs:attribute name="legislativebodyref" type="xs:IDREF" use="required" />
+                  </xs:complexType>
+                </xs:element>
+                <xs:element name="LegislativeBody">
+                  <xs:complexType>
+                    <xs:attribute name="ref" type="xs:IDREF" use="required" />
+                  </xs:complexType>
+                </xs:element>
+              </xs:choice>
               <xs:element name="Description" type="xs:string" minOccurs="0" maxOccurs="1" />
             </xs:sequence>
             <xs:attribute name="name" type="xs:string" use="required" />
