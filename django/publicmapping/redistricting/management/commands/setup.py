@@ -540,17 +540,13 @@ ERROR:
                 legislative_body = LegislativeBody.objects.get(name=lbconfig.get('name'))
                 tmp = LegislativeLevel.objects.filter(legislative_body=legislative_body, geolevel=glvl)
 
-                if len(tmp) == 0:
-                    if glref is None:
-                        plvl = None
-                    else:
-                        plvl = Geolevel.objects.get(name=lbody.get(glref))
-                        plvl = LegislativeLevel.objects.get(legislative_body=legislative_body, geolevel=plvl)
+                plvl = None
+                if len(tmp) == 0 and not glref is None:
+                    plvl = Geolevel.objects.get(name=lbody.get(glref))
+                    plvl = LegislativeLevel.objects.get(legislative_body=legislative_body, geolevel=plvl)
 
                 legislative_level = LegislativeLevel(legislative_body=legislative_body, geolevel=glvl, parent=plvl)
                 legislative_level.save()
-
-
 
             # save the geolevel, with the mapping to legislative bodies
             glvl.save()
