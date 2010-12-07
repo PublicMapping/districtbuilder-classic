@@ -181,6 +181,9 @@ class LegislativeSubject(models.Model):
     # The subject for characteristics in this body
     subject = models.ForeignKey(Subject)
 
+    # Is this subject the default subject at this geographic level?
+    is_default = models.BooleanField(default=False)
+
 
 class LegislativeLevel(models.Model):
     """

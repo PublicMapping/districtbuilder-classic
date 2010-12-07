@@ -478,6 +478,7 @@ ERROR:
 
         # Import subjects second
         subjs = config.xpath('//Subject[@id]')
+
         for subj in subjs:
             if 'aliasfor' in subj.attrib:
                 continue
@@ -496,13 +497,17 @@ ERROR:
 
             # map this subject to its legislative body
             lbodies = subj.xpath('LegislativeBody')
+
+            defaultSub = subj.xpath('LegislativeBody[@default]')
+
             for lbody in lbodies:
                 # de-reference
                 lbconfig = config.xpath('//LegislativeBody[@id="%s"]' % lbody.get('ref'))[0]
                 legislative_body = LegislativeBody.objects.get(name=lbconfig.get('name'))
-                tmp = LegislativeSubject.objects.filter(legislative_body=legislative_body, subject=subject)
+                is_default = (len(defaultSub) > 0)
+                tmp = LegislativeSubject.objects.filter(legislative_body=legislative_body, subject=subject, is_default=is_default)
                 if len(tmp) == 0:
-                    legislative_subject = LegislativeSubject(legislative_body=legislative_body, subject=subject)
+                    legislative_subject = LegislativeSubject(legislative_body=legislative_body, subject=subject, is_default=is_default)
 
                     subject.legislativesubject_set.add(legislative_subject)
 
@@ -512,7 +517,7 @@ ERROR:
         # Import geolevels third
         # Note that geolevels may be added in any order, but the geounits
         # themselves need to be imported top-down
-        geolevels = config.xpath('//GeoLevel')
+        geolevels = config.xpath('//GeoLevels/GeoLevel')
         for geolevel in geolevels:
             tmp = Geolevel.objects.filter(name=geolevel.get('name'))
             if len(tmp) == 0:
@@ -521,21 +526,31 @@ ERROR:
             else:
                 glvl = tmp[0]
 
-            lbodies = geolevel.xpath('LegislativeBody')
+            lbodies = geolevel.xpath('Parent')
+            lbref = 'legislativebodyref'
+            glref = 'geolevelref'
+            if len(lbodies) == 0:
+                lbodies = geolevel.xpath('LegislativeBody')
+                lbref = 'ref'
+                glref = None
+
             for lbody in lbodies:
                 # de-reference
-                lbconfig = config.xpath('//LegislativeBody[@id="%s"]' % lbody.get('ref'))[0]
+                lbconfig = config.xpath('//LegislativeBody[@id="%s"]' % lbody.get(lbref))[0]
                 legislative_body = LegislativeBody.objects.get(name=lbconfig.get('name'))
                 tmp = LegislativeLevel.objects.filter(legislative_body=legislative_body, geolevel=glvl)
+
                 if len(tmp) == 0:
-                    legislative_level = LegislativeLevel(legislative_body=legislative_body, geolevel=glvl)
+                    if glref is None:
+                        plvl = None
+                    else:
+                        plvl = Geolevel.objects.get(name=lbody.get(glref))
+                        plvl = LegislativeLevel.objects.get(legislative_body=legislative_body, geolevel=plvl)
 
-                    gparent = geolevel.xpath('..')[0]
-                    if gparent.tag == 'GeoLevel':
-                        parent = LegislativeLevel.objects.get(geolevel__name=gparent.get('name'), legislative_body=legislative_body)
-                        legislative_level.parent = parent
+                legislative_level = LegislativeLevel(legislative_body=legislative_body, geolevel=glvl, parent=plvl)
+                legislative_level.save()
 
-                    glvl.legislativelevel_set.add(legislative_level)
+
 
             # save the geolevel, with the mapping to legislative bodies
             glvl.save()
