@@ -162,6 +162,8 @@ def commonplan(request, planid):
         plan.edited = getutc(plan.edited)
         districts = plan.get_districts_at_version(plan.version)
         editable = can_edit(request.user, plan)
+        default_demo = getdefaultsubject(plan.legislative_body)
+        max_dists = plan.legislative_body.max_districts
         if not editable and not can_view(request.user, plan):
             plan = {}
     except:
@@ -169,9 +171,10 @@ def commonplan(request, planid):
         plan = {}
         districts = {}
         editable = False
+        default_demo = None
+        max_dists = 0
     levels = Geolevel.objects.all()
     demos = Subject.objects.values_list("id","name", "short_display","is_displayed")
-    default_demo = getdefaultsubject()
     layers = []
     snaplayers = []
     boundaries = []
@@ -181,7 +184,8 @@ def commonplan(request, planid):
         snaplayers.append( {'geolevel':level.id,'layer':level.name,'name':level.name.capitalize(),'min_zoom':level.min_zoom} )
         boundaries.append( {'id':'%s_boundaries' % level.name.lower(), 'name':level.name.capitalize()} )
     for demo in demos:
-        layers.append( {'id':demo[0],'text':demo[2],'value':demo[1].lower(), 'isdefault':str(demo[0] == default_demo.id).lower(), 'isdisplayed':str(demo[3]).lower()} )
+        isdefault = (not default_demo is None) and demo[0] == default_demo.id
+        layers.append( {'id':demo[0],'text':demo[2],'value':demo[1].lower(), 'isdefault':isdefault, 'isdisplayed':str(demo[3]).lower()} )
     for target in targets:
         # The "in there" range
         range1 = target.lower * settings.POPTARGET_RANGE1  
@@ -210,7 +214,7 @@ def commonplan(request, planid):
         'debugging_staff': settings.DEBUG and request.user.is_staff,
         'userinfo': get_user_info(request.user),
         'is_editable': editable,
-        'max_dists': settings.MAX_DISTRICTS + 1,
+        'max_dists': max_dists + 1,
         'ga_account': settings.GA_ACCOUNT,
         'ga_domain': settings.GA_DOMAIN
     }
@@ -249,7 +253,7 @@ def editplan(request, planid):
     plan = commonplan(request, planid)
     if plan['is_editable'] == False:
         return HttpResponseRedirect('/districtmapping/plan/%s/view/' % planid)
-    plan['dists_maxed'] = len(plan['districts']) > settings.MAX_DISTRICTS
+    plan['dists_maxed'] = len(plan['districts']) > plan.legislative_body.max_districts
     return render_to_response('editplan.html', plan) 
 
 @login_required
@@ -792,8 +796,8 @@ def simple_district_versioned(request,planid):
         subject_id = None
         if 'subject__eq' in request.REQUEST:
             subject_id = request.REQUEST['subject__eq']
-        elif getdefaultsubject():
-            subject_id = getdefaultsubject().id
+        elif getdefaultsubject(plan.legislative_body):
+            subject_id = getdefaultsubject(plan.legislative_body).id
 
         if subject_id:
             status['features'] = plan.get_wfs_districts(version, subject_id)
@@ -1132,46 +1136,21 @@ def getcompactness(district):
 #        query += 'getsubjectfordistrict(b.id, \'%s\') as %s, ' % (subject.name, subject.name)
 #    return query
      
-def getdefaultsubject():
+def getdefaultsubject(legislative_body):
     """
     Get the default subject to display. This reads the settings
     for the value 'DEFAULT_DISTRICT_DISPLAY', which can be the ID of
     a subject, a name of a subject, or the display of a subject.
+
+    Parameters:
+        legislative_body - The legislative body for whom to retrieve
+            the default subject.
     
     Returns:
         The default subject, based on the application settings.
     """
-    key = settings.DEFAULT_DISTRICT_DISPLAY
-    try:
-        subject = Subject.objects.filter(id__exact=key)
-        if len(subject) == 1:
-            return subject[0]
-    except:
-        pass
-
-    try:
-        subject = Subject.objects.filter(name__exact=key)
-        if len(subject) == 1:
-            return subject[0]
-    except:
-        pass
-
-    try:
-        subject = Subject.objects.filter(display__exact=key)
-        if len(subject) == 1:
-            return subject[0]
-    except:
-        pass
-
-    try:
-        subject = Subject.objects.filter(short_display__exact=key)
-        if len(subject) == 1:
-            return subject[0]
-    except:
-        pass
-
-    return None
-
+    lsub = LegislativeSubject.objects.filter( legislative_body=legislative_body, is_default = True)
+    return lsub.subject
 
 def getutc(t):
     """Given a datetime object, translate to a datetime object for UTC time.
