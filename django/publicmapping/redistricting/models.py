@@ -144,9 +144,6 @@ class Geolevel(models.Model):
     # The minimum zoom level
     min_zoom = models.PositiveIntegerField(default=0)
 
-    # The maximum zoom level
-    max_zoom = models.PositiveIntegerField(default=20)
-
     # The position that this geolevel should be in, relative to all other
     # geolevels, when viewing the geolevels in a list.
     sort_key = models.PositiveIntegerField(default=1)

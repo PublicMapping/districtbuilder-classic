@@ -68,7 +68,7 @@
         var UNASSIGNED_DISTRICT_ID = {% if unassigned_id %}{{ unassigned_id }}{% else %}0{% endif %};
         // An array of configuration settings for the layers that are
         // used to select geography.
-        var SNAP_LAYERS = [ {% for snap in snaplayers %} { geolevel: {{ snap.geolevel }}, level: '{{ snap.layer }}',layer: 'simple_{{ snap.layer }}', name: '{{ snap.name }}', min_zoom: {{ snap.min_zoom }}, max_zoom: {{ snap.max_zoom }} }{% if not forloop.last %},{% endif %} {% endfor %} ];
+        var SNAP_LAYERS = [ {% for snap in snaplayers %} { geolevel: {{ snap.geolevel }}, level: '{{ snap.layer }}',layer: 'simple_{{ snap.layer }}', name: '{{ snap.name }}', min_zoom: {{ snap.min_zoom }} }{% if not forloop.last %},{% endif %} {% endfor %} ];
         // An array of demographic settings for the choropleth variations 
         // of the snap layer
         var DEMOGRAPHICS = [{% for demo in demographics %} { id: {{ demo.id }}, text: '{{ demo.text }}', value: '{{ demo.value }}', isdefault: {{ demo.isdefault }}, isdisplayed: {{ demo.isdisplayed }} }{% if not forloop.last %},{% endif %} {% endfor %} ];         var MAP_LAYERS = []; for (var i = 0; i < SNAP_LAYERS.length; i++) { MAP_LAYERS.push( 'gmu:demo_' + SNAP_LAYERS[i].level );
@@ -300,25 +300,6 @@
          <div class="toolbar ui-widget-header">
           <div id="toolsets">
             <div class="toolset" id="toolset_edit">
-              <div class="toolset_group">
-                <img src="/site-media/images/icon-help.png" class="help divtip">
-                <div class="tooltip">The selected layer will be editable.  You will use the features in the selected layer to edit districts</div>
-                <label>Snap Map to:</label>
-                {% comment %}
-
-                Dynamically populate the 'Snap Map to:' dropdown, based
-                on the layers that are configured in the application.
-
-                {% endcomment %}
-                <select id="snapto">
-                  <script type="text/javascript">
-                    for (var i = 0; i < SNAP_LAYERS.length; i++) {
-                        var snap = SNAP_LAYERS[i];
-                        document.write('<option value="' + snap.layer + ';' + snap.level + '">' + snap.name + '</option>');
-                    }
-                  </script>
-                </select>
-              </div>
               <div class="toolset_group">
                 <img src="/site-media/images/icon-help.png" class="help divtip">
                 <div class="tooltip">The selected demographic attribute of current layer will be displayed on the map as a grayscale 'choropleth' overlay</div>                

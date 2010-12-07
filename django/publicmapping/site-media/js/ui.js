@@ -96,30 +96,6 @@ function loadTooltips() {
 }
 
 /**
- * Hides the editing tools when the zoom level is incompatible
- * with feature selection
- */
-function hideEditingTools(bool) {
-    var toggle = $('#edit_map_settings');
-    var tools = $('#toolset_draw .toolset_group').slice(1, 3);         
-    var no_edit = $('#toolset_draw #no_edit_at_zoom_level');
-    if (bool == true && $(tools).is(':visible')) {
-        // Change back to the navigate tool
-        //  if a deactivated tool is in use
-        if ($(tools).find('.toggle').length > 0) {
-            $('#navigate_map_tool').click();
-        }
-        $(tools).hide();
-        $(no_edit).show();
-        $(toggle).css('margin-top', '-43px');
-    } else if (!bool && $(tools).is(':hidden')){
-        $(no_edit).hide();
-        $(tools).show();
-        $(toggle).css('margin-top', '8px');
-    }
-}
-
-/**
  * Configure the tooltips and buttons
  */
 // Given a UTC time in ISO format, translate to browser local time
@@ -191,11 +167,6 @@ $(function() {
         });  
     }).val("demographics").attr("selected", "selected");
         
-    $('#snapto').change( function() {
-        $('#showby').siblings('label').text('Show ' + $('#snapto option:selected').text() + ' by:');
-
-    });
-
     // map editing buttons
     $('#toolset_draw .toolset_group button')
       .button({
@@ -209,9 +180,6 @@ $(function() {
         }
     });    
     
-    //Don't hide the editing toolbars by default
-    hideEditingTools(false);
-
     //toolset toggle button
     $('.toolbar_toggle').click(function(){
         if($('.toolset').hasClass('active')) {

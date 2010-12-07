@@ -50,15 +50,6 @@ function createLayer( name, layer, srs, extents, transparent, visibility, isBase
     );
 }
 
-/*
- * Get the value of the "Snap Map to:" dropdown.
- */
-function getSnapLayer() {
-    var orig = $('#snapto').val();
-    var items = orig.split(';');
-    return { layer: items[0], level: items[1] };
-}
-
 /* 
  * Get the value of the "Show Layer by:" dropdown.
  */
@@ -262,7 +253,6 @@ function init() {
                 data = xhr.responseXML;
             }
                 
-            var layer = getSnapLayer().layer;
             // get the layers in the response
             var layers = $('Layer > Layer',data);
             for (var i = 0; i < layers.length; i++) {
@@ -270,9 +260,8 @@ function init() {
                 var title = $('> Title',layers[i])[0].firstChild.nodeValue;
                 var name = $('> Name', layers[i])[0].firstChild.nodeValue;
 
-                // if the title is the displayed snap layer
-                if (title == layer) {
-                    // get the SRS and extent, then init the map
+                // get the SRS and extent of our snap layers, then init the map
+                if (title == SNAP_LAYERS[0].layer) {
                     var bbox = $('> BoundingBox',layers[i]);
                     var srs = bbox.attr('SRS');
                     var extent = new OpenLayers.Bounds(
@@ -422,6 +411,26 @@ function mapinit(srs,maxExtent) {
     layers.push(districtLayer);
     layers.push(selection);
     olmap.addLayers(layers);
+
+    /**
+     * Get information about the snap layer that should be used, according
+     * to the current zoom level.
+     */
+    var getSnapLayer = function() {
+        var zoom = 0;
+        if (typeof(olmap) != 'undefined') {
+            zoom = olmap.zoom;
+        }
+        var min_layer = { min_zoom: -1 };
+        for (var i in SNAP_LAYERS) {
+            var snap_layer = SNAP_LAYERS[i];
+            var my_min = snap_layer.min_zoom;
+            if (zoom >= my_min && my_min > min_layer.min_zoom) {
+                min_layer = snap_layer;
+            }
+        }
+        return { layer: min_layer.layer, level:min_layer.level, display:min_layer.name };
+    }
 
     // Create a protocol that is used by all editing controls
     // that selects geography at the specified snap layer.
@@ -1373,6 +1382,7 @@ function mapinit(srs,maxExtent) {
     //
     var getMapStyles = function() {
         var snap = getSnapLayer().layer.split('simple_')[1];
+        var snap = getSnapLayer().layer.split('simple_')[1];
         var show = getShowBy();
         OpenLayers.Request.GET({
             url: '/sld/' + snap + '_' + show + '.sld',
@@ -1541,7 +1551,7 @@ function mapinit(srs,maxExtent) {
 
     // Logic for the 'Snap Map to' dropdown, note that this logic
     // calls the boundsforChange callback
-    $('#snapto').change(function(evt){
+    var changeSnapLayer = function(evt) {
         var newOpts = getControl.protocol.options;
         var show = getShowBy();
         var snap = getSnapLayer();
@@ -1556,14 +1566,10 @@ function mapinit(srs,maxExtent) {
             boxControl.protocol = new OpenLayers.Protocol.WFS( newOpts );
         olmap.setBaseLayer(layers[0]);
         doMapStyling();
+        $('#showby').siblings('label').text('Show ' + snap.display + ' by:');
         getMapStyles();
         updateBoundaryLegend();
-
-        // Since keyboard defaults are on, if focus remains on this
-        // dropdown after change, the keyboard may change the selection
-        // inadvertently
-        $('#snapto').blur();
-    });
+    };
 
     // Logic for the 'Show Map by' dropdown
     $('#showby').change(function(evt){
@@ -1837,46 +1843,10 @@ function mapinit(srs,maxExtent) {
     districtLayer.events.register("loadend", districtLayer, sortByVisibility);
     olmap.events.register("moveend", olmap, sortByVisibility);
     
-    /**
-     * When the base layer changes or the map is zoomed, this
-     * function should be used to check whether editing is allowed
-     * at the given geolevel
-     */
-    var checkForEditingByZoom = function ( olevent ) {
-        try { /* We don't want a js error to prevent editing */
-            var level = getSnapLayer().level;
-            var zoom = olmap.zoom;
-            if (DEBUG) {
-                var debug = $("<div id='zoom_debug'>You are at zoom level " + olmap.zoom + ".</div>");
-                if ($('#logo #zoom_debug').length > 0) {
-                    $('#zoom_debug').replaceWith($(debug));
-                } else {
-                    $('#logo').append($(debug));
-                }
-            }
-            for (i in SNAP_LAYERS) {
-                var snap_layer = SNAP_LAYERS[i];
-                if (snap_layer.level == level) {
-                    if (zoom < snap_layer.min_zoom || zoom > snap_layer.max_zoom) {
-                        hideEditingTools(true);
-                        // If we're hiding the tools, remove the selection, too
-                        var selection = olmap.getLayersByName('Selection')[0];
-                        selection.removeFeatures(selection.features);
-                    } else {
-                        hideEditingTools(false);
-                    }
-                return;
-                }
-            }
-        } catch (err) { /* In case of error, let the user edit */
-            hideEditingTools(false);
-        }
-    };
-
     // Add the listeners for editing whenever a base layer is changed
     // or the zoom level is changed
-    olmap.events.register("changebaselayer", olmap, checkForEditingByZoom);
-    olmap.events.register("zoomend", olmap, checkForEditingByZoom);
+    olmap.events.register("changebaselayer", olmap, changeSnapLayer);
+    olmap.events.register("zoomend", olmap, changeSnapLayer);
    
     // triggering this event here will configure the map to correspond
     // with the initial dropdown values (jquery will set them to different
@@ -1884,7 +1854,7 @@ function mapinit(srs,maxExtent) {
     // that the map styling and legend info will get loaded, too, so there
     // is no need to explicitly perform doMapStyling() or getMapStyles()
     // in this init method.
-    $('#snapto').trigger('change');
+    changeSnapLayer();
 
     // Set the initial map extents to the bounds around the study area.
     olmap.zoomToExtent(maxExtent);

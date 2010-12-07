@@ -178,7 +178,7 @@ def commonplan(request, planid):
     rules = []
     targets = Target.objects.all()
     for level in levels:
-        snaplayers.append( {'geolevel':level.id,'layer':level.name,'name':level.name.capitalize(),'min_zoom':level.min_zoom,'max_zoom':level.max_zoom} )
+        snaplayers.append( {'geolevel':level.id,'layer':level.name,'name':level.name.capitalize(),'min_zoom':level.min_zoom} )
         boundaries.append( {'id':'%s_boundaries' % level.name.lower(), 'name':level.name.capitalize()} )
     for demo in demos:
         layers.append( {'id':demo[0],'text':demo[2],'value':demo[1].lower(), 'isdefault':str(demo[0] == default_demo.id).lower(), 'isdisplayed':str(demo[3]).lower()} )
