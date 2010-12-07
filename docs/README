@@ -17,9 +17,9 @@ On a debian-based system with aptitude installed, you can install most of
 the necessary software using the command:
 
 > sudo aptitude install apache2 libapache2-mod-wsgi python-django \
-    python-gdal python-rpy2 python-psycopg2 python-setuptools \
-    postgresql-8.4-postgis sun-java6-jdk tomcat6 tomcat6-admin \
-    r-base-dev build-essential
+    python-lxml python-gdal python-rpy2 python-psycopg2 \
+    python-setuptools postgresql-8.4-postgis sun-java6-jdk \
+    tomcat6 tomcat6-admin r-base-dev build-essential
     
 For python libraries that aren't in the ubuntu repositories, you can
 use easy_install (part of python-setuptools) to get celery, which
