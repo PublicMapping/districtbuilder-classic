@@ -72,8 +72,9 @@ function loadTooltips() {
         delay: 200,
         offset: [10,0],
         opacity: .8,
+        // Open this tip on click only, don't close it via tooltip methods
         events: {
-            widget: 'click,click'
+            widget: 'click,'
         },
         onBeforeShow:  function() {
             // ensure proper DOM placement
@@ -95,9 +96,6 @@ function loadTooltips() {
     });  
 }
 
-/**
- * Configure the tooltips and buttons
- */
 // Given a UTC time in ISO format, translate to browser local time
 function getLocalTimeFromIsoformat(time) {
     var dashRE = new RegExp('\-','g');
@@ -120,6 +118,9 @@ function getLocalTimeFromIsoformat(time) {
     return { hours: hours, minutes: minutes, day: day };
 }
 
+/**
+ * Configure the tooltips and buttons
+ */
 $(function() {
     // jQuery-UI tab layout
     $('#steps').tabs();
