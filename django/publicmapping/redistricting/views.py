@@ -167,7 +167,6 @@ def commonplan(request, planid):
         if not editable and not can_view(request.user, plan):
             plan = {}
     except Exception, ex:
-        print "Exception?! %s" % ex
         # If said plan doesn't exist, use an empty plan & district list.
         plan = {}
         districts = {}
@@ -971,23 +970,27 @@ def getgeography(request, planid):
                 stats['contiguity'] = district.is_contiguous()
                 stats['compactness'] = district.get_schwartzberg()
 
-                target = Target.objects.get(subject = subject)
-                
-                # The "in there" range
-                range1 = target.lower * settings.POPTARGET_RANGE1  
-                # The "out of there" range
-                range2 = target.lower * settings.POPTARGET_RANGE2
-                number = int(characteristic.number)
-                if number < (target.lower - range2):
-                    css_class = 'farunder'
-                elif number < (target.lower - range1):
-                    css_class = 'under'
-                elif number <= (target.lower + range1):
+                try: 
+                    target = Target.objects.get(subject = subject)
+                    # The "in there" range
+                    range1 = target.lower * settings.POPTARGET_RANGE1  
+                    # The "out of there" range
+                    range2 = target.lower * settings.POPTARGET_RANGE2
+                    number = int(characteristic.number)
+                    if number < (target.lower - range2):
+                        css_class = 'farunder'
+                    elif number < (target.lower - range1):
+                        css_class = 'under'
+                    elif number <= (target.lower + range1):
+                        css_class = 'target'
+                    elif number <= (target.lower + range2):
+                        css_class = 'over'
+                    elif number > (target.lower + range2):
+                        css_class = 'farover'
+                # No target found - probably not displayed
+                except:
                     css_class = 'target'
-                elif number <= (target.lower + range2):
-                    css_class = 'over'
-                elif number > (target.lower + range2):
-                    css_class = 'farover'
+                
                 stats['css_class'] = css_class 
 
             district_values.append(stats)
@@ -1001,6 +1004,7 @@ def getgeography(request, planid):
     except:
         status['exception'] = traceback.format_exc()
         status['message'] = "Couldn't get district geography."
+        sys.stderr.write(traceback.format_exc())
         return HttpResponse( json.dumps(status), mimetype='application/json', status=500)
 
 

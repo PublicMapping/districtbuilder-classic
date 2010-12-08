@@ -28,29 +28,10 @@ Author:
     David Zwarg, Andrew Jennings
 """
 
-from ConfigParser import RawConfigParser
-
-config = RawConfigParser()
-config.read('/projects/publicmapping/local/settings.ini')
-
 # Django settings for publicmapping project.
 
-DEBUG = False 
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
-
-ADMINS = (
-    (config.get('publicmapping','ADMIN_USER'), 
-     config.get('publicmapping','ADMIN_EMAIL')),
-)
-
-MANAGERS = ADMINS
-
-DATABASE_ENGINE = 'postgresql_psycopg2'   # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-DATABASE_NAME = config.get('database','DATABASE_NAME')  # Or path to database file if using sqlite3.
-DATABASE_USER = config.get('database', 'DATABASE_USER')  # Not used with sqlite3.
-DATABASE_PASSWORD = config.get('database', 'DATABASE_PASSWORD')   # Not used with sqlite3.
-DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
-DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -69,10 +50,6 @@ SITE_ID = 1
 # to load the internationalization machinery.
 USE_I18N = True
 
-# Absolute path to the directory that holds media.
-# Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = '/projects/publicmapping/trunk/django/publicmapping/site-media/'
-
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
@@ -82,9 +59,6 @@ MEDIA_URL = '/site-media/'
 # use a trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
 ADMIN_MEDIA_PREFIX = '/media/'
-
-# Make this unique, and don't share it with anybody.
-SECRET_KEY = config.get('publicmapping','SECRET_KEY')
 
 # Sessions expire when browser is close
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
@@ -121,13 +95,6 @@ AUTH_PROFILE_MODULE = 'redistricting.Profile'
 
 ROOT_URLCONF = 'publicmapping.urls'
 
-TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-    '/projects/publicmapping/trunk/django/publicmapping/templates',
-)
-
 # Settings for django-celery process queue
 import djcelery
 djcelery.setup_loader()
@@ -161,44 +128,6 @@ POSTGIS_TEMPLATE='template_postgis'
 # This is the base url for the application, where the login page is
 LOGIN_URL = '/'
 
-# The url of the geoserver instance where maps are stored. The NS and
-# NSHREF configuration parameters must match the namespace stored in
-# geoserver to match the correct feature types.
-MAP_SERVER = config.get('publicmapping', 'MAP_SERVER')
-MAP_SERVER_NS = config.get('publicmapping', 'MAP_SERVER_NS')
-MAP_SERVER_NSHREF = config.get('publicmapping', 'MAP_SERVER_NSHREF')
-
-# The maximum number of features that can be manipulated at once
-FEATURE_LIMIT = 500
-
-# The id of the 'base geolevel', the smallest geounit of which the 
-# other geounits are composed
-BASE_GEOLEVEL = 3
-
-# Declare the maximum number of districts allowed in a plan
-MAX_DISTRICTS = 18
-
-# The default subject to use when displaying maps on application entry
-# This may be a subject ID, name, or display field
-DEFAULT_DISTRICT_DISPLAY = 'POPTOT'
-
-# This settings determines whether reports are runnning.  If they are
-# not running, the user will get a friendly error message when they 
-# attempt to run a report
-REPORTS_ENABLED = True
-
-# The bard base shape that will be used to create bard reports.  This 
-# should be a bardmap image containing data for the base geounits
-
-BARD_BASESHAPE = '/projects/publicmapping/local/data/ohblock_bard_save.Rdata'
-
-# The R variable of the basemap included in the BARD_BASESHAPE image.  
-# Used to create BARD reports
-BARD_BASEMAP = 'oh_blocks.bardmap'
-
-# The temp directory where BARD will write HTML reports
-BARD_TEMP = '/projects/publicmapping/local/reports'
-
 # The POPTARGET RANGE variables are used to determine the class breaks for 
 # the district choropleths
 #
@@ -218,26 +147,50 @@ POPTARGET_RANGE1 = .1
 # or "farover", respectively
 POPTARGET_RANGE2 = .2
 
-# Set up mail server settings. This is required for simple mailing 
-# features, such as 'forgotten password' recovery, etc.
-MAIL_SERVER = config.get('mailer', 'SERVER')
-MAIL_PORT = config.get('mailer', 'PORT')
-MAIL_USERNAME = config.get('mailer', 'USERNAME')
-MAIL_PASSWORD = config.get('mailer', 'PASSWORD')
+#
+# Automatically generated settings.
+#
+DATABASE_ENGINE = 'postgresql_psycopg2'
+DATABASE_NAME = 'publicmapping'
+DATABASE_USER = 'publicmapping'
+DATABASE_PASSWORD = 'publicmapping'
 
-# Configure the location of the SLD files. These are used by the application
-# to generate legend information regarding map choropleths.
+MAP_SERVER = 'delhi.internal.azavea.com'
+MAP_SERVER_NS = 'gmu'
+MAP_SERVER_NSHREF = 'http://gmu.azavea.com/'
+FEATURE_LIMIT = 100
+
+ADMINS = (
+  ('ajennings',
+  'ajennings@azavea.com'),
+)
+MANAGERS = ADMINS
+
+MAIL_SERVER = 'localhost'
+MAIL_PORT = 25
+MAIL_USERNAME = ''
+MAIL_PASSWORD = ''
+
+SECRET_KEY = 'jd1cw+k1%)8b-+)f)bv8_%+54eeu2ib4!v-+^5k2^$*s+c1+08'
+
+MEDIA_ROOT = '/projects/publicmapping/trunk/django/publicmapping/site-media/'
+
+TEMPLATE_DIRS = (
+  '/projects/publicmapping/trunk/django/publicmapping/templates',
+)
+
 SLD_ROOT = '/projects/publicmapping/trunk/sld/'
 
-# Simplification tolerance. This determines just how much detail should be
-# included in the 'simple' versions of the geometries in the District
-# and Geounit models. The value is the amount, in spatial units, that the
-# geometries will be simplified.
 SIMPLE_TOLERANCE = 10.0
 
-# Google analytics values
+REPORTS_ENABLED = True
+
+BARD_BASESHAPE = '/projects/publicmapping/local/data/ohblock_bard_save.Rdata'
+BARD_BASEMAP = 'oh_blocks.bardmap'
+BARD_TEMP = '/projects/publicmapping/local/reports'
+
 GA_ACCOUNT = None
 GA_DOMAIN = None
-if config.has_section('analytics'):
-    GA_ACCOUNT = config.get('analytics', 'GA_ACCOUNT')
-    GA_DOMAIN = config.get('analytics', 'GA_DOMAIN')
+
+BASE_GEOLEVEL = 3
+DEFAULT_DISTRICT_DISPLAY = 'poptot'

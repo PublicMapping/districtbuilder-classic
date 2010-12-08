@@ -436,20 +436,15 @@ chooseplan = function(options) {
         });        
         $('#filter_mine').click( function () {
             _eventType = 'mine';
-            _nameRequired = true;
+            _nameRequired = false;
             _table.jqGrid().trigger('reloadGrid');
             $('input:radio[name=Edit]').filter('[value=edit]').attr('checked', true);
-            _nameRequired = false;
             showItems(false, true, true, true, false);
             setActiveTab($(this));            
         });        
-        $('#new_from_blank').click( function() {
-            _eventType = 'blank';
-            showItems(true, false, false, false, true);
-             setActiveTab($(this));           
-        });
         $('#new_from_file').click( function() {
             _eventType = 'upload';
+            _nameRequired = true;
             showItems(true, false, false, false, true);
             setActiveTab($(this));           
         });
