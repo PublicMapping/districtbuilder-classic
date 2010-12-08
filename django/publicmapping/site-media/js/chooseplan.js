@@ -247,7 +247,7 @@ chooseplan = function(options) {
                 {name:'fields.owner', label:'Author', search:true, width: '110', fixed: true, sortable:true},
                 {name:'fields.description', label:'Description', hidden:true, search:true},
                 {name:'fields.is_shared', label:'Shared', sortable:true, search:false, formatter:'checkbox', width:'70', fixed: true, align: 'center'},
-                {name:'fields.edited', label:'Last Edited', sortable:true, search:false, width:'130', fixed: true, align: 'center', formatter:'date', formatoptions: { srcformat: 'UniversalSortableDateTime', newformat:'d/m/Y g:i A'}},
+                {name:'fields.edited', label:'Last Edited', sortable:true, search:false, width:'130', fixed: true, align: 'center', formatter:'date', formatoptions: { srcformat: 'UniversalSortableDateTime', newformat:'m/d/Y g:i A'}},
                 {name:'fields.can_edit', label:'Edit', search:false, hidden: true},
                 {name:'fields.districtCount', label:'# Districts', search:false, sortable:true, hidden:true},
             ],
