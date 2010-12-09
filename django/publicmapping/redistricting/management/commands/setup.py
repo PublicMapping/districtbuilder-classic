@@ -608,6 +608,12 @@ ERROR:
                         else:
                             print 'LegislativeBody/GeoLevel mapping "%s/%s" already exists' % (legislative_body.name, glvl.name)
 
+        # Create an anonymous user
+        anon,created = User.object.get_or_create(username='anonymous')
+        if not created:
+            anon.set_password('anonymous')
+            anon.save()
+
         return True
 
     def import_shape(self,config,verbose):
