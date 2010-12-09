@@ -162,7 +162,7 @@ def commonplan(request, planid):
         plan.edited = getutc(plan.edited)
         districts = plan.get_districts_at_version(plan.version)
         editable = can_edit(request.user, plan)
-        default_demo = getdefaultsubject(plan.legislative_body)
+        default_demo = plan.legislative_body.get_default_subject()
         max_dists = plan.legislative_body.max_districts
         if not editable and not can_view(request.user, plan):
             plan = {}
@@ -188,10 +188,10 @@ def commonplan(request, planid):
         layers.append( {'id':demo[0],'text':demo[2],'value':demo[1].lower(), 'isdefault':isdefault, 'isdisplayed':str(demo[3]).lower()} )
     for target in targets:
         # The "in there" range
-        range1 = target.lower * settings.POPTARGET_RANGE1  
+        range1 = target.value * target.range1
         # The "out of there" range
-        range2 = target.lower * settings.POPTARGET_RANGE2
-        rules.append( {'subject_id':target.subject_id,'lowest': target.lower - range2,'lower':target.lower - range1,'upper':target.lower + range1,'highest': target.lower + range2} )
+        range2 = target.value * target.range2
+        rules.append( {'subject_id':target.subject_id,'lowest': target.value - range2,'lower':target.value - range1,'upper':target.value + range1,'highest': target.value + range2} )
 
     unassigned_id = 0
     if type(plan) != types.DictType:
@@ -492,8 +492,8 @@ def getreport(request, planid):
     cursor = plan.district_mapping_cursor(geounit_id_field='id')
 
     # Get the geounit ids we'll be iterating through
-    geolevel = settings.BASE_GEOLEVEL
-    geounits = Geounit.objects.filter(geolevel = settings.BASE_GEOLEVEL)
+    geolevel = plan.legislative_body.get_base_geolevel()
+    geounits = Geounit.objects.filter(geolevel=geolevel)
     max_and_min = geounits.aggregate(Min('id'), Max('id'))
     min_id = int(max_and_min['id__min'])
     max_id = int(max_and_min['id__max'])
@@ -797,8 +797,8 @@ def simple_district_versioned(request,planid):
         subject_id = None
         if 'subject__eq' in request.REQUEST:
             subject_id = request.REQUEST['subject__eq']
-        elif getdefaultsubject(plan.legislative_body):
-            subject_id = getdefaultsubject(plan.legislative_body).id
+        elif plan.legislative_body.get_default_subject():
+            subject_id = plan.legislative_body.get_default_subject().id
 
         if subject_id:
             status['features'] = plan.get_wfs_districts(version, subject_id)
@@ -883,7 +883,7 @@ def getdemographics(request, planid):
         return render_to_response('demographics.html', {
             'plan': plan,
             'district_values': district_values,
-            'aggregate': getcompliance(districts),
+            'aggregate': getcompliance(districts,plan.legislative_body),
             'headers': headers
         })
     except:
@@ -973,19 +973,19 @@ def getgeography(request, planid):
                 try: 
                     target = Target.objects.get(subject = subject)
                     # The "in there" range
-                    range1 = target.lower * settings.POPTARGET_RANGE1  
+                    range1 = target.value * target.range1
                     # The "out of there" range
-                    range2 = target.lower * settings.POPTARGET_RANGE2
+                    range2 = target.value * target.range2
                     number = int(characteristic.number)
-                    if number < (target.lower - range2):
+                    if number < (target.value - range2):
                         css_class = 'farunder'
-                    elif number < (target.lower - range1):
+                    elif number < (target.value - range1):
                         css_class = 'under'
-                    elif number <= (target.lower + range1):
+                    elif number <= (target.value + range1):
                         css_class = 'target'
-                    elif number <= (target.lower + range2):
+                    elif number <= (target.value + range2):
                         css_class = 'over'
-                    elif number > (target.lower + range2):
+                    elif number > (target.value + range2):
                         css_class = 'farover'
                 # No target found - probably not displayed
                 except:
@@ -998,7 +998,7 @@ def getgeography(request, planid):
         return render_to_response('geography.html', {
             'plan': plan,
             'district_values': district_values,
-            'aggregate': getcompliance(districts),
+            'aggregate': getcompliance(districts,plan.legislative_body),
             'name': subject.short_display
         })
     except:
@@ -1008,7 +1008,7 @@ def getgeography(request, planid):
         return HttpResponse( json.dumps(status), mimetype='application/json', status=500)
 
 
-def getcompliance(districts):
+def getcompliance(districts,legislative_body):
     """
     Get compliance information about a set of districts. Compliance
     includes contiguity, population target data, and minority districts.
@@ -1038,14 +1038,14 @@ def getcompliance(districts):
     displayed = Subject.objects.filter(is_displayed__exact = True)
     targets = Target.objects.filter(subject__in = displayed)
     for target in targets:
-        data = { 'name': 'Target Pop. %s' % target.lower, 'value': 'All meet target' } 
+        data = { 'name': 'Target Pop. %s' % target.value, 'value': 'All meet target' } 
         noncompliant = 0
         for district in districts:
             try:
                 characteristic = district.computedcharacteristic_set.get(subject__exact = target.subject) 
-                allowance = target.lower * settings.POPTARGET_RANGE1
+                allowance = target.value * target.range1
                 number = int(characteristic.number)
-                if (number < (target.lower - allowance)) or (number > (target.lower + allowance)):
+                if (number < (target.value - allowance)) or (number > (target.value + allowance)):
                     noncompliant += 1
             except:
                 # District has no characteristics - unassigned
@@ -1055,8 +1055,8 @@ def getcompliance(districts):
         compliance.append(data)
 
     #Minority districts
-    population = Subject.objects.get(name=settings.DEFAULT_DISTRICT_DISPLAY)
-    minority = Subject.objects.exclude(name=settings.DEFAULT_DISTRICT_DISPLAY)
+    population = legislative_body.get_default_subject()
+    minority = Subject.objects.exclude(name=population.name)
     data = {}
     for subject in minority:
         data[subject]  = { 'name': '%s Majority' % subject.short_display, 'value': 0 }
@@ -1142,22 +1142,6 @@ def getcompactness(district):
 #        query += 'getsubjectfordistrict(b.id, \'%s\') as %s, ' % (subject.name, subject.name)
 #    return query
      
-def getdefaultsubject(legislative_body):
-    """
-    Get the default subject to display. This reads the settings
-    for the value 'DEFAULT_DISTRICT_DISPLAY', which can be the ID of
-    a subject, a name of a subject, or the display of a subject.
-
-    Parameters:
-        legislative_body - The legislative body for whom to retrieve
-            the default subject.
-    
-    Returns:
-        The default subject, based on the application settings.
-    """
-    lsub = LegislativeSubject.objects.filter( legislative_body=legislative_body, is_default = True)[0]
-    return lsub.subject
-
 def getutc(t):
     """Given a datetime object, translate to a datetime object for UTC time.
     """

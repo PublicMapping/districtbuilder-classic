@@ -112,6 +112,56 @@ class LegislativeBody(models.Model):
     # The maximum number of districts in this body
     max_districts = models.PositiveIntegerField()
 
+    def get_default_subject(self):
+        """
+        Get the default subject for display. This is related to the
+        LegislativeBody via the LegislativeDefault table.
+
+        Returns:
+            The default subject for the legislative body.
+        """
+        ldef = LegislativeDefaults.objects.get(legislative_body=self)
+        return ldef.target.subject
+
+    def get_base_geolevel(self):
+        """
+        Get the base geolevel for this legislative body. Each legislative
+        body contains multiple geolevels, which are nested. There is only
+        one parent geolevel per legislative body, the one with no parent
+        above it.
+
+        Returns:
+            The base geolevel in this legislative body.
+        """
+        subj = self.get_default_subject()
+        levels = self.legislativelevel_set.filter(target__subject=subj,parent=None)
+        return levels[0].geolevel.id
+
+    def get_geolevels(self):
+        """
+        Get the geolevel heirarchy for this legislative body. This returns
+        a list of geolevels that exist in the legislative body, in the
+        order in which they are related.
+        """
+        subject = self.get_default_subject()
+        geobodies = self.legislativelevel_set.filter(target__subject=subject)
+
+        ordered = []
+        while len(ordered) < len(geobodies):
+            for geobody in geobodies:
+                if len(ordered) == 0 and geobody.parent is None:
+                    ordered.append(geobody)
+                elif len(ordered) > 0 and ordered[len(ordered)-1] == geobody.parent:
+                    ordered.append(geobody)
+
+        def glonly(item):
+            return item.geolevel
+
+        ordered = map(glonly,ordered)
+
+        ordered.reverse()
+        return ordered
+
     def __unicode__(self):
         """
         Represent the LegislativeBody as a unicode string. This is the 
@@ -202,7 +252,7 @@ class LegislativeLevel(models.Model):
         Represent the LegislativeLevel as a unicode string. This is the
         LegislativeLevel's LegislativeBody and Geolevel
         """
-        return "%s, %s, %s" % (self.legislative_body.name, self.geolevel.name, self.target.name)
+        return "%s, %s, %s" % (self.legislative_body.name, self.geolevel.name, self.target)
 
     class Meta:
         unique_together = ('geolevel','legislative_body','target',)
@@ -240,44 +290,44 @@ class Geounit(models.Model):
     # Manage the instances of this class with a geographically aware manager
     objects = models.GeoManager()
 
+#    @staticmethod
+#    def get_base_geounits(geounit_ids, geolevel):
+#        """
+#        Get the list of geounits at the base geolevel inside the 
+#        geometry of geounit_ids.
+#        
+#        This method performs a spatial query to find all the small
+#        Geounits that are contained within the combined extend of the
+#        Geounits that are in the list of geounit_ids.
+#        
+#        The spatial query unionizes the geometry of the geounit_ids,
+#        simplifies that geometry, then returns all geounits at the base
+#        geolevel whose centroid falls within the unionized geometry.
+#
+#        The performance of this method is directly related to the complexity
+#        of the geometry of the Geounits. This method will perform the best
+#        on simplified geometry, or geometries with fewer vertices.
+#
+#        Parameters:
+#            geounit_ids -- A list of Geounit IDs. Please note that these 
+#            must be int datatypes, and not str.
+#            geolevel -- The ID of the Geolevel that contains geounit_ids
+#
+#        Returns:
+#            A list of Geounit ids.
+#        """
+#        cursor = connection.cursor()
+#
+#        # craft a custom sql query to get the IDs of the geounits
+#        cursor.execute('SELECT id from redistricting_geounit where geolevel_id = %s and St_within(center, (select st_simplify(st_union(geom), 10) from redistricting_geounit where geolevel_id = %s and id in %s))', [int(settings.BASE_GEOLEVEL), int(geolevel), geounit_ids])
+#        results = []
+#        ids = cursor.fetchall()
+#        for row in ids:
+#            results += row
+#        return results
+
     @staticmethod
-    def get_base_geounits(geounit_ids, geolevel):
-        """
-        Get the list of geounits at the base geolevel inside the 
-        geometry of geounit_ids.
-        
-        This method performs a spatial query to find all the small
-        Geounits that are contained within the combined extend of the
-        Geounits that are in the list of geounit_ids.
-        
-        The spatial query unionizes the geometry of the geounit_ids,
-        simplifies that geometry, then returns all geounits at the base
-        geolevel whose centroid falls within the unionized geometry.
-
-        The performance of this method is directly related to the complexity
-        of the geometry of the Geounits. This method will perform the best
-        on simplified geometry, or geometries with fewer vertices.
-
-        Parameters:
-            geounit_ids -- A list of Geounit IDs. Please note that these 
-            must be int datatypes, and not str.
-            geolevel -- The ID of the Geolevel that contains geounit_ids
-
-        Returns:
-            A list of Geounit ids.
-        """
-        cursor = connection.cursor()
-
-        # craft a custom sql query to get the IDs of the geounits
-        cursor.execute('SELECT id from redistricting_geounit where geolevel_id = %s and St_within(center, (select st_simplify(st_union(geom), 10) from redistricting_geounit where geolevel_id = %s and id in %s))', [int(settings.BASE_GEOLEVEL), int(geolevel), geounit_ids])
-        results = []
-        ids = cursor.fetchall()
-        for row in ids:
-            results += row
-        return results
-
-    @staticmethod
-    def get_base_geounits_within(geom):
+    def get_base_geounits_within(geom,legislative_body):
         """
         Get the  list of geounits at the base geolevel inside a geometry.
 
@@ -298,9 +348,11 @@ class Geounit(models.Model):
         Returns:
             A list of Geounit ids.
         """
+        geolevel = legislative_body.get_base_geolevel()
+
         cursor = connection.cursor()
         # craft a custom sql query to get the IDs of the geounits
-        cursor.execute("select id from redistricting_geounit where geolevel_id = %s and st_within(center, geomfromewkt(%s))",[settings.BASE_GEOLEVEL, str(geom.ewkt)])
+        cursor.execute("select id from redistricting_geounit where geolevel_id = %s and st_within(center, geomfromewkt(%s))",[geolevel, str(geom.ewkt)])
         results = []
         ids = cursor.fetchall()
         for row in ids:
@@ -308,7 +360,7 @@ class Geounit(models.Model):
         return results
 
     @staticmethod
-    def get_mixed_geounits(geounit_ids, geolevel, boundary, inside):
+    def get_mixed_geounits(geounit_ids, legislative_body, geolevel, boundary, inside):
         """
         Spatially search for the largest Geounits inside or outside a 
         boundary.
@@ -316,11 +368,14 @@ class Geounit(models.Model):
         Search for Geounits in a multipass search. The searching method
         gets Geounits inside a boundary at a Geolevel, then determines
         if there is a geographic remainder, then repeats the search at
-        a smaller Geolevel, until the base Geolevel is reached.
+        a smaller Geolevel inside the specified LegislativeBody, until 
+        the base Geolevel is reached.
 
         Parameters:
             geounit_ids -- A list of Geounit IDs. Please note that these
                 must be int datatypes, and not str.
+            legislative_body -- The LegislativeBody that contains this 
+                geolevel.
             geolevel -- The ID of the Geolevel that contains geounit_ids
             boundary -- The GEOSGeometry that defines the edge of the
                 spatial search area.
@@ -331,20 +386,22 @@ class Geounit(models.Model):
             A list of Geounit objects, with only the ID and Geometry
             fields populated.
         """
-
         if not boundary and inside:
             # there are 0 geounits inside a non-existant boundary
             return []
 
-
         # Make sure the geolevel is a number
         geolevel = int(geolevel)
-        levels = Geolevel.objects.all().values_list('id',flat=True).order_by('id')
+        levels = legislative_body.get_geolevels()
+        base_geolevel = levels[len(levels)-1]
         selection = None
         units = []
+        searching = False
         for level in levels:
+            print "Searching geolevel %s" % level.name
             # if this geolevel is the requested geolevel
-            if geolevel == level:
+            if geolevel == level.id:
+                searching = True
                 guFilter = Q(id__in=geounit_ids)
 
                 # Get the area defined by the union of the geounits
@@ -360,7 +417,7 @@ class Geounit(models.Model):
 
                 if inside:
                     # Searching inside the boundary
-                    if level != settings.BASE_GEOLEVEL:
+                    if level != base_geolevel:
                         # Search by geometry
                         query += "st_within(geom, geomfromewkt('%s'))" % simple.ewkt
                     else:
@@ -368,7 +425,7 @@ class Geounit(models.Model):
                         query += "st_intersects(center, geomfromewkt('%s'))" % simple.ewkt
                 else:
                     # Searching outside the boundary
-                    if level != settings.BASE_GEOLEVEL:
+                    if level != base_geolevel:
                         # Search by geometry
                         query += "NOT st_intersects(geom, geomfromewkt('%s'))" % simple.ewkt
                     else:
@@ -388,12 +445,12 @@ class Geounit(models.Model):
 
                 # if we're at the base level, and haven't collected any
                 # geometries, return the units here
-                if level == settings.BASE_GEOLEVEL:
+                if level == base_geolevel:
                     return units
 
-            # only query geolevels at or below (smaller in size, bigger
-            # in id) the geolevel parameter
-            elif geolevel < level:
+            # only query geolevels below (smaller in size, after the 
+            # primary search geolevel) the geolevel parameter
+            elif searching:
                 # union the selected geometries
                 union = None
                 for selected in units:
@@ -465,12 +522,12 @@ class Geounit(models.Model):
                 # converted, or errored out above, in which case we just
                 # have to move on.
                 if not remainder.empty:
-                    query = "SELECT id,st_ashexewkb(geom,'NDR') FROM redistricting_geounit WHERE geolevel_id = %d AND " % level
+                    query = "SELECT id,st_ashexewkb(geom,'NDR') FROM redistricting_geounit WHERE geolevel_id = %d AND " % level.id
 
                     # Simplify the remainder before performing the query
                     simple = remainder.simplify(tolerance=settings.SIMPLE_TOLERANCE, preserve_topology=True)
 
-                    if level == settings.BASE_GEOLEVEL:
+                    if level == base_geolevel:
                         # Query by center
                         query += "st_intersects(center, geomfromewkt('%s'))" % simple.ewkt
                     else:
@@ -609,7 +666,7 @@ class Plan(models.Model):
         """
         Define a unique constraint on 2 fields of this model.
         """
-        unique_together = (('name','owner'),)
+        unique_together = ('name','owner','legislative_body',)
 
     @transaction.commit_on_success
     def add_geounits(self, districtid, geounit_ids, geolevel, version):
@@ -673,7 +730,7 @@ class Plan(models.Model):
                 continue
 
             # compute the geounits before changing the boundary
-            geounits = Geounit.get_mixed_geounits(geounit_ids, geolevel, district.geom, True)
+            geounits = Geounit.get_mixed_geounits(geounit_ids, self.legislative_body, geolevel, district.geom, True)
             # Difference the district with the selection
             # This may throw a GEOSException, in which case this function
             # will not complete successfully, and all changes will be
@@ -715,7 +772,7 @@ class Plan(models.Model):
                 fixed += 1
 
         # get the geounits before changing the target geometry
-        geounits = Geounit.get_mixed_geounits(geounit_ids, geolevel, target.geom, False)
+        geounits = Geounit.get_mixed_geounits(geounit_ids, self.legislative_body, geolevel, target.geom, False)
 
         # If there exists geometry in the target district
         if target.geom:
@@ -898,12 +955,12 @@ class Plan(models.Model):
             and a district_id, respectively.
         """
 
-        geolevel = settings.BASE_GEOLEVEL
+        geolevel = self.legislative_body.get_base_geolevel()
 
         # This query gets all of the geounit and district ids for the current plan 
         query = 'select g.' + geounit_id_field + ', l.district_id from redistricting_geounit as g join (select d.* from redistricting_district as d join (select max(version) as latest, district_id, plan_id from redistricting_district where plan_id = %s and version <= %s group by district_id, plan_id) as v on d.district_id = v.district_id and d.plan_id = v.plan_id and d.version = v.latest) as l on ST_Contains(l.geom, g.center) where geolevel_id = %s order by g.' + geounit_id_field
         cursor = connection.cursor()
-        cursor.execute(query, [self.id, self.version, settings.BASE_GEOLEVEL])
+        cursor.execute(query, [self.id, self.version, geolevel.id])
 
         return cursor
 
@@ -1202,7 +1259,10 @@ class District(models.Model):
         """    
         if not self.simple:
            return list()
-        return Geounit.objects.filter(geolevel = settings.BASE_GEOLEVEL, center__within = self.simple).values_list('id')
+
+        geolevel = self.plan.legislative_body.get_base_geolevel()
+
+        return Geounit.objects.filter(geolevel = geolevel, center__within = self.simple).values_list('id')
         
 
 
