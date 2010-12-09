@@ -623,7 +623,11 @@ div#form_container {
 div#chooserFileDownloadTarget {
   float:right;
 }
-
+div#chooserFileDownloadTarget .loading {
+    background: url('/site-media/images/chooser-loading.gif') no-repeat left center;
+    height:25px;
+    width:70px;
+}
 div#chooserFileDownloadTarget div#pendingMessage {
   font-size: 11px; 
   width: 120px; 

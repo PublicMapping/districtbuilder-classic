@@ -56,6 +56,8 @@ districtindexfile = function(options) {
      *   The publisher.
      */
     _self.init = function() {
+        _options.target.empty();
+        _options.target.append($('<div class="loading"></div>').width('70').height('25'));
         $.post(_options.statusUrl, statusRequestCallback);
         _options.callback();
         
