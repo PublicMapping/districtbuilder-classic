@@ -40,7 +40,8 @@
    
     <GeoLevels>
       <GeoLevel id="block" name="block" namefield="NAME00" supplementfield="BLKIDFP00"
-          shapefile="/projects/publicmapping/data/OH_39_census_block_web_mercator.shp">
+          shapefile="/projects/publicmapping/data/OH_39_census_block_web_mercator.shp"
+          min_zoom="0" sort_key="3">
           <!-- A reference to a legislative body.
               A geolevel may be used by many legislative bodies. -->
           <LegislativeBodies>
@@ -58,7 +59,8 @@
           be coincident in it's child until the system supports automatic
           aggregation. -->
       <GeoLevel id="tract" name="tract" namefield="TRACTNAME" supplementfield="TRACTID" 
-          shapefile="/projects/publicmapping/data/OH_39_census_tractsviablocks2_wm.shp">
+          shapefile="/projects/publicmapping/data/OH_39_census_tractsviablocks2_wm.shp"
+          min_zoom="5" sort_key="2">
           <!-- A reference to a legislative body.
               A geolevel may be used by many legislative bodies. -->
           <LegislativeBodies>
@@ -76,7 +78,8 @@
       <!-- A list of geographic levels supported. This list will be used by
           the importer to enforce nested geometries. -->
       <GeoLevel id="county" name="county" namefield="COUNTYNAME" supplementfield="COUNTYFP00"
-          shapefile="/projects/publicmapping/data/OH_39_census_countiesviablocks_WM.shp">
+          shapefile="/projects/publicmapping/data/OH_39_census_countiesviablocks_WM.shp"
+          min_zoom="9" sort_key="1">
           <!-- A reference to a legislative body.
               A geolevel may be used by many legislative bodies. -->
           <LegislativeBodies>
