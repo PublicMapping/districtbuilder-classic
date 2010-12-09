@@ -1,0 +1,14 @@
+{% autoescape off %}
+Hello {{ user.username }},
+
+We apologize for the inconvenience, but your uploaded file was not converted into a plan. There are a few reasons why this might have happened. As best we can tell, your file failed to upload for the following reason:
+
+{% for error in errors %}
+- {{ error.message }}
+
+{% endfor %}
+If you correct this issue and upload your file again, we can try again.
+
+Happy Redistricting!
+The Public Mapping Team
+{% endautoescape %}

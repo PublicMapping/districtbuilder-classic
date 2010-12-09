@@ -1,0 +1,16 @@
+{% autoescape off %}
+Hello {{ user.username }},
+
+Your plan was created successfully. You can view, edit, and share your new plan by logging in to District Builder, and pulling up the plan entitled "{{ plan.name }}"
+
+{% if errors %}
+There were a few errors during import:
+
+{% endif %}
+{% for error in errors %}
+- {{ error.message }}
+
+{% endfor %}
+Happy Redistricting!
+The Public Mapping Team
+{% endautoescape %}

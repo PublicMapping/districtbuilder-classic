@@ -24,13 +24,11 @@ Author:
     Andrew Jennings, David Zwarg
 """
 
-from redistricting.models import *
-from email.mime.application import MIMEApplication
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
 from celery.decorators import task
-import csv, time, zipfile, tempfile, os, smtplib, email, sys, traceback
-
+from django.core.mail import send_mail, mail_admins
+from django.template import loader, Context
+from redistricting.models import *
+import csv, time, zipfile, tempfile, os, sys, traceback
 
 
 class DistrictIndexFile():
@@ -67,39 +65,15 @@ class DistrictIndexFile():
                 through email, otherwise, output to the console.
         """
 
-        usertitle = "Problem importing your uploaded file."
-        usertpl = """Hello %s,
-
-We apologize for the inconvenience, but your uploaded file was not converted into a plan. There are a few reasons why this might have happened. As best we can tell, your file failed to upload for the following reason:
-
-- %s
-
-If you correct this issue and upload your file again, we can try again.
-
-Happy Redistricting!
-The Public Mapping Team
-"""
-
-        successtitle = "Upload and import plan confirmation."
-        successtpl = """Hello %s,
-
-Your plan was created successfully. You can view, edit, and share your new plan by logging in to District Builder, and pulling up the plan entitled "%s"
-
-Happy Redistricting!
-The Public Mapping Team
-"""
-
-        admintitle = "Problem importing user uploaded file."
-        admintpl = """Hello Admin,
-
-There was a problem importing a plan file from user '%s'. This user attempted to upload a file containing a plan, but it failed for the following reason:
-
-- %s
-
-If the user continues to have problems with this process, please check the application settings.
-
-Thank you.
-"""
+        if email:
+            error_subject = "Problem importing your uploaded file."
+            success_subject = "Upload and import plan confirmation."
+            admin_subject = "Problem importing user uploaded file."
+            
+            context = Context({
+                'user': owner,
+                'errors': list()
+            })
         
         # Is this filename a zip archive?
         if filename.endswith('.zip'):
@@ -113,16 +87,15 @@ Thank you.
                         os.unlink(filename)
 
                     if email:
-                        # report error to owner and admin
-                        txt = usertpl % (owner.username, "The zip file contains too many files.")
-                        Email.send_email(owner, txt, usertitle)
-
-                        adm = User.objects.filter(is_staff=True)[0]
-                        txt = admintpl % (owner.username, "The zip file contains too many files.")
-                        Email.send_email(adm, txt, admintitle)
+                        context['errors'].append({'message': 'The zip file contains too many files', 'traceback': None})
+                        # report error to owner
+                        template = loader.get_template('error.email')
+                        send_mail(error_subject, template.render(context), settings.EMAIL_HOST_USER, [email], fail_silently=False)
+                        # report error to admin
+                        template = loader.get_template('admin.email')
+                        mail_admins(admin_subject, template.render(context))
                     else:
                         sys.stderr.write('District Index .zip file contains too many files.\n')
-
                     return
 
                 item = archive.namelist()[0]
@@ -133,12 +106,14 @@ Thank you.
                         os.unlink(filename)
 
                     if email:
-                        # report error to owner and admin
-                        txt = usertpl % (owner.username, "The zip file must contain a comma separated value (.csv) file.")
-                        Email.send_email(owner, txt, usertitle)
-                        adm = User.objects.filter(is_staff=True)[0]
-                        txt = admintpl % (owner.username, "The zip file must contain a comma separated value (.csv) file.")
-                        Email.send_email(adm, txt, admintitle)
+                        context['errors'].append({'message': 'The zip file must contain a comma separated value (.csv) file.', 'traceback': None})
+
+                        # report error to owner
+                        template = loader.get_template('error.email')
+                        send_mail(error_subject, template.render(context), settings.EMAIL_HOST_USER, [email], fail_silently=False)
+                        # report error to admin
+                        template = loader.get_template('admin.email')
+                        mail_admins(admin_subject, template.render(context))
                     else:
                         sys.stderr.write('District Index .zip file does not contain a .csv file.\n')
 
@@ -166,17 +141,18 @@ Thank you.
 
             except Exception as ex:
                 if email:
-                    # Some problem opening the zip file, bail now
-                    # report error to owner and admin
-                    txt = usertpl % (owner.username, "Unspecified error during zip file processing.")
-                    Email.send_email(owner, txt, usertitle)
-                    adm = User.objects.filter(is_staff=True)[0]
-                    txt = admintpl % (owner.username, traceback.format_exc())
-                    Email.send_email(adm, txt, admintitle)
+                    context['errors'].append({'message': 'Unexpected error during zip file processing', 'traceback': traceback.format_exc()}) 
+                    # report error to owner
+                    template = loader.get_template('error.email')
+                    send_mail(error_subject, template.render(context), settings.EMAIL_HOST_USER, [email], fail_silently=False)
+                    # report error to admin
+                    template = loader.get_template('admin.email')
+                    mail_admins(admin_subject, template.render(context))
                 else:
                     sys.stderr.write('The .zip file could not be imported:\n%s\n' % traceback.format_exc())
 
                 if purge:
+                    # Some problem opening the zip file, bail now
                     os.unlink(filename)
                 return
        
@@ -192,11 +168,11 @@ Thank you.
 
         if not plan:
             if email:
-                txt = usertpl % (owner.username, "Plan could not be created, please ensure the plan name is unique.")
-                Email.send_email(owner, txt, usertitle)
-                adm = User.objects.filter(is_staff=True)[0]
-                txt = admintpl % (owner.username, "Plan could no:t be created. Probably a duplicate plan name.")
-                Email.send_email(adm,txt,admintitle)
+                context['errors'].append({'message': 'Plan couldn\'t be created. Be sure the plan name is unique.', 'tracback': None })
+                template = loader.get_template('error.email')
+                send_mail(error_subject, template.render(context), settings.EMAIL_HOST_USER, [email], fail_silently=False)
+                template = loader.get_template('admin.email')
+                mail_admins(error_subject, template.render(context))
             else:
                 sys.stderr.write('The plan "%s" could not be created:\n%s\n' % (name, traceback.format_exc()))
             return
@@ -204,9 +180,6 @@ Thank you.
         # initialize the dicts we'll use to store the supplemental_ids,
         # keyed on the district_id of this plan
         new_districts = dict()
-        accum_errors = []
-        admin_errors = []
-        
         csv_file = open(indexFile)
         reader = csv.DictReader(csv_file, fieldnames = ['code', 'district']) 
         for row in reader:
@@ -221,8 +194,10 @@ Thank you.
                     new_districts[dist_id].append(row['code'])
             except Exception as ex:
                 if email:
-                    accum_errors.append( "Did not import row:\n  '%s'" % row )
-                    admin_errors.append( "Did not import row:\n  '%s'\nReason:\n  %s" % (row, traceback.format_exc() ) )
+                    context['errors'].append({
+                        'message': 'Did not import row:\n  "%s, %s"\n' % (row['code'], row['district']),
+                        'traceback': traceback.format_exc()
+                    })
                 else:
                     sys.stderr.write("Did not import row:\n  '%s'\nReason:\n  %s\n" % (row, traceback.format_exc()))
         csv_file.close()
@@ -251,8 +226,10 @@ Thank you.
                 new_district.save()
             except Exception as ex:
                 if email:
-                    accum_errors.append('Unable to create district %s.' % district_id)
-                    admin_errors.append('Unable to create district %s.\nReason:\n%s' % (district_id, traceback.format_exc()))
+                    context['errors'].append({
+                        'message': 'Unable to create district %s.' % district_id,
+                        'traceback': traceback.format_exc()
+                    })
                 else:
                     sys.stderr.write('Unable to create district %s.\nReason:\n  %s\n' % (district_id, traceback.format_exc()))
                 continue
@@ -270,27 +247,28 @@ Thank you.
                     cc.save()
                 except Exception as ex:
                     if email:
-                        accum_errors.append('Unable to create ComputedCharacteristic for district %s, subject %s' % (district_id, subject.name))
-                        admin_errors.append('Unable to create ComputedCharacteristic for district %s, subject %s\nReason:\n%s' % (district_id, subject.name, traceback.format_exc()))
+                        context['errors'].append({
+                            'message': 'Unable to create ComputedCharacteristic for district %s, subject %s' % (district_id, subject.name),
+                            'traceback': None
+                        })
                     else:
                         sys.stderr.write('Unable to create ComputedCharacteristic for district %s, subject %s\nReason:\n  %s\n' % (district_id, subject.name, traceback.format_exc()))
 
         # this plan is complete, and no longer pending
         plan.is_pending = False
         plan.save()
+        context['plan'] = plan
 
         if email:
             # Plan operations completed successfully. It's unclear if the
             # accumulated messages are problems or not. Let's assume they are.
-            if len(accum_errors) > 0:
-                txt = usertpl % (owner.username, '\n'.join(accum_errors))
-                Email.send_email(owner, txt, usertitle)
-                adm = User.objects.filter(is_staff=True)[0]
-                txt = admintpl % (owner.username, '\n'.join(admin_errors))
-                Email.send_email(adm, txt, admintitle)
-            else:
-                txt = successtpl % (owner.username, plan.name)
-                Email.send_email(owner, txt, successtitle)
+
+            if len(context['errors']) > 0:
+                template = loader.get_template('admin.email')
+                mail_admins(admin_subject, template.render(context))
+
+            template = loader.get_template('importedplan.email')
+            send_mail(success_subject, template.render(context), settings.EMAIL_HOST_USER, [email], fail_silently=False)
 
     @staticmethod
     @task
@@ -312,39 +290,31 @@ Thank you.
         if status == 'none':
             pending = ('%s/plan%dv%d_pending.zip' % (tempfile.gettempdir(), plan.id, plan.version)) 
             archive = open(pending, 'w')
-
-            # Get the necessary district/geounit map from the db
-            cursor = plan.district_mapping_cursor()
-            
             f = tempfile.NamedTemporaryFile(delete=False)
-            difile = csv.writer(f)
-            # The cursor is iterable so just write each row as a row in the csv file
-            difile.writerows(cursor)
-            cursor.close()
-            f.close()
+            try:
+                # Get the necessary district/geounit map from the db
+                cursor = plan.district_mapping_cursor()
+                
+                difile = csv.writer(f)
+                # The cursor is iterable so just write each row as a row in the csv file
+                difile.writerows(cursor)
+                cursor.close()
+                f.close()
 
-            # Zip up the file 
-            zipwriter = zipfile.ZipFile(archive, 'w')
-            zipwriter.write(f.name, plan.name + '.csv')
-            zipwriter.close()
-            archive.close()
+                # Zip up the file 
+                zipwriter = zipfile.ZipFile(archive, 'w')
+                zipwriter.write(f.name, plan.name + '.csv')
+                zipwriter.close()
+                archive.close()
+                os.rename(archive.name, '%s/plan%dv%d.zip' % (tempfile.gettempdir(), plan.id, plan.version))
+            except Exception as ex:
+                sys.stderr.write('The plan "%s" could not be serialized to a district index file:\n%s\n' % (plan.name, traceback.format_exc()))
+                os.unlink(archive.name)
             # delete the temporary csv file
-            os.unlink(f.name)
-            os.rename(archive.name, '%s/plan%dv%d.zip' % (tempfile.gettempdir(), plan.id, plan.version))
+            finally:
+                os.unlink(f.name)
 
         return DistrictIndexFile.get_index_file(plan)
-
-        template = """Hello, %s.
-
-Here's the district index file you requested for the plan %s. Thank you for using the Public Mapping Project.
-
-Happy Redistricting!
-The Public Mapping Team"""
-        if type(user) == User:
-            msg = template % (user.username, plan.name)
-        else:
-            msg = template % (user, plan.name)
-        Email.send_email(user, msg, 'District index file for %s' % plan.name, DistrictIndexFile.get_index_file(plan))
 
     @staticmethod
     def get_index_file_status(plan):
@@ -382,62 +352,3 @@ The Public Mapping Team"""
             index_file = open('%s/plan%dv%d.zip' % (tempfile.gettempdir(), plan.id, plan.version), 'r')
             index_file.close()
             return index_file
-
-class Email():
-    @staticmethod
-    def send_email(user, text, subject, zipfile=None):
-        """
-        Send an email to a user with an optional subject and attached
-        district index file 
-
-        Parameters:
-            user -- The user to whom email should be sent
-            subject -- the subject of the message
-            text -- the text of the message
-            zipfile -- a zip file to attach to the message            
-        Returns:
-            True if the user was emailed successfully.
-        """
-
-        admin = settings.ADMINS[0][0]
-        sender = settings.ADMINS[0][1]
-
-        text = MIMEText(text)
-
-        if zipfile:
-            msg = MIMEMultipart()
-            msg.attach(text)
-            tach = MIMEApplication(open(zipfile.name).read(), 'zip')
-            tach.add_header('Content-Disposition', 'attachment; filename=DistrictIndexFile.zip')
-            msg.attach(tach)
-        else:
-            msg = text
-
-        if subject:
-            msg['Subject'] = subject
-
-        msg['From'] = sender
-        
-        # If given a user object, use the email address
-        if type(user) == User:
-            msg['To'] = user.email
-        else:
-            msg['To'] = user
-
-        try:
-            smtp = smtplib.SMTP( settings.MAIL_SERVER, settings.MAIL_PORT )
-            smtp.ehlo()
-            if settings.MAIL_PORT == '587':
-                smtp.starttls()
-            if settings.MAIL_USERNAME != '' and settings.MAIL_PASSWORD != '':
-                smtp.login( settings.MAIL_USERNAME, settings.MAIL_PASSWORD )
-
-            smtp.sendmail( sender, [msg['To']], msg.as_string() )
-            smtp.quit()
-
-#            if zipfile:
-#                os.unlink(zipfile.name)
-
-            return True
-        except:
-            return False

@@ -334,7 +334,7 @@ def uploadfile(request):
             return render_to_response('viewplan.html', status)
 
         # Put in a celery task to create the plan and email user on completion
-        DistrictIndexFile.index2plan.delay(request.POST['txtNewName'], request.POST['legislativeBody'], filename, request.user, False, True, request.POST['userEmail'])
+        DistrictIndexFile.index2plan.delay(request.POST['txtNewName'], request.POST['legislativeBody'], filename, owner = request.user, template = False, purge = True, email = request.POST['userEmail'])
 
     return render_to_response('viewplan.html', status) 
 

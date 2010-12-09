@@ -23,15 +23,16 @@ Author:
     Andrew Jennings, David Zwarg
 """
 
-from django.shortcuts import render_to_response
+from django.conf import settings
+from django.core.mail import send_mail
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_control
-from django.conf import settings
+from django.http import HttpResponseRedirect, HttpResponse
+from django.shortcuts import render_to_response
+from django.template import loader, Context
 from django.utils import simplejson as json
-from redistricting.utils import Email
 
 # for proxy
 import urllib2
@@ -39,7 +40,6 @@ import cgi
 import sys, os
 
 # for password reminders
-import smtplib
 from random import choice
 
 def index(request):
@@ -222,28 +222,21 @@ def emailpassword(user):
         True if the user was modified and notified successfully.
     """
 
-    tpl = """Hello %s,
-
-You requested a new password for the Public Mapping Project. Sorry for the
-inconvenience!  This is your new password: "%s"
-
-Thank you for using the Public Mapping Project.
-
-Happy Redistricting!
-The Public Mapping Team
-"""
-    admin = settings.ADMINS[0][0]
-    sender = settings.ADMINS[0][1]
-
     newpw = ''.join([choice('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_=+') for i in range(8)])
-    msg = tpl % (user.username, newpw)
+    context = Context({
+        'user': user,
+        'new_password': newpw
+    })
+    template = loader.get_template('forgottenpassword.email')
 
     try:
         user.set_password(newpw)
         user.save()
     except:
         return False
-    return Email.send_email(user, msg, 'Your Password Reset Request')
+
+    send_mail('Your Password Reset Request', template.render(context), settings.EMAIL_HOST_USER, [user.email], fail_silently=False)
+    return True
     
 @cache_control(no_cache=True)
 def forgotpassword(request):

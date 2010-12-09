@@ -1,0 +1,20 @@
+{% autoescape off %}
+Hello Admin,
+
+There was a problem importing a plan file from user '{{ user.username }}'. This user attempted to upload a file containing a plan but had some trouble.  The plan may have been imported.
+
+{% if plan %}
+Plan name: {{ plan.name }}
+{% endif %}
+
+{% for error in errors %}
+- {{ error.message }}
+
+{% if error.traceback %}
+{{ error.traceback }}
+{% endif %}
+{% endfor %}
+If the user continues to have problems with this process, please check the application settings.
+
+Thank you.
+{% endautoescape %}
