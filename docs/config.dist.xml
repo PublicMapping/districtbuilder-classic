@@ -141,7 +141,7 @@
         </Reporting>
         
         <!-- Information about the mailer configuration. -->
-        <Mailer server="" port="" username="" password=""/>
+        <Mailer server="" port="" username="" password="" prefix=""/>
     </Project>
     
 </DistrictBuilder>

@@ -251,10 +251,11 @@ def merge_config(config, verbose):
         settings_out.write("\nMANAGERS = ADMINS\n")
 
         cfg = config.xpath('//Mailer')[0]
-        settings_out.write("\nMAIL_SERVER = '%s'\n" % cfg.get('server'))
-        settings_out.write("MAIL_PORT = %d\n" % int(cfg.get('port')))
-        settings_out.write("MAIL_USERNAME = '%s'\n" % cfg.get('username'))
-        settings_out.write("MAIL_PASSWORD = '%s'\n" % cfg.get('password'))
+        settings_out.write("\nEMAIL_SERVER = '%s'\n" % cfg.get('server'))
+        settings_out.write("EMAIL_PORT = %d\n" % int(cfg.get('port')))
+        settings_out.write("EMAIL_HOST_USER = '%s'\n" % cfg.get('username'))
+        settings_out.write("EMAIL_HOST_PASSWORD = '%s'\n" % cfg.get('password'))
+        settings_out.write("EMAIL_SUBJECT_PREFIX = '%s '\n" % cfg.get('prefix'))
 
         settings_out.write("\nSECRET_KEY = '%s'\n" % "".join([random.choice("abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)") for i in range(50)]))
 
@@ -295,9 +296,6 @@ ERROR:
         if verbose:
             print traceback.format_exc()
         return False
-
-    return True
-
-
+return True 
 if __name__ == "__main__":
     main()
