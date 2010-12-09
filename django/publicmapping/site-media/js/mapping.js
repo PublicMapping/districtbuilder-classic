@@ -1384,51 +1384,68 @@ function mapinit(srs,maxExtent) {
     //
     // get the styles associated with the current map configuration
     //
-    var getMapStyles = function() {
-        var snap = getSnapLayer().layer.split('simple_')[1];
-        var snap = getSnapLayer().layer.split('simple_')[1];
-        var show = getShowBy();
-        OpenLayers.Request.GET({
-            url: '/sld/' + snap + '_' + show + '.sld',
-            method: 'GET',
-            callback: function(xhr){
-                var sld = sldFormat.read(xhr.responseXML || xhr.responseText);
-                var userStyle = getDefaultStyle(sld,getShowBy());
-                $('#legend_title').empty().append(userStyle.title);
+    var getMapStyles = (function() {
+        var styleCache = {};
+        var callbackStyle = function(sld) {
+            var userStyle = getDefaultStyle(sld,getShowBy());
+            $('#legend_title').empty().append(userStyle.title);
 
-                var lbody = $('#basemap_legend tbody');
-                lbody.empty();
+            var lbody = $('#basemap_legend tbody');
+            lbody.empty();
 
-                var rules = userStyle.rules;
-                for (var i = 0; i < rules.length; i++) {
-                    var rule = rules[i];
-                    if (!('Polygon' in rule.symbolizer)) {
-                        continue;
-                    }
-
-                    var div = $('<div/>');
-                    div.css('background-color',rule.symbolizer.Polygon.fillColor);
-                    div.css('border-width',rule.symbolizer.Polygon.strokeWidth);
-                    div.css('border-color',rule.symbolizer.Polygon.strokeColor);
-                    div.addClass('swatch');
-                    div.addClass('basemap_swatch');
-                    var swatch = $('<td/>');
-                    swatch.width(32);
-                    swatch.append(div);
-
-                    var row = $('<tr/>');
-                    row.append(swatch);
-
-                    var title = $('<td/>');
-                    title.append( rule.title );
-
-                    row.append(title);
-
-                    lbody.append(row);
+            var rules = userStyle.rules;
+            for (var i = 0; i < rules.length; i++) {
+                var rule = rules[i];
+                if (!('Polygon' in rule.symbolizer)) {
+                    continue;
                 }
+
+                var div = $('<div/>');
+                div.css('background-color',rule.symbolizer.Polygon.fillColor);
+                div.css('border-width',rule.symbolizer.Polygon.strokeWidth);
+                div.css('border-color',rule.symbolizer.Polygon.strokeColor);
+                div.addClass('swatch');
+                div.addClass('basemap_swatch');
+                var swatch = $('<td/>');
+                swatch.width(32);
+                swatch.append(div);
+
+                var row = $('<tr/>');
+                row.append(swatch);
+
+                var title = $('<td/>');
+                title.append( rule.title );
+
+                row.append(title);
+
+                lbody.append(row);
             }
-        });
-    };
+        };
+
+        return function() {
+            var snap = getSnapLayer().layer.split('simple_')[1];
+            var show = getShowBy();
+
+            styleUrl = '/sld/' + snap + '_' + show + '.sld';
+
+            if (styleUrl in styleCache) {
+                if (styleCache[styleUrl]) {
+                    callbackStyle(styleCache[styleUrl]);
+                }
+                return;
+            }
+            styleCache[styleUrl] = false;
+
+            OpenLayers.Request.GET({
+                url: styleUrl,
+                method: 'GET',
+                callback: function(xhr){
+                    var sld = sldFormat.read(xhr.responseXML || xhr.responseText);
+                    callbackStyle(sld);
+                }
+            });
+        };
+    })();
 
     //
     // Update the part of the legend associated with the 
