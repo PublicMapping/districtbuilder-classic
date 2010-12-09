@@ -220,6 +220,10 @@ function createDistrictTipDiv() {
  * Initialize the map from WMS GetCapabilities.
  */
 function init() {
+    if (/\/plan\/0\/view/.test(window.location.pathname)) {
+        return;
+    }
+
     // default map_server is on same host unless otherwise specified 
     if (MAP_SERVER=="") {
 	MAP_SERVER=window.location.host
