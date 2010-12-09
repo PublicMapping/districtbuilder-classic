@@ -609,7 +609,7 @@ ERROR:
                             print 'LegislativeBody/GeoLevel mapping "%s/%s" already exists' % (legislative_body.name, glvl.name)
 
         # Create an anonymous user
-        anon,created = User.object.get_or_create(username='anonymous')
+        anon,created = User.objects.get_or_create(username='anonymous')
         if not created:
             anon.set_password('anonymous')
             anon.save()
@@ -737,6 +737,15 @@ ERROR:
             sys.stdout.write('100%\n')
 
     def create_template(self, config, verbose):
+        """
+        Create the templates that are defined in the configuration file.
+        In addition to creating templates explicitly specified, this
+        will also create a blank template for each LegislativeBody.
+
+        Parameters:
+            config - The XML configuration.
+            verbose - A flag for outputting messages during the process.
+        """
         templates = config.xpath('/DistrictBuilder/Templates/Template')
         for template in templates:
             templateplan = Plan.objects.filter(name=template.get('name'))
@@ -760,3 +769,15 @@ ERROR:
 
             if verbose:
                 print 'Created template plan "%s"' % template.get('name')
+
+        lbodies = config.xpath('//LegislativeBody[@id]')
+        for lbody in lbodies:
+            owner = User.objects.get(is_staff=True)
+            legislative_body = LegislativeBody.objects.get(name=lbody.get('name'))
+            plan,created = Plan.objects.get_or_create(name='Blank',legislative_body=legislative_body,owner=owner,is_template=True)
+
+            if verbose:
+                if created:
+                    print 'Created Plan named "Blank" for LegislativeBody "%s"' % legislative_body.name
+                else:
+                    print 'Plan named "Blank" for LegislativeBody "%s" already exists' % legislative_body.name
