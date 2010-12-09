@@ -80,7 +80,7 @@ chooseplan = function(options) {
         
         if (window.UPLOADED) {
             var text = window.UPLOAD_STATUS ? 'Thanks! Your file has been uploaded, and your plan is being constructed. When your plan is completely constructed, you will receive an email from us.' : 'We\'re sorry! Your file was transferred to us, but there was a problem converting it into a plan. Make sure the file is a zipped block equivalency file, and please try again.';
-            $('<div title="Uploaded">' + text + '</div>').dialog({modal:true})
+            $('<div title="Uploaded">' + text + '</div>').dialog({modal:true,resizable:false})
         }
         return _self;
     };

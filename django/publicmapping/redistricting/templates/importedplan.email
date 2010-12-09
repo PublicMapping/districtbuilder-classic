@@ -1,3 +1,16 @@
+{% comment %}
+This template is used to let a user know that their plan has been created
+from a district index file.  If any problems are present (e.g., a row was
+not readable), this email may contain friendly error messages.
+
+Context:
+    user: A django user model representing the user who attempted to create a plan
+    plan: The plan, if it was created
+    errors: Any errors that may have occurred. Each error is a dict inculding:
+        message: A friendly error message
+        traceback: A traceback from the exception thrown when the plan was made
+
+{% endcomment %}
 {% autoescape off %}
 Hello {{ user.username }},
 

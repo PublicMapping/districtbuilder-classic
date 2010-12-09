@@ -1,3 +1,17 @@
+{% comment %}
+This template is used to email an administrator when a user's plan creation
+fails.  It should let the admin know that an error occurred and provide 
+information in case it's necessary to change or reconfigure the software
+to prevent further errors
+
+Context:
+    user: A django user model representing the user who attempted to create a plan
+    plan: The plan, if it was created
+    errors: Any errors that may have occurred. Each error is a dict inculding:
+        message: A friendly error message
+        traceback: A traceback from the exception thrown when the plan was made
+
+{% endcomment %}
 {% autoescape off %}
 Hello Admin,
 
