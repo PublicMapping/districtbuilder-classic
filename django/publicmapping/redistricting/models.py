@@ -413,24 +413,23 @@ class Geounit(models.Model):
                 # create a boundary if one doesn't exist
                 if not boundary:
                     boundary = empty_geom(selection.srid)
-                simple = boundary.simplify(tolerance=settings.SIMPLE_TOLERANCE,preserve_topology=True)
 
                 if inside:
                     # Searching inside the boundary
                     if level != base_geolevel:
                         # Search by geometry
-                        query += "st_within(geom, geomfromewkt('%s'))" % simple.ewkt
+                        query += "st_within(geom, geomfromewkt('%s'))" % boundary.ewkt
                     else:
                         # Search by centroid
-                        query += "st_intersects(center, geomfromewkt('%s'))" % simple.ewkt
+                        query += "st_intersects(center, geomfromewkt('%s'))" % boundary.ewkt
                 else:
                     # Searching outside the boundary
                     if level != base_geolevel:
                         # Search by geometry
-                        query += "NOT st_intersects(geom, geomfromewkt('%s'))" % simple.ewkt
+                        query += "NOT st_intersects(geom, geomfromewkt('%s'))" % boundary.ewkt
                     else:
                         # Search by centroid
-                        query += "NOT st_intersects(center, geomfromewkt('%s'))" % simple.ewkt
+                        query += "NOT st_intersects(center, geomfromewkt('%s'))" % boundary.ewkt
 
                 # Execute our custom SQL
                 cursor = connection.cursor()
@@ -524,15 +523,12 @@ class Geounit(models.Model):
                 if not remainder.empty:
                     query = "SELECT id,st_ashexewkb(geom,'NDR') FROM redistricting_geounit WHERE geolevel_id = %d AND " % level.id
 
-                    # Simplify the remainder before performing the query
-                    simple = remainder.simplify(tolerance=settings.SIMPLE_TOLERANCE, preserve_topology=True)
-
                     if level == base_geolevel:
                         # Query by center
-                        query += "st_intersects(center, geomfromewkt('%s'))" % simple.ewkt
+                        query += "st_intersects(center, geomfromewkt('%s'))" % remainder.ewkt
                     else:
                         # Query by geom
-                        query += "st_within(geom, geomfromewkt('%s'))" % simple.ewkt
+                        query += "st_within(geom, geomfromewkt('%s'))" % remainder.ewkt
 
                     # Execute our custom SQL
                     cursor = connection.cursor()
