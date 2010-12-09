@@ -143,6 +143,8 @@
                                     <xs:attribute name="supplementfield" type="xs:string" use="required" />
                                     <xs:attribute name="shapefile" type="xs:string" use="required" />
                                     <xs:attribute name="id" type="xs:ID" />
+                                    <xs:attribute name="max_zoom" type="xs:positiveInteger" />
+                                    <xs:attribute name="sort_key" type="xs:positiveInteger" />
                                 </xs:complexType>
                             </xs:element>
                         </xs:sequence>
