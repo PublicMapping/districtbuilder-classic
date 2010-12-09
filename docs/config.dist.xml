@@ -1,0 +1,144 @@
+<!-- The application element that contains all other elements. -->
+<DistrictBuilder>
+
+    <!-- Define legislative bodies referenced in the system. -->
+    <LegislativeBodies>
+        <!-- A Legislative body has an ID (for referencing in GeoLevel
+            definitions later), a name, and a label for plan items 
+            ("District" for Congressional, etc) -->
+        <LegislativeBody id="congress" name="Congressional" member="District %s" maxdistricts="18"/>
+    </LegislativeBodies>
+
+    <!-- A list of subjects referenced in the system. -->
+    <Subjects>
+        <!-- A Subject is a measurement type, such as "Total Population". 
+            The subject is mapped to an attribute during the import phase,
+            and contains a long and short display name. Subjects have IDs
+            for referencing in GeoLevel definitions later. -->
+        <Subject id="poptot" field="POPTOT" name="Total Population" 
+                 short_name="Total Pop." displayed="true" sortkey="1" />
+        <Subject id="popblk" field="POPBLK" name="Black Persons" 
+                 short_name="Black" displayed="false" sortkey="2" />
+        <Subject id="pophisp" field="POPHIS" name="Hispanic or Latino" 
+                 short_name="Hispanic" displayed="false" sortkey="3" />
+        <!-- You can alias a subject by overriding the field, if the
+            import shapefiles have different field names at different
+            geographic levels. -->
+        <Subject id="pophisp1" field="POPHISP" aliasfor="pophisp"/>
+    </Subjects>
+
+    <Targets>
+        <!-- A target is an objective measure of a district for a legislative
+            district. Each discrete target (usually 1 per legislative body/subject
+            combination) must be listed here, with a unique ID.
+        -->
+        <Target id="tottarget" subjectref="poptot" value="630730" range1="0.1" range2="0.2" />
+        <Target id="blktarget" subjectref="popblk" value="62000" range1="0.1" range2="0.2" />
+        <Target id="hisptarget" subjectref="pophisp" value="8000" range1="0.1" range2="0.2" />
+        <Target id="hisptarget1" subjectref="pophisp1" value="8000" range1="0.1" range2="0.2" />
+    </Targets>
+   
+    <GeoLevels>
+      <GeoLevel id="block" name="block" namefield="NAME00" supplementfield="BLKIDFP00"
+          shapefile="/projects/publicmapping/data/OH_39_census_block_web_mercator.shp">
+          <!-- A reference to a legislative body.
+              A geolevel may be used by many legislative bodies. -->
+          <LegislativeBodies>
+              <LegislativeBody ref="congress">
+                  <LegislativeTargets>
+                      <LegislativeTarget ref="tottarget" default="true" />
+                      <LegislativeTarget ref="blktarget"/>
+                      <LegislativeTarget ref="hisptarget1"/>
+                  </LegislativeTargets>
+              </LegislativeBody>
+          </LegislativeBodies>
+      </GeoLevel>
+
+      <!-- A child geolevel. The geography of the parent geolevel must
+          be coincident in it's child until the system supports automatic
+          aggregation. -->
+      <GeoLevel id="tract" name="tract" namefield="TRACTNAME" supplementfield="TRACTID" 
+          shapefile="/projects/publicmapping/data/OH_39_census_tractsviablocks2_wm.shp">
+          <!-- A reference to a legislative body.
+              A geolevel may be used by many legislative bodies. -->
+          <LegislativeBodies>
+              <LegislativeBody ref="congress">
+                  <Parent ref="block"/>
+                  <LegislativeTargets>
+                      <LegislativeTarget ref="tottarget" default="true" />
+                      <LegislativeTarget ref="blktarget"/>
+                      <LegislativeTarget ref="hisptarget"/>
+                  </LegislativeTargets>
+              </LegislativeBody>
+          </LegislativeBodies>
+      </GeoLevel>
+
+      <!-- A list of geographic levels supported. This list will be used by
+          the importer to enforce nested geometries. -->
+      <GeoLevel id="county" name="county" namefield="COUNTYNAME" supplementfield="COUNTYFP00"
+          shapefile="/projects/publicmapping/data/OH_39_census_countiesviablocks_WM.shp">
+          <!-- A reference to a legislative body.
+              A geolevel may be used by many legislative bodies. -->
+          <LegislativeBodies>
+              <LegislativeBody ref="congress">
+                  <Parent ref="tract"/>
+                  <LegislativeTargets>
+                      <LegislativeTarget ref="tottarget" default="true" />
+                      <LegislativeTarget ref="blktarget"/>
+                      <LegislativeTarget ref="hisptarget"/>
+                  </LegislativeTargets>
+              </LegislativeBody>
+          </LegislativeBodies>
+      </GeoLevel>
+    </GeoLevels>
+   
+    <!-- This element facilitates the creation of system templates. A
+        system template is a plan owned by the admin user, that all other
+        users can create derivative plans from. -->
+    <Templates>
+        <Template name="Congressional">
+            <!-- A reference to a legislative body. -->
+            <LegislativeBody ref="congress"/>
+            
+            <!-- The path to the district index file. The index file must be
+                a two column CSV file, with each row corresponding to a
+                unit of geography, and the district it belongs to. Only one
+                of "Shapefile" and "Indexfile" are required. -->
+            <Blockfile path="/projects/publicmapping/data/OH_congressional_blockfile.csv"/>
+        </Template>
+    </Templates>
+    
+    <!-- Configuration settings for the components of the application. The
+        "root" attribute defines the location in the file system, under
+        which the rest of the application components can be found. -->
+    <Project root="/projects/publicmapping/trunk">
+        <!-- Database connection information. -->
+        <Database name="publicmapping" user="publicmapping" password=""/>
+        
+        <!-- Administrative user information. This should match the admin
+            user created when the django project is created. -->
+        <Admin user="admin" email=""/>
+        
+        <!-- Configuration items specific to the 'redistricting' app. -->
+        <Redistricting tolerance="10.0">           
+            <!-- Information about the mapserver and geoserver settings. -->
+            <MapServer hostname="" ns="gmu" nshref="http://gmu.azavea.com/" adminuser="admin" adminpass="" styles="/projects/publicmapping/trunk/sld" maxfeatures="100"/>
+
+            <!-- <GoogleAnalytics account="" domain=""/> -->
+        </Redistricting>
+        
+        <!-- Configure the engine used for reporting. Currently, only 
+            BARD is supported. -->
+        <Reporting engine="BARD" enabled="true">
+            <!-- BARD specific configuration settings. -->
+            <Data
+                shape="/projects/publicmapping/local/data/ohblock_bard_save.Rdata" 
+                map="oh_blocks.bardmap"
+                temp="/projects/publicmapping/local/reports"/>
+        </Reporting>
+        
+        <!-- Information about the mailer configuration. -->
+        <Mailer server="" port="" username="" password=""/>
+    </Project>
+    
+</DistrictBuilder>
