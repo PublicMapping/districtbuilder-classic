@@ -112,9 +112,6 @@ class LegislativeBody(models.Model):
     # The maximum number of districts in this body
     max_districts = models.PositiveIntegerField()
 
-    # The subjects that exist in this legislative body
-    subjects = models.ManyToManyField(Subject, through='LegislativeSubject')
-
     def __unicode__(self):
         """
         Represent the LegislativeBody as a unicode string. This is the 
@@ -164,22 +161,19 @@ class Geolevel(models.Model):
         return self.name
 
 
-class LegislativeSubject(models.Model):
+class LegislativeDefaults(models.Model):
     """
-    A subject available in a legislative body.
-
-    A subject is something like "Total Population", and this subject can
-    exist in both "State Senate" and "State House" legislative bodies.
+    The default settings for a legislative body.
     """
 
     # The legislative body
     legislative_body = models.ForeignKey(LegislativeBody)
 
     # The subject for characteristics in this body
-    subject = models.ForeignKey(Subject)
+    target = models.ForeignKey('Target')
 
-    # Is this subject the default subject at this geographic level?
-    is_default = models.BooleanField(default=False)
+    class Meta:
+        unique_together = ('legislative_body',)
 
 
 class LegislativeLevel(models.Model):
@@ -200,12 +194,18 @@ class LegislativeLevel(models.Model):
     # Parent geographic classification in this legislative level
     parent = models.ForeignKey('LegislativeLevel',null=True)
 
+    # The target that refers to this level
+    target = models.ForeignKey('Target',null=True)
+
     def __unicode__(self):
         """
         Represent the LegislativeLevel as a unicode string. This is the
         LegislativeLevel's LegislativeBody and Geolevel
         """
-        return self.legislative_body.name + self.geolevel.name
+        return "%s, %s, %s" % (self.legislative_body.name, self.geolevel.name, self.target.name)
+
+    class Meta:
+        unique_together = ('geolevel','legislative_body','target',)
 
 
 class Geounit(models.Model):
@@ -535,11 +535,14 @@ class Target(models.Model):
     # The subject that this target relates to
     subject = models.ForeignKey(Subject)
 
-    # The lower data value
-    lower = models.PositiveIntegerField()
+    # The first range value
+    range1 = models.DecimalField(max_digits=12,decimal_places=4)
 
-    # The upper data value
-    upper = models.PositiveIntegerField()
+    # The second data value
+    range2 = models.DecimalField(max_digits=12,decimal_places=4)
+
+    # The central data value
+    value = models.DecimalField(max_digits=12,decimal_places=4)
 
     class Meta:
         """
@@ -550,9 +553,9 @@ class Target(models.Model):
     def __unicode__(self):
         """
         Represent the Target as a unicode string. The Target string is
-        in the form of "Subject : Lower - Upper"
+        in the form of "Subject : Value (Range1 - Range2)"
         """
-        return u'%s : %s - %s' % (self.subject, self.lower, self.upper)
+        return u'%s : %s (%s - %s)' % (self.subject, self.value, self.range1, self.range2)
 
 class Plan(models.Model):
     """
