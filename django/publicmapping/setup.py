@@ -296,6 +296,7 @@ ERROR:
         if verbose:
             print traceback.format_exc()
         return False
-return True 
+
+    return True
 if __name__ == "__main__":
     main()

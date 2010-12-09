@@ -257,9 +257,9 @@ class DistrictIndexFile():
         # this plan is complete, and no longer pending
         plan.is_pending = False
         plan.save()
-        context['plan'] = plan
 
         if email:
+            context['plan'] = plan
             # Plan operations completed successfully. It's unclear if the
             # accumulated messages are problems or not. Let's assume they are.
 
