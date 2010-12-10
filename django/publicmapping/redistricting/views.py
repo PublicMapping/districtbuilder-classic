@@ -389,11 +389,15 @@ def loadbard(request):
     Returns:
         A simple text response informing the client what BARD is up to.
     """
+    msg = ""
+
     if type(request) == bool:
-       threaded = True
+        threaded = True
     elif type(request) == HttpRequest:
-       threaded = request.META['mod_wsgi.application_group'] == 'bard-reports'
+        threaded = request.META['mod_wsgi.application_group'] == 'bard-reports'
+        msg += 'mod_wsg.application_group = "%s"' % request.META['mod_wsgi.application_group']
     else:
+        msg += 'Unknown request type.'
         threaded = False
 
     if bardWorkSpaceLoaded:
@@ -404,8 +408,8 @@ def loadbard(request):
         bardLoadingThread.daemon = True
         bardLoadingThread.start()
         return HttpResponse( 'Building bard workspace now ')
-    raise Exception    
-    return HttpResponse('Bard will not be loaded - wrong server config or reports off')
+    
+    return HttpResponse('Bard will not be loaded - wrong server config or reports off\nThreaded: %s\nMessage: %s' % (threaded, msg), mimetype='text/plain')
 
 
 def getreport(request, planid):
