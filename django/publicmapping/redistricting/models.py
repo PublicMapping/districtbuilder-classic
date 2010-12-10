@@ -956,7 +956,7 @@ class Plan(models.Model):
         # This query gets all of the geounit and district ids for the current plan 
         query = 'select g.' + geounit_id_field + ', l.district_id from redistricting_geounit as g join (select d.* from redistricting_district as d join (select max(version) as latest, district_id, plan_id from redistricting_district where plan_id = %s and version <= %s group by district_id, plan_id) as v on d.district_id = v.district_id and d.plan_id = v.plan_id and d.version = v.latest) as l on ST_Contains(l.geom, g.center) where geolevel_id = %s order by g.' + geounit_id_field
         cursor = connection.cursor()
-        cursor.execute(query, [self.id, self.version, geolevel.id])
+        cursor.execute(query, [self.id, self.version, geolevel])
 
         return cursor
 
