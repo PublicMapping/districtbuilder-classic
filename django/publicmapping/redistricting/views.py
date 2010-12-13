@@ -1186,7 +1186,7 @@ def getdistrictindexfile(request, planid):
     if file_status == 'done':
         archive = DistrictIndexFile.plan2index(plan)
         response = HttpResponse(open(archive.name).read(), content_type='application/zip')
-        response['Content-Disposition'] = 'attachment; filename=%s.zip' % plan.name
+        response['Content-Disposition'] = 'attachment; filename="%s.zip"' % plan.name
     else:
         # Put in a celery task to create this file
         DistrictIndexFile.plan2index.delay(plan)
