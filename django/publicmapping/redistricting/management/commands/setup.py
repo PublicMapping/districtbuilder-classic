@@ -575,7 +575,7 @@ ERROR:
                         range2=tconfig.get('range2')) 
 
                     if not targ.get('default') is None:
-                        obj, created = LegislativeDefaults.objects.get_or_create(legislative_body=legislative_body)
+                        obj, created = LegislativeDefault.objects.get_or_create(legislative_body=legislative_body)
                         obj.target = target
                         obj.save()
 

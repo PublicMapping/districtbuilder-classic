@@ -167,6 +167,7 @@ def commonplan(request, planid):
         if not editable and not can_view(request.user, plan):
             plan = {}
     except Exception, ex:
+        sys.stderr.write(traceback.format_exc())
         # If said plan doesn't exist, use an empty plan & district list.
         plan = {}
         districts = {}

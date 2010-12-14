@@ -120,7 +120,7 @@ class LegislativeBody(models.Model):
         Returns:
             The default subject for the legislative body.
         """
-        ldef = LegislativeDefaults.objects.get(legislative_body=self)
+        ldef = LegislativeDefault.objects.get(legislative_body=self)
         return ldef.target.subject
 
     def get_base_geolevel(self):
@@ -211,7 +211,7 @@ class Geolevel(models.Model):
         return self.name
 
 
-class LegislativeDefaults(models.Model):
+class LegislativeDefault(models.Model):
     """
     The default settings for a legislative body.
     """
