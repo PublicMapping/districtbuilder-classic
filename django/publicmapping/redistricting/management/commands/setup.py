@@ -169,7 +169,7 @@ contents of the file and try again.
 
         if not self.rest_config( 'POST', host,
             '/geoserver/rest/workspaces/%s/datastores/%s/featuretypes' % (namespace, datastore),
-            '<?xml version="1.0" encoding="UTF-8"?><featureType><name>identify_geounit</name><title>identify_geounit</title><nativeBoundingBox><minx>%0.1f</minx><miny>%0.1f</miny><maxx>%0.1f</maxx><maxy>%0.1f</maxy></nativeBoundingBox></featureType>' % extent,
+            '<?xml version="1.0" encoding="UTF-8"?><featureType><name>identify_geounit</name><title>identify_geounit</title><nativeBoundingBox><minx>%0.1f</minx><miny>%0.1f</miny><maxx>%0.1f</maxx><maxy>%0.1f</maxy></nativeBoundingBox><maxFeatures>%d</maxFeatures></featureType>' % (extent[0], extent[1], extent[2], extent[3], settings.FEATURE_LIMIT + 1),
             headers,
             'Could not create "identify_geounit" layer.'):
             return False
@@ -179,7 +179,7 @@ contents of the file and try again.
 
         if not self.rest_config( 'POST', host,
             '/geoserver/rest/workspaces/%s/datastores/%s/featuretypes' % (namespace, datastore),
-            '<?xml version="1.0" encoding="UTF-8"?><featureType><name>simple_district</name><title>simple_district</title><nativeBoundingBox><minx>%0.1f</minx><miny>%0.1f</miny><maxx>%0.1f</maxx><maxy>%0.1f</maxy></nativeBoundingBox></featureType>' % extent,
+            '<?xml version="1.0" encoding="UTF-8"?><featureType><name>simple_district</name><title>simple_district</title><nativeBoundingBox><minx>%0.1f</minx><miny>%0.1f</miny><maxx>%0.1f</maxx><maxy>%0.1f</maxy></nativeBoundingBox><maxFeatures>%d</maxFeatures></featureType>' % (extent[0], extent[1], extent[2], extent[3], settings.FEATURE_LIMIT + 1),
             headers,
             'Could not create "simple_district" layer.'):
             return False
@@ -190,7 +190,7 @@ contents of the file and try again.
         for geolevel in Geolevel.objects.all():
             if not self.rest_config( 'POST', host,
                 '/geoserver/rest/workspaces/%s/datastores/%s/featuretypes' % (namespace, datastore),
-                '<?xml version="1.0" encoding="UTF-8"?><featureType><name>simple_%s</name><title>simple_%s</title><nativeBoundingBox><minx>%0.1f</minx><miny>%0.1f</miny><maxx>%0.1f</maxx><maxy>%0.1f</maxy></nativeBoundingBox></featureType>' % (geolevel.name, geolevel.name, extent[0], extent[1], extent[2], extent[3]),
+                '<?xml version="1.0" encoding="UTF-8"?><featureType><name>simple_%s</name><title>simple_%s</title><nativeBoundingBox><minx>%0.1f</minx><miny>%0.1f</miny><maxx>%0.1f</maxx><maxy>%0.1f</maxy></nativeBoundingBox><maxFeatures>%d</maxFeatures></featureType>' % (geolevel.name, geolevel.name, extent[0], extent[1], extent[2], extent[3], settings.FEATURE_LIMIT + 1),
                 headers,
                 'Could not create picking layer "simple_%s".' % geolevel.name):
                 return False
@@ -204,7 +204,7 @@ contents of the file and try again.
             for subject in Subject.objects.all():
                 if not self.rest_config( 'POST', host,
                     '/geoserver/rest/workspaces/%s/datastores/%s/featuretypes' % (namespace, datastore),
-                    '<?xml version="1.0" encoding="UTF-8"?><featureType><name>demo_%s_%s</name><title>demo_%s_%s</title><nativeBoundingBox><minx>%0.1f</minx><miny>%0.1f</miny><maxx>%0.1f</maxx><maxy>%0.1f</maxy></nativeBoundingBox></featureType>' % (geolevel.name, subject.name, geolevel.name, subject.name, extent[0], extent[1], extent[2], extent[3]),
+                    '<?xml version="1.0" encoding="UTF-8"?><featureType><name>demo_%s_%s</name><title>demo_%s_%s</title><nativeBoundingBox><minx>%0.1f</minx><miny>%0.1f</miny><maxx>%0.1f</maxx><maxy>%0.1f</maxy></nativeBoundingBox><maxFeatures>%d</maxFeatures></featureType>' % (geolevel.name, subject.name, geolevel.name, subject.name, extent[0], extent[1], extent[2], extent[3], settings.FEATURE_LIMIT + 1),
                     headers,
                     "Could not create demographic layer 'demo_%s_%s'" % (geolevel.name, subject.name)):
                     return False
@@ -258,7 +258,7 @@ contents of the file and try again.
                     #
                     if not self.rest_config( 'POST', host,
                         '/geoserver/rest/workspaces/%s/datastores/%s/featuretypes' % (namespace, datastore),
-                        '<?xml version="1.0" encoding="UTF-8"?><featureType><name>demo_%s</name><title>demo_%s</title><nativeName>demo_%s_%s</nativeName><nativeBoundingBox><minx>%0.1f</minx><miny>%0.1f</miny><maxx>%0.1f</maxx><maxy>%0.1f</maxy></nativeBoundingBox></featureType>' % (geolevel.name, geolevel.name, geolevel.name, subject.name, extent[0], extent[1], extent[2], extent[3]),
+                        '<?xml version="1.0" encoding="UTF-8"?><featureType><name>demo_%s</name><title>demo_%s</title><nativeName>demo_%s_%s</nativeName><nativeBoundingBox><minx>%0.1f</minx><miny>%0.1f</miny><maxx>%0.1f</maxx><maxy>%0.1f</maxy></nativeBoundingBox><maxFeatures>%d</maxFeatures></featureType>' % (geolevel.name, geolevel.name, geolevel.name, subject.name, extent[0], extent[1], extent[2], extent[3], settings.FEATURE_LIMIT + 1),
                         headers,
                         "Could not create demographic layer 'demo_%s'" % geolevel.name):
                         return False
@@ -309,7 +309,7 @@ contents of the file and try again.
                     #
                     if not self.rest_config( 'POST', host,
                         '/geoserver/rest/workspaces/%s/datastores/%s/featuretypes' % (namespace, datastore),
-                        '<?xml version="1.0" encoding="UTF-8"?><featureType><name>%s_boundaries</name><title>%s_boundaries</title><nativeName>demo_%s_%s</nativeName><nativeBoundingBox><minx>%0.1f</minx><miny>%0.1f</miny><maxx>%0.1f</maxx><maxy>%0.1f</maxy></nativeBoundingBox></featureType>' % (geolevel.name, geolevel.name, geolevel.name, subject.name, extent[0], extent[1], extent[2], extent[3]),
+                        '<?xml version="1.0" encoding="UTF-8"?><featureType><name>%s_boundaries</name><title>%s_boundaries</title><nativeName>demo_%s_%s</nativeName><nativeBoundingBox><minx>%0.1f</minx><miny>%0.1f</miny><maxx>%0.1f</maxx><maxy>%0.1f</maxy></nativeBoundingBox><maxFeatures>%d</maxFeatures></featureType>' % (geolevel.name, geolevel.name, geolevel.name, subject.name, extent[0], extent[1], extent[2], extent[3], settings.FEATURE_LIMIT + 1),
                         headers,
                         "Could not create boundary layer '%s_boundaries'" % geolevel.name):
                         return False
