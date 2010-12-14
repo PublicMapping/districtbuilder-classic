@@ -311,6 +311,12 @@ def uploadfile(request):
         return render_to_response('viewplan.html', status)
     else:
         filename = index_file.name
+
+    if index_file.size > settings.MAX_UPLOAD_SIZE:
+        sys.stderr.write('File size exceeds allowable size.\n')
+        status['upload_status'] = False
+        return render_to_response('viewplan.html', status)
+
     if not filename.endswith(('.csv','.zip')):
         sys.stderr.write('Uploaded file must be ".csv" or ".zip".\n')
         status['upload_status'] = False

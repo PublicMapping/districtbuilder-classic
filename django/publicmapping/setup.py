@@ -285,6 +285,13 @@ def merge_config(config, verbose):
         else:
             settings_out.write("\nGA_ACCOUNT = None\nGA_DOMAIN = None\n")
 
+        cfg = config.xpath('//Upload')
+        if len(cfg) > 0:
+            cfg = cfg[0]
+            settings_out.write("\nMAX_UPLOAD_SIZE = %s * 1024\n" % cfg.get('maxsize'))
+        else:
+            settings_out.write("\nMAX_UPLOAD_SIZE = 5000 * 1024\n")
+
         settings_out.close()
     except Exception, ex:
         print """
