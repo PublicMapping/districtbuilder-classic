@@ -220,7 +220,8 @@ function createDistrictTipDiv() {
  * Initialize the map from WMS GetCapabilities.
  */
 function init() {
-    if (/\/plan\/0\/view/.test(window.location.pathname)) {
+    // if the draw tab is disabled, don't init any map jazz.
+    if ($('#tab_draw').hasClass('ui-state-disabled')){
         return;
     }
 
