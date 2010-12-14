@@ -657,7 +657,7 @@
           bottom left of the map.
 
           {% endcomment %}
-          <label>Plan Name:</label> {{ plan.name }}
+          <label>{{ plan.legislative_body.name|capfirst }} Plan Name:</label> {{ plan.name }}
           {% else %}
           {% comment %}
 
