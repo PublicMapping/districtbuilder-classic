@@ -36,7 +36,7 @@
 <div class="plansummary">
     <h3>{{ plan.name }}</h3>
     {% for target in aggregate %}
-        <div><label>{{ target.name }}</label> <span id="totalpop" class="value">{{ target.value|intcomma  }}</span></div>
+        <div><label>{{ target.name }} {{ target.target|floatformat|intcomma }}</label> <span id="totalpop" class="value">{{ target.value|intcomma  }}</span></div>
     {% endfor %}
         <div><label>2000 Hispanic Majority</label> <span id="totalpop" class="value">0</span></div>
         <div><label>2000 Black Majority</label> <span id="totalpop" class="value">1</span></div>

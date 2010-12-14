@@ -894,7 +894,7 @@ def getdemographics(request, planid):
         return render_to_response('demographics.html', {
             'plan': plan,
             'district_values': district_values,
-            'aggregate': getcompliance(districts,plan.legislative_body),
+            'aggregate': getcompliance(plan),
             'headers': headers
         })
     except:
@@ -924,11 +924,15 @@ def getgeography(request, planid):
         status['message'] = "Couldn't get geography info from the server. No plan with the given id."
         return HttpResponse( json.dumps(status), mimetype='application/json', status=500)
 
-    if 'demo' in request.REQUEST: 
-        demo = request.REQUEST['demo']
-    else:
-        status['message'] = "Couldn't get geography info from the server. Please use the 'demo' parameter with a Subject id."
-        return HttpResponse( json.dumps(status), mimetype='application/json', status=500)
+    try:
+        if 'demo' in request.REQUEST: 
+            demo = request.REQUEST['demo']
+            subject = Subject.objects.get(pk=demo)
+        else:
+            subject = plan.legislative_body.get_default_subject()
+    except:
+        status['message'] = "Couldn't get geography info from the server. No Subject exists with the given id and a default subjct is not listed"
+        return HttpResponse ( json.dumps(status), mimetype='application/json', status=500)
 
     if 'version' in request.REQUEST:
         version = int(request.REQUEST['version'])
@@ -941,11 +945,6 @@ def getgeography(request, planid):
         status['message'] = "Couldn't get districts at the specified version."
         return HttpResponse( json.dumps(status), mimetype='applicatio/json', status=500)
 
-    try:
-        subject = Subject.objects.get(pk=demo)
-    except:
-        status['message'] = "Couldn't get geography info from the server. No Subject exists with the given id."
-        return HttpResponse ( json.dumps(status), mimetype='application/json', status=500)
 
     try:
         district_values = []
@@ -1009,7 +1008,7 @@ def getgeography(request, planid):
         return render_to_response('geography.html', {
             'plan': plan,
             'district_values': district_values,
-            'aggregate': getcompliance(districts,plan.legislative_body),
+            'aggregate': getcompliance(plan),
             'name': subject.short_display
         })
     except:
@@ -1019,7 +1018,7 @@ def getgeography(request, planid):
         return HttpResponse( json.dumps(status), mimetype='application/json', status=500)
 
 
-def getcompliance(districts,legislative_body):
+def getcompliance(plan):
     """
     Get compliance information about a set of districts. Compliance
     includes contiguity, population target data, and minority districts.
@@ -1035,6 +1034,7 @@ def getcompliance(districts,legislative_body):
     # Check each district for contiguity
     contiguity = { 'name': 'Noncontiguous', 'value': 0 }
     noncontiguous = 0
+    districts = plan.district_set.all()
     for district in districts:
         if not district.is_contiguous() and district.name != 'Unassigned':
             noncontiguous += 1
@@ -1046,10 +1046,10 @@ def getcompliance(districts,legislative_body):
     compliance.append(contiguity);
 
     #Population targets
-    displayed = Subject.objects.filter(is_displayed__exact = True)
-    targets = Target.objects.filter(subject__in = displayed)
-    for target in targets:
-        data = { 'name': 'Target Pop. %s' % target.value, 'value': 'All meet target' } 
+    targets = LegislativeLevel.objects.filter(legislative_body = plan.legislative_body).values('target').distinct().filter(target__subject__is_displayed = True)
+    for value in targets:
+        target = Target.objects.get(pk=value['target'])
+        data = { 'name': 'Target Pop.', 'target': target.value, 'value': 'All meet target' } 
         noncompliant = 0
         for district in districts:
             try:
@@ -1066,7 +1066,7 @@ def getcompliance(districts,legislative_body):
         compliance.append(data)
 
     #Minority districts
-    population = legislative_body.get_default_subject()
+    population = plan.legislative_body.get_default_subject()
     minority = Subject.objects.exclude(name=population.name)
     data = {}
     for subject in minority:

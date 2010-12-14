@@ -120,8 +120,8 @@ class LegislativeBody(models.Model):
         Returns:
             The default subject for the legislative body.
         """
-        ldef = LegislativeDefault.objects.get(legislative_body=self)
-        return ldef.target.subject
+        ldef = self.legislativedefault_set.all()
+        return ldef[0].target.subject
 
     def get_base_geolevel(self):
         """
@@ -225,6 +225,9 @@ class LegislativeDefault(models.Model):
     class Meta:
         unique_together = ('legislative_body',)
 
+    def __unicode__(self):
+        return '%s - %s' % (self.legislative_body.name, self.target)
+
 
 class LegislativeLevel(models.Model):
     """
@@ -242,7 +245,7 @@ class LegislativeLevel(models.Model):
     legislative_body = models.ForeignKey(LegislativeBody)
 
     # Parent geographic classification in this legislative level
-    parent = models.ForeignKey('LegislativeLevel',null=True)
+    parent = models.ForeignKey('LegislativeLevel',null=True,blank=True)
 
     # The target that refers to this level
     target = models.ForeignKey('Target',null=True)
