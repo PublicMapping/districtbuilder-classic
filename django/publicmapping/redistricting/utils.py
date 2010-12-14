@@ -302,7 +302,7 @@ class DistrictIndexFile():
                 f.close()
 
                 # Zip up the file 
-                zipwriter = zipfile.ZipFile(archive, 'w')
+                zipwriter = zipfile.ZipFile(archive, 'w', zipfile.ZIP_DEFLATED)
                 zipwriter.write(f.name, plan.name + '.csv')
                 zipwriter.close()
                 archive.close()
