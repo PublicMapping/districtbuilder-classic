@@ -1456,7 +1456,6 @@ function mapinit(srs,maxExtent) {
         var boundary = getBoundLayer();
         if (boundary == '') {
             $('#boundary_legend').hide();
-            $('#map_legend_content').css('height', '300px');
              return;
         }
 
@@ -1495,7 +1494,6 @@ function mapinit(srs,maxExtent) {
                     row.append(title);
 
                     lbody.append(row);
-                    $('#map_legend_content').css('height', '340px');
                     $('#boundary_legend').show();
                 }
             }
