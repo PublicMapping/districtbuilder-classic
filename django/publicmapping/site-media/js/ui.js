@@ -81,13 +81,16 @@ function loadTooltips() {
             this.getTip().appendTo('body');
             // close on the next trigger click - putting this here as a "one()"
             // method keeps the handlers from piling up as the tabs are refreshed.
-            $('#stats_legend').one('click', function() {
+            var closeLegend = function() {
                 var tip = $('#stats_legend').tooltip();
                 if (tip.isShown(true)) {
                     tip.hide();
                 }
                 return false;
-            });
+            };
+            $('#stats_legend').one('click', closeLegend);
+            $('.menu_toggle').one('click', closeLegend);
+            $("#map_menu_header select").one('change', closeLegend);
         },
         onHide:  function() {
             // restore original DOM placement
