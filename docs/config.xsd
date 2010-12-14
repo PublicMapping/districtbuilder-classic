@@ -210,6 +210,17 @@
                                                 <xs:attribute name="maxfeatures" type="xs:positiveInteger" />
                                             </xs:complexType>
                                         </xs:element>
+                                        <xs:element name="GoogleAnalytics" minOccurs="0" maxOccurs="1">
+                                            <xs:complexType>
+                                                <xs:attribute name="account" use="required" />
+                                                <xs:attribute name="domain" use="required" />
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="Upload" minOccurs="1" maxOccurs="1">
+                                            <xs:complexType>
+                                                <xs:attribute name="maxsize" type="xs:nonNegativeInteger" use="required" />
+                                            </xs:complexType>
+                                        </xs:element>
                                     </xs:sequence>
                                     <xs:attribute name="tolerance" type="xs:decimal" use="required" />
                                 </xs:complexType>

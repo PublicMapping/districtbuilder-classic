@@ -128,6 +128,9 @@
             <MapServer hostname="" ns="gmu" nshref="http://gmu.azavea.com/" adminuser="admin" adminpass="" styles="/projects/publicmapping/trunk/sld" maxfeatures="100"/>
 
             <!-- <GoogleAnalytics account="" domain=""/> -->
+
+            <!-- Upload file size restrictions. This is in KB -->
+            <Upload maxsize="5300"/>
         </Redistricting>
         
         <!-- Configure the engine used for reporting. Currently, only 
