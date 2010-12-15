@@ -575,8 +575,10 @@ ERROR:
                         range2=tconfig.get('range2')) 
 
                     if not targ.get('default') is None:
-                        obj, created = LegislativeDefault.objects.get_or_create(legislative_body=legislative_body)
-                        obj.target = target
+                        obj, created = LegislativeDefault.objects.get_or_create(
+                            legislative_body=legislative_body,
+                            target=target
+                        )
                         obj.save()
 
                         if verbose:
