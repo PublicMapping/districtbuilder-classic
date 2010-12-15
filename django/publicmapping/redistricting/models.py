@@ -401,7 +401,6 @@ class Geounit(models.Model):
         units = []
         searching = False
         for level in levels:
-            print "Searching geolevel %s" % level.name
             # if this geolevel is the requested geolevel
             if geolevel == level.id:
                 searching = True
