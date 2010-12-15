@@ -19,8 +19,7 @@ the necessary software using the command:
 > sudo aptitude install apache2 libapache2-mod-wsgi python-django \
     python-lxml python-gdal python-rpy2 python-psycopg2 \
     python-setuptools postgresql-8.4-postgis sun-java6-jdk \
-    tomcat6 tomcat6-admin r-base-dev build-essential
-    
+    tomcat6 tomcat6-admin     
 For python libraries that aren't in the ubuntu repositories, you can
 use easy_install (part of python-setuptools) to get celery, which
 is used for background processes:
@@ -74,13 +73,7 @@ update support, and install tmpreaper and cron jobs.
 
     > sudo mkdir /projects/publicmapping/local
 
- 3. Copy the settings_sample.ini file to your local settings folder and 
-    name it settings.ini
-
-    > sudo cp /projects/publicmapping/trunk/docs/settings_sample.ini \
-        /projects/publicmapping/local/settings.ini
-
- 4. At this point, make sure that you have postgres and postgis 
+ 3. At this point, make sure that you have postgres and postgis 
     installed.
 
     You may need to run the postgis install script if you don't have a 
@@ -99,7 +92,7 @@ update support, and install tmpreaper and cron jobs.
     > psql -d template_postgis -f /usr/share/postgresql/8.4/contrib/spatial_ref_sys.sql 
     > exit
 
- 5. Once postgis is intalled, run the publicmapping_db.sql script in 
+ 4. Once postgis is intalled, run the publicmapping_db.sql script in 
     the sql directory:
 
     > sudo -u postgres psql -f /projects/publicmapping/trunk/sql/publicmapping_db.sql
@@ -108,7 +101,7 @@ update support, and install tmpreaper and cron jobs.
     template, along with a publicmapping user role.  The publicmapping 
     user will be assigned all permissions and ownership on the db.
 
- 6. Check out your settings.ini folder and make sure it's pointing to the
+ 5. Check out your settings.ini folder and make sure it's pointing to the
     correct DB and that your DB is accessible. You may want to adjust the 
     value of the map server, too.  Finally, make sure your pg_hba file in 
     your postgres configuration allows password-based authentication on 
@@ -119,44 +112,32 @@ update support, and install tmpreaper and cron jobs.
     You will need a row that looks like this in your pg_hba file:
     
         local   all   all   md5
+
+    Put that above the line that reads "local all all ident" so that 
+    password authentication is allowed before user ident authentication
      
- 7. Run the python command in the settings file to generate a secret key 
-    for your application and copy it into the settings.ini file.
-
- 8. Run the django syncdb command to create the database:
-  
-    > cd /projects/publicmapping/trunk/django/publicmapping
-    > python ./manage.py syncdb
-
- 9. To import your data, you'll need to configure the import.py command 
-    in the "/trunk/publicmapping/django/redistricting/management/commands" 
-    directory. 
-   
-    Unzip the datafile in /projects/publicmapping/trunk/data to the import 
+ 6. Unzip the datafile in /projects/publicmapping/trunk/data to the import 
     directory: /projects/local/data/:
 
-    >  mkdir /projects/publicmapping/local/data 
-    > (cd  /projects/publicmapping/local/data ; unzip /projects/publicmapping/data/2010_07_15_OHdata.zip )
+    > sudo mkdir /projects/publicmapping/local/data 
+    > cd  /projects/publicmapping/local/data; sudo unzip /projects/publicmapping/data/2010_10_22_OHdata.zip
 
-    OR, Using your favorite text editor, update the shapefile paths 
-    and subject configuration to match your data. 
-
-    Then run the import script admin command:
-
-    > python ./manage.py import county tract block
+ 7. Now we'll use the setup.py script to configure our application. Set the
+    script to be executable:
     
-    The script may take a long time to run.  It will import the geographic
-    data from the shapes and create the links and django models necessary 
-    to run the application. 
-    
-10. Run the demographics admin command to create the spatial views needed 
-    by the application. This MUST occur after the data import, as the 
-    subjects and geography from the import process are used to construct 
-    the views.
+    > cd /projects/publicmapping/trunk/django/publicmapping
+    > sudo chmod u+x setup.py
 
-    > python ./manage.py demographics
+ 8. Run the setup script with the appropriate parameters - the parts of 
+    the app you want to set up, along with the path to an xsd and a config.xml
+    file.  For example - if you want to set up the database with all geolevels,\
+    your config.xml file is next to the .xsd schema file in the repository,
+    and your geoserver is installed and configured, you would type:
 
-11. Django serves up SLD files to clients, and need this mime type added
+    > sudo python ./setup.py -V -d -g0 -g1 -g2 -t -v -G \
+        ../../docs/config.xsd ../../docs/config.xml
+
+ 7. Django serves up SLD files to clients, and need this mime type added
     to the system's known mime types in order to serve the content
     properly.
 
@@ -164,12 +145,12 @@ update support, and install tmpreaper and cron jobs.
     b. Find the line that starts with "application/xml"
     c. Add " sld" to the end of this line, after "xml xsl xsd"
 
-12. Now that you have the app configured and your data imported, you can 
+ 9. Now that you have the app configured and your data imported, you can 
     run the app using Django's testing server
      
     > python ./manage.py runserver
 
-13. You will see a notice that your server is running and you can access 
+10. You will see a notice that your server is running and you can access 
     your application at 127.0.0.1:8000  Enter that location into your 
     browser on the local machine and you should be able to use the 
     application.
@@ -250,78 +231,12 @@ update support, and install tmpreaper and cron jobs.
 
  3. Unzip the downloaded zip file so you can access the geoserver.war file.
 
- 4. Open the tomcat manager app and use the Deploy section to deploy 
-    Geoserver.
+ 4. Copy the .war file to the tomcat webapps dir.  It should be unpacked
+    automatically and deployed at the default /geoserver context
     
-        http://yourComputerName:8080/manager/html
+    > sudo cp geoserver.war /var/lib/tomcat6/webapps/
     
-     a. In the Context Path section, type "/geoserver"
-     b. In the WAR or Directory URL section, type the full path to your 
-        war file, e.g. "/home/publicmapping/geoserver.war"
-     c. Click Deploy. You should see the message "OK - Deployed 
-        application at context path /geoserver" near the top of the page.
-
- 5. Now you should be able to go to the geoserver admin page:
- 
-        http://yourComputerName:8080/geoserver/web 
-        
-     a. Log in with the default name and password - admin/geoserver.  
-     b. Change the administrator name and password in the Security > Users 
-        section of the Geoserver menu.
-
- 6. Configure the SLD files for the layers for use in geoserver.  You'll 
-    find all of these SLD files in the sld folder:
-    
-        /projects/publicmapping/trunk/sld
-     
-     a. Click on the Data > Styles option in the GeoServer menu
-     b. Click on "Add a new style" at the top of the screen
-     c. Click the "Browse" button, browse to the SLD, then click "Open" 
-        in the file dialog.
-     d. Click the "Upload" link to upload the style.
-     e. Now you'll see the SLD in the document editor Window.  Click the 
-        "Submit" button.
-     f. Repeat the process for each of the styles in the SLD folder
-
- 7. Now that the styling for each layer is configured, you can add the 
-    layers from the database. Click on Data > Layers in the GeoServer menu 
-    on the left. Add a new workspace.  The default is "gmu" with a 
-    namespace of "http://gmu.azavea.com"  You can use a different 
-    workspace if you edit your settings.ini file appropriately.
-
- 8. Add a new store in the workspace you just created. You can do this 
-    from the Data > Stores option. This store should point to your local 
-    PostGIS server.  Type in the appropriate name and password.
-
- 9. Now add each of the layers in the database.  Click on Data > Layers.  
-    For each layer, start by clicking the "Add a new resource" link:
-    
-     a. For each of the layers, select the appropriate view from the data 
-        store you just created. For the demographic layers, you'll need to 
-        set the appropriate styling from the "Publishing" tab before you 
-        deploy them. Each of the demo layers will have a similarly named 
-        SLD from those you just published.
-     b. You may need to use the links to generate Bounding Boxes for each 
-        layer. Just click the "Compute from data" then "Compute from 
-        native bounds" links to do so.  Make sure that you're using the 
-        proper SRS (EPSG:3785, aka Web Mercator, for the demo data).
-     c. For each geographic level, click on one of the layers already 
-        published, and click on "Publish Again". Rename the layer to exclude
-        the subject, and select the "_none" style.
-     d. In addition to each "demo" layer, you'll need to add the "simple" 
-        layers, too.  The styling for these layers in the Publishing 
-        section is not important - their styling it will be done by 
-        OpenLayers at runtime.
-     e. To create the layers that display only the borders for each
-        geolevel, you'll want to publish the redistricting_geounit layer
-        with the names geolevel_boundaries, e.g., tract_boundaries.
-        Assign the sld with the same name to each of these layers.
-
-10. Now that your GeoServer is configured, you should use the Services > 
-    GWC link in the menu to seed some of your layers.  This will make the 
-    base map layers appear faster.
-
-11. Add the REST Extension to GeoServer.
+ 5. Add the REST Extension to GeoServer.
 
      a. Change to the WEB-INF/lib directory inside of the GeoServer webapp,
         inside of tomcat. This folder may be:
@@ -342,17 +257,43 @@ update support, and install tmpreaper and cron jobs.
      
         > sudo /etc/init.d/tomcat6 restart
 
+ 6. Use the setup script to configure geoserver via the REST API.  This
+    will create your layers, datastores, and styles.
+
+    > cd /projects/publicmapping/trunk/django/publicmapping
+    > sudo python ./setup.py -V -G ../../docs/config.xsd ../../docs/config.xml
+
+ 7. Set the geowebcache directory to a non-default.  Otherwise your tiles will
+    be saved to /tmp and possibly disappear on reboot.  Add the following snippet
+    to your <web-app> configuration in geoserver's webapp configuration
     
+    > cd /var/lib/tomcat6/webapps/geoserver/WEB-INF
+    > gksu gedit web.xml    
+
+          <!-- Change the geowebcache dir -->
+          <context-param>
+            <param-name>GEOWEBCACHE_CACHE_DIR</param-name>
+            <param-value>/var/lib/tomcat6/webapps/geoserver/data/gwc</param-value>
+          </context-param>
+
+ 8. Now that your GeoServer is configured, you should use the Services > 
+    GWC link in the menu to seed some of your layers.  This will make the 
+    base map layers appear faster.
+
 == BARD / Reports Configuration ==
  1. The publicmapping project uses the BARD packages, written in the 
     R statistical language, to create customizable reports.  In order to 
     use these features (you can turn them off by changing the 
     ENABLE_REPORTS setting in settings.py to "False"), you will need to 
     install BARD and R2HTML as the root user so that it's accessible to 
-    the django process:
+    the django process.  Installing the geos dev libraries is needed to
+    install the rgeos package
     
+    > sudo aptitude install r-base-dev build-essential libgeos-dev 
+    > sudo R CMD javareconf
     > sudo R
     >> install.packages('BARD', dependencies=TRUE)
+    >> install.packages('R2HTML', dependencies=TRUE)
     >> q("no")
 
     If you have trouble installing any of these packages, you may need to 
