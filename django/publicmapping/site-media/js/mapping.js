@@ -835,9 +835,9 @@ function mapinit(srs,maxExtent) {
         var maxGeolevel = 0, minGeolevel = 9999;
         for (var i = 0; i < SNAP_LAYERS.length; i++) {
             if (snapto == 'simple_' + SNAP_LAYERS[i].level) {
-                maxGeolevel = SNAP_LAYERS[i].geolevel;
+                minGeolevel = SNAP_LAYERS[i].geolevel;
             }
-            minGeolevel = Math.min(minGeolevel, SNAP_LAYERS[i].geolevel);
+            maxGeolevel = Math.max(maxGeolevel, SNAP_LAYERS[i].geolevel);
         }
         // get the breadcrumbs to this geounit, starting at the
         // largest area (lowest geolevel) first, down to the
@@ -845,12 +845,12 @@ function mapinit(srs,maxExtent) {
         var crumbs = {};
         var ctics = {};
         var tipFeature = e.features[0];
-        for (var glvl = minGeolevel; glvl <= maxGeolevel; glvl++) {
+        for (var glvl = maxGeolevel; glvl >= minGeolevel; glvl--) {
             for (var feat = 0; feat < e.features.length; feat++) {
                 if (e.features[feat].data.geolevel_id == glvl) {
                     crumbs[e.features[feat].data.id] = e.features[feat].data.name;
                 }
-                if (e.features[feat].data.geolevel_id == maxGeolevel) {
+                if (e.features[feat].data.geolevel_id == minGeolevel) {
                     tipFeature = e.features[feat];
                     for (var demo = 0; demo < DEMOGRAPHICS.length; demo++) {
                         if (e.features[feat].data.subject_id == DEMOGRAPHICS[demo].id) {
