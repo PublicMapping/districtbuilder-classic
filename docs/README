@@ -235,6 +235,7 @@ update support, and install tmpreaper and cron jobs.
     automatically and deployed at the default /geoserver context
     
     > sudo cp geoserver.war /var/lib/tomcat6/webapps/
+    > sudo service tomcat6 restart
     
  5. Add the REST Extension to GeoServer.
 
@@ -252,6 +253,8 @@ update support, and install tmpreaper and cron jobs.
      c. Extract this plugin in the current folder (lib):
 
         > sudo unzip geoserver-2.0.2-restconfig-plugin.zip
+        > sudo chown tomcat6 restconfig*
+        > sudo chgrp tomcat6 restconfig*
 
      d. Restart tomcat to pick up the changes to the geoserver application:
      
@@ -292,9 +295,10 @@ update support, and install tmpreaper and cron jobs.
     > sudo aptitude install r-base-dev build-essential libgeos-dev 
     > sudo R CMD javareconf
     > sudo R
-    >> install.packages('BARD', dependencies=TRUE)
     >> install.packages('R2HTML', dependencies=TRUE)
-    >> q("no")
+    >> install.packages('rgeos', repos='http://R-Forge.R-project.org', dependencies=TRUE)
+    >> install.packages('BARD', dependencies=TRUE)
+    >> q('no')
 
     If you have trouble installing any of these packages, you may need to 
     hunt down and install a dependency or two, depending on your linux 
