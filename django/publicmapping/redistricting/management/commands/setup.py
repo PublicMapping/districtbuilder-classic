@@ -576,14 +576,20 @@ ERROR:
                         range2=tconfig.get('range2')) 
 
                     if not targ.get('default') is None:
-                        try:
-                            obj, created = LegislativeDefault.objects.get_or_create(
-                                legislative_body=legislative_body,
-                                target=target
-                            )
-                            obj.save()
-                        except IntegrityError as dupe:
-                            print 'Default target for LegislativeBody "%s" already exists' % legislative_body.name
+                        # get or create won't work here, as it requires a
+                        # target, which may be different from the item
+                        # we want to retrieve
+                        obj = LegislativeDefault.objects.filter(legislative_body=legislative_body)
+                        if len(obj) == 0:
+                            obj = LegislativeDefault(legislative_body=legislative_body, target=target)
+                            created = True
+                        else:
+                            obj = obj[0]
+                            obj.target = target
+                            created = False
+
+                        obj.save()
+
                         if verbose:
                             if created:
                                 print 'Set default target for LegislativeBody "%s"' % legislative_body.name
