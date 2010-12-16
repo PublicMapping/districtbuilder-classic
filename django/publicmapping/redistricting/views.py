@@ -164,6 +164,11 @@ def commonplan(request, planid):
         editable = can_edit(request.user, plan)
         default_demo = plan.legislative_body.get_default_subject()
         max_dists = plan.legislative_body.max_districts
+        body_member = plan.legislative_body.member
+
+        index = body_member.find('%')
+        if index >= 0:
+            body_member = body_member[0:index]
         if not editable and not can_view(request.user, plan):
             plan = {}
     except Exception, ex:
@@ -174,6 +179,7 @@ def commonplan(request, planid):
         editable = False
         default_demo = None
         max_dists = 0
+        body_member = 'District '
     levels = Geolevel.objects.all()
     demos = Subject.objects.values_list("id","name", "short_display","is_displayed")
     layers = []
@@ -217,7 +223,8 @@ def commonplan(request, planid):
         'is_editable': editable,
         'max_dists': max_dists + 1,
         'ga_account': settings.GA_ACCOUNT,
-        'ga_domain': settings.GA_DOMAIN
+        'ga_domain': settings.GA_DOMAIN,
+        'body_member': body_member
     }
 
 
@@ -669,7 +676,11 @@ def newdistrict(request, planid):
         if geolevel and geounit_ids and district_id:
             try: 
                 # create a temporary district
-                district = District(name='District %d' % (district_id - 1), plan=plan, district_id=district_id, version=plan.version)
+                try:
+                    name = plan.legislative_body.member % (district_id-1)
+                except:
+                    name = str(district_id-1)
+                district = District(name=name, plan=plan, district_id=district_id, version=plan.version)
                 district.save()
 
                 # save the district_id generated during save
@@ -876,8 +887,15 @@ def getdemographics(request, planid):
                     # Sometimes it's a ParseException. Dunno about that either.
                     continue
 
-            if dist_name.startswith('District '):
-                dist_name = district.name.rsplit(' ', 1)[1]
+            prefix = plan.legislative_body.member
+            index = prefix.find('%')
+            if index >= 0:
+                prefix = prefix[0:index]
+            else:
+                index = 0
+
+            if dist_name.startswith(prefix):
+                dist_name = district.name[index:]
 
             stats = { 'name': dist_name, 'district_id': district.district_id, 'characteristics': [] }
             for subject in subjects:
@@ -963,8 +981,15 @@ def getgeography(request, planid):
                     # Sometimes it's a ParseException. Dunno about that either.
                     continue
 
-            if dist_name.startswith('District '):
-                dist_name = district.name.rsplit(' ', 1)[1]
+            prefix = plan.legislative_body.member
+            index = prefix.find('%')
+            if index >= 0:
+                prefix = prefix[0:index]
+            else:
+                index = 0
+
+            if dist_name.startswith(prefix):
+                dist_name = district.name[index:]
 
             stats = { 'name': dist_name, 'district_id': district.district_id }
             characteristics = district.computedcharacteristic_set.filter(subject = subject)
