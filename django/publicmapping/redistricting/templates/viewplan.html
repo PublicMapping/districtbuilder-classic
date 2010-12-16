@@ -87,6 +87,8 @@
         var RULES = { {% for rule in rules %}'{{ rule.subject_id }}': {lowest: {{ rule.lowest }}, lower:{{ rule.lower }}, upper:{{ rule.upper }}, highest: {{ rule.highest }} }{% if not forloop.last %},{% endif %}{% endfor %}};
         // The maximum number of districts that can exist in this plan.
         var MAX_DISTRICTS = {{ max_dists }};
+        // The name of a 'district' in this plan, could be "District ", etc
+        var BODY_MEMBER = '{{ body_member }}';
         // This settings determines whether a staff member is viewing the page in debug mode. 
         // It can be used to display messages to help with debugging and/or configuration
         var DEBUG = {{ debugging_staff|lower }};
