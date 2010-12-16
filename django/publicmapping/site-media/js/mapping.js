@@ -165,7 +165,7 @@ function initializeResizeFix() {
 function createMapTipDiv() {
     var tipdiv = document.createElement('div');
     var tipelem = document.createElement('h1');
-    tipelem.appendChild(document.createTextNode('District Name'));
+    tipelem.appendChild(document.createTextNode(BODY_MEMBER+'Name'));
     tipdiv.appendChild(tipelem);
     tipelem = document.createElement('div');
     tipelem.id = 'tipclose';
@@ -195,7 +195,7 @@ function createMapTipDiv() {
 function createDistrictTipDiv() {
     var tipdiv = document.createElement('div');
     var tipelem = document.createElement('h1');
-    tipelem.appendChild(document.createTextNode('District Name'));
+    tipelem.appendChild(document.createTextNode(BODY_MEMBER+'Name'));
     tipdiv.appendChild(tipelem);
     tipelem = document.createElement('div');
     tipelem.id = 'tipclose';
@@ -1802,10 +1802,10 @@ function mapinit(srs,maxExtent) {
         for (var d = 1; d <= MAX_DISTRICTS; d++) {
             var dtaken = false;
             for (var o = 0; o < options.length && !dtaken; o++) {
-                dtaken = dtaken || ( options[o].text == 'District ' + d)
+                dtaken = dtaken || ( options[o].text == BODY_MEMBER + d)
             }
             if (!dtaken) {
-                avail.push('<option value="'+(d+1)+'">District '+d+'</option>');
+                avail.push('<option value="'+(d+1)+'">'+BODY_MEMBER+d+'</option>');
             }
         }
 
