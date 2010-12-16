@@ -236,6 +236,7 @@ chooseplan = function(options) {
             /* scroll: true, /* dynamically scroll grid instead of using pager */
             gridview: true,
             altRows: true,
+            altclass: 'chooserAlt',
 
             datatype: 'json',
             jsonReader: {

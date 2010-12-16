@@ -620,6 +620,14 @@ div#form_container {
   border-radius:   4px;
   }
 
+tr.chooserAlt td {
+    background-color:#f3f3f3;
+    color:#000000;
+}
+tr.ui-state-hover td {
+    background-color:#e9e9e9;
+    color:#000000;
+}
 div#chooserFileDownloadTarget {
   float:right;
 }
