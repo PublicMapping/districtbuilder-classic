@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>publicmapping.redistricting.management.commands.demographics</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="publicmapping-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a href="http://publicmapping.sf.net">Publicmapping on SourceForge</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="publicmapping-module.html">Package&nbsp;publicmapping</a> ::
+        <a href="publicmapping.redistricting-module.html">Package&nbsp;redistricting</a> ::
+        <a href="publicmapping.redistricting.management-module.html">Package&nbsp;management</a> ::
+        <a href="publicmapping.redistricting.management.commands-module.html">Package&nbsp;commands</a> ::
+        Module&nbsp;demographics
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="publicmapping.redistricting.management.commands.demographics-pysrc.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="publicmapping.redistricting.management.commands.demographics-module.html">Module publicmapping.redistricting.management.commands.demographics</a></h1>
+<pre class="py-src">
+<a name="L1"></a><tt class="py-lineno"> 1</tt>  <tt class="py-line"><tt class="py-docstring">"""</tt> </tt>
+<a name="L2"></a><tt class="py-lineno"> 2</tt>  <tt class="py-line"><tt class="py-docstring">Create required database views for simplified geometry and demographic</tt> </tt>
+<a name="L3"></a><tt class="py-lineno"> 3</tt>  <tt class="py-line"><tt class="py-docstring">data.</tt> </tt>
+<a name="L4"></a><tt class="py-lineno"> 4</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L5"></a><tt class="py-lineno"> 5</tt>  <tt class="py-line"><tt class="py-docstring">This management command will create 3 types of views:</tt> </tt>
+<a name="L6"></a><tt class="py-lineno"> 6</tt>  <tt class="py-line"><tt class="py-docstring">     1) simple_geo: simplified views of the basic geography -- this is used</tt> </tt>
+<a name="L7"></a><tt class="py-lineno"> 7</tt>  <tt class="py-line"><tt class="py-docstring">        by the user interface, because it's faster to use less geometry.</tt> </tt>
+<a name="L8"></a><tt class="py-lineno"> 8</tt>  <tt class="py-line"><tt class="py-docstring">     2) demo_geo_type: demographic views on each of the demographic and</tt> </tt>
+<a name="L9"></a><tt class="py-lineno"> 9</tt>  <tt class="py-line"><tt class="py-docstring">        geography combinations, for display in geoserver as map tiles</tt> </tt>
+<a name="L10"></a><tt class="py-lineno">10</tt>  <tt class="py-line"><tt class="py-docstring">     3) identify_geounit: a view of the geography that links to the </tt> </tt>
+<a name="L11"></a><tt class="py-lineno">11</tt>  <tt class="py-line"><tt class="py-docstring">        demographic data for use when identifying geographic units.</tt> </tt>
+<a name="L12"></a><tt class="py-lineno">12</tt>  <tt class="py-line"><tt class="py-docstring">        </tt> </tt>
+<a name="L13"></a><tt class="py-lineno">13</tt>  <tt class="py-line"><tt class="py-docstring">This file is part of The Public Mapping Project</tt> </tt>
+<a name="L14"></a><tt class="py-lineno">14</tt>  <tt class="py-line"><tt class="py-docstring">http://sourceforge.net/projects/publicmapping/</tt> </tt>
+<a name="L15"></a><tt class="py-lineno">15</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L16"></a><tt class="py-lineno">16</tt>  <tt class="py-line"><tt class="py-docstring">License:</tt> </tt>
+<a name="L17"></a><tt class="py-lineno">17</tt>  <tt class="py-line"><tt class="py-docstring">    Copyright 2010 Micah Altman, Michael McDonald</tt> </tt>
+<a name="L18"></a><tt class="py-lineno">18</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L19"></a><tt class="py-lineno">19</tt>  <tt class="py-line"><tt class="py-docstring">    Licensed under the Apache License, Version 2.0 (the "License");</tt> </tt>
+<a name="L20"></a><tt class="py-lineno">20</tt>  <tt class="py-line"><tt class="py-docstring">    you may not use this file except in compliance with the License.</tt> </tt>
+<a name="L21"></a><tt class="py-lineno">21</tt>  <tt class="py-line"><tt class="py-docstring">    You may obtain a copy of the License at</tt> </tt>
+<a name="L22"></a><tt class="py-lineno">22</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L23"></a><tt class="py-lineno">23</tt>  <tt class="py-line"><tt class="py-docstring">        http://www.apache.org/licenses/LICENSE-2.0</tt> </tt>
+<a name="L24"></a><tt class="py-lineno">24</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L25"></a><tt class="py-lineno">25</tt>  <tt class="py-line"><tt class="py-docstring">    Unless required by applicable law or agreed to in writing, software</tt> </tt>
+<a name="L26"></a><tt class="py-lineno">26</tt>  <tt class="py-line"><tt class="py-docstring">    distributed under the License is distributed on an "AS IS" BASIS,</tt> </tt>
+<a name="L27"></a><tt class="py-lineno">27</tt>  <tt class="py-line"><tt class="py-docstring">    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</tt> </tt>
+<a name="L28"></a><tt class="py-lineno">28</tt>  <tt class="py-line"><tt class="py-docstring">    See the License for the specific language governing permissions and</tt> </tt>
+<a name="L29"></a><tt class="py-lineno">29</tt>  <tt class="py-line"><tt class="py-docstring">    limitations under the License.</tt> </tt>
+<a name="L30"></a><tt class="py-lineno">30</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L31"></a><tt class="py-lineno">31</tt>  <tt class="py-line"><tt class="py-docstring">Author: </tt> </tt>
+<a name="L32"></a><tt class="py-lineno">32</tt>  <tt class="py-line"><tt class="py-docstring">    Andrew Jennings, David Zwarg</tt> </tt>
+<a name="L33"></a><tt class="py-lineno">33</tt>  <tt class="py-line"><tt class="py-docstring">"""</tt> </tt>
+<a name="L34"></a><tt class="py-lineno">34</tt>  <tt class="py-line"> </tt>
+<a name="L35"></a><tt class="py-lineno">35</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">django</tt><tt class="py-op">.</tt><tt class="py-name">core</tt><tt class="py-op">.</tt><tt id="link-0" class="py-name" targets="Package publicmapping.redistricting.management=publicmapping.redistricting.management-module.html"><a title="publicmapping.redistricting.management" class="py-name" href="#" onclick="return doclink('link-0', 'management', 'link-0');">management</a></tt><tt class="py-op">.</tt><tt class="py-name">base</tt> <tt class="py-keyword">import</tt> <tt class="py-name">BaseCommand</tt> </tt>
+<a name="L36"></a><tt class="py-lineno">36</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">django</tt><tt class="py-op">.</tt><tt class="py-name">db</tt> <tt class="py-keyword">import</tt> <tt class="py-name">connection</tt><tt class="py-op">,</tt><tt class="py-name">transaction</tt> </tt>
+<a name="L37"></a><tt class="py-lineno">37</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-1" class="py-name" targets="Package publicmapping.redistricting=publicmapping.redistricting-module.html"><a title="publicmapping.redistricting" class="py-name" href="#" onclick="return doclink('link-1', 'redistricting', 'link-1');">redistricting</a></tt><tt class="py-op">.</tt><tt id="link-2" class="py-name" targets="Module publicmapping.redistricting.models=publicmapping.redistricting.models-module.html"><a title="publicmapping.redistricting.models" class="py-name" href="#" onclick="return doclink('link-2', 'models', 'link-2');">models</a></tt> <tt class="py-keyword">import</tt> <tt class="py-op">*</tt> </tt>
+<a name="Command"></a><div id="Command-def"><a name="L38"></a><tt class="py-lineno">38</tt>  <tt class="py-line"> </tt>
+<a name="L39"></a><tt class="py-lineno">39</tt> <a class="py-toggle" href="#" id="Command-toggle" onclick="return toggle('Command');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="publicmapping.redistricting.management.commands.demographics.Command-class.html">Command</a><tt class="py-op">(</tt><tt class="py-base-class">BaseCommand</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="Command-collapsed" style="display:none;" pad="++" indent="++++"></div><div id="Command-expanded"><a name="L40"></a><tt class="py-lineno">40</tt>  <tt class="py-line">    <tt class="py-docstring">"""</tt> </tt>
+<a name="L41"></a><tt class="py-lineno">41</tt>  <tt class="py-line"><tt class="py-docstring">    A command that creates application views.</tt> </tt>
+<a name="L42"></a><tt class="py-lineno">42</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="L43"></a><tt class="py-lineno">43</tt>  <tt class="py-line">    <tt id="link-3" class="py-name" targets="Variable publicmapping.redistricting.management.commands.defaultplan.Command.args=publicmapping.redistricting.management.commands.defaultplan.Command-class.html#args,Variable publicmapping.redistricting.management.commands.demographics.Command.args=publicmapping.redistricting.management.commands.demographics.Command-class.html#args,Variable publicmapping.redistricting.management.commands.import.Command.args=publicmapping.redistricting.management.commands.import.Command-class.html#args,Variable publicmapping.redistricting.management.commands.setup.Command.args=publicmapping.redistricting.management.commands.setup.Command-class.html#args"><a title="publicmapping.redistricting.management.commands.defaultplan.Command.args
+publicmapping.redistricting.management.commands.demographics.Command.args
+publicmapping.redistricting.management.commands.import.Command.args
+publicmapping.redistricting.management.commands.setup.Command.args" class="py-name" href="#" onclick="return doclink('link-3', 'args', 'link-3');">args</a></tt> <tt class="py-op">=</tt> <tt class="py-name">None</tt> </tt>
+<a name="L44"></a><tt class="py-lineno">44</tt>  <tt class="py-line">    <tt id="link-4" class="py-name" targets="Variable publicmapping.redistricting.management.commands.defaultplan.Command.help=publicmapping.redistricting.management.commands.defaultplan.Command-class.html#help,Variable publicmapping.redistricting.management.commands.demographics.Command.help=publicmapping.redistricting.management.commands.demographics.Command-class.html#help,Variable publicmapping.redistricting.management.commands.import.Command.help=publicmapping.redistricting.management.commands.import.Command-class.html#help,Variable publicmapping.redistricting.management.commands.setup.Command.help=publicmapping.redistricting.management.commands.setup.Command-class.html#help"><a title="publicmapping.redistricting.management.commands.defaultplan.Command.help
+publicmapping.redistricting.management.commands.demographics.Command.help
+publicmapping.redistricting.management.commands.import.Command.help
+publicmapping.redistricting.management.commands.setup.Command.help" class="py-name" href="#" onclick="return doclink('link-4', 'help', 'link-4');">help</a></tt> <tt class="py-op">=</tt> <tt class="py-string">'Create redistricting database views.'</tt> </tt>
+<a name="L45"></a><tt class="py-lineno">45</tt>  <tt class="py-line"> </tt>
+<a name="L46"></a><tt class="py-lineno">46</tt>  <tt class="py-line">    <tt class="py-decorator">@</tt><tt class="py-decorator">transaction</tt><tt class="py-op">.</tt><tt class="py-name">commit_manually</tt> </tt>
+<a name="Command.handle"></a><div id="Command.handle-def"><a name="L47"></a><tt class="py-lineno">47</tt> <a class="py-toggle" href="#" id="Command.handle-toggle" onclick="return toggle('Command.handle');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="publicmapping.redistricting.management.commands.demographics.Command-class.html#handle">handle</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-op">*</tt><tt class="py-param">args</tt><tt class="py-op">,</tt> <tt class="py-op">**</tt><tt class="py-param">options</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="Command.handle-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="Command.handle-expanded"><a name="L48"></a><tt class="py-lineno">48</tt>  <tt class="py-line">        <tt class="py-docstring">"""</tt> </tt>
+<a name="L49"></a><tt class="py-lineno">49</tt>  <tt class="py-line"><tt class="py-docstring">        Perform the command. Run the SQL for creating redistricting views.</tt> </tt>
+<a name="L50"></a><tt class="py-lineno">50</tt>  <tt class="py-line"><tt class="py-docstring">        """</tt> </tt>
+<a name="L51"></a><tt class="py-lineno">51</tt>  <tt class="py-line">        <tt class="py-name">cursor</tt> <tt class="py-op">=</tt> <tt class="py-name">connection</tt><tt class="py-op">.</tt><tt class="py-name">cursor</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L52"></a><tt class="py-lineno">52</tt>  <tt class="py-line">         </tt>
+<a name="L53"></a><tt class="py-lineno">53</tt>  <tt class="py-line">        <tt class="py-name">sql</tt> <tt class="py-op">=</tt> <tt class="py-string">"CREATE OR REPLACE VIEW simple_district AS SELECT rd.id, rd.district_id, rd.name, rd.version, rd.plan_id, rc.subject_id, rc.number, rd.simple AS geom FROM redistricting_district rd JOIN redistricting_computedcharacteristic rc ON rd.id = rc.district_id WHERE rd.version = (( SELECT max(redistricting_district.version) AS max FROM redistricting_district WHERE redistricting_district.district_id = rd.district_id));"</tt> </tt>
+<a name="L54"></a><tt class="py-lineno">54</tt>  <tt class="py-line">        <tt class="py-name">cursor</tt><tt class="py-op">.</tt><tt class="py-name">execute</tt><tt class="py-op">(</tt><tt class="py-name">sql</tt><tt class="py-op">)</tt> </tt>
+<a name="L55"></a><tt class="py-lineno">55</tt>  <tt class="py-line">        <tt class="py-name">transaction</tt><tt class="py-op">.</tt><tt class="py-name">commit</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L56"></a><tt class="py-lineno">56</tt>  <tt class="py-line">        <tt class="py-keyword">print</tt> <tt class="py-string">'\tCreated simple_district view ...'</tt> </tt>
+<a name="L57"></a><tt class="py-lineno">57</tt>  <tt class="py-line">         </tt>
+<a name="L58"></a><tt class="py-lineno">58</tt>  <tt class="py-line">        <tt class="py-name">sql</tt> <tt class="py-op">=</tt> <tt class="py-string">"CREATE OR REPLACE VIEW identify_geounit AS SELECT rg.id, rg.name, rg.geolevel_id, rg.geom, rc.number, rc.percentage, rc.subject_id FROM redistricting_geounit rg JOIN redistricting_characteristic rc ON rg.id = rc.geounit_id;"</tt> </tt>
+<a name="L59"></a><tt class="py-lineno">59</tt>  <tt class="py-line">        <tt class="py-name">cursor</tt><tt class="py-op">.</tt><tt class="py-name">execute</tt><tt class="py-op">(</tt><tt class="py-name">sql</tt><tt class="py-op">)</tt> </tt>
+<a name="L60"></a><tt class="py-lineno">60</tt>  <tt class="py-line">        <tt class="py-name">transaction</tt><tt class="py-op">.</tt><tt class="py-name">commit</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L61"></a><tt class="py-lineno">61</tt>  <tt class="py-line">        <tt class="py-keyword">print</tt> <tt class="py-string">'\tCreated identify_geounit view ...'</tt> </tt>
+<a name="L62"></a><tt class="py-lineno">62</tt>  <tt class="py-line"> </tt>
+<a name="L63"></a><tt class="py-lineno">63</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt id="link-5" class="py-name" targets="Variable publicmapping.redistricting.models.Geounit.geolevel=publicmapping.redistricting.models.Geounit-class.html#geolevel,Variable publicmapping.redistricting.models.LegislativeLevel.geolevel=publicmapping.redistricting.models.LegislativeLevel-class.html#geolevel"><a title="publicmapping.redistricting.models.Geounit.geolevel
+publicmapping.redistricting.models.LegislativeLevel.geolevel" class="py-name" href="#" onclick="return doclink('link-5', 'geolevel', 'link-5');">geolevel</a></tt> <tt class="py-keyword">in</tt> <tt id="link-6" class="py-name" targets="Class publicmapping.redistricting.models.Geolevel=publicmapping.redistricting.models.Geolevel-class.html"><a title="publicmapping.redistricting.models.Geolevel" class="py-name" href="#" onclick="return doclink('link-6', 'Geolevel', 'link-6');">Geolevel</a></tt><tt class="py-op">.</tt><tt id="link-7" class="py-name" targets="Variable publicmapping.redistricting.models.District.objects=publicmapping.redistricting.models.District-class.html#objects,Variable publicmapping.redistricting.models.Geounit.objects=publicmapping.redistricting.models.Geounit-class.html#objects"><a title="publicmapping.redistricting.models.District.objects
+publicmapping.redistricting.models.Geounit.objects" class="py-name" href="#" onclick="return doclink('link-7', 'objects', 'link-7');">objects</a></tt><tt class="py-op">.</tt><tt class="py-name">all</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L64"></a><tt class="py-lineno">64</tt>  <tt class="py-line">            <tt class="py-name">sql</tt> <tt class="py-op">=</tt> <tt class="py-string">"CREATE OR REPLACE VIEW simple_%s AS SELECT id, name, geolevel_id, simple as geom FROM redistricting_geounit WHERE geolevel_id = %d;"</tt> <tt class="py-op">%</tt> <tt class="py-op">(</tt><tt id="link-8" class="py-name"><a title="publicmapping.redistricting.models.Geounit.geolevel
+publicmapping.redistricting.models.LegislativeLevel.geolevel" class="py-name" href="#" onclick="return doclink('link-8', 'geolevel', 'link-5');">geolevel</a></tt><tt class="py-op">.</tt><tt id="link-9" class="py-name" targets="Variable publicmapping.redistricting.models.District.name=publicmapping.redistricting.models.District-class.html#name,Variable publicmapping.redistricting.models.Geolevel.name=publicmapping.redistricting.models.Geolevel-class.html#name,Variable publicmapping.redistricting.models.Geounit.name=publicmapping.redistricting.models.Geounit-class.html#name,Variable publicmapping.redistricting.models.LegislativeBody.name=publicmapping.redistricting.models.LegislativeBody-class.html#name,Variable publicmapping.redistricting.models.Plan.name=publicmapping.redistricting.models.Plan-class.html#name,Variable publicmapping.redistricting.models.Subject.name=publicmapping.redistricting.models.Subject-class.html#name"><a title="publicmapping.redistricting.models.District.name
+publicmapping.redistricting.models.Geolevel.name
+publicmapping.redistricting.models.Geounit.name
+publicmapping.redistricting.models.LegislativeBody.name
+publicmapping.redistricting.models.Plan.name
+publicmapping.redistricting.models.Subject.name" class="py-name" href="#" onclick="return doclink('link-9', 'name', 'link-9');">name</a></tt><tt class="py-op">.</tt><tt class="py-name">lower</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt id="link-10" class="py-name"><a title="publicmapping.redistricting.models.Geounit.geolevel
+publicmapping.redistricting.models.LegislativeLevel.geolevel" class="py-name" href="#" onclick="return doclink('link-10', 'geolevel', 'link-5');">geolevel</a></tt><tt class="py-op">.</tt><tt class="py-name">id</tt><tt class="py-op">,</tt><tt class="py-op">)</tt> </tt>
+<a name="L65"></a><tt class="py-lineno">65</tt>  <tt class="py-line">            <tt class="py-name">cursor</tt><tt class="py-op">.</tt><tt class="py-name">execute</tt><tt class="py-op">(</tt><tt class="py-name">sql</tt><tt class="py-op">)</tt> </tt>
+<a name="L66"></a><tt class="py-lineno">66</tt>  <tt class="py-line">            <tt class="py-name">transaction</tt><tt class="py-op">.</tt><tt class="py-name">commit</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L67"></a><tt class="py-lineno">67</tt>  <tt class="py-line">            <tt class="py-keyword">print</tt> <tt class="py-string">'\tCreated simple_%s view ...'</tt> <tt class="py-op">%</tt> <tt id="link-11" class="py-name"><a title="publicmapping.redistricting.models.Geounit.geolevel
+publicmapping.redistricting.models.LegislativeLevel.geolevel" class="py-name" href="#" onclick="return doclink('link-11', 'geolevel', 'link-5');">geolevel</a></tt><tt class="py-op">.</tt><tt id="link-12" class="py-name"><a title="publicmapping.redistricting.models.District.name
+publicmapping.redistricting.models.Geolevel.name
+publicmapping.redistricting.models.Geounit.name
+publicmapping.redistricting.models.LegislativeBody.name
+publicmapping.redistricting.models.Plan.name
+publicmapping.redistricting.models.Subject.name" class="py-name" href="#" onclick="return doclink('link-12', 'name', 'link-9');">name</a></tt><tt class="py-op">.</tt><tt class="py-name">lower</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L68"></a><tt class="py-lineno">68</tt>  <tt class="py-line">             </tt>
+<a name="L69"></a><tt class="py-lineno">69</tt>  <tt class="py-line">            <tt class="py-keyword">for</tt> <tt id="link-13" class="py-name" targets="Variable publicmapping.redistricting.models.Characteristic.subject=publicmapping.redistricting.models.Characteristic-class.html#subject,Variable publicmapping.redistricting.models.ComputedCharacteristic.subject=publicmapping.redistricting.models.ComputedCharacteristic-class.html#subject,Variable publicmapping.redistricting.models.Target.subject=publicmapping.redistricting.models.Target-class.html#subject"><a title="publicmapping.redistricting.models.Characteristic.subject
+publicmapping.redistricting.models.ComputedCharacteristic.subject
+publicmapping.redistricting.models.Target.subject" class="py-name" href="#" onclick="return doclink('link-13', 'subject', 'link-13');">subject</a></tt> <tt class="py-keyword">in</tt> <tt id="link-14" class="py-name" targets="Class publicmapping.redistricting.models.Subject=publicmapping.redistricting.models.Subject-class.html"><a title="publicmapping.redistricting.models.Subject" class="py-name" href="#" onclick="return doclink('link-14', 'Subject', 'link-14');">Subject</a></tt><tt class="py-op">.</tt><tt id="link-15" class="py-name"><a title="publicmapping.redistricting.models.District.objects
+publicmapping.redistricting.models.Geounit.objects" class="py-name" href="#" onclick="return doclink('link-15', 'objects', 'link-7');">objects</a></tt><tt class="py-op">.</tt><tt class="py-name">all</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L70"></a><tt class="py-lineno">70</tt>  <tt class="py-line">                <tt class="py-name">sql</tt> <tt class="py-op">=</tt> <tt class="py-string">"CREATE OR REPLACE VIEW demo_%s_%s AS SELECT rg.id, rg.name, rg.geolevel_id, rg.geom, rc.number, rc.percentage FROM redistricting_geounit rg JOIN redistricting_characteristic rc ON rg.id = rc.geounit_id WHERE rc.subject_id = %d AND rg.geolevel_id = %d;"</tt> <tt class="py-op">%</tt> \ </tt>
+<a name="L71"></a><tt class="py-lineno">71</tt>  <tt class="py-line">                    <tt class="py-op">(</tt><tt id="link-16" class="py-name"><a title="publicmapping.redistricting.models.Geounit.geolevel
+publicmapping.redistricting.models.LegislativeLevel.geolevel" class="py-name" href="#" onclick="return doclink('link-16', 'geolevel', 'link-5');">geolevel</a></tt><tt class="py-op">.</tt><tt id="link-17" class="py-name"><a title="publicmapping.redistricting.models.District.name
+publicmapping.redistricting.models.Geolevel.name
+publicmapping.redistricting.models.Geounit.name
+publicmapping.redistricting.models.LegislativeBody.name
+publicmapping.redistricting.models.Plan.name
+publicmapping.redistricting.models.Subject.name" class="py-name" href="#" onclick="return doclink('link-17', 'name', 'link-9');">name</a></tt><tt class="py-op">.</tt><tt class="py-name">lower</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt id="link-18" class="py-name"><a title="publicmapping.redistricting.models.Characteristic.subject
+publicmapping.redistricting.models.ComputedCharacteristic.subject
+publicmapping.redistricting.models.Target.subject" class="py-name" href="#" onclick="return doclink('link-18', 'subject', 'link-13');">subject</a></tt><tt class="py-op">.</tt><tt id="link-19" class="py-name"><a title="publicmapping.redistricting.models.District.name
+publicmapping.redistricting.models.Geolevel.name
+publicmapping.redistricting.models.Geounit.name
+publicmapping.redistricting.models.LegislativeBody.name
+publicmapping.redistricting.models.Plan.name
+publicmapping.redistricting.models.Subject.name" class="py-name" href="#" onclick="return doclink('link-19', 'name', 'link-9');">name</a></tt><tt class="py-op">.</tt><tt class="py-name">lower</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">,</tt>  </tt>
+<a name="L72"></a><tt class="py-lineno">72</tt>  <tt class="py-line">                     <tt id="link-20" class="py-name"><a title="publicmapping.redistricting.models.Characteristic.subject
+publicmapping.redistricting.models.ComputedCharacteristic.subject
+publicmapping.redistricting.models.Target.subject" class="py-name" href="#" onclick="return doclink('link-20', 'subject', 'link-13');">subject</a></tt><tt class="py-op">.</tt><tt class="py-name">id</tt><tt class="py-op">,</tt> <tt id="link-21" class="py-name"><a title="publicmapping.redistricting.models.Geounit.geolevel
+publicmapping.redistricting.models.LegislativeLevel.geolevel" class="py-name" href="#" onclick="return doclink('link-21', 'geolevel', 'link-5');">geolevel</a></tt><tt class="py-op">.</tt><tt class="py-name">id</tt><tt class="py-op">,</tt><tt class="py-op">)</tt> </tt>
+<a name="L73"></a><tt class="py-lineno">73</tt>  <tt class="py-line">                <tt class="py-name">cursor</tt><tt class="py-op">.</tt><tt class="py-name">execute</tt><tt class="py-op">(</tt><tt class="py-name">sql</tt><tt class="py-op">)</tt> </tt>
+<a name="L74"></a><tt class="py-lineno">74</tt>  <tt class="py-line">                <tt class="py-name">transaction</tt><tt class="py-op">.</tt><tt class="py-name">commit</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L75"></a><tt class="py-lineno">75</tt>  <tt class="py-line">                <tt class="py-keyword">print</tt> <tt class="py-string">'\tCreated demo_%s_%s view ...'</tt> <tt class="py-op">%</tt> \ </tt>
+<a name="L76"></a><tt class="py-lineno">76</tt>  <tt class="py-line">                    <tt class="py-op">(</tt><tt id="link-22" class="py-name"><a title="publicmapping.redistricting.models.Geounit.geolevel
+publicmapping.redistricting.models.LegislativeLevel.geolevel" class="py-name" href="#" onclick="return doclink('link-22', 'geolevel', 'link-5');">geolevel</a></tt><tt class="py-op">.</tt><tt id="link-23" class="py-name"><a title="publicmapping.redistricting.models.District.name
+publicmapping.redistricting.models.Geolevel.name
+publicmapping.redistricting.models.Geounit.name
+publicmapping.redistricting.models.LegislativeBody.name
+publicmapping.redistricting.models.Plan.name
+publicmapping.redistricting.models.Subject.name" class="py-name" href="#" onclick="return doclink('link-23', 'name', 'link-9');">name</a></tt><tt class="py-op">.</tt><tt class="py-name">lower</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> <tt id="link-24" class="py-name"><a title="publicmapping.redistricting.models.Characteristic.subject
+publicmapping.redistricting.models.ComputedCharacteristic.subject
+publicmapping.redistricting.models.Target.subject" class="py-name" href="#" onclick="return doclink('link-24', 'subject', 'link-13');">subject</a></tt><tt class="py-op">.</tt><tt id="link-25" class="py-name"><a title="publicmapping.redistricting.models.District.name
+publicmapping.redistricting.models.Geolevel.name
+publicmapping.redistricting.models.Geounit.name
+publicmapping.redistricting.models.LegislativeBody.name
+publicmapping.redistricting.models.Plan.name
+publicmapping.redistricting.models.Subject.name" class="py-name" href="#" onclick="return doclink('link-25', 'name', 'link-9');">name</a></tt><tt class="py-op">.</tt><tt class="py-name">lower</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L77"></a><tt class="py-lineno">77</tt>  <tt class="py-line">               </tt>
+<a name="L78"></a><tt class="py-lineno">78</tt>  <tt class="py-line">        <tt class="py-keyword">print</tt> <tt class="py-string">'\tDone.'</tt> </tt>
+</div></div><a name="L79"></a><tt class="py-lineno">79</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="publicmapping-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a href="http://publicmapping.sf.net">Publicmapping on SourceForge</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Thu Dec 16 09:58:46 2010
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

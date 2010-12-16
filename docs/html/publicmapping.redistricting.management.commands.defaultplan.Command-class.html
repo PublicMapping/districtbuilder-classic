@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>publicmapping.redistricting.management.commands.defaultplan.Command</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="publicmapping-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a href="http://publicmapping.sf.net">Publicmapping on SourceForge</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="publicmapping-module.html">Package&nbsp;publicmapping</a> ::
+        <a href="publicmapping.redistricting-module.html">Package&nbsp;redistricting</a> ::
+        <a href="publicmapping.redistricting.management-module.html">Package&nbsp;management</a> ::
+        <a href="publicmapping.redistricting.management.commands-module.html">Package&nbsp;commands</a> ::
+        <a href="publicmapping.redistricting.management.commands.defaultplan-module.html">Module&nbsp;defaultplan</a> ::
+        Class&nbsp;Command
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="publicmapping.redistricting.management.commands.defaultplan.Command-class.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS DESCRIPTION ==================== -->
+<h1 class="epydoc">Class Command</h1><p class="nomargin-top"><span class="codelink"><a href="publicmapping.redistricting.management.commands.defaultplan-pysrc.html#Command">source&nbsp;code</a></span></p>
+<center>
+<center>  <map id="uml_class_diagram_for_publicma_8" name="uml_class_diagram_for_publicma_8">
+<area shape="rect" id="node11" href="publicmapping.redistricting.management.commands.defaultplan.Command-class.html#args" title="publicmapping.redistricting.management.commands.defaultplan.Command.args" alt="" coords="87,289,259,308"/>
+<area shape="rect" id="node11" href="publicmapping.redistricting.management.commands.defaultplan.Command-class.html#help" title="publicmapping.redistricting.management.commands.defaultplan.Command.help" alt="" coords="87,308,259,327"/>
+<area shape="rect" id="node11" href="publicmapping.redistricting.management.commands.defaultplan.Command-class.html#option_list" title="publicmapping.redistricting.management.commands.defaultplan.Command.option_list" alt="" coords="87,327,259,345"/>
+<area shape="rect" id="node11" href="publicmapping.redistricting.management.commands.defaultplan.Command-class.html#handle" title="Perform the command." alt="" coords="87,348,259,367"/>
+<area shape="rect" id="node1" href="publicmapping.redistricting.management.commands.defaultplan.Command-class.html" title="A command that imports a default set of boundaries into a system template." alt="" coords="75,265,269,373"/>
+<area shape="rect" id="node12" href="javascript:void(0);" title="django.core.management.base.BaseCommand.can_import_settings" alt="" coords="17,31,328,49"/>
+<area shape="rect" id="node12" href="javascript:void(0);" title="django.core.management.base.BaseCommand.requires_model_validation" alt="" coords="17,49,328,68"/>
+<area shape="rect" id="node12" href="javascript:void(0);" title="django.core.management.base.BaseCommand.output_transaction" alt="" coords="17,68,328,87"/>
+<area shape="rect" id="node12" href="javascript:void(0);" title="x.__init__(...) initializes x; see x.__class__.__doc__ for signature" alt="" coords="17,89,328,108"/>
+<area shape="rect" id="node12" href="javascript:void(0);" title="Return the Django version, which should be correct for all built&#45;in Django &#160;commands." alt="" coords="17,108,328,127"/>
+<area shape="rect" id="node12" href="javascript:void(0);" title="Return a brief description of how to use this command, by default from the &#160;attribute ``self.help``." alt="" coords="17,127,328,145"/>
+<area shape="rect" id="node12" href="javascript:void(0);" title="Create and return the ``OptionParser`` which will be used to parse the &#160;arguments to this command." alt="" coords="17,145,328,164"/>
+<area shape="rect" id="node12" href="javascript:void(0);" title="Print the help message for this command, derived from ``self.usage()``." alt="" coords="17,164,328,183"/>
+<area shape="rect" id="node12" href="javascript:void(0);" title="Set up any environment changes requested (e.g., Python path and Django &#160;settings), then run this command." alt="" coords="17,183,328,201"/>
+<area shape="rect" id="node12" href="javascript:void(0);" title="Try to execute this command, performing model validation if needed (as &#160;controlled by the attribute ``self.requires_model_validation``)." alt="" coords="17,201,328,220"/>
+<area shape="rect" id="node12" href="javascript:void(0);" title="Validates the given app, raising CommandError for any errors." alt="" coords="17,220,328,239"/>
+<area shape="rect" id="node2" href="javascript:void(0);" title="The base class from which all management commands ultimately derive." alt="" coords="5,6,339,245"/>
+</map>
+  <img src="uml_class_diagram_for_publicma_8.gif" alt='' usemap="#uml_class_diagram_for_publicma_8" ismap="ismap" class="graph-without-title" />
+</center>
+</center>
+<hr />
+<p>A command that imports a default set of boundaries into a system 
+  template.</p>
+
+<!-- ==================== INSTANCE METHODS ==================== -->
+<a name="section-InstanceMethods"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Instance Methods</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceMethods"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.management.commands.defaultplan.Command-class.html#handle" class="summary-sig-name">handle</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>,
+        <span class="summary-sig-arg">**options</span>)</span><br />
+      Perform the command.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.management.commands.defaultplan-pysrc.html#Command.handle">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code>django.core.management.base.BaseCommand</code></b>:
+      <code>__init__</code>,
+      <code>create_parser</code>,
+      <code>execute</code>,
+      <code>get_version</code>,
+      <code>print_help</code>,
+      <code>run_from_argv</code>,
+      <code>usage</code>,
+      <code>validate</code>
+      </p>
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__delattr__</code>,
+      <code>__format__</code>,
+      <code>__getattribute__</code>,
+      <code>__hash__</code>,
+      <code>__new__</code>,
+      <code>__reduce__</code>,
+      <code>__reduce_ex__</code>,
+      <code>__repr__</code>,
+      <code>__setattr__</code>,
+      <code>__sizeof__</code>,
+      <code>__str__</code>,
+      <code>__subclasshook__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS VARIABLES ==================== -->
+<a name="section-ClassVariables"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Class Variables</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-ClassVariables"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="args"></a><span class="summary-name">args</span> = <code title="''">''</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="publicmapping.redistricting.management.commands.defaultplan.Command-class.html#help" class="summary-name">help</a> = <code title="'Imports a default plan into the redistricting django app.'">'Imports a default plan into the redistricting django a<code class="variable-ellipsis">...</code></code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="publicmapping.redistricting.management.commands.defaultplan.Command-class.html#option_list" class="summary-name">option_list</a> = <code title="BaseCommand.option_list+(make_option('--shape', dest= 'shapefile', def\
+ault= '', help= &quot;The path to the Plan's shapefile.&quot;), make_option('--f\
+ield', dest= 'idfield', default= '', help= 'The field in the shapefile\
+ with the district ID.'), make_option('--name', dest= 'name', default=\
+ 'Congressional', help= 'The name of the default plan, defaults to &quot;Co\
+ngressional&quot;.'), make_option('--districtindexfile', dest= 'districtind\
+exfile', default= '', help= 'The path to a district index file.'), mak\
+e_option('--body', dest= 'legislativebody', default= '', help= 'The le\
+...">BaseCommand.option_list+(make_option('--shape', <code class="variable-ellipsis">...</code></code>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code>django.core.management.base.BaseCommand</code></b>:
+      <code>can_import_settings</code>,
+      <code>output_transaction</code>,
+      <code>requires_model_validation</code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== PROPERTIES ==================== -->
+<a name="section-Properties"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Properties</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Properties"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__class__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== METHOD DETAILS ==================== -->
+<a name="section-MethodDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Method Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-MethodDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="handle"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">handle</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">*args</span>,
+        <span class="sig-arg">**options</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.management.commands.defaultplan-pysrc.html#Command.handle">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Perform the command. Import the shapes and assign the Geounits to the 
+  districts, based on their boundaries.</p>
+  <dl class="fields">
+    <dt>Overrides:
+        django.core.management.base.BaseCommand.handle
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== CLASS VARIABLE DETAILS ==================== -->
+<a name="section-ClassVariableDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Class Variable Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-ClassVariableDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="help"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">help</h3>
+  
+  <dl class="fields">
+  </dl>
+  <dl class="fields">
+    <dt>Value:</dt>
+      <dd><table><tr><td><pre class="variable">
+'Imports a default plan into the redistricting django app.'
+</pre></td></tr></table>
+</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="option_list"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">option_list</h3>
+  
+  <dl class="fields">
+  </dl>
+  <dl class="fields">
+    <dt>Value:</dt>
+      <dd><table><tr><td><pre class="variable">
+BaseCommand.option_list+(make_option('--shape', dest= 'shapefile', def<span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
+ault= '', help= &quot;The path to the Plan's shapefile.&quot;), make_option('--f<span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
+ield', dest= 'idfield', default= '', help= 'The field in the shapefile<span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
+ with the district ID.'), make_option('--name', dest= 'name', default=<span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
+ 'Congressional', help= 'The name of the default plan, defaults to &quot;Co<span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
+ngressional&quot;.'), make_option('--districtindexfile', dest= 'districtind<span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
+exfile', default= '', help= 'The path to a district index file.'), mak<span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
+e_option('--body', dest= 'legislativebody', default= '', help= 'The le<span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
+<code class="variable-ellipsis">...</code>
+</pre></td></tr></table>
+</dd>
+  </dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="publicmapping-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a href="http://publicmapping.sf.net">Publicmapping on SourceForge</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Thu Dec 16 09:58:45 2010
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

@@ -1,0 +1,682 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>publicmapping.redistricting.models</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="publicmapping-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a href="http://publicmapping.sf.net">Publicmapping on SourceForge</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="publicmapping-module.html">Package&nbsp;publicmapping</a> ::
+        <a href="publicmapping.redistricting-module.html">Package&nbsp;redistricting</a> ::
+        Module&nbsp;models
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="publicmapping.redistricting.models-module.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== MODULE DESCRIPTION ==================== -->
+<h1 class="epydoc">Module models</h1><p class="nomargin-top"><span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html">source&nbsp;code</a></span></p>
+<pre class="literalblock">
+
+Define the models used by the redistricting app.
+
+The classes in redistricting.models define the data models used in the 
+application. Each class relates to one table in the database; foreign key
+fields may define a second, intermediate table to map the records to one
+another.
+
+This file is part of The Public Mapping Project
+http://sourceforge.net/projects/publicmapping/
+
+License:
+    Copyright 2010 Micah Altman, Michael McDonald
+
+    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+Author: 
+    Andrew Jennings, David Zwarg
+
+</pre>
+
+<!-- ==================== CLASSES ==================== -->
+<a name="section-Classes"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Classes</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Classes"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="publicmapping.redistricting.models.Subject-class.html" class="summary-name">Subject</a><br />
+      A classification of a set of Characteristics.
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="publicmapping.redistricting.models.LegislativeBody-class.html" class="summary-name">LegislativeBody</a><br />
+      A legislative body that plans belong to.
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="publicmapping.redistricting.models.Geolevel-class.html" class="summary-name">Geolevel</a><br />
+      A geographic classification for Geounits.
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="publicmapping.redistricting.models.LegislativeDefault-class.html" class="summary-name">LegislativeDefault</a><br />
+      The default settings for a legislative body.
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="publicmapping.redistricting.models.LegislativeLevel-class.html" class="summary-name">LegislativeLevel</a><br />
+      A geographic classification in a legislative body.
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="publicmapping.redistricting.models.Geounit-class.html" class="summary-name">Geounit</a><br />
+      A discrete areal unit.
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="publicmapping.redistricting.models.Characteristic-class.html" class="summary-name">Characteristic</a><br />
+      A data value for a Geounit's Subject.
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="publicmapping.redistricting.models.Target-class.html" class="summary-name">Target</a><br />
+      A set of data values that bound the ComputedCharacteristics of a 
+      District.
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="publicmapping.redistricting.models.Plan-class.html" class="summary-name">Plan</a><br />
+      A collection of Districts for an area of coverage, like a state.
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="publicmapping.redistricting.models.PlanForm-class.html" class="summary-name">PlanForm</a><br />
+      A form for displaying and editing a Plan.
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="publicmapping.redistricting.models.District-class.html" class="summary-name">District</a><br />
+      A collection of Geounits, aggregated together.
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="publicmapping.redistricting.models.ComputedCharacteristic-class.html" class="summary-name">ComputedCharacteristic</a><br />
+      ComputedCharacteristics are cached, aggregate values of 
+      Characteristics for Districts.
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="publicmapping.redistricting.models.Profile-class.html" class="summary-name">Profile</a><br />
+      Extra user information that doesn't fit in Django's default user 
+      table.
+    </td>
+  </tr>
+</table>
+<!-- ==================== FUNCTIONS ==================== -->
+<a name="section-Functions"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Functions</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Functions"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="update_profile"></a><span class="summary-sig-name">update_profile</span>(<span class="summary-sig-arg">sender</span>,
+        <span class="summary-sig-arg">**kwargs</span>)</span><br />
+      A trigger that creates profiles when a user is saved.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#update_profile">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.models-module.html#set_district_id" class="summary-sig-name">set_district_id</a>(<span class="summary-sig-arg">sender</span>,
+        <span class="summary-sig-arg">**kwargs</span>)</span><br />
+      Incremented the district_id (NOT the primary key id) when a district 
+      is saved.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#set_district_id">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="update_plan_edited_time"></a><span class="summary-sig-name">update_plan_edited_time</span>(<span class="summary-sig-arg">sender</span>,
+        <span class="summary-sig-arg">**kwargs</span>)</span><br />
+      Update the time that the plan was edited whenever the plan is saved.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#update_plan_edited_time">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="create_unassigned_district"></a><span class="summary-sig-name">create_unassigned_district</span>(<span class="summary-sig-arg">sender</span>,
+        <span class="summary-sig-arg">**kwargs</span>)</span><br />
+      When a new plan is saved, all geounits must be inserted into the 
+      Unassigned districts.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#create_unassigned_district">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.models-module.html#can_edit" class="summary-sig-name">can_edit</a>(<span class="summary-sig-arg">user</span>,
+        <span class="summary-sig-arg">plan</span>)</span><br />
+      Can a user edit a plan?</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#can_edit">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.models-module.html#can_view" class="summary-sig-name">can_view</a>(<span class="summary-sig-arg">user</span>,
+        <span class="summary-sig-arg">plan</span>)</span><br />
+      Can a user view a plan?</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#can_view">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.models-module.html#can_copy" class="summary-sig-name">can_copy</a>(<span class="summary-sig-arg">user</span>,
+        <span class="summary-sig-arg">plan</span>)</span><br />
+      Can a user copy a plan?</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#can_copy">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.models-module.html#empty_geom" class="summary-sig-name">empty_geom</a>(<span class="summary-sig-arg">srid</span>)</span><br />
+      Create an empty GeometryCollection.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#empty_geom">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.models-module.html#enforce_multi" class="summary-sig-name">enforce_multi</a>(<span class="summary-sig-arg">geom</span>)</span><br />
+      Make a geometry a multi-polygon geometry.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#enforce_multi">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+</table>
+<p class="indent-wrapped-lines"><b>Imports:</b>
+  <span title="django.core.exceptions.ValidationError">ValidationError</span>,
+  <span title="django.contrib.gis.db.models">models</span>,
+  <span title="django.contrib.gis.gdal.DataSource">DataSource</span>,
+  <span title="django.contrib.gis.geos.MultiPolygon">MultiPolygon</span>,
+  <span title="django.contrib.gis.geos.GEOSGeometry">GEOSGeometry</span>,
+  <span title="django.contrib.gis.geos.GEOSException">GEOSException</span>,
+  <span title="django.contrib.gis.geos.GeometryCollection">GeometryCollection</span>,
+  <span title="django.contrib.auth.models.User">User</span>,
+  <span title="django.db.models.Sum">Sum</span>,
+  <span title="django.db.models.Max">Max</span>,
+  <span title="django.db.models.Q">Q</span>,
+  <span title="django.db.models.signals.pre_save">pre_save</span>,
+  <span title="django.db.models.signals.post_save">post_save</span>,
+  <span title="django.db.connection">connection</span>,
+  <span title="django.db.transaction">transaction</span>,
+  <span title="django.forms.ModelForm">ModelForm</span>,
+  <span title="django.conf.settings">settings</span>,
+  <span title="django.utils.simplejson">json</span>,
+  <span title="datetime.datetime">datetime</span>,
+  <span title="math.sqrt">sqrt</span>,
+  <span title="math.pi">pi</span>,
+  <span title="copy.copy">copy</span>,
+  <span title="sys">sys</span>
+</p><br />
+<!-- ==================== FUNCTION DETAILS ==================== -->
+<a name="section-FunctionDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Function Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-FunctionDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="set_district_id"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">set_district_id</span>(<span class="sig-arg">sender</span>,
+        <span class="sig-arg">**kwargs</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#set_district_id">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Incremented the district_id (NOT the primary key id) when a district 
+  is saved. The district_id is unique to the plan/version.  The district_id
+  may already be set, but this method ensures that it is set when 
+  saved.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="can_edit"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">can_edit</span>(<span class="sig-arg">user</span>,
+        <span class="sig-arg">plan</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#can_edit">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Can a user edit a plan?
+
+In order to edit a plan, Users must own it or be a staff member.  
+Templates cannot be edited, only copied.
+
+Parameters:
+    user -- A User
+    plan -- A Plan
+
+Returns:
+    True if the User has permissions to edit the Plan.
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="can_view"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">can_view</span>(<span class="sig-arg">user</span>,
+        <span class="sig-arg">plan</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#can_view">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Can a user view a plan?
+
+In order to view a plan, the plan must have the shared flag set.
+
+Parameters:
+    user -- A User
+    plan -- A Plan
+
+Returns:
+    True if the User has permissions to view the Plan.
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="can_copy"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">can_copy</span>(<span class="sig-arg">user</span>,
+        <span class="sig-arg">plan</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#can_copy">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Can a user copy a plan?
+
+In order to copy a plan, the user must be the owner, or a staff 
+member to copy a plan they own.  Any registered user can copy a 
+template.
+
+Parameters:
+    user -- A User
+    plan -- A Plan
+
+Returns:
+    True if the User has permission to copy the Plan.
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="empty_geom"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">empty_geom</span>(<span class="sig-arg">srid</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#empty_geom">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Create an empty GeometryCollection.
+
+Parameters:
+    srid -- The spatial reference for this empty geometry.
+
+Returns:
+    An empty geometry.
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="enforce_multi"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">enforce_multi</span>(<span class="sig-arg">geom</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#enforce_multi">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Make a geometry a multi-polygon geometry.
+
+This method wraps Polygons in MultiPolygons. If geometry exists, but is
+neither polygon or multipolygon, an empty geometry is returned. If no
+geometry is provided, no geometry (None) is returned.
+
+Parameters:
+    geom -- The geometry to check/enforce.
+Returns:
+    A multi-polygon from any polygon type.
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="publicmapping-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a href="http://publicmapping.sf.net">Publicmapping on SourceForge</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Thu Dec 16 09:58:45 2010
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

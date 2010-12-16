@@ -1,0 +1,701 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>publicmapping.redistricting.management.commands.setup.Command</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="publicmapping-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a href="http://publicmapping.sf.net">Publicmapping on SourceForge</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="publicmapping-module.html">Package&nbsp;publicmapping</a> ::
+        <a href="publicmapping.redistricting-module.html">Package&nbsp;redistricting</a> ::
+        <a href="publicmapping.redistricting.management-module.html">Package&nbsp;management</a> ::
+        <a href="publicmapping.redistricting.management.commands-module.html">Package&nbsp;commands</a> ::
+        <a href="publicmapping.redistricting.management.commands.setup-module.html">Module&nbsp;setup</a> ::
+        Class&nbsp;Command
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="publicmapping.redistricting.management.commands.setup.Command-class.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS DESCRIPTION ==================== -->
+<h1 class="epydoc">Class Command</h1><p class="nomargin-top"><span class="codelink"><a href="publicmapping.redistricting.management.commands.setup-pysrc.html#Command">source&nbsp;code</a></span></p>
+<center>
+<center>  <map id="uml_class_diagram_for_publicma_11" name="uml_class_diagram_for_publicma_11">
+<area shape="rect" id="node17" href="publicmapping.redistricting.management.commands.setup.Command-class.html#args" title="publicmapping.redistricting.management.commands.setup.Command.args" alt="" coords="17,289,344,308"/>
+<area shape="rect" id="node17" href="publicmapping.redistricting.management.commands.setup.Command-class.html#help" title="publicmapping.redistricting.management.commands.setup.Command.help" alt="" coords="17,308,344,327"/>
+<area shape="rect" id="node17" href="publicmapping.redistricting.management.commands.setup.Command-class.html#option_list" title="publicmapping.redistricting.management.commands.setup.Command.option_list" alt="" coords="17,327,344,345"/>
+<area shape="rect" id="node17" href="publicmapping.redistricting.management.commands.setup.Command-class.html#handle" title="Perform the command." alt="" coords="17,348,344,367"/>
+<area shape="rect" id="node17" href="publicmapping.redistricting.management.commands.setup.Command-class.html#configure_geoserver" title="Create the workspace and layers in geoserver, based on the imported data." alt="" coords="17,367,344,385"/>
+<area shape="rect" id="node17" href="publicmapping.redistricting.management.commands.setup.Command-class.html#get_style_contents" title="publicmapping.redistricting.management.commands.setup.Command.get_style_contents" alt="" coords="17,385,344,404"/>
+<area shape="rect" id="node17" href="publicmapping.redistricting.management.commands.setup.Command-class.html#rest_config" title="publicmapping.redistricting.management.commands.setup.Command.rest_config" alt="" coords="17,404,344,423"/>
+<area shape="rect" id="node17" href="publicmapping.redistricting.management.commands.setup.Command-class.html#create_views" title="Create specialized views for GIS and mapping layers." alt="" coords="17,423,344,441"/>
+<area shape="rect" id="node17" href="publicmapping.redistricting.management.commands.setup.Command-class.html#import_geolevel" title="Import the geography at a geolevel." alt="" coords="17,441,344,460"/>
+<area shape="rect" id="node17" href="publicmapping.redistricting.management.commands.setup.Command-class.html#import_prereq" title="Import the required support data prior to importing." alt="" coords="17,460,344,479"/>
+<area shape="rect" id="node17" href="publicmapping.redistricting.management.commands.setup.Command-class.html#import_shape" title="Import a shapefile, based on a config." alt="" coords="17,479,344,497"/>
+<area shape="rect" id="node17" href="publicmapping.redistricting.management.commands.setup.Command-class.html#create_template" title="Create the templates that are defined in the configuration file." alt="" coords="17,497,344,516"/>
+<area shape="rect" id="node1" href="publicmapping.redistricting.management.commands.setup.Command-class.html" title="Set up District Builder." alt="" coords="5,265,355,522"/>
+<area shape="rect" id="node18" href="javascript:void(0);" title="django.core.management.base.BaseCommand.can_import_settings" alt="" coords="25,31,336,49"/>
+<area shape="rect" id="node18" href="javascript:void(0);" title="django.core.management.base.BaseCommand.requires_model_validation" alt="" coords="25,49,336,68"/>
+<area shape="rect" id="node18" href="javascript:void(0);" title="django.core.management.base.BaseCommand.output_transaction" alt="" coords="25,68,336,87"/>
+<area shape="rect" id="node18" href="javascript:void(0);" title="x.__init__(...) initializes x; see x.__class__.__doc__ for signature" alt="" coords="25,89,336,108"/>
+<area shape="rect" id="node18" href="javascript:void(0);" title="Return the Django version, which should be correct for all built&#45;in Django &#160;commands." alt="" coords="25,108,336,127"/>
+<area shape="rect" id="node18" href="javascript:void(0);" title="Return a brief description of how to use this command, by default from the &#160;attribute ``self.help``." alt="" coords="25,127,336,145"/>
+<area shape="rect" id="node18" href="javascript:void(0);" title="Create and return the ``OptionParser`` which will be used to parse the &#160;arguments to this command." alt="" coords="25,145,336,164"/>
+<area shape="rect" id="node18" href="javascript:void(0);" title="Print the help message for this command, derived from ``self.usage()``." alt="" coords="25,164,336,183"/>
+<area shape="rect" id="node18" href="javascript:void(0);" title="Set up any environment changes requested (e.g., Python path and Django &#160;settings), then run this command." alt="" coords="25,183,336,201"/>
+<area shape="rect" id="node18" href="javascript:void(0);" title="Try to execute this command, performing model validation if needed (as &#160;controlled by the attribute ``self.requires_model_validation``)." alt="" coords="25,201,336,220"/>
+<area shape="rect" id="node18" href="javascript:void(0);" title="Validates the given app, raising CommandError for any errors." alt="" coords="25,220,336,239"/>
+<area shape="rect" id="node2" href="javascript:void(0);" title="The base class from which all management commands ultimately derive." alt="" coords="13,6,347,245"/>
+</map>
+  <img src="uml_class_diagram_for_publicma_11.gif" alt='' usemap="#uml_class_diagram_for_publicma_11" ismap="ismap" class="graph-without-title" />
+</center>
+</center>
+<hr />
+<p>Set up District Builder.</p>
+
+<!-- ==================== INSTANCE METHODS ==================== -->
+<a name="section-InstanceMethods"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Instance Methods</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceMethods"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.management.commands.setup.Command-class.html#handle" class="summary-sig-name">handle</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>,
+        <span class="summary-sig-arg">**options</span>)</span><br />
+      Perform the command.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.management.commands.setup-pysrc.html#Command.handle">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="configure_geoserver"></a><span class="summary-sig-name">configure_geoserver</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">config</span>,
+        <span class="summary-sig-arg">extent</span>,
+        <span class="summary-sig-arg">verbose</span>)</span><br />
+      Create the workspace and layers in geoserver, based on the imported 
+      data.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.management.commands.setup-pysrc.html#Command.configure_geoserver">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="get_style_contents"></a><span class="summary-sig-name">get_style_contents</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">styledir</span>,
+        <span class="summary-sig-arg">geolevel</span>,
+        <span class="summary-sig-arg">subject</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.management.commands.setup-pysrc.html#Command.get_style_contents">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="rest_config"></a><span class="summary-sig-name">rest_config</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">method</span>,
+        <span class="summary-sig-arg">host</span>,
+        <span class="summary-sig-arg">url</span>,
+        <span class="summary-sig-arg">data</span>,
+        <span class="summary-sig-arg">headers</span>,
+        <span class="summary-sig-arg">msg</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.management.commands.setup-pysrc.html#Command.rest_config">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.management.commands.setup.Command-class.html#create_views" class="summary-sig-name">create_views</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">verbose</span>)</span><br />
+      Create specialized views for GIS and mapping layers.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.management.commands.setup-pysrc.html#Command.create_views">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.management.commands.setup.Command-class.html#import_geolevel" class="summary-sig-name">import_geolevel</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">config</span>,
+        <span class="summary-sig-arg">geolevel</span>,
+        <span class="summary-sig-arg">verbose</span>)</span><br />
+      Import the geography at a geolevel.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.management.commands.setup-pysrc.html#Command.import_geolevel">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.management.commands.setup.Command-class.html#import_prereq" class="summary-sig-name">import_prereq</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">config</span>,
+        <span class="summary-sig-arg">verbose</span>)</span><br />
+      Import the required support data prior to importing.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.management.commands.setup-pysrc.html#Command.import_prereq">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.management.commands.setup.Command-class.html#import_shape" class="summary-sig-name">import_shape</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">config</span>,
+        <span class="summary-sig-arg">verbose</span>)</span><br />
+      Import a shapefile, based on a config.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.management.commands.setup-pysrc.html#Command.import_shape">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.management.commands.setup.Command-class.html#create_template" class="summary-sig-name">create_template</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">config</span>,
+        <span class="summary-sig-arg">verbose</span>)</span><br />
+      Create the templates that are defined in the configuration file.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.management.commands.setup-pysrc.html#Command.create_template">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code>django.core.management.base.BaseCommand</code></b>:
+      <code>__init__</code>,
+      <code>create_parser</code>,
+      <code>execute</code>,
+      <code>get_version</code>,
+      <code>print_help</code>,
+      <code>run_from_argv</code>,
+      <code>usage</code>,
+      <code>validate</code>
+      </p>
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__delattr__</code>,
+      <code>__format__</code>,
+      <code>__getattribute__</code>,
+      <code>__hash__</code>,
+      <code>__new__</code>,
+      <code>__reduce__</code>,
+      <code>__reduce_ex__</code>,
+      <code>__repr__</code>,
+      <code>__setattr__</code>,
+      <code>__sizeof__</code>,
+      <code>__str__</code>,
+      <code>__subclasshook__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS VARIABLES ==================== -->
+<a name="section-ClassVariables"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Class Variables</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-ClassVariables"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="args"></a><span class="summary-name">args</span> = <code title="'&lt;config&gt;'">'&lt;config&gt;'</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="publicmapping.redistricting.management.commands.setup.Command-class.html#help" class="summary-name">help</a> = <code title="'Sets up District Builder based on the main XML configuration.'">'Sets up District Builder based on the main XML configu<code class="variable-ellipsis">...</code></code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="publicmapping.redistricting.management.commands.setup.Command-class.html#option_list" class="summary-name">option_list</a> = <code title="BaseCommand.option_list+(make_option('-c', '--config', dest= &quot;config&quot;,\
+ help= &quot;Use configuration file CONFIG&quot;, metavar= &quot;CONFIG&quot;), make_optio\
+n('-d', '--debug', dest= &quot;debug&quot;, help= &quot;Generate verbose debug output\
+&quot;, default= False, action= 'store_true'), make_option('-g', '--geoleve\
+l', dest= &quot;geolevels&quot;, action= &quot;append&quot;, help= &quot;Geolevels to import&quot;),\
+ make_option('-v', '--views', dest= &quot;views&quot;, default= False, action= &quot;\
+store_true&quot;, help= &quot;Create database views.&quot;), make_option('-G', '--geo\
+server', dest= &quot;geoserver&quot;, action= &quot;store_true&quot;, help= &quot;Create spatia\
+...">BaseCommand.option_list+(make_option('-c', '--co<code class="variable-ellipsis">...</code></code>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code>django.core.management.base.BaseCommand</code></b>:
+      <code>can_import_settings</code>,
+      <code>output_transaction</code>,
+      <code>requires_model_validation</code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== PROPERTIES ==================== -->
+<a name="section-Properties"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Properties</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Properties"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__class__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== METHOD DETAILS ==================== -->
+<a name="section-MethodDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Method Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-MethodDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="handle"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">handle</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">*args</span>,
+        <span class="sig-arg">**options</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.management.commands.setup-pysrc.html#Command.handle">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Perform the command.</p>
+  <dl class="fields">
+    <dt>Overrides:
+        django.core.management.base.BaseCommand.handle
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="create_views"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">create_views</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">verbose</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.management.commands.setup-pysrc.html#Command.create_views">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Create specialized views for GIS and mapping layers.</p>
+  <p>This creates views in the database that are used to map the features 
+  at different geographic levels, and for different choropleth map 
+  visualizations. All parameters for creating the views are saved in the 
+  database at this point.</p>
+  <dl class="fields">
+    <dt>Decorators:</dt>
+    <dd><ul class="nomargin-top">
+        <li><code>@transaction.commit_manually</code></li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="import_geolevel"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">import_geolevel</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">config</span>,
+        <span class="sig-arg">geolevel</span>,
+        <span class="sig-arg">verbose</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.management.commands.setup-pysrc.html#Command.import_geolevel">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Import the geography at a geolevel.
+
+Parameters:
+    config - The configuration dict of the geolevel
+    geolevel - The geolevel node in the configuration
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="import_prereq"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">import_prereq</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">config</span>,
+        <span class="sig-arg">verbose</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.management.commands.setup-pysrc.html#Command.import_prereq">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Import the required support data prior to importing.</p>
+  <p>Import the LegislativeBody, Subject, Geolevel, and associated 
+  relationships prior to loading all the geounits.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="import_shape"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">import_shape</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">config</span>,
+        <span class="sig-arg">verbose</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.management.commands.setup-pysrc.html#Command.import_shape">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Import a shapefile, based on a config.
+
+Parameters:
+    config -- A dictionary with 'shapepath', 'geolevel', 'name_field', and 'subject_fields' keys.
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="create_template"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">create_template</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">config</span>,
+        <span class="sig-arg">verbose</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.management.commands.setup-pysrc.html#Command.create_template">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Create the templates that are defined in the configuration file.
+In addition to creating templates explicitly specified, this
+will also create a blank template for each LegislativeBody.
+
+Parameters:
+    config - The XML configuration.
+    verbose - A flag for outputting messages during the process.
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== CLASS VARIABLE DETAILS ==================== -->
+<a name="section-ClassVariableDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Class Variable Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-ClassVariableDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="help"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">help</h3>
+  
+  <dl class="fields">
+  </dl>
+  <dl class="fields">
+    <dt>Value:</dt>
+      <dd><table><tr><td><pre class="variable">
+'Sets up District Builder based on the main XML configuration.'
+</pre></td></tr></table>
+</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="option_list"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">option_list</h3>
+  
+  <dl class="fields">
+  </dl>
+  <dl class="fields">
+    <dt>Value:</dt>
+      <dd><table><tr><td><pre class="variable">
+BaseCommand.option_list+(make_option('-c', '--config', dest= &quot;config&quot;,<span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
+ help= &quot;Use configuration file CONFIG&quot;, metavar= &quot;CONFIG&quot;), make_optio<span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
+n('-d', '--debug', dest= &quot;debug&quot;, help= &quot;Generate verbose debug output<span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
+&quot;, default= False, action= 'store_true'), make_option('-g', '--geoleve<span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
+l', dest= &quot;geolevels&quot;, action= &quot;append&quot;, help= &quot;Geolevels to import&quot;),<span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
+ make_option('-v', '--views', dest= &quot;views&quot;, default= False, action= &quot;<span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
+store_true&quot;, help= &quot;Create database views.&quot;), make_option('-G', '--geo<span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
+server', dest= &quot;geoserver&quot;, action= &quot;store_true&quot;, help= &quot;Create spatia<span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
+<code class="variable-ellipsis">...</code>
+</pre></td></tr></table>
+</dd>
+  </dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="publicmapping-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a href="http://publicmapping.sf.net">Publicmapping on SourceForge</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Thu Dec 16 09:58:46 2010
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>
