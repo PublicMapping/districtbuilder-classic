@@ -34,6 +34,7 @@ from django.contrib.gis.db.models import Union
 from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
 from django.conf import settings
+from django.db.utils import *
 from optparse import make_option
 from os.path import exists
 from lxml.etree import parse
@@ -575,12 +576,14 @@ ERROR:
                         range2=tconfig.get('range2')) 
 
                     if not targ.get('default') is None:
-                        obj, created = LegislativeDefault.objects.get_or_create(
-                            legislative_body=legislative_body,
-                            target=target
-                        )
-                        obj.save()
-
+                        try:
+                            obj, created = LegislativeDefault.objects.get_or_create(
+                                legislative_body=legislative_body,
+                                target=target
+                            )
+                            obj.save()
+                        except IntegrityError as dupe:
+                            print 'Default target for LegislativeBody "%s" already exists' % legislative_body.name
                         if verbose:
                             if created:
                                 print 'Set default target for LegislativeBody "%s"' % legislative_body.name
@@ -777,7 +780,6 @@ ERROR:
             owner = User.objects.get(is_staff=True)
             legislative_body = LegislativeBody.objects.get(name=lbody.get('name'))
             plan,created = Plan.objects.get_or_create(name='Blank',legislative_body=legislative_body,owner=owner,is_template=True)
-
             if verbose:
                 if created:
                     print 'Created Plan named "Blank" for LegislativeBody "%s"' % legislative_body.name
