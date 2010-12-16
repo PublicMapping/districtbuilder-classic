@@ -990,7 +990,7 @@ class Plan(models.Model):
         # Import each feature in the new plan. 
         # Sort by the district ID field
         for feature in sorted(layer,key=lambda f:int(f.get(idfield))):
-            print '\tImporting "District %s"' % (feature.get(idfield),)
+            print '\tImporting "%s"' % (body.member % (feature.get(idfield),))
 
             # Import only multipolygon shapes
             geom = feature.geom.geos
@@ -1013,7 +1013,7 @@ class Plan(models.Model):
 
             district = District(
                 district_id=int(feature.get(idfield)) + 1,
-                name='District %s' % feature.get(idfield),
+                name=body.member % feature.get(idfield),
                 plan=plan,
                 version=0,
                 geom=geom,
@@ -1086,8 +1086,15 @@ class District(models.Model):
             The Districts, sorted in numerical order.
         """
         name = self.name;
-        if name.startswith('District '):
-            name = name.rsplit(' ', 1)[1]
+        prefix = self.plan.legislative_body.member
+        index = member.find('%')
+        if index >= 0:
+            prefix = prefix[0:index]
+        else:
+            index = 0
+
+        if name.startswith(prefix):
+            name = name[index:]
         if name.isdigit():
             return '%03d' % int(name)
         return name 
