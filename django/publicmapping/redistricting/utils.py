@@ -219,7 +219,7 @@ class DistrictIndexFile():
                 new_simple = new_geom.simplify(tolerance = settings.SIMPLE_TOLERANCE, preserve_topology=True)
 
                 # Create a new district and save it
-                new_district = District(name='District %s' % district_id, 
+                new_district = District(name=legislative_body.member % district_id, 
                     district_id = district_id + 1, plan=plan, 
                     geom=enforce_multi(new_geom), 
                     simple = enforce_multi(new_simple))
