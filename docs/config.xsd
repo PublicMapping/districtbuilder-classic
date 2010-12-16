@@ -15,7 +15,7 @@
                     </xs:annotation>
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element name="LegislativeBody">
+                            <xs:element name="LegislativeBody" minOccurs="1" maxOccurs="unbounded">
                                 <xs:complexType>
                                     <xs:all>
                                         <xs:element name="Description" type="xs:string" maxOccurs="1" minOccurs="0" />
