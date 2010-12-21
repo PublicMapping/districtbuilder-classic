@@ -188,10 +188,10 @@ class DistrictIndexFile():
                 # If the district key is present, add this row's code; 
                 # else make a new list
                 if dist_id in new_districts:
-                    new_districts[dist_id].append(row['code'])
+                    new_districts[dist_id].append(str(row['code']))
                 else:
                     new_districts[dist_id] = list()
-                    new_districts[dist_id].append(row['code'])
+                    new_districts[dist_id].append(str(row['code']))
             except Exception as ex:
                 if email:
                     context['errors'].append({

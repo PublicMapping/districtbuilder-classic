@@ -666,6 +666,22 @@ class Plan(models.Model):
         """
         unique_together = ('name','owner','legislative_body',)
 
+    
+    def targets(self):
+        """
+        Get the targets associated with this plan by stepping back through
+        the legislative body and finding distinct targets for displayed subjects
+        among all the geolevels in the body. This will return a django queryset
+        if successful.
+        """
+        try:
+            levels = LegislativeLevel.objects.filter(legislative_body = self.legislative_body).values('target').distinct()
+            targets = Target.objects.filter(id__in=levels, subject__is_displayed = True)
+            return targets
+        except Exception as ex:
+            sys.stderr.write('Unable to get targets for plan %s: %s' % (self.name, ex))
+            raise ex
+
     @transaction.commit_on_success
     def add_geounits(self, districtid, geounit_ids, geolevel, version):
         """

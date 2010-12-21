@@ -33,8 +33,9 @@
 </script>
 
 {% load humanize %}
+{% load redistricting_extras %}
 <div class="plansummary">
-    <h3>{{ plan.name }}</h3>
+    <h3>{{ plan.name|truncate:"25" }}</h3>
     {% for subject in aggregate %}
     <div><label>{{ subject.name }} {{ subject.target|floatformat|intcomma }}</label> <span id="totalpop" class="value">{{ subject.value|intcomma  }}</span></div>
     {% endfor %}

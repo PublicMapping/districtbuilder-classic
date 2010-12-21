@@ -160,6 +160,7 @@ def commonplan(request, planid):
         # Get the plan and districts in the plan.
         plan = Plan.objects.get(pk=planid)
         plan.edited = getutc(plan.edited)
+        targets = plan.targets()
         districts = plan.get_districts_at_version(plan.version)
         editable = can_edit(request.user, plan)
         default_demo = plan.legislative_body.get_default_subject()
@@ -175,6 +176,7 @@ def commonplan(request, planid):
         sys.stderr.write(traceback.format_exc())
         # If said plan doesn't exist, use an empty plan & district list.
         plan = {}
+        targets = list()
         districts = {}
         editable = False
         default_demo = None
@@ -186,7 +188,6 @@ def commonplan(request, planid):
     snaplayers = []
     boundaries = []
     rules = []
-    targets = Target.objects.all()
     for level in levels:
         snaplayers.append( {'geolevel':level.id,'layer':level.name,'name':level.name.capitalize(),'min_zoom':level.min_zoom} )
         boundaries.append( {'id':'%s_boundaries' % level.name.lower(), 'name':level.name.capitalize()} )
@@ -1006,7 +1007,7 @@ def getgeography(request, planid):
                 stats['compactness'] = district.get_schwartzberg()
 
                 try: 
-                    target = Target.objects.get(subject = subject)
+                    target = plan.targets().get(subject = subject)
                     # The "in there" range
                     range1 = target.value * target.range1
                     # The "out of there" range
@@ -1071,9 +1072,7 @@ def getcompliance(plan):
     compliance.append(contiguity);
 
     #Population targets
-    targets = LegislativeLevel.objects.filter(legislative_body = plan.legislative_body).values('target').distinct().filter(target__subject__is_displayed = True)
-    for value in targets:
-        target = Target.objects.get(pk=value['target'])
+    for target in plan.targets():
         data = { 'name': 'Target Pop.', 'target': target.value, 'value': 'All meet target' } 
         noncompliant = 0
         for district in districts:
@@ -1116,27 +1115,27 @@ def getcompliance(plan):
     return compliance
         
 
-def getaggregate(districts):
-    """
-    Get the aggregate data for the districts. This will aggregate all
-    available subjects for the given districts.
-    
-    Parameters:
-        districts -- A list of districts
-        
-    Returns:
-        Aggregated data based on the districts given and all available subjects
-    """
-    aggregate = []
-    characteristics = ComputedCharacteristic.objects.filter(district__in=districts) 
-    for target in Target.objects.all():
-        data = { 'name': target.subject.short_display } 
-        try:
-            data['value']= "%.0f" % characteristics.filter(subject = target.subject).aggregate(Sum('number'))['number__sum'] 
-        except:
-            data['value']= "Data unavailable" 
-        aggregate.append(data)
-    return aggregate
+#def getaggregate(districts):
+#    """
+#    Get the aggregate data for the districts. This will aggregate all
+#    available subjects for the given districts.
+#    
+#    Parameters:
+#        districts -- A list of districts
+#        
+#    Returns:
+#        Aggregated data based on the districts given and all available subjects
+#    """
+#    aggregate = []
+#    characteristics = ComputedCharacteristic.objects.filter(district__in=districts) 
+#    for target in Target.objects.all():
+#        data = { 'name': target.subject.short_display } 
+#        try:
+#            data['value']= "%.0f" % characteristics.filter(subject = target.subject).aggregate(Sum('number'))['number__sum'] 
+#        except:
+#            data['value']= "Data unavailable" 
+#        aggregate.append(data)
+#    return aggregate
 
 def getcompactness(district):
     """

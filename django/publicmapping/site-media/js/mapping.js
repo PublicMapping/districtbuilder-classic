@@ -482,8 +482,20 @@ function mapinit(srs,maxExtent) {
 
     // Reload the information tabs and reload the filters
     var updateInfoDisplay = function() {
-        $('.geography').load(geourl, {demo: getDistrictBy().by, version: getPlanVersion()}, loadTooltips);
-        $('.demographics').load(demourl, {version: getPlanVersion()}, loadTooltips);
+        $('.geography').load(geourl, {  
+            demo: getDistrictBy().by,
+            version: getPlanVersion()
+        }, function() {
+            loadTooltips();
+            sortByVisibility(true);
+        });            
+
+        $('.demographics').load(demourl, {
+            version: getPlanVersion()
+        }, function() {
+            loadTooltips();
+            sortByVisibility(true);
+        });            
 
         districtLayer.filter = getVersionAndSubjectFilters();
         districtLayer.strategies[0].load();
@@ -924,12 +936,17 @@ function mapinit(srs,maxExtent) {
     * left of those tabs
     */
     var getVisibleBounds = function() {
-        if ($('.map_menu_content:visible').length > 0) {
-            var offset = $('#map_menu_header').position();
-            var bounds = olmap.getExtent();
-            var lonLat = olmap.getLonLatFromPixel(new OpenLayers.Pixel(offset.left, offset.top));
-            bounds.right = lonLat.lon;
-            return bounds;
+        // Checking for visibility sometimes causes OpenLayers unhappiness
+        try {
+            if ($('.map_menu_content:visible').length > 0) {
+                var offset = $('#map_menu_header').position();
+                var bounds = olmap.getExtent();
+                var lonLat = olmap.getLonLatFromPixel(new OpenLayers.Pixel(offset.left, offset.top));
+                bounds.right = lonLat.lon;
+                return bounds;
+            }
+        } catch (exception) {
+            // that's OK - nothing we can do here
         }
         return undefined;
     }
@@ -940,12 +957,15 @@ function mapinit(srs,maxExtent) {
     * info tabs are showing
     */ 
     var featureOnScreen = function(feature, bounds) {
-        if (bounds && feature.geometry) {
-            return feature.geometry.intersects(bounds.toGeometry());
-        } else {
-            return feature.onScreen();
+        try {
+            if (bounds && feature.geometry) {
+                return feature.geometry.intersects(bounds.toGeometry());
+            } else {
+                return feature.onScreen();
+            }
+        } catch (exception) {
+            return false;
         }
-    
     }
 
     // Connect the featuresSelected callback above to the featureselected
@@ -1432,16 +1452,18 @@ function mapinit(srs,maxExtent) {
             if (styleUrl in styleCache) {
                 if (styleCache[styleUrl]) {
                     callbackStyle(styleCache[styleUrl]);
+                    return;
                 }
-                return;
+            } else {
+                styleCache[styleUrl] = false;
             }
-            styleCache[styleUrl] = false;
 
             OpenLayers.Request.GET({
                 url: styleUrl,
                 method: 'GET',
                 callback: function(xhr){
                     var sld = sldFormat.read(xhr.responseXML || xhr.responseText);
+                    styleCache[styleUrl] = sld;
                     callbackStyle(sld);
                 }
             });
@@ -1836,7 +1858,7 @@ function mapinit(srs,maxExtent) {
     * different districts are now visible
     */
     olmap.prevVisibleDistricts = '';
-    var sortByVisibility = function() {
+    var sortByVisibility = function(force) {
         var visibleDistricts = '';
         var visible, notvisible = '';
         for (feature in districtLayer.features) {
@@ -1849,7 +1871,7 @@ function mapinit(srs,maxExtent) {
                 inforow.data('isVisibleOnMap', false);
             }
         }
-        if (visibleDistricts != olmap.prevVisibleDistricts) {
+        if (visibleDistricts != olmap.prevVisibleDistricts || force) {
             var demosorter = viewablesorter({ target: '#demographic_table tbody' }).init();
             var geosorter = viewablesorter({ target: '#geography_table tbody' }).init();
             demosorter.sortTable();
