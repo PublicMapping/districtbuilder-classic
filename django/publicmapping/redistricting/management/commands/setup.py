@@ -35,6 +35,7 @@ from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
 from django.conf import settings
 from django.db.utils import *
+from django.utils import simplejson as json
 from optparse import make_option
 from os.path import exists
 from lxml.etree import parse
@@ -143,103 +144,117 @@ contents of the file and try again.
         user_pass = '%s:%s' % (mapconfig.get('adminuser'), mapconfig.get('adminpass'))
         auth = 'Basic %s' % string.strip(base64.encodestring(user_pass))
         headers = {'Authorization': auth, 'Content-Type': 'application/xml', 'Accepts':'application/xml'}
+        json_headers = {'Authorization': auth, 'Content-Type': 'application/json', 'Accepts':'application/json'}
 
-        if not self.rest_config( 'POST', host, 
-            '/geoserver/rest/namespaces',
-            '<?xml version="1.0" encoding="UTF-8"?><namespace><prefix>%s</prefix><uri>%s</uri></namespace>' % (namespace, namespacehref),
-            headers,
-            'Could not create workspace in geoserver.'):
-            return False
+        def create_geoserver_object_if_necessary(url, name, dictionary, type_name=None):
+            """ 
+            This method will check geoserver for the existence of an object.
+            It will create the object if it doesn't exist and let the user
+            know the outcome via the print() statement
+            """
+            verbose_name = '%s:%s' % ('Geoserver object' if type_name is None else type_name, name)
+            if self.rest_check(host,'%s/%s.json' % (url, name), json_headers):
+                if verbose:
+                    print "%s already exists" % verbose_name
+            else:
+                if not self.rest_config( 'POST', host, url, json.dumps(dictionary), json_headers, 'Could not create %s' % verbose_name):
+                    return False
 
-        if verbose:
-            print "Created geoserver workspace and namespace."
+                if verbose:
+                    print 'Created %s' % verbose_name
 
+        # Create our namespace
+        namespace_url = '/geoserver/rest/namespaces'
+        namespace_obj = { 'namespace': { 'prefix': namespace, 'uri': namespacehref } }
+        create_geoserver_object_if_necessary(namespace_url, namespace, namespace_obj, 'Namespace')
+
+        # Create our DataStore
         dbconfig = config.xpath('//Database')[0]
-        dbconn = '<connectionParameters><host>%s</host><port>5432</port><database>%s</database><user>%s</user><passwd>%s</passwd><dbtype>postgis</dbtype><namespace>%s</namespace><schema>%s</schema></connectionParameters>' % (host, dbconfig.get('name'), dbconfig.get('user'), dbconfig.get('password'), namespacehref, dbconfig.get('user'))
 
-        datastore = 'PostGIS'
-        if not self.rest_config( 'POST', host,
-            '/geoserver/rest/workspaces/%s/datastores' % namespace,
-            '<?xml version="1.0" encoding="UTF-8"?><dataStore><name>%s</name>%s</dataStore>' % (datastore, dbconn),
-            headers,
-            'Could not add PostGIS data store to geoserver.'):
-            return False
+        data_store_url = '/geoserver/rest/workspaces/%s/datastores' % namespace
+        data_store_name = 'PostGIS'
 
-        if verbose:
-            print "Created geoserver PostGIS data store."
+        dbconn_obj = {
+            'host': host,
+            'port': 5432,
+            'database': dbconfig.get('name'),
+            'user': dbconfig.get('user'),
+            'passwd': dbconfig.get('password'),
+            'dbtype': 'postgis',
+            'namespace': namespace,
+            'schema': dbconfig.get('user')
+        }
+        data_store_obj = {'dataStore': {
+             'name': data_store_name,
+             'connectionParameters': dbconn_obj
+        } }
 
-        if not self.rest_config( 'POST', host,
-            '/geoserver/rest/workspaces/%s/datastores/%s/featuretypes' % (namespace, datastore),
-            '<?xml version="1.0" encoding="UTF-8"?><featureType><name>identify_geounit</name><title>identify_geounit</title><nativeBoundingBox><minx>%0.1f</minx><miny>%0.1f</miny><maxx>%0.1f</maxx><maxy>%0.1f</maxy></nativeBoundingBox><maxFeatures>%d</maxFeatures></featureType>' % (extent[0], extent[1], extent[2], extent[3], settings.FEATURE_LIMIT + 1),
-            headers,
-            'Could not create "identify_geounit" layer.'):
-            return False
+        create_geoserver_object_if_necessary(data_store_url, data_store_name, data_store_obj, 'Data Store')
 
-        if verbose:
-            print "Created 'identify_geounit' layer."
+        # Create the identify, simple, and demographic layers
+        def get_feature_type_obj (name, extent, title=None):
+            feature_type_obj = { 'featureType': {
+                'name': name,
+                'title': name if title is None else title,
+                'nativeBoundingBox': {
+                    'minx': '%0.1f' % extent[0],
+                    'miny': '%0.1f' % extent[1],
+                    'maxx': '%0.1f' % extent[2],
+                    'maxy': '%0.1f' % extent[3]
+                },
+                'maxFeatures': settings.FEATURE_LIMIT + 1
+            } }
+            return feature_type_obj
 
-        if not self.rest_config( 'POST', host,
-            '/geoserver/rest/workspaces/%s/datastores/%s/featuretypes' % (namespace, datastore),
-            '<?xml version="1.0" encoding="UTF-8"?><featureType><name>simple_district</name><title>simple_district</title><nativeBoundingBox><minx>%0.1f</minx><miny>%0.1f</miny><maxx>%0.1f</maxx><maxy>%0.1f</maxy></nativeBoundingBox><maxFeatures>%d</maxFeatures></featureType>' % (extent[0], extent[1], extent[2], extent[3], settings.FEATURE_LIMIT + 1),
-            headers,
-            'Could not create "simple_district" layer.'):
-            return False
-
-        if verbose:
-            print "Created 'simple_district' layer."
-
+        # Make a list of layers
+        feature_type_names = ['identify_geounit', 'simple_district']
         for geolevel in Geolevel.objects.all():
-            if not self.rest_config( 'POST', host,
-                '/geoserver/rest/workspaces/%s/datastores/%s/featuretypes' % (namespace, datastore),
-                '<?xml version="1.0" encoding="UTF-8"?><featureType><name>simple_%s</name><title>simple_%s</title><nativeBoundingBox><minx>%0.1f</minx><miny>%0.1f</miny><maxx>%0.1f</maxx><maxy>%0.1f</maxy></nativeBoundingBox><maxFeatures>%d</maxFeatures></featureType>' % (geolevel.name, geolevel.name, extent[0], extent[1], extent[2], extent[3], settings.FEATURE_LIMIT + 1),
-                headers,
-                'Could not create picking layer "simple_%s".' % geolevel.name):
-                return False
+            feature_type_names.append('simple_%s' % geolevel.name)
 
-            if verbose:
-                print "Created 'simple_%s' layer." % geolevel.name
+            for subject in Subject.objects.all():
+                feature_type_names.append('demo_%s_%s' % (geolevel.name, subject.name))
 
+        # Check for each layer in the list.  If it doesn't exist, make it
+        feature_type_url = '/geoserver/rest/workspaces/%s/datastores/%s/featuretypes' % (namespace, data_store_name)
+        for feature_type_name in feature_type_names:
+            feature_type_obj = get_feature_type_obj(feature_type_name, extent)
+            create_geoserver_object_if_necessary(feature_type_url, feature_type_name, feature_type_obj, 'Feature Type')
+
+        # Create the styles for the demographic layers
+        for geolevel in Geolevel.objects.all():
             styledir = mapconfig.get('styles')
 
             firstsubj = True
             for subject in Subject.objects.all():
-                if not self.rest_config( 'POST', host,
-                    '/geoserver/rest/workspaces/%s/datastores/%s/featuretypes' % (namespace, datastore),
-                    '<?xml version="1.0" encoding="UTF-8"?><featureType><name>demo_%s_%s</name><title>demo_%s_%s</title><nativeBoundingBox><minx>%0.1f</minx><miny>%0.1f</miny><maxx>%0.1f</maxx><maxy>%0.1f</maxy></nativeBoundingBox><maxFeatures>%d</maxFeatures></featureType>' % (geolevel.name, subject.name, geolevel.name, subject.name, extent[0], extent[1], extent[2], extent[3], settings.FEATURE_LIMIT + 1),
-                    headers,
-                    "Could not create demographic layer 'demo_%s_%s'" % (geolevel.name, subject.name)):
-                    return False
-
-                if verbose:
-                    print "Created 'demo_%s_%s' layer." % (geolevel.name, subject.name)
-
                 sld = self.get_style_contents( styledir, 
                     geolevel.name, 
                     subject.name)
                 if sld is None:
                     return False
 
-                if not self.rest_config( 'POST', host,
-                    '/geoserver/rest/styles',
-                    '<?xml version="1.0" encoding="UTF-8"?><style><name>%s_%s</name><filename>%s_%s.sld</filename></style>' % (geolevel.name, subject.name, geolevel.name, subject.name),
-                    headers,
-                    "Could not create style '%s_%s'." % (geolevel.name, subject.name)):
-                    return False
+                style_url = '/geoserver/rest/styles'
+                style_name = '%s_%s' % (geolevel.name, subject.name)
+                style_obj = { 'style': {
+                    'name': style_name,
+                    'filename': '%s.sld' % style_name
+                } }
 
-                if verbose:
-                    print "Created '%s_%s' style." % (geolevel.name, subject.name)
-
+                # Create the style object on the geoserver
+                create_geoserver_object_if_necessary(style_url, style_name, style_obj, 'Map Style')
                 headers['Content-Type'] = 'application/vnd.ogc.sld+xml'
+
+                # Update the style with the sld file contents
                 if not self.rest_config( 'PUT', host,
-                    '/geoserver/rest/styles/%s_%s' % (geolevel.name, subject.name),
+                    '/geoserver/rest/styles/%s' % style_name,
                     sld,
                     headers,
-                    "Could not upload style file '%s_%s.sld'" % (geolevel.name, subject.name)):
+                    "Could not upload style file '%s.sld'" % style_name):
                     return False
 
                 if verbose:
-                    print "Uploaded '%s_%s.sld' file." % (geolevel.name, subject.name)
+                    print "Uploaded '%s.sld' file." % style_name
 
+                # Apply the uploaded style to the demographic layers
                 headers['Content-Type'] = 'application/xml'
                 if not self.rest_config( 'PUT', host,
                     '/geoserver/rest/layers/%s:demo_%s_%s' % (namespace, geolevel.name, subject.name),
@@ -253,20 +268,13 @@ contents of the file and try again.
 
 
                 if firstsubj:
-                    firstsubj = False
                     #
                     # Create NONE demographic layer, based on first subject
                     #
-                    if not self.rest_config( 'POST', host,
-                        '/geoserver/rest/workspaces/%s/datastores/%s/featuretypes' % (namespace, datastore),
-                        '<?xml version="1.0" encoding="UTF-8"?><featureType><name>demo_%s</name><title>demo_%s</title><nativeName>demo_%s_%s</nativeName><nativeBoundingBox><minx>%0.1f</minx><miny>%0.1f</miny><maxx>%0.1f</maxx><maxy>%0.1f</maxy></nativeBoundingBox><maxFeatures>%d</maxFeatures></featureType>' % (geolevel.name, geolevel.name, geolevel.name, subject.name, extent[0], extent[1], extent[2], extent[3], settings.FEATURE_LIMIT + 1),
-                        headers,
-                        "Could not create demographic layer 'demo_%s'" % geolevel.name):
-                        return False
-
-                    if verbose:
-                        print "Created 'demo_%s' layer." % geolevel.name
-
+                    feature_type_obj = get_feature_type_obj('demo_%s' % geolevel.name, extent)
+                    feature_type_obj['featureType']['nativeName'] = 'demo_%s_%s' % (geolevel.name, subject.name)
+                    create_geoserver_object_if_necessary(feature_type_url, 'demo_%s' % geolevel.name, feature_type_obj, 'Feature Type')
+                    firstsubj = False
                     sld = self.get_style_contents( styledir, 
                         geolevel.name, 
                         'none' )
@@ -309,7 +317,7 @@ contents of the file and try again.
                     # Create boundary layer, based on geographic boundaries
                     #
                     if not self.rest_config( 'POST', host,
-                        '/geoserver/rest/workspaces/%s/datastores/%s/featuretypes' % (namespace, datastore),
+                        '/geoserver/rest/workspaces/%s/datastores/%s/featuretypes' % (namespace, data_store_name),
                         '<?xml version="1.0" encoding="UTF-8"?><featureType><name>%s_boundaries</name><title>%s_boundaries</title><nativeName>demo_%s_%s</nativeName><nativeBoundingBox><minx>%0.1f</minx><miny>%0.1f</miny><maxx>%0.1f</maxx><maxy>%0.1f</maxy></nativeBoundingBox><maxFeatures>%d</maxFeatures></featureType>' % (geolevel.name, geolevel.name, geolevel.name, subject.name, extent[0], extent[1], extent[2], extent[3], settings.FEATURE_LIMIT + 1),
                         headers,
                         "Could not create boundary layer '%s_boundaries'" % geolevel.name):
@@ -377,8 +385,20 @@ ERROR:
 """ % path
             return None
 
+    def rest_check(self, host, url, headers):
+        try:
+            conn = httplib.HTTPConnection(host, 8080)
+            conn.request('GET', url, None, headers)
+            rsp = conn.getresponse()
+            rsp.read() # and discard
+            conn.close()
+            return rsp.status == 200
+        except:
+            return False
+
     def rest_config(self, method, host, url, data, headers, msg):
         try:
+            # print('url: %s; data: %s' % (url, data))
             conn = httplib.HTTPConnection(host, 8080)
             conn.request(method, url, data, headers)
             rsp = conn.getresponse()
