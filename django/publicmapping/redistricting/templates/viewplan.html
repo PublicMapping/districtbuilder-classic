@@ -65,6 +65,10 @@
         // The most current version of the plan. When viewing a plan,
         // the most current plan version is initially displayed.
         var PLAN_VERSION = {% if plan %}{{ plan.version }}{% else %}0{% endif %};
+        // The history tree. This gets populated as the user walks
+        // backward in the history.
+        var PLAN_HISTORY = {};
+
         // The id of the special 'unassigned' district.
         var UNASSIGNED_DISTRICT_ID = {% if unassigned_id %}{{ unassigned_id }}{% else %}0{% endif %};
         // An array of configuration settings for the layers that are

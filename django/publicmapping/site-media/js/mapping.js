@@ -84,11 +84,8 @@ function getDistrictBy() {
  * Get the value of the history cursor.
  */
 function getPlanVersion() {
-    /* While history is disabled, this simply returns the plan version
-    from the view
     var ver = $('#history_cursor').val();
     return ver;
-    */ return PLAN_VERSION;
 }
 
 
@@ -237,6 +234,9 @@ function init() {
         OpenLayers.ProxyHost= "/proxy?url=";
         url = OpenLayers.ProxyHost + encodeURIComponent(url);
     }
+
+    // set the version cursor
+    $('#history_cursor').val(PLAN_VERSION);
 
     $.ajax({
         url: url,
@@ -1187,6 +1187,72 @@ function mapinit(srs,maxExtent) {
         });
         compactnessAvg = getCompactnessAvg(sorted);
 
+        // get the maximum version of all districts. If walking backward,
+        // it may be possible that the version you requested (let's say
+        // you requested version 3 of a plan) doesn't have any districts.
+        // This will happen if a user performs many undo steps, then edits
+        // the plan. In this case, the maximum version will be LESS than
+        // the version requested.
+        //
+        // Also, populate the 'Assigning Tools' dropdown with the list
+        // of current districts.
+        var max_version = 0;
+        $('#assign_district option').detach();
+        $('#assign_district')
+            .append('<option value="-1">-- Select One --</option>')
+            .append('<option value="1">Unassigned</option>');
+        for (var dist in districtLayer.features) {
+            var district = districtLayer.features[dist];
+            max_version = Math.max(district.attributes.version,max_version);
+            if (district.attributes.name != 'Unassigned') {
+                $('#assign_district')
+                    .append('<option value="' + district.attributes.district_id + '">' + district.attributes.name + '</option>');
+            }
+        }
+        if ($('#assign_district option').length < MAX_DISTRICTS + 1) {
+
+            $('#assign_district')
+                .append('<option value="new">New ' + BODY_MEMBER + '</option>');
+        }
+
+        var all_options = $('#assign_district option').detach();
+        // sort the options
+        all_options.sort(function(a,b){
+            if (a.value == 'new') {
+                return 1;
+            } else if (b.value == 'new') {
+                return -1;
+            } else {
+                return parseInt(a.value,10) > parseInt(b.value,10);
+            }
+        });
+        all_options.appendTo('#assign_district');
+
+        $('#assign_district').val(-1);
+
+        // set the version cursor to the max version. In situations where
+        // there has been an edit on an undo, the version cursor in not
+        // continuous across all versions of the plan.
+        var cursor = $('#history_cursor');
+        var cval = cursor.val();
+        if (cval != max_version) {
+            // Purge all versions that are in the history that are missing.
+            // You can get here after editing a plan for a while, then
+            // performing some undos, then editing again. You will be
+            // bumped up to the latest version of the plan, but there will
+            // be 'phantom' versions between the undo version basis and the
+            // current plan version.
+            while (cval > max_version) {
+                delete PLAN_HISTORY[cval--];
+            }
+        }
+        PLAN_HISTORY[max_version] = true;
+        cursor.val(max_version);
+
+        if (max_version == 0) {
+            $('#history_undo').addClass('disabled');
+        }
+
         var working = $('#working');
         if (working.dialog('isOpen')) {
             working.dialog('close');
@@ -1694,6 +1760,8 @@ function mapinit(srs,maxExtent) {
         var ver = cursor.val();
         if (ver > 0) {
             ver--;
+            PLAN_HISTORY[ver] = true;
+
             if (ver == 0) {
                 $(this).addClass('disabled');
             }
@@ -1711,6 +1779,9 @@ function mapinit(srs,maxExtent) {
         var ver = cursor.val();
         if (ver < PLAN_VERSION) {
             ver++;
+            while (!(ver in PLAN_HISTORY)) {
+                ver++;
+            }
             if (ver == PLAN_VERSION) {
                 $(this).addClass('disabled');
             }
@@ -1729,23 +1800,6 @@ function mapinit(srs,maxExtent) {
     */
     var createNewDistrict = function() {
         if (selection.features.length == 0) {
-            $('#assign_district').val('-1');
-            return;
-        }
-
-        if (getPlanVersion() != PLAN_VERSION) {
-            // unsupported at this time is creating a district based
-            // of a previous version of the plan. Inform the user.
-            $('<div id="nonewdistrictdialog">Districts may only be created from the most current plan at this time.</div>').dialog({
-                modal: true,
-                autoOpen: true,
-                title: 'Sorry',
-                buttons: { 
-                    'OK': function() {
-                        $('#nonewdistrictdialog').remove();
-                    }
-                }
-            });
             $('#assign_district').val('-1');
             return;
         }
@@ -1780,33 +1834,6 @@ function mapinit(srs,maxExtent) {
                     // perform an undo now, but not a redo
                     $('#history_redo').addClass('disabled');
                     $('#history_undo').removeClass('disabled');
-
-                    // add the new district entry to the list
-                    $('#assign_district').append('<option value="' + data.district_id + '">' + data.district_name + '</option>');
-
-                    // detach the list of districts from the DOM
-                    var all_options = $('#assign_district option').detach();
-
-                    // sort the options
-                    all_options.sort(function(a,b){
-                        if (a.value == 'new') {
-                            return 1;
-                        } else if (b.value == 'new') {
-                            return -1;
-                        } else {
-                            return parseInt(a.value,10) > parseInt(b.value,10);
-                        }
-                    });
-                    // attach the options back to the DOM (in order, now)
-                    all_options.appendTo('#assign_district');
-
-                    // if max # of districts has been reached, remove the
-                    // 'New District' option
-                    if (all_options.length > (MAX_DISTRICTS + 1 /* --select-- */ )) {
-                        // the second to last item will be 'new', the last
-                        // item will be the option just added
-                        all_options.filter('option[value=new]').remove();
-                    }
 
                     updateInfoDisplay();
 

@@ -156,9 +156,9 @@ def commonplan(request, planid):
     Returns:
         A python dict with common plan attributes set to the plan's values.
     """
-    try:
-        # Get the plan and districts in the plan.
-        plan = Plan.objects.get(pk=planid)
+    plan = Plan.objects.filter(id=planid)
+    if plan.count() == 1:
+        plan = plan[0]   
         plan.edited = getutc(plan.edited)
         targets = plan.targets()
         districts = plan.get_districts_at_version(plan.version)
@@ -172,8 +172,7 @@ def commonplan(request, planid):
             body_member = body_member[0:index]
         if not editable and not can_view(request.user, plan):
             plan = {}
-    except Exception, ex:
-        sys.stderr.write(traceback.format_exc())
+    else:
         # If said plan doesn't exist, use an empty plan & district list.
         plan = {}
         targets = list()

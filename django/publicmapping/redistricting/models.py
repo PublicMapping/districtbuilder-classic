@@ -713,6 +713,10 @@ class Plan(models.Model):
         # Get the districts in this plan, at the specified version.
         districts = self.get_districts_at_version(int(version))
 
+        # purge any districts between the version provided
+        # and the latest version
+        District.objects.filter(plan=self,version__gt=version).delete()
+
         # First, remove the aggregate values from districts that are
         # not the target, and intersect the geounits provided
         for district in districts:
@@ -721,8 +725,6 @@ class Plan(models.Model):
                 target = district
                 continue
 
-            # if this district does not overlap the selection or
-            # if this district does not contain the selection
             if not (district.geom and (district.geom.overlaps(incremental) or district.geom.contains(incremental) or 
             district.geom.within(incremental))):
                 # if this district has later edits, REVERT them to
