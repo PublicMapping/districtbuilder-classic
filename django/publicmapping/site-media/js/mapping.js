@@ -1848,7 +1848,7 @@ function mapinit(srs,maxExtent) {
         // that are already in the plan
         var options = $('#assign_district')[0].options;
         var avail = []
-        for (var d = 1; d <= MAX_DISTRICTS; d++) {
+        for (var d = 1; d < MAX_DISTRICTS; d++) {
             var dtaken = false;
             for (var o = 0; o < options.length && !dtaken; o++) {
                 dtaken = dtaken || ( options[o].text == BODY_MEMBER + d)
