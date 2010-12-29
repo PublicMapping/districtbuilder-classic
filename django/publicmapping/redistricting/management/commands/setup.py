@@ -143,21 +143,25 @@ contents of the file and try again.
 
         user_pass = '%s:%s' % (mapconfig.get('adminuser'), mapconfig.get('adminpass'))
         auth = 'Basic %s' % string.strip(base64.encodestring(user_pass))
-        headers = {'Authorization': auth, 'Content-Type': 'application/xml', 'Accepts':'application/xml'}
-        json_headers = {'Authorization': auth, 'Content-Type': 'application/json', 'Accepts':'application/json'}
+        headers = {'Authorization': auth, 'Content-Type': 'application/json', 'Accepts':'application/json'}
 
-        def create_geoserver_object_if_necessary(url, name, dictionary, type_name=None):
+        def create_geoserver_object_if_necessary(url, name, dictionary, type_name=None, update=False):
             """ 
             This method will check geoserver for the existence of an object.
             It will create the object if it doesn't exist and let the user
             know the outcome via the print() statement
             """
             verbose_name = '%s:%s' % ('Geoserver object' if type_name is None else type_name, name)
-            if self.rest_check(host,'%s/%s.json' % (url, name), json_headers):
+            if self.rest_check(host,'%s/%s.json' % (url, name), headers):
                 if verbose:
                     print "%s already exists" % verbose_name
+                if update:
+                    if not self.rest_config( 'PUT', host, url, json.dumps(dictionary), headers, 'Could not create %s' % verbose_name):
+                        print "%s couldn't be updated." % verbose_name
+                        return False
+                    
             else:
-                if not self.rest_config( 'POST', host, url, json.dumps(dictionary), json_headers, 'Could not create %s' % verbose_name):
+                if not self.rest_config( 'POST', host, url, json.dumps(dictionary), headers, 'Could not create %s' % verbose_name):
                     return False
 
                 if verbose:
@@ -221,150 +225,92 @@ contents of the file and try again.
             create_geoserver_object_if_necessary(feature_type_url, feature_type_name, feature_type_obj, 'Feature Type')
 
         # Create the styles for the demographic layers
+        styledir = mapconfig.get('styles')
+        style_url = '/geoserver/rest/styles'
+
+        sld_headers = {
+            'Authorization': auth,
+            'Content-Type': 'application/vnd.ogc.sld+xml',
+            'Accepts':'application/xml'
+        }
+
         for geolevel in Geolevel.objects.all():
-            styledir = mapconfig.get('styles')
+            is_first_subject = True
 
-            firstsubj = True
             for subject in Subject.objects.all():
-                sld = self.get_style_contents( styledir, 
-                    geolevel.name, 
-                    subject.name)
-                if sld is None:
-                    return False
 
-                style_url = '/geoserver/rest/styles'
-                style_name = '%s_%s' % (geolevel.name, subject.name)
-                style_obj = { 'style': {
-                    'name': style_name,
-                    'filename': '%s.sld' % style_name
-                } }
+                # This helper method is used for each layer
+                def publish_and_assign_style(style_name, style_type):
+                    """
+                    A method to assist in publishing styles to geoserver and configuring the layers
+                    to have a default style
+                    """
 
-                # Create the style object on the geoserver
-                create_geoserver_object_if_necessary(style_url, style_name, style_obj, 'Map Style')
-                headers['Content-Type'] = 'application/vnd.ogc.sld+xml'
+                    if not style_type:
+                        style_type = subject.name
+                    if not style_name:
+                        style_name = 'demo_%s_%s' % (geolevel.name, subject.name)
 
-                # Update the style with the sld file contents
-                if not self.rest_config( 'PUT', host,
-                    '/geoserver/rest/styles/%s' % style_name,
-                    sld,
-                    headers,
-                    "Could not upload style file '%s.sld'" % style_name):
-                    return False
+                    style_obj = { 'style': {
+                        'name': style_name,
+                        'filename': '%s.sld' % style_name
+                    } }
 
-                if verbose:
-                    print "Uploaded '%s.sld' file." % style_name
+                    # Get the SLD file
+                    sld = self.get_style_contents( styledir, geolevel.name, style_type )
 
-                # Apply the uploaded style to the demographic layers
-                headers['Content-Type'] = 'application/xml'
-                if not self.rest_config( 'PUT', host,
-                    '/geoserver/rest/layers/%s:demo_%s_%s' % (namespace, geolevel.name, subject.name),
-                    '<?xml version="1.0" encoding="UTF-8"?><layer><defaultStyle><name>%s_%s</name></defaultStyle><enabled>true</enabled></layer>' % (geolevel.name, subject.name),
-                    headers,
-                    "Could not assign style '%s_%s' to layer 'demo_%s_%s'." % (geolevel.name, subject.name, geolevel.name, subject.name)):
-                    return False
+                    if sld is None:
+                        print 'No style file found for %s' % style_name
+                        return False
 
-                if verbose:
-                    print "Assigned style '%s_%s' to layer 'demo_%s_%s'." % (geolevel.name, subject.name, geolevel.name, subject.name)
+                    # Create the style object on the geoserver
+                    create_geoserver_object_if_necessary(style_url, style_name, style_obj, 'Map Style')
+
+                    # Update the style with the sld file contents
+
+                    self.rest_config( 'PUT', host, '/geoserver/rest/styles/%s' % style_name, sld, \
+                        sld_headers, "Could not upload style file '%s.sld'" % style_name)
+
+                    if verbose:
+                        print "Uploaded '%s.sld' file." % style_name
+
+                    # Apply the uploaded style to the demographic layers
+                    layer = { 'layer' : {
+                        'defaultStyle': {
+                            'name': style_name
+                        },
+                        'enabled': True
+                    } }
+
+                    
+                    if not self.rest_config( 'PUT', host, '/geoserver/rest/layers/%s:%s' % (namespace, style_name), \
+                        json.dumps(layer), headers, "Could not assign style to layer '%s'." % style_name):
+                            return False
+
+                    if verbose:
+                        print "Assigned style '%s' to layer '%s'." % (style_name, style_name )
 
 
-                if firstsubj:
-                    #
+                # Create the style for the demographic layer
+                publish_and_assign_style(None, None)
+
+                if is_first_subject:
+                    is_first_subject = False
+
                     # Create NONE demographic layer, based on first subject
-                    #
                     feature_type_obj = get_feature_type_obj('demo_%s' % geolevel.name, extent)
                     feature_type_obj['featureType']['nativeName'] = 'demo_%s_%s' % (geolevel.name, subject.name)
                     create_geoserver_object_if_necessary(feature_type_url, 'demo_%s' % geolevel.name, feature_type_obj, 'Feature Type')
-                    firstsubj = False
-                    sld = self.get_style_contents( styledir, 
-                        geolevel.name, 
-                        'none' )
-                    if sld is None:
-                        return False
+                    publish_and_assign_style('demo_%s' % geolevel.name, 'none')
 
-                    if not self.rest_config( 'POST', host,
-                        '/geoserver/rest/styles',
-                        '<?xml version="1.0" encoding="UTF-8"?><style><name>%s_none</name><filename>%s_none.sld</filename></style>' % (geolevel.name, geolevel.name),
-                        headers,
-                        "Could not create style '%s_none'." % geolevel.name):
-                        return False
-
-                    if verbose:
-                        print "Created style '%s_none'." % geolevel.name
-
-                    headers['Content-Type'] = 'application/vnd.ogc.sld+xml'
-                    if not self.rest_config( 'PUT', host,
-                        '/geoserver/rest/styles/%s_none' % geolevel.name,
-                        sld,
-                        headers,
-                        "Could not upload style file '%s_none.sld'" % geolevel.name):
-                        return False
-
-                    if verbose:
-                        print "Uploaded '%s_none.sld' file." % geolevel.name
-
-                    headers['Content-Type'] = 'application/xml'
-                    if not self.rest_config( 'PUT', host,
-                        '/geoserver/rest/layers/%s:demo_%s' % (namespace, geolevel.name),
-                        '<?xml version="1.0" encoding="UTF-8"?><layer><defaultStyle><name>%s_none</name></defaultStyle><enabled>true</enabled></layer>' % geolevel.name,
-                        headers,
-                        "Could not assign style '%s_none' to layer 'demo_%s'." % (geolevel.name, geolevel.name)):
-                        return False
-
-                    if verbose:
-                        print "Assigned style '%s_none' to layer 'demo_%s'." % (geolevel.name, geolevel.name)
-
-                    #
                     # Create boundary layer, based on geographic boundaries
-                    #
-                    if not self.rest_config( 'POST', host,
-                        '/geoserver/rest/workspaces/%s/datastores/%s/featuretypes' % (namespace, data_store_name),
-                        '<?xml version="1.0" encoding="UTF-8"?><featureType><name>%s_boundaries</name><title>%s_boundaries</title><nativeName>demo_%s_%s</nativeName><nativeBoundingBox><minx>%0.1f</minx><miny>%0.1f</miny><maxx>%0.1f</maxx><maxy>%0.1f</maxy></nativeBoundingBox><maxFeatures>%d</maxFeatures></featureType>' % (geolevel.name, geolevel.name, geolevel.name, subject.name, extent[0], extent[1], extent[2], extent[3], settings.FEATURE_LIMIT + 1),
-                        headers,
-                        "Could not create boundary layer '%s_boundaries'" % geolevel.name):
-                        return False
+                    feature_name = '%s_boundaries' % geolevel.name
+                    feature_type_obj = get_feature_type_obj(feature_name , extent)
+                    feature_type_obj['featureType']['nativeName'] = 'demo_%s_%s' % (geolevel.name, subject.name)
+                    create_geoserver_object_if_necessary(feature_type_url, feature_name, feature_type_obj, 'Feature Type')
+                    publish_and_assign_style('%s_boundaries' % geolevel.name, 'boundaries')
 
-                    if verbose:
-                        print "Created '%s_boundaries' layer." % geolevel.name
-
-                    sld = self.get_style_contents( styledir, 
-                        geolevel.name, 
-                        'boundaries' )
-                    if sld is None:
-                        return False
-
-                    if not self.rest_config( 'POST', host,
-                        '/geoserver/rest/styles',
-                        '<?xml version="1.0" encoding="UTF-8"?><style><name>%s_boundaries</name><filename>%s_boundaries.sld</filename></style>' % (geolevel.name, geolevel.name),
-                        headers,
-                        "Could not create style '%s_boundaries'." % geolevel.name):
-                        return False
-
-                    if verbose:
-                        print "Created style '%s_boundaries'." % geolevel.name
-
-                    headers['Content-Type'] = 'application/vnd.ogc.sld+xml'
-                    if not self.rest_config( 'PUT', host,
-                        '/geoserver/rest/styles/%s_boundaries' % geolevel.name,
-                        sld,
-                        headers,
-                        "Could not upload style file '%s_boundaries.sld'" % geolevel.name):
-                        return False
-
-                    if verbose:
-                        print "Uploaded '%s_boundaries.sld' file." % geolevel.name
-
-                    headers['Content-Type'] = 'application/xml'
-                    if not self.rest_config( 'PUT', host,
-                        '/geoserver/rest/layers/%s:%s_boundaries' % (namespace, geolevel.name),
-                        '<?xml version="1.0" encoding="UTF-8"?><layer><defaultStyle><name>%s_boundaries</name></defaultStyle><enabled>true</enabled></layer>' % geolevel.name,
-                        headers,
-                        "Could not assign style '%s_boundaries' to layer '%s_boundaries'." % (geolevel.name, geolevel.name)):
-                        return False
-
-                    if verbose:
-                        print "Assigned style '%s_boundaries' to layer '%s_boundaries'." % (geolevel.name, geolevel.name)
-
-
+        # finished configure_geoserver
         return True
 
     def get_style_contents(self, styledir, geolevel, subject):
