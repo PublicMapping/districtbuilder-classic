@@ -96,30 +96,6 @@ var geourl = '/districtmapping/plan/' + PLAN_ID + '/geography';
 var demourl = '/districtmapping/plan/' + PLAN_ID + '/demographics';
 
 /**
- * Get the OpenLayers filters that describe the version and subject
- * criteria for the district layer.
- */
-function getVersionAndSubjectFilters() {
-    var dby = getDistrictBy();
-    var ver = getPlanVersion();
-    return new OpenLayers.Filter.Logical({
-        type: OpenLayers.Filter.Logical.AND,
-        filters: [
-            new OpenLayers.Filter.Comparison({
-                type: OpenLayers.Filter.Comparison.EQUAL_TO,
-                property: 'version',
-                value: ver
-            }),
-            new OpenLayers.Filter.Comparison({
-                type: OpenLayers.Filter.Comparison.EQUAL_TO,
-                property: 'subject',
-                value: dby.by
-            })
-        ]
-    });
-}
-
-/**
  * Add proper class names so css may style the PanZoom controls.
  */
 function doMapStyling() {
@@ -339,7 +315,7 @@ function mapinit(srs,maxExtent) {
     // The strategy for loading the districts. This is effectively
     // a manual refresh, with no automatic reloading of district
     // boundaries except when explicitly loaded.
-    var districtStrategy = new OpenLayers.Strategy.Fixed();
+    var districtStrategy = new OpenLayers.Strategy.BBOX({ratio:2});
 
     // The style for the districts. This serves as the base
     // style for all rules that apply to the districtLayer
@@ -356,6 +332,61 @@ function mapinit(srs,maxExtent) {
         fontWeight: '800',
         labelAlign: 'cm'
     };
+
+    /**
+     * Get information about the snap layer that should be used, according
+     * to the current zoom level.
+     */
+    var getSnapLayer = function() {
+        var zoom = 0;
+        if (typeof(olmap) != 'undefined') {
+            zoom = olmap.zoom;
+        }
+        var min_layer = { min_zoom: -1 };
+        for (var i in SNAP_LAYERS) {
+            var snap_layer = SNAP_LAYERS[i];
+            var my_min = snap_layer.min_zoom;
+            if (zoom >= my_min && my_min > min_layer.min_zoom) {
+                min_layer = snap_layer;
+            }
+        }
+        return { layer: min_layer.layer, level:min_layer.level, display:min_layer.name, geolevel: min_layer.geolevel };
+    }
+
+    /**
+     * Get the OpenLayers filters that describe the version and subject
+     * criteria for the district layer.
+     */
+    var getVersionAndSubjectFilters = function(extent) {
+        var dby = getDistrictBy();
+        var ver = getPlanVersion();
+        var lyr = getSnapLayer();
+        return new OpenLayers.Filter.Logical({
+            type: OpenLayers.Filter.Logical.AND,
+            filters: [
+                new OpenLayers.Filter.Comparison({
+                    type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                    property: 'version',
+                    value: ver
+                }),
+                new OpenLayers.Filter.Comparison({
+                    type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                    property: 'subject',
+                    value: dby.by
+                }),
+                new OpenLayers.Filter.Spatial({
+                    type: OpenLayers.Filter.Spatial.BBOX,
+                    value: extent
+                }),
+                new OpenLayers.Filter.Comparison({
+                    type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                    property: 'level',
+                    value: lyr.geolevel
+                })
+            ]
+        });
+    }
+
     
     // A vector layer that holds all the districts in
     // the current plan.
@@ -371,7 +402,7 @@ function mapinit(srs,maxExtent) {
             }),
             styleMap: new OpenLayers.StyleMap(new OpenLayers.Style(districtStyle)),
             projection: projection,
-            filter: getVersionAndSubjectFilters()
+            filter: getVersionAndSubjectFilters(maxExtent)
         }
     );
 
@@ -416,38 +447,6 @@ function mapinit(srs,maxExtent) {
     layers.push(districtLayer);
     layers.push(selection);
     olmap.addLayers(layers);
-
-    /**
-     * Get information about the snap layer that should be used, according
-     * to the current zoom level.
-     */
-    var getSnapLayer = function() {
-        var zoom = 0;
-        if (typeof(olmap) != 'undefined') {
-            zoom = olmap.zoom;
-        }
-        var min_layer = { min_zoom: -1 };
-        
-        $('#boundfor option').removeAttr('disabled');
-
-        for (var i in SNAP_LAYERS) {
-            var snap_layer = SNAP_LAYERS[i];
-            var my_min = snap_layer.min_zoom;
-            if (zoom >= my_min && my_min > min_layer.min_zoom) {
-                min_layer = snap_layer;
-            }
-            if (my_min >= zoom) {
-                $('#boundfor option[value*=' + snap_layer.level + ']').attr('disabled', true);
-            }
-        }
-        $('#boundfor option[value*=' + min_layer.level + ']').attr('disabled', true);
-        if ($('#boundfor option:selected').attr('disabled')) {
-            $('#boundfor option').first().attr('selected', 'selected')
-                .siblings().each( function() { $(this).removeAttr('selected') ; });
-            $('#boundfor').change();
-        }
-        return { layer: min_layer.layer, level:min_layer.level, display:min_layer.name };
-    }
 
     // Create a protocol that is used by all editing controls
     // that selects geography at the specified snap layer.
@@ -509,8 +508,8 @@ function mapinit(srs,maxExtent) {
             sortByVisibility(true);
         });            
 
-        districtLayer.filter = getVersionAndSubjectFilters();
-        districtLayer.strategies[0].load();
+        districtLayer.filter = getVersionAndSubjectFilters(olmap.getExtent());
+        districtLayer.strategies[0].update({force:true});
     };
 
     // An assignment function that adds geounits to a district
@@ -1185,13 +1184,115 @@ function mapinit(srs,maxExtent) {
         districtLayer.styleMap = new OpenLayers.StyleMap(newStyle);
     });
 
+    var updatingAssigned = false;
+    var updateAssignableDistricts = function() {
+        if (updatingAssigned)
+            return;
+        updatingAssigned = true;
+
+        var version = $('#history_cursor').val();
+        $.ajax({
+            type:'GET',
+            url:'../districts',
+            data: {version:version},
+            success: function(data,txtStatus,xhr){
+                updatingAssigned = false;
+                // do nothing if this call did not succeed
+                if (!data.success) {
+                    return;
+                }
+
+                $('#assign_district option').detach();
+                $('#assign_district')
+                    .append('<option value="-1">-- Select One --</option>')
+                    .append('<option value="1">Unassigned</option>');
+
+                // get the maximum version of all districts. If walking 
+                // backward, it may be possible that the version you 
+                // requested (let's say you requested version 3 of a plan)
+                // doesn't have any districts. This will happen if a user 
+                // performs many undo steps, then edits the plan. In this
+                // case, the maximum version will be LESS than the version
+                // requested.
+                var max_version = 0;
+                for (var d in data.districts) {
+                    var district = data.districts[d];
+                    max_version = Math.max(district.version,max_version);
+
+                    if (district.name != 'Unassigned') {
+                        $('#assign_district')
+                            .append('<option value="' + district.id + '">' + district.name + '</option>');
+                    }
+                }
+
+                if ($('#assign_district option').length < MAX_DISTRICTS + 1) {
+
+                    $('#assign_district')
+                        .append('<option value="new">New ' + BODY_MEMBER + '</option>');
+                }
+
+                var all_options = $('#assign_district option').detach();
+                // sort the options
+                all_options.sort(function(a,b){
+                    if (a.value == 'new') {
+                        return 1;
+                    } else if (b.value == 'new') {
+                        return -1;
+                    } else {
+                        return parseInt(a.value,10) > parseInt(b.value,10);
+                    }
+                });
+                all_options.appendTo('#assign_district');
+
+                $('#assign_district').val(-1);
+
+                // set the version cursor to the max version. In situations
+                // where there has been an edit on an undo, the version 
+                // cursor in not continuous across all versions of the 
+                // plan.
+                var cursor = $('#history_cursor');
+                if (version != max_version) {
+                    // Purge all versions that are in the history that are
+                    // missing. You can get here after editing a plan for 
+                    // a while, then performing some undos, then editing 
+                    // again. You will be bumped up to the latest version 
+                    // of the plan, but there will be 'phantom' versions 
+                    // between the undo version basis and the current 
+                    // plan version.
+                    while (version > max_version) {
+                        delete PLAN_HISTORY[version--];
+                    }
+                }
+
+                PLAN_HISTORY[max_version] = true;
+                cursor.val(max_version);
+
+                if (max_version == 0) {
+                    $('#history_undo').addClass('disabled');
+                }
+            }
+        });
+    };
+
     // Connect an event to the district layer that updates the 
     // list of possible districts to assign to.
     // TODO: this doesn't account for districts with null geometries
     // which will not come back from the WFS query
-    districtLayer.events.register('loadend',districtLayer,function(){
-        OpenLayers.Element.removeClass(olmap.viewPortDiv, 'olCursorWait');
-        selection.removeFeatures(selection.features);
+    var updateLevel = getSnapLayer().geolevel;
+    var updateDistrictScores = function(){
+        var geolevel = getSnapLayer().geolevel;
+        if (selection.features.length > 0 && 
+            (geolevel != updateLevel || selection.features[0].renderIntent == 'select')) {
+            updateLevel = geolevel;
+            selection.removeFeatures(selection.features);
+
+            // since we are removing features, terminate any controls that
+            // may be in limbo (dragdropControl, I'm looking at you)
+            if (assignMode == 'dragdrop') {
+                dragdropControl.deactivate();
+                dragdropControl.resumeTool.activate();
+            }
+        }
         
         var sorted = districtLayer.features.slice(0,districtLayer.features.length);
         sorted.sort(function(a,b){
@@ -1199,82 +1300,13 @@ function mapinit(srs,maxExtent) {
         });
         compactnessAvg = getCompactnessAvg(sorted);
 
-        // get the maximum version of all districts. If walking backward,
-        // it may be possible that the version you requested (let's say
-        // you requested version 3 of a plan) doesn't have any districts.
-        // This will happen if a user performs many undo steps, then edits
-        // the plan. In this case, the maximum version will be LESS than
-        // the version requested.
-        //
-        // Also, populate the 'Assigning Tools' dropdown with the list
-        // of current districts.
-        var max_version = 0;
-        $('#assign_district option').detach();
-        $('#assign_district')
-            .append('<option value="-1">-- Select One --</option>')
-            .append('<option value="1">Unassigned</option>');
-        for (var dist in districtLayer.features) {
-            var district = districtLayer.features[dist];
-            max_version = Math.max(district.attributes.version,max_version);
-            if (district.attributes.name != 'Unassigned') {
-                $('#assign_district')
-                    .append('<option value="' + district.attributes.district_id + '">' + district.attributes.name + '</option>');
-            }
-        }
-        if ($('#assign_district option').length < MAX_DISTRICTS + 1) {
-
-            $('#assign_district')
-                .append('<option value="new">New ' + BODY_MEMBER + '</option>');
-        }
-
-        var all_options = $('#assign_district option').detach();
-        // sort the options
-        all_options.sort(function(a,b){
-            if (a.value == 'new') {
-                return 1;
-            } else if (b.value == 'new') {
-                return -1;
-            } else {
-                return parseInt(a.value,10) > parseInt(b.value,10);
-            }
-        });
-        all_options.appendTo('#assign_district');
-
-        $('#assign_district').val(-1);
-
-        // set the version cursor to the max version. In situations where
-        // there has been an edit on an undo, the version cursor in not
-        // continuous across all versions of the plan.
-        var cursor = $('#history_cursor');
-        var cval = cursor.val();
-        if (cval != max_version) {
-            // Purge all versions that are in the history that are missing.
-            // You can get here after editing a plan for a while, then
-            // performing some undos, then editing again. You will be
-            // bumped up to the latest version of the plan, but there will
-            // be 'phantom' versions between the undo version basis and the
-            // current plan version.
-            while (cval > max_version) {
-                delete PLAN_HISTORY[cval--];
-            }
-        }
-        PLAN_HISTORY[max_version] = true;
-        cursor.val(max_version);
-
-        if (max_version == 0) {
-            $('#history_undo').addClass('disabled');
-        }
-
         var working = $('#working');
         if (working.dialog('isOpen')) {
             working.dialog('close');
         }
-    });
 
-    olmap.events.register('movestart',olmap,function(){
-        districtIdDiv.style.display = 'none';
-        tipdiv.style.display = 'none';
-    });
+        OpenLayers.Element.removeClass(olmap.viewPortDiv, 'olCursorWait');
+    };
 
     // When the navigate map tool is clicked, disable all the 
     // controls except the navigation control.
@@ -1671,7 +1703,12 @@ function mapinit(srs,maxExtent) {
 
     // Logic for the 'Snap Map to' dropdown, note that this logic
     // calls the boundsforChange callback
+    var changingSnap = false;
     var changeSnapLayer = function(evt) {
+        if (changingSnap)
+            return;
+        changingSnap = true;
+
         var newOpts = getControl.protocol.options;
         var show = getShowBy();
         var snap = getSnapLayer();
@@ -1689,6 +1726,13 @@ function mapinit(srs,maxExtent) {
         $('#showby').siblings('label').text('Show ' + snap.display + ' by:');
         getMapStyles();
         updateBoundaryLegend();
+
+        if (olmap.center !== null) {
+            districtLayer.filter = getVersionAndSubjectFilters(olmap.getExtent());
+            districtLayer.strategies[0].update({force:true});
+        }
+
+        changingSnap = false;
     };
 
     // Logic for the 'Show Map by' dropdown
@@ -1714,8 +1758,8 @@ function mapinit(srs,maxExtent) {
 
     // Logic for the 'Show Districts by' dropdown
     $('#districtby').change(function(evt){
-        districtLayer.filter = getVersionAndSubjectFilters();
-        districtLayer.strategies[0].load();
+        districtLayer.filter = getVersionAndSubjectFilters(maxExtent);
+        districtLayer.strategies[0].update({force:true});
 
         // Since keyboard defaults are on, if focus remains on this
         // dropdown after change, the keyboard may change the selection
@@ -1782,6 +1826,7 @@ function mapinit(srs,maxExtent) {
             $('#history_redo').removeClass('disabled');
 
             updateInfoDisplay();
+            updateAssignableDistricts();
         }
     });
 
@@ -1802,6 +1847,7 @@ function mapinit(srs,maxExtent) {
             $('#history_undo').removeClass('disabled');
 
             updateInfoDisplay();
+            updateAssignableDistricts();
         }
     });
 
@@ -1848,6 +1894,7 @@ function mapinit(srs,maxExtent) {
                     $('#history_undo').removeClass('disabled');
 
                     updateInfoDisplay();
+                    updateAssignableDistricts();
 
                     $('#working').dialog('close');
                     $('#assign_district').val('-1');
@@ -1900,14 +1947,15 @@ function mapinit(srs,maxExtent) {
     var sortByVisibility = function(force) {
         var visibleDistricts = '';
         var visible, notvisible = '';
+        $('#geography_table tr').data('isVisibleOnMap', false);
+        $('#demographic_table tr').data('isVisibleOnMap', false);
+
         for (feature in districtLayer.features) {
             var feature = districtLayer.features[feature];
             var inforow = $('.inforow_' + feature.attributes.district_id);
             if (featureOnScreen(feature, getVisibleBounds())) {
                 inforow.data('isVisibleOnMap', true);
                 visibleDistricts += feature.id;
-            } else {
-                inforow.data('isVisibleOnMap', false);
             }
         }
         if (visibleDistricts != olmap.prevVisibleDistricts || force) {
@@ -1920,14 +1968,6 @@ function mapinit(srs,maxExtent) {
 
         updateDistrictStyles();
     };
-
-    districtLayer.events.register("loadend", districtLayer, sortByVisibility);
-    olmap.events.register("moveend", olmap, sortByVisibility);
-    
-    // Add the listeners for editing whenever a base layer is changed
-    // or the zoom level is changed
-    olmap.events.register("changebaselayer", olmap, changeSnapLayer);
-    olmap.events.register("zoomend", olmap, changeSnapLayer);
    
     // triggering this event here will configure the map to correspond
     // with the initial dropdown values (jquery will set them to different
@@ -1943,6 +1983,20 @@ function mapinit(srs,maxExtent) {
 
     // set up sizing for dynamic map size that fills the pg
     initializeResizeFix();
+
+    districtLayer.events.register("loadend", districtLayer, sortByVisibility);
+    districtLayer.events.register('loadend',districtLayer, updateDistrictScores);
+
+    olmap.events.register('movestart',olmap,function(){
+        districtIdDiv.style.display = 'none';
+        tipdiv.style.display = 'none';
+    });
+    olmap.events.register("moveend", olmap, sortByVisibility);
+    
+    // Add the listeners for editing whenever a base layer is changed
+    // or the zoom level is changed
+    olmap.events.register("changebaselayer", olmap, changeSnapLayer);
+    olmap.events.register("zoomend", olmap, changeSnapLayer);
 }
 
 IdGeounit = OpenLayers.Class(OpenLayers.Control.GetFeature, {

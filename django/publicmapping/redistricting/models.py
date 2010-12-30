@@ -195,6 +195,9 @@ class Geolevel(models.Model):
     # geolevels, when viewing the geolevels in a list.
     sort_key = models.PositiveIntegerField(default=1)
 
+    # The geographic tolerance of this geographic level, for simplification
+    tolerance = models.FloatField(default=10)
+
     class Meta:
         """
         Additional information about the Subject model.
@@ -766,13 +769,12 @@ class Plan(models.Model):
                 # the district were removed); empty the geom and simple 
                 # fields
                 district.geom = None
-                district.simple = None
+                district.simplify()
             else:
                 # The district geometry exists, so save the updated 
                 # versions of the geom and simple fields
                 district.geom = geom
-                simple = geom.simplify(tolerance=settings.SIMPLE_TOLERANCE,preserve_topology=True)
-                district.simple = enforce_multi(simple)
+                district.simplify()
 
             # Clone the district to a new version, with a different shape
             district_copy = copy(district)
@@ -810,12 +812,7 @@ class Plan(models.Model):
 
         # If the target geometry exists (no errors from above)
         if target.geom:
-            # Simplify the district geometry.
-            simple = target.geom.simplify(tolerance=settings.SIMPLE_TOLERANCE,preserve_topology=True)
-            target.simple = enforce_multi(simple)
-        else:
-            # The simplified target geometry is empty, too.
-            target.simple = None
+            target.simplify()
 
         # Clone the district to a new version, with a different shape.
         target_copy = copy(target)
@@ -838,7 +835,7 @@ class Plan(models.Model):
         return fixed
 
 
-    def get_wfs_districts(self,version,subject_id):
+    def get_wfs_districts(self,version,subject_id,extents,geolevel):
         """
         Get the districts in this plan as a GeoJSON WFS response.
         
@@ -850,13 +847,14 @@ class Plan(models.Model):
         Parameters:
             version -- The Plan version.
             subject_id -- The Subject attributes to attach to the district.
+            extent -- The map extents.
 
         Returns:
             GeoJSON describing the Plan.
         """
         
         cursor = connection.cursor()
-        query = 'SELECT rd.id, rd.district_id, rd.name, lmt.version, rd.plan_id, rc.subject_id, rc.number, st_asgeojson(rd.simple) AS geom FROM redistricting_district rd JOIN redistricting_computedcharacteristic rc ON rd.id = rc.district_id JOIN (SELECT max(version) as version, district_id FROM redistricting_district WHERE plan_id = %d AND version <= %d GROUP BY district_id) AS lmt ON rd.district_id = lmt.district_id WHERE rd.plan_id = %d AND rc.subject_id = %d AND lmt.version = rd.version' % (int(self.id), int(version), int(self.id), int(subject_id))
+        query = "SELECT rd.id, rd.district_id, rd.name, lmt.version, rd.plan_id, rc.subject_id, rc.number, st_asgeojson(st_geometryn(rd.simple,%d)) AS geom FROM redistricting_district rd JOIN redistricting_computedcharacteristic rc ON rd.id = rc.district_id JOIN (SELECT max(version) as version, district_id FROM redistricting_district WHERE plan_id = %d AND version <= %d GROUP BY district_id) AS lmt ON rd.district_id = lmt.district_id WHERE rd.plan_id = %d AND rc.subject_id = %d AND lmt.version = rd.version AND st_intersects(st_geometryn(rd.simple,%d),st_envelope(('SRID='||(select st_srid(rd.simple))||';LINESTRING(%f %f,%f %f)')::geometry))" % (geolevel, int(self.id), int(version), int(self.id), int(subject_id), geolevel, extents[0], extents[1], extents[2], extents[3])
 
         # Execute our custom query
         cursor.execute(query)
@@ -1088,7 +1086,7 @@ class District(models.Model):
     geom = models.MultiPolygonField(srid=3785, blank=True, null=True)
 
     # The simplified geometry of this district
-    simple = models.MultiPolygonField(srid=3785, blank=True, null=True)
+    simple = models.GeometryCollectionField(srid=3785, blank=True, null=True)
 
     # The version of this district.
     version = models.PositiveIntegerField(default=0)
@@ -1280,13 +1278,41 @@ class District(models.Model):
             An array of Geounit IDs of Geounits that lie within this 
             District. 
         """    
-        if not self.simple:
+        if not self.geom:
            return list()
 
         geolevel = self.plan.legislative_body.get_base_geolevel()
 
-        return Geounit.objects.filter(geolevel = geolevel, center__within = self.simple).values_list('id')
-        
+        return Geounit.objects.filter(geolevel = geolevel, center__within = self.geom).values_list('id')
+
+    def simplify(self):
+        """
+        Simplify the geometry into a geometry collection in the simple 
+        field.
+
+        Parameters:
+            self - The district
+        """
+        plan = self.plan
+        body = plan.legislative_body
+        # This method returns the geolevels from largest to smallest
+        # but we want them the other direction
+        levels = body.get_geolevels()
+        levels.reverse()
+
+        if self.geom:
+            simples = []
+            index = 1
+            for level in levels:
+                while index < level.id:
+                    simples.append(empty_geom(self.geom.srid))
+                    index += 1
+                simples.append( self.geom.simplify(preserve_topology=True,tolerance=level.tolerance))
+                index += 1
+            simple = GeometryCollection(tuple(simples))
+            simple.srid = self.geom.srid
+            self.simple = simple
+            self.save()
 
 
 class ComputedCharacteristic(models.Model):

@@ -211,7 +211,7 @@ contents of the file and try again.
             return feature_type_obj
 
         # Make a list of layers
-        feature_type_names = ['identify_geounit', 'simple_district']
+        feature_type_names = ['identify_geounit']
         for geolevel in Geolevel.objects.all():
             feature_type_names.append('simple_%s' % geolevel.name)
 
@@ -383,12 +383,6 @@ ERROR:
         in the database at this point.
         """
         cursor = connection.cursor()
-        
-        sql = "CREATE OR REPLACE VIEW simple_district AS SELECT rd.id, rd.district_id, rd.name, rd.version, rd.plan_id, rc.subject_id, rc.number, rd.simple AS geom FROM redistricting_district rd JOIN redistricting_computedcharacteristic rc ON rd.id = rc.district_id WHERE rd.version = (( SELECT max(redistricting_district.version) AS max FROM redistricting_district WHERE redistricting_district.district_id = rd.district_id));"
-        cursor.execute(sql)
-        transaction.commit()
-        if verbose:
-            print 'Created simple_district view ...'
         
         sql = "CREATE OR REPLACE VIEW identify_geounit AS SELECT rg.id, rg.name, rg.geolevel_id, rg.geom, rc.number, rc.percentage, rc.subject_id FROM redistricting_geounit rg JOIN redistricting_characteristic rc ON rg.id = rc.geounit_id;"
         cursor.execute(sql)

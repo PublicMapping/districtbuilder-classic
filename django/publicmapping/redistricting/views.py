@@ -790,6 +790,45 @@ def chooseplan(request):
 
 @login_required
 @cache_control(private=True)
+def getdistricts(request, planid):
+    """
+    Get the districts in a plan at a specific version.
+
+    Parameters:
+        request - An HttpRequest, with the current user.
+        planid - The plan id to query for the districts.
+    Returns:
+    """
+    status = {'success':False}
+
+    plan = Plan.objects.filter(id=planid)
+    if plan.count() == 1:
+        plan = plan[0]
+
+        if 'version' in request.REQUEST:
+            version = int(request.REQUEST['version'])
+        else:
+            version = plan.version
+
+        districts = plan.get_districts_at_version(version)
+
+        status['districts'] = []
+        for district in districts:
+            if district.geom or district.name == 'Unassigned':
+                status['districts'].append({
+                    'id':district.district_id,
+                    'name':district.name,
+                    'version':district.version
+                })
+        status['success'] = True
+
+    else:
+        status['message'] = 'No plan exists with that ID.'
+
+    return HttpResponse(json.dumps(status), mimetype='application/json')
+
+@login_required
+@cache_control(private=True)
 def simple_district_versioned(request,planid):
     """
     Emulate a WFS service for versioned districts.
@@ -809,8 +848,10 @@ def simple_district_versioned(request,planid):
         A GeoJSON HttpResponse, describing the districts in the plan.
     """
     status = {'success':False,'type':'FeatureCollection'}
-    try:
-        plan = Plan.objects.get(id=planid)
+
+    plan = Plan.objects.filter(id=planid)
+    if plan.count() == 1:
+        plan = plan[0]
         if 'version__eq' in request.REQUEST:
             version = request.REQUEST['version__eq']
         else:
@@ -822,13 +863,25 @@ def simple_district_versioned(request,planid):
         elif plan.legislative_body.get_default_subject():
             subject_id = plan.legislative_body.get_default_subject().id
 
+        geolevel = plan.legislative_body.get_geolevels()[0].id
+        if 'level__eq' in request.REQUEST:
+            geolevel = int(request.REQUEST['level__eq'])
+
         if subject_id:
-            status['features'] = plan.get_wfs_districts(version, subject_id)
+            bbox = None
+            if 'bbox' in request.REQUEST:
+                bbox = request.REQUEST['bbox']
+                # convert the request string into a tuple full of floats
+                bbox = tuple( map( lambda x: float(x), bbox.split(',')))
+            else:
+                bbox = Plan.district_set.all().extent(field_name='simple')
+
+            status['features'] = plan.get_wfs_districts(version, subject_id, bbox, geolevel)
             status['success'] = True
         else:
             status['features'] = []
             status['message'] = 'Subject for districts is required.'
-    except:
+    else:
         status['features'] = []
         status['message'] = 'Query failed.'
 
@@ -1039,7 +1092,6 @@ def getgeography(request, planid):
     except:
         status['exception'] = traceback.format_exc()
         status['message'] = "Couldn't get district geography."
-        sys.stderr.write(traceback.format_exc())
         return HttpResponse( json.dumps(status), mimetype='application/json', status=500)
 
 
