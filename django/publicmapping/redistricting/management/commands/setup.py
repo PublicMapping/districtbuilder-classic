@@ -504,7 +504,7 @@ ERROR:
         # themselves need to be imported top-down (smallest area to biggest)
         geolevels = config.xpath('//GeoLevels/GeoLevel')
         for geolevel in geolevels:
-            glvl,created = Geolevel.objects.get_or_create(name=geolevel.get('name'),min_zoom=geolevel.get('min_zoom'),sort_key=geolevel.get('sort_key'))
+            glvl,created = Geolevel.objects.get_or_create(name=geolevel.get('name'),min_zoom=geolevel.get('min_zoom'),sort_key=geolevel.get('sort_key'),tolerance=geolevel.get('tolerance'))
 
             if verbose:
                 if created:

@@ -41,7 +41,7 @@
     <GeoLevels>
       <GeoLevel id="block" name="block" namefield="NAME00" supplementfield="BLKIDFP00"
           shapefile="/projects/publicmapping/data/OH_39_census_block_web_mercator.shp"
-          min_zoom="0" sort_key="3">
+          min_zoom="0" sort_key="3" tolerance="2.5">
           <!-- A reference to a legislative body.
               A geolevel may be used by many legislative bodies. -->
           <LegislativeBodies>
@@ -60,7 +60,7 @@
           aggregation. -->
       <GeoLevel id="tract" name="tract" namefield="TRACTNAME" supplementfield="TRACTID" 
           shapefile="/projects/publicmapping/data/OH_39_census_tractsviablocks2_wm.shp"
-          min_zoom="5" sort_key="2">
+          min_zoom="5" sort_key="2" tolerance="25">
           <!-- A reference to a legislative body.
               A geolevel may be used by many legislative bodies. -->
           <LegislativeBodies>
@@ -79,7 +79,7 @@
           the importer to enforce nested geometries. -->
       <GeoLevel id="county" name="county" namefield="COUNTYNAME" supplementfield="COUNTYFP00"
           shapefile="/projects/publicmapping/data/OH_39_census_countiesviablocks_WM.shp"
-          min_zoom="9" sort_key="1">
+          min_zoom="9" sort_key="1" tolerance="250">
           <!-- A reference to a legislative body.
               A geolevel may be used by many legislative bodies. -->
           <LegislativeBodies>
@@ -123,7 +123,7 @@
         <Admin user="admin" email=""/>
         
         <!-- Configuration items specific to the 'redistricting' app. -->
-        <Redistricting tolerance="10.0">           
+        <Redistricting>           
             <!-- Information about the mapserver and geoserver settings. -->
             <MapServer hostname="" ns="gmu" nshref="http://gmu.azavea.com/" adminuser="admin" adminpass="" styles="/projects/publicmapping/trunk/sld" maxfeatures="100"/>
 

@@ -145,6 +145,7 @@
                                     <xs:attribute name="id" type="xs:ID" />
                                     <xs:attribute name="min_zoom" type="xs:nonNegativeInteger" />
                                     <xs:attribute name="sort_key" type="xs:positiveInteger" />
+                                    <xs:attribute name="tolerance" type="xs:decimal" use="required" />
                                 </xs:complexType>
                             </xs:element>
                         </xs:sequence>
@@ -222,7 +223,6 @@
                                             </xs:complexType>
                                         </xs:element>
                                     </xs:sequence>
-                                    <xs:attribute name="tolerance" type="xs:decimal" use="required" />
                                 </xs:complexType>
                             </xs:element>
                             <xs:element name="Reporting">
