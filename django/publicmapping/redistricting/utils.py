@@ -216,14 +216,12 @@ class DistrictIndexFile():
             try:
                 # Build our new geometry from the union of our geounit geometries
                 new_geom = Geounit.objects.filter(guFilter).unionagg()
-                new_simple = new_geom.simplify(tolerance = settings.SIMPLE_TOLERANCE, preserve_topology=True)
 
                 # Create a new district and save it
                 new_district = District(name=legislative_body.member % district_id, 
                     district_id = district_id + 1, plan=plan, 
-                    geom=enforce_multi(new_geom), 
-                    simple = enforce_multi(new_simple))
-                new_district.save()
+                    geom=enforce_multi(new_geom))
+                new_district.simplify() # implicit save
             except Exception as ex:
                 if email:
                     context['errors'].append({

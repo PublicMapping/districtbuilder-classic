@@ -34,7 +34,6 @@ from django.contrib.gis.db.models import Union
 from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
 from django.conf import settings
-from django.db.utils import *
 from django.utils import simplejson as json
 from optparse import make_option
 from os.path import exists
@@ -420,7 +419,8 @@ ERROR:
             'geolevel': geolevel.get('name'),
             'name_field': geolevel.get('namefield'),
             'supplemental_id_field': geolevel.get('supplementfield'),
-            'subject_fields': []
+            'subject_fields': [],
+            'tolerance': geolevel.get('tolerance')
         }
 
         trefs = geolevel.xpath('LegislativeBodies/LegislativeBody/LegislativeTargets/LegislativeTarget')
@@ -581,6 +581,7 @@ ERROR:
 
         # Create an anonymous user
         anon,created = User.objects.get_or_create(username='anonymous')
+
         if not created:
             anon.set_password('anonymous')
             anon.save()
@@ -609,8 +610,6 @@ ERROR:
         # Create the subjects we need
         subject_objects = {}
         for sconfig in config['subject_fields']:
-            # don't recreate any subjects that already exist
-            # (in another geolevel, for instance)
             foundalias = False
             for elem in sconfig.getchildren():
                 if elem.tag == 'Subject':
@@ -631,78 +630,83 @@ ERROR:
                     sys.stdout.write('%2.0f%% .. ' % (progress * 100))
                     sys.stdout.flush()
 
-            try :
-                # Store the geos geometry
-                geos = feat.geom.geos
-                # Coerce the geometry into a MultiPolygon
-                if geos.geom_type == 'MultiPolygon':
-                    my_geom = geos
-                elif geos.geom_type == 'Polygon':
-                    my_geom = MultiPolygon(geos)
-                simple = my_geom.simplify(tolerance=settings.SIMPLE_TOLERANCE,preserve_topology=True)
-                if simple.geom_type != 'MultiPolygon':
-                    simple = MultiPolygon(simple)
-                center = my_geom.centroid
+            prefetch = Q(name=feat.get(config['name_field'])) & Q(geolevel=level)
+            if supplemental_id_field:
+                prefetch = prefetch & Q(supplemental_id=feat.get(supplemental_id_field))
+            prefetch = Geounit.objects.filter(prefetch) 
+            if prefetch.count() == 0:
+                try :
 
-                geos = None
+                    # Store the geos geometry
+                    geos = feat.geom.geos
+                    # Coerce the geometry into a MultiPolygon
+                    if geos.geom_type == 'MultiPolygon':
+                        my_geom = geos
+                    elif geos.geom_type == 'Polygon':
+                        my_geom = MultiPolygon(geos)
+                    simple = my_geom.simplify(tolerance=config['tolerance'],preserve_topology=True)
+                    if simple.geom_type != 'MultiPolygon':
+                        simple = MultiPolygon(simple)
+                    center = my_geom.centroid
 
-                # Ensure the centroid is within the geometry
-                if not center.within(my_geom):
-                    # Get the first polygon in the multipolygon
-                    first_poly = my_geom[0]
-                    # Get the extent of the first poly
-                    first_poly_extent = first_poly.extent
-                    min_x = first_poly_extent[0]
-                    max_x = first_poly_extent[2]
-                    # Create a line through the bbox and the poly center
-                    my_y = first_poly.centroid.y
-                    centerline = LineString( (min_x, my_y), (max_x, my_y))
-                    # Get the intersection of that line and the poly
-                    intersection = centerline.intersection(first_poly)
-                    if type(intersection) is MultiLineString:
-                        intersection = intersection[0]
-                    # the center of that line is my within-the-poly centroid.
-                    center = intersection.centroid
-                    first_poly = first_poly_extent = min_x = max_x = my_y = centerline = intersection = None
+                    geos = None
 
-                if verbose:
-                    if not my_geom.simple:
-                        print 'Geometry %d is not simple.\n' % feat.fid
-                    if not my_geom.valid:
-                        print 'Geometry %d is not valid.\n' % feat.fid
-                    if not simple.simple:
-                        print 'Simplified Geometry %d is not simple.\n' % feat.fid
-                    if not simple.valid:
-                        print 'Simplified Geometry %d is not valid.\n' % feat.fid
+                    # Ensure the centroid is within the geometry
+                    if not center.within(my_geom):
+                        # Get the first polygon in the multipolygon
+                        first_poly = my_geom[0]
+                        # Get the extent of the first poly
+                        first_poly_extent = first_poly.extent
+                        min_x = first_poly_extent[0]
+                        max_x = first_poly_extent[2]
+                        # Create a line through the bbox and the poly center
+                        my_y = first_poly.centroid.y
+                        centerline = LineString( (min_x, my_y), (max_x, my_y))
+                        # Get the intersection of that line and the poly
+                        intersection = centerline.intersection(first_poly)
+                        if type(intersection) is MultiLineString:
+                            intersection = intersection[0]
+                        # the center of that line is my within-the-poly centroid.
+                        center = intersection.centroid
+                        first_poly = first_poly_extent = min_x = max_x = my_y = centerline = intersection = None
 
-                g = Geounit(geom = my_geom, name = feat.get(config['name_field']), geolevel = level, simple = simple, center = center)
-                if supplemental_id_field:
-                    g.supplemental_id = feat.get(supplemental_id_field)
-                g.save()
-                my_geom = simple = center = None
-            except:
-                print 'Failed to import geometry for feature %d' % feat.fid
-                if verbose:
-                    traceback.print_exc()
-                    print ''
-                continue
+                    if verbose:
+                        if not my_geom.simple:
+                            print 'Geometry %d is not simple.\n' % feat.fid
+                        if not my_geom.valid:
+                            print 'Geometry %d is not valid.\n' % feat.fid
+                        if not simple.simple:
+                            print 'Simplified Geometry %d is not simple.\n' % feat.fid
+                        if not simple.valid:
+                            print 'Simplified Geometry %d is not valid.\n' % feat.fid
+
+                    g = Geounit(geom = my_geom, name = feat.get(config['name_field']), geolevel = level, simple = simple, center = center)
+                    if supplemental_id_field:
+                        g.supplemental_id = feat.get(supplemental_id_field)
+                    g.save()
+                except:
+                    print 'Failed to import geometry for feature %d' % feat.fid
+                    if verbose:
+                        traceback.print_exc()
+                        print ''
+                    continue
+            else:
+                g = prefetch[0]
 
             for attr, obj in subject_objects.iteritems():
                 value = Decimal(str(feat.get(attr))).quantize(Decimal('000000.0000', 'ROUND_DOWN'))
+                c, created = Characteristic.objects.get_or_create(subject=obj, geounit=g)
                 try:
-                    c = Characteristic(subject=obj, number=value, geounit=g)
+                    c.number = value
                     c.save()
                 except:
-                    c = Characteristic(subject=obj, number='0.0', geounit=g)
+                    c.number = '0.0'
                     c.save()
                     print 'Failed to set value "%s" to %d in feature "%s"' % (attr, feat.get(attr), feat.get(config['name_field']),)
                     if verbose:
                         traceback.print_exc()
                         print ''
-                c = value = None
-            g = feat = None
 
-        ds = None
 
         if verbose:
             sys.stdout.write('100%\n')
@@ -717,14 +721,15 @@ ERROR:
             config - The XML configuration.
             verbose - A flag for outputting messages during the process.
         """
+        admin = User.objects.filter(is_staff=True)
+        if admin.count() == 0:
+            print "Creating templates requires at least one admin user."
+            return
+
+        admin = admin[0]
+
         templates = config.xpath('/DistrictBuilder/Templates/Template')
         for template in templates:
-            templateplan = Plan.objects.filter(name=template.get('name'))
-            if len(templateplan) > 0:
-                if verbose:
-                    print "Plan '%s' exists, skipping." % template.get('name')
-                continue
-
             lbconfig = config.xpath('//LegislativeBody[@id="%s"]' % template.xpath('LegislativeBody')[0].get('ref'))[0]
             legislative_body = LegislativeBody.objects.filter(name=lbconfig.get('name'))
             if len(legislative_body) == 0:
@@ -732,10 +737,15 @@ ERROR:
                     print "LegislativeBody '%s' does not exist, skipping." % lbconfig.get('ref')
                 continue
 
+            templateplan, created = Plan.objects.get_or_create(name=template.get('name'), legislative_body=legislative_body, owner=admin, is_template=True)
+            if not created:
+                if verbose:
+                    print "Plan '%s' exists, skipping." % template.get('name')
+                continue
+
             fconfig = template.xpath('Blockfile')[0]
             path = fconfig.get('path')
 
-            admin = User.objects.get(username=settings.ADMINS[0][0])
             DistrictIndexFile.index2plan( template.get('name'), legislative_body[0].id, path, owner=admin, template=True, purge=False, email=None)
 
             if verbose:

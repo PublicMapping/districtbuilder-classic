@@ -1017,24 +1017,13 @@ class Plan(models.Model):
             else:
                 geom = None
 
-            simple = geom.simplify(tolerance=settings.SIMPLE_TOLERANCE,preserve_topology=True)
-
-            # Import only multipolygon shapes
-            if simple.geom_type == 'Polygon':
-                simple = MultiPolygon(simple)
-            elif geom.geom_type == 'MultiPolygon':
-                simple  = simple
-            else:
-                simple = None
-
             district = District(
                 district_id=int(feature.get(idfield)) + 1,
                 name=body.member % feature.get(idfield),
                 plan=plan,
                 version=0,
-                geom=geom,
-                simple=simple)
-            district.save()
+                geom=geom)
+            district.simplify() # implicit save
 
             geounits = list(district.get_base_geounits_within())
 

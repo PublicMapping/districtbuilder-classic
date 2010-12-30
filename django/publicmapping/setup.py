@@ -265,9 +265,6 @@ def merge_config(config, verbose):
         settings_out.write("\nTEMPLATE_DIRS = (\n  '%s/django/publicmapping/templates',\n)\n" % cfg.get('root'))
         settings_out.write("\nSLD_ROOT = '%s/sld/'\n" % cfg.get('root'))
 
-        cfg = config.xpath('//Redistricting')[0]
-        settings_out.write("\nSIMPLE_TOLERANCE = %0.1f\n" % float(cfg.get('tolerance')))
-
         cfg = config.xpath('//Reporting')[0]
         settings_out.write("\nREPORTS_ENABLED = %s\n" % (cfg.get('enabled') == 'true'))
         if cfg.get('engine').lower() == 'bard':
