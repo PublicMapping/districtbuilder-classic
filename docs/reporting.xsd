@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema 
+    attributeFormDefault="unqualified" 
+    elementFormDefault="qualified"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:db="http://publicmapping.org"
+    xmlns:rpt="http://publicmapping.org/reporting"
+    targetNamespace="http://publicmapping.org/reporting" >
+    <xs:import namespace="http://publicmapping.org" schemaLocation="config.xsd" />
+    <xs:complexType name="Config">
+        <xs:annotation>
+            <xs:documentation>
+            Each config item should contain a section of BardConfigs, representing the configuration parameters
+            for BARD, and a section of BardBodyConfigs, which link a BARD configuration to a LegislativeBody.
+
+            Each BardConfig item will be transformed into an HTML template that will pass appropriate user-selected
+            parameters to the getreport handler.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:all>
+            <xs:element name="BardConfigs">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="BardConfig" type="rpt:BardConfigType" />
+                    </xs:sequence>
+                </xs:complexType>
+                <xs:key name="DistrictBuilderSubjectKey">
+                    <xs:selector xpath="db:Subjects/Subject" />
+                    <xs:field xpath="@id" />
+                </xs:key>
+                <xs:keyref name="PopVarSubject" refer="rpt:DistrictBuilderSubjectKey">
+                    <xs:selector xpath="PopVars/PopVar" />
+                    <xs:field xpath="@subjectref" />
+                </xs:keyref>
+                <xs:keyref name="RatioNumeratorVarSubject" refer="rpt:DistrictBuilderSubjectKey">
+                    <xs:selector xpath="RatioVars/RatioVar/Numerators/Numerator" />
+                    <xs:field xpath="@subjectref" />
+                </xs:keyref>
+                <xs:keyref name="RatioDenominatorSubject" refer="rpt:DistrictBuilderSubjectKey">
+                    <xs:selector xpath="RatioVars/RatioVar/Denominator" />
+                    <xs:field xpath="@subjectref" />
+                </xs:keyref>
+            </xs:element>
+            <xs:element name="BardBodyConfigs">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="BardBodyConfig" type="rpt:BardBodyConfigType" />
+                    </xs:sequence>
+                </xs:complexType>
+                <xs:key name="DistrictBuilderLegislativeBodyKey">
+                    <xs:selector xpath="db:LegislativeBodies/LegislativeBody" />
+                    <xs:field xpath="@id" />
+                </xs:key>
+                <xs:key name="BardConfigKey">
+                    <xs:selector xpath="BardConfigs/BardConfig" />
+                    <xs:field xpath="@id" />
+                </xs:key>
+                <xs:keyref name="BardBodyReference" refer="rpt:DistrictBuilderLegislativeBodyKey">
+                    <xs:selector xpath="BardBodyConfigs/BardBodyConfig" />
+                    <xs:field xpath="@legislativebodyref" />
+                </xs:keyref>
+                <xs:keyref name="BardConfigReference" refer="rpt:BardConfigKey">
+                    <xs:selector xpath="BardBodyConfigs/BardBodyConfig" />
+                    <xs:field xpath="@bardconfigref" />
+                </xs:keyref>
+            </xs:element>
+        </xs:all>
+    </xs:complexType>
+    <xs:complexType name="BardBodyConfigType">
+        <xs:annotation>
+            <xs:documentation>
+            The BardBodyConfig links a BARD configuration to a Legislative Body. A single BARD
+            config may be linked to multiple Legislative Bodies if, for example, the bodies
+            descend from the same base geounits.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:attribute name="id" type="xs:ID" use="required" />
+        <xs:attribute name="legislativebodyref" type="xs:IDREF" use="required" /> 
+        <xs:attribute name="bardconfigref" type="xs:IDREF" use="required" />
+    </xs:complexType>
+    <xs:complexType name="BardConfigType">
+        <xs:annotation>
+            <xs:documentation>
+            The BardConfig is the complete configuration of all the elements that go into creating
+            a report in BARD.  As such, the config must provide all of the information necessary to 
+            create an HTML form that the user can fill out to pass the correct information into the 
+            PMPReport.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:all>
+            <xs:element name="PopVars">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="PopVar" minOccurs="1" maxOccurs="unbounded" >
+                            <xs:annotation>
+                                <xs:documentation>
+                                Population Variables give simple counts of a given segment of the population.
+                                One PopVar should be defined as the default to satisfy the PMPReport's PopVar
+                                parameter and should define a threshold.  Additional PopVar nodes will
+                                populate the PopVarExtra paramaters that can be selectable by the user.
+                                </xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                                <xs:all>
+                                   <xs:element name="Description" type="xs:string" maxOccurs="1" minOccurs="0" />
+                                </xs:all>
+                                <xs:attribute name="subjectref" type="xs:IDREF" use="required" />
+                                <xs:attribute name="threshold" type="xs:decimal" use="optional" />
+                                <xs:attribute name="default" type="xs:boolean" use="optional" default="false" />
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="RatioVars">
+                <xs:annotation>
+                    <xs:documentation>
+                    The RatioVars represent the count of a given population group against anotheri within a 
+                    district.  If the ratio of the numerator group to the denominator group exceeds the
+                    given threshold, the district is said to be a Majority District for the group.
+                    RatioVars use subject references to represent data fields, like the application config
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:all>
+                        <xs:element name="RatioVar">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="Numerators">
+                                        <xs:complexType>
+                                            <xs:sequence maxOccurs="unbounded">
+                                                <xs:element name="Numerator">
+                                                    <xs:complexType>
+                                                        <xs:sequence />
+                                                        <xs:attribute name="subjectref" type="xs:IDREF" use="required" />
+                                                    </xs:complexType>
+                                                </xs:element>
+                                            </xs:sequence>
+                                        </xs:complexType>
+                                    </xs:element>
+                                    <xs:element name="Denominator">
+                                        <xs:complexType>
+                                            <xs:sequence />
+                                            <xs:attribute name="subjectref" type="xs:IDREF" use="required" />
+                                        </xs:complexType>
+                                    </xs:element>
+                                    <xs:element name="Description" type="xs:string" maxOccurs="1" minOccurs="0" />
+                                </xs:sequence>
+                                <xs:attribute name="id" type="xs:string" use="required" />
+                                <xs:attribute name="label" type="xs:string"  />
+                                <xs:attribute name="threshold" type="xs:decimal"  />
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:all>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="SplitVars">
+                <xs:annotation>
+                    <xs:documentation>
+                    The SplitVars represent a way to see whether a given district splits geounits within
+                    the larger geolevels, e.g., whether a district includes only part of a county.  Each
+                    SplitVar should include two attributes: a field representing the named attribute in the
+                    bardMap file that lists the higher-level geounit to which the base geounit belongs, and 
+                    a human-friendly label.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="SplitVar" minOccurs="1" maxOccurs="unbounded" >
+                            <xs:complexType>
+                                <xs:all>
+                                   <xs:element name="Description" type="xs:string" maxOccurs="1" minOccurs="0" />
+                                </xs:all>
+                                <xs:attribute name="field" type="xs:string" use="required" />
+                                <xs:attribute name="label" type="xs:string" />
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:all>
+        <xs:attribute name="id" type="xs:ID" use="required" />
+        <xs:attribute name="shape" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                The path to the R workspace that will be loaded into the app at startup
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="map" type="xs:string" use="required" >
+            <xs:annotation>
+                <xs:documentation>
+                The name of the BARDMap variable within the loaded R workspace
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="temp" type="xs:string" use="required" >
+            <xs:annotation>
+                <xs:documentation>
+                The path to the www-data-readable directory where reports are written and stored
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+</xs:schema>
