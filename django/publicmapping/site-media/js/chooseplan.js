@@ -241,7 +241,7 @@ chooseplan = function(options) {
             datatype: 'json',
             jsonReader: {
                 repeatitems: false,
-                id: 'pk',
+                id: 'pk'
             },
             colModel: [
                 {name:'fields.name', label:'Name', search: true, sortable:true},
@@ -250,7 +250,7 @@ chooseplan = function(options) {
                 {name:'fields.is_shared', label:'Shared', sortable:true, search:false, formatter:'checkbox', width:'70', fixed: true, align: 'center'},
                 {name:'fields.edited', label:'Last Edited', sortable:true, search:false, width:'130', fixed: true, align: 'center', formatter:'date', formatoptions: { srcformat: 'UniversalSortableDateTime', newformat:'m/d/Y g:i A'}},
                 {name:'fields.can_edit', label:'Edit', search:false, hidden: true},
-                {name:'fields.districtCount', label:'# Districts', search:false, sortable:true, hidden:true},
+                {name:'fields.districtCount', label:'# Districts', search:false, sortable:true, hidden:true}
             ],
 
             onSelectRow: rowSelected,

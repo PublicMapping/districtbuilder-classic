@@ -74,7 +74,7 @@ function loadTooltips() {
         opacity: .8,
         // Open this tip on click only, don't close it via tooltip methods
         events: {
-            widget: 'click,'
+            widget: 'click,click'
         },
         onBeforeShow:  function() {
             // ensure proper DOM placement

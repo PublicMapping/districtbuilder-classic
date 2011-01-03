@@ -1997,6 +1997,8 @@ function mapinit(srs,maxExtent) {
     // or the zoom level is changed
     olmap.events.register("changebaselayer", olmap, changeSnapLayer);
     olmap.events.register("zoomend", olmap, changeSnapLayer);
+
+    PLAN_HISTORY[PLAN_VERSION] = true;
 }
 
 IdGeounit = OpenLayers.Class(OpenLayers.Control.GetFeature, {
