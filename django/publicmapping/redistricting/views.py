@@ -53,7 +53,6 @@ import settings, random, string, math, types, copy, time, threading, traceback, 
 
 def using_unique_session(u):
     if u.is_anonymous():
-        print "Anonymous always unique."
         return True
 
     sessions = Session.objects.all()
@@ -61,14 +60,11 @@ def using_unique_session(u):
     for session in sessions:
         decoded = session.get_decoded()
         if '_auth_user_id' in decoded and decoded['_auth_user_id'] == u.id:
-            print "Found auth user id (%d) in session list." % u.id
             count += 1
-            print "Number of sessions: %d" % count
             websession = SessionStore(session_key=session.session_key)
             websession['count'] = count
             websession.save()
 
-    print "(count <= 1): %s" % (count <= 1)
     return (count <= 1)
 
 @login_required
