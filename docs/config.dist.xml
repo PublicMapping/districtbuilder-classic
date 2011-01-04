@@ -21,6 +21,19 @@
                  short_name="Black" displayed="false" sortkey="2" />
         <Subject id="pophisp" field="POPHIS" name="Hispanic or Latino" 
                  short_name="Hispanic" displayed="false" sortkey="3" />
+        <Subject id="vaptot" field="VAPTOT" name="Voting Age Population"
+                 short_name="Voters" displayed="false" sortkey="4" />
+        <Subject id="vapnhwht" field="VAPNHWHT" name="Voting Age Population - White"
+                 short_name="White Votng Age" displayed="false" sortkey="9" />
+        <Subject id="vapblk" field="VAPBLK" name="Voting Age Population - Black"
+                 short_name="Blk Votng Age" displayed="false" sortkey="5" />
+        <Subject id="vaphisp" field="VAPHISP" name="Voting Age Population - Hispanic"
+                 short_name="Hsp Votng Age" displayed="false" sortkey="6" />
+        <Subject id="presdem" field="PRES_DEM" name="Democratic Voters"
+                 short_name="Democrat" displayed="false" sortkey="7" />
+        <Subject id="presrep" field="PRES_REP" name="Republican Voters"
+                 short_name="Republican" displayed="false" sortkey="8" />
+ 
         <!-- You can alias a subject by overriding the field, if the
             import shapefiles have different field names at different
             geographic levels. -->
@@ -77,7 +90,7 @@
 
       <!-- A list of geographic levels supported. This list will be used by
           the importer to enforce nested geometries. -->
-      <GeoLevel id="county" name="county" namefield="COUNTYNAME" supplementfield="COUNTYFP00"
+      <GeoLevel id="county" name="county" namefield="COUNTYNAME" supplementfield="COUNTYFP2"
           shapefile="/projects/publicmapping/data/OH_39_census_countiesviablocks_WM.shp"
           min_zoom="9" sort_key="1" tolerance="250">
           <!-- A reference to a legislative body.
@@ -135,12 +148,51 @@
         
         <!-- Configure the engine used for reporting. Currently, only 
             BARD is supported. -->
-        <Reporting engine="BARD" enabled="true">
+        <Reporting>
             <!-- BARD specific configuration settings. -->
-            <Data
+            <BardConfigs>
+                <BardConfig 
+                id="blocks"
                 shape="/projects/publicmapping/local/data/ohblock_bard_save.Rdata" 
                 map="oh_blocks.bardmap"
-                temp="/projects/publicmapping/local/reports"/>
+                temp="/projects/publicmapping/local/reports">
+                <PopVars>
+                    <PopVar subjectref="poptot" threshold=".5" default="true" />
+                    <PopVar subjectref="vaptot" threshold=".1" />
+                    <PopVar subjectref="vapnhwht" threshold=".1" />
+                    <PopVar subjectref="vapblk" threshold=".1" />
+                    <PopVar subjectref="vaphisp" threshold=".1" default="false" />
+                </PopVars>
+                <RatioVars>
+                    <!-- Set up RatioVars for both ethnicity and political party -->
+                    <RatioVar id="racialComp" label="Majority Minority Districts" threshold=".6">
+                        <Numerators>
+                            <Numerator subjectref="popblk" />
+                            <Numerator subjectref="pophisp" />
+                        </Numerators>
+                        <Denominator subjectref="poptot" />
+                    </RatioVar>
+                    <RatioVar id="partyControl" label="Party-Controlled Districts" threshold=".55">
+                        <Numerators>
+                            <Numerator subjectref="presdem" />
+                            <Numerator subjectref="presrep" />
+                        </Numerators>
+                        <Denominator subjectref="vaptot" />
+                    </RatioVar>
+                </RatioVars>
+                <SplitVars>
+                    <!-- See whether a given district splits a county or a tract -->
+                    <SplitVar field="COUNTY" label="County" />
+                    <SplitVar field="TRACT" label="Tract" />
+                </SplitVars>
+                </BardConfig>
+            </BardConfigs>
+            <BardBodyConfigs>
+                   <BardBodyConfig
+                    id="congress_blocks"
+                    legislativebodyref="congress"
+                    bardconfigref="blocks" />
+            </BardBodyConfigs>
         </Reporting>
         
         <!-- Information about the mailer configuration. -->

@@ -475,7 +475,7 @@ def getreport(request, planid):
             status['message'] = 'Reports functionality is not ready. Please try again later.'
         return HttpResponse(json.dumps(status),mimetype='application/json')
               
-        #  PMP reporrt interface
+        #  PMP report interface
         #    PMPreport<-function(
         #       bardMap,
         #       blockAssignmentID="BARDPlanID",

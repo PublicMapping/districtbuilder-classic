@@ -271,13 +271,14 @@ def merge_config(config, verbose):
         settings_out.write("\nSLD_ROOT = '%s/sld/'\n" % cfg.get('root'))
 
         cfg = config.xpath('//Reporting')[0]
-        settings_out.write("\nREPORTS_ENABLED = %s\n" % (cfg.get('enabled') == 'true'))
-        if cfg.get('engine').lower() == 'bard':
-            cfg = cfg.xpath('Data')[0]
-
+        cfg = cfg.find('BardConfigs/BardConfig')
+        if cfg != None:
+            settings_out.write("\nREPORTS_ENABLED = True\n")
             settings_out.write("\nBARD_BASESHAPE = '%s'\n" % cfg.get('shape'))
             settings_out.write("BARD_BASEMAP = '%s'\n" % cfg.get('map'))
             settings_out.write("BARD_TEMP = '%s'\n" % cfg.get('temp'))
+        else:
+            settings_out.write("\nREPORTS_ENABLED = False\n")
 
         cfg = config.xpath('//GoogleAnalytics')
         if len(cfg) > 0:
