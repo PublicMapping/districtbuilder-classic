@@ -58,7 +58,10 @@
           })();
         </script>
     {% endif %}
-
+    <script type="text/javascript">
+        var opensessions = {{ opensessions }};
+        var openusername = '{{ user.username }}';
+    </script>
   </head>
   <body id="static">
    <div class="static_wrap">
@@ -192,6 +195,25 @@
                 <button id="doClose">Close</button>
             </div>
         </form>
+    </div>
+
+    <div id="sessiondupe">
+        <h1>Your account has too many sessions.</h1>
+        <p>To use DistrictBuilder, you must do one of the following actions:</p>
+        <ul>
+            <li>
+                <a href="#" id="different_login">Log in as a different user.</a>
+            </li>
+            <li>
+                <a href="/accounts/logout/?next=/districtmapping/plan/0/view/">Use the system as a guest.</a>
+            </li>
+            <li>
+                <form method="post" id="purge_form" action="session">
+                    <input type="hidden" id="purge_username" name="username" value="{{ user.username }}"/>
+                    <a href="#" id="force_close">Force close the other user's session and log in again.</a>
+                </form>
+            </li>
+        </ul>
     </div>
 
     <div id="footer">

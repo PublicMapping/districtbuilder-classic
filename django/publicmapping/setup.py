@@ -58,10 +58,13 @@ def main():
     parser.add_option('-t', '--templates', dest="templates",
             help="Create the system-wide templates.",
             default=False, action='store_true')
+    parser.add_option('-n', '--nesting', dest="nesting",
+            help="Enforce nested geometries.",
+            default=False, action='store_true')
 
     (options, args) = parser.parse_args()
 
-    allops = (not options.database) and (not options.geolevels) and (not options.views) and (not options.geoserver) and (not options.templates)
+    allops = (not options.database) and (not options.geolevels) and (not options.views) and (not options.geoserver) and (not options.templates) and (not options.nesting)
 
     if len(args) != 2:
         print """
@@ -98,13 +101,15 @@ ERROR:
         views = True
         geoserver = True
         templates = True
+        nesting = True
     else:
         geolevels = options.geolevels
         views = options.views
         geoserver = options.geoserver
         templates = options.templates
+        nesting = options.nesting
 
-    management.call_command('setup', config=args[1], debug=options.verbose, geolevels=geolevels, views=views, geoserver=geoserver, templates=templates)
+    management.call_command('setup', config=args[1], debug=options.verbose, geolevels=geolevels, views=views, geoserver=geoserver, templates=templates, nesting=nesting)
 
     return
 

@@ -30,7 +30,7 @@ from django.conf.urls.defaults import *
 from django.conf import settings
 
 urlpatterns = patterns('publicmapping.redistricting.views',
-    (r'^$', 'editplan', { 'planid': 0 }),
+    (r'^$', 'viewplan', { 'planid': 0 }),
     (r'^plan/create/$', 'createplan'),
     (r'^plan/choose/$', 'chooseplan'),
     (r'^plan/upload/$', 'uploadfile'),

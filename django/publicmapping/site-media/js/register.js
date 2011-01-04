@@ -37,6 +37,7 @@ $(function(){
     // configure the registration dialog
     $('#register').dialog(dOptions);
     $('#forgotpass').dialog($.extend({title:'Forgot Password'},dOptions));
+    $('#sessiondupe').dialog($.extend({title:'Duplicate Session'},dOptions));
 
     // generic dialog in case registration is unavailable
     var genericRegistrationError = function() {
@@ -200,37 +201,9 @@ $(function(){
         return false;
     });
 
-    // when the anonymous button is clicked, fake a login as the
-    // 'anonymous' user, a special user
+    // go straight to the viewing pg
     $('#doAnonymous').click(function(evt) {
-        var frm = $('#anonymousForm')[0];
-        $.ajax({
-            context:frm,
-            data: {
-                newusername:'anonymous',
-                newpassword1:'anonymous',
-                email:''
-            },
-            dataType:'json',
-            type:'POST',
-            url:frm.action,
-            success:function(data,textStatus,xhr){
-                if (data.success) {
-                    window.location.href = data.redirect;
-                    return;
-                }
-            },
-            error:function(xhr,textStatus,error){
-                $('#doAnonymous').attr('disabled',true).css('cursor', 'not-allowed');
-                $('<div class="error">Sorry, anonymous access is not available at this time.  Please come back later.</div>').dialog({
-                    modal: true,
-                    title: 'Anonymous Unavailable',
-                    resizable:false, 
-                    width:300
-                });
-            }
-        });
-
+        window.location.href = '/accounts/logout/?next=/districtmapping/plan/0/view';
         return false;
     });
 
@@ -315,5 +288,35 @@ $(function(){
             title:'Login Error'
         });
         $('#username, #password').addClass('error');
+    } else if( 'opensessions' in window && opensessions > 1 ) {
+        $('#sessiondupe').dialog('open');
+        $('#force_close').click(function() {
+            var frm = $('#purge_form')[0];
+            $.ajax({
+                context:frm,
+                data: {
+                    username: $('#purge_username').val()
+                },
+                dataType:'json',
+                type:'POST',
+                url:frm.action,
+                success: function(data,textStatus,xhr){
+                    if (data.success) {
+                        $('#sessiondupe').dialog('close');
+                    }
+                    else {
+                        alert( data.message );
+                    }
+                },
+                error: function(xhr,textStatus,error) {
+                    alert( error );
+                }
+            });
+            return false;
+        });
+        $('#different_login').click(function() {
+            $('#sessiondupe').dialog('close');
+            return false;
+        });
     }
 });

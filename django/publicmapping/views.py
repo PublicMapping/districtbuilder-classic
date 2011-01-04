@@ -25,9 +25,12 @@ Author:
 
 from django.conf import settings
 from django.core.mail import send_mail
+from django.contrib.sessions.models import Session
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AnonymousUser
+from django.contrib.sessions.models import Session
 from django.contrib.auth.decorators import login_required
+from django.contrib.csrf.middleware import csrf_exempt
 from django.views.decorators.cache import cache_control
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render_to_response
@@ -56,10 +59,17 @@ def index(request):
         An HTML welcome page.
     """
 
+    count = 0
+    if 'count' in request.session:
+        count = request.session['count']
+        del request.session['count']
+
     return render_to_response('index.html', {
         'is_registered':False,
+        'opensessions':count,
         'ga_account': settings.GA_ACCOUNT,
-        'ga_domain': settings.GA_DOMAIN
+        'ga_domain': settings.GA_DOMAIN,
+        'user': request.user
     })
 
 
@@ -94,29 +104,28 @@ def userregister(request):
     anonymous = False
     status = { 'success':False }
     if username != '' and password != '':
-        anonymous = (username == 'anonymous' and password == 'anonymous')
+        if (username == 'anonymous' and password == 'anonymous'):
+            user = AnonymousUser()
+        else:
+            name_exists = User.objects.filter(username__exact=username)
+            if name_exists:
+                status['message'] ='name exists'
+                return HttpResponse(json.dumps(status), mimetype='application/json')
 
-        name_exists = User.objects.filter(username__exact=username)
-        if name_exists and not anonymous:
-            status['message'] ='name exists'
-            return HttpResponse(json.dumps(status), mimetype='application/json')
+            email_exists = email != '' and User.objects.filter(email__exact = email)
+            if email_exists:
+                status['message'] ='email exists'
+                return HttpResponse(json.dumps(status), mimetype='application/json')
 
-        email_exists = email != '' and User.objects.filter(email__exact = email)
-        if email_exists and not anonymous:
-            status['message'] ='email exists'
-            return HttpResponse(json.dumps(status), mimetype='application/json')
-
-        if not anonymous:
             try:
                 User.objects.create_user(username, email, password)
             except Exception as error:
                 status['message'] = 'Sorry, we weren\'t able to create your account.'
                 return HttpResponse(json.dumps(status), mimetype='application/json')
 
-        # authenticate the user, and add additional registration info
-        user = authenticate(username=username, password=password)
+            # authenticate the user, and add additional registration info
+            user = authenticate(username=username, password=password)
 
-        if not anonymous:
             user.first_name = fname
             user.last_name = lname
             user.save()
@@ -126,7 +135,8 @@ def userregister(request):
             profile.pass_hint = hint
             profile.save()
 
-        login( request, user )
+            login( request, user )
+
         status['success'] = True
         status['redirect'] = '/districtmapping/plan/0/view'
         return HttpResponse(json.dumps(status), mimetype='application/json')
@@ -202,8 +212,13 @@ def userlogout(request):
     Returns:
         An HttpResponseRedirect to the root url.
     """
+    key = request.session.session_key
     logout(request)
-    return HttpResponseRedirect('/')
+    Session.objects.filter(session_key = key).delete()
+    if 'next' in request.REQUEST:
+        return HttpResponseRedirect(request.REQUEST['next'])
+    else:
+        return HttpResponseRedirect('/')
 
 def emailpassword(user):
     """
@@ -319,3 +334,25 @@ def proxy(request):
 
     return httprsp
 
+@csrf_exempt
+def session(request):
+    status = { 'success': False, 'message': 'Unspecified error.' }
+    user = request.REQUEST['username']
+
+    try:
+        user = User.objects.get(username=user)
+    except:
+        status['message'] = 'No user found.';
+        return HttpResponse(json.dumps(status), mimetype='application/json')
+
+    sessions = Session.objects.all()
+    count = 0
+    for session in sessions:
+        decoded = session.get_decoded()
+        if '_auth_user_id' in decoded and decoded['_auth_user_id'] == user.id:
+            Session.objects.filter(session_key=session.session_key).delete()
+            count += 1
+
+    status['success'] = True
+    status['message'] = 'Deleted %d sessions.' % count
+    return HttpResponse(json.dumps(status), mimetype='application/json')

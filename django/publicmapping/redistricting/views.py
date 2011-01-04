@@ -33,7 +33,9 @@ from django.core.exceptions import ValidationError
 from django.db import IntegrityError, connection
 from django.db.models import Sum, Min, Max
 from django.shortcuts import render_to_response
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.sessions.models import Session
+from django.contrib.sessions.backends.db import SessionStore
 from django.contrib.gis.gdal import *
 from django.contrib.gis.gdal.libgdal import lgdal
 from django.contrib import humanize
@@ -48,6 +50,26 @@ from operator import attrgetter
 from redistricting.models import *
 from redistricting.utils import *
 import settings, random, string, math, types, copy, time, threading, traceback, os, sys, tempfile
+
+def using_unique_session(u):
+    if u.is_anonymous():
+        print "Anonymous always unique."
+        return True
+
+    sessions = Session.objects.all()
+    count = 0
+    for session in sessions:
+        decoded = session.get_decoded()
+        if '_auth_user_id' in decoded and decoded['_auth_user_id'] == u.id:
+            print "Found auth user id (%d) in session list." % u.id
+            count += 1
+            print "Number of sessions: %d" % count
+            websession = SessionStore(session_key=session.session_key)
+            websession['count'] = count
+            websession.save()
+
+    print "(count <= 1): %s" % (count <= 1)
+    return (count <= 1)
 
 @login_required
 def copyplan(request, planid):
@@ -128,7 +150,7 @@ def get_user_info(user):
     Returns:
         A dict with user information, including profile information.
     """
-    if user.username == 'anonymous':
+    if user.is_anonymous():
         return None
 
     profile = user.get_profile()
@@ -228,7 +250,7 @@ def commonplan(request, planid):
     }
 
 
-@login_required
+@user_passes_test(using_unique_session)
 def viewplan(request, planid):
     """
     View a plan. 
@@ -245,6 +267,7 @@ def viewplan(request, planid):
     return render_to_response('viewplan.html', commonplan(request, planid)) 
     
 @login_required
+@user_passes_test(using_unique_session)
 def editplan(request, planid):
     """
     Edit a plan. 
@@ -266,6 +289,7 @@ def editplan(request, planid):
     return render_to_response('editplan.html', cfg) 
 
 @login_required
+@user_passes_test(using_unique_session)
 def createplan(request):
     """
     Create a plan.
@@ -296,6 +320,7 @@ def createplan(request):
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
 @login_required
+@user_passes_test(using_unique_session)
 def uploadfile(request):
     """
     Accept a block equivalency file, and create a plan based on that
@@ -635,6 +660,7 @@ def getreport(request, planid):
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
 @login_required
+@user_passes_test(using_unique_session)
 def newdistrict(request, planid):
     """
     Create a new district.
@@ -706,6 +732,7 @@ def newdistrict(request, planid):
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
 @login_required
+@user_passes_test(using_unique_session)
 def addtodistrict(request, planid, districtid):
     """
     Add geounits to a district.
@@ -752,8 +779,7 @@ def addtodistrict(request, planid, districtid):
 
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
-
-@login_required
+@user_passes_test(using_unique_session)
 @cache_control(no_cache=True)
 def chooseplan(request):
     """
@@ -788,7 +814,7 @@ def chooseplan(request):
         'bodies': bodies
     })
 
-@login_required
+@user_passes_test(using_unique_session)
 @cache_control(private=True)
 def getdistricts(request, planid):
     """
@@ -827,7 +853,7 @@ def getdistricts(request, planid):
 
     return HttpResponse(json.dumps(status), mimetype='application/json')
 
-@login_required
+@user_passes_test(using_unique_session)
 @cache_control(private=True)
 def simple_district_versioned(request,planid):
     """
@@ -1235,7 +1261,7 @@ def getutc(t):
     t_seconds = time.mktime(t_tuple)
     return t.utcfromtimestamp(t_seconds)
 
-@login_required
+@user_passes_test(using_unique_session)
 def getdistrictindexfilestatus(request, planid):
     """
     Given a plan id, return the status of the district index file
@@ -1253,7 +1279,7 @@ def getdistrictindexfilestatus(request, planid):
         status['exception'] = ex 
     return HttpResponse(json.dumps(status),mimetype='application/json')
         
-@login_required
+@user_passes_test(using_unique_session)
 def getdistrictindexfile(request, planid):
     """
     Given a plan id, email the user a zipped copy of 
@@ -1275,7 +1301,7 @@ def getdistrictindexfile(request, planid):
         response = HttpResponse('File is not yet ready. Please try again in a few minutes')
     return response
 
-@login_required
+@user_passes_test(using_unique_session)
 def getplans(request):
     """
     Get the plans for the given user and return the data in a format readable
@@ -1337,6 +1363,7 @@ def getplans(request):
     return HttpResponse(json_response,mimetype='application/json') 
 
 @login_required
+@user_passes_test(using_unique_session)
 def editplanattributes(request, planid):
     if request.method != 'POST':
         return HttpResponseNotAllowed(['POST'])

@@ -57,6 +57,8 @@ class Command(BaseCommand):
             action='store_true'),
         make_option('-g', '--geolevel', dest="geolevels",
             action="append", help="Geolevels to import"),
+        make_option('-n', '--nesting', dest="nesting",
+            action='store_true', default=False, help="Enforce nested geometries."),
         make_option('-v', '--views', dest="views", default=False,
             action="store_true", help="Create database views."),
         make_option('-G', '--geoserver', dest="geoserver",
@@ -103,6 +105,7 @@ contents of the file and try again.
         self.import_prereq(config, verbose)
 
         optlevels = options.get("geolevels")
+        nesting = options.get("nesting")
         if not optlevels is None:
             # Begin the import process
             geolevels = config.xpath('/DistrictBuilder/GeoLevels/GeoLevel')
@@ -111,7 +114,10 @@ contents of the file and try again.
                 importme = len(optlevels) == 0
                 importme = importme or (i in optlevels)
                 if importme:
-                    self.import_geolevel(config, geolevel, verbose)
+                    #self.import_geolevel(config, geolevel, verbose)
+
+                    if nesting:
+                        self.renest_geolevel(i, verbose)
 
         if options.get("views"):
             # Create views based on the subjects and geolevels
@@ -122,7 +128,6 @@ contents of the file and try again.
             self.configure_geoserver(config, extent, verbose)
 
         if options.get("templates"):
-            print "Creating templates..."
             self.create_template(config, verbose)
 
     def configure_geoserver(self, config, extent, verbose):
@@ -434,6 +439,20 @@ ERROR:
             gconfig['subject_fields'].append( sconfig )
 
         self.import_shape(gconfig, verbose)
+
+    def renest_geolevel(self, geolevel_id, verbose):
+        """
+        Perform a re-nesting of the geography in the geographic levels.
+
+        Renesting the geometry works with Census Geography only that
+        has supplemental_ids.
+
+        Parameters:
+            geolevel - The configuration geolevel
+            verbose - A flag indicating verbose output messages.
+        """
+        if geolevel_id > 0:
+            geolevel = Geolevel.objects.get(id=geolevel_id+1).name
 
 
     def import_prereq(self, config, verbose):

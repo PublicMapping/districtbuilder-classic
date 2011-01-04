@@ -262,6 +262,12 @@ div#forgotpass {
     color: #6a6a6a;
     font-weight: bold;
 }
+div#sessiondupe {
+    display: none;
+    font-size: 14px;
+    color: #6a6a6a;
+    font-weight: bold;
+}
 form#registerForm input.field, form#registerForm input.error, 
 form#forgotForm input.field, form#forgotForm input.error {
     padding: 0 0 0 8px;
@@ -323,6 +329,12 @@ div#or {
     font-weight: bolder;
     color: #000000;
     text-align: center;
+}
+div#sessiondupe p {
+    font-weight: normal;
+}
+div#sessiondupe ul {
+    margin: 5px 0 5px 20px;
 }
 div#footer {
     clear: both;

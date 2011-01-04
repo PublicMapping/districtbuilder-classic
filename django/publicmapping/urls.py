@@ -42,6 +42,7 @@ urlpatterns = patterns('',
     (r'^districtmapping/', include('publicmapping.redistricting.urls')),
     (r'^$', 'publicmapping.views.index'),
     (r'^proxy$', 'publicmapping.views.proxy'),
+    (r'^session$', 'publicmapping.views.session'),
 )
 
 # Only if this application is running in debug mode, serve up the static
