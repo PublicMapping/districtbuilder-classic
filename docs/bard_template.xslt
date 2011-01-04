@@ -45,12 +45,12 @@
         </div>
         <div id="reportPreviewContainer">
             <div id="reportPreview" class="report">
+                <xsl:comment>This div intentionally left blank</xsl:comment>
             </div>
         </div>
 		<div id="reportButtons">
             <button id="btnPreviewReport">Create and Preview Report</button>
             <button id="btnSharePlans" onClick="$('#steps').tabs('select', '#step_share');return false;" >Go to Share Plan options</button>
-                       
         </div>
 
 </xsl:template>
