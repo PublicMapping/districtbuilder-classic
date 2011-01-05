@@ -114,10 +114,10 @@ contents of the file and try again.
                 importme = len(optlevels) == 0
                 importme = importme or (i in optlevels)
                 if importme:
-                    #self.import_geolevel(config, geolevel, verbose)
+                    self.import_geolevel(config, geolevel, verbose)
 
-                    if nesting:
-                        self.renest_geolevel(i, verbose)
+                    #if nesting:
+                    #    self.renest_geolevel(i, verbose)
 
         if options.get("views"):
             # Create views based on the subjects and geolevels
