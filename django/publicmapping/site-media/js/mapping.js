@@ -1898,6 +1898,10 @@ function mapinit(srs,maxExtent) {
                     version: getPlanVersion()
                 },
                 success: function(data, textStatus, xhr) {
+                    var mode = data.success ? 'select' : 'error';
+                    for (var i = 0; i < selection.features.length; i++) { 
+                        selection.drawFeature(selection.features[i], mode);
+                    } 
                     // update the max version of this plan
                     PLAN_VERSION = data.version;
 
