@@ -1267,7 +1267,7 @@ def getcompliance(plan):
             characteristics = district.computedcharacteristic_set
             population_value = characteristics.get(subject = population).number
             for subject in minority:
-                minority_value = characteristics.get(subject__exact = minority).number
+                minority_value = characteristics.get(subject__exact = subject).number
                 if minority_value / population_value > .5:
                     data[subject]['value'] += 1   
         except:
