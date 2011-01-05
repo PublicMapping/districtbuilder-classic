@@ -38,6 +38,7 @@ $(function(){
     $('#register').dialog(dOptions);
     $('#forgotpass').dialog($.extend({title:'Forgot Password'},dOptions));
     $('#sessiondupe').dialog($.extend({title:'Duplicate Session'},dOptions));
+    $('#sessionsmax').dialog($.extend({title:'Maximum Users Exceeded'},dOptions));
 
     // generic dialog in case registration is unavailable
     var genericRegistrationError = function() {
@@ -289,6 +290,11 @@ $(function(){
         });
         $('#username, #password').addClass('error');
     } else if( 'opensessions' in window && opensessions > 1 ) {
+        // If there is a page variable named opensessions, and it is
+        // greater than one, that means that we've been bumped back to
+        // the index page after attempting a login. This means that the
+        // user attempting to log in has an active session on another
+        // browser or computer. Give them options on how to access the app.
         $('#sessiondupe').dialog('open');
         $('#force_close').click(function() {
             var frm = $('#purge_form')[0];
@@ -318,5 +324,12 @@ $(function(){
             $('#sessiondupe').dialog('close');
             return false;
         });
+    } else if ( 'availsession' in window && !availsession ) {
+        // If there is a page variabl named availsession, and it is
+        // false, that means that we've been bumped back to the index
+        // page after attempting a login. This means that the maximum
+        // number of active sessions has been reached. Inform the user
+        // to come back and try again later.
+        $('#sessionsmax').dialog('open');
     }
 });

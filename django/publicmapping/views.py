@@ -62,11 +62,15 @@ def index(request):
     count = 0
     if 'count' in request.session:
         count = request.session['count']
-        del request.session['count']
+
+    avail = True
+    if 'avail' in request.session:
+        avail = request.session['avail']
 
     return render_to_response('index.html', {
         'is_registered':False,
         'opensessions':count,
+        'sessionavail':avail,
         'ga_account': settings.GA_ACCOUNT,
         'ga_domain': settings.GA_DOMAIN,
         'user': request.user
@@ -342,7 +346,7 @@ def session(request):
     try:
         user = User.objects.get(username=user)
     except:
-        status['message'] = 'No user found.';
+        status['message'] = 'No user found.'
         return HttpResponse(json.dumps(status), mimetype='application/json')
 
     sessions = Session.objects.all()

@@ -45,13 +45,28 @@ from django.views.decorators.cache import cache_control
 from rpy2 import robjects
 from rpy2.robjects import r, rinterface
 from rpy2.rlike import container as rpc
-from datetime import datetime, time
+from datetime import datetime, time, timedelta
 from operator import attrgetter
 from redistricting.models import *
 from redistricting.utils import *
 import settings, random, string, math, types, copy, time, threading, traceback, os, sys, tempfile
 
 def using_unique_session(u):
+    """
+    A test to determine if the user of the application is using a unique 
+    session. Each user is permitted one unique session (one session in the
+    django_session table that has not yet expired). If the user exceeds
+    this quota, this test fails, and the user will get bounced to the login
+    url.
+
+    Parameters:
+        u - The user. May be anonymous or registered.
+
+    Returns:
+        True - the user is an AnonymousUser or the number of sessions open
+               by the user is only 1 (one must be open to make the request)
+        False - the user is registered and has more than one open session.
+    """
     if u.is_anonymous():
         return True
 
@@ -60,12 +75,61 @@ def using_unique_session(u):
     for session in sessions:
         decoded = session.get_decoded()
         if '_auth_user_id' in decoded and decoded['_auth_user_id'] == u.id:
-            count += 1
+            if 'activity_time' in decoded and decoded['activity_time'] < datetime.now():
+                # delete this session of mine; it is dormant
+                Session.objects.filter(session_key=session.session_key).delete()
+            else:
+                count += 1
+
+    # after counting all the open and active sessions, go back through
+    # the session list and assign the session count to all web sessions
+    # for this user. (do this for inactive sessions, too)
+    for session in sessions:
+        decoded = session.get_decoded()
+        if '_auth_user_id' in decoded and decoded['_auth_user_id'] == u.id:
             websession = SessionStore(session_key=session.session_key)
             websession['count'] = count
             websession.save()
 
     return (count <= 1)
+
+def is_session_available(req):
+    """
+    Determine if a session is available. This is similar to a user test,
+    but requires access to the user's session, so it cannot be used in the
+    user_passes_test decorator.
+
+    Parameters:
+        req - The HttpRequest object, with user and session information.
+    """
+    sessions = Session.objects.filter(expire_date__gt=datetime.now())
+    count = 0
+    for session in sessions:
+        decoded = session.get_decoded()
+        if 'activity_time' in decoded and decoded['activity_time'] > datetime.now():
+            count += 1
+
+    avail = count < settings.CONCURRENT_SESSIONS
+    req.session['avail'] = avail
+
+    return avail
+
+def note_session_activity(req):
+    """
+    Add a session 'timeout' whenever a user performs an action. This is 
+    required to keep dormant (not yet expired, but inactive) sessions
+    from maxing out the concurrent session limit.
+
+    Parameters:
+        req - An HttpRequest, with a session attribute
+    """
+    # The timeout in this timedelta specifies the number of minutes.
+    window = timedelta(0,0,0,0,settings.SESSION_TIMEOUT)
+    if 'activity_time' in req.session:
+        req.session['activity_time'] += window
+    else:
+        req.session['activity_time'] = datetime.now() + window
+
 
 @login_required
 def copyplan(request, planid):
@@ -84,6 +148,8 @@ def copyplan(request, planid):
         A JSON HttpResponse which includes either an error message or the
         copied plan ID.
     """
+    note_session_activity(request)
+
     p = Plan.objects.get(pk=planid)
     status = { 'success': False }
     # Check if this plan is copyable by the current user.
@@ -174,6 +240,8 @@ def commonplan(request, planid):
     Returns:
         A python dict with common plan attributes set to the plan's values.
     """
+    note_session_activity(request)
+
     plan = Plan.objects.filter(id=planid)
     if plan.count() == 1:
         plan = plan[0]   
@@ -260,6 +328,10 @@ def viewplan(request, planid):
     Returns:
         A rendered HTML page for viewing a plan.
     """
+
+    if not is_session_available(request):
+        return HttpResponseRedirect('/')
+
     return render_to_response('viewplan.html', commonplan(request, planid)) 
     
 @login_required
@@ -277,6 +349,9 @@ def editplan(request, planid):
     Returns:
         A rendered HTML page for editing a plan.
     """
+    if not is_session_available(request):
+       return HttpResponseRedirect('/')
+
     cfg = commonplan(request, planid)
     if cfg['is_editable'] == False:
         return HttpResponseRedirect('/districtmapping/plan/%s/view/' % planid)
@@ -300,6 +375,8 @@ def createplan(request):
         A JSON HttpResponse, including the new plan's information, or an
         error describing why the plan could not be created.
     """
+    note_session_activity(request)
+
     status = { 'success': False, 'message': 'Unspecified Error' }
     if request.method == "POST":
         name = request.POST['name']
@@ -328,6 +405,7 @@ def uploadfile(request):
     Returns:
         A plan view, with additional information about the upload status.
     """
+    note_session_activity(request)
 
     status = commonplan(request,0)
     status['upload'] = True
@@ -462,6 +540,7 @@ def getreport(request, planid):
         The HTML for use as a preview in the web application, along with 
         the web address of the BARD report.
     """
+    note_session_activity(request)
 
     status = { 'success': False, 'message': 'Unspecified Error' }
     if not bardWorkSpaceLoaded:
@@ -672,6 +751,8 @@ def newdistrict(request, planid):
     Returns:
         The new District's name and district_id.
     """
+    note_session_activity(request)
+
     status = { 'success': False, 'message': 'Unspecified error.' }
     plan = Plan.objects.get(pk=planid)
 
@@ -747,6 +828,8 @@ def addtodistrict(request, planid, districtid):
         A JSON HttpResponse that contains the number of districts modified,
         or an error message if adding fails.
     """
+    note_session_activity(request)
+
     status = { 'success': False, 'message': 'Unspecified error.' }
     if len(request.REQUEST.items()) >= 2: 
         geolevel = request.REQUEST["geolevel"]
@@ -788,6 +871,8 @@ def chooseplan(request):
     Returns:
         A rendered HTML fragment that contains available plans.
     """
+    note_session_activity(request)
+
     templates = Plan.objects.filter(is_template=True, owner__is_staff = True, is_pending=False)
     shared = Plan.objects.filter(is_shared=True, is_pending=False)
     mine = Plan.objects.filter(is_template=False, is_shared=False, owner=request.user, is_pending=False)
@@ -821,6 +906,8 @@ def getdistricts(request, planid):
         planid - The plan id to query for the districts.
     Returns:
     """
+    note_session_activity(request)
+
     status = {'success':False}
 
     plan = Plan.objects.filter(id=planid)
@@ -869,6 +956,8 @@ def simple_district_versioned(request,planid):
     Returns:
         A GeoJSON HttpResponse, describing the districts in the plan.
     """
+    note_session_activity(request)
+
     status = {'success':False,'type':'FeatureCollection'}
 
     plan = Plan.objects.filter(id=planid)
@@ -924,6 +1013,8 @@ def getdemographics(request, planid):
     Returns:
         An HTML fragment that contains the demographic information.
     """
+    note_session_activity(request)
+
     status = { 'success':False }
     try:
         plan = Plan.objects.get(pk = planid)
@@ -1010,6 +1101,8 @@ def getgeography(request, planid):
     Returns:
         An HTML fragment that contains the geographic information.
     """
+    note_session_activity(request)
+
     status = { 'success': False }
     try:
         plan = Plan.objects.get(pk = planid)
@@ -1262,6 +1355,8 @@ def getdistrictindexfilestatus(request, planid):
     """
     Given a plan id, return the status of the district index file
     """    
+    note_session_activity(request)
+
     plan = Plan.objects.get(pk=planid)
     if not can_copy(request.user, plan):
         return HttpResponseForbidden()
@@ -1281,6 +1376,8 @@ def getdistrictindexfile(request, planid):
     Given a plan id, email the user a zipped copy of 
     the district index file
     """
+    note_session_activity(request)
+
     # Get the districtindexfile and create a response
     plan = Plan.objects.get(pk=planid)
     if not can_copy(request.user, plan):
@@ -1303,6 +1400,8 @@ def getplans(request):
     Get the plans for the given user and return the data in a format readable
     by the jqgrid
     """
+    note_session_activity(request)
+
     if request.method == 'POST':
         page = int(request.POST.get('page', 1))
         rows = int(request.POST.get('rows', 10))
@@ -1361,6 +1460,12 @@ def getplans(request):
 @login_required
 @user_passes_test(using_unique_session)
 def editplanattributes(request, planid):
+    """
+    Edit the attributes of a plan. Attributes of a plan are the name and/or
+    description.
+    """
+    note_session_activity(request)
+
     if request.method != 'POST':
         return HttpResponseNotAllowed(['POST'])
     new_name = request.POST.get('name', None)

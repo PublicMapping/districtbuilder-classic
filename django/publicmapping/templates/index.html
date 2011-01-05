@@ -59,8 +59,9 @@
         </script>
     {% endif %}
     <script type="text/javascript">
-        var opensessions = {{ opensessions }};
-        var openusername = '{{ user.username }}';
+        var opensessions = {{ opensessions }},
+            openusername = '{{ user.username }}',
+            availsession = {% if sessionavail %}true{% else %}false{% endif %};
     </script>
   </head>
   <body id="static">
@@ -214,6 +215,10 @@
                 </form>
             </li>
         </ul>
+    </div>
+
+    <div id="sessionsmax">
+        <p>The DistrictBuilder application has reached maximum capacity. Please try to use the application again shortly. We apologize for the inconvenience.</p>
     </div>
 
     <div id="footer">

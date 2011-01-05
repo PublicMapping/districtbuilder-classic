@@ -128,3 +128,9 @@ POSTGIS_TEMPLATE='template_postgis'
 # This is the base url for the application, where the login page is
 LOGIN_URL = '/'
 
+# The maximum number of different sessions that may be open at one time.
+CONCURRENT_SESSIONS = 5
+
+# The maximum amount of idle time past the last user activity to permit
+# before allowing other users to boot you off the system.
+SESSION_TIMEOUT = 15
