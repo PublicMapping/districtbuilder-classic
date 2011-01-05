@@ -1274,7 +1274,7 @@ function mapinit(srs,maxExtent) {
                     // of the plan, but there will be 'phantom' versions 
                     // between the undo version basis and the current 
                     // plan version.
-                    while (version > max_version) {
+                    while (version > max_version && version >= 0) {
                         delete PLAN_HISTORY[version--];
                     }
                 }
@@ -1851,7 +1851,7 @@ function mapinit(srs,maxExtent) {
         var ver = cursor.val();
         if (ver < PLAN_VERSION) {
             ver++;
-            while (!(ver in PLAN_HISTORY)) {
+            while (!(ver in PLAN_HISTORY) && ver <= PLAN_VERSION) {
                 ver++;
             }
             if (ver == PLAN_VERSION) {
