@@ -343,13 +343,28 @@ function mapinit(srs,maxExtent) {
             zoom = olmap.zoom;
         }
         var min_layer = { min_zoom: -1 };
+
+        $('#boundfor option').removeAttr('disabled');
+
         for (var i in SNAP_LAYERS) {
             var snap_layer = SNAP_LAYERS[i];
             var my_min = snap_layer.min_zoom;
             if (zoom >= my_min && my_min > min_layer.min_zoom) {
                 min_layer = snap_layer;
             }
+            if (my_min >= zoom) {  
+                $('#boundfor option[value*=' + snap_layer.level + ']').attr('disabled', true);  
+            }
         }
+        
+        // Disable the boundary layers for all layers with geounits nested in this one
+        $('#boundfor option[value*=' + min_layer.level + ']').attr('disabled', true);   
+        if ($('#boundfor option:selected').attr('disabled')) {  
+            $('#boundfor option').first().attr('selected', 'selected')  
+            .siblings().each( function() { $(this).removeAttr('selected') ; });     
+            $('#boundfor').change();    
+        }
+
         return { layer: min_layer.layer, level:min_layer.level, display:min_layer.name, geolevel: min_layer.geolevel };
     }
 
