@@ -750,14 +750,16 @@ ERROR:
         templates = config.xpath('/DistrictBuilder/Templates/Template')
         for template in templates:
             lbconfig = config.xpath('//LegislativeBody[@id="%s"]' % template.xpath('LegislativeBody')[0].get('ref'))[0]
-            legislative_body = LegislativeBody.objects.filter(name=lbconfig.get('name'))
-            if len(legislative_body) == 0:
+            query = LegislativeBody.objects.filter(name=lbconfig.get('name'))
+            if query.count() == 0:
                 if verbose:
                     print "LegislativeBody '%s' does not exist, skipping." % lbconfig.get('ref')
                 continue
+            else:
+                legislative_body = query[0]
 
-            templateplan, created = Plan.objects.get_or_create(name=template.get('name'), legislative_body=legislative_body, owner=admin, is_template=True)
-            if not created:
+            query = Plan.objects.filter(name=template.get('name'), legislative_body=legislative_body, owner=admin, is_template=True)
+            if query.count() > 0:
                 if verbose:
                     print "Plan '%s' exists, skipping." % template.get('name')
                 continue
@@ -765,7 +767,7 @@ ERROR:
             fconfig = template.xpath('Blockfile')[0]
             path = fconfig.get('path')
 
-            DistrictIndexFile.index2plan( template.get('name'), legislative_body[0].id, path, owner=admin, template=True, purge=False, email=None)
+            DistrictIndexFile.index2plan( template.get('name'), legislative_body.id, path, owner=admin, template=True, purge=False, email=None)
 
             if verbose:
                 print 'Created template plan "%s"' % template.get('name')
