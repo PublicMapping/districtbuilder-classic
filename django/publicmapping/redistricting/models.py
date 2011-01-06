@@ -705,7 +705,9 @@ class Plan(models.Model):
             version -- The version of the Plan that is being modified.
 
         Returns:
-            The number of Districts changed.
+            Either 1) the number of Districts changed if adding geounits 
+            to a district that already exists; 2) the name of the district
+            created with the passed geounits.
         """
         
         # incremental is the geometry that is changing
@@ -716,13 +718,26 @@ class Plan(models.Model):
         # Get the districts in this plan, at the specified version.
         districts = self.get_districts_at_version(int(version))
 
+        ds2 = self.get_districts_at_version(self.version)
+        print "Districts at PLAN version %d:" % self.version
+        for ds in ds2:
+            print "    %d" % ds.id
+
         # purge any districts between the version provided
         # and the latest version
-        District.objects.filter(plan=self,version__gt=version).delete()
+        purge = District.objects.filter(plan=self,version__gt=int(version))
+        print "Districts before purge: %d" % purge.count()
+        purge.delete()
+        print "Districts after purge: %d" % purge.count()
+
+        print "Districts at version %d:" % int(version)
+
+        target = None
 
         # First, remove the aggregate values from districts that are
         # not the target, and intersect the geounits provided
         for district in districts:
+            print "    %d, %d (%d)" % (district.id,district.district_id,districtid)
             if district.district_id == int(districtid):
                 # If the district_id is the target, save the target.
                 target = district
@@ -789,6 +804,17 @@ class Plan(models.Model):
             if district_copy.delta_stats(geounits,False):
                 fixed += 1
 
+        new_target = False
+        if target is None:
+            # create a temporary district
+            try:
+                name = self.legislative_body.member % (districtid-1)
+            except:
+                name = str(districtid-1)
+            target = District(name=name, plan=self, district_id=districtid, version=self.version)
+            target.save()
+            new_target = True
+                
         # get the geounits before changing the target geometry
         geounits = Geounit.get_mixed_geounits(geounit_ids, self.legislative_body, geolevel, target.geom, False)
 
@@ -830,6 +856,11 @@ class Plan(models.Model):
         # save any changes to the version of this plan
         self.version += 1
         self.save()
+
+        # purge the old target if a new one was created
+        if new_target:
+            District.objects.filter(id=target.id).delete()
+            return name
 
         # Return the number of changed districts
         return fixed

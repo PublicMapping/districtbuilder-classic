@@ -73,23 +73,31 @@ def using_unique_session(u):
     sessions = Session.objects.all()
     count = 0
     for session in sessions:
-        decoded = session.get_decoded()
-        if '_auth_user_id' in decoded and decoded['_auth_user_id'] == u.id:
-            if 'activity_time' in decoded and decoded['activity_time'] < datetime.now():
-                # delete this session of mine; it is dormant
-                Session.objects.filter(session_key=session.session_key).delete()
-            else:
-                count += 1
+        try:
+            decoded = session.get_decoded()
+
+            if '_auth_user_id' in decoded and decoded['_auth_user_id'] == u.id:
+                if 'activity_time' in decoded and decoded['activity_time'] < datetime.now():
+                    # delete this session of mine; it is dormant
+                    Session.objects.filter(session_key=session.session_key).delete()
+                else:
+                    count += 1
+        except SuspiciousOperation:
+            print "SuspiciousOperation caught while checking the number of sessions a user has open. Session key: %s" % session.session_key
+            print traceback.format_exc()
 
     # after counting all the open and active sessions, go back through
     # the session list and assign the session count to all web sessions
     # for this user. (do this for inactive sessions, too)
     for session in sessions:
-        decoded = session.get_decoded()
-        if '_auth_user_id' in decoded and decoded['_auth_user_id'] == u.id:
-            websession = SessionStore(session_key=session.session_key)
-            websession['count'] = count
-            websession.save()
+        try:
+            decoded = session.get_decoded()
+            if '_auth_user_id' in decoded and decoded['_auth_user_id'] == u.id:
+                websession = SessionStore(session_key=session.session_key)
+                websession['count'] = count
+                websession.save()
+        except SuspiciousOperation:
+            print "SuspiciousOperation caught while setting the session count on all user sessions. Session key: %s" % session.session_key
 
     return (count <= 1)
 
@@ -105,9 +113,13 @@ def is_session_available(req):
     sessions = Session.objects.filter(expire_date__gt=datetime.now())
     count = 0
     for session in sessions:
-        decoded = session.get_decoded()
-        if 'activity_time' in decoded and decoded['activity_time'] > datetime.now():
-            count += 1
+        try:
+            decoded = session.get_decoded()
+            if 'activity_time' in decoded and decoded['activity_time'] > datetime.now():
+                count += 1
+        except SuspiciousOperation:
+            print "SuspiciousOperation caught while checking the last activity time in a user's session. Session key: %s" % session.session_key
+            print traceback.format_exc()
 
     avail = count < settings.CONCURRENT_SESSIONS
     req.session['avail'] = avail
@@ -778,31 +790,21 @@ def newdistrict(request, planid):
 
         if geolevel and geounit_ids and district_id:
             try: 
-                # create a temporary district
-                try:
-                    name = plan.legislative_body.member % (district_id-1)
-                except:
-                    name = str(district_id-1)
-                district = District(name=name, plan=plan, district_id=district_id, version=plan.version)
-                district.save()
-
-                # save the district_id generated during save
-                district_id = district.district_id
-
                 # add the geounits selected to this district -- this will
                 # create a new district w/1 version higher
-                fixed = plan.add_geounits(district.district_id, geounit_ids, geolevel, version)
+                name = plan.add_geounits(district_id, geounit_ids, geolevel, version)
 
                 status['success'] = True
-                status['message'] = 'Created %d new district' % fixed
+                status['message'] = 'Created 1 new district'
                 plan = Plan.objects.get(pk=planid)
                 status['edited'] = getutc(plan.edited).isoformat()
                 status['district_id'] = district_id
-                status['district_name'] = district.name
+                status['district_name'] = name
                 status['version'] = plan.version
             except ValidationError:
                 status['message'] = 'Reached Max districts already'
             except:
+                print traceback.format_exc()
                 status['message'] = 'Couldn\'t save new district.'
         else:
             status['message'] = 'Must specify name, geolevel, and geounit ids for new district.'
