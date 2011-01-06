@@ -699,7 +699,7 @@ Include the markup for the account management panel.
             table: $('#plan_table'),
             pager: $('#plan_table_pager'),
             dataUrl: '/districtmapping/getplans/'
-        }).init();
+        });
     {% if plan.name %}
     {% comment %}
 
@@ -722,7 +722,12 @@ Include the markup for the account management panel.
                 exportIndexFile.init();
             }
         }});
+
+        // Get the list of plans after all the other plan info has loaded
+        setTimeout(choose.init, 1000);
     {% else %}
+        // Get the list of plans immediately
+        choose.init();
         $('#steps').tabs('option', 'disabled', [ 1,2,3 ]);
     {% endif %}
         // initialize the reporting interface
