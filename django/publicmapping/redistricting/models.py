@@ -709,6 +709,12 @@ class Plan(models.Model):
             to a district that already exists; 2) the name of the district
             created with the passed geounits.
         """
+
+        # fix the district id so that it is definitely an integer
+        districtid = int(districtid)
+
+        # fix the version so that it is definitely an integer
+        version = int(version)
         
         # incremental is the geometry that is changing
         incremental = Geounit.objects.filter(id__in=geounit_ids).unionagg()
@@ -716,29 +722,29 @@ class Plan(models.Model):
         fixed = 0
 
         # Get the districts in this plan, at the specified version.
-        districts = self.get_districts_at_version(int(version))
+        districts = self.get_districts_at_version(version)
 
-        ds2 = self.get_districts_at_version(self.version)
-        print "Districts at PLAN version %d:" % self.version
-        for ds in ds2:
-            print "    %d" % ds.id
+        #ds2 = self.get_districts_at_version(self.version)
+        #print "Districts at PLAN version %d:" % self.version
+        #for ds in ds2:
+        #    print "    %d" % ds.id
 
         # purge any districts between the version provided
         # and the latest version
-        purge = District.objects.filter(plan=self,version__gt=int(version))
-        print "Districts before purge: %d" % purge.count()
+        purge = District.objects.filter(plan=self,version__gt=version)
+        #print "Districts before purge: %d" % purge.count()
         purge.delete()
-        print "Districts after purge: %d" % purge.count()
+        #print "Districts after purge: %d" % purge.count()
 
-        print "Districts at version %d:" % int(version)
+        #print "Districts at version %d:" % int(version)
 
         target = None
 
         # First, remove the aggregate values from districts that are
         # not the target, and intersect the geounits provided
         for district in districts:
-            print "    %d, %d (%d)" % (district.id,district.district_id,districtid)
-            if district.district_id == int(districtid):
+            #print "    %d, %d (%d)" % (district.id,district.district_id,districtid)
+            if district.district_id == districtid:
                 # If the district_id is the target, save the target.
                 target = district
                 continue
@@ -784,18 +790,19 @@ class Plan(models.Model):
                 # the district were removed); empty the geom and simple 
                 # fields
                 district.geom = None
-                district.simplify()
             else:
                 # The district geometry exists, so save the updated 
                 # versions of the geom and simple fields
                 district.geom = geom
-                district.simplify()
 
             # Clone the district to a new version, with a different shape
             district_copy = copy(district)
             district_copy.version = self.version + 1
             district_copy.id = None
-            district_copy.save()
+            district_copy.save() # this auto-generates a district_id
+
+            # There is always a geometry for the district copy
+            district_copy.simplify() # implicit save
 
             # Clone the characteristings to this new version
             district_copy.clone_characteristics_from(district)
@@ -836,15 +843,14 @@ class Plan(models.Model):
             # Geounits
             target.geom = enforce_multi(incremental)
 
-        # If the target geometry exists (no errors from above)
-        if target.geom:
-            target.simplify()
-
         # Clone the district to a new version, with a different shape.
         target_copy = copy(target)
         target_copy.version = self.version + 1
         target_copy.id = None
-        target_copy.save();
+        
+        # If the target geometry exists (no errors from above)
+        if target_copy.geom:
+            target_copy.simplify() # implicit save happens here
 
         # Clone the characteristics to this new version
         target_copy.clone_characteristics_from(target)
