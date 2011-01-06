@@ -239,10 +239,15 @@ class DistrictIndexFile():
                     cc_value = Characteristic.objects.filter(
                         geounit__in = geounit_ids, 
                         subject = subject).aggregate(Sum('number'))
-                    cc = ComputedCharacteristic(subject = subject, 
-                        number = cc_value['number__sum'], 
-                        district = new_district)
-                    cc.save()
+                    value = cc_value['number__sum']
+                    if value is not None:
+                        cc = ComputedCharacteristic(subject = subject, 
+                            number = value, 
+                            district = new_district)
+                        cc.save()
+                    else:
+                        sys.stderr.write('Unable to create ComputedCharacteristic for Subject: %s. Skipping subject\n' % subject.name)
+                        continue
                 except Exception as ex:
                     if email:
                         context['errors'].append({
