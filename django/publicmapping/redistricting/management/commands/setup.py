@@ -651,7 +651,7 @@ ERROR:
 
             prefetch = Q(name=feat.get(config['name_field'])) & Q(geolevel=level)
             if supplemental_id_field:
-                prefetch = prefetch & Q(supplemental_id=feat.get(supplemental_id_field))
+                prefetch = prefetch & Q(supplemental_id=str(feat.get(supplemental_id_field)))
             prefetch = Geounit.objects.filter(prefetch) 
             if prefetch.count() == 0:
                 try :
@@ -663,7 +663,7 @@ ERROR:
                         my_geom = geos
                     elif geos.geom_type == 'Polygon':
                         my_geom = MultiPolygon(geos)
-                    simple = my_geom.simplify(tolerance=config['tolerance'],preserve_topology=True)
+                    simple = my_geom.simplify(tolerance=Decimal(config['tolerance']),preserve_topology=True)
                     if simple.geom_type != 'MultiPolygon':
                         simple = MultiPolygon(simple)
                     center = my_geom.centroid
@@ -714,9 +714,13 @@ ERROR:
 
             for attr, obj in subject_objects.iteritems():
                 value = Decimal(str(feat.get(attr))).quantize(Decimal('000000.0000', 'ROUND_DOWN'))
-                c, created = Characteristic.objects.get_or_create(subject=obj, geounit=g)
-                try:
+                query =  Characteristic.objects.filter(subject=obj, geounit=g)
+                if query.count() > 0:
+                    c = query[0]
                     c.number = value
+                else:
+                    c = Characteristic(subject=obj, geounit=g, number=value)
+                try:
                     c.save()
                 except:
                     c.number = '0.0'
