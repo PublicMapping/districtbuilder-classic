@@ -1081,7 +1081,7 @@ def getdemographics(request, planid):
         return render_to_response('demographics.html', {
             'plan': plan,
             'district_values': district_values,
-            'aggregate': getcompliance(plan),
+            'aggregate': getcompliance(plan, version),
             'headers': headers
         })
     except:
@@ -1204,7 +1204,7 @@ def getgeography(request, planid):
         return render_to_response('geography.html', {
             'plan': plan,
             'district_values': district_values,
-            'aggregate': getcompliance(plan),
+            'aggregate': getcompliance(plan, version),
             'name': subject.short_display
         })
     except:
@@ -1213,7 +1213,7 @@ def getgeography(request, planid):
         return HttpResponse( json.dumps(status), mimetype='application/json', status=500)
 
 
-def getcompliance(plan):
+def getcompliance(plan, version):
     """
     Get compliance information about a set of districts. Compliance
     includes contiguity, population target data, and minority districts.
@@ -1229,7 +1229,8 @@ def getcompliance(plan):
     # Check each district for contiguity
     contiguity = { 'name': 'Noncontiguous', 'value': 0 }
     noncontiguous = 0
-    districts = plan.district_set.all()
+    # Remember to get only the districts at a specific version
+    districts = plan.get_districts_at_version(version)
     for district in districts:
         if not district.is_contiguous() and district.name != 'Unassigned':
             noncontiguous += 1
