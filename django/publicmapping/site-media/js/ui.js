@@ -115,9 +115,11 @@ function getLocalTimeFromIsoformat(time) {
     // get the time zone offset in minutes, then multiply to get milliseconds
     var offset = date.getTimezoneOffset() * 60000;
     date = new Date(date - offset);
-    var hours = date.getHours() ;
+    var hours = date.getHours();
     var minutes = date.getMinutes();
-    var day = date.getMonth() + "/" + date.getDate();
+
+    // getMonth returns a value from 0-11, so we need to add 1
+    var day = (date.getMonth() + 1) + "/" + date.getDate();
     return { hours: hours, minutes: minutes, day: day };
 }
 
