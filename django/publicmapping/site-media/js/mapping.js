@@ -556,6 +556,7 @@ function mapinit(srs,maxExtent) {
                 if (data.success) {
                     // update the max version of this plan
                     PLAN_VERSION = data.version;
+                    PLAN_HISTORY[PLAN_VERSION] = true;
 
                     // set the version cursor
                     $('#history_cursor').val(data.version);
@@ -1914,6 +1915,7 @@ function mapinit(srs,maxExtent) {
                     } 
                     // update the max version of this plan
                     PLAN_VERSION = data.version;
+                    PLAN_HISTORY[PLAN_VERSION] = true;
 
                     $('#history_cursor').val(data.version);
 
