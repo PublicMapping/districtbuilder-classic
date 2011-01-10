@@ -46,6 +46,7 @@ from rpy2 import robjects
 from rpy2.robjects import r, rinterface
 from rpy2.rlike import container as rpc
 from datetime import datetime, time, timedelta
+from decimal import *
 from operator import attrgetter
 from redistricting.models import *
 from redistricting.utils import *
@@ -1267,10 +1268,10 @@ def getcompliance(plan):
     for district in districts:
         try:
             characteristics = district.computedcharacteristic_set
-            population_value = characteristics.get(subject = population).number
+            population_value = Decimal(characteristics.get(subject = population).number)
             for subject in minority:
-                minority_value = characteristics.get(subject__exact = subject).number
-                if minority_value / population_value > .5:
+                minority_value = Decimal(characteristics.get(subject__exact = subject).number)
+                if minority_value / population_value > Decimal('.5'):
                     data[subject]['value'] += 1   
         except:
             # District has no characteristics - unassigned
