@@ -1217,6 +1217,8 @@ function mapinit(srs,maxExtent) {
                     return;
                 }
 
+                var currentDist = $('#assign_district').val();
+
                 $('#assign_district option').detach();
                 $('#assign_district')
                     .append('<option value="-1">-- Select One --</option>')
@@ -1259,7 +1261,15 @@ function mapinit(srs,maxExtent) {
                 });
                 all_options.appendTo('#assign_district');
 
+                // ensures that '-- Select One --' is selected
                 $('#assign_district').val(-1);
+
+                if (assignMode == 'anchor') {
+                    // ONLY IF the district exists, and is in the option 
+                    // list will this change the current selection in the
+                    // dropdown
+                    $('#assign_district').val(currentDist);
+                }
 
                 // set the version cursor to the max version. In situations
                 // where there has been an edit on an undo, the version 
