@@ -1264,12 +1264,17 @@ function mapinit(srs,maxExtent) {
 
                 // ensures that '-- Select One --' is selected
                 $('#assign_district').val(-1);
-
+                
                 if (assignMode == 'anchor') {
                     // ONLY IF the district exists, and is in the option 
                     // list will this change the current selection in the
                     // dropdown
                     $('#assign_district').val(currentDist);
+
+                    if ($('#assign_district').val() != currentDist) {
+                        $('#anchor_tool').removeClass('toggle');
+                        assignMode = null;
+                    }
                 }
 
                 // set the version cursor to the max version. In situations
