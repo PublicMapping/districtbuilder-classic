@@ -321,7 +321,8 @@ function mapinit(srs,maxExtent) {
     // style for all rules that apply to the districtLayer
     var districtStyle = {
         fill: true,
-        fillOpacity: 0.00,
+        fillOpacity: 0.01,    // need some opacity for picking districts
+        fillColor: '#ee9900', // with ID tool -- fillColor needed, too
         strokeColor: '#ee9900',
         strokeOpacity: 1,
         strokeWidth: 2,
