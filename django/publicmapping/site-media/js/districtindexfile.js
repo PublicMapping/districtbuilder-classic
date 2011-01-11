@@ -58,7 +58,16 @@ districtindexfile = function(options) {
     _self.init = function() {
         _options.target.empty();
         _options.target.append($('<div class="loading"></div>').width('70').height('25'));
-        $.post(_options.statusUrl, statusRequestCallback);
+        $.ajax({
+           url: _options.statusUrl,
+           dataType: 'json',
+           success: statusRequestCallback,
+           error: function(xhr, textStatus, message) {
+               if (xhr.status == 403) {
+                   window.location.href='/?msg=logoff';
+               }
+           }
+        });
         _options.callback();
         
         return _self;
@@ -92,6 +101,10 @@ districtindexfile = function(options) {
                     return false;
                 });
                 _options.target.append(button);    
+            }
+        } else {
+            if ('redirect' in data) {
+                window.location.href = data.redirect;
             }
         }
     };

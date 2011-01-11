@@ -170,14 +170,25 @@ chooseplan = function(options) {
             }
             else {
                 window.status = 'Please standby while creating new plan ...';
-                $.post(
-                    url, 
-                    { 
+                $.ajax({
+                    url:url, 
+                    data:{ 
                         name: $('#txtNewName').val(),
                         legislativeBody: $('#leg_selector').val()
-                    }, 
-                    copyCallback, 
-                    'json');
+                    },
+                    dataType:'json',
+                    success: copyCallback,
+                    error: function(xhr,textStatus,message){
+                        var contentType = xhr.getResponseHeader('Content-Type');
+                        // if the content is text/html, redirect to '/',
+                        // since we probably just got logged out from 
+                        // another session
+                        if (contentType.startsWith('text/html')) {
+                            window.location.href='/?msg=logoff';
+                        }
+                    },
+                    type: 'POST'
+                });
                 return false;
             }
         }
@@ -199,7 +210,15 @@ chooseplan = function(options) {
      */
     var copyCallback = function(data) {
         if ('success' in data && !data.success) {
-            alert( data.message + '\n\nTip: Make sure the new plan\'s name is unique.' );
+            if ('redirect' in data) {
+                window.location.href = data.redirect;
+                return;
+            }
+
+            $('<div title="Creation Error"><p>' + data.message + "</p><p><b>Tip</b>: Make sure the new plan's name is unique.</p></div>").dialog({
+                modal:true,
+                resizable:false
+            });
 
             if (OpenLayers) {
                 OpenLayers.Element.removeClass(document.body,'olCursorWait');
@@ -255,6 +274,7 @@ chooseplan = function(options) {
 
             onSelectRow: rowSelected,
             beforeRequest: appendExtraParamsToRequest,
+            loadError: loadError,
             height: 'auto',
             autowidth: 'true',
             rowNum:15,
@@ -273,6 +293,12 @@ chooseplan = function(options) {
         );
     }
 
+    var loadError = function(xhr, textStatus, error) {
+        if (xhr.status == 403) {
+            window.location.href = '/?msg=logoff';
+        }
+    }
+
     var rowSelected = function(id) {
         // Set the internal variables for later use
         _selectedPlanId = id;
@@ -286,16 +312,29 @@ chooseplan = function(options) {
             _saveButton.unbind();
             // On save click, submit new plan attribute data to server
             _saveButton.click( function() {
-                $.post('/districtmapping/plan/' + _selectedPlanId + '/attributes/',
-                    {
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'json',
+                    url: '/districtmapping/plan/' + _selectedPlanId + '/attributes/',
+                    data: {
                         name: $('#plan_form #name').val(),
                         description: $('#plan_form #description').val()
-                    }, function(data) {
+                    }, 
+                    success: function(data) {
                         if (data.success) {
                             _table.jqGrid('FormToGrid', _selectedPlanId, '#plan_form');
                             editState('view');
                         }
-                    });
+                        else if ('redirect' in data) {
+                            window.location.href = data.redirect;
+                        }
+                    },
+                    error: function(xhr, textStatus, message) {
+                        if (xhr.status == 403) {
+                            window.location.href = '/?msg=logoff';
+                        }
+                    }
+                });
                 return false;
             });
         } else {

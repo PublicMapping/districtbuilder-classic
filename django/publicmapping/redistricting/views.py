@@ -144,7 +144,6 @@ def note_session_activity(req):
         req.session['activity_time'] = datetime.now() + window
 
 
-@login_required
 def copyplan(request, planid):
     """
     Copy a plan to a new, editable plan.
@@ -163,8 +162,13 @@ def copyplan(request, planid):
     """
     note_session_activity(request)
 
-    p = Plan.objects.get(pk=planid)
     status = { 'success': False }
+    if request.user.is_anonymous() or not using_unique_session(request.user):
+        status['message'] = "The current user may only have one session open at a time."
+        status['redirect'] = '/?msg=logoff'
+        return HttpResponse(json.dumps(status),mimetype='application/json')
+
+    p = Plan.objects.get(pk=planid)
     # Check if this plan is copyable by the current user.
     if not can_copy(request.user, p):
         status['message'] = "User %s doesn't have permission to copy this model" % request.user.username
@@ -405,8 +409,6 @@ def createplan(request):
     status['message'] = 'Didn\'t submit name through POST'
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
-@login_required
-@user_passes_test(using_unique_session)
 def uploadfile(request):
     """
     Accept a block equivalency file, and create a plan based on that
@@ -419,6 +421,18 @@ def uploadfile(request):
         A plan view, with additional information about the upload status.
     """
     note_session_activity(request)
+
+    if request.user.is_anonymous():
+        # If a user is logged off from another location, they will appear
+        # as an anonymous user. Redirect them to the front page. Sadly,
+        # they will not get a notice that they were logged out.
+        return HttpResponseRedirect('/')
+
+    if not using_unique_session(request.user):
+        # If the user is still logged in in another session, send them to
+        # the front page, with a message. This should never happen, but
+        # it's here just in case.
+        return HttpResponseRedirect('/?msg=logoff')
 
     status = commonplan(request,0)
     status['upload'] = True
@@ -1354,17 +1368,21 @@ def getutc(t):
     t_seconds = time.mktime(t_tuple)
     return t.utcfromtimestamp(t_seconds)
 
-@user_passes_test(using_unique_session)
 def getdistrictindexfilestatus(request, planid):
     """
     Given a plan id, return the status of the district index file
     """    
     note_session_activity(request)
 
+    status = { 'success':False }
+    if not using_unique_session(request.user):
+        status['message'] = "The current user may only have one session open at a time."
+        status['redirect'] = '/?msg=logoff'
+        return HttpResponse(json.dumps(status),mimetype='application/json')
+
     plan = Plan.objects.get(pk=planid)
     if not can_copy(request.user, plan):
         return HttpResponseForbidden()
-    status = { 'success':False }
     try:
         file_status = DistrictIndexFile.get_index_file_status(plan)
         status['success'] = True
@@ -1398,13 +1416,15 @@ def getdistrictindexfile(request, planid):
         response = HttpResponse('File is not yet ready. Please try again in a few minutes')
     return response
 
-@user_passes_test(using_unique_session)
 def getplans(request):
     """
     Get the plans for the given user and return the data in a format readable
     by the jqgrid
     """
     note_session_activity(request)
+
+    if not using_unique_session(request.user):
+        return HttpResponseForbidden()
 
     if request.method == 'POST':
         page = int(request.POST.get('page', 1))
@@ -1425,9 +1445,12 @@ def getplans(request):
     elif owner_filter == 'shared':
         available = Q(is_shared=True)
     elif owner_filter == 'mine':
-        available = Q(owner__exact=request.user)
+        if request.user.is_anonymous():
+            return HttpResponseForbidden()
+        else:
+            available = Q(owner__exact=request.user)
     else:
-        return HttpResponseBadRequest()
+        return HttpResponseBadRequest("Unknown filter method.")
         
        
     not_pending = Q(is_pending=False)
@@ -1457,18 +1480,39 @@ def getplans(request):
     # Create the objects that will be serialized for presentation in the plan chooser
     plans_list = list()
     for plan in plans:
-        plans_list.append( { 'pk': plan.id, 'fields': { 'name': plan.name, 'description': plan.description, 'edited': str(plan.edited), 'is_template': plan.is_template, 'is_shared': plan.is_shared, 'owner': plan.owner.username, 'districtCount': len(plan.get_districts_at_version(plan.version)) - 1, 'can_edit': can_edit(request.user, plan) }})
+        plans_list.append({
+            'pk': plan.id, 
+            'fields': { 
+                'name': plan.name, 
+                'description': plan.description, 
+                'edited': str(plan.edited), 
+                'is_template': plan.is_template, 
+                'is_shared': plan.is_shared, 
+                'owner': plan.owner.username, 
+                'districtCount': len(plan.get_districts_at_version(plan.version)) - 1, 
+                'can_edit': can_edit(request.user, plan)
+                }
+            })
     json_response = "{ \"total\":\"%d\", \"page\":\"%d\", \"records\":\"%d\", \"rows\":%s }" % (total_pages, page, len(plans), json.dumps(plans_list))
     return HttpResponse(json_response,mimetype='application/json') 
 
-@login_required
-@user_passes_test(using_unique_session)
 def editplanattributes(request, planid):
     """
     Edit the attributes of a plan. Attributes of a plan are the name and/or
     description.
     """
     note_session_activity(request)
+
+    status = { 'success': False }
+    if request.user.is_anonymous():
+        status['message'] = "Only registered users may edit plan attributes"
+        status['redirect'] = '/'
+        return HttpResponse(json.dumps(status),mimetype='application/json')
+
+    if not using_unique_session(request.user):
+        status['message'] = "The current user may only have one session open at a time."
+        status['redirect'] = '/?msg=logoff'
+        return HttpResponse(json.dumps(status),mimetype='application/json')
 
     if request.method != 'POST':
         return HttpResponseNotAllowed(['POST'])
@@ -1478,18 +1522,21 @@ def editplanattributes(request, planid):
     if not planid or not (new_name or new_description):
         return HttpResponseBadRequest('Must declare planId, name and description')
 
-    status = { 'success': False }
-    try:
-        plan = Plan.objects.get(pk=planid)
+    plan = Plan.objects.filter(pk=planid,owner=request.user)
+    if plan.count() == 0:
+        plan = plan[0]
         if new_name: 
             plan.name = new_name
         if new_description:
             plan.description = new_description
-        plan.save()
-    except Exception as ex:
-        status['message'] = 'Failed to save the changes to your plan'
-        status['exception'] = ex
+        try:
+            plan.save()
+
+            status['success'] = True
+            status['message'] = 'Updated plan attributes'
+        except Exception as ex:
+            status['message'] = 'Failed to save the changes to your plan'
+            status['exception'] = ex
     else:
-        status['success'] = True
-        status['message'] = 'Updated plan attributes'
+        status['message'] = "Cannot edit a plan you don\'t own."
     return HttpResponse(json.dumps(status), mimetype='application/json')

@@ -325,11 +325,25 @@ $(function(){
             return false;
         });
     } else if ( 'availsession' in window && !availsession ) {
-        // If there is a page variabl named availsession, and it is
+        // If there is a page variable named availsession, and it is
         // false, that means that we've been bumped back to the index
         // page after attempting a login. This means that the maximum
         // number of active sessions has been reached. Inform the user
         // to come back and try again later.
         $('#sessionsmax').dialog('open');
+    } else {
+        var re = new RegExp('[\\?\\&].+?=[^\\&]*','g');
+        var matches = window.location.search.match(re);
+        for (var i = 0; matches !== null && i < matches.length; i++) {
+            var re2 = new RegExp('[\\?\\&](.+?)=([^\\&]*)$');
+            var matches2 = matches[i].match(re2);
+
+            if (matches2[1] == 'msg' && matches2[2] == 'logoff') {
+                // TODO: Make this a nice dialog.
+                alert('You have been logged off.')
+                return;
+            }
+        }
     }
+
 });
