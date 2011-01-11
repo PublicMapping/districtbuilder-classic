@@ -509,20 +509,38 @@ function mapinit(srs,maxExtent) {
 
     // Reload the information tabs and reload the filters
     var updateInfoDisplay = function() {
-        $('.geography').load(geourl, {  
-            demo: getDistrictBy().by,
-            version: getPlanVersion()
-        }, function() {
-            loadTooltips();
-            sortByVisibility(true);
-        });            
+        $('.geography').load(
+            geourl, 
+            {  
+                demo: getDistrictBy().by,
+                version: getPlanVersion()
+            }, 
+            function(rsp, status, xhr) {
+                if (xhr.status > 400) {
+                    window.location.href = '/';
+                }
+                else {
+                    loadTooltips();
+                    sortByVisibility(true);
+                }
+            }
+        );
 
-        $('.demographics').load(demourl, {
-            version: getPlanVersion()
-        }, function() {
-            loadTooltips();
-            sortByVisibility(true);
-        });            
+        $('.demographics').load(
+            demourl, 
+            {
+                version: getPlanVersion()
+            }, 
+            function(rsp, status, xhr) {
+                if (xhr.status > 400) {
+                    window.location.href = '/';
+                }
+                else {
+                    loadTooltips();
+                    sortByVisibility(true);
+                }
+            }
+        );            
 
         districtLayer.filter = getVersionAndSubjectFilters(olmap.getExtent());
         districtLayer.strategies[0].update({force:true});
@@ -572,6 +590,10 @@ function mapinit(srs,maxExtent) {
                     $('#saveplaninfo').trigger('planSaved', [ data.edited ]);
                 }
                 else {
+                    if ('redirect' in data) {
+                        window.location.href = data.redirect;
+                        return;
+                    }
                     OpenLayers.Element.removeClass(olmap.viewPortDiv, 'olCursorWait');
                     $('#working').dialog('close');
                 }
@@ -1216,6 +1238,9 @@ function mapinit(srs,maxExtent) {
                 updatingAssigned = false;
                 // do nothing if this call did not succeed
                 if (!data.success) {
+                    if ('redirect' in data) {
+                        window.location.href = data.redirect;
+                    }
                     return;
                 }
 
@@ -1919,6 +1944,12 @@ function mapinit(srs,maxExtent) {
                     for (var i = 0; i < selection.features.length; i++) { 
                         selection.drawFeature(selection.features[i], mode);
                     } 
+
+                    if (!data.success && 'redirect' in data) {
+                        window.location.href = data.redirect;
+                        return;
+                    }
+
                     // update the max version of this plan
                     PLAN_VERSION = data.version;
                     PLAN_HISTORY[PLAN_VERSION] = true;
@@ -2021,19 +2052,19 @@ function mapinit(srs,maxExtent) {
     // set up sizing for dynamic map size that fills the pg
     initializeResizeFix();
 
-    districtLayer.events.register("loadend", districtLayer, sortByVisibility);
-    districtLayer.events.register('loadend',districtLayer, updateDistrictScores);
+    districtLayer.events.register('loadend', districtLayer, sortByVisibility);
+    districtLayer.events.register('loadend', districtLayer, updateDistrictScores);
 
     olmap.events.register('movestart',olmap,function(){
         districtIdDiv.style.display = 'none';
         tipdiv.style.display = 'none';
     });
-    olmap.events.register("moveend", olmap, sortByVisibility);
+    olmap.events.register('moveend', olmap, sortByVisibility);
     
     // Add the listeners for editing whenever a base layer is changed
     // or the zoom level is changed
-    olmap.events.register("changebaselayer", olmap, changeSnapLayer);
-    olmap.events.register("zoomend", olmap, changeSnapLayer);
+    olmap.events.register('changebaselayer', olmap, changeSnapLayer);
+    olmap.events.register('zoomend', olmap, changeSnapLayer);
 
     PLAN_HISTORY[PLAN_VERSION] = true;
 }

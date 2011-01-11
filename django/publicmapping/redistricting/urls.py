@@ -32,7 +32,6 @@ from django.conf import settings
 urlpatterns = patterns('publicmapping.redistricting.views',
     (r'^$', 'viewplan', { 'planid': 0 }),
     (r'^plan/create/$', 'createplan'),
-    (r'^plan/choose/$', 'chooseplan'),
     (r'^plan/upload/$', 'uploadfile'),
     (r'^plan/(?P<planid>\d*)/view/$', 'viewplan'),
     (r'^plan/(?P<planid>\d*)/edit/$', 'editplan'),

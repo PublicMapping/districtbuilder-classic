@@ -707,8 +707,10 @@ Include the markup for the account management panel.
     about this plan for display in the sidebar menu and display the draw tab. 
 
     {% endcomment %}
-        $('.geography').load('/districtmapping/plan/{{plan.id}}/geography');
-        $('.demographics').load('/districtmapping/plan/{{plan.id}}/demographics');      
+        $('.demographics').load('/districtmapping/plan/{{plan.id}}/demographics');     
+        // demographics is the default visible tab, so load that one first.
+        // load geography in the background
+        setTimeout(function(){ $('.geography').load('/districtmapping/plan/{{plan.id}}/geography') }, 1000);
         $('#steps').tabs('select', '#step_draw');
 
         // Load up the district index file checker whenever the 
@@ -724,7 +726,7 @@ Include the markup for the account management panel.
         }});
 
         // Get the list of plans after all the other plan info has loaded
-        setTimeout(choose.init, 1000);
+        setTimeout(choose.init, 2000);
     {% else %}
         // Get the list of plans immediately
         choose.init();
