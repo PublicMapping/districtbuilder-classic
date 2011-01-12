@@ -1411,8 +1411,8 @@ def set_district_id(sender, **kwargs):
             district.district_id = max_id + 1
         else:
             district.district_id = 1
-        # Unassigned is not counted in MAX_DISTRICTS
-        if district.district_id > settings.MAX_DISTRICTS + 1:
+        # Unassigned is not counted in max_districts
+        if district.district_id > (district.plan.legislative_body.max_districts + 1):            
             raise ValidationError("Too many districts already.  Reached Max Districts setting")
 
 def update_plan_edited_time(sender, **kwargs):
