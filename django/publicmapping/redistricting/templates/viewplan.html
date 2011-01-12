@@ -76,14 +76,14 @@
         var SNAP_LAYERS = [ {% for snap in snaplayers %} { geolevel: {{ snap.geolevel }}, level: '{{ snap.layer }}',layer: 'simple_{{ snap.layer }}', name: '{{ snap.name }}', min_zoom: {{ snap.min_zoom }} }{% if not forloop.last %},{% endif %} {% endfor %} ];
         // An array of demographic settings for the choropleth variations 
         // of the snap layer
-        var DEMOGRAPHICS = [{% for demo in demographics %} { id: {{ demo.id }}, text: '{{ demo.text }}', value: '{{ demo.value }}', isdefault: {{ demo.isdefault }}, isdisplayed: {{ demo.isdisplayed }} }{% if not forloop.last %},{% endif %} {% endfor %} ];         var MAP_LAYERS = []; for (var i = 0; i < SNAP_LAYERS.length; i++) { MAP_LAYERS.push( 'gmu:demo_' + SNAP_LAYERS[i].level );
+        var DEMOGRAPHICS = [{% for demo in demographics %} { id: {{ demo.id }}, text: '{{ demo.text }}', value: '{{ demo.value }}', isdefault: {{ demo.isdefault }}, isdisplayed: {{ demo.isdisplayed }} }{% if not forloop.last %},{% endif %} {% endfor %} ];         var MAP_LAYERS = []; for (var i = 0; i < SNAP_LAYERS.length; i++) { MAP_LAYERS.push( NAMESPACE + ':demo_' + SNAP_LAYERS[i].level );
             for (var j = 0; j < DEMOGRAPHICS.length; j++) {
-                MAP_LAYERS.push( 'gmu:demo_' + SNAP_LAYERS[i].level + '_' + DEMOGRAPHICS[j].value );
+                MAP_LAYERS.push( NAMESPACE + ':demo_' + SNAP_LAYERS[i].level + '_' + DEMOGRAPHICS[j].value );
             }
         }
         // The baselayer is a visible layer without selectable features or attribute information
         // Currently, only boundaries are supported
-        var BASE_LAYERS = [{% for layer in boundaries %} { id: 'gmu:{{layer.id}}', name: '{{ layer.name }}' }{% if not forloop.last %},{% endif %} {%endfor %} ];
+        var BASE_LAYERS = [{% for layer in boundaries %} { id: NAMESPACE + ':{{layer.id}}', name: '{{ layer.name }}' }{% if not forloop.last %},{% endif %} {%endfor %} ];
         for (i in BASE_LAYERS) {
             MAP_LAYERS.push( BASE_LAYERS[i].id );
         }
