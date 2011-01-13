@@ -1502,12 +1502,7 @@ def editplanattributes(request, planid):
     note_session_activity(request)
 
     status = { 'success': False }
-    if request.user.is_anonymous():
-        status['message'] = "Only registered users may edit plan attributes"
-        status['redirect'] = '/'
-        return HttpResponse(json.dumps(status),mimetype='application/json')
-
-    if not using_unique_session(request.user):
+    if request.user.is_anonymous() or not using_unique_session(request.user):
         status['message'] = "The current user may only have one session open at a time."
         status['redirect'] = '/?msg=logoff'
         return HttpResponse(json.dumps(status),mimetype='application/json')
@@ -1521,7 +1516,7 @@ def editplanattributes(request, planid):
         return HttpResponseBadRequest('Must declare planId, name and description')
 
     plan = Plan.objects.filter(pk=planid,owner=request.user)
-    if plan.count() == 0:
+    if plan.count() == 1:
         plan = plan[0]
         if new_name: 
             plan.name = new_name

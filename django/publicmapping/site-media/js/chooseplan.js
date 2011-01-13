@@ -328,6 +328,9 @@ chooseplan = function(options) {
                         else if ('redirect' in data) {
                             window.location.href = data.redirect;
                         }
+                        else if ('message' in data) {
+                            $('<div title="Error Saving Details"><p>' + data.message + '</p></div>').dialog({modal:true, resizable:false});
+                        }
                     },
                     error: function(xhr, textStatus, message) {
                         if (xhr.status == 403) {
