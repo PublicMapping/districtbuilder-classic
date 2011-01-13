@@ -339,8 +339,10 @@ $(function(){
             var matches2 = matches[i].match(re2);
 
             if (matches2[1] == 'msg' && matches2[2] == 'logoff') {
-                // TODO: Make this a nice dialog.
-                alert('You have been logged off.')
+                $('<div title="Logged Off" id="logoffdlg"><p>You have been logged off by another browser. This happens sometimes if you attempt to access the application from two different locations.</p><h1>Please log in again.</h1></div>').dialog({
+                    modal:true,
+                    resizable:false
+                });
                 return;
             }
         }

@@ -274,6 +274,11 @@ div#sessionsmax {
     color: #6a6a6a;
     font-weight: bold;
 }
+div#logoffdlg {
+    font-size: 14px;
+    color: #6a6a6a;
+    font-weight: bold;
+}
 form#registerForm input.field, form#registerForm input.error, 
 form#forgotForm input.field, form#forgotForm input.error {
     padding: 0 0 0 8px;
@@ -341,6 +346,10 @@ div#sessiondupe p {
 }
 div#sessiondupe ul {
     margin: 5px 0 5px 20px;
+}
+div#logoffdlg p {
+    font-weight: normal;
+    margin: 5px 0px;
 }
 div#footer {
     clear: both;
