@@ -29,7 +29,7 @@ Author:
 
 from django.http import *
 from django.core import serializers
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, SuspiciousOperation
 from django.db import IntegrityError, connection
 from django.db.models import Sum, Min, Max
 from django.shortcuts import render_to_response
@@ -796,7 +796,7 @@ def newdistrict(request, planid):
         status['message'] = 'The current user may only have one session open at a time.'
         status['redirect'] = '/?msg=logoff'
     elif len(request.REQUEST.items()) >= 3:
-        plan = Plan.objects.get(pk=planid, owner=request.owner)
+        plan = Plan.objects.get(pk=planid, owner=request.user)
 
         if 'geolevel' in request.REQUEST:
             geolevel = request.REQUEST['geolevel']
