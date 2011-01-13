@@ -31,7 +31,7 @@ Author:
 from django.core.exceptions import ValidationError
 from django.contrib.gis.db import models
 from django.contrib.gis.gdal import DataSource
-from django.contrib.gis.geos import MultiPolygon,GEOSGeometry,GEOSException,GeometryCollection
+from django.contrib.gis.geos import MultiPolygon,GEOSGeometry,GEOSException,GeometryCollection,Point
 from django.contrib.auth.models import User
 from django.db.models import Sum, Max, Q
 from django.db.models.signals import pre_save, post_save
@@ -1331,7 +1331,11 @@ class District(models.Model):
             index = 1
             for level in levels:
                 while index < level.id:
-                    simples.append(empty_geom(self.geom.srid))
+                    # We want to store the levels within a GeometryCollection, and make it so the level id
+                    # can be used as the index for lookups. So for disparate level ids, empty geometries need
+                    # to be stored. Empty GeometryCollections cannot be inserted into a GeometryCollection,
+                    # so a Point at the origin is used instead.
+                    simples.append(Point((0,0), srid=self.geom.srid))
                     index += 1
                 simples.append( self.geom.simplify(preserve_topology=True,tolerance=level.tolerance))
                 index += 1
