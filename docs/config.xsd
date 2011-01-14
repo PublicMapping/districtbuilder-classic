@@ -113,6 +113,18 @@
                                 <xs:complexType>
                                     <xs:sequence>
                                         <xs:element name="Description" type="xs:string" minOccurs="0" maxOccurs="1" />
+                                        <xs:element name="GeoLevelCharacteristics" minOccurs="1" maxOccurs="1">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="GeoLevelCharacteristic" minOccurs="1" maxOccurs="unbounded" > 
+                                                        <xs:complexType>
+                                                            <xs:sequence />
+                                                            <xs:attribute name="ref" type="xs:IDREF" />
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
                                         <xs:element name="LegislativeBodies">
                                             <xs:complexType>
                                                 <xs:sequence>

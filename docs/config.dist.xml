@@ -55,6 +55,13 @@
       <GeoLevel id="block" name="block" namefield="NAME00" supplementfield="BLKIDFP00"
           shapefile="/projects/publicmapping/data/OH_39_census_block_web_mercator.shp"
           min_zoom="0" sort_key="3" tolerance="2.5">
+          <!-- A reference to the subjects for which population data is available
+          at this geolevel -->
+          <GeoLevelCharacteristics>
+              <GeoLevelCharacteristic ref="poptot" />
+              <GeoLevelCharacteristic ref="popblk" />
+              <GeoLevelCharacteristic ref="pophisp1" />
+          </GeoLevelCharacteristics>
           <!-- A reference to a legislative body.
               A geolevel may be used by many legislative bodies. -->
           <LegislativeBodies>
@@ -74,6 +81,13 @@
       <GeoLevel id="tract" name="tract" namefield="TRACTNAME" supplementfield="TRACTID" 
           shapefile="/projects/publicmapping/data/OH_39_census_tractsviablocks2_wm.shp"
           min_zoom="5" sort_key="2" tolerance="25">
+          <!-- A reference to the subjects for which population data is available
+          at this geolevel -->
+          <GeoLevelCharacteristics>
+              <GeoLevelCharacteristic ref="poptot" />
+              <GeoLevelCharacteristic ref="popblk" />
+              <GeoLevelCharacteristic ref="pophisp" />
+          </GeoLevelCharacteristics>
           <!-- A reference to a legislative body.
               A geolevel may be used by many legislative bodies. -->
           <LegislativeBodies>
@@ -93,6 +107,13 @@
       <GeoLevel id="county" name="county" namefield="COUNTYNAME" supplementfield="COUNTYFP2"
           shapefile="/projects/publicmapping/data/OH_39_census_countiesviablocks_WM.shp"
           min_zoom="9" sort_key="1" tolerance="250">
+          <!-- A reference to the subjects for which population data is available
+          at this geolevel -->
+          <GeoLevelCharacteristics>
+              <GeoLevelCharacteristic ref="poptot" />
+              <GeoLevelCharacteristic ref="popblk" />
+              <GeoLevelCharacteristic ref="pophisp" />
+          </GeoLevelCharacteristics>
           <!-- A reference to a legislative body.
               A geolevel may be used by many legislative bodies. -->
           <LegislativeBodies>

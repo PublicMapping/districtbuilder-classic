@@ -428,11 +428,9 @@ ERROR:
             'tolerance': geolevel.get('tolerance')
         }
 
-        trefs = geolevel.xpath('LegislativeBodies/LegislativeBody/LegislativeTargets/LegislativeTarget')
-        for tref in trefs:
-            tconfig = config.xpath('//Target[@id="%s"]' % tref.get('ref'))[0]
-
-            sconfig = config.xpath('//Subject[@id="%s"]' % tconfig.get('subjectref'))[0]
+        crefs = geolevel.xpath('GeoLevelCharacteristics/GeoLevelCharacteristic')
+        for cref in crefs:
+            sconfig = config.xpath('//Subject[@id="%s"]' % cref.get('ref'))[0]
             if 'aliasfor' in sconfig.attrib:
                 salconfig = config.xpath('//Subject[@id="%s"]' % sconfig.get('aliasfor'))[0]
                 sconfig.append(salconfig)

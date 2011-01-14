@@ -14,7 +14,7 @@
             parameters to the getreport handler.
             </xs:documentation>
         </xs:annotation>
-        <xs:all>
+        <xs:all minOccurs="0">
             <xs:element name="BardConfigs">
                 <xs:complexType>
                     <xs:sequence>
