@@ -51,15 +51,14 @@ chooseplan = function(options) {
         // bunch o variables
        
         _table,
+        _districtindexfilePublisher,
         _selectedPlanId,
         _eventType = 'template',
         _nameRequired,
-        _activeText,
         _selectedPlanName,
         _editButton,
         _saveButton,
-        _cancelButton,
-        _resetForm;
+        _cancelButton;
 
     /**
      * Initialize the chooser. Setup the click event for the target to
@@ -344,10 +343,23 @@ chooseplan = function(options) {
             editState('none');
         }
 
-        districtindexfile({
-            target: $('#chooserFileDownloadTarget'),
-            planId: id
-        }).init();
+
+        // Update the district index file publisher
+        if (_districtindexfilePublisher) {
+            _districtindexfilePublisher.setUpdateVisibility(false);
+        }
+
+        var row = $(_table.getInd(id, true));
+        var difile = row.data('difile');
+        if (difile == null) {
+            difile = districtindexfile({
+                target: $('#chooserFileDownloadTarget'),
+                planId: id
+            }).init();
+            row.data('difile', difile);
+        }
+        difile.setUpdateVisibility(true).init();
+        _districtindexfilePublisher = difile;
     };
     
     var appendExtraParamsToRequest = function(xhr) {
@@ -510,6 +522,8 @@ chooseplan = function(options) {
         // When switching tabs, clear the details form
         $('#plan_buttons li').click( function() {
             $('#plan_form *[type=text]').val('');
+            _districtindexfilePublisher.setUpdateVisibility(false);
+            $('#chooserFileDownloadTarget').empty();
         });
 
         // If anonymous, hide the "new plan" options

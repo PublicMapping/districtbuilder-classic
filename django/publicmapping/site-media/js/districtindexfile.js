@@ -46,7 +46,9 @@ districtindexfile = function(options) {
             fetchUrl:'/districtmapping/plan/' + ( typeof(options.planId) != 'undefined' ? options.planId : PLAN_ID ) + '/districtindexfile/'
         }, options),
         
-        _autoDownload = false;
+        _autoDownload = false,
+        _visiblyUpdate = true;
+        _checkInProgress = {};
      
     /**
      * Initialize the publisher. Load the publisher's contents and set up
@@ -81,26 +83,32 @@ districtindexfile = function(options) {
             var fileStatus = data.status;
             // If the file is ready, add a button/link to download
             if (fileStatus == 'done') {
-                _options.target.empty();
-                var link = $('<a href="' + _options.fetchUrl + '" />');
-                var button = $('<button id="btnExportDistrictIndexFile" class="button">Download</button>').button();
-                $(link).append(button);
-                _options.target.append(link);    
                 if (_autoDownload) {
                     window.location = _options.fetchUrl;
+                    _autoDownload = false;
+                }
+                if (_visiblyUpdate) {
+                    _options.target.empty();
+                    var link = $('<a href="' + _options.fetchUrl + '" />');
+                    var button = $('<button id="btnExportDistrictIndexFile" class="button">Download</button>').button();
+                    $(link).append(button);
+                    _options.target.append(link);    
                 }
             // If the file is in progress, show that
             } else if (fileStatus == 'pending') {
                 indicatePending(data);
             // Else let the user request the file, then move to pending
             } else if (fileStatus == 'none') {
-                _options.target.empty();
-                var button = $('<button id="btnExportDistrictIndexFile" class="button">Request File</button>').button();
-                button.click( function() {
-                    $.post(_options.fetchUrl, indicatePending(data));
-                    return false;
-                });
-                _options.target.append(button);    
+                if (_visiblyUpdate) {
+                    _options.target.empty();
+                    var button = $('<button id="btnExportDistrictIndexFile" class="button">Request File</button>').button();
+                    button.click( function() {
+                        _autoDownload = true;
+                        $.post(_options.fetchUrl, indicatePending(data));
+                        return false;
+                    });
+                    _options.target.append(button);    
+                }
             }
         } else {
             if ('redirect' in data) {
@@ -128,7 +136,7 @@ districtindexfile = function(options) {
      * a button to download the file
      */
     var indicatePending = function(data) {
-        if (!_options.target.children().hasClass('pending')) {
+        if (_visiblyUpdate && !_options.target.children().hasClass('pending')) {
             _options.target.empty();
             var pending = $('<div id="pendingMessage" class="loading">Please wait. File is being created on the server.</div>');
             _options.target.append(pending);
@@ -138,8 +146,7 @@ districtindexfile = function(options) {
         var checkagain = function() {
             $.post(_options.statusUrl, statusRequestCallback);
         };
-        _autoDownload = true;
-        setTimeout(checkagain, _options.timer);
+        _checkInProgress = setTimeout(checkagain, _options.timer);
     };
 
     /**
@@ -153,6 +160,23 @@ districtindexfile = function(options) {
         });
     };
     
+    /**
+     * Clear out the setTimeout item that checks for the file status
+     */
+    _self.stopChecking = function() {
+        clearTimeout(_checkInProgress);
+        return _self;
+    };
+    
+    /**
+     * Set whether this publisher should automatically update UI items
+     * when checking the status in the background
+     */
+    _self.setUpdateVisibility = function(visible) {
+        _visiblyUpdate = visible;
+        return _self;
+    }
+        
 
     /**
      * If the user has no email address, this dialog will give them the opportunity
