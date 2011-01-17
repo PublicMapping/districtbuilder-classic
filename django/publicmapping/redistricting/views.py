@@ -47,6 +47,7 @@ from rpy2.robjects import r, rinterface
 from rpy2.rlike import container as rpc
 from datetime import datetime, time, timedelta
 from decimal import *
+from functools import wraps
 from operator import attrgetter
 from redistricting.models import *
 from redistricting.utils import *
@@ -102,6 +103,28 @@ def using_unique_session(u):
 
     return (count <= 1)
 
+def unique_session_or_json_redirect(function):
+    """ 
+    A decorator method.  Any method that accepts this decorator
+    should have an HttpRequest as a parameter called "request".
+    That request will be checked for a unique session.  If the
+    test passes, the original method is returned.  If the session
+    is not unique, then a JSON response is returned and the
+    client is redirected to log off.
+    """
+    def decorator(request, *args, **kwargs) :
+        def return_nonunique_session_result():
+            status = { 'success': False }
+            status['message'] = "The current user may only have one session open at a time."
+            status['redirect'] = '/?msg=logoff'
+            return HttpResponse(json.dumps(status),mimetype='application/json')
+
+        if not using_unique_session(request.user):
+            return return_nonunique_session_result()
+        else:
+            return function(request, *args, **kwargs)
+    return wraps(function)(decorator)
+
 def is_session_available(req):
     """
     Determine if a session is available. This is similar to a user test,
@@ -144,6 +167,8 @@ def note_session_activity(req):
         req.session['activity_time'] = datetime.now() + window
 
 
+@login_required
+@unique_session_or_json_redirect
 def copyplan(request, planid):
     """
     Copy a plan to a new, editable plan.
@@ -163,11 +188,6 @@ def copyplan(request, planid):
     note_session_activity(request)
 
     status = { 'success': False }
-    if request.user.is_anonymous() or not using_unique_session(request.user):
-        status['message'] = "The current user may only have one session open at a time."
-        status['redirect'] = '/?msg=logoff'
-        return HttpResponse(json.dumps(status),mimetype='application/json')
-
     p = Plan.objects.get(pk=planid)
     # Check if this plan is copyable by the current user.
     if not can_copy(request.user, p):
@@ -379,7 +399,8 @@ def editplan(request, planid):
     cfg['dists_maxed'] = len(cfg['districts']) > plan.legislative_body.max_districts
     return render_to_response('editplan.html', cfg) 
 
-
+@login_required
+@unique_session_or_json_redirect
 def createplan(request):
     """
     Create a plan.
@@ -397,13 +418,7 @@ def createplan(request):
     note_session_activity(request)
 
     status = { 'success': False }
-    if reqest.user.is_anonymous():
-        status['message'] = 'Only registered users may create new plans.'
-        status['redirect'] = '/'
-    elif not using_unique_session(request.user):
-        status['message'] = 'The current user may only have one session open at a time.'
-        status['redirect'] = '/?msg=logoff'
-    elif request.method == "POST":
+    if request.method == "POST":
         name = request.POST['name']
         body = LegislativeBody.objects.get(id=int(request.POST['legislativeBody']))
         plan = Plan(name = name, owner = request.user, legislative_body = body)
@@ -414,6 +429,7 @@ def createplan(request):
             status = { 'success': False, 'message': 'Couldn\'t save new plan' }
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
+@unique_session_or_json_redirect
 def uploadfile(request):
     """
     Accept a block equivalency file, and create a plan based on that
@@ -432,11 +448,6 @@ def uploadfile(request):
         # as an anonymous user. Redirect them to the front page. Sadly,
         # they will not get a notice that they were logged out.
         return HttpResponseRedirect('/')
-
-    if not using_unique_session(request.user):
-        # If the user is still logged in in another session, send them to
-        # the front page, with a message.
-        return HttpResponseRedirect('/?msg=logoff')
 
     status = commonplan(request,0)
     status['upload'] = True
@@ -556,6 +567,7 @@ def loadbard(request):
     return HttpResponse('Bard will not be loaded - wrong server config or reports off\nThreaded: %s\nMessage: %s' % (threaded, msg), mimetype='text/plain')
 
 
+@unique_session_or_json_redirect
 def getreport(request, planid):
     """
     Get a BARD report.
@@ -575,12 +587,7 @@ def getreport(request, planid):
 
     status = { 'success': False }
 
-    if not using_unique_session:
-        status['message'] = 'The current user may only have one session open at a time.'
-        status['redirect'] = '/?msg=logoff'
-        return HttpResponse(json.dumps(status),mimetype='application/json')
-
-    elif not bardWorkSpaceLoaded:
+    if not bardWorkSpaceLoaded:
         if not settings.REPORTS_ENABLED:
             status['message'] = 'Reports functionality is turned off.'
         else:
@@ -771,6 +778,8 @@ def getreport(request, planid):
         status['message'] = '<div class="error" title="error">Sorry, there was an error with the report: %s' % ex    
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
+@login_required
+@unique_session_or_json_redirect
 def newdistrict(request, planid):
     """
     Create a new district.
@@ -789,13 +798,7 @@ def newdistrict(request, planid):
     note_session_activity(request)
 
     status = { 'success': False }
-    if request.user.is_anonymous():
-        status['message'] = 'Only registered users can create districts.'
-        status['redirect'] = '/'
-    elif not using_unique_session(request.user):
-        status['message'] = 'The current user may only have one session open at a time.'
-        status['redirect'] = '/?msg=logoff'
-    elif len(request.REQUEST.items()) >= 3:
+    if len(request.REQUEST.items()) >= 3:
         plan = Plan.objects.get(pk=planid, owner=request.user)
 
         if 'geolevel' in request.REQUEST:
@@ -839,6 +842,8 @@ def newdistrict(request, planid):
             status['message'] = 'Must specify name, geolevel, and geounit ids for new district.'
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
+@login_required
+@unique_session_or_json_redirect
 def addtodistrict(request, planid, districtid):
     """
     Add geounits to a district.
@@ -861,13 +866,7 @@ def addtodistrict(request, planid, districtid):
 
     status = { 'success': False }
 
-    if request.user.is_anonymous():
-        status['message'] = 'Only registered users may change districts.'
-        status['redirect'] = '/'
-    elif not using_unique_session(request.user):
-        status['message'] = 'The current user may only have one session open at a time.'
-        status['redirect'] = '/?msg=logoff'
-    elif len(request.REQUEST.items()) >= 2: 
+    if len(request.REQUEST.items()) >= 2: 
         geolevel = request.REQUEST["geolevel"]
         geounit_ids = string.split(request.REQUEST["geounits"], "|")
         plan = Plan.objects.get(pk=planid,owner=request.user)
@@ -896,6 +895,7 @@ def addtodistrict(request, planid, districtid):
 
 
 @cache_control(private=True)
+@unique_session_or_json_redirect
 def getdistricts(request, planid):
     """
     Get the districts in a plan at a specific version.
@@ -909,33 +909,29 @@ def getdistricts(request, planid):
 
     status = {'success':False}
 
-    if not using_unique_session(request.user):
-        status['message'] = 'The current user may only have one session open at a time.'
-        status['redirect'] = '/?msg=logoff'
-    else:
-        plan = Plan.objects.filter(id=planid)
-        if plan.count() == 1:
-            plan = plan[0]
+    plan = Plan.objects.filter(id=planid)
+    if plan.count() == 1:
+        plan = plan[0]
 
-            if 'version' in request.REQUEST:
-                version = int(request.REQUEST['version'])
-            else:
-                version = plan.version
-
-            districts = plan.get_districts_at_version(version)
-
-            status['districts'] = []
-            for district in districts:
-                if district.geom or district.name == 'Unassigned':
-                    status['districts'].append({
-                        'id':district.district_id,
-                        'name':district.name,
-                        'version':district.version
-                    })
-            status['success'] = True
-
+        if 'version' in request.REQUEST:
+            version = int(request.REQUEST['version'])
         else:
-            status['message'] = 'No plan exists with that ID.'
+            version = plan.version
+
+        districts = plan.get_districts_at_version(version)
+
+        status['districts'] = []
+        for district in districts:
+            if district.geom or district.name == 'Unassigned':
+                status['districts'].append({
+                    'id':district.district_id,
+                    'name':district.name,
+                    'version':district.version
+                })
+        status['success'] = True
+
+    else:
+        status['message'] = 'No plan exists with that ID.'
 
     return HttpResponse(json.dumps(status), mimetype='application/json')
 
@@ -1000,6 +996,7 @@ def simple_district_versioned(request,planid):
     return HttpResponse(json.dumps(status),mimetype='application/json')
     
 
+@unique_session_or_json_redirect
 def getdemographics(request, planid):
     """
     Get the demographics of a plan.
@@ -1017,11 +1014,6 @@ def getdemographics(request, planid):
     note_session_activity(request)
 
     status = { 'success':False }
-    if not using_unique_session(request.user):
-        status['message'] = 'The current user may only have one session open at a time.'
-        status['redirect'] = '/?msg=logoff'
-        return HttpResponse(json.dumps(status), mimetype='application/json', status=403)
-
     try:
         plan = Plan.objects.get(pk=planid)
     except:
@@ -1093,6 +1085,7 @@ def getdemographics(request, planid):
         return HttpResponse( json.dumps(status), mimetype='application/json', status=500 )
 
 
+@unique_session_or_json_redirect
 def getgeography(request, planid):
     """
     Get the geography of a plan.
@@ -1110,11 +1103,6 @@ def getgeography(request, planid):
     note_session_activity(request)
 
     status = { 'success': False }
-    if not using_unique_session(request.user):
-        status['message'] = 'The current user may only have one session open at a time.'
-        status['redirect'] = '/?msg=logoff'
-        return HttpResponse(json.dumps(status), mimetype='application/json', status=403)
-
     try:
         plan = Plan.objects.get(pk=planid)
     except:
@@ -1362,6 +1350,7 @@ def getutc(t):
     t_seconds = time.mktime(t_tuple)
     return t.utcfromtimestamp(t_seconds)
 
+@unique_session_or_json_redirect
 def getdistrictindexfilestatus(request, planid):
     """
     Given a plan id, return the status of the district index file
@@ -1369,11 +1358,6 @@ def getdistrictindexfilestatus(request, planid):
     note_session_activity(request)
 
     status = { 'success':False }
-    if not using_unique_session(request.user):
-        status['message'] = "The current user may only have one session open at a time."
-        status['redirect'] = '/?msg=logoff'
-        return HttpResponse(json.dumps(status),mimetype='application/json')
-
     plan = Plan.objects.get(pk=planid)
     if not can_copy(request.user, plan):
         return HttpResponseForbidden()
@@ -1386,17 +1370,13 @@ def getdistrictindexfilestatus(request, planid):
         status['exception'] = ex 
     return HttpResponse(json.dumps(status),mimetype='application/json')
         
+@unique_session_or_json_redirect
 def getdistrictindexfile(request, planid):
     """
     Given a plan id, email the user a zipped copy of 
     the district index file
     """
     note_session_activity(request)
-
-    if not using_unique_session(request.user):
-        status['message'] = 'The current user may only have one session open at a time.'
-        status['redirect'] = '/?msg=logoff'
-        return HttpResponse(json.dumps(status),mimetype='application/json')
 
     # Get the districtindexfile and create a response
     plan = Plan.objects.get(pk=planid)
@@ -1494,6 +1474,8 @@ def getplans(request):
     json_response = "{ \"total\":\"%d\", \"page\":\"%d\", \"records\":\"%d\", \"rows\":%s }" % (total_pages, page, len(plans), json.dumps(plans_list))
     return HttpResponse(json_response,mimetype='application/json') 
 
+@login_required
+@unique_session_or_json_redirect
 def editplanattributes(request, planid):
     """
     Edit the attributes of a plan. Attributes of a plan are the name and/or
@@ -1502,11 +1484,6 @@ def editplanattributes(request, planid):
     note_session_activity(request)
 
     status = { 'success': False }
-    if request.user.is_anonymous() or not using_unique_session(request.user):
-        status['message'] = "The current user may only have one session open at a time."
-        status['redirect'] = '/?msg=logoff'
-        return HttpResponse(json.dumps(status),mimetype='application/json')
-
     if request.method != 'POST':
         return HttpResponseNotAllowed(['POST'])
     new_name = request.POST.get('name', None)
