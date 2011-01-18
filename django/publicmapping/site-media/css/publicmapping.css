@@ -988,6 +988,9 @@ div.toolset#toolset_draw .ui-icon {
 #district_id_map_tool  .ui-icon {
   background-image: url(/site-media/images/icon-district.png);
 }
+#lock_district_map_tool  .ui-icon {
+  background-image: url(/site-media/images/icon-lock-district.png);
+}
 #single_drawing_tool  .ui-icon {
   background-image: url(/site-media/images/icon-select.png);
 }
@@ -1353,6 +1356,9 @@ span.popstatus {
 .target {
   background: #eeeeee;
   border: 1px solid #cccccc;
+}
+.locked {
+  border: 2px dashed #FF0000 !important;
 }
 
 .plantable .notOnMap {

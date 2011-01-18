@@ -29,7 +29,7 @@ Author:
 
 from django.http import *
 from django.core import serializers
-from django.core.exceptions import ValidationError, SuspiciousOperation
+from django.core.exceptions import ValidationError, SuspiciousOperation, ObjectDoesNotExist
 from django.db import IntegrityError, connection
 from django.db.models import Sum, Min, Max
 from django.shortcuts import render_to_response
@@ -896,7 +896,52 @@ def addtodistrict(request, planid, districtid):
 
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
+@login_required
+def setdistrictlock(request, planid, district_id):
+    """
+    Set whether this district is locked for editing.
 
+    Parameters:
+        request -- An HttpRequest, with a boolean that indicates whether the district
+        should be locked or unlocked
+        planid -- The plan ID that contains the district.
+        district_id -- The district_id to lock or unlock
+
+    Returns:
+        A JSON HttpResponse that contains a boolean of whether the district is locked.
+    """
+    note_session_activity(request)
+
+    status = {'success':False}
+
+    if not using_unique_session(request.user):
+        status['message'] = 'The current user may only have one session open at a time.'
+        status['redirect'] = '/?msg=logoff'
+        return HttpResponse(json.dumps(status), mimetype='application/json')
+    
+    try:
+        plan = Plan.objects.get(pk=planid)
+        district = District.objects.filter(plan=plan,district_id=district_id).order_by('version').reverse()[0]
+        
+    except ObjectDoesNotExist:
+        status['message'] = 'Plan or district does not exist.'
+        return HttpResponse(json.dumps(status), mimetype='application/json')
+
+    if request.method != 'POST' or plan.owner != request.user:
+        return HttpResponseForbidden()
+    
+    lock = request.POST.get('lock').lower() == 'true'
+    if lock == None:
+        status['message'] = 'Must include lock parameter.'
+    else:
+        district.is_locked = lock
+        district.save()
+        status['success'] = True
+        status['message'] = 'District successfully %s' % ('locked' if lock else 'unlocked')
+  
+    return HttpResponse(json.dumps(status), mimetype='application/json')
+        
+            
 @cache_control(private=True)
 @unique_session_or_json_redirect
 def getdistricts(request, planid):

@@ -822,6 +822,25 @@ function mapinit(srs,maxExtent) {
         districtIdDiv.style.display = 'none';
     });
 
+    // Create a tool that toggles whether a district is locked when clicked on.
+    var lockDistrictControl = new OpenLayers.Control.SelectFeature(
+        districtLayer,
+        {
+            onSelect: function(feature) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/districtmapping/plan/' + PLAN_ID + '/district/' + feature.attributes.district_id + '/lock/',
+                    data: {
+                        lock: !feature.attributes.is_locked
+                    },
+                    success: function(data, textStatus, xhr) {
+                        districtLayer.strategies[0].update({force:true});
+                    }
+                });
+            }
+        }
+    );
+
     // Get the feature at the point in the layer.
     var featureAtPoint = function(pt, lyr) {
         for (var i = 0; i < lyr.features.length; i++) {
@@ -1084,6 +1103,7 @@ function mapinit(srs,maxExtent) {
         var lowerColor = $('.under').css('background-color');
         var upperColor = $('.over').css('background-color');
         var highestColor = $('.farover').css('background-color');
+        
         if (typeName == 'demographics') {
             rules = [
                 new OpenLayers.Rule({
@@ -1157,7 +1177,7 @@ function mapinit(srs,maxExtent) {
                 new OpenLayers.Rule({
                     filter: new OpenLayers.Filter.Comparison({
                         type: OpenLayers.Filter.Comparison.NOT_EQUAL_TO,
-                        property: 'contiguity',
+                        property: 'contiguous',
                         value: false
                     })
                 })
@@ -1197,11 +1217,40 @@ function mapinit(srs,maxExtent) {
                             fillColor: highestColor,
                             fillOpacity: 0.5
                         }
-                    }),
+                    })
                 ];
             }
 
         }
+
+        // Add styling for district locking. This should be shown regardless of the type.
+        var lockedDiv = $('.locked');
+
+        // There is no locked swatch on page load to pull styling from, so create a new div if needed.
+        if (lockedDiv.length === 0) {
+            lockedDiv = $('<div></div>').addClass('locked');
+        }
+        var lockedColor = lockedDiv.css('border-top-color');
+        rules.push(new OpenLayers.Rule({
+            filter: new OpenLayers.Filter.Comparison({
+                type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                property: 'is_locked',
+                value: true
+            }),
+            symbolizer: {
+                strokeColor: lockedColor,
+                strokeWidth: 4,
+                strokeDashstyle: 'dash'
+            }
+        }));
+        rules.push(new OpenLayers.Rule({
+            filter: new OpenLayers.Filter.Comparison({
+                type: OpenLayers.Filter.Comparison.NOT_EQUAL_TO,
+                property: 'is_locked',
+                value: true
+            })
+        }));
+        
         return rules;
     };
     // Recompute the rules for the district styling prior to the adding
@@ -1399,7 +1448,7 @@ function mapinit(srs,maxExtent) {
         $('#assign_district').val(-1);
     });
 
-    // When the district id  map tool is clicked, disable all the
+    // When the district id map tool is clicked, disable all the
     // controls except the district id control.
     $('#district_id_map_tool').click(function(evt){
         var active = olmap.getControlsBy('active',true);
@@ -1414,6 +1463,23 @@ function mapinit(srs,maxExtent) {
         assignMode = null;
         $('#assign_district').val(-1);
     });
+
+    // When the lock district map tool is clicked, disable all the
+    // controls except the lock district control.
+    $('#lock_district_map_tool').click(function(evt){
+        var active = olmap.getControlsBy('active',true);
+        for (var i = 0; i < active.length; i++) {
+            if (active[i].CLASS_NAME != 'OpenLayers.Control.KeyboardDefaults') {
+                active[i].deactivate();
+            }
+        }
+        lockDistrictControl.activate();
+        $('#dragdrop_tool').removeClass('toggle');
+        $('#anchor_tool').removeClass('toggle');
+        assignMode = null;
+        $('#assign_district').val(-1);
+    });
+    
     // When the single pick tool is clicked, disable all the
     // controls except for the single pick tool.
     $('#single_drawing_tool').click(function(evt){
@@ -1493,6 +1559,8 @@ function mapinit(srs,maxExtent) {
         idControl.deactivate();
         $('#district_id_map_tool').removeClass('toggle');
         districtIdControl.deactivate();
+        $('#lock_district_map_tool').removeClass('toggle');
+        lockDistrictControl.deactivate();
         $('#anchor_tool').removeClass('toggle');
         tipdiv.style.display = 'none';
         districtIdDiv.style.display = 'none';
@@ -1533,6 +1601,8 @@ function mapinit(srs,maxExtent) {
         idControl.deactivate();
         $('#district_id_map_tool').removeClass('toggle');
         districtIdControl.deactivate();
+        $('#lock_district_map_tool').removeClass('toggle');
+        lockDistrictControl.deactivate();
         $('#dragdrop_tool').removeClass('toggle');
         tipdiv.style.display = 'none';
         districtIdDiv.style.display = 'none';
@@ -1552,6 +1622,7 @@ function mapinit(srs,maxExtent) {
         new GlobalZoom(),
         idControl,
         districtIdControl,
+        lockDistrictControl,
         dragdropControl
     ]);
 
@@ -1726,7 +1797,6 @@ function mapinit(srs,maxExtent) {
         }
         else if (distDisplay.modified == 'Contiguity') {
             lbody.empty();
-
             var row = makeDistrictLegendRow('district_swatch_farover','farover','Noncontiguous');
             lbody.append(row);
             row = makeDistrictLegendRow('district_swatch_within','target','Contiguous');
@@ -1756,6 +1826,10 @@ function mapinit(srs,maxExtent) {
             row = makeDistrictLegendRow('district_swatch_farunder','farunder','Far Under Target');
             lbody.append(row);
         }
+
+        // Add legend row for locked districts.
+        row = makeDistrictLegendRow('district_swatch_within','locked','Locked For Editing');
+        lbody.append(row);
     };
 
     // Logic for the 'Snap Map to' dropdown, note that this logic

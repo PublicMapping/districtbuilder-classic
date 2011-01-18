@@ -249,6 +249,46 @@ class PlanTestCase(BaseTestCase):
         cursor.close()
         self.assertEqual(numunits, numunitscopy, 'Geounits between original and copy are different')
 
+    def test_lock_district(self):
+        """
+        Test the logic for locking/unlocking a district.
+        """
+        district = self.district1
+        districtid = district.id
+        district_id = district.district_id
+        
+        client = Client()
+
+        # Create a second user, and try to lock a district not belonging to that user
+        username2 = 'test_user2'
+        user2 = User(username=username2)
+        user2.set_password(self.password)
+        user2.save()
+        client.login(username=username2, password=self.password)
+
+        # Issue lock command when not logged in
+        response = client.post('/districtmapping/plan/%d/district/%d/lock/' % (self.plan.id, district_id), { 'lock':True })
+        self.assertEqual(403, response.status_code, 'Non-owner was able to lock district.' + str(response))
+        
+        # Login
+        client.login(username=self.username, password=self.password)
+        
+        # Issue lock command
+        response = client.post('/districtmapping/plan/%d/district/%d/lock/' % (self.plan.id, district_id), { 'lock':True })
+        self.assertEqual(200, response.status_code, 'Lock handler didn\'t return 200:' + str(response))
+
+        # Ensure lock exists
+        district = District.objects.get(pk=districtid)
+        self.assertTrue(district.is_locked, 'District wasn\'t locked.' + str(response))
+
+        # Issue unlock command
+        response = client.post('/districtmapping/plan/%d/district/%d/lock/' % (self.plan.id, district_id), { 'lock':False })
+        self.assertEqual(200, response.status_code, 'Lock handler didn\'t return 200:' + str(response))
+
+        # Ensure lock has been removed
+        district = District.objects.get(pk=districtid)
+        self.assertFalse(district.is_locked, 'District wasn\'t unlocked.' + str(response))
+        
         
 # This test is commented out, because get_base_geounits has also been commented out.
 # If get_base_geounits becomes uncommented, and starts being used, this test should be reactivated.        
