@@ -522,7 +522,9 @@ chooseplan = function(options) {
         // When switching tabs, clear the details form
         $('#plan_buttons li').click( function() {
             $('#plan_form *[type=text]').val('');
-            _districtindexfilePublisher.setUpdateVisibility(false);
+            if (_districtindexfilePublisher) {
+                _districtindexfilePublisher.setUpdateVisibility(false);
+            }    
             $('#chooserFileDownloadTarget').empty();
         });
 
