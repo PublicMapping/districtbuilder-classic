@@ -1069,8 +1069,6 @@ def getdemographics(request, planid):
             stats = { 'name': dist_name, 'district_id': district.district_id, 'characteristics': [] }
 
             for subject in subjects:
-                if district.name != 'Unassigned' and district.computedcharacteristic_set.filter(subject=subject).count() == 0:
-                    continue
                 subject_name = subject.short_display
                 characteristics = district.computedcharacteristic_set.filter(subject = subject) 
                 characteristic = { 'name': subject_name }
@@ -1278,10 +1276,9 @@ def getcompliance(plan, version):
             characteristics = district.computedcharacteristic_set
             population_value = Decimal(characteristics.get(subject = population).number)
             for subject in minority:
-                if district.computedcharacteristict_set.filter(subject=subject).count() > 0:
-                    minority_value = Decimal(characteristics.get(subject__exact = subject).number)
-                    if minority_value / population_value > Decimal('.5'):
-                        data[subject]['value'] += 1   
+                minority_value = Decimal(characteristics.get(subject__exact = subject).number)
+                if minority_value / population_value > Decimal('.5'):
+                    data[subject]['value'] += 1   
         except:
             # District has no characteristics - unassigned
             continue
