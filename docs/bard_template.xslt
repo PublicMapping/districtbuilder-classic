@@ -4,21 +4,25 @@
 <xsl:param name="legislativebody" />
 
 <xsl:template match="/DistrictBuilder">
-    <xsl:for-each select="//BardBodyConfig">
-        <xsl:choose>
-            <xsl:when test="@legislativebodyref=$legislativebody">
-                <xsl:apply-templates select="//BardConfig[@id=current()/@bardconfigref]" />
-            </xsl:when>
-            <xsl:otherwise>
-                <div id="reportdescription">
-                    <div id="description">
-                       <h3>Sorry, no reports for this legislative body</h3>
-                        <p>Reports are not enabled for this legislative body.</p>
-                    </div>
+    <xsl:choose>
+        <xsl:when test="//BardBodyConfig[@legislativebodyref=$legislativebody]">
+            <xsl:for-each select="//BardBodyConfig">
+                <xsl:choose>
+                    <xsl:when test="@legislativebodyref=$legislativebody">
+                        <xsl:apply-templates select="//BardConfig[@id=current()/@bardconfigref]" />
+                    </xsl:when>
+                </xsl:choose>
+            </xsl:for-each>
+        </xsl:when>
+        <xsl:otherwise>
+            <div id="reportdescription">
+                <div id="description">
+                   <h3>Sorry, no reports for this legislative body</h3>
+                    <p>Reports are not enabled for this legislative body.</p>
                 </div>
-            </xsl:otherwise>
-        </xsl:choose>
-    </xsl:for-each>
+            </div>
+        </xsl:otherwise>
+    </xsl:choose>
 </xsl:template>
 
 <xsl:template match="BardConfig">

@@ -30,7 +30,7 @@ Author:
 from decimal import Decimal
 from optparse import OptionParser, OptionGroup
 from os.path import exists
-from lxml.etree import parse, XMLSchema
+from lxml.etree import parse, XMLSchema, XSLT
 from xml.dom import minidom
 import traceback, pprint, os, sys, random
 
@@ -265,10 +265,11 @@ def merge_config(config, verbose):
         settings_out.write("\nSECRET_KEY = '%s'\n" % "".join([random.choice("abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)") for i in range(50)]))
 
         cfg = config.xpath('//Project')[0]
-        settings_out.write("\nMEDIA_ROOT = '%s/django/publicmapping/site-media/'\n" % cfg.get('root'))
+        root_dir = cfg.get('root')
+        settings_out.write("\nMEDIA_ROOT = '%s/django/publicmapping/site-media/'\n" % root_dir)
 
-        settings_out.write("\nTEMPLATE_DIRS = (\n  '%s/django/publicmapping/templates',\n)\n" % cfg.get('root'))
-        settings_out.write("\nSLD_ROOT = '%s/sld/'\n" % cfg.get('root'))
+        settings_out.write("\nTEMPLATE_DIRS = (\n  '%s/django/publicmapping/templates',\n)\n" % root_dir)
+        settings_out.write("\nSLD_ROOT = '%s/sld/'\n" % root_dir)
 
         cfg = config.xpath('//Reporting')[0]
         cfg = cfg.find('BardConfigs/BardConfig')
@@ -277,9 +278,12 @@ def merge_config(config, verbose):
             settings_out.write("\nBARD_BASESHAPE = '%s'\n" % cfg.get('shape'))
             settings_out.write("BARD_BASEMAP = '%s'\n" % cfg.get('map'))
             settings_out.write("BARD_TEMP = '%s'\n" % cfg.get('temp'))
+            xslt = cfg.get('transform')
+            create_report_templates(config, xslt, '%s/django/publicmapping/redistricting/templates' % root_dir)
         else:
             settings_out.write("\nREPORTS_ENABLED = False\n")
 
+        
         cfg = config.xpath('//GoogleAnalytics')
         if len(cfg) > 0:
             cfg = cfg[0]
@@ -308,5 +312,33 @@ ERROR:
         return False
 
     return True
+
+def create_report_templates(config, xslt_path, template_dir):
+    """
+    This object takes the full configuration element and the path
+    to an XSLT and does the transforms necessary to create templates
+    for use in BARD reporting
+    """
+    # Open up the XSLT file and create a transform
+    f = file(xslt_path)
+    xml = parse(f)
+    transform = XSLT(xml)
+
+    # For each legislative body, create the reporting step HTMl template.
+    # If there is no config for a body, the XSLT transform should create 
+    # a "Sorry, no reports" template
+    bodies = config.xpath('//DistrictBuilder/LegislativeBodies/LegislativeBody')
+    for body in bodies:
+        # Name  the template after the body's name
+        body_id = body.get('id')
+        body_name = body.get('name').lower()
+        template_path = '%s/bard_%s.html' % (template_dir, body_name)
+        # Pass the body's identifier in as a parameter
+        xslt_param = XSLT.strparam(body_id)
+        result = transform(config, legislativebody = xslt_param) 
+        f = open(template_path, 'w')
+        f.write(str(result))
+        f.close()
+
 if __name__ == "__main__":
     main()

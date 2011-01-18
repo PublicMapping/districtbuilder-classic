@@ -176,7 +176,8 @@
                 id="blocks"
                 shape="/projects/publicmapping/local/data/ohblock_bard_save.Rdata" 
                 map="oh_blocks.bardmap"
-                temp="/projects/publicmapping/local/reports">
+                temp="/projects/publicmapping/local/reports"    
+                transform="/projects/publicmapping/trunk/docs/bard_template.xslt">
                 <PopVars>
                     <PopVar subjectref="poptot" threshold=".5" default="true" />
                     <PopVar subjectref="vaptot" threshold=".1" />

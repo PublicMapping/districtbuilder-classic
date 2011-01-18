@@ -289,6 +289,7 @@ def commonplan(request, planid):
         default_demo = plan.legislative_body.get_default_subject()
         max_dists = plan.legislative_body.max_districts
         body_member = plan.legislative_body.member
+        reporting_template = 'bard_%s.html' % plan.legislative_body.name.lower()
 
         index = body_member.find('%')
         if index >= 0:
@@ -304,6 +305,7 @@ def commonplan(request, planid):
         default_demo = None
         max_dists = 0
         body_member = 'District '
+        reporting_template = None
     levels = Geolevel.objects.all()
     demos = Subject.objects.values_list("id","name", "short_display","is_displayed")
     layers = []
@@ -347,7 +349,8 @@ def commonplan(request, planid):
         'max_dists': max_dists + 1,
         'ga_account': settings.GA_ACCOUNT,
         'ga_domain': settings.GA_DOMAIN,
-        'body_member': body_member
+        'body_member': body_member,
+        'reporting_template': reporting_template
     }
 
 
@@ -1020,8 +1023,10 @@ def getdemographics(request, planid):
         status['message'] = "Couldn't get demographic info from the server. Please try again later."
         return HttpResponse( json.dumps(status), mimetype='application/json', status=500 )
 
-    subjects = Subject.objects.all()
-    headers = list(Subject.objects.all().values_list('short_display', flat=True))
+    # We only want the subjects that have data attached to districts
+    subject_ids = ComputedCharacteristic.objects.values_list('subject', flat=True).distinct()
+    subjects = Subject.objects.filter(id__in=subject_ids)
+    headers = list(subjects.values_list('short_display', flat=True))
 
     if 'version' in request.REQUEST:
         version = int(request.REQUEST['version'])
@@ -1062,7 +1067,10 @@ def getdemographics(request, planid):
                 dist_name = district.name[index:]
 
             stats = { 'name': dist_name, 'district_id': district.district_id, 'characteristics': [] }
+
             for subject in subjects:
+                if district.name != 'Unassigned' and district.computedcharacteristic_set.filter(subject=subject).count() == 0:
+                    continue
                 subject_name = subject.short_display
                 characteristics = district.computedcharacteristic_set.filter(subject = subject) 
                 characteristic = { 'name': subject_name }
@@ -1257,7 +1265,10 @@ def getcompliance(plan, version):
 
     #Minority districts
     population = plan.legislative_body.get_default_subject()
-    minority = Subject.objects.exclude(name=population.name)
+    # We only want the subjects that have data attached to districts
+    subject_ids = ComputedCharacteristic.objects.values_list('subject', flat=True).distinct()
+    minority = Subject.objects.filter(id__in=subject_ids).exclude(name=population.name)
+    # minority = Subject.objects.exclude(name=population.name)
     data = {}
     for subject in minority:
         data[subject]  = { 'name': '%s Majority' % subject.short_display, 'value': 0 }
@@ -1267,9 +1278,10 @@ def getcompliance(plan, version):
             characteristics = district.computedcharacteristic_set
             population_value = Decimal(characteristics.get(subject = population).number)
             for subject in minority:
-                minority_value = Decimal(characteristics.get(subject__exact = subject).number)
-                if minority_value / population_value > Decimal('.5'):
-                    data[subject]['value'] += 1   
+                if district.computedcharacteristict_set.filter(subject=subject).count() > 0:
+                    minority_value = Decimal(characteristics.get(subject__exact = subject).number)
+                    if minority_value / population_value > Decimal('.5'):
+                        data[subject]['value'] += 1   
         except:
             # District has no characteristics - unassigned
             continue

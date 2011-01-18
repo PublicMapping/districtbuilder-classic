@@ -37,7 +37,7 @@
             <xs:element name="BardBodyConfigs">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element name="BardBodyConfig" type="BardBodyConfigType" />
+                        <xs:element name="BardBodyConfig" type="BardBodyConfigType" minOccurs="1" maxOccurs="unbounded" />
                     </xs:sequence>
                 </xs:complexType>
                 <xs:key name="BardConfigKey">
@@ -187,6 +187,13 @@
             <xs:annotation>
                 <xs:documentation>
                 The path to the www-data-readable directory where reports are written and stored
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="transform" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                The path to the XSLT transform that converts config elements into HTML for use in the app
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
