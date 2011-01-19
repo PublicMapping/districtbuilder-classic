@@ -107,10 +107,25 @@ reports = function(options) {
             }
         };
 
+        // Get the ratioVar info from any areas such as Majority-Minority
+        // Districts or Party-Controlled Districts
+        _ratioVars = [];
+        $('.ratioVar').each( function(index, element) {
+            var name = $(element).val();
+            var numerators = getConcatenated(name);
+            // If none of the boxes are checked, don't send the ratioVar
+            if (numerators) {
+                var ratioVar = $('#' + name + 'Denominator').val();
+                ratioVar += '||' + $('#' + name + 'Threshold').val();
+                ratioVar += '||' + getConcatenated(name);
+                ratioVar += '||' + $('label[for^=' + name + ']').text();
+                
+                _ratioVars.push(ratioVar);
+            }
+        });
+
         _popVar = $('#popVar').val();
         _popVarExtra = getConcatenated('popVarExtra');
-        _partyControl = getConcatenated('partyControl');
-        _racialComp = getConcatenated('racialComp');
         _splitVars = getConcatenated('splitVar');
         _repCompactness = $('#repCompactness').attr('checked');
         _repCompactnessExtra = $('#repCompactnessExtra').attr('checked');
@@ -119,8 +134,7 @@ reports = function(options) {
         var data = { 
             popVar: _popVar,
             popVarExtra: _popVarExtra,
-            racialComp: _racialComp,
-            partyControl: _partyControl,
+            ratioVars: _ratioVars,
             splitVars: _splitVars,
             repCompactness: _repCompactness,
             repCompactnessExtra: _repCompactnessExtra,

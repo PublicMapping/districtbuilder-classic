@@ -703,23 +703,19 @@ def getreport(request, planid):
     else:
         pop_var_extra = r('as.null()')
     
-    racialComp = request.POST.get('racialComp', None)
-    partyControl = request.POST.get('partyControl', None)
-    if racialComp or partyControl:
+    post_list = request.POST.getlist('ratioVars[]')
+    if len(post_list) > 0:
         ratioVars = robjects.StrVector(())
-        if racialComp:
-            mmd = robjects.StrVector(())
-            mmd += r('list("denominator"=%s)' % get_named_vector(popVar).r_repr())
-            mmd += r('list("threshold"=.6)')
-            mmd += r('list("numerators"=%s)' % get_named_vector(racialComp).r_repr())
-            ratioVars += r('list("Majority Minority Districts"=%s)' % mmd.r_repr())
+        # Each of the ratioVars should have been posted as a list of items separated by
+        # double pipes
+        for ratioVar in post_list:
+            ratioAttributes = ratioVar.split('||')
+            rVar = robjects.StrVector(())
+            rVar += r('list("denominator"=%s)' % get_named_vector(ratioAttributes[0]).r_repr())
+            rVar += r('list("threshold"=%s)' % ratioAttributes[1])
+            rVar += r('list("numerators"=%s)' % get_named_vector(ratioAttributes[2]).r_repr())
+            ratioVars += r('list("%s"=%s)' % (ratioAttributes[3], rVar.r_repr()))
 
-        if partyControl:
-            pc = robjects.StrVector(())
-            pc += r('list("denominator"=%s)' % get_named_vector(popVar).r_repr())
-            pc += r('list("threshold"=.6)')
-            pc += r('list("numerators"=%s)' % get_named_vector(partyControl).r_repr())
-            ratioVars += r('list("Party-controlled Districts"=%s)' % pc.r_repr())
         ratio_vars = ratioVars
     else:
         ratio_vars = r('as.null()')
@@ -896,6 +892,7 @@ def addtodistrict(request, planid, districtid):
 
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
+@unique_session_or_json_redirect
 @login_required
 def setdistrictlock(request, planid, district_id):
     """
@@ -914,11 +911,6 @@ def setdistrictlock(request, planid, district_id):
 
     status = {'success':False}
 
-    if not using_unique_session(request.user):
-        status['message'] = 'The current user may only have one session open at a time.'
-        status['redirect'] = '/?msg=logoff'
-        return HttpResponse(json.dumps(status), mimetype='application/json')
-    
     try:
         plan = Plan.objects.get(pk=planid)
         district = District.objects.filter(plan=plan,district_id=district_id).order_by('version').reverse()[0]
@@ -1070,7 +1062,7 @@ def getdemographics(request, planid):
 
     # We only want the subjects that have data attached to districts
     subject_ids = ComputedCharacteristic.objects.values_list('subject', flat=True).distinct()
-    subjects = Subject.objects.filter(id__in=subject_ids)
+    subjects = Subject.objects.filter(id__in=subject_ids)[:3]
     headers = list(subjects.values_list('short_display', flat=True))
 
     if 'version' in request.REQUEST:

@@ -77,12 +77,11 @@
 
 <xsl:template match="RatioVars">
     <xsl:for-each select="RatioVar">
+            <input type="hidden" id="{@id}" value="{@id}" class="ratioVar" />
             <span class="{@id} master" ><input id="{@id}_master" type="checkbox" /><label for="{@id}_master"><xsl:value-of select="@label" /></label></span>
-            <input type="hidden" id="{@id}Denominator">
-                <xsl:attribute name="value">
-                    <xsl:value-of select="./Denominator/@subjectref" />
-                </xsl:attribute>
-            </input>
+            <xsl:variable name="denominatorfield" select="key('subject', ./Denominator/@subjectref)/@field" />
+            <xsl:variable name="denominatorname" select="key('subject',  ./Denominator/@subjectref)/@name" />
+            <input type="hidden" id="{@id}Denominator" value="{$denominatorname}|{$denominatorfield}" />
             <input type="hidden" id="{@id}Threshold">
                 <xsl:attribute name="value">
                     <xsl:value-of select="@threshold" />
