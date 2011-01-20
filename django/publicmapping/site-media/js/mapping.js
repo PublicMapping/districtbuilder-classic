@@ -1239,8 +1239,7 @@ function mapinit(srs,maxExtent) {
             }),
             symbolizer: {
                 strokeColor: lockedColor,
-                strokeWidth: 4,
-                strokeDashstyle: 'dash'
+                strokeWidth: 4
             }
         }));
         rules.push(new OpenLayers.Rule({
