@@ -102,6 +102,15 @@ djcelery.setup_loader()
 CARROT_BACKEND = 'ghettoq.taproot.Database'
 CELERY_IMPORTS = ( 'redistricting.utils', )
 
+from datetime import timedelta
+CELERYBEAT_SCHEDULE = {
+    'cleanup-sessions': {
+        'task': 'redistricting.utils.cleanup',
+        'schedule': timedelta(hours=1),
+        'args': None
+    },
+}
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',

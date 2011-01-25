@@ -25,10 +25,13 @@ Author:
 """
 
 from celery.decorators import task
+from django.core import management
+from django.contrib.sessions.models import Session
 from django.core.mail import send_mail, mail_admins
 from django.template import loader, Context
 from redistricting.models import *
 import csv, time, zipfile, tempfile, os, sys, traceback
+from datetime import datetime
 
 
 class DistrictIndexFile():
@@ -355,3 +358,12 @@ class DistrictIndexFile():
             index_file = open('%s/plan%dv%d.zip' % (tempfile.gettempdir(), plan.id, plan.version), 'r')
             index_file.close()
             return index_file
+
+@task
+def cleanup():
+    """
+    Clean out all the old sessions.
+
+    Old sessions are sessions whose expiration date is in the past.
+    """
+    management.call_command('cleanup') 
