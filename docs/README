@@ -101,11 +101,8 @@ update support, and install tmpreaper and cron jobs.
     template, along with a publicmapping user role.  The publicmapping 
     user will be assigned all permissions and ownership on the db.
 
- 5. Check out your settings.ini folder and make sure it's pointing to the
-    correct DB and that your DB is accessible. You may want to adjust the 
-    value of the map server, too.  Finally, make sure your pg_hba file in 
-    your postgres configuration allows password-based authentication on 
-    the local machine:
+ 5. Make sure your pg_hba file in your postgres configuration allows 
+    password-based authentication on the local machine:
 
     http://developer.postgresql.org/pgdocs/postgres/auth-pg-hba-conf.html
 
@@ -122,6 +119,13 @@ update support, and install tmpreaper and cron jobs.
     > sudo mkdir /projects/publicmapping/local/data 
     > cd  /projects/publicmapping/local/data; sudo unzip /projects/publicmapping/data/2010_10_22_OHdata.zip
 
+    *Note* that if you are loading spatial data for a coverage other than
+    the demonstration coverage over Ohio, you will need to ensure that the 
+    spatial reference of the data is "Web Auxiliary Sphere". The definition
+    for all GIS software packages is available here:
+        
+    http://spatialreference.org/ref/epsg/3785/
+
  7. Now we'll use the setup.py script to configure our application. Set the
     script to be executable:
     
@@ -129,10 +133,11 @@ update support, and install tmpreaper and cron jobs.
     > sudo chmod u+x setup.py
 
  8. Run the setup script with the appropriate parameters - the parts of 
-    the app you want to set up, along with the path to an xsd and a config.xml
-    file.  For example - if you want to set up the database with all geolevels,\
-    your config.xml file is next to the .xsd schema file in the repository,
-    and your geoserver is installed and configured, you would type:
+    the app you want to set up, along with the path to an xsd and a 
+    config.xml file.  For example - if you want to set up the database 
+    with all geolevels, your config.xml file is next to the .xsd schema 
+    file in the repository, and your geoserver is installed and 
+    configured, you would type:
 
     > sudo python ./setup.py -V -d -g0 -g1 -g2 -t -v -G \
         ../../docs/config.xsd ../../docs/config.xml
