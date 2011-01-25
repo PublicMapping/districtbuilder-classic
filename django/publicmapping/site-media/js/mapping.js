@@ -573,21 +573,38 @@ function mapinit(srs,maxExtent) {
             success: function(data, textStatus, xhr) {
                 var mode = data.success ? 'select' : 'error';
                 if (data.success) {
-                    // update the max version of this plan
-                    PLAN_VERSION = data.version;
-                    PLAN_HISTORY[PLAN_VERSION] = true;
+                    // if no districts were updated, display a warning
+                    if (data.updated === 0) {
+                        OpenLayers.Element.removeClass(olmap.viewPortDiv, 'olCursorWait');
+                        $('#working').dialog('close');
+                        $('<div id="errorDiv">No districts were updated.</div>').dialog({
+                            modal: true,
+                            autoOpen: true,
+                            title: 'Error',
+                            buttons: { 
+                                'OK': function() {
+                                    $('#errorDiv').remove();
+                                }
+                            }
+                        });
+                        updateInfoDisplay();
+                    } else {                    
+                        // update the max version of this plan
+                        PLAN_VERSION = data.version;
+                        PLAN_HISTORY[PLAN_VERSION] = true;
 
-                    // set the version cursor
-                    $('#history_cursor').val(data.version);
+                        // set the version cursor
+                        $('#history_cursor').val(data.version);
 
-                    // update the UI buttons to show that you can
-                    // perform an undo now, but not a redo
-                    $('#history_redo').addClass('disabled');
-                    $('#history_undo').removeClass('disabled');
+                        // update the UI buttons to show that you can
+                        // perform an undo now, but not a redo
+                        $('#history_redo').addClass('disabled');
+                        $('#history_undo').removeClass('disabled');
 
-                    updateInfoDisplay();
+                        updateInfoDisplay();
 
-                    $('#saveplaninfo').trigger('planSaved', [ data.edited ]);
+                        $('#saveplaninfo').trigger('planSaved', [ data.edited ]);
+                    }
                 }
                 else {
                     if ('redirect' in data) {
@@ -831,7 +848,8 @@ function mapinit(srs,maxExtent) {
                     type: 'POST',
                     url: '/districtmapping/plan/' + PLAN_ID + '/district/' + feature.attributes.district_id + '/lock/',
                     data: {
-                        lock: !feature.attributes.is_locked
+                        lock: !feature.attributes.is_locked,
+                        version: getPlanVersion()
                     },
                     success: function(data, textStatus, xhr) {
                         districtLayer.strategies[0].update({force:true});

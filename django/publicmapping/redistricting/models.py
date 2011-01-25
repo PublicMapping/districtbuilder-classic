@@ -724,6 +724,10 @@ class Plan(models.Model):
         # Get the districts in this plan, at the specified version.
         districts = self.get_districts_at_version(version)
 
+        # Check if the target district is locked
+        if any((ds.is_locked and ds.district_id == districtid) for ds in districts):
+            return 0
+
         #ds2 = self.get_districts_at_version(self.version)
         #print "Districts at PLAN version %d:" % self.version
         #for ds in ds2:

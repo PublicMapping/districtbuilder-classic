@@ -249,7 +249,7 @@ class PlanTestCase(BaseTestCase):
         cursor.close()
         self.assertEqual(numunits, numunitscopy, 'Geounits between original and copy are different')
 
-    def test_lock_district(self):
+    def test_district_locking(self):
         """
         Test the logic for locking/unlocking a district.
         """
@@ -257,6 +257,12 @@ class PlanTestCase(BaseTestCase):
         districtid = district.id
         district_id = district.district_id
         
+        level = self.geolevels[0]
+        levelid = level.id
+        
+        geounits = self.geounits[level.id]
+        geounitids = [str(geounits[0].id)]
+
         client = Client()
 
         # Create a second user, and try to lock a district not belonging to that user
@@ -267,29 +273,43 @@ class PlanTestCase(BaseTestCase):
         client.login(username=username2, password=self.password)
 
         # Issue lock command when not logged in
-        response = client.post('/districtmapping/plan/%d/district/%d/lock/' % (self.plan.id, district_id), { 'lock':True })
+        response = client.post('/districtmapping/plan/%d/district/%d/lock/' % (self.plan.id, district_id), { 'lock':True, 'version':self.plan.version })
         self.assertEqual(403, response.status_code, 'Non-owner was able to lock district.' + str(response))
         
         # Login
         client.login(username=self.username, password=self.password)
         
         # Issue lock command
-        response = client.post('/districtmapping/plan/%d/district/%d/lock/' % (self.plan.id, district_id), { 'lock':True })
+        response = client.post('/districtmapping/plan/%d/district/%d/lock/' % (self.plan.id, district_id), { 'lock':True, 'version':self.plan.version })
         self.assertEqual(200, response.status_code, 'Lock handler didn\'t return 200:' + str(response))
 
         # Ensure lock exists
         district = District.objects.get(pk=districtid)
         self.assertTrue(district.is_locked, 'District wasn\'t locked.' + str(response))
 
+        # Try adding geounits to the locked district (not allowed)
+        self.plan.add_geounits(district_id, geounitids, levelid, self.plan.version)
+        cursor = self.plan.district_mapping_cursor()
+        numunits = len(cursor.fetchall())
+        cursor.close()
+        self.assertEqual(0, numunits, 'Geounits were added to a locked district. Num geounits: %d' % numunits)
+        
         # Issue unlock command
-        response = client.post('/districtmapping/plan/%d/district/%d/lock/' % (self.plan.id, district_id), { 'lock':False })
+        response = client.post('/districtmapping/plan/%d/district/%d/lock/' % (self.plan.id, district_id), { 'lock':False, 'version':self.plan.version })
         self.assertEqual(200, response.status_code, 'Lock handler didn\'t return 200:' + str(response))
 
         # Ensure lock has been removed
         district = District.objects.get(pk=districtid)
         self.assertFalse(district.is_locked, 'District wasn\'t unlocked.' + str(response))
-        
-        
+
+        # Add geounits to the plan
+        self.plan.add_geounits(district_id, geounitids, levelid, self.plan.version)
+        cursor = self.plan.district_mapping_cursor()
+        numunits = len(cursor.fetchall())
+        cursor.close()
+        self.assertEqual(81, numunits, 'Geounits could not be added to an unlocked district. Num geounits: %d' % numunits)
+
+
 # This test is commented out, because get_base_geounits has also been commented out.
 # If get_base_geounits becomes uncommented, and starts being used, this test should be reactivated.        
 #    def test_get_base_geounits(self):

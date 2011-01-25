@@ -880,6 +880,7 @@ def addtodistrict(request, planid, districtid):
             fixed = plan.add_geounits(districtid, geounit_ids, geolevel, version)
             status['success'] = True;
             status['message'] = 'Updated %d districts' % fixed
+            status['updated'] = fixed
             plan = Plan.objects.get(pk=planid,owner=request.user)
             status['edited'] = getutc(plan.edited).isoformat()
             status['version'] = plan.version
@@ -911,25 +912,30 @@ def setdistrictlock(request, planid, district_id):
 
     status = {'success':False}
 
+    if request.method != 'POST':
+        return HttpResponseForbidden()
+    
+    lock = request.POST.get('lock').lower() == 'true'
+    version = request.POST.get('version')
+    if lock == None:
+        status['message'] = 'Must include lock parameter.'
+    elif version == None:
+        status['message'] = 'Must include version parameter.'
+
     try:
         plan = Plan.objects.get(pk=planid)
-        district = District.objects.filter(plan=plan,district_id=district_id).order_by('version').reverse()[0]
-        
+        district = District.objects.filter(plan=plan,district_id=district_id,version__lte=version).order_by('version').reverse()[0]
     except ObjectDoesNotExist:
         status['message'] = 'Plan or district does not exist.'
         return HttpResponse(json.dumps(status), mimetype='application/json')
 
-    if request.method != 'POST' or plan.owner != request.user:
+    if plan.owner != request.user:
         return HttpResponseForbidden()
     
-    lock = request.POST.get('lock').lower() == 'true'
-    if lock == None:
-        status['message'] = 'Must include lock parameter.'
-    else:
-        district.is_locked = lock
-        district.save()
-        status['success'] = True
-        status['message'] = 'District successfully %s' % ('locked' if lock else 'unlocked')
+    district.is_locked = lock
+    district.save()
+    status['success'] = True
+    status['message'] = 'District successfully %s' % ('locked' if lock else 'unlocked')
   
     return HttpResponse(json.dumps(status), mimetype='application/json')
         
