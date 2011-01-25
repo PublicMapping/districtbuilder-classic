@@ -279,9 +279,23 @@ function mapinit(srs,maxExtent) {
     });
 
     // Dynamically compute the resolutions, based on the map extents.
-    // NOTE: Geoserver computes the resolution with the top and the bottom
-    // components of the extent, NOT the left/right.
-    var rez = [(maxExtent.top - maxExtent.bottom) / 256.0];
+    // NOTE: Geoserver computes the resolution with the largest
+    // components of the extent
+    var xHeight = maxExtent.top - maxExtent.bottom;
+    var xWidth = maxExtent.right - maxExtent.left;
+
+    var rez = (xHeight > xWidth) ? 
+        [(maxExtent.top - maxExtent.bottom) / 256.0] :
+        [(maxExtent.right - maxExtent.left) / 256.0];
+
+    // GWC doesn't use the same exact height if something is more than 2x
+    // as wide. Correct for 2x wide geographies.
+    var flatness = parseInt( parseInt( xWidth / xHeight, 10 ) / 2, 10 );
+    while (flatness > 0) {
+        rez[0] /= 2;
+        flatness--;
+    }
+
     while (rez.length < 12) {
         rez.push( rez[rez.length - 1] / 2.0 );
     }
