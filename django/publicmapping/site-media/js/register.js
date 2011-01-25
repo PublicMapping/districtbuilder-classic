@@ -187,11 +187,8 @@ $(function(){
                     if (data.success) {
                         newpassword1.val('');
                         newpassword2.val('');
-                        $('#register').dialog('close');
                     }
-                    else {
-                        alert(data.message);
-                    }
+                    $('#register').dialog('close');
                 }
             },
             error:function(xhr,textStatus,error){
@@ -307,15 +304,10 @@ $(function(){
                 type:'POST',
                 url:frm.action,
                 success: function(data,textStatus,xhr){
-                    if (data.success) {
-                        $('#sessiondupe').dialog('close');
-                    }
-                    else {
-                        alert( data.message );
-                    }
+                    $('#sessiondupe').dialog('close');
                 },
                 error: function(xhr,textStatus,error) {
-                    alert( error );
+                    $('#sessiondupe').dialog('close');
                 }
             });
             return false;
