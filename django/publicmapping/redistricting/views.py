@@ -307,7 +307,7 @@ def commonplan(request, planid):
         body_member = 'District '
         reporting_template = None
     levels = Geolevel.objects.all()
-    demos = Subject.objects.values_list("id","name", "short_display","is_displayed")
+    demos = Subject.objects.all().order_by('sort_key').values_list("id","name", "short_display","is_displayed")[0:3]
     layers = []
     snaplayers = []
     boundaries = []
