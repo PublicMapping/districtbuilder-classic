@@ -102,6 +102,11 @@ contents of the file and try again.
         # config is now a XSD validated and id-ref checked configuration
         #
 
+        # When the setup script is run, it re-computes the secret key
+        # used to secure session data. Blow away any old sessions that
+        # were in the DB.
+        self.purge_sessions(verbose)
+
         self.import_prereq(config, verbose)
 
         optlevels = options.get("geolevels")
@@ -116,8 +121,8 @@ contents of the file and try again.
                 if importme:
                     self.import_geolevel(config, geolevel, verbose)
 
-                    #if nesting:
-                    #    self.renest_geolevel(i, verbose)
+                    if nesting:
+                        self.renest_geolevel(geolevel, verbose)
 
         if options.get("views"):
             # Create views based on the subjects and geolevels
@@ -129,6 +134,22 @@ contents of the file and try again.
 
         if options.get("templates"):
             self.create_template(config, verbose)
+
+    def purge_sessions(self, verbose):
+        """
+        Delete any sessions that existed in the database.
+
+        This is required to blank out any session information in the
+        application that may have been encrypted with an old secret key.
+        Secret keys are generated every time the setup.py script is run.
+        """
+        from django.contrib.sessions.models import Session
+        qset = Session.objects.all()
+
+        if verbose:
+            print "Purging %d sessions from the database." % qset.count()
+
+        qset.delete()
 
     def configure_geoserver(self, config, extent, verbose):
         """
@@ -219,7 +240,7 @@ contents of the file and try again.
         for geolevel in Geolevel.objects.all():
             feature_type_names.append('simple_%s' % geolevel.name)
 
-            for subject in Subject.objects.all():
+            for subject in Subject.objects.all().order_by('sort_key')[0:3]:
                 feature_type_names.append('demo_%s_%s' % (geolevel.name, subject.name))
 
         # Check for each layer in the list.  If it doesn't exist, make it
@@ -241,13 +262,14 @@ contents of the file and try again.
         for geolevel in Geolevel.objects.all():
             is_first_subject = True
 
-            for subject in Subject.objects.all():
+            # Import the first three subjects only
+            for subject in Subject.objects.all().order_by('sort_key')[0:3]:
 
                 # This helper method is used for each layer
                 def publish_and_assign_style(style_name, style_type):
                     """
-                    A method to assist in publishing styles to geoserver and configuring the layers
-                    to have a default style
+                    A method to assist in publishing styles to geoserver 
+                    and configuring the layers to have a default style
                     """
 
                     if not style_type:
@@ -329,7 +351,11 @@ contents of the file and try again.
             print """
 ERROR:
 
-        The style file %s colud not be loaded. Please confirm that the
+        The style file:
+        
+        %s
+        
+        could not be loaded. Please confirm that the
         style files are named according to the "geolevel_subject.sld"
         convention, and try again.
 """ % path
@@ -419,11 +445,27 @@ ERROR:
             config - The configuration dict of the geolevel
             geolevel - The geolevel node in the configuration
         """
+
+        shapeconfig = geolevel.xpath('Shapefile')
+        attrconfig = None
+        if len(shapeconfig) == 0:
+            shapeconfig = geolevel.xpath('Files/Geography')
+            attrconfig = geolevel.xpath('Files/Attributes')
+
+        if len(shapeconfig) == 0:
+            if verbose:
+                print """
+ERROR:
+
+    The geographic level setup routine needs either a Shapefile or a
+    set of Files/Geography elements in the configuration in order to
+    import geographic levels.""";
+            return
+
         gconfig = {
-            'shapepath': geolevel.get('shapefile'),
+            'shapefiles': shapeconfig,
+            'attributes': attrconfig,
             'geolevel': geolevel.get('name'),
-            'name_field': geolevel.get('namefield'),
-            'supplemental_id_field': geolevel.get('supplementfield'),
             'subject_fields': [],
             'tolerance': geolevel.get('tolerance')
         }
@@ -438,7 +480,7 @@ ERROR:
 
         self.import_shape(gconfig, verbose)
 
-    def renest_geolevel(self, geolevel_id, verbose):
+    def renest_geolevel(self, glconf, verbose):
         """
         Perform a re-nesting of the geography in the geographic levels.
 
@@ -449,8 +491,94 @@ ERROR:
             geolevel - The configuration geolevel
             verbose - A flag indicating verbose output messages.
         """
-        if geolevel_id > 0:
-            geolevel = Geolevel.objects.get(id=geolevel_id+1).name
+        geolevel = Geolevel.objects.get(name=glconf.get('name'))
+        llevels = LegislativeLevel.objects.filter(geolevel=geolevel)
+        parent = None
+        for llevel in llevels:
+            if not llevel.parent is None:
+                parent = llevel.parent
+
+        if parent:
+            progress = 0
+            if verbose:
+                print "Recomputing geometric and numerical aggregates..." 
+                sys.stdout.write('0% .. ')
+                sys.stdout.flush()
+
+            geomods = 0
+            nummods = 0
+
+            unitqset = Geounit.objects.filter(geolevel=geolevel)
+            for i,geounit in enumerate(unitqset):
+                if (float(i) / unitqset.count()) > (progress + 0.1):
+                    progress += 0.1
+                    if verbose:
+                        sys.stdout.write('%2.0f%% .. ' % (progress * 100))
+                        sys.stdout.flush()
+                
+                geo,num = self.aggregate_unit(geounit, geolevel, parent, verbose)
+
+                geomods += geo
+                nummods += num
+
+
+            sys.stdout.write('100%\n')
+
+            if verbose:
+                print "Geounits modified: (geometry: %d, data values: %d)" % (geomods, nummods)
+
+
+    def aggregate_unit(self, geounit, geolevel, parent, verbose):
+        geo = 0
+        num = 0
+
+        if not geounit.supplemental_id:
+            return (geo, num,)
+
+        parentunits = Geounit.objects.filter(supplemental_id__startswith=geounit.supplemental_id, geolevel=parent.geolevel)
+        newgeo = parentunits.unionagg()
+
+        if newgeo is None:
+            return (geo, num,)
+
+        difference = newgeo.difference(geounit.geom).area
+        if difference != 0:
+            # if there is any difference in the area, then assume that 
+            # this aggregate is an inaccurate aggregate of it's parents
+
+            # aggregate geometry
+
+            newsimple = newgeo.simplify(preserve_topology=True,tolerance=geolevel.tolerance)
+
+            geounit.geom = enforce_multi(newgeo)
+            geounit.simple = enforce_multi(newsimple)
+            geounit.save()
+
+            geo += 1
+
+        # aggregate data values
+        for subject in Subject.objects.all():
+            qset = Characteristic.objects.filter(geounit__in=parentunits, subject=subject)
+            aggdata = qset.aggregate(Sum('number'))['number__sum']
+
+            if aggdata is None:
+                aggdata = "0.0"
+
+            mychar = Characteristic.objects.filter(geounit=geounit, subject=subject)
+            if mychar.count() < 1:
+                mychar = Characteristic(geounit=geounit, subject=subject, number=aggdata)
+                mychar.save()
+                num += 1
+            else:
+                mychar = mychar[0]
+
+                if aggdata != mychar.number:
+                    mychar.number = aggdata
+                    mychar.save()
+
+                    num += 1
+
+        return (geo, num,)
 
 
     def import_prereq(self, config, verbose):
@@ -596,13 +724,6 @@ ERROR:
                         else:
                             print 'LegislativeBody/GeoLevel mapping "%s/%s" already exists' % (legislative_body.name, glvl.name)
 
-        # Create an anonymous user
-        anon,created = User.objects.get_or_create(username='anonymous')
-
-        if not created:
-            anon.set_password('anonymous')
-            anon.save()
-
         return True
 
     def import_shape(self,config,verbose):
@@ -612,125 +733,159 @@ ERROR:
         Parameters:
             config -- A dictionary with 'shapepath', 'geolevel', 'name_field', and 'subject_fields' keys.
         """
-        ds = DataSource(config['shapepath'])
+        for h,shapefile in enumerate(config['shapefiles']):
+            ds = DataSource(shapefile.get('path'))
 
-        if verbose:
-            print 'Importing from ', ds
+            if verbose:
+                print 'Importing from %s, %d of %d shapefiles...' % (ds, h+1, len(config['shapefiles']))
 
-        lyr = ds[0]
-        if verbose:
-            print '%d objects in shapefile' % len(lyr)
+            lyr = ds[0]
+            if verbose:
+                print '%d objects in shapefile' % len(lyr)
 
-        level = Geolevel.objects.get(name=config['geolevel'])
-        supplemental_id_field = config['supplemental_id_field']
+            level = Geolevel.objects.get(name=config['geolevel'])
+            supplemental_id_field = shapefile.get('supplementfield')
 
-        # Create the subjects we need
-        subject_objects = {}
-        for sconfig in config['subject_fields']:
-            foundalias = False
-            for elem in sconfig.getchildren():
-                if elem.tag == 'Subject':
-                    foundalias = True
-                    sub = Subject.objects.get(name=elem.get('id'))
-            if not foundalias:
-                sub = Subject.objects.get(name=sconfig.get('id'))
-            subject_objects[sconfig.get('field')] = sub
+            # Create the subjects we need
+            subject_objects = {}
+            for sconfig in config['subject_fields']:
+                foundalias = False
+                for elem in sconfig.getchildren():
+                    if elem.tag == 'Subject':
+                        foundalias = True
+                        sub = Subject.objects.get(name=elem.get('id'))
+                if not foundalias:
+                    sub = Subject.objects.get(name=sconfig.get('id'))
+                subject_objects[sconfig.get('field')] = sub
 
-        progress = 0.0
-        if verbose:
-            sys.stdout.write('0% .. ')
-            sys.stdout.flush()
-        for i,feat in enumerate(lyr):
-            if (float(i) / len(lyr)) > (progress + 0.1):
-                progress += 0.1
-                if verbose:
-                    sys.stdout.write('%2.0f%% .. ' % (progress * 100))
-                    sys.stdout.flush()
-
-            prefetch = Q(name=feat.get(config['name_field'])) & Q(geolevel=level)
-            if supplemental_id_field:
-                prefetch = prefetch & Q(supplemental_id=str(feat.get(supplemental_id_field)))
-            prefetch = Geounit.objects.filter(prefetch) 
-            if prefetch.count() == 0:
-                try :
-
-                    # Store the geos geometry
-                    geos = feat.geom.geos
-                    # Coerce the geometry into a MultiPolygon
-                    if geos.geom_type == 'MultiPolygon':
-                        my_geom = geos
-                    elif geos.geom_type == 'Polygon':
-                        my_geom = MultiPolygon(geos)
-                    simple = my_geom.simplify(tolerance=Decimal(config['tolerance']),preserve_topology=True)
-                    if simple.geom_type != 'MultiPolygon':
-                        simple = MultiPolygon(simple)
-                    center = my_geom.centroid
-
-                    geos = None
-
-                    # Ensure the centroid is within the geometry
-                    if not center.within(my_geom):
-                        # Get the first polygon in the multipolygon
-                        first_poly = my_geom[0]
-                        # Get the extent of the first poly
-                        first_poly_extent = first_poly.extent
-                        min_x = first_poly_extent[0]
-                        max_x = first_poly_extent[2]
-                        # Create a line through the bbox and the poly center
-                        my_y = first_poly.centroid.y
-                        centerline = LineString( (min_x, my_y), (max_x, my_y))
-                        # Get the intersection of that line and the poly
-                        intersection = centerline.intersection(first_poly)
-                        if type(intersection) is MultiLineString:
-                            intersection = intersection[0]
-                        # the center of that line is my within-the-poly centroid.
-                        center = intersection.centroid
-                        first_poly = first_poly_extent = min_x = max_x = my_y = centerline = intersection = None
-
+            progress = 0.0
+            if verbose:
+                sys.stdout.write('0% .. ')
+                sys.stdout.flush()
+            for i,feat in enumerate(lyr):
+                if (float(i) / len(lyr)) > (progress + 0.1):
+                    progress += 0.1
                     if verbose:
-                        if not my_geom.simple:
-                            print 'Geometry %d is not simple.\n' % feat.fid
-                        if not my_geom.valid:
-                            print 'Geometry %d is not valid.\n' % feat.fid
-                        if not simple.simple:
-                            print 'Simplified Geometry %d is not simple.\n' % feat.fid
-                        if not simple.valid:
-                            print 'Simplified Geometry %d is not valid.\n' % feat.fid
+                        sys.stdout.write('%2.0f%% .. ' % (progress * 100))
+                        sys.stdout.flush()
 
-                    g = Geounit(geom = my_geom, name = feat.get(config['name_field']), geolevel = level, simple = simple, center = center)
-                    if supplemental_id_field:
-                        g.supplemental_id = feat.get(supplemental_id_field)
-                    g.save()
-                except:
-                    print 'Failed to import geometry for feature %d' % feat.fid
-                    if verbose:
-                        traceback.print_exc()
-                        print ''
-                    continue
-            else:
-                g = prefetch[0]
+                prefetch = Q(name=feat.get(shapefile.get('namefield'))) & Q(geolevel=level)
+                if supplemental_id_field:
+                    prefetch = prefetch & Q(supplemental_id=str(feat.get(supplemental_id_field)))
+                prefetch = Geounit.objects.filter(prefetch) 
+                if prefetch.count() == 0:
+                    try :
 
-            for attr, obj in subject_objects.iteritems():
-                value = Decimal(str(feat.get(attr))).quantize(Decimal('000000.0000', 'ROUND_DOWN'))
-                query =  Characteristic.objects.filter(subject=obj, geounit=g)
-                if query.count() > 0:
-                    c = query[0]
-                    c.number = value
+                        # Store the geos geometry
+                        # Buffer by 0 to get rid of any self-intersections which may make this geometry invalid.
+                        geos = feat.geom.geos.buffer(0)
+                        # Coerce the geometry into a MultiPolygon
+                        if geos.geom_type == 'MultiPolygon':
+                            my_geom = geos
+                        elif geos.geom_type == 'Polygon':
+                            my_geom = MultiPolygon(geos)
+                        simple = my_geom.simplify(tolerance=Decimal(config['tolerance']),preserve_topology=True)
+                        if simple.geom_type != 'MultiPolygon':
+                            simple = MultiPolygon(simple)
+                        center = my_geom.centroid
+
+                        geos = None
+
+                        # Ensure the centroid is within the geometry
+                        if not center.within(my_geom):
+                            # Get the first polygon in the multipolygon
+                            first_poly = my_geom[0]
+                            # Get the extent of the first poly
+                            first_poly_extent = first_poly.extent
+                            min_x = first_poly_extent[0]
+                            max_x = first_poly_extent[2]
+                            # Create a line through the bbox and the poly center
+                            my_y = first_poly.centroid.y
+                            centerline = LineString( (min_x, my_y), (max_x, my_y))
+                            # Get the intersection of that line and the poly
+                            intersection = centerline.intersection(first_poly)
+                            if type(intersection) is MultiLineString:
+                                intersection = intersection[0]
+                            # the center of that line is my within-the-poly centroid.
+                            center = intersection.centroid
+                            first_poly = first_poly_extent = min_x = max_x = my_y = centerline = intersection = None
+
+                        if verbose:
+                            if not my_geom.simple:
+                                print 'Geometry %d is not simple.\n' % feat.fid
+                            if not my_geom.valid:
+                                print 'Geometry %d is not valid.\n' % feat.fid
+                            if not simple.simple:
+                                print 'Simplified Geometry %d is not simple.\n' % feat.fid
+                            if not simple.valid:
+                                print 'Simplified Geometry %d is not valid.\n' % feat.fid
+
+                        g = Geounit(geom = my_geom, name = feat.get(shapefile.get('namefield')), geolevel = level, simple = simple, center = center)
+                        if supplemental_id_field:
+                            g.supplemental_id = feat.get(supplemental_id_field)
+                        g.save()
+
+                    except:
+                        print 'Failed to import geometry for feature %d' % feat.fid
+                        if verbose:
+                            traceback.print_exc()
+                            print ''
+                        continue
                 else:
-                    c = Characteristic(subject=obj, geounit=g, number=value)
-                try:
-                    c.save()
-                except:
-                    c.number = '0.0'
-                    c.save()
-                    print 'Failed to set value "%s" to %d in feature "%s"' % (attr, feat.get(attr), feat.get(config['name_field']),)
-                    if verbose:
-                        traceback.print_exc()
-                        print ''
+                    g = prefetch[0]
 
+                if config['attributes'] == None:
+                    self.set_geounit_characteristic(g, subject_objects, feat, verbose)
 
-        if verbose:
-            sys.stdout.write('100%\n')
+            if verbose:
+                sys.stdout.write('100%\n')
+
+        if not config['attributes'] is None:
+            progress = 0
+            if verbose:
+                print "Assigning subject values to imported geography..."
+                sys.stdout.write('0% .. ')
+                sys.stdout.flush()
+            for h,attrconfig in enumerate(config['attributes']):
+                lyr = DataSource(attrconfig.get('path'))[0]
+
+                found = 0
+                missed = 0
+                for i,feat in enumerate(lyr):
+                    if (float(i) / len(lyr)) > (progress + 0.1):
+                        progress += 0.1
+                        if verbose:
+                            sys.stdout.write('%2.0f%% .. ' % (progress * 100))
+                            sys.stdout.flush()
+
+                    gid = feat.get(attrconfig.get('supplementfield'))
+                    g = Geounit.objects.filter(supplemental_id=gid)
+
+                    if g.count() > 0:
+                        self.set_geounit_characteristic(g[0], subject_objects, feat, verbose)
+
+            if verbose:
+                sys.stdout.write('100%\n')
+
+    def set_geounit_characteristic(self, g, subject_objects, feat, verbose):
+        for attr, obj in subject_objects.iteritems():
+            value = Decimal(str(feat.get(attr))).quantize(Decimal('000000.0000', 'ROUND_DOWN'))
+            query =  Characteristic.objects.filter(subject=obj, geounit=g)
+            if query.count() > 0:
+                c = query[0]
+                c.number = value
+            else:
+                c = Characteristic(subject=obj, geounit=g, number=value)
+            try:
+                c.save()
+            except:
+                c.number = '0.0'
+                c.save()
+                print 'Failed to set value "%s" to %d in feature "%s"' % (attr, feat.get(attr), g.name,)
+                if verbose:
+                    traceback.print_exc()
+                    print ''
+
 
     def create_template(self, config, verbose):
         """
@@ -784,3 +939,40 @@ ERROR:
                     print 'Created Plan named "Blank" for LegislativeBody "%s"' % legislative_body.name
                 else:
                     print 'Plan named "Blank" for LegislativeBody "%s" already exists' % legislative_body.name
+
+def empty_geom(srid):
+    """
+    Create an empty GeometryCollection.
+
+    Parameters:
+        srid -- The spatial reference for this empty geometry.
+
+    Returns:
+        An empty geometry.
+    """
+    geom = GeometryCollection([])
+    geom.srid = srid
+    return geom
+
+def enforce_multi(geom):
+    """
+    Make a geometry a multi-polygon geometry.
+
+    This method wraps Polygons in MultiPolygons. If geometry exists, but is
+    neither polygon or multipolygon, an empty geometry is returned. If no
+    geometry is provided, no geometry (None) is returned.
+
+    Parameters:
+        geom -- The geometry to check/enforce.
+    Returns:
+        A multi-polygon from any polygon type.
+    """
+    if geom:
+        if geom.geom_type == 'MultiPolygon':
+            return geom
+        elif geom.geom_type == 'Polygon':
+            return MultiPolygon(geom)
+        else:
+            return empty_geom(geom.srid)
+    else:
+        return geom
