@@ -7,6 +7,8 @@
             definitions later), a name, and a label for plan items 
             ("District" for Congressional, etc) -->
         <LegislativeBody id="congress" name="Congressional" member="District %s" maxdistricts="18"/>
+        <LegislativeBody id="house" name="State House" member="District %s" maxdistricts="99" />
+        <LegislativeBody id="senate" name="State Senate" member="District %s" maxdistricts="33" />
     </LegislativeBodies>
 
     <!-- A list of subjects referenced in the system. -->
@@ -15,12 +17,13 @@
             The subject is mapped to an attribute during the import phase,
             and contains a long and short display name. Subjects have IDs
             for referencing in GeoLevel definitions later. -->
-        <Subject id="poptot" field="POPTOT" name="Total Population" 
+        <Subject id="poptot" field="POP2000" name="Total Population" 
                  short_name="Total Pop." displayed="true" sortkey="1" />
-        <Subject id="popblk" field="POPBLK" name="Black Persons" 
+        <Subject id="popblk" field="BLACK" name="Black Persons" 
                  short_name="Black" displayed="false" sortkey="2" />
-        <Subject id="pophisp" field="POPHIS" name="Hispanic or Latino" 
+        <Subject id="pophisp" field="HISPANIC" name="Hispanic or Latino" 
                  short_name="Hispanic" displayed="false" sortkey="3" />
+        <!--
         <Subject id="vaptot" field="VAPTOT" name="Voting Age Population"
                  short_name="Voters" displayed="false" sortkey="4" />
         <Subject id="vapnhwht" field="VAPNHWHT" name="Voting Age Population - White"
@@ -33,11 +36,12 @@
                  short_name="Democrat" displayed="false" sortkey="7" />
         <Subject id="presrep" field="PRES_REP" name="Republican Voters"
                  short_name="Republican" displayed="false" sortkey="8" />
+        -->
  
         <!-- You can alias a subject by overriding the field, if the
             import shapefiles have different field names at different
             geographic levels. -->
-        <Subject id="pophisp1" field="POPHISP" aliasfor="pophisp"/>
+        <!-- <Subject id="pophisp1" field="POPHISP" aliasfor="pophisp"/> -->
     </Subjects>
 
     <Targets>
@@ -48,13 +52,36 @@
         <Target id="tottarget" subjectref="poptot" value="630730" range1="0.1" range2="0.2" />
         <Target id="blktarget" subjectref="popblk" value="62000" range1="0.1" range2="0.2" />
         <Target id="hisptarget" subjectref="pophisp" value="8000" range1="0.1" range2="0.2" />
-        <Target id="hisptarget1" subjectref="pophisp1" value="8000" range1="0.1" range2="0.2" />
+        <Target id="housetarget" subjectref="poptot" value="114678" range1="0.1" range2="0.2" />
+        <Target id="senatetarget" subjectref="poptot" value="344035" range1="0.1" range2="0.2" />
     </Targets>
    
     <GeoLevels>
-      <GeoLevel id="block" name="block" namefield="NAME00" supplementfield="BLKIDFP00"
-          shapefile="/projects/publicmapping/data/OH_39_census_block_web_mercator.shp"
-          min_zoom="0" sort_key="3" tolerance="2.5">
+      <GeoLevel id="block" name="block" min_zoom="0" sort_key="3" tolerance="2.5">
+          <!--
+
+          You may use EITHER the "Shapefile" or "Files" element as a child 
+          of geolevel to define the geography and attributes. The 
+          "Shapefile" element must contain both the geography and 
+          attributes, whereas the "Files" element contains an item for the 
+          geography, and multiple items for the attributes.
+          
+          This is in anticipation of loading data that has been downloaded
+          directly from the American Fact Finder web application hosted by
+          the US Census Beureau.
+          
+          <Shapefile namefield="NAME00" supplementfield="BLKIDFP00"
+            path="/projects/publicmapping/data/OH_39_census_block_web_mercator.shp"/>
+          -->
+          <Files>
+              <Geography path="/projects/publicmapping/data/Ashtabula/tgr39007blk00_3785.shp"
+                         namefield="BLOCK" supplementfield="STFID" />
+              <Geography path="/projects/publicmapping/data/Muskingum/tgr39119blk00_3785.shp"
+                         namefield="BLOCK" supplementfield="STFID" />
+              <Attributes path="/projects/publicmapping/data/Ohio_BlockDemographicData/tgr39000sf1blk.dbf"
+                          namefield="BLOCK" supplementfield="STFID" />
+          </Files>
+          
           <!-- A reference to the subjects for which population data is available
           at this geolevel -->
           <GeoLevelCharacteristics>
@@ -62,6 +89,7 @@
               <GeoLevelCharacteristic ref="popblk" />
               <GeoLevelCharacteristic ref="pophisp1" />
           </GeoLevelCharacteristics>
+          
           <!-- A reference to a legislative body.
               A geolevel may be used by many legislative bodies. -->
           <LegislativeBodies>
@@ -72,15 +100,25 @@
                       <LegislativeTarget ref="hisptarget1"/>
                   </LegislativeTargets>
               </LegislativeBody>
+              <LegislativeBody ref="house">
+                  <LegislativeTargets>
+                      <LegislativeTarget ref="housetarget" default="true" />
+                  </LegislativeTargets>
+              </LegislativeBody>
+              <LegislativeBody ref="senate">
+                  <LegislativeTargets>
+                      <LegislativeTarget ref="senatetarget" default="true" />
+                  </LegislativeTargets>
+              </LegislativeBody>
           </LegislativeBodies>
       </GeoLevel>
 
       <!-- A child geolevel. The geography of the parent geolevel must
           be coincident in it's child until the system supports automatic
           aggregation. -->
-      <GeoLevel id="tract" name="tract" namefield="TRACTNAME" supplementfield="TRACTID" 
-          shapefile="/projects/publicmapping/data/OH_39_census_tractsviablocks2_wm.shp"
-          min_zoom="5" sort_key="2" tolerance="25">
+      <GeoLevel id="tract" name="tract" min_zoom="5" sort_key="2" tolerance="25">
+          <Shapefile path="/projects/publicmapping/data/Ohio_tract00_WithDemographicData_3785.shp" namefield="TRACT" supplementfield="FIPS" />
+          
           <!-- A reference to the subjects for which population data is available
           at this geolevel -->
           <GeoLevelCharacteristics>
@@ -88,6 +126,7 @@
               <GeoLevelCharacteristic ref="popblk" />
               <GeoLevelCharacteristic ref="pophisp" />
           </GeoLevelCharacteristics>
+          
           <!-- A reference to a legislative body.
               A geolevel may be used by many legislative bodies. -->
           <LegislativeBodies>
@@ -99,14 +138,26 @@
                       <LegislativeTarget ref="hisptarget"/>
                   </LegislativeTargets>
               </LegislativeBody>
+              <LegislativeBody ref="house">
+                  <Parent ref="block"/>
+                  <LegislativeTargets>
+                      <LegislativeTarget ref="housetarget" default="true" />
+                  </LegislativeTargets>
+              </LegislativeBody>
+              <LegislativeBody ref="senate">
+                  <Parent ref="block"/>
+                  <LegislativeTargets>
+                      <LegislativeTarget ref="senatetarget" default="true" />
+                  </LegislativeTargets>
+              </LegislativeBody>
           </LegislativeBodies>
       </GeoLevel>
 
       <!-- A list of geographic levels supported. This list will be used by
           the importer to enforce nested geometries. -->
-      <GeoLevel id="county" name="county" namefield="COUNTYNAME" supplementfield="COUNTYFP2"
-          shapefile="/projects/publicmapping/data/OH_39_census_countiesviablocks_WM.shp"
-          min_zoom="9" sort_key="1" tolerance="250">
+      <GeoLevel id="county" name="county" min_zoom="9" sort_key="1" tolerance="250">
+          <Shapefile path="/projects/publicmapping/data/Ohio_county00_WithDemographicData_3785.shp" namefield="NAME" supplementfield="FIPS"/>
+          
           <!-- A reference to the subjects for which population data is available
           at this geolevel -->
           <GeoLevelCharacteristics>
@@ -114,6 +165,7 @@
               <GeoLevelCharacteristic ref="popblk" />
               <GeoLevelCharacteristic ref="pophisp" />
           </GeoLevelCharacteristics>
+          
           <!-- A reference to a legislative body.
               A geolevel may be used by many legislative bodies. -->
           <LegislativeBodies>
@@ -123,6 +175,18 @@
                       <LegislativeTarget ref="tottarget" default="true" />
                       <LegislativeTarget ref="blktarget"/>
                       <LegislativeTarget ref="hisptarget"/>
+                  </LegislativeTargets>
+              </LegislativeBody>
+              <LegislativeBody ref="house">
+                  <Parent ref="tract"/>
+                  <LegislativeTargets>
+                      <LegislativeTarget ref="housetarget" default="true" />
+                  </LegislativeTargets>
+              </LegislativeBody>
+              <LegislativeBody ref="senate">
+                  <Parent ref="tract"/>
+                  <LegislativeTargets>
+                      <LegislativeTarget ref="senatetarget" default="true" />
                   </LegislativeTargets>
               </LegislativeBody>
           </LegislativeBodies>
@@ -141,14 +205,27 @@
                 a two column CSV file, with each row corresponding to a
                 unit of geography, and the district it belongs to. Only one
                 of "Shapefile" and "Indexfile" are required. -->
-            <Blockfile path="/projects/publicmapping/data/OH_congressional_blockfile.csv"/>
+            <Blockfile path="/projects/publicmapping/data/OH_congressional_blockfile.csv" />
+        </Template>
+        
+        <Template name="State House">
+            <LegislativeBody ref="house"/>
+            
+            <Blockfile path="/projects/publicmapping/data/OH_statehouse_blockfile.csv" />
+        </Template>
+
+        <Template name="State Senate">
+            <LegislativeBody ref="senate"/>
+
+            <Blockfile path="/projects/publicmapping/data/OH_statesenate_blockfile.csv" />
         </Template>
     </Templates>
     
     <!-- Configuration settings for the components of the application. The
         "root" attribute defines the location in the file system, under
         which the rest of the application components can be found. -->
-    <Project root="/projects/publicmapping/trunk">
+    <Project root="/projects/publicmapping/trunk" sessionquota="5" 
+             sessiontimeout="15">
         <!-- Database connection information. -->
         <Database name="publicmapping" user="publicmapping" password=""/>
         
@@ -180,10 +257,12 @@
                 transform="/projects/publicmapping/trunk/docs/bard_template.xslt">
                 <PopVars>
                     <PopVar subjectref="poptot" threshold=".5" default="true" />
+                    <!--
                     <PopVar subjectref="vaptot" threshold=".1" />
                     <PopVar subjectref="vapnhwht" threshold=".1" />
                     <PopVar subjectref="vapblk" threshold=".1" />
                     <PopVar subjectref="vaphisp" threshold=".1" default="false" />
+                    -->
                 </PopVars>
                 <RatioVars>
                     <!-- Set up RatioVars for both ethnicity and political party -->
@@ -194,6 +273,7 @@
                         </Numerators>
                         <Denominator subjectref="poptot" />
                     </RatioVar>
+                    <!--
                     <RatioVar id="partyControl" label="Party-Controlled Districts" threshold=".55">
                         <Numerators>
                             <Numerator subjectref="presdem" />
@@ -201,6 +281,7 @@
                         </Numerators>
                         <Denominator subjectref="vaptot" />
                     </RatioVar>
+                    -->
                 </RatioVars>
                 <SplitVars>
                     <!-- See whether a given district splits a county or a tract -->
@@ -218,7 +299,7 @@
         </Reporting>
         
         <!-- Information about the mailer configuration. -->
-        <Mailer server="" port="" username="" password="" prefix=""/>
+        <Mailer server="" port="" username="" password=""/>
     </Project>
     
 </DistrictBuilder>

@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema 
-    attributeFormDefault="unqualified" 
-    elementFormDefault="qualified" 
-    xmlns:xs="http://www.w3.org/2001/XMLSchema" >
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
     <xs:include schemaLocation="reporting.xsd" />
     <xs:element name="DistrictBuilder">
         <xs:complexType>
@@ -49,8 +46,8 @@
                                         <xs:element name="SubjectType" minOccurs="0" maxOccurs="1">
                                             <xs:annotation>
                                                 <xs:documentation>
-                          SubjectType, if not specified, defaults to units of 'count', and no classes.
-                        </xs:documentation>
+                                                  SubjectType, if not specified, defaults to units of 'count', and no classes.
+                                                </xs:documentation>
                                             </xs:annotation>
                                             <xs:complexType>
                                                 <xs:all>
@@ -112,15 +109,25 @@
                             <xs:element name="GeoLevel" maxOccurs="unbounded">
                                 <xs:complexType>
                                     <xs:sequence>
+                                        <xs:choice>
+                                            <xs:element name="Shapefile" type="PathType">
+                                            </xs:element>
+                                            <xs:element name="Files">
+                                                <xs:complexType>
+                                                    <xs:sequence>
+                                                        <xs:element name="Geography" minOccurs="1" maxOccurs="unbounded" type="PathType">
+                                                        </xs:element>
+                                                        <xs:element name="Attributes" maxOccurs="unbounded" minOccurs="0" type="PathType">
+                                                        </xs:element>
+                                                    </xs:sequence>
+                                                </xs:complexType>
+                                            </xs:element>
+                                        </xs:choice>
                                         <xs:element name="Description" type="xs:string" minOccurs="0" maxOccurs="1" />
                                         <xs:element name="GeoLevelCharacteristics" minOccurs="1" maxOccurs="1">
                                             <xs:complexType>
                                                 <xs:sequence>
-                                                    <xs:element name="GeoLevelCharacteristic" minOccurs="1" maxOccurs="unbounded" > 
-                                                        <xs:complexType>
-                                                            <xs:sequence />
-                                                            <xs:attribute name="ref" type="xs:IDREF" />
-                                                        </xs:complexType>
+                                                    <xs:element name="GeoLevelCharacteristic" minOccurs="1" maxOccurs="unbounded" type="RefType">
                                                     </xs:element>
                                                 </xs:sequence>
                                             </xs:complexType>
@@ -155,9 +162,6 @@
                                         </xs:element>
                                     </xs:sequence>
                                     <xs:attribute name="name" type="xs:string" use="required" />
-                                    <xs:attribute name="namefield" type="xs:string" use="required" />
-                                    <xs:attribute name="supplementfield" type="xs:string" use="required" />
-                                    <xs:attribute name="shapefile" type="xs:string" use="required" />
                                     <xs:attribute name="id" type="xs:ID" />
                                     <xs:attribute name="min_zoom" type="xs:nonNegativeInteger" />
                                     <xs:attribute name="sort_key" type="xs:positiveInteger" />
@@ -260,6 +264,8 @@
                             </xs:element>
                         </xs:sequence>
                         <xs:attribute name="root" type="xs:string" use="required" />
+                        <xs:attribute name="sessionquota" type="xs:positiveInteger" use="optional" />
+                        <xs:attribute name="sessiontimeout" type="xs:positiveInteger" use="optional" />
                     </xs:complexType>
                 </xs:element>
             </xs:sequence>
@@ -300,6 +306,10 @@
             <xs:selector xpath="Templates/Template/LegislativeBody" />
             <xs:field xpath="@ref" />
         </xs:keyref>
+        <xs:keyref name="GeoLevelCharacteristic" refer="DistrictBuilderSubjectKey">
+            <xs:selector xpath="GeoLevels/GeoLevel/GeoLevelCharacteristics/GeoLevelCharacteristic" />
+            <xs:field xpath="@ref" />
+        </xs:keyref>
     </xs:element>
     <xs:complexType name="RefType">
         <xs:annotation>
@@ -307,5 +317,12 @@
         </xs:annotation>
         <xs:attribute name="ref" type="xs:IDREF">
         </xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="PathType">
+        <xs:sequence>
+        </xs:sequence>
+        <xs:attribute name="path" type="xs:string" use="required" />
+        <xs:attribute name="namefield" type="xs:string" use="optional" />
+        <xs:attribute name="supplementfield" type="xs:string" use="required" />
     </xs:complexType>
 </xs:schema>
