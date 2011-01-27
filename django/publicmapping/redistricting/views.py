@@ -36,6 +36,8 @@ from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.sessions.models import Session
 from django.contrib.sessions.backends.db import SessionStore
+from django.contrib.gis.geos.collections import MultiPolygon
+from django.contrib.gis.geos import GEOSGeometry
 from django.contrib.gis.gdal import *
 from django.contrib.gis.gdal.libgdal import lgdal
 from django.contrib import humanize
@@ -981,6 +983,7 @@ def getdistricts(request, planid):
 
     return HttpResponse(json.dumps(status), mimetype='application/json')
 
+
 @cache_control(private=True)
 def simple_district_versioned(request,planid):
     """
@@ -1040,7 +1043,98 @@ def simple_district_versioned(request,planid):
         status['message'] = 'Query failed.'
 
     return HttpResponse(json.dumps(status),mimetype='application/json')
-    
+
+
+@cache_control(private=True)
+def get_unlocked_simple_geometries(request,planid):
+    """
+    Emulate a WFS service for selecting unlocked geometries.
+
+    This function retrieves all unlocked geometries within a geolevel
+    for a given plan. This function is necessary because a traditional
+    view could not be used to obtain the geometries in a versioned fashion.
+
+    This method accepts 'version__eq', 'level__eq', and 'geom__eq' URL parameters.
+
+    Parameters:
+    request -- An HttpRequest, with the current user.
+    planid -- The plan ID from which to get the districts.
+
+    Returns:
+    A GeoJSON HttpResponse, describing the unlocked simplified geometries
+    """
+    note_session_activity(request)
+
+    status = {'type':'FeatureCollection'}
+
+    plan = Plan.objects.filter(id=planid)
+    if plan.count() == 1:
+        plan = plan[0]
+        if 'version__eq' in request.REQUEST:
+            version = request.REQUEST['version__eq']
+        else:
+            version = plan.version
+
+        geolevel = plan.legislative_body.get_geolevels()[0].id
+        if 'level__eq' in request.REQUEST:
+            geolevel = int(request.REQUEST['level__eq'])
+
+        if 'geom__eq' in request.REQUEST:
+            geom = GEOSGeometry(request.REQUEST['geom__eq'])           
+
+            # Selection is the geounits that intersects with the drawing tool used:
+            # either a lasso, a rectangle, or a point
+            selection = Q(geom__intersects=geom)
+
+            # Filter first by geolevel, then selection
+            filtered = Geounit.objects.filter(geolevel=geolevel).filter(selection)
+
+            # Create a union of locked geometries
+            locked_union = None
+            for district in plan.get_districts_at_version(version):
+                if district.is_locked:
+                    if locked_union is None:
+                        locked_union = district.geom
+                    else:
+                        locked_union = locked_union.union(district.geom)
+
+            # Unlocked geometries are only checked for if there are locked districts.
+            # Unlocked geometries can be defined as geometries that do not share any points
+            # with locked geometries (disjoint), and that only share a boundary with locked
+            # geometries (touches). Intersection cannot be used here, because of boundaries.
+            if locked_union is not None:
+                unlocked = Q(geom__touches=locked_union) | Q(geom__disjoint=locked_union)
+                filtered = filtered.filter(unlocked)
+
+            # Assemble the matching features into geojson
+            features = []
+            for feature in filtered:
+                features.append({
+                    # Note: OpenLayers breaks when the id is set to an integer, or even an integer string.
+                    # The id ends up being treated as an array index, rather than a property list key, and
+                    # there are some bizarre consequences. That's why the underscore is here.
+                    'id': '_%d' % feature.id,
+                    'geometry': json.loads(feature.simple.json),
+                    'properties': {
+                        'name': feature.name,
+                        'geolevel_id': feature.geolevel.id,
+                        'id': feature.id
+                    }
+                })
+                    
+            status['features'] = features
+            return HttpResponse(json.dumps(status),mimetype='application/json')
+            
+        else:
+            status['features'] = []
+            status['message'] = 'Geometry is required.'
+            
+    else:
+        status['features'] = []
+        status['message'] = 'Invalid plan.'
+
+    return HttpResponse(json.dumps(status),mimetype='application/json')
+
 
 @unique_session_or_json_redirect
 def getdemographics(request, planid):

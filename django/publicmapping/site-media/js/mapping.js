@@ -385,37 +385,46 @@ function mapinit(srs,maxExtent) {
 
     /**
      * Get the OpenLayers filters that describe the version and subject
-     * criteria for the district layer.
+     * criteria for the district layer. Geometry is optional, and when
+     * passed in adds an additional intersection filter on the geometry.
      */
-    var getVersionAndSubjectFilters = function(extent) {
+    var getVersionAndSubjectFilters = function(extent, geometry) {
         var dby = getDistrictBy();
         var ver = getPlanVersion();
         var lyr = getSnapLayer();
+        var filters = [
+            new OpenLayers.Filter.Comparison({
+                type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                property: 'version',
+                value: ver
+            }),
+            new OpenLayers.Filter.Comparison({
+                type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                property: 'subject',
+                value: dby.by
+            }),
+            new OpenLayers.Filter.Spatial({
+                type: OpenLayers.Filter.Spatial.BBOX,
+                value: extent
+            }),
+            new OpenLayers.Filter.Comparison({
+                type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                property: 'level',
+                value: lyr.geolevel
+            })
+        ];
+        if (geometry) {
+            filters.push(new OpenLayers.Filter.Comparison({
+                type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                property: 'geom',
+                value: geometry
+            }));
+        }
         return new OpenLayers.Filter.Logical({
             type: OpenLayers.Filter.Logical.AND,
-            filters: [
-                new OpenLayers.Filter.Comparison({
-                    type: OpenLayers.Filter.Comparison.EQUAL_TO,
-                    property: 'version',
-                    value: ver
-                }),
-                new OpenLayers.Filter.Comparison({
-                    type: OpenLayers.Filter.Comparison.EQUAL_TO,
-                    property: 'subject',
-                    value: dby.by
-                }),
-                new OpenLayers.Filter.Spatial({
-                    type: OpenLayers.Filter.Spatial.BBOX,
-                    value: extent
-                }),
-                new OpenLayers.Filter.Comparison({
-                    type: OpenLayers.Filter.Comparison.EQUAL_TO,
-                    property: 'level',
-                    value: lyr.geolevel
-                })
-            ]
+            filters: filters
         });
-    }
+    };
 
     
     // A vector layer that holds all the districts in
@@ -480,14 +489,9 @@ function mapinit(srs,maxExtent) {
 
     // Create a protocol that is used by all editing controls
     // that selects geography at the specified snap layer.
-    var getProtocol = new OpenLayers.Protocol.WFS({
-        url: window.location.protocol + '//' + MAP_SERVER + '/geoserver/wfs',
-        featureType: getSnapLayer().layer,
-        featureNS: NS_HREF,
-        featurePrefix: NAMESPACE,
-        srsName: srs,
-        geometryName: 'geom',
-	maxFeatures: FEATURE_LIMIT + 1
+    var getProtocol = new OpenLayers.Protocol.HTTP({
+        url: '/districtmapping/plan/' + PLAN_ID + '/unlockedgeometries',
+        format: new OpenLayers.Format.GeoJSON()
     });
 
     var idProtocol = new OpenLayers.Protocol.WFS({
@@ -520,6 +524,46 @@ function mapinit(srs,maxExtent) {
         toggleKey: 'ctrlKey',
         filterType: OpenLayers.Filter.Spatial.INTERSECTS
     });
+
+    // Extend the request function on the GetFeature control
+    // to allow for dynamic filtering for use with HTTP requests.
+    var filterExtension = {
+        request: function (bounds, options) {
+            var filter = getVersionAndSubjectFilters(maxExtent, bounds.toGeometry().toString());
+
+            // The rest of this function is exactly the same as the original, we only need
+            // to modify the filter -- something that isn't supported by default
+            options = options || {};
+            OpenLayers.Element.addClass(this.map.viewPortDiv, "olCursorWait");
+            this.protocol.read({
+                filter: filter,
+                callback: function(result) {
+                    if(result.success()) {
+                        if(result.features.length) {
+                            if(options.single == true) {
+                                this.selectBestFeature(result.features, bounds.getCenterLonLat(), options);
+                            } else {
+                                this.select(result.features);
+                            }
+                        } else if(options.hover) {
+                            this.hoverSelect();
+                        } else {
+                            this.events.triggerEvent("clickout");
+                            if(this.clickout) {
+                                this.unselectAll();
+                            }
+                        }
+                    }
+                    OpenLayers.Element.removeClass(this.map.viewPortDiv, "olCursorWait");
+                },
+                scope: this                        
+            });
+        }
+    };
+
+    // Apply the filter extension to both the get and box controls
+    OpenLayers.Util.extend(getControl, filterExtension);
+    OpenLayers.Util.extend(boxControl, filterExtension);
 
     // Reload the information tabs and reload the filters
     var updateInfoDisplay = function() {
@@ -753,13 +797,9 @@ function mapinit(srs,maxExtent) {
                 var subtract = this.handler.evt.ctrlKey && (assignMode == null);
                 var newOpts = getControl.protocol.options;
                 newOpts.featureType = getSnapLayer().layer;
-                getControl.protocol = new OpenLayers.Protocol.WFS( newOpts );
+                getControl.protocol = new OpenLayers.Protocol.HTTP( newOpts );
                 getControl.protocol.read({
-                    filter: new OpenLayers.Filter.Spatial({
-                        type: OpenLayers.Filter.Spatial.INTERSECTS,
-                        value: feature.geometry,
-                        projection: getProtocol.options.srsName
-                    }),
+                    filter: getVersionAndSubjectFilters(maxExtent, feature.geometry),
                     callback: function(rsp){
                         // first, remove the lasso feature
                         var lasso = selection.features[selection.features.length - 1];
@@ -1882,7 +1922,7 @@ function mapinit(srs,maxExtent) {
 
         newOpts.featureType = snap.layer;
         getControl.protocol = 
-            boxControl.protocol = new OpenLayers.Protocol.WFS( newOpts );
+            boxControl.protocol = new OpenLayers.Protocol.HTTP( newOpts );
         olmap.setBaseLayer(layers[0]);
         doMapStyling();
         $('#showby').siblings('label').text('Show ' + snap.display + ' by:');
