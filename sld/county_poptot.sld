@@ -9,11 +9,11 @@
       <Abstract>A grayscale style showing the population numbers in a given geounit.</Abstract>
       <FeatureTypeStyle>
         <Rule>
-          <Title>&gt; 500,000</Title>
+          <Title>&gt; 447,800</Title>
           <ogc:Filter>
             <ogc:PropertyIsGreaterThanOrEqualTo>
               <ogc:PropertyName>number</ogc:PropertyName>
-              <ogc:Literal>500000</ogc:Literal>
+              <ogc:Literal>447800</ogc:Literal>
             </ogc:PropertyIsGreaterThanOrEqualTo>
           </ogc:Filter>
           <PolygonSymbolizer>
@@ -23,16 +23,16 @@
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Title>&gt; 200,000</Title>
+          <Title>&gt; 237,000</Title>
           <ogc:Filter>
             <ogc:And>
               <ogc:PropertyIsLessThan>
                 <ogc:PropertyName>number</ogc:PropertyName>
-                <ogc:Literal>500000</ogc:Literal>
+                <ogc:Literal>447800</ogc:Literal>
               </ogc:PropertyIsLessThan>
               <ogc:PropertyIsGreaterThanOrEqualTo>
                 <ogc:PropertyName>number</ogc:PropertyName>
-                <ogc:Literal>200000</ogc:Literal>
+                <ogc:Literal>237000</ogc:Literal>
               </ogc:PropertyIsGreaterThanOrEqualTo>
             </ogc:And>
           </ogc:Filter>          
@@ -43,16 +43,16 @@
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Title>&gt; 100,000</Title>
+          <Title>&gt; 128,000</Title>
           <ogc:Filter>
             <ogc:And>
               <ogc:PropertyIsLessThan>
                 <ogc:PropertyName>number</ogc:PropertyName>
-                <ogc:Literal>200000</ogc:Literal>
+                <ogc:Literal>237000</ogc:Literal>
               </ogc:PropertyIsLessThan>
               <ogc:PropertyIsGreaterThanOrEqualTo>
                 <ogc:PropertyName>number</ogc:PropertyName>
-                <ogc:Literal>100000</ogc:Literal>
+                <ogc:Literal>128000</ogc:Literal>
               </ogc:PropertyIsGreaterThanOrEqualTo>
             </ogc:And>
           </ogc:Filter>          
@@ -63,16 +63,16 @@
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Title>&gt; 50,000</Title>
+          <Title>&gt; 48,350</Title>
           <ogc:Filter>
             <ogc:And>
               <ogc:PropertyIsLessThan>
                 <ogc:PropertyName>number</ogc:PropertyName>
-                <ogc:Literal>100000</ogc:Literal>
+                <ogc:Literal>128000</ogc:Literal>
               </ogc:PropertyIsLessThan>
               <ogc:PropertyIsGreaterThanOrEqualTo>
                 <ogc:PropertyName>number</ogc:PropertyName>
-                <ogc:Literal>50000</ogc:Literal>
+                <ogc:Literal>48350</ogc:Literal>
               </ogc:PropertyIsGreaterThanOrEqualTo>
             </ogc:And>
           </ogc:Filter>          
@@ -83,11 +83,11 @@
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Title>&lt; 50,000</Title>
+          <Title>&lt; 48,350</Title>
           <ogc:Filter>
             <ogc:PropertyIsLessThan>
               <ogc:PropertyName>number</ogc:PropertyName>
-              <ogc:Literal>50000</ogc:Literal>
+              <ogc:Literal>48350</ogc:Literal>
             </ogc:PropertyIsLessThan>
           </ogc:Filter>          
           <PolygonSymbolizer>
