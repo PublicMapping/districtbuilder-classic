@@ -36,12 +36,12 @@
     <meta name="author" content="David Zwarg, Andrew Jennings" />
     <meta name="copyright" content="&copy; 2010 Micah Altman, Michael McDonald"/>
     <title>Open Source District Mapping Tool</title>
-    <link rel="stylesheet" type="text/css" href="/site-media/css/reset.css"/>
-    <link rel="stylesheet" type="text/css" href="/site-media/jqGrid/css/ui.jqgrid.css"/>
-    <link rel="stylesheet" type="text/css" href="/site-media/jquery/themes/custom-theme/jquery-ui-1.8.2.custom.css"/>
-    <link rel="stylesheet" type="text/css" href="/site-media/css/publicmapping.css"/>
-    <script type="text/javascript" src="/site-media/openlayers/OpenLayers.js"></script><!-- production -->
-    <!-- <script type="text/javascript" src="/site-media/OpenLayers-2.9.1/lib/OpenLayers.js"></script> debug -->
+    <link rel="stylesheet" type="text/css" href="/static-media/css/reset.css"/>
+    <link rel="stylesheet" type="text/css" href="/static-media/jqGrid/css/ui.jqgrid.css"/>
+    <link rel="stylesheet" type="text/css" href="/static-media/jquery/themes/custom-theme/jquery-ui-1.8.2.custom.css"/>
+    <link rel="stylesheet" type="text/css" href="/static-media/css/publicmapping.css"/>
+    <script type="text/javascript" src="/static-media/openlayers/OpenLayers.js"></script><!-- production -->
+    <!-- <script type="text/javascript" src="/static-media/OpenLayers-2.9.1/lib/OpenLayers.js"></script> debug -->
 
     {% comment %}
 
@@ -107,23 +107,23 @@
     Load external javascript libraries.
 
     {% endcomment %}
-    <script type="text/javascript" src="/site-media/jquery/jquery-1.4.2.js"></script>
-    <script type="text/javascript" src="/site-media/jquery/jquery-ui-1.8.2.custom.min.js"></script>
-    <script type="text/javascript" src="/site-media/jquery/external/jquery.tools.tooltip.slide.min.js"></script>
-    <script type="text/javascript" src="/site-media/jqGrid/js/i18n/grid.locale-en.js"></script>
-    <script type="text/javascript" src="/site-media/jqGrid/js/jquery.jqGrid.min.js"></script>
+    <script type="text/javascript" src="/static-media/jquery/jquery-1.4.2.js"></script>
+    <script type="text/javascript" src="/static-media/jquery/jquery-ui-1.8.2.custom.min.js"></script>
+    <script type="text/javascript" src="/static-media/jquery/external/jquery.tools.tooltip.slide.min.js"></script>
+    <script type="text/javascript" src="/static-media/jqGrid/js/i18n/grid.locale-en.js"></script>
+    <script type="text/javascript" src="/static-media/jqGrid/js/jquery.jqGrid.min.js"></script>
     {% comment %}
 
     Load internal javascript logic.
 
     {% endcomment %}
-    <script type="text/javascript" src="/site-media/js/ui.js"></script>
-    <script type="text/javascript" src="/site-media/js/viewablesorter.js"></script>
-    <script type="text/javascript" src="/site-media/js/mapping.js"></script>
-    <script type="text/javascript" src="/site-media/js/districtindexfile.js"></script>
-    <script type="text/javascript" src="/site-media/js/chooseplan.js"></script>
-    <script type="text/javascript" src="/site-media/js/reports.js"></script>
-    <script type="text/javascript" src="/site-media/js/register.js"></script>
+    <script type="text/javascript" src="/static-media/js/ui.js"></script>
+    <script type="text/javascript" src="/static-media/js/viewablesorter.js"></script>
+    <script type="text/javascript" src="/static-media/js/mapping.js"></script>
+    <script type="text/javascript" src="/static-media/js/districtindexfile.js"></script>
+    <script type="text/javascript" src="/static-media/js/chooseplan.js"></script>
+    <script type="text/javascript" src="/static-media/js/reports.js"></script>
+    <script type="text/javascript" src="/static-media/js/register.js"></script>
     {% comment %}
 
     Load Google Analytics Script if the ga_account has been set
@@ -150,7 +150,7 @@
   <body onload="init();" id="app">
  
   <div id="app_header">
-    <div id="logo"><img src="/site-media/images/title-app.png" /></div>
+    <div id="logo"><img src="/static-media/images/title-app.png" /></div>
     <div id="site_nav">
         <ul>
             {% if not is_registered %}
@@ -308,7 +308,7 @@
           <div id="toolsets">
             <div class="toolset" id="toolset_edit">
               <div class="toolset_group">
-                <img src="/site-media/images/icon-help.png" class="help divtip">
+                <img src="/static-media/images/icon-help.png" class="help divtip">
                 <div class="tooltip">The selected demographic attribute of current layer will be displayed on the map as a grayscale 'choropleth' overlay</div>                
                 <label>Show Layer by:</label>
                 {% comment %}
@@ -334,7 +334,7 @@
                 </select>
               </div>
               <div class="toolset_group">
-                <img src="/site-media/images/icon-help.png" class="help divtip">
+                <img src="/static-media/images/icon-help.png" class="help divtip">
                 <div class="tooltip">The appearance of the districts on the map</div>                
                 <label>Show Districts by:</label>
                 {% comment %}
@@ -365,7 +365,7 @@
                 </select>
               </div>
              <div class="toolset_group">
-              <img src="/site-media/images/icon-help.png" class="help divtip">
+              <img src="/static-media/images/icon-help.png" class="help divtip">
               <div class="tooltip">View the boundaries of the selected layer. This layer is viewable but doesn't affect selection. Only the boundaries of larger geographies are selectable.</div>
                 <label>Show Boundaries:</label>
                 {% comment %}
@@ -483,8 +483,8 @@
                       <div class="legend_item last">
                         <h5>Contiguity</h5>
                         <ul>
-                          <li><img src="/site-media/images/icon-check.png" class="yes-contiguous"> Contiguous</li>
-                          <li><img src="/site-media/images/icon-warning.png" class="no-contiguous"> Non-contiguous</li>                 
+                          <li><img src="/static-media/images/icon-check.png" class="yes-contiguous"> Contiguous</li>
+                          <li><img src="/static-media/images/icon-warning.png" class="no-contiguous"> Non-contiguous</li>                 
  
                         </ul>
                       </div>                    

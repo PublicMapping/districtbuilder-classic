@@ -267,6 +267,7 @@ def merge_config(config, verbose):
         cfg = config.xpath('//Project')[0]
         root_dir = cfg.get('root')
         settings_out.write("\nMEDIA_ROOT = '%s/django/publicmapping/site-media/'\n" % root_dir)
+        settings_out.write("\nSTATIC_ROOT = '%s/django/publicmapping/static-media/'\n" % root_dir)
 
         settings_out.write("\nTEMPLATE_DIRS = (\n  '%s/django/publicmapping/templates',\n)\n" % root_dir)
         settings_out.write("\nSLD_ROOT = '%s/sld/'\n" % root_dir)

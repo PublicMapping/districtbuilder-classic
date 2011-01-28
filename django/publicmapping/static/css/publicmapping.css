@@ -35,8 +35,8 @@ body {
   /*min-height: 640px;*/
 }
 
-body#static {  background: url(/site-media/images/bg-body-home.png) 0 0 repeat-x;}
-body#app {  background: url(/site-media/images/bg-app.png) 0 0 repeat;}
+body#static {  background: url(/static-media/images/bg-body-home.png) 0 0 repeat-x;}
+body#app {  background: url(/static-media/images/bg-app.png) 0 0 repeat;}
 
 .clear_left  {clear:left}
 .clear_right {clear: right}
@@ -50,7 +50,7 @@ div.static_wrap {
 div#static_header {
   padding: 50px 0 20px;
   margin: 0 0 20px;
-  background: url(/site-media/images/divider.png) 0 100% repeat-x;
+  background: url(/static-media/images/divider.png) 0 100% repeat-x;
 }  
 div#app_header {
   padding: 0;
@@ -72,7 +72,7 @@ div#site_nav a {
   font-size: 11px;
   font-weight: bold;
   text-decoration: none;
-  background: url(/site-media/images/divider-vert.png) 100% 0 repeat-y; 
+  background: url(/static-media/images/divider-vert.png) 100% 0 repeat-y; 
   padding: 10px 15px;
   
 }
@@ -127,7 +127,7 @@ div#news h3 {
 }
 
 #static button {
-    background-image: url(/site-media/images/bg-button-lg.png);
+    background-image: url(/static-media/images/bg-button-lg.png);
     background-position: center center;
     background-repeat: repeat-x;
     font-size: 11px;
@@ -167,7 +167,7 @@ div#news h3 {
 
 
 div#user {
-  background: url(/site-media/images/bg-home-panel.png) 0 0 repeat-x;
+  background: url(/static-media/images/bg-home-panel.png) 0 0 repeat-x;
   margin-left: 330px;
   height: 253px;
   -moz-border-radius: 5px;
@@ -197,7 +197,7 @@ div#user a {
 div#login {
   float: left;
   width: 240px;
-  background: url(/site-media/images/divider-vert.png) 100% 0 repeat-y;
+  background: url(/static-media/images/divider-vert.png) 100% 0 repeat-y;
   padding: 0 20px;
   height: 100%;
 }
@@ -354,7 +354,7 @@ div#logoffdlg p {
 div#footer {
     clear: both;
     margin: 20px 0 0 0;
-    background: url(/site-media/images/divider.png) 0 0 repeat-x;
+    background: url(/static-media/images/divider.png) 0 0 repeat-x;
     padding: 20px 0 0 0;
 }
 div#copyright {
@@ -391,11 +391,11 @@ li#tab_draw {background-color: #93B6B2;}
 li#tab_evaluate {background-color: #87ae8b;}
 li#tab_share {background-color: #acae87;}
 
-div#step_plan .toolbar { background: url(/site-media/images/bg-toolbar.png) repeat-x 0 0 #7cb7b3}
+div#step_plan .toolbar { background: url(/static-media/images/bg-toolbar.png) repeat-x 0 0 #7cb7b3}
 div#step_plan .toolbar h1 {font-size: 21px; color: #fff; padding: 11px 0 0 15px;}
-div#step_draw .toolbar { background: url(/site-media/images/bg-toolbar.png) 0 0 repeat-x #87aea9}
-div#step_evaluate .toolbar {background: url(/site-media/images/bg-toolbar.png) 0 0 repeat-x  #87ae8b}
-div#step_share .toolbar {background: url(/site-media/images/bg-toolbar.png) 0 0 repeat-x #acae87}
+div#step_draw .toolbar { background: url(/static-media/images/bg-toolbar.png) 0 0 repeat-x #87aea9}
+div#step_evaluate .toolbar {background: url(/static-media/images/bg-toolbar.png) 0 0 repeat-x  #87ae8b}
+div#step_share .toolbar {background: url(/static-media/images/bg-toolbar.png) 0 0 repeat-x #acae87}
 
 ul#steps_tabs li {
   -moz-border-radius: 10px 10px 0 0;
@@ -405,7 +405,7 @@ ul#steps_tabs li {
   font-weight: bold;
   margin: 0 7px 0 0;
   border: none;
-  background-image: url(/site-media/images/bg-tab-inactive.png) ;
+  background-image: url(/static-media/images/bg-tab-inactive.png) ;
   background-position:0 0;
   background-repeat:repeat-x;
 }
@@ -477,7 +477,7 @@ div#plan_content h3#select_plan_title {
 
 
 div#leg_selector_container {
-  background: url(/site-media/images/divider-horz.png) 0 100% repeat-x;
+  background: url(/static-media/images/divider-horz.png) 0 100% repeat-x;
   padding: 0 0 12px 0;
   margin: 0 0 12px 0;
 }
@@ -523,7 +523,7 @@ ul#plan_buttons li {
   font-weight:bold;
   padding:8px 0 8px 10px;
   position:relative;
-  background-image: url(/site-media/images/bg-button-lg.png);
+  background-image: url(/static-media/images/bg-button-lg.png);
   background-position: center center;
   background-repeat:  repeat-x;
   margin-left: 5px;
@@ -598,7 +598,7 @@ display:none !important;
 }
 
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
-background: #ECF6F5 url("/site-media/images/bg-button-lg.png") center top repeat-x;
+background: #ECF6F5 url("/static-media/images/bg-button-lg.png") center top repeat-x;
 color: #555;
 }
 
@@ -659,7 +659,7 @@ div#chooserFileDownloadTarget {
   float:right;
 }
 div#chooserFileDownloadTarget .loading {
-    background: url('/site-media/images/chooser-loading.gif') no-repeat left center;
+    background: url('/static-media/images/chooser-loading.gif') no-repeat left center;
     height:25px;
     width:70px;
 }
@@ -775,7 +775,7 @@ ul#TemplateTypeButtons li {
   padding:13px 0;
   text-align:center;
   position:relative;
-  background-image: url(/site-media/images/bg-button-lg.png);
+  background-image: url(/static-media/images/bg-button-lg.png);
   background-position: center center;
   background-repeat:  repeat-x;
   
@@ -840,7 +840,7 @@ div#PlanChooser li.inactive {
 
 
 div#toolbar_plans {
-    background: url(/site-media/images/bg-app.png) 0 0 repeat;
+    background: url(/static-media/images/bg-app.png) 0 0 repeat;
     position: fixed;
     z-index: 1000;
     bottom: 0;
@@ -866,12 +866,12 @@ div#toolbar_plans .planname{
 div#toolbar_plans .planname label{font-weight:bold;}
 
 div#toolbar_plans #saveplanbtn {
-  background: url(/site-media/images/icon-save.png) 0 0 no-repeat;
+  background: url(/static-media/images/icon-save.png) 0 0 no-repeat;
   padding-left:20px;
   
 }
 div#toolbar_plans #difplanbtn {
-  background: url(/site-media/images/icon-open.png) 0 0 no-repeat;
+  background: url(/static-media/images/icon-open.png) 0 0 no-repeat;
   padding-left:20px;
 }
 
@@ -896,7 +896,7 @@ div#map {
 }
 
 div.shadow_left {
-background:url(/site-media/images/map-shadow-left.png) no-repeat scroll 0 0 transparent;
+background:url(/static-media/images/map-shadow-left.png) no-repeat scroll 0 0 transparent;
 bottom:0;
 left:0;
 position:absolute;
@@ -906,7 +906,7 @@ z-index:900;
 }
 
 div.shadow_top {
-background:url(/site-media/images/map-shadow-top.png) repeat-x scroll 0 0 transparent;
+background:url(/static-media/images/map-shadow-top.png) repeat-x scroll 0 0 transparent;
 height:11px;
 left:11px;
 position:absolute;
@@ -980,37 +980,37 @@ div.toolset#toolset_draw .ui-icon {
 }
 
 #navigate_map_tool  .ui-icon {
-  background-image: url(/site-media/images/icon-pan.png);
+  background-image: url(/static-media/images/icon-pan.png);
 }
 #identify_map_tool  .ui-icon {
-  background-image: url(/site-media/images/icon-identify.png);
+  background-image: url(/static-media/images/icon-identify.png);
 }
 #district_id_map_tool  .ui-icon {
-  background-image: url(/site-media/images/icon-district.png);
+  background-image: url(/static-media/images/icon-district.png);
 }
 #lock_district_map_tool  .ui-icon {
-  background-image: url(/site-media/images/icon-lock-district.png);
+  background-image: url(/static-media/images/icon-lock-district.png);
 }
 #single_drawing_tool  .ui-icon {
-  background-image: url(/site-media/images/icon-select.png);
+  background-image: url(/static-media/images/icon-select.png);
 }
 #rectangle_drawing_tool  .ui-icon {
-  background-image: url(/site-media/images/icon-select-rect.png);
+  background-image: url(/static-media/images/icon-select-rect.png);
 }
 #polygon_drawing_tool  .ui-icon {
-  background-image: url(/site-media/images/icon-select-poly.png);
+  background-image: url(/static-media/images/icon-select-poly.png);
 }
 #dragdrop_tool .ui-icon {
-  background-image: url(/site-media/images/icon-drop.png);
+  background-image: url(/static-media/images/icon-drop.png);
 }
 #anchor_tool .ui-icon {
-  background-image: url(/site-media/images/icon-anchor.png);
+  background-image: url(/static-media/images/icon-anchor.png);
 }
 #history_undo .ui-icon {
-  background-image: url(/site-media/images/icon-undo.png);
+  background-image: url(/static-media/images/icon-undo.png);
 }
 #history_redo  .ui-icon {
-  background-image: url(/site-media/images/icon-redo.png);
+  background-image: url(/static-media/images/icon-redo.png);
 }
 
 
@@ -1019,7 +1019,7 @@ div.toolset_group {
   font-size: 11px;
   font-weight:bold;
   cursor:pointer;
-  background: url(/site-media/images/divider-vert.png) 100% 0 repeat-y;
+  background: url(/static-media/images/divider-vert.png) 100% 0 repeat-y;
   padding: 8px 12px;
   }
   
@@ -1062,7 +1062,7 @@ div#no_edit_at_zoom_level {
 }
 
 #app button, .ui-dialog button {
-    background-image: url(/site-media/images/bg-button-sm.png);
+    background-image: url(/static-media/images/bg-button-sm.png);
     background-position: 0 0; 
     background-repeat: repeat-x;
     background-color: #1F8CBE;
@@ -1094,7 +1094,7 @@ div#map_menu {
     z-index:1000;
 }
 div#map_menu_header { 
-    background: url(/site-media/images/bg-toolbar.png) 0 0 repeat-x #5b8a62;
+    background: url(/static-media/images/bg-toolbar.png) 0 0 repeat-x #5b8a62;
     color: #ffffff;
     height: 30px;
     padding: 8px 0;
@@ -1123,10 +1123,10 @@ button.menu_toggle .ui-icon {
     margin-top/*\**/: -8px\9
 }
 button.menu_toggle .ui-icon-arrow-right {
-background: url(/site-media/images/icon-arrow.png) 4px 0 no-repeat;
+background: url(/static-media/images/icon-arrow.png) 4px 0 no-repeat;
 }
 button.menu_toggle .ui-icon-arrow-down {
-background: url(/site-media/images/icon-arrow.png) 2px -14px no-repeat;
+background: url(/static-media/images/icon-arrow.png) 2px -14px no-repeat;
 }
 button#legend_toggle {
     background-color: #606060;
@@ -1235,7 +1235,7 @@ div.map_menu_content.demographics {
 
 div.plansummary {
     padding: 10px 10px 15px;
-    background: url(/site-media/images/divider.png) 0 100% repeat-x;
+    background: url(/static-media/images/divider.png) 0 100% repeat-x;
     color: #3c3c3c;
     line-height: 16px;
     position:relative;
@@ -1515,7 +1515,7 @@ div#nameandshare,
     margin: 10px;
 }
 #step_share .loading {
-    background: url('/site-media/images/share-loading.gif') no-repeat left center;
+    background: url('/static-media/images/share-loading.gif') no-repeat left center;
     text-align: right;
 }
 
@@ -1587,7 +1587,7 @@ div.controlDiv {
     height: 17px;
     left: 27px;
     top:27px;
-    background: url(/site-media/openlayers/img/full-extent-mini.png) 0 0 no-repeat;
+    background: url(/static-media/openlayers/img/full-extent-mini.png) 0 0 no-repeat;
     background-color: #ffffff;
 }
 div.controlDiv span {
@@ -1646,7 +1646,7 @@ div#tipclose {
 
 .ui-dialog .ui-dialog-titlebar {
   margin: -0.2em -0.2em 10px -0.2em;
-  background: #39a787 url("/site-media/images/bg-toolbar.png") 0 0 repeat-x;
+  background: #39a787 url("/static-media/images/bg-toolbar.png") 0 0 repeat-x;
   color: #fff;
   -moz-border-radius:10px 10px 0 0;
   -webkit-border-radius:10px 10px 0 0;

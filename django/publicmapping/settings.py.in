@@ -55,10 +55,14 @@ USE_I18N = True
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
 MEDIA_URL = '/site-media/'
 
+# URL that handles the media served from STATIC_ROOT. Make sure to
+# use a trailing slash
+STATIC_URL = '/static-media/'
+
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to 
 # use a trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
-ADMIN_MEDIA_PREFIX = '/media/'
+ADMIN_MEDIA_PREFIX = '/static-media/admin/'
 
 # Sessions expire when browser is close
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
@@ -119,9 +123,11 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.gis',
+    'staticfiles',
     'djcelery',
     'ghettoq',
     'redistricting',
+    'publicmapping',
 )
 
 #

@@ -32,6 +32,7 @@ from django.contrib.gis.gdal import *
 from django.contrib.gis.geos import *
 from django.contrib.gis.db.models import Union 
 from django.contrib.auth.models import User
+from django.core.management import call_command
 from django.core.management.base import BaseCommand
 from django.conf import settings
 from django.utils import simplejson as json
@@ -134,6 +135,8 @@ contents of the file and try again.
 
         if options.get("templates"):
             self.create_template(config, verbose)
+        
+        call_command('collectstatic')
 
     def purge_sessions(self, verbose):
         """
