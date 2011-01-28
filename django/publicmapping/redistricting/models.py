@@ -147,12 +147,22 @@ class LegislativeBody(models.Model):
         geobodies = self.legislativelevel_set.filter(target__subject=subject)
 
         ordered = []
-        while len(ordered) < len(geobodies):
+        allgeobodies = len(geobodies)
+        while len(ordered) < allgeobodies:
+            foundbody = False
             for geobody in geobodies:
                 if len(ordered) == 0 and geobody.parent is None:
+                    # add the first geobody (the one with no parent)
                     ordered.append(geobody)
+                    foundbody = True
                 elif len(ordered) > 0 and ordered[len(ordered)-1] == geobody.parent:
+                    # add the next geobody if it's parent matches the last
+                    # geobody appended
                     ordered.append(geobody)
+                    foundbody = True
+
+            if not foundbody:
+                allgeobodies -= 1
 
         def glonly(item):
             return item.geolevel
@@ -280,6 +290,9 @@ class Geounit(models.Model):
     # An optional identifier that can be used with a nested id system such
     # as census block ids or voting division ids
     supplemental_id = models.CharField(max_length=50, db_index=True, blank=True, null=True)
+
+    # The ID of the geounit that contains this geounit
+    #child = models.ForeignKey('Geounit',null=True,blank=True)
 
     # The full geometry of the geounit (high detail).
     geom = models.MultiPolygonField(srid=3785)
