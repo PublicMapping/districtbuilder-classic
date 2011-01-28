@@ -48,15 +48,8 @@
     WSGIProcessGroup geodjango
     WSGIScriptAlias / /projects/publicmapping/trunk/django/publicmapping.wsgi
 
-    Alias /site-media/ /projects/publicmapping/trunk/django/publicmapping/site-media/
-    <Directory /projects/publicmapping/trunk/django/publicmapping/site-media>
-        Order deny,allow
-        Allow from all
-    </Directory>
-
-    Alias /media/ /projects/publicmapping/trunk/django/publicmapping/admin-media/
-    <Directory /projects/publicmapping/trunk/django/publicmapping/admin-media>
-    Options Indexes FollowSymLinks
+    Alias /static-media/ /projects/publicmapping/trunk/django/publicmapping/static-media/
+    <Directory /projects/publicmapping/trunk/django/publicmapping/static-media>
         Order deny,allow
         Allow from all
     </Directory>
