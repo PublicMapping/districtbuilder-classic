@@ -1175,6 +1175,7 @@ function mapinit(srs,maxExtent) {
         var lowerColor = $('.under').css('background-color');
         var upperColor = $('.over').css('background-color');
         var highestColor = $('.farover').css('background-color');
+        var lockedColor = $('.locked').css('border-top-color');
         
         if (typeName == 'demographics') {
             rules = [
@@ -1295,14 +1296,6 @@ function mapinit(srs,maxExtent) {
 
         }
 
-        // Add styling for district locking. This should be shown regardless of the type.
-        var lockedDiv = $('.locked');
-
-        // There is no locked swatch on page load to pull styling from, so create a new div if needed.
-        if (lockedDiv.length === 0) {
-            lockedDiv = $('<div></div>').addClass('locked');
-        }
-        var lockedColor = lockedDiv.css('border-top-color');
         rules.push(new OpenLayers.Rule({
             filter: new OpenLayers.Filter.Comparison({
                 type: OpenLayers.Filter.Comparison.EQUAL_TO,

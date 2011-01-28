@@ -406,6 +406,14 @@
                   <button id="identify_map_tool" title="Click on a geounit to see its demographic info." class="btntoggle titletip"></button>
                   <button id="district_id_map_tool" title="Click on a district to see its ID." class="btntoggle titletip"></button>
                   <button id="lock_district_map_tool" title="Click on a district to lock or unlock it." class="btntoggle titletip"></button>
+                  {% comment %}
+                  
+                  This hidden div is used to style the locked districts.
+                  This is needed, because the locked legend item does not
+                  exist before the first district layer is drawn.
+                  
+                  {% endcomment %}
+                  <div class="locked" style="display:none"></div>
                 </div>
               </div>
               {% block toolset_draw %}
