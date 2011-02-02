@@ -60,7 +60,7 @@ class Command(BaseCommand):
         make_option('-g', '--geolevel', dest="geolevels",
             action="append", help="Geolevels to import"),
         make_option('-n', '--nesting', dest="nesting",
-            action='store_true', default=False, help="Enforce nested geometries."),
+            action='append', help="Enforce nested geometries."),
         make_option('-V', '--views', dest="views", default=False,
             action="store_true", help="Create database views."),
         make_option('-G', '--geoserver', dest="geoserver",
@@ -114,7 +114,7 @@ contents of the file and try again.
         self.import_prereq(config, verbose)
 
         optlevels = options.get("geolevels")
-        nesting = options.get("nesting")
+        nestlevels = options.get("nesting")
         if not optlevels is None:
             # Begin the import process
             geolevels = config.xpath('/DistrictBuilder/GeoLevels/GeoLevel')
@@ -125,8 +125,10 @@ contents of the file and try again.
                 if importme:
                     self.import_geolevel(config, geolevel, verbose)
 
-                    if nesting:
-                        self.renest_geolevel(geolevel, verbose)
+                nestme = len(nestlevels) == 0
+                nestme = nestme or (i in nestlevels)
+                if nestme:
+                    self.renest_geolevel(geolevel, verbose)
 
         if options.get("views"):
             # Create views based on the subjects and geolevels
