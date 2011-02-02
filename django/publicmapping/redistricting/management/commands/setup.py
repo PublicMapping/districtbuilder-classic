@@ -40,6 +40,7 @@ from optparse import make_option
 from os.path import exists
 from lxml.etree import parse
 from xml.dom import minidom
+from rpy2.robjects import r
 from redistricting.models import *
 from redistricting.utils import *
 import traceback, pprint, httplib, string, base64, json
@@ -53,20 +54,22 @@ class Command(BaseCommand):
     option_list = BaseCommand.option_list + (
         make_option('-c', '--config', dest="config",
             help="Use configuration file CONFIG", metavar="CONFIG"),
-        make_option('-d', '--debug', dest="debug",
+        make_option('-D', '--debug', dest="debug",
             help="Generate verbose debug output", default=False, 
             action='store_true'),
         make_option('-g', '--geolevel', dest="geolevels",
             action="append", help="Geolevels to import"),
         make_option('-n', '--nesting', dest="nesting",
             action='store_true', default=False, help="Enforce nested geometries."),
-        make_option('-v', '--views', dest="views", default=False,
+        make_option('-V', '--views', dest="views", default=False,
             action="store_true", help="Create database views."),
         make_option('-G', '--geoserver', dest="geoserver",
             action="store_true", help="Create spatial layers in Geoserver.",
             default=False),
         make_option('-t', '--templates', dest="templates",
             action="store_true", help="Create system templates based on district index files.", default=False),
+        make_option('-b', '--bard', dest="bard",
+            action='store_true', help="Create a BARD map based on the imported spatial data.", default=False),
     )
 
 
@@ -130,13 +133,19 @@ contents of the file and try again.
             self.create_views(verbose)
 
         if options.get("geoserver"):
-            extent = Geounit.objects.all().extent()
-            self.configure_geoserver(config, extent, verbose)
+            qset = Geounit.objects.all()
+            extent = qset.extent()
+            srid = qset[0].geom.srid
+            self.configure_geoserver(config, srid, extent, verbose)
 
         if options.get("templates"):
             self.create_template(config, verbose)
         
         call_command('collectstatic')
+
+        if options.get("bard"):
+            self.build_bardmap(config, verbose)
+
 
     def purge_sessions(self, verbose):
         """
@@ -154,7 +163,7 @@ contents of the file and try again.
 
         qset.delete()
 
-    def configure_geoserver(self, config, extent, verbose):
+    def configure_geoserver(self, config, srid, extent, verbose):
         """
         Create the workspace and layers in geoserver, based on the
         imported data.
@@ -171,7 +180,9 @@ contents of the file and try again.
 
         user_pass = '%s:%s' % (mapconfig.get('adminuser'), mapconfig.get('adminpass'))
         auth = 'Basic %s' % string.strip(base64.encodestring(user_pass))
-        headers = {'Authorization': auth, 'Content-Type': 'application/json', 'Accepts':'application/json'}
+        headers = {'Authorization': auth, 
+            'Content-Type': 'application/json', 
+            'Accepts':'application/json'}
 
         def create_geoserver_object_if_necessary(url, name, dictionary, type_name=None, update=False):
             """ 
@@ -262,6 +273,21 @@ contents of the file and try again.
             'Accepts':'application/xml'
         }
 
+        def get_zoom_range( geolevel ):
+            lls = LegislativeLevel.objects.filter(geolevel=geolevel)
+            maxz = 0
+            for ll in lls:
+                if ll.parent:
+                    # min_zoom will get larger for each parent -- find the
+                    # highest value for min_zoom of all parents
+                    maxz = max(maxz,ll.parent.geolevel.min_zoom)
+            if maxz == 0:
+                # if no min_zoom or parents, only run the cache up to
+                # zoom level 12
+                maxz = 12
+
+            return (geolevel.min_zoom,maxz,)
+
         for geolevel in Geolevel.objects.all():
             is_first_subject = True
 
@@ -269,7 +295,7 @@ contents of the file and try again.
             for subject in Subject.objects.all().order_by('sort_key')[0:3]:
 
                 # This helper method is used for each layer
-                def publish_and_assign_style(style_name, style_type):
+                def publish_and_assign_style(style_name, style_type, zoom_range):
                     """
                     A method to assist in publishing styles to geoserver 
                     and configuring the layers to have a default style
@@ -293,12 +319,17 @@ contents of the file and try again.
                         return False
 
                     # Create the style object on the geoserver
-                    create_geoserver_object_if_necessary(style_url, style_name, style_obj, 'Map Style')
+                    create_geoserver_object_if_necessary(style_url, 
+                        style_name, style_obj, 'Map Style')
 
                     # Update the style with the sld file contents
 
-                    self.rest_config( 'PUT', host, '/geoserver/rest/styles/%s' % style_name, sld, \
-                        sld_headers, "Could not upload style file '%s.sld'" % style_name)
+                    self.rest_config( 'PUT', 
+                        host, 
+                        '/geoserver/rest/styles/%s' % style_name, 
+                        sld, 
+                        sld_headers, 
+                        "Could not upload style file '%s.sld'" % style_name)
 
                     if verbose:
                         print "Uploaded '%s.sld' file." % style_name
@@ -312,16 +343,49 @@ contents of the file and try again.
                     } }
 
                     
-                    if not self.rest_config( 'PUT', host, '/geoserver/rest/layers/%s:%s' % (namespace, style_name), \
-                        json.dumps(layer), headers, "Could not assign style to layer '%s'." % style_name):
+                    if not self.rest_config( 'PUT', \
+                        host, \
+                        '/geoserver/rest/layers/%s:%s' % (namespace, style_name), \
+                        json.dumps(layer), \
+                        headers, \
+                        "Could not assign style to layer '%s'." % style_name):
                             return False
 
                     if verbose:
                         print "Assigned style '%s' to layer '%s'." % (style_name, style_name )
 
+                    if not self.rest_config( 'PUT', \
+                        host, \
+                        '/geoserver/gwc/rest/reload', \
+                        '{"reload_configuration":1}', \
+                        headers, \
+                        "Could not reload GWC configuration."):
+                        return False
+
+                    gwc = { 'format': 'image/png',
+                        'gridSetId': 'EPSG:%d_%s:%s' % (srid,namespace,style_name,),
+                        'maxX': '',
+                        'maxY': '',
+                        'minX': '',
+                        'minY': '',
+                        'threadCount': '01',
+                        'type': 'seed',
+                        'zoomStart': '%02d' % zoom_range[0],
+                        'zoomEnd': '%02d' % zoom_range[1]
+                    }
+
+                    #print "Attempting to seed layer with: %s" % json.dumps(gwc)
+                    if not self.rest_config( 'PUT', \
+                        host, \
+                        '/geoserver/gwc/rest/seed/%s:%s' % (namespace,style_name,), \
+                        json.dumps(gwc), \
+                        headers,
+                        "Could not initialize seeding for layer '%s'." % style_name):
+                        return False
+                    
 
                 # Create the style for the demographic layer
-                publish_and_assign_style(None, None)
+                publish_and_assign_style(None, None, get_zoom_range(geolevel))
 
                 if is_first_subject:
                     is_first_subject = False
@@ -330,14 +394,14 @@ contents of the file and try again.
                     feature_type_obj = get_feature_type_obj('demo_%s' % geolevel.name, extent)
                     feature_type_obj['featureType']['nativeName'] = 'demo_%s_%s' % (geolevel.name, subject.name)
                     create_geoserver_object_if_necessary(feature_type_url, 'demo_%s' % geolevel.name, feature_type_obj, 'Feature Type')
-                    publish_and_assign_style('demo_%s' % geolevel.name, 'none')
+                    publish_and_assign_style('demo_%s' % geolevel.name, 'none',get_zoom_range(geolevel))
 
                     # Create boundary layer, based on geographic boundaries
                     feature_name = '%s_boundaries' % geolevel.name
                     feature_type_obj = get_feature_type_obj(feature_name , extent)
                     feature_type_obj['featureType']['nativeName'] = 'demo_%s_%s' % (geolevel.name, subject.name)
                     create_geoserver_object_if_necessary(feature_type_url, feature_name, feature_type_obj, 'Feature Type')
-                    publish_and_assign_style('%s_boundaries' % geolevel.name, 'boundaries')
+                    publish_and_assign_style('%s_boundaries' % geolevel.name, 'boundaries', get_zoom_range(geolevel))
 
         # finished configure_geoserver
         return True
@@ -942,6 +1006,55 @@ ERROR:
                     print 'Created Plan named "Blank" for LegislativeBody "%s"' % legislative_body.name
                 else:
                     print 'Plan named "Blank" for LegislativeBody "%s" already exists' % legislative_body.name
+
+    def build_bardmap(self, config, verbose):
+        """
+        Build the BARD reporting base maps.
+
+        Parameters:
+            config - The XML configuration.
+            verbose - A flag indicating that verbose messages should print.
+        """
+
+        # The first geolevel is the base geolevel of EVERYTHING
+        basegl = Geolevel.objects.get(id=1)
+        gconfig = config.xpath('//Geolevels/Geolevel[@name="%s"]' % basegl.name)[0]
+        shapefile = gconfig.xpath('Shapefile')[0].get('path')
+        srs = DataSource(shapefile).srs
+        if srs.name == 'WGS_1984_Web_Mercator_Auxiliary_Sphere':
+            # because proj4 doesn't have definitions for this ESRI def,
+            # but it does understand 3785
+            srs = SpatialReference(3785)
+
+        try:
+            r.library('BARD')
+            if verbose:
+                print "Loaded BARD library."
+            r.library('rgeos')
+            if verbose:
+                print "Loaded rgeos library."
+            sdf = r.readShapePoly(shapefile,proj4string=CRS(srs.proj))
+            if verbose:
+                print "Read shapefile '%s'." % shapefile
+            nb = r.poly2nb(sdf)
+            if verbose:
+                print "Computed neighborhoods."
+            bardmap = r.spatialDataFrame2bardBasemap(sdf,nb)
+            if verbose:
+                print "Created bardmap."
+            r.writeBardMap(bardmap,settings.BARD_BASESHAPE)
+            if verbose:
+                print "Wrote bardmap to disk."
+        except:
+            print """
+ERROR:
+
+The BARD map could not be computed. Please check the configuration settings
+and try again.
+"""
+            if verbose:
+                print "The following traceback may provide more information:"
+                print traceback.format_exc()
 
 def empty_geom(srid):
     """

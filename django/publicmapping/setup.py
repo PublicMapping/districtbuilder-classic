@@ -46,10 +46,10 @@ def main():
     parser.add_option('-g', '--geolevel', dest="geolevels",
             help="Import the geography from the Nth GeoLevel.", 
             action="append", type="int")
-    parser.add_option('-v', '--views', dest="views",
+    parser.add_option('-V', '--views', dest="views",
             help="Create database views based on all geographies.",
             action='store_true', default=False)
-    parser.add_option('-V', '--verbose', dest="verbose",
+    parser.add_option('-D', '--debug', dest="debug",
             help="Generate verbose debug output", default=False, 
             action='store_true')
     parser.add_option('-G', '--geoserver', dest="geoserver",
@@ -61,10 +61,13 @@ def main():
     parser.add_option('-n', '--nesting', dest="nesting",
             help="Enforce nested geometries.",
             default=False, action='store_true')
+    parser.add_option('-b', '--bard', dest="bard",
+            help="Create a BARD map based on the imported spatial data.", 
+            default=False, action='store_true')
 
     (options, args) = parser.parse_args()
 
-    allops = (not options.database) and (not options.geolevels) and (not options.views) and (not options.geoserver) and (not options.templates) and (not options.nesting)
+    allops = (not options.database) and (not options.geolevels) and (not options.views) and (not options.geoserver) and (not options.templates) and (not options.nesting) and (not options.bard)
 
     if len(args) != 2:
         print """
@@ -75,14 +78,14 @@ ERROR:
 """
         return
 
-    config = validate_config(args[0], args[1], options.verbose)
+    config = validate_config(args[0], args[1], options.debug)
 
     if not config:
        return
 
     print "Validated config."
 
-    if merge_config(config, options.verbose):
+    if merge_config(config, options.debug):
         print "Generated django settings."
     else:
         return
@@ -102,14 +105,16 @@ ERROR:
         geoserver = True
         templates = True
         nesting = True
+        bard = True
     else:
         geolevels = options.geolevels
         views = options.views
         geoserver = options.geoserver
         templates = options.templates
         nesting = options.nesting
+        bard = options.bard
 
-    management.call_command('setup', config=args[1], debug=options.verbose, geolevels=geolevels, views=views, geoserver=geoserver, templates=templates, nesting=nesting)
+    management.call_command('setup', config=args[1], debug=options.debug, geolevels=geolevels, views=views, geoserver=geoserver, templates=templates, nesting=nesting, bard=bard)
 
     return
 
