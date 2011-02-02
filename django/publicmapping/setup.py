@@ -60,7 +60,7 @@ def main():
             default=False, action='store_true')
     parser.add_option('-n', '--nesting', dest="nesting",
             help="Enforce nested geometries.",
-            default=False, action='append')
+            action='append')
     parser.add_option('-b', '--bard', dest="bard",
             help="Create a BARD map based on the imported spatial data.", 
             default=False, action='store_true')
