@@ -1023,9 +1023,9 @@ ERROR:
 
         # The first geolevel is the base geolevel of EVERYTHING
         basegl = Geolevel.objects.get(id=1)
-        gconfig = config.xpath('//Geolevels/Geolevel[@name="%s"]' % basegl.name)[0]
+        gconfig = config.xpath('//GeoLevels/GeoLevel[@name="%s"]' % basegl.name)[0]
         shapefile = gconfig.xpath('Shapefile')[0].get('path')
-        srs = DataSource(shapefile).srs
+        srs = DataSource(shapefile)[0].srs
         if srs.name == 'WGS_1984_Web_Mercator_Auxiliary_Sphere':
             # because proj4 doesn't have definitions for this ESRI def,
             # but it does understand 3785
@@ -1038,7 +1038,7 @@ ERROR:
             r.library('rgeos')
             if verbose:
                 print "Loaded rgeos library."
-            sdf = r.readShapePoly(shapefile,proj4string=CRS(srs.proj))
+            sdf = r.readShapePoly(shapefile,proj4string=r.CRS(srs.proj))
             if verbose:
                 print "Read shapefile '%s'." % shapefile
             nb = r.poly2nb(sdf)
