@@ -115,20 +115,23 @@ contents of the file and try again.
 
         optlevels = options.get("geolevels")
         nestlevels = options.get("nesting")
-        if not optlevels is None:
+
+        if (not optlevels is None) or (not nestlevels is None):
             # Begin the import process
             geolevels = config.xpath('/DistrictBuilder/GeoLevels/GeoLevel')
 
             for i,geolevel in enumerate(geolevels):
-                importme = len(optlevels) == 0
-                importme = importme or (i in optlevels)
-                if importme:
-                    self.import_geolevel(config, geolevel, verbose)
+                if not optlevels is None:
+                    importme = len(optlevels) == 0
+                    importme = importme or (('%d' % i) in optlevels)
+                    if importme:
+                        self.import_geolevel(config, geolevel, verbose)
 
-                nestme = len(nestlevels) == 0
-                nestme = nestme or (i in nestlevels)
-                if nestme:
-                    self.renest_geolevel(geolevel, verbose)
+                if not nestlevels is None:
+                    nestme = len(nestlevels) == 0
+                    nestme = nestme or (('%d' % i) in nestlevels)
+                    if nestme:
+                        self.renest_geolevel(geolevel, verbose)
 
         if options.get("views"):
             # Create views based on the subjects and geolevels
@@ -356,34 +359,34 @@ contents of the file and try again.
                     if verbose:
                         print "Assigned style '%s' to layer '%s'." % (style_name, style_name )
 
-                    if not self.rest_config( 'PUT', \
-                        host, \
-                        '/geoserver/gwc/rest/reload', \
-                        '{"reload_configuration":1}', \
-                        headers, \
-                        "Could not reload GWC configuration."):
-                        return False
+                    #if not self.rest_config( 'PUT', \
+                    #    host, \
+                    #    '/geoserver/gwc/rest/reload', \
+                    #    '{"reload_configuration":1}', \
+                    #    headers, \
+                    #    "Could not reload GWC configuration."):
+                    #    return False
 
-                    gwc = { 'format': 'image/png',
-                        'gridSetId': 'EPSG:%d_%s:%s' % (srid,namespace,style_name,),
-                        'maxX': '',
-                        'maxY': '',
-                        'minX': '',
-                        'minY': '',
-                        'threadCount': '01',
-                        'type': 'seed',
-                        'zoomStart': '%02d' % zoom_range[0],
-                        'zoomEnd': '%02d' % zoom_range[1]
-                    }
+                    #gwc = { 'format': 'image/png',
+                    #    'gridSetId': 'EPSG:%d_%s:%s' % (srid,namespace,style_name,),
+                    #    'maxX': '',
+                    #    'maxY': '',
+                    #    'minX': '',
+                    #    'minY': '',
+                    #    'threadCount': '01',
+                    #    'type': 'seed',
+                    #    'zoomStart': '%02d' % zoom_range[0],
+                    #    'zoomEnd': '%02d' % zoom_range[1]
+                    #}
 
                     #print "Attempting to seed layer with: %s" % json.dumps(gwc)
-                    if not self.rest_config( 'PUT', \
-                        host, \
-                        '/geoserver/gwc/rest/seed/%s:%s' % (namespace,style_name,), \
-                        json.dumps(gwc), \
-                        headers,
-                        "Could not initialize seeding for layer '%s'." % style_name):
-                        return False
+                    #if not self.rest_config( 'PUT', \
+                    #    host, \
+                    #    '/geoserver/gwc/rest/seed/%s:%s' % (namespace,style_name,), \
+                    #    json.dumps(gwc), \
+                    #    headers,
+                    #    "Could not initialize seeding for layer '%s'." % style_name):
+                    #    return False
                     
 
                 # Create the style for the demographic layer
