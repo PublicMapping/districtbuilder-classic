@@ -64,6 +64,7 @@ class BaseTestCase(unittest.TestCase):
 
         # create a three-tiered 27x27 square grid of geounits with coords from (0,0) to (1,1)
         dim = 3.0
+        lastgl = None
         for gl in self.geolevels:
             if not gl.id:
                 gl.save()
@@ -81,15 +82,22 @@ class BaseTestCase(unittest.TestCase):
                         Point(((x/dim),((y+1)/dim))), 
                         Point(((x/dim),(y/dim))) )))
                     geom.srid = 3785
+                    try:
+                        child = Geounit.objects.get(geolevel=lastgl,geom__contains=geom.centroid)
+                    except:
+                        child = None
                     gu = Geounit(
                         name=('Unit %d-%d' % (gl.id,(y * int(dim) + x))),
                         geolevel=gl,
                         geom=geom,
                         simple=geom,
-                        center=geom.centroid
+                        center=geom.centroid,
+                        child=child
                     )
                     gu.save()
                     self.geounits[gl.id].append(gu)
+                    #print "Appending geounit '%s' to self.geounits[%d]" % (gu.name, gl.id)
+            lastgl = gl
             dim *= 3.0
 
         # create a User
@@ -221,7 +229,7 @@ class PlanTestCase(BaseTestCase):
         # Login
         client = Client()
         client.login(username=self.username, password=self.password)
-        
+
         # Issue copy command
         copyname = 'MyTestCopy'
         response = client.post('/districtmapping/plan/%d/copy/' % self.plan.id, { 'name':copyname })
@@ -506,3 +514,93 @@ class GeounitMixTestCase(BaseTestCase):
         units = Geounit.get_mixed_geounits([str(bigunits[0].id),str(bigunits[4].id),str(bigunits[8].id)], self.legbod, level.id, boundary, False)
         numunits = len(units)
         self.assertEquals(63, numunits, 'Number of geounits outside boundary is incorrect. (%d)' % numunits)
+
+class GeounitBaseTestCase(BaseTestCase):
+    def get_max_extent(self,level):
+        """
+        A helper method to get the maximum extents of all geographic
+        units.
+
+        Parameters:
+            None
+
+        Returns:
+            The maximum extent as a MultiPolygon with an SRID of 3785.
+        """
+        geolevel = self.legbod.get_geolevels()[level]
+        ext = Geounit.objects.filter(geolevel=geolevel).extent()
+        boundary = MultiPolygon(Polygon(LinearRing(
+            Point((ext[0],ext[1])),
+            Point((ext[2],ext[1])),
+            Point((ext[2],ext[3])),
+            Point((ext[0],ext[3])),
+            Point((ext[0],ext[1]))
+        )))
+        boundary.srid = 3785
+        return boundary
+
+    def get_base_within(self, level):
+        """
+        A helper test method to get the base geounits within a geometry.
+        This method starts at the given geographic level, and drills its
+        way down.
+
+        This method asserts that all the base geounits were found, no matter
+        which geolevel is passed.
+
+        Parameters:
+            level - The geographic level to start searching.
+        """
+        boundary = self.get_max_extent(level)
+        units = Geounit.get_base_geounits_within(boundary, self.legbod)
+        numunits = len(units)
+        self.assertEquals(729, numunits, "Number of geounits is incorrect. (%d)" % numunits)
+
+    def test_get_base_within0(self):
+        self.get_base_within(0)
+
+    def test_get_base_within1(self):
+        self.get_base_within(1)
+
+    def test_get_base_within2(self):
+        self.get_base_within(2)
+
+    def get_base_from_child(self, units, expected):
+        baseunits = Geounit.get_base_geounits(units,self.legbod)
+        numunits = len(baseunits)
+
+        self.assertEquals(expected, numunits, 'Number of base geounits is incorrect. (%d)' % numunits)
+
+    def test_get_base_from_child0(self):
+        geolevel = self.legbod.get_geolevels()[0]
+        units = self.geounits[geolevel.id][0:1]
+
+        self.get_base_from_child(units, 81)
+       
+    def test_get_base_from_child1(self):
+        geolevel = self.legbod.get_geolevels()[1]
+        units = self.geounits[geolevel.id][0:1]
+
+        self.get_base_from_child(units, 9)
+
+    def test_get_base_from_child2(self):
+        geolevel = self.legbod.get_geolevels()[2]
+        units = self.geounits[geolevel.id][0:1]
+
+        self.get_base_from_child(units, 1)
+
+    def test_get_base_from_child_dupes(self):
+        geolevels = self.legbod.get_geolevels()
+        units = self.geounits[geolevels[0].id][0:1] + \
+            self.geounits[geolevels[1].id][0:1] + \
+            self.geounits[geolevels[2].id][0:1]
+
+        self.get_base_from_child(units, 81)
+
+    def test_get_base_from_child_eachlevel(self):
+        geolevels = self.legbod.get_geolevels()
+        units = self.geounits[geolevels[0].id][0:1] + \
+            self.geounits[geolevels[1].id][3:4] + \
+            self.geounits[geolevels[2].id][12:13]
+
+        self.get_base_from_child(units, 91)

@@ -292,7 +292,7 @@ class Geounit(models.Model):
     supplemental_id = models.CharField(max_length=50, db_index=True, blank=True, null=True)
 
     # The ID of the geounit that contains this geounit
-    #child = models.ForeignKey('Geounit',null=True,blank=True)
+    child = models.ForeignKey('Geounit',null=True,blank=True)
 
     # The full geometry of the geounit (high detail).
     geom = models.MultiPolygonField(srid=3785)
@@ -309,41 +309,52 @@ class Geounit(models.Model):
     # Manage the instances of this class with a geographically aware manager
     objects = models.GeoManager()
 
-#    @staticmethod
-#    def get_base_geounits(geounit_ids, geolevel):
-#        """
-#        Get the list of geounits at the base geolevel inside the 
-#        geometry of geounit_ids.
-#        
-#        This method performs a spatial query to find all the small
-#        Geounits that are contained within the combined extend of the
-#        Geounits that are in the list of geounit_ids.
-#        
-#        The spatial query unionizes the geometry of the geounit_ids,
-#        simplifies that geometry, then returns all geounits at the base
-#        geolevel whose centroid falls within the unionized geometry.
-#
-#        The performance of this method is directly related to the complexity
-#        of the geometry of the Geounits. This method will perform the best
-#        on simplified geometry, or geometries with fewer vertices.
-#
-#        Parameters:
-#            geounit_ids -- A list of Geounit IDs. Please note that these 
-#            must be int datatypes, and not str.
-#            geolevel -- The ID of the Geolevel that contains geounit_ids
-#
-#        Returns:
-#            A list of Geounit ids.
-#        """
-#        cursor = connection.cursor()
-#
-#        # craft a custom sql query to get the IDs of the geounits
-#        cursor.execute('SELECT id from redistricting_geounit where geolevel_id = %s and St_within(center, (select st_simplify(st_union(geom), 10) from redistricting_geounit where geolevel_id = %s and id in %s))', [int(settings.BASE_GEOLEVEL), int(geolevel), geounit_ids])
-#        results = []
-#        ids = cursor.fetchall()
-#        for row in ids:
-#            results += row
-#        return results
+    @staticmethod
+    def get_base_geounits(geounits, legislative_body):
+        """
+        Get the list of geounits at the base geolevel inside the 
+        geometry of geounits. This does not perform any spatial queries.
+        
+        Parameters:
+            geounits -- A list of Geounits. These may be at mixed
+                geographic levels, such as the set of Geounits returned
+                from get_mixed_geounits
+            legislative_body -- The legislative body to use to search
+                for base geounits. This may determine the path up the
+                hierarchy back to the base geounits.
+
+        Returns:
+            A list of Geounit ids at the base_geolevel of the Legislative
+            Body.
+        """
+        if geounits is None or len(geounits) == 0:
+            return []
+
+        if isinstance(geounits[0], Geounit):
+            geounits = map(lambda x: x.id, geounits)
+
+        geolevels = legislative_body.get_geolevels()
+
+        baseunits = []
+        childunits = []
+
+        # This loop moves from larger geographic levels to smaller levels
+        for i,geolevel in enumerate(geolevels):
+            if i == 0:
+                childunits = Geounit.objects.filter(geolevel=geolevel,id__in=geounits).values_list('id')
+                continue
+
+            if geolevel.id == legislative_body.get_base_geolevel():
+                # append any remaining units to the list
+                l1 = list(Geounit.objects.filter(geolevel=geolevel,id__in=geounits).values_list('id', flat=True))
+                l2 = list(Geounit.objects.filter(geolevel=geolevel,child__in=childunits).values_list('id', flat=True))
+                baseunits = list(set(l1 + l2))
+            else:
+                l1 = list(Geounit.objects.filter(geolevel=geolevel,id__in=geounits).values_list('id', flat=True))
+                l2 = list(Geounit.objects.filter(geolevel=geolevel,child__in=childunits).values_list('id', flat=True))
+                childunits = list(set(l1 + l2))
+
+        return baseunits
 
     @staticmethod
     def get_base_geounits_within(geom,legislative_body):
@@ -402,8 +413,8 @@ class Geounit(models.Model):
                 boundary, respectively.
 
         Returns:
-            A list of Geounit objects, with only the ID and Geometry
-            fields populated.
+            A list of Geounit objects, with the ID, child, geolevel,
+            and Geometry fields populated.
         """
         if not boundary and inside:
             # there are 0 geounits inside a non-existant boundary
@@ -426,7 +437,7 @@ class Geounit(models.Model):
                 selection = Geounit.objects.filter(guFilter).unionagg()
                
                 # Begin crafting the query to get the id and geom
-                query = "SELECT id,st_ashexewkb(geom,'NDR') FROM redistricting_geounit WHERE id IN (%s) AND " % (','.join(geounit_ids))
+                query = "SELECT id,child_id,geolevel_id,st_ashexewkb(geom,'NDR') FROM redistricting_geounit WHERE id IN (%s) AND " % (','.join(geounit_ids))
 
                 # create a boundary if one doesn't exist
                 if not boundary:
@@ -456,9 +467,9 @@ class Geounit(models.Model):
                 count = 0
                 for row in rows:
                     count += 1
-                    geom = GEOSGeometry(row[1])
+                    geom = GEOSGeometry(row[3])
                     # Create a geounit, and add it to the list of units
-                    units.append(Geounit(id=row[0],geom=geom))
+                    units.append(Geounit(id=row[0],geom=geom,child_id=row[1],geolevel_id=row[2]))
 
                 # if we're at the base level, and haven't collected any
                 # geometries, return the units here
@@ -539,7 +550,7 @@ class Geounit(models.Model):
                 # converted, or errored out above, in which case we just
                 # have to move on.
                 if not remainder.empty:
-                    query = "SELECT id,st_ashexewkb(geom,'NDR') FROM redistricting_geounit WHERE geolevel_id = %d AND " % level.id
+                    query = "SELECT id,child_id,geolevel_id,st_ashexewkb(geom,'NDR') FROM redistricting_geounit WHERE geolevel_id = %d AND " % level.id
 
                     if level == base_geolevel:
                         # Query by center
@@ -555,7 +566,7 @@ class Geounit(models.Model):
                     count = 0
                     for row in rows:
                         count += 1
-                        units.append(Geounit(id=row[0],geom=GEOSGeometry(row[1])))
+                        units.append(Geounit(id=row[0],geom=GEOSGeometry(row[3]),child_id=row[1],geolevel_id=row[2]))
 
         # Send back the collected Geounits
         return units
