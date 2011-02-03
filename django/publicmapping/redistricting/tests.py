@@ -92,10 +92,6 @@ class BaseTestCase(unittest.TestCase):
                     self.geounits[gl.id].append(gu)
             dim *= 3.0
 
-        # configure Settings
-        settings.BASE_GEOLEVEL = self.geolevels[2].id
-        settings.SIMPLE_TOLERANCE = 0.1
-
         # create a User
         self.username = 'test_user'
         self.password = 'secret'
@@ -395,11 +391,13 @@ class GeounitMixTestCase(BaseTestCase):
         """
         Test the spatial query to get all geounits at the base geolevel within a boundary.
         """
-        level = self.geolevels[0]
+        level = self.legbod.get_geolevels()[0]
         units = self.geounits[level.id]
         geounit_ids = tuple([units[0].id, units[1].id])
+        base_level = self.legbod.get_base_geolevel()
 
-        units = Geounit.objects.filter(geom__within=units[0].geom,geolevel=settings.BASE_GEOLEVEL)
+
+        units = Geounit.objects.filter(geom__within=units[0].geom,geolevel=base_level)
 
         numunits = len(units)
         self.assertEquals(81, numunits, 'Number of geounits within a high-level geounit is incorrect. (%d)' % numunits)
