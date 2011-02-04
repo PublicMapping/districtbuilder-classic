@@ -24,7 +24,7 @@ For python libraries that aren't in the ubuntu repositories, you can
 use easy_install (part of python-setuptools) to get celery, which
 is used for background processes:
 
-> sudo easy_install django-celery ghettoq
+> sudo easy_install django-celery ghettoq django-staticfiles
 
 In order to allow recovery of passwords, a mail server is recommended. 
 By default the application will use a locally running mailserver. 
