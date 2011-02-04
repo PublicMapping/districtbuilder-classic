@@ -142,7 +142,7 @@ def userregister(request):
             login( request, user )
 
         status['success'] = True
-        status['redirect'] = '/districtmapping/plan/0/view'
+        status['redirect'] = '/districtmapping/plan/0/view/'
         return HttpResponse(json.dumps(status), mimetype='application/json')
     else:
         status['message'] = 'Username cannot be empty.'

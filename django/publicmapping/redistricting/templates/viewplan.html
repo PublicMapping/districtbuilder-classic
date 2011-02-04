@@ -442,8 +442,8 @@
                     <button class="menu_toggle ui-icon"></button>
                     <label>Current<br/> District</label>
                     <select>
-                      <option value="demographics">Demographics</option>
                       <option value="geography">Basic Information</option>
+                      <option value="demographics">Demographics</option>
                     </select>
                 </div>
                 <div class="map_menu_content geography">
@@ -716,10 +716,10 @@ Include the markup for the account management panel.
     about this plan for display in the sidebar menu and display the draw tab. 
 
     {% endcomment %}
-        $('.demographics').load('/districtmapping/plan/{{plan.id}}/demographics');     
-        // demographics is the default visible tab, so load that one first.
-        // load geography in the background
-        setTimeout(function(){ $('.geography').load('/districtmapping/plan/{{plan.id}}/geography') }, 1000);
+        $('.geography').load('/districtmapping/plan/{{plan.id}}/geography/');     
+        // geography is the default visible tab, so load that one first.
+        // load demographics in the background
+        setTimeout(function(){ $('.demographics').load('/districtmapping/plan/{{plan.id}}/demographics/') }, 1000);
         $('#steps').tabs('select', '#step_draw');
 
         // Load up the district index file checker whenever the 

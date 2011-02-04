@@ -42,7 +42,7 @@ urlpatterns = patterns('',
     (r'^districtmapping/', include('publicmapping.redistricting.urls')),
     (r'^$', 'publicmapping.views.index'),
     (r'^proxy$', 'publicmapping.views.proxy'),
-    (r'^session$', 'publicmapping.views.session'),
+    (r'^session/$', 'publicmapping.views.session'),
 )
 
 # Only if this application is running in debug mode, serve up the static
@@ -50,8 +50,8 @@ urlpatterns = patterns('',
 # served by apache.
 if settings.DEBUG:
     urlpatterns += patterns('',
-        (r'^site-media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT }),
-        (r'^static-media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.STATIC_ROOT }),
-        (r'^sld/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.SLD_ROOT }),
+        (r'^site-media/(?P<path>.*)$/', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT }),
+        (r'^static-media/(?P<path>.*)/$', 'django.views.static.serve', {'document_root': settings.STATIC_ROOT }),
+        (r'^sld/(?P<path>.*)/$', 'django.views.static.serve', {'document_root': settings.SLD_ROOT }),
     )
 

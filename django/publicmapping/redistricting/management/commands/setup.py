@@ -146,7 +146,7 @@ contents of the file and try again.
         if options.get("templates"):
             self.create_template(config, verbose)
         
-        call_command('collectstatic')
+        call_command('collectstatic', interactive=False)
 
         if options.get("bard"):
             self.build_bardmap(config, verbose)

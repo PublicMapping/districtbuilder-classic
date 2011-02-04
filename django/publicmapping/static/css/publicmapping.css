@@ -1225,12 +1225,11 @@ div#map_menu_header label {
 div.map_menu_content.geography {
     background: #badcbf;
     border:1px solid #77b280;
-    display:none
   }
 div.map_menu_content.demographics {
     background: #efe8cb;
     border: 1px solid #ada176;
-
+    display:none
 }
 
 div.plansummary {
@@ -1332,7 +1331,7 @@ span.popstatus {
   -moz-border-radius:2px;
   -webkit-border-radius:2px;
   border-radius:2px;
-  padding: 3px 3px;
+  padding: 3px 1px;
   color: #3c3c3c;
   font-size: 11px;
   display:block;

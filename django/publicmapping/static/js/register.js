@@ -201,7 +201,7 @@ $(function(){
 
     // go straight to the viewing pg
     $('#doAnonymous').click(function(evt) {
-        window.location.href = '/accounts/logout/?next=/districtmapping/plan/0/view';
+        window.location.href = '/accounts/logout/?next=/districtmapping/plan/0/view/';
         return false;
     });
 

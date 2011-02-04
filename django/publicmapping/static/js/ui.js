@@ -171,7 +171,7 @@ $(function() {
               $(this).slideUp(200);
           }
         });  
-    }).val("demographics").attr("selected", "selected");
+    }).val("geography").attr("selected", "selected");
         
     // map editing buttons
     $('#toolset_draw .toolset_group button')

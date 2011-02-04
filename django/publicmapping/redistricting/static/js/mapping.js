@@ -92,8 +92,8 @@ function getPlanVersion() {
 /*
  * The URLs for updating the calculated geography and demographics.
  */
-var geourl = '/districtmapping/plan/' + PLAN_ID + '/geography';
-var demourl = '/districtmapping/plan/' + PLAN_ID + '/demographics';
+var geourl = '/districtmapping/plan/' + PLAN_ID + '/geography/';
+var demourl = '/districtmapping/plan/' + PLAN_ID + '/demographics/';
 
 /**
  * Add proper class names so css may style the PanZoom controls.
@@ -436,7 +436,7 @@ function mapinit(srs,maxExtent) {
                 districtStrategy
             ],
             protocol: new OpenLayers.Protocol.HTTP({
-                url: '/districtmapping/plan/' + PLAN_ID + '/district/versioned',
+                url: '/districtmapping/plan/' + PLAN_ID + '/district/versioned/',
                 format: new OpenLayers.Format.GeoJSON()
             }),
             styleMap: new OpenLayers.StyleMap(new OpenLayers.Style(districtStyle)),
@@ -490,7 +490,7 @@ function mapinit(srs,maxExtent) {
     // Create a protocol that is used by all editing controls
     // that selects geography at the specified snap layer.
     var getProtocol = new OpenLayers.Protocol.HTTP({
-        url: '/districtmapping/plan/' + PLAN_ID + '/unlockedgeometries',
+        url: '/districtmapping/plan/' + PLAN_ID + '/unlockedgeometries/',
         format: new OpenLayers.Format.GeoJSON()
     });
 
@@ -622,7 +622,7 @@ function mapinit(srs,maxExtent) {
         $('#working').dialog('open');
         $.ajax({
             type: 'POST',
-            url: '/districtmapping/plan/' + PLAN_ID + '/district/' + district_id + '/add',
+            url: '/districtmapping/plan/' + PLAN_ID + '/district/' + district_id + '/add/',
             data: {
                 geolevel: geolevel_id,
                 geounits: geounit_ids,
@@ -2070,7 +2070,7 @@ function mapinit(srs,maxExtent) {
             $('#working').dialog('open');
             $.ajax({
                 type: 'POST',
-                url: '/districtmapping/plan/' + PLAN_ID + '/district/new',
+                url: '/districtmapping/plan/' + PLAN_ID + '/district/new/',
                 data: {
                     district_id: district_id,
                     geolevel: geolevel_id,
