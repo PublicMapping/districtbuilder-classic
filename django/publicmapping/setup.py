@@ -60,7 +60,7 @@ def main():
             default=False, action='store_true')
     parser.add_option('-n', '--nesting', dest="nesting",
             help="Enforce nested geometries.",
-            action='append')
+            action='append', type="int")
     parser.add_option('-b', '--bard', dest="bard",
             help="Create a BARD map based on the imported spatial data.", 
             default=False, action='store_true')
@@ -282,7 +282,6 @@ def merge_config(config, verbose):
         if cfg != None:
             settings_out.write("\nREPORTS_ENABLED = True\n")
             settings_out.write("\nBARD_BASESHAPE = '%s'\n" % cfg.get('shape'))
-            settings_out.write("BARD_BASEMAP = '%s'\n" % cfg.get('map'))
             settings_out.write("BARD_TEMP = '%s'\n" % cfg.get('temp'))
             xslt = cfg.get('transform')
             create_report_templates(config, xslt, '%s/django/publicmapping/redistricting/templates' % root_dir)
