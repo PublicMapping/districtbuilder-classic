@@ -176,13 +176,6 @@
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="map" type="xs:string" use="required" >
-            <xs:annotation>
-                <xs:documentation>
-                The name of the BARDMap variable within the loaded R workspace
-                </xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
         <xs:attribute name="temp" type="xs:string" use="required" >
             <xs:annotation>
                 <xs:documentation>
