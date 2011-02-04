@@ -287,9 +287,12 @@ class Geounit(models.Model):
     # instance of a census tract or block), this can be the ID or FIPS code.
     name = models.CharField(max_length=200)
 
-    # An optional identifier that can be used with a nested id system such
-    # as census block ids or voting division ids
-    supplemental_id = models.CharField(max_length=50, db_index=True, blank=True, null=True)
+    # The field used when exporting or importing plans from District Index Files
+    portable_id = models.CharField(max_length=50, db_index=True, blank=True, null=True)
+
+    # An identifier used by the data ingestion process.  This number is a
+    # concatenated series of identifiers identifying parent-child relationships
+    tree_code = models.CharField(max_length=50, db_index=True, blank=True, null=True)
 
     # The ID of the geounit that contains this geounit
     child = models.ForeignKey('Geounit',null=True,blank=True)
@@ -1020,7 +1023,7 @@ class Plan(models.Model):
 
         return plan
 
-    def district_mapping_cursor (self, geounit_id_field="supplemental_id"):
+    def district_mapping_cursor (self, geounit_id_field="portable_id"):
         """
         Given a plan, get the district mapping info.  Each row 
         of the returned cursor represents a geounit id and a

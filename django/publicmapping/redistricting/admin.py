@@ -75,8 +75,8 @@ class GeounitAdmin(admin.OSMGeoAdmin):
     # When displayed as a list, show the name and geolevel
     list_display = ('name','geolevel',)
 
-    # In admin view, show the name, supplemental_id, geolevel, and geom fields.
-    fields = ('name','supplemental_id','geolevel','geom',)
+    # In admin view, show the name, portable_id, tree_code, geolevel, and geom fields.
+    fields = ('name','portable_id','tree_code','geolevel','geom',)
 
     # Order geounits by name by default.
     ordering = ('name',)

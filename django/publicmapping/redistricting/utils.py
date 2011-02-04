@@ -43,7 +43,7 @@ class DistrictIndexFile():
 
     These files may be uploaded or downloaded in .zip format. The files
     should not contain a header row - rows which do not contain a 
-    supplemental id from the database will be ignored.
+    portable id from the database will be ignored.
     """
 
     @staticmethod
@@ -52,7 +52,7 @@ class DistrictIndexFile():
         """
         Imports a plan using a district index file in csv format. 
         There should be only two columns: a CODE matching the 
-        supplemental ids of geounits and a DISTRICT integer
+        portable ids of geounits and a DISTRICT integer
         representing the district to which the geounit should belong.
 
         Parameters:
@@ -180,7 +180,7 @@ class DistrictIndexFile():
                 sys.stderr.write('The plan "%s" could not be created:\n%s\n' % (name, traceback.format_exc()))
             return
                 
-        # initialize the dicts we'll use to store the supplemental_ids,
+        # initialize the dicts we'll use to store the portable_ids,
         # keyed on the district_id of this plan
         new_districts = dict()
         csv_file = open(indexFile)
@@ -212,9 +212,9 @@ class DistrictIndexFile():
 
         # Create the district geometry from the lists of geounits
         for district_id in new_districts.keys():
-            # Get a filter using supplemental_id
+            # Get a filter using portable_id
             code_list = new_districts[district_id]
-            guFilter = Q(supplemental_id__in = code_list)
+            guFilter = Q(portable_id__in = code_list)
 
             try:
                 # Build our new geometry from the union of our geounit geometries
