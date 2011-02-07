@@ -123,13 +123,13 @@ contents of the file and try again.
             for i,geolevel in enumerate(geolevels):
                 if not optlevels is None:
                     importme = len(optlevels) == 0
-                    importme = importme or (('%d' % i) in optlevels)
+                    importme = importme or (i in optlevels)
                     if importme:
                         self.import_geolevel(config, geolevel, verbose)
 
                 if not nestlevels is None:
                     nestme = len(nestlevels) == 0
-                    nestme = nestme or (('%d' % i) in nestlevels)
+                    nestme = nestme or (i in nestlevels)
                     if nestme:
                         self.renest_geolevel(geolevel, verbose)
 
@@ -557,7 +557,7 @@ ERROR:
         Perform a re-nesting of the geography in the geographic levels.
 
         Renesting the geometry works with Census Geography only that
-        has supplemental_ids.
+        has treecodes.
 
         Parameters:
             geolevel - The configuration geolevel
@@ -604,13 +604,15 @@ ERROR:
         geo = 0
         num = 0
 
-        if not geounit.supplemental_id:
-            return (geo, num,)
-
-        parentunits = Geounit.objects.filter(supplemental_id__startswith=geounit.supplemental_id, geolevel=parent.geolevel)
+        parentunits = Geounit.objects.filter(
+            tree_code__startswith=geounit.tree_code, 
+            geolevel=parent.geolevel)
+        #print "Found %d parent units under %d." % (parentunits.count(), geounit.id)
+        parentunits.update(child=geounit)
         newgeo = parentunits.unionagg()
 
         if newgeo is None:
+            #print "No geometry for %d" % geounit.id
             return (geo, num,)
 
         difference = newgeo.difference(geounit.geom).area
@@ -805,7 +807,26 @@ ERROR:
         Parameters:
             config -- A dictionary with 'shapepath', 'geolevel', 'name_field', and 'subject_fields' keys.
         """
+        def get_shape_tree(shapefile, feature):
+            shpfields = shapefile.xpath('Fields/Field')
+            builtid = ''
+            for idx in range(0,len(shpfields)):
+                idpart = shapefile.xpath('Fields/Field[@type="tree" and @pos=%d]' % idx)
+                if len(idpart) > 0:
+                    idpart = idpart[0]
+                    part = feature.get(idpart.get('name'))
+                    width = int(idpart.get('width'))
+                    builtid = '%s%s' % (builtid, part.zfill(width))
+            return builtid
+        def get_shape_portable(shapefile, feature):
+            field = shapefile.xpath('Fields/Field[@type="portable"]')[0]
+            return feature.get(field.get('name'))
+        def get_shape_name(shapefile, feature):
+            field = shapefile.xpath('Fields/Field[@type="name"]')[0]
+            return feature.get(field.get('name'))
+
         for h,shapefile in enumerate(config['shapefiles']):
+
             ds = DataSource(shapefile.get('path'))
 
             if verbose:
@@ -816,7 +837,6 @@ ERROR:
                 print '%d objects in shapefile' % len(lyr)
 
             level = Geolevel.objects.get(name=config['geolevel'])
-            supplemental_id_field = shapefile.get('supplementfield')
 
             # Create the subjects we need
             subject_objects = {}
@@ -841,10 +861,12 @@ ERROR:
                         sys.stdout.write('%2.0f%% .. ' % (progress * 100))
                         sys.stdout.flush()
 
-                prefetch = Q(name=feat.get(shapefile.get('namefield'))) & Q(geolevel=level)
-                if supplemental_id_field:
-                    prefetch = prefetch & Q(supplemental_id=str(feat.get(supplemental_id_field)))
-                prefetch = Geounit.objects.filter(prefetch) 
+                prefetch = Geounit.objects.filter(
+                    Q(name=get_shape_name(shapefile, feat)), 
+                    Q(geolevel=level),
+                    Q(portable_id=get_shape_portable(shapefile, feat)),
+                    Q(tree_code=get_shape_tree(shapefile, feat))
+                )
                 if prefetch.count() == 0:
                     try :
 
@@ -892,9 +914,14 @@ ERROR:
                             if not simple.valid:
                                 print 'Simplified Geometry %d is not valid.\n' % feat.fid
 
-                        g = Geounit(geom = my_geom, name = feat.get(shapefile.get('namefield')), geolevel = level, simple = simple, center = center)
-                        if supplemental_id_field:
-                            g.supplemental_id = feat.get(supplemental_id_field)
+                        g = Geounit(geom = my_geom, 
+                            name = get_shape_name(shapefile, feat), 
+                            geolevel = level, 
+                            simple = simple, 
+                            center = center,
+                            portable_id = get_shape_portable(shapefile, feat),
+                            tree_code = get_shape_tree(shapefile, feat)
+                        )
                         g.save()
 
                     except:
@@ -930,8 +957,8 @@ ERROR:
                             sys.stdout.write('%2.0f%% .. ' % (progress * 100))
                             sys.stdout.flush()
 
-                    gid = feat.get(attrconfig.get('supplementfield'))
-                    g = Geounit.objects.filter(supplemental_id=gid)
+                    gid = get_shape_treeid(attrconfig, feat)
+                    g = Geounit.objects.filter(tree_code=gid)
 
                     if g.count() > 0:
                         self.set_geounit_characteristic(g[0], subject_objects, feat, verbose)
@@ -1032,22 +1059,25 @@ ERROR:
             srs = SpatialReference(3785)
 
         try:
-            r.library('BARD')
-            if verbose:
-                print "Loaded BARD library."
             r.library('rgeos')
             if verbose:
                 print "Loaded rgeos library."
+            r.library('BARD')
+            if verbose:
+                print "Loaded BARD library."
             sdf = r.readShapePoly(shapefile,proj4string=r.CRS(srs.proj))
             if verbose:
                 print "Read shapefile '%s'." % shapefile
-            nb = r.poly2nb(sdf)
+            fib = r.poly_findInBoxGEOS(sdf)
+            if verbose:
+                print "Created neighborhood index file."
+            nb = r.poly2nb(sdf,foundInBox=fib)
             if verbose:
                 print "Computed neighborhoods."
             bardmap = r.spatialDataFrame2bardBasemap(sdf,nb)
             if verbose:
                 print "Created bardmap."
-            r.writeBardMap(bardmap,settings.BARD_BASESHAPE)
+            r.writeBardMap(settings.BARD_BASESHAPE, bardmap)
             if verbose:
                 print "Wrote bardmap to disk."
         except:
