@@ -1192,6 +1192,52 @@ div.boundary_swatch {
     border-style: solid;
     border-width: thin;
 }
+
+button#settings_toggle {
+    background-color: #606060;
+    position: absolute;
+    bottom: 8px;
+    right: 365px;
+    font-size: 7pt;
+    -moz-box-shadow: 2px 2px 2px #888888;
+    -webkit-box-shadow: 2px 2px 2px #888888;
+    box-shadow: 2px 2px 2px #888888;
+}
+div#map_settings_content {
+    position: absolute;
+    bottom: 35px;
+    right: 280px;
+    width: 220px;
+    background-color: #efe8cb;
+    border: solid 1px #999999;
+    display: none;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    -moz-box-shadow: 2px 2px 2px #888888;
+    -webkit-box-shadow: 2px 2px 2px #888888;
+    box-shadow: 2px 2px 2px #888888;
+}
+div#map_settings_content h1 {
+    font-size: 11pt;
+    font-weight: bold;
+    text-align:center;
+}
+div#map_settings_content #map_settings_layers, div#map_settings_content .layer_type_container {
+    font-size: 0.75em;
+}
+div#map_settings_content #opacity_slider {
+    width: 85%;
+    height: 5px;
+    margin: 12px;
+}
+div#map_settings_content .ui-slider .ui-slider-handle {
+    cursor: default;
+    height: 0.8em;
+    position: absolute;
+    width: 0.6em;
+    z-index: 2;
+}
+
 div#map_menu_header select {
   font-size: 14px;
   font-weight:bold;

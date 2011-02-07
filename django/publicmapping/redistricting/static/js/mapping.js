@@ -31,28 +31,11 @@
  * @param layer The layer name (or array of names) served by the WMS server
  * @param extents The extents of the layer -- must be used for GeoWebCache.
  */
-function createLayer( name, layer, srs, extents, transparent, visibility, isBaseLayer ) {
-    return new OpenLayers.Layer.WMS( name,
-        window.location.protocol + '//' + MAP_SERVER + '/geoserver/gwc/service/wms',
-        {
-          srs: srs,
-          layers: layer,
-          tiles: 'true',
-          tilesOrigin: extents.left + ',' + extents.bottom,
-          format: 'image/png',
-          transparent: transparent
-        },
-        {
-            visibility: visibility,
-            isBaseLayer: isBaseLayer,
-            displayOutsideMaxExtent: true
-        }
-    );
-}
 
 /* 
  * Get the value of the "Show Layer by:" dropdown.
  */
+
 function getShowBy() {
     return $('#showby').val();
 }
@@ -203,59 +186,18 @@ function init() {
 	MAP_SERVER=window.location.host
     }
 
-    var url = window.location.protocol + '//' + MAP_SERVER + '/geoserver/ows?service=wms&' +
-        'version=1.1.1&request=GetCapabilities&namespace=' + NAMESPACE;
-
-    if (window.location.host != MAP_SERVER) {
-        OpenLayers.ProxyHost= "/proxy?url=";
-        url = OpenLayers.ProxyHost + encodeURIComponent(url);
-    }
-
     // set the version cursor
     $('#history_cursor').val(PLAN_VERSION);
 
-    $.ajax({
-        url: url,
-        type: 'GET',
-        // success does not get called by jquery in IE,
-        // use complete instead
-        complete: function(xhr, textStatus) {
-            var data = null;
-            if (xhr.responseXML == null) {
-                var parser = new DOMParser();
-                data = parser.parseFromString(xhr.responseText, 'text/xml');
-            }
-            else if (xhr.responseXML.childNodes.length == 0) {
-                data = new ActiveXObject('Microsoft.XMLDOM');
-                data.async = 'false';
-                data.loadXML(xhr.responseText);
-            }
-            else {
-                data = xhr.responseXML;
-            }
-                
-            // get the layers in the response
-            var layers = $('Layer > Layer',data);
-            for (var i = 0; i < layers.length; i++) {
-                // get the title of the layer
-                var title = $('> Title',layers[i])[0].firstChild.nodeValue;
-                var name = $('> Name', layers[i])[0].firstChild.nodeValue;
+    // set the max extent to be the boundaries of the world in
+    // spherical mercator to avoid all geowebcache offset issues
+    var max = 20037508.342789244;
+    var srs = "EPSG:3785";
+    var extent = new OpenLayers.Bounds(-max, -max, max, max);
 
-                // get the SRS and extent of our snap layers, then init the map
-                if (title == SNAP_LAYERS[0].layer) {
-                    var bbox = $('> BoundingBox',layers[i]);
-                    var srs = bbox.attr('SRS');
-                    var extent = new OpenLayers.Bounds(
-                        bbox.attr('minx'),
-                        bbox.attr('miny'),
-                        bbox.attr('maxx'),
-                        bbox.attr('maxy')
-                    );
-                    mapinit( srs, extent );
-                    return;
-                }
-            }
-        }
+    // ensure the page is fully loaded before the map is initialized
+    $(document).ready(function() {
+        mapinit( srs, extent );
     });
 }
 
@@ -263,6 +205,46 @@ function init() {
  * Initialize the map with extents and SRS pulled from WMS.
  */
 function mapinit(srs,maxExtent) {
+    var defaultThematicOpacity = 0.8;
+    var thematicLayers = [];
+
+    var createLayer = function( name, layer, srs, extents, transparent, visibility, isThematicLayer ) {
+        var newLayer = new OpenLayers.Layer.WMS( name,
+            window.location.protocol + '//' + MAP_SERVER + '/geoserver/gwc/service/wms',
+            {
+                srs: srs,
+                layers: layer,
+                tiles: 'true',
+                tilesOrigin: extents.left + ',' + extents.bottom,
+                format: 'image/png',
+                transparent: true
+            },
+            {
+                visibility: visibility,
+                isBaseLayer: false,
+                displayOutsideMaxExtent: true,
+                opacity: isThematicLayer ? defaultThematicOpacity : 1.0
+            }
+        );
+        if (isThematicLayer) {
+            thematicLayers.push(newLayer);
+        }
+        return newLayer;
+    };
+
+    // Set the visible thematic layer. This is a replacement for
+    // directly setting the base layer, which can no longer be done
+    // since a base map is now being used.
+    var setThematicLayer = function (layer) {
+        $(thematicLayers).each(function(i, thematicLayer) {
+            if (thematicLayer.visibility) {
+                thematicLayer.setVisibility(false);
+            }
+        });
+        if (!layer.visibility) {
+            layer.setVisibility(true);
+        }
+    };
 
     // The assignment mode -- the map is initially in navigation mode,
     // so the assignment mode is null.
@@ -278,32 +260,8 @@ function mapinit(srs,maxExtent) {
         handleRightClicks: true
     });
 
-    // Dynamically compute the resolutions, based on the map extents.
-    // NOTE: Geoserver computes the resolution with the largest
-    // components of the extent
-    var xHeight = maxExtent.top - maxExtent.bottom;
-    var xWidth = maxExtent.right - maxExtent.left;
-
-    var rez = (xHeight > xWidth) ? 
-        [(maxExtent.top - maxExtent.bottom) / 256.0] :
-        [(maxExtent.right - maxExtent.left) / 256.0];
-
-    // GWC doesn't use the same exact height if something is more than 2x
-    // as wide. Correct for 2x wide geographies.
-    var flatness = parseInt( parseInt( xWidth / xHeight, 10 ) / 2, 10 );
-    while (flatness > 0) {
-        rez[0] /= 2;
-        flatness--;
-    }
-
-    while (rez.length < 12) {
-        rez.push( rez[rez.length - 1] / 2.0 );
-    }
-
     // Create a slippy map.
-    var olmap = new OpenLayers.Map('map', {
-        // The resolutions here must match the settings in geowebcache.
-	resolutions: rez,
+    olmap = new OpenLayers.Map('map', {
         maxExtent: maxExtent,
         projection: projection,
         units: 'm',
@@ -317,10 +275,193 @@ function mapinit(srs,maxExtent) {
 
     // These layers are dependent on the layers available in geowebcache
     var layers = [];
+
+    
+
+    // Calculate the minimum zoom level based on the extent of the study area
+    var studyWidthMeters = STUDY_EXTENT[2] - STUDY_EXTENT[0];
+    var mapWidthPixels = $('div.olMapViewport').width();
+    var metersPerPixel = studyWidthMeters / mapWidthPixels;
+    var maxMetersPerPixel = 156543.033928; // at zoom 0 (20037508.342789244 * 2 / 256)
+
+    // maxmpp / 2^zoom = mpp
+    // zoom = log(maxmpp/mpp)/log(2)
+    var level = Math.log(maxMetersPerPixel / metersPerPixel) / Math.LN2;
+    
+    var minZoomLevel = Math.floor(level) - 1;
+    var maxZoomLevel = 17; // This level is far enough zoomed to view blocks in any state
+    var numZoomLevels = maxZoomLevel - minZoomLevel + 1;
+
+    // Set the base layers
+    var getLayer = function(provider, mapType) {
+        var options = {};
+        var types = {};
+
+        switch (provider) {
+            case 'bing':
+                options = {
+                    minZoomLevel: minZoomLevel,
+                    maxZoomLevel: maxZoomLevel,
+                    projection: projection,
+                    sphericalMercator: true,
+                    maxExtent: maxExtent    
+                };
+
+                types = {
+                    aerial: VEMapStyle.Aerial,
+                    hybrid: VEMapStyle.Hybrid,
+                    road: VEMapStyle.Road 
+                };
+    
+                options.type = types[mapType];
+                if (options.type) {
+                    return new OpenLayers.Layer.VirtualEarth(layerName, options);
+                }
+
+            case 'google':
+                options = {
+                    numZoomLevels: numZoomLevels,
+                    minZoomLevel: minZoomLevel,
+                    projection: projection,
+                    sphericalMercator: true,
+                    maxExtent: maxExtent
+                };
+                
+                types = {
+                    aerial: G_SATELLITE_MAP,
+                    hybrid: G_HYBRID_MAP, 
+                    road: G_NORMAL_MAP
+                };
+    
+                options.type = types[mapType];
+                if (options.type) {
+                    return new OpenLayers.Layer.Google(layerName, options);
+                }
+
+            case 'osm':
+                options = {
+                    numZoomLevels: numZoomLevels,
+                    minZoomLevel: minZoomLevel,
+                    projection: projection
+                };
+
+                // Only road type is supported. OSM does not have aerial or hybrid views.
+                if (mapType === 'road') {
+                    return new OpenLayers.Layer.OSM(layerName, null, options);
+                }
+
+            default:
+                return null;
+        }
+    };
+
+    // Map type -> label. Also used for determining if there are multiple of the same type.
+    var mapTypes = {
+        aerial: { label: 'Satellite' },
+        hybrid: { label: 'Hybrid' },
+        road: { label: 'Road' }
+    };
+
+    // Construct each layer, and assign a label.
+    $(BASE_MAPS.split(',')).each(function(i, layerName) {
+        var hyphenIndex = layerName.indexOf('-');
+        if (hyphenIndex <= 0) {
+            return null;
+        }
+        var provider = (layerName.substring(0, hyphenIndex)).toLowerCase();
+        var mapType = (layerName.substring(hyphenIndex + 1)).toLowerCase();
+        var layer = getLayer(provider, mapType);
+        if (layer) {
+            var existing = mapTypes[mapType];
+            if (existing.layer) {
+                existing.layer.name = mapTypes[mapType].label + " (" + existing.provider + ")";
+                layer.name = mapTypes[mapType].label + " (" + provider + ")";
+            } else {
+                layer.name = mapTypes[mapType].label;
+                mapTypes[mapType].layer = layer;
+                mapTypes[mapType].provider = provider;
+            }
+            layers.push(layer);
+        }
+    });
+
+    // If no base maps are configured, add one that's not visible, simply to utilize
+    // the resolution information. No tiles will ever be requested
+    if (layers.length === 0) {
+        var layer = getLayer('osm', 'road');
+        layer.setVisibility(false);
+        layers.push(layer);
+    }
+    
+    // Set up the opacity slider and connect change events to control the base and thematic layer opacities
+    $('#opacity_slider').slider({
+        value: defaultThematicOpacity * 100,
+        slide: function(event, ui) {
+            var isThematic = $('#thematic_radio').attr('checked');
+            $(olmap.layers).each(function(i, layer) {
+                if ((isThematic && !layer.isBaseLayer) || (!isThematic && layer.isBaseLayer)) {
+                    layer.setOpacity(ui.value / 100);
+                }
+            });
+        }
+    });
+
+    // Add a row for each base map to the Basemap Settings container for switching
+    $(layers).each(function(i, layer) {
+        var container = $('#map_settings_layers');
+        var div = $('<span class="layer_container"></span>');
+        var input = $('<input class="map_settings_layer" type="radio" name="layers">' + layer.name + '</input>');
+            
+        // Default the first layer as checked
+        if (i === 0) {
+            input.attr('checked', true);
+        }
+
+        // Set the base layer, and change label when the option is selected
+        input.click(function() {
+            $('#base_map_type').html(layer.name.split(' ')[0]); // split is in case the provider is in parens
+            olmap.setBaseLayer(layer);
+        });
+           
+        div.append(input);            
+        container.append(div);
+    });
+
+    // Set the default map type label
+    $('#base_map_type').html(layers[0].name);
+
+
+    // Function for monitoring when map layer radio changes, and updating the slider accordingly
+    var getMapLayerRadioChangeFn = function(isThematic){
+        return function() {        
+            var found = null;
+            for (var i = 0; i < olmap.layers.length; i++) {
+                var layer = olmap.layers[i];
+                if ((isThematic && !layer.isBaseLayer) || (!isThematic && layer.isBaseLayer)) {
+                    found = layer;
+                    break;
+                }
+            }
+            if (!found) { return; }
+            if (found.opacity === null) {
+                found.opacity = 1; // OpenLayers doesn't set opacity on load when it's 100%
+            }
+            $('#opacity_slider').slider('value', found.opacity * 100);
+        };
+    };
+    $('#thematic_radio').click(getMapLayerRadioChangeFn(true));
+    $('#basemap_radio').click(getMapLayerRadioChangeFn(false));
+
+    // Hide the map type selection if there are 1 or fewer types
+    if (layers.length <= 1) {
+        $('#map_settings_layers').hide();
+    }
+
+    // Construct map layers, ensuring boundary layers are at the end of the list for proper overlaying
     for (i in MAP_LAYERS) {
         var layerName = MAP_LAYERS[i];
         if (layerName.indexOf('boundaries') == -1) {
-            layers.push(createLayer( layerName, layerName, srs, maxExtent, false, true, true ));
+            layers.unshift(createLayer( layerName, layerName, srs, maxExtent, false, true, true ));
         } else {
             layers.push(createLayer( layerName, layerName, srs, maxExtent, true, false, false ));
         }
@@ -482,10 +623,16 @@ function mapinit(srs,maxExtent) {
         })
     });
 
-    // add these layers to the map
+    // Add these layers to the map
     layers.push(districtLayer);
     layers.push(selection);
     olmap.addLayers(layers);
+
+    // If a base map is intentionally not configured, make it invisible, and remove settings tool
+    if (!BASE_MAPS) {
+        olmap.baseLayer.setVisibility(false);
+        $('#map_settings').hide();
+    }
 
     // Create a protocol that is used by all editing controls
     // that selects geography at the specified snap layer.
@@ -1916,7 +2063,7 @@ function mapinit(srs,maxExtent) {
         newOpts.featureType = snap.layer;
         getControl.protocol = 
             boxControl.protocol = new OpenLayers.Protocol.HTTP( newOpts );
-        olmap.setBaseLayer(layers[0]);
+        setThematicLayer(layers[0]);
         doMapStyling();
         $('#showby').siblings('label').text('Show ' + snap.display + ' by:');
         getMapStyles();
@@ -1940,7 +2087,7 @@ function mapinit(srs,maxExtent) {
         }
 
         var layers = olmap.getLayersByName(layername);
-        olmap.setBaseLayer(layers[0]);
+        setThematicLayer(layers[0]);
         doMapStyling();
         getMapStyles();
         updateBoundaryLegend();
@@ -1972,7 +2119,6 @@ function mapinit(srs,maxExtent) {
         var name = getBoundLayer();
         if (name != '') {
             var layer = olmap.getLayersByName(name)[0];
-            olmap.setLayerIndex(layer, 1);
             boundaryLayer = layer;
             layer.setVisibility(true);
         }
@@ -2184,7 +2330,7 @@ function mapinit(srs,maxExtent) {
     changeSnapLayer();
 
     // Set the initial map extents to the bounds around the study area.
-    olmap.zoomToExtent(maxExtent);
+    olmap.zoomToExtent(STUDY_BOUNDS);
     OpenLayers.Element.addClass(olmap.viewPortDiv, 'olCursorWait');
 
     // set up sizing for dynamic map size that fills the pg
@@ -2296,7 +2442,9 @@ GlobalZoom = OpenLayers.Class(OpenLayers.Control, {
      * e - {Event}
      */
     onZoomToExtent: function(e) {
-        this.map.zoomToMaxExtent();
+        // This has been changed to use the map's maxExtent rather than just performing a
+        // zoomToMaxExtent, because maxExtent is broken on the OSM layer
+        this.map.zoomToExtent(STUDY_BOUNDS);
         OpenLayers.Event.stop(e);
     },
 
@@ -2354,3 +2502,62 @@ GlobalZoom = OpenLayers.Class(OpenLayers.Control, {
     CLASS_NAME: "GlobalZoom"
 });
 
+// Modify the spherical mercator initialization function so projection
+// is not hardcoded, but instead set in the layer options. This is needed,
+// because otherwise 900913 is always used, when we want 3785. This causes
+// a slight difference which results in the map being offset.
+OpenLayers.Layer.SphericalMercator.initMercatorParameters = function() {
+    this.RESOLUTIONS = [];
+    var maxResolution = 156543.0339;
+    for(var zoom = 0; zoom <= this.MAX_ZOOM_LEVEL; ++zoom) {
+        this.RESOLUTIONS[zoom] = maxResolution / Math.pow(2, zoom);
+    }
+};
+
+// Modify the OSM layer to add support for minZoomLevel
+OpenLayers.Layer.XYZ = OpenLayers.Class(OpenLayers.Layer.XYZ, {     
+    initialize: function(name, url, options) {
+        var minZoom = 0;
+        if (options.minZoomLevel) {
+            minZoom = options.minZoomLevel;
+        }
+        if (options && options.sphericalMercator || this.sphericalMercator) {
+            options = OpenLayers.Util.extend({
+                maxExtent: new OpenLayers.Bounds(
+                    -128 * 156543.0339,
+                    -128 * 156543.0339,
+                    128 * 156543.0339,
+                    128 * 156543.0339
+                ),
+                maxResolution: 156543.0339 / Math.pow(2, minZoom),
+                numZoomLevels: 19,
+                units: "m",
+                projection: "EPSG:3785"
+            }, options);
+        }
+        url = url || this.url;
+        name = name || this.name;
+        var newArguments = [name, url, {}, options];
+        OpenLayers.Layer.Grid.prototype.initialize.apply(this, newArguments);
+    },
+    getURL: function (bounds) {
+        var res = this.map.getResolution();
+        var x = Math.round((bounds.left - this.maxExtent.left) / (res * this.tileSize.w));
+        var y = Math.round((this.maxExtent.top - bounds.top) / (res * this.tileSize.h));
+        var z = this.map.getZoom() + this.minZoomLevel;
+        var url = this.url;
+        var s = '' + x + y + z;
+        if (url instanceof Array) {
+            url = this.selectUrl(s, url);
+        }
+        var path = OpenLayers.String.format(url, {'x': x, 'y': y, 'z': z});
+        return path;
+    }
+});
+OpenLayers.Layer.OSM = OpenLayers.Class(OpenLayers.Layer.XYZ, {
+    name: "OpenStreetMap",
+    attribution: "Data CC-By-SA by <a href='http://openstreetmap.org/'>OpenStreetMap</a>",
+    sphericalMercator: true,
+    url: 'http://tile.openstreetmap.org/${z}/${x}/${y}.png',
+    CLASS_NAME: "OpenLayers.Layer.OSM"
+});

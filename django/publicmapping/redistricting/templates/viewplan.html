@@ -42,6 +42,8 @@
     <link rel="stylesheet" type="text/css" href="/static-media/css/publicmapping.css"/>
     <script type="text/javascript" src="/static-media/openlayers/OpenLayers.js"></script><!-- production -->
     <!-- <script type="text/javascript" src="/static-media/OpenLayers-2.9.1/lib/OpenLayers.js"></script> debug -->
+    <script src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=6.2&mkt=en-us"></script> 
+    <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAjpkAC9ePGem0lIq5XcMiuhR_wWLPFku8Ix9i2SXYRVK3e45q1BQUd_beF8dtzKET_EteAjPdGDwqpQ"></script> 
 
     {% comment %}
 
@@ -53,6 +55,16 @@
     <script type="text/javascript">
         // The name of the map server that serves up map tiles.
         var MAP_SERVER = '{{ mapserver }}';
+        // The names of the base maps to display.
+        var BASE_MAPS = '{{ basemaps }}'
+        // default to open street map if nothing is provided
+        if (BASE_MAPS === 'None') {
+            BASE_MAPS = 'osm-road';
+        }
+        // The extent of all geounits in the study area.
+        var STUDY_EXTENT = {{ study_area_extent }};
+        // The bounds of all geounits in the study area.
+        var STUDY_BOUNDS = new OpenLayers.Bounds(STUDY_EXTENT[0], STUDY_EXTENT[1], STUDY_EXTENT[2], STUDY_EXTENT[3]);
         // The namespace configured for WFS requests
         var NAMESPACE = '{{ namespace }}';
         // The namespace HREF configured for WFS requests
@@ -521,6 +533,21 @@
           <div id="map">
             <div class="shadow_left"></div>
             <div class="shadow_top"></div>
+          </div>
+          <div id="map_settings">
+              <button id="settings_toggle">Basemap Settings</button>
+          </div>
+          <div id="map_settings_content">
+            <div id="map_settings_layers">
+            </div>
+            <h1>Map Layer Visibility</h1>
+            <span class="layer_type_container">
+                <input class="map_settings_layer_type" id="thematic_radio" type="radio" name="layer_types" checked="true">Thematic Layer</input>
+            </span>
+            <span class="layer_type_container">
+                <input class="map_settings_layer_type" id="basemap_radio" type="radio" name="layer_types"><span id="base_map_type"></span> Layer</input>
+            </span>
+            <div id="opacity_slider"></div>
           </div>
           <div id="map_legend">
               <button id="legend_toggle">Map Legend</button>
