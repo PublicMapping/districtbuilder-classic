@@ -339,25 +339,25 @@ class Geounit(models.Model):
         geolevels = legislative_body.get_geolevels()
 
         baseunits = []
-        childunits = []
+        baselevel = geolevels[len(geolevels) - 1]
 
         # This loop moves from larger geographic levels to smaller levels
         for i,geolevel in enumerate(geolevels):
             if i == 0:
-                childunits = Geounit.objects.filter(geolevel=geolevel,id__in=geounits).values_list('id')
+                baseunits = Q(geolevel=geolevel,id__in=geounits)
                 continue
 
-            if geolevel.id == legislative_body.get_base_geolevel():
+            if geolevel.id == baselevel:
                 # append any remaining units to the list
-                l1 = list(Geounit.objects.filter(geolevel=geolevel,id__in=geounits).values_list('portable_id', flat=True))
-                l2 = list(Geounit.objects.filter(geolevel=geolevel,child__in=childunits).values_list('portable_id', flat=True))
-                baseunits = list(set(l1 + l2))
+                baseunits = \
+                    Q(geolevel=geolevel,id__in=geounits) | \
+                    Q(geolevel=geolevel,child__in=Geounit.objects.filter(baseunits))
             else:
-                l1 = list(Geounit.objects.filter(geolevel=geolevel,id__in=geounits).values_list('id', flat=True))
-                l2 = list(Geounit.objects.filter(geolevel=geolevel,child__in=childunits).values_list('id', flat=True))
-                childunits = list(set(l1 + l2))
+                baseunits = \
+                    Q(geolevel=geolevel,id__in=geounits) | \
+                    Q(geolevel=geolevel,child__in=Geounit.objects.filter(baseunits))
 
-        return baseunits
+        return Geounit.objects.filter(baseunits).values_list('portable_id', flat=True)
 
     @staticmethod
     def get_base_geounits_within(geom,legislative_body):
@@ -437,7 +437,18 @@ class Geounit(models.Model):
                 guFilter = Q(id__in=geounit_ids)
 
                 # Get the area defined by the union of the geounits
-                selection = Geounit.objects.filter(guFilter).unionagg()
+                selection = Geounit.objects.filter(guFilter).collect()
+
+                # Union as a cascade - this is faster than the union
+                # spatial aggregate function off the filter
+                polycomponents = []
+                for geom in selection:
+                    if geom.geom_type == 'MultiPolygon':
+                        for poly in geom:
+                            polycomponents.append(poly)
+                    elif geom.geom_type == 'Polygon':
+                        polycomponents.append(geom)
+                selection = MultiPolygon(polycomponents,srid=selection.srid).cascaded_union
                
                 # Begin crafting the query to get the id and geom
                 query = "SELECT id,child_id,geolevel_id,st_ashexewkb(geom,'NDR') FROM redistricting_geounit WHERE id IN (%s) AND " % (','.join(geounit_ids))
@@ -483,15 +494,21 @@ class Geounit(models.Model):
             # primary search geolevel) the geolevel parameter
             elif searching:
                 # union the selected geometries
-                union = None
-                for selected in units:
+                if len(units) == 0:
+                    union = None
+                else:
                     # this always rebuilds the current extent of all the
                     # selected geounits
-                    if union is None:
-                        union = selected.geom
-                    else:
-                        union = union.union(selected.geom)
-
+                    geoms = []
+                    for unit in units:
+                        if unit.geom.geom_type == 'MultiPolygon':
+                            for geo in unit.geom:
+                                geoms.append(geo)
+                        elif unit.geom.geom_type == 'Polygon':
+                            geoms.append(unit.geom)
+                    # cascaded union is faster than unioning each unit
+                    # to it's neighbor
+                    union = MultiPolygon(geoms).cascaded_union
 
                 # set or merge this onto the existing selection
                 if union is None:
@@ -506,7 +523,7 @@ class Geounit(models.Model):
                     try:
                         remainder = boundary.intersection(intersects)
                     except GEOSException, ex:
-                        # it is not clear what this means, or why it happens
+                        # it is not clear what this means
                         remainder = empty_geom(boundary.srid)
                 else:
                     # the remainder geometry is the geounit selection 
@@ -523,9 +540,9 @@ class Geounit(models.Model):
                         # it is not clear what this means, or why it happens
                         remainder = empty_geom(boundary.srid)
 
-                # Check if the remainder is a geometry collection. If it is,
-                # munge it into a multi-polygon so that we can use it in our
-                # custom sql query
+                # Check if the remainder is a geometry collection. If it 
+                # is, munge it into a multi-polygon so that we can use it 
+                # in our custom sql query
                 if remainder.geom_type == 'GeometryCollection' and not remainder.empty:
                     srid = remainder.srid
                     union = None
@@ -755,26 +772,15 @@ class Plan(models.Model):
         if any((ds.is_locked and ds.district_id == districtid) for ds in districts):
             return 0
 
-        #ds2 = self.get_districts_at_version(self.version)
-        #print "Districts at PLAN version %d:" % self.version
-        #for ds in ds2:
-        #    print "    %d" % ds.id
-
         # purge any districts between the version provided
         # and the latest version
-        purge = District.objects.filter(plan=self,version__gt=version)
-        #print "Districts before purge: %d" % purge.count()
-        purge.delete()
-        #print "Districts after purge: %d" % purge.count()
-
-        #print "Districts at version %d:" % int(version)
+        District.objects.filter(plan=self,version__gt=version).delete()
 
         target = None
 
         # First, remove the aggregate values from districts that are
         # not the target, and intersect the geounits provided
         for district in districts:
-            #print "    %d, %d (%d)" % (district.id,district.district_id,districtid)
             if district.district_id == districtid:
                 # If the district_id is the target, save the target.
                 target = district
@@ -1364,7 +1370,8 @@ class District(models.Model):
         bigunits = Geounit.objects.filter(geolevel=geolevel, geom__intersects=self.geom)
         bigunits = map(lambda x: str(x.id), bigunits)
         mixed = Geounit.get_mixed_geounits(bigunits, self.plan.legislative_body, geolevel.id, self.geom, True)
-        return Geounit.get_base_geounits(mixed, self.plan.legislative_body)
+        units = Geounit.get_base_geounits(mixed, self.plan.legislative_body)
+        return units
 
     def simplify(self):
         """
@@ -1567,8 +1574,7 @@ def empty_geom(srid):
     Returns:
         An empty geometry.
     """
-    geom = GeometryCollection([])
-    geom.srid = srid
+    geom = GeometryCollection([], srid=srid)
     return geom
 
 def enforce_multi(geom):
