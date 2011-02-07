@@ -244,11 +244,14 @@ contents of the file and try again.
             feature_type_obj = { 'featureType': {
                 'name': name,
                 'title': name if title is None else title,
+
+                # Set the bounding box to the maximum spherical mercator extent
+                # in order to avoid all issues with geowebcache tile offsets
                 'nativeBoundingBox': {
-                    'minx': '%0.1f' % extent[0],
-                    'miny': '%0.1f' % extent[1],
-                    'maxx': '%0.1f' % extent[2],
-                    'maxy': '%0.1f' % extent[3]
+                    'minx': '%0.1f' % -20037508.342789244,
+                    'miny': '%0.1f' % -20037508.342789244,
+                    'maxx': '%0.1f' % 20037508.342789244,
+                    'maxy': '%0.1f' % 20037508.342789244
                 },
                 'maxFeatures': settings.FEATURE_LIMIT + 1
             } }
