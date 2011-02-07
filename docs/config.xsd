@@ -320,9 +320,23 @@
     </xs:complexType>
     <xs:complexType name="PathType">
         <xs:sequence>
+            <xs:element name="Fields" minOccurs="1" maxOccurs="1">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="Field" minOccurs="1" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:sequence>
+                                </xs:sequence>
+                                <xs:attribute name="name" type="xs:string" use="required" />
+                                <xs:attribute name="type" type="xs:string" use="required" />
+                                <xs:attribute name="pos" type="xs:nonNegativeInteger" use="optional" />
+                                <xs:attribute name="width" type="xs:positiveInteger" use="optional" />
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
         </xs:sequence>
         <xs:attribute name="path" type="xs:string" use="required" />
-        <xs:attribute name="namefield" type="xs:string" use="optional" />
-        <xs:attribute name="supplementfield" type="xs:string" use="required" />
     </xs:complexType>
 </xs:schema>
