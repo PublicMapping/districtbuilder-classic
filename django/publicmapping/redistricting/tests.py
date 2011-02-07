@@ -617,21 +617,17 @@ class GeounitBaseTestCase(BaseTestCase):
         ltlunits = map(lambda x: str(x.id), ltlunits)
 
         boundary = Geounit.objects.filter(id__in=ltlunits).unionagg()
-      
-        t1 = datetime.now()
-        units1 = Geounit.get_base_geounits_within(boundary, self.legbod)
-        t2 = datetime.now()
 
-        print "base_within: ", (t2 - t1)
+        t1 = datetime.now()
+        units1 = list(Geounit.get_base_geounits_within(boundary, self.legbod))
+        t2 = datetime.now()
 
         bigunits = map(lambda x: str(x.id), bigunits)
 
         t1 = datetime.now()
         units2 = Geounit.get_mixed_geounits(bigunits, self.legbod, level.id, boundary, True)
         t2 = datetime.now()
-        units2 = Geounit.get_base_geounits(units2, self.legbod)
+        units2 = list(Geounit.get_base_geounits(units2, self.legbod))
         t3 = datetime.now()
-
-        print "mixed/base: ", (t2 - t1), (t3 - t2)
 
         self.assertEquals( len(units1), len(units2), 'Number of units for two methods is incorrect.')
