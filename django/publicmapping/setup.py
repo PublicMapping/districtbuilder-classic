@@ -252,6 +252,7 @@ def merge_config(config, verbose):
 
         cfg = config.xpath('//MapServer')[0]
         settings_out.write("\nMAP_SERVER = '%s'\n" % cfg.get('hostname'))
+        settings_out.write("BASE_MAPS = '%s'\n" % cfg.get('basemaps'))
         settings_out.write("MAP_SERVER_NS = '%s'\n" % cfg.get('ns'))
         settings_out.write("MAP_SERVER_NSHREF = '%s'\n" % cfg.get('nshref'))
         settings_out.write("FEATURE_LIMIT = %d\n" % int(cfg.get('maxfeatures')))

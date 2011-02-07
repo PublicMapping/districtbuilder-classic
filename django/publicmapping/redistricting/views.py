@@ -315,6 +315,11 @@ def commonplan(request, planid):
     snaplayers = []
     boundaries = []
     rules = []
+
+    study_area_extent = []
+    for num in Geounit.objects.all().extent():
+        study_area_extent.append(num)
+
     for level in levels:
         snaplayers.append( {'geolevel':level.id,'layer':level.name,'name':level.name.capitalize(),'min_zoom':level.min_zoom} )
         boundaries.append( {'id':'%s_boundaries' % level.name.lower(), 'name':level.name.capitalize()} )
@@ -340,6 +345,7 @@ def commonplan(request, planid):
         'plan': plan,
         'districts': districts,
         'mapserver': settings.MAP_SERVER,
+        'basemaps': settings.BASE_MAPS,
         'namespace': settings.MAP_SERVER_NS,
         'ns_href': settings.MAP_SERVER_NSHREF,
         'feature_limit': settings.FEATURE_LIMIT,
@@ -356,7 +362,8 @@ def commonplan(request, planid):
         'ga_account': settings.GA_ACCOUNT,
         'ga_domain': settings.GA_DOMAIN,
         'body_member': body_member,
-        'reporting_template': reporting_template
+        'reporting_template': reporting_template,
+        'study_area_extent': study_area_extent
     }
 
 
