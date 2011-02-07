@@ -349,8 +349,8 @@ class Geounit(models.Model):
 
             if geolevel.id == legislative_body.get_base_geolevel():
                 # append any remaining units to the list
-                l1 = list(Geounit.objects.filter(geolevel=geolevel,id__in=geounits).values_list('id', flat=True))
-                l2 = list(Geounit.objects.filter(geolevel=geolevel,child__in=childunits).values_list('id', flat=True))
+                l1 = list(Geounit.objects.filter(geolevel=geolevel,id__in=geounits).values_list('portable_id', flat=True))
+                l2 = list(Geounit.objects.filter(geolevel=geolevel,child__in=childunits).values_list('portable_id', flat=True))
                 baseunits = list(set(l1 + l2))
             else:
                 l1 = list(Geounit.objects.filter(geolevel=geolevel,id__in=geounits).values_list('id', flat=True))
@@ -1344,6 +1344,27 @@ class District(models.Model):
         geolevel = self.plan.legislative_body.get_base_geolevel()
 
         return Geounit.objects.filter(geolevel = geolevel, center__within = self.geom).values_list('id')
+
+    def get_base_geounits(self):
+        """
+        Get a list of the geounit ids of the geounits that comprise
+        this district at the base level.
+
+        Get the mixed geounits in the district boundary first, then find
+        the smaller units in that mixed collection.
+
+        Returns:
+            An array of Geounit IDs of Geounits that lie within this
+            District.
+        """
+        if not self.geom:
+            return list()
+
+        geolevel = self.plan.legislative_body.get_geolevels()[0]
+        bigunits = Geounit.objects.filter(geolevel=geolevel, geom__intersects=self.geom)
+        bigunits = map(lambda x: str(x.id), bigunits)
+        mixed = Geounit.get_mixed_geounits(bigunits, self.plan.legislative_body, geolevel.id, self.geom, True)
+        return Geounit.get_base_geounits(mixed, self.plan.legislative_body)
 
     def simplify(self):
         """
