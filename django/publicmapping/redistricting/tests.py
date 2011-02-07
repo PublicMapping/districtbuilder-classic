@@ -32,6 +32,7 @@ from django.contrib.gis.geos import *
 from django.contrib.auth.models import User
 from publicmapping.redistricting.models import *
 from django.conf import settings
+from datetime import datetime
 
 class BaseTestCase(unittest.TestCase):
     """
@@ -65,6 +66,7 @@ class BaseTestCase(unittest.TestCase):
         # create a three-tiered 27x27 square grid of geounits with coords from (0,0) to (1,1)
         dim = 3.0
         lastgl = None
+        supp_id = 0
         for gl in self.geolevels:
             if not gl.id:
                 gl.save()
@@ -92,11 +94,13 @@ class BaseTestCase(unittest.TestCase):
                         geom=geom,
                         simple=geom,
                         center=geom.centroid,
-                        child=child
+                        child=child,
+                        portable_id="%07d" % supp_id,
+                        tree_code="%07d" % supp_id
                     )
                     gu.save()
                     self.geounits[gl.id].append(gu)
-                    #print "Appending geounit '%s' to self.geounits[%d]" % (gu.name, gl.id)
+                    supp_id += 1
             lastgl = gl
             dim *= 3.0
 
@@ -604,3 +608,30 @@ class GeounitBaseTestCase(BaseTestCase):
             self.geounits[geolevels[2].id][12:13]
 
         self.get_base_from_child(units, 91)
+
+    def test_time_within_vs_child(self):
+        level = self.geolevels[0]
+        bigunits = self.geounits[level.id]
+        ltlunits = self.geounits[self.geolevels[2].id]
+        ltlunits = ltlunits[0:len(ltlunits)/2]
+        ltlunits = map(lambda x: str(x.id), ltlunits)
+
+        boundary = Geounit.objects.filter(id__in=ltlunits).unionagg()
+      
+        t1 = datetime.now()
+        units1 = Geounit.get_base_geounits_within(boundary, self.legbod)
+        t2 = datetime.now()
+
+        print "base_within: ", (t2 - t1)
+
+        bigunits = map(lambda x: str(x.id), bigunits)
+
+        t1 = datetime.now()
+        units2 = Geounit.get_mixed_geounits(bigunits, self.legbod, level.id, boundary, True)
+        t2 = datetime.now()
+        units2 = Geounit.get_base_geounits(units2, self.legbod)
+        t3 = datetime.now()
+
+        print "mixed/base: ", (t2 - t1), (t3 - t2)
+
+        self.assertEquals( len(units1), len(units2), 'Number of units for two methods is incorrect.')
