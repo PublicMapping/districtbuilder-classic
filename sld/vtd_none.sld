@@ -12,7 +12,7 @@
           <Title>Fill</Title>
           <PolygonSymbolizer>
             <Fill>
-              <CssParameter name="fill">#969696</CssParameter>
+              <CssParameter name="fill">#FFFFFF</CssParameter>
             </Fill>
           </PolygonSymbolizer>
         </Rule>
