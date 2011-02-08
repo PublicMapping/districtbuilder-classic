@@ -1193,11 +1193,50 @@ div.boundary_swatch {
     border-width: thin;
 }
 
+button.map_type_button {
+    font-size: 7pt;
+    -moz-box-shadow: 2px 2px 2px #888888;
+    -webkit-box-shadow: 2px 2px 2px #888888;
+    box-shadow: 2px 2px 2px #888888;
+    width: 70px;
+    cursor: pointer;
+    background-color: #EFE8CB !important;
+    color: #222 !important;
+    font-weight: normal !important;
+}
+button#map_type_toggle {
+    font-size: 7pt;
+    -moz-box-shadow: 2px 2px 2px #888888;
+    -webkit-box-shadow: 2px 2px 2px #888888;
+    box-shadow: 2px 2px 2px #888888;
+    width: 70px;
+    cursor: pointer;
+    top: 60px;
+    right: 280px;
+    position: absolute;
+    font-size: 7pt;
+    background-color: #606060;
+}
+div#map_type_content {
+    position: absolute;
+    top: 83px;
+    right: 280px;
+    width: 70px;
+    border: solid 1px #999999;
+    display: none;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    -moz-box-shadow: 2px 2px 2px #888888;
+    -webkit-box-shadow: 2px 2px 2px #888888;
+    box-shadow: 2px 2px 2px #888888;
+    background-color: #EFE8CB;
+}
+
 button#settings_toggle {
     background-color: #606060;
     position: absolute;
-    bottom: 8px;
-    right: 365px;
+    top: 60px;
+    right: 355px;
     font-size: 7pt;
     -moz-box-shadow: 2px 2px 2px #888888;
     -webkit-box-shadow: 2px 2px 2px #888888;
@@ -1205,8 +1244,8 @@ button#settings_toggle {
 }
 div#map_settings_content {
     position: absolute;
-    bottom: 35px;
-    right: 280px;
+    top: 83px;
+    right: 355px;
     width: 220px;
     background-color: #efe8cb;
     border: solid 1px #999999;

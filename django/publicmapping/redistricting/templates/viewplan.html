@@ -534,13 +534,22 @@
             <div class="shadow_left"></div>
             <div class="shadow_top"></div>
           </div>
+
+          <div id="map_type_settings">
+              <button id="map_type_toggle">Road</button>
+          </div>
+          <div id="map_type_content">
+              <div id="map_type_content_container"></div>
+              <div class="toolset_group">
+                  <img src="/static-media/images/icon-help.png" class="help divtip">
+                  <div class="tooltip">Select a base map layer.</div>
+              </div>            
+          </div>
+
           <div id="map_settings">
-              <button id="settings_toggle">Basemap Settings</button>
+              <button id="settings_toggle">Map Layer Visibility</button>
           </div>
           <div id="map_settings_content">
-            <div id="map_settings_layers">
-            </div>
-            <h1>Map Layer Visibility</h1>
             <span class="layer_type_container">
                 <input class="map_settings_layer_type" id="thematic_radio" type="radio" name="layer_types" checked="true">Thematic Layer</input>
             </span>
@@ -548,6 +557,11 @@
                 <input class="map_settings_layer_type" id="basemap_radio" type="radio" name="layer_types"><span id="base_map_type"></span> Layer</input>
             </span>
             <div id="opacity_slider"></div>
+
+             <div class="toolset_group">
+                 <img src="/static-media/images/icon-help.png" class="help divtip">
+                 <div class="tooltip">Select a map layer and use the slider to set its visibility.</div>
+             </div>            
           </div>
           <div id="map_legend">
               <button id="legend_toggle">Map Legend</button>

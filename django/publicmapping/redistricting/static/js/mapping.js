@@ -408,23 +408,27 @@ function mapinit(srs,maxExtent) {
 
     // Add a row for each base map to the Basemap Settings container for switching
     $(layers).each(function(i, layer) {
-        var container = $('#map_settings_layers');
-        var div = $('<span class="layer_container"></span>');
-        var input = $('<input class="map_settings_layer" type="radio" name="layers">' + layer.name + '</input>');
+        var container = $('#map_type_content_container');
+        var button = $('<button class="map_type_button">' + layer.name + '</button>');
             
-        // Default the first layer as checked
+        // split is in case the provider is in parens due to there being multiple
+        var mapType = layer.name.split(' ')[0];
+        var toggle = $('#map_type_toggle');
+
+        // Default to the first map type
         if (i === 0) {
-            input.attr('checked', true);
+            toggle.button('option', 'label', mapType)
         }
 
         // Set the base layer, and change label when the option is selected
-        input.click(function() {
-            $('#base_map_type').html(layer.name.split(' ')[0]); // split is in case the provider is in parens
+        button.click(function() {
+            $('#base_map_type').html(mapType);
+            toggle.button('option', 'label', mapType)
             olmap.setBaseLayer(layer);
+            toggle.click();
         });
            
-        div.append(input);            
-        container.append(div);
+        container.append(button);
     });
 
     // Set the default map type label
@@ -454,7 +458,12 @@ function mapinit(srs,maxExtent) {
 
     // Hide the map type selection if there are 1 or fewer types
     if (layers.length <= 1) {
-        $('#map_settings_layers').hide();
+        var mapTypeRight = $('#map_type_toggle').css('right');
+        $('#map_type_settings').hide();
+
+        // Shift the map settings to fill the void where the map type button was.
+        $('#settings_toggle').css('right', mapTypeRight);
+        $('#map_settings_content').css('right', mapTypeRight);
     }
 
     // Construct map layers, ensuring boundary layers are at the end of the list for proper overlaying

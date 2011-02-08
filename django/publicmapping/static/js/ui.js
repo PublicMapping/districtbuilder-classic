@@ -218,11 +218,6 @@ $(function() {
         var toggle = $(this);
         var panel = $('#map_legend_content');
 
-        var otherToggle = $('#map_settings');
-        if (otherToggle.hasClass('active')) {
-            otherToggle.click();
-        }
-        
         if(toggle.hasClass('active')) {
             toggle.removeClass('active');
             panel.slideUp(240);
@@ -237,10 +232,19 @@ $(function() {
         var toggle = $(this);
         var panel = $('#map_settings_content');
 
-        var otherToggle = $('#map_legend');
-        if (otherToggle.hasClass('active')) {
-            otherToggle.click();
+        if(toggle.hasClass('active')) {
+            toggle.removeClass('active');
+            panel.slideUp(240);
         }
+        else {
+            toggle.addClass('active');
+            panel.slideDown(240);
+        }
+    });
+    
+    $('#map_type_settings').click(function(){
+        var toggle = $(this);
+        var panel = $('#map_type_content');
 
         if(toggle.hasClass('active')) {
             toggle.removeClass('active');
