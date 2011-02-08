@@ -326,9 +326,16 @@ def commonplan(request, planid):
     # Don't display the lowest geolevel because it's never available as a boundary
     if len(boundaries) > 0:
         boundaries.pop()
+    default_selected = False
     for demo in demos:
         isdefault = str((not default_demo is None) and (demo[0] == default_demo.id)).lower()
+        if isdefault == True:
+            default_selected = True
         layers.append( {'id':demo[0],'text':demo[2],'value':demo[1].lower(), 'isdefault':isdefault, 'isdisplayed':str(demo[3]).lower()} )
+    # If the default demo was not selected among the first three, we'll still need it for the dropdown menus
+    if default_demo and not default_selected:
+        layers.insert( 0, {'id':default_demo.id,'text':default_demo.short_display,'value':default_demo.name.lower(), 'isdefault':str(True).lower(), 'isdisplayed':str(default_demo.is_displayed).lower()} )
+
     for target in targets:
         # The "in there" range
         range1 = target.value * target.range1
@@ -1171,9 +1178,8 @@ def getdemographics(request, planid):
         status['message'] = "Couldn't get demographic info from the server. Please try again later."
         return HttpResponse( json.dumps(status), mimetype='application/json', status=500 )
 
-    # We only want the subjects that have data attached to districts
-    subject_ids = ComputedCharacteristic.objects.values_list('subject', flat=True).distinct()
-    subjects = Subject.objects.filter(id__in=subject_ids)[:3]
+    # We only have room for 3 subjects - get the first three by sort_key (default sort in Meta)
+    subjects = Subject.objects.all()[:3]
     headers = list(subjects.values_list('short_display', flat=True))
 
     if 'version' in request.REQUEST:
@@ -1224,6 +1230,14 @@ def getdemographics(request, planid):
                     characteristic['value'] = "n/a"
                 else:
                     characteristic['value'] = "%.0f" % characteristics[0].number       
+                    if subject.percentage_denominator:
+                        val = characteristics[0].percentage
+                        if val:
+                            try:
+                                characteristic['value'] = "%.2f%%" % (characteristics[0].percentage * 100)
+                            except:
+                                characteristic['value'] = "n/a"
+                
                 stats['characteristics'].append(characteristic)            
 
             district_values.append(stats)

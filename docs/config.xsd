@@ -72,6 +72,7 @@
                                     <xs:attribute name="displayed" type="xs:boolean" use="optional" />
                                     <xs:attribute name="sortkey" type="xs:integer" use="optional" />
                                     <xs:attribute name="aliasfor" type="xs:IDREF" use="optional" />
+                                    <xs:attribute name="percentage_denominator" type="xs:IDREF" use="optional" />
                                 </xs:complexType>
                             </xs:element>
                         </xs:sequence>

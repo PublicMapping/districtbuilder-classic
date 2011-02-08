@@ -207,8 +207,8 @@ class DistrictIndexFile():
 
         if purge:
             os.unlink(indexFile)
-        
-        subjects = Subject.objects.all()
+        # Get all subjects - those without denominators first to save a calculation
+        subjects = Subject.objects.order_by('-percentage_denominator').all()
 
         # Create the district geometry from the lists of geounits
         for district_id in new_districts.keys():
@@ -243,9 +243,20 @@ class DistrictIndexFile():
                         geounit__in = geounit_ids, 
                         subject = subject).aggregate(Sum('number'))
                     value = cc_value['number__sum']
+                    percentage = '0000.00000000'
+
+                    if subject.percentage_denominator:
+                        # The denominator's CC should've already been saved
+                        denominator_value = ComputedCharacteristic.objects.get(
+                            subject = subject.percentage_denominator,
+                            district = new_district).number
+                        percentage = value / denominator_value
+
+                    # sys.stderr.write('Aggregating value for %s: %s' % (subject, cc_value))
                     if value is not None:
                         cc = ComputedCharacteristic(subject = subject, 
                             number = value, 
+                            percentage = percentage,
                             district = new_district)
                         cc.save()
                     else:

@@ -152,8 +152,9 @@ class SubjectAdmin(admin.ModelAdmin):
     """
 
     # When displayed as a list, show the display name, the short display,
-    # and a flag indicating if it should be displayed (in the app).
-    list_display = ('display', 'short_display', 'is_displayed',)
+    # and a flag indicating if it should be displayed (in the app), and
+    # the percentage denominator.
+    list_display = ('display', 'short_display', 'sort_key', 'is_displayed','percentage_denominator',)
 
     # Enable filtering by the displayed flag
     list_filter = ('is_displayed',)

@@ -262,7 +262,7 @@ contents of the file and try again.
         for geolevel in Geolevel.objects.all():
             feature_type_names.append('simple_%s' % geolevel.name)
 
-            for subject in Subject.objects.all().order_by('sort_key')[0:3]:
+            for subject in Subject.objects.all().order_by('sort_key'):
                 feature_type_names.append('demo_%s_%s' % (geolevel.name, subject.name))
 
         # Check for each layer in the list.  If it doesn't exist, make it
@@ -299,8 +299,7 @@ contents of the file and try again.
         for geolevel in Geolevel.objects.all():
             is_first_subject = True
 
-            # Import the first three subjects only
-            for subject in Subject.objects.all().order_by('sort_key')[0:3]:
+            for subject in Subject.objects.all().order_by('sort_key'):
 
                 # This helper method is used for each layer
                 def publish_and_assign_style(style_name, style_type, zoom_range):
@@ -685,12 +684,18 @@ ERROR:
         for subj in subjs:
             if 'aliasfor' in subj.attrib:
                 continue
+            denominator_name = subj.get('percentage_denominator')
+            denominator = None
+            if (denominator_name):
+                denominator = Subject.objects.get(name=denominator_name)
             obj, created = Subject.objects.get_or_create(
                 name=subj.get('id'), 
                 display=subj.get('name'), 
                 short_display=subj.get('short_name'), 
                 is_displayed=(subj.get('displayed')=='true'), 
+                percentage_denominator=denominator,
                 sort_key=subj.get('sortkey'))
+                
 
             if verbose:
                 if created:
@@ -844,6 +849,7 @@ ERROR:
             # Create the subjects we need
             subject_objects = {}
             for sconfig in config['subject_fields']:
+                attr_name = sconfig.get('field')
                 foundalias = False
                 for elem in sconfig.getchildren():
                     if elem.tag == 'Subject':
@@ -851,7 +857,8 @@ ERROR:
                         sub = Subject.objects.get(name=elem.get('id'))
                 if not foundalias:
                     sub = Subject.objects.get(name=sconfig.get('id'))
-                subject_objects[sconfig.get('field')] = sub
+                subject_objects[attr_name] = sub
+                subject_objects['%s_by_id' % sub.name] = attr_name
 
             progress = 0.0
             if verbose:
@@ -971,13 +978,23 @@ ERROR:
 
     def set_geounit_characteristic(self, g, subject_objects, feat, verbose):
         for attr, obj in subject_objects.iteritems():
+            if attr.endswith('_by_id'):
+                continue
             value = Decimal(str(feat.get(attr))).quantize(Decimal('000000.0000', 'ROUND_DOWN'))
+            percentage = '0000.00000000'
+            if obj.percentage_denominator:
+                denominator_field = subject_objects['%s_by_id' % obj.percentage_denominator.name]
+                denominator_value = Decimal(str(feat.get(denominator_field))).quantize(Decimal('000000.0000', 'ROUND_DOWN'))
+                if denominator_value > 0:
+                    percentage = value / denominator_value
+
             query =  Characteristic.objects.filter(subject=obj, geounit=g)
             if query.count() > 0:
                 c = query[0]
                 c.number = value
+                c.percentage = percentage
             else:
-                c = Characteristic(subject=obj, geounit=g, number=value)
+                c = Characteristic(subject=obj, geounit=g, number=value, percentage=percentage)
             try:
                 c.save()
             except:

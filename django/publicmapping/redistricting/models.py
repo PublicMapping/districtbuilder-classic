@@ -70,6 +70,12 @@ class Subject(models.Model):
     # A description of this subject
     description = models.CharField(max_length= 500, blank=True)
 
+    # If this subject should be displayed as a percentage,
+    # a district's value for this subject will be divided by
+    # the value for the given subject.
+    # A null value indicates that the subject is not a percentage
+    percentage_denominator = models.ForeignKey('Subject',null=True,blank=True)
+
     # A flag that indicates if this subject should be displayed.
     is_displayed = models.BooleanField(default=True)
 
@@ -613,8 +619,9 @@ class Characteristic(models.Model):
     geounit = models.ForeignKey(Geounit)
     # The value as a raw decimal number
     number = models.DecimalField(max_digits=12,decimal_places=4)
-    # The value as a percentage
-    percentage = models.DecimalField(max_digits=6,decimal_places=6, null=True, blank=True)
+    # The value as a percentage of the value for this geounit of the subject given as 
+    # the percentage_denominator (if any)
+    percentage = models.DecimalField(max_digits=12,decimal_places=8, null=True, blank=True)
 
     def __unicode__(self):
         """
@@ -1226,7 +1233,9 @@ class District(models.Model):
         Returns:
             True if the stats for this district have changed.
         """
-        all_subjects = Subject.objects.all()
+        # Get the subjects that don't rely on others first - that will save us
+        # from computing characteristics for denominators twice
+        all_subjects = Subject.objects.order_by('-percentage_denominator').all()
         changed = False
 
         # For all subjects
@@ -1252,6 +1261,18 @@ class District(models.Model):
                 else:
                     # Subtract the aggregate from the computed value
                     computed.number -= aggregate
+
+                # If this subject is viewable as a percentage, do the math using the already calculated 
+                # value for the denominator
+                if subject.percentage_denominator:
+                    denominator = ComputedCharacteristic.objects.get(subject=subject.percentage_denominator,district=self)
+                    if denominator:
+                        if denominator.number > 0:
+                            computed.percentage = computed.number / denominator.number
+                        else:
+                            computed.percentage = '0000.00000000'
+
+                # If there are aggregate values for the subject and geounits.
                 computed.save();
 
                 changed = True
@@ -1426,8 +1447,8 @@ class ComputedCharacteristic(models.Model):
     # The total aggregate as a raw value
     number = models.DecimalField(max_digits=12,decimal_places=4)
 
-    # The aggregate as a percentage. Of what? Dunno.
-    percentage = models.DecimalField(max_digits=6,decimal_places=6, null=True, blank=True)
+    # The aggregate as a percentage of the percentage_denominator's aggregated value.
+    percentage = models.DecimalField(max_digits=12, decimal_places=8, null=True, blank=True)
 
     class Meta:
         """
