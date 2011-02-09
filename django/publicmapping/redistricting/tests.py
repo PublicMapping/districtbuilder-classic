@@ -26,11 +26,15 @@ Author:
     Andrew Jennings, David Zwarg
 """
 
+import os
 import unittest
+import zipfile
+from django.db.models import Sum, Min, Max
 from django.test.client import Client
 from django.contrib.gis.geos import *
 from django.contrib.auth.models import User
 from publicmapping.redistricting.models import *
+from publicmapping.redistricting.utils import *
 from django.conf import settings
 from datetime import datetime
 
@@ -202,9 +206,7 @@ class PlanTestCase(BaseTestCase):
         self.plan.add_geounits(districtid, geounitids, levelid, self.plan.version)
 
         # Check for new geounits
-        cursor = self.plan.district_mapping_cursor()
-        numunits = len(cursor.fetchall())
-        cursor.close()
+        numunits = len(Plan.objects.get(pk=self.plan.id).get_base_geounits(0.1))
         self.assertEqual(81, numunits, 'Geounits not added to plan correctly')
 
     def test_unassigned(self):
@@ -249,12 +251,8 @@ class PlanTestCase(BaseTestCase):
         self.assertEqual(numdistricts, numdistrictscopy, 'Districts between original and copy are different')
 
         # Ensure geounits are the same between plans
-        cursor = self.plan.district_mapping_cursor()
-        numunits = len(cursor.fetchall())
-        cursor.close()
-        cursor = copy.district_mapping_cursor()
-        numunitscopy = len(cursor.fetchall())
-        cursor.close()
+        numunits = len(Plan.objects.get(pk=self.plan.id).get_base_geounits(0.1))
+        numunitscopy = len(Plan.objects.get(pk=copy.id).get_base_geounits(0.1))
         self.assertEqual(numunits, numunitscopy, 'Geounits between original and copy are different')
 
     def test_district_locking(self):
@@ -297,9 +295,7 @@ class PlanTestCase(BaseTestCase):
 
         # Try adding geounits to the locked district (not allowed)
         self.plan.add_geounits(district_id, geounitids, levelid, self.plan.version)
-        cursor = self.plan.district_mapping_cursor()
-        numunits = len(cursor.fetchall())
-        cursor.close()
+        numunits = len(Plan.objects.get(pk=self.plan.id).get_base_geounits(0.1))
         self.assertEqual(0, numunits, 'Geounits were added to a locked district. Num geounits: %d' % numunits)
         
         # Issue unlock command
@@ -312,25 +308,91 @@ class PlanTestCase(BaseTestCase):
 
         # Add geounits to the plan
         self.plan.add_geounits(district_id, geounitids, levelid, self.plan.version)
-        cursor = self.plan.district_mapping_cursor()
-        numunits = len(cursor.fetchall())
-        cursor.close()
+        numunits = len(Plan.objects.get(pk=self.plan.id).get_base_geounits(0.1))
         self.assertEqual(81, numunits, 'Geounits could not be added to an unlocked district. Num geounits: %d' % numunits)
 
+    def test_get_base_geounits(self):
+        """
+        Test getting base geounits
+        """
+        geounits = self.geounits[self.geolevels[0].id]
 
-# This test is commented out, because get_base_geounits has also been commented out.
-# If get_base_geounits becomes uncommented, and starts being used, this test should be reactivated.        
-#    def test_get_base_geounits(self):
-#        """
-#        Test the logic for retrieving base geounits.
-#        """
-#        geounit_ids = Geounit.get_base_geounits( ( self.geounit_b1.id, ), self.levelb.id)
-#        self.assertEqual(3, len(geounit_ids), "Didn't get base geounits of large polys correctly; got " + str(len(geounit_ids)) + str(geounit_ids))
-#        geounit_ids = Geounit.get_base_geounits( ( self.geounit_b2.id, ), self.levelb.id)
-#        self.assertEqual(2, len(geounit_ids), "Didn't get base geounits of large polys correctly; got " + str(len(geounit_ids)) + str(geounit_ids))
-#        geounit_ids = Geounit.get_base_geounits( ( self.geounit_b1.id, self.geounit_b2.id ), self.levelb.id)
-#        self.assertEqual(5, len(geounit_ids), "Didn't get base geounits of large polys correctly; got " + str(len(geounit_ids)) + str(geounit_ids))
+        dist1ids = [str(geounits[0].id)]
+        dist2ids = [str(geounits[1].id)]
 
+        self.plan.add_geounits(self.district1.district_id, dist1ids, self.geolevels[0].id, self.plan.version)
+        self.plan.add_geounits(self.district2.district_id, dist2ids, self.geolevels[0].id, self.plan.version)
+
+        # Test getting the base geounits for a district
+        district1 = max(District.objects.filter(plan=self.plan,district_id=self.district1.district_id),key=lambda d: d.version)
+        district1units = district1.get_base_geounits(0.1)
+        self.assertEqual(81, len(district1units), 'Incorrect number of geounits returned in dist1: %d' % len(district1units))
+
+        district2 = max(District.objects.filter(plan=self.plan,district_id=self.district2.district_id),key=lambda d: d.version)
+        district2units = district2.get_base_geounits(0.1)
+        self.assertEqual(81, len(district2units), 'Incorrect number of geounits returned in dist2: %d' % len(district2units))
+
+        # Test getting the base geounits for a plan
+        plan = Plan.objects.get(pk=self.plan.id)
+        planunits = plan.get_base_geounits(0.1)
+        self.assertEqual(162, len(planunits), 'Incorrect number of geounits returned in plan: %d' % len(planunits))
+
+        # Test sorting the units by geounit id
+        planunits.sort(key=lambda unit: unit[0])
+        lastid = 0
+        for unit in planunits:
+            self.assertTrue(unit[0] >= lastid, 'Not in order: %d < %d' % (unit[0], lastid))
+            lastid = unit[0]
+
+    def test_plan2index(self):
+        """
+        Test exporting a plan
+        """
+        geounits = self.geounits[self.geolevels[0].id]
+        dist1ids = [str(geounits[0].id)]
+        self.plan.add_geounits(self.district1.district_id, dist1ids, self.geolevels[0].id, self.plan.version)
+
+        plan = Plan.objects.get(pk=self.plan.id)
+        archive = DistrictIndexFile.plan2index(plan)
+        zin = zipfile.ZipFile(archive.name, "r")
+        strz = zin.read(plan.name + ".csv")
+        zin.close()
+        os.remove(archive.name)
+        self.assertEqual(891, len(strz), 'Index file was the wrong length: %d' % len(strz))
+
+    def test_sorted_district_list(self):
+        """
+        Test the sorted district list for reporting
+        """
+        geounits = self.geounits[self.geolevels[0].id]
+        dist1ids = [str(geounits[0].id)]
+        self.plan.add_geounits(self.district1.district_id, dist1ids, self.geolevels[0].id, self.plan.version)
+        plan = Plan.objects.get(pk=self.plan.id)
+
+        mapping = plan.get_base_geounits()
+        mapping.sort(key=lambda unit: unit[0])
+
+        geolevel = plan.legislative_body.get_base_geolevel()
+        geounits = Geounit.objects.filter(geolevel=geolevel)
+        max_and_min = geounits.aggregate(Min('id'), Max('id'))
+        min_id = int(max_and_min['id__min'])
+        max_id = int(max_and_min['id__max'])
+
+        sorted_district_list = list()
+        row = None
+        if len(mapping) > 0:
+             row = mapping.pop(0)
+        for i in range(min_id, max_id + 1):
+            if row and row[0] == i:
+                district_id = row[2]
+                row = None
+                if len(mapping) > 0:
+                    row = mapping.pop(0)
+            else:
+                district_id = 'NA'
+            sorted_district_list.append(district_id)
+
+        self.assertEqual(729, len(sorted_district_list), 'Sorted district list was the wrong length: %d' % len(sorted_district_list))
 
 class GeounitMixTestCase(BaseTestCase):
     """
@@ -518,116 +580,3 @@ class GeounitMixTestCase(BaseTestCase):
         units = Geounit.get_mixed_geounits([str(bigunits[0].id),str(bigunits[4].id),str(bigunits[8].id)], self.legbod, level.id, boundary, False)
         numunits = len(units)
         self.assertEquals(63, numunits, 'Number of geounits outside boundary is incorrect. (%d)' % numunits)
-
-class GeounitBaseTestCase(BaseTestCase):
-    def get_max_extent(self,level):
-        """
-        A helper method to get the maximum extents of all geographic
-        units.
-
-        Parameters:
-            None
-
-        Returns:
-            The maximum extent as a MultiPolygon with an SRID of 3785.
-        """
-        geolevel = self.legbod.get_geolevels()[level]
-        ext = Geounit.objects.filter(geolevel=geolevel).extent()
-        boundary = MultiPolygon(Polygon(LinearRing(
-            Point((ext[0],ext[1])),
-            Point((ext[2],ext[1])),
-            Point((ext[2],ext[3])),
-            Point((ext[0],ext[3])),
-            Point((ext[0],ext[1]))
-        )))
-        boundary.srid = 3785
-        return boundary
-
-    def get_base_within(self, level):
-        """
-        A helper test method to get the base geounits within a geometry.
-        This method starts at the given geographic level, and drills its
-        way down.
-
-        This method asserts that all the base geounits were found, no matter
-        which geolevel is passed.
-
-        Parameters:
-            level - The geographic level to start searching.
-        """
-        boundary = self.get_max_extent(level)
-        units = Geounit.get_base_geounits_within(boundary, self.legbod)
-        numunits = len(units)
-        self.assertEquals(729, numunits, "Number of geounits is incorrect. (%d)" % numunits)
-
-    def test_get_base_within0(self):
-        self.get_base_within(0)
-
-    def test_get_base_within1(self):
-        self.get_base_within(1)
-
-    def test_get_base_within2(self):
-        self.get_base_within(2)
-
-    def get_base_from_child(self, units, expected):
-        baseunits = Geounit.get_base_geounits(units,self.legbod)
-        numunits = len(baseunits)
-
-        self.assertEquals(expected, numunits, 'Number of base geounits is incorrect. (%d)' % numunits)
-
-    def test_get_base_from_child0(self):
-        geolevel = self.legbod.get_geolevels()[0]
-        units = self.geounits[geolevel.id][0:1]
-
-        self.get_base_from_child(units, 81)
-       
-    def test_get_base_from_child1(self):
-        geolevel = self.legbod.get_geolevels()[1]
-        units = self.geounits[geolevel.id][0:1]
-
-        self.get_base_from_child(units, 9)
-
-    def test_get_base_from_child2(self):
-        geolevel = self.legbod.get_geolevels()[2]
-        units = self.geounits[geolevel.id][0:1]
-
-        self.get_base_from_child(units, 1)
-
-    def test_get_base_from_child_dupes(self):
-        geolevels = self.legbod.get_geolevels()
-        units = self.geounits[geolevels[0].id][0:1] + \
-            self.geounits[geolevels[1].id][0:1] + \
-            self.geounits[geolevels[2].id][0:1]
-
-        self.get_base_from_child(units, 81)
-
-    def test_get_base_from_child_eachlevel(self):
-        geolevels = self.legbod.get_geolevels()
-        units = self.geounits[geolevels[0].id][0:1] + \
-            self.geounits[geolevels[1].id][3:4] + \
-            self.geounits[geolevels[2].id][12:13]
-
-        self.get_base_from_child(units, 91)
-
-    def test_time_within_vs_child(self):
-        level = self.geolevels[0]
-        bigunits = self.geounits[level.id]
-        ltlunits = self.geounits[self.geolevels[2].id]
-        ltlunits = ltlunits[0:len(ltlunits)/2]
-        ltlunits = map(lambda x: str(x.id), ltlunits)
-
-        boundary = Geounit.objects.filter(id__in=ltlunits).unionagg()
-
-        t1 = datetime.now()
-        units1 = list(Geounit.get_base_geounits_within(boundary, self.legbod))
-        t2 = datetime.now()
-
-        bigunits = map(lambda x: str(x.id), bigunits)
-
-        t1 = datetime.now()
-        units2 = Geounit.get_mixed_geounits(bigunits, self.legbod, level.id, boundary, True)
-        t2 = datetime.now()
-        units2 = list(Geounit.get_base_geounits(units2, self.legbod))
-        t3 = datetime.now()
-
-        self.assertEquals( len(units1), len(units2), 'Number of units for two methods is incorrect.')

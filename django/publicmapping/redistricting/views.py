@@ -676,8 +676,9 @@ def getreport(request, planid):
             vec += r('list("%s"="%s")' % (pair[0], pair[1]))
         return vec
     
-    # Use the utility query to get the district mapping for geounit ids
-    cursor = plan.district_mapping_cursor(geounit_id_field='id')
+    # Get the district mapping and order by geounit id
+    mapping = plan.get_base_geounits()
+    mapping.sort(key=lambda unit: unit[0])
 
     # Get the geounit ids we'll be iterating through
     geolevel = plan.legislative_body.get_base_geolevel()
@@ -691,15 +692,18 @@ def getreport(request, planid):
     # order of the imported geounits. If this ordering is the same, the 
     # geounits' ids don't have to match their fids in the shapefile
     sorted_district_list = list()
-    row = cursor.fetchone()
+    row = None
+    if len(mapping) > 0:
+         row = mapping.pop(0)
     for i in range(min_id, max_id + 1):
         if row and row[0] == i:
-            district_id = row[1]
-            row = cursor.fetchone()
+            district_id = row[2]
+            row = None
+            if len(mapping) > 0:
+                row = mapping.pop(0)
         else:
             district_id = 'NA'
         sorted_district_list.append(district_id)
-    cursor.close()
 
     # Now we need an R Vector
     block_ids = robjects.IntVector(sorted_district_list)

@@ -309,13 +309,10 @@ class DistrictIndexFile():
             archive = open(pending, 'w')
             f = tempfile.NamedTemporaryFile(delete=False)
             try:
-                # Get the necessary district/geounit map from the db
-                cursor = plan.district_mapping_cursor()
-                
+                # Get the geounit mapping (we want the portable id, then the district id)
+                mapping = [(pid, did) for (gid, pid, did) in plan.get_base_geounits()]
                 difile = csv.writer(f)
-                # The cursor is iterable so just write each row as a row in the csv file
-                difile.writerows(cursor)
-                cursor.close()
+                difile.writerows(mapping)
                 f.close()
 
                 # Zip up the file 

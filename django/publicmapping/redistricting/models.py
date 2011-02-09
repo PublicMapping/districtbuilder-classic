@@ -319,86 +319,6 @@ class Geounit(models.Model):
     objects = models.GeoManager()
 
     @staticmethod
-    def get_base_geounits(geounits, legislative_body):
-        """
-        Get the list of geounits at the base geolevel inside the 
-        geometry of geounits. This does not perform any spatial queries.
-        
-        Parameters:
-            geounits -- A list of Geounits. These may be at mixed
-                geographic levels, such as the set of Geounits returned
-                from get_mixed_geounits
-            legislative_body -- The legislative body to use to search
-                for base geounits. This may determine the path up the
-                hierarchy back to the base geounits.
-
-        Returns:
-            A list of Geounit ids at the base_geolevel of the Legislative
-            Body.
-        """
-        if geounits is None or len(geounits) == 0:
-            return []
-
-        if isinstance(geounits[0], Geounit):
-            geounits = map(lambda x: x.id, geounits)
-
-        geolevels = legislative_body.get_geolevels()
-
-        baseunits = []
-        baselevel = geolevels[len(geolevels) - 1]
-
-        # This loop moves from larger geographic levels to smaller levels
-        for i,geolevel in enumerate(geolevels):
-            if i == 0:
-                baseunits = Q(geolevel=geolevel,id__in=geounits)
-                continue
-
-            if geolevel.id == baselevel:
-                # append any remaining units to the list
-                baseunits = \
-                    Q(geolevel=geolevel,id__in=geounits) | \
-                    Q(geolevel=geolevel,child__in=Geounit.objects.filter(baseunits))
-            else:
-                baseunits = \
-                    Q(geolevel=geolevel,id__in=geounits) | \
-                    Q(geolevel=geolevel,child__in=Geounit.objects.filter(baseunits))
-
-        return Geounit.objects.filter(baseunits).values_list('portable_id', flat=True)
-
-    @staticmethod
-    def get_base_geounits_within(geom,legislative_body):
-        """
-        Get the  list of geounits at the base geolevel inside a geometry.
-
-        This method performs a spatial query to find all the small
-        Geounits that are contained within the geometry provided.
-
-        The spatial query returns all Geounits at the base Geolevel whose
-        centroid falls within the geometry.
-
-        The performance of this method is directly related to the complexity
-        of the geometry of the Geounits. This method will perform the best
-        on simplified geometry, or geometries with fewer vertices.
-
-        Parameters:
-            geom -- The GEOSGeometry that describe the limits for the base 
-            Geounits.
-
-        Returns:
-            A list of Geounit ids.
-        """
-        geolevel = legislative_body.get_base_geolevel()
-
-        cursor = connection.cursor()
-        # craft a custom sql query to get the IDs of the geounits
-        cursor.execute("select id from redistricting_geounit where geolevel_id = %s and st_within(center, geomfromewkt(%s))",[geolevel, str(geom.ewkt)])
-        results = []
-        ids = cursor.fetchall()
-        for row in ids:
-            results += row
-        return results
-
-    @staticmethod
     def get_mixed_geounits(geounit_ids, legislative_body, geolevel, boundary, inside):
         """
         Spatially search for the largest Geounits inside or outside a 
@@ -1036,80 +956,27 @@ class Plan(models.Model):
 
         return plan
 
-    def district_mapping_cursor (self, geounit_id_field="portable_id"):
+    def get_base_geounits(self, threshold=100):
         """
-        Given a plan, get the district mapping info.  Each row 
-        of the returned cursor represents a geounit id and a
-        district_id.
+        Get a list of the geounit ids of the geounits that comprise 
+        this plan at the base level.  
 
         Parameters:
-            geounit_id_field - which id field to return from the geounits
+            threshold - distance threshold used for buffer in/out optimization
 
         Returns:
-            A database cursor with each row containing a geounit id
-            and a district_id, respectively.
+            A list of tuples containing Geounit IDs and portable ids
+            that lie within this Plan. 
         """
 
-        geolevel = self.legislative_body.get_base_geolevel()
-
-        # This query gets all of the geounit and district ids for the current plan 
-        query = 'select g.' + geounit_id_field + ', l.district_id from redistricting_geounit as g join (select d.* from redistricting_district as d join (select max(version) as latest, district_id, plan_id from redistricting_district where plan_id = %s and version <= %s group by district_id, plan_id) as v on d.district_id = v.district_id and d.plan_id = v.plan_id and d.version = v.latest) as l on ST_Contains(l.geom, g.center) where geolevel_id = %s order by g.' + geounit_id_field
-        cursor = connection.cursor()
-        cursor.execute(query, [self.id, self.version, geolevel])
-
-        return cursor
-
-    @staticmethod
-    def from_shapefile(name, body, shapefile, idfield, owner=None):
-        """
-        Import a shapefile into a plan. The plan shapefile must contain
-        an ID field.
-
-        Parameters:
-            name - The name of the plan
-            shapefile - The path to the shapefile
-            idfield - The name of the field in the shapefile that contains
-                the district ID of each district.
-            owner - Optional. The user who owns this plan. If not 
-                specified, defaults to the system admin.
-
-        Returns:
-            A new plan.
-        """
-        plan = Plan.create_default(name,body,owner)
-
-        if not plan:
-            return False
-
-        datasource = DataSource(shapefile)
-        layer = datasource[0]
-
-        # Import each feature in the new plan. 
-        # Sort by the district ID field
-        for feature in sorted(layer,key=lambda f:int(f.get(idfield))):
-            print '\tImporting "%s"' % (body.member % (feature.get(idfield),))
-
-            # Import only multipolygon shapes
-            geom = feature.geom.geos
-            if geom.geom_type == 'Polygon':
-                geom = MultiPolygon(geom)
-            elif geom.geom_type == 'MultiPolygon':
-                geom = geom
-            else:
-                geom = None
-
-            district = District(
-                district_id=int(feature.get(idfield)) + 1,
-                name=body.member % feature.get(idfield),
-                plan=plan,
-                version=0,
-                geom=geom)
-            district.simplify() # implicit save
-
-            geounits = list(district.get_base_geounits_within())
-
-            print '\tUpdating district statistics...'
-            district.delta_stats(geounits,True)
+        # Collect the geounits for each district in this plan
+        geounits = []
+        for district in self.get_districts_at_version(self.version):
+            districtunits = district.get_base_geounits(threshold)
+            # Add the district_id to the tuples
+            geounits.extend([(gid, pid, district.district_id) for (gid, pid) in districtunits])
+        
+        return geounits
 
 class PlanForm(ModelForm):
     """
@@ -1353,7 +1220,7 @@ class District(models.Model):
             c.district = self
             c.save()
 
-    def get_base_geounits_within(self):
+    def get_base_geounits(self, threshold=100):
         """
         Get a list of the geounit ids of the geounits that comprise 
         this district at the base level.  
@@ -1361,38 +1228,42 @@ class District(models.Model):
         We'll check this by seeing whether the centroid of each geounits 
         fits within the simplified geometry of this district.
 
+        Parameters:
+            threshold - distance threshold used for buffer in/out optimization
+
         Returns:
-            An array of Geounit IDs of Geounits that lie within this 
-            District. 
+            A list of tuples containing Geounit IDs and portable ids
+            that lie within this District. 
         """    
         if not self.geom:
            return list()
 
         geolevel = self.plan.legislative_body.get_base_geolevel()
 
-        return Geounit.objects.filter(geolevel = geolevel, center__within = self.geom).values_list('id')
+        # Simplify by the same distance threshold used for buffering
+        simple = self.geom.simplify(threshold)
 
-    def get_base_geounits(self):
-        """
-        Get a list of the geounit ids of the geounits that comprise
-        this district at the base level.
+        # If the simplification makes the polygon empty, use the unsimplified polygon
+        if simple.empty:
+            simple = self.geom
 
-        Get the mixed geounits in the district boundary first, then find
-        the smaller units in that mixed collection.
+        # Perform two queries against the simplified district, one buffered in,
+        # and one buffered out using the same distance as the simplification tolerance
+        b_out = Geounit.objects.filter(geolevel=geolevel, center__within=simple.buffer(threshold))
+        b_in = Geounit.objects.filter(geolevel=geolevel, center__within=simple.buffer(-1 * threshold))
 
-        Returns:
-            An array of Geounit IDs of Geounits that lie within this
-            District.
-        """
-        if not self.geom:
-            return list()
+        # Find the geounits that are different between the two queries,
+        # and check if they are within the unsimplified district
+        b_in_values_set = set(b_in.values_list('id', 'portable_id'))
+        b_out_values_set = set(b_out.values_list('id', 'portable_id'))
+        diff = set(b_out_values_set ^ b_in_values_set)
+        diffwithin = []
+        if len(diff) > 0:
+            diffids = reduce(lambda x,y: x+y, list(diff))
+            diffwithin = [(unit.id, unit.portable_id) for unit in Geounit.objects.filter(id__in=diffids) if unit.center.within(self.geom)]
 
-        geolevel = self.plan.legislative_body.get_geolevels()[0]
-        bigunits = Geounit.objects.filter(geolevel=geolevel, geom__intersects=self.geom)
-        bigunits = map(lambda x: str(x.id), bigunits)
-        mixed = Geounit.get_mixed_geounits(bigunits, self.plan.legislative_body, geolevel.id, self.geom, True)
-        units = Geounit.get_base_geounits(mixed, self.plan.legislative_body)
-        return units
+        # Combine the geounits that were within the unsimplifed district with the buffered in list
+        return list(b_in_values_set | set(diffwithin))
 
     def simplify(self):
         """
