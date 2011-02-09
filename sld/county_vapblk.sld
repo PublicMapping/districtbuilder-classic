@@ -6,7 +6,7 @@
     <Name>vapblk</Name>
     <UserStyle>
       <Title>Voting Age - Black Pop.</Title>
-      <Abstract>A grayscale style showing the percentage of a given geounit's voting-age population that is black.</Abstract>
+      <Abstract>A grayscale style showing the percentage of a given geounit&apos;s voting-age population that is black.</Abstract>
 	<FeatureTypeStyle>
         <Rule>
           <Title>&gt; 75&#37; </Title>

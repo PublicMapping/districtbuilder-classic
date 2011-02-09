@@ -6,7 +6,7 @@
     <Name>vaphisp</Name>
     <UserStyle>
       <Title>Voting Age - Hispanic Pop.</Title>
-      <Abstract>A grayscale style showing the percentage of a given geounit's voting-age population that is hispanic.</Abstract>
+      <Abstract>A grayscale style showing the percentage of a given geounit&apos;s voting-age population that is hispanic.</Abstract>
 	<FeatureTypeStyle>
         <Rule>
           <Title>&gt; 75&#37; </Title>

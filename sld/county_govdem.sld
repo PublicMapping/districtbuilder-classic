@@ -6,7 +6,7 @@
     <Name>presdem</Name>
     <UserStyle>
       <Title>Democratic Voters</Title>
-      <Abstract>A grayscale style showing the percentage of a given geounit's voting-age population that voted Democrat in the previous election</Abstract>
+      <Abstract>A grayscale style showing the percentage of a given geounit&apos;s voting-age population that voted Democrat in the previous election</Abstract>
 	<FeatureTypeStyle>
         <Rule>
           <Title>&gt; 75&#37; </Title>
