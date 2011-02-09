@@ -822,7 +822,8 @@ ERROR:
                 idpart = shapefile.xpath('Fields/Field[@type="tree" and @pos=%d]' % idx)
                 if len(idpart) > 0:
                     idpart = idpart[0]
-                    part = feature.get(idpart.get('name'))
+                    # strip any spaces in the treecode
+                    part = feature.get(idpart.get('name')).strip(' ')
                     width = int(idpart.get('width'))
                     builtid = '%s%s' % (builtid, part.zfill(width))
             return builtid
