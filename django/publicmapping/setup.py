@@ -278,6 +278,16 @@ def merge_config(config, verbose):
         settings_out.write("\nTEMPLATE_DIRS = (\n  '%s/django/publicmapping/templates',\n)\n" % root_dir)
         settings_out.write("\nSLD_ROOT = '%s/sld/'\n" % root_dir)
 
+        quota = cfg.get('sessionquota')
+        if not quota:
+            quota = 5
+        settings_out.write("\nCONCURRENT_SESSIONS = %d\n" % int(quota))
+
+        timeout = cfg.get('sessiontimeout')
+        if not timeout:
+            timeout = 15
+        settings_out.write("\nSESSION_TIMEOUT = %d\n" % int(timeout))
+
         cfg = config.xpath('//Reporting')[0]
         cfg = cfg.find('BardConfigs/BardConfig')
         if cfg != None:
