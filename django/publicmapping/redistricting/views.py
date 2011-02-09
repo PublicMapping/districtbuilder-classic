@@ -316,9 +316,12 @@ def commonplan(request, planid):
     boundaries = []
     rules = []
 
-    study_area_extent = []
-    for num in Geounit.objects.all().extent():
-        study_area_extent.append(num)
+    if len(levels) > 0:
+        study_area_extent = list(Geounit.objects.filter(geolevel=levels[0]).extent())
+    else:
+        # The geolevels with higher indexes are larger geography
+        biglevel = Geolevel.objects.all().order_by('-id')[0]
+        study_area_extent = Geounit.objects.filter(geolevel=biglevel).extent()
 
     for level in levels:
         snaplayers.append( {'geolevel':level.id,'layer':level.name,'name':level.name.capitalize(),'min_zoom':level.min_zoom} )
