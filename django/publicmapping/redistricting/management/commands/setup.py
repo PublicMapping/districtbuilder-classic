@@ -139,9 +139,8 @@ contents of the file and try again.
 
         if options.get("geoserver"):
             qset = Geounit.objects.all()
-            extent = qset.extent()
             srid = qset[0].geom.srid
-            self.configure_geoserver(config, srid, extent, verbose)
+            self.configure_geoserver(config, srid, verbose)
 
         if options.get("templates"):
             self.create_template(config, verbose)
@@ -168,7 +167,7 @@ contents of the file and try again.
 
         qset.delete()
 
-    def configure_geoserver(self, config, srid, extent, verbose):
+    def configure_geoserver(self, config, srid, verbose):
         """
         Create the workspace and layers in geoserver, based on the
         imported data.
@@ -240,7 +239,7 @@ contents of the file and try again.
         create_geoserver_object_if_necessary(data_store_url, data_store_name, data_store_obj, 'Data Store')
 
         # Create the identify, simple, and demographic layers
-        def get_feature_type_obj (name, extent, title=None):
+        def get_feature_type_obj (name, title=None):
             feature_type_obj = { 'featureType': {
                 'name': name,
                 'title': name if title is None else title,
@@ -268,7 +267,7 @@ contents of the file and try again.
         # Check for each layer in the list.  If it doesn't exist, make it
         feature_type_url = '/geoserver/rest/workspaces/%s/datastores/%s/featuretypes' % (namespace, data_store_name)
         for feature_type_name in feature_type_names:
-            feature_type_obj = get_feature_type_obj(feature_type_name, extent)
+            feature_type_obj = get_feature_type_obj(feature_type_name)
             create_geoserver_object_if_necessary(feature_type_url, feature_type_name, feature_type_obj, 'Feature Type')
 
         # Create the styles for the demographic layers
@@ -398,14 +397,14 @@ contents of the file and try again.
                     is_first_subject = False
 
                     # Create NONE demographic layer, based on first subject
-                    feature_type_obj = get_feature_type_obj('demo_%s' % geolevel.name, extent)
+                    feature_type_obj = get_feature_type_obj('demo_%s' % geolevel.name)
                     feature_type_obj['featureType']['nativeName'] = 'demo_%s_%s' % (geolevel.name, subject.name)
                     create_geoserver_object_if_necessary(feature_type_url, 'demo_%s' % geolevel.name, feature_type_obj, 'Feature Type')
                     publish_and_assign_style('demo_%s' % geolevel.name, 'none',get_zoom_range(geolevel))
 
                     # Create boundary layer, based on geographic boundaries
                     feature_name = '%s_boundaries' % geolevel.name
-                    feature_type_obj = get_feature_type_obj(feature_name , extent)
+                    feature_type_obj = get_feature_type_obj(feature_name)
                     feature_type_obj['featureType']['nativeName'] = 'demo_%s_%s' % (geolevel.name, subject.name)
                     create_geoserver_object_if_necessary(feature_type_url, feature_name, feature_type_obj, 'Feature Type')
                     publish_and_assign_style('%s_boundaries' % geolevel.name, 'boundaries', get_zoom_range(geolevel))
