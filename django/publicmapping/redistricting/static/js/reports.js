@@ -81,7 +81,20 @@ reports = function(options) {
     var submitReportRequestToServer = function() {
         $working.dialog('open');
         data = getReportOptions();
-        $.post(_options.reportUrl, data, loadPreviewContent);
+        $.ajax({
+            type:'POST',
+            url:_options.reportUrl,
+            data: data,
+            timeout: 10 * 60 * 1000,  // 10 min timeout -- reports take > 7min
+            success: loadPreviewContent,
+            error: function(xhr, txtStatus, msg) {
+                $working.dialog('close')
+                if (typeof(msg) == 'undefined') {
+                    msg = '';
+                }
+                $('<div title="Report Error">Sorry, we weren\'t able to preview this report.<p>' + msg + '</p></div>').dialog({ autoOpen:true });
+            }
+        });
     };
 
     /**
