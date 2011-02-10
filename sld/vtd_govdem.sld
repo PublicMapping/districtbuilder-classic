@@ -24,7 +24,7 @@
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Title>&gt; 60&#37; </Title>
+          <Title>&gt; 40&#37; </Title>
           <ogc:Filter>
             <ogc:And>
               <ogc:PropertyIsLessThan>
@@ -33,7 +33,7 @@
               </ogc:PropertyIsLessThan>
               <ogc:PropertyIsGreaterThanOrEqualTo>
                 <ogc:PropertyName>percentage</ogc:PropertyName>
-                <ogc:Literal>.60</ogc:Literal>
+                <ogc:Literal>.40</ogc:Literal>
               </ogc:PropertyIsGreaterThanOrEqualTo>
             </ogc:And>
           </ogc:Filter>          
@@ -45,16 +45,16 @@
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Title>&gt; 50&#37;</Title>
+          <Title>&gt; 20&#37;</Title>
           <ogc:Filter>
             <ogc:And>
               <ogc:PropertyIsLessThan>
                 <ogc:PropertyName>percentage</ogc:PropertyName>
-                <ogc:Literal>.60</ogc:Literal>
+                <ogc:Literal>.40</ogc:Literal>
               </ogc:PropertyIsLessThan>
               <ogc:PropertyIsGreaterThanOrEqualTo>
                 <ogc:PropertyName>percentage</ogc:PropertyName>
-                <ogc:Literal>.50</ogc:Literal>
+                <ogc:Literal>.20</ogc:Literal>
               </ogc:PropertyIsGreaterThanOrEqualTo>
             </ogc:And>
           </ogc:Filter>          
@@ -66,16 +66,16 @@
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Title>&gt; 25&#37;</Title>
+          <Title>&gt; 5&#37;</Title>
           <ogc:Filter>
             <ogc:And>
               <ogc:PropertyIsLessThan>
                 <ogc:PropertyName>percentage</ogc:PropertyName>
-                <ogc:Literal>.50</ogc:Literal>
+                <ogc:Literal>.20</ogc:Literal>
               </ogc:PropertyIsLessThan>
               <ogc:PropertyIsGreaterThanOrEqualTo>
                 <ogc:PropertyName>percentage</ogc:PropertyName>
-                <ogc:Literal>.25</ogc:Literal>
+                <ogc:Literal>.05</ogc:Literal>
               </ogc:PropertyIsGreaterThanOrEqualTo>
             </ogc:And>
           </ogc:Filter>          
@@ -87,11 +87,11 @@
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Title>&lt; 10&#37;</Title>
+          <Title>&lt; 5&#37;</Title>
           <ogc:Filter>
             <ogc:PropertyIsLessThan>
               <ogc:PropertyName>percentage</ogc:PropertyName>
-              <ogc:Literal>10</ogc:Literal>
+              <ogc:Literal>.05</ogc:Literal>
             </ogc:PropertyIsLessThan>
           </ogc:Filter>          
           <PolygonSymbolizer>

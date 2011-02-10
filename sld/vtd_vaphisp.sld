@@ -9,11 +9,11 @@
       <Abstract>A grayscale style showing the percentage of a given geounit&apos;s voting-age population that is hispanic.</Abstract>
 	<FeatureTypeStyle>
         <Rule>
-          <Title>&gt; 75&#37; </Title>
+          <Title>&gt; 25&#37; </Title>
           <ogc:Filter>
             <ogc:PropertyIsGreaterThanOrEqualTo>
               <ogc:PropertyName>percentage</ogc:PropertyName>
-              <ogc:Literal>.75</ogc:Literal>
+              <ogc:Literal>.25</ogc:Literal>
             </ogc:PropertyIsGreaterThanOrEqualTo>
           </ogc:Filter>
           <PolygonSymbolizer>
@@ -24,16 +24,16 @@
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Title>&gt; 60&#37; </Title>
+          <Title>&gt; 15&#37; </Title>
           <ogc:Filter>
             <ogc:And>
               <ogc:PropertyIsLessThan>
                 <ogc:PropertyName>percentage</ogc:PropertyName>
-                <ogc:Literal>.75</ogc:Literal>
+                <ogc:Literal>.25</ogc:Literal>
               </ogc:PropertyIsLessThan>
               <ogc:PropertyIsGreaterThanOrEqualTo>
                 <ogc:PropertyName>percentage</ogc:PropertyName>
-                <ogc:Literal>.60</ogc:Literal>
+                <ogc:Literal>.15</ogc:Literal>
               </ogc:PropertyIsGreaterThanOrEqualTo>
             </ogc:And>
           </ogc:Filter>          
@@ -45,16 +45,16 @@
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Title>&gt; 50&#37;</Title>
+          <Title>&gt; 10&#37;</Title>
           <ogc:Filter>
             <ogc:And>
               <ogc:PropertyIsLessThan>
                 <ogc:PropertyName>percentage</ogc:PropertyName>
-                <ogc:Literal>.60</ogc:Literal>
+                <ogc:Literal>.15</ogc:Literal>
               </ogc:PropertyIsLessThan>
               <ogc:PropertyIsGreaterThanOrEqualTo>
                 <ogc:PropertyName>percentage</ogc:PropertyName>
-                <ogc:Literal>.50</ogc:Literal>
+                <ogc:Literal>.10</ogc:Literal>
               </ogc:PropertyIsGreaterThanOrEqualTo>
             </ogc:And>
           </ogc:Filter>          
@@ -66,16 +66,16 @@
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Title>&gt; 25&#37;</Title>
+          <Title>&gt; 5&#37;</Title>
           <ogc:Filter>
             <ogc:And>
               <ogc:PropertyIsLessThan>
                 <ogc:PropertyName>percentage</ogc:PropertyName>
-                <ogc:Literal>.50</ogc:Literal>
+                <ogc:Literal>.10</ogc:Literal>
               </ogc:PropertyIsLessThan>
               <ogc:PropertyIsGreaterThanOrEqualTo>
                 <ogc:PropertyName>percentage</ogc:PropertyName>
-                <ogc:Literal>.25</ogc:Literal>
+                <ogc:Literal>.05</ogc:Literal>
               </ogc:PropertyIsGreaterThanOrEqualTo>
             </ogc:And>
           </ogc:Filter>          
@@ -87,11 +87,11 @@
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Title>&lt; 10&#37;</Title>
+          <Title>&lt; 5&#37;</Title>
           <ogc:Filter>
             <ogc:PropertyIsLessThan>
               <ogc:PropertyName>percentage</ogc:PropertyName>
-              <ogc:Literal>10</ogc:Literal>
+              <ogc:Literal>.05</ogc:Literal>
             </ogc:PropertyIsLessThan>
           </ogc:Filter>          
           <PolygonSymbolizer>
