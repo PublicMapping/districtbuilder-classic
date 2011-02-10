@@ -83,6 +83,9 @@
 
     CustomLog /var/log/apache2/publicmapping-access.log combined
 
+    # This virtual host needs a longer timeout because reports take a while
+    Timeout 600
+
     RewriteEngine On
 
     # This redirects report requests to an alternate port.
@@ -115,7 +118,7 @@ Listen 8081
 # If you're using mod_wsgi version 3 or later, this will throw a configtest error when starting apache.
 # In that case only, delete or comment out this line and use the one within the virtual host
 # More info here: http://code.google.com/p/modwsgi/wiki/ChangesInVersion0300
-WSGIImportScript /projects/publicmapping/trunk/django/reports.wsgi process-group=bard-reports application-group=bard-reports
+#WSGIImportScript /projects/publicmapping/trunk/django/reports.wsgi process-group=bard-reports application-group=bard-reports
 
 <VirtualHost *:8081>
     ServerAdmin AzaveaDev@azavea.com
@@ -124,7 +127,7 @@ WSGIImportScript /projects/publicmapping/trunk/django/reports.wsgi process-group
     WSGIProcessGroup bard-reports
     WSGIApplicationGroup bard-reports
     # mod_wsgi v3 only!  see above.
-    # WSGIImportScript /projects/publicmapping/trunk/django/reports.wsgi process-group=bard-reports application-group=bard-reports
+    WSGIImportScript /projects/publicmapping/trunk/django/reports.wsgi process-group=bard-reports application-group=bard-reports
     ErrorLog /var/log/apache2/bard-reporting-error.log
     CustomLog /var/log/apache2/bard-reporting-access.log combined
     
