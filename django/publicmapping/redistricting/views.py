@@ -1098,7 +1098,18 @@ def get_unlocked_simple_geometries(request,planid):
         geolevel = request.POST.get('level__eq', plan.legislative_body.get_geolevels()[0].id)
         geom = request.POST.get('geom__eq', None)
         if geom is not None:
-            geom = GEOSGeometry(geom)           
+            try:
+                wkt = request.POST.get('geom__eq', None)
+                geom = GEOSGeometry(wkt)
+            # If we can't get a poly, try a linestring
+            except GEOSException:
+                wkt = request.REQUEST['geom__eq'].replace('POLYGON', 'LINESTRING')
+                wkt = wkt.replace('((', '(').replace('))', ')')
+                try: 
+                    geom = GEOSGeometry(wkt)
+                except GEOSException:
+                    # If the line doesn't work, just don't return anything
+                    geom = None
 
             # Selection is the geounits that intersects with the drawing tool used:
             # either a lasso, a rectangle, or a point
