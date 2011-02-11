@@ -647,6 +647,7 @@ function mapinit(srs,maxExtent) {
     // that selects geography at the specified snap layer.
     var getProtocol = new OpenLayers.Protocol.HTTP({
         url: '/districtmapping/plan/' + PLAN_ID + '/unlockedgeometries/',
+        readWithPOST: true,
         format: new OpenLayers.Format.GeoJSON()
     });
 
@@ -681,16 +682,44 @@ function mapinit(srs,maxExtent) {
         filterType: OpenLayers.Filter.Spatial.INTERSECTS
     });
 
-    // Extend the request function on the GetFeature control
-    // to allow for dynamic filtering for use with HTTP requests.
+    // Add header for CSRF validation. This is needed, because setting
+    // the headers parameter does not work when performing POSTs (it's hardcoded).
+    var extendReadForCSRF = function(protocol) {
+        OpenLayers.Util.extend(protocol, {
+            read: function(options) {
+                OpenLayers.Protocol.prototype.read.apply(this, arguments);
+                options = OpenLayers.Util.applyDefaults(options, this.options);
+                options.params = OpenLayers.Util.applyDefaults(options.params, this.options.params);
+                if(options.filter) {
+                    options.params = this.filterToParams(options.filter, options.params);
+                }
+                var resp = new OpenLayers.Protocol.Response({requestType: "read"});
+                resp.priv = OpenLayers.Request.POST({
+                    url: options.url,
+                    callback: this.createCallback(this.handleRead, resp, options),
+                    data: OpenLayers.Util.getParameterString(options.params),
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        "X-Requested-With": "XMLHttpRequest"
+                    }
+                });
+                return resp;
+            }
+        });
+    };
+
+    // Extend the request function on the GetFeature control to allow for
+    // dynamic filtering and setting a header needed for CSRF validation
     var filterExtension = {
         request: function (bounds, options) {
+            // Allow for dynamic filtering, and extend for CSRF validation headers
             var filter = getVersionAndSubjectFilters(maxExtent, bounds.toGeometry().toString());
+            extendReadForCSRF(this.protocol);
 
-            // The rest of this function is exactly the same as the original, we only need
-            // to modify the filter -- something that isn't supported by default
+            // The rest of this function is exactly the same as the original
             options = options || {};
             OpenLayers.Element.addClass(this.map.viewPortDiv, "olCursorWait");
+            
             this.protocol.read({
                 filter: filter,
                 callback: function(result) {
@@ -954,6 +983,8 @@ function mapinit(srs,maxExtent) {
                 var newOpts = getControl.protocol.options;
                 newOpts.featureType = getSnapLayer().layer;
                 getControl.protocol = new OpenLayers.Protocol.HTTP( newOpts );
+                extendReadForCSRF(getControl.protocol);
+                
                 getControl.protocol.read({
                     filter: getVersionAndSubjectFilters(maxExtent, feature.geometry),
                     callback: function(rsp){

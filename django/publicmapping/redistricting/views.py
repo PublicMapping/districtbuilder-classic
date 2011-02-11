@@ -1094,17 +1094,11 @@ def get_unlocked_simple_geometries(request,planid):
     plan = Plan.objects.filter(id=planid)
     if plan.count() == 1:
         plan = plan[0]
-        if 'version__eq' in request.REQUEST:
-            version = request.REQUEST['version__eq']
-        else:
-            version = plan.version
-
-        geolevel = plan.legislative_body.get_geolevels()[0].id
-        if 'level__eq' in request.REQUEST:
-            geolevel = int(request.REQUEST['level__eq'])
-
-        if 'geom__eq' in request.REQUEST:
-            geom = GEOSGeometry(request.REQUEST['geom__eq'])           
+        version = request.POST.get('version__eq', plan.version)
+        geolevel = request.POST.get('level__eq', plan.legislative_body.get_geolevels()[0].id)
+        geom = request.POST.get('geom__eq', None)
+        if geom is not None:
+            geom = GEOSGeometry(geom)           
 
             # Selection is the geounits that intersects with the drawing tool used:
             # either a lasso, a rectangle, or a point
