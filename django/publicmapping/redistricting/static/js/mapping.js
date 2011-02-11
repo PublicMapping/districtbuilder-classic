@@ -1062,6 +1062,7 @@ function mapinit(srs,maxExtent) {
                         version: getPlanVersion()
                     },
                     success: function(data, textStatus, xhr) {
+                        selection.removeFeatures(selection.features);
                         districtLayer.strategies[0].update({force:true});
                     }
                 });
