@@ -754,10 +754,12 @@ class Plan(models.Model):
                 # the district were removed); empty the geom and simple 
                 # fields
                 district.geom = None
+                district.simple = None
             else:
                 # The district geometry exists, so save the updated 
                 # versions of the geom and simple fields
                 district.geom = geom
+                district.simplify()
 
             # Clone the district to a new version, with a different shape
             district_copy = copy(district)
