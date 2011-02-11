@@ -198,7 +198,7 @@
             <div class="shadow_left"></div>
             <div class="shadow_top"></div>
          <div class="toolbar ui-widget-header"><h1>Choose a Plan. Start Drawing.</h1></div>
-         <div id="plan_content">
+         <div class="tab_content">
          
         {% comment %}
         If there is only one legislative body, we won't display selectors or force
@@ -550,24 +550,22 @@
               <button id="settings_toggle">Map Layer Visibility</button>
           </div>
           <div id="map_settings_content">
-            <span class="layer_type_container">
-                <input class="map_settings_layer_type" id="thematic_radio" type="radio" name="layer_types" checked="true">Thematic Layer</input>
-            </span>
-            <span class="layer_type_container">
-                <input class="map_settings_layer_type" id="basemap_radio" type="radio" name="layer_types"><span id="base_map_type"></span> Layer</input>
-            </span>
-            <div id="opacity_slider"></div>
-
-             <div class="toolset_group">
+             <div class="float_right">
                  <img src="/static-media/images/icon-help.png" class="help divtip">
                  <div class="tooltip">Select a map layer and use the slider to set its visibility.</div>
-             </div>            
+             </div>  
+            <span class="layer_type_container" id="layer_type_thematic">
+                <input class="map_settings_layer_type" id="thematic_radio" type="radio" name="layer_types" checked="true">Roads</input>
+            </span>
+            <span class="layer_type_container" id="layer_type_base">
+                <input class="map_settings_layer_type" id="basemap_radio" type="radio" name="layer_types"><span id="base_map_type"></span> Layer</input>
+            </span>
+            <div id="opacity_slider"></div>          
           </div>
           <div id="map_legend">
               <button id="legend_toggle">Map Legend</button>
           </div>
           <div id="map_legend_content">
-            <h1>Map Legend</h1>
             <table id="basemap_legend">
                 <thead>
                     <tr>
@@ -632,32 +630,41 @@
       </div>
     </div>
     <div id="step_evaluate" class="main_content evaluate fulltab">
-    {% include reporting_template %}
+      <div class="shadow_left"></div>
+      <div class="shadow_top"></div>
+      <div class="toolbar ui-widget-header"><h1>Evaluate Statistics</h1></div>
+      <div class="tab_content">
+        {% include reporting_template %}
+      </div>
     </div>
     <div id="step_share" class="main_content share fulltab">
-        <div id="saveandshare">
-            {% block share_panel %}
-            {% comment %}
+      <div class="shadow_left"></div>
+      <div class="shadow_top"></div>
+      <div class="toolbar ui-widget-header"><h1>Share a Plan</h1></div>
+      <div class="tab_content">
+          <div id="saveandshare">
+              {% block share_panel %}
+              {% comment %}
 
-            Define a block entitled 'share_panel': this panel would show sharing
-            options in an editor interface, but the default viewer does not have
-            that capability.
+              Define a block entitled 'share_panel': this panel would show sharing
+              options in an editor interface, but the default viewer does not have
+              that capability.
 
-            {% endcomment %}
-            <div class="explanation">
-                <h3>Shared Documents not available</h3>
-                <p>If you were editing a plan, you could use this tab to share your plan with others<p>
-            </div>
-            {% endblock %}
-            <hr />
-            <div class="blockfile">
-                <h3>District Index File export</h3>
-                <p>You can export this plan to a district index file. The index file is a comma-separated-value file (csv) 
-                with each line listing a geounit (such as a census block) and the district to which it belongs. This file
-                can be imported to other instances of the publicmapping software or used in analysis of the plan using
-                your favorite GIS software.</p>
-                <div id='districtIndexFileTarget' />
-            </div>
+              {% endcomment %}
+              <div class="explanation">
+                  <h3>Shared Documents not available</h3>
+                  <p>If you were editing a plan, you could use this tab to share your plan with others<p>
+              </div>
+              {% endblock %}
+              <div class="blockfile">
+                  <h3>District Index File export</h3>
+                  <p>You can export this plan to a district index file. The index file is a comma-separated-value file (csv) 
+                  with each line listing a geounit (such as a census block) and the district to which it belongs. This file
+                  can be imported to other instances of the publicmapping software or used in analysis of the plan using
+                  your favorite GIS software.</p>
+                  <div id='districtIndexFileTarget' />
+              </div>
+          </div>
         </div>
     </div>
 </div>  

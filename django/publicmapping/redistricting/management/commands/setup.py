@@ -635,13 +635,19 @@ ERROR:
         for subject in Subject.objects.all():
             qset = Characteristic.objects.filter(geounit__in=parentunits, subject=subject)
             aggdata = qset.aggregate(Sum('number'))['number__sum']
+            percentage = '0000.00000000'
+            if aggdata and subject.percentage_denominator:
+                dset = Characteristic.objects.filter(geounit__in=parentunits, subject=subject.percentage_denominator)
+                denominator_data = qset.aggregate(Sum('number'))['number__sum']
+                if denominator_data > 0:
+                    percentage = aggdata / denominator_data
 
             if aggdata is None:
                 aggdata = "0.0"
 
             mychar = Characteristic.objects.filter(geounit=geounit, subject=subject)
             if mychar.count() < 1:
-                mychar = Characteristic(geounit=geounit, subject=subject, number=aggdata)
+                mychar = Characteristic(geounit=geounit, subject=subject, number=aggdata, percentage=percentage)
                 mychar.save()
                 num += 1
             else:
@@ -649,6 +655,7 @@ ERROR:
 
                 if aggdata != mychar.number:
                     mychar.number = aggdata
+                    mychar.percentage = percentage
                     mychar.save()
 
                     num += 1

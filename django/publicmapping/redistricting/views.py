@@ -850,14 +850,13 @@ def newdistrict(request, planid):
             try: 
                 # add the geounits selected to this district -- this will
                 # create a new district w/1 version higher
-                name = plan.add_geounits(district_id, geounit_ids, geolevel, version)
+                fixed = plan.add_geounits(district_id, geounit_ids, geolevel, version)
 
                 status['success'] = True
                 status['message'] = 'Created 1 new district'
                 plan = Plan.objects.get(pk=planid, owner=request.user)
                 status['edited'] = getutc(plan.edited).isoformat()
                 status['district_id'] = district_id
-                status['district_name'] = name
                 status['version'] = plan.version
             except ValidationError:
                 status['message'] = 'Reached Max districts already'
@@ -1250,6 +1249,7 @@ def getdemographics(request, planid):
             district_values.append(stats)
         return render_to_response('demographics.html', {
             'plan': plan,
+            'extra_demographics_template' : ('extra_demographics_%s.html' % plan.legislative_body.name.lower()),
             'district_values': district_values,
             'aggregate': getcompliance(plan, version),
             'headers': headers
@@ -1374,6 +1374,7 @@ def getgeography(request, planid):
 
         return render_to_response('geography.html', {
             'plan': plan,
+            'extra_demographics_template' : ('extra_demographics_%s.html' % plan.legislative_body.name.lower()),
             'district_values': district_values,
             'aggregate': getcompliance(plan, version),
             'name': subject.short_display

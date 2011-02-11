@@ -32,7 +32,7 @@ from django.contrib.sessions.models import Session
 from django.contrib.auth.decorators import login_required
 from django.contrib.csrf.middleware import csrf_exempt
 from django.views.decorators.cache import cache_control
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.shortcuts import render_to_response
 from django.template import loader, Context
 from django.utils import simplejson as json
@@ -315,9 +315,8 @@ def proxy(request):
     """
     url = request.GET['url']
 
-    host = url.split('/')[2]
-    if host != settings.MAP_SERVER:
-        raise Http404
+    if not url.startswith(settings.MAP_SERVER):
+        return HttpResponseNotFound()
 
     if request.method == 'POST':
         rsp = urllib2.urlopen( urllib2.Request(

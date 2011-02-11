@@ -41,7 +41,7 @@ urlpatterns = patterns('',
     (r'^accounts/update/$', 'publicmapping.views.userupdate'),
     (r'^districtmapping/', include('publicmapping.redistricting.urls')),
     (r'^$', 'publicmapping.views.index'),
-    (r'^proxy$', 'publicmapping.views.proxy'),
+    (r'^proxy', 'publicmapping.views.proxy'),
     (r'^session/$', 'publicmapping.views.session'),
 )
 

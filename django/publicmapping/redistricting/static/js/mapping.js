@@ -395,12 +395,12 @@ function mapinit(srs,maxExtent) {
     
     // Set up the opacity slider and connect change events to control the base and thematic layer opacities
     $('#opacity_slider').slider({
-        value: defaultThematicOpacity * 100,
+        value: 100 - defaultThematicOpacity * 100,
         slide: function(event, ui) {
             var isThematic = $('#thematic_radio').attr('checked');
             $(olmap.layers).each(function(i, layer) {
                 if ((isThematic && !layer.isBaseLayer) || (!isThematic && layer.isBaseLayer)) {
-                    layer.setOpacity(ui.value / 100);
+                    layer.setOpacity(1 - ui.value / 100);
                 }
             });
         }
@@ -788,7 +788,7 @@ function mapinit(srs,maxExtent) {
                 var mode = data.success ? 'select' : 'error';
                 if (data.success) {
                     // if no districts were updated, display a warning
-                    if (data.updated === 0) {
+                    if (!data.updated) {
                         OpenLayers.Element.removeClass(olmap.viewPortDiv, 'olCursorWait');
                         $('#working').dialog('close');
                         $('<div id="errorDiv">No districts were updated.</div>').dialog({
@@ -1153,7 +1153,7 @@ function mapinit(srs,maxExtent) {
         // largest area (lowest geolevel) first, down to the
         // most specific geolevel
         var crumbs = {};
-        var ctics = {};
+        var ctics = [];
         var tipFeature = e.features[0];
         for (var glvl = maxGeolevel; glvl >= minGeolevel; glvl--) {
             for (var feat = 0; feat < e.features.length; feat++) {
@@ -1164,12 +1164,17 @@ function mapinit(srs,maxExtent) {
                     tipFeature = e.features[feat];
                     for (var demo = 0; demo < DEMOGRAPHICS.length; demo++) {
                         if (e.features[feat].data.subject_id == DEMOGRAPHICS[demo].id) {
-                            ctics[DEMOGRAPHICS[demo].text] = parseFloat(e.features[feat].data.number);
+                            var text = DEMOGRAPHICS[demo].text;
+                            text = text.startsWith('% ') ? text.substr(2) : text;
+                            ctics.push({ lbl: text, val:parseFloat(e.features[feat].data.number) });
                         }
                     }
                 }
             }
         }
+
+        // sort the characteristics alphabetically by label
+        ctics = $(ctics).sort(function(a, b) { return a.lbl > b.lbl; });
 
         // truncate the breadcrumbs into a single string
         var place = [];
@@ -1187,11 +1192,14 @@ function mapinit(srs,maxExtent) {
         var value = parseInt(tipFeature.attributes.number, 10);
 
         var node = 2;
-        for (var key in ctics) {
-            tipdiv.childNodes[node].firstChild.nodeValue = 
-                key + ': ' + ctics[key].toLocaleString();
-            node ++;
-        }
+        $(ctics).each(function(i, obj) {
+            try {
+                $(tipdiv.childNodes[node]).html(obj.lbl + ': ' + obj.val.toLocaleString());
+                node ++;
+            } catch (exception) {
+                // too many characteristics
+            }
+        });
 
         var halfWidth = tipdiv.clientWidth/2;
         var halfHeight = tipdiv.clientHeight/2;
@@ -1502,7 +1510,7 @@ function mapinit(srs,maxExtent) {
         var version = $('#history_cursor').val();
         $.ajax({
             type:'GET',
-            url:'../districts',
+            url:'../districts/',
             data: {version:version},
             success: function(data,txtStatus,xhr){
                 updatingAssigned = false;

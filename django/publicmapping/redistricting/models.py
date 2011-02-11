@@ -690,7 +690,7 @@ class Plan(models.Model):
         # incremental is the geometry that is changing
         incremental = Geounit.objects.filter(id__in=geounit_ids).unionagg()
 
-        fixed = 0
+        fixed = False
 
         # Get the districts in this plan, at the specified version.
         districts = self.get_districts_at_version(version)
@@ -728,13 +728,18 @@ class Plan(models.Model):
                     # Clone the characteristings to this new version
                     district_copy.clone_characteristics_from(district)
 
-                    fixed += 1
+                    fixed = True
 
                 # go onto the next district
                 continue
 
             # compute the geounits before changing the boundary
             geounits = Geounit.get_mixed_geounits(geounit_ids, self.legislative_body, geolevel, district.geom, True)
+
+            # Set the flag to indicate that the districts have been fixed
+            if len(geounits) > 0:
+                fixed = True
+
             # Difference the district with the selection
             # This may throw a GEOSException, in which case this function
             # will not complete successfully, and all changes will be
@@ -773,9 +778,8 @@ class Plan(models.Model):
             # Clone the characteristings to this new version
             district_copy.clone_characteristics_from(district)
 
-            # If the district stats change, update the counter.
-            if district_copy.delta_stats(geounits,False):
-                fixed += 1
+            # Update the district stats
+            district_copy.delta_stats(geounits,False)
 
         new_target = False
         if target is None:
@@ -790,6 +794,10 @@ class Plan(models.Model):
                 
         # get the geounits before changing the target geometry
         geounits = Geounit.get_mixed_geounits(geounit_ids, self.legislative_body, geolevel, target.geom, False)
+
+        # set the fixed flag, since the target has changed
+        if len(geounits) > 0:
+            fixed = True
 
         # If there exists geometry in the target district
         if target.geom:
@@ -821,9 +829,8 @@ class Plan(models.Model):
         # Clone the characteristics to this new version
         target_copy.clone_characteristics_from(target)
 
-        # If the district stats change, update the counter
-        if target_copy.delta_stats(geounits,True):
-            fixed += 1
+        # Update the district stats
+        target_copy.delta_stats(geounits,True)
 
         # save any changes to the version of this plan
         self.version += 1
@@ -1112,7 +1119,7 @@ class District(models.Model):
             # Aggregate all Geounits Characteristic values
             aggregate = Characteristic.objects.filter(geounit__in=geounits, subject__exact=subject).aggregate(Sum('number'))['number__sum']
             # If there are aggregate values for the subject and geounits.
-            if aggregate:
+            if not aggregate is None:
                 # Get the pre-computed values
                 computed = ComputedCharacteristic.objects.filter(subject=subject,district=self)
 

@@ -13,7 +13,6 @@ Postgresql v 8.4 w/ PostGIS
 Python v 2.6
 Django v 1.1
 
-On a debian-based system with aptitude installed, you can install most of 
 the necessary software using the command:
 
 > sudo aptitude install apache2 libapache2-mod-wsgi python-django \
@@ -301,6 +300,7 @@ update support, and install tmpreaper and cron jobs.
     > sudo R CMD javareconf
     > sudo R
     >> install.packages('R2HTML', dependencies=TRUE)
+    >> install.packages('stringr', dependencies=TRUE)
     >> install.packages('rgeos', repos='http://R-Forge.R-project.org', dependencies=TRUE)
     >> install.packages('BARD', dependencies=TRUE)
     >> q('no')

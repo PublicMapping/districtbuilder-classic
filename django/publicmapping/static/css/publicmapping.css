@@ -7,7 +7,7 @@
 
        http://www.apache.org/licenses/LICENSE-2.0
 
-   Unless required by applicable law or agreed to in writing, software
+   Unless required by applicable law or agreed to in writing, software 
    distributed under the License is distributed on an "AS IS" BASIS,
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
@@ -38,6 +38,12 @@ body {
 body#static {  background: url(/static-media/images/bg-body-home.png) 0 0 repeat-x;}
 body#app {  background: url(/static-media/images/bg-app.png) 0 0 repeat;}
 
+.float_left  {float:left}
+.float_right {float:right}
+
+.float_left  {float:left}
+.float_right {float:right}
+
 .clear_left  {clear:left}
 .clear_right {clear: right}
 .clear  {clear: both}
@@ -48,7 +54,7 @@ div.static_wrap {
   }
 
 div#static_header {
-  padding: 50px 0 20px;
+  padding: 35px 0 20px;
   margin: 0 0 20px;
   background: url(/static-media/images/divider.png) 0 100% repeat-x;
 }  
@@ -59,9 +65,24 @@ div#app_header {
 div#logo {
   float: left;
 }
+div #logo .site-title {
+  font-size: 250%; 
+  font-family: arial, helvetica, sans-serif;
+  font-weight:bold; 
+  color: #fff; 
+  text-shadow: 0 -1px #222;
+  margin: 0;
+  padding: 0;
+}
 
 #app div#logo {
-  margin: 15px 0 0 5px
+  margin: 10px 0 0 5px;
+  font-size:20px;
+  font-weight: bold;
+  text-shadow: 0 -1px #222;
+  color: #fff;
+  opacity: .8;
+  
 }
 
 div#site_nav {
@@ -105,6 +126,8 @@ div#tour_news {
   float: left;
 }
 div#tour_news ul {margin-left: 15px;}
+div#tour_news li {margin-bottom: 5px;}
+div#tour_news a {color: #fff; font-weight:bold;}
 
 div#news {
   text-align:left;
@@ -127,6 +150,7 @@ div#news h3 {
 }
 
 #static button {
+    background-color: #39A787;
     background-image: url(/static-media/images/bg-button-lg.png);
     background-position: center center;
     background-repeat: repeat-x;
@@ -232,6 +256,7 @@ div#signup {
   margin: 0 0 0 20px;
   float:left;
 }
+div#signupBox {display:none}
 div#signup h3 {
   margin-top: 20px;
   font-size:  20px;
@@ -274,6 +299,15 @@ div#sessionsmax {
     color: #6a6a6a;
     font-weight: bold;
 }
+div#privacy {
+    display: none;
+    width: 500px
+}
+div#privacy p {font-size:12px; margin: 12px 0;}
+div#privacy h4 {margin:15px 0;font-size:14px; font-weight:bold;}
+div#privacy h4.first {margin-top: 0}
+div#privacy ul {margin-left: 15px; font-size: 12px; margin-top:10px;}
+
 div#logoffdlg {
     font-size: 14px;
     color: #6a6a6a;
@@ -355,7 +389,7 @@ div#footer {
     clear: both;
     margin: 20px 0 0 0;
     background: url(/static-media/images/divider.png) 0 0 repeat-x;
-    padding: 20px 0 0 0;
+    padding: 20px 0 15px 0;
 }
 div#copyright {
   float:left;
@@ -366,7 +400,17 @@ div#copyright {
 div #sponsors {
   float:right;
 }
+div #sponsors .logoRight {
+  float: right; margin-left: 15px;
+}
 
+div #sponsors p {
+font-size: 12px; 
+text-align: right; 
+width: 358px; 
+font-weight: bold; 
+color: rgb(62, 107, 127);
+}
 
 /* mapping styles */
 
@@ -392,7 +436,7 @@ li#tab_evaluate {background-color: #87ae8b;}
 li#tab_share {background-color: #acae87;}
 
 div#step_plan .toolbar { background: url(/static-media/images/bg-toolbar.png) repeat-x 0 0 #7cb7b3}
-div#step_plan .toolbar h1 {font-size: 21px; color: #fff; padding: 11px 0 0 15px;}
+div#step_plan .toolbar h1, div#step_evaluate  .toolbar h1, div#step_share .toolbar h1  {font-size: 21px; color: #fff; padding: 11px 0 0 15px;}
 div#step_draw .toolbar { background: url(/static-media/images/bg-toolbar.png) 0 0 repeat-x #87aea9}
 div#step_evaluate .toolbar {background: url(/static-media/images/bg-toolbar.png) 0 0 repeat-x  #87ae8b}
 div#step_share .toolbar {background: url(/static-media/images/bg-toolbar.png) 0 0 repeat-x #acae87}
@@ -429,7 +473,7 @@ input#evalbtn, input#sharebtn {
     background-color: #dddddd;
 }
 
-/* Plan Page */
+/* tab containers */
 div#step_plan {
     padding:0;
     background-color:#E3F0EF;
@@ -437,19 +481,47 @@ div#step_plan {
     -webkit-border-radius:0 10px 0 0;
     border-radius:0 10px 0 0;
 }
+div#step_evaluate {
+    padding:0;
+    background-color:#E3F0EF;
+    -moz-border-radius:0 10px 0 0;
+    -webkit-border-radius:0 10px 0 0;
+    border-radius:0 10px 0 0;
+}
+div#step_share{
+    padding:0;
+    background-color:#E3F0EF;
+    -moz-border-radius:0 10px 0 0;
+    -webkit-border-radius:0 10px 0 0;
+    border-radius:0 10px 0 0;
+}
 
-div#step_plan div.shadow_left {
+div#step_plan div.shadow_left ,
+div#step_evaluate div.shadow_left ,
+div#step_share div.shadow_left {
   top: 51px;
   opacity: .6
 }
 
-div#step_plan div.shadow_top {
+div#step_plan div.shadow_top,
+div#step_evaluate div.shadow_top ,
+div#step_share div.shadow_top {
   top: 51px;
   opacity: .6
 }
+div #sponsors .logoRight {
+  float: right; margin-left: 15px;
+}
 
+div #sponsors p {
+font-size: 12px; 
+text-align: right; 
+width: 358px; 
+font-weight: bold; 
+color: rgb(62, 107, 127);
+}
 
-div#plan_content {
+div.tab_content {
     top:51px;
     overflow:auto;
     bottom:0;
@@ -460,7 +532,7 @@ div#plan_content {
     padding: 18px;
 }
 
-div#plan_content h3 {
+div.tab_content h3 {
   color: #3e3e3e;
   font-size: 14px;
   letter-spacing: -0.03em;
@@ -468,13 +540,13 @@ div#plan_content h3 {
   margin-bottom: 10px;
 }
 
-div#plan_content h3#select_plan_title {
+div.tab_content h3#select_plan_title {
   float:left; 
   width: 66%;
   }
 
 
-
+/*plan tab */
 
 div#leg_selector_container {
   background: url(/static-media/images/divider-horz.png) 0 100% repeat-x;
@@ -1138,19 +1210,29 @@ button#legend_toggle {
     -webkit-box-shadow: 2px 2px 2px #888888;
     box-shadow: 2px 2px 2px #888888;
 }
+
+button#legend_toggle.ui-state-default {border: 1px solid #ccc;}
+
 div#map_legend_content {
     position: absolute;
     bottom: 35px;
     right: 280px;
-    width: 200px;
-    background-color: #efe8cb;
-    border: solid 1px #999999;
+    width: 170px;
+    background-color: #272727;
+    color: #fff;
+    padding: 5px;
+    border: 1px solid #666666;
     display: none;
+    opacity: 0.9;
+    filter: alpha(opacity=90);
     overflow-y: hidden;
     overflow-x: hidden;
     -moz-box-shadow: 2px 2px 2px #888888;
     -webkit-box-shadow: 2px 2px 2px #888888;
     box-shadow: 2px 2px 2px #888888;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
 }
 div#map_legend_content h1 {
     font-size: 11pt;
@@ -1158,14 +1240,14 @@ div#map_legend_content h1 {
     text-align:center;
 }
 div#map_legend_content table td {
-    font-size: 9pt;
+    font-size: .65em;
 }
 div#map_legend_content table th {
-    font-size: 9pt;
+    font-size: .65em;
     font-weight: bold;
 }
 div#map_legend_content table {
-    margin: 10px 3px;
+    margin: 0 3px 10px;
 }
 div#map_legend_content .swatch {
     width: 30px;
@@ -1238,23 +1320,33 @@ button#settings_toggle {
     top: 60px;
     right: 355px;
     font-size: 7pt;
+    display:none;
     -moz-box-shadow: 2px 2px 2px #888888;
     -webkit-box-shadow: 2px 2px 2px #888888;
     box-shadow: 2px 2px 2px #888888;
 }
+
+ button#settings_toggle.ui-state-default {border: 1px solid #ccc;}
+
 div#map_settings_content {
     position: absolute;
-    top: 83px;
+    top: 60px;
     right: 355px;
-    width: 220px;
-    background-color: #efe8cb;
-    border: solid 1px #999999;
-    display: none;
+    width: 170px;
+    background-color: #272727;
+    color: #fff;
+    border: 1px solid #666666;
+    padding: 5px 10px;
+    opacity: 0.9;
+    filter: alpha(opacity=90);
     overflow-y: hidden;
     overflow-x: hidden;
     -moz-box-shadow: 2px 2px 2px #888888;
     -webkit-box-shadow: 2px 2px 2px #888888;
     box-shadow: 2px 2px 2px #888888;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
 }
 div#map_settings_content h1 {
     font-size: 11pt;
@@ -1262,12 +1354,21 @@ div#map_settings_content h1 {
     text-align:center;
 }
 div#map_settings_content #map_settings_layers, div#map_settings_content .layer_type_container {
-    font-size: 0.75em;
-}
+    font-size: 0.65em;
+    font-weight:bold;
+    vertical-align:middle;
+    }
+div#map_settings_content .layer_type_container#layer_type_base {
+display:none
+}    
+div#map_settings_content .layer_type_container#layer_type_thematic input {
+display:none
+}    
+
 div#map_settings_content #opacity_slider {
-    width: 85%;
+    width: 100%;
     height: 5px;
-    margin: 12px;
+    margin: 5px 0;
 }
 div#map_settings_content .ui-slider .ui-slider-handle {
     cursor: default;
@@ -1332,7 +1433,7 @@ div.plansummary h3 {
 }
 div.plansummary label {
   display:inline-block;
-  width: 132px;
+  width: 149px;
   text-align:left;
   font-size: 12px;
   font-weight: bold;
@@ -1340,7 +1441,7 @@ div.plansummary label {
   }
 div.plansummary  .value {
   display:inline-block;
-  width: 100px;
+  width: 88px;
   text-align:right;
   font-size: 12px;
   font-weight: normal
@@ -1370,16 +1471,24 @@ div.plantable.header table tr th {
     font-size: 11px;
     line-height: 11px;
     }
-div.plantable.body  {
+div.plantable.body  { 
     background: #f7f4e5;
     border: 1px solid #aaa;
     overflow: auto;
     position: absolute;
-    top:180px;
     bottom:33px;
     left: 5px; 
     right: 5px;
 }
+div.map_menu_content.geography div.plantable.body {
+  top: 181px;
+  }
+div.map_menu_content.demographics div.plantable.body {
+  top: 203px;
+  }
+    
+  
+
 div.plantable.body table  tr.even {
   background: #fff;
 }
@@ -1404,7 +1513,7 @@ div.plantable .cell3{
     width: 26%;
 }
 div.plantable .cell4{  
-    width: 38%;
+    width: 35%;
 }
 div.plantable .error {
   font-size: 12px; 
@@ -1533,9 +1642,8 @@ div.evaluate {
     font-weight:normal;
 }
 .evaluate #reportButtons {
-    position:absolute;
-    bottom:35px;
-    width: 900px;
+  clear:both;
+  padding: 30px;
 }
 .evaluate #options span {
     display: block;
@@ -1571,12 +1679,29 @@ div.share p {
 
 div#nameandshare,
 #btnSaveAndShare {
-    margin:10px;
+    margin: 10px 0;
 }
 
 .share #successfulShare {
     display: none;
-    
+    width: 450px;
+}
+
+#successfulShare #sharedPermalink  a{
+    background: none repeat scroll 0 0 #DDDDDD;
+    border: 1px solid #CCCCCC;
+    font-size: 12px;
+    font-weight: bold;
+    margin: 15px 0;
+    padding: 12px;
+    text-decoration: none;
+    display:block;
+}
+
+.share #saveandshare .explanation {
+background: url("/static-media/images/divider-horz.png") repeat-x scroll 0 100% transparent;
+padding-bottom: 20px;
+margin-bottom:20px;
 }
 .share #saveandshare,
 .share #preview {
@@ -1596,7 +1721,7 @@ div#nameandshare,
     color:red;
 }
 #districtIndexFileTarget {
-    margin: 10px;
+    margin: 15px 0 30px 0;
 }
 #step_share .loading {
     background: url('/static-media/images/share-loading.gif') no-repeat left center;

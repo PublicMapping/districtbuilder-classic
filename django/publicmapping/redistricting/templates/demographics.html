@@ -39,7 +39,7 @@
     {% for target in aggregate %}
         <div><label>{{ target.name }} {{ target.target|floatformat|intcomma }}</label> <span id="totalpop" class="value">{{ target.value|intcomma  }}</span></div>
     {% endfor %}
-    {% include "extra_demographics.html" %}
+    {% include extra_demographics_template %}
 </div>
 <div class="plantable header">
     <table>
