@@ -41,9 +41,6 @@ body#app {  background: url(/static-media/images/bg-app.png) 0 0 repeat;}
 .float_left  {float:left}
 .float_right {float:right}
 
-.float_left  {float:left}
-.float_right {float:right}
-
 .clear_left  {clear:left}
 .clear_right {clear: right}
 .clear  {clear: both}
