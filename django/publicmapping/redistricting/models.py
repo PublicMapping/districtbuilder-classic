@@ -941,6 +941,48 @@ class Plan(models.Model):
 
         return plan
 
+    def get_base_geounits_in_geom(self, geom, threshold=100, simplified=False):
+        """
+        Get a list of the geounit ids of the geounits that comprise 
+        this geometry at the base level.  
+
+        Parameters:
+            threshold - distance threshold used for buffer in/out optimization
+            simplified - denotes whether or not the geom passed in is already simplified
+
+        Returns:
+            A list of tuples containing Geounit IDs and portable ids
+            that lie within this geometry. 
+        """
+
+        if not geom:
+           return list()
+
+        # Simplify by the same distance threshold used for buffering
+        simple = geom if simplified else geom.simplify(threshold)
+
+        # If the simplification makes the polygon empty, use the unsimplified polygon
+        simple = simple if not simple.empty else geom
+
+        # Perform two queries against the simplified district, one buffered in,
+        # and one buffered out using the same distance as the simplification tolerance
+        geolevel = self.legislative_body.get_base_geolevel()
+        b_out = Geounit.objects.filter(geolevel=geolevel, center__within=simple.buffer(threshold))
+        b_in = Geounit.objects.filter(geolevel=geolevel, center__within=simple.buffer(-1 * threshold))
+
+        # Find the geounits that are different between the two queries,
+        # and check if they are within the unsimplified district
+        b_in_values_set = set(b_in.values_list('id', 'portable_id'))
+        b_out_values_set = set(b_out.values_list('id', 'portable_id'))
+        diff = set(b_out_values_set ^ b_in_values_set)
+        diffwithin = []
+        if len(diff) > 0:
+            diffids = reduce(lambda x,y: x+y, list(diff))
+            diffwithin = [(unit.id, unit.portable_id) for unit in Geounit.objects.filter(id__in=diffids) if unit.center.within(geom)]
+
+        # Combine the geounits that were within the unsimplifed district with the buffered in list
+        return list(b_in_values_set | set(diffwithin))
+
     def get_base_geounits(self, threshold=100):
         """
         Get a list of the geounit ids of the geounits that comprise 
@@ -950,8 +992,8 @@ class Plan(models.Model):
             threshold - distance threshold used for buffer in/out optimization
 
         Returns:
-            A list of tuples containing Geounit IDs and portable ids
-            that lie within this Plan. 
+            A list of tuples containing Geounit IDs, portable ids,
+            and district ids that lie within this Plan. 
         """
 
         # Collect the geounits for each district in this plan
@@ -962,6 +1004,56 @@ class Plan(models.Model):
             geounits.extend([(gid, pid, district.district_id) for (gid, pid) in districtunits])
         
         return geounits
+
+    def get_assigned_geounits(self, threshold=100):
+        """
+        Get a list of the geounit ids of the geounits that comprise 
+        this plan at the base level. This is different than
+        get_base_geounits, because it doesn't return district ids
+        along with the geounit ids, and should therefore be more performant.
+
+        Parameters:
+            threshold - distance threshold used for buffer in/out optimization
+
+        Returns:
+            A list of tuples containing Geounit IDs and portable ids
+            that lie within this Plan. 
+        """
+
+        # TODO: enhance performance. Tried various ways to speed this up by
+        # creating a union of simplified geometries and passing it to get_base_geounits.
+        # This seems like it would be faster, since the amount of query overhead is
+        # reduced, but this offered no performance improvement, and instead caused
+        # some accuracty issues. This needs further examination.
+        geounits = []
+        for district in self.get_districts_at_version(self.version):
+            geounits.extend(district.get_base_geounits(threshold))
+        
+        return geounits
+
+    def get_unassigned_geounits(self, threshold=100):
+        """
+        Get a list of the geounit ids of the geounits that do not belong to
+        any district of this plan at the base level. 
+
+        Parameters:
+            threshold - distance threshold used for buffer in/out optimization
+
+        Returns:
+            A list of tuples containing Geounit IDs and portable ids
+            that do not belong to any districts within this Plan. 
+        """
+
+        # Find all geounits
+        geolevel = self.legislative_body.get_base_geolevel()
+        all = Geounit.objects.filter(geolevel=geolevel).values_list('id', 'portable_id')
+
+        # Find all assigned geounits
+        assigned = self.get_assigned_geounits(threshold)
+
+        # Return the difference
+        return list(set(all) ^ set(assigned))
+
 
 class PlanForm(ModelForm):
     """
@@ -1219,36 +1311,8 @@ class District(models.Model):
         Returns:
             A list of tuples containing Geounit IDs and portable ids
             that lie within this District. 
-        """    
-        if not self.geom:
-           return list()
-
-        geolevel = self.plan.legislative_body.get_base_geolevel()
-
-        # Simplify by the same distance threshold used for buffering
-        simple = self.geom.simplify(threshold)
-
-        # If the simplification makes the polygon empty, use the unsimplified polygon
-        if simple.empty:
-            simple = self.geom
-
-        # Perform two queries against the simplified district, one buffered in,
-        # and one buffered out using the same distance as the simplification tolerance
-        b_out = Geounit.objects.filter(geolevel=geolevel, center__within=simple.buffer(threshold))
-        b_in = Geounit.objects.filter(geolevel=geolevel, center__within=simple.buffer(-1 * threshold))
-
-        # Find the geounits that are different between the two queries,
-        # and check if they are within the unsimplified district
-        b_in_values_set = set(b_in.values_list('id', 'portable_id'))
-        b_out_values_set = set(b_out.values_list('id', 'portable_id'))
-        diff = set(b_out_values_set ^ b_in_values_set)
-        diffwithin = []
-        if len(diff) > 0:
-            diffids = reduce(lambda x,y: x+y, list(diff))
-            diffwithin = [(unit.id, unit.portable_id) for unit in Geounit.objects.filter(id__in=diffids) if unit.center.within(self.geom)]
-
-        # Combine the geounits that were within the unsimplifed district with the buffered in list
-        return list(b_in_values_set | set(diffwithin))
+        """
+        return self.plan.get_base_geounits_in_geom(self.geom, threshold);
 
     def simplify(self):
         """

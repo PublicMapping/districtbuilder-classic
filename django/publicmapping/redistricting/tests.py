@@ -344,6 +344,14 @@ class PlanTestCase(BaseTestCase):
             self.assertTrue(unit[0] >= lastid, 'Not in order: %d < %d' % (unit[0], lastid))
             lastid = unit[0]
 
+        # Test getting assigned geounits
+        assigned = plan.get_assigned_geounits(0.1)
+        self.assertEqual(162, len(assigned), 'Incorrect number of assigned geounits returned: %d' % len(assigned))
+
+        # Test getting unassigned geounits
+        unassigned = plan.get_unassigned_geounits(0.1)
+        self.assertEqual(729 - 162, len(unassigned), 'Incorrect number of unassigned geounits returned: %d' % len(unassigned))
+
     def test_plan2index(self):
         """
         Test exporting a plan
