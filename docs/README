@@ -11,8 +11,9 @@ Apache v 2.2
 Geoserver v 2.0.2
 Postgresql v 8.4 w/ PostGIS
 Python v 2.6
-Django v 1.1
+Django v 1.2.3
 
+On a debian-based system with aptitude installed, you can install most of
 the necessary software using the command:
 
 > sudo aptitude install apache2 libapache2-mod-wsgi python-django \
@@ -116,12 +117,13 @@ update support, and install tmpreaper and cron jobs.
     directory: /projects/local/data/:
 
     > sudo mkdir /projects/publicmapping/local/data 
-    > cd  /projects/publicmapping/local/data; sudo unzip /projects/publicmapping/data/2010_10_22_OHdata.zip
+    > cd  /projects/publicmapping/local/data; sudo unzip /projects/publicmapping/data/OH_data.zip
 
     *Note* that if you are loading spatial data for a coverage other than
     the demonstration coverage over Ohio, you will need to ensure that the 
-    spatial reference of the data is "Web Auxiliary Sphere". The definition
-    for all GIS software packages is available here:
+    spatial reference of the data is "Web Auxiliary Sphere" or "Popular 
+    Visualisation CRS / Mercator". The definition for all GIS software packages
+    is available here:
         
     http://spatialreference.org/ref/epsg/3785/
 
@@ -133,13 +135,37 @@ update support, and install tmpreaper and cron jobs.
 
  8. Run the setup script with the appropriate parameters - the parts of 
     the app you want to set up, along with the path to an xsd and a 
-    config.xml file.  For example - if you want to set up the database 
-    with all geolevels, your config.xml file is next to the .xsd schema 
-    file in the repository, and your geoserver is installed and 
-    configured, you would type:
+    config.xml file.  To set up the application database, import the spatial
+    data, configure geoserver, and create the BARD data files, run:
 
-    > sudo python ./setup.py -V -d -g0 -g1 -g2 -t -v -G \
-        ../../docs/config.xsd ../../docs/config.xml
+    > sudo ./setup.py ../../docs/config.xsd ../../docs/config.xml
+
+    To configure portions of the application seperately, get more help on the
+    setup tool by typing:
+
+    > ./setup.py --help
+
+    If you ren each setup step seperately, they must be performed in the
+    following order (all steps are required to get a properly functioning 
+    application):
+
+    > -d  : Create the database schema. This must happen before any other step
+            of the setup process, and can be performed multiple times if the 
+            configuration matches the database settings with no side effects.
+    > -g0 : Import the first (0 based index) GeoLevel from the configuration 
+            file.
+    > -gX : Import the Xth* (0 based index) GeoLevel from the configuration 
+            file.
+    > -nX : Renest the geometry and data values from the Xth* (0 based index)
+            GeoLevel.
+    > -V  : Create database views for the spatial layers in Geoserver.
+    > -G  : Configure a running Geoserver with the loaded spatial data. 
+    > -b  : Compute and store a BARD basemap for BARD reports.
+    > -t  : Create the template plans that are configured. This step may happen
+            any time after the nesting step.
+
+    * The importing and nesting must occur in the order of smallest geography 
+    to largest geography.
 
  7. Django serves up SLD files to clients, and need this mime type added
     to the system's known mime types in order to serve the content
@@ -271,17 +297,17 @@ update support, and install tmpreaper and cron jobs.
     > sudo python ./setup.py -V -G ../../docs/config.xsd ../../docs/config.xml
 
  7. Set the geowebcache directory to a non-default.  Otherwise your tiles will
-    be saved to /tmp and possibly disappear on reboot.  Add the following snippet
-    to your <web-app> configuration in geoserver's webapp configuration
+    be saved to /tmp and possibly disappear on reboot.  Add the following 
+    snippet to your <web-app> configuration in geoserver's webapp configuration:
     
     > cd /var/lib/tomcat6/webapps/geoserver/WEB-INF
-    > gksu gedit web.xml    
+    > sudo nano web.xml    
 
-          <!-- Change the geowebcache dir -->
-          <context-param>
-            <param-name>GEOWEBCACHE_CACHE_DIR</param-name>
-            <param-value>/var/lib/tomcat6/webapps/geoserver/data/gwc</param-value>
-          </context-param>
+      <!-- Change the geowebcache dir -->
+      <context-param>
+        <param-name>GEOWEBCACHE_CACHE_DIR</param-name>
+        <param-value>/var/lib/tomcat6/webapps/geoserver/data/gwc</param-value>
+      </context-param>
 
  8. Now that your GeoServer is configured, you should use the Services > 
     GWC link in the menu to seed some of your layers.  This will make the 
@@ -301,6 +327,7 @@ update support, and install tmpreaper and cron jobs.
     > sudo R
     >> install.packages('R2HTML', dependencies=TRUE)
     >> install.packages('stringr', dependencies=TRUE)
+    >> install.packages('ineq', dependencies=TRUE)
     >> install.packages('rgeos', repos='http://R-Forge.R-project.org', dependencies=TRUE)
     >> install.packages('BARD', dependencies=TRUE)
     >> q('no')
@@ -310,16 +337,16 @@ update support, and install tmpreaper and cron jobs.
     distribution.  NB: R packages are installed from source so you'll need
     the build-essential package to install BARD.
 
-  2. By default, reports are served from the following directory:
+ 2. By default, reports are served from the following directory:
 
-     /projects/publicmapping/local/reports
+    /projects/publicmapping/local/reports
 
-     You can make this directory and give it the appropriate permissions 
-     with the command:
+    You can make this directory and give it the appropriate permissions 
+    with the command:
         
-      sudo mkdir /projects/publicmapping/local/reports
-      sudo chgrp www-data /projects/publicmapping/local/reports
-      sudo chmod 770 /projects/publicmapping/local/reports
+    > sudo mkdir /projects/publicmapping/local/reports
+    > sudo chgrp www-data /projects/publicmapping/local/reports
+    > sudo chmod 770 /projects/publicmapping/local/reports
     
 == Celery Configuration ==
     Some processes take to long to happen over a synchronous  web 
@@ -330,43 +357,46 @@ update support, and install tmpreaper and cron jobs.
     configuration you need to do to get celeryd (the celery daemon) 
     running when your server starts.
     
-  1. Download the celery init.d script from github, put it into your 
-     init.d folder, and enable it for startup
+ 1. Download the celery init.d script from github, put it into your 
+    init.d folder, and enable it for startup
      
-     > sudo wget --no-check-certificate -O /etc/init.d/celeryd \
-       https://github.com/ask/celery/raw/master/contrib/debian/init.d/celeryd
-     > sudo chmod a+x /etc/init.d/celeryd
-     > sudo update-rc.d celeryd defaults
+    > sudo wget --no-check-certificate -O /etc/init.d/celeryd \
+      https://github.com/ask/celery/raw/master/contrib/debian/init.d/celeryd
+    > sudo chmod a+x /etc/init.d/celeryd
+    > sudo update-rc.d celeryd defaults
    
-  2. Configure celeryd to run as the www-data user rather than root
-     by creating a settings file in /etc/defaults
+ 2. Configure celeryd to run as the www-data user rather than root
+    by creating a settings file in /etc/defaults
 
-     > gksu gedit /etc/default/celeryd
+    > sudo nano /etc/default/celeryd
 
-  3. Paste the following configuration info into the file:
+ 3. Paste the following configuration info into the file:
 
-        # Where to chdir at start.
-        CELERYD_CHDIR='/projects/publicmapping/trunk/django/publicmapping/'
-        # Path to celeryd
-        CELERYD='/projects/publicmapping/trunk/django/publicmapping/manage.py celeryd'
-        # Name of the projects settings module.
-        export DJANGO_SETTINGS_MODULE='settings'
-        # User to run celeryd as. Default is current user.
-        CELERYD_USER='www-data'
-        # Group to run celeryd as. Default is current user.
-        CELERYD_GROUP='www-data'
+    # Where to chdir at start.
+    CELERYD_CHDIR='/projects/publicmapping/trunk/django/publicmapping/'
+    # Path to celeryd
+    CELERYD='/projects/publicmapping/trunk/django/publicmapping/manage.py celeryd'
+    # Options for celeryd that start the scheduler
+    CELERYD_OPTS='-B -s /tmp/celerybeat-schedule'
+    # Name of the projects settings module.
+    export DJANGO_SETTINGS_MODULE='settings'
+    # User to run celeryd as. Default is current user.
+    CELERYD_USER='www-data'
+    # Group to run celeryd as. Default is current user.
+    CELERYD_GROUP='www-data'
 
-  4. Save your file and close your text editor
+ 4. Save your file and close your text editor
 
-  5. Create your log and pid files so that www-data can read and 
-     write them.
+ 5. Create your log and pid files so that www-data can read and 
+    write them.
 
-     > sudo touch /var/run/celeryd.pid /var/log/celeryd.log
-     > sudo chown www-data /var/run/celeryd.pid /var/log/celeryd.log
-     > sudo chgrp www-data /var/run/celeryd.pid /var/log/celeryd.log
+    > sudo touch /var/run/celeryd.pid /var/log/celeryd.log
+    > sudo chown www-data /var/run/celeryd.pid /var/log/celeryd.log
+    > sudo chgrp www-data /var/run/celeryd.pid /var/log/celeryd.log
 
-  6. Celery should be ready to go
-     > sudo service celeryd start
+ 6. Celery should be ready to go, start it from the init script.
+
+    > sudo service celeryd start
 
 == Data Configuration ==
     Depending on your data, you may want to use the admin interface in 
