@@ -898,44 +898,20 @@ class Plan(models.Model):
         """
         Get Plan Districts at a specified version.
 
-        The districts are versioned to the current plan version when
-        they are changed, so this method searches all the districts
-        in the plan, returning the districts that have the highest
-        version number at or below the version passed in.
+        When a district is changed, a copy of the district is inserted
+        into the database with an incremented version number. The plan version
+        is also incremented.  This method returns all of the districts
+        in the given plan at a particular version.
 
         Parameters:
             version -- The version of the Districts to fetch.
 
         Returns:
-            An array of districts that exist in the plan at the version.
+            A list of districts that exist in the plan at the version.
         """
 
-        # Get all the districts
-        districts = self.district_set.all()
+        return list(District.objects.raw('select d.* from redistricting_district as d join (select max(version) as latest, district_id, plan_id from redistricting_district where plan_id = %s and version <= %s group by district_id, plan_id) as v on d.district_id = v.district_id and d.plan_id = v.plan_id and d.version = v.latest', [ self.id, version ]))
 
-        # Sort the districts by district_id, then version
-        districts = sorted(list(districts), key=lambda d: d.sortVer())
-        dvers = {}
-
-        # For each district
-        for i in range(0, len(districts)):
-            district = districts[i]
-
-            # If the district version is higher than the version requested
-            if district.version > version:
-                # Skip it
-                continue
-
-            # Save this district, keyed by the district_id
-            dvers[district.district_id] = district
-
-        # Convert the dict of districts into an array of districts
-        districts = []
-        for value in dvers.itervalues():
-            districts.append(value)
-
-        return districts
-      
     @staticmethod
     def create_default(name,body,owner=None,template=True,is_pending=True):
         """
