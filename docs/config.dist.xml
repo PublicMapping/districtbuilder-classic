@@ -6,9 +6,9 @@
         <!-- A Legislative body has an ID (for referencing in GeoLevel
             definitions later), a name, and a label for plan items 
             ("District" for Congressional, etc) -->
-        <LegislativeBody id="congress" name="Congressional" member="District %s" maxdistricts="18"/>
-        <LegislativeBody id="house" name="State House" member="District %s" maxdistricts="99" />
-        <LegislativeBody id="senate" name="State Senate" member="District %s" maxdistricts="33" />
+        <LegislativeBody id="congress" name="Congressional" member="Congressional District %s" maxdistricts="11"/>
+        <LegislativeBody id="house" name="State House" member="State House District %s" maxdistricts="100" />
+        <LegislativeBody id="senate" name="State Senate" member="State Senate District %s" maxdistricts="40" />
     </LegislativeBodies>
 
     <!-- A list of subjects referenced in the system. -->
@@ -17,26 +17,48 @@
             The subject is mapped to an attribute during the import phase,
             and contains a long and short display name. Subjects have IDs
             for referencing in GeoLevel definitions later. -->
-        <Subject id="poptot" field="POP2000" name="Total Population" 
+        <Subject id="poptot" field="TOTPOP" name="Total Population" 
                  short_name="Total Pop." displayed="true" sortkey="1" />
-        <Subject id="popblk" field="BLACK" name="Black Persons" 
+        <Subject id="popblk" field="TOTPOP_B" name="African-American" 
                  short_name="Black" displayed="false" sortkey="2" />
-        <Subject id="pophisp" field="HISPANIC" name="Hispanic or Latino" 
+        <Subject id="pophisp" field="TOTPOP_H" name="Hispanic or Latino"
                  short_name="Hispanic" displayed="false" sortkey="3" />
-        <!--
-        <Subject id="vaptot" field="VAPTOT" name="Voting Age Population"
-                 short_name="Voters" displayed="false" sortkey="4" />
-        <Subject id="vapnhwht" field="VAPNHWHT" name="Voting Age Population - White"
-                 short_name="White Votng Age" displayed="false" sortkey="9" />
-        <Subject id="vapblk" field="VAPBLK" name="Voting Age Population - Black"
-                 short_name="Blk Votng Age" displayed="false" sortkey="5" />
-        <Subject id="vaphisp" field="VAPHISP" name="Voting Age Population - Hispanic"
-                 short_name="Hsp Votng Age" displayed="false" sortkey="6" />
-        <Subject id="presdem" field="PRES_DEM" name="Democratic Voters"
-                 short_name="Democrat" displayed="false" sortkey="7" />
-        <Subject id="presrep" field="PRES_REP" name="Republican Voters"
-                 short_name="Republican" displayed="false" sortkey="8" />
-        -->
+        <Subject id="popwnh" field="TOTPOP_WNH" name="Total White Non-Hispanic" 
+                 short_name="White" displayed="false" sortkey="4" />
+        <Subject id="popasn" field="TOTPOP_A" name="Asian-American"
+                 short_name="As Amer" displayed="false" sortkey="5" />
+        <Subject id="popnam" field="TOTPOP_NA" name="Native American"
+                 short_name="Nat Amer" displayed="false" sortkey="6" />
+        <Subject id="poppild" field="TOTPOP_PI" name="Pacific Islander"
+                 short_name="Pac Isldr" displayed="false" sortkey="7" />
+        <Subject id="vap" field="VAP" name="Voting Age Population"
+                 short_name="Voters" displayed="false" sortkey="8" />
+        <Subject id="vapwnh" field="VAP_WNH" name="Voting Age Population - White"
+                 short_name="Wht Votng Age" displayed="false" sortkey="9" />
+        <Subject id="vapblk" field="VAP_B" name="Voting Age Population - African-American"
+                 short_name="Blk Votng Age" displayed="false" sortkey="10" />
+        <Subject id="vaphisp" field="VAP_H" name="Voting Age Population - Hispanic/Latino"
+                 short_name="Hsp Votng Age" displayed="false" sortkey="11" />
+        <Subject id="vapasn" field="VAP_A" name="Voting Age Population - Asian-American"
+                 short_name="As Am Votng Age" displayed="false" sortkey="12" />
+        <Subject id="vapnam" field="VAP_NA" name="Voting Age Population - Native American"
+                 short_name="Nat Amer Votng Age" displayed="false" sortkey="13" />
+        <Subject id="vappild" field="VAP_PI" name="Voting Age Population - Pacific Islander"
+                 short_name="Pac Isldr Votng Age" displayed="false" sortkey="14" />
+        <Subject id="presdem" field="PRS08DEM" name="Democratic Voters"
+                 short_name="Democrat 08" displayed="false" sortkey="15" />
+        <Subject id="presrep" field="PRS08REP" name="Republican Voters"
+                 short_name="Republican 08" displayed="false" sortkey="16" />
+        <Subject id="presoth" field="PRS08OTH" name="Other Voters"
+                 short_name="Other 08" displayed="false" sortkey="17" />
+        <Subject id="govdem" field="GOV09DEM" name="Democratic Voters, Governor '09"
+                 short_name="Democrat 09" displayed="false" sortkey="18" />
+        <Subject id="govrep" field="GOV09REP" name="Republican Voters, Governor '09"
+                 short_name="Republican 09" displayed="false" sortkey="19" />
+        <Subject id="govoth" field="GOV09OTH" name="Sum All Other Candidates, Governor '09"
+                 short_name="Other Cand 09" displayed="false" sortkey="20" />
+        <Subject id="govtot" field="GOV09TOT" name="Total Voters, Governor '09"
+                 short_name="All Voters 09" displayed="false" sortkey="21" />
  
         <!-- You can alias a subject by overriding the field, if the
             import shapefiles have different field names at different
@@ -49,15 +71,13 @@
             district. Each discrete target (usually 1 per legislative body/subject
             combination) must be listed here, with a unique ID.
         -->
-        <Target id="tottarget" subjectref="poptot" value="630730" range1="0.1" range2="0.2" />
-        <Target id="blktarget" subjectref="popblk" value="62000" range1="0.1" range2="0.2" />
-        <Target id="hisptarget" subjectref="pophisp" value="8000" range1="0.1" range2="0.2" />
-        <Target id="housetarget" subjectref="poptot" value="114678" range1="0.1" range2="0.2" />
-        <Target id="senatetarget" subjectref="poptot" value="344035" range1="0.1" range2="0.2" />
+        <Target id="tottarget" subjectref="poptot" value="727366" range1="0.20" range2="0.25" />
+        <Target id="housetarget" subjectref="poptot" value="80010" range1="0.1" range2="0.2" />
+        <Target id="senatetarget" subjectref="poptot" value="200026" range1="0.1" range2="0.2" />
     </Targets>
    
     <GeoLevels>
-      <GeoLevel id="block" name="block" min_zoom="0" sort_key="3" tolerance="2.5">
+      <GeoLevel id="block" name="block" min_zoom="9" sort_key="3" tolerance="2.5">
           <!--
 
           You may use EITHER the "Shapefile" or "Files" element as a child 
@@ -70,72 +90,160 @@
           directly from the American Fact Finder web application hosted by
           the US Census Beureau.
           
-          <Shapefile namefield="NAME00" supplementfield="BLKIDFP00"
-            path="/projects/publicmapping/data/OH_39_census_block_web_mercator.shp"/>
+          -->
+
+          <Shapefile path="/projects/publicmapping/data/tl_2010_51_block10_3785_join.shp">
+              <Fields>
+                  <!-- 
+
+                  Each Field item defines a field in the shapefile that
+                  describes a different part of the geographic unit.
+
+                  A "name" type field is used to display the name of the
+                  geographic unit.
+
+                  A "portable" type field is used to store the FIPS/GEOID
+                  of the geographic unit, which is shared with other GIS
+                  systems.
+
+                  A "tree" type field is used to store information about
+                  the geography, and where it resides in the tree. This type
+                  of field requires a "pos" attribute, which declares which
+                  position in the tree the field belongs (starting at 0);
+                  a "width" attribute is also required to declare how wide
+                  this portion of the tree code is. This is helpful when
+                  the treecode may not be zero padded.
+
+                  -->
+                  <Field name="NAME10" type="name"/>
+                  <Field name="GEOID10" type="portable"/>
+                  <Field name="STATEFP10" type="tree" pos="0" width="2"/>
+                  <Field name="COUNTYFP10" type="tree" pos="1" width="3"/>
+                  <Field name="VTDST10" type="tree" pos="2" width="4"/>
+                  <Field name="GEOID10" type="tree" pos="3" width="14"/>
+              </Fields>
+          </Shapefile>
+          
+          <!-- 
+          
+          A reference to the subjects for which attribute data is 
+          available at this geolevel.
+          
+          -->
+          <GeoLevelCharacteristics>
+              <GeoLevelCharacteristic ref="poptot" />
+              <GeoLevelCharacteristic ref="vap" />
+              <GeoLevelCharacteristic ref="vapblk" />
+              <GeoLevelCharacteristic ref="vaphisp" />
+              <GeoLevelCharacteristic ref="govdem" />
+              <GeoLevelCharacteristic ref="govrep" />
+              <GeoLevelCharacteristic ref="govtot" />
+          </GeoLevelCharacteristics>
+          
+          <!--
+          
+          A reference to a legislative body. A geolevel may be used by 
+          many legislative bodies.
+          
+          -->
+          <LegislativeBodies>
+              <LegislativeBody ref="congress">
+                  <LegislativeTargets>
+                      <LegislativeTarget ref="tottarget" default="true" />
+                  </LegislativeTargets>
+              </LegislativeBody>
+              <LegislativeBody ref="house">
+                  <LegislativeTargets>
+                      <LegislativeTarget ref="housetarget" default="true" />
+                  </LegislativeTargets>
+              </LegislativeBody>
+              <LegislativeBody ref="senate">
+                  <LegislativeTargets>
+                      <LegislativeTarget ref="senatetarget" default="true" />
+                  </LegislativeTargets>
+              </LegislativeBody>
+          </LegislativeBodies>
+      </GeoLevel>
+
+      <!--
+      
+      A child geolevel. The geography of the parent geolevel must
+      be coincident in its child.
+          
+      -->
+      <GeoLevel id="vtd" name="vtd" min_zoom="5" sort_key="2" tolerance="25">
+          <!--
+
+          You may use EITHER the "Shapefile" or "Files" element as a child 
+          of geolevel to define the geography and attributes. The 
+          "Shapefile" element must contain both the geography and 
+          attributes, whereas the "Files" element contains an item for the 
+          geography, and multiple items for the attributes.
+          
+          This is in anticipation of loading data that has been downloaded
+          directly from the American Fact Finder web application hosted by
+          the US Census Beureau.
+          
           -->
           <Files>
-              <Geography path="/projects/publicmapping/data/Ashtabula/tgr39007blk00_3785.shp"
-                         namefield="BLOCK" supplementfield="STFID" />
-              <Geography path="/projects/publicmapping/data/Muskingum/tgr39119blk00_3785.shp"
-                         namefield="BLOCK" supplementfield="STFID" />
-              <Attributes path="/projects/publicmapping/data/Ohio_BlockDemographicData/tgr39000sf1blk.dbf"
-                          namefield="BLOCK" supplementfield="STFID" />
+              <Geography path="/projects/publicmapping/data/tl_2010_51_vtd10_3785.shp">
+                  <!-- 
+
+                  Each Field item defines a field in the shapefile that
+                  describes a different part of the geographic unit.
+
+                  A "name" type field is used to display the name of the
+                  geographic unit.
+
+                  A "portable" type field is used to store the FIPS/GEOID
+                  of the geographic unit, which is shared with other GIS
+                  systems.
+
+                  A "tree" type field is used to store information about
+                  the geography, and where it resides in the tree. This type
+                  of field requires a "pos" attribute, which declares which
+                  position in the tree the field belongs (starting at 0);
+                  a "width" attribute is also required to declare how wide
+                  this portion of the tree code is. This is helpful when
+                  the treecode may not be zero padded.
+
+                  -->
+                  <Fields>
+                      <Field name="NAME10" type="name" />
+                      <Field name="GEOID10" type="portable" />
+                      <Field name="STATEFP10" type="tree" pos="0" width="2"/>
+                      <Field name="COUNTYFP10" type="tree" pos="1" width="3"/>
+                      <Field name="VTDST10" type="tree" pos="2" width="4"/>
+                  </Fields>
+              </Geography>
           </Files>
           
-          <!-- A reference to the subjects for which population data is available
-          at this geolevel -->
+          <!-- 
+          
+          A reference to the subjects for which attribute data is available
+          at this geolevel.
+          
+          -->
           <GeoLevelCharacteristics>
               <GeoLevelCharacteristic ref="poptot" />
-              <GeoLevelCharacteristic ref="popblk" />
-              <GeoLevelCharacteristic ref="pophisp1" />
+              <GeoLevelCharacteristic ref="vap" />
+              <GeoLevelCharacteristic ref="vapblk" />
+              <GeoLevelCharacteristic ref="vaphisp" />
+              <GeoLevelCharacteristic ref="govdem" />
+              <GeoLevelCharacteristic ref="govtot" />
           </GeoLevelCharacteristics>
           
-          <!-- A reference to a legislative body.
-              A geolevel may be used by many legislative bodies. -->
-          <LegislativeBodies>
-              <LegislativeBody ref="congress">
-                  <LegislativeTargets>
-                      <LegislativeTarget ref="tottarget" default="true" />
-                      <LegislativeTarget ref="blktarget"/>
-                      <LegislativeTarget ref="hisptarget1"/>
-                  </LegislativeTargets>
-              </LegislativeBody>
-              <LegislativeBody ref="house">
-                  <LegislativeTargets>
-                      <LegislativeTarget ref="housetarget" default="true" />
-                  </LegislativeTargets>
-              </LegislativeBody>
-              <LegislativeBody ref="senate">
-                  <LegislativeTargets>
-                      <LegislativeTarget ref="senatetarget" default="true" />
-                  </LegislativeTargets>
-              </LegislativeBody>
-          </LegislativeBodies>
-      </GeoLevel>
-
-      <!-- A child geolevel. The geography of the parent geolevel must
-          be coincident in it's child until the system supports automatic
-          aggregation. -->
-      <GeoLevel id="tract" name="tract" min_zoom="5" sort_key="2" tolerance="25">
-          <Shapefile path="/projects/publicmapping/data/Ohio_tract00_WithDemographicData_3785.shp" namefield="TRACT" supplementfield="FIPS" />
+          <!--
           
-          <!-- A reference to the subjects for which population data is available
-          at this geolevel -->
-          <GeoLevelCharacteristics>
-              <GeoLevelCharacteristic ref="poptot" />
-              <GeoLevelCharacteristic ref="popblk" />
-              <GeoLevelCharacteristic ref="pophisp" />
-          </GeoLevelCharacteristics>
+          A reference to a legislative body. A geolevel may be used by 
+          many legislative bodies. 
           
-          <!-- A reference to a legislative body.
-              A geolevel may be used by many legislative bodies. -->
+          -->
           <LegislativeBodies>
               <LegislativeBody ref="congress">
                   <Parent ref="block"/>
                   <LegislativeTargets>
                       <LegislativeTarget ref="tottarget" default="true" />
-                      <LegislativeTarget ref="blktarget"/>
-                      <LegislativeTarget ref="hisptarget"/>
                   </LegislativeTargets>
               </LegislativeBody>
               <LegislativeBody ref="house">
@@ -153,38 +261,94 @@
           </LegislativeBodies>
       </GeoLevel>
 
-      <!-- A list of geographic levels supported. This list will be used by
-          the importer to enforce nested geometries. -->
-      <GeoLevel id="county" name="county" min_zoom="9" sort_key="1" tolerance="250">
-          <Shapefile path="/projects/publicmapping/data/Ohio_county00_WithDemographicData_3785.shp" namefield="NAME" supplementfield="FIPS"/>
+      <!--
+      
+      A child geolevel. The geography of the parent geolevel must
+      be coincident in its child.
           
-          <!-- A reference to the subjects for which population data is available
-          at this geolevel -->
+      -->
+      <GeoLevel id="county" name="county" min_zoom="0" sort_key="1" tolerance="250">
+          <!--
+
+          You may use EITHER the "Shapefile" or "Files" element as a child 
+          of geolevel to define the geography and attributes. The 
+          "Shapefile" element must contain both the geography and 
+          attributes, whereas the "Files" element contains an item for the 
+          geography, and multiple items for the attributes.
+          
+          This is in anticipation of loading data that has been downloaded
+          directly from the American Fact Finder web application hosted by
+          the US Census Beureau.
+          
+          -->
+          <Files>
+              <Geography path="/projects/publicmapping/data/tl_2010_51_county10_3785.shp">
+                  <!-- 
+
+                  Each Field item defines a field in the shapefile that
+                  describes a different part of the geographic unit.
+
+                  A "name" type field is used to display the name of the
+                  geographic unit.
+
+                  A "portable" type field is used to store the FIPS/GEOID
+                  of the geographic unit, which is shared with other GIS
+                  systems.
+
+                  A "tree" type field is used to store information about
+                  the geography, and where it resides in the tree. This type
+                  of field requires a "pos" attribute, which declares which
+                  position in the tree the field belongs (starting at 0);
+                  a "width" attribute is also required to declare how wide
+                  this portion of the tree code is. This is helpful when
+                  the treecode may not be zero padded.
+
+                  -->
+                  <Fields>
+                      <Field name="NAME10" type="name"/>
+                      <Field name="GEOID10" type="portable"/>
+                      <Field name="STATEFP10" type="tree" pos="0" width="2"/>
+                      <Field name="COUNTYFP10" type="tree" pos="1" width="3"/>
+                  </Fields>
+              </Geography>
+          </Files>
+          
+          <!-- 
+          
+          A reference to the subjects for which attribute data is available
+          at this geolevel.
+          
+          -->
           <GeoLevelCharacteristics>
               <GeoLevelCharacteristic ref="poptot" />
-              <GeoLevelCharacteristic ref="popblk" />
-              <GeoLevelCharacteristic ref="pophisp" />
+              <GeoLevelCharacteristic ref="vap" />
+              <GeoLevelCharacteristic ref="vapblk" />
+              <GeoLevelCharacteristic ref="vaphisp" />
+              <GeoLevelCharacteristic ref="govdem" />
+              <GeoLevelCharacteristic ref="govtot" />
           </GeoLevelCharacteristics>
           
-          <!-- A reference to a legislative body.
-              A geolevel may be used by many legislative bodies. -->
+          <!--
+          
+          A reference to a legislative body. A geolevel may be used by 
+          many legislative bodies.
+          
+          -->
           <LegislativeBodies>
               <LegislativeBody ref="congress">
-                  <Parent ref="tract"/>
+                  <Parent ref="vtd"/>
                   <LegislativeTargets>
                       <LegislativeTarget ref="tottarget" default="true" />
-                      <LegislativeTarget ref="blktarget"/>
-                      <LegislativeTarget ref="hisptarget"/>
                   </LegislativeTargets>
               </LegislativeBody>
               <LegislativeBody ref="house">
-                  <Parent ref="tract"/>
+                  <Parent ref="vtd"/>
                   <LegislativeTargets>
                       <LegislativeTarget ref="housetarget" default="true" />
                   </LegislativeTargets>
               </LegislativeBody>
               <LegislativeBody ref="senate">
-                  <Parent ref="tract"/>
+                  <Parent ref="vtd"/>
                   <LegislativeTargets>
                       <LegislativeTarget ref="senatetarget" default="true" />
                   </LegislativeTargets>
@@ -193,126 +357,200 @@
       </GeoLevel>
     </GeoLevels>
    
-    <!-- This element facilitates the creation of system templates. A
-        system template is a plan owned by the admin user, that all other
-        users can create derivative plans from. -->
+    <!-- 
+    
+    This element facilitates the creation of system templates. A
+    system template is a plan owned by the admin user, that all other
+    users can create derivative plans from.
+    
+    -->
     <Templates>
         <Template name="Congressional">
             <!-- A reference to a legislative body. -->
             <LegislativeBody ref="congress"/>
             
-            <!-- The path to the district index file. The index file must be
-                a two column CSV file, with each row corresponding to a
-                unit of geography, and the district it belongs to. Only one
-                of "Shapefile" and "Indexfile" are required. -->
-            <Blockfile path="/projects/publicmapping/data/OH_congressional_blockfile.csv" />
+            <!-- 
+            
+            The path to the district index file. The index file must be
+            a two column CSV file, with each row corresponding to 1) a
+            unit of geography, and 2) the district it belongs to.
+            
+            -->
+            <Blockfile path="/projects/publicmapping/data/cd111_index.csv" />
         </Template>
         
         <Template name="State House">
             <LegislativeBody ref="house"/>
             
-            <Blockfile path="/projects/publicmapping/data/OH_statehouse_blockfile.csv" />
+            <Blockfile path="/projects/publicmapping/data/sldl10_index.csv" />
         </Template>
 
         <Template name="State Senate">
             <LegislativeBody ref="senate"/>
 
-            <Blockfile path="/projects/publicmapping/data/OH_statesenate_blockfile.csv" />
+            <Blockfile path="/projects/publicmapping/data/sldu10_index.csv" />
         </Template>
     </Templates>
     
-    <!-- Configuration settings for the components of the application. The
-        "root" attribute defines the location in the file system, under
-        which the rest of the application components can be found. -->
+    <!-- 
+    
+    Configuration settings for the components of the application. The
+    "root" attribute defines the location in the file system, under
+    which the rest of the application components can be found.
+    
+    -->
     <Project root="/projects/publicmapping/trunk" sessionquota="5" 
              sessiontimeout="15">
         <!-- Database connection information. -->
-        <Database name="publicmapping" user="publicmapping" password=""/>
+        <Database name="publicmapping" user="publicmapping" password="<enter password>"/>
         
-        <!-- Administrative user information. This should match the admin
-            user created when the django project is created. -->
-        <Admin user="admin" email=""/>
+        <!-- 
+        
+        Administrative user information. This should match the admin
+        user created when the django project is created.
+        
+        -->
+        <Admin user="admin" email="admin@..."/>
         
         <!-- Configuration items specific to the 'redistricting' app. -->
         <Redistricting>           
-            <!-- Information about the mapserver and geoserver settings. -->
-            <!-- basemaps is optional, and can be any set to any combination (CSV) of the following:
-                 osm-road
-                 google-road
-                 google-aerial
-                 google-hybrid
-                 bing-road
-                 bing-aerial
-                 bing-hybrid
+            <!-- 
+            
+            Information about the mapserver and geoserver settings. 
 
-                 The options are displayed in the order in which they are set,
-                 with the first one being set to the default base layer. If this is not set, it will
-                 default to osm-road. If the desire is to have no base layer, set it to the empty string.
+            The "basemaps" attribute is optional, and can be any set to 
+            any combination (CSV) of the following:
+              osm-road
+              google-road
+              google-aerial
+              google-hybrid
+              bing-road
+              bing-aerial
+              bing-hybrid
+             
+            The options are displayed in the order in which they are set,
+            with the first one being set to the default base layer. If 
+            this is not set, it will default to osm-road. If the desire 
+            is to have no base layer, set it to the empty string.
+            
             -->
-            <MapServer hostname="" ns="gmu" nshref="http://gmu.azavea.com/" adminuser="admin" adminpass="" styles="/projects/publicmapping/trunk/sld" maxfeatures="100" basemaps="google-road,google-aerial,google-hybrid"/>
+            <MapServer hostname="" ns="gmu" nshref="http://gmu.azavea.com/"
+                adminuser="admin" adminpass="geoserver" maxfeatures="100" 
+                styles="/projects/publicmapping/trunk/sld" />
 
-            <!-- <GoogleAnalytics account="" domain=""/> -->
+            <!-- 
+            
+            Use a GoogleAnalytics account to tract the usage of the 
+            application. This requires an account and domain.
+
+            <GoogleAnalytics account="" domain=""/>
+            
+            -->
 
             <!-- Upload file size restrictions. This is in KB -->
             <Upload maxsize="5300"/>
         </Redistricting>
         
-        <!-- Configure the engine used for reporting. Currently, only 
-            BARD is supported. -->
+        <!-- 
+        
+        Configure the engine used for reporting. Currently, BARD is the
+        only supported reporting engine.
+
+        -->
         <Reporting>
             <!-- BARD specific configuration settings. -->
             <BardConfigs>
+                <!--
+
+                The BARD configuration. 
+                
+                The "shape" attribute defines where the precomputed BARD
+                map is located.
+
+                The "temp" attribute is the location where temporary reports
+                should be stored.
+
+                The "transform" attribute is the location of the XSLT 
+                transform that generates the HTML content in the reporting
+                tab.
+
+                NOTE: it is important that all subjectref attributes of the
+                "...Var" elements below match attributes of the original
+                block shapefile from which the BARD map is derived.
+
+                -->
                 <BardConfig 
-                id="blocks"
-                shape="/projects/publicmapping/local/data/ohblock_bard_save.Rdata" 
-                map="oh_blocks.bardmap"
-                temp="/projects/publicmapping/local/reports"    
-                transform="/projects/publicmapping/trunk/docs/bard_template.xslt">
-                <PopVars>
-                    <PopVar subjectref="poptot" threshold=".5" default="true" />
-                    <!--
-                    <PopVar subjectref="vaptot" threshold=".1" />
-                    <PopVar subjectref="vapnhwht" threshold=".1" />
-                    <PopVar subjectref="vapblk" threshold=".1" />
-                    <PopVar subjectref="vaphisp" threshold=".1" default="false" />
-                    -->
-                </PopVars>
-                <RatioVars>
-                    <!-- Set up RatioVars for both ethnicity and political party -->
-                    <RatioVar id="racialComp" label="Majority Minority Districts" threshold=".6">
-                        <Numerators>
-                            <Numerator subjectref="popblk" />
-                            <Numerator subjectref="pophisp" />
-                        </Numerators>
-                        <Denominator subjectref="poptot" />
-                    </RatioVar>
-                    <!--
-                    <RatioVar id="partyControl" label="Party-Controlled Districts" threshold=".55">
-                        <Numerators>
-                            <Numerator subjectref="presdem" />
-                            <Numerator subjectref="presrep" />
-                        </Numerators>
-                        <Denominator subjectref="vaptot" />
-                    </RatioVar>
-                    -->
-                </RatioVars>
-                <SplitVars>
-                    <!-- See whether a given district splits a county or a tract -->
-                    <SplitVar field="COUNTY" label="County" />
-                    <SplitVar field="TRACT" label="Tract" />
-                </SplitVars>
+                    id="blocks"
+                    shape="/projects/publicmapping/data/vablock_bard_save.Rdata" 
+                    temp="/projects/publicmapping/local/reports"
+                    transform="/projects/publicmapping/trunk/docs/bard_template.xslt">
+                    <PopVars>
+                        <PopVar subjectref="poptot" threshold=".5" default="true" />
+                        <PopVar subjectref="vaptot" threshold=".1" />
+                        <PopVar subjectref="vapnhwht" threshold=".1" />
+                        <PopVar subjectref="vapblk" threshold=".1" />
+                        <PopVar subjectref="vaphisp" threshold=".1" default="false" />
+                    </PopVars>
+                    <RatioVars>
+                        <!--
+                        
+                        Set up RatioVars for both ethnicity and political 
+                        party.
+                        
+                        -->
+                        <RatioVar id="racialComp" label="Majority Minority Districts" threshold=".6">
+                            <Numerators>
+                                <Numerator subjectref="popblk" />
+                                <Numerator subjectref="pophisp" />
+                            </Numerators>
+                            <Denominator subjectref="poptot" />
+                        </RatioVar>
+                        <RatioVar id="partyControl" label="Party-Controlled Districts" threshold=".55">
+                            <Numerators>
+                                <Numerator subjectref="presdem" />
+                                <Numerator subjectref="presrep" />
+                            </Numerators>
+                            <Denominator subjectref="vaptot" />
+                        </RatioVar>
+                    </RatioVars>
+                    <SplitVars>
+                        <!-- 
+                        
+                        See whether a given district splits a geography.
+                        This can be any higher level geography: a county,
+                        VTd, or tract.
+
+                        -->
+                        <SplitVar field="COUNTYST10" label="County" />
+                        <SplitVar field="VTDST10" label="VTD" />
+                        <SplitVar field="TRACTCE10" label="Tract" />
+                    </SplitVars>
                 </BardConfig>
             </BardConfigs>
             <BardBodyConfigs>
-                   <BardBodyConfig
+                <!--
+
+                For each legislative body, map the configuration to the
+                geography used to generate reports.
+
+                -->
+                <BardBodyConfig
                     id="congress_blocks"
                     legislativebodyref="congress"
+                    bardconfigref="blocks" />
+                <BardBodyConfig
+                    id="house_blocks"
+                    legislativebodyref="house"
+                    bardconfigref="blocks" />
+                <BardBodyConfig
+                    id="senate_blocks"
+                    legislativebodyref="senate"
                     bardconfigref="blocks" />
             </BardBodyConfigs>
         </Reporting>
         
         <!-- Information about the mailer configuration. -->
-        <Mailer server="" port="" username="" password=""/>
+        <Mailer server="localhost" port="25" username="" password=""/>
     </Project>
     
 </DistrictBuilder>
