@@ -436,7 +436,7 @@ ERROR:
 
     def rest_check(self, host, url, headers):
         try:
-            conn = httplib.HTTPConnection(host, 8080)
+            conn = httplib.HTTPConnection(host, 80)
             conn.request('GET', url, None, headers)
             rsp = conn.getresponse()
             rsp.read() # and discard
@@ -448,7 +448,7 @@ ERROR:
     def rest_config(self, method, host, url, data, headers, msg):
         try:
             # print('url: %s; data: %s' % (url, data))
-            conn = httplib.HTTPConnection(host, 8080)
+            conn = httplib.HTTPConnection(host, 80)
             conn.request(method, url, data, headers)
             rsp = conn.getresponse()
             rsp.read() # and discard
@@ -471,6 +471,7 @@ ERROR:
 
         Exception thrown while configuring geoserver.
 """
+            print ex
             return False
 
         return True
