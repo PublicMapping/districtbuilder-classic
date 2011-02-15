@@ -759,12 +759,10 @@ class Plan(models.Model):
                 # the district were removed); empty the geom and simple 
                 # fields
                 district.geom = None
-                district.simple = None
             else:
                 # The district geometry exists, so save the updated 
                 # versions of the geom and simple fields
                 district.geom = geom
-                district.simplify()
 
             # Clone the district to a new version, with a different shape
             district_copy = copy(district)
@@ -821,10 +819,8 @@ class Plan(models.Model):
         target_copy = copy(target)
         target_copy.version = self.version + 1
         target_copy.id = None
-        
-        # If the target geometry exists (no errors from above)
-        if target_copy.geom:
-            target_copy.simplify() # implicit save happens here
+
+        target_copy.simplify() # implicit save happens here
 
         # Clone the characteristics to this new version
         target_copy.clone_characteristics_from(target)
@@ -1342,9 +1338,10 @@ class District(models.Model):
                     index += 1
                 simples.append( self.geom.simplify(preserve_topology=True,tolerance=level.tolerance))
                 index += 1
-            simple = GeometryCollection(tuple(simples))
-            simple.srid = self.geom.srid
-            self.simple = simple
+            self.simple = GeometryCollection(tuple(simples),srid=self.geom.srid)
+            self.save()
+        else:
+            self.simple = None
             self.save()
 
 
