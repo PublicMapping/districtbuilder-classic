@@ -693,7 +693,7 @@ class Plan(models.Model):
         fixed = False
 
         # Get the districts in this plan, at the specified version.
-        districts = self.get_districts_at_version(version)
+        districts = self.get_districts_at_version(version, include_geom=True)
 
         # Check if the target district is locked
         if any((ds.is_locked and ds.district_id == districtid) for ds in districts):
@@ -890,7 +890,7 @@ class Plan(models.Model):
         # Return a python dict, which gets serialized into geojson
         return features
 
-    def get_districts_at_version(self, version):
+    def get_districts_at_version(self, version, include_geom=False):
         """
         Get Plan Districts at a specified version.
 
@@ -901,12 +901,18 @@ class Plan(models.Model):
 
         Parameters:
             version -- The version of the Districts to fetch.
+            include_geom -- Should the geometry of the district be fetched?
 
         Returns:
             A list of districts that exist in the plan at the version.
         """
 
-        return list(District.objects.raw('select d.* from redistricting_district as d join (select max(version) as latest, district_id, plan_id from redistricting_district where plan_id = %s and version <= %s group by district_id, plan_id) as v on d.district_id = v.district_id and d.plan_id = v.plan_id and d.version = v.latest', [ self.id, version ]))
+        if include_geom:
+            fields = 'd.*'
+        else:
+            fields = 'd.id, d.district_id, d.name, d.plan_id, d.version, d.is_locked'
+
+        return list(District.objects.raw('select %s from redistricting_district as d join (select max(version) as latest, district_id, plan_id from redistricting_district where plan_id = %%s and version <= %%s group by district_id, plan_id) as v on d.district_id = v.district_id and d.plan_id = v.plan_id and d.version = v.latest' % fields, [ self.id, version ]))
 
     @staticmethod
     def create_default(name,body,owner=None,template=True,is_pending=True):
@@ -994,7 +1000,7 @@ class Plan(models.Model):
 
         # Collect the geounits for each district in this plan
         geounits = []
-        for district in self.get_districts_at_version(self.version):
+        for district in self.get_districts_at_version(self.version, include_geom=True):
             districtunits = district.get_base_geounits(threshold)
             # Add the district_id to the tuples
             geounits.extend([(gid, pid, district.district_id) for (gid, pid) in districtunits])
@@ -1022,7 +1028,7 @@ class Plan(models.Model):
         # reduced, but this offered no performance improvement, and instead caused
         # some accuracty issues. This needs further examination.
         geounits = []
-        for district in self.get_districts_at_version(self.version):
+        for district in self.get_districts_at_version(self.version,include_geom=True):
             geounits.extend(district.get_base_geounits(threshold))
         
         return geounits

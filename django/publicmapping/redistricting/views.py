@@ -213,7 +213,7 @@ def copyplan(request, planid):
 
     # Get all the districts in the original plan at the most recent version
     # of the original plan.
-    districts = p.get_districts_at_version(p.version)
+    districts = p.get_districts_at_version(p.version, include_geom=True)
     for district in districts:
         # Skip Unassigned, we already have that -- created automatically
         # when saving a new plan.
@@ -287,7 +287,7 @@ def commonplan(request, planid):
         plan.edited = getutc(plan.edited)
         targets = plan.targets()
         levels = plan.legislative_body.get_geolevels()
-        districts = plan.get_districts_at_version(plan.version)
+        districts = plan.get_districts_at_version(plan.version,include_geom=False)
         editable = can_edit(request.user, plan)
         default_demo = plan.legislative_body.get_default_subject()
         max_dists = plan.legislative_body.max_districts
@@ -317,11 +317,11 @@ def commonplan(request, planid):
     rules = []
 
     if len(levels) > 0:
-        study_area_extent = list(Geounit.objects.filter(geolevel=levels[0]).extent())
+        study_area_extent = list(Geounit.objects.filter(geolevel=levels[0]).extent(field_name='simple'))
     else:
         # The geolevels with higher indexes are larger geography
         biglevel = Geolevel.objects.all().order_by('-id')[0]
-        study_area_extent = Geounit.objects.filter(geolevel=biglevel).extent()
+        study_area_extent = Geounit.objects.filter(geolevel=biglevel).extent(field_name='simple')
 
     for level in levels:
         snaplayers.append( {'geolevel':level.id,'layer':level.name,'name':level.name.capitalize(),'min_zoom':level.min_zoom} )
@@ -649,7 +649,7 @@ def getreport(request, planid):
 
     try:
         plan = Plan.objects.get(pk=planid)
-        districts = plan.get_districts_at_version(plan.version)
+        districts = plan.get_districts_at_version(plan.version, include_geom=False)
     except:
         status['message'] = 'Couldn\'t retrieve plan information'
         return HttpResponse(json.dumps(status),mimetype='application/json')
@@ -990,11 +990,15 @@ def getdistricts(request, planid):
         else:
             version = plan.version
 
-        districts = plan.get_districts_at_version(version)
+        districts = plan.get_districts_at_version(version,include_geom=False)
 
         status['districts'] = []
         for district in districts:
-            if district.geom or district.name == 'Unassigned':
+            # just testing if the geom is null? too big a performance hit
+            # to haul it all out; just check it against the DB
+            has_geom = District.objects.filter(id=district.id, geom__isnull=False).count() == 1
+
+            if has_geom or district.name == 'Unassigned':
                 status['districts'].append({
                     'id':district.district_id,
                     'name':district.name,
@@ -1120,7 +1124,7 @@ def get_unlocked_simple_geometries(request,planid):
 
             # Create a union of locked geometries
             locked_union = None
-            for district in plan.get_districts_at_version(version):
+            for district in plan.get_districts_at_version(version, include_geom=True):
                 if district.is_locked:
                     if locked_union is None:
                         locked_union = district.geom
@@ -1199,7 +1203,7 @@ def getdemographics(request, planid):
         version = plan.version
 
     try:
-        districts = plan.get_districts_at_version(version)
+        districts = plan.get_districts_at_version(version, include_geom=False)
     except:
         status['message'] = "Couldn't get districts at the specified version."
         return HttpResponse( json.dumps(status), mimetype='applicatio/json')
@@ -1211,15 +1215,12 @@ def getdemographics(request, planid):
             if dist_name == "Unassigned":
                 dist_name = '&#216;' 
             else:
-                try:
-                    if not district.geom:
-                        # skip any districts with null geom that are not the 
-                        # special 'Unassigned' district
-                        continue
-                except:
-                    # Sometimes a GEOSException happens here. Can't explain why.
-                    # Sometimes it's a ParseException. Dunno about that either.
-                    continue
+                # just testing if the geom is null? too big a performance
+                # hit to haul it all out; just check it against the DB
+                has_geom = District.objects.filter(id=district.id, geom__isnull=False).count() == 1
+
+                if not has_geom:
+                    continue;
 
             prefix = plan.legislative_body.member
             index = prefix.find('%')
@@ -1305,7 +1306,7 @@ def getgeography(request, planid):
         version = plan.version
 
     try:
-        districts = plan.get_districts_at_version(version)
+        districts = plan.get_districts_at_version(version, include_geom=False)
     except:
         status['message'] = "Couldn't get districts at the specified version."
         return HttpResponse( json.dumps(status), mimetype='applicatio/json', status=500)
@@ -1318,15 +1319,12 @@ def getgeography(request, planid):
             if dist_name == "Unassigned":
                 dist_name = '&#216;'
             else:
-                try:
-                    if not district.geom:
-                        # skip any districts with null geom that are not the 
-                        # special 'Unassigned' district
-                        continue
-                except:
-                    # Sometimes a GEOSException happens here. Can't explain why.
-                    # Sometimes it's a ParseException. Dunno about that either.
-                    continue
+                # just testing if the geom is null? too big a performance
+                # hit to haul it all out; just check it against the DB
+                has_geom = District.objects.filter(id=district.id, geom__isnull=False).count() == 1
+
+                if not has_geom:
+                    continue;
 
             prefix = plan.legislative_body.member
             index = prefix.find('%')
@@ -1407,7 +1405,7 @@ def getcompliance(plan, version):
     contiguity = { 'name': 'Noncontiguous', 'value': 0 }
     noncontiguous = 0
     # Remember to get only the districts at a specific version
-    districts = plan.get_districts_at_version(version)
+    districts = plan.get_districts_at_version(version, include_geom=True)
     for district in districts:
         if not district.is_contiguous() and district.name != 'Unassigned':
             noncontiguous += 1
@@ -1651,7 +1649,7 @@ def getplans(request):
                 'is_template': plan.is_template, 
                 'is_shared': plan.is_shared, 
                 'owner': plan.owner.username, 
-                'districtCount': len(plan.get_districts_at_version(plan.version)) - 1, 
+                'districtCount': len(plan.get_districts_at_version(plan.version, include_geom=False)) - 1, 
                 'can_edit': can_edit(request.user, plan)
                 }
             })
