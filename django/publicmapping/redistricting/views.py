@@ -53,7 +53,7 @@ from functools import wraps
 from operator import attrgetter
 from redistricting.models import *
 from redistricting.utils import *
-import settings, random, string, math, types, copy, time, threading, traceback, os, sys, tempfile
+import settings, random, string, math, types, copy, time, threading, traceback, os, commands, sys, tempfile
 
 def using_unique_session(u):
     """
@@ -1698,3 +1698,17 @@ def editplanattributes(request, planid):
     else:
         status['message'] = "Cannot edit a plan you don\'t own."
     return HttpResponse(json.dumps(status), mimetype='application/json')
+
+def get_health(request):
+    try:
+        sys.stderr.write('Getting health at %s\n' % datetime.now())
+        result = 'Health retrieved at %s\n' % datetime.now()
+        result += '%d plans in database\n' % Plan.objects.all().count()
+        result += '%d sessions in use out of %s\n' % (Session.objects.all().count(), settings.CONCURRENT_SESSIONS)
+        space = os.statvfs('/projects/publicmapping')
+        sys.stderr.write(str(space))
+        result += '%s MB of disk space free\n' % ((space.f_bsize * space.f_bavail) / (1024*1024))
+        result += 'Memory Usage:\n%s\n' % commands.getoutput('free -m')
+        return HttpResponse(result, mimetype='text/plain')
+    except:
+        return HttpResponse('ERROR! Couldn\'t get health:\n%s' % traceback.format_exc())
