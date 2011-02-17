@@ -1119,35 +1119,41 @@ def get_unlocked_simple_geometries(request,planid):
             # either a lasso, a rectangle, or a point
             selection = Q(geom__intersects=geom)
 
+            # Create a union of locked geometries
+            districts = [d.id for d in plan.get_districts_at_version(version, include_geom=True) if d.is_locked]
+            locked = District.objects.filter(id__in=districts).collect()
+
+            # Create a simplified locked boundary for fast, but not completely accurate lookups
+            # Note: the preserve topology parameter of simplify is needed here
+            locked_buffered = locked.simplify(100, True).buffer(100) if locked else None
+
             # Filter first by geolevel, then selection
             filtered = Geounit.objects.filter(geolevel=geolevel).filter(selection)
-
-            # Create a union of locked geometries
-            locked_union = None
-            for district in plan.get_districts_at_version(version, include_geom=True):
-                if district.is_locked:
-                    if locked_union is None:
-                        locked_union = district.geom
-                    else:
-                        locked_union = locked_union.union(district.geom)
-
-            # Unlocked geometries are only checked for if there are locked districts.
-            # Unlocked geometries can be defined as geometries that do not share any points
-            # with locked geometries (disjoint), and that only share a boundary with locked
-            # geometries (touches). Intersection cannot be used here, because of boundaries.
-            if locked_union is not None:
-                unlocked = Q(geom__touches=locked_union) | Q(geom__disjoint=locked_union)
-                filtered = filtered.filter(unlocked)
-
             # Assemble the matching features into geojson
             features = []
             for feature in filtered:
+                # We want to allow for the selection of a geometry that is partially split
+                # with a locked district, so subtract out all sections that are locked
+                geom = feature.simple
+
+                # Only perform additional tests if the fast, innacurate lookup passed
+                if locked and geom.intersects(locked_buffered):
+
+                    # If a geometry is fully locked, don't add it
+                    if feature.geom.within(locked):
+                        continue
+
+                    # Overlapping geometries are the ones we need to subtract pieces of
+                    if feature.geom.overlaps(locked):
+                        # Since this is just for display, do the difference on the simplified geometries
+                        geom = geom.difference(locked_buffered)
+                        
                 features.append({
                     # Note: OpenLayers breaks when the id is set to an integer, or even an integer string.
                     # The id ends up being treated as an array index, rather than a property list key, and
                     # there are some bizarre consequences. That's why the underscore is here.
                     'id': '_%d' % feature.id,
-                    'geometry': json.loads(feature.simple.json),
+                    'geometry': json.loads(geom.json),
                     'properties': {
                         'name': feature.name,
                         'geolevel_id': feature.geolevel.id,

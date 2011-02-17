@@ -699,7 +699,13 @@ class Plan(models.Model):
         if any((ds.is_locked and ds.district_id == districtid) for ds in districts):
             return 0
 
-        # purge any districts between the version provided
+        # Collect locked district geometries, and remove locked sections
+        locked = District.objects.filter(id__in=[d.id for d in districts if d.is_locked]).collect()
+        if locked:
+            locked = locked if locked.valid else locked.buffer(0)
+            incremental = incremental if locked.empty else incremental.difference(locked)
+
+        # Purge any districts between the version provided
         # and the latest version
         District.objects.filter(plan=self,version__gt=version).delete()
 
@@ -961,7 +967,8 @@ class Plan(models.Model):
            return list()
 
         # Simplify by the same distance threshold used for buffering
-        simple = geom if simplified else geom.simplify(threshold)
+        # Note: the preserve topology parameter of simplify is needed here
+        simple = geom if simplified else geom.simplify(threshold, True)
 
         # If the simplification makes the polygon empty, use the unsimplified polygon
         simple = simple if not simple.empty else geom
