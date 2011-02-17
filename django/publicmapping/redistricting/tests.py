@@ -116,7 +116,7 @@ class BaseTestCase(unittest.TestCase):
         self.user.save()
 
         # create a LegislativeBody
-        self.legbod = LegislativeBody(name='TestLegislativeBody', member='TestMember', max_districts=20)
+        self.legbod = LegislativeBody(name='TestLegislativeBody', member='TestMember %d', max_districts=20)
         self.legbod.save()
 
         # create a Subject
@@ -588,3 +588,112 @@ class GeounitMixTestCase(BaseTestCase):
         units = Geounit.get_mixed_geounits([str(bigunits[0].id),str(bigunits[4].id),str(bigunits[8].id)], self.legbod, level.id, boundary, False)
         numunits = len(units)
         self.assertEquals(63, numunits, 'Number of geounits outside boundary is incorrect. (%d)' % numunits)
+
+
+class PurgeTestCase(BaseTestCase):
+    """
+    Unit tests to test the methods for purging extra districts off a plan.
+    """
+    def setUp(self):
+        BaseTestCase.setUp(self)
+
+        # create a new buch of districts for this test case
+        self.plan.district_set.all().delete()
+
+        geolevelid = self.geolevels[1].id
+
+        # create Districts
+        for i in range(0,9):
+            start = 9 * i
+            end = 9 * (i + 1)
+
+            # overlap the previous assignment to create multiple versions
+            # of districts
+            if i > 0:
+                start -= 1
+            if i < 8:
+                end += 1
+
+            geounits = self.geounits[geolevelid][start:end]
+            geounits = map(lambda x: str(x.id), geounits)
+       
+            self.plan.add_geounits( (i+1), geounits, geolevelid, self.plan.version)
+
+    def test_purge_lt_zero(self):
+        self.plan.purge(before=-1)
+
+        self.assertEquals(9, self.plan.version, 'Plan version is incorrect.')
+        count = self.plan.district_set.count()
+        self.assertEquals(17, count, 'Number of districts in plan is incorrect. (e:17,a:%d)' % count)
+        
+    def test_purge_gt_max(self):
+        self.plan.purge(after=9)
+
+        self.assertEquals(9, self.plan.version, 'Plan version is incorrect.')
+        count = self.plan.district_set.count()
+        self.assertEquals(17, count, 'Number of districts in plan is incorrect. (e:17,a:%d)' % count)
+
+    def test_purge_lt_four(self):
+        self.plan.purge(before=4)
+
+        self.assertEquals(9, self.plan.version, 'Plan version is incorrect.')
+
+        # should have 13 items, purging old versions of districts at version
+        # 0, 1, 2, and 3 but keeping the most recent version of each 
+        # district 
+        # (even if the district version is less than the 'before' keyword)
+        count = self.plan.district_set.count()
+        self.assertEquals(13, count, 'Number of districts in plan is incorrect. (e:13, a:%d)' % count)
+
+    def test_purge_lt_nine(self):
+        self.plan.purge(before=9)
+
+        self.assertEquals(9, self.plan.version, 'Plan version is incorrect.')
+
+        # should have 9 items, purging all old versions of districts, but 
+        # keeping the most recent version of each district 
+        # (even if the district version is less than the 'before' keyword)
+        count = self.plan.district_set.count()
+        self.assertEquals(9, count, 'Number of districts in plan is incorrect. (e:9, a:%d)' % count)
+
+    def test_purge_gt_five(self):
+        self.plan.purge(after=5)
+
+        self.assertEquals(9, self.plan.version, 'Plan version is incorrect.')
+
+        # should have 9 items, since everything after version 5 was deleted
+        # 2 of District 1
+        # 2 of District 2
+        # 2 of District 3
+        # 2 of District 4
+        # 1 of District 5
+        count = self.plan.district_set.count()
+        self.assertEquals(9, count, 'Number of districts in plan is incorrect. (e:9, a:%d)' % count)
+
+    def test_purge_many_edits(self):
+        geolevelid = self.geolevels[1].id
+
+        oldversion = self.plan.version
+
+        count = self.plan.district_set.count()
+
+        # every add_geounits call should add 2 districts to the 
+        # district_set, since this geounit should be removed from one
+        # district, and added to another.
+        for i in range(0,8):
+            item = 9 * (i + 1) + 1
+
+            item = str(self.geounits[geolevelid][item].id)
+            self.plan.add_geounits( (i+1), [item], geolevelid, self.plan.version)
+
+        # net gain: 16 districts
+
+        self.assertEquals(16, self.plan.district_set.count() - count, 'Incorrect of districts in the plan district_set.')
+        self.assertEquals(8, self.plan.version-oldversion, 'Incorrect number of versions incremented after 8 edits.')
+
+        self.plan.purge(before=oldversion)
+
+        # net loss: 16 districts
+
+        count = self.plan.district_set.count()
+        self.assertEquals(16, count, 'Number of districts in plan is incorrect. (e:16, a:%d)' % count)

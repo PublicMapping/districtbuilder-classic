@@ -656,6 +656,56 @@ class Plan(models.Model):
             sys.stderr.write('Unable to get targets for plan %s: %s' % (self.name, ex))
             raise ex
 
+    def purge(self, before=None, after=None):
+        """
+        Purge portions of this plan's history.
+
+        Use one of 'before' or 'after' keywords to purge either direction.
+        If both are used, only the versions before will be purged.
+
+        Keywords:
+            before -- purge the history of this plan prior to this version.
+            after -- purge the history of this plan after this version.
+        """
+        if before is None and after is None:
+            return
+
+        if not before is None:
+            # Can't purge before zero, since that's the starting point
+            if before <= 0:
+                return
+
+            ds = self.get_districts_at_version(before, include_geom=False)
+            allQ = Q(plan__isnull=True)
+            for d in ds:
+                maxqset = self.district_set.filter(district_id=d.district_id)
+                maxver = maxqset.aggregate(Max('version'))['version__max']
+                # Filter on this district
+                q1 = Q(district_id=d.district_id)
+                if d.version == maxver:
+                    # If the maximum version of this district across all 
+                    # edits is the same as this district's version, only 
+                    # purge the districts BEFORE the version specified.
+                    q2 = Q(version__lt=d.version)
+                else:
+                    # If the maximum version of this district across all
+                    # edits is greater than the version specified, you can
+                    # safely purge the district at this version and below
+                    # with no harm of deleting the last version of the
+                    # district.
+                    q2 = Q(version__lte=d.version)
+               
+                # Accumulate the criteria
+                allQ = allQ | (q1 & q2)
+
+            # delete everything all at once
+            self.district_set.filter(allQ).delete()
+
+        else:
+            # Purge any districts between the version provided
+            # and the latest version
+            self.district_set.filter(version__gt=after).delete()
+
     @transaction.commit_on_success
     def add_geounits(self, districtid, geounit_ids, geolevel, version):
         """
@@ -705,9 +755,7 @@ class Plan(models.Model):
             locked = locked if locked.valid else locked.buffer(0)
             incremental = incremental if locked.empty else incremental.difference(locked)
 
-        # Purge any districts between the version provided
-        # and the latest version
-        District.objects.filter(plan=self,version__gt=version).delete()
+        self.purge(after=version)
 
         target = None
 
@@ -839,6 +887,10 @@ class Plan(models.Model):
         # save any changes to the version of this plan
         self.version += 1
         self.save()
+
+        # Turn this on once client-side undo is limited
+        #if self.version > 5:
+        #    self.purge(before=self.version-5)
 
         # purge the old target if a new one was created
         if new_target:
