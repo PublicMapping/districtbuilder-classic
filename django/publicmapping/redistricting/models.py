@@ -697,7 +697,7 @@ class Plan(models.Model):
 
         # Check if the target district is locked
         if any((ds.is_locked and ds.district_id == districtid) for ds in districts):
-            return 0
+            return False
 
         # Collect locked district geometries, and remove locked sections
         locked = District.objects.filter(id__in=[d.id for d in districts if d.is_locked]).collect()
@@ -719,8 +719,10 @@ class Plan(models.Model):
                 target = district
                 continue
 
-            if not (district.geom and (district.geom.overlaps(incremental) or district.geom.contains(incremental) or 
-            district.geom.within(incremental))):
+            if not (district.geom and \
+                (district.geom.overlaps(incremental) or \
+                 district.geom.contains(incremental) or \
+                 district.geom.within(incremental))):
                 # if this district has later edits, REVERT them to
                 # this version of the district
                 if not district.is_latest_version():
@@ -841,9 +843,8 @@ class Plan(models.Model):
         # purge the old target if a new one was created
         if new_target:
             District.objects.filter(id=target.id).delete()
-            return name
 
-        # Return the number of changed districts
+        # Return a flag indicating any districts changed
         return fixed
 
 
