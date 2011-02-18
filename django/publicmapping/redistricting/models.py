@@ -33,7 +33,7 @@ from django.contrib.gis.db import models
 from django.contrib.gis.gdal import DataSource
 from django.contrib.gis.geos import MultiPolygon,GEOSGeometry,GEOSException,GeometryCollection,Point
 from django.contrib.auth.models import User
-from django.db.models import Sum, Max, Q
+from django.db.models import Sum, Max, Q, Count
 from django.db.models.signals import pre_save, post_save
 from django.db import connection, transaction
 from django.forms import ModelForm
@@ -656,6 +656,37 @@ class Plan(models.Model):
             sys.stderr.write('Unable to get targets for plan %s: %s' % (self.name, ex))
             raise ex
 
+    def get_nth_previous_version(self, steps):
+        """
+        Get the version of this plan N steps away.
+
+        Since editing a plan in its history purges higher versions of the
+        districts in the plan, the version numbers become discontinuous.
+        In order to support purging with these discontinuous version 
+        numbers, this method assists in finding the valid version number
+        of the plan that is so many steps behind the current plan.
+
+        This problem does not occur when purging higher numbered versions 
+        from a plan.
+
+        Parameters:
+            steps -- The number of 'undo' steps away from the current 
+                     plan's version.
+
+        Returns:
+            A valid version of this plan in the past.
+        """
+        versions = self.district_set.order_by('-version').values('version').annotate(count=Count('version'))
+
+        if steps < len(versions):
+            return versions[steps]['version']
+
+        # if the number of steps exceeds the total history of the
+        # plan, the version cannot be less than zero. In addition,
+        # all plans are guaranteed to have a version 0.
+        return 0;
+
+
     def purge(self, before=None, after=None):
         """
         Purge portions of this plan's history.
@@ -888,9 +919,14 @@ class Plan(models.Model):
         self.version += 1
         self.save()
 
-        # Turn this on once client-side undo is limited
-        #if self.version > 5:
-        #    self.purge(before=self.version-5)
+        # Turn this on once client-side undo is limited to 5 versions.
+        # Tweak or make the parameter to get_nth_previous_version 
+        # configurable.
+        #
+        #prever = self.get_nth_previous_version(5)
+        #if prever > 0:
+        #    self.purge(before=prever)
+        #
 
         # purge the old target if a new one was created
         if new_target:

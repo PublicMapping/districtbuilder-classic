@@ -697,3 +697,38 @@ class PurgeTestCase(BaseTestCase):
 
         count = self.plan.district_set.count()
         self.assertEquals(16, count, 'Number of districts in plan is incorrect. (e:16, a:%d)' % count)
+
+    def test_version_back(self):
+        version = self.plan.get_nth_previous_version(self.plan.version)
+
+        self.assertEquals(0, version, 'Walking back %d versions does not land at zero.' % self.plan.version)
+
+        version = self.plan.get_nth_previous_version(self.plan.version-1)
+
+        self.assertEquals(1, version, 'Walking back %d versions does not land at one.' % (self.plan.version - 1))
+
+    def test_purge_versions(self):
+        geolevelid = self.geolevels[1].id
+
+        oldversion = self.plan.version
+        for i in range(oldversion - 1, 4, -1):
+            item = 9 * (i + 1) - 2;
+            item = str(self.geounits[geolevelid][item].id)
+            self.plan.add_geounits( (i+1), [item], geolevelid, i)
+
+        # added four new versions
+
+        newversion = self.plan.version
+        self.assertEquals(13, newversion, 'Adding items to sequential positions in history resulted in the wrong number of versions. (e:17,a:%d)' % newversion)
+
+        # the first step back in history shoulde be version 4, since the
+        # last edit was off that version
+
+        previous = self.plan.get_nth_previous_version(1)
+        self.assertEquals(5, previous, 'The previous version is incorrect, since edits were performed off of 8,7,6,5 versions, with the last edit being off of version 5. (e:5, a:%d)' % previous)
+
+        previous = self.plan.get_nth_previous_version(3)
+        self.assertEquals(3, previous, '(e:3, a:%d)' % previous)
+
+        previous = self.plan.get_nth_previous_version(5)
+        self.assertEquals(1, previous, '(e:1, a:%d)' % previous)
