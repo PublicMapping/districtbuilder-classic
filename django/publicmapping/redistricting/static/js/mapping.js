@@ -700,7 +700,8 @@ function mapinit(srs,maxExtent) {
                     data: OpenLayers.Util.getParameterString(options.params),
                     headers: {
                         "Content-Type": "application/x-www-form-urlencoded",
-                        "X-Requested-With": "XMLHttpRequest"
+                        "X-Requested-With": "XMLHttpRequest",
+                        "X-CSRFToken": $('#csrfmiddlewaretoken').val()
                     }
                 });
                 return resp;

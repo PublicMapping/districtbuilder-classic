@@ -279,7 +279,16 @@ chooseplan = function(options) {
             rowNum:15,
             sortname: 'id',
             viewrecords:true,
-            mtype: 'POST'
+            mtype: 'POST',
+            ajaxGridOptions: {
+                beforeSend: function(xhr, settings) {
+                    if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+                        // Only send the token to relative URLs i.e. locally.
+                        xhr.setRequestHeader("X-CSRFToken",
+                                             $("#csrfmiddlewaretoken").val());
+                    }
+                }
+            }
         }).jqGrid(
             'navGrid',
             '#' + _options.pager.attr('id'),

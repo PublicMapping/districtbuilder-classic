@@ -144,7 +144,8 @@ $(function(){
                 passwordhint:passwordhint.val(),
                 firstname:$('#firstname').val(),
                 lastname:$('#lastname').val(),
-                organization:$('#organization').val()
+                organization:$('#organization').val(),
+                csrfmiddlewaretoken:$('#csrfmiddlewaretoken').val()
             },
             dataType:'json',
             type:'POST',

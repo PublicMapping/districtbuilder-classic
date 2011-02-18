@@ -730,6 +730,17 @@ Include the markup for the account management panel.
 <script type="text/javascript" defer="true">
     // run the initialization for these components when the page is ready
     $( function() {
+        /* Necessary for Django csrf for all js on this page */
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+                    // Only send the token to relative URLs i.e. locally.
+                    xhr.setRequestHeader("X-CSRFToken",
+                                         $("#csrfmiddlewaretoken").val());
+                }
+            }
+        });
+
         // initialize a working dialog
         $('#working').dialog({
             resizable:false,
