@@ -88,8 +88,8 @@ update support, and install tmpreaper and cron jobs.
     > sudo su postgres 
     > createdb template_postgis
     > createlang plpgsql template_postgis
-    > psql -d template_postgis -f /usr/share/postgresql/8.4/contrib/postgis.sql
-    > psql -d template_postgis -f /usr/share/postgresql/8.4/contrib/spatial_ref_sys.sql 
+    > psql -d template_postgis -f /usr/share/postgresql/8.4/contrib/postgis-1.5/postgis.sql
+    > psql -d template_postgis -f /usr/share/postgresql/8.4/contrib/postgis-1.5/spatial_ref_sys.sql 
     > exit
 
  4. Once postgis is intalled, run the publicmapping_db.sql script in 
@@ -117,13 +117,13 @@ update support, and install tmpreaper and cron jobs.
     directory: /projects/local/data/:
 
     > sudo mkdir /projects/publicmapping/local/data 
-    > cd  /projects/publicmapping/local/data; sudo unzip /projects/publicmapping/data/OH_data.zip
+    > cd  /projects/publicmapping/local/data; sudo unzip /projects/publicmapping/data/VA_data.zip
 
     *Note* that if you are loading spatial data for a coverage other than
     the demonstration coverage over Ohio, you will need to ensure that the 
     spatial reference of the data is "Web Auxiliary Sphere" or "Popular 
-    Visualisation CRS / Mercator". The definition for all GIS software packages
-    is available here:
+    Visualisation CRS / Mercator". The definition for all GIS software 
+    packages is available here:
         
     http://spatialreference.org/ref/epsg/3785/
 
@@ -135,39 +135,52 @@ update support, and install tmpreaper and cron jobs.
 
  8. Run the setup script with the appropriate parameters - the parts of 
     the app you want to set up, along with the path to an xsd and a 
-    config.xml file.  To set up the application database, import the spatial
-    data, configure geoserver, and create the BARD data files, run:
+    config.xml file.  
+    
+     a. To get a mostly-configured configuration, copy the distribution
+        configuration to get started.
 
-    > sudo ./setup.py ../../docs/config.xsd ../../docs/config.xml
+        > cd /projects/publicmapping/trunk/docs/
+        > sudo cp config.dist.xml config.xml
 
-    To configure portions of the application seperately, get more help on the
-    setup tool by typing:
+        Adjust the database connection parameters and server information
+        in the distribution configuration. Many of the other settings
+        should be good enough to start with.
 
-    > ./setup.py --help
+     b. To set up the application database, import the spatial
+        data, configure geoserver, and create the BARD data files, run:
+
+        > sudo ./setup.py ../../docs/config.xsd ../../docs/config.xml
+
+     c. To configure portions of the application seperately, get more help 
+        on the setup tool by typing:
+
+        > ./setup.py --help
 
     If you ren each setup step seperately, they must be performed in the
     following order (all steps are required to get a properly functioning 
     application):
 
-    > -d  : Create the database schema. This must happen before any other step
-            of the setup process, and can be performed multiple times if the 
-            configuration matches the database settings with no side effects.
-    > -g0 : Import the first (0 based index) GeoLevel from the configuration 
+    > -d  : Create the database schema. This must happen before any other 
+            step of the setup process, and can be performed multiple times 
+            if the configuration matches the database settings with no side
+            effects.
+    > -g0 : Import the first (0 based index) GeoLevel from the configuration
             file.
     > -gX : Import the Xth* (0 based index) GeoLevel from the configuration 
             file.
-    > -nX : Renest the geometry and data values from the Xth* (0 based index)
-            GeoLevel.
+    > -nX : Renest the geometry and data values from the Xth* (0 based 
+            index) GeoLevel.
     > -V  : Create database views for the spatial layers in Geoserver.
     > -G  : Configure a running Geoserver with the loaded spatial data. 
     > -b  : Compute and store a BARD basemap for BARD reports.
-    > -t  : Create the template plans that are configured. This step may happen
-            any time after the nesting step.
+    > -t  : Create the template plans that are configured. This step may 
+            happen any time after the nesting step.
 
-    * The importing and nesting must occur in the order of smallest geography 
-    to largest geography.
+    * The importing and nesting must occur in the order of smallest 
+    geography to largest geography.
 
- 7. Django serves up SLD files to clients, and need this mime type added
+ 9. Django serves up SLD files to clients, and need this mime type added
     to the system's known mime types in order to serve the content
     properly.
 
@@ -175,12 +188,12 @@ update support, and install tmpreaper and cron jobs.
     b. Find the line that starts with "application/xml"
     c. Add " sld" to the end of this line, after "xml xsl xsd"
 
- 9. Now that you have the app configured and your data imported, you can 
+10. Now that you have the app configured and your data imported, you can 
     run the app using Django's testing server
      
     > python ./manage.py runserver
 
-10. You will see a notice that your server is running and you can access 
+11. You will see a notice that your server is running and you can access 
     your application at 127.0.0.1:8000  Enter that location into your 
     browser on the local machine and you should be able to use the 
     application.
@@ -222,7 +235,14 @@ update support, and install tmpreaper and cron jobs.
 
         Allow from All
 
- 7. This application requires SSL. You will need to generate your
+ 7. An update to the wsgi module requires a change to the publicmapping
+    apache configuration file. If your version of wsgi is >= 3, ensure
+    that line 121 is commented out, and line 130 is uncommented.
+
+    If your version of wsgi is < 3, ensure that line 121 is uncommented, 
+    and line 130 is commented out.
+
+ 8. This application requires SSL. You will need to generate your
     own publicmapping certficate and key and place them in the 
     /etc/ssl/certs directory with the names publicmapping.crt and 
     publicmapping.key.
@@ -236,7 +256,7 @@ update support, and install tmpreaper and cron jobs.
 
     http://httpd.apache.org/docs/2.0/ssl/ssl_faq.html
 
- 8. This application runs as the apache user, usually www-data.  Be sure 
+ 9. This application runs as the apache user, usually www-data.  Be sure 
     the file permissions allow for the www-data to read the project 
     directories.  Only the reports directory needs to be writable by 
     www-data.  No files are required to be readable by "all".
@@ -296,9 +316,10 @@ update support, and install tmpreaper and cron jobs.
     > cd /projects/publicmapping/trunk/django/publicmapping
     > sudo python ./setup.py -V -G ../../docs/config.xsd ../../docs/config.xml
 
- 7. Set the geowebcache directory to a non-default.  Otherwise your tiles will
-    be saved to /tmp and possibly disappear on reboot.  Add the following 
-    snippet to your <web-app> configuration in geoserver's webapp configuration:
+ 7. Set the geowebcache directory to a non-default.  Otherwise your tiles 
+    will be saved to /tmp and possibly disappear on reboot.  Add the 
+    following snippet to your <web-app> configuration in geoserver's webapp
+    configuration:
     
     > cd /var/lib/tomcat6/webapps/geoserver/WEB-INF
     > sudo nano web.xml    
@@ -341,15 +362,8 @@ update support, and install tmpreaper and cron jobs.
 
     /projects/publicmapping/local/reports
 
-    You can make this directory and give it the appropriate permissions 
-    with the command:
-        
-    > sudo mkdir /projects/publicmapping/local/reports
-    > sudo chgrp www-data /projects/publicmapping/local/reports
-    > sudo chmod 770 /projects/publicmapping/local/reports
-    
 == Celery Configuration ==
-    Some processes take to long to happen over a synchronous  web 
+    Some processes take to long to happen over a synchronous web 
     connection. The app uses a process queue called celery to make
     these actions happen in the background so the web application 
     stays performant.  After installing the celery components using
