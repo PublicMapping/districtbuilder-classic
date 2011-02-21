@@ -65,6 +65,10 @@ class BaseTestCase(unittest.TestCase):
         else:
             self.geolevels = list(self.geolevels)
 
+        # create a Subject
+        self.subject = Subject(name='TestSubject')
+        self.subject.save()
+        
         self.geounits = {}
 
         # create a three-tiered 27x27 square grid of geounits with coords from (0,0) to (1,1)
@@ -104,6 +108,9 @@ class BaseTestCase(unittest.TestCase):
                     )
                     gu.save()
                     self.geounits[gl.id].append(gu)
+
+                    ch = Characteristic(geounit=gu, subject=self.subject,number=x)
+                    ch.save()
                     supp_id += 1
             lastgl = gl
             dim *= 3.0
@@ -119,10 +126,6 @@ class BaseTestCase(unittest.TestCase):
         self.legbod = LegislativeBody(name='TestLegislativeBody', member='TestMember %d', max_districts=20)
         self.legbod.save()
 
-        # create a Subject
-        self.subject = Subject(name='TestSubject')
-        self.subject.save()
-        
         # create a Target
         self.target = Target(subject=self.subject, range1=1, range2=5, value=3)
         self.target.save()
@@ -310,6 +313,92 @@ class PlanTestCase(BaseTestCase):
         self.plan.add_geounits(district_id, geounitids, levelid, self.plan.version)
         numunits = len(Plan.objects.get(pk=self.plan.id).get_base_geounits(0.1))
         self.assertEqual(81, numunits, 'Geounits could not be added to an unlocked district. Num geounits: %d' % numunits)
+
+    def test_district_locking2(self):
+        """
+        Test the case where adding a partially selected geometry may add
+        the entire geometry's aggregate value.
+        """
+        geounits = self.geounits[self.geolevels[1].id]
+
+        dist1ids = geounits[0:3] + geounits[9:12]
+        dist2ids = geounits[18:21] + geounits[27:30] + geounits[36:39]
+
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        dist2ids = map(lambda x: str(x.id), dist2ids)
+
+        self.plan.add_geounits(self.district1.district_id, dist1ids, self.geolevels[1].id, self.plan.version)
+        self.plan.add_geounits(self.district2.district_id, dist2ids, self.geolevels[1].id, self.plan.version)
+
+        district1 = max(District.objects.filter(plan=self.plan,district_id=self.district1.district_id),key=lambda d: d.version)
+        district1units = district1.get_base_geounits(0.1)
+
+        self.assertEqual(54, len(district1units), 'Incorrect number of geounits returned in dist1: %d' % len(district1units))
+
+        district2 = max(District.objects.filter(plan=self.plan,district_id=self.district2.district_id),key=lambda d: d.version)
+        district2units = district2.get_base_geounits(0.1)
+
+        self.assertEqual(81, len(district2units), 'Incorrect number of geounits returned in dist2: %d' % len(district2units))
+
+        geounits = self.geounits[self.geolevels[0].id] 
+        dist3ids = geounits[1:3] + geounits[4:6] + geounits[7:9]
+
+        dist3ids = map(lambda x: str(x.id), dist3ids)
+
+        self.plan.add_geounits(self.district2.district_id + 1, dist3ids, self.geolevels[0].id, self.plan.version)
+
+        district3 = max(District.objects.filter(plan=self.plan,district_id=self.district2.district_id+1),key=lambda d: d.version)
+        district3units = district3.get_base_geounits(0.1)
+
+        self.assertEqual(486, len(district3units), 'Incorrect number of geounits returned in dist3: %d' % len(district3units))
+
+        # Plan looks like this now:
+        #
+        #  *-----------*-----------*-----------*
+        #  |           |                       |
+        #  |           |                       |
+        #  |           |                       |
+        #  |           |                       | 
+        #  |           |                       |
+        #  *           *           *           *
+        #  |           |                       |
+        #  |           |                       |
+        #  +-----------+      District 3       |
+        #  |           |                       |
+        #  | District 2|                       |
+        #  *           *           *           *
+        #  |           |                       |
+        #  +-----------+                       |
+        #  |           |                       |
+        #  | District 1|                       |
+        #  |           |                       |
+        #  *-----------*-----------*-----------*
+
+        # Try locking District 2, selecting the large block that totally
+        # contains District 1, and add it to District 3
+        district2.is_locked = True
+        district2.save()
+
+        districtpre_computed = ComputedCharacteristic.objects.filter(district__in=[district1,district2,district3],subject=self.subject).order_by('district').values_list('number',flat=True)
+        print presum
+        presum = 0;
+        for pre in districtpre_computed:
+            presum += pre
+
+        self.plan.add_geounits(district3.district_id, [str(geounits[0].id)], self.geolevels[0].id, self.plan.version)
+
+
+        district1 = max(District.objects.filter(plan=self.plan,district_id=self.district1.district_id),key=lambda d: d.version)
+        district2 = max(District.objects.filter(plan=self.plan,district_id=self.district2.district_id),key=lambda d: d.version)
+        district3 = max(District.objects.filter(plan=self.plan,district_id=district3.district_id),key=lambda d: d.version)
+
+        districtpost_computed = ComputedCharacteristic.objects.filter(district__in=[district1,district2,district3],subject=self.subject).order_by('district').values_list('number',flat=True)
+        print postsum
+        postsum = 0;
+        for post in districtpost_computed:
+            postsum += post
+
+        self.assertEqual(presum, postsum, 'The computed districts of the new plan do not match the computed districts of the old plan, when only reassigning geography. (e:%0.2f,a:%0.2f' % (presum, postsum))
 
     def test_get_base_geounits(self):
         """
