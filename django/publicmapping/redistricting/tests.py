@@ -380,7 +380,7 @@ class PlanTestCase(BaseTestCase):
         district2.save()
 
         districtpre_computed = ComputedCharacteristic.objects.filter(district__in=[district1,district2,district3],subject=self.subject).order_by('district').values_list('number',flat=True)
-        print presum
+        print districtpre_computed
         presum = 0;
         for pre in districtpre_computed:
             presum += pre
@@ -393,7 +393,7 @@ class PlanTestCase(BaseTestCase):
         district3 = max(District.objects.filter(plan=self.plan,district_id=district3.district_id),key=lambda d: d.version)
 
         districtpost_computed = ComputedCharacteristic.objects.filter(district__in=[district1,district2,district3],subject=self.subject).order_by('district').values_list('number',flat=True)
-        print postsum
+        print districtpost_computed
         postsum = 0;
         for post in districtpost_computed:
             postsum += post
