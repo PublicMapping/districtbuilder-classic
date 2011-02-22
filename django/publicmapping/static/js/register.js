@@ -221,7 +221,8 @@ $(function(){
             context:frm,
             data: {
                 username: $('#forgotusername').val(),
-                email: $('#forgotemail').val()
+                email: $('#forgotemail').val(),
+                csrfmiddlewaretoken: $('#csrfmiddlewaretoken').val()
             },
             dataType:'json',
             type:'POST',
