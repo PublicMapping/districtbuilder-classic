@@ -121,6 +121,58 @@ Author:
     </td>
   </tr>
 </table>
+<!-- ==================== FUNCTIONS ==================== -->
+<a name="section-Functions"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Functions</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Functions"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.management.commands.setup-module.html#empty_geom" class="summary-sig-name">empty_geom</a>(<span class="summary-sig-arg">srid</span>)</span><br />
+      Create an empty GeometryCollection.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.management.commands.setup-pysrc.html#empty_geom">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.management.commands.setup-module.html#enforce_multi" class="summary-sig-name">enforce_multi</a>(<span class="summary-sig-arg">geom</span>)</span><br />
+      Make a geometry a multi-polygon geometry.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.management.commands.setup-pysrc.html#enforce_multi">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+</table>
 <p class="indent-wrapped-lines"><b>Imports:</b>
   <span title="decimal.Decimal">Decimal</span>,
   <span title="django.contrib.gis.gdal.gdal_version">gdal_version</span>,
@@ -164,12 +216,14 @@ Author:
   <span title="django.contrib.gis.geos.LineString">LineString</span>,
   <span title="django.contrib.gis.db.models.Union">Union</span>,
   <span title="django.contrib.auth.models.User">User</span>,
+  <span title="django.core.management.call_command">call_command</span>,
   <span title="django.core.management.base.BaseCommand">BaseCommand</span>,
   <span title="django.conf.settings">settings</span>,
   <span title="optparse.make_option">make_option</span>,
   <span title="os.path.exists">exists</span>,
   <span title="lxml.etree.parse">parse</span>,
   <span title="xml.dom.minidom">minidom</span>,
+  <span title="rpy2.robjects.r">r</span>,
   <span title="traceback">traceback</span>,
   <span title="pprint">pprint</span>,
   <span title="httplib">httplib</span>,
@@ -177,6 +231,86 @@ Author:
   <span title="base64">base64</span>,
   <span title="json">json</span>
 </p><br />
+<!-- ==================== FUNCTION DETAILS ==================== -->
+<a name="section-FunctionDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Function Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-FunctionDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="empty_geom"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">empty_geom</span>(<span class="sig-arg">srid</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.management.commands.setup-pysrc.html#empty_geom">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Create an empty GeometryCollection.
+
+Parameters:
+    srid -- The spatial reference for this empty geometry.
+
+Returns:
+    An empty geometry.
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="enforce_multi"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">enforce_multi</span>(<span class="sig-arg">geom</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.management.commands.setup-pysrc.html#enforce_multi">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Make a geometry a multi-polygon geometry.
+
+This method wraps Polygons in MultiPolygons. If geometry exists, but is
+neither polygon or multipolygon, an empty geometry is returned. If no
+geometry is provided, no geometry (None) is returned.
+
+Parameters:
+    geom -- The geometry to check/enforce.
+Returns:
+    A multi-polygon from any polygon type.
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<br />
 <!-- ==================== NAVIGATION BAR ==================== -->
 <table class="navbar" border="0" width="100%" cellpadding="0"
        bgcolor="#a0c0ff" cellspacing="0">
@@ -208,7 +342,7 @@ Author:
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">
-    Generated by Epydoc 3.0.1 on Thu Dec 16 09:58:45 2010
+    Generated by Epydoc 3.0.1 on Thu Feb 17 23:26:47 2011
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

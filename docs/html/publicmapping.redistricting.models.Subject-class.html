@@ -64,19 +64,20 @@
 <!-- ==================== CLASS DESCRIPTION ==================== -->
 <h1 class="epydoc">Class Subject</h1><p class="nomargin-top"><span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#Subject">source&nbsp;code</a></span></p>
 <center>
-<center>  <map id="uml_class_diagram_for_publicma_23" name="uml_class_diagram_for_publicma_23">
-<area shape="rect" id="node30" href="publicmapping.redistricting.models.Subject-class.html#name" title="publicmapping.redistricting.models.Subject.name" alt="" coords="17,31,127,49"/>
-<area shape="rect" id="node30" href="publicmapping.redistricting.models.Subject-class.html#display" title="publicmapping.redistricting.models.Subject.display" alt="" coords="17,49,127,68"/>
-<area shape="rect" id="node30" href="publicmapping.redistricting.models.Subject-class.html#short_display" title="publicmapping.redistricting.models.Subject.short_display" alt="" coords="17,68,127,87"/>
-<area shape="rect" id="node30" href="publicmapping.redistricting.models.Subject-class.html#description" title="publicmapping.redistricting.models.Subject.description" alt="" coords="17,87,127,105"/>
-<area shape="rect" id="node30" href="publicmapping.redistricting.models.Subject-class.html#is_displayed" title="publicmapping.redistricting.models.Subject.is_displayed" alt="" coords="17,105,127,124"/>
-<area shape="rect" id="node30" href="publicmapping.redistricting.models.Subject-class.html#sort_key" title="publicmapping.redistricting.models.Subject.sort_key" alt="" coords="17,124,127,143"/>
-<area shape="rect" id="node30" href="publicmapping.redistricting.models.Subject-class.html#format_string" title="publicmapping.redistricting.models.Subject.format_string" alt="" coords="17,143,127,161"/>
-<area shape="rect" id="node30" href="publicmapping.redistricting.models.Subject.Meta-class.html" title="Additional information about the Subject model." alt="" coords="17,161,127,180"/>
-<area shape="rect" id="node30" href="publicmapping.redistricting.models.Subject-class.html#__unicode__" title="Represent the Subject as a unicode string." alt="" coords="17,183,127,201"/>
-<area shape="rect" id="node1" href="publicmapping.redistricting.models.Subject-class.html" title="A classification of a set of Characteristics." alt="" coords="5,6,139,207"/>
+<center>  <map id="uml_class_diagram_for_publicma_21" name="uml_class_diagram_for_publicma_21">
+<area shape="rect" id="node26" href="publicmapping.redistricting.models.Subject-class.html#name" title="publicmapping.redistricting.models.Subject.name" alt="" coords="17,31,167,49"/>
+<area shape="rect" id="node26" href="publicmapping.redistricting.models.Subject-class.html#display" title="publicmapping.redistricting.models.Subject.display" alt="" coords="17,49,167,68"/>
+<area shape="rect" id="node26" href="publicmapping.redistricting.models.Subject-class.html#short_display" title="publicmapping.redistricting.models.Subject.short_display" alt="" coords="17,68,167,87"/>
+<area shape="rect" id="node26" href="publicmapping.redistricting.models.Subject-class.html#description" title="publicmapping.redistricting.models.Subject.description" alt="" coords="17,87,167,105"/>
+<area shape="rect" id="node26" href="publicmapping.redistricting.models.Subject-class.html#percentage_denominator" title="publicmapping.redistricting.models.Subject.percentage_denominator" alt="" coords="17,105,167,124"/>
+<area shape="rect" id="node26" href="publicmapping.redistricting.models.Subject-class.html#is_displayed" title="publicmapping.redistricting.models.Subject.is_displayed" alt="" coords="17,124,167,143"/>
+<area shape="rect" id="node26" href="publicmapping.redistricting.models.Subject-class.html#sort_key" title="publicmapping.redistricting.models.Subject.sort_key" alt="" coords="17,143,167,161"/>
+<area shape="rect" id="node26" href="publicmapping.redistricting.models.Subject-class.html#format_string" title="publicmapping.redistricting.models.Subject.format_string" alt="" coords="17,161,167,180"/>
+<area shape="rect" id="node26" href="publicmapping.redistricting.models.Subject.Meta-class.html" title="Additional information about the Subject model." alt="" coords="17,180,167,199"/>
+<area shape="rect" id="node26" href="publicmapping.redistricting.models.Subject-class.html#__unicode__" title="Represent the Subject as a unicode string." alt="" coords="17,201,167,220"/>
+<area shape="rect" id="node1" href="publicmapping.redistricting.models.Subject-class.html" title="A classification of a set of Characteristics." alt="" coords="5,6,179,226"/>
 </map>
-  <img src="uml_class_diagram_for_publicma_23.gif" alt='' usemap="#uml_class_diagram_for_publicma_23" ismap="ismap" class="graph-without-title" />
+  <img src="uml_class_diagram_for_publicma_21.gif" alt='' usemap="#uml_class_diagram_for_publicma_21" ismap="ismap" class="graph-without-title" />
 </center>
 </center>
 <hr />
@@ -204,6 +205,13 @@ If you think about it in GIS terms:
     <td width="15%" align="right" valign="top" class="summary">
       <span class="summary-type">&nbsp;</span>
     </td><td class="summary">
+        <a href="publicmapping.redistricting.models.Subject-class.html#percentage_denominator" class="summary-name">percentage_denominator</a> = <code title="models.ForeignKey('Subject', null= True, blank= True)">models.ForeignKey('Subject', null= Tr<code class="variable-ellipsis">...</code></code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
         <a name="is_displayed"></a><span class="summary-name">is_displayed</span> = <code title="models.BooleanField(default= True)">models.BooleanField(default= True)</code>
     </td>
   </tr>
@@ -261,6 +269,43 @@ If you think about it in GIS terms:
 </td></tr></table>
 </div>
 <br />
+<!-- ==================== CLASS VARIABLE DETAILS ==================== -->
+<a name="section-ClassVariableDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Class Variable Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-ClassVariableDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="percentage_denominator"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">percentage_denominator</h3>
+  
+  <dl class="fields">
+  </dl>
+  <dl class="fields">
+    <dt>Value:</dt>
+      <dd><table><tr><td><pre class="variable">
+models.ForeignKey('Subject', null= True, blank= True)
+</pre></td></tr></table>
+</dd>
+  </dl>
+</td></tr></table>
+</div>
+<br />
 <!-- ==================== NAVIGATION BAR ==================== -->
 <table class="navbar" border="0" width="100%" cellpadding="0"
        bgcolor="#a0c0ff" cellspacing="0">
@@ -292,7 +337,7 @@ If you think about it in GIS terms:
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">
-    Generated by Epydoc 3.0.1 on Thu Dec 16 09:58:46 2010
+    Generated by Epydoc 3.0.1 on Thu Feb 17 23:26:54 2011
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"
