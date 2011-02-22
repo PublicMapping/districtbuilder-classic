@@ -877,8 +877,14 @@ class Plan(models.Model):
             target.save()
             new_target = True
                 
+        # If there are locked districts: augment the district boundary with the
+        # boundary of the locked area, because get_mixed_geounits is getting
+        # the geounits that lie outside of the provided geometry, but
+        # within the boundaries of the geounit ids.
+        bounds = target.geom.union(locked) if locked else target.geom
+
         # get the geounits before changing the target geometry
-        geounits = Geounit.get_mixed_geounits(geounit_ids, self.legislative_body, geolevel, target.geom, False)
+        geounits = Geounit.get_mixed_geounits(geounit_ids, self.legislative_body, geolevel, bounds, False)
 
         # set the fixed flag, since the target has changed
         if len(geounits) > 0:
