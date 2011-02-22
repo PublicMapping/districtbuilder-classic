@@ -66,8 +66,7 @@ class BaseTestCase(unittest.TestCase):
             self.geolevels = list(self.geolevels)
 
         # create a Subject
-        self.subject = Subject(name='TestSubject')
-        self.subject.save()
+        (self.subject, created) = Subject.objects.get_or_create(name='TestSubject')
         
         self.geounits = {}
 
@@ -161,7 +160,6 @@ class BaseTestCase(unittest.TestCase):
         self.plan.delete()
         self.user.delete()
         self.legbod.delete()
-        self.subject.delete()
         self.target.delete()
         self.legdef.delete()
         self.leglev3.delete()
@@ -169,7 +167,7 @@ class BaseTestCase(unittest.TestCase):
         self.leglev1.delete()
         self.district1.delete()
         self.district2.delete()
-        # Keep the geolevels/units around. They are too expensive to create and delete each time.
+        # Keep the geolevels/units/subjects/characteristics around. They are too expensive to create and delete each time.
             
 class PlanTestCase(BaseTestCase):
     """
@@ -316,8 +314,8 @@ class PlanTestCase(BaseTestCase):
 
     def test_district_locking2(self):
         """
-        Test the case where adding a partially selected geometry may add
-        the entire geometry's aggregate value.
+        Test the case where adding a partially selected geometry (due to
+        locking) may add the entire geometry's aggregate value.
         """
         geounits = self.geounits[self.geolevels[1].id]
 
@@ -398,7 +396,7 @@ class PlanTestCase(BaseTestCase):
         for post in districtpost_computed:
             postsum += post
 
-        self.assertEqual(presum, postsum, 'The computed districts of the new plan do not match the computed districts of the old plan, when only reassigning geography. (e:%0.2f,a:%0.2f' % (presum, postsum))
+        self.assertEqual(presum, postsum, 'The computed districts of the new plan do not match the computed districts of the old plan, when only reassigning geography. (e:%0.2f,a:%0.2f)' % (presum, postsum))
 
     def test_get_base_geounits(self):
         """
