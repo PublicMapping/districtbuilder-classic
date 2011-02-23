@@ -25,7 +25,7 @@ License:
     limitations under the License.
 
 Author: 
-    Andrew Jennings, David Zwarg
+    Andrew Jennings, David Zwarg, Kenny Shepard
 """
 
 from django.core.exceptions import ValidationError
@@ -783,7 +783,9 @@ class Plan(models.Model):
         # Collect locked district geometries, and remove locked sections
         locked = District.objects.filter(id__in=[d.id for d in districts if d.is_locked]).collect()
         if locked:
-            locked = locked if locked.valid else locked.buffer(0)
+            # GEOS topology exceptions are sometimes thrown when performing a difference
+            # on compledx geometries unless a buffer(0) is first performed.
+            locked = locked if locked.empty else locked.buffer(0)
             incremental = incremental if locked.empty else incremental.difference(locked)
 
         self.purge(after=version)
