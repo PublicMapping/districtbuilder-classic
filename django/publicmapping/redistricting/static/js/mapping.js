@@ -790,8 +790,27 @@ function mapinit(srs,maxExtent) {
         districtLayer.strategies[0].update({force:true});
     };
 
+    // Track whether we've already got an outbound request to the server to add districts
+    var outboundRequest = false;
     // An assignment function that adds geounits to a district
     var assignOnSelect = function(feature) {
+        // If there's an outbound request, hold the user from more clicking
+        if (outboundRequest === true) {
+            $('<div id="busyDiv">Please wait until your previous changes have been accepted.</div>').dialog({
+                modal: true,
+                autoOpen: true,
+                title: 'Busy',
+                buttons: { 
+                    'OK': function() {
+                        $('#busyDiv').remove();
+                    }
+                }
+            });
+            return false;
+        } else {
+            outboundRequest = true;
+        }
+
         if (selection.features.length == 0) {
             $('#assign_district').val('-1');
             return;
@@ -816,6 +835,7 @@ function mapinit(srs,maxExtent) {
             },
             success: function(data, textStatus, xhr) {
                 var mode = data.success ? 'select' : 'error';
+                outboundRequest = false;
                 if (data.success) {
                     // if no districts were updated, display a warning
                     if (!data.updated) {
@@ -874,6 +894,7 @@ function mapinit(srs,maxExtent) {
             },
             error: function(xhr, textStatus, error) {
                 window.status = 'failed to select';
+                outboundRequest = false;
             }
         });
     };
