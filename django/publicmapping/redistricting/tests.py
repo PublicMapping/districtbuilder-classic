@@ -487,6 +487,30 @@ class PlanTestCase(BaseTestCase):
 
         self.assertEqual(729, len(sorted_district_list), 'Sorted district list was the wrong length: %d' % len(sorted_district_list))
 
+    def test_schwartzberg(self):
+        """
+        Test the Schwartzberg measure of compactness.
+        """
+        geounits = self.geounits[self.geolevels[1].id]
+
+        dist1ids = geounits[0:3] + geounits[9:12]
+        dist2ids = geounits[18:21] + geounits[27:30] + geounits[36:39]
+
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        dist2ids = map(lambda x: str(x.id), dist2ids)
+
+        self.plan.add_geounits(self.district1.district_id, dist1ids, self.geolevels[1].id, self.plan.version)
+        self.plan.add_geounits(self.district2.district_id, dist2ids, self.geolevels[1].id, self.plan.version)
+
+        district1 = max(District.objects.filter(plan=self.plan,district_id=self.district1.district_id),key=lambda d: d.version)
+        district2 = max(District.objects.filter(plan=self.plan,district_id=self.district2.district_id),key=lambda d: d.version)
+
+        schw1 = district1.get_schwartzberg_raw()
+        self.assertAlmostEquals(0.86832150547, schw1, 9, 'Schwartzberg for District 1 was incorrect: %d' % schw1)
+
+        schw2 = district2.get_schwartzberg_raw()
+        self.assertAlmostEquals(0.88622692545, schw2, 9, 'Schwartzberg for District 2 was incorrect: %d' % schw2)
+
 class GeounitMixTestCase(BaseTestCase):
     """
     Unit tests to test the mixed geounit spatial queries.
