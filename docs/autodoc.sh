@@ -7,7 +7,7 @@ epydoc --config=epydoc.config
 postgresql_autodoc -d publicmapping -h localhost -p 5432 -u publicmapping --password -s publicmapping -m "publicmapping_" -t dot
 
 # Generate a graphic from the dot file.
-dot -Tpng publicmapping.dot -o schema.png
+dot -Tpng html/publicmapping.dot -o html/schema.png
 
-rm publicmapping.dot
-cp schema.png html/schema.png
+rm html/publicmapping.dot
+cp html/schema.png schema.png
