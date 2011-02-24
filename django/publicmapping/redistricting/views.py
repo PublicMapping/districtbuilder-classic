@@ -24,7 +24,7 @@ License:
     limitations under the License.
 
 Author: 
-    Andrew Jennings, David Zwarg
+    Andrew Jennings, David Zwarg, Kenny Shepard
 """
 
 from django.http import *
@@ -51,6 +51,7 @@ from datetime import datetime, time, timedelta
 from decimal import *
 from functools import wraps
 from operator import attrgetter
+from redistricting.calculators import *
 from redistricting.models import *
 from redistricting.utils import *
 import settings, random, string, math, types, copy, time, threading, traceback, os, commands, sys, tempfile
@@ -1345,16 +1346,19 @@ def getgeography(request, planid):
             stats = { 'name': dist_name, 'district_id': district.district_id }
             characteristics = district.computedcharacteristic_set.filter(subject = subject)
 
+            compactness = Schwartzberg(district).calculate()
+            compactness_formatted = ("%.2f%%" % (compactness * 100)) if compactness else "n/a"
+            
             if characteristics.count() == 0:
                 stats['demo'] = 'n/a'        
                 stats['contiguity'] = district.is_contiguous()
-                stats['compactness'] = district.get_schwartzberg()
+                stats['compactness'] = compactness_formatted
                 stats['css_class'] = 'under'
 
             for characteristic in characteristics:
                 stats['demo'] = "%.0f" % characteristic.number        
                 stats['contiguity'] = district.is_contiguous()
-                stats['compactness'] = district.get_schwartzberg()
+                stats['compactness'] = compactness_formatted
 
                 try: 
                     target = plan.targets().get(subject = subject)
@@ -1490,23 +1494,6 @@ def getcompliance(plan, version):
 #            data['value']= "Data unavailable" 
 #        aggregate.append(data)
 #    return aggregate
-
-def getcompactness(district):
-    """
-    Get the Schwartzberg measure of compactness. Schwartzberg is the 
-    measure of the perimeter of the district to the circumference of the 
-    circle whose area is equal to the area of the district.
-    
-    NOTE: This function is empty.
-    
-    Parameters:
-        district -- A list of districts
-        
-    Returns:
-        Nothing
-    """
-    pass
-
 #def createShapeFile(planid):
 #    """ Given a plan id, this function will create a shape file in the temp folder
 #    that contains the district geometry and all available computed characteristics. 

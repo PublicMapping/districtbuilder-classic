@@ -40,7 +40,7 @@ from django.forms import ModelForm
 from django.conf import settings
 from django.utils import simplejson as json
 from datetime import datetime
-from math import sqrt, pi
+from redistricting.calculators import *
 from copy import copy
 import sys
 
@@ -985,7 +985,7 @@ class Plan(models.Model):
                     'version': row[4],
                     'number': float(row[7]),
                     'contiguous': district.is_contiguous(),
-                    'compactness': district.get_schwartzberg_raw()
+                    'compactness': Schwartzberg(district).calculate()
                 },
                 'geometry': geom
             })
@@ -1329,43 +1329,6 @@ class District(models.Model):
 
         return changed
         
-
-    def get_schwartzberg_raw(self):
-        """
-        Generate Schwartzberg measure of compactness.
-        
-        The Schwartzberg measure of compactness measures the perimeter of 
-        the district to the circumference of the circle whose area is 
-        equal to the area of the district.
-
-        Returns:
-            The Schwartzberg measure as a raw number.
-        """
-        try:
-            r = sqrt(self.geom.area / pi)
-            perimeter = 2 * pi * r
-            ratio = perimeter / self.geom.length
-            return ratio
-        except:
-            return None
-        
-    def get_schwartzberg(self):
-        """
-        Generate Schwartzberg measure of compactness.
-        
-        The Schwartzberg measure of compactness measures the perimeter of 
-        the district to the circumference of the circle whose area is 
-        equal to the area of the district.
-
-        Returns:
-            The Schwartzberg measure, formatted as a percentage.
-        """
-        ratio = self.get_schwartzberg_raw()
-        if ratio:
-            return "%.2f%%" % (ratio * 100)
-        else: 
-            return "n/a"
-
     def is_contiguous(self):
         """
         Checks to see if the district is contiguous.

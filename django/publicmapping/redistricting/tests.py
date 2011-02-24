@@ -23,7 +23,7 @@ License:
     limitations under the License.
 
 Author: 
-    Andrew Jennings, David Zwarg
+    Andrew Jennings, David Zwarg, Kenny Shepard
 """
 
 import os
@@ -35,6 +35,7 @@ from django.contrib.gis.geos import *
 from django.contrib.auth.models import User
 from publicmapping.redistricting.models import *
 from publicmapping.redistricting.utils import *
+from publicmapping.redistricting.calculators import *
 from django.conf import settings
 from datetime import datetime
 
@@ -505,10 +506,10 @@ class PlanTestCase(BaseTestCase):
         district1 = max(District.objects.filter(plan=self.plan,district_id=self.district1.district_id),key=lambda d: d.version)
         district2 = max(District.objects.filter(plan=self.plan,district_id=self.district2.district_id),key=lambda d: d.version)
 
-        schw1 = district1.get_schwartzberg_raw()
+        schw1 = Schwartzberg(district1).calculate()
         self.assertAlmostEquals(0.86832150547, schw1, 9, 'Schwartzberg for District 1 was incorrect: %d' % schw1)
 
-        schw2 = district2.get_schwartzberg_raw()
+        schw2 = Schwartzberg(district2).calculate()
         self.assertAlmostEquals(0.88622692545, schw2, 9, 'Schwartzberg for District 2 was incorrect: %d' % schw2)
 
 class GeounitMixTestCase(BaseTestCase):
