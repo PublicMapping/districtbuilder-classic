@@ -71,9 +71,9 @@
             district. Each discrete target (usually 1 per legislative body/subject
             combination) must be listed here, with a unique ID.
         -->
-        <Target id="tottarget" subjectref="poptot" value="727366" range1="0.20" range2="0.25" />
-        <Target id="housetarget" subjectref="poptot" value="80010" range1="0.1" range2="0.2" />
-        <Target id="senatetarget" subjectref="poptot" value="200026" range1="0.1" range2="0.2" />
+        <Target id="tottarget" subjectref="poptot" value="727366" range1="0.005" range2="0.01" />
+        <Target id="housetarget" subjectref="poptot" value="80010" range1="0.05" range2="0.10" />
+        <Target id="senatetarget" subjectref="poptot" value="200026" range1="0.05" range2="0.10" />
     </Targets>
    
     <GeoLevels>
