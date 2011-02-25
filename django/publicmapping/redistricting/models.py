@@ -1015,7 +1015,7 @@ class Plan(models.Model):
         else:
             fields = 'd.id, d.district_id, d.name, d.plan_id, d.version, d.is_locked'
 
-        return list(District.objects.raw('select %s from redistricting_district as d join (select max(version) as latest, district_id, plan_id from redistricting_district where plan_id = %%s and version <= %%s group by district_id, plan_id) as v on d.district_id = v.district_id and d.plan_id = v.plan_id and d.version = v.latest order by d.district_id' % fields, [ self.id, version ]))
+        return sorted(list(District.objects.raw('select %s from redistricting_district as d join (select max(version) as latest, district_id, plan_id from redistricting_district where plan_id = %%s and version <= %%s group by district_id, plan_id) as v on d.district_id = v.district_id and d.plan_id = v.plan_id and d.version = v.latest' % fields, [ self.id, version ])), key=lambda d: d.sortKey())
 
     @staticmethod
     def create_default(name,body,owner=None,template=True,is_pending=True):
@@ -1226,7 +1226,7 @@ class District(models.Model):
         """
         name = self.name;
         prefix = self.plan.legislative_body.member
-        index = member.find('%')
+        index = prefix.find('%')
         if index >= 0:
             prefix = prefix[0:index]
         else:
