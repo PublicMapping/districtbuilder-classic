@@ -1646,7 +1646,7 @@ def getplans(request):
                 'can_edit': can_edit(request.user, plan)
                 }
             })
-    json_response = "{ \"total\":\"%d\", \"page\":\"%d\", \"records\":\"%d\", \"rows\":%s }" % (total_pages, page, len(plans), json.dumps(plans_list))
+    json_response = "{ \"total\":\"%d\", \"page\":\"%d\", \"records\":\"%d\", \"rows\":%s }" % (total_pages, page, len(all_plans), json.dumps(plans_list))
     return HttpResponse(json_response,mimetype='application/json') 
 
 @login_required

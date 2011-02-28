@@ -395,7 +395,7 @@ chooseplan = function(options) {
         var searchBox = $('#plan_search');
         searchBox.keyup( function(event) {
             if (event.which == 13) {
-                _table.jqGrid().trigger('reloadGrid');
+                _table.jqGrid().trigger('reloadGrid', [{ page:1 }]);
             }
         });
 
@@ -470,14 +470,14 @@ chooseplan = function(options) {
         });
 
         $('#leg_selector').change( function() {
-            _table.jqGrid().trigger('reloadGrid');
+            _table.jqGrid().trigger('reloadGrid', [{ page:1 }]);
         });
 
         // Set up the filter buttons
         $('#filter_templates').click( function () {
             _eventType = 'template';
             _nameRequired = true;
-            _table.jqGrid().trigger('reloadGrid');
+            _table.jqGrid().trigger('reloadGrid', [{ page:1 }]);
             if (_options.anonymous) {
                 showItems(false, false, true, false, true);
             } else {
@@ -489,7 +489,7 @@ chooseplan = function(options) {
         $('#filter_shared').click( function () {
             _eventType = 'shared';
             _nameRequired = true;
-            _table.jqGrid().trigger('reloadGrid');
+            _table.jqGrid().trigger('reloadGrid', [{ page:1 }]);
             if (_options.anonymous) {
                 showItems(false, false, true, false, true);
             } else {
@@ -501,7 +501,7 @@ chooseplan = function(options) {
         $('#filter_mine').click( function () {
             _eventType = 'mine';
             _nameRequired = false;
-            _table.jqGrid().trigger('reloadGrid');
+            _table.jqGrid().trigger('reloadGrid', [{ page:1 }]);
             $('input:radio[name=Edit]').filter('[value=edit]').attr('checked', true);
             showItems(false, true, true, true, false);
             setActiveTab($(this));            
