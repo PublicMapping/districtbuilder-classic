@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema 
-    attributeFormDefault="unqualified" 
-    elementFormDefault="qualified"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema" >
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+           xmlns:db="http://gmu.azavea.com/DistrictBuilder" >
     <xs:include schemaLocation="config.xsd" />
     <xs:complexType name="Config">
         <xs:annotation>
@@ -21,18 +20,6 @@
                         <xs:element name="BardConfig" type="BardConfigType" />
                     </xs:sequence>
                 </xs:complexType>
-                <xs:keyref name="PopVarSubject" refer="DistrictBuilderSubjectKey">
-                    <xs:selector xpath="PopVars/PopVar" />
-                    <xs:field xpath="@subjectref" />
-                </xs:keyref>
-                <xs:keyref name="RatioNumeratorVarSubject" refer="DistrictBuilderSubjectKey">
-                    <xs:selector xpath="RatioVars/RatioVar/Numerators/Numerator" />
-                    <xs:field xpath="@subjectref" />
-                </xs:keyref>
-                <xs:keyref name="RatioDenominatorSubject" refer="DistrictBuilderSubjectKey">
-                    <xs:selector xpath="RatioVars/RatioVar/Denominator" />
-                    <xs:field xpath="@subjectref" />
-                </xs:keyref>
             </xs:element>
             <xs:element name="BardBodyConfigs">
                 <xs:complexType>
@@ -40,18 +27,6 @@
                         <xs:element name="BardBodyConfig" type="BardBodyConfigType" minOccurs="1" maxOccurs="unbounded" />
                     </xs:sequence>
                 </xs:complexType>
-                <xs:key name="BardConfigKey">
-                    <xs:selector xpath="BardConfigs/BardConfig" />
-                    <xs:field xpath="@id" />
-                </xs:key>
-                <xs:keyref name="BardBodyReference" refer="DistrictBuilderLegislativeBodyKey">
-                    <xs:selector xpath="BardBodyConfigs/BardBodyConfig" />
-                    <xs:field xpath="@legislativebodyref" />
-                </xs:keyref>
-                <xs:keyref name="BardConfigReference" refer="BardConfigKey">
-                    <xs:selector xpath="BardBodyConfigs/BardBodyConfig" />
-                    <xs:field xpath="@bardconfigref" />
-                </xs:keyref>
             </xs:element>
         </xs:all>
     </xs:complexType>
