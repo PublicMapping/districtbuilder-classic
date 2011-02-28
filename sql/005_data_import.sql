@@ -89,7 +89,7 @@ update redistricting_characteristic as c set number = vtd.sum, percentage = 0.00
 update redistricting_characteristic as n set percentage = n.number / d.number from redistricting_subject as s join redistricting_characteristic as d on s.percentage_denominator_id = d.subject_id where n.geounit_id = d.geounit_id and exists (select * from va_vtd_map as m where m.parent = n.geounit_id) and d.number != 0 and n.subject_id = s.id;
 
 -- Update the county characteristics
-select p.id as parent, c.id as child into temp va_county_map from redistricting_geounit as p join redistricting_geounit as c on c.child_id = p.id where p.geolevel_id = 3 and exists (select * from va_vtd_map as v where c.id = v.parent);
+select p.id as parent, c.id as child into temp va_county_map from redistricting_geounit as p join redistricting_geounit as c on c.child_id = p.id where p.id = 288258;
 
 select m.parent as geounit_id, c.subject_id, sum (c.number) into temp va_county_sums from redistricting_characteristic as c join va_county_map as m on c.geounit_id = m.child group by m.parent, c.subject_id;
 
