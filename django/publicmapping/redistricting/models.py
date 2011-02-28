@@ -613,6 +613,9 @@ class Plan(models.Model):
     # backend, and should not be visible in the UI
     is_pending = models.BooleanField(default=False)
 
+    # Is this plan considered a valid plan based on validation criteria?
+    is_valid = models.BooleanField(default=False)
+
     # The most recent version of the districts in this plan.
     version = models.PositiveIntegerField(default=0)
 
@@ -1610,3 +1613,114 @@ def enforce_multi(geom):
             return empty_geom(geom.srid)
     else:
         return geom
+
+
+class ScoreDisplay(models.Model):
+    """
+    Container for displaying score panels
+    """
+
+    # The title of the score display
+    title = models.CharField(max_length=50)
+
+    # The legislative body that this score display is for
+    legislative_body = models.ForeignKey(LegislativeBody)
+
+    # Whether or not this score display belongs on the leaderboard page
+    is_page = models.BooleanField(default=False)
+
+    # The style to be assigned to this score display
+    cssclass = models.CharField(max_length=50, blank=True)
+
+
+class ScorePanel(models.Model):
+    """
+    Container for displaying multiple scores of a given type
+    """
+
+    # The type of the score display (plan, plan summary, district)
+    type = models.CharField(max_length=20)
+
+    # The score display this panel belongs to
+    display = models.ForeignKey(ScoreDisplay)
+
+    # Where this panel belongs within a score display
+    position = models.PositiveIntegerField(default=0)
+    
+    # The title of the score panel
+    title = models.CharField(max_length=50)
+    
+    # The filename of the template to be used for formatting this panel
+    template = models.CharField(max_length=500, blank=True)
+
+    # The style to be assigned to this score display
+    cssclass = models.CharField(max_length=50, blank=True)
+
+
+class ScoreFunction(models.Model):
+    """
+    Score calculation definition
+    """
+
+    # Namepace of the calculator module to use for scoring
+    calculator = models.CharField(max_length=500)
+
+    # Name of this score function
+    name = models.CharField(max_length=50)
+
+    # Label to be displayed for scores calculated with this funciton
+    label = models.CharField(max_length=100, blank=True)
+
+    # Description of this score function
+    description = models.TextField(blank=True)
+
+    # Whether or not this score function is for a plan
+    is_planscore = models.BooleanField(default=False)
+
+
+class ScoreArgument(models.Model):
+    """
+    Defines the arguments passed into a score function
+    """
+
+    # The score function this argument is for
+    function = models.ForeignKey(ScoreFunction)
+
+    # The name of the argument of the score function
+    argument = models.CharField(max_length=50)
+
+    # The value of the argument to be passed
+    value = models.CharField(max_length=50)
+
+    # The type of the argument (literal, score, subject)
+    type = models.CharField(max_length=10)
+
+    
+class PanelFunction(models.Model):
+    """
+    Defines the score functions used in a given score panel
+    """
+
+    # The score panel
+    panel = models.ForeignKey(ScorePanel)
+
+    # The score function
+    function = models.ForeignKey(ScoreFunction)
+
+
+class ValidationCriteria(models.Model):
+    """
+    Defines the required score functions to validate a legislative body
+    """
+
+    # The score function this criteria is for
+    function = models.ForeignKey(ScoreFunction)
+
+    # Name of this validation criteria
+    name = models.CharField(max_length=50)
+
+    # Description of this validation criteria
+    description = models.TextField(blank=True)
+
+    # The legislative body that this validation criteria is for
+    legislative_body = models.ForeignKey(LegislativeBody)
