@@ -37,9 +37,19 @@ class CalculatorBase:
     and defines a couple default rendering options for HTML, JSON, and 
     Boolean.
     """
+
+    # This calculator's result
     result = None
 
-    def compute(self, *args, **kwargs):
+    # This calculator's dictionary of arguments. This dictionary is keyed
+    # by argument name, and the values are tuples of the type name and
+    # the value.
+    #
+    # E.g.: arg_dict = { 'minimum':('literal','0.5',) }
+    #
+    arg_dict = {}
+
+    def compute(self, **kwargs):
         """
         Compute the value for this calculator. The base class calculates
         nothing.
@@ -61,6 +71,7 @@ class CalculatorBase:
         """
         return json.dumps( {'result':self.result} )
 
+
 class Schwartzberg(CalculatorBase):
     """
     Calculator for the Schwartzberg measure of compactness.
@@ -72,7 +83,7 @@ class Schwartzberg(CalculatorBase):
     Parameters:
         district -- The District for which compactness is to be calculated.
     """
-    def compute(self, *args, **kwargs):
+    def compute(self, **kwargs):
         """
         Calculates the Schwartzberg measure of compactness.
         """
@@ -93,3 +104,10 @@ class Schwartzberg(CalculatorBase):
 
     def html(self):
         return ("%.2f%%" % (self.result * 100)) if self.result else "n/a"
+
+#class Sum(CalculatorBase):
+#    """
+#    Sum up all values.
+#    """
+#    def compute(self, *args, **kwargs):
+        
