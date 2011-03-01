@@ -963,3 +963,63 @@ class CalculatorCase(BaseTestCase):
         actual = pctcalc.result
 
         self.assertEquals(expected, actual, 'Incorrect value during percentage. (e:%f,a:%f)' % (expected, actual))
+
+    def test_threshold1(self):
+        thrcalc = Threshold()
+        thrcalc.arg_dict['value'] = ('literal','1',)
+        thrcalc.arg_dict['threshold'] = ('literal','2',)
+        thrcalc.compute(districts=[self.district1])
+
+        self.assertEquals(False, thrcalc.result, 'Incorrect value during threshold. (e:%s,a:%s)' % (False, thrcalc.result))
+
+    def test_threshold2(self):
+        thrcalc = Threshold()
+        thrcalc.arg_dict['value'] = ('literal','2',)
+        thrcalc.arg_dict['threshold'] = ('literal','1',)
+        thrcalc.compute(districts=[self.district1])
+
+        self.assertEquals(True, thrcalc.result, 'Incorrect value during threshold. (e:%s,a:%s)' % (True, thrcalc.result))
+
+    def test_threshold3(self):
+        geolevelid = self.geolevels[1].id
+        geounits = self.geounits[geolevelid]
+
+        dist1ids = geounits[0:3] + geounits[9:12]
+        exqset = Characteristic.objects.filter(geounit__in=dist1ids,subject=self.subject)
+        expected = float(exqset.aggregate(SumAgg('number'))['number__sum']) > 10.0
+
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        
+        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
+
+        thrcalc = Threshold()
+        thrcalc.arg_dict['value'] = ('subject',self.subject.name,)
+        thrcalc.arg_dict['threshold'] = ('literal','10.0',)
+        thrcalc.compute(districts=[district1])
+
+        actual = thrcalc.result
+
+        self.assertEquals(expected, actual, 'Incorrect value during threshold. (e:%s,a:%s)' % (expected, actual))
+
+    def test_threshold4(self):
+        geolevelid = self.geolevels[1].id
+        geounits = self.geounits[geolevelid]
+
+        dist1ids = geounits[0:3] + geounits[9:12]
+        exqset = Characteristic.objects.filter(geounit__in=dist1ids,subject=self.subject)
+        expected = float(exqset.aggregate(SumAgg('number'))['number__sum']) > 5.0
+
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        
+        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
+
+        thrcalc = Threshold()
+        thrcalc.arg_dict['value'] = ('subject',self.subject.name,)
+        thrcalc.arg_dict['threshold'] = ('literal','5.0',)
+        thrcalc.compute(districts=[district1])
+
+        actual = thrcalc.result
+
+        self.assertEquals(expected, actual, 'Incorrect value during threshold. (e:%s,a:%s)' % (expected, actual))

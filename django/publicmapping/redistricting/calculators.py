@@ -142,7 +142,8 @@ class Sum(CalculatorBase):
             argnum = 1
             while ('value%d'%argnum) in self.arg_dict:
                 number = self.get_value('value%d'%argnum, district)
-                self.result += float(number)
+                if not number is None:
+                    self.result += float(number)
 
                 argnum += 1
         elif 'plans' in kwargs:
@@ -158,6 +159,7 @@ class Sum(CalculatorBase):
                     self.result += float(number)
 
                 argnum += 1
+
 
 class Percent(CalculatorBase):
     def __init__(self):
@@ -178,16 +180,47 @@ class Percent(CalculatorBase):
             num = self.get_value('numerator',district)
             den = self.get_value('denominator',district)
 
-            if num is None or den is None:
-                return
-
-            self.result = float(num) / float(den)
-
         elif 'plans' in kwargs:
             num = self.get_value('numerator')
             den = self.get_value('denominator')
 
-            if num is None or den is None:
+        else:
+            return
+
+        if num is None or den is None:
+            return
+
+        self.result = float(num) / float(den)
+
+
+class Threshold(CalculatorBase):
+    def __init__(self):
+        self.result = None
+        self.arg_dict = {}
+
+    def compute(self, **kwargs):
+        """
+        Calculate and determine if a value exceeds a threshold.
+        """
+        if 'districts' in kwargs:
+            districts = kwargs['districts']
+            if len(districts) == 0:
                 return
 
-            self.result = float(num) / float(den)
+            district = districts[0]
+            val = self.get_value('value',district)
+            thr = self.get_value('threshold',district)
+
+        elif 'plans' in kwargs:
+            val = self.get_value('value')
+            thr = self.get_value('threshold')
+
+        else:
+            return
+
+        if val is None or thr is None:
+            return
+
+        self.result = float(val) > float(thr)
+
+
