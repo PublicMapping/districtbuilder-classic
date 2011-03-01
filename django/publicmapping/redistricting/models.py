@@ -33,7 +33,7 @@ from django.contrib.gis.db import models
 from django.contrib.gis.gdal import DataSource
 from django.contrib.gis.geos import MultiPolygon,GEOSGeometry,GEOSException,GeometryCollection,Point
 from django.contrib.auth.models import User
-from django.db.models import Sum, Max, Q, Count
+from django.db.models import Sum as SumAgg, Max, Q, Count
 from django.db.models.signals import pre_save, post_save
 from django.db import connection, transaction
 from django.forms import ModelForm
@@ -1297,7 +1297,7 @@ class District(models.Model):
         # For all subjects
         for subject in all_subjects:
             # Aggregate all Geounits Characteristic values
-            aggregate = Characteristic.objects.filter(geounit__in=geounits, subject__exact=subject).aggregate(Sum('number'))['number__sum']
+            aggregate = Characteristic.objects.filter(geounit__in=geounits, subject__exact=subject).aggregate(SumAgg('number'))['number__sum']
             # If there are aggregate values for the subject and geounits.
             if not aggregate is None:
                 # Get the pre-computed values

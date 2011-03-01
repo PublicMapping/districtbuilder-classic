@@ -29,7 +29,7 @@ Author:
 import os
 import unittest
 import zipfile
-from django.db.models import Sum, Min, Max
+from django.db.models import Sum as SumAgg, Min, Max
 from django.test.client import Client
 from django.contrib.gis.geos import *
 from django.contrib.auth.models import User
@@ -844,3 +844,85 @@ class PurgeTestCase(BaseTestCase):
 
         previous = self.plan.get_nth_previous_version(5)
         self.assertEquals(1, previous, '(e:1, a:%d)' % previous)
+
+class CalculatorCase(BaseTestCase):
+    def test_sum1(self):
+        sum1 = Sum()
+        sum1.arg_dict['value1'] = ('literal','10',)
+        sum1.arg_dict['value2'] = ('literal','20',)
+
+        self.assertEquals(None,sum1.result)
+        sum1.compute(districts=[self.district1])
+        self.assertEquals(30,sum1.result)
+
+        sum2 = Sum()
+
+        self.assertEquals(None,sum2.result)
+        self.assertEquals(30,sum1.result)
+
+        sum2.compute(districts=[self.district1])
+
+        self.assertEquals(0,sum2.result)
+        self.assertEquals(30,sum1.result)
+        
+    def test_sum2a(self):
+        sumcalc = Sum()
+        sumcalc.arg_dict['value1'] = ('literal','0',)
+        sumcalc.arg_dict['value2'] = ('literal','1',)
+        sumcalc.arg_dict['value3'] = ('literal','2',)
+        sumcalc.compute(plans=[])
+
+        self.assertEquals(3, sumcalc.result, 'Incorrect value during summation. (e:%d,a:%d)' % (3, sumcalc.result))
+
+    def test_sum2b(self):
+        sumcalc = Sum()
+        sumcalc.arg_dict['value1'] = ('literal','0',)
+        sumcalc.arg_dict['value2'] = ('literal','1',)
+        sumcalc.arg_dict['value3'] = ('literal','2',)
+        sumcalc.compute(districts=[self.district1])
+
+        self.assertEquals(3, sumcalc.result, 'Incorrect value during summation. (e:%d,a:%d)' % (3, sumcalc.result))
+
+    def test_sum3(self):
+        geolevelid = self.geolevels[1].id
+        geounits = self.geounits[geolevelid]
+
+        dist1ids = geounits[0:3] + geounits[9:12]
+        exqset = Characteristic.objects.filter(geounit__in=dist1ids,subject=self.subject)
+        expected = float(exqset.aggregate(SumAgg('number'))['number__sum']) + 5.0
+
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        
+        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
+
+        sumcalc = Sum()
+        sumcalc.arg_dict['value1'] = ('subject',self.subject.name,)
+        sumcalc.arg_dict['value2'] = ('literal','5.0',)
+        sumcalc.compute(districts=[district1])
+
+        actual = sumcalc.result
+
+        self.assertEquals(expected, actual, 'Incorrect value during summation. (e:%d,a:%d)' % (expected, actual))
+
+    def test_sum4(self):
+        geolevelid = self.geolevels[1].id
+        geounits = self.geounits[geolevelid]
+
+        dist1ids = geounits[0:3] + geounits[9:12]
+        exqset = Characteristic.objects.filter(geounit__in=dist1ids,subject=self.subject)
+        expected = float(exqset.aggregate(SumAgg('number'))['number__sum'])
+
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        
+        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
+
+        sumcalc = Sum()
+        sumcalc.arg_dict['value1'] = ('subject',self.subject.name,)
+        sumcalc.compute(districts=[district1])
+
+        actual = sumcalc.result
+
+        self.assertEquals(expected, actual, 'Incorrect value during summation. (e:%d,a:%d)' % (expected, actual))
+

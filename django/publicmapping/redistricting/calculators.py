@@ -79,13 +79,14 @@ class Schwartzberg(CalculatorBase):
     The Schwartzberg measure of compactness measures the perimeter of 
     the district to the circumference of the circle whose area is 
     equal to the area of the district.
-
-    Parameters:
-        district -- The District for which compactness is to be calculated.
     """
     def compute(self, **kwargs):
         """
-        Calculates the Schwartzberg measure of compactness.
+        Calculate the Schwartzberg measure of compactness. This calculator
+        only operates on districts.
+
+        Keywords:
+            districts - A list of districts to compute compactness for.
         """
         if not 'districts' in kwargs:
             return
@@ -105,9 +106,50 @@ class Schwartzberg(CalculatorBase):
     def html(self):
         return ("%.2f%%" % (self.result * 100)) if self.result else "n/a"
 
-#class Sum(CalculatorBase):
-#    """
-#    Sum up all values.
-#    """
-#    def compute(self, *args, **kwargs):
-        
+
+class Sum(CalculatorBase):
+    """
+    Sum up all values.
+    """
+    def __init__(self):
+        self.result = None
+        self.arg_dict = {}
+
+    def compute(self, **kwargs):
+        """
+        Calculate the sum of a series of values. Each value to be added
+        should be added to the args_dict as 'value1', 'value2', etc.
+        """
+        if 'districts' in kwargs:
+            districts = kwargs['districts']
+            if len(districts) == 0:
+                return
+
+            district = districts[0]
+            self.result = 0
+
+            argnum = 1
+            while ('value%d'%argnum) in self.arg_dict:
+                argtype, argval = self.arg_dict['value%d'%argnum]
+
+                if argtype == 'literal':
+                    self.result += float(argval)
+                elif argtype == 'subject':
+                    number = district.computedcharacteristic_set.get(subject__name=argval).number
+                    self.result += float(number)
+
+                argnum += 1
+        elif 'plans' in kwargs:
+            # If summing plans, the only use case we have is summing a 
+            # resulting set of scores -- this will be interpolated into
+            # the summation of a set of literals.
+            self.result = 0
+
+            argnum = 1
+            while ('value%d'%argnum) in self.arg_dict:
+                argtype, argval = self.arg_dict['value%d'%argnum]
+
+                if argtype == 'literal':
+                    self.result += float(argval)
+
+                argnum += 1
