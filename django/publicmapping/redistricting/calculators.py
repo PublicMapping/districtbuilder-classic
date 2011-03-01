@@ -71,6 +71,17 @@ class CalculatorBase:
         """
         return json.dumps( {'result':self.result} )
 
+    def get_value(self, argument, district=None):
+        """
+        Get the value of an argument if it is a literal or a subject.
+        """
+        (argtype, argval) = self.arg_dict[argument]
+        if argtype == 'literal':
+            return argval
+        elif argtype == 'subject' and not district is None:
+            return district.computedcharacteristic_set.get(subject__name=argval).number
+        return None
+
 
 class Schwartzberg(CalculatorBase):
     """
@@ -130,13 +141,8 @@ class Sum(CalculatorBase):
 
             argnum = 1
             while ('value%d'%argnum) in self.arg_dict:
-                argtype, argval = self.arg_dict['value%d'%argnum]
-
-                if argtype == 'literal':
-                    self.result += float(argval)
-                elif argtype == 'subject':
-                    number = district.computedcharacteristic_set.get(subject__name=argval).number
-                    self.result += float(number)
+                number = self.get_value('value%d'%argnum, district)
+                self.result += float(number)
 
                 argnum += 1
         elif 'plans' in kwargs:
@@ -147,9 +153,41 @@ class Sum(CalculatorBase):
 
             argnum = 1
             while ('value%d'%argnum) in self.arg_dict:
-                argtype, argval = self.arg_dict['value%d'%argnum]
-
-                if argtype == 'literal':
-                    self.result += float(argval)
+                number = self.get_value('value%d'%argnum)
+                if not number is None:
+                    self.result += float(number)
 
                 argnum += 1
+
+class Percent(CalculatorBase):
+    def __init__(self):
+        self.result = None
+        self.arg_dict = {}
+
+    def compute(self, **kwargs):
+        """
+        Calculate a percentage for two values. This calculator requires
+        a 'numerator' argument, and a 'denominator' argument.
+        """
+        if 'districts' in kwargs:
+            districts = kwargs['districts']
+            if len(districts) == 0:
+                return
+
+            district = districts[0]
+            num = self.get_value('numerator',district)
+            den = self.get_value('denominator',district)
+
+            if num is None or den is None:
+                return
+
+            self.result = float(num) / float(den)
+
+        elif 'plans' in kwargs:
+            num = self.get_value('numerator')
+            den = self.get_value('denominator')
+
+            if num is None or den is None:
+                return
+
+            self.result = float(num) / float(den)
