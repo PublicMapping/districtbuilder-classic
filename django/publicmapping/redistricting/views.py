@@ -714,7 +714,8 @@ def getreport(request, planid):
     names = sorted(districts, key=attrgetter('district_id'))
     sorted_name_list = robjects.StrVector(())
     for district in names:
-       if district.name != "Unassigned":
+        has_geom = District.objects.filter(id=district.id, geom__isnull=False).count() == 1
+        if has_geom and district.name != "Unassigned":
             sorted_name_list += district.name 
     bardplan.do_slot_assign('levels', sorted_name_list)
 
