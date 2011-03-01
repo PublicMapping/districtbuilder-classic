@@ -506,11 +506,13 @@ class PlanTestCase(BaseTestCase):
         district1 = max(District.objects.filter(plan=self.plan,district_id=self.district1.district_id),key=lambda d: d.version)
         district2 = max(District.objects.filter(plan=self.plan,district_id=self.district2.district_id),key=lambda d: d.version)
 
-        schw1 = Schwartzberg(district1).calculate()
-        self.assertAlmostEquals(0.86832150547, schw1, 9, 'Schwartzberg for District 1 was incorrect: %d' % schw1)
+        calc = Schwartzberg()
 
-        schw2 = Schwartzberg(district2).calculate()
-        self.assertAlmostEquals(0.88622692545, schw2, 9, 'Schwartzberg for District 2 was incorrect: %d' % schw2)
+        calc.compute(districts=[district1])
+        self.assertAlmostEquals(0.86832150547, calc.result, 9, 'Schwartzberg for District 1 was incorrect: %d' % calc.result)
+
+        calc.compute(districts=[district2])
+        self.assertAlmostEquals(0.88622692545, calc.result, 9, 'Schwartzberg for District 2 was incorrect: %d' % calc.result)
 
 class GeounitMixTestCase(BaseTestCase):
     """
