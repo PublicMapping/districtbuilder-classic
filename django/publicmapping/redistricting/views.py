@@ -1346,8 +1346,9 @@ def getgeography(request, planid):
             stats = { 'name': dist_name, 'district_id': district.district_id }
             characteristics = district.computedcharacteristic_set.filter(subject = subject)
 
-            compactness = Schwartzberg(district).calculate()
-            compactness_formatted = ("%.2f%%" % (compactness * 100)) if compactness else "n/a"
+            compactness_calculator = Schwartzberg()
+            compactness_calculator.compute(districts=[district])
+            compactness_formatted = compactness_calculator.html()
             
             if characteristics.count() == 0:
                 stats['demo'] = 'n/a'        

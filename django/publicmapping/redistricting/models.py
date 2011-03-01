@@ -979,6 +979,9 @@ class Plan(models.Model):
                 geom = json.loads( row[8] )
             else:
                 geom = None
+            compactness_calculator = Schwartzberg()
+            compactness_calculator.compute(districts=[district])
+
             features.append({ 
                 'id': row[0],
                 'properties': {
@@ -988,7 +991,7 @@ class Plan(models.Model):
                     'version': row[4],
                     'number': float(row[7]),
                     'contiguous': district.is_contiguous(),
-                    'compactness': Schwartzberg(district).calculate()
+                    'compactness': compactness_calculator.result
                 },
                 'geometry': geom
             })

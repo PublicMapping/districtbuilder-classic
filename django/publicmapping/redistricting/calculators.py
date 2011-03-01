@@ -29,8 +29,39 @@ Author:
 """
 
 from math import sqrt, pi
+from django.utils import simplejson as json
 
-class Schwartzberg:
+class CalculatorBase:
+    """
+    A base class for all calculators that defines the result object,
+    and defines a couple default rendering options for HTML, JSON, and 
+    Boolean.
+    """
+    result = None
+
+    def compute(self, *args, **kwargs):
+        """
+        Compute the value for this calculator. The base class calculates
+        nothing.
+        """
+        pass
+
+    def html(self):
+        """
+        Return a basic HTML representation of the result.
+        """
+        if not self.result is None:
+            return '<span>%s</span>' % self.result
+        else:
+            return '<span>n/a</span>'
+
+    def json(self):
+        """
+        Return a basic JSON representation of the result.
+        """
+        return json.dumps( {'result':self.result} )
+
+class Schwartzberg(CalculatorBase):
     """
     Calculator for the Schwartzberg measure of compactness.
         
@@ -41,23 +72,24 @@ class Schwartzberg:
     Parameters:
         district -- The District for which compactness is to be calculated.
     """
-
-    def __init__(self, district):
-        self.district = district
-        if not district:
-            raise ValidationError("No district has been supplied.")
-
-    def calculate(self):
+    def compute(self, *args, **kwargs):
         """
         Calculates the Schwartzberg measure of compactness.
-
-        Returns:
-            The Schwartzberg measure as a raw number.
         """
-        if not self.district.geom:
-            return None
+        if not 'districts' in kwargs:
+            return
+
+        districts = kwargs['districts']
+        if len(districts) == 0:
+            return
+
+        district = districts[0]
+        if district.geom is None:
+            return
         
-        r = sqrt(self.district.geom.area / pi)
+        r = sqrt(district.geom.area / pi)
         perimeter = 2 * pi * r
-        ratio = perimeter / self.district.geom.length
-        return ratio
+        self.result = perimeter / district.geom.length
+
+    def html(self):
+        return ("%.2f%%" % (self.result * 100)) if self.result else "n/a"
