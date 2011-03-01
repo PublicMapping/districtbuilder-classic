@@ -1023,3 +1023,69 @@ class CalculatorCase(BaseTestCase):
         actual = thrcalc.result
 
         self.assertEquals(expected, actual, 'Incorrect value during threshold. (e:%s,a:%s)' % (expected, actual))
+
+    def test_range1(self):
+        rngcalc = Range()
+        rngcalc.arg_dict['value'] = ('literal','2',)
+        rngcalc.arg_dict['min'] = ('literal','1',)
+        rngcalc.arg_dict['max'] = ('literal','3',)
+        rngcalc.compute(districts=[self.district1])
+
+        self.assertEquals(True, rngcalc.result, 'Incorrect value during range. (e:%s,a:%s)' % (True, rngcalc.result))
+
+    def test_range2(self):
+        rngcalc = Range()
+        rngcalc.arg_dict['value'] = ('literal','1',)
+        rngcalc.arg_dict['min'] = ('literal','2',)
+        rngcalc.arg_dict['max'] = ('literal','3',)
+        rngcalc.compute(districts=[self.district1])
+
+        self.assertEquals(False, rngcalc.result, 'Incorrect value during range. (e:%s,a:%s)' % (False, rngcalc.result))
+
+    def test_range3(self):
+        geolevelid = self.geolevels[1].id
+        geounits = self.geounits[geolevelid]
+
+        dist1ids = geounits[0:3] + geounits[9:12]
+        exqset = Characteristic.objects.filter(geounit__in=dist1ids,subject=self.subject)
+        expected = float(exqset.aggregate(SumAgg('number'))['number__sum'])
+        expected = 5.0 < expected and expected < 10.0
+
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        
+        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
+
+        rngcalc = Range()
+        rngcalc.arg_dict['value'] = ('subject',self.subject.name,)
+        rngcalc.arg_dict['min'] = ('literal','5.0',)
+        rngcalc.arg_dict['max'] = ('literal','10.0',)
+        rngcalc.compute(districts=[district1])
+
+        actual = rngcalc.result
+
+        self.assertEquals(expected, actual, 'Incorrect value during range. (e:%s,a:%s)' % (expected, actual))
+
+    def test_range4(self):
+        geolevelid = self.geolevels[1].id
+        geounits = self.geounits[geolevelid]
+
+        dist1ids = geounits[0:3] + geounits[9:12]
+        exqset = Characteristic.objects.filter(geounit__in=dist1ids,subject=self.subject)
+        expected = float(exqset.aggregate(SumAgg('number'))['number__sum'])
+        expected = 1.0 < expected and expected < 5.0
+
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        
+        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
+
+        rngcalc = Range()
+        rngcalc.arg_dict['value'] = ('subject',self.subject.name,)
+        rngcalc.arg_dict['min'] = ('literal','1.0',)
+        rngcalc.arg_dict['max'] = ('literal','5.0',)
+        rngcalc.compute(districts=[district1])
+
+        actual = rngcalc.result
+
+        self.assertEquals(expected, actual, 'Incorrect value during range. (e:%s,a:%s)' % (expected, actual))

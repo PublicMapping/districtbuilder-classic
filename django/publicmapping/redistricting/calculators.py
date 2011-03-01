@@ -131,34 +131,32 @@ class Sum(CalculatorBase):
         Calculate the sum of a series of values. Each value to be added
         should be added to the args_dict as 'value1', 'value2', etc.
         """
+        district = None
+
         if 'districts' in kwargs:
             districts = kwargs['districts']
             if len(districts) == 0:
                 return
 
             district = districts[0]
-            self.result = 0
-
-            argnum = 1
-            while ('value%d'%argnum) in self.arg_dict:
-                number = self.get_value('value%d'%argnum, district)
-                if not number is None:
-                    self.result += float(number)
-
-                argnum += 1
         elif 'plans' in kwargs:
             # If summing plans, the only use case we have is summing a 
             # resulting set of scores -- this will be interpolated into
             # the summation of a set of literals.
-            self.result = 0
+            pass
 
-            argnum = 1
-            while ('value%d'%argnum) in self.arg_dict:
-                number = self.get_value('value%d'%argnum)
-                if not number is None:
-                    self.result += float(number)
+        else:
+            return
 
-                argnum += 1
+        self.result = 0
+
+        argnum = 1
+        while ('value%d'%argnum) in self.arg_dict:
+            number = self.get_value('value%d'%argnum, district)
+            if not number is None:
+                self.result += float(number)
+
+            argnum += 1
 
 
 class Percent(CalculatorBase):
@@ -171,21 +169,23 @@ class Percent(CalculatorBase):
         Calculate a percentage for two values. This calculator requires
         a 'numerator' argument, and a 'denominator' argument.
         """
+        district = None
+
         if 'districts' in kwargs:
             districts = kwargs['districts']
             if len(districts) == 0:
                 return
 
             district = districts[0]
-            num = self.get_value('numerator',district)
-            den = self.get_value('denominator',district)
 
         elif 'plans' in kwargs:
-            num = self.get_value('numerator')
-            den = self.get_value('denominator')
+            pass
 
         else:
             return
+
+        num = self.get_value('numerator',district)
+        den = self.get_value('denominator',district)
 
         if num is None or den is None:
             return
@@ -202,21 +202,23 @@ class Threshold(CalculatorBase):
         """
         Calculate and determine if a value exceeds a threshold.
         """
+        district = None
+
         if 'districts' in kwargs:
             districts = kwargs['districts']
             if len(districts) == 0:
                 return
 
             district = districts[0]
-            val = self.get_value('value',district)
-            thr = self.get_value('threshold',district)
 
         elif 'plans' in kwargs:
-            val = self.get_value('value')
-            thr = self.get_value('threshold')
+            pass
 
         else:
             return
+
+        val = self.get_value('value',district)
+        thr = self.get_value('threshold',district)
 
         if val is None or thr is None:
             return
@@ -224,3 +226,35 @@ class Threshold(CalculatorBase):
         self.result = float(val) > float(thr)
 
 
+class Range(CalculatorBase):
+    def __init__(self):
+        self.result = None
+        self.arg_dict = {}
+
+    def compute(self, **kwargs):
+        """
+        Calculate and determine if a value lies within a range.
+        """
+        district = None
+
+        if 'districts' in kwargs:
+            districts = kwargs['districts']
+            if len(districts) == 0:
+                return
+
+            district = districts[0]
+
+        elif 'plans' in kwargs:
+            pass
+
+        else:
+            return
+
+        val = self.get_value('value',district)
+        minval = self.get_value('min',district)
+        maxval = self.get_value('max',district)
+
+        if val is None or minval is None or maxval is None:
+            return
+
+        self.result = float(val) > float(minval) and float(val) < float(maxval)
