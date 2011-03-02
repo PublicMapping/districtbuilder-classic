@@ -714,8 +714,7 @@ def getreport(request, planid):
     names = sorted(districts, key=attrgetter('district_id'))
     sorted_name_list = robjects.StrVector(())
     for district in names:
-        has_geom = District.objects.filter(id=district.id, geom__isnull=False).count() == 1
-        if has_geom and district.name != "Unassigned":
+        if district.has_geom and district.name != "Unassigned":
             sorted_name_list += district.name 
     bardplan.do_slot_assign('levels', sorted_name_list)
 
@@ -996,11 +995,7 @@ def getdistricts(request, planid):
 
         status['districts'] = []
         for district in districts:
-            # just testing if the geom is null? too big a performance hit
-            # to haul it all out; just check it against the DB
-            has_geom = District.objects.filter(id=district.id, geom__isnull=False).count() == 1
-
-            if has_geom or district.name == 'Unassigned':
+            if district.has_geom or district.name == 'Unassigned':
                 status['districts'].append({
                     'id':district.district_id,
                     'name':district.name,
@@ -1223,11 +1218,7 @@ def getdemographics(request, planid):
             if dist_name == "Unassigned":
                 dist_name = '&#216;' 
             else:
-                # just testing if the geom is null? too big a performance
-                # hit to haul it all out; just check it against the DB
-                has_geom = District.objects.filter(id=district.id, geom__isnull=False).count() == 1
-
-                if not has_geom:
+                if not district.has_geom:
                     continue;
 
             prefix = plan.legislative_body.member
@@ -1327,11 +1318,7 @@ def getgeography(request, planid):
             if dist_name == "Unassigned":
                 dist_name = '&#216;'
             else:
-                # just testing if the geom is null? too big a performance
-                # hit to haul it all out; just check it against the DB
-                has_geom = District.objects.filter(id=district.id, geom__isnull=False).count() == 1
-
-                if not has_geom:
+                if not district.has_geom:
                     continue;
 
             prefix = plan.legislative_body.member

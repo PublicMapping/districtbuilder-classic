@@ -1019,7 +1019,7 @@ class Plan(models.Model):
         if include_geom:
             fields = 'd.*'
         else:
-            fields = 'd.id, d.district_id, d.name, d.plan_id, d.version, d.is_locked'
+            fields = 'd.id, d.district_id, d.name, d.plan_id, d.version, d.is_locked, d.geom is not null as has_geom'
 
         return sorted(list(District.objects.raw('select %s from redistricting_district as d join (select max(version) as latest, district_id, plan_id from redistricting_district where plan_id = %%s and version <= %%s group by district_id, plan_id) as v on d.district_id = v.district_id and d.plan_id = v.plan_id and d.version = v.latest' % fields, [ self.id, version ])), key=lambda d: d.sortKey())
 
