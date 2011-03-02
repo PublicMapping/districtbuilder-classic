@@ -20132,19 +20132,6 @@
   }
  }, 
  {
-  "pk": 1, 
-  "model": "redistricting.district", 
-  "fields": {
-   "name": "Unassigned", 
-   "simple": null, 
-   "district_id": 1, 
-   "is_locked": false, 
-   "version": 0, 
-   "geom": null, 
-   "plan": 1
-  }
- }, 
- {
   "pk": 22, 
   "model": "auth.permission", 
   "fields": {

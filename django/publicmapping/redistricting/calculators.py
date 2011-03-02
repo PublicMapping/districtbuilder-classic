@@ -79,7 +79,14 @@ class CalculatorBase:
         if argtype == 'literal':
             return argval
         elif argtype == 'subject' and not district is None:
-            return district.computedcharacteristic_set.get(subject__name=argval).number
+            # This method is more fault tolerant than _set.get, since it 
+            # won't throw an exception if the item doesn't exist.
+            cc = district.computedcharacteristic_set.filter(subject__name=argval)
+            if cc.count() == 0:
+                return None
+            
+            return cc[0].number
+
         return None
 
 
@@ -99,14 +106,10 @@ class Schwartzberg(CalculatorBase):
         Keywords:
             districts - A list of districts to compute compactness for.
         """
-        if not 'districts' in kwargs:
+        if not 'district' in kwargs:
             return
 
-        districts = kwargs['districts']
-        if len(districts) == 0:
-            return
-
-        district = districts[0]
+        district = kwargs['district']
         if district.geom is None:
             return
         
@@ -131,32 +134,27 @@ class Sum(CalculatorBase):
         Calculate the sum of a series of values. Each value to be added
         should be added to the args_dict as 'value1', 'value2', etc.
         """
-        district = None
+        districts = []
 
-        if 'districts' in kwargs:
-            districts = kwargs['districts']
-            if len(districts) == 0:
-                return
-
-            district = districts[0]
-        elif 'plans' in kwargs:
-            # If summing plans, the only use case we have is summing a 
-            # resulting set of scores -- this will be interpolated into
-            # the summation of a set of literals.
-            pass
+        if 'district' in kwargs:
+            districts = [kwargs['district']]
+        elif 'plan' in kwargs:
+            plan = kwargs['plan']
+            districts = plan.get_districts_at_version(plan.version, include_geom=False)
 
         else:
             return
 
         self.result = 0
 
-        argnum = 1
-        while ('value%d'%argnum) in self.arg_dict:
-            number = self.get_value('value%d'%argnum, district)
-            if not number is None:
-                self.result += float(number)
+        for district in districts:
+            argnum = 1
+            while ('value%d'%argnum) in self.arg_dict:
+                number = self.get_value('value%d'%argnum, district)
+                if not number is None:
+                    self.result += float(number)
 
-            argnum += 1
+                argnum += 1
 
 
 class Percent(CalculatorBase):
@@ -171,12 +169,8 @@ class Percent(CalculatorBase):
         """
         district = None
 
-        if 'districts' in kwargs:
-            districts = kwargs['districts']
-            if len(districts) == 0:
-                return
-
-            district = districts[0]
+        if 'district' in kwargs:
+            district = kwargs['district']
 
         elif 'plans' in kwargs:
             pass
@@ -204,12 +198,8 @@ class Threshold(CalculatorBase):
         """
         district = None
 
-        if 'districts' in kwargs:
-            districts = kwargs['districts']
-            if len(districts) == 0:
-                return
-
-            district = districts[0]
+        if 'district' in kwargs:
+            district = kwargs['district']
 
         elif 'plans' in kwargs:
             pass
@@ -237,12 +227,8 @@ class Range(CalculatorBase):
         """
         district = None
 
-        if 'districts' in kwargs:
-            districts = kwargs['districts']
-            if len(districts) == 0:
-                return
-
-            district = districts[0]
+        if 'district' in kwargs:
+            district = kwargs['district']
 
         elif 'plans' in kwargs:
             pass

@@ -27,7 +27,7 @@ Author:
 """
 
 import os
-import unittest
+from django.test import TestCase
 import zipfile
 from django.db.models import Sum as SumAgg, Min, Max
 from django.test.client import Client
@@ -39,142 +39,65 @@ from publicmapping.redistricting.calculators import *
 from django.conf import settings
 from datetime import datetime
 
-class BaseTestCase(unittest.TestCase):
+class BaseTestCase(TestCase):
     """
     Only contains setUp and tearDown, which are shared among all other TestCases
     """
+    fixtures = ['redistricting_testdata.json']
 
     def setUp(self):
         """
         Setup the general tests. This fabricates a set of data in the 
         test database for use later.
         """
-        self.longMessage = True
-
         # need geounits for ids & geometries
         self.geolevels = Geolevel.objects.filter( 
             Q(name='first level') |
             Q(name='second level') |
             Q(name='third level')
         ).order_by('id')
-        if len(self.geolevels) == 0:
-            self.geolevels = [
-                Geolevel(name='first level'),
-                Geolevel(name='second level'),
-                Geolevel(name='third level')
-            ]
-        else:
-            self.geolevels = list(self.geolevels)
+        self.geolevels = list(self.geolevels)
 
         # create a Subject
-        (self.subject, created) = Subject.objects.get_or_create(name='TestSubject')
+        self.subject = Subject.objects.get(name='TestSubject')
         
         self.geounits = {}
 
         # create a three-tiered 27x27 square grid of geounits with coords from (0,0) to (1,1)
-        dim = 3.0
-        lastgl = None
-        supp_id = 0
         for gl in self.geolevels:
-            if not gl.id:
-                gl.save()
-
             self.geounits[gl.id] = list(Geounit.objects.filter(geolevel=gl).order_by('id'))
-            if len(self.geounits[gl.id]) > 0:
-                continue
-
-            for y in range(0,int(dim)):
-                for x in range(0,int(dim)):
-                    geom = MultiPolygon(Polygon(LinearRing( 
-                        Point(((x/dim),(y/dim))), 
-                        Point((((x+1)/dim),(y/dim))), 
-                        Point((((x+1)/dim),((y+1)/dim))), 
-                        Point(((x/dim),((y+1)/dim))), 
-                        Point(((x/dim),(y/dim))) )))
-                    geom.srid = 3785
-                    try:
-                        child = Geounit.objects.get(geolevel=lastgl,geom__contains=geom.centroid)
-                    except:
-                        child = None
-                    gu = Geounit(
-                        name=('Unit %d-%d' % (gl.id,(y * int(dim) + x))),
-                        geolevel=gl,
-                        geom=geom,
-                        simple=geom,
-                        center=geom.centroid,
-                        child=child,
-                        portable_id="%07d" % supp_id,
-                        tree_code="%07d" % supp_id
-                    )
-                    gu.save()
-                    self.geounits[gl.id].append(gu)
-
-                    ch = Characteristic(geounit=gu, subject=self.subject,number=x)
-                    ch.save()
-                    supp_id += 1
-            lastgl = gl
-            dim *= 3.0
 
         # create a User
         self.username = 'test_user'
         self.password = 'secret'
-        self.user = User(username=self.username)
-        self.user.set_password(self.password)
-        self.user.save()
+        self.user = User.objects.get(username=self.username)
 
         # create a LegislativeBody
-        self.legbod = LegislativeBody(name='TestLegislativeBody', member='TestMember %d', max_districts=20)
-        self.legbod.save()
+        self.legbod = LegislativeBody.objects.get(name='TestLegislativeBody')
 
         # create a Target
-        self.target = Target(subject=self.subject, range1=1, range2=5, value=3)
-        self.target.save()
+        self.target = Target.objects.get(subject=self.subject)
 
         # create a LegislativeDefault
-        self.legdef = LegislativeDefault(legislative_body=self.legbod, target=self.target)
-        self.legdef.save()
+        self.legdef = LegislativeDefault.objects.get(legislative_body=self.legbod, target=self.target)
 
         # create LegislativeLevel hierarchy
-        self.leglev3 = LegislativeLevel(geolevel=self.geolevels[2], legislative_body=self.legbod, target=self.target)
-        self.leglev3.save()
-        self.leglev2 = LegislativeLevel(geolevel=self.geolevels[1], legislative_body=self.legbod, target=self.target, parent=self.leglev3)
-        self.leglev2.save()
-        self.leglev1 = LegislativeLevel(geolevel=self.geolevels[0], legislative_body=self.legbod, target=self.target, parent=self.leglev2)
-        self.leglev1.save()
+        self.leglev3 = LegislativeLevel.objects.get(geolevel=self.geolevels[2])
+        self.leglev2 = LegislativeLevel.objects.get(geolevel=self.geolevels[1])
+        self.leglev1 = LegislativeLevel.objects.get(geolevel=self.geolevels[0])
         
         # create a Plan
-        self.plan = Plan(name='testPlan', owner=self.user, legislative_body=self.legbod)
-        self.plan.save()
+        self.plan = Plan.objects.get(name='testPlan')
 
         # create Districts
-        self.district1 = District(name='District 1', district_id = 0)
-        self.district1.plan = self.plan
-        self.district1.save()
-        self.district2 = District(name='District 2', district_id = 0) 
-        self.district2.plan = self.plan
-        self.district2.save()
-    
-    def tearDown(self):
-        """
-        Clean up after testing.
-        """
-        self.plan.delete()
-        self.user.delete()
-        self.legbod.delete()
-        self.target.delete()
-        self.legdef.delete()
-        self.leglev3.delete()
-        self.leglev2.delete()
-        self.leglev1.delete()
-        self.district1.delete()
-        self.district2.delete()
-        # Keep the geolevels/units/subjects/characteristics around. They are too expensive to create and delete each time.
-            
+        self.district1 = District.objects.get(name='District 1')
+        self.district2 = District.objects.get(name='District 2')
+
+
 class PlanTestCase(BaseTestCase):
     """
     Unit tests to test Plan operations
     """
-    
     def test_district_id_increment(self):
         """
         Test the logic for the automatically generated district_id
@@ -216,7 +139,7 @@ class PlanTestCase(BaseTestCase):
         Test the logic for an unassigned district.
         """
         unassigned = District.objects.filter(name='Unassigned', plan = self.plan)
-        self.assertEqual(1, unassigned.count(), 'No Unassigned district on plan')
+        self.assertEqual(1, unassigned.count(), 'No Unassigned district on plan. (e:1, a:%d)' % unassigned.count())
 
     def test_copyplan(self):
         """
@@ -250,7 +173,7 @@ class PlanTestCase(BaseTestCase):
         # Ensure districts are the same between plans
         numdistricts = len(self.plan.get_districts_at_version(self.plan.version))
         numdistrictscopy = len(copy.get_districts_at_version(copy.version))
-        self.assertEqual(numdistricts, numdistrictscopy, 'Districts between original and copy are different')
+        self.assertEqual(numdistricts, numdistrictscopy, 'Districts between original and copy are different. (e:%d, a:%d)' % (numdistricts, numdistrictscopy))
 
         # Ensure geounits are the same between plans
         numunits = len(Plan.objects.get(pk=self.plan.id).get_base_geounits(0.1))
@@ -508,10 +431,10 @@ class PlanTestCase(BaseTestCase):
 
         calc = Schwartzberg()
 
-        calc.compute(districts=[district1])
+        calc.compute(district=district1)
         self.assertAlmostEquals(0.86832150547, calc.result, 9, 'Schwartzberg for District 1 was incorrect: %d' % calc.result)
 
-        calc.compute(districts=[district2])
+        calc.compute(district=district2)
         self.assertAlmostEquals(0.88622692545, calc.result, 9, 'Schwartzberg for District 2 was incorrect: %d' % calc.result)
 
 class GeounitMixTestCase(BaseTestCase):
@@ -852,7 +775,7 @@ class CalculatorCase(BaseTestCase):
         sum1.arg_dict['value2'] = ('literal','20',)
 
         self.assertEquals(None,sum1.result)
-        sum1.compute(districts=[self.district1])
+        sum1.compute(district=self.district1)
         self.assertEquals(30,sum1.result)
 
         sum2 = Sum()
@@ -860,7 +783,7 @@ class CalculatorCase(BaseTestCase):
         self.assertEquals(None,sum2.result)
         self.assertEquals(30,sum1.result)
 
-        sum2.compute(districts=[self.district1])
+        sum2.compute(district=self.district1)
 
         self.assertEquals(0,sum2.result)
         self.assertEquals(30,sum1.result)
@@ -870,16 +793,19 @@ class CalculatorCase(BaseTestCase):
         sumcalc.arg_dict['value1'] = ('literal','0',)
         sumcalc.arg_dict['value2'] = ('literal','1',)
         sumcalc.arg_dict['value3'] = ('literal','2',)
-        sumcalc.compute(plans=[])
+        sumcalc.compute(plan=self.plan)
 
-        self.assertEquals(3, sumcalc.result, 'Incorrect value during summation. (e:%d,a:%d)' % (3, sumcalc.result))
+        # The sum of a plan w/3 districts and w/3 literals is the sum
+        # of literals * the number of plans
+
+        self.assertEquals(9, sumcalc.result, 'Incorrect value during summation. (e:%d,a:%d)' % (9, sumcalc.result))
 
     def test_sum2b(self):
         sumcalc = Sum()
         sumcalc.arg_dict['value1'] = ('literal','0',)
         sumcalc.arg_dict['value2'] = ('literal','1',)
         sumcalc.arg_dict['value3'] = ('literal','2',)
-        sumcalc.compute(districts=[self.district1])
+        sumcalc.compute(district=self.district1)
 
         self.assertEquals(3, sumcalc.result, 'Incorrect value during summation. (e:%d,a:%d)' % (3, sumcalc.result))
 
@@ -899,7 +825,7 @@ class CalculatorCase(BaseTestCase):
         sumcalc = Sum()
         sumcalc.arg_dict['value1'] = ('subject',self.subject.name,)
         sumcalc.arg_dict['value2'] = ('literal','5.0',)
-        sumcalc.compute(districts=[district1])
+        sumcalc.compute(district=district1)
 
         actual = sumcalc.result
 
@@ -920,7 +846,7 @@ class CalculatorCase(BaseTestCase):
 
         sumcalc = Sum()
         sumcalc.arg_dict['value1'] = ('subject',self.subject.name,)
-        sumcalc.compute(districts=[district1])
+        sumcalc.compute(district=district1)
 
         actual = sumcalc.result
 
@@ -930,7 +856,7 @@ class CalculatorCase(BaseTestCase):
         pctcalc = Percent()
         pctcalc.arg_dict['numerator'] = ('literal','1',)
         pctcalc.arg_dict['denominator'] = ('literal','2',)
-        pctcalc.compute(districts=[self.district1])
+        pctcalc.compute(district=self.district1)
 
         self.assertEquals(0.5, pctcalc.result, 'Incorrect value during percentage. (e:%d,a:%d)' % (0.5, pctcalc.result))
 
@@ -938,7 +864,7 @@ class CalculatorCase(BaseTestCase):
         pctcalc = Percent()
         pctcalc.arg_dict['numerator'] = ('literal','2',)
         pctcalc.arg_dict['denominator'] = ('literal','4',)
-        pctcalc.compute(districts=[self.district1])
+        pctcalc.compute(district=self.district1)
 
         self.assertEquals(0.5, pctcalc.result, 'Incorrect value during percentage. (e:%d,a:%d)' % (0.5, pctcalc.result))
 
@@ -958,7 +884,7 @@ class CalculatorCase(BaseTestCase):
         pctcalc = Percent()
         pctcalc.arg_dict['numerator'] = ('subject',self.subject.name,)
         pctcalc.arg_dict['denominator'] = ('literal','10.0',)
-        pctcalc.compute(districts=[district1])
+        pctcalc.compute(district=district1)
 
         actual = pctcalc.result
 
@@ -968,7 +894,7 @@ class CalculatorCase(BaseTestCase):
         thrcalc = Threshold()
         thrcalc.arg_dict['value'] = ('literal','1',)
         thrcalc.arg_dict['threshold'] = ('literal','2',)
-        thrcalc.compute(districts=[self.district1])
+        thrcalc.compute(district=self.district1)
 
         self.assertEquals(False, thrcalc.result, 'Incorrect value during threshold. (e:%s,a:%s)' % (False, thrcalc.result))
 
@@ -976,7 +902,7 @@ class CalculatorCase(BaseTestCase):
         thrcalc = Threshold()
         thrcalc.arg_dict['value'] = ('literal','2',)
         thrcalc.arg_dict['threshold'] = ('literal','1',)
-        thrcalc.compute(districts=[self.district1])
+        thrcalc.compute(district=self.district1)
 
         self.assertEquals(True, thrcalc.result, 'Incorrect value during threshold. (e:%s,a:%s)' % (True, thrcalc.result))
 
@@ -996,7 +922,7 @@ class CalculatorCase(BaseTestCase):
         thrcalc = Threshold()
         thrcalc.arg_dict['value'] = ('subject',self.subject.name,)
         thrcalc.arg_dict['threshold'] = ('literal','10.0',)
-        thrcalc.compute(districts=[district1])
+        thrcalc.compute(district=district1)
 
         actual = thrcalc.result
 
@@ -1018,7 +944,7 @@ class CalculatorCase(BaseTestCase):
         thrcalc = Threshold()
         thrcalc.arg_dict['value'] = ('subject',self.subject.name,)
         thrcalc.arg_dict['threshold'] = ('literal','5.0',)
-        thrcalc.compute(districts=[district1])
+        thrcalc.compute(district=district1)
 
         actual = thrcalc.result
 
@@ -1029,7 +955,7 @@ class CalculatorCase(BaseTestCase):
         rngcalc.arg_dict['value'] = ('literal','2',)
         rngcalc.arg_dict['min'] = ('literal','1',)
         rngcalc.arg_dict['max'] = ('literal','3',)
-        rngcalc.compute(districts=[self.district1])
+        rngcalc.compute(district=self.district1)
 
         self.assertEquals(True, rngcalc.result, 'Incorrect value during range. (e:%s,a:%s)' % (True, rngcalc.result))
 
@@ -1038,7 +964,7 @@ class CalculatorCase(BaseTestCase):
         rngcalc.arg_dict['value'] = ('literal','1',)
         rngcalc.arg_dict['min'] = ('literal','2',)
         rngcalc.arg_dict['max'] = ('literal','3',)
-        rngcalc.compute(districts=[self.district1])
+        rngcalc.compute(district=self.district1)
 
         self.assertEquals(False, rngcalc.result, 'Incorrect value during range. (e:%s,a:%s)' % (False, rngcalc.result))
 
@@ -1060,7 +986,7 @@ class CalculatorCase(BaseTestCase):
         rngcalc.arg_dict['value'] = ('subject',self.subject.name,)
         rngcalc.arg_dict['min'] = ('literal','5.0',)
         rngcalc.arg_dict['max'] = ('literal','10.0',)
-        rngcalc.compute(districts=[district1])
+        rngcalc.compute(district=district1)
 
         actual = rngcalc.result
 
@@ -1084,7 +1010,7 @@ class CalculatorCase(BaseTestCase):
         rngcalc.arg_dict['value'] = ('subject',self.subject.name,)
         rngcalc.arg_dict['min'] = ('literal','1.0',)
         rngcalc.arg_dict['max'] = ('literal','5.0',)
-        rngcalc.compute(districts=[district1])
+        rngcalc.compute(district=district1)
 
         actual = rngcalc.result
 
