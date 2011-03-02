@@ -94,6 +94,204 @@ class BaseTestCase(TestCase):
         self.district2 = District.objects.get(name='District 2')
 
 
+
+class ScoringTestCase(BaseTestCase):
+    """
+    Unit tests to test the logic of the scoring functionality
+    """
+    def setUp(self):
+        BaseTestCase.setUp(self)
+
+        # create a couple districts and populate with geounits
+        geounits = self.geounits[self.geolevels[1].id]
+
+        self.dist1units = geounits[0:3] + geounits[9:12]
+        self.dist2units = geounits[18:21] + geounits[27:30] + geounits[36:39]
+
+        dist1ids = map(lambda x: str(x.id), self.dist1units)
+        dist2ids = map(lambda x: str(x.id), self.dist2units)
+
+        self.plan.add_geounits(self.district1.district_id, dist1ids, self.geolevels[1].id, self.plan.version)
+        self.plan.add_geounits(self.district2.district_id, dist2ids, self.geolevels[1].id, self.plan.version)
+
+        self.district1 = max(District.objects.filter(plan=self.plan,district_id=self.district1.district_id),key=lambda d: d.version)
+        self.district2 = max(District.objects.filter(plan=self.plan,district_id=self.district2.district_id),key=lambda d: d.version)
+        
+        # create objects used for scoring
+        self.scoreDisplay1 = ScoreDisplay(title='SD1', legislative_body=self.legbod, is_page=False)
+        self.scoreDisplay1.save()
+
+        self.scorePanel1 = ScorePanel(type='district', display=self.scoreDisplay1, position=0, title='SP1')
+        self.scorePanel1.save()
+
+    def tearDown(self):
+        """
+        Clean up after testing.
+        """
+        BaseTestCase.tearDown(self)
+        self.scorePanel1.delete()
+        self.scoreDisplay1.delete()
+
+    def testSetup(self):
+        """
+        Make sure we have the districts created during setUp
+        """
+        district1units = self.district1.get_base_geounits()
+        self.assertEqual(54, len(district1units), 'Incorrect number of geounits returned in dist1: %d' % len(district1units))
+
+        district2units = self.district2.get_base_geounits()
+        self.assertEqual(81, len(district2units), 'Incorrect number of geounits returned in dist1: %d' % len(district2units))
+
+    def testInvalidScenarios(self):
+        """
+        Test what happens when a calculator module doesn't exist,
+        or bad parameters are passed in
+        """
+        badFunction = ScoreFunction(calculator='does.not.Exist', name='bad')
+        self.assertRaises(ImportError, badFunction.score, [self.district1])
+
+    def testSchwarzbergScoringFunction(self):
+        """
+        Test the schwarzberg scoring function
+        """
+        # create the ScoreFunction
+        schwartzFunction = ScoreFunction(calculator='redistricting.calculators.Schwartzberg', name='SchwartzbergFn')
+
+        # multiple districts
+        scores = schwartzFunction.score([self.district1, self.district2])
+        self.assertAlmostEquals(0.86832150547, scores[0], 9, 'Schwartzberg for first district was incorrect: %f' % scores[0])
+        self.assertAlmostEquals(0.88622692545, scores[1], 9, 'Schwartzberg for second district was incorrect: %f' % scores[1])
+
+        # single district as list
+        scores = schwartzFunction.score([self.district1])
+        self.assertAlmostEquals(0.86832150547, scores[0], 9, 'Schwartzberg for District 1 was incorrect: %f' % scores[0])
+
+        # single district as object
+        score = schwartzFunction.score(self.district1)
+        self.assertAlmostEquals(0.86832150547, score, 9, 'Schwartzberg for District 1 was incorrect: %f' % score)
+
+        # HTML
+        score = schwartzFunction.score(self.district1, 'html')
+        self.assertEquals("86.83%", score, 'Schwartzberg HTML for District 1 was incorrect: ' + score)
+
+        # JSON
+        score = schwartzFunction.score(self.district1, 'json')
+        self.assertEquals('{"result": 0.86832150546992093}', score, 'Schwartzberg JSON for District 1 was incorrect: ' + score)
+
+    def testSumFunction(self):
+        """
+        Test the sum scoring function
+        """
+        # create the scoring function for summing three parameters
+        sumThreeFunction = ScoreFunction(calculator='redistricting.calculators.Sum', name='SumThreeFn')
+        sumThreeFunction.save()
+
+        # create the arguments
+        ScoreArgument(function=sumThreeFunction, argument='value1', value='0', type='literal').save()
+        ScoreArgument(function=sumThreeFunction, argument='value2', value='1', type='literal').save()
+        ScoreArgument(function=sumThreeFunction, argument='value3', value='2', type='literal').save()
+
+        # test raw value
+        score = sumThreeFunction.score(self.district1)
+        self.assertEquals(3, score, 'sumThree was incorrect: %d' % score)
+
+        # HTML -- also make sure mixed case format works
+        score = sumThreeFunction.score(self.district1, 'HtmL')
+        self.assertEquals('<span>3.0</span>', score, 'sumThree was incorrect: %s' % score)
+
+        # JSON -- also make sure uppercase format works
+        score = sumThreeFunction.score(self.district1, 'JSON')
+        self.assertEquals('{"result": 3.0}', score, 'sumThree was incorrect: %s' % score)
+
+        # create the scoring function for summing a literal and a subject
+        sumMixedFunction = ScoreFunction(calculator='redistricting.calculators.Sum', name='SumMixedFn')
+        sumMixedFunction.save()
+
+        # create the arguments
+        ScoreArgument(function=sumMixedFunction, argument='value1', value=self.subject.name, type='subject').save()
+        ScoreArgument(function=sumMixedFunction, argument='value2', value='5.0', type='literal').save()
+
+        # test raw value
+        score = sumMixedFunction.score(self.district1)
+        self.assertEquals(11, score, 'sumMixed was incorrect: %d' % score)
+
+    def testSumPlanFunction(self):
+        """
+        Test the sum scoring function on a plan level
+        """
+        # create the scoring function for summing the districts in a plan
+        sumPlanFunction = ScoreFunction(calculator='redistricting.calculators.Sum', name='SumPlanFn', is_planscore=True)
+        sumPlanFunction.save()
+
+        # create the arguments
+        ScoreArgument(function=sumPlanFunction, argument='value1', value='1', type='literal').save()
+
+        # test raw value
+        num_districts = len(self.plan.get_districts_at_version(self.plan.version, include_geom=False))
+        score = sumPlanFunction.score(self.plan)
+        self.assertEquals(num_districts, score, 'sumPlanFunction was incorrect: %d' % score)
+
+        # test a list of plans
+        score = sumPlanFunction.score([self.plan, self.plan])
+        self.assertEquals(num_districts, score[0], 'sumPlanFunction was incorrect for first plan: %d' % score[0])
+        self.assertEquals(num_districts, score[1], 'sumPlanFunction was incorrect for second plan: %d' % score[1])
+
+    def testThresholdFunction(self):
+        # create the scoring function for checking if a value passes a threshold
+        thresholdFunction1 = ScoreFunction(calculator='redistricting.calculators.Threshold', name='ThresholdFn')
+        thresholdFunction1.save()
+
+        # create the arguments
+        ScoreArgument(function=thresholdFunction1, argument='value', value='1', type='literal').save()
+        ScoreArgument(function=thresholdFunction1, argument='threshold', value='2', type='literal').save()
+
+        # test raw value
+        score = thresholdFunction1.score(self.district1)
+        self.assertEquals(False, score, '1 is not greater than 2')
+
+        # create a new scoring function to test the inverse
+        thresholdFunction2 = ScoreFunction(calculator='redistricting.calculators.Threshold', name='ThresholdFn')
+        thresholdFunction2.save()
+
+        # create the arguments
+        ScoreArgument(function=thresholdFunction2, argument='value', value='2', type='literal').save()
+        ScoreArgument(function=thresholdFunction2, argument='threshold', value='1', type='literal').save()
+
+        # test raw value
+        score = thresholdFunction2.score(self.district1)
+        self.assertEquals(True, score, '2 is greater than 1')
+
+        # HTML
+        score = thresholdFunction2.score(self.district1, 'html')
+        self.assertEquals("<span>True</span>", score, 'Threshold HTML was incorrect: ' + score)
+
+        # JSON
+        score = thresholdFunction2.score(self.district1, 'json')
+        self.assertEquals('{"result": true}', score, 'Threshold JSON was incorrect: ' + score)
+
+    def testRangeFunction(self):
+        # create the scoring function for checking if a value passes a range
+        rangeFunction1 = ScoreFunction(calculator='redistricting.calculators.Range', name='RangeFn')
+        rangeFunction1.save()
+
+        # create the arguments
+        ScoreArgument(function=rangeFunction1, argument='value', value='2', type='literal').save()
+        ScoreArgument(function=rangeFunction1, argument='min', value='1', type='literal').save()
+        ScoreArgument(function=rangeFunction1, argument='max', value='3', type='literal').save()
+
+        # test raw value
+        score = rangeFunction1.score(self.district1)
+        self.assertEquals(True, score, '2 is between 1 and 3')
+
+        # HTML
+        score = rangeFunction1.score(self.district1, 'html')
+        self.assertEquals("<span>True</span>", score, 'Range HTML was incorrect: ' + score)
+
+        # JSON
+        score = rangeFunction1.score(self.district1, 'json')
+        self.assertEquals('{"result": true}', score, 'Range JSON was incorrect: ' + score)
+
+
 class PlanTestCase(BaseTestCase):
     """
     Unit tests to test Plan operations

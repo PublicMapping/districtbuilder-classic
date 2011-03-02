@@ -1680,6 +1680,68 @@ class ScoreFunction(models.Model):
     # Whether or not this score function is for a plan
     is_planscore = models.BooleanField(default=False)
 
+    def get_calculator(self, name):
+        """
+        Retrieve a calculator instance by name.
+
+        Parameters:
+            name -- The fully qualified name of the calculator class.
+
+        Returns:
+            An instance of the requested calculator.
+        """
+        parts = name.split('.')
+        module = ".".join(parts[:-1])
+        m = __import__( module )
+        for comp in parts[1:]:
+            m = getattr(m, comp)            
+        return m()
+
+    def score(self, districts_or_plans, format='raw'):
+        """
+        Calculate the score for the object or list of objects passed in.
+
+        Parameters:
+            districts_or_plans -- Either a single district, a single plan,
+                a list of districts, or a list of plans. Whether or not this
+                deals with districts or plans must be in sync with the value
+                of is_planscore.
+            format -- One of 'raw', 'html', or 'json'.
+                Determines how the results should be returned.
+
+        Returns:
+            A score for each district or plan contained within districts_or_plans.
+            If districts_or_plans is a single district or plan, a single result will
+            be returned. If it is a list, a list of results in the same order as
+            districts_or_plans will be returned.
+        """
+        # Raises an ImportError if there is no calculator with the given name
+        calc = self.get_calculator(self.calculator)
+
+        # Add all arguments that are defined for this score function
+        args = ScoreArgument.objects.filter(function=self)
+        for arg in args:
+            calc.arg_dict[arg.argument] = (arg.type, arg.value)
+
+        # Is districts_or_plans a list, or a single district/plan?
+        is_list = isinstance(districts_or_plans, list)
+
+        # Calculate results for every item in the list
+        results = []
+        for dp in (districts_or_plans if is_list else [districts_or_plans]):
+            # Build the keyword arguments based on whether this is for districts or plans
+            kwargs = { 'plan': dp } if self.is_planscore else { 'district': dp }
+
+            # Ask the calculator instance to compute the result
+            calc.compute(**kwargs)
+
+            # Format the result
+            fl = format.lower()
+            r = calc.html() if fl == 'html' else (calc.json() if fl == 'json' else calc.result)
+            results.append(r)
+
+        return results if is_list else results[0]
+
 
 class ScoreArgument(models.Model):
     """
