@@ -253,7 +253,7 @@ class Percent(CalculatorBase):
 
 class Threshold(CalculatorBase):
     """
-    Determine a value, and return a numerical logical value. 
+    Determine a value, and indicate if it exceeds a threshold.
 
     This calculator accepts two arguments: "value", and "threshold". The
     result of this calculator is 1 or 0, to facilitate the combination of
@@ -294,10 +294,24 @@ class Threshold(CalculatorBase):
         if val is None or thr is None:
             return
 
-        self.result = float(val) > float(thr)
+        self.result = 1 if float(val) > float(thr) else 0
 
 
 class Range(CalculatorBase):
+    """
+    Determine a value, and indicate if it falls within a range
+
+    This calculator accepts three arguments: "value", "min", and "max". The
+    result of this calculator is 1 or 0, to facilitate the combination of
+    scores. One example may be where the number of districts that fall 
+    within a range are required.
+    
+    If the value computed is greater than or equal to min and less than 
+    or equal to max, the return value will be zero (1).
+
+    If the value computed is less than min or greater than max, the return
+    value will be one (1).
+    """
     def __init__(self):
         """
         Initialize the result and argument dictionary.
@@ -314,7 +328,7 @@ class Range(CalculatorBase):
         if 'district' in kwargs:
             district = kwargs['district']
 
-        elif 'plans' in kwargs:
+        elif 'plan' in kwargs:
             pass
 
         else:
@@ -327,4 +341,4 @@ class Range(CalculatorBase):
         if val is None or minval is None or maxval is None:
             return
 
-        self.result = float(val) > float(minval) and float(val) < float(maxval)
+        self.result = 1 if float(val) > float(minval) and float(val) < float(maxval) else 0

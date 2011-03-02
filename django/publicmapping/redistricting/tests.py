@@ -1164,7 +1164,7 @@ class CalculatorCase(BaseTestCase):
         thrcalc.arg_dict['threshold'] = ('literal','2',)
         thrcalc.compute(district=self.district1)
 
-        self.assertEquals(False, thrcalc.result, 'Incorrect value during threshold. (e:%s,a:%s)' % (False, thrcalc.result))
+        self.assertEquals(0, thrcalc.result, 'Incorrect value during threshold. (e:%s,a:%s)' % (0, thrcalc.result))
 
     def test_threshold2(self):
         thrcalc = Threshold()
@@ -1172,7 +1172,7 @@ class CalculatorCase(BaseTestCase):
         thrcalc.arg_dict['threshold'] = ('literal','1',)
         thrcalc.compute(district=self.district1)
 
-        self.assertEquals(True, thrcalc.result, 'Incorrect value during threshold. (e:%s,a:%s)' % (True, thrcalc.result))
+        self.assertEquals(1, thrcalc.result, 'Incorrect value during threshold. (e:%s,a:%s)' % (1, thrcalc.result))
 
     def test_threshold3(self):
         geolevelid = self.geolevels[1].id
@@ -1181,6 +1181,7 @@ class CalculatorCase(BaseTestCase):
         dist1ids = geounits[0:3] + geounits[9:12]
         exqset = Characteristic.objects.filter(geounit__in=dist1ids,subject=self.subject)
         expected = float(exqset.aggregate(SumAgg('number'))['number__sum']) > 10.0
+        expected = 1 if expected else 0
 
         dist1ids = map(lambda x: str(x.id), dist1ids)
         
@@ -1203,6 +1204,7 @@ class CalculatorCase(BaseTestCase):
         dist1ids = geounits[0:3] + geounits[9:12]
         exqset = Characteristic.objects.filter(geounit__in=dist1ids,subject=self.subject)
         expected = float(exqset.aggregate(SumAgg('number'))['number__sum']) > 5.0
+        expected = 1 if expected else 0
 
         dist1ids = map(lambda x: str(x.id), dist1ids)
         
@@ -1225,7 +1227,7 @@ class CalculatorCase(BaseTestCase):
         rngcalc.arg_dict['max'] = ('literal','3',)
         rngcalc.compute(district=self.district1)
 
-        self.assertEquals(True, rngcalc.result, 'Incorrect value during range. (e:%s,a:%s)' % (True, rngcalc.result))
+        self.assertEquals(1, rngcalc.result, 'Incorrect value during range. (e:%s,a:%s)' % (1, rngcalc.result))
 
     def test_range2(self):
         rngcalc = Range()
@@ -1234,7 +1236,7 @@ class CalculatorCase(BaseTestCase):
         rngcalc.arg_dict['max'] = ('literal','3',)
         rngcalc.compute(district=self.district1)
 
-        self.assertEquals(False, rngcalc.result, 'Incorrect value during range. (e:%s,a:%s)' % (False, rngcalc.result))
+        self.assertEquals(0, rngcalc.result, 'Incorrect value during range. (e:%s,a:%s)' % (0, rngcalc.result))
 
     def test_range3(self):
         geolevelid = self.geolevels[1].id
@@ -1243,7 +1245,7 @@ class CalculatorCase(BaseTestCase):
         dist1ids = geounits[0:3] + geounits[9:12]
         exqset = Characteristic.objects.filter(geounit__in=dist1ids,subject=self.subject)
         expected = float(exqset.aggregate(SumAgg('number'))['number__sum'])
-        expected = 5.0 < expected and expected < 10.0
+        expected = 1 if 5.0 < expected and expected < 10.0 else 0
 
         dist1ids = map(lambda x: str(x.id), dist1ids)
         
@@ -1267,7 +1269,7 @@ class CalculatorCase(BaseTestCase):
         dist1ids = geounits[0:3] + geounits[9:12]
         exqset = Characteristic.objects.filter(geounit__in=dist1ids,subject=self.subject)
         expected = float(exqset.aggregate(SumAgg('number'))['number__sum'])
-        expected = 1.0 < expected and expected < 5.0
+        expected = 1 if 1.0 < expected and expected < 5.0 else 0
 
         dist1ids = map(lambda x: str(x.id), dist1ids)
         
