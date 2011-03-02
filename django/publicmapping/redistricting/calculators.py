@@ -114,7 +114,9 @@ class Schwartzberg(CalculatorBase):
     the district to the circumference of the circle whose area is 
     equal to the area of the district.
 
-    This calculator only operates on districts.
+    This calculator will calculate either the compactness score of a
+    single district, or it will average the compactness scores of all 
+    districts in a plan.
     """
     def compute(self, **kwargs):
         """
@@ -123,16 +125,32 @@ class Schwartzberg(CalculatorBase):
         Keywords:
             district - A district's whose compactness should be computed.
         """
-        if not 'district' in kwargs:
+        districts = []
+        if 'district' in kwargs:
+            districts = [kwargs['district']]
+            if districts[0].geom is None:
+                return
+
+        elif 'plan' in kwargs:
+            plan = kwargs['plan']
+            districts = plan.get_districts_at_version(plan.version, include_geom=False)
+
+        else:
             return
 
-        district = kwargs['district']
-        if district.geom is None:
-            return
+        num = 0
+        compactness = 0
+        for district in districts:
+            if district.geom is None:
+                continue
         
-        r = sqrt(district.geom.area / pi)
-        perimeter = 2 * pi * r
-        self.result = perimeter / district.geom.length
+            r = sqrt(district.geom.area / pi)
+            perimeter = 2 * pi * r
+            compactness += perimeter / district.geom.length
+            num += 1
+
+        self.result = compactness / num
+
 
     def html(self):
         """
@@ -343,9 +361,12 @@ class Range(CalculatorBase):
 
         self.result = 1 if float(val) > float(minval) and float(val) < float(maxval) else 0
 
+
 class Contiguity(CalculatorBase):
     """
     Calculate the contiguity of a district.
+
+    A district is considered contiguous if it has only one polygon.
 
     This calculator will only operate on a district.
     """
