@@ -59,6 +59,10 @@ class CalculatorBase:
     def html(self):
         """
         Return a basic HTML representation of the result.
+
+        The base class generates an HTML span element, with the text
+        content set to a string representation of the result. If the result
+        is None, the string "n/a" is used.
         """
         if not self.result is None:
             return '<span>%s</span>' % self.result
@@ -68,12 +72,24 @@ class CalculatorBase:
     def json(self):
         """
         Return a basic JSON representation of the result.
+
+        The base class generates an simple Javascript object that contains
+        a single property, named "result".
         """
         return json.dumps( {'result':self.result} )
 
     def get_value(self, argument, district=None):
         """
         Get the value of an argument if it is a literal or a subject.
+
+        This method is used anytime a calculator needs to get the value of
+        a named argument. The type of the argument is determined from the 
+        tuple in the argument dictionary, and either the literal value or
+        the retrieved ComputedCharacteristic is returned. This only searches
+        for the ComputedCharacteristic in the set attached to the district.
+
+        If no district is provided, no subject argument value is ever 
+        returned.
         """
         (argtype, argval) = self.arg_dict[argument]
         if argtype == 'literal':
@@ -97,14 +113,15 @@ class Schwartzberg(CalculatorBase):
     The Schwartzberg measure of compactness measures the perimeter of 
     the district to the circumference of the circle whose area is 
     equal to the area of the district.
+
+    This calculator only operates on districts.
     """
     def compute(self, **kwargs):
         """
-        Calculate the Schwartzberg measure of compactness. This calculator
-        only operates on districts.
+        Calculate the Schwartzberg measure of compactness.
 
         Keywords:
-            districts - A list of districts to compute compactness for.
+            district - A district's whose compactness should be computed.
         """
         if not 'district' in kwargs:
             return
@@ -118,21 +135,38 @@ class Schwartzberg(CalculatorBase):
         self.result = perimeter / district.geom.length
 
     def html(self):
-        return ("%.2f%%" % (self.result * 100)) if self.result else "n/a"
+        """
+        Generate an HTML representation of the compactness score. This
+        is represented as a percentage or "n/a"
+        """
+        return ("%0.2f%%" % (self.result * 100)) if self.result else "n/a"
 
 
 class Sum(CalculatorBase):
     """
     Sum up all values.
+
+    For districts, this calculator will sum up a series of arguments.
+
+    For plans, this calculator will sum up a series of arguments across
+    all districts. If a literal value is included in a plan calculation,
+    that literal value is combined with the subject value for each 
+    district.
+
+    Each argument should be assigned the argument name "valueN", where N
+    is a positive integer. The summation will add all arguments, starting
+    at position 1, until an argument is not found.
     """
     def __init__(self):
+        """
+        Initialize the result and argument dictionary.
+        """
         self.result = None
         self.arg_dict = {}
 
     def compute(self, **kwargs):
         """
-        Calculate the sum of a series of values. Each value to be added
-        should be added to the args_dict as 'value1', 'value2', etc.
+        Calculate the sum of a series of values.
         """
         districts = []
 
@@ -158,28 +192,58 @@ class Sum(CalculatorBase):
 
 
 class Percent(CalculatorBase):
+    """
+    Calculate a percentage for two values.
+
+    A percentage calculator requires two arguments: "numerator", and 
+    "denominator".
+
+    When passed a district, the percentage calculator simply divides the
+    numerator by the denominator.
+
+    When passed a plan, the percentage calculator accumulates all the
+    numerator values and denominator values for all districts in the plan.
+    After the numerator and denominator values have been accumulated, 
+    it computes the percentage of those totals.
+    """
     def __init__(self):
+        """
+        Initialize the result and argument dictionary.
+        """
         self.result = None
         self.arg_dict = {}
 
     def compute(self, **kwargs):
         """
-        Calculate a percentage for two values. This calculator requires
-        a 'numerator' argument, and a 'denominator' argument.
+        Calculate a percentage.
         """
         district = None
 
         if 'district' in kwargs:
             district = kwargs['district']
 
-        elif 'plans' in kwargs:
-            pass
+            num = self.get_value('numerator',district)
+            den = self.get_value('denominator',district)
+
+        elif 'plan' in kwargs:
+            plan = kwargs['plan']
+            districts = plan.get_districts_at_version(plan.version, include_geom=False)
+            num = 0
+            den = 0
+            for district in districts:
+                tmpnum = self.get_value('numerator',district)
+                tmpden = self.get_value('denominator',district)
+
+                # If either the numerator or denominator don't exist,
+                # we have to skip it.
+                if tmpnum is None or tmpden is None:
+                    continue
+
+                den += float(tmpden)
+                num += float(tmpnum)
 
         else:
             return
-
-        num = self.get_value('numerator',district)
-        den = self.get_value('denominator',district)
 
         if num is None or den is None:
             return
@@ -188,7 +252,24 @@ class Percent(CalculatorBase):
 
 
 class Threshold(CalculatorBase):
+    """
+    Determine a value, and return a numerical logical value. 
+
+    This calculator accepts two arguments: "value", and "threshold". The
+    result of this calculator is 1 or 0, to facilitate the combination of
+    scores. One example may be where the number of districts that exceed a
+    threshold are required.
+    
+    If the value computed is less than or equal to the threshold, the 
+    return value will be zero (0).
+
+    If the value computed is greater than the threshold, the return value
+    will be one (1).
+    """
     def __init__(self):
+        """
+        Initialize the result and argument dictionary.
+        """
         self.result = None
         self.arg_dict = {}
 
@@ -218,6 +299,9 @@ class Threshold(CalculatorBase):
 
 class Range(CalculatorBase):
     def __init__(self):
+        """
+        Initialize the result and argument dictionary.
+        """
         self.result = None
         self.arg_dict = {}
 

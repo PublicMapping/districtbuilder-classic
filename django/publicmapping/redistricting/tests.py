@@ -852,6 +852,30 @@ class CalculatorCase(BaseTestCase):
 
         self.assertEquals(expected, actual, 'Incorrect value during summation. (e:%d,a:%d)' % (expected, actual))
 
+    def test_sum5(self):
+        geolevelid = self.geolevels[1].id
+        geounits = self.geounits[geolevelid]
+
+        dist1ids = geounits[0:3] + geounits[9:12]
+        dist2ids = geounits[18:21] + geounits[27:30] + geounits[36:39]
+        exqset = Characteristic.objects.filter(geounit__in=dist1ids+dist2ids,subject=self.subject)
+        expected = float(exqset.aggregate(SumAgg('number'))['number__sum'])
+
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        dist2ids = map(lambda x: str(x.id), dist2ids)
+        
+        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district2.district_id, dist2ids, geolevelid, self.plan.version)
+
+        sumcalc = Sum()
+        sumcalc.arg_dict['value1'] = ('subject',self.subject.name,)
+        sumcalc.compute(plan=self.plan)
+
+        actual = sumcalc.result
+
+        self.assertEquals(expected, actual, 'Incorrect value during summation. (e:%d,a:%d)' % (expected, actual))
+
+
     def test_percent1(self):
         pctcalc = Percent()
         pctcalc.arg_dict['numerator'] = ('literal','1',)
@@ -889,6 +913,52 @@ class CalculatorCase(BaseTestCase):
         actual = pctcalc.result
 
         self.assertEquals(expected, actual, 'Incorrect value during percentage. (e:%f,a:%f)' % (expected, actual))
+
+    def test_percent4(self):
+        geolevelid = self.geolevels[1].id
+        geounits = self.geounits[geolevelid]
+
+        dist1ids = geounits[0:3] + geounits[9:12]
+        dist2ids = geounits[18:21] + geounits[27:30] + geounits[36:39]
+        exqset = Characteristic.objects.filter(geounit__in=dist1ids+dist2ids,subject=self.subject)
+        expected = float(exqset.aggregate(SumAgg('number'))['number__sum']) / 20.0
+
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        dist2ids = map(lambda x: str(x.id), dist2ids)
+        
+        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district2.district_id, dist2ids, geolevelid, self.plan.version)
+
+        pctcalc = Percent()
+        pctcalc.arg_dict['numerator'] = ('subject',self.subject.name,)
+        pctcalc.arg_dict['denominator'] = ('literal','10.0',)
+        pctcalc.compute(plan=self.plan)
+
+        actual = pctcalc.result
+
+        self.assertEquals(expected, actual, 'Incorrect value during percentage. (e:%f,a:%f)' % (expected, actual))
+
+    def test_percent5(self):
+        geolevelid = self.geolevels[1].id
+        geounits = self.geounits[geolevelid]
+
+        dist1ids = geounits[0:3] + geounits[9:12]
+        dist2ids = geounits[18:21] + geounits[27:30] + geounits[36:39]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        dist2ids = map(lambda x: str(x.id), dist2ids)
+        
+        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district2.district_id, dist2ids, geolevelid, self.plan.version)
+
+        pctcalc = Percent()
+        pctcalc.arg_dict['numerator'] = ('subject',self.subject.name,)
+        pctcalc.arg_dict['denominator'] = ('subject',self.subject.name,)
+        pctcalc.compute(plan=self.plan)
+
+        actual = pctcalc.result
+
+        self.assertEquals(1.0, actual, 'Incorrect value during percentage. (e:%f,a:%f)' % (1.0, actual))
+
 
     def test_threshold1(self):
         thrcalc = Threshold()
