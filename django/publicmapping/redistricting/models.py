@@ -980,7 +980,10 @@ class Plan(models.Model):
             else:
                 geom = None
             compactness_calculator = Schwartzberg()
-            compactness_calculator.compute(districts=[district])
+            compactness_calculator.compute(district=district)
+
+            contiguity_calculator = Contiguity()
+            contiguity_calculator.compute(district=district)
 
             features.append({ 
                 'id': row[0],
@@ -990,7 +993,7 @@ class Plan(models.Model):
                     'is_locked': row[3],
                     'version': row[4],
                     'number': float(row[7]),
-                    'contiguous': district.is_contiguous(),
+                    'contiguous': contiguity_calculator.result,
                     'compactness': compactness_calculator.result
                 },
                 'geometry': geom
@@ -1334,27 +1337,6 @@ class District(models.Model):
                 changed = True
 
         return changed
-        
-    def is_contiguous(self):
-        """
-        Checks to see if the district is contiguous.
-        
-        The district is already a unioned geom.  Any multipolygon with 
-        more than one poly in it will not be contiguous.  There is one 
-        case where this test may give a false negative - if all of the 
-        polys in a multipolygon each meet another poly at one point. In 
-        GIS terms, this is connected but not contiguous.  But the 
-        real-word case may be different.  
-
-        http://webhelp.esri.com/arcgisdesktop/9.2/index.cfm?TopicName=Coverage_topology.
-
-        Returns:
-            True if the district is contiguous.
-        """
-        if not self.geom == None:
-            return len(self.geom) == 1
-        else:
-            return False
 
     def clone_characteristics_from(self, origin):
         """

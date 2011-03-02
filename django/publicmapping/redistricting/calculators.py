@@ -342,3 +342,33 @@ class Range(CalculatorBase):
             return
 
         self.result = 1 if float(val) > float(minval) and float(val) < float(maxval) else 0
+
+class Contiguity(CalculatorBase):
+    """
+    Calculate the contiguity of a district.
+
+    This calculator will only operate on a district.
+    """
+    def __init__(self):
+        """
+        Initialize the result and argument dictionary.
+        """
+        self.result = None
+        self.arg_dict = {}
+
+    def compute(self, **kwargs):
+        """
+        Determine if a district is continuous.
+        """
+        district = None
+
+        if 'district' in kwargs:
+            district = kwargs['district']
+
+        elif 'plan' in kwargs:
+            return
+
+        else:
+            return
+
+        self.result = 1 if district.geom and len(district.geom) == 1 else 0

@@ -1335,18 +1335,21 @@ def getgeography(request, planid):
             characteristics = district.computedcharacteristic_set.filter(subject = subject)
 
             compactness_calculator = Schwartzberg()
-            compactness_calculator.compute(districts=[district])
+            compactness_calculator.compute(district=district)
             compactness_formatted = compactness_calculator.html()
+
+            contiguity_calculator = Contiguity()
+            contiguity_calculator.compute(district=district)
             
             if characteristics.count() == 0:
                 stats['demo'] = 'n/a'        
-                stats['contiguity'] = district.is_contiguous()
+                stats['contiguity'] = contiguity_calculator.result is 1
                 stats['compactness'] = compactness_formatted
                 stats['css_class'] = 'under'
 
             for characteristic in characteristics:
                 stats['demo'] = "%.0f" % characteristic.number        
-                stats['contiguity'] = district.is_contiguous()
+                stats['contiguity'] = contiguity_calculator.result is 1
                 stats['compactness'] = compactness_formatted
 
                 try: 
@@ -1405,8 +1408,10 @@ def getcompliance(plan, version):
     noncontiguous = 0
     # Remember to get only the districts at a specific version
     districts = plan.get_districts_at_version(version, include_geom=True)
+    contiguity_calculator = Contiguity()
     for district in districts:
-        if not district.is_contiguous() and district.name != 'Unassigned':
+        contiguity_calculator.compute(district=district)
+        if contiguity_calculator.result == 0 and district.name != 'Unassigned':
             noncontiguous += 1
     if noncontiguous > 0:
         if noncontiguous == 1:

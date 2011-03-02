@@ -1285,3 +1285,40 @@ class CalculatorCase(BaseTestCase):
         actual = rngcalc.result
 
         self.assertEquals(expected, actual, 'Incorrect value during range. (e:%s,a:%s)' % (expected, actual))
+
+    def test_contiguity1(self):
+        cntcalc = Contiguity()
+        cntcalc.compute(district=self.district1)
+
+        self.assertEquals(0, cntcalc.result, 'District is contiguous.')
+
+    def test_contiguity2(self):
+        geolevelid = self.geolevels[1].id
+        geounits = self.geounits[geolevelid]
+
+        dist1ids = geounits[0:3] + geounits[12:15]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        
+        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
+
+        cntcalc = Contiguity()
+        cntcalc.compute(district=district1)
+
+        self.assertEquals(0, cntcalc.result, 'District is contiguous.')
+
+    def test_contiguity3(self):
+        geolevelid = self.geolevels[1].id
+        geounits = self.geounits[geolevelid]
+
+        dist1ids = geounits[0:3] + geounits[9:12]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        
+        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
+
+        cntcalc = Contiguity()
+        cntcalc.compute(district=district1)
+
+        self.assertEquals(1, cntcalc.result, 'District is discontiguous.')
+
