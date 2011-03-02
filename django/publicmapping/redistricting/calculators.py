@@ -370,13 +370,6 @@ class Contiguity(CalculatorBase):
 
     This calculator will only operate on a district.
     """
-    def __init__(self):
-        """
-        Initialize the result and argument dictionary.
-        """
-        self.result = None
-        self.arg_dict = {}
-
     def compute(self, **kwargs):
         """
         Determine if a district is continuous.
@@ -393,3 +386,46 @@ class Contiguity(CalculatorBase):
             return
 
         self.result = 1 if district.geom and len(district.geom) == 1 else 0
+
+
+class Equivalence(CalculatorBase):
+    """
+    Generate a single score based on how closely a set of districts are
+    to a target.
+
+    This calculator examines every district in a plan, and generates a
+    score which is the difference between the district with the maximum 
+    value and the district with the minimum value.
+
+    This calculator requires one argument: 'value', which is the name
+    of a subject.
+    """
+    def __init__(self):
+        """
+        Initialize the result and argument dictionary.
+        """
+        self.result = None
+        self.arg_dict = {}
+
+    def compute(self, **kwargs):
+        """
+        Generate an equivalence score.
+        """
+        if 'district' in kwargs or not 'plan' in kwargs:
+            return
+
+        plan = kwargs['plan']
+
+        districts = plan.get_districts_at_version(plan.version,include_geom=False)
+        if len(districts) == 0:
+            return
+
+        min_d = 1000000000 # 1B enough?
+        max_d = 0
+        for district in districts:
+            tmpval = self.get_value('value',district)
+            if not tmpval is None:
+                min_d = min(float(tmpval), min_d)
+                max_d = max(float(tmpval), max_d)
+
+        self.result = max_d - min_d

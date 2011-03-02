@@ -1346,3 +1346,22 @@ class CalculatorCase(BaseTestCase):
 
         self.assertEquals(1, cntcalc.result, 'District is discontiguous.')
 
+    def test_equivalence1(self):
+        geolevelid = self.geolevels[1].id
+        geounits = self.geounits[geolevelid]
+
+        dist1ids = geounits[0:3] + geounits[9:12]
+        dist2ids = geounits[18:21] + geounits[27:30] + geounits[36:39]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        dist2ids = map(lambda x: str(x.id), dist2ids)
+        
+        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district2.district_id, dist2ids, geolevelid, self.plan.version)
+
+        equcalc = Equivalence()
+        equcalc.arg_dict['value'] = ('subject',self.subject.name,)
+        equcalc.compute(plan=self.plan)
+
+        actual = equcalc.result
+
+        self.assertEquals(3.0, actual, 'Incorrect value during equivalence. (e:%f,a:%f)' % (1.0, actual))
