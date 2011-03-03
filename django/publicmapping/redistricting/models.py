@@ -1624,6 +1624,13 @@ class ScoreDisplay(models.Model):
     # The style to be assigned to this score display
     cssclass = models.CharField(max_length=50, blank=True)
 
+    def __unicode__(self):
+        """
+        Get a unicode representation of this object. This is the Display's
+        title.
+        """
+        return self.title
+
 
 class ScorePanel(models.Model):
     """
@@ -1643,11 +1650,17 @@ class ScorePanel(models.Model):
     title = models.CharField(max_length=50)
     
     # The filename of the template to be used for formatting this panel
-    template = models.CharField(max_length=500, blank=True)
+    template = models.CharField(max_length=500)
 
     # The style to be assigned to this score display
     cssclass = models.CharField(max_length=50, blank=True)
 
+    def __unicode__(self):
+        """
+        Get a unicode representation of this object. This is the Panel's
+        title.
+        """
+        return self.title
 
 class ScoreFunction(models.Model):
     """
@@ -1731,6 +1744,13 @@ class ScoreFunction(models.Model):
 
         return results if is_list else results[0]
 
+    def __unicode__(self):
+        """
+        Get a unicode representation of this object. This is the 
+        ScoreFunction's name.
+        """
+        return self.name
+
 
 class ScoreArgument(models.Model):
     """
@@ -1749,6 +1769,13 @@ class ScoreArgument(models.Model):
     # The type of the argument (literal, score, subject)
     type = models.CharField(max_length=10)
 
+    def __unicode__(self):
+        """
+        Get a unicode representation of this object. This is the Argument's
+        arg/value/type.
+        """
+        return "%s / %s / %s" % (self.argument, self.type, self.value)
+
     
 class PanelFunction(models.Model):
     """
@@ -1760,6 +1787,13 @@ class PanelFunction(models.Model):
 
     # The score function
     function = models.ForeignKey(ScoreFunction)
+
+    def __unicode__(self):
+        """
+        Get a unicode representation of this object. This is the 
+        PanelFunction's arg/value/type.
+        """
+        return "%s / %s" % (self.panel.title, self.function.name)
 
 
 class ValidationCriteria(models.Model):
@@ -1778,6 +1812,9 @@ class ValidationCriteria(models.Model):
 
     # The legislative body that this validation criteria is for
     legislative_body = models.ForeignKey(LegislativeBody)
+
+    def __unicode__(self):
+        return self.name
 
     class Meta:
         verbose_name_plural = "Validation criterion"

@@ -159,6 +159,71 @@ class SubjectAdmin(admin.ModelAdmin):
     # Enable filtering by the displayed flag
     list_filter = ('is_displayed',)
 
+class PanelFunctionInline(admin.TabularInline):
+    model = PanelFunction
+
+class ScorePanelAdmin(admin.ModelAdmin):
+    """
+    Administrative settings for ScorePanels.
+    """
+
+    fields = ('title', 'display', 'type', 'template', 'position', 'cssclass',)
+
+    list_display = ('title', 'type', 'template', 'cssclass',)
+
+    list_filter = ('type',)
+
+    ordering = ['display','position']
+
+    inlines = [
+        PanelFunctionInline
+    ]
+
+class ScoreArgumentInline(admin.TabularInline):
+    model = ScoreArgument
+
+class ScoreFunctionAdmin(admin.ModelAdmin):
+    """
+    Administrative settings for ScoreFunctions.
+    """
+    fields = ('name', 'calculator', 'is_planscore', 'label', 'description',)
+
+    list_display = ('name', 'label', 'description', 'is_planscore',)
+
+    list_filter = ('is_planscore', 'calculator',)
+
+    ordering = ['name']
+
+    inlines = [
+        ScoreArgumentInline
+    ]
+
+class ScoreArgumentAdmin(admin.ModelAdmin):
+    """
+    Administrative settings for ScoreArguments
+    """
+    fields = ('argument', 'type', 'value', 'function',)
+
+    list_display = ('argument', 'type', 'value', 'function',)
+
+    ordering = ['function', 'argument']
+
+class ScorePanelInline(admin.TabularInline):
+    model = ScorePanel
+
+class ScoreDisplayAdmin(admin.ModelAdmin):
+    """
+    Administrative settings for ScoreDisplay
+    """
+
+    list_filter = ('is_page',)
+
+    inlines = [
+        ScorePanelInline
+    ]
+
+
+
 # Register these classes with the admin interface.
 admin.site.register(Geounit, GeounitAdmin)
 admin.site.register(ComputedCharacteristic) 
@@ -173,8 +238,8 @@ admin.site.register(District, DistrictAdmin)
 admin.site.register(Target)
 admin.site.register(PanelFunction)
 admin.site.register(Profile)
-admin.site.register(ScoreArgument)
-admin.site.register(ScoreDisplay)
-admin.site.register(ScoreFunction)
-admin.site.register(ScorePanel)
+admin.site.register(ScoreArgument, ScoreArgumentAdmin)
+admin.site.register(ScoreDisplay, ScoreDisplayAdmin)
+admin.site.register(ScoreFunction, ScoreFunctionAdmin)
+admin.site.register(ScorePanel, ScorePanelAdmin)
 admin.site.register(ValidationCriteria)
