@@ -21,8 +21,11 @@
        the user interface for button and dialogs and tooltips.
 
    Author: 
-        Andrew Jennings, David Zwarg
+        Andrew Jennings, David Zwarg, Kenny Shepard
 */
+
+// comment out the following line to display the leaderboard wireframed components
+$(document).ready(function(){$('#tab_leaderboard').remove();$('#step_leaderboard').remove();$('#verifyandpost').remove();});
 
 /**
  * Configure all buttons to look and behave like jQuery buttons.
@@ -124,12 +127,106 @@ function getLocalTimeFromIsoformat(time) {
 }
 
 /**
- * Configure the tooltips and buttons
+ * Configure the tooltips, buttons, and leaderboard
  */
 $(function() {
+    var constructLeaderboardSection = function(container, owner) {
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            url: '/districtmapping/getleaderboard/',
+            data: { owner_filter: owner }, 
+            success: function(data) {
+                var panels = $('<div class="leaderboard_panels"></div>');
+                container.append(panels);
+
+                // if there is an active plan, show leaderboard controls
+                if ($('#txtPlanName').length > 0) {
+                    var controls = $('<div class="leaderboard_controls"></div>');
+                    controls.html('<button class="leaderboard_button">Update Leaderboards with Current Plan</button>');
+                    container.append(controls);
+                }
+                    
+                var count = 0;
+                for (var i in data.items) {
+                    var item = data.items[i];
+                    var panel = $('<div class="leaderboard_panel ' + (((count % 2) === 0) ? 'even' : 'odd') + '"></div>');
+                    panel.append($('<div class="leaderboard_title">' + item.title + '</div>'));
+
+                    // id is required for jqgrid. an exception is thrown otherwise.
+                    var gridId = (container[0].id + "_" + count);
+                    var grid = $('<div class="leaderboard_grid"><table id="' + gridId + '"></table></div>');
+                    panel.append(grid);
+                    panels.append(panel);
+
+                    // construct the jqGrid
+                    var jqGrid = $('#' + gridId).jqGrid({
+                        datatype: "local",
+                        height: 230,
+                        colNames:['Rank', 'User Name', 'Plan Name', 'Score'],
+                        colModel:[
+                              {name:'rank',index:'rank', width:55, sorttype:"int"},
+                              {name:'userName',index:'userName', width:85},
+                              {name:'planName',index:'planName', width:150},
+                              {name:'score',index:'score', width:60, align:"right",sorttype:"float"}
+                        ]
+                    });
+
+                    // add rows
+                    if (item.rows) {
+                        for (var r = 0; r < item.rows.length; r++) {
+                            var row = item.rows[r];
+                            var planName = row.planName;
+                            if (row.shared) {
+                                planName = "<a href='../../../plan/" + row.planId + "/view/' target='_blank'>" +
+                                    planName + "</a>";
+                            }
+                            jqGrid.jqGrid('addRowData', r + 1, {
+                                rank: row.rank,
+                                userName: row.userName,
+                                planName: planName,
+                                score: row.score
+                            });
+                        }
+                    }
+
+                    count += 1;
+                }
+            },
+            error: function(xhr, textStatus, message) {
+                if (xhr.status == 403) {
+                    window.location.href = '/?msg=logoff';
+                }
+            }
+        });
+    };
+        
+    // clears out any previous leaderboard elements, and constructs a new one
+    var updateLeaderboard = function() {
+        $("#topranked_content").remove();
+        var toprankedDiv = $("#leaderboard_topranked").html('<div id="topranked_content"></div>');
+        // construct the 'Top Ranked' section
+        constructLeaderboardSection(toprankedDiv, "all");
+
+        var myRanked = $("#leaderboard_myranked")
+        if (myRanked.length > 0) {
+            $("#myranked_content").remove();
+            var myrankedDiv = $("#leaderboard_myranked").html('<div id="myranked_content"></div>');
+            constructLeaderboardSection(myrankedDiv, "mine");
+        }
+    };
+        
     // jQuery-UI tab layout
-    $('#steps').tabs();
-    
+    $('#steps').tabs({
+        select: function(e, ui) {
+            // lazy-load the leaderboard
+            if ((ui.index === 4) && ($("#topranked_content").length === 0)) {
+                updateLeaderboard();
+            }
+        }
+    });
+    $('#leaderboard_tabs').tabs();
+   
     // jQuery Tools tooltips   
     loadTooltips();
     

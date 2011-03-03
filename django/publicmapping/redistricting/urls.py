@@ -23,7 +23,7 @@ License:
     limitations under the License.
 
 Author: 
-    Andrew Jennings, David Zwarg
+    Andrew Jennings, David Zwarg, Kenny Shepard
 """
 
 from django.conf.urls.defaults import *
@@ -49,6 +49,7 @@ urlpatterns = patterns('publicmapping.redistricting.views',
     (r'^plan/(?P<planid>\d*)/districtindexfile/$', 'getdistrictindexfile'),
     (r'^plan/(?P<planid>\d*)/districtindexfilestatus/$', 'getdistrictindexfilestatus'),
     (r'^getplans/$', 'getplans'),
+    (r'^getleaderboard/$', 'getleaderboard'),
     (r'^loadbard/$', 'loadbard'),
     (r'^health/$', 'get_health'),
 )

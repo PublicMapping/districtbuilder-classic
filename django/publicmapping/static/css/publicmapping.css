@@ -21,7 +21,7 @@
        Project django web application.
 
    Author: 
-        Andrew Jennings, David Zwarg
+        Andrew Jennings, David Zwarg, Kenny Shepard
 */
 html {
     height: 100%;
@@ -431,12 +431,15 @@ li#tab_plan {background-color: #89BEBB;}
 li#tab_draw {background-color: #93B6B2;}
 li#tab_evaluate {background-color: #87ae8b;}
 li#tab_share {background-color: #acae87;}
+li#tab_leaderboard {background-color: #89BEBB;}
 
 div#step_plan .toolbar { background: url(/static-media/images/bg-toolbar.png) repeat-x 0 0 #7cb7b3}
 div#step_plan .toolbar h1, div#step_evaluate  .toolbar h1, div#step_share .toolbar h1  {font-size: 21px; color: #fff; padding: 11px 0 0 15px;}
 div#step_draw .toolbar { background: url(/static-media/images/bg-toolbar.png) 0 0 repeat-x #87aea9}
 div#step_evaluate .toolbar {background: url(/static-media/images/bg-toolbar.png) 0 0 repeat-x  #87ae8b}
 div#step_share .toolbar {background: url(/static-media/images/bg-toolbar.png) 0 0 repeat-x #acae87}
+div#step_leaderboard .toolbar { background: url(/static-media/images/bg-toolbar.png) repeat-x 0 0 #7cb7b3}
+div#step_leaderboard .toolbar h1, div#step_evaluate  .toolbar h1, div#step_share .toolbar h1  {font-size: 21px; color: #fff; padding: 11px 0 0 15px;}
 
 ul#steps_tabs li {
   -moz-border-radius: 10px 10px 0 0;
@@ -492,8 +495,53 @@ div#step_share{
     -webkit-border-radius:0 10px 0 0;
     border-radius:0 10px 0 0;
 }
+div#step_leaderboard {
+    padding:0;
+    background-color:#E3F0EF;
+    -moz-border-radius:0 10px 0 0;
+    -webkit-border-radius:0 10px 0 0;
+    border-radius:0 10px 0 0;
+}
+
+div#step_leaderboard div.tab_content {
+    top:34px;
+    padding: 0;
+}
+
+div.leaderboard_panels {
+    float: left;
+    width: 800px;
+}
+
+div.leaderboard_controls {
+    width: 150px;
+    float: left;
+}
+
+div.leaderboard_panel {
+    border:1px solid #000;
+    width: 375px;
+    height: 300px;
+    float: left;
+    margin: 10px;
+}
+
+div.leaderboard_title {
+  font-size:12px;
+  font-weight: bold;
+  height: 10%;
+}
+
+div.leaderboard_grid {
+  height: 85%;
+  border:1px solid #000;
+  margin-left: 10px;
+  margin-right: 10px;
+  font-size: 11px;
+}
 
 div#step_plan div.shadow_left ,
+div#step_leaderboard div.shadow_left ,
 div#step_evaluate div.shadow_left ,
 div#step_share div.shadow_left {
   top: 51px;
@@ -501,6 +549,7 @@ div#step_share div.shadow_left {
 }
 
 div#step_plan div.shadow_top,
+div#step_leaderboard div.shadow_top,
 div#step_evaluate div.shadow_top ,
 div#step_share div.shadow_top {
   top: 51px;
@@ -1675,7 +1724,8 @@ div.share p {
 }
 
 div#nameandshare,
-#btnSaveAndShare {
+#btnSaveAndShare,
+#btnVerifyAndSubmit {
     margin: 10px 0;
 }
 
@@ -1723,6 +1773,23 @@ margin-bottom:20px;
 #step_share .loading {
     background: url('/static-media/images/share-loading.gif') no-repeat left center;
     text-align: right;
+}
+
+.share #saveandshare,
+.share #verifyandpost {
+    float: left;
+}
+
+.share #verifyandpost {
+    height: 97%;
+    width: 50%;
+    border: 1px solid #000;
+    margin-left: 25px;
+    padding: 10px;
+}
+
+.share #verifyandpost .explanation-text {
+    margin: 10px;
 }
 
 
