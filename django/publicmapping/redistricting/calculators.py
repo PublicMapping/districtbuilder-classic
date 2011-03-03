@@ -133,7 +133,7 @@ class Schwartzberg(CalculatorBase):
 
         elif 'plan' in kwargs:
             plan = kwargs['plan']
-            districts = plan.get_districts_at_version(plan.version, include_geom=False)
+            districts = plan.get_districts_at_version(plan.version, include_geom=True)
 
         else:
             return
@@ -491,3 +491,60 @@ class PartisanDifferential(CalculatorBase):
 
         self.result = pd / num
 
+class RepresentationalFairness(CalculatorBase):
+    """
+    Compute the representational fairness.
+
+    Representational fairness is defined here as the 
+
+    This calculator only operates on Plans.
+
+    This calculator requires two arguments: 'democratic', and 'republican'.
+    """
+    def __init__(self):
+        """
+        Initialize the result and argument dictionary.
+        """
+        self.result = None
+        self.arg_dict = {}
+
+    def compute(self, **kwargs):
+        """
+        Compute the representational fairness.
+        """
+        if not 'plan' in kwargs:
+            return
+
+        plan = kwargs['plan']
+        districts = plan.get_districts_at_version(plan.version, include_geom=False)
+        numdistricts = 0
+        likely = 0
+        sumdem = 0
+        sumrep = 0
+        for district in districts:
+            tmpdem = self.get_value('democratic',district)
+            tmprep = self.get_value('republican',district)
+
+            if tmpdem is None or tmprep is None:
+                continue
+
+            dem = float(tmpdem)
+            rep = float(tmprep)
+
+            pidx = dem / (dem + rep)
+            if pidx > 0.5:
+                print "PIDX!",pidx
+                likely += 1
+
+            sumdem += dem
+            sumrep += rep
+
+            numdistricts += 1
+
+        print "Sum DEM:%0.2f, Sum REP:%0.2f" % (sumdem, sumrep,)
+        statepct = sumdem / (sumdem+sumrep)
+        print "Likely: %d, Num total: %d" % (likely, numdistricts,)
+        likelypct = float(likely) / float(numdistricts)
+
+        self.result = abs( (likelypct/statepct) - 1 )
+        print "Result:", self.result

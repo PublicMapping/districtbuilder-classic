@@ -1422,3 +1422,45 @@ class CalculatorCase(BaseTestCase):
         expected = (0.923077 + 0.461538) / 2
 
         self.assertAlmostEquals(expected, actual, 6, 'Incorrect value during partisan differential. (e:%f,a:%f)' % (expected, actual))
+
+    def test_repfairness1(self):
+        geolevelid = self.geolevels[1].id
+        geounits = self.geounits[geolevelid]
+
+        dist1ids = geounits[0:3] + geounits[9:12]
+        dist2ids = geounits[6:9] + geounits[15:18]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        dist2ids = map(lambda x: str(x.id), dist2ids)
+        
+        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district2.district_id, dist2ids, geolevelid, self.plan.version)
+
+        rfcalc = RepresentationalFairness()
+        rfcalc.arg_dict['democratic'] = ('subject',self.subject1.name,)
+        rfcalc.arg_dict['republican'] = ('subject',self.subject2.name,)
+        rfcalc.compute(plan=self.plan)
+
+        actual = rfcalc.result
+
+        self.assertEquals(1.0, actual, 'Incorrect value during representational fairness. (e:%f,a:%f)' % (1.0, actual))
+
+    def test_repfairness2(self):
+        geolevelid = self.geolevels[1].id
+        geounits = self.geounits[geolevelid]
+
+        dist1ids = geounits[0:3] + geounits[9:12]
+        dist2ids = geounits[6:9] + geounits[15:18]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        dist2ids = map(lambda x: str(x.id), dist2ids)
+        
+        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district2.district_id, dist2ids, geolevelid, self.plan.version)
+
+        rfcalc = RepresentationalFairness()
+        rfcalc.arg_dict['democratic'] = ('subject',self.subject2.name,)
+        rfcalc.arg_dict['republican'] = ('subject',self.subject1.name,)
+        rfcalc.compute(plan=self.plan)
+
+        actual = rfcalc.result
+
+        self.assertAlmostEquals(0.181818, actual, 6, 'Incorrect value during representational fairness. (e:%f,a:%f)' % (0.181818, actual))
