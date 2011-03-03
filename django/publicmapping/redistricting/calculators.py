@@ -429,3 +429,65 @@ class Equivalence(CalculatorBase):
                 max_d = max(float(tmpval), max_d)
 
         self.result = max_d - min_d
+
+
+class PartisanDifferential(CalculatorBase):
+    """
+    Compute the partisan differential.
+
+    The partisan differential is the absolute value of the difference 
+    between the Democratic Partisan Index and the Republican Partisan 
+    Index. The Democratic Partisan Index is the number of democratic 
+    votes divided by the combined number of democratic and republican 
+    votes. The Republican Partisan Index is the number of republican 
+    votes divided by the combined number of democratic and republican 
+    votes.
+
+    This calculator requires two arguments: 'democratic' and 'republican'
+
+    When passed a district, this calculator will compute the partisan
+    differential of one district.
+
+    When passed a plan, this calculator will compute the average
+    partisan differential of all districts in the plan.
+    """
+    def __init__(self):
+        """
+        Initialize the result and argument dictionary.
+        """
+        self.result = None
+        self.arg_dict = {}
+
+    def compute(self, **kwargs):
+        """
+        Compute the partisan differential.
+        """
+        districts=[]
+        if 'district' in kwargs:
+            districts = [kwargs['district']]
+
+        elif 'plan' in kwargs:
+            plan = kwargs['plan']
+            districts = plan.get_districts_at_version(plan, include_geom=False)
+
+        else:
+            return
+
+        num = 0
+        pd = 0
+        for district in districts:
+            dem = self.get_value('democratic',district)
+            rep = self.get_value('republican',district)
+            if dem is None or rep is None:
+                continue
+
+            dem = float(dem)
+            rep = float(rep)
+            dem_pi = dem / (rep + dem)
+            rep_pi = rep / (rep + dem)
+
+            pd += abs(rep_pi - dem_pi)
+            num += 1.0
+
+        self.result = pd / num
+

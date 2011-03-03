@@ -186,7 +186,7 @@ class LegislativeBody(models.Model):
         return self.name
 
     class Meta:
-        verbose_name_plural = "LegislativeBodies"
+        verbose_name_plural = "Legislative bodies"
 
 
 class Geolevel(models.Model):
@@ -1451,6 +1451,13 @@ class Profile(models.Model):
     # A user's password hint.
     pass_hint = models.CharField(max_length=256)
 
+    def __unicode__(self):
+        """
+        Represent the Profile as a unicode string. This is the a string
+        with the User's name.
+        """
+        return "%s's profile" % self.user.username
+
 
 def update_profile(sender, **kwargs):
     """
@@ -1771,3 +1778,6 @@ class ValidationCriteria(models.Model):
 
     # The legislative body that this validation criteria is for
     legislative_body = models.ForeignKey(LegislativeBody)
+
+    class Meta:
+        verbose_name_plural = "Validation criterion"

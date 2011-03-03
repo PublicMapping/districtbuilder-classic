@@ -324,6 +324,14 @@
   }
  }, 
  {
+  "pk": "178913be744142228425ed8932da573f", 
+  "model": "sessions.session", 
+  "fields": {
+   "expire_date": "2011-03-16 18:43:12", 
+   "session_data": "gAJ9cQEoVRJfYXV0aF91c2VyX2JhY2tlbmRxAlUpZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5k\ncy5Nb2RlbEJhY2tlbmRxA1UNX2F1dGhfdXNlcl9pZHEESwF1LmY0MDJjY2E4YjVmZTdkOTY4OGVh\nNjc3NTFjYWMzYWNk\n"
+  }
+ }, 
+ {
   "pk": 1, 
   "model": "sites.site", 
   "fields": {
@@ -335,13 +343,27 @@
   "pk": 1, 
   "model": "redistricting.subject", 
   "fields": {
-   "description": "", 
+   "description": "TestSubject", 
    "sort_key": 1, 
-   "format_string": "", 
+   "format_string": "%0.2f", 
    "name": "TestSubject", 
    "is_displayed": true, 
-   "short_display": "", 
-   "display": "", 
+   "short_display": "TestSubject", 
+   "display": "TestSubject", 
+   "percentage_denominator": null
+  }
+ }, 
+ {
+  "pk": 2, 
+  "model": "redistricting.subject", 
+  "fields": {
+   "description": "TestSubject2", 
+   "sort_key": 2, 
+   "format_string": "%0.2f", 
+   "name": "TestSubject2", 
+   "is_displayed": true, 
+   "short_display": "TestSubject2", 
+   "display": "TestSubject2", 
    "percentage_denominator": null
   }
  }, 
@@ -20079,6 +20101,8196 @@
   }
  }, 
  {
+  "pk": 820, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 1, 
+   "percentage": null, 
+   "number": "26.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 821, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 2, 
+   "percentage": null, 
+   "number": "25.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 822, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 3, 
+   "percentage": null, 
+   "number": "24.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 823, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 4, 
+   "percentage": null, 
+   "number": "26.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 824, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 5, 
+   "percentage": null, 
+   "number": "25.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 825, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 6, 
+   "percentage": null, 
+   "number": "24.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 826, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 7, 
+   "percentage": null, 
+   "number": "26.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 827, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 8, 
+   "percentage": null, 
+   "number": "25.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 828, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 9, 
+   "percentage": null, 
+   "number": "24.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 829, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 10, 
+   "percentage": null, 
+   "number": "26.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 830, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 11, 
+   "percentage": null, 
+   "number": "25.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 831, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 12, 
+   "percentage": null, 
+   "number": "24.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 832, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 13, 
+   "percentage": null, 
+   "number": "23.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 833, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 14, 
+   "percentage": null, 
+   "number": "22.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 834, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 15, 
+   "percentage": null, 
+   "number": "21.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 835, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 16, 
+   "percentage": null, 
+   "number": "20.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 836, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 17, 
+   "percentage": null, 
+   "number": "19.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 837, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 18, 
+   "percentage": null, 
+   "number": "18.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 838, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 19, 
+   "percentage": null, 
+   "number": "26.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 839, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 20, 
+   "percentage": null, 
+   "number": "25.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 840, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 21, 
+   "percentage": null, 
+   "number": "24.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 841, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 22, 
+   "percentage": null, 
+   "number": "23.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 842, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 23, 
+   "percentage": null, 
+   "number": "22.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 843, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 24, 
+   "percentage": null, 
+   "number": "21.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 844, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 25, 
+   "percentage": null, 
+   "number": "20.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 845, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 26, 
+   "percentage": null, 
+   "number": "19.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 846, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 27, 
+   "percentage": null, 
+   "number": "18.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 847, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 28, 
+   "percentage": null, 
+   "number": "26.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 848, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 29, 
+   "percentage": null, 
+   "number": "25.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 849, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 30, 
+   "percentage": null, 
+   "number": "24.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 850, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 31, 
+   "percentage": null, 
+   "number": "23.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 851, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 32, 
+   "percentage": null, 
+   "number": "22.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 852, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 33, 
+   "percentage": null, 
+   "number": "21.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 853, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 34, 
+   "percentage": null, 
+   "number": "20.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 854, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 35, 
+   "percentage": null, 
+   "number": "19.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 855, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 36, 
+   "percentage": null, 
+   "number": "18.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 856, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 37, 
+   "percentage": null, 
+   "number": "26.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 857, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 38, 
+   "percentage": null, 
+   "number": "25.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 858, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 39, 
+   "percentage": null, 
+   "number": "24.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 859, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 40, 
+   "percentage": null, 
+   "number": "23.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 860, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 41, 
+   "percentage": null, 
+   "number": "22.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 861, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 42, 
+   "percentage": null, 
+   "number": "21.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 862, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 43, 
+   "percentage": null, 
+   "number": "20.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 863, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 44, 
+   "percentage": null, 
+   "number": "19.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 864, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 45, 
+   "percentage": null, 
+   "number": "18.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 865, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 46, 
+   "percentage": null, 
+   "number": "26.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 866, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 47, 
+   "percentage": null, 
+   "number": "25.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 867, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 48, 
+   "percentage": null, 
+   "number": "24.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 868, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 49, 
+   "percentage": null, 
+   "number": "23.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 869, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 50, 
+   "percentage": null, 
+   "number": "22.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 870, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 51, 
+   "percentage": null, 
+   "number": "21.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 871, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 52, 
+   "percentage": null, 
+   "number": "20.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 872, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 53, 
+   "percentage": null, 
+   "number": "19.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 873, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 54, 
+   "percentage": null, 
+   "number": "18.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 874, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 55, 
+   "percentage": null, 
+   "number": "26.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 875, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 56, 
+   "percentage": null, 
+   "number": "25.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 876, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 57, 
+   "percentage": null, 
+   "number": "24.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 877, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 58, 
+   "percentage": null, 
+   "number": "23.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 878, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 59, 
+   "percentage": null, 
+   "number": "22.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 879, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 60, 
+   "percentage": null, 
+   "number": "21.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 880, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 61, 
+   "percentage": null, 
+   "number": "20.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 881, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 62, 
+   "percentage": null, 
+   "number": "19.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 882, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 63, 
+   "percentage": null, 
+   "number": "18.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 883, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 64, 
+   "percentage": null, 
+   "number": "26.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 884, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 65, 
+   "percentage": null, 
+   "number": "25.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 885, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 66, 
+   "percentage": null, 
+   "number": "24.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 886, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 67, 
+   "percentage": null, 
+   "number": "23.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 887, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 68, 
+   "percentage": null, 
+   "number": "22.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 888, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 69, 
+   "percentage": null, 
+   "number": "21.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 889, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 70, 
+   "percentage": null, 
+   "number": "20.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 890, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 71, 
+   "percentage": null, 
+   "number": "19.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 891, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 72, 
+   "percentage": null, 
+   "number": "18.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 892, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 73, 
+   "percentage": null, 
+   "number": "26.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 893, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 74, 
+   "percentage": null, 
+   "number": "25.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 894, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 75, 
+   "percentage": null, 
+   "number": "24.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 895, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 76, 
+   "percentage": null, 
+   "number": "23.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 896, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 77, 
+   "percentage": null, 
+   "number": "22.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 897, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 78, 
+   "percentage": null, 
+   "number": "21.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 898, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 79, 
+   "percentage": null, 
+   "number": "20.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 899, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 80, 
+   "percentage": null, 
+   "number": "19.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 900, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 81, 
+   "percentage": null, 
+   "number": "18.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 901, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 82, 
+   "percentage": null, 
+   "number": "26.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 902, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 83, 
+   "percentage": null, 
+   "number": "25.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 903, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 84, 
+   "percentage": null, 
+   "number": "24.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 904, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 85, 
+   "percentage": null, 
+   "number": "23.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 905, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 86, 
+   "percentage": null, 
+   "number": "22.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 906, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 87, 
+   "percentage": null, 
+   "number": "21.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 907, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 88, 
+   "percentage": null, 
+   "number": "20.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 908, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 89, 
+   "percentage": null, 
+   "number": "19.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 909, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 90, 
+   "percentage": null, 
+   "number": "18.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 910, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 91, 
+   "percentage": null, 
+   "number": "26.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 911, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 92, 
+   "percentage": null, 
+   "number": "25.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 912, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 93, 
+   "percentage": null, 
+   "number": "24.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 913, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 94, 
+   "percentage": null, 
+   "number": "23.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 914, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 95, 
+   "percentage": null, 
+   "number": "22.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 915, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 96, 
+   "percentage": null, 
+   "number": "21.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 916, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 97, 
+   "percentage": null, 
+   "number": "20.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 917, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 98, 
+   "percentage": null, 
+   "number": "19.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 918, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 99, 
+   "percentage": null, 
+   "number": "18.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 919, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 100, 
+   "percentage": null, 
+   "number": "17.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 920, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 101, 
+   "percentage": null, 
+   "number": "16.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 921, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 102, 
+   "percentage": null, 
+   "number": "15.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 922, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 103, 
+   "percentage": null, 
+   "number": "14.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 923, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 104, 
+   "percentage": null, 
+   "number": "13.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 924, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 105, 
+   "percentage": null, 
+   "number": "12.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 925, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 106, 
+   "percentage": null, 
+   "number": "11.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 926, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 107, 
+   "percentage": null, 
+   "number": "10.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 927, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 108, 
+   "percentage": null, 
+   "number": "9.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 928, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 109, 
+   "percentage": null, 
+   "number": "8.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 929, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 110, 
+   "percentage": null, 
+   "number": "7.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 930, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 111, 
+   "percentage": null, 
+   "number": "6.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 931, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 112, 
+   "percentage": null, 
+   "number": "5.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 932, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 113, 
+   "percentage": null, 
+   "number": "4.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 933, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 114, 
+   "percentage": null, 
+   "number": "3.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 934, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 115, 
+   "percentage": null, 
+   "number": "2.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 935, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 116, 
+   "percentage": null, 
+   "number": "1.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 936, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 117, 
+   "percentage": null, 
+   "number": "0.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 937, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 118, 
+   "percentage": null, 
+   "number": "26.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 938, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 119, 
+   "percentage": null, 
+   "number": "25.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 939, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 120, 
+   "percentage": null, 
+   "number": "24.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 940, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 121, 
+   "percentage": null, 
+   "number": "23.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 941, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 122, 
+   "percentage": null, 
+   "number": "22.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 942, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 123, 
+   "percentage": null, 
+   "number": "21.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 943, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 124, 
+   "percentage": null, 
+   "number": "20.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 944, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 125, 
+   "percentage": null, 
+   "number": "19.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 945, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 126, 
+   "percentage": null, 
+   "number": "18.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 946, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 127, 
+   "percentage": null, 
+   "number": "17.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 947, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 128, 
+   "percentage": null, 
+   "number": "16.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 948, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 129, 
+   "percentage": null, 
+   "number": "15.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 949, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 130, 
+   "percentage": null, 
+   "number": "14.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 950, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 131, 
+   "percentage": null, 
+   "number": "13.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 951, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 132, 
+   "percentage": null, 
+   "number": "12.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 952, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 133, 
+   "percentage": null, 
+   "number": "11.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 953, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 134, 
+   "percentage": null, 
+   "number": "10.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 954, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 135, 
+   "percentage": null, 
+   "number": "9.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 955, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 136, 
+   "percentage": null, 
+   "number": "8.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 956, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 137, 
+   "percentage": null, 
+   "number": "7.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 957, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 138, 
+   "percentage": null, 
+   "number": "6.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 958, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 139, 
+   "percentage": null, 
+   "number": "5.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 959, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 140, 
+   "percentage": null, 
+   "number": "4.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 960, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 141, 
+   "percentage": null, 
+   "number": "3.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 961, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 142, 
+   "percentage": null, 
+   "number": "2.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 962, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 143, 
+   "percentage": null, 
+   "number": "1.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 963, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 144, 
+   "percentage": null, 
+   "number": "0.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 964, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 145, 
+   "percentage": null, 
+   "number": "26.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 965, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 146, 
+   "percentage": null, 
+   "number": "25.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 966, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 147, 
+   "percentage": null, 
+   "number": "24.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 967, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 148, 
+   "percentage": null, 
+   "number": "23.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 968, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 149, 
+   "percentage": null, 
+   "number": "22.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 969, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 150, 
+   "percentage": null, 
+   "number": "21.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 970, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 151, 
+   "percentage": null, 
+   "number": "20.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 971, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 152, 
+   "percentage": null, 
+   "number": "19.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 972, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 153, 
+   "percentage": null, 
+   "number": "18.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 973, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 154, 
+   "percentage": null, 
+   "number": "17.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 974, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 155, 
+   "percentage": null, 
+   "number": "16.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 975, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 156, 
+   "percentage": null, 
+   "number": "15.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 976, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 157, 
+   "percentage": null, 
+   "number": "14.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 977, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 158, 
+   "percentage": null, 
+   "number": "13.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 978, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 159, 
+   "percentage": null, 
+   "number": "12.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 979, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 160, 
+   "percentage": null, 
+   "number": "11.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 980, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 161, 
+   "percentage": null, 
+   "number": "10.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 981, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 162, 
+   "percentage": null, 
+   "number": "9.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 982, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 163, 
+   "percentage": null, 
+   "number": "8.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 983, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 164, 
+   "percentage": null, 
+   "number": "7.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 984, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 165, 
+   "percentage": null, 
+   "number": "6.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 985, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 166, 
+   "percentage": null, 
+   "number": "5.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 986, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 167, 
+   "percentage": null, 
+   "number": "4.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 987, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 168, 
+   "percentage": null, 
+   "number": "3.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 988, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 169, 
+   "percentage": null, 
+   "number": "2.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 989, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 170, 
+   "percentage": null, 
+   "number": "1.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 990, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 171, 
+   "percentage": null, 
+   "number": "0.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 991, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 172, 
+   "percentage": null, 
+   "number": "26.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 992, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 173, 
+   "percentage": null, 
+   "number": "25.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 993, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 174, 
+   "percentage": null, 
+   "number": "24.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 994, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 175, 
+   "percentage": null, 
+   "number": "23.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 995, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 176, 
+   "percentage": null, 
+   "number": "22.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 996, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 177, 
+   "percentage": null, 
+   "number": "21.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 997, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 178, 
+   "percentage": null, 
+   "number": "20.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 998, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 179, 
+   "percentage": null, 
+   "number": "19.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 999, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 180, 
+   "percentage": null, 
+   "number": "18.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1000, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 181, 
+   "percentage": null, 
+   "number": "17.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1001, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 182, 
+   "percentage": null, 
+   "number": "16.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1002, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 183, 
+   "percentage": null, 
+   "number": "15.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1003, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 184, 
+   "percentage": null, 
+   "number": "14.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1004, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 185, 
+   "percentage": null, 
+   "number": "13.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1005, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 186, 
+   "percentage": null, 
+   "number": "12.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1006, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 187, 
+   "percentage": null, 
+   "number": "11.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1007, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 188, 
+   "percentage": null, 
+   "number": "10.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1008, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 189, 
+   "percentage": null, 
+   "number": "9.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1009, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 190, 
+   "percentage": null, 
+   "number": "8.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1010, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 191, 
+   "percentage": null, 
+   "number": "7.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1011, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 192, 
+   "percentage": null, 
+   "number": "6.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1012, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 193, 
+   "percentage": null, 
+   "number": "5.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1013, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 194, 
+   "percentage": null, 
+   "number": "4.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1014, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 195, 
+   "percentage": null, 
+   "number": "3.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1015, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 196, 
+   "percentage": null, 
+   "number": "2.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1016, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 197, 
+   "percentage": null, 
+   "number": "1.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1017, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 198, 
+   "percentage": null, 
+   "number": "0.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1018, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 199, 
+   "percentage": null, 
+   "number": "26.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1019, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 200, 
+   "percentage": null, 
+   "number": "25.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1020, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 201, 
+   "percentage": null, 
+   "number": "24.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1021, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 202, 
+   "percentage": null, 
+   "number": "23.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1022, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 203, 
+   "percentage": null, 
+   "number": "22.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1023, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 204, 
+   "percentage": null, 
+   "number": "21.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1024, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 205, 
+   "percentage": null, 
+   "number": "20.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1025, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 206, 
+   "percentage": null, 
+   "number": "19.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1026, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 207, 
+   "percentage": null, 
+   "number": "18.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1027, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 208, 
+   "percentage": null, 
+   "number": "17.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1028, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 209, 
+   "percentage": null, 
+   "number": "16.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1029, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 210, 
+   "percentage": null, 
+   "number": "15.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1030, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 211, 
+   "percentage": null, 
+   "number": "14.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1031, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 212, 
+   "percentage": null, 
+   "number": "13.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1032, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 213, 
+   "percentage": null, 
+   "number": "12.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1033, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 214, 
+   "percentage": null, 
+   "number": "11.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1034, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 215, 
+   "percentage": null, 
+   "number": "10.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1035, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 216, 
+   "percentage": null, 
+   "number": "9.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1036, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 217, 
+   "percentage": null, 
+   "number": "8.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1037, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 218, 
+   "percentage": null, 
+   "number": "7.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1038, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 219, 
+   "percentage": null, 
+   "number": "6.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1039, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 220, 
+   "percentage": null, 
+   "number": "5.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1040, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 221, 
+   "percentage": null, 
+   "number": "4.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1041, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 222, 
+   "percentage": null, 
+   "number": "3.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1042, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 223, 
+   "percentage": null, 
+   "number": "2.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1043, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 224, 
+   "percentage": null, 
+   "number": "1.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1044, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 225, 
+   "percentage": null, 
+   "number": "0.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1045, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 226, 
+   "percentage": null, 
+   "number": "26.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1046, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 227, 
+   "percentage": null, 
+   "number": "25.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1047, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 228, 
+   "percentage": null, 
+   "number": "24.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1048, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 229, 
+   "percentage": null, 
+   "number": "23.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1049, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 230, 
+   "percentage": null, 
+   "number": "22.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1050, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 231, 
+   "percentage": null, 
+   "number": "21.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1051, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 232, 
+   "percentage": null, 
+   "number": "20.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1052, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 233, 
+   "percentage": null, 
+   "number": "19.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1053, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 234, 
+   "percentage": null, 
+   "number": "18.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1054, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 235, 
+   "percentage": null, 
+   "number": "17.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1055, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 236, 
+   "percentage": null, 
+   "number": "16.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1056, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 237, 
+   "percentage": null, 
+   "number": "15.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1057, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 238, 
+   "percentage": null, 
+   "number": "14.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1058, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 239, 
+   "percentage": null, 
+   "number": "13.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1059, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 240, 
+   "percentage": null, 
+   "number": "12.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1060, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 241, 
+   "percentage": null, 
+   "number": "11.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1061, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 242, 
+   "percentage": null, 
+   "number": "10.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1062, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 243, 
+   "percentage": null, 
+   "number": "9.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1063, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 244, 
+   "percentage": null, 
+   "number": "8.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1064, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 245, 
+   "percentage": null, 
+   "number": "7.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1065, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 246, 
+   "percentage": null, 
+   "number": "6.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1066, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 247, 
+   "percentage": null, 
+   "number": "5.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1067, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 248, 
+   "percentage": null, 
+   "number": "4.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1068, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 249, 
+   "percentage": null, 
+   "number": "3.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1069, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 250, 
+   "percentage": null, 
+   "number": "2.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1070, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 251, 
+   "percentage": null, 
+   "number": "1.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1071, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 252, 
+   "percentage": null, 
+   "number": "0.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1072, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 253, 
+   "percentage": null, 
+   "number": "26.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1073, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 254, 
+   "percentage": null, 
+   "number": "25.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1074, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 255, 
+   "percentage": null, 
+   "number": "24.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1075, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 256, 
+   "percentage": null, 
+   "number": "23.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1076, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 257, 
+   "percentage": null, 
+   "number": "22.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1077, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 258, 
+   "percentage": null, 
+   "number": "21.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1078, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 259, 
+   "percentage": null, 
+   "number": "20.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1079, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 260, 
+   "percentage": null, 
+   "number": "19.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1080, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 261, 
+   "percentage": null, 
+   "number": "18.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1081, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 262, 
+   "percentage": null, 
+   "number": "17.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1082, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 263, 
+   "percentage": null, 
+   "number": "16.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1083, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 264, 
+   "percentage": null, 
+   "number": "15.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1084, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 265, 
+   "percentage": null, 
+   "number": "14.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1085, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 266, 
+   "percentage": null, 
+   "number": "13.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1086, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 267, 
+   "percentage": null, 
+   "number": "12.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1087, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 268, 
+   "percentage": null, 
+   "number": "11.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1088, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 269, 
+   "percentage": null, 
+   "number": "10.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1089, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 270, 
+   "percentage": null, 
+   "number": "9.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1090, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 271, 
+   "percentage": null, 
+   "number": "8.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1091, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 272, 
+   "percentage": null, 
+   "number": "7.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1092, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 273, 
+   "percentage": null, 
+   "number": "6.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1093, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 274, 
+   "percentage": null, 
+   "number": "5.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1094, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 275, 
+   "percentage": null, 
+   "number": "4.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1095, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 276, 
+   "percentage": null, 
+   "number": "3.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1096, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 277, 
+   "percentage": null, 
+   "number": "2.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1097, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 278, 
+   "percentage": null, 
+   "number": "1.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1098, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 279, 
+   "percentage": null, 
+   "number": "0.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1099, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 280, 
+   "percentage": null, 
+   "number": "26.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1100, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 281, 
+   "percentage": null, 
+   "number": "25.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1101, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 282, 
+   "percentage": null, 
+   "number": "24.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1102, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 283, 
+   "percentage": null, 
+   "number": "23.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1103, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 284, 
+   "percentage": null, 
+   "number": "22.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1104, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 285, 
+   "percentage": null, 
+   "number": "21.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1105, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 286, 
+   "percentage": null, 
+   "number": "20.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1106, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 287, 
+   "percentage": null, 
+   "number": "19.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1107, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 288, 
+   "percentage": null, 
+   "number": "18.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1108, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 289, 
+   "percentage": null, 
+   "number": "17.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1109, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 290, 
+   "percentage": null, 
+   "number": "16.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1110, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 291, 
+   "percentage": null, 
+   "number": "15.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1111, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 292, 
+   "percentage": null, 
+   "number": "14.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1112, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 293, 
+   "percentage": null, 
+   "number": "13.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1113, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 294, 
+   "percentage": null, 
+   "number": "12.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1114, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 295, 
+   "percentage": null, 
+   "number": "11.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1115, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 296, 
+   "percentage": null, 
+   "number": "10.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1116, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 297, 
+   "percentage": null, 
+   "number": "9.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1117, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 298, 
+   "percentage": null, 
+   "number": "8.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1118, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 299, 
+   "percentage": null, 
+   "number": "7.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1119, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 300, 
+   "percentage": null, 
+   "number": "6.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1120, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 301, 
+   "percentage": null, 
+   "number": "5.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1121, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 302, 
+   "percentage": null, 
+   "number": "4.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1122, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 303, 
+   "percentage": null, 
+   "number": "3.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1123, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 304, 
+   "percentage": null, 
+   "number": "2.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1124, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 305, 
+   "percentage": null, 
+   "number": "1.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1125, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 306, 
+   "percentage": null, 
+   "number": "0.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1126, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 307, 
+   "percentage": null, 
+   "number": "26.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1127, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 308, 
+   "percentage": null, 
+   "number": "25.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1128, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 309, 
+   "percentage": null, 
+   "number": "24.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1129, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 310, 
+   "percentage": null, 
+   "number": "23.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1130, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 311, 
+   "percentage": null, 
+   "number": "22.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1131, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 312, 
+   "percentage": null, 
+   "number": "21.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1132, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 313, 
+   "percentage": null, 
+   "number": "20.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1133, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 314, 
+   "percentage": null, 
+   "number": "19.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1134, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 315, 
+   "percentage": null, 
+   "number": "18.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1135, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 316, 
+   "percentage": null, 
+   "number": "17.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1136, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 317, 
+   "percentage": null, 
+   "number": "16.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1137, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 318, 
+   "percentage": null, 
+   "number": "15.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1138, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 319, 
+   "percentage": null, 
+   "number": "14.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1139, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 320, 
+   "percentage": null, 
+   "number": "13.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1140, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 321, 
+   "percentage": null, 
+   "number": "12.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1141, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 322, 
+   "percentage": null, 
+   "number": "11.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1142, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 323, 
+   "percentage": null, 
+   "number": "10.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1143, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 324, 
+   "percentage": null, 
+   "number": "9.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1144, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 325, 
+   "percentage": null, 
+   "number": "8.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1145, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 326, 
+   "percentage": null, 
+   "number": "7.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1146, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 327, 
+   "percentage": null, 
+   "number": "6.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1147, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 328, 
+   "percentage": null, 
+   "number": "5.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1148, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 329, 
+   "percentage": null, 
+   "number": "4.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1149, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 330, 
+   "percentage": null, 
+   "number": "3.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1150, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 331, 
+   "percentage": null, 
+   "number": "2.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1151, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 332, 
+   "percentage": null, 
+   "number": "1.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1152, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 333, 
+   "percentage": null, 
+   "number": "0.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1153, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 334, 
+   "percentage": null, 
+   "number": "26.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1154, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 335, 
+   "percentage": null, 
+   "number": "25.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1155, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 336, 
+   "percentage": null, 
+   "number": "24.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1156, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 337, 
+   "percentage": null, 
+   "number": "23.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1157, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 338, 
+   "percentage": null, 
+   "number": "22.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1158, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 339, 
+   "percentage": null, 
+   "number": "21.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1159, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 340, 
+   "percentage": null, 
+   "number": "20.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1160, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 341, 
+   "percentage": null, 
+   "number": "19.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1161, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 342, 
+   "percentage": null, 
+   "number": "18.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1162, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 343, 
+   "percentage": null, 
+   "number": "17.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1163, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 344, 
+   "percentage": null, 
+   "number": "16.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1164, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 345, 
+   "percentage": null, 
+   "number": "15.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1165, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 346, 
+   "percentage": null, 
+   "number": "14.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1166, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 347, 
+   "percentage": null, 
+   "number": "13.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1167, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 348, 
+   "percentage": null, 
+   "number": "12.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1168, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 349, 
+   "percentage": null, 
+   "number": "11.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1169, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 350, 
+   "percentage": null, 
+   "number": "10.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1170, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 351, 
+   "percentage": null, 
+   "number": "9.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1171, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 352, 
+   "percentage": null, 
+   "number": "8.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1172, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 353, 
+   "percentage": null, 
+   "number": "7.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1173, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 354, 
+   "percentage": null, 
+   "number": "6.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1174, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 355, 
+   "percentage": null, 
+   "number": "5.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1175, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 356, 
+   "percentage": null, 
+   "number": "4.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1176, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 357, 
+   "percentage": null, 
+   "number": "3.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1177, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 358, 
+   "percentage": null, 
+   "number": "2.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1178, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 359, 
+   "percentage": null, 
+   "number": "1.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1179, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 360, 
+   "percentage": null, 
+   "number": "0.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1180, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 361, 
+   "percentage": null, 
+   "number": "26.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1181, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 362, 
+   "percentage": null, 
+   "number": "25.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1182, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 363, 
+   "percentage": null, 
+   "number": "24.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1183, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 364, 
+   "percentage": null, 
+   "number": "23.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1184, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 365, 
+   "percentage": null, 
+   "number": "22.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1185, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 366, 
+   "percentage": null, 
+   "number": "21.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1186, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 367, 
+   "percentage": null, 
+   "number": "20.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1187, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 368, 
+   "percentage": null, 
+   "number": "19.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1188, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 369, 
+   "percentage": null, 
+   "number": "18.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1189, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 370, 
+   "percentage": null, 
+   "number": "17.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1190, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 371, 
+   "percentage": null, 
+   "number": "16.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1191, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 372, 
+   "percentage": null, 
+   "number": "15.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1192, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 373, 
+   "percentage": null, 
+   "number": "14.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1193, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 374, 
+   "percentage": null, 
+   "number": "13.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1194, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 375, 
+   "percentage": null, 
+   "number": "12.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1195, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 376, 
+   "percentage": null, 
+   "number": "11.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1196, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 377, 
+   "percentage": null, 
+   "number": "10.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1197, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 378, 
+   "percentage": null, 
+   "number": "9.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1198, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 379, 
+   "percentage": null, 
+   "number": "8.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1199, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 380, 
+   "percentage": null, 
+   "number": "7.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1200, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 381, 
+   "percentage": null, 
+   "number": "6.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1201, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 382, 
+   "percentage": null, 
+   "number": "5.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1202, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 383, 
+   "percentage": null, 
+   "number": "4.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1203, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 384, 
+   "percentage": null, 
+   "number": "3.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1204, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 385, 
+   "percentage": null, 
+   "number": "2.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1205, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 386, 
+   "percentage": null, 
+   "number": "1.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1206, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 387, 
+   "percentage": null, 
+   "number": "0.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1207, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 388, 
+   "percentage": null, 
+   "number": "26.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1208, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 389, 
+   "percentage": null, 
+   "number": "25.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1209, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 390, 
+   "percentage": null, 
+   "number": "24.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1210, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 391, 
+   "percentage": null, 
+   "number": "23.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1211, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 392, 
+   "percentage": null, 
+   "number": "22.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1212, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 393, 
+   "percentage": null, 
+   "number": "21.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1213, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 394, 
+   "percentage": null, 
+   "number": "20.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1214, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 395, 
+   "percentage": null, 
+   "number": "19.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1215, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 396, 
+   "percentage": null, 
+   "number": "18.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1216, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 397, 
+   "percentage": null, 
+   "number": "17.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1217, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 398, 
+   "percentage": null, 
+   "number": "16.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1218, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 399, 
+   "percentage": null, 
+   "number": "15.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1219, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 400, 
+   "percentage": null, 
+   "number": "14.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1220, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 401, 
+   "percentage": null, 
+   "number": "13.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1221, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 402, 
+   "percentage": null, 
+   "number": "12.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1222, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 403, 
+   "percentage": null, 
+   "number": "11.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1223, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 404, 
+   "percentage": null, 
+   "number": "10.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1224, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 405, 
+   "percentage": null, 
+   "number": "9.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1225, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 406, 
+   "percentage": null, 
+   "number": "8.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1226, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 407, 
+   "percentage": null, 
+   "number": "7.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1227, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 408, 
+   "percentage": null, 
+   "number": "6.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1228, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 409, 
+   "percentage": null, 
+   "number": "5.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1229, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 410, 
+   "percentage": null, 
+   "number": "4.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1230, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 411, 
+   "percentage": null, 
+   "number": "3.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1231, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 412, 
+   "percentage": null, 
+   "number": "2.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1232, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 413, 
+   "percentage": null, 
+   "number": "1.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1233, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 414, 
+   "percentage": null, 
+   "number": "0.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1234, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 415, 
+   "percentage": null, 
+   "number": "26.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1235, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 416, 
+   "percentage": null, 
+   "number": "25.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1236, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 417, 
+   "percentage": null, 
+   "number": "24.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1237, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 418, 
+   "percentage": null, 
+   "number": "23.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1238, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 419, 
+   "percentage": null, 
+   "number": "22.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1239, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 420, 
+   "percentage": null, 
+   "number": "21.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1240, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 421, 
+   "percentage": null, 
+   "number": "20.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1241, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 422, 
+   "percentage": null, 
+   "number": "19.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1242, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 423, 
+   "percentage": null, 
+   "number": "18.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1243, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 424, 
+   "percentage": null, 
+   "number": "17.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1244, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 425, 
+   "percentage": null, 
+   "number": "16.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1245, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 426, 
+   "percentage": null, 
+   "number": "15.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1246, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 427, 
+   "percentage": null, 
+   "number": "14.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1247, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 428, 
+   "percentage": null, 
+   "number": "13.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1248, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 429, 
+   "percentage": null, 
+   "number": "12.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1249, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 430, 
+   "percentage": null, 
+   "number": "11.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1250, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 431, 
+   "percentage": null, 
+   "number": "10.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1251, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 432, 
+   "percentage": null, 
+   "number": "9.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1252, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 433, 
+   "percentage": null, 
+   "number": "8.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1253, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 434, 
+   "percentage": null, 
+   "number": "7.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1254, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 435, 
+   "percentage": null, 
+   "number": "6.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1255, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 436, 
+   "percentage": null, 
+   "number": "5.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1256, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 437, 
+   "percentage": null, 
+   "number": "4.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1257, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 438, 
+   "percentage": null, 
+   "number": "3.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1258, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 439, 
+   "percentage": null, 
+   "number": "2.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1259, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 440, 
+   "percentage": null, 
+   "number": "1.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1260, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 441, 
+   "percentage": null, 
+   "number": "0.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1261, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 442, 
+   "percentage": null, 
+   "number": "26.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1262, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 443, 
+   "percentage": null, 
+   "number": "25.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1263, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 444, 
+   "percentage": null, 
+   "number": "24.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1264, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 445, 
+   "percentage": null, 
+   "number": "23.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1265, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 446, 
+   "percentage": null, 
+   "number": "22.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1266, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 447, 
+   "percentage": null, 
+   "number": "21.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1267, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 448, 
+   "percentage": null, 
+   "number": "20.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1268, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 449, 
+   "percentage": null, 
+   "number": "19.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1269, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 450, 
+   "percentage": null, 
+   "number": "18.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1270, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 451, 
+   "percentage": null, 
+   "number": "17.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1271, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 452, 
+   "percentage": null, 
+   "number": "16.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1272, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 453, 
+   "percentage": null, 
+   "number": "15.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1273, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 454, 
+   "percentage": null, 
+   "number": "14.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1274, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 455, 
+   "percentage": null, 
+   "number": "13.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1275, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 456, 
+   "percentage": null, 
+   "number": "12.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1276, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 457, 
+   "percentage": null, 
+   "number": "11.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1277, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 458, 
+   "percentage": null, 
+   "number": "10.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1278, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 459, 
+   "percentage": null, 
+   "number": "9.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1279, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 460, 
+   "percentage": null, 
+   "number": "8.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1280, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 461, 
+   "percentage": null, 
+   "number": "7.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1281, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 462, 
+   "percentage": null, 
+   "number": "6.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1282, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 463, 
+   "percentage": null, 
+   "number": "5.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1283, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 464, 
+   "percentage": null, 
+   "number": "4.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1284, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 465, 
+   "percentage": null, 
+   "number": "3.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1285, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 466, 
+   "percentage": null, 
+   "number": "2.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1286, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 467, 
+   "percentage": null, 
+   "number": "1.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1287, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 468, 
+   "percentage": null, 
+   "number": "0.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1288, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 469, 
+   "percentage": null, 
+   "number": "26.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1289, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 470, 
+   "percentage": null, 
+   "number": "25.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1290, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 471, 
+   "percentage": null, 
+   "number": "24.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1291, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 472, 
+   "percentage": null, 
+   "number": "23.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1292, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 473, 
+   "percentage": null, 
+   "number": "22.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1293, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 474, 
+   "percentage": null, 
+   "number": "21.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1294, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 475, 
+   "percentage": null, 
+   "number": "20.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1295, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 476, 
+   "percentage": null, 
+   "number": "19.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1296, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 477, 
+   "percentage": null, 
+   "number": "18.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1297, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 478, 
+   "percentage": null, 
+   "number": "17.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1298, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 479, 
+   "percentage": null, 
+   "number": "16.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1299, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 480, 
+   "percentage": null, 
+   "number": "15.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1300, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 481, 
+   "percentage": null, 
+   "number": "14.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1301, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 482, 
+   "percentage": null, 
+   "number": "13.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1302, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 483, 
+   "percentage": null, 
+   "number": "12.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1303, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 484, 
+   "percentage": null, 
+   "number": "11.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1304, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 485, 
+   "percentage": null, 
+   "number": "10.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1305, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 486, 
+   "percentage": null, 
+   "number": "9.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1306, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 487, 
+   "percentage": null, 
+   "number": "8.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1307, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 488, 
+   "percentage": null, 
+   "number": "7.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1308, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 489, 
+   "percentage": null, 
+   "number": "6.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1309, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 490, 
+   "percentage": null, 
+   "number": "5.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1310, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 491, 
+   "percentage": null, 
+   "number": "4.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1311, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 492, 
+   "percentage": null, 
+   "number": "3.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1312, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 493, 
+   "percentage": null, 
+   "number": "2.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1313, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 494, 
+   "percentage": null, 
+   "number": "1.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1314, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 495, 
+   "percentage": null, 
+   "number": "0.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1315, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 496, 
+   "percentage": null, 
+   "number": "26.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1316, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 497, 
+   "percentage": null, 
+   "number": "25.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1317, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 498, 
+   "percentage": null, 
+   "number": "24.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1318, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 499, 
+   "percentage": null, 
+   "number": "23.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1319, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 500, 
+   "percentage": null, 
+   "number": "22.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1320, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 501, 
+   "percentage": null, 
+   "number": "21.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1321, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 502, 
+   "percentage": null, 
+   "number": "20.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1322, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 503, 
+   "percentage": null, 
+   "number": "19.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1323, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 504, 
+   "percentage": null, 
+   "number": "18.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1324, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 505, 
+   "percentage": null, 
+   "number": "17.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1325, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 506, 
+   "percentage": null, 
+   "number": "16.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1326, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 507, 
+   "percentage": null, 
+   "number": "15.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1327, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 508, 
+   "percentage": null, 
+   "number": "14.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1328, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 509, 
+   "percentage": null, 
+   "number": "13.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1329, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 510, 
+   "percentage": null, 
+   "number": "12.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1330, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 511, 
+   "percentage": null, 
+   "number": "11.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1331, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 512, 
+   "percentage": null, 
+   "number": "10.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1332, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 513, 
+   "percentage": null, 
+   "number": "9.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1333, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 514, 
+   "percentage": null, 
+   "number": "8.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1334, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 515, 
+   "percentage": null, 
+   "number": "7.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1335, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 516, 
+   "percentage": null, 
+   "number": "6.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1336, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 517, 
+   "percentage": null, 
+   "number": "5.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1337, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 518, 
+   "percentage": null, 
+   "number": "4.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1338, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 519, 
+   "percentage": null, 
+   "number": "3.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1339, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 520, 
+   "percentage": null, 
+   "number": "2.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1340, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 521, 
+   "percentage": null, 
+   "number": "1.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1341, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 522, 
+   "percentage": null, 
+   "number": "0.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1342, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 523, 
+   "percentage": null, 
+   "number": "26.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1343, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 524, 
+   "percentage": null, 
+   "number": "25.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1344, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 525, 
+   "percentage": null, 
+   "number": "24.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1345, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 526, 
+   "percentage": null, 
+   "number": "23.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1346, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 527, 
+   "percentage": null, 
+   "number": "22.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1347, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 528, 
+   "percentage": null, 
+   "number": "21.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1348, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 529, 
+   "percentage": null, 
+   "number": "20.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1349, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 530, 
+   "percentage": null, 
+   "number": "19.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1350, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 531, 
+   "percentage": null, 
+   "number": "18.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1351, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 532, 
+   "percentage": null, 
+   "number": "17.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1352, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 533, 
+   "percentage": null, 
+   "number": "16.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1353, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 534, 
+   "percentage": null, 
+   "number": "15.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1354, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 535, 
+   "percentage": null, 
+   "number": "14.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1355, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 536, 
+   "percentage": null, 
+   "number": "13.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1356, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 537, 
+   "percentage": null, 
+   "number": "12.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1357, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 538, 
+   "percentage": null, 
+   "number": "11.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1358, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 539, 
+   "percentage": null, 
+   "number": "10.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1359, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 540, 
+   "percentage": null, 
+   "number": "9.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1360, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 541, 
+   "percentage": null, 
+   "number": "8.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1361, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 542, 
+   "percentage": null, 
+   "number": "7.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1362, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 543, 
+   "percentage": null, 
+   "number": "6.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1363, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 544, 
+   "percentage": null, 
+   "number": "5.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1364, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 545, 
+   "percentage": null, 
+   "number": "4.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1365, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 546, 
+   "percentage": null, 
+   "number": "3.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1366, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 547, 
+   "percentage": null, 
+   "number": "2.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1367, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 548, 
+   "percentage": null, 
+   "number": "1.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1368, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 549, 
+   "percentage": null, 
+   "number": "0.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1369, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 550, 
+   "percentage": null, 
+   "number": "26.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1370, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 551, 
+   "percentage": null, 
+   "number": "25.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1371, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 552, 
+   "percentage": null, 
+   "number": "24.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1372, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 553, 
+   "percentage": null, 
+   "number": "23.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1373, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 554, 
+   "percentage": null, 
+   "number": "22.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1374, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 555, 
+   "percentage": null, 
+   "number": "21.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1375, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 556, 
+   "percentage": null, 
+   "number": "20.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1376, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 557, 
+   "percentage": null, 
+   "number": "19.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1377, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 558, 
+   "percentage": null, 
+   "number": "18.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1378, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 559, 
+   "percentage": null, 
+   "number": "17.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1379, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 560, 
+   "percentage": null, 
+   "number": "16.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1380, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 561, 
+   "percentage": null, 
+   "number": "15.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1381, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 562, 
+   "percentage": null, 
+   "number": "14.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1382, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 563, 
+   "percentage": null, 
+   "number": "13.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1383, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 564, 
+   "percentage": null, 
+   "number": "12.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1384, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 565, 
+   "percentage": null, 
+   "number": "11.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1385, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 566, 
+   "percentage": null, 
+   "number": "10.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1386, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 567, 
+   "percentage": null, 
+   "number": "9.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1387, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 568, 
+   "percentage": null, 
+   "number": "8.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1388, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 569, 
+   "percentage": null, 
+   "number": "7.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1389, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 570, 
+   "percentage": null, 
+   "number": "6.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1390, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 571, 
+   "percentage": null, 
+   "number": "5.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1391, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 572, 
+   "percentage": null, 
+   "number": "4.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1392, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 573, 
+   "percentage": null, 
+   "number": "3.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1393, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 574, 
+   "percentage": null, 
+   "number": "2.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1394, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 575, 
+   "percentage": null, 
+   "number": "1.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1395, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 576, 
+   "percentage": null, 
+   "number": "0.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1396, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 577, 
+   "percentage": null, 
+   "number": "26.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1397, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 578, 
+   "percentage": null, 
+   "number": "25.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1398, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 579, 
+   "percentage": null, 
+   "number": "24.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1399, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 580, 
+   "percentage": null, 
+   "number": "23.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1400, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 581, 
+   "percentage": null, 
+   "number": "22.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1401, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 582, 
+   "percentage": null, 
+   "number": "21.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1402, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 583, 
+   "percentage": null, 
+   "number": "20.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1403, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 584, 
+   "percentage": null, 
+   "number": "19.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1404, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 585, 
+   "percentage": null, 
+   "number": "18.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1405, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 586, 
+   "percentage": null, 
+   "number": "17.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1406, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 587, 
+   "percentage": null, 
+   "number": "16.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1407, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 588, 
+   "percentage": null, 
+   "number": "15.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1408, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 589, 
+   "percentage": null, 
+   "number": "14.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1409, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 590, 
+   "percentage": null, 
+   "number": "13.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1410, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 591, 
+   "percentage": null, 
+   "number": "12.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1411, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 592, 
+   "percentage": null, 
+   "number": "11.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1412, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 593, 
+   "percentage": null, 
+   "number": "10.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1413, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 594, 
+   "percentage": null, 
+   "number": "9.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1414, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 595, 
+   "percentage": null, 
+   "number": "8.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1415, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 596, 
+   "percentage": null, 
+   "number": "7.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1416, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 597, 
+   "percentage": null, 
+   "number": "6.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1417, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 598, 
+   "percentage": null, 
+   "number": "5.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1418, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 599, 
+   "percentage": null, 
+   "number": "4.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1419, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 600, 
+   "percentage": null, 
+   "number": "3.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1420, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 601, 
+   "percentage": null, 
+   "number": "2.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1421, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 602, 
+   "percentage": null, 
+   "number": "1.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1422, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 603, 
+   "percentage": null, 
+   "number": "0.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1423, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 604, 
+   "percentage": null, 
+   "number": "26.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1424, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 605, 
+   "percentage": null, 
+   "number": "25.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1425, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 606, 
+   "percentage": null, 
+   "number": "24.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1426, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 607, 
+   "percentage": null, 
+   "number": "23.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1427, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 608, 
+   "percentage": null, 
+   "number": "22.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1428, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 609, 
+   "percentage": null, 
+   "number": "21.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1429, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 610, 
+   "percentage": null, 
+   "number": "20.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1430, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 611, 
+   "percentage": null, 
+   "number": "19.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1431, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 612, 
+   "percentage": null, 
+   "number": "18.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1432, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 613, 
+   "percentage": null, 
+   "number": "17.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1433, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 614, 
+   "percentage": null, 
+   "number": "16.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1434, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 615, 
+   "percentage": null, 
+   "number": "15.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1435, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 616, 
+   "percentage": null, 
+   "number": "14.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1436, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 617, 
+   "percentage": null, 
+   "number": "13.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1437, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 618, 
+   "percentage": null, 
+   "number": "12.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1438, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 619, 
+   "percentage": null, 
+   "number": "11.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1439, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 620, 
+   "percentage": null, 
+   "number": "10.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1440, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 621, 
+   "percentage": null, 
+   "number": "9.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1441, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 622, 
+   "percentage": null, 
+   "number": "8.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1442, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 623, 
+   "percentage": null, 
+   "number": "7.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1443, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 624, 
+   "percentage": null, 
+   "number": "6.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1444, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 625, 
+   "percentage": null, 
+   "number": "5.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1445, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 626, 
+   "percentage": null, 
+   "number": "4.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1446, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 627, 
+   "percentage": null, 
+   "number": "3.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1447, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 628, 
+   "percentage": null, 
+   "number": "2.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1448, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 629, 
+   "percentage": null, 
+   "number": "1.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1449, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 630, 
+   "percentage": null, 
+   "number": "0.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1450, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 631, 
+   "percentage": null, 
+   "number": "26.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1451, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 632, 
+   "percentage": null, 
+   "number": "25.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1452, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 633, 
+   "percentage": null, 
+   "number": "24.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1453, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 634, 
+   "percentage": null, 
+   "number": "23.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1454, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 635, 
+   "percentage": null, 
+   "number": "22.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1455, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 636, 
+   "percentage": null, 
+   "number": "21.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1456, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 637, 
+   "percentage": null, 
+   "number": "20.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1457, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 638, 
+   "percentage": null, 
+   "number": "19.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1458, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 639, 
+   "percentage": null, 
+   "number": "18.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1459, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 640, 
+   "percentage": null, 
+   "number": "17.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1460, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 641, 
+   "percentage": null, 
+   "number": "16.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1461, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 642, 
+   "percentage": null, 
+   "number": "15.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1462, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 643, 
+   "percentage": null, 
+   "number": "14.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1463, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 644, 
+   "percentage": null, 
+   "number": "13.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1464, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 645, 
+   "percentage": null, 
+   "number": "12.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1465, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 646, 
+   "percentage": null, 
+   "number": "11.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1466, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 647, 
+   "percentage": null, 
+   "number": "10.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1467, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 648, 
+   "percentage": null, 
+   "number": "9.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1468, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 649, 
+   "percentage": null, 
+   "number": "8.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1469, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 650, 
+   "percentage": null, 
+   "number": "7.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1470, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 651, 
+   "percentage": null, 
+   "number": "6.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1471, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 652, 
+   "percentage": null, 
+   "number": "5.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1472, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 653, 
+   "percentage": null, 
+   "number": "4.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1473, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 654, 
+   "percentage": null, 
+   "number": "3.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1474, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 655, 
+   "percentage": null, 
+   "number": "2.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1475, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 656, 
+   "percentage": null, 
+   "number": "1.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1476, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 657, 
+   "percentage": null, 
+   "number": "0.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1477, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 658, 
+   "percentage": null, 
+   "number": "26.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1478, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 659, 
+   "percentage": null, 
+   "number": "25.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1479, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 660, 
+   "percentage": null, 
+   "number": "24.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1480, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 661, 
+   "percentage": null, 
+   "number": "23.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1481, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 662, 
+   "percentage": null, 
+   "number": "22.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1482, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 663, 
+   "percentage": null, 
+   "number": "21.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1483, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 664, 
+   "percentage": null, 
+   "number": "20.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1484, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 665, 
+   "percentage": null, 
+   "number": "19.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1485, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 666, 
+   "percentage": null, 
+   "number": "18.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1486, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 667, 
+   "percentage": null, 
+   "number": "17.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1487, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 668, 
+   "percentage": null, 
+   "number": "16.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1488, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 669, 
+   "percentage": null, 
+   "number": "15.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1489, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 670, 
+   "percentage": null, 
+   "number": "14.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1490, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 671, 
+   "percentage": null, 
+   "number": "13.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1491, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 672, 
+   "percentage": null, 
+   "number": "12.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1492, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 673, 
+   "percentage": null, 
+   "number": "11.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1493, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 674, 
+   "percentage": null, 
+   "number": "10.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1494, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 675, 
+   "percentage": null, 
+   "number": "9.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1495, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 676, 
+   "percentage": null, 
+   "number": "8.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1496, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 677, 
+   "percentage": null, 
+   "number": "7.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1497, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 678, 
+   "percentage": null, 
+   "number": "6.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1498, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 679, 
+   "percentage": null, 
+   "number": "5.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1499, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 680, 
+   "percentage": null, 
+   "number": "4.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1500, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 681, 
+   "percentage": null, 
+   "number": "3.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1501, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 682, 
+   "percentage": null, 
+   "number": "2.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1502, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 683, 
+   "percentage": null, 
+   "number": "1.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1503, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 684, 
+   "percentage": null, 
+   "number": "0.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1504, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 685, 
+   "percentage": null, 
+   "number": "26.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1505, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 686, 
+   "percentage": null, 
+   "number": "25.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1506, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 687, 
+   "percentage": null, 
+   "number": "24.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1507, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 688, 
+   "percentage": null, 
+   "number": "23.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1508, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 689, 
+   "percentage": null, 
+   "number": "22.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1509, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 690, 
+   "percentage": null, 
+   "number": "21.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1510, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 691, 
+   "percentage": null, 
+   "number": "20.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1511, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 692, 
+   "percentage": null, 
+   "number": "19.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1512, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 693, 
+   "percentage": null, 
+   "number": "18.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1513, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 694, 
+   "percentage": null, 
+   "number": "17.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1514, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 695, 
+   "percentage": null, 
+   "number": "16.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1515, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 696, 
+   "percentage": null, 
+   "number": "15.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1516, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 697, 
+   "percentage": null, 
+   "number": "14.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1517, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 698, 
+   "percentage": null, 
+   "number": "13.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1518, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 699, 
+   "percentage": null, 
+   "number": "12.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1519, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 700, 
+   "percentage": null, 
+   "number": "11.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1520, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 701, 
+   "percentage": null, 
+   "number": "10.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1521, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 702, 
+   "percentage": null, 
+   "number": "9.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1522, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 703, 
+   "percentage": null, 
+   "number": "8.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1523, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 704, 
+   "percentage": null, 
+   "number": "7.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1524, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 705, 
+   "percentage": null, 
+   "number": "6.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1525, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 706, 
+   "percentage": null, 
+   "number": "5.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1526, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 707, 
+   "percentage": null, 
+   "number": "4.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1527, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 708, 
+   "percentage": null, 
+   "number": "3.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1528, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 709, 
+   "percentage": null, 
+   "number": "2.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1529, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 710, 
+   "percentage": null, 
+   "number": "1.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1530, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 711, 
+   "percentage": null, 
+   "number": "0.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1531, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 712, 
+   "percentage": null, 
+   "number": "26.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1532, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 713, 
+   "percentage": null, 
+   "number": "25.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1533, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 714, 
+   "percentage": null, 
+   "number": "24.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1534, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 715, 
+   "percentage": null, 
+   "number": "23.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1535, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 716, 
+   "percentage": null, 
+   "number": "22.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1536, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 717, 
+   "percentage": null, 
+   "number": "21.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1537, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 718, 
+   "percentage": null, 
+   "number": "20.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1538, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 719, 
+   "percentage": null, 
+   "number": "19.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1539, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 720, 
+   "percentage": null, 
+   "number": "18.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1540, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 721, 
+   "percentage": null, 
+   "number": "17.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1541, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 722, 
+   "percentage": null, 
+   "number": "16.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1542, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 723, 
+   "percentage": null, 
+   "number": "15.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1543, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 724, 
+   "percentage": null, 
+   "number": "14.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1544, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 725, 
+   "percentage": null, 
+   "number": "13.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1545, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 726, 
+   "percentage": null, 
+   "number": "12.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1546, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 727, 
+   "percentage": null, 
+   "number": "11.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1547, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 728, 
+   "percentage": null, 
+   "number": "10.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1548, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 729, 
+   "percentage": null, 
+   "number": "9.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1549, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 730, 
+   "percentage": null, 
+   "number": "8.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1550, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 731, 
+   "percentage": null, 
+   "number": "7.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1551, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 732, 
+   "percentage": null, 
+   "number": "6.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1552, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 733, 
+   "percentage": null, 
+   "number": "5.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1553, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 734, 
+   "percentage": null, 
+   "number": "4.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1554, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 735, 
+   "percentage": null, 
+   "number": "3.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1555, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 736, 
+   "percentage": null, 
+   "number": "2.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1556, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 737, 
+   "percentage": null, 
+   "number": "1.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1557, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 738, 
+   "percentage": null, 
+   "number": "0.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1558, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 739, 
+   "percentage": null, 
+   "number": "26.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1559, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 740, 
+   "percentage": null, 
+   "number": "25.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1560, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 741, 
+   "percentage": null, 
+   "number": "24.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1561, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 742, 
+   "percentage": null, 
+   "number": "23.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1562, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 743, 
+   "percentage": null, 
+   "number": "22.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1563, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 744, 
+   "percentage": null, 
+   "number": "21.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1564, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 745, 
+   "percentage": null, 
+   "number": "20.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1565, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 746, 
+   "percentage": null, 
+   "number": "19.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1566, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 747, 
+   "percentage": null, 
+   "number": "18.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1567, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 748, 
+   "percentage": null, 
+   "number": "17.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1568, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 749, 
+   "percentage": null, 
+   "number": "16.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1569, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 750, 
+   "percentage": null, 
+   "number": "15.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1570, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 751, 
+   "percentage": null, 
+   "number": "14.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1571, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 752, 
+   "percentage": null, 
+   "number": "13.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1572, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 753, 
+   "percentage": null, 
+   "number": "12.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1573, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 754, 
+   "percentage": null, 
+   "number": "11.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1574, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 755, 
+   "percentage": null, 
+   "number": "10.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1575, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 756, 
+   "percentage": null, 
+   "number": "9.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1576, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 757, 
+   "percentage": null, 
+   "number": "8.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1577, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 758, 
+   "percentage": null, 
+   "number": "7.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1578, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 759, 
+   "percentage": null, 
+   "number": "6.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1579, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 760, 
+   "percentage": null, 
+   "number": "5.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1580, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 761, 
+   "percentage": null, 
+   "number": "4.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1581, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 762, 
+   "percentage": null, 
+   "number": "3.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1582, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 763, 
+   "percentage": null, 
+   "number": "2.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1583, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 764, 
+   "percentage": null, 
+   "number": "1.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1584, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 765, 
+   "percentage": null, 
+   "number": "0.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1585, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 766, 
+   "percentage": null, 
+   "number": "26.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1586, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 767, 
+   "percentage": null, 
+   "number": "25.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1587, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 768, 
+   "percentage": null, 
+   "number": "24.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1588, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 769, 
+   "percentage": null, 
+   "number": "23.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1589, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 770, 
+   "percentage": null, 
+   "number": "22.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1590, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 771, 
+   "percentage": null, 
+   "number": "21.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1591, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 772, 
+   "percentage": null, 
+   "number": "20.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1592, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 773, 
+   "percentage": null, 
+   "number": "19.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1593, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 774, 
+   "percentage": null, 
+   "number": "18.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1594, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 775, 
+   "percentage": null, 
+   "number": "17.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1595, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 776, 
+   "percentage": null, 
+   "number": "16.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1596, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 777, 
+   "percentage": null, 
+   "number": "15.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1597, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 778, 
+   "percentage": null, 
+   "number": "14.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1598, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 779, 
+   "percentage": null, 
+   "number": "13.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1599, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 780, 
+   "percentage": null, 
+   "number": "12.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1600, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 781, 
+   "percentage": null, 
+   "number": "11.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1601, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 782, 
+   "percentage": null, 
+   "number": "10.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1602, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 783, 
+   "percentage": null, 
+   "number": "9.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1603, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 784, 
+   "percentage": null, 
+   "number": "8.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1604, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 785, 
+   "percentage": null, 
+   "number": "7.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1605, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 786, 
+   "percentage": null, 
+   "number": "6.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1606, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 787, 
+   "percentage": null, 
+   "number": "5.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1607, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 788, 
+   "percentage": null, 
+   "number": "4.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1608, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 789, 
+   "percentage": null, 
+   "number": "3.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1609, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 790, 
+   "percentage": null, 
+   "number": "2.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1610, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 791, 
+   "percentage": null, 
+   "number": "1.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1611, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 792, 
+   "percentage": null, 
+   "number": "0.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1612, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 793, 
+   "percentage": null, 
+   "number": "26.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1613, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 794, 
+   "percentage": null, 
+   "number": "25.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1614, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 795, 
+   "percentage": null, 
+   "number": "24.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1615, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 796, 
+   "percentage": null, 
+   "number": "23.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1616, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 797, 
+   "percentage": null, 
+   "number": "22.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1617, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 798, 
+   "percentage": null, 
+   "number": "21.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1618, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 799, 
+   "percentage": null, 
+   "number": "20.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1619, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 800, 
+   "percentage": null, 
+   "number": "19.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1620, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 801, 
+   "percentage": null, 
+   "number": "18.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1621, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 802, 
+   "percentage": null, 
+   "number": "17.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1622, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 803, 
+   "percentage": null, 
+   "number": "16.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1623, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 804, 
+   "percentage": null, 
+   "number": "15.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1624, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 805, 
+   "percentage": null, 
+   "number": "14.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1625, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 806, 
+   "percentage": null, 
+   "number": "13.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1626, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 807, 
+   "percentage": null, 
+   "number": "12.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1627, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 808, 
+   "percentage": null, 
+   "number": "11.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1628, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 809, 
+   "percentage": null, 
+   "number": "10.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1629, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 810, 
+   "percentage": null, 
+   "number": "9.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1630, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 811, 
+   "percentage": null, 
+   "number": "8.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1631, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 812, 
+   "percentage": null, 
+   "number": "7.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1632, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 813, 
+   "percentage": null, 
+   "number": "6.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1633, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 814, 
+   "percentage": null, 
+   "number": "5.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1634, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 815, 
+   "percentage": null, 
+   "number": "4.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1635, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 816, 
+   "percentage": null, 
+   "number": "3.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1636, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 817, 
+   "percentage": null, 
+   "number": "2.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1637, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 818, 
+   "percentage": null, 
+   "number": "1.0000", 
+   "subject": 2
+  }
+ }, 
+ {
+  "pk": 1638, 
+  "model": "redistricting.characteristic", 
+  "fields": {
+   "geounit": 819, 
+   "percentage": null, 
+   "number": "0.0000", 
+   "subject": 2
+  }
+ }, 
+ {
   "pk": 1, 
   "model": "redistricting.target", 
   "fields": {
@@ -20089,10 +28301,20 @@
   }
  }, 
  {
+  "pk": 2, 
+  "model": "redistricting.target", 
+  "fields": {
+   "range2": "0.2000", 
+   "range1": "0.1000", 
+   "value": "5.0000", 
+   "subject": 2
+  }
+ }, 
+ {
   "pk": 1, 
   "model": "redistricting.plan", 
   "fields": {
-   "edited": "2011-03-02 12:41:31", 
+   "edited": "2011-03-02 18:58:30", 
    "is_shared": false, 
    "created": "2011-03-02 12:41:31", 
    "description": "", 
@@ -21113,10 +29335,10 @@
    "is_active": true, 
    "is_superuser": false, 
    "is_staff": false, 
-   "last_login": "2011-03-02 12:41:31", 
+   "last_login": "2011-03-02 18:43:12", 
    "groups": [], 
    "user_permissions": [], 
-   "password": "sha1$1658f$c99b5d9ed5043e41d6aa87e874f524f790083a39", 
+   "password": "sha1$55d95$8d6ad9466271e588d9fc6bfce3212e5a66a62ba6", 
    "email": "", 
    "date_joined": "2011-03-02 12:41:31"
   }

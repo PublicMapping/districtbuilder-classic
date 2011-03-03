@@ -59,7 +59,8 @@ class BaseTestCase(TestCase):
         self.geolevels = list(self.geolevels)
 
         # create a Subject
-        self.subject = Subject.objects.get(name='TestSubject')
+        self.subject1 = Subject.objects.get(name='TestSubject')
+        self.subject2 = Subject.objects.get(name='TestSubject2')
         
         self.geounits = {}
 
@@ -76,7 +77,7 @@ class BaseTestCase(TestCase):
         self.legbod = LegislativeBody.objects.get(name='TestLegislativeBody')
 
         # create a Target
-        self.target = Target.objects.get(subject=self.subject)
+        self.target = Target.objects.get(subject=self.subject1)
 
         # create a LegislativeDefault
         self.legdef = LegislativeDefault.objects.get(legislative_body=self.legbod, target=self.target)
@@ -208,7 +209,7 @@ class ScoringTestCase(BaseTestCase):
         sumMixedFunction.save()
 
         # create the arguments
-        ScoreArgument(function=sumMixedFunction, argument='value1', value=self.subject.name, type='subject').save()
+        ScoreArgument(function=sumMixedFunction, argument='value1', value=self.subject1.name, type='subject').save()
         ScoreArgument(function=sumMixedFunction, argument='value2', value='5.0', type='literal').save()
 
         # test raw value
@@ -499,7 +500,7 @@ class PlanTestCase(BaseTestCase):
         district2.is_locked = True
         district2.save()
 
-        districtpre_computed = ComputedCharacteristic.objects.filter(district__in=[district1,district2,district3],subject=self.subject).order_by('district').values_list('number',flat=True)
+        districtpre_computed = ComputedCharacteristic.objects.filter(district__in=[district1,district2,district3],subject=self.subject1).order_by('district').values_list('number',flat=True)
         presum = 0;
         for pre in districtpre_computed:
             presum += pre
@@ -511,7 +512,7 @@ class PlanTestCase(BaseTestCase):
         district2 = max(District.objects.filter(plan=self.plan,district_id=self.district2.district_id),key=lambda d: d.version)
         district3 = max(District.objects.filter(plan=self.plan,district_id=district3.district_id),key=lambda d: d.version)
 
-        districtpost_computed = ComputedCharacteristic.objects.filter(district__in=[district1,district2,district3],subject=self.subject).order_by('district').values_list('number',flat=True)
+        districtpost_computed = ComputedCharacteristic.objects.filter(district__in=[district1,district2,district3],subject=self.subject1).order_by('district').values_list('number',flat=True)
         postsum = 0;
         for post in districtpost_computed:
             postsum += post
@@ -1036,7 +1037,7 @@ class CalculatorCase(BaseTestCase):
         geounits = self.geounits[geolevelid]
 
         dist1ids = geounits[0:3] + geounits[9:12]
-        exqset = Characteristic.objects.filter(geounit__in=dist1ids,subject=self.subject)
+        exqset = Characteristic.objects.filter(geounit__in=dist1ids,subject=self.subject1)
         expected = float(exqset.aggregate(SumAgg('number'))['number__sum']) + 5.0
 
         dist1ids = map(lambda x: str(x.id), dist1ids)
@@ -1045,7 +1046,7 @@ class CalculatorCase(BaseTestCase):
         district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
 
         sumcalc = Sum()
-        sumcalc.arg_dict['value1'] = ('subject',self.subject.name,)
+        sumcalc.arg_dict['value1'] = ('subject',self.subject1.name,)
         sumcalc.arg_dict['value2'] = ('literal','5.0',)
         sumcalc.compute(district=district1)
 
@@ -1058,7 +1059,7 @@ class CalculatorCase(BaseTestCase):
         geounits = self.geounits[geolevelid]
 
         dist1ids = geounits[0:3] + geounits[9:12]
-        exqset = Characteristic.objects.filter(geounit__in=dist1ids,subject=self.subject)
+        exqset = Characteristic.objects.filter(geounit__in=dist1ids,subject=self.subject1)
         expected = float(exqset.aggregate(SumAgg('number'))['number__sum'])
 
         dist1ids = map(lambda x: str(x.id), dist1ids)
@@ -1067,7 +1068,7 @@ class CalculatorCase(BaseTestCase):
         district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
 
         sumcalc = Sum()
-        sumcalc.arg_dict['value1'] = ('subject',self.subject.name,)
+        sumcalc.arg_dict['value1'] = ('subject',self.subject1.name,)
         sumcalc.compute(district=district1)
 
         actual = sumcalc.result
@@ -1080,7 +1081,7 @@ class CalculatorCase(BaseTestCase):
 
         dist1ids = geounits[0:3] + geounits[9:12]
         dist2ids = geounits[18:21] + geounits[27:30] + geounits[36:39]
-        exqset = Characteristic.objects.filter(geounit__in=dist1ids+dist2ids,subject=self.subject)
+        exqset = Characteristic.objects.filter(geounit__in=dist1ids+dist2ids,subject=self.subject1)
         expected = float(exqset.aggregate(SumAgg('number'))['number__sum'])
 
         dist1ids = map(lambda x: str(x.id), dist1ids)
@@ -1090,7 +1091,7 @@ class CalculatorCase(BaseTestCase):
         self.plan.add_geounits( self.district2.district_id, dist2ids, geolevelid, self.plan.version)
 
         sumcalc = Sum()
-        sumcalc.arg_dict['value1'] = ('subject',self.subject.name,)
+        sumcalc.arg_dict['value1'] = ('subject',self.subject1.name,)
         sumcalc.compute(plan=self.plan)
 
         actual = sumcalc.result
@@ -1119,7 +1120,7 @@ class CalculatorCase(BaseTestCase):
         geounits = self.geounits[geolevelid]
 
         dist1ids = geounits[0:3] + geounits[9:12]
-        exqset = Characteristic.objects.filter(geounit__in=dist1ids,subject=self.subject)
+        exqset = Characteristic.objects.filter(geounit__in=dist1ids,subject=self.subject1)
         expected = float(exqset.aggregate(SumAgg('number'))['number__sum']) / 10.0
 
         dist1ids = map(lambda x: str(x.id), dist1ids)
@@ -1128,7 +1129,7 @@ class CalculatorCase(BaseTestCase):
         district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
 
         pctcalc = Percent()
-        pctcalc.arg_dict['numerator'] = ('subject',self.subject.name,)
+        pctcalc.arg_dict['numerator'] = ('subject',self.subject1.name,)
         pctcalc.arg_dict['denominator'] = ('literal','10.0',)
         pctcalc.compute(district=district1)
 
@@ -1142,7 +1143,7 @@ class CalculatorCase(BaseTestCase):
 
         dist1ids = geounits[0:3] + geounits[9:12]
         dist2ids = geounits[18:21] + geounits[27:30] + geounits[36:39]
-        exqset = Characteristic.objects.filter(geounit__in=dist1ids+dist2ids,subject=self.subject)
+        exqset = Characteristic.objects.filter(geounit__in=dist1ids+dist2ids,subject=self.subject1)
         expected = float(exqset.aggregate(SumAgg('number'))['number__sum']) / 20.0
 
         dist1ids = map(lambda x: str(x.id), dist1ids)
@@ -1152,7 +1153,7 @@ class CalculatorCase(BaseTestCase):
         self.plan.add_geounits( self.district2.district_id, dist2ids, geolevelid, self.plan.version)
 
         pctcalc = Percent()
-        pctcalc.arg_dict['numerator'] = ('subject',self.subject.name,)
+        pctcalc.arg_dict['numerator'] = ('subject',self.subject1.name,)
         pctcalc.arg_dict['denominator'] = ('literal','10.0',)
         pctcalc.compute(plan=self.plan)
 
@@ -1173,8 +1174,8 @@ class CalculatorCase(BaseTestCase):
         self.plan.add_geounits( self.district2.district_id, dist2ids, geolevelid, self.plan.version)
 
         pctcalc = Percent()
-        pctcalc.arg_dict['numerator'] = ('subject',self.subject.name,)
-        pctcalc.arg_dict['denominator'] = ('subject',self.subject.name,)
+        pctcalc.arg_dict['numerator'] = ('subject',self.subject1.name,)
+        pctcalc.arg_dict['denominator'] = ('subject',self.subject1.name,)
         pctcalc.compute(plan=self.plan)
 
         actual = pctcalc.result
@@ -1203,7 +1204,7 @@ class CalculatorCase(BaseTestCase):
         geounits = self.geounits[geolevelid]
 
         dist1ids = geounits[0:3] + geounits[9:12]
-        exqset = Characteristic.objects.filter(geounit__in=dist1ids,subject=self.subject)
+        exqset = Characteristic.objects.filter(geounit__in=dist1ids,subject=self.subject1)
         expected = float(exqset.aggregate(SumAgg('number'))['number__sum']) > 10.0
         expected = 1 if expected else 0
 
@@ -1213,7 +1214,7 @@ class CalculatorCase(BaseTestCase):
         district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
 
         thrcalc = Threshold()
-        thrcalc.arg_dict['value'] = ('subject',self.subject.name,)
+        thrcalc.arg_dict['value'] = ('subject',self.subject1.name,)
         thrcalc.arg_dict['threshold'] = ('literal','10.0',)
         thrcalc.compute(district=district1)
 
@@ -1226,7 +1227,7 @@ class CalculatorCase(BaseTestCase):
         geounits = self.geounits[geolevelid]
 
         dist1ids = geounits[0:3] + geounits[9:12]
-        exqset = Characteristic.objects.filter(geounit__in=dist1ids,subject=self.subject)
+        exqset = Characteristic.objects.filter(geounit__in=dist1ids,subject=self.subject1)
         expected = float(exqset.aggregate(SumAgg('number'))['number__sum']) > 5.0
         expected = 1 if expected else 0
 
@@ -1236,7 +1237,7 @@ class CalculatorCase(BaseTestCase):
         district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
 
         thrcalc = Threshold()
-        thrcalc.arg_dict['value'] = ('subject',self.subject.name,)
+        thrcalc.arg_dict['value'] = ('subject',self.subject1.name,)
         thrcalc.arg_dict['threshold'] = ('literal','5.0',)
         thrcalc.compute(district=district1)
 
@@ -1267,7 +1268,7 @@ class CalculatorCase(BaseTestCase):
         geounits = self.geounits[geolevelid]
 
         dist1ids = geounits[0:3] + geounits[9:12]
-        exqset = Characteristic.objects.filter(geounit__in=dist1ids,subject=self.subject)
+        exqset = Characteristic.objects.filter(geounit__in=dist1ids,subject=self.subject1)
         expected = float(exqset.aggregate(SumAgg('number'))['number__sum'])
         expected = 1 if 5.0 < expected and expected < 10.0 else 0
 
@@ -1277,7 +1278,7 @@ class CalculatorCase(BaseTestCase):
         district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
 
         rngcalc = Range()
-        rngcalc.arg_dict['value'] = ('subject',self.subject.name,)
+        rngcalc.arg_dict['value'] = ('subject',self.subject1.name,)
         rngcalc.arg_dict['min'] = ('literal','5.0',)
         rngcalc.arg_dict['max'] = ('literal','10.0',)
         rngcalc.compute(district=district1)
@@ -1291,7 +1292,7 @@ class CalculatorCase(BaseTestCase):
         geounits = self.geounits[geolevelid]
 
         dist1ids = geounits[0:3] + geounits[9:12]
-        exqset = Characteristic.objects.filter(geounit__in=dist1ids,subject=self.subject)
+        exqset = Characteristic.objects.filter(geounit__in=dist1ids,subject=self.subject1)
         expected = float(exqset.aggregate(SumAgg('number'))['number__sum'])
         expected = 1 if 1.0 < expected and expected < 5.0 else 0
 
@@ -1301,7 +1302,7 @@ class CalculatorCase(BaseTestCase):
         district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
 
         rngcalc = Range()
-        rngcalc.arg_dict['value'] = ('subject',self.subject.name,)
+        rngcalc.arg_dict['value'] = ('subject',self.subject1.name,)
         rngcalc.arg_dict['min'] = ('literal','1.0',)
         rngcalc.arg_dict['max'] = ('literal','5.0',)
         rngcalc.compute(district=district1)
@@ -1359,9 +1360,43 @@ class CalculatorCase(BaseTestCase):
         self.plan.add_geounits( self.district2.district_id, dist2ids, geolevelid, self.plan.version)
 
         equcalc = Equivalence()
-        equcalc.arg_dict['value'] = ('subject',self.subject.name,)
+        equcalc.arg_dict['value'] = ('subject',self.subject1.name,)
         equcalc.compute(plan=self.plan)
 
         actual = equcalc.result
 
         self.assertEquals(3.0, actual, 'Incorrect value during equivalence. (e:%f,a:%f)' % (1.0, actual))
+
+
+    def test_partisandiff1(self):
+        geolevelid = self.geolevels[1].id
+        geounits = self.geounits[geolevelid]
+
+        dist1ids = geounits[0:3] + geounits[9:12]
+        dist2ids = geounits[6:9] + geounits[15:18]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        dist2ids = map(lambda x: str(x.id), dist2ids)
+        
+        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district2.district_id, dist2ids, geolevelid, self.plan.version)
+
+        district1 = self.plan.district_set.filter(district_id=self.district1.district_id, version=self.plan.version-1)[0]
+
+        pdcalc = PartisanDifferential()
+        pdcalc.arg_dict['democratic'] = ('subject',self.subject1.name,)
+        pdcalc.arg_dict['republican'] = ('subject',self.subject2.name,)
+        pdcalc.compute(district=district1)
+
+        actual = pdcalc.result
+
+        self.assertAlmostEquals(0.923077, actual, 6, 'Incorrect value during partisan differential. (e:%f,a:%f)' % (0.923077, actual))
+
+        district2 = self.plan.district_set.filter(district_id=self.district2.district_id, version=self.plan.version)[0]
+
+        pdcalc.arg_dict['democratic'] = ('subject',self.subject2.name,)
+        pdcalc.arg_dict['republican'] = ('subject',self.subject1.name,)
+        pdcalc.compute(district=district2)
+
+        actual = pdcalc.result
+
+        self.assertAlmostEquals(0.461538, actual, 6, 'Incorrect value during partisan differential. (e:%f,a:%f)' % (0.461538, actual))
