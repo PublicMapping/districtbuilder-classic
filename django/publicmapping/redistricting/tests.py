@@ -1400,3 +1400,25 @@ class CalculatorCase(BaseTestCase):
         actual = pdcalc.result
 
         self.assertAlmostEquals(0.461538, actual, 6, 'Incorrect value during partisan differential. (e:%f,a:%f)' % (0.461538, actual))
+
+    def test_partisandiff2(self):
+        geolevelid = self.geolevels[1].id
+        geounits = self.geounits[geolevelid]
+
+        dist1ids = geounits[0:3] + geounits[9:12]
+        dist2ids = geounits[6:9] + geounits[15:18]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        dist2ids = map(lambda x: str(x.id), dist2ids)
+        
+        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district2.district_id, dist2ids, geolevelid, self.plan.version)
+
+        pdcalc = PartisanDifferential()
+        pdcalc.arg_dict['democratic'] = ('subject',self.subject1.name,)
+        pdcalc.arg_dict['republican'] = ('subject',self.subject2.name,)
+        pdcalc.compute(plan=self.plan)
+
+        actual = pdcalc.result
+        expected = (0.923077 + 0.461538) / 2
+
+        self.assertAlmostEquals(expected, actual, 6, 'Incorrect value during partisan differential. (e:%f,a:%f)' % (expected, actual))

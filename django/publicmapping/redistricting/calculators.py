@@ -468,7 +468,7 @@ class PartisanDifferential(CalculatorBase):
 
         elif 'plan' in kwargs:
             plan = kwargs['plan']
-            districts = plan.get_districts_at_version(plan, include_geom=False)
+            districts = plan.get_districts_at_version(plan.version, include_geom=False)
 
         else:
             return
