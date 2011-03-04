@@ -751,6 +751,7 @@
       {% endif %}
 </div>
 <div id="working" title="Please Wait">Please wait while new districts are computed...</div>
+<div id="waiting" title="Please Wait">Please wait while data is being retrieved...</div>
 <div id="DialogContainer"></div>
 <div class="olHandlerBoxSelectFeature" style="display:none;"></div>
 
@@ -788,6 +789,21 @@ Include the markup for the account management panel.
                 $('.ui-dialog-titlebar-close', $(this).parent()).hide();
             }
         });
+
+        // initialize a waiting dialog
+        $('#waiting').dialog({
+            resizable:false,
+            modal:false,
+            position:[157,100],
+            minHeight: 50,
+            draggable:false,
+            closeOnEscape:false,
+            autoOpen:false,
+            open: function(event,ui) {
+                $('.ui-dialog-titlebar-close', $(this).parent()).hide();
+            }
+        });
+
         // initialize the plan chooser
         var choose = chooseplan({
             {% if not plan.name %}

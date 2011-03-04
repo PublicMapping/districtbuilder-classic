@@ -25,7 +25,7 @@
 */
 
 // comment out the following line to display the leaderboard wireframed components
-$(document).ready(function(){$('#tab_leaderboard').remove();$('#step_leaderboard').remove();$('#verifyandpost').remove();});
+//$(document).ready(function(){$('#tab_leaderboard').remove();$('#step_leaderboard').remove();$('#verifyandpost').remove();});
 
 /**
  * Configure all buttons to look and behave like jQuery buttons.
@@ -192,6 +192,7 @@ $(function() {
 
                     count += 1;
                 }
+                $('#waiting').dialog('close');                
             },
             error: function(xhr, textStatus, message) {
                 if (xhr.status == 403) {
@@ -214,6 +215,9 @@ $(function() {
             var myrankedDiv = $("#leaderboard_myranked").html('<div id="myranked_content"></div>');
             constructLeaderboardSection(myrankedDiv, "mine");
         }
+
+        // show waiting dialog
+        $('#waiting').dialog('open');        
     };
         
     // jQuery-UI tab layout
