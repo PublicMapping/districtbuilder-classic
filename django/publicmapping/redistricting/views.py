@@ -242,6 +242,39 @@ def copyplan(request, planid):
 
     return HttpResponse(data, mimetype='application/json')
 
+@login_required
+@unique_session_or_json_redirect
+def scoreplan(request, planid):
+    """
+    Validate a plan to allow for it to be shown in the leaaderboard
+
+    Parameters:
+        request -- The HttpRequest, which includes the user.
+        planid -- The plan to score.
+
+    Returns:
+        A JSON HttpResponse which includes a status, and if applicable,
+        a reason why the plan couldn't be validated
+    """
+    note_session_activity(request)
+    status = { 'success': False }
+    plan = Plan.objects.get(pk=planid)
+
+    # For testing -- sleep, and randomize what's returned
+    time.sleep(2)
+    if random.random() > 0.5:
+        status['success'] = True
+        status['message'] = "Validation successful"
+
+        # Set is_valid status on the plan
+        plan.is_valid = True
+        plan.save()
+    else:
+        status['success'] = False
+        status['message'] = "Plan contains a non-contiguous district" 
+
+    return HttpResponse(json.dumps(status),mimetype='application/json')
+
 def get_user_info(user):
     """
     Get extended user information for the current user.
@@ -1629,6 +1662,7 @@ def getleaderboard(request):
                     )
                 })
 
+    time.sleep(2) # for testing
     return HttpResponse(json_response,mimetype='application/json') 
     
 

@@ -143,8 +143,32 @@ $(function() {
                 // if there is an active plan, show leaderboard controls
                 if ($('#txtPlanName').length > 0) {
                     var controls = $('<div class="leaderboard_controls"></div>');
-                    controls.html('<button class="leaderboard_button">Update Leaderboards with Current Plan</button>');
+                    var button = $('<button class="leaderboard_button">Update Leaderboards with Current Plan</button>');
+                    controls.html(button);
                     container.append(controls);
+
+                    // add handling for updating leaderboard with current plan
+                    button.click(function() {
+                        $('#waiting').dialog('open');                                    
+                        $.ajax({
+                            url: '/districtmapping/plan/' + PLAN_ID + '/score/',
+                            type: 'POST',
+                            success: function(data, textStatus, xhr) {
+                                $('#waiting').dialog('close');
+                                if (data.success) {
+                                    // score was successful, show new results
+                                    updateLeaderboard();
+                                } else {
+                                    // score failed, show reason
+                                    $('<div title="Validation Failed">' + data.message + '</div>').dialog({autoOpen:true});
+                                }
+                            },
+                            error: function() {
+                                $('#waiting').dialog('close');
+                                $('<div title="Error">Server error. Please try again later.</div>').dialog({autoOpen:true});
+                            }
+                        });
+                    });
                 }
                     
                 var count = 0;
@@ -219,6 +243,30 @@ $(function() {
         // show waiting dialog
         $('#waiting').dialog('open');        
     };
+
+    // connect the 'Verify and Submit Plan' button
+    $('#btnVerifyAndSubmit').click(function() {
+        $('#waiting').dialog('open');                                    
+        $.ajax({
+            url: '/districtmapping/plan/' + PLAN_ID + '/score/',
+            type: 'POST',
+            success: function(data, textStatus, xhr) {
+                $('#waiting').dialog('close');
+                if (data.success) {
+                    // score was successful, clear leaderboard
+                    $("#topranked_content").remove();
+                    $('<div title="Validation Successful">Plan has been scored. View it on the Leaderboard tab.</div>').dialog({autoOpen:true});
+                } else {
+                    // score failed, show reason
+                    $('<div title="Validation Failed">' + data.message + '</div>').dialog({autoOpen:true});
+                }
+            },
+            error: function() {
+                $('#waiting').dialog('close');
+                $('<div title="Error">Server error. Please try again later.</div>').dialog({autoOpen:true});
+            }
+        });
+    });
         
     // jQuery-UI tab layout
     $('#steps').tabs({
