@@ -926,6 +926,9 @@ class Plan(models.Model):
         # Update the district stats
         target_copy.delta_stats(geounits,True)
 
+        # invalidate the plan, since it has been modified
+        self.is_valid = False
+
         # save any changes to the version of this plan
         self.version += 1
         self.save()
