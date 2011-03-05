@@ -50,49 +50,44 @@ class BaseTestCase(TestCase):
         Setup the general tests. This fabricates a set of data in the 
         test database for use later.
         """
-        # need geounits for ids & geometries
-        self.geolevels = Geolevel.objects.filter( 
-            Q(name='first level') |
-            Q(name='second level') |
-            Q(name='third level')
-        ).order_by('id')
-        self.geolevels = list(self.geolevels)
+        # Get the test Geolevels
+        self.geolevels = Geolevel.objects.all().order_by('id')
 
-        # create a Subject
+        # Get test Subjects
         self.subject1 = Subject.objects.get(name='TestSubject')
         self.subject2 = Subject.objects.get(name='TestSubject2')
-        
-        self.geounits = {}
 
-        # create a three-tiered 27x27 square grid of geounits with coords from (0,0) to (1,1)
+        # Get the test Geounits
+        self.geounits = {}
         for gl in self.geolevels:
             self.geounits[gl.id] = list(Geounit.objects.filter(geolevel=gl).order_by('id'))
 
-        # create a User
+        # Get a test User
         self.username = 'test_user'
         self.password = 'secret'
         self.user = User.objects.get(username=self.username)
 
-        # create a LegislativeBody
+        # Get a test LegislativeBody
         self.legbod = LegislativeBody.objects.get(name='TestLegislativeBody')
 
-        # create a Target
+        # Get a test Target
         self.target = Target.objects.get(subject=self.subject1)
 
-        # create a LegislativeDefault
+        # Get a test LegislativeDefault
         self.legdef = LegislativeDefault.objects.get(legislative_body=self.legbod, target=self.target)
 
-        # create LegislativeLevel hierarchy
+        # Get a test LegislativeLevel hierarchy
         self.leglev3 = LegislativeLevel.objects.get(geolevel=self.geolevels[2])
         self.leglev2 = LegislativeLevel.objects.get(geolevel=self.geolevels[1])
         self.leglev1 = LegislativeLevel.objects.get(geolevel=self.geolevels[0])
         
-        # create a Plan
+        # Get a test Plan
         self.plan = Plan.objects.get(name='testPlan')
+        self.plan2 = Plan.objects.get(name='testPlan2')
 
-        # create Districts
-        self.district1 = District.objects.get(name='District 1')
-        self.district2 = District.objects.get(name='District 2')
+        # Get the test Districts
+        self.district1 = District.objects.get(name='District 1', plan=self.plan)
+        self.district2 = District.objects.get(name='District 2', plan=self.plan)
 
 
 
@@ -1478,16 +1473,24 @@ class ScoreRenderCase(BaseTestCase):
         self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
         self.plan.add_geounits( self.district2.district_id, dist2ids, geolevelid, self.plan.version)
 
-        panels = ScorePanel.objects.all()
+        dist1ids = geounits[3:6] + geounits[12:15]
+        dist2ids = geounits[9:12] + geounits[18:21]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        dist2ids = map(lambda x: str(x.id), dist2ids)
+        
+        self.plan2.add_geounits( 1, dist1ids, geolevelid, self.plan2.version)
+        self.plan2.add_geounits( 1, dist2ids, geolevelid, self.plan2.version)
+
+        panels = ScorePanel.objects.filter(type='plan')
 
         for panel in panels:
             tplfile = settings.TEMPLATE_DIRS[0] + '/' + panel.template
             template = open(tplfile,'w')
-            template.write('{% for score in scores %}{{ score.score|safe }}{% endfor %}')
+            template.write('{% for planscore in planscores %}{{planscore.plan.name}}:{{ planscore.score|safe }}{% endfor %}')
             template.close()
 
-            markup = panel.render(self.plan)
-            expected = '<span>48.0</span>'
+            markup = panel.render([self.plan,self.plan2])
+            expected = 'testPlan:<span>48.0</span>testPlan:<span>0.181818181818</span>testPlan2:<span>152.0</span>testPlan2:<span>0.263888888889</span>'
             self.assertEquals(expected, markup, 'The markup was incorrect. (e:"%s", a:"%s")' % (expected, markup))
 
             os.remove(tplfile)
@@ -1504,21 +1507,18 @@ class ScoreRenderCase(BaseTestCase):
         self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
         self.plan.add_geounits( self.district2.district_id, dist2ids, geolevelid, self.plan.version)
 
-        panels = ScorePanel.objects.all()
-
-        district_scores = [ '0.04', '0.368421052632', 'n/a' ]
+        panels = ScorePanel.objects.filter(type='district')
 
         for panel in panels:
             districts = self.plan.get_districts_at_version(self.plan.version,include_geom=False)
 
             tplfile = settings.TEMPLATE_DIRS[0] + '/' + panel.template
             template = open(tplfile,'w')
-            template.write('{% for score in scores %}{{ score.score|safe }}{% endfor %}')
+            template.write('{% for dscore in districtscores %}{{dscore.district.name }}:{% for score in dscore.scores %}{{ score.score|safe }}{% endfor %}{% endfor %}')
             template.close()
 
-            for i in range(0,len(districts)):
-                markup = panel.render(districts[i])
-                expected = '<span>%s</span>' % district_scores[i]
-                self.assertEquals(expected, markup, 'The markup for district "%s" was incorrect. (e:"%s", a:"%s")' % (districts[i].name,expected,markup))
+            markup = panel.render(districts)
+            expected = 'District 1:86.83%<span>1</span>District 2:86.83%<span>1</span>Unassigned:n/a<span>0</span>'
+            self.assertEquals(expected, markup, 'The markup for districts was incorrect. (e:"%s", a:"%s")' % (expected,markup))
 
             os.remove(tplfile)

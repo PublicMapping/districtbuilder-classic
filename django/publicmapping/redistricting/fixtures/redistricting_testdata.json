@@ -324,18 +324,10 @@
   }
  }, 
  {
-  "pk": "178913be744142228425ed8932da573f", 
+  "pk": "d152d08f58e719833809132709c642a8", 
   "model": "sessions.session", 
   "fields": {
-   "expire_date": "2011-03-16 18:43:12", 
-   "session_data": "gAJ9cQEoVRJfYXV0aF91c2VyX2JhY2tlbmRxAlUpZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5k\ncy5Nb2RlbEJhY2tlbmRxA1UNX2F1dGhfdXNlcl9pZHEESwF1LmY0MDJjY2E4YjVmZTdkOTY4OGVh\nNjc3NTFjYWMzYWNk\n"
-  }
- }, 
- {
-  "pk": "d2f6cdc47caa8d1e1d5ebf559d4c0d0c", 
-  "model": "sessions.session", 
-  "fields": {
-   "expire_date": "2011-03-17 14:26:23", 
+   "expire_date": "2011-03-17 19:31:10", 
    "session_data": "gAJ9cQEoVRJfYXV0aF91c2VyX2JhY2tlbmRxAlUpZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5k\ncy5Nb2RlbEJhY2tlbmRxA1UNX2F1dGhfdXNlcl9pZHEESwF1LmY0MDJjY2E4YjVmZTdkOTY4OGVh\nNjc3NTFjYWMzYWNk\n"
   }
  }, 
@@ -28337,6 +28329,23 @@
  }, 
  {
   "pk": 2, 
+  "model": "redistricting.plan", 
+  "fields": {
+   "edited": "2011-03-03 21:12:16", 
+   "is_shared": false, 
+   "created": "2011-03-03 21:11:26", 
+   "description": "", 
+   "is_template": false, 
+   "is_valid": false, 
+   "version": 0, 
+   "owner": 1, 
+   "legislative_body": 1, 
+   "is_pending": false, 
+   "name": "testPlan2"
+  }
+ }, 
+ {
+  "pk": 2, 
   "model": "redistricting.district", 
   "fields": {
    "name": "District 1", 
@@ -28346,6 +28355,19 @@
    "version": 0, 
    "geom": null, 
    "plan": 1
+  }
+ }, 
+ {
+  "pk": 5, 
+  "model": "redistricting.district", 
+  "fields": {
+   "name": "District 1", 
+   "simple": null, 
+   "district_id": 1, 
+   "is_locked": false, 
+   "version": 0, 
+   "geom": null, 
+   "plan": 2
   }
  }, 
  {
@@ -28362,6 +28384,19 @@
   }
  }, 
  {
+  "pk": 6, 
+  "model": "redistricting.district", 
+  "fields": {
+   "name": "District 2", 
+   "simple": null, 
+   "district_id": 2, 
+   "is_locked": false, 
+   "version": 0, 
+   "geom": null, 
+   "plan": 2
+  }
+ }, 
+ {
   "pk": 1, 
   "model": "redistricting.scoredisplay", 
   "fields": {
@@ -28369,6 +28404,16 @@
    "cssclass": "the_display", 
    "is_page": true, 
    "title": "TestScoreDisplay"
+  }
+ }, 
+ {
+  "pk": 2, 
+  "model": "redistricting.scoredisplay", 
+  "fields": {
+   "legislative_body": 1, 
+   "cssclass": "", 
+   "is_page": false, 
+   "title": "TestScoreDisplay2"
   }
  }, 
  {
@@ -28384,15 +28429,15 @@
   }
  }, 
  {
-  "pk": 2, 
+  "pk": 3, 
   "model": "redistricting.scorepanel", 
   "fields": {
    "title": "TestScorePanel2", 
    "template": "sp_template2.html", 
-   "position": 2, 
+   "position": 1, 
    "cssclass": "panel2", 
-   "type": "plan", 
-   "display": 1
+   "type": "district", 
+   "display": 2
   }
  }, 
  {
@@ -28412,9 +28457,31 @@
   "fields": {
    "calculator": "publicmapping.redistricting.calculators.Percent", 
    "description": "Divide two subjects by one another.", 
-   "is_planscore": false, 
+   "is_planscore": true, 
    "name": "Percentage Points", 
    "label": "The percentage of A/B"
+  }
+ }, 
+ {
+  "pk": 3, 
+  "model": "redistricting.scorefunction", 
+  "fields": {
+   "calculator": "publicmapping.redistricting.calculators.Schwartzberg", 
+   "description": "The Schwartzberg measure of compactness.", 
+   "is_planscore": false, 
+   "name": "Compactness", 
+   "label": "Compactness"
+  }
+ }, 
+ {
+  "pk": 4, 
+  "model": "redistricting.scorefunction", 
+  "fields": {
+   "calculator": "publicmapping.redistricting.calculators.Contiguity", 
+   "description": "Is a district contiguous?", 
+   "is_planscore": false, 
+   "name": "Contiguity", 
+   "label": "Contiguous"
   }
  }, 
  {
@@ -28464,19 +28531,19 @@
   }
  }, 
  {
-  "pk": 3, 
+  "pk": 5, 
   "model": "redistricting.panelfunction", 
   "fields": {
-   "function": 2, 
-   "panel": 2
+   "function": 3, 
+   "panel": 3
   }
  }, 
  {
-  "pk": 4, 
+  "pk": 6, 
   "model": "redistricting.panelfunction", 
   "fields": {
-   "function": 1, 
-   "panel": 2
+   "function": 4, 
+   "panel": 3
   }
  }, 
  {
@@ -29459,9 +29526,9 @@
    "first_name": "", 
    "last_name": "", 
    "is_active": true, 
-   "is_superuser": false, 
-   "is_staff": false, 
-   "last_login": "2011-03-03 14:26:23", 
+   "is_superuser": true, 
+   "is_staff": true, 
+   "last_login": "2011-03-03 19:31:10", 
    "groups": [], 
    "user_permissions": [], 
    "password": "sha1$55d95$8d6ad9466271e588d9fc6bfce3212e5a66a62ba6", 

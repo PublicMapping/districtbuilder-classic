@@ -1666,28 +1666,71 @@ class ScorePanel(models.Model):
         """
         return self.title
 
-    def render(self,district_or_plan):
+    def render(self,dorp):
         """
         Generate the scores for all the functions attached to this panel,
         and render them in the template.
         """
-        scores = []
-        for pf in self.panelfunction_set.all():
-            # Skip cases where a plan is provided to a district only score
-            if isinstance(district_or_plan,Plan) and not pf.function.is_planscore:
-                continue
-            # Skip cases where a district is provided to a plan only score
-            if isinstance(district_or_plan,District) and pf.function.is_planscore:
-                continue
+        is_list = isinstance(dorp,list)
 
-            scores.append({ 
-                'name':pf.function.name,
-                'label':pf.function.label,
-                'description':pf.function.description,
-                'score':pf.function.score(district_or_plan,format='html')
-            })
+        # If this is a plan panel, it only renders plans
+        if (self.type == 'plan' or self.type == 'plan_summary') and \
+            (not isinstance(dorp,Plan) and \
+                (is_list and not isinstance(dorp[0],Plan))):
+            return ""
 
-        return render_to_string(self.template, {"scores":scores} )
+        # If this is a district panel, it only renders districts
+        if self.type == 'district' and \
+            (not isinstance(dorp,District) and \
+                (is_list and not isinstance(dorp[0],District))):
+            return ""
+
+        # Render an item for each plan and plan score
+        if self.type == 'plan' or self.type == 'plan_summary':
+            if is_list:
+                plans = dorp
+            else:
+                plans = [dorp]
+
+            planscores = []
+            for plan in plans:
+                for pf in self.panelfunction_set.filter(function__is_planscore=True):
+                    planscores.append({
+                        'plan':plan,
+                        'name':pf.function.name,
+                        'label':pf.function.label,
+                        'description':pf.function.description,
+                        'score':pf.function.score(plan,format='html')
+                    })
+
+            return render_to_string(self.template, {"planscores":planscores} )
+
+        # Render each district with multiple scores
+        elif self.type == 'district':
+            if is_list:
+                districts = dorp
+            else:
+                districts = [dorp]
+
+            districtscores = []
+            for district in districts:
+                districtscore = { 'district':district, 'scores':[] }
+
+                for pf in self.panelfunction_set.filter(function__is_planscore=False):
+                    districtscore['scores'].append({
+                        'district':district,
+                        'name':pf.function.name,
+                        'label':pf.function.label,
+                        'description':pf.function.description,
+                        'score':pf.function.score(district,format='html')
+                    })
+
+
+                districtscores.append(districtscore)
+
+            return render_to_string(self.template, {"districtscores":districtscores} )
+
+
 
 class ScoreFunction(models.Model):
     """
