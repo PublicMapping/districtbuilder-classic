@@ -141,12 +141,10 @@ $(function() {
                 container.append(panels);
 
                 // if there is an active plan, show leaderboard controls
-                if ($('#txtPlanName').length > 0) {
-                    var controls = $('<div class="leaderboard_controls"></div>');
-                    var button = $('<button class="leaderboard_button">Update Leaderboards with Current Plan</button>');
-                    controls.html(button);
-                    container.append(controls);
-
+                 if ($('#txtPlanName').length > 0) {
+                    var button = $('<button class="leaderboard_button">Update Leaderboards<br/>with Current Plan</button>').button();
+                    $('#updateLeaderboardsContainer').html(button);
+                    
                     // add handling for updating leaderboard with current plan
                     button.click(function() {
                         $('#waiting').dialog('open');                                    
@@ -186,7 +184,9 @@ $(function() {
                     // construct the jqGrid
                     var jqGrid = $('#' + gridId).jqGrid({
                         datatype: "local",
-                        height: 230,
+                        height: 'auto',
+                        width: 420,
+                        forceFit: true,
                         colNames:['Rank', 'User Name', 'Plan Name', 'Score'],
                         colModel:[
                               {name:'rank',index:'rank', width:55, sorttype:"int"},

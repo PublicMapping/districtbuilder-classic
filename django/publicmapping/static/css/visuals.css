@@ -1,0 +1,393 @@
+/*body bg*/
+
+body#static {  background: url(/static-media/images/bg-body-home.png) 0 0 repeat-x;}
+body#app {  background: url(/static-media/images/bg-app.png) 0 0 repeat;}
+
+/*homepage*/
+
+div #logo .site-title {
+  font-size: 250%; 
+  font-family: arial, helvetica, sans-serif;
+  font-weight:bold; 
+  color: #fff; 
+  text-shadow: 0 -1px #222;
+  margin: 0;
+  padding: 0;
+}
+
+div#banner {
+  clear:both;
+  -moz-box-shadow: 0 0 40px #5d8c96;
+  -webkit-box-shadow:0 0 40px #5d8c96;
+  box-shadow: 0 0 40px #5d8c96;
+}
+
+div#body_box {
+  position:relative;
+  text-align: left;
+  margin: 30px 0 0 0 ; 
+}
+div#tour_news {
+  width: 300px;
+  margin: 0 35px 0 0;
+  float: left;
+}
+div#tour_news ul {margin-left: 15px;}
+div#tour_news li {margin-bottom: 5px;}
+div#tour_news a {color: #fff; font-weight:bold;}
+
+div#news {
+  text-align:left;
+  font-size: 14px;
+  color: #fff;
+  line-height: 20px;
+}
+
+
+div#news span {
+    font-weight: bold;
+    padding: 3px;
+}
+div#news h3 {
+  font-size: 21px; 
+  line-height: 26px;
+  color: #e1e8b1;
+  margin: 0 0 12px 0; 
+  font-weight: bold;
+}
+
+#static button {
+    background-color: #39A787;
+    background-image: url(/static-media/images/bg-button-lg.png);
+    background-position: center center;
+    background-repeat: repeat-x;
+    font-size: 11px;
+    font-weight: bold;
+    text-shadow: 0 -1px #333;
+    color: #fff;
+    }
+
+#static button#new_to_redistricting {
+  margin-top: 15px;
+  width:90%;
+  background-color: #1f8cbe;
+  padding: 3px 0;
+  font-size: 13px;
+  font-weight:bold;
+  line-height: 15px;
+}
+#static button#new_to_redistricting .take_a_tour {
+  font-size: 24px;
+  line-height: 26px;
+}
+
+#static button#login {
+  background-color: #be801f;
+  font-size: 20px;
+}
+
+#static button#sign_up {
+  font-size: 16px;
+  background-color: #39a787;
+}
+
+#static button#doAnonymous {
+  font-size: 16px;
+  background-color: #3a80a0;
+}
+div#user {
+  background: url(/static-media/images/bg-home-panel.png) 0 0 repeat-x;
+  margin-left: 330px;
+  height: 253px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+   border-radius: 5px;
+  -moz-box-shadow: 0 0 40px #95bec6;
+  -webkit-box-shadow:0 0 40px #95bec6;
+  box-shadow: 0 0 40px #95bec6;
+}
+div#user h2 {
+  margin-left: 5px;
+}
+
+div#user button {width: 100%;}
+
+div #user p {
+  margin-top: 15px;
+}
+
+div#user a {
+  color: #fff;
+  text-decoration: underline;
+  font-size: 11px;
+  font-weight: bold;
+  }
+
+div#login {
+  float: left;
+  width: 240px;
+  background: url(/static-media/images/divider-vert.png) 100% 0 repeat-y;
+  padding: 0 20px;
+  height: 100%;
+}
+
+div#login h3 {
+  margin: 20px 0 10px;
+  font-size:  20px;
+  color: #fff;
+  font-weight: bold;
+}
+div#login input {
+  padding: 0 0 0 8px;
+  width: 230px;
+  height: 34px;
+  border: 1px solid #ccc;
+  margin: 0 0 10px;
+  -moz-border-radius: 8px;
+  -webkit-border-radius: 8px
+  border-radius: 8px;
+}
+div#login input.error {
+    border: 1px solid #ff0000;
+}
+
+div.rightlink {
+    text-align: right;
+    font-size: 0.8em;
+}
+input#loginbutton {
+}
+div#signup {
+  margin: 0 0 0 20px;
+  float:left;
+}
+div#signupBox {display:none}
+div#signup h3 {
+  margin-top: 20px;
+  font-size:  20px;
+  color: #fff;
+  font-weight: bold;
+}
+div#signup h4 {
+  margin: 10px 0 7px;
+  font-size:  14px;
+  color: #e0e7b2;
+  font-weight: bold;
+}
+div#signUpButton {
+    text-align: right;
+}
+div#ordiv {
+    margin: 10px auto;
+}
+div#register {
+  display:none;
+  font-size: 14px;
+  color: #6a6a6a;
+  font-weight: bold;
+}
+div#forgotpass {
+    display: none;
+    font-size: 14px;
+    color: #6a6a6a;
+    font-weight: bold;
+}
+div#sessiondupe {
+    display: none;
+    font-size: 14px;
+    color: #6a6a6a;
+    font-weight: bold;
+}
+div#sessionsmax {
+    display: none;
+    font-size: 14px;
+    color: #6a6a6a;
+    font-weight: bold;
+}
+div#privacy {
+    display: none;
+    width: 500px
+}
+div#privacy p {font-size:12px; margin: 12px 0;}
+div#privacy h4 {margin:15px 0;font-size:14px; font-weight:bold;}
+div#privacy h4.first {margin-top: 0}
+div#privacy ul {margin-left: 15px; font-size: 12px; margin-top:10px;}
+
+div#logoffdlg {
+    font-size: 14px;
+    color: #6a6a6a;
+    font-weight: bold;
+}
+form#registerForm input.field, form#registerForm input.error, 
+form#forgotForm input.field, form#forgotForm input.error {
+    padding: 0 0 0 8px;
+    width: 230px;
+    height: 30px;
+    border: 1px solid #ccc;
+    margin: 0 0 10px 15px;
+    -moz-border-radius: 8px;
+    -webkit-border-radius: 8px
+    border-radius: 8px;
+}
+form#registerForm input.error, form#forgotForm input.error {
+    border: solid 1px #ff0000;
+}
+table#registerTable {
+    margin-bottom: 0.8em;
+}
+td.fname {
+    white-space:nowrap;
+    vertical-align: top;
+    font-weight: bold;
+}
+span.recommended {
+    font-size: 0.75em;
+    text-align: center;
+}
+div#dupemail {
+    display: none;
+}
+label.required {
+    color: #ff0000;
+}
+div#requiredNote {
+    font-size: 0.75em;
+    text-align: left;
+}
+div#forgothint, div#forgotButton2, div#forgotsent {
+    display: none;
+}
+form#forgotForm input#forgothintbox {
+    margin: 10px;
+    width: 360px;
+}
+div#forgotButton, div#forgotButton2 {
+    margin-top: 15px;
+}
+div#forgotprompt, div#forgothint, div#forgotsent {
+    font-weight: normal;
+}
+div#forgotprompt td.fname {
+    width: 125px;
+    text-align: right;
+}
+div#username_hint, div#email_reset, div#got_hint, div#reset_sent {
+    font-weight: bold;
+}
+div#or {
+    font-size: 12pt;
+    font-weight: bolder;
+    color: #000000;
+    text-align: center;
+}
+div#sessiondupe p {
+    font-weight: normal;
+}
+div#sessiondupe ul {
+    margin: 5px 0 5px 20px;
+}
+div#logoffdlg p {
+    font-weight: normal;
+    margin: 5px 0px;
+}
+div#footer {
+    clear: both;
+    margin: 20px 0 0 0;
+    background: url(/static-media/images/divider.png) 0 0 repeat-x;
+    padding: 20px 0 15px 0;
+}
+div#copyright {
+  float:left;
+  color: #474747;
+  font-size: 11px;
+  font-weight:bold;
+}
+div #sponsors {
+  float:right;
+}
+div #sponsors .logoRight {
+  float: right; margin-left: 15px;
+}
+
+div #sponsors p {
+font-size: 12px; 
+text-align: right; 
+width: 358px; 
+font-weight: bold; 
+color: rgb(62, 107, 127);
+}
+
+/*----------------MAPPING PAGE---------------------------------------*/
+
+/*tabs and tab container */
+#app div#logo {  opacity: .8;}
+
+ul#steps_tabs li#tab_plan {background-color: #89BEBB;}
+ul#steps_tabs li#tab_draw {background-color: #93B6B2;}
+ul#steps_tabs li#tab_evaluate {background-color: #87ae8b;}
+ul#steps_tabs li#tab_share {background-color: #acae87;}
+ul#steps_tabs li#tab_leaderboard {background-color: #B8A381}
+
+div#step_plan .toolbar { background-color:#7cb7b3}
+div#step_draw .toolbar { background-color:#87aea9}
+div#step_evaluate .toolbar {background-color: #87ae8b}
+div#step_share .toolbar {background-color:#acae87}
+div#step_leaderboard .toolbar {background-color: #b09873}
+
+div#step_leaderboard div.toolbar li {background-color: #b7a17f; border: 1px solid #c1af92;}
+div#step_leaderboard div.toolbar  li.ui-state-active {background-color: #967f5b; border: 1px solid: #857152}
+
+
+div.tab_content {background: #e3f0ef;}
+    
+/*plan content */    
+ul#plan_buttons li {background-color:#8BD1BC;} 
+div#form_container {background-color: #ecf6f5;}
+div#form_action{background-color: #8ac7b5;}
+
+/*buttons */
+
+#app button, .ui-dialog button {
+    background-color: #1F8CBE;
+    border: 1px solid #3B7181;
+    }
+    
+ button#stats_legend {background-color: #bb9160;}
+
+
+    
+/* plan toolbars*/    
+div#toolbar_plans {
+  background: transparent url(/static-media/images/bg-app.png) 0 0 repeat;
+  }
+
+
+  
+div.toolset#toolset_draw .ui-button-icon-only {background-color:#6B8F8B;}
+ 
+div.toolset#toolset_draw .ui-button-icon-only.toggle, div.toolset#toolset_draw .ui-button-icon-only.ui-state-active{background-color: #A8CFCB;}  
+
+/*sidebar */
+
+div#map_menu_header {background-color:#5b8a62;}
+div#map_menu_header button.menu_toggle{background-color: #6B9571;}
+
+div.map_menu_content.geography {
+    background: #badcbf;
+    border:1px solid #77b280;
+  }
+div.map_menu_content.demographics {
+    background: #efe8cb;
+    border: 1px solid #ada176;
+}
+div.plantable.body  { 
+    background: #f7f4e5;
+    }
+    
+/*jQgrid customization */
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+background: #ECF6F5 
+}
+.ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight {
+background: #EFD695
+}

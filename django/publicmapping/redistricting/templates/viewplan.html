@@ -39,7 +39,8 @@
     <link rel="stylesheet" type="text/css" href="/static-media/css/reset.css"/>
     <link rel="stylesheet" type="text/css" href="/static-media/jqGrid/css/ui.jqgrid.css"/>
     <link rel="stylesheet" type="text/css" href="/static-media/jquery/themes/custom-theme/jquery-ui-1.8.2.custom.css"/>
-    <link rel="stylesheet" type="text/css" href="/static-media/css/publicmapping.css"/>
+    <link rel="stylesheet" type="text/css" href="/static-media/css/core.css"/>
+    <link rel="stylesheet" type="text/css" href="/static-media/css/visuals.css"/>    
     <script type="text/javascript" src="/static-media/openlayers/OpenLayers.js"></script><!-- production -->
     <!-- <script type="text/javascript" src="/static-media/OpenLayers-2.9.1/lib/OpenLayers.js"></script> debug -->
     <script src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=6.2&mkt=en-us"></script> 
@@ -638,14 +639,21 @@
         {% include reporting_template %}
       </div>
     </div>
-    <div id="step_leaderboard" class="main_content leaderboard">
-      <div id="leaderboard_tabs" class="tab_content">
-          <ul>
+    <div id="step_leaderboard" class="main_content leaderboard fulltab">
+      <div class="shadow_left"></div>
+      <div class="shadow_top"></div>
+      <div class="toolbar  ui-widget-header" id="leaderboard_tabs">
+              <ul id="leaderboard_nav">
               <li id="tab_topranked"><a href="#leaderboard_topranked">Top Ranked Users' Plans</a><li>
               {% if is_registered %}                  
-              <li id="tab_myranked"><a href="#leaderboard_myranked">My Ranked Plans</a><li>
+              <li id="tab_myranked"><a href="#leaderboard_myranked">My Ranked Plans</a></li>
               {% endif %}
           </ul>
+          <div id="updateLeaderboardsContainer"></div>
+       </div>
+    
+      <div class="tab_content">
+
           <div id="leaderboard_topranked">
           </div>
           {% if is_registered %}                  
