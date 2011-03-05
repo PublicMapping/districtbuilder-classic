@@ -1464,3 +1464,61 @@ class CalculatorCase(BaseTestCase):
         actual = rfcalc.result
 
         self.assertAlmostEquals(0.181818, actual, 6, 'Incorrect value during representational fairness. (e:%f,a:%f)' % (0.181818, actual))
+
+class ScoreRenderCase(BaseTestCase):
+    def test_panelrender_plan(self):
+        geolevelid = self.geolevels[1].id
+        geounits = self.geounits[geolevelid]
+
+        dist1ids = geounits[0:3] + geounits[9:12]
+        dist2ids = geounits[6:9] + geounits[15:18]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        dist2ids = map(lambda x: str(x.id), dist2ids)
+        
+        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district2.district_id, dist2ids, geolevelid, self.plan.version)
+
+        panels = ScorePanel.objects.all()
+
+        for panel in panels:
+            tplfile = settings.TEMPLATE_DIRS[0] + '/' + panel.template
+            template = open(tplfile,'w')
+            template.write('{% for score in scores %}{{ score.score|safe }}{% endfor %}')
+            template.close()
+
+            markup = panel.render(self.plan)
+            expected = '<span>48.0</span>'
+            self.assertEquals(expected, markup, 'The markup was incorrect. (e:"%s", a:"%s")' % (expected, markup))
+
+            os.remove(tplfile)
+
+    def test_panelrender_district(self):
+        geolevelid = self.geolevels[1].id
+        geounits = self.geounits[geolevelid]
+
+        dist1ids = geounits[0:3] + geounits[9:12]
+        dist2ids = geounits[6:9] + geounits[15:18]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        dist2ids = map(lambda x: str(x.id), dist2ids)
+        
+        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district2.district_id, dist2ids, geolevelid, self.plan.version)
+
+        panels = ScorePanel.objects.all()
+
+        district_scores = [ '0.04', '0.368421052632', 'n/a' ]
+
+        for panel in panels:
+            districts = self.plan.get_districts_at_version(self.plan.version,include_geom=False)
+
+            tplfile = settings.TEMPLATE_DIRS[0] + '/' + panel.template
+            template = open(tplfile,'w')
+            template.write('{% for score in scores %}{{ score.score|safe }}{% endfor %}')
+            template.close()
+
+            for i in range(0,len(districts)):
+                markup = panel.render(districts[i])
+                expected = '<span>%s</span>' % district_scores[i]
+                self.assertEquals(expected, markup, 'The markup for district "%s" was incorrect. (e:"%s", a:"%s")' % (districts[i].name,expected,markup))
+
+            os.remove(tplfile)

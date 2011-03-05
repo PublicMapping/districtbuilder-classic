@@ -28410,7 +28410,7 @@
   "pk": 2, 
   "model": "redistricting.scorefunction", 
   "fields": {
-   "calculator": "publicmapping.redistricting.calculators.Percentage", 
+   "calculator": "publicmapping.redistricting.calculators.Percent", 
    "description": "Divide two subjects by one another.", 
    "is_planscore": false, 
    "name": "Percentage Points", 

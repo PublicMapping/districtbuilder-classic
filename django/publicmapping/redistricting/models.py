@@ -39,6 +39,7 @@ from django.db import connection, transaction
 from django.forms import ModelForm
 from django.conf import settings
 from django.utils import simplejson as json
+from django.template.loader import render_to_string
 from datetime import datetime
 from redistricting.calculators import *
 from copy import copy
@@ -1664,6 +1665,29 @@ class ScorePanel(models.Model):
         title.
         """
         return self.title
+
+    def render(self,district_or_plan):
+        """
+        Generate the scores for all the functions attached to this panel,
+        and render them in the template.
+        """
+        scores = []
+        for pf in self.panelfunction_set.all():
+            # Skip cases where a plan is provided to a district only score
+            if isinstance(district_or_plan,Plan) and not pf.function.is_planscore:
+                continue
+            # Skip cases where a district is provided to a plan only score
+            if isinstance(district_or_plan,District) and pf.function.is_planscore:
+                continue
+
+            scores.append({ 
+                'name':pf.function.name,
+                'label':pf.function.label,
+                'description':pf.function.description,
+                'score':pf.function.score(district_or_plan,format='html')
+            })
+
+        return render_to_string(self.template, {"scores":scores} )
 
 class ScoreFunction(models.Model):
     """
