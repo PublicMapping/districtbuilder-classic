@@ -279,10 +279,13 @@ class Threshold(CalculatorBase):
     threshold are required.
     
     If the value computed is less than or equal to the threshold, the 
-    return value will be zero (0).
+    result value will be zero (0).
 
-    If the value computed is greater than the threshold, the return value
+    If the value computed is greater than the threshold, the result value
     will be one (1).
+
+    If this calculator is called with a plan, it will tally up the number
+    of districts that exceed the designated threshold.
     """
     def __init__(self):
         """
@@ -295,24 +298,28 @@ class Threshold(CalculatorBase):
         """
         Calculate and determine if a value exceeds a threshold.
         """
-        district = None
+        districts = []
 
         if 'district' in kwargs:
-            district = kwargs['district']
+            districts = [kwargs['district']]
 
-        elif 'plans' in kwargs:
-            pass
+        elif 'plan' in kwargs:
+            plan = kwargs['plan']
+            districts = plan.get_districts_at_version(plan.version, include_geom=False)
 
         else:
             return
 
-        val = self.get_value('value',district)
-        thr = self.get_value('threshold',district)
+        self.result = 0
+        for district in districts:
+            val = self.get_value('value',district)
+            thr = self.get_value('threshold',district)
 
-        if val is None or thr is None:
-            return
+            if val is None or thr is None:
+                continue
 
-        self.result = 1 if float(val) > float(thr) else 0
+            if float(val) > float(thr):
+                self.result += 1
 
 
 class Range(CalculatorBase):
@@ -325,10 +332,15 @@ class Range(CalculatorBase):
     within a range are required.
     
     If the value computed is greater than or equal to min and less than 
-    or equal to max, the return value will be zero (1).
+    or equal to max, the result value will be zero (1).
 
-    If the value computed is less than min or greater than max, the return
+    If the value computed is less than min or greater than max, the result
     value will be one (1).
+
+    If the calculator is passed a plan, then the result value will be the
+    number of districts that are within the range. For a test like equi-
+    population, this will count the number of districts within the target
+    range.
     """
     def __init__(self):
         """
@@ -341,25 +353,29 @@ class Range(CalculatorBase):
         """
         Calculate and determine if a value lies within a range.
         """
-        district = None
+        districts = None
 
         if 'district' in kwargs:
-            district = kwargs['district']
+            districts = [kwargs['district']]
 
         elif 'plan' in kwargs:
-            pass
+            plan = kwargs['plan']
+            districts = plan.get_districts_at_version(plan.version, include_geom=False)
 
         else:
             return
 
-        val = self.get_value('value',district)
-        minval = self.get_value('min',district)
-        maxval = self.get_value('max',district)
+        self.result = 0
+        for district in districts:
+            val = self.get_value('value',district)
+            minval = self.get_value('min',district)
+            maxval = self.get_value('max',district)
 
-        if val is None or minval is None or maxval is None:
-            return
+            if val is None or minval is None or maxval is None:
+                continue
 
-        self.result = 1 if float(val) > float(minval) and float(val) < float(maxval) else 0
+            if float(val) > float(minval) and float(val) < float(maxval):
+                self.result += 1
 
 
 class Contiguity(CalculatorBase):
@@ -374,18 +390,22 @@ class Contiguity(CalculatorBase):
         """
         Determine if a district is continuous.
         """
-        district = None
+        districts = []
 
         if 'district' in kwargs:
-            district = kwargs['district']
+            districts = [kwargs['district']]
 
         elif 'plan' in kwargs:
-            return
+            plan = kwargs['plan']
+            districts = plan.get_districts_at_version(plan.version, include_geom=False)
 
         else:
             return
 
-        self.result = 1 if district.geom and len(district.geom) == 1 else 0
+        self.result = 0
+        for district in districts:
+            if district.geom and len(district.geom) == 1: 
+                self.result += 1
 
 
 class Equivalence(CalculatorBase):

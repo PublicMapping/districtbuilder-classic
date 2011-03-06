@@ -1240,6 +1240,42 @@ class CalculatorCase(BaseTestCase):
 
         self.assertEquals(expected, actual, 'Incorrect value during threshold. (e:%s,a:%s)' % (expected, actual))
 
+    def test_threshold_plan1(self):
+        geolevelid = self.geolevels[1].id
+        geounits = self.geounits[geolevelid]
+
+        dist1ids = geounits[0:3] + geounits[9:12]
+        dist2ids = geounits[18:21] + geounits[27:30] + geounits[36:39]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        dist2ids = map(lambda x: str(x.id), dist2ids)
+        
+        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district2.district_id, dist2ids, geolevelid, self.plan.version)
+
+        thrcalc = Threshold()
+        thrcalc.arg_dict['value'] = ('subject',self.subject1.name,)
+        thrcalc.arg_dict['threshold'] = ('literal','10.0',)
+        thrcalc.compute(plan=self.plan)
+
+        actual = thrcalc.result
+
+        self.assertEquals(0, actual, 'Incorrect value during threshold. (e:%d,a:%d)' % (0, actual))
+
+        thrcalc.arg_dict['threshold'] = ('literal','7.0',)
+        thrcalc.compute(plan=self.plan)
+
+        actual = thrcalc.result
+
+        self.assertEquals(1, actual, 'Incorrect value during threshold. (e:%d,a:%d)' % (1, actual))
+
+        thrcalc.arg_dict['threshold'] = ('literal','5.0',)
+        thrcalc.compute(plan=self.plan)
+
+        actual = thrcalc.result
+
+        self.assertEquals(2, actual, 'Incorrect value during threshold. (e:%d,a:%d)' % (2, actual))
+
+
     def test_range1(self):
         rngcalc = Range()
         rngcalc.arg_dict['value'] = ('literal','2',)
@@ -1306,6 +1342,29 @@ class CalculatorCase(BaseTestCase):
 
         self.assertEquals(expected, actual, 'Incorrect value during range. (e:%s,a:%s)' % (expected, actual))
 
+    def test_range_plan1(self):
+        geolevelid = self.geolevels[1].id
+        geounits = self.geounits[geolevelid]
+
+        dist1ids = geounits[0:3] + geounits[9:12]
+        dist2ids = geounits[18:21] + geounits[27:30] + geounits[36:39]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        dist2ids = map(lambda x: str(x.id), dist2ids)
+        
+        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district2.district_id, dist2ids, geolevelid, self.plan.version)
+
+        rngcalc = Range()
+        rngcalc.arg_dict['value'] = ('subject',self.subject1.name,)
+        rngcalc.arg_dict['min'] = ('literal','7.0',)
+        rngcalc.arg_dict['max'] = ('literal','11.0',)
+        rngcalc.compute(plan=self.plan)
+
+        actual = rngcalc.result
+        expected = 1
+
+        self.assertEquals(expected, actual, 'Incorrect value during Plan range. (e:%d,a:%d)' % (expected, actual))
+
     def test_contiguity1(self):
         cntcalc = Contiguity()
         cntcalc.compute(district=self.district1)
@@ -1342,6 +1401,42 @@ class CalculatorCase(BaseTestCase):
 
         self.assertEquals(1, cntcalc.result, 'District is discontiguous.')
 
+    def test_contiguity_plan1(self):
+        geolevelid = self.geolevels[1].id
+        geounits = self.geounits[geolevelid]
+
+        dist1ids = geounits[0:4] + geounits[5:9]
+        dist2ids = geounits[9:13] + geounits[14:18]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        dist2ids = map(lambda x: str(x.id), dist2ids)
+        
+        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district2.district_id, dist2ids, geolevelid, self.plan.version)
+
+        cntcalc = Contiguity()
+        cntcalc.compute(plan=self.plan)
+
+        actual = cntcalc.result
+
+        self.assertEquals(0, actual, 'Incorrect value during contiguity. (e:%d,a:%d)' % (0, actual))
+
+        self.plan.add_geounits( self.district1.district_id, [str(geounits[4].id)], geolevelid, self.plan.version )
+
+        cntcalc.compute(plan=self.plan)
+
+        actual = cntcalc.result
+
+        self.assertEquals(1, actual, 'Incorrect value during contiguity. (e:%d,a:%d)' % (1, actual))
+
+        self.plan.add_geounits( self.district2.district_id, [str(geounits[13].id)], geolevelid, self.plan.version )
+
+        cntcalc.compute(plan=self.plan)
+
+        actual = cntcalc.result
+
+        self.assertEquals(2, actual, 'Incorrect value during contiguity. (e:%d,a:%d)' % (2, actual))
+
+
     def test_equivalence1(self):
         geolevelid = self.geolevels[1].id
         geounits = self.geounits[geolevelid]
@@ -1360,7 +1455,7 @@ class CalculatorCase(BaseTestCase):
 
         actual = equcalc.result
 
-        self.assertEquals(3.0, actual, 'Incorrect value during equivalence. (e:%f,a:%f)' % (1.0, actual))
+        self.assertEquals(3.0, actual, 'Incorrect value during equivalence. (e:%f,a:%f)' % (3.0, actual))
 
 
     def test_partisandiff1(self):
