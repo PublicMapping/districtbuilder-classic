@@ -61,13 +61,13 @@ class Command(BaseCommand):
 
             # Get all of the geounit_ids for that geolevel
             geounit_ids = map(str, Geounit.objects.filter(geolevel = geolevel).values_list('id', flat=True))
-            if verbosity > 0:
+            if verbosity > 1:
                 self.stdout.write("Found largest-geometry geolevel of %s, which has %d geounits\n" % (geolevel, len(geounit_ids)))
             # Cycle through each district and update the statistics
             if district_id == None:
                 all_districts = p.district_set.all()
-                if verbosity > 1:
-                    self.stdout.write('%d districts in plan %s\n' % (len(all_districts), p.name))
+                if verbosity > 0:
+                    self.stdout.write('Plan ID: %d; %d districts in %s\n' % (p.id, len(all_districts), p.name))
             else:
                 all_districts = list(districts,)
                 if verbosity > 1:
@@ -102,4 +102,4 @@ class Command(BaseCommand):
             return True
         except Exception as ex:
             if verbosity > 0:
-                print 'Unable to reaggreagate %s because \n%s' % (district.name, ex)
+                self.stdout.write('Unable to reaggreagate %s because \n%s' % (district.name, ex))
