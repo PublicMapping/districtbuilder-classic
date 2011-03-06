@@ -255,15 +255,15 @@ class ScoringTestCase(BaseTestCase):
 
         # test raw value
         score = thresholdFunction2.score(self.district1)
-        self.assertEquals(True, score, '2 is greater than 1')
+        self.assertEquals(1, score, '2 is greater than 1')
 
         # HTML
         score = thresholdFunction2.score(self.district1, 'html')
-        self.assertEquals("<span>True</span>", score, 'Threshold HTML was incorrect: ' + score)
+        self.assertEquals("<span>1</span>", score, 'Threshold HTML was incorrect: ' + score)
 
         # JSON
         score = thresholdFunction2.score(self.district1, 'json')
-        self.assertEquals('{"result": true}', score, 'Threshold JSON was incorrect: ' + score)
+        self.assertEquals('{"result": 1}', score, 'Threshold JSON was incorrect: ' + score)
 
     def testRangeFunction(self):
         # create the scoring function for checking if a value passes a range
@@ -277,15 +277,15 @@ class ScoringTestCase(BaseTestCase):
 
         # test raw value
         score = rangeFunction1.score(self.district1)
-        self.assertEquals(True, score, '2 is between 1 and 3')
+        self.assertEquals(1, score, '2 is between 1 and 3')
 
         # HTML
         score = rangeFunction1.score(self.district1, 'html')
-        self.assertEquals("<span>True</span>", score, 'Range HTML was incorrect: ' + score)
+        self.assertEquals("<span>1</span>", score, 'Range HTML was incorrect: ' + score)
 
         # JSON
         score = rangeFunction1.score(self.district1, 'json')
-        self.assertEquals('{"result": true}', score, 'Range JSON was incorrect: ' + score)
+        self.assertEquals('{"result": 1}', score, 'Range JSON was incorrect: ' + score)
 
 
 class PlanTestCase(BaseTestCase):
@@ -1490,7 +1490,10 @@ class ScoreRenderCase(BaseTestCase):
             template.close()
 
             markup = panel.render([self.plan,self.plan2])
-            expected = 'testPlan:<span>48.0</span>testPlan:<span>0.181818181818</span>testPlan2:<span>152.0</span>testPlan2:<span>0.263888888889</span>'
+            expected = 'testPlan:<span>48.0</span>' + \
+                'testPlan:<span>0.181818181818</span>' + \
+                'testPlan2:<span>152.0</span>' + \
+                'testPlan2:<span>0.263888888889</span>'
             self.assertEquals(expected, markup, 'The markup was incorrect. (e:"%s", a:"%s")' % (expected, markup))
 
             os.remove(tplfile)
@@ -1518,7 +1521,84 @@ class ScoreRenderCase(BaseTestCase):
             template.close()
 
             markup = panel.render(districts)
-            expected = 'District 1:86.83%<span>1</span>District 2:86.83%<span>1</span>Unassigned:n/a<span>0</span>'
+            expected = 'District 1:86.83%<span>1</span>' + \
+                'District 2:86.83%<span>1</span>' + \
+                'Unassigned:n/a<span>0</span>'
             self.assertEquals(expected, markup, 'The markup for districts was incorrect. (e:"%s", a:"%s")' % (expected,markup))
 
             os.remove(tplfile)
+
+    def test_display_render_page(self):
+        geolevelid = self.geolevels[1].id
+        geounits = self.geounits[geolevelid]
+
+        dist1ids = geounits[0:3] + geounits[9:12]
+        dist2ids = geounits[6:9] + geounits[15:18]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        dist2ids = map(lambda x: str(x.id), dist2ids)
+        
+        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district2.district_id, dist2ids, geolevelid, self.plan.version)
+        self.plan.is_valid = True
+        self.plan.save()
+
+        dist1ids = geounits[3:6] + geounits[12:15]
+        dist2ids = geounits[9:12] + geounits[18:21]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        dist2ids = map(lambda x: str(x.id), dist2ids)
+        
+        self.plan2.add_geounits( 1, dist1ids, geolevelid, self.plan2.version)
+        self.plan2.add_geounits( 1, dist2ids, geolevelid, self.plan2.version)
+        self.plan2.is_valid = True
+        self.plan2.save()
+
+        display = ScoreDisplay.objects.filter(is_page=True)[0]
+        plans = list(Plan.objects.filter(is_valid=True))
+
+        panel = display.scorepanel_set.all()[0]
+        tplfile = settings.TEMPLATE_DIRS[0] + '/' + panel.template
+        template = open(tplfile,'w')
+        template.write('{% for planscore in planscores %}{{planscore.plan.name}}:{{ planscore.score|safe }}{% endfor %}')
+        template.close()
+
+        markup = display.render(plans)
+
+        expected = 'testPlan:<span>48.0</span>' + \
+            'testPlan:<span>0.181818181818</span>' + \
+            'testPlan2:<span>152.0</span>' + \
+            'testPlan2:<span>0.263888888889</span>'
+        self.assertEquals(expected, markup, 'The markup was incorrect. (e:"%s", a:"%s")' % (expected, markup))
+
+        os.remove(tplfile)
+
+    def test_display_render_div(self):
+        geolevelid = self.geolevels[1].id
+        geounits = self.geounits[geolevelid]
+
+        dist1ids = geounits[0:3] + geounits[9:12]
+        dist2ids = geounits[6:9] + geounits[15:18]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        dist2ids = map(lambda x: str(x.id), dist2ids)
+        
+        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district2.district_id, dist2ids, geolevelid, self.plan.version)
+
+        display = ScoreDisplay.objects.filter(is_page=False)[0]
+
+        panel = display.scorepanel_set.all()[0]
+        tplfile = settings.TEMPLATE_DIRS[0] + '/' + panel.template
+        template = open(tplfile,'w')
+        template.write('{% for dscore in districtscores %}{{dscore.district.name }}:{% for score in dscore.scores %}{{ score.score|safe }}{% endfor %}{% endfor %}')
+        template.close()
+
+        markup = display.render(self.plan)
+        self.assertEquals('', markup, 'The markup was incorrect. (e:"", a:"%s")' % markup)
+
+        markup = display.render(self.plan.get_districts_at_version(self.plan.version,include_geom=False))
+
+        expected = 'District 1:86.83%<span>1</span>' + \
+            'District 2:86.83%<span>1</span>' + \
+            'Unassigned:n/a<span>0</span>'
+        self.assertEquals(expected, markup, 'The markup was incorrect. (e:"%s", a:"%s")' % (expected, markup))
+
+        os.remove(tplfile)

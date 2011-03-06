@@ -1635,6 +1635,52 @@ class ScoreDisplay(models.Model):
         """
         return self.title
 
+    def render(self, dorp):
+        """
+        Generate the markup for all the panels attached to this display.
+
+        If the is_page property is set, render expects to receive a list
+        of valid plans.
+
+        If the is_page property is not set, render expects to receive a
+        single plan, or a list of districts.
+
+        Parameters:
+            dorp -- A list of districts, plan, or list of plans.
+
+        Returns:
+            The markup for this display.
+        """
+        is_list = isinstance(dorp, list)
+
+        if self.is_page and \
+            (is_list and \
+                any(not isinstance(item,Plan) for item in dorp)):
+            # If this display is a page, it should receive a list of plans
+            #print "Page display only renders lists of plans."
+            return ''
+        elif not self.is_page:
+            if is_list and \
+                any(not isinstance(item,District) for item in dorp):
+                # If this display is not a page, the list should be a set
+                # of districts.
+                #print "Non-page display renders lists of districts"
+                return ''
+            elif not is_list and \
+                not isinstance(dorp,Plan):
+                # If this display is not a page, the item should be a plan.
+                #print "Non-page display renders a single plan."
+                return ''
+
+        panels = self.scorepanel_set.all().order_by('position')
+
+        markup = ''
+        for panel in panels:
+            #print "Rendering panel:",panel.title
+            markup += panel.render(dorp)
+
+        return markup
+
 
 class ScorePanel(models.Model):
     """
@@ -1670,20 +1716,36 @@ class ScorePanel(models.Model):
         """
         Generate the scores for all the functions attached to this panel,
         and render them in the template.
+
+        Parameters:
+            dorp -- A district, list of districts, plan, or list of plans.
+
+        Returns:
+            A rendered set of scores.
         """
         is_list = isinstance(dorp,list)
 
         # If this is a plan panel, it only renders plans
         if (self.type == 'plan' or self.type == 'plan_summary') and \
-            (not isinstance(dorp,Plan) and \
-                (is_list and not isinstance(dorp[0],Plan))):
-            return ""
+            not isinstance(dorp,Plan):
+            if is_list:
+                if any(not isinstance(item,Plan) for item in dorp):
+                    #print 'Plan panel only renders plans.'
+                    return ''
+            else:
+                #print 'Plan panel only renders plans.'
+                return ''
 
         # If this is a district panel, it only renders districts
         if self.type == 'district' and \
-            (not isinstance(dorp,District) and \
-                (is_list and not isinstance(dorp[0],District))):
-            return ""
+            not isinstance(dorp,District):
+            if is_list:
+                if any(not isinstance(item,District) for item in dorp):
+                    #print 'District panel only renders districts.'
+                    return ''
+            else:
+                #print 'District panel only renders districts.'
+                return ''
 
         # Render an item for each plan and plan score
         if self.type == 'plan' or self.type == 'plan_summary':
@@ -1691,6 +1753,8 @@ class ScorePanel(models.Model):
                 plans = dorp
             else:
                 plans = [dorp]
+
+            #print len(plans)
 
             planscores = []
             for plan in plans:
@@ -1703,7 +1767,13 @@ class ScorePanel(models.Model):
                         'score':pf.function.score(plan,format='html')
                     })
 
-            return render_to_string(self.template, {"planscores":planscores} )
+            #print len(planscores)
+
+            return render_to_string(self.template, {
+                'planscores':planscores,
+                'title':self.title,
+                'cssclass':self.cssclass
+            })
 
         # Render each district with multiple scores
         elif self.type == 'district':
@@ -1728,7 +1798,11 @@ class ScorePanel(models.Model):
 
                 districtscores.append(districtscore)
 
-            return render_to_string(self.template, {"districtscores":districtscores} )
+            return render_to_string(self.template, {
+                'districtscores':districtscores,
+                'title': self.title,
+                'cssclass': self.cssclass
+            })
 
 
 

@@ -533,7 +533,6 @@ class RepresentationalFairness(CalculatorBase):
 
             pidx = dem / (dem + rep)
             if pidx > 0.5:
-                print "PIDX!",pidx
                 likely += 1
 
             sumdem += dem
@@ -541,10 +540,7 @@ class RepresentationalFairness(CalculatorBase):
 
             numdistricts += 1
 
-        print "Sum DEM:%0.2f, Sum REP:%0.2f" % (sumdem, sumrep,)
         statepct = sumdem / (sumdem+sumrep)
-        print "Likely: %d, Num total: %d" % (likely, numdistricts,)
         likelypct = float(likely) / float(numdistricts)
 
         self.result = abs( (likelypct/statepct) - 1 )
-        print "Result:", self.result
