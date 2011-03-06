@@ -887,6 +887,9 @@ div.toolset#toolset_draw .ui-icon {
 #polygon_drawing_tool  .ui-icon {
   background-image: url(/static-media/images/icon-select-poly.png);
 }
+#copy_paste_tool  .ui-icon {
+  background-image: url(/static-media/images/icon-copy-paste.png);
+}
 #dragdrop_tool .ui-icon {
   background-image: url(/static-media/images/icon-drop.png);
 }
@@ -1425,6 +1428,27 @@ div#stats_legend_panel img  {
 button#stats_legend {
   width: 100%;
 }
+
+
+/* copy / paste dialog */
+#shared_districts_content {padding-bottom: 15px;float:left}
+#shared_districts_content > div {
+    float:left;
+    margin-right: 15px;
+    font-size: 12px;
+}
+#shared_districts_content h2 {margin-bottom: 8px; font-size: 16px; font-weight:bold;}
+#shared_plans_column {
+}
+#shared_districts_column {
+}
+#shared_districts_dialog  #step_3 {
+}
+#shared_districts_dialog  #step_3 h2{
+  float:left; margin-right: 10px;
+}
+
+
 
 /* bard report previews */
 div.report {
