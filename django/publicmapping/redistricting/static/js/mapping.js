@@ -2263,6 +2263,14 @@ function mapinit(srs,maxExtent) {
         }
     });
 
+    // Grab the event fired off by the copy/paste button
+    // and reload the page after pasting
+    $('#copy_paste_tool').bind('merge_success', function() {
+            updateInfoDisplay();
+            updateAssignableDistricts();
+    });
+        
+
     /*
     * Ask the user for a new district name, then assign the current 
     * selection to the new district upon successful creation of the

@@ -41,6 +41,7 @@
           <button id="single_drawing_tool" title="Single district select; +Shift to select multiple districts" class="btntoggle titletip" ></button>
           <button id="rectangle_drawing_tool" title="Select by rectangle" class="btntoggle titletip" ></button>
           <button id="polygon_drawing_tool" title="Select by drawing a polygon" class="btntoggle titletip"></button>
+          <button id="copy_paste_tool" title="Copy a district from another plan" class="titletip"></button>
         </div>
       </div>
       <div class="toolset_group toolset_group_w">
@@ -89,3 +90,45 @@
                 <a href="/districtmapping/plan/0/view/"><button id="selectNew">Select New Plan to Edit</button></a>
             </div>
         {% endblock %}
+
+    {% block shared_districts %}
+    <div id="shared_districts_dialog">
+        <!-- <div id="header"><h3></h3></div> -->
+        <div id="shared_districts_content">
+            <div id="shared_plans_column">
+                <table id="shared_plans_table"></table>
+                <div id="shared_plans_pager"></div>
+            </div>
+            <div id="shared_districts_column">
+                <table id="shared_districts_table"></table>
+                <div id="shared_districts_pager"></div>
+            </div>
+            <div id="shared_district_maps">
+            </div>
+        </div>
+        <div id="footer">
+            <div id="message_box"></div>
+            <div id="step_3">
+                3. Paste Selected Districts
+                <button id="paste_button">Paste</button>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="/static-media/js/shareddistricts.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            var shared = shareddistricts({
+                container: $('#shared_districts_dialog'),
+                target: $('#copy_paste_tool'),
+                planTable: $('#shared_plans_table'),
+                planPager: $('#shared_plans_pager'),
+                planUrl: '/districtmapping/getplans/',
+                districtTable: $('#shared_districts_table'),
+                districtPager: $('#shared_districts_pager'),
+                districtUrl: '/districtmapping/plan/PLAN_ID/shareddistricts/',
+                submitButton: $('#paste_button'),
+                handlerUrl: '/districtmapping/plan/{{ plan.id }}/pastedistricts/'
+            }).init();
+        });
+    </script>
+    {% endblock %}

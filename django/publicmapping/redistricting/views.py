@@ -903,6 +903,60 @@ def newdistrict(request, planid):
 
 @login_required
 @unique_session_or_json_redirect
+def add_districts_to_plan(request, planid):
+    status = { 'success': False }
+
+    # TODO: Remove "Stay Tuned" Message on implementation
+    status['message'] = 'This feature is not yet implemented'
+    return HttpResponse(json.dumps(status),mimetype='application/json')
+
+    # Make sure we can edit the given plan
+    try:
+        plan = Plan.objects.get(pk=planid)
+    except:
+        status['message'] = 'No plan with the given id'
+        return HttpResponse(json.dumps(status),mimetype='application/json')
+
+    if not can_edit(request.user, plan):
+        status['message'] = 'User can\'t edit the given plan'
+        return HttpResponse(json.dumps(status),mimetype='application/json')
+    
+    # Get the districts we want to merge
+    district_list = request.POST.getlist('districts[]')
+    if len(district_list) == 0:
+        status['message'] = 'No districts selected to add to the given plan'
+        return HttpResponse(json.dumps(status),mimetype='application/json')
+    else:
+        districts = District.objects.filter(id__in=district_list)
+        status['message'] = 'Going to merge %d districts' % len(districts)
+    
+    # Check to see if we have enough room to add these districts without
+    # going over MAX_DISTRICTS for the legislative_body
+    current_districts = plan.get_districts_at_version(plan.version, include_geom=False)
+    current_district_count = 0
+    for d in current_districts:
+        if d.has_geom == True:
+            current_district_count += 1
+     
+    # current_district_count = len(plan.get_districts_at_version(plan.version)) - 1
+    allowed_districts = plan.legislative_body.max_districts
+    
+    if current_district_count + len(districts) > allowed_districts:
+        status['message'] = 'Tried to merge too many districts'
+
+    # Everything checks out, let's paste those districts
+    try:
+        results = plan.paste_districts(districts)
+        status['success'] = True
+        status['message'] = 'Merged %d districts' % len(results)
+        status['version'] = plan.version
+    except Exception as ex:
+        status['message'] = 'Failed to merge: %s' % ex
+
+    return HttpResponse(json.dumps(status),mimetype='application/json')
+
+@login_required
+@unique_session_or_json_redirect
 def addtodistrict(request, planid, districtid):
     """
     Add geounits to a district.
@@ -1699,6 +1753,8 @@ def getplans(request):
             return HttpResponseForbidden()
         else:
             available = Q(owner__exact=request.user)
+    elif owner_filter == 'all_available':
+        available = Q(is_template=True) | Q(is_shared=True) | Q(owner__exact=request.user)
     else:
         return HttpResponseBadRequest("Unknown filter method.")
         
@@ -1744,6 +1800,52 @@ def getplans(request):
                 }
             })
     json_response = "{ \"total\":\"%d\", \"page\":\"%d\", \"records\":\"%d\", \"rows\":%s }" % (total_pages, page, len(all_plans), json.dumps(plans_list))
+    return HttpResponse(json_response,mimetype='application/json') 
+
+def get_shared_districts(request, planid):
+    """
+    Get the shared districts in a given plan and return the
+    data in a format readable by the jqgrid
+    """
+    note_session_activity(request)
+
+    if not using_unique_session(request.user):
+        return HttpResponseForbidden()
+
+    if request.method == 'POST':
+        page = int(request.POST.get('page', 1))
+        rows = int(request.POST.get('rows', 10))
+    else:
+        return HttpResponseForbidden()
+
+    end = page * rows
+    start = end - rows
+    
+    plan = Plan.objects.get(pk=planid)
+    if not can_copy(request.user, plan):
+        return HttpResponseForbidden()
+
+    all_districts = plan.get_districts_at_version(plan.version, include_geom=False)
+
+    if len(all_districts) > 0:
+        total_pages = math.ceil(len(all_districts) / float(rows))
+    else:
+        total_pages = 1
+
+    districts = all_districts[start:end]
+    # Create the objects that will be serialized for presentation in the plan chooser
+    districts_list = list()
+    for district in districts:
+        if district.has_geom and district.name != 'Unassigned':
+            districts_list.append({
+                'pk': district.id, 
+                'fields': { 
+                    'name': district.name, 
+                    'district_id': district.district_id,
+                }
+            })
+
+    json_response = "{ \"total\":\"%d\", \"page\":\"%d\", \"records\":\"%d\", \"rows\":%s }" % (total_pages, page, len(all_districts), json.dumps(districts_list))
     return HttpResponse(json_response,mimetype='application/json') 
 
 @login_required

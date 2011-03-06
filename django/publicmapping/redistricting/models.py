@@ -333,7 +333,7 @@ class Geounit(models.Model):
 
         Parameters:
             geounit_ids -- A list of Geounit IDs. Please note that these
-                must be int datatypes, and not str.
+                must be strings, not integers.
             legislative_body -- The LegislativeBody that contains this 
                 geolevel.
             geolevel -- The ID of the Geolevel that contains geounit_ids
@@ -349,7 +349,7 @@ class Geounit(models.Model):
         if not boundary and inside:
             # there are 0 geounits inside a non-existant boundary
             return []
-
+            
         # Make sure the geolevel is a number
         geolevel = int(geolevel)
         levels = legislative_body.get_geolevels()
@@ -950,6 +950,118 @@ class Plan(models.Model):
         # Return a flag indicating any districts changed
         return fixed
 
+    def get_biggest_geolevel(self):
+        """
+        A convenience method to get the "biggest" geolevel that could
+        be used in this plan.  Helpful for get_mixed_geounits
+        
+        Returns:
+            The geolevel in this plan with the minimum zoom level
+        """
+        leg_levels = LegislativeLevel.objects.filter(legislative_body = self.legislative_body)
+        geolevel = leg_levels[0].geolevel
+
+        for l in leg_levels:
+            if l.geolevel.min_zoom < geolevel.min_zoom:
+                geolevel = l.geolevel
+        return geolevel
+
+    def paste_districts(self, districts, version=None):
+        """ 
+        Add the districts with the given plan into the plan
+        Parameters
+            districts -- A list of districts to add to
+                this plan
+            version -- The plan version that requested the
+                change.  Upon success, the plan will be one
+                version greater.
+        
+        Returns:
+            A list of the ids of the new, pasted districts
+        """
+    
+        if version == None:
+            version = self.version
+        # Check to see if we have enough room to add these districts without
+        # going over MAX_DISTRICTS for the legislative_body
+        current_districts = self.get_districts_at_version(version, include_geom=False)
+        current_district_count = 0
+        for d in current_districts:
+            if d.has_geom == True:
+                current_district_count += 1
+         
+        allowed_districts = self.legislative_body.max_districts
+        
+        if current_district_count + len(districts) > allowed_districts:
+            raise Exception('Tried to merge too many districts')
+
+        # We've got room.  Add the districts.
+        pasted_list = list()
+        for district in districts:
+            new_district_id = self.paste_district(district, version=version)
+            if new_district_id > 0:
+                pasted_list.append(new_district_id)
+        if len(pasted_list) > 0:
+            self.version = version + 1
+            self.save()
+        return pasted_list
+
+    def paste_district(self, district, version=None):
+        """
+        Add the district with the given primary key into this plan
+
+        Parameters:
+            district -- The district to paste into the plan.
+            version -- the plan version that requested the change.
+                The saved districts will be one version greater.
+                NB: If these districts are in a different plan, the ordering
+                of the addition could have unexpected results
+
+        Returns:
+            The id of the created district
+        """
+        
+        # Get the old districts from before this one is pasted
+        if version == None:
+            version = self.version
+        others = self.get_districts_at_version(version, include_geom=True)
+        biggest_geolevel = self.get_biggest_geolevel()
+
+        # Save the new district as-is to the plan
+        pasted = District(name='', plan=self, district_id = None, geom=district.geom, simple = district.simple, version = version + 1)
+        pasted.save();
+        pasted.name = self.legislative_body.member % (pasted.district_id - 1)
+        pasted.save();
+        pasted.clone_characteristics_from(district)
+        
+        # For the remaning districts in the plan,
+        sys.stderr.write('Districts already in plan: %s\n' % others)
+        for existing in others:
+            sys.stderr.write('Checking to see if pasted district overlaps with %s\n' % existing)
+            if not existing.geom or not pasted.geom:
+                continue
+            # See if the pasted existing intersects any other existings
+            if existing.geom.intersects(pasted.geom):
+                intersection = existing.geom.intersection(pasted.geom)
+                # We don't want touching existings
+                if intersection.geom_type not in ('Polygon', 'MultiPolygon', 'LinearRing', 'GeometryCollection'):
+                    sys.stderr.write('GEOM touches but doesn\'t intersect - intersection type %s\n' % intersection.geom_type)
+                    continue
+                old_stats = existing.computedcharacteristic_set
+                existing.id = None
+                # sys.stderr.write('Intersection of %s and %s is %s, type %s\n' % (existing, pasted, intersection, intersection.geom_type))
+                difference = enforce_multi(existing.geom.difference(pasted.geom))
+                # sys.stderr.write('Difference of %s and %s is %s %s\n' % (existing.geom, intersection, difference.geom_type, difference))
+                existing.geom = None if difference.empty == True else difference
+                existing.version += 1
+                existing.simplify()
+                
+                sys.stderr.write('Saved district %s, version %d\n' % (existing, existing.version))
+                geounit_ids = map(str, Geounit.objects.filter(geom__bboverlaps=intersection, geolevel=biggest_geolevel).values_list('id', flat=True))
+                geounits = Geounit.get_mixed_geounits(geounit_ids, self.legislative_body, biggest_geolevel.id, difference, True)
+                
+                existing.delta_stats(geounits, False)
+        return pasted.id
 
     def get_wfs_districts(self,version,subject_id,extents,geolevel):
         """

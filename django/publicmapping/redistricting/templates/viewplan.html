@@ -41,6 +41,7 @@
     <link rel="stylesheet" type="text/css" href="/static-media/jquery/themes/custom-theme/jquery-ui-1.8.2.custom.css"/>
     <link rel="stylesheet" type="text/css" href="/static-media/css/core.css"/>
     <link rel="stylesheet" type="text/css" href="/static-media/css/visuals.css"/>    
+    <link rel="stylesheet" type="text/css" href="/static-media/css/redistricting.css"/>
     <script type="text/javascript" src="/static-media/openlayers/OpenLayers.js"></script><!-- production -->
     <!-- <script type="text/javascript" src="/static-media/OpenLayers-2.9.1/lib/OpenLayers.js"></script> debug -->
     <script src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=6.2&mkt=en-us"></script> 
@@ -135,6 +136,7 @@
     <script type="text/javascript" src="/static-media/js/mapping.js"></script>
     <script type="text/javascript" src="/static-media/js/districtindexfile.js"></script>
     <script type="text/javascript" src="/static-media/js/chooseplan.js"></script>
+    <script type="text/javascript" src="/static-media/js/shareddistricts.js"></script>
     <script type="text/javascript" src="/static-media/js/reports.js"></script>
     <script type="text/javascript" src="/static-media/js/register.js"></script>
     {% comment %}
@@ -762,6 +764,14 @@
 <div id="waiting" title="Please Wait">Please wait while data is being retrieved...</div>
 <div id="DialogContainer"></div>
 <div class="olHandlerBoxSelectFeature" style="display:none;"></div>
+
+{% comment %}
+
+Include the shared_districts markup if we're using the copy/paste tool
+
+{% endcomment %}
+
+{% block shared_districts %}{% endblock %}
 
 {% comment %}
 
