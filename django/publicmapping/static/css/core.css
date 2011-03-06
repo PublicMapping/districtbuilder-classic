@@ -270,45 +270,50 @@ div.leaderboard_panel {
     box-shadow: 0 0 20px -5px #666666;
 
 }
-    
-div  .leaderboard_panel.odd {margin-right:none}
-
-div.leaderboard_panel .ui-widget-content {
-  border: 1px solid #bbb;
-  color: #555555;
-  font-size: 11px;
-  -moz-border-radius: 0;
-  -webkit-border-radius: 0;
-  border-radius: 0;
-  }
-div.leaderboard_panel .ui-widget-content .ui-th-ltr {
-  font-weight: bold;
-}
-div.leaderboard_panel .ui-widget-content .ui-th-ltr td {
-  padding-left: 7px;
-  padding-right: 7px;
-}
-div.leaderboard_panel .ui-jqgrid tr.ui-row-ltr {
-  background: #fafafa;
-}
-div.leaderboard_panel .ui-widget-content a {
-  color: #555
-}
-  
-
 div.leaderboard_title {
   font-size:16px;
   font-weight: bold;
   color: #3E3E3E;
   margin-bottom: 10px;
 }
+div.leaderboard_panel.odd {margin-right:none}
 
-div.leaderboard_grid {
-  background: #fff;
-  margin-right: 10px;
+div.leaderboard_panel table{
+  border-collapse: collapse;
+  color: #555555;
   font-size: 11px;
+  border: 1px solid #ccc;
 }
 
+div.leaderboard_panel .ui-widget-content .ui-th-ltr {
+  font-weight: bold;
+ }
+ 
+div.leaderboard_panel .titleHelp {
+  float:left;
+  margin: 5px 5px 0 0;
+}
+ 
+div.leaderboard_panel table th{
+background: #ECF6F5;
+font-weight:bold;
+font-size: 12px;
+}
+div.leaderboard_panel table td, div.leaderboard_panel table th {
+padding: 3px 7px;
+border: 1px solid #ccc;
+}
+div.leaderboard_panel table th.colRank {width: 25px}
+div.leaderboard_panel table th.colUser {width: 90px}
+div.leaderboard_panel table th.colPlan {width: 160px}
+div.leaderboard_panel table th.colScore {width: 30px}
+
+div.leaderboard_panel table tr {
+  background: #fafafa;
+}
+div.leaderboard_panel  table a {
+  color: #555
+}
 
 
 
