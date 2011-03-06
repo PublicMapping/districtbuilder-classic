@@ -902,7 +902,9 @@ div.toolset#toolset_draw .ui-icon {
 #history_redo  .ui-icon {
   background-image: url(/static-media/images/icon-redo.png);
 }
-
+#select_district  .ui-icon {
+  background-image: url(/static-media/images/icon-select-district.png);
+}
 
 div.toolset_group {
   float:left;
@@ -1583,7 +1585,7 @@ margin-bottom:20px;
 }
 
 .share #verifyandpost .explanation {
-    margin: 10px;
+    margin: 0 0 10px 0;
 }
 
 
