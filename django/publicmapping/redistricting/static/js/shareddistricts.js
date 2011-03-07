@@ -304,10 +304,11 @@ shareddistricts = function(options) {
                 success: function(data) {
                     if (data.success == true) {
                         console.log('Successfully pasted a district. Plan at version ' + data.version);
+                        PLAN_VERSION = data.version;
+                        PLAN_HISTORY[PLAN_VERSION] = true;
                         $('#history_cursor').val(data.version);
                         _options.container.dialog( 'close');
                         $('#copy_paste_tool').trigger('merge_success'); 
-                        // alert('Success!\n' + data.message);
                     } else {
                         alert('Sorry!\n' + data.message);
                         _options.container.dialog( 'close');
@@ -315,7 +316,7 @@ shareddistricts = function(options) {
                 }
             });
             // We don't want these districts selected anymore in the table
-            loadDistrictsForPlan(_selectedPlanId);
+            _districtTable.trigger('reloadGrid', [{page:1}]); 
         });
 
     };

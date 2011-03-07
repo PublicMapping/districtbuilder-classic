@@ -30,7 +30,7 @@ Author:
 from django.http import *
 from django.core import serializers
 from django.core.exceptions import ValidationError, SuspiciousOperation, ObjectDoesNotExist
-from django.db import IntegrityError, connection
+from django.db import IntegrityError, connection, transaction
 from django.db.models import Sum, Min, Max
 from django.shortcuts import render_to_response
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -903,12 +903,13 @@ def newdistrict(request, planid):
 
 @login_required
 @unique_session_or_json_redirect
+@transaction.commit_manually
 def add_districts_to_plan(request, planid):
     status = { 'success': False }
 
     # TODO: Remove "Stay Tuned" Message on implementation
-    status['message'] = 'This feature is not yet implemented'
-    return HttpResponse(json.dumps(status),mimetype='application/json')
+#    status['message'] = 'This feature is not yet implemented'
+#    return HttpResponse(json.dumps(status),mimetype='application/json')
 
     # Make sure we can edit the given plan
     try:
@@ -941,16 +942,18 @@ def add_districts_to_plan(request, planid):
     # current_district_count = len(plan.get_districts_at_version(plan.version)) - 1
     allowed_districts = plan.legislative_body.max_districts
     
-    if current_district_count + len(districts) > allowed_districts:
-        status['message'] = 'Tried to merge too many districts'
+    if (current_district_count + len(districts)) > allowed_districts:
+        status['message'] = 'Tried to merge too many districts; %d current + %d added > % max' % (current_district_count, len(districts), allowed_districts)
 
     # Everything checks out, let's paste those districts
     try:
         results = plan.paste_districts(districts)
+        transaction.commit()
         status['success'] = True
         status['message'] = 'Merged %d districts' % len(results)
         status['version'] = plan.version
     except Exception as ex:
+        transaction.rollback()
         status['message'] = 'Failed to merge: %s' % ex
 
     return HttpResponse(json.dumps(status),mimetype='application/json')

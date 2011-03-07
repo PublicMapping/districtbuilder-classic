@@ -656,17 +656,14 @@ class PlanTestCase(BaseTestCase):
 
     def test_paste_districts(self):
         
+        # Set up the test using geounits in the 2nd level
         geolevelid = self.geolevels[1].id
         geounits = self.geounits[geolevelid]
-
         dist1ids = geounits[0:3] + geounits[9:12] + geounits[18:21]
-                
         dist1ids = map(lambda x: str(x.id), dist1ids)
-
         self.plan.add_geounits(self.district1.district_id, dist1ids, geolevelid, self.plan.version)
 
         district1 = max(District.objects.filter(plan=self.plan,district_id=self.district1.district_id),key=lambda d: d.version)
-
         target = Plan.create_default('Paste Plan 1', self.plan.legislative_body, owner=self.user, template=False, is_pending=False)
         target.save();
 
@@ -711,24 +708,113 @@ class PlanTestCase(BaseTestCase):
         self.district1 = max(District.objects.filter(plan=self.plan,district_id=self.district1.district_id),key=lambda d: d.version)
 
         # Get the statistics for the district 1 in the target
-        # sys.stdout.write(target.district_set.all())
         target1 = max(District.objects.filter(plan=target,district_id=target1.district_id),key=lambda d: d.version)
         self.assertTrue(target1.geom.equals(self.district1.geom), 'Geometry of pasted geometry is not correct')
         target_stats = target1.computedcharacteristic_set.all()
         
         for stat in target_stats:
             district1_stat = ComputedCharacteristic.objects.get(district=self.district1, subject=stat.subject)
-            sys.stdout.write('Expected: %s Got: %s' % (district1_stat.number, stat.number))
             self.assertEquals(stat.number, district1_stat.number, "Stats for pasted district (number) don't match")
-            sys.stdout.write('Expected: %s Got: %s' % (district1_stat.percentage, stat.percentage))
             self.assertEquals(stat.percentage, district1_stat.percentage, "Stats for pasted district (percentage) don't match")
             
         # Make sure that method fails when adding too many districts
         settings.max_districts = 2
-        with self.assertRaises(Exception) as ex:
-            result = target.paste_districts(district2)
-        self.assertEquals(ex.message, 'Allowed to merge too many districts')
-            
+        self.assertRaises(Exception, target.paste_districts, (district2), 'Allowed to merge too many districts')
+
+    def test_paste_districts_onto_locked(self):
+        
+        # Set up the test using geounits in the 2nd level
+        geolevelid = self.geolevels[1].id
+        geounits = self.geounits[geolevelid]
+        dist1ids = geounits[0:3] + geounits[9:12] + geounits[18:21]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        self.plan.add_geounits(self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+
+        district1 = max(District.objects.filter(plan=self.plan,district_id=self.district1.district_id),key=lambda d: d.version)
+        target = Plan.create_default('Paste Plan 1', self.plan.legislative_body, owner=self.user, template=False, is_pending=False)
+        target.save();
+
+        # Add a district to the Paste Plan
+        target.add_geounits(self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        # Lock that district
+        district1 = max(District.objects.filter(plan=target,district_id=self.district1.district_id),key=lambda d: d.version)
+        district1.is_locked = True;
+        district1.save()
+        # Add a district that would overlap district1 to self.plan
+        dist2ids = geounits[10:13] + geounits[19:22] + geounits[28:31]
+        dist2ids = map(lambda x: str(x.id), dist2ids)
+        self.plan.add_geounits(self.district2.district_id, dist2ids, geolevelid, self.plan.version)
+        self.district2 = max(District.objects.filter(plan=self.plan,district_id=self.district2.district_id),key=lambda d: d.version)
+
+        # Paste district2 into our Paste Plan, on top of the locked district1
+        target.paste_districts((self.district2,))
+        district2 = max(District.objects.filter(plan=target,district_id=self.district2.district_id),key=lambda d: d.version)
+        # Create in self.plan the district we want to see if Paste Plan
+        unassigned = max(District.objects.filter(plan=self.plan,name="Unassigned"),key=lambda d: d.version)
+        self.plan.add_geounits(unassigned.district_id, dist1ids, geolevelid, self.plan.version)
+        self.district2 = max(District.objects.filter(plan=self.plan,district_id=self.district2.district_id),key=lambda d: d.version)
+        # Check stats and geometry
+        self.assertTrue(self.district2.geom.equals(district2.geom), 'Geom for district pasted over locked district doesn\'t match')
+        target_stats = district2.computedcharacteristic_set.all()
+        for stat in target_stats:
+            expected_stat = ComputedCharacteristic.objects.get(district=self.district2, subject=stat.subject)
+            self.assertEquals(stat.number, expected_stat.number, "Stats for pasted district (number) don't match")
+            self.assertEquals(stat.percentage, expected_stat.percentage, "Stats for pasted district (percentage) don't match")
+        
+
+    def test_paste_multiple_districts(self):
+        # Set up the test using geounits in the 2nd level
+        geolevelid = self.geolevels[1].id
+        geounits = self.geounits[geolevelid]
+        dist1ids = geounits[0:3] + geounits[9:12] + geounits[18:21]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        self.plan.add_geounits(self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+
+        self.district3 = District(plan=self.plan, name="TestMember 3", district_id = 4)
+        self.district3.save()
+        dist3ids = geounits[20:23] + geounits[29:32] + geounits[38:41]
+        dist3ids = map(lambda x: str(x.id), dist3ids)
+        self.plan.add_geounits(self.district3.district_id, dist3ids, geolevelid, self.plan.version)
+
+        self.district1 = max(District.objects.filter(plan=self.plan,district_id=self.district1.district_id),key=lambda d: d.version)
+        self.district3 = max(District.objects.filter(plan=self.plan,district_id=self.district3.district_id),key=lambda d: d.version)
+
+        target = Plan.create_default('Paste Plan', self.plan.legislative_body, owner=self.user, template=False, is_pending=False)
+        target.save();
+
+        # Add a district to the Paste Plan
+        dist2ids = geounits[10:12] + geounits[19:22] + geounits[29:31]
+        dist2ids = map(lambda x: str(x.id), dist2ids)
+        target.add_geounits(self.district2.district_id, dist2ids, geolevelid, target.version)
+
+        # Paste over top of it with two districts, both intersecting the present district
+        old_version = target.version
+        results = target.paste_districts((self.district1, self.district3))
+        new_version = target.version
+        # Check that we've only moved up one version
+        self.assertTrue(new_version == old_version + 1, 'Adding multiple districts increased plan version by %d rather than 1' % (new_version - old_version))
+        # Check stats and geometry for all districts in Paste Plan
+        self.assertEqual(2, len(results), 'Didn\'t get 2 pasted district IDs')
+        district1 = District.objects.get(pk=results[0])
+        self.assertTrue(self.district1.geom.equals(district1.geom), 'Geom for pasted district doesn\'t match')
+        target_stats = district1.computedcharacteristic_set.all()
+        for stat in target_stats:
+            expected_stat = ComputedCharacteristic.objects.get(district=self.district1, subject=stat.subject)
+            self.assertEquals(stat.number, expected_stat.number, "Stats for pasted district (number) don't match")
+            self.assertEquals(stat.percentage, expected_stat.percentage, "Stats for pasted district (percentage) don't match")
+
+        district3 = District.objects.get(pk=results[1])
+        self.assertTrue(self.district3.geom.equals(district3.geom), 'Geom for pasted district doesn\'t match')
+        target_stats = district3.computedcharacteristic_set.all()
+        for stat in target_stats:
+            expected_stat = ComputedCharacteristic.objects.get(district=self.district3, subject=stat.subject)
+            self.assertEquals(stat.number, expected_stat.number, "Stats for pasted district (number) don't match")
+            self.assertEquals(stat.percentage, expected_stat.percentage, "Stats for pasted district (percentage) don't match")
+
+        # Test that already-present district is gone.
+        district2 = max(District.objects.filter(plan=target,district_id=self.district2.district_id),key=lambda d: d.version)
+        self.assertTrue(district2.geom == None, 'District 2 geom wasn\'t emptied when it was pasted over')
+        self.assertEqual(0, len(district2.computedcharacteristic_set.all()), 'District2 still has characteristics')
 
 class GeounitMixTestCase(BaseTestCase):
     """

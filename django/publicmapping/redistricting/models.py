@@ -987,7 +987,7 @@ class Plan(models.Model):
         current_districts = self.get_districts_at_version(version, include_geom=False)
         current_district_count = 0
         for d in current_districts:
-            if d.has_geom == True:
+            if d.has_geom == True and d.name != 'Unassigned':
                 current_district_count += 1
          
         allowed_districts = self.legislative_body.max_districts
@@ -996,9 +996,12 @@ class Plan(models.Model):
             raise Exception('Tried to merge too many districts')
 
         # We've got room.  Add the districts.
+        if version < self.version:
+            self.purge(after=version)
         pasted_list = list()
+        others = None
         for district in districts:
-            new_district_id = self.paste_district(district, version=version)
+            new_district_id, others = self.paste_district(district, version=version, others=others)
             if new_district_id > 0:
                 pasted_list.append(new_district_id)
         if len(pasted_list) > 0:
@@ -1006,7 +1009,11 @@ class Plan(models.Model):
             self.save()
         return pasted_list
 
-    def paste_district(self, district, version=None):
+    # We'll use these types every time we paste.  Instantiate once in the class.
+    global acceptable_intersections
+    acceptable_intersections = ('Polygon', 'MultiPolygon', 'LinearRing')
+
+    def paste_district(self, district, version=None, others=None):
         """
         Add the district with the given primary key into this plan
 
@@ -1024,44 +1031,83 @@ class Plan(models.Model):
         # Get the old districts from before this one is pasted
         if version == None:
             version = self.version
-        others = self.get_districts_at_version(version, include_geom=True)
+        new_version = version + 1
+        if others == None:
+            first_run = True
+            others = self.get_districts_at_version(version, include_geom=True)
+        else:
+            first_run = False
+            sys.stderr.write('Running through a second time\n')
+
         biggest_geolevel = self.get_biggest_geolevel()
 
-        # Save the new district as-is to the plan
-        pasted = District(name='', plan=self, district_id = None, geom=district.geom, simple = district.simple, version = version + 1)
+        # Pass this list of districts through the paste_districts chain
+        edited_districts = list()
+
+        # Save the new district to the plan to start
+        pasted = District(name='', plan=self, district_id = None, geom=district.geom, simple = district.simple, version = new_version)
         pasted.save();
         pasted.name = self.legislative_body.member % (pasted.district_id - 1)
         pasted.save();
         pasted.clone_characteristics_from(district)
         
         # For the remaning districts in the plan,
-        sys.stderr.write('Districts already in plan: %s\n' % others)
         for existing in others:
-            sys.stderr.write('Checking to see if pasted district overlaps with %s\n' % existing)
+            edited_districts.append(existing)
+            # This existing district may be empty/removed
             if not existing.geom or not pasted.geom:
                 continue
             # See if the pasted existing intersects any other existings
             if existing.geom.intersects(pasted.geom):
                 intersection = existing.geom.intersection(pasted.geom)
-                # We don't want touching existings
-                if intersection.geom_type not in ('Polygon', 'MultiPolygon', 'LinearRing', 'GeometryCollection'):
-                    sys.stderr.write('GEOM touches but doesn\'t intersect - intersection type %s\n' % intersection.geom_type)
+                # We don't want touching districts (LineStrings in common) in our collection
+                if intersection.geom_type == 'GeometryCollection':
+                    intersection = filter(lambda g: g.geom_type in acceptable_intersections, intersection)
+                    if len(intersection) == 0:
+                        continue
+                    intersection = MultiPolygon(intersection)
+                elif intersection.empty == True or intersection.geom_type not in acceptable_intersections:
                     continue
-                old_stats = existing.computedcharacteristic_set
-                existing.id = None
-                # sys.stderr.write('Intersection of %s and %s is %s, type %s\n' % (existing, pasted, intersection, intersection.geom_type))
-                difference = enforce_multi(existing.geom.difference(pasted.geom))
-                # sys.stderr.write('Difference of %s and %s is %s %s\n' % (existing.geom, intersection, difference.geom_type, difference))
-                existing.geom = None if difference.empty == True else difference
-                existing.version += 1
-                existing.simplify()
-                
-                sys.stderr.write('Saved district %s, version %d\n' % (existing, existing.version))
-                geounit_ids = map(str, Geounit.objects.filter(geom__bboverlaps=intersection, geolevel=biggest_geolevel).values_list('id', flat=True))
-                geounits = Geounit.get_mixed_geounits(geounit_ids, self.legislative_body, biggest_geolevel.id, difference, True)
-                
-                existing.delta_stats(geounits, False)
-        return pasted.id
+                # If the target is locked, we'll update pasted instead;
+                if existing.is_locked == True:
+                    difference = pasted.geom.difference(existing.geom)
+                    if difference.empty == True:
+                        # This pasted district is consumed by others. Delete the record and return no number
+                        pasted.delete()
+                        return None
+                    else:
+                        pasted.geom = enforce_multi(difference)
+                        pasted.simplify()
+                    geounit_ids = map(str, Geounit.objects.filter(geom__bboverlaps=enforce_multi(intersection), geolevel=biggest_geolevel).values_list('id', flat=True))
+                    geounits = Geounit.get_mixed_geounits(geounit_ids, self.legislative_body, biggest_geolevel.id, intersection, True)
+                    pasted.delta_stats(geounits, False)
+                else:
+                    # We'll be updating the existing district and incrementing the version
+                    difference = enforce_multi(existing.geom.difference(pasted.geom))
+                    if first_run == True:
+                        new_district = copy(existing)
+                        new_district.id = None
+                        new_district.save()
+                        new_district.clone_characteristics_from(existing)
+                    else:
+                        new_district = existing
+                    new_district.geom = None if difference.empty == True else difference
+                    new_district.version = new_version
+                    new_district.simplify()
+                    new_district.save()
+                    
+                    # If we've edited the district, pop it on the new_district list
+                    edited_districts.pop()
+                    edited_districts.append(new_district)
+
+                    geounit_ids = map(str, Geounit.objects.filter(geom__bboverlaps=enforce_multi(intersection), geolevel=biggest_geolevel).values_list('id', flat=True))
+                    geounits = Geounit.get_mixed_geounits(geounit_ids, self.legislative_body, biggest_geolevel.id, intersection, True)
+                    
+                    if new_district.geom != None:
+                        new_district.delta_stats(geounits, False)
+                    else:
+                        new_district.computedcharacteristic_set.all().delete()
+        return (pasted.id, edited_districts)
 
     def get_wfs_districts(self,version,subject_id,extents,geolevel):
         """
