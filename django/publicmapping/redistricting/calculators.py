@@ -149,7 +149,7 @@ class Schwartzberg(CalculatorBase):
             compactness += perimeter / district.geom.length
             num += 1
 
-        self.result = compactness / num
+        self.result = (compactness / num) if num > 0 else 0
 
 
     def html(self):
@@ -509,7 +509,7 @@ class PartisanDifferential(CalculatorBase):
             pd += abs(rep_pi - dem_pi)
             num += 1.0
 
-        self.result = pd / num
+        self.result = (pd / num) if num > 0 else 0
 
 class RepresentationalFairness(CalculatorBase):
     """
@@ -560,10 +560,12 @@ class RepresentationalFairness(CalculatorBase):
 
             numdistricts += 1
 
-        statepct = sumdem / (sumdem+sumrep)
-        likelypct = float(likely) / float(numdistricts)
-
-        self.result = abs( (likelypct/statepct) - 1 )
+        if (sumdem + sumrep == 0) or (numdistricts == 0):
+            self.result = 0
+        else:
+            statepct = sumdem / (sumdem+sumrep)
+            likelypct = float(likely) / float(numdistricts)
+            self.result = abs( (likelypct/statepct) - 1 )
 
 
 class CountDistricts(CalculatorBase):
