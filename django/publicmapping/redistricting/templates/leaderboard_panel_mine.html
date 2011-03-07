@@ -45,6 +45,7 @@
     </thead>
     <tbody>
       {% for planscore in planscores %}
+      {% if planscore.plan.owner.username == context.user.username %} 
       <tr>
         <td>{{forloop.counter}}</td>
         <td>{{planscore.plan.owner.username}}</td>
@@ -57,6 +58,7 @@
         </td>
         <td>{{planscore.score|safe}}</td>
       </tr>
+      {% endif %}
       {% endfor %}
     </tbody>
   </table>

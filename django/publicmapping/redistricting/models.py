@@ -1793,7 +1793,7 @@ class ScoreDisplay(models.Model):
         """
         return self.title
 
-    def render(self, dorp):
+    def render(self, dorp, context=None):
         """
         Generate the markup for all the panels attached to this display.
 
@@ -1805,6 +1805,7 @@ class ScoreDisplay(models.Model):
 
         Parameters:
             dorp -- A list of districts, plan, or list of plans.
+            context -- Optional object that can be used for advanced rendering
 
         Returns:
             The markup for this display.
@@ -1835,7 +1836,7 @@ class ScoreDisplay(models.Model):
         markup = ''
         for panel in panels:
             #print "Rendering panel:",panel.title
-            markup += panel.render(dorp)
+            markup += panel.render(dorp, context)
 
         return markup
 
@@ -1873,7 +1874,7 @@ class ScorePanel(models.Model):
         """
         return self.title
 
-    def render(self,dorp):
+    def render(self,dorp,context=None):
         """
         Generate the scores for all the functions attached to this panel,
         and render them in the template.
@@ -1882,6 +1883,7 @@ class ScorePanel(models.Model):
 
         Parameters:
             dorp -- A district, list of districts, plan, or list of plans.
+            context -- Optional object that can be used for advanced rendering
 
         Returns:
             A rendered set of scores.
@@ -1935,7 +1937,8 @@ class ScorePanel(models.Model):
                 'planscores':planscores,
                 'title':self.title,
                 'cssclass':self.cssclass,
-                'position':self.position
+                'position':self.position,
+                'context':context
             })
 
         # Render each district with multiple scores

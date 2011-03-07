@@ -1669,14 +1669,10 @@ def getleaderboard(request):
     
     # Retrieve the leaderboard display
     display = ScoreDisplay.objects.filter(title='%s Leaderboard - %s' % (leg_body.name, owner_filter.title()))[0]
-
-    # construct the plan filter
     plans = Plan.objects.filter(legislative_body=leg_body, is_valid=True)
-    if owner_filter == 'mine':
-        plans = plans.filter(owner=request.user)
 
     try :
-        html = display.render(list(plans))
+        html = display.render(list(plans), request)
     except Exception as ex:
         print traceback.format_exc()
 
