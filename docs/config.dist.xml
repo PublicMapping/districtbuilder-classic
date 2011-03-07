@@ -578,14 +578,14 @@
                         party.
                         
                         -->
-                        <RatioVar id="racialComp" label="Majority Minority Districts" threshold=".6">
+                        <RatioVar id="racialComp" label="Majority Minority Districts" threshold=".5">
                             <Numerators>
                                 <Numerator subjectref="popblk" />
                                 <Numerator subjectref="pophisp" />
                             </Numerators>
                             <Denominator subjectref="poptot" />
                         </RatioVar>
-                        <RatioVar id="partyControl" label="Party-Controlled Districts" threshold=".55">
+                        <RatioVar id="partyControl" label="Party-Controlled Districts" threshold=".5">
                             <Numerators>
                                 <Numerator subjectref="presdem" />
                                 <Numerator subjectref="presrep" />
