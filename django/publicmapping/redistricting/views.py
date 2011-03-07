@@ -260,20 +260,26 @@ def scoreplan(request, planid):
     status = { 'success': False }
     plan = Plan.objects.get(pk=planid)
 
-    # For testing -- sleep, and randomize what's returned
-    time.sleep(2)
-    if random.random() > 0.5:
+    criterion = ValidationCriteria.objects.filter(legislative_body=plan.legislative_body)
+    status['success'] = True
+    for criteria in criterion:
+        score = criteria.function.score(plan, format='raw')
+
+        if not score:
+            status['success'] = False
+            status['message'] = '<p>%s</p><p>%s</p>' % (criteria.name, criteria.description)
+            break
+
+    if status['success']:
         status['success'] = True
         status['message'] = "Validation successful"
 
         # Set is_valid status on the plan
         plan.is_valid = True
         plan.save()
-    else:
-        status['success'] = False
-        status['message'] = "Plan contains a non-contiguous district" 
 
     return HttpResponse(json.dumps(status),mimetype='application/json')
+
 
 def get_user_info(user):
     """
