@@ -218,7 +218,7 @@ $(function() {
                 if (data.success) {
                     // score was successful, clear leaderboard
                     $("#topranked_content").remove();
-                    $('<div title="Validation Successful">Plan has been scored. View it on the Leaderboard tab.</div>').dialog({autoOpen:true});
+                    $('#steps').tabs('select', '#step_leaderboard');
                 } else {
                     // score failed, show reason
                     $('<div title="Validation Failed">' + data.message + '</div>').dialog({autoOpen:true});
