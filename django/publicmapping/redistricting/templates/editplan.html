@@ -127,7 +127,7 @@
                 planUrl: '/districtmapping/getplans/',
                 districtTable: $('#shared_districts_table'),
                 districtPager: $('#shared_districts_pager'),
-                districtUrl: '/districtmapping/plan/PLAN_ID/shareddistricts/',
+                districtUrl: '/districtmapping/plan/' + PLAN_ID + '/shareddistricts/',
                 submitButton: $('#paste_button'),
                 handlerUrl: '/districtmapping/plan/{{ plan.id }}/pastedistricts/'
             }).init();
