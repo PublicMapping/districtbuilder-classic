@@ -1888,7 +1888,8 @@ class ScorePanel(models.Model):
             return render_to_string(self.template, {
                 'planscores':planscores,
                 'title':self.title,
-                'cssclass':self.cssclass
+                'cssclass':self.cssclass,
+                'position':self.position
             })
 
         # Render each district with multiple scores

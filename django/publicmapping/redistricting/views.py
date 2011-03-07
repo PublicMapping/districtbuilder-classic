@@ -1650,75 +1650,35 @@ def getdistrictindexfile(request, planid):
         response = HttpResponse('File is not yet ready. Please try again in a few minutes')
     return response
 
+
 def getleaderboard(request):
     """
-    Get the information used for constructing the leaderboard
+    Get the rendered leaderboard
     """
     note_session_activity(request)
 
     if not using_unique_session(request.user):
         return HttpResponseForbidden()
 
-    if request.method == 'POST':
-        owner_filter = request.POST.get('owner_filter');
-    else:
-        return HttpResponseForbidden()
-
-    # fake data for testing
-    rows1 = (
-        { "rank": 1, "userName": "Administrator", "planName": "Congression 2000", "score": 97, "planId": 11, "shared": False },
-        { "rank": 2, "userName": "Administrator", "planName": "Congres 2000 Alter", "score": 94, "planId": 12, "shared": True },
-        { "rank": 3, "userName": "Bdad22", "planName": "Plan12MinorityDist", "score": 87, "planId": 13, "shared": False },
-        { "rank": 4, "userName": "Bdad22", "planName": "Plan13MinorityDist", "score": 86, "planId": 14, "shared": False },
-        { "rank": 5, "userName": "FairForAll", "planName": "Dist11-12 Balance", "score": 85, "planId": 15, "shared": True },
-        { "rank": 6, "userName": "FairForAll", "planName": "Dist11-14 Boundary", "score": 85, "planId": 16, "shared": False },
-        { "rank": 7, "userName": "GerryWho", "planName": "GerryBalanced", "score": 79, "planId": 17, "shared": True },
-        { "rank": 8, "userName": "LWV-OH", "planName": "LWV-2012", "score": 78, "planId": 18, "shared": True },
-        { "rank": 9, "userName": "ManderWhat", "planName": "ManderWho", "score": 78, "planId": 19, "shared": False },
-        { "rank": 10, "userName": "MDN", "planName": "MDN-2011", "score": 65, "planId": 20, "shared": False }
-        )
-
-    rows2 = (
-        { "rank": 1, "userName": "ME", "planName": "Congression 2000", "score": 97, "planId": 11, "shared": False },
-        { "rank": 34, "userName": "ME", "planName": "Congres 2000 Alter", "score": 94, "planId": 12, "shared": True },
-        { "rank": 32, "userName": "ME", "planName": "Plan12MinorityDist", "score": 87, "planId": 13, "shared": False },
-        { "rank": 15, "userName": "ME", "planName": "Plan13MinorityDist", "score": 86, "planId": 14, "shared": False },
-        { "rank": 43, "userName": "ME", "planName": "Dist11-12 Balance", "score": 85, "planId": 15, "shared": True },
-        { "rank": 6, "userName": "ME", "planName": "Dist11-14 Boundary", "score": 85, "planId": 16, "shared": False },
-        { "rank": 78, "userName": "ME", "planName": "GerryBalanced", "score": 79, "planId": 17, "shared": True },
-        { "rank": 189, "userName": "ME", "planName": "LWV-2012", "score": 78, "planId": 18, "shared": True },
-        { "rank": 900, "userName": "ME", "planName": "ManderWho1", "score": 77, "planId": 190, "shared": False },
-        { "rank": 901, "userName": "ME", "planName": "ManderWho2", "score": 76, "planId": 191, "shared": False },
-        { "rank": 902, "userName": "ME", "planName": "ManderWho3", "score": 75, "planId": 192, "shared": True },
-        { "rank": 903, "userName": "ME", "planName": "ManderWho4", "score": 74, "planId": 193, "shared": False },
-        { "rank": 10, "userName": "ME", "planName": "MDN-2011", "score": 65, "planId": 20, "shared": False }
-        )
+    owner_filter = request.REQUEST['owner_filter']
+    body_pk = int(request.REQUEST['legislative_body']);
+    leg_body = LegislativeBody.objects.filter(pk=body_pk)[0]
     
+    # Retrieve the leaderboard display
+    display = ScoreDisplay.objects.filter(title='%s Leaderboard - %s' % (leg_body.name, owner_filter.title()))[0]
+
+    # construct the plan filter
+    plans = Plan.objects.filter(legislative_body=leg_body, is_valid=True)
     if owner_filter == 'mine':
-        if request.user.is_anonymous():
-            return HttpResponseForbidden()
+        plans = plans.filter(owner=request.user)
 
-        json_response = json.dumps({
-                "items": (
-                    { "title": "My Plans - Population Score Ranking", "rows": rows2 },
-                    { "title": "My Plans - Compactness Score Ranking", "rows": rows2 },
-                    { "title": "My Plans - Competitiveness Score Ranking", "rows": rows2 },
-                    { "title": "My Plans - Rep. Fairness Score Ranking", "rows": rows2 },
-                    )
-                })
-    else:
-        json_response = json.dumps({
-                "items": (
-                    { "title": "Top Ten - Plan Population Target", "rows": rows1 },
-                    { "title": "Top Ten - Average District Compactness", "rows": rows1 },
-                    { "title": "Top Ten - Average District Competitiveness", "rows": rows1 },
-                    { "title": "Top Ten - Average District Representational Fairness", "rows": rows1 },
-                    )
-                })
+    try :
+        html = display.render(list(plans))
+    except Exception as ex:
+        print traceback.format_exc()
 
-    time.sleep(2) # for testing
-    return HttpResponse(json_response,mimetype='application/json') 
-    
+    return HttpResponse(html, mimetype='text/plain')
+
 
 def getplans(request):
     """

@@ -130,13 +130,13 @@ function getLocalTimeFromIsoformat(time) {
  * Configure the tooltips, buttons, and leaderboard
  */
 $(function() {
+    var outstandingRequests = 0;
     var constructLeaderboardSection = function(container, owner) {
         $.ajax({
-            type: 'POST',
-            dataType: 'json',
+            type: 'GET',
             url: '/districtmapping/getleaderboard/',
-            data: { owner_filter: owner }, 
-            success: function(data) {
+            data: { owner_filter: owner, legislative_body: $('#leg_selector').val() }, 
+            success: function(html) {
                 var panels = $('<div class="leaderboard_panels"></div>');
                 container.append(panels);
 
@@ -168,55 +168,16 @@ $(function() {
                         });
                     });
                 }
-                    
-                var count = 0;
-                for (var i in data.items) {
-                    var item = data.items[i];
-                    var panel = $('<div class="leaderboard_panel ' + (((count % 2) === 0) ? 'even' : 'odd') + '"></div>');
-                    panel.append($('<div class="leaderboard_title">' + item.title + '</div>'));
 
-                    // id is required for jqgrid. an exception is thrown otherwise.
-                    var gridId = (container[0].id + "_" + count);
-                    var grid = $('<div class="leaderboard_grid"><table id="' + gridId + '"></table></div>');
-                    panel.append(grid);
-                    panels.append(panel);
+                // insert the score panels HTML
+                panels.html(html);
 
-                    // construct the jqGrid
-                    var jqGrid = $('#' + gridId).jqGrid({
-                        datatype: "local",
-                        height: 'auto',
-                        width: 420,
-                        forceFit: true,
-                        colNames:['Rank', 'User Name', 'Plan Name', 'Score'],
-                        colModel:[
-                              {name:'rank',index:'rank', width:55, sorttype:"int"},
-                              {name:'userName',index:'userName', width:85},
-                              {name:'planName',index:'planName', width:150},
-                              {name:'score',index:'score', width:60, align:"right",sorttype:"float"}
-                        ]
-                    });
-
-                    // add rows
-                    if (item.rows) {
-                        for (var r = 0; r < item.rows.length; r++) {
-                            var row = item.rows[r];
-                            var planName = row.planName;
-                            if (row.shared) {
-                                planName = "<a href='../../../plan/" + row.planId + "/view/' target='_blank'>" +
-                                    planName + "</a>";
-                            }
-                            jqGrid.jqGrid('addRowData', r + 1, {
-                                rank: row.rank,
-                                userName: row.userName,
-                                planName: planName,
-                                score: row.score
-                            });
-                        }
-                    }
-
-                    count += 1;
+                // check if we are no longer waiting for data
+                outstandingRequests -= 1;
+                if (outstandingRequests === 0) {
+                    //loadTooltips();
+                    $('#waiting').dialog('close');
                 }
-                $('#waiting').dialog('close');                
             },
             error: function(xhr, textStatus, message) {
                 if (xhr.status == 403) {
@@ -231,12 +192,14 @@ $(function() {
         $("#topranked_content").remove();
         var toprankedDiv = $("#leaderboard_topranked").html('<div id="topranked_content"></div>');
         // construct the 'Top Ranked' section
+        outstandingRequests += 1;
         constructLeaderboardSection(toprankedDiv, "all");
 
         var myRanked = $("#leaderboard_myranked")
         if (myRanked.length > 0) {
             $("#myranked_content").remove();
             var myrankedDiv = $("#leaderboard_myranked").html('<div id="myranked_content"></div>');
+            outstandingRequests += 1;
             constructLeaderboardSection(myrankedDiv, "mine");
         }
 
@@ -266,6 +229,11 @@ $(function() {
                 $('<div title="Error">Server error. Please try again later.</div>').dialog({autoOpen:true});
             }
         });
+    });
+
+    // connect to legislative body changes
+    $('#leg_selector').change( function() {
+        $("#topranked_content").remove();        
     });
         
     // jQuery-UI tab layout
