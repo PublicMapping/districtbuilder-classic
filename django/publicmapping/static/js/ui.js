@@ -226,12 +226,12 @@ $(function() {
 
     // connect the 'Verify and Submit Plan' button
     $('#btnVerifyAndSubmit').click(function() {
-        $('#waiting').dialog('open');                                    
+        $('#scoring').dialog({modal:true, resizable:false, autoOpen:true, escapeOnClose: false, open: function(event, ui) { $(".ui-dialog-titlebar-close", $(this).parent()).hide(); }});
         $.ajax({
             url: '/districtmapping/plan/' + PLAN_ID + '/score/',
             type: 'POST',
             success: function(data, textStatus, xhr) {
-                $('#waiting').dialog('close');
+                $('#scoring').dialog('close');
                 if (data.success) {
                     // score was successful, clear leaderboard
                     $("#topranked_content").remove();
@@ -242,7 +242,7 @@ $(function() {
                 }
             },
             error: function() {
-                $('#waiting').dialog('close');
+                $('#scoring').dialog('close');
                 $('<div title="Error">Server error. Please try again later.</div>').dialog({autoOpen:true});
             }
         });
