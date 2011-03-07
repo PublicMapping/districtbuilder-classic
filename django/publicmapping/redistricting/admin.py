@@ -222,6 +222,11 @@ class ScoreDisplayAdmin(admin.ModelAdmin):
         ScorePanelInline
     ]
 
+class ValidationCriteriaAdmin(admin.ModelAdmin):
+    """
+    Administrative settings for ValidationCriteria.
+    """
+    fields = ('name','legislative_body','function','description',)
 
 
 # Register these classes with the admin interface.
@@ -242,4 +247,4 @@ admin.site.register(ScoreArgument, ScoreArgumentAdmin)
 admin.site.register(ScoreDisplay, ScoreDisplayAdmin)
 admin.site.register(ScoreFunction, ScoreFunctionAdmin)
 admin.site.register(ScorePanel, ScorePanelAdmin)
-admin.site.register(ValidationCriteria)
+admin.site.register(ValidationCriteria, ValidationCriteriaAdmin)
