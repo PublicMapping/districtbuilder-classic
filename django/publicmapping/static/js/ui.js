@@ -165,7 +165,7 @@ $(function() {
 
                     // if there is an active plan, show leaderboard controls
                     if ($('#txtPlanName').length > 0) {
-                        var button = $('<button class="leaderboard_button">Update Leaderboards<br/>with Current Plan</button>').button();
+                        var button = $('<button class="leaderboard_button">Update Leaderboards<br/>with Working Plan</button>').button();
                         $('#updateLeaderboardsContainer').html(button);
                     
                         // add handling for updating leaderboard with current plan
