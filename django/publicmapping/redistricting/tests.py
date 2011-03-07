@@ -1630,6 +1630,103 @@ class CalculatorCase(BaseTestCase):
 
         self.assertAlmostEquals(0.181818, actual, 6, 'Incorrect value during representational fairness. (e:%f,a:%f)' % (0.181818, actual))
 
+    def test_countdist(self):
+        geolevelid = self.geolevels[1].id
+        geounits = self.geounits[geolevelid]
+
+        dist1ids = geounits[0:3] + geounits[9:12]
+        dist2ids = geounits[6:9] + geounits[15:18]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        dist2ids = map(lambda x: str(x.id), dist2ids)
+        
+        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district2.district_id, dist2ids, geolevelid, self.plan.version)
+
+        numcalc = CountDistricts()
+        numcalc.arg_dict['target'] = ('literal','2',)
+        numcalc.compute(plan=self.plan)
+
+        actual = numcalc.result
+
+        self.assertEquals(True, actual, 'Incorrect value during district counting. (e:%s,a:%s)' % (True, actual))
+
+    def test_allblocks(self):
+        self.fail('Incomplete test')
+
+    def test_equipop(self):
+        geolevelid = self.geolevels[1].id
+        geounits = self.geounits[geolevelid]
+
+        dist1ids = geounits[0:3] + geounits[9:12]
+        dist2ids = geounits[6:9] + geounits[15:18]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        dist2ids = map(lambda x: str(x.id), dist2ids)
+        
+        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district2.district_id, dist2ids, geolevelid, self.plan.version)
+
+        equicalc = Equipopulation()
+        equicalc.arg_dict['value'] = ('subject',self.subject1.name,)
+        equicalc.arg_dict['min'] = ('literal','5',)
+        equicalc.arg_dict['max'] = ('literal','10',)
+        equicalc.compute(plan=self.plan)
+
+        actual = equicalc.result
+
+        self.assertEquals(False, actual, 'Incorrect value during plan equipop. (e:%s,a:%s)' % (False, actual))
+
+        equicalc.arg_dict['min'] = ('literal','40',)
+        equicalc.arg_dict['max'] = ('literal','45',)
+        equicalc.compute(plan=self.plan)
+
+        actual = equicalc.result
+
+        self.assertEquals(False, actual, 'Incorrect value during plan equipop. (e:%s,a:%s)' % (False, actual))
+
+        equicalc.arg_dict['min'] = ('literal','5',)
+        equicalc.arg_dict['max'] = ('literal','45',)
+        equicalc.compute(plan=self.plan)
+
+        actual = equicalc.result
+
+        self.assertEquals(True, actual, 'Incorrect value during plan equipop. (e:%s,a:%s)' % (True, actual))
+
+
+    def test_allblocks(self):
+        self.fail('Incomplete test')
+
+    def test_majmin(self):
+        geolevelid = self.geolevels[1].id
+        geounits = self.geounits[geolevelid]
+
+        dist1ids = geounits[0:3] + geounits[9:12]
+        dist2ids = geounits[18:21] + geounits[27:30] + geounits[36:39]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        dist2ids = map(lambda x: str(x.id), dist2ids)
+        
+        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district2.district_id, dist2ids, geolevelid, self.plan.version)
+
+        majcalc = MajorityMinority()
+        majcalc.arg_dict['population'] = ('subject',self.subject1.name,)
+        majcalc.arg_dict['minority1'] = ('subject',self.subject2.name,)
+        majcalc.compute(plan=self.plan)
+
+        actual = majcalc.result
+
+        self.assertEquals(True, actual, 'Incorrect value during percentage. (e:%f,a:%f)' % (True, actual))
+
+        majcalc.arg_dict['population'] = ('subject',self.subject2.name,)
+        majcalc.arg_dict['minority1'] = ('subject',self.subject1.name,)
+        majcalc.compute(plan=self.plan)
+
+        actual = majcalc.result
+
+        self.assertEquals(False, actual, 'Incorrect value during percentage. (e:%f,a:%f)' % (False, actual))
+
+
+
+
 class ScoreRenderCase(BaseTestCase):
     def test_panelrender_plan(self):
         geolevelid = self.geolevels[1].id

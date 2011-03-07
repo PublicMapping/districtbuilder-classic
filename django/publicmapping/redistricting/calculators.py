@@ -564,3 +564,142 @@ class RepresentationalFairness(CalculatorBase):
         likelypct = float(likely) / float(numdistricts)
 
         self.result = abs( (likelypct/statepct) - 1 )
+
+
+class CountDistricts(CalculatorBase):
+    """
+    Count the number of districts in a plan, and determine if that number
+    matches a target.
+
+    This calculator works on plans only.
+
+    This calculator requires an argument 'target' set to the number of
+    districts desired in a plan.  If the number of districts matches
+    the target value, a boolean True is the result.
+    """
+    def __init__(self):
+        """
+        Initialize the result and argument dictionary.
+        """
+        self.result = None
+        self.arg_dict = {}
+
+    def compute(self, **kwargs):
+        """
+        Compute the number of districts in a plan, and determine if that
+        number matches a target.
+        """
+        if not 'plan' in kwargs or not 'target' in self.arg_dict:
+            return
+
+        plan = kwargs['plan']
+        districts = plan.get_districts_at_version(plan.version, include_geom=False)
+        # ALL PLANS include 1 district named "Unassigned", which cannot be
+        # removed. Therefore the actual target to be validated is one less
+        # than the number of districts.
+        target = int(self.get_value('target'))
+
+        self.result = (len(districts)-1) == target
+
+
+class AllBlocksAssigned(CalculatorBase):
+    """
+    Determine if all the blocks in the state are assigned to a district.
+    
+    This calculator works on plans only.
+    """
+    def __init__(self):
+        """
+        Initialize the result and argument dictionary.
+        """
+        self.result = None
+        self.arg_dict = {}
+
+    def compute(self, **kwargs):
+        """
+        Determine if all the blocks in the state are assigned to a district.
+        """
+        pass
+
+
+class Equipopulation(CalculatorBase):
+    """
+    Determine if all the districts in a plan fall within a target range of
+    population. This merely wraps a Range calculator, but looks for the
+    number of districts outside the range.
+
+    This calculator works on plans only.
+    """
+    def __init__(self):
+        """
+        Initialize the result and argument dictionary.
+        """
+        self.result = None
+        self.arg_dict = {}
+
+    def compute(self, **kwargs):
+        """
+        Determine if all the districts in a plan fall within a target range.
+        """
+        if not 'plan' in kwargs:
+            return
+
+        plan = kwargs['plan']
+
+        inrange = Range()
+        inrange.arg_dict = self.arg_dict
+        inrange.compute(plan=plan)
+
+        districts = plan.get_districts_at_version(plan.version, include_geom=False)
+
+        # ALL PLANS include 1 district named "Unassigned", which should 
+        # never be at the target.
+        self.result = inrange.result == (len(districts) - 1)
+
+
+class MajorityMinority(CalculatorBase):
+    """
+    Determine if at least one district in a plan has a majority of minorityi
+    population.
+
+    This calculator works on plans only.
+    """
+    def __init__(self):
+        """
+        Initialize the result and argument dictionary.
+        """
+        self.result = None
+        self.arg_dict = {}
+
+    def compute(self, **kwargs):
+        """
+        Determine if at least one district in a plan has a majority of 
+        minority population. 
+        """
+        if not 'plan' in kwargs:
+            return
+
+        plan = kwargs['plan']
+        districts = plan.get_districts_at_version(plan.version, include_geom=False)
+
+        self.result = False
+        for district in districts:
+            pop = self.get_value('population', district)
+
+            if pop is None:
+                continue
+
+            den = float(pop)
+            argnum = 1
+            while ('minority%d'%argnum) in self.arg_dict:
+                minor = self.get_value('minority%d'%argnum, district)
+                argnum += 1
+
+                if minor is None:
+                    continue
+                    
+                num = float(minor)
+
+                if num / den > 0.5:
+                    self.result = True
+                    return
