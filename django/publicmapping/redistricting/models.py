@@ -1817,6 +1817,9 @@ class ScorePanel(models.Model):
     # The style to be assigned to this score display
     cssclass = models.CharField(max_length=50, blank=True)
 
+    # The method of sorting the scores in this panel
+    is_ascending = models.BooleanField(default=True)
+
     def __unicode__(self):
         """
         Get a unicode representation of this object. This is the Panel's
@@ -1828,6 +1831,8 @@ class ScorePanel(models.Model):
         """
         Generate the scores for all the functions attached to this panel,
         and render them in the template.
+        
+        Only plan type panels are affected by the sorting order.
 
         Parameters:
             dorp -- A district, list of districts, plan, or list of plans.
@@ -1866,8 +1871,6 @@ class ScorePanel(models.Model):
             else:
                 plans = [dorp]
 
-            #print len(plans)
-
             planscores = []
             for plan in plans:
                 for pf in self.panelfunction_set.filter(function__is_planscore=True):
@@ -1876,10 +1879,11 @@ class ScorePanel(models.Model):
                         'name':pf.function.name,
                         'label':pf.function.label,
                         'description':pf.function.description,
-                        'score':pf.function.score(plan,format='html')
+                        'score':pf.function.score(plan,format='html'),
+                        'raw':pf.function.score(plan,format='raw')
                     })
 
-            #print len(planscores)
+            planscores.sort(key=lambda x:x['raw'],reverse=not self.is_ascending)
 
             return render_to_string(self.template, {
                 'planscores':planscores,

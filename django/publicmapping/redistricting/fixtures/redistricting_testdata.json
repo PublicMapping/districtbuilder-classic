@@ -28425,7 +28425,8 @@
    "position": 1, 
    "cssclass": "panel1", 
    "type": "plan", 
-   "display": 1
+   "display": 1,
+   "is_ascending": true
   }
  }, 
  {
@@ -28437,7 +28438,8 @@
    "position": 1, 
    "cssclass": "panel2", 
    "type": "district", 
-   "display": 2
+   "display": 2,
+   "is_ascending": true
   }
  }, 
  {

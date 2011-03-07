@@ -1756,11 +1756,13 @@ class ScoreRenderCase(BaseTestCase):
             template.write('{% for planscore in planscores %}{{planscore.plan.name}}:{{ planscore.score|safe }}{% endfor %}')
             template.close()
 
+            panel.is_ascending = False
             markup = panel.render([self.plan,self.plan2])
-            expected = 'testPlan:<span>48.0</span>' + \
-                'testPlan:<span>0.181818181818</span>' + \
-                'testPlan2:<span>152.0</span>' + \
-                'testPlan2:<span>0.263888888889</span>'
+            expected = 'testPlan2:<span>152.0</span>' + \
+                'testPlan:<span>48.0</span>' + \
+                'testPlan2:<span>0.263888888889</span>' + \
+                'testPlan:<span>0.181818181818</span>'
+                
             self.assertEquals(expected, markup, 'The markup was incorrect. (e:"%s", a:"%s")' % (expected, markup))
 
             os.remove(tplfile)
@@ -1830,10 +1832,10 @@ class ScoreRenderCase(BaseTestCase):
 
         markup = display.render(plans)
 
-        expected = 'testPlan:<span>48.0</span>' + \
-            'testPlan:<span>0.181818181818</span>' + \
-            'testPlan2:<span>152.0</span>' + \
-            'testPlan2:<span>0.263888888889</span>'
+        expected = 'testPlan:<span>0.181818181818</span>' + \
+            'testPlan2:<span>0.263888888889</span>' + \
+            'testPlan:<span>48.0</span>' + \
+            'testPlan2:<span>152.0</span>'
         self.assertEquals(expected, markup, 'The markup was incorrect. (e:"%s", a:"%s")' % (expected, markup))
 
         os.remove(tplfile)
