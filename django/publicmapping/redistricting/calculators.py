@@ -29,6 +29,7 @@ Author:
 """
 
 from math import sqrt, pi
+from django.contrib.humanize.templatetags.humanize import intcomma
 from django.utils import simplejson as json
 
 class CalculatorBase:
@@ -426,6 +427,13 @@ class Equivalence(CalculatorBase):
         """
         self.result = None
         self.arg_dict = {}
+
+    def html(self):
+        """
+        Generate an HTML representation of the equivalence score. This
+        is represented as an integer formatted with commas or "n/a"
+        """
+        return intcomma(int(self.result)) if self.result else "n/a"
 
     def compute(self, **kwargs):
         """
