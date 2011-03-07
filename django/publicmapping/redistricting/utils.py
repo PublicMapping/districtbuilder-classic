@@ -29,6 +29,7 @@ from django.core import management
 from django.contrib.sessions.models import Session
 from django.core.mail import send_mail, mail_admins
 from django.template import loader, Context
+from django.db.models import Sum as SumAgg
 from redistricting.models import *
 import csv, time, zipfile, tempfile, os, sys, traceback
 from datetime import datetime
@@ -241,7 +242,7 @@ class DistrictIndexFile():
                 try:
                     cc_value = Characteristic.objects.filter(
                         geounit__in = geounit_ids, 
-                        subject = subject).aggregate(Sum('number'))
+                        subject = subject).aggregate(SumAgg('number'))
                     value = cc_value['number__sum']
                     percentage = '0000.00000000'
 
