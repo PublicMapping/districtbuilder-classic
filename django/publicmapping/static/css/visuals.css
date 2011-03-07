@@ -324,8 +324,8 @@ color: rgb(62, 107, 127);
 
 ul#steps_tabs li#tab_plan {background-color: #89BEBB;}
 ul#steps_tabs li#tab_draw {background-color: #93B6B2;}
-ul#steps_tabs li#tab_evaluate {background-color: #87ae8b;}
-ul#steps_tabs li#tab_share {background-color: #acae87;}
+ul#steps_tabs li#tab_evaluate {background-color: #93B697;}
+ul#steps_tabs li#tab_share {background-color: #B4B693;}
 ul#steps_tabs li#tab_leaderboard {background-color: #B8A381}
 
 div#step_plan .toolbar { background-color:#7cb7b3}

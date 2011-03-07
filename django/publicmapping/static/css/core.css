@@ -261,7 +261,7 @@ div.leaderboard_panel {
     margin: 10px;
     padding: 12px 12px 15px;
     border: 1px solid #ccc;
-    background: #fff;
+    background: #FBFBF3;
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
     border-radius: 4px;
@@ -276,13 +276,15 @@ div.leaderboard_title {
   color: #3E3E3E;
   margin-bottom: 10px;
 }
-div.leaderboard_panel.odd {margin-right:none}
+div.leaderboard_panel.odd {clear:left}
+div.leaderboard_panel.even {margin-right:0; }
 
 div.leaderboard_panel table{
   border-collapse: collapse;
   color: #555555;
   font-size: 11px;
   border: 1px solid #ccc;
+  width: 390px;
 }
 
 div.leaderboard_panel .ui-widget-content .ui-th-ltr {
@@ -300,8 +302,9 @@ font-weight:bold;
 font-size: 12px;
 }
 div.leaderboard_panel table td, div.leaderboard_panel table th {
-padding: 3px 7px;
+padding: 4px 7px;
 border: 1px solid #ccc;
+line-height: 14px;
 }
 div.leaderboard_panel table th.colRank {width: 25px}
 div.leaderboard_panel table th.colUser {width: 90px}
@@ -452,7 +455,7 @@ ul#plan_buttons li:hover {
 ul#plan_buttons li.active {
   color:#333;
   background-image:none;
-  background-color: #fff;
+  background-color: #FBFBF3;
   margin-left: 0;
   border-left: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
@@ -472,7 +475,7 @@ div#content_container {
   -moz-box-shadow: 0 0 20px -5px #666;
   -webkit-box-shadow: 0 0 20px -5px #666; 
   box-shadow: 0 0 20px -5px #666; 
-  background-color:#FFFFFF;
+  background-color:#FBFBF3;
   position: absolute;
   left: 168px;
   right: 18px;
@@ -1516,9 +1519,15 @@ div.share {
     background: #ACAE87 !important;
 }
 
-div.share p {
+div.share p, div.share label{
     font-size:80%;
+    margin: 13px 0;
 }
+div.share ol {
+    font-size: 80%;
+    margin-left: 20px;
+}
+
 
 div#nameandshare,
 #btnSaveAndShare {
@@ -1552,6 +1561,8 @@ margin-bottom:20px;
     width:45%;
 }
 .share #nameandshare {
+   background: url("/static-media/images/divider-horz.png") repeat-x scroll 0 100% transparent;
+    padding-bottom: 15px;
 }
 .share #reportpreview {
     height:600px;
@@ -1577,15 +1588,21 @@ margin-bottom:20px;
 }
 
 .share #verifyandpost {
-    height: 97%;
-    width: 50%;
-    border: 1px solid #000;
+    width: 47%;
+    border: 1px solid #ccc;
     margin-left: 25px;
-    padding: 10px;
+    padding: 20px;
+    background: #FBFBF3;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    -moz-box-shadow: 0 0 20px -5px #666666;
+    -webkit-box-shadow: 0 0 20px -5px #666666;
+    box-shadow: 0 0 20px -5px #666666;
 }
 
 .share #verifyandpost .explanation {
-    margin: 0 0 10px 0;
+    margin: 0 0 15px 0;
 }
 
 
