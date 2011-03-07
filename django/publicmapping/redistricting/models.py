@@ -1920,8 +1920,13 @@ class ScorePanel(models.Model):
                 plans = [dorp]
 
             planscores = []
+
+            # TODO: do we need a seperate per-panel description?
+            description = ''
+            
             for plan in plans:
                 for pf in self.panelfunction_set.filter(function__is_planscore=True):
+                    description = pf.function.description
                     planscores.append({
                         'plan':plan,
                         'name':pf.function.name,
@@ -1938,6 +1943,7 @@ class ScorePanel(models.Model):
                 'title':self.title,
                 'cssclass':self.cssclass,
                 'position':self.position,
+                'description':description,
                 'context':context
             })
 

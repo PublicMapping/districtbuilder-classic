@@ -140,42 +140,59 @@ $(function() {
                 var panels = $('<div class="leaderboard_panels"></div>');
                 container.append(panels);
 
-                // if there is an active plan, show leaderboard controls
-                 if ($('#txtPlanName').length > 0) {
-                    var button = $('<button class="leaderboard_button">Update Leaderboards<br/>with Current Plan</button>').button();
-                    $('#updateLeaderboardsContainer').html(button);
-                    
-                    // add handling for updating leaderboard with current plan
-                    button.click(function() {
-                        $('#waiting').dialog('open');                                    
-                        $.ajax({
-                            url: '/districtmapping/plan/' + PLAN_ID + '/score/',
-                            type: 'POST',
-                            success: function(data, textStatus, xhr) {
-                                $('#waiting').dialog('close');
-                                if (data.success) {
-                                    // score was successful, show new results
-                                    updateLeaderboard();
-                                } else {
-                                    // score failed, show reason
-                                    $('<div title="Validation Failed">' + data.message + '</div>').dialog({autoOpen:true});
-                                }
-                            },
-                            error: function() {
-                                $('#waiting').dialog('close');
-                                $('<div title="Error">Server error. Please try again later.</div>').dialog({autoOpen:true});
-                            }
-                        });
-                    });
-                }
-
                 // insert the score panels HTML
                 panels.html(html);
 
                 // check if we are no longer waiting for data
                 outstandingRequests -= 1;
                 if (outstandingRequests === 0) {
-                    //loadTooltips();
+                    // create the tooltips
+                    $(".leaderboard.divtip").tooltip({ 
+                        position: 'bottom right',
+                        offset: [8,10],
+                        delay: 200,
+                        predelay: 50,
+                        opacity: .8,      
+                        onBeforeShow:  function() {
+                            // ensure proper DOM placement
+                            this.getTip().appendTo('body');
+                        },
+                        onHide:  function() {
+                            // restore original DOM placement
+                            this.getTip().appendTo(this.getTrigger());
+                        }
+                    });
+
+                    // if there is an active plan, show leaderboard controls
+                    if ($('#txtPlanName').length > 0) {
+                        var button = $('<button class="leaderboard_button">Update Leaderboards<br/>with Current Plan</button>').button();
+                        $('#updateLeaderboardsContainer').html(button);
+                    
+                        // add handling for updating leaderboard with current plan
+                        button.click(function() {
+                            $('#waiting').dialog('open');                                    
+                            $.ajax({
+                                url: '/districtmapping/plan/' + PLAN_ID + '/score/',
+                                type: 'POST',
+                                success: function(data, textStatus, xhr) {
+                                    $('#waiting').dialog('close');
+                                    if (data.success) {
+                                        // score was successful, show new results
+                                        updateLeaderboard();
+                                    } else {
+                                        // score failed, show reason
+                                        $('<div title="Validation Failed">' + data.message + '</div>').dialog({autoOpen:true});
+                                    }
+                                },
+                                error: function() {
+                                    $('#waiting').dialog('close');
+                                    $('<div title="Error">Server error. Please try again later.</div>').dialog({autoOpen:true});
+                                }
+                            });
+                        });
+                    }
+
+                    // close the waiting dialog
                     $('#waiting').dialog('close');
                 }
             },
