@@ -556,6 +556,14 @@
   }
  }, 
  {
+  "pk": 24, 
+  "model": "redistricting.panelfunction", 
+  "fields": {
+   "function": 4, 
+   "panel": 8
+  }
+ }, 
+ {
   "pk": 1, 
   "model": "redistricting.scorefunction", 
   "fields": {
