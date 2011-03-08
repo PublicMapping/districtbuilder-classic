@@ -435,8 +435,8 @@ class Equivalence(CalculatorBase):
     score which is the difference between the district with the maximum 
     value and the district with the minimum value.
 
-    This calculator requires two arguments: 'target' and 'value'; 'target'
-    is the mean target population, and 'value' is the name of a subject.
+    This calculator requires one argument: 'value', which is the name
+    of a subject.
     """
     def __init__(self):
         """
@@ -465,21 +465,13 @@ class Equivalence(CalculatorBase):
         if len(districts) == 0:
             return
 
-        target = self.get_value('target')
-        if target is None:
-            return
-        target = float(target)
-
         min_d = 1000000000 # 1B enough?
         max_d = 0
         for district in districts:
             tmpval = self.get_value('value',district)
-            if tmpval is None:
-                continue
-
-            abs_d = abs(target - float(tmpval))
-            min_d = min(abs_d, min_d)
-            max_d = max(abs_d, max_d)
+            if not tmpval is None:
+                min_d = min(float(tmpval), min_d)
+                max_d = max(float(tmpval), max_d)
 
         self.result = max_d - min_d
 
