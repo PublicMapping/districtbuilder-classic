@@ -568,7 +568,7 @@
   "model": "redistricting.scorefunction", 
   "fields": {
    "calculator": "publicmapping.redistricting.calculators.Equivalence", 
-   "description": "All districts must have nearly equal populations. The law does not require perfectly equal populations; however, the courts have said that districts must be as close in population as is practicable.", 
+   "description": "The Equipopulation score is the difference between the district with the highest population and the district with the lowest population.", 
    "is_planscore": true, 
    "name": "Equipopulation", 
    "label": "Equal Population"
