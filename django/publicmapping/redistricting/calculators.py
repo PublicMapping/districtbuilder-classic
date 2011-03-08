@@ -423,7 +423,7 @@ class AllContiguous(CalculatorBase):
         calc = Contiguity()
         calc.compute(**kwargs)
 
-        self.result = len(districts) == calc.result
+        self.result = (len(districts)-1) == calc.result
 
 
 class Equivalence(CalculatorBase):
