@@ -72,7 +72,7 @@ def using_unique_session(u):
                by the user is only 1 (one must be open to make the request)
         False - the user is registered and has more than one open session.
     """
-    if u.is_anonymous():
+    if u.is_anonymous() or u.is_superuser:
         return True
 
     sessions = Session.objects.all()
@@ -137,6 +137,9 @@ def is_session_available(req):
     Parameters:
         req - The HttpRequest object, with user and session information.
     """
+    if req.user.is_superuser:
+        return True
+
     sessions = Session.objects.filter(expire_date__gt=datetime.now())
     count = 0
     for session in sessions:
@@ -266,7 +269,7 @@ def scoreplan(request, planid):
     ccs = ComputedCharacteristic.objects.filter(district__in=districts,subject=subject)
     seemingly_valid = 0
     for cc in ccs:
-        if not cc.number is None and cc.number != float(0.0):
+        if not cc.number is None and float(cc.number) != 0.0:
             seemingly_valid += 1
 
     if seemingly_valid == 0:
@@ -1358,7 +1361,7 @@ def getdemographics(request, planid):
                         val = characteristics[0].percentage
                         if val:
                             try:
-                                characteristic['value'] = "%.2f%%" % (characteristics[0].percentage * 100)
+                                characteristic['value'] = "%.2f%%" % (val * 100)
                             except:
                                 characteristic['value'] = "n/a"
                 
