@@ -536,6 +536,14 @@ class PartisanDifferential(CalculatorBase):
 
         self.result = (pd / num) if num > 0 else 0
 
+    def html(self):
+        """
+        Generate an HTML representation of the partisan differential score.
+        This is represented as a span with a floating point number.
+        """
+        return "<span>%0.2f%%</span" % (self.result * 100)
+
+
 class RepresentationalFairness(CalculatorBase):
     """
     Compute the representational fairness.
@@ -591,6 +599,13 @@ class RepresentationalFairness(CalculatorBase):
             statepct = sumdem / (sumdem+sumrep)
             likelypct = float(likely) / float(numdistricts)
             self.result = abs( (likelypct/statepct) - 1 )
+
+    def html(self):
+        """
+        Generate an HTML representation of the representational fairness
+        score. This is represented as a span with a floating point number.
+        """
+        return "<span>%0.2f%%</span" % (self.result * 100)
 
 
 class CountDistricts(CalculatorBase):
