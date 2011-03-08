@@ -138,7 +138,7 @@ class PlanAdmin(admin.ModelAdmin):
     list_display = ('name','is_template','is_shared','owner','created','edited',)
 
     # Enable filtering by the template and shared flags.
-    list_filter = ('is_template','is_shared',)
+    list_filter = ('is_template','is_shared','is_valid','legislative_body',)
 
     # Order Plans by name by default.
     ordering = ('name',)
