@@ -617,6 +617,9 @@ class AllBlocksAssigned(CalculatorBase):
     Determine if all the blocks in the state are assigned to a district.
     
     This calculator works on plans only.
+
+    This calculator has an optional argument of 'threshold', which is used
+    for buffer in/out optimization
     """
     def __init__(self):
         """
@@ -629,7 +632,13 @@ class AllBlocksAssigned(CalculatorBase):
         """
         Determine if all the blocks in the state are assigned to a district.
         """
-        pass
+        if not 'plan' in kwargs:
+            return
+
+        plan = kwargs['plan']
+        threshold = self.get_value('threshold')
+        geounits = plan.get_unassigned_geounits(threshold)
+        self.result = len(geounits) == 0
 
 
 class Equipopulation(CalculatorBase):

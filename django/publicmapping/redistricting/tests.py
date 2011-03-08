@@ -1779,7 +1779,34 @@ class CalculatorCase(BaseTestCase):
 
 
     def test_allblocks(self):
-        self.fail('Incomplete test')
+        geolevelid = self.geolevels[1].id
+        geounits = self.geounits[geolevelid]
+
+        dist1ids = geounits[0:3] + geounits[9:12]
+        dist2ids = geounits[6:9] + geounits[15:18]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        dist2ids = map(lambda x: str(x.id), dist2ids)
+        
+        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district2.district_id, dist2ids, geolevelid, self.plan.version)
+
+        allblocks = AllBlocksAssigned()
+        allblocks.arg_dict['threshold'] = ('literal', 0.1)
+
+        plan = Plan.objects.get(pk=self.plan.id)
+        allblocks.compute(plan=plan)
+        actual = allblocks.result
+        self.assertEquals(False, actual, 'Incorrect value during plan allblocks. (e:%s,a:%s)' % (False, actual))
+
+        remainderids = plan.get_unassigned_geounits(0.1)
+        remainderids = map(lambda x: str(x[0]), remainderids)
+        plan.add_geounits( self.district2.district_id, remainderids, geolevelid, plan.version)
+
+        plan = Plan.objects.get(pk=plan.id)
+        allblocks.compute(plan=plan)
+        actual = allblocks.result
+        self.assertEquals(True, actual, 'Incorrect value during plan allblocks. (e:%s,a:%s)' % (True, actual))
+
 
     def test_majmin(self):
         geolevelid = self.geolevels[1].id
