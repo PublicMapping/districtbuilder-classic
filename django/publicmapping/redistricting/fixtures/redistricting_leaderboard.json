@@ -696,6 +696,39 @@
   }
  }, 
  {
+  "pk": 13, 
+  "model": "redistricting.scorefunction", 
+  "fields": {
+   "calculator": "publicmapping.redistricting.calculators.AllBlocksAssigned", 
+   "description": "All blocks in the plan must be assigned.", 
+   "is_planscore": true, 
+   "name": "All Blocks Assigned - State House", 
+   "label": "All Blocks Assigned"
+  }
+ }, 
+ {
+  "pk": 14, 
+  "model": "redistricting.scorefunction", 
+  "fields": {
+   "calculator": "publicmapping.redistricting.calculators.AllBlocksAssigned", 
+   "description": "All blocks in the plan must be assigned.", 
+   "is_planscore": true, 
+   "name": "All Blocks Assigned  - Congress", 
+   "label": "All Blocks Assigned"
+  }
+ }, 
+ {
+  "pk": 15, 
+  "model": "redistricting.scorefunction", 
+  "fields": {
+   "calculator": "publicmapping.redistricting.calculators.AllBlocksAssigned", 
+   "description": "All blocks in the plan must be assigned.", 
+   "is_planscore": true, 
+   "name": "All Blocks Assigned  - State Senate", 
+   "label": "All Blocks Assigned"
+  }
+ }, 
+ {
   "pk": 1, 
   "model": "redistricting.scoreargument", 
   "fields": {
@@ -1040,6 +1073,36 @@
   "model": "redistricting.validationcriteria", 
   "fields": {
    "function": 7, 
+   "legislative_body": 3, 
+   "name": "District Count - State Senate", 
+   "description": ""
+  }
+ }, 
+ {
+  "pk": 13, 
+  "model": "redistricting.validationcriteria", 
+  "fields": {
+   "function": 13, 
+   "legislative_body": 1, 
+   "name": "District Count - Congress", 
+   "description": ""
+  }
+ }, 
+ {
+  "pk": 14, 
+  "model": "redistricting.validationcriteria", 
+  "fields": {
+   "function": 14, 
+   "legislative_body": 2, 
+   "name": "District Count - State House", 
+   "description": ""
+  }
+ }, 
+ {
+  "pk": 15, 
+  "model": "redistricting.validationcriteria", 
+  "fields": {
+   "function": 15, 
    "legislative_body": 3, 
    "name": "District Count - State Senate", 
    "description": ""

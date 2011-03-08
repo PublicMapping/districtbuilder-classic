@@ -277,11 +277,14 @@ def scoreplan(request, planid):
     criterion = ValidationCriteria.objects.filter(legislative_body=plan.legislative_body)
     status['success'] = True
     for criteria in criterion:
-        score = criteria.function.score(plan, format='raw')
+        try:
+            score = criteria.function.score(plan, format='raw')
+        except:
+            print traceback.format_exc()
 
         if not score:
             status['success'] = False
-            status['message'] = '<p>%s</p><p>%s</p>' % (criteria.name, criteria.description)
+            status['message'] = '<p>%s</p><p>%s</p>' % (criteria.name, criteria.description or criteria.function.description)
             break
 
     if status['success']:

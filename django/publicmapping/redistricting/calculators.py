@@ -626,7 +626,7 @@ class AllBlocksAssigned(CalculatorBase):
         Initialize the result and argument dictionary.
         """
         self.result = None
-        self.arg_dict = {}
+        self.arg_dict = { 'threshold': ('literal', 100)}
 
     def compute(self, **kwargs):
         """
@@ -636,6 +636,7 @@ class AllBlocksAssigned(CalculatorBase):
             return
 
         plan = kwargs['plan']
+
         threshold = self.get_value('threshold')
         geounits = plan.get_unassigned_geounits(threshold)
         self.result = len(geounits) == 0
