@@ -1688,11 +1688,16 @@ def getleaderboard(request):
 
     owner_filter = request.REQUEST['owner_filter']
     body_pk = int(request.REQUEST['legislative_body']);
-    leg_body = LegislativeBody.objects.filter(pk=body_pk)[0]
+    leg_body = LegislativeBody.objects.get(pk=body_pk)
     
     # Retrieve the leaderboard display
     display = ScoreDisplay.objects.filter(title='%s Leaderboard - %s' % (leg_body.name, owner_filter.title()))[0]
-    plans = Plan.objects.filter(legislative_body=leg_body, is_valid=True)
+
+    pfilter = Q(legislative_body=leg_body) & Q(is_valid=True)
+    if owner_filter == 'mine':
+        pfilter = pfilter & Q(owner=request.user)
+
+    plans = Plan.objects.filter(pfilter)
 
     try :
         html = display.render(list(plans), request)
