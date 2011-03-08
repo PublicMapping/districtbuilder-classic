@@ -263,7 +263,7 @@ def scoreplan(request, planid):
     # check if the computed char for REP exists yet
     districts = plan.get_districts_at_version(plan.version,include_geom=False)
     subject = Subject.objects.get(name='govrep')
-    ccs = ComputedCharacteristics.objects.filter(district__in=districts,subject=subject)
+    ccs = ComputedCharacteristic.objects.filter(district__in=districts,subject=subject)
     seemingly_valid = 0
     for cc in ccs:
         if not cc.number is None and cc.number != float(0.0):
