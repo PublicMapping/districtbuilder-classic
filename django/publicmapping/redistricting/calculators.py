@@ -409,6 +409,23 @@ class Contiguity(CalculatorBase):
                 self.result += 1
 
 
+class AllContiguous(CalculatorBase):
+    """
+    Used to verify that all districts in a plan are contiguous.
+    """
+    def compute(self, **kwargs):
+        if not 'plan' in kwargs:
+            return
+
+	plan = kwargs['plan']
+        districts = plan.get_districts_at_version(plan.version, include_geom=False)
+
+        calc = Contiguity()
+        calc.compute(**kwargs)
+
+        self.result = len(districts) == calc.result
+
+
 class Equivalence(CalculatorBase):
     """
     Generate a single score based on how closely a set of districts are
