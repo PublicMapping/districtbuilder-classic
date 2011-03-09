@@ -931,11 +931,20 @@ def newdistrict(request, planid):
 @unique_session_or_json_redirect
 @transaction.commit_manually
 def add_districts_to_plan(request, planid):
-    status = { 'success': False }
+    """
+    This handler is used to paste existing districts from one
+    plan into another plan
+    
+    Parameters:
+        request -- An HttpRequest object including a list of districtids and
+            a version
+        planid -- The plan into which to paste the districts
 
-    # TODO: Remove "Stay Tuned" Message on implementation
-#    status['message'] = 'This feature is not yet implemented'
-#    return HttpResponse(json.dumps(status),mimetype='application/json')
+    Returns:
+        Some JSON explaining the success or failure of the paste operation
+    """
+
+    status = { 'success': False }
 
     # Make sure we can edit the given plan
     try:
@@ -955,34 +964,81 @@ def add_districts_to_plan(request, planid):
         return HttpResponse(json.dumps(status),mimetype='application/json')
     else:
         districts = District.objects.filter(id__in=district_list)
+        version = int(request.POST.get('version', None))
         status['message'] = 'Going to merge %d districts' % len(districts)
     
     # Check to see if we have enough room to add these districts without
     # going over MAX_DISTRICTS for the legislative_body
-    current_districts = plan.get_districts_at_version(plan.version, include_geom=False)
-    current_district_count = 0
-    for d in current_districts:
-        if d.has_geom == True:
-            current_district_count += 1
-     
-    # current_district_count = len(plan.get_districts_at_version(plan.version)) - 1
-    allowed_districts = plan.legislative_body.max_districts
+    allowed_districts = plan.get_available_districts(version=version)
     
-    if (current_district_count + len(districts)) > allowed_districts:
-        status['message'] = 'Tried to merge too many districts; %d current + %d added > % max' % (current_district_count, len(districts), allowed_districts)
+    if len(districts) > allowed_districts:
+        status['message'] = 'Tried to merge too many districts; %d slots left' % allowed_districts
 
     # Everything checks out, let's paste those districts
     try:
-        results = plan.paste_districts(districts)
+        results = plan.paste_districts(districts, version=version)
         transaction.commit()
         status['success'] = True
         status['message'] = 'Merged %d districts' % len(results)
         status['version'] = plan.version
     except Exception as ex:
         transaction.rollback()
-        status['message'] = 'Failed to merge: %s' % ex
+        status['message'] = str(ex)
+        status['exception'] = traceback.format_exc()
 
     return HttpResponse(json.dumps(status),mimetype='application/json')
+
+@login_required
+@unique_session_or_json_redirect
+def combine_districts(request, planid):
+    """
+    Take the contents of one district and add them to another districts
+    """
+    
+    status = { 'success': False }
+
+    # Make sure we can edit the given plan
+    try:
+        plan = Plan.objects.get(pk=planid)
+    except:
+        status['message'] = 'No plan with the given id'
+        return HttpResponse(json.dumps(status),mimetype='application/json')
+
+    if not can_edit(request.user, plan):
+        status['message'] = 'User can\'t edit the given plan'
+        return HttpResponse(json.dumps(status),mimetype='application/json')
+    
+    # Get the districts we want to merge
+    version = int(request.POST.get('version', plan.version))
+    from_id = int(request.POST.get('from_district_id', -1))
+    to_id = int(request.POST.get('to_district_id', None))
+
+    try:
+        all_districts = plan.get_districts_at_version(version, include_geom=True)
+        
+        from_districts = filter(lambda d: True if d.district_id == from_id else False, all_districts)
+        to_district = filter(lambda d: True if d.district_id == to_id else False, all_districts)[0]
+
+        locked = to_district.is_locked
+        for district in from_districts:
+            if district.is_locked:
+                locked = True
+
+        if locked:
+            status['message'] = 'Can\'t combine locked districts'
+            return HttpResponse(json.dumps(status),mimetype='application/json')
+
+        result = plan.combine_districts(to_district, from_districts, version=version)
+
+        if result[0] == True:
+            status['success'] = True
+            status['message'] = 'Successfully combined districts'
+            status['version'] = result[1]
+    except:
+        status['message'] = 'Could not combine districts'
+        status['exception'] = traceback.format_exc()
+    return HttpResponse(json.dumps(status),mimetype='application/json')
+
 
 @login_required
 @unique_session_or_json_redirect
@@ -1110,6 +1166,9 @@ def getdistricts(request, planid):
         districts = plan.get_districts_at_version(version,include_geom=False)
 
         status['districts'] = []
+
+        status['available'] = plan.get_available_districts(version=version)
+
         for district in districts:
             if district.has_geom or district.name == 'Unassigned':
                 status['districts'].append({
@@ -1361,7 +1420,7 @@ def getdemographics(request, planid):
                         val = characteristics[0].percentage
                         if val:
                             try:
-                                characteristic['value'] = "%.2f%%" % (val * 100)
+                                characteristic['value'] = "%.2f%%" % (characteristics[0].percentage * 100)
                             except:
                                 characteristic['value'] = "n/a"
                 

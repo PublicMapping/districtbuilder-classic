@@ -49,7 +49,7 @@ shareddistricts = function(options) {
             width: 800,
             title: 'Copy and Paste Districts',
             resizable: false,
-            closable: true,
+            closable: true
         }, options),
         // bunch o variables
        
@@ -295,30 +295,44 @@ shareddistricts = function(options) {
 
     var initUI = function() {
         _options.submitButton.click( function() {
+            _options.container.dialog('close');
+            $('#working').dialog('open');
+            // Send off our request
             $.ajax({
                 url: _options.handlerUrl,
                 type: 'POST',
                 data: {
-                    districts: _selectedDistricts
+                    districts: _selectedDistricts,
+                    version: $('#history_cursor').val()
                 },
                 success: function(data) {
+                    $('#working').dialog('close');
                     if (data.success == true) {
-                        console.log('Successfully pasted a district. Plan at version ' + data.version);
                         PLAN_VERSION = data.version;
                         PLAN_HISTORY[PLAN_VERSION] = true;
                         $('#history_cursor').val(data.version);
-                        _options.container.dialog( 'close');
+                        // update the UI buttons to show that you can
+                        // perform an undo now, but not a redo
+                        $('#history_redo').addClass('disabled');
+                        $('#history_undo').removeClass('disabled');
+
                         $('#copy_paste_tool').trigger('merge_success'); 
                     } else {
-                        alert('Sorry!\n' + data.message);
-                        _options.container.dialog( 'close');
+                        $('<div class="error" title="Sorry">Unable to paste districts:<p>' + data.message + '</p></div>').dialog({
+                            modal: true,
+                            autoOpen: true,
+                            resizable: false
+                        });
                     }
                 }
             });
             // We don't want these districts selected anymore in the table
+            _selectedDistricts = [];
             _districtTable.trigger('reloadGrid', [{page:1}]); 
         });
-
+        $('#available_districts').bind('updated', function() {
+            $('#shared_districts_column h2').text('2. Select ' + $('#available_districts').va() + ' districts to copy');
+        });
     };
 
     //resize grid to fit window

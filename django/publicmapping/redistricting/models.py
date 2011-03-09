@@ -43,6 +43,7 @@ from django.template.loader import render_to_string
 from datetime import datetime
 from redistricting.calculators import *
 from copy import copy
+from decimal import *
 import sys
 
 
@@ -1037,7 +1038,6 @@ class Plan(models.Model):
             others = self.get_districts_at_version(version, include_geom=True)
         else:
             first_run = False
-            sys.stderr.write('Running through a second time\n')
 
         biggest_geolevel = self.get_biggest_geolevel()
 
@@ -1331,6 +1331,102 @@ class Plan(models.Model):
         # Return the difference
         return list(set(all) ^ set(assigned))
 
+    def get_available_districts(self, version=None):
+        if version == None:
+           version = self.version
+        current_districts = self.get_districts_at_version(version, include_geom=False)
+        available_districts = self.legislative_body.max_districts
+        for d in current_districts:
+            if d.has_geom and d.name != 'Unassigned':
+                available_districts -= 1 
+        return available_districts
+
+    @transaction.commit_manually
+    def combine_districts(self, target, components, version=None):
+        """
+        Given a target district, add the components and combine
+        their scores and geography.  Target and components should
+        be districts within this plan
+        Parameters:
+            target - A district within this plan
+            components - A list of districts within this plan
+                to combine with the target
+            
+        Returns:
+            Whether the operation was successful
+        """
+        # Check to be sure they're all in the same version and don't 
+        # overlap - that should never happen
+        if version == None:
+            version = self.version
+        if version != self.version:
+            self.purge(after=version)
+        district_keys = set(map(lambda d: d.id, components))
+        district_version = self.get_districts_at_version(version)
+        version_keys = set(map(lambda d: d.id, district_version))
+        if not district_keys.issubset(version_keys):
+            raise Exception('Attempted to combine districts not in the same plan or version') 
+        if target.is_locked:
+            raise Exception('You cannot combine with a locked district')
+        
+        try:
+            target.id = None
+            target.version = version + 1
+            target.save()
+
+            if target.name == 'Unassigned':
+                target.geom = None
+                target.simple = None
+                target.save()
+            else:
+                # Combine the stats for all of the districts
+                all_characteristics = ComputedCharacteristic.objects.filter(district__in=district_keys)
+                all_subjects = Subject.objects.order_by('-percentage_denominator').all()
+                for subject in all_subjects:
+                    relevant_characteristics = filter(lambda c: c.subject == subject, all_characteristics)
+                    number = sum(map(lambda c: c.number, relevant_characteristics))
+                    percentage = Decimal('0000.00000000')
+                    if subject.percentage_denominator:
+                        denominator = ComputedCharacteristic.objects.get(subject=subject.percentage_denominator,district=target)
+                        if denominator:
+                            if denominator.number > 0:
+                                percentage = number / denominator.number
+                    cc = ComputedCharacteristic(district=target, subject=subject, number=number, percentage=percentage)
+                    cc.save()
+
+                # Create a new copy of the target geometry
+                all_geometry = map(lambda d: d.geom, components)
+                all_geometry.append(target.geom)
+                # Can't make a MultiPolygon from MultiPolygons so break it down
+                polys = list()
+                for geometry in all_geometry:
+                    if geometry == None: 
+                        continue
+                    elif geometry.geom_type == 'MultiPolygon':
+                        polys += map(lambda p: p, geometry)
+                    elif geometry.geom_type == 'Polygon':
+                        polys += geometry
+                target.geom = enforce_multi(MultiPolygon(polys).cascaded_union)
+                target.simplify()
+
+            # Eliminate the component districts from the version
+            for component in components:
+                if component.district_id == target.district_id:
+                    # Pasting a district to itself would've been handled earlier
+                    continue
+                component.id = None
+                component.geom = None
+                component.simple = None
+                component.version = version + 1
+                component.save()
+
+            self.version += 1
+            self.save()
+            transaction.commit()
+            return True, self.version
+        except Exception as ex:
+            transaction.rollback()
+            return False
 
 class PlanForm(ModelForm):
     """
@@ -1640,14 +1736,18 @@ def set_district_id(sender, **kwargs):
     """
     district = kwargs['instance']
     if (not district.district_id):
-        max_id = District.objects.filter(plan = district.plan).aggregate(Max('district_id'))['district_id__max']
-        if max_id:
-            district.district_id = max_id + 1
+        districts = district.plan.get_districts_at_version(district.version, include_geom=False)
+        ids_in_use = map(lambda d: d.district_id, filter(lambda d: True if d.has_geom or d.name == 'Unassigned' else False, districts))
+        max_districts = district.plan.legislative_body.max_districts + 1
+        if len(ids_in_use) >= max_districts:
+            raise ValidationError("Too many districts already. Reached Max Districts setting")
         else:
-            district.district_id = 1
-        # Unassigned is not counted in max_districts
-        if district.district_id > (district.plan.legislative_body.max_districts + 1):            
-            raise ValidationError("Too many districts already.  Reached Max Districts setting")
+            # Find one not in use - 1 is unassigned
+            # TODO - update this if unassigned is not district_id 1
+            for i in range(1, max_districts+2):
+                if i not in ids_in_use:
+                    district.district_id = i
+                    return
 
 def update_plan_edited_time(sender, **kwargs):
     """

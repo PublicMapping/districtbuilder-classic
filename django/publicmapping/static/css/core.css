@@ -893,6 +893,9 @@ div.toolset#toolset_draw .ui-icon {
 #copy_paste_tool  .ui-icon {
   background-image: url(/static-media/images/icon-copy-paste.png);
 }
+#unassign_tool  .ui-icon {
+  background-image: url(/static-media/images/icon-copy-paste.png);
+}
 #dragdrop_tool .ui-icon {
   background-image: url(/static-media/images/icon-drop.png);
 }
@@ -905,7 +908,7 @@ div.toolset#toolset_draw .ui-icon {
 #history_redo  .ui-icon {
   background-image: url(/static-media/images/icon-redo.png);
 }
-#select_district  .ui-icon {
+#district_select_tool  .ui-icon {
   background-image: url(/static-media/images/icon-select-district.png);
 }
 

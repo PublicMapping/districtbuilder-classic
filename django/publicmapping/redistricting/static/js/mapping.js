@@ -1056,8 +1056,61 @@ function mapinit(srs,maxExtent) {
         protocol: idProtocol
     });
 
+    var districtSelectTool = new OpenLayers.Control.SelectFeature(
+        districtLayer,
+        {
+            hover: false,
+            clickFeature: function(feature, event) {
+                // Show a dialog asking to unmerge
+                // to combine with unassigned
+                $('<div id="unassign_district">Would you like to unassign the geography in ' + 
+                feature.attributes.name + '?</div>').dialog({
+                    resizable: false,
+                    moadl: true,
+                    buttons: {  
+                        'OK': function() {
+                            $(this).dialog('close');
+                            // submit an ajax call to the handler
+                            $('#working').dialog('open');
+                            $.ajax({
+                                type: 'POST',
+                                url: '/districtmapping/plan/' + PLAN_ID + '/combinedistricts/',
+                                data: {
+                                    from_district_id: feature.attributes.district_id,
+                                    to_district_id: 1, /*Always Unassigned */
+                                    version: getPlanVersion()
+                                },
+                                success: function(data, textStatus, xhr) {
+                                    $('#working').dialog('close');
+                                    if (data.success == true) {
+                                        PLAN_VERSION = data.version;
+                                        PLAN_HISTORY[PLAN_VERSION] = true;
+                                        $('#history_cursor').val(data.version);
+                                        updateInfoDisplay();
+                                        updateAssignableDistricts();
+                                    } else {
+                                        $('<div class="error" title="Sorry">Unable to combine districts:<p>' + data.message + '</p></div>').dialog({
+                                            modal: true,
+                                            autoOpen: true,
+                                            resizable: false
+                                        });
+                                    }
+                                }
+                            });
+                        }, 
+                        'No': function() {
+                            $(this).dialog('close');
+                        }
+                    },
+                    modal: true
+                }); // end dialog
+        }
+    });
+
+
     var districtIdDiv = createDistrictTipDiv();
     olmap.div.insertBefore(districtIdDiv,olmap.div.firstChild);
+
     var districtIdControl = new OpenLayers.Control.SelectFeature(
         districtLayer,
         {
@@ -1746,6 +1799,22 @@ function mapinit(srs,maxExtent) {
         $('#assign_district').val(-1);
     });
 
+    // When the district unassign tool is clicked, disable all the
+    // controls except the unassign tool control.
+    $('#district_select_tool').click(function(evt){
+        var active = olmap.getControlsBy('active',true);
+        for (var i = 0; i < active.length; i++) {
+            if (active[i].CLASS_NAME != 'OpenLayers.Control.KeyboardDefaults') {
+                active[i].deactivate();
+            }
+        }
+        districtSelectTool.activate();
+        $('#dragdrop_tool').removeClass('toggle');
+        $('#anchor_tool').removeClass('toggle');
+        assignMode = null;
+        $('#assign_district').val(-1);
+    });
+
     // When the lock district map tool is clicked, disable all the
     // controls except the lock district control.
     $('#lock_district_map_tool').click(function(evt){
@@ -1841,6 +1910,8 @@ function mapinit(srs,maxExtent) {
         idControl.deactivate();
         $('#district_id_map_tool').removeClass('toggle');
         districtIdControl.deactivate();
+        $('#district_select').removeClass('toggle');
+        districtSelectControl.deactivate();
         $('#lock_district_map_tool').removeClass('toggle');
         lockDistrictControl.deactivate();
         $('#anchor_tool').removeClass('toggle');
@@ -1904,6 +1975,7 @@ function mapinit(srs,maxExtent) {
         new GlobalZoom(),
         idControl,
         districtIdControl,
+        districtSelectTool,
         lockDistrictControl,
         dragdropControl
     ]);
@@ -2268,6 +2340,10 @@ function mapinit(srs,maxExtent) {
     $('#copy_paste_tool').bind('merge_success', function() {
             updateInfoDisplay();
             updateAssignableDistricts();
+            // update the UI buttons to show that you can
+            // perform an undo now, but not a redo
+            $('#history_redo').addClass('disabled');
+            $('#history_undo').removeClass('disabled');
     });
         
 
