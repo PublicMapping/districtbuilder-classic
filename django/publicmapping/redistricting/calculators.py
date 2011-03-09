@@ -528,6 +528,10 @@ class PartisanDifferential(CalculatorBase):
 
             dem = float(dem)
             rep = float(rep)
+
+            if dem == 0.0 and rep == 0.0:
+                continue
+
             dem_pi = dem / (rep + dem)
             rep_pi = rep / (rep + dem)
 
@@ -583,6 +587,9 @@ class RepresentationalFairness(CalculatorBase):
 
             dem = float(tmpdem)
             rep = float(tmprep)
+
+            if dem == 0.0 and rep == 0.0:
+                continue
 
             pidx = dem / (dem + rep)
             if pidx > 0.5:
