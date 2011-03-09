@@ -135,7 +135,7 @@ $(function() {
         $.ajax({
             type: 'GET',
             url: '/districtmapping/getleaderboard/',
-            data: { owner_filter: owner, legislative_body: $('#leg_selector').val() }, 
+            data: { owner_filter: owner, legislative_body: BODY_ID }, 
             success: function(html) {
                 var panels = $('<div class="leaderboard_panels"></div>');
                 container.append(panels);

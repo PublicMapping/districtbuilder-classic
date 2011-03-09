@@ -483,6 +483,7 @@ def editplan(request, planid):
         return HttpResponseRedirect('/districtmapping/plan/%s/view/' % planid)
     plan = Plan.objects.get(id=planid,owner=request.user)
     cfg['dists_maxed'] = len(cfg['districts']) > plan.legislative_body.max_districts
+    cfg['available_districts'] = plan.get_available_districts()
     return render_to_response('editplan.html', cfg) 
 
 @login_required
@@ -1870,11 +1871,15 @@ def get_shared_districts(request, planid):
     end = page * rows
     start = end - rows
     
-    plan = Plan.objects.get(pk=planid)
-    if not can_copy(request.user, plan):
-        return HttpResponseForbidden()
+    try:
+        plan = Plan.objects.get(pk=planid)
+        if not can_copy(request.user, plan):
+            return HttpResponseForbidden()
 
-    all_districts = plan.get_districts_at_version(plan.version, include_geom=False)
+        all_districts = plan.get_districts_at_version(plan.version, include_geom=False)
+    except:
+        plan = None
+        all_districts = () 
 
     if len(all_districts) > 0:
         total_pages = math.ceil(len(all_districts) / float(rows))

@@ -82,6 +82,8 @@
         // The history tree. This gets populated as the user walks
         // backward in the history.
         var PLAN_HISTORY = {};
+        // The id of the legislative body for this plan
+        var BODY_ID = {{ plan.legislative_body.id }};
 
         // The id of the special 'unassigned' district.
         var UNASSIGNED_DISTRICT_ID = {% if unassigned_id %}{{ unassigned_id }}{% else %}0{% endif %};

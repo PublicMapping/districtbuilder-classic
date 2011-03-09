@@ -97,6 +97,9 @@
     <div id="shared_districts_dialog">
         <!-- <div id="header"><h3></h3></div> -->
         <div id="shared_districts_content">
+            <div id="shared_districts_instructions">
+            <p>Choose districts to paste into your plan.  A plan has a maximum number of districts allowed by law.  If you would like to paste districts into a plan, you must have fewer districts in your plan than the maximum allowed.  If you would like to remove districts from your plan, use the district unassign tool.</p>
+            </div>
             <div id="shared_plans_column">
                 <h2>1. Choose Plan</h2>
                 <table id="shared_plans_table"></table>
@@ -131,7 +134,8 @@
                 districtPager: $('#shared_districts_pager'),
                 districtUrl: '/districtmapping/plan/PLAN_ID/shareddistricts/',
                 submitButton: $('#paste_button'),
-                handlerUrl: '/districtmapping/plan/{{ plan.id }}/pastedistricts/'
+                handlerUrl: '/districtmapping/plan/{{ plan.id }}/pastedistricts/',
+                availableDistricts: {{ available_districts }}
             }).init();
         });
     </script>

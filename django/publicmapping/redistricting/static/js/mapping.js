@@ -1711,6 +1711,8 @@ function mapinit(srs,maxExtent) {
                 if (max_version == 0) {
                     $('#history_undo').addClass('disabled');
                 }
+                // Update the "available districts" shown in the copy/paste dialog
+                $('#copy_paste_tool').trigger('available_districts_updated', [data.available]);
             }
         });
     };

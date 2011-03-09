@@ -44,6 +44,7 @@ shareddistricts = function(options) {
             // When putting in the district URL, make sure to add the PLAN_ID like so
             districtUrl: '/districtmapping/plan/PLAN_ID/shareddistricts/',
             handlerUrl: '',
+            availableDistricts: -1,
             autoOpen: false,
             modal: true,
             width: 800,
@@ -51,17 +52,15 @@ shareddistricts = function(options) {
             resizable: false,
             closable: true
         }, options),
+
         // bunch o variables
-       
-        _container, 
+        _disabledDialog,
         _planTable,
+        _districtTable,
         _selectedPlanId,
-        _nameRequired,
         _selectedDistricts,
         _selectedPlanName,
-        _editButton,
-        _saveButton,
-        _cancelButton;
+        _available_districts
 
     /**
      * Initialize the chooser. Setup the click event for the target to
@@ -72,8 +71,7 @@ shareddistricts = function(options) {
      */
     _self.init = function() {
         _options.container.dialog(_options);
-        _options.target.click(function() { _options.container.dialog( 'open'); });
-
+        _options.target.click(showDialog);
         _selectedDistricts = [];
         _planTable = _options.planTable;
         loadPlanTable();
@@ -81,9 +79,27 @@ shareddistricts = function(options) {
         loadDistrictsTable();
 
         initUI();
+
+        _available_districts = _options.availableDistricts;
+        _options.target.trigger('available_districts_updated', [_available_districts]);
     };
 
+    var showDialog = function() {
+        _options.container.dialog('open');
+    };
 
+    var showDisabledDialog = function() {
+        _disabledDialog.dialog('open');
+    };
+    
+    var closeDialog = function(event, ui) {
+        _options.target.trigger('available_districts_updated', [_available_districts + _selectedDistricts.length]);
+        _selectedDistricts = [];
+        _selectedPlanId = undefined;
+        _planTable.trigger('reloadGrid', [{page:1}]); 
+        _districtTable.trigger('reloadGrid', [{page:1}]); 
+    };
+        
     /**
      * Set up the jqGrid table and make the initial call to the server for data
      */
@@ -184,6 +200,11 @@ shareddistricts = function(options) {
                                              $("#csrfmiddlewaretoken").val());
                     }
                 }
+            },
+            beforeRequest: function () {
+                // If we don't do this, the grid gets a 500 error the first time
+                // before a plan is selected
+                this.p.url = this.p.url.replace('PLAN_ID', 0);
             }
         }).jqGrid(
             'navGrid',
@@ -205,8 +226,12 @@ shareddistricts = function(options) {
 
     var planSelected = function(id) {
         // Set the internal variables for later use
-        _selectedPlanId = id;
-        loadDistrictsForPlan(id);
+        if (_selectedPlanId != id) {
+            _selectedPlanId = id;
+            _options.target.trigger('available_districts_updated', [_available_districts + _selectedDistricts.length]);
+            _selectedDistricts = [];
+            loadDistrictsForPlan(id);
+        }
     };
     
     var setSelectedDistricts = function(checkbox) {
@@ -215,8 +240,10 @@ shareddistricts = function(options) {
         var checked = $(this).is(':checked');
         if (checked) {
             _selectedDistricts.push(value);
+            _options.target.trigger('available_districts_updated', [_available_districts -=1]);
         } else if (!checked && selectionIndex > -1) {
             _selectedDistricts.splice(selectionIndex, 1);
+            _options.target.trigger('available_districts_updated', [_available_districts +=1]);
         }
     };
 
@@ -225,7 +252,7 @@ shareddistricts = function(options) {
         for (var i = 0; i < ids.length; i++) {
             var cl = ids[i];
             var selectionIndex = _selectedDistricts.indexOf(cl);
-            var checked = selectionIndex > 1 ? ' checked ' : '';
+            var checked = selectionIndex > -1 ? ' checked ' : '';
             var content = '<input class="district_selection" type="checkbox" value="' + cl + '"' + checked + '/>'
             _districtTable.jqGrid('setRowData', cl, { selected: content });
         }
@@ -244,7 +271,7 @@ shareddistricts = function(options) {
 
     var appendExtraParamsToRequest = function(xhr) {
         _planTable.setPostDataItem( 'owner_filter', 'all_available' );
-        _planTable.setPostDataItem( 'legislative_body', $('#leg_selector').val() );
+        _planTable.setPostDataItem( 'legislative_body', BODY_ID );
         /* TODO: implement search
         If the search box has a value, apply that to any filter
         var search = $('#plan_search');
@@ -294,9 +321,49 @@ shareddistricts = function(options) {
     };
 
     var initUI = function() {
+        // Create the dialog displayed when the tool is disabled
+        _disabledDialog = $('<div id="copy_paste_disabled" title="Maximum Districts Reached">' + 
+            'Your plan is at maximum capacity. Please delete a district to enable pasting.</div>')
+            .dialog({ autoOpen: false, modal: true, resizable: false});
+
+        // Use the closeDialog method to clear out the selections
+        _options.container.bind('dialogclose', closeDialog);
+
+        // Set up the message that displays how many districts are available for pasting
+        _options.target.bind('available_districts_updated', function(event, new_value) {
+            _available_districts = new_value;
+            switch (_available_districts) {
+                case 0:
+                    var instructions = '2. Check your selections';
+                    break;
+                case 1:
+                    var instructions = '2. Select a district to copy';
+                    break;
+                default:
+                    if (_available_districts > 0) {
+                        var instructions = '2. Select up to ' + _available_districts + ' districts to copy';
+                    } else {
+                        var instructions = '2. Remove ' + Math.abs(_available_districts) + ' before submitting';
+                    }
+            }
+
+            $('#shared_districts_column h2').text(instructions);
+        
+            // The tool icon will be enabled or disabled 
+            if (_available_districts == 0) {
+                _options.target.unbind('click', showDialog);
+                _options.target.bind('click', showDisabledDialog);
+            } else {
+                _options.target.unbind('click', showDisabledDialog);
+                _options.target.bind('click', showDialog);
+            }            
+        });
+
+        // Set up the submit button
         _options.submitButton.click( function() {
-            _options.container.dialog('close');
-            $('#working').dialog('open');
+            if (_available_districts < 0) {
+                return false;   
+            }
             // Send off our request
             $.ajax({
                 url: _options.handlerUrl,
@@ -318,21 +385,22 @@ shareddistricts = function(options) {
 
                         $('#copy_paste_tool').trigger('merge_success'); 
                     } else {
-                        $('<div class="error" title="Sorry">Unable to paste districts:<p>' + data.message + '</p></div>').dialog({
-                            modal: true,
-                            autoOpen: true,
-                            resizable: false
-                        });
+                        $('<div class="error" title="Sorry">Unable to paste districts:<p>' + data.message + '</p></div>')
+                            .dialog({modal:true, resizable:false});
                     }
+                },
+                error: function() {
+                    $('<div class="error" title="Sorry">Unable to paste districts</div>')
+                        .dialog({modal:true, resizable:false});
                 }
             });
+            _options.container.dialog('close');
+            $('#working').dialog('open');
             // We don't want these districts selected anymore in the table
             _selectedDistricts = [];
             _districtTable.trigger('reloadGrid', [{page:1}]); 
         });
-        $('#available_districts').bind('updated', function() {
-            $('#shared_districts_column h2').text('2. Select ' + $('#available_districts').va() + ' districts to copy');
-        });
+
     };
 
     //resize grid to fit window

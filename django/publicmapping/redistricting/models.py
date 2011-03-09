@@ -1740,7 +1740,7 @@ def set_district_id(sender, **kwargs):
         ids_in_use = map(lambda d: d.district_id, filter(lambda d: True if d.has_geom or d.name == 'Unassigned' else False, districts))
         max_districts = district.plan.legislative_body.max_districts + 1
         if len(ids_in_use) >= max_districts:
-            raise ValidationError("Too many districts already. Reached Max Districts setting")
+            raise ValidationError("Plan is at maximum district capacity of %d" % max_districts)
         else:
             # Find one not in use - 1 is unassigned
             # TODO - update this if unassigned is not district_id 1
