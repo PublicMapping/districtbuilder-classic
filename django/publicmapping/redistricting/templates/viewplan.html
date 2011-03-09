@@ -83,8 +83,7 @@
         // backward in the history.
         var PLAN_HISTORY = {};
         // The id of the legislative body for this plan
-        var BODY_ID = {{ plan.legislative_body.id }};
-
+        var BODY_ID = {% if plan.legislative_body.id %}{{ plan.legislative_body.id }}{% else %}0{% endif %};
         // The id of the special 'unassigned' district.
         var UNASSIGNED_DISTRICT_ID = {% if unassigned_id %}{{ unassigned_id }}{% else %}0{% endif %};
         // An array of configuration settings for the layers that are
