@@ -1128,7 +1128,55 @@ class Plan(models.Model):
         """
         
         cursor = connection.cursor()
-        query = "SELECT rd.id, rd.district_id, rd.name, rd.is_locked, lmt.version, rd.plan_id, rc.subject_id, rc.number, st_asgeojson(st_geometryn(rd.simple,%d)) AS geom FROM redistricting_district rd JOIN redistricting_computedcharacteristic rc ON rd.id = rc.district_id JOIN (SELECT max(version) as version, district_id FROM redistricting_district WHERE plan_id = %d AND version <= %d GROUP BY district_id) AS lmt ON rd.district_id = lmt.district_id WHERE rd.plan_id = %d AND rc.subject_id = %d AND lmt.version = rd.version AND st_intersects(st_geometryn(rd.simple,%d),st_envelope(('SRID='||(select st_srid(rd.simple))||';LINESTRING(%f %f,%f %f)')::geometry))" % (geolevel, int(self.id), int(version), int(self.id), int(subject_id), geolevel, extents[0], extents[1], extents[2], extents[3])
+        query = """SELECT rd.id,
+rd.district_id,
+rd.name,
+rd.is_locked,
+lmt.version,
+rd.plan_id,
+rc.subject_id,
+rc.number,
+st_asgeojson(
+    st_intersection(
+        st_geometryn(rd.simple,%d),
+            st_envelope(
+                ('SRID=' || (select st_srid(rd.simple)) || ';LINESTRING(%f %f,%f %f)')::geometry
+            )
+        )
+    ) as geom 
+FROM redistricting_district as rd 
+JOIN redistricting_computedcharacteristic as rc 
+ON rd.id = rc.district_id 
+JOIN (
+    SELECT max(version) as version,district_id
+    FROM redistricting_district 
+    WHERE plan_id = %d 
+    AND version <= %d 
+    GROUP BY district_id) 
+AS lmt 
+ON rd.district_id = lmt.district_id 
+WHERE rd.plan_id = %d 
+AND rc.subject_id = %d 
+AND lmt.version = rd.version 
+AND st_intersects(
+    st_geometryn(rd.simple,%d),
+        st_envelope(
+            ('SRID=' || (select st_srid(rd.simple)) || ';LINESTRING(%f %f,%f %f)')::geometry
+        )
+    )""" % (geolevel, \
+                extents[0], \
+                extents[1], \
+                extents[2], \
+                extents[3], \
+                int(self.id), \
+                int(version), \
+                int(self.id), \
+                int(subject_id), \
+                geolevel, \
+                extents[0], \
+                extents[1], \
+                extents[2], \
+                extents[3], )
 
         # Execute our custom query
         cursor.execute(query)
