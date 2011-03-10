@@ -246,15 +246,15 @@ class DistrictIndexFile():
                     value = cc_value['number__sum']
                     percentage = '0000.00000000'
 
-                    if subject.percentage_denominator:
-                        # The denominator's CC should've already been saved
-                        denominator_value = ComputedCharacteristic.objects.get(
-                            subject = subject.percentage_denominator,
-                            district = new_district).number
-                        percentage = value / denominator_value
+                    if value is not None:
+                        if subject.percentage_denominator:
+                            # The denominator's CC should've already been saved
+                            denominator_value = ComputedCharacteristic.objects.get(
+                                subject = subject.percentage_denominator,
+                                district = new_district).number
+                            percentage = value / denominator_value
 
                     # sys.stderr.write('Aggregating value for %s: %s' % (subject, cc_value))
-                    if value is not None:
                         cc = ComputedCharacteristic(subject = subject, 
                             number = value, 
                             percentage = percentage,
