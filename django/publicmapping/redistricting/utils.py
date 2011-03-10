@@ -28,7 +28,7 @@ from celery.decorators import task
 from django.core import management
 from django.contrib.sessions.models import Session
 from django.core.mail import send_mail, mail_admins
-from django.template import loader, Context
+from django.template import loader, Context as DjangoContext
 from django.db.models import Sum as SumAgg
 from redistricting.models import *
 import csv, time, zipfile, tempfile, os, sys, traceback
@@ -74,7 +74,7 @@ class DistrictIndexFile():
             success_subject = "Upload and import plan confirmation."
             admin_subject = "Problem importing user uploaded file."
             
-            context = Context({
+            context = DjangoContext({
                 'user': owner,
                 'errors': list()
             })
