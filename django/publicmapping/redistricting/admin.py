@@ -31,6 +31,16 @@ Author:
 from publicmapping.redistricting.models import *
 from django.contrib.gis import admin
 
+class ComputedCharacteristicAdmin(admin.ModelAdmin):
+    """
+    Administrative settings for ComputedCharacteristics of a District.
+    """
+
+    list_display = ('subject','district','number',)
+
+    # Enable filtering by subject
+    list_filter = ('subject',)
+
 class CharacteristicAdmin(admin.ModelAdmin):
     """
     Administrative settings for Characteristics of a Geounit.
@@ -231,7 +241,7 @@ class ValidationCriteriaAdmin(admin.ModelAdmin):
 
 # Register these classes with the admin interface.
 admin.site.register(Geounit, GeounitAdmin)
-admin.site.register(ComputedCharacteristic) 
+admin.site.register(ComputedCharacteristic, ComputedCharacteristicAdmin) 
 admin.site.register(Characteristic, CharacteristicAdmin)
 admin.site.register(Subject, SubjectAdmin)
 admin.site.register(Geolevel)
