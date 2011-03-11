@@ -278,6 +278,59 @@ class PolsbyPopper(CalculatorBase):
         return ("%0.2f%%" % (self.result * 100)) if self.result else "n/a"
 
 
+class LengthWidthCompactness(CalculatorBase):
+    """
+    Calculator for the Length/Width measure of compactness.
+
+    The Length/Width measure of campactness measures the length of the 
+    district's bounding box, and divides it by the width of the district's
+    bounding box.
+
+    This calculator will calculate either the compactness score of a single
+    district, or it will average the compactness scores of all districts
+    in a plan.
+    """
+    def compute(self, **kwargs):
+        """
+        Calculate the Length/Width measure of compactness.
+
+        Keywords:
+            district -- A district whose compactness should be computed.
+            plan -- A plan whose district compactnesses should be averaged.
+        """
+        districts = []
+        if 'district' in kwargs:
+            districts = [kwargs['district']]
+            if districts[0].geom is None:
+                return
+
+        elif 'plan' in kwargs:
+            plan = kwargs['plan']
+            districts = plan.get_districts_at_version(plan.version, include_geom=True)
+
+        else:
+            return
+
+        num = 0
+        compactness = 0
+        for district in districts:
+            if district.geom is None:
+                continue
+
+            bbox = district.geom.extent
+            compactness += (bbox[3] - bbox[1]) / (bbox[2] - bbox[0])
+            num += 1
+
+        self.result = compactness / num
+
+    def html(self):
+        """
+        Generate an HTML representation of the compactness score. This
+        is represented as a percentage or "n/a"
+        """
+        return ("%0.2f%%" % (self.result * 100)) if self.result else "n/a"
+
+
 class Sum(CalculatorBase):
     """
     Sum up all values.
