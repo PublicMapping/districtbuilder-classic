@@ -29,6 +29,7 @@ Author:
 """
 
 from math import sqrt, pi
+from django.contrib.gis.geos import Point
 from django.contrib.humanize.templatetags.humanize import intcomma
 from django.utils import simplejson as json
 
@@ -124,7 +125,8 @@ class Schwartzberg(CalculatorBase):
         Calculate the Schwartzberg measure of compactness.
 
         Keywords:
-            district - A district's whose compactness should be computed.
+            district - A district whose compactness should be computed.
+            plan -- A plan whose districts compactness should be averaged.
         """
         districts = []
         if 'district' in kwargs:
@@ -152,6 +154,71 @@ class Schwartzberg(CalculatorBase):
 
         self.result = (compactness / num) if num > 0 else 0
 
+
+    def html(self):
+        """
+        Generate an HTML representation of the compactness score. This
+        is represented as a percentage or "n/a"
+        """
+        return ("%0.2f%%" % (self.result * 100)) if self.result else "n/a"
+
+
+class Roeck(CalculatorBase):
+    """
+    Calculator for the Roeck measure of compactness.
+
+    The Roeck measure of compactness measures the area of the smallest
+    enclosing circle around a district to the area of the district.
+
+    This calculator will calculate either the compactness score of a single
+    district, or it will average the compactness scores of all districts
+    in a plan.
+    """
+    def compute(self, **kwargs):
+        """
+        Calculate the Roeck measure of compactness.
+
+        Keywords:
+            district -- A district whose compactness should be computed.
+            plan -- A plan whose disricts compactness should be averaged.
+        """
+        from datetime import datetime
+        start = datetime.now()
+        districts = []
+        if 'district' in kwargs:
+            districts = [kwargs['district']]
+            if districts[0].geom is None:
+                return
+
+        elif 'plan' in kwargs:
+            plan = kwargs['plan']
+            districts = plan.get_districts_at_version(plan.version, include_geom=True)
+
+        else:
+            return
+
+        mid = datetime.now()
+
+        num = 0
+        compactness = 0
+        for district in districts:
+            if district.geom is None:
+                continue
+
+            centroid = district.geom.centroid
+            maxd = 0
+            for linestring in district.geom.convex_hull:
+                for coord in linestring:
+                    maxd = max(maxd, centroid.distance(Point(coord)))
+
+            cir_area = pi * maxd * maxd
+
+            compactness += district.geom.area / cir_area
+            num += 1
+
+        self.result = compactness / num
+
+        stop = datetime.now()
 
     def html(self):
         """

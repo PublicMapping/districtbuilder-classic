@@ -617,55 +617,6 @@ class PlanTestCase(BaseTestCase):
 
         self.assertEqual(729, len(sorted_district_list), 'Sorted district list was the wrong length: %d' % len(sorted_district_list))
 
-    def test_schwartzberg(self):
-        """
-        Test the Schwartzberg measure of compactness.
-        """
-        geounits = self.geounits[self.geolevels[1].id]
-
-        dist1ids = geounits[0:3] + geounits[9:12]
-        dist2ids = geounits[18:21] + geounits[27:30] + geounits[36:39]
-
-        dist1ids = map(lambda x: str(x.id), dist1ids)
-        dist2ids = map(lambda x: str(x.id), dist2ids)
-
-        self.plan.add_geounits(self.district1.district_id, dist1ids, self.geolevels[1].id, self.plan.version)
-        self.plan.add_geounits(self.district2.district_id, dist2ids, self.geolevels[1].id, self.plan.version)
-
-        district1 = max(District.objects.filter(plan=self.plan,district_id=self.district1.district_id),key=lambda d: d.version)
-        district2 = max(District.objects.filter(plan=self.plan,district_id=self.district2.district_id),key=lambda d: d.version)
-
-        calc = Schwartzberg()
-
-        calc.compute(district=district1)
-        self.assertAlmostEquals(0.86832150547, calc.result, 9, 'Schwartzberg for District 1 was incorrect: %d' % calc.result)
-
-        calc.compute(district=district2)
-        self.assertAlmostEquals(0.88622692545, calc.result, 9, 'Schwartzberg for District 2 was incorrect: %d' % calc.result)
-
-    def test_schwartzberg1(self):
-        """
-        Test the Schwartzberg measure of compactness.
-        """
-        geounits = self.geounits[self.geolevels[1].id]
-
-        dist1ids = geounits[0:3] + geounits[9:12]
-        dist2ids = geounits[18:21] + geounits[27:30] + geounits[36:39]
-
-        dist1ids = map(lambda x: str(x.id), dist1ids)
-        dist2ids = map(lambda x: str(x.id), dist2ids)
-
-        self.plan.add_geounits(self.district1.district_id, dist1ids, self.geolevels[1].id, self.plan.version)
-        self.plan.add_geounits(self.district2.district_id, dist2ids, self.geolevels[1].id, self.plan.version)
-
-        district1 = max(District.objects.filter(plan=self.plan,district_id=self.district1.district_id),key=lambda d: d.version)
-        district2 = max(District.objects.filter(plan=self.plan,district_id=self.district2.district_id),key=lambda d: d.version)
-
-        calc = Schwartzberg()
-
-        calc.compute(plan=self.plan)
-        self.assertAlmostEquals(0.87727421546, calc.result, 9, 'Schwartzberg for District 1 was incorrect: %f' % calc.result)
-
     def test_paste_districts(self):
         
         # Set up the test using geounits in the 2nd level
@@ -1592,6 +1543,7 @@ class CalculatorCase(BaseTestCase):
 
         self.assertEquals(expected, actual, 'Incorrect value during range. (e:%s,a:%s)' % (expected, actual))
 
+
     def test_range_plan1(self):
         geolevelid = self.geolevels[1].id
         geounits = self.geounits[geolevelid]
@@ -1614,6 +1566,108 @@ class CalculatorCase(BaseTestCase):
         expected = 1
 
         self.assertEquals(expected, actual, 'Incorrect value during Plan range. (e:%d,a:%d)' % (expected, actual))
+
+
+    def test_schwartzberg(self):
+        """
+        Test the Schwartzberg measure of compactness.
+        """
+        geounits = self.geounits[self.geolevels[1].id]
+
+        dist1ids = geounits[0:3] + geounits[9:12]
+        dist2ids = geounits[18:21] + geounits[27:30] + geounits[36:39]
+
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        dist2ids = map(lambda x: str(x.id), dist2ids)
+
+        self.plan.add_geounits(self.district1.district_id, dist1ids, self.geolevels[1].id, self.plan.version)
+        self.plan.add_geounits(self.district2.district_id, dist2ids, self.geolevels[1].id, self.plan.version)
+
+        district1 = max(District.objects.filter(plan=self.plan,district_id=self.district1.district_id),key=lambda d: d.version)
+        district2 = max(District.objects.filter(plan=self.plan,district_id=self.district2.district_id),key=lambda d: d.version)
+
+        calc = Schwartzberg()
+
+        calc.compute(district=district1)
+        self.assertAlmostEquals(0.86832150547, calc.result, 9, 'Schwartzberg for District 1 was incorrect: %d' % calc.result)
+
+        calc.compute(district=district2)
+        self.assertAlmostEquals(0.88622692545, calc.result, 9, 'Schwartzberg for District 2 was incorrect: %d' % calc.result)
+
+    def test_schwartzberg1(self):
+        """
+        Test the Schwartzberg measure of compactness.
+        """
+        geounits = self.geounits[self.geolevels[1].id]
+
+        dist1ids = geounits[0:3] + geounits[9:12]
+        dist2ids = geounits[18:21] + geounits[27:30] + geounits[36:39]
+
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        dist2ids = map(lambda x: str(x.id), dist2ids)
+
+        self.plan.add_geounits(self.district1.district_id, dist1ids, self.geolevels[1].id, self.plan.version)
+        self.plan.add_geounits(self.district2.district_id, dist2ids, self.geolevels[1].id, self.plan.version)
+
+        district1 = max(District.objects.filter(plan=self.plan,district_id=self.district1.district_id),key=lambda d: d.version)
+        district2 = max(District.objects.filter(plan=self.plan,district_id=self.district2.district_id),key=lambda d: d.version)
+
+        calc = Schwartzberg()
+
+        calc.compute(plan=self.plan)
+        self.assertAlmostEquals(0.87727421546, calc.result, 9, 'Schwartzberg for District 1 was incorrect: %f' % calc.result)
+
+    def test_roeck(self):
+        """
+        Test the Roeck measure of compactness.
+        """
+        geounits = self.geounits[self.geolevels[1].id]
+
+        dist1ids = geounits[0:3] + geounits[9:12]
+        dist2ids = geounits[18:21] + geounits[27:30] + geounits[36:39]
+
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        dist2ids = map(lambda x: str(x.id), dist2ids)
+
+        self.plan.add_geounits(self.district1.district_id, dist1ids, self.geolevels[1].id, self.plan.version)
+        self.plan.add_geounits(self.district2.district_id, dist2ids, self.geolevels[1].id, self.plan.version)
+
+        district1 = max(District.objects.filter(plan=self.plan,district_id=self.district1.district_id),key=lambda d: d.version)
+        district2 = max(District.objects.filter(plan=self.plan,district_id=self.district2.district_id),key=lambda d: d.version)
+
+        calc = Roeck()
+
+        calc.compute(district=district1)
+        expected = 0.587649
+        self.assertAlmostEquals(expected, calc.result, 6, 'Roeck for District 1 was incorrect. (e:%0.6f,a:%0.6f)' % (expected, calc.result))
+
+        calc.compute(district=district2)
+        expected = 0.636620
+        self.assertAlmostEquals(expected, calc.result, 6, 'Roeck for District 2 was incorrect. (e:%0.6f,a:%0.6f)' % (expected, calc.result))
+
+    def test_roeck1(self):
+        """
+        Test the Roeck measure of compactness.
+        """
+        geounits = self.geounits[self.geolevels[1].id]
+
+        dist1ids = geounits[0:3] + geounits[9:12]
+        dist2ids = geounits[18:21] + geounits[27:30] + geounits[36:39]
+
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        dist2ids = map(lambda x: str(x.id), dist2ids)
+
+        self.plan.add_geounits(self.district1.district_id, dist1ids, self.geolevels[1].id, self.plan.version)
+        self.plan.add_geounits(self.district2.district_id, dist2ids, self.geolevels[1].id, self.plan.version)
+
+        district1 = max(District.objects.filter(plan=self.plan,district_id=self.district1.district_id),key=lambda d: d.version)
+        district2 = max(District.objects.filter(plan=self.plan,district_id=self.district2.district_id),key=lambda d: d.version)
+
+        calc = Roeck()
+
+        calc.compute(plan=self.plan)
+        expected = (0.636620 + 0.587649) / 2
+        self.assertAlmostEquals(expected, calc.result, 6, 'Roeck for District 1 was incorrect. (e:%0.6f,a:%0.6f)' % (expected, calc.result))
 
     def test_contiguity1(self):
         cntcalc = Contiguity()
