@@ -1667,7 +1667,59 @@ class CalculatorCase(BaseTestCase):
 
         calc.compute(plan=self.plan)
         expected = (0.636620 + 0.587649) / 2
-        self.assertAlmostEquals(expected, calc.result, 6, 'Roeck for District 1 was incorrect. (e:%0.6f,a:%0.6f)' % (expected, calc.result))
+        self.assertAlmostEquals(expected, calc.result, 6, 'Roeck for plan was incorrect. (e:%0.6f,a:%0.6f)' % (expected, calc.result))
+
+    def test_polsbypopper(self):
+        """
+        Test the Polsby-Popper measure of compactness.
+        """
+        geounits = self.geounits[self.geolevels[1].id]
+
+        dist1ids = geounits[0:3] + geounits[9:12]
+        dist2ids = geounits[18:21] + geounits[27:30] + geounits[36:39]
+
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        dist2ids = map(lambda x: str(x.id), dist2ids)
+
+        self.plan.add_geounits(self.district1.district_id, dist1ids, self.geolevels[1].id, self.plan.version)
+        self.plan.add_geounits(self.district2.district_id, dist2ids, self.geolevels[1].id, self.plan.version)
+
+        district1 = max(District.objects.filter(plan=self.plan,district_id=self.district1.district_id),key=lambda d: d.version)
+        district2 = max(District.objects.filter(plan=self.plan,district_id=self.district2.district_id),key=lambda d: d.version)
+
+        calc = PolsbyPopper()
+
+        calc.compute(district=district1)
+        expected = 0.753982
+        self.assertAlmostEquals(expected, calc.result, 6, 'Polsby-Popper for District 1 was incorrect. (e:%0.6f,a:%0.6f)' % (expected, calc.result))
+
+        calc.compute(district=district2)
+        expected = 0.785398
+        self.assertAlmostEquals(expected, calc.result, 6, 'Polsby-Popper for District 2 was incorrect. (e:%0.6f,a:%0.6f)' % (expected, calc.result))
+
+    def test_polsbypopper1(self):
+        """
+        Test the Polsby-Popper measure of compactness.
+        """
+        geounits = self.geounits[self.geolevels[1].id]
+
+        dist1ids = geounits[0:3] + geounits[9:12]
+        dist2ids = geounits[18:21] + geounits[27:30] + geounits[36:39]
+
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        dist2ids = map(lambda x: str(x.id), dist2ids)
+
+        self.plan.add_geounits(self.district1.district_id, dist1ids, self.geolevels[1].id, self.plan.version)
+        self.plan.add_geounits(self.district2.district_id, dist2ids, self.geolevels[1].id, self.plan.version)
+
+        district1 = max(District.objects.filter(plan=self.plan,district_id=self.district1.district_id),key=lambda d: d.version)
+        district2 = max(District.objects.filter(plan=self.plan,district_id=self.district2.district_id),key=lambda d: d.version)
+
+        calc = PolsbyPopper()
+
+        calc.compute(plan=self.plan)
+        expected = (0.753982 + 0.785398) / 2
+        self.assertAlmostEquals(expected, calc.result, 6, 'Polsby-Popper for plan was incorrect. (e:%0.6f,a:%0.6f)' % (expected, calc.result))
 
     def test_contiguity1(self):
         cntcalc = Contiguity()

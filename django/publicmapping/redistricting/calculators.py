@@ -126,7 +126,7 @@ class Schwartzberg(CalculatorBase):
 
         Keywords:
             district - A district whose compactness should be computed.
-            plan -- A plan whose districts compactness should be averaged.
+            plan -- A plan whose district compactnesses should be averaged.
         """
         districts = []
         if 'district' in kwargs:
@@ -168,7 +168,7 @@ class Roeck(CalculatorBase):
     Calculator for the Roeck measure of compactness.
 
     The Roeck measure of compactness measures the area of the smallest
-    enclosing circle around a district to the area of the district.
+    enclosing circle around a district compared to the area of the district.
 
     This calculator will calculate either the compactness score of a single
     district, or it will average the compactness scores of all districts
@@ -180,10 +180,8 @@ class Roeck(CalculatorBase):
 
         Keywords:
             district -- A district whose compactness should be computed.
-            plan -- A plan whose disricts compactness should be averaged.
+            plan -- A plan whose district compactnesses should be averaged.
         """
-        from datetime import datetime
-        start = datetime.now()
         districts = []
         if 'district' in kwargs:
             districts = [kwargs['district']]
@@ -196,8 +194,6 @@ class Roeck(CalculatorBase):
 
         else:
             return
-
-        mid = datetime.now()
 
         num = 0
         compactness = 0
@@ -218,7 +214,61 @@ class Roeck(CalculatorBase):
 
         self.result = compactness / num
 
-        stop = datetime.now()
+    def html(self):
+        """
+        Generate an HTML representation of the compactness score. This
+        is represented as a percentage or "n/a"
+        """
+        return ("%0.2f%%" % (self.result * 100)) if self.result else "n/a"
+
+
+class PolsbyPopper(CalculatorBase):
+    """
+    Calculator for the Polsby-Popper measure of compactness.
+
+    The Polsby-Popper measure of campactness measures the area of a circle
+    with the same perimeter as a district compared to area of the district.
+
+    This calculator will calculate either the compactness score of a single
+    district, or it will average the compactness scores of all districts
+    in a plan.
+    """
+    def compute(self, **kwargs):
+        """
+        Calculate the Polsby-Popper measure of compactness.
+
+        Keywords:
+            district -- A district whose compactness should be computed.
+            plan -- A plan whose district compactnesses should be averaged.
+        """
+        districts = []
+        if 'district' in kwargs:
+            districts = [kwargs['district']]
+            if districts[0].geom is None:
+                return
+
+        elif 'plan' in kwargs:
+            plan = kwargs['plan']
+            districts = plan.get_districts_at_version(plan.version, include_geom=True)
+
+        else:
+            return
+
+        num = 0
+        compactness = 0
+        for district in districts:
+            if district.geom is None:
+                continue
+
+            perimeter = 0
+            for poly in district.geom:
+                for linestring in poly:
+                    perimeter += linestring.length
+
+            compactness += 4 * pi * district.geom.area / perimeter / perimeter
+            num += 1
+
+        self.result = compactness / num
 
     def html(self):
         """
