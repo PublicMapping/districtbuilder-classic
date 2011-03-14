@@ -652,6 +652,13 @@
               <li id="tab_myranked"><a href="#leaderboard_myranked">My Ranked Plans</a></li>
               {% endif %}
           </ul>
+          <div id="legSelectorLeaderboardsContainer">
+              <select id="legSelectorLeaderboards">
+                  {% for body in bodies %}
+                      <option value="{{ body.id }}">{{ body.name }}</option>
+                  {% endfor %}
+              </select>
+          </div>          
           <div id="updateLeaderboardsContainer"></div>
        </div>
     

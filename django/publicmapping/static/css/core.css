@@ -243,7 +243,17 @@ div#updateLeaderboardsContainer button  span
 
 }
 
+div#legSelectorLeaderboardsContainer {
+  float:right;
+  background: url(/static-media/images/divider-horz.png) 0 100% repeat-x;
+  margin: 7px 4px 0 0;
+}
 
+div#legSelectorLeaderboardsContainer select {
+  font-size: 14px;
+  font-weight:bold;
+  color: #5a5a5a;
+}
 
 
 #step_leaderboard .ui-tabs-panel{

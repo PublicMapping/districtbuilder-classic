@@ -135,7 +135,7 @@ $(function() {
         $.ajax({
             type: 'GET',
             url: '/districtmapping/getleaderboard/',
-            data: { owner_filter: owner, legislative_body: BODY_ID }, 
+            data: { owner_filter: owner, legislative_body: $('#legSelectorLeaderboards').val() }, 
             success: function(html) {
                 var panels = $('<div class="leaderboard_panels"></div>');
                 container.append(panels);
@@ -248,9 +248,14 @@ $(function() {
         });
     }
 
+    // set the value of the legislative body dropdown
+    if (BODY_ID) {
+        $('#legSelectorLeaderboards').val(BODY_ID);
+    }
+
     // connect to legislative body changes
-    $('#leg_selector').change( function() {
-        $("#topranked_content").remove();        
+    $('#legSelectorLeaderboards').change( function() {
+        updateLeaderboard();
     });
         
     // jQuery-UI tab layout
