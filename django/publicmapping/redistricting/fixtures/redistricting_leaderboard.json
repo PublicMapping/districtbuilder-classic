@@ -579,7 +579,7 @@
   "model": "redistricting.scorefunction", 
   "fields": {
    "calculator": "publicmapping.redistricting.calculators.Schwartzberg", 
-   "description": "Compactness is sometimes referred to as the \"look\" of a district, and assures that oddly-shaped districts are minimized. The geography of Virginia's state boundary is complex; nevertheless, teams should attempt to produce districts that look as compact as possible.", 
+   "description": "The competition is using the 'Schwartzberg' compactness measure. This measure is a ratio of the perimeter of the district to the circumference of the circle whose area is equal to the area of the district.", 
    "is_planscore": true, 
    "name": "Schwartzberg", 
    "label": "Average Compactness"
