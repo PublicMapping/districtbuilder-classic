@@ -454,3 +454,14 @@ $(function() {
         }
     });
 });
+
+// When a plan is unloaded, allow the server to do any required cleanup
+$(window).unload(function () {
+    if (window['PLAN_ID']) {
+        $.ajax({
+            url: '/districtmapping/plan/' + PLAN_ID + '/unload/',
+            type: 'POST',
+            async: false
+        });
+    }
+});

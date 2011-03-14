@@ -621,6 +621,9 @@ class Plan(models.Model):
     # The most recent version of the districts in this plan.
     version = models.PositiveIntegerField(default=0)
 
+    # The oldest available stored version of this plan.
+    min_version = models.PositiveIntegerField(default=0)
+
     # The time when this Plan was created.
     created = models.DateTimeField(auto_now_add=True)
 
@@ -718,18 +721,9 @@ class Plan(models.Model):
                 maxver = maxqset.aggregate(Max('version'))['version__max']
                 # Filter on this district
                 q1 = Q(district_id=d.district_id)
-                if d.version == maxver:
-                    # If the maximum version of this district across all 
-                    # edits is the same as this district's version, only 
-                    # purge the districts BEFORE the version specified.
-                    q2 = Q(version__lt=d.version)
-                else:
-                    # If the maximum version of this district across all
-                    # edits is greater than the version specified, you can
-                    # safely purge the district at this version and below
-                    # with no harm of deleting the last version of the
-                    # district.
-                    q2 = Q(version__lte=d.version)
+
+                # Filter on all previous versions
+                q2 = Q(version__lt=d.version)
                
                 # Accumulate the criteria
                 allQ = allQ | (q1 & q2)
@@ -741,6 +735,23 @@ class Plan(models.Model):
             # Purge any districts between the version provided
             # and the latest version
             self.district_set.filter(version__gt=after).delete()
+
+        
+    def purge_beyond_nth_step(self, steps):
+        """
+        Purge portions of this plan's history that
+        are beyond N undo steps away.
+
+        Parameters:
+            steps -- The number of 'undo' steps away from the current 
+                     plan's version.
+        """
+        if (steps >= 0):
+            prever = self.get_nth_previous_version(steps)
+            if prever > self.min_version:
+                self.purge(before=prever)
+                self.min_version = prever
+                self.save();
 
     @transaction.commit_on_success
     def add_geounits(self, districtid, geounit_ids, geolevel, version):
@@ -935,14 +946,9 @@ class Plan(models.Model):
         self.version += 1
         self.save()
 
-        # Turn this on once client-side undo is limited to 5 versions.
-        # Tweak or make the parameter to get_nth_previous_version 
-        # configurable.
-        #
-        #prever = self.get_nth_previous_version(5)
-        #if prever > 0:
-        #    self.purge(before=prever)
-        #
+        # purge old versions
+        if settings.MAX_UNDOS_DURING_EDIT > 0:
+            self.purge_beyond_nth_step(settings.MAX_UNDOS_DURING_EDIT)
 
         # purge the old target if a new one was created
         if new_target:

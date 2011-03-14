@@ -174,6 +174,38 @@ def note_session_activity(req):
 
 
 @login_required
+def unloadplan(request, planid):
+    """
+    Unload a plan.
+
+    This view is called anytime a plan is unloaded. Example: navigating
+    away from the page, or selecting a new plan. This method allows
+    for any required plan cleanup such as purging temporary versions.
+
+    Parameters:
+        request -- The HttpRequest, which includes the user.
+        planid -- The plan to unload.
+
+    Returns:
+        A JSON HttpResponse which includes a status.
+    """
+    note_session_activity(request)
+    status = { 'success': False }
+
+    p = Plan.objects.get(pk=planid)
+
+    if not can_copy(request.user, p):
+        status['message'] = "User %s doesn't have permission to unload this plan" % request.user.username
+        return HttpResponse(json.dumps(status),mimetype='application/json')
+
+    # Purge temporary versions
+    if settings.MAX_UNDOS_AFTER_EDIT > 0:
+        p.purge_beyond_nth_step(settings.MAX_UNDOS_AFTER_EDIT)
+    
+    status['success'] = True
+    return HttpResponse(json.dumps(status),mimetype='application/json')
+
+@login_required
 @unique_session_or_json_redirect
 def copyplan(request, planid):
     """
@@ -455,6 +487,11 @@ def viewplan(request, planid):
     if not is_session_available(request):
         return HttpResponseRedirect('/')
 
+    # Cleanup old versions for logged in users
+    if not request.user.is_anonymous() and (int(planid) == 0) and (settings.MAX_UNDOS_AFTER_EDIT > 0):
+        for p in Plan.objects.filter(owner=request.user):
+            p.purge_beyond_nth_step(settings.MAX_UNDOS_AFTER_EDIT)
+
     return render_to_response('viewplan.html', commonplan(request, planid))
 
 
@@ -484,6 +521,11 @@ def editplan(request, planid):
     plan = Plan.objects.get(id=planid,owner=request.user)
     cfg['dists_maxed'] = len(cfg['districts']) > plan.legislative_body.max_districts
     cfg['available_districts'] = plan.get_available_districts()
+
+    # Cleanup old versions
+    if settings.MAX_UNDOS_AFTER_EDIT > 0:
+        plan.purge_beyond_nth_step(settings.MAX_UNDOS_AFTER_EDIT)
+
     return render_to_response('editplan.html', cfg) 
 
 @login_required
@@ -1170,6 +1212,13 @@ def getdistricts(request, planid):
 
         status['available'] = plan.get_available_districts(version=version)
 
+        # Find the maximum version in the returned districts
+        max_version = max([d.version for d in districts])
+
+        # Only allow undo if the max version being returned isn't
+        # equal to the minimum stored version
+        can_undo = max_version > plan.min_version
+
         for district in districts:
             if district.has_geom or district.name == 'Unassigned':
                 status['districts'].append({
@@ -1177,6 +1226,7 @@ def getdistricts(request, planid):
                     'name':district.name,
                     'version':district.version
                 })
+        status['canUndo'] = can_undo
         status['success'] = True
 
     else:

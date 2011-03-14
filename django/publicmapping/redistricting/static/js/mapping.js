@@ -1708,7 +1708,7 @@ function mapinit(srs,maxExtent) {
                 PLAN_HISTORY[max_version] = true;
                 cursor.val(max_version);
 
-                if (max_version == 0) {
+                if (!data.canUndo) {
                     $('#history_undo').addClass('disabled');
                 }
                 // Update the "available districts" shown in the copy/paste dialog

@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-    <xs:include schemaLocation="reporting.xsd" />
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" 
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:db="http://gmu.azavea.com/DistrictBuilder" >
+    <xs:include schemaLocation="reporting.xsd"/>
     <xs:element name="DistrictBuilder">
         <xs:complexType>
             <xs:sequence>
@@ -72,24 +74,99 @@
                                     <xs:attribute name="displayed" type="xs:boolean" use="optional" />
                                     <xs:attribute name="sortkey" type="xs:integer" use="optional" />
                                     <xs:attribute name="aliasfor" type="xs:IDREF" use="optional" />
-                                    <xs:attribute name="percentage_denominator" type="xs:IDREF" use="optional" />
                                 </xs:complexType>
                             </xs:element>
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
-                <xs:element name="Targets">
+                <xs:element name="Scoring">
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element name="Target" minOccurs="1" maxOccurs="unbounded">
+                            <xs:element name="ScoreFunctions">
                                 <xs:complexType>
                                     <xs:sequence>
+                                        <xs:element name="ScoreFunction" minOccurs="1" maxOccurs="unbounded">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                        <xs:element name="Argument">
+                                                            <xs:complexType>
+                                                                <xs:sequence></xs:sequence>
+                                                                <xs:attribute name="name" type="xs:string" />
+                                                                <xs:attribute name="value" type="xs:float" />
+                                                            </xs:complexType>
+                                                        </xs:element>
+                                                        <xs:element name="SubjectArgument" type="NamedRefType">
+                                                        </xs:element>
+                                                        <xs:element name="ScoreArgument" type="NamedRefType">
+                                                        </xs:element>
+                                                    </xs:choice>
+                                                </xs:sequence>
+                                                <xs:attribute name="id" type="xs:ID" />
+                                                <xs:attribute name="type" type="ScoreFunctionTypeType" />
+                                                <xs:attribute name="calculator" type="xs:string" />
+                                            </xs:complexType>
+                                        </xs:element>
                                     </xs:sequence>
-                                    <xs:attribute name="id" type="xs:ID" />
-                                    <xs:attribute name="subjectref" type="xs:IDREF" />
-                                    <xs:attribute name="value" type="xs:decimal" />
-                                    <xs:attribute name="range1" type="xs:decimal" />
-                                    <xs:attribute name="range2" type="xs:decimal" />
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="ScorePanels" minOccurs="0" maxOccurs="1">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="ScorePanel" minOccurs="1" maxOccurs="unbounded">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="Score" minOccurs="0" maxOccurs="unbounded" type="RefType">
+                                                    </xs:element>
+                                                </xs:sequence>
+                                                <xs:attribute name="id" type="xs:ID" />
+                                                <xs:attribute name="type" type="ScorePanelsTypeType" />
+                                                <xs:attribute name="title" type="xs:string" />
+                                                <xs:attribute name="cssclass" type="xs:string" />
+                                                <xs:attribute name="template" type="xs:string" />
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="ScoreDisplays" minOccurs="0" maxOccurs="1">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="ScoreDisplay" minOccurs="1" maxOccurs="unbounded">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="ScorePanel" minOccurs="1" maxOccurs="unbounded" type="RefType" >
+                                                    </xs:element>
+                                                </xs:sequence>
+                                                <xs:attribute name="legislativebodyref" type="xs:IDREF" />
+                                                <xs:attribute name="type" type="xs:string" />
+                                                <xs:attribute name="cssclass" type="xs:string" />
+                                                <xs:attribute name="title" type="xs:string" />
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Validation">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Criteria" minOccurs="1" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="Criterion" minOccurs="1" maxOccurs="unbounded">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="Score" type="RefType" />
+                                                </xs:sequence>
+                                                <xs:attribute name="name" type="xs:string" />
+                                                <xs:attribute name="description" type="xs:string" />
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                    <xs:attribute name="legislativebodyref" type="xs:IDREF" />
                                 </xs:complexType>
                             </xs:element>
                         </xs:sequence>
@@ -138,24 +215,22 @@
                                                 <xs:sequence>
                                                     <xs:element name="LegislativeBody" minOccurs="1" maxOccurs="unbounded">
                                                         <xs:complexType>
-                                                            <xs:sequence>
-                                                                <xs:element name="Parent" type="RefType" minOccurs="0" maxOccurs="1">
-                                                                </xs:element>
-                                                                <xs:element name="LegislativeTargets">
-                                                                    <xs:complexType>
-                                                                        <xs:sequence>
-                                                                            <xs:element name="LegislativeTarget" minOccurs="1" maxOccurs="unbounded">
-                                                                                <xs:complexType>
-                                                                                    <xs:sequence />
-                                                                                    <xs:attribute name="ref" type="xs:IDREF" />
-                                                                                    <xs:attribute name="default" type="xs:boolean" use="optional" default="false" />
-                                                                                </xs:complexType>
-                                                                            </xs:element>
-                                                                        </xs:sequence>
-                                                                    </xs:complexType>
-                                                                </xs:element>
-                                                            </xs:sequence>
-                                                            <xs:attribute name="ref" type="xs:IDREF" />
+                                                            <xs:complexContent>
+                                                                <xs:extension base="RefType">
+                                                                    <xs:sequence>
+                                                                        <xs:element name="Parent" type="RefType" minOccurs="0" maxOccurs="1">
+                                                                        </xs:element>
+                                                                        <xs:element name="LegislativeScores">
+                                                                            <xs:complexType>
+                                                                                <xs:sequence>
+                                                                                    <xs:element name="LegislativeScore" minOccurs="1" maxOccurs="unbounded" type="RefType">
+                                                                                    </xs:element>
+                                                                                </xs:sequence>
+                                                                            </xs:complexType>
+                                                                        </xs:element>
+                                                                    </xs:sequence>
+                                                                </xs:extension>
+                                                            </xs:complexContent>
                                                         </xs:complexType>
                                                     </xs:element>
                                                 </xs:sequence>
@@ -286,18 +361,18 @@
             <xs:selector xpath="Subjects/Subject" />
             <xs:field xpath="@id" />
         </xs:key>
-        <xs:key name="DistrictBuilderTargetKey">
-            <xs:selector xpath="Targets/Target" />
-            <xs:field xpath="@id" />
-        </xs:key>
         <xs:key name="DistrictBuilderGeoLevelKey">
             <xs:selector xpath="GeoLevels/GeoLevel" />
             <xs:field xpath="@id" />
         </xs:key>
-        <xs:keyref name="TargetSubject" refer="DistrictBuilderSubjectKey">
-            <xs:selector xpath="Targets/Target" />
-            <xs:field xpath="@subjectref" />
-        </xs:keyref>
+        <xs:key name="DistrictBuilderScoreFunctionKey">
+            <xs:selector xpath="Scoring/ScoreFunctions/ScoreFunction" />
+            <xs:field xpath="@id" />
+        </xs:key>
+        <xs:key name="DistrictBuilderScorePanelKey">
+            <xs:selector xpath="Scoring/ScorePanels/ScorePanel" />
+            <xs:field xpath="@id" />
+        </xs:key>
         <xs:keyref name="GeoLevelLegislativeBody" refer="DistrictBuilderLegislativeBodyKey">
             <xs:selector xpath="GeoLevels/GeoLevel/LegislativeBodies/LegislativeBody" />
             <xs:field xpath="@ref" />
@@ -306,8 +381,8 @@
             <xs:selector xpath="GeoLevels/GeoLevel/LegislativeBodies/LegislativeBody/Parent" />
             <xs:field xpath="@ref" />
         </xs:keyref>
-        <xs:keyref name="GeoLevelLegislativeTarget" refer="DistrictBuilderTargetKey">
-            <xs:selector xpath="GeoLevels/GeoLevel/LegislativeBodies/LegislativeBody/LegislativeTargets/LegislativeTarget" />
+        <xs:keyref name="GeoLevelLegislativeScore" refer="DistrictBuilderScoreFunctionKey">
+            <xs:selector xpath="GeoLevels/GeoLevel/LegislativeBodies/LegislativeBody/LegislativeScores/LegislativeScore" />
             <xs:field xpath="@ref" />
         </xs:keyref>
         <xs:keyref name="TemplateLegislativeBody" refer="DistrictBuilderLegislativeBodyKey">
@@ -318,15 +393,82 @@
             <xs:selector xpath="GeoLevels/GeoLevel/GeoLevelCharacteristics/GeoLevelCharacteristic" />
             <xs:field xpath="@ref" />
         </xs:keyref>
+        <xs:keyref name="ScoreFunctionScoreFunction" refer="DistrictBuilderScoreFunctionKey">
+            <xs:selector xpath="Scoring/ScoreFunctions/ScoreFunction/ScoreArgument" />
+            <xs:field xpath="@ref" />
+        </xs:keyref>
+        <xs:keyref name="ScoreFunctionSubject" refer="DistrictBuilderSubjectKey">
+            <xs:selector xpath="Scoring/ScoreFunctions/ScoreFunction/SubjectArgument" />
+            <xs:field xpath="@ref" />
+        </xs:keyref>
+        <xs:keyref name="ScorePanelScore" refer="DistrictBuilderScoreFunctionKey">
+            <xs:selector xpath="Scoring/ScorePanels/ScorePanel/Score" />
+            <xs:field xpath="@ref" />
+        </xs:keyref>
+        <xs:keyref name="ScoreDisplayLegislativeBody" refer="DistrictBuilderLegislativeBodyKey">
+            <xs:selector xpath="Scoring/ScoreDisplays/ScoreDisplay" />
+            <xs:field xpath="@legislativebodyref" />
+        </xs:keyref>
+        <xs:keyref name="ScoreDisplayScorePanel" refer="DistrictBuilderScorePanelKey">
+            <xs:selector xpath="Scoring/ScoreDisplays/ScoreDisplay/ScorePanel" />
+            <xs:field xpath="@ref" />
+        </xs:keyref>
+        <xs:keyref name="ValidationLegislativeBody" refer="DistrictBuilderLegislativeBodyKey">
+            <xs:selector xpath="Validation/Criteria" />
+            <xs:field xpath="@legislativebodyref" />
+        </xs:keyref>
+        <xs:keyref name="CriterionScore" refer="DistrictBuilderScoreFunctionKey">
+            <xs:selector xpath="Validation/Criteria/Criterion/Score" />
+            <xs:field xpath="@ref" />
+        </xs:keyref>
+        <!-- BARD config keyrefs -->
+        <xs:key name="BardConfigKey">
+            <xs:selector xpath="Project/Reporting/BardConfigs/BardConfig" />
+            <xs:field xpath="@id" />
+        </xs:key>
+        <xs:keyref name="PopVarSubject" refer="DistrictBuilderSubjectKey">
+            <xs:selector xpath="Project/Reporting/BardConfigs/BardConfig/PopVars/PopVar" />
+            <xs:field xpath="@subjectref" />
+        </xs:keyref>
+        <xs:keyref name="RatioNumeratorVarSubject" refer="DistrictBuilderSubjectKey">
+            <xs:selector xpath="Project/Reporting/BardConfigs/BardConfig/RatioVars/RatioVar/Numerators/Numerator" />
+            <xs:field xpath="@subjectref" />
+        </xs:keyref>
+        <xs:keyref name="RatioDenominatorSubject" refer="DistrictBuilderSubjectKey">
+            <xs:selector xpath="Project/Reporting/BardConfigs/BardConfig/RatioVars/RatioVar/Denominator" />
+            <xs:field xpath="@subjectref" />
+        </xs:keyref>
+        <xs:keyref name="BardBodyReference" refer="DistrictBuilderLegislativeBodyKey">
+            <xs:selector xpath="Project/Reporting/BardBodyConfigs/BardBodyConfig" />
+            <xs:field xpath="@legislativebodyref" />
+        </xs:keyref>
+        <xs:keyref name="BardConfigReference" refer="BardConfigKey">
+            <xs:selector xpath="Project/Reporting/BardBodyConfigs/BardBodyConfig" />
+            <xs:field xpath="@bardconfigref" />
+        </xs:keyref>
+        <!-- end of BARD config keyrefs -->
     </xs:element>
     <xs:complexType name="RefType">
         <xs:annotation>
-            <xs:documentation>A reference to another element, used in many places in the configuration.</xs:documentation>
+            <xs:documentation>A reference to another element, via a "ref" attribute.</xs:documentation>
         </xs:annotation>
         <xs:attribute name="ref" type="xs:IDREF">
         </xs:attribute>
     </xs:complexType>
+    <xs:complexType name="NamedRefType">
+        <xs:annotation>
+            <xs:documentation>A reference to another element, via a "ref" attribute, with a name.</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="RefType">
+                <xs:attribute name="name" type="xs:string" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
     <xs:complexType name="PathType">
+        <xs:annotation>
+            <xs:documentation>An element that contains information about a file's path and the structure of the data inside of that path.</xs:documentation>
+        </xs:annotation>
         <xs:sequence>
             <xs:element name="Fields" minOccurs="1" maxOccurs="1">
                 <xs:complexType>
@@ -336,7 +478,7 @@
                                 <xs:sequence>
                                 </xs:sequence>
                                 <xs:attribute name="name" type="xs:string" use="required" />
-                                <xs:attribute name="type" type="xs:string" use="required" />
+                                <xs:attribute name="type" type="FieldTypeType" use="required" />
                                 <xs:attribute name="pos" type="xs:nonNegativeInteger" use="optional" />
                                 <xs:attribute name="width" type="xs:positiveInteger" use="optional" />
                             </xs:complexType>
@@ -347,4 +489,33 @@
         </xs:sequence>
         <xs:attribute name="path" type="xs:string" use="required" />
     </xs:complexType>
+    <xs:simpleType name="FieldTypeType">
+        <xs:annotation>
+            <xs:documentation>A fixed set of types available for Field elements. A Field element can only be of type "name", "portable", or "tree".</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="name" />
+            <xs:enumeration value="portable" />
+            <xs:enumeration value="tree" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="ScoreFunctionTypeType">
+        <xs:annotation>
+            <xs:documentation>A fixed set of types avaliable for ScoreFunction elements. A ScoreFunction can only be of type "district" or "plan".</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="district" />
+            <xs:enumeration value="plan" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="ScorePanelsTypeType">
+        <xs:annotation>
+            <xs:documentation>A fixed set of types available for ScorePanel elements. A ScorePanel element can only be of type "plan", "plan summary", or "district".</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="plan" />
+            <xs:enumeration value="plan summary" />
+            <xs:enumeration value="district" />
+        </xs:restriction>
+    </xs:simpleType>
 </xs:schema>

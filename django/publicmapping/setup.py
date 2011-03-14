@@ -316,6 +316,17 @@ def merge_config(config, verbose):
         else:
             settings_out.write("\nMAX_UPLOAD_SIZE = 5000 * 1024\n")
 
+        # Undo restrictions
+        maxundosduringedit = 0
+        maxundosafteredit = 0
+        cfg = config.xpath('//MaxUndos')
+        if len(cfg) > 0:
+            cfg = cfg[0]
+            maxundosduringedit = cfg.get('duringedit') or 0
+            maxundosafteredit = cfg.get('afteredit') or 0
+        settings_out.write("\nMAX_UNDOS_DURING_EDIT = %d\n" % int(maxundosduringedit))
+        settings_out.write("\nMAX_UNDOS_AFTER_EDIT = %d\n" % int(maxundosafteredit))
+
         settings_out.close()
     except Exception, ex:
         print """
