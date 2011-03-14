@@ -2093,6 +2093,7 @@ class ScorePanel(models.Model):
             planscores.sort(key=lambda x:x['raw'],reverse=not self.is_ascending)
 
             return render_to_string(self.template, {
+                'settings':settings,
                 'planscores':planscores,
                 'title':self.title,
                 'cssclass':self.cssclass,

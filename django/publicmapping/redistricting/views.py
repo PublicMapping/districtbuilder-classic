@@ -1814,10 +1814,10 @@ def getleaderboard(request):
 
     try :
         html = display.render(list(plans), request)
+        return HttpResponse(html, mimetype='text/plain')
     except Exception as ex:
         print traceback.format_exc()
-
-    return HttpResponse(html, mimetype='text/plain')
+        return HttpResponse('%s' % ex, mimetype='text/plain')
 
 
 def getplans(request):

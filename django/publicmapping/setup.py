@@ -327,6 +327,14 @@ def merge_config(config, verbose):
         settings_out.write("\nMAX_UNDOS_DURING_EDIT = %d\n" % int(maxundosduringedit))
         settings_out.write("\nMAX_UNDOS_AFTER_EDIT = %d\n" % int(maxundosafteredit))
 
+        # Leaderboard
+        maxranked = 10
+        cfg = config.xpath('//Leaderboard')
+        if len(cfg) > 0:
+            cfg = cfg[0]
+            maxranked = cfg.get('maxranked') or 10
+        settings_out.write("\nLEADERBOARD_MAX_RANKED = %d\n" % int(maxranked))
+        
         settings_out.close()
     except Exception, ex:
         print """

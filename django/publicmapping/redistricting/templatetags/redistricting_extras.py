@@ -48,3 +48,19 @@ def truncate(value, length):
         return value
     except:
         return value
+
+@register.filter
+def spellnumber(value):
+    """
+    This filter converts a number into its spelled-out equivalent.
+    Note: not all numbers are implemented. The return value for a
+    number greater than twenty will be the non-spelled-out version.
+    Parameters:
+        value - A number value
+    """
+    try:
+        return ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
+         "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen",
+         "seventeen", "eighteen", "nineteen", "twenty"][value]
+    except:
+        return value

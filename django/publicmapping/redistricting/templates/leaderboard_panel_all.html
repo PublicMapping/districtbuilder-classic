@@ -28,11 +28,14 @@
        Andrew Jennings, David Zwarg, Kenny Shepard
 
 {% endcomment %}
+
+{% load redistricting_extras %}
+
 <div class="leaderboard_panel {% if position|divisibleby:'2' %}even{% else %}odd{% endif %} {{cssclass}}">
   <div class="leaderboard_title">
     <img src="/static-media/images/icon-help.png" class="leaderboard divtip">
     <div class="tooltip"> {{description|safe}}</div>
-    Top Ten - {{title}}
+    Top {{ settings.LEADERBOARD_MAX_RANKED|spellnumber|title }} - {{title}}
   </div>
 
   <table cellspacing="0">
@@ -46,7 +49,7 @@
     </thead>
     <tbody>
       {% for planscore in planscores %}
-      {% if forloop.counter <= 10 %} 
+      {% if forloop.counter <= settings.LEADERBOARD_MAX_RANKED %} 
       <tr>
         <td>{{forloop.counter}}</td>
         <td>{{planscore.plan.owner.username}}</td>

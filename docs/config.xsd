@@ -250,6 +250,11 @@
                                                 <xs:attribute name="afteredit" type="xs:positiveInteger" use="optional" />
                                             </xs:complexType>
                                         </xs:element>
+                                        <xs:element name="Leaderboard" minOccurs="0" maxOccurs="1">
+                                            <xs:complexType>
+                                                <xs:attribute name="maxranked" type="xs:positiveInteger" use="optional" />
+                                            </xs:complexType>
+                                        </xs:element>
                                     </xs:sequence>
                                 </xs:complexType>
                             </xs:element>
