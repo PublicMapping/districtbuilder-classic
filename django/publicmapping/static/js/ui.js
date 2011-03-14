@@ -163,35 +163,6 @@ $(function() {
                         }
                     });
 
-                    // if there is an active plan, show leaderboard controls
-                    if ($('#txtPlanName').length > 0) {
-                        var button = $('<button class="leaderboard_button">Update Leaderboards<br/>with Working Plan</button>').button();
-                        $('#updateLeaderboardsContainer').html(button);
-                    
-                        // add handling for updating leaderboard with current plan
-                        button.click(function() {
-                            $('#waiting').dialog('open');                                    
-                            $.ajax({
-                                url: '/districtmapping/plan/' + PLAN_ID + '/score/',
-                                type: 'POST',
-                                success: function(data, textStatus, xhr) {
-                                    $('#waiting').dialog('close');
-                                    if (data.success) {
-                                        // score was successful, show new results
-                                        updateLeaderboard();
-                                    } else {
-                                        // score failed, show reason
-                                        $('<div title="Validation Failed">' + data.message + '</div>').dialog({autoOpen:true});
-                                    }
-                                },
-                                error: function() {
-                                    $('#waiting').dialog('close');
-                                    $('<div title="Error">Server error. Please try again later.</div>').dialog({autoOpen:true});
-                                }
-                            });
-                        });
-                    }
-
                     // close the waiting dialog
                     $('#waiting').dialog('close');
                 }
@@ -247,6 +218,35 @@ $(function() {
             }
         });
     });
+
+    // create the update leaderboards button
+    if ($('#txtPlanName').length > 0) {
+        var button = $('<button class="leaderboard_button">Update Leaderboards<br/>with Working Plan</button>').button();
+        $('#updateLeaderboardsContainer').html(button);
+                    
+        // add handling for updating leaderboard with current plan
+        button.click(function() {
+            $('#waiting').dialog('open');                                    
+            $.ajax({
+                url: '/districtmapping/plan/' + PLAN_ID + '/score/',
+                type: 'POST',
+                success: function(data, textStatus, xhr) {
+                    $('#waiting').dialog('close');
+                    if (data.success) {
+                        // score was successful, show new results
+                        updateLeaderboard();
+                    } else {
+                        // score failed, show reason
+                        $('<div title="Validation Failed">' + data.message + '</div>').dialog({autoOpen:true});
+                    }
+                },
+                error: function() {
+                    $('#waiting').dialog('close');
+                    $('<div title="Error">Server error. Please try again later.</div>').dialog({autoOpen:true});
+                }
+            });
+        });
+    }
 
     // connect to legislative body changes
     $('#leg_selector').change( function() {
