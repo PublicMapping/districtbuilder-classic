@@ -145,7 +145,7 @@ def is_session_available(req):
     for session in sessions:
         try:
             decoded = session.get_decoded()
-            if 'activity_time' in decoded and decoded['activity_time'] > datetime.now():
+            if (not req.user.is_anonymous()) and 'activity_time' in decoded and decoded['activity_time'] > datetime.now():
                 count += 1
         except SuspiciousOperation:
             print "SuspiciousOperation caught while checking the last activity time in a user's session. Session key: %s" % session.session_key
@@ -167,10 +167,7 @@ def note_session_activity(req):
     """
     # The timeout in this timedelta specifies the number of minutes.
     window = timedelta(0,0,0,0,settings.SESSION_TIMEOUT)
-    if 'activity_time' in req.session:
-        req.session['activity_time'] += window
-    else:
-        req.session['activity_time'] = datetime.now() + window
+    req.session['activity_time'] = datetime.now() + window
 
 
 @login_required
