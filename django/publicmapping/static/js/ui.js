@@ -249,7 +249,7 @@ $(function() {
     }
 
     // set the value of the legislative body dropdown
-    if (BODY_ID) {
+    if (window['BODY_ID']) {
         $('#legSelectorLeaderboards').val(BODY_ID);
     }
 
