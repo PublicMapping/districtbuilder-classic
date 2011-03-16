@@ -126,11 +126,11 @@ class DistrictAdmin(admin.OSMGeoAdmin):
     # When displayed as a list, show the name, plan, and version.
     list_display = ('name','plan','version',)
 
-    # Enable filtering by plan and version in the admin list view.
-    list_filter = ('plan','version',)
+    # Enable filtering by plan, version and district_id in the admin list view.
+    list_filter = ('plan','version','district_id')
 
-    # Order Districts by name by default.
-    ordering = ('name',)
+    # Order Districts by version and district_id by default.
+    ordering = ('version','district_id',)
 
 class PlanAdmin(admin.ModelAdmin):
     """
@@ -147,8 +147,7 @@ class PlanAdmin(admin.ModelAdmin):
     # owner, created, edited flags.
     list_display = ('name','is_template','is_shared','owner','created','edited',)
 
-    # Enable filtering by the template and shared flags.
-    list_filter = ('is_template','is_shared','is_valid','legislative_body',)
+    list_filter = ('is_template','is_shared','is_valid','legislative_body','owner')
 
     # Order Plans by name by default.
     ordering = ('name',)
@@ -177,7 +176,7 @@ class ScorePanelAdmin(admin.ModelAdmin):
     Administrative settings for ScorePanels.
     """
 
-    fields = ('title', 'display', 'type', 'template', 'position', 'cssclass',)
+    fields = ('title', 'display', 'type', 'template', 'position', 'is_ascending', 'cssclass',)
 
     list_display = ('title', 'type', 'template', 'cssclass',)
 
