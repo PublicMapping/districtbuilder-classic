@@ -248,6 +248,15 @@ $(function() {
         });
     }
 
+    // create the leaderboard CSV download button
+    var button = $('<button class="leaderboard_button">Download Scores<br/>as CSV</button>').button();
+    $('#downloadLeaderboardsContainer').html(button);
+    button.click(function() {
+        var owner = $("#tab_myranked").hasClass("ui-state-active") ? "mine" : "all";
+        window.location="/districtmapping/getleaderboardcsv/?owner_filter=" + owner +
+            "&legislative_body=" + $('#legSelectorLeaderboards').val();
+    });
+
     // set the value of the legislative body dropdown
     if (window['BODY_ID']) {
         $('#legSelectorLeaderboards').val(BODY_ID);

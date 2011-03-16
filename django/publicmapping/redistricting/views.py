@@ -54,7 +54,7 @@ from operator import attrgetter
 from redistricting.calculators import *
 from redistricting.models import *
 from redistricting.utils import *
-import settings, random, string, math, types, copy, time, threading, traceback, os, commands, sys, tempfile
+import settings, random, string, math, types, copy, time, threading, traceback, os, commands, sys, tempfile, csv
 
 def using_unique_session(u):
     """
@@ -1786,6 +1786,21 @@ def getdistrictindexfile(request, planid):
         response = HttpResponse('File is not yet ready. Please try again in a few minutes')
     return response
 
+def getvalidplans(leg_body, owner=None):
+    """
+    Returns the valid plans for a given legislative body and owner (optional)
+    """
+    pfilter = Q(legislative_body=leg_body) & Q(is_valid=True)
+    if owner is not None:
+        pfilter = pfilter & Q(owner=owner)
+
+    return list(Plan.objects.filter(pfilter))
+
+def getleaderboarddisplay(leg_body, owner_filter):
+    """
+    Returns the leaderboard ScoreDisplay given a legislative body and owner
+    """
+    return ScoreDisplay.objects.filter(title='%s Leaderboard - %s' % (leg_body.name, owner_filter.title()))[0]
 
 def getleaderboard(request):
     """
@@ -1800,18 +1815,58 @@ def getleaderboard(request):
     body_pk = int(request.REQUEST['legislative_body']);
     leg_body = LegislativeBody.objects.get(pk=body_pk)
     
-    # Retrieve the leaderboard display
-    display = ScoreDisplay.objects.filter(title='%s Leaderboard - %s' % (leg_body.name, owner_filter.title()))[0]
-
-    pfilter = Q(legislative_body=leg_body) & Q(is_valid=True)
-    if owner_filter == 'mine':
-        pfilter = pfilter & Q(owner=request.user)
-
-    plans = Plan.objects.filter(pfilter)
+    display = getleaderboarddisplay(leg_body, owner_filter)
+    plans = getvalidplans(leg_body, request.user if owner_filter == 'mine' else None)
 
     try :
-        html = display.render(list(plans), request)
+        html = display.render(plans, request)
         return HttpResponse(html, mimetype='text/plain')
+    except Exception as ex:
+        print traceback.format_exc()
+        return HttpResponse('%s' % ex, mimetype='text/plain')
+
+def getleaderboardcsv(request):
+    """
+    Get the leaderboard scores in csv form
+    """
+    note_session_activity(request)
+
+    if not using_unique_session(request.user):
+        return HttpResponseForbidden()
+
+    owner_filter = request.REQUEST['owner_filter']
+    body_pk = int(request.REQUEST['legislative_body']);
+    leg_body = LegislativeBody.objects.get(pk=body_pk)
+    plans = getvalidplans(leg_body, request.user if owner_filter == 'mine' else None)
+
+    display = getleaderboarddisplay(leg_body, owner_filter)
+    plans = getvalidplans(leg_body, request.user if owner_filter == 'mine' else None)
+
+    panels = display.scorepanel_set.all().order_by('position')
+    
+    try :
+        # mark the response as csv, and create the csv writer
+        response = HttpResponse(mimetype='text/csv')
+        response['Content-Disposition'] = 'attachment; filename=leaderboard_scores.csv'
+        writer = csv.writer(response)
+
+        # write headers
+        writer.writerow(['Plan ID', 'Plan Name', 'User Name'] + [p.title for p in panels])
+
+        # write row for each plan
+        for plan in plans:
+            row = [plan.id, plan.name, plan.owner.username]
+
+            # add each score
+            for panel in panels:
+                pf = panel.panelfunction_set.all()[0]
+                score = pf.function.score(plan)
+                row.append(score[0] if isinstance(score, (list, tuple)) else score)
+                
+            # write the row
+            writer.writerow(row)
+            
+        return response    
     except Exception as ex:
         print traceback.format_exc()
         return HttpResponse('%s' % ex, mimetype='text/plain')

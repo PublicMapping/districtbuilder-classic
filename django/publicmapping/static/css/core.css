@@ -236,11 +236,22 @@ div#updateLeaderboardsContainer button {
     padding: 3px 20px;
     
 }
-div#updateLeaderboardsContainer button  span
-{
+div#updateLeaderboardsContainer button span {
     line-height: 12px;
     padding: .25em 0 0 ;
+}
 
+div#downloadLeaderboardsContainer {
+  float:right;
+  margin: 2px 10px 0 0;
+}
+div#downloadLeaderboardsContainer button {
+    padding: 3px 20px;
+    
+}
+div#downloadLeaderboardsContainer button span {
+    line-height: 12px;
+    padding: .25em 0 0 ;
 }
 
 div#legSelectorLeaderboardsContainer {

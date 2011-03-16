@@ -55,6 +55,7 @@ urlpatterns = patterns('publicmapping.redistricting.views',
     (r'^plan/(?P<planid>\d*)/districtindexfilestatus/$', 'getdistrictindexfilestatus'),
     (r'^getplans/$', 'getplans'),
     (r'^getleaderboard/$', 'getleaderboard'),
+    (r'^getleaderboardcsv/$', 'getleaderboardcsv'),
     (r'^loadbard/$', 'loadbard'),
     (r'^health/$', 'get_health'),
 )
