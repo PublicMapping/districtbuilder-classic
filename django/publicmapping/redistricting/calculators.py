@@ -648,11 +648,12 @@ class Equivalence(CalculatorBase):
 
 class PartisanDifferential(CalculatorBase):
     """
-    Compute the partisan differential.
-
-    The partisan differential is the absolute value of the difference 
-    between the Democratic Partisan Index and the Republican Partisan 
-    Index. The Democratic Partisan Index is the number of democratic 
+    The partisan differential is absolute value of the number of
+    districts where the partisan index for a one party is
+    above 50% minus the number of districts where the partisan index
+    for the other party is above 50%
+    
+    The Democratic Partisan Index is the number of democratic 
     votes divided by the combined number of democratic and republican 
     votes. The Republican Partisan Index is the number of republican 
     votes divided by the combined number of democratic and republican 
@@ -660,11 +661,11 @@ class PartisanDifferential(CalculatorBase):
 
     This calculator requires two arguments: 'democratic' and 'republican'
 
-    When passed a district, this calculator will compute the partisan
-    differential of one district.
-
-    When passed a plan, this calculator will compute the average
-    partisan differential of all districts in the plan.
+    When passed a plan, this calculator will compute the
+    partisan differential for all districts in the plan.
+    The result is a tuple with - the first item is the differential
+    and the second item is the party toward which the plan's 
+    districts are biased
     """
     def __init__(self):
         """
@@ -677,19 +678,16 @@ class PartisanDifferential(CalculatorBase):
         """
         Compute the partisan differential.
         """
-        districts=[]
-        if 'district' in kwargs:
-            districts = [kwargs['district']]
 
-        elif 'plan' in kwargs:
+        if 'plan' in kwargs:
             plan = kwargs['plan']
             districts = plan.get_districts_at_version(plan.version, include_geom=False)
 
         else:
             return
 
-        num = 0
-        pd = 0
+        dems = 0
+        reps = 0
         for district in districts:
             dem = self.get_value('democratic',district)
             rep = self.get_value('republican',district)
@@ -703,30 +701,49 @@ class PartisanDifferential(CalculatorBase):
                 continue
 
             dem_pi = dem / (rep + dem)
-            rep_pi = rep / (rep + dem)
+            if dem_pi > .5:
+                dems += 1
+            else:
+                rep_pi = rep / (rep + dem)
+                if rep_pi > .5:
+                    reps += 1
 
-            pd += abs(rep_pi - dem_pi)
-            num += 1.0
-
-        self.result = (pd / num) if num > 0 else 0
+        value = dems - reps
+        sort = abs(value)
+        party = 'Democrat' if value > 0 else 'Republican'
+        self.result = (sort, party)
 
     def html(self):
         """
-        Generate an HTML representation of the partisan differential score.
-        This is represented as a span with a floating point number.
+        Display the results in HTML format. Since the results for this
+        calculator are in tuple format for sorting purposes, it's important
+        to display a human readable score that explains which party the 
+        plan is biased toward
         """
-        return "<span>%0.2f%%</span" % (self.result * 100)
+        if self.result[0] == 0:
+            return '<span>Balanced</span>'
+        else:
+            return '<span>%s&nbsp;%d</span>' % (self.result[1], self.result[0])
+
+    def json(self):
+        """
+        Return a basic JSON representation of the result.
+        """
+        return json.dumps( {'result': {'value': self.result[0], 'party': self.result[1]}} )
 
 
 class RepresentationalFairness(CalculatorBase):
     """
     Compute the representational fairness.
 
-    Representational fairness is defined here as the 
+    Representational fairness is defined here as the number of districts that 
+    have a partisan index (democratic or republican) that falls within
+    a desired range of .5 (by default).
 
     This calculator only operates on Plans.
 
-    This calculator requires two arguments: 'democratic', and 'republican'.
+    This calculator requires three arguments: 'democratic', 'republican',
+        and 'range'
     """
     def __init__(self):
         """
@@ -744,10 +761,16 @@ class RepresentationalFairness(CalculatorBase):
 
         plan = kwargs['plan']
         districts = plan.get_districts_at_version(plan.version, include_geom=False)
-        numdistricts = 0
-        likely = 0
-        sumdem = 0
-        sumrep = 0
+        try:
+            difference = float(self.get_value('range'))
+            low = .5 - difference
+            high = .5 + difference
+        except:
+            low = .45
+            high = .55
+
+        
+        fair = 0
         for district in districts:
             tmpdem = self.get_value('democratic',district)
             tmprep = self.get_value('republican',district)
@@ -762,28 +785,10 @@ class RepresentationalFairness(CalculatorBase):
                 continue
 
             pidx = dem / (dem + rep)
-            if pidx > 0.5:
-                likely += 1
+            if pidx > low and pidx < high:
+                fair += 1
 
-            sumdem += dem
-            sumrep += rep
-
-            numdistricts += 1
-
-        if (sumdem + sumrep == 0) or (numdistricts == 0):
-            self.result = 0
-        else:
-            statepct = sumdem / (sumdem+sumrep)
-            likelypct = float(likely) / float(numdistricts)
-            self.result = abs( (likelypct/statepct) - 1 )
-
-    def html(self):
-        """
-        Generate an HTML representation of the representational fairness
-        score. This is represented as a span with a floating point number.
-        """
-        return "<span>%0.2f%%</span" % (self.result * 100)
-
+        self.result = fair
 
 class CountDistricts(CalculatorBase):
     """

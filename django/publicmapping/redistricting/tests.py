@@ -1866,7 +1866,7 @@ class CalculatorCase(BaseTestCase):
         self.assertEquals(3.0, actual, 'Incorrect value during equivalence. (e:%f,a:%f)' % (3.0, actual))
 
 
-    def test_partisandiff1(self):
+    def test_partisandifferential(self):
         geolevelid = self.geolevels[1].id
         geounits = self.geounits[geolevelid]
 
@@ -1879,37 +1879,7 @@ class CalculatorCase(BaseTestCase):
         self.plan.add_geounits( self.district2.district_id, dist2ids, geolevelid, self.plan.version)
 
         district1 = self.plan.district_set.filter(district_id=self.district1.district_id, version=self.plan.version-1)[0]
-
-        pdcalc = PartisanDifferential()
-        pdcalc.arg_dict['democratic'] = ('subject',self.subject1.name,)
-        pdcalc.arg_dict['republican'] = ('subject',self.subject2.name,)
-        pdcalc.compute(district=district1)
-
-        actual = pdcalc.result
-
-        self.assertAlmostEquals(0.923077, actual, 6, 'Incorrect value during partisan differential. (e:%f,a:%f)' % (0.923077, actual))
-
         district2 = self.plan.district_set.filter(district_id=self.district2.district_id, version=self.plan.version)[0]
-
-        pdcalc.arg_dict['democratic'] = ('subject',self.subject2.name,)
-        pdcalc.arg_dict['republican'] = ('subject',self.subject1.name,)
-        pdcalc.compute(district=district2)
-
-        actual = pdcalc.result
-
-        self.assertAlmostEquals(0.461538, actual, 6, 'Incorrect value during partisan differential. (e:%f,a:%f)' % (0.461538, actual))
-
-    def test_partisandiff2(self):
-        geolevelid = self.geolevels[1].id
-        geounits = self.geounits[geolevelid]
-
-        dist1ids = geounits[0:3] + geounits[9:12]
-        dist2ids = geounits[6:9] + geounits[15:18]
-        dist1ids = map(lambda x: str(x.id), dist1ids)
-        dist2ids = map(lambda x: str(x.id), dist2ids)
-        
-        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
-        self.plan.add_geounits( self.district2.district_id, dist2ids, geolevelid, self.plan.version)
 
         pdcalc = PartisanDifferential()
         pdcalc.arg_dict['democratic'] = ('subject',self.subject1.name,)
@@ -1917,11 +1887,24 @@ class CalculatorCase(BaseTestCase):
         pdcalc.compute(plan=self.plan)
 
         actual = pdcalc.result
-        expected = (0.923077 + 0.461538) / 2
 
-        self.assertAlmostEquals(expected, actual, 6, 'Incorrect value during partisan differential. (e:%f,a:%f)' % (expected, actual))
+        # If you're playing along at home, the values are:
+        # District 1: 6 dem, 150 rep; District 2: 42 dem, 114 rep
+        self.assertEqual(2, actual[0], 'Wrong number of districts in PartisanDifferential (e:%d,a:%d)' % (2, actual[0]))
+        self.assertEqual('Republican', actual[1], 'Wrong party given for PartisanDifferential (e:%s,a:%s)' % ('Republican', actual[1]))
 
-    def test_repfairness1(self):
+        # Swap subjects and make sure we get the right party
+        pdcalc = PartisanDifferential()
+        pdcalc.arg_dict['democratic'] = ('subject',self.subject2.name,)
+        pdcalc.arg_dict['republican'] = ('subject',self.subject1.name,)
+        pdcalc.compute(plan=self.plan)
+
+        actual = pdcalc.result
+
+        self.assertEqual(2, actual[0], 'Wrong number of districts in PartisanDifferential (e:%d,a:%d)' % (2, actual[0]))
+        self.assertEqual('Democrat', actual[1], 'Wrong party given for PartisanDifferential (e:%s,a:%s)' % ('Democrat', actual[1]))
+
+    def test_representativefairness(self):
         geolevelid = self.geolevels[1].id
         geounits = self.geounits[geolevelid]
 
@@ -1933,6 +1916,8 @@ class CalculatorCase(BaseTestCase):
         self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
         self.plan.add_geounits( self.district2.district_id, dist2ids, geolevelid, self.plan.version)
 
+        # If you're playing along at home, the values are:
+        # District 1: 6 dem, 150 rep; District 2: 42 dem, 114 rep
         rfcalc = RepresentationalFairness()
         rfcalc.arg_dict['democratic'] = ('subject',self.subject1.name,)
         rfcalc.arg_dict['republican'] = ('subject',self.subject2.name,)
@@ -1940,28 +1925,28 @@ class CalculatorCase(BaseTestCase):
 
         actual = rfcalc.result
 
-        self.assertEquals(1.0, actual, 'Incorrect value during representational fairness. (e:%f,a:%f)' % (1.0, actual))
+        # by default, we have a range of .45 - .55.  Neither district is fair.
+        self.assertEquals(0, actual, 'Incorrect value during representational fairness. (e:%d,a:%d)' % (0, actual))
 
-    def test_repfairness2(self):
-        geolevelid = self.geolevels[1].id
-        geounits = self.geounits[geolevelid]
-
-        dist1ids = geounits[0:3] + geounits[9:12]
-        dist2ids = geounits[6:9] + geounits[15:18]
-        dist1ids = map(lambda x: str(x.id), dist1ids)
-        dist2ids = map(lambda x: str(x.id), dist2ids)
-        
-        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
-        self.plan.add_geounits( self.district2.district_id, dist2ids, geolevelid, self.plan.version)
-
+        # Open up the range to .25 - .75. District 2 should be fair now
         rfcalc = RepresentationalFairness()
-        rfcalc.arg_dict['democratic'] = ('subject',self.subject2.name,)
-        rfcalc.arg_dict['republican'] = ('subject',self.subject1.name,)
+        rfcalc.arg_dict['democratic'] = ('subject',self.subject1.name,)
+        rfcalc.arg_dict['republican'] = ('subject',self.subject2.name,)
+        rfcalc.arg_dict['range'] = ('literal',.25,)
         rfcalc.compute(plan=self.plan)
 
         actual = rfcalc.result
+        self.assertEquals(1, actual, 'Incorrect value during representational fairness. (e:%d,a:%d)' % (1, actual))
 
-        self.assertAlmostEquals(0.181818, actual, 6, 'Incorrect value during representational fairness. (e:%f,a:%f)' % (0.181818, actual))
+        # Open up the range to .03 - .97 (inclusive). District 1 should also be fair now. Switch subjects, too.
+        rfcalc = RepresentationalFairness()
+        rfcalc.arg_dict['democratic'] = ('subject',self.subject2.name,)
+        rfcalc.arg_dict['republican'] = ('subject',self.subject1.name,)
+        rfcalc.arg_dict['range'] = ('literal',.47,)
+        rfcalc.compute(plan=self.plan)
+
+        actual = rfcalc.result
+        self.assertEquals(2, actual, 'Incorrect value during representational fairness. (e:%d,a:%d)' % (2, actual))
 
     def test_countdist(self):
         geolevelid = self.geolevels[1].id
