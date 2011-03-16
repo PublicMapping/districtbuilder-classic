@@ -254,18 +254,6 @@ div#downloadLeaderboardsContainer button span {
     padding: .25em 0 0 ;
 }
 
-div#legSelectorLeaderboardsContainer {
-  float:right;
-  background: url(/static-media/images/divider-horz.png) 0 100% repeat-x;
-  margin: 7px 4px 0 0;
-}
-
-div#legSelectorLeaderboardsContainer select {
-  font-size: 14px;
-  font-weight:bold;
-  color: #5a5a5a;
-}
-
 
 #step_leaderboard .ui-tabs-panel{
 padding:0;
@@ -339,6 +327,9 @@ div.leaderboard_panel  table a {
   color: #555
 }
 
+div.leaderboard_panels div.leg_selector_container {
+  margin-right: 88px;
+}
 
 
 div.shadow_left {
@@ -416,19 +407,19 @@ div.tab_content h3#select_plan_title {
 
 /*plan tab */
 
-div#leg_selector_container {
+div.leg_selector_container {
   background: url(/static-media/images/divider-horz.png) 0 100% repeat-x;
   padding: 0 0 12px 0;
   margin: 0 0 12px 0;
 }
 
-div#leg_selector_container select {
+div.leg_selector_container select {
   font-size: 14px;
   font-weight:bold;
   color: #5a5a5a;
 }
 
-span#leg_selector_instructions {
+span.leg_selector_instructions {
   font-size: 16px;
   color: #3e3e3e;
   font-weight:bold;

@@ -210,11 +210,11 @@
         the user to choose one
         {% endcomment %}
         {% ifnotequal bodies|length 1 %}
-        <div id="leg_selector_container">
-            <span id="leg_selector_instructions">
+        <div class="leg_selector_container">
+            <span class="leg_selector_instructions">
                1. Select Legislative Body
             </span>
-            <select id="leg_selector">
+            <select id="leg_selector" class="leg_selector">
                 {% for body in bodies %}
                     <option value="{{ body.id }}">{{ body.name }}</option>
                 {% endfor %}
@@ -652,18 +652,25 @@
               <li id="tab_myranked"><a href="#leaderboard_myranked">My Ranked Plans</a></li>
               {% endif %}
           </ul>
-          <div id="legSelectorLeaderboardsContainer">
-              <select id="legSelectorLeaderboards">
-                  {% for body in bodies %}
-                      <option value="{{ body.id }}">{{ body.name }}</option>
-                  {% endfor %}
-              </select>
-          </div>          
           <div id="updateLeaderboardsContainer"></div>
           <div id="downloadLeaderboardsContainer"></div>
        </div>
     
       <div class="tab_content">
+          {% ifnotequal bodies|length 1 %}
+          <div class="leaderboard_panels">
+            <div class="leg_selector_container">
+                <span class="leg_selector_instructions">
+                   1. Select Legislative Body
+                </span>
+                <select id="legSelectorLeaderboards">
+                    {% for body in bodies %}
+                        <option value="{{ body.id }}">{{ body.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+          </div>
+          {% endifnotequal %}
 
           <div id="leaderboard_topranked">
           </div>

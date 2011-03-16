@@ -135,7 +135,7 @@ $(function() {
         $.ajax({
             type: 'GET',
             url: '/districtmapping/getleaderboard/',
-            data: { owner_filter: owner, legislative_body: $('#legSelectorLeaderboards').val() }, 
+            data: { owner_filter: owner, legislative_body: ($('#legSelectorLeaderboards').val() || 1) }, 
             success: function(html) {
                 var panels = $('<div class="leaderboard_panels"></div>');
                 container.append(panels);
@@ -254,7 +254,7 @@ $(function() {
     button.click(function() {
         var owner = $("#tab_myranked").hasClass("ui-state-active") ? "mine" : "all";
         window.location="/districtmapping/getleaderboardcsv/?owner_filter=" + owner +
-            "&legislative_body=" + $('#legSelectorLeaderboards').val();
+            "&legislative_body=" + ($('#legSelectorLeaderboards').val() || 1);
     });
 
     // set the value of the legislative body dropdown
