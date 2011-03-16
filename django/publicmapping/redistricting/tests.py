@@ -1866,7 +1866,7 @@ class CalculatorCase(BaseTestCase):
         self.assertEquals(3.0, actual, 'Incorrect value during equivalence. (e:%f,a:%f)' % (3.0, actual))
 
 
-    def test_partisandifferential(self):
+    def test_representationalfairness(self):
         geolevelid = self.geolevels[1].id
         geounits = self.geounits[geolevelid]
 
@@ -1881,30 +1881,30 @@ class CalculatorCase(BaseTestCase):
         district1 = self.plan.district_set.filter(district_id=self.district1.district_id, version=self.plan.version-1)[0]
         district2 = self.plan.district_set.filter(district_id=self.district2.district_id, version=self.plan.version)[0]
 
-        pdcalc = PartisanDifferential()
-        pdcalc.arg_dict['democratic'] = ('subject',self.subject1.name,)
-        pdcalc.arg_dict['republican'] = ('subject',self.subject2.name,)
-        pdcalc.compute(plan=self.plan)
+        rfcalc = RepresentationalFairness()
+        rfcalc.arg_dict['democratic'] = ('subject',self.subject1.name,)
+        rfcalc.arg_dict['republican'] = ('subject',self.subject2.name,)
+        rfcalc.compute(plan=self.plan)
 
-        actual = pdcalc.result
+        actual = rfcalc.result
 
         # If you're playing along at home, the values are:
         # District 1: 6 dem, 150 rep; District 2: 42 dem, 114 rep
-        self.assertEqual(2, actual[0], 'Wrong number of districts in PartisanDifferential (e:%d,a:%d)' % (2, actual[0]))
-        self.assertEqual('Republican', actual[1], 'Wrong party given for PartisanDifferential (e:%s,a:%s)' % ('Republican', actual[1]))
+        self.assertEqual(2, actual[0], 'Wrong number of districts in RepresentationalFairness (e:%d,a:%d)' % (2, actual[0]))
+        self.assertEqual('Republican', actual[1], 'Wrong party given for RepresentationalFairness (e:%s,a:%s)' % ('Republican', actual[1]))
 
         # Swap subjects and make sure we get the right party
-        pdcalc = PartisanDifferential()
-        pdcalc.arg_dict['democratic'] = ('subject',self.subject2.name,)
-        pdcalc.arg_dict['republican'] = ('subject',self.subject1.name,)
-        pdcalc.compute(plan=self.plan)
+        rfcalc = RepresentationalFairness()
+        rfcalc.arg_dict['democratic'] = ('subject',self.subject2.name,)
+        rfcalc.arg_dict['republican'] = ('subject',self.subject1.name,)
+        rfcalc.compute(plan=self.plan)
 
-        actual = pdcalc.result
+        actual = rfcalc.result
 
-        self.assertEqual(2, actual[0], 'Wrong number of districts in PartisanDifferential (e:%d,a:%d)' % (2, actual[0]))
-        self.assertEqual('Democrat', actual[1], 'Wrong party given for PartisanDifferential (e:%s,a:%s)' % ('Democrat', actual[1]))
+        self.assertEqual(2, actual[0], 'Wrong number of districts in RepresentationalFairness (e:%d,a:%d)' % (2, actual[0]))
+        self.assertEqual('Democrat', actual[1], 'Wrong party given for RepresentationalFairness (e:%s,a:%s)' % ('Democrat', actual[1]))
 
-    def test_representativefairness(self):
+    def test_competitiveness(self):
         geolevelid = self.geolevels[1].id
         geounits = self.geounits[geolevelid]
 
@@ -1918,35 +1918,35 @@ class CalculatorCase(BaseTestCase):
 
         # If you're playing along at home, the values are:
         # District 1: 6 dem, 150 rep; District 2: 42 dem, 114 rep
-        rfcalc = RepresentationalFairness()
-        rfcalc.arg_dict['democratic'] = ('subject',self.subject1.name,)
-        rfcalc.arg_dict['republican'] = ('subject',self.subject2.name,)
-        rfcalc.compute(plan=self.plan)
+        ccalc = Competitiveness()
+        ccalc.arg_dict['democratic'] = ('subject',self.subject1.name,)
+        ccalc.arg_dict['republican'] = ('subject',self.subject2.name,)
+        ccalc.compute(plan=self.plan)
 
-        actual = rfcalc.result
+        actual = ccalc.result
 
         # by default, we have a range of .45 - .55.  Neither district is fair.
-        self.assertEquals(0, actual, 'Incorrect value during representational fairness. (e:%d,a:%d)' % (0, actual))
+        self.assertEquals(0, actual, 'Incorrect value during competitiveness. (e:%d,a:%d)' % (0, actual))
 
         # Open up the range to .25 - .75. District 2 should be fair now
-        rfcalc = RepresentationalFairness()
-        rfcalc.arg_dict['democratic'] = ('subject',self.subject1.name,)
-        rfcalc.arg_dict['republican'] = ('subject',self.subject2.name,)
-        rfcalc.arg_dict['range'] = ('literal',.25,)
-        rfcalc.compute(plan=self.plan)
+        ccalc = Competitiveness()
+        ccalc.arg_dict['democratic'] = ('subject',self.subject1.name,)
+        ccalc.arg_dict['republican'] = ('subject',self.subject2.name,)
+        ccalc.arg_dict['range'] = ('literal',.25,)
+        ccalc.compute(plan=self.plan)
 
-        actual = rfcalc.result
-        self.assertEquals(1, actual, 'Incorrect value during representational fairness. (e:%d,a:%d)' % (1, actual))
+        actual = ccalc.result
+        self.assertEquals(1, actual, 'Incorrect value during competitiveness. (e:%d,a:%d)' % (1, actual))
 
         # Open up the range to .03 - .97 (inclusive). District 1 should also be fair now. Switch subjects, too.
-        rfcalc = RepresentationalFairness()
-        rfcalc.arg_dict['democratic'] = ('subject',self.subject2.name,)
-        rfcalc.arg_dict['republican'] = ('subject',self.subject1.name,)
-        rfcalc.arg_dict['range'] = ('literal',.47,)
-        rfcalc.compute(plan=self.plan)
+        ccalc = Competitiveness()
+        ccalc.arg_dict['democratic'] = ('subject',self.subject2.name,)
+        ccalc.arg_dict['republican'] = ('subject',self.subject1.name,)
+        ccalc.arg_dict['range'] = ('literal',.47,)
+        ccalc.compute(plan=self.plan)
 
-        actual = rfcalc.result
-        self.assertEquals(2, actual, 'Incorrect value during representational fairness. (e:%d,a:%d)' % (2, actual))
+        actual = ccalc.result
+        self.assertEquals(2, actual, 'Incorrect value during competitiveness. (e:%d,a:%d)' % (2, actual))
 
     def test_countdist(self):
         geolevelid = self.geolevels[1].id

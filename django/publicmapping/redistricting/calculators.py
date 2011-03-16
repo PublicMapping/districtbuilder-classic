@@ -646,12 +646,12 @@ class Equivalence(CalculatorBase):
         self.result = max_d - min_d
 
 
-class PartisanDifferential(CalculatorBase):
+class RepresentationalFairness(CalculatorBase):
     """
-    The partisan differential is absolute value of the number of
-    districts where the partisan index for a one party is
-    above 50% minus the number of districts where the partisan index
-    for the other party is above 50%
+    The representational fairness measure, or partisan differential,
+    is absolute value of the number of districts where the partisan
+    index for a one party is above 50% minus the number of districts
+    where the partisan index for the other party is above 50%
     
     The Democratic Partisan Index is the number of democratic 
     votes divided by the combined number of democratic and republican 
@@ -662,7 +662,7 @@ class PartisanDifferential(CalculatorBase):
     This calculator requires two arguments: 'democratic' and 'republican'
 
     When passed a plan, this calculator will compute the
-    partisan differential for all districts in the plan.
+    representational fairness for all districts in the plan.
     The result is a tuple with - the first item is the differential
     and the second item is the party toward which the plan's 
     districts are biased
@@ -676,7 +676,7 @@ class PartisanDifferential(CalculatorBase):
 
     def compute(self, **kwargs):
         """
-        Compute the partisan differential.
+        Compute the representational fairness.
         """
 
         if 'plan' in kwargs:
@@ -729,14 +729,14 @@ class PartisanDifferential(CalculatorBase):
         """
         Return a basic JSON representation of the result.
         """
-        return json.dumps( {'result': {'value': self.result[0], 'party': self.result[1]}} )
+        return json.dumps( {'result': '%s %d' % (self.result[1], self.result[0])} )
 
 
-class RepresentationalFairness(CalculatorBase):
+class Competitiveness(CalculatorBase):
     """
-    Compute the representational fairness.
+    Compute the plan's Competitiveness.
 
-    Representational fairness is defined here as the number of districts that 
+    Competitiveness is defined here as the number of districts that 
     have a partisan index (democratic or republican) that falls within
     a desired range of .5 (by default).
 
@@ -754,7 +754,7 @@ class RepresentationalFairness(CalculatorBase):
 
     def compute(self, **kwargs):
         """
-        Compute the representational fairness.
+        Compute the competitiveness.
         """
         if not 'plan' in kwargs:
             return
