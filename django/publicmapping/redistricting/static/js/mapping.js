@@ -1913,7 +1913,7 @@ function mapinit(srs,maxExtent) {
         $('#district_id_map_tool').removeClass('toggle');
         districtIdControl.deactivate();
         $('#district_select').removeClass('toggle');
-        districtSelectControl.deactivate();
+        districtSelectTool.deactivate();
         $('#lock_district_map_tool').removeClass('toggle');
         lockDistrictControl.deactivate();
         $('#anchor_tool').removeClass('toggle');
