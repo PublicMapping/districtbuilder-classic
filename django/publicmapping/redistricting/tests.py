@@ -289,6 +289,118 @@ class ScoringTestCase(BaseTestCase):
         self.assertEquals('{"result": 1}', score, 'Range JSON was incorrect: ' + score)
 
 
+    def testNestedSumFunction(self):
+        """
+        Test a sum scoring function that references a sum scoring function
+        """
+        # create the scoring function for summing two literals
+        sumTwoLiteralsFunction = ScoreFunction(calculator='redistricting.calculators.Sum', name='SumTwoLiteralsFn')
+        sumTwoLiteralsFunction.save()
+        ScoreArgument(function=sumTwoLiteralsFunction, argument='value1', value='5', type='literal').save()
+        ScoreArgument(function=sumTwoLiteralsFunction, argument='value2', value='7', type='literal').save()
+        
+        # create the scoring function for summing a literal and a score
+        sumLiteralAndScoreFunction = ScoreFunction(calculator='redistricting.calculators.Sum', name='SumLiteralAndScoreFn')
+        sumLiteralAndScoreFunction.save()
+
+        # first argument is just a literal
+        ScoreArgument(function=sumLiteralAndScoreFunction, argument='value1', value='2', type='literal').save()
+
+        # second argument is a score function
+        ScoreArgument(function=sumLiteralAndScoreFunction, argument='value2', value=sumTwoLiteralsFunction.id, type='score').save()
+
+        # test nested sum
+        score = sumLiteralAndScoreFunction.score(self.district1)
+        self.assertEquals(14, score, 'sumLiteralAndScoreFunction was incorrect: %d' % score)
+
+        # sum two of these nested sums
+        sumTwoNestedSumsFunction = ScoreFunction(calculator='redistricting.calculators.Sum', name='SumTwoNestedSumsFn')
+        sumTwoNestedSumsFunction.save()
+        ScoreArgument(function=sumTwoNestedSumsFunction, argument='value1', value=sumLiteralAndScoreFunction.id, type='score').save()        
+        ScoreArgument(function=sumTwoNestedSumsFunction, argument='value2', value=sumLiteralAndScoreFunction.id, type='score').save()
+        score = sumTwoNestedSumsFunction.score(self.district1)
+        self.assertEquals(28, score, 'sumTwoNestedSumsFunction was incorrect: %d' % score)
+
+        # test a list of districts
+        score = sumTwoNestedSumsFunction.score([self.district1, self.district1])
+        self.assertEquals(28, score[0], 'sumTwoNestedSumsFunction was incorrect for first district: %d' % score[0])
+        self.assertEquals(28, score[1], 'sumTwoNestedSumsFunction was incorrect for second district: %d' % score[1])
+
+    def testNestedSumPlanFunction(self):
+        """
+        Test the nested sum scoring function on a plan level
+        """
+        # create the scoring function for summing the districts in a plan
+        sumPlanFunction = ScoreFunction(calculator='redistricting.calculators.Sum', name='SumPlanFn', is_planscore=True)
+        sumPlanFunction.save()
+        ScoreArgument(function=sumPlanFunction, argument='value1', value='1', type='literal').save()
+
+        # find the number of districts in the plan in an alternate fashion
+        num_districts = len(self.plan.get_districts_at_version(self.plan.version, include_geom=False))
+
+        # ensure the sumPlanFunction works correctly
+        score = sumPlanFunction.score(self.plan)
+        self.assertEquals(num_districts, score, 'sumPlanFunction was incorrect: %d' % score)
+
+        # create the scoring function for summing the sum of the districts in a plan
+        sumSumPlanFunction = ScoreFunction(calculator='redistricting.calculators.Sum', name='SumSumPlanFn', is_planscore=True)
+        sumSumPlanFunction.save()
+        ScoreArgument(function=sumSumPlanFunction, argument='value1', value=sumPlanFunction.id, type='score').save()
+
+        # test nested sum
+        score = sumSumPlanFunction.score(self.plan)
+        self.assertEquals(num_districts ** 2, score, 'sumSumPlanFunction was incorrect: %d' % score)
+
+        # test a list of plans
+        score = sumSumPlanFunction.score([self.plan, self.plan])
+        self.assertEquals(num_districts ** 2, score[0], 'sumSumPlanFunction was incorrect for first plan: %d' % score[0])
+        self.assertEquals(num_districts ** 2, score[1], 'sumSumPlanFunction was incorrect for second plan: %d' % score[1])
+
+    def testPlanScoreNestedWithDistrictScore(self):
+        """
+        Test the case where a ScoreFunction of type 'plan' has an argument
+        that is a ScoreFunction of type 'district', in which case, the argument
+        ScoreFunction needs to be evaluated over all districts in the list of plans
+        """
+        # create the district scoring function for getting subject1
+        districtSubjectFunction = ScoreFunction(calculator='redistricting.calculators.Sum', name='GetSubjectFn')
+        districtSubjectFunction.save()
+        ScoreArgument(function=districtSubjectFunction, argument='value1', value=self.subject1.name, type='subject').save()
+
+        # create the plan scoring function for summing values
+        planSumFunction = ScoreFunction(calculator='redistricting.calculators.Sum', name='PlanSumFn', is_planscore=True)
+        planSumFunction.save()
+        ScoreArgument(function=planSumFunction, value=districtSubjectFunction.id, type='score').save()
+
+        # subject values are 6, 9, and 0; so the total should be 15
+        score = planSumFunction.score(self.plan)
+        self.assertEquals(15, score, 'planSumFunction was incorrect: %d' % score)
+
+        # test a list of plans
+        score = planSumFunction.score([self.plan, self.plan])
+        self.assertEquals(15, score[0], 'planSumFunction was incorrect for first plan: %d' % score[0])
+        self.assertEquals(15, score[1], 'planSumFunction was incorrect for second plan: %d' % score[1])
+
+        # test with multiple arguments
+        districtSubjectFunction2 = ScoreFunction(calculator='redistricting.calculators.Sum', name='GetSubjectFn2')
+        districtSubjectFunction2.save()
+        ScoreArgument(function=districtSubjectFunction2, argument='value1', value=self.subject1.name, type='subject').save()
+        ScoreArgument(function=districtSubjectFunction2, argument='value2', value=self.subject1.name, type='subject').save()
+        
+        planSumFunction2 = ScoreFunction(calculator='redistricting.calculators.Sum', name='PlanSumFn2', is_planscore=True)
+        planSumFunction2.save()
+        ScoreArgument(function=planSumFunction2, value=districtSubjectFunction2.id, type='score').save()
+
+        # should be twice as much
+        score = planSumFunction2.score(self.plan)
+        self.assertEquals(30, score, 'planSumFunction was incorrect: %d' % score)
+
+        # test with adding another argument to the plan function, should double again
+        ScoreArgument(function=planSumFunction2, value=districtSubjectFunction2.id, type='score').save()
+        score = planSumFunction2.score(self.plan)
+        self.assertEquals(60, score, 'planSumFunction was incorrect: %d' % score)
+        
+
 class PlanTestCase(BaseTestCase):
     """
     Unit tests to test Plan operations
@@ -1092,12 +1204,12 @@ class PurgeTestCase(BaseTestCase):
 
         self.assertEquals(9, self.plan.version, 'Plan version is incorrect.')
 
-        # should have 13 items, purging old versions of districts at version
+        # should have 14 items, purging old versions of districts at version
         # 0, 1, 2, and 3 but keeping the most recent version of each 
         # district 
         # (even if the district version is less than the 'before' keyword)
         count = self.plan.district_set.count()
-        self.assertEquals(13, count, 'Number of districts in plan is incorrect. (e:13, a:%d)' % count)
+        self.assertEquals(14, count, 'Number of districts in plan is incorrect. (e:14, a:%d)' % count)
 
     def test_purge_lt_nine(self):
         self.plan.purge(before=9)
@@ -1147,10 +1259,8 @@ class PurgeTestCase(BaseTestCase):
 
         self.plan.purge(before=oldversion)
 
-        # net loss: 16 districts
-
         count = self.plan.district_set.count()
-        self.assertEquals(16, count, 'Number of districts in plan is incorrect. (e:16, a:%d)' % count)
+        self.assertEquals(25, count, 'Number of districts in plan is incorrect. (e:25, a:%d)' % count)
 
     def test_version_back(self):
         version = self.plan.get_nth_previous_version(self.plan.version)

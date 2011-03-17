@@ -2191,19 +2191,38 @@ class ScoreFunction(models.Model):
         # Raises an ImportError if there is no calculator with the given name
         calc = self.get_calculator(self.calculator)
 
-        # Add all arguments that are defined for this score function
-        args = ScoreArgument.objects.filter(function=self)
-        for arg in args:
-            calc.arg_dict[arg.argument] = (arg.type, arg.value)
-
         # Is districts_or_plans a list, or a single district/plan?
         is_list = isinstance(districts_or_plans, list)
 
         # Calculate results for every item in the list
         results = []
         for dp in (districts_or_plans if is_list else [districts_or_plans]):
-            # Build the keyword arguments based on whether this is for districts or plans
-            kwargs = { 'plan': dp } if self.is_planscore else { 'district': dp }
+            # Add all arguments that are defined for this score function
+            args = ScoreArgument.objects.filter(function=self)
+            arg_lst = []
+            for arg in args:
+                # For 'score' types, calculate the score, and then pass the result on
+                if (arg.type != 'score'):
+                    calc.arg_dict[arg.argument] = (arg.type, arg.value)
+                else:
+                    score_fn = ScoreFunction.objects.get(pk=int(arg.value))
+
+                    # If this is a plan score and the argument is a district score,
+                    # extract the districts from the plan, score each individually,
+                    # and pass into the score function as a list
+                    if not (self.is_planscore and not score_fn.is_planscore):
+                        calc.arg_dict[arg.argument] = ('literal', score_fn.score(dp, format))
+                    else:
+                        for d in dp.get_districts_at_version(dp.version):
+                            arg_lst.append(score_fn.score(d, format))
+
+            # Build the keyword arguments based on whether this is for districts, plans, or list
+            if len(arg_lst) > 0:
+                kwargs = { 'list': arg_lst }
+            elif self.is_planscore:
+                kwargs = { 'plan': dp }
+            else:
+                kwargs = { 'district': dp }
 
             # Ask the calculator instance to compute the result
             calc.compute(**kwargs)

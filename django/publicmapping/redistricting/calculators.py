@@ -342,6 +342,8 @@ class Sum(CalculatorBase):
     that literal value is combined with the subject value for each 
     district.
 
+    For lists of numbers, this calculator will return the sum of the list.
+
     Each argument should be assigned the argument name "valueN", where N
     is a positive integer. The summation will add all arguments, starting
     at position 1, until an argument is not found.
@@ -364,10 +366,13 @@ class Sum(CalculatorBase):
         elif 'plan' in kwargs:
             plan = kwargs['plan']
             districts = plan.get_districts_at_version(plan.version, include_geom=False)
-
+        elif 'list' in kwargs:
+            lst = kwargs['list']
+            self.result = reduce(lambda x,y: x + y, lst)
+            return
         else:
             return
-
+        
         self.result = 0
 
         for district in districts:
