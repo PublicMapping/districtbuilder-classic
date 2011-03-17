@@ -47,7 +47,7 @@ shareddistricts = function(options) {
             availableDistricts: -1,
             autoOpen: false,
             modal: true,
-            width: 800,
+            width: 975,
             title: 'Copy and Paste Districts',
             resizable: false,
             closable: true
@@ -190,7 +190,7 @@ shareddistricts = function(options) {
             colModel: [
                 {name:'fields.name', label:'District Name'},
                 {name:'fields.district_id', hidden: true},
-                {name:'selected', label:' '}
+                {name:'selected', label:' ', width: '55', align: 'center'}
             ],
 
             onSelectRow: setFilterForFeature,
