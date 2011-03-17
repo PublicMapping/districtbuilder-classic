@@ -66,16 +66,96 @@
         <!-- <Subject id="pophisp1" field="POPHISP" aliasfor="pophisp"/> -->
     </Subjects>
 
-    <Targets>
-        <!-- A target is an objective measure of a district for a legislative
-            district. Each discrete target (usually 1 per legislative body/subject
-            combination) must be listed here, with a unique ID.
+    <Scoring>
+        <!--
+        Configuration items relating to the scoring and evaluation
+        of plans created by users.
         -->
-        <Target id="tottarget" subjectref="poptot" value="727366" range1="0.005" range2="0.01" />
-        <Target id="housetarget" subjectref="poptot" value="80010" range1="0.05" range2="0.10" />
-        <Target id="senatetarget" subjectref="poptot" value="200026" range1="0.05" range2="0.10" />
-    </Targets>
-   
+        <ScoreFunctions>
+            <!-- 
+            Each ScoreFunction configuration item describes how a scoring
+            calculator should be used to generate a score of a district or
+            plan, based on either 1) a subject, 2) a score, or 3) a literal
+            value.
+            -->
+            <ScoreFunction id="district_poptot" type="district"
+                calculator="publicmapping.redistricting.calculators.Sum">
+                <!--
+                This score function is a district-type score function,
+                which means that it will generate one score per district.
+                The score calculator is the python class in the 'calculator'
+                attribute.
+                The parameters passed to the calculator are passed by
+                key=value pair, based on the 'name' of the argument. The 
+                value of an argument may be:
+                  * A computed characteristic if the argument element is a
+                    SubjectArgument.
+                  * A literal value if the element is an Argument element 
+                    and the 'value' attribute is not empty.
+                  * A computed score result if the argument element is a 
+                    ScoreArgument.
+                -->
+                <SubjectArgument name="value" ref="poptot" />
+            </ScoreFunction>
+
+            <!--
+            This could be a calculator that counts the number of districts
+            in a plan.
+            -->
+            <ScoreFunction id="plan_count" type="plan"
+                calculator="publicmapping.redistricting.calculators.Count">
+            </ScoreFunction>
+
+        </ScoreFunctions>
+
+        <ScorePanels>
+            <!-- 
+            Each ScorePanel configuration item describes the settings
+            for displaying a set of scores in the user interface. A 
+            ScorePanel may be referenced more than once in multiple
+            ScoreDisplays.
+            -->
+            <ScorePanel id="panel_summary" type="plan summary" cssclass=""
+                template="summary.html">
+                <Score ref="plan_count"/>
+            </ScorePanel>
+        </ScorePanels>
+
+        <ScoreDisplays>
+            <ScoreDisplay legislativebodyref="congress" type="sidebar"
+                title="Basic Information" cssclass="">
+                <ScorePanel ref="panel_summary" />
+            </ScoreDisplay>
+        </ScoreDisplays>
+    </Scoring>
+
+    <!--
+    Define the criteria for a 'legal' or 'valid' plan for features such as
+    the contest leaderboard.
+    -->
+    <Validation>
+        <!--
+        When defining sets of criteria, a single set of criteria is used to
+        validate plans agains one legislative body. The philosophy is that
+        the plan level scores defined in Scoring/ScoreFunctions above are
+        used to evaluate a given plan, and can be used to set thresholds
+        or scores for legal plan configurations.
+
+        The description attribute may contain a large amount of text 
+        describing the precise criterion used.
+        -->
+        <Criteria legislativebodyref="congress">
+            <Criterion name="Equipopulation" description="Equipopulation is when each district has the same population.">
+                <!-- 
+                Note that this plan score just counts the number of
+                districts, and is probably not a good metric for plan
+                validity.
+                -->
+                <Score ref="plan_count" />
+            </Criterion>
+        </Criteria>
+    </Validation>
+    
     <GeoLevels>
       <GeoLevel id="block" name="block" min_zoom="9" sort_key="3" tolerance="2.5">
           <!--
