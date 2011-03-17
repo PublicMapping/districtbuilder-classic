@@ -1280,7 +1280,7 @@ def simple_district_versioned(request,planid):
                 # convert the request string into a tuple full of floats
                 bbox = tuple( map( lambda x: float(x), bbox.split(',')))
             else:
-                bbox = Plan.district_set.all().extent(field_name='simple')
+                bbox = plan.district_set.all().extent(field_name='simple')
 
             status['features'] = plan.get_wfs_districts(version, subject_id, bbox, geolevel)
         else:

@@ -53,14 +53,21 @@ shareddistricts = function(options) {
             closable: true
         }, options),
 
-        // bunch o variables
+        // shared district variables
         _disabledDialog,
-        _planTable,
-        _districtTable,
         _selectedPlanId,
         _selectedDistricts,
         _selectedPlanName,
-        _available_districts
+        _available_districts,
+        // mapping variables
+        _map,
+        _baseLayer,
+        _districtLayer,
+        _filterStrategy,
+        _fixedStrategy,
+        // jqGrid variables
+        _planTable,
+        _districtTable;
 
     /**
      * Initialize the chooser. Setup the click event for the target to
@@ -86,6 +93,9 @@ shareddistricts = function(options) {
 
     var showDialog = function() {
         _options.container.dialog('open');
+        if (_map == undefined) {
+            initMap();
+        }
     };
 
     var showDisabledDialog = function() {
@@ -183,6 +193,7 @@ shareddistricts = function(options) {
                 {name:'selected', label:' '}
             ],
 
+            onSelectRow: setFilterForFeature,
             gridComplete: checkSelections,
             beforeRequest: appendExtraParamsToRequest,
             loadError: loadError,
@@ -231,6 +242,8 @@ shareddistricts = function(options) {
             _options.target.trigger('available_districts_updated', [_available_districts + _selectedDistricts.length]);
             _selectedDistricts = [];
             loadDistrictsForPlan(id);
+            _filterStrategy.setFilter(new OpenLayers.Filter.FeatureId());
+            _districtLayer.refresh({url: '/districtmapping/plan/' + _selectedPlanId + '/district/versioned/' });
         }
     };
     
@@ -403,6 +416,112 @@ shareddistricts = function(options) {
 
     };
 
+    /**
+     * Initialize the thumbnail maps
+     */
+    var initMap = function() {
+        // This comes in handy to pad the bounding box
+        // So that it fits properly in the map container
+        var padBoundingBox = function(box, height, width) {
+            var b = box.toArray();
+            b[0] -= width;
+            b[1] -= height;
+            b[2] += width;
+            b[3] += height;
+            return new OpenLayers.Bounds.fromArray(b);
+        };
+
+        // Get the width-to-height ratio of our container and map
+        var div = $('#shared_district_map_div');
+        var divRatio = div.width() / div.height();
+        var mapSize = STUDY_BOUNDS.getSize();
+        var mapRatio = mapSize.w / mapSize.h;
+    
+        // See which way we need to pad our map bounds
+        var mapBounds = STUDY_BOUNDS;
+        if (mapRatio == divRatio) {
+            // perfect! Stick with the study_bounds
+        } else if (mapRatio > divRatio) {
+            // the map is wider. Pad the height.
+            var padHeight = true;
+        } else {
+            // the map is taller. Pad the width.
+            var padWidth = true;
+        }
+
+        // Pad the bounds appropriately
+        // divW / divH = (mapW + paddingW) / (mapH + paddingH)
+        var padRatio = divRatio / mapRatio;
+        if (padWidth) {
+            var padding = divRatio * mapSize.h - mapSize.w;
+            var padding = padding / 2;
+            mapBounds = padBoundingBox(mapBounds, 0, padding);    
+        } else if (padHeight) {
+            var padding = mapSize.w / divRatio - mapSize.h;
+            var padding = padding / 2;
+            mapBounds = padBoundingBox(mapBounds, padding, 0);
+        }
+        
+        var mapUrl = window.location.protocol + '//' + MAP_SERVER +
+            '/geoserver/wms?request=GetMap&Format=image/png&srs=EPSG:3785';
+        mapUrl += '&layers=' + MAP_LAYERS[0];
+        mapUrl += '&bbox=' + mapBounds.toArray().join(',');
+        mapUrl += '&width=' + div.width();
+        mapUrl += '&height=' + div.height();
+
+        _baseLayer = new OpenLayers.Layer.Image(
+            'Shared_Base',
+            mapUrl,
+            mapBounds,
+            new OpenLayers.Size(div.height(), div.width()),
+            {
+                isBaseLayer: true,
+                numZoomLevels: 1
+            }
+        );
+        
+        // Load map features for a plan only once
+        _fixedStrategy = new OpenLayers.Strategy.Fixed();
+        // Show districts shapes by filter and use the cache
+        _filterStrategy = new OpenLayers.Strategy.Filter({
+            filter: new OpenLayers.Filter.FeatureId()
+        });
+
+        _districtLayer = new OpenLayers.Layer.Vector(
+        'District Layer', {
+            protocol: new OpenLayers.Protocol.HTTP({
+                url: '/districtmapping/plan/0/district/versioned/',
+                format: new OpenLayers.Format.GeoJSON()
+            }),
+            strategies: [ _fixedStrategy, _filterStrategy ],
+            style: {
+                fill: true,
+                fillColor: '#ee9900',
+                strokeColor: '#ee9900',
+                strokeWidth: 2
+            },
+            projection: 'EPSG:3785',
+            isBaseLayer: false
+        });
+ 
+        var mapOptions = {
+            projection: "EPSG:3785",
+            units:"m",
+            controls: [],
+        };
+
+        _map = new OpenLayers.Map('shared_district_map_div', mapOptions);
+        _map.addLayer(_baseLayer);
+        _map.addLayer(_districtLayer);
+        _map.zoomToExtent(mapBounds, true);
+    };
+
+
+    var setFilterForFeature = function(districtId) {
+        var filter = new OpenLayers.Filter.FeatureId({ fids: [ districtId ] });
+        _filterStrategy.setFilter(filter);
+    };        
+
     //resize grid to fit window
     var resizeToFit = function() {
         // Shrink the container and allow for padding
@@ -413,7 +532,7 @@ shareddistricts = function(options) {
             _planTable.jqGrid('setGridWidth', tblContainerWidth + 15);
         }
     };
-    
+
     $(window).resize( resizeToFit );
 
     return _self;
