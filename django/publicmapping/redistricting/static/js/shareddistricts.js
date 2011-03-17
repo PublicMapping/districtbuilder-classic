@@ -54,6 +54,11 @@ shareddistricts = function(options) {
         }, options),
 
         // bunch o variables
+        _map,
+        _baseLayer,
+        _districtLayer,
+        _filterStrategy,
+        _refreshStrategy,
         _disabledDialog,
         _planTable,
         _districtTable,
@@ -86,6 +91,9 @@ shareddistricts = function(options) {
 
     var showDialog = function() {
         _options.container.dialog('open');
+        if (_map == undefined) {
+            initMap();
+        }
     };
 
     var showDisabledDialog = function() {
@@ -183,6 +191,7 @@ shareddistricts = function(options) {
                 {name:'selected', label:' '}
             ],
 
+            onSelectRow: setFilterForFeature,
             gridComplete: checkSelections,
             beforeRequest: appendExtraParamsToRequest,
             loadError: loadError,
@@ -231,6 +240,8 @@ shareddistricts = function(options) {
             _options.target.trigger('available_districts_updated', [_available_districts + _selectedDistricts.length]);
             _selectedDistricts = [];
             loadDistrictsForPlan(id);
+            _districtLayer.protocol.url = '/districtmapping/plan/' + _selectedPlanId + '/district/versioned/';
+            _refreshStrategy.refresh();
         }
     };
     
@@ -403,6 +414,75 @@ shareddistricts = function(options) {
 
     };
 
+    var initMap = function() {
+        var width = 200;
+        var size = STUDY_BOUNDS.getSize();
+        var ratio = size.h / size.w;
+        var height = width * ratio;
+
+        var mapUrl = window.location.protocol + '//' + MAP_SERVER + '/geoserver/wms?request=GetMap&layers=LAYER&bbox=BBOX&Format=image/png&width=WIDTH&height=HEIGHT&srs=EPSG:3785';
+        mapUrl = mapUrl.replace('LAYER', 'gmu:demo_county');
+        mapUrl = mapUrl.replace('BBOX', STUDY_BOUNDS.toArray().join(','));
+        mapUrl = mapUrl.replace('WIDTH', width);
+        mapUrl = mapUrl.replace('HEIGHT', Math.ceil(height));
+        var options = {
+            // maxExtent: STUDY_BOUNDS,
+            projection: "EPSG:3785",
+            units:"m"
+            //controls: [],
+        };
+
+        _baseLayer = new OpenLayers.Layer.Image(
+            'Shared_Base',
+            mapUrl,
+            STUDY_BOUNDS,
+            new OpenLayers.Size(height, width),
+            {}
+            // { numZoomLevels: 1 }
+        );
+        
+
+        // Create  a vector layer with a feature ID filter strategy
+        // On selection of a plan, get the districts in the plan
+        // On clicking a district, set the feature filter to that featureID
+        // The refresh the map
+        
+        _filterStrategy = new OpenLayers.Strategy.Filter({
+            filter: new OpenLayers.Filter.FeatureId()
+        });
+        _refreshStrategy = new OpenLayers.Strategy.Refresh();
+
+        _districtLayer = new OpenLayers.Layer.Vector(
+        'District Layer', {
+            protocol: new OpenLayers.Protocol.HTTP({
+                url: '/districtmapping/plan/0/district/versioned/',
+                format: new OpenLayers.Format.GeoJSON()
+            }),
+            strategies: [ _filterStrategy, _refreshStrategy ],
+            style: new OpenLayers.Style({
+                fill: true,
+                fillColor: '#ee9900',
+                strokeColor: '#ee9900',
+                strokeWidth: 2
+            }),
+            projection: 'EPSG:3785'
+        });
+
+        _map = new OpenLayers.Map('shared_district_map_div', options);
+        _map.addLayer(_baseLayer);
+        _map.addLayer(_districtLayer);
+        _map.zoomToExtent(STUDY_BOUNDS);
+        
+        _filterStrategy.activate();
+        _refreshStrategy.activate();
+    };
+
+
+    var setFilterForFeature = function(districtId) {
+        var filter = new OpenLayers.Filter.FeatureId({ fids: [ districtId ] });
+        _filterStrategy.setFilter(filter);
+    };        
+
     //resize grid to fit window
     var resizeToFit = function() {
         // Shrink the container and allow for padding
@@ -413,7 +493,7 @@ shareddistricts = function(options) {
             _planTable.jqGrid('setGridWidth', tblContainerWidth + 15);
         }
     };
-    
+
     $(window).resize( resizeToFit );
 
     return _self;
