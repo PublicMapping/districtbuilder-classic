@@ -277,7 +277,8 @@ chooseplan = function(options) {
             height: 'auto',
             autowidth: 'true',
             rowNum:15,
-            sortname: 'id',
+            sortname: 'fields.edited',
+            sortorder: 'desc',
             viewrecords:true,
             mtype: 'POST',
             ajaxGridOptions: {
