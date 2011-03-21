@@ -440,7 +440,7 @@ def commonplan(request, planid):
         unassigned_id = plan.district_set.filter(name='Unassigned').values_list('district_id',flat=True)[0]
 
     return {
-        'bodies': LegislativeBody.objects.all(),
+        'bodies': LegislativeBody.objects.all().order_by('name'),
         'plan': plan,
         'districts': districts,
         'mapserver': settings.MAP_SERVER,
