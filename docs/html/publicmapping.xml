@@ -1,0 +1,2587 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- $Header: /cvsroot/autodoc/autodoc/xml.tmpl,v 1.2 2006/05/16 19:01:27 rbt Exp $ -->
+
+<book id="database.publicmapping" xreflabel="publicmapping database schema"><title>publicmapping Model</title>
+
+
+
+
+  <chapter id="publicmapping.schema"
+           xreflabel="publicmapping">
+    <title>Schema publicmapping</title>
+    <para></para>
+
+
+      <section id="publicmapping.table.redistricting-characteristic"
+               xreflabel="publicmapping.redistricting_characteristic">
+        <title id="publicmapping.table.redistricting-characteristic-title">
+         Table:
+         
+         <structname>redistricting_characteristic</structname>
+        </title>
+ 
+
+
+        <para>
+          <variablelist>
+            <title>
+              Structure of <structname>redistricting_characteristic</structname>
+            </title>
+
+
+            <varlistentry>
+              <term><structfield>id</structfield></term>
+              <listitem><para>
+                <type>serial</type>
+
+
+                <literal>PRIMARY KEY</literal>
+
+
+
+
+
+
+
+
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>subject_id</structfield></term>
+              <listitem><para>
+                <type>integer</type>
+
+
+
+
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+
+                <literal>REFERENCES</literal> <xref linkend="publicmapping.table.redistricting-subject"/>
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>geounit_id</structfield></term>
+              <listitem><para>
+                <type>integer</type>
+
+
+
+
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+
+                <literal>REFERENCES</literal> <xref linkend="publicmapping.table.redistricting-geounit"/>
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>number</structfield></term>
+              <listitem><para>
+                <type>numeric(12,4)</type>
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>percentage</structfield></term>
+              <listitem><para>
+                <type>numeric(12,8)</type>
+
+
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+        </variablelist>
+
+
+
+
+
+        <variablelist>
+          <title>Indexes on redistricting_characteristic</title>
+
+          <varlistentry>
+            <term>redistricting_characteristic_geounit_id</term>
+            <listitem><para>geounit_id</para></listitem>
+          </varlistentry>
+
+
+
+          <varlistentry>
+            <term>redistricting_characteristic_subject_id</term>
+            <listitem><para>subject_id</para></listitem>
+          </varlistentry>
+
+        </variablelist>
+
+
+
+
+
+
+
+
+      </para>
+    </section>
+
+      <section id="publicmapping.table.redistricting-computedcharacteristic"
+               xreflabel="publicmapping.redistricting_computedcharacteristic">
+        <title id="publicmapping.table.redistricting-computedcharacteristic-title">
+         Table:
+         
+         <structname>redistricting_computedcharacteristic</structname>
+        </title>
+ 
+
+
+        <para>
+          <variablelist>
+            <title>
+              Structure of <structname>redistricting_computedcharacteristic</structname>
+            </title>
+
+
+            <varlistentry>
+              <term><structfield>id</structfield></term>
+              <listitem><para>
+                <type>serial</type>
+
+
+                <literal>PRIMARY KEY</literal>
+
+
+
+
+
+
+
+
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>subject_id</structfield></term>
+              <listitem><para>
+                <type>integer</type>
+
+
+
+
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+
+                <literal>REFERENCES</literal> <xref linkend="publicmapping.table.redistricting-subject"/>
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>district_id</structfield></term>
+              <listitem><para>
+                <type>integer</type>
+
+
+
+
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+
+                <literal>REFERENCES</literal> <xref linkend="publicmapping.table.redistricting-district"/>
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>number</structfield></term>
+              <listitem><para>
+                <type>numeric(12,4)</type>
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>percentage</structfield></term>
+              <listitem><para>
+                <type>numeric(12,8)</type>
+
+
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+        </variablelist>
+
+
+
+
+
+        <variablelist>
+          <title>Indexes on redistricting_computedcharacteristic</title>
+
+          <varlistentry>
+            <term>redistricting_computedcharacteristic_district_id</term>
+            <listitem><para>district_id</para></listitem>
+          </varlistentry>
+
+
+
+          <varlistentry>
+            <term>redistricting_computedcharacteristic_subject_id</term>
+            <listitem><para>subject_id</para></listitem>
+          </varlistentry>
+
+        </variablelist>
+
+
+
+
+
+
+
+
+      </para>
+    </section>
+
+      <section id="publicmapping.table.redistricting-district"
+               xreflabel="publicmapping.redistricting_district">
+        <title id="publicmapping.table.redistricting-district-title">
+         Table:
+         
+         <structname>redistricting_district</structname>
+        </title>
+ 
+
+
+        <para>
+          <variablelist>
+            <title>
+              Structure of <structname>redistricting_district</structname>
+            </title>
+
+
+            <varlistentry>
+              <term><structfield>id</structfield></term>
+              <listitem><para>
+                <type>serial</type>
+
+
+                <literal>PRIMARY KEY</literal>
+
+
+
+
+
+
+
+
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>district_id</structfield></term>
+              <listitem><para>
+                <type>integer</type>
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>name</structfield></term>
+              <listitem><para>
+                <type>character varying(200)</type>
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>plan_id</structfield></term>
+              <listitem><para>
+                <type>integer</type>
+
+
+
+
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+
+                <literal>REFERENCES</literal> <xref linkend="publicmapping.table.redistricting-plan"/>
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>version</structfield></term>
+              <listitem><para>
+                <type>integer</type>
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>is_locked</structfield></term>
+              <listitem><para>
+                <type>boolean</type>
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>geom</structfield></term>
+              <listitem><para>
+                <type>geometry</type>
+
+
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>simple</structfield></term>
+              <listitem><para>
+                <type>geometry</type>
+
+
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+        </variablelist>
+
+
+
+        <variablelist>
+          <title>Constraints on redistricting_district</title>
+
+          <varlistentry>
+            <term>enforce_dims_geom</term>
+            <listitem><para>CHECK ((st_ndims(geom) = 2))</para></listitem>
+          </varlistentry>
+
+
+
+          <varlistentry>
+            <term>enforce_dims_simple</term>
+            <listitem><para>CHECK ((st_ndims(simple) = 2))</para></listitem>
+          </varlistentry>
+
+
+
+          <varlistentry>
+            <term>enforce_geotype_geom</term>
+            <listitem><para>CHECK (((geometrytype(geom) = &apos;MULTIPOLYGON&apos;::text) OR (geom IS NULL)))</para></listitem>
+          </varlistentry>
+
+
+
+          <varlistentry>
+            <term>enforce_geotype_simple</term>
+            <listitem><para>CHECK (((geometrytype(simple) = &apos;GEOMETRYCOLLECTION&apos;::text) OR (simple IS NULL)))</para></listitem>
+          </varlistentry>
+
+
+
+          <varlistentry>
+            <term>enforce_srid_geom</term>
+            <listitem><para>CHECK ((st_srid(geom) = 3785))</para></listitem>
+          </varlistentry>
+
+
+
+          <varlistentry>
+            <term>enforce_srid_simple</term>
+            <listitem><para>CHECK ((st_srid(simple) = 3785))</para></listitem>
+          </varlistentry>
+
+
+
+          <varlistentry>
+            <term>redistricting_district_district_id_check</term>
+            <listitem><para>CHECK ((district_id &gt;= 0))</para></listitem>
+          </varlistentry>
+
+
+
+          <varlistentry>
+            <term>redistricting_district_version_check</term>
+            <listitem><para>CHECK ((version &gt;= 0))</para></listitem>
+          </varlistentry>
+
+        </variablelist>
+
+
+
+
+
+        <variablelist>
+          <title>Indexes on redistricting_district</title>
+
+          <varlistentry>
+            <term>redistricting_district_geom_id</term>
+            <listitem><para>geom</para></listitem>
+          </varlistentry>
+
+
+
+          <varlistentry>
+            <term>redistricting_district_plan_id</term>
+            <listitem><para>plan_id</para></listitem>
+          </varlistentry>
+
+
+
+          <varlistentry>
+            <term>redistricting_district_simple_id</term>
+            <listitem><para>simple</para></listitem>
+          </varlistentry>
+
+        </variablelist>
+
+
+
+
+
+        <itemizedlist>
+          <title>
+            Tables referencing redistricting_computedcharacteristic via Foreign Key Constraints
+          </title>
+
+          <listitem>
+            <para>
+              <xref linkend="publicmapping.table.redistricting-computedcharacteristic"/>
+            </para>
+          </listitem>
+
+        </itemizedlist>
+
+
+
+
+
+
+      </para>
+    </section>
+
+      <section id="publicmapping.table.redistricting-geolevel"
+               xreflabel="publicmapping.redistricting_geolevel">
+        <title id="publicmapping.table.redistricting-geolevel-title">
+         Table:
+         
+         <structname>redistricting_geolevel</structname>
+        </title>
+ 
+
+
+        <para>
+          <variablelist>
+            <title>
+              Structure of <structname>redistricting_geolevel</structname>
+            </title>
+
+
+            <varlistentry>
+              <term><structfield>id</structfield></term>
+              <listitem><para>
+                <type>serial</type>
+
+
+                <literal>PRIMARY KEY</literal>
+
+
+
+
+
+
+
+
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>name</structfield></term>
+              <listitem><para>
+                <type>character varying(50)</type>
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>min_zoom</structfield></term>
+              <listitem><para>
+                <type>integer</type>
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>sort_key</structfield></term>
+              <listitem><para>
+                <type>integer</type>
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>tolerance</structfield></term>
+              <listitem><para>
+                <type>double precision</type>
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+        </variablelist>
+
+
+
+        <variablelist>
+          <title>Constraints on redistricting_geolevel</title>
+
+          <varlistentry>
+            <term>redistricting_geolevel_min_zoom_check</term>
+            <listitem><para>CHECK ((min_zoom &gt;= 0))</para></listitem>
+          </varlistentry>
+
+
+
+          <varlistentry>
+            <term>redistricting_geolevel_sort_key_check</term>
+            <listitem><para>CHECK ((sort_key &gt;= 0))</para></listitem>
+          </varlistentry>
+
+        </variablelist>
+
+
+
+
+
+
+
+        <itemizedlist>
+          <title>
+            Tables referencing redistricting_geounit via Foreign Key Constraints
+          </title>
+
+          <listitem>
+            <para>
+              <xref linkend="publicmapping.table.redistricting-geounit"/>
+            </para>
+          </listitem>
+
+
+
+          <listitem>
+            <para>
+              <xref linkend="publicmapping.table.redistricting-legislativelevel"/>
+            </para>
+          </listitem>
+
+        </itemizedlist>
+
+
+
+
+
+
+      </para>
+    </section>
+
+      <section id="publicmapping.table.redistricting-geounit"
+               xreflabel="publicmapping.redistricting_geounit">
+        <title id="publicmapping.table.redistricting-geounit-title">
+         Table:
+         
+         <structname>redistricting_geounit</structname>
+        </title>
+ 
+
+
+        <para>
+          <variablelist>
+            <title>
+              Structure of <structname>redistricting_geounit</structname>
+            </title>
+
+
+            <varlistentry>
+              <term><structfield>id</structfield></term>
+              <listitem><para>
+                <type>serial</type>
+
+
+                <literal>PRIMARY KEY</literal>
+
+
+
+
+
+
+
+
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>name</structfield></term>
+              <listitem><para>
+                <type>character varying(200)</type>
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>portable_id</structfield></term>
+              <listitem><para>
+                <type>character varying(50)</type>
+
+
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>tree_code</structfield></term>
+              <listitem><para>
+                <type>character varying(50)</type>
+
+
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>child_id</structfield></term>
+              <listitem><para>
+                <type>integer</type>
+
+
+
+
+
+
+
+
+
+
+
+
+                <literal>REFERENCES</literal> <xref linkend="publicmapping.table.redistricting-geounit"/>
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>geolevel_id</structfield></term>
+              <listitem><para>
+                <type>integer</type>
+
+
+
+
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+
+                <literal>REFERENCES</literal> <xref linkend="publicmapping.table.redistricting-geolevel"/>
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>geom</structfield></term>
+              <listitem><para>
+                <type>geometry</type>
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>simple</structfield></term>
+              <listitem><para>
+                <type>geometry</type>
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>center</structfield></term>
+              <listitem><para>
+                <type>geometry</type>
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+        </variablelist>
+
+
+
+        <variablelist>
+          <title>Constraints on redistricting_geounit</title>
+
+          <varlistentry>
+            <term>enforce_dims_center</term>
+            <listitem><para>CHECK ((st_ndims(center) = 2))</para></listitem>
+          </varlistentry>
+
+
+
+          <varlistentry>
+            <term>enforce_dims_geom</term>
+            <listitem><para>CHECK ((st_ndims(geom) = 2))</para></listitem>
+          </varlistentry>
+
+
+
+          <varlistentry>
+            <term>enforce_dims_simple</term>
+            <listitem><para>CHECK ((st_ndims(simple) = 2))</para></listitem>
+          </varlistentry>
+
+
+
+          <varlistentry>
+            <term>enforce_geotype_center</term>
+            <listitem><para>CHECK (((geometrytype(center) = &apos;POINT&apos;::text) OR (center IS NULL)))</para></listitem>
+          </varlistentry>
+
+
+
+          <varlistentry>
+            <term>enforce_geotype_geom</term>
+            <listitem><para>CHECK (((geometrytype(geom) = &apos;MULTIPOLYGON&apos;::text) OR (geom IS NULL)))</para></listitem>
+          </varlistentry>
+
+
+
+          <varlistentry>
+            <term>enforce_geotype_simple</term>
+            <listitem><para>CHECK (((geometrytype(simple) = &apos;MULTIPOLYGON&apos;::text) OR (simple IS NULL)))</para></listitem>
+          </varlistentry>
+
+
+
+          <varlistentry>
+            <term>enforce_srid_center</term>
+            <listitem><para>CHECK ((st_srid(center) = 3785))</para></listitem>
+          </varlistentry>
+
+
+
+          <varlistentry>
+            <term>enforce_srid_geom</term>
+            <listitem><para>CHECK ((st_srid(geom) = 3785))</para></listitem>
+          </varlistentry>
+
+
+
+          <varlistentry>
+            <term>enforce_srid_simple</term>
+            <listitem><para>CHECK ((st_srid(simple) = 3785))</para></listitem>
+          </varlistentry>
+
+        </variablelist>
+
+
+
+
+
+        <variablelist>
+          <title>Indexes on redistricting_geounit</title>
+
+          <varlistentry>
+            <term>redistricting_geounit_center_id</term>
+            <listitem><para>center</para></listitem>
+          </varlistentry>
+
+
+
+          <varlistentry>
+            <term>redistricting_geounit_child_id</term>
+            <listitem><para>child_id</para></listitem>
+          </varlistentry>
+
+
+
+          <varlistentry>
+            <term>redistricting_geounit_geolevel_id</term>
+            <listitem><para>geolevel_id</para></listitem>
+          </varlistentry>
+
+
+
+          <varlistentry>
+            <term>redistricting_geounit_geom_id</term>
+            <listitem><para>geom</para></listitem>
+          </varlistentry>
+
+
+
+          <varlistentry>
+            <term>redistricting_geounit_portable_id</term>
+            <listitem><para>portable_id</para></listitem>
+          </varlistentry>
+
+
+
+          <varlistentry>
+            <term>redistricting_geounit_portable_id_like</term>
+            <listitem><para>portable_id varchar_pattern_ops</para></listitem>
+          </varlistentry>
+
+
+
+          <varlistentry>
+            <term>redistricting_geounit_simple_id</term>
+            <listitem><para>simple</para></listitem>
+          </varlistentry>
+
+
+
+          <varlistentry>
+            <term>redistricting_geounit_tree_code</term>
+            <listitem><para>tree_code</para></listitem>
+          </varlistentry>
+
+
+
+          <varlistentry>
+            <term>redistricting_geounit_tree_code_like</term>
+            <listitem><para>tree_code varchar_pattern_ops</para></listitem>
+          </varlistentry>
+
+        </variablelist>
+
+
+
+
+
+        <itemizedlist>
+          <title>
+            Tables referencing redistricting_characteristic via Foreign Key Constraints
+          </title>
+
+          <listitem>
+            <para>
+              <xref linkend="publicmapping.table.redistricting-characteristic"/>
+            </para>
+          </listitem>
+
+
+
+          <listitem>
+            <para>
+              <xref linkend="publicmapping.table.redistricting-geounit"/>
+            </para>
+          </listitem>
+
+        </itemizedlist>
+
+
+
+
+
+
+      </para>
+    </section>
+
+      <section id="publicmapping.table.redistricting-legislativebody"
+               xreflabel="publicmapping.redistricting_legislativebody">
+        <title id="publicmapping.table.redistricting-legislativebody-title">
+         Table:
+         
+         <structname>redistricting_legislativebody</structname>
+        </title>
+ 
+
+
+        <para>
+          <variablelist>
+            <title>
+              Structure of <structname>redistricting_legislativebody</structname>
+            </title>
+
+
+            <varlistentry>
+              <term><structfield>id</structfield></term>
+              <listitem><para>
+                <type>serial</type>
+
+
+                <literal>PRIMARY KEY</literal>
+
+
+
+
+
+
+
+
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>name</structfield></term>
+              <listitem><para>
+                <type>character varying(256)</type>
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>member</structfield></term>
+              <listitem><para>
+                <type>character varying(32)</type>
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>max_districts</structfield></term>
+              <listitem><para>
+                <type>integer</type>
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+        </variablelist>
+
+
+
+        <variablelist>
+          <title>Constraints on redistricting_legislativebody</title>
+
+          <varlistentry>
+            <term>redistricting_legislativebody_max_districts_check</term>
+            <listitem><para>CHECK ((max_districts &gt;= 0))</para></listitem>
+          </varlistentry>
+
+        </variablelist>
+
+
+
+
+
+
+
+        <itemizedlist>
+          <title>
+            Tables referencing redistricting_legislativedefault via Foreign Key Constraints
+          </title>
+
+          <listitem>
+            <para>
+              <xref linkend="publicmapping.table.redistricting-legislativedefault"/>
+            </para>
+          </listitem>
+
+
+
+          <listitem>
+            <para>
+              <xref linkend="publicmapping.table.redistricting-legislativelevel"/>
+            </para>
+          </listitem>
+
+
+
+          <listitem>
+            <para>
+              <xref linkend="publicmapping.table.redistricting-plan"/>
+            </para>
+          </listitem>
+
+        </itemizedlist>
+
+
+
+
+
+
+      </para>
+    </section>
+
+      <section id="publicmapping.table.redistricting-legislativedefault"
+               xreflabel="publicmapping.redistricting_legislativedefault">
+        <title id="publicmapping.table.redistricting-legislativedefault-title">
+         Table:
+         
+         <structname>redistricting_legislativedefault</structname>
+        </title>
+ 
+
+
+        <para>
+          <variablelist>
+            <title>
+              Structure of <structname>redistricting_legislativedefault</structname>
+            </title>
+
+
+            <varlistentry>
+              <term><structfield>id</structfield></term>
+              <listitem><para>
+                <type>serial</type>
+
+
+                <literal>PRIMARY KEY</literal>
+
+
+
+
+
+
+
+
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>legislative_body_id</structfield></term>
+              <listitem><para>
+                <type>integer</type>
+
+
+
+
+
+
+
+
+                      <literal>UNIQUE</literal>
+
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+
+                <literal>REFERENCES</literal> <xref linkend="publicmapping.table.redistricting-legislativebody"/>
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>target_id</structfield></term>
+              <listitem><para>
+                <type>integer</type>
+
+
+
+
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+
+                <literal>REFERENCES</literal> <xref linkend="publicmapping.table.redistricting-target"/>
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+        </variablelist>
+
+
+
+
+
+        <variablelist>
+          <title>Indexes on redistricting_legislativedefault</title>
+
+          <varlistentry>
+            <term>redistricting_legislativedefault_legislative_body_id</term>
+            <listitem><para>legislative_body_id</para></listitem>
+          </varlistentry>
+
+
+
+          <varlistentry>
+            <term>redistricting_legislativedefault_target_id</term>
+            <listitem><para>target_id</para></listitem>
+          </varlistentry>
+
+        </variablelist>
+
+
+
+
+
+
+
+
+      </para>
+    </section>
+
+      <section id="publicmapping.table.redistricting-legislativelevel"
+               xreflabel="publicmapping.redistricting_legislativelevel">
+        <title id="publicmapping.table.redistricting-legislativelevel-title">
+         Table:
+         
+         <structname>redistricting_legislativelevel</structname>
+        </title>
+ 
+
+
+        <para>
+          <variablelist>
+            <title>
+              Structure of <structname>redistricting_legislativelevel</structname>
+            </title>
+
+
+            <varlistentry>
+              <term><structfield>id</structfield></term>
+              <listitem><para>
+                <type>serial</type>
+
+
+                <literal>PRIMARY KEY</literal>
+
+
+
+
+
+
+
+
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>geolevel_id</structfield></term>
+              <listitem><para>
+                <type>integer</type>
+
+
+
+
+
+
+
+
+                      <literal>UNIQUE#1</literal>
+
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+
+                <literal>REFERENCES</literal> <xref linkend="publicmapping.table.redistricting-geolevel"/>
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>legislative_body_id</structfield></term>
+              <listitem><para>
+                <type>integer</type>
+
+
+
+
+                      <literal>UNIQUE#1</literal>
+
+
+
+
+
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+
+
+
+                <literal>REFERENCES</literal> <xref linkend="publicmapping.table.redistricting-legislativebody"/>
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>parent_id</structfield></term>
+              <listitem><para>
+                <type>integer</type>
+
+
+
+
+
+
+
+
+
+
+
+
+                <literal>REFERENCES</literal> <xref linkend="publicmapping.table.redistricting-legislativelevel"/>
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>target_id</structfield></term>
+              <listitem><para>
+                <type>integer</type>
+
+
+
+
+                      <literal>UNIQUE#1</literal>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <literal>REFERENCES</literal> <xref linkend="publicmapping.table.redistricting-target"/>
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+        </variablelist>
+
+
+
+
+
+        <variablelist>
+          <title>Indexes on redistricting_legislativelevel</title>
+
+          <varlistentry>
+            <term>redistricting_legislativelevel_geolevel_id</term>
+            <listitem><para>geolevel_id</para></listitem>
+          </varlistentry>
+
+
+
+          <varlistentry>
+            <term>redistricting_legislativelevel_legislative_body_id</term>
+            <listitem><para>legislative_body_id</para></listitem>
+          </varlistentry>
+
+
+
+          <varlistentry>
+            <term>redistricting_legislativelevel_parent_id</term>
+            <listitem><para>parent_id</para></listitem>
+          </varlistentry>
+
+
+
+          <varlistentry>
+            <term>redistricting_legislativelevel_target_id</term>
+            <listitem><para>target_id</para></listitem>
+          </varlistentry>
+
+        </variablelist>
+
+
+
+
+
+        <itemizedlist>
+          <title>
+            Tables referencing redistricting_legislativelevel via Foreign Key Constraints
+          </title>
+
+          <listitem>
+            <para>
+              <xref linkend="publicmapping.table.redistricting-legislativelevel"/>
+            </para>
+          </listitem>
+
+        </itemizedlist>
+
+
+
+
+
+
+      </para>
+    </section>
+
+      <section id="publicmapping.table.redistricting-plan"
+               xreflabel="publicmapping.redistricting_plan">
+        <title id="publicmapping.table.redistricting-plan-title">
+         Table:
+         
+         <structname>redistricting_plan</structname>
+        </title>
+ 
+
+
+        <para>
+          <variablelist>
+            <title>
+              Structure of <structname>redistricting_plan</structname>
+            </title>
+
+
+            <varlistentry>
+              <term><structfield>id</structfield></term>
+              <listitem><para>
+                <type>serial</type>
+
+
+                <literal>PRIMARY KEY</literal>
+
+
+
+
+
+
+
+
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>name</structfield></term>
+              <listitem><para>
+                <type>character varying(200)</type>
+
+
+
+
+                      <literal>UNIQUE#1</literal>
+
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>description</structfield></term>
+              <listitem><para>
+                <type>character varying(500)</type>
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>is_template</structfield></term>
+              <listitem><para>
+                <type>boolean</type>
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>is_shared</structfield></term>
+              <listitem><para>
+                <type>boolean</type>
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>is_pending</structfield></term>
+              <listitem><para>
+                <type>boolean</type>
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>version</structfield></term>
+              <listitem><para>
+                <type>integer</type>
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>created</structfield></term>
+              <listitem><para>
+                <type>timestamp with time zone</type>
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>edited</structfield></term>
+              <listitem><para>
+                <type>timestamp with time zone</type>
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>owner_id</structfield></term>
+              <listitem><para>
+                <type>integer</type>
+
+
+
+
+                      <literal>UNIQUE#1</literal>
+
+
+
+
+
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+
+
+
+                <literal>REFERENCES</literal> <xref linkend="publicmapping.table.auth-user"/>
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>legislative_body_id</structfield></term>
+              <listitem><para>
+                <type>integer</type>
+
+
+
+
+
+
+
+
+                      <literal>UNIQUE#1</literal>
+
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+
+                <literal>REFERENCES</literal> <xref linkend="publicmapping.table.redistricting-legislativebody"/>
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+        </variablelist>
+
+
+
+        <variablelist>
+          <title>Constraints on redistricting_plan</title>
+
+          <varlistentry>
+            <term>redistricting_plan_version_check</term>
+            <listitem><para>CHECK ((version &gt;= 0))</para></listitem>
+          </varlistentry>
+
+        </variablelist>
+
+
+
+
+
+        <variablelist>
+          <title>Indexes on redistricting_plan</title>
+
+          <varlistentry>
+            <term>redistricting_plan_description</term>
+            <listitem><para>description</para></listitem>
+          </varlistentry>
+
+
+
+          <varlistentry>
+            <term>redistricting_plan_description_like</term>
+            <listitem><para>description varchar_pattern_ops</para></listitem>
+          </varlistentry>
+
+
+
+          <varlistentry>
+            <term>redistricting_plan_legislative_body_id</term>
+            <listitem><para>legislative_body_id</para></listitem>
+          </varlistentry>
+
+
+
+          <varlistentry>
+            <term>redistricting_plan_owner_id</term>
+            <listitem><para>owner_id</para></listitem>
+          </varlistentry>
+
+        </variablelist>
+
+
+
+
+
+        <itemizedlist>
+          <title>
+            Tables referencing redistricting_district via Foreign Key Constraints
+          </title>
+
+          <listitem>
+            <para>
+              <xref linkend="publicmapping.table.redistricting-district"/>
+            </para>
+          </listitem>
+
+        </itemizedlist>
+
+
+
+
+
+
+      </para>
+    </section>
+
+      <section id="publicmapping.table.redistricting-profile"
+               xreflabel="publicmapping.redistricting_profile">
+        <title id="publicmapping.table.redistricting-profile-title">
+         Table:
+         
+         <structname>redistricting_profile</structname>
+        </title>
+ 
+
+
+        <para>
+          <variablelist>
+            <title>
+              Structure of <structname>redistricting_profile</structname>
+            </title>
+
+
+            <varlistentry>
+              <term><structfield>id</structfield></term>
+              <listitem><para>
+                <type>serial</type>
+
+
+                <literal>PRIMARY KEY</literal>
+
+
+
+
+
+
+
+
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>user_id</structfield></term>
+              <listitem><para>
+                <type>integer</type>
+
+
+
+
+
+
+
+
+                      <literal>UNIQUE</literal>
+
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+
+                <literal>REFERENCES</literal> <xref linkend="publicmapping.table.auth-user"/>
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>organization</structfield></term>
+              <listitem><para>
+                <type>character varying(256)</type>
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>pass_hint</structfield></term>
+              <listitem><para>
+                <type>character varying(256)</type>
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+        </variablelist>
+
+
+
+
+
+
+
+
+
+
+      </para>
+    </section>
+
+      <section id="publicmapping.table.redistricting-subject"
+               xreflabel="publicmapping.redistricting_subject">
+        <title id="publicmapping.table.redistricting-subject-title">
+         Table:
+         
+         <structname>redistricting_subject</structname>
+        </title>
+ 
+
+
+        <para>
+          <variablelist>
+            <title>
+              Structure of <structname>redistricting_subject</structname>
+            </title>
+
+
+            <varlistentry>
+              <term><structfield>id</structfield></term>
+              <listitem><para>
+                <type>serial</type>
+
+
+                <literal>PRIMARY KEY</literal>
+
+
+
+
+
+
+
+
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>name</structfield></term>
+              <listitem><para>
+                <type>character varying(50)</type>
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>display</structfield></term>
+              <listitem><para>
+                <type>character varying(200)</type>
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>short_display</structfield></term>
+              <listitem><para>
+                <type>character varying(25)</type>
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>description</structfield></term>
+              <listitem><para>
+                <type>character varying(500)</type>
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>percentage_denominator_id</structfield></term>
+              <listitem><para>
+                <type>integer</type>
+
+
+
+
+
+
+
+
+
+
+
+
+                <literal>REFERENCES</literal> <xref linkend="publicmapping.table.redistricting-subject"/>
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>is_displayed</structfield></term>
+              <listitem><para>
+                <type>boolean</type>
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>sort_key</structfield></term>
+              <listitem><para>
+                <type>integer</type>
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>format_string</structfield></term>
+              <listitem><para>
+                <type>character varying(50)</type>
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+        </variablelist>
+
+
+
+        <variablelist>
+          <title>Constraints on redistricting_subject</title>
+
+          <varlistentry>
+            <term>redistricting_subject_sort_key_check</term>
+            <listitem><para>CHECK ((sort_key &gt;= 0))</para></listitem>
+          </varlistentry>
+
+        </variablelist>
+
+
+
+
+
+        <variablelist>
+          <title>Indexes on redistricting_subject</title>
+
+          <varlistentry>
+            <term>redistricting_subject_percentage_denominator_id</term>
+            <listitem><para>percentage_denominator_id</para></listitem>
+          </varlistentry>
+
+        </variablelist>
+
+
+
+
+
+        <itemizedlist>
+          <title>
+            Tables referencing redistricting_characteristic via Foreign Key Constraints
+          </title>
+
+          <listitem>
+            <para>
+              <xref linkend="publicmapping.table.redistricting-characteristic"/>
+            </para>
+          </listitem>
+
+
+
+          <listitem>
+            <para>
+              <xref linkend="publicmapping.table.redistricting-computedcharacteristic"/>
+            </para>
+          </listitem>
+
+
+
+          <listitem>
+            <para>
+              <xref linkend="publicmapping.table.redistricting-subject"/>
+            </para>
+          </listitem>
+
+
+
+          <listitem>
+            <para>
+              <xref linkend="publicmapping.table.redistricting-target"/>
+            </para>
+          </listitem>
+
+        </itemizedlist>
+
+
+
+
+
+
+      </para>
+    </section>
+
+      <section id="publicmapping.table.redistricting-target"
+               xreflabel="publicmapping.redistricting_target">
+        <title id="publicmapping.table.redistricting-target-title">
+         Table:
+         
+         <structname>redistricting_target</structname>
+        </title>
+ 
+
+
+        <para>
+          <variablelist>
+            <title>
+              Structure of <structname>redistricting_target</structname>
+            </title>
+
+
+            <varlistentry>
+              <term><structfield>id</structfield></term>
+              <listitem><para>
+                <type>serial</type>
+
+
+                <literal>PRIMARY KEY</literal>
+
+
+
+
+
+
+
+
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>subject_id</structfield></term>
+              <listitem><para>
+                <type>integer</type>
+
+
+
+
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+
+                <literal>REFERENCES</literal> <xref linkend="publicmapping.table.redistricting-subject"/>
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>range1</structfield></term>
+              <listitem><para>
+                <type>numeric(12,4)</type>
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>range2</structfield></term>
+              <listitem><para>
+                <type>numeric(12,4)</type>
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+            <varlistentry>
+              <term><structfield>value</structfield></term>
+              <listitem><para>
+                <type>numeric(12,4)</type>
+
+
+
+                <literal>NOT NULL</literal>
+
+
+
+
+
+              </para>
+
+            </listitem>
+          </varlistentry>
+
+        </variablelist>
+
+
+
+
+
+        <variablelist>
+          <title>Indexes on redistricting_target</title>
+
+          <varlistentry>
+            <term>redistricting_target_subject_id</term>
+            <listitem><para>subject_id</para></listitem>
+          </varlistentry>
+
+        </variablelist>
+
+
+
+
+
+        <itemizedlist>
+          <title>
+            Tables referencing redistricting_legislativedefault via Foreign Key Constraints
+          </title>
+
+          <listitem>
+            <para>
+              <xref linkend="publicmapping.table.redistricting-legislativedefault"/>
+            </para>
+          </listitem>
+
+
+
+          <listitem>
+            <para>
+              <xref linkend="publicmapping.table.redistricting-legislativelevel"/>
+            </para>
+          </listitem>
+
+        </itemizedlist>
+
+
+
+
+
+
+      </para>
+    </section>
+
+
+
+  </chapter>
+
+</book>
+

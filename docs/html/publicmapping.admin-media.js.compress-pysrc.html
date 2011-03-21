@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>publicmapping.admin-media.js.compress</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="publicmapping-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a href="http://publicmapping.sf.net">Publicmapping on SourceForge</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="publicmapping-module.html">Package&nbsp;publicmapping</a> ::
+        <a href="publicmapping.admin-media-module.html">Package&nbsp;admin-media</a> ::
+        <a href="publicmapping.admin-media.js-module.html">Package&nbsp;js</a> ::
+        Module&nbsp;compress
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="publicmapping.admin-media.js.compress-pysrc.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="publicmapping.admin-media.js.compress-module.html">Module publicmapping.admin-media.js.compress</a></h1>
+<pre class="py-src">
+<a name="L1"></a><tt class="py-lineno"> 1</tt>  <tt class="py-line"><tt class="py-comment">#!/usr/bin/env python</tt> </tt>
+<a name="L2"></a><tt class="py-lineno"> 2</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">os</tt> </tt>
+<a name="L3"></a><tt class="py-lineno"> 3</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">optparse</tt> </tt>
+<a name="L4"></a><tt class="py-lineno"> 4</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">subprocess</tt> </tt>
+<a name="L5"></a><tt class="py-lineno"> 5</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">sys</tt> </tt>
+<a name="L6"></a><tt class="py-lineno"> 6</tt>  <tt class="py-line"> </tt>
+<a name="L7"></a><tt class="py-lineno"> 7</tt>  <tt class="py-line"><tt id="link-0" class="py-name" targets="Variable publicmapping.admin-media.js.compress.here=publicmapping.admin-media.js.compress-module.html#here"><a title="publicmapping.admin-media.js.compress.here" class="py-name" href="#" onclick="return doclink('link-0', 'here', 'link-0');">here</a></tt> <tt class="py-op">=</tt> <tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">path</tt><tt class="py-op">.</tt><tt class="py-name">dirname</tt><tt class="py-op">(</tt><tt class="py-name">__file__</tt><tt class="py-op">)</tt> </tt>
+<a name="L8"></a><tt class="py-lineno"> 8</tt>  <tt class="py-line"> </tt>
+<a name="main"></a><div id="main-def"><a name="L9"></a><tt class="py-lineno"> 9</tt> <a class="py-toggle" href="#" id="main-toggle" onclick="return toggle('main');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="publicmapping.admin-media.js.compress-module.html#main">main</a><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="main-collapsed" style="display:none;" pad="++" indent="++++"></div><div id="main-expanded"><a name="L10"></a><tt class="py-lineno">10</tt>  <tt class="py-line">    <tt class="py-name">usage</tt> <tt class="py-op">=</tt> <tt class="py-string">"usage: %prog [file1..fileN]"</tt> </tt>
+<a name="L11"></a><tt class="py-lineno">11</tt>  <tt class="py-line">    <tt id="link-1" class="py-name" targets="Variable publicmapping.redistricting.models.Plan.description=publicmapping.redistricting.models.Plan-class.html#description,Variable publicmapping.redistricting.models.ScoreFunction.description=publicmapping.redistricting.models.ScoreFunction-class.html#description,Variable publicmapping.redistricting.models.Subject.description=publicmapping.redistricting.models.Subject-class.html#description,Variable publicmapping.redistricting.models.ValidationCriteria.description=publicmapping.redistricting.models.ValidationCriteria-class.html#description"><a title="publicmapping.redistricting.models.Plan.description
+publicmapping.redistricting.models.ScoreFunction.description
+publicmapping.redistricting.models.Subject.description
+publicmapping.redistricting.models.ValidationCriteria.description" class="py-name" href="#" onclick="return doclink('link-1', 'description', 'link-1');">description</a></tt> <tt class="py-op">=</tt> <tt class="py-string">"""With no file paths given this script will automatically</tt> </tt>
+<a name="L12"></a><tt class="py-lineno">12</tt>  <tt class="py-line"><tt class="py-string">compress all jQuery-based files of the admin app. Requires the Google Closure</tt> </tt>
+<a name="L13"></a><tt class="py-lineno">13</tt>  <tt class="py-line"><tt class="py-string">Compiler library and Java version 6 or later."""</tt> </tt>
+<a name="L14"></a><tt class="py-lineno">14</tt>  <tt class="py-line">    <tt class="py-name">parser</tt> <tt class="py-op">=</tt> <tt class="py-name">optparse</tt><tt class="py-op">.</tt><tt class="py-name">OptionParser</tt><tt class="py-op">(</tt><tt class="py-name">usage</tt><tt class="py-op">,</tt> <tt id="link-2" class="py-name"><a title="publicmapping.redistricting.models.Plan.description
+publicmapping.redistricting.models.ScoreFunction.description
+publicmapping.redistricting.models.Subject.description
+publicmapping.redistricting.models.ValidationCriteria.description" class="py-name" href="#" onclick="return doclink('link-2', 'description', 'link-1');">description</a></tt><tt class="py-op">=</tt><tt id="link-3" class="py-name"><a title="publicmapping.redistricting.models.Plan.description
+publicmapping.redistricting.models.ScoreFunction.description
+publicmapping.redistricting.models.Subject.description
+publicmapping.redistricting.models.ValidationCriteria.description" class="py-name" href="#" onclick="return doclink('link-3', 'description', 'link-1');">description</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L15"></a><tt class="py-lineno">15</tt>  <tt class="py-line">    <tt class="py-name">parser</tt><tt class="py-op">.</tt><tt class="py-name">add_option</tt><tt class="py-op">(</tt><tt class="py-string">"-c"</tt><tt class="py-op">,</tt> <tt class="py-name">dest</tt><tt class="py-op">=</tt><tt class="py-string">"compiler"</tt><tt class="py-op">,</tt> <tt class="py-name">default</tt><tt class="py-op">=</tt><tt class="py-string">"~/bin/compiler.jar"</tt><tt class="py-op">,</tt> </tt>
+<a name="L16"></a><tt class="py-lineno">16</tt>  <tt class="py-line">                      <tt id="link-4" class="py-name" targets="Variable publicmapping.redistricting.management.commands.reaggregate.Command.help=publicmapping.redistricting.management.commands.reaggregate.Command-class.html#help,Variable publicmapping.redistricting.management.commands.setup.Command.help=publicmapping.redistricting.management.commands.setup.Command-class.html#help"><a title="publicmapping.redistricting.management.commands.reaggregate.Command.help
+publicmapping.redistricting.management.commands.setup.Command.help" class="py-name" href="#" onclick="return doclink('link-4', 'help', 'link-4');">help</a></tt><tt class="py-op">=</tt><tt class="py-string">"path to Closure Compiler jar file"</tt><tt class="py-op">)</tt> </tt>
+<a name="L17"></a><tt class="py-lineno">17</tt>  <tt class="py-line">    <tt class="py-name">parser</tt><tt class="py-op">.</tt><tt class="py-name">add_option</tt><tt class="py-op">(</tt><tt class="py-string">"-v"</tt><tt class="py-op">,</tt> <tt class="py-string">"--verbose"</tt><tt class="py-op">,</tt> </tt>
+<a name="L18"></a><tt class="py-lineno">18</tt>  <tt class="py-line">                      <tt class="py-name">action</tt><tt class="py-op">=</tt><tt class="py-string">"store_true"</tt><tt class="py-op">,</tt> <tt class="py-name">dest</tt><tt class="py-op">=</tt><tt class="py-string">"verbose"</tt><tt class="py-op">)</tt> </tt>
+<a name="L19"></a><tt class="py-lineno">19</tt>  <tt class="py-line">    <tt class="py-name">parser</tt><tt class="py-op">.</tt><tt class="py-name">add_option</tt><tt class="py-op">(</tt><tt class="py-string">"-q"</tt><tt class="py-op">,</tt> <tt class="py-string">"--quiet"</tt><tt class="py-op">,</tt> </tt>
+<a name="L20"></a><tt class="py-lineno">20</tt>  <tt class="py-line">                      <tt class="py-name">action</tt><tt class="py-op">=</tt><tt class="py-string">"store_false"</tt><tt class="py-op">,</tt> <tt class="py-name">dest</tt><tt class="py-op">=</tt><tt class="py-string">"verbose"</tt><tt class="py-op">)</tt> </tt>
+<a name="L21"></a><tt class="py-lineno">21</tt>  <tt class="py-line">    <tt class="py-op">(</tt><tt class="py-name">options</tt><tt class="py-op">,</tt> <tt id="link-5" class="py-name" targets="Variable publicmapping.redistricting.management.commands.reaggregate.Command.args=publicmapping.redistricting.management.commands.reaggregate.Command-class.html#args,Variable publicmapping.redistricting.management.commands.setup.Command.args=publicmapping.redistricting.management.commands.setup.Command-class.html#args"><a title="publicmapping.redistricting.management.commands.reaggregate.Command.args
+publicmapping.redistricting.management.commands.setup.Command.args" class="py-name" href="#" onclick="return doclink('link-5', 'args', 'link-5');">args</a></tt><tt class="py-op">)</tt> <tt class="py-op">=</tt> <tt class="py-name">parser</tt><tt class="py-op">.</tt><tt class="py-name">parse_args</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L22"></a><tt class="py-lineno">22</tt>  <tt class="py-line"> </tt>
+<a name="L23"></a><tt class="py-lineno">23</tt>  <tt class="py-line">    <tt class="py-name">compiler</tt> <tt class="py-op">=</tt> <tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">path</tt><tt class="py-op">.</tt><tt class="py-name">expanduser</tt><tt class="py-op">(</tt><tt class="py-name">options</tt><tt class="py-op">.</tt><tt class="py-name">compiler</tt><tt class="py-op">)</tt> </tt>
+<a name="L24"></a><tt class="py-lineno">24</tt>  <tt class="py-line">    <tt class="py-keyword">if</tt> <tt class="py-keyword">not</tt> <tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">path</tt><tt class="py-op">.</tt><tt class="py-name">exists</tt><tt class="py-op">(</tt><tt class="py-name">compiler</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L25"></a><tt class="py-lineno">25</tt>  <tt class="py-line">        <tt class="py-name">sys</tt><tt class="py-op">.</tt><tt class="py-name">exit</tt><tt class="py-op">(</tt><tt class="py-string">"Google Closure compiler jar file %s not found. Please use the -c option to specify the path."</tt> <tt class="py-op">%</tt> <tt class="py-name">compiler</tt><tt class="py-op">)</tt> </tt>
+<a name="L26"></a><tt class="py-lineno">26</tt>  <tt class="py-line"> </tt>
+<a name="L27"></a><tt class="py-lineno">27</tt>  <tt class="py-line">    <tt class="py-keyword">if</tt> <tt class="py-keyword">not</tt> <tt id="link-6" class="py-name"><a title="publicmapping.redistricting.management.commands.reaggregate.Command.args
+publicmapping.redistricting.management.commands.setup.Command.args" class="py-name" href="#" onclick="return doclink('link-6', 'args', 'link-5');">args</a></tt><tt class="py-op">:</tt> </tt>
+<a name="L28"></a><tt class="py-lineno">28</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">options</tt><tt class="py-op">.</tt><tt class="py-name">verbose</tt><tt class="py-op">:</tt> </tt>
+<a name="L29"></a><tt class="py-lineno">29</tt>  <tt class="py-line">            <tt class="py-name">sys</tt><tt class="py-op">.</tt><tt class="py-name">stdout</tt><tt class="py-op">.</tt><tt class="py-name">write</tt><tt class="py-op">(</tt><tt class="py-string">"No filenames given; defaulting to admin scripts\n"</tt><tt class="py-op">)</tt> </tt>
+<a name="L30"></a><tt class="py-lineno">30</tt>  <tt class="py-line">        <tt id="link-7" class="py-name"><a title="publicmapping.redistricting.management.commands.reaggregate.Command.args
+publicmapping.redistricting.management.commands.setup.Command.args" class="py-name" href="#" onclick="return doclink('link-7', 'args', 'link-5');">args</a></tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">path</tt><tt class="py-op">.</tt><tt class="py-name">join</tt><tt class="py-op">(</tt><tt id="link-8" class="py-name"><a title="publicmapping.admin-media.js.compress.here" class="py-name" href="#" onclick="return doclink('link-8', 'here', 'link-0');">here</a></tt><tt class="py-op">,</tt> <tt class="py-name">f</tt><tt class="py-op">)</tt> <tt class="py-keyword">for</tt> <tt class="py-name">f</tt> <tt class="py-keyword">in</tt> <tt class="py-op">[</tt> </tt>
+<a name="L31"></a><tt class="py-lineno">31</tt>  <tt class="py-line">            <tt class="py-string">"actions.js"</tt><tt class="py-op">,</tt> <tt class="py-string">"collapse.js"</tt><tt class="py-op">,</tt> <tt class="py-string">"inlines.js"</tt><tt class="py-op">,</tt> <tt class="py-string">"prepopulate.js"</tt><tt class="py-op">]</tt><tt class="py-op">]</tt> </tt>
+<a name="L32"></a><tt class="py-lineno">32</tt>  <tt class="py-line"> </tt>
+<a name="L33"></a><tt class="py-lineno">33</tt>  <tt class="py-line">    <tt class="py-keyword">for</tt> <tt class="py-name">arg</tt> <tt class="py-keyword">in</tt> <tt id="link-9" class="py-name"><a title="publicmapping.redistricting.management.commands.reaggregate.Command.args
+publicmapping.redistricting.management.commands.setup.Command.args" class="py-name" href="#" onclick="return doclink('link-9', 'args', 'link-5');">args</a></tt><tt class="py-op">:</tt> </tt>
+<a name="L34"></a><tt class="py-lineno">34</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-keyword">not</tt> <tt class="py-name">arg</tt><tt class="py-op">.</tt><tt class="py-name">endswith</tt><tt class="py-op">(</tt><tt class="py-string">".js"</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L35"></a><tt class="py-lineno">35</tt>  <tt class="py-line">            <tt class="py-name">arg</tt> <tt class="py-op">=</tt> <tt class="py-name">arg</tt> <tt class="py-op">+</tt> <tt class="py-string">".js"</tt> </tt>
+<a name="L36"></a><tt class="py-lineno">36</tt>  <tt class="py-line">        <tt class="py-name">to_compress</tt> <tt class="py-op">=</tt> <tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">path</tt><tt class="py-op">.</tt><tt class="py-name">expanduser</tt><tt class="py-op">(</tt><tt class="py-name">arg</tt><tt class="py-op">)</tt> </tt>
+<a name="L37"></a><tt class="py-lineno">37</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">path</tt><tt class="py-op">.</tt><tt class="py-name">exists</tt><tt class="py-op">(</tt><tt class="py-name">to_compress</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L38"></a><tt class="py-lineno">38</tt>  <tt class="py-line">            <tt class="py-name">to_compress_min</tt> <tt class="py-op">=</tt> <tt class="py-string">"%s.min.js"</tt> <tt class="py-op">%</tt> <tt class="py-string">""</tt><tt class="py-op">.</tt><tt class="py-name">join</tt><tt class="py-op">(</tt><tt class="py-name">arg</tt><tt class="py-op">.</tt><tt class="py-name">rsplit</tt><tt class="py-op">(</tt><tt class="py-string">".js"</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L39"></a><tt class="py-lineno">39</tt>  <tt class="py-line">            <tt class="py-name">cmd</tt> <tt class="py-op">=</tt> <tt class="py-string">"java -jar %s --js %s --js_output_file %s"</tt> <tt class="py-op">%</tt> <tt class="py-op">(</tt><tt class="py-name">compiler</tt><tt class="py-op">,</tt> <tt class="py-name">to_compress</tt><tt class="py-op">,</tt> <tt class="py-name">to_compress_min</tt><tt class="py-op">)</tt> </tt>
+<a name="L40"></a><tt class="py-lineno">40</tt>  <tt class="py-line">            <tt class="py-keyword">if</tt> <tt class="py-name">options</tt><tt class="py-op">.</tt><tt class="py-name">verbose</tt><tt class="py-op">:</tt> </tt>
+<a name="L41"></a><tt class="py-lineno">41</tt>  <tt class="py-line">                <tt class="py-name">sys</tt><tt class="py-op">.</tt><tt class="py-name">stdout</tt><tt class="py-op">.</tt><tt class="py-name">write</tt><tt class="py-op">(</tt><tt class="py-string">"Running: %s\n"</tt> <tt class="py-op">%</tt> <tt class="py-name">cmd</tt><tt class="py-op">)</tt> </tt>
+<a name="L42"></a><tt class="py-lineno">42</tt>  <tt class="py-line">            <tt class="py-name">subprocess</tt><tt class="py-op">.</tt><tt class="py-name">call</tt><tt class="py-op">(</tt><tt class="py-name">cmd</tt><tt class="py-op">.</tt><tt class="py-name">split</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L43"></a><tt class="py-lineno">43</tt>  <tt class="py-line">        <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L44"></a><tt class="py-lineno">44</tt>  <tt class="py-line">            <tt class="py-name">sys</tt><tt class="py-op">.</tt><tt class="py-name">stdout</tt><tt class="py-op">.</tt><tt class="py-name">write</tt><tt class="py-op">(</tt><tt class="py-string">"File %s not found. Sure it exists?\n"</tt> <tt class="py-op">%</tt> <tt class="py-name">to_compress</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L45"></a><tt class="py-lineno">45</tt>  <tt class="py-line"> </tt>
+<a name="L46"></a><tt class="py-lineno">46</tt>  <tt class="py-line"><tt class="py-keyword">if</tt> <tt class="py-name">__name__</tt> <tt class="py-op">==</tt> <tt class="py-string">'__main__'</tt><tt class="py-op">:</tt> </tt>
+<a name="L47"></a><tt class="py-lineno">47</tt>  <tt class="py-line">    <tt id="link-10" class="py-name" targets="Function publicmapping.admin-media.js.compress.main()=publicmapping.admin-media.js.compress-module.html#main,Function publicmapping.setup.main()=publicmapping.setup-module.html#main"><a title="publicmapping.admin-media.js.compress.main
+publicmapping.setup.main" class="py-name" href="#" onclick="return doclink('link-10', 'main', 'link-10');">main</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L48"></a><tt class="py-lineno">48</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="publicmapping-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a href="http://publicmapping.sf.net">Publicmapping on SourceForge</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Sat Mar  5 09:07:30 2011
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

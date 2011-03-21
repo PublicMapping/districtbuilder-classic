@@ -1,0 +1,50 @@
+digraph g {
+node [ fontsize = "10", shape = record ];
+edge [];
+
+"redistricting_characteristic" [shape = record, label = "{<col0> \N| id:  serial\lsubject_id:  integer\lgeounit_id:  integer\lnumber:  numeric(12,4)\lpercentage:  numeric(12,8)\l}" ];
+
+"redistricting_computedcharacteristic" [shape = record, label = "{<col0> \N| id:  serial\lsubject_id:  integer\ldistrict_id:  integer\lnumber:  numeric(12,4)\lpercentage:  numeric(12,8)\l}" ];
+
+"redistricting_district" [shape = record, label = "{<col0> \N| id:  serial\ldistrict_id:  integer\lname:  character varying(200)\lplan_id:  integer\lversion:  integer\lis_locked:  boolean\lgeom:  geometry\lsimple:  geometry\l}" ];
+
+"redistricting_geolevel" [shape = record, label = "{<col0> \N| id:  serial\lname:  character varying(50)\lmin_zoom:  integer\lsort_key:  integer\ltolerance:  double precision\l}" ];
+
+"redistricting_geounit" [shape = record, label = "{<col0> \N| id:  serial\lname:  character varying(200)\lportable_id:  character varying(50)\ltree_code:  character varying(50)\lchild_id:  integer\lgeolevel_id:  integer\lgeom:  geometry\lsimple:  geometry\lcenter:  geometry\l}" ];
+
+"redistricting_legislativebody" [shape = record, label = "{<col0> \N| id:  serial\lname:  character varying(256)\lmember:  character varying(32)\lmax_districts:  integer\l}" ];
+
+"redistricting_legislativedefault" [shape = record, label = "{<col0> \N| id:  serial\llegislative_body_id:  integer\ltarget_id:  integer\l}" ];
+
+"redistricting_legislativelevel" [shape = record, label = "{<col0> \N| id:  serial\lgeolevel_id:  integer\llegislative_body_id:  integer\lparent_id:  integer\ltarget_id:  integer\l}" ];
+
+"redistricting_plan" [shape = record, label = "{<col0> \N| id:  serial\lname:  character varying(200)\ldescription:  character varying(500)\lis_template:  boolean\lis_shared:  boolean\lis_pending:  boolean\lversion:  integer\lcreated:  timestamp with time zone\ledited:  timestamp with time zone\lowner_id:  integer\llegislative_body_id:  integer\l}" ];
+
+"redistricting_profile" [shape = record, label = "{<col0> \N| id:  serial\luser_id:  integer\lorganization:  character varying(256)\lpass_hint:  character varying(256)\l}" ];
+
+"redistricting_subject" [shape = record, label = "{<col0> \N| id:  serial\lname:  character varying(50)\ldisplay:  character varying(200)\lshort_display:  character varying(25)\ldescription:  character varying(500)\lpercentage_denominator_id:  integer\lis_displayed:  boolean\lsort_key:  integer\lformat_string:  character varying(50)\l}" ];
+
+"redistricting_target" [shape = record, label = "{<col0> \N| id:  serial\lsubject_id:  integer\lrange1:  numeric(12,4)\lrange2:  numeric(12,4)\lvalue:  numeric(12,4)\l}" ];
+
+
+"redistricting_characteristic" -> "redistricting_subject" [label="redistricting_characteristic_subject_id_fkey"];
+"redistricting_characteristic" -> "redistricting_geounit" [label="redistricting_characteristic_geounit_id_fkey"];
+"redistricting_computedcharacteristic" -> "redistricting_subject" [label="redistricting_computedcharacteristic_subject_id_fkey"];
+"redistricting_computedcharacteristic" -> "redistricting_district" [label="redistricting_computedcharacteristic_district_id_fkey"];
+"redistricting_district" -> "redistricting_plan" [label="redistricting_district_plan_id_fkey"];
+"redistricting_geounit" -> "redistricting_geounit" [label="child_id_refs_id_4c5a1937"];
+"redistricting_geounit" -> "redistricting_geolevel" [label="redistricting_geounit_geolevel_id_fkey"];
+"redistricting_legislativedefault" -> "redistricting_legislativebody" [label="redistricting_legislativedefault_legislative_body_id_fkey"];
+"redistricting_legislativedefault" -> "redistricting_target" [label="target_id_refs_id_a31d8e60"];
+"redistricting_legislativelevel" -> "redistricting_geolevel" [label="redistricting_legislativelevel_geolevel_id_fkey"];
+"redistricting_legislativelevel" -> "redistricting_legislativebody" [label="redistricting_legislativelevel_legislative_body_id_fkey"];
+"redistricting_legislativelevel" -> "redistricting_legislativelevel" [label="parent_id_refs_id_dedb5985"];
+"redistricting_legislativelevel" -> "redistricting_target" [label="target_id_refs_id_df3ea265"];
+"redistricting_plan" -> "auth_user" [label="redistricting_plan_owner_id_fkey"];
+"redistricting_plan" -> "redistricting_legislativebody" [label="redistricting_plan_legislative_body_id_fkey"];
+"redistricting_profile" -> "auth_user" [label="redistricting_profile_user_id_fkey"];
+"redistricting_subject" -> "redistricting_subject" [label="percentage_denominator_id_refs_id_dc15ab85"];
+"redistricting_target" -> "redistricting_subject" [label="redistricting_target_subject_id_fkey"];
+}
+
+

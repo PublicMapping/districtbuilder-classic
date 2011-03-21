@@ -1,0 +1,2452 @@
+<!-- $Header: /cvsroot/autodoc/autodoc/html.tmpl,v 1.4 2006/05/16 19:01:27 rbt Exp $ -->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+  <head>
+    <title>Index for publicmapping</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <style type="text/css">
+	BODY {
+		color:	#000000;
+		background-color: #FFFFFF;
+		font-family: Helvetica, sans-serif;
+	}
+
+	P {
+		margin-top: 5px;
+		margin-bottom: 5px;
+	}
+
+	P.w3ref {
+		font-size: 8pt;
+		font-style: italic;
+		text-align: right;
+	}
+
+	P.detail {
+		font-size: 10pt;
+	}
+
+	.error {
+		color: #FFFFFF;
+		background-color: #FF0000;
+	}
+
+	H1, H2, H3, H4, H5, H6 {
+	}
+
+	OL {
+		list-style-type: upper-alpha;
+	}
+
+	UL.topic {
+		list-style-type: upper-alpha;
+	}
+
+	LI.topic {
+		font-weight : bold;
+	}
+
+	HR {
+		color: #00FF00;
+		background-color: #808080;
+	}
+
+	TABLE {
+		border-width: medium;
+		padding: 3px;
+		background-color: #000000;
+		width: 90%;
+	}
+
+	CAPTION {
+		text-transform: capitalize;
+		font-weight : bold;
+		font-size: 14pt;
+	}
+
+	TH {
+		color: #FFFFFF;
+		background-color: #000000;
+		text-align: left;
+	}
+
+	TR {
+		color: #000000;
+		background-color: #000000;
+		vertical-align: top;
+	}
+
+	TR.tr0 {
+		background-color: #F0F0F0;
+	}
+
+	TR.tr1 {
+		background-color: #D8D8D8;
+	}
+
+	TD {
+		font-size: 12pt;
+	}
+
+	TD.col0 {
+		font-weight : bold;
+		width: 20%;
+	}
+
+	TD.col1 {
+		font-style: italic;
+		width: 15%;
+	}
+
+	TD.col2 {
+		font-size: 12px;
+	}
+    </style>
+    <link rel="stylesheet" type="text/css" media="all" href="all.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="screen.css">
+    <link rel="stylesheet" type="text/css" media="print" href="print.css">
+    <meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+  </head>
+  <body>
+
+    <!-- Primary Index -->
+	<p><br><br>Dumped on 2011-02-17</p>
+<h1><a name="index">Index of database - publicmapping</a></h1>
+<ul>
+    
+    <li><a name="publicmapping.schema">publicmapping</a></li><ul>
+    	<li><a href="#publicmapping.table.redistricting-characteristic">redistricting_characteristic</a></li><li><a href="#publicmapping.table.redistricting-computedcharacteristic">redistricting_computedcharacteristic</a></li><li><a href="#publicmapping.table.redistricting-district">redistricting_district</a></li><li><a href="#publicmapping.table.redistricting-geolevel">redistricting_geolevel</a></li><li><a href="#publicmapping.table.redistricting-geounit">redistricting_geounit</a></li><li><a href="#publicmapping.table.redistricting-legislativebody">redistricting_legislativebody</a></li><li><a href="#publicmapping.table.redistricting-legislativedefault">redistricting_legislativedefault</a></li><li><a href="#publicmapping.table.redistricting-legislativelevel">redistricting_legislativelevel</a></li><li><a href="#publicmapping.table.redistricting-plan">redistricting_plan</a></li><li><a href="#publicmapping.table.redistricting-profile">redistricting_profile</a></li><li><a href="#publicmapping.table.redistricting-subject">redistricting_subject</a></li><li><a href="#publicmapping.table.redistricting-target">redistricting_target</a></li>
+  	
+    </ul>
+    
+</ul>
+
+    <!-- Schema Creation -->
+    <!-- publicmappingpublicmapping -->
+
+		
+		
+        <hr>
+		<h2>Table:
+			<a name="publicmapping.table.redistricting-characteristic">redistricting_characteristic</a>
+		</h2>
+        
+
+
+        <table width="100%" cellspacing="0" cellpadding="3">
+                <caption>redistricting_characteristic Structure</caption>
+                <tr>
+                <th>F-Key</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Description</th>
+                </tr>
+            
+            <tr class="tr0">
+				<td>
+                
+                  
+                
+                </td>
+            	<td>id</td>
+            	<td>serial</td>
+                <td><i>
+				
+					PRIMARY KEY
+					
+
+					
+				
+
+				
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr1">
+				<td>
+                
+                  
+                  <a href="#publicmapping.table.redistricting-subject">redistricting_subject.id</a>
+                  
+                
+                </td>
+            	<td>subject_id</td>
+            	<td>integer</td>
+                <td><i>
+				
+					
+
+					
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr0">
+				<td>
+                
+                  
+                  <a href="#publicmapping.table.redistricting-geounit">redistricting_geounit.id</a>
+                  
+                
+                </td>
+            	<td>geounit_id</td>
+            	<td>integer</td>
+                <td><i>
+				
+					
+
+					
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr1">
+				<td>
+                
+                </td>
+            	<td>number</td>
+            	<td>numeric(12,4)</td>
+                <td><i>
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr0">
+				<td>
+                
+                </td>
+            	<td>percentage</td>
+            	<td>numeric(12,8)</td>
+                <td><i>
+				
+
+				
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+        </table>
+
+        <!-- Inherits -->
+		
+
+		
+		
+		
+
+        <!-- Constraint List -->
+		
+
+        <!-- Foreign Key Discovery -->
+		
+
+    <!-- Indexes -->
+    
+       redistricting_characteristic_geounit_id geounit_id
+    
+       redistricting_characteristic_subject_id subject_id
+    
+
+	<!-- View Definition -->
+	
+
+	<!-- List off permissions -->
+	
+
+	<p>
+		<a href="#index">Index</a> -
+		<a href="#publicmapping.schema">Schema publicmapping</a>
+    </p>
+	
+        <hr>
+		<h2>Table:
+			<a name="publicmapping.table.redistricting-computedcharacteristic">redistricting_computedcharacteristic</a>
+		</h2>
+        
+
+
+        <table width="100%" cellspacing="0" cellpadding="3">
+                <caption>redistricting_computedcharacteristic Structure</caption>
+                <tr>
+                <th>F-Key</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Description</th>
+                </tr>
+            
+            <tr class="tr0">
+				<td>
+                
+                  
+                
+                </td>
+            	<td>id</td>
+            	<td>serial</td>
+                <td><i>
+				
+					PRIMARY KEY
+					
+
+					
+				
+
+				
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr1">
+				<td>
+                
+                  
+                  <a href="#publicmapping.table.redistricting-subject">redistricting_subject.id</a>
+                  
+                
+                </td>
+            	<td>subject_id</td>
+            	<td>integer</td>
+                <td><i>
+				
+					
+
+					
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr0">
+				<td>
+                
+                  
+                  <a href="#publicmapping.table.redistricting-district">redistricting_district.id</a>
+                  
+                
+                </td>
+            	<td>district_id</td>
+            	<td>integer</td>
+                <td><i>
+				
+					
+
+					
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr1">
+				<td>
+                
+                </td>
+            	<td>number</td>
+            	<td>numeric(12,4)</td>
+                <td><i>
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr0">
+				<td>
+                
+                </td>
+            	<td>percentage</td>
+            	<td>numeric(12,8)</td>
+                <td><i>
+				
+
+				
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+        </table>
+
+        <!-- Inherits -->
+		
+
+		
+		
+		
+
+        <!-- Constraint List -->
+		
+
+        <!-- Foreign Key Discovery -->
+		
+
+    <!-- Indexes -->
+    
+       redistricting_computedcharacteristic_district_id district_id
+    
+       redistricting_computedcharacteristic_subject_id subject_id
+    
+
+	<!-- View Definition -->
+	
+
+	<!-- List off permissions -->
+	
+
+	<p>
+		<a href="#index">Index</a> -
+		<a href="#publicmapping.schema">Schema publicmapping</a>
+    </p>
+	
+        <hr>
+		<h2>Table:
+			<a name="publicmapping.table.redistricting-district">redistricting_district</a>
+		</h2>
+        
+
+
+        <table width="100%" cellspacing="0" cellpadding="3">
+                <caption>redistricting_district Structure</caption>
+                <tr>
+                <th>F-Key</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Description</th>
+                </tr>
+            
+            <tr class="tr0">
+				<td>
+                
+                  
+                
+                </td>
+            	<td>id</td>
+            	<td>serial</td>
+                <td><i>
+				
+					PRIMARY KEY
+					
+
+					
+				
+
+				
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr1">
+				<td>
+                
+                </td>
+            	<td>district_id</td>
+            	<td>integer</td>
+                <td><i>
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr0">
+				<td>
+                
+                </td>
+            	<td>name</td>
+            	<td>character varying(200)</td>
+                <td><i>
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr1">
+				<td>
+                
+                  
+                  <a href="#publicmapping.table.redistricting-plan">redistricting_plan.id</a>
+                  
+                
+                </td>
+            	<td>plan_id</td>
+            	<td>integer</td>
+                <td><i>
+				
+					
+
+					
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr0">
+				<td>
+                
+                </td>
+            	<td>version</td>
+            	<td>integer</td>
+                <td><i>
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr1">
+				<td>
+                
+                </td>
+            	<td>is_locked</td>
+            	<td>boolean</td>
+                <td><i>
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr0">
+				<td>
+                
+                </td>
+            	<td>geom</td>
+            	<td>geometry</td>
+                <td><i>
+				
+
+				
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr1">
+				<td>
+                
+                </td>
+            	<td>simple</td>
+            	<td>geometry</td>
+                <td><i>
+				
+
+				
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+        </table>
+
+        <!-- Inherits -->
+		
+
+		
+		
+		
+
+        <!-- Constraint List -->
+		
+        <p>&nbsp;</p>
+		<table width="100%" cellspacing="0" cellpadding="3">
+            <caption>redistricting_district Constraints</caption>
+            <tr>
+            	<th>Name</th>
+            	<th>Constraint</th>
+            </tr>
+			
+            <tr class="tr0">
+				<td>enforce_dims_geom</td>
+                <td>CHECK ((st_ndims(geom) = 2))</td>
+            </tr>
+			
+            <tr class="tr1">
+				<td>enforce_dims_simple</td>
+                <td>CHECK ((st_ndims(simple) = 2))</td>
+            </tr>
+			
+            <tr class="tr0">
+				<td>enforce_geotype_geom</td>
+                <td>CHECK (((geometrytype(geom) = &#39;MULTIPOLYGON&#39;::text) OR (geom IS NULL)))</td>
+            </tr>
+			
+            <tr class="tr1">
+				<td>enforce_geotype_simple</td>
+                <td>CHECK (((geometrytype(simple) = &#39;GEOMETRYCOLLECTION&#39;::text) OR (simple IS NULL)))</td>
+            </tr>
+			
+            <tr class="tr0">
+				<td>enforce_srid_geom</td>
+                <td>CHECK ((st_srid(geom) = 3785))</td>
+            </tr>
+			
+            <tr class="tr1">
+				<td>enforce_srid_simple</td>
+                <td>CHECK ((st_srid(simple) = 3785))</td>
+            </tr>
+			
+            <tr class="tr0">
+				<td>redistricting_district_district_id_check</td>
+                <td>CHECK ((district_id &gt;= 0))</td>
+            </tr>
+			
+            <tr class="tr1">
+				<td>redistricting_district_version_check</td>
+                <td>CHECK ((version &gt;= 0))</td>
+            </tr>
+			
+		</table>
+		
+
+        <!-- Foreign Key Discovery -->
+		
+			<p>Tables referencing this one via Foreign Key Constraints:</p>
+		
+			<ul>
+				<li><a href="#publicmapping.table.redistricting-computedcharacteristic">redistricting_computedcharacteristic</a></li>
+			</ul>
+		
+		
+
+    <!-- Indexes -->
+    
+       redistricting_district_geom_id geom
+    
+       redistricting_district_plan_id plan_id
+    
+       redistricting_district_simple_id simple
+    
+
+	<!-- View Definition -->
+	
+
+	<!-- List off permissions -->
+	
+
+	<p>
+		<a href="#index">Index</a> -
+		<a href="#publicmapping.schema">Schema publicmapping</a>
+    </p>
+	
+        <hr>
+		<h2>Table:
+			<a name="publicmapping.table.redistricting-geolevel">redistricting_geolevel</a>
+		</h2>
+        
+
+
+        <table width="100%" cellspacing="0" cellpadding="3">
+                <caption>redistricting_geolevel Structure</caption>
+                <tr>
+                <th>F-Key</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Description</th>
+                </tr>
+            
+            <tr class="tr0">
+				<td>
+                
+                  
+                
+                </td>
+            	<td>id</td>
+            	<td>serial</td>
+                <td><i>
+				
+					PRIMARY KEY
+					
+
+					
+				
+
+				
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr1">
+				<td>
+                
+                </td>
+            	<td>name</td>
+            	<td>character varying(50)</td>
+                <td><i>
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr0">
+				<td>
+                
+                </td>
+            	<td>min_zoom</td>
+            	<td>integer</td>
+                <td><i>
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr1">
+				<td>
+                
+                </td>
+            	<td>sort_key</td>
+            	<td>integer</td>
+                <td><i>
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr0">
+				<td>
+                
+                </td>
+            	<td>tolerance</td>
+            	<td>double precision</td>
+                <td><i>
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+        </table>
+
+        <!-- Inherits -->
+		
+
+		
+		
+		
+
+        <!-- Constraint List -->
+		
+        <p>&nbsp;</p>
+		<table width="100%" cellspacing="0" cellpadding="3">
+            <caption>redistricting_geolevel Constraints</caption>
+            <tr>
+            	<th>Name</th>
+            	<th>Constraint</th>
+            </tr>
+			
+            <tr class="tr0">
+				<td>redistricting_geolevel_min_zoom_check</td>
+                <td>CHECK ((min_zoom &gt;= 0))</td>
+            </tr>
+			
+            <tr class="tr1">
+				<td>redistricting_geolevel_sort_key_check</td>
+                <td>CHECK ((sort_key &gt;= 0))</td>
+            </tr>
+			
+		</table>
+		
+
+        <!-- Foreign Key Discovery -->
+		
+			<p>Tables referencing this one via Foreign Key Constraints:</p>
+		
+			<ul>
+				<li><a href="#publicmapping.table.redistricting-geounit">redistricting_geounit</a></li>
+			</ul>
+		
+			<ul>
+				<li><a href="#publicmapping.table.redistricting-legislativelevel">redistricting_legislativelevel</a></li>
+			</ul>
+		
+		
+
+    <!-- Indexes -->
+    
+
+	<!-- View Definition -->
+	
+
+	<!-- List off permissions -->
+	
+
+	<p>
+		<a href="#index">Index</a> -
+		<a href="#publicmapping.schema">Schema publicmapping</a>
+    </p>
+	
+        <hr>
+		<h2>Table:
+			<a name="publicmapping.table.redistricting-geounit">redistricting_geounit</a>
+		</h2>
+        
+
+
+        <table width="100%" cellspacing="0" cellpadding="3">
+                <caption>redistricting_geounit Structure</caption>
+                <tr>
+                <th>F-Key</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Description</th>
+                </tr>
+            
+            <tr class="tr0">
+				<td>
+                
+                  
+                
+                </td>
+            	<td>id</td>
+            	<td>serial</td>
+                <td><i>
+				
+					PRIMARY KEY
+					
+
+					
+				
+
+				
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr1">
+				<td>
+                
+                </td>
+            	<td>name</td>
+            	<td>character varying(200)</td>
+                <td><i>
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr0">
+				<td>
+                
+                </td>
+            	<td>portable_id</td>
+            	<td>character varying(50)</td>
+                <td><i>
+				
+
+				
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr1">
+				<td>
+                
+                </td>
+            	<td>tree_code</td>
+            	<td>character varying(50)</td>
+                <td><i>
+				
+
+				
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr0">
+				<td>
+                
+                  
+                  <a href="#publicmapping.table.redistricting-geounit">redistricting_geounit.id</a>
+                  
+                
+                </td>
+            	<td>child_id</td>
+            	<td>integer</td>
+                <td><i>
+				
+					
+
+					
+				
+
+				
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr1">
+				<td>
+                
+                  
+                  <a href="#publicmapping.table.redistricting-geolevel">redistricting_geolevel.id</a>
+                  
+                
+                </td>
+            	<td>geolevel_id</td>
+            	<td>integer</td>
+                <td><i>
+				
+					
+
+					
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr0">
+				<td>
+                
+                </td>
+            	<td>geom</td>
+            	<td>geometry</td>
+                <td><i>
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr1">
+				<td>
+                
+                </td>
+            	<td>simple</td>
+            	<td>geometry</td>
+                <td><i>
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr0">
+				<td>
+                
+                </td>
+            	<td>center</td>
+            	<td>geometry</td>
+                <td><i>
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+        </table>
+
+        <!-- Inherits -->
+		
+
+		
+		
+		
+
+        <!-- Constraint List -->
+		
+        <p>&nbsp;</p>
+		<table width="100%" cellspacing="0" cellpadding="3">
+            <caption>redistricting_geounit Constraints</caption>
+            <tr>
+            	<th>Name</th>
+            	<th>Constraint</th>
+            </tr>
+			
+            <tr class="tr0">
+				<td>enforce_dims_center</td>
+                <td>CHECK ((st_ndims(center) = 2))</td>
+            </tr>
+			
+            <tr class="tr1">
+				<td>enforce_dims_geom</td>
+                <td>CHECK ((st_ndims(geom) = 2))</td>
+            </tr>
+			
+            <tr class="tr0">
+				<td>enforce_dims_simple</td>
+                <td>CHECK ((st_ndims(simple) = 2))</td>
+            </tr>
+			
+            <tr class="tr1">
+				<td>enforce_geotype_center</td>
+                <td>CHECK (((geometrytype(center) = &#39;POINT&#39;::text) OR (center IS NULL)))</td>
+            </tr>
+			
+            <tr class="tr0">
+				<td>enforce_geotype_geom</td>
+                <td>CHECK (((geometrytype(geom) = &#39;MULTIPOLYGON&#39;::text) OR (geom IS NULL)))</td>
+            </tr>
+			
+            <tr class="tr1">
+				<td>enforce_geotype_simple</td>
+                <td>CHECK (((geometrytype(simple) = &#39;MULTIPOLYGON&#39;::text) OR (simple IS NULL)))</td>
+            </tr>
+			
+            <tr class="tr0">
+				<td>enforce_srid_center</td>
+                <td>CHECK ((st_srid(center) = 3785))</td>
+            </tr>
+			
+            <tr class="tr1">
+				<td>enforce_srid_geom</td>
+                <td>CHECK ((st_srid(geom) = 3785))</td>
+            </tr>
+			
+            <tr class="tr0">
+				<td>enforce_srid_simple</td>
+                <td>CHECK ((st_srid(simple) = 3785))</td>
+            </tr>
+			
+		</table>
+		
+
+        <!-- Foreign Key Discovery -->
+		
+			<p>Tables referencing this one via Foreign Key Constraints:</p>
+		
+			<ul>
+				<li><a href="#publicmapping.table.redistricting-characteristic">redistricting_characteristic</a></li>
+			</ul>
+		
+			<ul>
+				<li><a href="#publicmapping.table.redistricting-geounit">redistricting_geounit</a></li>
+			</ul>
+		
+		
+
+    <!-- Indexes -->
+    
+       redistricting_geounit_center_id center
+    
+       redistricting_geounit_child_id child_id
+    
+       redistricting_geounit_geolevel_id geolevel_id
+    
+       redistricting_geounit_geom_id geom
+    
+       redistricting_geounit_portable_id portable_id
+    
+       redistricting_geounit_portable_id_like portable_id varchar_pattern_ops
+    
+       redistricting_geounit_simple_id simple
+    
+       redistricting_geounit_tree_code tree_code
+    
+       redistricting_geounit_tree_code_like tree_code varchar_pattern_ops
+    
+
+	<!-- View Definition -->
+	
+
+	<!-- List off permissions -->
+	
+
+	<p>
+		<a href="#index">Index</a> -
+		<a href="#publicmapping.schema">Schema publicmapping</a>
+    </p>
+	
+        <hr>
+		<h2>Table:
+			<a name="publicmapping.table.redistricting-legislativebody">redistricting_legislativebody</a>
+		</h2>
+        
+
+
+        <table width="100%" cellspacing="0" cellpadding="3">
+                <caption>redistricting_legislativebody Structure</caption>
+                <tr>
+                <th>F-Key</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Description</th>
+                </tr>
+            
+            <tr class="tr0">
+				<td>
+                
+                  
+                
+                </td>
+            	<td>id</td>
+            	<td>serial</td>
+                <td><i>
+				
+					PRIMARY KEY
+					
+
+					
+				
+
+				
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr1">
+				<td>
+                
+                </td>
+            	<td>name</td>
+            	<td>character varying(256)</td>
+                <td><i>
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr0">
+				<td>
+                
+                </td>
+            	<td>member</td>
+            	<td>character varying(32)</td>
+                <td><i>
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr1">
+				<td>
+                
+                </td>
+            	<td>max_districts</td>
+            	<td>integer</td>
+                <td><i>
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+        </table>
+
+        <!-- Inherits -->
+		
+
+		
+		
+		
+
+        <!-- Constraint List -->
+		
+        <p>&nbsp;</p>
+		<table width="100%" cellspacing="0" cellpadding="3">
+            <caption>redistricting_legislativebody Constraints</caption>
+            <tr>
+            	<th>Name</th>
+            	<th>Constraint</th>
+            </tr>
+			
+            <tr class="tr0">
+				<td>redistricting_legislativebody_max_districts_check</td>
+                <td>CHECK ((max_districts &gt;= 0))</td>
+            </tr>
+			
+		</table>
+		
+
+        <!-- Foreign Key Discovery -->
+		
+			<p>Tables referencing this one via Foreign Key Constraints:</p>
+		
+			<ul>
+				<li><a href="#publicmapping.table.redistricting-legislativedefault">redistricting_legislativedefault</a></li>
+			</ul>
+		
+			<ul>
+				<li><a href="#publicmapping.table.redistricting-legislativelevel">redistricting_legislativelevel</a></li>
+			</ul>
+		
+			<ul>
+				<li><a href="#publicmapping.table.redistricting-plan">redistricting_plan</a></li>
+			</ul>
+		
+		
+
+    <!-- Indexes -->
+    
+
+	<!-- View Definition -->
+	
+
+	<!-- List off permissions -->
+	
+
+	<p>
+		<a href="#index">Index</a> -
+		<a href="#publicmapping.schema">Schema publicmapping</a>
+    </p>
+	
+        <hr>
+		<h2>Table:
+			<a name="publicmapping.table.redistricting-legislativedefault">redistricting_legislativedefault</a>
+		</h2>
+        
+
+
+        <table width="100%" cellspacing="0" cellpadding="3">
+                <caption>redistricting_legislativedefault Structure</caption>
+                <tr>
+                <th>F-Key</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Description</th>
+                </tr>
+            
+            <tr class="tr0">
+				<td>
+                
+                  
+                
+                </td>
+            	<td>id</td>
+            	<td>serial</td>
+                <td><i>
+				
+					PRIMARY KEY
+					
+
+					
+				
+
+				
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr1">
+				<td>
+                
+                  
+                  <a href="#publicmapping.table.redistricting-legislativebody">redistricting_legislativebody.id</a>
+                  
+                
+                  
+                
+                </td>
+            	<td>legislative_body_id</td>
+            	<td>integer</td>
+                <td><i>
+				
+					
+
+					
+				
+					
+
+					
+                       UNIQUE
+                    
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr0">
+				<td>
+                
+                  
+                  <a href="#publicmapping.table.redistricting-target">redistricting_target.id</a>
+                  
+                
+                </td>
+            	<td>target_id</td>
+            	<td>integer</td>
+                <td><i>
+				
+					
+
+					
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+        </table>
+
+        <!-- Inherits -->
+		
+
+		
+		
+		
+
+        <!-- Constraint List -->
+		
+
+        <!-- Foreign Key Discovery -->
+		
+
+    <!-- Indexes -->
+    
+       redistricting_legislativedefault_legislative_body_id legislative_body_id
+    
+       redistricting_legislativedefault_target_id target_id
+    
+
+	<!-- View Definition -->
+	
+
+	<!-- List off permissions -->
+	
+
+	<p>
+		<a href="#index">Index</a> -
+		<a href="#publicmapping.schema">Schema publicmapping</a>
+    </p>
+	
+        <hr>
+		<h2>Table:
+			<a name="publicmapping.table.redistricting-legislativelevel">redistricting_legislativelevel</a>
+		</h2>
+        
+
+
+        <table width="100%" cellspacing="0" cellpadding="3">
+                <caption>redistricting_legislativelevel Structure</caption>
+                <tr>
+                <th>F-Key</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Description</th>
+                </tr>
+            
+            <tr class="tr0">
+				<td>
+                
+                  
+                
+                </td>
+            	<td>id</td>
+            	<td>serial</td>
+                <td><i>
+				
+					PRIMARY KEY
+					
+
+					
+				
+
+				
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr1">
+				<td>
+                
+                  
+                  <a href="#publicmapping.table.redistricting-geolevel">redistricting_geolevel.id</a>
+                  
+                
+                  
+                
+                </td>
+            	<td>geolevel_id</td>
+            	<td>integer</td>
+                <td><i>
+				
+					
+
+					
+				
+					
+
+					
+                       UNIQUE#1
+                    
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr0">
+				<td>
+                
+                  
+                
+                  
+                  <a href="#publicmapping.table.redistricting-legislativebody">redistricting_legislativebody.id</a>
+                  
+                
+                </td>
+            	<td>legislative_body_id</td>
+            	<td>integer</td>
+                <td><i>
+				
+					
+
+					
+                       UNIQUE#1
+                    
+				
+					
+
+					
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr1">
+				<td>
+                
+                  
+                  <a href="#publicmapping.table.redistricting-legislativelevel">redistricting_legislativelevel.id</a>
+                  
+                
+                </td>
+            	<td>parent_id</td>
+            	<td>integer</td>
+                <td><i>
+				
+					
+
+					
+				
+
+				
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr0">
+				<td>
+                
+                  
+                
+                  
+                  <a href="#publicmapping.table.redistricting-target">redistricting_target.id</a>
+                  
+                
+                </td>
+            	<td>target_id</td>
+            	<td>integer</td>
+                <td><i>
+				
+					
+
+					
+                       UNIQUE#1
+                    
+				
+					
+
+					
+				
+
+				
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+        </table>
+
+        <!-- Inherits -->
+		
+
+		
+		
+		
+
+        <!-- Constraint List -->
+		
+
+        <!-- Foreign Key Discovery -->
+		
+			<p>Tables referencing this one via Foreign Key Constraints:</p>
+		
+			<ul>
+				<li><a href="#publicmapping.table.redistricting-legislativelevel">redistricting_legislativelevel</a></li>
+			</ul>
+		
+		
+
+    <!-- Indexes -->
+    
+       redistricting_legislativelevel_geolevel_id geolevel_id
+    
+       redistricting_legislativelevel_legislative_body_id legislative_body_id
+    
+       redistricting_legislativelevel_parent_id parent_id
+    
+       redistricting_legislativelevel_target_id target_id
+    
+
+	<!-- View Definition -->
+	
+
+	<!-- List off permissions -->
+	
+
+	<p>
+		<a href="#index">Index</a> -
+		<a href="#publicmapping.schema">Schema publicmapping</a>
+    </p>
+	
+        <hr>
+		<h2>Table:
+			<a name="publicmapping.table.redistricting-plan">redistricting_plan</a>
+		</h2>
+        
+
+
+        <table width="100%" cellspacing="0" cellpadding="3">
+                <caption>redistricting_plan Structure</caption>
+                <tr>
+                <th>F-Key</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Description</th>
+                </tr>
+            
+            <tr class="tr0">
+				<td>
+                
+                  
+                
+                </td>
+            	<td>id</td>
+            	<td>serial</td>
+                <td><i>
+				
+					PRIMARY KEY
+					
+
+					
+				
+
+				
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr1">
+				<td>
+                
+                  
+                
+                </td>
+            	<td>name</td>
+            	<td>character varying(200)</td>
+                <td><i>
+				
+					
+
+					
+                       UNIQUE#1
+                    
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr0">
+				<td>
+                
+                </td>
+            	<td>description</td>
+            	<td>character varying(500)</td>
+                <td><i>
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr1">
+				<td>
+                
+                </td>
+            	<td>is_template</td>
+            	<td>boolean</td>
+                <td><i>
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr0">
+				<td>
+                
+                </td>
+            	<td>is_shared</td>
+            	<td>boolean</td>
+                <td><i>
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr1">
+				<td>
+                
+                </td>
+            	<td>is_pending</td>
+            	<td>boolean</td>
+                <td><i>
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr0">
+				<td>
+                
+                </td>
+            	<td>version</td>
+            	<td>integer</td>
+                <td><i>
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr1">
+				<td>
+                
+                </td>
+            	<td>created</td>
+            	<td>timestamp with time zone</td>
+                <td><i>
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr0">
+				<td>
+                
+                </td>
+            	<td>edited</td>
+            	<td>timestamp with time zone</td>
+                <td><i>
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr1">
+				<td>
+                
+                  
+                
+                  
+                  <a href="#publicmapping.table.auth-user">auth_user.id</a>
+                  
+                
+                </td>
+            	<td>owner_id</td>
+            	<td>integer</td>
+                <td><i>
+				
+					
+
+					
+                       UNIQUE#1
+                    
+				
+					
+
+					
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr0">
+				<td>
+                
+                  
+                  <a href="#publicmapping.table.redistricting-legislativebody">redistricting_legislativebody.id</a>
+                  
+                
+                  
+                
+                </td>
+            	<td>legislative_body_id</td>
+            	<td>integer</td>
+                <td><i>
+				
+					
+
+					
+				
+					
+
+					
+                       UNIQUE#1
+                    
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+        </table>
+
+        <!-- Inherits -->
+		
+
+		
+		
+		
+
+        <!-- Constraint List -->
+		
+        <p>&nbsp;</p>
+		<table width="100%" cellspacing="0" cellpadding="3">
+            <caption>redistricting_plan Constraints</caption>
+            <tr>
+            	<th>Name</th>
+            	<th>Constraint</th>
+            </tr>
+			
+            <tr class="tr0">
+				<td>redistricting_plan_version_check</td>
+                <td>CHECK ((version &gt;= 0))</td>
+            </tr>
+			
+		</table>
+		
+
+        <!-- Foreign Key Discovery -->
+		
+			<p>Tables referencing this one via Foreign Key Constraints:</p>
+		
+			<ul>
+				<li><a href="#publicmapping.table.redistricting-district">redistricting_district</a></li>
+			</ul>
+		
+		
+
+    <!-- Indexes -->
+    
+       redistricting_plan_description description
+    
+       redistricting_plan_description_like description varchar_pattern_ops
+    
+       redistricting_plan_legislative_body_id legislative_body_id
+    
+       redistricting_plan_owner_id owner_id
+    
+
+	<!-- View Definition -->
+	
+
+	<!-- List off permissions -->
+	
+
+	<p>
+		<a href="#index">Index</a> -
+		<a href="#publicmapping.schema">Schema publicmapping</a>
+    </p>
+	
+        <hr>
+		<h2>Table:
+			<a name="publicmapping.table.redistricting-profile">redistricting_profile</a>
+		</h2>
+        
+
+
+        <table width="100%" cellspacing="0" cellpadding="3">
+                <caption>redistricting_profile Structure</caption>
+                <tr>
+                <th>F-Key</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Description</th>
+                </tr>
+            
+            <tr class="tr0">
+				<td>
+                
+                  
+                
+                </td>
+            	<td>id</td>
+            	<td>serial</td>
+                <td><i>
+				
+					PRIMARY KEY
+					
+
+					
+				
+
+				
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr1">
+				<td>
+                
+                  
+                  <a href="#publicmapping.table.auth-user">auth_user.id</a>
+                  
+                
+                  
+                
+                </td>
+            	<td>user_id</td>
+            	<td>integer</td>
+                <td><i>
+				
+					
+
+					
+				
+					
+
+					
+                       UNIQUE
+                    
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr0">
+				<td>
+                
+                </td>
+            	<td>organization</td>
+            	<td>character varying(256)</td>
+                <td><i>
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr1">
+				<td>
+                
+                </td>
+            	<td>pass_hint</td>
+            	<td>character varying(256)</td>
+                <td><i>
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+        </table>
+
+        <!-- Inherits -->
+		
+
+		
+		
+		
+
+        <!-- Constraint List -->
+		
+
+        <!-- Foreign Key Discovery -->
+		
+
+    <!-- Indexes -->
+    
+
+	<!-- View Definition -->
+	
+
+	<!-- List off permissions -->
+	
+
+	<p>
+		<a href="#index">Index</a> -
+		<a href="#publicmapping.schema">Schema publicmapping</a>
+    </p>
+	
+        <hr>
+		<h2>Table:
+			<a name="publicmapping.table.redistricting-subject">redistricting_subject</a>
+		</h2>
+        
+
+
+        <table width="100%" cellspacing="0" cellpadding="3">
+                <caption>redistricting_subject Structure</caption>
+                <tr>
+                <th>F-Key</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Description</th>
+                </tr>
+            
+            <tr class="tr0">
+				<td>
+                
+                  
+                
+                </td>
+            	<td>id</td>
+            	<td>serial</td>
+                <td><i>
+				
+					PRIMARY KEY
+					
+
+					
+				
+
+				
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr1">
+				<td>
+                
+                </td>
+            	<td>name</td>
+            	<td>character varying(50)</td>
+                <td><i>
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr0">
+				<td>
+                
+                </td>
+            	<td>display</td>
+            	<td>character varying(200)</td>
+                <td><i>
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr1">
+				<td>
+                
+                </td>
+            	<td>short_display</td>
+            	<td>character varying(25)</td>
+                <td><i>
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr0">
+				<td>
+                
+                </td>
+            	<td>description</td>
+            	<td>character varying(500)</td>
+                <td><i>
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr1">
+				<td>
+                
+                  
+                  <a href="#publicmapping.table.redistricting-subject">redistricting_subject.id</a>
+                  
+                
+                </td>
+            	<td>percentage_denominator_id</td>
+            	<td>integer</td>
+                <td><i>
+				
+					
+
+					
+				
+
+				
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr0">
+				<td>
+                
+                </td>
+            	<td>is_displayed</td>
+            	<td>boolean</td>
+                <td><i>
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr1">
+				<td>
+                
+                </td>
+            	<td>sort_key</td>
+            	<td>integer</td>
+                <td><i>
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr0">
+				<td>
+                
+                </td>
+            	<td>format_string</td>
+            	<td>character varying(50)</td>
+                <td><i>
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+        </table>
+
+        <!-- Inherits -->
+		
+
+		
+		
+		
+
+        <!-- Constraint List -->
+		
+        <p>&nbsp;</p>
+		<table width="100%" cellspacing="0" cellpadding="3">
+            <caption>redistricting_subject Constraints</caption>
+            <tr>
+            	<th>Name</th>
+            	<th>Constraint</th>
+            </tr>
+			
+            <tr class="tr0">
+				<td>redistricting_subject_sort_key_check</td>
+                <td>CHECK ((sort_key &gt;= 0))</td>
+            </tr>
+			
+		</table>
+		
+
+        <!-- Foreign Key Discovery -->
+		
+			<p>Tables referencing this one via Foreign Key Constraints:</p>
+		
+			<ul>
+				<li><a href="#publicmapping.table.redistricting-characteristic">redistricting_characteristic</a></li>
+			</ul>
+		
+			<ul>
+				<li><a href="#publicmapping.table.redistricting-computedcharacteristic">redistricting_computedcharacteristic</a></li>
+			</ul>
+		
+			<ul>
+				<li><a href="#publicmapping.table.redistricting-subject">redistricting_subject</a></li>
+			</ul>
+		
+			<ul>
+				<li><a href="#publicmapping.table.redistricting-target">redistricting_target</a></li>
+			</ul>
+		
+		
+
+    <!-- Indexes -->
+    
+       redistricting_subject_percentage_denominator_id percentage_denominator_id
+    
+
+	<!-- View Definition -->
+	
+
+	<!-- List off permissions -->
+	
+
+	<p>
+		<a href="#index">Index</a> -
+		<a href="#publicmapping.schema">Schema publicmapping</a>
+    </p>
+	
+        <hr>
+		<h2>Table:
+			<a name="publicmapping.table.redistricting-target">redistricting_target</a>
+		</h2>
+        
+
+
+        <table width="100%" cellspacing="0" cellpadding="3">
+                <caption>redistricting_target Structure</caption>
+                <tr>
+                <th>F-Key</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Description</th>
+                </tr>
+            
+            <tr class="tr0">
+				<td>
+                
+                  
+                
+                </td>
+            	<td>id</td>
+            	<td>serial</td>
+                <td><i>
+				
+					PRIMARY KEY
+					
+
+					
+				
+
+				
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr1">
+				<td>
+                
+                  
+                  <a href="#publicmapping.table.redistricting-subject">redistricting_subject.id</a>
+                  
+                
+                </td>
+            	<td>subject_id</td>
+            	<td>integer</td>
+                <td><i>
+				
+					
+
+					
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr0">
+				<td>
+                
+                </td>
+            	<td>range1</td>
+            	<td>numeric(12,4)</td>
+                <td><i>
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr1">
+				<td>
+                
+                </td>
+            	<td>range2</td>
+            	<td>numeric(12,4)</td>
+                <td><i>
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+            <tr class="tr0">
+				<td>
+                
+                </td>
+            	<td>value</td>
+            	<td>numeric(12,4)</td>
+                <td><i>
+				
+
+				NOT NULL
+				
+				</i>
+				
+				</td>
+			 </tr>
+            
+        </table>
+
+        <!-- Inherits -->
+		
+
+		
+		
+		
+
+        <!-- Constraint List -->
+		
+
+        <!-- Foreign Key Discovery -->
+		
+			<p>Tables referencing this one via Foreign Key Constraints:</p>
+		
+			<ul>
+				<li><a href="#publicmapping.table.redistricting-legislativedefault">redistricting_legislativedefault</a></li>
+			</ul>
+		
+			<ul>
+				<li><a href="#publicmapping.table.redistricting-legislativelevel">redistricting_legislativelevel</a></li>
+			</ul>
+		
+		
+
+    <!-- Indexes -->
+    
+       redistricting_target_subject_id subject_id
+    
+
+	<!-- View Definition -->
+	
+
+	<!-- List off permissions -->
+	
+
+	<p>
+		<a href="#index">Index</a> -
+		<a href="#publicmapping.schema">Schema publicmapping</a>
+    </p>
+	
+
+	<!-- We've gone through the table structure, now lets take a look at user functions -->
+	
+
+
+<p class="w3ref">Generated by <a href="http://www.rbt.ca/autodoc/">PostgreSQL Autodoc</a></p>
+<p class="w3ref"><a href="http://validator.w3.org/check/referer">W3C HTML 4.01 Strict</a></p>
+</body></html>

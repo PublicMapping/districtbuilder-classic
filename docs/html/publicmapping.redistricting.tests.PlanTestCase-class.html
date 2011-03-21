@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>publicmapping.redistricting.tests.PlanTestCase</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="publicmapping-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a href="http://publicmapping.sf.net">Publicmapping on SourceForge</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="publicmapping-module.html">Package&nbsp;publicmapping</a> ::
+        <a href="publicmapping.redistricting-module.html">Package&nbsp;redistricting</a> ::
+        <a href="publicmapping.redistricting.tests-module.html">Module&nbsp;tests</a> ::
+        Class&nbsp;PlanTestCase
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="publicmapping.redistricting.tests.PlanTestCase-class.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS DESCRIPTION ==================== -->
+<h1 class="epydoc">Class PlanTestCase</h1><p class="nomargin-top"><span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#PlanTestCase">source&nbsp;code</a></span></p>
+<center>
+<center>  <map id="uml_class_diagram_for_publicma_58" name="uml_class_diagram_for_publicma_58">
+<area shape="rect" id="node79" href="publicmapping.redistricting.tests.BaseTestCase-class.html#fixtures" title="publicmapping.redistricting.tests.BaseTestCase.fixtures" alt="" coords="87,31,176,49"/>
+<area shape="rect" id="node79" href="publicmapping.redistricting.tests.BaseTestCase-class.html#setUp" title="Setup the general tests." alt="" coords="87,52,176,71"/>
+<area shape="rect" id="node1" href="publicmapping.redistricting.tests.BaseTestCase-class.html" title="Only contains setUp and tearDown, which are shared among all other TestCases" alt="" coords="75,6,187,77"/>
+<area shape="rect" id="node78" href="publicmapping.redistricting.tests.PlanTestCase-class.html#test_district_id_increment" title="Test the logic for the automatically generated district_id" alt="" coords="17,129,245,148"/>
+<area shape="rect" id="node78" href="publicmapping.redistricting.tests.PlanTestCase-class.html#test_add_to_plan" title="Test the logic for adding geounits to a district." alt="" coords="17,148,245,167"/>
+<area shape="rect" id="node78" href="publicmapping.redistricting.tests.PlanTestCase-class.html#test_unassigned" title="Test the logic for an unassigned district." alt="" coords="17,167,245,185"/>
+<area shape="rect" id="node78" href="publicmapping.redistricting.tests.PlanTestCase-class.html#test_copyplan" title="Test the logic for copying plans." alt="" coords="17,185,245,204"/>
+<area shape="rect" id="node78" href="publicmapping.redistricting.tests.PlanTestCase-class.html#test_district_locking" title="Test the logic for locking/unlocking a district." alt="" coords="17,204,245,223"/>
+<area shape="rect" id="node78" href="publicmapping.redistricting.tests.PlanTestCase-class.html#test_district_locking2" title="Test the case where adding a partially selected geometry (due to locking) &#160;may add the entire geometry&#39;s aggregate value." alt="" coords="17,223,245,241"/>
+<area shape="rect" id="node78" href="publicmapping.redistricting.tests.PlanTestCase-class.html#test_get_base_geounits" title="Test getting base geounits" alt="" coords="17,241,245,260"/>
+<area shape="rect" id="node78" href="publicmapping.redistricting.tests.PlanTestCase-class.html#test_plan2index" title="Test exporting a plan" alt="" coords="17,260,245,279"/>
+<area shape="rect" id="node78" href="publicmapping.redistricting.tests.PlanTestCase-class.html#test_sorted_district_list" title="Test the sorted district list for reporting" alt="" coords="17,279,245,297"/>
+<area shape="rect" id="node78" href="publicmapping.redistricting.tests.PlanTestCase-class.html#test_paste_districts" title="publicmapping.redistricting.tests.PlanTestCase.test_paste_districts" alt="" coords="17,297,245,316"/>
+<area shape="rect" id="node78" href="publicmapping.redistricting.tests.PlanTestCase-class.html#test_paste_districts_onto_locked" title="publicmapping.redistricting.tests.PlanTestCase.test_paste_districts_onto_locked" alt="" coords="17,316,245,335"/>
+<area shape="rect" id="node78" href="publicmapping.redistricting.tests.PlanTestCase-class.html#test_paste_multiple_districts" title="publicmapping.redistricting.tests.PlanTestCase.test_paste_multiple_districts" alt="" coords="17,335,245,353"/>
+<area shape="rect" id="node78" href="publicmapping.redistricting.tests.PlanTestCase-class.html#test_get_available_districts" title="publicmapping.redistricting.tests.PlanTestCase.test_get_available_districts" alt="" coords="17,353,245,372"/>
+<area shape="rect" id="node78" href="publicmapping.redistricting.tests.PlanTestCase-class.html#test_combine_districts" title="publicmapping.redistricting.tests.PlanTestCase.test_combine_districts" alt="" coords="17,372,245,391"/>
+<area shape="rect" id="node2" href="publicmapping.redistricting.tests.PlanTestCase-class.html" title="Unit tests to test Plan operations" alt="" coords="5,97,256,397"/>
+</map>
+  <img src="uml_class_diagram_for_publicma_58.gif" alt='' usemap="#uml_class_diagram_for_publicma_58" ismap="ismap" class="graph-without-title" />
+</center>
+</center>
+<hr />
+<p>Unit tests to test Plan operations</p>
+
+<!-- ==================== INSTANCE METHODS ==================== -->
+<a name="section-InstanceMethods"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Instance Methods</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceMethods"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_district_id_increment"></a><span class="summary-sig-name">test_district_id_increment</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Test the logic for the automatically generated district_id</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#PlanTestCase.test_district_id_increment">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_add_to_plan"></a><span class="summary-sig-name">test_add_to_plan</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Test the logic for adding geounits to a district.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#PlanTestCase.test_add_to_plan">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_unassigned"></a><span class="summary-sig-name">test_unassigned</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Test the logic for an unassigned district.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#PlanTestCase.test_unassigned">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_copyplan"></a><span class="summary-sig-name">test_copyplan</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Test the logic for copying plans.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#PlanTestCase.test_copyplan">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_district_locking"></a><span class="summary-sig-name">test_district_locking</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Test the logic for locking/unlocking a district.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#PlanTestCase.test_district_locking">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_district_locking2"></a><span class="summary-sig-name">test_district_locking2</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Test the case where adding a partially selected geometry (due to 
+      locking) may add the entire geometry's aggregate value.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#PlanTestCase.test_district_locking2">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_get_base_geounits"></a><span class="summary-sig-name">test_get_base_geounits</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Test getting base geounits</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#PlanTestCase.test_get_base_geounits">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_plan2index"></a><span class="summary-sig-name">test_plan2index</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Test exporting a plan</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#PlanTestCase.test_plan2index">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_sorted_district_list"></a><span class="summary-sig-name">test_sorted_district_list</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Test the sorted district list for reporting</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#PlanTestCase.test_sorted_district_list">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_paste_districts"></a><span class="summary-sig-name">test_paste_districts</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#PlanTestCase.test_paste_districts">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_paste_districts_onto_locked"></a><span class="summary-sig-name">test_paste_districts_onto_locked</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#PlanTestCase.test_paste_districts_onto_locked">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_paste_multiple_districts"></a><span class="summary-sig-name">test_paste_multiple_districts</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#PlanTestCase.test_paste_multiple_districts">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_get_available_districts"></a><span class="summary-sig-name">test_get_available_districts</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#PlanTestCase.test_get_available_districts">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_combine_districts"></a><span class="summary-sig-name">test_combine_districts</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#PlanTestCase.test_combine_districts">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="publicmapping.redistricting.tests.BaseTestCase-class.html">BaseTestCase</a></code></b>:
+      <code><a href="publicmapping.redistricting.tests.BaseTestCase-class.html#setUp">setUp</a></code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS VARIABLES ==================== -->
+<a name="section-ClassVariables"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Class Variables</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-ClassVariables"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="publicmapping.redistricting.tests.BaseTestCase-class.html">BaseTestCase</a></code></b>:
+      <code><a href="publicmapping.redistricting.tests.BaseTestCase-class.html#fixtures">fixtures</a></code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="publicmapping-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a href="http://publicmapping.sf.net">Publicmapping on SourceForge</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Sat Mar  5 09:07:29 2011
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>
