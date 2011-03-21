@@ -573,7 +573,7 @@ class Contiguity(CalculatorBase):
 
         elif 'plan' in kwargs:
             plan = kwargs['plan']
-            districts = plan.get_districts_at_version(plan.version, include_geom=False)
+            districts = plan.get_districts_at_version(plan.version, include_geom=True)
 
         else:
             return
@@ -587,6 +587,8 @@ class Contiguity(CalculatorBase):
 class AllContiguous(CalculatorBase):
     """
     Used to verify that all districts in a plan are contiguous.
+
+    This calculator will only operate on a plan.
     """
     def compute(self, **kwargs):
         if not 'plan' in kwargs:
@@ -598,6 +600,9 @@ class AllContiguous(CalculatorBase):
         calc = Contiguity()
         calc.compute(**kwargs)
 
+        # ALL PLANS include 1 district named "Unassigned", which cannot be
+        # removed. Therefore the actual target to be validated is one less
+        # than the number of districts.
         self.result = (len(districts)-1) == calc.result
 
 
@@ -898,8 +903,13 @@ class Equipopulation(CalculatorBase):
 
 class MajorityMinority(CalculatorBase):
     """
-    Determine if at least one district in a plan has a majority of minorityi
+    Determine if at least one district in a plan has a majority of minority
     population.
+
+    This calculator accepts one 'population' argument, and any number of
+    'minorityN' arguments, where N is a number starting at 1, and 
+    incrementing by 1. If there are gaps in the sequence, only the first
+    continuous set of 'minorityN' parameters will be used.
 
     This calculator works on plans only.
     """
