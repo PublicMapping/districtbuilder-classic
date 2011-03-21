@@ -89,7 +89,7 @@ License:
     limitations under the License.
 
 Author: 
-    Andrew Jennings, David Zwarg
+    Andrew Jennings, David Zwarg, Kenny Shepard
 
 </pre>
 
@@ -185,11 +185,47 @@ session.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.views-module.html#unloadplan" class="summary-sig-name">unloadplan</a>(<span class="summary-sig-arg">request</span>,
+        <span class="summary-sig-arg">planid</span>)</span><br />
+      Unload a plan.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.views-pysrc.html#unloadplan">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
           <td><span class="summary-sig"><a href="publicmapping.redistricting.views-module.html#copyplan" class="summary-sig-name">copyplan</a>(<span class="summary-sig-arg">request</span>,
         <span class="summary-sig-arg">planid</span>)</span><br />
       Copy a plan to a new, editable plan.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="publicmapping.redistricting.views-pysrc.html#copyplan">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.views-module.html#scoreplan" class="summary-sig-name">scoreplan</a>(<span class="summary-sig-arg">request</span>,
+        <span class="summary-sig-arg">planid</span>)</span><br />
+      Validate a plan to allow for it to be shown in the leaaderboard</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.views-pysrc.html#scoreplan">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -380,6 +416,43 @@ file.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.views-module.html#add_districts_to_plan" class="summary-sig-name">add_districts_to_plan</a>(<span class="summary-sig-arg">request</span>,
+        <span class="summary-sig-arg">planid</span>)</span><br />
+      This handler is used to paste existing districts from one
+plan into another plan</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.views-pysrc.html#add_districts_to_plan">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.views-module.html#combine_districts" class="summary-sig-name">combine_districts</a>(<span class="summary-sig-arg">request</span>,
+        <span class="summary-sig-arg">planid</span>)</span><br />
+      Take the contents of one district and add them to another districts</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.views-pysrc.html#combine_districts">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
           <td><span class="summary-sig"><a href="publicmapping.redistricting.views-module.html#addtodistrict" class="summary-sig-name">addtodistrict</a>(<span class="summary-sig-arg">request</span>,
         <span class="summary-sig-arg">planid</span>,
         <span class="summary-sig-arg">districtid</span>)</span><br />
@@ -526,23 +599,6 @@ file.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a href="publicmapping.redistricting.views-module.html#getcompactness" class="summary-sig-name">getcompactness</a>(<span class="summary-sig-arg">district</span>)</span><br />
-      Get the Schwartzberg measure of compactness.</td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="publicmapping.redistricting.views-pysrc.html#getcompactness">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
           <td><span class="summary-sig"><a name="getutc"></a><span class="summary-sig-name">getutc</span>(<span class="summary-sig-arg">t</span>)</span><br />
       Given a datetime object, translate to a datetime object for UTC time.</td>
           <td align="right" valign="top">
@@ -597,11 +653,102 @@ file.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
+          <td><span class="summary-sig"><a name="getvalidplans"></a><span class="summary-sig-name">getvalidplans</span>(<span class="summary-sig-arg">leg_body</span>,
+        <span class="summary-sig-arg">owner</span>=<span class="summary-sig-default">None</span>)</span><br />
+      Returns the valid plans for a given legislative body and owner 
+      (optional)</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.views-pysrc.html#getvalidplans">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="getleaderboarddisplay"></a><span class="summary-sig-name">getleaderboarddisplay</span>(<span class="summary-sig-arg">leg_body</span>,
+        <span class="summary-sig-arg">owner_filter</span>)</span><br />
+      Returns the leaderboard ScoreDisplay given a legislative body and 
+      owner</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.views-pysrc.html#getleaderboarddisplay">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="getleaderboard"></a><span class="summary-sig-name">getleaderboard</span>(<span class="summary-sig-arg">request</span>)</span><br />
+      Get the rendered leaderboard</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.views-pysrc.html#getleaderboard">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="getleaderboardcsv"></a><span class="summary-sig-name">getleaderboardcsv</span>(<span class="summary-sig-arg">request</span>)</span><br />
+      Get the leaderboard scores in csv form</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.views-pysrc.html#getleaderboardcsv">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
           <td><span class="summary-sig"><a name="getplans"></a><span class="summary-sig-name">getplans</span>(<span class="summary-sig-arg">request</span>)</span><br />
       Get the plans for the given user and return the data in a format 
       readable by the jqgrid</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="publicmapping.redistricting.views-pysrc.html#getplans">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="get_shared_districts"></a><span class="summary-sig-name">get_shared_districts</span>(<span class="summary-sig-arg">request</span>,
+        <span class="summary-sig-arg">planid</span>)</span><br />
+      Get the shared districts in a given plan and return the data in a 
+      format readable by the jqgrid</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.views-pysrc.html#get_shared_districts">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -729,6 +876,7 @@ file.</td>
   <span title="django.core.exceptions.ObjectDoesNotExist">ObjectDoesNotExist</span>,
   <span title="django.db.IntegrityError">IntegrityError</span>,
   <span title="django.db.connection">connection</span>,
+  <span title="django.db.transaction">transaction</span>,
   <span title="django.db.models.Sum">Sum</span>,
   <span title="django.db.models.Min">Min</span>,
   <span title="django.db.models.Max">Max</span>,
@@ -806,7 +954,8 @@ file.</td>
   <span title="os">os</span>,
   <span title="commands">commands</span>,
   <span title="sys">sys</span>,
-  <span title="tempfile">tempfile</span>
+  <span title="tempfile">tempfile</span>,
+  <span title="csv">csv</span>
 </p><br />
 <!-- ==================== FUNCTION DETAILS ==================== -->
 <a name="section-FunctionDetails"></a>
@@ -940,6 +1089,45 @@ Parameters:
   </dl>
 </td></tr></table>
 </div>
+<a name="unloadplan"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">unloadplan</span>(<span class="sig-arg">request</span>,
+        <span class="sig-arg">planid</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.views-pysrc.html#unloadplan">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Unload a plan.
+
+This view is called anytime a plan is unloaded. Example: navigating
+away from the page, or selecting a new plan. This method allows
+for any required plan cleanup such as purging temporary versions.
+
+Parameters:
+    request -- The HttpRequest, which includes the user.
+    planid -- The plan to unload.
+
+Returns:
+    A JSON HttpResponse which includes a status.
+
+</pre>
+  <dl class="fields">
+    <dt>Decorators:</dt>
+    <dd><ul class="nomargin-top">
+        <li><code>@login_required</code></li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
 <a name="copyplan"></a>
 <div>
 <table class="details" border="1" cellpadding="3"
@@ -970,6 +1158,43 @@ Parameters:
 Returns:
     A JSON HttpResponse which includes either an error message or the
     copied plan ID.
+
+</pre>
+  <dl class="fields">
+    <dt>Decorators:</dt>
+    <dd><ul class="nomargin-top">
+        <li><code>@login_required</code></li>
+        <li><code>@unique_session_or_json_redirect</code></li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="scoreplan"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">scoreplan</span>(<span class="sig-arg">request</span>,
+        <span class="sig-arg">planid</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.views-pysrc.html#scoreplan">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Validate a plan to allow for it to be shown in the leaaderboard
+
+Parameters:
+    request -- The HttpRequest, which includes the user.
+    planid -- The plan to score.
+
+Returns:
+    A JSON HttpResponse which includes a status, and if applicable,
+    a reason why the plan couldn't be validated
 
 </pre>
   <dl class="fields">
@@ -1325,6 +1550,71 @@ Returns:
   </dl>
 </td></tr></table>
 </div>
+<a name="add_districts_to_plan"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">add_districts_to_plan</span>(<span class="sig-arg">request</span>,
+        <span class="sig-arg">planid</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.views-pysrc.html#add_districts_to_plan">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+This handler is used to paste existing districts from one
+plan into another plan
+
+Parameters:
+    request -- An HttpRequest object including a list of districtids and
+        a version
+    planid -- The plan into which to paste the districts
+
+Returns:
+    Some JSON explaining the success or failure of the paste operation
+
+</pre>
+  <dl class="fields">
+    <dt>Decorators:</dt>
+    <dd><ul class="nomargin-top">
+        <li><code>@login_required</code></li>
+        <li><code>@unique_session_or_json_redirect</code></li>
+        <li><code>@transaction.commit_manually</code></li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="combine_districts"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">combine_districts</span>(<span class="sig-arg">request</span>,
+        <span class="sig-arg">planid</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.views-pysrc.html#combine_districts">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Take the contents of one district and add them to another 
+  districts</p>
+  <dl class="fields">
+    <dt>Decorators:</dt>
+    <dd><ul class="nomargin-top">
+        <li><code>@login_required</code></li>
+        <li><code>@unique_session_or_json_redirect</code></li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
 <a name="addtodistrict"></a>
 <div>
 <table class="details" border="1" cellpadding="3"
@@ -1624,39 +1914,6 @@ Returns:
   </dl>
 </td></tr></table>
 </div>
-<a name="getcompactness"></a>
-<div>
-<table class="details" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr><td>
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">getcompactness</span>(<span class="sig-arg">district</span>)</span>
-  </h3>
-  </td><td align="right" valign="top"
-    ><span class="codelink"><a href="publicmapping.redistricting.views-pysrc.html#getcompactness">source&nbsp;code</a></span>&nbsp;
-    </td>
-  </tr></table>
-  
-  <pre class="literalblock">
-
-Get the Schwartzberg measure of compactness. Schwartzberg is the 
-measure of the perimeter of the district to the circumference of the 
-circle whose area is equal to the area of the district.
-
-NOTE: This function is empty.
-
-Parameters:
-    district -- A list of districts
-    
-Returns:
-    Nothing
-
-</pre>
-  <dl class="fields">
-  </dl>
-</td></tr></table>
-</div>
 <a name="getdistrictindexfilestatus"></a>
 <div>
 <table class="details" border="1" cellpadding="3"
@@ -1801,7 +2058,7 @@ threading.Thread(target= load_bard_workspace, name= 'loading_bard')
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">
-    Generated by Epydoc 3.0.1 on Thu Feb 17 23:26:47 2011
+    Generated by Epydoc 3.0.1 on Sat Mar  5 09:07:21 2011
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

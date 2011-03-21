@@ -90,7 +90,7 @@ License:
     limitations under the License.
 
 Author: 
-    Andrew Jennings, David Zwarg
+    Andrew Jennings, David Zwarg, Kenny Shepard
 
 </pre>
 
@@ -216,6 +216,54 @@ Author:
         <a href="publicmapping.redistricting.models.Profile-class.html" class="summary-name">Profile</a><br />
       Extra user information that doesn't fit in Django's default user 
       table.
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="publicmapping.redistricting.models.ScoreDisplay-class.html" class="summary-name">ScoreDisplay</a><br />
+      Container for displaying score panels
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="publicmapping.redistricting.models.ScorePanel-class.html" class="summary-name">ScorePanel</a><br />
+      Container for displaying multiple scores of a given type
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="publicmapping.redistricting.models.ScoreFunction-class.html" class="summary-name">ScoreFunction</a><br />
+      Score calculation definition
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="publicmapping.redistricting.models.ScoreArgument-class.html" class="summary-name">ScoreArgument</a><br />
+      Defines the arguments passed into a score function
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="publicmapping.redistricting.models.PanelFunction-class.html" class="summary-name">PanelFunction</a><br />
+      Defines the score functions used in a given score panel
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="publicmapping.redistricting.models.ValidationCriteria-class.html" class="summary-name">ValidationCriteria</a><br />
+      Defines the required score functions to validate a legislative body
     </td>
   </tr>
 </table>
@@ -409,7 +457,7 @@ Author:
   <span title="django.contrib.gis.geos.GeometryCollection">GeometryCollection</span>,
   <span title="django.contrib.gis.geos.Point">Point</span>,
   <span title="django.contrib.auth.models.User">User</span>,
-  <span title="django.db.models.Sum">Sum</span>,
+  <span title="django.db.models.Sum">SumAgg</span>,
   <span title="django.db.models.Max">Max</span>,
   <span title="django.db.models.Q">Q</span>,
   <span title="django.db.models.Count">Count</span>,
@@ -420,10 +468,34 @@ Author:
   <span title="django.forms.ModelForm">ModelForm</span>,
   <span title="django.conf.settings">settings</span>,
   <span title="django.utils.simplejson">json</span>,
+  <span title="django.template.loader.render_to_string">render_to_string</span>,
   <span title="datetime.datetime">datetime</span>,
-  <span title="math.sqrt">sqrt</span>,
-  <span title="math.pi">pi</span>,
   <span title="copy.copy">copy</span>,
+  <span title="decimal.BasicContext">BasicContext</span>,
+  <span title="decimal.Underflow">Underflow</span>,
+  <span title="decimal.DecimalException">DecimalException</span>,
+  <span title="decimal.DivisionByZero">DivisionByZero</span>,
+  <span title="decimal.localcontext">localcontext</span>,
+  <span title="decimal.InvalidOperation">InvalidOperation</span>,
+  <span title="decimal.ROUND_DOWN">ROUND_DOWN</span>,
+  <span title="decimal.ROUND_HALF_EVEN">ROUND_HALF_EVEN</span>,
+  <span title="decimal.ROUND_HALF_UP">ROUND_HALF_UP</span>,
+  <span title="decimal.ROUND_UP">ROUND_UP</span>,
+  <span title="decimal.Inexact">Inexact</span>,
+  <span title="decimal.getcontext">getcontext</span>,
+  <span title="decimal.ROUND_FLOOR">ROUND_FLOOR</span>,
+  <span title="decimal.Overflow">Overflow</span>,
+  <span title="decimal.ROUND_HALF_DOWN">ROUND_HALF_DOWN</span>,
+  <span title="decimal.Decimal">Decimal</span>,
+  <span title="decimal.DefaultContext">DefaultContext</span>,
+  <span title="decimal.Context">Context</span>,
+  <span title="decimal.ROUND_05UP">ROUND_05UP</span>,
+  <span title="decimal.ROUND_CEILING">ROUND_CEILING</span>,
+  <span title="decimal.Subnormal">Subnormal</span>,
+  <span title="decimal.Rounded">Rounded</span>,
+  <span title="decimal.ExtendedContext">ExtendedContext</span>,
+  <span title="decimal.setcontext">setcontext</span>,
+  <span title="decimal.Clamped">Clamped</span>,
   <span title="sys">sys</span>
 </p><br />
 <!-- ==================== FUNCTION DETAILS ==================== -->
@@ -662,7 +734,7 @@ Returns:
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">
-    Generated by Epydoc 3.0.1 on Thu Feb 17 23:26:47 2011
+    Generated by Epydoc 3.0.1 on Sat Mar  5 09:07:21 2011
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"
