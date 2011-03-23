@@ -1915,217 +1915,6 @@ def enforce_multi(geom):
     else:
         return geom
 
-
-class ScoreDisplay(models.Model):
-    """
-    Container for displaying score panels
-    """
-
-    # The title of the score display
-    title = models.CharField(max_length=50)
-
-    # The legislative body that this score display is for
-    legislative_body = models.ForeignKey(LegislativeBody)
-
-    # Whether or not this score display belongs on the leaderboard page
-    is_page = models.BooleanField(default=False)
-
-    # The style to be assigned to this score display
-    cssclass = models.CharField(max_length=50, blank=True)
-
-    def __unicode__(self):
-        """
-        Get a unicode representation of this object. This is the Display's
-        title.
-        """
-        return self.title
-
-    def render(self, dorp, context=None):
-        """
-        Generate the markup for all the panels attached to this display.
-
-        If the is_page property is set, render expects to receive a list
-        of valid plans.
-
-        If the is_page property is not set, render expects to receive a
-        single plan, or a list of districts.
-
-        Parameters:
-            dorp -- A list of districts, plan, or list of plans.
-            context -- Optional object that can be used for advanced rendering
-
-        Returns:
-            The markup for this display.
-        """
-        is_list = isinstance(dorp, list)
-
-        if self.is_page and \
-            (is_list and \
-                any(not isinstance(item,Plan) for item in dorp)):
-            # If this display is a page, it should receive a list of plans
-            #print "Page display only renders lists of plans."
-            return ''
-        elif not self.is_page:
-            if is_list and \
-                any(not isinstance(item,District) for item in dorp):
-                # If this display is not a page, the list should be a set
-                # of districts.
-                #print "Non-page display renders lists of districts"
-                return ''
-            elif not is_list and \
-                not isinstance(dorp,Plan):
-                # If this display is not a page, the item should be a plan.
-                #print "Non-page display renders a single plan."
-                return ''
-
-        panels = self.scorepanel_set.all().order_by('position')
-
-        markup = ''
-        for panel in panels:
-            #print "Rendering panel:",panel.title
-            markup += panel.render(dorp, context)
-
-        return markup
-
-
-class ScorePanel(models.Model):
-    """
-    Container for displaying multiple scores of a given type
-    """
-
-    # The type of the score display (plan, plan summary, district)
-    type = models.CharField(max_length=20)
-
-    # The score display this panel belongs to
-    display = models.ForeignKey(ScoreDisplay)
-
-    # Where this panel belongs within a score display
-    position = models.PositiveIntegerField(default=0)
-    
-    # The title of the score panel
-    title = models.CharField(max_length=50)
-    
-    # The filename of the template to be used for formatting this panel
-    template = models.CharField(max_length=500)
-
-    # The style to be assigned to this score display
-    cssclass = models.CharField(max_length=50, blank=True)
-
-    # The method of sorting the scores in this panel
-    is_ascending = models.BooleanField(default=True)
-
-    def __unicode__(self):
-        """
-        Get a unicode representation of this object. This is the Panel's
-        title.
-        """
-        return self.title
-
-    def render(self,dorp,context=None):
-        """
-        Generate the scores for all the functions attached to this panel,
-        and render them in the template.
-        
-        Only plan type panels are affected by the sorting order.
-
-        Parameters:
-            dorp -- A district, list of districts, plan, or list of plans.
-            context -- Optional object that can be used for advanced rendering
-
-        Returns:
-            A rendered set of scores.
-        """
-        is_list = isinstance(dorp,list)
-
-        # If this is a plan panel, it only renders plans
-        if (self.type == 'plan' or self.type == 'plan_summary') and \
-            not isinstance(dorp,Plan):
-            if is_list:
-                if any(not isinstance(item,Plan) for item in dorp):
-                    #print 'Plan panel only renders plans.'
-                    return ''
-            else:
-                #print 'Plan panel only renders plans.'
-                return ''
-
-        # If this is a district panel, it only renders districts
-        if self.type == 'district' and \
-            not isinstance(dorp,District):
-            if is_list:
-                if any(not isinstance(item,District) for item in dorp):
-                    #print 'District panel only renders districts.'
-                    return ''
-            else:
-                #print 'District panel only renders districts.'
-                return ''
-
-        # Render an item for each plan and plan score
-        if self.type == 'plan' or self.type == 'plan_summary':
-            if is_list:
-                plans = dorp
-            else:
-                plans = [dorp]
-
-            planscores = []
-
-            # TODO: do we need a seperate per-panel description?
-            description = ''
-            
-            for plan in plans:
-                for pf in self.panelfunction_set.filter(function__is_planscore=True):
-                    description = pf.function.description
-                    planscores.append({
-                        'plan':plan,
-                        'name':pf.function.name,
-                        'label':pf.function.label,
-                        'description':pf.function.description,
-                        'score':pf.function.score(plan,format='html'),
-                        'raw':pf.function.score(plan,format='raw')
-                    })
-
-            planscores.sort(key=lambda x:x['raw'],reverse=not self.is_ascending)
-
-            return render_to_string(self.template, {
-                'settings':settings,
-                'planscores':planscores,
-                'title':self.title,
-                'cssclass':self.cssclass,
-                'position':self.position,
-                'description':description,
-                'context':context
-            })
-
-        # Render each district with multiple scores
-        elif self.type == 'district':
-            if is_list:
-                districts = dorp
-            else:
-                districts = [dorp]
-
-            districtscores = []
-            for district in districts:
-                districtscore = { 'district':district, 'scores':[] }
-
-                for pf in self.panelfunction_set.filter(function__is_planscore=False):
-                    districtscore['scores'].append({
-                        'district':district,
-                        'name':pf.function.name,
-                        'label':pf.function.label,
-                        'description':pf.function.description,
-                        'score':pf.function.score(district,format='html')
-                    })
-
-
-                districtscores.append(districtscore)
-
-            return render_to_string(self.template, {
-                'districtscores':districtscores,
-                'title': self.title,
-                'cssclass': self.cssclass
-            })
-
-
-
 class ScoreFunction(models.Model):
     """
     Score calculation definition
@@ -2260,24 +2049,216 @@ class ScoreArgument(models.Model):
         """
         return "%s / %s / %s" % (self.argument, self.type, self.value)
 
-    
-class PanelFunction(models.Model):
+class ScoreDisplay(models.Model):
     """
-    Defines the score functions used in a given score panel
+    Container for displaying score panels
     """
 
-    # The score panel
-    panel = models.ForeignKey(ScorePanel)
+    # The title of the score display
+    title = models.CharField(max_length=50)
 
-    # The score function
-    function = models.ForeignKey(ScoreFunction)
+    # The legislative body that this score display is for
+    legislative_body = models.ForeignKey(LegislativeBody)
+
+    # Whether or not this score display belongs on the leaderboard page
+    is_page = models.BooleanField(default=False)
+
+    # The style to be assigned to this score display
+    cssclass = models.CharField(max_length=50, blank=True)
 
     def __unicode__(self):
         """
-        Get a unicode representation of this object. This is the 
-        PanelFunction's arg/value/type.
+        Get a unicode representation of this object. This is the Display's
+        title.
         """
-        return "%s / %s" % (self.panel.title, self.function.name)
+        return self.title
+
+    def render(self, dorp, context=None):
+        """
+        Generate the markup for all the panels attached to this display.
+
+        If the is_page property is set, render expects to receive a list
+        of valid plans.
+
+        If the is_page property is not set, render expects to receive a
+        single plan, or a list of districts.
+
+        Parameters:
+            dorp -- A list of districts, plan, or list of plans.
+            context -- Optional object that can be used for advanced rendering
+
+        Returns:
+            The markup for this display.
+        """
+        is_list = isinstance(dorp, list)
+
+        if self.is_page and \
+            (is_list and \
+                any(not isinstance(item,Plan) for item in dorp)):
+            # If this display is a page, it should receive a list of plans
+            #print "Page display only renders lists of plans."
+            return ''
+        elif not self.is_page:
+            if is_list and \
+                any(not isinstance(item,District) for item in dorp):
+                # If this display is not a page, the list should be a set
+                # of districts.
+                #print "Non-page display renders lists of districts"
+                return ''
+            elif not is_list and \
+                not isinstance(dorp,Plan):
+                # If this display is not a page, the item should be a plan.
+                #print "Non-page display renders a single plan."
+                return ''
+
+        panels = self.scorepanel_set.all().order_by('position')
+
+        markup = ''
+        for panel in panels:
+            #print "Rendering panel:",panel.title
+            markup += panel.render(dorp, context)
+
+        return markup
+
+
+class ScorePanel(models.Model):
+    """
+    Container for displaying multiple scores of a given type
+    """
+
+    # The type of the score display (plan, plan summary, district)
+    type = models.CharField(max_length=20)
+
+    # The score display this panel belongs to
+    display = models.ForeignKey(ScoreDisplay)
+
+    # Where this panel belongs within a score display
+    position = models.PositiveIntegerField(default=0)
+    
+    # The title of the score panel
+    title = models.CharField(max_length=50)
+    
+    # The filename of the template to be used for formatting this panel
+    template = models.CharField(max_length=500)
+
+    # The style to be assigned to this score display
+    cssclass = models.CharField(max_length=50, blank=True)
+
+    # The method of sorting the scores in this panel
+    is_ascending = models.BooleanField(default=True)
+
+    # The functions associated with this panel
+    score_functions = models.ManyToManyField(ScoreFunction)
+
+    def __unicode__(self):
+        """
+        Get a unicode representation of this object. This is the Panel's
+        title.
+        """
+        return self.title
+
+    def render(self,dorp,context=None):
+        """
+        Generate the scores for all the functions attached to this panel,
+        and render them in the template.
+        
+        Only plan type panels are affected by the sorting order.
+
+        Parameters:
+            dorp -- A district, list of districts, plan, or list of plans.
+            context -- Optional object that can be used for advanced rendering
+
+        Returns:
+            A rendered set of scores.
+        """
+        is_list = isinstance(dorp,list)
+
+        # If this is a plan panel, it only renders plans
+        if (self.type == 'plan' or self.type == 'plan_summary') and \
+            not isinstance(dorp,Plan):
+            if is_list:
+                if any(not isinstance(item,Plan) for item in dorp):
+                    #print 'Plan panel only renders plans.'
+                    return ''
+            else:
+                #print 'Plan panel only renders plans.'
+                return ''
+
+        # If this is a district panel, it only renders districts
+        if self.type == 'district' and \
+            not isinstance(dorp,District):
+            if is_list:
+                if any(not isinstance(item,District) for item in dorp):
+                    #print 'District panel only renders districts.'
+                    return ''
+            else:
+                #print 'District panel only renders districts.'
+                return ''
+
+        # Render an item for each plan and plan score
+        if self.type == 'plan' or self.type == 'plan_summary':
+            if is_list:
+                plans = dorp
+            else:
+                plans = [dorp]
+
+            planscores = []
+
+            # TODO: do we need a seperate per-panel description?
+            description = ''
+            
+            for plan in plans:
+                for function in self.score_functions.filter(is_planscore=True):
+                    description = function.description
+                    planscores.append({
+                        'plan':plan,
+                        'name':function.name,
+                        'label':function.label,
+                        'description':function.description,
+                        'score':function.score(plan,format='html'),
+                        'raw':function.score(plan,format='raw')
+                    })
+
+            planscores.sort(key=lambda x:x['raw'],reverse=not self.is_ascending)
+
+            return render_to_string(self.template, {
+                'settings':settings,
+                'planscores':planscores,
+                'title':self.title,
+                'cssclass':self.cssclass,
+                'position':self.position,
+                'description':description,
+                'context':context
+            })
+
+        # Render each district with multiple scores
+        elif self.type == 'district':
+            if is_list:
+                districts = dorp
+            else:
+                districts = [dorp]
+
+            districtscores = []
+            for district in districts:
+                districtscore = { 'district':district, 'scores':[] }
+
+                for function in self.score_functions.filter(is_planscore=False):
+                    districtscore['scores'].append({
+                        'district':district,
+                        'name':function.name,
+                        'label':function.label,
+                        'description':function.description,
+                        'score':function.score(district,format='html')
+                    })
+
+
+                districtscores.append(districtscore)
+
+            return render_to_string(self.template, {
+                'districtscores':districtscores,
+                'title': self.title,
+                'cssclass': self.cssclass
+            })
 
 
 class ValidationCriteria(models.Model):

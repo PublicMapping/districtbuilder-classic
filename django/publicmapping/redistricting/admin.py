@@ -168,25 +168,18 @@ class SubjectAdmin(admin.ModelAdmin):
     # Enable filtering by the displayed flag
     list_filter = ('is_displayed',)
 
-class PanelFunctionInline(admin.TabularInline):
-    model = PanelFunction
-
 class ScorePanelAdmin(admin.ModelAdmin):
     """
     Administrative settings for ScorePanels.
     """
 
-    fields = ('title', 'display', 'type', 'template', 'position', 'is_ascending', 'cssclass',)
+    fields = ('title', 'display', 'type', 'template', 'position', 'is_ascending', 'cssclass', 'score_functions',)
 
     list_display = ('title', 'type', 'template', 'cssclass',)
 
     list_filter = ('type',)
 
     ordering = ['display','position']
-
-    inlines = [
-        PanelFunctionInline
-    ]
 
 class ScoreArgumentInline(admin.TabularInline):
     model = ScoreArgument
@@ -250,7 +243,6 @@ admin.site.register(LegislativeDefault)
 admin.site.register(Plan, PlanAdmin)
 admin.site.register(District, DistrictAdmin)
 admin.site.register(Target)
-admin.site.register(PanelFunction)
 admin.site.register(Profile)
 admin.site.register(ScoreArgument, ScoreArgumentAdmin)
 admin.site.register(ScoreDisplay, ScoreDisplayAdmin)
