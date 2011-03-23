@@ -18,6 +18,24 @@
   }
  }, 
  {
+  "pk": 37, 
+  "model": "contenttypes.contenttype", 
+  "fields": {
+   "model": "computeddistrictscore", 
+   "name": "computed district score", 
+   "app_label": "redistricting"
+  }
+ }, 
+ {
+  "pk": 38, 
+  "model": "contenttypes.contenttype", 
+  "fields": {
+   "model": "computedplanscore", 
+   "name": "computed plan score", 
+   "app_label": "redistricting"
+  }
+ }, 
+ {
   "pk": 5, 
   "model": "contenttypes.contenttype", 
   "fields": {
@@ -324,6 +342,14 @@
   }
  }, 
  {
+  "pk": "cfdbf67f85e178420b32d637b0ba9233", 
+  "model": "sessions.session", 
+  "fields": {
+   "expire_date": "2011-03-19 22:07:25", 
+   "session_data": "gAJ9cQEoVRJfYXV0aF91c2VyX2JhY2tlbmRxAlUpZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5k\ncy5Nb2RlbEJhY2tlbmRxA1UNX2F1dGhfdXNlcl9pZHEESwF1LjVkNzExNzQwNmQ3NzEzMjY1MTlh\nZDEwMTM5ZmExMDQ2\n"
+  }
+ }, 
+ {
   "pk": "d152d08f58e719833809132709c642a8", 
   "model": "sessions.session", 
   "fields": {
@@ -337,6 +363,45 @@
   "fields": {
    "domain": "example.com", 
    "name": "example.com"
+  }
+ }, 
+ {
+  "pk": 3, 
+  "model": "admin.logentry", 
+  "fields": {
+   "action_flag": 2, 
+   "action_time": "2011-03-05 22:32:25", 
+   "object_repr": "Sum", 
+   "object_id": "5", 
+   "change_message": "Added score argument \"value1 / subject / TestSubject\". Added score argument \"value2 / subject / TestSubject2\".", 
+   "user": 1, 
+   "content_type": 33
+  }
+ }, 
+ {
+  "pk": 2, 
+  "model": "admin.logentry", 
+  "fields": {
+   "action_flag": 2, 
+   "action_time": "2011-03-05 22:09:41", 
+   "object_repr": "Percentage", 
+   "object_id": "6", 
+   "change_message": "Added score argument \"numerator / subject / TestSubject\". Added score argument \"denominator / subject / TestSubject2\".", 
+   "user": 1, 
+   "content_type": 33
+  }
+ }, 
+ {
+  "pk": 1, 
+  "model": "admin.logentry", 
+  "fields": {
+   "action_flag": 1, 
+   "action_time": "2011-03-05 22:09:11", 
+   "object_repr": "Percentage", 
+   "object_id": "6", 
+   "change_message": "", 
+   "user": 1, 
+   "content_type": 33
   }
  }, 
  {
@@ -28314,7 +28379,7 @@
   "pk": 1, 
   "model": "redistricting.plan", 
   "fields": {
-   "edited": "2011-03-03 14:25:20", 
+   "edited": "2011-03-05 22:08:27", 
    "is_shared": false, 
    "created": "2011-03-02 12:41:31", 
    "description": "", 
@@ -28323,6 +28388,7 @@
    "version": 0, 
    "owner": 1, 
    "legislative_body": 1, 
+   "min_version": 0, 
    "is_pending": false, 
    "name": "testPlan"
   }
@@ -28331,7 +28397,7 @@
   "pk": 2, 
   "model": "redistricting.plan", 
   "fields": {
-   "edited": "2011-03-03 21:12:16", 
+   "edited": "2011-03-05 22:08:27", 
    "is_shared": false, 
    "created": "2011-03-03 21:11:26", 
    "description": "", 
@@ -28340,6 +28406,7 @@
    "version": 0, 
    "owner": 1, 
    "legislative_body": 1, 
+   "min_version": 0, 
    "is_pending": false, 
    "name": "testPlan2"
   }
@@ -28421,12 +28488,12 @@
   "model": "redistricting.scorepanel", 
   "fields": {
    "title": "TestScorePanel1", 
+   "is_ascending": true, 
    "template": "sp_template1.html", 
    "position": 1, 
    "cssclass": "panel1", 
    "type": "plan", 
-   "display": 1,
-   "is_ascending": true
+   "display": 1
   }
  }, 
  {
@@ -28434,12 +28501,12 @@
   "model": "redistricting.scorepanel", 
   "fields": {
    "title": "TestScorePanel2", 
+   "is_ascending": true, 
    "template": "sp_template2.html", 
    "position": 1, 
    "cssclass": "panel2", 
    "type": "district", 
-   "display": 2,
-   "is_ascending": true
+   "display": 2
   }
  }, 
  {
@@ -28487,6 +28554,28 @@
   }
  }, 
  {
+  "pk": 6, 
+  "model": "redistricting.scorefunction", 
+  "fields": {
+   "calculator": "publicmapping.redistricting.calculators.Percent", 
+   "description": "Percentage for a district.", 
+   "is_planscore": false, 
+   "name": "Percentage", 
+   "label": "The percentage of A/B"
+  }
+ }, 
+ {
+  "pk": 5, 
+  "model": "redistricting.scorefunction", 
+  "fields": {
+   "calculator": "publicmapping.redistricting.calculators.Sum", 
+   "description": "Sum values in a district.", 
+   "is_planscore": false, 
+   "name": "Sum", 
+   "label": "Sum"
+  }
+ }, 
+ {
   "pk": 3, 
   "model": "redistricting.scoreargument", 
   "fields": {
@@ -28514,6 +28603,46 @@
    "type": "subject", 
    "argument": "numerator", 
    "value": "TestSubject"
+  }
+ }, 
+ {
+  "pk": 4, 
+  "model": "redistricting.scoreargument", 
+  "fields": {
+   "function": 6, 
+   "type": "subject", 
+   "argument": "numerator", 
+   "value": "TestSubject"
+  }
+ }, 
+ {
+  "pk": 5, 
+  "model": "redistricting.scoreargument", 
+  "fields": {
+   "function": 6, 
+   "type": "subject", 
+   "argument": "denominator", 
+   "value": "TestSubject2"
+  }
+ }, 
+ {
+  "pk": 6, 
+  "model": "redistricting.scoreargument", 
+  "fields": {
+   "function": 5, 
+   "type": "subject", 
+   "argument": "value1", 
+   "value": "TestSubject"
+  }
+ }, 
+ {
+  "pk": 7, 
+  "model": "redistricting.scoreargument", 
+  "fields": {
+   "function": 5, 
+   "type": "subject", 
+   "argument": "value2", 
+   "value": "TestSubject2"
   }
  }, 
  {
@@ -29032,6 +29161,60 @@
    "codename": "delete_computedcharacteristic", 
    "name": "Can delete computed characteristic", 
    "content_type": 29
+  }
+ }, 
+ {
+  "pk": 109, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "add_computeddistrictscore", 
+   "name": "Can add computed district score", 
+   "content_type": 37
+  }
+ }, 
+ {
+  "pk": 110, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "change_computeddistrictscore", 
+   "name": "Can change computed district score", 
+   "content_type": 37
+  }
+ }, 
+ {
+  "pk": 111, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "delete_computeddistrictscore", 
+   "name": "Can delete computed district score", 
+   "content_type": 37
+  }
+ }, 
+ {
+  "pk": 112, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "add_computedplanscore", 
+   "name": "Can add computed plan score", 
+   "content_type": 38
+  }
+ }, 
+ {
+  "pk": 113, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "change_computedplanscore", 
+   "name": "Can change computed plan score", 
+   "content_type": 38
+  }
+ }, 
+ {
+  "pk": 114, 
+  "model": "auth.permission", 
+  "fields": {
+   "codename": "delete_computedplanscore", 
+   "name": "Can delete computed plan score", 
+   "content_type": 38
   }
  }, 
  {

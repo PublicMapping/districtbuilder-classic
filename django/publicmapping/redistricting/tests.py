@@ -1237,6 +1237,10 @@ class PurgeTestCase(BaseTestCase):
         self.assertEquals(9, count, 'Number of districts in plan is incorrect. (e:9, a:%d)' % count)
 
     def test_purge_many_edits(self):
+        # Reset the undo mechanism
+        settings.MAX_UNDOS_DURING_EDIT = 0
+        settings.MAX_UNDOS_AFTER_EDIT = 0
+
         geolevelid = self.geolevels[1].id
 
         oldversion = self.plan.version
@@ -2326,3 +2330,85 @@ class ScoreRenderCase(BaseTestCase):
         self.assertEquals(expected, markup, 'The markup was incorrect. (e:"%s", a:"%s")' % (expected, markup))
 
         os.remove(tplfile)
+
+class ComputedScoresTestCase(BaseTestCase):
+    def test_district1(self):
+        geolevelid = self.geolevels[1].id
+        geounits = self.geounits[geolevelid]
+
+        dist1ids = geounits[0:3] + geounits[9:12]
+        dist2ids = geounits[6:9] + geounits[15:18]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        dist2ids = map(lambda x: str(x.id), dist2ids)
+        
+        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district2.district_id, dist2ids, geolevelid, self.plan.version)
+        
+        function = ScoreFunction.objects.get(calculator__endswith='Sum',is_planscore=False)
+        numscores = ComputedDistrictScore.objects.all().count()
+
+        self.assertEquals(0, numscores, 'The number of computed district scores is incorrect. (e:0, a:%d)' % numscores)
+
+        district1 = self.plan.district_set.filter(district_id=self.district1.district_id, version=self.plan.version-1)[0]
+
+        score = ComputedDistrictScore.compute(function, district1)
+
+        self.assertEquals(156, score, 'The score computed is incorrect. (e:156.0, a:%0.1f)' % score)
+
+        numscores = ComputedDistrictScore.objects.all().count()
+
+        self.assertEquals(1, numscores, 'The number of computed district scores is incorrect. (e:1, a:%d)' % numscores)
+
+        dist1ids = geounits[3:6]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+
+        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version )
+
+        district1 = self.plan.district_set.filter(district_id=self.district1.district_id, version=self.plan.version)[0]
+
+        score = ComputedDistrictScore.compute(function, district1)
+
+        self.assertEquals(442, score, 'The score computed is incorrect. (e:442.0, a:%0.1f)' % score)
+
+        numscores = ComputedDistrictScore.objects.all().count()
+
+        self.assertEquals(2, numscores, 'The number of computed district scores is incorrect. (e:2, a:%d)' % numscores)
+
+    def test_plan1(self):
+        geolevelid = self.geolevels[1].id
+        geounits = self.geounits[geolevelid]
+
+        dist1ids = geounits[0:3] + geounits[9:12]
+        dist2ids = geounits[6:9] + geounits[15:18]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        dist2ids = map(lambda x: str(x.id), dist2ids)
+        
+        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district2.district_id, dist2ids, geolevelid, self.plan.version)
+        
+        function = ScoreFunction.objects.get(calculator__endswith='Sum',is_planscore=True)
+        numscores = ComputedPlanScore.objects.all().count()
+
+        self.assertEquals(0, numscores, 'The number of computed plan scores is incorrect. (e:0, a:%d)' % numscores)
+
+        score = ComputedPlanScore.compute(function, self.plan)
+
+        self.assertEquals(48, score, 'The score computed is incorrect. (e:48.0, a:%0.1f)' % score)
+
+        numscores = ComputedPlanScore.objects.all().count()
+
+        self.assertEquals(1, numscores, 'The number of computed plan scores is incorrect. (e:1, a:%d)' % numscores)
+
+        dist1ids = geounits[3:6]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+
+        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version )
+
+        score = ComputedPlanScore.compute(function, self.plan)
+
+        self.assertEquals(147, score, 'The score computed is incorrect. (e:147.0, a:%0.1f)' % score)
+
+        numscores = ComputedPlanScore.objects.all().count()
+
+        self.assertEquals(2, numscores, 'The number of computed plan scores is incorrect. (e:2, a:%d)' % numscores)
+
