@@ -33,5 +33,10 @@ CREATE INDEX redistricting_scorepanel_score_functions_scorepanel_id
 -- We have our new table.  Copy our old panelfunction references
 INSERT INTO redistricting_scorepanel_score_functions (SELECT id, panel_id AS scorepanel_id, function_id AS scorefunction_id FROM redistricting_panelfunction);
 
+-- Reset the keys
+SELECT setval('redistricting_scorepanel_score_functions_id_seq', (select max(id) from redistricting_scorepanel_score_functions) + 1)
+
 -- Drop the old panelfunction table
 DROP TABLE redistricting_panelfunction;
+
+
