@@ -1987,7 +1987,7 @@ class ScoreFunction(models.Model):
                 if (arg.type != 'score'):
                     calc.arg_dict[arg.argument] = (arg.type, arg.value)
                 else:
-                    score_fn = ScoreFunction.objects.get(pk=int(arg.value))
+                    score_fn = ScoreFunction.objects.get(name=arg.value)
 
                     # If this is a plan score and the argument is a district score,
                     # extract the districts from the plan, score each individually,
