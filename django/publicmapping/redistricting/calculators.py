@@ -325,7 +325,6 @@ class LengthWidthCompactness(CalculatorBase):
                 continue
 
             bbox = district.geom.extent
-            w
             compactness += (bbox[3] - bbox[1]) / (bbox[2] - bbox[0])
             num += 1
 
@@ -923,10 +922,16 @@ class MajorityMinority(CalculatorBase):
     Determine if at least one district in a plan has a majority of minority
     population.
 
-    This calculator accepts one 'population' argument, and any number of
-    'minorityN' arguments, where N is a number starting at 1, and 
-    incrementing by 1. If there are gaps in the sequence, only the first
-    continuous set of 'minorityN' parameters will be used.
+    This calculator accepts 'population', 'count', 'threshold' arguments, 
+    and any number of 'minorityN' arguments, where N is a number starting 
+    at 1 and incrementing by 1. If there are gaps in the sequence, only the 
+    first continuous set of 'minorityN' parameters will be used.
+
+    The 'population' argument is for the general population to be compared
+    to the 'minorityN' populations. These should probably by voting age
+    populations. The 'count' argument defines AT LEAST how many districts
+    must be majority/minority in order for a plan to pass. The 'threshold'
+    argument defines the threshold at which a majority is determined.
 
     This calculator works on plans only.
     """
@@ -939,8 +944,8 @@ class MajorityMinority(CalculatorBase):
 
     def compute(self, **kwargs):
         """
-        Determine if at least one district in a plan has a majority of 
-        minority population. 
+        Determine if the requisite number of districts in a plan have a 
+        majority of minority population. 
         """
         if not 'plan' in kwargs:
             return
@@ -948,6 +953,7 @@ class MajorityMinority(CalculatorBase):
         plan = kwargs['plan']
         districts = plan.get_districts_at_version(plan.version, include_geom=False)
 
+        districtcount = 0
         self.result = False
         for district in districts:
             pop = self.get_value('population', district)
@@ -957,6 +963,7 @@ class MajorityMinority(CalculatorBase):
 
             den = float(pop)
             argnum = 1
+            exceeds = False
             while ('minority%d'%argnum) in self.arg_dict:
                 minor = self.get_value('minority%d'%argnum, district)
                 argnum += 1
@@ -966,6 +973,21 @@ class MajorityMinority(CalculatorBase):
                     
                 num = float(minor)
 
-                if num / den > 0.5:
-                    self.result = True
-                    return
+                try:
+                    threshold = float(self.get_value('threshold', district))
+                except:
+                    threshold = 0.5
+
+                if num / den > threshold:
+                    exceeds = True
+                    break
+
+            if exceeds:
+                districtcount += 1
+
+        try:
+            count = float(self.get_value('count', district))
+        except:
+            count = 1
+
+        self.result = districtcount >= count

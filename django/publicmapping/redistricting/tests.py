@@ -2000,12 +2000,13 @@ class CalculatorCase(BaseTestCase):
         rfcalc.arg_dict['republican'] = ('subject',self.subject2.name,)
         rfcalc.compute(plan=self.plan)
 
-        actual = rfcalc.result
-
         # If you're playing along at home, the values are:
         # District 1: 6 dem, 150 rep; District 2: 42 dem, 114 rep
-        self.assertEqual(2, actual[0], 'Wrong number of districts in RepresentationalFairness (e:%d,a:%d)' % (2, actual[0]))
-        self.assertEqual('Republican', actual[1], 'Wrong party given for RepresentationalFairness (e:%s,a:%s)' % ('Republican', actual[1]))
+        actual = rfcalc.result
+        self.assertEqual(-2, actual, 'Wrong number of districts in RepresentationalFairness (e:%d,a:%d)' % (-2, actual))
+
+        actual = rfcalc.html()
+        self.assertEqual('<span>Republican&nbsp;2</span>', actual, 'Wrong party given for RepresentationalFairness (e:%s,a:%s)' % ('<span>Republican&nbsp;2</span>', actual))
 
         # Swap subjects and make sure we get the right party
         rfcalc = RepresentationalFairness()
@@ -2014,9 +2015,10 @@ class CalculatorCase(BaseTestCase):
         rfcalc.compute(plan=self.plan)
 
         actual = rfcalc.result
+        self.assertEqual(2, actual, 'Wrong number of districts in RepresentationalFairness (e:%d,a:%d)' % (2, actual))
 
-        self.assertEqual(2, actual[0], 'Wrong number of districts in RepresentationalFairness (e:%d,a:%d)' % (2, actual[0]))
-        self.assertEqual('Democrat', actual[1], 'Wrong party given for RepresentationalFairness (e:%s,a:%s)' % ('Democrat', actual[1]))
+        actual = rfcalc.html()
+        self.assertEqual('<span>Democrat&nbsp;2</span>', actual, 'Wrong party given for RepresentationalFairness (e:%s,a:%s)' % ('<span>Democrat&nbsp;2</span>', actual))
 
     def test_competitiveness(self):
         geolevelid = self.geolevels[1].id
@@ -2168,15 +2170,19 @@ class CalculatorCase(BaseTestCase):
 
         majcalc = MajorityMinority()
         majcalc.arg_dict['population'] = ('subject',self.subject1.name,)
+        majcalc.arg_dict['count'] = ('literal', 1,)
         majcalc.arg_dict['minority1'] = ('subject',self.subject2.name,)
+        majcalc.arg_dict['threshold'] = ('literal', 0.5,)
         majcalc.compute(plan=self.plan)
 
         actual = majcalc.result
 
         self.assertEquals(True, actual, 'Incorrect value during percentage. (e:%f,a:%f)' % (True, actual))
 
+        majcalc.arg_dict['count'] = ('literal', 1,)
         majcalc.arg_dict['population'] = ('subject',self.subject2.name,)
         majcalc.arg_dict['minority1'] = ('subject',self.subject1.name,)
+        majcalc.arg_dict['threshold'] = ('literal', 0.5,)
         majcalc.compute(plan=self.plan)
 
         actual = majcalc.result
