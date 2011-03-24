@@ -112,6 +112,7 @@ contents of the file and try again.
         self.purge_sessions(verbose)
 
         self.import_prereq(config, verbose)
+        self.import_scoring(config, verbose)
 
         optlevels = options.get("geolevels")
         nestlevels = options.get("nesting")
@@ -662,6 +663,194 @@ ERROR:
 
         return (geo, num,)
 
+    def import_arguments(self, score_function, config, verbose):
+        # Import arguments for this score function
+        for arg in config.xpath('Argument'):
+            name = arg.get('name')
+            arg_obj, created = ScoreArgument.objects.get_or_create(
+                function=score_function,
+                type='literal',
+                argument=name,
+                value=arg.get('value')
+                )
+
+            if verbose:
+                if created:
+                    print 'Created literal ScoreArgument "%s"' % name
+                else:
+                    print 'literal ScoreArgument "%s" already exists' % name
+                        
+        # Import subject arguments for this score function
+        for subarg in config.xpath('SubjectArgument'):
+            name = subarg.get('name')
+            subarg_obj, created = ScoreArgument.objects.get_or_create(
+                function=score_function,
+                type='subject',
+                argument=name,
+                value=subarg.get('ref')
+                )
+
+            if verbose:
+                if created:
+                    print 'Created subject ScoreArgument "%s"' % name
+                else:
+                    print 'subject ScoreArgument "%s" already exists' % name
+                        
+        # Import score arguments for this score function
+        for scorearg in config.xpath('ScoreArgument'):
+            name = scorearg.get('name')
+            scorearg_obj, created = ScoreArgument.objects.get_or_create(
+                function=score_function,
+                type='score',
+                argument=name,
+                value=scorearg.get('ref')
+                )
+
+            if verbose:
+                if created:
+                    print 'Created subject ScoreArgument "%s"' % name
+                else:
+                    print 'subject ScoreArgument "%s" already exists' % name
+        
+        
+    @transaction.commit_on_success    
+    def import_scoring(self, config, verbose):
+        """
+        Import the Scoring and Validation sections which configure the models:
+          - ScoreDisplay
+          - ScorePanel
+          - ScoreFunction
+          - ScoreArgument
+          - ValidationCriteria
+
+        Scoring is currently optional. Import sections only if they are present.
+        """
+
+        # Remove previous score configuration
+        for m in [ValidationCriteria, ScorePanel, ScoreDisplay, ScoreArgument, ScoreFunction]:
+            m.objects.all().delete()
+            
+        if (len(config.xpath('//Scoring')) == 0):
+            print 'Scoring not configured'
+
+        # Import score displays.
+        for sd in config.xpath('//ScoreDisplays/ScoreDisplay'):
+            lbconfig = config.xpath('//LegislativeBody[@id="%s"]' % sd.get('legislativebodyref'))[0]
+            lb = LegislativeBody.objects.get(name=lbconfig.get('name'))
+            title = sd.get('title')
+             
+            sd_obj, created = ScoreDisplay.objects.get_or_create(
+                title=title, 
+                legislative_body=lb,
+                is_page=sd.get('type') == 'leaderboard',
+                cssclass=sd.get('cssclass') or ''
+                )
+
+            if verbose:
+                if created:
+                    print 'Created ScoreDisplay "%s"' % title
+                else:
+                    print 'ScoreDisplay "%s" already exists' % title
+
+            # Import score panels for this score display.
+            position = 0
+            for spref in sd.xpath('ScorePanel'):
+                sp = config.xpath('//ScorePanels/ScorePanel[@id="%s"]' % spref.get('ref'))[0]
+                title = sp.get('title')
+                position += 1
+
+                is_ascending = sp.get('is_ascending')
+                if is_ascending is None:
+                    is_ascending = True
+                
+                ascending = sp.get('is_ascending')
+                sp_obj, created = ScorePanel.objects.get_or_create(
+                    type=sp.get('type'),
+                    display=sd_obj,
+                    position=position,
+                    title=title,
+                    template=sp.get('template'),
+                    cssclass=sp.get('cssclass') or '',
+                    is_ascending=(ascending is None or ascending=='true'), 
+                    )
+
+                if verbose:
+                    if created:
+                        print 'Created ScorePanel "%s"' % title
+                    else:
+                        print 'ScorePanel "%s" already exists' % title
+
+                # Import score functions for this score panel
+                for sfref in sp.xpath('Score'):
+                    sf = config.xpath('//ScoreFunctions/ScoreFunction[@id="%s"]' % sfref.get('ref'))[0]
+                    name = sf.get('id') or ''
+                    sf_obj, created = ScoreFunction.objects.get_or_create(
+                        calculator=sf.get('calculator'),
+                        name=name,
+                        label=sf.get('label') or '',
+                        description=sf.get('description') or '',
+                        is_planscore=sf.get('type') == 'plan'
+                        )
+
+                    if verbose:
+                        if created:
+                            print 'Created ScoreFunction "%s"' % name
+                        else:
+                            print 'ScoreFunction "%s" already exists' % name
+
+                    # Add ScoreFunction reference to ScorePanel
+                    sp_obj.score_functions.add(sf_obj)
+
+                    # Import arguments for this score function
+                    self.import_arguments(sf_obj, sf, verbose)
+
+
+        # Import validation criteria.
+        if (len(config.xpath('//Validation')) == 0):
+            print 'Validation not configured'
+            return;
+
+        for vc in config.xpath('//Validation/Criteria'):
+            lbconfig = config.xpath('//LegislativeBody[@id="%s"]' % vc.get('legislativebodyref'))[0]
+            lb = LegislativeBody.objects.get(name=lbconfig.get('name'))
+
+            for crit in vc.xpath('Criterion'):
+                # Import the score function for this validation criterion
+                sfref = crit.xpath('Score')[0]
+                sf = config.xpath('//ScoreFunctions/ScoreFunction[@id="%s"]' % sfref.get('ref'))[0]
+                name = sf.get('id') or ''
+                sf_obj, created = ScoreFunction.objects.get_or_create(
+                    calculator=sf.get('calculator'),
+                    name=name,
+                    label=sf.get('label') or '',
+                    description=sf.get('description') or '',
+                    is_planscore=sf.get('type') == 'plan'
+                    )
+
+                if verbose:
+                    if created:
+                        print 'Created ScoreFunction "%s"' % name
+                    else:
+                        print 'ScoreFunction "%s" already exists' % name
+
+                # Import arguments for this score function
+                self.import_arguments(sf_obj, sf, verbose)
+
+                # Import this validation criterion
+                name = crit.get('name')
+                crit_obj, created = ValidationCriteria.objects.get_or_create(
+                    function=sf_obj,
+                    name=name,
+                    description=crit.get('description') or '',
+                    legislative_body=lb
+                    )
+
+                if verbose:
+                    if created:
+                        print 'Created ValidationCriteria "%s"' % name
+                    else:
+                        print 'ValidationCriteria "%s" already exists' % name
+                
 
     def import_prereq(self, config, verbose):
         """

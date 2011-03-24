@@ -76,6 +76,291 @@
         <Target id="senatetarget" subjectref="poptot" value="200026" range1="0.05" range2="0.10" />
     </Targets>
    
+    <Scoring>
+        <!--
+        Configuration items relating to the scoring and evaluation
+        of plans created by users.
+        -->
+        <ScoreFunctions>
+            <!-- 
+            Each ScoreFunction configuration item describes how a scoring
+            calculator should be used to generate a score of a district or
+            plan, based on either 1) a subject, 2) a score, or 3) a literal
+            value.
+            -->
+            <ScoreFunction id="plan_equivalence" type="plan" label="Equal Population" 
+                calculator="publicmapping.redistricting.calculators.Equivalence"
+                description="The Equipopulation score is the difference between the district with the highest population and the district with the lowest population.">
+                <!--
+                This score function is a plan-type score function,
+                which means that it will generate one score per plan.
+                The score calculator is the python class in the 'calculator'
+                attribute.
+                The parameters passed to the calculator are passed by
+                key=value pair, based on the 'name' of the argument. The 
+                value of an argument may be:
+                  * A computed characteristic if the argument element is a
+                    SubjectArgument.
+                  * A literal value if the element is an Argument element 
+                    and the 'value' attribute is not empty.
+                  * A computed score result if the argument element is a 
+                    ScoreArgument.
+                -->
+                <SubjectArgument name="value" ref="poptot" />
+            </ScoreFunction>
+
+            <ScoreFunction id="plan_schwartzberg" type="plan" label="Average Compactness" 
+                calculator="publicmapping.redistricting.calculators.Schwartzberg"
+                description="The competition is using the 'Schwartzberg' compactness measure. This measure is a ratio of the perimeter of the district to the circumference of the circle whose area is equal to the area of the district. ">
+            </ScoreFunction>
+
+            <ScoreFunction id="plan_competitiveness" type="plan" label="Competitiveness" 
+                calculator="publicmapping.redistricting.calculators.Competitiveness"
+                description="Each plan's overall political competitiveness is determined by averaging each district.s 'partisan differential'.  The partisan differential of each district is calculated by subtracting the Democratic 'partisan index' from the Republican 'partisan index'.&lt;br/&gt;&lt;br/&gt;'Heavily' competitive districts are districts with partisan differentials of less than or equal to 5%. 'Generally' competitive districts are districts with partisan differentials of greater than 5% but less than 10%.">
+                <SubjectArgument name="democratic" ref="govdem" />
+                <SubjectArgument name="republican" ref="govrep" />
+            </ScoreFunction>
+
+            <ScoreFunction id="plan_repfairness" type="plan" label="Representational Fairness" 
+                calculator="publicmapping.redistricting.calculators.RepresentationalFairness"
+                description="Representational fairness is increased when the percentage of districts a party would likely win (based upon the 'partisan index' used to determine Competitiveness) closely mirrors that party.s percentage of the statewide vote. ">
+                <SubjectArgument name="democratic" ref="govdem" />
+                <SubjectArgument name="republican" ref="govrep" />
+                <Argument name="range" value="0.05" />
+            </ScoreFunction>
+
+            <!-- For validation -->
+            <ScoreFunction id="plan_majority_minority" type="plan" label="Majority Minority" 
+                calculator="publicmapping.redistricting.calculators.MajorityMinority"
+                description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S> 30, 49 (1986)) 'sufficiently large and geographically compact to constitute a majority in a single-member district'.">
+                <SubjectArgument name="minority1" ref="vaphisp" />
+                <SubjectArgument name="minority2" ref="vapblk" />
+                <SubjectArgument name="population" ref="vap" />
+            </ScoreFunction>
+
+            <ScoreFunction id="plan_all_blocks_assigned" type="plan" label="All Blocks Assigned" 
+                calculator="publicmapping.redistricting.calculators.AllBlocksAssigned"
+                description="All blocks in the plan must be assigned.">
+            </ScoreFunction>
+
+            <ScoreFunction id="plan_all_contiguous" type="plan" label="All Contiguous" 
+                calculator="publicmapping.redistricting.calculators.AllContiguous"
+                description="Contiguity means that every part of a district must be reachable from every other part without crossing the district's borders. All districts within a plan must be contiguous. Water contiguity is permitted given Virginia's extensive coastal region. 'Point contiguity' or 'touch-point contiguity' where two sections of a district are connected at a single point is not permitted.">
+            </ScoreFunction>
+
+            <ScoreFunction id="congress_plan_equipopulation" type="plan" label="Equipopulation" 
+                calculator="publicmapping.redistricting.calculators.Equipopulation"
+                description="The population of each Congressional district must be 727,366 +/- 0.5%.">
+                <SubjectArgument name="value" ref="poptot" />
+                <Argument name="min" value="723729" />
+                <Argument name="max" value="731003" />
+            </ScoreFunction>
+
+            <ScoreFunction id="congress_plan_count_districts" type="plan" label="Count Districts" 
+                calculator="publicmapping.redistricting.calculators.CountDistricts"
+                description="The number of districts in a Congressional redistricting plan must be 11.">
+                <Argument name="target" value="11" />
+            </ScoreFunction>
+
+            <ScoreFunction id="senate_plan_equipopulation" type="plan" label="Equipopulation" 
+                calculator="publicmapping.redistricting.calculators.Equipopulation"
+                description="The population of each State Senate district must be 200,026 +/- 5%">
+                <SubjectArgument name="value" ref="poptot" />
+                <Argument name="min" value="190025" />
+                <Argument name="max" value="210027" />
+            </ScoreFunction>
+
+            <ScoreFunction id="senate_plan_count_districts" type="plan" label="Count Districts" 
+                calculator="publicmapping.redistricting.calculators.CountDistricts"
+                description="The number of districts in a State Senate redistricting plan must be 40.">
+                <Argument name="target" value="40" />
+            </ScoreFunction>
+
+            <ScoreFunction id="house_plan_equipopulation" type="plan" label="Equipopulation" 
+                calculator="publicmapping.redistricting.calculators.Equipopulation"
+                description="The population of each House of Delegates district must be 80,010 +/- 5%">
+                <SubjectArgument name="value" ref="poptot" />
+                <Argument name="min" value="76010" />
+                <Argument name="max" value="84011" />
+            </ScoreFunction>
+
+            <ScoreFunction id="house_plan_count_districts" type="plan" label="Count Districts" 
+                calculator="publicmapping.redistricting.calculators.CountDistricts"
+                description="The number of districts in a House of Delegates redistricting plan must be 100.">
+                <Argument name="target" value="100" />
+            </ScoreFunction>
+            
+        </ScoreFunctions>
+
+        <ScorePanels>
+            <!-- 
+            Each ScorePanel configuration item describes the settings
+            for displaying a set of scores in the user interface. A 
+            ScorePanel may be referenced more than once in multiple
+            ScoreDisplays.
+            -->
+            <ScorePanel id="panel_equivalence_all" type="plan" template="leaderboard_panel_all.html"
+                title="Equipopulation">
+                <Score ref="plan_equivalence"/>
+            </ScorePanel>
+
+            <ScorePanel id="panel_schwartzberg_all" type="plan" template="leaderboard_panel_all.html"
+                title="Average Compactness" is_ascending="false">
+                <Score ref="plan_schwartzberg"/>
+            </ScorePanel>
+
+            <ScorePanel id="panel_competitiveness_all" type="plan" template="leaderboard_panel_all.html"
+                title="Competitiveness">
+                <Score ref="plan_competitiveness"/>
+            </ScorePanel>
+
+            <ScorePanel id="panel_repfairness_all" type="plan" template="leaderboard_panel_all.html"
+                title="Representational Fairness">
+                <Score ref="plan_repfairness"/>
+            </ScorePanel>
+
+            <ScorePanel id="panel_equivalence_mine" type="plan" template="leaderboard_panel_mine.html"
+                title="Equipopulation">
+                <Score ref="plan_equivalence"/>
+            </ScorePanel>
+
+            <ScorePanel id="panel_schwartzberg_mine" type="plan" template="leaderboard_panel_mine.html"
+                title="Average Compactness" is_ascending="false">
+                <Score ref="plan_schwartzberg"/>
+            </ScorePanel>
+
+            <ScorePanel id="panel_competitiveness_mine" type="plan" template="leaderboard_panel_mine.html"
+                title="Competitiveness">
+                <Score ref="plan_competitiveness"/>
+            </ScorePanel>
+
+            <ScorePanel id="panel_repfairness_mine" type="plan" template="leaderboard_panel_mine.html"
+                title="Representational Fairness">
+                <Score ref="plan_repfairness"/>
+            </ScorePanel>
+        </ScorePanels>
+
+        <ScoreDisplays>
+            <ScoreDisplay legislativebodyref="congress" type="leaderboard"
+                title="Congressional Leaderboard - All" cssclass="leaderboard congress">
+                <ScorePanel ref="panel_equivalence_all" />
+                <ScorePanel ref="panel_schwartzberg_all" />
+                <ScorePanel ref="panel_competitiveness_all" />
+                <ScorePanel ref="panel_repfairness_all" />
+            </ScoreDisplay>
+
+            <ScoreDisplay legislativebodyref="house" type="leaderboard"
+                title="State House Leaderboard - All" cssclass="leaderboard house">
+                <ScorePanel ref="panel_equivalence_all" />
+                <ScorePanel ref="panel_schwartzberg_all" />
+                <ScorePanel ref="panel_competitiveness_all" />
+                <ScorePanel ref="panel_repfairness_all" />
+            </ScoreDisplay>
+
+            <ScoreDisplay legislativebodyref="senate" type="leaderboard"
+                title="State Senate Leaderboard - All" cssclass="leaderboard senate">
+                <ScorePanel ref="panel_equivalence_all" />
+                <ScorePanel ref="panel_schwartzberg_all" />
+                <ScorePanel ref="panel_competitiveness_all" />
+                <ScorePanel ref="panel_repfairness_all" />
+            </ScoreDisplay>
+
+            <ScoreDisplay legislativebodyref="congress" type="leaderboard"
+                title="Congressional Leaderboard - Mine" cssclass="leaderboard congress">
+                <ScorePanel ref="panel_equivalence_mine" />
+                <ScorePanel ref="panel_schwartzberg_mine" />
+                <ScorePanel ref="panel_competitiveness_mine" />
+                <ScorePanel ref="panel_repfairness_mine" />
+            </ScoreDisplay>
+
+            <ScoreDisplay legislativebodyref="house" type="leaderboard"
+                title="State House Leaderboard - Mine" cssclass="leaderboard house">
+                <ScorePanel ref="panel_equivalence_mine" />
+                <ScorePanel ref="panel_schwartzberg_mine" />
+                <ScorePanel ref="panel_competitiveness_mine" />
+                <ScorePanel ref="panel_repfairness_mine" />
+            </ScoreDisplay>
+
+            <ScoreDisplay legislativebodyref="senate" type="leaderboard"
+                title="State Senate Leaderboard - Mine" cssclass="leaderboard senate">
+                <ScorePanel ref="panel_equivalence_mine" />
+                <ScorePanel ref="panel_schwartzberg_mine" />
+                <ScorePanel ref="panel_competitiveness_mine" />
+                <ScorePanel ref="panel_repfairness_mine" />
+            </ScoreDisplay>
+        </ScoreDisplays>
+    </Scoring>
+
+    <!--
+    Define the criteria for a 'legal' or 'valid' plan for features such as
+    the contest leaderboard.
+    -->
+    <Validation>
+        <!--
+        When defining sets of criteria, a single set of criteria is used to
+        validate plans agains one legislative body. The philosophy is that
+        the plan level scores defined in Scoring/ScoreFunctions above are
+        used to evaluate a given plan, and can be used to set thresholds
+        or scores for legal plan configurations.
+
+        The description attribute may contain a large amount of text 
+        describing the precise criterion used.
+        -->
+        <Criteria legislativebodyref="congress">
+            <Criterion name="CountDistricts - Congress">
+                <Score ref="congress_plan_count_districts" />
+            </Criterion>
+            <Criterion name="Equipopulation - Congress" description="&lt;p&gt;Your plan does not meet the competition criteria for Equipopulation:&lt;/p&gt;&lt;p&gt;The population of each Congressional district must be 727,366 +/- 0.5%.&lt;/p&gt;">
+                <Score ref="congress_plan_equipopulation" />
+            </Criterion>
+            <Criterion name="MajorityMinority - Congress">
+                <Score ref="plan_majority_minority" />
+            </Criterion>
+            <Criterion name="AllBlocksAssigned - Congress">
+                <Score ref="plan_all_blocks_assigned" />
+            </Criterion>
+            <Criterion name="AllContiguous - Congress" description="&lt;p&gt;Your plan does not meet the competition criteria for Contiguity&lt;/p&gt;&lt;p&gt;Every part of a district must be reachable from every other part without crossing the district's borders. All districts within a plan must be contiguous. Water contiguity is permitted given Virginia's extensive coastal region. 'Point contiguity' or 'touch-point contiguity' where two sections of a district are connected at a single point is not permitted.&lt;/p&gt;">
+                <Score ref="plan_all_contiguous" />
+            </Criterion>
+        </Criteria>
+
+        <Criteria legislativebodyref="house">
+            <Criterion name="CountDistricts - House">
+                <Score ref="house_plan_count_districts" />
+            </Criterion>
+            <Criterion name="Equipopulation - House" description="&lt;p&gt;Your plan does not meet the competition criteria for Equipopulation:&lt;/p&gt;&lt;p&gt;The population of each House of Delegates district must be 80,010 +/- 0.5%.&lt;/p&gt;">
+                <Score ref="house_plan_equipopulation" />
+            </Criterion>
+            <Criterion name="MajorityMinority - House">
+                <Score ref="plan_majority_minority" />
+            </Criterion>
+            <Criterion name="AllBlocksAssigned - House">
+                <Score ref="plan_all_blocks_assigned" />
+            </Criterion>
+            <Criterion name="AllContiguous - House" description="&lt;p&gt;Your plan does not meet the competition criteria for Contiguity&lt;/p&gt;&lt;p&gt;Every part of a district must be reachable from every other part without crossing the district's borders. All districts within a plan must be contiguous. Water contiguity is permitted given Virginia's extensive coastal region. 'Point contiguity' or 'touch-point contiguity' where two sections of a district are connected at a single point is not permitted.&lt;/p&gt;">
+                <Score ref="plan_all_contiguous" />
+            </Criterion>
+        </Criteria>
+
+        <Criteria legislativebodyref="senate">
+            <Criterion name="CountDistricts - Senate">
+                <Score ref="senate_plan_count_districts" />
+            </Criterion>
+            <Criterion name="Equipopulation - Senate" description="&lt;p&gt;Your plan does not meet the competition criteria for Equipopulation:&lt;/p&gt;&lt;p&gt;The population of each State Senate district must be 200,026 +/- 0.5%.&lt;/p&gt;">
+                <Score ref="senate_plan_equipopulation" />
+            </Criterion>
+            <Criterion name="MajorityMinority - Senate">
+                <Score ref="plan_majority_minority" />
+            </Criterion>
+            <Criterion name="AllBlocksAssigned - Senate">
+                <Score ref="plan_all_blocks_assigned" />
+            </Criterion>
+            <Criterion name="AllContiguous - Senate" description="&lt;p&gt;Your plan does not meet the competition criteria for Contiguity&lt;/p&gt;&lt;p&gt;Every part of a district must be reachable from every other part without crossing the district's borders. All districts within a plan must be contiguous. Water contiguity is permitted given Virginia's extensive coastal region. 'Point contiguity' or 'touch-point contiguity' where two sections of a district are connected at a single point is not permitted.&lt;/p&gt;">
+                <Score ref="plan_all_contiguous" />
+            </Criterion>
+        </Criteria>
+    </Validation>
+
     <GeoLevels>
       <GeoLevel id="block" name="block" min_zoom="9" sort_key="3" tolerance="2.5">
           <!--
