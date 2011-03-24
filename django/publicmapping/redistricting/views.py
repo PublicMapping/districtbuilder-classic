@@ -1800,7 +1800,8 @@ def getleaderboarddisplay(leg_body, owner_filter):
     """
     Returns the leaderboard ScoreDisplay given a legislative body and owner
     """
-    return ScoreDisplay.objects.filter(title='%s Leaderboard - %s' % (leg_body.name, owner_filter.title()))[0]
+    displays = ScoreDisplay.objects.filter(title='%s Leaderboard - %s' % (leg_body.name, owner_filter.title()))
+    return displays[0] if len(displays) > 0 else None
 
 def getleaderboard(request):
     """
@@ -1816,6 +1817,9 @@ def getleaderboard(request):
     leg_body = LegislativeBody.objects.get(pk=body_pk)
     
     display = getleaderboarddisplay(leg_body, owner_filter)
+    if display is None:
+        return HttpResponse('No display configured', mimetype='text/plain')
+    
     plans = getvalidplans(leg_body, request.user if owner_filter == 'mine' else None)
 
     try :
