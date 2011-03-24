@@ -58,6 +58,13 @@ class CalculatorBase:
         """
         pass
 
+    def sortkey(self):
+        """
+        How should this calculator be compared to others like it? The
+        default sorting method sorts by the value of the result.
+        """
+        return self.result
+
     def html(self):
         """
         Return a basic HTML representation of the result.
@@ -318,6 +325,7 @@ class LengthWidthCompactness(CalculatorBase):
                 continue
 
             bbox = district.geom.extent
+            w
             compactness += (bbox[3] - bbox[1]) / (bbox[2] - bbox[0])
             num += 1
 
@@ -718,10 +726,7 @@ class RepresentationalFairness(CalculatorBase):
                 if rep_pi > .5:
                     reps += 1
 
-        value = dems - reps
-        sort = abs(value)
-        party = 'Democrat' if value > 0 else 'Republican'
-        self.result = (sort, party)
+        self.result = dems - reps
 
     def html(self):
         """
@@ -730,16 +735,28 @@ class RepresentationalFairness(CalculatorBase):
         to display a human readable score that explains which party the 
         plan is biased toward
         """
-        if self.result[0] == 0:
+        sort = abs(self.result)
+        party = 'Democrat' if self.result > 0 else 'Republican'
+        if sort == 0:
             return '<span>Balanced</span>'
         else:
-            return '<span>%s&nbsp;%d</span>' % (self.result[1], self.result[0])
+            return '<span>%s&nbsp;%d</span>' % (party, sort)
 
     def json(self):
         """
         Return a basic JSON representation of the result.
         """
-        return json.dumps( {'result': '%s %d' % (self.result[1], self.result[0])} )
+        sort = abs(self.result)
+        party = 'Democrat' if self.result > 0 else 'Republican'
+        return json.dumps( {'result': '%s %d' % (party, sort)} )
+
+    def sortkey(self):
+        """
+        How should this calculator be compared to others like it? 
+        Sort by the absolute value of the result (farther from zero
+        is a worse score).
+        """
+        return abs(self.result)
 
 
 class Competitiveness(CalculatorBase):

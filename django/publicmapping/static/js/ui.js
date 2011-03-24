@@ -188,7 +188,10 @@ $(function() {
             $("#myranked_content").remove();
             var myrankedDiv = $("#leaderboard_myranked").html('<div id="myranked_content"></div>');
             outstandingRequests += 1;
-            constructLeaderboardSection(myrankedDiv, "mine");
+            
+            setTimeout( function(){
+                constructLeaderboardSection(myrankedDiv, "mine");
+            }, 500);
         }
 
         // show waiting dialog

@@ -310,7 +310,7 @@ def scoreplan(request, planid):
     status['success'] = True
     for criteria in criterion:
         try:
-            score = criteria.function.score(plan, format='raw')
+            score = ComputedPlanScore.compute(criteria.function, plan)
         except:
             print traceback.format_exc()
 

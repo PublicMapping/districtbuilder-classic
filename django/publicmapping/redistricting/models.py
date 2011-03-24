@@ -40,12 +40,11 @@ from django.forms import ModelForm
 from django.conf import settings
 from django.utils import simplejson as json
 from django.template.loader import render_to_string
-from datetime import datetime
 from redistricting.calculators import *
+from datetime import datetime
 from copy import copy
 from decimal import *
-import sys
-
+import sys, cPickle
 
 class Subject(models.Model):
     """
@@ -1935,7 +1934,7 @@ class ScoreFunction(models.Model):
     # Whether or not this score function is for a plan
     is_planscore = models.BooleanField(default=False)
 
-    def get_calculator(self, name):
+    def get_calculator(self):
         """
         Retrieve a calculator instance by name.
 
@@ -1945,7 +1944,7 @@ class ScoreFunction(models.Model):
         Returns:
             An instance of the requested calculator.
         """
-        parts = name.split('.')
+        parts = self.calculator.split('.')
         module = ".".join(parts[:-1])
         m = __import__( module )
         for comp in parts[1:]:
@@ -1972,7 +1971,7 @@ class ScoreFunction(models.Model):
             districts_or_plans will be returned.
         """
         # Raises an ImportError if there is no calculator with the given name
-        calc = self.get_calculator(self.calculator)
+        calc = self.get_calculator()
 
         # Is districts_or_plans a list, or a single district/plan?
         is_list = isinstance(districts_or_plans, list)
@@ -2215,11 +2214,11 @@ class ScorePanel(models.Model):
                         'name':function.name,
                         'label':function.label,
                         'description':function.description,
-                        'score':function.score(plan,format='html'),
-                        'raw':function.score(plan,format='raw')
+                        'score':ComputedPlanScore.compute(function,plan,format='html'),
+                        'sort':ComputedPlanScore.compute(function,plan,format='sort')
                     })
 
-            planscores.sort(key=lambda x:x['raw'],reverse=not self.is_ascending)
+            planscores.sort(key=lambda x:x['sort'],reverse=not self.is_ascending)
 
             return render_to_string(self.template, {
                 'settings':settings,
@@ -2248,7 +2247,7 @@ class ScorePanel(models.Model):
                         'name':function.name,
                         'label':function.label,
                         'description':function.description,
-                        'score':function.score(district,format='html')
+                        'score':ComputedDistrictScore.compute(function,district,format='html')
                     })
 
 
@@ -2301,18 +2300,18 @@ class ComputedDistrictScore(models.Model):
     district = models.ForeignKey(District)
 
     # The actual score value
-    value = models.DecimalField(max_digits=12,decimal_places=4)
+    value = models.TextField()
 
     def __unicode__(self):
         name = ''
-        if not district is None:
-            if not district.plan is None:
-                name = '%s / %s' % (district.name, district.plan.name,)
+        if not self.district is None:
+            if not self.district.plan is None:
+                name = '%s / %s' % (self.district.name, self.district.plan.name,)
             else:
-                name = district.name
+                name = self.district.name
 
-        if not function is None:
-            name = '%s / %s' % (function.name, name)
+        if not self.function is None:
+            name = '%s / %s' % (self.function.name, name)
         else:
             name = 'None / %s' % name
 
@@ -2320,7 +2319,7 @@ class ComputedDistrictScore(models.Model):
 
 
     @staticmethod
-    def compute(function,district):
+    def compute(function,district,format='raw'):
         """
         Get the computed value. This method will leverage the cache when
         it is available, or it will populate the cache if it is not.
@@ -2338,7 +2337,7 @@ class ComputedDistrictScore(models.Model):
         """
         created = False
         try:
-            defaults = {'value':Decimal('0000.00000000')}
+            defaults = {'value':''}
             cache,created = ComputedDistrictScore.objects.get_or_create(function=function, district=district, defaults=defaults)
 
         except Exception,e:
@@ -2346,10 +2345,26 @@ class ComputedDistrictScore(models.Model):
             return None
 
         if created:
-            cache.value = Decimal('%0.8f' % function.score(district, format='raw'))
+            score = function.score(district, format='raw')
+            cache.value = cPickle.dumps(score)
             cache.save()
+        else:
+            score = cPickle.loads(str(cache.value))
 
-        return cache.value
+        if format != 'raw':
+            calc = function.get_calculator()
+            calc.result = score
+            if format == 'html':
+                return calc.html()
+            elif format == 'json':
+                return calc.json()
+            elif format == 'sort':
+                return calc.sortkey()
+            else:
+                # Unrecognized format!
+                return None
+
+        return score
 
     class Meta:
         unique_together = (('function','district'),)
@@ -2375,10 +2390,10 @@ class ComputedPlanScore(models.Model):
     version = models.PositiveIntegerField(default=0)
 
     # The actual score value
-    value = models.DecimalField(max_digits=12,decimal_places=4)
+    value = models.TextField()
 
     @staticmethod
-    def compute(function, plan, version=None):
+    def compute(function, plan, version=None, format='raw'):
         """
         Get the computed value. This method will leverage the cache when
         it is available, or it will populate the cache if it is not.
@@ -2398,7 +2413,7 @@ class ComputedPlanScore(models.Model):
         try:
             if version is None:
                 version = plan.version
-            defaults = {'value':Decimal('0000.00000000')}
+            defaults = {'value':''}
             cache,created = ComputedPlanScore.objects.get_or_create(function=function, plan=plan, version=version, defaults=defaults)
 
         except Exception,e:
@@ -2406,7 +2421,35 @@ class ComputedPlanScore(models.Model):
             return None
 
         if created:
-            cache.value = Decimal('%0.8f' % function.score(plan, format='raw'))
+            score = function.score(plan, format='raw')
+            cache.value = cPickle.dumps(score)
             cache.save()
+        else:
+            score = cPickle.loads(str(cache.value))
 
-        return cache.value
+        if format != 'raw':
+            calc = function.get_calculator()
+            calc.result = score
+            if format == 'html':
+                return calc.html()
+            elif format == 'json':
+                return calc.json()
+            elif format == 'sort':
+                return calc.sortkey()
+            else:
+                # Unrecognized format!
+                return None
+
+        return score
+
+    def __unicode__(self):
+        name = ''
+        if not self.plan is None:
+            name = self.plan.name
+
+        if not self.function is None:
+            name = '%s / %s' % (self.function.name, name)
+        else:
+            name = 'None / %s' % name
+
+        return name
