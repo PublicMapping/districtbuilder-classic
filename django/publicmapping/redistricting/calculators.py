@@ -565,9 +565,19 @@ class Contiguity(CalculatorBase):
     """
     Calculate the contiguity of a district.
 
-    A district is considered contiguous if it has only one polygon.
+    This calculator accepts an optional argument: 'allow_single_point'.
+    If this is set to '1' (True), the calculator will consider a district containing
+    muliple polygons contiguous if the polygons are connected to each other by a
+    minimum of one point. By default, this is set to '0' (False), and a district is
+    only considered to be congiguous if it is comprised of a single polygon
+    
+    If the district is contiguous, the result value will be zero (0).
 
-    This calculator will only operate on a district.
+    If the district is discontiguous, the result value will be one (1).
+
+    If this calculator is called with a plan, it will tally up the number
+    of districts that are contiguous.
+
     """
     def compute(self, **kwargs):
         """
@@ -585,10 +595,42 @@ class Contiguity(CalculatorBase):
         else:
             return
 
+        if 'allow_single_point' in self.arg_dict:
+            allow_single = int(self.arg_dict['allow_single_point'][1]) == 1
+        else:
+            allow_single = False
+
         self.result = 0
         for district in districts:
-            if district.geom and len(district.geom) == 1: 
-                self.result += 1
+            if district.geom:
+                if len(district.geom) == 1: 
+                    self.result += 1
+                elif allow_single:
+                    # create a running union of of polygons that touch, seeded with the first.
+                    # loop through remaining polygons and add any that touch the union.
+                    # repeat until either:
+                    #   - the remaining list is empty: contiguous
+                    #   - no matches were found in a pass: discontiguous
+                    union = district.geom[0]
+                    remaining = district.geom[1:]
+                    contiguous = False
+
+                    while (True):
+                        if len(remaining) == 0:
+                            contiguous = True
+                            break
+                        else:
+                            match = False
+                            for geom in remaining:
+                                if geom.touches(union):
+                                    remaining.remove(geom)
+                                    union = geom.union(union)
+                                    match = True
+                            if not match:
+                                break
+
+                    if contiguous:
+                        self.result += 1
 
 
 class AllContiguous(CalculatorBase):

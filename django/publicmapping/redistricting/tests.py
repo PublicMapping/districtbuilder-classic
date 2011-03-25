@@ -1923,6 +1923,59 @@ class CalculatorCase(BaseTestCase):
 
         self.assertEquals(1, cntcalc.result, 'District is discontiguous.')
 
+    def test_contiguity_singlepoint(self):
+        geolevelid = self.geolevels[1].id
+        geounits = self.geounits[geolevelid]
+
+        dist1ids = [geounits[0], geounits[10]]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
+
+        # 2 geounits connected by one point -- single-point is false, should fail
+        cntcalc = Contiguity()
+        cntcalc.compute(district=district1)
+        self.assertEquals(0, cntcalc.result, 'District is contiguous at 1 point, but single-point contiguity is false.')
+
+        # 2 geounits connected by one point -- single-point is true, should pass
+        cntcalc = Contiguity()
+        cntcalc.arg_dict['allow_single_point'] = ('literal','1',)
+        cntcalc.compute(district=district1)
+        self.assertEquals(1, cntcalc.result, 'District is contiguous at 1 point, and single-point contiguity is true.')
+
+        # add another geounits so 3 geometries are connected by 2 single points (contiguous)
+        dist1ids = [geounits[18]]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
+
+        cntcalc = Contiguity()
+        cntcalc.arg_dict['allow_single_point'] = ('literal','1',)
+        cntcalc.compute(district=district1)
+        self.assertEquals(1, cntcalc.result, 'District is contiguous at 1 point twice, and single-point contiguity is true.')
+
+        # add another geounits so 4 geometries are connected by 3 single points (contiguous)
+        dist1ids = [geounits[28]]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
+
+        cntcalc = Contiguity()
+        cntcalc.arg_dict['allow_single_point'] = ('literal','1',)
+        cntcalc.compute(district=district1)
+        self.assertEquals(1, cntcalc.result, 'District is contiguous at 1 point thrice, and single-point contiguity is true.')
+
+        # add more geounits so 5 geometries are connected by 3 single points (discontiguous)
+        dist1ids = [geounits[14]]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
+
+        cntcalc = Contiguity()
+        cntcalc.arg_dict['allow_single_point'] = ('literal','1',)
+        cntcalc.compute(district=district1)
+        self.assertEquals(0, cntcalc.result, 'District is contiguous at 1 point thrice, but has a disjoint geometry.')
+
     def test_contiguity_plan1(self):
         geolevelid = self.geolevels[1].id
         geounits = self.geounits[geolevelid]
