@@ -185,7 +185,7 @@ class DistrictIndexFile():
         # keyed on the district_id of this plan
         new_districts = dict()
         csv_file = open(indexFile)
-        reader = csv.DictReader(csv_file, fieldnames = ['code', 'district']) 
+        reader = csv.DictReader(csv_file, fieldnames = ['code', 'district'])
         for row in reader:
             try:
                 dist_id = int(row['district'])
@@ -211,6 +211,15 @@ class DistrictIndexFile():
         # Get all subjects - those without denominators first to save a calculation
         subjects = Subject.objects.order_by('-percentage_denominator').all()
 
+        # BEGIN workaround for real districts starting at district_id == 2
+        minD = legislative_body.max_districts + 1
+        cntD = len(new_districts.keys())
+        for district_id in new_districts.keys():
+            minD = min(minD, district_id)
+
+        offset = 0 if minD == 1 and cntD == legislative_body.max_districts else 1
+        # END workaround for real districts starting at district_id == 2
+
         # Create the district geometry from the lists of geounits
         for district_id in new_districts.keys():
             # Get a filter using portable_id
@@ -220,10 +229,22 @@ class DistrictIndexFile():
             try:
                 # Build our new geometry from the union of our geounit geometries
                 new_geom = Geounit.objects.filter(guFilter).unionagg()
+                #new_geom = Geounit.objects.filter(guFilter).collect()
+
+                # Union as a cascade - this is faster than the union
+                # spatial aggregate function off the filter
+                #polycomponents = []
+                #for geom in new_geom:
+                #    if geom.geom_type == 'MultiPolygon':
+                #        for poly in geom:
+                #            polycomponents.append(poly)
+                #    elif geom.geom_type == 'Polygon':
+                #        polycomponents.append(geom)
+                #new_geom = MultiPolygon(polycomponents,srid=new_geom.srid).cascaded_union
 
                 # Create a new district and save it
-                new_district = District(name=legislative_body.member % district_id, 
-                    district_id = district_id + 1, plan=plan, 
+                new_district = District(name=legislative_body.member % (district_id - offset), 
+                    district_id = district_id - offset + 1, plan=plan, 
                     geom=enforce_multi(new_geom))
                 new_district.simplify() # implicit save
             except Exception as ex:
@@ -311,7 +332,7 @@ class DistrictIndexFile():
             f = tempfile.NamedTemporaryFile(delete=False)
             try:
                 # Get the geounit mapping (we want the portable id, then the district id)
-                mapping = [(pid, did) for (gid, pid, did) in plan.get_base_geounits()]
+                mapping = [(pid, did-1) for (gid, pid, did) in plan.get_base_geounits()]
                 difile = csv.writer(f)
                 difile.writerows(mapping)
                 f.close()
