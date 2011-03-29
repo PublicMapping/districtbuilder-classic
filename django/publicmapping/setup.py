@@ -250,6 +250,7 @@ def merge_config(config, verbose):
         settings_out.write("DATABASE_NAME = '%s'\n" % cfg.get('name'))
         settings_out.write("DATABASE_USER = '%s'\n" % cfg.get('user'))
         settings_out.write("DATABASE_PASSWORD = '%s'\n" % cfg.get('password'))
+        settings_out.write("DATABASE_HOST = '%s'\n" % cfg.get('host',''))
 
         cfg = config.xpath('//MapServer')[0]
         settings_out.write("\nMAP_SERVER = '%s'\n" % cfg.get('hostname'))

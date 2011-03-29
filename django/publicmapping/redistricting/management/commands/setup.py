@@ -224,7 +224,7 @@ contents of the file and try again.
         data_store_name = 'PostGIS'
 
         dbconn_obj = {
-            'host': host,
+            'host': dbconfig.get('host',host),
             'port': 5432,
             'database': dbconfig.get('name'),
             'user': dbconfig.get('user'),
