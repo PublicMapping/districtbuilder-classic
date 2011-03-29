@@ -2205,9 +2205,6 @@ class CalculatorCase(BaseTestCase):
 
         self.assertEquals(True, actual, 'Incorrect value during district counting. (e:%s,a:%s)' % (True, actual))
 
-    def test_allblocks(self):
-        self.fail('Incomplete test')
-
     def test_equipop(self):
         geolevelid = self.geolevels[1].id
         geounits = self.geounits[geolevelid]
