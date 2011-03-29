@@ -1687,7 +1687,7 @@ class District(models.Model):
 
         filter = Q(override_geounit__geom__within=self.geom)
         filter = filter & Q(connect_to_geounit__geom__within=self.geom)
-        return ContiguityOverride.objects.filter(filter)
+        return list(ContiguityOverride.objects.filter(filter))
     
     def simplify(self):
         """

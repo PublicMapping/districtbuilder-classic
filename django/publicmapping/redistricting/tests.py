@@ -2033,6 +2033,7 @@ class CalculatorCase(BaseTestCase):
         dist1ids = map(lambda x: str(x.id), dist1ids)
         self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
         district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
+        cntcalc.arg_dict['allow_single_point'] = ('literal','0',)
         cntcalc.compute(district=district1)
         self.assertEquals(0, cntcalc.result, 'Calculator needs allow_single_point on to be considered contiguous')
         cntcalc.arg_dict['allow_single_point'] = ('literal','1',)

@@ -634,6 +634,7 @@ class Contiguity(CalculatorBase):
                                         c = override.connect_to_geounit.geom
                                         if (geom.contains(o) and union.contains(c)) or (geom.contains(c) and union.contains(o)):
                                             linked = True
+                                            overrides.remove(override)
                                             break
 
                                 if linked:
