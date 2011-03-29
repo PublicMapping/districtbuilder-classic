@@ -361,6 +361,22 @@
         </Criteria>
     </Validation>
 
+    <!--
+    Optional configuration for geounits that require special contiguity rules.
+    'id' is the portable id of the geounit in which to configure an override.
+    'connect_to' is the portable id of the geounit in which the geounit is
+    to be considered contiguous with. Tests for contiguity will apply these overrides
+    in order to account for contiguity when physical contiguity is not possible.
+    For example, an island may need to be marked contiguous with one or more geounits
+    on an adjacent coast (possibly containing harbors). 
+
+    <ContiguityOverrides>
+        <ContiguityOverride id="510030112012077" connect_to="510030102011065" />
+        <ContiguityOverride id="510030112012077" connect_to="510030103003037" />
+    </ContiguityOverrides>
+
+    -->
+
     <GeoLevels>
       <GeoLevel id="block" name="block" min_zoom="9" sort_key="3" tolerance="2.5">
           <!--
