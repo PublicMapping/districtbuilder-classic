@@ -1934,6 +1934,7 @@ class CalculatorCase(BaseTestCase):
 
         # 2 geounits connected by one point -- single-point is false, should fail
         cntcalc = Contiguity()
+        cntcalc.arg_dict['allow_single_point'] = ('literal','0',)
         cntcalc.compute(district=district1)
         self.assertEquals(0, cntcalc.result, 'District is contiguous at 1 point, but single-point contiguity is false.')
 
@@ -1975,6 +1976,72 @@ class CalculatorCase(BaseTestCase):
         cntcalc.arg_dict['allow_single_point'] = ('literal','1',)
         cntcalc.compute(district=district1)
         self.assertEquals(0, cntcalc.result, 'District is contiguous at 1 point thrice, but has a disjoint geometry.')
+
+    def test_contiguity_overrides(self):
+        geolevelid = self.geolevels[1].id
+        geounits = self.geounits[geolevelid]
+
+        dist1ids = [geounits[0], geounits[11]]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
+
+        overrides = []
+        def add_override(id1, id2):
+            override = ContiguityOverride(override_geounit=geounits[id1], connect_to_geounit=geounits[id2])
+            override.save()
+            overrides.append(override)
+
+        # add some bogus overrides for testing
+        add_override(27, 28)
+        add_override(28, 29)
+        add_override(29, 30)
+        add_override(30, 31)
+        add_override(31, 32)
+
+        # 2 disjoint geounits and no overrides defined, should fail
+        cntcalc = Contiguity()
+        cntcalc.compute(district=district1)
+        self.assertEquals(0, cntcalc.result, 'District is non-contiguous, and no overrides have been defined.')
+
+        # define a contiguity override between the two geounits, same test should now pass
+        add_override(0, 11)
+        cntcalc.compute(district=district1)
+        self.assertEquals(1, cntcalc.result, 'District is not contiguous, but an override should make it so.')
+
+        # add a few more non-contiguous geounits without overrides, should fail
+        dist1ids = [geounits[4], geounits[22], geounits[7]]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
+        cntcalc.compute(district=district1)
+        self.assertEquals(0, cntcalc.result, 'District needs 3 overrides to be considered contiguous')
+
+        # add overrides and test one by one. the final override should make the test pass
+        add_override(11, 4)
+        cntcalc.compute(district=district1)
+        self.assertEquals(0, cntcalc.result, 'District needs 2 overrides to be considered contiguous')
+        add_override(4, 22)
+        cntcalc.compute(district=district1)
+        self.assertEquals(0, cntcalc.result, 'District needs 1 overrides to be considered contiguous')
+        add_override(7, 4)
+        cntcalc.compute(district=district1)
+        self.assertEquals(1, cntcalc.result, 'District has appropriate overrides to be considered contiguous')
+
+        # check to make sure this works in conjunction with single-point contiguity by adding 2 more geounits
+        dist1ids = [geounits[14], geounits[19]]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
+        cntcalc.compute(district=district1)
+        self.assertEquals(0, cntcalc.result, 'Calculator needs allow_single_point on to be considered contiguous')
+        cntcalc.arg_dict['allow_single_point'] = ('literal','1',)
+        cntcalc.compute(district=district1)
+        self.assertEquals(1, cntcalc.result, 'allow_single_point is enabled, should be considered contiguous')
+
+        # remove contiguity overrides
+        for override in overrides:
+            override.delete()
 
     def test_contiguity_plan1(self):
         geolevelid = self.geolevels[1].id

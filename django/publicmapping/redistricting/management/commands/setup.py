@@ -24,7 +24,7 @@ License:
     limitations under the License.
 
 Author: 
-    Andrew Jennings, David Zwarg
+    Andrew Jennings, David Zwarg, Kenny Shepard
 """
 
 from decimal import Decimal
@@ -112,6 +112,7 @@ contents of the file and try again.
         self.purge_sessions(verbose)
 
         self.import_prereq(config, verbose)
+        self.import_contiguity_overrides(config, verbose)
         self.import_scoring(config, verbose)
 
         optlevels = options.get("geolevels")
@@ -662,6 +663,43 @@ ERROR:
                     num += 1
 
         return (geo, num,)
+
+    @transaction.commit_on_success    
+    def import_contiguity_overrides(self, config, verbose):
+        """
+        Import any ContiguityOverrides. This is optional.
+        """
+
+        # Remove previous contiguity overrides
+        ContiguityOverride.objects.all().delete()
+            
+        if (len(config.xpath('//ContiguityOverrides')) == 0):
+            print 'ContiguityOverrides not configured'
+
+        # Import contiguity overrides.
+        for co in config.xpath('//ContiguityOverride'):
+            portable_id = co.get('id')
+            temp = Geounit.objects.filter(portable_id=portable_id)
+            if (len(temp) == 0):
+                raise Exception('There exists no geounit with portable_id: %s' % portable_id)
+            override_geounit = temp[0]
+
+            portable_id = co.get('connect_to')
+            temp = Geounit.objects.filter(portable_id=portable_id)
+            if (len(temp) == 0):
+                raise Exception('There exists no geounit with portable_id: %s' % portable_id)
+            connect_to_geounit = temp[0]
+
+            co_obj, created = ContiguityOverride.objects.get_or_create(
+                override_geounit=override_geounit, 
+                connect_to_geounit=connect_to_geounit 
+                )
+
+            if verbose:
+                if created:
+                    print 'Created ContiguityOverride "%s"' % str(co_obj)
+                else:
+                    print 'ContiguityOverride "%s" already exists' % str(co_obj)
 
     def import_arguments(self, score_function, config, verbose):
         # Import arguments for this score function

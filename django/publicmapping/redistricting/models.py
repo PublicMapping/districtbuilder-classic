@@ -1675,6 +1675,20 @@ class District(models.Model):
         """
         return self.plan.get_base_geounits_in_geom(self.geom, threshold);
 
+    def get_contiguity_overrides(self):
+        """
+        Retrieve any contiguity overrides that are applicable
+        to this district. This is defined by any ContiguityOverride
+        objects whose two referenced geounits both fall within
+        the geometry of this district.
+        """
+        if not self.geom:
+            return []
+
+        filter = Q(override_geounit__geom__within=self.geom)
+        filter = filter & Q(connect_to_geounit__geom__within=self.geom)
+        return ContiguityOverride.objects.filter(filter)
+    
     def simplify(self):
         """
         Simplify the geometry into a geometry collection in the simple 
@@ -2453,3 +2467,23 @@ class ComputedPlanScore(models.Model):
             name = 'None / %s' % name
 
         return name
+
+
+class ContiguityOverride(models.Model):
+    """
+    Defines a relationship between two geounits in which special
+    behavior needs to be applied when calculating contiguity.
+    """
+
+    # The geounit that is non-contiguous and needs an override applied
+    override_geounit = models.ForeignKey(Geounit, related_name="override_geounit")
+
+    # The geounit that the override_geounit is allowed to be considered
+    # contiguous with, even in the absense of physical contiguity.
+    connect_to_geounit = models.ForeignKey(Geounit, related_name="connect_to_geounit")
+
+    # Manage the instances of this class with a geographically aware manager
+    objects = models.GeoManager()
+
+    def __unicode__(self):
+        return '%s / %s' % (self.override_geounit.portable_id, self.connect_to_geounit.portable_id)

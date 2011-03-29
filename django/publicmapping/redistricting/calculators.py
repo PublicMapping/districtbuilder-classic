@@ -570,6 +570,9 @@ class Contiguity(CalculatorBase):
     muliple polygons contiguous if the polygons are connected to each other by a
     minimum of one point. By default, this is set to '0' (False), and a district is
     only considered to be congiguous if it is comprised of a single polygon
+
+    'ContiguityOverride' objects that are applicable to the district will be applied
+    to allow for special cases where non-physical contiguity isn't possible.
     
     If the district is contiguous, the result value will be zero (0).
 
@@ -605,33 +608,46 @@ class Contiguity(CalculatorBase):
             if district.geom:
                 if len(district.geom) == 1: 
                     self.result += 1
-                elif allow_single:
-                    # create a running union of of polygons that touch, seeded with the first.
-                    # loop through remaining polygons and add any that touch the union.
-                    # repeat until either:
-                    #   - the remaining list is empty: contiguous
-                    #   - no matches were found in a pass: discontiguous
-                    union = district.geom[0]
-                    remaining = district.geom[1:]
-                    contiguous = False
+                else:
+                    # obtain the contiguity overrides that need to be applied
+                    overrides = district.get_contiguity_overrides()
 
-                    while (True):
-                        if len(remaining) == 0:
-                            contiguous = True
-                            break
-                        else:
-                            match = False
+                    if allow_single or len(overrides) > 0:
+                        # create a running union of of polygons that are linked, seeded with the first.
+                        # loop through remaining polygons and add any that either touch the union,
+                        # or do so virtually with a contiguity override. repeat until either:
+                        #   - the remaining list is empty: contiguous
+                        #   - no matches were found in a pass: discontiguous
+                        union = district.geom[0]
+                        remaining = district.geom[1:]
+                        contiguous = True
+    
+                        while (len(remaining) > 0):
+                            match_in_pass = False
                             for geom in remaining:
-                                if geom.touches(union):
+                                linked = False
+                                if allow_single and geom.touches(union):
+                                    linked = True
+                                else:
+                                    for override in overrides:
+                                        o = override.override_geounit.geom
+                                        c = override.connect_to_geounit.geom
+                                        if (geom.contains(o) and union.contains(c)) or (geom.contains(c) and union.contains(o)):
+                                            linked = True
+                                            break
+
+                                if linked:
                                     remaining.remove(geom)
                                     union = geom.union(union)
-                                    match = True
-                            if not match:
+                                    match_in_pass = True
+                                    
+                            if not match_in_pass:
+                                contiguous = False
                                 break
-
-                    if contiguous:
-                        self.result += 1
-
+    
+                        if contiguous:
+                            self.result += 1
+    
 
 class AllContiguous(CalculatorBase):
     """
