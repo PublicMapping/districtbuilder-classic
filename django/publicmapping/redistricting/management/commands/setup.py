@@ -1303,7 +1303,8 @@ ERROR:
         """
 
         # The first geolevel is the base geolevel of EVERYTHING
-        basegl = Geolevel.objects.get(id=1)
+        lbody = LegislativeBody.objects.all()[0]
+        basegl = Geolevel.objects.get(id=lbody.get_base_geolevel())
         gconfig = config.xpath('//GeoLevels/GeoLevel[@name="%s"]' % basegl.name)[0]
         shapefile = gconfig.xpath('Shapefile')[0].get('path')
         srs = DataSource(shapefile)[0].srs
