@@ -366,16 +366,7 @@ class Geounit(models.Model):
                 # Get the area defined by the union of the geounits
                 selection = Geounit.objects.filter(guFilter).collect()
 
-                # Union as a cascade - this is faster than the union
-                # spatial aggregate function off the filter
-                polycomponents = []
-                for geom in selection:
-                    if geom.geom_type == 'MultiPolygon':
-                        for poly in geom:
-                            polycomponents.append(poly)
-                    elif geom.geom_type == 'Polygon':
-                        polycomponents.append(geom)
-                selection = MultiPolygon(polycomponents,srid=selection.srid).cascaded_union
+                selection = enforce_multi(selection,collapse=True)
                
                 # Begin crafting the query to get the id and geom
                 query = "SELECT id,child_id,geolevel_id,st_ashexewkb(geom,'NDR') FROM redistricting_geounit WHERE id IN (%s) AND " % (','.join(geounit_ids))
@@ -426,16 +417,8 @@ class Geounit(models.Model):
                 else:
                     # this always rebuilds the current extent of all the
                     # selected geounits
-                    geoms = []
-                    for unit in units:
-                        if unit.geom.geom_type == 'MultiPolygon':
-                            for geo in unit.geom:
-                                geoms.append(geo)
-                        elif unit.geom.geom_type == 'Polygon':
-                            geoms.append(unit.geom)
-                    # cascaded union is faster than unioning each unit
-                    # to it's neighbor
-                    union = MultiPolygon(geoms).cascaded_union
+                    geoms = GeometryCollection(map(lambda unit:unit.geom, units), srid=units[0].geom.srid)
+                    union = enforce_multi(geoms, collapse=True)
 
                 # set or merge this onto the existing selection
                 if union is None:
@@ -467,31 +450,7 @@ class Geounit(models.Model):
                         # it is not clear what this means, or why it happens
                         remainder = empty_geom(boundary.srid)
 
-                # Check if the remainder is a geometry collection. If it 
-                # is, munge it into a multi-polygon so that we can use it 
-                # in our custom sql query
-                if remainder.geom_type == 'GeometryCollection' and not remainder.empty:
-                    srid = remainder.srid
-                    union = None
-                    for geom in remainder:
-                        mgeom = enforce_multi(geom)
-                        if mgeom.geom_type == 'MultiPolygon':
-                            if union is None:
-                                union = mgeom
-                            else:
-                                for poly in mgeom:
-                                    union.append(poly)
-                        else:
-                            # do nothing if it's not some kind of poly
-                            pass
-
-                    remainder = union
-                    if remainder:
-                        remainder.srid = srid
-                    else:
-                        remainder = empty_geom(srid)
-                elif remainder.empty or (remainder.geom_type != 'MultiPolygon' and remainder.geom_type != 'Polygon'):
-                    remainder = empty_geom(boundary.srid)
+                remainder = enforce_multi(remainder)
 
                 # Check if the remainder is empty -- it may have been 
                 # converted, or errored out above, in which case we just
@@ -513,7 +472,8 @@ class Geounit(models.Model):
                     count = 0
                     for row in rows:
                         count += 1
-                        units.append(Geounit(id=row[0],geom=GEOSGeometry(row[3]),child_id=row[1],geolevel_id=row[2]))
+                        geom = GEOSGeometry(row[3])
+                        units.append(Geounit(id=row[0],geom=geom,child_id=row[1],geolevel_id=row[2]))
 
         # Send back the collected Geounits
         return units
@@ -634,6 +594,11 @@ class Plan(models.Model):
 
     # The legislative body that this plan is for
     legislative_body = models.ForeignKey(LegislativeBody)
+
+    # A flag to indicate that upon post_save, when a plan is created,
+    # it should create an Unassigned district. There are times when
+    # this behaviour should be skipped (when copying plans, for example)
+    create_unassigned = True
 
     def __unicode__(self):
         """
@@ -799,7 +764,7 @@ class Plan(models.Model):
         locked = District.objects.filter(id__in=[d.id for d in districts if d.is_locked]).collect()
         if locked:
             # GEOS topology exceptions are sometimes thrown when performing a difference
-            # on compledx geometries unless a buffer(0) is first performed.
+            # on complex geometries unless a buffer(0) is first performed.
             locked = locked if locked.empty else locked.buffer(0)
             incremental = incremental if locked.empty else incremental.difference(locked)
 
@@ -815,10 +780,7 @@ class Plan(models.Model):
                 target = district
                 continue
 
-            if not (district.geom and \
-                (district.geom.overlaps(incremental) or \
-                 district.geom.contains(incremental) or \
-                 district.geom.within(incremental))):
+            if not district.geom is None and not district.geom.relate_pattern(incremental,'T********'):
                 # if this district has later edits, REVERT them to
                 # this version of the district
                 if not district.is_latest_version():
@@ -855,18 +817,7 @@ class Plan(models.Model):
                 raise ex
 
             # Make sure the geom is a multi-polygon.
-            geom = enforce_multi(geom)
-
-            # If the geometry of this district is empty
-            if geom.empty:
-                # The district geometry is empty (probably all geounits in
-                # the district were removed); empty the geom and simple 
-                # fields
-                district.geom = None
-            else:
-                # The district geometry exists, so save the updated 
-                # versions of the geom and simple fields
-                district.geom = geom
+            district.geom = enforce_multi(geom)
 
             # Clone the district to a new version, with a different shape
             district_copy = copy(district)
@@ -988,17 +939,12 @@ class Plan(models.Model):
     
         if version == None:
             version = self.version
-        # Check to see if we have enough room to add these districts without
-        # going over MAX_DISTRICTS for the legislative_body
+        # Check to see if we have enough room to add these districts 
+        # without going over MAX_DISTRICTS for the legislative_body
         current_districts = self.get_districts_at_version(version, include_geom=False)
-        current_district_count = 0
-        for d in current_districts:
-            if d.has_geom == True and d.name != 'Unassigned':
-                current_district_count += 1
-         
-        allowed_districts = self.legislative_body.max_districts
+        allowed_districts = self.legislative_body.max_districts + 1
         
-        if current_district_count + len(districts) > allowed_districts:
+        if len(current_districts) + len(districts) > allowed_districts:
             raise Exception('Tried to merge too many districts')
 
         # We've got room.  Add the districts.
@@ -1052,7 +998,7 @@ class Plan(models.Model):
         # Save the new district to the plan to start
         pasted = District(name='', plan=self, district_id = None, geom=district.geom, simple = district.simple, version = new_version)
         pasted.save();
-        pasted.name = self.legislative_body.member % (pasted.district_id - 1)
+        pasted.name = self.legislative_body.member % pasted.district_id
         pasted.save();
         pasted.clone_characteristics_from(district)
         
@@ -1105,7 +1051,9 @@ class Plan(models.Model):
                     edited_districts.pop()
                     edited_districts.append(new_district)
 
-                    geounit_ids = map(str, Geounit.objects.filter(geom__bboverlaps=enforce_multi(intersection), geolevel=biggest_geolevel).values_list('id', flat=True))
+                    geounit_ids = Geounit.objects.filter(geom__bboverlaps=intersection, geolevel=biggest_geolevel).values_list('id', flat=True)
+                    geounit_ids = map(str, geounit_ids)
+
                     geounits = Geounit.get_mixed_geounits(geounit_ids, self.legislative_body, biggest_geolevel.id, intersection, True)
                     
                     if new_district.geom != None:
@@ -1161,6 +1109,7 @@ JOIN (
 AS lmt 
 ON rd.district_id = lmt.district_id 
 WHERE rd.plan_id = %d 
+AND NOT rd.name = 'Unassigned'
 AND rc.subject_id = %d 
 AND lmt.version = rd.version 
 AND st_intersects(
@@ -1329,9 +1278,11 @@ AND st_intersects(
         # Collect the geounits for each district in this plan
         geounits = []
         for district in self.get_districts_at_version(self.version, include_geom=True):
-            districtunits = district.get_base_geounits(threshold)
-            # Add the district_id to the tuples
-            geounits.extend([(gid, pid, district.district_id) for (gid, pid) in districtunits])
+            # Unassigned is district 0
+            if district.district_id > 0:
+                districtunits = district.get_base_geounits(threshold)
+                # Add the district_id to the tuples
+                geounits.extend([(gid, pid, district.district_id) for (gid, pid) in districtunits])
         
         return geounits
 
@@ -1357,7 +1308,8 @@ AND st_intersects(
         # some accuracty issues. This needs further examination.
         geounits = []
         for district in self.get_districts_at_version(self.version,include_geom=True):
-            geounits.extend(district.get_base_geounits(threshold))
+            if district.district_id > 0:
+                geounits.extend(district.get_base_geounits(threshold))
         
         return geounits
 
@@ -1374,24 +1326,27 @@ AND st_intersects(
             that do not belong to any districts within this Plan. 
         """
 
-        # Find all geounits
-        geolevel = self.legislative_body.get_base_geolevel()
-        all = Geounit.objects.filter(geolevel=geolevel).values_list('id', 'portable_id')
+        # The unassigned district contains all the unassigned items.
+        unassigned = self.district_set.filter(district_id=0).order_by('-version')[0]
 
-        # Find all assigned geounits
-        assigned = self.get_assigned_geounits(threshold)
-
-        # Return the difference
-        return list(set(all) ^ set(assigned))
+        # Return the base geounits of the unassigned district
+        return unassigned.get_base_geounits(threshold)
 
     def get_available_districts(self, version=None):
+        """
+        Get the number of districts that are available in the current plan.
+
+        Returns:
+            The number of districts that may added to this plan.
+        """
         if version == None:
            version = self.version
         current_districts = self.get_districts_at_version(version, include_geom=False)
         available_districts = self.legislative_body.max_districts
         for d in current_districts:
-            if d.has_geom and d.name != 'Unassigned':
-                available_districts -= 1 
+            if d.has_geom and not d.geom.empty and d.district_id > 0:
+                available_districts -= 1
+
         return available_districts
 
     @transaction.commit_manually
@@ -1427,40 +1382,26 @@ AND st_intersects(
             target.version = version + 1
             target.save()
 
-            if target.name == 'Unassigned':
-                target.geom = None
-                target.simple = None
-                target.save()
-            else:
-                # Combine the stats for all of the districts
-                all_characteristics = ComputedCharacteristic.objects.filter(district__in=district_keys)
-                all_subjects = Subject.objects.order_by('-percentage_denominator').all()
-                for subject in all_subjects:
-                    relevant_characteristics = filter(lambda c: c.subject == subject, all_characteristics)
-                    number = sum(map(lambda c: c.number, relevant_characteristics))
-                    percentage = Decimal('0000.00000000')
-                    if subject.percentage_denominator:
-                        denominator = ComputedCharacteristic.objects.get(subject=subject.percentage_denominator,district=target)
-                        if denominator:
-                            if denominator.number > 0:
-                                percentage = number / denominator.number
-                    cc = ComputedCharacteristic(district=target, subject=subject, number=number, percentage=percentage)
-                    cc.save()
+            # Combine the stats for all of the districts
+            all_characteristics = ComputedCharacteristic.objects.filter(district__in=district_keys)
+            all_subjects = Subject.objects.order_by('-percentage_denominator').all()
+            for subject in all_subjects:
+                relevant_characteristics = filter(lambda c: c.subject == subject, all_characteristics)
+                number = sum(map(lambda c: c.number, relevant_characteristics))
+                percentage = Decimal('0000.00000000')
+                if subject.percentage_denominator:
+                    denominator = ComputedCharacteristic.objects.get(subject=subject.percentage_denominator,district=target)
+                    if denominator:
+                        if denominator.number > 0:
+                            percentage = number / denominator.number
+                cc = ComputedCharacteristic(district=target, subject=subject, number=number, percentage=percentage)
+                cc.save()
 
-                # Create a new copy of the target geometry
-                all_geometry = map(lambda d: d.geom, components)
-                all_geometry.append(target.geom)
-                # Can't make a MultiPolygon from MultiPolygons so break it down
-                polys = list()
-                for geometry in all_geometry:
-                    if geometry == None: 
-                        continue
-                    elif geometry.geom_type == 'MultiPolygon':
-                        polys += map(lambda p: p, geometry)
-                    elif geometry.geom_type == 'Polygon':
-                        polys += geometry
-                target.geom = enforce_multi(MultiPolygon(polys).cascaded_union)
-                target.simplify()
+            # Create a new copy of the target geometry
+            all_geometry = map(lambda d: d.geom, components)
+            all_geometry.append(target.geom)
+            target.geom = enforce_multi(GeometryCollection(all_geometry,srid=target.geom.srid), collapse=True)
+            target.simplify()
 
             # Eliminate the component districts from the version
             for component in components:
@@ -1514,7 +1455,7 @@ class District(models.Model):
     # The district_id of the district, this is not the primary key ID,
     # but rather, an ID of the district that remains constant over all
     # versions of the district.
-    district_id = models.PositiveIntegerField(default=1)
+    district_id = models.PositiveIntegerField(default=None)
 
     # The name of the district
     name = models.CharField(max_length=200)
@@ -1704,7 +1645,7 @@ class District(models.Model):
         levels = body.get_geolevels()
         levels.reverse()
 
-        if self.geom:
+        if not self.geom is None:
             simples = []
             index = 1
             for level in levels:
@@ -1715,7 +1656,10 @@ class District(models.Model):
                     # so a Point at the origin is used instead.
                     simples.append(Point((0,0), srid=self.geom.srid))
                     index += 1
-                simples.append( self.geom.simplify(preserve_topology=True,tolerance=level.tolerance))
+                if self.geom.num_coords > 0:
+                    simples.append( self.geom.simplify(preserve_topology=True,tolerance=level.tolerance))
+                else:
+                    simples.append( self.geom )
                 index += 1
             self.simple = GeometryCollection(tuple(simples),srid=self.geom.srid)
             self.save()
@@ -1795,16 +1739,16 @@ def set_district_id(sender, **kwargs):
     when saved.
     """
     district = kwargs['instance']
-    if (not district.district_id):
+    if district.district_id is None:
         districts = district.plan.get_districts_at_version(district.version, include_geom=False)
-        ids_in_use = map(lambda d: d.district_id, filter(lambda d: True if d.has_geom or d.name == 'Unassigned' else False, districts))
+        ids_in_use = map(lambda d: d.district_id, filter(lambda d: True if d.has_geom else False, districts))
         max_districts = district.plan.legislative_body.max_districts + 1
         if len(ids_in_use) >= max_districts:
             raise ValidationError("Plan is at maximum district capacity of %d" % max_districts)
         else:
-            # Find one not in use - 1 is unassigned
-            # TODO - update this if unassigned is not district_id 1
-            for i in range(1, max_districts+2):
+            # Find one not in use - 0 is unassigned
+            # TODO - update this if unassigned is not district_id 0
+            for i in range(1, max_districts+1):
                 if i not in ids_in_use:
                     district.district_id = i
                     return
@@ -1825,10 +1769,22 @@ def create_unassigned_district(sender, **kwargs):
     """
     plan = kwargs['instance']
     created = kwargs['created']
-    
-    if created:
-        unassigned = District(name="Unassigned", version = 0, plan = plan)
-        unassigned.save()
+
+    if created and plan.create_unassigned:
+        plan.create_unassigned = False
+
+        unassigned = District(name="Unassigned", version = 0, plan = plan, district_id=0)
+
+        levels = plan.legislative_body.get_geolevels()
+        biggestlevel = levels[0]
+
+        unassigned.geom = enforce_multi(Geounit.objects.filter(geolevel=biggestlevel).collect(), collapse=True)
+        unassigned.simplify() # implicit save
+
+        biggestgeolevel = plan.legislative_body.get_geolevels()[0]
+        geounits = Geounit.objects.filter(geolevel=biggestgeolevel)
+        unassigned.delta_stats(geounits, True)
+
         
 # Connect the post_save signal from a User object to the update_profile
 # helper method
@@ -1894,7 +1850,7 @@ def can_copy(user, plan):
 
 def empty_geom(srid):
     """
-    Create an empty GeometryCollection.
+    Create an empty MultiPolygon.
 
     Parameters:
         srid -- The spatial reference for this empty geometry.
@@ -1902,10 +1858,9 @@ def empty_geom(srid):
     Returns:
         An empty geometry.
     """
-    geom = GeometryCollection([], srid=srid)
-    return geom
+    return MultiPolygon([], srid=srid)
 
-def enforce_multi(geom):
+def enforce_multi(geom, collapse=False):
     """
     Make a geometry a multi-polygon geometry.
 
@@ -1915,18 +1870,37 @@ def enforce_multi(geom):
 
     Parameters:
         geom -- The geometry to check/enforce.
+        collapse -- A flag indicating that this method should collapse 
+                    the resulting multipolygon via cascaded_union. With
+                    this flag, the method still returns a multipolygon.
     Returns:
-        A multi-polygon from any polygon type.
+        A multi-polygon from any geometry type.
     """
-    if geom:
-        if geom.geom_type == 'MultiPolygon':
-            return geom
+    mpoly = MultiPolygon([])
+    if not geom is None:
+        mpoly.srid = geom.srid
+
+        if geom.empty:
+            pass
+        elif geom.geom_type == 'MultiPolygon':
+            if collapse:
+                mpoly = enforce_multi( geom.cascaded_union )
+            else:
+                mpoly = geom
         elif geom.geom_type == 'Polygon':
-            return MultiPolygon(geom)
-        else:
-            return empty_geom(geom.srid)
-    else:
-        return geom
+            # Collapse has no meaning if this is a single polygon
+            mpoly.append(geom)
+        elif geom.geom_type == 'GeometryCollection':
+            components = []
+            for item in geom:
+                for component in enforce_multi(item):
+                    mpoly.append(component)
+
+            if collapse:
+                # Collapse the multipolygon group
+                mpoly = enforce_multi( mpoly, collapse )
+
+    return mpoly
 
 class ScoreFunction(models.Model):
     """
@@ -2109,26 +2083,22 @@ class ScoreDisplay(models.Model):
             (is_list and \
                 any(not isinstance(item,Plan) for item in dorp)):
             # If this display is a page, it should receive a list of plans
-            #print "Page display only renders lists of plans."
             return ''
         elif not self.is_page:
             if is_list and \
                 any(not isinstance(item,District) for item in dorp):
                 # If this display is not a page, the list should be a set
                 # of districts.
-                #print "Non-page display renders lists of districts"
                 return ''
             elif not is_list and \
                 not isinstance(dorp,Plan):
                 # If this display is not a page, the item should be a plan.
-                #print "Non-page display renders a single plan."
                 return ''
 
         panels = self.scorepanel_set.all().order_by('position')
 
         markup = ''
         for panel in panels:
-            #print "Rendering panel:",panel.title
             markup += panel.render(dorp, context)
 
         return markup
@@ -2191,10 +2161,8 @@ class ScorePanel(models.Model):
             not isinstance(dorp,Plan):
             if is_list:
                 if any(not isinstance(item,Plan) for item in dorp):
-                    #print 'Plan panel only renders plans.'
                     return ''
             else:
-                #print 'Plan panel only renders plans.'
                 return ''
 
         # If this is a district panel, it only renders districts
@@ -2202,10 +2170,8 @@ class ScorePanel(models.Model):
             not isinstance(dorp,District):
             if is_list:
                 if any(not isinstance(item,District) for item in dorp):
-                    #print 'District panel only renders districts.'
                     return ''
             else:
-                #print 'District panel only renders districts.'
                 return ''
 
         # Render an item for each plan and plan score

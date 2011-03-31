@@ -151,6 +151,9 @@ class Schwartzberg(CalculatorBase):
         num = 0
         compactness = 0
         for district in districts:
+            if district.district_id == 0:
+                continue
+
             if district.geom is None:
                 continue
         
@@ -205,6 +208,9 @@ class Roeck(CalculatorBase):
         num = 0
         compactness = 0
         for district in districts:
+            if district.district_id == 0:
+                continue
+
             if district.geom is None:
                 continue
 
@@ -264,6 +270,9 @@ class PolsbyPopper(CalculatorBase):
         num = 0
         compactness = 0
         for district in districts:
+            if district.district_id == 0:
+                continue
+
             if district.geom is None:
                 continue
 
@@ -321,6 +330,9 @@ class LengthWidthCompactness(CalculatorBase):
         num = 0
         compactness = 0
         for district in districts:
+            if district.district_id == 0:
+                continue
+
             if district.geom is None:
                 continue
 
@@ -383,6 +395,9 @@ class Sum(CalculatorBase):
         self.result = 0
 
         for district in districts:
+            if district.district_id == 0:
+                continue
+
             argnum = 1
             while ('value%d'%argnum) in self.arg_dict:
                 number = self.get_value('value%d'%argnum, district)
@@ -432,6 +447,9 @@ class Percent(CalculatorBase):
             num = 0
             den = 0
             for district in districts:
+                if district.district_id == 0:
+                    continue
+
                 tmpnum = self.get_value('numerator',district)
                 tmpden = self.get_value('denominator',district)
 
@@ -605,49 +623,51 @@ class Contiguity(CalculatorBase):
 
         self.result = 0
         for district in districts:
-            if district.geom:
-                if len(district.geom) == 1: 
-                    self.result += 1
-                else:
-                    # obtain the contiguity overrides that need to be applied
-                    overrides = district.get_contiguity_overrides()
+            if district.district_id == 0:
+                continue
 
-                    if allow_single or len(overrides) > 0:
-                        # create a running union of of polygons that are linked, seeded with the first.
-                        # loop through remaining polygons and add any that either touch the union,
-                        # or do so virtually with a contiguity override. repeat until either:
-                        #   - the remaining list is empty: contiguous
-                        #   - no matches were found in a pass: discontiguous
-                        union = district.geom[0]
-                        remaining = district.geom[1:]
-                        contiguous = True
+            if len(district.geom) == 1: 
+                self.result += 1
+            else:
+                # obtain the contiguity overrides that need to be applied
+                overrides = district.get_contiguity_overrides()
+
+                if allow_single or len(overrides) > 0:
+                    # create a running union of of polygons that are linked, seeded with the first.
+                    # loop through remaining polygons and add any that either touch the union,
+                    # or do so virtually with a contiguity override. repeat until either:
+                    #   - the remaining list is empty: contiguous
+                    #   - no matches were found in a pass: discontiguous
+                    union = district.geom[0]
+                    remaining = district.geom[1:]
+                    contiguous = True
     
-                        while (len(remaining) > 0):
-                            match_in_pass = False
-                            for geom in remaining:
-                                linked = False
-                                if allow_single and geom.touches(union):
-                                    linked = True
-                                else:
-                                    for override in overrides:
-                                        o = override.override_geounit.geom
-                                        c = override.connect_to_geounit.geom
-                                        if (geom.contains(o) and union.contains(c)) or (geom.contains(c) and union.contains(o)):
-                                            linked = True
-                                            overrides.remove(override)
-                                            break
+                    while (len(remaining) > 0):
+                        match_in_pass = False
+                        for geom in remaining:
+                            linked = False
+                            if allow_single and geom.touches(union):
+                                linked = True
+                            else:
+                                for override in overrides:
+                                    o = override.override_geounit.geom
+                                    c = override.connect_to_geounit.geom
+                                    if (geom.contains(o) and union.contains(c)) or (geom.contains(c) and union.contains(o)):
+                                        linked = True
+                                        overrides.remove(override)
+                                        break
 
-                                if linked:
-                                    remaining.remove(geom)
-                                    union = geom.union(union)
-                                    match_in_pass = True
+                            if linked:
+                                remaining.remove(geom)
+                                union = geom.union(union)
+                                match_in_pass = True
                                     
-                            if not match_in_pass:
-                                contiguous = False
-                                break
+                        if not match_in_pass:
+                            contiguous = False
+                            break
     
-                        if contiguous:
-                            self.result += 1
+                    if contiguous:
+                        self.result += 1
     
 
 class AllContiguous(CalculatorBase):
@@ -714,6 +734,9 @@ class Equivalence(CalculatorBase):
         min_d = 1000000000 # 1B enough?
         max_d = 0
         for district in districts:
+            if district.district_id == 0:
+                continue
+
             tmpval = self.get_value('value',district)
             if not tmpval is None:
                 min_d = min(float(tmpval), min_d)
@@ -857,6 +880,9 @@ class Competitiveness(CalculatorBase):
         
         fair = 0
         for district in districts:
+            if district.district_id == 0:
+                continue
+
             tmpdem = self.get_value('democratic',district)
             tmprep = self.get_value('republican',district)
 

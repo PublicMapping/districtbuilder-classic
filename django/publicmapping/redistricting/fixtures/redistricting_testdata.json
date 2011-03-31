@@ -28019,11 +28019,11 @@
   "model": "redistricting.district", 
   "fields": {
    "name": "District 1", 
-   "simple": null, 
-   "district_id": 2, 
+   "simple": "GEOMETRYCOLLECTION (POINT (0.0000000000000000 0.0000000000000000), POINT (0.0000000000000000 0.0000000000000000), MULTIPOLYGON EMPTY, MULTIPOLYGON EMPTY, MULTIPOLYGON EMPTY)", 
+   "district_id": 1, 
    "is_locked": false, 
    "version": 0, 
-   "geom": null, 
+   "geom": "MULTIPOLYGON EMPTY",  
    "plan": 1
   }
  }, 
@@ -28032,11 +28032,11 @@
   "model": "redistricting.district", 
   "fields": {
    "name": "District 1", 
-   "simple": null, 
+   "simple": "GEOMETRYCOLLECTION (POINT (0.0000000000000000 0.0000000000000000), POINT (0.0000000000000000 0.0000000000000000), MULTIPOLYGON EMPTY, MULTIPOLYGON EMPTY, MULTIPOLYGON EMPTY)", 
    "district_id": 1, 
    "is_locked": false, 
    "version": 0, 
-   "geom": null, 
+   "geom": "MULTIPOLYGON EMPTY", 
    "plan": 2
   }
  }, 
@@ -28045,11 +28045,11 @@
   "model": "redistricting.district", 
   "fields": {
    "name": "District 2", 
-   "simple": null, 
-   "district_id": 3, 
+   "simple": "GEOMETRYCOLLECTION (POINT (0.0000000000000000 0.0000000000000000), POINT (0.0000000000000000 0.0000000000000000), MULTIPOLYGON EMPTY, MULTIPOLYGON EMPTY, MULTIPOLYGON EMPTY)", 
+   "district_id": 2, 
    "is_locked": false, 
    "version": 0, 
-   "geom": null, 
+   "geom": "MULTIPOLYGON EMPTY",
    "plan": 1
   }
  }, 
@@ -28058,11 +28058,11 @@
   "model": "redistricting.district", 
   "fields": {
    "name": "District 2", 
-   "simple": null, 
+   "simple": "GEOMETRYCOLLECTION (POINT (0.0000000000000000 0.0000000000000000), POINT (0.0000000000000000 0.0000000000000000), MULTIPOLYGON EMPTY, MULTIPOLYGON EMPTY, MULTIPOLYGON EMPTY)", 
    "district_id": 2, 
    "is_locked": false, 
    "version": 0, 
-   "geom": null, 
+   "geom": "MULTIPOLYGON EMPTY", 
    "plan": 2
   }
  }, 

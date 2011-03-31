@@ -241,18 +241,14 @@ def copyplan(request, planid):
         status['message'] = "You already have a plan named that. Please pick a unique name."
         return HttpResponse(json.dumps(status),mimetype='application/json')
 
-    plan_copy = Plan(name = newname, owner=request.user, is_shared = shared, legislative_body = p.legislative_body)
+    plan_copy = Plan(name=newname, owner=request.user, is_shared=shared, legislative_body=p.legislative_body)
+    plan_copy.create_unassigned = False
     plan_copy.save()
 
     # Get all the districts in the original plan at the most recent version
     # of the original plan.
     districts = p.get_districts_at_version(p.version, include_geom=True)
     for district in districts:
-        # Skip Unassigned, we already have that -- created automatically
-        # when saving a new plan.
-        if district.name == "Unassigned":
-            continue
-
         district_copy = copy.copy(district)
 
         district_copy.id = None
@@ -1555,6 +1551,7 @@ def getgeography(request, planid):
                 dist_name = district.name[index:]
 
             stats = { 'name': dist_name, 'district_id': district.district_id }
+
             characteristics = district.computedcharacteristic_set.filter(subject = subject)
 
             compactness_calculator = Schwartzberg()
@@ -1655,7 +1652,7 @@ def getcompliance(plan, version):
                 if (number < (target.value - allowance)) or (number > (target.value + allowance)):
                     noncompliant += 1
             except:
-                # District has no characteristics - unassigned
+                #print "'%s'(%d) is missing computed characteristics for '%s'" % (district.name,district.id,target.subject.name)
                 continue
         if noncompliant > 0:
             data['value'] = '%d miss target' % noncompliant
@@ -1680,7 +1677,7 @@ def getcompliance(plan, version):
                 if minority_value / population_value > Decimal('.5'):
                     data[subject]['value'] += 1   
         except:
-            # District has no characteristics - unassigned
+            #print "'%s'(%d) is missing computed characteristics for '%s'" % (district.name,district.id,population.name)
             continue
             
 

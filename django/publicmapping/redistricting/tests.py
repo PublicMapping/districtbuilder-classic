@@ -224,9 +224,9 @@ class ScoringTestCase(BaseTestCase):
         ScoreArgument(function=sumPlanFunction, argument='value1', value='1', type='literal').save()
 
         # test raw value
-        num_districts = len(self.plan.get_districts_at_version(self.plan.version, include_geom=False))
+        num_districts = len(self.plan.get_districts_at_version(self.plan.version, include_geom=False)) - 1
         score = sumPlanFunction.score(self.plan)
-        self.assertEquals(num_districts, score, 'sumPlanFunction was incorrect: %d' % score)
+        self.assertEquals(num_districts, score, 'sumPlanFunction was incorrect. (e:%d, a:%d)' % (num_districts, score))
 
         # test a list of plans
         score = sumPlanFunction.score([self.plan, self.plan])
@@ -336,7 +336,7 @@ class ScoringTestCase(BaseTestCase):
         ScoreArgument(function=sumPlanFunction, argument='value1', value='1', type='literal').save()
 
         # find the number of districts in the plan in an alternate fashion
-        num_districts = len(self.plan.get_districts_at_version(self.plan.version, include_geom=False))
+        num_districts = len(self.plan.get_districts_at_version(self.plan.version, include_geom=False)) - 1
 
         # ensure the sumPlanFunction works correctly
         score = sumPlanFunction.score(self.plan)
@@ -374,7 +374,7 @@ class ScoringTestCase(BaseTestCase):
 
         # subject values are 6, 9, and 0; so the total should be 15
         score = planSumFunction.score(self.plan)
-        self.assertEquals(15, score, 'planSumFunction was incorrect: %d' % score)
+        self.assertEquals(15, score, 'planSumFunction was incorrect: (e:15, a:%d)' % score)
 
         # test a list of plans
         score = planSumFunction.score([self.plan, self.plan])
@@ -412,7 +412,7 @@ class PlanTestCase(BaseTestCase):
         # Note: district_id is set to 0 here, because otherwise, the auto-increment code does not get called.
         # It may be best to revisit how district_id is used throughout the app, and to not allow for it to be set,
         # since it should be auto-generated.
-        d3 = District(name='District 3',district_id=0,version=0)
+        d3 = District(name='District 3', version=0)
         d3.plan = self.plan
 
         p1 = Polygon( ((1, 1), (1, 1), (1, 1), (1, 1)) )
@@ -422,7 +422,7 @@ class PlanTestCase(BaseTestCase):
         d3.save()
         latest = d3.district_id
 
-        d4 = District(name = 'District 4',district_id=0,version=0)
+        d4 = District(name = 'District 4', version=0)
         d4.plan = self.plan
 
         p2 = Polygon( ((0, 0), (0, 1), (1, 1), (0, 0)) )
@@ -431,7 +431,7 @@ class PlanTestCase(BaseTestCase):
 
         d4.save()
         incremented = d4.district_id
-        self.assertTrue(latest + 1 == incremented, 'New district did not have an id greater than the previous district')
+        self.assertEquals(latest + 1, incremented, 'New district did not have an id greater than the previous district. (e:%d, a:%d)' % (latest+1,incremented))
         
     def test_add_to_plan(self):
         """
@@ -450,7 +450,7 @@ class PlanTestCase(BaseTestCase):
 
         # Check for new geounits
         numunits = len(Plan.objects.get(pk=self.plan.id).get_base_geounits(0.1))
-        self.assertEqual(81, numunits, 'Geounits not added to plan correctly')
+        self.assertEqual(81, numunits, 'Geounits not added to plan correctly. (e:81, a:%d)' % numunits)
 
     def test_unassigned(self):
         """
@@ -747,7 +747,7 @@ class PlanTestCase(BaseTestCase):
         self.assertEquals(1, len(result), "District1 wasn't pasted into the plan")
         target1 = District.objects.get(pk=result[0])
         self.assertTrue(target1.geom.equals(district1.geom), "Geometries of pasted district doesn't match original")
-        self.assertEquals(target1.name, "TestMember 1", "Proper name wasn't assigned to pasted district")
+        self.assertEquals(target1.name, "TestMember 1", "Proper name wasn't assigned to pasted district. (e:'TestMember 1', a:'%s')" % target1.name)
 
         target_stats =  ComputedCharacteristic.objects.filter(district = result[0])
         for stat in target_stats:
@@ -789,7 +789,7 @@ class PlanTestCase(BaseTestCase):
         
         for stat in target_stats:
             district1_stat = ComputedCharacteristic.objects.get(district=self.district1, subject=stat.subject)
-            self.assertEquals(stat.number, district1_stat.number, "Stats for pasted district (number) don't match")
+            self.assertEquals(stat.number, district1_stat.number, "Stats for pasted district (number) don't match. (e:%f, a:%f)" % (stat.number, district1_stat.number))
             self.assertEquals(stat.percentage, district1_stat.percentage, "Stats for pasted district (percentage) don't match")
             
         # Make sure that method fails when adding too many districts
@@ -846,7 +846,7 @@ class PlanTestCase(BaseTestCase):
         dist1ids = map(lambda x: str(x.id), dist1ids)
         self.plan.add_geounits(self.district1.district_id, dist1ids, geolevelid, self.plan.version)
 
-        self.district3 = District(plan=self.plan, name="TestMember 3", district_id = 4)
+        self.district3 = District(plan=self.plan, name="TestMember 3", district_id = 3)
         self.district3.save()
         dist3ids = geounits[20:23] + geounits[29:32] + geounits[38:41]
         dist3ids = map(lambda x: str(x.id), dist3ids)
@@ -897,7 +897,7 @@ class PlanTestCase(BaseTestCase):
         self.plan.legislative_body.max_districts = 1
         self.plan.legislative_body.save()
 
-        self.assertEqual(1, self.plan.get_available_districts(), 'Wrong number of available districts returned initially: %d')
+        self.assertEqual(1, self.plan.get_available_districts(), 'Wrong number of available districts returned initially. (e:1, a:%d)' % self.plan.get_available_districts())
 
         # Set up the test using geounits in the 2nd level
         geolevelid = self.geolevels[1].id
@@ -907,12 +907,12 @@ class PlanTestCase(BaseTestCase):
         dist1ids = geounits[0:3] + geounits[9:12] + geounits[18:21]
         dist1ids = map(lambda x: str(x.id), dist1ids)
         self.plan.add_geounits(self.district1.district_id, dist1ids, geolevelid, self.plan.version)
-        self.assertEqual(0, self.plan.get_available_districts(), 'Wrong number of available districts returned after adding a district')
+        self.assertEqual(0, self.plan.get_available_districts(), 'Wrong number of available districts returned after adding a district. (e:0, a:%d)' % self.plan.get_available_districts())
 
         # Unassign the district
-        unassigned = District.objects.get(plan=self.plan, name="Unassigned")
+        unassigned = District.objects.filter(plan=self.plan, name="Unassigned").order_by('-version')[0]
         self.plan.add_geounits(unassigned.district_id, dist1ids, geolevelid, self.plan.version)
-        self.assertEqual(1, self.plan.get_available_districts(), 'Wrong number of available districts returned after removing a district')
+        self.assertEqual(1, self.plan.get_available_districts(), 'Wrong number of available districts returned after removing a district. (e:1, a:%d)' % self.plan.get_available_districts())
         
     def test_combine_districts(self):
         # Set up three districst using geounits in the 2nd level
@@ -946,7 +946,7 @@ class PlanTestCase(BaseTestCase):
             total = ComputedCharacteristic.objects.filter(district__plan=self.plan, subject=subject).aggregate(SumAgg('number'))
             totals[subject] = total['number__sum']
 
-        total_geom = District.objects.filter(plan = self.plan).unionagg()
+        total_geom = enforce_multi(District.objects.filter(plan=self.plan,district_id__gt=0).collect(), collapse=True)
 
         # Paste them all together now
         self.district1 = initial_state[self.district1.district_id]
@@ -1328,10 +1328,10 @@ class CalculatorCase(BaseTestCase):
         sumcalc.arg_dict['value3'] = ('literal','2',)
         sumcalc.compute(plan=self.plan)
 
-        # The sum of a plan w/3 districts and w/3 literals is the sum
+        # The sum of a plan w/2 districts and w/3 literals is the sum
         # of literals * the number of plans
 
-        self.assertEquals(9, sumcalc.result, 'Incorrect value during summation. (e:%d,a:%d)' % (9, sumcalc.result))
+        self.assertEquals(6, sumcalc.result, 'Incorrect value during summation. (e:%d,a:%d)' % (6, sumcalc.result))
 
     def test_sum2b(self):
         sumcalc = Sum()
@@ -1453,14 +1453,19 @@ class CalculatorCase(BaseTestCase):
 
         dist1ids = geounits[0:3] + geounits[9:12]
         dist2ids = geounits[18:21] + geounits[27:30] + geounits[36:39]
-        exqset = Characteristic.objects.filter(geounit__in=dist1ids+dist2ids,subject=self.subject1)
-        expected = float(exqset.aggregate(SumAgg('number'))['number__sum']) / 20.0
 
         dist1ids = map(lambda x: str(x.id), dist1ids)
         dist2ids = map(lambda x: str(x.id), dist2ids)
         
         self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        district1 = self.plan.district_set.filter(district_id=self.district1.district_id,version=self.plan.version)[0]
+        expected = float(district1.computedcharacteristic_set.filter(subject=self.subject1)[0].number)
+
         self.plan.add_geounits( self.district2.district_id, dist2ids, geolevelid, self.plan.version)
+        district2 = self.plan.district_set.filter(district_id=self.district2.district_id,version=self.plan.version)[0]
+        expected += float(district2.computedcharacteristic_set.filter(subject=self.subject1)[0].number)
+
+        expected = expected / 20
 
         pctcalc = Percent()
         pctcalc.arg_dict['numerator'] = ('subject',self.subject1.name,)
@@ -2474,10 +2479,11 @@ class ComputedScoresTestCase(BaseTestCase):
         self.assertEquals(0, numscores, 'The number of computed district scores is incorrect. (e:0, a:%d)' % numscores)
 
         district1 = self.plan.district_set.filter(district_id=self.district1.district_id, version=self.plan.version-1)[0]
+        expected = function.score(district1)
 
         score = ComputedDistrictScore.compute(function, district1)
 
-        self.assertEquals(156, score, 'The score computed is incorrect. (e:156.0, a:%0.1f)' % score)
+        self.assertEquals(expected, score, 'The score computed is incorrect. (e:%0.1f, a:%0.1f)' % (expected,score,))
 
         numscores = ComputedDistrictScore.objects.all().count()
 
@@ -2489,10 +2495,11 @@ class ComputedScoresTestCase(BaseTestCase):
         self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version )
 
         district1 = self.plan.district_set.filter(district_id=self.district1.district_id, version=self.plan.version)[0]
+        expected = function.score(district1)
 
         score = ComputedDistrictScore.compute(function, district1)
 
-        self.assertEquals(442, score, 'The score computed is incorrect. (e:442.0, a:%0.1f)' % score)
+        self.assertEquals(expected, score, 'The score computed is incorrect. (e:%0.1f, a:%0.1f)' % (expected,score,))
 
         numscores = ComputedDistrictScore.objects.all().count()
 
