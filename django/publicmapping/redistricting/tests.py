@@ -44,44 +44,17 @@ class BaseTestCase(TestCase):
     """
     Only contains setUp and tearDown, which are shared among all other TestCases
     """
-    fixtures = ['redistricting_testdata.json']
+    fixtures = ['redistricting_testdata.json',
+                'redistricting_testdata_geolevel2.json',
+                'redistricting_testdata_geolevel3.json',
+                'redistricting_testdata_scoring.json'
+                ]
 
     def setUp(self):
         """
         Setup the general tests. This fabricates a set of data in the 
         test database for use later.
         """
-        # Get the test Geolevels
-        self.geolevels = Geolevel.objects.all().order_by('id')
-
-        # Get test Subjects
-        self.subject1 = Subject.objects.get(name='TestSubject')
-        self.subject2 = Subject.objects.get(name='TestSubject2')
-
-        # Get the test Geounits
-        self.geounits = {}
-        for gl in self.geolevels:
-            self.geounits[gl.id] = list(Geounit.objects.filter(geolevel=gl).order_by('id'))
-
-        # Get a test User
-        self.username = 'test_user'
-        self.password = 'secret'
-        self.user = User.objects.get(username=self.username)
-
-        # Get a test LegislativeBody
-        self.legbod = LegislativeBody.objects.get(name='TestLegislativeBody')
-
-        # Get a test Target
-        self.target = Target.objects.get(subject=self.subject1)
-
-        # Get a test LegislativeDefault
-        self.legdef = LegislativeDefault.objects.get(legislative_body=self.legbod, target=self.target)
-
-        # Get a test LegislativeLevel hierarchy
-        self.leglev3 = LegislativeLevel.objects.get(geolevel=self.geolevels[2])
-        self.leglev2 = LegislativeLevel.objects.get(geolevel=self.geolevels[1])
-        self.leglev1 = LegislativeLevel.objects.get(geolevel=self.geolevels[0])
-        
         # Get a test Plan
         self.plan = Plan.objects.get(name='testPlan')
         self.plan2 = Plan.objects.get(name='testPlan2')
@@ -90,54 +63,72 @@ class BaseTestCase(TestCase):
         self.district1 = District.objects.get(name='District 1', plan=self.plan)
         self.district2 = District.objects.get(name='District 2', plan=self.plan)
 
+        # Get a test User
+        self.username = 'test_user'
+        self.password = 'secret'
+        self.user = User.objects.get(username=self.username)
 
+    def tearDown(self):
+        self.plan = None
+        self.plan2 = None
+        self.district1 = None
+        self.district2 = None
+        self.username = None
+        self.password = None
+        self.user = None
 
 class ScoringTestCase(BaseTestCase):
     """
     Unit tests to test the logic of the scoring functionality
     """
+    fixtures = ['redistricting_testdata.json',
+                'redistricting_testdata_geolevel2.json',
+                'redistricting_testdata_scoring.json'
+                ]
+
     def setUp(self):
         BaseTestCase.setUp(self)
 
         # create a couple districts and populate with geounits
-        geounits = self.geounits[self.geolevels[1].id]
+        # geounits = self.geounits[self.geolevels[1].id]
+        geolevel = Geolevel.objects.get(pk=2)
+        geounits = list(Geounit.objects.filter(geolevel = geolevel).order_by('id'))
 
-        self.dist1units = geounits[0:3] + geounits[9:12]
-        self.dist2units = geounits[18:21] + geounits[27:30] + geounits[36:39]
+        dist1units = geounits[0:3] + geounits[9:12]
+        dist2units = geounits[18:21] + geounits[27:30] + geounits[36:39]
 
-        dist1ids = map(lambda x: str(x.id), self.dist1units)
-        dist2ids = map(lambda x: str(x.id), self.dist2units)
+        dist1ids = map(lambda x: str(x.id), dist1units)
+        dist2ids = map(lambda x: str(x.id), dist2units)
 
-        self.plan.add_geounits(self.district1.district_id, dist1ids, self.geolevels[1].id, self.plan.version)
-        self.plan.add_geounits(self.district2.district_id, dist2ids, self.geolevels[1].id, self.plan.version)
+        self.plan.add_geounits(self.district1.district_id, dist1ids, geolevel.id, self.plan.version)
+        self.plan.add_geounits(self.district2.district_id, dist2ids, geolevel.id, self.plan.version)
 
         self.district1 = max(District.objects.filter(plan=self.plan,district_id=self.district1.district_id),key=lambda d: d.version)
         self.district2 = max(District.objects.filter(plan=self.plan,district_id=self.district2.district_id),key=lambda d: d.version)
         
         # create objects used for scoring
+        self.legbod = LegislativeBody.objects.get(name='TestLegislativeBody')
         self.scoreDisplay1 = ScoreDisplay(title='SD1', legislative_body=self.legbod, is_page=False)
         self.scoreDisplay1.save()
 
         self.scorePanel1 = ScorePanel(type='district', display=self.scoreDisplay1, position=0, title='SP1')
         self.scorePanel1.save()
 
+        self.subject1 = Subject.objects.get(name='TestSubject')
+
     def tearDown(self):
         """
         Clean up after testing.
         """
-        BaseTestCase.tearDown(self)
         self.scorePanel1.delete()
         self.scoreDisplay1.delete()
 
-    def testSetup(self):
-        """
-        Make sure we have the districts created during setUp
-        """
-        district1units = self.district1.get_base_geounits()
-        self.assertEqual(54, len(district1units), 'Incorrect number of geounits returned in dist1: %d' % len(district1units))
+        self.district1 = None
+        self.district2 = None
+        self.legbod = None
+        self.subject1 = None
 
-        district2units = self.district2.get_base_geounits()
-        self.assertEqual(81, len(district2units), 'Incorrect number of geounits returned in dist1: %d' % len(district2units))
+        BaseTestCase.tearDown(self)
 
     def testInvalidScenarios(self):
         """
@@ -365,6 +356,7 @@ class ScoringTestCase(BaseTestCase):
         # create the district scoring function for getting subject1
         districtSubjectFunction = ScoreFunction(calculator='redistricting.calculators.Sum', name='GetSubjectFn')
         districtSubjectFunction.save()
+
         ScoreArgument(function=districtSubjectFunction, argument='value1', value=self.subject1.name, type='subject').save()
 
         # create the plan scoring function for summing values
@@ -405,6 +397,29 @@ class PlanTestCase(BaseTestCase):
     """
     Unit tests to test Plan operations
     """
+
+    fixtures = ['redistricting_testdata.json', 'redistricting_testdata_geolevel2.json', 'redistricting_testdata_geolevel3.json']
+
+    def setUp(self):
+        BaseTestCase.setUp(self)        
+        self.geolevel = Geolevel.objects.get(pk=2)
+        self.geolevels = Geolevel.objects.all().order_by('id')
+
+        self.geounits = {}
+        for gl in self.geolevels:
+           self.geounits[gl.id] = list(Geounit.objects.filter(geolevel=gl).order_by('id'))
+
+    def tearDown(self):
+        self.geolevel = None
+        self.geolevels = None
+        self.geounits = None
+        try:
+            BaseTestCase.tearDown(self)
+        except:
+            import traceback
+            print(traceback.format_exc())
+            print('Couldn\'t tear down')
+
     def test_district_id_increment(self):
         """
         Test the logic for the automatically generated district_id
@@ -440,17 +455,12 @@ class PlanTestCase(BaseTestCase):
         district = self.district1
         districtid = district.district_id
 
-        level = self.geolevels[0]
-        levelid = level.id
+        geounitids = [str(self.geounits[1][0].id)]
+
+        self.plan.add_geounits(districtid, geounitids, self.geolevel.id, self.plan.version)
+        district = District.objects.get(plan=self.plan, district_id=districtid, version=1)
         
-        geounits = self.geounits[level.id]
-        geounitids = [str(geounits[0].id)]
-
-        self.plan.add_geounits(districtid, geounitids, levelid, self.plan.version)
-
-        # Check for new geounits
-        numunits = len(Plan.objects.get(pk=self.plan.id).get_base_geounits(0.1))
-        self.assertEqual(81, numunits, 'Geounits not added to plan correctly. (e:81, a:%d)' % numunits)
+        self.assertEqual(district.geom, self.geounits[1][0].geom, "Geometry for added district doesn't match")
 
     def test_unassigned(self):
         """
@@ -463,17 +473,11 @@ class PlanTestCase(BaseTestCase):
         """
         Test the logic for copying plans.
         """
-        district = self.district1
-        districtid = district.district_id
+        geounitids = [str(self.geounits[1][0].id)]
 
-        level = self.geolevels[0]
-        levelid = level.id
-        
-        geounits = self.geounits[level.id]
-        geounitids = [str(geounits[0].id)]
-
+        this_id = self.plan.id
         # Add geounits to plan
-        self.plan.add_geounits(districtid, geounitids, levelid, self.plan.version)
+        self.plan.add_geounits(self.district1.district_id, geounitids, self.geolevel.id, self.plan.version)
         
         # Login
         client = Client()
@@ -502,15 +506,7 @@ class PlanTestCase(BaseTestCase):
         """
         Test the logic for locking/unlocking a district.
         """
-        district = self.district1
-        districtid = district.id
-        district_id = district.district_id
-        
-        level = self.geolevels[0]
-        levelid = level.id
-        
-        geounits = self.geounits[level.id]
-        geounitids = [str(geounits[0].id)]
+        geounitids = [str(self.geounits[1][0].id)]
 
         client = Client()
 
@@ -522,53 +518,54 @@ class PlanTestCase(BaseTestCase):
         client.login(username=username2, password=self.password)
 
         # Issue lock command when not logged in
-        response = client.post('/districtmapping/plan/%d/district/%d/lock/' % (self.plan.id, district_id), { 'lock':True, 'version':self.plan.version })
+        response = client.post('/districtmapping/plan/%d/district/%d/lock/' % (self.plan.id, self.district1.district_id), { 'lock':True, 'version':self.plan.version })
         self.assertEqual(403, response.status_code, 'Non-owner was able to lock district.' + str(response))
         
         # Login
         client.login(username=self.username, password=self.password)
         
         # Issue lock command
-        response = client.post('/districtmapping/plan/%d/district/%d/lock/' % (self.plan.id, district_id), { 'lock':True, 'version':self.plan.version })
+        response = client.post('/districtmapping/plan/%d/district/%d/lock/' % (self.plan.id, self.district1.district_id), { 'lock':True, 'version':self.plan.version })
         self.assertEqual(200, response.status_code, 'Lock handler didn\'t return 200:' + str(response))
 
         # Ensure lock exists
-        district = District.objects.get(pk=districtid)
-        self.assertTrue(district.is_locked, 'District wasn\'t locked.' + str(response))
+        self.district1 = District.objects.get(pk=self.district1.id)
+        self.assertTrue(self.district1.is_locked, 'District wasn\'t locked.' + str(response))
 
         # Try adding geounits to the locked district (not allowed)
-        self.plan.add_geounits(district_id, geounitids, levelid, self.plan.version)
+        self.plan.add_geounits(self.district1.district_id, geounitids, self.geolevel.id, self.plan.version)
         numunits = len(Plan.objects.get(pk=self.plan.id).get_base_geounits(0.1))
         self.assertEqual(0, numunits, 'Geounits were added to a locked district. Num geounits: %d' % numunits)
         
         # Issue unlock command
-        response = client.post('/districtmapping/plan/%d/district/%d/lock/' % (self.plan.id, district_id), { 'lock':False, 'version':self.plan.version })
+        response = client.post('/districtmapping/plan/%d/district/%d/lock/' % (self.plan.id, self.district1.district_id), { 'lock':False, 'version':self.plan.version })
         self.assertEqual(200, response.status_code, 'Lock handler didn\'t return 200:' + str(response))
 
         # Ensure lock has been removed
-        district = District.objects.get(pk=districtid)
-        self.assertFalse(district.is_locked, 'District wasn\'t unlocked.' + str(response))
+        self.district1 = District.objects.get(pk=self.district1.id)
+        self.assertFalse(self.district1.is_locked, 'District wasn\'t unlocked.' + str(response))
 
         # Add geounits to the plan
-        self.plan.add_geounits(district_id, geounitids, levelid, self.plan.version)
-        numunits = len(Plan.objects.get(pk=self.plan.id).get_base_geounits(0.1))
-        self.assertEqual(81, numunits, 'Geounits could not be added to an unlocked district. Num geounits: %d' % numunits)
+        old_geom = self.district1.geom
+        self.plan.add_geounits(self.district1.district_id, geounitids, self.geolevel.id, self.plan.version)
+        self.district1 = max(District.objects.filter(plan=self.plan,district_id=self.district1.district_id),key=lambda d: d.version)
+        new_geom = self.district1.geom
+        self.assertNotEqual(old_geom, new_geom, "Geounits could not be added to an unlocked district")
 
     def test_district_locking2(self):
         """
         Test the case where adding a partially selected geometry (due to
         locking) may add the entire geometry's aggregate value.
         """
-        geounits = self.geounits[self.geolevels[1].id]
-
+        geounits = list(Geounit.objects.filter(geolevel=self.geolevel).order_by('id'))
         dist1ids = geounits[0:3] + geounits[9:12]
         dist2ids = geounits[18:21] + geounits[27:30] + geounits[36:39]
 
         dist1ids = map(lambda x: str(x.id), dist1ids)
         dist2ids = map(lambda x: str(x.id), dist2ids)
 
-        self.plan.add_geounits(self.district1.district_id, dist1ids, self.geolevels[1].id, self.plan.version)
-        self.plan.add_geounits(self.district2.district_id, dist2ids, self.geolevels[1].id, self.plan.version)
+        self.plan.add_geounits(self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
+        self.plan.add_geounits(self.district2.district_id, dist2ids, self.geolevel.id, self.plan.version)
 
         district1 = max(District.objects.filter(plan=self.plan,district_id=self.district1.district_id),key=lambda d: d.version)
         district1units = district1.get_base_geounits(0.1)
@@ -580,12 +577,13 @@ class PlanTestCase(BaseTestCase):
 
         self.assertEqual(81, len(district2units), 'Incorrect number of geounits returned in dist2: %d' % len(district2units))
 
-        geounits = self.geounits[self.geolevels[0].id] 
+        geolevel_id = 1
+        geounits = list(Geounit.objects.filter(geolevel=geolevel_id).order_by('id'))
         dist3ids = geounits[1:3] + geounits[4:6] + geounits[7:9]
 
         dist3ids = map(lambda x: str(x.id), dist3ids)
 
-        self.plan.add_geounits(self.district2.district_id + 1, dist3ids, self.geolevels[0].id, self.plan.version)
+        self.plan.add_geounits(self.district2.district_id + 1, dist3ids, geolevel_id, self.plan.version)
 
         district3 = max(District.objects.filter(plan=self.plan,district_id=self.district2.district_id+1),key=lambda d: d.version)
         district3units = district3.get_base_geounits(0.1)
@@ -619,7 +617,10 @@ class PlanTestCase(BaseTestCase):
         district2.is_locked = True
         district2.save()
 
-        districtpre_computed = ComputedCharacteristic.objects.filter(district__in=[district1,district2,district3],subject=self.subject1).order_by('district').values_list('number',flat=True)
+        subject = Subject.objects.get(name='TestSubject')
+
+        districtpre_computed = ComputedCharacteristic.objects.filter(district__in=[district1,district2,district3],subject=subject
+).order_by('district').values_list('number',flat=True)
         presum = 0;
         for pre in districtpre_computed:
             presum += pre
@@ -631,7 +632,7 @@ class PlanTestCase(BaseTestCase):
         district2 = max(District.objects.filter(plan=self.plan,district_id=self.district2.district_id),key=lambda d: d.version)
         district3 = max(District.objects.filter(plan=self.plan,district_id=district3.district_id),key=lambda d: d.version)
 
-        districtpost_computed = ComputedCharacteristic.objects.filter(district__in=[district1,district2,district3],subject=self.subject1).order_by('district').values_list('number',flat=True)
+        districtpost_computed = ComputedCharacteristic.objects.filter(district__in=[district1,district2,district3],subject=subject).order_by('district').values_list('number',flat=True)
         postsum = 0;
         for post in districtpost_computed:
             postsum += post
@@ -730,7 +731,7 @@ class PlanTestCase(BaseTestCase):
         self.assertEqual(729, len(sorted_district_list), 'Sorted district list was the wrong length: %d' % len(sorted_district_list))
 
     def test_paste_districts(self):
-        
+        # TODO - figure out why this fails only when run with the entire test suite
         # Set up the test using geounits in the 2nd level
         geolevelid = self.geolevels[1].id
         geounits = self.geounits[geolevelid]
@@ -798,7 +799,7 @@ class PlanTestCase(BaseTestCase):
         self.assertRaises(Exception, target.paste_districts, (district2,), 'Allowed to merge too many districts')
 
     def test_paste_districts_onto_locked(self):
-        
+        # TODO - figure out why this fails only when run with the entire test suite
         # Set up the test using geounits in the 2nd level
         geolevelid = self.geolevels[1].id
         geounits = self.geounits[geolevelid]
@@ -823,9 +824,10 @@ class PlanTestCase(BaseTestCase):
         self.district2 = max(District.objects.filter(plan=self.plan,district_id=self.district2.district_id),key=lambda d: d.version)
 
         # Paste district2 into our Paste Plan, on top of the locked district1
-        target.paste_districts((self.district2,))
-        district2 = max(District.objects.filter(plan=target,district_id=self.district2.district_id),key=lambda d: d.version)
-        # Create in self.plan the district we want to see if Paste Plan
+        result = target.paste_districts((self.district2,))
+        district2 = District.objects.get(pk=result[0])
+        # district2 = max(District.objects.filter(plan=target,district_id=self.district2.district_id),key=lambda d: d.version)
+        # Create in self.plan the district we want to see in Paste Plan
         unassigned = max(District.objects.filter(plan=self.plan,name="Unassigned"),key=lambda d: d.version)
         self.plan.add_geounits(unassigned.district_id, dist1ids, geolevelid, self.plan.version)
         self.district2 = max(District.objects.filter(plan=self.plan,district_id=self.district2.district_id),key=lambda d: d.version)
@@ -935,7 +937,8 @@ class PlanTestCase(BaseTestCase):
         dist3_district_id = 4
         self.plan.add_geounits(dist3_district_id, dist3ids, geolevelid, self.plan.version)
 
-        all_3 = self.plan.get_districts_at_version(self.plan.version,include_geom=True)
+        all_4 = self.plan.get_districts_at_version(self.plan.version,include_geom=True)
+        all_3 = filter(lambda x : x.name != "Unassigned", all_4)
         initial_state = { }
         total = 0
         for district in all_3:
@@ -943,36 +946,47 @@ class PlanTestCase(BaseTestCase):
 
         totals = {}
         for subject in Subject.objects.all():
-            total = ComputedCharacteristic.objects.filter(district__plan=self.plan, subject=subject).aggregate(SumAgg('number'))
+            total = ComputedCharacteristic.objects.filter(district__in=all_3, subject=subject).aggregate(SumAgg('number'))
             totals[subject] = total['number__sum']
-
         total_geom = enforce_multi(District.objects.filter(plan=self.plan,district_id__gt=0).collect(), collapse=True)
 
         # Paste them all together now
-        self.district1 = initial_state[self.district1.district_id]
-        self.district2 = initial_state[self.district2.district_id]
-        self.district3 = initial_state[dist3_district_id]
+        district1 = initial_state[self.district1.district_id]
+        district2 = initial_state[self.district2.district_id]
+        district3 = initial_state[dist3_district_id]
 
-        result = self.plan.combine_districts(self.district1, (self.district2, self.district3))
+        result = self.plan.combine_districts(district1, (district2, district3))
         self.assertTrue(result, 'Combine operation returned false')
 
         # Refresh our plan version
-        self.plan = Plan.objects.get(pk=self.plan.id)
-        combined = District.objects.get(district_id=self.district1.district_id, plan=self.plan, version=self.plan.version)
+        plan = Plan.objects.get(pk=self.plan.id)
+        combined = max(District.objects.filter(plan=plan,district_id=self.district1.district_id),key=lambda d: d.version)
         self.assertTrue(combined.geom.equals(total_geom), "Geometries of combined districts don't match")
-# TODO: Figure out a way to get this test right - computedcharacteristics and versioning aren't working correctly
-#        for subject in Subject.objects.all():
-#            characteristic = ComputedCharacteristic.objects.get(subject=subject,district=combined)
-#            sys.stdout.write('Characteristic for %s : %d, %d' % (characteristic.subject, characteristic.number, characteristic.percentage))
-#            self.assertEqual(characteristic.number, totals[subject], 'Stats (number) don\'t match on combined district')
-#            self.assertEqual(characteristic.number, total, 'Stats (number) don\'t match on combined district')
-#            self.assertEqual(characteristic.percentage, totals[subject], 'Stats (percentage) don\'t match on combined district')
+
+        # Check our statistics
+        for subject in Subject.objects.all():
+            characteristic = ComputedCharacteristic.objects.get(subject=subject,district=combined)
+            self.assertEqual(characteristic.number, totals[subject], 'Stats (number) don\'t match on combined district e:%d,a:%d' % (totals[subject], characteristic.number))
 
 class GeounitMixTestCase(BaseTestCase):
     """
     Unit tests to test the mixed geounit spatial queries.
     """
     
+    def setUp(self):
+        BaseTestCase.setUp(self)
+        self.geolevels = Geolevel.objects.all().order_by('id')
+        self.geounits = {}
+        for gl in self.geolevels:
+            self.geounits[gl.id] = list(Geounit.objects.filter(geolevel=gl).order_by('id'))
+        self.legbod = LegislativeBody.objects.get(name='TestLegislativeBody')
+
+    def tearDown(self):
+        self.geolevels = None
+        self.geounits = None
+        self.legbod = None
+        BaseTestCase.tearDown(self)
+
     def test_numgeolevels(self):
         """
         Test the number of geolevels created.
@@ -1160,13 +1174,16 @@ class PurgeTestCase(BaseTestCase):
     """
     Unit tests to test the methods for purging extra districts off a plan.
     """
+    fixtures = ['redistricting_testdata.json', 'redistricting_testdata_geolevel2.json']
+
     def setUp(self):
         BaseTestCase.setUp(self)
 
         # create a new buch of districts for this test case
         self.plan.district_set.all().delete()
+        self.geounits = list(Geounit.objects.filter(geolevel=2).order_by('id'))
 
-        geolevelid = self.geolevels[1].id
+        geolevelid = 2
 
         # create Districts
         for i in range(0,9):
@@ -1180,10 +1197,15 @@ class PurgeTestCase(BaseTestCase):
             if i < 8:
                 end += 1
 
-            geounits = self.geounits[geolevelid][start:end]
+            geounits = self.geounits
             geounits = map(lambda x: str(x.id), geounits)
        
             self.plan.add_geounits( (i+1), geounits, geolevelid, self.plan.version)
+
+    def tearDown(self):
+        self.geounits = None
+        self.plan = None
+        BaseTestCase.tearDown(self)
 
     def test_purge_lt_zero(self):
         self.plan.purge(before=-1)
@@ -1241,7 +1263,7 @@ class PurgeTestCase(BaseTestCase):
         settings.MAX_UNDOS_DURING_EDIT = 0
         settings.MAX_UNDOS_AFTER_EDIT = 0
 
-        geolevelid = self.geolevels[1].id
+        geolevelid = 2
 
         oldversion = self.plan.version
 
@@ -1253,7 +1275,7 @@ class PurgeTestCase(BaseTestCase):
         for i in range(0,8):
             item = 9 * (i + 1) + 1
 
-            item = str(self.geounits[geolevelid][item].id)
+            item = str(self.geounits[item].id)
             self.plan.add_geounits( (i+1), [item], geolevelid, self.plan.version)
 
         # net gain: 16 districts
@@ -1276,12 +1298,12 @@ class PurgeTestCase(BaseTestCase):
         self.assertEquals(1, version, 'Walking back %d versions does not land at one.' % (self.plan.version - 1))
 
     def test_purge_versions(self):
-        geolevelid = self.geolevels[1].id
+        geolevelid = 2
 
         oldversion = self.plan.version
         for i in range(oldversion - 1, 4, -1):
             item = 9 * (i + 1) - 2;
-            item = str(self.geounits[geolevelid][item].id)
+            item = str(self.geounits[item].id)
             self.plan.add_geounits( (i+1), [item], geolevelid, i)
 
         # added four new versions
@@ -1301,7 +1323,24 @@ class PurgeTestCase(BaseTestCase):
         previous = self.plan.get_nth_previous_version(5)
         self.assertEquals(1, previous, '(e:1, a:%d)' % previous)
 
-class CalculatorCase(BaseTestCase):
+class CalculatorTestCase(BaseTestCase):
+
+    fixtures = ['redistricting_testdata.json', 'redistricting_testdata_geolevel2.json']
+
+    def setUp(self):
+        BaseTestCase.setUp(self)
+        self.geolevel = Geolevel.objects.get(pk=2)
+        self.geounits = list(Geounit.objects.filter(geolevel=self.geolevel).order_by('id'))
+        self.subject1 = Subject.objects.get(name='TestSubject')
+        self.subject2 = Subject.objects.get(name='TestSubject2')
+    
+    def tearDown(self):
+        self.geolevel = None
+        self.geounits = None
+        self.subject1 = None
+        self.subject2 = None
+        BaseTestCase.tearDown(self)
+
     def test_sum1(self):
         sum1 = Sum()
         sum1.arg_dict['value1'] = ('literal','10',)
@@ -1343,16 +1382,13 @@ class CalculatorCase(BaseTestCase):
         self.assertEquals(3, sumcalc.result, 'Incorrect value during summation. (e:%d,a:%d)' % (3, sumcalc.result))
 
     def test_sum3(self):
-        geolevelid = self.geolevels[1].id
-        geounits = self.geounits[geolevelid]
-
-        dist1ids = geounits[0:3] + geounits[9:12]
+        dist1ids = self.geounits[0:3] + self.geounits[9:12]
         exqset = Characteristic.objects.filter(geounit__in=dist1ids,subject=self.subject1)
         expected = float(exqset.aggregate(SumAgg('number'))['number__sum']) + 5.0
 
         dist1ids = map(lambda x: str(x.id), dist1ids)
         
-        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
         district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
 
         sumcalc = Sum()
@@ -1365,16 +1401,13 @@ class CalculatorCase(BaseTestCase):
         self.assertEquals(expected, actual, 'Incorrect value during summation. (e:%d,a:%d)' % (expected, actual))
 
     def test_sum4(self):
-        geolevelid = self.geolevels[1].id
-        geounits = self.geounits[geolevelid]
-
-        dist1ids = geounits[0:3] + geounits[9:12]
+        dist1ids = self.geounits[0:3] + self.geounits[9:12]
         exqset = Characteristic.objects.filter(geounit__in=dist1ids,subject=self.subject1)
         expected = float(exqset.aggregate(SumAgg('number'))['number__sum'])
 
         dist1ids = map(lambda x: str(x.id), dist1ids)
         
-        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
         district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
 
         sumcalc = Sum()
@@ -1386,19 +1419,16 @@ class CalculatorCase(BaseTestCase):
         self.assertEquals(expected, actual, 'Incorrect value during summation. (e:%d,a:%d)' % (expected, actual))
 
     def test_sum5(self):
-        geolevelid = self.geolevels[1].id
-        geounits = self.geounits[geolevelid]
-
-        dist1ids = geounits[0:3] + geounits[9:12]
-        dist2ids = geounits[18:21] + geounits[27:30] + geounits[36:39]
+        dist1ids = self.geounits[0:3] + self.geounits[9:12]
+        dist2ids = self.geounits[18:21] + self.geounits[27:30] + self.geounits[36:39]
         exqset = Characteristic.objects.filter(geounit__in=dist1ids+dist2ids,subject=self.subject1)
         expected = float(exqset.aggregate(SumAgg('number'))['number__sum'])
 
         dist1ids = map(lambda x: str(x.id), dist1ids)
         dist2ids = map(lambda x: str(x.id), dist2ids)
         
-        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
-        self.plan.add_geounits( self.district2.district_id, dist2ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
+        self.plan.add_geounits( self.district2.district_id, dist2ids, self.geolevel.id, self.plan.version)
 
         sumcalc = Sum()
         sumcalc.arg_dict['value1'] = ('subject',self.subject1.name,)
@@ -1426,16 +1456,13 @@ class CalculatorCase(BaseTestCase):
         self.assertEquals(0.5, pctcalc.result, 'Incorrect value during percentage. (e:%d,a:%d)' % (0.5, pctcalc.result))
 
     def test_percent3(self):
-        geolevelid = self.geolevels[1].id
-        geounits = self.geounits[geolevelid]
-
-        dist1ids = geounits[0:3] + geounits[9:12]
+        dist1ids = self.geounits[0:3] + self.geounits[9:12]
         exqset = Characteristic.objects.filter(geounit__in=dist1ids,subject=self.subject1)
         expected = float(exqset.aggregate(SumAgg('number'))['number__sum']) / 10.0
 
         dist1ids = map(lambda x: str(x.id), dist1ids)
         
-        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
         district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
 
         pctcalc = Percent()
@@ -1448,20 +1475,17 @@ class CalculatorCase(BaseTestCase):
         self.assertEquals(expected, actual, 'Incorrect value during percentage. (e:%f,a:%f)' % (expected, actual))
 
     def test_percent4(self):
-        geolevelid = self.geolevels[1].id
-        geounits = self.geounits[geolevelid]
-
-        dist1ids = geounits[0:3] + geounits[9:12]
-        dist2ids = geounits[18:21] + geounits[27:30] + geounits[36:39]
+        dist1ids = self.geounits[0:3] + self.geounits[9:12]
+        dist2ids = self.geounits[18:21] + self.geounits[27:30] + self.geounits[36:39]
 
         dist1ids = map(lambda x: str(x.id), dist1ids)
         dist2ids = map(lambda x: str(x.id), dist2ids)
         
-        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
         district1 = self.plan.district_set.filter(district_id=self.district1.district_id,version=self.plan.version)[0]
         expected = float(district1.computedcharacteristic_set.filter(subject=self.subject1)[0].number)
 
-        self.plan.add_geounits( self.district2.district_id, dist2ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district2.district_id, dist2ids, self.geolevel.id, self.plan.version)
         district2 = self.plan.district_set.filter(district_id=self.district2.district_id,version=self.plan.version)[0]
         expected += float(district2.computedcharacteristic_set.filter(subject=self.subject1)[0].number)
 
@@ -1477,16 +1501,13 @@ class CalculatorCase(BaseTestCase):
         self.assertEquals(expected, actual, 'Incorrect value during percentage. (e:%f,a:%f)' % (expected, actual))
 
     def test_percent5(self):
-        geolevelid = self.geolevels[1].id
-        geounits = self.geounits[geolevelid]
-
-        dist1ids = geounits[0:3] + geounits[9:12]
-        dist2ids = geounits[18:21] + geounits[27:30] + geounits[36:39]
+        dist1ids = self.geounits[0:3] + self.geounits[9:12]
+        dist2ids = self.geounits[18:21] + self.geounits[27:30] + self.geounits[36:39]
         dist1ids = map(lambda x: str(x.id), dist1ids)
         dist2ids = map(lambda x: str(x.id), dist2ids)
         
-        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
-        self.plan.add_geounits( self.district2.district_id, dist2ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
+        self.plan.add_geounits( self.district2.district_id, dist2ids, self.geolevel.id, self.plan.version)
 
         pctcalc = Percent()
         pctcalc.arg_dict['numerator'] = ('subject',self.subject1.name,)
@@ -1515,17 +1536,14 @@ class CalculatorCase(BaseTestCase):
         self.assertEquals(1, thrcalc.result, 'Incorrect value during threshold. (e:%s,a:%s)' % (1, thrcalc.result))
 
     def test_threshold3(self):
-        geolevelid = self.geolevels[1].id
-        geounits = self.geounits[geolevelid]
-
-        dist1ids = geounits[0:3] + geounits[9:12]
+        dist1ids = self.geounits[0:3] + self.geounits[9:12]
         exqset = Characteristic.objects.filter(geounit__in=dist1ids,subject=self.subject1)
         expected = float(exqset.aggregate(SumAgg('number'))['number__sum']) > 10.0
         expected = 1 if expected else 0
 
         dist1ids = map(lambda x: str(x.id), dist1ids)
         
-        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
         district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
 
         thrcalc = Threshold()
@@ -1538,17 +1556,14 @@ class CalculatorCase(BaseTestCase):
         self.assertEquals(expected, actual, 'Incorrect value during threshold. (e:%s,a:%s)' % (expected, actual))
 
     def test_threshold4(self):
-        geolevelid = self.geolevels[1].id
-        geounits = self.geounits[geolevelid]
-
-        dist1ids = geounits[0:3] + geounits[9:12]
+        dist1ids = self.geounits[0:3] + self.geounits[9:12]
         exqset = Characteristic.objects.filter(geounit__in=dist1ids,subject=self.subject1)
         expected = float(exqset.aggregate(SumAgg('number'))['number__sum']) > 5.0
         expected = 1 if expected else 0
 
         dist1ids = map(lambda x: str(x.id), dist1ids)
         
-        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
         district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
 
         thrcalc = Threshold()
@@ -1561,16 +1576,13 @@ class CalculatorCase(BaseTestCase):
         self.assertEquals(expected, actual, 'Incorrect value during threshold. (e:%s,a:%s)' % (expected, actual))
 
     def test_threshold_plan1(self):
-        geolevelid = self.geolevels[1].id
-        geounits = self.geounits[geolevelid]
-
-        dist1ids = geounits[0:3] + geounits[9:12]
-        dist2ids = geounits[18:21] + geounits[27:30] + geounits[36:39]
+        dist1ids = self.geounits[0:3] + self.geounits[9:12]
+        dist2ids = self.geounits[18:21] + self.geounits[27:30] + self.geounits[36:39]
         dist1ids = map(lambda x: str(x.id), dist1ids)
         dist2ids = map(lambda x: str(x.id), dist2ids)
         
-        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
-        self.plan.add_geounits( self.district2.district_id, dist2ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
+        self.plan.add_geounits( self.district2.district_id, dist2ids, self.geolevel.id, self.plan.version)
 
         thrcalc = Threshold()
         thrcalc.arg_dict['value'] = ('subject',self.subject1.name,)
@@ -1615,17 +1627,14 @@ class CalculatorCase(BaseTestCase):
         self.assertEquals(0, rngcalc.result, 'Incorrect value during range. (e:%s,a:%s)' % (0, rngcalc.result))
 
     def test_range3(self):
-        geolevelid = self.geolevels[1].id
-        geounits = self.geounits[geolevelid]
-
-        dist1ids = geounits[0:3] + geounits[9:12]
+        dist1ids = self.geounits[0:3] + self.geounits[9:12]
         exqset = Characteristic.objects.filter(geounit__in=dist1ids,subject=self.subject1)
         expected = float(exqset.aggregate(SumAgg('number'))['number__sum'])
         expected = 1 if 5.0 < expected and expected < 10.0 else 0
 
         dist1ids = map(lambda x: str(x.id), dist1ids)
         
-        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
         district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
 
         rngcalc = Range()
@@ -1639,17 +1648,14 @@ class CalculatorCase(BaseTestCase):
         self.assertEquals(expected, actual, 'Incorrect value during range. (e:%s,a:%s)' % (expected, actual))
 
     def test_range4(self):
-        geolevelid = self.geolevels[1].id
-        geounits = self.geounits[geolevelid]
-
-        dist1ids = geounits[0:3] + geounits[9:12]
+        dist1ids = self.geounits[0:3] + self.geounits[9:12]
         exqset = Characteristic.objects.filter(geounit__in=dist1ids,subject=self.subject1)
         expected = float(exqset.aggregate(SumAgg('number'))['number__sum'])
         expected = 1 if 1.0 < expected and expected < 5.0 else 0
 
         dist1ids = map(lambda x: str(x.id), dist1ids)
         
-        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
         district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
 
         rngcalc = Range()
@@ -1664,16 +1670,13 @@ class CalculatorCase(BaseTestCase):
 
 
     def test_range_plan1(self):
-        geolevelid = self.geolevels[1].id
-        geounits = self.geounits[geolevelid]
-
-        dist1ids = geounits[0:3] + geounits[9:12]
-        dist2ids = geounits[18:21] + geounits[27:30] + geounits[36:39]
+        dist1ids = self.geounits[0:3] + self.geounits[9:12]
+        dist2ids = self.geounits[18:21] + self.geounits[27:30] + self.geounits[36:39]
         dist1ids = map(lambda x: str(x.id), dist1ids)
         dist2ids = map(lambda x: str(x.id), dist2ids)
         
-        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
-        self.plan.add_geounits( self.district2.district_id, dist2ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
+        self.plan.add_geounits( self.district2.district_id, dist2ids, self.geolevel.id, self.plan.version)
 
         rngcalc = Range()
         rngcalc.arg_dict['value'] = ('subject',self.subject1.name,)
@@ -1691,16 +1694,14 @@ class CalculatorCase(BaseTestCase):
         """
         Test the Schwartzberg measure of compactness.
         """
-        geounits = self.geounits[self.geolevels[1].id]
-
-        dist1ids = geounits[0:3] + geounits[9:12]
-        dist2ids = geounits[18:21] + geounits[27:30] + geounits[36:39]
+        dist1ids = self.geounits[0:3] + self.geounits[9:12]
+        dist2ids = self.geounits[18:21] + self.geounits[27:30] + self.geounits[36:39]
 
         dist1ids = map(lambda x: str(x.id), dist1ids)
         dist2ids = map(lambda x: str(x.id), dist2ids)
 
-        self.plan.add_geounits(self.district1.district_id, dist1ids, self.geolevels[1].id, self.plan.version)
-        self.plan.add_geounits(self.district2.district_id, dist2ids, self.geolevels[1].id, self.plan.version)
+        self.plan.add_geounits(self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
+        self.plan.add_geounits(self.district2.district_id, dist2ids, self.geolevel.id, self.plan.version)
 
         district1 = max(District.objects.filter(plan=self.plan,district_id=self.district1.district_id),key=lambda d: d.version)
         district2 = max(District.objects.filter(plan=self.plan,district_id=self.district2.district_id),key=lambda d: d.version)
@@ -1717,16 +1718,14 @@ class CalculatorCase(BaseTestCase):
         """
         Test the Schwartzberg measure of compactness.
         """
-        geounits = self.geounits[self.geolevels[1].id]
-
-        dist1ids = geounits[0:3] + geounits[9:12]
-        dist2ids = geounits[18:21] + geounits[27:30] + geounits[36:39]
+        dist1ids = self.geounits[0:3] + self.geounits[9:12]
+        dist2ids = self.geounits[18:21] + self.geounits[27:30] + self.geounits[36:39]
 
         dist1ids = map(lambda x: str(x.id), dist1ids)
         dist2ids = map(lambda x: str(x.id), dist2ids)
 
-        self.plan.add_geounits(self.district1.district_id, dist1ids, self.geolevels[1].id, self.plan.version)
-        self.plan.add_geounits(self.district2.district_id, dist2ids, self.geolevels[1].id, self.plan.version)
+        self.plan.add_geounits(self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
+        self.plan.add_geounits(self.district2.district_id, dist2ids, self.geolevel.id, self.plan.version)
 
         district1 = max(District.objects.filter(plan=self.plan,district_id=self.district1.district_id),key=lambda d: d.version)
         district2 = max(District.objects.filter(plan=self.plan,district_id=self.district2.district_id),key=lambda d: d.version)
@@ -1740,16 +1739,14 @@ class CalculatorCase(BaseTestCase):
         """
         Test the Roeck measure of compactness.
         """
-        geounits = self.geounits[self.geolevels[1].id]
-
-        dist1ids = geounits[0:3] + geounits[9:12]
-        dist2ids = geounits[18:21] + geounits[27:30] + geounits[36:39]
+        dist1ids = self.geounits[0:3] + self.geounits[9:12]
+        dist2ids = self.geounits[18:21] + self.geounits[27:30] + self.geounits[36:39]
 
         dist1ids = map(lambda x: str(x.id), dist1ids)
         dist2ids = map(lambda x: str(x.id), dist2ids)
 
-        self.plan.add_geounits(self.district1.district_id, dist1ids, self.geolevels[1].id, self.plan.version)
-        self.plan.add_geounits(self.district2.district_id, dist2ids, self.geolevels[1].id, self.plan.version)
+        self.plan.add_geounits(self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
+        self.plan.add_geounits(self.district2.district_id, dist2ids, self.geolevel.id, self.plan.version)
 
         district1 = max(District.objects.filter(plan=self.plan,district_id=self.district1.district_id),key=lambda d: d.version)
         district2 = max(District.objects.filter(plan=self.plan,district_id=self.district2.district_id),key=lambda d: d.version)
@@ -1768,16 +1765,14 @@ class CalculatorCase(BaseTestCase):
         """
         Test the Roeck measure of compactness.
         """
-        geounits = self.geounits[self.geolevels[1].id]
-
-        dist1ids = geounits[0:3] + geounits[9:12]
-        dist2ids = geounits[18:21] + geounits[27:30] + geounits[36:39]
+        dist1ids = self.geounits[0:3] + self.geounits[9:12]
+        dist2ids = self.geounits[18:21] + self.geounits[27:30] + self.geounits[36:39]
 
         dist1ids = map(lambda x: str(x.id), dist1ids)
         dist2ids = map(lambda x: str(x.id), dist2ids)
 
-        self.plan.add_geounits(self.district1.district_id, dist1ids, self.geolevels[1].id, self.plan.version)
-        self.plan.add_geounits(self.district2.district_id, dist2ids, self.geolevels[1].id, self.plan.version)
+        self.plan.add_geounits(self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
+        self.plan.add_geounits(self.district2.district_id, dist2ids, self.geolevel.id, self.plan.version)
 
         district1 = max(District.objects.filter(plan=self.plan,district_id=self.district1.district_id),key=lambda d: d.version)
         district2 = max(District.objects.filter(plan=self.plan,district_id=self.district2.district_id),key=lambda d: d.version)
@@ -1792,16 +1787,14 @@ class CalculatorCase(BaseTestCase):
         """
         Test the Polsby-Popper measure of compactness.
         """
-        geounits = self.geounits[self.geolevels[1].id]
-
-        dist1ids = geounits[0:3] + geounits[9:12]
-        dist2ids = geounits[18:21] + geounits[27:30] + geounits[36:39]
+        dist1ids = self.geounits[0:3] + self.geounits[9:12]
+        dist2ids = self.geounits[18:21] + self.geounits[27:30] + self.geounits[36:39]
 
         dist1ids = map(lambda x: str(x.id), dist1ids)
         dist2ids = map(lambda x: str(x.id), dist2ids)
 
-        self.plan.add_geounits(self.district1.district_id, dist1ids, self.geolevels[1].id, self.plan.version)
-        self.plan.add_geounits(self.district2.district_id, dist2ids, self.geolevels[1].id, self.plan.version)
+        self.plan.add_geounits(self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
+        self.plan.add_geounits(self.district2.district_id, dist2ids, self.geolevel.id, self.plan.version)
 
         district1 = max(District.objects.filter(plan=self.plan,district_id=self.district1.district_id),key=lambda d: d.version)
         district2 = max(District.objects.filter(plan=self.plan,district_id=self.district2.district_id),key=lambda d: d.version)
@@ -1820,16 +1813,14 @@ class CalculatorCase(BaseTestCase):
         """
         Test the Polsby-Popper measure of compactness.
         """
-        geounits = self.geounits[self.geolevels[1].id]
-
-        dist1ids = geounits[0:3] + geounits[9:12]
-        dist2ids = geounits[18:21] + geounits[27:30] + geounits[36:39]
+        dist1ids = self.geounits[0:3] + self.geounits[9:12]
+        dist2ids = self.geounits[18:21] + self.geounits[27:30] + self.geounits[36:39]
 
         dist1ids = map(lambda x: str(x.id), dist1ids)
         dist2ids = map(lambda x: str(x.id), dist2ids)
 
-        self.plan.add_geounits(self.district1.district_id, dist1ids, self.geolevels[1].id, self.plan.version)
-        self.plan.add_geounits(self.district2.district_id, dist2ids, self.geolevels[1].id, self.plan.version)
+        self.plan.add_geounits(self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
+        self.plan.add_geounits(self.district2.district_id, dist2ids, self.geolevel.id, self.plan.version)
 
         district1 = max(District.objects.filter(plan=self.plan,district_id=self.district1.district_id),key=lambda d: d.version)
         district2 = max(District.objects.filter(plan=self.plan,district_id=self.district2.district_id),key=lambda d: d.version)
@@ -1844,16 +1835,14 @@ class CalculatorCase(BaseTestCase):
         """
         Test the Length/Width measure of compactness.
         """
-        geounits = self.geounits[self.geolevels[1].id]
-
-        dist1ids = geounits[0:3] + geounits[9:12]
-        dist2ids = geounits[18:21] + geounits[27:30] + geounits[36:39]
+        dist1ids = self.geounits[0:3] + self.geounits[9:12]
+        dist2ids = self.geounits[18:21] + self.geounits[27:30] + self.geounits[36:39]
 
         dist1ids = map(lambda x: str(x.id), dist1ids)
         dist2ids = map(lambda x: str(x.id), dist2ids)
 
-        self.plan.add_geounits(self.district1.district_id, dist1ids, self.geolevels[1].id, self.plan.version)
-        self.plan.add_geounits(self.district2.district_id, dist2ids, self.geolevels[1].id, self.plan.version)
+        self.plan.add_geounits(self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
+        self.plan.add_geounits(self.district2.district_id, dist2ids, self.geolevel.id, self.plan.version)
 
         district1 = max(District.objects.filter(plan=self.plan,district_id=self.district1.district_id),key=lambda d: d.version)
         district2 = max(District.objects.filter(plan=self.plan,district_id=self.district2.district_id),key=lambda d: d.version)
@@ -1872,16 +1861,14 @@ class CalculatorCase(BaseTestCase):
         """
         Test the Length/Width measure of compactness.
         """
-        geounits = self.geounits[self.geolevels[1].id]
-
-        dist1ids = geounits[0:3] + geounits[9:12]
-        dist2ids = geounits[18:21] + geounits[27:30] + geounits[36:39]
+        dist1ids = self.geounits[0:3] + self.geounits[9:12]
+        dist2ids = self.geounits[18:21] + self.geounits[27:30] + self.geounits[36:39]
 
         dist1ids = map(lambda x: str(x.id), dist1ids)
         dist2ids = map(lambda x: str(x.id), dist2ids)
 
-        self.plan.add_geounits(self.district1.district_id, dist1ids, self.geolevels[1].id, self.plan.version)
-        self.plan.add_geounits(self.district2.district_id, dist2ids, self.geolevels[1].id, self.plan.version)
+        self.plan.add_geounits(self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
+        self.plan.add_geounits(self.district2.district_id, dist2ids, self.geolevel.id, self.plan.version)
 
         district1 = max(District.objects.filter(plan=self.plan,district_id=self.district1.district_id),key=lambda d: d.version)
         district2 = max(District.objects.filter(plan=self.plan,district_id=self.district2.district_id),key=lambda d: d.version)
@@ -1899,13 +1886,10 @@ class CalculatorCase(BaseTestCase):
         self.assertEquals(0, cntcalc.result, 'District is contiguous.')
 
     def test_contiguity2(self):
-        geolevelid = self.geolevels[1].id
-        geounits = self.geounits[geolevelid]
-
-        dist1ids = geounits[0:3] + geounits[12:15]
+        dist1ids = self.geounits[0:3] + self.geounits[12:15]
         dist1ids = map(lambda x: str(x.id), dist1ids)
         
-        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
         district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
 
         cntcalc = Contiguity()
@@ -1914,13 +1898,10 @@ class CalculatorCase(BaseTestCase):
         self.assertEquals(0, cntcalc.result, 'District is contiguous.')
 
     def test_contiguity3(self):
-        geolevelid = self.geolevels[1].id
-        geounits = self.geounits[geolevelid]
-
-        dist1ids = geounits[0:3] + geounits[9:12]
+        dist1ids = self.geounits[0:3] + self.geounits[9:12]
         dist1ids = map(lambda x: str(x.id), dist1ids)
         
-        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
         district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
 
         cntcalc = Contiguity()
@@ -1929,12 +1910,9 @@ class CalculatorCase(BaseTestCase):
         self.assertEquals(1, cntcalc.result, 'District is discontiguous.')
 
     def test_contiguity_singlepoint(self):
-        geolevelid = self.geolevels[1].id
-        geounits = self.geounits[geolevelid]
-
-        dist1ids = [geounits[0], geounits[10]]
+        dist1ids = [self.geounits[0], self.geounits[10]]
         dist1ids = map(lambda x: str(x.id), dist1ids)
-        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
         district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
 
         # 2 geounits connected by one point -- single-point is false, should fail
@@ -1950,9 +1928,9 @@ class CalculatorCase(BaseTestCase):
         self.assertEquals(1, cntcalc.result, 'District is contiguous at 1 point, and single-point contiguity is true.')
 
         # add another geounits so 3 geometries are connected by 2 single points (contiguous)
-        dist1ids = [geounits[18]]
+        dist1ids = [self.geounits[18]]
         dist1ids = map(lambda x: str(x.id), dist1ids)
-        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
         district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
 
         cntcalc = Contiguity()
@@ -1961,9 +1939,9 @@ class CalculatorCase(BaseTestCase):
         self.assertEquals(1, cntcalc.result, 'District is contiguous at 1 point twice, and single-point contiguity is true.')
 
         # add another geounits so 4 geometries are connected by 3 single points (contiguous)
-        dist1ids = [geounits[28]]
+        dist1ids = [self.geounits[28]]
         dist1ids = map(lambda x: str(x.id), dist1ids)
-        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
         district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
 
         cntcalc = Contiguity()
@@ -1972,9 +1950,9 @@ class CalculatorCase(BaseTestCase):
         self.assertEquals(1, cntcalc.result, 'District is contiguous at 1 point thrice, and single-point contiguity is true.')
 
         # add more geounits so 5 geometries are connected by 3 single points (discontiguous)
-        dist1ids = [geounits[14]]
+        dist1ids = [self.geounits[14]]
         dist1ids = map(lambda x: str(x.id), dist1ids)
-        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
         district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
 
         cntcalc = Contiguity()
@@ -1983,17 +1961,14 @@ class CalculatorCase(BaseTestCase):
         self.assertEquals(0, cntcalc.result, 'District is contiguous at 1 point thrice, but has a disjoint geometry.')
 
     def test_contiguity_overrides(self):
-        geolevelid = self.geolevels[1].id
-        geounits = self.geounits[geolevelid]
-
-        dist1ids = [geounits[0], geounits[11]]
+        dist1ids = [self.geounits[0], self.geounits[11]]
         dist1ids = map(lambda x: str(x.id), dist1ids)
-        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
         district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
 
         overrides = []
         def add_override(id1, id2):
-            override = ContiguityOverride(override_geounit=geounits[id1], connect_to_geounit=geounits[id2])
+            override = ContiguityOverride(override_geounit=self.geounits[id1], connect_to_geounit=self.geounits[id2])
             override.save()
             overrides.append(override)
 
@@ -2015,9 +1990,9 @@ class CalculatorCase(BaseTestCase):
         self.assertEquals(1, cntcalc.result, 'District is not contiguous, but an override should make it so.')
 
         # add a few more non-contiguous geounits without overrides, should fail
-        dist1ids = [geounits[4], geounits[22], geounits[7]]
+        dist1ids = [self.geounits[4], self.geounits[22], self.geounits[7]]
         dist1ids = map(lambda x: str(x.id), dist1ids)
-        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
         district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
         cntcalc.compute(district=district1)
         self.assertEquals(0, cntcalc.result, 'District needs 3 overrides to be considered contiguous')
@@ -2034,9 +2009,9 @@ class CalculatorCase(BaseTestCase):
         self.assertEquals(1, cntcalc.result, 'District has appropriate overrides to be considered contiguous')
 
         # check to make sure this works in conjunction with single-point contiguity by adding 2 more geounits
-        dist1ids = [geounits[14], geounits[19]]
+        dist1ids = [self.geounits[14], self.geounits[19]]
         dist1ids = map(lambda x: str(x.id), dist1ids)
-        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
         district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
         cntcalc.arg_dict['allow_single_point'] = ('literal','0',)
         cntcalc.compute(district=district1)
@@ -2050,16 +2025,13 @@ class CalculatorCase(BaseTestCase):
             override.delete()
 
     def test_contiguity_plan1(self):
-        geolevelid = self.geolevels[1].id
-        geounits = self.geounits[geolevelid]
-
-        dist1ids = geounits[0:4] + geounits[5:9]
-        dist2ids = geounits[9:13] + geounits[14:18]
+        dist1ids = self.geounits[0:4] + self.geounits[5:9]
+        dist2ids = self.geounits[9:13] + self.geounits[14:18]
         dist1ids = map(lambda x: str(x.id), dist1ids)
         dist2ids = map(lambda x: str(x.id), dist2ids)
         
-        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
-        self.plan.add_geounits( self.district2.district_id, dist2ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
+        self.plan.add_geounits( self.district2.district_id, dist2ids, self.geolevel.id, self.plan.version)
 
         cntcalc = Contiguity()
         cntcalc.compute(plan=self.plan)
@@ -2068,7 +2040,7 @@ class CalculatorCase(BaseTestCase):
 
         self.assertEquals(0, actual, 'Incorrect value during contiguity. (e:%d,a:%d)' % (0, actual))
 
-        self.plan.add_geounits( self.district1.district_id, [str(geounits[4].id)], geolevelid, self.plan.version )
+        self.plan.add_geounits( self.district1.district_id, [str(self.geounits[4].id)], self.geolevel.id, self.plan.version )
 
         cntcalc.compute(plan=self.plan)
 
@@ -2076,7 +2048,7 @@ class CalculatorCase(BaseTestCase):
 
         self.assertEquals(1, actual, 'Incorrect value during contiguity. (e:%d,a:%d)' % (1, actual))
 
-        self.plan.add_geounits( self.district2.district_id, [str(geounits[13].id)], geolevelid, self.plan.version )
+        self.plan.add_geounits( self.district2.district_id, [str(self.geounits[13].id)], self.geolevel.id, self.plan.version )
 
         cntcalc.compute(plan=self.plan)
 
@@ -2086,16 +2058,13 @@ class CalculatorCase(BaseTestCase):
 
 
     def test_equivalence1(self):
-        geolevelid = self.geolevels[1].id
-        geounits = self.geounits[geolevelid]
-
-        dist1ids = geounits[0:3] + geounits[9:12]
-        dist2ids = geounits[18:21] + geounits[27:30] + geounits[36:39]
+        dist1ids = self.geounits[0:3] + self.geounits[9:12]
+        dist2ids = self.geounits[18:21] + self.geounits[27:30] + self.geounits[36:39]
         dist1ids = map(lambda x: str(x.id), dist1ids)
         dist2ids = map(lambda x: str(x.id), dist2ids)
         
-        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
-        self.plan.add_geounits( self.district2.district_id, dist2ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
+        self.plan.add_geounits( self.district2.district_id, dist2ids, self.geolevel.id, self.plan.version)
 
         equcalc = Equivalence()
         equcalc.arg_dict['value'] = ('subject',self.subject1.name,)
@@ -2107,16 +2076,13 @@ class CalculatorCase(BaseTestCase):
 
 
     def test_representationalfairness(self):
-        geolevelid = self.geolevels[1].id
-        geounits = self.geounits[geolevelid]
-
-        dist1ids = geounits[0:3] + geounits[9:12]
-        dist2ids = geounits[6:9] + geounits[15:18]
+        dist1ids = self.geounits[0:3] + self.geounits[9:12]
+        dist2ids = self.geounits[6:9] + self.geounits[15:18]
         dist1ids = map(lambda x: str(x.id), dist1ids)
         dist2ids = map(lambda x: str(x.id), dist2ids)
         
-        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
-        self.plan.add_geounits( self.district2.district_id, dist2ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
+        self.plan.add_geounits( self.district2.district_id, dist2ids, self.geolevel.id, self.plan.version)
 
         district1 = self.plan.district_set.filter(district_id=self.district1.district_id, version=self.plan.version-1)[0]
         district2 = self.plan.district_set.filter(district_id=self.district2.district_id, version=self.plan.version)[0]
@@ -2147,16 +2113,13 @@ class CalculatorCase(BaseTestCase):
         self.assertEqual('<span>Democrat&nbsp;2</span>', actual, 'Wrong party given for RepresentationalFairness (e:%s,a:%s)' % ('<span>Democrat&nbsp;2</span>', actual))
 
     def test_competitiveness(self):
-        geolevelid = self.geolevels[1].id
-        geounits = self.geounits[geolevelid]
-
-        dist1ids = geounits[0:3] + geounits[9:12]
-        dist2ids = geounits[6:9] + geounits[15:18]
+        dist1ids = self.geounits[0:3] + self.geounits[9:12]
+        dist2ids = self.geounits[6:9] + self.geounits[15:18]
         dist1ids = map(lambda x: str(x.id), dist1ids)
         dist2ids = map(lambda x: str(x.id), dist2ids)
         
-        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
-        self.plan.add_geounits( self.district2.district_id, dist2ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
+        self.plan.add_geounits( self.district2.district_id, dist2ids, self.geolevel.id, self.plan.version)
 
         # If you're playing along at home, the values are:
         # District 1: 6 dem, 150 rep; District 2: 42 dem, 114 rep
@@ -2191,16 +2154,13 @@ class CalculatorCase(BaseTestCase):
         self.assertEquals(2, actual, 'Incorrect value during competitiveness. (e:%d,a:%d)' % (2, actual))
 
     def test_countdist(self):
-        geolevelid = self.geolevels[1].id
-        geounits = self.geounits[geolevelid]
-
-        dist1ids = geounits[0:3] + geounits[9:12]
-        dist2ids = geounits[6:9] + geounits[15:18]
+        dist1ids = self.geounits[0:3] + self.geounits[9:12]
+        dist2ids = self.geounits[6:9] + self.geounits[15:18]
         dist1ids = map(lambda x: str(x.id), dist1ids)
         dist2ids = map(lambda x: str(x.id), dist2ids)
         
-        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
-        self.plan.add_geounits( self.district2.district_id, dist2ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
+        self.plan.add_geounits( self.district2.district_id, dist2ids, self.geolevel.id, self.plan.version)
 
         numcalc = CountDistricts()
         numcalc.arg_dict['target'] = ('literal','2',)
@@ -2211,16 +2171,13 @@ class CalculatorCase(BaseTestCase):
         self.assertEquals(True, actual, 'Incorrect value during district counting. (e:%s,a:%s)' % (True, actual))
 
     def test_equipop(self):
-        geolevelid = self.geolevels[1].id
-        geounits = self.geounits[geolevelid]
-
-        dist1ids = geounits[0:3] + geounits[9:12]
-        dist2ids = geounits[6:9] + geounits[15:18]
+        dist1ids = self.geounits[0:3] + self.geounits[9:12]
+        dist2ids = self.geounits[6:9] + self.geounits[15:18]
         dist1ids = map(lambda x: str(x.id), dist1ids)
         dist2ids = map(lambda x: str(x.id), dist2ids)
         
-        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
-        self.plan.add_geounits( self.district2.district_id, dist2ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
+        self.plan.add_geounits( self.district2.district_id, dist2ids, self.geolevel.id, self.plan.version)
 
         equicalc = Equipopulation()
         equicalc.arg_dict['value'] = ('subject',self.subject1.name,)
@@ -2249,47 +2206,15 @@ class CalculatorCase(BaseTestCase):
         self.assertEquals(True, actual, 'Incorrect value during plan equipop. (e:%s,a:%s)' % (True, actual))
 
 
-    def test_allblocks(self):
-        geolevelid = self.geolevels[1].id
-        geounits = self.geounits[geolevelid]
-
-        dist1ids = geounits[0:3] + geounits[9:12]
-        dist2ids = geounits[6:9] + geounits[15:18]
-        dist1ids = map(lambda x: str(x.id), dist1ids)
-        dist2ids = map(lambda x: str(x.id), dist2ids)
-        
-        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
-        self.plan.add_geounits( self.district2.district_id, dist2ids, geolevelid, self.plan.version)
-
-        allblocks = AllBlocksAssigned()
-        allblocks.arg_dict['threshold'] = ('literal', 0.1)
-
-        plan = Plan.objects.get(pk=self.plan.id)
-        allblocks.compute(plan=plan)
-        actual = allblocks.result
-        self.assertEquals(False, actual, 'Incorrect value during plan allblocks. (e:%s,a:%s)' % (False, actual))
-
-        remainderids = plan.get_unassigned_geounits(0.1)
-        remainderids = map(lambda x: str(x[0]), remainderids)
-        plan.add_geounits( self.district2.district_id, remainderids, geolevelid, plan.version)
-
-        plan = Plan.objects.get(pk=plan.id)
-        allblocks.compute(plan=plan)
-        actual = allblocks.result
-        self.assertEquals(True, actual, 'Incorrect value during plan allblocks. (e:%s,a:%s)' % (True, actual))
-
 
     def test_majmin(self):
-        geolevelid = self.geolevels[1].id
-        geounits = self.geounits[geolevelid]
-
-        dist1ids = geounits[0:3] + geounits[9:12]
-        dist2ids = geounits[18:21] + geounits[27:30] + geounits[36:39]
+        dist1ids = self.geounits[0:3] + self.geounits[9:12]
+        dist2ids = self.geounits[18:21] + self.geounits[27:30] + self.geounits[36:39]
         dist1ids = map(lambda x: str(x.id), dist1ids)
         dist2ids = map(lambda x: str(x.id), dist2ids)
         
-        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
-        self.plan.add_geounits( self.district2.district_id, dist2ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
+        self.plan.add_geounits( self.district2.district_id, dist2ids, self.geolevel.id, self.plan.version)
 
         majcalc = MajorityMinority()
         majcalc.arg_dict['population'] = ('subject',self.subject1.name,)
@@ -2312,13 +2237,63 @@ class CalculatorCase(BaseTestCase):
 
         self.assertEquals(False, actual, 'Incorrect value during percentage. (e:%f,a:%f)' % (False, actual))
 
+class AllBlocksTestCase(BaseTestCase):
+    fixtures = ['redistricting_testdata.json',
+                'redistricting_testdata_geolevel2.json',
+                'redistricting_testdata_geolevel3.json',
+                ]
+    def setUp(self):
+        BaseTestCase.setUp(self)
+        self.geolevel = Geolevel.objects.get(pk=2)
+        self.geounits = list(Geounit.objects.filter(geolevel=self.geolevel).order_by('id'))
+    
+    def tearDown(self):
+        self.geolevel = None
+        self.geounits = None
+        BaseTestCase.tearDown(self)
 
+    def test_allblocks(self):
+        dist1ids = self.geounits[0:3] + self.geounits[9:12]
+        dist2ids = self.geounits[6:9] + self.geounits[15:18]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        dist2ids = map(lambda x: str(x.id), dist2ids)
+        
+        self.plan.add_geounits( self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
+        self.plan.add_geounits( self.district2.district_id, dist2ids, self.geolevel.id, self.plan.version)
 
+        allblocks = AllBlocksAssigned()
+        allblocks.arg_dict['threshold'] = ('literal', 0.1)
 
-class ScoreRenderCase(BaseTestCase):
+        plan = Plan.objects.get(pk=self.plan.id)
+        allblocks.compute(plan=plan)
+        actual = allblocks.result
+        self.assertEquals(False, actual, 'Incorrect value during plan allblocks. (e:%s,a:%s)' % (False, actual))
+
+        remainderids = plan.get_unassigned_geounits(0.1)
+        remainderids = map(lambda x: str(x[0]), remainderids)
+        plan.add_geounits( self.district2.district_id, remainderids, self.geolevel.id, plan.version)
+
+        plan = Plan.objects.get(pk=plan.id)
+        allblocks.compute(plan=plan)
+        actual = allblocks.result
+        self.assertEquals(True, actual, 'Incorrect value during plan allblocks. (e:%s,a:%s)' % (True, actual))
+
+class ScoreRenderTestCase(BaseTestCase):
+    fixtures = ['redistricting_testdata.json', 'redistricting_testdata_geolevel2.json', 'redistricting_testdata_scoring.json']
+
+    def setUp(self):
+        BaseTestCase.setUp(self)
+        self.geolevel = Geolevel.objects.get(pk=2)
+        self.geounits = list(Geounit.objects.filter(geolevel=self.geolevel).order_by('id'))
+
+    def tearDown(self):
+        self.geolevel = None
+        self.geounits = None
+        BaseTestCase.tearDown(self)
+
     def test_panelrender_plan(self):
-        geolevelid = self.geolevels[1].id
-        geounits = self.geounits[geolevelid]
+        geolevelid = self.geolevel.id
+        geounits = self.geounits
 
         dist1ids = geounits[0:3] + geounits[9:12]
         dist2ids = geounits[6:9] + geounits[15:18]
@@ -2356,8 +2331,8 @@ class ScoreRenderCase(BaseTestCase):
             os.remove(tplfile)
 
     def test_panelrender_district(self):
-        geolevelid = self.geolevels[1].id
-        geounits = self.geounits[geolevelid]
+        geolevelid = self.geolevel.id
+        geounits = self.geounits
 
         dist1ids = geounits[0:3] + geounits[9:12]
         dist2ids = geounits[6:9] + geounits[15:18]
@@ -2386,8 +2361,8 @@ class ScoreRenderCase(BaseTestCase):
             os.remove(tplfile)
 
     def test_display_render_page(self):
-        geolevelid = self.geolevels[1].id
-        geounits = self.geounits[geolevelid]
+        geolevelid = self.geolevel.id
+        geounits = self.geounits
 
         dist1ids = geounits[0:3] + geounits[9:12]
         dist2ids = geounits[6:9] + geounits[15:18]
@@ -2429,8 +2404,8 @@ class ScoreRenderCase(BaseTestCase):
         os.remove(tplfile)
 
     def test_display_render_div(self):
-        geolevelid = self.geolevels[1].id
-        geounits = self.geounits[geolevelid]
+        geolevelid = self.geolevel.id
+        geounits = self.geounits
 
         dist1ids = geounits[0:3] + geounits[9:12]
         dist2ids = geounits[6:9] + geounits[15:18]
@@ -2462,8 +2437,8 @@ class ScoreRenderCase(BaseTestCase):
 
 class ComputedScoresTestCase(BaseTestCase):
     def test_district1(self):
-        geolevelid = self.geolevels[1].id
-        geounits = self.geounits[geolevelid]
+        geolevelid = 2
+        geounits = list(Geounit.objects.filter(geolevel=geolevelid).order_by('id'))
 
         dist1ids = geounits[0:3] + geounits[9:12]
         dist2ids = geounits[6:9] + geounits[15:18]
@@ -2506,8 +2481,8 @@ class ComputedScoresTestCase(BaseTestCase):
         self.assertEquals(2, numscores, 'The number of computed district scores is incorrect. (e:2, a:%d)' % numscores)
 
     def test_plan1(self):
-        geolevelid = self.geolevels[1].id
-        geounits = self.geounits[geolevelid]
+        geolevelid = 2
+        geounits = list(Geounit.objects.filter(geolevel=geolevelid).order_by('id'))
 
         dist1ids = geounits[0:3] + geounits[9:12]
         dist2ids = geounits[6:9] + geounits[15:18]
