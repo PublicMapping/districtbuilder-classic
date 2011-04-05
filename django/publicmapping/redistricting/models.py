@@ -1369,14 +1369,17 @@ AND st_intersects(
             version = self.version
         if version != self.version:
             self.purge(after=version)
+
         district_keys = set(map(lambda d: d.id, components))
+        district_keys.add(target.id)
+
         district_version = self.get_districts_at_version(version)
         version_keys = set(map(lambda d: d.id, district_version))
         if not district_keys.issubset(version_keys):
             raise Exception('Attempted to combine districts not in the same plan or version') 
         if target.is_locked:
             raise Exception('You cannot combine with a locked district')
-        
+
         try:
             target.id = None
             target.version = version + 1
