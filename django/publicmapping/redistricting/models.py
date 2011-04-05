@@ -849,7 +849,13 @@ class Plan(models.Model):
         # boundary of the locked area, because get_mixed_geounits is getting
         # the geounits that lie outside of the provided geometry, but
         # within the boundaries of the geounit ids.
-        bounds = target.geom.union(locked) if (locked and target.geom) else target.geom
+        if locked:
+            if target.geom:
+                bounds = target.geom.union(locked)
+            else:
+                bounds = locked
+        else:
+            bounds = target.geom
 
         # get the geounits before changing the target geometry
         geounits = Geounit.get_mixed_geounits(geounit_ids, self.legislative_body, geolevel, bounds, False)
@@ -1585,6 +1591,37 @@ class District(models.Model):
                 changed = True
 
         return changed
+
+    def reset_stats(self):
+        """
+        Reset the statistics to zero for this district. This method walks
+        through all available subjects, and sets the computed 
+        characteristic for this district to zero.
+
+        Returns:
+            True if the district stats were changed.
+        """
+        all_subjects = Subject.objects.all()
+        changed = False
+
+        # For all subjects
+        for subject in all_subjects:
+            # Get the pre-computed values
+            defaults = {'number':Decimal('0000.00000000')}
+            computed,created = ComputedCharacteristic.objects.get_or_create(subject=subject,district=self,defaults=defaults)
+
+            if not created:
+                # Add the aggregate to the computed value
+                computed.number = '0000.00000000'
+                computed.percentage = '0000.00000000'
+
+                # Save these values
+                computed.save();
+
+                changed = True
+
+        return changed
+
 
     def clone_characteristics_from(self, origin):
         """
