@@ -264,7 +264,7 @@ def merge_config(config, verbose):
         settings_out.write("\nMANAGERS = ADMINS\n")
 
         cfg = config.xpath('//Mailer')[0]
-        settings_out.write("\nEMAIL_SERVER = '%s'\n" % cfg.get('server'))
+        settings_out.write("\nEMAIL_HOST = '%s'\n" % cfg.get('server'))
         settings_out.write("EMAIL_PORT = %d\n" % int(cfg.get('port')))
         settings_out.write("EMAIL_HOST_USER = '%s'\n" % cfg.get('username'))
         settings_out.write("EMAIL_HOST_PASSWORD = '%s'\n" % cfg.get('password'))
