@@ -33,7 +33,7 @@ from optparse import OptionParser, OptionGroup
 from os.path import exists
 from lxml.etree import parse, XMLSchema, XSLT
 from xml.dom import minidom
-import traceback, pprint, os, sys, random
+import traceback, os, sys, random
 
 def main():
     """
@@ -50,9 +50,6 @@ def main():
     parser.add_option('-V', '--views', dest="views",
             help="Create database views based on all geographies.",
             action='store_true', default=False)
-    parser.add_option('-D', '--debug', dest="debug",
-            help="Generate verbose debug output", default=False, 
-            action='store_true')
     parser.add_option('-G', '--geoserver', dest="geoserver",
             help="Create spatial data layers in Geoserver.",
             default=False, action='store_true')
@@ -70,8 +67,11 @@ def main():
 
     allops = (not options.database) and (not options.geolevels) and (not options.views) and (not options.geoserver) and (not options.templates) and (not options.nesting) and (not options.bard)
 
+    verbose = int(options.get('verbosity'))
+
     if len(args) != 2:
-        print """
+        if verbose > 0:
+            print """
 ERROR:
 
     This script requires a configuration file and a schema. Please check
@@ -79,15 +79,17 @@ ERROR:
 """
         return
 
-    config = validate_config(args[0], args[1], options.debug)
+    config = validate_config(args[0], args[1], verbose)
 
     if not config:
        return
 
-    print "Validated config."
+    if verbose > 0:
+        print "Validated config."
 
-    if merge_config(config, options.debug):
-        print "Generated django settings."
+    if merge_config(config, verbose):
+        if verbose > 0:
+            print "Generated django settings."
     else:
         return
 
@@ -115,17 +117,18 @@ ERROR:
         nesting = options.nesting
         bard = options.bard
 
-    management.call_command('setup', config=args[1], debug=options.debug, geolevels=geolevels, views=views, geoserver=geoserver, templates=templates, nesting=nesting, bard=bard)
+    management.call_command('setup', config=args[1], verbosity=verbose, geolevels=geolevels, views=views, geoserver=geoserver, templates=templates, nesting=nesting, bard=bard)
 
     return
 
 
-def validate_config(sch, cfg, verbose=False):
+def validate_config(sch, cfg, verbose):
     """
     Open the configuration file and validate it.
     """
     if not exists(sch):
-        print """
+        if verbose > 0:
+            print """
 ERROR:
 
 The validation schema file specified does not exist. Please check the
@@ -134,7 +137,8 @@ path and try again.
         return False
 
     if not exists(cfg):
-        print """
+        if verbose > 0:
+            print """
 ERROR:
 
 The configuration file specified does not exist. Please check the path
@@ -145,13 +149,14 @@ and try again.
     try:
         schdoc = parse(sch)
     except Exception, ex:
-        print """
+        if verbose > 0:
+            print """
 ERROR:
 
 The validation schema file specified could not be parsed. Please check
 the contents of the file and try again.
 """
-        if verbose:
+        if verbose > 1:
             print "The following traceback may provide more information:"
             print traceback.format_exc()
 
@@ -163,25 +168,26 @@ the contents of the file and try again.
     try:
         elem_tree = parse(cfg)
     except Exception, ex:
-        print """
+        if verbose > 0:
+            print """
 ERROR:
 
 The configuration file specified could not be parsed. Please check the
 contents of the file and try again.
 """
-        if verbose:
+        if verbose > 1:
             print "The following traceback may provide more information:"
             print traceback.format_exc()
 
         return False
 
     if not schema.validate(elem_tree):
-        if verbose:
+        if verbose > 1:
             print "Configuration is parsed, but is not valid."
             print schema.error_log.last_error
         return False
 
-    if verbose:
+    if verbose > 0:
         print "Configuration is parsed and validated."
 
     # Document may be valid, but IDs may not match REFs.
@@ -195,7 +201,8 @@ contents of the file and try again.
             found = found or (ref_tag.get('ref') == id_tag.get('id'))
 
         if not found:
-            print """
+            if verbose > 1:
+                print """
 ERROR:
 
 The configuration file has mismatched ID and REF attributes. Please edit
@@ -214,7 +221,8 @@ section.
             found = found or (ref_tag.get('ref') == id_tag.get('id'))
 
         if not found:
-            print """
+            if verbose > 1:
+                print """
 ERROR:
 
 The configuration file has mismatched ID and REF attributes. Please edit
@@ -223,7 +231,7 @@ the configuration file and make sure all <Subject> tags reference a
 """
             return False
 
-    if verbose:
+    if verbose > 0:
         print "Document validated."
 
     return elem_tree
@@ -338,13 +346,14 @@ def merge_config(config, verbose):
         
         settings_out.close()
     except Exception, ex:
-        print """
+        if verbose > 0:
+            print """
 ERROR:
 
     The database settings could not be written. Please check the 
     permissions of the django directory and settings.py and try again.
 """
-        if verbose:
+        if verbose > 1:
             print traceback.format_exc()
         return False
 
