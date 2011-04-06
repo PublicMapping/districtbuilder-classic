@@ -62,12 +62,16 @@ def main():
     parser.add_option('-b', '--bard', dest="bard",
             help="Create a BARD map based on the imported spatial data.", 
             default=False, action='store_true')
+    parser.add_option('-v', '--verbosity', dest="verbosity",
+            help="Verbosity level; 0=minimal output, 1=normal output, 2=all output",
+            default=1, type="int")
+
 
     (options, args) = parser.parse_args()
 
     allops = (not options.database) and (not options.geolevels) and (not options.views) and (not options.geoserver) and (not options.templates) and (not options.nesting) and (not options.bard)
 
-    verbose = int(options.get('verbosity'))
+    verbose = options.verbosity
 
     if len(args) != 2:
         if verbose > 0:
