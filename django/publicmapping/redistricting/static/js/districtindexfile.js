@@ -79,7 +79,7 @@ districtindexfile = function(options) {
      * The callback after getting the status of the file
      */
     var statusRequestCallback = function(data) {
-        if (data.success) {
+        if (data !== null && data.success) {
             var fileStatus = data.status;
             // If the file is ready, add a button/link to download
             if (fileStatus == 'done') {

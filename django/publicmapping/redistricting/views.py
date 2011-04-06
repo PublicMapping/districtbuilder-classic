@@ -1630,6 +1630,8 @@ def getcompliance(plan, version):
     districts = plan.get_districts_at_version(version, include_geom=True)
     contiguity_calculator = Contiguity()
     for district in districts:
+        if district.geom is None:
+            continue
         contiguity_calculator.compute(district=district)
         if contiguity_calculator.result == 0 and district.name != 'Unassigned':
             noncontiguous += 1

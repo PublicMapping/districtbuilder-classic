@@ -156,6 +156,9 @@ class Schwartzberg(CalculatorBase):
 
             if district.geom is None:
                 continue
+
+            if district.geom.length == 0:
+                continue
         
             r = sqrt(district.geom.area / pi)
             perimeter = 2 * pi * r

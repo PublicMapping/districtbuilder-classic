@@ -838,9 +838,9 @@ class Plan(models.Model):
         if target is None:
             # create a temporary district
             try:
-                name = self.legislative_body.member % (districtid-1)
+                name = self.legislative_body.member % districtid
             except:
-                name = str(districtid-1)
+                name = str(districtid)
             target = District(name=name, plan=self, district_id=districtid, version=self.version)
             target.save()
             new_target = True
@@ -1418,10 +1418,9 @@ AND st_intersects(
                     # Pasting a district to itself would've been handled earlier
                     continue
                 component.id = None
-                component.geom = None
-                component.simple = None
+                component.geom = MultiPolygon([], srid=component.geom.srid)
                 component.version = version + 1
-                component.save()
+                component.simplify() # implicit save
 
             self.version += 1
             self.save()

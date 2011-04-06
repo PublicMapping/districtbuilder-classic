@@ -1077,7 +1077,7 @@ function mapinit(srs,maxExtent) {
                                 url: '/districtmapping/plan/' + PLAN_ID + '/combinedistricts/',
                                 data: {
                                     from_district_id: feature.attributes.district_id,
-                                    to_district_id: 1, /*Always Unassigned */
+                                    to_district_id: 0, /*Always Unassigned */
                                     version: getPlanVersion()
                                 },
                                 success: function(data, textStatus, xhr) {
@@ -2422,7 +2422,7 @@ function mapinit(srs,maxExtent) {
                 dtaken = dtaken || ( options[o].text == BODY_MEMBER + d)
             }
             if (!dtaken) {
-                avail.push('<option value="'+(d+1)+'">'+BODY_MEMBER+d+'</option>');
+                avail.push('<option value="'+d+'">'+BODY_MEMBER+d+'</option>');
             }
         }
 
