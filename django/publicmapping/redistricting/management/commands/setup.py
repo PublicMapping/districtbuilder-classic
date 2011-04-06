@@ -54,9 +54,6 @@ class Command(BaseCommand):
     option_list = BaseCommand.option_list + (
         make_option('-c', '--config', dest="config",
             help="Use configuration file CONFIG", metavar="CONFIG"),
-        make_option('-D', '--debug', dest="debug",
-            help="Generate verbose debug output", default=False, 
-            action='store_true'),
         make_option('-g', '--geolevel', dest="geolevels",
             action="append", help="Geolevels to import"),
         make_option('-n', '--nesting', dest="nesting",
@@ -86,18 +83,19 @@ ERROR:
 """
             return
 
-        verbose = options.get('debug')
+        verbose = int(options.get('verbosity'))
 
         try:
             config = parse( options.get('config') )
         except Exception, ex:
-            print """
+            if verbose > 0:
+                print """
 ERROR:
 
 The configuration file specified could not be parsed. Please check the
 contents of the file and try again.
 """
-            if verbose:
+            if verbose > 1:
                 print "The following traceback may provide more information:"
                 print traceback.format_exc()
             return
@@ -164,7 +162,7 @@ contents of the file and try again.
         from django.contrib.sessions.models import Session
         qset = Session.objects.all()
 
-        if verbose:
+        if verbose > 1:
             print "Purging %d sessions from the database." % qset.count()
 
         qset.delete()
@@ -198,18 +196,19 @@ contents of the file and try again.
             """
             verbose_name = '%s:%s' % ('Geoserver object' if type_name is None else type_name, name)
             if self.rest_check(host,'%s/%s.json' % (url, name), headers):
-                if verbose:
+                if verbose > 1:
                     print "%s already exists" % verbose_name
                 if update:
-                    if not self.rest_config( 'PUT', host, url, json.dumps(dictionary), headers, 'Could not create %s' % verbose_name):
-                        print "%s couldn't be updated." % verbose_name
+                    if not self.rest_config( 'PUT', host, url, json.dumps(dictionary), headers, 'Could not create %s' % (verbose_name,), verbose):
+                        if verbose > 0:
+                            print "%s couldn't be updated." % verbose_name
                         return False
                     
             else:
-                if not self.rest_config( 'POST', host, url, json.dumps(dictionary), headers, 'Could not create %s' % verbose_name):
+                if not self.rest_config( 'POST', host, url, json.dumps(dictionary), headers, 'Could not create %s' % (verbose_name,), verbose):
                     return False
 
-                if verbose:
+                if verbose > 1:
                     print 'Created %s' % verbose_name
 
         # Create our namespace
@@ -320,10 +319,11 @@ contents of the file and try again.
                     } }
 
                     # Get the SLD file
-                    sld = self.get_style_contents( styledir, geolevel.name, style_type )
+                    sld = self.get_style_contents( styledir, geolevel.name, style_type, verbose )
 
                     if sld is None:
-                        print 'No style file found for %s' % style_name
+                        if verbose > 1:
+                            print 'No style file found for %s' % style_name
                         return False
 
                     # Create the style object on the geoserver
@@ -337,9 +337,10 @@ contents of the file and try again.
                         '/geoserver/rest/styles/%s' % style_name, 
                         sld, 
                         sld_headers, 
-                        "Could not upload style file '%s.sld'" % style_name)
+                        "Could not upload style file '%s.sld'" % style_name,
+                        verbose)
 
-                    if verbose:
+                    if verbose > 1:
                         print "Uploaded '%s.sld' file." % style_name
 
                     # Apply the uploaded style to the demographic layers
@@ -356,10 +357,11 @@ contents of the file and try again.
                         '/geoserver/rest/layers/%s:%s' % (namespace, style_name), \
                         json.dumps(layer), \
                         headers, \
-                        "Could not assign style to layer '%s'." % style_name):
+                        "Could not assign style to layer '%s'." % style_name, \
+                        verbose):
                             return False
 
-                    if verbose:
+                    if verbose > 1:
                         print "Assigned style '%s' to layer '%s'." % (style_name, style_name )
 
                     #if not self.rest_config( 'PUT', \
@@ -367,7 +369,8 @@ contents of the file and try again.
                     #    '/geoserver/gwc/rest/reload', \
                     #    '{"reload_configuration":1}', \
                     #    headers, \
-                    #    "Could not reload GWC configuration."):
+                    #    "Could not reload GWC configuration.", \
+                    #    verbose):
                     #    return False
 
                     #gwc = { 'format': 'image/png',
@@ -382,13 +385,15 @@ contents of the file and try again.
                     #    'zoomEnd': '%02d' % zoom_range[1]
                     #}
 
-                    #print "Attempting to seed layer with: %s" % json.dumps(gwc)
+                    #if verbose > 1:
+                    #    print "Attempting to seed layer with: %s" % json.dumps(gwc)
                     #if not self.rest_config( 'PUT', \
                     #    host, \
                     #    '/geoserver/gwc/rest/seed/%s:%s' % (namespace,style_name,), \
                     #    json.dumps(gwc), \
                     #    headers,
-                    #    "Could not initialize seeding for layer '%s'." % style_name):
+                    #    "Could not initialize seeding for layer '%s'." % style_name, \
+                    #    verbose):
                     #    return False
                     
 
@@ -414,7 +419,7 @@ contents of the file and try again.
         # finished configure_geoserver
         return True
 
-    def get_style_contents(self, styledir, geolevel, subject):
+    def get_style_contents(self, styledir, geolevel, subject, verbose):
         path = '%s/%s_%s.sld' % (styledir, geolevel, subject) 
         try:
             stylefile = open(path)
@@ -423,7 +428,8 @@ contents of the file and try again.
 
             return sld
         except:
-            print """
+            if verbose > 0:
+                print """
 ERROR:
 
         The style file:
@@ -447,16 +453,16 @@ ERROR:
         except:
             return False
 
-    def rest_config(self, method, host, url, data, headers, msg):
+    def rest_config(self, method, host, url, data, headers, msg, verbose):
         try:
-            # print('url: %s; data: %s' % (url, data))
             conn = httplib.HTTPConnection(host, 8080)
             conn.request(method, url, data, headers)
             rsp = conn.getresponse()
             rsp.read() # and discard
             conn.close()
             if rsp.status != 201 and rsp.status != 200:
-                print """
+                if verbose > 0:
+                    print """
 ERROR:
 
         Could not configure geoserver: 
@@ -465,10 +471,12 @@ ERROR:
 
         Please check the configuration settings, and try again.
 """ % msg
-                print "HTTP Status: %d" % rsp.status
+                if verbose > 1:
+                    print "HTTP Status: %d" % rsp.status
                 return False
         except Exception, ex:
-            print """
+            if verbose > 0:
+                print """
 ERROR:
 
         Exception thrown while configuring geoserver.
@@ -492,14 +500,14 @@ ERROR:
         sql = "CREATE OR REPLACE VIEW identify_geounit AS SELECT rg.id, rg.name, rg.geolevel_id, rg.geom, rc.number, rc.percentage, rc.subject_id FROM redistricting_geounit rg JOIN redistricting_characteristic rc ON rg.id = rc.geounit_id;"
         cursor.execute(sql)
         transaction.commit()
-        if verbose:
+        if verbose > 1:
             print 'Created identify_geounit view ...'
 
         for geolevel in Geolevel.objects.all():
             sql = "CREATE OR REPLACE VIEW simple_%s AS SELECT id, name, geolevel_id, simple as geom FROM redistricting_geounit WHERE geolevel_id = %d;" % (geolevel.name, geolevel.id,)
             cursor.execute(sql)
             transaction.commit()
-            if verbose:
+            if verbose > 1:
                 print 'Created simple_%s view ...' % geolevel.name
             
             for subject in Subject.objects.all():
@@ -508,7 +516,7 @@ ERROR:
                      subject.id, geolevel.id,)
                 cursor.execute(sql)
                 transaction.commit()
-                if verbose:
+                if verbose > 1:
                     print 'Created demo_%s_%s view ...' % \
                         (geolevel.name, subject.name)
 
@@ -528,7 +536,7 @@ ERROR:
             attrconfig = geolevel.xpath('Files/Attributes')
 
         if len(shapeconfig) == 0:
-            if verbose:
+            if verbose > 0:
                 print """
 ERROR:
 
@@ -575,7 +583,7 @@ ERROR:
 
         if parent:
             progress = 0
-            if verbose:
+            if verbose > 0:
                 print "Recomputing geometric and numerical aggregates..." 
                 sys.stdout.write('0% .. ')
                 sys.stdout.flush()
@@ -587,7 +595,7 @@ ERROR:
             for i,geounit in enumerate(unitqset):
                 if (float(i) / unitqset.count()) > (progress + 0.1):
                     progress += 0.1
-                    if verbose:
+                    if verbose > 0:
                         sys.stdout.write('%2.0f%% .. ' % (progress * 100))
                         sys.stdout.flush()
                 
@@ -597,9 +605,10 @@ ERROR:
                 nummods += num
 
 
-            sys.stdout.write('100%\n')
+            if verbose > 0:
+                sys.stdout.write('100%\n')
 
-            if verbose:
+            if verbose > 1:
                 print "Geounits modified: (geometry: %d, data values: %d)" % (geomods, nummods)
 
 
@@ -610,12 +619,11 @@ ERROR:
         parentunits = Geounit.objects.filter(
             tree_code__startswith=geounit.tree_code, 
             geolevel=parent.geolevel)
-        #print "Found %d parent units under %d." % (parentunits.count(), geounit.id)
+        
         parentunits.update(child=geounit)
         newgeo = parentunits.unionagg()
 
         if newgeo is None:
-            #print "No geometry for %d" % geounit.id
             return (geo, num,)
 
         difference = newgeo.difference(geounit.geom).area
@@ -674,7 +682,8 @@ ERROR:
         ContiguityOverride.objects.all().delete()
             
         if (len(config.xpath('//ContiguityOverrides')) == 0):
-            print 'ContiguityOverrides not configured'
+            if verbose > 1:
+                print 'ContiguityOverrides not configured'
 
         # Import contiguity overrides.
         for co in config.xpath('//ContiguityOverride'):
@@ -695,7 +704,7 @@ ERROR:
                 connect_to_geounit=connect_to_geounit 
                 )
 
-            if verbose:
+            if verbose > 1:
                 if created:
                     print 'Created ContiguityOverride "%s"' % str(co_obj)
                 else:
@@ -712,7 +721,7 @@ ERROR:
                 value=arg.get('value')
                 )
 
-            if verbose:
+            if verbose > 1:
                 if created:
                     print 'Created literal ScoreArgument "%s"' % name
                 else:
@@ -728,7 +737,7 @@ ERROR:
                 value=subarg.get('ref')
                 )
 
-            if verbose:
+            if verbose > 1:
                 if created:
                     print 'Created subject ScoreArgument "%s"' % name
                 else:
@@ -744,7 +753,7 @@ ERROR:
                 value=scorearg.get('ref')
                 )
 
-            if verbose:
+            if verbose > 1:
                 if created:
                     print 'Created subject ScoreArgument "%s"' % name
                 else:
@@ -769,7 +778,8 @@ ERROR:
             m.objects.all().delete()
             
         if (len(config.xpath('//Scoring')) == 0):
-            print 'Scoring not configured'
+            if verbose > 1:
+                print 'Scoring not configured'
 
         # Import score displays.
         for sd in config.xpath('//ScoreDisplays/ScoreDisplay'):
@@ -784,7 +794,7 @@ ERROR:
                 cssclass=sd.get('cssclass') or ''
                 )
 
-            if verbose:
+            if verbose > 1:
                 if created:
                     print 'Created ScoreDisplay "%s"' % title
                 else:
@@ -812,7 +822,7 @@ ERROR:
                     is_ascending=(ascending is None or ascending=='true'), 
                     )
 
-                if verbose:
+                if verbose > 1:
                     if created:
                         print 'Created ScorePanel "%s"' % title
                     else:
@@ -830,7 +840,7 @@ ERROR:
                         is_planscore=sf.get('type') == 'plan'
                         )
 
-                    if verbose:
+                    if verbose > 1:
                         if created:
                             print 'Created ScoreFunction "%s"' % name
                         else:
@@ -845,7 +855,8 @@ ERROR:
 
         # Import validation criteria.
         if (len(config.xpath('//Validation')) == 0):
-            print 'Validation not configured'
+            if verbose > 1:
+                print 'Validation not configured'
             return;
 
         for vc in config.xpath('//Validation/Criteria'):
@@ -865,7 +876,7 @@ ERROR:
                     is_planscore=sf.get('type') == 'plan'
                     )
 
-                if verbose:
+                if verbose > 1:
                     if created:
                         print 'Created ScoreFunction "%s"' % name
                     else:
@@ -883,7 +894,7 @@ ERROR:
                     legislative_body=lb
                     )
 
-                if verbose:
+                if verbose > 1:
                     if created:
                         print 'Created ValidationCriteria "%s"' % name
                     else:
@@ -905,7 +916,7 @@ ERROR:
                 name=body.get('name'), 
                 member=body.get('member'), 
                 max_districts=body.get('maxdistricts'))
-            if verbose:
+            if verbose > 1:
                 if created:
                     print 'Created LegislativeBody "%s"' % body.get('name')
                 else:
@@ -930,7 +941,7 @@ ERROR:
                 sort_key=subj.get('sortkey'))
                 
 
-            if verbose:
+            if verbose > 1:
                 if created:
                     print 'Created Subject "%s"' % subj.get('name')
                 else:
@@ -953,7 +964,7 @@ ERROR:
                 range1=targ.get('range1'),
                 range2=targ.get('range2'))
 
-            if verbose:
+            if verbose > 1:
                 if created:
                     print 'Created Target "%s"' % obj
                 else:
@@ -966,7 +977,7 @@ ERROR:
         for geolevel in geolevels:
             glvl,created = Geolevel.objects.get_or_create(name=geolevel.get('name'),min_zoom=geolevel.get('min_zoom'),sort_key=geolevel.get('sort_key'),tolerance=geolevel.get('tolerance'))
 
-            if verbose:
+            if verbose > 1:
                 if created:
                     print 'Created GeoLevel "%s"' % glvl.name
                 else:
@@ -1010,7 +1021,7 @@ ERROR:
 
                         obj.save()
 
-                        if verbose:
+                        if verbose > 1:
                             if created:
                                 print 'Set default target for LegislativeBody "%s"' % legislative_body.name
                             else:
@@ -1033,7 +1044,7 @@ ERROR:
                         target=target, 
                         parent=parent)
 
-                    if verbose:
+                    if verbose > 1:
                         if created:
                             print 'Created LegislativeBody/GeoLevel mapping "%s/%s"' % (legislative_body.name, glvl.name)
                         else:
@@ -1071,11 +1082,11 @@ ERROR:
 
             ds = DataSource(shapefile.get('path'))
 
-            if verbose:
+            if verbose > 1:
                 print 'Importing from %s, %d of %d shapefiles...' % (ds, h+1, len(config['shapefiles']))
 
             lyr = ds[0]
-            if verbose:
+            if verbose > 1:
                 print '%d objects in shapefile' % len(lyr)
 
             level = Geolevel.objects.get(name=config['geolevel'])
@@ -1095,13 +1106,13 @@ ERROR:
                 subject_objects['%s_by_id' % sub.name] = attr_name
 
             progress = 0.0
-            if verbose:
+            if verbose > 1:
                 sys.stdout.write('0% .. ')
                 sys.stdout.flush()
             for i,feat in enumerate(lyr):
                 if (float(i) / len(lyr)) > (progress + 0.1):
                     progress += 0.1
-                    if verbose:
+                    if verbose > 1:
                         sys.stdout.write('%2.0f%% .. ' % (progress * 100))
                         sys.stdout.flush()
 
@@ -1148,7 +1159,7 @@ ERROR:
                             center = intersection.centroid
                             first_poly = first_poly_extent = min_x = max_x = my_y = centerline = intersection = None
 
-                        if verbose:
+                        if verbose > 2:
                             if not my_geom.simple:
                                 print 'Geometry %d is not simple.\n' % feat.fid
                             if not my_geom.valid:
@@ -1169,8 +1180,9 @@ ERROR:
                         g.save()
 
                     except:
-                        print 'Failed to import geometry for feature %d' % feat.fid
-                        if verbose:
+                        if verbose > 0:
+                            print 'Failed to import geometry for feature %d' % feat.fid
+                        if verbose > 1:
                             traceback.print_exc()
                             print ''
                         continue
@@ -1180,12 +1192,12 @@ ERROR:
                 if config['attributes'] == None:
                     self.set_geounit_characteristic(g, subject_objects, feat, verbose)
 
-            if verbose:
+            if verbose > 1:
                 sys.stdout.write('100%\n')
 
         if not config['attributes'] is None:
             progress = 0
-            if verbose:
+            if verbose > 1:
                 print "Assigning subject values to imported geography..."
                 sys.stdout.write('0% .. ')
                 sys.stdout.flush()
@@ -1197,7 +1209,7 @@ ERROR:
                 for i,feat in enumerate(lyr):
                     if (float(i) / len(lyr)) > (progress + 0.1):
                         progress += 0.1
-                        if verbose:
+                        if verbose > 1:
                             sys.stdout.write('%2.0f%% .. ' % (progress * 100))
                             sys.stdout.flush()
 
@@ -1207,7 +1219,7 @@ ERROR:
                     if g.count() > 0:
                         self.set_geounit_characteristic(g[0], subject_objects, feat, verbose)
 
-            if verbose:
+            if verbose > 1:
                 sys.stdout.write('100%\n')
 
     def set_geounit_characteristic(self, g, subject_objects, feat, verbose):
@@ -1234,8 +1246,9 @@ ERROR:
             except:
                 c.number = '0.0'
                 c.save()
-                print 'Failed to set value "%s" to %d in feature "%s"' % (attr, feat.get(attr), g.name,)
-                if verbose:
+                if verbose > 1:
+                    print 'Failed to set value "%s" to %d in feature "%s"' % (attr, feat.get(attr), g.name,)
+                if verbose > 2:
                     traceback.print_exc()
                     print ''
 
@@ -1252,7 +1265,8 @@ ERROR:
         """
         admin = User.objects.filter(is_staff=True)
         if admin.count() == 0:
-            print "Creating templates requires at least one admin user."
+            if verbose > 0:
+                print "Creating templates requires at least one admin user."
             return
 
         admin = admin[0]
@@ -1262,7 +1276,7 @@ ERROR:
             lbconfig = config.xpath('//LegislativeBody[@id="%s"]' % template.xpath('LegislativeBody')[0].get('ref'))[0]
             query = LegislativeBody.objects.filter(name=lbconfig.get('name'))
             if query.count() == 0:
-                if verbose:
+                if verbose > 1:
                     print "LegislativeBody '%s' does not exist, skipping." % lbconfig.get('ref')
                 continue
             else:
@@ -1270,7 +1284,7 @@ ERROR:
 
             query = Plan.objects.filter(name=template.get('name'), legislative_body=legislative_body, owner=admin, is_template=True)
             if query.count() > 0:
-                if verbose:
+                if verbose > 1:
                     print "Plan '%s' exists, skipping." % template.get('name')
                 continue
 
@@ -1279,7 +1293,7 @@ ERROR:
 
             DistrictIndexFile.index2plan( template.get('name'), legislative_body.id, path, owner=admin, template=True, purge=False, email=None)
 
-            if verbose:
+            if verbose > 1:
                 print 'Created template plan "%s"' % template.get('name')
 
         lbodies = config.xpath('//LegislativeBody[@id]')
@@ -1287,7 +1301,7 @@ ERROR:
             owner = User.objects.get(is_staff=True)
             legislative_body = LegislativeBody.objects.get(name=lbody.get('name'))
             plan,created = Plan.objects.get_or_create(name='Blank',legislative_body=legislative_body,owner=owner,is_template=True)
-            if verbose:
+            if verbose > 1:
                 if created:
                     print 'Created Plan named "Blank" for LegislativeBody "%s"' % legislative_body.name
                 else:
@@ -1315,34 +1329,41 @@ ERROR:
 
         try:
             r.library('rgeos')
-            if verbose:
+            if verbose > 1:
                 print "Loaded rgeos library."
             r.library('BARD')
-            if verbose:
+            if verbose > 1:
                 print "Loaded BARD library."
             sdf = r.readShapePoly(shapefile,proj4string=r.CRS(srs.proj))
-            if verbose:
+            if verbose > 1:
                 print "Read shapefile '%s'." % shapefile
-            fib = r.poly_findInBoxGEOS(sdf)
-            if verbose:
-                print "Created neighborhood index file."
-            nb = r.poly2nb(sdf,foundInBox=fib)
-            if verbose:
+
+            # The following lines perform the bard basemap computation
+            # much faster, but require vast amounts of memory. Disabled
+            # by default.
+            #fib = r.poly_findInBoxGEOS(sdf)
+            #if verbose > 1:
+            #    print "Created neighborhood index file."
+            #nb = r.poly2nb(sdf,foundInBox=fib)
+
+            nb = r.poly2nb(sdf)
+            if verbose > 1:
                 print "Computed neighborhoods."
             bardmap = r.spatialDataFrame2bardBasemap(sdf,nb)
-            if verbose:
+            if verbose > 1:
                 print "Created bardmap."
             r.writeBardMap(settings.BARD_BASESHAPE, bardmap)
-            if verbose:
+            if verbose > 1:
                 print "Wrote bardmap to disk."
         except:
-            print """
+            if verbose > 0:
+                print """
 ERROR:
 
 The BARD map could not be computed. Please check the configuration settings
 and try again.
 """
-            if verbose:
+            if verbose > 1:
                 print "The following traceback may provide more information:"
                 print traceback.format_exc()
 
