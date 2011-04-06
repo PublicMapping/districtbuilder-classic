@@ -1633,7 +1633,7 @@ function mapinit(srs,maxExtent) {
                 $('#assign_district option').detach();
                 $('#assign_district')
                     .append('<option value="-1">-- Select One --</option>')
-                    .append('<option value="1">Unassigned</option>');
+                    .append('<option value="0">Unassigned</option>');
 
                 // get the maximum version of all districts. If walking 
                 // backward, it may be possible that the version you 
