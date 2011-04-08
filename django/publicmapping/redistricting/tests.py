@@ -2237,6 +2237,53 @@ class CalculatorTestCase(BaseTestCase):
 
         self.assertEquals(False, actual, 'Incorrect value during percentage. (e:%f,a:%f)' % (False, actual))
 
+    def test_interval(self):
+        interval = Interval()
+        interval.arg_dict['subject'] = ('subject', self.subject2.name)
+        interval.arg_dict['target'] = ('literal', 301)
+        interval.arg_dict['bound1'] = ('literal', .50)
+        interval.arg_dict['bound2'] = ('literal', .25)
+
+        dist1ids = self.geounits[0:3] + self.geounits[9:12]
+        dist2ids = self.geounits[18:21] + self.geounits[27:30] + self.geounits[36:39]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        dist2ids = map(lambda x: str(x.id), dist2ids)
+        
+        self.plan.add_geounits( self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
+        self.plan.add_geounits( self.district2.district_id, dist2ids, self.geolevel.id, self.plan.version)
+
+        # Update our districts
+        for d in self.plan.get_districts_at_version(self.plan.version, include_geom = False):
+            if (d.district_id == self.district1.district_id):
+                self.district1 = d
+            elif (d.district_id == self.district2.district_id):
+                self.district2 = d
+        
+        # Value of 375 for district 1.  Should be in middle class - i.e. return 2 on 0-based index
+        interval.compute(district=self.district1)
+        self.assertEqual(2, interval.result, "Incorrect interval returned: e:%d,a:%d" % (2, interval.result))
+        # Value of 225 for district 1.  Should be in 2nd class - i.e. return 1 on 0-based index
+        interval.compute(district=self.district2)
+        self.assertEqual(1, interval.result, "Incorrect interval returned: e:%d,a:%d" % (1, interval.result))
+
+        # District 1 is in the middle class - should get a 1
+        interval.compute(plan=self.plan)
+        self.assertEqual(1, interval.result, "Incorrect interval returned: e:%d,a:%d" % (1, interval.result))
+
+        # Adjust to get them all out of the target
+        interval.arg_dict['bound1'] = ('literal', .1)
+        interval.arg_dict['bound2'] = ('literal', .2)
+
+        interval.compute(plan=self.plan)
+        self.assertEqual(0, interval.result, "Incorrect interval returned: e:%d,a:%d" % (0, interval.result))
+
+        # Everybody's on target 
+        interval.arg_dict['bound1'] = ('literal', .5)
+        del interval.arg_dict['bound2']
+
+        interval.compute(plan=self.plan)
+        self.assertEqual(2, interval.result, "Incorrect interval returned: e:%d,a:%d" % (2, interval.result))
+
 class AllBlocksTestCase(BaseTestCase):
     fixtures = ['redistricting_testdata.json',
                 'redistricting_testdata_geolevel2.json',

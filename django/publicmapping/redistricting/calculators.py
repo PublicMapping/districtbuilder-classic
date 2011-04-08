@@ -32,6 +32,7 @@ from math import sqrt, pi
 from django.contrib.gis.geos import Point
 from django.contrib.humanize.templatetags.humanize import intcomma
 from django.utils import simplejson as json
+from decimal import Decimal
 
 class CalculatorBase:
     """
@@ -695,6 +696,75 @@ class AllContiguous(CalculatorBase):
         self.result = (len(districts)-1) == calc.result
 
 
+class Interval(CalculatorBase):
+    """
+    Used to determine whether a value falls in an interval determined by 
+    a central target value and bounds determined to be a percentage of
+    that target value.  With bound values of .10 and .20 and a target of 10,
+    the intervals would be:
+         [-infinity, 8), [8, 9), [9, 11), [11, 12), [12, infinity) 
+    
+    Given a district, this calculator will return the 0-based index of the
+    interval in which the district's value lies - Using the above example, 
+    a district with a value of 8.5 would have a result of 1.
+
+    Given a plan, this calculator will return the number of districts that 
+    fall in the interval including the target
+    """
+    def compute(self, **kwargs):
+        """
+        Determine the interval to which a district's value belongs.
+        """
+        districts = []
+        bounds = []
+        target = Decimal(str(self.get_value('target')))
+
+        if 'district' in kwargs:
+            districts = [kwargs['district']]
+
+            # Set up our bounds
+            argnum = 1
+            while ('bound%d' % argnum) in self.arg_dict:
+                bound = Decimal(str(self.get_value('bound%d' % argnum)))
+                bounds.append(target + (target * bound))
+                bounds.append(target - (target * bound))
+                
+                argnum += 1
+            bounds.sort()
+        
+            # Check which interval our subject's value is in
+            for district in districts:
+                value = self.get_value('subject', district)
+                for idx, bound in enumerate(bounds):
+                    if value < bound:
+                        self.result = idx
+                        return
+                self.result = len(bounds) + 1
+
+        elif 'plan' in kwargs:
+            plan = kwargs['plan']
+            districts = plan.get_districts_at_version(plan.version, include_geom=True)
+
+            # Set up our bounds
+            argnum = 1
+            min_bound = None
+            while ('bound%d' % argnum) in self.arg_dict:
+                bound = Decimal(str(self.get_value('bound%d' % argnum)))
+                if (not min_bound) or (bound < min_bound):
+                    min_bound = bound
+                argnum += 1
+
+            max_bound = target + (target * min_bound)
+            min_bound = target - (target * min_bound)
+
+            self.result = 0
+            for district in districts:
+                value = self.get_value('subject', district)
+                if value >= min_bound and value < max_bound:
+                    self.result += 1 
+        else:
+            return
+
 class Equivalence(CalculatorBase):
     """
     Generate a single score based on how closely a set of districts are
@@ -1066,7 +1136,7 @@ class MajorityMinority(CalculatorBase):
                 except:
                     threshold = 0.5
 
-                if num / den > threshold:
+                if den != 0 and num / den > threshold:
                     exceeds = True
                     break
 
