@@ -2284,6 +2284,11 @@ class CalculatorTestCase(BaseTestCase):
         interval.compute(plan=self.plan)
         self.assertEqual(2, interval.result, "Incorrect interval returned: e:%d,a:%d" % (2, interval.result))
 
+        # Everybody's over - make sure we're in group 3 (0-based index 2)
+        interval.arg_dict['target'] = ('literal', 0)
+        interval.compute(district=self.district2)
+        self.assertEqual(2, interval.result, "Incorrect interval returned: e:%d,a:%d" % (2, interval.result))
+
 class AllBlocksTestCase(BaseTestCase):
     fixtures = ['redistricting_testdata.json',
                 'redistricting_testdata_geolevel2.json',

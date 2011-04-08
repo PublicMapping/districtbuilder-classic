@@ -739,7 +739,7 @@ class Interval(CalculatorBase):
                     if value < bound:
                         self.result = idx
                         return
-                self.result = len(bounds) + 1
+                self.result = len(bounds)
 
         elif 'plan' in kwargs:
             plan = kwargs['plan']
