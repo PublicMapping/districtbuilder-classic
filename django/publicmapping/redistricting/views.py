@@ -458,7 +458,8 @@ def commonplan(request, planid):
         'ga_domain': settings.GA_DOMAIN,
         'body_member': body_member,
         'reporting_template': reporting_template,
-        'study_area_extent': study_area_extent
+        'study_area_extent': study_area_extent,
+        'has_leaderboard' : len(ScoreDisplay.objects.filter(is_page=True)) > 0
     }
 
 
