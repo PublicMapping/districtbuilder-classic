@@ -33,16 +33,11 @@
 import os
 import sys
 
-os.environ['DJANGO_SETTINGS_MODULE'] = 'publicmapping.settings'
-os.environ['CELERY_LOADER'] = 'django'
+os.environ['DJANGO_SETTINGS_MODULE'] = 'reporting.settings'
 
 sys.path.append('/projects/publicmapping/trunk/django')
-sys.path.append('/projects/publicmapping/trunk/django/publicmapping')
+sys.path.append('/projects/publicmapping/trunk/django/reporting')
 
 import django.core.handlers.wsgi
 application = django.core.handlers.wsgi.WSGIHandler()
-
-# This will load the BARD basemap every time the mod_wsgi process is started
-import publicmapping.redistricting.views
-publicmapping.redistricting.views.loadbard(True)
 

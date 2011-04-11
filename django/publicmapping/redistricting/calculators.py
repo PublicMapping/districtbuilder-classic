@@ -606,13 +606,15 @@ class Contiguity(CalculatorBase):
     Calculate the contiguity of a district.
 
     This calculator accepts an optional argument: 'allow_single_point'.
-    If this is set to '1' (True), the calculator will consider a district containing
-    muliple polygons contiguous if the polygons are connected to each other by a
-    minimum of one point. By default, this is set to '0' (False), and a district is
-    only considered to be congiguous if it is comprised of a single polygon
+    If this is set to '1' (True), the calculator will consider a district 
+    containing muliple polygons contiguous if the polygons are connected 
+    to each other by a minimum of one point. By default, this is set to 
+    '0' (False), and a district is only considered to be congiguous if it
+    is comprised of a single polygon.
 
-    'ContiguityOverride' objects that are applicable to the district will be applied
-    to allow for special cases where non-physical contiguity isn't possible.
+    'ContiguityOverride' objects that are applicable to the district will 
+    be applied to allow for special cases where non-physical contiguity 
+    isn't possible.
     
     If the district is contiguous, the result value will be zero (0).
 
@@ -646,6 +648,7 @@ class Contiguity(CalculatorBase):
         self.result = 0
         for district in districts:
             if district.district_id == 0:
+                self.result += 1
                 continue
 
             if len(district.geom) == 1: 
@@ -690,7 +693,7 @@ class Contiguity(CalculatorBase):
     
                     if contiguous:
                         self.result += 1
-    
+
 
 class AllContiguous(CalculatorBase):
     """

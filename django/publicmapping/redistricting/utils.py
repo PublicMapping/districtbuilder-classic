@@ -25,14 +25,17 @@ Author:
 """
 
 from celery.decorators import task
+from celery.task.http import HttpDispatchTask
 from django.core import management
 from django.contrib.sessions.models import Session
 from django.core.mail import send_mail, mail_admins
 from django.template import loader, Context as DjangoContext
-from django.db.models import Sum as SumAgg
+from django.db.models import Sum as SumAgg, Min, Max
 from redistricting.models import *
-import csv, time, zipfile, tempfile, os, sys, traceback
+import csv, time, zipfile, tempfile, os, sys, traceback, time
 from datetime import datetime
+from operator import attrgetter
+import socket
 
 
 class DistrictIndexFile():
@@ -406,3 +409,161 @@ def cleanup():
     Old sessions are sessions whose expiration date is in the past.
     """
     management.call_command('cleanup') 
+
+class PlanReport:
+    """
+    A collection of static methods that assist in asynchronous report
+    generation.
+    """
+
+    @staticmethod
+    @task
+    def createreport(planid, stamp, request):
+        """
+        Create the data structures required for a BARD report, and call
+        the django reporting apache process to create the report.
+        """
+        if settings.DEBUG:
+            sys.stderr.write('Starting task to create a report.\n')
+        try:
+            plan = Plan.objects.get(pk=planid)
+            districts = plan.get_districts_at_version(plan.version, include_geom=False)
+        except:
+            sys.stderr.write("Couldn't retrieve plan information.\n")
+            return 
+
+        tempdir = settings.BARD_TEMP
+        filename = '%s_p%d_v%d_%s' % (plan.owner.username, plan.id, plan.version, stamp)
+
+        if settings.DEBUG:
+            sys.stderr.write('Getting base geounits.\n')
+
+        # Get the district mapping and order by geounit id
+        mapping = plan.get_base_geounits()
+        #mapping = list(Geounit.objects.all().order_by('id').values_list('id','portable_id','id')[0:100])
+        mapping.sort(key=lambda unit: unit[0])
+
+        # Get the geounit ids we'll be iterating through
+        geolevel = plan.legislative_body.get_base_geolevel()
+        geounits = Geounit.objects.filter(geolevel=geolevel)
+        max_and_min = geounits.aggregate(Min('id'), Max('id'))
+        min_id = int(max_and_min['id__min'])
+        max_id = int(max_and_min['id__max'])
+
+        if settings.DEBUG:
+            sys.stderr.write('Getting district mapping.\n')
+
+        # Iterate through the query results to create the district_id list
+        # This ordering depends on the geounits in the shapefile matching the 
+        # order of the imported geounits. If this ordering is the same, the 
+        # geounits' ids don't have to match their fids in the shapefile
+        sorted_district_list = list()
+        row = None
+        if len(mapping) > 0:
+             row = mapping.pop(0)
+        for i in range(min_id, max_id + 1):
+            if row and row[0] == i:
+                district_id = row[2]
+                row = None
+                if len(mapping) > 0:
+                    row = mapping.pop(0)
+            else:
+                district_id = 'NA'
+            sorted_district_list.append(str(district_id))
+
+        if settings.DEBUG:
+            sys.stderr.write('Getting POST variables and settings.')
+        
+        names = sorted(districts, key=attrgetter('district_id'))
+        names = filter(lambda d:d!='Unassigned',map(lambda d:d.name, names))
+
+        if settings.DEBUG:
+            sys.stderr.write('Firing web worker task.')
+
+        dispatcher = HttpDispatchTask()
+
+        # Callbacks do not fire for HttpDispatchTask -- why not?
+        #
+        #def failure(exc, task_id, args, kwargs, einfo=None):
+        #    print '  CALLBACK: Failure!'
+        #def success(retval, task_id, args, kwargs):
+        #    print '  CALLBACK: Success!'
+        #
+        #dispatcher.on_failure = failure
+        #dispatcher.on_success = success
+        #
+
+        # Increase the default timeout, just in case
+        socket.setdefaulttimeout(600)
+
+        result = dispatcher.delay(
+            url='http://localhost:8081/getreport/', 
+            method='POST',
+            plan_id=planid,
+            plan_owner=plan.owner.username,
+            plan_version=plan.version,
+            district_list=';'.join(sorted_district_list),
+            district_names=';'.join(names),
+            pop_var=request['popVar'],
+            pop_var_extra=request['popVarExtra'],
+            ratio_vars=';'.join(request['ratioVars[]']),
+            split_vars=request['splitVars'],
+            block_label_var=request['blockLabelVar'],
+            rep_comp=request['repComp'],
+            rep_comp_extra=request['repCompExtra'],
+            rep_spatial=request['repSpatial'],
+            rep_spatial_extra=request['repSpatialExtra'],
+            stamp=stamp)
+
+        return
+
+    @staticmethod
+    def checkreport(planid, stamp):
+        """
+        Check on the status of a BARD report.
+        """
+        try:
+            plan = Plan.objects.get(pk=planid)
+        except:
+            return 'error'
+
+        tempdir = settings.BARD_TEMP
+        filename = '%s_p%d_v%d_%s' % (plan.owner.username, plan.id, plan.version, stamp)
+
+        if os.path.exists('%s/%s.pending' % (tempdir, filename)):
+            return 'busy'
+        elif os.path.exists('%s/%s.html' % (tempdir, filename)):
+            return 'ready'
+        else:
+            return 'free'
+
+    @staticmethod
+    def markpending(planid, stamp):
+        """
+        Create a pending file, to indicate that a report is in the works.
+        """
+        try:
+            plan = Plan.objects.get(pk=planid)
+        except:
+            return 'error'
+
+        tempdir = settings.BARD_TEMP
+        filename = '%s_p%d_v%d_%s' % (plan.owner.username, plan.id, plan.version, stamp)
+
+        pending = open('%s/%s.pending' % (tempdir, filename,),'w')
+        pending.close()
+
+
+    @staticmethod
+    def getreport(planid, stamp):
+        """
+        Fetch a previously generated BARD report.
+        """
+        try:
+            plan = Plan.objects.get(pk=planid)
+        except:
+            return 'error'
+
+        filename = '%s_p%d_v%d_%s' % (plan.owner.username, plan.id, plan.version, stamp)
+
+        return '/reports/%s.html' % filename

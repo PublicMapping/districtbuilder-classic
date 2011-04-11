@@ -63,38 +63,59 @@ reports = function(options) {
         });
         return _self;
     };
-    
-    // the working dialog
-    var $working = $('<div title="Working">Please wait while your report is created. This will take a few minutes.</div>').dialog({ 
-        autoOpen: false,
-        escapeOnClose: false,
-        modal:true,
-        resizable:false,
-        open: function(event, ui) { 
-            $(".ui-dialog-titlebar-close", $(this).parent()).hide();
-        }
-    });
 
+    var pollCount = 0;
+    
     /**
      * Submit a request to the server to generate a report.
      */
     var submitReportRequestToServer = function() {
-        $working.dialog('open');
+        $('#reportPreview').html('<h1 id="genreport">Generating Report</h1><p>Your report is being constructed.</p><p>You may use the rest of the application while the report is building.</p><p>A preview of your report will appear in this space when it is ready.</p>');
         data = getReportOptions();
+        pollCount = 0;
         $.ajax({
             type:'POST',
             url:_options.reportUrl,
             data: data,
-            timeout: 10 * 60 * 1000,  // 10 min timeout -- reports take > 7min
-            success: loadPreviewContent,
-            error: function(xhr, txtStatus, msg) {
-                $working.dialog('close')
-                if (typeof(msg) == 'undefined') {
-                    msg = '';
-                }
-                $('<div title="Report Error">Sorry, we weren\'t able to preview this report.<p>' + msg + '</p></div>').dialog({ autoOpen:true });
-            }
+            success: pollReport,
+            error: reportError
         });
+    };
+
+    var reportError = function(xhr, txtStatus, msg) {
+        if (typeof(msg) == 'undefined') {
+            msg = '';
+        }
+        $('#reportPreview').html('<h1 id="genreport">Report Error</h1>' + "<p>Sorry, this report cannot be previewed.</p>");
+    }
+
+    var pollReport = function(data, textStatus, xhr) {
+        if (data.success) {
+            $('#reportPreview').append('<!-- ' + (pollCount++) + ' -->');
+            var success = null,
+                type = null,
+                newdata = null;
+            if (data.retry != 0) {
+                type = 'POST';
+                success = pollReport;
+                newdata = { stamp: data.stamp };
+                setTimeout(function(){
+                    $.ajax({
+                        type: type,
+                        url: data.url,
+                        data: newdata,
+                        success: success,
+                        error: reportError
+                    })
+                }, data.retry * 1000);
+            }
+            else {
+                loadPreviewContent(data.url);
+            }
+        }
+        else {
+            $('#reportPreview').html('<h1 id="genreport">Connection Failed</h1><p>There was a problem checking your report status. You can resume checking by clicking on the "Create and Preview Report" button.</p>');
+        }
     };
 
     /**
@@ -165,27 +186,24 @@ reports = function(options) {
      * Parameters:
      *   data -- The JSON server response.
      *   textStatus -- The text status of the HTTP ajax call.
-     *   XMLHttpRequest -- The XmlHTTPRequest object.
+     *   xhr -- The XmlHTTPRequest object.
      */
-    var loadPreviewContent = function(data, textStatus, XMLHttpRequest) {
+    var loadPreviewContent = function(url) {
         if (typeof(_gaq) != 'undefined') { _gaq.push(['_trackEvent', 'Reports', 'RanReport']); }
-        $working.dialog('close');
-        if (data.success) {
-            _options.previewContainer.html(data.preview); 
-            var link = 'https://' + location.host + data.file
-            $btnOpenReport = $('<a href="' + link + '" target="report" ><button id="btnOpenReport">Open report in a new window</button></a>');
-            $('#reportButtons #btnOpenReport').remove();
-            $('#reportButtons').append($btnOpenReport);  
-            $('button', $btnOpenReport).button();
+        _options.previewContainer.load(url); 
+        
+        var link = 'https://' + location.host + url
+        $btnOpenReport = $('<a href="' + link + '" target="report" ><button id="btnOpenReport">Open report in a new window</button></a>');
+        $('#reportButtons #btnOpenReport').remove();
+        $('#reportButtons').append($btnOpenReport);  
+        $('button', $btnOpenReport).button();
 
+        setTimeout(function() { 
             // do some formatting
             $('#reportPreview td.cellinside').each( function() {
                 $(this).text(addCommas($(this).text()));
             });
-        } 
-        else {
-            $('<div title="Report Error">Sorry, we weren\'t able to preview this report; <p>' + data.message + '</p></div>').dialog({ autoOpen:true });
-        }
+        }, 100);
     };
 
     /**

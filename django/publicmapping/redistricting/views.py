@@ -33,6 +33,7 @@ from django.core.exceptions import ValidationError, SuspiciousOperation, ObjectD
 from django.db import IntegrityError, connection, transaction
 from django.db.models import Sum, Min, Max
 from django.shortcuts import render_to_response
+from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.sessions.models import Session
 from django.contrib.sessions.backends.db import SessionStore
@@ -44,17 +45,14 @@ from django.contrib import humanize
 from django import forms
 from django.utils import simplejson as json
 from django.views.decorators.cache import cache_control
-from rpy2 import robjects
-from rpy2.robjects import r, rinterface
-from rpy2.rlike import container as rpc
+from django.template.defaultfilters import slugify
 from datetime import datetime, time, timedelta
 from decimal import *
 from functools import wraps
-from operator import attrgetter
 from redistricting.calculators import *
 from redistricting.models import *
 from redistricting.utils import *
-import settings, random, string, math, types, copy, time, threading, traceback, os, commands, sys, tempfile, csv
+import settings, random, string, math, types, copy, time, threading, traceback, os, commands, sys, tempfile, csv, hashlib
 
 def using_unique_session(u):
     """
@@ -616,79 +614,23 @@ def uploadfile(request):
 
     return render_to_response('viewplan.html', status) 
 
-
-def load_bard_workspace():
+def generate_report_hash(qdict):
     """
-    Load the workspace and setup R.
-
-    This function is called by the thread loading function. The workspace
-    setup incurs a significant amount of overhead and processing time to
-    load the basemaps into BARD. This method starts up these processes in
-    a separate process & thread, in order to keep the web application 
-    responsive during R initialization.
+    Generate a hash based on the query items passed to this report request.
     """
-    try:
-        r.library('rgeos')
-        r.library('gpclib')
-        r.library('BARD')
-        r.library('R2HTML')
-        r.gpclibPermit()
 
-        global bardmap
-        bardmap = r.readBardMap(settings.BARD_BASESHAPE)
-
-        global bardWorkSpaceLoaded
-        bardWorkSpaceLoaded = True
-
-	if settings.DEBUG:
-	        r('trace(PMPreport, at=1, tracer=function()print(sys.calls()))')
-    except:
-        sys.stderr.write('BARD Could not be loaded.  Check your configuration and available memory')
-        return
-
-# A flag that indicates that the workspace was loaded
-bardWorkSpaceLoaded = False
-# An object that holds the bardmap for later analysis
-bardmap = {}
-# The loading thread for the BARD setup
-bardLoadingThread = threading.Thread(target=load_bard_workspace, name='loading_bard') 
-
-def loadbard(request):
-    """
-    Load BARD and it's workspace.
-
-    BARD is loaded in a separate thread in order to free resources for
-    the web processing thread. This method is called by the wsgi application
-    setup file, 'reports.wsgi'.
-
-    Parameters:
-        request -- An HttpRequest OR True
-
-    Returns:
-        A simple text response informing the client what BARD is up to.
-    """
-    msg = ""
-
-    if type(request) == bool:
-        threaded = True
-    elif type(request) == HttpRequest:
-        threaded = request.META['mod_wsgi.application_group'] == 'bard-reports'
-        msg += 'mod_wsg.application_group = "%s"' % request.META['mod_wsgi.application_group']
-    else:
-        msg += 'Unknown request type.'
-        threaded = False
-
-    if bardWorkSpaceLoaded:
-        return HttpResponse('Bard is already loaded')
-    elif bardLoadingThread.is_alive():
-        return HttpResponse( 'Bard is already building')
-    elif threaded and not bardWorkSpaceLoaded and settings.REPORTS_ENABLED:
-        bardLoadingThread.daemon = True
-        bardLoadingThread.start()
-        return HttpResponse( 'Building bard workspace now ')
-    
-    return HttpResponse('Bard will not be loaded - wrong server config or reports off\nThreaded: %s\nMessage: %s' % (threaded, msg), mimetype='text/plain')
-
+    params = qdict.get('popVar', ' ') + \
+        qdict.get('popVarExtra', ' ') + \
+        qdict.get('ratioVars[]', ' ') + \
+        qdict.get('splitVars', ' ') + \
+        qdict.get('blockLabelVar', 'CTID') + \
+        qdict.get('repCompactness', ' ') + \
+        qdict.get('repCompactnessExtra', ' ') + \
+        qdict.get('repSpatial', ' ') + \
+        qdict.get('repSpatialExtra', ' ')
+    sha = hashlib.sha1()
+    sha.update(params)
+    return sha.hexdigest()
 
 @unique_session_or_json_redirect
 def getreport(request, planid):
@@ -710,195 +652,64 @@ def getreport(request, planid):
 
     status = { 'success': False }
 
-    if not bardWorkSpaceLoaded:
-        if not settings.REPORTS_ENABLED:
-            status['message'] = 'Reports functionality is turned off.'
-        else:
-            status['message'] = 'Reports functionality is not ready. Please try again later.'
+    if not settings.REPORTS_ENABLED:
+        status['message'] = 'Reports functionality is turned off.'
         return HttpResponse(json.dumps(status),mimetype='application/json')
               
-        #  PMP report interface
-        #    PMPreport<-function(
-        #       bardMap,
-        #       blockAssignmentID="BARDPlanID",
-        #       popVar=list("Total Population"="POPTOT",tolerance=.01),
-        #       popVarExtra=list("Voting Age Population"="VAPTOT","Voting Age
-        #Population Black"="VAPHWHT"),
-        #       ratioVars=list(
-        #               "Majority Minority Districts"=list(
-        #                       denominator=list("Total Population"="POPTOT"),
-        #                       threshold=.6,
-        #                       numerators=list("Black Population"="POPBLK", "Hispanic Population"="POPHISP")
-        #                  ),
-        #               "Party-Controlled Districts"=list(
-        #                       threshold=.55,
-        #                       numerators=list("Democratic Votes"="PRES_DEM", "Republican Votes"="PRES_REP")
-        #                  )
-        #       ),
-        #       splitVars = list("County"="COUNTY", "Tract"="TRACT"),
-        #       blockLabelVar="CTID",
-        #       repCompactness=TRUE,
-        #       repCompactnessExtra=FALSE,
-        #       repSpatial=TRUE,
-        #       repSpatialExtra=FALSE,
-        #       useHTML=TRUE,
-        #       ...)  
-
-    try:
-        plan = Plan.objects.get(pk=planid)
-        districts = plan.get_districts_at_version(plan.version, include_geom=False)
-    except:
-        status['message'] = 'Couldn\'t retrieve plan information'
-        return HttpResponse(json.dumps(status),mimetype='application/json')
-    #Get the variables from the request
+    # Get the variables from the request
     if request.method != 'POST':
         status['message'] = 'Information for report wasn\'t sent via POST'
         return HttpResponse(json.dumps(status),mimetype='application/json')
 
-    def get_named_vector(parameter_string, tag = None):
-        """
-        Helper method to break up the strings that represents lists of 
-        variables.
-        
-        Parameters:
-            parameter_string -- A string of parameters
-            
-        Returns:
-            A StrVector with names, suitable for rpy2 use.
-        """
-        vec = robjects.StrVector(())
-        extras = parameter_string.split('^')
-        for extra in extras:
-            pair = extra.split('|')
-            vec += r('list("%s"="%s")' % (pair[0], pair[1]))
-        return vec
-    
-    # Get the district mapping and order by geounit id
-    mapping = plan.get_base_geounits()
-    mapping.sort(key=lambda unit: unit[0])
+    stamp = request.POST.get('stamp', generate_report_hash(request.POST))
 
-    # Get the geounit ids we'll be iterating through
-    geolevel = plan.legislative_body.get_base_geolevel()
-    geounits = Geounit.objects.filter(geolevel=geolevel)
-    max_and_min = geounits.aggregate(Min('id'), Max('id'))
-    min_id = int(max_and_min['id__min'])
-    max_id = int(max_and_min['id__max'])
+    rptstatus = PlanReport.checkreport(planid, stamp)
+    if rptstatus == 'ready':
+        print 'Report is ready.'
+        status = {
+            'success': True,
+            'url': PlanReport.getreport(planid, stamp),
+            'retry': 0,
+            'message': 'Plan report is ready.',
+            'stamp': stamp
+        }
+    elif rptstatus == 'busy':
+        print 'Report is busy.'
+        status = {
+            'success': True,
+            'url': reverse(getreport, args=[planid]),
+            'retry': 10,
+            'message': 'Report is building.',
+            'stamp': stamp
+        }
+    elif rptstatus == 'free':
+        print 'Starting new report.'
+        status = {
+            'success': True,
+            'url': reverse(getreport, args=[planid]),
+            'retry': 10,
+            'message': 'Report generation started.',
+            'stamp': stamp
+        }
 
-    # Iterate through the query results to create the district_id list
-    # This ordering depends on the geounits in the shapefile matching the 
-    # order of the imported geounits. If this ordering is the same, the 
-    # geounits' ids don't have to match their fids in the shapefile
-    sorted_district_list = list()
-    row = None
-    if len(mapping) > 0:
-         row = mapping.pop(0)
-    for i in range(min_id, max_id + 1):
-        if row and row[0] == i:
-            district_id = row[2]
-            row = None
-            if len(mapping) > 0:
-                row = mapping.pop(0)
-        else:
-            district_id = 'NA'
-        sorted_district_list.append(district_id)
+        req = {
+            'popVar': request.POST.get('popVar', ''),
+            'popVarExtra': request.POST.get('popVarExtra', ''),
+            'ratioVars[]': request.POST.getlist('ratioVars[]'),
+            'splitVars': request.POST.get('splitVars', ''),
+            'blockLabelVar': request.POST.get('blockLabelVar', 'CTID'),
+            'repComp': request.POST.get('repCompactness', ''),
+            'repCompExtra': request.POST.get('repCompactnessExtra', ''),
+            'repSpatial': request.POST.get('repSpatial', ''),
+            'repSpatialExtra': request.POST.get('repSpatialExtra', '')
+        }
 
-    # Now we need an R Vector
-    block_ids = robjects.IntVector(sorted_district_list)
-    bardplan = r.createAssignedPlan(bardmap, block_ids)
-
-    # assign names to the districts
-    names = sorted(districts, key=attrgetter('district_id'))
-    sorted_name_list = robjects.StrVector(())
-    for district in names:
-        if district.has_geom and district.name != "Unassigned":
-            sorted_name_list += district.name 
-    bardplan.do_slot_assign('levels', sorted_name_list)
-
-    # Get the other report variables from the POST request.  We'll only add
-    # them to the report if they're in the request
-    popVar = request.POST.get('popVar', None)
-    if popVar:
-        pop_var = get_named_vector(popVar)
-        pop_var += r('list("tolerance"=.01)')
-
-    popVarExtra = request.POST.get('popVarExtra', None)
-    if popVarExtra:
-        pop_var_extra = get_named_vector(popVarExtra)
+        PlanReport.markpending(planid, stamp)
+        PlanReport.createreport.delay(planid, stamp, req)
     else:
-        pop_var_extra = r('as.null()')
-    
-    post_list = request.POST.getlist('ratioVars[]')
-    if len(post_list) > 0:
-        ratioVars = robjects.StrVector(())
-        # Each of the ratioVars should have been posted as a list of items separated by
-        # double pipes
-        for ratioVar in post_list:
-            ratioAttributes = ratioVar.split('||')
-            rVar = robjects.StrVector(())
-            rVar += r('list("denominator"=%s)' % get_named_vector(ratioAttributes[0]).r_repr())
-            rVar += r('list("threshold"=%s)' % ratioAttributes[1])
-            rVar += r('list("numerators"=%s)' % get_named_vector(ratioAttributes[2]).r_repr())
-            ratioVars += r('list("%s"=%s)' % (ratioAttributes[3], rVar.r_repr()))
+        print 'Check report status: "%s"' % rptstatus
+        status['message'] = 'Unrecognized status when checking report status.'
 
-        ratio_vars = ratioVars
-    else:
-        ratio_vars = r('as.null()')
-
-    splitVars = request.POST.get('splitVars', None)
-    if splitVars:
-        split_vars = get_named_vector(splitVars)
-    else:
-        split_vars = r('as.null()')
-    
-    blockLabelVar = request.POST.get('blockLabelVar', 'CTID')
-
-    repCompactness = request.POST.get('repCompactness', None)
-    if 'true' == repCompactness:
-        rep_compactness = r(True)
-    else:
-        rep_compactness = r(False)
-
-    repCompactnessExtra = request.POST.get('repCompactnessExtra', None)
-    if 'true' == repCompactnessExtra:
-        rep_compactness_extra = r(True)
-    else:
-        rep_compactness_extra = r(False)
-
-    repSpatial = request.POST.get('repSpatial', None)
-    if 'true' == repSpatial:
-        rep_spatial = r(True)
-    else:
-        rep_spatial = r(False)
-
-    repSpatialExtra = request.POST.get('repSpatialExtra', None)
-    if 'true' == repSpatialExtra:
-        rep_spatial_extra = r(True)
-    else:
-        rep_spatial_extra = r(False)
-
-    try:
-        # set up the temp dir and filename
-        tempdir = settings.BARD_TEMP
-        filename = '%s_plan_%d_version_%d_%s' % (plan.owner.username, plan.id, plan.version, datetime.now().strftime('%y%m%d_%H%M'))
-        r.copyR2HTMLfiles(tempdir)
-        report = r.HTMLInitFile(tempdir, filename=filename, BackGroundColor="#BBBBEE", Title="Plan Analysis")
-        title = r['HTML.title']
-        r['HTML.title']("Plan Analysis", HR=2, file=report)
-        # Now write the report to the temp dir
-        r.PMPreport( bardplan, block_ids, file = report, popVar = pop_var, popVarExtra = pop_var_extra, ratioVars = ratio_vars, splitVars = split_vars, repCompactness = rep_compactness, repCompactnessExtra = rep_compactness_extra, repSpatial = rep_spatial, repSpatialExtra = rep_spatial_extra)
-        r.HTMLEndFile()
-
-        # BARD has written the report to file - read it and put it in as
-        # the preview
-        f = open(report[0], 'r')
-        status['preview'] = f.read()
-        status['file'] = '/reports/%s.html' % filename
-        status['message'] = 'Report successful'
-        f.close()
-
-        status['success'] = True
-    except Exception as ex:
-        status['message'] = '<div class="error" title="error">Sorry, there was an error with the report: %s' % ex    
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
 @login_required
@@ -1607,7 +1418,7 @@ def getgeography(request, planid):
         district_values = []
         for district in districts:
             dist_name = district.name
-            if dist_name == "Unassigned":
+            if district.district_id == 0:
                 dist_name = '&#216;'
             else:
                 if not district.has_geom:
@@ -1667,6 +1478,10 @@ def getgeography(request, planid):
                     css_class = 'target'
                 
                 stats['css_class'] = css_class 
+
+            if district.district_id == 0:
+                # Unassigned is never over nor under
+                stats['css_class'] = 'target'
 
             district_values.append(stats)
 
