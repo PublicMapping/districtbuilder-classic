@@ -184,8 +184,9 @@ class DistrictIndexFile():
         # initialize the dicts we'll use to store the portable_ids,
         # keyed on the district_id of this plan
         new_districts = dict()
+        num_members = dict()
         csv_file = open(indexFile)
-        reader = csv.DictReader(csv_file, fieldnames = ['code', 'district'])
+        reader = csv.DictReader(csv_file, fieldnames = ['code', 'district', 'num_members'])
         for row in reader:
             try:
                 dist_id = int(row['district'])
@@ -196,6 +197,14 @@ class DistrictIndexFile():
                 else:
                     new_districts[dist_id] = list()
                     new_districts[dist_id].append(str(row['code']))
+
+                    # num_members may not exist in files exported before the column was added
+                    num = 1
+                    if row['num_members']:
+                        num = int(row['num_members'])
+
+                    num_members[dist_id] = num
+                    
             except Exception as ex:
                 if email:
                     context['errors'].append({
@@ -244,7 +253,7 @@ class DistrictIndexFile():
 
                 # Create a new district and save it
                 new_district = District(name=legislative_body.member % (district_id - offset), 
-                    district_id = district_id - offset + 1, plan=plan, 
+                    district_id = district_id - offset + 1, plan=plan, num_members=num_members[district_id],
                     geom=enforce_multi(new_geom))
                 new_district.simplify() # implicit save
             except Exception as ex:
@@ -332,7 +341,7 @@ class DistrictIndexFile():
             f = tempfile.NamedTemporaryFile(delete=False)
             try:
                 # Get the geounit mapping (we want the portable id, then the district id)
-                mapping = [(pid, did-1) for (gid, pid, did) in plan.get_base_geounits()]
+                mapping = [(pid, did-1, members) for (gid, pid, did, members) in plan.get_base_geounits()]
                 difile = csv.writer(f)
                 difile.writerows(mapping)
                 f.close()

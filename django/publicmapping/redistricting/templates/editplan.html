@@ -34,6 +34,10 @@
     <button class="toolbar_toggle" id="start_drawing">Edit Map</button>
     {% endblock %}
 
+    {% block additional_toolset_buttons %}
+    <button id="lock_district_map_tool" title="Click on a district to lock or unlock it." class="btntoggle titletip"></button>
+    {% endblock %}
+
       {% block toolset_draw %}
       <div class="toolset_group">
         <label>Selecting Tools</label>
@@ -143,4 +147,74 @@
             }).init();
         });
     </script>
+    {% endblock %}
+
+    {% block multi_member %}
+    {% if plan.legislative_body.multi_members_allowed %}
+    <div id="multi_member_dialog">
+        <div id="multi_member_content">
+            <div id="multi_member_grid_container">
+                <table id="multi_member_grid"></table>
+            </div>
+            <div id="multi_member_info">
+                <div id="multi_member_instructions">
+                    <p>
+                        Click on a row to edit the number of members for the selected
+                        district. Press ENTER to complete editing a district.
+                    </p>
+                    <br />
+                    <p>
+                        When all desired edits are made, press the Save button to
+                        save all changes to the database.
+                    </p>
+                </div>
+                <div id="multi_member_targets">
+                    <p>Target # of representatives: <span id="multi_target_reps"></span></p>
+                    <p>Target # of multi-member districts: <span id="multi_target_dists"></span></p>
+                    <p>Target # of members per multi-member district: <span id="multi_target_per"></span></p>
+                </div>
+                <div id="multi_member_values">
+                    <p>Your plan currently has <span id="multi_num_reps" class="multi_val"></span> representatives.</p>
+                    <p>Your plan currently has <span id="multi_num_dists" class="multi_val"></span> multi-member districts.</p>
+                </div>
+                <div id="multi_member_footer">
+                    <button id="multi_member_save_button">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="/static-media/js/multimember.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            multimember({
+                container: $('#multi_member_dialog'),
+                editContainer: $('#multi_member_edit_container'),
+                memberGrid: $('#multi_member_grid'),
+                numMembersContainer: $('#multi_num_reps'),
+                numMultiDistsContainer: $('#multi_num_dists'),
+                targetMembersContainer: $('#multi_target_reps'),
+                targetMultiDistsContainer: $('#multi_target_dists'),
+                targetMembersPerDistContainer: $('#multi_target_per'),
+                minMultiDistricts: {{ plan.legislative_body.min_multi_districts }},
+                maxMultiDistricts: {{ plan.legislative_body.max_multi_districts }},
+                minMultiDistrictMembers: {{ plan.legislative_body.min_multi_district_members }},
+                maxMultiDistrictMembers: {{ plan.legislative_body.max_multi_district_members }},
+                minPlanMembers: {{ plan.legislative_body.min_plan_members }},
+                maxPlanMembers: {{ plan.legislative_body.max_plan_members }},
+                target: $('#multi_member_toggle'),
+                assignButton: $('#multi_member_save_button'),
+                workingDialog: $('#working'),
+                handlerUrl: '/districtmapping/plan/{{ plan.id }}/districtmembers/',
+                getDistrictsFn: function() {
+                    return $(olmap.getLayersByName("Current Plan")[0].features).map(function(i, f) {
+                        return f.data;
+                    });
+                },
+                getVersionFn: function() {
+                    return $('#history_cursor').val();
+                }
+            }).init();
+        });
+    </script>
+    {% endif %}
     {% endblock %}

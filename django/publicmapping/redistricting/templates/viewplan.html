@@ -421,7 +421,15 @@
                   <button id="navigate_map_tool" class="active btntoggle toggle"></button>
                   <button id="identify_map_tool" title="Click on a geounit to see its demographic info." class="btntoggle titletip"></button>
                   <button id="district_id_map_tool" title="Click on a district to see its ID." class="btntoggle titletip"></button>
-                  <button id="lock_district_map_tool" title="Click on a district to lock or unlock it." class="btntoggle titletip"></button>
+
+                  {% block additional_toolset_buttons %}
+                  {% comment %}
+
+                  Additional buttons can be added to the toolset by using this block.
+
+                  {% endcomment %}
+                  {% endblock %}
+
                   {% comment %}
                   
                   This hidden div is used to style the locked districts.
@@ -566,6 +574,11 @@
             </span>
             <div id="opacity_slider"></div>          
           </div>
+          {% if plan.legislative_body.multi_members_allowed %}
+          <div id="multi_member_button_container">
+              <button id="multi_member_toggle">Select Multi-Member Districts</button>
+          </div>
+          {% endif %}
           <div id="map_legend">
               <button id="legend_toggle">Map Legend</button>
           </div>
@@ -786,13 +799,21 @@
 <div id="DialogContainer"></div>
 <div class="olHandlerBoxSelectFeature" style="display:none;"></div>
 
+{% block shared_districts %}
 {% comment %}
 
 Include the shared_districts markup if we're using the copy/paste tool
 
 {% endcomment %}
+{% endblock %}
 
-{% block shared_districts %}{% endblock %}
+{% block multi_member %}
+{% comment %}
+
+Include the markup for the multi-member assignment tool
+
+{% endcomment %}
+{% endblock %}
 
 {% comment %}
 

@@ -41,7 +41,15 @@
   "fields": {
    "member": "TestMember %d", 
    "name": "TestLegislativeBody", 
-   "max_districts": 20
+   "max_districts": 20,
+   "multi_members_allowed": false,
+   "multi_district_label_format": "{name} - [{num_members}]",
+   "min_multi_districts": 0,
+   "max_multi_districts": 0,
+   "min_multi_district_members": 0,
+   "max_multi_district_members": 0,
+   "min_plan_members": 0,
+   "max_plan_members": 0
   }
  }, 
  {
@@ -484,7 +492,8 @@
    "is_locked": false, 
    "version": 0, 
    "geom": "MULTIPOLYGON EMPTY",  
-   "plan": 1
+   "plan": 1,
+   "num_members": 1
   }
  }, 
  {
@@ -497,7 +506,8 @@
    "is_locked": false, 
    "version": 0, 
    "geom": "MULTIPOLYGON EMPTY", 
-   "plan": 2
+   "plan": 2,
+   "num_members": 1
   }
  }, 
  {
@@ -510,7 +520,8 @@
    "is_locked": false, 
    "version": 0, 
    "geom": "MULTIPOLYGON EMPTY",
-   "plan": 1
+   "plan": 1,
+   "num_members": 1
   }
  }, 
  {
@@ -523,7 +534,8 @@
    "is_locked": false, 
    "version": 0, 
    "geom": "MULTIPOLYGON EMPTY", 
-   "plan": 2
+   "plan": 2,
+   "num_members": 1
   }
  }, 
  {

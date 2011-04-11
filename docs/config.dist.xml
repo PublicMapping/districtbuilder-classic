@@ -374,7 +374,32 @@
         <ContiguityOverride id="510030112012077" connect_to="510030102011065" />
         <ContiguityOverride id="510030112012077" connect_to="510030103003037" />
     </ContiguityOverrides>
+    -->
 
+    <!--
+    Optional configuration for legislative bodies that support
+    multi-member districts.
+
+    multi_district_label_format is the format to be used for displaying a
+    map label of a multi-member district. This format string will be passed
+    to python's 'format' function with the named arguments: 'name' (district name)
+    and 'num_members' (number of representatives)
+    For example: "{name} - [{num_members}]" will display "District 5 - [3]" for a
+    district named "District 5" that is configured with 3 representatives.
+                            
+    The other min/max attributes are for configuring valid ranges for (respectively):
+    number of multi-member districts allowed
+    number of members allowed per multi-member district
+    number of members allowed in an entire plan
+
+    <MultiMemberDistrictConfigs>
+        <MultiMemberDistrictConfig legislativebodyref="congress"
+            min_multi_districts="2" max_multi_districts="5"
+            min_multi_district_members="3" max_multi_district_members="7"
+            min_plan_members="25" max_plan_members="35"
+            multi_district_label_format="{name} [{num_members}]"
+        />
+    </MultiMemberDistrictConfigs>
     -->
 
     <GeoLevels>

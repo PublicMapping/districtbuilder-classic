@@ -119,6 +119,34 @@ class LegislativeBody(models.Model):
     # The maximum number of districts in this body
     max_districts = models.PositiveIntegerField()
 
+    # Whether or not districts of this legislative body are allowed multi-members
+    multi_members_allowed = models.BooleanField(default=False)
+    
+    # The format to be used for displaying a map label of a multi-member district.
+    # This format string will be passed to python's 'format' function with the named
+    # arguments: 'name' (district name) and 'num_members' (number of representatives)
+    # For example: "{name} - [{num_members}]" will display "District 5 - [3]" for a district named
+    # "District 5" that is configured with 3 representatives.
+    multi_district_label_format = models.CharField(max_length=32, default='{name} - [{num_members}]')
+
+    # The minimimum number of multi-member districts allowed in a plan.
+    min_multi_districts = models.PositiveIntegerField(default=0)
+    
+    # The maximum number of multi-member districts allowed in a plan.
+    max_multi_districts = models.PositiveIntegerField(default=0)
+    
+    # The minimimum number of members allowed in a multi-member district.
+    min_multi_district_members = models.PositiveIntegerField(default=0)
+    
+    # The maximimum number of members allowed in a multi-member district.
+    max_multi_district_members = models.PositiveIntegerField(default=0)
+
+    # The minimumum total number of members allowed in a plan.
+    min_plan_members = models.PositiveIntegerField(default=0)
+    
+    # The maximumum total number of members allowed in a plan.
+    max_plan_members = models.PositiveIntegerField(default=0)
+
     def get_default_subject(self):
         """
         Get the default subject for display. This is related to the
@@ -717,6 +745,25 @@ class Plan(models.Model):
                 self.min_version = prever
                 self.save();
 
+    def update_num_members(self, district, num_members):
+        """
+        Create and save a new district version with the new number of values
+
+        Parameters:
+            district -- The district to modify
+            num_members -- The new number of representatives for the district
+        """
+                
+        # Clone the district to a new version, with new num_members
+        district_copy = copy(district)
+        district_copy.version = self.version
+        district_copy.num_members = num_members
+        district_copy.id = None
+        district_copy.save()
+
+        # Clone the characteristings to this new version
+        district_copy.clone_characteristics_from(district)
+                
     @transaction.commit_on_success
     def add_geounits(self, districtid, geounit_ids, geolevel, version):
         """
@@ -1102,7 +1149,8 @@ st_asgeojson(
                 ('SRID=' || (select st_srid(rd.simple)) || ';LINESTRING(%f %f,%f %f)')::geometry
             )
         )
-    ) as geom 
+    ) as geom ,
+rd.num_members
 FROM redistricting_district as rd 
 JOIN redistricting_computedcharacteristic as rc 
 ON rd.id = rc.district_id 
@@ -1155,16 +1203,27 @@ AND st_intersects(
             contiguity_calculator = Contiguity()
             contiguity_calculator.compute(district=district)
 
+            name = row[2]
+            num_members = int(row[9])
+
+            # If this district contains multiple members, change the label
+            label = name
+            if (self.legislative_body.multi_members_allowed and (num_members > 1)):
+                format = self.legislative_body.multi_district_label_format
+                label = format.format(name=name, num_members=num_members)
+            
             features.append({ 
                 'id': row[0],
                 'properties': {
                     'district_id': row[1],
-                    'name': row[2],
+                    'name': name,
+                    'label': label,
                     'is_locked': row[3],
                     'version': row[4],
                     'number': float(row[7]),
                     'contiguous': contiguity_calculator.result,
-                    'compactness': compactness_calculator.result
+                    'compactness': compactness_calculator.result,
+                    'num_members': num_members
                 },
                 'geometry': geom
             })
@@ -1278,7 +1337,7 @@ AND st_intersects(
 
         Returns:
             A list of tuples containing Geounit IDs, portable ids,
-            and district ids that lie within this Plan. 
+            district ids, and num_members that lie within this Plan. 
         """
 
         # Collect the geounits for each district in this plan
@@ -1287,8 +1346,8 @@ AND st_intersects(
             # Unassigned is district 0
             if district.district_id > 0:
                 districtunits = district.get_base_geounits(threshold)
-                # Add the district_id to the tuples
-                geounits.extend([(gid, pid, district.district_id) for (gid, pid) in districtunits])
+                # Add extra district data to the tuples
+                geounits.extend([(gid, pid, district.district_id, district.num_members) for (gid, pid) in districtunits])
         
         return geounits
 
@@ -1483,6 +1542,9 @@ class District(models.Model):
     # A flag that indicates if this district should be edited
     is_locked = models.BooleanField(default=False)
 
+    # The number of representatives configured for this district
+    num_members = models.PositiveIntegerField(default=1)
+
     # This is a geographic model, so use the geomanager for objects
     objects = models.GeoManager()
     
@@ -1650,7 +1712,7 @@ class District(models.Model):
             threshold - distance threshold used for buffer in/out optimization
 
         Returns:
-            A list of tuples containing Geounit IDs and portable ids
+            A list of tuples containing Geounit IDs, portable ids, and num_members
             that lie within this District. 
         """
         return self.plan.get_base_geounits_in_geom(self.geom, threshold);

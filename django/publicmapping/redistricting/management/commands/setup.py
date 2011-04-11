@@ -922,6 +922,32 @@ ERROR:
                 else:
                     print 'LegislativeBody "%s" already exists' % body.get('name')
 
+            # Add multi-member district configuration
+            mmconfigs = config.xpath('//MultiMemberDistrictConfig[@legislativebodyref="%s"]' % body.get('id'))
+            if len(mmconfigs) > 0:
+                mmconfig = mmconfigs[0]
+                obj.multi_members_allowed = True
+                obj.multi_district_label_format = mmconfig.get('multi_district_label_format')
+                obj.min_multi_districts = mmconfig.get('min_multi_districts')
+                obj.max_multi_districts = mmconfig.get('max_multi_districts')
+                obj.min_multi_district_members = mmconfig.get('min_multi_district_members')
+                obj.max_multi_district_members = mmconfig.get('max_multi_district_members')
+                obj.min_plan_members = mmconfig.get('min_plan_members')
+                obj.max_plan_members = mmconfig.get('max_plan_members')
+                if verbose:
+                    print 'Multi-member districts enabled for: %s' % body.get('name')
+            else:
+                obj.multi_members_allowed = False
+                obj.multi_district_label_format = ''
+                obj.min_multi_districts = 0
+                obj.max_multi_districts = 0
+                obj.min_multi_district_members = 0
+                obj.max_multi_district_members = 0
+                obj.min_plan_members = 0
+                obj.max_plan_members = 0
+                if verbose:
+                    print 'Multi-member districts not configured for: %s' % body.get('name')
+            obj.save()
 
         # Import subjects second
         subjs = config.xpath('//Subject[@id]')

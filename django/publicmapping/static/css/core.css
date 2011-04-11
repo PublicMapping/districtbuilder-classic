@@ -1840,3 +1840,66 @@ div#tipclose {
     top:-20px;
 }
     
+/* multi-member districts */
+
+button#multi_member_toggle {
+    background-color: #606060;
+    position: absolute;
+    bottom: 8px;
+    right: 365px;
+    font-size: 7pt;
+    -moz-box-shadow: 2px 2px 2px #888888;
+    -webkit-box-shadow: 2px 2px 2px #888888;
+    box-shadow: 2px 2px 2px #888888;
+}
+
+button#multi_member_toggle.ui-state-default {border: 1px solid #ccc;}
+
+#multi_member_content {
+    height: 255px;
+    font-size: 12px;
+}
+
+#multi_member_grid_container {
+    width: 31%;
+    height: 100%;
+    float: left;
+}
+
+#multi_member_info {
+    width: 66%;
+    height: 100%;
+    float: left;
+    margin-left: 14px;
+}
+
+#multi_member_targets {
+    margin-top: 15px;
+    font-size: 10pt;
+    font-weight: bold;
+}
+
+#multi_member_values {
+    margin-top: 15px;
+    font-size: 10pt;
+    font-weight: bold;
+}
+
+#multi_member_save_button {
+    float: right;
+    margin-top: 5px;
+}
+
+span.multi_val {
+    text-decoration: underline;
+    font-size: 11pt;
+    color: #090;
+}
+
+span.multi_val.invalid {
+    color: #900;
+}
+
+#gview_multi_member_grid div.ui-jqgrid-bdiv {
+    height: 230px !important;
+}

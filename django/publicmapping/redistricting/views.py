@@ -1026,6 +1026,78 @@ def add_districts_to_plan(request, planid):
 
 @login_required
 @unique_session_or_json_redirect
+@transaction.commit_manually
+def assign_district_members(request, planid):
+    """
+    This handler is used to assign members to districts
+    
+    Parameters:
+        request -- An HttpRequest object including a version,
+                   and a mapping of districtids to num_members
+        planid -- The plan into which to assign district members
+
+    Returns:
+        Some JSON explaining the success or failure of the paste operation
+    """
+
+    status = { 'success': False }
+
+    # Make sure we can edit the given plan
+    try:
+        plan = Plan.objects.get(pk=planid)
+    except:
+        status['message'] = 'No plan with the given id'
+        return HttpResponse(json.dumps(status),mimetype='application/json')
+
+    if not can_edit(request.user, plan):
+        status['message'] = 'User can\'t edit the given plan'
+        return HttpResponse(json.dumps(status),mimetype='application/json')
+
+    # Make sure this district allows multi-member assignment
+    leg_bod = plan.legislative_body
+    if (not leg_bod.multi_members_allowed):
+        status['message'] = 'Multi-members not allowed for this legislative body'
+        return HttpResponse(json.dumps(status),mimetype='application/json')
+    
+    # Get the districts we want to assign members to
+    districts = request.POST.getlist('districts[]')
+    counts = request.POST.getlist('counts[]')
+    version = int(request.POST.get('version', None))    
+
+    # Assign the district members and return status
+    try:
+        changed = 0
+        for i in range(0, len(districts)):
+            id = int(districts[i])
+            count = int(counts[i])
+            district = District.objects.filter(plan=plan,district_id=id,version__lte=version).order_by('version').reverse()[0]
+
+            if district.num_members != count:
+                if (changed == 0):
+                    # If there is at least one change, update the plan
+                    if version != plan.version:
+                        plan.purge(after=version)
+
+                    plan.version = plan.version + 1
+                    plan.save()
+
+                plan.update_num_members(district, count)
+                changed += 1
+
+        transaction.commit()
+        status['success'] = True
+        status['version'] = plan.version
+        status['modified'] = changed
+        status['message'] = 'Modified members for %d districts' % changed
+    except Exception as ex:
+        transaction.rollback()
+        status['message'] = str(ex)
+        status['exception'] = traceback.format_exc()
+
+    return HttpResponse(json.dumps(status),mimetype='application/json')
+
+@login_required
+@unique_session_or_json_redirect
 def combine_districts(request, planid):
     """
     Take the contents of one district and add them to another districts

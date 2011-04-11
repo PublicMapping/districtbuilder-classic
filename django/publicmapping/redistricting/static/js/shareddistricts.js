@@ -20,7 +20,7 @@
        This script file defines behaviors of the 'Copy and Paste Districts' dialog
    
    Author: 
-        Andrew Jennings, David Zwarg
+        Andrew Jennings, David Zwarg, Kenny Shepard
 */
 
 /**
@@ -388,15 +388,7 @@ shareddistricts = function(options) {
                 success: function(data) {
                     $('#working').dialog('close');
                     if (data.success == true) {
-                        PLAN_VERSION = data.version;
-                        PLAN_HISTORY[PLAN_VERSION] = true;
-                        $('#history_cursor').val(data.version);
-                        // update the UI buttons to show that you can
-                        // perform an undo now, but not a redo
-                        $('#history_redo').addClass('disabled');
-                        $('#history_undo').removeClass('disabled');
-
-                        $('#copy_paste_tool').trigger('merge_success'); 
+                        $('#copy_paste_tool').trigger('merge_success', [data.version]); 
                     } else {
                         $('<div class="error" title="Sorry">Unable to paste districts:<p>' + data.message + '</p></div>')
                             .dialog({modal:true, resizable:false});

@@ -490,7 +490,7 @@ function mapinit(srs,maxExtent) {
         strokeColor: '#ee9900',
         strokeOpacity: 1,
         strokeWidth: 2,
-        label: '${name}',
+        label: '${label}',
         fontColor: '#663300',
         fontSize: '10pt',
         fontFamily: 'Arial,Helvetica,sans-serif',
@@ -2337,18 +2337,27 @@ function mapinit(srs,maxExtent) {
         }
     });
 
-    // Grab the event fired off by the copy/paste button
-    // and reload the page after pasting
-    $('#copy_paste_tool').bind('merge_success', function() {
-            updateInfoDisplay();
-            updateAssignableDistricts();
-            // update the UI buttons to show that you can
-            // perform an undo now, but not a redo
-            $('#history_redo').addClass('disabled');
-            $('#history_undo').removeClass('disabled');
-    });
-        
+    // Update the current version number and refresh.
+    // Called on success callbacks when performing operations that
+    //   create new versions such as: merging and assigning members
+    var updateToVersion = function(event, version){
+        PLAN_VERSION = version;
+        PLAN_HISTORY[PLAN_VERSION] = true;
+        $('#history_cursor').val(version);
 
+        updateInfoDisplay();
+        updateAssignableDistricts();
+
+        // update the UI buttons to show that you can
+        // perform an undo now, but not a redo
+        $('#history_redo').addClass('disabled');
+        $('#history_undo').removeClass('disabled');
+    };
+
+    // Bind to events that need refreshes
+    $('#copy_paste_tool').bind('merge_success', updateToVersion);
+    $('#multi_member_toggle').bind('assign_success', updateToVersion);
+        
     /*
     * Ask the user for a new district name, then assign the current 
     * selection to the new district upon successful creation of the

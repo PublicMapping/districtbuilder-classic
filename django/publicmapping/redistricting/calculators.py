@@ -535,6 +535,11 @@ class Range(CalculatorBase):
     result of this calculator is 1 or 0, to facilitate the combination of
     scores. One example may be where the number of districts that fall 
     within a range are required.
+
+    This calculator accepts an optional argument: 'apply_num_members'.
+    If this is set to '1' (True), the calculator will consider the number
+    of members assigned to each district when performing calculations.
+    This should only be used with population subjects.
     
     If the value computed is greater than or equal to min and less than 
     or equal to max, the result value will be zero (1).
@@ -571,8 +576,21 @@ class Range(CalculatorBase):
             return
 
         self.result = 0
-        for district in districts:
+
+        if 'apply_num_members' in self.arg_dict:
+            apply_num_members = int(self.arg_dict['apply_num_members'][1]) == 1
+        else:
+            apply_num_members = False
+
+        for district in districts:            
+            if district.district_id == 0:
+                continue
+
             val = self.get_value('value',district)
+                
+            if apply_num_members and district.num_members > 1:
+                val = val / district.num_members
+            
             minval = self.get_value('min',district)
             maxval = self.get_value('max',district)
 
@@ -719,6 +737,11 @@ class Interval(CalculatorBase):
         bounds = []
         target = Decimal(str(self.get_value('target')))
 
+        if 'apply_num_members' in self.arg_dict:
+            apply_num_members = int(self.arg_dict['apply_num_members'][1]) == 1
+        else:
+            apply_num_members = False
+
         if 'district' in kwargs:
             districts = [kwargs['district']]
 
@@ -735,6 +758,9 @@ class Interval(CalculatorBase):
             # Check which interval our subject's value is in
             for district in districts:
                 value = self.get_value('subject', district)
+                if apply_num_members and district.num_members > 1:
+                    value = value / district.num_members
+                
                 for idx, bound in enumerate(bounds):
                     if value < bound:
                         self.result = idx
@@ -760,6 +786,9 @@ class Interval(CalculatorBase):
             self.result = 0
             for district in districts:
                 value = self.get_value('subject', district)
+                if apply_num_members and district.num_members > 1:
+                    value = value / district.num_members
+                
                 if value >= min_bound and value < max_bound:
                     self.result += 1 
         else:
@@ -776,6 +805,12 @@ class Equivalence(CalculatorBase):
 
     This calculator requires one argument: 'value', which is the name
     of a subject.
+    
+    This calculator accepts an optional argument: 'apply_num_members'.
+    If this is set to '1' (True), the calculator will consider the number
+    of members assigned to each district when performing calculations.
+    This should only be used with population subjects.
+
     """
     def __init__(self):
         """
@@ -804,6 +839,11 @@ class Equivalence(CalculatorBase):
         if len(districts) == 0:
             return
 
+        if 'apply_num_members' in self.arg_dict:
+            apply_num_members = int(self.arg_dict['apply_num_members'][1]) == 1
+        else:
+            apply_num_members = False
+
         min_d = 1000000000 # 1B enough?
         max_d = 0
         for district in districts:
@@ -811,6 +851,9 @@ class Equivalence(CalculatorBase):
                 continue
 
             tmpval = self.get_value('value',district)
+            if apply_num_members and district.num_members > 1:
+                tmpval = tmpval / district.num_members
+            
             if not tmpval is None:
                 min_d = min(float(tmpval), min_d)
                 max_d = max(float(tmpval), max_d)
@@ -1072,6 +1115,7 @@ class Equipopulation(CalculatorBase):
 
         # ALL PLANS include 1 district named "Unassigned", which should 
         # never be at the target.
+        
         self.result = inrange.result == (len(districts) - 1)
 
 
@@ -1149,3 +1193,53 @@ class MajorityMinority(CalculatorBase):
             count = 1
 
         self.result = districtcount >= count
+
+
+class MultiMember(CalculatorBase):
+    """
+    Used to verify a multi-member plan satisfies all parameters.
+
+    This calculator will only operate on a plan.
+    """
+    def compute(self, **kwargs):
+        self.result = False
+
+        if not 'plan' in kwargs:
+            return
+
+	plan = kwargs['plan']
+        districts = plan.get_districts_at_version(plan.version, include_geom=False)
+        legbod = plan.legislative_body
+
+        if legbod.multi_members_allowed:
+            min_dist_mems = legbod.min_multi_district_members
+            max_dist_mems = legbod.max_multi_district_members
+            min_multi_dists = legbod.min_multi_districts
+            max_multi_dists = legbod.max_multi_districts
+            min_plan_mems = legbod.min_plan_members
+            max_plan_mems = legbod.max_plan_members
+            
+            total_members = 0
+            total_multi_dists = 0
+
+            for d in districts:
+                if d.district_id == 0:
+                    continue
+
+                total_members += d.num_members
+                if (d.num_members > 1):
+                    total_multi_dists += 1
+
+                    # Check number of members per multi-member district
+                    if (d.num_members < min_dist_mems) or (d.num_members > max_dist_mems):
+                        return
+
+            # Check number of multi-member districts
+            if (total_multi_dists < min_multi_dists) or (total_multi_dists > max_multi_dists):
+                return
+
+            # Check number of districts per plan
+            if (total_members < min_plan_mems) or (total_members > max_plan_mems):
+                return
+        
+        self.result = True
