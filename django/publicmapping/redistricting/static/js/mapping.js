@@ -207,6 +207,16 @@ function init() {
     });
 }
 
+/**
+ * Toggles the highlighting of a district
+ * This is called when the Basic Information rows are clicked on
+ */
+function toggleDistrict(district_id) {
+    var row = $('.inforow_' + district_id + ' .popstatus');
+    row.toggleClass('selected');
+    $(this).trigger('update_highlighting', [ true ]);
+}
+
 /*
  * Initialize the map with extents and SRS pulled from WMS.
  */
@@ -486,6 +496,7 @@ function mapinit(srs,maxExtent) {
     // a manual refresh, with no automatic reloading of district
     // boundaries except when explicitly loaded.
     var districtStrategy = new OpenLayers.Strategy.BBOX({ratio:2});
+    var highlightStrategy = new OpenLayers.Strategy.BBOX({ratio:2});
 
     // The style for the districts. This serves as the base
     // style for all rules that apply to the districtLayer
@@ -502,6 +513,15 @@ function mapinit(srs,maxExtent) {
         fontFamily: 'Arial,Helvetica,sans-serif',
         fontWeight: '800',
         labelAlign: 'cm'
+    };
+
+    // The style for the highlighted district layer
+    var highlightStyle = {
+        fill: false,
+        fillColor: '#007FFF',
+        strokeColor: '#007FFF',
+        strokeOpacity: 1,
+        strokeWidth: 3
     };
 
     /**
@@ -541,10 +561,12 @@ function mapinit(srs,maxExtent) {
 
     /**
      * Get the OpenLayers filters that describe the version and subject
-     * criteria for the district layer. Geometry is optional, and when
-     * passed in adds an additional intersection filter on the geometry.
+     * criteria for the district layer.
+     *
+     * geometry is optional, and when passed in adds an additional intersection filter on the geometry.
+     * district_ids is an optional array of integers, and when passed in filters by district_ids
      */
-    var getVersionAndSubjectFilters = function(extent, geometry) {
+    var getVersionAndSubjectFilters = function(extent, geometry, district_ids) {
         var dby = getDistrictBy();
         var ver = getPlanVersion();
         var lyr = getSnapLayer();
@@ -576,12 +598,18 @@ function mapinit(srs,maxExtent) {
                 value: geometry
             }));
         }
+        if (district_ids !== undefined) {
+            filters.push(new OpenLayers.Filter.Comparison({
+                type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                property: 'district_ids',
+                value: district_ids.join(',')
+            }));
+        }
         return new OpenLayers.Filter.Logical({
             type: OpenLayers.Filter.Logical.AND,
             filters: filters
         });
     };
-
     
     // A vector layer that holds all the districts in
     // the current plan.
@@ -598,6 +626,23 @@ function mapinit(srs,maxExtent) {
             styleMap: new OpenLayers.StyleMap(new OpenLayers.Style(districtStyle)),
             projection: projection,
             filter: getVersionAndSubjectFilters(maxExtent)
+        }
+    );
+
+    // A vector layer that holds all highlighted districts
+    var highlightLayer = new OpenLayers.Layer.Vector(
+        'Highlighted Districts',
+        {
+            strategies: [
+                highlightStrategy
+            ],
+            protocol: new OpenLayers.Protocol.HTTP({
+                url: '/districtmapping/plan/' + PLAN_ID + '/district/versioned/',
+                format: new OpenLayers.Format.GeoJSON()
+            }),
+            styleMap: new OpenLayers.StyleMap(new OpenLayers.Style(highlightStyle)),
+            projection: projection,
+            filter: getVersionAndSubjectFilters(maxExtent, null, [])
         }
     );
 
@@ -640,6 +685,7 @@ function mapinit(srs,maxExtent) {
 
     // Add these layers to the map
     layers.push(districtLayer);
+    layers.push(highlightLayer);
     layers.push(selection);
     olmap.addLayers(layers);
 
@@ -2192,6 +2238,10 @@ function mapinit(srs,maxExtent) {
         // Add legend row for locked districts.
         row = makeDistrictLegendRow('district_swatch_within','locked','Locked For Editing');
         lbody.append(row);
+
+        // Add legend row for highlighted districts.
+        row = makeDistrictLegendRow('district_swatch_within','highlighted','Highlighted');
+        lbody.append(row);
     };
 
     // Logic for the 'Snap Map to' dropdown, note that this logic
@@ -2343,6 +2393,23 @@ function mapinit(srs,maxExtent) {
         }
     });
 
+
+    /**
+     * Updates district highlighting layer on the map
+     */
+    var updateDistrictHighlighting = function() {
+        var district_ids = [];
+        $('.popstatus.selected').each(function(i, el) {
+            var className = el.parentNode.parentNode.className;
+            var prefix = 'inforow_';
+            var index = className.indexOf(prefix);
+            var num = className.substring(index + prefix.length);
+            district_ids.push(parseInt(num, 10));
+        });
+        highlightLayer.filter = getVersionAndSubjectFilters(olmap.getExtent(), null, district_ids);
+        highlightLayer.strategies[0].update({force:true});
+    };
+
     // Update the current version number and refresh.
     // Called on success callbacks when performing operations that
     //   create new versions such as: merging and assigning members
@@ -2363,6 +2430,7 @@ function mapinit(srs,maxExtent) {
     // Bind to events that need refreshes
     $('#copy_paste_tool').bind('merge_success', updateToVersion);
     $('#multi_member_toggle').bind('assign_success', updateToVersion);
+    $(this).bind('update_highlighting', updateDistrictHighlighting);
         
     /*
     * Ask the user for a new district name, then assign the current 

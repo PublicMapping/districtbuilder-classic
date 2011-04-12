@@ -1115,7 +1115,7 @@ class Plan(models.Model):
                         new_district.computedcharacteristic_set.all().delete()
         return (pasted.id, edited_districts)
 
-    def get_wfs_districts(self,version,subject_id,extents,geolevel):
+    def get_wfs_districts(self,version,subject_id,extents,geolevel, district_ids=None):
         """
         Get the districts in this plan as a GeoJSON WFS response.
         
@@ -1128,10 +1128,15 @@ class Plan(models.Model):
             version -- The Plan version.
             subject_id -- The Subject attributes to attach to the district.
             extent -- The map extents.
+            district_ids -- Optional array of district_ids to filter by.
 
         Returns:
             GeoJSON describing the Plan.
         """
+
+        # If explicitly asked for no district ids, return no features
+        if district_ids == []:
+            return []
         
         cursor = connection.cursor()
         query = """SELECT rd.id,
@@ -1163,7 +1168,6 @@ JOIN (
 AS lmt 
 ON rd.district_id = lmt.district_id 
 WHERE rd.plan_id = %d 
-AND NOT rd.name = 'Unassigned'
 AND rc.subject_id = %d 
 AND lmt.version = rd.version 
 AND st_intersects(
@@ -1186,10 +1190,24 @@ AND st_intersects(
                 extents[2], \
                 extents[3], )
 
+        exclude_unassigned = True
+
+        # Filter by district_ids if the parameter is present
+        if district_ids:
+            # The 'int' conversion will throw an exception if the value isn't an integer.
+            # This is desired, and will keep any harmful array values out of the query.
+            query += ' AND rd.district_id in (' + ','.join(str(int(id)) for id in district_ids) + ')'
+            exclude_unassigned = len(filter(lambda x: int(x) == 0, district_ids)) == 0
+
+        # Don't return Unassigned district unless it was explicitly requested
+        if exclude_unassigned:
+            query += " AND NOT rd.name = 'Unassigned'"
+
         # Execute our custom query
         cursor.execute(query)
         rows = cursor.fetchall()
         features = []
+        
         for row in rows:
             district = District.objects.get(pk=int(row[0]))
             # Maybe the most recent district is empty

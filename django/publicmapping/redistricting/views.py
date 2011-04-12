@@ -1120,7 +1120,7 @@ def getdistricts(request, planid):
 
 
 @cache_control(private=True)
-def simple_district_versioned(request,planid):
+def simple_district_versioned(request, planid, district_ids=None):
     """
     Emulate a WFS service for versioned districts.
 
@@ -1130,6 +1130,9 @@ def simple_district_versioned(request,planid):
     districts in a versioned fashion.
 
     This method accepts 'version__eq' and 'subjects__eq' URL parameters.
+
+    This method accepts an optional 'disctrict_ids__eq' parameter, which is
+    a comma-separated list of district_ids to filter by
 
     Parameters:
         request -- An HttpRequest, with the current user.
@@ -1160,6 +1163,13 @@ def simple_district_versioned(request,planid):
         if 'level__eq' in request.REQUEST:
             geolevel = int(request.REQUEST['level__eq'])
 
+        if 'district_ids__eq' in request.REQUEST:
+            district_ids = request.REQUEST['district_ids__eq']
+            if len(district_ids) > 0:
+                district_ids = district_ids.split(',')
+            else:
+                district_ids = []
+
         if subject_id:
             bbox = None
             if 'bbox' in request.REQUEST:
@@ -1169,7 +1179,7 @@ def simple_district_versioned(request,planid):
             else:
                 bbox = plan.district_set.all().extent(field_name='simple')
 
-            status['features'] = plan.get_wfs_districts(version, subject_id, bbox, geolevel)
+            status['features'] = plan.get_wfs_districts(version, subject_id, bbox, geolevel, district_ids)
         else:
             status['features'] = []
             status['message'] = 'Subject for districts is required.'

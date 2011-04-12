@@ -1370,6 +1370,10 @@ span.popstatus {
   color: #3c3c3c;
   font-size: 11px;
   display:block;
+  cursor: pointer;
+}
+span.popstatus.selected {
+  border: 3px solid #007FFF;
 }
 .over {
   background: #ead3a7;
@@ -1393,6 +1397,9 @@ span.popstatus {
 }
 .locked {
   border: 2px solid #FF0000 !important;
+}
+.highlighted {
+  border: 2px solid #007FFF !important;
 }
 
 .plantable .notOnMap {
