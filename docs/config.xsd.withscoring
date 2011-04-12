@@ -9,7 +9,7 @@
                     <xs:annotation>
                         <xs:documentation>
                             LegislativeBodies model different election contests, the related metrics and the relevant
-                            geography. One such example is "US Congress", with Census Block, Census Tract, and state
+                            geography. One such example is &quot;US Congress&quot;, with Census Block, Census Tract, and state
                             county geographies.
 
                             Subjects, GeoLevels and Templates refer to individual LegislativeBody items.
@@ -47,7 +47,7 @@
                                         <xs:element name="SubjectType" minOccurs="0" maxOccurs="1">
                                             <xs:annotation>
                                                 <xs:documentation>
-                                                  SubjectType, if not specified, defaults to units of 'count', and no classes.
+                                                  SubjectType, if not specified, defaults to units of &apos;count&apos;, and no classes.
                                                 </xs:documentation>
                                             </xs:annotation>
                                             <xs:complexType>
@@ -175,8 +175,8 @@
                     <xs:annotation>
                         <xs:documentation>
                             Optional configuration for geounits that require special contiguity rules.
-                            'id' is the portable id of the geounit in which to configure an override.
-                            'connect_to' is the portable id of the geounit in which the geounit is
+                            &apos;id&apos; is the portable id of the geounit in which to configure an override.
+                            &apos;connect_to&apos; is the portable id of the geounit in which the geounit is
                             to be considered contiguous with. Tests for contiguity will apply these overrides
                             in order to account for contiguity when physical contiguity is not possible.
                             For example, an island may need to be marked contiguous with one or more geounits
@@ -204,10 +204,10 @@
 
                             multi_district_label_format is the format to be used for displaying a
                             map label of a multi-member district. This format string will be passed
-                            to python's 'format' function with the named arguments: 'name' (district name)
-                            and 'num_members' (number of representatives)
-                            For example: "{name} - [{num_members}]" will display "District 5 - [3]" for a
-                            district named "District 5" that is configured with 3 representatives.
+                            to python&apos;s &apos;format&apos; function with the named arguments: &apos;name&apos; (district name)
+                            and &apos;num_members&apos; (number of representatives)
+                            For example: &quot;{name} - [{num_members}]&quot; will display &quot;District 5 - [3]&quot; for a
+                            district named &quot;District 5&quot; that is configured with 3 representatives.
                             
                             The other min/max attributes are for configuring valid ranges for (respectively):
                             number of multi-member districts allowed
@@ -237,10 +237,10 @@
                 <xs:element name="GeoLevels">
                     <xs:annotation>
                         <xs:documentation>
-                            The set of geometries modeled in the mapping application. Geographies are "nested", which
+                            The set of geometries modeled in the mapping application. Geographies are &quot;nested&quot;, which
                             is to say, the boundaries of a larger geographic area (counties, for example) are coincident
                             with the boundaries of a smaller geographic area (census blocks, for example). The smaller
-                            geographic area is considered the "parent" GeoLevel, since the larger geographic areas are
+                            geographic area is considered the &quot;parent&quot; GeoLevel, since the larger geographic areas are
                             derived from the smaller ones.
                         </xs:documentation>
                     </xs:annotation>
@@ -313,7 +313,7 @@
                     <xs:annotation>
                         <xs:documentation>
                             A Template defines a plan that is available to all users as a basis for an individual
-                            user's new plan.
+                            user&apos;s new plan.
                         </xs:documentation>
                     </xs:annotation>
                     <xs:complexType>
@@ -361,6 +361,7 @@
                                     <xs:sequence>
                                         <xs:element name="MapServer">
                                             <xs:complexType>
+                                                <xs:attribute name="protocol" type="WebProtocolType" use="optional" />
                                                 <xs:attribute name="hostname" type="xs:string" use="required" />
                                                 <xs:attribute name="ns" type="xs:string" use="required" />
                                                 <xs:attribute name="nshref" type="xs:string" use="required" />
@@ -417,6 +418,7 @@
                         <xs:attribute name="root" type="xs:string" use="required" />
                         <xs:attribute name="sessionquota" type="xs:positiveInteger" use="optional" />
                         <xs:attribute name="sessiontimeout" type="xs:positiveInteger" use="optional" />
+                        <xs:attribute name="bannerimage" type="xs:string" use="optional" />
                     </xs:complexType>
                 </xs:element>
             </xs:sequence>
@@ -522,14 +524,14 @@
     </xs:element>
     <xs:complexType name="RefType">
         <xs:annotation>
-            <xs:documentation>A reference to another element, via a "ref" attribute.</xs:documentation>
+            <xs:documentation>A reference to another element, via a &quot;ref&quot; attribute.</xs:documentation>
         </xs:annotation>
         <xs:attribute name="ref" type="xs:IDREF">
         </xs:attribute>
     </xs:complexType>
     <xs:complexType name="NamedRefType">
         <xs:annotation>
-            <xs:documentation>A reference to another element, via a "ref" attribute, with a name.</xs:documentation>
+            <xs:documentation>A reference to another element, via a &quot;ref&quot; attribute, with a name.</xs:documentation>
         </xs:annotation>
         <xs:complexContent>
             <xs:extension base="RefType">
@@ -539,7 +541,7 @@
     </xs:complexType>
     <xs:complexType name="PathType">
         <xs:annotation>
-            <xs:documentation>An element that contains information about a file's path and the structure of the data inside of that path.</xs:documentation>
+            <xs:documentation>An element that contains information about a file&apos;s path and the structure of the data inside of that path.</xs:documentation>
         </xs:annotation>
         <xs:sequence>
             <xs:element name="Fields" minOccurs="1" maxOccurs="1">
@@ -563,7 +565,7 @@
     </xs:complexType>
     <xs:simpleType name="FieldTypeType">
         <xs:annotation>
-            <xs:documentation>A fixed set of types available for Field elements. A Field element can only be of type "name", "portable", or "tree".</xs:documentation>
+            <xs:documentation>A fixed set of types available for Field elements. A Field element can only be of type &quot;name&quot;, &quot;portable&quot;, or &quot;tree&quot;.</xs:documentation>
         </xs:annotation>
         <xs:restriction base="xs:string">
             <xs:enumeration value="name" />
@@ -573,7 +575,7 @@
     </xs:simpleType>
     <xs:simpleType name="ScoreFunctionTypeType">
         <xs:annotation>
-            <xs:documentation>A fixed set of types avaliable for ScoreFunction elements. A ScoreFunction can only be of type "district" or "plan".</xs:documentation>
+            <xs:documentation>A fixed set of types avaliable for ScoreFunction elements. A ScoreFunction can only be of type &quot;district&quot; or &quot;plan&quot;.</xs:documentation>
         </xs:annotation>
         <xs:restriction base="xs:string">
             <xs:enumeration value="district" />
@@ -582,12 +584,21 @@
     </xs:simpleType>
     <xs:simpleType name="ScorePanelsTypeType">
         <xs:annotation>
-            <xs:documentation>A fixed set of types available for ScorePanel elements. A ScorePanel element can only be of type "plan", "plan summary", or "district".</xs:documentation>
+            <xs:documentation>A fixed set of types available for ScorePanel elements. A ScorePanel element can only be of type &quot;plan&quot;, &quot;plan summary&quot;, or &quot;district&quot;.</xs:documentation>
         </xs:annotation>
         <xs:restriction base="xs:string">
             <xs:enumeration value="plan" />
             <xs:enumeration value="plan summary" />
             <xs:enumeration value="district" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="WebProtocolType">
+        <xs:annotation>
+            <xs:documentation>A fixed set of protocols available for MapServer elements. The protocol of the map server may be either &apos;http&apos; or &apos;https&apos;.</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="http" />
+            <xs:enumeration value="https" />
         </xs:restriction>
     </xs:simpleType>
 </xs:schema>
