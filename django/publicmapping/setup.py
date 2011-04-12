@@ -309,17 +309,7 @@ def merge_config(config, verbose):
         # '/static-media/images/banner-home.png'
         banner = cfg.get('bannerimage')
         if bannerimage:
-            # Need to write out the default context processors, too.
-            settings_out.write("""
-TEMPLATE_CONTEXT_PROCESSORS = (
-    'django.contrib.auth.context_processors.auth',
-    'django.core.context_processors.debug',
-    'django.core.context_processors.i18n',
-    'django.core.context_processors.media',
-    'django.contrib.messages.context_processors.messages',
-    'publicmapping.context_processors.banner_image',
-)""")
-            settings_out.write("BANNER_IMAGE = '%s'\n" % banner)
+            settings_out.write("\nBANNER_IMAGE = '%s'\n" % banner)
 
         cfg = config.xpath('//Reporting')[0]
         cfg = cfg.find('BardConfigs/BardConfig')
