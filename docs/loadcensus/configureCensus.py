@@ -878,7 +878,7 @@ print 'generating config file ... '
 gen_config(num_districts_congress=congDis,num_districts_senate=senDis,num_districts_house=houseDis,sum_TOTPOP=sum_TOTPOP,has_election_data=has_election_data,has_vtds=0) 
 
 print '\n\n*** Now run: ***\n\n'
-print '(cd /projects/publicmapping/trunk/django/publicmapping/; python setup.py -D /projects/publicmapping/trunk/docs/config.xsd  /projects/publicmapping/trunk/docs/config_census_template.xml)'
+print '(cd /projects/publicmapping/trunk/django/publicmapping/; python setup.py -D /projects/publicmapping/trunk/docs/config.xsd  /projects/publicmapping/trunk/docs/config_census_generated.xml)'
 
 
 
