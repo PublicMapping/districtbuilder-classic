@@ -142,7 +142,7 @@ def get_named_vector(parameter_string, tag = None):
         vec += r('list("%s"="%s")' % (pair[0], pair[1]))
     return vec
 
-def drop_error(tempdir, basename):
+def drop_error(tempdir, basename, msg):
     """
     Drop an error .html output file and clean up the .pending file.
     """
@@ -174,6 +174,7 @@ def getreport(request):
         The HTML for use as a preview in the web application, along with 
         the web address of the BARD report.
     """
+    global bardWorkSpaceLoaded
     if settings.DEBUG:
         print "Generating report. Is BARD loaded? %s" % bardWorkSpaceLoaded
 
@@ -221,9 +222,17 @@ def getreport(request):
     if settings.DEBUG:
         print "Got district list, getting other POSTed stuff."
 
-    # Now we need an R Vector
-    block_ids = robjects.IntVector(sorted_district_list)
-    bardplan = r.createAssignedPlan(bardmap, block_ids)
+    global bardmap
+    try:
+        # Now we need an R Vector
+        block_ids = robjects.IntVector(sorted_district_list)
+        bardplan = r.createAssignedPlan(bardmap, block_ids)
+    except Exception as ex:
+        status['reason'] = 'Could not create BARD plan from map.'
+        if settings.DEBUG:
+            print traceback.format_exc()
+        drop_error(tempdir, basename, 'Could not create BARD plan from map.')
+        return HttpResponse(json.dumps(status),mimetype='application/json')
 
     if settings.DEBUG:
         print "Created assigned plan."
