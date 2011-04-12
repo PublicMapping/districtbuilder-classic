@@ -186,6 +186,12 @@ function init() {
 	MAP_SERVER=window.location.host
     }
 
+    // default map_server protocol is the same as the request unless 
+    // otherwise specified
+    if (MAP_SERVER_PROTOCOL=="") {
+        MAP_SERVER_PROTOCOL = window.location.protocol;
+    }
+
     // set the version cursor
     $('#history_cursor').val(PLAN_VERSION);
 
@@ -210,7 +216,7 @@ function mapinit(srs,maxExtent) {
 
     var createLayer = function( name, layer, srs, extents, transparent, visibility, isThematicLayer ) {
         var newLayer = new OpenLayers.Layer.WMS( name,
-            window.location.protocol + '//' + MAP_SERVER + '/geoserver/gwc/service/wms',
+            MAP_SERVER_PROTOCOL + '//' + MAP_SERVER + '/geoserver/gwc/service/wms',
             {
                 srs: srs,
                 layers: layer,
@@ -652,7 +658,7 @@ function mapinit(srs,maxExtent) {
     });
 
     var idProtocol = new OpenLayers.Protocol.WFS({
-        url: window.location.protocol + '//' + MAP_SERVER + '/geoserver/wfs',
+        url: MAP_SERVER_PROTOCOL + '//' + MAP_SERVER + '/geoserver/wfs',
         featureType: 'identify_geounit',
         featureNS: NS_HREF,
         featurePrefix: NAMESPACE,

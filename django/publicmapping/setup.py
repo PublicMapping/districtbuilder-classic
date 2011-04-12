@@ -266,6 +266,9 @@ def merge_config(config, verbose):
 
         cfg = config.xpath('//MapServer')[0]
         settings_out.write("\nMAP_SERVER = '%s'\n" % cfg.get('hostname'))
+        protocol = cfg.get('protocol')
+        if protocol:
+            settings_out.write("MAP_SERVER_PROTOCOL = '%s'\n" % protocol)
         settings_out.write("BASE_MAPS = '%s'\n" % cfg.get('basemaps'))
         settings_out.write("MAP_SERVER_NS = '%s'\n" % cfg.get('ns'))
         settings_out.write("MAP_SERVER_NSHREF = '%s'\n" % cfg.get('nshref'))
@@ -301,6 +304,22 @@ def merge_config(config, verbose):
         if not timeout:
             timeout = 15
         settings_out.write("\nSESSION_TIMEOUT = %d\n" % int(timeout))
+
+        # If banner image setting does not exist, defaults to:
+        # '/static-media/images/banner-home.png'
+        banner = cfg.get('bannerimage')
+        if bannerimage:
+            # Need to write out the default context processors, too.
+            settings_out.write("""
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.auth.context_processors.auth',
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
+    'django.contrib.messages.context_processors.messages',
+    'publicmapping.context_processors.banner_image',
+)""")
+            settings_out.write("BANNER_IMAGE = '%s'\n" % banner)
 
         cfg = config.xpath('//Reporting')[0]
         cfg = cfg.find('BardConfigs/BardConfig')
