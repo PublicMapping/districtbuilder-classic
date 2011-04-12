@@ -683,7 +683,7 @@ class Config_Template(DictionaryTemplate):
                     temp="/projects/publicmapping/local/reports"
                     transform="/projects/publicmapping/trunk/docs/bard_template.xslt">
                     <PopVars>
-                        <PopVar subjectref="TOTPOP" threshold=".5" default="true" />
+                        <PopVar subjectref="TOTPOP" threshold=".01" default="true" />
                         <PopVar subjectref="VAP" threshold=".1" />
                         <PopVar subjectref="VAP_B" threshold=".1" />
                         <PopVar subjectref="VAP_H" threshold=".1" default="false" />
@@ -878,7 +878,7 @@ print 'generating config file ... '
 gen_config(num_districts_congress=congDis,num_districts_senate=senDis,num_districts_house=houseDis,sum_TOTPOP=sum_TOTPOP,has_election_data=has_election_data,has_vtds=0) 
 
 print '\n\n*** Now run: ***\n\n'
-print '(cd /projects/publicmapping/trunk/django/publicmapping/; python setup.py -D /projects/publicmapping/trunk/docs/config.xsd  /projects/publicmapping/trunk/docs/config_census_generated.xml)'
+print '(cd /projects/publicmapping/trunk/django/publicmapping/; python setup.py -D /projects/publicmapping/trunk/docs/config.xsd.withscoring  /projects/publicmapping/trunk/docs/config_census_generated.xml)'
 
 
 
