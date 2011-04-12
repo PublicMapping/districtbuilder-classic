@@ -95,6 +95,10 @@ MIDDLEWARE_CLASSES = (
 #    'django.middleware.cache.FetchFromCacheMiddleware',
 )
 
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'publicmapping.context_processors.banner_image',
+)
+
 AUTH_PROFILE_MODULE = 'redistricting.Profile'
 
 ROOT_URLCONF = 'publicmapping.urls'

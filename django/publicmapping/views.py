@@ -34,7 +34,7 @@ from django.contrib.csrf.middleware import csrf_exempt
 from django.views.decorators.cache import cache_control
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.shortcuts import render_to_response
-from django.template import loader, Context
+from django.template import loader, Context, RequestContext
 from django.utils import simplejson as json
 
 # for proxy
@@ -74,7 +74,7 @@ def index(request):
         'ga_account': settings.GA_ACCOUNT,
         'ga_domain': settings.GA_DOMAIN,
         'user': request.user
-    })
+    }, context_instance=RequestContext(request))
 
 
 def userregister(request):
