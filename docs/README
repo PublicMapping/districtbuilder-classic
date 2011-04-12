@@ -157,7 +157,7 @@ update support, and install tmpreaper and cron jobs.
 
         > ./setup.py --help
 
-    If you ren each setup step seperately, they must be performed in the
+    If you run each setup step seperately, they must be performed in the
     following order (all steps are required to get a properly functioning 
     application):
 
@@ -363,7 +363,7 @@ update support, and install tmpreaper and cron jobs.
     /projects/publicmapping/local/reports
 
 == Celery Configuration ==
-    Some processes take to long to happen over a synchronous web 
+    Some processes take too long to happen over a synchronous web 
     connection. The app uses a process queue called celery to make
     these actions happen in the background so the web application 
     stays performant.  After installing the celery components using
