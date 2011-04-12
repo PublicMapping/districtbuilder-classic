@@ -676,7 +676,6 @@ def getreport(request, planid):
 
     rptstatus = PlanReport.checkreport(planid, stamp)
     if rptstatus == 'ready':
-        print 'Report is ready.'
         status = {
             'success': True,
             'url': PlanReport.getreport(planid, stamp),
@@ -685,7 +684,6 @@ def getreport(request, planid):
             'stamp': stamp
         }
     elif rptstatus == 'busy':
-        print 'Report is busy.'
         status = {
             'success': True,
             'url': reverse(getreport, args=[planid]),
@@ -694,7 +692,6 @@ def getreport(request, planid):
             'stamp': stamp
         }
     elif rptstatus == 'free':
-        print 'Starting new report.'
         status = {
             'success': True,
             'url': reverse(getreport, args=[planid]),
@@ -718,7 +715,6 @@ def getreport(request, planid):
         PlanReport.markpending(planid, stamp)
         PlanReport.createreport.delay(planid, stamp, req)
     else:
-        print 'Check report status: "%s"' % rptstatus
         status['message'] = 'Unrecognized status when checking report status.'
 
     return HttpResponse(json.dumps(status),mimetype='application/json')
@@ -1563,7 +1559,7 @@ def getcompliance(plan, version):
     population = plan.legislative_body.get_default_subject()
     # We only want the subjects that have data attached to districts
     subject_ids = ComputedCharacteristic.objects.values_list('subject', flat=True).distinct()
-    minority = Subject.objects.filter(id__in=subject_ids).exclude(name=population.name)
+    minority = Subject.objects.filter(id__in=subject_ids).exclude(name=population.name)[1:3]
     # minority = Subject.objects.exclude(name=population.name)
     data = {}
     for subject in minority:
