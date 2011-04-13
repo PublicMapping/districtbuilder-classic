@@ -36,9 +36,9 @@
                     <xsl:apply-templates select="//PopVars" />
                     <span class="compactness master" ><input id="compactness_master" type="checkbox" /><label for="compactness_master">Compactness</label></span>
                     <span class="compactness child reportVar"><input id="repCompactness" type="checkbox" value="repCompactness" /><label for="repCompactness">Compactness - Length/Width</label></span>
-                    <span class="compactness child reportVar"><input id="repCompactnessExtra" type="checkbox" value="repCompactnessExtra" /><label for="repCompactnessExtra">Compactness - Bounding Circle</label></span>
+                    <!--<span class="compactness child reportVar"><input id="repCompactnessExtra" type="checkbox" value="repCompactnessExtra" /><label for="repCompactnessExtra">Compactness - Bounding Circle</label></span>-->
                     <span class="spatial master" ><input id="spatial_master" type="checkbox" /><label for="spatial_master">Spatial Analysis</label></span>
-                    <span class="spatial child reportVar"><input id="repSpatialExtra" type="checkbox" value="repSpatialExtra" /><label for="repSpatialExtra">Contiguity</label></span>
+                    <!--<span class="spatial child reportVar"><input id="repSpatialExtra" type="checkbox" value="repSpatialExtra" /><label for="repSpatialExtra">Contiguity</label></span>-->
                     <span class="spatial child reportVar"><input id="repSpatial" type="checkbox" value="repSpatial" /><label for="repSpatial">Unassigned Blocks</label></span>
                 </div>
                 <div id="options2">
