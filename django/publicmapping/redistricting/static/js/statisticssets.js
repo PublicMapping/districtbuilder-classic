@@ -41,6 +41,7 @@ statisticssets = function(options) {
             callback: function() {},
             /* the id for the plan to which this checker applies. by default, the current plan */
             statsUrl: '/districtmapping/plan/' + ( typeof(options.planId) != 'undefined' ? options.planId : PLAN_ID ) + '/statisticssets/',
+            loadDemographicsUrl: '/districtmapping/plan/' + ( typeof(options.planId) != 'undefined' ? options.planId : PLAN_ID ) + '/demographics/',
         }, options),
         
         _selector = $('#map_menu_header > select'),
@@ -125,7 +126,22 @@ statisticssets = function(options) {
 
     var showScoreDisplay = function(event) {
         var displayId = $(this).val();
-        alert("Should load display " + displayId);
+        $('.demographics').load(
+            _options.loadDemographicsUrl,
+            {
+                displayId: displayId
+            },
+            function(rsp, status, xhr) {
+                if (xhr.status > 400) {
+                    window.location.href = '/';
+                }
+                else {
+                    loadTooltips();
+                    // sortByVisibility(true);
+                }
+            }
+        );  
+        // alert("Should load display " + displayId);
     }
     /**
      * Given a function object in JSON, create a checkbox and

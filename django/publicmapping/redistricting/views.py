@@ -1386,13 +1386,16 @@ def get_demographics(request, planid):
     districts = plan.get_districts_at_version(version,include_geom=True)
     display = ScoreDisplay.objects.get(title='Demographics')
     
-    if 'personalDisplay' in request.POST:
+    if 'displayId' in request.REQUEST:
         try:
-            display = ScoreDisplay.objects.get(pk=request.POST['personalDisplay'])
+            display = ScoreDisplay.objects.get(pk=request.POST['displayId'])
         except:
             status['message'] = "Unable to get Personalized ScoreDisplay"
             status['exception'] = traceback.format_exc()
 
+    else:
+        sys.stderr.write('No displayId in request: %s\n' % request.POST)
+        
     try :
         html = display.render(plan, request)
         return HttpResponse(html, mimetype='text/html')

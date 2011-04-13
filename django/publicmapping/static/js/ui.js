@@ -329,7 +329,7 @@ $(function() {
     
     // the menu type selector dropdown
     $("#map_menu_header select").change(function(){
-        var selectedVal = this.value;
+        var selectedVal = this.value == 'basic_information' ? 'basic_information' : 'demographics';
         $('.map_menu_content').each(function() {       
           if($(this).hasClass(selectedVal)) {
               $(this).slideDown(200);
