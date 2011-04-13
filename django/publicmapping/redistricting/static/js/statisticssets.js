@@ -98,6 +98,7 @@ statisticssets = function(options) {
             $('.function').each( function() {
                 $(this).attr('checked', false);
             });
+            _statisticsSetNameField.val('');
         });
     };
     /**
@@ -175,6 +176,7 @@ statisticssets = function(options) {
         var deleteButton = $('<button id="delete_set_' + set.id + '" class="delete_set"></button>');
         deleteButton.data('id', set.id);
         deleteButton.bind('click', { id: set.id}, deleteSet);
+        deleteButton.button({icons: {primary: 'icon-trash'}, text: false});
         set_button.append(deleteButton);
 
         return set_button;
@@ -184,9 +186,18 @@ statisticssets = function(options) {
      * Adds an entry for the given statistics set to the 
      * dropdown so the user can view the stats set
      */
-    var addSetToSelector = function(set) {
+    var addSetToSelector = function(set, select) {
         _selector.append($('<option value="' + set.id + '">' + set.name + '</option>'));
+        if (select) {
+            showStatisticsSet(set.id);
+        }
     };
+
+    var showStatisticsSet = function(id) {
+        _selector.val(id);
+        _selector.trigger('change');
+        _options.container.dialog("close");
+    }
 
     /**
      * Removes an entry for the given statistics set
@@ -246,14 +257,22 @@ statisticssets = function(options) {
         });
         return functions;
     };
+
     /** 
-     * Save the Statistics Set.  If it has the same name as a 
-     * current set, try to edit that set.  if it has a new name
-     * try to create a new set
+     * Save the Statistics Set. The backend will decide whether a 
+     * new set is required or the current set is edited.
      */
     var saveStatisticsSet = function(name, selectedStats) {
         
         var functionArray = getSelectedScoreFunctions();
+        if (functionArray.length > 3) {
+            $("<div>Please select 3 or fewer statistics.</div>").dialog({
+                title: 'Error',
+                resizable:false,
+                modal:true
+            });
+            return false;
+        }
         var data = { functions: functionArray, name: _statisticsSetNameField.val() };
         $.ajax({
             type: 'POST',
@@ -262,12 +281,19 @@ statisticssets = function(options) {
             success: function(data) {
                 if (data.success == true) {
                     if (data.newRecord == true) {
-                        alert ('Successfully added set ' + data.set.name);
                         var record = createStatisticsSetButton(data.set);
                         _savedSetsContainer.append(record);
-                        addSetToSelector(data.set);
+                        addSetToSelector(data.set, true);
                     } else {
-                        alert ('Successfully updated set ' + data.set.name);
+                        showStatisticsSet(data.set.id);
+                    }
+                } else {
+                    if (data.error == 'limit') {
+                        $('<div>' + data.message + '</div>').dialog({
+                            title: 'Error',
+                            resizable:false,
+                            modal:true
+                        });
                     }
                 }
             }

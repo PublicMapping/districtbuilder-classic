@@ -4,8 +4,16 @@
 }
 
 #available_statistics {
-    height:300px;
-    overflow-y: scroll;
+    height:275px;
+    overflow: auto;
+    font-size: 14px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    margin: 8px 0;
+}
+
+#clear_statistics {
+    float:right;
 }
 
 #saved_statistics_sets button {
@@ -13,10 +21,20 @@
 }
 
 .statistics_set {
-    border: 1px black;
-    -moz-border-radius:3px;
-    border-radius:3px;
-    background:lightblue;
-    padding: 3px;
-    margin-top:3px;
+    background: #fdfdfd url("/static-media/images/bg-button-sm.png") 0 15px repeat-x;
+    border: 1px solid #CCCCCC;
+    font-size: 12px;
+    font-weight: bold;
+    margin: 7px 0;
+    padding: 8px;
+    text-decoration: none;
+    display:block;
+    cursor:pointer;
+    border-radius: 6px;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+}
+
+.statistics_set:hover {
+
 }

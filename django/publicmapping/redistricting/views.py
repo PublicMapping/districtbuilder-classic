@@ -1396,6 +1396,9 @@ def get_demographics(request, planid):
     else:
         sys.stderr.write('No displayId in request: %s\n' % request.POST)
         
+#    if display.title == "Basic Information":
+#        return getgeography(request, planid)
+
     try :
         html = display.render(plan, request)
         return HttpResponse(html, mimetype='text/html')
@@ -2017,8 +2020,8 @@ def statistics_sets(request, planid):
         sets = []
         scorefunctions = []
             
-        allfunctions = ScoreFunction.objects.all()
-        for f in allfunctions:
+        user_functions = ScoreFunction.objects.filter(is_user_selectable=True)
+        for f in user_functions:
             scorefunctions.append({ 'id': f.id, 'name': f.name })
         result['functions'] = scorefunctions
 
@@ -2057,16 +2060,26 @@ def statistics_sets(request, planid):
     # If it's a post, edit or create the ScoreDisplay and return 
     # the id and name as usual
     elif request.method == 'POST':
+        # If we're adding a new display, we should make sure they only have 3
+        def validate_num(user, limit=3):
+            return ScoreDisplay.objects.filter(owner=user).count() < limit
+
         if 'functions[]' in request.POST:
             functions = request.POST.getlist('functions[]')
+            functions = map(lambda x: int(x), functions)
             try:
                 display = ScoreDisplay.objects.get(title=request.POST.get('name'), owner=request.user)
                 display = display.copy_from(display=display, functions=functions)
             except:
-                demo = ScoreDisplay.objects.get(title='Demographics', owner__is_superuser=True)
-                display = ScoreDisplay()
-                display = display.copy_from(display=demo, title=request.POST.get('name'), owner=request.user, functions=functions)
-                result['newRecord'] = True
+                if validate_num(request.user):
+                    demo = ScoreDisplay.objects.get(title='Demographics', owner__is_superuser=True)
+                    display = ScoreDisplay()
+                    display = display.copy_from(display=demo, title=request.POST.get('name'), owner=request.user, functions=functions)
+                    result['newRecord'] = True
+                else:
+                    result['message'] = 'Each user is limited to 3 statistics sets. Please delete one or edit an existing set.'
+                    result['error'] = 'limit'
+                    return HttpResponse(json.dumps(result),mimetype='application/json')
 
             result['set'] = {'name':display.title, 'id':display.id, 'functions':functions}
             result['success'] = True

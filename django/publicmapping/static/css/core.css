@@ -923,6 +923,10 @@ div.toolset#toolset_draw .ui-icon {
 #district_select_tool  .ui-icon {
   background-image: url(/static-media/images/icon-select-district.png);
 }
+.delete_set .ui-icon {
+  background-image: url(/static-media/images/icon-trash.png);
+}
+
 
 div.toolset_group {
   float:left;

@@ -2023,6 +2023,10 @@ class ScoreFunction(models.Model):
     # Whether or not this score function is for a plan
     is_planscore = models.BooleanField(default=False)
 
+    # Whether a user can select this function for use in a 
+    # statistics set
+    is_user_selectable = models.BooleanField(default=False)
+    
     class Meta:
         """
         Additional information about the Subject model.
