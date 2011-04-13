@@ -53,6 +53,6 @@ ALTER TABLE redistricting_scoredisplay
  
 ALTER TABLE redistricting_scorefunction ADD COLUMN is_user_selectable boolean;
 UPDATE redistricting_scorefunction set is_user_selectable = true where calculator ilike 'publicmapping.redistricting.calculators.Sum';
-UPDATE redistricting_scorefunction set is_user_selectable = true where is_user_selectable is null;
+UPDATE redistricting_scorefunction set is_user_selectable = false where is_user_selectable is null;
 ALTER TABLE redistricting_scorefunction ALTER COLUMN is_user_selectable SET NOT NULL;
 
