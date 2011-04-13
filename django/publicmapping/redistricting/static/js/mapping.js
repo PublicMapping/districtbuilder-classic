@@ -207,14 +207,39 @@ function init() {
     });
 }
 
+// Timer used to distinguish between single and double clicks
+var clickTimer = null;
+
 /**
  * Toggles the highlighting of a district
  * This is called when the Basic Information rows are clicked on
  */
 function toggleDistrict(district_id) {
-    var row = $('.inforow_' + district_id + ' .popstatus');
-    row.toggleClass('selected');
-    $(this).trigger('update_highlighting', [ true ]);
+    if (clickTimer) {
+        clearTimeout(clickTimer);
+        clickTimer = null;
+    }
+    clickTimer = setTimeout(function() {
+        var row = $('.inforow_' + district_id + ' .popstatus');
+        row.toggleClass('selected');
+        $(this).trigger('update_highlighting', [ true ]);
+        clickTimer = null;
+    }, 200);
+    
+    // needed for multiple click events on a single element
+    return true;
+}
+
+/**
+ * Zooms to the extent of a district
+ * This is called when the Basic Information rows are double clicked on
+ */
+function zoomToDistrict(district_id) {
+    if (clickTimer) {
+        clearTimeout(clickTimer);
+        clickTimer = null;
+    }
+    $(this).trigger('zoom_to_district', [ district_id ]);
 }
 
 /*
@@ -2410,6 +2435,32 @@ function mapinit(srs,maxExtent) {
         highlightLayer.strategies[0].update({force:true});
     };
 
+    /**
+     * Zooms to the extent of a district by district_id
+     */
+    var zoomToDistrictExtent = function(evt, district_id) {
+        $.ajax({
+            type:'GET',
+            url: '/districtmapping/plan/' + PLAN_ID + '/district/versioned/',
+            data: {
+                district_ids__eq: district_id,
+                version__eq: getPlanVersion(),
+                level__eq: getSnapLayer().geolevel,
+                subject__eq: getDistrictBy().by
+            },
+            success: function(featureCollection){
+                if (featureCollection) {
+                    var geojson = new OpenLayers.Format.GeoJSON();
+                    var features = geojson.read(featureCollection);
+                    if (features && features.length > 0) {
+                        var bounds = features[0].geometry.getBounds();
+                        olmap.zoomToExtent(bounds);
+                    }
+                 }
+            }
+        });
+    };
+
     // Update the current version number and refresh.
     // Called on success callbacks when performing operations that
     //   create new versions such as: merging and assigning members
@@ -2431,6 +2482,7 @@ function mapinit(srs,maxExtent) {
     $('#copy_paste_tool').bind('merge_success', updateToVersion);
     $('#multi_member_toggle').bind('assign_success', updateToVersion);
     $(this).bind('update_highlighting', updateDistrictHighlighting);
+    $(this).bind('zoom_to_district', zoomToDistrictExtent);
         
     /*
     * Ask the user for a new district name, then assign the current 

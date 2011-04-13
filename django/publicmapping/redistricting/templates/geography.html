@@ -64,7 +64,8 @@
                 <td class="celldistrictname cell1">{{ stat.name|safe }}</td>
                 <td class="celldemo cell2">
                     <span class="popstatus {{ stat.css_class }}"
-                          onclick="toggleDistrict({{ stat.district_id }})"> 
+                          onclick="toggleDistrict({{ stat.district_id }})"
+                          ondblclick="zoomToDistrict({{ stat.district_id }})"> 
                         {{ stat.demo|intcomma }}
                     </span>
                 </td>
