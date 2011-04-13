@@ -796,7 +796,7 @@ class Interval(CalculatorBase):
                     if value < bound:
                         self.result = (idx, value, self.arg_dict['subject'][1])
                         return
-                self.result = len(bounds)
+                self.result = (len(bounds), value, self.arg_dict['subject'][1])
 
         elif 'plan' in kwargs:
             plan = kwargs['plan']
@@ -838,12 +838,11 @@ class Interval(CalculatorBase):
         try:
             interval = self.result[0]
             interval_class = "interval_%d" % interval if interval >= 0 else 'no_interval'
-            span_value = "n/a" if self.resvalue == None else value
-            if value == None:
-                return '<span class="%s %s">%s</span>' % (interval_class, self.result[2], self.result[1])
+            span_value = "n/a" if self.result[1] == None else self.result[1]
+            return '<span class="%s %s">%s</span>' % (interval_class, self.result[2], span_value)
         except:
-            import traceback
-            print(traceback.format_exc())
+            # import traceback
+            # print(traceback.format_exc())
             return '<span>n/a<span>'
         
 

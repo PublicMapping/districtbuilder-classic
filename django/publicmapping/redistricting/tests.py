@@ -2840,6 +2840,7 @@ class StatisticsSetTestCase(BaseTestCase):
         demographics.score_functions = functions.all()
         demographics.save()
 
+        self.functions = functions.all()
         self.demographics = demographics
         self.summary = summary
         self.display = display
@@ -2869,7 +2870,7 @@ class StatisticsSetTestCase(BaseTestCase):
             "Copied scoredisplay has wrong number of panels attached")
 
         vap = ScoreFunction.objects.get(label="VAP")
-        copy = copy.copy_from(display=self.display, functions=[vap], title="Copied from")
+        copy = copy.copy_from(display=self.display, functions=[unicode(str(vap.id))], title="Copied from")
         self.assertEquals(len(copy.scorepanel_set.all()), len(self.display.scorepanel_set.all()), 
             "Copied scoredisplay has wrong number of panels attached")
 
@@ -2884,5 +2885,25 @@ class StatisticsSetTestCase(BaseTestCase):
             elif panel.title == "Demographics":
                 self.assertEquals(1, len(panel.score_functions.all()),
                     "Copied demographics panel didn't have correct number of functions")
+                panels_tested += 1
+        self.assertEquals(2, panels_tested, "Copied scoredisplay didn't have both panels needed")
+
+        # Let's try just updating those score functions
+        new_copy = ScoreDisplay(owner=user)
+        new_copy = copy.copy_from(display=copy, functions = self.functions)
+        self.assertEquals(copy.title, new_copy.title, "Title of scoredisplay not copied")
+        self.assertEquals(copy.id, new_copy.id, "Scorefunctions not added to current display")
+        self.assertEquals(len(copy.scorepanel_set.all()), len(new_copy.scorepanel_set.all()), 
+            "Copied scoredisplay has wrong number of panels attached")
+
+        panels_tested = 0
+        for panel in new_copy.scorepanel_set.all():
+            if panel.title == "Plan Summary":
+                self.assertEquals(len(self.summary.score_functions.all()), len(panel.score_functions.all()), 
+                    "Copied plan summary panel didn't have correct number of functions")
+                panels_tested += 1
+            elif panel.title == "Demographics":
+                self.assertEquals(len(self.functions), len(panel.score_functions.all()),
+                    "Copied demographics panel didn't have correct number of functions; e:%d,a:%d" % (3, len(panel.score_functions.all())))
                 panels_tested += 1
         self.assertEquals(2, panels_tested, "Copied scoredisplay didn't have both panels needed")

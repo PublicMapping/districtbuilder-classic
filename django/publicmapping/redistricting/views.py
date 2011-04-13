@@ -2027,6 +2027,8 @@ def statistics_sets(request, planid):
                 for panel in display.scorepanel_set.all():
                     if panel.type == 'district':
                         functions = map(lambda x: x.id, panel.score_functions.all())
+                        if len(functions) == 0:
+                            result['message'] = "No functions for %s" % panel
                 sets.append({ 'id': display.id, 'name': display.title, 'functions': functions })
         except:
             result['message'] = 'No user displays for %s: %s' % (request.user, traceback.format_exc())

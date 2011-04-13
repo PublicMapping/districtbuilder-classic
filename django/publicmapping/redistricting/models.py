@@ -44,7 +44,7 @@ from redistricting.calculators import Schwartzberg, Contiguity
 from datetime import datetime
 from copy import copy
 from decimal import *
-import sys, cPickle, traceback
+import sys, cPickle, traceback, types
 
 class Subject(models.Model):
     """
@@ -653,7 +653,7 @@ class Plan(models.Model):
             targets = Target.objects.filter(id__in=levels, subject__is_displayed = True)
             return targets
         except Exception as ex:
-            sys.stderr.write('Unable to get targets for plan %s: %s' % (self.name, ex))
+            print('Unable to get targets for plan %s: %s' % (self.name, ex))
             raise ex
 
     def get_nth_previous_version(self, steps):
@@ -1279,7 +1279,7 @@ AND st_intersects(
         try:
             plan.save()
         except Exception as ex:
-            sys.stderr.write( "Couldn't save plan: %s\n" % ex )
+            print( "Couldn't save plan: %s\n" % ex )
             return None
 
         return plan
@@ -2189,36 +2189,39 @@ class ScoreDisplay(models.Model):
             functions -- a list of ScoreFunctions or the primary
                 keys of ScoreFunctions to replace in the display's
                 first "district" ScorePanel
-            owner -- the owner of the new ScoreDisplay
-            title -- the title of the new scorefunction
+            owner -- the owner of the new ScoreDisplay - only set if we're not copying self
+            title -- the title of the new scorefunction - only set if we're not copying self
         
         Returns:
             The new ScoreDisplay
         """
         
+        print('Copying from display %s' % display)
         if display == None:
             return
 
         if self != display:
             self = copy(display)
             self.id = None
+
+            self.owner = owner if owner != None else display.owner
+
+            # We can't have duplicate titles per owner so append "copy" if we must
+            if self.owner == display.owner:
+                print ('same owner: %s\n' % self.owner)
+                self.title = title if title != None else "%s copy" % display.title
+            else:
+                self.title = title if title != None else display.title
+
+            self.save()
+            self.scorepanel_set = display.scorepanel_set.all()
+
         else:
             self = display
 
-        self.owner = owner if owner != None else display.owner
-
-        # We can't have duplicate titles per owner so append "copy" if we must
-        if self.owner == display.owner:
-            print ('same owner: %s\n' % self.owner)
-            self.title = title if title != None else "%s copy" % display.title
-        else:
-            self.title = title if title != None else display.title
-
-        print("%s with id of %d" % (self.owner, self.owner.id))
-        self.save()
-        self.scorepanel_set = display.scorepanel_set.all()
 
         try:
+            print(str(self.scorepanel_set.all()))
             public_demo = self.scorepanel_set.get(type='district')
             if self != display:
                 self.scorepanel_set.remove(public_demo)
@@ -2231,23 +2234,23 @@ class ScoreDisplay(models.Model):
 
             demo_panel.score_functions.clear()
             if len(functions) == 0:
-                sys.stderr.write('No functions input into copy')
+                print('No functions input into copy')
                 return self
-            sys.stderr.write('These are our functions: %s' % functions)
+            print('These are our functions: %s' % functions)
             for function in functions:
-                sys.stderr.write('function %s is type %s' % (function, str(type(function))))
-                if type(function) == int:
-                    function = ScoreFunctions.objects.get(pk=function) 
-                if type(function) == str:
-                    function = ScoreFunctions.objects.get(pk=int(function))
+                print('function %s is type %s' % (function, str(type(function))))
+                if isinstance(function, types.IntType):
+                    function = ScoreFunction.objects.get(pk=function) 
+                if isinstance(function, types.StringTypes):
+                    function = ScoreFunction.objects.get(pk=int(function))
                 if type(function) == ScoreFunction:
                     demo_panel.score_functions.add(function)
-                    sys.stderr.write("Successfully added %s to %s" % (function, demo_panel))
+                    print("Successfully added %s to %s" % (function, demo_panel))
             demo_panel.save()
             self.scorepanel_set.add(demo_panel)
             self.save()
         except:
-            sys.stderr.write('Failed to copy ScoreDisplay %s to %s: %s' % (display.title, self.title, traceback.format_exc()))
+            print('Failed to copy ScoreDisplay %s to %s: %s' % (display.title, self.title, traceback.format_exc()))
 
         return self
 
@@ -2518,7 +2521,7 @@ class ComputedDistrictScore(models.Model):
             cache,created = ComputedDistrictScore.objects.get_or_create(function=function, district=district, defaults=defaults)
 
         except Exception as ex:
-            sys.stderr.write(traceback.format_exc())
+            print(traceback.format_exc())
             return None
 
         if created == True:
@@ -2529,7 +2532,7 @@ class ComputedDistrictScore(models.Model):
             try:
                 score = cPickle.loads(str(cache.value))
             except:
-                sys.stderr.write('Failed to get cached value: %s\n' % traceback.format_exc())
+                print('Failed to get cached value: %s\n' % traceback.format_exc())
                 score = function.score(district, format='raw')
 
         if format != 'raw':
@@ -2609,7 +2612,7 @@ class ComputedPlanScore(models.Model):
             try:
                 score = cPickle.loads(str(cache.value))
             except:
-                sys.stderr.write('Failed to get cached value: %s\n' % traceback.format_exc())
+                print('Failed to get cached value: %s\n' % traceback.format_exc())
                 score = function.score(plan, format='raw')
 
         if format != 'raw':
