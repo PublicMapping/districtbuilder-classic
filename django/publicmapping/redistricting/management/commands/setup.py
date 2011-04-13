@@ -812,7 +812,14 @@ ERROR:
         
         admin = User.objects.filter(is_superuser=True)
         if admin.count() == 0:
-            admin = None
+            if verbose > 1:
+                print """
+ERROR:
+
+    There was no superuser installed; ScoreDisplays need to be assigned
+    ownership to a superuser.
+""" 
+            return
         else:
             admin = admin[0]
 
@@ -837,11 +844,10 @@ ERROR:
                     print 'ScoreDisplay "%s" already exists' % title
 
             # Import score panels for this score display.
-            position = 0
             for spref in sd.xpath('ScorePanel'):
                 sp = config.xpath('//ScorePanels/ScorePanel[@id="%s"]' % spref.get('ref'))[0]
                 title = sp.get('title')
-                position += 1
+                position = int(sp.get('position'))
 
                 is_ascending = sp.get('is_ascending')
                 if is_ascending is None:
@@ -1006,16 +1012,12 @@ ERROR:
         for subj in subjs:
             if 'aliasfor' in subj.attrib:
                 continue
-            denominator_name = subj.get('percentage_denominator')
-            denominator = None
-            if (denominator_name):
-                denominator = Subject.objects.get(name=denominator_name)
             obj, created = Subject.objects.get_or_create(
                 name=subj.get('id'), 
                 display=subj.get('name'), 
                 short_display=subj.get('short_name'), 
                 is_displayed=(subj.get('displayed')=='true'), 
-                percentage_denominator=denominator,
+                percentage_denominator=None,
                 sort_key=subj.get('sortkey'))
                 
 
@@ -1024,6 +1026,18 @@ ERROR:
                     print 'Created Subject "%s"' % subj.get('name')
                 else:
                     print 'Subject "%s" already exists' % subj.get('name')
+
+        for subj in subjs:
+            denominator_name = subj.get('percentage_denominator')
+            if (denominator_name):
+                numerator = Subject.objects.get(name=subj.get('id'))
+                denominator = Subject.objects.get(name=denominator_name)
+                numerator.percentage_denominator = denominator
+                numerator.save()
+
+                if verbose > 1:
+                    print 'Set denominator on "%s" to "%s"' % (subj.get('name'), subj.get('percentage_denominator'))
+
 
         # Import targets third
         targs = config.xpath('//Targets/Target')
