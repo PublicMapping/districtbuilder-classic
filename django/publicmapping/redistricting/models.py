@@ -2413,10 +2413,13 @@ class ScorePanel(models.Model):
                 districts = [dorp]
 
             districtscores = []
+            functions = []
             for district in districts:
                 districtscore = { 'district':district, 'scores':[] }
 
                 for function in self.score_functions.filter(is_planscore=False):
+                    if not function.label in functions:
+                        functions.append(function.label)
                     districtscore['scores'].append({
                         'district':district,
                         'name':function.name,
@@ -2429,6 +2432,7 @@ class ScorePanel(models.Model):
 
             return render_to_string(self.template, {
                 'districtscores':districtscores,
+                'functions':functions,
                 'title': self.title,
                 'cssclass': self.cssclass
             })
