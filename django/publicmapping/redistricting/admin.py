@@ -177,9 +177,9 @@ class ScorePanelAdmin(admin.ModelAdmin):
 
     list_display = ('title', 'type', 'template', 'cssclass',)
 
-    list_filter = ('type',)
+    list_filter = ('type','cssclass',)
 
-    ordering = ['displays','position']
+    ordering = ['title']
 
 class ScoreArgumentInline(admin.TabularInline):
     model = ScoreArgument

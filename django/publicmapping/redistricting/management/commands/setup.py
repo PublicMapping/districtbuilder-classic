@@ -38,7 +38,7 @@ from django.conf import settings
 from django.utils import simplejson as json
 from optparse import make_option
 from os.path import exists
-from lxml.etree import parse
+from lxml.etree import parse, XSLT
 from xml.dom import minidom
 from rpy2.robjects import r
 from redistricting.models import *
@@ -54,6 +54,9 @@ class Command(BaseCommand):
     option_list = BaseCommand.option_list + (
         make_option('-c', '--config', dest="config",
             help="Use configuration file CONFIG", metavar="CONFIG"),
+        make_option('-d', '--database', dest="database",
+            help="Generate the base data objects.", default=False,
+            action='store_true'),
         make_option('-g', '--geolevel', dest="geolevels",
             action="append", help="Geolevels to import"),
         make_option('-n', '--nesting', dest="nesting",
@@ -67,6 +70,10 @@ class Command(BaseCommand):
             action="store_true", help="Create system templates based on district index files.", default=False),
         make_option('-b', '--bard', dest="bard",
             action='store_true', help="Create a BARD map based on the imported spatial data.", default=False),
+        make_option('-s', '--static', dest="static",
+            action='store_true', help="Collect the static javascript and css files.", default=False),
+        make_option('-B', '--bardtemplates', dest="bard_templates",
+            action='store_true', help="Create the BARD reporting templates.", default=False),
     )
 
 
@@ -144,8 +151,12 @@ contents of the file and try again.
 
         if options.get("templates"):
             self.create_template(config, verbose)
-        
-        call_command('collectstatic', interactive=False)
+       
+        if options.get("static"):
+            call_command('collectstatic', interactive=False, verbosity=verbose)
+
+        if options.get("bard_templates"):
+            self.create_report_templates(config, verbose)
 
         if options.get("bard"):
             self.build_bardmap(config, verbose)
@@ -735,16 +746,34 @@ ERROR:
                 type='subject',
                 argument=name,
                 value=subarg.get('ref')
-                )
+            )
 
             if verbose > 1:
                 if created:
                     print 'Created subject ScoreArgument "%s"' % name
                 else:
                     print 'subject ScoreArgument "%s" already exists' % name
-                        
+        
         # Import score arguments for this score function
         for scorearg in config.xpath('ScoreArgument'):
+            argfn = config.xpath('//ScoreFunctions/ScoreFunction[@id="%s"]' % scorearg.get('ref'))[0]
+            childfn_obj, created = ScoreFunction.objects.get_or_create(
+                calculator=argfn.get('calculator'),
+                name=argfn.get('id'),
+                label=argfn.get('label') or '',
+                description=argfn.get('description') or '',
+                is_planscore=argfn.get('type') == 'plan'
+            )
+
+            if verbose > 1:
+                if created:
+                    print 'Created ScoreFunction "%s"' % argfn.get('id')
+                else:
+                    print 'ScoreFunction "%s" already exists' % argfn.get('id')
+
+            # Recursion!
+            self.import_arguments(childfn_obj, argfn, verbose)
+
             name = scorearg.get('name')
             scorearg_obj, created = ScoreArgument.objects.get_or_create(
                 function=score_function,
@@ -780,6 +809,12 @@ ERROR:
         if (len(config.xpath('//Scoring')) == 0):
             if verbose > 1:
                 print 'Scoring not configured'
+        
+        admin = User.objects.filter(is_superuser=True)
+        if admin.count() == 0:
+            admin = None
+        else:
+            admin = admin[0]
 
         # Import score displays.
         for sd in config.xpath('//ScoreDisplays/ScoreDisplay'):
@@ -791,8 +826,9 @@ ERROR:
                 title=title, 
                 legislative_body=lb,
                 is_page=sd.get('type') == 'leaderboard',
-                cssclass=sd.get('cssclass') or ''
-                )
+                cssclass=sd.get('cssclass') or '',
+                owner=admin
+            )
 
             if verbose > 1:
                 if created:
@@ -812,20 +848,36 @@ ERROR:
                     is_ascending = True
                 
                 ascending = sp.get('is_ascending')
-                sp_obj, created = ScorePanel.objects.get_or_create(
+                sp_obj = ScorePanel.objects.filter(
                     type=sp.get('type'),
-                    display=sd_obj,
                     position=position,
                     title=title,
                     template=sp.get('template'),
                     cssclass=sp.get('cssclass') or '',
                     is_ascending=(ascending is None or ascending=='true'), 
-                    )
+                )
 
-                if verbose > 1:
-                    if created:
+                if len(sp_obj) == 0:
+                    sp_obj = ScorePanel(
+                        type=sp.get('type'),
+                        position=position,
+                        title=title,
+                        template=sp.get('template'),
+                        cssclass=sp.get('cssclass') or '',
+                        is_ascending=(ascending is None or ascending=='true'), 
+                    )
+                    sp_obj.save()
+                    sd_obj.scorepanel_set.add(sp_obj)
+
+                    if verbose > 1:
                         print 'Created ScorePanel "%s"' % title
-                    else:
+                else:
+                    sp_obj = sp_obj[0]
+                    attached = sd_obj.scorepanel_set.filter(id=sp_obj.id).count() == 1
+                    if not attached:
+                        sd_obj.scorepanel_set.add(sp_obj)
+
+                    if verbose > 1:
                         print 'ScorePanel "%s" already exists' % title
 
                 # Import score functions for this score panel
@@ -838,7 +890,7 @@ ERROR:
                         label=sf.get('label') or '',
                         description=sf.get('description') or '',
                         is_planscore=sf.get('type') == 'plan'
-                        )
+                    )
 
                     if verbose > 1:
                         if created:
@@ -934,7 +986,7 @@ ERROR:
                 obj.max_multi_district_members = mmconfig.get('max_multi_district_members')
                 obj.min_plan_members = mmconfig.get('min_plan_members')
                 obj.max_plan_members = mmconfig.get('max_plan_members')
-                if verbose:
+                if verbose > 1:
                     print 'Multi-member districts enabled for: %s' % body.get('name')
             else:
                 obj.multi_members_allowed = False
@@ -945,7 +997,7 @@ ERROR:
                 obj.max_multi_district_members = 0
                 obj.min_plan_members = 0
                 obj.max_plan_members = 0
-                if verbose:
+                if verbose > 1:
                     print 'Multi-member districts not configured for: %s' % body.get('name')
             obj.save()
 
@@ -1332,6 +1384,45 @@ ERROR:
                     print 'Created Plan named "Blank" for LegislativeBody "%s"' % legislative_body.name
                 else:
                     print 'Plan named "Blank" for LegislativeBody "%s" already exists' % legislative_body.name
+
+
+    def create_report_templates(self, config, verbose):
+        """
+        This object takes the full configuration element and the path
+        to an XSLT and does the transforms necessary to create templates
+        for use in BARD reporting
+        """
+        xslt_path = settings.BARD_TRANSFORM
+        template_dir = '%s/django/publicmapping/redistricting/templates' % config.xpath('//Project')[0].get('root')
+
+        # Open up the XSLT file and create a transform
+        f = file(xslt_path)
+        xml = parse(f)
+        transform = XSLT(xml)
+
+        # For each legislative body, create the reporting step HTML 
+        # template. If there is no config for a body, the XSLT transform 
+        # should create a "Sorry, no reports" template
+        bodies = config.xpath('//DistrictBuilder/LegislativeBodies/LegislativeBody')
+        for body in bodies:
+            # Name  the template after the body's name
+            body_id = body.get('id')
+            body_name = body.get('name')
+
+            if verbose > 0:
+                print "Creating BARD reporting template for %s" % body_name
+
+            body_name = body_name.lower()
+            template_path = '%s/bard_%s.html' % (template_dir, body_name)
+
+            # Pass the body's identifier in as a parameter
+            xslt_param = XSLT.strparam(body_id)
+            result = transform(config, legislativebody = xslt_param) 
+
+            f = open(template_path, 'w')
+            f.write(str(result))
+            f.close()
+
 
     def build_bardmap(self, config, verbose):
         """

@@ -31,7 +31,7 @@ Author:
 from decimal import Decimal
 from optparse import OptionParser, OptionGroup
 from os.path import exists
-from lxml.etree import parse, XMLSchema, XSLT
+from lxml.etree import parse, XMLSchema
 from xml.dom import minidom
 import traceback, os, sys, random
 
@@ -59,9 +59,15 @@ def main():
     parser.add_option('-n', '--nesting', dest="nesting",
             help="Enforce nested geometries.",
             action='append', type="int")
+    parser.add_option('-s', '--static', dest="static",
+            help="Collect the static javascript and css files.",
+            action='store_true', default=False),
     parser.add_option('-b', '--bard', dest="bard",
             help="Create a BARD map based on the imported spatial data.", 
-            default=False, action='store_true')
+            default=False, action='store_true'),
+    parser.add_option('-B', '--bardtemplates', dest="bard_templates",
+            help="Create the BARD reporting templates.",
+            action='store_true', default=False),
     parser.add_option('-v', '--verbosity', dest="verbosity",
             help="Verbosity level; 0=minimal output, 1=normal output, 2=all output",
             default=1, type="int")
@@ -69,7 +75,7 @@ def main():
 
     (options, args) = parser.parse_args()
 
-    allops = (not options.database) and (not options.geolevels) and (not options.views) and (not options.geoserver) and (not options.templates) and (not options.nesting) and (not options.bard)
+    allops = (not options.database) and (not options.geolevels) and (not options.views) and (not options.geoserver) and (not options.templates) and (not options.nesting) and (not options.bard) and (not options.static) and (not options.bard_templates)
 
     verbose = options.verbosity
 
@@ -104,7 +110,7 @@ ERROR:
     from django.core import management
 
     if allops or options.database:
-        management.call_command('syncdb')
+        management.call_command('syncdb', verbosity=verbose)
 
     if allops:
         geolevels = []
@@ -112,16 +118,20 @@ ERROR:
         geoserver = True
         templates = True
         nesting = []
+        static = True
         bard = True
+        bard_templates = True
     else:
         geolevels = options.geolevels
         views = options.views
         geoserver = options.geoserver
         templates = options.templates
         nesting = options.nesting
+        static = options.static
         bard = options.bard
+        bard_templates = options.bard_templates
 
-    management.call_command('setup', config=args[1], verbosity=verbose, geolevels=geolevels, views=views, geoserver=geoserver, templates=templates, nesting=nesting, bard=bard)
+    management.call_command('setup', config=args[1], verbosity=verbose, geolevels=geolevels, views=views, geoserver=geoserver, templates=templates, nesting=nesting, static=static, bard=bard, bard_templates=bard_templates)
 
     return
 
@@ -306,10 +316,9 @@ def merge_config(config, verbose):
         cfg = cfg.find('BardConfigs/BardConfig')
         if cfg != None:
             settings_out.write("\nREPORTS_ENABLED = True\n")
-            settings_out.write("\nBARD_BASESHAPE = '%s'\n" % cfg.get('shape'))
+            settings_out.write("BARD_BASESHAPE = '%s'\n" % cfg.get('shape'))
             settings_out.write("BARD_TEMP = '%s'\n" % cfg.get('temp'))
-            xslt = cfg.get('transform')
-            create_report_templates(config, xslt, '%s/django/publicmapping/redistricting/templates' % root_dir)
+            settings_out.write("BARD_TRANSFORM = '%s'\n" % cfg.get('transform'))
         else:
             settings_out.write("\nREPORTS_ENABLED = False\n")
 
@@ -363,32 +372,6 @@ ERROR:
 
     return True
 
-def create_report_templates(config, xslt_path, template_dir):
-    """
-    This object takes the full configuration element and the path
-    to an XSLT and does the transforms necessary to create templates
-    for use in BARD reporting
-    """
-    # Open up the XSLT file and create a transform
-    f = file(xslt_path)
-    xml = parse(f)
-    transform = XSLT(xml)
-
-    # For each legislative body, create the reporting step HTMl template.
-    # If there is no config for a body, the XSLT transform should create 
-    # a "Sorry, no reports" template
-    bodies = config.xpath('//DistrictBuilder/LegislativeBodies/LegislativeBody')
-    for body in bodies:
-        # Name  the template after the body's name
-        body_id = body.get('id')
-        body_name = body.get('name').lower()
-        template_path = '%s/bard_%s.html' % (template_dir, body_name)
-        # Pass the body's identifier in as a parameter
-        xslt_param = XSLT.strparam(body_id)
-        result = transform(config, legislativebody = xslt_param) 
-        f = open(template_path, 'w')
-        f.write(str(result))
-        f.close()
 
 if __name__ == "__main__":
     main()
