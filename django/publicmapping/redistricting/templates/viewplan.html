@@ -469,78 +469,13 @@
                     <button class="menu_toggle ui-icon"></button>
                     <button id="open_statistics_editor">Edit Stats</button>
                     <select>
-                      <option value="basic_information">Basic Information</option>
-                      <option value="demographics">Demographics</option>
                     </select>
                 </div>
                 <div class="map_menu_content basic_information">
-                  <div class="plansummary">
-                      <h3>Basic Information</h3>
-                      <div><label>Population Equality:</label> <span class="value" >N/A</span></div>
-                      <div><label>Contiguity:</label> <span class="value">N/A</span></div>
-                      <div><label>Compactness:</label> <span class="value" >N/A</span></div>
-
-                  </div>
-                  <div class="plantable header">
-                     <table>
-                      <thead>
-                          <tr>
-                              <th class="celldist cell1"></th>
-                              <th class="cellpop cell2"></th>
-                              <th class="cellcontig cell3"></th>
-                              <th class="cellcompact cell4"></th>
-                          </tr>
-                      </thead>
-                   </table>
-                  </div>
-                  <div class="plantable body">
-                    <div id="nogeography" class="error">Please select a plan to see district data</div>
-                  </div>
-                 <div class="menu_footer">
-                    <button id="stats_legend">Stats Legend</button>
-                    <div class="tooltip" id="stats_legend_panel">
-                      <div class="legend_item">
-                        <h5>Population</h5>
-                        <ul>
-                          <li><span class="swatch popstatus over"></span> Over target</li>
-                          <li><span class="swatch popstatus under" id="swatch-under"></span> Under target</li>                       
-                          <li><span class="swatch popstatus target" id="swatch-target"></span> Meets target</li>  
-                        </ul>
-                      </div>
-                      <div class="legend_item last">
-                        <h5>Contiguity</h5>
-                        <ul>
-                          <li><img src="/static-media/images/icon-check.png" class="yes-contiguous"> Contiguous</li>
-                          <li><img src="/static-media/images/icon-warning.png" class="no-contiguous"> Non-contiguous</li>                 
- 
-                        </ul>
-                      </div>                    
-                    
-                    </div>
-                </div>
+                    <div><h3>loading...</h3></div>
                 </div>
                 <div class="map_menu_content demographics">
-                  <div class="plansummary">
-                      <h3>Demographics</h3>
-                      <div><label></label> <span class="value" ></span></div>
-                      <div><label></label> <span class="value" ></span></div>
-                      <div><label></label> <span class="value" ></span></div>
-                  </div>
-                  <div class="plantable header">
-                     <table>
-                      <thead>
-                          <tr>
-                              <th class="celldist cell1"></th>
-                              <th class="cellpop cell2"></th>
-                              <th class="cellcontig cell3"></th>
-                              <th class="cellcompact cell4"></th>
-                          </tr>
-                      </thead>
-                   </table>
-                  </div>
-                  <div class="plantable body">
-                    <div id="nogeography" class="error">Please select a plan to see district data</div>
-                  </div>
+                    <div><h3>loading...</h3></div>
                 </div>
             </div>
             {% endif %}

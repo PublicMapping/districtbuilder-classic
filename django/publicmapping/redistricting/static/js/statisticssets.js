@@ -127,9 +127,11 @@ statisticssets = function(options) {
 
     var showScoreDisplay = function(event) {
         var displayId = $(this).val();
+        $('.demographics').empty();
         $('.demographics').load(
             _options.loadDemographicsUrl,
             {
+                version: getPlanVersion(),
                 displayId: displayId
             },
             function(rsp, status, xhr) {
@@ -142,7 +144,6 @@ statisticssets = function(options) {
                 }
             }
         );  
-        // alert("Should load display " + displayId);
     }
     /**
      * Given a function object in JSON, create a checkbox and
@@ -267,13 +268,22 @@ statisticssets = function(options) {
         var functionArray = getSelectedScoreFunctions();
         if (functionArray.length > 3) {
             $("<div>Please select 3 or fewer statistics.</div>").dialog({
-                title: 'Error',
+                title: 'Warning',
                 resizable:false,
                 modal:true
             });
             return false;
         }
-        var data = { functions: functionArray, name: _statisticsSetNameField.val() };
+        var name = _statisticsSetNameField.val();
+        if ($.trim(name) == '') {
+            $("<div>Please name your statistics set.</div>").dialog({
+                title: 'Warning',
+                resizable:false,
+                modal:true
+            });
+            return false;
+        }
+        var data = { functions: functionArray, name: name };
         $.ajax({
             type: 'POST',
             data: data,
@@ -290,7 +300,7 @@ statisticssets = function(options) {
                 } else {
                     if (data.error == 'limit') {
                         $('<div>' + data.message + '</div>').dialog({
-                            title: 'Error',
+                            title: 'Warning',
                             resizable:false,
                             modal:true
                         });

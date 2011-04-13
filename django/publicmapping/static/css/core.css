@@ -1378,23 +1378,23 @@ span.popstatus {
   font-size: 11px;
   display:block;
 }
-.over {
+.over, .interval_3.poptot {
   background: #ead3a7;
   border: 1px solid #d9c296;
 }
-.farover {
+.farover, .interval_4.poptot {
   background: #EBB95E;
   border: 1px solid #D8962B;
 }
-.under {
+.under, .interval_1x.poptot {
   background: #a2d5d0;
   border: 1px solid #91c4b9;
 }
-.farunder {
+.farunder, .interval_0.poptot {
   background: #0AAC98;
   border: 1px solid #048474;
 }
-.target {
+.target, .interval_2.poptot {
   background: #eeeeee;
   border: 1px solid #cccccc;
 }

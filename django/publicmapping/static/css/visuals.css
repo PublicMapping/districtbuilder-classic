@@ -342,7 +342,7 @@ div.tab_content {background: #e3f0ef;}
     
 /*plan content */    
 ul#plan_buttons li {background-color:#8BD1BC;} 
-div#form_container {background-color: #ecf6f5;}
+div#form_container, div#name_statistics_set  {background-color: #ecf6f5;}
 div#form_action{background-color: #8ac7b5;}
 
 /*buttons */
@@ -383,6 +383,9 @@ div.map_menu_content.demographics {
 div.info_table tbody tr { 
     background: #f7f4e5;
 }
+
+
+
     
 /*jQgrid customization */
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
