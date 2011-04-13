@@ -139,6 +139,7 @@
     <script type="text/javascript" src="/static-media/js/shareddistricts.js"></script>
     <script type="text/javascript" src="/static-media/js/reports.js"></script>
     <script type="text/javascript" src="/static-media/js/register.js"></script>
+    <script type="text/javascript" src="/static-media/js/statisticssets.js"></script>
     {% comment %}
 
     Load Google Analytics Script if the ga_account has been set
@@ -466,15 +467,15 @@
             <div id="map_menu">
                 <div id="map_menu_header">
                     <button class="menu_toggle ui-icon"></button>
-                    <label>Current<br/> District</label>
+                    <button id="open_statistics_editor">Edit Stats</button>
                     <select>
-                      <option value="geography">Basic Information</option>
+                      <option value="basic_information">Basic Information</option>
                       <option value="demographics">Demographics</option>
                     </select>
                 </div>
-                <div class="map_menu_content geography">
+                <div class="map_menu_content basic_information">
                   <div class="plansummary">
-                      <h3>Geography</h3>
+                      <h3>Basic Information</h3>
                       <div><label>Population Equality:</label> <span class="value" >N/A</span></div>
                       <div><label>Contiguity:</label> <span class="value">N/A</span></div>
                       <div><label>Compactness:</label> <span class="value" >N/A</span></div>
@@ -821,6 +822,14 @@ Include the markup for the multi-member assignment tool
 
 {% comment %}
 
+Include the stats_picker markup if the user can save stats
+
+{% endcomment %}
+
+{% block stats_editor %}{% endblock %}
+
+{% comment %}
+
 Include the markup for the account management panel.
 
 {% endcomment %}
@@ -887,10 +896,12 @@ Include the markup for the account management panel.
     about this plan for display in the sidebar menu and display the draw tab. 
 
     {% endcomment %}
-        $('.geography').load('/districtmapping/plan/{{plan.id}}/geography/');     
+        $('.basic_information').load('/districtmapping/plan/{{plan.id}}/basicinformation/',
+            function() { fixTableHeight($('.basic_information table')); });     
         // geography is the default visible tab, so load that one first.
         // load demographics in the background
-        setTimeout(function(){ $('.demographics').load('/districtmapping/plan/{{plan.id}}/demographics/') }, 1000);
+        setTimeout(function(){ $('.demographics').load('/districtmapping/plan/{{plan.id}}/demographics/',
+            function() { fixTableHeight($('.demographics table')); }) }, 1000);
         $('#steps').tabs('select', '#step_draw');
 
         // Load up the district index file checker whenever the 
@@ -904,6 +915,8 @@ Include the markup for the account management panel.
                 exportIndexFile.init();
             }
         }});
+
+        stats = statisticssets({}).init();
 
         // Get the list of plans after all the other plan info has loaded
         setTimeout(choose.init, 2000);

@@ -26,6 +26,8 @@ Author:
 
 from django import template
 from django.template.defaultfilters import stringfilter
+from django.utils.safestring import mark_safe
+import re
 
 register = template.Library()
 
@@ -62,5 +64,29 @@ def spellnumber(value):
         return ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
          "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen",
          "seventeen", "eighteen", "nineteen", "twenty"][value]
+    except:
+        return value
+
+@register.filter
+@stringfilter
+def district_number(value):
+    """
+    This filter removes any extra words from a district name.
+    E.g., "District 10" becomes "10".
+    
+    Special case: "Unassigned" becomes a Theta symbol
+
+    Parameters:
+        a full district name:
+    Returns:
+        a number
+    """
+    try:
+        if value == "Unassigned":
+            return mark_safe('&#216;')
+        p = re.compile('(?P<member>(\w+\s+)+)(?P<digits>\d+)')
+        m = p.match(value)
+        if m != None:
+            return m.group('digits') 
     except:
         return value

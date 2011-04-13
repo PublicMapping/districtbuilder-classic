@@ -18,10 +18,11 @@
    http://sourceforge.net/projects/publicmapping/
 
    Purpose:
-       This template is a sidebar for demographic statistics.
+       This template creates the district inormation on the
+       Basic Information tab
 
        This template contains an HTML fragment for the collapsible sidebar.
-       This fragment contains a table with a column for each demographic
+       This fragment contains a table with a column for each geographic
        statistic, and a row for each district in the plan.
 
    Author:
@@ -29,49 +30,34 @@
 
 {% endcomment %}
 <script type="text/javascript">
-    loadTooltips();
+         loadTooltips();
 </script>
 
 {% load humanize %}
 {% load redistricting_extras %}
-<div class="plansummary">
-    <h3>{{ plan.name|truncate:"25" }}</h3>
-    {% for target in aggregate %}
-        <div><label>{{ target.name }} {{ target.target|floatformat|intcomma }}</label> <span id="totalpop" class="value">{{ target.value|intcomma  }}</span></div>
-    {% endfor %}
-    {% include extra_demographics_template %}
-</div>
-<div class="plantable header">
-    <table>
+<div class="info_table">
+    {% if districtscores %}
+    <table id="demographics_table">
         <thead>
-            {% if headers %}
             <tr>
-                <th class="celldist cell1">Dist.</th>
-                {% for header in headers %}
-                <th class="cellsubjects {% cycle 'cell2' 'cell3' 'cell4' %}">{{ header|intcomma }}</th>
+                <th class="district_name">Dist.</th>
+                {% for function in functions %}
+                <th class="info_header score{{ forloop.counter }}">{{ function.label }}</th>
                 {% endfor %}
             </tr>
-            {% endif %}
         </thead>
-    </table>
-</div>
-<div class="plantable body">
-    <table id="demographic_table">
         <tbody>
-            {% for district in district_values %}
-            <tr class="{% cycle 'odd' 'even' %} inforow_{{ district.district_id }}">
-                <td class="celldistrictname cell1">{{ district.name|safe }}</td>
-                {% for characteristic in district.characteristics %}
-                <td class="cellvalue {% cycle 'cell2' 'cell3' 'cell4'%}">
-                    {{ characteristic.value|intcomma }}
-                </td>
+            {% for row in districtscores %}
+            <tr class="{% cycle 'odd' 'even' %} inforow_{{ row.district.district_id }}">
+                <td class="district_name">{{ row.district.name|district_number }}</td>
+                {% for score in row.scores %}
+                <td class="cellcompact score{{ forloop.counter }}">{{ score.score|safe }}</td>
                 {% endfor %}
             </tr>
-            {% empty %}
-            <tr class="error">
-                <td>Sorry, data for this plan could not be retrieved from the server</td>
-            </tr> 
             {% endfor %}
         </tbody>
     </table>
+    {% else %}
+    <div class="error"> Sorry, there is no demographic data for this plan</div>
+    {% endif %}                    
 </div>

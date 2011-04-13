@@ -1312,7 +1312,7 @@ def getdemographics(request, planid):
         districts = plan.get_districts_at_version(version, include_geom=False)
     except:
         status['message'] = "Couldn't get districts at the specified version."
-        return HttpResponse( json.dumps(status), mimetype='applicatio/json')
+        return HttpResponse( json.dumps(status), mimetype='application/json')
 
     try:
         district_values = []
@@ -1367,6 +1367,66 @@ def getdemographics(request, planid):
         status['message'] = "Couldn't get district demographics."
         return HttpResponse( json.dumps(status), mimetype='application/json', status=500 )
 
+@unique_session_or_json_redirect
+def get_demographics(request, planid):
+    note_session_activity(request)
+
+    status = { 'success': False }
+    try:
+        plan = Plan.objects.get(pk=planid)
+    except:
+        status['message'] = "Couldn't get geography info from the server. No plan with the given id."
+        return HttpResponse( json.dumps(status), mimetype='application/json', status=500)
+
+    if 'version' in request.REQUEST:
+        version = int(request.REQUEST['version'])
+    else:
+        version = plan.version
+
+    districts = plan.get_districts_at_version(version,include_geom=True)
+    display = ScoreDisplay.objects.get(title='Demographics')
+    
+    if 'personalDisplay' in request.POST:
+        try:
+            display = ScoreDisplay.objects.get(pk=request.POST['personalDisplay'])
+        except:
+            status['message'] = "Unable to get Personalized ScoreDisplay"
+            status['exception'] = traceback.format_exc()
+
+    try :
+        html = display.render(plan, request)
+        return HttpResponse(html, mimetype='text/html')
+    except:
+        status['message'] = "Couldn't render display tab."
+        status['exception'] = traceback.format_exc()
+        return HttpResponse( json.dumps(status), mimetype='application/json', status=500)
+
+@unique_session_or_json_redirect
+def get_basic_information(request, planid):
+    note_session_activity(request)
+
+    status = { 'success': False }
+    try:
+        plan = Plan.objects.get(pk=planid)
+    except:
+        status['message'] = "Couldn't get geography info from the server. No plan with the given id."
+        return HttpResponse( json.dumps(status), mimetype='application/json', status=500)
+
+    if 'version' in request.REQUEST:
+        version = int(request.REQUEST['version'])
+    else:
+        version = plan.version
+
+    districts = plan.get_districts_at_version(version,include_geom=True)
+    display = ScoreDisplay.objects.get(title='Basic Information')
+
+    try :
+        html = display.render(plan, request)
+        return HttpResponse(html, mimetype='text/html')
+    except:
+        status['message'] = "Couldn't render display tab."
+        status['exception'] = traceback.format_exc()
+        return HttpResponse( json.dumps(status), mimetype='application/json', status=500)
 
 @unique_session_or_json_redirect
 def getgeography(request, planid):
@@ -1411,7 +1471,7 @@ def getgeography(request, planid):
         districts = plan.get_districts_at_version(version, include_geom=False)
     except:
         status['message'] = "Couldn't get districts at the specified version."
-        return HttpResponse( json.dumps(status), mimetype='applicatio/json', status=500)
+        return HttpResponse( json.dumps(status), mimetype='application/json', status=500)
 
 
     try:
@@ -1943,3 +2003,70 @@ def get_health(request):
         return HttpResponse(result, mimetype='text/plain')
     except:
         return HttpResponse('ERROR! Couldn\'t get health:\n%s' % traceback.format_exc())
+
+
+def statistics_sets(request, planid):
+    result = { 'success': False }
+    # If it's a get request, find the user
+    # see what's available
+    # return names and IDs in JSON to populate the dropdown/stats editor
+    if request.method == 'GET':
+        sets = []
+        scorefunctions = []
+            
+        allfunctions = ScoreFunction.objects.all()
+        for f in allfunctions:
+            scorefunctions.append({ 'id': f.id, 'name': f.name })
+        result['functions'] = scorefunctions
+
+        try:
+            user_displays = ScoreDisplay.objects.filter(owner=request.user)
+            result['displays_count'] = len(user_displays)
+            for display in user_displays:
+                functions = []
+                for panel in display.scorepanel_set.all():
+                    if panel.type == 'district':
+                        functions = map(lambda x: x.id, panel.score_functions.all())
+                sets.append({ 'id': display.id, 'name': display.title, 'functions': functions })
+        except:
+            result['message'] = 'No user displays for %s: %s' % (request.user, traceback.format_exc())
+
+        bi = ScoreDisplay.objects.get(title='Basic Information', owner__is_superuser=True)
+        sets.append({ 'id': bi.id, 'name': bi.title, 'functions': [] })
+        demo = ScoreDisplay.objects.get(title='Demographics', owner__is_superuser=True)
+        sets.append({ 'id': demo.id, 'name': demo.title, 'functions': [] })
+
+        result['sets'] = sets
+        result['success'] = True
+    # Delete the requested ScoreDisplay to make some room
+    elif request.method == 'POST' and 'delete' in request.POST:
+        try:
+            display = ScoreDisplay.objects.get(pk=request.REQUEST.get('id', -1))
+            result['set'] = {'name':display.title, 'id':display.id}
+            display.delete()
+            result['success'] = True
+        except:
+            result['message'] = 'Couldn\'t delete personalized scoredisplay'
+            result['exception'] = traceback.format_exc()
+        
+    # If it's a post, edit or create the ScoreDisplay and return 
+    # the id and name as usual
+    elif request.method == 'POST':
+        if 'functions[]' in request.POST:
+            functions = request.POST.getlist('functions[]')
+            try:
+                display = ScoreDisplay.objects.get(title=request.POST.get('name'), owner=request.user)
+                display = display.copy_from(display=display, functions=functions)
+            except:
+                demo = ScoreDisplay.objects.get(title='Demographics', owner__is_superuser=True)
+                display = ScoreDisplay()
+                display = display.copy_from(display=demo, title=request.POST.get('name'), owner=request.user, functions=functions)
+                result['newRecord'] = True
+
+            result['set'] = {'name':display.title, 'id':display.id, 'functions':functions}
+            result['success'] = True
+
+        else:
+            result['message'] = "Didn't get functions in POST parameter"
+
+    return HttpResponse(json.dumps(result),mimetype='application/json')

@@ -75,7 +75,7 @@ function getPlanVersion() {
 /*
  * The URLs for updating the calculated geography and demographics.
  */
-var geourl = '/districtmapping/plan/' + PLAN_ID + '/geography/';
+var geourl = '/districtmapping/plan/' + PLAN_ID + '/basicinformation/';
 var demourl = '/districtmapping/plan/' + PLAN_ID + '/demographics/';
 
 /**
@@ -753,7 +753,7 @@ function mapinit(srs,maxExtent) {
 
     // Reload the information tabs and reload the filters
     var updateInfoDisplay = function() {
-        $('.geography').load(
+        $('.basic_information').load(
             geourl, 
             {  
                 demo: getDistrictBy().by,
@@ -2465,8 +2465,8 @@ function mapinit(srs,maxExtent) {
     var sortByVisibility = function(force) {
         var visibleDistricts = '';
         var visible, notvisible = '';
-        $('#geography_table tr').data('isVisibleOnMap', false);
-        $('#demographic_table tr').data('isVisibleOnMap', false);
+        $('#basic_information_table tr').data('isVisibleOnMap', false);
+        $('#demographics_table tr').data('isVisibleOnMap', false);
 
         for (feature in districtLayer.features) {
             var feature = districtLayer.features[feature];
@@ -2477,8 +2477,8 @@ function mapinit(srs,maxExtent) {
             }
         }
         if (visibleDistricts != olmap.prevVisibleDistricts || force) {
-            var demosorter = viewablesorter({ target: '#demographic_table tbody' }).init();
-            var geosorter = viewablesorter({ target: '#geography_table tbody' }).init();
+            var demosorter = viewablesorter({ target: '#demographics_table tbody' }).init();
+            var geosorter = viewablesorter({ target: '#basic_information_table tbody' }).init();
             demosorter.sortTable();
             geosorter.sortTable();
             olmap.prevVisibleDistricts = visibleDistricts;

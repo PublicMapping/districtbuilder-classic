@@ -955,7 +955,7 @@ div.toolset_group select {
   }
 div.toolset_group_w select#assign_district {
     width: 100px;
-    margin-right: 20px;
+    margin-right: 5px;
 }
 div.toolset .ui-icon {
 background-color: transparent;
@@ -990,14 +990,14 @@ button.toolbar_toggle {
     position:absolute;
     right:0;
     text-transform: uppercase;
-    padding: 5px 8px;
+    padding: 5px;
     margin-top: 8px;
 }
 
     
 button#edit_map_settings ,
 button#start_drawing   {
-    width:145px;
+    width:135px;
 }
 
 div#map_menu {
@@ -1224,7 +1224,6 @@ div#map_menu_header select {
   font-weight:bold;
   float:left;
   height: 25px;
-  width: 170px;
 }
     
 div#map_menu_header label {
@@ -1249,7 +1248,7 @@ div#map_menu_header label {
     -webkit-box-shadow: 0 8px 17px -6px #333333;
     box-shadow: 0 8px 17px -6px #333333;
 }
-div.map_menu_content.geography {
+div.map_menu_content.basic_information {
     background: #bababa;
     border:1px solid #777;
   }
@@ -1259,20 +1258,20 @@ div.map_menu_content.demographics {
     display:none
 }
 
-div.plansummary {
+div.plan_summary {
     padding: 10px 10px 15px;
     background: url(/static-media/images/divider.png) 0 100% repeat-x;
     color: #3c3c3c;
     line-height: 16px;
     position:relative;
 }
-div.plansummary h3 {
+div.plan_summary h3 {
   font-size: 19px;
   line-height: 26px;
   font-weight: bold;
 
 }
-div.plansummary label {
+div.plan_summary label {
   display:inline-block;
   width: 149px;
   text-align:left;
@@ -1280,7 +1279,7 @@ div.plansummary label {
   font-weight: bold;
 
   }
-div.plansummary  .value {
+div.plan_summary label + span {
   display:inline-block;
   width: 88px;
   text-align:right;
@@ -1294,34 +1293,39 @@ div.plansummary  .value {
   top:150px;
 }
 
-div.plantable table {
+div.info_table table {
     border-collapse: collapse;
-    color: #717171;
     table-layout: fixed;
     width: 100%;
-    }
-div.plantable.header {
+}
+
+div.info_table {
+    color: #717171;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+div.info_table thead,
+div.info_table tbody {
     left: 5px; 
     right: 5px; 
-    position: relative;
 }
-div.plantable.header table tr th {
+div.info_table th {
+    top: 10px;
     text-align:center;
     padding: 3px;
     font-weight: bold;
     font-size: 11px;
     line-height: 11px;
-    }
-div.plantable.body  { 
+}
+div.info_table tbody { 
     background: #f7f7f7;
     border: 1px solid #aaa;
-    overflow: auto;
-    position: absolute;
-    bottom:33px;
-    left: 5px; 
-    right: 5px;
+    overflow-y:auto;
+    position:absolute;
+    top:164px;
+    bottom:25px;
 }
-div.map_menu_content.geography div.plantable.body {
+div.map_menu_content.basic_information div.plantable.body {
   top: 181px;
   }
 div.map_menu_content.demographics div.plantable.body {
@@ -1330,33 +1334,32 @@ div.map_menu_content.demographics div.plantable.body {
     
   
 
-div.plantable.body table  tr.even {
+div.info_table table tr.even {
   background: #fff;
 }
-div.plantable.body table tr td {
+div.info_table table tr td {
     font-size: 10pt;
     text-align: right;
     padding: 5px 5px;
 }
-div.plantable.body .cell1 {
+div.info_table .district_name{  
+    width: 12%;
+}
+div.info_table td.district_name {
+    overflow: hidden;
     font-size: 12px;
     font-weight: bold;
 }
- 
-div.plantable .cell1{  
-    width: 12%;
-    overflow: hidden;
-}
-div.plantable .cell2{  
+div.info_table .score1{  
     width: 24%;
 }
-div.plantable .cell3{  
+div.info_table .score2{  
     width: 26%;
 }
-div.plantable .cell4{  
+div.info_table .score3{  
     width: 35%;
 }
-div.plantable .error {
+div.info_table .error {
   font-size: 12px; 
   font-weight: bold;
   color:#333; 
@@ -1395,7 +1398,7 @@ span.popstatus {
   border: 2px solid #FF0000 !important;
 }
 
-.plantable .notOnMap {
+.notOnMap {
     opacity:.5;
 }
 
@@ -1474,14 +1477,6 @@ button#stats_legend {
 
 
 /* bard report previews */
-#reportPreview h1#genreport {
-    text-align:center;
-}
-#reportPreview p {
-    margin: 0 5px 0 10px;
-    font-size: 0.8em;
-}
-
 div.report {
 	border: 3px solid #779e7b;
     top:40;

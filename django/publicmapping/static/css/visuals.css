@@ -372,7 +372,7 @@ div.toolset#toolset_draw .ui-button-icon-only.toggle, div.toolset#toolset_draw .
 div#map_menu_header {background-color:#5b8a62;}
 div#map_menu_header button.menu_toggle{background-color: #6B9571;}
 
-div.map_menu_content.geography {
+div.map_menu_content.basic_information {
     background: #badcbf;
     border:1px solid #77b280;
   }
@@ -380,9 +380,9 @@ div.map_menu_content.demographics {
     background: #efe8cb;
     border: 1px solid #ada176;
 }
-div.plantable.body  { 
+div.info_table tbody tr { 
     background: #f7f4e5;
-    }
+}
     
 /*jQgrid customization */
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {

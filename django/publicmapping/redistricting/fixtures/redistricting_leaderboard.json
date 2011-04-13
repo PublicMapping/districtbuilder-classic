@@ -68,8 +68,7 @@
    "template": "leaderboard_panel_mine.html", 
    "position": 4, 
    "cssclass": "repfairness", 
-   "type": "plan", 
-   "display": 2
+   "type": "plan" 
   }
  }, 
  {
@@ -81,8 +80,7 @@
    "template": "leaderboard_panel_all.html", 
    "position": 1, 
    "cssclass": "equipop", 
-   "type": "plan", 
-   "display": 1
+   "type": "plan" 
   }
  }, 
  {
@@ -94,8 +92,7 @@
    "template": "leaderboard_panel_mine.html", 
    "position": 1, 
    "cssclass": "equipop", 
-   "type": "plan", 
-   "display": 2
+   "type": "plan" 
   }
  }, 
  {
@@ -107,8 +104,7 @@
    "template": "leaderboard_panel_all.html", 
    "position": 2, 
    "cssclass": "avgcompact", 
-   "type": "plan", 
-   "display": 1
+   "type": "plan" 
   }
  }, 
  {
@@ -120,8 +116,7 @@
    "template": "leaderboard_panel_mine.html", 
    "position": 2, 
    "cssclass": "avgcompact", 
-   "type": "plan", 
-   "display": 2
+   "type": "plan" 
   }
  }, 
  {
@@ -133,8 +128,7 @@
    "template": "leaderboard_panel_all.html", 
    "position": 3, 
    "cssclass": "competitiveness", 
-   "type": "plan", 
-   "display": 1
+   "type": "plan" 
   }
  }, 
  {
@@ -146,8 +140,7 @@
    "template": "leaderboard_panel_mine.html", 
    "position": 3, 
    "cssclass": "competitiveness", 
-   "type": "plan", 
-   "display": 2
+   "type": "plan" 
   }
  }, 
  {
@@ -159,8 +152,7 @@
    "template": "leaderboard_panel_all.html", 
    "position": 4, 
    "cssclass": "repfairness", 
-   "type": "plan", 
-   "display": 1
+   "type": "plan" 
   }
  }, 
  {
@@ -172,8 +164,7 @@
    "template": "leaderboard_panel_all.html", 
    "position": 1, 
    "cssclass": "equipop", 
-   "type": "plan", 
-   "display": 3
+   "type": "plan" 
   }
  }, 
  {
@@ -185,8 +176,7 @@
    "template": "leaderboard_panel_all.html", 
    "position": 2, 
    "cssclass": "avgcompact", 
-   "type": "plan", 
-   "display": 3
+   "type": "plan" 
   }
  }, 
  {
@@ -198,8 +188,7 @@
    "template": "leaderboard_panel_all.html", 
    "position": 3, 
    "cssclass": "competitiveness", 
-   "type": "plan", 
-   "display": 3
+   "type": "plan" 
   }
  }, 
  {
@@ -211,8 +200,7 @@
    "template": "leaderboard_panel_all.html", 
    "position": 4, 
    "cssclass": "repfairness", 
-   "type": "plan", 
-   "display": 3
+   "type": "plan" 
   }
  }, 
  {
@@ -224,8 +212,7 @@
    "template": "leaderboard_panel_mine.html", 
    "position": 1, 
    "cssclass": "equipop", 
-   "type": "plan", 
-   "display": 4
+   "type": "plan" 
   }
  }, 
  {
@@ -237,8 +224,7 @@
    "template": "leaderboard_panel_mine.html", 
    "position": 2, 
    "cssclass": "avgcompact", 
-   "type": "plan", 
-   "display": 4
+   "type": "plan" 
   }
  }, 
  {
@@ -250,8 +236,7 @@
    "template": "leaderboard_panel_mine.html", 
    "position": 3, 
    "cssclass": "competitiveness", 
-   "type": "plan", 
-   "display": 4
+   "type": "plan" 
   }
  }, 
  {
@@ -263,8 +248,7 @@
    "template": "leaderboard_panel_mine.html", 
    "position": 4, 
    "cssclass": "repfairness", 
-   "type": "plan", 
-   "display": 4
+   "type": "plan" 
   }
  }, 
  {
@@ -276,8 +260,7 @@
    "template": "leaderboard_panel_all.html", 
    "position": 1, 
    "cssclass": "equipop", 
-   "type": "plan", 
-   "display": 5
+   "type": "plan" 
   }
  }, 
  {
@@ -289,8 +272,7 @@
    "template": "leaderboard_panel_all.html", 
    "position": 2, 
    "cssclass": "avgcompact", 
-   "type": "plan", 
-   "display": 5
+   "type": "plan" 
   }
  }, 
  {
@@ -302,8 +284,7 @@
    "template": "leaderboard_panel_all.html", 
    "position": 3, 
    "cssclass": "competitiveness", 
-   "type": "plan", 
-   "display": 5
+   "type": "plan" 
   }
  }, 
  {
@@ -315,8 +296,7 @@
    "template": "leaderboard_panel_all.html", 
    "position": 4, 
    "cssclass": "repfairness", 
-   "type": "plan", 
-   "display": 5
+   "type": "plan" 
   }
  }, 
  {
@@ -328,8 +308,7 @@
    "template": "leaderboard_panel_mine.html", 
    "position": 1, 
    "cssclass": "equipop", 
-   "type": "plan", 
-   "display": 6
+   "type": "plan" 
   }
  }, 
  {
@@ -341,8 +320,7 @@
    "template": "leaderboard_panel_mine.html", 
    "position": 2, 
    "cssclass": "avgcompact", 
-   "type": "plan", 
-   "display": 6
+   "type": "plan" 
   }
  }, 
  {
@@ -354,8 +332,7 @@
    "template": "leaderboard_panel_mine.html", 
    "position": 3, 
    "cssclass": "competitiveness", 
-   "type": "plan", 
-   "display": 6
+   "type": "plan" 
   }
  }, 
  {
@@ -367,8 +344,7 @@
    "template": "leaderboard_panel_mine.html", 
    "position": 4, 
    "cssclass": "repfairness", 
-   "type": "plan", 
-   "display": 6
+   "type": "plan" 
   }
  }, 
  {

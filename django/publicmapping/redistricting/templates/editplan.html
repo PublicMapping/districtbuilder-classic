@@ -149,6 +149,26 @@
     </script>
     {% endblock %}
 
+    {% block stats_editor %}
+
+    <div id="stats_editor_container" class="stats_editor" title="Edit Statistics Sets">
+        Select up to 3 statistics
+        <button id="clear_statistics">Clear Choices</button>
+        <div id="available_statistics"> </div>
+        
+        <div id="name_statistics_set">
+            Name Statistics Set
+            <input type="text" id="statistics_set_name" />
+            <button id="save_statistics_set">Save</button>
+        </div>
+        ... Or select a saved statistics set
+        <div id="saved_statistics_sets"> </div>
+    </div>
+
+
+
+    {% endblock %}
+
     {% block multi_member %}
     {% if plan.legislative_body.multi_members_allowed %}
     <div id="multi_member_dialog">

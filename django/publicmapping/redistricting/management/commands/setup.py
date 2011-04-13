@@ -30,7 +30,7 @@ Author:
 from decimal import Decimal
 from django.contrib.gis.gdal import *
 from django.contrib.gis.geos import *
-from django.contrib.gis.db.models import Union 
+from django.contrib.gis.db.models import Sum, Union
 from django.contrib.auth.models import User
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
