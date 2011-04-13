@@ -81,13 +81,15 @@
         <ScoreFunctions>
             <!-- A district score that returns a literal value -->
             <ScoreFunction id="district_poptot" type="district"
-                calculator="publicmapping.redistricting.calculators.Sum">
+                calculator="publicmapping.redistricting.calculators.Sum"
+                user_selectable="true">
                 <SubjectArgument name="value1" ref="poptot" />
             </ScoreFunction>
 
             <!-- A district score that returns a percentage -->
             <ScoreFunction id="district_blkvap_percent" type="district"
-                calculator="publicmapping.redistricting.calculators.Percent">
+                calculator="publicmapping.redistricting.calculators.Percent"
+                user_selectable="true">
                 <SubjectArgument name="numerator" ref="vapblk" />
                 <SubjectArgument name="denominator" ref="vap" />
             </ScoreFunction>
@@ -97,7 +99,8 @@
                 <Argument name="threshold" value="0.5" />
             </ScoreFunction>
             <ScoreFunction id="district_hispvap_percent" type="district"
-                calculator="publicmapping.redistricting.calculators.Percent">
+                calculator="publicmapping.redistricting.calculators.Percent"
+                user_selectable="true">
                 <SubjectArgument name="numerator" ref="vaphisp" />
                 <SubjectArgument name="denominator" ref="vap" />
             </ScoreFunction>
@@ -159,12 +162,14 @@
             <!-- A custom calculator to calculate compactness, and return
                 the raw compactness score. -->
             <ScoreFunction id="district_schwartzberg" type="district"
-                calculator="publicmapping.redistricting.calculators.Schwartzberg">
+                calculator="publicmapping.redistricting.calculators.Schwartzberg"
+                user_selectable="true">
             </ScoreFunction>
             
             <!-- A custom calculator to do contiguity, and is boolean. -->
             <ScoreFunction id="district_contiguous" type="district"
-                calculator="publicmapping.redistricting.calculators.Contiguity">
+                calculator="publicmapping.redistricting.calculators.Contiguity"
+                user_selectable="true">
             </ScoreFunction>
 
             <!-- A plan score that aggregates all literal values -->

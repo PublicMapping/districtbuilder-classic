@@ -782,12 +782,14 @@ ERROR:
         # Import score arguments for this score function
         for scorearg in config.xpath('ScoreArgument'):
             argfn = config.xpath('//ScoreFunctions/ScoreFunction[@id="%s"]' % scorearg.get('ref'))[0]
+            user_selectable = argfn.get('user_selectable') == 'true'
             childfn_obj, created = ScoreFunction.objects.get_or_create(
                 calculator=argfn.get('calculator'),
                 name=argfn.get('id'),
                 label=argfn.get('label') or '',
                 description=argfn.get('description') or '',
-                is_planscore=argfn.get('type') == 'plan'
+                is_planscore=argfn.get('type') == 'plan',
+                is_user_selectable=user_selectable
             )
 
             if verbose > 1:
@@ -915,12 +917,14 @@ ERROR:
                 for sfref in sp.xpath('Score'):
                     sf = config.xpath('//ScoreFunctions/ScoreFunction[@id="%s"]' % sfref.get('ref'))[0]
                     name = sf.get('id') or ''
+                    user_selectable = sf.get('user_selectable') == 'true'
                     sf_obj, created = ScoreFunction.objects.get_or_create(
                         calculator=sf.get('calculator'),
                         name=name,
                         label=sf.get('label') or '',
                         description=sf.get('description') or '',
-                        is_planscore=sf.get('type') == 'plan'
+                        is_planscore=sf.get('type') == 'plan',
+                        is_user_selectable=user_selectable
                     )
 
                     if verbose > 1:
@@ -951,13 +955,15 @@ ERROR:
                 sfref = crit.xpath('Score')[0]
                 sf = config.xpath('//ScoreFunctions/ScoreFunction[@id="%s"]' % sfref.get('ref'))[0]
                 name = sf.get('id') or ''
+                user_selectable = sf.get('user_selectable') == 'true'
                 sf_obj, created = ScoreFunction.objects.get_or_create(
                     calculator=sf.get('calculator'),
                     name=name,
                     label=sf.get('label') or '',
                     description=sf.get('description') or '',
-                    is_planscore=sf.get('type') == 'plan'
-                    )
+                    is_planscore=sf.get('type') == 'plan',
+                    is_user_selectable=user_selectable
+                )
 
                 if verbose > 1:
                     if created:
