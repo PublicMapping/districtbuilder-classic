@@ -110,7 +110,7 @@ ERROR:
     from django.core import management
 
     if allops or options.database:
-        management.call_command('syncdb', verbosity=verbose)
+        management.call_command('syncdb', verbosity=verbose, interactive=False)
 
     if allops:
         geolevels = []

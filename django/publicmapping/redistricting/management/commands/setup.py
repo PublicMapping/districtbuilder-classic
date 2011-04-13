@@ -116,6 +116,7 @@ contents of the file and try again.
         # were in the DB.
         self.purge_sessions(verbose)
 
+        self.create_superuser(config, verbose)
         self.import_prereq(config, verbose)
         self.import_contiguity_overrides(config, verbose)
         self.import_scoring(config, verbose)
@@ -160,6 +161,30 @@ contents of the file and try again.
 
         if options.get("bard"):
             self.build_bardmap(config, verbose)
+
+
+    def create_superuser(self, config, verbose):
+        """
+        Create the django superuser, based on the config.
+        """
+        from django.contrib.auth.models import User
+        admcfg = config.xpath('//Project/Admin')[0]
+        defaults = {'first_name':'Admin','last_name':'User','is_staff':True,'is_active':True,'is_superuser':True}
+        admin,created = User.objects.get_or_create(
+            username=admcfg.get('user'),
+            email=admcfg.get('email'),
+            defaults=defaults
+        )
+
+        if created:
+            admin.set_password(admcfg.get('password'))
+            admin.save()
+
+            if verbose > 1:
+                print 'Created administrative user.'
+        else:
+            if verbose > 1:
+                print 'Administrative user exists, not modifying.'
 
 
     def purge_sessions(self, verbose):
@@ -1017,7 +1042,6 @@ ERROR:
                 display=subj.get('name'), 
                 short_display=subj.get('short_name'), 
                 is_displayed=(subj.get('displayed')=='true'), 
-                percentage_denominator=None,
                 sort_key=subj.get('sortkey'))
                 
 
@@ -1028,15 +1052,17 @@ ERROR:
                     print 'Subject "%s" already exists' % subj.get('name')
 
         for subj in subjs:
+            numerator = Subject.objects.get(name=subj.get('id'))
+            denominator = None
             denominator_name = subj.get('percentage_denominator')
             if (denominator_name):
-                numerator = Subject.objects.get(name=subj.get('id'))
                 denominator = Subject.objects.get(name=denominator_name)
-                numerator.percentage_denominator = denominator
-                numerator.save()
 
-                if verbose > 1:
-                    print 'Set denominator on "%s" to "%s"' % (subj.get('name'), subj.get('percentage_denominator'))
+            numerator.percentage_denominator = denominator
+            numerator.save()
+
+            if verbose > 1:
+                print 'Set denominator on "%s" to "%s"' % (numerator.name, denominator_name)
 
 
         # Import targets third
