@@ -2424,7 +2424,7 @@ OpenLayers.Util.extend(boxControl, filterExtension);
     * different districts are now visible
     */
     olmap.prevVisibleDistricts = '';
-    sortByVisibility = function(force) {
+    var sortByVisibility = function(force) {
         var visibleDistricts = '';
         var visible, notvisible = '';
         $('#demographics_table tr').data('isVisibleOnMap', false);
@@ -2445,6 +2445,8 @@ OpenLayers.Util.extend(boxControl, filterExtension);
 
         updateDistrictStyles();
     };
+
+    $('.olmap').bind('resort_by_visibility', sortByVisibility);
    
     // triggering this event here will configure the map to correspond
     // with the initial dropdown values (jquery will set them to different

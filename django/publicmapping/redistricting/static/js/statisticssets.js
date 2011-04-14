@@ -135,7 +135,6 @@ statisticssets = function(options) {
 
     var showScoreDisplay = function(event) {
         var displayId = _selector.val();
-        // var displayId = $(this).val();
         $('.demographics').empty();
         $('.demographics').load(
             _options.loadDemographicsUrl,
@@ -149,7 +148,7 @@ statisticssets = function(options) {
                 }
                 else {
                     loadTooltips();
-                    // sortByVisibility(true);
+                    $('.olmap').trigger('resort_by_visibility');
                 }
             }
         );  
@@ -235,6 +234,8 @@ statisticssets = function(options) {
                 success: function(data) {
                     if (data.success == true) {
                         deleteFromUI(data.set);
+                        showScoreDisplay();
+                        $('.olmap').trigger('resort_by_visibility');
                     }
                 }
             });
