@@ -1252,14 +1252,9 @@ div#map_menu_header label {
     -webkit-box-shadow: 0 8px 17px -6px #333333;
     box-shadow: 0 8px 17px -6px #333333;
 }
-div.map_menu_content.basic_information {
-    background: #bababa;
-    border:1px solid #777;
-  }
 div.map_menu_content.demographics {
     background: #efefef;
     border: 1px solid #adadad;
-    display:none
 }
 
 div.plan_summary {

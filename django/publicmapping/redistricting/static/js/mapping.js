@@ -71,13 +71,6 @@ function getPlanVersion() {
     return ver;
 }
 
-
-/*
- * The URLs for updating the calculated geography and demographics.
- */
-var geourl = '/districtmapping/plan/' + PLAN_ID + '/basicinformation/';
-var demourl = '/districtmapping/plan/' + PLAN_ID + '/demographics/';
-
 /**
  * Add proper class names so css may style the PanZoom controls.
  */
@@ -707,85 +700,54 @@ function mapinit(srs,maxExtent) {
                 return resp;
             }
         });
-    };
+};
 
-    // Extend the request function on the GetFeature control to allow for
-    // dynamic filtering and setting a header needed for CSRF validation
-    var filterExtension = {
-        request: function (bounds, options) {
-            // Allow for dynamic filtering, and extend for CSRF validation headers
-            var filter = getVersionAndSubjectFilters(maxExtent, bounds.toGeometry().toString());
-            extendReadForCSRF(this.protocol);
+// Extend the request function on the GetFeature control to allow for
+// dynamic filtering and setting a header needed for CSRF validation
+var filterExtension = {
+    request: function (bounds, options) {
+        // Allow for dynamic filtering, and extend for CSRF validation headers
+        var filter = getVersionAndSubjectFilters(maxExtent, bounds.toGeometry().toString());
+        extendReadForCSRF(this.protocol);
 
-            // The rest of this function is exactly the same as the original
-            options = options || {};
-            OpenLayers.Element.addClass(this.map.viewPortDiv, "olCursorWait");
-            
-            this.protocol.read({
-                filter: filter,
-                callback: function(result) {
-                    if(result.success()) {
-                        if(result.features.length) {
-                            if(options.single == true) {
-                                this.selectBestFeature(result.features, bounds.getCenterLonLat(), options);
-                            } else {
-                                this.select(result.features);
-                            }
-                        } else if(options.hover) {
-                            this.hoverSelect();
+        // The rest of this function is exactly the same as the original
+        options = options || {};
+        OpenLayers.Element.addClass(this.map.viewPortDiv, "olCursorWait");
+        
+        this.protocol.read({
+            filter: filter,
+            callback: function(result) {
+                if(result.success()) {
+                    if(result.features.length) {
+                        if(options.single == true) {
+                            this.selectBestFeature(result.features, bounds.getCenterLonLat(), options);
                         } else {
-                            this.events.triggerEvent("clickout");
-                            if(this.clickout) {
-                                this.unselectAll();
-                            }
+                            this.select(result.features);
+                        }
+                    } else if(options.hover) {
+                        this.hoverSelect();
+                    } else {
+                        this.events.triggerEvent("clickout");
+                        if(this.clickout) {
+                            this.unselectAll();
                         }
                     }
-                    OpenLayers.Element.removeClass(this.map.viewPortDiv, "olCursorWait");
-                },
-                scope: this                        
-            });
-        }
-    };
+                }
+                OpenLayers.Element.removeClass(this.map.viewPortDiv, "olCursorWait");
+            },
+            scope: this                        
+        });
+    }
+};
 
-    // Apply the filter extension to both the get and box controls
-    OpenLayers.Util.extend(getControl, filterExtension);
-    OpenLayers.Util.extend(boxControl, filterExtension);
+// Apply the filter extension to both the get and box controls
+OpenLayers.Util.extend(getControl, filterExtension);
+OpenLayers.Util.extend(boxControl, filterExtension);
 
     // Reload the information tabs and reload the filters
     var updateInfoDisplay = function() {
-        $('.basic_information').load(
-            geourl, 
-            {  
-                demo: getDistrictBy().by,
-                version: getPlanVersion()
-            }, 
-            function(rsp, status, xhr) {
-                if (xhr.status > 400) {
-                    window.location.href = '/';
-                }
-                else {
-                    loadTooltips();
-                    sortByVisibility(true);
-                }
-            }
-        );
-
-        $('.demographics').load(
-            demourl, 
-            {
-                version: getPlanVersion()
-            }, 
-            function(rsp, status, xhr) {
-                if (xhr.status > 400) {
-                    window.location.href = '/';
-                }
-                else {
-                    loadTooltips();
-                    sortByVisibility(true);
-                }
-            }
-        );            
-
+        $('#open_statistics_editor').trigger('refresh_tab');
+        sortByVisibility(true);
         districtLayer.filter = getVersionAndSubjectFilters(olmap.getExtent());
         districtLayer.strategies[0].update({force:true});
     };
@@ -2462,10 +2424,9 @@ function mapinit(srs,maxExtent) {
     * different districts are now visible
     */
     olmap.prevVisibleDistricts = '';
-    var sortByVisibility = function(force) {
+    sortByVisibility = function(force) {
         var visibleDistricts = '';
         var visible, notvisible = '';
-        $('#basic_information_table tr').data('isVisibleOnMap', false);
         $('#demographics_table tr').data('isVisibleOnMap', false);
 
         for (feature in districtLayer.features) {
@@ -2478,9 +2439,7 @@ function mapinit(srs,maxExtent) {
         }
         if (visibleDistricts != olmap.prevVisibleDistricts || force) {
             var demosorter = viewablesorter({ target: '#demographics_table tbody' }).init();
-            var geosorter = viewablesorter({ target: '#basic_information_table tbody' }).init();
             demosorter.sortTable();
-            geosorter.sortTable();
             olmap.prevVisibleDistricts = visibleDistricts;
         }
 

@@ -45,10 +45,7 @@ statisticssets = function(options) {
         }, options),
         
         _selector = $('#map_menu_header > select'),
-        _personalDisplayId,
-        _allPersonalDisplaysIds,
-        _selectedScoreFunctionIds,
-        _allScoreFunctionIds,
+        _selectedStatisticsSet,
         _clearButton = $('#clear_statistics');
         _functionsContainer = $("#available_statistics"),
         _saveButton = $("#save_statistics_set"),
@@ -63,6 +60,7 @@ statisticssets = function(options) {
      *   The publisher.
      */
     _self.init = function() {
+        _options.target.bind('refresh_tab', showScoreDisplay);
         _options.container.hide();
         _options.target.click( function() {_options.container.dialog({ width: 500 }); });
         _selector.change( showScoreDisplay );
@@ -123,10 +121,12 @@ statisticssets = function(options) {
                 window.location.href = data.redirect;
             }
         }
+        showScoreDisplay();
     };
 
     var showScoreDisplay = function(event) {
-        var displayId = $(this).val();
+        var displayId = _selector.val();
+        // var displayId = $(this).val();
         $('.demographics').empty();
         $('.demographics').load(
             _options.loadDemographicsUrl,

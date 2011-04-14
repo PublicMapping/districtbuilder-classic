@@ -471,9 +471,6 @@
                     <select>
                     </select>
                 </div>
-                <div class="map_menu_content basic_information">
-                    <div><h3>loading...</h3></div>
-                </div>
                 <div class="map_menu_content demographics">
                     <div><h3>loading...</h3></div>
                 </div>
@@ -831,12 +828,6 @@ Include the markup for the account management panel.
     about this plan for display in the sidebar menu and display the draw tab. 
 
     {% endcomment %}
-        $('.basic_information').load('/districtmapping/plan/{{plan.id}}/basicinformation/',
-            function() { fixTableHeight($('.basic_information table')); });     
-        // geography is the default visible tab, so load that one first.
-        // load demographics in the background
-        setTimeout(function(){ $('.demographics').load('/districtmapping/plan/{{plan.id}}/demographics/',
-            function() { fixTableHeight($('.demographics table')); }) }, 1000);
         $('#steps').tabs('select', '#step_draw');
 
         // Load up the district index file checker whenever the 
