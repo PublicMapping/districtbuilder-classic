@@ -64,3 +64,7 @@
 .statistics_set:hover {
   border: 1px solid #aaa
 }
+
+.statistics_set_selected {
+    background-color: #DFDFDF;
+}

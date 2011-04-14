@@ -63,6 +63,10 @@ statisticssets = function(options) {
         _options.target.bind('refresh_tab', showScoreDisplay);
         _options.container.hide();
         _options.target.click( function() {
+            _clearButton.click();
+            if (_savedSetsContainer.children().length > 0) {
+                $('#existing_statistics_set').show();
+            }
             _options.container.dialog({ width: 500 });
         });
         _selector.change( showScoreDisplay );
@@ -99,6 +103,7 @@ statisticssets = function(options) {
                 $(this).attr('checked', false);
             });
             _statisticsSetNameField.val('');
+            $('.statistics_set').removeClass('statistics_set_selected');
         });
     };
     /**
@@ -107,7 +112,6 @@ statisticssets = function(options) {
      */
     var statsRequestCallback = function(data) {
         if (data.success) {
-            console.log('statsRequestCallback');
             if (data.sets.length > 0) {
                 $('#existing_statistics_set').hide();
             }
@@ -250,6 +254,8 @@ statisticssets = function(options) {
      * indicate which set is being edited.
      */
     var selectSet = function(event, data, whatever, something) {
+        $('.statistics_set').removeClass('statistics_set_selected');
+        $(this).addClass('statistics_set_selected');
         var set = event.data.set;
         _statisticsSetNameField.val(set.name);
         $('.function').each( function() {
