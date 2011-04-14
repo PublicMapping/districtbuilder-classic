@@ -1270,101 +1270,8 @@ def get_unlocked_simple_geometries(request,planid):
 
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
-
 @unique_session_or_json_redirect
-def getdemographics(request, planid):
-    """
-    Get the demographics of a plan.
-
-    This function retrieves the calculated values for the demographic 
-    statistics of a plan.
-
-    Parameters:
-        request -- An HttpRequest, with the current user
-        planid -- The plan ID
-
-    Returns:
-        An HTML fragment that contains the demographic information.
-    """
-    note_session_activity(request)
-
-    status = { 'success':False }
-    try:
-        plan = Plan.objects.get(pk=planid)
-    except:
-        status['message'] = "Couldn't get demographic info from the server. Please try again later."
-        return HttpResponse( json.dumps(status), mimetype='application/json', status=500 )
-
-    # We only have room for 3 subjects - get the first three by sort_key (default sort in Meta)
-    subjects = Subject.objects.all()[:3]
-    headers = list(subjects.values_list('short_display', flat=True))
-
-    if 'version' in request.REQUEST:
-        version = int(request.REQUEST['version'])
-    else:
-        version = plan.version
-
-    try:
-        districts = plan.get_districts_at_version(version, include_geom=False)
-    except:
-        status['message'] = "Couldn't get districts at the specified version."
-        return HttpResponse( json.dumps(status), mimetype='application/json')
-
-    try:
-        district_values = []
-        for district in districts:
-            dist_name = district.name
-            if dist_name == "Unassigned":
-                dist_name = '&#216;' 
-            else:
-                if not district.has_geom:
-                    continue;
-
-            prefix = plan.legislative_body.member
-            index = prefix.find('%')
-            if index >= 0:
-                prefix = prefix[0:index]
-            else:
-                index = 0
-
-            if dist_name.startswith(prefix):
-                dist_name = district.name[index:]
-
-            stats = { 'name': dist_name, 'district_id': district.district_id, 'characteristics': [] }
-
-            for subject in subjects:
-                subject_name = subject.short_display
-                characteristics = district.computedcharacteristic_set.filter(subject = subject) 
-                characteristic = { 'name': subject_name }
-                if characteristics.count() == 0:
-                    characteristic['value'] = "n/a"
-                else:
-                    characteristic['value'] = "%.0f" % characteristics[0].number       
-                    if subject.percentage_denominator:
-                        val = characteristics[0].percentage
-                        if val:
-                            try:
-                                characteristic['value'] = "%.2f%%" % (characteristics[0].percentage * 100)
-                            except:
-                                characteristic['value'] = "n/a"
-                
-                stats['characteristics'].append(characteristic)            
-
-            district_values.append(stats)
-        return render_to_response('demographics.html', {
-            'plan': plan,
-            'extra_demographics_template' : ('extra_demographics_%s.html' % plan.legislative_body.name.lower()),
-            'district_values': district_values,
-            'aggregate': getcompliance(plan, version),
-            'headers': headers
-        })
-    except:
-        status['exception'] = traceback.format_exc()
-        status['message'] = "Couldn't get district demographics."
-        return HttpResponse( json.dumps(status), mimetype='application/json', status=500 )
-
-@unique_session_or_json_redirect
-def get_demographics(request, planid):
+def get_statistics(request, planid):
     note_session_activity(request)
 
     status = { 'success': False }
@@ -1375,7 +1282,10 @@ def get_demographics(request, planid):
         return HttpResponse( json.dumps(status), mimetype='application/json', status=500)
 
     if 'version' in request.REQUEST:
-        version = int(request.REQUEST['version'])
+        try:
+            version = int(request.REQUEST['version'])
+        except:
+            version = plan.version
     else:
         version = plan.version
 
@@ -1392,9 +1302,6 @@ def get_demographics(request, planid):
     else:
         sys.stderr.write('No displayId in request: %s\n' % request.POST)
         
-#    if display.title == "Basic Information":
-#        return getgeography(request, planid)
-
     try :
         html = display.render(plan, request)
         return HttpResponse(html, mimetype='text/html')
@@ -1403,287 +1310,6 @@ def get_demographics(request, planid):
         status['exception'] = traceback.format_exc()
         return HttpResponse( json.dumps(status), mimetype='application/json', status=500)
 
-@unique_session_or_json_redirect
-def get_basic_information(request, planid):
-    note_session_activity(request)
-
-    status = { 'success': False }
-    try:
-        plan = Plan.objects.get(pk=planid)
-    except:
-        status['message'] = "Couldn't get geography info from the server. No plan with the given id."
-        return HttpResponse( json.dumps(status), mimetype='application/json', status=500)
-
-    if 'version' in request.REQUEST:
-        version = int(request.REQUEST['version'])
-    else:
-        version = plan.version
-
-    districts = plan.get_districts_at_version(version,include_geom=True)
-    display = ScoreDisplay.objects.get(title='Basic Information')
-
-    try :
-        html = display.render(plan, request)
-        return HttpResponse(html, mimetype='text/html')
-    except:
-        status['message'] = "Couldn't render display tab."
-        status['exception'] = traceback.format_exc()
-        return HttpResponse( json.dumps(status), mimetype='application/json', status=500)
-
-@unique_session_or_json_redirect
-def getgeography(request, planid):
-    """
-    Get the geography of a plan.
-
-    This function retrieves the calculated values for the geographic 
-    statistics of a plan.
-
-    Parameters:
-        request -- An HttpRequest, with the current user
-        planid -- The plan ID
-
-    Returns:
-        An HTML fragment that contains the geographic information.
-    """
-    note_session_activity(request)
-
-    status = { 'success': False }
-    try:
-        plan = Plan.objects.get(pk=planid)
-    except:
-        status['message'] = "Couldn't get geography info from the server. No plan with the given id."
-        return HttpResponse( json.dumps(status), mimetype='application/json', status=500)
-
-    try:
-        if 'demo' in request.REQUEST: 
-            demo = request.REQUEST['demo']
-            subject = Subject.objects.get(pk=demo)
-        else:
-            subject = plan.legislative_body.get_default_subject()
-    except:
-        status['message'] = "Couldn't get geography info from the server. No Subject exists with the given id and a default subjct is not listed"
-        return HttpResponse ( json.dumps(status), mimetype='application/json', status=500)
-
-    if 'version' in request.REQUEST:
-        version = int(request.REQUEST['version'])
-    else:
-        version = plan.version
-
-    try:
-        districts = plan.get_districts_at_version(version, include_geom=False)
-    except:
-        status['message'] = "Couldn't get districts at the specified version."
-        return HttpResponse( json.dumps(status), mimetype='application/json', status=500)
-
-
-    try:
-        district_values = []
-        for district in districts:
-            dist_name = district.name
-            if district.district_id == 0:
-                dist_name = '&#216;'
-            else:
-                if not district.has_geom:
-                    continue;
-
-            prefix = plan.legislative_body.member
-            index = prefix.find('%')
-            if index >= 0:
-                prefix = prefix[0:index]
-            else:
-                index = 0
-
-            if dist_name.startswith(prefix):
-                dist_name = district.name[index:]
-
-            stats = { 'name': dist_name, 'district_id': district.district_id }
-
-            characteristics = district.computedcharacteristic_set.filter(subject = subject)
-
-            compactness_calculator = Schwartzberg()
-            compactness_calculator.compute(district=district)
-            compactness_formatted = compactness_calculator.html()
-
-            contiguity_calculator = Contiguity()
-            contiguity_calculator.compute(district=district)
-            
-            if characteristics.count() == 0:
-                stats['demo'] = 'n/a'        
-                stats['contiguity'] = contiguity_calculator.result is 1
-                stats['compactness'] = compactness_formatted
-                stats['css_class'] = 'under'
-
-            for characteristic in characteristics:
-                stats['demo'] = "%.0f" % characteristic.number        
-                stats['contiguity'] = contiguity_calculator.result is 1
-                stats['compactness'] = compactness_formatted
-
-                try: 
-                    target = plan.targets().get(subject = subject)
-                    # The "in there" range
-                    range1 = target.value * target.range1
-                    # The "out of there" range
-                    range2 = target.value * target.range2
-                    number = int(characteristic.number)
-                    if number < (target.value - range2):
-                        css_class = 'farunder'
-                    elif number < (target.value - range1):
-                        css_class = 'under'
-                    elif number <= (target.value + range1):
-                        css_class = 'target'
-                    elif number <= (target.value + range2):
-                        css_class = 'over'
-                    elif number > (target.value + range2):
-                        css_class = 'farover'
-                # No target found - probably not displayed
-                except:
-                    css_class = 'target'
-                
-                stats['css_class'] = css_class 
-
-            if district.district_id == 0:
-                # Unassigned is never over nor under
-                stats['css_class'] = 'target'
-
-            district_values.append(stats)
-
-        return render_to_response('geography.html', {
-            'plan': plan,
-            'extra_demographics_template' : ('extra_demographics_%s.html' % plan.legislative_body.name.lower()),
-            'district_values': district_values,
-            'aggregate': getcompliance(plan, version),
-            'name': subject.short_display
-        })
-    except:
-        status['exception'] = traceback.format_exc()
-        status['message'] = "Couldn't get district geography."
-        return HttpResponse( json.dumps(status), mimetype='application/json', status=500)
-
-
-def getcompliance(plan, version):
-    """
-    Get compliance information about a set of districts. Compliance
-    includes contiguity, population target data, and minority districts.
-    
-    Parameters:
-        districts -- A list of districts
-        
-    Returns:
-        A set of contiguity and data values.
-    """
-    compliance = []
-
-    # Check each district for contiguity
-    contiguity = { 'name': 'Noncontiguous', 'value': 0 }
-    noncontiguous = 0
-    # Remember to get only the districts at a specific version
-    districts = plan.get_districts_at_version(version, include_geom=True)
-    contiguity_calculator = Contiguity()
-    for district in districts:
-        if district.geom is None:
-            continue
-        contiguity_calculator.compute(district=district)
-        if contiguity_calculator.result == 0 and district.name != 'Unassigned':
-            noncontiguous += 1
-    if noncontiguous > 0:
-        if noncontiguous == 1:
-            contiguity['value'] = '%d district' % noncontiguous
-        else:
-            contiguity['value'] = '%d districts' % noncontiguous
-    compliance.append(contiguity);
-
-    #Population targets
-    for target in plan.targets():
-        data = { 'name': 'Target Pop.', 'target': target.value, 'value': 'All meet target' } 
-        noncompliant = 0
-        for district in districts:
-            try:
-                characteristic = district.computedcharacteristic_set.get(subject__exact = target.subject) 
-                allowance = target.value * target.range1
-                number = int(characteristic.number)
-                if (number < (target.value - allowance)) or (number > (target.value + allowance)):
-                    noncompliant += 1
-            except:
-                #print "'%s'(%d) is missing computed characteristics for '%s'" % (district.name,district.id,target.subject.name)
-                continue
-        if noncompliant > 0:
-            data['value'] = '%d miss target' % noncompliant
-        compliance.append(data)
-
-    #Minority districts
-    population = plan.legislative_body.get_default_subject()
-    # We only want the subjects that have data attached to districts
-    subject_ids = ComputedCharacteristic.objects.values_list('subject', flat=True).distinct()
-    minority = Subject.objects.filter(id__in=subject_ids).exclude(name=population.name)
-    # minority = Subject.objects.exclude(name=population.name)
-    data = {}
-    for subject in minority:
-        data[subject]  = { 'name': '%s Majority' % subject.short_display, 'value': 0 }
-
-    for district in districts:
-        try:
-            characteristics = district.computedcharacteristic_set
-            population_value = Decimal(characteristics.get(subject = population).number)
-            for subject in minority:
-                minority_value = Decimal(characteristics.get(subject__exact = subject).number)
-                if minority_value / population_value > Decimal('.5'):
-                    data[subject]['value'] += 1   
-        except:
-            #print "'%s'(%d) is missing computed characteristics for '%s'" % (district.name,district.id,population.name)
-            continue
-            
-
-    for v in data.values():
-        compliance.append(v)
-        
-    return compliance
-        
-
-#def getaggregate(districts):
-#    """
-#    Get the aggregate data for the districts. This will aggregate all
-#    available subjects for the given districts.
-#    
-#    Parameters:
-#        districts -- A list of districts
-#        
-#    Returns:
-#        Aggregated data based on the districts given and all available subjects
-#    """
-#    aggregate = []
-#    characteristics = ComputedCharacteristic.objects.filter(district__in=districts) 
-#    for target in Target.objects.all():
-#        data = { 'name': target.subject.short_display } 
-#        try:
-#            data['value']= "%.0f" % characteristics.filter(subject = target.subject).aggregate(Sum('number'))['number__sum'] 
-#        except:
-#            data['value']= "Data unavailable" 
-#        aggregate.append(data)
-#    return aggregate
-#def createShapeFile(planid):
-#    """ Given a plan id, this function will create a shape file in the temp folder
-#    that contains the district geometry and all available computed characteristics. 
-#    This shapefile is suitable for importing to BARD
-#    """
-#    import os
-#    query = 'select %s b.*, b.name as BARDPlanID from ( select district_id, max(version) as version from redistricting_district group by district_id ) as a join redistricting_district as b on a.district_id = b.district_id and a.version = b.version where geom is not null' % getSubjectQueries()
-#    shape = settings.TEMP_DIR + str(planid) + '.shp'
-#    cmd = 'pgsql2shp -k -u %s -P %s -f %s %s "%s"' % (settings.DATABASE_USER, settings.DATABASE_PASSWORD, shape, settings.DATABASE_NAME, query)
-#    try:
-#        if os.system(cmd) == 0:
-#            return shape
-#        else:
-#            return None
-#    except doh as Exception:
-#        print "%s; %s", query, doh.message
-
-#def get_subject_queries():
-#    all = Subject.objects.all()
-#    query = '';
-#    for subject in all:
-#        query += 'getsubjectfordistrict(b.id, \'%s\') as %s, ' % (subject.name, subject.name)
-#    return query
-     
 def getutc(t):
     """Given a datetime object, translate to a datetime object for UTC time.
     """
@@ -2009,18 +1635,17 @@ def get_health(request):
 
 def statistics_sets(request, planid):
     result = { 'success': False }
-    # If it's a get request, find the user
-    # see what's available
-    # return names and IDs in JSON to populate the dropdown/stats editor
     if request.method == 'GET':
         sets = []
         scorefunctions = []
             
-        user_functions = ScoreFunction.objects.filter(is_user_selectable=True)
+        # Get the functions available for the users
+        user_functions = ScoreFunction.objects.filter(is_user_selectable=True).order_by('name')
         for f in user_functions:
             scorefunctions.append({ 'id': f.id, 'name': f.name })
         result['functions'] = scorefunctions
 
+        # Get the admin displays
         bi = ScoreDisplay.objects.get(title='Basic Information', owner__is_superuser=True)
         sets.append({ 'id': bi.id, 'name': bi.title, 'functions': [], 'mine':False })
         demo = ScoreDisplay.objects.get(title='Demographics', owner__is_superuser=True)

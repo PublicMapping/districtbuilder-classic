@@ -147,13 +147,8 @@ statisticssets = function(options) {
                 displayId: displayId
             },
             function(rsp, status, xhr) {
-                if (xhr.status > 400) {
-                    window.location.href = '/';
-                }
-                else {
-                    loadTooltips();
-                    $('.olmap').trigger('resort_by_visibility');
-                }
+                loadTooltips();
+                $('.olMap').trigger('resort_by_visibility');
             }
         );  
     }
@@ -179,7 +174,7 @@ statisticssets = function(options) {
      * Returns a jQuery object representing the clickable DOM element
      */
     var createStatisticsSetButton = function(set) {
-        if (set.functions.length == 0) return false;
+        if (!set.mine) return false;
         var set_button = $('<div id="select_statistics_set_' + set.id + '" class="statistics_set"></div>');
         set_button.append(set.name);
         set_button.data('name', set.name);
@@ -200,27 +195,30 @@ statisticssets = function(options) {
      * dropdown so the user can view the stats set
      */
     var addSetToSelector = function(set, select) {
-        var cls = '';
+        var newElement = $('<option value="' + set.id + '">' + set.name + '</option>');
+
         if (set.mine) {
-            cls = 'own_set';
-        }
-        var setOption = $('<option value="' + set.id + '" class="' + cls + '">' + set.name + '</option>')
-        var options = _selector.children('option');
-        if (options.length < 3) {
-            _selector.append(setOption);
-        }
-        else {
-            var added = false;
-            for (var i = 2; i < options.length && !added; i++) {
-                if (set.name < options[i].text) {
-                    $(options[i]).before(setOption);
-                    added = true;
+            newElement.addClass('own_set');
+
+            var olderSibling = false;
+            _selector.children('.own_set').each(function(index, Element) {
+                if (newElement.text() < $(this).text()) {
+                    olderSibling = $(this);
+                    return false;
                 }
-            }
-            if (!added) {
-                _selector.append(setOption);
-            }
+            });
+        
+            if (olderSibling) {
+                olderSibling.before(newElement);
+            } else {
+                _selector.append(newElement);
+            }            
+
+        } else {
+            newElement.addClass('admin');
+            _selector.append(newElement);
         }
+        
         if (select) {
             showStatisticsSet(set.id);
         }
@@ -332,22 +330,17 @@ statisticssets = function(options) {
                     if (data.newRecord == true) {
                         $('#existing_statistics_set').show();
                         var record = createStatisticsSetButton(data.set);
-                        var children = _savedSetsContainer.children();
-                        if (children.length < 1) {
+                        var olderSibling = false;
+                        _savedSetsContainer.children().each( function(index, Element) {
+                            if (record.text() < $(this).text()) {
+                                olderSibling = $(this);
+                                return false;
+                            }
+                        });
+                        if (olderSibling) {
+                            olderSibling.before(record);
+                        } else {
                             _savedSetsContainer.append(record);
-                        }
-                        else {
-                            var added = false;
-                            for (var i = 0; i < children.length && !added; i++) {
-                                var child = $(children[i]);
-                                if (record.data().name < child.data().name) {
-                                    child.before(record);
-                                    added = true;
-                                }
-                            }
-                            if (!added) {
-                                _savedSetsContainer.append(record);
-                            }
                         }
                         addSetToSelector(data.set, true);
                     } else {

@@ -2200,7 +2200,6 @@ class ScoreDisplay(models.Model):
             The new ScoreDisplay
         """
         
-        print('Copying from display %s' % display)
         if display == None:
             return
 
@@ -2212,7 +2211,6 @@ class ScoreDisplay(models.Model):
 
             # We can't have duplicate titles per owner so append "copy" if we must
             if self.owner == display.owner:
-                print ('same owner: %s\n' % self.owner)
                 self.title = title if title != None else "%s copy" % display.title
             else:
                 self.title = title if title != None else display.title
@@ -2225,7 +2223,6 @@ class ScoreDisplay(models.Model):
 
 
         try:
-            print(str(self.scorepanel_set.all()))
             public_demo = self.scorepanel_set.get(type='district')
             if self != display:
                 self.scorepanel_set.remove(public_demo)
@@ -2238,23 +2235,19 @@ class ScoreDisplay(models.Model):
 
             demo_panel.score_functions.clear()
             if len(functions) == 0:
-                print('No functions input into copy')
                 return self
-            print('These are our functions: %s' % functions)
             for function in functions:
-                print('function %s is type %s' % (function, str(type(function))))
                 if isinstance(function, types.IntType):
                     function = ScoreFunction.objects.get(pk=function) 
                 if isinstance(function, types.StringTypes):
                     function = ScoreFunction.objects.get(pk=int(function))
                 if type(function) == ScoreFunction:
                     demo_panel.score_functions.add(function)
-                    print("Successfully added %s to %s" % (function, demo_panel))
             demo_panel.save()
             self.scorepanel_set.add(demo_panel)
             self.save()
         except:
-            print('Failed to copy ScoreDisplay %s to %s: %s' % (display.title, self.title, traceback.format_exc()))
+            sys.stderr.write('Failed to copy ScoreDisplay %s to %s: %s\n' % (display.title, self.title, traceback.format_exc()))
 
         return self
 

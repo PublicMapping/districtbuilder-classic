@@ -461,7 +461,7 @@
       "displays": [
         7
       ], 
-      "template": "demographics.html", 
+      "template": "basic_information.html", 
       "position": 1, 
       "cssclass": "", 
       "type": "district"

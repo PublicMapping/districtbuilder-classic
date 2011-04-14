@@ -51,8 +51,8 @@ viewablesorter = function(options) {
         if (b.data('isVisibleOnMap') == true) {
             bScore -= 1000;
         }
-        aName = a.children('.celldistrictname').text();
-        bName = b.children('.celldistrictname').text();
+        aName = a.children('.district_name').text();
+        bName = b.children('.district_name').text();
         aNum = parseInt(aName);
         bNum = parseInt(bName);
 

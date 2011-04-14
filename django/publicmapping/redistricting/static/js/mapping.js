@@ -2446,7 +2446,7 @@ OpenLayers.Util.extend(boxControl, filterExtension);
         updateDistrictStyles();
     };
 
-    $('.olmap').bind('resort_by_visibility', sortByVisibility);
+    $('.olMap').bind('resort_by_visibility', sortByVisibility);
    
     // triggering this event here will configure the map to correspond
     // with the initial dropdown values (jquery will set them to different

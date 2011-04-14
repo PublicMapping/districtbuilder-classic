@@ -37,7 +37,7 @@
 {% load redistricting_extras %}
 <div class="info_table">
     {% if districtscores %}
-    <table id="basic_information_table">
+    <table id="demographics_table">
         <thead>
             <tr>
                 <th class="district_name">Dist.</th>
@@ -60,4 +60,26 @@
     {% else %}
     <div class="error"> Sorry, there is no demographic data for this plan</div>
     {% endif %}                    
+</div>
+<div class="menu_footer">
+    <button id="stats_legend" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false"><span class="ui-button-text">Stats Legend</span></button>
+    <div id="stats_legend_panel" class="tooltip">
+        <div class="legend_item">
+            <h5>Population</h5>
+            <ul>
+                <li><span class="swatch popstatus farover"></span> Far over target</li>
+                <li><span class="swatch popstatus over"></span> Over target</li>
+                <li><span id="swatch-target" class="swatch popstatus target"></span> Meets target</li>
+                <li><span id="swatch-under" class="swatch popstatus under"></span> Under target</li>
+                <li><span id="swatch-farunder" class="swatch popstatus farunder"></span>Far Under target</li>
+            </ul>
+        </div>
+        <div class="legend_item last">
+            <h5>Contiguity</h5>
+            <ul>
+                <li><img class="yes-contiguous" src="/static-media/images/icon-check.png"> Contiguous</li>
+                <li><img class="no-contiguous" src="/static-media/images/icon-warning.png"> Non-contiguous</li>                 
+            </ul>
+        </div>                    
+    </div>
 </div>
