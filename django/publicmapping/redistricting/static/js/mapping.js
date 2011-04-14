@@ -746,6 +746,7 @@ OpenLayers.Util.extend(boxControl, filterExtension);
 
     // Reload the information tabs and reload the filters
     var updateInfoDisplay = function() {
+        $('#open_statistics_editor').trigger('dirty_cache');
         $('#open_statistics_editor').trigger('refresh_tab');
         sortByVisibility(true);
         districtLayer.filter = getVersionAndSubjectFilters(olmap.getExtent());

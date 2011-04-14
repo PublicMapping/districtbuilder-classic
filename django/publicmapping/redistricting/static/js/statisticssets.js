@@ -44,8 +44,8 @@ statisticssets = function(options) {
             loadDemographicsUrl: '/districtmapping/plan/' + ( typeof(options.planId) != 'undefined' ? options.planId : PLAN_ID ) + '/demographics/',
         }, options),
         
+        _displayCache = {},
         _selector = $('#map_menu_header > select'),
-        _selectedStatisticsSet,
         _clearButton = $('#clear_statistics');
         _functionsContainer = $("#available_statistics"),
         _saveButton = $("#save_statistics_set"),
@@ -61,6 +61,10 @@ statisticssets = function(options) {
      */
     _self.init = function() {
         _options.target.bind('refresh_tab', showScoreDisplay);
+        _options.target.bind('dirty_cache', function() {
+            _displayCache['dirty'] = true;
+        });
+
         _options.container.hide();
         _options.target.click( function() {
             _clearButton.click();
@@ -139,6 +143,19 @@ statisticssets = function(options) {
 
     var showScoreDisplay = function(event) {
         var displayId = _selector.val();
+
+        // Check the cache.
+        if (_displayCache['dirty'] == false) {
+            var result = _displayCache[displayId];
+            if (result) {
+                $('.demographics').html(result);
+                return;
+            }
+        } else {
+            // dirty cache.  clear it out.
+            _displayCache = { dirty: false };
+        }
+
         $('.demographics').html('<div class="sidebarload"><h3>Loading Statistics...</h3></div>');
         $('.demographics').load(
             _options.loadDemographicsUrl,
@@ -149,6 +166,7 @@ statisticssets = function(options) {
             function(rsp, status, xhr) {
                 loadTooltips();
                 $('.olMap').trigger('resort_by_visibility');
+                _displayCache[displayId] = rsp;
             }
         );  
     }
@@ -255,6 +273,7 @@ statisticssets = function(options) {
                 data: event.data,
                 success: function(data) {
                     if (data.success == true) {
+                        delete _displayCache[data.set.id.toString()];
                         deleteFromUI(data.set);
                         showScoreDisplay();
                         $('.olmap').trigger('resort_by_visibility');
@@ -327,9 +346,12 @@ statisticssets = function(options) {
             url: _options.statsUrl,
             success: function(data) {
                 if (data.success == true) {
+
+                    delete _displayCache[data.set.id.toString()];
+                    var record = createStatisticsSetButton(data.set);
+
                     if (data.newRecord == true) {
                         $('#existing_statistics_set').show();
-                        var record = createStatisticsSetButton(data.set);
                         var olderSibling = false;
                         _savedSetsContainer.children().each( function(index, Element) {
                             if (record.text() < $(this).text()) {
@@ -344,6 +366,7 @@ statisticssets = function(options) {
                         }
                         addSetToSelector(data.set, true);
                     } else {
+                        _savedSetsContainer.find('#' + record.attr('id')).replaceWith(record);
                         showStatisticsSet(data.set.id);
                     }
                 } else {
