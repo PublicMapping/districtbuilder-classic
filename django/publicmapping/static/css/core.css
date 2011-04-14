@@ -1279,7 +1279,7 @@ div.plan_summary label {
   font-weight: bold;
 
   }
-div.plan_summary label + span {
+div.plan_summary span {
   display:inline-block;
   width: 88px;
   text-align:right;
@@ -1320,7 +1320,7 @@ div.info_table th {
 div.info_table tbody { 
     background: #f7f7f7;
     border: 1px solid #aaa;
-    overflow-y:auto;
+    overflow:auto;
     position:absolute;
     top:164px;
     bottom:25px;
@@ -1349,12 +1349,14 @@ div.info_table td.district_name {
     overflow: hidden;
     font-size: 12px;
     font-weight: bold;
+    text-align: center;
 }
 div.info_table .score1{  
-    width: 24%;
+    width: 27%;
 }
 div.info_table .score2{  
     width: 26%;
+    text-align:center;
 }
 div.info_table .score3{  
     width: 35%;
@@ -1365,7 +1367,7 @@ div.info_table .error {
   color:#333; 
   padding: 8px;
 }
-span.popstatus { 
+span.poptot { 
   -moz-border-radius:2px;
   -webkit-border-radius:2px;
   border-radius:2px;
@@ -1373,6 +1375,8 @@ span.popstatus {
   color: #3c3c3c;
   font-size: 11px;
   display:block;
+  min-width: 64px;
+  text-align:center;
 }
 .over, .interval_3.poptot {
   background: #ead3a7;
