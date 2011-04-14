@@ -62,7 +62,9 @@ statisticssets = function(options) {
     _self.init = function() {
         _options.target.bind('refresh_tab', showScoreDisplay);
         _options.container.hide();
-        _options.target.click( function() {_options.container.dialog({ width: 500 }); });
+        _options.target.click( function() {
+            _options.container.dialog({ width: 500 });
+        });
         _selector.change( showScoreDisplay );
         $.ajax({
            url: _options.statsUrl,
@@ -105,6 +107,13 @@ statisticssets = function(options) {
      */
     var statsRequestCallback = function(data) {
         if (data.success) {
+            console.log('statsRequestCallback');
+            if (data.sets.length > 0) {
+                $('#existing_statistics_set').hide();
+            }
+            else {
+                $('#existing_statistics_set').show();
+            }
             for (i in data.sets) {
                 var set = data.sets[i];
                 addSetToSelector(set);
@@ -207,6 +216,9 @@ statisticssets = function(options) {
     var deleteFromUI = function(set) {
         _selector.children().remove('option[value="' + set.id + '"]');
         _savedSetsContainer.children().remove('#select_statistics_set_' + set.id);
+        if (_savedSetsContainer.children().length == 0) {
+            $('#existing_statistics_set').hide();
+        }
     };
 
     /**
@@ -291,6 +303,7 @@ statisticssets = function(options) {
             success: function(data) {
                 if (data.success == true) {
                     if (data.newRecord == true) {
+                        $('#existing_statistics_set').show();
                         var record = createStatisticsSetButton(data.set);
                         _savedSetsContainer.append(record);
                         addSetToSelector(data.set, true);
