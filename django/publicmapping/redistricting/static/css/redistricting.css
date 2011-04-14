@@ -74,13 +74,15 @@
 }
 
 .sidebarload {
-    height: 100px;
-    width: 75%;
-    border: solid 1px #BBBBBB;
+    height: 60px;
+    margin: 20px;
+    border: solid 1px #CEC290;
     background-image: url('/static-media/images/chooser-loading.gif');
-    background-color: #ecf6f5;
-    background-position: center;
+    background-position: 50% 75%;
     background-repeat: no-repeat;
-    margin: 40px auto;
     text-align: center;
+    padding: 15px 20px 20px;
+    border-radius: 6px;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
 }
