@@ -665,7 +665,6 @@ def getreport(request, planid):
 
     rptstatus = PlanReport.checkreport(planid, stamp)
     if rptstatus == 'ready':
-        print 'Report is ready.'
         status = {
             'success': True,
             'url': PlanReport.getreport(planid, stamp),
@@ -674,7 +673,6 @@ def getreport(request, planid):
             'stamp': stamp
         }
     elif rptstatus == 'busy':
-        print 'Report is busy.'
         status = {
             'success': True,
             'url': reverse(getreport, args=[planid]),
@@ -683,7 +681,6 @@ def getreport(request, planid):
             'stamp': stamp
         }
     elif rptstatus == 'free':
-        print 'Starting new report.'
         status = {
             'success': True,
             'url': reverse(getreport, args=[planid]),
@@ -707,7 +704,6 @@ def getreport(request, planid):
         PlanReport.markpending(planid, stamp)
         PlanReport.createreport.delay(planid, stamp, req)
     else:
-        print 'Check report status: "%s"' % rptstatus
         status['message'] = 'Unrecognized status when checking report status.'
 
     return HttpResponse(json.dumps(status),mimetype='application/json')

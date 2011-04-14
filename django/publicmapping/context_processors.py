@@ -20,7 +20,7 @@ License:
     limitations under the License.
 
 Author:
-    Geoffrey Hing 
+    Geoffrey Hing, David Zwarg
 """
 
 from django.conf import settings
@@ -42,5 +42,4 @@ def banner_image(request):
     else:
         context_dict['banner_image'] = '/static-media/images/banner-home.png'
 
-    print 'set banner image to "%s"' % context_dict['banner_image']
     return context_dict;
