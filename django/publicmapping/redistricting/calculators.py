@@ -33,6 +33,10 @@ from django.contrib.gis.geos import Point
 from django.contrib.humanize.templatetags.humanize import intcomma
 from django.utils import simplejson as json
 from decimal import Decimal
+import locale
+
+# This helps in formatting - by default, apache+wsgi uses the "C" locale
+locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 
 class CalculatorBase:
     """
@@ -416,7 +420,8 @@ class Sum(CalculatorBase):
         is represented as an integer formatted with commas or "n/a"
         """
         if (type(self.result) == Decimal):
-            return '<span>{0:0.2f}</span>'.format(self.result)
+            result = locale.format("%d", self.result, grouping=True)
+            return '<span>%s</span>' % result
         else:
             return '<span>N/A</span>'
 
@@ -838,11 +843,9 @@ class Interval(CalculatorBase):
         try:
             interval = self.result[0]
             interval_class = "interval_%d" % interval if interval >= 0 else 'no_interval'
-            span_value = "n/a" if self.result[1] == None else self.result[1]
+            span_value = locale.format("%d", self.result[1], grouping=True)
             return '<span class="%s %s">%s</span>' % (interval_class, self.result[2], span_value)
         except:
-            # import traceback
-            # print(traceback.format_exc())
             return '<span>n/a<span>'
         
 
