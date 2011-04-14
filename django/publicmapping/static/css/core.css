@@ -1228,6 +1228,7 @@ div#map_menu_header select {
   font-weight:bold;
   float:left;
   height: 25px;
+  width: 150px;
 }
     
 div#map_menu_header label {

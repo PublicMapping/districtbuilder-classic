@@ -1635,6 +1635,14 @@ def get_health(request):
 
 def statistics_sets(request, planid):
     result = { 'success': False }
+
+    plan = Plan.objects.filter(id=planid)
+    if plan.count() == 0:
+        result['message'] = 'No plan with that ID exists.'
+        return HttpResponse(json.dumps(result),mimetype='application/json')
+    else:
+        plan = plan[0]
+
     if request.method == 'GET':
         sets = []
         scorefunctions = []
@@ -1646,10 +1654,12 @@ def statistics_sets(request, planid):
         result['functions'] = scorefunctions
 
         # Get the admin displays
-        bi = ScoreDisplay.objects.get(title='Basic Information', owner__is_superuser=True)
-        sets.append({ 'id': bi.id, 'name': bi.title, 'functions': [], 'mine':False })
-        demo = ScoreDisplay.objects.get(title='Demographics', owner__is_superuser=True)
-        sets.append({ 'id': demo.id, 'name': demo.title, 'functions': [], 'mine':False })
+        admin_displays = ScoreDisplay.objects.filter(
+            owner__is_superuser=True,
+            legislative_body=plan.legislative_body,
+            is_page=False).order_by('title')
+        for admin_display in admin_displays:
+            sets.append({ 'id': admin_display.id, 'name': admin_display.title, 'functions': [], 'mine':False })
 
         try:
             user_displays = ScoreDisplay.objects.filter(owner=request.user).order_by('title')
@@ -1693,7 +1703,10 @@ def statistics_sets(request, planid):
                 display = display.copy_from(display=display, functions=functions)
             except:
                 if validate_num(request.user):
-                    demo = ScoreDisplay.objects.get(title='Demographics', owner__is_superuser=True)
+                    demo = ScoreDisplay.objects.filter(
+                        owner__is_superuser=True,
+                        legislative_body=plan.legislative_body,
+                        is_page=False)[0]
                     display = ScoreDisplay()
                     display = display.copy_from(display=demo, title=request.POST.get('name'), owner=request.user, functions=functions)
                     result['newRecord'] = True
