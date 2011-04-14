@@ -139,7 +139,7 @@ statisticssets = function(options) {
 
     var showScoreDisplay = function(event) {
         var displayId = _selector.val();
-        $('.demographics').empty();
+        $('.demographics').html('<div class="sidebarload"><h3>Loading Statistics...</h3></div>');
         $('.demographics').load(
             _options.loadDemographicsUrl,
             {

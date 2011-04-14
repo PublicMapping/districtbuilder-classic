@@ -72,3 +72,15 @@
 .own_set {
     background-color: #ffffcc;
 }
+
+.sidebarload {
+    height: 100px;
+    width: 75%;
+    border: solid 1px #BBBBBB;
+    background-image: url('/static-media/images/chooser-loading.gif');
+    background-color: #ecf6f5;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin: 40px auto;
+    text-align: center;
+}
