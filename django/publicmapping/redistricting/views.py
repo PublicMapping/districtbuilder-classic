@@ -2021,8 +2021,13 @@ def statistics_sets(request, planid):
             scorefunctions.append({ 'id': f.id, 'name': f.name })
         result['functions'] = scorefunctions
 
+        bi = ScoreDisplay.objects.get(title='Basic Information', owner__is_superuser=True)
+        sets.append({ 'id': bi.id, 'name': bi.title, 'functions': [], 'mine':False })
+        demo = ScoreDisplay.objects.get(title='Demographics', owner__is_superuser=True)
+        sets.append({ 'id': demo.id, 'name': demo.title, 'functions': [], 'mine':False })
+
         try:
-            user_displays = ScoreDisplay.objects.filter(owner=request.user)
+            user_displays = ScoreDisplay.objects.filter(owner=request.user).order_by('title')
             result['displays_count'] = len(user_displays)
             for display in user_displays:
                 functions = []
@@ -2031,14 +2036,9 @@ def statistics_sets(request, planid):
                         functions = map(lambda x: x.id, panel.score_functions.all())
                         if len(functions) == 0:
                             result['message'] = "No functions for %s" % panel
-                sets.append({ 'id': display.id, 'name': display.title, 'functions': functions })
+                sets.append({ 'id': display.id, 'name': display.title, 'functions': functions, 'mine': display.owner==request.user })
         except:
             result['message'] = 'No user displays for %s: %s' % (request.user, traceback.format_exc())
-
-        bi = ScoreDisplay.objects.get(title='Basic Information', owner__is_superuser=True)
-        sets.append({ 'id': bi.id, 'name': bi.title, 'functions': [] })
-        demo = ScoreDisplay.objects.get(title='Demographics', owner__is_superuser=True)
-        sets.append({ 'id': demo.id, 'name': demo.title, 'functions': [] })
 
         result['sets'] = sets
         result['success'] = True
@@ -2077,7 +2077,7 @@ def statistics_sets(request, planid):
                     result['error'] = 'limit'
                     return HttpResponse(json.dumps(result),mimetype='application/json')
 
-            result['set'] = {'name':display.title, 'id':display.id, 'functions':functions}
+            result['set'] = {'name':display.title, 'id':display.id, 'functions':functions, 'mine': display.owner==request.user}
             result['success'] = True
 
         else:

@@ -200,7 +200,27 @@ statisticssets = function(options) {
      * dropdown so the user can view the stats set
      */
     var addSetToSelector = function(set, select) {
-        _selector.append($('<option value="' + set.id + '">' + set.name + '</option>'));
+        var cls = '';
+        if (set.mine) {
+            cls = 'own_set';
+        }
+        var setOption = $('<option value="' + set.id + '" class="' + cls + '">' + set.name + '</option>')
+        var options = _selector.children('option');
+        if (options.length < 3) {
+            _selector.append(setOption);
+        }
+        else {
+            var added = false;
+            for (var i = 2; i < options.length && !added; i++) {
+                if (set.name < options[i].text) {
+                    $(options[i]).before(setOption);
+                    added = true;
+                }
+            }
+            if (!added) {
+                _selector.append(setOption);
+            }
+        }
         if (select) {
             showStatisticsSet(set.id);
         }
@@ -312,7 +332,23 @@ statisticssets = function(options) {
                     if (data.newRecord == true) {
                         $('#existing_statistics_set').show();
                         var record = createStatisticsSetButton(data.set);
-                        _savedSetsContainer.append(record);
+                        var children = _savedSetsContainer.children();
+                        if (children.length < 1) {
+                            _savedSetsContainer.append(record);
+                        }
+                        else {
+                            var added = false;
+                            for (var i = 0; i < children.length && !added; i++) {
+                                var child = $(children[i]);
+                                if (record.data().name < child.data().name) {
+                                    child.before(record);
+                                    added = true;
+                                }
+                            }
+                            if (!added) {
+                                _savedSetsContainer.append(record);
+                            }
+                        }
                         addSetToSelector(data.set, true);
                     } else {
                         showStatisticsSet(data.set.id);
