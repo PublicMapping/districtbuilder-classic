@@ -2,3 +2,85 @@
     height:200px;
     width:200px;
 }
+
+#available_statistics {
+    height:225px;
+    overflow: auto;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    margin: 8px 0 0 ;
+}
+
+#available_statistics .function_wrapper {
+  border-bottom: 1px solid #ddd;
+  padding: 4px;
+  vertical-align: middle;
+}
+#available_statistics .function_wrapper label {
+  margin-left: 3px;
+}
+
+#clear_statistics {
+    float:right;
+}
+
+#saved_statistics_sets button {
+    float:right;
+}
+
+#name_statistics_set {
+    font-size: 14px;
+    font-weight: bold;
+    padding: 6px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-top: none;
+    background: #eee;
+    border-radius: 0 0 6px 6px;
+    -webkit-border-radius: 0 0 6px 6px;
+    -moz-border-radius: 0 0 6px 6px;
+    
+}
+
+#name_statistics_set input {margin: 0 5px}
+
+.statistics_set {
+    background: #fdfdfd url("/static-media/images/bg-button-sm.png") 0 15px repeat-x;
+    border: 1px solid #CCCCCC;
+    font-size: 12px;
+    font-weight: bold;
+    margin: 7px 0;
+    padding: 8px;
+    text-decoration: none;
+    display:block;
+    cursor:pointer;
+    border-radius: 6px;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+}
+
+#app button.delete_set {margin-top: 2px; background-color:transparent; border: none}
+
+.statistics_set:hover {
+  border: 1px solid #aaa
+}
+
+.statistics_set_selected {
+    background-color: #DFDFDF;
+}
+
+.own_set {
+    background-color: #ffffcc;
+}
+
+.sidebarload {
+    height: 100px;
+    width: 75%;
+    border: solid 1px #BBBBBB;
+    background-image: url('/static-media/images/chooser-loading.gif');
+    background-color: #ecf6f5;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin: 40px auto;
+    text-align: center;
+}

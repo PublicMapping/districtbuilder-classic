@@ -30,7 +30,7 @@ Author:
 from decimal import Decimal
 from django.contrib.gis.gdal import *
 from django.contrib.gis.geos import *
-from django.contrib.gis.db.models import Union 
+from django.contrib.gis.db.models import Sum, Union
 from django.contrib.auth.models import User
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
@@ -38,7 +38,7 @@ from django.conf import settings
 from django.utils import simplejson as json
 from optparse import make_option
 from os.path import exists
-from lxml.etree import parse
+from lxml.etree import parse, XSLT
 from xml.dom import minidom
 from rpy2.robjects import r
 from redistricting.models import *
@@ -54,6 +54,9 @@ class Command(BaseCommand):
     option_list = BaseCommand.option_list + (
         make_option('-c', '--config', dest="config",
             help="Use configuration file CONFIG", metavar="CONFIG"),
+        make_option('-d', '--database', dest="database",
+            help="Generate the base data objects.", default=False,
+            action='store_true'),
         make_option('-g', '--geolevel', dest="geolevels",
             action="append", help="Geolevels to import"),
         make_option('-n', '--nesting', dest="nesting",
@@ -67,6 +70,10 @@ class Command(BaseCommand):
             action="store_true", help="Create system templates based on district index files.", default=False),
         make_option('-b', '--bard', dest="bard",
             action='store_true', help="Create a BARD map based on the imported spatial data.", default=False),
+        make_option('-s', '--static', dest="static",
+            action='store_true', help="Collect the static javascript and css files.", default=False),
+        make_option('-B', '--bardtemplates', dest="bard_templates",
+            action='store_true', help="Create the BARD reporting templates.", default=False),
     )
 
 
@@ -109,6 +116,7 @@ contents of the file and try again.
         # were in the DB.
         self.purge_sessions(verbose)
 
+        self.create_superuser(config, verbose)
         self.import_prereq(config, verbose)
         self.import_contiguity_overrides(config, verbose)
         self.import_scoring(config, verbose)
@@ -144,11 +152,39 @@ contents of the file and try again.
 
         if options.get("templates"):
             self.create_template(config, verbose)
-        
-        call_command('collectstatic', interactive=False)
+       
+        if options.get("static"):
+            call_command('collectstatic', interactive=False, verbosity=verbose)
+
+        if options.get("bard_templates"):
+            self.create_report_templates(config, verbose)
 
         if options.get("bard"):
             self.build_bardmap(config, verbose)
+
+
+    def create_superuser(self, config, verbose):
+        """
+        Create the django superuser, based on the config.
+        """
+        from django.contrib.auth.models import User
+        admcfg = config.xpath('//Project/Admin')[0]
+        defaults = {'first_name':'Admin','last_name':'User','is_staff':True,'is_active':True,'is_superuser':True}
+        admin,created = User.objects.get_or_create(
+            username=admcfg.get('user'),
+            email=admcfg.get('email'),
+            defaults=defaults
+        )
+
+        if created:
+            admin.set_password(admcfg.get('password'))
+            admin.save()
+
+            if verbose > 1:
+                print 'Created administrative user.'
+        else:
+            if verbose > 1:
+                print 'Administrative user exists, not modifying.'
 
 
     def purge_sessions(self, verbose):
@@ -735,16 +771,36 @@ ERROR:
                 type='subject',
                 argument=name,
                 value=subarg.get('ref')
-                )
+            )
 
             if verbose > 1:
                 if created:
                     print 'Created subject ScoreArgument "%s"' % name
                 else:
                     print 'subject ScoreArgument "%s" already exists' % name
-                        
+        
         # Import score arguments for this score function
         for scorearg in config.xpath('ScoreArgument'):
+            argfn = config.xpath('//ScoreFunctions/ScoreFunction[@id="%s"]' % scorearg.get('ref'))[0]
+            user_selectable = argfn.get('user_selectable') == 'true'
+            childfn_obj, created = ScoreFunction.objects.get_or_create(
+                calculator=argfn.get('calculator'),
+                name=argfn.get('id'),
+                label=argfn.get('label') or '',
+                description=argfn.get('description') or '',
+                is_planscore=argfn.get('type') == 'plan',
+                is_user_selectable=user_selectable
+            )
+
+            if verbose > 1:
+                if created:
+                    print 'Created ScoreFunction "%s"' % argfn.get('id')
+                else:
+                    print 'ScoreFunction "%s" already exists' % argfn.get('id')
+
+            # Recursion!
+            self.import_arguments(childfn_obj, argfn, verbose)
+
             name = scorearg.get('name')
             scorearg_obj, created = ScoreArgument.objects.get_or_create(
                 function=score_function,
@@ -780,6 +836,19 @@ ERROR:
         if (len(config.xpath('//Scoring')) == 0):
             if verbose > 1:
                 print 'Scoring not configured'
+        
+        admin = User.objects.filter(is_superuser=True)
+        if admin.count() == 0:
+            if verbose > 1:
+                print """
+ERROR:
+
+    There was no superuser installed; ScoreDisplays need to be assigned
+    ownership to a superuser.
+""" 
+            return
+        else:
+            admin = admin[0]
 
         # Import score displays.
         for sd in config.xpath('//ScoreDisplays/ScoreDisplay'):
@@ -791,8 +860,9 @@ ERROR:
                 title=title, 
                 legislative_body=lb,
                 is_page=sd.get('type') == 'leaderboard',
-                cssclass=sd.get('cssclass') or ''
-                )
+                cssclass=sd.get('cssclass') or '',
+                owner=admin
+            )
 
             if verbose > 1:
                 if created:
@@ -801,44 +871,61 @@ ERROR:
                     print 'ScoreDisplay "%s" already exists' % title
 
             # Import score panels for this score display.
-            position = 0
             for spref in sd.xpath('ScorePanel'):
                 sp = config.xpath('//ScorePanels/ScorePanel[@id="%s"]' % spref.get('ref'))[0]
                 title = sp.get('title')
-                position += 1
+                position = int(sp.get('position'))
 
                 is_ascending = sp.get('is_ascending')
                 if is_ascending is None:
                     is_ascending = True
                 
                 ascending = sp.get('is_ascending')
-                sp_obj, created = ScorePanel.objects.get_or_create(
+                sp_obj = ScorePanel.objects.filter(
                     type=sp.get('type'),
-                    display=sd_obj,
                     position=position,
                     title=title,
                     template=sp.get('template'),
                     cssclass=sp.get('cssclass') or '',
                     is_ascending=(ascending is None or ascending=='true'), 
-                    )
+                )
 
-                if verbose > 1:
-                    if created:
+                if len(sp_obj) == 0:
+                    sp_obj = ScorePanel(
+                        type=sp.get('type'),
+                        position=position,
+                        title=title,
+                        template=sp.get('template'),
+                        cssclass=sp.get('cssclass') or '',
+                        is_ascending=(ascending is None or ascending=='true'), 
+                    )
+                    sp_obj.save()
+                    sd_obj.scorepanel_set.add(sp_obj)
+
+                    if verbose > 1:
                         print 'Created ScorePanel "%s"' % title
-                    else:
+                else:
+                    sp_obj = sp_obj[0]
+                    attached = sd_obj.scorepanel_set.filter(id=sp_obj.id).count() == 1
+                    if not attached:
+                        sd_obj.scorepanel_set.add(sp_obj)
+
+                    if verbose > 1:
                         print 'ScorePanel "%s" already exists' % title
 
                 # Import score functions for this score panel
                 for sfref in sp.xpath('Score'):
                     sf = config.xpath('//ScoreFunctions/ScoreFunction[@id="%s"]' % sfref.get('ref'))[0]
                     name = sf.get('id') or ''
+                    user_selectable = sf.get('user_selectable') == 'true'
                     sf_obj, created = ScoreFunction.objects.get_or_create(
                         calculator=sf.get('calculator'),
                         name=name,
                         label=sf.get('label') or '',
                         description=sf.get('description') or '',
-                        is_planscore=sf.get('type') == 'plan'
-                        )
+                        is_planscore=sf.get('type') == 'plan',
+                        is_user_selectable=user_selectable
+                    )
 
                     if verbose > 1:
                         if created:
@@ -868,13 +955,15 @@ ERROR:
                 sfref = crit.xpath('Score')[0]
                 sf = config.xpath('//ScoreFunctions/ScoreFunction[@id="%s"]' % sfref.get('ref'))[0]
                 name = sf.get('id') or ''
+                user_selectable = sf.get('user_selectable') == 'true'
                 sf_obj, created = ScoreFunction.objects.get_or_create(
                     calculator=sf.get('calculator'),
                     name=name,
                     label=sf.get('label') or '',
                     description=sf.get('description') or '',
-                    is_planscore=sf.get('type') == 'plan'
-                    )
+                    is_planscore=sf.get('type') == 'plan',
+                    is_user_selectable=user_selectable
+                )
 
                 if verbose > 1:
                     if created:
@@ -934,7 +1023,7 @@ ERROR:
                 obj.max_multi_district_members = mmconfig.get('max_multi_district_members')
                 obj.min_plan_members = mmconfig.get('min_plan_members')
                 obj.max_plan_members = mmconfig.get('max_plan_members')
-                if verbose:
+                if verbose > 1:
                     print 'Multi-member districts enabled for: %s' % body.get('name')
             else:
                 obj.multi_members_allowed = False
@@ -945,7 +1034,7 @@ ERROR:
                 obj.max_multi_district_members = 0
                 obj.min_plan_members = 0
                 obj.max_plan_members = 0
-                if verbose:
+                if verbose > 1:
                     print 'Multi-member districts not configured for: %s' % body.get('name')
             obj.save()
 
@@ -954,16 +1043,11 @@ ERROR:
         for subj in subjs:
             if 'aliasfor' in subj.attrib:
                 continue
-            denominator_name = subj.get('percentage_denominator')
-            denominator = None
-            if (denominator_name):
-                denominator = Subject.objects.get(name=denominator_name)
             obj, created = Subject.objects.get_or_create(
                 name=subj.get('id'), 
                 display=subj.get('name'), 
                 short_display=subj.get('short_name'), 
                 is_displayed=(subj.get('displayed')=='true'), 
-                percentage_denominator=denominator,
                 sort_key=subj.get('sortkey'))
                 
 
@@ -972,6 +1056,20 @@ ERROR:
                     print 'Created Subject "%s"' % subj.get('name')
                 else:
                     print 'Subject "%s" already exists' % subj.get('name')
+
+        for subj in subjs:
+            numerator = Subject.objects.get(name=subj.get('id'))
+            denominator = None
+            denominator_name = subj.get('percentage_denominator')
+            if (denominator_name):
+                denominator = Subject.objects.get(name=denominator_name)
+
+            numerator.percentage_denominator = denominator
+            numerator.save()
+
+            if verbose > 1:
+                print 'Set denominator on "%s" to "%s"' % (numerator.name, denominator_name)
+
 
         # Import targets third
         targs = config.xpath('//Targets/Target')
@@ -1332,6 +1430,45 @@ ERROR:
                     print 'Created Plan named "Blank" for LegislativeBody "%s"' % legislative_body.name
                 else:
                     print 'Plan named "Blank" for LegislativeBody "%s" already exists' % legislative_body.name
+
+
+    def create_report_templates(self, config, verbose):
+        """
+        This object takes the full configuration element and the path
+        to an XSLT and does the transforms necessary to create templates
+        for use in BARD reporting
+        """
+        xslt_path = settings.BARD_TRANSFORM
+        template_dir = '%s/django/publicmapping/redistricting/templates' % config.xpath('//Project')[0].get('root')
+
+        # Open up the XSLT file and create a transform
+        f = file(xslt_path)
+        xml = parse(f)
+        transform = XSLT(xml)
+
+        # For each legislative body, create the reporting step HTML 
+        # template. If there is no config for a body, the XSLT transform 
+        # should create a "Sorry, no reports" template
+        bodies = config.xpath('//DistrictBuilder/LegislativeBodies/LegislativeBody')
+        for body in bodies:
+            # Name  the template after the body's name
+            body_id = body.get('id')
+            body_name = body.get('name')
+
+            if verbose > 0:
+                print "Creating BARD reporting template for %s" % body_name
+
+            body_name = body_name.lower()
+            template_path = '%s/bard_%s.html' % (template_dir, body_name)
+
+            # Pass the body's identifier in as a parameter
+            xslt_param = XSLT.strparam(body_id)
+            result = transform(config, legislativebody = xslt_param) 
+
+            f = open(template_path, 'w')
+            f.write(str(result))
+            f.close()
+
 
     def build_bardmap(self, config, verbose):
         """

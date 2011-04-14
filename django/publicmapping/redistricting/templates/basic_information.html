@@ -48,7 +48,9 @@
         </thead>
         <tbody>
             {% for row in districtscores %}
-            <tr class="{% cycle 'odd' 'even' %} inforow_{{ row.district.district_id }}">
+            <tr class="{% cycle 'odd' 'even' %} inforow_{{ row.district.district_id }}"
+                  onclick="toggleDistrict({{ row.district.district_id }})"
+                  ondblclick="zoomToDistrict({{ row.district.district_id }})">
                 <td class="district_name">{{ row.district.name|district_number }}</td>
                 {% for score in row.scores %}
                 <td class="cellcompact score{{ forloop.counter }}">{{ score.score|safe }}</td>
@@ -60,4 +62,26 @@
     {% else %}
     <div class="error"> Sorry, there is no demographic data for this plan</div>
     {% endif %}                    
+</div>
+<div class="menu_footer">
+    <button id="stats_legend" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false"><span class="ui-button-text">Stats Legend</span></button>
+    <div id="stats_legend_panel" class="tooltip">
+        <div class="legend_item">
+            <h5>Population</h5>
+            <ul>
+                <li><span class="swatch popstatus farover"></span> Far over target</li>
+                <li><span class="swatch popstatus over"></span> Over target</li>
+                <li><span id="swatch-target" class="swatch popstatus target"></span> Meets target</li>
+                <li><span id="swatch-under" class="swatch popstatus under"></span> Under target</li>
+                <li><span id="swatch-farunder" class="swatch popstatus farunder"></span>Far Under target</li>
+            </ul>
+        </div>
+        <div class="legend_item last">
+            <h5>Contiguity</h5>
+            <ul>
+                <li><img class="yes-contiguous" src="/static-media/images/icon-check.png"> Contiguous</li>
+                <li><img class="no-contiguous" src="/static-media/images/icon-warning.png"> Non-contiguous</li>                 
+            </ul>
+        </div>                    
+    </div>
 </div>

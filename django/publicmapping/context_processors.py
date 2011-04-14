@@ -20,7 +20,7 @@ License:
     limitations under the License.
 
 Author:
-    Geoffrey Hing 
+    Geoffrey Hing, David Zwarg
 """
 
 from django.conf import settings

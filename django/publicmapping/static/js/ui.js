@@ -126,6 +126,22 @@ function getLocalTimeFromIsoformat(time) {
     return { hours: hours, minutes: minutes, day: day };
 }
 
+
+/*
+ * For the info tab tables - we use absolute positioning to get
+ * the scrolling right in the tbody.  But sometimes the header
+ * heights change and changing the css is tough
+ */
+function fixTableHeight(table) {
+    // if (table.is(':visible')) {
+    if (true == false) {
+        var header = table.find('thead');
+        var bottom = header.position().top + header.outerHeight(true);
+        var table = table.find('tbody');
+        table.css('top', bottom);
+    }
+}
+
 /**
  * Configure the tooltips, buttons, and leaderboard
  */
@@ -311,19 +327,6 @@ $(function() {
             }  
         });
     
-    // the menu type selector dropdown
-    $("#map_menu_header select").change(function(){
-        var selectedVal = this.value;
-        $('.map_menu_content').each(function() {       
-          if($(this).hasClass(selectedVal)) {
-              $(this).slideDown(200);
-          }
-          else {
-              $(this).slideUp(200);
-          }
-        });  
-    }).val("geography").attr("selected", "selected");
-        
     // map editing buttons
     $('#toolset_draw .toolset_group button')
       .button({

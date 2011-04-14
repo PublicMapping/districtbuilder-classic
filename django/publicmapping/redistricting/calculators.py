@@ -33,6 +33,10 @@ from django.contrib.gis.geos import Point
 from django.contrib.humanize.templatetags.humanize import intcomma
 from django.utils import simplejson as json
 from decimal import Decimal
+import locale
+
+# This helps in formatting - by default, apache+wsgi uses the "C" locale
+locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 
 class CalculatorBase:
     """
@@ -406,10 +410,20 @@ class Sum(CalculatorBase):
             while ('value%d'%argnum) in self.arg_dict:
                 number = self.get_value('value%d'%argnum, district)
                 if not number is None:
-                    self.result += float(number)
+                    self.result += number
 
                 argnum += 1
 
+    def html(self):
+        """
+        Generate an HTML representation of the equivalence score. This
+        is represented as an integer formatted with commas or "n/a"
+        """
+        if (type(self.result) == Decimal):
+            result = locale.format("%d", self.result, grouping=True)
+            return '<span>%s</span>' % result
+        else:
+            return '<span>N/A</span>'
 
 class Percent(CalculatorBase):
     """
@@ -462,17 +476,26 @@ class Percent(CalculatorBase):
                 if tmpnum is None or tmpden is None:
                     continue
 
-                den += float(tmpden)
-                num += float(tmpnum)
+                den += tmpden
+                num += tmpnum
 
         else:
             return
 
-        if num is None or den is None:
+        if num is None or den is None or den == 0:
             return
+    
+        self.result = num / den
 
-        self.result = float(num) / float(den)
-
+    def html(self):
+        """
+        Generate an HTML representation of the equivalence score. This
+        is represented as an integer formatted with commas or "n/a"
+        """
+        if (type(self.result) == Decimal):
+            return '<span>{0:.2%}</span>'.format(self.result)
+        else:
+            return '<span>N/A</span>'
 
 class Threshold(CalculatorBase):
     """
@@ -694,7 +717,15 @@ class Contiguity(CalculatorBase):
                     if contiguous:
                         self.result += 1
 
-
+    def html(self):
+        """
+        Generate an HTML representation of the equivalence score. This
+        is represented as an integer formatted with commas or "n/a"
+        """
+        if self.result == True:
+            return '<img class="yes-contiguous" src="/static-media/images/icon-check.png">'
+        else:
+            return '<img class="no-contiguous" src="/static-media/images/icon-warning.png">'
 class AllContiguous(CalculatorBase):
     """
     Used to verify that all districts in a plan are contiguous.
@@ -761,14 +792,16 @@ class Interval(CalculatorBase):
             # Check which interval our subject's value is in
             for district in districts:
                 value = self.get_value('subject', district)
+                if value == None:
+                    return -1
                 if apply_num_members and district.num_members > 1:
                     value = value / district.num_members
                 
                 for idx, bound in enumerate(bounds):
                     if value < bound:
-                        self.result = idx
+                        self.result = (idx, value, self.arg_dict['subject'][1])
                         return
-                self.result = len(bounds)
+                self.result = (len(bounds), value, self.arg_dict['subject'][1])
 
         elif 'plan' in kwargs:
             plan = kwargs['plan']
@@ -789,13 +822,32 @@ class Interval(CalculatorBase):
             self.result = 0
             for district in districts:
                 value = self.get_value('subject', district)
+
                 if apply_num_members and district.num_members > 1:
                     value = value / district.num_members
                 
-                if value >= min_bound and value < max_bound:
+                if value != None and value >= min_bound and value < max_bound:
                     self.result += 1 
         else:
             return
+
+    def html(self):
+        """
+        Returns an HTML representation of the Interval, using a css class 
+        called interval_X, with X being the interval index.
+        An empty value will have a class of no_interval.
+        The span will also have a class named after the subject to make
+        multiple intervals available in a panel.
+        """
+        # Get the name of the subject
+        try:
+            interval = self.result[0]
+            interval_class = "interval_%d" % interval if interval >= 0 else 'no_interval'
+            span_value = locale.format("%d", self.result[1], grouping=True)
+            return '<span class="%s %s">%s</span>' % (interval_class, self.result[2], span_value)
+        except:
+            return '<span>n/a<span>'
+        
 
 class Equivalence(CalculatorBase):
     """
@@ -820,8 +872,7 @@ class Equivalence(CalculatorBase):
         Initialize the result and argument dictionary.
         """
         self.result = None
-        self.arg_dict = {}
-
+        self.arg_dict = {} 
     def html(self):
         """
         Generate an HTML representation of the equivalence score. This

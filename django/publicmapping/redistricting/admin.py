@@ -173,13 +173,13 @@ class ScorePanelAdmin(admin.ModelAdmin):
     Administrative settings for ScorePanels.
     """
 
-    fields = ('title', 'display', 'type', 'template', 'position', 'is_ascending', 'cssclass', 'score_functions',)
+    fields = ('title', 'displays', 'type', 'template', 'position', 'is_ascending', 'cssclass', 'score_functions',)
 
     list_display = ('title', 'type', 'template', 'cssclass',)
 
-    list_filter = ('type',)
+    list_filter = ('type','cssclass',)
 
-    ordering = ['display','position']
+    ordering = ['title']
 
 class ScoreArgumentInline(admin.TabularInline):
     model = ScoreArgument
@@ -210,19 +210,12 @@ class ScoreArgumentAdmin(admin.ModelAdmin):
 
     ordering = ['function', 'argument']
 
-class ScorePanelInline(admin.TabularInline):
-    model = ScorePanel
 
 class ScoreDisplayAdmin(admin.ModelAdmin):
     """
     Administrative settings for ScoreDisplay
     """
-
     list_filter = ('is_page',)
-
-    inlines = [
-        ScorePanelInline
-    ]
 
 class ValidationCriteriaAdmin(admin.ModelAdmin):
     """
@@ -251,3 +244,4 @@ admin.site.register(ScorePanel, ScorePanelAdmin)
 admin.site.register(ValidationCriteria, ValidationCriteriaAdmin)
 admin.site.register(ComputedDistrictScore)
 admin.site.register(ComputedPlanScore)
+admin.site.register(ContiguityOverride)

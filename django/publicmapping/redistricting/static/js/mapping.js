@@ -71,13 +71,6 @@ function getPlanVersion() {
     return ver;
 }
 
-
-/*
- * The URLs for updating the calculated geography and demographics.
- */
-var geourl = '/districtmapping/plan/' + PLAN_ID + '/geography/';
-var demourl = '/districtmapping/plan/' + PLAN_ID + '/demographics/';
-
 /**
  * Add proper class names so css may style the PanZoom controls.
  */
@@ -220,7 +213,7 @@ function toggleDistrict(district_id) {
         clickTimer = null;
     }
     clickTimer = setTimeout(function() {
-        var row = $('.inforow_' + district_id + ' .popstatus');
+        var row = $('.inforow_' + district_id + ' .poptot');
         row.toggleClass('selected');
         $(this).trigger('update_highlighting', [ true ]);
         clickTimer = null;
@@ -784,85 +777,55 @@ function mapinit(srs,maxExtent) {
                 return resp;
             }
         });
-    };
+};
 
-    // Extend the request function on the GetFeature control to allow for
-    // dynamic filtering and setting a header needed for CSRF validation
-    var filterExtension = {
-        request: function (bounds, options) {
-            // Allow for dynamic filtering, and extend for CSRF validation headers
-            var filter = getVersionAndSubjectFilters(maxExtent, bounds.toGeometry().toString());
-            extendReadForCSRF(this.protocol);
+// Extend the request function on the GetFeature control to allow for
+// dynamic filtering and setting a header needed for CSRF validation
+var filterExtension = {
+    request: function (bounds, options) {
+        // Allow for dynamic filtering, and extend for CSRF validation headers
+        var filter = getVersionAndSubjectFilters(maxExtent, bounds.toGeometry().toString());
+        extendReadForCSRF(this.protocol);
 
-            // The rest of this function is exactly the same as the original
-            options = options || {};
-            OpenLayers.Element.addClass(this.map.viewPortDiv, "olCursorWait");
-            
-            this.protocol.read({
-                filter: filter,
-                callback: function(result) {
-                    if(result.success()) {
-                        if(result.features.length) {
-                            if(options.single == true) {
-                                this.selectBestFeature(result.features, bounds.getCenterLonLat(), options);
-                            } else {
-                                this.select(result.features);
-                            }
-                        } else if(options.hover) {
-                            this.hoverSelect();
+        // The rest of this function is exactly the same as the original
+        options = options || {};
+        OpenLayers.Element.addClass(this.map.viewPortDiv, "olCursorWait");
+        
+        this.protocol.read({
+            filter: filter,
+            callback: function(result) {
+                if(result.success()) {
+                    if(result.features.length) {
+                        if(options.single == true) {
+                            this.selectBestFeature(result.features, bounds.getCenterLonLat(), options);
                         } else {
-                            this.events.triggerEvent("clickout");
-                            if(this.clickout) {
-                                this.unselectAll();
-                            }
+                            this.select(result.features);
+                        }
+                    } else if(options.hover) {
+                        this.hoverSelect();
+                    } else {
+                        this.events.triggerEvent("clickout");
+                        if(this.clickout) {
+                            this.unselectAll();
                         }
                     }
-                    OpenLayers.Element.removeClass(this.map.viewPortDiv, "olCursorWait");
-                },
-                scope: this                        
-            });
-        }
-    };
+                }
+                OpenLayers.Element.removeClass(this.map.viewPortDiv, "olCursorWait");
+            },
+            scope: this                        
+        });
+    }
+};
 
-    // Apply the filter extension to both the get and box controls
-    OpenLayers.Util.extend(getControl, filterExtension);
-    OpenLayers.Util.extend(boxControl, filterExtension);
+// Apply the filter extension to both the get and box controls
+OpenLayers.Util.extend(getControl, filterExtension);
+OpenLayers.Util.extend(boxControl, filterExtension);
 
     // Reload the information tabs and reload the filters
     var updateInfoDisplay = function() {
-        $('.geography').load(
-            geourl, 
-            {  
-                demo: getDistrictBy().by,
-                version: getPlanVersion()
-            }, 
-            function(rsp, status, xhr) {
-                if (xhr.status > 400) {
-                    window.location.href = '/';
-                }
-                else {
-                    loadTooltips();
-                    sortByVisibility(true);
-                }
-            }
-        );
-
-        $('.demographics').load(
-            demourl, 
-            {
-                version: getPlanVersion()
-            }, 
-            function(rsp, status, xhr) {
-                if (xhr.status > 400) {
-                    window.location.href = '/';
-                }
-                else {
-                    loadTooltips();
-                    sortByVisibility(true);
-                }
-            }
-        );            
-
+        $('#open_statistics_editor').trigger('dirty_cache');
+        $('#open_statistics_editor').trigger('refresh_tab');
+        sortByVisibility(true);
         districtLayer.filter = getVersionAndSubjectFilters(olmap.getExtent());
         districtLayer.strategies[0].update({force:true});
     };
@@ -2424,11 +2387,13 @@ function mapinit(srs,maxExtent) {
      */
     var updateDistrictHighlighting = function() {
         var district_ids = [];
-        $('.popstatus.selected').each(function(i, el) {
+        $('.poptot.selected').each(function(i, el) {
             var className = el.parentNode.parentNode.className;
             var prefix = 'inforow_';
             var index = className.indexOf(prefix);
             var num = className.substring(index + prefix.length);
+            var spaceIndex = num.indexOf(' ');
+            var num = num.substring(0, spaceIndex);
             district_ids.push(parseInt(num, 10));
         });
         highlightLayer.filter = getVersionAndSubjectFilters(olmap.getExtent(), null, district_ids);
@@ -2591,8 +2556,7 @@ function mapinit(srs,maxExtent) {
     var sortByVisibility = function(force) {
         var visibleDistricts = '';
         var visible, notvisible = '';
-        $('#geography_table tr').data('isVisibleOnMap', false);
-        $('#demographic_table tr').data('isVisibleOnMap', false);
+        $('#demographics_table tr').data('isVisibleOnMap', false);
 
         for (feature in districtLayer.features) {
             var feature = districtLayer.features[feature];
@@ -2603,15 +2567,15 @@ function mapinit(srs,maxExtent) {
             }
         }
         if (visibleDistricts != olmap.prevVisibleDistricts || force) {
-            var demosorter = viewablesorter({ target: '#demographic_table tbody' }).init();
-            var geosorter = viewablesorter({ target: '#geography_table tbody' }).init();
+            var demosorter = viewablesorter({ target: '#demographics_table tbody' }).init();
             demosorter.sortTable();
-            geosorter.sortTable();
             olmap.prevVisibleDistricts = visibleDistricts;
         }
 
         updateDistrictStyles();
     };
+
+    $('.olMap').bind('resort_by_visibility', sortByVisibility);
    
     // triggering this event here will configure the map to correspond
     // with the initial dropdown values (jquery will set them to different

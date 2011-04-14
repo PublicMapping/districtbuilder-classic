@@ -33,18 +33,18 @@ from django.contrib.gis.db import models
 from django.contrib.gis.gdal import DataSource
 from django.contrib.gis.geos import MultiPolygon,GEOSGeometry,GEOSException,GeometryCollection,Point
 from django.contrib.auth.models import User
-from django.db.models import Sum as SumAgg, Max, Q, Count
-from django.db.models.signals import pre_save, post_save
+from django.db.models import Sum, Max, Q, Count
+from django.db.models.signals import pre_save, post_save, m2m_changed
 from django.db import connection, transaction
 from django.forms import ModelForm
 from django.conf import settings
 from django.utils import simplejson as json
 from django.template.loader import render_to_string
-from redistricting.calculators import *
+from redistricting.calculators import Schwartzberg, Contiguity
 from datetime import datetime
 from copy import copy
 from decimal import *
-import sys, cPickle
+import sys, cPickle, traceback, types
 
 class Subject(models.Model):
     """
@@ -653,7 +653,7 @@ class Plan(models.Model):
             targets = Target.objects.filter(id__in=levels, subject__is_displayed = True)
             return targets
         except Exception as ex:
-            sys.stderr.write('Unable to get targets for plan %s: %s' % (self.name, ex))
+            print('Unable to get targets for plan %s: %s' % (self.name, ex))
             raise ex
 
     def get_nth_previous_version(self, steps):
@@ -1297,7 +1297,7 @@ AND st_intersects(
         try:
             plan.save()
         except Exception as ex:
-            sys.stderr.write( "Couldn't save plan: %s\n" % ex )
+            print( "Couldn't save plan: %s\n" % ex )
             return None
 
         return plan
@@ -1640,7 +1640,7 @@ class District(models.Model):
         # For all subjects
         for subject in all_subjects:
             # Aggregate all Geounits Characteristic values
-            aggregate = Characteristic.objects.filter(geounit__in=geounits, subject__exact=subject).aggregate(SumAgg('number'))['number__sum']
+            aggregate = Characteristic.objects.filter(geounit__in=geounits, subject__exact=subject).aggregate(Sum('number'))['number__sum']
             # If there are aggregate values for the subject and geounits.
             if not aggregate is None:
                 # Get the pre-computed values
@@ -2041,6 +2041,18 @@ class ScoreFunction(models.Model):
     # Whether or not this score function is for a plan
     is_planscore = models.BooleanField(default=False)
 
+    # Whether a user can select this function for use in a 
+    # statistics set
+    is_user_selectable = models.BooleanField(default=False)
+    
+    class Meta:
+        """
+        Additional information about the Subject model.
+        """
+
+        # The default method of sorting Subjects should be by 'sort_key'
+        ordering = ['name']
+
     def get_calculator(self):
         """
         Retrieve a calculator instance by name.
@@ -2172,12 +2184,90 @@ class ScoreDisplay(models.Model):
     # The style to be assigned to this score display
     cssclass = models.CharField(max_length=50, blank=True)
 
+    # The owner of this ScoreDisplay
+    owner = models.ForeignKey(User)
+
+    class Meta:
+        """
+        Define a unique constraint on 2 fields of this model.
+        """
+        unique_together = ('title','owner')
+
     def __unicode__(self):
         """
         Get a unicode representation of this object. This is the Display's
         title.
         """
         return self.title
+
+    def copy_from(self, display=None, functions=[], owner=None, title=None):
+        """ 
+        Given a scoredisplay and a list of functions, this method
+        will copy the display and assign the copy to the new owner
+        
+        Parameters:
+            display -- a ScoreDisplay to copy - the current 
+               Demographics display 
+            functions -- a list of ScoreFunctions or the primary
+                keys of ScoreFunctions to replace in the display's
+                first "district" ScorePanel
+            owner -- the owner of the new ScoreDisplay - only set if we're not copying self
+            title -- the title of the new scorefunction - only set if we're not copying self
+        
+        Returns:
+            The new ScoreDisplay
+        """
+        
+        if display == None:
+            return
+
+        if self != display:
+            self = copy(display)
+            self.id = None
+
+            self.owner = owner if owner != None else display.owner
+
+            # We can't have duplicate titles per owner so append "copy" if we must
+            if self.owner == display.owner:
+                self.title = title if title != None else "%s copy" % display.title
+            else:
+                self.title = title if title != None else display.title
+
+            self.save()
+            self.scorepanel_set = display.scorepanel_set.all()
+
+        else:
+            self = display
+
+
+        try:
+            public_demo = self.scorepanel_set.get(type='district')
+            if self != display:
+                self.scorepanel_set.remove(public_demo)
+                demo_panel = copy(public_demo)
+                demo_panel.id = None
+                demo_panel.save()
+                self.scorepanel_set.add(demo_panel)
+            else:
+                demo_panel = public_demo
+
+            demo_panel.score_functions.clear()
+            if len(functions) == 0:
+                return self
+            for function in functions:
+                if isinstance(function, types.IntType):
+                    function = ScoreFunction.objects.get(pk=function) 
+                if isinstance(function, types.StringTypes):
+                    function = ScoreFunction.objects.get(pk=int(function))
+                if type(function) == ScoreFunction:
+                    demo_panel.score_functions.add(function)
+            demo_panel.save()
+            self.scorepanel_set.add(demo_panel)
+            self.save()
+        except:
+            sys.stderr.write('Failed to copy ScoreDisplay %s to %s: %s\n' % (display.title, self.title, traceback.format_exc()))
+
+        return self
 
     def render(self, dorp, context=None):
         """
@@ -2232,7 +2322,7 @@ class ScorePanel(models.Model):
     type = models.CharField(max_length=20)
 
     # The score display this panel belongs to
-    display = models.ForeignKey(ScoreDisplay)
+    displays = models.ManyToManyField(ScoreDisplay)
 
     # Where this panel belongs within a score display
     position = models.PositiveIntegerField(default=0)
@@ -2284,12 +2374,15 @@ class ScorePanel(models.Model):
             else:
                 return ''
 
-        # If this is a district panel, it only renders districts
+        # Given a plan, it will render using the districts within the plan
         if self.type == 'district' and \
             not isinstance(dorp,District):
             if is_list:
                 if any(not isinstance(item,District) for item in dorp):
                     return ''
+            elif isinstance(dorp,Plan):
+                dorp = dorp.get_districts_at_version(dorp.version, include_geom=True)
+                is_list = True
             else:
                 return ''
 
@@ -2326,6 +2419,7 @@ class ScorePanel(models.Model):
                 'cssclass':self.cssclass,
                 'position':self.position,
                 'description':description,
+                'planname': plans[0].name,
                 'context':context
             })
 
@@ -2337,10 +2431,13 @@ class ScorePanel(models.Model):
                 districts = [dorp]
 
             districtscores = []
+            functions = []
             for district in districts:
                 districtscore = { 'district':district, 'scores':[] }
 
                 for function in self.score_functions.filter(is_planscore=False):
+                    if not function.label in functions:
+                        functions.append(function.label)
                     districtscore['scores'].append({
                         'district':district,
                         'name':function.name,
@@ -2349,15 +2446,14 @@ class ScorePanel(models.Model):
                         'score':ComputedDistrictScore.compute(function,district,format='html')
                     })
 
-
                 districtscores.append(districtscore)
 
             return render_to_string(self.template, {
                 'districtscores':districtscores,
+                'functions':functions,
                 'title': self.title,
                 'cssclass': self.cssclass
             })
-
 
 class ValidationCriteria(models.Model):
     """
@@ -2439,16 +2535,20 @@ class ComputedDistrictScore(models.Model):
             defaults = {'value':''}
             cache,created = ComputedDistrictScore.objects.get_or_create(function=function, district=district, defaults=defaults)
 
-        except Exception,e:
-            print e
+        except Exception as ex:
+            print(traceback.format_exc())
             return None
 
-        if created:
+        if created == True:
             score = function.score(district, format='raw')
             cache.value = cPickle.dumps(score)
             cache.save()
         else:
-            score = cPickle.loads(str(cache.value))
+            try:
+                score = cPickle.loads(str(cache.value))
+            except:
+                print('Failed to get cached value: %s\n' % traceback.format_exc())
+                score = function.score(district, format='raw')
 
         if format != 'raw':
             calc = function.get_calculator()
@@ -2524,7 +2624,11 @@ class ComputedPlanScore(models.Model):
             cache.value = cPickle.dumps(score)
             cache.save()
         else:
-            score = cPickle.loads(str(cache.value))
+            try:
+                score = cPickle.loads(str(cache.value))
+            except:
+                print('Failed to get cached value: %s\n' % traceback.format_exc())
+                score = function.score(plan, format='raw')
 
         if format != 'raw':
             calc = function.get_calculator()

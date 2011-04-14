@@ -123,6 +123,7 @@
                                                 <xs:attribute name="calculator" type="xs:string" />
                                                 <xs:attribute name="label" type="xs:string" use="optional" />
                                                 <xs:attribute name="description" type="xs:string" use="optional" />
+                                                <xs:attribute name="user_selectable" type="xs:boolean" use="optional" />
                                             </xs:complexType>
                                         </xs:element>
                                     </xs:sequence>
@@ -143,6 +144,7 @@
                                                 <xs:attribute name="cssclass" type="xs:string" use="optional" />
                                                 <xs:attribute name="template" type="xs:string" />
                                                 <xs:attribute name="is_ascending" type="xs:boolean" use="optional" />
+                                                <xs:attribute name="position" type="xs:positiveInteger" />
                                             </xs:complexType>
                                         </xs:element>
                                     </xs:sequence>
@@ -366,6 +368,7 @@
                         <xs:sequence>
                             <xs:element name="Database">
                                 <xs:complexType>
+                                    <xs:attribute name="host" type="xs:string" use="optional" />
                                     <xs:attribute name="name" type="xs:string" use="required" />
                                     <xs:attribute name="user" type="xs:string" use="required" />
                                     <xs:attribute name="password" type="xs:string" use="required" />
@@ -375,6 +378,7 @@
                                 <xs:complexType>
                                     <xs:attribute name="user" type="xs:string" use="required" />
                                     <xs:attribute name="email" type="xs:string" use="required" />
+                                    <xs:attribute name="password" type="xs:string" use="required" />
                                 </xs:complexType>
                             </xs:element>
                             <xs:element name="Redistricting">
@@ -612,6 +616,7 @@
         </xs:annotation>
         <xs:restriction base="xs:string">
             <xs:enumeration value="plan" />
+            <xs:enumeration value="plan_summary" />
             <xs:enumeration value="district" />
         </xs:restriction>
     </xs:simpleType>
