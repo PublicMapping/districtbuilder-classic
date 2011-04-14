@@ -1224,11 +1224,13 @@ div#map_settings_content .ui-slider .ui-slider-handle {
 }
 
 div#map_menu_header select {
-  font-size: 14px;
-  font-weight:bold;
-  float:left;
-  height: 25px;
-  width: 150px;
+    float: left;
+    font-size: 12px;
+    font-weight: bold;
+    height: 21px;
+    margin: 2px 7px;
+    width: 138px;
+    border: 1px solid #ccc;
 }
     
 div#map_menu_header label {
@@ -1309,6 +1311,14 @@ div.info_table tbody {
     left: 5px; 
     right: 5px; 
 }
+div.info_table thead tr {
+  padding-right: 18px;
+  display:block
+}
+div.info_table.basic thead tr {
+  padding-right: 0;
+}
+
 div.info_table th {
     top: 10px;
     text-align:center;
@@ -1322,7 +1332,7 @@ div.info_table tbody {
     border: 1px solid #aaa;
     overflow:auto;
     position:absolute;
-    top:164px;
+    top:165px;
     bottom:25px;
 }
 div.map_menu_content.basic_information div.plantable.body {
@@ -1339,7 +1349,7 @@ div.info_table table tr.even {
 }
 div.info_table table tr td {
     font-size: 10pt;
-    text-align: right;
+    text-align: center;
     padding: 5px 5px;
 }
 div.info_table .district_name{  
@@ -1352,7 +1362,7 @@ div.info_table td.district_name {
     text-align: center;
 }
 div.info_table .score1{  
-    width: 27%;
+    width: 67px;
 }
 div.info_table .score2{  
     width: 26%;
@@ -1378,9 +1388,6 @@ span.poptot {
   min-width: 64px;
   text-align:center;
 }
-span.poptot.selected{
-    border: 3px solid #007FFF;
-}
 .over, .interval_3.poptot {
   background: #ead3a7;
   border: 1px solid #d9c296;
@@ -1403,9 +1410,6 @@ span.poptot.selected{
 }
 .locked {
   border: 2px solid #FF0000 !important;
-}
-.highlighted {
-  border: 2px solid #007FFF !important;
 }
 
 .notOnMap {
@@ -1449,6 +1453,8 @@ div#stats_legend_panel span.swatch{
   float:left; 
   display: block;
   margin: 4px 5px 0 0;
+  width: 5px;
+  height: 5px;
 }
 div#stats_legend_panel img  {
   float:left; 
