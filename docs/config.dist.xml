@@ -230,6 +230,11 @@
                 <ScoreArgument name="value1" ref="district_contiguous"/>
             </ScoreFunction>
 
+            <ScoreFunction id="plan_noncontiguous" type="plan"
+                calculator="publicmapping.redistricting.calculators.NonContiguous"
+                label="Noncontiguous">
+            </ScoreFunction>
+
             <!-- interval score function for congressional districts -->
             <ScoreFunction id="congressional_population" type="district"
                 label="Tot Pop" user_selectable="true"
@@ -264,7 +269,7 @@
 
             <ScoreFunction id="congress_plan_equipopulation" type="plan"
                 calculator="publicmapping.redistricting.calculators.Equipopulation"
-                label="Equipopulation"
+                label="Target Pop. 727,366"
                 description="The population of each Congressional district must be 727,366 +/- 0.5%.">
                 <Argument name="min" value="723729"/>
                 <Argument name="max" value="731003"/>
@@ -384,6 +389,7 @@
             <!-- Summary above all sidebar panels -->
             <ScorePanel id="panel_summary" type="plan_summary" position="1"
                 title="Plan Summary" cssclass="plan_summary" template="plan_summary.html">
+                <Score ref="plan_noncontiguous"/>
                 <Score ref="congress_plan_equipopulation"/>
                 <Score ref="plan_majority_minority" />
                 <Score ref="congress_plan_count_districts" />
