@@ -1294,11 +1294,26 @@ AND st_intersects(
         # Create a new plan. This will also create an Unassigned district
         # in the the plan.
         plan = Plan(name=name, legislative_body=body, is_template=template, version=0, owner=owner, is_pending=is_pending)
+        if template and is_pending:
+            plan.create_unassigned = False
+
         try:
             plan.save()
         except Exception as ex:
             print( "Couldn't save plan: %s\n" % ex )
             return None
+
+        # If the unassigned district was not created when the plan was
+        # saved, this plan still needs an unassigned district, it just
+        # has to be empty, and have 0 for all stat values.
+        if not plan.create_unassigned:
+            # The same srid is used for all geounits and geometries
+            srid = Geounit.objects.all()[0].geom.srid
+
+            unassigned = District(name="Unassigned", version = 0, plan = plan, district_id=0)
+            unassigned.geom = MultiPolygon([],srid=srid)
+            unassigned.simplify() # implicit save
+            unassigned.reset_stats()
 
         return plan
 

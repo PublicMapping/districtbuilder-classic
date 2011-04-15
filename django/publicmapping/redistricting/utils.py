@@ -96,11 +96,11 @@ class DistrictIndexFile():
                     if email:
                         context['errors'].append({'message': 'The zip file contains too many files', 'traceback': None})
                         # report error to owner
-                        template = loader.get_template('error.email')
-                        send_mail(error_subject, template.render(context), settings.EMAIL_HOST_USER, [email], fail_silently=False)
+                        email_template = loader.get_template('error.email')
+                        send_mail(error_subject, email_template.render(context), settings.EMAIL_HOST_USER, [email], fail_silently=False)
                         # report error to admin
-                        template = loader.get_template('admin.email')
-                        mail_admins(admin_subject, template.render(context))
+                        email_template = loader.get_template('admin.email')
+                        mail_admins(admin_subject, email_template.render(context))
                     else:
                         sys.stderr.write('District Index .zip file contains too many files.\n')
                     return
@@ -116,11 +116,11 @@ class DistrictIndexFile():
                         context['errors'].append({'message': 'The zip file must contain a comma separated value (.csv) file.', 'traceback': None})
 
                         # report error to owner
-                        template = loader.get_template('error.email')
-                        send_mail(error_subject, template.render(context), settings.EMAIL_HOST_USER, [email], fail_silently=False)
+                        email_template = loader.get_template('error.email')
+                        send_mail(error_subject, email_template.render(context), settings.EMAIL_HOST_USER, [email], fail_silently=False)
                         # report error to admin
-                        template = loader.get_template('admin.email')
-                        mail_admins(admin_subject, template.render(context))
+                        email_template = loader.get_template('admin.email')
+                        mail_admins(admin_subject, email_template.render(context))
                     else:
                         sys.stderr.write('District Index .zip file does not contain a .csv file.\n')
 
@@ -150,11 +150,11 @@ class DistrictIndexFile():
                 if email:
                     context['errors'].append({'message': 'Unexpected error during zip file processing', 'traceback': traceback.format_exc()}) 
                     # report error to owner
-                    template = loader.get_template('error.email')
-                    send_mail(error_subject, template.render(context), settings.EMAIL_HOST_USER, [email], fail_silently=False)
+                    email_template = loader.get_template('error.email')
+                    send_mail(error_subject, email_template.render(context), settings.EMAIL_HOST_USER, [email], fail_silently=False)
                     # report error to admin
-                    template = loader.get_template('admin.email')
-                    mail_admins(admin_subject, template.render(context))
+                    email_template = loader.get_template('admin.email')
+                    mail_admins(admin_subject, email_template.render(context))
                 else:
                     sys.stderr.write('The .zip file could not be imported:\n%s\n' % traceback.format_exc())
 
@@ -223,15 +223,6 @@ class DistrictIndexFile():
         # Get all subjects - those without denominators first to save a calculation
         subjects = Subject.objects.order_by('-percentage_denominator').all()
 
-        # BEGIN workaround for real districts starting at district_id == 2
-        minD = legislative_body.max_districts + 1
-        cntD = len(new_districts.keys())
-        for district_id in new_districts.keys():
-            minD = min(minD, district_id)
-
-        offset = 0 if minD == 1 and cntD == legislative_body.max_districts else 1
-        # END workaround for real districts starting at district_id == 2
-
         # Create the district geometry from the lists of geounits
         for district_id in new_districts.keys():
             # Get a filter using portable_id
@@ -241,22 +232,10 @@ class DistrictIndexFile():
             try:
                 # Build our new geometry from the union of our geounit geometries
                 new_geom = Geounit.objects.filter(guFilter).unionagg()
-                #new_geom = Geounit.objects.filter(guFilter).collect()
-
-                # Union as a cascade - this is faster than the union
-                # spatial aggregate function off the filter
-                #polycomponents = []
-                #for geom in new_geom:
-                #    if geom.geom_type == 'MultiPolygon':
-                #        for poly in geom:
-                #            polycomponents.append(poly)
-                #    elif geom.geom_type == 'Polygon':
-                #        polycomponents.append(geom)
-                #new_geom = MultiPolygon(polycomponents,srid=new_geom.srid).cascaded_union
 
                 # Create a new district and save it
-                new_district = District(name=legislative_body.member % (district_id - offset), 
-                    district_id = district_id - offset + 1, plan=plan, num_members=num_members[district_id],
+                new_district = District(name=legislative_body.member % (district_id), 
+                    district_id = district_id, plan=plan, num_members=num_members[district_id],
                     geom=enforce_multi(new_geom))
                 new_district.simplify() # implicit save
             except Exception as ex:
