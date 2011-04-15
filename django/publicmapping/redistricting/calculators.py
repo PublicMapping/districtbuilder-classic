@@ -148,7 +148,8 @@ class Schwartzberg(CalculatorBase):
 
         elif 'plan' in kwargs:
             plan = kwargs['plan']
-            districts = plan.get_districts_at_version(plan.version, include_geom=True)
+            version = kwargs['version'] if 'version' in kwargs else plan.version
+            districts = plan.get_districts_at_version(version, include_geom=True)
 
         else:
             return
@@ -208,7 +209,8 @@ class Roeck(CalculatorBase):
 
         elif 'plan' in kwargs:
             plan = kwargs['plan']
-            districts = plan.get_districts_at_version(plan.version, include_geom=True)
+            version = kwargs['version'] if 'version' in kwargs else plan.version
+            districts = plan.get_districts_at_version(version, include_geom=True)
 
         else:
             return
@@ -270,7 +272,8 @@ class PolsbyPopper(CalculatorBase):
 
         elif 'plan' in kwargs:
             plan = kwargs['plan']
-            districts = plan.get_districts_at_version(plan.version, include_geom=True)
+            version = kwargs['version'] if 'version' in kwargs else plan.version
+            districts = plan.get_districts_at_version(version, include_geom=True)
 
         else:
             return
@@ -330,7 +333,8 @@ class LengthWidthCompactness(CalculatorBase):
 
         elif 'plan' in kwargs:
             plan = kwargs['plan']
-            districts = plan.get_districts_at_version(plan.version, include_geom=True)
+            version = kwargs['version'] if 'version' in kwargs else plan.version
+            districts = plan.get_districts_at_version(version, include_geom=True)
 
         else:
             return
@@ -392,7 +396,8 @@ class Sum(CalculatorBase):
             districts = [kwargs['district']]
         elif 'plan' in kwargs:
             plan = kwargs['plan']
-            districts = plan.get_districts_at_version(plan.version, include_geom=False)
+            version = kwargs['version'] if 'version' in kwargs else plan.version
+            districts = plan.get_districts_at_version(version, include_geom=False)
         elif 'list' in kwargs:
             lst = kwargs['list']
             self.result = reduce(lambda x,y: x + y, lst)
@@ -461,7 +466,8 @@ class Percent(CalculatorBase):
 
         elif 'plan' in kwargs:
             plan = kwargs['plan']
-            districts = plan.get_districts_at_version(plan.version, include_geom=False)
+            version = kwargs['version'] if 'version' in kwargs else plan.version
+            districts = plan.get_districts_at_version(version, include_geom=False)
             num = 0
             den = 0
             for district in districts:
@@ -533,7 +539,8 @@ class Threshold(CalculatorBase):
 
         elif 'plan' in kwargs:
             plan = kwargs['plan']
-            districts = plan.get_districts_at_version(plan.version, include_geom=False)
+            version = kwargs['version'] if 'version' in kwargs else plan.version
+            districts = plan.get_districts_at_version(version, include_geom=False)
 
         else:
             return
@@ -593,7 +600,8 @@ class Range(CalculatorBase):
 
         elif 'plan' in kwargs:
             plan = kwargs['plan']
-            districts = plan.get_districts_at_version(plan.version, include_geom=False)
+            version = kwargs['version'] if 'version' in kwargs else plan.version
+            districts = plan.get_districts_at_version(version, include_geom=False)
 
         else:
             return
@@ -658,7 +666,8 @@ class Contiguity(CalculatorBase):
 
         elif 'plan' in kwargs:
             plan = kwargs['plan']
-            districts = plan.get_districts_at_version(plan.version, include_geom=True)
+            version = kwargs['version'] if 'version' in kwargs else plan.version
+            districts = plan.get_districts_at_version(version, include_geom=True)
 
         else:
             return
@@ -739,7 +748,8 @@ class AllContiguous(CalculatorBase):
             return
 
 	plan = kwargs['plan']
-        districts = plan.get_districts_at_version(plan.version, include_geom=False)
+        version = kwargs['version'] if 'version' in kwargs else plan.version
+        districts = plan.get_districts_at_version(version, include_geom=False)
 
         calc = Contiguity()
         calc.compute(**kwargs)
@@ -763,7 +773,8 @@ class NonContiguous(CalculatorBase):
             return
 
         plan = kwargs['plan']
-        districts = plan.get_districts_at_version(plan.version, include_geom=False)
+        version = kwargs['version'] if 'version' in kwargs else plan.version
+        districts = plan.get_districts_at_version(version, include_geom=False)
 
         calc = Contiguity()
         calc.compute(**kwargs)
@@ -828,7 +839,8 @@ class Interval(CalculatorBase):
 
         elif 'plan' in kwargs:
             plan = kwargs['plan']
-            districts = plan.get_districts_at_version(plan.version, include_geom=True)
+            version = kwargs['version'] if 'version' in kwargs else plan.version
+            districts = plan.get_districts_at_version(version, include_geom=True)
 
             # Set up our bounds
             argnum = 1
@@ -911,8 +923,8 @@ class Equivalence(CalculatorBase):
             return
 
         plan = kwargs['plan']
-
-        districts = plan.get_districts_at_version(plan.version,include_geom=False)
+        version = kwargs['version'] if 'version' in kwargs else plan.version
+        districts = plan.get_districts_at_version(version,include_geom=False)
         if len(districts) == 0:
             return
 
@@ -973,7 +985,8 @@ class RepresentationalFairness(CalculatorBase):
 
         if 'plan' in kwargs:
             plan = kwargs['plan']
-            districts = plan.get_districts_at_version(plan.version, include_geom=False)
+            version = kwargs['version'] if 'version' in kwargs else plan.version
+            districts = plan.get_districts_at_version(version, include_geom=False)
 
         else:
             return
@@ -1061,7 +1074,8 @@ class Competitiveness(CalculatorBase):
             return
 
         plan = kwargs['plan']
-        districts = plan.get_districts_at_version(plan.version, include_geom=False)
+        version = kwargs['version'] if 'version' in kwargs else plan.version
+        districts = plan.get_districts_at_version(version, include_geom=False)
         try:
             difference = float(self.get_value('range'))
             low = .5 - difference
@@ -1121,7 +1135,8 @@ class CountDistricts(CalculatorBase):
             return
 
         plan = kwargs['plan']
-        districts = plan.get_districts_at_version(plan.version, include_geom=False)
+        version = kwargs['version'] if 'version' in kwargs else plan.version
+        districts = plan.get_districts_at_version(version, include_geom=False)
         # ALL PLANS include 1 district named "Unassigned", which cannot be
         # removed. Therefore the actual target to be validated is one less
         # than the number of districts.
@@ -1186,9 +1201,10 @@ class Equipopulation(CalculatorBase):
 
         inrange = Range()
         inrange.arg_dict = self.arg_dict
-        inrange.compute(plan=plan)
+        inrange.compute(**kwargs)
 
-        districts = plan.get_districts_at_version(plan.version, include_geom=False)
+        version = kwargs['version'] if 'version' in kwargs else plan.version
+        districts = plan.get_districts_at_version(version, include_geom=False)
 
         # ALL PLANS include 1 district named "Unassigned", which should 
         # never be at the target.
@@ -1230,7 +1246,8 @@ class MajorityMinority(CalculatorBase):
             return
 
         plan = kwargs['plan']
-        districts = plan.get_districts_at_version(plan.version, include_geom=False)
+        version = kwargs['version'] if 'version' in kwargs else plan.version
+        districts = plan.get_districts_at_version(version, include_geom=False)
 
         districtcount = 0
         self.result = False
@@ -1285,7 +1302,8 @@ class MultiMember(CalculatorBase):
             return
 
 	plan = kwargs['plan']
-        districts = plan.get_districts_at_version(plan.version, include_geom=False)
+        version = kwargs['version'] if 'version' in kwargs else plan.version
+        districts = plan.get_districts_at_version(version, include_geom=False)
         legbod = plan.legislative_body
 
         if legbod.multi_members_allowed:

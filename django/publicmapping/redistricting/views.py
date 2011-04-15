@@ -1310,7 +1310,6 @@ def get_statistics(request, planid):
     else:
         version = plan.version
 
-    districts = plan.get_districts_at_version(version,include_geom=True)
     display = ScoreDisplay.objects.get(title='Demographics')
     
     if 'displayId' in request.REQUEST:
@@ -1324,15 +1323,17 @@ def get_statistics(request, planid):
         sys.stderr.write('No displayId in request: %s\n' % request.POST)
         
     try :
-        html = display.render(plan, request)
+        html = display.render(plan, request, version=version)
         return HttpResponse(html, mimetype='text/html')
     except:
         status['message'] = "Couldn't render display tab."
         status['exception'] = traceback.format_exc()
         return HttpResponse( json.dumps(status), mimetype='application/json', status=500)
 
+
 def getutc(t):
-    """Given a datetime object, translate to a datetime object for UTC time.
+    """
+    Given a datetime object, translate to a datetime object for UTC time.
     """
     t_tuple = t.timetuple()
     t_seconds = time.mktime(t_tuple)

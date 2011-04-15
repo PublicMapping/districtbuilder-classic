@@ -2070,7 +2070,7 @@ class ScoreFunction(models.Model):
             m = getattr(m, comp)            
         return m()
 
-    def score(self, districts_or_plans, format='raw'):
+    def score(self, districts_or_plans, format='raw', version=None):
         """
         Calculate the score for the object or list of objects passed in.
 
@@ -2112,16 +2112,16 @@ class ScoreFunction(models.Model):
                     # extract the districts from the plan, score each individually,
                     # and pass into the score function as a list
                     if not (self.is_planscore and not score_fn.is_planscore):
-                        calc.arg_dict[arg.argument] = ('literal', score_fn.score(dp, format))
+                        calc.arg_dict[arg.argument] = ('literal', score_fn.score(dp, format=format, version=version))
                     else:
-                        for d in dp.get_districts_at_version(dp.version):
-                            arg_lst.append(score_fn.score(d, format))
+                        for d in dp.get_districts_at_version(v):
+                            arg_lst.append(score_fn.score(d, format=format, version=version))
 
             # Build the keyword arguments based on whether this is for districts, plans, or list
             if len(arg_lst) > 0:
                 kwargs = { 'list': arg_lst }
             elif self.is_planscore:
-                kwargs = { 'plan': dp }
+                kwargs = { 'plan': dp, 'version': version or dp.version }
             else:
                 kwargs = { 'district': dp }
 
@@ -2269,7 +2269,7 @@ class ScoreDisplay(models.Model):
 
         return self
 
-    def render(self, dorp, context=None):
+    def render(self, dorp, context=None, version=None):
         """
         Generate the markup for all the panels attached to this display.
 
@@ -2282,6 +2282,7 @@ class ScoreDisplay(models.Model):
         Parameters:
             dorp -- A list of districts, plan, or list of plans.
             context -- Optional object that can be used for advanced rendering
+            version -- Optional; the version of the plan or district to render.
 
         Returns:
             The markup for this display.
@@ -2308,7 +2309,7 @@ class ScoreDisplay(models.Model):
 
         markup = ''
         for panel in panels:
-            markup += panel.render(dorp, context)
+            markup += panel.render(dorp, context, version)
 
         return markup
 
@@ -2349,7 +2350,7 @@ class ScorePanel(models.Model):
         """
         return self.title
 
-    def render(self,dorp,context=None):
+    def render(self,dorp,context=None,version=None):
         """
         Generate the scores for all the functions attached to this panel,
         and render them in the template.
@@ -2359,6 +2360,7 @@ class ScorePanel(models.Model):
         Parameters:
             dorp -- A district, list of districts, plan, or list of plans.
             context -- Optional object that can be used for advanced rendering
+            version -- Optional; version of the plan or district to render.
 
         Returns:
             A rendered set of scores.
@@ -2381,7 +2383,7 @@ class ScorePanel(models.Model):
                 if any(not isinstance(item,District) for item in dorp):
                     return ''
             elif isinstance(dorp,Plan):
-                dorp = dorp.get_districts_at_version(dorp.version, include_geom=True)
+                dorp = dorp.get_districts_at_version(version or dorp.version, include_geom=True)
                 is_list = True
             else:
                 return ''
@@ -2406,8 +2408,8 @@ class ScorePanel(models.Model):
                         'name':function.name,
                         'label':function.label,
                         'description':function.description,
-                        'score':ComputedPlanScore.compute(function,plan,format='html'),
-                        'sort':ComputedPlanScore.compute(function,plan,format='sort')
+                        'score':ComputedPlanScore.compute(function,plan,format='html',version=version or plan.version),
+                        'sort':ComputedPlanScore.compute(function,plan,format='sort',version=version or plan.version)
                     })
 
             planscores.sort(key=lambda x:x['sort'],reverse=not self.is_ascending)
@@ -2604,30 +2606,29 @@ class ComputedPlanScore(models.Model):
         Parameters:
             function -- A ScoreFunction to compute with
             plan -- A Plan to compute on
+            version -- Optional; the version of the plan to compute.
 
         Returns:
             The cached value for the plan.
         """
         created = False
         try:
-            if version is None:
-                version = plan.version
             defaults = {'value':''}
-            cache,created = ComputedPlanScore.objects.get_or_create(function=function, plan=plan, version=version, defaults=defaults)
+            cache,created = ComputedPlanScore.objects.get_or_create(function=function, plan=plan, version=version or plan.version, defaults=defaults)
 
         except Exception,e:
             print e
             return None
 
         if created:
-            score = function.score(plan, format='raw')
+            score = function.score(plan, format='raw', version=version or plan.version)
             cache.value = cPickle.dumps(score)
             cache.save()
         else:
             try:
                 score = cPickle.loads(str(cache.value))
             except:
-                score = function.score(plan, format='raw')
+                score = function.score(plan, format='raw', version=version or plan.version)
                 cache.value = cPickle.dumps(score)
                 cache.save()
 
