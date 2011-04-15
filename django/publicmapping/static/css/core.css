@@ -1922,3 +1922,23 @@ span.multi_val.invalid {
 #gview_multi_member_grid div.ui-jqgrid-bdiv {
     height: 230px !important;
 }
+
+/* District highlighting */
+span.poptot {
+  cursor: pointer;
+
+  /* Make sure the text is not selectable */
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+span.poptot.selected {
+  border: 3px solid #007FFF;
+}
+
+.highlighted {
+  border: 2px solid #007FFF !important;
+}
