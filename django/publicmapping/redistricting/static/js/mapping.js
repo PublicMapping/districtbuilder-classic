@@ -1342,7 +1342,6 @@ OpenLayers.Util.extend(boxControl, filterExtension);
         var node = 2;
         $(ctics).each(function(i, obj) {
             try {
-                console.log(tipdiv.childNodes[node]);
                 $(tipdiv.childNodes[node]).html(obj.lbl + ': ' + Math.round(obj.val).toLocaleString());
                 node ++;
             } catch (exception) {
