@@ -45,7 +45,7 @@ from django.contrib import humanize
 from django import forms
 from django.utils import simplejson as json
 from django.views.decorators.cache import cache_control
-from django.template.defaultfilters import slugify
+from django.template.defaultfilters import slugify, force_escape
 from django.conf import settings
 from datetime import datetime, time, timedelta
 from decimal import *
@@ -1671,7 +1671,7 @@ def statistics_sets(request, planid):
         # Get the functions available for the users
         user_functions = ScoreFunction.objects.filter(is_user_selectable=True).order_by('name')
         for f in user_functions:
-            scorefunctions.append({ 'id': f.id, 'name': f.name })
+            scorefunctions.append({ 'id': f.id, 'name': force_escape(f.name) })
         result['functions'] = scorefunctions
 
         # Get the admin displays
@@ -1680,7 +1680,7 @@ def statistics_sets(request, planid):
             legislative_body=plan.legislative_body,
             is_page=False).order_by('title')
         for admin_display in admin_displays:
-            sets.append({ 'id': admin_display.id, 'name': admin_display.title, 'functions': [], 'mine':False })
+            sets.append({ 'id': admin_display.id, 'name': force_escape(admin_display.title), 'functions': [], 'mine':False })
 
         try:
             user_displays = ScoreDisplay.objects.filter(owner=request.user).order_by('title')
@@ -1692,7 +1692,7 @@ def statistics_sets(request, planid):
                         functions = map(lambda x: x.id, panel.score_functions.all())
                         if len(functions) == 0:
                             result['message'] = "No functions for %s" % panel
-                sets.append({ 'id': display.id, 'name': display.title, 'functions': functions, 'mine': display.owner==request.user })
+                sets.append({ 'id': display.id, 'name': force_escape(display.title), 'functions': functions, 'mine': display.owner==request.user })
         except:
             result['message'] = 'No user displays for %s: %s' % (request.user, traceback.format_exc())
 
@@ -1702,7 +1702,7 @@ def statistics_sets(request, planid):
     elif request.method == 'POST' and 'delete' in request.POST:
         try:
             display = ScoreDisplay.objects.get(pk=request.REQUEST.get('id', -1))
-            result['set'] = {'name':display.title, 'id':display.id}
+            result['set'] = {'name':force_escape(display.title), 'id':display.id}
             display.delete()
             result['success'] = True
         except:
@@ -1736,7 +1736,7 @@ def statistics_sets(request, planid):
                     result['error'] = 'limit'
                     return HttpResponse(json.dumps(result),mimetype='application/json')
 
-            result['set'] = {'name':display.title, 'id':display.id, 'functions':functions, 'mine': display.owner==request.user}
+            result['set'] = {'name':force_escape(display.title), 'id':display.id, 'functions':functions, 'mine': display.owner==request.user}
             result['success'] = True
 
         else:

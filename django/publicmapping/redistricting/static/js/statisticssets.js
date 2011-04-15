@@ -294,7 +294,7 @@ statisticssets = function(options) {
         $('.statistics_set').removeClass('statistics_set_selected');
         $(this).addClass('statistics_set_selected');
         var set = event.data.set;
-        _statisticsSetNameField.val(set.name);
+        _statisticsSetNameField.val($('<div/>').html(set.name).text());
         $('.function').each( function() {
             var id = parseInt($(this).val());
             var index = set.functions.indexOf(id);
