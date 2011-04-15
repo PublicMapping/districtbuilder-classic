@@ -1306,7 +1306,9 @@ OpenLayers.Util.extend(boxControl, filterExtension);
                 if (e.features[feat].data.geolevel_id == glvl) {
                     crumbs[e.features[feat].data.id] = e.features[feat].data.name;
                 }
-                if (e.features[feat].data.geolevel_id == minGeolevel) {
+
+                if (e.features[feat].data.geolevel_id == minGeolevel &&
+                    glvl == minGeolevel) {
                     tipFeature = e.features[feat];
                     for (var demo = 0; demo < DEMOGRAPHICS.length; demo++) {
                         if (e.features[feat].data.subject_id == DEMOGRAPHICS[demo].id) {
@@ -1340,7 +1342,8 @@ OpenLayers.Util.extend(boxControl, filterExtension);
         var node = 2;
         $(ctics).each(function(i, obj) {
             try {
-                $(tipdiv.childNodes[node]).html(obj.lbl + ': ' + obj.val.toLocaleString());
+                console.log(tipdiv.childNodes[node]);
+                $(tipdiv.childNodes[node]).html(obj.lbl + ': ' + Math.round(obj.val).toLocaleString());
                 node ++;
             } catch (exception) {
                 // too many characteristics
