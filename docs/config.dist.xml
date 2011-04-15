@@ -58,6 +58,8 @@
                  short_name="Republican 08" displayed="false" sortkey="16" />
         <Subject id="poptot" field="TOTPOP" name="Total Population" 
                  short_name="Total Pop." displayed="true" sortkey="17" />
+        <Subject id="presoth" field="PRS08OTH" name="Other Voters"
+                 short_name="Other 08" displayed="false" sortkey="18" />
         <Subject id="govrep" field="GOV09REP" name="Republican Voters, Governor &apos;09"
                  short_name="Republican 09" displayed="false" sortkey="19" />
         <Subject id="govoth" field="GOV09OTH" name="Sum All Other Candidates, Governor &apos;09"
@@ -82,30 +84,32 @@
             <!-- A district score that returns a literal value -->
             <ScoreFunction id="district_poptot" type="district"
                 calculator="publicmapping.redistricting.calculators.Sum"
-                user_selectable="true">
+                label="Total Pop" user_selectable="true">
                 <SubjectArgument name="value1" ref="poptot" />
             </ScoreFunction>
 
             <!-- A district score that returns a percentage -->
             <ScoreFunction id="district_blkvap_percent" type="district"
                 calculator="publicmapping.redistricting.calculators.Percent"
-                user_selectable="true">
+                label="Black VAP" user_selectable="true">
                 <SubjectArgument name="numerator" ref="vapblk" />
                 <SubjectArgument name="denominator" ref="vap" />
             </ScoreFunction>
             <ScoreFunction id="district_blkvap_thresh" type="district"
-                calculator="publicmapping.redistricting.calculators.Threshold">
+                calculator="publicmapping.redistricting.calculators.Threshold"
+                label="Black VAP Threshold">
                 <ScoreArgument name="value" ref="district_blkvap_percent" />
                 <Argument name="threshold" value="0.5" />
             </ScoreFunction>
             <ScoreFunction id="district_hispvap_percent" type="district"
                 calculator="publicmapping.redistricting.calculators.Percent"
-                user_selectable="true">
+                label="His. VAP" user_selectable="true">
                 <SubjectArgument name="numerator" ref="vaphisp" />
                 <SubjectArgument name="denominator" ref="vap" />
             </ScoreFunction>
             <ScoreFunction id="district_hispvap_thresh" type="district"
-                calculator="publicmapping.redistricting.calculators.Threshold">
+                calculator="publicmapping.redistricting.calculators.Threshold"
+                label="His. VAP Threshold">
                 <ScoreArgument name="value" ref="district_hispvap_percent" />
                 <Argument name="threshold" value="0.5" />
             </ScoreFunction>
@@ -137,7 +141,8 @@
             <!-- A district score that returns 1(T) if the subject value
                 is between the ranges, otherwise returns 0(F). -->
             <ScoreFunction id="district_poptot_range" type="district"
-                calculator="publicmapping.redistricting.calculators.Range">
+                calculator="publicmapping.redistricting.calculators.Range"
+                label="Tot Pop Range">
                 <SubjectArgument name="value" ref="poptot" />
                 <Argument name="min" value="723729" />
                 <Argument name="max" value="731003" />
@@ -163,18 +168,19 @@
                 the raw compactness score. -->
             <ScoreFunction id="district_schwartzberg" type="district"
                 calculator="publicmapping.redistricting.calculators.Schwartzberg"
-                user_selectable="true">
+                label="Compactness" user_selectable="true">
             </ScoreFunction>
             
             <!-- A custom calculator to do contiguity, and is boolean. -->
             <ScoreFunction id="district_contiguous" type="district"
                 calculator="publicmapping.redistricting.calculators.Contiguity"
-                user_selectable="true">
+                label="Contiguous" user_selectable="true">
             </ScoreFunction>
 
             <!-- A plan score that aggregates all literal values -->
             <ScoreFunction id="plan_sum_equipop" type="plan" 
-                calculator="publicmapping.redistricting.calculators.Sum">
+                calculator="publicmapping.redistricting.calculators.Sum"
+                label="Equal Population">
                 <ScoreArgument name="value1" ref="district_poptot_range" />
             </ScoreFunction>
             <ScoreFunction id="plan_all_equipop" type="plan" 
@@ -212,14 +218,26 @@
                 1(T) if there is more than 0 districts that have a minority
                 majority. -->
             <ScoreFunction id="plan_major_minor" type="plan"
-                calculator="publicmapping.redistricting.calculators.Threshold">
+                calculator="publicmapping.redistricting.calculators.Threshold"
+                label="Majority-Minority">
                 <ScoreArgument name="value" ref="district_majmin" />
                 <Argument name="threshold" value="0" />
             </ScoreFunction>
 
             <ScoreFunction id="plan_contiguous" type="plan"
-                calculator="publicmapping.redistricting.calculators.Sum">
+                calculator="publicmapping.redistricting.calculators.Sum"
+                label="Contiguous">
                 <ScoreArgument name="value1" ref="district_contiguous"/>
+            </ScoreFunction>
+
+            <!-- interval score function for congressional districts -->
+            <ScoreFunction id="congressional_population" type="district"
+                label="Tot Pop" user_selectable="true"
+                calculator="publicmapping.redistricting.calculators.Interval">
+                <SubjectArgument name="subject" ref="poptot" />
+                <Argument name="target" value="727366" />
+                <Argument name="bound1" value=".005" />
+                <Argument name="bound2" value=".01" />
             </ScoreFunction>
 
             <!-- leaderboard functions -->
@@ -321,6 +339,12 @@
                 label="Average Compactness"
                 description="The competition is using the &apos;Schwartzberg&apos; compactness measure. This measure is a ratio of the perimeter of the district to the circumference of the circle whose area is equal to the area of the district." >
             </ScoreFunction>
+
+            <ScoreFunction id="partisan_index" type="district"
+                calculator="publicmapping.redistricting.calculators.Sum"
+                user_selectable="true" label="Partisan Index">
+                <SubjectArgument name="value1" ref="govdem" />
+            </ScoreFunction>
         </ScoreFunctions>
         
         <ScorePanels>
@@ -359,18 +383,18 @@
 
             <!-- Summary above all sidebar panels -->
             <ScorePanel id="panel_summary" type="plan_summary" position="1"
-                title="Plan Summary" cssclass="" template="plan_summary.html">
-                <Score ref="plan_contiguous"/>
-                <Score ref="plan_sum_equipop" />
-                <Score ref="plan_blkvap_thresh" />
-                <Score ref="plan_hispvap_thresh" />
+                title="Plan Summary" cssclass="plan_summary" template="plan_summary.html">
+                <Score ref="congress_plan_equipopulation"/>
+                <Score ref="plan_majority_minority" />
+                <Score ref="congress_plan_count_districts" />
+                <Score ref="plan_equivalence" />
             </ScorePanel>
 
             <!-- Basic Information -->
             <ScorePanel id="panel_info" type="district" position="2"
                 title="Basic Information" cssclass="district_basic_info" 
                 template="basic_information.html">
-                <Score ref="district_poptot" />
+                <Score ref="congressional_population" />
                 <Score ref="district_contiguous" />
                 <Score ref="district_schwartzberg" />
             </ScorePanel>
@@ -379,7 +403,7 @@
             <ScorePanel id="panel_demo" type="district" position="2"
                 title="Demographics" cssclass="district_demographics" 
                 template="demographics.html">
-                <Score ref="district_poptot" />
+                <Score ref="partisan_index" />
                 <Score ref="district_blkvap_percent" />
                 <Score ref="district_hispvap_percent" />
             </ScorePanel>
@@ -428,12 +452,12 @@
                 <ScorePanel ref="panel_competitive_mine" />
                 <ScorePanel ref="panel_rf_mine" />
             </ScoreDisplay>
-            <ScoreDisplay legislativebodyref="congress" type="sidebar" title="Basic Information" cssclass="">
+            <ScoreDisplay legislativebodyref="congress" type="sidebar" title="Basic Information" cssclass="basic_information">
                 <ScorePanel ref="panel_summary" />
                 <ScorePanel ref="panel_info" />
             </ScoreDisplay>
 
-            <ScoreDisplay legislativebodyref="congress" type="sidebar" title="Demographics" cssclass="">
+            <ScoreDisplay legislativebodyref="congress" type="sidebar" title="Demographics" cssclass="demographics">
                 <ScorePanel ref="panel_summary" />
                 <ScorePanel ref="panel_demo" />
             </ScoreDisplay>
@@ -555,12 +579,25 @@
           
           -->
           <GeoLevelCharacteristics>
-              <GeoLevelCharacteristic ref="poptot" />
-              <GeoLevelCharacteristic ref="vap" />
+              <GeoLevelCharacteristic ref="govdem" />
               <GeoLevelCharacteristic ref="vapblk" />
               <GeoLevelCharacteristic ref="vaphisp" />
-              <GeoLevelCharacteristic ref="govdem" />
+              <GeoLevelCharacteristic ref="pophisp" />
+              <GeoLevelCharacteristic ref="popasn" />
+              <GeoLevelCharacteristic ref="popnam" />
+              <GeoLevelCharacteristic ref="poppild" />
+              <GeoLevelCharacteristic ref="vap" />
+              <GeoLevelCharacteristic ref="vapwnh" />
+              <GeoLevelCharacteristic ref="popblk" />
+              <GeoLevelCharacteristic ref="popwnh" />
+              <GeoLevelCharacteristic ref="vapasn" />
+              <GeoLevelCharacteristic ref="vapnam" />
+              <GeoLevelCharacteristic ref="vappild" />
+              <GeoLevelCharacteristic ref="presdem" />
+              <GeoLevelCharacteristic ref="presrep" />
+              <GeoLevelCharacteristic ref="poptot" />
               <GeoLevelCharacteristic ref="govrep" />
+              <GeoLevelCharacteristic ref="govoth" />
               <GeoLevelCharacteristic ref="govtot" />
           </GeoLevelCharacteristics>
           
@@ -573,17 +610,17 @@
           <LegislativeBodies>
               <LegislativeBody ref="congress">
                   <LegislativeTargets>
-                      <LegislativeTarget ref="congress_target" />
+                      <LegislativeTarget ref="congress_target" default="true" />
                   </LegislativeTargets>
               </LegislativeBody>
               <LegislativeBody ref="house">
                   <LegislativeTargets>
-                      <LegislativeTarget ref="house_target" />
+                      <LegislativeTarget ref="house_target" default="true" />
                   </LegislativeTargets>
               </LegislativeBody>
               <LegislativeBody ref="senate">
                   <LegislativeTargets>
-                      <LegislativeTarget ref="senate_target" />
+                      <LegislativeTarget ref="senate_target" default="true" />
                   </LegislativeTargets>
               </LegislativeBody>
           </LegislativeBodies>
@@ -649,11 +686,25 @@
           
           -->
           <GeoLevelCharacteristics>
-              <GeoLevelCharacteristic ref="poptot" />
-              <GeoLevelCharacteristic ref="vap" />
+              <GeoLevelCharacteristic ref="govdem" />
               <GeoLevelCharacteristic ref="vapblk" />
               <GeoLevelCharacteristic ref="vaphisp" />
-              <GeoLevelCharacteristic ref="govdem" />
+              <GeoLevelCharacteristic ref="pophisp" />
+              <GeoLevelCharacteristic ref="popasn" />
+              <GeoLevelCharacteristic ref="popnam" />
+              <GeoLevelCharacteristic ref="poppild" />
+              <GeoLevelCharacteristic ref="vap" />
+              <GeoLevelCharacteristic ref="vapwnh" />
+              <GeoLevelCharacteristic ref="popblk" />
+              <GeoLevelCharacteristic ref="popwnh" />
+              <GeoLevelCharacteristic ref="vapasn" />
+              <GeoLevelCharacteristic ref="vapnam" />
+              <GeoLevelCharacteristic ref="vappild" />
+              <GeoLevelCharacteristic ref="presdem" />
+              <GeoLevelCharacteristic ref="presrep" />
+              <GeoLevelCharacteristic ref="poptot" />
+              <GeoLevelCharacteristic ref="govrep" />
+              <GeoLevelCharacteristic ref="govoth" />
               <GeoLevelCharacteristic ref="govtot" />
           </GeoLevelCharacteristics>
           
@@ -667,19 +718,19 @@
               <LegislativeBody ref="congress">
                   <Parent ref="block" />
                   <LegislativeTargets>
-                      <LegislativeTarget ref="congress_target" />
+                      <LegislativeTarget ref="congress_target" default="true" />
                   </LegislativeTargets>
               </LegislativeBody>
               <LegislativeBody ref="house">
                   <Parent ref="block" />
                   <LegislativeTargets>
-                      <LegislativeTarget ref="house_target" />
+                      <LegislativeTarget ref="house_target" default="true" />
                   </LegislativeTargets>
               </LegislativeBody>
               <LegislativeBody ref="senate">
                   <Parent ref="block" />
                   <LegislativeTargets>
-                      <LegislativeTarget ref="senate_target" />
+                      <LegislativeTarget ref="senate_target" default="true" />
                   </LegislativeTargets>
               </LegislativeBody>
           </LegislativeBodies>
@@ -744,11 +795,25 @@
           
           -->
           <GeoLevelCharacteristics>
-              <GeoLevelCharacteristic ref="poptot" />
-              <GeoLevelCharacteristic ref="vap" />
+              <GeoLevelCharacteristic ref="govdem" />
               <GeoLevelCharacteristic ref="vapblk" />
               <GeoLevelCharacteristic ref="vaphisp" />
-              <GeoLevelCharacteristic ref="govdem" />
+              <GeoLevelCharacteristic ref="pophisp" />
+              <GeoLevelCharacteristic ref="popasn" />
+              <GeoLevelCharacteristic ref="popnam" />
+              <GeoLevelCharacteristic ref="poppild" />
+              <GeoLevelCharacteristic ref="vap" />
+              <GeoLevelCharacteristic ref="vapwnh" />
+              <GeoLevelCharacteristic ref="popblk" />
+              <GeoLevelCharacteristic ref="popwnh" />
+              <GeoLevelCharacteristic ref="vapasn" />
+              <GeoLevelCharacteristic ref="vapnam" />
+              <GeoLevelCharacteristic ref="vappild" />
+              <GeoLevelCharacteristic ref="presdem" />
+              <GeoLevelCharacteristic ref="presrep" />
+              <GeoLevelCharacteristic ref="poptot" />
+              <GeoLevelCharacteristic ref="govrep" />
+              <GeoLevelCharacteristic ref="govoth" />
               <GeoLevelCharacteristic ref="govtot" />
           </GeoLevelCharacteristics>
           
@@ -762,19 +827,19 @@
               <LegislativeBody ref="congress">
                   <Parent ref="vtd" />
                   <LegislativeTargets>
-                      <LegislativeTarget ref="congress_target" />
+                      <LegislativeTarget ref="congress_target" default="true" />
                   </LegislativeTargets>
               </LegislativeBody>
               <LegislativeBody ref="house">
                   <Parent ref="vtd" />
                   <LegislativeTargets>
-                      <LegislativeTarget ref="house_target" />
+                      <LegislativeTarget ref="house_target" default="true" />
                   </LegislativeTargets>
               </LegislativeBody>
               <LegislativeBody ref="senate">
                   <Parent ref="vtd" />
                   <LegislativeTargets>
-                      <LegislativeTarget ref="senate_target" />
+                      <LegislativeTarget ref="senate_target" default="true" />
                   </LegislativeTargets>
               </LegislativeBody>
           </LegislativeBodies>
@@ -834,7 +899,7 @@
 
             The 'host' attribute is optional.
         -->
-        <Database name="<database>" user="publicmapping" password="<password>" host="<optional>"/>
+        <Database name="<database name>" user="publicmapping" password="<database user password>" host="<optional>"/>
         
         <!-- 
         
@@ -842,7 +907,7 @@
         superuser in django with these credentials.
         
         -->
-        <Admin user="<username>" email="<email address>" password="<STRONG password!>"/>
+        <Admin user="<admin user name>" email="<admin email>" password="<STRONG password>"/>
         
         <!-- Configuration items specific to the redistricting app. -->
         <Redistricting>           
@@ -867,7 +932,7 @@
             
             -->
             <MapServer hostname="" ns="gmu" nshref="http://gmu.azavea.com/"
-                adminuser="<username>" adminpass="<password>" maxfeatures="100" 
+                adminuser="<geoserver admin user>" adminpass="<geoserver admin pass>" maxfeatures="100" 
                 styles="/projects/publicmapping/trunk/sld" />
 
             <!-- 
@@ -932,15 +997,15 @@
                         -->
                         <RatioVar id="racialComp" label="Majority Minority Districts" threshold=".5">
                             <Numerators>
-                                <Numerator subjectref="popblk" />
-                                <Numerator subjectref="pophisp" />
+                                <Numerator subjectref="vapblk" />
+                                <Numerator subjectref="vaphisp" />
                             </Numerators>
-                            <Denominator subjectref="poptot" />
+                            <Denominator subjectref="vap" />
                         </RatioVar>
                         <RatioVar id="partyControl" label="Party-Controlled Districts" threshold=".5">
                             <Numerators>
-                                <Numerator subjectref="presdem" />
-                                <Numerator subjectref="presrep" />
+                                <Numerator subjectref="govdem" />
+                                <Numerator subjectref="govrep" />
                             </Numerators>
                             <Denominator subjectref="vap" />
                         </RatioVar>
