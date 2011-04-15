@@ -318,7 +318,7 @@ def merge_config(config, verbose):
         # If banner image setting does not exist, defaults to:
         # '/static-media/images/banner-home.png'
         banner = cfg.get('bannerimage')
-        if bannerimage:
+        if banner:
             settings_out.write("\nBANNER_IMAGE = '%s'\n" % banner)
 
         cfg = config.xpath('//Reporting')[0]
