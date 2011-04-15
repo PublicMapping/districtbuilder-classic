@@ -34,6 +34,6 @@
 <div class="{{ cssclass }}">
 <h3>{{ planname|truncate:"25" }}</h3>
 {% for score in planscores %}
-    <div><label>{{ score.name }}</label>{{ score.score|safe }}</div>
+    <div><label>{{ score.label }}</label>{{ score.score|safe }}</div>
 {% endfor %}
 </div>

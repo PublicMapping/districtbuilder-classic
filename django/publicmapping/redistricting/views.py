@@ -1671,7 +1671,7 @@ def statistics_sets(request, planid):
         # Get the functions available for the users
         user_functions = ScoreFunction.objects.filter(is_user_selectable=True).order_by('name')
         for f in user_functions:
-            scorefunctions.append({ 'id': f.id, 'name': force_escape(f.name) })
+            scorefunctions.append({ 'id': f.id, 'name': force_escape(f.label) })
         result['functions'] = scorefunctions
 
         # Get the admin displays
