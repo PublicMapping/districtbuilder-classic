@@ -2627,8 +2627,9 @@ class ComputedPlanScore(models.Model):
             try:
                 score = cPickle.loads(str(cache.value))
             except:
-                print('Failed to get cached value: %s\n' % traceback.format_exc())
                 score = function.score(plan, format='raw')
+                cache.value = cPickle.dumps(score)
+                cache.save()
 
         if format != 'raw':
             calc = function.get_calculator()

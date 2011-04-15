@@ -726,6 +726,8 @@ class Contiguity(CalculatorBase):
             return '<img class="yes-contiguous" src="/static-media/images/icon-check.png">'
         else:
             return '<img class="no-contiguous" src="/static-media/images/icon-warning.png">'
+
+
 class AllContiguous(CalculatorBase):
     """
     Used to verify that all districts in a plan are contiguous.
@@ -746,6 +748,27 @@ class AllContiguous(CalculatorBase):
         # removed. Therefore the actual target to be validated is one less
         # than the number of districts.
         self.result = (len(districts)-1) == calc.result
+
+
+class NonContiguous(CalculatorBase):
+    """
+    Calculate the number of districts in a plan that are non-contiguous.
+
+    This calculator does not accept any arguments.
+
+    This calculator will only operate on a plan.
+    """
+    def compute(self, **kwargs):
+        if not 'plan' in kwargs:
+            return
+
+        plan = kwargs['plan']
+        districts = plan.get_districts_at_version(plan.version, include_geom=False)
+
+        calc = Contiguity()
+        calc.compute(**kwargs)
+
+        self.result = len(districts) - calc.result
 
 
 class Interval(CalculatorBase):
