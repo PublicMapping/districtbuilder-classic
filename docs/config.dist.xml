@@ -235,12 +235,33 @@
                 label="Noncontiguous">
             </ScoreFunction>
 
-            <!-- interval score function for congressional districts -->
+            <!-- interval score function for population -->
             <ScoreFunction id="congressional_population" type="district"
                 label="Tot Pop" user_selectable="true"
+                description="Population interval calculator for congressional."
                 calculator="publicmapping.redistricting.calculators.Interval">
                 <SubjectArgument name="subject" ref="poptot" />
                 <Argument name="target" value="727366" />
+                <Argument name="bound1" value=".005" />
+                <Argument name="bound2" value=".01" />
+            </ScoreFunction>
+
+            <ScoreFunction id="house_population" type="district"
+                label="Tot Pop" user_selectable="true"
+                description="Population interval calculator for house."
+                calculator="publicmapping.redistricting.calculators.Interval">
+                <SubjectArgument name="subject" ref="poptot" />
+                <Argument name="target" value="80010" />
+                <Argument name="bound1" value=".005" />
+                <Argument name="bound2" value=".01" />
+            </ScoreFunction>
+
+            <ScoreFunction id="senate_population" type="district"
+                label="Tot Pop" user_selectable="true"
+                description="Population interval calculator for senate."
+                calculator="publicmapping.redistricting.calculators.Interval">
+                <SubjectArgument name="subject" ref="poptot" />
+                <Argument name="target" value="200026" />
                 <Argument name="bound1" value=".005" />
                 <Argument name="bound2" value=".01" />
             </ScoreFunction>
@@ -278,7 +299,7 @@
 
             <ScoreFunction id="house_plan_equipopulation" type="plan"
                 calculator="publicmapping.redistricting.calculators.Equipopulation"
-                label="Equipopulation"
+                label="Target Pop. 80,010"
                 description="The population of each House of Delegates district must be 80,010 +/- 5%.">
                 <Argument name="min" value="76010"/>
                 <Argument name="max" value="84011"/>
@@ -287,7 +308,7 @@
 
             <ScoreFunction id="senate_plan_equipopulation" type="plan"
                 calculator="publicmapping.redistricting.calculators.Equipopulation"
-                label="Equipopulation"
+                label="Target Pop. 200,026"
                 description="The population of each State Senate district must be 200,026 +/- 5%.">
                 <Argument name="min" value="190025"/>
                 <Argument name="max" value="210027"/>
@@ -387,8 +408,8 @@
             </ScorePanel>
 
             <!-- Summary above all sidebar panels -->
-            <ScorePanel id="panel_summary" type="plan_summary" position="1"
-                title="Plan Summary" cssclass="plan_summary" template="plan_summary.html">
+            <ScorePanel id="congressional_panel_summary" type="plan_summary" position="1"
+                title="Plan Summary" cssclass="plan_summary congressional" template="plan_summary.html">
                 <Score ref="plan_noncontiguous"/>
                 <Score ref="congress_plan_equipopulation"/>
                 <Score ref="plan_majority_minority" />
@@ -396,18 +417,68 @@
                 <Score ref="plan_equivalence" />
             </ScorePanel>
 
+            <ScorePanel id="house_panel_summary" type="plan_summary" position="1"
+                title="Plan Summary" cssclass="plan_summary house" template="plan_summary.html">
+                <Score ref="plan_noncontiguous"/>
+                <Score ref="house_plan_equipopulation"/>
+                <Score ref="plan_majority_minority" />
+                <Score ref="house_plan_count_districts" />
+                <Score ref="plan_equivalence" />
+            </ScorePanel>
+
+            <ScorePanel id="senate_panel_summary" type="plan_summary" position="1"
+                title="Plan Summary" cssclass="plan_summary senate" template="plan_summary.html">
+                <Score ref="plan_noncontiguous"/>
+                <Score ref="senate_plan_equipopulation"/>
+                <Score ref="plan_majority_minority" />
+                <Score ref="senate_plan_count_districts" />
+                <Score ref="plan_equivalence" />
+            </ScorePanel>
+
             <!-- Basic Information -->
-            <ScorePanel id="panel_info" type="district" position="2"
-                title="Basic Information" cssclass="district_basic_info" 
+            <ScorePanel id="congresional_panel_info" type="district" position="2"
+                title="Basic Information" cssclass="district_basic_info congressional" 
                 template="basic_information.html">
                 <Score ref="congressional_population" />
                 <Score ref="district_contiguous" />
                 <Score ref="district_schwartzberg" />
             </ScorePanel>
+
+            <ScorePanel id="house_panel_info" type="district" position="2"
+                title="Basic Information" cssclass="district_basic_info house" 
+                template="basic_information.html">
+                <Score ref="house_population" />
+                <Score ref="district_contiguous" />
+                <Score ref="district_schwartzberg" />
+            </ScorePanel>
+            
+            <ScorePanel id="senate_panel_info" type="district" position="2"
+                title="Basic Information" cssclass="district_basic_info senate" 
+                template="basic_information.html">
+                <Score ref="senate_population" />
+                <Score ref="district_contiguous" />
+                <Score ref="district_schwartzberg" />
+            </ScorePanel>
             
             <!-- Demographics -->
-            <ScorePanel id="panel_demo" type="district" position="2"
-                title="Demographics" cssclass="district_demographics" 
+            <ScorePanel id="congressional_panel_demo" type="district" position="2"
+                title="Demographics" cssclass="district_demographics congressional" 
+                template="demographics.html">
+                <Score ref="partisan_index" />
+                <Score ref="district_blkvap_percent" />
+                <Score ref="district_hispvap_percent" />
+            </ScorePanel>
+
+            <ScorePanel id="house_panel_demo" type="district" position="2"
+                title="Demographics" cssclass="district_demographics house" 
+                template="demographics.html">
+                <Score ref="partisan_index" />
+                <Score ref="district_blkvap_percent" />
+                <Score ref="district_hispvap_percent" />
+            </ScorePanel>
+
+            <ScorePanel id="senate_panel_demo" type="district" position="2"
+                title="Demographics" cssclass="district_demographics senate" 
                 template="demographics.html">
                 <Score ref="partisan_index" />
                 <Score ref="district_blkvap_percent" />
@@ -458,14 +529,36 @@
                 <ScorePanel ref="panel_competitive_mine" />
                 <ScorePanel ref="panel_rf_mine" />
             </ScoreDisplay>
+
+             <!-- Sidebar configuration -->
             <ScoreDisplay legislativebodyref="congress" type="sidebar" title="Basic Information" cssclass="basic_information">
-                <ScorePanel ref="panel_summary" />
-                <ScorePanel ref="panel_info" />
+                <ScorePanel ref="congressional_panel_summary" />
+                <ScorePanel ref="congresional_panel_info" />
             </ScoreDisplay>
 
             <ScoreDisplay legislativebodyref="congress" type="sidebar" title="Demographics" cssclass="demographics">
-                <ScorePanel ref="panel_summary" />
-                <ScorePanel ref="panel_demo" />
+                <ScorePanel ref="congressional_panel_summary" />
+                <ScorePanel ref="congressional_panel_demo" />
+            </ScoreDisplay>
+
+            <ScoreDisplay legislativebodyref="house" type="sidebar" title="Basic Information" cssclass="basic_information">
+                <ScorePanel ref="house_panel_summary" />
+                <ScorePanel ref="house_panel_info" />
+            </ScoreDisplay>
+
+            <ScoreDisplay legislativebodyref="house" type="sidebar" title="Demographics" cssclass="demographics">
+                <ScorePanel ref="house_panel_summary" />
+                <ScorePanel ref="house_panel_demo" />
+            </ScoreDisplay>
+
+            <ScoreDisplay legislativebodyref="senate" type="sidebar" title="Basic Information" cssclass="basic_information">
+                <ScorePanel ref="senate_panel_summary" />
+                <ScorePanel ref="senate_panel_info" />
+            </ScoreDisplay>
+
+            <ScoreDisplay legislativebodyref="senate" type="sidebar" title="Demographics" cssclass="demographics">
+                <ScorePanel ref="senate_panel_summary" />
+                <ScorePanel ref="senate_panel_demo" />
             </ScoreDisplay>
         </ScoreDisplays>
     </Scoring>

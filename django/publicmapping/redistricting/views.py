@@ -1310,7 +1310,7 @@ def get_statistics(request, planid):
     else:
         version = plan.version
 
-    display = ScoreDisplay.objects.get(title='Demographics')
+    display = ScoreDisplay.objects.get(title='Demographics', legislative_body=plan.legislative_body)    
     
     if 'displayId' in request.REQUEST:
         try:
