@@ -2419,7 +2419,7 @@ class ScorePanel(models.Model):
                 'cssclass':self.cssclass,
                 'position':self.position,
                 'description':description,
-                'planname': plans[0].name,
+                'planname': '' if len(plans) == 0 else plans[0].name,
                 'context':context
             })
 
