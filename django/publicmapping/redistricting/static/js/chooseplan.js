@@ -281,13 +281,11 @@ chooseplan = function(options) {
             sortorder: 'desc',
             viewrecords:true,
             mtype: 'POST',
-            ajaxGridOptions: {
-                beforeSend: function(xhr, settings) {
-                    if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
-                        // Only send the token to relative URLs i.e. locally.
-                        xhr.setRequestHeader("X-CSRFToken",
-                                             $("#csrfmiddlewaretoken").val());
-                    }
+            loadBeforeSend: function(xhr) {
+                if (!(/^http:.*/.test(this.p.url) || /^https:.*/.test(this.p.url))) {
+                    // Only send the token to relative URLs i.e. locally.
+                    xhr.setRequestHeader("X-CSRFToken",
+                                         $("#csrfmiddlewaretoken").val());
                 }
             }
         }).jqGrid(
