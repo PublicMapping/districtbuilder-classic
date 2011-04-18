@@ -996,8 +996,11 @@ class Plan(models.Model):
         # without going over MAX_DISTRICTS for the legislative_body
         current_districts = self.get_districts_at_version(version, include_geom=False)
         allowed_districts = self.legislative_body.max_districts + 1
-        
-        if len(current_districts) + len(districts) > allowed_districts:
+        for d in current_districts:
+            if d.district_id == 0 or not d.geom.empty:
+                allowed_districts -= 1
+
+        if allowed_districts <= 0:
             raise Exception('Tried to merge too many districts')
 
         # We've got room.  Add the districts.
@@ -1043,16 +1046,24 @@ class Plan(models.Model):
         else:
             first_run = False
 
+        slot = None
+        for d in others:
+            if d.district_id != 0 and d.geom.empty:
+                slot = d.district_id
+                break
+
         biggest_geolevel = self.get_biggest_geolevel()
 
         # Pass this list of districts through the paste_districts chain
         edited_districts = list()
 
         # Save the new district to the plan to start
-        pasted = District(name='', plan=self, district_id = None, geom=district.geom, simple = district.simple, version = new_version)
+        newname = '' if slot == None else self.legislative_body.member % slot
+        pasted = District(name=newname, plan=self, district_id = slot, geom=district.geom, simple = district.simple, version = new_version)
         pasted.save();
-        pasted.name = self.legislative_body.member % pasted.district_id
-        pasted.save();
+        if newname  == '':
+            pasted.name = self.legislative_body.member % pasted.district_id
+            pasted.save();
         pasted.clone_characteristics_from(district)
         
         # For the remaning districts in the plan,
@@ -1095,7 +1106,7 @@ class Plan(models.Model):
                         new_district.clone_characteristics_from(existing)
                     else:
                         new_district = existing
-                    new_district.geom = None if difference.empty == True else difference
+                    new_district.geom = difference
                     new_district.version = new_version
                     new_district.simplify()
                     new_district.save()
