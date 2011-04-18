@@ -1125,6 +1125,13 @@ OpenLayers.Util.extend(boxControl, filterExtension);
                                         PLAN_VERSION = data.version;
                                         PLAN_HISTORY[PLAN_VERSION] = true;
                                         $('#history_cursor').val(data.version);
+
+                                        // update the UI buttons to show that you can
+                                        // perform an undo now, but not a redo
+                                        $('#history_redo').addClass('disabled');
+                                        $('#history_undo').removeClass('disabled');
+
+
                                         updateInfoDisplay();
                                         updateAssignableDistricts();
                                     } else {
