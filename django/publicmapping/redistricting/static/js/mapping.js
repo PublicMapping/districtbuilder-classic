@@ -2395,7 +2395,7 @@ OpenLayers.Util.extend(boxControl, filterExtension);
             var index = className.indexOf(prefix);
             var num = parseInt(className.substring(index + prefix.length).split(' ')[0], 10);
             if (num > -1) {
-                district_ids.push(parseInt(num, 10));
+                district_ids.push(num);
             }
         });
         highlightLayer.filter = getVersionAndSubjectFilters(olmap.getExtent(), null, district_ids);
