@@ -149,6 +149,7 @@ statisticssets = function(options) {
             var result = _displayCache[displayId];
             if (result) {
                 $('.demographics').html(result);
+                $('.olMap').trigger('draw_highlighted_districts', [ true ]);
                 return;
             }
         } else {
@@ -166,6 +167,7 @@ statisticssets = function(options) {
             function(rsp, status, xhr) {
                 loadTooltips();
                 $('.olMap').trigger('resort_by_visibility');
+                $('.olMap').trigger('draw_highlighted_districts', [ true ]);
                 _displayCache[displayId] = rsp;
             }
         );  

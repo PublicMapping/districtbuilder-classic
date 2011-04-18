@@ -213,9 +213,7 @@ function toggleDistrict(district_id) {
         clickTimer = null;
     }
     clickTimer = setTimeout(function() {
-        var row = $('.inforow_' + district_id + ' .poptot');
-        row.toggleClass('selected');
-        $(this).trigger('update_highlighting', [ true ]);
+        $(this).trigger('toggle_highlighting', [ district_id ]);
         clickTimer = null;
     }, 200);
     
@@ -828,6 +826,7 @@ OpenLayers.Util.extend(boxControl, filterExtension);
         sortByVisibility(true);
         districtLayer.filter = getVersionAndSubjectFilters(olmap.getExtent());
         districtLayer.strategies[0].update({force:true});
+        drawHighlightedDistricts();
     };
 
     // Track whether we've already got an outbound request to the server to add districts
@@ -2263,6 +2262,7 @@ OpenLayers.Util.extend(boxControl, filterExtension);
         if (olmap.center !== null) {
             districtLayer.filter = getVersionAndSubjectFilters(olmap.getExtent());
             districtLayer.strategies[0].update({force:true});
+            drawHighlightedDistricts();
         }
 
         changingSnap = false;
@@ -2383,23 +2383,39 @@ OpenLayers.Util.extend(boxControl, filterExtension);
         }
     });
 
+    // Storage for districts that are to be highlighted
+    var highlightedDistricts = [];
 
     /**
-     * Updates district highlighting layer on the map
+     * Highlights districts -- both in district row, and on map
      */
-    var updateDistrictHighlighting = function() {
-        var district_ids = [];
-        $('.poptot.selected').each(function(i, el) {
-            var className = el.parentNode.parentNode.className;
-            var prefix = 'inforow_';
-            var index = className.indexOf(prefix);
-            var num = parseInt(className.substring(index + prefix.length).split(' ')[0], 10);
-            if (num > -1) {
-                district_ids.push(num);
-            }
+    var drawHighlightedDistricts = function(evt, onlyUpdateRows) {
+        // Unselect all rows
+        $('#demographics_table tr .poptot').removeClass('selected');
+
+        // Add selected class for each selected district
+        $(highlightedDistricts).each(function(i, district_id) {
+            $('.inforow_' + district_id + ' .poptot').addClass('selected');
         });
-        highlightLayer.filter = getVersionAndSubjectFilters(olmap.getExtent(), null, district_ids);
-        highlightLayer.strategies[0].update({force:true});
+
+        // Update layer
+        if (!onlyUpdateRows) {
+            highlightLayer.filter = getVersionAndSubjectFilters(olmap.getExtent(), null, highlightedDistricts);
+            highlightLayer.strategies[0].update({force:true});
+        }
+    };
+
+    /**
+     * Updates highlighted districts array, and then calls function to highlight them
+     */
+    var toggleDistrictHighlighting = function(evt, district_id) {
+        var index = $.inArray(district_id, highlightedDistricts);
+        if (index < 0) {
+            highlightedDistricts.push(district_id);
+        } else {
+            highlightedDistricts.splice(index, 1);
+        }
+        drawHighlightedDistricts();
     };
 
     /**
@@ -2448,7 +2464,7 @@ OpenLayers.Util.extend(boxControl, filterExtension);
     // Bind to events that need refreshes
     $('#copy_paste_tool').bind('merge_success', updateToVersion);
     $('#multi_member_toggle').bind('assign_success', updateToVersion);
-    $(this).bind('update_highlighting', updateDistrictHighlighting);
+    $(this).bind('toggle_highlighting', toggleDistrictHighlighting);
     $(this).bind('zoom_to_district', zoomToDistrictExtent);
         
     /*
@@ -2578,6 +2594,7 @@ OpenLayers.Util.extend(boxControl, filterExtension);
     };
 
     $('.olMap').bind('resort_by_visibility', sortByVisibility);
+    $('.olMap').bind('draw_highlighted_districts', drawHighlightedDistricts);
    
     // triggering this event here will configure the map to correspond
     // with the initial dropdown values (jquery will set them to different
