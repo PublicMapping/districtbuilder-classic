@@ -136,6 +136,7 @@ function createMapTipDiv() {
     tipdiv.style.zIndex = 100000;
     tipdiv.style.position = 'absolute';
     tipdiv.style.opacity = '0.8';
+    tipdiv.style.maxWidth = '300px';
     tipdiv.className = 'tooltip';
 
     return tipdiv;
