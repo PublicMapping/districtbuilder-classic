@@ -64,21 +64,23 @@
 <!-- ==================== CLASS DESCRIPTION ==================== -->
 <h1 class="epydoc">Class AllContiguous</h1><p class="nomargin-top"><span class="codelink"><a href="publicmapping.redistricting.calculators-pysrc.html#AllContiguous">source&nbsp;code</a></span></p>
 <center>
-<center>  <map id="uml_class_diagram_for_publicma_18" name="uml_class_diagram_for_publicma_18">
-<area shape="rect" id="node19" href="publicmapping.redistricting.calculators.CalculatorBase-class.html#result" title="publicmapping.redistricting.calculators.CalculatorBase.result" alt="" coords="17,31,257,49"/>
-<area shape="rect" id="node19" href="publicmapping.redistricting.calculators.CalculatorBase-class.html#arg_dict" title="publicmapping.redistricting.calculators.CalculatorBase.arg_dict" alt="" coords="17,49,257,68"/>
-<area shape="rect" id="node19" href="publicmapping.redistricting.calculators.CalculatorBase-class.html#html" title="Return a basic HTML representation of the result." alt="" coords="17,71,257,89"/>
-<area shape="rect" id="node19" href="publicmapping.redistricting.calculators.CalculatorBase-class.html#json" title="Return a basic JSON representation of the result." alt="" coords="17,89,257,108"/>
-<area shape="rect" id="node19" href="publicmapping.redistricting.calculators.CalculatorBase-class.html#get_value" title="Get the value of an argument if it is a literal or a subject." alt="" coords="17,108,257,127"/>
-<area shape="rect" id="node1" href="publicmapping.redistricting.calculators.CalculatorBase-class.html" title="A base class for all calculators that defines the result object, and defines a couple default rendering options for HTML, JSON, and Boolean." alt="" coords="5,6,269,133"/>
-<area shape="rect" id="node18" href="publicmapping.redistricting.calculators.AllContiguous-class.html#compute" title="Compute the value for this calculator." alt="" coords="64,185,211,204"/>
-<area shape="rect" id="node2" href="publicmapping.redistricting.calculators.AllContiguous-class.html" title="Used to verify that all districts in a plan are contiguous." alt="" coords="52,153,223,210"/>
+<center>  <map id="uml_class_diagram_for_publicma_16" name="uml_class_diagram_for_publicma_16">
+<area shape="rect" id="node17" href="publicmapping.redistricting.calculators.CalculatorBase-class.html#result" title="publicmapping.redistricting.calculators.CalculatorBase.result" alt="" coords="17,31,257,49"/>
+<area shape="rect" id="node17" href="publicmapping.redistricting.calculators.CalculatorBase-class.html#arg_dict" title="publicmapping.redistricting.calculators.CalculatorBase.arg_dict" alt="" coords="17,49,257,68"/>
+<area shape="rect" id="node17" href="publicmapping.redistricting.calculators.CalculatorBase-class.html#sortkey" title="How should this calculator be compared to others like it? The default &#160;sorting method sorts by the value of the result." alt="" coords="17,71,257,89"/>
+<area shape="rect" id="node17" href="publicmapping.redistricting.calculators.CalculatorBase-class.html#html" title="Return a basic HTML representation of the result." alt="" coords="17,89,257,108"/>
+<area shape="rect" id="node17" href="publicmapping.redistricting.calculators.CalculatorBase-class.html#json" title="Return a basic JSON representation of the result." alt="" coords="17,108,257,127"/>
+<area shape="rect" id="node17" href="publicmapping.redistricting.calculators.CalculatorBase-class.html#get_value" title="Get the value of an argument if it is a literal or a subject." alt="" coords="17,127,257,145"/>
+<area shape="rect" id="node1" href="publicmapping.redistricting.calculators.CalculatorBase-class.html" title="A base class for all calculators that defines the result object, and defines a couple default rendering options for HTML, JSON, and Boolean." alt="" coords="5,6,269,151"/>
+<area shape="rect" id="node16" href="publicmapping.redistricting.calculators.AllContiguous-class.html#compute" title="Compute the value for this calculator." alt="" coords="64,204,211,223"/>
+<area shape="rect" id="node2" href="publicmapping.redistricting.calculators.AllContiguous-class.html" title="Used to verify that all districts in a plan are contiguous." alt="" coords="52,171,223,229"/>
 </map>
-  <img src="uml_class_diagram_for_publicma_18.gif" alt='' usemap="#uml_class_diagram_for_publicma_18" ismap="ismap" class="graph-without-title" />
+  <img src="uml_class_diagram_for_publicma_16.gif" alt='' usemap="#uml_class_diagram_for_publicma_16" ismap="ismap" class="graph-without-title" />
 </center>
 </center>
 <hr />
 <p>Used to verify that all districts in a plan are contiguous.</p>
+  <p>This calculator will only operate on a plan.</p>
 
 <!-- ==================== INSTANCE METHODS ==================== -->
 <a name="section-InstanceMethods"></a>
@@ -120,7 +122,8 @@
     <p class="indent-wrapped-lines"><b>Inherited from <code><a href="publicmapping.redistricting.calculators.CalculatorBase-class.html">CalculatorBase</a></code></b>:
       <code><a href="publicmapping.redistricting.calculators.CalculatorBase-class.html#get_value">get_value</a></code>,
       <code><a href="publicmapping.redistricting.calculators.CalculatorBase-class.html#html">html</a></code>,
-      <code><a href="publicmapping.redistricting.calculators.CalculatorBase-class.html#json">json</a></code>
+      <code><a href="publicmapping.redistricting.calculators.CalculatorBase-class.html#json">json</a></code>,
+      <code><a href="publicmapping.redistricting.calculators.CalculatorBase-class.html#sortkey">sortkey</a></code>
       </p>
     </td>
   </tr>
@@ -226,7 +229,7 @@
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">
-    Generated by Epydoc 3.0.1 on Sat Mar  5 09:07:23 2011
+    Generated by Epydoc 3.0.1 on Sun Apr  3 20:04:09 2011
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

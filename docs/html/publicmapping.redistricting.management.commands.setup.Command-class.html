@@ -66,40 +66,39 @@
 <!-- ==================== CLASS DESCRIPTION ==================== -->
 <h1 class="epydoc">Class Command</h1><p class="nomargin-top"><span class="codelink"><a href="publicmapping.redistricting.management.commands.setup-pysrc.html#Command">source&nbsp;code</a></span></p>
 <center>
-<center>  <map id="uml_class_diagram_for_publicma_35" name="uml_class_diagram_for_publicma_35">
-<area shape="rect" id="node53" href="javascript:void(0);" title="django.core.management.base.BaseCommand.can_import_settings" alt="" coords="55,31,365,49"/>
-<area shape="rect" id="node53" href="javascript:void(0);" title="django.core.management.base.BaseCommand.requires_model_validation" alt="" coords="55,49,365,68"/>
-<area shape="rect" id="node53" href="javascript:void(0);" title="django.core.management.base.BaseCommand.output_transaction" alt="" coords="55,68,365,87"/>
-<area shape="rect" id="node53" href="javascript:void(0);" title="x.__init__(...) initializes x; see x.__class__.__doc__ for signature" alt="" coords="55,89,365,108"/>
-<area shape="rect" id="node53" href="javascript:void(0);" title="Return the Django version, which should be correct for all built&#45;in Django &#160;commands." alt="" coords="55,108,365,127"/>
-<area shape="rect" id="node53" href="javascript:void(0);" title="Return a brief description of how to use this command, by default from the &#160;attribute ``self.help``." alt="" coords="55,127,365,145"/>
-<area shape="rect" id="node53" href="javascript:void(0);" title="Create and return the ``OptionParser`` which will be used to parse the &#160;arguments to this command." alt="" coords="55,145,365,164"/>
-<area shape="rect" id="node53" href="javascript:void(0);" title="Print the help message for this command, derived from ``self.usage()``." alt="" coords="55,164,365,183"/>
-<area shape="rect" id="node53" href="javascript:void(0);" title="Set up any environment changes requested (e.g., Python path and Django &#160;settings), then run this command." alt="" coords="55,183,365,201"/>
-<area shape="rect" id="node53" href="javascript:void(0);" title="Try to execute this command, performing model validation if needed (as &#160;controlled by the attribute ``self.requires_model_validation``)." alt="" coords="55,201,365,220"/>
-<area shape="rect" id="node53" href="javascript:void(0);" title="Validates the given app, raising CommandError for any errors." alt="" coords="55,220,365,239"/>
-<area shape="rect" id="node1" href="javascript:void(0);" title="The base class from which all management commands ultimately derive." alt="" coords="43,6,376,245"/>
-<area shape="rect" id="node52" href="publicmapping.redistricting.management.commands.setup.Command-class.html#args" title="publicmapping.redistricting.management.commands.setup.Command.args" alt="" coords="17,289,404,308"/>
-<area shape="rect" id="node52" href="publicmapping.redistricting.management.commands.setup.Command-class.html#help" title="publicmapping.redistricting.management.commands.setup.Command.help" alt="" coords="17,308,404,327"/>
-<area shape="rect" id="node52" href="publicmapping.redistricting.management.commands.setup.Command-class.html#option_list" title="publicmapping.redistricting.management.commands.setup.Command.option_list" alt="" coords="17,327,404,345"/>
-<area shape="rect" id="node52" href="publicmapping.redistricting.management.commands.setup.Command-class.html#handle" title="Perform the command." alt="" coords="17,348,404,367"/>
-<area shape="rect" id="node52" href="publicmapping.redistricting.management.commands.setup.Command-class.html#purge_sessions" title="Delete any sessions that existed in the database." alt="" coords="17,367,404,385"/>
-<area shape="rect" id="node52" href="publicmapping.redistricting.management.commands.setup.Command-class.html#configure_geoserver" title="Create the workspace and layers in geoserver, based on the imported data." alt="" coords="17,385,404,404"/>
-<area shape="rect" id="node52" href="publicmapping.redistricting.management.commands.setup.Command-class.html#get_style_contents" title="publicmapping.redistricting.management.commands.setup.Command.get_style_contents" alt="" coords="17,404,404,423"/>
-<area shape="rect" id="node52" href="publicmapping.redistricting.management.commands.setup.Command-class.html#rest_check" title="publicmapping.redistricting.management.commands.setup.Command.rest_check" alt="" coords="17,423,404,441"/>
-<area shape="rect" id="node52" href="publicmapping.redistricting.management.commands.setup.Command-class.html#rest_config" title="publicmapping.redistricting.management.commands.setup.Command.rest_config" alt="" coords="17,441,404,460"/>
-<area shape="rect" id="node52" href="publicmapping.redistricting.management.commands.setup.Command-class.html#create_views" title="Create specialized views for GIS and mapping layers." alt="" coords="17,460,404,479"/>
-<area shape="rect" id="node52" href="publicmapping.redistricting.management.commands.setup.Command-class.html#import_geolevel" title="Import the geography at a geolevel." alt="" coords="17,479,404,497"/>
-<area shape="rect" id="node52" href="publicmapping.redistricting.management.commands.setup.Command-class.html#renest_geolevel" title="Perform a re&#45;nesting of the geography in the geographic levels." alt="" coords="17,497,404,516"/>
-<area shape="rect" id="node52" href="publicmapping.redistricting.management.commands.setup.Command-class.html#aggregate_unit" title="publicmapping.redistricting.management.commands.setup.Command.aggregate_unit" alt="" coords="17,516,404,535"/>
-<area shape="rect" id="node52" href="publicmapping.redistricting.management.commands.setup.Command-class.html#import_prereq" title="Import the required support data prior to importing." alt="" coords="17,535,404,553"/>
-<area shape="rect" id="node52" href="publicmapping.redistricting.management.commands.setup.Command-class.html#import_shape" title="Import a shapefile, based on a config." alt="" coords="17,553,404,572"/>
-<area shape="rect" id="node52" href="publicmapping.redistricting.management.commands.setup.Command-class.html#set_geounit_characteristic" title="publicmapping.redistricting.management.commands.setup.Command.set_geounit_characteristic" alt="" coords="17,572,404,591"/>
-<area shape="rect" id="node52" href="publicmapping.redistricting.management.commands.setup.Command-class.html#create_template" title="Create the templates that are defined in the configuration file." alt="" coords="17,591,404,609"/>
-<area shape="rect" id="node52" href="publicmapping.redistricting.management.commands.setup.Command-class.html#build_bardmap" title="Build the BARD reporting base maps." alt="" coords="17,609,404,628"/>
-<area shape="rect" id="node2" href="publicmapping.redistricting.management.commands.setup.Command-class.html" title="Set up District Builder." alt="" coords="5,265,416,634"/>
+<center>  <map id="uml_class_diagram_for_publicma_37" name="uml_class_diagram_for_publicma_37">
+<area shape="rect" id="node59" href="javascript:void(0);" title="django.core.management.base.BaseCommand.can_import_settings" alt="" coords="52,31,363,49"/>
+<area shape="rect" id="node59" href="javascript:void(0);" title="django.core.management.base.BaseCommand.requires_model_validation" alt="" coords="52,49,363,68"/>
+<area shape="rect" id="node59" href="javascript:void(0);" title="django.core.management.base.BaseCommand.output_transaction" alt="" coords="52,68,363,87"/>
+<area shape="rect" id="node59" href="javascript:void(0);" title="x.__init__(...) initializes x; see x.__class__.__doc__ for signature" alt="" coords="52,89,363,108"/>
+<area shape="rect" id="node59" href="javascript:void(0);" title="Return the Django version, which should be correct for all built&#45;in Django &#160;commands." alt="" coords="52,108,363,127"/>
+<area shape="rect" id="node59" href="javascript:void(0);" title="Return a brief description of how to use this command, by default from the &#160;attribute ``self.help``." alt="" coords="52,127,363,145"/>
+<area shape="rect" id="node59" href="javascript:void(0);" title="Create and return the ``OptionParser`` which will be used to parse the &#160;arguments to this command." alt="" coords="52,145,363,164"/>
+<area shape="rect" id="node59" href="javascript:void(0);" title="Print the help message for this command, derived from ``self.usage()``." alt="" coords="52,164,363,183"/>
+<area shape="rect" id="node59" href="javascript:void(0);" title="Set up any environment changes requested (e.g., Python path and Django &#160;settings), then run this command." alt="" coords="52,183,363,201"/>
+<area shape="rect" id="node59" href="javascript:void(0);" title="Try to execute this command, performing model validation if needed (as &#160;controlled by the attribute ``self.requires_model_validation``)." alt="" coords="52,201,363,220"/>
+<area shape="rect" id="node59" href="javascript:void(0);" title="Validates the given app, raising CommandError for any errors." alt="" coords="52,220,363,239"/>
+<area shape="rect" id="node1" href="javascript:void(0);" title="The base class from which all management commands ultimately derive." alt="" coords="40,6,373,245"/>
+<area shape="rect" id="node58" href="publicmapping.redistricting.management.commands.setup.Command-class.html#args" title="publicmapping.redistricting.management.commands.setup.Command.args" alt="" coords="17,289,397,308"/>
+<area shape="rect" id="node58" href="publicmapping.redistricting.management.commands.setup.Command-class.html#help" title="publicmapping.redistricting.management.commands.setup.Command.help" alt="" coords="17,308,397,327"/>
+<area shape="rect" id="node58" href="publicmapping.redistricting.management.commands.setup.Command-class.html#option_list" title="publicmapping.redistricting.management.commands.setup.Command.option_list" alt="" coords="17,327,397,345"/>
+<area shape="rect" id="node58" href="publicmapping.redistricting.management.commands.setup.Command-class.html#handle" title="Perform the command." alt="" coords="17,348,397,367"/>
+<area shape="rect" id="node58" href="publicmapping.redistricting.management.commands.setup.Command-class.html#create_superuser" title="Create the django superuser, based on the config." alt="" coords="17,367,397,385"/>
+<area shape="rect" id="node58" href="publicmapping.redistricting.management.commands.setup.Command-class.html#purge_sessions" title="Delete any sessions that existed in the database." alt="" coords="17,385,397,404"/>
+<area shape="rect" id="node58" href="publicmapping.redistricting.management.commands.setup.Command-class.html#configure_geoserver" title="Create the workspace and layers in geoserver, based on the imported data." alt="" coords="17,404,397,423"/>
+<area shape="rect" id="node58" href="publicmapping.redistricting.management.commands.setup.Command-class.html#get_style_contents" title="publicmapping.redistricting.management.commands.setup.Command.get_style_contents" alt="" coords="17,423,397,441"/>
+<area shape="rect" id="node58" href="publicmapping.redistricting.management.commands.setup.Command-class.html#rest_check" title="publicmapping.redistricting.management.commands.setup.Command.rest_check" alt="" coords="17,441,397,460"/>
+<area shape="rect" id="node58" href="publicmapping.redistricting.management.commands.setup.Command-class.html#rest_config" title="publicmapping.redistricting.management.commands.setup.Command.rest_config" alt="" coords="17,460,397,479"/>
+<area shape="rect" id="node58" href="publicmapping.redistricting.management.commands.setup.Command-class.html#create_views" title="Create specialized views for GIS and mapping layers." alt="" coords="17,479,397,497"/>
+<area shape="rect" id="node58" href="publicmapping.redistricting.management.commands.setup.Command-class.html#import_geolevel" title="Import the geography at a geolevel." alt="" coords="17,497,397,516"/>
+<area shape="rect" id="node58" href="publicmapping.redistricting.management.commands.setup.Command-class.html#renest_geolevel" title="Perform a re&#45;nesting of the geography in the geographic levels." alt="" coords="17,516,397,535"/>
+<area shape="rect" id="node58" href="publicmapping.redistricting.management.commands.setup.Command-class.html#aggregate_unit" title="publicmapping.redistricting.management.commands.setup.Command.aggregate_unit" alt="" coords="17,535,397,553"/>
+<area shape="rect" id="node58" href="publicmapping.redistricting.management.commands.setup.Command-class.html#import_contiguity_overrides" title="Import any ContiguityOverrides." alt="" coords="17,553,397,572"/>
+<area shape="rect" id="node58" href="publicmapping.redistricting.management.commands.setup.Command-class.html#import_arguments" title="publicmapping.redistricting.management.commands.setup.Command.import_arguments" alt="" coords="17,572,397,591"/>
+<area shape="rect" id="node58" href="publicmapping.redistricting.management.commands.setup.Command-class.html#build_bardmap" title="Build the BARD reporting base maps." alt="" coords="17,609,397,628"/>
+<area shape="rect" id="node2" href="publicmapping.redistricting.management.commands.setup.Command-class.html" title="Set up District Builder." alt="" coords="5,265,408,634"/>
 </map>
-  <img src="uml_class_diagram_for_publicma_35.gif" alt='' usemap="#uml_class_diagram_for_publicma_35" ismap="ismap" class="graph-without-title" />
+  <img src="uml_class_diagram_for_publicma_37.gif" alt='' usemap="#uml_class_diagram_for_publicma_37" ismap="ismap" class="graph-without-title" />
 </center>
 </center>
 <hr />
@@ -134,6 +133,25 @@
       Perform the command.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="publicmapping.redistricting.management.commands.setup-pysrc.html#Command.handle">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="create_superuser"></a><span class="summary-sig-name">create_superuser</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">config</span>,
+        <span class="summary-sig-arg">verbose</span>)</span><br />
+      Create the django superuser, based on the config.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.management.commands.setup-pysrc.html#Command.create_superuser">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -189,7 +207,8 @@
           <td><span class="summary-sig"><a name="get_style_contents"></a><span class="summary-sig-name">get_style_contents</span>(<span class="summary-sig-arg">self</span>,
         <span class="summary-sig-arg">styledir</span>,
         <span class="summary-sig-arg">geolevel</span>,
-        <span class="summary-sig-arg">subject</span>)</span></td>
+        <span class="summary-sig-arg">subject</span>,
+        <span class="summary-sig-arg">verbose</span>)</span></td>
           <td align="right" valign="top">
             <span class="codelink"><a href="publicmapping.redistricting.management.commands.setup-pysrc.html#Command.get_style_contents">source&nbsp;code</a></span>
             
@@ -230,7 +249,8 @@
         <span class="summary-sig-arg">url</span>,
         <span class="summary-sig-arg">data</span>,
         <span class="summary-sig-arg">headers</span>,
-        <span class="summary-sig-arg">msg</span>)</span></td>
+        <span class="summary-sig-arg">msg</span>,
+        <span class="summary-sig-arg">verbose</span>)</span></td>
           <td align="right" valign="top">
             <span class="codelink"><a href="publicmapping.redistricting.management.commands.setup-pysrc.html#Command.rest_config">source&nbsp;code</a></span>
             
@@ -323,6 +343,64 @@
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.management.commands.setup.Command-class.html#import_contiguity_overrides" class="summary-sig-name">import_contiguity_overrides</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">config</span>,
+        <span class="summary-sig-arg">verbose</span>)</span><br />
+      Import any ContiguityOverrides.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.management.commands.setup-pysrc.html#Command.import_contiguity_overrides">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="import_arguments"></a><span class="summary-sig-name">import_arguments</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">score_function</span>,
+        <span class="summary-sig-arg">config</span>,
+        <span class="summary-sig-arg">verbose</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.management.commands.setup-pysrc.html#Command.import_arguments">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.management.commands.setup.Command-class.html#import_scoring" class="summary-sig-name">import_scoring</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">config</span>,
+        <span class="summary-sig-arg">verbose</span>)</span><br />
+      Import the Scoring and Validation sections which configure the 
+      models:</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.management.commands.setup-pysrc.html#Command.import_scoring">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
           <td><span class="summary-sig"><a href="publicmapping.redistricting.management.commands.setup.Command-class.html#import_prereq" class="summary-sig-name">import_prereq</a>(<span class="summary-sig-arg">self</span>,
         <span class="summary-sig-arg">config</span>,
         <span class="summary-sig-arg">verbose</span>)</span><br />
@@ -387,6 +465,27 @@
       Create the templates that are defined in the configuration file.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="publicmapping.redistricting.management.commands.setup-pysrc.html#Command.create_template">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="create_report_templates"></a><span class="summary-sig-name">create_report_templates</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">config</span>,
+        <span class="summary-sig-arg">verbose</span>)</span><br />
+      This object takes the full configuration element and the path to an 
+      XSLT and does the transforms necessary to create templates for use in
+      BARD reporting</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.management.commands.setup-pysrc.html#Command.create_report_templates">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -479,12 +578,12 @@
     </td><td class="summary">
         <a href="publicmapping.redistricting.management.commands.setup.Command-class.html#option_list" class="summary-name">option_list</a> = <code title="BaseCommand.option_list+(make_option('-c', '--config', dest= &quot;config&quot;,\
  help= &quot;Use configuration file CONFIG&quot;, metavar= &quot;CONFIG&quot;), make_optio\
-n('-D', '--debug', dest= &quot;debug&quot;, help= &quot;Generate verbose debug output\
-&quot;, default= False, action= 'store_true'), make_option('-g', '--geoleve\
-l', dest= &quot;geolevels&quot;, action= &quot;append&quot;, help= &quot;Geolevels to import&quot;),\
- make_option('-n', '--nesting', dest= &quot;nesting&quot;, action= 'append', hel\
-p= &quot;Enforce nested geometries.&quot;), make_option('-V', '--views', dest= &quot;\
-views&quot;, default= False, action= &quot;store_true&quot;, help= &quot;Create database v\
+n('-d', '--database', dest= &quot;database&quot;, help= &quot;Generate the base data \
+objects.&quot;, default= False, action= 'store_true'), make_option('-g', '-\
+-geolevel', dest= &quot;geolevels&quot;, action= &quot;append&quot;, help= &quot;Geolevels to i\
+mport&quot;, type= 'int'), make_option('-n', '--nesting', dest= &quot;nesting&quot;, \
+action= 'append', help= &quot;Enforce nested geometries.&quot;, type= 'int'), ma\
+ke_option('-V', '--views', dest= &quot;views&quot;, default= False, action= &quot;sto\
 ...">BaseCommand.option_list+(make_option('-c', '--co<code class="variable-ellipsis">...</code></code>
     </td>
   </tr>
@@ -678,6 +777,76 @@ Parameters:
   </dl>
 </td></tr></table>
 </div>
+<a name="import_contiguity_overrides"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">import_contiguity_overrides</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">config</span>,
+        <span class="sig-arg">verbose</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.management.commands.setup-pysrc.html#Command.import_contiguity_overrides">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Import any ContiguityOverrides. This is optional.</p>
+  <dl class="fields">
+    <dt>Decorators:</dt>
+    <dd><ul class="nomargin-top">
+        <li><code>@transaction.commit_on_success</code></li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="import_scoring"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">import_scoring</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">config</span>,
+        <span class="sig-arg">verbose</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.management.commands.setup-pysrc.html#Command.import_scoring">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Import the Scoring and Validation sections which configure the 
+  models:</p>
+  <ul>
+    <li>
+      ScoreDisplay
+    </li>
+    <li>
+      ScorePanel
+    </li>
+    <li>
+      ScoreFunction
+    </li>
+    <li>
+      ScoreArgument
+    </li>
+    <li>
+      ValidationCriteria
+    </li>
+  </ul>
+  <p>Scoring is currently optional. Import sections only if they are 
+  present.</p>
+  <dl class="fields">
+    <dt>Decorators:</dt>
+    <dd><ul class="nomargin-top">
+        <li><code>@transaction.commit_on_success</code></li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
 <a name="import_prereq"></a>
 <div>
 <table class="details" border="1" cellpadding="3"
@@ -840,12 +1009,12 @@ Parameters:
       <dd><table><tr><td><pre class="variable">
 BaseCommand.option_list+(make_option('-c', '--config', dest= &quot;config&quot;,<span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
  help= &quot;Use configuration file CONFIG&quot;, metavar= &quot;CONFIG&quot;), make_optio<span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
-n('-D', '--debug', dest= &quot;debug&quot;, help= &quot;Generate verbose debug output<span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
-&quot;, default= False, action= 'store_true'), make_option('-g', '--geoleve<span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
-l', dest= &quot;geolevels&quot;, action= &quot;append&quot;, help= &quot;Geolevels to import&quot;),<span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
- make_option('-n', '--nesting', dest= &quot;nesting&quot;, action= 'append', hel<span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
-p= &quot;Enforce nested geometries.&quot;), make_option('-V', '--views', dest= &quot;<span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
-views&quot;, default= False, action= &quot;store_true&quot;, help= &quot;Create database v<span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
+n('-d', '--database', dest= &quot;database&quot;, help= &quot;Generate the base data <span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
+objects.&quot;, default= False, action= 'store_true'), make_option('-g', '-<span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
+-geolevel', dest= &quot;geolevels&quot;, action= &quot;append&quot;, help= &quot;Geolevels to i<span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
+mport&quot;, type= 'int'), make_option('-n', '--nesting', dest= &quot;nesting&quot;, <span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
+action= 'append', help= &quot;Enforce nested geometries.&quot;, type= 'int'), ma<span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
+ke_option('-V', '--views', dest= &quot;views&quot;, default= False, action= &quot;sto<span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
 <code class="variable-ellipsis">...</code>
 </pre></td></tr></table>
 </dd>
@@ -884,7 +1053,7 @@ views&quot;, default= False, action= &quot;store_true&quot;, help= &quot;Create 
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">
-    Generated by Epydoc 3.0.1 on Sat Mar  5 09:07:25 2011
+    Generated by Epydoc 3.0.1 on Sun Apr  3 20:04:11 2011
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

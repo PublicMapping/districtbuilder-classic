@@ -64,21 +64,50 @@
 <!-- ==================== CLASS DESCRIPTION ==================== -->
 <h1 class="epydoc">Class ScoreDisplay</h1><p class="nomargin-top"><span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#ScoreDisplay">source&nbsp;code</a></span></p>
 <center>
-<center>  <map id="uml_class_diagram_for_publicma_49" name="uml_class_diagram_for_publicma_49">
-<area shape="rect" id="node67" href="publicmapping.redistricting.models.ScoreDisplay-class.html#title" title="publicmapping.redistricting.models.ScoreDisplay.title" alt="" coords="17,31,213,49"/>
-<area shape="rect" id="node67" href="publicmapping.redistricting.models.ScoreDisplay-class.html#legislative_body" title="publicmapping.redistricting.models.ScoreDisplay.legislative_body" alt="" coords="17,49,213,68"/>
-<area shape="rect" id="node67" href="publicmapping.redistricting.models.ScoreDisplay-class.html#is_page" title="publicmapping.redistricting.models.ScoreDisplay.is_page" alt="" coords="17,68,213,87"/>
-<area shape="rect" id="node67" href="publicmapping.redistricting.models.ScoreDisplay-class.html#cssclass" title="publicmapping.redistricting.models.ScoreDisplay.cssclass" alt="" coords="17,87,213,105"/>
-<area shape="rect" id="node67" href="publicmapping.redistricting.models.ScoreDisplay-class.html#__unicode__" title="Get a unicode representation of this object." alt="" coords="17,108,213,127"/>
-<area shape="rect" id="node67" href="publicmapping.redistricting.models.ScoreDisplay-class.html#render" title="Generate the markup for all the panels attached to this display." alt="" coords="17,127,213,145"/>
-<area shape="rect" id="node1" href="publicmapping.redistricting.models.ScoreDisplay-class.html" title="Container for displaying score panels" alt="" coords="5,6,224,151"/>
+<center>  <map id="uml_class_diagram_for_publicma_53" name="uml_class_diagram_for_publicma_53">
+<area shape="rect" id="node75" href="publicmapping.redistricting.models.ScoreDisplay-class.html#title" title="publicmapping.redistricting.models.ScoreDisplay.title" alt="" coords="17,31,429,49"/>
+<area shape="rect" id="node75" href="publicmapping.redistricting.models.ScoreDisplay-class.html#legislative_body" title="publicmapping.redistricting.models.ScoreDisplay.legislative_body" alt="" coords="17,49,429,68"/>
+<area shape="rect" id="node75" href="publicmapping.redistricting.models.ScoreDisplay-class.html#is_page" title="publicmapping.redistricting.models.ScoreDisplay.is_page" alt="" coords="17,68,429,87"/>
+<area shape="rect" id="node75" href="publicmapping.redistricting.models.ScoreDisplay-class.html#cssclass" title="publicmapping.redistricting.models.ScoreDisplay.cssclass" alt="" coords="17,87,429,105"/>
+<area shape="rect" id="node75" href="publicmapping.redistricting.models.ScoreDisplay-class.html#owner" title="publicmapping.redistricting.models.ScoreDisplay.owner" alt="" coords="17,105,429,124"/>
+<area shape="rect" id="node75" href="publicmapping.redistricting.models.ScoreDisplay.Meta-class.html" title="Define a unique constraint on 2 fields of this model." alt="" coords="17,124,429,143"/>
+<area shape="rect" id="node75" href="publicmapping.redistricting.models.ScoreDisplay-class.html#__unicode__" title="Get a unicode representation of this object." alt="" coords="17,145,429,164"/>
+<area shape="rect" id="node75" href="publicmapping.redistricting.models.ScoreDisplay-class.html#copy_from" title="Given a scoredisplay and a list of functions, this method will copy the display and assign the copy to the new owner" alt="" coords="17,164,429,183"/>
+<area shape="rect" id="node75" href="publicmapping.redistricting.models.ScoreDisplay-class.html#render" title="Generate the markup for all the panels attached to this display." alt="" coords="17,183,429,201"/>
+<area shape="rect" id="node1" href="publicmapping.redistricting.models.ScoreDisplay-class.html" title="Container for displaying score panels" alt="" coords="5,6,440,207"/>
 </map>
-  <img src="uml_class_diagram_for_publicma_49.gif" alt='' usemap="#uml_class_diagram_for_publicma_49" ismap="ismap" class="graph-without-title" />
+  <img src="uml_class_diagram_for_publicma_53.gif" alt='' usemap="#uml_class_diagram_for_publicma_53" ismap="ismap" class="graph-without-title" />
 </center>
 </center>
 <hr />
 <p>Container for displaying score panels</p>
 
+<!-- ==================== NESTED CLASSES ==================== -->
+<a name="section-NestedClasses"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Nested Classes</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-NestedClasses"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="publicmapping.redistricting.models.ScoreDisplay.Meta-class.html" class="summary-name">Meta</a><br />
+      Define a unique constraint on 2 fields of this model.
+    </td>
+  </tr>
+</table>
 <!-- ==================== INSTANCE METHODS ==================== -->
 <a name="section-InstanceMethods"></a>
 <table class="summary" border="1" cellpadding="3"
@@ -119,9 +148,32 @@
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.models.ScoreDisplay-class.html#copy_from" class="summary-sig-name">copy_from</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">display</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">functions</span>=<span class="summary-sig-default">[]</span>,
+        <span class="summary-sig-arg">owner</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">title</span>=<span class="summary-sig-default">None</span>)</span><br />
+      Given a scoredisplay and a list of functions, this method
+will copy the display and assign the copy to the new owner</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#ScoreDisplay.copy_from">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
           <td><span class="summary-sig"><a href="publicmapping.redistricting.models.ScoreDisplay-class.html#render" class="summary-sig-name">render</a>(<span class="summary-sig-arg">self</span>,
         <span class="summary-sig-arg">dorp</span>,
-        <span class="summary-sig-arg">context</span>=<span class="summary-sig-default">None</span>)</span><br />
+        <span class="summary-sig-arg">context</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">version</span>=<span class="summary-sig-default">None</span>)</span><br />
       Generate the markup for all the panels attached to this display.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#ScoreDisplay.render">source&nbsp;code</a></span>
@@ -178,6 +230,13 @@
         <a name="cssclass"></a><span class="summary-name">cssclass</span> = <code title="models.CharField(max_length= 50, blank= True)">models.CharField(max_length= 50, blank= True)</code>
     </td>
   </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="owner"></a><span class="summary-name">owner</span> = <code title="models.ForeignKey(User)">models.ForeignKey(User)</code>
+    </td>
+  </tr>
 </table>
 <!-- ==================== METHOD DETAILS ==================== -->
 <a name="section-MethodDetails"></a>
@@ -217,6 +276,46 @@
   </dl>
 </td></tr></table>
 </div>
+<a name="copy_from"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">copy_from</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">display</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">functions</span>=<span class="sig-default">[]</span>,
+        <span class="sig-arg">owner</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">title</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#ScoreDisplay.copy_from">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Given a scoredisplay and a list of functions, this method
+will copy the display and assign the copy to the new owner
+
+Parameters:
+    display -- a ScoreDisplay to copy - the current 
+       Demographics display 
+    functions -- a list of ScoreFunctions or the primary
+        keys of ScoreFunctions to replace in the display's
+        first &quot;district&quot; ScorePanel
+    owner -- the owner of the new ScoreDisplay - only set if we're not copying self
+    title -- the title of the new scorefunction - only set if we're not copying self
+
+Returns:
+    The new ScoreDisplay
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
 <a name="render"></a>
 <div>
 <table class="details" border="1" cellpadding="3"
@@ -226,7 +325,8 @@
   <tr valign="top"><td>
   <h3 class="epydoc"><span class="sig"><span class="sig-name">render</span>(<span class="sig-arg">self</span>,
         <span class="sig-arg">dorp</span>,
-        <span class="sig-arg">context</span>=<span class="sig-default">None</span>)</span>
+        <span class="sig-arg">context</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">version</span>=<span class="sig-default">None</span>)</span>
   </h3>
   </td><td align="right" valign="top"
     ><span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#ScoreDisplay.render">source&nbsp;code</a></span>&nbsp;
@@ -246,6 +346,7 @@ single plan, or a list of districts.
 Parameters:
     dorp -- A list of districts, plan, or list of plans.
     context -- Optional object that can be used for advanced rendering
+    version -- Optional; the version of the plan or district to render.
 
 Returns:
     The markup for this display.
@@ -287,7 +388,7 @@ Returns:
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">
-    Generated by Epydoc 3.0.1 on Sat Mar  5 09:07:27 2011
+    Generated by Epydoc 3.0.1 on Sun Apr  3 20:04:13 2011
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

@@ -64,38 +64,39 @@
 <!-- ==================== CLASS DESCRIPTION ==================== -->
 <h1 class="epydoc">Class Plan</h1><p class="nomargin-top"><span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#Plan">source&nbsp;code</a></span></p>
 <center>
-<center>  <map id="uml_class_diagram_for_publicma_45" name="uml_class_diagram_for_publicma_45">
-<area shape="rect" id="node63" href="publicmapping.redistricting.models.Plan-class.html#name" title="publicmapping.redistricting.models.Plan.name" alt="" coords="17,31,461,49"/>
-<area shape="rect" id="node63" href="publicmapping.redistricting.models.Plan-class.html#description" title="publicmapping.redistricting.models.Plan.description" alt="" coords="17,49,461,68"/>
-<area shape="rect" id="node63" href="publicmapping.redistricting.models.Plan-class.html#is_template" title="publicmapping.redistricting.models.Plan.is_template" alt="" coords="17,68,461,87"/>
-<area shape="rect" id="node63" href="publicmapping.redistricting.models.Plan-class.html#is_shared" title="publicmapping.redistricting.models.Plan.is_shared" alt="" coords="17,87,461,105"/>
-<area shape="rect" id="node63" href="publicmapping.redistricting.models.Plan-class.html#is_pending" title="publicmapping.redistricting.models.Plan.is_pending" alt="" coords="17,105,461,124"/>
-<area shape="rect" id="node63" href="publicmapping.redistricting.models.Plan-class.html#is_valid" title="publicmapping.redistricting.models.Plan.is_valid" alt="" coords="17,124,461,143"/>
-<area shape="rect" id="node63" href="publicmapping.redistricting.models.Plan-class.html#version" title="publicmapping.redistricting.models.Plan.version" alt="" coords="17,143,461,161"/>
-<area shape="rect" id="node63" href="publicmapping.redistricting.models.Plan-class.html#min_version" title="publicmapping.redistricting.models.Plan.min_version" alt="" coords="17,161,461,180"/>
-<area shape="rect" id="node63" href="publicmapping.redistricting.models.Plan-class.html#created" title="publicmapping.redistricting.models.Plan.created" alt="" coords="17,180,461,199"/>
-<area shape="rect" id="node63" href="publicmapping.redistricting.models.Plan-class.html#edited" title="publicmapping.redistricting.models.Plan.edited" alt="" coords="17,199,461,217"/>
-<area shape="rect" id="node63" href="publicmapping.redistricting.models.Plan-class.html#owner" title="publicmapping.redistricting.models.Plan.owner" alt="" coords="17,217,461,236"/>
-<area shape="rect" id="node63" href="publicmapping.redistricting.models.Plan-class.html#legislative_body" title="publicmapping.redistricting.models.Plan.legislative_body" alt="" coords="17,236,461,255"/>
-<area shape="rect" id="node63" href="publicmapping.redistricting.models.Plan.Meta-class.html" title="Define a unique constraint on 2 fields of this model." alt="" coords="17,255,461,273"/>
-<area shape="rect" id="node63" href="publicmapping.redistricting.models.Plan-class.html#acceptable_intersections" title="publicmapping.redistricting.models.Plan.acceptable_intersections" alt="" coords="17,273,461,292"/>
-<area shape="rect" id="node63" href="publicmapping.redistricting.models.Plan-class.html#__unicode__" title="Represent the Plan as a unicode string." alt="" coords="17,295,461,313"/>
-<area shape="rect" id="node63" href="publicmapping.redistricting.models.Plan-class.html#targets" title="Get the targets associated with this plan by stepping back through the &#160;legislative body and finding distinct targets for displayed subjects among &#160;all the geolevels in the body." alt="" coords="17,313,461,332"/>
-<area shape="rect" id="node63" href="publicmapping.redistricting.models.Plan-class.html#get_nth_previous_version" title="Get the version of this plan N steps away." alt="" coords="17,332,461,351"/>
-<area shape="rect" id="node63" href="publicmapping.redistricting.models.Plan-class.html#purge" title="Purge portions of this plan&#39;s history." alt="" coords="17,351,461,369"/>
-<area shape="rect" id="node63" href="publicmapping.redistricting.models.Plan-class.html#purge_beyond_nth_step" title="Purge portions of this plan&#39;s history that are beyond N undo steps away." alt="" coords="17,369,461,388"/>
-<area shape="rect" id="node63" href="publicmapping.redistricting.models.Plan-class.html#add_geounits" title="Add Geounits to a District." alt="" coords="17,388,461,407"/>
-<area shape="rect" id="node63" href="publicmapping.redistricting.models.Plan-class.html#get_biggest_geolevel" title="A convenience method to get the &quot;biggest&quot; geolevel that could be used in this plan." alt="" coords="17,407,461,425"/>
-<area shape="rect" id="node63" href="publicmapping.redistricting.models.Plan-class.html#paste_districts" title="Add the districts with the given plan into the plan Parameters &#160;&#160;&#160;&#160;districts &#45;&#45; A list of districts to add to &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;this plan &#160;&#160;&#160;&#160;version &#45;&#45; The plan version that requested the &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;change." alt="" coords="17,425,461,444"/>
-<area shape="rect" id="node63" href="publicmapping.redistricting.models.Plan-class.html#paste_district" title="Add the district with the given primary key into this plan" alt="" coords="17,444,461,463"/>
-<area shape="rect" id="node63" href="publicmapping.redistricting.models.Plan-class.html#get_wfs_districts" title="Get the districts in this plan as a GeoJSON WFS response." alt="" coords="17,463,461,481"/>
-<area shape="rect" id="node63" href="publicmapping.redistricting.models.Plan-class.html#get_districts_at_version" title="Get Plan Districts at a specified version." alt="" coords="17,481,461,500"/>
-<area shape="rect" id="node63" href="publicmapping.redistricting.models.Plan-class.html#create_default" title="Create a default plan." alt="" coords="17,500,461,519"/>
-<area shape="rect" id="node63" href="publicmapping.redistricting.models.Plan-class.html#get_base_geounits_in_geom" title="Get a list of the geounit ids of the geounits that comprise &#160;this geometry at the base level." alt="" coords="17,519,461,537"/>
-<area shape="rect" id="node63" href="publicmapping.redistricting.models.Plan-class.html#combine_districts" title="Given a target district, add the components and combine their scores and geography." alt="" coords="17,556,461,575"/>
-<area shape="rect" id="node1" href="publicmapping.redistricting.models.Plan-class.html" title="A collection of Districts for an area of coverage, like a state." alt="" coords="5,6,472,581"/>
+<center>  <map id="uml_class_diagram_for_publicma_49" name="uml_class_diagram_for_publicma_49">
+<area shape="rect" id="node71" href="publicmapping.redistricting.models.Plan-class.html#name" title="publicmapping.redistricting.models.Plan.name" alt="" coords="17,31,487,49"/>
+<area shape="rect" id="node71" href="publicmapping.redistricting.models.Plan-class.html#description" title="publicmapping.redistricting.models.Plan.description" alt="" coords="17,49,487,68"/>
+<area shape="rect" id="node71" href="publicmapping.redistricting.models.Plan-class.html#is_template" title="publicmapping.redistricting.models.Plan.is_template" alt="" coords="17,68,487,87"/>
+<area shape="rect" id="node71" href="publicmapping.redistricting.models.Plan-class.html#is_shared" title="publicmapping.redistricting.models.Plan.is_shared" alt="" coords="17,87,487,105"/>
+<area shape="rect" id="node71" href="publicmapping.redistricting.models.Plan-class.html#is_pending" title="publicmapping.redistricting.models.Plan.is_pending" alt="" coords="17,105,487,124"/>
+<area shape="rect" id="node71" href="publicmapping.redistricting.models.Plan-class.html#is_valid" title="publicmapping.redistricting.models.Plan.is_valid" alt="" coords="17,124,487,143"/>
+<area shape="rect" id="node71" href="publicmapping.redistricting.models.Plan-class.html#version" title="publicmapping.redistricting.models.Plan.version" alt="" coords="17,143,487,161"/>
+<area shape="rect" id="node71" href="publicmapping.redistricting.models.Plan-class.html#min_version" title="publicmapping.redistricting.models.Plan.min_version" alt="" coords="17,161,487,180"/>
+<area shape="rect" id="node71" href="publicmapping.redistricting.models.Plan-class.html#created" title="publicmapping.redistricting.models.Plan.created" alt="" coords="17,180,487,199"/>
+<area shape="rect" id="node71" href="publicmapping.redistricting.models.Plan-class.html#edited" title="publicmapping.redistricting.models.Plan.edited" alt="" coords="17,199,487,217"/>
+<area shape="rect" id="node71" href="publicmapping.redistricting.models.Plan-class.html#owner" title="publicmapping.redistricting.models.Plan.owner" alt="" coords="17,217,487,236"/>
+<area shape="rect" id="node71" href="publicmapping.redistricting.models.Plan-class.html#legislative_body" title="publicmapping.redistricting.models.Plan.legislative_body" alt="" coords="17,236,487,255"/>
+<area shape="rect" id="node71" href="publicmapping.redistricting.models.Plan-class.html#create_unassigned" title="publicmapping.redistricting.models.Plan.create_unassigned" alt="" coords="17,255,487,273"/>
+<area shape="rect" id="node71" href="publicmapping.redistricting.models.Plan.Meta-class.html" title="Define a unique constraint on 2 fields of this model." alt="" coords="17,273,487,292"/>
+<area shape="rect" id="node71" href="publicmapping.redistricting.models.Plan-class.html#acceptable_intersections" title="publicmapping.redistricting.models.Plan.acceptable_intersections" alt="" coords="17,292,487,311"/>
+<area shape="rect" id="node71" href="publicmapping.redistricting.models.Plan-class.html#__unicode__" title="Represent the Plan as a unicode string." alt="" coords="17,313,487,332"/>
+<area shape="rect" id="node71" href="publicmapping.redistricting.models.Plan-class.html#targets" title="Get the targets associated with this plan by stepping back through the &#160;legislative body and finding distinct targets for displayed subjects among &#160;all the geolevels in the body." alt="" coords="17,332,487,351"/>
+<area shape="rect" id="node71" href="publicmapping.redistricting.models.Plan-class.html#get_nth_previous_version" title="Get the version of this plan N steps away." alt="" coords="17,351,487,369"/>
+<area shape="rect" id="node71" href="publicmapping.redistricting.models.Plan-class.html#purge" title="Purge portions of this plan&#39;s history." alt="" coords="17,369,487,388"/>
+<area shape="rect" id="node71" href="publicmapping.redistricting.models.Plan-class.html#purge_beyond_nth_step" title="Purge portions of this plan&#39;s history that are beyond N undo steps away." alt="" coords="17,388,487,407"/>
+<area shape="rect" id="node71" href="publicmapping.redistricting.models.Plan-class.html#update_num_members" title="Create and save a new district version with the new number of values" alt="" coords="17,407,487,425"/>
+<area shape="rect" id="node71" href="publicmapping.redistricting.models.Plan-class.html#add_geounits" title="Add Geounits to a District." alt="" coords="17,425,487,444"/>
+<area shape="rect" id="node71" href="publicmapping.redistricting.models.Plan-class.html#get_biggest_geolevel" title="A convenience method to get the &quot;biggest&quot; geolevel that could be used in this plan." alt="" coords="17,444,487,463"/>
+<area shape="rect" id="node71" href="publicmapping.redistricting.models.Plan-class.html#paste_districts" title="Add the districts with the given plan into the plan Parameters &#160;&#160;&#160;&#160;districts &#45;&#45; A list of districts to add to &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;this plan &#160;&#160;&#160;&#160;version &#45;&#45; The plan version that requested the &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;change." alt="" coords="17,463,487,481"/>
+<area shape="rect" id="node71" href="publicmapping.redistricting.models.Plan-class.html#paste_district" title="Add the district with the given primary key into this plan" alt="" coords="17,481,487,500"/>
+<area shape="rect" id="node71" href="publicmapping.redistricting.models.Plan-class.html#get_wfs_districts" title="Get the districts in this plan as a GeoJSON WFS response." alt="" coords="17,500,487,519"/>
+<area shape="rect" id="node71" href="publicmapping.redistricting.models.Plan-class.html#get_districts_at_version" title="Get Plan Districts at a specified version." alt="" coords="17,519,487,537"/>
+<area shape="rect" id="node71" href="publicmapping.redistricting.models.Plan-class.html#create_default" title="Create a default plan." alt="" coords="17,537,487,556"/>
+<area shape="rect" id="node71" href="publicmapping.redistricting.models.Plan-class.html#combine_districts" title="Given a target district, add the components and combine their scores and geography." alt="" coords="17,575,487,593"/>
+<area shape="rect" id="node1" href="publicmapping.redistricting.models.Plan-class.html" title="A collection of Districts for an area of coverage, like a state." alt="" coords="5,6,499,599"/>
 </map>
-  <img src="uml_class_diagram_for_publicma_45.gif" alt='' usemap="#uml_class_diagram_for_publicma_45" ismap="ismap" class="graph-without-title" />
+  <img src="uml_class_diagram_for_publicma_49.gif" alt='' usemap="#uml_class_diagram_for_publicma_49" ismap="ismap" class="graph-without-title" />
 </center>
 </center>
 <hr />
@@ -247,6 +248,25 @@ are beyond N undo steps away.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.models.Plan-class.html#update_num_members" class="summary-sig-name">update_num_members</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">district</span>,
+        <span class="summary-sig-arg">num_members</span>)</span><br />
+      Create and save a new district version with the new number of values</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#Plan.update_num_members">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
           <td><span class="summary-sig"><a href="publicmapping.redistricting.models.Plan-class.html#add_geounits" class="summary-sig-name">add_geounits</a>(<span class="summary-sig-arg">self</span>,
         <span class="summary-sig-arg">districtid</span>,
         <span class="summary-sig-arg">geounit_ids</span>,
@@ -334,7 +354,8 @@ Parameters
         <span class="summary-sig-arg">version</span>,
         <span class="summary-sig-arg">subject_id</span>,
         <span class="summary-sig-arg">extents</span>,
-        <span class="summary-sig-arg">geolevel</span>)</span><br />
+        <span class="summary-sig-arg">geolevel</span>,
+        <span class="summary-sig-arg">district_ids</span>=<span class="summary-sig-default">None</span>)</span><br />
       Get the districts in this plan as a GeoJSON WFS response.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#Plan.get_wfs_districts">source&nbsp;code</a></span>
@@ -448,8 +469,9 @@ any district of this plan at the base level.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="get_available_districts"></a><span class="summary-sig-name">get_available_districts</span>(<span class="summary-sig-arg">self</span>,
-        <span class="summary-sig-arg">version</span>=<span class="summary-sig-default">None</span>)</span></td>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.models.Plan-class.html#get_available_districts" class="summary-sig-name">get_available_districts</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">version</span>=<span class="summary-sig-default">None</span>)</span><br />
+      Get the number of districts that are available in the current plan.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#Plan.get_available_districts">source&nbsp;code</a></span>
             
@@ -625,6 +647,13 @@ their scores and geography.</td>
     <td width="15%" align="right" valign="top" class="summary">
       <span class="summary-type">&nbsp;</span>
     </td><td class="summary">
+        <a name="create_unassigned"></a><span class="summary-name">create_unassigned</span> = <code title="True">True</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
         <a href="publicmapping.redistricting.models.Plan-class.html#acceptable_intersections" class="summary-name">acceptable_intersections</a> = <code title="'Polygon', 'MultiPolygon', 'LinearRing'">'Polygon', 'MultiPolygon', 'LinearR<code class="variable-ellipsis">...</code></code>
     </td>
   </tr>
@@ -789,6 +818,35 @@ Parameters:
   </dl>
 </td></tr></table>
 </div>
+<a name="update_num_members"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">update_num_members</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">district</span>,
+        <span class="sig-arg">num_members</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#Plan.update_num_members">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Create and save a new district version with the new number of values
+
+Parameters:
+    district -- The district to modify
+    num_members -- The new number of representatives for the district
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
 <a name="add_geounits"></a>
 <div>
 <table class="details" border="1" cellpadding="3"
@@ -947,7 +1005,8 @@ Returns:
         <span class="sig-arg">version</span>,
         <span class="sig-arg">subject_id</span>,
         <span class="sig-arg">extents</span>,
-        <span class="sig-arg">geolevel</span>)</span>
+        <span class="sig-arg">geolevel</span>,
+        <span class="sig-arg">district_ids</span>=<span class="sig-default">None</span>)</span>
   </h3>
   </td><td align="right" valign="top"
     ><span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#Plan.get_wfs_districts">source&nbsp;code</a></span>&nbsp;
@@ -967,6 +1026,7 @@ Parameters:
     version -- The Plan version.
     subject_id -- The Subject attributes to attach to the district.
     extent -- The map extents.
+    district_ids -- Optional array of district_ids to filter by.
 
 Returns:
     GeoJSON describing the Plan.
@@ -1109,7 +1169,7 @@ Parameters:
 
 Returns:
     A list of tuples containing Geounit IDs, portable ids,
-    and district ids that lie within this Plan. 
+    district ids, and num_members that lie within this Plan. 
 
 </pre>
   <dl class="fields">
@@ -1176,6 +1236,33 @@ Parameters:
 Returns:
     A list of tuples containing Geounit IDs and portable ids
     that do not belong to any districts within this Plan. 
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="get_available_districts"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">get_available_districts</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">version</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#Plan.get_available_districts">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Get the number of districts that are available in the current plan.
+
+Returns:
+    The number of districts that may added to this plan.
 
 </pre>
   <dl class="fields">
@@ -1308,7 +1395,7 @@ models.CharField(max_length= 500, db_index= True, blank= True)
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">
-    Generated by Epydoc 3.0.1 on Sat Mar  5 09:07:27 2011
+    Generated by Epydoc 3.0.1 on Sun Apr  3 20:04:13 2011
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"
