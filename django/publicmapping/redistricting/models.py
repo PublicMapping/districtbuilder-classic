@@ -2217,7 +2217,7 @@ class ScoreDisplay(models.Model):
         """
         Define a unique constraint on 2 fields of this model.
         """
-        unique_together = ('title','owner')
+        unique_together = ('title','owner','legislative_body')
 
     def __unicode__(self):
         """
