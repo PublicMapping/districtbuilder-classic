@@ -1493,6 +1493,13 @@ button#stats_legend {
 
 
 /* bard report previews */
+#reportPreview h1#genreport { 
+    text-align:center; 
+} 
+#reportPreview p { 
+    margin: 0 5px 0 10px; 
+    font-size: 0.8em; 
+} 
 div.report {
 	border: 3px solid #779e7b;
     top:40;
