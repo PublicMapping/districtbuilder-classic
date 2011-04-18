@@ -2393,10 +2393,10 @@ OpenLayers.Util.extend(boxControl, filterExtension);
             var className = el.parentNode.parentNode.className;
             var prefix = 'inforow_';
             var index = className.indexOf(prefix);
-            var num = className.substring(index + prefix.length);
-            var spaceIndex = num.indexOf(' ');
-            var num = num.substring(0, spaceIndex);
-            district_ids.push(parseInt(num, 10));
+            var num = parseInt(className.substring(index + prefix.length).split(' ')[0], 10);
+            if (num > -1) {
+                district_ids.push(parseInt(num, 10));
+            }
         });
         highlightLayer.filter = getVersionAndSubjectFilters(olmap.getExtent(), null, district_ids);
         highlightLayer.strategies[0].update({force:true});
