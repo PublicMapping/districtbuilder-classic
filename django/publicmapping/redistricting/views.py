@@ -1684,7 +1684,7 @@ def statistics_sets(request, planid):
             sets.append({ 'id': admin_display.id, 'name': force_escape(admin_display.title), 'functions': [], 'mine':False })
 
         try:
-            user_displays = ScoreDisplay.objects.filter(owner=request.user).order_by('title')
+            user_displays = ScoreDisplay.objects.filter(owner=request.user, is_page=False).order_by('title')
             result['displays_count'] = len(user_displays)
             for display in user_displays:
                 functions = []
