@@ -1133,7 +1133,7 @@
                     temp="/projects/publicmapping/local/reports"
                     transform="/projects/publicmapping/trunk/docs/bard_template.xslt">
                     <PopVars>
-                        <PopVar subjectref="poptot" threshold=".5" default="true" />
+                        <PopVar subjectref="poptot" threshold=".05" default="true" />
                         <PopVar subjectref="vap" threshold=".1" />
                         <PopVar subjectref="vapwnh" threshold=".1" />
                         <PopVar subjectref="vapblk" threshold=".1" />
