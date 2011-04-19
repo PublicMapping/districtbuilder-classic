@@ -429,9 +429,7 @@
             <!-- Summary above all sidebar panels -->
             <ScorePanel id="congressional_panel_summary" type="plan_summary" position="1"
                 title="Plan Summary" cssclass="plan_summary congressional" template="plan_summary.html">
-                <Score ref="a_congress_plan_count_districts" />
                 <Score ref="a_congress_plan_equipopulation"/>
-                <Score ref="plan_equivalence" />
                 <Score ref="plan_majority_minority_blk" />
                 <Score ref="plan_majority_minority_hisp" />
                 <Score ref="plan_noncontiguous"/>
@@ -439,9 +437,7 @@
 
             <ScorePanel id="house_panel_summary" type="plan_summary" position="1"
                 title="Plan Summary" cssclass="plan_summary house" template="plan_summary.html">
-                <Score ref="a_house_plan_count_districts" />
                 <Score ref="a_house_plan_equipopulation"/>
-                <Score ref="plan_equivalence" />
                 <Score ref="plan_majority_minority_blk" />
                 <Score ref="plan_majority_minority_hisp" />
                 <Score ref="plan_noncontiguous"/>
@@ -449,9 +445,7 @@
 
             <ScorePanel id="senate_panel_summary" type="plan_summary" position="1"
                 title="Plan Summary" cssclass="plan_summary senate" template="plan_summary.html">
-                <Score ref="a_senate_plan_count_districts" />
                 <Score ref="a_senate_plan_equipopulation"/>
-                <Score ref="plan_equivalence" />
                 <Score ref="plan_majority_minority_blk" />
                 <Score ref="plan_majority_minority_hisp" />
                 <Score ref="plan_noncontiguous"/>
