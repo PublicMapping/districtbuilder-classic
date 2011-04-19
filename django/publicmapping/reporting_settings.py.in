@@ -3,12 +3,6 @@
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
-ADMINS = (
-    ('Admin', 'dzwarg+reporting@azavea.com'),
-)
-
-MANAGERS = ADMINS
-
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
@@ -87,7 +81,3 @@ INSTALLED_APPS = (
     'reporting',
 )
 
-REPORTS_ENABLED = True
-
-BARD_BASESHAPE = '/projects/publicmapping/data/vablock_bard_save.Rdata'
-BARD_TEMP = '/projects/publicmapping/local/reports'

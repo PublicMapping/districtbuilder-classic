@@ -1185,6 +1185,12 @@ class Equipopulation(CalculatorBase):
     population. This merely wraps a Range calculator, but looks for the
     number of districts outside the range.
 
+    This calculator takes either a "target" or a "validation" parameter.  
+    If given a target, it will return a string that's showable in a plan 
+    summary.  If given a validation number, it will return a boolean result
+    representing whether the given plan has reached that number of 
+    majority-minority districts as configured.
+
     This calculator works on plans only.
     """
     def __init__(self):
@@ -1213,16 +1219,17 @@ class Equipopulation(CalculatorBase):
         try:
             target = self.get_value('target')
             validation = self.get_value('validation')
-            if validation != None and validation == 'true':
+            if validation != None:
                 # ALL PLANS include 1 district named "Unassigned", which
                 # should never be at the target.
         
                 self.result = inrange.result == (len(districts) - 1)
             elif target != None:
-                self.result = '<span>%d (%s)</span>' % (inrange.result, target)
+                self.result = '<span>%d (of %s)</span>' % (inrange.result, target)
             else:
                 self.result = inrange.result
         except:
+            print traceback.format_exc()
             self.result = inrange.result
 
 
@@ -1242,11 +1249,11 @@ class MajorityMinority(CalculatorBase):
     must be majority/minority in order for a plan to pass. The 'threshold'
     argument defines the threshold at which a majority is determined.
 
-    This calculator takes either a "target" or a "validation" parameter.  If
-    given a target, it will return a string that's showable in a plan summary.
-    If given a validation number, it will return a boolean result representing
-    whether the given plan has reached that number of majority-minority districts
-    as configured.
+    This calculator takes either a "target" or a "validation" parameter.  
+    If given a target, it will return a string that's showable in a plan 
+    summary.  If given a validation number, it will return a boolean result
+    representing whether the given plan has reached that number of 
+    majority-minority districts as configured.
 
     This calculator works on plans only.
     """
@@ -1307,10 +1314,11 @@ class MajorityMinority(CalculatorBase):
                 self.result = districtcount >= Decimal(validation)
                 sys.stderr.write('result is %s\n' % self.result)
             elif target != None:
-                self.result = "<span>%d (%s)</span>" % (districtcount, target)
+                self.result = "<span>%d (of %s)</span>" % (districtcount, target)
             else:
                 self.result = "<span>%s</span>" % districtcount
         except:
+            print traceback.format_exc()
             self.result = districtcount
 
 

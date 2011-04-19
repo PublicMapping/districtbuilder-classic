@@ -261,10 +261,20 @@ def merge_config(config, verbose):
         settings_in = open('settings.py.in','r')
         settings_out = open('settings.py','w')
 
+        # Copy input settings for district builder
         for line in settings_in.readlines():
             settings_out.write(line)
 
         settings_in.close()
+
+        rsettings_in = open('reporting_settings.py.in', 'r')
+        rsettings_out = open('reporting_settings.py', 'w')
+
+        # Copy input settings for reporting
+        for line in rsettings_in.readlines():
+            rsettings_out.write(line)
+
+        rsettings_in.close()
 
         cfg = config.xpath('//Project/Database')[0]
         settings_out.write('\n#\n# Automatically generated settings.\n#\n')
@@ -287,6 +297,9 @@ def merge_config(config, verbose):
         cfg = config.xpath('//Admin')[0]
         settings_out.write("\nADMINS = (\n  ('%s',\n  '%s'),\n)" % (cfg.get('user'), cfg.get('email')))
         settings_out.write("\nMANAGERS = ADMINS\n")
+
+        rsettings_out.write("\nADMINS = (\n  ('%s',\n  '%s'),\n)" % (cfg.get('user'), cfg.get('email')))
+        rsettings_out.write("\nMANAGERS = ADMINS\n")
 
         cfg = config.xpath('//Mailer')[0]
         settings_out.write("\nEMAIL_HOST = '%s'\n" % cfg.get('server'))
@@ -324,11 +337,19 @@ def merge_config(config, verbose):
         cfg = config.xpath('//Reporting')[0]
         cfg = cfg.find('BardConfigs/BardConfig')
         if cfg != None:
+            # Write these settings to the report settings.
+            rsettings_out.write("\nREPORTS_ENABLED = True\n")
+            rsettings_out.write("BARD_BASESHAPE = '%s'\n" % cfg.get('shape'))
+            rsettings_out.write("BARD_TEMP = '%s'\n" % cfg.get('temp'))
+
+            # Write these settings to the district builder settings.
             settings_out.write("\nREPORTS_ENABLED = True\n")
-            settings_out.write("BARD_BASESHAPE = '%s'\n" % cfg.get('shape'))
-            settings_out.write("BARD_TEMP = '%s'\n" % cfg.get('temp'))
             settings_out.write("BARD_TRANSFORM = '%s'\n" % cfg.get('transform'))
         else:
+            # Write this setting to the report settings.
+            rsettings_out.write("\nREPORTS_ENABLED = False\n")
+
+            # Write this setting to the district builder settings.
             settings_out.write("\nREPORTS_ENABLED = False\n")
 
         
@@ -367,6 +388,9 @@ def merge_config(config, verbose):
         settings_out.write("\nLEADERBOARD_MAX_RANKED = %d\n" % int(maxranked))
         
         settings_out.close()
+        rsettings_out.close()
+
+        os.rename('reporting_settings.py', '../reporting/settings.py')
     except Exception, ex:
         if verbose > 0:
             print """
