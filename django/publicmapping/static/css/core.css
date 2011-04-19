@@ -1275,7 +1275,7 @@ div.plan_summary h3 {
 }
 div.plan_summary label {
   display:inline-block;
-  width: 149px;
+  width: 160px;
   text-align:left;
   font-size: 12px;
   font-weight: bold;
@@ -1283,7 +1283,7 @@ div.plan_summary label {
   }
 div.plan_summary span {
   display:inline-block;
-  width: 88px;
+  width: 77px;
   text-align:right;
   font-size: 12px;
   font-weight: normal

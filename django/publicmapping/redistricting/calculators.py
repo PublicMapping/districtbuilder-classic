@@ -105,7 +105,11 @@ class CalculatorBase:
         If no district is provided, no subject argument value is ever 
         returned.
         """
-        (argtype, argval) = self.arg_dict[argument]
+        try:
+            (argtype, argval) = self.arg_dict[argument]
+        except:
+            return None
+
         if argtype == 'literal':
             return argval
         elif argtype == 'subject' and not district is None:
@@ -1228,6 +1232,12 @@ class MajorityMinority(CalculatorBase):
     must be majority/minority in order for a plan to pass. The 'threshold'
     argument defines the threshold at which a majority is determined.
 
+    This calculator takes either a "target" or a "validation" parameter.  If
+    given a target, it will return a string that's showable in a plan summary.
+    If given a validation number, it will return a boolean result representing
+    whether the given plan has reached that number of majority-minority districts
+    as configured.
+
     This calculator works on plans only.
     """
     def __init__(self):
@@ -1280,13 +1290,18 @@ class MajorityMinority(CalculatorBase):
 
             if exceeds:
                 districtcount += 1
-
         try:
-            count = float(self.get_value('count', district))
+            target = self.get_value('target')
+            validation = self.get_value('validation')
+            if validation != None:
+                self.result = districtcount >= Decimal(validation)
+                sys.stderr.write('result is %s\n' % self.result)
+            elif target != None:
+                self.result = "<span>%d (%s)</span>" % (districtcount, target)
+            else:
+                self.result = "<span>%s</span>" % districtcount
         except:
-            count = 1
-
-        self.result = districtcount >= count
+            self.result = districtcount
 
 
 class MultiMember(CalculatorBase):
