@@ -342,13 +342,32 @@
                 <SubjectArgument name="value" ref="poptot" />
             </ScoreFunction>
 
+            <ScoreFunction id="plan_majority_minority_blk" type="plan"
+                calculator="publicmapping.redistricting.calculators.MajorityMinority"
+                label="Black VAP Majority (target)"
+                description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
+                <SubjectArgument name="population" ref="vap" />
+                <SubjectArgument name="minority1" ref="vapblk" />
+                <Argument name="target" value="1" />
+            </ScoreFunction>
+
+            <ScoreFunction id="plan_majority_minority_hisp" type="plan"
+                calculator="publicmapping.redistricting.calculators.MajorityMinority"
+                label="Hisp. VAP Majority (target)"
+                description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
+                <SubjectArgument name="population" ref="vap" />
+                <SubjectArgument name="minority1" ref="vaphisp" />
+                <Argument name="target" value="0" />
+            </ScoreFunction>
+
             <ScoreFunction id="plan_majority_minority" type="plan"
                 calculator="publicmapping.redistricting.calculators.MajorityMinority"
-                label="Majority Minority"
+                label="Majority Minority District"
                 description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
                 <SubjectArgument name="population" ref="vap" />
                 <SubjectArgument name="minority1" ref="vapblk" />
                 <SubjectArgument name="minority2" ref="vaphisp" />
+                <Argument name="validation" value="1" />
             </ScoreFunction>
 
             <ScoreFunction id="plan_repfairness" type="plan"
@@ -413,7 +432,8 @@
                 <Score ref="a_congress_plan_count_districts" />
                 <Score ref="a_congress_plan_equipopulation"/>
                 <Score ref="plan_equivalence" />
-                <Score ref="plan_majority_minority" />
+                <Score ref="plan_majority_minority_blk" />
+                <Score ref="plan_majority_minority_hisp" />
                 <Score ref="plan_noncontiguous"/>
             </ScorePanel>
 
@@ -422,7 +442,8 @@
                 <Score ref="a_house_plan_count_districts" />
                 <Score ref="a_house_plan_equipopulation"/>
                 <Score ref="plan_equivalence" />
-                <Score ref="plan_majority_minority" />
+                <Score ref="plan_majority_minority_blk" />
+                <Score ref="plan_majority_minority_hisp" />
                 <Score ref="plan_noncontiguous"/>
             </ScorePanel>
 
@@ -431,7 +452,8 @@
                 <Score ref="a_senate_plan_count_districts" />
                 <Score ref="a_senate_plan_equipopulation"/>
                 <Score ref="plan_equivalence" />
-                <Score ref="plan_majority_minority" />
+                <Score ref="plan_majority_minority_blk" />
+                <Score ref="plan_majority_minority_hisp" />
                 <Score ref="plan_noncontiguous"/>
             </ScorePanel>
 
