@@ -295,7 +295,7 @@
                 <Argument name="min" value="723729"/>
                 <Argument name="max" value="731003"/>
                 <SubjectArgument name="value" ref="poptot"/>
-                <Argument name="validation" value="true"/>
+                <Argument name="validation" value="1"/>
             </ScoreFunction>
 
             <ScoreFunction id="a_congress_plan_equipopulation_summary" type="plan"
@@ -305,7 +305,6 @@
                 <Argument name="min" value="723729"/>
                 <Argument name="max" value="731003"/>
                 <SubjectArgument name="value" ref="poptot"/>
-                <Argument name="validation" value="false"/>
                 <Argument name="target" value="11"/>
             </ScoreFunction>
 
@@ -316,7 +315,7 @@
                 <Argument name="min" value="76010"/>
                 <Argument name="max" value="84011"/>
                 <SubjectArgument name="value" ref="poptot"/>
-                <Argument name="validation" value="true"/>
+                <Argument name="validation" value="1"/>
             </ScoreFunction>
 
             <ScoreFunction id="a_house_plan_equipopulation_summary" type="plan"
@@ -326,7 +325,6 @@
                 <Argument name="min" value="76010"/>
                 <Argument name="max" value="84011"/>
                 <SubjectArgument name="value" ref="poptot"/>
-                <Argument name="validation" value="false"/>
                 <Argument name="target" value="100"/>
             </ScoreFunction>
 
@@ -337,7 +335,7 @@
                 <Argument name="min" value="190025"/>
                 <Argument name="max" value="210027"/>
                 <SubjectArgument name="value" ref="poptot"/>
-                <Argument name="validation" value="true"/>
+                <Argument name="validation" value="1"/>
             </ScoreFunction>
 
             <ScoreFunction id="a_senate_plan_equipopulation_summary" type="plan"
@@ -347,7 +345,6 @@
                 <Argument name="min" value="190025"/>
                 <Argument name="max" value="210027"/>
                 <SubjectArgument name="value" ref="poptot"/>
-                <Argument name="validation" value="false"/>
                 <Argument name="target" value="40"/>
             </ScoreFunction>
 
@@ -380,7 +377,7 @@
 
             <ScoreFunction id="plan_majority_minority_blk" type="plan"
                 calculator="publicmapping.redistricting.calculators.MajorityMinority"
-                label="Black VAP Majority (target)"
+                label="Black VAP Majority (50%)"
                 description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
                 <SubjectArgument name="population" ref="vap" />
                 <SubjectArgument name="minority1" ref="vapblk" />
@@ -389,7 +386,7 @@
 
             <ScoreFunction id="plan_majority_minority_hisp" type="plan"
                 calculator="publicmapping.redistricting.calculators.MajorityMinority"
-                label="Hisp. VAP Majority (target)"
+                label="Hisp. VAP Majority (50%)"
                 description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
                 <SubjectArgument name="population" ref="vap" />
                 <SubjectArgument name="minority1" ref="vaphisp" />
