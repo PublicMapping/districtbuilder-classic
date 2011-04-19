@@ -149,6 +149,8 @@ statisticssets = function(options) {
             var result = _displayCache[displayId];
             if (result) {
                 $('.demographics').html(result);
+                fixTableHeight($('.demographics'));
+                $('.olMap').trigger('resort_by_visibility');
                 $('.olMap').trigger('draw_highlighted_districts', [ true ]);
                 return;
             }
@@ -166,6 +168,7 @@ statisticssets = function(options) {
             },
             function(rsp, status, xhr) {
                 loadTooltips();
+                fixTableHeight($('.demographics'));
                 $('.olMap').trigger('resort_by_visibility');
                 $('.olMap').trigger('draw_highlighted_districts', [ true ]);
                 _displayCache[displayId] = rsp;
@@ -383,6 +386,19 @@ statisticssets = function(options) {
             }
         });
     };
+
+    /*
+     * For the info tab tables - we use absolute positioning to get
+     * the scrolling right in the tbody.  But sometimes the header
+     * heights change and changing the css is tough
+     */
+    var fixTableHeight = function (table) {
+        var header = table.find('thead');
+        var bottom = header.position().top + header.outerHeight(true);
+        var table = table.find('tbody');
+        table.css('top', bottom);
+    }
+
 
     return _self;
 };
