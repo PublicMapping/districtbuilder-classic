@@ -248,7 +248,7 @@ multimember = function(options) {
             datatype: 'local',
             colNames: ['District', 'District ID', '# Members'],
             colModel: [
-                { name: 'name', index: 'district_id', width: 90, align: 'center', sorttype: 'int' },
+                { name: 'name', index: 'district_id', width: 90, align: 'left', sorttype: 'int' },
                 { name: 'district_id', index: 'district_id', hidden: true },
                 { name: 'num_members', index: 'num_members', editable: true, 
                         width: 100, sorttype: 'int', align: 'right',
