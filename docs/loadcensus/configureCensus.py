@@ -36,11 +36,12 @@ PUBLICMAPPINGPASS="publicmapping"
 def     clear_publicmapping_db():
         db = dbapi2.connect (database="publicmapping", user="publicmapping", password=PUBLICMAPPINGPASS)
         cur = db.cursor()
-        cur.execute("truncate table redistricting_characteristic CASCADE ; truncate table redistricting_computedcharacteristic CASCADE; truncate table redistricting_district CASCADE; truncate table redistricting_geolevel CASCADE ; truncate table redistricting_geounit CASCADE; truncate table redistricting_legislativelevel CASCADE ; truncate table redistricting_profile CASCADE; truncate table redistricting_plan CASCADE ")
-        #cur.execute("truncate table redistricting_characteristic CASCADE ; truncate table redistricting_computedcharacteristic CASCADE; truncate table redistricting_district CASCADE; truncate table redistricting_geolevel CASCADE ; truncate table redistricting_geounit CASCADE; truncate table redistricting_legislativebody CASCADE; truncate table redistricting_legislativedefault CASCADE ; truncate table redistricting_legislativelevel CASCADE ; truncate table redistricting_profile CASCADE; truncate table redistricting_plan CASCADE; truncate table re districting_subject CASCADE; truncate table redistricting_target CASCADE; ")
+        redtable=["redistricting_characteristic","redistricting_computedcharacteristic","redistricting_computeddistrictscore","redistricting_computedplanscore","redistricting_contiguityoverride","redistricting_district","redistricting_geolevel","redistricting_geounit","redistricting_legislativebody","redistricting_legislativedefault","redistricting_legislativelevel","redistricting_plan","redistricting_profile","redistricting_scoreargument","redistricting_scoredisplay","redistricting_scorefunction","redistricting_scorepanel","redistricting_scorepanel_displays","redistricting_scorepanel_score_functions","redistricting_subject","redistricting_target","redistricting_validationcriteria"]
+        for i in redtable:
+                cur.execute("truncate table %s CASCADE" % i)
         db.commit()
         db.close()
-### Install depende
+
 
 
 ### Install dependencies
@@ -878,7 +879,7 @@ print 'generating config file ... '
 gen_config(num_districts_congress=congDis,num_districts_senate=senDis,num_districts_house=houseDis,sum_TOTPOP=sum_TOTPOP,has_election_data=has_election_data,has_vtds=0) 
 
 print '\n\n*** Now run: ***\n\n'
-print '(cd /projects/publicmapping/trunk/django/publicmapping/; python setup.py -D /projects/publicmapping/trunk/docs/config.xsd.withscoring  /projects/publicmapping/trunk/docs/config_census_generated.xml)'
+print '(cd /projects/publicmapping/trunk/django/publicmapping/; python setup.py -D /projects/publicmapping/trunk/docs/config.xsd /projects/publicmapping/trunk/docs/config_census_generated.xml)'
 
 
 
