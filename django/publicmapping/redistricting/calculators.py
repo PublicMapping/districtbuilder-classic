@@ -1210,10 +1210,20 @@ class Equipopulation(CalculatorBase):
         version = kwargs['version'] if 'version' in kwargs else plan.version
         districts = plan.get_districts_at_version(version, include_geom=False)
 
-        # ALL PLANS include 1 district named "Unassigned", which should 
-        # never be at the target.
+        try:
+            target = self.get_value('target')
+            validation = self.get_value('validation')
+            if validation != None and validation == 'true':
+                # ALL PLANS include 1 district named "Unassigned", which
+                # should never be at the target.
         
-        self.result = inrange.result == (len(districts) - 1)
+                self.result = inrange.result == (len(districts) - 1)
+            elif target != None:
+                self.result = '<span>%d (%s)</span>' % (inrange.result, target)
+            else:
+                self.result = inrange.result
+        except:
+            self.result = inrange.result
 
 
 class MajorityMinority(CalculatorBase):

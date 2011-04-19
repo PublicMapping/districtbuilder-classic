@@ -2427,7 +2427,7 @@ class ScorePanel(models.Model):
             description = ''
             
             for plan in plans:
-                for function in self.score_functions.filter(is_planscore=True):
+                for function in self.score_functions.filter(is_planscore=True).order_by('name'):
                     description = function.description
                     planscores.append({
                         'plan':plan,
@@ -2438,7 +2438,8 @@ class ScorePanel(models.Model):
                         'sort':ComputedPlanScore.compute(function,plan,format='sort',version=version or plan.version)
                     })
 
-            planscores.sort(key=lambda x:x['sort'],reverse=not self.is_ascending)
+            if self.type == 'plan':
+                planscores.sort(key=lambda x:x['sort'],reverse=not self.is_ascending)
 
             return render_to_string(self.template, {
                 'settings':settings,
