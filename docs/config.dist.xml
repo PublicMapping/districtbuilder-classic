@@ -288,31 +288,67 @@
                 <Argument name="target" value="40" />
             </ScoreFunction>
 
-            <ScoreFunction id="a_congress_plan_equipopulation" type="plan"
+            <ScoreFunction id="a_congress_plan_equipopulation_validation" type="plan"
                 calculator="publicmapping.redistricting.calculators.Equipopulation"
-                label="Target Pop. 727,366"
+                label="Target Pop. (727,366)"
                 description="The population of each Congressional district must be 727,366 +/- 0.5%.">
                 <Argument name="min" value="723729"/>
                 <Argument name="max" value="731003"/>
                 <SubjectArgument name="value" ref="poptot"/>
+                <Argument name="validation" value="true"/>
             </ScoreFunction>
 
-            <ScoreFunction id="a_house_plan_equipopulation" type="plan"
+            <ScoreFunction id="a_congress_plan_equipopulation_summary" type="plan"
                 calculator="publicmapping.redistricting.calculators.Equipopulation"
-                label="Target Pop. 80,010"
+                label="Target Pop. (727,366)"
+                description="The population of each Congressional district must be 727,366 +/- 0.5%.">
+                <Argument name="min" value="723729"/>
+                <Argument name="max" value="731003"/>
+                <SubjectArgument name="value" ref="poptot"/>
+                <Argument name="validation" value="false"/>
+                <Argument name="target" value="11"/>
+            </ScoreFunction>
+
+            <ScoreFunction id="a_house_plan_equipopulation_validation" type="plan"
+                calculator="publicmapping.redistricting.calculators.Equipopulation"
+                label="Target Pop. (80,010)"
                 description="The population of each House of Delegates district must be 80,010 +/- 5%.">
                 <Argument name="min" value="76010"/>
                 <Argument name="max" value="84011"/>
                 <SubjectArgument name="value" ref="poptot"/>
+                <Argument name="validation" value="true"/>
             </ScoreFunction>
 
-            <ScoreFunction id="a_senate_plan_equipopulation" type="plan"
+            <ScoreFunction id="a_house_plan_equipopulation_summary" type="plan"
                 calculator="publicmapping.redistricting.calculators.Equipopulation"
-                label="Target Pop. 200,026"
+                label="Target Pop. (80,010)"
+                description="The population of each House of Delegates district must be 80,010 +/- 5%.">
+                <Argument name="min" value="76010"/>
+                <Argument name="max" value="84011"/>
+                <SubjectArgument name="value" ref="poptot"/>
+                <Argument name="validation" value="false"/>
+                <Argument name="target" value="100"/>
+            </ScoreFunction>
+
+            <ScoreFunction id="a_senate_plan_equipopulation_validation" type="plan"
+                calculator="publicmapping.redistricting.calculators.Equipopulation"
+                label="Target Pop. (200,026)"
                 description="The population of each State Senate district must be 200,026 +/- 5%.">
                 <Argument name="min" value="190025"/>
                 <Argument name="max" value="210027"/>
                 <SubjectArgument name="value" ref="poptot"/>
+                <Argument name="validation" value="true"/>
+            </ScoreFunction>
+
+            <ScoreFunction id="a_senate_plan_equipopulation_summary" type="plan"
+                calculator="publicmapping.redistricting.calculators.Equipopulation"
+                label="Target Pop. (200,026)"
+                description="The population of each State Senate district must be 200,026 +/- 5%.">
+                <Argument name="min" value="190025"/>
+                <Argument name="max" value="210027"/>
+                <SubjectArgument name="value" ref="poptot"/>
+                <Argument name="validation" value="false"/>
+                <Argument name="target" value="40"/>
             </ScoreFunction>
 
             <ScoreFunction id="plan_all_blocks_assigned" type="plan"
@@ -429,7 +465,7 @@
             <!-- Summary above all sidebar panels -->
             <ScorePanel id="congressional_panel_summary" type="plan_summary" position="1"
                 title="Plan Summary" cssclass="plan_summary congressional" template="plan_summary.html">
-                <Score ref="a_congress_plan_equipopulation"/>
+                <Score ref="a_congress_plan_equipopulation_summary"/>
                 <Score ref="plan_majority_minority_blk" />
                 <Score ref="plan_majority_minority_hisp" />
                 <Score ref="plan_noncontiguous"/>
@@ -437,7 +473,7 @@
 
             <ScorePanel id="house_panel_summary" type="plan_summary" position="1"
                 title="Plan Summary" cssclass="plan_summary house" template="plan_summary.html">
-                <Score ref="a_house_plan_equipopulation"/>
+                <Score ref="a_house_plan_equipopulation_summary"/>
                 <Score ref="plan_majority_minority_blk" />
                 <Score ref="plan_majority_minority_hisp" />
                 <Score ref="plan_noncontiguous"/>
@@ -445,7 +481,7 @@
 
             <ScorePanel id="senate_panel_summary" type="plan_summary" position="1"
                 title="Plan Summary" cssclass="plan_summary senate" template="plan_summary.html">
-                <Score ref="a_senate_plan_equipopulation"/>
+                <Score ref="a_senate_plan_equipopulation_summary"/>
                 <Score ref="plan_majority_minority_blk" />
                 <Score ref="plan_majority_minority_hisp" />
                 <Score ref="plan_noncontiguous"/>
@@ -583,7 +619,7 @@
         <Criteria legislativebodyref="congress">
             <Criterion name="Equipopulation - Congress" 
                 description="&lt;p&gt;Your plan does not meet the competition criteria for Equipopulation:&lt;/p&gt;&lt;p&gt;The population of each Congressional district must be 727,366 +/- 0.5%.&lt;/p&gt;">
-                <Score ref="a_congress_plan_equipopulation" />
+                <Score ref="a_congress_plan_equipopulation_validation" />
             </Criterion>
             <Criterion name="AllContiguous - Congress" 
                 description="&lt;p&gt;Your plan does not meet the competition criteria for Contiguity&lt;/p&gt;&lt;p&gt;Every part of a district must be reachable from every other part without crossing the district's borders. All districts within a plan must be contiguous. Water contiguity is permitted given Virginia's extensive coastal region. 'Point contiguity' or 'touch-point contiguity' where two sections of a district are connected at a single point is not permitted.&lt;/p&gt;">
@@ -602,7 +638,7 @@
         <Criteria legislativebodyref="house">
             <Criterion name="Equipopulation - House" 
                 description="&lt;p&gt;Your plan does not meet the competition criteria for Equipopulation:&lt;/p&gt;&lt;p&gt;The population of each House of Delegates district must be 80,010 +/- 5%.&lt;/p&gt;">
-                <Score ref="a_house_plan_equipopulation" />
+                <Score ref="a_house_plan_equipopulation_validation" />
             </Criterion>
             <Criterion name="AllContiguous - House" 
                 description="&lt;p&gt;Your plan does not meet the competition criteria for Contiguity&lt;/p&gt;&lt;p&gt;Every part of a district must be reachable from every other part without crossing the district's borders. All districts within a plan must be contiguous. Water contiguity is permitted given Virginia's extensive coastal region. 'Point contiguity' or 'touch-point contiguity' where two sections of a district are connected at a single point is not permitted.&lt;/p&gt;">
@@ -621,7 +657,7 @@
         <Criteria legislativebodyref="senate">
             <Criterion name="Equipopulation - Senate" 
                 description="&lt;p&gt;Your plan does not meet the competition criteria for Equipopulation:&lt;/p&gt;&lt;p&gt;The population of each House of Delegates district must be 200,026 +/- 5%.&lt;/p&gt;">
-                <Score ref="a_senate_plan_equipopulation" />
+                <Score ref="a_senate_plan_equipopulation_validation" />
             </Criterion>
             <Criterion name="AllContiguous - Senate" 
                 description="&lt;p&gt;Your plan does not meet the competition criteria for Contiguity&lt;/p&gt;&lt;p&gt;Every part of a district must be reachable from every other part without crossing the district's borders. All districts within a plan must be contiguous. Water contiguity is permitted given Virginia's extensive coastal region. 'Point contiguity' or 'touch-point contiguity' where two sections of a district are connected at a single point is not permitted.&lt;/p&gt;">
