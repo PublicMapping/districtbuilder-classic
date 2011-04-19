@@ -42,6 +42,18 @@ def     clear_publicmapping_db():
         db.commit()
         db.close()
 
+### Drop DB
+
+def     drop_db():
+        olddir = os.getcwd()
+        os.chdir("/tmp")
+        subprocess.check_call(["service","tomcat6","stop"])
+        subprocess.check_call(["service","celeryd","stop"])
+        subprocess.check_call(['su postgres -c "dropdb publicmapping"'],shell=True)
+        subprocess.check_call(['cat /projects/publicmapping/trunk/sql/publicmapping_db.sql | su postgres -c "psql -f - postgres"'],shell=True)
+        subprocess.check_call(["service","tomcat6","start"])
+        subprocess.check_call(["service","celeryd","start"])
+        os.chdir(olddir)
 
 
 ### Install dependencies
@@ -820,7 +832,7 @@ gensld_boundaries("block")
 
 # Clear out DB
 print 'clearing database ...'
-clear_publicmapping_db()
+drop_db()
 
 # Retrieve data files
 print 'retrieving census data ...'
