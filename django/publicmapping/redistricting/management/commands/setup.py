@@ -205,6 +205,73 @@ contents of the file and try again.
 
         qset.delete()
 
+    def purge_geoserver(self, host, namespace, headers, verbose):
+        """
+        Remove any configured items in geoserver for the namespace.
+
+        This prevents conflicts in geowebcache when the datastore and
+        featuretype is reconfigured without discarding the old featuretype.
+        """
+        # get the workspace 
+        ws_cfg = self.read_config(host, '/geoserver/rest/workspaces/%s.json' % namespace, headers, 'Could not get workspace %s.' % namespace, verbose)
+        if ws_cfg is None:
+            if verbose > 1:
+                print "%s configuration could not be fetched." % namespace
+            return True
+
+        # get the data stores in the workspace
+        wsds_cfg = self.read_config(host, ws_cfg['workspace']['dataStores'], headers, 'Could not get data stores in workspace %s' % ws_cfg['workspace']['name'], verbose)
+        if wsds_cfg is None:
+            if verbose > 1:
+                print "Workspace '%s' datastore configuration could not be fetched." % namespace
+            return False
+
+        # get the data source configuration
+        ds_cfg = self.read_config(host, wsds_cfg['dataStores']['dataStore'][0]['href'], headers, "Could not get datastore configuration for '%s'" % wsds_cfg['dataStores']['dataStore'][0]['name'], verbose)
+        if ds_cfg is None:
+            if verbose > 1:
+                print "Datastore configuration could not be fetched."
+            return False
+
+        # get all the feature types in the data store
+        fts_cfg = self.read_config(host, ds_cfg['dataStore']['featureTypes'] + '?list=all', headers, "Could not get feature types in datastore '%s'" % wsds_cfg['dataStores']['dataStore'][0]['name'], verbose)
+        if fts_cfg is None:
+            if verbose > 1:
+                print "Data store '%s' feature type configuration could not be fetched." % wsds_cfg['dataStores']['dataStore'][0]['name']
+            return False
+
+        if not 'featureType' in fts_cfg['featureTypes']: 
+            fts_cfg['featureTypes'] = { 'featureType':[] }
+
+        for ft_cfg in fts_cfg['featureTypes']['featureType']:
+            # Delete the layer
+            if not self.rest_config('DELETE', host, '/geoserver/rest/layers/%s.json' % ft_cfg['name'], None, headers, 'Could not delete layer %s' % (ft_cfg['name'],), verbose):
+                if verbose > 1:
+                    print "Could not delete layer %s" % ft_cfg['name']
+                continue
+
+            # Delete the feature type
+            if not self.rest_config('DELETE', host, ft_cfg['href'], None, headers, 'Could not delete feature type %s' % (ft_cfg['name'],), verbose):
+                if verbose > 1:
+                    print "Could not delete feature type '%s'" % ft_cfg['name']
+            else:
+                if verbose > 1:
+                    print "Deleted feature type '%s'" % ft_cfg['name']
+
+        # now that the data store is empty, delete it
+        if not self.rest_config('DELETE', host, wsds_cfg['dataStores']['dataStore'][0]['href'], None, headers, 'Could not delete datastore %s' % wsds_cfg['dataStores']['dataStore'][0]['name'], verbose):
+            if verbose > 1:
+                print "Could not delete datastore %s" % wsds_cfg['dataStores']['dataStore'][0]['name']
+            return False
+
+        # now that the workspace is empty, delete it
+        if not self.rest_config('DELETE', host, '/geoserver/rest/workspaces/%s.json' % namespace, None, headers, 'Could not delete workspace %s' % namespace, verbose):
+            if verbose > 1:
+                print "Could not delete workspace %s" % namespace
+            return False
+
+        return True
+            
     def configure_geoserver(self, config, srid, verbose):
         """
         Create the workspace and layers in geoserver, based on the
@@ -248,6 +315,17 @@ contents of the file and try again.
 
                 if verbose > 1:
                     print 'Created %s' % verbose_name
+
+        # Purge all of geoserver configs -- any collisions of names or
+        # anything will foobar geowebcache, leading to no choropleth
+        # layers.
+        if not self.purge_geoserver(host, namespace, headers, verbose):
+            if verbose > 0:
+                print "Geoserver configuration could not be cleaned, quitting."
+            return False
+
+        if verbose > 0:
+            print "Geoserver configuration cleaned."
 
         # Create our namespace
         namespace_url = '/geoserver/rest/namespaces'
@@ -348,12 +426,16 @@ contents of the file and try again.
 
                     if not style_type:
                         style_type = subject.name
+
                     if not style_name:
-                        style_name = 'demo_%s_%s' % (geolevel.name, subject.name)
+                        layer_name = 'demo_%s_%s' % (geolevel.name, subject.name)
+                        style_name = layer_name
+                    else:
+                        layer_name = style_name
 
                     style_obj = { 'style': {
-                        'name': style_name,
-                        'filename': '%s.sld' % style_name
+                        'name': layer_name,
+                        'filename': '%s.sld' % layer_name
                     } }
 
                     # Get the SLD file
@@ -361,25 +443,24 @@ contents of the file and try again.
 
                     if sld is None:
                         if verbose > 1:
-                            print 'No style file found for %s' % style_name
-                        return False
+                            print 'No style file found for %s' % layer_name
+                        style_name = 'polygon'
+                    else:
+                        # Create the style object on the geoserver
+                        create_geoserver_object_if_necessary(style_url, 
+                            style_name, style_obj, 'Map Style')
 
-                    # Create the style object on the geoserver
-                    create_geoserver_object_if_necessary(style_url, 
-                        style_name, style_obj, 'Map Style')
+                        # Update the style with the sld file contents
 
-                    # Update the style with the sld file contents
-
-                    self.rest_config( 'PUT', 
-                        host, 
-                        '/geoserver/rest/styles/%s' % style_name, 
-                        sld, 
-                        sld_headers, 
-                        "Could not upload style file '%s.sld'" % style_name,
-                        verbose)
-
-                    if verbose > 1:
-                        print "Uploaded '%s.sld' file." % style_name
+                        if self.rest_config( 'PUT', \
+                            host, \
+                            '/geoserver/rest/styles/%s' % style_name, \
+                            sld, \
+                            sld_headers, \
+                            "Could not upload style file '%s.sld'" % style_name, \
+                            verbose):
+                            if verbose > 1:
+                                print "Uploaded '%s_%s.sld' file." % (geolevel.name, subject.name)
 
                     # Apply the uploaded style to the demographic layers
                     layer = { 'layer' : {
@@ -392,10 +473,10 @@ contents of the file and try again.
                     
                     if not self.rest_config( 'PUT', \
                         host, \
-                        '/geoserver/rest/layers/%s:%s' % (namespace, style_name), \
+                        '/geoserver/rest/layers/%s:%s' % (namespace, layer_name), \
                         json.dumps(layer), \
                         headers, \
-                        "Could not assign style to layer '%s'." % style_name, \
+                        "Could not assign style to layer '%s'." % layer_name, \
                         verbose):
                             return False
 
@@ -454,6 +535,9 @@ contents of the file and try again.
                     create_geoserver_object_if_necessary(feature_type_url, feature_name, feature_type_obj, 'Feature Type')
                     publish_and_assign_style('%s_boundaries' % geolevel.name, 'boundaries', get_zoom_range(geolevel))
 
+        if verbose > 0:
+            print "Geoserver configuration complete."
+
         # finished configure_geoserver
         return True
 
@@ -466,9 +550,9 @@ contents of the file and try again.
 
             return sld
         except:
-            if verbose > 0:
+            if verbose > 1:
                 print """
-ERROR:
+WARNING:
 
         The style file:
         
@@ -510,7 +594,7 @@ ERROR:
         Please check the configuration settings, and try again.
 """ % msg
                 if verbose > 1:
-                    print "HTTP Status: %d" % rsp.status
+                    print "        HTTP Status: %d" % rsp.status
                 return False
         except Exception, ex:
             if verbose > 0:
@@ -522,6 +606,38 @@ ERROR:
             return False
 
         return True
+
+    def read_config(self, host, url, headers, msg, verbose):
+        try:
+            conn = httplib.HTTPConnection(host, 8080)
+            conn.request('GET', url, None, headers)
+            rsp = conn.getresponse()
+            response = rsp.read() # and discard
+            conn.close()
+            if rsp.status != 201 and rsp.status != 200:
+                if verbose > 0:
+                    print """
+ERROR:
+
+        Could not fetch geoserver configuration:
+
+        %s
+
+        Please chece the configuration settings, and try again.
+""" % msg
+                return None
+
+            return json.loads(response)
+        except Exception, ex:
+            if verbose > 0:
+                print """
+ERROR:
+
+        Exception thrown while fetching geoserver configuration.
+"""
+            if verbose > 1:
+                print traceback.format_exc()
+            return None
 
     @transaction.commit_manually
     def create_views(self, verbose):
