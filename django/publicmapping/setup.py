@@ -345,6 +345,7 @@ def merge_config(config, verbose):
             # Write these settings to the district builder settings.
             settings_out.write("\nREPORTS_ENABLED = True\n")
             settings_out.write("BARD_TRANSFORM = '%s'\n" % cfg.get('transform'))
+            settings_out.write("BARD_TEMP = '%s'\n" % cfg.get('temp'))
         else:
             # Write this setting to the report settings.
             rsettings_out.write("\nREPORTS_ENABLED = False\n")
