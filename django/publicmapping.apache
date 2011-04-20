@@ -45,7 +45,7 @@
         BrowserMatch "MSIE [17-9]" ssl-unclean-shutdown
 
         ServerAdmin AzaveaDev@azavea.com
-        WSGIDaemonProcess geodjango user=www-data group=www-data processes=5 threads=1 display-name=publicmapping
+        WSGIDaemonProcess geodjango user=www-data group=www-data processes=10 threads=1 display-name=publicmapping
         WSGIProcessGroup geodjango
         WSGIScriptAlias / /projects/publicmapping/trunk/django/publicmapping.wsgi
 
@@ -139,7 +139,7 @@
         ErrorLog /var/log/apache2/bard-reporting-error.log
         CustomLog /var/log/apache2/bard-reporting-access.log combined
         
-        LogLevel debug
+        LogLevel warn
 
         # This virtual host needs a longer timeout because of reports
         Timeout 600
