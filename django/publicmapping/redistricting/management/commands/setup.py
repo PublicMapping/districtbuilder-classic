@@ -270,6 +270,22 @@ contents of the file and try again.
                 print "Could not delete workspace %s" % namespace
             return False
 
+        # Get a list of styles
+        sts_cfg = self.read_config(host, '/geoserver/rest/styles.json', headers, "Could not get styles.", verbose)
+        if not sts_cfg is None:
+            excludes = ['point','line','polygon','raster']
+            for st_cfg in sts_cfg['styles']['style']:
+                if st_cfg['name'] in excludes:
+                    continue
+
+                # Delete the style
+                if not self.rest_config('DELETE', host, st_cfg['href'], None, headers, 'Could not delete style %s' % st_cfg['name'], verbose):
+                    if verbose > 1:
+                        print "Could not delete style %s" % st_cfg['name']
+                else:
+                    if verbose > 1:
+                        print "Deleted style %s" % st_cfg['name']
+
         return True
             
     def configure_geoserver(self, config, srid, verbose):
@@ -481,7 +497,7 @@ contents of the file and try again.
                             return False
 
                     if verbose > 1:
-                        print "Assigned style '%s' to layer '%s'." % (style_name, style_name )
+                        print "Assigned style '%s' to layer '%s'." % (style_name, layer_name )
 
                     #if not self.rest_config( 'PUT', \
                     #    host, \
