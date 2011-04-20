@@ -1206,7 +1206,7 @@ OpenLayers.Util.extend(boxControl, filterExtension);
     var lockDistrictControl = new OpenLayers.Control.SelectFeature(
         districtLayer,
         {
-            onSelect: function(feature) {
+            clickFeature: function(feature) {
                 $.ajax({
                     type: 'POST',
                     url: '/districtmapping/plan/' + PLAN_ID + '/district/' + feature.attributes.district_id + '/lock/',
