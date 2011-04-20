@@ -18,6 +18,7 @@ import rpy2.robjects as robjects
 import shutil
 import psycopg2 as dbapi2
 import optparse
+import string
 
 
 ### 
@@ -264,7 +265,9 @@ def gensld_boundaries(geoname):
 
 #TODO: generalize to any number of choropleths
 def gensld_choro(geoname,varname,vartitle,quantiles):
-        target_file = '/projects/publicmapping/trunk/sld/%s_%s.sld' % (geoname,varname) 
+	# WARNING: sld files need to be lower case to be compatible with postgres views
+	lvarname = string.lower(varname)
+        target_file = '/projects/publicmapping/trunk/sld/%s_%s.sld' % (geoname,lvarname) 
         varabs="Grayscale choropleth based on quantiles of %s" % (varname)
         valuelist= [
           {"top": str(quantiles[5]),
@@ -1129,7 +1132,7 @@ class Config_Template(DictionaryTemplate):
         <!-- Configuration items specific to the 'redistricting' app. -->
        <Redistricting>      
 	   <MapServer hostname="" ns="gmu" nshref="http://gmu.azavea.com/"
-                adminuser="admin" adminpass="geoserver" maxfeatures="100" 
+                adminuser="admin" adminpass="admin" maxfeatures="100" 
                 styles="/projects/publicmapping/trunk/sld" />
             <!-- 
             
@@ -1149,7 +1152,7 @@ class Config_Template(DictionaryTemplate):
             <BardConfigs>
   		 <BardConfig 
                     id="blocks"
-                    shape="/projects/publicmapping/data/vablock_bard_save.Rdata" 
+                    shape="/projects/publicmapping/data/census_configured.Rdata" 
                     temp="/projects/publicmapping/local/reports"
                     transform="/projects/publicmapping/trunk/docs/bard_template.xslt">
                     <PopVars>
