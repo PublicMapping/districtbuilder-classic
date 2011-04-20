@@ -318,19 +318,19 @@ class Config_Template(DictionaryTemplate):
 	 The subject is mapped to an attribute during the import phase,
             and contains a long and short display name. Subjects have IDs
             for referencing in GeoLevel definitions later. -->
-        <Subject id="TOTPOP" field="TOTPOP" name="Total Population" short_name="Total Pop." displayed="true" sortkey="1" />
-        <Subject id="TOTPOP_B" field="TOTPOP_B" name="African-American" short_name="Black" displayed="false" sortkey="2" />        
-	<Subject id="TOTPOP_H" field="TOTPOP_H" name="Hispanic or Latino" short_name="Hispanic" displayed="false" sortkey="3" />
-	<Subject id="TOTPOP_NA" field="TOTPOP_NA" name="Native American" short_name="Nat Amer" displayed="false" sortkey="4" />
-        <Subject id="VAP" field="VAP" name="Voting Age Population" short_name="Total Pop." displayed="true" sortkey="5" />
-        <Subject id="VAP_B" field="VAP_B" name="African-American Voting Age Population" short_name="Black VAP " displayed="false" sortkey="6" />
-        <Subject id="VAP_H" field="VAP_H" name="Hispanic or Latino voting age population" short_name="Hispanic VAP" displayed="false" sortkey="8" />
-        <Subject id="VAP_NA" field="VAP_NA" name="Native American Voting Age Population" short_name="Nat Amer VAP" displayed="false" sortkey="9" />
+        <Subject id="totpop" field="TOTPOP" name="Total Population" short_name="Total Pop." displayed="true" sortkey="1" />
+        <Subject id="totpop_b" field="TOTPOP_B" name="African-American" short_name="Black" displayed="false" sortkey="2" />        
+	<Subject id="totpop_h" field="TOTPOP_H" name="Hispanic or Latino" short_name="Hispanic" displayed="false" sortkey="3" />
+	<Subject id="totpop_na" field="TOTPOP_NA" name="Native American" short_name="Nat Amer" displayed="false" sortkey="4" />
+        <Subject id="vap" field="VAP" name="Voting Age Population" short_name="Total Pop." displayed="true" sortkey="5" />
+        <Subject id="vap_b" field="VAP_B" name="African-American Voting Age Population" short_name="Black VAP " displayed="false" sortkey="6" />
+        <Subject id="vap_h" field="VAP_H" name="Hispanic or Latino voting age population" short_name="Hispanic VAP" displayed="false" sortkey="8" />
+        <Subject id="vap_na" field="VAP_NA" name="Native American Voting Age Population" short_name="Nat Amer VAP" displayed="false" sortkey="9" />
 
         %(start_elec)s
-        <Subject id="VOTE_DEM" field="VOTE_DEM" name="number of likely Democratic voters" short_name="democratic voters" displayed="false" sortkey="10" />
-        <Subject id="VOTE_REP" field="VOTE_REP" name="number of likely Republican voters" short_name="democratic voters" displayed="false" sortkey="11" />
-        <Subject id="VOTE_TOT" field="VOTE_TOT" name="number of likely Republican voters" short_name="democratic voters" displayed="false" sortkey="12" />
+        <Subject id="vote_dem" field="VOTE_DEM" name="number of likely Democratic voters" short_name="democratic voters" displayed="false" sortkey="10" />
+        <Subject id="vote_rep" field="VOTE_REP" name="number of likely Republican voters" short_name="democratic voters" displayed="false" sortkey="11" />
+        <Subject id="vote_tot" field="VOTE_TOT" name="number of likely Republican voters" short_name="democratic voters" displayed="false" sortkey="12" />
         %(end_elec)s
    </Subjects>
     <Targets>
@@ -338,9 +338,9 @@ class Config_Template(DictionaryTemplate):
             district. Each discrete target (usually 1 per legislative body/subject
             combination) must be listed here, with a unique ID.
         -->
-        <Target id="congress_target" subjectref="TOTPOP" value="%(pop_congress)s" range1="0.005" range2="0.01" />
-        <Target id="house_target" subjectref="TOTPOP" value="%(pop_house)s" range1="0.05" range2="0.1" />
-        <Target id="senate_target" subjectref="TOTPOP" value="%(pop_senate)s" range1="0.05" range2="0.1" />
+        <Target id="congress_target" subjectref="totpop" value="%(pop_congress)s" range1="0.005" range2="0.01" />
+        <Target id="house_target" subjectref="totpop" value="%(pop_house)s" range1="0.05" range2="0.1" />
+        <Target id="senate_target" subjectref="totpop" value="%(pop_senate)s" range1="0.05" range2="0.1" />
     </Targets>
 
     <Scoring>
@@ -349,31 +349,31 @@ class Config_Template(DictionaryTemplate):
             <ScoreFunction id="district_poptot" type="district"
                 calculator="publicmapping.redistricting.calculators.Sum"
                 label="Total Pop" user_selectable="true">
-                <SubjectArgument name="value1" ref="TOTPOP" />
+                <SubjectArgument name="value1" ref="totpop" />
             </ScoreFunction>
 
             <!-- A district score that returns a percentage -->
             <ScoreFunction id="district_blkvap_percent" type="district"
                 calculator="publicmapping.redistricting.calculators.Percent"
-                label="Black VAP" user_selectable="true">
-                <SubjectArgument name="numerator" ref="VAP_B" />
-                <SubjectArgument name="denominator" ref="VAP" />
+                label="Black vap" user_selectable="true">
+                <SubjectArgument name="numerator" ref="vap_b" />
+                <SubjectArgument name="denominator" ref="vap" />
             </ScoreFunction>
             <ScoreFunction id="district_blkvap_thresh" type="district"
                 calculator="publicmapping.redistricting.calculators.Threshold"
-                label="Black VAP Threshold">
+                label="Black vap Threshold">
                 <ScoreArgument name="value" ref="district_blkvap_percent" />
                 <Argument name="threshold" value="0.5" />
             </ScoreFunction>
             <ScoreFunction id="district_hispvap_percent" type="district"
                 calculator="publicmapping.redistricting.calculators.Percent"
-                label="His. VAP" user_selectable="true">
-                <SubjectArgument name="numerator" ref="VAP_H" />
-                <SubjectArgument name="denominator" ref="VAP" />
+                label="His. vap" user_selectable="true">
+                <SubjectArgument name="numerator" ref="vap_h" />
+                <SubjectArgument name="denominator" ref="vap" />
             </ScoreFunction>
             <ScoreFunction id="district_hispvap_thresh" type="district"
                 calculator="publicmapping.redistricting.calculators.Threshold"
-                label="His. VAP Threshold">
+                label="His. vap Threshold">
                 <ScoreArgument name="value" ref="district_hispvap_percent" />
                 <Argument name="threshold" value="0.5" />
             </ScoreFunction>
@@ -382,21 +382,21 @@ class Config_Template(DictionaryTemplate):
                 ranges around a mean value. -->
             <ScoreFunction id="district_poptot_uitarget_congress" type="district" 
                 calculator="publicmapping.redistricting.calculators.Target">
-                <SubjectArgument name="value" ref="TOTPOP" />
+                <SubjectArgument name="value" ref="totpop" />
                 <Argument name="target" value="%(pop_congress)s" />
                 <Argument name="range1" value="0.005"/>
                 <Argument name="range2" value="0.010"/>
             </ScoreFunction>
             <ScoreFunction id="district_poptot_uitarget_house" type="district"
                 calculator="publicmapping.redistricting.calculators.Target">
-                <SubjectArgument name="value" ref="TOTPOP" />
+                <SubjectArgument name="value" ref="totpop" />
                 <Argument name="target" value="%(pop_house)s" />
                 <Argument name="range1" value="0.05" />
                 <Argument name="range2" value="0.10" />
             </ScoreFunction>
             <ScoreFunction id="district_poptot_uitarget_senate" type="district"
                 calculator="publicmapping.redistricting.calculators.Target">
-                <SubjectArgument name="value" ref="TOTPOP" />
+                <SubjectArgument name="value" ref="totpop" />
                 <Argument name="target" value="%(pop_senate)s" />
                 <Argument name="range1" value="0.05" />
                 <Argument name="range2" value="0.10" />
@@ -407,7 +407,7 @@ class Config_Template(DictionaryTemplate):
             <ScoreFunction id="district_poptot_range" type="district"
                 calculator="publicmapping.redistricting.calculators.Range"
                 label="Tot Pop Range">
-                <SubjectArgument name="value" ref="TOTPOP" />
+                <SubjectArgument name="value" ref="totpop" />
                 <Argument name="min" value="%(pop_congress_min)s" />
                 <Argument name="max" value="%(pop_congress_max)s" />
             </ScoreFunction>
@@ -418,14 +418,14 @@ class Config_Template(DictionaryTemplate):
                 subject. -->
             <ScoreFunction id="district_mintot" type="district"
                 calculator="publicmapping.redistricting.calculators.Sum">
-                <SubjectArgument name="value1" ref="TOTPOP_B" />
-                <SubjectArgument name="value2" ref="TOTPOP_H" />
-                <SubjectArgument name="value3" ref="TOTPOP_NA" />
+                <SubjectArgument name="value1" ref="totpop_b" />
+                <SubjectArgument name="value2" ref="totpop_h" />
+                <SubjectArgument name="value3" ref="totpop_na" />
             </ScoreFunction>
             <ScoreFunction id="district_majmin" type="district"
                 calculator="publicmapping.redistricting.calculators.DivideAndThreshold" >
                 <ScoreArgument name="numerator" ref="district_mintot" />
-                <SubjectArgument name="denominator" ref="TOTPOP" />
+                <SubjectArgument name="denominator" ref="totpop" />
                 <Argument name="threshold" value="0.5" />
             </ScoreFunction>
 
@@ -505,7 +505,7 @@ class Config_Template(DictionaryTemplate):
                 label="Tot Pop" user_selectable="true"
                 description="Population interval calculator for congressional."
                 calculator="publicmapping.redistricting.calculators.Interval">
-                <SubjectArgument name="subject" ref="TOTPOP" />
+                <SubjectArgument name="subject" ref="totpop" />
                 <Argument name="target" value="%(pop_congress)s" />
                 <Argument name="bound1" value=".005" />
                 <Argument name="bound2" value=".01" />
@@ -515,7 +515,7 @@ class Config_Template(DictionaryTemplate):
                 label="Tot Pop" user_selectable="true"
                 description="Population interval calculator for house."
                 calculator="publicmapping.redistricting.calculators.Interval">
-                <SubjectArgument name="subject" ref="TOTPOP" />
+                <SubjectArgument name="subject" ref="totpop" />
                 <Argument name="target" value="%(pop_house)s" />
                 <Argument name="bound1" value=".005" />
                 <Argument name="bound2" value=".01" />
@@ -525,7 +525,7 @@ class Config_Template(DictionaryTemplate):
                 label="Tot Pop" user_selectable="true"
                 description="Population interval calculator for senate."
                 calculator="publicmapping.redistricting.calculators.Interval">
-                <SubjectArgument name="subject" ref="TOTPOP" />
+                <SubjectArgument name="subject" ref="totpop" />
                 <Argument name="target" value="%(pop_senate)s" />
                 <Argument name="bound1" value=".005" />
                 <Argument name="bound2" value=".01" />
@@ -566,7 +566,7 @@ class Config_Template(DictionaryTemplate):
                 description="The population of each Congressional district must be %(pop_congress_min)s-%(pop_congress_max)s">
                 <Argument name="min" value="%(pop_congress_min)s"/>
                 <Argument name="max" value="%(pop_congress_max)s"/>
-                <SubjectArgument name="value" ref="TOTPOP"/>
+                <SubjectArgument name="value" ref="totpop"/>
             </ScoreFunction>
 
             <ScoreFunction id="a_senate_plan_equipopulation" type="plan"
@@ -575,7 +575,7 @@ class Config_Template(DictionaryTemplate):
                 description="The population of each Senate district must be %(pop_senate_min)s-%(pop_senate_max)s">
                 <Argument name="min" value="%(pop_senate_min)s"/>
                 <Argument name="max" value="%(pop_senate_max)s"/>
-                <SubjectArgument name="value" ref="TOTPOP"/>
+                <SubjectArgument name="value" ref="totpop"/>
             </ScoreFunction>
 
             <ScoreFunction id="a_house_plan_equipopulation" type="plan"
@@ -584,7 +584,7 @@ class Config_Template(DictionaryTemplate):
                 description="The population of each House district must be %(pop_house_min)s-%(pop_house_max)s">
                 <Argument name="min" value="%(pop_house_min)s"/>
                 <Argument name="max" value="%(pop_house_max)s"/>
-                <SubjectArgument name="value" ref="TOTPOP"/>
+                <SubjectArgument name="value" ref="totpop"/>
             </ScoreFunction>
 
 
@@ -599,8 +599,8 @@ class Config_Template(DictionaryTemplate):
                 calculator="publicmapping.redistricting.calculators.Competitiveness"
                 label="Competitiveness"
                 description="Each plan&apos;s overall political competitiveness is determined by averaging each district.s &apos;partisan differential&apos;.  The partisan differential of each district is calculated by subtracting the Democratic &apos;partisan index&apos; from the Republican &apos;partisan index&apos;.&lt;br/&gt;&lt;br/&gt;&apos;Heavily&apos; competitive districts are districts with partisan differentials of less than or equal to 5%%. &apos;Generally&apos; competitive districts are districts with partisan differentials of greater than 5%% but less than 10%%.">
-                <SubjectArgument name="democratic" ref="VOTE_DEM" />
-                <SubjectArgument name="republican" ref="VOTE_REP" />
+                <SubjectArgument name="democratic" ref="vote_dem" />
+                <SubjectArgument name="republican" ref="vote_rep" />
             </ScoreFunction>
                 %(end_elec)s
 
@@ -608,24 +608,24 @@ class Config_Template(DictionaryTemplate):
                 calculator="publicmapping.redistricting.calculators.Equivalence"
                 label="Equal Population"
                 description="The Equipopulation score is the difference between the district with the highest population and the district with the lowest population.">
-                <SubjectArgument name="value" ref="TOTPOP" />
+                <SubjectArgument name="value" ref="totpop" />
             </ScoreFunction>
 
             <ScoreFunction id="plan_majority_minority_blk" type="plan"
                 calculator="publicmapping.redistricting.calculators.MajorityMinority"
-                label="Black VAP Majority (target)"
+                label="Black vap Majority (target)"
                 description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
-                <SubjectArgument name="population" ref="VAP" />
-                <SubjectArgument name="minority1" ref="VAP_B" />
+                <SubjectArgument name="population" ref="vap" />
+                <SubjectArgument name="minority1" ref="vap_b" />
                 <Argument name="target" value="1" />
             </ScoreFunction>
 
             <ScoreFunction id="plan_majority_minority_hisp" type="plan"
                 calculator="publicmapping.redistricting.calculators.MajorityMinority"
-                label="Hisp. VAP Majority (target)"
+                label="Hisp. vap Majority (target)"
                 description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
-                <SubjectArgument name="population" ref="VAP" />
-                <SubjectArgument name="minority1" ref="VAP_H" />
+                <SubjectArgument name="population" ref="vap" />
+                <SubjectArgument name="minority1" ref="vap_h" />
                 <Argument name="target" value="0" />
             </ScoreFunction>
 
@@ -633,8 +633,8 @@ class Config_Template(DictionaryTemplate):
                 calculator="publicmapping.redistricting.calculators.MajorityMinority"
                 label="Native Americah Majority (target)"
                 description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
-                <SubjectArgument name="population" ref="VAP" />
-                <SubjectArgument name="minority1" ref="VAP_NA" />
+                <SubjectArgument name="population" ref="vap" />
+                <SubjectArgument name="minority1" ref="vap_na" />
                 <Argument name="target" value="0" />
             </ScoreFunction>
 
@@ -642,10 +642,10 @@ class Config_Template(DictionaryTemplate):
                 calculator="publicmapping.redistricting.calculators.MajorityMinority"
                 label="Majority Minority District"
                 description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
-                <SubjectArgument name="population" ref="VAP" />
-                <SubjectArgument name="minority1" ref="VAP_B" />
-                <SubjectArgument name="minority2" ref="VAP_H" />
-                <SubjectArgument name="minority3" ref="VAP_NA" />
+                <SubjectArgument name="population" ref="vap" />
+                <SubjectArgument name="minority1" ref="vap_b" />
+                <SubjectArgument name="minority2" ref="vap_h" />
+                <SubjectArgument name="minority3" ref="vap_na" />
                 <Argument name="validation" value="1" />
             </ScoreFunction>
 
@@ -655,8 +655,8 @@ class Config_Template(DictionaryTemplate):
                 label="Representational Fairness"
                 description="Representational fairness is increased when the percentage of districts a party would likely win (based upon the &apos;partisan index&apos; used to determine Competitiveness) closely mirrors that party.s percentage of the statewide vote." >
                 <Argument name="range" value="0.05" />
-                <SubjectArgument name="democratic" ref="VOTE_DEM" />
-                <SubjectArgument name="republican" ref="VOTE_REP" />
+                <SubjectArgument name="democratic" ref="vote_dem" />
+                <SubjectArgument name="republican" ref="vote_rep" />
             </ScoreFunction>
                 %(end_elec)s
 
@@ -670,7 +670,7 @@ class Config_Template(DictionaryTemplate):
             <ScoreFunction id="partisan_index" type="district"
                 calculator="publicmapping.redistricting.calculators.Sum"
                 user_selectable="true" label="Partisan Index">
-                <SubjectArgument name="value1" ref="VOTE_DEM" />
+                <SubjectArgument name="value1" ref="vote_dem" />
             </ScoreFunction>
                 %(end_elec)s
         </ScoreFunctions>
@@ -976,15 +976,15 @@ class Config_Template(DictionaryTemplate):
           </Shapefile>
           
           <GeoLevelCharacteristics>
-              <GeoLevelCharacteristic ref="TOTPOP" />
-              <GeoLevelCharacteristic ref="VAP" />
-              <GeoLevelCharacteristic ref="VAP_B" />
-              <GeoLevelCharacteristic ref="VAP_H" />
-              <GeoLevelCharacteristic ref="VAP_NA" />
+              <GeoLevelCharacteristic ref="totpop" />
+              <GeoLevelCharacteristic ref="vap" />
+              <GeoLevelCharacteristic ref="vap_b" />
+              <GeoLevelCharacteristic ref="vap_h" />
+              <GeoLevelCharacteristic ref="vap_na" />
                 %(start_elec)s
-              <GeoLevelCharacteristic ref="VOTE_DEM" />
-              <GeoLevelCharacteristic ref="VOTE_REP" />
-              <GeoLevelCharacteristic ref="VOTE_TOT" />
+              <GeoLevelCharacteristic ref="vote_dem" />
+              <GeoLevelCharacteristic ref="vote_rep" />
+              <GeoLevelCharacteristic ref="vote_tot" />
                 %(end_elec)s
           </GeoLevelCharacteristics>
          <LegislativeBodies>
@@ -1019,15 +1019,15 @@ class Config_Template(DictionaryTemplate):
               </Geography>
           </Files>
           <GeoLevelCharacteristics>
-              <GeoLevelCharacteristic ref="TOTPOP" />
-              <GeoLevelCharacteristic ref="VAP" />
-              <GeoLevelCharacteristic ref="VAP_B" />
-              <GeoLevelCharacteristic ref="VAP_H" />
-              <GeoLevelCharacteristic ref="VAP_NA" />
+              <GeoLevelCharacteristic ref="totpop" />
+              <GeoLevelCharacteristic ref="vap" />
+              <GeoLevelCharacteristic ref="vap_b" />
+              <GeoLevelCharacteristic ref="vap_h" />
+              <GeoLevelCharacteristic ref="vap_na" />
                 %(start_elec)s
-              <GeoLevelCharacteristic ref="VOTE_DEM" />
-              <GeoLevelCharacteristic ref="VOTE_REP" />
-              <GeoLevelCharacteristic ref="VOTE_TOT" />
+              <GeoLevelCharacteristic ref="vote_dem" />
+              <GeoLevelCharacteristic ref="vote_rep" />
+              <GeoLevelCharacteristic ref="vote_tot" />
                 %(end_elec)s
           </GeoLevelCharacteristics>
          <LegislativeBodies>
@@ -1065,15 +1065,15 @@ class Config_Template(DictionaryTemplate):
               </Geography>
           </Files>
          <GeoLevelCharacteristics>
-              <GeoLevelCharacteristic ref="TOTPOP" />
-              <GeoLevelCharacteristic ref="VAP" />
-              <GeoLevelCharacteristic ref="VAP_B" />
-              <GeoLevelCharacteristic ref="VAP_H" />
-              <GeoLevelCharacteristic ref="VAP_NA" />
+              <GeoLevelCharacteristic ref="totpop" />
+              <GeoLevelCharacteristic ref="vap" />
+              <GeoLevelCharacteristic ref="vap_b" />
+              <GeoLevelCharacteristic ref="vap_h" />
+              <GeoLevelCharacteristic ref="vap_na" />
                %(start_elec)s
-              <GeoLevelCharacteristic ref="VOTE_DEM" />
-              <GeoLevelCharacteristic ref="VOTE_REP" />
-              <GeoLevelCharacteristic ref="VOTE_TOT" />
+              <GeoLevelCharacteristic ref="vote_dem" />
+              <GeoLevelCharacteristic ref="vote_rep" />
+              <GeoLevelCharacteristic ref="vote_tot" />
                 %(end_elec)s
           </GeoLevelCharacteristics>
        <LegislativeBodies>
@@ -1156,11 +1156,11 @@ class Config_Template(DictionaryTemplate):
                     temp="/projects/publicmapping/local/reports"
                     transform="/projects/publicmapping/trunk/docs/bard_template.xslt">
                     <PopVars>
-                        <PopVar subjectref="TOTPOP" threshold=".01" default="true" />
-                        <PopVar subjectref="VAP" threshold=".1" />
-                        <PopVar subjectref="VAP_B" threshold=".1" />
-                        <PopVar subjectref="VAP_H" threshold=".1" default="false" />
-                        <PopVar subjectref="VAP_NA" threshold=".1" default="false" />
+                        <PopVar subjectref="totpop" threshold=".01" default="true" />
+                        <PopVar subjectref="vap" threshold=".1" />
+                        <PopVar subjectref="vap_b" threshold=".1" />
+                        <PopVar subjectref="vap_h" threshold=".1" default="false" />
+                        <PopVar subjectref="vap_na" threshold=".1" default="false" />
                     </PopVars>
                     <RatioVars>
                         <!--
@@ -1171,18 +1171,18 @@ class Config_Template(DictionaryTemplate):
                         -->
                         <RatioVar id="racialComp" label="Majority Minority Districts" threshold=".5">
                             <Numerators>
-                                <Numerator subjectref="TOTPOP_B" />
-                                <Numerator subjectref="TOTPOP_H" />
+                                <Numerator subjectref="totpop_b" />
+                                <Numerator subjectref="totpop_h" />
                             </Numerators>
-                            <Denominator subjectref="TOTPOP" />
+                            <Denominator subjectref="totpop" />
                         </RatioVar>
                 %(start_elec)s
                         <RatioVar id="partyControl" label="Party-Controlled Districts" threshold=".5">
                             <Numerators>
-                                <Numerator subjectref="VOTE_DEM" />
-                                <Numerator subjectref="VOTE_REP" />
+                                <Numerator subjectref="vote_dem" />
+                                <Numerator subjectref="vote_rep" />
                             </Numerators>
-                            <Denominator subjectref="VOTE_TOT" />
+                            <Denominator subjectref="vote_tot" />
                         </RatioVar>
                 %(end_elec)s
                     </RatioVars>
