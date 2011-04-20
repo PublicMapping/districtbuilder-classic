@@ -330,216 +330,614 @@ class Config_Template(DictionaryTemplate):
         <Subject id="VOTE_TOT" field="VOTE_TOT" name="number of likely Republican voters" short_name="democratic voters" displayed="false" sortkey="12" />
         %(end_elec)s
    </Subjects>
-   <Scoring>
+    <Targets>
+        <!-- A target is an objective measure of a district for a legislative
+            district. Each discrete target (usually 1 per legislative body/subject
+            combination) must be listed here, with a unique ID.
+        -->
+        <Target id="congress_target" subjectref="TOTPOP" value="%(pop_congress)s" range1="0.005" range2="0.01" />
+        <Target id="house_target" subjectref="TOTPOP" value="%(pop_house)s" range1="0.05" range2="0.1" />
+        <Target id="senate_target" subjectref="TOTPOP" value="%(pop_senate)s" range1="0.05" range2="0.1" />
+    </Targets>
+
+    <Scoring>
         <ScoreFunctions>
-                <ScoreFunction id="plan_equivalence" type="plan" label="Equal Population" calculator="publicmapping.redistricting.calculators.Equivalence" description="The Equipopulation score is the difference between the district
- with the highest population and the district with the lowest population.">
-		<SubjectArgument name="value" ref="TOTPOP" />
-	</ScoreFunction>
-	<ScoreFunction id="plan_schwartzberg" type="plan" label="Average Compactness" calculator="publicmapping.redistricting.calculators.Schwartzberg" description="The competition is using the 'Schwartzberg' compactness measure. This measure is a ratio of the perimeter of the district to the circumference of the circle whose area is equal to the area of the district. ">
-	</ScoreFunction>       
-	
-	 %(start_elec)s
-            <ScoreFunction id="plan_competitiveness" type="plan" label="Competitiveness" calculator="publicmapping.redistricting.calculators.Competitiveness" description="Each plan's overall political competitiveness is determined by averaging each district.s 'partisan differential'.  The partisan differential of each district is calculated by subtracting the Democratic 'partisan index' from the Republican 'partisan index'.&lt;br/&gt;&lt;br/&gt;'Heavily' competitive districts are districts with partisan differentials of less than or equal to 5%%. 'Generally' competitive districts are districts with partisan differentials of greater than 5%% but less than 10%%.">               
-		 <SubjectArgument name="democratic" ref="VOTE_DEM" />
-		 <SubjectArgument name="republican" ref="VOTE_REP" />
+            <!-- A district score that returns a literal value -->
+            <ScoreFunction id="district_poptot" type="district"
+                calculator="publicmapping.redistricting.calculators.Sum"
+                label="Total Pop" user_selectable="true">
+                <SubjectArgument name="value1" ref="TOTPOP" />
             </ScoreFunction>
-   	    <ScoreFunction id="plan_repfairness" type="plan" label="Representational Fairness"
-                calculator="publicmapping.redistricting.calculators.RepresentationalFairness"
-                description="Representational fairness is increased when the percentage of districts a party would likely win (based upon the 'partisan index' used to determine Competitiveness) closely mirrors that party.s percentage of the statewide vote. ">
-                <SubjectArgument name="democratic" ref="VOTE_DEM" />
-                <SubjectArgument name="republican" ref="VOTE_REP" />
-                <Argument name="range" value="0.05" />
+
+            <!-- A district score that returns a percentage -->
+            <ScoreFunction id="district_blkvap_percent" type="district"
+                calculator="publicmapping.redistricting.calculators.Percent"
+                label="Black VAP" user_selectable="true">
+                <SubjectArgument name="numerator" ref="VAP_B" />
+                <SubjectArgument name="denominator" ref="VAP" />
             </ScoreFunction>
-	 %(end_elec)s
-            <!-- For validation -->
-            <ScoreFunction id="plan_majority_minority" type="plan" label="Majority Minority" 
-                calculator="publicmapping.redistricting.calculators.MajorityMinority"
-                description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S> 30, 49 (1986)) 'sufficiently large and geographically compact to constitute a majority in a single-member district'.">
-                <SubjectArgument name="minority1" ref="VAP_H" />
-                <SubjectArgument name="minority2" ref="VAP_B" />
-                <SubjectArgument name="population" ref="VAP" />
+            <ScoreFunction id="district_blkvap_thresh" type="district"
+                calculator="publicmapping.redistricting.calculators.Threshold"
+                label="Black VAP Threshold">
+                <ScoreArgument name="value" ref="district_blkvap_percent" />
+                <Argument name="threshold" value="0.5" />
             </ScoreFunction>
-            <ScoreFunction id="plan_all_blocks_assigned" type="plan" label="All Blocks Assigned" 
-                calculator="publicmapping.redistricting.calculators.AllBlocksAssigned"
-                description="All blocks in the plan must be assigned.">
+            <ScoreFunction id="district_hispvap_percent" type="district"
+                calculator="publicmapping.redistricting.calculators.Percent"
+                label="His. VAP" user_selectable="true">
+                <SubjectArgument name="numerator" ref="VAP_H" />
+                <SubjectArgument name="denominator" ref="VAP" />
             </ScoreFunction>
-            <ScoreFunction id="plan_all_contiguous" type="plan" label="All Contiguous" 
-                calculator="publicmapping.redistricting.calculators.AllContiguous"
-                description="Contiguity means that every part of a district must be reachable from every other part without crossing the district's borders. All districts within a plan must be contiguous. ">
+            <ScoreFunction id="district_hispvap_thresh" type="district"
+                calculator="publicmapping.redistricting.calculators.Threshold"
+                label="His. VAP Threshold">
+                <ScoreArgument name="value" ref="district_hispvap_percent" />
+                <Argument name="threshold" value="0.5" />
             </ScoreFunction>
-            <ScoreFunction id="congress_plan_equipopulation" type="plan" label="Equipopulation" 
-                calculator="publicmapping.redistricting.calculators.Equipopulation"
-                description="The population of each Congressional district must be %(pop_congress_max)s - %(pop_congress_min)s .">
+
+            <!-- A district score that generates classes based on a couple
+                ranges around a mean value. -->
+            <ScoreFunction id="district_poptot_uitarget_congress" type="district" 
+                calculator="publicmapping.redistricting.calculators.Target">
+                <SubjectArgument name="value" ref="TOTPOP" />
+                <Argument name="target" value="%(pop_congress)s" />
+                <Argument name="range1" value="0.005"/>
+                <Argument name="range2" value="0.010"/>
+            </ScoreFunction>
+            <ScoreFunction id="district_poptot_uitarget_house" type="district"
+                calculator="publicmapping.redistricting.calculators.Target">
+                <SubjectArgument name="value" ref="TOTPOP" />
+                <Argument name="target" value="%(pop_house)s" />
+                <Argument name="range1" value="0.05" />
+                <Argument name="range2" value="0.10" />
+            </ScoreFunction>
+            <ScoreFunction id="district_poptot_uitarget_senate" type="district"
+                calculator="publicmapping.redistricting.calculators.Target">
+                <SubjectArgument name="value" ref="TOTPOP" />
+                <Argument name="target" value="%(pop_senate)s" />
+                <Argument name="range1" value="0.05" />
+                <Argument name="range2" value="0.10" />
+            </ScoreFunction>
+
+            <!-- A district score that returns 1(T) if the subject value
+                is between the ranges, otherwise returns 0(F). -->
+            <ScoreFunction id="district_poptot_range" type="district"
+                calculator="publicmapping.redistricting.calculators.Range"
+                label="Tot Pop Range">
                 <SubjectArgument name="value" ref="TOTPOP" />
                 <Argument name="min" value="%(pop_congress_min)s" />
                 <Argument name="max" value="%(pop_congress_max)s" />
             </ScoreFunction>
-            <ScoreFunction id="congress_plan_count_districts" type="plan" label="Count Districts" 
+
+            <!-- A district score that is threshold dependent, and returns 
+                T/F; this example uses 2 score functions: 1 to combine a 
+                set of subjects, and 2 to divide the sum over another 
+                subject. -->
+            <ScoreFunction id="district_mintot" type="district"
+                calculator="publicmapping.redistricting.calculators.Sum">
+                <SubjectArgument name="value1" ref="TOTPOP_B" />
+                <SubjectArgument name="value2" ref="TOTPOP_H" />
+                <SubjectArgument name="value3" ref="TOTPOP_NA" />
+            </ScoreFunction>
+            <ScoreFunction id="district_majmin" type="district"
+                calculator="publicmapping.redistricting.calculators.DivideAndThreshold" >
+                <ScoreArgument name="numerator" ref="district_mintot" />
+                <SubjectArgument name="denominator" ref="TOTPOP" />
+                <Argument name="threshold" value="0.5" />
+            </ScoreFunction>
+
+            <!-- A custom calculator to calculate compactness, and return
+                the raw compactness score. -->
+            <ScoreFunction id="district_schwartzberg" type="district"
+                calculator="publicmapping.redistricting.calculators.Schwartzberg"
+                label="Compactness" user_selectable="true">
+            </ScoreFunction>
+            
+            <!-- A custom calculator to do contiguity, and is boolean. -->
+            <ScoreFunction id="district_contiguous" type="district"
+                calculator="publicmapping.redistricting.calculators.Contiguity"
+                label="Contiguous" user_selectable="true">
+            </ScoreFunction>
+
+            <!-- A plan score that aggregates all literal values -->
+            <ScoreFunction id="plan_sum_equipop" type="plan" 
+                calculator="publicmapping.redistricting.calculators.Sum"
+                label="Equal Population">
+                <ScoreArgument name="value1" ref="district_poptot_range" />
+            </ScoreFunction>
+            <ScoreFunction id="plan_all_equipop" type="plan" 
+                calculator="publicmapping.redistricting.calculators.Threshold" >
+                <ScoreArgument name="value" ref="plan_sum_equipop" />
+                <Argument name="threshold" value="0" />
+            </ScoreFunction>
+
+            <!-- A plan score that aggregates all districts over a threshold -->
+            <ScoreFunction id="plan_count_majmin" type="plan" 
+                calculator="publicmapping.redistricting.calculators.Sum">
+                <ScoreArgument name="value1" ref="district_majmin" />
+            </ScoreFunction>
+
+            <ScoreFunction id="plan_blkvap_thresh" type="plan"
+                calculator="publicmapping.redistricting.calculators.Sum">
+                <ScoreArgument name="value1" ref="district_blkvap_thresh" />
+            </ScoreFunction>
+
+            <ScoreFunction id="plan_hispvap_thresh" type="plan"
+                calculator="publicmapping.redistricting.calculators.Sum">
+                <ScoreArgument name="value1" ref="district_hispvap_thresh" />
+            </ScoreFunction>
+
+            <!-- A plan score that evaluates a threshold, and returns T/F.
+                This plan score checks that all districts are within the
+                population limits. -->
+            <ScoreFunction id="plan_poptot_inrange" type="plan" 
+                calculator="publicmapping.redistricting.calculators.Threshold">
+                <ScoreArgument name="value" ref="district_poptot_range" />
+                <Argument name="threshold" value="0" />
+            </ScoreFunction>
+           
+            <!-- A plan score that evaluates all districts, and returns
+                1(T) if there is more than 0 districts that have a minority
+                majority. -->
+            <ScoreFunction id="plan_major_minor" type="plan"
+                calculator="publicmapping.redistricting.calculators.Threshold"
+                label="Majority-Minority">
+                <ScoreArgument name="value" ref="district_majmin" />
+                <Argument name="threshold" value="0" />
+            </ScoreFunction>
+
+            <ScoreFunction id="plan_contiguous" type="plan"
+                calculator="publicmapping.redistricting.calculators.Sum"
+                label="Contiguous">
+                <ScoreArgument name="value1" ref="district_contiguous"/>
+            </ScoreFunction>
+
+            <ScoreFunction id="plan_noncontiguous" type="plan"
+                calculator="publicmapping.redistricting.calculators.NonContiguous"
+                label="Noncontiguous">
+            </ScoreFunction>
+
+            <!-- interval score function for population -->
+            <ScoreFunction id="a_congressional_population" type="district"
+                label="Tot Pop" user_selectable="true"
+                description="Population interval calculator for congressional."
+                calculator="publicmapping.redistricting.calculators.Interval">
+                <SubjectArgument name="subject" ref="TOTPOP" />
+                <Argument name="target" value="%(pop_congress)s" />
+                <Argument name="bound1" value=".005" />
+                <Argument name="bound2" value=".01" />
+            </ScoreFunction>
+
+            <ScoreFunction id="a_house_population" type="district"
+                label="Tot Pop" user_selectable="true"
+                description="Population interval calculator for house."
+                calculator="publicmapping.redistricting.calculators.Interval">
+                <SubjectArgument name="subject" ref="TOTPOP" />
+                <Argument name="target" value="%(pop_house)s" />
+                <Argument name="bound1" value=".005" />
+                <Argument name="bound2" value=".01" />
+            </ScoreFunction>
+
+            <ScoreFunction id="a_senate_population" type="district"
+                label="Tot Pop" user_selectable="true"
+                description="Population interval calculator for senate."
+                calculator="publicmapping.redistricting.calculators.Interval">
+                <SubjectArgument name="subject" ref="TOTPOP" />
+                <Argument name="target" value="%(pop_senate)s" />
+                <Argument name="bound1" value=".005" />
+                <Argument name="bound2" value=".01" />
+            </ScoreFunction>
+
+            <!-- leaderboard functions -->
+            <ScoreFunction id="a_congress_plan_count_districts" type="plan"
                 calculator="publicmapping.redistricting.calculators.CountDistricts"
-                description="The number of districts in a Congressional redistricting plan must be %(num_districts_congress)s.">
+                label="Count Districts"
+                description="The number of districts in a Congressional redistricting plan must be 11.">
                 <Argument name="target" value="%(num_districts_congress)s" />
             </ScoreFunction>
-            <ScoreFunction id="senate_plan_equipopulation" type="plan" label="Equipopulation" 
-                calculator="publicmapping.redistricting.calculators.Equipopulation"
-                description="The population of each State Senate district %(pop_senate_max)s - %(pop_senate_min)s ">
-                <SubjectArgument name="value" ref="TOTPOP" />
-                <Argument name="min" value="%(pop_senate_min)s" />
-                <Argument name="max" value="%(pop_senate_max)s" />
-            </ScoreFunction>
-            <ScoreFunction id="senate_plan_count_districts" type="plan" label="Count Districts" 
+
+            <ScoreFunction id="a_house_plan_count_districts" type="plan"
                 calculator="publicmapping.redistricting.calculators.CountDistricts"
-                description="The number of districts in a State Senate redistricting plan must be %(num_districts_senate)s .">
+                label="Count Districts"
+                description="The number of districts in a House of Delegates redistricting plan must be 100.">
+                <Argument name="target" value="%(num_districts_house)s" />
+            </ScoreFunction>
+
+            <ScoreFunction id="a_senate_plan_count_districts" type="plan"
+                calculator="publicmapping.redistricting.calculators.CountDistricts"
+                label="Count Districts"
+                description="The number of districts in a State Senate redistricting plan must be 100.">
                 <Argument name="target" value="%(num_districts_senate)s" />
             </ScoreFunction>
-            <ScoreFunction id="house_plan_equipopulation" type="plan" label="Equipopulation" 
-                calculator="publicmapping.redistricting.calculators.Equipopulation"
-                description="The population of each House of Delegates district must be %(pop_house_max)s- %(pop_house_min)s">
-                <SubjectArgument name="value" ref="TOTPOP" />
-                <Argument name="min" value="%(pop_house_min)s"/>
-                <Argument name="max" value="%(pop_house_max)s" />
+
+
+            <ScoreFunction id="plan_all_blocks_assigned" type="plan"
+                calculator="publicmapping.redistricting.calculators.AllBlocksAssigned"
+                label="All Blocks Assigned"
+                description="All blocks in the plan must be assigned.">
             </ScoreFunction>
-            <ScoreFunction id="house_plan_count_districts" type="plan" label="Count Districts" 
-                calculator="publicmapping.redistricting.calculators.CountDistricts"
-                description="The number of districts in a House of Delegates redistricting plan must be %(num_districts_house)s.">
-                <Argument name="target" value="%(num_districts_house)s" />
-            </ScoreFunction>           
+
+            <ScoreFunction id="a_congress_plan_equipopulation" type="plan"
+                calculator="publicmapping.redistricting.calculators.Equipopulation"
+                label="Target Pop. %(pop_congress)s"
+                description="The population of each Congressional district must be %(pop_congress_min)s-%(pop_congress_max)s">
+                <Argument name="min" value="%(pop_congress_min)s"/>
+                <Argument name="max" value="%(pop_congress_max)s"/>
+                <SubjectArgument name="value" ref="TOTPOP"/>
+            </ScoreFunction>
+
+            <ScoreFunction id="a_senate_plan_equipopulation" type="plan"
+                calculator="publicmapping.redistricting.calculators.Equipopulation"
+                label="Target Pop. %(pop_senate)s"
+                description="The population of each Senate district must be %(pop_senate_min)s-%(pop_senate_max)s">
+                <Argument name="min" value="%(pop_senate_min)s"/>
+                <Argument name="max" value="%(pop_senate_max)s"/>
+                <SubjectArgument name="value" ref="TOTPOP"/>
+            </ScoreFunction>
+
+            <ScoreFunction id="a_house_plan_equipopulation" type="plan"
+                calculator="publicmapping.redistricting.calculators.Equipopulation"
+                label="Target Pop. %(pop_house)s"
+                description="The population of each House district must be %(pop_house_min)s-%(pop_house_max)s">
+                <Argument name="min" value="%(pop_house_min)s"/>
+                <Argument name="max" value="%(pop_house_max)s"/>
+                <SubjectArgument name="value" ref="TOTPOP"/>
+            </ScoreFunction>
+
+
+
+            <ScoreFunction id="plan_all_contiguous" type="plan"
+                calculator="publicmapping.redistricting.calculators..AllContiguous"
+                label="All Contiguous"
+                description="Contiguity means that every part of a district must be reachable from every other part without crossing the district&apos;s borders. All districts within a plan must be contiguous. Water contiguity is permitted given Virginia&apos;s extensive coastal region. &apos;Point contiguity&apos; or &apos;touch-point contiguity&apos; where two sections of a district are connected at a single point is not permitted.">
+            </ScoreFunction>
+                %(start_elec)s
+            <ScoreFunction id="plan_competitiveness" type="plan"
+                calculator="publicmapping.redistricting.calculators.Competitiveness"
+                label="Competitiveness"
+                description="Each plan&apos;s overall political competitiveness is determined by averaging each district.s &apos;partisan differential&apos;.  The partisan differential of each district is calculated by subtracting the Democratic &apos;partisan index&apos; from the Republican &apos;partisan index&apos;.&lt;br/&gt;&lt;br/&gt;&apos;Heavily&apos; competitive districts are districts with partisan differentials of less than or equal to 5%%. &apos;Generally&apos; competitive districts are districts with partisan differentials of greater than 5%% but less than 10%%.">
+                <SubjectArgument name="democratic" ref="VOTE_DEM" />
+                <SubjectArgument name="republican" ref="VOTE_REP" />
+            </ScoreFunction>
+                %(end_elec)s
+
+            <ScoreFunction id="plan_equivalence" type="plan"
+                calculator="publicmapping.redistricting.calculators.Equivalence"
+                label="Equal Population"
+                description="The Equipopulation score is the difference between the district with the highest population and the district with the lowest population.">
+                <SubjectArgument name="value" ref="TOTPOP" />
+            </ScoreFunction>
+
+            <ScoreFunction id="plan_majority_minority_blk" type="plan"
+                calculator="publicmapping.redistricting.calculators.MajorityMinority"
+                label="Black VAP Majority (target)"
+                description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
+                <SubjectArgument name="population" ref="VAP" />
+                <SubjectArgument name="minority1" ref="VAP_B" />
+                <Argument name="target" value="1" />
+            </ScoreFunction>
+
+            <ScoreFunction id="plan_majority_minority_hisp" type="plan"
+                calculator="publicmapping.redistricting.calculators.MajorityMinority"
+                label="Hisp. VAP Majority (target)"
+                description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
+                <SubjectArgument name="population" ref="VAP" />
+                <SubjectArgument name="minority1" ref="VAP_H" />
+                <Argument name="target" value="0" />
+            </ScoreFunction>
+
+            <ScoreFunction id="plan_majority_minority_na" type="plan"
+                calculator="publicmapping.redistricting.calculators.MajorityMinority"
+                label="Native Americah Majority (target)"
+                description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
+                <SubjectArgument name="population" ref="VAP" />
+                <SubjectArgument name="minority1" ref="VAP_NA" />
+                <Argument name="target" value="0" />
+            </ScoreFunction>
+
+            <ScoreFunction id="plan_majority_minority" type="plan"
+                calculator="publicmapping.redistricting.calculators.MajorityMinority"
+                label="Majority Minority District"
+                description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
+                <SubjectArgument name="population" ref="VAP" />
+                <SubjectArgument name="minority1" ref="VAP_B" />
+                <SubjectArgument name="minority2" ref="VAP_H" />
+                <SubjectArgument name="minority3" ref="VAP_NA" />
+                <Argument name="validation" value="1" />
+            </ScoreFunction>
+
+                %(start_elec)s
+            <ScoreFunction id="plan_repfairness" type="plan"
+                calculator="publicmapping.redistricting.calculators.RepresentationalFairness"
+                label="Representational Fairness"
+                description="Representational fairness is increased when the percentage of districts a party would likely win (based upon the &apos;partisan index&apos; used to determine Competitiveness) closely mirrors that party.s percentage of the statewide vote." >
+                <Argument name="range" value="0.05" />
+                <SubjectArgument name="democratic" ref="VOTE_DEM" />
+                <SubjectArgument name="republican" ref="VOTE_REP" />
+            </ScoreFunction>
+                %(end_elec)s
+
+            <ScoreFunction id="plan_schwartzberg" type="plan"
+                calculator="publicmapping.redistricting.calculators.Schwartzberg"
+                label="Average Compactness"
+                description="The competition is using the &apos;Schwartzberg&apos; compactness measure. This measure is a ratio of the perimeter of the district to the circumference of the circle whose area is equal to the area of the district." >
+            </ScoreFunction>
+
+                %(start_elec)s
+            <ScoreFunction id="partisan_index" type="district"
+                calculator="publicmapping.redistricting.calculators.Sum"
+                user_selectable="true" label="Partisan Index">
+                <SubjectArgument name="value1" ref="VOTE_DEM" />
+            </ScoreFunction>
+                %(end_elec)s
         </ScoreFunctions>
-     <ScorePanels>        
-            <ScorePanel id="panel_equivalence_all" type="plan" template="leaderboard_panel_all.html" title="Equipopulation">
-                <Score ref="plan_equivalence"/>            
-	    </ScorePanel>
-            <ScorePanel id="panel_schwartzberg_all" type="plan" template="leaderboard_panel_all.html" title="Average Compactness">
-                <Score ref="plan_schwartzberg"/>
-	    </ScorePanel>
-                %(start_elec)s
-            <ScorePanel id="panel_competitiveness_all" type="plan" template="leaderboard_panel_all.html" title="Competitiveness">
-                <Score ref="plan_competitiveness"/>
-	    </ScorePanel>
-            <ScorePanel id="panel_repfairness_all" type="plan" template="leaderboard_panel_all.html" title="Representational Fairness">
-                <Score ref="plan_repfairness"/>
-	    </ScorePanel>
-                %(end_elec)s
-            <ScorePanel id="panel_equivalence_mine" type="plan" template="leaderboard_panel_ mine.html"	title="Equipopulation">
-                <Score ref="plan_equivalence"/>
-	    </ScorePanel>
-            <ScorePanel id="panel_schwartzberg_mine" type="plan" template="leaderboard_panel_mine.html" title="Average Compactness">
-                <Score ref="plan_schwartzberg"/>
-	    </ScorePanel>
-                %(start_elec)s
-            <ScorePanel id="panel_competitiveness_mine" type="plan" template="leaderboard_panel_mine.html" title="Competitiveness">
-                <Score ref="plan_competitiveness"/>
+        
+        <ScorePanels>
+            <ScorePanel id="panel_equipop_all" type="plan" position="1"
+                title="Equipopulation" template="leaderboard_panel_all.html">
+                <Score ref="plan_equivalence" />
             </ScorePanel>
-            <ScorePanel id="panel_repfairness_mine" type="plan" template="leaderboard_panel_mine.html" title="Representational Fairness">
-                <Score ref="plan_repfairness"/>
+            <ScorePanel id="panel_equipop_mine" type="plan" position="1"
+                title="Equipopulation" template="leaderboard_panel_mine.html">
+                <Score ref="plan_equivalence" />
+            </ScorePanel>
+            <ScorePanel id="panel_compact_all" type="plan" position="2"
+                title="Schwartzberg" template="leaderboard_panel_all.html">
+                <Score ref="plan_schwartzberg" />
+            </ScorePanel>
+            <ScorePanel id="panel_compact_mine" type="plan" position="2"
+                title="Schwartzberg" template="leaderboard_panel_mine.html">
+                <Score ref="plan_schwartzberg" />
+            </ScorePanel>
+                %(start_elec)s
+            <ScorePanel id="panel_competitive_all" type="plan" position="3"
+                title="Competitiveness" template="leaderboard_panel_all.html">
+                <Score ref="plan_competitiveness" />
+            </ScorePanel>
+            <ScorePanel id="panel_competitive_mine" type="plan" position="3"
+                title="Competitiveness" template="leaderboard_panel_mine.html">
+                <Score ref="plan_competitiveness" />
+            </ScorePanel>
+            <ScorePanel id="panel_rf_all" type="plan" position="4"
+                title="Representational Fairness" template="leaderboard_panel_all.html">
+                <Score ref="plan_repfairness" />
+            </ScorePanel>
+            <ScorePanel id="panel_rf_mine" type="plan" position="4"
+                title="Representational Fairness" template="leaderboard_panel_mine.html">
+                <Score ref="plan_repfairness" />
             </ScorePanel>
                 %(end_elec)s
+
+            <!-- Summary above all sidebar panels -->
+            <ScorePanel id="congressional_panel_summary" type="plan_summary" position="1"
+                title="Plan Summary" cssclass="plan_summary congressional" template="plan_summary.html">
+                <Score ref="a_congress_plan_count_districts" />
+                <Score ref="a_congress_plan_equipopulation"/>
+                <Score ref="plan_majority_minority_blk" />
+                <Score ref="plan_majority_minority_hisp" />
+                <Score ref="plan_majority_minority_na" />
+                <Score ref="plan_noncontiguous"/>
+            </ScorePanel>
+
+            <ScorePanel id="house_panel_summary" type="plan_summary" position="1"
+                title="Plan Summary" cssclass="plan_summary house" template="plan_summary.html">
+                <Score ref="a_senate_plan_count_districts" />
+                <Score ref="a_house_plan_equipopulation"/>
+                <Score ref="plan_majority_minority_blk" />
+                <Score ref="plan_majority_minority_hisp" />
+                <Score ref="plan_majority_minority_na" />
+                <Score ref="plan_noncontiguous"/>
+            </ScorePanel>
+
+            <ScorePanel id="senate_panel_summary" type="plan_summary" position="1"
+                title="Plan Summary" cssclass="plan_summary senate" template="plan_summary.html">
+                <Score ref="a_senate_plan_count_districts" />
+                <Score ref="a_senate_plan_equipopulation"/>
+                <Score ref="plan_majority_minority_blk" />
+                <Score ref="plan_majority_minority_hisp" />
+                <Score ref="plan_majority_minority_na" />
+                <Score ref="plan_noncontiguous"/>
+            </ScorePanel>
+
+            <!-- Basic Information -->
+            <ScorePanel id="congresional_panel_info" type="district" position="2"
+                title="Basic Information" cssclass="district_basic_info congressional" 
+                template="basic_information.html">
+                <Score ref="a_congressional_population" />
+                <Score ref="district_contiguous" />
+                <Score ref="district_schwartzberg" />
+            </ScorePanel>
+
+            <ScorePanel id="house_panel_info" type="district" position="2"
+                title="Basic Information" cssclass="district_basic_info house" 
+                template="basic_information.html">
+                <Score ref="a_house_population" />
+                <Score ref="district_contiguous" />
+                <Score ref="district_schwartzberg" />
+            </ScorePanel>
+            
+            <ScorePanel id="senate_panel_info" type="district" position="2"
+                title="Basic Information" cssclass="district_basic_info senate" 
+                template="basic_information.html">
+                <Score ref="a_senate_population" />
+                <Score ref="district_contiguous" />
+                <Score ref="district_schwartzberg" />
+            </ScorePanel>
+            
+            <!-- Demographics -->
+            <ScorePanel id="congressional_panel_demo" type="district" position="2"
+                title="Demographics" cssclass="district_demographics congressional" 
+                template="demographics.html">
+                %(start_elec)s
+                <Score ref="partisan_index" />
+                %(end_elec)s
+                <Score ref="district_blkvap_percent" />
+                <Score ref="district_hispvap_percent" />
+            </ScorePanel>
+
+            <ScorePanel id="house_panel_demo" type="district" position="2"
+                title="Demographics" cssclass="district_demographics house" 
+                template="demographics.html">
+                %(start_elec)s
+                <Score ref="partisan_index" />
+                %(end_elec)s
+                <Score ref="district_blkvap_percent" />
+                <Score ref="district_hispvap_percent" />
+            </ScorePanel>
+
+            <ScorePanel id="senate_panel_demo" type="district" position="2"
+                title="Demographics" cssclass="district_demographics senate" 
+                template="demographics.html">
+                %(start_elec)s
+                <Score ref="partisan_index" />
+                %(end_elec)s
+                <Score ref="district_blkvap_percent" />
+                <Score ref="district_hispvap_percent" />
+            </ScorePanel>
         </ScorePanels>
+        
         <ScoreDisplays>
-            <ScoreDisplay legislativebodyref="congress" type="leaderboard"
+            <ScoreDisplay legislativebodyref="congress" type="leaderboard" 
                 title="Congressional Leaderboard - All" cssclass="leaderboard congress">
-                <ScorePanel ref="panel_equivalence_all" />
-                <ScorePanel ref="panel_schwartzberg_all" />
+                <ScorePanel ref="panel_equipop_all" />
+                <ScorePanel ref="panel_compact_all" />
                 %(start_elec)s
-                <ScorePanel ref="panel_competitiveness_all" />
-                <ScorePanel ref="panel_repfairness_all" />
-                %(end_elec)s            </ScoreDisplay>            <ScoreDisplay legislativebodyref="house" type="leaderboard"
-                title="State House Leaderboard - All" cssclass="leaderboard house">
-                <ScorePanel ref="panel_equivalence_all" />
-                <ScorePanel ref="panel_schwartzberg_all" />
-                %(start_elec)s
-                <ScorePanel ref="panel_competitiveness_all" />
-                <ScorePanel ref="panel_repfairness_all" />
+                <ScorePanel ref="panel_competitive_all" />
+                <ScorePanel ref="panel_rf_all" />
                 %(end_elec)s
             </ScoreDisplay>
-            <ScoreDisplay legislativebodyref="senate" type="leaderboard"
-                title="State Senate Leaderboard - All" cssclass="leaderboard senate">
-                <ScorePanel ref="panel_equivalence_all" />
-                <ScorePanel ref="panel_schwartzberg_all" />
-                %(start_elec)s
-                <ScorePanel ref="panel_competitiveness_all" />
-                <ScorePanel ref="panel_repfairness_all" />
-                %(end_elec)s
-            </ScoreDisplay>
-            <ScoreDisplay legislativebodyref="congress" type="leaderboard"
+            <ScoreDisplay legislativebodyref="congress" type="leaderboard" 
                 title="Congressional Leaderboard - Mine" cssclass="leaderboard congress">
-                <ScorePanel ref="panel_equivalence_mine" />
-                <ScorePanel ref="panel_schwartzberg_mine" />
+                <ScorePanel ref="panel_equipop_mine" />
+                <ScorePanel ref="panel_compact_mine" />
                 %(start_elec)s
-                <ScorePanel ref="panel_competitiveness_mine" />
-                <ScorePanel ref="panel_repfairness_mine" />
+                <ScorePanel ref="panel_competitive_all" />
+                <ScorePanel ref="panel_rf_mine" />
                 %(end_elec)s
             </ScoreDisplay>
-            <ScoreDisplay legislativebodyref="house" type="leaderboard"
+            <ScoreDisplay legislativebodyref="house" type="leaderboard" 
+                title="State House Leaderboard - All" cssclass="leaderboard house">
+                <ScorePanel ref="panel_equipop_all" />
+                <ScorePanel ref="panel_compact_all" />
+                %(start_elec)s
+                <ScorePanel ref="panel_competitive_all" />
+                <ScorePanel ref="panel_rf_all" />
+                %(end_elec)s
+            </ScoreDisplay>
+            <ScoreDisplay legislativebodyref="house" type="leaderboard" 
                 title="State House Leaderboard - Mine" cssclass="leaderboard house">
-                <ScorePanel ref="panel_equivalence_mine" />
-                <ScorePanel ref="panel_schwartzberg_mine" />
+                <ScorePanel ref="panel_equipop_mine" />
+                <ScorePanel ref="panel_compact_mine" />
                 %(start_elec)s
-                <ScorePanel ref="panel_competitiveness_mine" />
-                <ScorePanel ref="panel_repfairness_mine" />
+                <ScorePanel ref="panel_competitive_mine" />
+                <ScorePanel ref="panel_rf_mine" />
                 %(end_elec)s
             </ScoreDisplay>
-            <ScoreDisplay legislativebodyref="senate" type="leaderboard"
-                title="State Senate Leaderboard - Mine" cssclass="leaderboard senate">
-                <ScorePanel ref="panel_equivalence_mine" />
-                <ScorePanel ref="panel_schwartzberg_mine" />
+            <ScoreDisplay legislativebodyref="senate" type="leaderboard" 
+                title="State Senate Leaderboard - All" cssclass="leaderboard senate">
+                <ScorePanel ref="panel_equipop_all" />
+                <ScorePanel ref="panel_compact_all" />
                 %(start_elec)s
-                <ScorePanel ref="panel_competitiveness_mine" />
-                <ScorePanel ref="panel_repfairness_mine" />
+                <ScorePanel ref="panel_competitive_all" />
+                <ScorePanel ref="panel_rf_all" />
                 %(end_elec)s
+            </ScoreDisplay>
+            <ScoreDisplay legislativebodyref="senate" type="leaderboard" 
+                title="State Senate Leaderboard - Mine" cssclass="leaderboard senate">
+                <ScorePanel ref="panel_equipop_mine" />
+                <ScorePanel ref="panel_compact_mine" />
+                %(start_elec)s
+                <ScorePanel ref="panel_competitive_mine" />
+                <ScorePanel ref="panel_rf_mine" />
+                %(end_elec)s
+            </ScoreDisplay>
+
+             <!-- Sidebar configuration -->
+            <ScoreDisplay legislativebodyref="congress" type="sidebar" title="Basic Information" cssclass="basic_information">
+                <ScorePanel ref="congressional_panel_summary" />
+                <ScorePanel ref="congresional_panel_info" />
+            </ScoreDisplay>
+
+            <ScoreDisplay legislativebodyref="congress" type="sidebar" title="Demographics" cssclass="demographics">
+                <ScorePanel ref="congressional_panel_summary" />
+                <ScorePanel ref="congressional_panel_demo" />
+            </ScoreDisplay>
+
+            <ScoreDisplay legislativebodyref="house" type="sidebar" title="Basic Information" cssclass="basic_information">
+                <ScorePanel ref="house_panel_summary" />
+                <ScorePanel ref="house_panel_info" />
+            </ScoreDisplay>
+
+            <ScoreDisplay legislativebodyref="house" type="sidebar" title="Demographics" cssclass="demographics">
+                <ScorePanel ref="house_panel_summary" />
+                <ScorePanel ref="house_panel_demo" />
+            </ScoreDisplay>
+
+            <ScoreDisplay legislativebodyref="senate" type="sidebar" title="Basic Information" cssclass="basic_information">
+                <ScorePanel ref="senate_panel_summary" />
+                <ScorePanel ref="senate_panel_info" />
+            </ScoreDisplay>
+
+            <ScoreDisplay legislativebodyref="senate" type="sidebar" title="Demographics" cssclass="demographics">
+                <ScorePanel ref="senate_panel_summary" />
+                <ScorePanel ref="senate_panel_demo" />
             </ScoreDisplay>
         </ScoreDisplays>
     </Scoring>
-   <Validation>
+
+    <Validation>
         <Criteria legislativebodyref="congress">
-            <Criterion name="CountDistricts - Congress">
-                <Score ref="congress_plan_count_districts" />
+            <Criterion name="Equipopulation - Congress" description="&lt;p&gt;Your plan does not meet the competition criteria for Equipopulation:&lt;/p&gt;&lt;p&gt; The population of each Congressional district must be %(pop_congress_max)s-%(pop_congress_min)s">  
+                <Score ref="a_congress_plan_equipopulation" />
             </Criterion>
-            <Criterion name="Equipopulation - Congress" description="&lt;p&gt;Your plan does not meet the competition criteria for Equipopulation:&lt;/p&gt;&lt;p&gt; The population of each Congressional district must be %(pop_congress_max)s-%(pop_congress_min)s">                
-		<Score ref="congress_plan_equipopulation" />            
-	    </Criterion>
-            <Criterion name="MajorityMinority - Congress">
+            <Criterion name="AllContiguous - Congress" 
+                description="&lt;p&gt;Your plan does not meet the competition criteria for Contiguity&lt;/p&gt;&lt;p&gt;Every part of a district must be reachable from every other part without crossing the district's borders. All districts within a plan must be contiguous. &lt;/p&gt;">
+                <Score ref="plan_all_contiguous" />
+            </Criterion>
+            <Criterion name="MajorityMinority - Congress" description="">
                 <Score ref="plan_majority_minority" />
             </Criterion>
-            <Criterion name="AllBlocksAssigned - Congress">
-                <Score ref="plan_all_blocks_assigned" />
+            <Criterion name="CountDistricts - Congress" description="">
+                <Score ref="a_congress_plan_count_districts" />
             </Criterion>
-            <Criterion name="AllContiguous - Congress" description="&lt;p&gt;Your plan does not meet the competition criteria for Contiguity&lt;/p&gt;&lt;p&gt;Every part of a district must be reachable from every other part without crossing the district's borders. ">               
-		 <Score ref="plan_all_contiguous" />
+            <Criterion name="AllBlocksAssigned - Congress" description="">
+                <Score ref="plan_all_blocks_assigned" />
             </Criterion>
         </Criteria>
         <Criteria legislativebodyref="house">
-            <Criterion name="CountDistricts - House">
-                <Score ref="house_plan_count_districts" />
+            <Criterion name="Equipopulation - House" description="&lt;p&gt;Your plan does not meet the competition criteria for Equipopulation:&lt;/p&gt;&lt;p&gt;The population of each House of Delegates district must be %(pop_house_min)s - %(pop_house_max)s"> 
+                <Score ref="a_house_plan_equipopulation" />
             </Criterion>
-            <Criterion name="Equipopulation - House" description="&lt;p&gt;Your plan does not meet the competition criteria for Equipopulation:&lt;/p&gt;&lt;p&gt;The population of each House of Delegates district must be %(pop_house_min)s - %(pop_house_max)s">                
-		<Score ref="house_plan_equipopulation" />            
-	    </Criterion>            
-	    <Criterion name="MajorityMinority - House">
+            <Criterion name="AllContiguous - House" 
+                description="&lt;p&gt;Your plan does not meet the competition criteria for Contiguity&lt;/p&gt;&lt;p&gt;Every part of a district must be reachable from every other part without crossing the district's borders. All districts within a plan must be contiguous. &lt;/p&gt;">
+                <Score ref="plan_all_contiguous" />
+            </Criterion>
+            <Criterion name="MajorityMinority - House" description="">
                 <Score ref="plan_majority_minority" />
             </Criterion>
-            <Criterion name="AllBlocksAssigned - House">
-                <Score ref="plan_all_blocks_assigned" />
+            <Criterion name="CountDistricts - House" description="">
+                <Score ref="a_house_plan_count_districts" />
             </Criterion>
-            <Criterion name="AllContiguous - House" description="&lt;p&gt;Your plan does not meet the competition criteria for Contiguity&lt;/p&gt;&lt;p&gt;Every part of a district must be reachable from every other part without crossing the district's borders. All districts within a plan must be contiguous. ">                
-		<Score ref="plan_all_contiguous" />
+            <Criterion name="AllBlocksAssigned - House" description="">
+                <Score ref="plan_all_blocks_assigned" />
             </Criterion>
         </Criteria>
-        <Criteria legislativebodyref="senate">            
-	    <Criterion name="CountDistricts - Senate">
-                <Score ref="senate_plan_count_districts" />
-            </Criterion>
+        <Criteria legislativebodyref="senate">
             <Criterion name="Equipopulation - Senate" description="&lt;p&gt;Your plan does not meet the competition criteria for Equipopulation:&lt;/p&gt;&lt;p&gt;The population of each State Senate district must be %(pop_house_min)s-%(pop_house_max)s">
-                <Score ref="senate_plan_equipopulation" />
+                <Score ref="a_senate_plan_equipopulation" />
             </Criterion>
-            <Criterion name="MajorityMinority - Senate">
-                <Score ref="plan_majority_minority" />            
-	    </Criterion>            
-	    <Criterion name="AllBlocksAssigned - Senate">
-                <Score ref="plan_all_blocks_assigned" />
-            </Criterion>
-            <Criterion name="AllContiguous - Senate" description="&lt;p&gt;Your plan does not meet the competition criteria for Contiguity&lt;/p&gt;&lt;p&gt;Every part of a district must be reachable from every other part without crossing the district's borders. ">
+            <Criterion name="AllContiguous - Senate" 
+                description="&lt;p&gt;Your plan does not meet the competition criteria for Contiguity&lt;/p&gt;&lt;p&gt;Every part of a district must be reachable from every other part without crossing the district's borders. All districts within a plan must be contiguous. &lt;/p&gt;">
                 <Score ref="plan_all_contiguous" />
+            </Criterion>
+            <Criterion name="MajorityMinority - Senate" description="">
+                <Score ref="plan_majority_minority" />
+            </Criterion>
+            <Criterion name="CountDistricts - Senate" description="">
+                <Score ref="a_senate_plan_count_districts" />
+            </Criterion>
+            <Criterion name="AllBlocksAssigned - Senate" description="">
+                <Score ref="plan_all_blocks_assigned" />
             </Criterion>
         </Criteria>
     </Validation>
@@ -586,6 +984,24 @@ class Config_Template(DictionaryTemplate):
               <GeoLevelCharacteristic ref="VOTE_TOT" />
                 %(end_elec)s
           </GeoLevelCharacteristics>
+         <LegislativeBodies>
+              <LegislativeBody ref="congress">
+                  <LegislativeTargets>
+                      <LegislativeTarget ref="congress_target" default="true" />
+                  </LegislativeTargets>
+              </LegislativeBody>
+              <LegislativeBody ref="house">
+                  <LegislativeTargets>
+                      <LegislativeTarget ref="house_target" default="true" />
+                  </LegislativeTargets>
+              </LegislativeBody>
+              <LegislativeBody ref="senate">
+                  <LegislativeTargets>
+                      <LegislativeTarget ref="senate_target" default="true" />
+                  </LegislativeTargets>
+              </LegislativeBody>
+          </LegislativeBodies>
+
      </GeoLevel>
       <GeoLevel id="tract" name="tract" min_zoom="4" sort_key="2" tolerance="25">
          <Files>
@@ -611,6 +1027,27 @@ class Config_Template(DictionaryTemplate):
               <GeoLevelCharacteristic ref="VOTE_TOT" />
                 %(end_elec)s
           </GeoLevelCharacteristics>
+         <LegislativeBodies>
+              <LegislativeBody ref="congress">
+                  <Parent ref="block" />
+                  <LegislativeTargets>
+                      <LegislativeTarget ref="congress_target" default="true" />
+                  </LegislativeTargets>
+              </LegislativeBody>
+              <LegislativeBody ref="house">
+                  <Parent ref="block" />
+                  <LegislativeTargets>
+                      <LegislativeTarget ref="house_target" default="true" />
+                  </LegislativeTargets>
+              </LegislativeBody>
+              <LegislativeBody ref="senate">
+                  <Parent ref="block" />
+                  <LegislativeTargets>
+                      <LegislativeTarget ref="senate_target" default="true" />
+                  </LegislativeTargets>
+              </LegislativeBody>
+          </LegislativeBodies>
+
       </GeoLevel>
 
       <GeoLevel id="county" name="county" min_zoom="0" sort_key="1" tolerance="250">
@@ -636,6 +1073,26 @@ class Config_Template(DictionaryTemplate):
               <GeoLevelCharacteristic ref="VOTE_TOT" />
                 %(end_elec)s
           </GeoLevelCharacteristics>
+       <LegislativeBodies>
+              <LegislativeBody ref="congress">
+                  <Parent ref="tract" />
+                  <LegislativeTargets>
+                      <LegislativeTarget ref="congress_target" default="true" />
+                  </LegislativeTargets>
+              </LegislativeBody>
+              <LegislativeBody ref="house">
+                  <Parent ref="tract" />
+                  <LegislativeTargets>
+                      <LegislativeTarget ref="house_target" default="true" />
+                  </LegislativeTargets>
+              </LegislativeBody>
+              <LegislativeBody ref="senate">
+                  <Parent ref="tract" />
+                  <LegislativeTargets>
+                      <LegislativeTarget ref="senate_target" default="true" />
+                  </LegislativeTargets>
+              </LegislativeBody>
+          </LegislativeBodies>
       </GeoLevel>
     </GeoLevels>
 
@@ -667,7 +1124,7 @@ class Config_Template(DictionaryTemplate):
         user created when the django project is created.
         
         -->
-        <Admin user="admin" email="support@publicmapping.org"/>
+        <Admin user="admin" email="support@publicmapping.org" password="admin"/>
         
         <!-- Configuration items specific to the 'redistricting' app. -->
        <Redistricting>      
@@ -781,15 +1238,18 @@ def gen_config(num_districts_congress,num_districts_senate,num_districts_house,s
 		midlevel="vtds"
                 midlevel_width="4"
                 midlevel_var="VTDST10"        
-	pop_congress_max = (sum_TOTPOP/float(num_districts_congress)) * 1.005
-        pop_congress_min = (sum_TOTPOP/float(num_districts_congress)) * 0.995        
-	pop_house_max = (sum_TOTPOP/float(num_districts_house)) * 1.1
-        pop_house_min = (sum_TOTPOP/float(num_districts_house)) * 0.9        
-	pop_senate_max = (sum_TOTPOP/float(num_districts_senate)) * 1.1
-        pop_senate_min = (sum_TOTPOP/float(num_districts_senate)) * 0.9
+	pop_congress = round((sum_TOTPOP/float(num_districts_congress)))
+	pop_congress_max = round((sum_TOTPOP/float(num_districts_congress)) * 1.005)
+        pop_congress_min = round((sum_TOTPOP/float(num_districts_congress)) * 0.995)
+	pop_house = round((sum_TOTPOP/float(num_districts_house))) 
+	pop_house_max = round((sum_TOTPOP/float(num_districts_house)) * 1.1)
+        pop_house_min = round((sum_TOTPOP/float(num_districts_house)) * 0.9)
+	pop_senate = round((sum_TOTPOP/float(num_districts_senate)))
+	pop_senate_max = round((sum_TOTPOP/float(num_districts_senate)) * 1.1)
+        pop_senate_min = round((sum_TOTPOP/float(num_districts_senate)) * 0.9)
         target_file = '/projects/publicmapping/trunk/docs/config_census_generated.xml'
         f = open(target_file,'w')
-        f.write(str( Config_Template(start_elec=start_elec,end_elec=end_elec,num_districts_congress=num_districts_congress,num_districts_house=num_districts_house,num_districts_senate=num_districts_senate,pop_congress_max=pop_congress_max,pop_congress_min=pop_congress_min,pop_senate_max=pop_senate_max, pop_senate_min=pop_senate_min,pop_house_max=pop_house_max,pop_house_min=pop_house_min)))
+        f.write(str( Config_Template(start_elec=start_elec,end_elec=end_elec,num_districts_congress=num_districts_congress,num_districts_house=num_districts_house,num_districts_senate=num_districts_senate,pop_congress_max=pop_congress_max,pop_congress_min=pop_congress_min,pop_senate_max=pop_senate_max, pop_senate_min=pop_senate_min,pop_house_max=pop_house_max,pop_house_min=pop_house_min,pop_congress=pop_congress,pop_senate=pop_senate,pop_house=pop_house)))
         f.close()
         os.chmod(target_file,stat.S_IRUSR|stat.S_IRGRP|stat.S_IROTH)    
 
@@ -806,7 +1266,22 @@ parser.add_option('-C','--congdist', dest='congDis',help="number of congressiona
 parser.add_option('-H', '--housedist',dest='senDis',help="number of senate districts", type=int, default=0)
 parser.add_option('-S', '--sendist', dest='houseDis',help="number of house districts", type=int,default=0)
 
+parser.add_option('-i', '--install', dest="do_install", help="Install dependencencies.", default=False, action='store_true') 
+parser.add_option('-g', '--getdata', dest="do_getdata", help="Get data.", default=False, action='store_true') 
+parser.add_option('-s', '--gensld', dest="do_gensld", help="Generate slds", default=False, action='store_true') 
+parser.add_option('-c', '--genconf', dest="do_genconf", help="Generate config file", default=False, action='store_true') 
+parser.add_option('-d', '--dropdb', dest="do_dropdb", help="Drop database", default=False, action='store_true') 
+
 (parseResults,numargs)=parser.parse_args()
+
+allops = (not parseResults.do_install) and  (not parseResults.do_getdata) and  (not parseResults.do_gensld) and  (not parseResults.do_genconf) and (not parseResults.do_dropdb)
+if (allops):
+	parseResults.do_install=True
+	parseResults.do_getdata=True
+	parseResults.do_gensld=True
+	parseResults.do_genconf=True
+	parseResults.do_dropdb=True
+
 if len(numargs) != 0:
         parser.error("additional arguments ignored ")
 stateFips = parseResults.stateFips
@@ -814,84 +1289,93 @@ houseDis = parseResults.houseDis
 senDis= parseResults.senDis
 congDis= parseResults.congDis
 if (stateFips==0 or houseDis==0 or senDis==0 or congDis==0):
-        print "Must supply all arguments"
+        print "Must supply all district arguments"
         raise ValueError
 
 # install dependencies
-print "installing dependencies..."
-install_dependencies()
-
-# generate generic sld files
-print 'generating generic sld files ...'
-gensld_none("county")
-gensld_none("tract")
-gensld_none("block")
-gensld_boundaries("county")
-gensld_boundaries("tract")
-gensld_boundaries("block")
+if (parseResults.do_install):
+	print "installing dependencies..."
+	install_dependencies()
 
 # Clear out DB
-print 'clearing database ...'
-drop_db()
+if (parseResults.do_dropdb):
+	print 'clearing database ...'
+	drop_db()
+
+# generate generic sld files
+if (parseResults.do_gensld):
+	print 'generating generic sld files ...'
+	gensld_none("county")
+	gensld_none("tract")
+	gensld_none("block")
+	gensld_boundaries("county")
+	gensld_boundaries("tract")
+	gensld_boundaries("block")
 
 # Retrieve data files
-print 'retrieving census data ...'
-get_census_data(stateFips)
 
-# merge standard variables
-# TODO: Refactor entirely in rpy
-# NOTE: robject is returning 6-level quantiles, has_election_data, has_vtd, sum_TOTPOP
-print 'merging data...'
-robjects.r.source("/projects/publicmapping/trunk/docs/loadcensus/mergeCensus.R")
-sum_TOTPOP= robjects.r.sum_TOTPOP[0]
-has_election_data = robjects.r.has_election_data
+if (parseResults.do_getdata):
+	print 'retrieving census data ...'
+	get_census_data(stateFips)
+	# merge standard variables
+	# TODO: Refactor entirely in rpy
+	print 'merging data...'
+	robjects.r.source("/projects/publicmapping/trunk/docs/loadcensus/mergeCensus.R")
+
+if ( (parseResults.do_genconf) or (parseResults.do_gensld)) :
+	print 'calculating statistics for configs and slds...'
+	robjects.r.source("/projects/publicmapping/trunk/docs/loadcensus/calcStats.R")
+	sum_TOTPOP= robjects.r.sum_TOTPOP[0]
+	# TODO: Refactor entirely in rpy
+	# NOTE: robject is returning 6-level quantiles, has_election_data, has_vtd, sum_TOTPOP
+	has_election_data = robjects.r.has_election_data
 
 # TODO: refactor as matrix of varnames and geographies
-print 'generating choropleth slds ...'
-gensld_choro("block","TOTPOP","Total Population",robjects.r.q_block_TOTPOP)
-gensld_choro("block","TOTPOP_H","Total Hispanic Population",robjects.r.q_block_TOTPOP_H)
-gensld_choro("block","TOTPOP_B","Total Black Population",robjects.r.q_block_TOTPOP_B)
-gensld_choro("block","TOTPOP_NA","Total Native American Population",robjects.r.q_block_TOTPOP_NA)
-gensld_choro("block","VAP","Voting Age Population",robjects.r.q_block_VAP)
-gensld_choro("block","VAP_H","Voting Age Hispanic Population",robjects.r.q_block_VAP_H)
-gensld_choro("block","VAP_B","Voting Age Black Population",robjects.r.q_block_VAP_B)
-gensld_choro("block","VAP_NA","Voting Age Native American Population",robjects.r.q_block_VAP_NA)
-if (has_election_data==1) :        
-	gensld_choro("block","VOTE_DEM","Predicted Democratic Vote ",robjects.r.q_block_VOTE_DEM)        
-	gensld_choro("block","VOTE_REP","Predicted Republican Vote ",robjects.r.q_block_VOTE_REP)
-        gensld_choro("block","VOTE_TOT","Predicted Republican Vote ",robjects.r.q_block_VOTE_TOT)
-gensld_choro("tract","TOTPOP","Total Population",robjects.r.q_tract_TOTPOP)
-gensld_choro("tract","TOTPOP_H","Total Hispanic Population",robjects.r.q_tract_TOTPOP_H)
-gensld_choro("tract","TOTPOP_B","Total Black Population",robjects.r.q_tract_TOTPOP_B)
-gensld_choro("tract","TOTPOP_NA","Total Native American Population",robjects.r.q_tract_TOTPOP_NA)
-gensld_choro("tract","VAP","Voting Age Population",robjects.r.q_tract_VAP)
-gensld_choro("tract","VAP_H","Voting Age Hispanic Population",robjects.r.q_tract_VAP_H)
-gensld_choro("tract","VAP_B","Voting Age Black Population",robjects.r.q_tract_VAP_B)
-gensld_choro("tract","VAP_NA","Voting Age Native American Population",robjects.r.q_tract_VAP_NA)
-if (has_election_data==1) :
-        gensld_choro("tract","VOTE_DEM","Predicted Democratic Vote ",robjects.r.q_tract_VOTE_DEM)
-        gensld_choro("tract","VOTE_REP","Predicted Republican Vote ",robjects.r.q_tract_VOTE_REP)
-        gensld_choro("tract","VOTE_TOT","Predicted Republican Vote ",robjects.r.q_tract_VOTE_TOT)
-gensld_choro("county","TOTPOP","Total Population",robjects.r.q_county_TOTPOP)
-gensld_choro("county","TOTPOP_H","Total Hispanic Population",robjects.r.q_county_TOTPOP_H)
-gensld_choro("county","TOTPOP_B","Total Black Population",robjects.r.q_county_TOTPOP_B)
-gensld_choro("county","TOTPOP_NA","Total Native American Population",robjects.r.q_county_TOTPOP_NA)
-gensld_choro("county","VAP","Voting Age Population",robjects.r.q_county_VAP)
-gensld_choro("county","VAP_H","Voting Age Hispanic Population",robjects.r.q_county_VAP_H)
-gensld_choro("county","VAP_B","Voting Age Black Population",robjects.r.q_county_VAP_B)
-gensld_choro("county","VAP_NA","Voting Age Native American Population",robjects.r.q_county_VAP_NA)
-if (has_election_data==1) :
-        gensld_choro("county","VOTE_DEM","Predicted Democratic Vote ",robjects.r.q_county_VOTE_DEM)
-        gensld_choro("county","VOTE_REP","Predicted Republican Vote ",robjects.r.q_county_VOTE_REP)
-        gensld_choro("county","VOTE_TOT","Predicted Republican Vote ",robjects.r.q_county_VOTE_TOT)
+if ( parseResults.do_gensld) :
+	print 'generating choropleth slds ...'
+	gensld_choro("block","TOTPOP","Total Population",robjects.r.q_block_TOTPOP)
+	gensld_choro("block","TOTPOP_H","Total Hispanic Population",robjects.r.q_block_TOTPOP_H)
+	gensld_choro("block","TOTPOP_B","Total Black Population",robjects.r.q_block_TOTPOP_B)
+	gensld_choro("block","TOTPOP_NA","Total Native American Population",robjects.r.q_block_TOTPOP_NA)
+	gensld_choro("block","VAP","Voting Age Population",robjects.r.q_block_VAP)
+	gensld_choro("block","VAP_H","Voting Age Hispanic Population",robjects.r.q_block_VAP_H)
+	gensld_choro("block","VAP_B","Voting Age Black Population",robjects.r.q_block_VAP_B)
+	gensld_choro("block","VAP_NA","Voting Age Native American Population",robjects.r.q_block_VAP_NA)
+	gensld_choro("tract","TOTPOP_H","Total Hispanic Population",robjects.r.q_tract_TOTPOP_H)
+	gensld_choro("tract","TOTPOP_B","Total Black Population",robjects.r.q_tract_TOTPOP_B)
+	gensld_choro("tract","TOTPOP_NA","Total Native American Population",robjects.r.q_tract_TOTPOP_NA)
+	gensld_choro("tract","VAP","Voting Age Population",robjects.r.q_tract_VAP)
+	gensld_choro("tract","VAP_H","Voting Age Hispanic Population",robjects.r.q_tract_VAP_H)
+	gensld_choro("tract","VAP_B","Voting Age Black Population",robjects.r.q_tract_VAP_B)
+	gensld_choro("tract","VAP_NA","Voting Age Native American Population",robjects.r.q_tract_VAP_NA)
+	gensld_choro("county","TOTPOP","Total Population",robjects.r.q_county_TOTPOP)
+	gensld_choro("county","TOTPOP_H","Total Hispanic Population",robjects.r.q_county_TOTPOP_H)
+	gensld_choro("county","TOTPOP_B","Total Black Population",robjects.r.q_county_TOTPOP_B)
+	gensld_choro("county","TOTPOP_NA","Total Native American Population",robjects.r.q_county_TOTPOP_NA)
+	gensld_choro("county","VAP","Voting Age Population",robjects.r.q_county_VAP)
+	gensld_choro("county","VAP_H","Voting Age Hispanic Population",robjects.r.q_county_VAP_H)
+	gensld_choro("county","VAP_B","Voting Age Black Population",robjects.r.q_county_VAP_B)
+	gensld_choro("county","VAP_NA","Voting Age Native American Population",robjects.r.q_county_VAP_NA)
+	if (has_election_data==1) :        
+		gensld_choro("block","VOTE_DEM","Predicted Democratic Vote ",robjects.r.q_block_VOTE_DEM)
+		gensld_choro("block","VOTE_REP","Predicted Republican Vote ",robjects.r.q_block_VOTE_REP)
+        	gensld_choro("block","VOTE_TOT","Predicted Republican Vote ",robjects.r.q_block_VOTE_TOT)
+        	gensld_choro("tract","VOTE_DEM","Predicted Democratic Vote ",robjects.r.q_tract_VOTE_DEM)
+        	gensld_choro("tract","VOTE_REP","Predicted Republican Vote ",robjects.r.q_tract_VOTE_REP)
+        	gensld_choro("tract","VOTE_TOT","Predicted Republican Vote ",robjects.r.q_tract_VOTE_TOT)
+        	gensld_choro("county","VOTE_DEM","Predicted Democratic Vote ",robjects.r.q_county_VOTE_DEM)
+        	gensld_choro("county","VOTE_REP","Predicted Republican Vote ",robjects.r.q_county_VOTE_REP)
+        	gensld_choro("county","VOTE_TOT","Predicted Republican Vote ",robjects.r.q_county_VOTE_TOT)
+		gensld_choro("tract","TOTPOP","Total Population",robjects.r.q_tract_TOTPOP)
 
 
 # generate config file
-print 'generating config file ... '
-gen_config(num_districts_congress=congDis,num_districts_senate=senDis,num_districts_house=houseDis,sum_TOTPOP=sum_TOTPOP,has_election_data=has_election_data,has_vtds=0) 
+if (parseResults.do_genconf):
+	print 'generating config file ... '
+	gen_config(num_districts_congress=congDis,num_districts_senate=senDis,num_districts_house=houseDis,sum_TOTPOP=sum_TOTPOP,has_election_data=has_election_data,has_vtds=0) 
 
 print '\n\n*** Now run: ***\n\n'
-print '(cd /projects/publicmapping/trunk/django/publicmapping/; python setup.py -D /projects/publicmapping/trunk/docs/config.xsd /projects/publicmapping/trunk/docs/config_census_generated.xml)'
+print '(cd /projects/publicmapping/trunk/django/publicmapping/; python setup.py -v2 /projects/publicmapping/trunk/docs/config.xsd /projects/publicmapping/trunk/docs/config_census_generated.xml)'
 
 
 
