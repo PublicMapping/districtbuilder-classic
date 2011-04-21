@@ -818,7 +818,7 @@ ERROR:
             percentage = '0000.00000000'
             if aggdata and subject.percentage_denominator:
                 dset = Characteristic.objects.filter(geounit__in=parentunits, subject=subject.percentage_denominator)
-                denominator_data = qset.aggregate(Sum('number'))['number__sum']
+                denominator_data = dset.aggregate(Sum('number'))['number__sum']
                 if denominator_data > 0:
                     percentage = aggdata / denominator_data
 
