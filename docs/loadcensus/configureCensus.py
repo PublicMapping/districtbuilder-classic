@@ -84,17 +84,19 @@ def     get_census_data(stateFips):
         cmdarg = 'ftp://ftp2.census.gov/geo/tiger/TIGER2010/TABBLOCK/2010/%s.zip' % cenBlockFilePrefix 
         subprocess.check_call(["wget","-nc",cmdarg])
         cmdarg = 'ftp://ftp2.census.gov/geo/tiger/TIGER2010/TRACT/2010/%s.zip' % cenTractFilePrefix
-        subprocess.check_call(["wget","-nc",cmdarg])
+        subprocess.check_call(["wget","-N",cmdarg])
         cmdarg = 'ftp://ftp2.census.gov/geo/tiger/TIGER2010/COUNTY/2010/%s.zip' % cenCountyFilePrefix
-        subprocess.check_call(["wget","-nc",cmdarg])
+        subprocess.check_call(["wget","-N",cmdarg])
         # get additional data from our S3 bucket
         print 'Retrieving additional data...'
         cmdarg = 'https://s3.amazonaws.com/redistricting_supplement_data/redist/%s_redist_data.zip' % stateFips
-        subprocess.check_call(["wget","-nc",cmdarg])
+        subprocess.check_call(["wget","-N",cmdarg])
         print 'Unzipping files ...'
         # unzip data files
         for i in [ cenBlockFilePrefix, cenTractFilePrefix, cenCountyFilePrefix ] :
-                myzip = zipfile.ZipFile('%s.zip' % i, 'r')
+	    	zfile = '%s.zip' % i 
+		print ('Unzipping %s' %zfile)
+                myzip = zipfile.ZipFile(zfile, 'r')
                 myzip.extractall()
         myzip = zipfile.ZipFile('%s_redist_data.zip' % stateFips, 'r')
         myzip.extractall()        # Reproject block data
@@ -1274,16 +1276,18 @@ parser.add_option('-g', '--getdata', dest="do_getdata", help="Get data.", defaul
 parser.add_option('-s', '--gensld', dest="do_gensld", help="Generate slds", default=False, action='store_true') 
 parser.add_option('-c', '--genconf', dest="do_genconf", help="Generate config file", default=False, action='store_true') 
 parser.add_option('-d', '--dropdb', dest="do_dropdb", help="Drop database", default=False, action='store_true') 
+parser.add_option('-r', '--run', dest="do_run", help="run setup.py", default=False, action='store_true') 
 
 (parseResults,numargs)=parser.parse_args()
 
-allops = (not parseResults.do_install) and  (not parseResults.do_getdata) and  (not parseResults.do_gensld) and  (not parseResults.do_genconf) and (not parseResults.do_dropdb)
+allops = (not parseResults.do_install) and  (not parseResults.do_getdata) and  (not parseResults.do_gensld) and  (not parseResults.do_genconf) and (not parseResults.do_dropdb) and (not parseResults.do_run)
 if (allops):
 	parseResults.do_install=True
 	parseResults.do_getdata=True
 	parseResults.do_gensld=True
 	parseResults.do_genconf=True
 	parseResults.do_dropdb=True
+	parseResults.do_run=True
 
 if len(numargs) != 0:
         parser.error("additional arguments ignored ")
@@ -1377,7 +1381,16 @@ if (parseResults.do_genconf):
 	print 'generating config file ... '
 	gen_config(num_districts_congress=congDis,num_districts_senate=senDis,num_districts_house=houseDis,sum_TOTPOP=sum_TOTPOP,has_election_data=has_election_data,has_vtds=0) 
 
-print '\n\n*** Now run: ***\n\n'
+if (parseResults.do_run):
+	print 'running setup-py ... '
+        olddir = os.getcwd()
+        os.chdir("/projects/publicmapping/trunk/django/publicmapping/")
+        subprocess.check_call(["ls"])
+        #subprocess.check_call(["setup.py","-v2","/projects/publicmapping/trunk/docs/config.xsd"," /projects/publicmapping/trunk/docs/config_census_generated.xml"])
+        subprocess.check_call(["./setup.py -v2 /projects/publicmapping/trunk/docs/config.xsd /projects/publicmapping/trunk/docs/config_census_generated.xml"],shell=True)
+        os.chdir(olddir)
+else:
+	print '\n\n*** Now run: ***\n\n'
 print '(cd /projects/publicmapping/trunk/django/publicmapping/; python setup.py -v2 /projects/publicmapping/trunk/docs/config.xsd /projects/publicmapping/trunk/docs/config_census_generated.xml)'
 
 
