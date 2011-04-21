@@ -230,9 +230,22 @@
                 <ScoreArgument name="value1" ref="district_contiguous"/>
             </ScoreFunction>
 
-            <ScoreFunction id="plan_noncontiguous" type="plan"
-                calculator="publicmapping.redistricting.calculators.NonContiguous"
-                label="Noncontiguous">
+            <ScoreFunction id="b_plan_congress_noncontiguous" type="plan"
+                calculator="publicmapping.redistricting.calculators.Contiguity"
+                label="Contiguous">
+                <Argument name="target" value="11" />
+            </ScoreFunction>
+
+            <ScoreFunction id="b_plan_house_noncontiguous" type="plan"
+                calculator="publicmapping.redistricting.calculators.Contiguity"
+                label="Contiguous">
+                <Argument name="target" value="100" />
+            </ScoreFunction>
+
+            <ScoreFunction id="b_plan_senate_noncontiguous" type="plan"
+                calculator="publicmapping.redistricting.calculators.Contiguity"
+                label="Contiguous">
+                <Argument name="target" value="40" />
             </ScoreFunction>
 
             <!-- interval score function for population -->
@@ -355,7 +368,7 @@
             </ScoreFunction>
 
             <ScoreFunction id="plan_all_contiguous" type="plan"
-                calculator="publicmapping.redistricting.calculators..AllContiguous"
+                calculator="publicmapping.redistricting.calculators.AllContiguous"
                 label="All Contiguous"
                 description="Contiguity means that every part of a district must be reachable from every other part without crossing the district&apos;s borders. All districts within a plan must be contiguous. Water contiguity is permitted given Virginia&apos;s extensive coastal region. &apos;Point contiguity&apos; or &apos;touch-point contiguity&apos; where two sections of a district are connected at a single point is not permitted.">
             </ScoreFunction>
@@ -375,18 +388,36 @@
                 <SubjectArgument name="value" ref="poptot" />
             </ScoreFunction>
 
-            <ScoreFunction id="plan_majority_minority_blk" type="plan"
+            <ScoreFunction id="plan_majority_minority_blk_congress" type="plan"
                 calculator="publicmapping.redistricting.calculators.MajorityMinority"
-                label="Black VAP Majority (50%)"
+                label="Black VAP Majority (&gt;50%)"
                 description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
                 <SubjectArgument name="population" ref="vap" />
                 <SubjectArgument name="minority1" ref="vapblk" />
                 <Argument name="target" value="1" />
             </ScoreFunction>
 
+            <ScoreFunction id="plan_majority_minority_blk_house" type="plan"
+                calculator="publicmapping.redistricting.calculators.MajorityMinority"
+                label="Black VAP Majority (&gt;50%)"
+                description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
+                <SubjectArgument name="population" ref="vap" />
+                <SubjectArgument name="minority1" ref="vapblk" />
+                <Argument name="target" value="11" />
+            </ScoreFunction>
+
+            <ScoreFunction id="plan_majority_minority_blk_senate" type="plan"
+                calculator="publicmapping.redistricting.calculators.MajorityMinority"
+                label="Black VAP Majority (&gt;50%)"
+                description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
+                <SubjectArgument name="population" ref="vap" />
+                <SubjectArgument name="minority1" ref="vapblk" />
+                <Argument name="target" value="5" />
+            </ScoreFunction>
+
             <ScoreFunction id="plan_majority_minority_hisp" type="plan"
                 calculator="publicmapping.redistricting.calculators.MajorityMinority"
-                label="Hisp. VAP Majority (50%)"
+                label="Hisp. VAP Majority (&gt;50%)"
                 description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
                 <SubjectArgument name="population" ref="vap" />
                 <SubjectArgument name="minority1" ref="vaphisp" />
@@ -463,25 +494,25 @@
             <ScorePanel id="congressional_panel_summary" type="plan_summary" position="1"
                 title="Plan Summary" cssclass="plan_summary congressional" template="plan_summary.html">
                 <Score ref="a_congress_plan_equipopulation_summary"/>
-                <Score ref="plan_majority_minority_blk" />
+                <Score ref="b_plan_congress_noncontiguous"/>
+                <Score ref="plan_majority_minority_blk_congress" />
                 <Score ref="plan_majority_minority_hisp" />
-                <Score ref="plan_noncontiguous"/>
             </ScorePanel>
 
             <ScorePanel id="house_panel_summary" type="plan_summary" position="1"
                 title="Plan Summary" cssclass="plan_summary house" template="plan_summary.html">
                 <Score ref="a_house_plan_equipopulation_summary"/>
-                <Score ref="plan_majority_minority_blk" />
+                <Score ref="b_plan_house_noncontiguous"/>
+                <Score ref="plan_majority_minority_blk_house" />
                 <Score ref="plan_majority_minority_hisp" />
-                <Score ref="plan_noncontiguous"/>
             </ScorePanel>
 
             <ScorePanel id="senate_panel_summary" type="plan_summary" position="1"
                 title="Plan Summary" cssclass="plan_summary senate" template="plan_summary.html">
                 <Score ref="a_senate_plan_equipopulation_summary"/>
-                <Score ref="plan_majority_minority_blk" />
+                <Score ref="b_plan_senate_noncontiguous"/>
+                <Score ref="plan_majority_minority_blk_senate" />
                 <Score ref="plan_majority_minority_hisp" />
-                <Score ref="plan_noncontiguous"/>
             </ScorePanel>
 
             <!-- Basic Information -->

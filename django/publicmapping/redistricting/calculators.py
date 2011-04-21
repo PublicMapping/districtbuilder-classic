@@ -640,12 +640,16 @@ class Contiguity(CalculatorBase):
     """
     Calculate the contiguity of a district.
 
-    This calculator accepts an optional argument: 'allow_single_point'.
-    If this is set to '1' (True), the calculator will consider a district 
-    containing muliple polygons contiguous if the polygons are connected 
-    to each other by a minimum of one point. By default, this is set to 
-    '0' (False), and a district is only considered to be congiguous if it
-    is comprised of a single polygon.
+    This calculator accepts two optional arguments: 'allow_single_point',
+    and 'target'. If 'allow_single_point' is set to '1' (True), the 
+    calculator will consider a district containing muliple polygons 
+    contiguous if the polygons are connected to each other by a minimum of 
+    one point. By default, this is set to '0' (False), and a district is 
+    only considered to be congiguous if it is comprised of a single 
+    polygon.
+
+    If 'target' is set, the calculator will format the result to include
+    the target value in parenthesis after the calculated value.
 
     'ContiguityOverride' objects that are applicable to the district will 
     be applied to allow for special cases where non-physical contiguity 
@@ -659,6 +663,13 @@ class Contiguity(CalculatorBase):
     of districts that are contiguous.
 
     """
+    def __init__(self):
+        """
+        Initialize the result and argument dictionary.
+        """
+        self.result = None
+        self.arg_dict = {}
+
     def compute(self, **kwargs):
         """
         Determine if a district is continuous.
@@ -730,15 +741,26 @@ class Contiguity(CalculatorBase):
                     if contiguous:
                         self.result += 1
 
+        try:
+            target = self.get_value('target')
+            if target != None:
+                # result is -1 because unassigned is always considered contiguous
+                self.result = '<span>%d (of %s)</span>' % (self.result-1, target)
+        except:
+            pass
+
     def html(self):
         """
         Generate an HTML representation of the equivalence score. This
         is represented as an integer formatted with commas or "n/a"
         """
-        if self.result == True:
-            return '<img class="yes-contiguous" src="/static-media/images/icon-check.png">'
+        if type(self.result) == int:
+            if self.result == 1:
+                return '<img class="yes-contiguous" src="/static-media/images/icon-check.png">'
+            else:
+                return '<img class="no-contiguous" src="/static-media/images/icon-warning.png">'
         else:
-            return '<img class="no-contiguous" src="/static-media/images/icon-warning.png">'
+            return '<span>%s</span>' % self.result
 
 
 class AllContiguous(CalculatorBase):
@@ -768,7 +790,9 @@ class NonContiguous(CalculatorBase):
     """
     Calculate the number of districts in a plan that are non-contiguous.
 
-    This calculator does not accept any arguments.
+    This calculator accepts a 'target' argument. If set, the result of
+    this calculator will be an HTML fragment with the target printed
+    next to the calculated value.
 
     This calculator will only operate on a plan.
     """
@@ -784,6 +808,13 @@ class NonContiguous(CalculatorBase):
         calc.compute(**kwargs)
 
         self.result = len(districts) - calc.result
+
+        try:
+            target = self.get_value('target')
+            if target != None:
+                self.result = '%d (of %s)' % (self.result, target)
+        except:
+            pass
 
 
 class Interval(CalculatorBase):
@@ -1225,11 +1256,10 @@ class Equipopulation(CalculatorBase):
         
                 self.result = inrange.result == (len(districts) - 1)
             elif target != None:
-                self.result = '<span>%d (of %s)</span>' % (inrange.result, target)
+                self.result = '%d (of %s)' % (inrange.result, target)
             else:
                 self.result = inrange.result
         except:
-            print traceback.format_exc()
             self.result = inrange.result
 
 
@@ -1307,19 +1337,18 @@ class MajorityMinority(CalculatorBase):
 
             if exceeds:
                 districtcount += 1
+
+        self.result = districtcount
+
         try:
             target = self.get_value('target')
             validation = self.get_value('validation')
             if validation != None:
                 self.result = districtcount >= Decimal(validation)
-                sys.stderr.write('result is %s\n' % self.result)
             elif target != None:
-                self.result = "<span>%d (of %s)</span>" % (districtcount, target)
-            else:
-                self.result = "<span>%s</span>" % districtcount
+                self.result = "%d (of %s)" % (districtcount, target)
         except:
-            print traceback.format_exc()
-            self.result = districtcount
+            pass
 
 
 class MultiMember(CalculatorBase):

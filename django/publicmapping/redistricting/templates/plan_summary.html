@@ -34,6 +34,9 @@
 <div class="{{ cssclass }}">
 <h3>{{ planname|truncate:"25" }}</h3>
 {% for score in planscores %}
+    {% if forloop.first %}
+        <div class="summary_header"><label>Score (Target)</label><span>Districts</span></div>
+    {% endif %}
     <div><label>{{ score.label }}</label>{{ score.score|safe }}</div>
 {% endfor %}
 </div>

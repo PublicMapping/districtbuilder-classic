@@ -1279,7 +1279,7 @@ div.plan_summary label {
   text-align:left;
   font-size: 12px;
   font-weight: bold;
-
+  margin-left: 3px;
   }
 div.plan_summary span {
   display:inline-block;
@@ -1288,6 +1288,9 @@ div.plan_summary span {
   font-size: 12px;
   font-weight: normal
   }
+div.plan_summary .summary_header {
+  border-bottom: 1px solid #999999;
+}
 
 #updatestatsbtn {
   position: absolute;
