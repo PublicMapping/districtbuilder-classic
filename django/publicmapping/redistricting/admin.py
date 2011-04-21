@@ -28,7 +28,7 @@ Author:
     Andrew Jennings, David Zwarg
 """
 
-from publicmapping.redistricting.models import *
+from models import *
 from django.contrib.gis import admin
 
 class ComputedCharacteristicAdmin(admin.ModelAdmin):

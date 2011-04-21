@@ -44,7 +44,7 @@ from redistricting.calculators import Schwartzberg, Contiguity
 from datetime import datetime
 from copy import copy
 from decimal import *
-import sys, cPickle, traceback, types
+import sys, cPickle, traceback, types, tagging
 
 class Subject(models.Model):
     """
@@ -1811,6 +1811,9 @@ class District(models.Model):
         else:
             self.simple = None
             self.save()
+
+# Enable tagging of districts by registering them with the tagging module
+tagging.register(District)
 
 
 class ComputedCharacteristic(models.Model):

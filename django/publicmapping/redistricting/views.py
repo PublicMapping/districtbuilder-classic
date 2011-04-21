@@ -87,8 +87,8 @@ def using_unique_session(u):
                 else:
                     count += 1
         except SuspiciousOperation:
-            print "SuspiciousOperation caught while checking the number of sessions a user has open. Session key: %s" % session.session_key
-            print traceback.format_exc()
+            if settings.DEBUG:
+                print "SuspiciousOperation caught while checking the number of sessions a user has open. Session key: %s" % session.session_key
 
     # after counting all the open and active sessions, go back through
     # the session list and assign the session count to all web sessions
@@ -101,7 +101,8 @@ def using_unique_session(u):
                 websession['count'] = count
                 websession.save()
         except SuspiciousOperation:
-            print "SuspiciousOperation caught while setting the session count on all user sessions. Session key: %s" % session.session_key
+            if settings.DEBUG:
+                print "SuspiciousOperation caught while setting the session count on all user sessions. Session key: %s" % session.session_key
 
     return (count <= 1)
 
@@ -147,8 +148,8 @@ def is_session_available(req):
             if (not req.user.is_anonymous()) and 'activity_time' in decoded and decoded['activity_time'] > datetime.now():
                 count += 1
         except SuspiciousOperation:
-            print "SuspiciousOperation caught while checking the last activity time in a user's session. Session key: %s" % session.session_key
-            print traceback.format_exc()
+            if settings.DEBUG:
+                print "SuspiciousOperation caught while checking the last activity time in a user's session. Session key: %s" % session.session_key
 
     avail = count < settings.CONCURRENT_SESSIONS
     req.session['avail'] = avail
