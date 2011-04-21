@@ -1385,7 +1385,9 @@ if (parseResults.do_run):
 	print 'running setup-py ... '
         olddir = os.getcwd()
         os.chdir("/projects/publicmapping/trunk/django/publicmapping/")
-        subprocess.check_call(["python","setup.py","-v2","/projects/publicmapping/trunk/docs/config.xsd"," /projects/publicmapping/trunk/docs/config_census_generated.xml"])
+        subprocess.check_call(["ls"])
+        #subprocess.check_call(["setup.py","-v2","/projects/publicmapping/trunk/docs/config.xsd"," /projects/publicmapping/trunk/docs/config_census_generated.xml"])
+        subprocess.check_call(["./setup.py -v2 /projects/publicmapping/trunk/docs/config.xsd /projects/publicmapping/trunk/docs/config_census_generated.xml"],shell=True)
         os.chdir(olddir)
 else:
 	print '\n\n*** Now run: ***\n\n'
