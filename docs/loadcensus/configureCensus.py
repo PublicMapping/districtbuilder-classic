@@ -84,17 +84,19 @@ def     get_census_data(stateFips):
         cmdarg = 'ftp://ftp2.census.gov/geo/tiger/TIGER2010/TABBLOCK/2010/%s.zip' % cenBlockFilePrefix 
         subprocess.check_call(["wget","-nc",cmdarg])
         cmdarg = 'ftp://ftp2.census.gov/geo/tiger/TIGER2010/TRACT/2010/%s.zip' % cenTractFilePrefix
-        subprocess.check_call(["wget","-nc",cmdarg])
+        subprocess.check_call(["wget","-N",cmdarg])
         cmdarg = 'ftp://ftp2.census.gov/geo/tiger/TIGER2010/COUNTY/2010/%s.zip' % cenCountyFilePrefix
-        subprocess.check_call(["wget","-nc",cmdarg])
+        subprocess.check_call(["wget","-N",cmdarg])
         # get additional data from our S3 bucket
         print 'Retrieving additional data...'
         cmdarg = 'https://s3.amazonaws.com/redistricting_supplement_data/redist/%s_redist_data.zip' % stateFips
-        subprocess.check_call(["wget","-nc",cmdarg])
+        subprocess.check_call(["wget","-N",cmdarg])
         print 'Unzipping files ...'
         # unzip data files
         for i in [ cenBlockFilePrefix, cenTractFilePrefix, cenCountyFilePrefix ] :
-                myzip = zipfile.ZipFile('%s.zip' % i, 'r')
+	    	zfile = '%s.zip' % i 
+		print ('Unzipping %s' %zfile)
+                myzip = zipfile.ZipFile(zfile, 'r')
                 myzip.extractall()
         myzip = zipfile.ZipFile('%s_redist_data.zip' % stateFips, 'r')
         myzip.extractall()        # Reproject block data
