@@ -235,7 +235,7 @@ def copyplan(request, planid):
         newname = request.POST["name"]
         shared = request.POST.get("shared", False)
 
-    plan_copy = Plan.objects.filter(name__exact=newname, owner=request.user)
+    plan_copy = Plan.objects.filter(name=newname, owner=request.user, legislative_body=p.legislative_body)
     # Check that the copied plan's name doesn't already exist.
     if len(plan_copy) > 0:
         status['message'] = "You already have a plan named that. Please pick a unique name."
