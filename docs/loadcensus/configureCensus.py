@@ -104,10 +104,10 @@ def     get_census_data(stateFips):
         if (os.path.exists("census_blocks.shp")) :
                 os.remove('census_blocks.shp')
         subprocess.check_call(["ogr2ogr",'-overwrite','-t_srs','EPSG:3785','census_blocks.shp','%s.shp' % cenBlockFilePrefix ])
+        subprocess.check_call(["ogr2ogr",'-overwrite','-t_srs','EPSG:3785','census_tracts.shp','%s.shp' % cenTractFilePrefix])
+        subprocess.check_call(["ogr2ogr",'-overwrite','-t_srs','EPSG:3785','census_counties.shp','%s.shp' % cenCountyFilePrefix])
         # standardize file names
         print 'Copying data files...'
-        shutil.copy('%s.dbf' % cenTractFilePrefix, 'census_tracts.dbf' )
-        shutil.copy('%s.dbf' % cenCountyFilePrefix, 'census_county.dbf' )
         shutil.copy('%s_redist_data.csv' %stateFips , 'redist_data.csv' )
         os.chdir(olddir)
 
@@ -1010,7 +1010,7 @@ class Config_Template(DictionaryTemplate):
      </GeoLevel>
       <GeoLevel id="tract" name="tract" min_zoom="4" sort_key="2" tolerance="25">
          <Files>
-              <Geography path="/projects/publicmapping/data/census_tracts.dbf">
+              <Geography path="/projects/publicmapping/data/census_tracts.shp">
             <Fields>
                       <Field name="NAME10" type="name" />
                       <Field name="GEOID10" type="portable" />
@@ -1057,7 +1057,7 @@ class Config_Template(DictionaryTemplate):
 
       <GeoLevel id="county" name="county" min_zoom="0" sort_key="1" tolerance="250">
           <Files>
-              <Geography path="/projects/publicmapping/data/census_county.dbf">
+              <Geography path="/projects/publicmapping/data/census_counties.shp">
                   <Fields>
                       <Field name="NAME10" type="name"/>
                       <Field name="GEOID10" type="portable"/>
