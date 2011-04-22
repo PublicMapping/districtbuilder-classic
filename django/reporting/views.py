@@ -253,6 +253,8 @@ def getreport(request):
         if popVar:
             pop_var = get_named_vector(popVar)
             pop_var += r('list("tolerance"=.01)')
+        else:
+            pop_var = r('as.null()')
 
         popVarExtra = request.POST.get('pop_var_extra', None)
         if settings.DEBUG:
