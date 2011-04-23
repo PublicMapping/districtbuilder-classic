@@ -158,8 +158,7 @@ class Empty_Template(ListTemplate):
 ###
 
 class SldList_Template(DictionaryTemplate):
-    _template = """
-<?xml version="1.0" encoding="ISO-8859-1"?>
+    _template = """<?xml version="1.0" encoding="ISO-8859-1"?>
 <StyledLayerDescriptor version="1.0.0" xmlns="http://www.opengis.net/sld" xmlns:ogc="http://www.opengis.net/ogc" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.0.0/StyledLayerDescriptor.xsd">
   <NamedLayer>
     <Name>%(layername)s</Name>
@@ -254,12 +253,15 @@ def gensld_none(geoname):
         target_file = '/projects/publicmapping/trunk/sld/%s_none.sld' % (geoname)       
         f = open(target_file,'w')
         f.write ( str(SldList_Template(layername="%s No fill" % (geoname),layertitle="%s No Fill" % (geoname) ,layerabs="A style showing the boundaries of a geounit with a transparent fill", slst=[],sli=Empty_Template, lst=[{"title":"Fill","fill":"#FFFFFF","fillopacity":"0.5"}],li=Sld_Poly_Template,elst=[{"title":"Boundary","stroke":"#555555","strokewidth":"0.25","strokeopacity":"1.0"}],eli=Sld_Line_Template)) )
+	f.write("\n")
         f.close()
         os.chmod(target_file,stat.S_IRUSR|stat.S_IRGRP|stat.S_IROTH)    
+
 def gensld_boundaries(geoname):
         target_file = '/projects/publicmapping/trunk/sld/%s_boundaries.sld' % (geoname) 
         f = open(target_file,'w')
         f.write ( str(SldList_Template(layername="%s Boundaries" % (geoname) ,layertitle="%s Boundaries Only" %(geoname),layerabs="A style showing the boundaries of a geounit", slst=[] ,sli=Empty_Template, lst=[],li=Empty_Template,elst=[{"title":"County Boundaries","fill":"#000000","fillopacity":"0.0","stroke":"#2255FF","strokewidth":"2","strokeopacity":"0.35"}],eli=Sld_PolyB_Template)))
+	f.write("\n")
         f.close()
         os.chmod(target_file,stat.S_IRUSR|stat.S_IRGRP|stat.S_IROTH)  
 
@@ -291,7 +293,8 @@ def gensld_choro(geoname,varname,vartitle,quantiles):
           "fill": "#EEEEEE",
           "fillopacity":"0.5"}]
         f = open(target_file,'w')
-        f.write(str( SldList_Template(layername=varname,layertitle=vartitle,layerabs=varabs,slst=[],sli=Empty_Template, lst=valuelist,li=Sld_Range_Template,elst=[{"title":"Boundary","stroke":"#555555","strokewidth":"0.25","strokeopacity":"1.0"}],eli=Sld_Line_Template) ))
+        f.write(str( SldList_Template(layername=lvarname,layertitle=vartitle,layerabs=varabs,slst=[],sli=Empty_Template, lst=valuelist,li=Sld_Range_Template,elst=[{"title":"Boundary","stroke":"#555555","strokewidth":"0.25","strokeopacity":"1.0"}],eli=Sld_Line_Template) ))
+	f.write("\n")
         f.close()
         os.chmod(target_file,stat.S_IRUSR|stat.S_IRGRP|stat.S_IROTH)  
 
@@ -1253,6 +1256,7 @@ def gen_config(num_districts_congress,num_districts_senate,num_districts_house,s
         target_file = '/projects/publicmapping/trunk/docs/config_census_generated.xml'
         f = open(target_file,'w')
         f.write(str( Config_Template(start_elec=start_elec,end_elec=end_elec,num_districts_congress=num_districts_congress,num_districts_house=num_districts_house,num_districts_senate=num_districts_senate,pop_congress_max=pop_congress_max,pop_congress_min=pop_congress_min,pop_senate_max=pop_senate_max, pop_senate_min=pop_senate_min,pop_house_max=pop_house_max,pop_house_min=pop_house_min,pop_congress=pop_congress,pop_senate=pop_senate,pop_house=pop_house)))
+	f.write("\n")
         f.close()
         os.chmod(target_file,stat.S_IRUSR|stat.S_IRGRP|stat.S_IROTH)    
 
@@ -1346,6 +1350,7 @@ if ( parseResults.do_gensld) :
 	gensld_choro("block","VAP_H","Voting Age Hispanic Population",robjects.r.q_block_VAP_H)
 	gensld_choro("block","VAP_B","Voting Age Black Population",robjects.r.q_block_VAP_B)
 	gensld_choro("block","VAP_NA","Voting Age Native American Population",robjects.r.q_block_VAP_NA)
+	gensld_choro("tract","TOTPOP","Total Population",robjects.r.q_tract_TOTPOP)
 	gensld_choro("tract","TOTPOP_H","Total Hispanic Population",robjects.r.q_tract_TOTPOP_H)
 	gensld_choro("tract","TOTPOP_B","Total Black Population",robjects.r.q_tract_TOTPOP_B)
 	gensld_choro("tract","TOTPOP_NA","Total Native American Population",robjects.r.q_tract_TOTPOP_NA)
@@ -1371,7 +1376,6 @@ if ( parseResults.do_gensld) :
         	gensld_choro("county","VOTE_DEM","Predicted Democratic Vote ",robjects.r.q_county_VOTE_DEM)
         	gensld_choro("county","VOTE_REP","Predicted Republican Vote ",robjects.r.q_county_VOTE_REP)
         	gensld_choro("county","VOTE_TOT","Predicted Republican Vote ",robjects.r.q_county_VOTE_TOT)
-		gensld_choro("tract","TOTPOP","Total Population",robjects.r.q_tract_TOTPOP)
 
 
 # generate config file
@@ -1389,7 +1393,7 @@ if (parseResults.do_run):
         os.chdir(olddir)
 else:
 	print '\n\n*** Now run: ***\n\n'
-print '(cd /projects/publicmapping/trunk/django/publicmapping/; python setup.py -v2 /projects/publicmapping/trunk/docs/config.xsd /projects/publicmapping/trunk/docs/config_census_generated.xml)'
+	print '(cd /projects/publicmapping/trunk/django/publicmapping/; python setup.py -v2 /projects/publicmapping/trunk/docs/config.xsd /projects/publicmapping/trunk/docs/config_census_generated.xml)'
 
 
 
