@@ -9,14 +9,14 @@
 # merge census and supplementary data
 library(foreign) 
 setwd('/projects/publicmapping/data')
-supp.df <-read.csv("redist_data.csv",stringsAsFactors=F)
+supp.df <-read.csv("redist_data.csv",stringsAsFactors=F,colClasses=c(GEOID10="character",foobar="character"))
 census.df<-read.dbf("census_blocks.dbf",as.is=TRUE)
 census.df$orig_rows<-1:dim(census.df)[1]
 merged.df<-merge(census.df,supp.df,by="GEOID10")
 merged.df <- merged.df[order(merged.df$orig_rows),]
 merged.df$orig_rows<-NULL
 
-if (!all(census.df$GEOID10==merged.df$GEOID10)) { 
+if (!all(census.df$GEOID10==merged.df$GEOID10)|| sum(merged.df$TOTPOP)==0) { 
        stop('Census merge mismatch')
 }
 
