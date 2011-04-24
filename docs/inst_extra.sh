@@ -40,6 +40,12 @@ echo "$SMPATCH" | patch -bN /etc/mail/sendmail.mc
 #
 # Install report directory cleanup
 # 
+echo "Updating BARD"
+echo 'install.packages("BARD",dependencies=TRUE,repos="http://cran.r-project.org")' | R --slave 
+
+#
+# Install report directory cleanup
+# 
 echo "Installing directory cleanup"
 apt-get -y install tmpreaper
 echo "5 0 * * *      /usr/sbin/tmpreaper 2d /projects/publicmapping/local/reports/ /tmp/ > /dev/null 2>&1" > /tmp/wwwcron
