@@ -118,10 +118,39 @@ PDPATCH='
 ! //Acquire::http::Dl-Limit "70";
 '
 echo "$PDPATCH" | patch -bN /etc/apt/apt.conf.d/50unattended-upgrades
+PDPATCH='
+*** 50unattended-upgrades       2010-12-15 22:04:32.893507001 +0000
+--- 50unattended-upgrades.good  2011-04-24 03:13:09.682787880 +0000
+***************
+*** 22,32 ****
+  
+  // Do automatic removal of new unused dependencies after the upgrade
+  // (equivalent to apt-get autoremove)
+! //Unattended-Upgrade::Remove-Unused-Dependencies "false";
+  
+  // Automatically reboot *WITHOUT CONFIRMATION* if a 
+  // the file /var/run/reboot-required is found after the upgrade 
+! Unattended-Upgrade::Automatic-Reboot "false";
+  
+  
+  // Use apt bandwidth limit feature, this example limits the download
+--- 22,32 ----
+  
+  // Do automatic removal of new unused dependencies after the upgrade
+  // (equivalent to apt-get autoremove)
+! /Unattended-Upgrade::Remove-Unused-Dependencies "false";
+  
+  // Automatically reboot *WITHOUT CONFIRMATION* if a 
+  // the file /var/run/reboot-required is found after the upgrade 
+! Unattended-Upgrade::Automatic-Reboot "true";
+  
+  
+  // Use apt bandwidth limit feature, this example limits the download
+'
+echo "$PDPATCH" | patch -bN /etc/apt/apt.conf.d/50unattended-upgrades
 
 echo "Installing security patches -- this may reboot at end"
-/etc/cron.daily/apt
-
+aptitude safe-upgrade -o Aptitude::Delete-Unused=false --assume-yes --target-release `lsb_release -cs`-security
 
 
 
