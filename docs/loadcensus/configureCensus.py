@@ -73,6 +73,8 @@ def     install_dependencies():
 ### This retrieves the census files,unzips and reprojects (using ogr2ogr) 
 
 def     get_census_data(stateFips): 
+	if (stateFips<10) :
+		stateFips = "0%s" % stateFips
         print 'Retrieving census shapefiles...'
         # put all data in publicmapping data directory
         olddir = os.getcwd()
@@ -103,6 +105,10 @@ def     get_census_data(stateFips):
         print 'Reprojecting block shapefile...'
         if (os.path.exists("census_blocks.shp")) :
                 os.remove('census_blocks.shp')
+        if (os.path.exists("census_tracts.shp")) :
+                os.remove('census_tracts.shp')
+        if (os.path.exists("census_counties.shp")) :
+                os.remove('census_counties.shp')
         subprocess.check_call(["ogr2ogr",'-overwrite','-t_srs','EPSG:3785','census_blocks.shp','%s.shp' % cenBlockFilePrefix ])
         subprocess.check_call(["ogr2ogr",'-overwrite','-t_srs','EPSG:3785','census_tracts.shp','%s.shp' % cenTractFilePrefix])
         subprocess.check_call(["ogr2ogr",'-overwrite','-t_srs','EPSG:3785','census_counties.shp','%s.shp' % cenCountyFilePrefix])
