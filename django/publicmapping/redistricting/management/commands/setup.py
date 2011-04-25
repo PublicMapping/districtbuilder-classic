@@ -1643,11 +1643,11 @@ ERROR:
             #    print "Created neighborhood index file."
             #nb = r.poly2nb(sdf,foundInBox=fib)
 
-            nb = r.poly2nb(sdf)
-            if verbose > 1:
-                print "Computed neighborhoods."
-            bardmap = r.spatialDataFrame2bardBasemap(sdf)
-            #bardmap = r.spatialDataFrame2bardBasemap(sdf,keepgeom=r(False))
+           # nb = r.poly2nb(sdf)
+           # if verbose > 1:
+           #     print "Computed neighborhoods."
+           # bardmap = r.spatialDataFrame2bardBasemap(sdf)
+            bardmap = r.spatialDataFrame2bardBasemap(sdf,keepgeom=r(False))
             if verbose > 1:
                 print "Created bardmap."
             r.writeBardMap(settings.BARD_BASESHAPE, bardmap)
