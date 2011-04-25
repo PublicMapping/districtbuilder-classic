@@ -1952,3 +1952,29 @@ span.poptot.selected {
 .highlighted {
   border: 2px solid #007FFF !important;
 }
+
+/* Commenting css */
+#districtComment {
+    display:none;
+}
+
+#districtComment .comm1 {
+    background-color: #e6e6e6;
+}
+#districtComment .district_comment_date {
+    font-size: 8pt;
+    color: #999999;
+}
+#districtComment .district_comment_content {
+    font-size: 10pt;
+}
+#districtComment form {
+    font-size: 10pt;
+}
+#districtComment label {
+    font-weight: bold;
+}
+#districtComment #id_comment {
+    width:260px;
+    height: 80px;
+}

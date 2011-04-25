@@ -132,6 +132,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.gis',
+    'django.contrib.comments',
     'staticfiles',
     'djcelery',
     'ghettoq',

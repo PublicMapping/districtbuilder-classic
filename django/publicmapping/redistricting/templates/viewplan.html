@@ -735,6 +735,7 @@
 <div id="working" title="Please Wait">Please wait while new districts are computed...</div>
 <div id="waiting" title="Please Wait">Please wait while data is being retrieved...</div>
 <div id="scoring" title="Please Wait">Please wait while the plan is being validated. This may take a few minutes.</div>
+<div id="districtComment" title="Please Wait">Please wait while the comments are loaded.</div>
 <div id="DialogContainer"></div>
 <div class="olHandlerBoxSelectFeature" style="display:none;"></div>
 
@@ -760,7 +761,13 @@ Include the stats_picker markup if the user can save stats
 
 {% endcomment %}
 
-{% block stats_editor %}{% endblock %}
+{% block stats_editor %}
+{% comment %}
+
+Include the stats editor if user can edit stats.
+
+{% endcomment %}
+{% endblock %}
 
 {% comment %}
 

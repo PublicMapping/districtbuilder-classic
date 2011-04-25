@@ -34,6 +34,8 @@ from django.db import IntegrityError, connection, transaction
 from django.db.models import Sum, Min, Max
 from django.shortcuts import render_to_response
 from django.core.urlresolvers import reverse
+from django.core.context_processors import csrf
+from django.contrib.comments.models import Comment
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.sessions.models import Session
 from django.contrib.sessions.backends.db import SessionStore
@@ -1745,3 +1747,36 @@ def statistics_sets(request, planid):
             result['message'] = "Didn't get functions in POST parameter"
 
     return HttpResponse(json.dumps(result),mimetype='application/json')
+
+#
+# Comment views
+#
+@unique_session_or_json_redirect
+def get_district_comments(request, planid, district_id):
+    """
+    Get the comments that are attached to a district.
+
+    Parameters:
+        request -- An HttpRequest
+        planid -- The plan ID
+        district_id -- The district ID
+    """
+    status = { 'success': False }
+    plan = Plan.objects.filter(id=planid)
+    if plan.count() == 0:
+        status['message'] = 'No plan with that ID was found.'
+    else:
+        plan = plan[0]
+
+        district = plan.district_set.filter(id=district_id)
+        if district.count() == 0:
+            status['message'] = 'No district with that ID in the given plan.'
+        else:
+            c = { 'district': district[0],
+                'user': request.user }
+            c.update(csrf(request))
+            status['markup'] = render_to_string('districtcomments.html', c)
+            status['success'] = True
+
+    return HttpResponse(json.dumps(status), mimetype='application/json')
+

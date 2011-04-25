@@ -1106,7 +1106,7 @@ OpenLayers.Util.extend(boxControl, filterExtension);
                 $('<div id="unassign_district">Would you like to unassign the geography in ' + 
                 feature.attributes.name + '?</div>').dialog({
                     resizable: false,
-                    moadl: true,
+                    modal: true,
                     buttons: {  
                         'OK': function() {
                             $(this).dialog('close');
@@ -1155,6 +1155,7 @@ OpenLayers.Util.extend(boxControl, filterExtension);
     });
 
 
+    /*
     var districtIdDiv = createDistrictTipDiv();
     olmap.div.insertBefore(districtIdDiv,olmap.div.firstChild);
 
@@ -1201,6 +1202,129 @@ OpenLayers.Util.extend(boxControl, filterExtension);
     districtIdControl.events.register('deactivate', districtIdControl, function() {
         districtIdDiv.style.display = 'none';
     });
+    */
+
+    var districtInfo = $('#districtComment');
+    districtInfo.dialog({
+        resizable: false,
+        modal: false,
+        draggable: true,
+        autoOpen: false
+    });
+
+    var districtIdControl = new OpenLayers.Control.SelectFeature(
+        districtLayer,
+        {
+            hover: false,
+            onSelect: function(feature){
+                districtInfo.html('<div class="commentloading"><h3>Loading Comments...</h3></div>');
+                districtInfo.dialog('option','buttons',{
+                    'OK': function() {
+                        districtInfo.dialog('close');
+                        districtIdControl.clickoutFeature(feature);
+                    }
+                });
+                districtInfo.dialog('option','title','Please Wait...');
+                districtInfo.dialog('open');
+
+                var badComment = function(xhr, textStatus, message) {
+                    districtInfo.dialog('option','buttons',{
+                        'Close': function() {
+                            districtInfo.dialog('close');
+                            districtIdControl.clickoutFeature(feature);
+                        }
+                    });
+                    districtInfo.dialog('option','title','Oops!');
+                    districtInfo.html('<div>Sorry, your comment could not be saved. Please try again later.</div>');
+                };
+
+                var goodComment = function(data, textStatus, xhr) {
+                    if (xhr.status == 200) {
+                        districtInfo.dialog('close');
+                        districtIdControl.clickoutFeature(feature);
+                        districtIdControl.clickFeature(feature);
+                    }
+                    else {
+                        badComment(xhr, textStatus, 'Sorry, your comment could not be saved. Please try again later.</div>');
+                    }
+                };
+
+                var postComment = function() {
+                    var submit = $('#submit-mode');
+                    submit.val('Post');
+                    submit.attr('name', 'post');
+                    var form = submit.parents('form');
+                    var inputs = form.find('input');
+
+                    var data = {
+                        'comment':form.find('#id_comment').val()
+                    };
+
+                    if (data.comment === null || data.comment == '' ) {
+                        // bail if no comment text
+                        return;
+                    }
+
+                    for (var i = 0; i < inputs.length; i++) { 
+                        data[inputs[i].name] = inputs[i].value;
+                    }
+
+                    $.ajax({
+                        type: form.attr('method'),
+                        url: form.attr('action'), 
+                        data: data,
+                        success: goodComment,
+                        error: badComment
+                    });
+                }
+
+                $.ajax({
+                    method:'GET',
+                    url: '/districtmapping/plan/' + PLAN_ID + '/district/' + feature.fid + '/comments/',
+                    success: function(data, textStatus, xhr) {
+                        if (xhr.status == 200 && data.success) {
+                            districtInfo.dialog('close');
+                            districtInfo.html(data.markup);
+                            districtInfo.dialog('option','buttons', {
+                                'Cancel': function() {
+                                    districtInfo.dialog('close');
+                                    districtIdControl.clickoutFeature(feature);
+                                },
+                                'OK': postComment
+                            });
+                            districtInfo.dialog('option','title',feature.attributes.label);
+                            districtInfo.dialog('open');
+                        }
+                        else {
+                            districtInfo.dialog('option','buttons',{
+                                'Close': function() {
+                                    districtInfo.dialog('close');
+                                    districtIdControl.clickoutFeature(feature);
+                                }
+                            });
+                            districtInfo.dialog('option','title','Oops!');
+                            if (xhr.status != 0) {
+                                districtInfo.html('<div>' + data.message + '</div>');
+                            }
+                            else {
+                                districtInfo.html('<div>Sorry, comments are unavailable at the current time. Please try again later.</div>');
+                            }
+                        }
+                    },
+                    error: function(xhr, textStatus, message) {
+                        districtInfo.dialog('option','buttons',{
+                            'Close': function() {
+                                districtInfo.dialog('close');
+                                districtIdControl.clickoutFeature(feature);
+                            }
+                        });
+                        districtInfo.dialog('option','title','Oops!');
+                        districtInfo.html('<div>Sorry, comments are unavailable at the current time.</div>');
+                    }
+                });
+            }
+        }
+    );
 
     // Create a tool that toggles whether a district is locked when clicked on.
     var lockDistrictControl = new OpenLayers.Control.SelectFeature(
@@ -1379,7 +1503,7 @@ OpenLayers.Util.extend(boxControl, filterExtension);
         }
 
         // hide the other tip
-        districtIdDiv.style.display = 'none';
+        //districtIdDiv.style.display = 'none';
     };
 
     // A callback for feature selection in different controls.
@@ -1815,7 +1939,7 @@ OpenLayers.Util.extend(boxControl, filterExtension);
         assignMode = null;
         $('#assign_district').val(-1);
         tipdiv.style.display = 'none';
-        districtIdDiv.style.display = 'none';
+        //districtIdDiv.style.display = 'none';
     });
 
     // When the identify map tool is clicked, disable all the
@@ -1894,7 +2018,7 @@ OpenLayers.Util.extend(boxControl, filterExtension);
         getControl.activate();
         getControl.features = selection.features;
         tipdiv.style.display = 'none';
-        districtIdDiv.style.display = 'none';
+        //districtIdDiv.style.display = 'none';
     });
 
     // When the rectangle selection tool is clicked, disable all the
@@ -1909,7 +2033,7 @@ OpenLayers.Util.extend(boxControl, filterExtension);
         boxControl.activate();
         boxControl.features = selection.features;
         tipdiv.style.display = 'none';
-        districtIdDiv.style.display = 'none';
+        //districtIdDiv.style.display = 'none';
     });
 
     // When the polygon selection tool is clicked, disable all the
@@ -1923,7 +2047,7 @@ OpenLayers.Util.extend(boxControl, filterExtension);
         }
         polyControl.activate();
         tipdiv.style.display = 'none';
-        districtIdDiv.style.display = 'none';
+        //districtIdDiv.style.display = 'none';
     });
 
     // When the assignment tool is clicked, disable all the
@@ -1967,7 +2091,7 @@ OpenLayers.Util.extend(boxControl, filterExtension);
         lockDistrictControl.deactivate();
         $('#anchor_tool').removeClass('toggle');
         tipdiv.style.display = 'none';
-        districtIdDiv.style.display = 'none';
+        //districtIdDiv.style.display = 'none';
 
         // enable single select tool if no selection tool is enabled
         if (!(getControl.active || boxControl.active || polyControl.active) && !selectionAlready) {
@@ -2009,7 +2133,7 @@ OpenLayers.Util.extend(boxControl, filterExtension);
         lockDistrictControl.deactivate();
         $('#dragdrop_tool').removeClass('toggle');
         tipdiv.style.display = 'none';
-        districtIdDiv.style.display = 'none';
+        //districtIdDiv.style.display = 'none';
 
         // enable single select tool if no selection tool is enabled
         if (!(getControl.active || boxControl.active || polyControl.active)) {
@@ -2623,7 +2747,7 @@ OpenLayers.Util.extend(boxControl, filterExtension);
     districtLayer.events.register('loadend', districtLayer, updateDistrictScores);
 
     olmap.events.register('movestart',olmap,function(){
-        districtIdDiv.style.display = 'none';
+        //districtIdDiv.style.display = 'none';
         tipdiv.style.display = 'none';
     });
     olmap.events.register('moveend', olmap, sortByVisibility);
