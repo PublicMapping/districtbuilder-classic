@@ -1802,7 +1802,10 @@ class District(models.Model):
                     simples.append(Point((0,0), srid=self.geom.srid))
                     index += 1
                 if self.geom.num_coords > 0:
-                    simples.append( self.geom.simplify(preserve_topology=True,tolerance=level.tolerance))
+                    simple = self.geom.simplify(preserve_topology=True,tolerance=level.tolerance)
+                    if not simple.valid:
+                        simple = simple.buffer(0)
+                    simples.append(simple)
                 else:
                     simples.append( self.geom )
                 index += 1
