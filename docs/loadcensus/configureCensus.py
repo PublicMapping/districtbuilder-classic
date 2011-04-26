@@ -1050,6 +1050,9 @@ class Config_Template(DictionaryTemplate):
               <GeoLevelCharacteristic ref="vap_b" />
               <GeoLevelCharacteristic ref="vap_h" />
               <GeoLevelCharacteristic ref="vap_na" />
+              <GeoLevelCharacteristic ref="totpop_b" />
+              <GeoLevelCharacteristic ref="totpop_h" />
+              <GeoLevelCharacteristic ref="totpop_na" />
                 %(start_elec)s
               <GeoLevelCharacteristic ref="vote_dem" />
               <GeoLevelCharacteristic ref="vote_rep" />
@@ -1093,6 +1096,9 @@ class Config_Template(DictionaryTemplate):
               <GeoLevelCharacteristic ref="vap_b" />
               <GeoLevelCharacteristic ref="vap_h" />
               <GeoLevelCharacteristic ref="vap_na" />
+              <GeoLevelCharacteristic ref="totpop_b" />
+              <GeoLevelCharacteristic ref="totpop_h" />
+              <GeoLevelCharacteristic ref="totpop_na" />
                 %(start_elec)s
               <GeoLevelCharacteristic ref="vote_dem" />
               <GeoLevelCharacteristic ref="vote_rep" />
@@ -1139,6 +1145,9 @@ class Config_Template(DictionaryTemplate):
               <GeoLevelCharacteristic ref="vap_b" />
               <GeoLevelCharacteristic ref="vap_h" />
               <GeoLevelCharacteristic ref="vap_na" />
+              <GeoLevelCharacteristic ref="totpop_b" />
+              <GeoLevelCharacteristic ref="totpop_h" />
+              <GeoLevelCharacteristic ref="totpop_na" />
                %(start_elec)s
               <GeoLevelCharacteristic ref="vote_dem" />
               <GeoLevelCharacteristic ref="vote_rep" />
