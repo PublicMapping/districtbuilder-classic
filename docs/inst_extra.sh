@@ -170,6 +170,7 @@ PDPATCH='
       </context-param>
     
       <!-- pick up all spring application contexts -->
+'
 echo "$PDPATCH" | patch -bN /var/lib/tomcat6/webapps/geoserver/WEB-INF/web.xml
 
 echo "Installing security patches -- this may reboot at end"

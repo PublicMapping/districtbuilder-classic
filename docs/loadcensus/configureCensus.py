@@ -327,20 +327,19 @@ class Config_Template(DictionaryTemplate):
 	 The subject is mapped to an attribute during the import phase,
             and contains a long and short display name. Subjects have IDs
             for referencing in GeoLevel definitions later. -->
-        <Subject id="totpop" field="TOTPOP" name="Total Population" short_name="Total Pop." displayed="true" sortkey="1" />
-        <Subject id="vap" field="VAP" name="Voting Age Population" short_name="Total Pop." displayed="true" sortkey="2" />
-        <Subject id="vap_b" field="VAP_B" name="African-American Voting Age Population" short_name="Black VAP " displayed="true" sortkey="3" />
-        <Subject id="vap_h" field="VAP_H" name="Hispanic or Latino voting age population" short_name="Hispanic VAP" displayed="true" sortkey="4" />
-        <Subject id="vap_na" field="VAP_NA" name="Native American Voting Age Population" short_name="Nat Amer VAP" displayed="true" sortkey="5" />
-        <Subject id="totpop_b" field="TOTPOP_B" name="African-American" short_name="Black" displayed="false" sortkey="6" />        
-	<Subject id="totpop_h" field="TOTPOP_H" name="Hispanic or Latino" short_name="Hispanic" displayed="false" sortkey="7" />
-	<Subject id="totpop_na" field="TOTPOP_NA" name="Native American" short_name="Nat Amer" displayed="false" sortkey="8" />
-
+        <Subject id="vap_b" field="VAP_B" name="African-American Voting Age Population" short_name="Black VAP " displayed="true" sortkey="1" percentage_denominator="vap" />
+        <Subject id="vap_h" field="VAP_H" name="Hispanic or Latino voting age population" short_name="Hispanic VAP" displayed="true" sortkey="2" percentage_denominator="vap" />
+        <Subject id="vap_na" field="VAP_NA" name="Native American Voting Age Population" short_name="Nat Amer VAP" displayed="true" sortkey="3" percentage_denominator="vap" />
         %(start_elec)s
-        <Subject id="vote_dem" field="VOTE_DEM" name="number of likely Democratic voters" short_name="democratic voters" displayed="false" sortkey="10" />
-        <Subject id="vote_rep" field="VOTE_REP" name="number of likely Republican voters" short_name="democratic voters" displayed="false" sortkey="11" />
-        <Subject id="vote_tot" field="VOTE_TOT" name="number of likely Republican voters" short_name="democratic voters" displayed="false" sortkey="12" />
+        <Subject id="vote_dem" field="VOTE_DEM" name="number of likely Democratic voters" short_name="democratic voters" displayed="true" sortkey="4" percentage_denominator="vote_tot" />
+        <Subject id="vote_rep" field="VOTE_REP" name="number of likely Republican voters" short_name="democratic voters" displayed="true" sortkey="5" percentage_denominator="vote_tot" />
+        <Subject id="vote_tot" field="VOTE_TOT" name="number of likely Republican voters" short_name="democratic voters" displayed="false" sortkey="6" />
         %(end_elec)s
+        <Subject id="vap" field="VAP" name="Voting Age Population" short_name="Total Pop." displayed="true" sortkey="7" />
+        <Subject id="totpop_b" field="TOTPOP_B" name="African-American" short_name="Black" displayed="false" sortkey="8" />        
+	<Subject id="totpop_h" field="TOTPOP_H" name="Hispanic or Latino" short_name="Hispanic" displayed="false" sortkey="9" />
+	<Subject id="totpop_na" field="TOTPOP_NA" name="Native American" short_name="Nat Amer" displayed="false" sortkey="10" />
+        <Subject id="totpop" field="TOTPOP" name="Total Population" short_name="Total Pop." displayed="true" sortkey="11" />
    </Subjects>
     <Targets>
         <!-- A target is an objective measure of a district for a legislative
@@ -1263,7 +1262,7 @@ class Config_Template(DictionaryTemplate):
                         This can be any higher level geography: a county,
                         VTd, or tract.
                         -->
-                        <SplitVar field="COUNTYST10" label="County" />
+                        <SplitVar field="COUNTYFP10" label="County" />
                         <SplitVar field="TRACTCE10" label="Tract" />
                     </SplitVars>
                 </BardConfig>
