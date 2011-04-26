@@ -35,7 +35,7 @@ from redistricting.models import *
 import csv, time, zipfile, tempfile, os, sys, traceback, time
 from datetime import datetime
 from operator import attrgetter
-import socket
+import socket, urllib
 
 
 class DistrictIndexFile():
@@ -476,7 +476,7 @@ class PlanReport:
         socket.setdefaulttimeout(600)
 
         result = dispatcher.delay(
-            url='http://localhost:8081/getreport/', 
+            url = settings.BARD_SERVER + '/getreport/' if settings.BARD_SERVER else 'http://localhost:8081/getreport/',
             method='POST',
             plan_id=planid,
             plan_owner=plan.owner.username,
@@ -493,7 +493,6 @@ class PlanReport:
             rep_spatial=request['repSpatial'],
             rep_spatial_extra=request['repSpatialExtra'],
             stamp=stamp)
-
         return
 
     @staticmethod
@@ -509,7 +508,18 @@ class PlanReport:
         tempdir = settings.BARD_TEMP
         filename = '%s_p%d_v%d_%s' % (plan.owner.username, plan.id, plan.version, stamp)
 
-        if os.path.exists('%s/%s.pending' % (tempdir, filename)):
+        pending_file = '%s/%s.pending' % (tempdir, filename)
+        if os.path.exists(pending_file):
+            # If the reports server is on another machine
+            if settings.BARD_SERVER:
+                path = '%s/reports/%s.html' % (settings.BARD_SERVER,filename)
+                try:
+                    result = urllib.urlopen(path)
+                    if result.getcode() == 200:
+                        os.unlink(pending_file)
+                        return 'ready'
+                except:
+                    return 'busy'
             return 'busy'
         elif os.path.exists('%s/%s.html' % (tempdir, filename)):
             return 'ready'

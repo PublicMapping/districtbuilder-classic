@@ -346,7 +346,11 @@ def getreport(request):
         if settings.DEBUG:
             print "Removing pending file."
 
-        os.unlink('%s/%s.pending' % (tempdir, basename))
+        try:
+            os.unlink('%s/%s.pending' % (tempdir, basename))
+        except:
+            if settings.DEBUG:
+                print "No pending file to remove - report finished"
 
         status['status'] = 'success'
         status['retval'] = '%s.html' % basename

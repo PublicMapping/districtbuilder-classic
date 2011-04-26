@@ -156,6 +156,13 @@
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
+        <xs:attribute name="server" type="xs:string" >
+            <xs:annotation>
+                <xs:documentation>
+                The URL for the server running bard reports, e.g "http://reports.server.com"
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
         <xs:attribute name="transform" type="xs:string" use="required">
             <xs:annotation>
                 <xs:documentation>
