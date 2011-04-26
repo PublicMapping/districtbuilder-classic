@@ -149,6 +149,29 @@ PDPATCH='
 '
 echo "$PDPATCH" | patch -bN /etc/apt/apt.conf.d/50unattended-upgrades
 
+echo "Patching gwc directory"
+PDPATCH='
+*** web.xml.bak 2011-04-26 12:47:20.396795908 +0000
+--- web.xml     2011-04-26 12:49:44.576795920 +0000
+***************
+*** 57,63 ****
+      <!-- Change the geowebcache dir -->
+      <context-param>
+        <param-name>GEOWEBCACHE_CACHE_DIR</param-name>
+!       <param-value>/mnt/geowebcache</param-value>
+      </context-param>
+    
+      <!-- pick up all spring application contexts -->
+--- 57,63 ----
+      <!-- Change the geowebcache dir -->
+      <context-param>
+        <param-name>GEOWEBCACHE_CACHE_DIR</param-name>
+!       <param-value>/var/lib/tomcat6/webapps/geoserver/data/gwc</param-value>
+      </context-param>
+    
+      <!-- pick up all spring application contexts -->
+echo "$PDPATCH" | patch -bN /var/lib/tomcat6/webapps/geoserver/WEB-INF/web.xml
+
 echo "Installing security patches -- this may reboot at end"
 aptitude safe-upgrade -o Aptitude::Delete-Unused=false --assume-yes --target-release `lsb_release -cs`-security
 
