@@ -349,6 +349,9 @@ def merge_config(config, verbose):
             server = cfg.get('server')
             if server:
                 settings_out.write("BARD_SERVER = '%s'\n" % server)
+            else:
+                settings_out.write("BARD_SERVER = 'http://localhost:8081'")
+
         else:
             # Write this setting to the report settings.
             rsettings_out.write("\nREPORTS_ENABLED = False\n")
