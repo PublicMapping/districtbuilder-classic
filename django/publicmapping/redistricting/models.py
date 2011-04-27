@@ -40,6 +40,8 @@ from django.forms import ModelForm
 from django.conf import settings
 from django.utils import simplejson as json
 from django.template.loader import render_to_string
+from django.contrib.comments.models import Comment
+from django.contrib.contenttypes.models import ContentType
 from redistricting.calculators import Schwartzberg, Contiguity
 from datetime import datetime
 from copy import copy
@@ -709,8 +711,9 @@ class Plan(models.Model):
             ds = self.get_districts_at_version(before, include_geom=False)
             allQ = Q(plan__isnull=True)
             for d in ds:
-                maxqset = self.district_set.filter(district_id=d.district_id)
-                maxver = maxqset.aggregate(Max('version'))['version__max']
+                #maxqset = self.district_set.filter(district_id=d.district_id)
+                #maxver = maxqset.aggregate(Max('version'))['version__max']
+
                 # Filter on this district
                 q1 = Q(district_id=d.district_id)
 
@@ -720,13 +723,21 @@ class Plan(models.Model):
                 # Accumulate the criteria
                 allQ = allQ | (q1 & q2)
 
-            # delete everything all at once
-            self.district_set.filter(allQ).delete()
-
+            # get the IDs of all the offenders
+            deleteme = self.district_set.filter(allQ)
         else:
             # Purge any districts between the version provided
             # and the latest version
-            self.district_set.filter(version__gt=after).delete()
+            deleteme = self.district_set.filter(version__gt=after)
+
+        # since comments are loosely bound, manually remove them, too
+        pks = deleteme.values_list('id',flat=True)
+        pks = map(lambda id:str(id), pks) # some genious uses text as a pk?
+        ct = ContentType.objects.get(app_label='redistricting',model='district')
+        Comment.objects.filter(object_pk__in=pks,content_type=ct).delete()
+
+        # delete all districts at once
+        deleteme.delete()
 
         
     def purge_beyond_nth_step(self, steps):
@@ -763,6 +774,7 @@ class Plan(models.Model):
 
         # Clone the characteristings to this new version
         district_copy.clone_characteristics_from(district)
+        district_copy.clone_comments_from(district)
                 
     @transaction.commit_on_success
     def add_geounits(self, districtid, geounit_ids, geolevel, version, keep_old_versions=False):
@@ -841,6 +853,7 @@ class Plan(models.Model):
 
                     # Clone the characteristings to this new version
                     district_copy.clone_characteristics_from(district)
+                    district_copy.clone_comments_from(district)
 
                     fixed = True
 
@@ -878,6 +891,7 @@ class Plan(models.Model):
 
             # Clone the characteristings to this new version
             district_copy.clone_characteristics_from(district)
+            district_copy.clone_comments_from(district)
 
             # Update the district stats
             district_copy.delta_stats(geounits,False)
@@ -939,6 +953,7 @@ class Plan(models.Model):
 
         # Clone the characteristics to this new version
         target_copy.clone_characteristics_from(target)
+        target_copy.clone_comments_from(target)
 
         # Update the district stats
         target_copy.delta_stats(geounits,True)
@@ -1066,6 +1081,7 @@ class Plan(models.Model):
             pasted.name = self.legislative_body.member % pasted.district_id
             pasted.save();
         pasted.clone_characteristics_from(district)
+        pasted.clone_comments_from(district)
         
         # For the remaning districts in the plan,
         for existing in others:
@@ -1105,6 +1121,7 @@ class Plan(models.Model):
                         new_district.id = None
                         new_district.save()
                         new_district.clone_characteristics_from(existing)
+                        new_district.clone_comments_from(existing)
                     else:
                         new_district = existing
                     new_district.geom = difference
@@ -1893,6 +1910,22 @@ class District(models.Model):
             c.id = None
             c.district = self
             c.save()
+
+    def clone_comments_from(self, origin):
+        """
+        Copy the comments from one district to another.
+
+        Cloning District Comments is required when any district is edited.
+
+        Parameters:
+            origin -- The source District.
+        """
+        ct = ContentType.objects.get(app_label='redistricting', model='district')
+        cmts = Comment.objects.filter(object_pk=origin.id, content_type=ct)
+        for cmt in cmts:
+            cmt.id = None
+            cmt.object_pk = self.id
+            cmt.save()
 
     def get_base_geounits(self, threshold=100):
         """
@@ -2861,3 +2894,4 @@ class ContiguityOverride(models.Model):
 
     def __unicode__(self):
         return '%s / %s' % (self.override_geounit.portable_id, self.connect_to_geounit.portable_id)
+

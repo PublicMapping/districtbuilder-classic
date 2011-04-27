@@ -150,8 +150,8 @@ statisticssets = function(options) {
             if (result) {
                 $('.demographics').html(result);
                 fixTableHeight($('.demographics'));
-                $('.olMap').trigger('resort_by_visibility');
-                $('.olMap').trigger('draw_highlighted_districts', [ true ]);
+                $('#map').trigger('resort_by_visibility');
+                $('#map').trigger('draw_highlighted_districts', [ true ]);
                 return;
             }
         } else {
@@ -169,8 +169,8 @@ statisticssets = function(options) {
             function(rsp, status, xhr) {
                 loadTooltips();
                 fixTableHeight($('.demographics'));
-                $('.olMap').trigger('resort_by_visibility');
-                $('.olMap').trigger('draw_highlighted_districts', [ true ]);
+                $('#map').trigger('resort_by_visibility');
+                $('#map').trigger('draw_highlighted_districts', [ true ]);
                 _displayCache[displayId] = rsp;
             }
         );  
@@ -281,7 +281,7 @@ statisticssets = function(options) {
                         delete _displayCache[data.set.id.toString()];
                         deleteFromUI(data.set);
                         showScoreDisplay();
-                        $('.olmap').trigger('resort_by_visibility');
+                        $('#map').trigger('resort_by_visibility');
                     }
                 }
             });

@@ -193,7 +193,8 @@ multimember = function(options) {
                     $(_options.workingDialog).dialog('close');
                     if (data.success) {
                         if (data.modified) {
-                            $(_options.target).trigger('assign_success', [data.version]);
+                            var updateAssignments = false;
+                            $('#map').trigger('version_changed', [data.version, false]);
                         }
                     } else {
                         $('<div class="error" title="Sorry">Unable to assign representatives:<p>' + data.message + '</p></div>')

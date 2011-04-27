@@ -36,6 +36,7 @@ from django.shortcuts import render_to_response
 from django.core.urlresolvers import reverse
 from django.core.context_processors import csrf
 from django.contrib.comments.models import Comment
+from django.contrib.comments.forms import CommentForm
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.sessions.models import Session
 from django.contrib.sessions.backends.db import SessionStore
@@ -44,7 +45,6 @@ from django.contrib.gis.geos import GEOSGeometry
 from django.contrib.gis.gdal import *
 from django.contrib.gis.gdal.libgdal import lgdal
 from django.contrib import humanize
-from django import forms
 from django.utils import simplejson as json
 from django.views.decorators.cache import cache_control
 from django.template.defaultfilters import slugify, force_escape
@@ -266,6 +266,7 @@ def copyplan(request, planid):
 
         # clone the characteristics from the original district to the copy 
         district_copy.clone_characteristics_from(district)
+        district_copy.clone_comments_from(district)
 
     # Serialize the plan object to the response.
     data = serializers.serialize("json", [ plan_copy ])
@@ -1783,14 +1784,14 @@ def statistics_sets(request, planid):
 # Comment views
 #
 @unique_session_or_json_redirect
-def get_district_comments(request, planid, district_id):
+def district_comment(request, planid, district_id):
     """
     Get the comments that are attached to a district.
 
     Parameters:
         request -- An HttpRequest
         planid -- The plan ID
-        district_id -- The district ID
+        district_id -- The district ID, this is the district number in a plan, and NOT the id of a district.
     """
     status = { 'success': False }
     plan = Plan.objects.filter(id=planid)
@@ -1799,15 +1800,58 @@ def get_district_comments(request, planid, district_id):
     else:
         plan = plan[0]
 
-        district = plan.district_set.filter(id=district_id)
-        if district.count() == 0:
-            status['message'] = 'No district with that ID in the given plan.'
-        else:
-            c = { 'district': district[0],
-                'user': request.user }
-            c.update(csrf(request))
-            status['markup'] = render_to_string('districtcomments.html', c)
-            status['success'] = True
+        version = plan.version
+        if 'version' in request.REQUEST:
+            version = request.REQUEST['version']
+            if type(version) == int:
+                version = min(plan.version, int(version))
+
+        district_id = int(district_id)
+        district = plan.get_districts_at_version(version, 
+                                                 include_geom=False)
+        district = filter(lambda d:d.district_id==district_id, district)
+
+        if request.method == 'GET':
+            if len(district) == 0:
+                status['message'] = 'No district with that ID in the given plan.'
+            else:
+                c = { 'district': district[0],
+                    'typetags': map(lambda tag:tag.name[5:],district[0].tags),
+                    'user': request.user }
+                c.update(csrf(request))
+                status['markup'] = render_to_string('districtcomments.html', c)
+                status['success'] = True
+        elif request.method == 'POST':
+            district = District.objects.get(id=request.POST['object_pk'])
+            form = CommentForm(district, request.POST)
+            if form.is_valid():
+                comment = form.get_comment_object()
+                district = comment.content_object
+                district_copy = copy.copy(district)
+
+                # In case of non-linear editing, everything after this point
+                # must be purged.
+                district.plan.purge(after=version)
+
+                district_copy.id = None
+                # This must increment the PLAN version, not the DISTRICT
+                # version, since the district version may not be the most
+                # recent version in the plan.
+                district_copy.version = district_copy.plan.version + 1
+                district_copy.save()
+
+                district_copy.clone_characteristics_from(district)
+                district_copy.clone_comments_from(district)
+                district_copy.plan.version += 1
+                district_copy.plan.save()
+               
+                comment.object_pk = district_copy.id
+                comment.save()
+
+                status['version'] = district_copy.plan.version
+                status['success'] = True
+            else:
+                status['message'] = 'Invalid form.'
+                status['errors'] = form.errors
 
     return HttpResponse(json.dumps(status), mimetype='application/json')
-

@@ -388,7 +388,8 @@ shareddistricts = function(options) {
                 success: function(data) {
                     $('#working').dialog('close');
                     if (data.success == true) {
-                        $('#copy_paste_tool').trigger('merge_success', [data.version]); 
+                        var updateAssignments = true;
+                        $('#map').trigger('version_changed', [data.version, updateAssignments]); 
                     } else {
                         $('<div class="error" title="Sorry">Unable to paste districts:<p>' + data.message + '</p></div>')
                             .dialog({modal:true, resizable:false});

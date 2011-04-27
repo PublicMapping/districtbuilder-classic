@@ -813,59 +813,87 @@ function mapinit(srs,maxExtent) {
                 return resp;
             }
         });
-};
+    };
 
-// Extend the request function on the GetFeature control to allow for
-// dynamic filtering and setting a header needed for CSRF validation
-var filterExtension = {
-    request: function (bounds, options) {
-        // Allow for dynamic filtering, and extend for CSRF validation headers
-        var filter = getVersionAndSubjectFilters(maxExtent, bounds.toGeometry().toString());
-        extendReadForCSRF(this.protocol);
+    // Extend the request function on the GetFeature control to allow for
+    // dynamic filtering and setting a header needed for CSRF validation
+    var filterExtension = {
+        request: function (bounds, options) {
+            // Allow for dynamic filtering, and extend for CSRF validation headers
+            var filter = getVersionAndSubjectFilters(maxExtent, bounds.toGeometry().toString());
+            extendReadForCSRF(this.protocol);
 
-        // The rest of this function is exactly the same as the original
-        options = options || {};
-        OpenLayers.Element.addClass(this.map.viewPortDiv, "olCursorWait");
+            // The rest of this function is exactly the same as the original
+            options = options || {};
+            OpenLayers.Element.addClass(this.map.viewPortDiv, "olCursorWait");
         
-        this.protocol.read({
-            filter: filter,
-            callback: function(result) {
-                if(result.success()) {
-                    if(result.features.length) {
-                        if(options.single == true) {
-                            this.selectBestFeature(result.features, bounds.getCenterLonLat(), options);
+            this.protocol.read({
+                filter: filter,
+                callback: function(result) {
+                    if(result.success()) {
+                        if(result.features.length) {
+                            if(options.single == true) {
+                                this.selectBestFeature(result.features, bounds.getCenterLonLat(), options);
+                            } else {
+                                this.select(result.features);
+                            }
+                        } else if(options.hover) {
+                            this.hoverSelect();
                         } else {
-                            this.select(result.features);
-                        }
-                    } else if(options.hover) {
-                        this.hoverSelect();
-                    } else {
-                        this.events.triggerEvent("clickout");
-                        if(this.clickout) {
-                            this.unselectAll();
+                            this.events.triggerEvent("clickout");
+                            if(this.clickout) {
+                                this.unselectAll();
+                            }
                         }
                     }
-                }
-                OpenLayers.Element.removeClass(this.map.viewPortDiv, "olCursorWait");
-            },
-            scope: this                        
-        });
-    }
-};
+                    OpenLayers.Element.removeClass(this.map.viewPortDiv, "olCursorWait");
+                },
+                scope: this                        
+            });
+        }
+    };
 
-// Apply the filter extension to both the get and box controls
-OpenLayers.Util.extend(getControl, filterExtension);
-OpenLayers.Util.extend(boxControl, filterExtension);
+    // Apply the filter extension to both the get and box controls
+    OpenLayers.Util.extend(getControl, filterExtension);
+    OpenLayers.Util.extend(boxControl, filterExtension);
 
     // Reload the information tabs and reload the filters
     var updateInfoDisplay = function() {
         $('#open_statistics_editor').trigger('dirty_cache');
         $('#open_statistics_editor').trigger('refresh_tab');
-        sortByVisibility(true);
+        $('#map').trigger('resort_by_visibility', [true]);
         districtLayer.filter = getVersionAndSubjectFilters(olmap.getExtent());
         districtLayer.strategies[0].update({force:true});
-        drawHighlightedDistricts();
+        $('#map').trigger('draw_highlighted_districts');
     };
+
+    var versionChanged = function(evt, version, updateAssignments) {
+        if (version > PLAN_VERSION) {
+            // update the max version of this plan
+            PLAN_VERSION = version;
+            PLAN_HISTORY[PLAN_VERSION] = true;
+        }
+
+        // set the version cursor
+        $('#history_cursor').val(version);
+
+        if (version == PLAN_VERSION) {
+            // update the UI buttons to show that you can
+            // perform an undo now, but not a redo
+            $('#history_redo').addClass('disabled');
+            $('#history_undo').removeClass('disabled');
+        }
+        else {
+            $('#history_redo').removeClass('disabled');
+            $('#history_undo').addClass('disabled');
+        }
+
+        updateInfoDisplay();
+        if (updateAssignments) {
+            updateAssignableDistricts();
+        }
+    };
+    $('#map').bind('version_changed', versionChanged);
 
     // Track whether we've already got an outbound request to the server to add districts
     var outboundRequest = false;
@@ -884,14 +912,14 @@ OpenLayers.Util.extend(boxControl, filterExtension);
                 }
             });
             return false;
-        } else {
-            outboundRequest = true;
         }
 
         if (selection.features.length == 0) {
             $('#assign_district').val('-1');
             return;
         }
+
+        outboundRequest = true;
 
         var district_id = feature.data.district_id;
         var geolevel_id = selection.features[0].attributes.geolevel_id;
@@ -929,21 +957,9 @@ OpenLayers.Util.extend(boxControl, filterExtension);
                             }
                         });
                         updateInfoDisplay();
-                    } else {                    
-                        // update the max version of this plan
-                        PLAN_VERSION = data.version;
-                        PLAN_HISTORY[PLAN_VERSION] = true;
-
-                        // set the version cursor
-                        $('#history_cursor').val(data.version);
-
-                        // update the UI buttons to show that you can
-                        // perform an undo now, but not a redo
-                        $('#history_redo').addClass('disabled');
-                        $('#history_undo').removeClass('disabled');
-
-                        updateInfoDisplay();
-
+                    } else {
+                        var updateAssignments = false;
+                        $('#map').trigger('version_changed', [data.version, updateAssignments]);
                         $('#saveplaninfo').trigger('planSaved', [ data.edited ]);
                     }
                 }
@@ -1160,18 +1176,8 @@ OpenLayers.Util.extend(boxControl, filterExtension);
                                 success: function(data, textStatus, xhr) {
                                     $('#working').dialog('close');
                                     if (data.success == true) {
-                                        PLAN_VERSION = data.version;
-                                        PLAN_HISTORY[PLAN_VERSION] = true;
-                                        $('#history_cursor').val(data.version);
-
-                                        // update the UI buttons to show that you can
-                                        // perform an undo now, but not a redo
-                                        $('#history_redo').addClass('disabled');
-                                        $('#history_undo').removeClass('disabled');
-
-
-                                        updateInfoDisplay();
-                                        updateAssignableDistricts();
+                                        var updateAssignments = true;
+                                        $('#map').trigger('version_changed', [data.version, updateAssignments]);
                                     } else {
                                         $('<div class="error" title="Sorry">Unable to combine districts:<p>' + data.message + '</p></div>').dialog({
                                             modal: true,
@@ -1241,8 +1247,8 @@ OpenLayers.Util.extend(boxControl, filterExtension);
     });
     */
 
-    var districtInfo = $('#districtComment');
-    districtInfo.dialog({
+    var districtComment = $('#districtComment');
+    districtComment.dialog({
         resizable: false,
         modal: false,
         draggable: true,
@@ -1254,32 +1260,33 @@ OpenLayers.Util.extend(boxControl, filterExtension);
         {
             hover: false,
             onSelect: function(feature){
-                districtInfo.html('<div class="commentloading"><h3>Loading Comments...</h3></div>');
-                districtInfo.dialog('option','buttons',{
+                districtComment.html('<div class="commentloading"><h3>Loading Comments...</h3></div>');
+                districtComment.dialog('option','buttons',{
                     'OK': function() {
-                        districtInfo.dialog('close');
+                        districtComment.dialog('close');
                         districtIdControl.clickoutFeature(feature);
                     }
                 });
-                districtInfo.dialog('option','title','Please Wait...');
-                districtInfo.dialog('open');
+                districtComment.dialog('option','title','Please Wait...');
+                districtComment.dialog('open');
 
                 var badComment = function(xhr, textStatus, message) {
-                    districtInfo.dialog('option','buttons',{
+                    districtComment.dialog('option','buttons',{
                         'Close': function() {
-                            districtInfo.dialog('close');
+                            districtComment.dialog('close');
                             districtIdControl.clickoutFeature(feature);
                         }
                     });
-                    districtInfo.dialog('option','title','Oops!');
-                    districtInfo.html('<div>Sorry, your comment could not be saved. Please try again later.</div>');
+                    districtComment.dialog('option','title','Oops!');
+                    districtComment.html('<div>Sorry, your comment could not be saved. Please try again later.</div>');
                 };
 
                 var goodComment = function(data, textStatus, xhr) {
-                    if (xhr.status == 200) {
-                        districtInfo.dialog('close');
+                    if (xhr.status == 200 && data.success) {
+                        districtComment.dialog('close');
                         districtIdControl.clickoutFeature(feature);
-                        districtIdControl.clickFeature(feature);
+                        var updateAssignments = false;
+                        $('#map').trigger('version_changed',[data.version, updateAssignments]);
                     }
                     else {
                         badComment(xhr, textStatus, 'Sorry, your comment could not be saved. Please try again later.</div>');
@@ -1294,7 +1301,8 @@ OpenLayers.Util.extend(boxControl, filterExtension);
                     var inputs = form.find('input');
 
                     var data = {
-                        'comment':form.find('#id_comment').val()
+                        'comment':form.find('#id_comment').val(),
+                        'version':getPlanVersion()
                     };
 
                     if (data.comment === null || data.comment == '' ) {
@@ -1317,46 +1325,49 @@ OpenLayers.Util.extend(boxControl, filterExtension);
 
                 $.ajax({
                     method:'GET',
-                    url: '/districtmapping/plan/' + PLAN_ID + '/district/' + feature.fid + '/comments/',
+                    url: '/districtmapping/plan/' + PLAN_ID + '/district/' + feature.attributes.district_id + '/comments/',
+                    data: {
+                        version: getPlanVersion()
+                    },
                     success: function(data, textStatus, xhr) {
                         if (xhr.status == 200 && data.success) {
-                            districtInfo.dialog('close');
-                            districtInfo.html(data.markup);
-                            districtInfo.dialog('option','buttons', {
+                            districtComment.dialog('close');
+                            districtComment.html(data.markup);
+                            districtComment.dialog('option','buttons', {
                                 'Cancel': function() {
-                                    districtInfo.dialog('close');
+                                    districtComment.dialog('close');
                                     districtIdControl.clickoutFeature(feature);
                                 },
                                 'OK': postComment
                             });
-                            districtInfo.dialog('option','title',feature.attributes.label);
-                            districtInfo.dialog('open');
+                            districtComment.dialog('option','title',feature.attributes.label);
+                            districtComment.dialog('open');
                         }
                         else {
-                            districtInfo.dialog('option','buttons',{
+                            districtComment.dialog('option','buttons',{
                                 'Close': function() {
-                                    districtInfo.dialog('close');
+                                    districtComment.dialog('close');
                                     districtIdControl.clickoutFeature(feature);
                                 }
                             });
-                            districtInfo.dialog('option','title','Oops!');
+                            districtComment.dialog('option','title','Oops!');
                             if (xhr.status != 0) {
-                                districtInfo.html('<div>' + data.message + '</div>');
+                                districtComment.html('<div>' + data.message + '</div>');
                             }
                             else {
-                                districtInfo.html('<div>Sorry, comments are unavailable at the current time. Please try again later.</div>');
+                                districtComment.html('<div>Sorry, comments are unavailable at the current time. Please try again later.</div>');
                             }
                         }
                     },
                     error: function(xhr, textStatus, message) {
-                        districtInfo.dialog('option','buttons',{
+                        districtComment.dialog('option','buttons',{
                             'Close': function() {
-                                districtInfo.dialog('close');
+                                districtComment.dialog('close');
                                 districtIdControl.clickoutFeature(feature);
                             }
                         });
-                        districtInfo.dialog('option','title','Oops!');
-                        districtInfo.html('<div>Sorry, comments are unavailable at the current time.</div>');
+                        districtComment.dialog('option','title','Oops!');
+                        districtComment.html('<div>Sorry, comments are unavailable at the current time.</div>');
                     }
                 });
             }
@@ -1823,7 +1834,7 @@ OpenLayers.Util.extend(boxControl, filterExtension);
             return;
         updatingAssigned = true;
 
-        var version = $('#history_cursor').val();
+        var version = getPlanVersion();
         $.ajax({
             type:'GET',
             url:'../districts/',
@@ -2122,6 +2133,7 @@ OpenLayers.Util.extend(boxControl, filterExtension);
         idControl.deactivate();
         $('#district_id_map_tool').removeClass('toggle');
         districtIdControl.deactivate();
+        districtComment.dialog('close');
         $('#district_select').removeClass('toggle');
         districtSelectTool.deactivate();
         $('#lock_district_map_tool').removeClass('toggle');
@@ -2166,6 +2178,7 @@ OpenLayers.Util.extend(boxControl, filterExtension);
         idControl.deactivate();
         $('#district_id_map_tool').removeClass('toggle');
         districtIdControl.deactivate();
+        districtComment.dialog('close');
         $('#lock_district_map_tool').removeClass('toggle');
         lockDistrictControl.deactivate();
         $('#dragdrop_tool').removeClass('toggle');
@@ -2431,7 +2444,7 @@ OpenLayers.Util.extend(boxControl, filterExtension);
         if (olmap.center !== null) {
             districtLayer.filter = getVersionAndSubjectFilters(olmap.getExtent());
             districtLayer.strategies[0].update({force:true});
-            drawHighlightedDistricts();
+            $('#map').trigger('draw_highlighted_districts');
         }
 
         changingSnap = false;
@@ -2513,6 +2526,7 @@ OpenLayers.Util.extend(boxControl, filterExtension);
 
     // Logic for the history back button
     $('#history_undo').click(function(evt){
+        districtComment.dialog('close');
         var cursor = $('#history_cursor');
         var ver = cursor.val();
         if (ver > 0) {
@@ -2533,6 +2547,7 @@ OpenLayers.Util.extend(boxControl, filterExtension);
 
     // Logic for history redo button
     $('#history_redo').click(function(evt){
+        districtComment.dialog('close');
         var cursor = $('#history_cursor');
         var ver = cursor.val();
         if (ver < PLAN_VERSION) {
@@ -2584,7 +2599,7 @@ OpenLayers.Util.extend(boxControl, filterExtension);
         } else {
             highlightedDistricts.splice(index, 1);
         }
-        drawHighlightedDistricts();
+        $('#map').trigger('draw_highlighted_districts');
     };
 
     /**
@@ -2613,26 +2628,7 @@ OpenLayers.Util.extend(boxControl, filterExtension);
         });
     };
 
-    // Update the current version number and refresh.
-    // Called on success callbacks when performing operations that
-    //   create new versions such as: merging and assigning members
-    var updateToVersion = function(event, version){
-        PLAN_VERSION = version;
-        PLAN_HISTORY[PLAN_VERSION] = true;
-        $('#history_cursor').val(version);
-
-        updateInfoDisplay();
-        updateAssignableDistricts();
-
-        // update the UI buttons to show that you can
-        // perform an undo now, but not a redo
-        $('#history_redo').addClass('disabled');
-        $('#history_undo').removeClass('disabled');
-    };
-
     // Bind to events that need refreshes
-    $('#copy_paste_tool').bind('merge_success', updateToVersion);
-    $('#multi_member_toggle').bind('assign_success', updateToVersion);
     $(this).bind('toggle_highlighting', toggleDistrictHighlighting);
     $(this).bind('zoom_to_district', zoomToDistrictExtent);
         
@@ -2678,19 +2674,9 @@ OpenLayers.Util.extend(boxControl, filterExtension);
                         return;
                     }
 
-                    // update the max version of this plan
-                    PLAN_VERSION = data.version;
-                    PLAN_HISTORY[PLAN_VERSION] = true;
+                    var updateAssignments = true;
+                    $('#map').trigger('version_changed', [data.version, updateAssignments]);
 
-                    $('#history_cursor').val(data.version);
-
-                    // update the UI buttons to show that you can
-                    // perform an undo now, but not a redo
-                    $('#history_redo').addClass('disabled');
-                    $('#history_undo').removeClass('disabled');
-
-                    updateInfoDisplay();
-                    updateAssignableDistricts();
 
                     $('#working').dialog('close');
                     $('#assign_district').val('-1');
@@ -2762,8 +2748,8 @@ OpenLayers.Util.extend(boxControl, filterExtension);
         updateDistrictStyles();
     };
 
-    $('.olMap').bind('resort_by_visibility', sortByVisibility);
-    $('.olMap').bind('draw_highlighted_districts', drawHighlightedDistricts);
+    $('#map').bind('resort_by_visibility', sortByVisibility);
+    $('#map').bind('draw_highlighted_districts', drawHighlightedDistricts);
    
     // triggering this event here will configure the map to correspond
     // with the initial dropdown values (jquery will set them to different
