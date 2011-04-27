@@ -291,20 +291,6 @@ def scoreplan(request, planid):
     status = { 'success': False }
     plan = Plan.objects.get(pk=planid)
 
-    # check if the computed char for REP exists yet
-    districts = plan.get_districts_at_version(plan.version,include_geom=False)
-    subject = Subject.objects.get(name='govrep')
-    ccs = ComputedCharacteristic.objects.filter(district__in=districts,subject=subject)
-    seemingly_valid = 0
-    for cc in ccs:
-        if not cc.number is None and float(cc.number) != 0.0:
-            seemingly_valid += 1
-
-    if seemingly_valid == 0:
-        # reaggregate this plan w/dem rep
-        from django.core.management import call_command
-        call_command('reaggregate', plan_id=plan.id)
-
     criterion = ValidationCriteria.objects.filter(legislative_body=plan.legislative_body)
     status['success'] = True
     for criteria in criterion:

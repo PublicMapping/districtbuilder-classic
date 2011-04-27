@@ -476,7 +476,7 @@ class PlanReport:
         socket.setdefaulttimeout(600)
 
         result = dispatcher.delay(
-            url = settings.BARD_SERVER + '/getreport/' if settings.BARD_SERVER else 'http://localhost:8081/getreport/',
+            url = settings.BARD_SERVER + '/getreport/',
             method='POST',
             plan_id=planid,
             plan_owner=plan.owner.username,
@@ -511,7 +511,7 @@ class PlanReport:
         pending_file = '%s/%s.pending' % (tempdir, filename)
         if os.path.exists(pending_file):
             # If the reports server is on another machine
-            if settings.BARD_SERVER:
+            if not 'localhost'  in settings.BARD_SERVER:
                 path = '%s/reports/%s.html' % (settings.BARD_SERVER,filename)
                 try:
                     result = urllib.urlopen(path)

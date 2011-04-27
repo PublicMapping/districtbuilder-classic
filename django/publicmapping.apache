@@ -86,9 +86,6 @@
 
         RewriteEngine On
 
-        # This redirects report requests to an alternate port.
-        RewriteRule ^/reporting/getreport/$ http://localhost:8081/getreport/ [NC,P]
-
         # You can comment out this rewriterule and adjust your map server name accordingly to stop proxying
         # map requests through apache
         RewriteRule /geoserver/(.*) http://%{HTTP_HOST}:8080/geoserver/$1 [NC,P]
