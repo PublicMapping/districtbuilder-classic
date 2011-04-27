@@ -50,8 +50,10 @@ def     drop_db():
         os.chdir("/tmp")
         subprocess.check_call(["service","tomcat6","stop"])
         subprocess.check_call(["service","celeryd","stop"])
+        subprocess.check_call(["service","apache2","stop"])
         subprocess.check_call(['su postgres -c "dropdb publicmapping"'],shell=True)
         subprocess.check_call(['cat /projects/publicmapping/trunk/sql/publicmapping_db.sql | su postgres -c "psql -f - postgres"'],shell=True)
+        subprocess.check_call(["service","apache2","start"])
         subprocess.check_call(["service","tomcat6","start"])
         subprocess.check_call(["service","celeryd","start"])
         os.chdir(olddir)
@@ -258,7 +260,7 @@ class Sld_Range_Template(ListTemplate):
 def gensld_none(geoname):
         target_file = '/projects/publicmapping/trunk/sld/%s_none.sld' % (geoname)       
         f = open(target_file,'w')
-        f.write ( str(SldList_Template(layername="%s No fill" % (geoname),layertitle="%s No Fill" % (geoname) ,layerabs="A style showing the boundaries of a geounit with a transparent fill", slst=[],sli=Empty_Template, lst=[{"title":"Fill","fill":"#FFFFFF","fillopacity":"0.5"}],li=Sld_Poly_Template,elst=[{"title":"Boundary","stroke":"#555555","strokewidth":"0.25","strokeopacity":"1.0"}],eli=Sld_Line_Template)) )
+        f.write ( str(SldList_Template(layername="%s No fill" % (geoname),layertitle="%s No Fill" % (geoname) ,layerabs="A style showing the boundaries of a geounit with a transparent fill", slst=[],sli=Empty_Template, lst=[{"title":"Fill","fill":"#FFFFFF","fillopacity":"1.0"}],li=Sld_Poly_Template,elst=[{"title":"Boundary","stroke":"#555555","strokewidth":"3.00","strokeopacity":"1.0"}],eli=Sld_Line_Template)) )
 	f.write("\n")
         f.close()
         os.chmod(target_file,stat.S_IRUSR|stat.S_IRGRP|stat.S_IROTH)    
@@ -281,23 +283,23 @@ def gensld_choro(geoname,varname,vartitle,quantiles):
           {"top": str(quantiles[5]),
           "bottom": str(quantiles[4]),
           "fill": "#000000",
-          "fillopacity":"0.5"},
+          "fillopacity":"1.0"},
           {"top": str(quantiles[4]),
           "bottom": str(quantiles[3]),
           "fill": "#444444",
-          "fillopacity":"0.5"},
+          "fillopacity":"1.0"},
           {"top": str(quantiles[3]),
           "bottom": str(quantiles[2]),
           "fill": "#777777",
-          "fillopacity":"0.5"},
+          "fillopacity":"1.0"},
           {"top": str(quantiles[2]),
           "bottom": str(quantiles[1]),
           "fill": "#AAAAAA",
-          "fillopacity":"0.5"},
+          "fillopacity":"1.0"},
           {"top": str(quantiles[1]),
           "bottom": str(quantiles[0]),
           "fill": "#EEEEEE",
-          "fillopacity":"0.5"}]
+          "fillopacity":"1.0"}]
         f = open(target_file,'w')
         f.write(str( SldList_Template(layername=lvarname,layertitle=vartitle,layerabs=varabs,slst=[],sli=Empty_Template, lst=valuelist,li=Sld_Range_Template,elst=[{"title":"Boundary","stroke":"#555555","strokewidth":"0.25","strokeopacity":"1.0"}],eli=Sld_Line_Template) ))
 	f.write("\n")
@@ -1030,7 +1032,7 @@ class Config_Template(DictionaryTemplate):
 
 
     <GeoLevels>
-      <GeoLevel id="block" name="block" min_zoom="8" sort_key="3" tolerance="2.5">
+      <GeoLevel id="block" name="block" min_zoom="6" sort_key="3" tolerance="2.5">
 
           <Shapefile path="/projects/publicmapping/data/census_blocks.shp">
               <Fields>
@@ -1078,7 +1080,7 @@ class Config_Template(DictionaryTemplate):
           </LegislativeBodies>
 
      </GeoLevel>
-      <GeoLevel id="tract" name="tract" min_zoom="4" sort_key="2" tolerance="25">
+      <GeoLevel id="tract" name="tract" min_zoom="3" sort_key="2" tolerance="25">
          <Files>
               <Geography path="/projects/publicmapping/data/census_tracts.shp">
             <Fields>
