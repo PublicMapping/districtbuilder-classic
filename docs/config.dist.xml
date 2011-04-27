@@ -1125,6 +1125,19 @@
 
             <!-- Upload file size restrictions. This is in KB -->
             <Upload maxsize="5300"/>
+
+            <!--
+            Fix unassigned behavior
+            minpercent - The minimum percentage of assigned units required
+                in order to perform fixes for adjacent unassigned units.
+                This does not apply to unassigned units wholly contained within
+                a districts -- those don't require a minimum.
+            comparatorsubject - Name of the subject used for deciding which district
+                to assign an adjacent unassigned geounit to in the case of multiple
+                adjacent districts. The district with the lower value for this subject
+                is always favored.
+            -->
+            <FixUnassigned minpercent="99" comparatorsubject="poptot" />
         </Redistricting>
         
         <!-- 

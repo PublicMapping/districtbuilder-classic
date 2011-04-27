@@ -407,6 +407,12 @@
                                                 <xs:attribute name="maxsize" type="xs:nonNegativeInteger" use="required" />
                                             </xs:complexType>
                                         </xs:element>
+                                        <xs:element name="FixUnassigned" minOccurs="0" maxOccurs="1">
+                                            <xs:complexType>
+                                                <xs:attribute name="minpercent" type="xs:nonNegativeInteger" use="optional" />
+                                                <xs:attribute name="comparatorsubject" type="xs:string" use="optional" />
+                                            </xs:complexType>
+                                        </xs:element>
                                         <xs:element name="MaxUndos" minOccurs="0" maxOccurs="1">
                                             <xs:complexType>
                                                 <xs:attribute name="duringedit" type="xs:positiveInteger" use="optional" />

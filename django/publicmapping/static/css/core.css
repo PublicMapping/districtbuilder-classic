@@ -1869,13 +1869,28 @@ div#tipclose {
     top:-20px;
 }
     
+/* fix unassigned */
+
+button#fix_unassigned_button {
+    background-color: #606060;
+    position: absolute;
+    bottom: 8px;
+    right: 360px;
+    font-size: 7pt;
+    -moz-box-shadow: 2px 2px 2px #888888;
+    -webkit-box-shadow: 2px 2px 2px #888888;
+    box-shadow: 2px 2px 2px #888888;
+}
+
+button#fix_unassigned_button.ui-state-default {border: 1px solid #ccc;}
+
 /* multi-member districts */
 
 button#multi_member_toggle {
     background-color: #606060;
     position: absolute;
     bottom: 8px;
-    right: 365px;
+    right: 456px;
     font-size: 7pt;
     -moz-box-shadow: 2px 2px 2px #888888;
     -webkit-box-shadow: 2px 2px 2px #888888;

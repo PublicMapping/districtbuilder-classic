@@ -489,6 +489,43 @@ function mapinit(srs,maxExtent) {
     $('#thematic_radio').click(getMapLayerRadioChangeFn(true));
     $('#basemap_radio').click(getMapLayerRadioChangeFn(false));
 
+    // Handle Fix Unassigned requests
+    $('#fix_unassigned').click(function(){
+        var pleaseWait = $('<div>Please wait while fixing unassigned. This may take a couple minutes.</div>').dialog({
+            modal: true,
+            autoOpen: true,
+            title: 'Fixing Unassigned',
+            escapeOnClose: false,
+            resizable:false,
+            open: function() { $(".ui-dialog-titlebar-close", $(this).parent()).hide(); }                    
+        });
+        
+        $.ajax({
+            type: 'POST',
+            url: '/districtmapping/plan/' + PLAN_ID + '/fixunassigned/',
+            data: { version: getPlanVersion() },
+            success: function(data, textStatus, xhr) {
+                pleaseWait.remove();
+                if (data.success) {
+                    updateToVersion(null, data.version);
+                }
+                $('<div>' + data.message + '</div>').dialog({
+                    modal: false,
+                    autoOpen: true,
+                    resizable:false,
+                    title: (data.success ? 'Success' : 'Error'),
+                    buttons: { OK: function() { $(this).dialog('close'); }}
+                });                
+            },
+            error: function(xhr, textStatus, error) {
+                pleaseWait.remove();                        
+                $('<div>Error encountered while fixing unassigned</div>').dialog({
+                    modal: true, autoOpen: true, title: 'Error', resizable:false
+                });                
+            }
+        });
+    });
+
     // Hide the map type selection if there are 1 or fewer types
     if (layers.length <= 1) {
         var mapTypeRight = $('#map_type_toggle').css('right');

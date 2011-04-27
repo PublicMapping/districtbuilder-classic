@@ -372,6 +372,23 @@ def merge_config(config, verbose):
         else:
             settings_out.write("\nMAX_UPLOAD_SIZE = 5000 * 1024\n")
 
+        # Fix unassigned parameters
+        minpercent = 99
+        comparatorsubject = 'poptot'
+        cfg = config.xpath('//FixUnassigned')
+        if len(cfg) > 0:
+            cfg = cfg[0]
+            minpercent = cfg.get('minpercent') or minpercent
+            comparatorsubject = cfg.get('comparatorsubject') or comparatorsubject
+        settings_out.write("\nFIX_UNASSIGNED_MIN_PERCENT = %d\n" % int(minpercent))
+        settings_out.write("\nFIX_UNASSIGNED_COMPARATOR_SUBJECT = '%s'\n" % comparatorsubject)
+
+        cfg = config.xpath('//FixUnassigned')
+        if len(cfg) > 0:
+            cfg = cfg[0]
+            minpercent = cfg.get('minpercent') or minpercent
+        settings_out.write("\nFIX_UNASSIGNED_MIN_PERCENT = %d\n" % int(minpercent))
+
         # Undo restrictions
         maxundosduringedit = 0
         maxundosafteredit = 0

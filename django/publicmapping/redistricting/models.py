@@ -31,7 +31,7 @@ Author:
 from django.core.exceptions import ValidationError
 from django.contrib.gis.db import models
 from django.contrib.gis.gdal import DataSource
-from django.contrib.gis.geos import MultiPolygon,GEOSGeometry,GEOSException,GeometryCollection,Point
+from django.contrib.gis.geos import MultiPolygon,Polygon,GEOSGeometry,GEOSException,GeometryCollection,Point
 from django.contrib.auth.models import User
 from django.db.models import Sum, Max, Q, Count
 from django.db.models.signals import pre_save, post_save, m2m_changed
@@ -765,7 +765,7 @@ class Plan(models.Model):
         district_copy.clone_characteristics_from(district)
                 
     @transaction.commit_on_success
-    def add_geounits(self, districtid, geounit_ids, geolevel, version):
+    def add_geounits(self, districtid, geounit_ids, geolevel, version, keep_old_versions=False):
         """
         Add Geounits to a District. When geounits are added to one 
         District, they are also removed from whichever district they're 
@@ -782,6 +782,7 @@ class Plan(models.Model):
                 to the District.
             geolevel -- The Geolevel of the geounit_ids.
             version -- The version of the Plan that is being modified.
+            keep_old_versions -- Optional. If true, no older versions are purged.
 
         Returns:
             Either 1) the number of Districts changed if adding geounits 
@@ -950,7 +951,7 @@ class Plan(models.Model):
         self.save()
 
         # purge old versions
-        if settings.MAX_UNDOS_DURING_EDIT > 0:
+        if settings.MAX_UNDOS_DURING_EDIT > 0 and not keep_old_versions:
             self.purge_beyond_nth_step(settings.MAX_UNDOS_DURING_EDIT)
 
         # purge the old target if a new one was created
@@ -1395,7 +1396,7 @@ AND st_intersects(
         
         return geounits
 
-    def get_assigned_geounits(self, threshold=100):
+    def get_assigned_geounits(self, threshold=100, version=None):
         """
         Get a list of the geounit ids of the geounits that comprise 
         this plan at the base level. This is different than
@@ -1404,11 +1405,15 @@ AND st_intersects(
 
         Parameters:
             threshold - distance threshold used for buffer in/out optimization
+            version -- The version of the Plan.
 
         Returns:
             A list of tuples containing Geounit IDs and portable ids
             that lie within this Plan. 
         """
+
+        if version == None:
+           version = self.version
 
         # TODO: enhance performance. Tried various ways to speed this up by
         # creating a union of simplified geometries and passing it to get_base_geounits.
@@ -1416,19 +1421,20 @@ AND st_intersects(
         # reduced, but this offered no performance improvement, and instead caused
         # some accuracty issues. This needs further examination.
         geounits = []
-        for district in self.get_districts_at_version(self.version,include_geom=True):
+        for district in self.get_districts_at_version(version,include_geom=True):
             if district.district_id > 0:
                 geounits.extend(district.get_base_geounits(threshold))
         
         return geounits
 
-    def get_unassigned_geounits(self, threshold=100):
+    def get_unassigned_geounits(self, threshold=100, version=None):
         """
         Get a list of the geounit ids of the geounits that do not belong to
         any district of this plan at the base level. 
 
         Parameters:
             threshold - distance threshold used for buffer in/out optimization
+            version -- The version of the Plan.
 
         Returns:
             A list of tuples containing Geounit IDs and portable ids
@@ -1436,7 +1442,10 @@ AND st_intersects(
         """
 
         # The unassigned district contains all the unassigned items.
-        unassigned = self.district_set.filter(district_id=0).order_by('-version')[0]
+        if version:
+            unassigned = self.district_set.filter(district_id=0, version__lte=version).order_by('-version')[0]
+        else:
+            unassigned = self.district_set.filter(district_id=0).order_by('-version')[0]
 
         # Return the base geounits of the unassigned district
         return unassigned.get_base_geounits(threshold)
@@ -1457,6 +1466,147 @@ AND st_intersects(
                 available_districts -= 1
 
         return available_districts
+
+    def fix_unassigned(self, version=None, threshold=100):
+        """
+        Assign unassigned base geounits that are fully contained within
+        or adjacent to another district
+
+        First fix any unassigned geounits that are fully contained within a district.
+        Only fix other adjacent geounits if the minimum percentage of assigned
+        geounits has been reached.
+
+        Parameters:
+            version -- The version of the Plan that is being fixed.
+            threshold - distance threshold used for buffer in/out optimization
+
+        Returns:
+            Whether or not the fix was successful, and a message
+        """
+
+        if version == None:
+           version = self.version
+
+        num_unassigned = 0
+        geolevel = self.legislative_body.get_base_geolevel()
+
+        # Check that there are unassigned geounits to fix
+        unassigned_district = self.district_set.get(district_id=0, version=version)
+        unassigned_geom = unassigned_district.geom
+        if not unassigned_geom or unassigned_geom.empty:
+            return False, 'There are no unassigned units that can be fixed.'
+
+        # Get the unlocked districts in this plan with geometries
+        districts = self.get_districts_at_version(version, include_geom=False)
+        districts = District.objects.filter(id__in=[d.id for d in districts if d.district_id != 0 and not d.is_locked])
+        districts = [d for d in districts if d.geom and not d.geom.empty]
+
+        # Storage for geounits that need to be added. Map of tuples: geounitid -> (district_id, dist_val)
+        to_add = {}
+
+        # Check if any unassigned clusters are within the exterior of a district
+        for unassigned_poly in unassigned_geom:
+            for district in districts:
+                for poly in district.geom:
+                    if unassigned_poly.within(Polygon(poly.exterior_ring)):
+                        for tup in self.get_base_geounits_in_geom(unassigned_poly, threshold=threshold):
+                            to_add[tup[0]] = (district.district_id, 0)
+
+        # Check if all districts have been assigned
+        num_districts = len(self.get_districts_at_version(version, include_geom=False)) - 1
+        not_all_districts_assigned = num_districts < self.legislative_body.max_districts
+        if not_all_districts_assigned and not to_add:
+            return False, 'All districts need to be assigned before fixing can occur. Currently: ' + str(num_districts)
+
+        # Only check for adjacent geounits if all districts are assigned
+        if not not_all_districts_assigned:
+            # Get unassigned geounits, and subtract out any that have been added to to_add
+            unassigned = self.get_unassigned_geounits(threshold=threshold, version=version)
+            unassigned = [t[0] for t in unassigned]
+            num_unassigned = len(unassigned)
+            unassigned = list(set(unassigned) - set(to_add.keys()))
+    
+            # Check that the percentage of assigned base geounits meets the requirements
+            num_total_units = Geounit.objects.filter(geolevel=geolevel).count()
+            pct_unassigned = 1.0 * num_unassigned / num_total_units
+            pct_assigned = 1 - pct_unassigned
+            min_pct = settings.FIX_UNASSIGNED_MIN_PERCENT / 100.0
+            below_min_pct = pct_assigned < min_pct
+            if below_min_pct and not to_add:
+                return False, 'The percentage of assigned units is: ' + str(int(pct_assigned * 100)) + '. Fixing unassigned requires a minimum percentage of: ' + str(settings.FIX_UNASSIGNED_MIN_PERCENT)
+    
+            if not below_min_pct:
+                # Get the unassigned geounits from the ids
+                unassigned = list(Geounit.objects.filter(pk__in=unassigned))
+    
+                # Remove any unassigned geounits that aren't on the edge
+                temp = []
+                for poly in unassigned_geom:
+                    exterior = Polygon(poly.exterior_ring)
+                    for g in unassigned:
+                        if not g in temp and g.geom.intersects(unassigned_geom):
+                            temp.append(g)
+                unassigned = temp
+                
+                # Set up calculator/storage for comparator values (most likely population)
+                # Sum is not imported, because of conflicts with the 'models' Sum
+                ns = 'publicmapping.redistricting.calculators'
+                sum = getattr(getattr(getattr(__import__(ns), 'redistricting'), 'calculators'), 'Sum')        
+                calculator = sum()
+                calculator.arg_dict['value1'] = ('subject', settings.FIX_UNASSIGNED_COMPARATOR_SUBJECT)
+        
+                # Test each unassigned geounit with each unlocked district to see if it should be assigned
+                for district in districts:
+                    # Calculate the comparator value for the district
+                    calculator.compute(district=district)
+                    dist_val = calculator.result
+        
+                    # Check if geounits are touching the district
+                    for poly in district.geom:
+                        exterior = Polygon(poly.exterior_ring)
+                        for geounit in unassigned:
+                            if geounit.geom.touches(exterior):
+                                if (geounit.id not in to_add or dist_val < to_add[geounit.id][1]):
+                                    to_add[geounit.id] = (district.district_id, dist_val)
+
+        # Add all geounits that need to be fixed
+        if to_add:
+            # Compile lists of geounits to add per district
+            district_units = {}
+            for gid, tup in to_add.items():
+                did = tup[0]
+                if did in district_units:
+                    units = district_units[did]
+                else:
+                    units = []
+                    district_units[did] = units
+                units.append(gid)
+
+            # Add units for each district, and update version, since it changes when adding geounits
+            for did, units in district_units.items():
+                self.add_geounits(did, [str(p) for p in units], geolevel, version, True)
+                version = self.version
+                
+            # Fix versions so a single undo can undo the entire set of fixes
+            num_adds = len(district_units.items())
+            if num_adds > 1:
+                # Delete interim unassigned districts
+                self.district_set.filter(district_id=0, version__in=range(self.version - num_adds + 1, self.version)).delete()
+
+                # Set all changed districts to the current version
+                for dist in self.district_set.filter(version__in=range(self.version - num_adds + 1, self.version)):
+                    dist.version = self.version
+                    dist.save()
+
+            # Return status message
+            num_fixed = len(to_add)
+            text = 'Number of units fixed: ' + str(num_fixed)
+            num_remaining = num_unassigned - num_fixed
+            if (num_remaining > 0):
+                text += ', Number of units remaining: ' + str(num_remaining)
+            return True, text
+
+        return False, 'No unassigned units could be fixed. Ensure the appropriate districts are not locked.'
 
     @transaction.commit_manually
     def combine_districts(self, target, components, version=None):

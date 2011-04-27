@@ -969,6 +969,37 @@ def combine_districts(request, planid):
         status['exception'] = traceback.format_exc()
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
+@login_required
+@unique_session_or_json_redirect
+def fix_unassigned(request, planid):
+    """
+    Assign unassigned base geounits that are fully contained
+    or adjacent to another district
+    """
+    
+    status = { 'success': False }
+
+    try:
+        plan = Plan.objects.get(pk=planid)
+    except:
+        status['message'] = 'No plan with the given id'
+        return HttpResponse(json.dumps(status),mimetype='application/json')
+
+    if not can_edit(request.user, plan):
+        status['message'] = 'User can\'t edit the given plan'
+        return HttpResponse(json.dumps(status),mimetype='application/json')
+
+    try:
+        version = int(request.POST.get('version', plan.version))
+        result = plan.fix_unassigned(version)
+        status['success'] = result[0]
+        status['message'] = result[1]
+        status['version'] = plan.version
+    except:
+        status['message'] = 'Could not fix unassigned'
+        status['exception'] = traceback.format_exc()
+    return HttpResponse(json.dumps(status),mimetype='application/json')
+
 
 @login_required
 @unique_session_or_json_redirect

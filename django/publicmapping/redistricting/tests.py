@@ -970,6 +970,165 @@ class PlanTestCase(BaseTestCase):
             characteristic = ComputedCharacteristic.objects.get(subject=subject,district=combined)
             self.assertEqual(characteristic.number, totals[subject], 'Stats (number) don\'t match on combined district e:%d,a:%d' % (totals[subject], characteristic.number))
 
+    def test_fix_unassigned(self):
+        """
+        Test the logic for fixing unassigned geounits in a plan
+        """
+
+        plan = self.plan
+        geounits = list(Geounit.objects.filter(geolevel=self.geolevel).order_by('id'))
+
+        # Ensure the min % setting is set, and then hardcode it for testing
+        self.assertTrue(settings.FIX_UNASSIGNED_MIN_PERCENT > -1, 'FIX_UNASSIGNED_MIN_PERCENT is not set')
+        settings.FIX_UNASSIGNED_MIN_PERCENT = 15
+        self.assertEqual(15, settings.FIX_UNASSIGNED_MIN_PERCENT, 'FIX_UNASSIGNED_MIN_PERCENT did not change')
+
+        # Ensure the comparator subject is set, and then hardcode it for testing
+        self.assertTrue(settings.FIX_UNASSIGNED_COMPARATOR_SUBJECT, 'FIX_UNASSIGNED_COMPARATOR_SUBJECT is not set')
+        settings.FIX_UNASSIGNED_COMPARATOR_SUBJECT = 'TestSubject2'
+        self.assertEqual('TestSubject2', settings.FIX_UNASSIGNED_COMPARATOR_SUBJECT, 'FIX_UNASSIGNED_COMPARATOR_SUBJECT did not change')
+
+        # Try fixing when not all districts exist
+        result = plan.fix_unassigned(threshold=0.1)
+        self.assertFalse(result[0], ('Not all districts exist', result))
+
+        # Change the max number of districts, so we don't have to assign them all for testing
+        leg_body = plan.legislative_body
+        leg_body.max_districts = 2
+        leg_body.save()
+
+        # Try fixing when < min % geounits are assigned
+        result = plan.fix_unassigned(threshold=0.1)
+        self.assertFalse(result[0], ('Not enough % assigned blocks', result))
+
+        # Add all geounits to District1
+        plan.add_geounits(self.district1.district_id, [str(x.id) for x in geounits], self.geolevel.id, plan.version)
+        district1 = max(District.objects.filter(plan=plan,district_id=self.district1.district_id),key=lambda d: d.version)
+
+        # Ensure geounits were assigned correctly
+        unassigned = plan.get_unassigned_geounits(threshold=0.1)
+        self.assertEqual(0, len(unassigned), ("Unassigned has geounits", len(unassigned), result))
+        num = len(district1.get_base_geounits(0.1))
+        self.assertEqual(730, num, ("District 1 doesn't contain all of the geounits", num, result))
+
+        # Fixing unassigned should fail, since there are no unassigned geounits
+        result = plan.fix_unassigned(threshold=0.1)
+        self.assertFalse(result[0], ('No unassigned geounits', result))
+
+        # Create one small and one large unassigned holes in district 1
+        units = geounits[10:12] + geounits[19:21] + geounits[28:30] + [geounits[47]]
+        plan.add_geounits(0, [str(x.id) for x in units], self.geolevel.id, plan.version)
+        district1 = max(District.objects.filter(plan=plan,district_id=self.district1.district_id),key=lambda d: d.version)
+        version_with_holes = district1.version
+
+        # Ensure geounits were unassigned correctly
+        unassigned = plan.get_unassigned_geounits(threshold=0.1)
+        self.assertEqual(63, len(unassigned), ("Unassigned has wrong number of geounits", len(unassigned), result))
+        num = len(district1.get_base_geounits(0.1))
+        self.assertEqual(730 - 63, num, ("District 1 has the wrong number of the geounits", num, result))
+
+        # Fix the holes
+        result = plan.fix_unassigned(threshold=0.1)
+        self.assertTrue(result[0], ('Holes should have been closed', result))
+        unassigned = plan.get_unassigned_geounits(threshold=0.1)
+        self.assertEqual(0, len(unassigned), ("Unassigned should be empty", len(unassigned), result))
+
+        # Try the same thing when the district with holes is locked
+        district1 = District.objects.get(plan=plan, district_id=self.district1.district_id, version=version_with_holes)
+        district1.is_locked = True
+        district1.save()
+        result = plan.fix_unassigned(threshold=0.1, version=version_with_holes)
+        self.assertFalse(result[0], ('District locked, nothing should be fixed', result))
+
+        # Unassign some units on the edges (not holes)
+        units = geounits[0:1] + geounits[9:10] + [geounits[3]]
+        plan.add_geounits(0, [str(x.id) for x in units], self.geolevel.id, plan.version)
+        district1 = max(District.objects.filter(plan=plan,district_id=self.district1.district_id),key=lambda d: d.version)
+        version_with_edges = district1.version
+
+        # Ensure geounits were unassigned correctly
+        unassigned = plan.get_unassigned_geounits(threshold=0.1)
+        self.assertEqual(27, len(unassigned), ("Unassigned has wrong number of geounits", len(unassigned), result))
+        num = len(district1.get_base_geounits(0.1))
+        self.assertEqual(730 - 27, num, ("District 1 has the wrong number of the geounits", num, result))
+
+        # Fix the edges -- this only fixes some of the base geounits
+        result = plan.fix_unassigned(threshold=0.1)
+        self.assertTrue(result[0], ('Edges should have been assigned', result))
+        unassigned = plan.get_unassigned_geounits(threshold=0.1)
+        self.assertEqual(12, len(unassigned), ("Unassigned shouldn't quite be empty", len(unassigned), result))
+       
+        # Fix again -- this fixes some more of the base geounits
+        result = plan.fix_unassigned(threshold=0.1)
+        self.assertTrue(result[0], ('Edges should have been assigned', result))
+        unassigned = plan.get_unassigned_geounits(threshold=0.1)
+        self.assertEqual(4, len(unassigned), ("Unassigned should still have some", len(unassigned), result))
+
+        # Fix again -- this should complete the fix
+        result = plan.fix_unassigned(threshold=0.1)
+        self.assertTrue(result[0], ('Edges should have been assigned', result))
+        unassigned = plan.get_unassigned_geounits(threshold=0.1)
+        self.assertEqual(0, len(unassigned), ("Unassigned should be empty after 3 fixes", len(unassigned), result))
+
+        # Create a small second district in the lower-left
+        units = geounits[0:1] + geounits[9:10]
+        plan.add_geounits(self.district2.district_id, [str(x.id) for x in units], self.geolevel.id, plan.version)
+
+        # Create an area of unassigned districts between the two districts (right angle)
+        units = geounits[18:20] + [geounits[2], geounits[11]]
+        plan.add_geounits(0, [str(x.id) for x in units], self.geolevel.id, plan.version)
+
+        # Ensure geounits were unassigned correctly
+        district1 = max(District.objects.filter(plan=plan,district_id=self.district1.district_id),key=lambda d: d.version)
+        district2 = max(District.objects.filter(plan=plan,district_id=self.district2.district_id),key=lambda d: d.version)
+        unassigned = plan.get_unassigned_geounits(threshold=0.1)
+        self.assertEqual(36, len(unassigned), ("Unassigned shouldn't be empty", len(unassigned), result))
+        num = len(district2.get_base_geounits(0.1))
+        self.assertEqual(18, num, ("District 2 has the wrong number of the geounits", num, result))
+        num = len(district1.get_base_geounits(0.1))
+        self.assertEqual(730 - 18 - 36, num, ("District 1 has the wrong number of the geounits", num, result))
+
+        # Fix, and ensure the blocks are partially assigned to the one with the lower population
+        result = plan.fix_unassigned(threshold=0.1)
+        district1 = max(District.objects.filter(plan=plan,district_id=self.district1.district_id),key=lambda d: d.version)
+        district2 = max(District.objects.filter(plan=plan,district_id=self.district2.district_id),key=lambda d: d.version)
+        self.assertTrue(result[0], ('Right-angle should have been partially fixed', result))
+        unassigned = plan.get_unassigned_geounits(threshold=0.1)
+        self.assertEqual(10, len(unassigned), ("Unassigned shouldn't quite be empty", len(unassigned), result))
+        num = len(district2.get_base_geounits(0.1))
+        self.assertEqual(18 + 4, num, ("District 2 has the wrong number of the geounits", num, result))
+        num = len(district1.get_base_geounits(0.1))
+        self.assertEqual(730 - 18 - 36 + 22, num, ("District 1 has the wrong number of the geounits", num, result))
+        version_before = plan.version
+
+        # Fix again -- this fixes the remaining base geounits
+        result = plan.fix_unassigned(threshold=0.1)
+        district1 = max(District.objects.filter(plan=plan,district_id=self.district1.district_id),key=lambda d: d.version)
+        district2 = max(District.objects.filter(plan=plan,district_id=self.district2.district_id),key=lambda d: d.version)
+        self.assertTrue(result[0], ('Right-angle should have been fixed', result))
+        unassigned = plan.get_unassigned_geounits(threshold=0.1)
+        self.assertEqual(0, len(unassigned), ("Unassigned should be empty", len(unassigned), result))
+        num = len(district2.get_base_geounits(0.1))
+        self.assertEqual(18 + 4 + 5, num, ("District 2 has the wrong number of the geounits", num, result))
+        num = len(district1.get_base_geounits(0.1))
+        self.assertEqual(730 - 18 - 36 + 22 + 5, num, ("District 1 has the wrong number of the geounits", num, result))
+
+        # Try that again with the smaller district locked
+        district2 = District.objects.get(plan=plan, district_id=self.district2.district_id, version=version_before)
+        district2.is_locked = True
+        district2.save()
+        result = plan.fix_unassigned(threshold=0.1, version=version_before)
+        district1 = max(District.objects.filter(plan=plan,district_id=self.district1.district_id),key=lambda d: d.version)
+        district2 = max(District.objects.filter(plan=plan,district_id=self.district2.district_id),key=lambda d: d.version)
+        self.assertTrue(result[0], ('Right-angle should have been fixed', result))
+        unassigned = plan.get_unassigned_geounits(threshold=0.1)
+        self.assertEqual(0, len(unassigned), ("Unassigned should be empty", len(unassigned), result))
+        num = len(district2.get_base_geounits(0.1))
+        self.assertEqual(18 + 4, num, ("District 2 has the wrong number of the geounits", num, result))
+        num = len(district1.get_base_geounits(0.1))
+        self.assertEqual(730 - 18 - 36 + 22 + 10, num, ("District 1 has the wrong number of the geounits", num, result))
+
+
 class GeounitMixTestCase(BaseTestCase):
     """
     Unit tests to test the mixed geounit spatial queries.
