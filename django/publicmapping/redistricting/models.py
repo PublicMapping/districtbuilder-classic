@@ -209,6 +209,20 @@ class LegislativeBody(models.Model):
         ordered.reverse()
         return ordered
 
+    def is_below(self, legislative_body):
+        """
+        Compares this legislative body to a second legislative body, and
+        determines the nesting order (which one is above or below). This
+        assumes the relationship can be determined from max_districts.
+        
+        Parameters:
+            legislative_body -- The LegislativeBody in which to perform the comparison
+
+        Returns:
+            True if this this legislative body is below the one passed in, False otherwise
+        """
+        return self.max_districts > legislative_body.max_districts
+
     def __unicode__(self):
         """
         Represent the LegislativeBody as a unicode string. This is the 

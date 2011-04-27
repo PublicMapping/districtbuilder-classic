@@ -3148,3 +3148,30 @@ class TaggingCase(BaseTestCase):
         intersection = TaggedItem.objects.get_union_by_model(District.objects.all(), tags)
 
         self.assertEquals(2, intersection.count(), 'Number of models with type= tags are not correct.')
+
+
+class NestingTestCase(BaseTestCase):
+    """
+    Unit tests to test Legislative chamber nesting 
+    """
+    fixtures = ['redistricting_testdata.json']
+
+    def test_child_parent(self):
+        # Create 3 nested legislative bodies
+        bottom = LegislativeBody(name="bottom", max_districts=100)
+        bottom.save()
+        middle = LegislativeBody(name="middle", max_districts=20)
+        middle.save()
+        top = LegislativeBody(name="top", max_districts=4)
+        top.save()
+
+        # Try out each permutation
+        self.assertFalse(bottom.is_below(bottom), "Bottom was below Bottom")
+        self.assertTrue(bottom.is_below(middle), "Bottom wasn't below Middle")
+        self.assertTrue(bottom.is_below(top), "Bottom wasn't below Top")
+        self.assertFalse(middle.is_below(bottom), "Middle was below Bottom")
+        self.assertFalse(middle.is_below(middle), "Middle was below Middle")
+        self.assertTrue(middle.is_below(top), "Middle wasn't below Top")
+        self.assertFalse(top.is_below(bottom), "Top was below Bottom")
+        self.assertFalse(top.is_below(middle), "Top was below Middle")
+        self.assertFalse(top.is_below(top), "Top was below Top")
