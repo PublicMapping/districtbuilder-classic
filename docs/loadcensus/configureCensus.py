@@ -256,6 +256,23 @@ class Sld_Range_Template(ListTemplate):
         """
 
 
+class Sld_URange_Template(ListTemplate):
+    _template = """
+        <Rule>
+          <Title>%(bottom)s-%(top)s</Title>
+          <ogc:Filter>
+              <ogc:PropertyIsGreaterThanOrEqualTo>
+                <ogc:PropertyName>number</ogc:PropertyName>
+                <ogc:Literal>%(bottom)s</ogc:Literal>
+              </ogc:PropertyIsGreaterThanOrEqualTo>
+          <PolygonSymbolizer>
+            <Fill>
+              <CssParameter name="fill">%(fill)s</CssParameter>
+              <CssParameter name="fill-opacity">%(fillopacity)s</CssParameter>
+            </Fill>
+          </PolygonSymbolizer>
+        </Rule>
+        """
 
 def gensld_none(geoname):
         target_file = '/projects/publicmapping/trunk/sld/%s_none.sld' % (geoname)       
@@ -280,10 +297,6 @@ def gensld_choro(geoname,varname,vartitle,quantiles):
         target_file = '/projects/publicmapping/trunk/sld/%s_%s.sld' % (geoname,lvarname) 
         varabs="Grayscale choropleth based on quantiles of %s" % (varname)
         valuelist= [
-          {"top": str(quantiles[5]),
-          "bottom": str(quantiles[4]),
-          "fill": "#000000",
-          "fillopacity":"1.0"},
           {"top": str(quantiles[4]),
           "bottom": str(quantiles[3]),
           "fill": "#444444",
@@ -300,8 +313,14 @@ def gensld_choro(geoname,varname,vartitle,quantiles):
           "bottom": str(quantiles[0]),
           "fill": "#EEEEEE",
           "fillopacity":"1.0"}]
-        f = open(target_file,'w')
-        f.write(str( SldList_Template(layername=lvarname,layertitle=vartitle,layerabs=varabs,slst=[],sli=Empty_Template, lst=valuelist,li=Sld_Range_Template,elst=[{"title":"Boundary","stroke":"#555555","strokewidth":"0.25","strokeopacity":"1.0"}],eli=Sld_Line_Template) ))
+
+   	svaluelist = [{"top": str(quantiles[5]),
+          "bottom": str(quantiles[4]),
+          "fill": "#000000",
+          "fillopacity":"1.0"}
+
+        f = open(target_file,'w')]
+        f.write(str( SldList_Template(layername=lvarname,layertitle=vartitle,layerabs=varabs,slst=svaluelist,sli=Sld_URange_Template, lst=valuelist,li=Sld_Range_Template,elst=[{"title":"Boundary","stroke":"#555555","strokewidth":"0.25","strokeopacity":"1.0"}],eli=Sld_Line_Template) ))
 	f.write("\n")
         f.close()
         os.chmod(target_file,stat.S_IRUSR|stat.S_IRGRP|stat.S_IROTH)  
@@ -1179,22 +1198,20 @@ class Config_Template(DictionaryTemplate):
       </GeoLevel>
     </GeoLevels>
 
-    <!--
     <Templates>
         <Template name="Congressional">
             <LegislativeBody ref="congress"/>
-             <Blockfile path="/projects/publicmapping/data/cd111_index.csv" />
+             <Blockfile path="/projects/publicmapping/data/congress_generated_index.csv" />
         </Template>
         <Template name="State House">
             <LegislativeBody ref="house"/>
-            <Blockfile path="/projects/publicmapping/data/sldl10_index.csv" />
+            <Blockfile path="/projects/publicmapping/data/house_generated_index.csv" />
         </Template>
         <Template name="State Senate">
             <LegislativeBody ref="senate"/>
-            <Blockfile path="/projects/publicmapping/data/sldu10_index.csv" />
+            <Blockfile path="/projects/publicmapping/data/senate_generated_index.csv" />
         </Template>
     </Templates>
-    -->
 
     <Project root="/projects/publicmapping/trunk" sessionquota="5" 
              sessiontimeout="15">

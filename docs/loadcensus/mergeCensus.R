@@ -38,3 +38,8 @@ options(warn=-1)
 write.dbf(merged.df,"census_blocks.dbf")
 options(warn=0)
 
+# write template files
+write.table(cbind(as.character(merged.df$GEOID10),merged.df$CD),file="congress_generated_index.csv",quote=F,row.names=F,col.names=F,sep=",")
+write.table(cbind(as.character(merged.df$GEOID10),merged.df$SLDL),file="house_generated_index.csv",quote=F,row.names=F,col.names=F,sep=",")
+write.table(cbind(as.character(merged.df$GEOID10),merged.df$SLDU),file="senate_generated_index.csv",quote=F,row.names=F,col.names=F,sep=",")
+
