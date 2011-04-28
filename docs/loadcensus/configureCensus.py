@@ -246,7 +246,8 @@ class Sld_Range_Template(ListTemplate):
                 <ogc:PropertyName>number</ogc:PropertyName>
                 <ogc:Literal>%(bottom)s</ogc:Literal>
               </ogc:PropertyIsGreaterThanOrEqualTo>
-            </ogc:And>          </ogc:Filter>          
+            </ogc:And>
+          </ogc:Filter>          
           <PolygonSymbolizer>
             <Fill>
               <CssParameter name="fill">%(fill)s</CssParameter>
@@ -266,6 +267,7 @@ class Sld_URange_Template(ListTemplate):
                 <ogc:PropertyName>number</ogc:PropertyName>
                 <ogc:Literal>%(bottom)s</ogc:Literal>
               </ogc:PropertyIsGreaterThanOrEqualTo>
+          </ogc:Filter>          
           <PolygonSymbolizer>
             <Fill>
               <CssParameter name="fill">%(fill)s</CssParameter>
