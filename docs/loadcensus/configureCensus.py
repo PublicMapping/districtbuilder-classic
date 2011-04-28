@@ -387,37 +387,37 @@ class Config_Template(DictionaryTemplate):
             <!-- A district score that returns a percentage -->
             <ScoreFunction id="district_blkvap_percent" type="district"
                 calculator="publicmapping.redistricting.calculators.Percent"
-                label="Black vap" user_selectable="true">
+                label="Black VAP" user_selectable="true">
                 <SubjectArgument name="numerator" ref="vap_b" />
                 <SubjectArgument name="denominator" ref="vap" />
             </ScoreFunction>
             <ScoreFunction id="district_blkvap_thresh" type="district"
                 calculator="publicmapping.redistricting.calculators.Threshold"
-                label="Black vap Threshold">
+                label="Black VAP Threshold">
                 <ScoreArgument name="value" ref="district_blkvap_percent" />
                 <Argument name="threshold" value="0.5" />
             </ScoreFunction>
             <ScoreFunction id="district_hispvap_percent" type="district"
                 calculator="publicmapping.redistricting.calculators.Percent"
-                label="His. vap" user_selectable="true">
+                label="Hisp. VAP" user_selectable="true">
                 <SubjectArgument name="numerator" ref="vap_h" />
                 <SubjectArgument name="denominator" ref="vap" />
             </ScoreFunction>
             <ScoreFunction id="district_hispvap_thresh" type="district"
                 calculator="publicmapping.redistricting.calculators.Threshold"
-                label="His. vap Threshold">
+                label="Hisp. VAP Threshold">
                 <ScoreArgument name="value" ref="district_hispvap_percent" />
                 <Argument name="threshold" value="0.5" />
             </ScoreFunction>
             <ScoreFunction id="district_navap_percent" type="district"
                 calculator="publicmapping.redistricting.calculators.Percent"
-                label="Black vap" user_selectable="true">
+                label="Black VAP" user_selectable="true">
                 <SubjectArgument name="numerator" ref="vap_na" />
                 <SubjectArgument name="denominator" ref="vap" />
             </ScoreFunction>
             <ScoreFunction id="district_navap_thresh" type="district"
                 calculator="publicmapping.redistricting.calculators.Threshold"
-                label="Black vap Threshold">
+                label="Black VAP Threshold">
                 <ScoreArgument name="value" ref="district_navap_percent" />
                 <Argument name="threshold" value="0.5" />
             </ScoreFunction>
@@ -709,16 +709,16 @@ class Config_Template(DictionaryTemplate):
 
             <ScoreFunction id="plan_majority_minority_blk" type="plan"
                 calculator="publicmapping.redistricting.calculators.MajorityMinority"
-                label="Black vap Majority (&gt; 50%%)"
+                label="Black VAP Majority (&gt; 50%%)"
                 description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
                 <SubjectArgument name="population" ref="vap" />
                 <SubjectArgument name="minority1" ref="vap_b" />
-                <Argument name="target" value="1" />
+                <Argument name="target" value="0" />
             </ScoreFunction>
 
             <ScoreFunction id="plan_majority_minority_hisp" type="plan"
                 calculator="publicmapping.redistricting.calculators.MajorityMinority"
-                label="Hisp. vap Majority (&gt; 50%%)"
+                label="Hisp. VAP Majority (&gt; 50%%)"
                 description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
                 <SubjectArgument name="population" ref="vap" />
                 <SubjectArgument name="minority1" ref="vap_h" />
@@ -727,7 +727,7 @@ class Config_Template(DictionaryTemplate):
 
             <ScoreFunction id="plan_majority_minority_na" type="plan"
                 calculator="publicmapping.redistricting.calculators.MajorityMinority"
-                label="Native Americah Majority (&gt; 50%%)"
+                label="Native American Majority (&gt; 50%%)"
                 description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
                 <SubjectArgument name="population" ref="vap" />
                 <SubjectArgument name="minority1" ref="vap_na" />
