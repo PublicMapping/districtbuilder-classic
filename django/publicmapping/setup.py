@@ -350,7 +350,7 @@ def merge_config(config, verbose):
             if server:
                 settings_out.write("BARD_SERVER = '%s'\n" % server)
             else:
-                settings_out.write("BARD_SERVER = 'https://localhost/reporting'")
+                settings_out.write("BARD_SERVER = 'https://localhost/reporting'\n")
 
         else:
             # Write this setting to the report settings.
