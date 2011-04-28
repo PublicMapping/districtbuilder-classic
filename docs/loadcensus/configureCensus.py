@@ -51,6 +51,7 @@ def     drop_db():
         subprocess.check_call(["service","tomcat6","stop"])
         subprocess.check_call(["service","celeryd","stop"])
         subprocess.check_call(["service","apache2","stop"])
+        subprocess.check_call(["service","apache2","restart"])
         subprocess.check_call(['su postgres -c "dropdb publicmapping"'],shell=True)
         subprocess.check_call(['cat /projects/publicmapping/trunk/sql/publicmapping_db.sql | su postgres -c "psql -f - postgres"'],shell=True)
         subprocess.check_call(["service","apache2","start"])
@@ -317,9 +318,9 @@ def gensld_choro(geoname,varname,vartitle,quantiles):
    	svaluelist = [{"top": str(quantiles[5]),
           "bottom": str(quantiles[4]),
           "fill": "#000000",
-          "fillopacity":"1.0"}
+          "fillopacity":"1.0"}]
 
-        f = open(target_file,'w')]
+        f = open(target_file,'w')
         f.write(str( SldList_Template(layername=lvarname,layertitle=vartitle,layerabs=varabs,slst=svaluelist,sli=Sld_URange_Template, lst=valuelist,li=Sld_Range_Template,elst=[{"title":"Boundary","stroke":"#555555","strokewidth":"0.25","strokeopacity":"1.0"}],eli=Sld_Line_Template) ))
 	f.write("\n")
         f.close()
