@@ -1150,6 +1150,11 @@
                 transform that generates the HTML content in the reporting
                 tab.
 
+                The "server" attribute is the optional URL of another
+                server that runs BARD reports for this web site.
+                E.G., 'http://reporting.server.com'.  Leave off the trailing
+                slash.
+
                 NOTE: it is important that all subjectref attributes of the
                 "...Var" elements below match attributes of the original
                 block shapefile from which the BARD map is derived.

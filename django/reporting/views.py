@@ -35,7 +35,7 @@ from rpy2 import robjects
 from rpy2.robjects import r, rinterface
 from rpy2.rlike import container as rpc
 from decimal import *
-import settings, threading, traceback, os, sys, time
+import settings, threading, traceback, os, sys, time, tempfile, shutil
 
 def load_bard_workspace():
     """
@@ -146,7 +146,7 @@ def drop_error(tempdir, basename, msg):
     """
     Drop an error .html output file and clean up the .pending file.
     """
-    output = os.open('%s/%s.html' % (tempdir, basename,), 'w')
+    output = open('%s/%s.html' % (tempdir, basename,), 'w')
     output.write("""<html>
 <h1>Error Generating Report</h1>
 <p>Your report could not be generated. Please try again.</p>
@@ -157,7 +157,10 @@ def drop_error(tempdir, basename, msg):
 -->
 """ % msg)
     output.close()
-    os.unlink('%s/%s.pending' % (tempdir, basename,))
+    try:
+        os.unlink('%s/%s.pending' % (tempdir, basename,))
+    except:
+        return
 
 @csrf_exempt
 def getreport(request):
@@ -338,17 +341,24 @@ def getreport(request):
 
     try:
         r.copyR2HTMLfiles(tempdir)
-        report = r.HTMLInitFile(tempdir, filename=basename, BackGroundColor="#BBBBEE", Title="Plan Analysis")
+        # Write to a temp file so that the reports-checker doesn't see it early
+        report = r.HTMLInitFile(tempfile.gettempdir(), filename=basename, BackGroundColor="#BBBBEE", Title="Plan Analysis")
         title = r['HTML.title']
         r['HTML.title']("Plan Analysis", HR=2, file=report)
-        # Now write the report to the temp dir
         r.PMPreport( bardplan, block_ids, file = report, popVar = pop_var, popVarExtra = pop_var_extra, ratioVars = ratio_vars, splitVars = split_vars, repCompactness = rep_compactness, repCompactnessExtra = rep_compactness_extra, repSpatial = rep_spatial, repSpatialExtra = rep_spatial_extra)
         r.HTMLEndFile()
+
+        # Now move the report back to the reports directory dir
+        shutil.move('%s/%s.html' % (tempfile.gettempdir(), basename), tempdir)
 
         if settings.DEBUG:
             print "Removing pending file."
 
-        os.unlink('%s/%s.pending' % (tempdir, basename))
+        try:
+            os.unlink('%s/%s.pending' % (tempdir, basename))
+        except:
+            if settings.DEBUG:
+                print "No pending file to remove - report finished"
 
         status['status'] = 'success'
         status['retval'] = '%s.html' % basename

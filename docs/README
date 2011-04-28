@@ -362,6 +362,12 @@ update support, and install tmpreaper and cron jobs.
 
     /projects/publicmapping/local/reports
 
+ 3. You can also install the "reporting" app onto another server so that 
+    your web server is separated from your reporting server. If you decide
+    to do so, you can set the BARD_SERVER variable in your BardConfig in 
+    the xml file.  Use a fully qualified domain name, e.g. 
+    http://reporting.server.com
+
 == Celery Configuration ==
     Some processes take too long to happen over a synchronous web 
     connection. The app uses a process queue called celery to make

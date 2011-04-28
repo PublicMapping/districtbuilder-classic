@@ -347,6 +347,12 @@ def merge_config(config, verbose):
             settings_out.write("BARD_BASESHAPE = '%s'\n" % cfg.get('shape'))
             settings_out.write("BARD_TRANSFORM = '%s'\n" % cfg.get('transform'))
             settings_out.write("BARD_TEMP = '%s'\n" % cfg.get('temp'))
+            server = cfg.get('server')
+            if server:
+                settings_out.write("BARD_SERVER = '%s'\n" % server)
+            else:
+                settings_out.write("BARD_SERVER = 'https://localhost/reporting'\n")
+
         else:
             # Write this setting to the report settings.
             rsettings_out.write("\nREPORTS_ENABLED = False\n")
