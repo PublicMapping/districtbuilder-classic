@@ -43,6 +43,7 @@ from django.template.loader import render_to_string
 from django.contrib.comments.models import Comment
 from django.contrib.contenttypes.models import ContentType
 from redistricting.calculators import Schwartzberg, Contiguity
+from tagging.models import TaggedItem
 from datetime import datetime
 from copy import copy
 from decimal import *
@@ -746,9 +747,12 @@ class Plan(models.Model):
 
         # since comments are loosely bound, manually remove them, too
         pks = deleteme.values_list('id',flat=True)
-        pks = map(lambda id:str(id), pks) # some genious uses text as a pk?
+        pkstr = map(lambda id:str(id), pks) # some genious uses text as a pk?
         ct = ContentType.objects.get(app_label='redistricting',model='district')
-        Comment.objects.filter(object_pk__in=pks,content_type=ct).delete()
+        Comment.objects.filter(object_pk__in=pkstr,content_type=ct).delete()
+
+        # since tags are loosely bound, manually remove them, too
+        TaggedItem.objects.filter(object_id__in=pks,content_type=ct).delete()
 
         # delete all districts at once
         deleteme.delete()
@@ -786,9 +790,8 @@ class Plan(models.Model):
         district_copy.id = None
         district_copy.save()
 
-        # Clone the characteristings to this new version
-        district_copy.clone_characteristics_from(district)
-        district_copy.clone_comments_from(district)
+        # Clone the characteristics, comments and tags to this new version
+        district_copy.clone_relations_from(district)
                 
     @transaction.commit_on_success
     def add_geounits(self, districtid, geounit_ids, geolevel, version, keep_old_versions=False):
@@ -865,9 +868,9 @@ class Plan(models.Model):
                     district_copy.id = None
                     district_copy.save()
 
-                    # Clone the characteristings to this new version
-                    district_copy.clone_characteristics_from(district)
-                    district_copy.clone_comments_from(district)
+                    # Clone the characteristics, comments, and tags to this 
+                    # new version
+                    district_copy.clone_relations_from(district)
 
                     fixed = True
 
@@ -903,9 +906,8 @@ class Plan(models.Model):
             # There is always a geometry for the district copy
             district_copy.simplify() # implicit save
 
-            # Clone the characteristings to this new version
-            district_copy.clone_characteristics_from(district)
-            district_copy.clone_comments_from(district)
+            # Clone the characteristcs, comments, and tags to this new version
+            district_copy.clone_relations_from(district)
 
             # Update the district stats
             district_copy.delta_stats(geounits,False)
@@ -965,9 +967,8 @@ class Plan(models.Model):
 
         target_copy.simplify() # implicit save happens here
 
-        # Clone the characteristics to this new version
-        target_copy.clone_characteristics_from(target)
-        target_copy.clone_comments_from(target)
+        # Clone the characteristics, comments, and tags to this new version
+        target_copy.clone_relations_from(target)
 
         # Update the district stats
         target_copy.delta_stats(geounits,True)
@@ -1094,8 +1095,7 @@ class Plan(models.Model):
         if newname  == '':
             pasted.name = self.legislative_body.member % pasted.district_id
             pasted.save();
-        pasted.clone_characteristics_from(district)
-        pasted.clone_comments_from(district)
+        pasted.clone_relations_from(district)
         
         # For the remaning districts in the plan,
         for existing in others:
@@ -1134,8 +1134,7 @@ class Plan(models.Model):
                         new_district = copy(existing)
                         new_district.id = None
                         new_district.save()
-                        new_district.clone_characteristics_from(existing)
-                        new_district.clone_comments_from(existing)
+                        new_district.clone_relations_from(existing)
                     else:
                         new_district = existing
                     new_district.geom = difference
@@ -1909,12 +1908,13 @@ class District(models.Model):
         return changed
 
 
-    def clone_characteristics_from(self, origin):
+    def clone_relations_from(self, origin):
         """
-        Copy the computed characteristics from one district to another.
+        Copy the computed characteristics, comments, and tags from one 
+        district to another.
 
-        Cloning District Characteristics is required when cloning, 
-        copying, or instantiating a template district.
+        Cloning District Characteristics, Comments and Tags are required when 
+        cloning, copying, or instantiating a template district.
 
         Parameters:
             origin -- The source District.
@@ -1925,21 +1925,19 @@ class District(models.Model):
             c.district = self
             c.save()
 
-    def clone_comments_from(self, origin):
-        """
-        Copy the comments from one district to another.
-
-        Cloning District Comments is required when any district is edited.
-
-        Parameters:
-            origin -- The source District.
-        """
         ct = ContentType.objects.get(app_label='redistricting', model='district')
         cmts = Comment.objects.filter(object_pk=origin.id, content_type=ct)
         for cmt in cmts:
             cmt.id = None
             cmt.object_pk = self.id
             cmt.save()
+
+        items = TaggedItem.objects.filter(object_id=origin.id, content_type=ct)
+        for item in items:
+            item.id = None
+            item.object_id = self.id
+            item.save()
+
 
     def get_base_geounits(self, threshold=100):
         """

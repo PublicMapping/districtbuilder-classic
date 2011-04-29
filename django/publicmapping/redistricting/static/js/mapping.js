@@ -1260,6 +1260,7 @@ function mapinit(srs,maxExtent) {
         {
             hover: false,
             onSelect: function(feature){
+                console.log('onSelect(), feature.fid:'+feature.fid);
                 districtComment.html('<div class="commentloading"><h3>Loading Comments...</h3></div>');
                 districtComment.dialog('option','buttons',{
                     'OK': function() {
@@ -1267,33 +1268,58 @@ function mapinit(srs,maxExtent) {
                         districtIdControl.clickoutFeature(feature);
                     }
                 });
+                districtComment.dialog('option','close', function(){
+                    districtIdControl.clickoutFeature(feature);
+                });
                 districtComment.dialog('option','title','Please Wait...');
                 districtComment.dialog('open');
 
-                var badComment = function(xhr, textStatus, message) {
-                    districtComment.dialog('option','buttons',{
-                        'Close': function() {
+                var getErrorCallback = function(ft) {
+                    return function(xhr, textStatus, message) {
+                        console.log('error(), ft.fid:',ft.fid);
+                        districtComment.dialog('option','buttons',{
+                            'Close': function() {
+                                districtComment.dialog('close');
+                                districtIdControl.clickoutFeature(ft);
+                            }
+                        });
+                        districtComment.dialog('option','title','Oops!');
+                        districtComment.html('<div>Sorry, your information could not be saved. Please try again later.</div>');
+                    };
+                };
+
+                var getSuccessCallback = function(ft) {
+                    return function(data, textStatus, xhr) {
+                        console.log('success(), ft.fid:',ft.fid);
+                        if (xhr.status == 200 && data.success) {
                             districtComment.dialog('close');
-                            districtIdControl.clickoutFeature(feature);
+                            districtIdControl.clickoutFeature(ft);
+
+                            // The district may have been removed when reloading
+                            // the plan geometry -- get the same feature ID as
+                            // the one we are referencing, but this time, make
+                            // sure it's the one on the map.
+                            var dLayer = olmap.getLayersByName('Current Plan')[0];
+                            for (var i = 0; i < dLayer.features.length; i++) {
+                               if (dLayer.features[i].fid == ft.fid) {
+                                   ft = dLayer.features[i];
+                                   break;
+                               }
+                            }
+                            districtIdControl.clickFeature(ft);
+
+                            PLAN_VERSION = data.version;
+                            var updateAssignments = true;
+                            $('#map').trigger('version_changed', [data.version,updateAssignments]);
                         }
-                    });
-                    districtComment.dialog('option','title','Oops!');
-                    districtComment.html('<div>Sorry, your comment could not be saved. Please try again later.</div>');
+                        else {
+                            var badComment = getErrorCallback(ft);
+                            badComment(xhr, textStatus, 'Sorry, your information could not be saved. Please try again later.</div>');
+                        }
+                    };
                 };
 
-                var goodComment = function(data, textStatus, xhr) {
-                    if (xhr.status == 200 && data.success) {
-                        districtComment.dialog('close');
-                        districtIdControl.clickoutFeature(feature);
-                        var updateAssignments = false;
-                        $('#map').trigger('version_changed',[data.version, updateAssignments]);
-                    }
-                    else {
-                        badComment(xhr, textStatus, 'Sorry, your comment could not be saved. Please try again later.</div>');
-                    }
-                };
-
-                var postComment = function() {
+                var postComment = function(evt) {
                     var submit = $('#submit-mode');
                     submit.val('Post');
                     submit.attr('name', 'post');
@@ -1318,13 +1344,46 @@ function mapinit(srs,maxExtent) {
                         type: form.attr('method'),
                         url: form.attr('action'), 
                         data: data,
-                        success: goodComment,
-                        error: badComment
+                        success: getSuccessCallback(feature),
+                        error: getErrorCallback(feature)
                     });
+
+                    evt.stopPropagation();
+                    return false;
                 }
 
+                var deleteComment = function(evt) {
+                    var cmt = $(this).attr('comment_id');
+                    $.ajax({
+                        type:'DELETE',
+                        url: '/districtmapping/plan/' + PLAN_ID + '/district/' + evt.data.district_id + '/comment/' + cmt + '/',
+                        data: {
+                            version: getPlanVersion(),
+                            comment: cmt
+                        },
+                        success: getSuccessCallback(feature),
+                        error: getErrorCallback(feature)
+                    });
+                };
+
+                var saveLabelInput = function(evt) {
+                    var type = (evt.target.name == 'savelabel') ? 'label' : 'type';
+                    var url = '/districtmapping/plan/' + PLAN_ID + '/district/' + feature.fid + '/tags/' + type + '/';
+
+                    $.ajax({
+                        type: 'POST',
+                        url: url,
+                        data: {
+                            tags: $('#id_' + type).val(),
+                            version: getPlanVersion()
+                        },
+                        success: getSuccessCallback(feature),
+                        error: getErrorCallback(feature)
+                    });
+                };
+
                 $.ajax({
-                    method:'GET',
+                    type:'GET',
                     url: '/districtmapping/plan/' + PLAN_ID + '/district/' + feature.attributes.district_id + '/comments/',
                     data: {
                         version: getPlanVersion()
@@ -1333,14 +1392,31 @@ function mapinit(srs,maxExtent) {
                         if (xhr.status == 200 && data.success) {
                             districtComment.dialog('close');
                             districtComment.html(data.markup);
-                            districtComment.dialog('option','buttons', {
-                                'Cancel': function() {
-                                    districtComment.dialog('close');
-                                    districtIdControl.clickoutFeature(feature);
-                                },
-                                'OK': postComment
-                            });
+                            districtComment.dialog('option','buttons',{});
                             districtComment.dialog('option','title',feature.attributes.label);
+                            var commentDel = districtComment.find('button.delete_comment');
+                            commentDel.bind('click', {district_id:feature.fid}, deleteComment);
+                            commentDel.button({icons: {primary: 'icon-trash'}, text: false });
+                            var commentShow = $('#expandComments');
+                            commentShow.bind('click', {}, function() {
+                                $('#expandedComments').show();
+                                $('#collapsedComments').hide();
+                                $('#commentCancel').bind('click',{},function(evt){
+                                    $('#expandedComments').hide();
+                                    $('#collapsedComments').show();
+                                    evt.stopPropagation();
+                                    return false;
+                                });
+                                $('#commentCancel').button();
+                                $('#commentPost').bind('click',{}, postComment);
+                                $('#commentPost').button();
+                            });
+                            commentShow.button();
+
+                            var buttons = districtComment.find('.district_input button');
+                            buttons.button({icons: {primary: 'icon-disk'}, text: false});
+                            buttons.bind('click', {}, saveLabelInput);
+
                             districtComment.dialog('open');
                         }
                         else {

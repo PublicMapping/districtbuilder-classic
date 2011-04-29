@@ -49,6 +49,8 @@ from django.utils import simplejson as json
 from django.views.decorators.cache import cache_control
 from django.template.defaultfilters import slugify, force_escape
 from django.conf import settings
+from tagging.utils import parse_tag_input
+from tagging.models import Tag, TaggedItem
 from datetime import datetime, time, timedelta
 from decimal import *
 from functools import wraps
@@ -264,9 +266,9 @@ def copyplan(request, planid):
             status["exception"] = inst.message
             return HttpResponse(json.dumps(status),mimetype='application/json')
 
-        # clone the characteristics from the original district to the copy 
-        district_copy.clone_characteristics_from(district)
-        district_copy.clone_comments_from(district)
+        # clone the characteristics, comments, and tags from the original 
+        # district to the copy 
+        district_copy.clone_relations_from(district)
 
     # Serialize the plan object to the response.
     data = serializers.serialize("json", [ plan_copy ])
@@ -1801,8 +1803,14 @@ def district_comment(request, planid, district_id):
             if len(district) == 0:
                 status['message'] = 'No district with that ID in the given plan.'
             else:
-                c = { 'district': district[0],
-                    'typetags': map(lambda tag:tag.name[5:],district[0].tags),
+                district = district[0]
+                typetags = filter(lambda tag:tag.name[:4]=='type', district.tags)
+                typetags = map(lambda tag:tag.name[5:] if tag.name[5:].count(' ') == 0 else '"%s"' % tag.name[5:], typetags)
+                labeltags = filter(lambda tag:tag.name[:5]=='label', district.tags)
+                labeltags = map(lambda tag:tag.name[6:], labeltags)
+                c = { 'district': district,
+                    'typetags': typetags,
+                    'labeltag': labeltags[0] if len(labeltags) > 0 else '',
                     'user': request.user }
                 c.update(csrf(request))
                 status['markup'] = render_to_string('districtcomments.html', c)
@@ -1812,32 +1820,113 @@ def district_comment(request, planid, district_id):
             form = CommentForm(district, request.POST)
             if form.is_valid():
                 comment = form.get_comment_object()
-                district = comment.content_object
-                district_copy = copy.copy(district)
-
-                # In case of non-linear editing, everything after this point
-                # must be purged.
-                district.plan.purge(after=version)
-
-                district_copy.id = None
-                # This must increment the PLAN version, not the DISTRICT
-                # version, since the district version may not be the most
-                # recent version in the plan.
-                district_copy.version = district_copy.plan.version + 1
-                district_copy.save()
-
-                district_copy.clone_characteristics_from(district)
-                district_copy.clone_comments_from(district)
-                district_copy.plan.version += 1
-                district_copy.plan.save()
-               
-                comment.object_pk = district_copy.id
                 comment.save()
 
-                status['version'] = district_copy.plan.version
+                district.plan.purge(after=district.version)
+
+                status['version'] = district.version
                 status['success'] = True
             else:
                 status['message'] = 'Invalid form.'
                 status['errors'] = form.errors
+
+    return HttpResponse(json.dumps(status), mimetype='application/json')
+
+def delete_district_comment(request, planid, district_id, comment_id):
+    """
+    Delete a comment from a district.
+
+    Parameters:
+        planid -- The ID of the plan.
+        district_id -- The ID of the district -- this is the Primary Key.
+        comment_id -- The comment that should be removed.
+    """
+    status = { 'success': False }
+    plan = Plan.objects.filter(id=planid)
+    if plan.count() == 0:
+        status['message'] = 'No plan with that ID was found.'
+    else:
+        plan = plan[0]
+
+        district = plan.district_set.filter(id=district_id)
+        if district.count() == 0:
+            status['message'] = 'No district in the given plan was found.'
+        else:
+            district = district[0]
+            comment = Comment.objects.get(id=comment_id)
+            comment.delete()
+
+            district.plan.purge(after=district.version)
+
+            status['version'] = district.version
+            status['success'] = True
+
+    return HttpResponse(json.dumps(status),mimetype='application/json')
+
+def district_tags(request, planid, district_id, tag_type):
+    """
+    Set the tags on a district. District Labels and Types are tags, and can
+    be added in any combination.
+
+    Parameters:
+        planid -- The plan ID
+        district_id -- The district ID. This is the primary key, not the district_id
+        tag_type -- A string indicating which type of tag to save. Options are 'label' or 'type'
+    """
+    status = { 'success': False }
+    if request.method != 'POST':
+        status['message'] = 'Get tags for a district via the comments endpoint.'
+        return HttpResponse(json.dumps(status), mimetype='application/json')
+
+    plan = Plan.objects.filter(id=planid)
+    if plan.count() == 0:
+        status['message'] = 'No plan with that ID was found.'
+        return HttpResponse(json.dumps(status), mimetype='application/json')
+
+    plan = plan[0]
+
+    district = plan.district_set.filter(id=district_id)
+    if district.count() == 0:
+        status['message'] = 'No district in the given plan was found.'
+        return HttpResponse(json.dumps(status), mimetype='application/json')
+
+    version = plan.version
+    if 'version' in request.REQUEST:
+        version = request.REQUEST['version']
+        if type(version) == int:
+            version = min(plan.version, int(version))
+
+    district = district[0]
+
+    # Get the tags on this object of this type.
+    tset = Tag.objects.get_for_object(district).filter(name__startswith=tag_type)
+
+    # Purge the tags of this same type off the object
+    TaggedItem.objects.filter(tag__in=tset, object_id=district.id).delete()
+
+    district.plan.purge(after=district.version)
+    status['version'] = district.version
+
+    if 'tags' in request.POST:
+        if tag_type == 'label':
+            # Allowed to use many items in the label field
+            strtag = request.POST['tags']
+            if strtag.count('"') > 0:
+                strtag = strtag.replace('"','\\"')
+            Tag.objects.add_tag(district, '"%s=%s"' % (tag_type, strtag,))
+        else:
+            # Each term is a different type
+
+            # Parse all the tags, and add them (do not update, because it might
+            # remove tags of a different tag type) to the district model
+            strtags = parse_tag_input(request.POST['tags'])
+            for strtag in strtags:
+                if strtag.count(' ') > 0:
+                    strtag = '"%s=%s"' % (tag_type, strtag,)
+                else:
+                    strtag = '%s=%s' % (tag_type, strtag,)
+                Tag.objects.add_tag(district, strtag)
+
+    status['success'] = True
 
     return HttpResponse(json.dumps(status), mimetype='application/json')

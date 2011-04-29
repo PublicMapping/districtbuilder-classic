@@ -1997,3 +1997,40 @@ span.poptot.selected {
     width:260px;
     height: 80px;
 }
+#districtComment button.delete_comment {
+    background-color: transparent;
+    border: 1px solid #cccccc;
+    margin-top: -0.5em;
+    float: right;
+    height: 2em;
+}
+#districtComment button.delete_comment .ui-icon {
+    background-image: url("/static-media/images/icon-trash.png");
+    top: 0.3em;
+}
+#expandedComments {
+    display: none;
+}
+#districtComment h3 {
+    font-size: 14pt;
+    margin-top: 5px;
+}
+#districtComment input {
+    border: none;
+    width: 225px;
+}
+#districtComment .district_input {
+    border: inset 1px #cccccc;
+}
+#districtComment .district_input button {
+    background-color: transparent;
+    border: 1px solid #cccccc;
+    margin-top: 0.1em;
+    padding-top: 0.2em;
+    float: right;
+    height: 2em;
+}
+#districtComment .district_input button .ui-icon {
+    background-image: url("/static-media/images/icon-save.png");
+    top: 0.3em;
+}
