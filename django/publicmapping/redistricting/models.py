@@ -92,6 +92,7 @@ class Subject(models.Model):
         Additional information about the Subject model.
         """
 
+
         # The default method of sorting Subjects should be by 'sort_key'
         ordering = ['sort_key']
 
@@ -1285,7 +1286,7 @@ AND st_intersects(
         return sorted(list(District.objects.raw('select %s from redistricting_district as d join (select max(version) as latest, district_id, plan_id from redistricting_district where plan_id = %%s and version <= %%s group by district_id, plan_id) as v on d.district_id = v.district_id and d.plan_id = v.plan_id and d.version = v.latest' % fields, [ self.id, version ])), key=lambda d: d.sortKey())
 
     @staticmethod
-    def create_default(name,body,owner=None,template=True,is_pending=True):
+    def create_default(name,body,owner=None,template=True,is_pending=True,create_unassigned=True):
         """
         Create a default plan.
 
@@ -1305,26 +1306,13 @@ AND st_intersects(
         # Create a new plan. This will also create an Unassigned district
         # in the the plan.
         plan = Plan(name=name, legislative_body=body, is_template=template, version=0, owner=owner, is_pending=is_pending)
-        if template and is_pending:
-            plan.create_unassigned = False
+        plan.create_unassigned = create_unassigned
 
         try:
             plan.save()
         except Exception as ex:
             print( "Couldn't save plan: %s\n" % ex )
             return None
-
-        # If the unassigned district was not created when the plan was
-        # saved, this plan still needs an unassigned district, it just
-        # has to be empty, and have 0 for all stat values.
-        if not plan.create_unassigned:
-            # The same srid is used for all geounits and geometries
-            srid = Geounit.objects.all()[0].geom.srid
-
-            unassigned = District(name="Unassigned", version = 0, plan = plan, district_id=0)
-            unassigned.geom = MultiPolygon([],srid=srid)
-            unassigned.simplify() # implicit save
-            unassigned.reset_stats()
 
         return plan
 
@@ -1802,7 +1790,10 @@ class District(models.Model):
                     simples.append(Point((0,0), srid=self.geom.srid))
                     index += 1
                 if self.geom.num_coords > 0:
-                    simples.append( self.geom.simplify(preserve_topology=True,tolerance=level.tolerance))
+                    simple = self.geom.simplify(preserve_topology=True,tolerance=level.tolerance)
+                    if not simple.valid:
+                        simple = simple.buffer(0)
+                    simples.append(simple)
                 else:
                     simples.append( self.geom )
                 index += 1
@@ -1920,14 +1911,26 @@ def create_unassigned_district(sender, **kwargs):
 
         unassigned = District(name="Unassigned", version = 0, plan = plan, district_id=0)
 
-        levels = plan.legislative_body.get_geolevels()
-        biggestlevel = levels[0]
+        biggest_geolevel = plan.get_biggest_geolevel()
+        all_geom = enforce_multi(Geounit.objects.filter(geolevel=biggest_geolevel).collect())
+        if not all_geom.valid:
+            all_geom = all_geom.buffer(0)
 
-        unassigned.geom = enforce_multi(Geounit.objects.filter(geolevel=biggestlevel).collect(), collapse=True)
-        unassigned.simplify() # implicit save
+        if plan.district_set.count() > 0:
+            sys.stderr.write('Creating unassigned; Current districts are %s' % plan.district_set.all())
+            taken = enforce_multi(plan.district_set.all().collect())
+            if not taken.valid:
+                taken = taken.buffer(0)
 
-        biggestgeolevel = plan.legislative_body.get_geolevels()[0]
-        geounits = Geounit.objects.filter(geolevel=biggestgeolevel)
+            unassigned.geom =  enforce_multi(all_geom.difference(taken))
+            unassigned.simplify() # implicit save
+            geounit_ids = map(str, Geounit.objects.filter(geom__bboverlaps=unassigned.geom, geolevel=biggest_geolevel).values_list('id', flat=True))
+            geounits = Geounit.get_mixed_geounits(geounit_ids, plan.legislative_body, biggest_geolevel.id, unassigned.geom, True)
+        else:
+            unassigned.geom = enforce_multi(all_geom)
+            unassigned.simplify() #implicit save
+            geounits = Geounit.objects.filter(geolevel=biggest_geolevel)
+
         unassigned.delta_stats(geounits, True)
 
         

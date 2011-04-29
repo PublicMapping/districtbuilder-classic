@@ -171,7 +171,7 @@ class DistrictIndexFile():
         except:
             raise Exception('body parameter could not be cast to an integer. Type: %s, %s' % (type(body), body))
         
-        plan = Plan.create_default(name, legislative_body, owner=owner, template=template, is_pending=True)
+        plan = Plan.create_default(name, legislative_body, owner=owner, template=template, is_pending=True, create_unassigned=False)
 
         if not plan:
             if email:
@@ -266,7 +266,6 @@ class DistrictIndexFile():
                                 district = new_district).number
                             percentage = value / denominator_value
 
-                    # sys.stderr.write('Aggregating value for %s: %s' % (subject, cc_value))
                         cc = ComputedCharacteristic(subject = subject, 
                             number = value, 
                             percentage = percentage,
@@ -284,6 +283,9 @@ class DistrictIndexFile():
                     else:
                         sys.stderr.write('Unable to create ComputedCharacteristic for district %s, subject %s\nReason:\n  %s\n' % (district_id, subject.name, traceback.format_exc()))
 
+        # Now that all of our other districts exist, create an unassigned district
+        plan.create_unassigned = True
+        create_unassigned_district(plan, instance=plan, created=True)
         # this plan is complete, and no longer pending
         plan.is_pending = False
         plan.save()
