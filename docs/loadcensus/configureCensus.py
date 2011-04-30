@@ -411,13 +411,13 @@ class Config_Template(DictionaryTemplate):
             </ScoreFunction>
             <ScoreFunction id="district_navap_percent" type="district"
                 calculator="publicmapping.redistricting.calculators.Percent"
-                label="Black VAP" user_selectable="true">
+                label="Native American VAP" user_selectable="true">
                 <SubjectArgument name="numerator" ref="vap_na" />
                 <SubjectArgument name="denominator" ref="vap" />
             </ScoreFunction>
             <ScoreFunction id="district_navap_thresh" type="district"
                 calculator="publicmapping.redistricting.calculators.Threshold"
-                label="Black VAP Threshold">
+                label="Native American VAP Threshold">
                 <ScoreArgument name="value" ref="district_navap_percent" />
                 <Argument name="threshold" value="0.5" />
             </ScoreFunction>
@@ -543,7 +543,6 @@ class Config_Template(DictionaryTemplate):
                 label="Contiguous">
                 <ScoreArgument name="value1" ref="district_contiguous"/>
             </ScoreFunction>
-
 
             <ScoreFunction id="b_plan_congress_noncontiguous" type="plan"
                 calculator="publicmapping.redistricting.calculators.Contiguity"
@@ -707,31 +706,85 @@ class Config_Template(DictionaryTemplate):
                 <SubjectArgument name="value" ref="totpop" />
             </ScoreFunction>
 
-            <ScoreFunction id="plan_majority_minority_blk" type="plan"
+            <ScoreFunction id="plan_majority_minority_blk_congress" type="plan"
                 calculator="publicmapping.redistricting.calculators.MajorityMinority"
                 label="Black VAP Majority (&gt; 50%%)"
                 description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
                 <SubjectArgument name="population" ref="vap" />
                 <SubjectArgument name="minority1" ref="vap_b" />
-                <Argument name="target" value="0" />
+                <Argument name="target" value="%(target_bl_congress)s" />
             </ScoreFunction>
 
-            <ScoreFunction id="plan_majority_minority_hisp" type="plan"
+            <ScoreFunction id="plan_majority_minority_blk_house" type="plan"
+                calculator="publicmapping.redistricting.calculators.MajorityMinority"
+                label="Black VAP Majority (&gt; 50%%)"
+                description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
+                <SubjectArgument name="population" ref="vap" />
+                <SubjectArgument name="minority1" ref="vap_b" />
+                <Argument name="target" value="%(target_bl_house)s" />
+            </ScoreFunction>
+
+            <ScoreFunction id="plan_majority_minority_blk_senate" type="plan"
+                calculator="publicmapping.redistricting.calculators.MajorityMinority"
+                label="Black VAP Majority (&gt; 50%%)"
+                description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
+                <SubjectArgument name="population" ref="vap" />
+                <SubjectArgument name="minority1" ref="vap_b" />
+                <Argument name="target" value="%(target_bl_senate)s" />
+            </ScoreFunction>
+
+            <ScoreFunction id="plan_majority_minority_hisp_congress" type="plan"
                 calculator="publicmapping.redistricting.calculators.MajorityMinority"
                 label="Hisp. VAP Majority (&gt; 50%%)"
                 description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
                 <SubjectArgument name="population" ref="vap" />
                 <SubjectArgument name="minority1" ref="vap_h" />
-                <Argument name="target" value="0" />
+                <Argument name="target" value="%(target_hisp_congress)s" />
             </ScoreFunction>
 
-            <ScoreFunction id="plan_majority_minority_na" type="plan"
+            <ScoreFunction id="plan_majority_minority_hisp_house" type="plan"
+                calculator="publicmapping.redistricting.calculators.MajorityMinority"
+                label="Hisp. VAP Majority (&gt; 50%%)"
+                description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
+                <SubjectArgument name="population" ref="vap" />
+                <SubjectArgument name="minority1" ref="vap_h" />
+                <Argument name="target" value="%(target_hisp_house)s" />
+            </ScoreFunction>
+
+            <ScoreFunction id="plan_majority_minority_hisp_senate" type="plan"
+                calculator="publicmapping.redistricting.calculators.MajorityMinority"
+                label="Hisp. VAP Majority (&gt; 50%%)"
+                description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
+                <SubjectArgument name="population" ref="vap" />
+                <SubjectArgument name="minority1" ref="vap_h" />
+                <Argument name="target" value="%(target_hisp_senate)s" />
+            </ScoreFunction>
+
+            <ScoreFunction id="plan_majority_minority_na_congress" type="plan"
                 calculator="publicmapping.redistricting.calculators.MajorityMinority"
                 label="Native American Majority (&gt; 50%%)"
                 description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
                 <SubjectArgument name="population" ref="vap" />
                 <SubjectArgument name="minority1" ref="vap_na" />
-                <Argument name="target" value="0" />
+                <Argument name="target" value="%(target_na_congress)s" />
+            </ScoreFunction>
+
+            <ScoreFunction id="plan_majority_minority_na_house" type="plan"
+                calculator="publicmapping.redistricting.calculators.MajorityMinority"
+                label="Native American Majority (&gt; 50%%)"
+                description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
+                <SubjectArgument name="population" ref="vap" />
+                <SubjectArgument name="minority1" ref="vap_na" />
+                <Argument name="target" value="%(target_na_house)s" />
+            </ScoreFunction>
+
+            <ScoreFunction id="plan_majority_minority_na_senate" type="plan"
+                calculator="publicmapping.redistricting.calculators.MajorityMinority"
+                label="Native American Majority (&gt; 50%%)"
+                description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
+                <SubjectArgument name="population" ref="vap" />
+                <SubjectArgument name="minority1" ref="vap_na" />
+                <Argument name="target" value="%(target_na_senate)s" />
             </ScoreFunction>
 
             <ScoreFunction id="plan_majority_minority" type="plan"
@@ -812,18 +865,22 @@ class Config_Template(DictionaryTemplate):
                 title="Plan Summary" cssclass="plan_summary congressional" template="plan_summary.html">
 	        <Score ref="a_congress_plan_equipopulation_summary"/>
                 <Score ref="b_plan_congress_noncontiguous"/>
-                <Score ref="plan_majority_minority_blk" />
-                <Score ref="plan_majority_minority_hisp" />
-                <Score ref="plan_majority_minority_na" />
+                <Score ref="plan_majority_minority_blk_congress" />
+                <Score ref="plan_majority_minority_hisp_congress" />
+		%(start_na)s
+                <Score ref="plan_majority_minority_na_congress" />
+		%(end_na)s
             </ScorePanel>
 
             <ScorePanel id="house_panel_summary" type="plan_summary" position="1"
                 title="Plan Summary" cssclass="plan_summary house" template="plan_summary.html">
 	        <Score ref="a_house_plan_equipopulation_summary"/>
                 <Score ref="b_plan_house_noncontiguous"/>
-                <Score ref="plan_majority_minority_blk" />
-                <Score ref="plan_majority_minority_hisp" />
-                <Score ref="plan_majority_minority_na" />
+                <Score ref="plan_majority_minority_blk_house" />
+                <Score ref="plan_majority_minority_hisp_house" />
+		%(start_na)s
+                <Score ref="plan_majority_minority_na_house" />
+		%(end_na)s
             </ScorePanel>
 
             <ScorePanel id="senate_panel_summary" type="plan_summary" position="1"
@@ -831,8 +888,11 @@ class Config_Template(DictionaryTemplate):
 	        <Score ref="a_senate_plan_equipopulation_summary"/>
                 <Score ref="b_plan_senate_noncontiguous"/>
                 <Score ref="a_senate_plan_count_districts" />
-                <Score ref="plan_majority_minority_hisp" />
-                <Score ref="plan_majority_minority_na" />
+                <Score ref="plan_majority_minority_blk_senate" />
+                <Score ref="plan_majority_minority_hisp_senate" />
+		%(start_na)s
+                <Score ref="plan_majority_minority_na_senate" />
+		%(end_na)s
             </ScorePanel>
 
             <!-- Basic Information -->
@@ -1260,7 +1320,9 @@ class Config_Template(DictionaryTemplate):
                         <PopVar subjectref="vap" threshold=".1" />
                         <PopVar subjectref="vap_b" threshold=".1" />
                         <PopVar subjectref="vap_h" threshold=".1" default="false" />
+			%(start_na)s
                         <PopVar subjectref="vap_na" threshold=".1" default="false" />
+			%(end_na)s
                     </PopVars>
                     <RatioVars>
                         <!--
@@ -1328,9 +1390,15 @@ class Config_Template(DictionaryTemplate):
 
 
 
-def gen_config(num_districts_congress,num_districts_senate,num_districts_house,sum_TOTPOP,has_election_data=0,has_vtds=0) :
+def gen_config(num_districts_congress,num_districts_senate,num_districts_house,sum_TOTPOP,has_election_data=0,has_vtds=0, conf_na=False , 
+target_na_congress=0, target_hisp_congress = 0 , target_bl_congress = 0,
+target_na_house=0, target_hisp_house = 0 , target_bl_house = 0,
+target_na_senate =0, target_hisp_senate = 0 , target_bl_senate = 0): 
+
         start_elec="<!--"        
+        start_na="<!--"        
 	end_elec="-->"
+	end_na="-->"
         midlevel="tract"
         midlevel_width="6"
         midlevel_var="TRACTCE10"        
@@ -1352,7 +1420,7 @@ def gen_config(num_districts_congress,num_districts_senate,num_districts_house,s
         pop_senate_min = int(round((sum_TOTPOP/float(num_districts_senate)) * 0.9))
         target_file = '/projects/publicmapping/trunk/docs/config_census_generated.xml'
         f = open(target_file,'w')
-        f.write(str( Config_Template(start_elec=start_elec,end_elec=end_elec,num_districts_congress=num_districts_congress,num_districts_house=num_districts_house,num_districts_senate=num_districts_senate,pop_congress_max=pop_congress_max,pop_congress_min=pop_congress_min,pop_senate_max=pop_senate_max, pop_senate_min=pop_senate_min,pop_house_max=pop_house_max,pop_house_min=pop_house_min,pop_congress=pop_congress,pop_senate=pop_senate,pop_house=pop_house)))
+        f.write(str( Config_Template(start_elec=start_elec,end_elec=end_elec,num_districts_congress=num_districts_congress,num_districts_house=num_districts_house,num_districts_senate=num_districts_senate,pop_congress_max=pop_congress_max,pop_congress_min=pop_congress_min,pop_senate_max=pop_senate_max, pop_senate_min=pop_senate_min,pop_house_max=pop_house_max,pop_house_min=pop_house_min,pop_congress=pop_congress,pop_senate=pop_senate,pop_house=pop_house,start_na=start_na, end_na=end_na, target_na_congress=target_na_congress, target_hisp_congress=target_hisp_congress, target_bl_congress=target_bl_congress, target_na_house=target_na_house, target_hisp_house=target_hisp_house, target_bl_house=target_bl_house, target_na_senate=target_na_senate, target_hisp_senate=target_hisp_senate, target_bl_senate=target_bl_senate)))
 	f.write("\n")
         f.close()
         os.chmod(target_file,stat.S_IRUSR|stat.S_IRGRP|stat.S_IROTH)    
@@ -1362,14 +1430,20 @@ def gen_config(num_districts_congress,num_districts_senate,num_districts_house,s
 ### MAIN
 ###
 
+#
 #  Get Arguments
+#
+
 
 parser=optparse.OptionParser(usage="%prog -F[fips_code] -C[num_congressional_districts] -S[num_senate_districts] -H[num_house_districts]", version="%prog 0.1")
+
+# required arguments
 parser.add_option('-F','--fips', dest='stateFips',help="State two digit FIPS code", type=int, default=0)
 parser.add_option('-C','--congdist', dest='congDis',help="number of congressional districts", type=int, default=0)
 parser.add_option('-H', '--housedist',dest='senDis',help="number of senate districts", type=int, default=0)
 parser.add_option('-S', '--sendist', dest='houseDis',help="number of house districts", type=int,default=0)
 
+# operations to perform
 parser.add_option('-i', '--install', dest="do_install", help="Install dependencencies.", default=False, action='store_true') 
 parser.add_option('-g', '--getdata', dest="do_getdata", help="Get data.", default=False, action='store_true') 
 parser.add_option('-s', '--gensld', dest="do_gensld", help="Generate slds", default=False, action='store_true') 
@@ -1377,7 +1451,24 @@ parser.add_option('-c', '--genconf', dest="do_genconf", help="Generate config fi
 parser.add_option('-d', '--dropdb', dest="do_dropdb", help="Drop database", default=False, action='store_true') 
 parser.add_option('-r', '--run', dest="do_run", help="run setup.py", default=False, action='store_true') 
 
+# configuration options
+parser.add_option('--na_inc', dest="conf_na", help="Include Native Americans in stats.", default=False, action='store_true') 
+parser.add_option('--na_targ_c', dest='target_na_congress',help="Number of Native American Congressional Districts for target", type=int, default=0)
+parser.add_option('--na_targ_h', dest='target_na_house',help="Number of Native American House Districts for target", type=int, default=0)
+parser.add_option('--na_targ_s', dest='target_na_senate',help="Number of Native American Senate Districts for target", type=int, default=0)
+parser.add_option('--hisp_targ_c', dest='target_hisp_congress',help="Number of Hispanic Congressional Districts for target", type=int, default=0)
+parser.add_option('--hisp_targ_h', dest='target_hisp_house',help="Number of Hispanic House Districts for target", type=int, default=0)
+parser.add_option('--hisp_targ_s', dest='target_hisp_senate',help="Number of Hispanic SenateDistricts for target", type=int, default=0)
+parser.add_option('--bl_targ_c', dest='target_bl_congress',help="Number of Black Congressional districts for target", type=int, default=0)
+parser.add_option('--bl_targ_h', dest='target_bl_house',help="Number of Black House districts for target", type=int, default=0)
+parser.add_option('--bl_targ_s', dest='target_bl_senate',help="Number of Black Senate districts for target", type=int, default=0)
+
 (parseResults,numargs)=parser.parse_args()
+
+
+# include na if there is a positive target, even if not otherwise specified
+if ((parseResults.target_na_congress+parseResults.target_na_senate+parseResults.target_na_house)>0) :
+	parseResults.conf_na = True
 
 allops = (not parseResults.do_install) and  (not parseResults.do_getdata) and  (not parseResults.do_gensld) and  (not parseResults.do_genconf) and (not parseResults.do_dropdb) and (not parseResults.do_run)
 if (allops):
@@ -1478,7 +1569,10 @@ if ( parseResults.do_gensld) :
 # generate config file
 if (parseResults.do_genconf):
 	print 'generating config file ... '
-	gen_config(num_districts_congress=congDis,num_districts_senate=senDis,num_districts_house=houseDis,sum_TOTPOP=sum_TOTPOP,has_election_data=has_election_data,has_vtds=0) 
+	gen_config(num_districts_congress=congDis,num_districts_senate=senDis,num_districts_house=houseDis,sum_TOTPOP=sum_TOTPOP,has_election_data=has_election_data,has_vtds=0,conf_na=parseResults.conf_na, 
+target_na_congress=parseResults.target_na_congress, target_hisp_congress = parseResults.target_hisp_congress, target_bl_congress = parseResults.target_bl_congress,
+target_na_house=parseResults.target_na_house, target_hisp_house = parseResults.target_hisp_house, target_bl_house = parseResults.target_bl_house,
+target_na_senate=parseResults.target_na_senate, target_hisp_senate = parseResults.target_hisp_senate, target_bl_senate = parseResults.target_bl_senate) 
 
 if (parseResults.do_run):
 	print 'running setup-py ... '
