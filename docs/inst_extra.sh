@@ -21,6 +21,7 @@ echo "Installing mail support"
 apt-get -y install mailutils
 apt-get -y install sharutils
 apt-get -y install sendmail-bin
+apt-get -y install sensible-mda
 
 SMPATCH='*** /etc/mail/sendmail.mc.good       2010-12-15 22:01:17.773507002 +0000
 --- /etc/mail/sendmail.mc 2011-04-19 17:46:41.635571035 +0000
