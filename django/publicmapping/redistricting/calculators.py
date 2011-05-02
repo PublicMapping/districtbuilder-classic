@@ -419,7 +419,7 @@ class Sum(CalculatorBase):
             while ('value%d'%argnum) in self.arg_dict:
                 number = self.get_value('value%d'%argnum, district)
                 if not number is None:
-                    self.result += number
+                    self.result += float(number)
 
                 argnum += 1
 
@@ -486,8 +486,8 @@ class Percent(CalculatorBase):
                 if tmpnum is None or tmpden is None:
                     continue
 
-                den += tmpden
-                num += tmpnum
+                den += float(tmpden)
+                num += float(tmpnum)
 
         else:
             return
@@ -624,7 +624,7 @@ class Range(CalculatorBase):
             val = self.get_value('value',district)
                 
             if apply_num_members and district.num_members > 1:
-                val = val / district.num_members
+                val = float(val) / district.num_members
             
             minval = self.get_value('min',district)
             maxval = self.get_value('max',district)
@@ -894,7 +894,7 @@ class Interval(CalculatorBase):
                 value = self.get_value('subject', district)
 
                 if apply_num_members and district.num_members > 1:
-                    value = value / district.num_members
+                    value = float(value) / district.num_members
                 
                 if value != None and value >= min_bound and value < max_bound:
                     self.result += 1 
@@ -976,7 +976,7 @@ class Equivalence(CalculatorBase):
 
             tmpval = self.get_value('value',district)
             if apply_num_members and district.num_members > 1:
-                tmpval = tmpval / district.num_members
+                tmpval = float(tmpval) / district.num_members
             
             if not tmpval is None:
                 min_d = min(float(tmpval), min_d)
@@ -1400,3 +1400,60 @@ class MultiMember(CalculatorBase):
                 return
         
         self.result = True
+
+class Average(CalculatorBase):
+    """
+    Average a set of scores together.
+
+    This calculator will add up all arguments passed into it, and return
+    the mathematical mean of their values.
+
+    For a district, this calculator will average a set of scores for 
+    each district.
+
+    For a plan, this calculator will average a set of district scores 
+    across the entire plan.
+
+    Each argument should be assigned the argument name "valueN", where N
+    is a positive integer. The summation will add all arguments, starting
+    at position 1, until an argument is not found.
+    """
+    def compute(self, **kwargs):
+        """
+        Calculate the average of a series of values.
+        """
+        districts = []
+
+        if 'district' in kwargs:
+            districts.append(kwargs['district'])
+        elif 'plan' in kwargs:
+            plan = kwargs['plan']
+            version = kwargs['version'] if 'version' in kwargs else plan.version
+            districts = plan.get_districts_at_version(version, include_geom=False)
+        else:
+            return
+
+        self.result = 0.0
+        count = 0.0
+        for district in districts:
+            if district.district_id == 0:
+                # do nothing with the unassigned districts
+                continue
+
+            count += 1
+            argnum = 0
+            argsum = 0.0
+            while ('value%d' % (argnum+1,)) in self.arg_dict:
+                argnum += 1
+
+                number = self.get_value('value%d'%argnum, district)
+                if not number is None:
+                    argsum += float(number)
+
+            self.result += argsum / argnum
+
+        if count == 0:
+            self.result = None
+        else:
+            self.result /= count
+
