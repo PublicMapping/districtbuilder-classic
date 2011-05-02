@@ -465,8 +465,8 @@ class Percent(CalculatorBase):
         if 'district' in kwargs:
             district = kwargs['district']
 
-            num = self.get_value('numerator',district)
-            den = self.get_value('denominator',district)
+            num = float(self.get_value('numerator',district))
+            den = float(self.get_value('denominator',district))
 
         elif 'plan' in kwargs:
             plan = kwargs['plan']
@@ -1418,10 +1418,14 @@ class Average(CalculatorBase):
     is a positive integer. The summation will add all arguments, starting
     at position 1, until an argument is not found.
 
-    This calculator also accepts a 'min' and 'max' value. If these
-    arguments are present, the calculator will compute a boolean result,
-    where True represents a plan where the averaged value lies between the 
-    'min' and 'max' arguments, inclusive.
+    This calculator also accepts an optional 'min' and 'max' value. If 
+    these arguments are present, the calculator will compute a boolean 
+    result, where True represents a plan where the averaged value lies 
+    between the 'min' and 'max' arguments, inclusive.
+
+    This calculator also accepts an optional 'target' value. If 'min' and
+    'max' are not present and given a target, it will return a string 
+    that's showable in a plan summary.
     """
     def __init__(self):
         """
@@ -1442,36 +1446,45 @@ class Average(CalculatorBase):
             plan = kwargs['plan']
             version = kwargs['version'] if 'version' in kwargs else plan.version
             districts = plan.get_districts_at_version(version, include_geom=False)
-        else:
-            return
 
-        self.result = 0.0
-        count = 0.0
-        for district in districts:
-            if district.district_id == 0:
-                # do nothing with the unassigned districts
-                continue
+            self.result = 0.0
+            count = 0.0
+            for district in districts:
+                if district.district_id == 0:
+                    # do nothing with the unassigned districts
+                    continue
 
-            count += 1
-            argnum = 0
-            argsum = 0.0
-            while ('value%d' % (argnum+1,)) in self.arg_dict:
-                argnum += 1
+                count += 1
+                argnum = 0
+                argsum = 0.0
+                while ('value%d' % (argnum+1,)) in self.arg_dict:
+                    argnum += 1
 
-                number = self.get_value('value%d'%argnum, district)
-                if not number is None:
-                    argsum += float(number)
+                    number = self.get_value('value%d'%argnum, district)
+                    if not number is None:
+                        argsum += float(number)
 
-            self.result += argsum / argnum
+                self.result += argsum / argnum
 
-        if count == 0:
-            self.result = None
-            return
-        
-        self.result /= count
+            if count == 0:
+                self.result = None
+                return
+            
+            self.result /= count
+
+        elif 'list' in kwargs:
+            arg_list = kwargs['list']
+
+            filtered = filter(lambda x:not x is None, arg_list)
+            reduced = reduce(lambda x,y: x+y, filtered)
+
+            self.result = reduced / len(filtered)
 
         if not self.get_value('min') is None and not self.get_value('max') is None:
             minv = float(self.get_value('min'))
             maxv = float(self.get_value('max'))
 
             self.result = self.result >= minv and self.result <= maxv
+        elif not self.get_value('target') is None:
+            target = self.get_value('target')
+            self.result = "%d (of %s)" % (self.result, target)

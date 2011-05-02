@@ -2335,13 +2335,15 @@ class ScoreFunction(models.Model):
                 else:
                     score_fn = ScoreFunction.objects.get(name=arg.value)
 
-                    # If this is a plan score and the argument is a district score,
-                    # extract the districts from the plan, score each individually,
-                    # and pass into the score function as a list
+                    # If this is a plan score and the argument is a 
+                    # district score, extract the districts from the 
+                    # plan, score each individually, # and pass into the 
+                    # score function as a list
                     if not (self.is_planscore and not score_fn.is_planscore):
                         calc.arg_dict[arg.argument] = ('literal', score_fn.score(dp, format=format, version=version))
                     else:
-                        for d in dp.get_districts_at_version(v):
+                        version = plan.version if version is None else version
+                        for d in dp.get_districts_at_version(version):
                             arg_lst.append(score_fn.score(d, format=format, version=version))
 
             # Build the keyword arguments based on whether this is for districts, plans, or list
