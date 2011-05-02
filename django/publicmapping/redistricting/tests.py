@@ -2515,6 +2515,44 @@ class CalculatorTestCase(BaseTestCase):
         avg.compute(plan=self.plan)
         self.assertEquals(97.5,avg.result)
 
+    def test_average3(self):
+        avg = Average()
+        avg.arg_dict['value1'] = ('literal', '10.0')
+        avg.arg_dict['value2'] = ('literal', '20.0')
+        avg.arg_dict['min'] = ('literal', '10.0')
+        avg.arg_dict['max'] = ('literal', '20.0')
+        avg.compute(plan=self.plan)
+
+        # Average is 15.0, should be between 10.0 and 20.0
+        self.assertEquals(True,avg.result)
+
+        dist1ids = self.geounits[0:3] + self.geounits[9:12]
+        dist2ids = self.geounits[18:21] + self.geounits[27:30] + self.geounits[36:39]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        dist2ids = map(lambda x: str(x.id), dist2ids)
+        
+        self.plan.add_geounits( self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
+        self.plan.add_geounits( self.district2.district_id, dist2ids, self.geolevel.id, self.plan.version)
+
+        avg = Average()
+        avg.arg_dict['value1'] = ('subject', self.subject1.name)
+        avg.arg_dict['value2'] = ('subject', self.subject2.name)
+        avg.arg_dict['min'] = ('literal', '90.0')
+        avg.arg_dict['max'] = ('literal', '95.0')
+        avg.compute(plan=self.plan)
+
+        # Average is 97.5, should not be beween 90.0 and 95.0
+        self.assertEquals(False,avg.result)
+
+        avg = Average()
+        avg.arg_dict['value1'] = ('subject', self.subject1.name)
+        avg.arg_dict['value2'] = ('subject', self.subject2.name)
+        avg.arg_dict['min'] = ('literal', '100.0')
+        avg.arg_dict['max'] = ('literal', '105.0')
+        avg.compute(plan=self.plan)
+
+        # Average is 97.5, should not be beween 100.0 and 105.0
+        self.assertEquals(False,avg.result)
 
 class AllBlocksTestCase(BaseTestCase):
     fixtures = ['redistricting_testdata.json',

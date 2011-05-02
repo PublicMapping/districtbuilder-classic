@@ -1417,7 +1417,19 @@ class Average(CalculatorBase):
     Each argument should be assigned the argument name "valueN", where N
     is a positive integer. The summation will add all arguments, starting
     at position 1, until an argument is not found.
+
+    This calculator also accepts a 'min' and 'max' value. If these
+    arguments are present, the calculator will compute a boolean result,
+    where True represents a plan where the averaged value lies between the 
+    'min' and 'max' arguments, inclusive.
     """
+    def __init__(self):
+        """
+        Initialize the result and argument dictionary.
+        """
+        self.result = None
+        self.arg_dict = {}
+
     def compute(self, **kwargs):
         """
         Calculate the average of a series of values.
@@ -1454,6 +1466,12 @@ class Average(CalculatorBase):
 
         if count == 0:
             self.result = None
-        else:
-            self.result /= count
+            return
+        
+        self.result /= count
 
+        if not self.get_value('min') is None and not self.get_value('max') is None:
+            minv = float(self.get_value('min'))
+            maxv = float(self.get_value('max'))
+
+            self.result = self.result >= minv and self.result <= maxv
