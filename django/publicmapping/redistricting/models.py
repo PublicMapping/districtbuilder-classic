@@ -828,7 +828,11 @@ class Plan(models.Model):
                 target = district
                 continue
 
-            if not district.geom is None and not district.geom.relate_pattern(incremental,'T********'):
+            if district.geom is None:
+                # Nothing can interact with no geometry
+                continue
+
+            if not district.geom.relate_pattern(incremental,'T********'):
                 # if this district has later edits, REVERT them to
                 # this version of the district
                 if not district.is_latest_version():
