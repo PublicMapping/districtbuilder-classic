@@ -419,7 +419,7 @@ class Sum(CalculatorBase):
             while ('value%d'%argnum) in self.arg_dict:
                 number = self.get_value('value%d'%argnum, district)
                 if not number is None:
-                    self.result += float(number)
+                    self.result += number
 
                 argnum += 1
 
@@ -465,8 +465,8 @@ class Percent(CalculatorBase):
         if 'district' in kwargs:
             district = kwargs['district']
 
-            num = float(self.get_value('numerator',district))
-            den = float(self.get_value('denominator',district))
+            num = self.get_value('numerator',district)
+            den = self.get_value('denominator',district)
 
         elif 'plan' in kwargs:
             plan = kwargs['plan']
@@ -486,8 +486,8 @@ class Percent(CalculatorBase):
                 if tmpnum is None or tmpden is None:
                     continue
 
-                den += float(tmpden)
-                num += float(tmpnum)
+                den += tmpden
+                num += tmpnum
 
         else:
             return
