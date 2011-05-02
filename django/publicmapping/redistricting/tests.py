@@ -1417,7 +1417,7 @@ class CalculatorTestCase(BaseTestCase):
 
         actual = sumcalc.result
 
-        self.assertEquals(expected, actual, 'Incorrect value during summation. (e:%d,a:%d)' % (expected, actual))
+        self.assertAlmostEquals(expected, actual, 8, 'Incorrect value during summation. (e:%d,a:%d)' % (expected, actual))
 
     def test_sum5(self):
         dist1ids = self.geounits[0:3] + self.geounits[9:12]
@@ -1437,7 +1437,7 @@ class CalculatorTestCase(BaseTestCase):
 
         actual = sumcalc.result
 
-        self.assertEquals(expected, actual, 'Incorrect value during summation. (e:%d,a:%d)' % (expected, actual))
+        self.assertAlmostEquals(expected, actual, 8, 'Incorrect value during summation. (e:%d,a:%d)' % (expected, actual))
 
 
     def test_percent1(self):
@@ -2226,7 +2226,7 @@ class CalculatorTestCase(BaseTestCase):
 
         actual = majcalc.result
 
-        self.assertEquals(True, actual, 'Incorrect value during percentage. (e:%f,a:%f)' % (True, actual))
+        self.assertEquals(True, actual, 'Incorrect value during majority/minority. (e:%f,a:%f)' % (True, actual))
 
         majcalc.arg_dict['count'] = ('literal', 1,)
         majcalc.arg_dict['population'] = ('subject',self.subject2.name,)
@@ -2236,7 +2236,7 @@ class CalculatorTestCase(BaseTestCase):
 
         actual = majcalc.result
 
-        self.assertEquals(False, actual, 'Incorrect value during percentage. (e:%f,a:%f)' % (False, actual))
+        self.assertEquals(False, actual, 'Incorrect value during majority/minority. (e:%f,a:%f)' % (False, actual))
 
     def test_interval(self):
         interval = Interval()
@@ -2289,6 +2289,72 @@ class CalculatorTestCase(BaseTestCase):
         interval.arg_dict['target'] = ('literal', 0)
         interval.compute(district=self.district2)
         self.assertEqual(2, interval.result, "Incorrect interval returned: e:%d,a:%d" % (2, interval.result))
+
+    def test_average1(self):
+        avg = Average()
+        avg.arg_dict['value1'] = ('literal','10',)
+        avg.arg_dict['value2'] = ('literal','20',)
+
+        self.assertEquals(None,avg.result)
+        avg.compute(district=self.district1)
+        self.assertEquals(15,avg.result)
+
+        dist1ids = self.geounits[0:3] + self.geounits[9:12]
+        dist2ids = self.geounits[18:21] + self.geounits[27:30] + self.geounits[36:39]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        dist2ids = map(lambda x: str(x.id), dist2ids)
+        
+        self.plan.add_geounits( self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
+        self.plan.add_geounits( self.district2.district_id, dist2ids, self.geolevel.id, self.plan.version)
+
+        # Update our districts
+        for d in self.plan.get_districts_at_version(self.plan.version, include_geom = False):
+            if (d.district_id == self.district1.district_id):
+                self.district1 = d
+            elif (d.district_id == self.district2.district_id):
+                self.district2 = d
+
+        avg = Average()
+        avg.arg_dict['value1'] = ('subject', self.subject1.name)
+        avg.arg_dict['value2'] = ('subject', self.subject2.name)
+
+        self.assertEquals(None,avg.result)
+        avg.compute(district=self.district1)
+        self.assertEquals(195.0,avg.result)
+
+        avg = Average()
+        avg.arg_dict['value1'] = ('subject', self.subject1.name)
+        avg.arg_dict['value2'] = ('subject', self.subject2.name)
+
+        self.assertEquals(None,avg.result)
+        avg.compute(district=self.district2)
+        self.assertEquals(117.0,avg.result)
+
+    def test_average2(self):
+        avg = Average()
+        avg.arg_dict['value1'] = ('literal', '10.0')
+        avg.arg_dict['value2'] = ('literal', '20.0')
+
+        self.assertEquals(None, avg.result)
+        avg.compute(plan=self.plan)
+        self.assertEquals(15.0,avg.result)
+
+        dist1ids = self.geounits[0:3] + self.geounits[9:12]
+        dist2ids = self.geounits[18:21] + self.geounits[27:30] + self.geounits[36:39]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        dist2ids = map(lambda x: str(x.id), dist2ids)
+        
+        self.plan.add_geounits( self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
+        self.plan.add_geounits( self.district2.district_id, dist2ids, self.geolevel.id, self.plan.version)
+
+        avg = Average()
+        avg.arg_dict['value1'] = ('subject', self.subject1.name)
+        avg.arg_dict['value2'] = ('subject', self.subject2.name)
+
+        self.assertEquals(None,avg.result)
+        avg.compute(plan=self.plan)
+        self.assertEquals(97.5,avg.result)
+
 
 class AllBlocksTestCase(BaseTestCase):
     fixtures = ['redistricting_testdata.json',
