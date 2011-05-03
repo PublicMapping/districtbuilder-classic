@@ -1440,8 +1440,8 @@ parser=optparse.OptionParser(usage="%prog -F[fips_code] -C[num_congressional_dis
 # required arguments
 parser.add_option('-F','--fips', dest='stateFips',help="State two digit FIPS code", type=int, default=0)
 parser.add_option('-C','--congdist', dest='congDis',help="number of congressional districts", type=int, default=0)
-parser.add_option('-H', '--housedist',dest='senDis',help="number of senate districts", type=int, default=0)
-parser.add_option('-S', '--sendist', dest='houseDis',help="number of house districts", type=int,default=0)
+parser.add_option('-H', '--housedist',dest='houseDis',help="number of senate districts", type=int, default=0)
+parser.add_option('-S', '--sendist', dest='senDis',help="number of house districts", type=int,default=0)
 
 # operations to perform
 parser.add_option('-i', '--install', dest="do_install", help="Install dependencencies.", default=False, action='store_true') 
