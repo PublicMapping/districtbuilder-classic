@@ -19,6 +19,7 @@ import shutil
 import psycopg2 as dbapi2
 import optparse
 import string
+import time
 
 
 ### 
@@ -56,7 +57,13 @@ def     drop_db():
         subprocess.check_call(['cat /projects/publicmapping/trunk/sql/publicmapping_db.sql | su postgres -c "psql -f - postgres"'],shell=True)
         subprocess.check_call(["service","apache2","start"])
         subprocess.check_call(["service","tomcat6","start"])
+
+  	# workaround celeryd first-time startup problem
         subprocess.check_call(["service","celeryd","start"])
+	time.sleep(15)
+        subprocess.check_call(["service","celeryd","start"])
+	time.sleep(15)
+        subprocess.check_call(["service","celeryd","status"])
         os.chdir(olddir)
 
 
