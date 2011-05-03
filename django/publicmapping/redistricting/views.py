@@ -1905,6 +1905,10 @@ def district_tags(request, planid, district_id, tag_type):
     TaggedItem.objects.filter(tag__in=tset, object_id=district.id).delete()
 
     district.plan.purge(after=district.version)
+
+    district.plan.version = district.version
+    district.plan.save()
+
     status['version'] = district.version
 
     if 'tags' in request.POST:

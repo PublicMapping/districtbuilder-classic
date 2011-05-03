@@ -1260,7 +1260,6 @@ function mapinit(srs,maxExtent) {
         {
             hover: false,
             onSelect: function(feature){
-                console.log('onSelect(), feature.fid:'+feature.fid);
                 districtComment.html('<div class="commentloading"><h3>Loading Comments...</h3></div>');
                 districtComment.dialog('option','buttons',{
                     'OK': function() {
@@ -1276,7 +1275,6 @@ function mapinit(srs,maxExtent) {
 
                 var getErrorCallback = function(ft) {
                     return function(xhr, textStatus, message) {
-                        console.log('error(), ft.fid:',ft.fid);
                         districtComment.dialog('option','buttons',{
                             'Close': function() {
                                 districtComment.dialog('close');
@@ -1290,7 +1288,6 @@ function mapinit(srs,maxExtent) {
 
                 var getSuccessCallback = function(ft) {
                     return function(data, textStatus, xhr) {
-                        console.log('success(), ft.fid:',ft.fid);
                         if (xhr.status == 200 && data.success) {
                             districtComment.dialog('close');
                             districtIdControl.clickoutFeature(ft);
