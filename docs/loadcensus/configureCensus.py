@@ -1266,8 +1266,8 @@ def gen_config(num_districts_congress,num_districts_senate,num_districts_house,s
 parser=optparse.OptionParser(usage="%prog -F[fips_code] -C[num_congressional_districts] -S[num_senate_districts] -H[num_house_districts]", version="%prog 0.1")
 parser.add_option('-F','--fips', dest='stateFips',help="State two digit FIPS code", type=int, default=0)
 parser.add_option('-C','--congdist', dest='congDis',help="number of congressional districts", type=int, default=0)
-parser.add_option('-H', '--housedist',dest='senDis',help="number of senate districts", type=int, default=0)
-parser.add_option('-S', '--sendist', dest='houseDis',help="number of house districts", type=int,default=0)
+parser.add_option('-H', '--housedist',dest='houseDis',help="number of senate districts", type=int, default=0)
+parser.add_option('-S', '--sendist', dest='senDis',help="number of house districts", type=int,default=0)
 
 parser.add_option('-i', '--install', dest="do_install", help="Install dependencencies.", default=False, action='store_true') 
 parser.add_option('-g', '--getdata', dest="do_getdata", help="Get data.", default=False, action='store_true') 

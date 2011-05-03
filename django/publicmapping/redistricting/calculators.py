@@ -419,7 +419,7 @@ class Sum(CalculatorBase):
             while ('value%d'%argnum) in self.arg_dict:
                 number = self.get_value('value%d'%argnum, district)
                 if not number is None:
-                    self.result += float(number)
+                    self.result += number
 
                 argnum += 1
 
@@ -486,8 +486,8 @@ class Percent(CalculatorBase):
                 if tmpnum is None or tmpden is None:
                     continue
 
-                den += float(tmpden)
-                num += float(tmpnum)
+                den += tmpden
+                num += tmpnum
 
         else:
             return
@@ -1440,13 +1440,25 @@ class Average(CalculatorBase):
         """
         districts = []
 
-        if 'district' in kwargs:
+        if 'list' in kwargs:
+            arg_list = kwargs['list']
+
+            filtered = filter(lambda x:not x is None, arg_list)
+            reduced = reduce(lambda x,y: x+y, filtered)
+
+            self.result = reduced / len(filtered)
+
+        elif 'district' in kwargs :
             districts.append(kwargs['district'])
+
         elif 'plan' in kwargs:
             plan = kwargs['plan']
             version = kwargs['version'] if 'version' in kwargs else plan.version
             districts = plan.get_districts_at_version(version, include_geom=False)
+        else:
+            return
 
+        if not 'list' in kwargs:
             self.result = 0.0
             count = 0.0
             for district in districts:
@@ -1472,14 +1484,6 @@ class Average(CalculatorBase):
             
             self.result /= count
 
-        elif 'list' in kwargs:
-            arg_list = kwargs['list']
-
-            filtered = filter(lambda x:not x is None, arg_list)
-            reduced = reduce(lambda x,y: x+y, filtered)
-
-            self.result = reduced / len(filtered)
-
         if not self.get_value('min') is None and not self.get_value('max') is None:
             minv = float(self.get_value('min'))
             maxv = float(self.get_value('max'))
@@ -1488,3 +1492,13 @@ class Average(CalculatorBase):
         elif not self.get_value('target') is None:
             target = self.get_value('target')
             self.result = "%d (of %s)" % (self.result, target)
+
+    def html(self):
+        """
+        Generate an HTML representation of the competitiveness score. This
+        is represented as a percentage or "n/a"
+        """
+        if type(self.result) == float:
+            return ("%0.2f%%" % (self.result * 100)) if self.result else "n/a"
+        else:
+            return '<span>%s</span>' % self.result
