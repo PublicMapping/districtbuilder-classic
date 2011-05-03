@@ -1858,6 +1858,9 @@ def delete_district_comment(request, planid, district_id, comment_id):
 
             district.plan.purge(after=district.version)
 
+            district.plan.version = district.version
+            district.plan.save()
+
             status['version'] = district.version
             status['success'] = True
 
