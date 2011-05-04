@@ -402,7 +402,7 @@ def commonplan(request, planid):
     default_selected = False
     for demo in demos:
         isdefault = str((not default_demo is None) and (demo[0] == default_demo.id)).lower()
-        if isdefault == True:
+        if isdefault == 'true':
             default_selected = True
         layers.append( {'id':demo[0],'text':demo[2],'value':demo[1].lower(), 'isdefault':isdefault, 'isdisplayed':str(demo[3]).lower()} )
     # If the default demo was not selected among the first three, we'll still need it for the dropdown menus
