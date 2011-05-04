@@ -1444,6 +1444,9 @@ class Average(CalculatorBase):
             arg_list = kwargs['list']
 
             filtered = filter(lambda x:not x is None, arg_list)
+            if len(filtered) == 0:
+                return
+
             reduced = reduce(lambda x,y: x+y, filtered)
 
             self.result = reduced / len(filtered)
@@ -1500,5 +1503,7 @@ class Average(CalculatorBase):
         """
         if type(self.result) == float:
             return ("%0.2f%%" % (self.result * 100)) if self.result else "n/a"
-        else:
+        elif not self.result is None:
             return '<span>%s</span>' % self.result
+        else:
+            return '<span>n/a</span>'
