@@ -507,7 +507,8 @@ function mapinit(srs,maxExtent) {
             success: function(data, textStatus, xhr) {
                 pleaseWait.remove();
                 if (data.success) {
-                    updateToVersion(null, data.version);
+                    var updateAssignments = true;
+                    $('#map').trigger('version_changed', [data.version, updateAssignments]);
                 }
                 $('<div>' + data.message + '</div>').dialog({
                     modal: false,
