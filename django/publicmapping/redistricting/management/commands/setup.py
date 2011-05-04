@@ -43,7 +43,7 @@ from xml.dom import minidom
 from rpy2.robjects import r
 from redistricting.models import *
 from redistricting.utils import *
-import traceback, pprint, httplib, string, base64, json
+import traceback, pprint, httplib, string, base64, json, types
 
 class Command(BaseCommand):
     """
@@ -1324,14 +1324,20 @@ ERROR:
                 idpart = shapefile.xpath('Fields/Field[@type="tree" and @pos=%d]' % idx)
                 if len(idpart) > 0:
                     idpart = idpart[0]
+                    part = feature.get(idpart.get('name'))
                     # strip any spaces in the treecode
-                    part = feature.get(idpart.get('name')).strip(' ')
+                    if not (isinstance(part, types.StringTypes)):
+                        part = '%d' % part
+                    part = part.strip(' ')
                     width = int(idpart.get('width'))
                     builtid = '%s%s' % (builtid, part.zfill(width))
             return builtid
         def get_shape_portable(shapefile, feature):
             field = shapefile.xpath('Fields/Field[@type="portable"]')[0]
-            return feature.get(field.get('name'))
+            portable = feature.get(field.get('name'))
+            if not (isinstance(portable, types.StringTypes)):
+                portable = '%d' % portable
+            return portable
         def get_shape_name(shapefile, feature):
             field = shapefile.xpath('Fields/Field[@type="name"]')[0]
             return feature.get(field.get('name'))

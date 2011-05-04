@@ -500,7 +500,7 @@ shareddistricts = function(options) {
         var mapOptions = {
             projection: "EPSG:3785",
             units:"m",
-            controls: [],
+            controls: []
         };
 
         _map = new OpenLayers.Map('shared_district_map_div', mapOptions);

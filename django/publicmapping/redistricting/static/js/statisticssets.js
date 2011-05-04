@@ -41,7 +41,7 @@ statisticssets = function(options) {
             callback: function() {},
             /* the id for the plan to which this checker applies. by default, the current plan */
             statsUrl: '/districtmapping/plan/' + ( typeof(options.planId) != 'undefined' ? options.planId : PLAN_ID ) + '/statisticssets/',
-            loadDemographicsUrl: '/districtmapping/plan/' + ( typeof(options.planId) != 'undefined' ? options.planId : PLAN_ID ) + '/demographics/',
+            loadDemographicsUrl: '/districtmapping/plan/' + ( typeof(options.planId) != 'undefined' ? options.planId : PLAN_ID ) + '/demographics/'
         }, options),
         
         _displayCache = {},
