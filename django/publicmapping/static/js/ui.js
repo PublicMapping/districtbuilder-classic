@@ -448,7 +448,7 @@ $(function() {
                             $('#steps').tabs('select', '#step_draw');
                         });
                         if (typeof(_gaq) != 'undefined') { _gaq.push(['_trackEvent', 'Plans', 'Shared']); }
-                        $('#successfulShare').dialog({autoOpen: true});
+                        $('#successfulShare').dialog({autoOpen: true, width:460, resizable:false});
                     }
                 },
                 error: function() {
