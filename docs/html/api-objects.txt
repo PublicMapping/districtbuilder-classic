@@ -153,6 +153,15 @@ publicmapping.redistricting.calculators.CalculatorBase.sortkey	publicmapping.red
 publicmapping.redistricting.calculators.CalculatorBase.json	publicmapping.redistricting.calculators.CalculatorBase-class.html#json
 publicmapping.redistricting.calculators.CalculatorBase.html	publicmapping.redistricting.calculators.CalculatorBase-class.html#html
 publicmapping.redistricting.calculators.CalculatorBase.result	publicmapping.redistricting.calculators.CalculatorBase-class.html#result
+publicmapping.redistricting.calculators.Average	publicmapping.redistricting.calculators.Average-class.html
+publicmapping.redistricting.calculators.Average.compute	publicmapping.redistricting.calculators.Average-class.html#compute
+publicmapping.redistricting.calculators.CalculatorBase.arg_dict	publicmapping.redistricting.calculators.CalculatorBase-class.html#arg_dict
+publicmapping.redistricting.calculators.CalculatorBase.get_value	publicmapping.redistricting.calculators.CalculatorBase-class.html#get_value
+publicmapping.redistricting.calculators.CalculatorBase.sortkey	publicmapping.redistricting.calculators.CalculatorBase-class.html#sortkey
+publicmapping.redistricting.calculators.CalculatorBase.json	publicmapping.redistricting.calculators.CalculatorBase-class.html#json
+publicmapping.redistricting.calculators.Average.html	publicmapping.redistricting.calculators.Average-class.html#html
+publicmapping.redistricting.calculators.CalculatorBase.result	publicmapping.redistricting.calculators.CalculatorBase-class.html#result
+publicmapping.redistricting.calculators.Average.__init__	publicmapping.redistricting.calculators.Average-class.html#__init__
 publicmapping.redistricting.calculators.CalculatorBase	publicmapping.redistricting.calculators.CalculatorBase-class.html
 publicmapping.redistricting.calculators.CalculatorBase.compute	publicmapping.redistricting.calculators.CalculatorBase-class.html#compute
 publicmapping.redistricting.calculators.CalculatorBase.arg_dict	publicmapping.redistricting.calculators.CalculatorBase-class.html#arg_dict
@@ -178,6 +187,7 @@ publicmapping.redistricting.calculators.CalculatorBase.sortkey	publicmapping.red
 publicmapping.redistricting.calculators.CalculatorBase.json	publicmapping.redistricting.calculators.CalculatorBase-class.html#json
 publicmapping.redistricting.calculators.Contiguity.html	publicmapping.redistricting.calculators.Contiguity-class.html#html
 publicmapping.redistricting.calculators.CalculatorBase.result	publicmapping.redistricting.calculators.CalculatorBase-class.html#result
+publicmapping.redistricting.calculators.Contiguity.__init__	publicmapping.redistricting.calculators.Contiguity-class.html#__init__
 publicmapping.redistricting.calculators.CountDistricts	publicmapping.redistricting.calculators.CountDistricts-class.html
 publicmapping.redistricting.calculators.CountDistricts.compute	publicmapping.redistricting.calculators.CountDistricts-class.html#compute
 publicmapping.redistricting.calculators.CalculatorBase.arg_dict	publicmapping.redistricting.calculators.CalculatorBase-class.html#arg_dict
@@ -333,6 +343,8 @@ publicmapping.redistricting.management.commands.setup.Command.build_bardmap	publ
 publicmapping.redistricting.management.commands.setup.Command.import_contiguity_overrides	publicmapping.redistricting.management.commands.setup.Command-class.html#import_contiguity_overrides
 publicmapping.redistricting.management.commands.setup.Command.aggregate_unit	publicmapping.redistricting.management.commands.setup.Command-class.html#aggregate_unit
 publicmapping.redistricting.management.commands.setup.Command.import_arguments	publicmapping.redistricting.management.commands.setup.Command-class.html#import_arguments
+publicmapping.redistricting.management.commands.setup.Command.option_list	publicmapping.redistricting.management.commands.setup.Command-class.html#option_list
+publicmapping.redistricting.management.commands.setup.Command.read_config	publicmapping.redistricting.management.commands.setup.Command-class.html#read_config
 publicmapping.redistricting.management.commands.setup.Command.create_report_templates	publicmapping.redistricting.management.commands.setup.Command-class.html#create_report_templates
 publicmapping.redistricting.management.commands.setup.Command.renest_geolevel	publicmapping.redistricting.management.commands.setup.Command-class.html#renest_geolevel
 publicmapping.redistricting.management.commands.setup.Command.import_scoring	publicmapping.redistricting.management.commands.setup.Command-class.html#import_scoring
@@ -346,7 +358,7 @@ publicmapping.redistricting.management.commands.setup.Command.create_views	publi
 publicmapping.redistricting.management.commands.setup.Command.import_prereq	publicmapping.redistricting.management.commands.setup.Command-class.html#import_prereq
 publicmapping.redistricting.management.commands.setup.Command.rest_check	publicmapping.redistricting.management.commands.setup.Command-class.html#rest_check
 publicmapping.redistricting.management.commands.setup.Command.set_geounit_characteristic	publicmapping.redistricting.management.commands.setup.Command-class.html#set_geounit_characteristic
-publicmapping.redistricting.management.commands.setup.Command.option_list	publicmapping.redistricting.management.commands.setup.Command-class.html#option_list
+publicmapping.redistricting.management.commands.setup.Command.purge_geoserver	publicmapping.redistricting.management.commands.setup.Command-class.html#purge_geoserver
 publicmapping.redistricting.management.commands.setup.Command.get_style_contents	publicmapping.redistricting.management.commands.setup.Command-class.html#get_style_contents
 publicmapping.redistricting.management.commands.setup.Command.import_shape	publicmapping.redistricting.management.commands.setup.Command-class.html#import_shape
 publicmapping.redistricting.models.Characteristic	publicmapping.redistricting.models.Characteristic-class.html
@@ -608,7 +620,10 @@ publicmapping.redistricting.tests.CalculatorTestCase.test_contiguity2	publicmapp
 publicmapping.redistricting.tests.CalculatorTestCase.test_percent2	publicmapping.redistricting.tests.CalculatorTestCase-class.html#test_percent2
 publicmapping.redistricting.tests.CalculatorTestCase.test_schwartzberg1	publicmapping.redistricting.tests.CalculatorTestCase-class.html#test_schwartzberg1
 publicmapping.redistricting.tests.CalculatorTestCase.test_competitiveness	publicmapping.redistricting.tests.CalculatorTestCase-class.html#test_competitiveness
+publicmapping.redistricting.tests.CalculatorTestCase.test_average2	publicmapping.redistricting.tests.CalculatorTestCase-class.html#test_average2
 publicmapping.redistricting.tests.CalculatorTestCase.test_contiguity_plan1	publicmapping.redistricting.tests.CalculatorTestCase-class.html#test_contiguity_plan1
+publicmapping.redistricting.tests.CalculatorTestCase.test_average1	publicmapping.redistricting.tests.CalculatorTestCase-class.html#test_average1
+publicmapping.redistricting.tests.CalculatorTestCase.test_average3	publicmapping.redistricting.tests.CalculatorTestCase-class.html#test_average3
 publicmapping.redistricting.tests.CalculatorTestCase.test_roeck	publicmapping.redistricting.tests.CalculatorTestCase-class.html#test_roeck
 publicmapping.redistricting.tests.CalculatorTestCase.test_sum3	publicmapping.redistricting.tests.CalculatorTestCase-class.html#test_sum3
 publicmapping.redistricting.tests.CalculatorTestCase.test_roeck1	publicmapping.redistricting.tests.CalculatorTestCase-class.html#test_roeck1
