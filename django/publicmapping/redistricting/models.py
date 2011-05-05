@@ -47,6 +47,7 @@ from tagging.models import TaggedItem
 from datetime import datetime
 from copy import copy
 from decimal import *
+from operator import attrgetter
 import sys, cPickle, traceback, types, tagging
 
 class Subject(models.Model):
@@ -1703,6 +1704,27 @@ AND st_intersects(
         except Exception as ex:
             transaction.rollback()
             return False
+
+    def get_district_info(self, version=None):
+        """
+        Get a set of tuples for each district in this plan. This will 
+        generate a list of tuples sorted by the 'district_id' field that
+        contains the district name, and the number of members in the
+        district.
+
+        Parameters:
+            version -- Optional; if specified, it will get the district
+                       info for the specified version of the plan. If
+                       omitted, the most recent plan version will be used.
+        """
+        version = version if not version is None else self.version
+        districts = self.get_districts_at_version(version, include_geom=False)
+        districts = sorted(districts, key=attrgetter('district_id'))
+        districts = filter(lambda d:d.name!='Unassigned', districts)
+        districts = map(lambda d:(d.name,d.num_members,), districts)
+
+        return districts
+
 
 class PlanForm(ModelForm):
     """

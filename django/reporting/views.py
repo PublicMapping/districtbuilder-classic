@@ -221,6 +221,8 @@ def getreport(request):
         return HttpResponse(json.dumps(status),mimetype='application/json')
 
     sorted_district_list = request.POST.get('district_list').split(';')
+    nseat_param = request.POST.get('nseats')
+    mag_param = request.POST.get('district_mags').split(';')
 
     if settings.DEBUG:
         print "Got district list, getting other POSTed stuff."
@@ -229,7 +231,9 @@ def getreport(request):
     try:
         # Now we need an R Vector
         block_ids = robjects.IntVector(sorted_district_list)
-        bardplan = r.createAssignedPlan(bardmap, block_ids)
+        num_seats = int(nseat_param)
+        magnitude = robjects.IntVector(mag_param)
+        bardplan = r.createAssignedPlan(bardmap, block_ids, nseats=num_seats, magnitude=magnitude)
     except Exception as ex:
         status['reason'] = 'Could not create BARD plan from map.'
         if settings.DEBUG:
@@ -343,7 +347,15 @@ def getreport(request):
         report = r.HTMLInitFile(tempfile.gettempdir(), filename=basename, BackGroundColor="#BBBBEE", Title="Plan Analysis")
         title = r['HTML.title']
         r['HTML.title']("Plan Analysis", HR=2, file=report)
-        r.PMPreport( bardplan, block_ids, file = report, popVar = pop_var, popVarExtra = pop_var_extra, ratioVars = ratio_vars, splitVars = split_vars, repCompactness = rep_compactness, repCompactnessExtra = rep_compactness_extra, repSpatial = rep_spatial, repSpatialExtra = rep_spatial_extra)
+        r.PMPreport( bardplan, block_ids, file=report, 
+            popVar=pop_var, 
+            popVarExtra=pop_var_extra, 
+            ratioVars=ratio_vars, 
+            splitVars=split_vars, 
+            repCompactness=rep_compactness, 
+            repCompactnessExtra=rep_compactness_extra,
+            repSpatial=rep_spatial, 
+            repSpatialExtra=rep_spatial_extra)
         r.HTMLEndFile()
 
         # Now move the report back to the reports directory dir

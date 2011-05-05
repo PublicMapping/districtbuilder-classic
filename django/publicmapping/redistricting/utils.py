@@ -34,7 +34,6 @@ from django.db.models import Sum as SumAgg, Min, Max
 from redistricting.models import *
 import csv, time, zipfile, tempfile, os, sys, traceback, time
 from datetime import datetime
-from operator import attrgetter
 import socket, urllib
 
 
@@ -409,7 +408,6 @@ class PlanReport:
             sys.stderr.write('Starting task to create a report.\n')
         try:
             plan = Plan.objects.get(pk=planid)
-            districts = plan.get_districts_at_version(plan.version, include_geom=False)
         except:
             sys.stderr.write("Couldn't retrieve plan information.\n")
             return 
@@ -422,7 +420,6 @@ class PlanReport:
 
         # Get the district mapping and order by geounit id
         mapping = plan.get_base_geounits()
-        #mapping = list(Geounit.objects.all().order_by('id').values_list('id','portable_id','id')[0:100])
         mapping.sort(key=lambda unit: unit[0])
 
         # Get the geounit ids we'll be iterating through
@@ -456,8 +453,12 @@ class PlanReport:
         if settings.DEBUG:
             sys.stderr.write('Getting POST variables and settings.')
         
-        names = sorted(districts, key=attrgetter('district_id'))
-        names = filter(lambda d:d!='Unassigned',map(lambda d:d.name, names))
+        info = plan.get_district_info()
+        names = map(lambda i:i[0], info)
+        nseats = map(lambda i:i[1], info) # can't do it in the lambda
+        nseats = reduce(lambda x,y: x+y, nseats, 0)
+        # needs to be a str because of join() below
+        magnitude = map(lambda i:str(i[1]), info)
 
         if settings.DEBUG:
             sys.stderr.write('Firing web worker task.')
@@ -466,14 +467,13 @@ class PlanReport:
 
         # Callbacks do not fire for HttpDispatchTask -- why not?
         #
-        #def failure(exc, task_id, args, kwargs, einfo=None):
-        #    print '  CALLBACK: Failure!'
-        #def success(retval, task_id, args, kwargs):
-        #    print '  CALLBACK: Success!'
+        #def failure(self, exc, task_id, args, kwargs, einfo=None):
+        #    self.log.get_default_logger().info('  CALLBACK: Failure!')
+        #def success(self, retval, task_id, args, kwargs):
+        #    self.log.get_default_logger().info('  CALLBACK: Success!')
         #
         #dispatcher.on_failure = failure
         #dispatcher.on_success = success
-        #
 
         # Increase the default timeout, just in case
         socket.setdefaulttimeout(600)
@@ -486,6 +486,8 @@ class PlanReport:
             plan_version=plan.version,
             district_list=';'.join(sorted_district_list),
             district_names=';'.join(names),
+            district_mags=';'.join(magnitude),
+            nseats=nseats,
             pop_var=request['popVar'],
             pop_var_extra=request['popVarExtra'],
             ratio_vars=';'.join(request['ratioVars[]']),
