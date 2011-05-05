@@ -1771,6 +1771,19 @@ def statistics_sets(request, planid):
 #
 # Comment views
 #
+def purge_plan_clear_cache(district, version):
+    """
+    This is a helper method that purges a plan after a version, and clears
+    any pre-computed scores at the specified version.
+    """
+    district.plan.purge(after=version)
+
+    district.plan.version = version
+    district.plan.save()
+
+    cache = district.computeddistrictscore_set.filter(function__calculator__endswith='.Comments')
+    cache.delete()
+
 @unique_session_or_json_redirect
 def district_comment(request, planid, district_id):
     """
@@ -1790,13 +1803,14 @@ def district_comment(request, planid, district_id):
 
         version = plan.version
         if 'version' in request.REQUEST:
-            version = request.REQUEST['version']
-            if type(version) == int:
+            try:
+                version = int(request.REQUEST['version'])
                 version = min(plan.version, int(version))
+            except:
+                pass
 
         district_id = int(district_id)
-        district = plan.get_districts_at_version(version, 
-                                                 include_geom=False)
+        district = plan.get_districts_at_version(version, include_geom=False)
         district = filter(lambda d:d.district_id==district_id, district)
 
         if request.method == 'GET':
@@ -1820,14 +1834,28 @@ def district_comment(request, planid, district_id):
             form = CommentForm(district, request.POST)
             if form.is_valid():
                 comment = form.get_comment_object()
+                if district.version < version:
+                    # The district version may lag behind the cursor 
+                    # version if there were no edits for a while. If this 
+                    # is the case the district must be copied to the 
+                    # currently edited version.
+                    district_copy = copy.copy(district)
+                    district_copy.id = None
+                    district_copy.version = version
+
+                    district_copy.save()
+
+                    # clone the characteristics, comments, and tags from 
+                    # the original district to the copy 
+                    district_copy.clone_relations_from(district)
+                    district = district_copy
+
+                comment.object_pk = district.id
                 comment.save()
 
-                district.plan.purge(after=district.version)
+                purge_plan_clear_cache(district, version)
 
-                district.plan.version = district.version
-                district.plan.save()
-
-                status['version'] = district.version
+                status['version'] = version
                 status['success'] = True
             else:
                 status['message'] = 'Invalid form.'
@@ -1835,7 +1863,7 @@ def district_comment(request, planid, district_id):
 
     return HttpResponse(json.dumps(status), mimetype='application/json')
 
-def delete_district_comment(request, planid, district_id, comment_id):
+def delete_district_comment(request, planid, district_id, comment_id, version):
     """
     Delete a comment from a district.
 
@@ -1859,12 +1887,9 @@ def delete_district_comment(request, planid, district_id, comment_id):
             comment = Comment.objects.get(id=comment_id)
             comment.delete()
 
-            district.plan.purge(after=district.version)
+            purge_plan_clear_cache(district, version)
 
-            district.plan.version = district.version
-            district.plan.save()
-
-            status['version'] = district.version
+            status['version'] = version
             status['success'] = True
 
     return HttpResponse(json.dumps(status),mimetype='application/json')
@@ -1898,11 +1923,28 @@ def district_tags(request, planid, district_id, tag_type):
 
     version = plan.version
     if 'version' in request.REQUEST:
-        version = request.REQUEST['version']
-        if type(version) == int:
+        try:
+            version = int(request.REQUEST['version'])
             version = min(plan.version, int(version))
+        except:
+            pass
 
     district = district[0]
+    if district.version < version:
+        # The district version may lag behind the cursor 
+        # version if there were no edits for a while. If this 
+        # is the case the district must be copied to the 
+        # currently edited version.
+        district_copy = copy.copy(district)
+        district_copy.id = None
+        district_copy.version = version
+
+        district_copy.save()
+
+        # clone the characteristics, comments, and tags from 
+        # the original district to the copy 
+        district_copy.clone_relations_from(district)
+        district = district_copy
 
     # Get the tags on this object of this type.
     tset = Tag.objects.get_for_object(district).filter(name__startswith=tag_type)
@@ -1910,12 +1952,9 @@ def district_tags(request, planid, district_id, tag_type):
     # Purge the tags of this same type off the object
     TaggedItem.objects.filter(tag__in=tset, object_id=district.id).delete()
 
-    district.plan.purge(after=district.version)
+    purge_plan_clear_cache(district, version)
 
-    district.plan.version = district.version
-    district.plan.save()
-
-    status['version'] = district.version
+    status['version'] = version
 
     if 'tags' in request.POST:
         if tag_type == 'label':

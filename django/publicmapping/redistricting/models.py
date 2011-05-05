@@ -2667,12 +2667,13 @@ class ScorePanel(models.Model):
                 for function in self.score_functions.filter(is_planscore=False):
                     if not function.label in functions:
                         functions.append(function.label)
+                    score = ComputedDistrictScore.compute(function,district,format='html')
                     districtscore['scores'].append({
                         'district':district,
                         'name':function.name,
                         'label':function.label,
                         'description':function.description,
-                        'score':ComputedDistrictScore.compute(function,district,format='html')
+                        'score':score
                     })
 
                 districtscores.append(districtscore)

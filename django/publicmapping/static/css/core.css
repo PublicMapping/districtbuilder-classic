@@ -1973,18 +1973,22 @@ span.poptot.selected {
     display:none;
 }
 
-#districtComment .comm1 {
+.comm1 {
     background-color: #e6e6e6;
 }
-#districtComment .comm2 {
+.comm2 {
     background-color: #f4f4f4;
 }
-#districtComment .district_comment_date {
+.district_comment {
+    clear:both;
+    font-weight:normal;
+}
+.district_comment_date {
     font-size: 8pt;
     color: #999999;
     text-align: right;
 }
-#districtComment .district_comment_content {
+.district_comment_content {
     font-size: 10pt;
 }
 #districtComment form {
@@ -2033,4 +2037,35 @@ span.poptot.selected {
 #districtComment .district_input button .ui-icon {
     background-image: url("/static-media/images/icon-save.png");
     top: 0.3em;
+}
+.community_comments {
+    overflow-y: auto;
+    height: 98%;
+    margin: 5px;
+}
+.districtComment {
+    clear: both;
+    padding: 5px 10px;
+}
+.districtComment h3 {
+    font-size: 10pt;
+    font-weight: bold;
+}
+
+.districtComment h4 {
+    font-size: 9pt;
+    font-weight: normal;
+    clear: both;
+    float: left;
+    width: 6em;
+    padding-left: 1em;
+} 
+
+.districtComment .district_label {
+    font-size: 9pt;
+    float: left;
+}
+.districtComment .district_type {
+    font-size: 9pt;
+    float: left;
 }

@@ -1444,6 +1444,9 @@ class Average(CalculatorBase):
             arg_list = kwargs['list']
 
             filtered = filter(lambda x:not x is None, arg_list)
+            if len(filtered) == 0:
+                return
+
             reduced = reduce(lambda x,y: x+y, filtered)
 
             self.result = reduced / len(filtered)
@@ -1500,5 +1503,44 @@ class Average(CalculatorBase):
         """
         if type(self.result) == float:
             return ("%0.2f%%" % (self.result * 100)) if self.result else "n/a"
-        else:
+        elif not self.result is None:
             return '<span>%s</span>' % self.result
+        else:
+            return '<span>n/a</span>'
+
+
+class Comments(CalculatorBase):
+    """
+    Not really a calculator, but this occupies a ScorePanel. This 
+    calculator just gets the related comments and tags for districts
+    in a plan, to enable a ScorePanel to render them.
+
+    This calculator generates the typetags and labeltags required for
+    the comment/tagging form template.
+
+    This calculator only accepts districts.
+    """
+    def compute(self, **kwargs):
+        """
+        Get the related comments and tags, and store them in a dict for
+        the result. The result is suitable for passing to the template
+        that renders the comment sidebar.
+        """
+        if not 'district' in kwargs:
+            return
+        
+        district = kwargs['district']
+
+        typetags = filter(lambda tag:tag.name[:4]=='type', district.tags)
+        typetags = map(lambda tag:tag.name[5:] if tag.name[5:].count(' ') == 0 else '"%s"' % tag.name[5:], typetags)
+
+        labeltags = filter(lambda tag:tag.name[:5]=='label', district.tags)
+        labeltags = map(lambda tag:tag.name[6:], labeltags)
+
+        self.result = { 'typetags': typetags, 'labeltags': labeltags }
+
+    def html(self):
+        """
+        Fake the cache out and return the dict of typetags and labeltags.
+        """
+        return self.result

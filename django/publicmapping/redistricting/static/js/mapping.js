@@ -1352,13 +1352,10 @@ function mapinit(srs,maxExtent) {
 
                 var deleteComment = function(evt) {
                     var cmt = $(this).attr('comment_id');
+                    var ver = getPlanVersion();
                     $.ajax({
                         type:'DELETE',
-                        url: '/districtmapping/plan/' + PLAN_ID + '/district/' + evt.data.district_id + '/comment/' + cmt + '/',
-                        data: {
-                            version: getPlanVersion(),
-                            comment: cmt
-                        },
+                        url: '/districtmapping/plan/' + PLAN_ID + '/district/' + evt.data.district_id + '/comment/' + cmt + '/version/' + ver + '/',
                         success: getSuccessCallback(feature),
                         error: getErrorCallback(feature)
                     });
