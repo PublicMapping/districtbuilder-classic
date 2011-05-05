@@ -23,7 +23,7 @@
        This template changes the title of the application and some copy
        text to customize the text in the administrative section.
 
-   Author: 
+   Author:
         Andrew Jennings, David Zwarg
 
 {% endcomment %}
@@ -31,8 +31,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=8" />        
-    <meta name="author" content="David Zwarg, Andrew Jennings" />
+    <meta http-equiv="X-UA-Compatible" content="IE=8" />
+    <meta name="author" content="David Zwarg, Andrew Jennings, Kenny Shepard" />
     <meta name="copyright" content="&copy; 2010 Micah Altman, Michael McDonald"/>
     <title>Welcome to DistrictBuilder</title>
     <link rel="stylesheet" type="text/css" href="/static-media/css/reset.css"/>
@@ -68,11 +68,11 @@
   </head>
   <body id="static">
    <div class="static_wrap">
-   
+
    <div id="static_header">
       <div id="logo">
                <!--<img src="/static-media/images/title-static.png" />-->
-	       <span style="font-size:250%; font-family:arial,sans-serif; font-weight:bold; color:white">DistrictBuilder</span>	
+	       <span style="font-size:250%; font-family:arial,sans-serif; font-weight:bold; color:white">DistrictBuilder</span>
       </div>
       <div id="site_nav">
         <ul>
@@ -81,12 +81,12 @@
           <li><a href="">item</a></li>
 	-->
           <li><a href="http://www.publicmapping.org">About</a></li>
-          <li><a class="last" href="mailto:support@districtbuilder.org?subject=%5BDistrictBuilder%5D%20Support%20Request">Support</a></li>    
+          <li><a class="last" href="mailto:support@districtbuilder.org?subject=%5BDistrictBuilder%5D%20Support%20Request">Support</a></li>
         </ul>
       </div>
       <div class="clear"></div>
     </div>
-    
+
     <div id="banner">
        <img src="{{ banner_image }}" />
     </div>
@@ -134,7 +134,7 @@
               <button id="doAnonymous" id="enter_as_a_guest" />Enter as a guest</button>
 
             </form>
-            
+
             <p><a href="#">Privacy Policy</a></p>
 
         </div>
@@ -178,7 +178,7 @@
 
             <div id="forgothint">
                 <div id="got_hint">Here Is Your Hint</div>
-                <p>If this helps you remember your password, you can close 
+                <p>If this helps you remember your password, you can close
                 this dialog and log in.</p>
 
                 <input id="forgothintbox" name="forgothintbox" class="field"/>
@@ -224,14 +224,21 @@
     </div>
 
     <div id="footer">
-        <div id="copyright"><a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/3.0/88x31.png" /></a><!--<br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a>.-->  </div>
-        <div id="sponsors"><!--Sponsor Logos--></div>
+        <div id="copyright"><a class="logoLeft" rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/3.0/88x31.png" /></a>
+        <p>Powered by <a href="http://www.publicmapping.org/resources/software" target="_blank">District Builder</a>, a project of <a href="http://publicmapping.org/"target="_blank">PublicMapping.org</a>
+          </p>
+        </div>
+        <div id="sponsors">
+        <a target="_blank" class="logoRight" href="http://www.mozilla.com/?from=sfx&amp;uid=0&amp;t=306"><img border="0" src="http://sfx-images.mozilla.org/affiliates/Buttons/firefox3/110x32_get_ffx.png" alt="Spread Firefox Affiliate Button"></a>
+          <p> We've designed the software to run on <a target="_blank" href="http://www.mozilla.com/?from=sfx&amp;uid=0&amp;t=306">Mozilla Firefox</a> - a free web browser
+          </p>
+        </div>
     </div>
     </div>
     <script type="text/javascript" src="/static-media/jquery/jquery-1.4.2.js"></script>
     <script type="text/javascript" src="/static-media/jquery/jquery-ui-1.8.2.custom.min.js"></script>
-    <script type="text/javascript" src="/static-media/jquery/external/jquery.bgiframe-2.1.1.js"></script>   
-    <script type="text/javascript" src="/static-media/jquery/external/jquery.tools.tooltip.slide.min.js"></script>    
+    <script type="text/javascript" src="/static-media/jquery/external/jquery.bgiframe-2.1.1.js"></script>
+    <script type="text/javascript" src="/static-media/jquery/external/jquery.tools.tooltip.slide.min.js"></script>
     <script type="text/javascript" src="/static-media/js/ui.js"></script>
     <script type="text/javascript" src="/static-media/js/register.js"></script>
   </body>

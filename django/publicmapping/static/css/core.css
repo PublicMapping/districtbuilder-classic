@@ -368,16 +368,27 @@ div#step_leaderboard div.shadow_top  {
   top: 51px;
   opacity: .6
 }
+
+div #footer p {
+font-size: 12px;  
+width: 358px; 
+font-weight: bold;
+margin-top: -3px; 
+color: rgb(62, 107, 127);
+}
+
+div #footer a {color: #10525e}
+
+div #copyright .logoLeft {
+  float:left; margin-right: 15px;
+}
+
 div #sponsors .logoRight {
   float: right; margin-left: 15px;
 }
 
 div #sponsors p {
-font-size: 12px; 
-text-align: right; 
-width: 358px; 
-font-weight: bold; 
-color: rgb(62, 107, 127);
+text-align: right;
 }
 
 div.tab_content {
