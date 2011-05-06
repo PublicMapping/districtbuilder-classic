@@ -465,8 +465,8 @@ class Percent(CalculatorBase):
         if 'district' in kwargs:
             district = kwargs['district']
 
-            num = float(self.get_value('numerator',district))
-            den = float(self.get_value('denominator',district))
+            num = self.get_value('numerator',district)
+            den = self.get_value('denominator',district)
 
         elif 'plan' in kwargs:
             plan = kwargs['plan']

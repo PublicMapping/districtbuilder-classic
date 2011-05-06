@@ -341,14 +341,13 @@ $(function() {
 
     $('#saveplaninfo').bind('planSaved', function(event, time) {
         var local = getLocalTimeFromIsoformat(time);
-        $('#saveplaninfo').text('Last Saved at ' + (local.hours % 12) + ':' + ((local.minutes < 10) ? ('0' + local.minutes) : local.minutes));
+        $('#saveplaninfo').text('Last Saved on ' + local.day + ' at ' + (local.hours % 12) + ':' + ((local.minutes < 10) ? ('0' + local.minutes) : local.minutes));
     });
 
 
     try {
         var saved = $('#saveplaninfo').text().trim();
-        var local = getLocalTimeFromIsoformat(saved);
-        $('#saveplaninfo').text('Plan saved ' + local.day + ' at ' + (local.hours % 12) + ':' + ((local.minutes < 10) ? ('0' + local.minutes) : local.minutes));
+        $('#saveplaninfo').trigger('planSaved', [saved]);
     } catch (error) {
        // Just leave it: "no plan selected"
     }

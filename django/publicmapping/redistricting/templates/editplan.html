@@ -46,7 +46,9 @@
           <button id="rectangle_drawing_tool" title="Select by rectangle" class="btntoggle titletip" ></button>
           <button id="polygon_drawing_tool" title="Select by drawing a polygon" class="btntoggle titletip"></button>
           <button id="district_select_tool" title="Unassign all the units in a district" class="btntoggle titletip"></button>
+          {% if not plan.is_community %}
           <button id="copy_paste_tool" title="Copy a district from another plan" class="titletip"></button>
+          {% endif %}
         </div>
       </div>
       <div class="toolset_group toolset_group_w">
@@ -238,5 +240,13 @@
             }).init();
         });
     </script>
+    {% endif %}
+    {% endblock %}
+
+    {% block fix_unassigned %}
+    {% if not plan.is_community %}
+    <div id="fix_unassigned">
+        <button id="fix_unassigned_button">Fix Unassigned</button>
+    </div>
     {% endif %}
     {% endblock %}

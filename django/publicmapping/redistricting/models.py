@@ -658,6 +658,16 @@ class Plan(models.Model):
         """
         unique_together = ('name','owner','legislative_body',)
 
+    def is_community(self):
+        """
+        Determine if this plan is a community map. Community maps have no
+        limits to the number of districts -- in practicality, this limit
+        is 9999 districts.
+        """
+        if self.legislative_body is None:
+            return False
+
+        return self.legislative_body.max_districts == 9999;
     
     def targets(self):
         """

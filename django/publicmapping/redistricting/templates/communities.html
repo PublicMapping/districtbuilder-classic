@@ -1,0 +1,63 @@
+{% comment %}
+
+   Copyright 2010 Micah Altman, Michael McDonald
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+   This file is part of The Public Mapping Project
+   http://sourceforge.net/projects/publicmapping/
+
+   Purpose:
+       This template creates the district inormation on the
+       Basic Information tab
+
+       This template contains an HTML fragment for the collapsible sidebar.
+       This fragment contains a table with a column for each geographic
+       statistic, and a row for each district in the plan.
+
+   Author:
+       Andrew Jennings, David Zwarg
+
+{% endcomment %}
+<script type="text/javascript">
+         loadTooltips();
+</script>
+
+{% load humanize %}
+{% load redistricting_extras %}
+<div class="info_table">
+    {% if districtscores %}
+    <table id="demographics_table">
+        <thead>
+            <tr>
+                <th class="district_name">No.</th>
+                {% for function in functions %}
+                <th class="info_header score{{ forloop.counter }}">{{ function }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in districtscores %}
+            <tr class="{% cycle 'odd' 'even' %} inforow_{{ row.district.district_id }}">
+                <td class="district_name">{{ row.district.name|district_number }}</td>
+                {% for score in row.scores %}
+                <td class="cellcompact score{{ forloop.counter }}">{{ score.score|safe }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="error"> Sorry, there is no demographic data for this plan</div>
+    {% endif %}                    
+</div>

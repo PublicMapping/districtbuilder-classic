@@ -517,9 +517,14 @@
               <button id="multi_member_toggle">Select Multi-Member Districts</button>
           </div>
           {% endif %}
-          <div id="fix_unassigned">
-              <button id="fix_unassigned_button">Fix Unassigned</button>
-          </div>
+          {% block fix_unassigned %}
+          {% comment %}
+
+          A place holder for the "Fix Unassigned" button, which should
+          only appear when the plan is editable.
+
+          {% endcomment %}
+          {% endblock %}
           <div id="map_legend">
               <button id="legend_toggle">Map Legend</button>
           </div>
@@ -698,7 +703,11 @@
           bottom left of the map.
 
           {% endcomment %}
-          <label>{{ plan.legislative_body.name|capfirst }} Plan Name:</label> {{ plan.name|truncate:"40" }}
+          <label>
+            {{ plan.legislative_body.name|capfirst }}
+            {% if not plan.is_community %}Plan{% endif %}
+            Name:
+          </label> {{ plan.name|truncate:"40" }}
           {% else %}
           {% comment %}
 
