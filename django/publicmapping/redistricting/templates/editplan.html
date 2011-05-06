@@ -61,7 +61,7 @@
                 <option value="{{ d.district_id }}">{{ d.name }}</option>
             {% endfor %}
             {% ifnotequal max_dists districts|length %}
-                <option value="new">New District</option>
+                <option value="new">New {{ body_member }}</option>
             {% endifnotequal %}
           </select>
           <button id="dragdrop_tool" class="titletip" title="Select areas on the map then drag them to into a district for reassignment"></button>

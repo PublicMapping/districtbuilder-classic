@@ -200,7 +200,7 @@
         <li id="tab_draw"><a href="#step_draw">Step 2: Draw</a></li>
         <li id="tab_evaluate"><a href="#step_evaluate">Step 3: Evaluate</a></li>
         <li id="tab_share"><a href="#step_share">Step 4: Share</a></li>
-        {% if has_leaderboard %}        
+        {% if has_leaderboard and not plan.is_community %}
         <li id="tab_leaderboard"><a href="#step_leaderboard">Leaderboards</a></li>
         {% endif %}
       </ul>
@@ -358,7 +358,7 @@
               <div class="toolset_group">
                 <img src="/static-media/images/icon-help.png" class="help divtip">
                 <div class="tooltip">The appearance of the districts on the map</div>                
-                <label>Show Districts by:</label>
+                <label>Show {{ body_member }} by:</label>
                 {% comment %}
 
                 Dynamically populate the "Show Districts by:" dropdown,
@@ -600,7 +600,7 @@
         {% include reporting_template %}
       </div>
     </div>
-    {% if has_leaderboard %}        
+    {% if has_leaderboard and not plan.is_community %}        
     <div id="step_leaderboard" class="main_content leaderboard fulltab">
       <div class="shadow_left"></div>
       <div class="shadow_top"></div>
@@ -865,6 +865,10 @@ Include the markup for the account management panel.
         }});
 
         stats = statisticssets({}).init();
+
+        {% if plan.is_community %}
+        $('#steps').tabs('option', 'disabled', [2,3]);
+        {% endif %}
 
         // Get the list of plans after all the other plan info has loaded
         setTimeout(choose.init, 2000);
