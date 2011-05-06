@@ -52,6 +52,7 @@ div.static_wrap {
 div#static_header {
   padding: 35px 0 20px;
   margin: 0 0 20px;
+  height: 86px;
   background: url(/static-media/images/divider.png) 0 100% repeat-x;
 }  
 div#app_header {
@@ -371,14 +372,13 @@ div#step_leaderboard div.shadow_top  {
 
 div #footer p {
 font-size: 12px;  
-width: 358px; 
 font-weight: bold;
-margin-top: -3px; 
 color: rgb(62, 107, 127);
 }
 
 div #footer a {color: #10525e}
 
+div #copyright, div#sponsors {width: 350px}
 div #copyright .logoLeft {
   float:left; margin-right: 15px;
 }
