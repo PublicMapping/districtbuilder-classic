@@ -68,8 +68,9 @@
                 <td></td>
                 <td>
                     <input id="agree" name="agree" type="checkbox"/>
-                    <label id="agreelabel" for="agree">I have read the <a href="#">Privacy Policy</a> and <a href="#">Terms of Use</a></label>
+                    <label id="agreelabel" for="agree">I have read the <a href="#" onclick="$('#privacy').dialog('open');">Terms of Use</a> </label>
                 </td>
+
             </tr>
             {% endif %}
             <input type="hidden" id="userid" name="userid" 

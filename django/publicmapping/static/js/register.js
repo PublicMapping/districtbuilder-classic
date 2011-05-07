@@ -36,6 +36,7 @@ $(function(){
     };
     // configure the registration dialog
     $('#register').dialog(dOptions);
+    $('#privacy').dialog($.extend({title:'Terms of Use', height: 375},dOptions));
     $('#forgotpass').dialog($.extend({title:'Forgot Password'},dOptions));
     $('#sessiondupe').dialog($.extend({title:'Duplicate Session'},dOptions));
     $('#sessionsmax').dialog($.extend({title:'Maximum Users Exceeded'},dOptions));
