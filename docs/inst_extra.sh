@@ -151,9 +151,8 @@ PDPATCH='
 echo "$PDPATCH" | patch -bN /etc/apt/apt.conf.d/50unattended-upgrades
 
 echo "Patching gwc directory"
-PDPATCH='
-*** web.xml.bak 2011-04-26 12:47:20.396795908 +0000
---- web.xml     2011-04-26 12:49:44.576795920 +0000
+PDPATCH=' *** web.xml.orig	2011-04-22 13:02:04.000000000 +0000
+--- web.xml	2011-05-09 10:27:51.002911979 +0000
 ***************
 *** 57,63 ****
       <!-- Change the geowebcache dir -->
