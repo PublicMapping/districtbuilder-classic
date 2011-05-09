@@ -58,12 +58,6 @@ def     drop_db():
         subprocess.check_call(["service","apache2","start"])
         subprocess.check_call(["service","tomcat6","start"])
 
-  	# workaround celeryd first-time startup problem
-        subprocess.check_call(["service","celeryd","start"])
-	time.sleep(15)
-        subprocess.check_call(["service","celeryd","start"])
-	time.sleep(15)
-        subprocess.check_call(["service","celeryd","status"])
         os.chdir(olddir)
 
 
@@ -103,6 +97,8 @@ def     get_census_data(stateFips):
         print 'Retrieving additional data...'
         cmdarg = 'https://s3.amazonaws.com/redistricting_supplement_data/redist/%s_redist_data.zip' % stateFips
         subprocess.check_call(["wget","-N",cmdarg])
+        cmdarg = 'https://s3.amazonaws.com/redistricting_supplement_data/redist/%s_contiguity_overrides.csv' % stateFips
+        subprocess.call(["wget","-N",cmdarg])
         print 'Unzipping files ...'
         # unzip data files
         for i in [ cenBlockFilePrefix, cenTractFilePrefix, cenCountyFilePrefix ] :
@@ -125,6 +121,8 @@ def     get_census_data(stateFips):
         # standardize file names
         print 'Copying data files...'
         shutil.copy('%s_redist_data.csv' %stateFips , 'redist_data.csv' )
+        if (os.path.exists("%s_contiguity_overrides.csv" % stateFips)) :
+        	shutil.copy("%s_contiguity_overrides.csv" % stateFips,'redist_overrides.csv') 
         os.chdir(olddir)
 
 
@@ -341,8 +339,9 @@ def gensld_choro(geoname,varname,vartitle,quantiles):
 ###        paramaterize thresholds?
 
 class Config_Template(DictionaryTemplate):
-    _template = """
-<DistrictBuilder>
+    _template = """<DistrictBuilder>
+    <!-- Define Internal Entities to avoid Repeated Entering of Values -->
+
     <!-- Define legislative bodies referenced in the system. -->
     <LegislativeBodies>
         <!-- A Legislative body has an ID (for referencing in GeoLevel
@@ -1048,6 +1047,7 @@ class Config_Template(DictionaryTemplate):
         </ScoreDisplays>
     </Scoring>
 
+
     <Validation>
         <Criteria legislativebodyref="congress">
             <Criterion name="Equipopulation - Congress" description="&lt;p&gt;Your plan does not meet the competition criteria for Equipopulation:&lt;/p&gt;&lt;p&gt; The population of each Congressional district must be %(pop_congress_max)s-%(pop_congress_min)s">  
@@ -1119,6 +1119,8 @@ class Config_Template(DictionaryTemplate):
     </ContiguityOverrides>
     -->
 
+	<!-- Contiguity Overrides, if Any -->
+	%(contiguityOverrideString)s
 
     <GeoLevels>
       <GeoLevel id="block" name="block" min_zoom="6" sort_key="3" tolerance="2.5">
@@ -1400,7 +1402,7 @@ class Config_Template(DictionaryTemplate):
 def gen_config(num_districts_congress,num_districts_senate,num_districts_house,sum_TOTPOP,has_election_data=0,has_vtds=0, conf_na=False , 
 target_na_congress=0, target_hisp_congress = 0 , target_bl_congress = 0,
 target_na_house=0, target_hisp_house = 0 , target_bl_house = 0,
-target_na_senate =0, target_hisp_senate = 0 , target_bl_senate = 0): 
+target_na_senate =0, target_hisp_senate = 0 , target_bl_senate = 0, contiguityOverrideString = ""): 
 
         start_elec="<!--"        
         start_na="<!--"        
@@ -1427,7 +1429,7 @@ target_na_senate =0, target_hisp_senate = 0 , target_bl_senate = 0):
         pop_senate_min = int(round((sum_TOTPOP/float(num_districts_senate)) * 0.9))
         target_file = '/projects/publicmapping/trunk/docs/config_census_generated.xml'
         f = open(target_file,'w')
-        f.write(str( Config_Template(start_elec=start_elec,end_elec=end_elec,num_districts_congress=num_districts_congress,num_districts_house=num_districts_house,num_districts_senate=num_districts_senate,pop_congress_max=pop_congress_max,pop_congress_min=pop_congress_min,pop_senate_max=pop_senate_max, pop_senate_min=pop_senate_min,pop_house_max=pop_house_max,pop_house_min=pop_house_min,pop_congress=pop_congress,pop_senate=pop_senate,pop_house=pop_house,start_na=start_na, end_na=end_na, target_na_congress=target_na_congress, target_hisp_congress=target_hisp_congress, target_bl_congress=target_bl_congress, target_na_house=target_na_house, target_hisp_house=target_hisp_house, target_bl_house=target_bl_house, target_na_senate=target_na_senate, target_hisp_senate=target_hisp_senate, target_bl_senate=target_bl_senate)))
+        f.write(str( Config_Template(start_elec=start_elec,end_elec=end_elec,num_districts_congress=num_districts_congress,num_districts_house=num_districts_house,num_districts_senate=num_districts_senate,pop_congress_max=pop_congress_max,pop_congress_min=pop_congress_min,pop_senate_max=pop_senate_max, pop_senate_min=pop_senate_min,pop_house_max=pop_house_max,pop_house_min=pop_house_min,pop_congress=pop_congress,pop_senate=pop_senate,pop_house=pop_house,start_na=start_na, end_na=end_na, target_na_congress=target_na_congress, target_hisp_congress=target_hisp_congress, target_bl_congress=target_bl_congress, target_na_house=target_na_house, target_hisp_house=target_hisp_house, target_bl_house=target_bl_house, target_na_senate=target_na_senate, target_hisp_senate=target_hisp_senate, target_bl_senate=target_bl_senate,contiguityOverrideString=contiguityOverrideString)))
 	f.write("\n")
         f.close()
         os.chmod(target_file,stat.S_IRUSR|stat.S_IRGRP|stat.S_IROTH)    
@@ -1534,6 +1536,15 @@ if ( (parseResults.do_genconf) or (parseResults.do_gensld)) :
 	# NOTE: robject is returning 6-level quantiles, has_election_data, has_vtd, sum_TOTPOP
 	has_election_data = robjects.r.has_election_data
 
+if ( parseResults.do_genconf) :
+	robjects.r.source("/projects/publicmapping/trunk/docs/loadcensus/contiguityOverride.R")
+	# TODO: should work but has embedded string forwarding	
+	#contiguityOverrideString = robjects.r.contiguityOverrideString
+	f = open('/projects/publicmapping/trunk/docs/generated_overrides.xml', 'r')
+	contiguityOverrideString = f.read()
+	f.close()
+	
+
 # TODO: refactor as matrix of varnames and geographies
 if ( parseResults.do_gensld) :
 	print 'generating choropleth slds ...'
@@ -1579,7 +1590,7 @@ if (parseResults.do_genconf):
 	gen_config(num_districts_congress=congDis,num_districts_senate=senDis,num_districts_house=houseDis,sum_TOTPOP=sum_TOTPOP,has_election_data=has_election_data,has_vtds=0,conf_na=parseResults.conf_na, 
 target_na_congress=parseResults.target_na_congress, target_hisp_congress = parseResults.target_hisp_congress, target_bl_congress = parseResults.target_bl_congress,
 target_na_house=parseResults.target_na_house, target_hisp_house = parseResults.target_hisp_house, target_bl_house = parseResults.target_bl_house,
-target_na_senate=parseResults.target_na_senate, target_hisp_senate = parseResults.target_hisp_senate, target_bl_senate = parseResults.target_bl_senate) 
+target_na_senate=parseResults.target_na_senate, target_hisp_senate = parseResults.target_hisp_senate, target_bl_senate = parseResults.target_bl_senate, contiguityOverrideString=contiguityOverrideString) 
 
 if (parseResults.do_run):
 	print 'running setup-py ... '
@@ -1595,3 +1606,6 @@ else:
 
 
 
+# workaround celeryd first-time startup problem
+print 'Starting celeryd ...'
+subprocess.check_call(["service","celeryd","start"])
