@@ -1,0 +1,35 @@
+*** index.html.educational 	2011-05-09 09:20:59.852551144 +0000
+---  /projects/publicmapping/trunk/django/publicmapping/templates/index.html 2011-05-09 09:19:49.952551154 +0000
+***************
+*** 229,234 ****
+--- 229,239 ----
+  
+      <div id="privacy">
+                  <h4 class="first">The following discloses our information gathering and dissemination practices; and terms of use for this web site.</h4>
++         <h4>Who may use this site</h4>
++ 
++         <ul>
++           <li>This site is for educational use only. Only students, faculty, and affiliates of educational institutions may register to create maps on this site. A .edu mail address is required for registration. If you are afffiliated with an educational institution, but do not have a .edu e-mail address, please contact <a href="mailto:support@publicmapping.org">support@publicmapping.org</a></li>
++   	</ul>
+          <h4>Information gathering</h4>
+          <ul>
+            <li>Our web server software generates logfiles of the IP addresses of computers that access this web site and of what files they access.</li>
+***************
+*** 263,271 ****
+            </p>
+          </div>
+          <div id="sponsors">
+!         <a target="_blank" class="logoRight" href="http://www.mozilla.com/?from=sfx&amp;uid=0&amp;t=306"><img border="0" src="http://sfx-images.mozilla.org/affiliates/Buttons/firefox3/110x32_get_ffx.png" alt="Spread Firefox Affiliate Button"></a>
+!           <p> We've designed the software to run on <a target="_blank" href="http://www.mozilla.com/?from=sfx&amp;uid=0&amp;t=306">Mozilla Firefox</a> - a free web browser
+!           </p>
+          </div>
+  
+      </div>
+--- 268,274 ----
+            </p>
+          </div>
+          <div id="sponsors">
+! 	 <div><p><a rel="websupport" href="http://aws.amazon.com/education/" target="_blank"><img alt="Amazon Web Services in Education" style="border-width:0" height="31" src="http://awsmedia.s3.amazonaws.com/logo_aws.gif"></a><br/>Educational use sponsored by AWS in Education </p></div>
+          </div>
+  
+      </div>

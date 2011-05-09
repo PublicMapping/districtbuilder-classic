@@ -19,6 +19,7 @@ import shutil
 import psycopg2 as dbapi2
 import optparse
 import string
+import time
 
 
 ### 
@@ -50,10 +51,13 @@ def     drop_db():
         os.chdir("/tmp")
         subprocess.check_call(["service","tomcat6","stop"])
         subprocess.check_call(["service","celeryd","stop"])
+        subprocess.check_call(["service","apache2","stop"])
+        subprocess.check_call(["service","apache2","restart"])
         subprocess.check_call(['su postgres -c "dropdb publicmapping"'],shell=True)
         subprocess.check_call(['cat /projects/publicmapping/trunk/sql/publicmapping_db.sql | su postgres -c "psql -f - postgres"'],shell=True)
+        subprocess.check_call(["service","apache2","start"])
         subprocess.check_call(["service","tomcat6","start"])
-        subprocess.check_call(["service","celeryd","start"])
+
         os.chdir(olddir)
 
 
@@ -73,6 +77,8 @@ def     install_dependencies():
 ### This retrieves the census files,unzips and reprojects (using ogr2ogr) 
 
 def     get_census_data(stateFips): 
+	if (stateFips<10) :
+		stateFips = "0%s" % stateFips
         print 'Retrieving census shapefiles...'
         # put all data in publicmapping data directory
         olddir = os.getcwd()
@@ -91,6 +97,8 @@ def     get_census_data(stateFips):
         print 'Retrieving additional data...'
         cmdarg = 'https://s3.amazonaws.com/redistricting_supplement_data/redist/%s_redist_data.zip' % stateFips
         subprocess.check_call(["wget","-N",cmdarg])
+        cmdarg = 'https://s3.amazonaws.com/redistricting_supplement_data/redist/%s_contiguity_overrides.csv' % stateFips
+        subprocess.call(["wget","-N",cmdarg])
         print 'Unzipping files ...'
         # unzip data files
         for i in [ cenBlockFilePrefix, cenTractFilePrefix, cenCountyFilePrefix ] :
@@ -103,12 +111,18 @@ def     get_census_data(stateFips):
         print 'Reprojecting block shapefile...'
         if (os.path.exists("census_blocks.shp")) :
                 os.remove('census_blocks.shp')
+        if (os.path.exists("census_tracts.shp")) :
+                os.remove('census_tracts.shp')
+        if (os.path.exists("census_counties.shp")) :
+                os.remove('census_counties.shp')
         subprocess.check_call(["ogr2ogr",'-overwrite','-t_srs','EPSG:3785','census_blocks.shp','%s.shp' % cenBlockFilePrefix ])
+        subprocess.check_call(["ogr2ogr",'-overwrite','-t_srs','EPSG:3785','census_tracts.shp','%s.shp' % cenTractFilePrefix])
+        subprocess.check_call(["ogr2ogr",'-overwrite','-t_srs','EPSG:3785','census_counties.shp','%s.shp' % cenCountyFilePrefix])
         # standardize file names
         print 'Copying data files...'
-        shutil.copy('%s.dbf' % cenTractFilePrefix, 'census_tracts.dbf' )
-        shutil.copy('%s.dbf' % cenCountyFilePrefix, 'census_county.dbf' )
         shutil.copy('%s_redist_data.csv' %stateFips , 'redist_data.csv' )
+        if (os.path.exists("%s_contiguity_overrides.csv" % stateFips)) :
+        	shutil.copy("%s_contiguity_overrides.csv" % stateFips,'redist_overrides.csv') 
         os.chdir(olddir)
 
 
@@ -158,8 +172,7 @@ class Empty_Template(ListTemplate):
 ###
 
 class SldList_Template(DictionaryTemplate):
-    _template = """
-<?xml version="1.0" encoding="ISO-8859-1"?>
+    _template = """<?xml version="1.0" encoding="ISO-8859-1"?>
 <StyledLayerDescriptor version="1.0.0" xmlns="http://www.opengis.net/sld" xmlns:ogc="http://www.opengis.net/ogc" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.0.0/StyledLayerDescriptor.xsd">
   <NamedLayer>
     <Name>%(layername)s</Name>
@@ -238,7 +251,8 @@ class Sld_Range_Template(ListTemplate):
                 <ogc:PropertyName>number</ogc:PropertyName>
                 <ogc:Literal>%(bottom)s</ogc:Literal>
               </ogc:PropertyIsGreaterThanOrEqualTo>
-            </ogc:And>          </ogc:Filter>          
+            </ogc:And>
+          </ogc:Filter>          
           <PolygonSymbolizer>
             <Fill>
               <CssParameter name="fill">%(fill)s</CssParameter>
@@ -249,17 +263,38 @@ class Sld_Range_Template(ListTemplate):
         """
 
 
+class Sld_URange_Template(ListTemplate):
+    _template = """
+        <Rule>
+          <Title>%(bottom)s-%(top)s</Title>
+          <ogc:Filter>
+              <ogc:PropertyIsGreaterThanOrEqualTo>
+                <ogc:PropertyName>number</ogc:PropertyName>
+                <ogc:Literal>%(bottom)s</ogc:Literal>
+              </ogc:PropertyIsGreaterThanOrEqualTo>
+          </ogc:Filter>          
+          <PolygonSymbolizer>
+            <Fill>
+              <CssParameter name="fill">%(fill)s</CssParameter>
+              <CssParameter name="fill-opacity">%(fillopacity)s</CssParameter>
+            </Fill>
+          </PolygonSymbolizer>
+        </Rule>
+        """
 
 def gensld_none(geoname):
         target_file = '/projects/publicmapping/trunk/sld/%s_none.sld' % (geoname)       
         f = open(target_file,'w')
-        f.write ( str(SldList_Template(layername="%s No fill" % (geoname),layertitle="%s No Fill" % (geoname) ,layerabs="A style showing the boundaries of a geounit with a transparent fill", slst=[],sli=Empty_Template, lst=[{"title":"Fill","fill":"#FFFFFF","fillopacity":"0.5"}],li=Sld_Poly_Template,elst=[{"title":"Boundary","stroke":"#555555","strokewidth":"0.25","strokeopacity":"1.0"}],eli=Sld_Line_Template)) )
+        f.write ( str(SldList_Template(layername="%s No fill" % (geoname),layertitle="%s No Fill" % (geoname) ,layerabs="A style showing the boundaries of a geounit with a transparent fill", slst=[],sli=Empty_Template, lst=[{"title":"Fill","fill":"#FFFFFF","fillopacity":"1.0"}],li=Sld_Poly_Template,elst=[{"title":"Boundary","stroke":"#555555","strokewidth":"3.00","strokeopacity":"1.0"}],eli=Sld_Line_Template)) )
+	f.write("\n")
         f.close()
         os.chmod(target_file,stat.S_IRUSR|stat.S_IRGRP|stat.S_IROTH)    
+
 def gensld_boundaries(geoname):
         target_file = '/projects/publicmapping/trunk/sld/%s_boundaries.sld' % (geoname) 
         f = open(target_file,'w')
         f.write ( str(SldList_Template(layername="%s Boundaries" % (geoname) ,layertitle="%s Boundaries Only" %(geoname),layerabs="A style showing the boundaries of a geounit", slst=[] ,sli=Empty_Template, lst=[],li=Empty_Template,elst=[{"title":"County Boundaries","fill":"#000000","fillopacity":"0.0","stroke":"#2255FF","strokewidth":"2","strokeopacity":"0.35"}],eli=Sld_PolyB_Template)))
+	f.write("\n")
         f.close()
         os.chmod(target_file,stat.S_IRUSR|stat.S_IRGRP|stat.S_IROTH)  
 
@@ -270,28 +305,31 @@ def gensld_choro(geoname,varname,vartitle,quantiles):
         target_file = '/projects/publicmapping/trunk/sld/%s_%s.sld' % (geoname,lvarname) 
         varabs="Grayscale choropleth based on quantiles of %s" % (varname)
         valuelist= [
-          {"top": str(quantiles[5]),
-          "bottom": str(quantiles[4]),
-          "fill": "#000000",
-          "fillopacity":"0.5"},
           {"top": str(quantiles[4]),
           "bottom": str(quantiles[3]),
           "fill": "#444444",
-          "fillopacity":"0.5"},
+          "fillopacity":"1.0"},
           {"top": str(quantiles[3]),
           "bottom": str(quantiles[2]),
           "fill": "#777777",
-          "fillopacity":"0.5"},
+          "fillopacity":"1.0"},
           {"top": str(quantiles[2]),
           "bottom": str(quantiles[1]),
           "fill": "#AAAAAA",
-          "fillopacity":"0.5"},
+          "fillopacity":"1.0"},
           {"top": str(quantiles[1]),
           "bottom": str(quantiles[0]),
           "fill": "#EEEEEE",
-          "fillopacity":"0.5"}]
+          "fillopacity":"1.0"}]
+
+   	svaluelist = [{"top": str(quantiles[5]),
+          "bottom": str(quantiles[4]),
+          "fill": "#000000",
+          "fillopacity":"1.0"}]
+
         f = open(target_file,'w')
-        f.write(str( SldList_Template(layername=varname,layertitle=vartitle,layerabs=varabs,slst=[],sli=Empty_Template, lst=valuelist,li=Sld_Range_Template,elst=[{"title":"Boundary","stroke":"#555555","strokewidth":"0.25","strokeopacity":"1.0"}],eli=Sld_Line_Template) ))
+        f.write(str( SldList_Template(layername=lvarname,layertitle=vartitle,layerabs=varabs,slst=svaluelist,sli=Sld_URange_Template, lst=valuelist,li=Sld_Range_Template,elst=[{"title":"Boundary","stroke":"#555555","strokewidth":"0.25","strokeopacity":"1.0"}],eli=Sld_Line_Template) ))
+	f.write("\n")
         f.close()
         os.chmod(target_file,stat.S_IRUSR|stat.S_IRGRP|stat.S_IROTH)  
 
@@ -301,8 +339,9 @@ def gensld_choro(geoname,varname,vartitle,quantiles):
 ###        paramaterize thresholds?
 
 class Config_Template(DictionaryTemplate):
-    _template = """
-<DistrictBuilder>
+    _template = """<DistrictBuilder>
+    <!-- Define Internal Entities to avoid Repeated Entering of Values -->
+
     <!-- Define legislative bodies referenced in the system. -->
     <LegislativeBodies>
         <!-- A Legislative body has an ID (for referencing in GeoLevel
@@ -318,20 +357,19 @@ class Config_Template(DictionaryTemplate):
 	 The subject is mapped to an attribute during the import phase,
             and contains a long and short display name. Subjects have IDs
             for referencing in GeoLevel definitions later. -->
-        <Subject id="totpop" field="TOTPOP" name="Total Population" short_name="Total Pop." displayed="true" sortkey="1" />
-        <Subject id="totpop_b" field="TOTPOP_B" name="African-American" short_name="Black" displayed="false" sortkey="2" />        
-	<Subject id="totpop_h" field="TOTPOP_H" name="Hispanic or Latino" short_name="Hispanic" displayed="false" sortkey="3" />
-	<Subject id="totpop_na" field="TOTPOP_NA" name="Native American" short_name="Nat Amer" displayed="false" sortkey="4" />
-        <Subject id="vap" field="VAP" name="Voting Age Population" short_name="Total Pop." displayed="true" sortkey="5" />
-        <Subject id="vap_b" field="VAP_B" name="African-American Voting Age Population" short_name="Black VAP " displayed="false" sortkey="6" />
-        <Subject id="vap_h" field="VAP_H" name="Hispanic or Latino voting age population" short_name="Hispanic VAP" displayed="false" sortkey="8" />
-        <Subject id="vap_na" field="VAP_NA" name="Native American Voting Age Population" short_name="Nat Amer VAP" displayed="false" sortkey="9" />
-
+        <Subject id="vap_b" field="VAP_B" name="African-American Voting Age Population" short_name="Black VAP " displayed="true" sortkey="1" percentage_denominator="vap" />
+        <Subject id="vap_h" field="VAP_H" name="Hispanic or Latino voting age population" short_name="Hispanic VAP" displayed="true" sortkey="2" percentage_denominator="vap" />
+        <Subject id="vap_na" field="VAP_NA" name="Native American Voting Age Population" short_name="Nat Amer VAP" displayed="true" sortkey="3" percentage_denominator="vap" />
         %(start_elec)s
-        <Subject id="vote_dem" field="VOTE_DEM" name="number of likely Democratic voters" short_name="democratic voters" displayed="false" sortkey="10" />
-        <Subject id="vote_rep" field="VOTE_REP" name="number of likely Republican voters" short_name="democratic voters" displayed="false" sortkey="11" />
-        <Subject id="vote_tot" field="VOTE_TOT" name="number of likely Republican voters" short_name="democratic voters" displayed="false" sortkey="12" />
+        <Subject id="vote_dem" field="VOTE_DEM" name="number of likely Democratic voters" short_name="democratic voters" displayed="true" sortkey="4" percentage_denominator="vote_tot" />
+        <Subject id="vote_rep" field="VOTE_REP" name="number of likely Republican voters" short_name="democratic voters" displayed="true" sortkey="5" percentage_denominator="vote_tot" />
+        <Subject id="vote_tot" field="VOTE_TOT" name="number of likely Republican voters" short_name="democratic voters" displayed="false" sortkey="6" />
         %(end_elec)s
+        <Subject id="vap" field="VAP" name="Voting Age Population" short_name="Total Pop." displayed="true" sortkey="7" />
+        <Subject id="totpop_b" field="TOTPOP_B" name="African-American" short_name="Black" displayed="false" sortkey="8" />        
+	<Subject id="totpop_h" field="TOTPOP_H" name="Hispanic or Latino" short_name="Hispanic" displayed="false" sortkey="9" />
+	<Subject id="totpop_na" field="TOTPOP_NA" name="Native American" short_name="Nat Amer" displayed="false" sortkey="10" />
+        <Subject id="totpop" field="TOTPOP" name="Total Population" short_name="Total Pop." displayed="true" sortkey="11" />
    </Subjects>
     <Targets>
         <!-- A target is an objective measure of a district for a legislative
@@ -355,26 +393,38 @@ class Config_Template(DictionaryTemplate):
             <!-- A district score that returns a percentage -->
             <ScoreFunction id="district_blkvap_percent" type="district"
                 calculator="publicmapping.redistricting.calculators.Percent"
-                label="Black vap" user_selectable="true">
+                label="Black VAP" user_selectable="true">
                 <SubjectArgument name="numerator" ref="vap_b" />
                 <SubjectArgument name="denominator" ref="vap" />
             </ScoreFunction>
             <ScoreFunction id="district_blkvap_thresh" type="district"
                 calculator="publicmapping.redistricting.calculators.Threshold"
-                label="Black vap Threshold">
+                label="Black VAP Threshold">
                 <ScoreArgument name="value" ref="district_blkvap_percent" />
                 <Argument name="threshold" value="0.5" />
             </ScoreFunction>
             <ScoreFunction id="district_hispvap_percent" type="district"
                 calculator="publicmapping.redistricting.calculators.Percent"
-                label="His. vap" user_selectable="true">
+                label="Hisp. VAP" user_selectable="true">
                 <SubjectArgument name="numerator" ref="vap_h" />
                 <SubjectArgument name="denominator" ref="vap" />
             </ScoreFunction>
             <ScoreFunction id="district_hispvap_thresh" type="district"
                 calculator="publicmapping.redistricting.calculators.Threshold"
-                label="His. vap Threshold">
+                label="Hisp. VAP Threshold">
                 <ScoreArgument name="value" ref="district_hispvap_percent" />
+                <Argument name="threshold" value="0.5" />
+            </ScoreFunction>
+            <ScoreFunction id="district_navap_percent" type="district"
+                calculator="publicmapping.redistricting.calculators.Percent"
+                label="Native American VAP" user_selectable="true">
+                <SubjectArgument name="numerator" ref="vap_na" />
+                <SubjectArgument name="denominator" ref="vap" />
+            </ScoreFunction>
+            <ScoreFunction id="district_navap_thresh" type="district"
+                calculator="publicmapping.redistricting.calculators.Threshold"
+                label="Native American VAP Threshold">
+                <ScoreArgument name="value" ref="district_navap_percent" />
                 <Argument name="threshold" value="0.5" />
             </ScoreFunction>
 
@@ -470,6 +520,11 @@ class Config_Template(DictionaryTemplate):
                 <ScoreArgument name="value1" ref="district_hispvap_thresh" />
             </ScoreFunction>
 
+            <ScoreFunction id="plan_navap_thresh" type="plan"
+                calculator="publicmapping.redistricting.calculators.Sum">
+                <ScoreArgument name="value1" ref="district_navap_thresh" />
+            </ScoreFunction>
+
             <!-- A plan score that evaluates a threshold, and returns T/F.
                 This plan score checks that all districts are within the
                 population limits. -->
@@ -489,16 +544,30 @@ class Config_Template(DictionaryTemplate):
                 <Argument name="threshold" value="0" />
             </ScoreFunction>
 
-            <ScoreFunction id="plan_contiguous" type="plan"
+          <ScoreFunction id="plan_contiguous" type="plan"
                 calculator="publicmapping.redistricting.calculators.Sum"
                 label="Contiguous">
                 <ScoreArgument name="value1" ref="district_contiguous"/>
             </ScoreFunction>
 
-            <ScoreFunction id="plan_noncontiguous" type="plan"
-                calculator="publicmapping.redistricting.calculators.NonContiguous"
-                label="Noncontiguous">
+            <ScoreFunction id="b_plan_congress_noncontiguous" type="plan"
+                calculator="publicmapping.redistricting.calculators.Contiguity"
+                label="Contiguous">
+                <Argument name="target" value="%(num_districts_congress)s" />
             </ScoreFunction>
+
+            <ScoreFunction id="b_plan_house_noncontiguous" type="plan"
+                calculator="publicmapping.redistricting.calculators.Contiguity"
+                label="Contiguous">
+                <Argument name="target" value="%(num_districts_house)s" />
+            </ScoreFunction>
+
+            <ScoreFunction id="b_plan_senate_noncontiguous" type="plan"
+                calculator="publicmapping.redistricting.calculators.Contiguity"
+                label="Contiguous">
+                <Argument name="target" value="%(num_districts_senate)s" />
+            </ScoreFunction>
+
 
             <!-- interval score function for population -->
             <ScoreFunction id="a_congressional_population" type="district"
@@ -535,24 +604,84 @@ class Config_Template(DictionaryTemplate):
             <ScoreFunction id="a_congress_plan_count_districts" type="plan"
                 calculator="publicmapping.redistricting.calculators.CountDistricts"
                 label="Count Districts"
-                description="The number of districts in a Congressional redistricting plan must be 11.">
+                description="The number of districts in a Congressional redistricting plan must be %(num_districts_congress)s.">
                 <Argument name="target" value="%(num_districts_congress)s" />
             </ScoreFunction>
 
             <ScoreFunction id="a_house_plan_count_districts" type="plan"
                 calculator="publicmapping.redistricting.calculators.CountDistricts"
                 label="Count Districts"
-                description="The number of districts in a House of Delegates redistricting plan must be 100.">
+                description="The number of districts in a House of Delegates redistricting plan must be %(num_districts_house)s.">
                 <Argument name="target" value="%(num_districts_house)s" />
             </ScoreFunction>
 
             <ScoreFunction id="a_senate_plan_count_districts" type="plan"
                 calculator="publicmapping.redistricting.calculators.CountDistricts"
                 label="Count Districts"
-                description="The number of districts in a State Senate redistricting plan must be 100.">
+                description="The number of districts in a State Senate redistricting plan must be %(num_districts_senate)s.">
                 <Argument name="target" value="%(num_districts_senate)s" />
             </ScoreFunction>
 
+
+            <ScoreFunction id="a_congress_plan_equipopulation_validation" type="plan"
+                calculator="publicmapping.redistricting.calculators.Equipopulation"
+                label="Target Pop. %(pop_congress)s"
+                description="The population of each Congressional district must be %(pop_congress_min)s-%(pop_congress_max)s">
+                <Argument name="min" value="%(pop_congress_min)s"/>
+                <Argument name="max" value="%(pop_congress_max)s"/>
+                <SubjectArgument name="value" ref="totpop"/>
+                <Argument name="validation" value="1"/>
+            </ScoreFunction>
+
+            <ScoreFunction id="a_congress_plan_equipopulation_summary" type="plan"
+                calculator="publicmapping.redistricting.calculators.Equipopulation"
+                label="Target Pop. %(pop_congress)s"
+                description="The population of each Congressional district must be %(pop_congress_min)s-%(pop_congress_max)s">
+                <Argument name="min" value="%(pop_congress_min)s"/>
+                <Argument name="max" value="%(pop_congress_max)s"/>
+                <SubjectArgument name="value" ref="totpop"/>
+		<Argument name="target" value="%(num_districts_congress)s"/>
+            </ScoreFunction>
+
+            <ScoreFunction id="a_senate_plan_equipopulation_validation" type="plan"
+                calculator="publicmapping.redistricting.calculators.Equipopulation"
+                label="Target Pop. %(pop_senate)s"
+                description="The population of each Senate district must be %(pop_senate_min)s-%(pop_senate_max)s">
+                <Argument name="min" value="%(pop_senate_min)s"/>
+                <Argument name="max" value="%(pop_senate_max)s"/>
+                <SubjectArgument name="value" ref="totpop"/>
+                <Argument name="validation" value="1"/>
+            </ScoreFunction>
+
+            <ScoreFunction id="a_senate_plan_equipopulation_summary" type="plan"
+                calculator="publicmapping.redistricting.calculators.Equipopulation"
+                label="Target Pop. %(pop_senate)s"
+                description="The population of each Senate district must be %(pop_senate_min)s-%(pop_senate_max)s">
+                <Argument name="min" value="%(pop_senate_min)s"/>
+                <Argument name="max" value="%(pop_senate_max)s"/>
+                <SubjectArgument name="value" ref="totpop"/>
+		<Argument name="target" value="%(num_districts_senate)s"/>
+            </ScoreFunction>
+
+            <ScoreFunction id="a_house_plan_equipopulation_validation" type="plan"
+                calculator="publicmapping.redistricting.calculators.Equipopulation"
+                label="Target Pop. %(pop_house)s"
+                description="The population of each House district must be %(pop_house_min)s-%(pop_house_max)s">
+                <Argument name="min" value="%(pop_house_min)s"/>
+                <Argument name="max" value="%(pop_house_max)s"/>
+                <SubjectArgument name="value" ref="totpop"/>
+                <Argument name="validation" value="1"/>
+            </ScoreFunction>
+
+            <ScoreFunction id="a_house_plan_equipopulation_summary" type="plan"
+                calculator="publicmapping.redistricting.calculators.Equipopulation"
+                label="Target Pop. %(pop_house)s"
+                description="The population of each House district must be %(pop_house_min)s-%(pop_house_max)s">
+                <Argument name="min" value="%(pop_house_min)s"/>
+                <Argument name="max" value="%(pop_house_max)s"/>
+                <SubjectArgument name="value" ref="totpop"/>
+		<Argument name="target" value="%(num_districts_house)s"/>
+            </ScoreFunction>
 
             <ScoreFunction id="plan_all_blocks_assigned" type="plan"
                 calculator="publicmapping.redistricting.calculators.AllBlocksAssigned"
@@ -560,37 +689,9 @@ class Config_Template(DictionaryTemplate):
                 description="All blocks in the plan must be assigned.">
             </ScoreFunction>
 
-            <ScoreFunction id="a_congress_plan_equipopulation" type="plan"
-                calculator="publicmapping.redistricting.calculators.Equipopulation"
-                label="Target Pop. %(pop_congress)s"
-                description="The population of each Congressional district must be %(pop_congress_min)s-%(pop_congress_max)s">
-                <Argument name="min" value="%(pop_congress_min)s"/>
-                <Argument name="max" value="%(pop_congress_max)s"/>
-                <SubjectArgument name="value" ref="totpop"/>
-            </ScoreFunction>
-
-            <ScoreFunction id="a_senate_plan_equipopulation" type="plan"
-                calculator="publicmapping.redistricting.calculators.Equipopulation"
-                label="Target Pop. %(pop_senate)s"
-                description="The population of each Senate district must be %(pop_senate_min)s-%(pop_senate_max)s">
-                <Argument name="min" value="%(pop_senate_min)s"/>
-                <Argument name="max" value="%(pop_senate_max)s"/>
-                <SubjectArgument name="value" ref="totpop"/>
-            </ScoreFunction>
-
-            <ScoreFunction id="a_house_plan_equipopulation" type="plan"
-                calculator="publicmapping.redistricting.calculators.Equipopulation"
-                label="Target Pop. %(pop_house)s"
-                description="The population of each House district must be %(pop_house_min)s-%(pop_house_max)s">
-                <Argument name="min" value="%(pop_house_min)s"/>
-                <Argument name="max" value="%(pop_house_max)s"/>
-                <SubjectArgument name="value" ref="totpop"/>
-            </ScoreFunction>
-
-
 
             <ScoreFunction id="plan_all_contiguous" type="plan"
-                calculator="publicmapping.redistricting.calculators..AllContiguous"
+                calculator="publicmapping.redistricting.calculators.AllContiguous"
                 label="All Contiguous"
                 description="Contiguity means that every part of a district must be reachable from every other part without crossing the district&apos;s borders. All districts within a plan must be contiguous. Water contiguity is permitted given Virginia&apos;s extensive coastal region. &apos;Point contiguity&apos; or &apos;touch-point contiguity&apos; where two sections of a district are connected at a single point is not permitted.">
             </ScoreFunction>
@@ -611,31 +712,85 @@ class Config_Template(DictionaryTemplate):
                 <SubjectArgument name="value" ref="totpop" />
             </ScoreFunction>
 
-            <ScoreFunction id="plan_majority_minority_blk" type="plan"
+            <ScoreFunction id="plan_majority_minority_blk_congress" type="plan"
                 calculator="publicmapping.redistricting.calculators.MajorityMinority"
-                label="Black vap Majority (target)"
+                label="Black VAP Majority (&gt; 50%%)"
                 description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
                 <SubjectArgument name="population" ref="vap" />
                 <SubjectArgument name="minority1" ref="vap_b" />
-                <Argument name="target" value="1" />
+                <Argument name="target" value="%(target_bl_congress)s" />
             </ScoreFunction>
 
-            <ScoreFunction id="plan_majority_minority_hisp" type="plan"
+            <ScoreFunction id="plan_majority_minority_blk_house" type="plan"
                 calculator="publicmapping.redistricting.calculators.MajorityMinority"
-                label="Hisp. vap Majority (target)"
+                label="Black VAP Majority (&gt; 50%%)"
+                description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
+                <SubjectArgument name="population" ref="vap" />
+                <SubjectArgument name="minority1" ref="vap_b" />
+                <Argument name="target" value="%(target_bl_house)s" />
+            </ScoreFunction>
+
+            <ScoreFunction id="plan_majority_minority_blk_senate" type="plan"
+                calculator="publicmapping.redistricting.calculators.MajorityMinority"
+                label="Black VAP Majority (&gt; 50%%)"
+                description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
+                <SubjectArgument name="population" ref="vap" />
+                <SubjectArgument name="minority1" ref="vap_b" />
+                <Argument name="target" value="%(target_bl_senate)s" />
+            </ScoreFunction>
+
+            <ScoreFunction id="plan_majority_minority_hisp_congress" type="plan"
+                calculator="publicmapping.redistricting.calculators.MajorityMinority"
+                label="Hisp. VAP Majority (&gt; 50%%)"
                 description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
                 <SubjectArgument name="population" ref="vap" />
                 <SubjectArgument name="minority1" ref="vap_h" />
-                <Argument name="target" value="0" />
+                <Argument name="target" value="%(target_hisp_congress)s" />
             </ScoreFunction>
 
-            <ScoreFunction id="plan_majority_minority_na" type="plan"
+            <ScoreFunction id="plan_majority_minority_hisp_house" type="plan"
                 calculator="publicmapping.redistricting.calculators.MajorityMinority"
-                label="Native Americah Majority (target)"
+                label="Hisp. VAP Majority (&gt; 50%%)"
+                description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
+                <SubjectArgument name="population" ref="vap" />
+                <SubjectArgument name="minority1" ref="vap_h" />
+                <Argument name="target" value="%(target_hisp_house)s" />
+            </ScoreFunction>
+
+            <ScoreFunction id="plan_majority_minority_hisp_senate" type="plan"
+                calculator="publicmapping.redistricting.calculators.MajorityMinority"
+                label="Hisp. VAP Majority (&gt; 50%%)"
+                description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
+                <SubjectArgument name="population" ref="vap" />
+                <SubjectArgument name="minority1" ref="vap_h" />
+                <Argument name="target" value="%(target_hisp_senate)s" />
+            </ScoreFunction>
+
+            <ScoreFunction id="plan_majority_minority_na_congress" type="plan"
+                calculator="publicmapping.redistricting.calculators.MajorityMinority"
+                label="Native American Majority (&gt; 50%%)"
                 description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
                 <SubjectArgument name="population" ref="vap" />
                 <SubjectArgument name="minority1" ref="vap_na" />
-                <Argument name="target" value="0" />
+                <Argument name="target" value="%(target_na_congress)s" />
+            </ScoreFunction>
+
+            <ScoreFunction id="plan_majority_minority_na_house" type="plan"
+                calculator="publicmapping.redistricting.calculators.MajorityMinority"
+                label="Native American Majority (&gt; 50%%)"
+                description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
+                <SubjectArgument name="population" ref="vap" />
+                <SubjectArgument name="minority1" ref="vap_na" />
+                <Argument name="target" value="%(target_na_house)s" />
+            </ScoreFunction>
+
+            <ScoreFunction id="plan_majority_minority_na_senate" type="plan"
+                calculator="publicmapping.redistricting.calculators.MajorityMinority"
+                label="Native American Majority (&gt; 50%%)"
+                description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
+                <SubjectArgument name="population" ref="vap" />
+                <SubjectArgument name="minority1" ref="vap_na" />
+                <Argument name="target" value="%(target_na_senate)s" />
             </ScoreFunction>
 
             <ScoreFunction id="plan_majority_minority" type="plan"
@@ -714,32 +869,36 @@ class Config_Template(DictionaryTemplate):
             <!-- Summary above all sidebar panels -->
             <ScorePanel id="congressional_panel_summary" type="plan_summary" position="1"
                 title="Plan Summary" cssclass="plan_summary congressional" template="plan_summary.html">
-                <Score ref="a_congress_plan_count_districts" />
-                <Score ref="a_congress_plan_equipopulation"/>
-                <Score ref="plan_majority_minority_blk" />
-                <Score ref="plan_majority_minority_hisp" />
-                <Score ref="plan_majority_minority_na" />
-                <Score ref="plan_noncontiguous"/>
+	        <Score ref="a_congress_plan_equipopulation_summary"/>
+                <Score ref="b_plan_congress_noncontiguous"/>
+                <Score ref="plan_majority_minority_blk_congress" />
+                <Score ref="plan_majority_minority_hisp_congress" />
+		%(start_na)s
+                <Score ref="plan_majority_minority_na_congress" />
+		%(end_na)s
             </ScorePanel>
 
             <ScorePanel id="house_panel_summary" type="plan_summary" position="1"
                 title="Plan Summary" cssclass="plan_summary house" template="plan_summary.html">
-                <Score ref="a_senate_plan_count_districts" />
-                <Score ref="a_house_plan_equipopulation"/>
-                <Score ref="plan_majority_minority_blk" />
-                <Score ref="plan_majority_minority_hisp" />
-                <Score ref="plan_majority_minority_na" />
-                <Score ref="plan_noncontiguous"/>
+	        <Score ref="a_house_plan_equipopulation_summary"/>
+                <Score ref="b_plan_house_noncontiguous"/>
+                <Score ref="plan_majority_minority_blk_house" />
+                <Score ref="plan_majority_minority_hisp_house" />
+		%(start_na)s
+                <Score ref="plan_majority_minority_na_house" />
+		%(end_na)s
             </ScorePanel>
 
             <ScorePanel id="senate_panel_summary" type="plan_summary" position="1"
                 title="Plan Summary" cssclass="plan_summary senate" template="plan_summary.html">
+	        <Score ref="a_senate_plan_equipopulation_summary"/>
+                <Score ref="b_plan_senate_noncontiguous"/>
                 <Score ref="a_senate_plan_count_districts" />
-                <Score ref="a_senate_plan_equipopulation"/>
-                <Score ref="plan_majority_minority_blk" />
-                <Score ref="plan_majority_minority_hisp" />
-                <Score ref="plan_majority_minority_na" />
-                <Score ref="plan_noncontiguous"/>
+                <Score ref="plan_majority_minority_blk_senate" />
+                <Score ref="plan_majority_minority_hisp_senate" />
+		%(start_na)s
+                <Score ref="plan_majority_minority_na_senate" />
+		%(end_na)s
             </ScorePanel>
 
             <!-- Basic Information -->
@@ -888,10 +1047,11 @@ class Config_Template(DictionaryTemplate):
         </ScoreDisplays>
     </Scoring>
 
+
     <Validation>
         <Criteria legislativebodyref="congress">
             <Criterion name="Equipopulation - Congress" description="&lt;p&gt;Your plan does not meet the competition criteria for Equipopulation:&lt;/p&gt;&lt;p&gt; The population of each Congressional district must be %(pop_congress_max)s-%(pop_congress_min)s">  
-                <Score ref="a_congress_plan_equipopulation" />
+                <Score ref="a_congress_plan_equipopulation_validation" />
             </Criterion>
             <Criterion name="AllContiguous - Congress" 
                 description="&lt;p&gt;Your plan does not meet the competition criteria for Contiguity&lt;/p&gt;&lt;p&gt;Every part of a district must be reachable from every other part without crossing the district's borders. All districts within a plan must be contiguous. &lt;/p&gt;">
@@ -909,7 +1069,7 @@ class Config_Template(DictionaryTemplate):
         </Criteria>
         <Criteria legislativebodyref="house">
             <Criterion name="Equipopulation - House" description="&lt;p&gt;Your plan does not meet the competition criteria for Equipopulation:&lt;/p&gt;&lt;p&gt;The population of each House of Delegates district must be %(pop_house_min)s - %(pop_house_max)s"> 
-                <Score ref="a_house_plan_equipopulation" />
+                <Score ref="a_house_plan_equipopulation_validation" />
             </Criterion>
             <Criterion name="AllContiguous - House" 
                 description="&lt;p&gt;Your plan does not meet the competition criteria for Contiguity&lt;/p&gt;&lt;p&gt;Every part of a district must be reachable from every other part without crossing the district's borders. All districts within a plan must be contiguous. &lt;/p&gt;">
@@ -927,7 +1087,7 @@ class Config_Template(DictionaryTemplate):
         </Criteria>
         <Criteria legislativebodyref="senate">
             <Criterion name="Equipopulation - Senate" description="&lt;p&gt;Your plan does not meet the competition criteria for Equipopulation:&lt;/p&gt;&lt;p&gt;The population of each State Senate district must be %(pop_house_min)s-%(pop_house_max)s">
-                <Score ref="a_senate_plan_equipopulation" />
+                <Score ref="a_senate_plan_equipopulation_validation" />
             </Criterion>
             <Criterion name="AllContiguous - Senate" 
                 description="&lt;p&gt;Your plan does not meet the competition criteria for Contiguity&lt;/p&gt;&lt;p&gt;Every part of a district must be reachable from every other part without crossing the district's borders. All districts within a plan must be contiguous. &lt;/p&gt;">
@@ -959,9 +1119,11 @@ class Config_Template(DictionaryTemplate):
     </ContiguityOverrides>
     -->
 
+	<!-- Contiguity Overrides, if Any -->
+	%(contiguityOverrideString)s
 
     <GeoLevels>
-      <GeoLevel id="block" name="block" min_zoom="8" sort_key="3" tolerance="2.5">
+      <GeoLevel id="block" name="block" min_zoom="6" sort_key="3" tolerance="2.5">
 
           <Shapefile path="/projects/publicmapping/data/census_blocks.shp">
               <Fields>
@@ -981,6 +1143,9 @@ class Config_Template(DictionaryTemplate):
               <GeoLevelCharacteristic ref="vap_b" />
               <GeoLevelCharacteristic ref="vap_h" />
               <GeoLevelCharacteristic ref="vap_na" />
+              <GeoLevelCharacteristic ref="totpop_b" />
+              <GeoLevelCharacteristic ref="totpop_h" />
+              <GeoLevelCharacteristic ref="totpop_na" />
                 %(start_elec)s
               <GeoLevelCharacteristic ref="vote_dem" />
               <GeoLevelCharacteristic ref="vote_rep" />
@@ -1006,9 +1171,9 @@ class Config_Template(DictionaryTemplate):
           </LegislativeBodies>
 
      </GeoLevel>
-      <GeoLevel id="tract" name="tract" min_zoom="4" sort_key="2" tolerance="25">
+      <GeoLevel id="tract" name="tract" min_zoom="3" sort_key="2" tolerance="25">
          <Files>
-              <Geography path="/projects/publicmapping/data/census_tracts.dbf">
+              <Geography path="/projects/publicmapping/data/census_tracts.shp">
             <Fields>
                       <Field name="NAME10" type="name" />
                       <Field name="GEOID10" type="portable" />
@@ -1024,6 +1189,9 @@ class Config_Template(DictionaryTemplate):
               <GeoLevelCharacteristic ref="vap_b" />
               <GeoLevelCharacteristic ref="vap_h" />
               <GeoLevelCharacteristic ref="vap_na" />
+              <GeoLevelCharacteristic ref="totpop_b" />
+              <GeoLevelCharacteristic ref="totpop_h" />
+              <GeoLevelCharacteristic ref="totpop_na" />
                 %(start_elec)s
               <GeoLevelCharacteristic ref="vote_dem" />
               <GeoLevelCharacteristic ref="vote_rep" />
@@ -1055,7 +1223,7 @@ class Config_Template(DictionaryTemplate):
 
       <GeoLevel id="county" name="county" min_zoom="0" sort_key="1" tolerance="250">
           <Files>
-              <Geography path="/projects/publicmapping/data/census_county.dbf">
+              <Geography path="/projects/publicmapping/data/census_counties.shp">
                   <Fields>
                       <Field name="NAME10" type="name"/>
                       <Field name="GEOID10" type="portable"/>
@@ -1070,6 +1238,9 @@ class Config_Template(DictionaryTemplate):
               <GeoLevelCharacteristic ref="vap_b" />
               <GeoLevelCharacteristic ref="vap_h" />
               <GeoLevelCharacteristic ref="vap_na" />
+              <GeoLevelCharacteristic ref="totpop_b" />
+              <GeoLevelCharacteristic ref="totpop_h" />
+              <GeoLevelCharacteristic ref="totpop_na" />
                %(start_elec)s
               <GeoLevelCharacteristic ref="vote_dem" />
               <GeoLevelCharacteristic ref="vote_rep" />
@@ -1099,22 +1270,20 @@ class Config_Template(DictionaryTemplate):
       </GeoLevel>
     </GeoLevels>
 
-    <!--
     <Templates>
         <Template name="Congressional">
             <LegislativeBody ref="congress"/>
-             <Blockfile path="/projects/publicmapping/data/cd111_index.csv" />
+             <Blockfile path="/projects/publicmapping/data/congress_generated_index.csv" />
         </Template>
         <Template name="State House">
             <LegislativeBody ref="house"/>
-            <Blockfile path="/projects/publicmapping/data/sldl10_index.csv" />
+            <Blockfile path="/projects/publicmapping/data/house_generated_index.csv" />
         </Template>
         <Template name="State Senate">
             <LegislativeBody ref="senate"/>
-            <Blockfile path="/projects/publicmapping/data/sldu10_index.csv" />
+            <Blockfile path="/projects/publicmapping/data/senate_generated_index.csv" />
         </Template>
     </Templates>
-    -->
 
     <Project root="/projects/publicmapping/trunk" sessionquota="5" 
              sessiontimeout="15">
@@ -1160,7 +1329,9 @@ class Config_Template(DictionaryTemplate):
                         <PopVar subjectref="vap" threshold=".1" />
                         <PopVar subjectref="vap_b" threshold=".1" />
                         <PopVar subjectref="vap_h" threshold=".1" default="false" />
+			%(start_na)s
                         <PopVar subjectref="vap_na" threshold=".1" default="false" />
+			%(end_na)s
                     </PopVars>
                     <RatioVars>
                         <!--
@@ -1193,7 +1364,7 @@ class Config_Template(DictionaryTemplate):
                         This can be any higher level geography: a county,
                         VTd, or tract.
                         -->
-                        <SplitVar field="COUNTYST10" label="County" />
+                        <SplitVar field="COUNTYFP10" label="County" />
                         <SplitVar field="TRACTCE10" label="Tract" />
                     </SplitVars>
                 </BardConfig>
@@ -1228,9 +1399,15 @@ class Config_Template(DictionaryTemplate):
 
 
 
-def gen_config(num_districts_congress,num_districts_senate,num_districts_house,sum_TOTPOP,has_election_data=0,has_vtds=0) :
+def gen_config(num_districts_congress,num_districts_senate,num_districts_house,sum_TOTPOP,has_election_data=0,has_vtds=0, conf_na=False , 
+target_na_congress=0, target_hisp_congress = 0 , target_bl_congress = 0,
+target_na_house=0, target_hisp_house = 0 , target_bl_house = 0,
+target_na_senate =0, target_hisp_senate = 0 , target_bl_senate = 0, contiguityOverrideString = ""): 
+
         start_elec="<!--"        
+        start_na="<!--"        
 	end_elec="-->"
+	end_na="-->"
         midlevel="tract"
         midlevel_width="6"
         midlevel_var="TRACTCE10"        
@@ -1241,18 +1418,19 @@ def gen_config(num_districts_congress,num_districts_senate,num_districts_house,s
 		midlevel="vtds"
                 midlevel_width="4"
                 midlevel_var="VTDST10"        
-	pop_congress = round((sum_TOTPOP/float(num_districts_congress)))
-	pop_congress_max = round((sum_TOTPOP/float(num_districts_congress)) * 1.005)
-        pop_congress_min = round((sum_TOTPOP/float(num_districts_congress)) * 0.995)
-	pop_house = round((sum_TOTPOP/float(num_districts_house))) 
-	pop_house_max = round((sum_TOTPOP/float(num_districts_house)) * 1.1)
-        pop_house_min = round((sum_TOTPOP/float(num_districts_house)) * 0.9)
-	pop_senate = round((sum_TOTPOP/float(num_districts_senate)))
-	pop_senate_max = round((sum_TOTPOP/float(num_districts_senate)) * 1.1)
-        pop_senate_min = round((sum_TOTPOP/float(num_districts_senate)) * 0.9)
+	pop_congress = int(round((sum_TOTPOP/float(num_districts_congress))))
+	pop_congress_max = int(round((sum_TOTPOP/float(num_districts_congress)) * 1.005))
+        pop_congress_min = int(round((sum_TOTPOP/float(num_districts_congress)) * 0.995))
+	pop_house = int(round((sum_TOTPOP/float(num_districts_house))))
+	pop_house_max = int(round((sum_TOTPOP/float(num_districts_house)) * 1.1))
+        pop_house_min = int(round((sum_TOTPOP/float(num_districts_house)) * 0.9))
+	pop_senate = int(round((sum_TOTPOP/float(num_districts_senate))))
+	pop_senate_max = int(round((sum_TOTPOP/float(num_districts_senate)) * 1.1))
+        pop_senate_min = int(round((sum_TOTPOP/float(num_districts_senate)) * 0.9))
         target_file = '/projects/publicmapping/trunk/docs/config_census_generated.xml'
         f = open(target_file,'w')
-        f.write(str( Config_Template(start_elec=start_elec,end_elec=end_elec,num_districts_congress=num_districts_congress,num_districts_house=num_districts_house,num_districts_senate=num_districts_senate,pop_congress_max=pop_congress_max,pop_congress_min=pop_congress_min,pop_senate_max=pop_senate_max, pop_senate_min=pop_senate_min,pop_house_max=pop_house_max,pop_house_min=pop_house_min,pop_congress=pop_congress,pop_senate=pop_senate,pop_house=pop_house)))
+        f.write(str( Config_Template(start_elec=start_elec,end_elec=end_elec,num_districts_congress=num_districts_congress,num_districts_house=num_districts_house,num_districts_senate=num_districts_senate,pop_congress_max=pop_congress_max,pop_congress_min=pop_congress_min,pop_senate_max=pop_senate_max, pop_senate_min=pop_senate_min,pop_house_max=pop_house_max,pop_house_min=pop_house_min,pop_congress=pop_congress,pop_senate=pop_senate,pop_house=pop_house,start_na=start_na, end_na=end_na, target_na_congress=target_na_congress, target_hisp_congress=target_hisp_congress, target_bl_congress=target_bl_congress, target_na_house=target_na_house, target_hisp_house=target_hisp_house, target_bl_house=target_bl_house, target_na_senate=target_na_senate, target_hisp_senate=target_hisp_senate, target_bl_senate=target_bl_senate,contiguityOverrideString=contiguityOverrideString)))
+	f.write("\n")
         f.close()
         os.chmod(target_file,stat.S_IRUSR|stat.S_IRGRP|stat.S_IROTH)    
 
@@ -1261,14 +1439,20 @@ def gen_config(num_districts_congress,num_districts_senate,num_districts_house,s
 ### MAIN
 ###
 
+#
 #  Get Arguments
+#
+
 
 parser=optparse.OptionParser(usage="%prog -F[fips_code] -C[num_congressional_districts] -S[num_senate_districts] -H[num_house_districts]", version="%prog 0.1")
+
+# required arguments
 parser.add_option('-F','--fips', dest='stateFips',help="State two digit FIPS code", type=int, default=0)
 parser.add_option('-C','--congdist', dest='congDis',help="number of congressional districts", type=int, default=0)
 parser.add_option('-H', '--housedist',dest='houseDis',help="number of senate districts", type=int, default=0)
 parser.add_option('-S', '--sendist', dest='senDis',help="number of house districts", type=int,default=0)
 
+# operations to perform
 parser.add_option('-i', '--install', dest="do_install", help="Install dependencencies.", default=False, action='store_true') 
 parser.add_option('-g', '--getdata', dest="do_getdata", help="Get data.", default=False, action='store_true') 
 parser.add_option('-s', '--gensld', dest="do_gensld", help="Generate slds", default=False, action='store_true') 
@@ -1276,7 +1460,24 @@ parser.add_option('-c', '--genconf', dest="do_genconf", help="Generate config fi
 parser.add_option('-d', '--dropdb', dest="do_dropdb", help="Drop database", default=False, action='store_true') 
 parser.add_option('-r', '--run', dest="do_run", help="run setup.py", default=False, action='store_true') 
 
+# configuration options
+parser.add_option('--na_inc', dest="conf_na", help="Include Native Americans in stats.", default=False, action='store_true') 
+parser.add_option('--na_targ_c', dest='target_na_congress',help="Number of Native American Congressional Districts for target", type=int, default=0)
+parser.add_option('--na_targ_h', dest='target_na_house',help="Number of Native American House Districts for target", type=int, default=0)
+parser.add_option('--na_targ_s', dest='target_na_senate',help="Number of Native American Senate Districts for target", type=int, default=0)
+parser.add_option('--hisp_targ_c', dest='target_hisp_congress',help="Number of Hispanic Congressional Districts for target", type=int, default=0)
+parser.add_option('--hisp_targ_h', dest='target_hisp_house',help="Number of Hispanic House Districts for target", type=int, default=0)
+parser.add_option('--hisp_targ_s', dest='target_hisp_senate',help="Number of Hispanic SenateDistricts for target", type=int, default=0)
+parser.add_option('--bl_targ_c', dest='target_bl_congress',help="Number of Black Congressional districts for target", type=int, default=0)
+parser.add_option('--bl_targ_h', dest='target_bl_house',help="Number of Black House districts for target", type=int, default=0)
+parser.add_option('--bl_targ_s', dest='target_bl_senate',help="Number of Black Senate districts for target", type=int, default=0)
+
 (parseResults,numargs)=parser.parse_args()
+
+
+# include na if there is a positive target, even if not otherwise specified
+if ((parseResults.target_na_congress+parseResults.target_na_senate+parseResults.target_na_house)>0) :
+	parseResults.conf_na = True
 
 allops = (not parseResults.do_install) and  (not parseResults.do_getdata) and  (not parseResults.do_gensld) and  (not parseResults.do_genconf) and (not parseResults.do_dropdb) and (not parseResults.do_run)
 if (allops):
@@ -1335,6 +1536,15 @@ if ( (parseResults.do_genconf) or (parseResults.do_gensld)) :
 	# NOTE: robject is returning 6-level quantiles, has_election_data, has_vtd, sum_TOTPOP
 	has_election_data = robjects.r.has_election_data
 
+if ( parseResults.do_genconf) :
+	robjects.r.source("/projects/publicmapping/trunk/docs/loadcensus/contiguityOverride.R")
+	# TODO: should work but has embedded string forwarding	
+	#contiguityOverrideString = robjects.r.contiguityOverrideString
+	f = open('/projects/publicmapping/trunk/docs/generated_overrides.xml', 'r')
+	contiguityOverrideString = f.read()
+	f.close()
+	
+
 # TODO: refactor as matrix of varnames and geographies
 if ( parseResults.do_gensld) :
 	print 'generating choropleth slds ...'
@@ -1346,6 +1556,7 @@ if ( parseResults.do_gensld) :
 	gensld_choro("block","VAP_H","Voting Age Hispanic Population",robjects.r.q_block_VAP_H)
 	gensld_choro("block","VAP_B","Voting Age Black Population",robjects.r.q_block_VAP_B)
 	gensld_choro("block","VAP_NA","Voting Age Native American Population",robjects.r.q_block_VAP_NA)
+	gensld_choro("tract","TOTPOP","Total Population",robjects.r.q_tract_TOTPOP)
 	gensld_choro("tract","TOTPOP_H","Total Hispanic Population",robjects.r.q_tract_TOTPOP_H)
 	gensld_choro("tract","TOTPOP_B","Total Black Population",robjects.r.q_tract_TOTPOP_B)
 	gensld_choro("tract","TOTPOP_NA","Total Native American Population",robjects.r.q_tract_TOTPOP_NA)
@@ -1371,13 +1582,15 @@ if ( parseResults.do_gensld) :
         	gensld_choro("county","VOTE_DEM","Predicted Democratic Vote ",robjects.r.q_county_VOTE_DEM)
         	gensld_choro("county","VOTE_REP","Predicted Republican Vote ",robjects.r.q_county_VOTE_REP)
         	gensld_choro("county","VOTE_TOT","Predicted Republican Vote ",robjects.r.q_county_VOTE_TOT)
-		gensld_choro("tract","TOTPOP","Total Population",robjects.r.q_tract_TOTPOP)
 
 
 # generate config file
 if (parseResults.do_genconf):
 	print 'generating config file ... '
-	gen_config(num_districts_congress=congDis,num_districts_senate=senDis,num_districts_house=houseDis,sum_TOTPOP=sum_TOTPOP,has_election_data=has_election_data,has_vtds=0) 
+	gen_config(num_districts_congress=congDis,num_districts_senate=senDis,num_districts_house=houseDis,sum_TOTPOP=sum_TOTPOP,has_election_data=has_election_data,has_vtds=0,conf_na=parseResults.conf_na, 
+target_na_congress=parseResults.target_na_congress, target_hisp_congress = parseResults.target_hisp_congress, target_bl_congress = parseResults.target_bl_congress,
+target_na_house=parseResults.target_na_house, target_hisp_house = parseResults.target_hisp_house, target_bl_house = parseResults.target_bl_house,
+target_na_senate=parseResults.target_na_senate, target_hisp_senate = parseResults.target_hisp_senate, target_bl_senate = parseResults.target_bl_senate, contiguityOverrideString=contiguityOverrideString) 
 
 if (parseResults.do_run):
 	print 'running setup-py ... '
@@ -1389,7 +1602,10 @@ if (parseResults.do_run):
         os.chdir(olddir)
 else:
 	print '\n\n*** Now run: ***\n\n'
-print '(cd /projects/publicmapping/trunk/django/publicmapping/; python setup.py -v2 /projects/publicmapping/trunk/docs/config.xsd /projects/publicmapping/trunk/docs/config_census_generated.xml)'
+	print '(cd /projects/publicmapping/trunk/django/publicmapping/; python setup.py -v2 /projects/publicmapping/trunk/docs/config.xsd /projects/publicmapping/trunk/docs/config_census_generated.xml)'
 
 
 
+# workaround celeryd first-time startup problem
+print 'Starting celeryd ...'
+subprocess.check_call(["service","celeryd","start"])

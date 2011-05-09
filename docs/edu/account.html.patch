@@ -1,0 +1,25 @@
+*** account.html	2011-05-09 09:43:41.652551146 +0000
+--- account.html.educational	2011-05-09 09:44:34.362551146 +0000
+***************
+*** 32,41 ****
+                  {% endif %}/></td>
+              </tr>
+              <tr>
+!                 <td colspan="2"><span class="recommended">An email address is recommended to recover a forgotten password</span></td>
+              </tr>
+              <tr>
+!                 <td class="fname">Email Address</td>
+                  <td><input id="email" name="email" class="field" maxlength="75"
+                  {% if is_registered %}
+                      value="{{ userinfo.email }}"
+--- 32,41 ----
+                  {% endif %}/></td>
+              </tr>
+              <tr>
+!                 <td colspan="2"><span class="recommended">A .edu email address is required to show educational affiliation</span></td>
+              </tr>
+              <tr>
+!                 <td class="fname">Email Address *</td>
+                  <td><input id="email" name="email" class="field" maxlength="75"
+                  {% if is_registered %}
+                      value="{{ userinfo.email }}"
