@@ -124,11 +124,12 @@
     Load external javascript libraries.
 
     {% endcomment %}
-    <script type="text/javascript" src="/static-media/jquery/jquery-1.4.2.js"></script>
+    <script type="text/javascript" src="/static-media/jquery/jquery-1.6.js"></script>
     <script type="text/javascript" src="/static-media/jquery/jquery-ui-1.8.2.custom.min.js"></script>
     <script type="text/javascript" src="/static-media/jquery/external/jquery.tools.tooltip.slide.min.js"></script>
     <script type="text/javascript" src="/static-media/jqGrid/js/i18n/grid.locale-en.js"></script>
     <script type="text/javascript" src="/static-media/jqGrid/js/jquery.jqGrid.min.js"></script>
+    <script type="text/javascript" src="/static-media/jqGrid/plugins/grid.postext.js"></script>
     {% comment %}
 
     Load internal javascript logic.
@@ -470,9 +471,9 @@
             <div id="map_menu">
                 <div id="map_menu_header">
                     <button class="menu_toggle ui-icon"></button>
-                    <button id="open_statistics_editor">Edit Stats</button>
                     <select>
                     </select>
+                    <button id="open_statistics_editor">Edit Stats</button>
                 </div>
                 <div class="map_menu_content demographics">
                     <div class="sidebarload"><h3>Loading Statistics...</h3></div>
