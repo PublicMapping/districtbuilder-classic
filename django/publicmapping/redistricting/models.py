@@ -1694,7 +1694,7 @@ AND st_intersects(
             # Create a new copy of the target geometry
             all_geometry = map(lambda d: d.geom, components)
             all_geometry.append(target.geom)
-            target.geom = enforce_multi(GeometryCollection(all_geometry,srid=target.geom.srid), collapse=True)
+            target.geom = enforce_multi(GeometryCollection(all_geometry,srid=target.geom.srid).buffer(0), collapse=True)
             target.simplify()
 
             # Eliminate the component districts from the version
