@@ -249,7 +249,7 @@ shareddistricts = function(options) {
     
     var setSelectedDistricts = function(checkbox) {
         var value = $(this).val();
-        var selectionIndex = _selectedDistricts.indexOf(value);
+        var selectionIndex = $.inArray(value, _selectedDistricts);
         var checked = $(this).is(':checked');
         if (checked) {
             _selectedDistricts.push(value);
@@ -264,7 +264,7 @@ shareddistricts = function(options) {
         var ids = _districtTable.jqGrid('getDataIDs');
         for (var i = 0; i < ids.length; i++) {
             var cl = ids[i];
-            var selectionIndex = _selectedDistricts.indexOf(cl);
+            var selectionIndex = $.inArray(cl, _selectedDistricts);
             var checked = selectionIndex > -1 ? ' checked ' : '';
             var content = '<input class="district_selection" type="checkbox" value="' + cl + '"' + checked + '/>'
             _districtTable.jqGrid('setRowData', cl, { selected: content });
