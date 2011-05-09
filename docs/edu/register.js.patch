@@ -1,0 +1,41 @@
+*** register.js	2011-05-09 09:28:38.502551151 +0000
+--- register.js.educational	2011-05-08 03:36:57.382551154 +0000
+***************
+*** 118,124 ****
+              passwordhint.removeClass('error');
+          }
+          if ($.trim(email.val()) != '') {
+!             if (!(email.val().match(/^([\w\-\.\+])+\@([\w\-\.])+\.([A-Za-z]{2,4})$/))) {
+                  email.removeClass('field');
+                  email.addClass('error');
+                  return false;
+--- 118,125 ----
+              passwordhint.removeClass('error');
+          }
+          if ($.trim(email.val()) != '') {
+!             //if (!(email.val().match(/^([\w\-\.\+])+\@([\w\-\.])+\.([A-Za-z]{2,4})$/))) {
+!             if (!(email.val().match(/^([\w\-\.\+])+\@([\w\-\.])+\.(edu)$/))) {
+                  email.removeClass('field');
+                  email.addClass('error');
+                  return false;
+***************
+*** 127,133 ****
+                  email.addClass('field');
+                  email.removeClass('error');
+              }            
+!         }
+  
+          if (agree.length > 0 && !agree[0].checked) {
+              $('#agreelabel').addClass('required');
+--- 128,138 ----
+                  email.addClass('field');
+                  email.removeClass('error');
+              }            
+!         } else {
+!                 email.addClass('field');
+!                 email.removeClass('error');
+!                 return false;
+!         }            
+  
+          if (agree.length > 0 && !agree[0].checked) {
+              $('#agreelabel').addClass('required');
