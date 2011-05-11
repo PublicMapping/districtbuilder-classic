@@ -992,6 +992,56 @@ def fix_unassigned(request, planid):
 
 @login_required
 @unique_session_or_json_redirect
+def get_splits(request, planid, otherplanid):
+    """
+    Find all splits between this plan and another plan
+
+    Parameters:
+        request -- An HttpRequest optionally containing version and/or otherversion
+        planid -- The plan ID
+        otherplanid -- The plan ID of the other plan to find splits with
+
+    Returns:
+        A JSON HttpResponse that contains an array of splits, given as arrays,
+        where the first item is the district_id of the district in this plan
+        which causes the split, and the second item is the district_id of the
+        district in the other plan which is split.
+    """
+    
+    status = { 'success': False }
+
+    try:
+        plan = Plan.objects.get(pk=planid)
+    except:
+        status['message'] = 'No plan with the given id'
+        return HttpResponse(json.dumps(status),mimetype='application/json')
+
+    try:
+        otherplan = Plan.objects.get(pk=otherplanid)
+    except:
+        status['message'] = 'No other plan with the given id'
+        return HttpResponse(json.dumps(status),mimetype='application/json')
+
+    if not can_edit(request.user, plan):
+        status['message'] = 'User can\'t edit the given plan'
+        return HttpResponse(json.dumps(status),mimetype='application/json')
+
+    # get the versions from the request or the plan
+    version = request.REQUEST['version'] if 'version' in request.REQUEST else plan.version
+    otherversion = request.REQUEST['otherversion'] if 'otherversion' in request.REQUEST else otherplan.version
+
+    try:
+        result = plan.find_splits(otherplan, version, otherversion)
+        status['success'] = True
+        status['message'] = result
+    except:
+        status['message'] = 'Could not fix unassigned'
+        status['exception'] = traceback.format_exc()
+    return HttpResponse(json.dumps(status),mimetype='application/json')
+
+
+@login_required
+@unique_session_or_json_redirect
 def addtodistrict(request, planid, districtid):
     """
     Add geounits to a district.
