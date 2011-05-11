@@ -3258,24 +3258,138 @@ class NestingTestCase(BaseTestCase):
     """
     Unit tests to test Legislative chamber nesting 
     """
-    fixtures = ['redistricting_testdata.json']
+    fixtures = ['redistricting_testdata.json', 'redistricting_testdata_geolevel2.json', 'redistricting_testdata_geolevel3.json']
+
+    def setUp(self):
+        BaseTestCase.setUp(self)        
+        self.geolevel = Geolevel.objects.get(pk=2)
+        self.geolevels = Geolevel.objects.all().order_by('id')
+
+        self.geounits = {}
+        for gl in self.geolevels:
+           self.geounits[gl.id] = list(Geounit.objects.filter(geolevel=gl).order_by('id'))
+
+        # Create 3 nested legislative bodies
+        self.bottom = LegislativeBody(name="bottom", max_districts=100)
+        self.bottom.save()
+        self.middle = LegislativeBody(name="middle", max_districts=20)
+        self.middle.save()
+        self.top = LegislativeBody(name="top", max_districts=4)
+        self.top.save()
+
+        # Create references for plans and districts
+        self.plan = Plan.objects.get(name='testPlan')
+        self.plan2 = Plan.objects.get(name='testPlan2')
+        self.p1d1 = District.objects.get(name='District 1', plan=self.plan)
+        self.p1d2 = District.objects.get(name='District 2', plan=self.plan)
+        self.p2d1 = District(name='District 1', district_id=1, version=0, plan=self.plan2)
+        self.p2d1.save()
+        self.p2d2 = District(name='District 2', district_id=2, version=0, plan=self.plan2)
+        self.p2d2.save()
+
+    def tearDown(self):
+        self.geolevel = None
+        self.geolevels = None
+        self.geounits = None
+        try:
+            BaseTestCase.tearDown(self)
+        except:
+            import traceback
+            print(traceback.format_exc())
+            print('Couldn\'t tear down')
 
     def test_child_parent(self):
-        # Create 3 nested legislative bodies
-        bottom = LegislativeBody(name="bottom", max_districts=100)
-        bottom.save()
-        middle = LegislativeBody(name="middle", max_districts=20)
-        middle.save()
-        top = LegislativeBody(name="top", max_districts=4)
-        top.save()
+        # Try out each permutation of nested districts
+        self.assertFalse(self.bottom.is_below(self.bottom), "Bottom was below Bottom")
+        self.assertTrue(self.bottom.is_below(self.middle), "Bottom wasn't below Middle")
+        self.assertTrue(self.bottom.is_below(self.top), "Bottom wasn't below Top")
+        self.assertFalse(self.middle.is_below(self.bottom), "Middle was below Bottom")
+        self.assertFalse(self.middle.is_below(self.middle), "Middle was below Middle")
+        self.assertTrue(self.middle.is_below(self.top), "Middle wasn't below Top")
+        self.assertFalse(self.top.is_below(self.bottom), "Top was below Bottom")
+        self.assertFalse(self.top.is_below(self.middle), "Top was below Middle")
+        self.assertFalse(self.top.is_below(self.top), "Top was below Top")
 
-        # Try out each permutation
-        self.assertFalse(bottom.is_below(bottom), "Bottom was below Bottom")
-        self.assertTrue(bottom.is_below(middle), "Bottom wasn't below Middle")
-        self.assertTrue(bottom.is_below(top), "Bottom wasn't below Top")
-        self.assertFalse(middle.is_below(bottom), "Middle was below Bottom")
-        self.assertFalse(middle.is_below(middle), "Middle was below Middle")
-        self.assertTrue(middle.is_below(top), "Middle wasn't below Top")
-        self.assertFalse(top.is_below(bottom), "Top was below Bottom")
-        self.assertFalse(top.is_below(middle), "Top was below Middle")
-        self.assertFalse(top.is_below(top), "Top was below Top")
+    def test_split_identical_districts(self):
+        gl, gs = self.geolevel, list(Geounit.objects.filter(geolevel=self.geolevel).order_by("id"))
+        p1, p1d1, p1d2 = self.plan, self.p1d1, self.p1d2
+        p2, p2d1, p2d2 = self.plan2, self.p2d1, self.p2d2
+
+        p1.add_geounits(p1d1.district_id, [str(x.id) for x in gs if x.id in [10, 11, 19, 20]], gl.id, p1.version)
+        p1d1 = max(District.objects.filter(plan=p1,district_id=p1d1.district_id),key=lambda d: d.version)
+        p1.add_geounits(p1d2.district_id, [str(x.id) for x in gs if x.id in [29, 30, 38, 39]], gl.id, p1.version)
+        p1d2 = max(District.objects.filter(plan=p1,district_id=p1d2.district_id),key=lambda d: d.version)
+
+        # Identical
+        p2.add_geounits(p2d1.district_id, [str(x.id) for x in gs if x.id in [10, 11, 19, 20]], gl.id, p2.version)
+        p2d1 = max(District.objects.filter(plan=p2,district_id=p2d1.district_id),key=lambda d: d.version)
+        p2.add_geounits(p2d2.district_id, [str(x.id) for x in gs if x.id in [29, 30, 38, 39]], gl.id, p2.version)
+        p2d2 = max(District.objects.filter(plan=p2,district_id=p2d2.district_id),key=lambda d: d.version)
+
+        # Test splits
+        splits = p1.find_splits(p2)
+        self.assertEquals(len(splits), 0, "Found splits in identical plans")
+
+    def test_split_bottom_district_smaller(self):
+        gl, gs = self.geolevel, list(Geounit.objects.filter(geolevel=self.geolevel).order_by("id"))
+        p1, p1d1, p1d2 = self.plan, self.p1d1, self.p1d2
+        p2, p2d1, p2d2 = self.plan2, self.p2d1, self.p2d2
+
+        p1.add_geounits(p1d1.district_id, [str(x.id) for x in gs if x.id in [10, 11, 19, 20]], gl.id, p1.version)
+        p1d1 = max(District.objects.filter(plan=p1,district_id=p1d1.district_id),key=lambda d: d.version)
+        p1.add_geounits(p1d2.district_id, [str(x.id) for x in gs if x.id in [29, 30, 38, 39]], gl.id, p1.version)
+        p1d2 = max(District.objects.filter(plan=p1,district_id=p1d2.district_id),key=lambda d: d.version)
+
+        # 38, 39 not included in bottom plan
+        p2.add_geounits(p2d1.district_id, [str(x.id) for x in gs if x.id in [10, 11, 19, 20]], gl.id, p2.version)
+        p2d1 = max(District.objects.filter(plan=p2,district_id=p2d1.district_id),key=lambda d: d.version)
+        p2.add_geounits(p2d2.district_id, [str(x.id) for x in gs if x.id in [29, 30]], gl.id, p2.version)
+        p2d2 = max(District.objects.filter(plan=p2,district_id=p2d2.district_id),key=lambda d: d.version)
+
+        # Test splits
+        splits = p1.find_splits(p2)
+        self.assertEquals(len(splits), 0, "Found splits when bottom plan had a smaller district")
+
+    def test_split_top_district_smaller(self):
+        gl, gs = self.geolevel, list(Geounit.objects.filter(geolevel=self.geolevel).order_by("id"))
+        p1, p1d1, p1d2 = self.plan, self.p1d1, self.p1d2
+        p2, p2d1, p2d2 = self.plan2, self.p2d1, self.p2d2
+
+        # 38, 39 not included in top plan
+        p1.add_geounits(p1d1.district_id, [str(x.id) for x in gs if x.id in [10, 11, 19, 20]], gl.id, p1.version)
+        p1d1 = max(District.objects.filter(plan=p1,district_id=p1d1.district_id),key=lambda d: d.version)
+        p1.add_geounits(p1d2.district_id, [str(x.id) for x in gs if x.id in [29, 30]], gl.id, p1.version)
+        p1d2 = max(District.objects.filter(plan=p1,district_id=p1d2.district_id),key=lambda d: d.version)
+
+        p2.add_geounits(p2d1.district_id, [str(x.id) for x in gs if x.id in [10, 11, 19, 20]], gl.id, p2.version)
+        p2d1 = max(District.objects.filter(plan=p2,district_id=p2d1.district_id),key=lambda d: d.version)
+        p2.add_geounits(p2d2.district_id, [str(x.id) for x in gs if x.id in [29, 30, 38, 39]], gl.id, p2.version)
+        p2d2 = max(District.objects.filter(plan=p2,district_id=p2d2.district_id),key=lambda d: d.version)
+
+        # Test splits
+        splits = p1.find_splits(p2)
+        self.assertEquals(len(splits), 1, "Didn't find 1 split")
+        self.assertEquals(splits[0], (2, 2), "Didn't find p1d2 to split p2d2")
+
+    def test_split_move_diagonally(self):
+        gl, gs = self.geolevel, list(Geounit.objects.filter(geolevel=self.geolevel).order_by("id"))
+        p1, p1d1, p1d2 = self.plan, self.p1d1, self.p1d2
+        p2, p2d1, p2d2 = self.plan2, self.p2d1, self.p2d2
+
+        # Offset plan one unit diagonally down-left
+        p1.add_geounits(p1d1.district_id, [str(x.id) for x in gs if x.id in [0, 1, 9, 10]], gl.id, p1.version)
+        p1d1 = max(District.objects.filter(plan=p1,district_id=p1d1.district_id),key=lambda d: d.version)
+        p1.add_geounits(p1d2.district_id, [str(x.id) for x in gs if x.id in [19, 20, 28, 29]], gl.id, p1.version)
+        p1d2 = max(District.objects.filter(plan=p1,district_id=p1d2.district_id),key=lambda d: d.version)
+        
+        p2.add_geounits(p2d1.district_id, [str(x.id) for x in gs if x.id in [10, 11, 19, 20]], gl.id, p2.version)
+        p2d1 = max(District.objects.filter(plan=p2,district_id=p2d1.district_id),key=lambda d: d.version)
+        p2.add_geounits(p2d2.district_id, [str(x.id) for x in gs if x.id in [29, 30, 38, 39]], gl.id, p2.version)
+        p2d2 = max(District.objects.filter(plan=p2,district_id=p2d2.district_id),key=lambda d: d.version)
+
+        # Test splits
+        splits = p1.find_splits(p2)
+        self.assertEquals(len(splits), 3, "Didn't find 3 splits")
+        self.assertEquals(splits[0], (1, 1), "Didn't find p1d1 to split p2d1")
+        self.assertEquals(splits[1], (2, 1), "Didn't find p1d2 to split p2d1")
+        self.assertEquals(splits[2], (2, 2), "Didn't find p1d2 to split p2d2")

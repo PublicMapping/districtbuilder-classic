@@ -1735,6 +1735,70 @@ AND st_intersects(
 
         return districts
 
+    def find_splits(self, other_plan, version=None, other_version=None):
+        """
+        Determines if this plan splits the below Plan.
+
+        Parameters:
+            other_plan -- The plan that is 'below' this plan hierarchically. The below
+                          plan should most likely have a larger number of districts. A split occurs
+                          when a district in this plan crosses the boundary of a district
+                          in the other plan.
+                          
+            version -- Optional; if specified, splits will be calculated using
+                       districts in the specified version of the plan. If
+                       omitted, the most recent plan version will be used.
+
+            other_version -- Optional; if specified, splits will be calculated using
+                             districts in the specified version of the other plan. If
+                             omitted, the most recent version of the other plan
+                             will be used.
+
+        Returns:
+            An array of splits, given as tuples, where the first item is the district_id of
+            the district in this plan which causes the split, and the second item is the
+            district_id of the district in the other plan which is split.
+        """
+        if not other_plan:
+            raise Exception('Other plan must be specified for use in finding splits.')
+        
+        version = version if not version is None else self.version
+        other_version = other_version if not other_version is None else other_plan.version
+
+        cursor = connection.cursor()
+
+        # The query does a cross join on the versioned districts of this plan (above) with
+        # the versioned districts of the other plan (below), and returns the rows where
+        # the boundary of the above district intersects the interior of the below district.
+        query = """SELECT above.district_id, below.district_id
+FROM redistricting_district as below
+JOIN (
+    SELECT max(version) as version, district_id FROM redistricting_district
+    WHERE plan_id = %d 
+    AND version <= %d 
+    GROUP BY district_id
+) AS lmt1 ON below.district_id = lmt1.district_id
+CROSS JOIN (
+    SELECT sub.id, sub.district_id, sub.name, sub.geom
+    FROM redistricting_district as sub
+    JOIN (
+        SELECT max(version) as version, district_id FROM redistricting_district
+        WHERE plan_id = %d  
+        AND version <= %d 
+        GROUP BY district_id
+    ) AS lmt2 ON sub.district_id = lmt2.district_id
+    WHERE sub.plan_id = %d AND sub.version = lmt2.version AND sub.district_id > 0
+) AS above
+WHERE below.plan_id = %d  
+AND below.district_id > 0 
+AND below.version = lmt1.version
+AND ST_Relate(above.geom, below.geom, '***T*****')
+ORDER BY above.district_id, below.district_id
+""" % (other_plan.id, other_version, self.id, version, self.id, other_plan.id)
+
+        cursor.execute(query)
+        splits = cursor.fetchall()
+        return splits
 
 class PlanForm(ModelForm):
     """
