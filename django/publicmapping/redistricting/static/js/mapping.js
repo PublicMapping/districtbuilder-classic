@@ -491,6 +491,39 @@ function mapinit(srs,maxExtent) {
 
     // Handle Fix Unassigned requests
     $('#fix_unassigned').click(function(){
+
+        // For testing -- hijack this button when ctrl is held to query for splits
+        if (arguments[0].ctrlKey) {
+            var belowPlanId = 9;
+
+            var waitDialog = $('<div>Please wait while querying for splits.</div>').dialog({
+                modal: true,
+                autoOpen: true,
+                title: 'Finding Splits',
+                escapeOnClose: false,
+                resizable:false,
+                open: function() { $(".ui-dialog-titlebar-close", $(this).parent()).hide(); }                    
+            });
+
+            $.ajax({
+                type: 'GET',
+                url: '/districtmapping/plan/' + PLAN_ID + '/splits/' + belowPlanId + '/',
+                data: { version: getPlanVersion() },
+                success: function(data, textStatus, xhr) {
+                    setHighlightedDistricts(data.above_ids);
+                    waitDialog.remove();
+                },
+                error: function(xhr, textStatus, error) {
+                    waitDialog.remove();                        
+                    $('<div>Error encountered while querying for splits.</div>').dialog({
+                        modal: true, autoOpen: true, title: 'Error', resizable:false
+                    });                
+                }
+            });
+
+            return;
+        }
+            
         var pleaseWait = $('<div>Please wait while fixing unassigned. This may take a couple minutes.</div>').dialog({
             modal: true,
             autoOpen: true,
@@ -2640,7 +2673,7 @@ function mapinit(srs,maxExtent) {
 
     // Storage for districts that are to be highlighted
     var highlightedDistricts = [];
-
+    
     /**
      * Highlights districts -- both in district row, and on map
      */
@@ -2658,6 +2691,14 @@ function mapinit(srs,maxExtent) {
             highlightLayer.filter = getVersionAndSubjectFilters(olmap.getExtent(), null, highlightedDistricts);
             highlightLayer.strategies[0].update({force:true});
         }
+    };
+
+    /**
+     * Sets all highlighted districts
+     */
+    var setHighlightedDistricts = function(districts) {
+        highlightedDistricts = districts;
+        drawHighlightedDistricts();
     };
 
     /**
