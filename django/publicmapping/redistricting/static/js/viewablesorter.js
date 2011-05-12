@@ -56,6 +56,14 @@ viewablesorter = function(options) {
         aNum = parseInt(aName);
         bNum = parseInt(bName);
 
+        // Always show the unassigned district on top
+        if (aName == '\xD8') {
+            aScore = -Infinity;
+        }
+        if (bName == '\xD8') {
+            bScore = -Infinity;
+        }
+        
         if (aNum) {
             aScore -= ( 500 - aNum );
         }
