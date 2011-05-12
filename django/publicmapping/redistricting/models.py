@@ -1523,7 +1523,7 @@ AND st_intersects(
         geolevel = self.legislative_body.get_base_geolevel()
 
         # Check that there are unassigned geounits to fix
-        unassigned_district = self.district_set.get(district_id=0, version=version)
+        unassigned_district = self.district_set.filter(district_id=0, version__lte=version).order_by('-version')[0]
         unassigned_geom = unassigned_district.geom
         if not unassigned_geom or unassigned_geom.empty:
             return False, 'There are no unassigned units that can be fixed.'
