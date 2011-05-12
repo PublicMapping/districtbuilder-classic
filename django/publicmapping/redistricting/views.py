@@ -1027,15 +1027,18 @@ def get_splits(request, planid, otherplanid):
         return HttpResponse(json.dumps(status),mimetype='application/json')
 
     # get the versions from the request or the plan
-    version = request.REQUEST['version'] if 'version' in request.REQUEST else plan.version
-    otherversion = request.REQUEST['otherversion'] if 'otherversion' in request.REQUEST else otherplan.version
+    version = int(request.REQUEST['version'] if 'version' in request.REQUEST else plan.version)
+    otherversion = int(request.REQUEST['otherversion'] if 'otherversion' in request.REQUEST else otherplan.version)
 
     try:
-        result = plan.find_splits(otherplan, version, otherversion)
+        splits = plan.find_splits(otherplan, version, otherversion)
         status['success'] = True
-        status['message'] = result
+        status['message'] = 'Found %d split%s' % (len(splits), '' if len(splits) == 1 else 's')
+        status['splits'] = splits
+        status['above_ids'] = list(set([i[0] for i in splits]))
+        status['below_ids'] = list(set([i[1] for i in splits]))
     except:
-        status['message'] = 'Could not fix unassigned'
+        status['message'] = 'Could not query for splits'
         status['exception'] = traceback.format_exc()
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
