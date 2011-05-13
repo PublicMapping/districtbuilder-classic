@@ -28,8 +28,8 @@ if (is.na(electionvar)) {
 	has_election_data<-0
 } else {
 	has_election_data<-1  
-	merged.df$VOTE_DEM<-merged.df[electionvar]
-        merged.df$VOTE_REP<-merged.df[sub("_DEM","_REP",electionvar)]        
+	merged.df$VOTE_DEM<-merged.df[[electionvar]]
+        merged.df$VOTE_REP<-merged.df[[sub("_DEM","_REP",electionvar)]]        
 	merged.df$VOTE_TOT<-merged.df$VOTE_DEM+merged.df$VOTE_REP
 }
 
