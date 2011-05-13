@@ -780,10 +780,7 @@ class AllContiguous(CalculatorBase):
         calc = Contiguity()
         calc.compute(**kwargs)
 
-        # ALL PLANS include 1 district named "Unassigned", which cannot be
-        # removed. Therefore the actual target to be validated is one less
-        # than the number of districts.
-        self.result = (len(districts)-1) == calc.result
+        self.result = len(districts) == calc.result
 
 
 class NonContiguous(CalculatorBase):
