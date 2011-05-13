@@ -121,6 +121,7 @@ def     get_census_data(stateFips):
         # standardize file names
         print 'Copying data files...'
         shutil.copy('%s_redist_data.csv' %stateFips , 'redist_data.csv' )
+        os.remove(''redist_overrides.csv'')
         if (os.path.exists("%s_contiguity_overrides.csv" % stateFips)) :
         	shutil.copy("%s_contiguity_overrides.csv" % stateFips,'redist_overrides.csv') 
         os.chdir(olddir)
