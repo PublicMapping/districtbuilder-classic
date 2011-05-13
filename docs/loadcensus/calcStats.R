@@ -12,8 +12,7 @@ setwd('/projects/publicmapping/data')
 merged.df<-read.dbf("census_blocks.dbf",as.is=TRUE)
 
 # check for the existence of election variables in the data, choose the # best one
-electionvar <- names(merged.df)[charmatch (c("VOTE_DEM","GOV10_DEM","GOV09_DEM","GOV08_DEM",
-"PRS10_DEM","PRS09_DEM","PRS08_DEM"),names(merged.df))]
+electionvar <- names(merged.df)[charmatch (c("VOTE_DEM"),names(merged.df))]
 electionvar<-electionvar[which(!is.na(electionvar))][1]
 if (is.na(electionvar)) {        
 	has_election_data<-0
@@ -57,12 +56,12 @@ q_county_TOTPOP_NA <-myq(aggregate(merged.df$TOTPOP_NA,by=list(merged.df$COUNTYF
 if (has_election_data) {
         q_block_VOTE_DEM<- myq(merged.df$VOTE_DEM)
         q_tract_VOTE_DEM<-myq(aggregate(merged.df$VOTE_DEM,by=list(merged.df$TRACTCE10),sum,na.rm=T)[2])
-        q_county_VOTE_DEM<-myq(aggregate(merged.df$VOTE_DEM,by=list(merged.df$COUNTYP10),sum,na.rm=T)[2])
+        q_county_VOTE_DEM<-myq(aggregate(merged.df$VOTE_DEM,by=list(merged.df$COUNTYFP10),sum,na.rm=T)[2])
         q_block_VOTE_REP<- myq(merged.df$VOTE_REP)
         q_tract_VOTE_REP<-myq(aggregate(merged.df$VOTE_REP,by=list(merged.df$TRACTCE10),sum,na.rm=T)[2])
-        q_county_VOTE_REP<-myq(aggregate(merged.df$VOTE_REP,by=list(merged.df$COUNTYP10),sum,na.rm=T)[2])
+        q_county_VOTE_REP<-myq(aggregate(merged.df$VOTE_REP,by=list(merged.df$COUNTYFP10),sum,na.rm=T)[2])
         q_block_VOTE_TOT<- myq(merged.df$VOTE_TOT)
         q_tract_VOTE_TOT<-myq(aggregate(merged.df$VOTE_TOT,by=list(merged.df$TRACTCE10),sum,na.rm=T)[2])
-        q_county_VOTE_TOT<-myq(aggregate(merged.df$VOTE_TOT,by=list(merged.df$COUNTYP10),sum,na.rm=T)[2])
+        q_county_VOTE_TOT<-myq(aggregate(merged.df$VOTE_TOT,by=list(merged.df$COUNTYFP10),sum,na.rm=T)[2])
 }
 
