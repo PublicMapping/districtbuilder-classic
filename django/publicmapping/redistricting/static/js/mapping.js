@@ -1232,7 +1232,6 @@ function mapinit(srs,maxExtent) {
     });
 
 
-    /*
     var districtIdDiv = createDistrictTipDiv();
     olmap.div.insertBefore(districtIdDiv,olmap.div.firstChild);
 
@@ -1279,7 +1278,6 @@ function mapinit(srs,maxExtent) {
     districtIdControl.events.register('deactivate', districtIdControl, function() {
         districtIdDiv.style.display = 'none';
     });
-    */
 
     var districtComment = $('#districtComment');
     districtComment.dialog({
@@ -1289,7 +1287,7 @@ function mapinit(srs,maxExtent) {
         autoOpen: false
     });
 
-    var districtIdControl = new OpenLayers.Control.SelectFeature(
+    var districtCommentControl = new OpenLayers.Control.SelectFeature(
         districtLayer,
         {
             hover: false,
@@ -1298,11 +1296,11 @@ function mapinit(srs,maxExtent) {
                 districtComment.dialog('option','buttons',{
                     'OK': function() {
                         districtComment.dialog('close');
-                        districtIdControl.clickoutFeature(feature);
+                        districtCommentControl.clickoutFeature(feature);
                     }
                 });
                 districtComment.dialog('option','close', function(){
-                    districtIdControl.clickoutFeature(feature);
+                    districtCommentControl.clickoutFeature(feature);
                 });
                 districtComment.dialog('option','title','Please Wait...');
                 districtComment.dialog('open');
@@ -1312,7 +1310,7 @@ function mapinit(srs,maxExtent) {
                         districtComment.dialog('option','buttons',{
                             'Close': function() {
                                 districtComment.dialog('close');
-                                districtIdControl.clickoutFeature(ft);
+                                districtCommentControl.clickoutFeature(ft);
                             }
                         });
                         districtComment.dialog('option','title','Oops!');
@@ -1324,7 +1322,7 @@ function mapinit(srs,maxExtent) {
                     return function(data, textStatus, xhr) {
                         if (xhr.status == 200 && data.success) {
                             districtComment.dialog('close');
-                            districtIdControl.clickoutFeature(ft);
+                            districtCommentControl.clickoutFeature(ft);
 
                             // The district may have been removed when reloading
                             // the plan geometry -- get the same feature ID as
@@ -1337,7 +1335,7 @@ function mapinit(srs,maxExtent) {
                                    break;
                                }
                             }
-                            districtIdControl.clickFeature(ft);
+                            districtCommentControl.clickFeature(ft);
 
                             PLAN_VERSION = data.version;
                             var updateAssignments = true;
@@ -1451,7 +1449,7 @@ function mapinit(srs,maxExtent) {
                             districtComment.dialog('option','buttons',{
                                 'Close': function() {
                                     districtComment.dialog('close');
-                                    districtIdControl.clickoutFeature(feature);
+                                    districtCommentControl.clickoutFeature(feature);
                                 }
                             });
                             districtComment.dialog('option','title','Oops!');
@@ -1467,7 +1465,7 @@ function mapinit(srs,maxExtent) {
                         districtComment.dialog('option','buttons',{
                             'Close': function() {
                                 districtComment.dialog('close');
-                                districtIdControl.clickoutFeature(feature);
+                                districtCommentControl.clickoutFeature(feature);
                             }
                         });
                         districtComment.dialog('option','title','Oops!');
@@ -1477,6 +1475,25 @@ function mapinit(srs,maxExtent) {
             }
         }
     );
+
+    $('#label_district_button').click(function(){
+        var active = olmap.getControlsBy('active',true);
+        for (var i = 0; i < active.length; i++) {
+            if (active[i].CLASS_NAME != 'OpenLayers.Control.KeyboardDefaults') {
+                active[i].deactivate();
+            }
+        }
+        $('.toolset_group button.btntoggle').removeClass('toggle');
+        $(this).addClass('toggle');
+        districtCommentControl.activate();
+        $('#navigate_map_tool').removeClass('toggle');
+        $('#dragdrop_tool').removeClass('toggle');
+        $('#anchor_tool').removeClass('toggle');
+        assignMode = null;
+        $('#assign_district').val(-1);
+        tipdiv.style.display = 'none';
+        districtIdDiv.style.display = 'none';
+    });
 
     // Create a tool that toggles whether a district is locked when clicked on.
     var lockDistrictControl = new OpenLayers.Control.SelectFeature(
@@ -1655,7 +1672,7 @@ function mapinit(srs,maxExtent) {
         }
 
         // hide the other tip
-        //districtIdDiv.style.display = 'none';
+        districtIdDiv.style.display = 'none';
     };
 
     // A callback for feature selection in different controls.
@@ -2091,7 +2108,7 @@ function mapinit(srs,maxExtent) {
         assignMode = null;
         $('#assign_district').val(-1);
         tipdiv.style.display = 'none';
-        //districtIdDiv.style.display = 'none';
+        districtIdDiv.style.display = 'none';
     });
 
     // When the identify map tool is clicked, disable all the
@@ -2170,7 +2187,7 @@ function mapinit(srs,maxExtent) {
         getControl.activate();
         getControl.features = selection.features;
         tipdiv.style.display = 'none';
-        //districtIdDiv.style.display = 'none';
+        districtIdDiv.style.display = 'none';
     });
 
     // When the rectangle selection tool is clicked, disable all the
@@ -2185,7 +2202,7 @@ function mapinit(srs,maxExtent) {
         boxControl.activate();
         boxControl.features = selection.features;
         tipdiv.style.display = 'none';
-        //districtIdDiv.style.display = 'none';
+        districtIdDiv.style.display = 'none';
     });
 
     // When the polygon selection tool is clicked, disable all the
@@ -2199,7 +2216,7 @@ function mapinit(srs,maxExtent) {
         }
         polyControl.activate();
         tipdiv.style.display = 'none';
-        //districtIdDiv.style.display = 'none';
+        districtIdDiv.style.display = 'none';
     });
 
     // When the assignment tool is clicked, disable all the
@@ -2237,6 +2254,7 @@ function mapinit(srs,maxExtent) {
         idControl.deactivate();
         $('#district_id_map_tool').removeClass('toggle');
         districtIdControl.deactivate();
+        districtCommentControl.deactivate();
         districtComment.dialog('close');
         $('#district_select').removeClass('toggle');
         districtSelectTool.deactivate();
@@ -2244,7 +2262,7 @@ function mapinit(srs,maxExtent) {
         lockDistrictControl.deactivate();
         $('#anchor_tool').removeClass('toggle');
         tipdiv.style.display = 'none';
-        //districtIdDiv.style.display = 'none';
+        districtIdDiv.style.display = 'none';
 
         // enable single select tool if no selection tool is enabled
         if (!(getControl.active || boxControl.active || polyControl.active) && !selectionAlready) {
@@ -2282,12 +2300,13 @@ function mapinit(srs,maxExtent) {
         idControl.deactivate();
         $('#district_id_map_tool').removeClass('toggle');
         districtIdControl.deactivate();
+        districtCommentControl.deactivate();
         districtComment.dialog('close');
         $('#lock_district_map_tool').removeClass('toggle');
         lockDistrictControl.deactivate();
         $('#dragdrop_tool').removeClass('toggle');
         tipdiv.style.display = 'none';
-        //districtIdDiv.style.display = 'none';
+        districtIdDiv.style.display = 'none';
 
         // enable single select tool if no selection tool is enabled
         if (!(getControl.active || boxControl.active || polyControl.active)) {
@@ -2304,6 +2323,7 @@ function mapinit(srs,maxExtent) {
         new GlobalZoom(),
         idControl,
         districtIdControl,
+        districtCommentControl,
         districtSelectTool,
         lockDistrictControl,
         dragdropControl
@@ -2757,7 +2777,7 @@ function mapinit(srs,maxExtent) {
 
         // Once we have the district name, post a request to the 
         // server to create it in the DB
-        var createDistrict = function(district_id) {
+        var createDistrict = function(district_id, district_label) {
             var geolevel_id = selection.features[0].attributes.geolevel_id;
             var geounit_ids = [];
             for (var i = 0; i < selection.features.length; i++) {
@@ -2771,6 +2791,7 @@ function mapinit(srs,maxExtent) {
                 url: '/districtmapping/plan/' + PLAN_ID + '/district/new/',
                 data: {
                     district_id: district_id,
+                    district_name: district_label,
                     geolevel: geolevel_id,
                     geounits: geounit_ids,
                     version: getPlanVersion()
@@ -2804,22 +2825,48 @@ function mapinit(srs,maxExtent) {
         for (var d = 1; d < MAX_DISTRICTS; d++) {
             var dtaken = false;
             for (var o = 0; o < options.length && !dtaken; o++) {
-                dtaken = dtaken || ( options[o].text == BODY_MEMBER + d)
+                dtaken = dtaken || (parseInt(options[o].value,10) == d)
             }
             if (!dtaken) {
-                avail.push('<option value="'+d+'">'+BODY_MEMBER+d+'</option>');
+                if (PLAN_TYPE == 'plan') {
+                    var lbl = BODY_MEMBER+d;
+                    avail.push('<option value="'+d+';'+lbl+'">'+lbl+'</option>');
+                }
+                else {
+                    avail.push(d);
+                    d = MAX_DISTRICTS;
+                }
             }
+        }
+
+        var markup = null;
+        if (PLAN_TYPE == 'plan') {
+            markup = $('<div id="newdistrictdialog">Please select a ' + BODY_MEMBER.toLowerCase() + ' name:<br/><select id="newdistrictname">' + avail.join('') + '</select></div>')
+        }
+        else {
+            markup = $('<div id="newdistrictdialog">Name new ' + BODY_MEMBER.toLowerCase() + ':<br/><input type="text" id="newdistrictname" value="' + BODY_MEMBER + avail[0] + '" /><input type="hidden" id="newdistrictid" value="' + avail[0] + '"/></div>');
         }
 
         // Create a dialog to get the new district's name from the user.
         // On close, destroy the dialog.
-        $('<div id="newdistrictdialog">Please select a district name:<br/><select id="newdistrictname">' + avail.join('') + '</select></div>').dialog({
+        markup.dialog({
             modal: true,
             autoOpen: true,
-            title: 'New District',
+            title: 'New '+BODY_MEMBER,
+            width: 330,
             buttons: { 
                 'OK': function() { 
-                    createDistrict($('#newdistrictname').val()); 
+                    var did, dname;
+                    if (PLAN_TYPE == 'plan') {
+                        var dinfo = $('#newdistrictname').val().split(';');
+                        did = dinfo[0];
+                        dname = dinfo[1];
+                    }
+                    else {
+                        did = $('#newdistrictid').val();
+                        dname = $('#newdistrictname').val(); 
+                    }
+                    createDistrict(did, dname);
                     $(this).dialog("close"); 
                     $('#newdistrictdialog').remove(); 
                 },
@@ -2882,7 +2929,7 @@ function mapinit(srs,maxExtent) {
     districtLayer.events.register('loadend', districtLayer, updateDistrictScores);
 
     olmap.events.register('movestart',olmap,function(){
-        //districtIdDiv.style.display = 'none';
+        districtIdDiv.style.display = 'none';
         tipdiv.style.display = 'none';
     });
     olmap.events.register('moveend', olmap, sortByVisibility);

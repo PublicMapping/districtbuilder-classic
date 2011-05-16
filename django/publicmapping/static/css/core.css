@@ -1747,6 +1747,9 @@ div#tipclose {
     right: 2px;
     cursor: pointer;
 }
+select#newdistrictname {
+    width: 290px;
+}
 
 
 /* JQUERY TOOLS TOOLTIPS */
@@ -1909,6 +1912,21 @@ button#multi_member_toggle {
 }
 
 button#multi_member_toggle.ui-state-default {border: 1px solid #ccc;}
+
+/* district label&comment */
+
+button#label_district_button {
+    background-color: #606060;
+    position: absolute;
+    bottom: 8px;
+    right: 360px;
+    font-size: 7pt;
+    -moz-box-shadow: 2px 2px 2px #888888;
+    -webkit-box-shadow: 2px 2px 2px #888888;
+    box-shadow: 2px 2px 2px #888888;
+}
+
+button#label_district_button.ui-state-default {border: 1px solid #ccc;}
 
 #multi_member_content {
     height: 255px;

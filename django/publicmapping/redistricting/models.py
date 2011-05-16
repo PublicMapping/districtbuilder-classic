@@ -805,7 +805,7 @@ class Plan(models.Model):
         district_copy.clone_relations_from(district)
                 
     @transaction.commit_on_success
-    def add_geounits(self, districtid, geounit_ids, geolevel, version, keep_old_versions=False):
+    def add_geounits(self, districtinfo, geounit_ids, geolevel, version, keep_old_versions=False):
         """
         Add Geounits to a District. When geounits are added to one 
         District, they are also removed from whichever district they're 
@@ -816,8 +816,10 @@ class Plan(models.Model):
         simplifies geometries to 100 meters between points (-ish).
 
         Parameters:
-            districtid -- The district_id (NOT the id) of the
-                destination District.
+            districtinfo -- The district_id (NOT the id) of the
+                destination District OR the district_id (NOT the id) of
+                the destination District and the district name, as a
+                tuple.
             geounit_ids -- A list of Geounit ids that are to be added
                 to the District.
             geolevel -- The Geolevel of the geounit_ids.
@@ -831,7 +833,12 @@ class Plan(models.Model):
         """
 
         # fix the district id so that it is definitely an integer
-        districtid = int(districtid)
+        if type(districtinfo) == tuple:
+            districtid = int(districtinfo[0])
+            districtname = districtinfo[1]
+        else:
+            districtid = int(districtinfo)
+            districtname = self.legislative_body.member % districtid
 
         # fix the version so that it is definitely an integer
         version = int(version)
@@ -929,12 +936,7 @@ class Plan(models.Model):
 
         new_target = False
         if target is None:
-            # create a temporary district
-            try:
-                name = self.legislative_body.member % districtid
-            except:
-                name = str(districtid)
-            target = District(name=name, plan=self, district_id=districtid, version=self.version)
+            target = District(name=districtname, plan=self, district_id=districtid, version=self.version)
             target.save()
             new_target = True
                 

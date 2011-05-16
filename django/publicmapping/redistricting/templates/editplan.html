@@ -250,3 +250,11 @@
     </div>
     {% endif %}
     {% endblock %}
+
+    {% block label_ctl %}
+    {% if plan.is_community %}
+    <div id="label_district">
+        <button id="label_district_button">Label {{ body_member }}</button>
+    </div>
+    {% endif %}
+    {% endblock %}

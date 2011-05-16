@@ -81,6 +81,7 @@
         // The most current version of the plan. When viewing a plan,
         // the most current plan version is initially displayed.
         var PLAN_VERSION = {% if plan %}{{ plan.version }}{% else %}0{% endif %};
+        var PLAN_TYPE = '{% if plan and plan.is_community %}community{% else %}plan{% endif %}';
         // The history tree. This gets populated as the user walks
         // backward in the history.
         var PLAN_HISTORY = {};
@@ -523,6 +524,14 @@
 
           A place holder for the "Fix Unassigned" button, which should
           only appear when the plan is editable.
+
+          {% endcomment %}
+          {% endblock %}
+          {% block label_ctl %}
+          {% comment %}
+
+          A place holder for the "Label Community" button, which should
+          only appear when the plan is editable, and is a community map.
 
           {% endcomment %}
           {% endblock %}

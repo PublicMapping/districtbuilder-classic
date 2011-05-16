@@ -37,15 +37,3 @@
     </div>
 {% endfor %}
 </div>
-<script type="text/javascript">
-(function(){
-    var districts = $('.districtComment');
-    var h3re = new RegExp('^\\s*\<h3\>.*\<\/h3\>\\s*$');
-    districts.each(function(idx){
-        var me = $(this);
-        if (h3re.test(me.html())) {
-            me.hide();
-        }
-    });
-})();
-</script>

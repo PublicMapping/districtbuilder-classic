@@ -748,6 +748,13 @@ def newdistrict(request, planid):
         else:
             district_id = None
 
+        if 'district_name' in request.REQUEST:
+            district_name = request.REQUEST['district_name']
+        elif not district_id is None:
+            district_name = plan.legislative_body.member % district_id
+        else:
+            district_name = None
+
         if 'version' in request.REQUEST:
             version = request.REQUEST['version']
         else:
@@ -757,7 +764,7 @@ def newdistrict(request, planid):
             try: 
                 # add the geounits selected to this district -- this will
                 # create a new district w/1 version higher
-                fixed = plan.add_geounits(district_id, geounit_ids, geolevel, version)
+                fixed = plan.add_geounits((district_id, district_name,), geounit_ids, geolevel, version)
 
                 status['success'] = True
                 status['message'] = 'Created 1 new district'
