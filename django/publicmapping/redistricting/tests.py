@@ -110,11 +110,12 @@ class ScoringTestCase(BaseTestCase):
         
         # create objects used for scoring
         self.legbod = LegislativeBody.objects.get(name='TestLegislativeBody')
-        self.scoreDisplay1 = ScoreDisplay(title='SD1', legislative_body=self.legbod, is_page=False)
+        self.scoreDisplay1 = ScoreDisplay(title='SD1', legislative_body=self.legbod, is_page=False, owner=self.user)
         self.scoreDisplay1.save()
 
-        self.scorePanel1 = ScorePanel(type='district', display=self.scoreDisplay1, position=0, title='SP1')
+        self.scorePanel1 = ScorePanel(type='district', position=0, title='SP1')
         self.scorePanel1.save()
+        self.scorePanel1.displays.add(self.scoreDisplay1)
 
         self.subject1 = Subject.objects.get(name='TestSubject')
 
@@ -1559,7 +1560,7 @@ class CalculatorTestCase(BaseTestCase):
 
         actual = sumcalc.result
 
-        self.assertEquals(expected, actual, 'Incorrect value during summation. (e:%d,a:%d)' % (expected, actual))
+        self.assertEquals(expected, actual, 'Incorrect value during summation. (e:%s-%d,a:%s-%d)' % (type(expected), expected, type(actual), actual))
 
     def test_sum4(self):
         dist1ids = self.geounits[0:3] + self.geounits[9:12]

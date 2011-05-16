@@ -3,16 +3,19 @@
   "pk": 1, 
   "model": "redistricting.scoredisplay", 
   "fields": {
+   "owner": 1,
    "legislative_body": 1, 
    "cssclass": "the_display", 
    "is_page": true, 
    "title": "TestScoreDisplay"
+    
   }
  }, 
  {
   "pk": 2, 
   "model": "redistricting.scoredisplay", 
   "fields": {
+   "owner": 1,
    "legislative_body": 1, 
    "cssclass": "", 
    "is_page": false, 
@@ -29,7 +32,7 @@
    "position": 1, 
    "cssclass": "panel1", 
    "type": "plan", 
-   "display": 1,
+   "displays": [1],
    "score_functions": [1,2]
   }
  }, 
@@ -43,7 +46,7 @@
    "position": 1, 
    "cssclass": "panel2", 
    "type": "district", 
-   "display": 2,
+   "displays": [2],
    "score_functions": [3,4]
   }
  }, 
