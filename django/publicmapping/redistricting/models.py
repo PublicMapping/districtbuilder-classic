@@ -43,7 +43,7 @@ from django.template.loader import render_to_string
 from django.contrib.comments.models import Comment
 from django.contrib.contenttypes.models import ContentType
 from redistricting.calculators import Schwartzberg, Contiguity
-from tagging.models import TaggedItem
+from tagging.models import TaggedItem, Tag
 from datetime import datetime
 from copy import copy
 from decimal import *
@@ -2104,6 +2104,40 @@ class District(models.Model):
             self.simple = None
             self.save()
 
+
+    def get_community_type_intersections(self, community_map, version=None):
+        """
+        Given a community_map (a Plan object), will determine the number of distinct
+        types of community that this district intersections.
+        
+        Parameters:
+            community_map - a Plan linked to the community-mapping legislativebody
+            version - the version of the community_map to examine. If not given, 
+                the current plan version will be used
+        Returns:
+            an integer count of the number of distinct community types intersecting
+            this district
+        """
+        if version is None:
+            version = community_map.version
+        
+        # Filters - first get all districts
+        communities = community_map.get_districts_at_version(version, include_geom=True)
+        # Filter quickly by envelope
+        communities = filter(lambda z: True if self.geom.envelope.intersects(z.geom.envelope) else False, communities)
+        # Filter by relation - must have interior intersection
+        communities = filter(lambda z: True if self.geom.relate_pattern(z.geom, 'T********') else False, communities)
+
+        types = {}
+        for community in communities:
+            tags = Tag.objects.get_for_object(community).filter(name__startswith='type=')
+            for tag in tags:
+                if tag.name in types:
+                    types[tag.name] += 1
+                else:
+                    types[tag.name] = 1
+        return len(types)
+
 # Enable tagging of districts by registering them with the tagging module
 tagging.register(District)
 
@@ -2216,10 +2250,10 @@ def create_unassigned_district(sender, **kwargs):
         unassigned = District(name="Unassigned", version = 0, plan = plan, district_id=0)
 
         biggest_geolevel = plan.get_biggest_geolevel()
-        all_geom = Geounit.objects.filter(geolevel=biggest_geolevel).collect()
+        all_geom = Geounit.objects.filter(geolevel=biggest_geolevel).unionagg()
 
         if plan.district_set.count() > 0:
-            taken = plan.district_set.all().collect()
+            taken = plan.district_set.all().unionagg()
             unassigned.geom =  enforce_multi(all_geom.difference(taken))
             unassigned.simplify() # implicit save
             geounit_ids = map(str, Geounit.objects.filter(geom__bboverlaps=unassigned.geom, geolevel=biggest_geolevel).values_list('id', flat=True))
