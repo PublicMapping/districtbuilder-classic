@@ -37,6 +37,7 @@ from django.core.urlresolvers import reverse
 from django.core.context_processors import csrf
 from django.contrib.comments.models import Comment
 from django.contrib.comments.forms import CommentForm
+from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.sessions.models import Session
 from django.contrib.sessions.backends.db import SessionStore
@@ -1851,7 +1852,7 @@ def purge_plan_clear_cache(district, version):
     cache.delete()
 
 @unique_session_or_json_redirect
-def district_comment(request, planid, district_id):
+def district_info(request, planid, district_id):
     """
     Get the comments that are attached to a district.
 
@@ -1897,8 +1898,14 @@ def district_comment(request, planid, district_id):
                 status['success'] = True
         elif request.method == 'POST':
             district = District.objects.get(id=request.POST['object_pk'])
+            district.name = request.POST['label']
+
             form = CommentForm(district, request.POST)
-            if form.is_valid():
+            no_comment = False
+            if not form.is_valid():
+                no_comment = 'comment' in form.errors and len(form.error) == 1
+
+            if not no_comment:
                 comment = form.get_comment_object()
                 if district.version < version:
                     # The district version may lag behind the cursor 
@@ -1915,133 +1922,37 @@ def district_comment(request, planid, district_id):
                     # the original district to the copy 
                     district_copy.clone_relations_from(district)
                     district = district_copy
+                else:
+                    # save the changes to the district -- maybe name change
+                    district.save()
 
+                # Don't thread comments, keep only the latest and greatest
+                ct = ContentType.objects.get(app_label='redistricting',model='district')
+                Comment.objects.filter(object_pk = district.id, content_type=ct).delete()
                 comment.object_pk = district.id
                 comment.save()
-
-                purge_plan_clear_cache(district, version)
-
-                status['version'] = version
-                status['success'] = True
             else:
-                status['message'] = 'Invalid form.'
-                status['errors'] = form.errors
+                # save this if the label changed
+                district.save()
 
-    return HttpResponse(json.dumps(status), mimetype='application/json')
+            # Get the tags on this object of this type.
+            tset = Tag.objects.get_for_object(district).filter(name__startswith='type')
 
-def delete_district_comment(request, planid, district_id, comment_id, version):
-    """
-    Delete a comment from a district.
-
-    Parameters:
-        planid -- The ID of the plan.
-        district_id -- The ID of the district -- this is the Primary Key.
-        comment_id -- The comment that should be removed.
-    """
-    status = { 'success': False }
-    plan = Plan.objects.filter(id=planid)
-    if plan.count() == 0:
-        status['message'] = 'No plan with that ID was found.'
-    else:
-        plan = plan[0]
-
-        district = plan.district_set.filter(id=district_id)
-        if district.count() == 0:
-            status['message'] = 'No district in the given plan was found.'
-        else:
-            district = district[0]
-            comment = Comment.objects.get(id=comment_id)
-            comment.delete()
+            # Purge the tags of this same type off the object
+            TaggedItem.objects.filter(tag__in=tset, object_id=district.id).delete()
 
             purge_plan_clear_cache(district, version)
 
+            if 'type' in request.POST:
+                strtags = parse_tag_input(request.POST['type'])
+                for strtag in strtags:
+                    if strtag.count(' ') > 0:
+                        strtag = '"type=%s"' % strtag
+                    else:
+                        strtag = 'type=%s' % strtag
+                    Tag.objects.add_tag(district, strtag)
+
             status['version'] = version
             status['success'] = True
-
-    return HttpResponse(json.dumps(status),mimetype='application/json')
-
-def district_tags(request, planid, district_id, tag_type):
-    """
-    Set the tags on a district. District Labels and Types are tags, and can
-    be added in any combination.
-
-    Parameters:
-        planid -- The plan ID
-        district_id -- The district ID. This is the primary key, not the district_id
-        tag_type -- A string indicating which type of tag to save. Options are 'label' or 'type'
-    """
-    status = { 'success': False }
-    if request.method != 'POST':
-        status['message'] = 'Get tags for a district via the comments endpoint.'
-        return HttpResponse(json.dumps(status), mimetype='application/json')
-
-    plan = Plan.objects.filter(id=planid)
-    if plan.count() == 0:
-        status['message'] = 'No plan with that ID was found.'
-        return HttpResponse(json.dumps(status), mimetype='application/json')
-
-    plan = plan[0]
-
-    district = plan.district_set.filter(id=district_id)
-    if district.count() == 0:
-        status['message'] = 'No district in the given plan was found.'
-        return HttpResponse(json.dumps(status), mimetype='application/json')
-
-    version = plan.version
-    if 'version' in request.REQUEST:
-        try:
-            version = int(request.REQUEST['version'])
-            version = min(plan.version, int(version))
-        except:
-            pass
-
-    district = district[0]
-    if district.version < version:
-        # The district version may lag behind the cursor 
-        # version if there were no edits for a while. If this 
-        # is the case the district must be copied to the 
-        # currently edited version.
-        district_copy = copy.copy(district)
-        district_copy.id = None
-        district_copy.version = version
-
-        district_copy.save()
-
-        # clone the characteristics, comments, and tags from 
-        # the original district to the copy 
-        district_copy.clone_relations_from(district)
-        district = district_copy
-
-    # Get the tags on this object of this type.
-    tset = Tag.objects.get_for_object(district).filter(name__startswith=tag_type)
-
-    # Purge the tags of this same type off the object
-    TaggedItem.objects.filter(tag__in=tset, object_id=district.id).delete()
-
-    purge_plan_clear_cache(district, version)
-
-    status['version'] = version
-
-    if 'tags' in request.POST:
-        if tag_type == 'label':
-            # Allowed to use many items in the label field
-            strtag = request.POST['tags']
-            if strtag.count('"') > 0:
-                strtag = strtag.replace('"','\\"')
-            Tag.objects.add_tag(district, '"%s=%s"' % (tag_type, strtag,))
-        else:
-            # Each term is a different type
-
-            # Parse all the tags, and add them (do not update, because it might
-            # remove tags of a different tag type) to the district model
-            strtags = parse_tag_input(request.POST['tags'])
-            for strtag in strtags:
-                if strtag.count(' ') > 0:
-                    strtag = '"%s=%s"' % (tag_type, strtag,)
-                else:
-                    strtag = '%s=%s' % (tag_type, strtag,)
-                Tag.objects.add_tag(district, strtag)
-
-    status['success'] = True
 
     return HttpResponse(json.dumps(status), mimetype='application/json')

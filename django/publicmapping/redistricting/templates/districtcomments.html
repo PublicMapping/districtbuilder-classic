@@ -1,37 +1,20 @@
 {% load comments %}
 <div>
-    <h3>Label:</h3>
+    <h3>1. Edit Community Label:</h3>
     <div id="district_label" class="district_input">
-        <button id="district_label_save" name="savelabel"></button>
-        <input type="text" value="{{ labeltag }}" id="id_label" name="label"/>
+        <input type="text" value="{{ district.name }}" id="id_label" name="label"/>
     </div>
-    <h3>Type:</h3>
+    <h3>2. Edit Community Type:</h3>
     <div id="district_type" class="district_input">
-        <button id="district_type_save" name="savetype"></button>
         <input type="text" value="{% for tag in typetags %}{{ tag }}{% if not forloop.last %}, {% endif %}{% endfor %}" id="id_type" name="type"/>
     </div>
     {% get_comment_list for district as dcoms %}
-    {% if dcoms %}
-        <h3>Comments:</h3>
-    {% endif %}
-    {% for dcom in dcoms %}
-        <div class="district_comment {% cycle 'comm1' 'comm2' %}">
-            <div class="district_comment_content">{{ dcom.comment }}</div>
-            <div class="district_comment_remove"><button class="delete_comment" comment_id="{{ dcom.id }}" /></div>
-            <div class="district_comment_date">{{ dcom.submit_date|date:"N j, Y" }} at {{ dcom.submit_date|date:"g:i a" }}</div>
-        </div>
-    {% endfor %}
-    <div id="collapsedComments">
-        <button id="expandComments"><span>Add a comment...</span></button>
-    </div>
-    <div id="expandedComments">
+    <h3>3. Comments:</h3>
         {% get_comment_form for district as form %}
-        <form action="/districtmapping/plan/{{ district.plan_id }}/district/{{ district.district_id }}/comments/" method="post">
+        <form action="/districtmapping/plan/{{ district.plan_id }}/district/{{ district.district_id }}/info/" method="post">
             {% csrf_token %}
             <p>
-                {{ form.comment.errors }}
-                <label for="id_comment">Your comment:</label>
-                {{ form.comment }}
+                <textarea id="id_comment" name="comment" cols="40" rows="10">{% for dcom in dcoms %}{{ dcom.comment }}{% endfor %}</textarea>
             </p>
             <input type="hidden" id="id_name" name="{{ form.name.html_name }}" value="{% firstof user.first_name user.last_name user.username %}"/>
             <input type="hidden" id="id_email" name="{{ form.email.html_name }}" value="{{ user.email }}"/>
@@ -45,8 +28,6 @@
             {{ form.timestamp }}
             {{ form.security_hash }}
             <input type="hidden" id="submit-mode"/>
-            <button id="commentCancel"><span>Cancel</span></button>
-            <button id="commentPost"><span>Post</span></button>
         </form>
     </div>
 </div>

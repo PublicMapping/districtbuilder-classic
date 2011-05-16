@@ -1292,7 +1292,7 @@ function mapinit(srs,maxExtent) {
         {
             hover: false,
             onSelect: function(feature){
-                districtComment.html('<div class="commentloading"><h3>Loading Comments...</h3></div>');
+                districtComment.html('<div class="commentloading"><h3>Loading Community Info</h3></div>');
                 districtComment.dialog('option','buttons',{
                     'OK': function() {
                         districtComment.dialog('close');
@@ -1348,7 +1348,7 @@ function mapinit(srs,maxExtent) {
                     };
                 };
 
-                var postComment = function(evt) {
+                var postInfo = function(evt) {
                     var submit = $('#submit-mode');
                     submit.val('Post');
                     submit.attr('name', 'post');
@@ -1357,13 +1357,10 @@ function mapinit(srs,maxExtent) {
 
                     var data = {
                         'comment':form.find('#id_comment').val(),
-                        'version':getPlanVersion()
+                        'version':getPlanVersion(),
+                        'label':$('#id_label').val(),
+                        'type':$('#id_type').val()
                     };
-
-                    if (data.comment === null || data.comment == '' ) {
-                        // bail if no comment text
-                        return;
-                    }
 
                     for (var i = 0; i < inputs.length; i++) { 
                         data[inputs[i].name] = inputs[i].value;
@@ -1381,36 +1378,9 @@ function mapinit(srs,maxExtent) {
                     return false;
                 }
 
-                var deleteComment = function(evt) {
-                    var cmt = $(this).attr('comment_id');
-                    var ver = getPlanVersion();
-                    $.ajax({
-                        type:'DELETE',
-                        url: '/districtmapping/plan/' + PLAN_ID + '/district/' + evt.data.district_id + '/comment/' + cmt + '/version/' + ver + '/',
-                        success: getSuccessCallback(feature),
-                        error: getErrorCallback(feature)
-                    });
-                };
-
-                var saveLabelInput = function(evt) {
-                    var type = (evt.target.name == 'savelabel') ? 'label' : 'type';
-                    var url = '/districtmapping/plan/' + PLAN_ID + '/district/' + feature.fid + '/tags/' + type + '/';
-
-                    $.ajax({
-                        type: 'POST',
-                        url: url,
-                        data: {
-                            tags: $('#id_' + type).val(),
-                            version: getPlanVersion()
-                        },
-                        success: getSuccessCallback(feature),
-                        error: getErrorCallback(feature)
-                    });
-                };
-
                 $.ajax({
                     type:'GET',
-                    url: '/districtmapping/plan/' + PLAN_ID + '/district/' + feature.attributes.district_id + '/comments/',
+                    url: '/districtmapping/plan/' + PLAN_ID + '/district/' + feature.attributes.district_id + '/info/',
                     data: {
                         version: getPlanVersion()
                     },
@@ -1418,31 +1388,12 @@ function mapinit(srs,maxExtent) {
                         if (xhr.status == 200 && data.success) {
                             districtComment.dialog('close');
                             districtComment.html(data.markup);
-                            districtComment.dialog('option','buttons',{});
-                            districtComment.dialog('option','title',feature.attributes.label);
-                            var commentDel = districtComment.find('button.delete_comment');
-                            commentDel.bind('click', {district_id:feature.fid}, deleteComment);
-                            commentDel.button({icons: {primary: 'icon-trash'}, text: false });
-                            var commentShow = $('#expandComments');
-                            commentShow.bind('click', {}, function() {
-                                $('#expandedComments').show();
-                                $('#collapsedComments').hide();
-                                $('#commentCancel').bind('click',{},function(evt){
-                                    $('#expandedComments').hide();
-                                    $('#collapsedComments').show();
-                                    evt.stopPropagation();
-                                    return false;
-                                });
-                                $('#commentCancel').button();
-                                $('#commentPost').bind('click',{}, postComment);
-                                $('#commentPost').button();
+                            districtComment.dialog('option','buttons',{
+                                'Save': function(evt) {
+                                    postInfo(evt);
+                                }
                             });
-                            commentShow.button();
-
-                            var buttons = districtComment.find('.district_input button');
-                            buttons.button({icons: {primary: 'icon-disk'}, text: false});
-                            buttons.bind('click', {}, saveLabelInput);
-
+                            districtComment.dialog('option','title','Community Info');
                             districtComment.dialog('open');
                         }
                         else {
