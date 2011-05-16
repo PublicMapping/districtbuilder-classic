@@ -57,7 +57,7 @@ from functools import wraps
 from redistricting.calculators import *
 from redistricting.models import *
 from redistricting.utils import *
-import random, string, math, types, copy, time, threading, traceback, os, commands, sys, tempfile, csv, hashlib
+import random, string, math, types, copy, time, threading, traceback, os, commands, sys, tempfile, csv, hashlib, inflect
 
 def using_unique_session(u):
     """
@@ -435,6 +435,8 @@ def commonplan(request, planid):
     else:
         mapserver_protocol = ''
 
+    member = body_member.strip().lower()
+
     return {
         'bodies': LegislativeBody.objects.all().order_by('name'),
         'plan': plan,
@@ -457,7 +459,8 @@ def commonplan(request, planid):
         'max_dists': max_dists + 1,
         'ga_account': settings.GA_ACCOUNT,
         'ga_domain': settings.GA_DOMAIN,
-        'body_member': body_member,
+        'body_member': member, 
+        'body_members': inflect.engine().plural(member),
         'reporting_template': reporting_template,
         'study_area_extent': study_area_extent,
         'has_leaderboard' : len(ScoreDisplay.objects.filter(is_page=True)) > 0

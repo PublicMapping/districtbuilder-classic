@@ -151,6 +151,9 @@ class LegislativeBody(models.Model):
     # The maximumum total number of members allowed in a plan.
     max_plan_members = models.PositiveIntegerField(default=0)
 
+    # A flag indicating if this legislative body contains community maps
+    is_community = models.BooleanField(default=False)
+
     def get_default_subject(self):
         """
         Get the default subject for display. This is related to the
@@ -667,7 +670,7 @@ class Plan(models.Model):
         if self.legislative_body is None:
             return False
 
-        return self.legislative_body.max_districts == 9999;
+        return self.legislative_body.is_community
     
     def targets(self):
         """
@@ -1095,10 +1098,12 @@ class Plan(models.Model):
             first_run = False
 
         slot = None
+        print 'checking others:',len(others)
         for d in others:
             if d.district_id != 0 and d.geom.empty:
                 slot = d.district_id
                 break
+        print 'slot is',slot
 
         biggest_geolevel = self.get_biggest_geolevel()
 

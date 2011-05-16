@@ -114,7 +114,7 @@ function initializeResizeFix() {
 function createMapTipDiv() {
     var tipdiv = document.createElement('div');
     var tipelem = document.createElement('h1');
-    tipelem.appendChild(document.createTextNode(BODY_MEMBER+'Name'));
+    tipelem.appendChild(document.createTextNode(BODY_MEMBER+' Name'));
     tipdiv.appendChild(tipelem);
     tipelem = document.createElement('div');
     tipelem.id = 'tipclose';
@@ -145,7 +145,7 @@ function createMapTipDiv() {
 function createDistrictTipDiv() {
     var tipdiv = document.createElement('div');
     var tipelem = document.createElement('h1');
-    tipelem.appendChild(document.createTextNode(BODY_MEMBER+'Name'));
+    tipelem.appendChild(document.createTextNode(BODY_MEMBER+' Name'));
     tipdiv.appendChild(tipelem);
     tipelem = document.createElement('div');
     tipelem.id = 'tipclose';
@@ -2829,7 +2829,7 @@ function mapinit(srs,maxExtent) {
             }
             if (!dtaken) {
                 if (PLAN_TYPE == 'plan') {
-                    var lbl = BODY_MEMBER+d;
+                    var lbl = BODY_MEMBER+' '+d;
                     avail.push('<option value="'+d+';'+lbl+'">'+lbl+'</option>');
                 }
                 else {
@@ -2844,7 +2844,7 @@ function mapinit(srs,maxExtent) {
             markup = $('<div id="newdistrictdialog">Please select a ' + BODY_MEMBER.toLowerCase() + ' name:<br/><select id="newdistrictname">' + avail.join('') + '</select></div>')
         }
         else {
-            markup = $('<div id="newdistrictdialog">Name new ' + BODY_MEMBER.toLowerCase() + ':<br/><input type="text" id="newdistrictname" value="' + BODY_MEMBER + avail[0] + '" /><input type="hidden" id="newdistrictid" value="' + avail[0] + '"/></div>');
+            markup = $('<div id="newdistrictdialog">Name new ' + BODY_MEMBER.toLowerCase() + ':<br/><input type="text" id="newdistrictname" value="' + BODY_MEMBER.charAt(0).toUpperCase() + BODY_MEMBER.substring(1) + ' ' + avail[0] + '" /><input type="hidden" id="newdistrictid" value="' + avail[0] + '"/></div>');
         }
 
         // Create a dialog to get the new district's name from the user.

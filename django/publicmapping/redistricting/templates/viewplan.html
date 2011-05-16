@@ -112,6 +112,7 @@
         var MAX_DISTRICTS = {{ max_dists }};
         // The name of a 'district' in this plan, could be "District ", etc
         var BODY_MEMBER = '{{ body_member }}';
+        var BODY_MEMBERS = '{{ body_members }}';
         // This settings determines whether a staff member is viewing the page in debug mode. 
         // It can be used to display messages to help with debugging and/or configuration
         var DEBUG = {{ debugging_staff|lower }};
@@ -359,8 +360,8 @@
               </div>
               <div class="toolset_group">
                 <img src="/static-media/images/icon-help.png" class="help divtip">
-                <div class="tooltip">The appearance of the districts on the map</div>                
-                <label>Show {{ body_member }} by:</label>
+                <div class="tooltip">The appearance of the {{ body_members }} on the map</div>                
+                <label>Show {{ body_member|capfirst }} by:</label>
                 {% comment %}
 
                 Dynamically populate the "Show Districts by:" dropdown,
@@ -755,7 +756,7 @@
       </div>
       {% endif %}
 </div>
-<div id="working" title="Please Wait">Please wait while new districts are computed...</div>
+<div id="working" title="Please Wait">Please wait while new {{ body_members }} are computed...</div>
 <div id="waiting" title="Please Wait">Please wait while data is being retrieved...</div>
 <div id="scoring" title="Please Wait">Please wait while the plan is being validated. This may take a few minutes.</div>
 <div id="districtComment" title="Please Wait">Please wait while the comments are loaded.</div>

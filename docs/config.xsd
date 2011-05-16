@@ -25,6 +25,7 @@
                                     <xs:attribute name="name" type="xs:string" use="required" />
                                     <xs:attribute name="member" type="xs:string" use="required" />
                                     <xs:attribute name="maxdistricts" type="xs:unsignedByte" use="required" />
+                                    <xs:attribute name="is_community" type="xs:boolean" use="optional" />
                                 </xs:complexType>
                             </xs:element>
                         </xs:sequence>

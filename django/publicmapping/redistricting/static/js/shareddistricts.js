@@ -48,7 +48,7 @@ shareddistricts = function(options) {
             autoOpen: false,
             modal: true,
             width: 975,
-            title: 'Copy and Paste Districts',
+            title: 'Copy and Paste ' + BODY_MEMBERS.charAt(0).toUpperCase() + BODY_MEMBERS.substring(1),
             resizable: false,
             closable: true
         }, options),
@@ -188,7 +188,7 @@ shareddistricts = function(options) {
                 id: 'pk'
             },
             colModel: [
-                {name:'fields.name', label:'District Name'},
+                {name:'fields.name', label:BODY_MEMBER.charAt(0).toUpperCase() + BODY_MEMBER.substring(1) + ' Name'},
                 {name:'fields.district_id', hidden: true},
                 {name:'selected', label:' ', width: '55', align: 'center'}
             ],
@@ -335,8 +335,8 @@ shareddistricts = function(options) {
 
     var initUI = function() {
         // Create the dialog displayed when the tool is disabled
-        _disabledDialog = $('<div id="copy_paste_disabled" title="Maximum Districts Reached">' + 
-            'Your plan is at maximum capacity. Please delete a district to enable pasting.</div>')
+        _disabledDialog = $('<div id="copy_paste_disabled" title="Maximum ' + BODY_MEMBERS.charAt(0).toUpperCase() + BODY_MEMBERS.substring(1) + ' Reached">' + 
+            'Your plan is at maximum capacity. Please delete a ' + BODY_MEMBER + ' to enable pasting.</div>')
             .dialog({ autoOpen: false, modal: true, resizable: false});
 
         // Use the closeDialog method to clear out the selections
@@ -345,18 +345,27 @@ shareddistricts = function(options) {
         // Set up the message that displays how many districts are available for pasting
         _options.target.bind('available_districts_updated', function(event, new_value) {
             _available_districts = new_value;
+            var instructions = '2. Remove ' + Math.abs(_available_districts) + ' before submitting';
             switch (_available_districts) {
                 case 0:
-                    var instructions = '2. Check your selections';
+                    instructions = '2. Check your selections';
                     break;
                 case 1:
-                    var instructions = '2. Select a district to copy';
+                    if (PLAN_TYPE == 'plan') {
+                        instructions = '2. Select a ' + BODY_MEMBER + 'to copy';
+                    }
+                    else {
+                        instructions = '2. Select a ' + BODY_MEMBER;
+                    }
                     break;
                 default:
                     if (_available_districts > 0) {
-                        var instructions = '2. Select up to ' + _available_districts + ' districts to copy';
-                    } else {
-                        var instructions = '2. Remove ' + Math.abs(_available_districts) + ' before submitting';
+                        if (PLAN_TYPE == 'plan') {
+                            instructions = '2. Select up to ' + _available_districts + ' ' + BODY_MEMBERS + ' to copy';
+                        }
+                        else {
+                            instructions = '2. Select ' + BODY_MEMBERS;
+                        }
                     }
             }
 
@@ -391,12 +400,12 @@ shareddistricts = function(options) {
                         var updateAssignments = true;
                         $('#map').trigger('version_changed', [data.version, updateAssignments]); 
                     } else {
-                        $('<div class="error" title="Sorry">Unable to paste districts:<p>' + data.message + '</p></div>')
+                        $('<div class="error" title="Sorry">Unable to paste ' + BODY_MEMBERS + ':<p>' + data.message + '</p></div>')
                             .dialog({modal:true, resizable:false});
                     }
                 },
                 error: function() {
-                    $('<div class="error" title="Sorry">Unable to paste districts</div>')
+                    $('<div class="error" title="Sorry">Unable to paste ' + BODY_MEMBERS + '</div>')
                         .dialog({modal:true, resizable:false});
                 }
             });
