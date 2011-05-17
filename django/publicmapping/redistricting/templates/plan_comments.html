@@ -2,38 +2,25 @@
 
 <div class="community_comments">
 {% for dscore in districtscores %}
-    <div class="districtComment">
+    <div class="districtComment {% cycle 'comm1' 'comm2' %}">
         <h3>{{ dscore.district }}</h3>
+        <div class="edit_district_info">Click to edit</div>
+        <div class="district_type">
+            <h4>Type/s:</h4>
+            {% for forscore in dscore.scores %}
+                {% with forscore.score as score %}
+                    {% if score.typetags %}
+                        <span>{% for tag in score.typetags %}{{ tag }}{% if not forloop.last %},{% endif %}{% endfor %}</span>
+                    {% endif %}
+                {% endwith %}
+            {% endfor %}
+        </div>
         {% get_comment_list for dscore.district as dcoms %}
-        {% for forscore in dscore.scores %}
-            {% with forscore.score as score %}
-                {% if score.labeltags %}
-                    <h4>Label:</h4>
-                    <div class="district_label">
-                        {% for labeltag in score.labeltags %}
-                            {{ labeltag }}
-                        {% endfor %}
-                    </div>
-                {% endif %}
-                {% if score.typetags %}
-                    <h4>Type:</h4>
-                    <div class="district_type">
-                        {% for tag in score.typetags %}
-                            {{ tag }}{% if not forloop.last %},{% endif %}
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            {% endwith %}
-        {% endfor %}
-        {% for dcom in dcoms %}
-            {% if forloop.first %}
-                <h4>Comments:</h4>
-            {% endif %}
-            <div class="district_comment {% cycle 'comm1' 'comm2' %}">
-                <div class="district_comment_content">{{ dcom.comment }}</div>
-                <div class="district_comment_date">{{ dcom.submit_date|date:"N j, Y" }} at {{ dcom.submit_date|date:"g:i a" }}</div>
-            </div>
-        {% endfor %}
+        <div class="district_comment">
+            <h4>Comments:</h4>
+            <div>{% for dcom in dcoms %}{{ dcom.comment }}{% endfor %}</div>
+        </div>
+        <div style="clear:both;height:0;line-height:0;">&nbsp;</div>
     </div>
 {% endfor %}
 </div>

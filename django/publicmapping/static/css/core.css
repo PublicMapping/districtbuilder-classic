@@ -2001,25 +2001,6 @@ span.poptot.selected {
 #districtComment {
     display:none;
 }
-
-.comm1 {
-    background-color: #e6e6e6;
-}
-.comm2 {
-    background-color: #f4f4f4;
-}
-.district_comment {
-    clear:both;
-    font-weight:normal;
-}
-.district_comment_date {
-    font-size: 8pt;
-    color: #999999;
-    text-align: right;
-}
-.district_comment_content {
-    font-size: 10pt;
-}
 #districtComment form {
     font-size: 10pt;
 }
@@ -2030,71 +2011,56 @@ span.poptot.selected {
     width:260px;
     height: 80px;
 }
-#districtComment button.delete_comment {
-    background-color: transparent;
-    border: 1px solid #cccccc;
-    margin-top: -0.5em;
-    float: right;
-    height: 2em;
-}
-#districtComment button.delete_comment .ui-icon {
-    background-image: url("/static-media/images/icon-trash.png");
-    top: 0.3em;
-}
-#expandedComments {
-    display: none;
-}
 #districtComment h3 {
     font-size: 14pt;
-    margin-top: 5px;
+    margin-top: 15px;
 }
 #districtComment input {
-    border: none;
-    width: 225px;
-}
-#districtComment .district_input {
-    border: inset 1px #cccccc;
-}
-#districtComment .district_input button {
-    background-color: transparent;
-    border: 1px solid #cccccc;
-    margin-top: 0.1em;
-    padding-top: 0.2em;
-    float: right;
-    height: 2em;
-}
-#districtComment .district_input button .ui-icon {
-    background-image: url("/static-media/images/icon-save.png");
-    top: 0.3em;
+    width: 260px;
 }
 .community_comments {
     overflow-y: auto;
     height: 98%;
     margin: 5px;
 }
+.community_comments .comm2 {
+    background-color: #FFF8DB;
+}
 .districtComment {
+    padding: 5px 3px;
     clear: both;
-    padding: 5px 10px;
+    font-weight: normal;
 }
 .districtComment h3 {
+    font-size: 12pt;
+    font-weight: bold;
+    float: left;
+}
+.districtComment h4 {
+    clear:both;
     font-size: 10pt;
     font-weight: bold;
 }
-
-.districtComment h4 {
-    font-size: 9pt;
-    font-weight: normal;
+.districtComment .edit_district_info {
+    float:right;
+    font-size: 8pt;
+}
+.districtComment .district_comment {
     clear: both;
-    float: left;
-    width: 6em;
-    padding-left: 1em;
-} 
-
-.districtComment .district_label {
     font-size: 9pt;
-    float: left;
+    margin-top: 1em;
+}
+.districtComment .district_comment div {
+    border: 1px inset;
+    width: 200px;
+    height: 40px;
+    background-color: #eeeeee;
+    padding: 2px;
 }
 .districtComment .district_type {
-    font-size: 9pt;
-    float: left;
+    clear: both;
+    font-size: 10pt;
+}
+.districtComment .district_type h4 {
+    display: inline;
 }
