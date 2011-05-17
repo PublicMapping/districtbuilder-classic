@@ -18,6 +18,54 @@
   }
  },
  {
+  "pk": 19, 
+  "model": "redistricting.target", 
+  "fields": {
+   "range2": "1.0000", 
+   "range1": "1.0000", 
+   "value": "8001024.0000", 
+   "subject": 1
+  }
+ }, 
+ {
+  "pk": 44, 
+  "model": "redistricting.legislativelevel", 
+  "fields": {
+   "legislative_body": 6, 
+   "target": 19, 
+   "parent": null, 
+   "geolevel": 1
+  }
+ }, 
+ {
+  "pk": 45, 
+  "model": "redistricting.legislativelevel", 
+  "fields": {
+   "legislative_body": 6, 
+   "target": 19, 
+   "parent": 44, 
+   "geolevel": 2
+  }
+ }, 
+ {
+  "pk": 46, 
+  "model": "redistricting.legislativelevel", 
+  "fields": {
+   "legislative_body": 6, 
+   "target": 19, 
+   "parent": 45, 
+   "geolevel": 3
+  }
+ }, 
+ {
+  "pk": 6, 
+  "model": "redistricting.legislativedefault", 
+  "fields": {
+   "legislative_body": 6, 
+   "target": 19
+  }
+ },
+ {
   "pk": 3263, 
   "model": "redistricting.scorefunction", 
   "fields": {
