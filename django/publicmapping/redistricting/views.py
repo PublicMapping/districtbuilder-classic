@@ -1191,12 +1191,11 @@ def getdistricts(request, planid):
         can_undo = max_version > plan.min_version
 
         for district in districts:
-            if district.has_geom or district.name == 'Unassigned':
-                status['districts'].append({
-                    'id':district.district_id,
-                    'name':district.name,
-                    'version':district.version
-                })
+            status['districts'].append({
+                'id':district.district_id,
+                'name':district.name,
+                'version':district.version
+            })
         status['canUndo'] = can_undo
         status['success'] = True
 
@@ -1680,7 +1679,7 @@ def get_shared_districts(request, planid):
     # Create the objects that will be serialized for presentation in the plan chooser
     districts_list = list()
     for district in districts:
-        if district.has_geom and district.name != 'Unassigned':
+        if not district.is_unassigned:
             districts_list.append({
                 'pk': district.id, 
                 'fields': { 
