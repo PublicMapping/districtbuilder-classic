@@ -33,7 +33,7 @@ from django.contrib.gis.geos import Point
 from django.contrib.humanize.templatetags.humanize import intcomma
 from django.utils import simplejson as json
 from decimal import Decimal
-import locale
+import locale, sys, traceback
 
 # This helps in formatting - by default, apache+wsgi uses the "C" locale
 locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
@@ -1541,3 +1541,49 @@ class Comments(CalculatorBase):
         Fake the cache out and return the dict of typetags and labeltags.
         """
         return self.result
+
+class CommunityTypeCounter(CalculatorBase):
+    """
+    Count the number of community types which intersect a given district
+    For districts, this calculator will count the number of distinct
+    community types that intersect the district.
+
+    This calculator, in addition to requiring a "districts" argument, 
+    requires a "community_map_id" argument, which is the primary key
+    of the community map (Plan object) that is being compared
+    to the district, and a "version" argument indicating the version
+    number of the community map.
+    """
+    def __init__(self):
+        """
+        Initialize the result and argument dictionary.
+        """
+        self.result = None
+        self.arg_dict = {}
+
+    def compute(self, **kwargs):
+        """
+        Calculate the sum of a series of values.
+        """
+        districts = []
+
+        if 'district' in kwargs:
+            district = kwargs['district']
+        else:
+            return
+
+        if 'community_map_id' in kwargs:
+            try:
+                from redistricting.models import Plan
+                community_map_id = int(kwargs['community_map_id'])
+                version = int(kwargs['version'])
+                community_map = Plan.objects.get(pk=community_map_id)
+            except:
+                # sys.stderr.write(traceback.format_exc())
+                self.result = 'n/a'
+                return
+        try:
+            self.result = district.get_community_type_intersections(community_map, version=version)
+        except:
+            # sys.stderr.write(traceback.format_exc())
+            self.result = 'n/a'

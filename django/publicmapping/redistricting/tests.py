@@ -3439,7 +3439,6 @@ class CommunityTypeTestCase(BaseTestCase):
         p, c = self.plan, self.community
 
         # Create a basic district in the plan
-        # p.add_geounits(1, ['31', '32', '33'], gl.id, p.version)
         p.add_geounits(1, [str(x.id) for x in gs if x.id > 28 and x.id < 73 and x.id % 9 in [4, 5, 6]], gl.id, p.version)
         d1 = max(District.objects.filter(plan=p,district_id=1),key=lambda d: d.version)
 
@@ -3477,3 +3476,26 @@ class CommunityTypeTestCase(BaseTestCase):
         c4.tags = 'type=type_a type=type_b type=type_c'
         intersections = d1.get_community_type_intersections(c)
         self.assertEquals(3, intersections, 'Detected incorrect number of community intersections. e:3;a:%d' % intersections)
+
+    def test_community_intersection_calculator(self):
+        calc = CommunityTypeCounter()
+        gl, gs = self.geolevel, list(Geounit.objects.filter(geolevel=self.geolevel).order_by("id"))
+        p, c = self.plan, self.community
+
+        # Create a basic district in the plan
+        p.add_geounits(1, [str(x.id) for x in gs if x.id > 28 and x.id < 73 and x.id % 9 in [4, 5, 6]], gl.id, p.version)
+        d1 = max(District.objects.filter(plan=p,district_id=1),key=lambda d: d.version)
+
+        # Check and make sure we get 0 intersections
+        calc.compute(district=d1, community_map_id=c.id, version=c.version)
+        self.assertEquals(0, calc.result, 'Detected community intersections when there are none a:%s' % calc.result)
+
+        # C1 intersects on the left, half-in and half-out of d1 
+        c.add_geounits(1, ['57', '58'] , gl.id, c.version)
+        c1 = max(District.objects.filter(plan=c,district_id=1),key=lambda d: d.version)
+        c1.tags = 'type=type_a'
+        calc.compute(district=d1, community_map_id=c.id, version=c.version)
+        self.assertEquals(1, calc.result, 'detected incorrect number of community calc.result. e:1;a:%s' % calc.result)
+
+        calc.compute(district=d1, community_map_id=-1, version=c.version)
+        self.assertEquals('n/a', calc.result, 'Did\'t get "n/a" when incorrect map_id used. a:%s' % calc.result)
