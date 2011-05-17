@@ -386,7 +386,7 @@ def commonplan(request, planid):
         default_demo = None
         max_dists = 0
         body_member = 'District '
-        reporting_template = None
+        reporting_template = 'empty.html'
     demos = Subject.objects.all().order_by('sort_key').values_list("id","name", "short_display","is_displayed")[0:3]
     layers = []
     snaplayers = []
