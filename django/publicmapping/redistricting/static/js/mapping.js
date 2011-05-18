@@ -1020,7 +1020,6 @@ function mapinit(srs,maxExtent) {
                 }
             },
             error: function(xhr, textStatus, error) {
-                window.status = 'failed to select';
                 outboundRequest = false;
             }
         });
@@ -1265,7 +1264,6 @@ function mapinit(srs,maxExtent) {
                     tipdiv.style.display = 'none';
                 };
                 return function(feature, event){
-                    window.status = feature.attributes.name;
                     var pixel = this.handlers.feature.evt.xy;
                     showTip(feature, pixel);
                 };
@@ -2722,7 +2720,7 @@ function mapinit(srs,maxExtent) {
             }
             if (!dtaken) {
                 if (PLAN_TYPE == 'plan') {
-                    var lbl = BODY_MEMBER+' '+d;
+                    var lbl = BODY_MEMBER.charAt(0).toUpperCase()+BODY_MEMBER.substring(1)+' '+d;
                     avail.push('<option value="'+d+';'+lbl+'">'+lbl+'</option>');
                 }
                 else {
