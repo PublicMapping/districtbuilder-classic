@@ -366,11 +366,17 @@ class Config_Template(DictionaryTemplate):
         <Subject id="vote_rep" field="VOTE_REP" name="number of likely Republican voters" short_name="democratic voters" displayed="true" sortkey="5" percentage_denominator="vote_tot" />
         <Subject id="vote_tot" field="VOTE_TOT" name="number of likely Republican voters" short_name="democratic voters" displayed="false" sortkey="6" />
         %(end_elec)s
-        <Subject id="vap" field="VAP" name="Voting Age Population" short_name="Total Pop." displayed="true" sortkey="7" />
+        <Subject id="vap" field="VAP" name="Voting Age Population" short_name="vap" displayed="true" sortkey="7" />
         <Subject id="totpop_b" field="TOTPOP_B" name="African-American" short_name="Black" displayed="false" sortkey="8" />        
 	<Subject id="totpop_h" field="TOTPOP_H" name="Hispanic or Latino" short_name="Hispanic" displayed="false" sortkey="9" />
 	<Subject id="totpop_na" field="TOTPOP_NA" name="Native American" short_name="Nat Amer" displayed="false" sortkey="10" />
-        <Subject id="totpop" field="TOTPOP" name="Total Population" short_name="Total Pop." displayed="true" sortkey="11" />
+	<Subject id="totpop_a" field="TOTPOP_A" name="Asian Population" short_name="Asian" displayed="false" sortkey="11" />
+	<Subject id="totpop_pi" field="TOTPOP_PI" name="Pacific Islander" short_name="Pac Isl" displayed="false" sortkey="12" />
+	<Subject id="totpop_wnh" field="TOTPOP_WNH" name="White Non-Hispanic" short_name="White" displayed="false" sortkey="13" />
+        <Subject id="totpop" field="TOTPOP" name="Total Population" short_name="Total Pop." displayed="true" sortkey="14" />
+        <Subject id="vap_a" field="VAP_A" name="Asian Voting Age Population" short_name="Asian VAP" displayed="true" sortkey="15" />
+        <Subject id="vap_pi" field="VAP_PI" name="Pacific Islander Voting Age Population" short_name="Pacific VAP" displayed="true" sortkey="16" />
+        <Subject id="vap_wnh" field="VAP_WNH" name="White Non-Hispanic Voting Age Population" short_name="White VAP" displayed="true" sortkey="17" />
    </Subjects>
     <Targets>
         <!-- A target is an objective measure of a district for a legislative
@@ -1144,6 +1150,12 @@ class Config_Template(DictionaryTemplate):
               <GeoLevelCharacteristic ref="vap_b" />
               <GeoLevelCharacteristic ref="vap_h" />
               <GeoLevelCharacteristic ref="vap_na" />
+              <GeoLevelCharacteristic ref="vap_wnh" />
+              <GeoLevelCharacteristic ref="vap_pi" />
+              <GeoLevelCharacteristic ref="vap_a" />
+              <GeoLevelCharacteristic ref="totpop_wnh" />
+              <GeoLevelCharacteristic ref="totpop_pi" />
+              <GeoLevelCharacteristic ref="totpop_a" />
               <GeoLevelCharacteristic ref="totpop_b" />
               <GeoLevelCharacteristic ref="totpop_h" />
               <GeoLevelCharacteristic ref="totpop_na" />
@@ -1190,6 +1202,12 @@ class Config_Template(DictionaryTemplate):
               <GeoLevelCharacteristic ref="vap_b" />
               <GeoLevelCharacteristic ref="vap_h" />
               <GeoLevelCharacteristic ref="vap_na" />
+              <GeoLevelCharacteristic ref="vap_wnh" />
+              <GeoLevelCharacteristic ref="vap_pi" />
+              <GeoLevelCharacteristic ref="vap_a" />
+              <GeoLevelCharacteristic ref="totpop_wnh" />
+              <GeoLevelCharacteristic ref="totpop_pi" />
+              <GeoLevelCharacteristic ref="totpop_a" />
               <GeoLevelCharacteristic ref="totpop_b" />
               <GeoLevelCharacteristic ref="totpop_h" />
               <GeoLevelCharacteristic ref="totpop_na" />
@@ -1239,6 +1257,12 @@ class Config_Template(DictionaryTemplate):
               <GeoLevelCharacteristic ref="vap_b" />
               <GeoLevelCharacteristic ref="vap_h" />
               <GeoLevelCharacteristic ref="vap_na" />
+              <GeoLevelCharacteristic ref="vap_wnh" />
+              <GeoLevelCharacteristic ref="vap_pi" />
+              <GeoLevelCharacteristic ref="vap_a" />
+              <GeoLevelCharacteristic ref="totpop_wnh" />
+              <GeoLevelCharacteristic ref="totpop_pi" />
+              <GeoLevelCharacteristic ref="totpop_a" />
               <GeoLevelCharacteristic ref="totpop_b" />
               <GeoLevelCharacteristic ref="totpop_h" />
               <GeoLevelCharacteristic ref="totpop_na" />

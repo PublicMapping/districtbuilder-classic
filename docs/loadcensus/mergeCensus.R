@@ -22,7 +22,7 @@ if (!all(census.df$GEOID10==merged.df$GEOID10)|| sum(merged.df$TOTPOP)==0) {
 
 # check for the existence of election variables in the data, choose the # best one
 electionvar <- names(merged.df)[charmatch (c("VOTE_DEM","GOV10_DEM","GOV09_DEM","GOV08_DEM",
-"PRS10_DEM","PRS09_DEM","PRS08_DEM"),names(merged.df))]
+"PRS10_DEM","PRS09_DEM","PRS08_DEM","SEN10_DEM","SEN08_DEM","LTG10_DEM","LTG08_DEM"),names(merged.df))]
 electionvar<-electionvar[which(!is.na(electionvar))][1]
 if (is.na(electionvar)) {        
 	has_election_data<-0
