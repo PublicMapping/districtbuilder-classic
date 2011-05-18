@@ -376,6 +376,8 @@ def commonplan(request, planid):
             body_member = body_member[0:index]
         if not editable and not can_view(request.user, plan):
             plan = {}
+        tags = Tag.objects.filter(name__startswith='type=').order_by('id').values_list('name',flat=True)
+        tags = map(lambda x:x[5:], tags)
     else:
         # If said plan doesn't exist, use an empty plan & district list.
         plan = {}
@@ -387,6 +389,7 @@ def commonplan(request, planid):
         max_dists = 0
         body_member = 'District '
         reporting_template = 'empty.html'
+        tags = []
     demos = Subject.objects.all().order_by('sort_key').values_list("id","name", "short_display","is_displayed")[0:3]
     layers = []
     snaplayers = []
@@ -464,7 +467,8 @@ def commonplan(request, planid):
         'body_members': inflect.engine().plural(member),
         'reporting_template': reporting_template,
         'study_area_extent': study_area_extent,
-        'has_leaderboard' : len(ScoreDisplay.objects.filter(is_page=True)) > 0
+        'has_leaderboard' : len(ScoreDisplay.objects.filter(is_page=True)) > 0,
+        'tags': tags
     }
 
 
@@ -777,9 +781,11 @@ def newdistrict(request, planid):
                     comment = Comment(object_pk = district.id, content_type=ct, site_id=1, user_name=request.user.username, user_email=request.user.email, comment=request.POST['comment'])
                     comment.save()
 
-                if 'type' in request.POST and request.POST['type'] != '':
-                    strtags = parse_tag_input(request.POST['type'])
+                if len(request.REQUEST.getlist('type[]')) > 0:
+                    strtags = request.REQUEST.getlist('type[]')
                     for strtag in strtags:
+                        if strtag == '':
+                            continue
                         if strtag.count(' ') > 0:
                             strtag = '"type=%s"' % strtag
                         else:
@@ -1938,9 +1944,11 @@ def district_info(request, planid, district_id):
 
             purge_plan_clear_cache(district, version)
 
-            if 'type' in request.POST:
-                strtags = parse_tag_input(request.POST['type'])
+            if len(request.REQUEST.getlist('type[]')) > 0:
+                strtags = request.REQUEST.getlist('type[]')
                 for strtag in strtags:
+                    if strtag == '':
+                        continue
                     if strtag.count(' ') > 0:
                         strtag = '"type=%s"' % strtag
                     else:

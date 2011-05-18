@@ -202,5 +202,33 @@
    "is_page": false, 
    "title": "Demographics"
   }
+ },
+ {
+  "pk": 54, 
+  "model": "tagging.tag", 
+  "fields": {
+   "name": "type=Minority"
+  }
+ }, 
+ {
+  "pk": 52, 
+  "model": "tagging.tag", 
+  "fields": {
+   "name": "type=Neighborhood"
+  }
+ }, 
+ {
+  "pk": 55, 
+  "model": "tagging.tag", 
+  "fields": {
+   "name": "type=Administrative Boundary"
+  }
+ }, 
+ {
+  "pk": 53, 
+  "model": "tagging.tag", 
+  "fields": {
+   "name": "type=Local Government"
+  }
  }
 ]

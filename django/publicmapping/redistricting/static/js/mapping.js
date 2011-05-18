@@ -2759,6 +2759,10 @@ function mapinit(srs,maxExtent) {
             });
         }
         else {
+            var h3 = districtComment.children('h3');
+            $(h3[0]).text('1. Community Label:');
+            $(h3[1]).text('2. Community Type:');
+
             districtComment.dialog('open');
             $('#id_label').val('');
             $('#id_type').val('');

@@ -2010,6 +2010,9 @@ span.poptot.selected {
 #districtComment #id_comment {
     width:260px;
     height: 80px;
+    -moz-border-radius: 8px;
+    border: 1px solid #CCCCCC;
+    padding: 0 0 0 8px;
 }
 #districtComment h3 {
     font-size: 14pt;
@@ -2017,6 +2020,12 @@ span.poptot.selected {
 }
 #districtComment input {
     width: 260px;
+}
+#districtComment select {
+    width: 270px;
+    -moz-border-radius: 8px;
+    border: 1px solid #CCCCCC;
+    padding: 0 0 0 8px;
 }
 .community_comments {
     overflow-y: auto;

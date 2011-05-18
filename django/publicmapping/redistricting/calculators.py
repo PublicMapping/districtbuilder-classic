@@ -1529,7 +1529,7 @@ class Comments(CalculatorBase):
         district = kwargs['district']
 
         typetags = filter(lambda tag:tag.name[:4]=='type', district.tags)
-        typetags = map(lambda tag:tag.name[5:] if tag.name[5:].count(' ') == 0 else '"%s"' % tag.name[5:], typetags)
+        typetags = map(lambda tag:tag.name[5:], typetags)
 
         labeltags = filter(lambda tag:tag.name[:5]=='label', district.tags)
         labeltags = map(lambda tag:tag.name[6:], labeltags)

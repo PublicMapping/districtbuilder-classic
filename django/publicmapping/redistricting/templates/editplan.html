@@ -259,11 +259,14 @@
         <input type="hidden" value="" id="id_district_id" name="district_id"/>
         <h3>1. Edit Community Label:</h3>
         <div id="district_label" class="district_input">
-            <input type="text" class="field" value="" id="id_label" name="label"/>
+            <input type="text" class="field" value="" id="id_label" name="label" maxlength="200"/>
         </div>
         <h3>2. Edit Community Type:</h3>
         <div id="district_type" class="district_input">
-            <input type="text" class="field" value="" id="id_type" name="type"/>
+            <select name="type" id="id_type" multiple="multiple" size="4">
+                {% for tag in tags %}<option value="{{ tag }}">{{ tag }}</option>
+                {% endfor %}
+            </select>
         </div>
         <h3>3. Comments:</h3>
             <p>
