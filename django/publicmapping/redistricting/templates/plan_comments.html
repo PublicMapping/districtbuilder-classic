@@ -12,9 +12,10 @@
                 {% for forscore in dscore.scores %}
                     {% with forscore.score as score %}
                         {% if score.typetags %}
-                            <input type="text" class="infoType" name="type" value="{% for tag in score.typetags %}{{ tag }}{% if not forloop.last %},{% endif %}{% endfor %}" readonly="true" />
+                            <span class="infoType">{% for tag in score.typetags %}{{ tag }}{% if not forloop.last %},{% endif %}{% endfor %}</span>
+                            <input type="hidden" class="infoType" name="type" value="{% for tag in score.typetags %}{{ tag }}{% if not forloop.last %},{% endif %}{% endfor %}"/>
                         {% else %}
-                            <input type="text" class="infoType" name="type" value="" readonly="true" />
+                            <input type="hidden" class="infoType" name="type" value="" readonly="true" />
                         {% endif %}
                     {% endwith %}
                 {% endfor %}
