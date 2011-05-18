@@ -938,7 +938,7 @@ class Plan(models.Model):
 
         new_target = False
         if target is None:
-            target = District(name=districtname, plan=self, district_id=districtid, version=self.version)
+            target = District(name=districtname, plan=self, district_id=districtid, version=self.version, geom=MultiPolygon([]))
             target.save()
             new_target = True
                 
@@ -1172,10 +1172,11 @@ class Plan(models.Model):
 
                     geounits = Geounit.get_mixed_geounits(geounit_ids, self.legislative_body, biggest_geolevel.id, intersection, True)
                     
-                    if new_district.geom != None:
-                        new_district.delta_stats(geounits, False)
-                    else:
+                    # Don't save Characteristics for this version if it's an empty district
+                    if new_district.geom.empty:
                         new_district.computedcharacteristic_set.all().delete()
+                    else:
+                        new_district.delta_stats(geounits, False)
         return (pasted.id, edited_districts)
 
     def get_wfs_districts(self,version,subject_id,extents,geolevel, district_ids=None):
@@ -1332,9 +1333,9 @@ AND st_intersects(
         if include_geom:
             fields = 'd.*'
         else:
-            fields = 'd.id, d.district_id, d.name, d.plan_id, d.version, d.is_locked, d.geom is not null as has_geom'
+            fields = 'd.id, d.district_id, d.name, d.plan_id, d.version, d.is_locked'
 
-        return sorted(list(District.objects.raw('select %s from redistricting_district as d join (select max(version) as latest, district_id, plan_id from redistricting_district where plan_id = %%s and version <= %%s group by district_id, plan_id) as v on d.district_id = v.district_id and d.plan_id = v.plan_id and d.version = v.latest' % fields, [ self.id, version ])), key=lambda d: d.sortKey())
+        return sorted(list(District.objects.raw('select %s from redistricting_district as d join (select max(version) as latest, district_id, plan_id from redistricting_district where plan_id = %%s and version <= %%s group by district_id, plan_id) as v on d.district_id = v.district_id and d.plan_id = v.plan_id and d.version = v.latest where not ST_IsEmpty(d.geom) or d.district_id = 0' % fields, [ self.id, version ])), key=lambda d: d.sortKey())
 
     @staticmethod
     def create_default(name,body,owner=None,template=True,is_pending=True,create_unassigned=True):
@@ -1499,11 +1500,7 @@ AND st_intersects(
            version = self.version
         current_districts = self.get_districts_at_version(version, include_geom=False)
         available_districts = self.legislative_body.max_districts
-        for d in current_districts:
-            if d.has_geom and not d.geom.empty and d.district_id > 0:
-                available_districts -= 1
-
-        return available_districts
+        return available_districts - len(current_districts) + 1 #add one for unassigned
 
     def fix_unassigned(self, version=None, threshold=100):
         """
@@ -1848,10 +1845,10 @@ class District(models.Model):
     plan = models.ForeignKey(Plan)
 
     # The geometry of this district (high detail)
-    geom = models.MultiPolygonField(srid=3785, blank=True, null=True)
+    geom = models.MultiPolygonField(srid=3785, default=MultiPolygon([]))
 
     # The simplified geometry of this district
-    simple = models.GeometryCollectionField(srid=3785, blank=True, null=True)
+    simple = models.GeometryCollectionField(srid=3785, default=GeometryCollection([]))
 
     # The version of this district.
     version = models.PositiveIntegerField(default=0)
@@ -1908,6 +1905,14 @@ class District(models.Model):
 
             return self.version == maxver
         return true
+
+    @property
+    def is_unassigned(self):
+        """
+        Convenience property for readability (or a change in the district_id of 
+        Unassigned)
+        """
+        return self.district_id == 0
 
     def __unicode__(self):
         """
@@ -2078,31 +2083,24 @@ class District(models.Model):
         levels = body.get_geolevels()
         levels.reverse()
 
-        if not self.geom is None:
-            simples = []
-            index = 1
-            for level in levels:
-                while index < level.id:
-                    # We want to store the levels within a GeometryCollection, and make it so the level id
-                    # can be used as the index for lookups. So for disparate level ids, empty geometries need
-                    # to be stored. Empty GeometryCollections cannot be inserted into a GeometryCollection,
-                    # so a Point at the origin is used instead.
-                    simples.append(Point((0,0), srid=self.geom.srid))
-                    index += 1
-                if self.geom.num_coords > 0:
-                    simple = self.geom.simplify(preserve_topology=True,tolerance=level.tolerance)
-                    if not simple.valid:
-                        simple = simple.buffer(0)
-                    simples.append(simple)
-                else:
-                    simples.append( self.geom )
+        simples = []
+        index = 1
+        for level in levels:
+            while index < level.id:
+                # We want to store the levels within a GeometryCollection, and make it so the level id
+                # can be used as the index for lookups. So for disparate level ids, empty geometries need
+                # to be stored. Empty GeometryCollections cannot be inserted into a GeometryCollection,
+                # so a Point at the origin is used instead.
+                simples.append(Point((0,0), srid=self.geom.srid))
                 index += 1
-            self.simple = GeometryCollection(tuple(simples),srid=self.geom.srid)
-            self.save()
-        else:
-            self.simple = None
-            self.save()
+            if self.geom.num_coords > 0:
+                simples.append(self.geom.simplify(preserve_topology=True,tolerance=level.tolerance))
+            else:
+                simples.append( self.geom )
 
+            index +=1 
+        self.simple = GeometryCollection(tuple(simples),srid=self.geom.srid)
+        self.save()
 
     def get_community_type_intersections(self, community_map, version=None):
         """
@@ -2214,7 +2212,7 @@ def set_district_id(sender, **kwargs):
     district = kwargs['instance']
     if district.district_id is None:
         districts = district.plan.get_districts_at_version(district.version, include_geom=False)
-        ids_in_use = map(lambda d: d.district_id, filter(lambda d: True if d.has_geom else False, districts))
+        ids_in_use = map(lambda d: d.district_id, districts)
         max_districts = district.plan.legislative_body.max_districts + 1
         if len(ids_in_use) >= max_districts:
             raise ValidationError("Plan is at maximum district capacity of %d" % max_districts)
@@ -2359,25 +2357,25 @@ def enforce_multi(geom, collapse=False):
     if not geom is None:
         mpoly.srid = geom.srid
 
-        if geom.empty:
-            pass
-        elif geom.geom_type == 'MultiPolygon':
-            if collapse:
-                mpoly = enforce_multi( geom.cascaded_union )
-            else:
-                mpoly = geom
-        elif geom.geom_type == 'Polygon':
-            # Collapse has no meaning if this is a single polygon
-            mpoly.append(geom)
-        elif geom.geom_type == 'GeometryCollection':
-            components = []
-            for item in geom:
-                for component in enforce_multi(item):
-                    mpoly.append(component)
+    if geom.empty:
+        pass
+    elif geom.geom_type == 'MultiPolygon':
+        if collapse:
+            mpoly = enforce_multi( geom.cascaded_union )
+        else:
+            mpoly = geom
+    elif geom.geom_type == 'Polygon':
+        # Collapse has no meaning if this is a single polygon
+        mpoly.append(geom)
+    elif geom.geom_type == 'GeometryCollection':
+        components = []
+        for item in geom:
+            for component in enforce_multi(item):
+                mpoly.append(component)
 
-            if collapse:
-                # Collapse the multipolygon group
-                mpoly = enforce_multi( mpoly, collapse )
+        if collapse:
+            # Collapse the multipolygon group
+            mpoly = enforce_multi( mpoly, collapse )
 
     return mpoly
 
