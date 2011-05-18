@@ -147,7 +147,7 @@ class Schwartzberg(CalculatorBase):
         districts = []
         if 'district' in kwargs:
             districts = [kwargs['district']]
-            if districts[0].geom is None:
+            if districts[0].geom.empty:
                 return
 
         elif 'plan' in kwargs:
@@ -164,7 +164,7 @@ class Schwartzberg(CalculatorBase):
             if district.district_id == 0:
                 continue
 
-            if district.geom is None:
+            if district.geom.empty:
                 continue
 
             if district.geom.length == 0:
@@ -208,7 +208,7 @@ class Roeck(CalculatorBase):
         districts = []
         if 'district' in kwargs:
             districts = [kwargs['district']]
-            if districts[0].geom is None:
+            if districts[0].geom.empty:
                 return
 
         elif 'plan' in kwargs:
@@ -225,7 +225,7 @@ class Roeck(CalculatorBase):
             if district.district_id == 0:
                 continue
 
-            if district.geom is None:
+            if district.geom.empty:
                 continue
 
             centroid = district.geom.centroid
@@ -271,7 +271,7 @@ class PolsbyPopper(CalculatorBase):
         districts = []
         if 'district' in kwargs:
             districts = [kwargs['district']]
-            if districts[0].geom is None:
+            if districts[0].geom.empty:
                 return
 
         elif 'plan' in kwargs:
@@ -288,7 +288,7 @@ class PolsbyPopper(CalculatorBase):
             if district.district_id == 0:
                 continue
 
-            if district.geom is None:
+            if district.geom.empty:
                 continue
 
             perimeter = 0
@@ -332,7 +332,7 @@ class LengthWidthCompactness(CalculatorBase):
         districts = []
         if 'district' in kwargs:
             districts = [kwargs['district']]
-            if districts[0].geom is None:
+            if districts[0].geom.empty:
                 return
 
         elif 'plan' in kwargs:
@@ -349,7 +349,7 @@ class LengthWidthCompactness(CalculatorBase):
             if district.district_id == 0:
                 continue
 
-            if district.geom is None:
+            if district.geom.empty:
                 continue
 
             bbox = district.geom.extent

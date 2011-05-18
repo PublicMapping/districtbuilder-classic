@@ -1565,7 +1565,7 @@ ERROR:
 
         lbodies = config.xpath('//LegislativeBody[@id]')
         for lbody in lbodies:
-            owner = User.objects.get(is_staff=True)
+            owner = User.objects.filter(is_staff=True)[0]
             legislative_body = LegislativeBody.objects.get(name=lbody.get('name'))
             plan,created = Plan.objects.get_or_create(name='Blank',legislative_body=legislative_body,owner=owner,is_template=True)
             if verbose > 1:
