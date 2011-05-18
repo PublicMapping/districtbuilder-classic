@@ -537,7 +537,8 @@ class PlanTestCase(BaseTestCase):
 
         # Try adding geounits to the locked district (not allowed)
         self.plan.add_geounits(self.district1.district_id, geounitids, self.geolevel.id, self.plan.version)
-        numunits = len(Plan.objects.get(pk=self.plan.id).get_base_geounits(0.1))
+        self.assertRaises(District.DoesNotExist, District.objects.get, pk=self.district1.id, version=self.plan.version)
+        numunits = len(self.district1.get_base_geounits(0.1))
         self.assertEqual(0, numunits, 'Geounits were added to a locked district. Num geounits: %d' % numunits)
         
         # Issue unlock command
@@ -545,7 +546,7 @@ class PlanTestCase(BaseTestCase):
         self.assertEqual(200, response.status_code, 'Lock handler didn\'t return 200:' + str(response))
 
         # Ensure lock has been removed
-        self.district1 = District.objects.get(pk=self.district1.id)
+        self.district1 = max(District.objects.filter(plan=self.plan,district_id=self.district1.district_id),key=lambda d: d.version)
         self.assertFalse(self.district1.is_locked, 'District wasn\'t unlocked.' + str(response))
 
         # Add geounits to the plan
@@ -894,7 +895,7 @@ class PlanTestCase(BaseTestCase):
 
         # Test that already-present district is gone.
         district2 = max(District.objects.filter(plan=target,district_id=self.district2.district_id),key=lambda d: d.version)
-        self.assertTrue(district2.geom == None, 'District 2 geom wasn\'t emptied when it was pasted over')
+        self.assertTrue(district2.geom.empty, 'District 2 geom wasn\'t emptied when it was pasted over')
         self.assertEqual(0, len(district2.computedcharacteristic_set.all()), 'District2 still has characteristics')
 
     def test_get_available_districts(self):
@@ -2423,33 +2424,33 @@ class CalculatorTestCase(BaseTestCase):
         
         # Value of 375 for district 1.  Should be in middle class - i.e. return 2 on 0-based index
         interval.compute(district=self.district1)
-        self.assertEqual(2, interval.result, "Incorrect interval returned: e:%d,a:%d" % (2, interval.result))
+        self.assertEqual(2, interval.result, "Incorrect interval returned: e:%s,a:%s" % (2, interval.result))
         # Value of 225 for district 1.  Should be in 2nd class - i.e. return 1 on 0-based index
         interval.compute(district=self.district2)
-        self.assertEqual(1, interval.result, "Incorrect interval returned: e:%d,a:%d" % (1, interval.result))
+        self.assertEqual(1, interval.result, "Incorrect interval returned: e:%s,a:%s" % (1, interval.result))
 
         # District 1 is in the middle class - should get a 1
         interval.compute(plan=self.plan)
-        self.assertEqual(1, interval.result, "Incorrect interval returned: e:%d,a:%d" % (1, interval.result))
+        self.assertEqual(1, interval.result, "Incorrect interval returned: e:%s,a:%s" % (1, interval.result))
 
         # Adjust to get them all out of the target
         interval.arg_dict['bound1'] = ('literal', .1)
         interval.arg_dict['bound2'] = ('literal', .2)
 
         interval.compute(plan=self.plan)
-        self.assertEqual(0, interval.result, "Incorrect interval returned: e:%d,a:%d" % (0, interval.result))
+        self.assertEqual(0, interval.result, "Incorrect interval returned: e:%s,a:%s" % (0, interval.result))
 
         # Everybody's on target 
         interval.arg_dict['bound1'] = ('literal', .5)
         del interval.arg_dict['bound2']
 
         interval.compute(plan=self.plan)
-        self.assertEqual(2, interval.result, "Incorrect interval returned: e:%d,a:%d" % (2, interval.result))
+        self.assertEqual(2, interval.result, "Incorrect interval returned: e:%s,a:%s" % (2, interval.result))
 
         # Everybody's over - make sure we're in group 3 (0-based index 2)
         interval.arg_dict['target'] = ('literal', 0)
         interval.compute(district=self.district2)
-        self.assertEqual(2, interval.result, "Incorrect interval returned: e:%d,a:%d" % (2, interval.result))
+        self.assertEqual(2, interval.result, "Incorrect interval returned: e:%s,a:%s" % (2, interval.result))
 
     def test_average1(self):
         avg = Average()
@@ -3499,3 +3500,103 @@ class CommunityTypeTestCase(BaseTestCase):
 
         calc.compute(district=d1, community_map_id=-1, version=c.version)
         self.assertEquals('n/a', calc.result, 'Did\'t get "n/a" when incorrect map_id used. a:%s' % calc.result)
+
+class CommunityMapTestCase(BaseTestCase):
+    """
+    Unit tests for Community Map editing
+    """
+    fixtures = ['redistricting_testdata.json', 'redistricting_testdata_geolevel2.json']
+
+    def setUp(self):
+        BaseTestCase.setUp(self)        
+        self.geolevel = Geolevel.objects.get(pk=2)
+        self.geolevels = Geolevel.objects.all().order_by('id')
+        self.legbod = LegislativeBody.objects.get(name='TestLegislativeBody')
+        self.legbod.is_community = True
+        self.legbod.save()
+
+        self.geounits = {}
+        for gl in self.geolevels:
+           self.geounits[gl.id] = list(Geounit.objects.filter(geolevel=gl).order_by('id'))
+
+        # Create a community map with a district
+        self.community = Plan(name='community', owner=self.user, legislative_body=self.legbod)
+        self.community.save()
+
+        gl, gs = self.geolevel, list(Geounit.objects.filter(geolevel=self.geolevel).order_by("id"))
+        self.community.add_geounits(1, [str(x.id) for x in gs if x.id > 28 and x.id < 73 and x.id % 9 in [4, 5, 6]], gl.id, self.community.version)
+        self.d1 = max(District.objects.filter(plan=self.community,district_id=1),key=lambda d: d.version)
+
+    def tearDown(self):
+        self.geolevel = None
+        self.geolevels = None
+        self.legbod = None
+        self.geounits = None
+        self.d1.delete()
+        self.community.delete()
+
+        try:
+            BaseTestCase.tearDown(self)
+        except:
+            import traceback
+            print(traceback.format_exc())
+            print('Couldn\'t tear down')
+
+
+    def test_community_editing_no_stats(self):
+        """
+        We don't want ComputedCharacteristics for community maps
+        """
+        # We better not have any statistics saved
+        stats = self.d1.computedcharacteristic_set.all()
+        self.assertEqual(0, len(stats), 'Stats were saved for community map')
+
+    def test_community_map_no_unassigned(self):
+        """
+        Test that when we create a new community map, there is no unassigned district
+        """
+        c, d1 = self.community, self.d1
+
+        # Check to see if Plan created through Plan has no unassigned district
+        districts = c.district_set.all()
+        unassigned = filter(lambda d: True if d.is_unassigned else False, districts)
+        self.assertEqual(0, len(unassigned), 'Community map has an unassigned district')
+
+        # If we copy a community map, it shouldn't have an unassigned district
+        client = Client()
+        client.login(username=self.username, password=self.password)
+        copyname = 'My Community Copy'
+        response = client.post('/districtmapping/plan/%d/copy/' % c.id, { 'name':copyname })
+
+        self.assertEqual(200, response.status_code, 'Could not copy community map: %s' % response)
+
+        new_plan = json.loads(response.content)[0]
+        plan_id = new_plan['pk']
+        new_plan = Plan.objects.get(pk=plan_id)
+        districts = new_plan.district_set.all()
+
+        unassigned = filter(lambda d: True if d.is_unassigned else False, districts)
+        self.assertEqual(0, len(unassigned), 'Community map has an unassigned district after being copied')
+
+    def test_community_map_delete(self):
+        """
+        Test that when unassigning a geounit from a community map, the geounit is unassigned despite
+        there being no "Unassigned" district
+        """
+        c, d1 = self.community, self.d1
+
+        client = Client()
+        client.login(username=self.username, password=self.password)
+        response = client.post('/districtmapping/plan/%d/district/%d/add/' % (c.id, 0), # 0 for Unassigned
+            { 'geolevel': self.geolevel.id, 'geounits': '31|32' })
+
+        self.assertEqual(200, response.status_code, 'Couldn\'t remove geounits from community map')
+        response = json.loads(response.content)
+        self.assertTrue(response['success'], 'Couldn\'t remove geounits from community map: %s' % response)
+
+        districts = c.district_set.all()
+        unassigned = filter(lambda d: True if d.is_unassigned else False, districts)
+        self.assertEqual(0, len(unassigned), 'Community map has an unassigned district')
+
+        d2 = District.objects.get(district_id=d1.district_id, version=response['version'], plan=c)
+        self.assertLess(d2.geom.area, d1.geom.area, 'Community geom not changed on unassign request')

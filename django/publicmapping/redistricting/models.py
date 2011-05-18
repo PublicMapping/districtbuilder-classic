@@ -938,9 +938,25 @@ class Plan(models.Model):
 
         new_target = False
         if target is None:
-            target = District(name=districtname, plan=self, district_id=districtid, version=self.version, geom=MultiPolygon([]))
-            target.save()
-            new_target = True
+            # Our other districts have been modified.  If we're in a community map and 
+            # unassigning districts, we don't need to create the new target, just finish up
+            if self.is_community and districtid == 0:
+                # Plan is changed. invalidate and save any changes to the version of this plan
+                self.is_valid = False
+                self.version += 1
+                self.save()
+
+                # purge old versions
+                if settings.MAX_UNDOS_DURING_EDIT > 0 and not keep_old_versions:
+                    self.purge_beyond_nth_step(settings.MAX_UNDOS_DURING_EDIT)
+
+                # Return a flag indicating any districts changed
+                return fixed
+
+            else:
+                target = District(name=districtname, plan=self, district_id=districtid, version=self.version, geom=MultiPolygon([]))
+                target.save()
+                new_target = True
                 
         # If there are locked districts: augment the district boundary with the
         # boundary of the locked area, because get_mixed_geounits is getting
@@ -1941,6 +1957,8 @@ class District(models.Model):
         all_subjects = Subject.objects.order_by('-percentage_denominator').all()
         changed = False
 
+        if self.plan.is_community():
+            return changed
         # For all subjects
         for subject in all_subjects:
             # Aggregate all Geounits Characteristic values
@@ -2241,7 +2259,7 @@ def create_unassigned_district(sender, **kwargs):
     plan = kwargs['instance']
     created = kwargs['created']
 
-    if created and plan.create_unassigned:
+    if created and plan.create_unassigned and not plan.is_community():
         plan.create_unassigned = False
 
         unassigned = District(name="Unassigned", version = 0, plan = plan, district_id=0)
