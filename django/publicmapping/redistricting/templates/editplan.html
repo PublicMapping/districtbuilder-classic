@@ -154,7 +154,6 @@
     {% endblock %}
 
     {% block stats_editor %}
-
     <div id="stats_editor_container" class="stats_editor" title="Edit Statistics Sets">
         Select up to 3 statistics
         <button id="clear_statistics">Clear Choices</button>
@@ -170,13 +169,13 @@
         </div>
         <div id="saved_statistics_sets"> </div>
     </div>
-
-
-
     {% endblock %}
 
     {% block multi_member %}
     {% if plan.legislative_body.multi_members_allowed %}
+    <div id="multi_member_button_container">
+        <button id="multi_member_toggle">Select Multi-Member Districts</button>
+    </div>
     <div id="multi_member_dialog">
         <div id="multi_member_content">
             <div id="multi_member_grid_container">
@@ -253,10 +252,27 @@
     {% endif %}
     {% endblock %}
 
-    {% block label_ctl %}
+    {% block district_info %}
     {% if plan.is_community %}
-    <div id="label_district">
-        <button id="label_district_button">Label {{ body_member|capfirst }}</button>
+    <div id="districtComment" title="Community Info">
+        <input type="hidden" value="0" id="id_district_pk" name="district_pk"/>
+        <input type="hidden" value="" id="id_district_id" name="district_id"/>
+        <h3>1. Edit Community Label:</h3>
+        <div id="district_label" class="district_input">
+            <input type="text" class="field" value="" id="id_label" name="label"/>
+        </div>
+        <h3>2. Edit Community Type:</h3>
+        <div id="district_type" class="district_input">
+            <input type="text" class="field" value="" id="id_type" name="type"/>
+        </div>
+        <h3>3. Comments:</h3>
+            <p>
+                <textarea id="id_comment" name="comment" cols="40" rows="10"></textarea>
+            </p>
+        </div>
+    </div>
+    <div id="districtCommentErr" title="Oops!">
+        <div>Sorry, your information could not be saved. Please try again later.</div>
     </div>
     {% endif %}
     {% endblock %}

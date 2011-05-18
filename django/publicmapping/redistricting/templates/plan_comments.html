@@ -3,24 +3,42 @@
 <div class="community_comments">
 {% for dscore in districtscores %}
     <div class="districtComment {% cycle 'comm1' 'comm2' %}">
-        <h3>{{ dscore.district }}</h3>
-        <div class="edit_district_info">Click to edit</div>
-        <div class="district_type">
-            <h4>Type/s:</h4>
-            {% for forscore in dscore.scores %}
-                {% with forscore.score as score %}
-                    {% if score.typetags %}
-                        <span>{% for tag in score.typetags %}{{ tag }}{% if not forloop.last %},{% endif %}{% endfor %}</span>
-                    {% endif %}
-                {% endwith %}
-            {% endfor %}
-        </div>
-        {% get_comment_list for dscore.district as dcoms %}
-        <div class="district_comment">
-            <h4>Comments:</h4>
-            <div>{% for dcom in dcoms %}{{ dcom.comment }}{% endfor %}</div>
-        </div>
-        <div style="clear:both;height:0;line-height:0;">&nbsp;</div>
+        <form id="districtInfo{{ dscore.district.district_id }}">
+            <input type="hidden" name="pk" value="{{ dscore.district.id }}" />
+            <input type="text" class="infoLabel" name="label" value="{{ dscore.district.name }}" readonly="true" />
+            <div class="edit_district_info" districtid="{{ dscore.district.district_id }}">Click to edit</div>
+            <div class="district_type">
+                <h4>Type/s:</h4>
+                {% for forscore in dscore.scores %}
+                    {% with forscore.score as score %}
+                        {% if score.typetags %}
+                            <input type="text" class="infoType" name="type" value="{% for tag in score.typetags %}{{ tag }}{% if not forloop.last %},{% endif %}{% endfor %}" readonly="true" />
+                        {% else %}
+                            <input type="text" class="infoType" name="type" value="" readonly="true" />
+                        {% endif %}
+                    {% endwith %}
+                {% endfor %}
+            </div>
+            {% get_comment_list for dscore.district as dcoms %}
+            <div class="district_comment">
+                <h4>Comments:</h4>
+                <textarea class="infoComment" name="comments" readonly="true">{% for dcom in dcoms %}{{ dcom.comment }}{% endfor %}</textarea>
+            </div>
+            <div style="clear:both;height:0;line-height:0;">&nbsp;</div>
+        </form>
     </div>
 {% endfor %}
 </div>
+<script type="text/javascript">
+$('.edit_district_info').each(function(idx,elem){
+    $(elem).click(function(evt){
+        var frm = $(elem.parentNode);
+        $('#id_label').val( frm.find('[name="label"]').val() );
+        $('#id_type').val( frm.find('[name="type"]').val() );
+        $('#id_comment').val( frm.find('[name="comments"]').val() );
+        $('#id_district_pk').val( frm.find('[name="pk"]').val() );
+        $('#id_district_id').val( $(elem).attr('districtid') );
+        $('#districtComment').dialog('open');
+    });
+});
+</script>

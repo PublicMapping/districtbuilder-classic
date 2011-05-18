@@ -1998,7 +1998,7 @@ span.poptot.selected {
 }
 
 /* Commenting css */
-#districtComment {
+#districtComment, #districtCommentErr {
     display:none;
 }
 #districtComment form {
@@ -2031,10 +2031,13 @@ span.poptot.selected {
     clear: both;
     font-weight: normal;
 }
-.districtComment h3 {
+.districtComment .infoLabel {
     font-size: 12pt;
     font-weight: bold;
     float: left;
+    border: none;
+    width: 170px;
+    background: transparent;
 }
 .districtComment h4 {
     clear:both;
@@ -2044,13 +2047,17 @@ span.poptot.selected {
 .districtComment .edit_district_info {
     float:right;
     font-size: 8pt;
+    text-decoration: underline;
+}
+.districtComment .edit_district_info:hover {
+    cursor: pointer;
 }
 .districtComment .district_comment {
     clear: both;
     font-size: 9pt;
     margin-top: 1em;
 }
-.districtComment .district_comment div {
+.districtComment .district_comment textarea {
     border: 1px inset;
     width: 200px;
     height: 40px;
@@ -2059,7 +2066,12 @@ span.poptot.selected {
 }
 .districtComment .district_type {
     clear: both;
+}
+.districtComment .infoType {
     font-size: 10pt;
+    border: none;
+    width: 170px;
+    background: transparent;
 }
 .districtComment .district_type h4 {
     display: inline;

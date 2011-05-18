@@ -1879,33 +1879,13 @@ def district_info(request, planid, district_id):
         district = plan.get_districts_at_version(version, include_geom=False)
         district = filter(lambda d:d.district_id==district_id, district)
 
-        if request.method == 'GET':
-            if len(district) == 0:
-                status['message'] = 'No district with that ID in the given plan.'
-            else:
-                district = district[0]
-                typetags = filter(lambda tag:tag.name[:4]=='type', district.tags)
-                typetags = map(lambda tag:tag.name[5:] if tag.name[5:].count(' ') == 0 else '"%s"' % tag.name[5:], typetags)
-                labeltags = filter(lambda tag:tag.name[:5]=='label', district.tags)
-                labeltags = map(lambda tag:tag.name[6:], labeltags)
-                c = { 'district': district,
-                    'typetags': typetags,
-                    'labeltag': labeltags[0] if len(labeltags) > 0 else '',
-                    'user': request.user }
-                c.update(csrf(request))
-                status['markup'] = render_to_string('districtcomments.html', c)
-                status['success'] = True
-        elif request.method == 'POST':
+        if request.method == 'POST':
             district = District.objects.get(id=request.POST['object_pk'])
-            district.name = request.POST['label']
+            district.name = request.POST['district_name']
 
-            form = CommentForm(district, request.POST)
-            no_comment = False
-            if not form.is_valid():
-                no_comment = 'comment' in form.errors and len(form.error) == 1
+            has_comment = 'comment' in request.POST
 
-            if not no_comment:
-                comment = form.get_comment_object()
+            if has_comment:
                 if district.version < version:
                     # The district version may lag behind the cursor 
                     # version if there were no edits for a while. If this 
@@ -1928,7 +1908,7 @@ def district_info(request, planid, district_id):
                 # Don't thread comments, keep only the latest and greatest
                 ct = ContentType.objects.get(app_label='redistricting',model='district')
                 Comment.objects.filter(object_pk = district.id, content_type=ct).delete()
-                comment.object_pk = district.id
+                comment = Comment(object_pk = district.id, content_type=ct, site_id=1, user_name=request.user.username, user_email=request.user.email, comment=request.POST['comment'])
                 comment.save()
             else:
                 # save this if the label changed

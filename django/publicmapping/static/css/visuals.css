@@ -229,7 +229,15 @@ form#forgotForm input.field, form#forgotForm input.error {
     -webkit-border-radius: 8px
     border-radius: 8px;
 }
-form#registerForm input.error, form#forgotForm input.error {
+#districtComment input.field, #districtComment input.error{
+    padding: 0 0 0 8px;
+    height: 30px;
+    border: 1px solid #ccc;
+    -moz-border-radius: 8px;
+    -webkit-border-radius: 8px
+    border-radius: 8px;
+}
+form#registerForm input.error, form#forgotForm input.error, #districtComment input.error {
     border: solid 1px #ff0000;
 }
 table#registerTable {

@@ -30,7 +30,6 @@ Author:
 
 from django.core.exceptions import ValidationError
 from django.contrib.gis.db import models
-from django.contrib.gis.gdal import DataSource
 from django.contrib.gis.geos import MultiPolygon,Polygon,GEOSGeometry,GEOSException,GeometryCollection,Point
 from django.contrib.auth.models import User
 from django.db.models import Sum, Max, Q, Count

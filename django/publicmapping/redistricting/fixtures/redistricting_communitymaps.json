@@ -157,7 +157,7 @@
    ], 
    "template": "community_summary.html", 
    "position": 1, 
-   "cssclass": "demographics", 
+   "cssclass": "plan_summary", 
    "type": "plan_summary"
   }
  }, 
