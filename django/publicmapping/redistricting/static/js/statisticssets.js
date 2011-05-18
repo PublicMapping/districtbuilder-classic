@@ -394,6 +394,9 @@ statisticssets = function(options) {
      */
     var fixTableHeight = function (table) {
         var header = table.find('thead');
+        if (header.length == 0) {
+            return;
+        }
         var bottom = header.position().top + header.outerHeight(true);
         var table = table.find('tbody');
         table.css('top', bottom);

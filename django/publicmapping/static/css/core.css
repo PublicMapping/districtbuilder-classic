@@ -2038,6 +2038,7 @@ span.poptot.selected {
     border: none;
     width: 170px;
     background: transparent;
+    cursor: default;
 }
 .districtComment h4 {
     clear:both;
@@ -2063,6 +2064,7 @@ span.poptot.selected {
     height: 40px;
     background-color: #eeeeee;
     padding: 2px;
+    cursor: default;
 }
 .districtComment .district_type {
     clear: both;
@@ -2072,6 +2074,7 @@ span.poptot.selected {
     border: none;
     width: 170px;
     background: transparent;
+    cursor: default;
 }
 .districtComment .district_type h4 {
     display: inline;

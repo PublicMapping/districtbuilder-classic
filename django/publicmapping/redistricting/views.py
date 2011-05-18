@@ -770,6 +770,22 @@ def newdistrict(request, planid):
                 # create a new district w/1 version higher
                 fixed = plan.add_geounits((district_id, district_name,), geounit_ids, geolevel, version)
 
+                # if there are comments or types, add them to the district
+                district = plan.district_set.filter(district_id=district_id,name=district_name)[0]
+                ct = ContentType.objects.get(app_label='redistricting',model='district')
+                if 'comment' in request.POST and request.POST['comment'] != '':
+                    comment = Comment(object_pk = district.id, content_type=ct, site_id=1, user_name=request.user.username, user_email=request.user.email, comment=request.POST['comment'])
+                    comment.save()
+
+                if 'type' in request.POST and request.POST['type'] != '':
+                    strtags = parse_tag_input(request.POST['type'])
+                    for strtag in strtags:
+                        if strtag.count(' ') > 0:
+                            strtag = '"type=%s"' % strtag
+                        else:
+                            strtag = 'type=%s' % strtag
+                        Tag.objects.add_tag(district, strtag)
+
                 status['success'] = True
                 status['message'] = 'Created 1 new district'
                 plan = Plan.objects.get(pk=planid, owner=request.user)
@@ -1883,28 +1899,28 @@ def district_info(request, planid, district_id):
             district = District.objects.get(id=request.POST['object_pk'])
             district.name = request.POST['district_name']
 
-            has_comment = 'comment' in request.POST
 
+            if district.version < version:
+                # The district version may lag behind the cursor 
+                # version if there were no edits for a while. If this 
+                # is the case the district must be copied to the 
+                # currently edited version.
+                district_copy = copy.copy(district)
+                district_copy.id = None
+                district_copy.version = version
+
+                district_copy.save()
+
+                # clone the characteristics, comments, and tags from 
+                # the original district to the copy 
+                district_copy.clone_relations_from(district)
+                district = district_copy
+            else:
+                # save the changes to the district -- maybe name change
+                district.save()
+
+            has_comment = 'comment' in request.POST and request.POST['comment'] != '' 
             if has_comment:
-                if district.version < version:
-                    # The district version may lag behind the cursor 
-                    # version if there were no edits for a while. If this 
-                    # is the case the district must be copied to the 
-                    # currently edited version.
-                    district_copy = copy.copy(district)
-                    district_copy.id = None
-                    district_copy.version = version
-
-                    district_copy.save()
-
-                    # clone the characteristics, comments, and tags from 
-                    # the original district to the copy 
-                    district_copy.clone_relations_from(district)
-                    district = district_copy
-                else:
-                    # save the changes to the district -- maybe name change
-                    district.save()
-
                 # Don't thread comments, keep only the latest and greatest
                 ct = ContentType.objects.get(app_label='redistricting',model='district')
                 Comment.objects.filter(object_pk = district.id, content_type=ct).delete()
