@@ -491,39 +491,6 @@ function mapinit(srs,maxExtent) {
 
     // Handle Fix Unassigned requests
     $('#fix_unassigned').click(function(){
-
-        // For testing -- hijack this button when ctrl is held to query for splits
-        if (arguments[0].ctrlKey) {
-            var belowPlanId = 9;
-
-            var waitDialog = $('<div>Please wait while querying for splits.</div>').dialog({
-                modal: true,
-                autoOpen: true,
-                title: 'Finding Splits',
-                escapeOnClose: false,
-                resizable:false,
-                open: function() { $(".ui-dialog-titlebar-close", $(this).parent()).hide(); }                    
-            });
-
-            $.ajax({
-                type: 'GET',
-                url: '/districtmapping/plan/' + PLAN_ID + '/splits/' + belowPlanId + '/',
-                data: { version: getPlanVersion() },
-                success: function(data, textStatus, xhr) {
-                    setHighlightedDistricts(data.above_ids);
-                    waitDialog.remove();
-                },
-                error: function(xhr, textStatus, error) {
-                    waitDialog.remove();                        
-                    $('<div>Error encountered while querying for splits.</div>').dialog({
-                        modal: true, autoOpen: true, title: 'Error', resizable:false
-                    });                
-                }
-            });
-
-            return;
-        }
-            
         var pleaseWait = $('<div>Please wait while fixing unassigned. This may take a couple minutes.</div>').dialog({
             modal: true,
             autoOpen: true,
@@ -558,6 +525,54 @@ function mapinit(srs,maxExtent) {
                 });                
             }
         });
+    });
+
+    // Handle show splits requests
+    $('#show_splits').click(function(){
+        var referenceLayerId = $('#reference_layer_select').val();
+        if (!referenceLayerId || (referenceLayerId === 'None')) {
+            $('<div>No reference layer selected.</div>').dialog({
+                modal: true, autoOpen: true, title: 'Error', resizable:false
+            });
+            return;
+        }
+
+        // TODO: add support for displaying geolevel splits
+        if (!referenceLayerId.startsWith('plan')) {
+            $('<div>Geolevel splits not yet supported.</div>').dialog({
+                modal: true, autoOpen: true, title: 'Error', resizable:false
+            });
+            return;
+        }
+            
+        var belowPlanId = referenceLayerId.substring('plan.'.length);
+    
+        var waitDialog = $('<div>Please wait while querying for splits.</div>').dialog({
+            modal: true,
+            autoOpen: true,
+            title: 'Finding Splits',
+            escapeOnClose: false,
+            resizable:false,
+            open: function() { $(".ui-dialog-titlebar-close", $(this).parent()).hide(); }                    
+        });
+
+        $.ajax({
+            type: 'GET',
+            url: '/districtmapping/plan/' + PLAN_ID + '/splits/' + belowPlanId + '/',
+            data: { version: getPlanVersion() },
+            success: function(data, textStatus, xhr) {
+                setHighlightedDistricts(data.above_ids);
+                waitDialog.remove();
+            },
+            error: function(xhr, textStatus, error) {
+                waitDialog.remove();                        
+                $('<div>Error encountered while querying for splits.</div>').dialog({
+                    modal: true, autoOpen: true, title: 'Error', resizable:false
+                });                
+            }
+        });
+
+        return;
     });
 
     // Hide the map type selection if there are 1 or fewer types
@@ -929,6 +944,13 @@ function mapinit(srs,maxExtent) {
     };
     $('#map').bind('version_changed', versionChanged);
 
+    // Update reference layer on map when the reference layer drop down is changed
+    // referenceLayerId is one of: None, plan.XXX, geolevel.XXX
+    var referenceLayerChanged = function(evt, referenceLayerId) {
+        // TODO: update map
+    };
+    $('#map').bind('reference_layer_changed', referenceLayerChanged);
+    
     // Track whether we've already got an outbound request to the server to add districts
     var outboundRequest = false;
     // An assignment function that adds geounits to a district
@@ -2452,7 +2474,7 @@ function mapinit(srs,maxExtent) {
             boxControl.protocol = new OpenLayers.Protocol.HTTP( newOpts );
         setThematicLayer(layers[0]);
         doMapStyling();
-        $('#showby').siblings('label').text('Show ' + snap.display + ' by:');
+        $('#layer_type').text(snap.display);
         getMapStyles();
         updateBoundaryLegend();
 

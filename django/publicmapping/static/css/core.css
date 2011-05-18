@@ -1898,6 +1898,45 @@ button#fix_unassigned_button {
 
 button#fix_unassigned_button.ui-state-default {border: 1px solid #ccc;}
 
+/* layer chooser */
+
+button#choose_layers_button {
+    background-color: #606060;
+    position: absolute;
+    bottom: 26px;
+    left: 4px;
+    font-size: 7pt;
+    -moz-box-shadow: 2px 2px 2px #888888;
+    -webkit-box-shadow: 2px 2px 2px #888888;
+    box-shadow: 2px 2px 2px #888888;
+}
+button#choose_layers_button.ui-state-default {border: 1px solid #ccc;}
+#choose_layers_dialog .indented {margin-left: 20px;}
+#choose_layers_dialog .fillwidth {width:93%;}
+#choose_layers_dialog .spacebelow {margin-bottom:4px;}
+#choose_layers_dialog select {margin-top: 10px; margin-bottom: 10px;}
+#choose_layers_content {padding-bottom: 15px;float:left}
+#choose_layers_content h2 {margin-bottom: 8px; font-size: 16px; font-weight:bold;}
+#choose_layers_select_div {width:300px; height:300px; float:left;}
+#reference_layer_content {width:420px; height:300px; float:left;}
+#choose_layers_content > div {margin-right: 15px; font-size: 12px;}
+#choose_layers_instructions {margin-bottom: 10px;}
+
+/* show splits */
+
+button#show_splits_button {
+    background-color: #606060;
+    position: absolute;
+    bottom: 26px;
+    left: 98px;
+    font-size: 7pt;
+    -moz-box-shadow: 2px 2px 2px #888888;
+    -webkit-box-shadow: 2px 2px 2px #888888;
+    box-shadow: 2px 2px 2px #888888;
+}
+
+button#show_splits_button.ui-state-default {border: 1px solid #ccc;}
+
 /* multi-member districts */
 
 button#multi_member_toggle {

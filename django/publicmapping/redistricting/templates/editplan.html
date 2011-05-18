@@ -171,6 +171,12 @@
     </div>
     {% endblock %}
 
+    {% block splits_ctl %}
+    <div id="show_splits">
+        <button id="show_splits_button">Show Splits</button>
+    </div>
+    {% endblock %}
+    
     {% block multi_member %}
     {% if plan.legislative_body.multi_members_allowed %}
     <div id="multi_member_button_container">

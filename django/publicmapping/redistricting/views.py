@@ -1597,9 +1597,11 @@ def getplans(request):
         sidx = request.POST.get('sidx', 'id')
         sord = request.POST.get('sord', 'asc')
         owner_filter = request.POST.get('owner_filter');
-        body_pk = int(request.POST.get('legislative_body'));
+        body_pk = request.POST.get('legislative_body');
+        body_pk = int(body_pk) if body_pk else body_pk;
         search = request.POST.get('_search', False);
         search_string = request.POST.get('searchString', '');
+        is_community = request.POST.get('is_community', False) == 'true';
     else:
         return HttpResponseForbidden()
     end = page * rows
@@ -1621,8 +1623,7 @@ def getplans(request):
         
        
     not_pending = Q(is_pending=False)
-    body_filter = Q(legislative_body=body_pk)
-    
+
     # Set up the order_by parameter from sidx and sord in the request
     if sidx.startswith('fields.'):
         sidx = sidx[len('fields.'):]
@@ -1636,7 +1637,12 @@ def getplans(request):
     else:
         search_filter = None
 
-    all_plans = Plan.objects.filter(available, not_pending, body_filter, search_filter).order_by(sidx)
+    if body_pk:
+        body_filter = Q(legislative_body=body_pk)
+        all_plans = Plan.objects.filter(available, not_pending, body_filter, search_filter).order_by(sidx)
+    else:
+        community_filter = Q(legislative_body__is_community=is_community)
+        all_plans = Plan.objects.filter(available, not_pending, search_filter, community_filter).order_by(sidx)
 
     if all_plans.count() > 0:
         total_pages = math.ceil(all_plans.count() / float(rows))
@@ -1657,7 +1663,8 @@ def getplans(request):
                 'is_shared': plan.is_shared, 
                 'owner': plan.owner.username, 
                 'districtCount': len(plan.get_districts_at_version(plan.version, include_geom=False)) - 1, 
-                'can_edit': can_edit(request.user, plan)
+                'can_edit': can_edit(request.user, plan),
+                'plan_type': plan.legislative_body.name
                 }
             })
     json_response = "{ \"total\":\"%d\", \"page\":\"%d\", \"records\":\"%d\", \"rows\":%s }" % (total_pages, page, len(all_plans), json.dumps(plans_list))

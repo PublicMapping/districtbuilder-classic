@@ -332,63 +332,6 @@
          <div class="toolbar ui-widget-header">
           <div id="toolsets">
             <div class="toolset" id="toolset_edit">
-              <div class="toolset_group">
-                <img src="/static-media/images/icon-help.png" class="help divtip">
-                <div class="tooltip">The selected demographic attribute of current layer will be displayed on the map as a grayscale 'choropleth' overlay</div>                
-                <label>Show Layer by:</label>
-                {% comment %}
-
-                Dynamically populate the "Show Layer by:" dropdown, based
-                on the demographics that are configured in the application.
-
-                {% endcomment %}
-                <select id="showby">
-                  <script type="text/javascript">
-                    for (var i = 0; i < DEMOGRAPHICS.length; i++) {
-                        var demo = DEMOGRAPHICS[i];
-                        if ( i == 0 ) {
-                            document.write('<option value="none">None</option>');
-                        }
-                        document.write('<option value="' + demo.value + '"');
-                        if (demo.isdefault) {
-                            document.write(' selected="true"');
-                        }
-                        document.write('>' + demo.text + '</option>');
-                    }
-                  </script>
-                </select>
-              </div>
-              <div class="toolset_group">
-                <img src="/static-media/images/icon-help.png" class="help divtip">
-                <div class="tooltip">The appearance of the {{ body_members }} on the map</div>                
-                <label>Show {{ body_member|capfirst }} by:</label>
-                {% comment %}
-
-                Dynamically populate the "Show Districts by:" dropdown,
-                based on the demographics that are configured in the 
-                application.
-
-                {% endcomment %}
-                <select id="districtby">
-                  <script type="text/javascript">
-                    for (var i = 0; i < DEMOGRAPHICS.length; i++) {
-                        var demo = DEMOGRAPHICS[i];
-                        if ( i == 0 ) {
-                            document.write('<option value="' + demo.id + '.None">None</option>');
-                            document.write('<option value="' + demo.id + '.Compactness">Compactness</option>');
-                            document.write('<option value="' + demo.id + '.Contiguity">Contiguity</option>');
-                        }
-                        if ( demo.isdisplayed ) {
-                            document.write('<option value="' + demo.id + '"');
-                            if (demo.isdefault) {
-                                document.write(' selected="true"');
-                            }
-                            document.write('>' + demo.text + '</option>');
-                        }
-                    }
-                  </script>
-                </select>
-              </div>
              <div class="toolset_group">
               <img src="/static-media/images/icon-help.png" class="help divtip">
               <div class="tooltip">View the boundaries of the selected layer. This layer is viewable but doesn't affect selection. Only the boundaries of larger geographies are selectable.</div>
@@ -515,11 +458,23 @@
             </span>
             <div id="opacity_slider"></div>          
           </div>
-
           {% block multi_member %}
           {% comment %}
 
           Include the markup for the multi-member assignment tool
+
+          {% endcomment %}
+          {% endblock %}
+
+          <div id="choose_layers">
+              <button id="choose_layers_button">Choose Layers</button>
+          </div>
+
+          {% block splits_ctl %}
+          {% comment %}
+
+          A place holder for the "Show Splits" button, which should
+          only appear when the plan is editable.
 
           {% endcomment %}
           {% endblock %}
@@ -535,6 +490,7 @@
           <div id="map_legend">
               <button id="legend_toggle">Map Legend</button>
           </div>
+
           <div id="map_legend_content">
             <table id="basemap_legend">
                 <thead>
@@ -771,6 +727,91 @@ Include the shared_districts markup if we're using the copy/paste tool
 Include the stats_picker markup if the user can save stats
 
 {% endcomment %}
+
+<div id="choose_layers_dialog">
+    <div id="choose_layers_content">
+        <div id="choose_layers_select_div">
+            {% comment %}
+
+            Dynamically populate the "Show Layer by:" dropdown, based
+            on the demographics that are configured in the application.
+
+            {% endcomment %}
+            <h2>1. Select <span id="layer_type">Layer</span> Thematic Map</h2>
+            <select id="showby" class="indented fillwidth">
+                <option value="none">None</option>
+                {% for demo in demographics %}              
+                    <option value="{{ demo.value }}" {% if demo.isdefault == "true" %}selected=true{% endif %}>
+                        {{ demo.text }}
+                    </option>
+                {% endfor %}
+            </select>
+            
+            <h2>2. Choose District Thematic Map</h2>
+            {% comment %}
+
+            Dynamically populate the "Show Districts by:" dropdown,
+            based on the demographics that are configured in the 
+            application.
+
+            {% endcomment %}
+            <select id="districtby" class="indented fillwidth">
+                <option value="1.None">None</option>
+                <option value="1.Compactness">Compactness</option>
+                <option value="1.Contiguity">Contiguity</option>
+
+                {% for demo in demographics %}
+                {% if demo.isdisplayed == "true" %}
+                    <option value="{{ demo.id }}" {% if demo.isdefault == "true" %}selected=true{% endif %}>
+                        {{ demo.text }}
+                    </option>
+                {% endif %}
+                {% endfor %}
+            </select>
+            
+            <h2>3. Choose a Reference Layer</h2>
+            <select id="reference_layer_select" class="indented fillwidth">
+                <option value="None">None</option>
+                {% for snap in snaplayers %}
+                    <option value="geolevel.{{ snap.geolevel }}">
+                        {{ snap.name }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <h2 class="indented">OR...</h2>
+            <button id="choose_layers_legislative_button" class="indented fillwidth spacebelow">
+                Select Legislative Plan For Display
+            </button>
+            <button id="choose_layers_community_button" class="indented fillwidth">
+                Select Community Plan For Display
+            </button>
+        </div>
+        <div id="reference_layer_content">
+            <h2>4. Select Plan to Display as Reference Layer</h2>
+            <table id="reference_plans_table"></table>
+            <div id="reference_plans_pager"></div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/static-media/js/layerchooser.js"></script>
+<script type="text/javascript">
+    $(function() {
+        layerChooser = layerchooser({
+            container: $('#choose_layers_dialog'),
+            target: $('#choose_layers_button'),
+            legislativeButton: $('#choose_layers_legislative_button'),
+            communityButton: $('#choose_layers_community_button'),
+            referenceLayerContent: $('#reference_layer_content'),
+            referenceLayerSelect: $('#reference_layer_select'),
+            referencePlansTable: $('#reference_plans_table'),
+            referencePlansPager: $('#reference_plans_pager'),
+            referencePlansUrl: '/districtmapping/getplans/',
+            map: $('#map'),
+            csrfmiddlewaretoken: $('#csrfmiddlewaretoken')
+        }).init();
+    });
+</script>
 
 {% block stats_editor %}
 {% comment %}
