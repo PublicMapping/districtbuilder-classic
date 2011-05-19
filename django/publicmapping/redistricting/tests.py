@@ -3600,3 +3600,32 @@ class CommunityMapTestCase(BaseTestCase):
 
         d2 = District.objects.get(district_id=d1.district_id, version=response['version'], plan=c)
         self.assertLess(d2.geom.area, d1.geom.area, 'Community geom not changed on unassign request')
+
+    def test_community_map_combine(self):
+        """
+        Test that when community maps are combined, they are properly deleted when combined with
+        an empty target (i.e., unassigned), and that stats are not kept
+        """
+        c, d1 = self.community, self.d1
+    
+        result = c.combine_districts(None, [d1,])
+        self.assertTrue(result[0], 'Didn\'t get True result when combining districts with unassigned')
+        d1 = District.objects.get(plan=c, district_id=1, version=result[1])
+    
+        self.assertTrue(d1.geom.empty, 'Removed district does not have empty geometry')
+        
+    def test_community_map_combine_handler(self):
+        """
+        Test that when community maps are combined, they are properly deleted when combined with
+        an empty target (i.e., unassigned), and that stats are not kept
+        """
+        c, d1 = self.community, self.d1
+    
+        client = Client()
+        client.login(username=self.username, password=self.password)
+        response = client.post('/districtmapping/plan/%d/combinedistricts/' % c.id, { 'from_district_id': d1.district_id, 'to_district_id': 0, 'version': c.version })
+        self.assertEqual(200, response.status_code, 'Didn\'t get 200 status when combining districts')
+        response = json.loads(response.content)
+        self.assertEqual(True, response['success'], 'Didn\'t get success message when combining districts')
+        d1 = District.objects.get(plan=c, district_id=1, version=response['version'])
+        self.assertTrue(d1.geom.empty, 'Removed district does not have empty geometry')

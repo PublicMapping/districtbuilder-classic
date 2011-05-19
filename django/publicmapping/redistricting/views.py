@@ -968,10 +968,16 @@ def combine_districts(request, planid):
     try:
         all_districts = plan.get_districts_at_version(version, include_geom=True)
         
-        from_districts = filter(lambda d: True if d.district_id == from_id else False, all_districts)
-        to_district = filter(lambda d: True if d.district_id == to_id else False, all_districts)[0]
+        from_districts = [d for d in all_districts if d.district_id == from_id]
+        to_district = [d for d in all_districts if d.district_id == to_id]
 
-        locked = to_district.is_locked
+        if len(to_district) == 1:
+            to_district = to_district[0]
+            locked = to_district.is_locked
+        else:
+            to_district = None
+            locked = False
+
         for district in from_districts:
             if district.is_locked:
                 locked = True
