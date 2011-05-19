@@ -746,7 +746,7 @@ ERROR:
             geolevel - The configuration geolevel
             verbose - A flag indicating verbose output messages.
         """
-        geolevel = Geolevel.objects.get(name=glconf.get('name'))
+        geolevel = Geolevel.objects.get(name=glconf.get('name').lower())
         llevels = LegislativeLevel.objects.filter(geolevel=geolevel)
         parent = None
         for llevel in llevels:
@@ -1180,7 +1180,7 @@ ERROR:
             if 'aliasfor' in subj.attrib:
                 continue
             obj, created = Subject.objects.get_or_create(
-                name=subj.get('id'), 
+                name=subj.get('id').lower(), 
                 display=subj.get('name'), 
                 short_display=subj.get('short_name'), 
                 is_displayed=(subj.get('displayed')=='true'), 
@@ -1194,10 +1194,10 @@ ERROR:
                     print 'Subject "%s" already exists' % subj.get('name')
 
         for subj in subjs:
-            numerator = Subject.objects.get(name=subj.get('id'))
+            numerator = Subject.objects.get(name=subj.get('id').lower())
             denominator = None
-            denominator_name = subj.get('percentage_denominator')
-            if (denominator_name):
+            denominator_name = subj.get('percentage_denominator').lower()
+            if denominator_name:
                 denominator = Subject.objects.get(name=denominator_name)
 
             numerator.percentage_denominator = denominator
@@ -1216,7 +1216,7 @@ ERROR:
             if not subconfig.get('aliasfor') is None:
                 # dereference any subject alias
                 subconfig = config.xpath('//Subject[@id="%s"]' % (subconfig.get('aliasfor')))[0]
-            subject = Subject.objects.filter(name=subconfig.get('id'))[0]
+            subject = Subject.objects.filter(name=subconfig.get('id').lower())[0]
 
             obj, created = Target.objects.get_or_create(
                 subject=subject,
@@ -1235,7 +1235,7 @@ ERROR:
         # themselves need to be imported top-down (smallest area to biggest)
         geolevels = config.xpath('//GeoLevels/GeoLevel')
         for geolevel in geolevels:
-            glvl,created = Geolevel.objects.get_or_create(name=geolevel.get('name'),min_zoom=geolevel.get('min_zoom'),sort_key=geolevel.get('sort_key'),tolerance=geolevel.get('tolerance'))
+            glvl,created = Geolevel.objects.get_or_create(name=geolevel.get('name').lower(),min_zoom=geolevel.get('min_zoom'),sort_key=geolevel.get('sort_key'),tolerance=geolevel.get('tolerance'))
 
             if verbose > 1:
                 if created:
@@ -1258,7 +1258,7 @@ ERROR:
                     if not sconfig.get('aliasfor') is None:
                         # dereference any subject alias
                         sconfig = config.xpath('//Subject[@id="%s"]' % (sconfig.get('aliasfor')))[0]
-                    subject = Subject.objects.get(name=sconfig.get('id'))
+                    subject = Subject.objects.get(name=sconfig.get('id').lower())
 
                     target = Target.objects.get(
                         subject=subject,
@@ -1292,7 +1292,7 @@ ERROR:
                         parent = None
                     else:
                         pconfig = config.xpath('//GeoLevel[@id="%s"]' % pconfig[0].get('ref'))[0]
-                        plvl = Geolevel.objects.get(name=pconfig.get('name'))
+                        plvl = Geolevel.objects.get(name=pconfig.get('name').lower())
                         parent = LegislativeLevel.objects.get(
                             legislative_body=legislative_body, 
                             geolevel=plvl, 
@@ -1355,7 +1355,7 @@ ERROR:
             if verbose > 1:
                 print '%d objects in shapefile' % len(lyr)
 
-            level = Geolevel.objects.get(name=config['geolevel'])
+            level = Geolevel.objects.get(name=config['geolevel'].lower())
 
             # Create the subjects we need
             subject_objects = {}
@@ -1365,9 +1365,9 @@ ERROR:
                 for elem in sconfig.getchildren():
                     if elem.tag == 'Subject':
                         foundalias = True
-                        sub = Subject.objects.get(name=elem.get('id'))
+                        sub = Subject.objects.get(name=elem.get('id').lower())
                 if not foundalias:
-                    sub = Subject.objects.get(name=sconfig.get('id'))
+                    sub = Subject.objects.get(name=sconfig.get('id').lower())
                 subject_objects[attr_name] = sub
                 subject_objects['%s_by_id' % sub.name] = attr_name
 
