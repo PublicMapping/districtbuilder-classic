@@ -938,25 +938,9 @@ class Plan(models.Model):
 
         new_target = False
         if target is None:
-            # Our other districts have been modified.  If we're in a community map and 
-            # unassigning districts, we don't need to create the new target, just finish up
-            if self.is_community and districtid == 0:
-                # Plan is changed. invalidate and save any changes to the version of this plan
-                self.is_valid = False
-                self.version += 1
-                self.save()
-
-                # purge old versions
-                if settings.MAX_UNDOS_DURING_EDIT > 0 and not keep_old_versions:
-                    self.purge_beyond_nth_step(settings.MAX_UNDOS_DURING_EDIT)
-
-                # Return a flag indicating any districts changed
-                return fixed
-
-            else:
-                target = District(name=districtname, plan=self, district_id=districtid, version=self.version, geom=MultiPolygon([]))
-                target.save()
-                new_target = True
+            target = District(name=districtname, plan=self, district_id=districtid, version=self.version, geom=MultiPolygon([]))
+            target.save()
+            new_target = True
                 
         # If there are locked districts: augment the district boundary with the
         # boundary of the locked area, because get_mixed_geounits is getting
@@ -1661,8 +1645,7 @@ AND st_intersects(
         their scores and geography.  Target and components should
         be districts within this plan
         Parameters:
-            target - A district within this plan. If the target is 
-                None, it is assumed that the districts are being unassigned
+            target - A district within this plan
             components - A list of districts within this plan
                 to combine with the target
             
@@ -1677,48 +1660,44 @@ AND st_intersects(
             self.purge(after=version)
 
         district_keys = set(map(lambda d: d.id, components))
-        if target is not None:
-            district_keys.add(target.id)
+        district_keys.add(target.id)
 
         district_version = self.get_districts_at_version(version)
         version_keys = set(map(lambda d: d.id, district_version))
         if not district_keys.issubset(version_keys):
             raise Exception('Attempted to combine districts not in the same plan or version') 
-        if target is not None and target.is_locked:
+        if target.is_locked:
             raise Exception('You cannot combine with a locked district')
 
         try:
-            # If the target is None, don't worry about the target - just get to deleting the components
-            if target is not None:
-                target.id = None
-                target.version = version + 1
-                target.save()
+            target.id = None
+            target.version = version + 1
+            target.save()
 
-                if not target.plan.is_community():
-                    # Combine the stats for all of the districts
-                    all_characteristics = ComputedCharacteristic.objects.filter(district__in=district_keys)
-                    all_subjects = Subject.objects.order_by('-percentage_denominator').all()
-                    for subject in all_subjects:
-                        relevant_characteristics = filter(lambda c: c.subject == subject, all_characteristics)
-                        number = sum(map(lambda c: c.number, relevant_characteristics))
-                        percentage = Decimal('0000.00000000')
-                        if subject.percentage_denominator:
-                            denominator = ComputedCharacteristic.objects.get(subject=subject.percentage_denominator,district=target)
-                            if denominator:
-                                if denominator.number > 0:
-                                    percentage = number / denominator.number
-                        cc = ComputedCharacteristic(district=target, subject=subject, number=number, percentage=percentage)
-                        cc.save()
+            # Combine the stats for all of the districts
+            all_characteristics = ComputedCharacteristic.objects.filter(district__in=district_keys)
+            all_subjects = Subject.objects.order_by('-percentage_denominator').all()
+            for subject in all_subjects:
+                relevant_characteristics = filter(lambda c: c.subject == subject, all_characteristics)
+                number = sum(map(lambda c: c.number, relevant_characteristics))
+                percentage = Decimal('0000.00000000')
+                if subject.percentage_denominator:
+                    denominator = ComputedCharacteristic.objects.get(subject=subject.percentage_denominator,district=target)
+                    if denominator:
+                        if denominator.number > 0:
+                            percentage = number / denominator.number
+                cc = ComputedCharacteristic(district=target, subject=subject, number=number, percentage=percentage)
+                cc.save()
 
-                # Create a new copy of the target geometry
-                all_geometry = map(lambda d: d.geom, components)
-                all_geometry.append(target.geom)
-                target.geom = enforce_multi(GeometryCollection(all_geometry,srid=target.geom.srid).buffer(0), collapse=True)
-                target.simplify()
+            # Create a new copy of the target geometry
+            all_geometry = map(lambda d: d.geom, components)
+            all_geometry.append(target.geom)
+            target.geom = enforce_multi(GeometryCollection(all_geometry,srid=target.geom.srid).buffer(0), collapse=True)
+            target.simplify()
 
             # Eliminate the component districts from the version
             for component in components:
-                if target and component.district_id == target.district_id:
+                if component.district_id == target.district_id:
                     # Pasting a district to itself would've been handled earlier
                     continue
                 component.id = None
@@ -2007,8 +1986,6 @@ class District(models.Model):
         all_subjects = Subject.objects.order_by('-percentage_denominator').all()
         changed = False
 
-        if self.plan.is_community():
-            return changed
         # For all subjects
         for subject in all_subjects:
             # Aggregate all Geounits Characteristic values
@@ -2309,7 +2286,7 @@ def create_unassigned_district(sender, **kwargs):
     plan = kwargs['instance']
     created = kwargs['created']
 
-    if created and plan.create_unassigned and not plan.is_community():
+    if created and plan.create_unassigned:
         plan.create_unassigned = False
 
         unassigned = District(name="Unassigned", version = 0, plan = plan, district_id=0)
