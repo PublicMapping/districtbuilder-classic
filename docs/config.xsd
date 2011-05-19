@@ -287,14 +287,6 @@
                                             </xs:element>
                                         </xs:choice>
                                         <xs:element name="Description" type="xs:string" minOccurs="0" maxOccurs="1" />
-                                        <xs:element name="GeoLevelCharacteristics" minOccurs="1" maxOccurs="1">
-                                            <xs:complexType>
-                                                <xs:sequence>
-                                                    <xs:element name="GeoLevelCharacteristic" minOccurs="1" maxOccurs="unbounded" type="RefType">
-                                                    </xs:element>
-                                                </xs:sequence>
-                                            </xs:complexType>
-                                        </xs:element>
                                         <xs:element name="LegislativeBodies">
                                             <xs:complexType>
                                                 <xs:sequence>
@@ -495,10 +487,6 @@
         </xs:keyref>
         <xs:keyref name="TemplateLegislativeBody" refer="DistrictBuilderLegislativeBodyKey">
             <xs:selector xpath="Templates/Template/LegislativeBody" />
-            <xs:field xpath="@ref" />
-        </xs:keyref>
-        <xs:keyref name="GeoLevelCharacteristic" refer="DistrictBuilderSubjectKey">
-            <xs:selector xpath="GeoLevels/GeoLevel/GeoLevelCharacteristics/GeoLevelCharacteristic" />
             <xs:field xpath="@ref" />
         </xs:keyref>
         <xs:keyref name="ScoreFunctionScoreFunction" refer="DistrictBuilderScoreFunctionKey">

@@ -726,9 +726,8 @@ ERROR:
             'tolerance': geolevel.get('tolerance')
         }
 
-        crefs = geolevel.xpath('GeoLevelCharacteristics/GeoLevelCharacteristic')
-        for cref in crefs:
-            sconfig = config.xpath('//Subject[@id="%s"]' % cref.get('ref'))[0]
+        sconfigs = geolevel.xpath('Subjects/Subject')
+        for sconfig in sconfigs:
             if 'aliasfor' in sconfig.attrib:
                 salconfig = config.xpath('//Subject[@id="%s"]' % sconfig.get('aliasfor'))[0]
                 sconfig.append(salconfig)

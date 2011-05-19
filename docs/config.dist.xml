@@ -83,7 +83,7 @@
         <ScoreFunctions>
             <!-- A district score that returns a literal value -->
             <ScoreFunction id="district_poptot" type="district"
-                calculator="publicmapping.redistricting.calculators.Sum"
+                calculator="publicmapping.redistricting.calculators.SumValues"
                 label="Total Pop" user_selectable="true">
                 <SubjectArgument name="value1" ref="poptot" />
             </ScoreFunction>
@@ -153,7 +153,7 @@
                 set of subjects, and 2 to divide the sum over another 
                 subject. -->
             <ScoreFunction id="district_mintot" type="district"
-                calculator="publicmapping.redistricting.calculators.Sum">
+                calculator="publicmapping.redistricting.calculators.SumValues">
                 <SubjectArgument name="value1" ref="popblk" />
                 <SubjectArgument name="value2" ref="pophisp" />
             </ScoreFunction>
@@ -179,7 +179,7 @@
 
             <!-- A plan score that aggregates all literal values -->
             <ScoreFunction id="plan_sum_equipop" type="plan" 
-                calculator="publicmapping.redistricting.calculators.Sum"
+                calculator="publicmapping.redistricting.calculators.SumValues"
                 label="Equal Population">
                 <ScoreArgument name="value1" ref="district_poptot_range" />
             </ScoreFunction>
@@ -191,17 +191,17 @@
 
             <!-- A plan score that aggregates all districts over a threshold -->
             <ScoreFunction id="plan_count_majmin" type="plan" 
-                calculator="publicmapping.redistricting.calculators.Sum">
+                calculator="publicmapping.redistricting.calculators.SumValues">
                 <ScoreArgument name="value1" ref="district_majmin" />
             </ScoreFunction>
 
             <ScoreFunction id="plan_blkvap_thresh" type="plan"
-                calculator="publicmapping.redistricting.calculators.Sum">
+                calculator="publicmapping.redistricting.calculators.SumValues">
                 <ScoreArgument name="value1" ref="district_blkvap_thresh" />
             </ScoreFunction>
 
             <ScoreFunction id="plan_hispvap_thresh" type="plan"
-                calculator="publicmapping.redistricting.calculators.Sum">
+                calculator="publicmapping.redistricting.calculators.SumValues">
                 <ScoreArgument name="value1" ref="district_hispvap_thresh" />
             </ScoreFunction>
 
@@ -225,7 +225,7 @@
             </ScoreFunction>
 
             <ScoreFunction id="plan_contiguous" type="plan"
-                calculator="publicmapping.redistricting.calculators.Sum"
+                calculator="publicmapping.redistricting.calculators.SumValues"
                 label="Contiguous">
                 <ScoreArgument name="value1" ref="district_contiguous"/>
             </ScoreFunction>
@@ -450,7 +450,7 @@
             </ScoreFunction>
 
             <ScoreFunction id="partisan_index" type="district"
-                calculator="publicmapping.redistricting.calculators.Sum"
+                calculator="publicmapping.redistricting.calculators.SumValues"
                 user_selectable="true" label="Partisan Index">
                 <SubjectArgument name="value1" ref="govdem" />
             </ScoreFunction>
@@ -751,35 +751,6 @@
               </Fields>
           </Shapefile>
           
-          <!-- 
-          
-          A reference to the subjects for which attribute data is 
-          available at this geolevel.
-          
-          -->
-          <GeoLevelCharacteristics>
-              <GeoLevelCharacteristic ref="govdem" />
-              <GeoLevelCharacteristic ref="vapblk" />
-              <GeoLevelCharacteristic ref="vaphisp" />
-              <GeoLevelCharacteristic ref="pophisp" />
-              <GeoLevelCharacteristic ref="popasn" />
-              <GeoLevelCharacteristic ref="popnam" />
-              <GeoLevelCharacteristic ref="poppild" />
-              <GeoLevelCharacteristic ref="vap" />
-              <GeoLevelCharacteristic ref="vapwnh" />
-              <GeoLevelCharacteristic ref="popblk" />
-              <GeoLevelCharacteristic ref="popwnh" />
-              <GeoLevelCharacteristic ref="vapasn" />
-              <GeoLevelCharacteristic ref="vapnam" />
-              <GeoLevelCharacteristic ref="vappild" />
-              <GeoLevelCharacteristic ref="presdem" />
-              <GeoLevelCharacteristic ref="presrep" />
-              <GeoLevelCharacteristic ref="poptot" />
-              <GeoLevelCharacteristic ref="govrep" />
-              <GeoLevelCharacteristic ref="govoth" />
-              <GeoLevelCharacteristic ref="govtot" />
-          </GeoLevelCharacteristics>
-          
           <!--
           
           A reference to a legislative body. A geolevel may be used by 
@@ -857,35 +828,6 @@
                   </Fields>
               </Geography>
           </Files>
-          
-          <!-- 
-          
-          A reference to the subjects for which attribute data is available
-          at this geolevel.
-          
-          -->
-          <GeoLevelCharacteristics>
-              <GeoLevelCharacteristic ref="govdem" />
-              <GeoLevelCharacteristic ref="vapblk" />
-              <GeoLevelCharacteristic ref="vaphisp" />
-              <GeoLevelCharacteristic ref="pophisp" />
-              <GeoLevelCharacteristic ref="popasn" />
-              <GeoLevelCharacteristic ref="popnam" />
-              <GeoLevelCharacteristic ref="poppild" />
-              <GeoLevelCharacteristic ref="vap" />
-              <GeoLevelCharacteristic ref="vapwnh" />
-              <GeoLevelCharacteristic ref="popblk" />
-              <GeoLevelCharacteristic ref="popwnh" />
-              <GeoLevelCharacteristic ref="vapasn" />
-              <GeoLevelCharacteristic ref="vapnam" />
-              <GeoLevelCharacteristic ref="vappild" />
-              <GeoLevelCharacteristic ref="presdem" />
-              <GeoLevelCharacteristic ref="presrep" />
-              <GeoLevelCharacteristic ref="poptot" />
-              <GeoLevelCharacteristic ref="govrep" />
-              <GeoLevelCharacteristic ref="govoth" />
-              <GeoLevelCharacteristic ref="govtot" />
-          </GeoLevelCharacteristics>
           
           <!--
           
@@ -966,35 +908,6 @@
                   </Fields>
               </Geography>
           </Files>
-          
-          <!-- 
-          
-          A reference to the subjects for which attribute data is available
-          at this geolevel.
-          
-          -->
-          <GeoLevelCharacteristics>
-              <GeoLevelCharacteristic ref="govdem" />
-              <GeoLevelCharacteristic ref="vapblk" />
-              <GeoLevelCharacteristic ref="vaphisp" />
-              <GeoLevelCharacteristic ref="pophisp" />
-              <GeoLevelCharacteristic ref="popasn" />
-              <GeoLevelCharacteristic ref="popnam" />
-              <GeoLevelCharacteristic ref="poppild" />
-              <GeoLevelCharacteristic ref="vap" />
-              <GeoLevelCharacteristic ref="vapwnh" />
-              <GeoLevelCharacteristic ref="popblk" />
-              <GeoLevelCharacteristic ref="popwnh" />
-              <GeoLevelCharacteristic ref="vapasn" />
-              <GeoLevelCharacteristic ref="vapnam" />
-              <GeoLevelCharacteristic ref="vappild" />
-              <GeoLevelCharacteristic ref="presdem" />
-              <GeoLevelCharacteristic ref="presrep" />
-              <GeoLevelCharacteristic ref="poptot" />
-              <GeoLevelCharacteristic ref="govrep" />
-              <GeoLevelCharacteristic ref="govoth" />
-              <GeoLevelCharacteristic ref="govtot" />
-          </GeoLevelCharacteristics>
           
           <!--
           
