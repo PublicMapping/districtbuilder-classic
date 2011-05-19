@@ -31,7 +31,6 @@ from django.http import *
 from django.core import serializers
 from django.core.exceptions import ValidationError, SuspiciousOperation, ObjectDoesNotExist
 from django.db import IntegrityError, connection, transaction
-from django.db.models import Sum, Min, Max
 from django.shortcuts import render_to_response
 from django.core.urlresolvers import reverse
 from django.core.context_processors import csrf

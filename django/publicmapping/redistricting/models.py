@@ -41,7 +41,7 @@ from django.utils import simplejson as json
 from django.template.loader import render_to_string
 from django.contrib.comments.models import Comment
 from django.contrib.contenttypes.models import ContentType
-from redistricting.calculators import Schwartzberg, Contiguity
+from redistricting.calculators import Schwartzberg, Contiguity, SumValues
 from tagging.models import TaggedItem, Tag
 from datetime import datetime
 from copy import copy
@@ -1598,10 +1598,7 @@ AND st_intersects(
                 unassigned = temp
                 
                 # Set up calculator/storage for comparator values (most likely population)
-                # Sum is not imported, because of conflicts with the 'models' Sum
-                ns = 'publicmapping.redistricting.calculators'
-                sum = getattr(getattr(getattr(__import__(ns), 'redistricting'), 'calculators'), 'Sum')        
-                calculator = sum()
+                calculator = SumValues()
                 calculator.arg_dict['value1'] = ('subject', settings.FIX_UNASSIGNED_COMPARATOR_SUBJECT)
         
                 # Test each unassigned geounit with each unlocked district to see if it should be assigned

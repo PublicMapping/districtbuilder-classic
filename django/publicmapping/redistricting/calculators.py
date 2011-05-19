@@ -366,7 +366,7 @@ class LengthWidthCompactness(CalculatorBase):
         return ("%0.2f%%" % (self.result * 100)) if self.result else "n/a"
 
 
-class Sum(CalculatorBase):
+class SumValues(CalculatorBase):
     """
     Sum up all values.
 

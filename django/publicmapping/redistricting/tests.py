@@ -30,7 +30,7 @@ import os
 from django.test import TestCase
 import zipfile
 from django.contrib.gis.db.models import Union
-from django.db.models import Sum as SumAgg, Min, Max
+from django.db.models import Sum, Min, Max
 from django.test.client import Client
 from django.contrib.gis.geos import *
 from django.contrib.auth.models import User
@@ -950,7 +950,7 @@ class PlanTestCase(BaseTestCase):
 
         totals = {}
         for subject in Subject.objects.all():
-            total = ComputedCharacteristic.objects.filter(district__in=all_3, subject=subject).aggregate(SumAgg('number'))
+            total = ComputedCharacteristic.objects.filter(district__in=all_3, subject=subject).aggregate(Sum('number'))
             totals[subject] = total['number__sum']
         total_geom = enforce_multi(District.objects.filter(plan=self.plan,district_id__gt=0).collect(), collapse=True)
 
@@ -1505,7 +1505,7 @@ class CalculatorTestCase(BaseTestCase):
         BaseTestCase.tearDown(self)
 
     def test_sum1(self):
-        sum1 = Sum()
+        sum1 = SumValues()
         sum1.arg_dict['value1'] = ('literal','10',)
         sum1.arg_dict['value2'] = ('literal','20',)
 
@@ -1513,7 +1513,7 @@ class CalculatorTestCase(BaseTestCase):
         sum1.compute(district=self.district1)
         self.assertEquals(30,sum1.result)
 
-        sum2 = Sum()
+        sum2 = SumValues()
 
         self.assertEquals(None,sum2.result)
         self.assertEquals(30,sum1.result)
@@ -1524,7 +1524,7 @@ class CalculatorTestCase(BaseTestCase):
         self.assertEquals(30,sum1.result)
         
     def test_sum2a(self):
-        sumcalc = Sum()
+        sumcalc = SumValues()
         sumcalc.arg_dict['value1'] = ('literal','0',)
         sumcalc.arg_dict['value2'] = ('literal','1',)
         sumcalc.arg_dict['value3'] = ('literal','2',)
@@ -1536,7 +1536,7 @@ class CalculatorTestCase(BaseTestCase):
         self.assertEquals(6, sumcalc.result, 'Incorrect value during summation. (e:%d,a:%d)' % (6, sumcalc.result))
 
     def test_sum2b(self):
-        sumcalc = Sum()
+        sumcalc = SumValues()
         sumcalc.arg_dict['value1'] = ('literal','0',)
         sumcalc.arg_dict['value2'] = ('literal','1',)
         sumcalc.arg_dict['value3'] = ('literal','2',)
@@ -1547,14 +1547,14 @@ class CalculatorTestCase(BaseTestCase):
     def test_sum3(self):
         dist1ids = self.geounits[0:3] + self.geounits[9:12]
         exqset = Characteristic.objects.filter(geounit__in=dist1ids,subject=self.subject1)
-        expected = float(exqset.aggregate(SumAgg('number'))['number__sum']) + 5.0
+        expected = float(exqset.aggregate(Sum('number'))['number__sum']) + 5.0
 
         dist1ids = map(lambda x: str(x.id), dist1ids)
         
         self.plan.add_geounits( self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
         district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
 
-        sumcalc = Sum()
+        sumcalc = SumValues()
         sumcalc.arg_dict['value1'] = ('subject',self.subject1.name,)
         sumcalc.arg_dict['value2'] = ('literal','5.0',)
         sumcalc.compute(district=district1)
@@ -1566,14 +1566,14 @@ class CalculatorTestCase(BaseTestCase):
     def test_sum4(self):
         dist1ids = self.geounits[0:3] + self.geounits[9:12]
         exqset = Characteristic.objects.filter(geounit__in=dist1ids,subject=self.subject1)
-        expected = float(exqset.aggregate(SumAgg('number'))['number__sum'])
+        expected = float(exqset.aggregate(Sum('number'))['number__sum'])
 
         dist1ids = map(lambda x: str(x.id), dist1ids)
         
         self.plan.add_geounits( self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
         district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
 
-        sumcalc = Sum()
+        sumcalc = SumValues()
         sumcalc.arg_dict['value1'] = ('subject',self.subject1.name,)
         sumcalc.compute(district=district1)
 
@@ -1585,7 +1585,7 @@ class CalculatorTestCase(BaseTestCase):
         dist1ids = self.geounits[0:3] + self.geounits[9:12]
         dist2ids = self.geounits[18:21] + self.geounits[27:30] + self.geounits[36:39]
         exqset = Characteristic.objects.filter(geounit__in=dist1ids+dist2ids,subject=self.subject1)
-        expected = float(exqset.aggregate(SumAgg('number'))['number__sum'])
+        expected = float(exqset.aggregate(Sum('number'))['number__sum'])
 
         dist1ids = map(lambda x: str(x.id), dist1ids)
         dist2ids = map(lambda x: str(x.id), dist2ids)
@@ -1593,7 +1593,7 @@ class CalculatorTestCase(BaseTestCase):
         self.plan.add_geounits( self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
         self.plan.add_geounits( self.district2.district_id, dist2ids, self.geolevel.id, self.plan.version)
 
-        sumcalc = Sum()
+        sumcalc = SumValues()
         sumcalc.arg_dict['value1'] = ('subject',self.subject1.name,)
         sumcalc.compute(plan=self.plan)
 
@@ -1621,7 +1621,7 @@ class CalculatorTestCase(BaseTestCase):
     def test_percent3(self):
         dist1ids = self.geounits[0:3] + self.geounits[9:12]
         exqset = Characteristic.objects.filter(geounit__in=dist1ids,subject=self.subject1)
-        expected = float(exqset.aggregate(SumAgg('number'))['number__sum']) / 10.0
+        expected = float(exqset.aggregate(Sum('number'))['number__sum']) / 10.0
 
         dist1ids = map(lambda x: str(x.id), dist1ids)
         
@@ -1701,7 +1701,7 @@ class CalculatorTestCase(BaseTestCase):
     def test_threshold3(self):
         dist1ids = self.geounits[0:3] + self.geounits[9:12]
         exqset = Characteristic.objects.filter(geounit__in=dist1ids,subject=self.subject1)
-        expected = float(exqset.aggregate(SumAgg('number'))['number__sum']) > 10.0
+        expected = float(exqset.aggregate(Sum('number'))['number__sum']) > 10.0
         expected = 1 if expected else 0
 
         dist1ids = map(lambda x: str(x.id), dist1ids)
@@ -1721,7 +1721,7 @@ class CalculatorTestCase(BaseTestCase):
     def test_threshold4(self):
         dist1ids = self.geounits[0:3] + self.geounits[9:12]
         exqset = Characteristic.objects.filter(geounit__in=dist1ids,subject=self.subject1)
-        expected = float(exqset.aggregate(SumAgg('number'))['number__sum']) > 5.0
+        expected = float(exqset.aggregate(Sum('number'))['number__sum']) > 5.0
         expected = 1 if expected else 0
 
         dist1ids = map(lambda x: str(x.id), dist1ids)
@@ -1792,7 +1792,7 @@ class CalculatorTestCase(BaseTestCase):
     def test_range3(self):
         dist1ids = self.geounits[0:3] + self.geounits[9:12]
         exqset = Characteristic.objects.filter(geounit__in=dist1ids,subject=self.subject1)
-        expected = float(exqset.aggregate(SumAgg('number'))['number__sum'])
+        expected = float(exqset.aggregate(Sum('number'))['number__sum'])
         expected = 1 if 5.0 < expected and expected < 10.0 else 0
 
         dist1ids = map(lambda x: str(x.id), dist1ids)
@@ -1813,7 +1813,7 @@ class CalculatorTestCase(BaseTestCase):
     def test_range4(self):
         dist1ids = self.geounits[0:3] + self.geounits[9:12]
         exqset = Characteristic.objects.filter(geounit__in=dist1ids,subject=self.subject1)
-        expected = float(exqset.aggregate(SumAgg('number'))['number__sum'])
+        expected = float(exqset.aggregate(Sum('number'))['number__sum'])
         expected = 1 if 1.0 < expected and expected < 5.0 else 0
 
         dist1ids = map(lambda x: str(x.id), dist1ids)
