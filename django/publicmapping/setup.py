@@ -196,9 +196,16 @@ contents of the file and try again.
         return False
 
     if not schema.validate(elem_tree):
-        if verbose > 1:
-            print "Configuration is parsed, but is not valid."
-            print schema.error_log.last_error
+        if verbose > 0:
+            print """
+            
+ERROR:
+
+The configuration file specified was parsed successfully, but there are
+validation errors.
+"""
+            if verbose > 1:
+                print schema.error_log.last_error
         return False
 
     if verbose > 0:
