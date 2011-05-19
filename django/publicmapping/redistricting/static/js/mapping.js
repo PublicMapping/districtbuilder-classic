@@ -537,15 +537,12 @@ function mapinit(srs,maxExtent) {
             return;
         }
 
-        // TODO: add support for displaying geolevel splits
-        if (!referenceLayerId.startsWith('plan')) {
-            $('<div>Geolevel splits not yet supported.</div>').dialog({
-                modal: true, autoOpen: true, title: 'Error', resizable:false
-            });
-            return;
+        var urlSuffix = '';
+        if (referenceLayerId.startsWith('plan')) {
+            urlSuffix = 'plan/' + referenceLayerId.substring('plan.'.length);
+        } else {
+            urlSuffix = 'geolevel/' + referenceLayerId.substring('geolevel.'.length);
         }
-            
-        var belowPlanId = referenceLayerId.substring('plan.'.length);
     
         var waitDialog = $('<div>Please wait while querying for splits.</div>').dialog({
             modal: true,
@@ -558,15 +555,21 @@ function mapinit(srs,maxExtent) {
 
         $.ajax({
             type: 'GET',
-            url: '/districtmapping/plan/' + PLAN_ID + '/splits/' + belowPlanId + '/',
+            url: '/districtmapping/plan/' + PLAN_ID + '/splits/' + urlSuffix + '/',
             data: { version: getPlanVersion() },
             success: function(data, textStatus, xhr) {
-                setHighlightedDistricts(data.above_ids);
                 waitDialog.remove();
+                if (data.success) {
+                    setHighlightedDistricts(data.above_ids);
+                } else {
+                    $('<div>Error encountered while querying for splits: ' + data.message + '</div>').dialog({
+                        modal: true, autoOpen: true, title: 'Error', resizable:false
+                    });                
+                }
             },
             error: function(xhr, textStatus, error) {
                 waitDialog.remove();                        
-                $('<div>Error encountered while querying for splits.</div>').dialog({
+                $('<div>Error encountered while querying for splits: ' + textStatus + '</div>').dialog({
                     modal: true, autoOpen: true, title: 'Error', resizable:false
                 });                
             }

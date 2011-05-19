@@ -1030,22 +1030,25 @@ def fix_unassigned(request, planid):
 
 @login_required
 @unique_session_or_json_redirect
-def get_splits(request, planid, otherplanid):
+def get_splits(request, planid, otherid, othertype):
     """
     Find all splits between this plan and another plan
 
     Parameters:
         request -- An HttpRequest optionally containing version and/or otherversion
         planid -- The plan ID
-        otherplanid -- The plan ID of the other plan to find splits with
+        otherid -- The plan ID or geolevel ID to find splits with
+        othertype -- One of: 'plan' or 'geolevel'. For specifying otherid
 
     Returns:
         A JSON HttpResponse that contains an array of splits, given as arrays,
         where the first item is the district_id of the district in this plan
         which causes the split, and the second item is the district_id of the
-        district in the other plan which is split.
+        district in the other plan or geolevel. When a geolevel is specified,
+        the portable_id will be used, rather than the district_id.
     """
-    
+
+    otherid = int(otherid)
     status = { 'success': False }
 
     try:
@@ -1054,22 +1057,27 @@ def get_splits(request, planid, otherplanid):
         status['message'] = 'No plan with the given id'
         return HttpResponse(json.dumps(status),mimetype='application/json')
 
-    try:
-        otherplan = Plan.objects.get(pk=otherplanid)
-    except:
-        status['message'] = 'No other plan with the given id'
-        return HttpResponse(json.dumps(status),mimetype='application/json')
-
     if not can_edit(request.user, plan):
         status['message'] = 'User can\'t edit the given plan'
         return HttpResponse(json.dumps(status),mimetype='application/json')
 
-    # get the versions from the request or the plan
     version = int(request.REQUEST['version'] if 'version' in request.REQUEST else plan.version)
-    otherversion = int(request.REQUEST['otherversion'] if 'otherversion' in request.REQUEST else otherplan.version)
-
     try:
-        splits = plan.find_splits(otherplan, version, otherversion)
+        if othertype == 'plan':
+            try:
+                otherplan = Plan.objects.get(pk=otherid)
+            except:
+                status['message'] = 'No other plan with the given id'
+                return HttpResponse(json.dumps(status),mimetype='application/json')
+
+            otherversion = int(request.REQUEST['otherversion'] if 'otherversion' in request.REQUEST else otherplan.version)
+            splits = plan.find_plan_splits(otherplan, version, otherversion)
+        elif othertype == 'geolevel':
+            splits = plan.find_geolevel_splits(otherid, version)
+        else:
+            status['message'] = 'othertype not supported: ' + othertype
+            return HttpResponse(json.dumps(status),mimetype='application/json')
+
         status['success'] = True
         status['message'] = 'Found %d split%s' % (len(splits), '' if len(splits) == 1 else 's')
         status['splits'] = splits

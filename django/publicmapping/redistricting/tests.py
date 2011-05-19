@@ -3329,7 +3329,7 @@ class NestingTestCase(BaseTestCase):
         p2d2 = max(District.objects.filter(plan=p2,district_id=p2d2.district_id),key=lambda d: d.version)
 
         # Test splits
-        splits = p1.find_splits(p2)
+        splits = p1.find_plan_splits(p2)
         self.assertEquals(len(splits), 0, "Found splits in identical plans")
 
     def test_split_bottom_district_smaller(self):
@@ -3349,7 +3349,7 @@ class NestingTestCase(BaseTestCase):
         p2d2 = max(District.objects.filter(plan=p2,district_id=p2d2.district_id),key=lambda d: d.version)
 
         # Test splits
-        splits = p1.find_splits(p2)
+        splits = p1.find_plan_splits(p2)
         self.assertEquals(len(splits), 0, "Found splits when bottom plan had a smaller district")
 
     def test_split_top_district_smaller(self):
@@ -3369,7 +3369,7 @@ class NestingTestCase(BaseTestCase):
         p2d2 = max(District.objects.filter(plan=p2,district_id=p2d2.district_id),key=lambda d: d.version)
 
         # Test splits
-        splits = p1.find_splits(p2)
+        splits = p1.find_plan_splits(p2)
         self.assertEquals(len(splits), 1, "Didn't find 1 split")
         self.assertEquals(splits[0], (2, 2), "Didn't find p1d2 to split p2d2")
 
@@ -3390,7 +3390,7 @@ class NestingTestCase(BaseTestCase):
         p2d2 = max(District.objects.filter(plan=p2,district_id=p2d2.district_id),key=lambda d: d.version)
 
         # Test splits
-        splits = p1.find_splits(p2)
+        splits = p1.find_plan_splits(p2)
         self.assertEquals(len(splits), 3, "Didn't find 3 splits")
         self.assertEquals(splits[0], (1, 1), "Didn't find p1d1 to split p2d1")
         self.assertEquals(splits[1], (2, 1), "Didn't find p1d2 to split p2d1")

@@ -1754,7 +1754,7 @@ AND st_intersects(
 
         return districts
 
-    def find_splits(self, other_plan, version=None, other_version=None):
+    def find_plan_splits(self, other_plan, version=None, other_version=None):
         """
         Determines if this plan splits the below Plan.
 
@@ -1814,6 +1814,56 @@ AND below.version = lmt1.version
 AND ST_Relate(above.geom, below.geom, '***T*****')
 ORDER BY above.district_id, below.district_id
 """ % (other_plan.id, other_version, self.id, version, self.id, other_plan.id)
+
+        cursor.execute(query)
+        splits = cursor.fetchall()
+        return splits
+
+    def find_geolevel_splits(self, geolevelid, version=None):
+        """
+        Determines if this plan splits the below Plan.
+
+        Parameters:
+            geolevelid -- The geolevel that is 'below' this plan hierarchically.
+                          A split occurs when a district in this plan crosses the
+                          boundary of a geounit in the geolevel.
+                          
+            version -- Optional; if specified, splits will be calculated using
+                       districts in the specified version of the plan. If
+                       omitted, the most recent plan version will be used.
+
+        Returns:
+            An array of splits, given as tuples, where the first item is the district_id of
+            the district in this plan which causes the split, and the second item is the
+            portable_id of the geounit in the geolevel which is split.
+        """
+        if not geolevelid:
+            raise Exception('geolevelid must be specified for use in finding splits.')
+        
+        version = version if not version is None else self.version
+
+        cursor = connection.cursor()
+
+        # The query does a cross join on the versioned districts of this plan (above) with
+        # the geounits of the geolevel (below), and returns the rows where
+        # the boundary of the above district intersects the interior of the below geounit.
+        query = """SELECT above.district_id, below.portable_id
+FROM redistricting_geounit as below
+CROSS JOIN (
+    SELECT sub.id, sub.district_id, sub.name, sub.geom
+    FROM redistricting_district as sub
+    JOIN (
+        SELECT max(version) as version, district_id FROM redistricting_district
+        WHERE plan_id = %d  
+        AND version <= %d 
+        GROUP BY district_id
+    ) AS lmt2 ON sub.district_id = lmt2.district_id
+    WHERE sub.plan_id = %d AND sub.version = lmt2.version AND sub.district_id > 0
+) AS above
+WHERE below.geolevel_id = %d  
+AND ST_Relate(above.geom, below.geom, '***T*****')
+ORDER BY above.district_id, below.portable_id
+""" % (self.id, version, self.id, geolevelid)
 
         cursor.execute(query)
         splits = cursor.fetchall()
