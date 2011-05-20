@@ -1015,6 +1015,12 @@ button#start_drawing   {
     width:135px;
 }
 
+button#start_mapping[disabled="disabled"] {
+    background-color: #DDD;
+    color: #444;
+    cursor: default;
+}
+
 div#map_menu {
     float:right;
     margin: 0 10px 0 0;

@@ -168,6 +168,8 @@ chooseplan = function(options) {
                 return false;
             }
             else {
+                $('#start_mapping').attr('disabled', 'disabled');                
+                $('#start_mapping .ui-button-text').html('Creating New Plan...');
                 window.status = 'Please standby while creating new plan ...';
                 $.ajax({
                     url:url, 
