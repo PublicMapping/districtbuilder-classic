@@ -848,11 +848,6 @@ div.toolset {
   width: 100%
   }
     
-div.toolset#toolset_draw {
-  position:absolute;
-  top:51px;
-}
-
 div.toolset#toolset_draw .ui-button-icon-only {
 text-align:center;
 height: 20px;

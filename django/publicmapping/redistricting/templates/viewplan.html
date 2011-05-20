@@ -331,20 +331,6 @@
       <div id="mapandmenu" class="fulltab" >
          <div class="toolbar ui-widget-header">
           <div id="toolsets">
-            <div class="toolset" id="toolset_edit">
-        {% block mode_toggle %}        
-        {% comment %}
-
-        Define a block named 'mode_toggle': this section can be overridden
-        to change the name of the button. It is entitled "Navigation" by
-        default, for viewing. For an editing interface, this button could
-        be changed to another, more informative label, such as "Edit Map".
-
-        {% endcomment %}
-        <button class="toolbar_toggle" id="start_drawing">Navigation</button>
-        {% endblock %}
-            </div>
-
             <div class="toolset" id="toolset_draw">
               <div class="toolset_group">
                 <label>Map Tools</label>
@@ -381,9 +367,6 @@
 
               {% endcomment %}
               {% endblock %}
-
-              <button class="toolbar_toggle" id="edit_map_settings">Select Map View</button>
-            
             </div>
             </div>
             {% if plan %}

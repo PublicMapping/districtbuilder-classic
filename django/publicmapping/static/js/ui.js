@@ -325,20 +325,6 @@ $(function() {
         }
     });    
     
-    //toolset toggle button
-    $('.toolbar_toggle').click(function(){
-        if($('.toolset').hasClass('active')) {
-            $('.toolset').each(function() {
-                $(this).removeClass('active').animate({marginTop: '+=51'}, 200)
-            });
-        }
-        else {
-            $('.toolset').each(function(){
-                $(this).addClass('active').animate({marginTop: '-=51'}, 200)
-            })
-        }
-    });
-
     $('#saveplaninfo').bind('planSaved', function(event, time) {
         var local = getLocalTimeFromIsoformat(time);
         $('#saveplaninfo').text('Last Saved on ' + local.day + ' at ' + (local.hours % 12) + ':' + ((local.minutes < 10) ? ('0' + local.minutes) : local.minutes));
