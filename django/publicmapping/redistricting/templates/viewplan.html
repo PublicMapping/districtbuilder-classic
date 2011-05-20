@@ -773,11 +773,9 @@ Include the stats_picker markup if the user can save stats
             <select id="reference_layer_select" class="indented fillwidth">
                 <option value="None">None</option>
                 {% for snap in snaplayers %}
-                {% if not forloop.last %}                
                     <option value="geolevel.{{ snap.geolevel }}">
                         {{ snap.name }}
                     </option>
-                {% endif %}
                 {% endfor %}
             </select>
 
