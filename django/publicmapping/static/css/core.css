@@ -1375,6 +1375,15 @@ div.info_table td.district_name {
     font-weight: bold;
     text-align: center;
 }
+div.info_table .community_name {
+    width: 12%;
+}
+div.info_table td.community_name {
+    overflow: hidden;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: left;
+}
 div.info_table .score1{  
     width: 67px;
 }

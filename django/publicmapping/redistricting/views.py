@@ -1853,7 +1853,18 @@ def statistics_sets(request, planid):
                     demo = ScoreDisplay.objects.filter(
                         owner__is_superuser=True,
                         legislative_body=plan.legislative_body,
-                        is_page=False)[0]
+                        is_page=False)
+                    # DO NOT select the ScoreDisplay that contains
+                    # the comment calculator
+                    for disp in demo:
+                        has_comments = False
+                        for pnl in disp.scorepanel_set.all():
+                            for fn in pnl.score_functions.all():
+                                has_comments = has_comments or fn.calculator.endswith('.Comments')
+                        if not has_comments:
+                            demo = disp
+                            break
+
                     display = ScoreDisplay()
                     display = display.copy_from(display=demo, title=request.POST.get('name'), owner=request.user, functions=functions)
                     result['newRecord'] = True
