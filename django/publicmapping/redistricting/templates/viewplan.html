@@ -101,10 +101,10 @@
         }
         // The baselayer is a visible layer without selectable features or attribute information
         // Currently, only boundaries are supported
-        var BASE_LAYERS = [{% for layer in boundaries %} { id: NAMESPACE + ':{{layer.id}}', name: '{{ layer.name }}' }{% if not forloop.last %},{% endif %} {%endfor %} ];
+        /* var BASE_LAYERS = [{% for layer in boundaries %} { id: NAMESPACE + ':{{layer.id}}', name: '{{ layer.name }}' }{% if not forloop.last %},{% endif %} {%endfor %} ];
         for (i in BASE_LAYERS) {
             MAP_LAYERS.push( BASE_LAYERS[i].id );
-        }
+        } */
         // The style rules for all subjects. Each subject has a different
         // set of ranges, and they are pulled from the django db.
         var RULES = { {% for rule in rules %}'{{ rule.subject_id }}': {lowest: {{ rule.lowest }}, lower:{{ rule.lower }}, upper:{{ rule.upper }}, highest: {{ rule.highest }} }{% if not forloop.last %},{% endif %}{% endfor %}};
@@ -332,27 +332,6 @@
          <div class="toolbar ui-widget-header">
           <div id="toolsets">
             <div class="toolset" id="toolset_edit">
-             <div class="toolset_group">
-              <img src="/static-media/images/icon-help.png" class="help divtip">
-              <div class="tooltip">View the boundaries of the selected layer. This layer is viewable but doesn't affect selection. Only the boundaries of larger geographies are selectable.</div>
-                <label>Show Boundaries:</label>
-                {% comment %}
-
-                Show a boundary, which is visible but has no attribute
-                data.
-
-                {% endcomment %}
-                <select id="boundfor">
-                  <option value=''>None</option>
-                  <script type="text/javascript">
-                    for (var i = 0; i < BASE_LAYERS.length; i++) {
-                        var base = BASE_LAYERS[i];
-                        document.write('<option value="' + base.id + '">' + base.name + '</option>');
-                    }
-                  </script>
-                </select>
-              </div>
-           
         {% block mode_toggle %}        
         {% comment %}
 

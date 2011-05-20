@@ -403,8 +403,8 @@ def commonplan(request, planid):
         study_area_extent = Geounit.objects.filter(geolevel=biglevel).extent(field_name='simple')
 
     for level in levels:
-        snaplayers.append( {'geolevel':level.id,'layer':level.name,'name':level.name.capitalize(),'min_zoom':level.min_zoom} )
-        boundaries.append( {'id':'%s_boundaries' % level.name.lower(), 'name':level.name.capitalize()} )
+        snaplayers.append( {'geolevel':level.id,'layer':level.name.lower(),'name':level.name.capitalize(),'min_zoom':level.min_zoom} )
+        boundaries.append( {'layer':'%s_boundaries' % level.name.lower(), 'name':level.name.capitalize()} )
     # Don't display the lowest geolevel because it's never available as a boundary
     if len(boundaries) > 0:
         boundaries.pop()
@@ -1246,7 +1246,7 @@ def simple_district_versioned(request, planid, district_ids=None):
 
     This method accepts 'version__eq' and 'subjects__eq' URL parameters.
 
-    This method accepts an optional 'disctrict_ids__eq' parameter, which is
+    This method accepts an optional 'district_ids__eq' parameter, which is
     a comma-separated list of district_ids to filter by
 
     Parameters:

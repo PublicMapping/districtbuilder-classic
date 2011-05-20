@@ -265,6 +265,43 @@ function mapinit(srs,maxExtent) {
         return newLayer;
     };
 
+    // The style for reference layers
+    var referenceStyle = {
+        fill: false,
+        fillColor: '#447700',
+        strokeColor: '#447700',
+        strokeOpacity: 1,
+        strokeWidth: 2
+    };
+
+    var createGeolevelLayer = function(layerName, featureType) {
+        return new OpenLayers.Layer.Vector(
+            layerName,
+            {
+                strategies: [
+                    new OpenLayers.Strategy.BBOX({ratio:2})
+                ],
+                protocol: createGeolevelProtocol(featureType),
+                style: referenceStyle,
+                projection: projection,
+                visibility: false
+            }
+        );
+    };
+
+    // Create a protocol that is used to get the geolevel
+    // reference layers
+    var createGeolevelProtocol = function(featureType) {
+        return new OpenLayers.Protocol.WFS({
+            url: MAP_SERVER_PROTOCOL + '//' + MAP_SERVER + '/geoserver/wfs',
+            featureType: featureType,
+            featureNS: NS_HREF,
+            featurePrefix: NAMESPACE,
+            srsName: srs,
+            geometryName: 'geom'
+        });
+    };
+
     // Set the visible thematic layer. This is a replacement for
     // directly setting the base layer, which can no longer be done
     // since a base map is now being used.
@@ -594,13 +631,14 @@ function mapinit(srs,maxExtent) {
     }
 
     // Construct map layers, ensuring boundary layers are at the end of the list for proper overlaying
+    for (i in SNAP_LAYERS) {
+        var snapLayer = SNAP_LAYERS[i];
+        layers.push(createGeolevelLayer('geolevel.' + snapLayer.geolevel, snapLayer.level + '_boundaries'));
+    }
+
     for (i in MAP_LAYERS) {
         var layerName = MAP_LAYERS[i];
-        if (layerName.indexOf('boundaries') == -1) {
-            layers.unshift(createLayer( layerName, layerName, srs, maxExtent, false, true, true ));
-        } else {
-            layers.push(createLayer( layerName, layerName, srs, maxExtent, true, false, false ));
-        }
+        layers.push(createLayer( layerName, layerName, srs, maxExtent, false, true, true ));
     }
 
     // The strategy for loading the districts. This is effectively
@@ -633,14 +671,6 @@ function mapinit(srs,maxExtent) {
         strokeColor: '#007FFF',
         strokeOpacity: 1,
         strokeWidth: 3
-    };
-
-    // The style for reference layers
-    var referenceStyle = {
-        fill: false,
-        strokeColor: '#447700',
-        strokeOpacity: 1,
-        strokeWidth: 2,
     };
 
     /**
@@ -999,7 +1029,6 @@ function mapinit(srs,maxExtent) {
     var createReferenceLayer = function(referenceLayerId) {
         var layerIdPattern = /(.+)\.(\d+)$/;
         var matches = layerIdPattern.exec(referenceLayerId);
-        /* TODO: Set up WFS layer for geolevels - or use geoserver boundary views */
         var layerType = matches[1];
         var layerId = matches[2];
 
@@ -1014,14 +1043,12 @@ function mapinit(srs,maxExtent) {
                         url: '/districtmapping/plan/' + layerId + '/district/versioned/',
                         format: new OpenLayers.Format.GeoJSON()
                     }),
-                    styleMap: new OpenLayers.StyleMap(new OpenLayers.Style(referenceStyle)),
+                    style: referenceStyle,
                     projection: projection,
                     filter: getVersionAndSubjectFilters(maxExtent)
                 }
             );
-        } else {
-            return undefined;
-        }
+        } // otherwise the "geolevel" reference layers are already created
     };
 
     // Hide the current reference layer and reset the currentReferenceLayer variable
@@ -2558,7 +2585,7 @@ function mapinit(srs,maxExtent) {
         doMapStyling();
         $('#layer_type').text(snap.display);
         getMapStyles();
-        updateBoundaryLegend();
+        //updateBoundaryLegend();
 
         if (olmap.center !== null) {
             districtLayer.filter = getVersionAndSubjectFilters(olmap.getExtent());
