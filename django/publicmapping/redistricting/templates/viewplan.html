@@ -197,7 +197,7 @@
     <div class="clear"></div>
   </div>
 
-  <div id="steps">
+  <div id="steps" style="visibility: hidden;">
       <ul id="steps_tabs">
         <li id="tab_plan"><a href="#step_plan">Step 1: Plan</a><li>
         <li id="tab_draw"><a href="#step_draw">Step 2: Draw</a></li>
@@ -897,6 +897,10 @@ Include the markup for the account management panel.
         }).init();
         
     });
+
+    $(document).ready(function() {
+        $('#steps').css('visibility', '');
+    })
 </script>
   </body>
 </html>
