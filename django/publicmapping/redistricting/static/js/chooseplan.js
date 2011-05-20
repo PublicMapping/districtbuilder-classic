@@ -484,6 +484,7 @@ chooseplan = function(options) {
             } else {
                 showItems(true, false, true, false, true);
             }
+            $('#start_mapping .ui-button-text').html('Start Drawing');
             setActiveTab($(this));
            
         });        
@@ -496,7 +497,7 @@ chooseplan = function(options) {
             } else {
                 showItems(true, false, true, false, true);
             }
-                
+            $('#start_mapping .ui-button-text').html('Start Drawing');
             setActiveTab($(this));
         });        
         $('#filter_mine').click( function () {
@@ -506,12 +507,14 @@ chooseplan = function(options) {
             $('input:radio[name=Edit]').filter('[value=edit]').attr('checked', true);
             showItems(false, true, true, true, false);
             setActiveTab($(this));            
+            $('#start_mapping .ui-button-text').html('Start Drawing');
         });        
         $('#new_from_file').click( function() {
             _eventType = 'upload';
             _nameRequired = true;
             showItems(true, false, false, false, true);
             setActiveTab($(this));           
+            $('#start_mapping .ui-button-text').html('Upload Plan');
         });
 
         $('#edit_plan').button().click( function() {
