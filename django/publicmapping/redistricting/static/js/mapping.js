@@ -561,6 +561,11 @@ function mapinit(srs,maxExtent) {
                 waitDialog.remove();
                 if (data.success) {
                     setHighlightedDistricts(data.above_ids);
+                    if (data.splits.length === 0) {
+                        $('<div>This plan contains no splits.</div>').dialog({
+                            modal: true, autoOpen: true, title: 'No Splits Found', resizable:false
+                        });                
+                    }
                 } else {
                     $('<div>Error encountered while querying for splits: ' + data.message + '</div>').dialog({
                         modal: true, autoOpen: true, title: 'Error', resizable:false
