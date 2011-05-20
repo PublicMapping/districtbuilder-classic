@@ -31,6 +31,8 @@
  *   options -- Configuration options for the layer chooser tool.
  */
 layerchooser = function(options) {
+    var _minWidth = 350;
+    var _maxWidth = 790;
 
     var _self = {},
         _options = $.extend({
@@ -48,7 +50,7 @@ layerchooser = function(options) {
             referencePlansUrl: '',
             autoOpen: false,
             modal: false,
-            width: 'auto',
+            width: _minWidth,
             height: 'auto',
             title: 'Choose Map Layers',
             resizable: false,
@@ -75,6 +77,7 @@ layerchooser = function(options) {
         var reload = function() {
             _planTable.trigger('reloadGrid');            
             _options.referenceLayerContent.show();
+            _options.container.dialog('option', 'width', _maxWidth);
             _options.container.dialog('option', 'position', 'center');
         };
         _options.legislativeButton.click(function(){
@@ -109,6 +112,7 @@ layerchooser = function(options) {
             _options.referenceLayerSelect.append($('<option></option>').
                 attr('value', val).
                 text(_planTable.jqGrid('getRowData', id)['fields.name']));
+                _options.container.dialog('option', 'width', _minWidth);
                 _options.container.dialog('option', 'position', 'center');
             _options.referenceLayerSelect.val(val);
             _options.referenceLayerSelect.trigger('change');
