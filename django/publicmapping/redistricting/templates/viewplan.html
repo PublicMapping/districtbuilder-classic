@@ -792,6 +792,9 @@ Include the stats_picker markup if the user can save stats
             <table id="reference_plans_table"></table>
             <div id="reference_plans_pager"></div>
         </div>
+        <div>
+          <button id="choose_layers_ok_button" style="float:right;">OK</button>
+        </div>
     </div>
 </div>
 <script type="text/javascript" src="/static-media/js/layerchooser.js"></script>
@@ -802,6 +805,7 @@ Include the stats_picker markup if the user can save stats
             target: $('#choose_layers_button'),
             legislativeButton: $('#choose_layers_legislative_button'),
             communityButton: $('#choose_layers_community_button'),
+            okButton: $('#choose_layers_ok_button'),
             referenceLayerContent: $('#reference_layer_content'),
             referenceLayerSelect: $('#reference_layer_select'),
             referencePlansTable: $('#reference_plans_table'),

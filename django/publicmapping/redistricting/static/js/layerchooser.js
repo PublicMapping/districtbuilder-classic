@@ -38,6 +38,7 @@ layerchooser = function(options) {
             target: {},
             legislativeButton: {},
             communityButton: {},
+            okButton: {},
             referenceLayerContent: {},
             referenceLayerSelect: {},
             referencePlansTable: {},
@@ -70,7 +71,7 @@ layerchooser = function(options) {
         _options.target.click(showDialog);
         _options.referenceLayerContent.hide();
 
-        // Add select button behavior
+        // Add button behavior
         var reload = function() {
             _planTable.trigger('reloadGrid');            
             _options.referenceLayerContent.show();
@@ -83,6 +84,9 @@ layerchooser = function(options) {
         _options.communityButton.click(function(){
             _filterCommunities = true;
             reload();
+        });
+        _options.okButton.click(function(){
+            _options.container.dialog('close');
         });
 
         // Trigger event the selected reference layer has changed

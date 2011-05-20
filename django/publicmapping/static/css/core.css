@@ -1917,8 +1917,8 @@ button#choose_layers_button.ui-state-default {border: 1px solid #ccc;}
 #choose_layers_dialog select {margin-top: 10px; margin-bottom: 10px;}
 #choose_layers_content {padding-bottom: 15px;float:left}
 #choose_layers_content h2 {margin-bottom: 8px; font-size: 16px; font-weight:bold;}
-#choose_layers_select_div {width:300px; height:300px; float:left;}
-#reference_layer_content {width:420px; height:300px; float:left;}
+#choose_layers_select_div {width:300px; height:311px; float:left;}
+#reference_layer_content {width:420px; height:311px; float:left;}
 #choose_layers_content > div {margin-right: 15px; font-size: 12px;}
 #choose_layers_instructions {margin-bottom: 10px;}
 
