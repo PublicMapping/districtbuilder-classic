@@ -188,7 +188,7 @@ class ScoreFunctionAdmin(admin.ModelAdmin):
     """
     Administrative settings for ScoreFunctions.
     """
-    fields = ('name', 'calculator', 'is_planscore', 'label', 'description',)
+    fields = ('name', 'calculator', 'is_planscore', 'is_user_selectable', 'label', 'description',)
 
     list_display = ('name', 'label', 'description', 'is_planscore',)
 
