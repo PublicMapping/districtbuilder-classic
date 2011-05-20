@@ -6,7 +6,7 @@
         <form id="districtInfo{{ dscore.district.district_id }}">
             <input type="hidden" name="pk" value="{{ dscore.district.id }}" />
             <input type="text" class="infoLabel" name="label" value="{{ dscore.district.name }}" readonly="true" />
-            <div class="edit_district_info" districtid="{{ dscore.district.district_id }}">Click to edit</div>
+            <div class="edit_district_info" districtid="{{ dscore.district.district_id }}">Edit</div>
             <div class="district_type">
                 <h4>Type/s:</h4>
                 {% for forscore in dscore.scores %}
