@@ -53,6 +53,7 @@ def     drop_db():
         subprocess.check_call(["service","celeryd","stop"])
         subprocess.check_call(["service","apache2","stop"])
         subprocess.check_call(["service","apache2","restart"])
+        subprocess.check_call(["service","postgresql","restart"])
         subprocess.check_call(['su postgres -c "dropdb publicmapping"'],shell=True)
         subprocess.check_call(['cat /projects/publicmapping/trunk/sql/publicmapping_db.sql | su postgres -c "psql -f - postgres"'],shell=True)
         subprocess.check_call(["service","apache2","start"])
@@ -373,10 +374,10 @@ class Config_Template(DictionaryTemplate):
 	<Subject id="totpop_a" field="TOTPOP_A" name="Asian Population" short_name="Asian" displayed="false" sortkey="11" />
 	<Subject id="totpop_pi" field="TOTPOP_PI" name="Pacific Islander" short_name="Pac Isl" displayed="false" sortkey="12" />
 	<Subject id="totpop_wnh" field="TOTPOP_WNH" name="White Non-Hispanic" short_name="White" displayed="false" sortkey="13" />
-        <Subject id="totpop" field="TOTPOP" name="Total Population" short_name="Total Pop." displayed="true" sortkey="14" />
-        <Subject id="vap_a" field="VAP_A" name="Asian Voting Age Population" short_name="Asian VAP" displayed="true" sortkey="15" />
-        <Subject id="vap_pi" field="VAP_PI" name="Pacific Islander Voting Age Population" short_name="Pacific VAP" displayed="true" sortkey="16" />
-        <Subject id="vap_wnh" field="VAP_WNH" name="White Non-Hispanic Voting Age Population" short_name="White VAP" displayed="true" sortkey="17" />
+        <Subject id="totpop" field="TOTPOP" name="Total Population" short_name="Total Pop." displayed="true" sortkey="14" percentage_denominator="vap"/>
+        <Subject id="vap_a" field="VAP_A" name="Asian Voting Age Population" short_name="Asian VAP" displayed="true" sortkey="15" percentage_denominator="vap" />
+        <Subject id="vap_pi" field="VAP_PI" name="Pacific Islander Voting Age Population" short_name="Pacific VAP" displayed="true" sortkey="16" percentage_denominator="vap"/>
+        <Subject id="vap_wnh" field="VAP_WNH" name="White Non-Hispanic Voting Age Population" short_name="White VAP" displayed="true" sortkey="17" percentage_denominator="vap"/>
    </Subjects>
     <Targets>
         <!-- A target is an objective measure of a district for a legislative
@@ -396,11 +397,76 @@ class Config_Template(DictionaryTemplate):
                 label="Total Pop" user_selectable="true">
                 <SubjectArgument name="value1" ref="totpop" />
             </ScoreFunction>
+            <ScoreFunction id="district_totpop_b" type="district"
+                calculator="publicmapping.redistricting.calculators.Sum"
+                label="Black VAP" user_selectable="true">
+                <SubjectArgument name="value1" ref="totpop_b" />
+            </ScoreFunction>
+            <ScoreFunction id="district_totpop_h" type="district"
+                calculator="publicmapping.redistricting.calculators.Sum"
+                label="Hispanic VAP" user_selectable="true">
+                <SubjectArgument name="value1" ref="totpop_h" />
+            </ScoreFunction>
+            <ScoreFunction id="district_totpop_a" type="district"
+                calculator="publicmapping.redistricting.calculators.Sum"
+                label="Asian VAP" user_selectable="true">
+                <SubjectArgument name="value1" ref="totpop_a" />
+            </ScoreFunction>
+            <ScoreFunction id="district_totpop_na" type="district"
+                calculator="publicmapping.redistricting.calculators.Sum"
+                label="Native American VAP" user_selectable="true">
+                <SubjectArgument name="value1" ref="totpop_na" />
+            </ScoreFunction>
+            <ScoreFunction id="district_totpop_pi" type="district"
+                calculator="publicmapping.redistricting.calculators.Sum"
+                label="Pacific Islander VAP" user_selectable="true">
+                <SubjectArgument name="value1" ref="totpop_pi" />
+            </ScoreFunction>
+            <ScoreFunction id="district_totpop_wnh" type="district"
+                calculator="publicmapping.redistricting.calculators.Sum"
+                label="Pacific Islander VAP" user_selectable="true">
+                <SubjectArgument name="value1" ref="totpop_wnh" />
+            </ScoreFunction>
+            <ScoreFunction id="district_vap" type="district"
+                calculator="publicmapping.redistricting.calculators.Sum"
+                label="VAP" user_selectable="true">
+                <SubjectArgument name="value1" ref="vap" />
+            </ScoreFunction>
+            <ScoreFunction id="district_vap_b" type="district"
+                calculator="publicmapping.redistricting.calculators.Sum"
+                label="Black VAP" user_selectable="true">
+                <SubjectArgument name="value1" ref="vap_b" />
+            </ScoreFunction>
+            <ScoreFunction id="district_vap_h" type="district"
+                calculator="publicmapping.redistricting.calculators.Sum"
+                label="Hispanic VAP" user_selectable="true">
+                <SubjectArgument name="value1" ref="vap_h" />
+            </ScoreFunction>
+            <ScoreFunction id="district_vap_a" type="district"
+                calculator="publicmapping.redistricting.calculators.Sum"
+                label="Asian VAP" user_selectable="true">
+                <SubjectArgument name="value1" ref="vap_a" />
+            </ScoreFunction>
+            <ScoreFunction id="district_vap_na" type="district"
+                calculator="publicmapping.redistricting.calculators.Sum"
+                label="Native American VAP" user_selectable="true">
+                <SubjectArgument name="value1" ref="vap_na" />
+            </ScoreFunction>
+            <ScoreFunction id="district_vap_pi" type="district"
+                calculator="publicmapping.redistricting.calculators.Sum"
+                label="Pacific Islander VAP" user_selectable="true">
+                <SubjectArgument name="value1" ref="vap_pi" />
+            </ScoreFunction>
+            <ScoreFunction id="district_vap_wnh" type="district"
+                calculator="publicmapping.redistricting.calculators.Sum"
+                label="Pacific Islander VAP" user_selectable="true">
+                <SubjectArgument name="value1" ref="vap_wnh" />
+            </ScoreFunction>
 
             <!-- A district score that returns a percentage -->
             <ScoreFunction id="district_blkvap_percent" type="district"
                 calculator="publicmapping.redistricting.calculators.Percent"
-                label="Black VAP" user_selectable="true">
+                label="Black VAP %%" user_selectable="true">
                 <SubjectArgument name="numerator" ref="vap_b" />
                 <SubjectArgument name="denominator" ref="vap" />
             </ScoreFunction>
@@ -412,7 +478,7 @@ class Config_Template(DictionaryTemplate):
             </ScoreFunction>
             <ScoreFunction id="district_hispvap_percent" type="district"
                 calculator="publicmapping.redistricting.calculators.Percent"
-                label="Hisp. VAP" user_selectable="true">
+                label="Hisp. VAP %%" user_selectable="true">
                 <SubjectArgument name="numerator" ref="vap_h" />
                 <SubjectArgument name="denominator" ref="vap" />
             </ScoreFunction>
@@ -424,7 +490,7 @@ class Config_Template(DictionaryTemplate):
             </ScoreFunction>
             <ScoreFunction id="district_navap_percent" type="district"
                 calculator="publicmapping.redistricting.calculators.Percent"
-                label="Native American VAP" user_selectable="true">
+                label="Native American VAP %%" user_selectable="true">
                 <SubjectArgument name="numerator" ref="vap_na" />
                 <SubjectArgument name="denominator" ref="vap" />
             </ScoreFunction>
@@ -434,6 +500,83 @@ class Config_Template(DictionaryTemplate):
                 <ScoreArgument name="value" ref="district_navap_percent" />
                 <Argument name="threshold" value="0.5" />
             </ScoreFunction>
+            <ScoreFunction id="district_avap_percent" type="district"
+                calculator="publicmapping.redistricting.calculators.Percent"
+                label="Asian VAP %%" user_selectable="true">
+                <SubjectArgument name="numerator" ref="vap_a" />
+                <SubjectArgument name="denominator" ref="vap" />
+            </ScoreFunction>
+            <ScoreFunction id="district_avap_thresh" type="district"
+                calculator="publicmapping.redistricting.calculators.Threshold"
+                label="Asian VAP Threshold">
+                <ScoreArgument name="value" ref="district_avap_percent" />
+                <Argument name="threshold" value="0.5" />
+            </ScoreFunction>
+            <ScoreFunction id="district_pivap_percent" type="district"
+                calculator="publicmapping.redistricting.calculators.Percent"
+                label="Pacific Islander VAP %%" user_selectable="true">
+                <SubjectArgument name="numerator" ref="vap_pi" />
+                <SubjectArgument name="denominator" ref="vap" />
+            </ScoreFunction>
+            <ScoreFunction id="district_pivap_thresh" type="district"
+                calculator="publicmapping.redistricting.calculators.Threshold"
+                label="Pacific Islander VAP Threshold">
+                <ScoreArgument name="value" ref="district_pivap_percent" />
+                <Argument name="threshold" value="0.5" />
+            </ScoreFunction>
+            <ScoreFunction id="district_wnhvap_percent" type="district"
+                calculator="publicmapping.redistricting.calculators.Percent"
+                label="White VAP %%" user_selectable="true">
+                <SubjectArgument name="numerator" ref="vap_wnh" />
+                <SubjectArgument name="denominator" ref="vap" />
+            </ScoreFunction>
+            <ScoreFunction id="district_wnhvap_thresh" type="district"
+                calculator="publicmapping.redistricting.calculators.Threshold"
+                label="White VAP Threshold">
+                <ScoreArgument name="value" ref="district_wnhvap_percent" />
+                <Argument name="threshold" value="0.5" />
+            </ScoreFunction>
+                %(start_elec)s
+            <ScoreFunction id="district_vote" type="district"
+                calculator="publicmapping.redistricting.calculators.Sum"
+                label="Estimated votes" user_selectable="true">
+                <SubjectArgument name="value1" ref="vote_tot" />
+            </ScoreFunction>
+            <ScoreFunction id="district_vote_dem" type="district"
+                calculator="publicmapping.redistricting.calculators.Sum"
+                label="Estimated Democratic votes" user_selectable="true">
+                <SubjectArgument name="value1" ref="vote_dem" />
+            </ScoreFunction>
+            <ScoreFunction id="district_vote_rep" type="district"
+                calculator="publicmapping.redistricting.calculators.Sum"
+                label="Estimated Democratic votes" user_selectable="true">
+                <SubjectArgument name="value1" ref="vote_rep" />
+            </ScoreFunction>
+            <ScoreFunction id="district_votedem_percent" type="district"
+                calculator="publicmapping.redistricting.calculators.Percent"
+                label="Democratic Predicted Vote %%" user_selectable="true">
+                <SubjectArgument name="numerator" ref="vote_dem" />
+                <SubjectArgument name="denominator" ref="vote_tot" />
+            </ScoreFunction>
+            <ScoreFunction id="district_votedem_thresh" type="district"
+                calculator="publicmapping.redistricting.calculators.Threshold"
+                label="Democratic Predicted Vote Threshold">
+                <ScoreArgument name="value" ref="district_votedem_percent" />
+                <Argument name="threshold" value="0.5" />
+            </ScoreFunction>
+            <ScoreFunction id="district_voterep_percent" type="district"
+                calculator="publicmapping.redistricting.calculators.Percent"
+                label="Republican Predicted Vote %%" user_selectable="true">
+                <SubjectArgument name="numerator" ref="vote_rep" />
+                <SubjectArgument name="denominator" ref="vote_tot" />
+            </ScoreFunction>
+            <ScoreFunction id="district_voterep_thresh" type="district"
+                calculator="publicmapping.redistricting.calculators.Threshold"
+                label="Republican Predicted Vote Threshold">
+                <ScoreArgument name="value" ref="district_voterep_percent" />
+                <Argument name="threshold" value="0.5" />
+            </ScoreFunction>
+                %(end_elec)s
 
             <!-- A district score that generates classes based on a couple
                 ranges around a mean value. -->
@@ -518,18 +661,32 @@ class Config_Template(DictionaryTemplate):
             </ScoreFunction>
 
             <ScoreFunction id="plan_blkvap_thresh" type="plan"
-                calculator="publicmapping.redistricting.calculators.Sum">
+                calculator="publicmapping.redistricting.calculators.Sum"
+                label="Majority Black Districts" user_selectable="true">
                 <ScoreArgument name="value1" ref="district_blkvap_thresh" />
             </ScoreFunction>
 
             <ScoreFunction id="plan_hispvap_thresh" type="plan"
-                calculator="publicmapping.redistricting.calculators.Sum">
+                calculator="publicmapping.redistricting.calculators.Sum"
+                label="Majority Hispanic Districts" user_selectable="true">
                 <ScoreArgument name="value1" ref="district_hispvap_thresh" />
             </ScoreFunction>
 
             <ScoreFunction id="plan_navap_thresh" type="plan"
-                calculator="publicmapping.redistricting.calculators.Sum">
+                calculator="publicmapping.redistricting.calculators.Sum"
+                label="Majority Asian Districts" user_selectable="true">
                 <ScoreArgument name="value1" ref="district_navap_thresh" />
+            </ScoreFunction>
+
+            <ScoreFunction id="plan_avap_thresh" type="plan"
+                calculator="publicmapping.redistricting.calculators.Sum"
+                label="Majority Asian Districts" user_selectable="true">
+                <ScoreArgument name="value1" ref="district_avap_thresh" />
+            </ScoreFunction>
+
+            <ScoreFunction id="plan_pivap_thresh" type="plan"
+                calculator="publicmapping.redistricting.calculators.Sum">
+                <ScoreArgument name="value1" ref="district_pivap_thresh" />
             </ScoreFunction>
 
             <!-- A plan score that evaluates a threshold, and returns T/F.
@@ -578,7 +735,7 @@ class Config_Template(DictionaryTemplate):
 
             <!-- interval score function for population -->
             <ScoreFunction id="a_congressional_population" type="district"
-                label="Tot Pop" user_selectable="true"
+                label="Tot Pop Range (Congress)" user_selectable="true"
                 description="Population interval calculator for congressional."
                 calculator="publicmapping.redistricting.calculators.Interval">
                 <SubjectArgument name="subject" ref="totpop" />
@@ -588,7 +745,7 @@ class Config_Template(DictionaryTemplate):
             </ScoreFunction>
 
             <ScoreFunction id="a_house_population" type="district"
-                label="Tot Pop" user_selectable="true"
+                label="Tot Pop Range (House)" user_selectable="true"
                 description="Population interval calculator for house."
                 calculator="publicmapping.redistricting.calculators.Interval">
                 <SubjectArgument name="subject" ref="totpop" />
@@ -598,7 +755,7 @@ class Config_Template(DictionaryTemplate):
             </ScoreFunction>
 
             <ScoreFunction id="a_senate_population" type="district"
-                label="Tot Pop" user_selectable="true"
+                label="Tot Pop Range (Senate)" user_selectable="true"
                 description="Population interval calculator for senate."
                 calculator="publicmapping.redistricting.calculators.Interval">
                 <SubjectArgument name="subject" ref="totpop" />
@@ -700,7 +857,7 @@ class Config_Template(DictionaryTemplate):
             <ScoreFunction id="plan_all_contiguous" type="plan"
                 calculator="publicmapping.redistricting.calculators.AllContiguous"
                 label="All Contiguous"
-                description="Contiguity means that every part of a district must be reachable from every other part without crossing the district&apos;s borders. All districts within a plan must be contiguous. Water contiguity is permitted given Virginia&apos;s extensive coastal region. &apos;Point contiguity&apos; or &apos;touch-point contiguity&apos; where two sections of a district are connected at a single point is not permitted.">
+                description="Contiguity means that every part of a district must be reachable from every other part without crossing the district&apos;s borders. All districts within a plan must be contiguous. Water contiguity is permitted. &apos;Point contiguity&apos; or &apos;touch-point contiguity&apos; where two sections of a district are connected at a single point is not permitted.">
             </ScoreFunction>
                 %(start_elec)s
             <ScoreFunction id="plan_competitiveness" type="plan"
@@ -963,6 +1120,37 @@ class Config_Template(DictionaryTemplate):
                 <Score ref="district_blkvap_percent" />
                 <Score ref="district_hispvap_percent" />
             </ScorePanel>
+
+	     <!-- Needed due to issue https://sourceforge.net/apps/trac/publicmapping/ticket/340 Delete after setup -->
+		<ScorePanel id="stats_picker" type="district" position="1" title="Stats Picker" cssclass="hidden" template="demographics.html">
+			<Score ref="district_poptot"/>
+			<Score ref="district_totpop_b"/>
+			<Score ref="district_totpop_h"/>
+			<Score ref="district_totpop_a"/>
+			<Score ref="district_totpop_na"/>
+			<Score ref="district_totpop_pi"/>
+			<Score ref="district_totpop_wnh"/>
+			<Score ref="district_vap"/>
+			<Score ref="district_vap_b"/>
+			<Score ref="district_vap_h"/>
+			<Score ref="district_vap_a"/>
+			<Score ref="district_vap_na"/>
+			<Score ref="district_vap_pi"/>
+			<Score ref="district_vap_wnh"/>
+			<Score ref="district_blkvap_percent"/>
+			<Score ref="district_hispvap_percent"/>
+			<Score ref="district_avap_percent"/>
+			<Score ref="district_navap_percent"/>
+			<Score ref="district_pivap_percent"/>
+			<Score ref="district_wnhvap_percent"/>
+                	%(start_elec)s
+			<Score ref="district_vote"/>
+			<Score ref="district_vote_dem"/>
+			<Score ref="district_vote_rep"/>
+			<Score ref="district_vote_dem_percent"/>
+			<Score ref="district_vote_rep_percent"/>
+                	%(end_elec)s
+		</ScorePanel>
         </ScorePanels>
         
         <ScoreDisplays>
@@ -1051,6 +1239,9 @@ class Config_Template(DictionaryTemplate):
                 <ScorePanel ref="senate_panel_summary" />
                 <ScorePanel ref="senate_panel_demo" />
             </ScoreDisplay>
+
+<!-- Needed due to issue https://sourceforge.net/apps/trac/publicmapping/ticket/340 Delete after setup -->
+	<ScoreDisplay legislativebodyref="congress" type="sidebar" title="All Stats" cssclass="hidden"><ScorePanel ref="stats_picker"/></ScoreDisplay>
         </ScoreDisplays>
     </Scoring>
 
@@ -1352,11 +1543,6 @@ class Config_Template(DictionaryTemplate):
                     <PopVars>
                         <PopVar subjectref="totpop" threshold=".01" default="true" />
                         <PopVar subjectref="vap" threshold=".1" />
-                        <PopVar subjectref="vap_b" threshold=".1" />
-                        <PopVar subjectref="vap_h" threshold=".1" default="false" />
-			%(start_na)s
-                        <PopVar subjectref="vap_na" threshold=".1" default="false" />
-			%(end_na)s
                     </PopVars>
                     <RatioVars>
                         <!--
@@ -1369,8 +1555,23 @@ class Config_Template(DictionaryTemplate):
                             <Numerators>
                                 <Numerator subjectref="totpop_b" />
                                 <Numerator subjectref="totpop_h" />
+                                <Numerator subjectref="totpop_na" />
+                                <Numerator subjectref="totpop_a" />
+                                <Numerator subjectref="totpop_pi" />
+                                <Numerator subjectref="totpop_wnh" />
                             </Numerators>
                             <Denominator subjectref="totpop" />
+                        </RatioVar>
+                        <RatioVar id="racialCompVap" label="Majority Minority Districts" threshold=".5">
+                            <Numerators>
+                                <Numerator subjectref="vap_b" />
+                                <Numerator subjectref="vap_h" />
+                                <Numerator subjectref="vap_na" />
+                                <Numerator subjectref="vap_a" />
+                                <Numerator subjectref="vap_pi" />
+                                <Numerator subjectref="vap_wnh" />
+                            </Numerators>
+                            <Denominator subjectref="vap" />
                         </RatioVar>
                 %(start_elec)s
                         <RatioVar id="partyControl" label="Party-Controlled Districts" threshold=".5">
