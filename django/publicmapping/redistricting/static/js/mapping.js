@@ -635,6 +635,14 @@ function mapinit(srs,maxExtent) {
         strokeWidth: 3
     };
 
+    // The style for reference layers
+    var referenceStyle = {
+        fill: false,
+        strokeColor: '#447700',
+        strokeOpacity: 1,
+        strokeWidth: 2,
+    };
+
     /**
      * Get information about the snap layer that should be used, according
      * to the current zoom level.
@@ -954,11 +962,77 @@ function mapinit(srs,maxExtent) {
 
     // Update reference layer on map when the reference layer drop down is changed
     // referenceLayerId is one of: None, plan.XXX, geolevel.XXX
+    var currentReferenceLayer;
     var referenceLayerChanged = function(evt, referenceLayerId) {
-        // TODO: update map
+        if (referenceLayerId === 'None') {
+            hideCurrentReferenceLayer();
+            return;
+        }
+            
+        var layer = olmap.getLayersByName(referenceLayerId)
+        if (layer.length == 0) {
+            hideCurrentReferenceLayer();
+
+            var layer = createReferenceLayer(referenceLayerId);
+            if (layer == undefined) { currentReferenceLayer = undefined; return; }
+            olmap.addLayer(layer);
+            layer.setVisibility(true);
+            layer.refresh();
+            currentReferenceLayer = referenceLayerId;
+        } else {
+            var layer = layer[0];
+            if (referenceLayerId == currentReferenceLayer) {
+                // Already viewing this layer
+            } else {
+                hideCurrentReferenceLayer();
+                layer.setVisibility(true);
+                layer.refresh();
+                currentReferenceLayer = referenceLayerId;
+            }
+        }
     };
+
     $('#map').bind('reference_layer_changed', referenceLayerChanged);
     
+    // Create a reference layer with the appropriate styling and
+    // strategy
+    var createReferenceLayer = function(referenceLayerId) {
+        var layerIdPattern = /(.+)\.(\d+)$/;
+        var matches = layerIdPattern.exec(referenceLayerId);
+        /* TODO: Set up WFS layer for geolevels - or use geoserver boundary views */
+        var layerType = matches[1];
+        var layerId = matches[2];
+
+        if (layerType === 'plan') {
+            return new OpenLayers.Layer.Vector(
+                referenceLayerId,
+                {
+                    strategies: [
+                        new OpenLayers.Strategy.BBOX({ratio:2})
+                    ],
+                    protocol: new OpenLayers.Protocol.HTTP({
+                        url: '/districtmapping/plan/' + layerId + '/district/versioned/',
+                        format: new OpenLayers.Format.GeoJSON()
+                    }),
+                    styleMap: new OpenLayers.StyleMap(new OpenLayers.Style(referenceStyle)),
+                    projection: projection,
+                    filter: getVersionAndSubjectFilters(maxExtent)
+                }
+            );
+        } else {
+            return undefined;
+        }
+    };
+
+    // Hide the current reference layer and reset the currentReferenceLayer variable
+    var hideCurrentReferenceLayer = function() {
+        if (currentReferenceLayer) {
+            var current = olmap.getLayersByName(currentReferenceLayer)[0];
+            current.setVisibility(false);
+            currentReferenceLayer = undefined;
+        }
+    };
+
     // Track whether we've already got an outbound request to the server to add districts
     var outboundRequest = false;
     // An assignment function that adds geounits to a district
