@@ -71,7 +71,7 @@ statisticssets = function(options) {
             if (_savedSetsContainer.children().length > 0) {
                 $('#existing_statistics_set').show();
             }
-            _options.container.dialog({ width: 500 });
+            _options.container.dialog({ width: 500, modal: true });
         });
         _selector.change( showScoreDisplay );
         $.ajax({
