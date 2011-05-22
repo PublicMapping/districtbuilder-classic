@@ -1632,14 +1632,17 @@ target_na_senate =0, target_hisp_senate = 0 , target_bl_senate = 0, contiguityOv
 
         start_elec="<!--"        
         start_na="<!--"        
+	if (conf_na==True):
+                start_na=""
+                end_na=""
 	end_elec="-->"
 	end_na="-->"
         midlevel="tract"
         midlevel_width="6"
         midlevel_var="TRACTCE10"        
-	if (has_election_data==1) :
-                start_elect=""
-                end_elect=""       
+	if (has_election_data==1):
+                start_elec=""
+                end_elec=""       
 	if (has_vtds==1) :                
 		midlevel="vtds"
                 midlevel_width="4"
@@ -1760,7 +1763,7 @@ if ( (parseResults.do_genconf) or (parseResults.do_gensld)) :
 	sum_TOTPOP= robjects.r.sum_TOTPOP[0]
 	# TODO: Refactor entirely in rpy
 	# NOTE: robject is returning 6-level quantiles, has_election_data, has_vtd, sum_TOTPOP
-	has_election_data = robjects.r.has_election_data
+	has_election_data = robjects.r.has_election_data[0]
 
 if ( parseResults.do_genconf) :
 	robjects.r.source("/projects/publicmapping/trunk/docs/loadcensus/contiguityOverride.R")
