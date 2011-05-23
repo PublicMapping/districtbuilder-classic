@@ -16,9 +16,9 @@
               <CssParameter name="fill-opacity">0.0</CssParameter>
             </Fill>
             <Stroke>
-              <CssParameter name="stroke">#2255FF</CssParameter>
+              <CssParameter name="stroke">#447700</CssParameter>
               <CssParameter name="stroke-width">2</CssParameter>
-              <CssParameter name="stroke-opacity">0.35</CssParameter>
+              <CssParameter name="stroke-opacity">1</CssParameter>
             </Stroke>
           </PolygonSymbolizer>
         </Rule>

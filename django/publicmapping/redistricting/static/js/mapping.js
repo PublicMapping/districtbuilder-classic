@@ -41,13 +41,6 @@ function getShowBy() {
 }
 
 /*
- * Get the value of the "Show Boundaries:" dropdown.
- */
-function getBoundLayer() {
-    return $('#boundfor').val();
-}
-
-/*
  * Get the value of the "Show Districts by:" dropdown. This returns
  * an object with a 'by' and 'modified' property, since the selection
  * of this dropdown may also be 'None', 'Compactness' or 'Contiguity'
@@ -263,43 +256,6 @@ function mapinit(srs,maxExtent) {
             thematicLayers.push(newLayer);
         }
         return newLayer;
-    };
-
-    // The style for reference layers
-    var referenceStyle = {
-        fill: false,
-        fillColor: '#447700',
-        strokeColor: '#447700',
-        strokeOpacity: 1,
-        strokeWidth: 2
-    };
-
-    var createGeolevelLayer = function(layerName, featureType) {
-        return new OpenLayers.Layer.Vector(
-            layerName,
-            {
-                strategies: [
-                    new OpenLayers.Strategy.BBOX({ratio:2})
-                ],
-                protocol: createGeolevelProtocol(featureType),
-                style: referenceStyle,
-                projection: projection,
-                visibility: false
-            }
-        );
-    };
-
-    // Create a protocol that is used to get the geolevel
-    // reference layers
-    var createGeolevelProtocol = function(featureType) {
-        return new OpenLayers.Protocol.WFS({
-            url: MAP_SERVER_PROTOCOL + '//' + MAP_SERVER + '/geoserver/wfs',
-            featureType: featureType,
-            featureNS: NS_HREF,
-            featurePrefix: NAMESPACE,
-            srsName: srs,
-            geometryName: 'geom'
-        });
     };
 
     // Set the visible thematic layer. This is a replacement for
@@ -631,15 +587,18 @@ function mapinit(srs,maxExtent) {
     }
 
     // Construct map layers, ensuring boundary layers are at the end of the list for proper overlaying
-    for (i in SNAP_LAYERS) {
-        var snapLayer = SNAP_LAYERS[i];
-        layers.push(createGeolevelLayer('geolevel.' + snapLayer.geolevel, snapLayer.level + '_boundaries'));
-    }
-
     for (i in MAP_LAYERS) {
         var layerName = MAP_LAYERS[i];
-        layers.push(createLayer( layerName, layerName, srs, maxExtent, false, true, true ));
+        layers.unshift(createLayer( layerName, layerName, srs, maxExtent, false, true, true ));
     }
+
+    for (i in SNAP_LAYERS) {
+        layer = SNAP_LAYERS[i];
+        var layerName = 'geolevel.' + layer.geolevel;
+        var featureName = NAMESPACE + ':' + layer.level + '_boundaries';
+        layers.push(createLayer( layerName, featureName, srs, maxExtent, true, false, false ));
+
+    } 
 
     // The strategy for loading the districts. This is effectively
     // a manual refresh, with no automatic reloading of district
@@ -673,6 +632,14 @@ function mapinit(srs,maxExtent) {
         strokeWidth: 3
     };
 
+    // The style for reference layers
+    var referenceStyle = {
+        fill: false,
+        strokeColor: '#447700',
+        strokeOpacity: 1,
+        strokeWidth: 2,
+    };
+
     /**
      * Get information about the snap layer that should be used, according
      * to the current zoom level.
@@ -684,27 +651,14 @@ function mapinit(srs,maxExtent) {
         }
         var min_layer = { min_zoom: -1 };
 
-        $('#boundfor option').removeAttr('disabled');
-
         for (var i in SNAP_LAYERS) {
             var snap_layer = SNAP_LAYERS[i];
             var my_min = snap_layer.min_zoom;
             if (zoom >= my_min && my_min > min_layer.min_zoom) {
                 min_layer = snap_layer;
             }
-            if (my_min >= zoom) {  
-                $('#boundfor option[value*=' + snap_layer.level + ']').attr('disabled', true);  
-            }
         }
         
-        // Disable the boundary layers for all layers with geounits nested in this one
-        $('#boundfor option[value*=' + min_layer.level + ']').attr('disabled', true);   
-        if ($('#boundfor option:selected').attr('disabled')) {  
-            $('#boundfor option').first().attr('selected', 'selected')  
-            .siblings().each( function() { $(this).removeAttr('selected') ; });     
-            $('#boundfor').change();    
-        }
-
         return { layer: min_layer.layer, level:min_layer.level, display:min_layer.name, geolevel: min_layer.geolevel };
     }
 
@@ -993,7 +947,8 @@ function mapinit(srs,maxExtent) {
     // Update reference layer on map when the reference layer drop down is changed
     // referenceLayerId is one of: None, plan.XXX, geolevel.XXX
     var currentReferenceLayer;
-    var referenceLayerChanged = function(evt, referenceLayerId) {
+    var referenceLayerChanged = function(evt, referenceLayerId, referenceLayerName) {
+        updateBoundaryLegend(referenceLayerId, referenceLayerName);
         if (referenceLayerId === 'None') {
             hideCurrentReferenceLayer();
             return;
@@ -1007,7 +962,9 @@ function mapinit(srs,maxExtent) {
             if (layer == undefined) { currentReferenceLayer = undefined; return; }
             olmap.addLayer(layer);
             layer.setVisibility(true);
-            layer.refresh();
+            if (layer.CLASS_NAME === 'OpenLayers.Layer.Vector') {
+                layer.refresh();
+            }
             currentReferenceLayer = referenceLayerId;
         } else {
             var layer = layer[0];
@@ -1016,7 +973,9 @@ function mapinit(srs,maxExtent) {
             } else {
                 hideCurrentReferenceLayer();
                 layer.setVisibility(true);
-                layer.refresh();
+                if (layer.CLASS_NAME === 'OpenLayers.Layer.Vector') {
+                    layer.refresh();
+                }
                 currentReferenceLayer = referenceLayerId;
             }
         }
@@ -1024,6 +983,17 @@ function mapinit(srs,maxExtent) {
 
     $('#map').bind('reference_layer_changed', referenceLayerChanged);
     
+    // Update the map legend
+    var updateBoundaryLegend = function(referenceLayerId, referenceLayerName) {
+        var title = 'Boundary';
+        if (referenceLayerId.startsWith('geolevel')) {
+           title = referenceLayerName + ' boundary';
+        } else if (referenceLayerId.startsWith('plan')) {
+            title = 'District / Community boundary';
+        }
+        $('td#boundary_title').text(title);
+    };
+
     // Create a reference layer with the appropriate styling and
     // strategy
     var createReferenceLayer = function(referenceLayerId) {
@@ -2434,58 +2404,6 @@ function mapinit(srs,maxExtent) {
     })();
 
     //
-    // Update the part of the legend associated with the 
-    // Show Boundaries: control
-    //
-    var updateBoundaryLegend = function() {
-        var boundary = getBoundLayer();
-        if (boundary == '') {
-            $('#boundary_legend').hide();
-             return;
-        }
-
-        OpenLayers.Request.GET({
-            url: '/sld/' + boundary.substr(4) + '.sld',
-            method: 'GET',
-            callback: function(xhr){
-                var sld = sldFormat.read(xhr.responseXML || xhr.responseText);
-                var userStyle = getDefaultStyle(sld,'Boundaries');
-                $('#boundary_title').empty().append(userStyle.title);
-
-                var lbody = $('#boundary_legend tbody');
-                lbody.empty();
-
-                var rules = userStyle.rules;
-                for (var i = 0; i < rules.length; i++) {
-                    var rule = rules[i];
-                    if (!('Polygon' in rule.symbolizer)) {
-                        continue;
-                    }
-
-                    var div = $('<div/>');
-                    div.css('border-color',rule.symbolizer.Polygon.strokeColor);
-                    div.addClass('swatch');
-                    div.addClass('boundary_swatch');
-                    var swatch = $('<td/>');
-                    swatch.width(32);
-                    swatch.append(div);
-
-                    var row = $('<tr/>');
-                    row.append(swatch);
-
-                    var title = $('<td/>');
-                    title.append( rule.title );
-
-                    row.append(title);
-
-                    lbody.append(row);
-                    $('#boundary_legend').show();
-                }
-            }
-        });
-    };
-
-    //
     // Update the styles of the districts based on the 'Show District By'
     // dropdown in the menu.
     //
@@ -2585,7 +2503,6 @@ function mapinit(srs,maxExtent) {
         doMapStyling();
         $('#layer_type').text(snap.display);
         getMapStyles();
-        //updateBoundaryLegend();
 
         if (olmap.center !== null) {
             districtLayer.filter = getVersionAndSubjectFilters(olmap.getExtent());
@@ -2609,7 +2526,6 @@ function mapinit(srs,maxExtent) {
         setThematicLayer(layers[0]);
         doMapStyling();
         getMapStyles();
-        updateBoundaryLegend();
 
         // Since keyboard defaults are on, if focus remains on this
         // dropdown after change, the keyboard may change the selection
@@ -2626,29 +2542,6 @@ function mapinit(srs,maxExtent) {
         // dropdown after change, the keyboard may change the selection
         // inadvertently
         $('#districtby').blur();
-    });
-
-    boundaryLayer = {};
-    $('#boundfor').change(function(evt){
-        try {
-            boundaryLayer.setVisibility(false);
-        } catch (err) {
-            // That's ok - just initializing.
-        }
-        var name = getBoundLayer();
-        if (name != '') {
-            var layer = olmap.getLayersByName(name)[0];
-            boundaryLayer = layer;
-            layer.setVisibility(true);
-        }
-        doMapStyling();
-        getMapStyles();
-        updateBoundaryLegend();
-
-        // Since keyboard defaults are on, if focus remains on this
-        // dropdown after change, the keyboard may change the selection
-        // inadvertently
-        $('#boundfor').blur();
     });
 
     // Logic for the 'Assign District to' dropdown

@@ -392,7 +392,6 @@ def commonplan(request, planid):
     demos = Subject.objects.all().order_by('sort_key').values_list("id","name", "short_display","is_displayed")[0:3]
     layers = []
     snaplayers = []
-    boundaries = []
     rules = []
 
     if len(levels) > 0:
@@ -404,10 +403,6 @@ def commonplan(request, planid):
 
     for level in levels:
         snaplayers.append( {'geolevel':level.id,'layer':level.name.lower(),'name':level.name.capitalize(),'min_zoom':level.min_zoom} )
-        boundaries.append( {'layer':'%s_boundaries' % level.name.lower(), 'name':level.name.capitalize()} )
-    # Don't display the lowest geolevel because it's never available as a boundary
-    if len(boundaries) > 0:
-        boundaries.pop()
     default_selected = False
     for demo in demos:
         isdefault = str((not default_demo is None) and (demo[0] == default_demo.id)).lower()
@@ -452,7 +447,6 @@ def commonplan(request, planid):
         'feature_limit': settings.FEATURE_LIMIT,
         'demographics': layers,
         'snaplayers': snaplayers,
-        'boundaries': boundaries,
         'rules': rules,
         'unassigned_id': unassigned_id,
         'is_registered': request.user.username != 'anonymous' and request.user.username != '',

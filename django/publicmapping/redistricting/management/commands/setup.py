@@ -375,7 +375,7 @@ contents of the file and try again.
         create_geoserver_object_if_necessary(data_store_url, data_store_name, data_store_obj, 'Data Store')
 
         # Create the identify, simple, and demographic layers
-        def get_feature_type_obj (name, title=None, set_max=True):
+        def get_feature_type_obj (name, title=None):
             feature_type_obj = { 'featureType': {
                 'name': name,
                 'title': name if title is None else title,
@@ -388,7 +388,7 @@ contents of the file and try again.
                     'maxx': '%0.1f' % 20037508.342789244,
                     'maxy': '%0.1f' % 20037508.342789244
                 },
-                'maxFeatures': settings.FEATURE_LIMIT + 1 if set_max else 0
+                'maxFeatures': settings.FEATURE_LIMIT + 1
             } }
             return feature_type_obj
 
@@ -549,8 +549,8 @@ contents of the file and try again.
 
                     # Create boundary layer, based on geographic boundaries
                     feature_name = '%s_boundaries' % geolevel.name
-                    feature_type_obj = get_feature_type_obj(feature_name, set_max=False)
-                    feature_type_obj['featureType']['nativeName'] = 'simple_%s' % geolevel.name
+                    feature_type_obj = get_feature_type_obj(feature_name)
+                    feature_type_obj['featureType']['nativeName'] = 'demo_%s_%s' % (geolevel.name, subject.name)
                     create_geoserver_object_if_necessary(feature_type_url, feature_name, feature_type_obj, 'Feature Type')
                     publish_and_assign_style('%s_boundaries' % geolevel.name, 'boundaries', get_zoom_range(geolevel))
 

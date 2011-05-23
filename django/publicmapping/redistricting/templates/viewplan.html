@@ -99,12 +99,6 @@
                 MAP_LAYERS.push( NAMESPACE + ':demo_' + SNAP_LAYERS[i].level + '_' + DEMOGRAPHICS[j].value );
             }
         }
-        // The baselayer is a visible layer without selectable features or attribute information
-        // Currently, only boundaries are supported
-        /* var BASE_LAYERS = [{% for layer in boundaries %} { id: NAMESPACE + ':{{layer.id}}', name: '{{ layer.name }}' }{% if not forloop.last %},{% endif %} {%endfor %} ];
-        for (i in BASE_LAYERS) {
-            MAP_LAYERS.push( BASE_LAYERS[i].id );
-        } */
         // The style rules for all subjects. Each subject has a different
         // set of ranges, and they are pulled from the django db.
         var RULES = { {% for rule in rules %}'{{ rule.subject_id }}': {lowest: {{ rule.lowest }}, lower:{{ rule.lower }}, upper:{{ rule.upper }}, highest: {{ rule.highest }} }{% if not forloop.last %},{% endif %}{% endfor %}};
@@ -504,7 +498,7 @@
             <table id="boundary_legend">
                 <thead>
                     <tr>
-                        <th colspan="2">Boundary</th>
+                        <th colspan="2">Reference</th>
                     </tr>
                 </thead>
                 <tbody>

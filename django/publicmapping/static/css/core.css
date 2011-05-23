@@ -1126,10 +1126,11 @@ div#legend_swatch_2 {
 div#legend_swatch_3 {
     background-color: #666666;
 }
-div.boundary_swatch {
+div#boundary_swatch {
     background-color: transparent;
     border-style: solid;
     border-width: thin;
+    border: solid 2px #447700;
 }
 
 button.map_type_button {

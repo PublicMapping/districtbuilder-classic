@@ -94,7 +94,11 @@ layerchooser = function(options) {
 
         // Trigger event the selected reference layer has changed
         _options.referenceLayerSelect.change(function() {
-            _options.map.trigger('reference_layer_changed', [_options.referenceLayerSelect.val()]);             
+            var selector = _options.referenceLayerSelect;
+            _options.map.trigger('reference_layer_changed', [
+                selector.val(),
+                selector.find('option:selected').text().trim()
+            ]);             
         });
 
         // Load Plan
