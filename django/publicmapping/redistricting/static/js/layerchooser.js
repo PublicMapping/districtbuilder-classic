@@ -75,7 +75,7 @@ layerchooser = function(options) {
 
         // Add button behavior
         var reload = function() {
-            _planTable.trigger('reloadGrid');            
+            _planTable.trigger('reloadGrid', [{page:1}]);
             _options.referenceLayerContent.show();
             _options.container.dialog('option', 'width', _maxWidth);
             _options.container.dialog('option', 'position', 'center');
