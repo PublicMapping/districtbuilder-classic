@@ -401,7 +401,8 @@ chooseplan = function(options) {
         });
 
         // watermark for non-html5 browsers
-        if (document.getElementById('plan_search').getAttribute('placeholder') != 'Search') {
+        if (document.getElementById('plan_search').getAttribute('placeholder') != 'Search' ||
+                navigator.userAgent.indexOf('Firefox/3') > -1) {
             searchBox.focus( function() {
                 if ($(this).val() == 'Search') {
                     $(this).val('');

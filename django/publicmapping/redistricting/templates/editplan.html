@@ -151,14 +151,19 @@
 
     {% block stats_editor %}
     <div id="stats_editor_container" class="stats_editor" title="Edit Statistics Sets">
-        Select up to 3 statistics
+        <div id="stats_editor_instructions">
+            You can select up to three statistics at once to display in the sidebar. Each set of three
+            statistics will be saved in the dropdown for you to select or edit later. You may have up
+            to three sets of statistics saved.
+        </div>
+        1. Select up to 3 statistics
         <button id="clear_statistics">Clear Choices</button>
         <div id="available_statistics"> </div>
         
         <div id="name_statistics_set">
-            Name Statistics Set
+            2. Name Statistics Set
             <input type="text" id="statistics_set_name" maxlength="50" />
-            <button id="save_statistics_set">Save</button>
+            <button id="save_statistics_set">Save Set</button>
         </div>
         <div id="existing_statistics_set">
             ... Or select a saved statistics set

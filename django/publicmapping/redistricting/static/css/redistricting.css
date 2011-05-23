@@ -28,6 +28,11 @@
     float:right;
 }
 
+#stats_editor_instructions {
+    font-size: 12px;
+    padding-bottom: 5px;
+}
+
 #name_statistics_set {
     font-size: 14px;
     font-weight: bold;
