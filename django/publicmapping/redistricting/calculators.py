@@ -90,7 +90,7 @@ class CalculatorBase:
         The base class generates an simple Javascript object that contains
         a single property, named "result".
         """
-        return json.dumps( {'result':self.result} )
+        return json.dumps( {'result':self.result}, use_decimal=True )
 
     def get_value(self, argument, district=None):
         """
@@ -110,19 +110,22 @@ class CalculatorBase:
         except:
             return None
 
+        value = None
         if argtype == 'literal':
-            return argval
+            value = argval
+            try:
+                # If our literal is a number, make it a decimal to match models
+                value = Decimal(value)
+            except:
+                # No problem, it may be a string
+                pass
         elif argtype == 'subject' and not district is None:
             # This method is more fault tolerant than _set.get, since it 
             # won't throw an exception if the item doesn't exist.
             cc = district.computedcharacteristic_set.filter(subject__name=argval)
-            if cc.count() == 0:
-                return None
-            
-            return cc[0].number
-
-        return None
-
+            if cc.count() > 0:
+                value = cc[0].number
+        return value
 
 class Schwartzberg(CalculatorBase):
     """
@@ -428,8 +431,8 @@ class SumValues(CalculatorBase):
         Generate an HTML representation of the equivalence score. This
         is represented as an integer formatted with commas or "n/a"
         """
-        if (type(self.result) == Decimal):
-            result = locale.format("%d", self.result, grouping=True)
+        if isinstance(self.result, Decimal):
+            result = locale.format("%s", self.result, grouping=True)
             return '<span>%s</span>' % result
         else:
             return '<span>N/A</span>'

@@ -2518,7 +2518,7 @@ class ScoreFunction(models.Model):
                     if not (self.is_planscore and not score_fn.is_planscore):
                         calc.arg_dict[arg.argument] = ('literal', score_fn.score(dp, format=format, version=version))
                     else:
-                        version = plan.version if version is None else version
+                        version = dp.version if version is None else version
                         for d in dp.get_districts_at_version(version):
                             arg_lst.append(score_fn.score(d, format=format, version=version))
 

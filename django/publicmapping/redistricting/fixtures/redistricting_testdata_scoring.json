@@ -54,7 +54,7 @@
   "pk": 1, 
   "model": "redistricting.scorefunction", 
   "fields": {
-   "calculator": "publicmapping.redistricting.calculators.Sum", 
+   "calculator": "publicmapping.redistricting.calculators.SumValues", 
    "description": "The combined population in the plan.", 
    "is_planscore": true, 
    "name": "Population Sum", 
@@ -109,7 +109,7 @@
   "pk": 5, 
   "model": "redistricting.scorefunction", 
   "fields": {
-   "calculator": "publicmapping.redistricting.calculators.Sum", 
+   "calculator": "publicmapping.redistricting.calculators.SumValues", 
    "description": "Sum values in a district.", 
    "is_planscore": false, 
    "name": "Sum", 
