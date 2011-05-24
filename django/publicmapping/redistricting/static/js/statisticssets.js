@@ -393,7 +393,7 @@ statisticssets = function(options) {
      * heights change and changing the css is tough
      */
     var fixTableHeight = function (table) {
-        var header = table.find('thead');
+        var header = table.find('thead:visible');
         if (header.length == 0) {
             return;
         }
