@@ -1076,6 +1076,32 @@ def get_splits(request, planid, otherid, othertype):
         status['exception'] = traceback.format_exc()
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
+def get_splits_report(request, planid):
+    """
+    Get the rendered splits report
+    """
+    note_session_activity(request)
+
+    try:
+        plan = Plan.objects.get(pk=planid)
+    except:
+        return HttpResponse('<div>Plan does not exist.</div>', mimetype='text/plain')
+
+    if not using_unique_session(request.user) or not can_edit(request.user, plan):
+        return HttpResponseForbidden()
+
+    version = int(request.REQUEST['version'] if 'version' in request.REQUEST else plan.version)
+    layers = request.REQUEST.getlist('layers[]')
+    if len(layers) == 0:
+        return HttpResponse('<div>No layers were provided.</div>', mimetype='text/plain')
+
+    try :
+        html = '<div>TODO: return rendered splits report for: %s.</div>' % str(layers)
+        return HttpResponse(html, mimetype='text/plain')
+    except Exception as ex:
+        print traceback.format_exc()
+        return HttpResponse('%s' % ex, mimetype='text/plain')
+
 
 @login_required
 @unique_session_or_json_redirect

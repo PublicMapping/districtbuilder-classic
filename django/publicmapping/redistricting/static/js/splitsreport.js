@@ -39,8 +39,10 @@ splitsreport = function(options) {
             extendedOkButton: {},
             availableLayers: {},
             referenceLayerSelect: {},
+            splitsReportUrl: {},
+            resultsContainer: {},
             map: {},
-            csrfmiddlewaretoken: {},
+            getVersionFn: {},
             autoOpen: false,
             modal: true,
             width: 800,
@@ -63,7 +65,33 @@ splitsreport = function(options) {
 
         // Add button behavior for displaying reports
         var displaySplits = function(ids) {
-            // TODO: retrieve and display report with the given ids
+            var waitDialog = $('<div>Please wait while retrieving splits report.</div>').dialog({
+                modal: true,
+                autoOpen: true,
+                title: 'Retrieving Splits Report',
+                escapeOnClose: false,
+                resizable:false,
+                open: function() { $(".ui-dialog-titlebar-close", $(this).parent()).hide(); }                    
+            });
+    
+            $.ajax({
+                type: 'GET',
+                url: _options.splitsReportUrl,
+                data: {
+                    version: _options.getVersionFn(),
+                    layers: ids
+                },
+                success: function(data, textStatus, xhr) {
+                    waitDialog.remove();
+                    _options.resultsContainer.html(data);
+                },
+                error: function(xhr, textStatus, error) {
+                    waitDialog.remove();                        
+                    $('<div>Error encountered while retrieving splits report: ' + textStatus + '</div>').dialog({
+                        modal: true, autoOpen: true, title: 'Error', resizable:false
+                    });                
+                }
+            });
         };
         _options.currentOkButton.click(function(){
             var referenceLayerId = _options.referenceLayerSelect.val();

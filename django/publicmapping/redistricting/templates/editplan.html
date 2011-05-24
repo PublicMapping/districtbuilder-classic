@@ -300,8 +300,12 @@
                 extendedOkButton: $('#splits_report_extended_ok_button'),
                 availableLayers: $('#splits_report_available_layers'),
                 referenceLayerSelect: $('#reference_layer_select'),
+                splitsReportUrl: '/districtmapping/plan/{{ plan.id }}/splitsreport/',
+                resultsContainer: $('#splits_report_results_container'),
                 map: $('#map'),
-                csrfmiddlewaretoken: $('#csrfmiddlewaretoken')
+                getVersionFn: function() {
+                    return $('#history_cursor').val();
+                }
             }).init();
         });
     </script>
