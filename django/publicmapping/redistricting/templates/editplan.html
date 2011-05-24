@@ -251,6 +251,63 @@
     {% endif %}
     {% endblock %}
 
+    {% block splits_report %}
+    
+    <div id="splits_report">
+        <button id="splits_report_button">Splits Report</button>
+    </div>
+    <div id="splits_report_dialog">
+        <div id="splits_report_content">
+            <div id="splits_report_select_panel">
+                <h2>1. Generate Splits Report for Current Displayed Plans</h2>
+                <div id="splits_report_current_ok_div">
+                    <button id="splits_report_current_ok_button">OK</button>
+                </div>
+    
+                <div id="splits_report_or_text">OR...</div>
+    
+                <h2>2. Generate an extended splits report by selecting up to 3 additional layers to compare to your current plan.</h2>
+                <div id="splits_report_reminder_text">
+                    Keep in mind that for each additional plan you select, your report will take additional time to generate.
+                </div>
+                <div id="splits_report_available_layers">
+                {% for snap in snaplayers %}
+                    <div class="layer_choice_wrapper">
+                        <input id="geolevel.{{ snap.geolevel }}" class="layer_choice" type="checkbox" value="geolevel.{{ snap.geolevel }}" />
+                        <label for="geolevel.{{ snap.geolevel }}">{{ snap.name }}</label>
+                    </div>                  
+                {% endfor %}
+                </div>
+                <div id="splits_report_extended_ok_div">
+                    <button id="splits_report_extended_ok_button">OK</button>
+                </div>
+            </div>
+            <div id="splits_report_results_panel">
+                <h2>Splits Report</h2>
+                <div id="splits_report_results_container">
+                  <p>Please select a report</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="/static-media/js/splitsreport.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            splitsreport = splitsreport({
+                container: $('#splits_report_dialog'),
+                target: $('#splits_report_button'),
+                currentOkButton: $('#splits_report_current_ok_button'),
+                extendedOkButton: $('#splits_report_extended_ok_button'),
+                availableLayers: $('#splits_report_available_layers'),
+                referenceLayerSelect: $('#reference_layer_select'),
+                map: $('#map'),
+                csrfmiddlewaretoken: $('#csrfmiddlewaretoken')
+            }).init();
+        });
+    </script>
+        
+    {% endblock %}
+
     {% block fix_unassigned %}
     {% if not plan.is_community %}
     <div id="fix_unassigned">
