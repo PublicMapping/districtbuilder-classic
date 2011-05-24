@@ -392,14 +392,16 @@ statisticssets = function(options) {
      * the scrolling right in the tbody.  But sometimes the header
      * heights change and changing the css is tough
      */
+    var planSummaryHeight;
     var fixTableHeight = function (table) {
         var header = table.find('thead:visible');
-        if (header.length == 0) {
-            return;
+        if (header.length != 0) {
+            planSummaryHeight = header.position().top + header.outerHeight(true);
         }
-        var bottom = header.position().top + header.outerHeight(true);
         var table = table.find('tbody');
-        table.css('top', bottom);
+        if (planSummaryHeight) {
+            table.css('top', planSummaryHeight);
+        }
     }
 
 
