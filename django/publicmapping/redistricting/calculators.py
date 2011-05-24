@@ -56,6 +56,13 @@ class CalculatorBase:
     #
     arg_dict = {}
 
+    def __init__(self):
+        """
+        Initialize the result and argument dictionary.
+        """
+        self.result = None
+        self.arg_dict = {}
+
     def compute(self, **kwargs):
         """
         Compute the value for this calculator. The base class calculates
@@ -386,13 +393,6 @@ class SumValues(CalculatorBase):
     is a positive integer. The summation will add all arguments, starting
     at position 1, until an argument is not found.
     """
-    def __init__(self):
-        """
-        Initialize the result and argument dictionary.
-        """
-        self.result = None
-        self.arg_dict = {}
-
     def compute(self, **kwargs):
         """
         Calculate the sum of a series of values.
@@ -452,13 +452,6 @@ class Percent(CalculatorBase):
     After the numerator and denominator values have been accumulated, 
     it computes the percentage of those totals.
     """
-    def __init__(self):
-        """
-        Initialize the result and argument dictionary.
-        """
-        self.result = None
-        self.arg_dict = {}
-
     def compute(self, **kwargs):
         """
         Calculate a percentage.
@@ -528,13 +521,6 @@ class Threshold(CalculatorBase):
     If this calculator is called with a plan, it will tally up the number
     of districts that exceed the designated threshold.
     """
-    def __init__(self):
-        """
-        Initialize the result and argument dictionary.
-        """
-        self.result = None
-        self.arg_dict = {}
-
     def compute(self, **kwargs):
         """
         Calculate and determine if a value exceeds a threshold.
@@ -589,13 +575,6 @@ class Range(CalculatorBase):
     population, this will count the number of districts within the target
     range.
     """
-    def __init__(self):
-        """
-        Initialize the result and argument dictionary.
-        """
-        self.result = None
-        self.arg_dict = {}
-
     def compute(self, **kwargs):
         """
         Calculate and determine if a value lies within a range.
@@ -666,13 +645,6 @@ class Contiguity(CalculatorBase):
     of districts that are contiguous.
 
     """
-    def __init__(self):
-        """
-        Initialize the result and argument dictionary.
-        """
-        self.result = None
-        self.arg_dict = {}
-
     def compute(self, **kwargs):
         """
         Determine if a district is continuous.
@@ -937,12 +909,6 @@ class Equivalence(CalculatorBase):
     This should only be used with population subjects.
 
     """
-    def __init__(self):
-        """
-        Initialize the result and argument dictionary.
-        """
-        self.result = None
-        self.arg_dict = {} 
     def html(self):
         """
         Generate an HTML representation of the equivalence score. This
@@ -1006,13 +972,6 @@ class RepresentationalFairness(CalculatorBase):
     and the second item is the party toward which the plan's 
     districts are biased
     """
-    def __init__(self):
-        """
-        Initialize the result and argument dictionary.
-        """
-        self.result = None
-        self.arg_dict = {}
-
     def compute(self, **kwargs):
         """
         Compute the representational fairness.
@@ -1094,13 +1053,6 @@ class Competitiveness(CalculatorBase):
     This calculator requires three arguments: 'democratic', 'republican',
         and 'range'
     """
-    def __init__(self):
-        """
-        Initialize the result and argument dictionary.
-        """
-        self.result = None
-        self.arg_dict = {}
-
     def compute(self, **kwargs):
         """
         Compute the competitiveness.
@@ -1154,13 +1106,6 @@ class CountDistricts(CalculatorBase):
     districts desired in a plan.  If the number of districts matches
     the target value, a boolean True is the result.
     """
-    def __init__(self):
-        """
-        Initialize the result and argument dictionary.
-        """
-        self.result = None
-        self.arg_dict = {}
-
     def compute(self, **kwargs):
         """
         Compute the number of districts in a plan, and determine if that
@@ -1189,13 +1134,6 @@ class AllBlocksAssigned(CalculatorBase):
     This calculator has an optional argument of 'threshold', which is used
     for buffer in/out optimization
     """
-    def __init__(self):
-        """
-        Initialize the result and argument dictionary.
-        """
-        self.result = None
-        self.arg_dict = { 'threshold': ('literal', 100)}
-
     def compute(self, **kwargs):
         """
         Determine if all the blocks in the state are assigned to a district.
@@ -1224,13 +1162,6 @@ class Equipopulation(CalculatorBase):
 
     This calculator works on plans only.
     """
-    def __init__(self):
-        """
-        Initialize the result and argument dictionary.
-        """
-        self.result = None
-        self.arg_dict = {}
-
     def compute(self, **kwargs):
         """
         Determine if all the districts in a plan fall within a target range.
@@ -1287,13 +1218,6 @@ class MajorityMinority(CalculatorBase):
 
     This calculator works on plans only.
     """
-    def __init__(self):
-        """
-        Initialize the result and argument dictionary.
-        """
-        self.result = None
-        self.arg_dict = {}
-
     def compute(self, **kwargs):
         """
         Determine if the requisite number of districts in a plan have a 
@@ -1427,13 +1351,6 @@ class Average(CalculatorBase):
     'max' are not present and given a target, it will return a string 
     that's showable in a plan summary.
     """
-    def __init__(self):
-        """
-        Initialize the result and argument dictionary.
-        """
-        self.result = None
-        self.arg_dict = {}
-
     def compute(self, **kwargs):
         """
         Calculate the average of a series of values.
@@ -1557,13 +1474,6 @@ class CommunityTypeCounter(CalculatorBase):
     to the district, and a "version" argument indicating the version
     number of the community map.
     """
-    def __init__(self):
-        """
-        Initialize the result and argument dictionary.
-        """
-        self.result = None
-        self.arg_dict = {}
-
     def compute(self, **kwargs):
         """
         Calculate the sum of a series of values.
