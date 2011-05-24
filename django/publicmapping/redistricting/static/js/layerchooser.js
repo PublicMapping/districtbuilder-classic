@@ -113,11 +113,16 @@ layerchooser = function(options) {
         var planSelected = function(id) {
             var val = 'plan.' + id;
             _options.referenceLayerContent.hide();
-            _options.referenceLayerSelect.append($('<option></option>').
-                attr('value', val).
-                text(_planTable.jqGrid('getRowData', id)['fields.name']));
-                _options.container.dialog('option', 'width', _minWidth);
-                _options.container.dialog('option', 'position', 'center');
+
+            // Don't add the option if it's already there
+            var query = '#' + _options.referenceLayerSelect[0].id + ' option[value=' + val.replace('.', '\\.') + ']';
+            if ($(query).length === 0) {
+                _options.referenceLayerSelect.append($('<option></option>').
+                    attr('value', val).
+                    text(_planTable.jqGrid('getRowData', id)['fields.name']));
+            }
+            _options.container.dialog('option', 'width', _minWidth);
+            _options.container.dialog('option', 'position', 'center');
             _options.referenceLayerSelect.val(val);
             _options.referenceLayerSelect.trigger('change');
         };
