@@ -2754,6 +2754,47 @@ class ScoreRenderTestCase(BaseTestCase):
 
         os.remove(tplfile)
 
+    def test_scoredisplay_with_overrides(self):
+        # Get a ScoreDisplay
+        display = ScoreDisplay.objects.get(pk=1)
+        display.is_page = False
+
+        # Make up a ScorePanel - don't save it
+        panel = ScorePanel(title="My Fresh Panel", type="district", template="sp_template2.html")
+        # Create two functions, one with an arg and one without
+        function = ScoreFunction(calculator="redistricting.calculators.SumValues", name="My Fresh Calc", label="Hot Sums",is_planscore=False)
+
+        arg1 = ScoreArgument(argument="value1", value="5", type="literal")
+        arg2 = ScoreArgument(argument="value2", value="TestSubject", type="subject")
+
+        # Render the ScoreDisplay
+        components = [(panel, [(function, arg1, arg2)])]
+        district_result = display.render([self.district1], components=components)
+        self.assertEqual("District 1:<span>14.0000</span>", district_result, 'Didn\'t get expected result when overriding district\'s display')
+
+        # Add some districts to our plan
+        geolevelid = self.geolevel.id
+        geounits = self.geounits
+
+        dist1ids = geounits[0:3] + geounits[9:12]
+        dist2ids = geounits[6:9] + geounits[15:18]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        dist2ids = map(lambda x: str(x.id), dist2ids)
+        
+        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district2.district_id, dist2ids, geolevelid, self.plan.version)
+
+        # Set up the elements to work for a plan
+        panel.type = 'plan'
+        panel.template = 'sp_template1.html'
+        function.is_planscore = True
+        components = [(panel, [(function, arg1, arg2)])]
+
+        # Check the result
+        plan_result = display.render(self.plan, components=components)
+        self.assertEqual("testPlan:['<span>58.0000</span>']", plan_result, 'Didn\'t get expected result when overriding plan\'s display')
+
+
 class ComputedScoresTestCase(BaseTestCase):
     def test_district1(self):
         geolevelid = 2

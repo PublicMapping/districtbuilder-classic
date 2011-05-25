@@ -2473,7 +2473,7 @@ class ScoreFunction(models.Model):
             m = getattr(m, comp)            
         return m()
 
-    def score(self, districts_or_plans, format='raw', version=None):
+    def score(self, districts_or_plans, format='raw', version=None, score_arguments=None):
         """
         Calculate the score for the object or list of objects passed in.
 
@@ -2484,6 +2484,8 @@ class ScoreFunction(models.Model):
                 the value of is_planscore.
             format -- One of 'raw', 'html', or 'json'.
                 Determines how the results should be returned.
+            score_arguments -- a list of ScoreArguments to override the entries
+                linked through the database
 
         Returns:
             A score for each district or plan contained within 
@@ -2502,7 +2504,10 @@ class ScoreFunction(models.Model):
         results = []
         for dp in (districts_or_plans if is_list else [districts_or_plans]):
             # Add all arguments that are defined for this score function
-            args = ScoreArgument.objects.filter(function=self)
+            if score_arguments is not None:
+                args = score_arguments
+            else:
+                args = ScoreArgument.objects.filter(function=self)
             arg_lst = []
             for arg in args:
                 # For 'score' types, calculate the score, and then pass the result on
@@ -2674,7 +2679,7 @@ class ScoreDisplay(models.Model):
 
         return self
 
-    def render(self, dorp, context=None, version=None):
+    def render(self, dorp, context=None, version=None, components=None):
         """
         Generate the markup for all the panels attached to this display.
 
@@ -2687,6 +2692,10 @@ class ScoreDisplay(models.Model):
         Parameters:
             dorp -- A list of districts, plan, or list of plans.
             context -- Optional object that can be used for advanced rendering
+            components -- Optional list of tuples that can be used to recompose
+                the elements of a ScoreDisplay at runtime.  Each tuple should 
+                consist of a ScorePanel at index 0, followed by any number of 
+                ScoreFunctions tuples - a ScoreFunction followed by its arguments.
             version -- Optional; the version of the plan or district to render.
 
         Returns:
@@ -2710,11 +2719,19 @@ class ScoreDisplay(models.Model):
                 # If this display is not a page, the item should be a plan.
                 return ''
 
-        panels = self.scorepanel_set.all().order_by('position')
-
         markup = ''
-        for panel in panels:
-            markup += panel.render(dorp, context, version)
+        if components is not None:
+            for component in components:
+                panel = component[0]
+                if len(component) > 1:
+                    markup += panel.render(dorp, context=context, version=version, components=list(component[1:]))
+                else:
+                    markup += panel.render(dorp, context=context, version=version)
+        else:
+            panels = self.scorepanel_set.all().order_by('position')
+
+            for panel in panels:
+                markup += panel.render(dorp, context=context, version=version)
 
         return markup
 
@@ -2755,7 +2772,7 @@ class ScorePanel(models.Model):
         """
         return self.title
 
-    def render(self,dorp,context=None,version=None):
+    def render(self,dorp,context=None,version=None,components=None):
         """
         Generate the scores for all the functions attached to this panel,
         and render them in the template.
@@ -2766,6 +2783,10 @@ class ScorePanel(models.Model):
             dorp -- A district, list of districts, plan, or list of plans.
             context -- Optional object that can be used for advanced rendering
             version -- Optional; version of the plan or district to render.
+            components -- Optional list of ScoreFunction tuples to render
+                 instead of any ScoreFunctions linked through the database.
+                 Each tuple should be a ScoreFunction at index 0 followed by
+                 and ScoreArguments
 
         Returns:
             A rendered set of scores.
@@ -2793,6 +2814,9 @@ class ScorePanel(models.Model):
             else:
                 return ''
 
+        # Keep track of whether we're using a parameter or the DB to populate our panel
+        function_override = components is not None
+
         # Render an item for each plan and plan score
         if self.type == 'plan' or self.type == 'plan_summary':
             if is_list:
@@ -2806,15 +2830,32 @@ class ScorePanel(models.Model):
             description = ''
             
             for plan in plans:
-                for function in self.score_functions.filter(is_planscore=True).order_by('name'):
+                if function_override:
+                    functions = map(lambda f: f[0], components)
+                else:
+                    functions = self.score_functions.filter(is_planscore=True).order_by('name')
+
+                for function in functions:
+                    if function_override:
+                        if len(function) > 1:
+                            arguments = function[1:]
+                        function = function[0]
+                        score = function.score(plans,format='html',version=version or plan.version,score_arguments=arguments)
+                        sort = score
+
+                    else:
+                        score = ComputedPlanScore.compute(function,plan,format='html',version=version or plan.version)
+                        sort = ComputedPlanScore.compute(function,plan,format='sort',version=version or plan.version)
+                    
                     description = function.description
+
                     planscores.append({
                         'plan':plan,
                         'name':function.name,
                         'label':function.label,
                         'description':function.description,
-                        'score':ComputedPlanScore.compute(function,plan,format='html',version=version or plan.version),
-                        'sort':ComputedPlanScore.compute(function,plan,format='sort',version=version or plan.version)
+                        'score':score,
+                        'sort':sort
                     })
 
             if self.type == 'plan':
@@ -2843,10 +2884,24 @@ class ScorePanel(models.Model):
             for district in districts:
                 districtscore = { 'district':district, 'scores':[] }
 
-                for function in self.score_functions.filter(is_planscore=False):
-                    if not function.label in functions:
-                        functions.append(function.label)
-                    score = ComputedDistrictScore.compute(function,district,format='html')
+                if function_override:
+                    district_functions = reduce(lambda c: not c[0].is_planscore, components)
+                    
+
+                else:
+                    district_functions = self.score_functions.filter(is_planscore=False)
+
+
+                for function in district_functions:
+                    if function_override:
+                        if len(function) > 1:
+                            arguments = function[1:]
+                        function = function[0]
+                        score = function.score(district,format='html',score_arguments=arguments)
+                    else:
+                        if not function.label in functions:
+                            functions.append(function.label)
+                        score = ComputedDistrictScore.compute(function,district,format='html')
                     districtscore['scores'].append({
                         'district':district,
                         'name':function.name,
@@ -3006,7 +3061,7 @@ class ComputedPlanScore(models.Model):
         Get the computed value. This method will leverage the cache when
         it is available, or it will populate the cache if it is not.
 
-        If the cached score exists, it's value is not changed.
+        If the cached score exists, its value is not changed.
 
         If the cached score does not exist, this method will create it.
 
