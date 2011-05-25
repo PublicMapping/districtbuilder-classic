@@ -2445,8 +2445,8 @@ class ScoreFunction(models.Model):
     is_planscore = models.BooleanField(default=False)
 
     # Whether a user can select this function for use in a 
-    # statistics set
-    is_user_selectable = models.BooleanField(default=False)
+    # statistics set, per legislative levelqq
+    selectable_bodies = models.ManyToManyField(LegislativeBody)
     
     class Meta:
         """

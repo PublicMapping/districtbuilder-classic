@@ -61,7 +61,7 @@
         </script>
     {% endif %}
     <script type="text/javascript">
-        var opensessions = {{ opensessions }},
+        var opensessions = {% if opensessions %}{{ opensessions }}{% else %}0{% endif %},
             openusername = '{{ user.username }}',
             availsession = {% if sessionavail %}true{% else %}false{% endif %};
     </script>
