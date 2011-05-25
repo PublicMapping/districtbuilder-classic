@@ -577,9 +577,9 @@
               {% block share_panel %}
               {% comment %}
 
-              Define a block entitled 'share_panel': this panel would show sharing
-              options in an editor interface, but the default viewer does not have
-              that capability.
+              Define a block entitled 'share_panel': this panel would show 
+              sharing options in an editor interface, but the default 
+              viewer does not have that capability.
 
               {% endcomment %}
               <div class="explanation">
@@ -589,36 +589,26 @@
               {% endblock %}
               <div class="blockfile">
                   <h3>District Index File export</h3>
-                  <p>You can export this plan to a district index file. The index file is a comma-separated-value file (csv) 
-                  with each line listing a geounit (such as a census block) and the district to which it belongs. This file
-                  can be imported to other instances of the publicmapping software or used in analysis of the plan using
-                  your favorite GIS software.</p>
+                  <p>You can export this plan to a {{ body_member|lower }} 
+                  index file. The index file is a comma-separated-value file
+                  (csv) with each line listing a geounit (such as a census 
+                  block) and the {{ body_member|lower }} to which it 
+                  belongs. This file can be imported to other instances of 
+                  the publicmapping software or used in analysis of the plan
+                  using your favorite GIS software.</p>
                   <div id='districtIndexFileTarget' />
               </div>
           </div>
         </div>
-        {% if is_registered and has_leaderboard %}                  
-        <div id="verifyandpost">
-            <div class="explanation">
-               <h3>Verify and Post Plan to Leaderboards</h3>
-                <p>
-                To   be considered for submission to the leaderboard, a plan must first be   submitted for verification that it meets the competition criteria for a   legal district plan. Keep in mind that as soon as you edit a verified   plan, it will automatically become &lsquo;unverified&rsquo; and you will need to   re-verify it in order for it to again be considered for the   leaderboards.</p>
-                <p>
-                By verifying your plan, you are <em><strong>not</strong></em> sharing   your plan with other users. If your plan qualifies for the top ten   plans list for any of the four score types and you have not yet shared   your plan with the public, your <strong>plan name</strong> and <strong>user name</strong> will simply be listed in   the leaderboard table. If you HAVE shared your plan with the public,   your plan name will be hyperlinked with the plan&rsquo;s unique URL.</p>
-                <p>
-                How to verify and submit your plan:
-                <ol>
-                  <li>Click the &ldquo;Verify and Submit&rdquo; button.</li>
-                  <li>Wait for the plan to be verified. </li>
-                  <li>If it is verified, you will be taken to the Leaderboard page. </li>
-                  <li>Check the leaderboards to see if your plan ranks in the top ten for any of the four available score types. </li>
-                  <li>Click on the &ldquo;My Ranked Plans&rdquo; to check your plans&rsquo; ranking as compared to all verified plans.</li>
-                </ol>
-                </p>
-            </div>
-            <button id="btnVerifyAndSubmit">Verify and Submit Plan</button>            
-        </div>
-        {% endif %}
+        {% block verify_submit %}
+        {% comment %}
+
+        Define a block entitled 'verify_submit': this panel will show the
+        verification and submission instructions for editable plans to
+        registered users when the leaderboard is enabled.
+
+        {% endcomment %}
+        {% endblock %}
     </div>
 </div>  
 <div id="toolbar_plans">
@@ -884,7 +874,7 @@ Include the markup for the account management panel.
         stats = statisticssets({}).init();
 
         {% if plan.is_community %}
-        $('#steps').tabs('option', 'disabled', [2,3]);
+        $('#steps').tabs('option', 'disabled', [2]);
         {% endif %}
 
         // Get the list of plans after all the other plan info has loaded

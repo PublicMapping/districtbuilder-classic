@@ -153,6 +153,9 @@ class LegislativeBody(models.Model):
     # A flag indicating if this legislative body contains community maps
     is_community = models.BooleanField(default=False)
 
+    # Where in the list of legislative bodies should this item appear?
+    sort_key = models.PositiveIntegerField(default=0)
+
     def get_default_subject(self):
         """
         Get the default subject for display. This is related to the

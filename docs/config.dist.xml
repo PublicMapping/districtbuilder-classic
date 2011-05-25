@@ -6,10 +6,10 @@
         <!-- A Legislative body has an ID (for referencing in GeoLevel
             definitions later), a name, and a label for plan items 
             ("District" for Congressional, etc) -->
-        <LegislativeBody id="congress" name="Congressional" member="District %s" maxdistricts="11"/>
-        <LegislativeBody id="house" name="State House" member="District %s" maxdistricts="100" />
-        <LegislativeBody id="senate" name="State Senate" member="District %s" maxdistricts="40" />
-        <LegislativeBody id="community" name="Community Map" member="Community %s" maxdistricts="999" is_community="true" />
+        <LegislativeBody id="congress" name="Congressional" member="District %s" maxdistricts="11" sort_key="1"/>
+        <LegislativeBody id="house" name="State House" member="District %s" maxdistricts="100" sort_key="2"/>
+        <LegislativeBody id="senate" name="State Senate" member="District %s" maxdistricts="40" sort_key="3"/>
+        <LegislativeBody id="community" name="Community Map" member="Community %s" maxdistricts="999" is_community="true" sort_key="4"/>
     </LegislativeBodies>
 
     <!-- A list of subjects referenced in the system. -->

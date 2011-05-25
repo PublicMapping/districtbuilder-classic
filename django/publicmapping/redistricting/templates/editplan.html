@@ -93,6 +93,29 @@
             </div>
         {% endblock %}
 
+    {% block verify_submit %}
+        {% if has_leaderboard and not plan.is_community %}
+        <div id="verifyandpost">
+            <div class="explanation">
+               <h3>Verify and Post Plan to Leaderboards</h3>
+                <p>To be considered for submission to the leaderboard, a plan must first be submitted for verification that it meets the competition criteria for a legal district plan. Keep in mind that as soon as you edit a verified plan, it will automatically become "unverified" and you will need to re-verify it in order for it to again be considered for the leaderboards.</p>
+                <p>By verifying your plan, you are <em><strong>not</strong></em> sharing your plan with other users. If your plan qualifies for the top ten plans list for any of the four score types and you have not yet shared your plan with the public, your <strong>plan name</strong> and <strong>user name</strong> will simply be listed in the leaderboard table. If you HAVE shared your plan with the public, your plan name will be hyperlinked with the plan's unique URL.</p>
+                <p>
+                How to verify and submit your plan:
+                <ol>
+                  <li>Click the "Verify and Submit" button.</li>
+                  <li>Wait for the plan to be verified. </li>
+                  <li>If it is verified, you will be taken to the Leaderboard page. </li>
+                  <li>Check the leaderboards to see if your plan ranks in the top ten for any of the four available score types. </li>
+                  <li>Click on the "My Ranked Plans" to check your plans' ranking as compared to all verified plans.</li>
+                </ol>
+                </p>
+            </div>
+            <button id="btnVerifyAndSubmit">Verify and Submit Plan</button>            
+        </div>
+        {% endif %}
+    {% endblock %}
+
     {% block shared_districts %}
     <div id="shared_districts_dialog">
         <!-- <div id="header"><h3></h3></div> -->

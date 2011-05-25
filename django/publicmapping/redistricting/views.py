@@ -436,7 +436,7 @@ def commonplan(request, planid):
     member = body_member.strip().lower()
 
     return {
-        'bodies': LegislativeBody.objects.all().order_by('name'),
+        'bodies': LegislativeBody.objects.all().order_by('sort_key'),
         'plan': plan,
         'districts': districts,
         'mapserver': settings.MAP_SERVER,
