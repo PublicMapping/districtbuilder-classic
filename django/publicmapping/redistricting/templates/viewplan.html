@@ -165,8 +165,23 @@
   </head>
   <body onload="init();" id="app">
  
-  <div id="app_header">
-    <div id="logo"><img src="/static-media/images/title-app.png" /></div>
+
+
+  <div id="steps" style="visibility: hidden;">
+     <div id="app_header">
+      <div id="logo"><img src="/static-media/images/title-app.png" /></div>
+      <ul id="steps_tabs"> <!-- tabs have to be first UL in #steps or else tabs wont work -->
+        <li id="tab_plan"><a href="#step_plan">Plan</a><li>
+        <li id="tab_draw"><a href="#step_draw">Draw</a></li>
+        <li id="tab_evaluate"><a href="#step_evaluate">Evaluate</a></li>
+        <li id="tab_share" class="last"><a href="#step_share">Share</a></li>
+        {% if has_leaderboard and not plan.is_community %}
+        <li id="tab_leaderboard" class="rounded"><a href="#step_leaderboard">Leaderboards</a></li>
+        {% endif %}
+      </ul>
+      
+
+
     <div id="site_nav">
         <ul>
             {% if not is_registered %}
@@ -189,18 +204,8 @@
         </ul>
     </div>
     <div class="clear"></div>
-  </div>
-
-  <div id="steps" style="visibility: hidden;">
-      <ul id="steps_tabs">
-        <li id="tab_plan"><a href="#step_plan">Step 1: Plan</a><li>
-        <li id="tab_draw"><a href="#step_draw">Step 2: Draw</a></li>
-        <li id="tab_evaluate"><a href="#step_evaluate">Step 3: Evaluate</a></li>
-        <li id="tab_share"><a href="#step_share">Step 4: Share</a></li>
-        {% if has_leaderboard and not plan.is_community %}
-        <li id="tab_leaderboard"><a href="#step_leaderboard">Leaderboards</a></li>
-        {% endif %}
-      </ul>
+  </div>   
+      
    <div id="step_plan" class="main_content plan fulltab">
             <div class="shadow_left"></div>
             <div class="shadow_top"></div>
@@ -323,24 +328,38 @@
  </div>
    <div id="step_draw" class="main_content">
       <div id="mapandmenu" class="fulltab" >
-         <div class="toolbar ui-widget-header">
+         <div id="control_header" class="toolbar ui-widget-header">
+         <button id="choose_layers_button">Set Map<br/>Layers</button>
           <div id="toolsets">
+            <div id="history_tools">
+            {% block toolset_history %}
+            {% comment %}
+
+              Add undo/redo history buttons when in edit mode
+
+            {% endcomment %}
+            {% endblock %}
+            </div>
+            <ul class="mapping_tabs">
+              <li><a href="#toolset_draw">Map Editing</a></li>
+              <li><a href="#toolset_district">District Tools</a></li>
+            </ul>  
+           
+
+          {% block toolset_draw %}
+          {% comment %}
+
+          Define a block named 'toolset_draw': this section is a place-
+          holder for drawing/assignement tools. By default, the viewer has
+          navigation-only ability, so those elements would have to be
+          implemented in an editor template that extends this viewer.
+
+          {% endcomment %}
             <div class="toolset" id="toolset_draw">
-              <div class="toolset_group">
-                <label>Map Tools</label>
-                <div>
-                  <button id="navigate_map_tool" class="active btntoggle toggle"></button>
-                  <button id="identify_map_tool" title="Click on a geounit to see its demographic info." class="btntoggle titletip"></button>
-                  <button id="district_id_map_tool" title="Click on a district to see its ID." class="btntoggle titletip"></button>
-
-                  {% block additional_toolset_buttons %}
-                  {% comment %}
-
-                  Additional buttons can be added to the toolset by using this block.
-
-                  {% endcomment %}
-                  {% endblock %}
-
+              <div class="toolset_group toolset_group_lg">
+                  <button id="navigate_map_tool" class="active btntoggle toggle">Pan</button>
+                  <button id="identify_map_tool" title="Click on a geounit to see its demographic info." class="btntoggle titletip">Info</button>
+                  <button id="district_id_map_tool" title="Click on a district to see its ID." class="btntoggle titletip">District Info</button>
                   {% comment %}
                   
                   This hidden div is used to style the locked districts.
@@ -349,35 +368,46 @@
                   
                   {% endcomment %}
                   <div class="locked" style="display:none"></div>
-                </div>
               </div>
-              {% block toolset_draw %}
-              {% comment %}
-
-              Define a block named 'toolset_draw': this section is a place-
-              holder for drawing/editing tools. By default, the viewer has
-              no editing capability, so these elements would have to be
-              implemented in an editor template that extends this viewer.
-
-              {% endcomment %}
-              {% endblock %}
+              <div class="clear"></div>
             </div>
-            </div>
+          {% endblock %}
+
+          {% block toolset_district %}
+          {% comment %}
+
+          Define a block named 'toolset_district': this section is a place-
+          holder for district editing tools. By default, the viewer has
+          no editing capability, so these elements would have to be
+          implemented in an editor template that extends this viewer.
+
+          {% endcomment %}
+          {% endblock %}
+
+            <div class="clear"></div>
+          </div>
             {% if plan %}
             {% comment %}
 
             If a plan exists, show the map sidebar menu.
 
             {% endcomment %}
+
             <div id="map_menu">
-                <div id="map_menu_header">
-                    <button class="menu_toggle ui-icon"></button>
-                    <select>
-                    </select>
-                    <button id="open_statistics_editor">Edit Stats</button>
-                </div>
-                <div class="map_menu_content demographics">
-                    <div class="sidebarload"><h3>Loading Statistics...</h3></div>
+              <div id="stats_options">
+                 <button id="open_statistics_editor">Edit Stats</button>
+              </div>
+
+              <ul class="mapping_tabs">
+                <li><a href="#sidebar_content"><button class="menu_toggle"></button>Statistics</a></li>
+              </ul> 
+                <div class="sidebar_content">
+                  <div id="map_menu_header">
+                      <select></select>
+                    </div>
+                  <div class="map_menu_content demographics">
+                      <div class="sidebarload"><h3>Loading Statistics...</h3></div>
+                  </div>
                 </div>
             </div>
             {% endif %}
@@ -392,7 +422,7 @@
           </div>
           <div id="map_type_content">
               <div id="map_type_content_container"></div>
-              <div class="toolset_group">
+              <div class="toolset_group toolset_group_lg">
                   <img src="/static-media/images/icon-help.png" class="help divtip">
                   <div class="tooltip">Select a base map layer.</div>
               </div>            
@@ -407,7 +437,7 @@
                  <div class="tooltip">Select a map layer and use the slider to set its visibility.</div>
              </div>  
             <span class="layer_type_container" id="layer_type_thematic">
-                <input class="map_settings_layer_type" id="thematic_radio" type="radio" name="layer_types" checked="true">Roads</input>
+                <input class="map_settings_layer_type" id="thematic_radio" type="radio" name="layer_types" checked="true">Map</input>
             </span>
             <span class="layer_type_container" id="layer_type_base">
                 <input class="map_settings_layer_type" id="basemap_radio" type="radio" name="layer_types"><span id="base_map_type"></span> Layer</input>
@@ -422,36 +452,6 @@
           {% endcomment %}
           {% endblock %}
 
-          <div id="choose_layers">
-              <button id="choose_layers_button">Choose Layers</button>
-          </div>
-
-          {% block splits_ctl %}
-          {% comment %}
-
-          A place holder for the "Show Splits" button, which should
-          only appear when the plan is editable.
-
-          {% endcomment %}
-          {% endblock %}
-
-          {% block splits_report %}
-          {% comment %}
-
-          A place holder for the "Splits Report" button, which should
-          only appear when the plan is editable.
-
-          {% endcomment %}
-          {% endblock %}
-
-          {% block fix_unassigned %}
-          {% comment %}
-
-          A place holder for the "Fix Unassigned" button, which should
-          only appear when the plan is editable.
-
-          {% endcomment %}
-          {% endblock %}
           <div id="map_legend">
               <button id="legend_toggle">Map Legend</button>
           </div>
@@ -757,7 +757,7 @@ Include the stats_picker markup if the user can save stats
     $(function() {
         layerChooser = layerchooser({
             container: $('#choose_layers_dialog'),
-            target: $('#choose_layers_button'),
+            target: $('#choose_layers_button').button({icons:{primary:'icon-layers'}}),
             legislativeButton: $('#choose_layers_legislative_button'),
             communityButton: $('#choose_layers_community_button'),
             okButton: $('#choose_layers_ok_button'),

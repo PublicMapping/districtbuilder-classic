@@ -281,6 +281,12 @@ $(function() {
         }
     });
     $('#leaderboard_tabs').tabs();
+    $('#map_menu').tabs();
+    
+    
+    $('#toolsets').tabs();
+   
+   
    
     // jQuery Tools tooltips   
     loadTooltips();
@@ -292,31 +298,32 @@ $(function() {
     // stats dropdown button
     $('.menu_toggle')
         .button({
-            icons: {primary: 'ui-icon-arrow-down'},text: false})
+            icons: {primary: 'ui-icon-arrow-down'}, text: false})
         .toggle(
             function(){
-                $(this).button({icons: {primary: 'ui-icon-arrow-right'}})
+                $(this).button({icons: {primary: 'ui-icon-arrow-right'}, text: false})
             },
             function(){
-                $(this).button({icons: {primary: 'ui-icon-arrow-down'}});
+                $(this).button({icons: {primary: 'ui-icon-arrow-down'}, text: false})
             })
         .click(function(){
             if ( $(".map_menu_content:visible'").length === 0) {
+                $('#map_settings_content, #legend_toggle').removeClass('collapse', 400);
                 $storedPanel.slideDown(200);
             }
             else {
                 $('.map_menu_content:visible').each(function() {
                     $storedPanel = $(this);
                     $storedPanel.slideUp(200);
+                    $('#map_settings_content, #legend_toggle').addClass('collapse', 400);
                 });
             }  
         });
     
     // map editing buttons
-    $('#toolset_draw .toolset_group button')
+    $('.toolset button, #history_tools button, #open_statistics_editor')
       .button({
-          icons: {primary: 'ui-icon'},
-          text:false
+          icons: {primary: 'ui-icon'}
       })
       .click(function(){
         if($(this).hasClass('btntoggle')) {

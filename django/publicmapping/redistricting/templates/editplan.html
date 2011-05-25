@@ -30,47 +30,96 @@
 
 {% endcomment %}
 
-    {% block additional_toolset_buttons %}
-    <button id="lock_district_map_tool" title="Click on a district to lock or unlock it." class="btntoggle titletip"></button>
-    {% endblock %}
-
-      {% block toolset_draw %}
-      <div class="toolset_group">
-        <label>Selecting Tools</label>
-        <div>
-          <button id="single_drawing_tool" title="Single district select; +Shift to select multiple {{ body_members}}" class="btntoggle titletip" ></button>
-          <button id="rectangle_drawing_tool" title="Select by rectangle" class="btntoggle titletip" ></button>
-          <button id="polygon_drawing_tool" title="Select by drawing a polygon" class="btntoggle titletip"></button>
-          <button id="district_select_tool" title="Unassign all the units in a district" class="btntoggle titletip"></button>
-          <button id="copy_paste_tool" title="Copy a district from another plan" class="titletip"></button>
-        </div>
-      </div>
-      <div class="toolset_group toolset_group_w">
-        <label>Assigning Tools</label>
-        <div>
-          <button id="anchor_tool" class="titletip" title="Enable anchor mode, then select a district name to repeatedly assign areas to a district"></button>
-          <select id="assign_district" class="titletip" title="Assign {{ body_members }} currently selected on map by choosing a district name from drop down list">
-            <option value="-1">-- Select One --</option>
-            {% for d in districts %}
-                <option value="{{ d.district_id }}">{{ d.name }}</option>
-            {% endfor %}
-            {% ifnotequal max_dists districts|length %}
-                <option value="new">New {{ body_member|capfirst }}</option>
-            {% endifnotequal %}
-          </select>
-          <button id="dragdrop_tool" class="titletip" title="Select areas on the map then drag them to into a district for reassignment"></button>
-        </div>
-      </div>
-      <div class="toolset_group">
-        <label>History</label>
-        <div>
-          <button id="history_undo" class="{% if not plan %}disabled{% else %}{% ifequal plan.version 0 %}disabled{% endifequal %}{% endif %}"></button>
-          <button id="history_redo" class="disabled"></button>
+      {% block toolset_history %}
+          <button id="history_undo" class="{% if not plan %}disabled{% else %}{% ifequal plan.version 0 %}disabled{% endifequal %}{% endif %}">Undo</button>
+          <button id="history_redo" class="disabled">Redo</button>
           <input id="history_cursor" type="hidden"/>
-        </div>
-      </div>
       {% endblock %}
+      
+          
+      {% block toolset_draw %}
+      <div class="toolset" id="toolset_draw">
+        <div class="toolset_group">
+          <div>
+          <button class="navigate_map_tool active btntoggle toggle">Pan</button><br/>
+          <button class="identify_map_tool btntoggle titletip" title="Click on a geounit to see its demographic info." >Info</button>
+          </div>
+         </div>
+       
+        <div class="toolset_group toolset_group_lg">
+          <div>
+            <button id="single_drawing_tool" title="Single district select; +Shift to select multiple {{ body_members}}" class="btntoggle titletip" >Single<br/>Select</button>
+            <button id="rectangle_drawing_tool" title="Select by rectangle" class="btntoggle titletip" >Rectangle<br/>Select</button>
+            <button id="polygon_drawing_tool" title="Select by drawing a polygon" class="btntoggle titletip">Polygon<br/>Select</button>
+          </div>
+        </div>  
+        <div class="toolset_group toolset_group_lg">
+          <div>
+            <button id="anchor_tool" class="titletip" title="Enable anchor mode, then select a district name to repeatedly assign areas to a district">Anchor<br/>District</button>
+            <div class="button_group" id="control_assign_district">
+              <label>Assign to District</label><br/>
+              <select id="assign_district" class="titletip" title="Assign {{ body_members }} currently selected on map by choosing a district name from drop down list">
+              <option value="-1">-- Select One --</option>
+              {% for d in districts %}
+                  <option value="{{ d.district_id }}">{{ d.name }}</option>
+              {% endfor %}
+              {% ifnotequal max_dists districts|length %}
+                  <option value="new">New {{ body_member|capfirst }}</option>
+              {% endifnotequal %}
+            </select>
+            </div>
+            <button id="dragdrop_tool" class="titletip" title="Select areas on the map then drag them to into a district for reassignment">Click and<br/>Drag</button>
+          </div>
+        </div>
+        <div class="toolset_group toolset_group_lg last">  
+        {% if not plan.is_community %}
+          <div id="fix_unassigned">
+            <button id="fix_unassigned_button">Fix<br/>Unassigned</button>
+          </div>
+          {% endif %}
+          
+            {% comment %}
+            
+            This hidden div is used to style the locked districts.
+            This is needed, because the locked legend item does not
+            exist before the first district layer is drawn.
+            
+            {% endcomment %}
+            <div class="locked" style="display:none"></div>
+        </div>
+        <div class="clear"></div>
+      </div>
+      {% endblock toolset_draw %}
 
+      {% block toolset_district %}
+      <div class="toolset" id="toolset_district">
+        <div class="toolset_group">
+          <button class="navigate_map_tool active btntoggle toggle">Pan</button><br/>
+          <button class=" identify_map_tool btntoggle titletip" title="Click on a geounit to see its demographic info.">Info</button>
+        </div>
+        <div class="toolset_group toolset_group_lg">
+            <button id="lock_district_map_tool" title="Click on a district to lock or unlock it." class="btntoggle titletip">Lock<br/> District</button> 
+            <button id="district_id_map_tool" title="Click on a district to see its ID." class="btntoggle titletip">District<br/>Info</button> 
+            <button id="district_select_tool" title="Unassign all the units in a district" class="btntoggle titletip">Unassign<br/>District</button>
+            <button id="copy_paste_tool" title="Copy a district from another plan" class="titletip">Copy and</br> Paste</button>
+        </div>
+        <div class="toolset_group toolset_group_lg">
+
+          <button id="show_splits_button">Show<br/>Splits</button>
+          <button id="generate_splits_report_button">Generate<br/>Splits Report</button>
+         </div>
+        <div class="toolset_group toolset_group_lg last">       
+          {% if plan.legislative_body.multi_members_allowed %}
+          <button id="multi_member_toggle">Select Multi-<br/>Member Districts</button>
+          {% endif %}
+        </div>
+        <div class="clear"></div>
+      </div>
+          
+                    
+
+      {% endblock %}
+      
         {% block share_panel %}
             <div class="explanation">
                 <h3>Explanation of Shared Documents</h3>
@@ -195,17 +244,9 @@
     </div>
     {% endblock %}
 
-    {% block splits_ctl %}
-    <div id="show_splits">
-        <button id="show_splits_button">Show Splits</button>
-    </div>
-    {% endblock %}
     
     {% block multi_member %}
     {% if plan.legislative_body.multi_members_allowed %}
-    <div id="multi_member_button_container">
-        <button id="multi_member_toggle">Select Multi-Member Districts</button>
-    </div>
     <div id="multi_member_dialog">
         <div id="multi_member_content">
             <div id="multi_member_grid_container">
@@ -274,11 +315,8 @@
     {% endif %}
     {% endblock %}
 
+
     {% block splits_report %}
-    
-    <div id="splits_report">
-        <button id="splits_report_button">Splits Report</button>
-    </div>
     <div id="splits_report_dialog">
         <div id="splits_report_content">
             <div id="splits_report_select_panel">
@@ -333,14 +371,6 @@
         });
     </script>
         
-    {% endblock %}
-
-    {% block fix_unassigned %}
-    {% if not plan.is_community %}
-    <div id="fix_unassigned">
-        <button id="fix_unassigned_button">Fix Unassigned</button>
-    </div>
-    {% endif %}
     {% endblock %}
 
     {% block district_info %}

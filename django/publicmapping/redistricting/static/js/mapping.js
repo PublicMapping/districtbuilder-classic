@@ -579,14 +579,11 @@ function mapinit(srs,maxExtent) {
         return;
     });
 
-    // Hide the map type selection if there are 1 or fewer types
-    if (layers.length <= 1) {
-        var mapTypeRight = $('#map_type_toggle').css('right');
-        $('#map_type_settings').hide();
-
-        // Shift the map settings to fill the void where the map type button was.
-        $('#settings_toggle').css('right', mapTypeRight);
-        $('#map_settings_content').css('right', mapTypeRight);
+    // Change basemap selectoor styling if there is more than 1 choice
+    if (layers.length > 1) {
+        $('#map_type_settings').addClass('multiple');
+        $('#settings_toggle').addClass('multiple');
+        $('#map_settings_content').addClass('multiple');
     }
 
     // Construct map layers, ensuring boundary layers are at the end of the list for proper overlaying
@@ -2095,7 +2092,7 @@ function mapinit(srs,maxExtent) {
 
     // When the navigate map tool is clicked, disable all the 
     // controls except the navigation control.
-    $('#navigate_map_tool').click(function(evt){
+    $('.navigate_map_tool').click(function(evt){
         var active = olmap.getControlsBy('active',true);
         for (var i = 0; i < active.length; i++) {
             if (active[i].CLASS_NAME != 'OpenLayers.Control.KeyboardDefaults') {
@@ -2113,7 +2110,7 @@ function mapinit(srs,maxExtent) {
 
     // When the identify map tool is clicked, disable all the
     // controls except the identify control.
-    $('#identify_map_tool').click(function(evt){
+    $('.identify_map_tool').click(function(evt){
         var active = olmap.getControlsBy('active',true);
         for (var i = 0; i < active.length; i++) {
             if (active[i].CLASS_NAME != 'OpenLayers.Control.KeyboardDefaults') {

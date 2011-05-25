@@ -329,14 +329,10 @@ color: rgb(62, 107, 127);
 /*tabs and tab container */
 #app div#logo {  opacity: .8;}
 
-ul#steps_tabs li#tab_plan {background-color: #89BEBB;}
-ul#steps_tabs li#tab_draw {background-color: #93B6B2;}
-ul#steps_tabs li#tab_evaluate {background-color: #93B697;}
-ul#steps_tabs li#tab_share {background-color: #B4B693;}
-ul#steps_tabs li#tab_leaderboard {background-color: #B8A381}
+
 
 div#step_plan .toolbar { background-color:#7cb7b3}
-div#step_draw .toolbar { background-color:#87aea9}
+
 div#step_evaluate .toolbar {background-color: #87ae8b}
 div#step_share .toolbar {background-color:#acae87}
 div#step_leaderboard .toolbar {background-color: #b09873}
@@ -354,7 +350,7 @@ div#form_action{background-color: #8ac7b5;}
 
 /*buttons */
 
-#app button, .ui-dialog button {
+#app button, .ui-dialog button { 
     background-color: #1F8CBE;
     border: 1px solid #3B7181;
     }
@@ -370,23 +366,15 @@ div#toolbar_plans {
 
 
   
-div.toolset#toolset_draw .ui-button-icon-only {background-color:#6B8F8B;}
+div#toolsets .ui-button.ui-state-hover {}
  
-div.toolset#toolset_draw .ui-button-icon-only.toggle, div.toolset#toolset_draw .ui-button-icon-only.ui-state-active{background-color: #A8CFCB;}  
+div#toolsets .ui-button.toggle, div#toolsets .ui-button.ui-state-active{}  
 
 /*sidebar */
 
-div#map_menu_header {background-color:#5b8a62;}
+div#map_menu_header {}
 div#map_menu_header button.menu_toggle{background-color: #6B9571;}
 
-div.map_menu_content.basic_information {
-    background: #badcbf;
-    border:1px solid #77b280;
-  }
-div.map_menu_content.demographics {
-    background: #efe8cb;
-    border: 1px solid #ada176;
-}
 div.info_table tbody tr { 
     background: #f7f4e5;
 }
