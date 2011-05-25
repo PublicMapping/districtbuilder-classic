@@ -296,7 +296,10 @@ function mapinit(srs,maxExtent) {
             navigate,
             new OpenLayers.Control.PanZoomBar(),
             new OpenLayers.Control.KeyboardDefaults()
-        ]
+         ],
+
+        // Restrict panning to the extent of the study area, with a small buffer
+        restrictedExtent: STUDY_BOUNDS.scale(2),
     });
 
     // These layers are dependent on the layers available in geowebcache
