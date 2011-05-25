@@ -24,7 +24,7 @@
                                     <xs:attribute name="id" type="xs:ID" use="required" />
                                     <xs:attribute name="name" type="xs:string" use="required" />
                                     <xs:attribute name="member" type="xs:string" use="required" />
-                                    <xs:attribute name="maxdistricts" type="xs:unsignedByte" use="required" />
+                                    <xs:attribute name="maxdistricts" type="xs:nonNegativeInteger" use="required" />
                                     <xs:attribute name="is_community" type="xs:boolean" use="optional" />
                                 </xs:complexType>
                             </xs:element>
@@ -116,6 +116,8 @@
                                                         <xs:element name="SubjectArgument" type="NamedRefType">
                                                         </xs:element>
                                                         <xs:element name="ScoreArgument" type="NamedRefType">
+                                                        </xs:element>
+                                                        <xs:element name="LegislativeBody" type="RefType">
                                                         </xs:element>
                                                     </xs:choice>
                                                 </xs:sequence>
@@ -495,6 +497,10 @@
         </xs:keyref>
         <xs:keyref name="ScoreFunctionSubject" refer="DistrictBuilderSubjectKey">
             <xs:selector xpath="Scoring/ScoreFunctions/ScoreFunction/SubjectArgument" />
+            <xs:field xpath="@ref" />
+        </xs:keyref>
+        <xs:keyref name="ScoreFunctionLegislativeBody" refer="DistrictBuilderLegislativeBodyKey">
+            <xs:selector xpath="Scoring/ScoreFunctions/ScoreFunction/LegislativeBody" />
             <xs:field xpath="@ref" />
         </xs:keyref>
         <xs:keyref name="ScorePanelScore" refer="DistrictBuilderScoreFunctionKey">

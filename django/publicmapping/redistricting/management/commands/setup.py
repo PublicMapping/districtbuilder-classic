@@ -882,6 +882,36 @@ ERROR:
                 else:
                     print 'ContiguityOverride "%s" already exists' % str(co_obj)
 
+
+    def import_function(self, config, verbose):
+        user_selectable = config.get('user_selectable') == 'true'
+        fn_obj, created = ScoreFunction.objects.get_or_create(
+            calculator=config.get('calculator'),
+            name=config.get('id'),
+            label=config.get('label') or '',
+            description=config.get('description') or '',
+            is_planscore=config.get('type') == 'plan'
+        )
+
+        lbodies = []
+        for lbitem in config.xpath('LegislativeBody'):
+            lb = config.xpath('//LegislativeBody[@id="%s"]' % lbitem.get('ref'))[0]
+            lbodies.append(lb.get('name'))
+        lbodies = list(LegislativeBody.objects.filter(name__in=lbodies))
+        fn_obj.selectable_bodies.add(*lbodies)
+
+        if verbose > 1:
+            if created:
+                print 'Created ScoreFunction "%s"' % config.get('id')
+            else:
+                print 'ScoreFunction "%s" already exists' % config.get('id')
+
+        # Recursion if any ScoreArguments!
+        self.import_arguments(fn_obj, config, verbose)
+
+        return fn_obj
+
+
     def import_arguments(self, score_function, config, verbose):
         # Import arguments for this score function
         for arg in config.xpath('Argument'):
@@ -918,24 +948,7 @@ ERROR:
         # Import score arguments for this score function
         for scorearg in config.xpath('ScoreArgument'):
             argfn = config.xpath('//ScoreFunctions/ScoreFunction[@id="%s"]' % scorearg.get('ref'))[0]
-            user_selectable = argfn.get('user_selectable') == 'true'
-            childfn_obj, created = ScoreFunction.objects.get_or_create(
-                calculator=argfn.get('calculator'),
-                name=argfn.get('id'),
-                label=argfn.get('label') or '',
-                description=argfn.get('description') or '',
-                is_planscore=argfn.get('type') == 'plan',
-                is_user_selectable=user_selectable
-            )
-
-            if verbose > 1:
-                if created:
-                    print 'Created ScoreFunction "%s"' % argfn.get('id')
-                else:
-                    print 'ScoreFunction "%s" already exists' % argfn.get('id')
-
-            # Recursion!
-            self.import_arguments(childfn_obj, argfn, verbose)
+            self.import_function( argfn, verbose )
 
             name = scorearg.get('name')
             scorearg_obj, created = ScoreArgument.objects.get_or_create(
@@ -1052,29 +1065,10 @@ ERROR:
                 # Import score functions for this score panel
                 for sfref in sp.xpath('Score'):
                     sf = config.xpath('//ScoreFunctions/ScoreFunction[@id="%s"]' % sfref.get('ref'))[0]
-                    name = sf.get('id') or ''
-                    user_selectable = sf.get('user_selectable') == 'true'
-                    sf_obj, created = ScoreFunction.objects.get_or_create(
-                        calculator=sf.get('calculator'),
-                        name=name,
-                        label=sf.get('label') or '',
-                        description=sf.get('description') or '',
-                        is_planscore=sf.get('type') == 'plan',
-                        is_user_selectable=user_selectable
-                    )
-
-                    if verbose > 1:
-                        if created:
-                            print 'Created ScoreFunction "%s"' % name
-                        else:
-                            print 'ScoreFunction "%s" already exists' % name
+                    sf_obj = self.import_function(sf, verbose)
 
                     # Add ScoreFunction reference to ScorePanel
                     sp_obj.score_functions.add(sf_obj)
-
-                    # Import arguments for this score function
-                    self.import_arguments(sf_obj, sf, verbose)
-
 
         # Import validation criteria.
         if (len(config.xpath('//Validation')) == 0):
@@ -1090,25 +1084,7 @@ ERROR:
                 # Import the score function for this validation criterion
                 sfref = crit.xpath('Score')[0]
                 sf = config.xpath('//ScoreFunctions/ScoreFunction[@id="%s"]' % sfref.get('ref'))[0]
-                name = sf.get('id') or ''
-                user_selectable = sf.get('user_selectable') == 'true'
-                sf_obj, created = ScoreFunction.objects.get_or_create(
-                    calculator=sf.get('calculator'),
-                    name=name,
-                    label=sf.get('label') or '',
-                    description=sf.get('description') or '',
-                    is_planscore=sf.get('type') == 'plan',
-                    is_user_selectable=user_selectable
-                )
-
-                if verbose > 1:
-                    if created:
-                        print 'Created ScoreFunction "%s"' % name
-                    else:
-                        print 'ScoreFunction "%s" already exists' % name
-
-                # Import arguments for this score function
-                self.import_arguments(sf_obj, sf, verbose)
+                sf_obj = self.import_function(sf, verbose)
 
                 # Import this validation criterion
                 name = crit.get('name')
@@ -1140,7 +1116,8 @@ ERROR:
             obj, created = LegislativeBody.objects.get_or_create(
                 name=body.get('name'), 
                 member=body.get('member'), 
-                max_districts=body.get('maxdistricts'))
+                max_districts=body.get('maxdistricts'),
+                is_community=body.get('is_community')=='true')
             if verbose > 1:
                 if created:
                     print 'Created LegislativeBody "%s"' % body.get('name')
@@ -1172,6 +1149,7 @@ ERROR:
                 obj.max_plan_members = 0
                 if verbose > 1:
                     print 'Multi-member districts not configured for: %s' % body.get('name')
+
             obj.save()
 
         # Import subjects second

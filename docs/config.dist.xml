@@ -9,6 +9,7 @@
         <LegislativeBody id="congress" name="Congressional" member="District %s" maxdistricts="11"/>
         <LegislativeBody id="house" name="State House" member="District %s" maxdistricts="100" />
         <LegislativeBody id="senate" name="State Senate" member="District %s" maxdistricts="40" />
+        <LegislativeBody id="community" name="Community Map" member="Community %s" maxdistricts="999" is_community="true" />
     </LegislativeBodies>
 
     <!-- A list of subjects referenced in the system. -->
@@ -81,19 +82,16 @@
 
     <Scoring>
         <ScoreFunctions>
-            <!-- A district score that returns a literal value -->
-            <ScoreFunction id="district_poptot" type="district"
-                calculator="publicmapping.redistricting.calculators.SumValues"
-                label="Total Pop" user_selectable="true">
-                <SubjectArgument name="value1" ref="poptot" />
-            </ScoreFunction>
-
             <!-- A district score that returns a percentage -->
             <ScoreFunction id="district_blkvap_percent" type="district"
                 calculator="publicmapping.redistricting.calculators.Percent"
-                label="Black VAP" user_selectable="true">
+                label="Black VAP">
                 <SubjectArgument name="numerator" ref="vapblk" />
                 <SubjectArgument name="denominator" ref="vap" />
+                <LegislativeBody ref="congress"/>
+                <LegislativeBody ref="house"/>
+                <LegislativeBody ref="senate"/>
+                <LegislativeBody ref="community"/>
             </ScoreFunction>
             <ScoreFunction id="district_blkvap_thresh" type="district"
                 calculator="publicmapping.redistricting.calculators.Threshold"
@@ -103,9 +101,13 @@
             </ScoreFunction>
             <ScoreFunction id="district_hispvap_percent" type="district"
                 calculator="publicmapping.redistricting.calculators.Percent"
-                label="His. VAP" user_selectable="true">
+                label="His. VAP">
                 <SubjectArgument name="numerator" ref="vaphisp" />
                 <SubjectArgument name="denominator" ref="vap" />
+                <LegislativeBody ref="congress"/>
+                <LegislativeBody ref="house"/>
+                <LegislativeBody ref="senate"/>
+                <LegislativeBody ref="community"/>
             </ScoreFunction>
             <ScoreFunction id="district_hispvap_thresh" type="district"
                 calculator="publicmapping.redistricting.calculators.Threshold"
@@ -169,12 +171,18 @@
             <ScoreFunction id="district_schwartzberg" type="district"
                 calculator="publicmapping.redistricting.calculators.Schwartzberg"
                 label="Compactness" user_selectable="true">
+                <LegislativeBody ref="congress"/>
+                <LegislativeBody ref="house"/>
+                <LegislativeBody ref="senate"/>
             </ScoreFunction>
             
             <!-- A custom calculator to do contiguity, and is boolean. -->
             <ScoreFunction id="district_contiguous" type="district"
                 calculator="publicmapping.redistricting.calculators.Contiguity"
                 label="Contiguous" user_selectable="true">
+                <LegislativeBody ref="congress"/>
+                <LegislativeBody ref="house"/>
+                <LegislativeBody ref="senate"/>
             </ScoreFunction>
 
             <!-- A plan score that aggregates all literal values -->
@@ -453,6 +461,10 @@
                 calculator="publicmapping.redistricting.calculators.SumValues"
                 user_selectable="true" label="Partisan Index">
                 <SubjectArgument name="value1" ref="govdem" />
+                <LegislativeBody ref="congress"/>
+                <LegislativeBody ref="house"/>
+                <LegislativeBody ref="senate"/>
+                <LegislativeBody ref="community"/>
             </ScoreFunction>
         </ScoreFunctions>
         
@@ -1044,7 +1056,7 @@
             minpercent - The minimum percentage of assigned units required
                 in order to perform fixes for adjacent unassigned units.
                 This does not apply to unassigned units wholly contained within
-                a districts -- those don't require a minimum.
+                a district - those don't require a minimum.
             comparatorsubject - Name of the subject used for deciding which district
                 to assign an adjacent unassigned geounit to in the case of multiple
                 adjacent districts. The district with the lower value for this subject
