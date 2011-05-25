@@ -377,7 +377,7 @@ chooseplan = function(options) {
         _table.setPostDataItem( 'legislative_body', $('#leg_selector').val() );
         /* If the search box has a value, apply that to any filter */
         var search = $('#plan_search');
-        if (search.val() != '') {
+        if (search.val() != '' && search.val() != ' Search ') {
                 _table.setPostDataItem( '_search', true );
                 _table.setPostDataItem( 'searchString', $('#plan_search').val() );
         } else {
@@ -404,21 +404,21 @@ chooseplan = function(options) {
         if (document.getElementById('plan_search').getAttribute('placeholder') != 'Search' ||
                 navigator.userAgent.indexOf('Firefox/3') > -1) {
             searchBox.focus( function() {
-                if ($(this).val() == 'Search') {
+                if ($(this).val() == ' Search ') {
                     $(this).val('');
-                    $(this).css('font', '');
+                    $(this).css('color', '#000000');
                 }
             });
             searchBox.blur( function() {
                 if ($(this).val() == '') {
-                    $(this).css('font', 'gray');
-                    $(this).val('Search');
+                    $(this).css('color', '#666666');
+                    $(this).val(' Search ');
                 }
             });
 
             // initial state showing watermark
             searchBox.css('font', 'gray');
-            searchBox.val('Search');
+            searchBox.val(' Search ');
         }
         
     };
