@@ -1500,3 +1500,63 @@ class CommunityTypeCounter(CalculatorBase):
         except:
             # sys.stderr.write(traceback.format_exc())
             self.result = 'n/a'
+
+class SplitCounter(CalculatorBase):
+    """
+    This calculator determines which districts are "split" and how
+    often by the districts in a different plan.
+    """
+    def compute(self, **kwargs):
+        if 'plan' in kwargs:
+            plan = kwargs['plan']
+            version = kwargs['version'] if 'version' in kwargs else plan.version
+        else:
+            return
+
+        # Use the argument to find "bottom" map
+        target = self.get_value('boundary_id')
+        id = int(target[target.find('.')+1:])
+
+        results = {'plan_name': plan.name}
+
+        other_names = False
+
+        from redistricting.models import Geolevel, Plan
+
+        my_names = dict((p.district_id, p.name) for p in plan.get_districts_at_version(plan.version))
+        if target.startswith('geolevel'):
+            results['other_name'] = Geolevel.objects.get(pk=id).name
+            splits = plan.find_geolevel_splits(id, version=version)
+        elif target.startswith('plan'):
+            other_plan = Plan.objects.get(pk=id)
+            results['other_name'] = other_plan.name
+            splits = plan.find_plan_splits(other_plan, version=version)
+            other_names = dict((p.district_id, p.name) for p in other_plan.get_districts_at_version(other_plan.version))
+
+        if other_names:
+            named_splits = [(my_names[s[0]], other_names[s[1]]) for s in splits]
+        else:
+            named_splits = [(my_names[s[0]], s[1]) for s in splits]
+
+        results['splits'] = splits
+        results['named_splits'] = named_splits
+        results['total_splits'] = len(splits)
+        results['total_split_districts'] = len(set(i[0] for i in splits))
+
+        self.result = results
+
+    def html(self):
+        """
+        Generate an HTML representation of the equivalence score. This
+        is represented as an integer formatted with commas or "n/a"
+        """
+        r = self.result
+        render = '<div class="split_report">'
+        render += '<div>Total districts split by %s: %d<div>' % (r['other_name'], r['total_split_districts'])
+        render += '<div>Total number of splits: %d<div>' % r['total_splits']
+        render += '<table><thead><tr><th>%s district</th><th>%s district</th></tr></thead><tbody>' % (r['plan_name'], r['other_name'])
+        for s in r['named_splits']:
+            render += '<tr><td>%s</td><td>%s</td></tr>' % (s[0], s[1])
+        render += '</tbody></table></div>'
+        return render
+

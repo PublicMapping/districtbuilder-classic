@@ -2556,6 +2556,68 @@ class CalculatorTestCase(BaseTestCase):
         # Average is 97.5, should not be beween 100.0 and 105.0
         self.assertEqual(False,avg.result)
 
+    def test_splitcounter(self):
+        # Create a plan with two large districts - geounits 5 and 8
+
+        p1 = self.plan
+        d1a_id = 1
+        # Create a district of geounit 5
+        p1.add_geounits( d1a_id, ['5'], 1, p1.version)
+
+        d2a_id = 2
+        # Create a district of geounit 8
+        p1.add_geounits( d2a_id, ['8'], 1, p1.version)
+
+        # Create a plan with two districts - one crosses both 5 and 8,
+        p2 = self.plan2
+        d1b_id = 3
+        geounits = [str(i) for i in range(30,69) if i % 9 in (3,4,5)]
+        p2.add_geounits( d1b_id, geounits, 2, p2.version)
+
+        # the other is entirely within 5
+        d2b_id = 4
+        geounits = [str(i) for i in range(42, 61) if i % 9 == 6]
+        p2.add_geounits( d2b_id, geounits, 2, p2.version)
+
+        # Calc the first plan with second as other
+        calc = SplitCounter()
+        calc.arg_dict['boundary_id'] = ('literal', 'plan.%d' % p2.id)
+        calc.compute(plan=p1)
+        num_splits = calc.result['total_splits']
+        self.assertEqual(2, num_splits, 'Did not find expected splits. e:2, a:%s' % num_splits)
+
+        # Calc the second plan with first as other
+        calc.__init__()
+        calc.arg_dict['boundary_id'] = ('literal', 'plan.%d' % p1.id)
+        calc.compute(plan=p2)
+        num_splits = calc.result['total_splits']
+        split_tuples = calc.result['splits']
+        self.assertEqual(3, num_splits, 'Did not find expected splits. e:3, a:%s' % num_splits)
+        self.assertIn((3,1), calc.result['splits'], 'Split not detected')
+        self.assertIn(('TestMember 3', 'TestMember 1'), calc.result['named_splits'], 'Split not named correctly')
+
+        # Calc the first plan with geolevel 1 - no splits
+        calc.__init__()
+        calc.arg_dict['boundary_id'] = ('literal', 'geolevel.1')
+        calc.compute(plan=p1)
+        num_splits = calc.result['total_splits']
+        self.assertEqual(0, num_splits, 'Did not find expected splits. e:0, a:%s' % num_splits)
+
+        # Calc the second plan with geolevel 2 - no splits
+        calc.__init__()
+        calc.arg_dict['boundary_id'] = ('literal', 'geolevel.2')
+        calc.compute(plan=p2)
+        num_splits = calc.result['total_splits']
+        self.assertEqual(0, num_splits, 'Did not find expected splits. e:0, a:%s' % num_splits)
+
+        # Calc the second plan with geolevel 1 - d1a and d2a both split the geolevels
+        calc.__init__()
+        calc.arg_dict['boundary_id'] = ('literal', 'geolevel.1')
+        calc.compute(plan=p2)
+        district_splits = calc.result['total_split_districts']
+        self.assertEqual(2, district_splits, 'Did not find expected splits. e:2, a:%s' % district_splits)
+        self.assertIn((4, u'0000004'), calc.result['splits'], 'Did not find expected splits')
+    
 class AllBlocksTestCase(BaseTestCase):
     fixtures = ['redistricting_testdata.json',
                 'redistricting_testdata_geolevel2.json',
@@ -2794,6 +2856,35 @@ class ScoreRenderTestCase(BaseTestCase):
         plan_result = display.render(self.plan, components=components)
         self.assertEqual("testPlan:['<span>58.0000</span>']", plan_result, 'Didn\'t get expected result when overriding plan\'s display')
 
+    def test_splitcounter_display(self):
+        # Create a plan with two districts - one crosses both 5 and 8
+        p1 = self.plan
+        d1a_id = 1
+        geounits = [str(i) for i in range(30,69) if i % 9 in (3,4,5)]
+        p1.add_geounits( d1a_id, geounits, 2, p1.version)
+
+        # the other is entirely within 5
+        d2a_id = 5
+        geounits = [str(i) for i in range(42, 61) if i % 9 == 6]
+        p1.add_geounits( d2a_id, geounits, 2, p1.version)
+
+        # Get a ScoreDisplay and components to render
+        display = ScoreDisplay.objects.get(pk=1)
+        display.is_page = False
+        display.save()
+
+        panel = ScorePanel(title="Splits Report", type="plan", template="sp_template1.html", cssclass="split_panel")
+        function = ScoreFunction(calculator="redistricting.calculators.SplitCounter", name="splits_test", label="Geolevel Splits", is_planscore=True)
+        arg1 = ScoreArgument(argument="boundary_id", value="geolevel.1", type="literal")
+
+        components = [(panel, [(function, arg1)])]
+
+        expected_result = "%s:[u'<div class=\"split_report\"><div>Total districts split by first level: 2<div><div>Total number of splits: 7<div><table><thead><tr><th>testPlan district</th><th>first level district</th></tr></thead><tbody><tr><td>TestMember 1</td><td>0000000</td></tr><tr><td>TestMember 1</td><td>0000001</td></tr><tr><td>TestMember 1</td><td>0000003</td></tr><tr><td>TestMember 1</td><td>0000004</td></tr><tr><td>TestMember 1</td><td>0000006</td></tr><tr><td>TestMember 1</td><td>0000007</td></tr><tr><td>TestMember 5</td><td>0000004</td></tr></tbody></table></div>']" % p1.name
+
+        # Check the result
+        plan_result = display.render(p1, components=components)
+
+        self.assertEqual(expected_result, plan_result, "Didn't get expected result when rendering SplitCounter:\ne:%s\na:%s" % (expected_result, plan_result))
 
 class ComputedScoresTestCase(BaseTestCase):
     def test_district1(self):
