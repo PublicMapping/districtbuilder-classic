@@ -978,10 +978,6 @@ ERROR:
         Scoring is currently optional. Import sections only if they are present.
         """
 
-        # Remove previous score configuration
-        for m in [ValidationCriteria, ScorePanel, ScoreDisplay, ScoreArgument, ScoreFunction]:
-            m.objects.all().delete()
-            
         if (len(config.xpath('//Scoring')) == 0):
             if verbose > 1:
                 print 'Scoring not configured'
