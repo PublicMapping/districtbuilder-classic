@@ -524,7 +524,7 @@ function mapinit(srs,maxExtent) {
     });
 
     // Handle show splits requests
-    $('#show_splits').click(function(){
+    $('#show_splits_button').click(function(){
         var referenceLayerId = $('#reference_layer_select').val();
         if (!referenceLayerId || (referenceLayerId === 'None')) {
             $('<div>No reference layer selected.</div>').dialog({
