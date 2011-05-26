@@ -1690,7 +1690,7 @@ function mapinit(srs,maxExtent) {
         // Checking for visibility sometimes causes OpenLayers unhappiness
         try {
             if ($('.map_menu_content:visible').length > 0) {
-                var offset = $('#map_menu_header').position();
+                var offset = $('.map_menu_content').offset();
                 var bounds = olmap.getExtent();
                 var lonLat = olmap.getLonLatFromPixel(new OpenLayers.Pixel(offset.left, offset.top));
                 bounds.right = lonLat.lon;
