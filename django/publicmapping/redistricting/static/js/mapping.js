@@ -2100,6 +2100,7 @@ function mapinit(srs,maxExtent) {
             }
         }
         navigate.activate();
+        $('.navigate_map_tool').addClass('toggle');
         $('#dragdrop_tool').removeClass('toggle');
         $('#anchor_tool').removeClass('toggle');
         assignMode = null;
@@ -2118,6 +2119,7 @@ function mapinit(srs,maxExtent) {
             }
         }
         idControl.activate();
+        $('.identify_map_tool').addClass('toggle');
         $('#dragdrop_tool').removeClass('toggle');
         $('#anchor_tool').removeClass('toggle');
         assignMode = null;
