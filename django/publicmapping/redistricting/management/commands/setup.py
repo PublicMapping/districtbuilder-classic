@@ -1066,6 +1066,11 @@ ERROR:
                     # Add ScoreFunction reference to ScorePanel
                     sp_obj.score_functions.add(sf_obj)
 
+        # It's possible to define ScoreFunctions that are not part of any ScorePanels, yet
+        # still need to be added to allow for user selection. Find and import these functions.
+        for sf in config.xpath('//ScoreFunctions/ScoreFunction'):
+            self.import_function(sf, verbose)
+
         # Import validation criteria.
         if (len(config.xpath('//Validation')) == 0):
             if verbose > 1:
