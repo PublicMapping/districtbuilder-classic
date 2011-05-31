@@ -320,6 +320,15 @@ $(function() {
                 });
             }  
         });
+     
+     
+     //stats picker menu slider activation
+     $('#map_menu_header select').change(function() {
+          if ( $(".map_menu_content:visible'").length === 0) {
+                $('#map_settings_content, #legend_toggle').removeClass('collapse', 400);
+                $storedPanel.slideDown(200);
+          }
+     });
     
     // map editing buttons
     $('.toolset button, #history_tools button, #open_statistics_editor')
