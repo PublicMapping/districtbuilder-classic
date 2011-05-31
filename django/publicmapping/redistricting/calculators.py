@@ -669,10 +669,6 @@ class Contiguity(CalculatorBase):
 
         self.result = 0
         for district in districts:
-            if district.district_id == 0:
-                self.result += 1
-                continue
-
             if len(district.geom) == 1: 
                 self.result += 1
             else:

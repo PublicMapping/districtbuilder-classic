@@ -2201,7 +2201,7 @@ class CalculatorTestCase(BaseTestCase):
 
         actual = cntcalc.result
 
-        self.assertEqual(0, actual, 'Incorrect value during contiguity. (e:%d,a:%d)' % (0, actual))
+        self.assertEqual(1, actual, 'Incorrect value during contiguity. (e:%d,a:%d)' % (1, actual))
 
         self.plan.add_geounits( self.district1.district_id, [str(self.geounits[4].id)], self.geolevel.id, self.plan.version )
 
@@ -2209,7 +2209,7 @@ class CalculatorTestCase(BaseTestCase):
 
         actual = cntcalc.result
 
-        self.assertEqual(1, actual, 'Incorrect value during contiguity. (e:%d,a:%d)' % (1, actual))
+        self.assertEqual(2, actual, 'Incorrect value during contiguity. (e:%d,a:%d)' % (2, actual))
 
         self.plan.add_geounits( self.district2.district_id, [str(self.geounits[13].id)], self.geolevel.id, self.plan.version )
 
@@ -2217,7 +2217,7 @@ class CalculatorTestCase(BaseTestCase):
 
         actual = cntcalc.result
 
-        self.assertEqual(2, actual, 'Incorrect value during contiguity. (e:%d,a:%d)' % (2, actual))
+        self.assertEqual(3, actual, 'Incorrect value during contiguity. (e:%d,a:%d)' % (3, actual))
 
 
     def test_equivalence1(self):
