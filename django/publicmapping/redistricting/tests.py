@@ -2593,8 +2593,8 @@ class CalculatorTestCase(BaseTestCase):
         num_splits = calc.result['total_splits']
         split_tuples = calc.result['splits']
         self.assertEqual(3, num_splits, 'Did not find expected splits. e:3, a:%s' % num_splits)
-        self.assertIn((3,1), calc.result['splits'], 'Split not detected')
-        self.assertIn(('TestMember 3', 'TestMember 1'), calc.result['named_splits'], 'Split not named correctly')
+        self.assertTrue((3,1) in calc.result['splits'], 'Split not detected')
+        self.assertTrue(('TestMember 3', 'TestMember 1') in calc.result['named_splits'], 'Split not named correctly')
 
         # Calc the first plan with geolevel 1 - no splits
         calc.__init__()
@@ -2616,7 +2616,7 @@ class CalculatorTestCase(BaseTestCase):
         calc.compute(plan=p2)
         district_splits = calc.result['total_split_districts']
         self.assertEqual(2, district_splits, 'Did not find expected splits. e:2, a:%s' % district_splits)
-        self.assertIn((4, u'0000004'), calc.result['splits'], 'Did not find expected splits')
+        self.assertTrue((4, u'0000004') in calc.result['splits'], 'Did not find expected splits')
     
 class AllBlocksTestCase(BaseTestCase):
     fixtures = ['redistricting_testdata.json',

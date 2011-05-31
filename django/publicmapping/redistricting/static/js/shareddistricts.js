@@ -352,7 +352,7 @@ shareddistricts = function(options) {
                     break;
                 case 1:
                     if (PLAN_TYPE == 'plan') {
-                        instructions = '2. Select a ' + BODY_MEMBER + 'to copy';
+                        instructions = '2. Select a ' + BODY_MEMBER + ' to copy';
                     }
                     else {
                         instructions = '2. Select a ' + BODY_MEMBER;
