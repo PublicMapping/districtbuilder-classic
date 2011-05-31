@@ -335,6 +335,13 @@ def merge_config(config, verbose):
             timeout = 15
         settings_out.write("\nSESSION_TIMEOUT = %d\n" % int(timeout))
 
+        istoposimplified = cfg.get('istoposimplified')
+        if not istoposimplified:
+            istoposimplified = False
+        else:
+            istoposimplified = True if istoposimplified == 'true' else False
+        settings_out.write("\nIS_TOPO_SIMPLIFIED = %s\n" % istoposimplified)
+
         # If banner image setting does not exist, defaults to:
         # '/static-media/images/banner-home.png'
         banner = cfg.get('bannerimage')

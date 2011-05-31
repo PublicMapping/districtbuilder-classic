@@ -444,6 +444,7 @@
                         <xs:attribute name="root" type="xs:string" use="required" />
                         <xs:attribute name="sessionquota" type="xs:positiveInteger" use="optional" />
                         <xs:attribute name="sessiontimeout" type="xs:positiveInteger" use="optional" />
+                        <xs:attribute name="istoposimplified" type="xs:boolean" use="optional" default="false" />
                     </xs:complexType>
                 </xs:element>
             </xs:sequence>
