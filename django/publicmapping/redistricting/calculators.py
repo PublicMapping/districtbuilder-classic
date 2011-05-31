@@ -1552,8 +1552,8 @@ class SplitCounter(CalculatorBase):
         """
         r = self.result
         render = '<div class="split_report">'
-        render += '<div>Total districts split by %s: %d<div>' % (r['other_name'], r['total_split_districts'])
-        render += '<div>Total number of splits: %d<div>' % r['total_splits']
+        render += '<div>Total districts split by %s: %d</div>' % (r['other_name'], r['total_split_districts'])
+        render += '<div>Total number of splits: %d</div>' % r['total_splits']
         render += '<table><thead><tr><th>%s district</th><th>%s district</th></tr></thead><tbody>' % (r['plan_name'], r['other_name'])
         for s in r['named_splits']:
             render += '<tr><td>%s</td><td>%s</td></tr>' % (s[0], s[1])

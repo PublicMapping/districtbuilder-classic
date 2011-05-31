@@ -1096,8 +1096,19 @@ def get_splits_report(request, planid):
         return HttpResponse('<div>No layers were provided.</div>', mimetype='text/plain')
 
     try :
-        html = '<div>TODO: return rendered splits report for: %s.</div>' % str(layers)
-        return HttpResponse(html, mimetype='text/plain')
+        # Get a ScoreDisplay and components to render
+        display = ScoreDisplay(is_page=False, title="Splits Report", owner=request.user, legislative_body = plan.legislative_body)
+        panel = ScorePanel(title="Splits Report", type="plan", template='split_report.html', cssclass="split_panel")
+        function = ScoreFunction(calculator="redistricting.calculators.SplitCounter", name="splits_test", label="Geolevel Splits", is_planscore=True)
+
+        html = ''
+        for layer in layers:
+            arg1 = ScoreArgument(argument="boundary_id", value=layer, type="literal")
+            components = [(panel, [(function, arg1)])]
+
+            html += display.render(plan, components=components)
+
+        return HttpResponse(html, mimetype='text/html')
     except Exception as ex:
         print traceback.format_exc()
         return HttpResponse('%s' % ex, mimetype='text/plain')
