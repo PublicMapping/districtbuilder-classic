@@ -176,11 +176,17 @@ $(function(){
                         var newusername = $('#newusername');
                         newusername.removeClass('field');
                         newusername.addClass('error');
+                        $('<div>User Name already exists. Please choose another one.</div>').dialog({
+                            modal: true, autoOpen: true, title: 'Error', resizable:false
+                        });                
                     } else if (data.message == 'email exists') {
                         var email = $('#email');
                         email.removeClass('field');
                         email.addClass('error');
                         $('#dupemail').css('display','block');
+                        $('<div>Email already exists. Enter another one, or use the password retrieval form.</div>').dialog({
+                            modal: true, autoOpen: true, title: 'Error', resizable:false
+                        });                
                     } else {
                         genericRegistrationError();
                     }
