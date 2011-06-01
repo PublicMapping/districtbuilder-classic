@@ -59,7 +59,8 @@ div#static_header {
 div#app_header {
   padding: 0;
   height: 43px; 
-  background: rgba(233,233,210, .35) url(/static-media/images/bg-app-header.png) 0 0 repeat-x;
+  background: #7FAAAA url(/static-media/images/bg-app-header.png) 0 0 repeat-x;
+  background-color: rgba(233,233,210, .35);
   box-shadow: 0 0 7px rgba(0,0,0,.6);
   -moz-box-shadow: 0 0 7px rgba(0,0,0,.6);
   -webkit-box-shadow: 0 0 7px rgba(0,0,0,.6);
@@ -84,6 +85,7 @@ div#site_nav a {
   vertical-align:middle; 
 }
 div#site_nav a:hover {
+  background-color: #90B7B9;
   background-color: rgba(255,255,255, .1);
 }
 
@@ -143,9 +145,9 @@ ul#steps_tabs li {
   background-image: url(/static-media/images/bg-arrow-button.png);
   background-position: top right;
   background-repeat:repeat-x;
- -moz-border-radius: 6px 0 6px 0;
-  -webkit-border-radius: 6px 0 6px 0;
-  border-radius: 6px 0 0 6px;
+ -moz-border-radius: 3px 0 3px 0;
+  -webkit-border-radius: 3px 0 3px 0;
+  border-radius: 3px 0 0 3px;
   text-shadow: 0 -1px #666
 }
 
@@ -158,10 +160,12 @@ ul#steps_tabs li.ui-state-default.ui-tabs-selected {
 ul#steps_tabs li.ui-state-default.ui-state-disabled {
   background-image: url(/static-media/images/bg-arrow-button-disabled.png); 
   opacity: 1; 
+  filter: Alpha(Opacity=100);
 }
 ul#steps_tabs li.ui-state-default.ui-state-disabled a {
   color: rgba(255,255,255, .3);
   text-shadow:none;
+  filter: Alpha(Opacity=35);
 }
 
 ul#steps_tabs li#tab_plan {border-left: 1px solid #5F8081 !important; background-position: 100% 0; z-index: 31 }
@@ -171,20 +175,19 @@ ul#steps_tabs li#tab_evaluate {background-position: 100% -62px; z-index: 29}
 ul#steps_tabs li#tab_share {
   background-position: 80% -93px; z-index: 28; margin-right: 10px; 
     border-right: 1px solid #5F8081 !important;
-  -moz-border-radius: 6px;
-  -webkit-border-radius: 6px;
-  border-radius: 6px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
   }
   ul#steps_tabs li#tab_share a  {
     padding-right: 20px;
   }
 ul#steps_tabs li#tab_leaderboard {
   background-position: 80% 0;
-  border-right: 1px solid rgba(0, 0, 0, 0.2);
-  border-left: 1px solid rgba(0, 0, 0, 0.2);
-  -moz-border-radius: 6px;
-  -webkit-border-radius: 6px;
-  border-radius: 6px;
+  border: 1px solid #5F8081 !important;  
+-moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
 }
 ul#steps_tabs li#tab_leaderboard a {
   padding-right: 15px;
@@ -840,10 +843,11 @@ div#control_header button#choose_layers_button.ui-state-default {
     text-transform: uppercase;
     background-color: #606060;
     margin:0;
+    background: url(/static-media/images/bg-button-xl.png) 0 0 repeat-x;
     -moz-box-shadow: 2px 2px 2px rgba(0,0,0,.3);
     -webkit-box-shadow: 2px 2px 2px rgba(0,0,0,.3);
     box-shadow: 2px 2px 2px rgba(0,0,0,.3);
-    background: url(/static-media/images/bg-button-xl.png) 0 0 repeat-x;
+
 }
 
 div#control_header button#choose_layers_button .icon-layers {
@@ -851,6 +855,7 @@ div#control_header button#choose_layers_button .icon-layers {
     display: block;
     width: 61px;
     height: 49px;
+    top:0;
     left: auto;
     margin: 0 auto;
     position: relative;
@@ -907,10 +912,10 @@ div.fulltab {
     right:10px;
     left:10px;
     bottom:0px;
+    min-width:980px;
     -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    min-width:980px;
     -moz-border-radius: 8px 8px 0 0;
     -webkit-border-radius: 8px 8px 0 0;
     border-radius: 8px 8px 0 0;
@@ -944,11 +949,12 @@ div#map {
   border-bottom: none;
   text-transform: uppercase;
   background-color: rgba(233, 233, 210, 0.35);
+  *background-color: #82AFB0;
   background-image: url(/static-media/images/bg-button-sm.png);
   background-position:0 0;
   background-repeat:repeat-x;
   text-shadow: 0 -1px rgba(0,0,0,.3);
- -moz-border-radius: 3px 3px 0 0;
+  -moz-border-radius: 3px 3px 0 0;
   -webkit-border-radius: 3px 3px 0 0;
   border-radius: 3px 3px 0 0;
 }
@@ -959,6 +965,7 @@ div#map {
   color: #fff; 
   }
 #mapandmenu ul.mapping_tabs li.ui-state-hover   {
+  border: 1px solid #90ADAE;
   border: 1px solid rgba(255,255,255,.3);
   border-bottom: none;
   }
@@ -984,7 +991,9 @@ div#control_header .button_group#control_assign_district {
   }
 div#control_header div.toolset {
   padding: 0;
-  background: rgba(233,233,210, .35) url(/static-media/images/bg-header-panel.png) 0 0 repeat-x;
+  background: url(/static-media/images/bg-header-panel.png) 0 0 repeat-x;
+  background-color: rgba(233,233,210, .35);
+  *background-color: #82AFB0;
  -moz-border-radius: 0 3px 3px;
   -webkit-border-radius: 0 3px 3px;
   border-radius: 0 3px 3px;
@@ -1020,10 +1029,11 @@ div#control_header .ui-button.ui-state-hover {
 }
 
 div#control_header .ui-button.disabled, div#control_header .ui-button.ui-state-hover.disabled {
-opacity: .5;
 background:none;
 border:none;
 cursor: not-allowed;
+opacity: .5;
+filter: Alpha(opacity=50);
 }
 
 
@@ -1199,14 +1209,16 @@ div#map_menu {
     background:none;
     border:none;
     padding: 0;
-    float:right;
+    position:absolute;
+    right: 0;
     margin: 0;
     height: 100%;
     z-index:1000;
 }
 
+
+div#stats_options  {position: absolute; right: 0}
 div#stats_options  .ui-button{ 
-    float:right; 
     border: 1px solid transparent;
     margin: -1px 0 1px 0;
     padding: 0;
@@ -1242,7 +1254,9 @@ div#map_menu_header {
     padding: 8px 0 0 0;
     cursor: pointer;
     width: 270px;
-    background: rgba(233,233,210, .35) url(/static-media/images/bg-header-panel.png) 0 0 repeat-x;
+    background: #82AFB0 url(/static-media/images/bg-header-panel.png) 0 0 repeat-x;
+    background-color: rgba(233,233,210, .35);
+    *background-color: #82AFB0;
     -moz-border-radius: 0 3px 3px;
     -webkit-border-radius: 0 3px 3px;
     border-radius: 0 3px 3px;
