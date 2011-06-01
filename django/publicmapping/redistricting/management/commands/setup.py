@@ -447,7 +447,7 @@ contents of the file and try again.
                         style_type = subject.name
 
                     if not style_name:
-                        layer_name = 'demo_%s_%s' % (geolevel.name, subject.name)
+                        layer_name = '%s:demo_%s_%s' % (namespace,geolevel.name, subject.name)
                         style_name = layer_name
                     else:
                         layer_name = style_name
@@ -458,7 +458,7 @@ contents of the file and try again.
                     } }
 
                     # Get the SLD file
-                    sld = self.get_style_contents( styledir, geolevel.name, style_type, verbose )
+                    sld = self.get_style_contents( namespace, styledir, geolevel.name, style_type, verbose )
 
                     if sld is None:
                         if verbose > 1:
@@ -479,7 +479,7 @@ contents of the file and try again.
                             "Could not upload style file '%s.sld'" % style_name, \
                             verbose):
                             if verbose > 1:
-                                print "Uploaded '%s_%s.sld' file." % (geolevel.name, subject.name)
+                                print "Uploaded '%s.sld' file." % style_name
 
                     # Apply the uploaded style to the demographic layers
                     layer = { 'layer' : {
@@ -492,7 +492,7 @@ contents of the file and try again.
                     
                     if not self.rest_config( 'PUT', \
                         host, \
-                        '/geoserver/rest/layers/%s:%s' % (namespace, layer_name), \
+                        '/geoserver/rest/layers/%s' % layer_name, \
                         json.dumps(layer), \
                         headers, \
                         "Could not assign style to layer '%s'." % layer_name, \
@@ -545,14 +545,14 @@ contents of the file and try again.
                     feature_type_obj = get_feature_type_obj('demo_%s' % geolevel.name)
                     feature_type_obj['featureType']['nativeName'] = 'demo_%s_%s' % (geolevel.name, subject.name)
                     create_geoserver_object_if_necessary(feature_type_url, 'demo_%s' % geolevel.name, feature_type_obj, 'Feature Type')
-                    publish_and_assign_style('demo_%s' % geolevel.name, 'none',get_zoom_range(geolevel))
+                    publish_and_assign_style('%s:demo_%s' % (namespace, geolevel.name,), 'none',get_zoom_range(geolevel))
 
                     # Create boundary layer, based on geographic boundaries
                     feature_name = '%s_boundaries' % geolevel.name
                     feature_type_obj = get_feature_type_obj(feature_name)
                     feature_type_obj['featureType']['nativeName'] = 'demo_%s_%s' % (geolevel.name, subject.name)
                     create_geoserver_object_if_necessary(feature_type_url, feature_name, feature_type_obj, 'Feature Type')
-                    publish_and_assign_style('%s_boundaries' % geolevel.name, 'boundaries', get_zoom_range(geolevel))
+                    publish_and_assign_style('%s:%s_boundaries' % (namespace,geolevel.name,), 'boundaries', get_zoom_range(geolevel))
 
         if verbose > 0:
             print "Geoserver configuration complete."
@@ -560,8 +560,8 @@ contents of the file and try again.
         # finished configure_geoserver
         return True
 
-    def get_style_contents(self, styledir, geolevel, subject, verbose):
-        path = '%s/%s_%s.sld' % (styledir, geolevel, subject) 
+    def get_style_contents(self, namespace, styledir, geolevel, subject, verbose):
+        path = '%s/%s:%s_%s.sld' % (styledir, namespace, geolevel, subject) 
         try:
             stylefile = open(path)
             sld = stylefile.read()

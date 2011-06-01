@@ -2373,7 +2373,7 @@ function mapinit(srs,maxExtent) {
                 $('#map').trigger('style_changed', [new OpenLayers.Style(districtStyle)]);
                 return;
             }
-            var styleUrl = '/sld/' + snap + '_' + show + '.sld';
+            var styleUrl = '/sld/' + NAMESPACE + ':' + snap + '_' + show + '.sld';
 
             var isSnap = false;
             for (var i = 0; i < SNAP_LAYERS.length; i++) {
