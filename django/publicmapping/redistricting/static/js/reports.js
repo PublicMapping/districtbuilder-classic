@@ -161,10 +161,10 @@ reports = function(options) {
         _popVar = $('#popVar').val();
         _popVarExtra = getConcatenated('popVarExtra');
         _splitVars = getConcatenated('splitVar');
-        _repCompactness = $('#repCompactness').attr('checked');
-        _repCompactnessExtra = $('#repCompactnessExtra').attr('checked');
-        _repSpatial = $('#repSpatial').attr('checked');
-        _repSpatialExtra = $('#repSpatialExtra').attr('checked');
+        _repCompactness = $('#repCompactness').is(':checked');
+        _repCompactnessExtra = $('#repCompactnessExtra').is(':checked');
+        _repSpatial = $('#repSpatial').is(':checked');
+        _repSpatialExtra = $('#repSpatialExtra').is(':checked');
         var data = { 
             popVar: _popVar,
             popVarExtra: _popVarExtra,

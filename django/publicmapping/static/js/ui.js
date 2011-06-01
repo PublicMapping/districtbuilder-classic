@@ -402,16 +402,16 @@ $(function() {
         $this = $(this);
         var id = $this.attr('id');
         var category = id.substring(0, id.indexOf('_'));
-        var checked = $this.attr('checked');
-        $('#reportdescription .' + category + ' input').attr('checked', $this.attr('checked'));     
+        var checked = $this.is(':checked');
+        $('#reportdescription .' + category + ' input').prop('checked', $this.is(':checked'));     
     });
     $('#reportdescription .reportVar input').click( function() {
         $this = $(this).closest('span');
         var id = $this.attr('id');
         var categories = $this.attr('class');
         var category = categories.split(' ')[0]; 
-        if ($this.find('input').attr('checked') == false) {
-            $('#' + category + '_master').attr('checked', false);     
+        if ($this.find('input').is(':checked') == false) {
+            $('#' + category + '_master').prop('checked', false);     
         }
     });
 
