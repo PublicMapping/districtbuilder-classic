@@ -1187,30 +1187,7 @@ ERROR:
                 print 'Set denominator on "%s" to "%s"' % (numerator.name, denominator_name)
 
 
-        # Import targets third
-        targs = config.xpath('//Targets/Target')
-
-        for targ in targs:
-            # get subject
-            subconfig = config.xpath('//Subject[@id="%s"]' % (targ.get('subjectref')))[0]
-            if not subconfig.get('aliasfor') is None:
-                # dereference any subject alias
-                subconfig = config.xpath('//Subject[@id="%s"]' % (subconfig.get('aliasfor')))[0]
-            subject = Subject.objects.filter(name=subconfig.get('id').lower())[0]
-
-            obj, created = Target.objects.get_or_create(
-                subject=subject,
-                value=targ.get('value'),
-                range1=targ.get('range1'),
-                range2=targ.get('range2'))
-
-            if verbose > 1:
-                if created:
-                    print 'Created Target "%s"' % obj
-                else:
-                    print 'Target "%s" already exists' % obj
-            
-        # Import geolevels fourth
+        # Import geolevels third
         # Note that geolevels may be added in any order, but the geounits
         # themselves need to be imported top-down (smallest area to biggest)
         geolevels = config.xpath('//GeoLevels/GeoLevel')
@@ -1230,65 +1207,35 @@ ERROR:
                 lbconfig = config.xpath('//LegislativeBody[@id="%s"]' % lbody.get('ref'))[0]
                 legislative_body = LegislativeBody.objects.get(name=lbconfig.get('name'))
                 
-                # Add a mapping for the targets in this GL/LB combo.
-                targs = lbody.xpath('LegislativeTargets/LegislativeTarget')
-                for targ in targs:
-                    tconfig = config.xpath('//Target[@id="%s"]' % targ.get('ref'))[0]
-                    sconfig = config.xpath('//Subject[@id="%s"]' % tconfig.get('subjectref'))[0]
-                    if not sconfig.get('aliasfor') is None:
-                        # dereference any subject alias
-                        sconfig = config.xpath('//Subject[@id="%s"]' % (sconfig.get('aliasfor')))[0]
-                    subject = Subject.objects.get(name=sconfig.get('id').lower())
+                # Add a mapping for the subjects in this GL/LB combo.
+                sconfig = lbody.xpath('//Subjects/Subject[@default="true"]')[0]
+                if not sconfig.get('aliasfor') is None:
+                    # dereference any subject alias
+                    sconfig = config.xpath('//Subject[@id="%s"]' % (sconfig.get('aliasfor')))[0]
+                subject = Subject.objects.get(name=sconfig.get('id').lower())
 
-                    target = Target.objects.get(
-                        subject=subject,
-                        value=tconfig.get('value'),
-                        range1=tconfig.get('range1'),
-                        range2=tconfig.get('range2')) 
-
-                    if not targ.get('default') is None:
-                        # get or create won't work here, as it requires a
-                        # target, which may be different from the item
-                        # we want to retrieve
-                        obj = LegislativeDefault.objects.filter(legislative_body=legislative_body)
-                        if len(obj) == 0:
-                            obj = LegislativeDefault(legislative_body=legislative_body, target=target)
-                            created = True
-                        else:
-                            obj = obj[0]
-                            obj.target = target
-                            created = False
-
-                        obj.save()
-
-                        if verbose > 1:
-                            if created:
-                                print 'Set default target for LegislativeBody "%s"' % legislative_body.name
-                            else:
-                                print 'Changed default target for LegislativeBody "%s"' % legislative_body.name
-
-                    pconfig = lbody.xpath('Parent')
-                    if len(pconfig) == 0:
-                        parent = None
-                    else:
-                        pconfig = config.xpath('//GeoLevel[@id="%s"]' % pconfig[0].get('ref'))[0]
-                        plvl = Geolevel.objects.get(name=pconfig.get('name').lower())
-                        parent = LegislativeLevel.objects.get(
-                            legislative_body=legislative_body, 
-                            geolevel=plvl, 
-                            target=target)
-
-                    obj, created = LegislativeLevel.objects.get_or_create(
+                pconfig = lbody.xpath('Parent')
+                if len(pconfig) == 0:
+                    parent = None
+                else:
+                    pconfig = config.xpath('//GeoLevel[@id="%s"]' % pconfig[0].get('ref'))[0]
+                    plvl = Geolevel.objects.get(name=pconfig.get('name').lower())
+                    parent = LegislativeLevel.objects.get(
                         legislative_body=legislative_body, 
-                        geolevel=glvl, 
-                        target=target, 
-                        parent=parent)
+                        geolevel=plvl, 
+                        subject=subject)
 
-                    if verbose > 1:
-                        if created:
-                            print 'Created LegislativeBody/GeoLevel mapping "%s/%s"' % (legislative_body.name, glvl.name)
-                        else:
-                            print 'LegislativeBody/GeoLevel mapping "%s/%s" already exists' % (legislative_body.name, glvl.name)
+                obj, created = LegislativeLevel.objects.get_or_create(
+                    legislative_body=legislative_body, 
+                    geolevel=glvl, 
+                    subject=subject, 
+                    parent=parent)
+
+                if verbose > 1:
+                    if created:
+                        print 'Created LegislativeBody/GeoLevel mapping "%s/%s"' % (legislative_body.name, glvl.name)
+                    else:
+                        print 'LegislativeBody/GeoLevel mapping "%s/%s" already exists' % (legislative_body.name, glvl.name)
 
         return True
 

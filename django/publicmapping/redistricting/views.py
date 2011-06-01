@@ -361,7 +361,6 @@ def commonplan(request, planid):
     if plan.count() == 1:
         plan = plan[0]   
         plan.edited = getutc(plan.edited)
-        targets = plan.targets()
         levels = plan.legislative_body.get_geolevels()
         districts = plan.get_districts_at_version(plan.version,include_geom=False)
         editable = can_edit(request.user, plan)
@@ -380,7 +379,6 @@ def commonplan(request, planid):
     else:
         # If said plan doesn't exist, use an empty plan & district list.
         plan = {}
-        targets = list()
         levels = list()
         districts = {}
         editable = False
@@ -392,7 +390,6 @@ def commonplan(request, planid):
     demos = Subject.objects.all().order_by('sort_key').values_list("id","name", "short_display","is_displayed")[0:3]
     layers = []
     snaplayers = []
-    rules = []
 
     if len(levels) > 0:
         study_area_extent = list(Geounit.objects.filter(geolevel=levels[0]).extent(field_name='simple'))
@@ -412,13 +409,6 @@ def commonplan(request, planid):
     # If the default demo was not selected among the first three, we'll still need it for the dropdown menus
     if default_demo and not default_selected:
         layers.insert( 0, {'id':default_demo.id,'text':default_demo.short_display,'value':default_demo.name.lower(), 'isdefault':str(True).lower(), 'isdisplayed':str(default_demo.is_displayed).lower()} )
-
-    for target in targets:
-        # The "in there" range
-        range1 = target.value * target.range1
-        # The "out of there" range
-        range2 = target.value * target.range2
-        rules.append( {'subject_id':target.subject_id,'lowest': target.value - range2,'lower':target.value - range1,'upper':target.value + range1,'highest': target.value + range2} )
 
     unassigned_id = 0
     if type(plan) != types.DictType:
@@ -447,7 +437,6 @@ def commonplan(request, planid):
         'feature_limit': settings.FEATURE_LIMIT,
         'demographics': layers,
         'snaplayers': snaplayers,
-        'rules': rules,
         'unassigned_id': unassigned_id,
         'is_registered': request.user.username != 'anonymous' and request.user.username != '',
         'debugging_staff': settings.DEBUG and request.user.is_staff,

@@ -99,14 +99,12 @@
                 MAP_LAYERS.push( NAMESPACE + ':demo_' + SNAP_LAYERS[i].level + '_' + DEMOGRAPHICS[j].value );
             }
         }
-        // The style rules for all subjects. Each subject has a different
-        // set of ranges, and they are pulled from the django db.
-        var RULES = { {% for rule in rules %}'{{ rule.subject_id }}': {lowest: {{ rule.lowest }}, lower:{{ rule.lower }}, upper:{{ rule.upper }}, highest: {{ rule.highest }} }{% if not forloop.last %},{% endif %}{% endfor %}};
         // The maximum number of districts that can exist in this plan.
         var MAX_DISTRICTS = {{ max_dists }};
         // The name of a 'district' in this plan, could be "District ", etc
         var BODY_MEMBER = '{{ body_member }}';
         var BODY_MEMBERS = '{{ body_members }}';
+        var LEGISLATIVE_BODY = '{{ plan.legislative_body.name|lower }}';
         // This settings determines whether a staff member is viewing the page in debug mode. 
         // It can be used to display messages to help with debugging and/or configuration
         var DEBUG = {{ debugging_staff|lower }};
@@ -685,12 +683,6 @@ Include the shared_districts markup if we're using the copy/paste tool
 {% endcomment %}
 {% endblock %}
 
-{% comment %}
-
-Include the stats_picker markup if the user can save stats
-
-{% endcomment %}
-
 <div id="choose_layers_dialog">
     <div id="choose_layers_content">
         <div id="choose_layers_select_div">
@@ -719,13 +711,13 @@ Include the stats_picker markup if the user can save stats
 
             {% endcomment %}
             <select id="districtby" class="indented fillwidth">
-                <option value="1.None">None</option>
-                <option value="1.Compactness">Compactness</option>
-                <option value="1.Contiguity">Contiguity</option>
+                <option value="0" name="None">None</option>
+                <option value="-1" name="Compactness">Compactness</option>
+                <option value="-2" name="Contiguity">Contiguity</option>
 
                 {% for demo in demographics %}
                 {% if demo.isdisplayed == "true" %}
-                    <option value="{{ demo.id }}" {% if demo.isdefault == "true" %}selected=true{% endif %}>
+                    <option value="{{ demo.id }}" modifier="" name="{{ demo.value }}" {% if demo.isdefault == "true" %}selected="true"{% endif %}>
                         {{ demo.text }}
                     </option>
                 {% endif %}
