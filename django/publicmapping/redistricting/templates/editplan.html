@@ -111,11 +111,14 @@
             <button id="district_select_tool" title="Unassign all the units in a district" class="btntoggle titletip">Unassign<br/>District</button>
             <button id="copy_paste_tool" title="Copy a district from another plan" class="titletip">Copy and</br> Paste</button>
         </div>
-        <div class="toolset_group toolset_group_lg">
 
+        {% if not plan.is_community %}        
+        <div class="toolset_group toolset_group_lg">
           <button id="show_splits_button">Show<br/>Splits</button>
           <button id="generate_splits_report_button">Generate<br/>Splits Report</button>
          </div>
+        {% endif %}
+        
         <div class="toolset_group toolset_group_lg last">       
           {% if plan.legislative_body.multi_members_allowed %}
           <button id="multi_member_toggle">Select Multi-<br/>Member Districts</button>
