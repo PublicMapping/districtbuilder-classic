@@ -767,6 +767,7 @@
               <LegislativeBody ref="congress" />
               <LegislativeBody ref="house" />
               <LegislativeBody ref="senate" />
+              <LegislativeBody ref="community" />
           </LegislativeBodies>
       </GeoLevel>
 
@@ -839,6 +840,9 @@
               <LegislativeBody ref="senate">
                   <Parent ref="block" />
               </LegislativeBody>
+              <LegislativeBody ref="community">
+                  <Parent ref="block" />
+              </LegislativeBody>
           </LegislativeBodies>
       </GeoLevel>
 
@@ -908,6 +912,9 @@
                   <Parent ref="vtd" />
               </LegislativeBody>
               <LegislativeBody ref="senate">
+                  <Parent ref="vtd" />
+              </LegislativeBody>
+              <LegislativeBody ref="community">
                   <Parent ref="vtd" />
               </LegislativeBody>
           </LegislativeBodies>

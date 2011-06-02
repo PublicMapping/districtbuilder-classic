@@ -726,7 +726,7 @@ ERROR:
             'tolerance': geolevel.get('tolerance')
         }
 
-        sconfigs = geolevel.xpath('Subjects/Subject')
+        sconfigs = geolevel.xpath('//Subjects/Subject')
         for sconfig in sconfigs:
             if 'aliasfor' in sconfig.attrib:
                 salconfig = config.xpath('//Subject[@id="%s"]' % sconfig.get('aliasfor'))[0]
@@ -1382,13 +1382,13 @@ ERROR:
                 else:
                     g = prefetch[0]
 
-                if config['attributes'] == None:
+                if not config['attributes']:
                     self.set_geounit_characteristic(g, subject_objects, feat, verbose)
 
             if verbose > 1:
                 sys.stdout.write('100%\n')
 
-        if not config['attributes'] is None:
+        if config['attributes']:
             progress = 0
             if verbose > 1:
                 print "Assigning subject values to imported geography..."
@@ -1419,7 +1419,12 @@ ERROR:
         for attr, obj in subject_objects.iteritems():
             if attr.endswith('_by_id'):
                 continue
-            value = Decimal(str(feat.get(attr))).quantize(Decimal('000000.0000', 'ROUND_DOWN'))
+            try:
+                value = Decimal(str(feat.get(attr))).quantize(Decimal('000000.0000', 'ROUND_DOWN'))
+            except:
+                if verbose > 1:
+                    print 'No attribute "%s" on feature %d' % (attr, feat.fid,)
+                continue
             percentage = '0000.00000000'
             if obj.percentage_denominator:
                 denominator_field = subject_objects['%s_by_id' % obj.percentage_denominator.name]
