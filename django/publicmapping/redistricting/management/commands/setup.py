@@ -43,7 +43,7 @@ from xml.dom import minidom
 from rpy2.robjects import r
 from redistricting.models import *
 from redistricting.utils import *
-import traceback, pprint, httplib, string, base64, json, types
+import traceback, pprint, httplib, string, base64, json, types, re
 
 class Command(BaseCommand):
     """
@@ -276,9 +276,13 @@ contents of the file and try again.
         # Get a list of styles
         sts_cfg = self.read_config(host, '/geoserver/rest/styles.json', headers, "Could not get styles.", verbose)
         if not sts_cfg is None:
-            excludes = ['point','line','polygon','raster']
+            includes = ['^%s:.*' % namespace]
             for st_cfg in sts_cfg['styles']['style']:
-                if st_cfg['name'] in excludes:
+                skip = False
+                for inc in includes:
+                    skip = skip or re.compile(inc).match(st_cfg['name']) is None
+                if skip:
+                    # This style doesn't match any style starting with the prefix.
                     continue
 
                 # Delete the style
