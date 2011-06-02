@@ -696,6 +696,7 @@ Include the shared_districts markup if we're using the copy/paste tool
 {% endcomment %}
 {% endblock %}
 
+{% if plan.name %}
 <div id="choose_layers_dialog">
     <div id="choose_layers_content">
         <div id="choose_layers_select_div">
@@ -768,22 +769,25 @@ Include the shared_districts markup if we're using the copy/paste tool
 <script type="text/javascript" src="/static-media/js/layerchooser.js"></script>
 <script type="text/javascript">
     $(function() {
-        layerChooser = layerchooser({
-            container: $('#choose_layers_dialog'),
-            target: $('#choose_layers_button').button({icons:{primary:'icon-layers'}}),
-            legislativeButton: $('#choose_layers_legislative_button'),
-            communityButton: $('#choose_layers_community_button'),
-            okButton: $('#choose_layers_ok_button'),
-            referenceLayerContent: $('#reference_layer_content'),
-            referenceLayerSelect: $('#reference_layer_select'),
-            referencePlansTable: $('#reference_plans_table'),
-            referencePlansPager: $('#reference_plans_pager'),
-            referencePlansUrl: '/districtmapping/getplans/',
-            map: $('#map'),
-            csrfmiddlewaretoken: $('#csrfmiddlewaretoken')
-        }).init();
+        setTimeout(function() {
+            layerChooser = layerchooser({
+                container: $('#choose_layers_dialog'),
+                target: $('#choose_layers_button').button({icons:{primary:'icon-layers'}}),
+                legislativeButton: $('#choose_layers_legislative_button'),
+                communityButton: $('#choose_layers_community_button'),
+                okButton: $('#choose_layers_ok_button'),
+                referenceLayerContent: $('#reference_layer_content'),
+                referenceLayerSelect: $('#reference_layer_select'),
+                referencePlansTable: $('#reference_plans_table'),
+                referencePlansPager: $('#reference_plans_pager'),
+                referencePlansUrl: '/districtmapping/getplans/',
+                map: $('#map'),
+                csrfmiddlewaretoken: $('#csrfmiddlewaretoken')
+            }).init();
+        }, 1000);
     });
 </script>
+{% endif %}
 
 {% block stats_editor %}
 {% comment %}

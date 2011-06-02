@@ -365,7 +365,7 @@ chooseplan = function(options) {
             difile = districtindexfile({
                 target: $('#chooserFileDownloadTarget'),
                 planId: id
-            }).init();
+            });
             row.data('difile', difile);
         }
         difile.setUpdateVisibility(true).init();
