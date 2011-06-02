@@ -396,6 +396,7 @@ chooseplan = function(options) {
         var searchBox = $('#plan_search');
         searchBox.keyup( function(event) {
             if (event.which == 13) {
+                clearPlanForm();
                 _table.jqGrid().trigger('reloadGrid', [{ page:1 }]);
             }
         });
@@ -534,13 +535,7 @@ chooseplan = function(options) {
         });
     
         // When switching tabs, clear the details form
-        $('#plan_buttons li').click( function() {
-            $('#plan_form *[type=text]').val('');
-            if (_districtindexfilePublisher) {
-                _districtindexfilePublisher.setUpdateVisibility(false);
-            }    
-            $('#chooserFileDownloadTarget').empty();
-        });
+        $('#plan_buttons li').click( clearPlanForm );
 
         // If anonymous, hide the "new plan" options
         if (_options.anonymous) {
@@ -560,6 +555,14 @@ chooseplan = function(options) {
 
         // Start the chooser with templates
         $('#filter_templates').click();
+    };
+
+    var clearPlanForm = function() {
+        $('#plan_form *[type=text]').val('');
+        if (_districtindexfilePublisher) {
+            _districtindexfilePublisher.setUpdateVisibility(false);
+        }    
+        $('#chooserFileDownloadTarget').empty();
     };
 
     //resize grid to fit window
