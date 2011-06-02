@@ -1498,6 +1498,10 @@ class SplitCounter(CalculatorBase):
     """
     This calculator determines which districts are "split" and how
     often by the districts in a different plan.
+
+    This calculator also accepts an optional 'inverse' value. If this
+    is set to 1 (true), the inverse calculation will take place:
+    the bottom layer will be treated as the top layer and vice versa.
     """
     def compute(self, **kwargs):
         if 'plan' in kwargs:
@@ -1509,6 +1513,10 @@ class SplitCounter(CalculatorBase):
         # Use the argument to find "bottom" map
         target = self.get_value('boundary_id')
         id = int(target[target.find('.')+1:])
+
+        # Check if we should invert the order or the layers
+        inverse = self.get_value('inverse') == 1
+        # TODO: implement inverse functionality
 
         results = {'plan_name': plan.name}
 

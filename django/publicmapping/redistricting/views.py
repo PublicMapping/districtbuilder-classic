@@ -1091,6 +1091,7 @@ def get_splits_report(request, planid):
         return HttpResponseForbidden()
 
     version = int(request.REQUEST['version'] if 'version' in request.REQUEST else plan.version)
+    inverse = request.REQUEST['inverse'] == 'true' if 'inverse' in request.REQUEST else False
     layers = request.REQUEST.getlist('layers[]')
     if len(layers) == 0:
         return HttpResponse('<div>No layers were provided.</div>', mimetype='text/plain')
@@ -1104,7 +1105,8 @@ def get_splits_report(request, planid):
         html = ''
         for layer in layers:
             arg1 = ScoreArgument(argument="boundary_id", value=layer, type="literal")
-            components = [(panel, [(function, arg1)])]
+            arg2 = ScoreArgument(argument="inverse", value=(1 if inverse else 0), type="literal")
+            components = [(panel, [(function, arg1, arg2)])]
 
             html += display.render(plan, components=components)
 
