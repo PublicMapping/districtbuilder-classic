@@ -120,7 +120,6 @@ contents of the file and try again.
 
         self.create_superuser(config, verbose)
         self.import_prereq(config, verbose)
-        #self.import_contiguity_overrides(config, verbose)
         self.import_scoring(config, verbose)
 
         optlevels = options.get("geolevels")
@@ -143,7 +142,8 @@ contents of the file and try again.
                     if nestme:
                         self.renest_geolevel(geolevel, verbose)
 
-		self.import_contiguity_overrides(config, verbose)
+            # Do this once after processing the geolevels
+            self.import_contiguity_overrides(config, verbose)
 
 
         if options.get("views"):

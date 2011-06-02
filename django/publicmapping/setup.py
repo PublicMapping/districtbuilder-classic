@@ -204,8 +204,18 @@ ERROR:
 The configuration file specified was parsed successfully, but there are
 validation errors.
 """
-            if verbose > 1:
+            if verbose > 2:
+                print 'Error Log:'
+                for error in schema.error_log:
+                    print """
+ Domain: %s
+ Type: %s
+ Message: %s
+""" % (error.domain_name,error.type_name,error.message)
+            else:
+                print 'Last Error:'
                 print schema.error_log.last_error
+
         return False
 
     if verbose > 0:
