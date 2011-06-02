@@ -35,8 +35,8 @@ splitsreport = function(options) {
         _options = $.extend({
             container: {},
             target: {},
-            currentOkButton: {},
-            extendedOkButton: {},
+            okButton: {},
+            inverseCheckbox: {},
             availableLayers: {},
             referenceLayerSelect: {},
             splitsReportUrl: {},
@@ -65,6 +65,8 @@ splitsreport = function(options) {
 
         // Add button behavior for displaying reports
         var displaySplits = function(ids) {
+            console.debug();
+            
             var waitDialog = $('<div>Please wait while retrieving splits report.</div>').dialog({
                 modal: true,
                 autoOpen: true,
@@ -79,7 +81,8 @@ splitsreport = function(options) {
                 url: _options.splitsReportUrl,
                 data: {
                     version: _options.getVersionFn(),
-                    layers: ids
+                    layers: ids,
+                    inverse: _options.inverseCheckbox.is(':checked')        
                 },
                 success: function(data, textStatus, xhr) {
                     waitDialog.remove();
@@ -93,17 +96,7 @@ splitsreport = function(options) {
                 }
             });
         };
-        _options.currentOkButton.click(function(){
-            var referenceLayerId = _options.referenceLayerSelect.val();
-            if (!referenceLayerId || (referenceLayerId === 'None')) {
-                $('<div>No reference layer selected.</div>').dialog({
-                    modal: true, autoOpen: true, title: 'Warning', resizable:false
-                });
-                return;
-            }
-            displaySplits([referenceLayerId]);
-        });
-        _options.extendedOkButton.click(function(){
+        _options.okButton.click(function(){
             var selected = [];
             _options.availableLayers.find(':checked').each( function() {
                 selected.push($(this).val());
@@ -121,15 +114,24 @@ splitsreport = function(options) {
 
         // Listen for new 'converted' layers to add as selectable options
         _options.map.bind('reference_layer_changed', function(evt, rid, rname) {
-            // Don't add the option if it's 'None' or has already been added
-            if ((rid === 'None') || (_options.availableLayers.find('input[id=' + rid.replace('.', '\\.') + ']').length > 0)) {
+            // Uncheck all checked items
+            _options.availableLayers.find(':checked').prop('checked', false);
+
+            // Don't do anything if it's 'None'
+            if (rid === 'None') {
                 return;
             }
-                
-            var div = $('<div class="layer_choice_wrapper"></div>');
-            div.append($('<input class="layer_choice" id="' + rid + '" value="' + rid + '" type="checkbox"></input>'));
-            div.append($('<label for="' + rid + '">&nbsp;' + rname + '</label>'));
-            _options.availableLayers.append(div);            
+      
+            // Only add the option if it hasn't already been added
+            if (_options.availableLayers.find('input[id=' + rid.replace('.', '\\.') + ']').length === 0) {
+                var div = $('<div class="layer_choice_wrapper"></div>');
+                div.append($('<input class="layer_choice" id="' + rid + '" value="' + rid + '" type="checkbox"></input>'));
+                div.append($('<label for="' + rid + '">&nbsp;' + rname + '</label>'));
+                _options.availableLayers.append(div);            
+            }
+
+            // Check the selected item
+            $('#' + rid.replace('.', '\\.')).prop('checked', true);
         });
     };
 
