@@ -15,7 +15,7 @@
             <xs:element name="BardConfigs">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element name="BardConfig" type="BardConfigType" />
+                        <xs:element name="BardConfig" type="BardConfigType" minOccurs="1" maxOccurs="unbounded" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>

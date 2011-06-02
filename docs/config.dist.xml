@@ -1063,16 +1063,16 @@
 
                 -->
                 <BardConfig 
-                    id="blocks"
+                    id="tenpercent"
                     shape="/projects/publicmapping/data/vablock_bard_save.Rdata" 
                     temp="/projects/publicmapping/local/reports"
                     transform="/projects/publicmapping/trunk/docs/bard_template.xslt">
                     <PopVars>
-                        <PopVar subjectref="poptot" threshold=".05" default="true" />
-                        <PopVar subjectref="vap" threshold=".1" />
-                        <PopVar subjectref="vapwnh" threshold=".1" />
-                        <PopVar subjectref="vapblk" threshold=".1" />
-                        <PopVar subjectref="vaphisp" threshold=".1" default="false" />
+                        <PopVar subjectref="poptot" threshold=".1" default="true" />
+                        <PopVar subjectref="vap" />
+                        <PopVar subjectref="vapwnh" />
+                        <PopVar subjectref="vapblk" />
+                        <PopVar subjectref="vaphisp" default="false" />
                     </PopVars>
                     <RatioVars>
                         <!--
@@ -1104,9 +1104,41 @@
                         VTd, or tract.
 
                         -->
-                        <SplitVar field="COUNTYST10" label="County" />
+                        <SplitVar field="COUNTYFP10" label="County" />
                         <SplitVar field="VTDST10" label="VTD" />
-                        <SplitVar field="TRACTCE10" label="Tract" />
+                    </SplitVars>
+                </BardConfig>
+                <BardConfig 
+                    id="fivepercent"
+                    shape="/projects/publicmapping/data/vablock_bard_save.Rdata" 
+                    temp="/projects/publicmapping/local/reports"
+                    transform="/projects/publicmapping/trunk/docs/bard_template.xslt">
+                    <PopVars>
+                        <PopVar subjectref="poptot" threshold=".05" default="true" />
+                        <PopVar subjectref="vap" />
+                        <PopVar subjectref="vapwnh" />
+                        <PopVar subjectref="vapblk" />
+                        <PopVar subjectref="vaphisp" default="false" />
+                    </PopVars>
+                    <RatioVars>
+                        <RatioVar id="racialComp" label="Majority Minority Districts" threshold=".5">
+                            <Numerators>
+                                <Numerator subjectref="vapblk" />
+                                <Numerator subjectref="vaphisp" />
+                            </Numerators>
+                            <Denominator subjectref="vap" />
+                        </RatioVar>
+                        <RatioVar id="partyControl" label="Party-Controlled Districts" threshold=".5">
+                            <Numerators>
+                                <Numerator subjectref="govdem" />
+                                <Numerator subjectref="govrep" />
+                            </Numerators>
+                            <Denominator subjectref="vap" />
+                        </RatioVar>
+                    </RatioVars>
+                    <SplitVars>
+                        <SplitVar field="COUNTYFP10" label="County" />
+                        <SplitVar field="VTDST10" label="VTD" />
                     </SplitVars>
                 </BardConfig>
             </BardConfigs>
@@ -1120,15 +1152,15 @@
                 <BardBodyConfig
                     id="congress_blocks"
                     legislativebodyref="congress"
-                    bardconfigref="blocks" />
+                    bardconfigref="fivepercent" />
                 <BardBodyConfig
                     id="house_blocks"
                     legislativebodyref="house"
-                    bardconfigref="blocks" />
+                    bardconfigref="tenpercent" />
                 <BardBodyConfig
                     id="senate_blocks"
                     legislativebodyref="senate"
-                    bardconfigref="blocks" />
+                    bardconfigref="tenpercent" />
             </BardBodyConfigs>
         </Reporting>
         

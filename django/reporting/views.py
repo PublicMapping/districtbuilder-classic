@@ -139,7 +139,10 @@ def get_named_vector(parameter_string, tag = None):
     extras = parameter_string.split('^')
     for extra in extras:
         pair = extra.split('|')
-        vec += r('list("%s"="%s")' % (pair[0], pair[1]))
+        if re.match('^[\d\.]+$', pair[1]):
+            vec += r('list("%s"=%s)' % (pair[0], Decimal(pair[1])))
+        else:
+            vec += r('list("%s"="%s")' % (pair[0], pair[1]))
     return vec
 
 def drop_error(tempdir, basename, msg):
@@ -259,7 +262,6 @@ def getreport(request):
             print 'popVar',popVar
         if popVar:
             pop_var = get_named_vector(popVar)
-            pop_var += r('list("tolerance"=.01)')
 
         popVarExtra = request.POST.get('pop_var_extra', None)
         if settings.DEBUG:

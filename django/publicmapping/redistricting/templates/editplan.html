@@ -36,6 +36,14 @@
           <input id="history_cursor" type="hidden"/>
       {% endblock %}
       
+      {% block toolset_tabs %}
+          <ul class="mapping_tabs">
+            <li><a href="#toolset_draw">Map Editing</a></li>
+            <li><a href="#toolset_district">District Tools</a></li>
+          </ul>  
+      {% endblock %}
+      
+      
           
       {% block toolset_draw %}
       <div class="toolset" id="toolset_draw">

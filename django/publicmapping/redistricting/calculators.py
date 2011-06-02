@@ -415,9 +415,6 @@ class SumValues(CalculatorBase):
         self.result = 0
 
         for district in districts:
-            if district.district_id == 0:
-                continue
-
             argnum = 1
             while ('value%d'%argnum) in self.arg_dict:
                 number = self.get_value('value%d'%argnum, district)
