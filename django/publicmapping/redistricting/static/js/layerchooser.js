@@ -31,8 +31,8 @@
  *   options -- Configuration options for the layer chooser tool.
  */
 layerchooser = function(options) {
-    var _minWidth = 350;
-    var _maxWidth = 790;
+    var _minWidth = 380;
+    var _maxWidth = 865;
 
     var _self = {},
         _options = $.extend({

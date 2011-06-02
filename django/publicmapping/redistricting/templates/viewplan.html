@@ -713,57 +713,65 @@ Include the stats_picker markup if the user can save stats
             on the demographics that are configured in the application.
 
             {% endcomment %}
-            <h2>1. Select <span id="layer_type">Layer</span> Thematic Map</h2>
-            <select id="showby" class="indented fillwidth">
-                <option value="none">None</option>
-                {% for demo in demographics %}              
-                    <option value="{{ demo.value }}" {% if demo.isdefault == "true" %}selected=true{% endif %}>
-                        {{ demo.text }}
-                    </option>
-                {% endfor %}
-            </select>
+            <div class="dialog_step">
+              <h2>1. Select <span id="layer_type">Layer</span> Thematic Map</h2>
+              <select id="showby" class="indented fillwidth">
+                  <option value="none">None</option>
+                  {% for demo in demographics %}              
+                      <option value="{{ demo.value }}" {% if demo.isdefault == "true" %}selected=true{% endif %}>
+                          {{ demo.text }}
+                      </option>
+                  {% endfor %}
+              </select>
+            </div>
             
-            <h2>2. Choose District Thematic Map</h2>
-            {% comment %}
+            <div class="dialog_step">
+              <h2>2. Choose District Thematic Map</h2>
+              {% comment %}
 
-            Dynamically populate the "Show Districts by:" dropdown,
-            based on the demographics that are configured in the 
-            application.
+              Dynamically populate the "Show Districts by:" dropdown,
+              based on the demographics that are configured in the 
+              application.
 
-            {% endcomment %}
-            <select id="districtby" class="indented fillwidth">
-                <option value="1.None">None</option>
-                <option value="1.Compactness">Compactness</option>
-                <option value="1.Contiguity">Contiguity</option>
+              {% endcomment %}
+              <select id="districtby" class="indented fillwidth">
+                  <option value="1.None">None</option>
+                  <option value="1.Compactness">Compactness</option>
+                  <option value="1.Contiguity">Contiguity</option>
 
-                {% for demo in demographics %}
-                {% if demo.isdisplayed == "true" %}
-                    <option value="{{ demo.id }}" {% if demo.isdefault == "true" %}selected=true{% endif %}>
-                        {{ demo.text }}
-                    </option>
-                {% endif %}
-                {% endfor %}
-            </select>
+                  {% for demo in demographics %}
+                  {% if demo.isdisplayed == "true" %}
+                      <option value="{{ demo.id }}" {% if demo.isdefault == "true" %}selected=true{% endif %}>
+                          {{ demo.text }}
+                      </option>
+                  {% endif %}
+                  {% endfor %}
+              </select>
+            </div>
             
-            <h2>3. Choose a Reference Layer</h2>
-            <select id="reference_layer_select" class="indented fillwidth">
-                <option value="None">None</option>
-                {% for snap in snaplayers %}
-                    <option value="geolevel.{{ snap.geolevel }}">
-                        {{ snap.name }}
-                    </option>
-                {% endfor %}
-            </select>
-
-            <h2 class="indented">OR...</h2>
-            <button id="choose_layers_legislative_button" class="indented fillwidth spacebelow">
-                Select Legislative Plan For Display
-            </button>
-            <button id="choose_layers_community_button" class="indented fillwidth">
-                Select Community Plan For Display
-            </button>
+            <div class="dialog_step">
+              <h2>3. Choose a Reference Layer</h2>
+              <select id="reference_layer_select" class="indented fillwidth">
+                  <option value="None">None</option>
+                  {% for snap in snaplayers %}
+                      <option value="geolevel.{{ snap.geolevel }}">
+                          {{ snap.name }}
+                      </option>
+                  {% endfor %}
+              </select>
+              <div id="choose_layers_button_group" class="indented">
+              <h2 class="indented centered">OR...</h2>
+              <button id="choose_layers_legislative_button" class="lg spacebelow">
+                  Select Legislative Plan</br>For Display
+              </button>
+              <button id="choose_layers_community_button" class="lg">
+                  Select Community Plan<br/>For Display
+              </button>
+              </div>
+              <div class="clear"></div>
+            </div>
         </div>
-        <div id="reference_layer_content">
+        <div id="reference_layer_content" class="dialog_step">
             <h2>4. Select Plan to Display as Reference Layer</h2>
             <table id="reference_plans_table"></table>
             <div id="reference_plans_pager"></div>
