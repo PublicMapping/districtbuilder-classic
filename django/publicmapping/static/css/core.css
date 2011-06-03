@@ -2149,7 +2149,7 @@ select#newdistrictname {
 }
     
 /* layer chooser */
-
+#choose_layers_dialog { display:none; }
 #choose_layers_dialog .centered {text-align:center}
 #choose_layers_dialog .indented {margin-left: 3px}
 #choose_layers_dialog .fillwidth {width:93%;}
@@ -2287,7 +2287,7 @@ span.poptot.selected {
     margin: 5px;
 }
 .community_comments .comm2 {
-    background-color: #FFF8DB;
+    background-color: #F0FCFA;
 }
 .districtComment {
     padding: 5px 3px;
