@@ -1208,7 +1208,7 @@ function mapinit(srs,maxExtent) {
         }
         else if (assignMode == 'anchor') {
             var d_id = $('#assign_district').val();
-            if (parseInt(d_id,10) > 0) {
+            if (parseInt(d_id,10) > -1) {
                 var feature = { data:{ district_id: d_id } };
                 assignOnSelect(feature);
             }
