@@ -58,7 +58,7 @@
         <Subject id="presrep" field="PRS08REP" name="Republican Voters"
                  short_name="Republican 08" displayed="false" sortkey="16" />
         <Subject id="poptot" field="TOTPOP" name="Total Population" 
-                 short_name="Total Pop." displayed="true" sortkey="17" />
+                 short_name="Total Pop." displayed="true" sortkey="17" default="true" />
         <Subject id="presoth" field="PRS08OTH" name="Other Voters"
                  short_name="Other 08" displayed="false" sortkey="18" />
         <Subject id="govrep" field="GOV09REP" name="Republican Voters, Governor &apos;09"
@@ -460,6 +460,30 @@
                 <LegislativeBody ref="senate"/>
                 <LegislativeBody ref="community"/>
             </ScoreFunction>
+
+            <ScoreFunction id="district_vap" type="district"
+                calculator="publicmapping.redistricting.calculators.SumValues"
+                user_selectable="true" label="Voting Age Pop.">
+                <SubjectArgument name="value1" ref="vap" />
+                <LegislativeBody ref="congress"/>
+                <LegislativeBody ref="house"/>
+                <LegislativeBody ref="senate"/>
+                <LegislativeBody ref="community"/>
+            </ScoreFunction>
+                
+            <ScoreFunction id="district_poptot" type="district"
+                calculator="publicmapping.redistricting.calculators.SumValues"
+                user_selectable="true" label="Total Population">
+                <SubjectArgument name="value1" ref="poptot" />
+                <LegislativeBody ref="community"/>
+            </ScoreFunction>
+
+            <ScoreFunction id="district_comments" type="district"
+                calculator="publicmapping.redistricting.calculators.Comments"
+                user_selectable="false" label="Comments">
+                <LegislativeBody ref="community"/>
+            </ScoreFunction>
+
         </ScoreFunctions>
         
         <ScorePanels>
@@ -521,6 +545,14 @@
                 <Score ref="plan_majority_minority_hisp" />
             </ScorePanel>
 
+            <ScorePanel id="community_panel_summary" type="plan_summary" position="1"
+                title="Community Summary" cssclass="plan_summary community" template="community_summary.html">
+                <Score ref="a_senate_plan_equipopulation_summary"/>
+                <Score ref="b_plan_senate_noncontiguous"/>
+                <Score ref="plan_majority_minority_blk_senate" />
+                <Score ref="plan_majority_minority_hisp" />
+            </ScorePanel>
+
             <!-- Basic Information -->
             <ScorePanel id="congresional_panel_info" type="district" position="2"
                 title="Basic Information" cssclass="district_basic_info congressional" 
@@ -546,6 +578,13 @@
                 <Score ref="district_schwartzberg" />
             </ScorePanel>
             
+            <!-- Community Comments -->
+            <ScorePanel id="community_panel_comments" type="district" position="2"
+                title="Plan Comments" cssclass="district_comments community"
+                template="plan_comments.html">
+                <Score ref="district_comments" />
+            </ScorePanel>
+
             <!-- Demographics -->
             <ScorePanel id="congressional_panel_demo" type="district" position="2"
                 title="Demographics" cssclass="district_demographics congressional" 
@@ -570,6 +609,14 @@
                 <Score ref="district_blkvap_percent" />
                 <Score ref="district_hispvap_percent" />
             </ScorePanel>
+
+            <ScorePanel id="community_panel_demo" type="district" position="2"
+                title="Demographics" cssclass="district_demographics community" 
+                template="communities.html">
+                <Score ref="district_poptot" />
+                <Score ref="district_vap" />
+            </ScorePanel>
+            
         </ScorePanels>
         
         <ScoreDisplays>
@@ -646,6 +693,17 @@
                 <ScorePanel ref="senate_panel_summary" />
                 <ScorePanel ref="senate_panel_demo" />
             </ScoreDisplay>
+
+            <ScoreDisplay legislativebodyref="community" type="sidebar" title="Demographics" cssclass="demographics">
+                <ScorePanel ref="community_panel_summary" />
+                <ScorePanel ref="community_panel_demo" />
+            </ScoreDisplay>
+
+            <ScoreDisplay legislativebodyref="community" type="sidebar" title="Community Mapping" cssclass="demographics">
+                <ScorePanel ref="community_panel_summary" />
+                <ScorePanel ref="community_panel_comments" />
+            </ScoreDisplay>
+
         </ScoreDisplays>
     </Scoring>
     
