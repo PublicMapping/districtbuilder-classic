@@ -122,8 +122,8 @@ splitsreport = function(options) {
                 return;
             }
       
-            // Only add the option if it hasn't already been added
-            if (_options.availableLayers.find('input[id=' + rid.replace('.', '\\.') + ']').length === 0) {
+            // Only add the option if it hasn't already been added, and is a plan
+            if (rid.startsWith('plan') && (_options.availableLayers.find('input[id=' + rid.replace('.', '\\.') + ']').length === 0)) {
                 var div = $('<div class="layer_choice_wrapper"></div>');
                 div.append($('<input class="layer_choice" id="' + rid + '" value="' + rid + '" type="checkbox"></input>'));
                 div.append($('<label for="' + rid + '">&nbsp;' + rname + '</label>'));
