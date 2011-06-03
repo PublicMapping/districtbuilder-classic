@@ -2197,6 +2197,8 @@ function mapinit(srs,maxExtent) {
         districtIdControl.deactivate();
         $('#lock_district_map_tool').removeClass('toggle');
         lockDistrictControl.deactivate();
+        $('#district_select_tool').removeClass('toggle');
+        districtSelectTool.deactivate();
         $('#dragdrop_tool').removeClass('toggle');
         tipdiv.style.display = 'none';
         districtIdDiv.style.display = 'none';

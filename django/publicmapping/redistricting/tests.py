@@ -2879,7 +2879,7 @@ class ScoreRenderTestCase(BaseTestCase):
 
         components = [(panel, [(function, arg1)])]
 
-        expected_result = "%s:[u'<div class=\"split_report\"><div>Total districts split by first level: 2<div><div>Total number of splits: 7<div><table><thead><tr><th>testPlan district</th><th>first level district</th></tr></thead><tbody><tr><td>TestMember 1</td><td>0000000</td></tr><tr><td>TestMember 1</td><td>0000001</td></tr><tr><td>TestMember 1</td><td>0000003</td></tr><tr><td>TestMember 1</td><td>0000004</td></tr><tr><td>TestMember 1</td><td>0000006</td></tr><tr><td>TestMember 1</td><td>0000007</td></tr><tr><td>TestMember 5</td><td>0000004</td></tr></tbody></table></div>']" % p1.name
+        expected_result = "%s:[u'<div class=\"split_report\"><div>Total districts split by first level: 2</div><div>Total number of splits: 7</div><table><thead><tr><th>testPlan district</th><th>first level district</th></tr></thead><tbody><tr><td>TestMember 1</td><td>0000000</td></tr><tr><td>TestMember 1</td><td>0000001</td></tr><tr><td>TestMember 1</td><td>0000003</td></tr><tr><td>TestMember 1</td><td>0000004</td></tr><tr><td>TestMember 1</td><td>0000006</td></tr><tr><td>TestMember 1</td><td>0000007</td></tr><tr><td>TestMember 5</td><td>0000004</td></tr></tbody></table></div>']" % p1.name
 
         # Check the result
         plan_result = display.render(p1, components=components)

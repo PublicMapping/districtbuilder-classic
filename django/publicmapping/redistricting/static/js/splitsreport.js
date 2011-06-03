@@ -45,7 +45,7 @@ splitsreport = function(options) {
             getVersionFn: {},
             autoOpen: false,
             modal: true,
-            width: 800,
+            width: 778,
             height: 'auto',
             title: 'Splits Report',
             resizable: false,
