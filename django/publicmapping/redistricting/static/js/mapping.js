@@ -966,7 +966,7 @@ function mapinit(srs,maxExtent) {
             return;
         }
             
-        var layer = olmap.getLayersByName(referenceLayerId)
+        var layer = olmap.getLayersByName(referenceLayerId);
         if (layer.length == 0) {
             hideCurrentReferenceLayer();
 
@@ -994,7 +994,6 @@ function mapinit(srs,maxExtent) {
     };
 
     $('#map').bind('reference_layer_changed', referenceLayerChanged);
-    
     // Update the map legend
     var updateBoundaryLegend = function(referenceLayerId, referenceLayerName) {
         var title = 'Boundary';
@@ -1015,6 +1014,12 @@ function mapinit(srs,maxExtent) {
         var layerId = matches[2];
 
         if (layerType === 'plan') {
+            // get version and subject filters
+            var filter = getVersionAndSubjectFilters(maxExtent);
+            // remove version criteria
+            filter.filters = filter.filters.splice(1);
+
+
             return new OpenLayers.Layer.Vector(
                 referenceLayerId,
                 {
@@ -1027,7 +1032,7 @@ function mapinit(srs,maxExtent) {
                     }),
                     style: referenceStyle,
                     projection: projection,
-                    filter: getVersionAndSubjectFilters(maxExtent)
+                    filter: filter
                 }
             );
         } // otherwise the "geolevel" reference layers are already created
