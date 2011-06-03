@@ -159,13 +159,13 @@ class LegislativeBody(models.Model):
     def get_default_subject(self):
         """
         Get the default subject for display. This is related to the
-        LegislativeBody via the LegislativeDefault table.
+        LegislativeBody via the LegislativeLevel table.
 
         Returns:
             The default subject for the legislative body.
         """
-        ldef = self.legislativedefault_set.all()
-        return ldef[0].target.subject
+        ldef = self.legislativelevel_set.filter(parent__isnull=True)
+        return ldef[0].subject
 
     def get_base_geolevel(self):
         """
@@ -178,7 +178,7 @@ class LegislativeBody(models.Model):
             The base geolevel in this legislative body.
         """
         subj = self.get_default_subject()
-        levels = self.legislativelevel_set.filter(target__subject=subj,parent=None)
+        levels = self.legislativelevel_set.filter(subject=subj,parent=None)
         return levels[0].geolevel.id
 
     def get_geolevels(self):
@@ -188,7 +188,7 @@ class LegislativeBody(models.Model):
         order in which they are related.
         """
         subject = self.get_default_subject()
-        geobodies = self.legislativelevel_set.filter(target__subject=subject)
+        geobodies = self.legislativelevel_set.filter(subject=subject)
 
         ordered = []
         allgeobodies = len(geobodies)
@@ -282,24 +282,6 @@ class Geolevel(models.Model):
         return self.name
 
 
-class LegislativeDefault(models.Model):
-    """
-    The default settings for a legislative body.
-    """
-
-    # The legislative body
-    legislative_body = models.ForeignKey(LegislativeBody)
-
-    # The subject for characteristics in this body
-    target = models.ForeignKey('Target')
-
-    class Meta:
-        unique_together = ('legislative_body',)
-
-    def __unicode__(self):
-        return '%s - %s' % (self.legislative_body.name, self.target)
-
-
 class LegislativeLevel(models.Model):
     """
     A geographic classification in a legislative body.
@@ -319,17 +301,17 @@ class LegislativeLevel(models.Model):
     parent = models.ForeignKey('LegislativeLevel',null=True,blank=True)
 
     # The target that refers to this level
-    target = models.ForeignKey('Target',null=True)
+    subject = models.ForeignKey(Subject)
 
     def __unicode__(self):
         """
         Represent the LegislativeLevel as a unicode string. This is the
         LegislativeLevel's LegislativeBody and Geolevel
         """
-        return "%s, %s, %s" % (self.legislative_body.name, self.geolevel.name, self.target)
+        return "%s, %s, %s" % (self.legislative_body.name, self.geolevel.name, self.subject.display)
 
     class Meta:
-        unique_together = ('geolevel','legislative_body','target',)
+        unique_together = ('geolevel','legislative_body','subject',)
 
 
 class Geounit(models.Model):
@@ -563,41 +545,6 @@ class Characteristic(models.Model):
         """
         return u'%s for %s: %s' % (self.subject, self.geounit, self.number)
 
-class Target(models.Model):
-    """
-    A set of data values that bound the ComputedCharacteristics of a 
-    District.
-
-    A Target contains the upper and lower bounds for a Subject. When 
-    editing districts, these targets are used by the symbolizers to 
-    represent districts as over or under the target range.
-    """
-
-    # The subject that this target relates to
-    subject = models.ForeignKey(Subject)
-
-    # The first range value
-    range1 = models.DecimalField(max_digits=12,decimal_places=4)
-
-    # The second data value
-    range2 = models.DecimalField(max_digits=12,decimal_places=4)
-
-    # The central data value
-    value = models.DecimalField(max_digits=12,decimal_places=4)
-
-    class Meta:
-        """
-        Additional information about the Target model.
-        """
-        ordering = ['subject']
-
-    def __unicode__(self):
-        """
-        Represent the Target as a unicode string. The Target string is
-        in the form of "Subject : Value (Range1 - Range2)"
-        """
-        return u'%s : %s (%s - %s)' % (self.subject, self.value, self.range1, self.range2)
-
 class Plan(models.Model):
     """
     A collection of Districts for an area of coverage, like a state.
@@ -674,21 +621,6 @@ class Plan(models.Model):
 
         return self.legislative_body.is_community
     
-    def targets(self):
-        """
-        Get the targets associated with this plan by stepping back through
-        the legislative body and finding distinct targets for displayed subjects
-        among all the geolevels in the body. This will return a django queryset
-        if successful.
-        """
-        try:
-            levels = LegislativeLevel.objects.filter(legislative_body = self.legislative_body).values('target').distinct()
-            targets = Target.objects.filter(id__in=levels, subject__is_displayed = True)
-            return targets
-        except Exception as ex:
-            print('Unable to get targets for plan %s: %s' % (self.name, ex))
-            raise ex
-
     def get_nth_previous_version(self, steps):
         """
         Get the version of this plan N steps away.
@@ -1280,6 +1212,7 @@ AND st_intersects(
                 geom = json.loads( row[8] )
             else:
                 geom = None
+
             compactness_calculator = Schwartzberg()
             compactness_calculator.compute(district=district)
 

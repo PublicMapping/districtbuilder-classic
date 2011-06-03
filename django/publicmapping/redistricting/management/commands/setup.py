@@ -43,7 +43,7 @@ from xml.dom import minidom
 from rpy2.robjects import r
 from redistricting.models import *
 from redistricting.utils import *
-import traceback, pprint, httplib, string, base64, json, types
+import traceback, pprint, httplib, string, base64, json, types, re
 
 class Command(BaseCommand):
     """
@@ -120,7 +120,6 @@ contents of the file and try again.
 
         self.create_superuser(config, verbose)
         self.import_prereq(config, verbose)
-        #self.import_contiguity_overrides(config, verbose)
         self.import_scoring(config, verbose)
 
         optlevels = options.get("geolevels")
@@ -143,7 +142,8 @@ contents of the file and try again.
                     if nestme:
                         self.renest_geolevel(geolevel, verbose)
 
-		self.import_contiguity_overrides(config, verbose)
+            # Do this once after processing the geolevels
+            self.import_contiguity_overrides(config, verbose)
 
 
         if options.get("views"):
@@ -276,9 +276,13 @@ contents of the file and try again.
         # Get a list of styles
         sts_cfg = self.read_config(host, '/geoserver/rest/styles.json', headers, "Could not get styles.", verbose)
         if not sts_cfg is None:
-            excludes = ['point','line','polygon','raster']
+            includes = ['^%s:.*' % namespace]
             for st_cfg in sts_cfg['styles']['style']:
-                if st_cfg['name'] in excludes:
+                skip = False
+                for inc in includes:
+                    skip = skip or re.compile(inc).match(st_cfg['name']) is None
+                if skip:
+                    # This style doesn't match any style starting with the prefix.
                     continue
 
                 # Delete the style
@@ -447,7 +451,7 @@ contents of the file and try again.
                         style_type = subject.name
 
                     if not style_name:
-                        layer_name = 'demo_%s_%s' % (geolevel.name, subject.name)
+                        layer_name = '%s:demo_%s_%s' % (namespace,geolevel.name, subject.name)
                         style_name = layer_name
                     else:
                         layer_name = style_name
@@ -458,7 +462,7 @@ contents of the file and try again.
                     } }
 
                     # Get the SLD file
-                    sld = self.get_style_contents( styledir, geolevel.name, style_type, verbose )
+                    sld = self.get_style_contents( namespace, styledir, geolevel.name, style_type, verbose )
 
                     if sld is None:
                         if verbose > 1:
@@ -479,7 +483,7 @@ contents of the file and try again.
                             "Could not upload style file '%s.sld'" % style_name, \
                             verbose):
                             if verbose > 1:
-                                print "Uploaded '%s_%s.sld' file." % (geolevel.name, subject.name)
+                                print "Uploaded '%s.sld' file." % style_name
 
                     # Apply the uploaded style to the demographic layers
                     layer = { 'layer' : {
@@ -492,7 +496,7 @@ contents of the file and try again.
                     
                     if not self.rest_config( 'PUT', \
                         host, \
-                        '/geoserver/rest/layers/%s:%s' % (namespace, layer_name), \
+                        '/geoserver/rest/layers/%s' % layer_name, \
                         json.dumps(layer), \
                         headers, \
                         "Could not assign style to layer '%s'." % layer_name, \
@@ -545,14 +549,14 @@ contents of the file and try again.
                     feature_type_obj = get_feature_type_obj('demo_%s' % geolevel.name)
                     feature_type_obj['featureType']['nativeName'] = 'demo_%s_%s' % (geolevel.name, subject.name)
                     create_geoserver_object_if_necessary(feature_type_url, 'demo_%s' % geolevel.name, feature_type_obj, 'Feature Type')
-                    publish_and_assign_style('demo_%s' % geolevel.name, 'none',get_zoom_range(geolevel))
+                    publish_and_assign_style('%s:demo_%s' % (namespace, geolevel.name,), 'none',get_zoom_range(geolevel))
 
                     # Create boundary layer, based on geographic boundaries
                     feature_name = '%s_boundaries' % geolevel.name
                     feature_type_obj = get_feature_type_obj(feature_name)
                     feature_type_obj['featureType']['nativeName'] = 'demo_%s_%s' % (geolevel.name, subject.name)
                     create_geoserver_object_if_necessary(feature_type_url, feature_name, feature_type_obj, 'Feature Type')
-                    publish_and_assign_style('%s_boundaries' % geolevel.name, 'boundaries', get_zoom_range(geolevel))
+                    publish_and_assign_style('%s:%s_boundaries' % (namespace,geolevel.name,), 'boundaries', get_zoom_range(geolevel))
 
         if verbose > 0:
             print "Geoserver configuration complete."
@@ -560,8 +564,8 @@ contents of the file and try again.
         # finished configure_geoserver
         return True
 
-    def get_style_contents(self, styledir, geolevel, subject, verbose):
-        path = '%s/%s_%s.sld' % (styledir, geolevel, subject) 
+    def get_style_contents(self, namespace, styledir, geolevel, subject, verbose):
+        path = '%s/%s:%s_%s.sld' % (styledir, namespace, geolevel, subject) 
         try:
             stylefile = open(path)
             sld = stylefile.read()
@@ -726,7 +730,7 @@ ERROR:
             'tolerance': geolevel.get('tolerance')
         }
 
-        sconfigs = geolevel.xpath('Subjects/Subject')
+        sconfigs = geolevel.xpath('//Subjects/Subject')
         for sconfig in sconfigs:
             if 'aliasfor' in sconfig.attrib:
                 salconfig = config.xpath('//Subject[@id="%s"]' % sconfig.get('aliasfor'))[0]
@@ -1187,30 +1191,7 @@ ERROR:
                 print 'Set denominator on "%s" to "%s"' % (numerator.name, denominator_name)
 
 
-        # Import targets third
-        targs = config.xpath('//Targets/Target')
-
-        for targ in targs:
-            # get subject
-            subconfig = config.xpath('//Subject[@id="%s"]' % (targ.get('subjectref')))[0]
-            if not subconfig.get('aliasfor') is None:
-                # dereference any subject alias
-                subconfig = config.xpath('//Subject[@id="%s"]' % (subconfig.get('aliasfor')))[0]
-            subject = Subject.objects.filter(name=subconfig.get('id').lower())[0]
-
-            obj, created = Target.objects.get_or_create(
-                subject=subject,
-                value=targ.get('value'),
-                range1=targ.get('range1'),
-                range2=targ.get('range2'))
-
-            if verbose > 1:
-                if created:
-                    print 'Created Target "%s"' % obj
-                else:
-                    print 'Target "%s" already exists' % obj
-            
-        # Import geolevels fourth
+        # Import geolevels third
         # Note that geolevels may be added in any order, but the geounits
         # themselves need to be imported top-down (smallest area to biggest)
         geolevels = config.xpath('//GeoLevels/GeoLevel')
@@ -1230,65 +1211,35 @@ ERROR:
                 lbconfig = config.xpath('//LegislativeBody[@id="%s"]' % lbody.get('ref'))[0]
                 legislative_body = LegislativeBody.objects.get(name=lbconfig.get('name'))
                 
-                # Add a mapping for the targets in this GL/LB combo.
-                targs = lbody.xpath('LegislativeTargets/LegislativeTarget')
-                for targ in targs:
-                    tconfig = config.xpath('//Target[@id="%s"]' % targ.get('ref'))[0]
-                    sconfig = config.xpath('//Subject[@id="%s"]' % tconfig.get('subjectref'))[0]
-                    if not sconfig.get('aliasfor') is None:
-                        # dereference any subject alias
-                        sconfig = config.xpath('//Subject[@id="%s"]' % (sconfig.get('aliasfor')))[0]
-                    subject = Subject.objects.get(name=sconfig.get('id').lower())
+                # Add a mapping for the subjects in this GL/LB combo.
+                sconfig = lbody.xpath('//Subjects/Subject[@default="true"]')[0]
+                if not sconfig.get('aliasfor') is None:
+                    # dereference any subject alias
+                    sconfig = config.xpath('//Subject[@id="%s"]' % (sconfig.get('aliasfor')))[0]
+                subject = Subject.objects.get(name=sconfig.get('id').lower())
 
-                    target = Target.objects.get(
-                        subject=subject,
-                        value=tconfig.get('value'),
-                        range1=tconfig.get('range1'),
-                        range2=tconfig.get('range2')) 
-
-                    if not targ.get('default') is None:
-                        # get or create won't work here, as it requires a
-                        # target, which may be different from the item
-                        # we want to retrieve
-                        obj = LegislativeDefault.objects.filter(legislative_body=legislative_body)
-                        if len(obj) == 0:
-                            obj = LegislativeDefault(legislative_body=legislative_body, target=target)
-                            created = True
-                        else:
-                            obj = obj[0]
-                            obj.target = target
-                            created = False
-
-                        obj.save()
-
-                        if verbose > 1:
-                            if created:
-                                print 'Set default target for LegislativeBody "%s"' % legislative_body.name
-                            else:
-                                print 'Changed default target for LegislativeBody "%s"' % legislative_body.name
-
-                    pconfig = lbody.xpath('Parent')
-                    if len(pconfig) == 0:
-                        parent = None
-                    else:
-                        pconfig = config.xpath('//GeoLevel[@id="%s"]' % pconfig[0].get('ref'))[0]
-                        plvl = Geolevel.objects.get(name=pconfig.get('name').lower())
-                        parent = LegislativeLevel.objects.get(
-                            legislative_body=legislative_body, 
-                            geolevel=plvl, 
-                            target=target)
-
-                    obj, created = LegislativeLevel.objects.get_or_create(
+                pconfig = lbody.xpath('Parent')
+                if len(pconfig) == 0:
+                    parent = None
+                else:
+                    pconfig = config.xpath('//GeoLevel[@id="%s"]' % pconfig[0].get('ref'))[0]
+                    plvl = Geolevel.objects.get(name=pconfig.get('name').lower())
+                    parent = LegislativeLevel.objects.get(
                         legislative_body=legislative_body, 
-                        geolevel=glvl, 
-                        target=target, 
-                        parent=parent)
+                        geolevel=plvl, 
+                        subject=subject)
 
-                    if verbose > 1:
-                        if created:
-                            print 'Created LegislativeBody/GeoLevel mapping "%s/%s"' % (legislative_body.name, glvl.name)
-                        else:
-                            print 'LegislativeBody/GeoLevel mapping "%s/%s" already exists' % (legislative_body.name, glvl.name)
+                obj, created = LegislativeLevel.objects.get_or_create(
+                    legislative_body=legislative_body, 
+                    geolevel=glvl, 
+                    subject=subject, 
+                    parent=parent)
+
+                if verbose > 1:
+                    if created:
+                        print 'Created LegislativeBody/GeoLevel mapping "%s/%s"' % (legislative_body.name, glvl.name)
+                    else:
+                        print 'LegislativeBody/GeoLevel mapping "%s/%s" already exists' % (legislative_body.name, glvl.name)
 
         return True
 
@@ -1435,13 +1386,13 @@ ERROR:
                 else:
                     g = prefetch[0]
 
-                if config['attributes'] == None:
+                if not config['attributes']:
                     self.set_geounit_characteristic(g, subject_objects, feat, verbose)
 
             if verbose > 1:
                 sys.stdout.write('100%\n')
 
-        if not config['attributes'] is None:
+        if config['attributes']:
             progress = 0
             if verbose > 1:
                 print "Assigning subject values to imported geography..."
@@ -1472,7 +1423,12 @@ ERROR:
         for attr, obj in subject_objects.iteritems():
             if attr.endswith('_by_id'):
                 continue
-            value = Decimal(str(feat.get(attr))).quantize(Decimal('000000.0000', 'ROUND_DOWN'))
+            try:
+                value = Decimal(str(feat.get(attr))).quantize(Decimal('000000.0000', 'ROUND_DOWN'))
+            except:
+                if verbose > 1:
+                    print 'No attribute "%s" on feature %d' % (attr, feat.fid,)
+                continue
             percentage = '0000.00000000'
             if obj.percentage_denominator:
                 denominator_field = subject_objects['%s_by_id' % obj.percentage_denominator.name]

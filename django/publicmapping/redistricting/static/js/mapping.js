@@ -47,13 +47,12 @@ function getShowBy() {
  *  but for performance and query reasons, the subject ID may not be empty.
  */
 function getDistrictBy() {
-    var orig = $('#districtby').val();
-    var mod = new RegExp('^(.*)\.(None|Compactness|Contiguity)').test(orig);
-    if (mod) {
-        orig = RegExp.$1;
-        mod = RegExp.$2;
-    }
-    return { by: orig, modified: mod }; 
+    var sel = $('#districtby');
+    var elem = $($('option', sel)[sel[0].selectedIndex]);
+    return { 
+        by: parseInt(elem.attr('value'),10),
+        name: elem.attr('name')
+    };
 }
 
 /**
@@ -659,7 +658,12 @@ function mapinit(srs,maxExtent) {
             }
         }
         
-        return { layer: min_layer.layer, level:min_layer.level, display:min_layer.name, geolevel: min_layer.geolevel };
+        return { 
+            layer: min_layer.layer, 
+            level:min_layer.level, 
+            display:min_layer.name, 
+            geolevel: min_layer.geolevel
+        };
     }
 
     /**
@@ -682,7 +686,7 @@ function mapinit(srs,maxExtent) {
             new OpenLayers.Filter.Comparison({
                 type: OpenLayers.Filter.Comparison.EQUAL_TO,
                 property: 'subject',
-                value: dby.by
+                value: (dby.by > 0) ? dby.by : 1
             }),
             new OpenLayers.Filter.Spatial({
                 type: OpenLayers.Filter.Spatial.BBOX,
@@ -943,6 +947,14 @@ function mapinit(srs,maxExtent) {
         }
     };
     $('#map').bind('version_changed', versionChanged);
+
+    var styleChanged = function(evt, newStyle) {
+        districtLayer.styleMap = new OpenLayers.StyleMap(newStyle);
+        districtLayer.redraw();
+
+        updateDistrictStyles();
+    };
+    $('#map').bind('style_changed', styleChanged);
 
     // Update reference layer on map when the reference layer drop down is changed
     // referenceLayerId is one of: None, plan.XXX, geolevel.XXX
@@ -1751,13 +1763,11 @@ function mapinit(srs,maxExtent) {
         OpenLayers.Element.addClass(olmap.viewPortDiv, 'olCursorWait');
     });
 
+    var computeCompactnessAvg = (function() {
+        // not all districts are returned every time: it may depend on
+        // the extent of where the user is viewing the map
+        var compactnessCache = {};
 
-    // This object holds the mean and standard deviation for the 
-    // compactness scores, calculated when the features are loaded.
-    var compactnessAvg = {};
-
-
-    var getCompactnessAvg = function(features) {
         var average = function(a){
             //+ Carlos R. L. Rodrigues
             //@ http://jsfromhell.com/array/average [rev. #1]
@@ -1767,14 +1777,20 @@ function mapinit(srs,maxExtent) {
             return r.deviation = Math.sqrt(r.variance = s / t), r;
         };
 
-        var scores = [];
-        for (var i = 0; i < features.length; i++) {
-            var feature = features[i];
-            scores.push(feature.attributes.compactness);
-        }
-        return average(scores);
+        var compute = function(features) {
+            // reduce features to id:compactness
+            $.each(features,function(index,item){
+                compactnessCache[item.attributes.district_id] = item.attributes.compactness;
+            });
+            var scores = [];
+            for (var i in compactnessCache) {
+                scores.push(compactnessCache[i]);
+            }
+            return average(scores);
+        };
 
-    };
+        return compute;
+    })();
 
     // Get the OpenLayers styling rules for the map, given the district 
     // layer and/or modification (e.g. No styling compactness) taken from
@@ -1788,121 +1804,8 @@ function mapinit(srs,maxExtent) {
         var lockedColor = $('.locked').css('border-top-color');
         
         if (typeName == 'demographics') {
-            rules = [
-                new OpenLayers.Rule({
-                    filter: new OpenLayers.Filter.Comparison({
-                        type: OpenLayers.Filter.Comparison.LESS_THAN_OR_EQUAL_TO,
-                        property: 'number',
-                        value: RULES[dby.by].lowest
-                    }),
-                    symbolizer: {
-                        fillColor: lowestColor,
-                        fillOpacity: 0.5
-                    }
-                }),
-                new OpenLayers.Rule({
-                    filter: new OpenLayers.Filter.Comparison({
-                        type: OpenLayers.Filter.Comparison.BETWEEN,
-                        property: 'number',
-                        lowerBoundary: RULES[dby.by].lowest,
-                        upperBoundary: RULES[dby.by].lower
-                    }),
-                    symbolizer: {
-                        fillColor: lowerColor,
-                        fillOpacity: 0.5
-                    }
-                }),
-                new OpenLayers.Rule({
-                    filter: new OpenLayers.Filter.Comparison({
-                        type: OpenLayers.Filter.Comparison.BETWEEN,
-                        property: 'number',
-                        lowerBoundary: RULES[dby.by].lower,
-                        upperBoundary: RULES[dby.by].upper
-                    })
-                }),
-                new OpenLayers.Rule({
-                    filter: new OpenLayers.Filter.Comparison({
-                        type: OpenLayers.Filter.Comparison.BETWEEN,
-                        property: 'number',
-                        lowerBoundary: RULES[dby.by].upper,
-                        upperBoundary: RULES[dby.by].highest
-                    }),
-                    symbolizer: {
-                        fillColor: upperColor,
-                        fillOpacity: 0.5
-                    }
-                }),
-                new OpenLayers.Rule({
-                    filter: new OpenLayers.Filter.Comparison({
-                        type: OpenLayers.Filter.Comparison.GREATER_THAN_OR_EQUAL_TO,
-                        property: 'number',
-                        value: RULES[dby.by].highest
-                    }),
-                    symbolizer: {
-                        fillColor: highestColor,
-                        fillOpacity: 0.5
-                    }
-                })
-            ];
         } else if (typeName == 'Contiguity') {
-            rules = [
-                new OpenLayers.Rule({
-                    filter: new OpenLayers.Filter.Comparison({
-                        type: OpenLayers.Filter.Comparison.EQUAL_TO,
-                        property: 'contiguous',
-                        value: false
-                    }),
-                    symbolizer: {
-                        fillColor: highestColor,
-                        fillOpacity: 0.5
-                    }
-                }),
-                new OpenLayers.Rule({
-                    filter: new OpenLayers.Filter.Comparison({
-                        type: OpenLayers.Filter.Comparison.NOT_EQUAL_TO,
-                        property: 'contiguous',
-                        value: false
-                    })
-                })
-        
-            ];
         } else if (typeName == 'Compactness') {
-            if (compactnessAvg) {
-                var upper = compactnessAvg.mean + (2 * compactnessAvg.deviation);
-                var lower = compactnessAvg.mean - (2 * compactnessAvg.deviation); 
-                rules = [
-                    new OpenLayers.Rule({
-                        filter: new OpenLayers.Filter.Comparison({
-                            type: OpenLayers.Filter.Comparison.LESS_THAN,
-                            property: 'compactness',
-                            value: lower 
-                        }),
-                        symbolizer: {
-                            fillColor: lowestColor,
-                            fillOpacity: 0.5
-                        }
-                    }),
-                    new OpenLayers.Rule({
-                        filter: new OpenLayers.Filter.Comparison({
-                            type: OpenLayers.Filter.Comparison.BETWEEN,
-                            property: 'compactness',
-                            lowerBoundary: lower,
-                            upperBoundary: upper
-                        })
-                    }),
-                    new OpenLayers.Rule({
-                        filter: new OpenLayers.Filter.Comparison({
-                            type: OpenLayers.Filter.Comparison.GREATER_THAN,
-                            property: 'compactness',
-                            value: upper 
-                        }),
-                        symbolizer: {
-                            fillColor: highestColor,
-                            fillOpacity: 0.5
-                        }
-                    })
-                ];
-            }
 
         }
 
@@ -1931,19 +1834,14 @@ function mapinit(srs,maxExtent) {
     // of the features to the district layer.  This is done at this time
     // to prevent 2 renderings from being triggered on the district layer.
     districtLayer.events.register('beforefeaturesadded',districtLayer,function(context){
-        var newOptions = OpenLayers.Util.extend({}, districtStyle);
         var dby = getDistrictBy();
-        var rules = []
-        if (!dby.modified) {
-            rules = getStylingRules('demographics', dby);
-        } else {
-            rules = getStylingRules(dby.modified, dby);
+        var visualize = (dby.by > 0) ? LEGISLATIVE_BODY : dby.name;
+
+        if (visualize == 'Compactness') {
+            computeCompactnessAvg(context.features);
         }
-        
-        var newStyle = new OpenLayers.Style(newOptions,{
-            rules:rules
-        });
-        districtLayer.styleMap = new OpenLayers.StyleMap(newStyle);
+
+        getMapStyles(visualize, dby.name);
     });
 
     var updatingAssigned = false;
@@ -2080,7 +1978,7 @@ function mapinit(srs,maxExtent) {
         sorted.sort(function(a,b){
             return a.attributes.name > b.attributes.name;
         });
-        compactnessAvg = getCompactnessAvg(sorted);
+        computeCompactnessAvg(sorted);
 
         var working = $('#working');
         if (working.dialog('isOpen')) {
@@ -2344,7 +2242,7 @@ function mapinit(srs,maxExtent) {
     //
     var getMapStyles = (function() {
         var styleCache = {};
-        var callbackStyle = function(sld) {
+        var callbackSnap = function(sld) {
             var userStyle = getDefaultStyle(sld,getShowBy());
             $('#legend_title').empty().append(userStyle.title);
 
@@ -2380,15 +2278,115 @@ function mapinit(srs,maxExtent) {
             }
         };
 
-        return function() {
-            var snap = getSnapLayer().layer.split('simple_')[1];
-            var show = getShowBy();
+        var callbackDistrict = function(sld) {
+            var userStyle = getDefaultStyle(sld,getDistrictBy().name);
+            var newOptions = OpenLayers.Util.extend({}, districtStyle);
 
-            styleUrl = '/sld/' + snap + '_' + show + '.sld';
+            var newStyle = new OpenLayers.Style(newOptions,{
+                rules:userStyle.rules
+            });
+            $('#map').trigger('style_changed', [newStyle]);
+        };
+
+        var callbackContiguity = function() {
+            var newOptions = OpenLayers.Util.extend({}, districtStyle);
+            var fill = $('<div class="farover"/>').css('background-color');
+            
+            var newStyle = new OpenLayers.Style(newOptions,{
+                rules: [
+                    new OpenLayers.Rule({
+                        filter: new OpenLayers.Filter.Comparison({
+                            type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                            property: 'contiguous',
+                            value: false
+                        }),
+                        symbolizer: {
+                            fillColor: fill,
+                            fillOpacity: 0.5
+                        }
+                    }),
+                    new OpenLayers.Rule({
+                        filter: new OpenLayers.Filter.Comparison({
+                            type: OpenLayers.Filter.Comparison.NOT_EQUAL_TO,
+                            property: 'contiguous',
+                            value: false
+                        })
+                    })
+                ]
+            });
+            $('#map').trigger('style_changed', [newStyle]);
+        };
+
+        var callbackCompactness = function() {
+            var newOptions = OpenLayers.Util.extend({}, districtStyle);
+            var compactnessAvg = computeCompactnessAvg(districtLayer.features);
+            var upper = compactnessAvg.mean + (2 * compactnessAvg.deviation);
+            var lower = compactnessAvg.mean - (2 * compactnessAvg.deviation); 
+            var highestColor = $('<div class="farover"/>').css('background-color');
+            var lowestColor = $('<div class="farunder"/>').css('background-color');
+            var newStyle = new OpenLayers.Style(newOptions,{
+                rules: [
+                    new OpenLayers.Rule({
+                        filter: new OpenLayers.Filter.Comparison({
+                            type: OpenLayers.Filter.Comparison.LESS_THAN,
+                            property: 'compactness',
+                            value: lower 
+                        }),
+                        symbolizer: {
+                            fillColor: lowestColor,
+                            fillOpacity: 0.5
+                        }
+                    }),
+                    new OpenLayers.Rule({
+                        filter: new OpenLayers.Filter.Comparison({
+                            type: OpenLayers.Filter.Comparison.BETWEEN,
+                            property: 'compactness',
+                            lowerBoundary: lower,
+                            upperBoundary: upper
+                        })
+                    }),
+                    new OpenLayers.Rule({
+                        filter: new OpenLayers.Filter.Comparison({
+                            type: OpenLayers.Filter.Comparison.GREATER_THAN,
+                            property: 'compactness',
+                            value: upper 
+                        }),
+                        symbolizer: {
+                            fillColor: highestColor,
+                            fillOpacity: 0.5
+                        }
+                    })
+                ]
+            });
+            $('#map').trigger('style_changed', [newStyle]);
+        };
+
+        return function(snap, show) {
+            if (snap == 'Contiguity') {
+                callbackContiguity();
+                return;
+            }
+            if (snap == 'Compactness') {
+                callbackCompactness();
+                return;
+            }
+            if (snap == 'None') {
+                    
+                $('#map').trigger('style_changed', [new OpenLayers.Style(districtStyle)]);
+                return;
+            }
+            var styleUrl = '/sld/' + NAMESPACE + ':' + snap + '_' + show + '.sld';
+
+            var isSnap = false;
+            for (var i = 0; i < SNAP_LAYERS.length; i++) {
+                isSnap = isSnap || (SNAP_LAYERS[i].level == snap);
+            }
+            
+            var callback = isSnap ? callbackSnap : callbackDistrict;
 
             if (styleUrl in styleCache) {
                 if (styleCache[styleUrl]) {
-                    callbackStyle(styleCache[styleUrl]);
+                    callback(styleCache[styleUrl]);
                     return;
                 }
             } else {
@@ -2401,7 +2399,7 @@ function mapinit(srs,maxExtent) {
                 callback: function(xhr){
                     var sld = sldFormat.read(xhr.responseXML || xhr.responseText);
                     styleCache[styleUrl] = sld;
-                    callbackStyle(sld);
+                    callback(sld);
                 }
             });
         };
@@ -2435,21 +2433,21 @@ function mapinit(srs,maxExtent) {
         var distDisplay = getDistrictBy();
         var lbody = $('#district_legend tbody');
 
-        if (distDisplay.modified == 'None') {
+        if (distDisplay.by == 0) {
             lbody.empty();
 
             var row = makeDistrictLegendRow('district_swatch_within','target','Boundary');
 
             lbody.append(row);
         }
-        else if (distDisplay.modified == 'Contiguity') {
+        else if (distDisplay.by == -2) {
             lbody.empty();
             var row = makeDistrictLegendRow('district_swatch_farover','farover','Noncontiguous');
             lbody.append(row);
             row = makeDistrictLegendRow('district_swatch_within','target','Contiguous');
             lbody.append(row);
         }
-        else if (distDisplay.modified == 'Compactness') {
+        else if (distDisplay.by == -1) {
             lbody.empty();
 
             var row = makeDistrictLegendRow('district_swatch_farover','farover','Very Compact');
@@ -2506,7 +2504,7 @@ function mapinit(srs,maxExtent) {
         setThematicLayer(layers[0]);
         doMapStyling();
         $('#layer_type').text(snap.display);
-        getMapStyles();
+        getMapStyles(getSnapLayer().layer.split('simple_')[1],getShowBy());
 
         if (olmap.center !== null) {
             districtLayer.filter = getVersionAndSubjectFilters(olmap.getExtent());
@@ -2529,7 +2527,7 @@ function mapinit(srs,maxExtent) {
         var layers = olmap.getLayersByName(layername);
         setThematicLayer(layers[0]);
         doMapStyling();
-        getMapStyles();
+        getMapStyles(getSnapLayer().layer.split('simple_')[1],getShowBy());
 
         // Since keyboard defaults are on, if focus remains on this
         // dropdown after change, the keyboard may change the selection
@@ -2539,8 +2537,21 @@ function mapinit(srs,maxExtent) {
 
     // Logic for the 'Show Districts by' dropdown
     $('#districtby').change(function(evt){
-        districtLayer.filter = getVersionAndSubjectFilters(maxExtent);
-        districtLayer.strategies[0].update({force:true});
+        if (evt.target.value == '-2') {
+            getMapStyles('Contiguity','');
+        }
+        else if (evt.target.value == '-1') {
+            getMapStyles('Compactness','');
+        }
+        else if (evt.target.value == '0') {
+            getMapStyles('None', '');
+        }
+        else {
+            var dby = getDistrictBy();
+            var visualize = (dby.by > 0) ? LEGISLATIVE_BODY : dby.name;
+
+            getMapStyles(visualize, dby.name);
+        }
 
         // Since keyboard defaults are on, if focus remains on this
         // dropdown after change, the keyboard may change the selection
@@ -2657,6 +2668,7 @@ function mapinit(srs,maxExtent) {
      * Zooms to the extent of a district by district_id
      */
     var zoomToDistrictExtent = function(evt, district_id) {
+        var dby = getDistrictBy();
         $.ajax({
             type:'GET',
             url: '/districtmapping/plan/' + PLAN_ID + '/district/versioned/',
@@ -2664,7 +2676,7 @@ function mapinit(srs,maxExtent) {
                 district_ids__eq: district_id,
                 version__eq: getPlanVersion(),
                 level__eq: getSnapLayer().geolevel,
-                subject__eq: getDistrictBy().by
+                subject__eq: (dby.by > 0) ? dby.by : 1
             },
             success: function(featureCollection){
                 if (featureCollection) {

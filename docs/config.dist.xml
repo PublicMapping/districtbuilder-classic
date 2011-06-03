@@ -74,12 +74,6 @@
         <!-- <Subject id="pophisp1" field="POPHISP" aliasfor="pophisp"/> -->
     </Subjects>
 
-    <Targets>
-        <Target id="congress_target" subjectref="poptot" value="727366" range1="0.005" range2="0.01" />
-        <Target id="house_target" subjectref="poptot" value="80010" range1="0.05" range2="0.1" />
-        <Target id="senate_target" subjectref="poptot" value="200026" range1="0.05" range2="0.1" />
-    </Targets>
-
     <Scoring>
         <ScoreFunctions>
             <!-- A district score that returns a percentage -->
@@ -770,21 +764,10 @@
           
           -->
           <LegislativeBodies>
-              <LegislativeBody ref="congress">
-                  <LegislativeTargets>
-                      <LegislativeTarget ref="congress_target" default="true" />
-                  </LegislativeTargets>
-              </LegislativeBody>
-              <LegislativeBody ref="house">
-                  <LegislativeTargets>
-                      <LegislativeTarget ref="house_target" default="true" />
-                  </LegislativeTargets>
-              </LegislativeBody>
-              <LegislativeBody ref="senate">
-                  <LegislativeTargets>
-                      <LegislativeTarget ref="senate_target" default="true" />
-                  </LegislativeTargets>
-              </LegislativeBody>
+              <LegislativeBody ref="congress" />
+              <LegislativeBody ref="house" />
+              <LegislativeBody ref="senate" />
+              <LegislativeBody ref="community" />
           </LegislativeBodies>
       </GeoLevel>
 
@@ -850,21 +833,15 @@
           <LegislativeBodies>
               <LegislativeBody ref="congress">
                   <Parent ref="block" />
-                  <LegislativeTargets>
-                      <LegislativeTarget ref="congress_target" default="true" />
-                  </LegislativeTargets>
               </LegislativeBody>
               <LegislativeBody ref="house">
                   <Parent ref="block" />
-                  <LegislativeTargets>
-                      <LegislativeTarget ref="house_target" default="true" />
-                  </LegislativeTargets>
               </LegislativeBody>
               <LegislativeBody ref="senate">
                   <Parent ref="block" />
-                  <LegislativeTargets>
-                      <LegislativeTarget ref="senate_target" default="true" />
-                  </LegislativeTargets>
+              </LegislativeBody>
+              <LegislativeBody ref="community">
+                  <Parent ref="block" />
               </LegislativeBody>
           </LegislativeBodies>
       </GeoLevel>
@@ -930,21 +907,15 @@
           <LegislativeBodies>
               <LegislativeBody ref="congress">
                   <Parent ref="vtd" />
-                  <LegislativeTargets>
-                      <LegislativeTarget ref="congress_target" default="true" />
-                  </LegislativeTargets>
               </LegislativeBody>
               <LegislativeBody ref="house">
                   <Parent ref="vtd" />
-                  <LegislativeTargets>
-                      <LegislativeTarget ref="house_target" default="true" />
-                  </LegislativeTargets>
               </LegislativeBody>
               <LegislativeBody ref="senate">
                   <Parent ref="vtd" />
-                  <LegislativeTargets>
-                      <LegislativeTarget ref="senate_target" default="true" />
-                  </LegislativeTargets>
+              </LegislativeBody>
+              <LegislativeBody ref="community">
+                  <Parent ref="vtd" />
               </LegislativeBody>
           </LegislativeBodies>
       </GeoLevel>
