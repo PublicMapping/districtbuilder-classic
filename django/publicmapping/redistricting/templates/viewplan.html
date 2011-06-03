@@ -894,7 +894,9 @@ Include the markup for the account management panel.
             }
         }});
 
-        stats = statisticssets({}).init();
+        if (typeof(stats) == 'undefined') { 
+            stats = statisticssets({}).init();
+        }
 
         {% if plan.is_community %}
         $('#steps').tabs('option', 'disabled', [2]);
