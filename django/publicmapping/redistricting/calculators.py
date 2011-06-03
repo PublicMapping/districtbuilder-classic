@@ -471,7 +471,7 @@ class SumValues(CalculatorBase):
             The result wrapped in an HTML SPAN element: "<span>1</span>".
         """
         if isinstance(self.result, Decimal):
-            result = locale.format("%s", self.result, grouping=True)
+            result = locale.format("%d", self.result, grouping=True)
             return '<span>%s</span>' % result
         else:
             return '<span>N/A</span>'
