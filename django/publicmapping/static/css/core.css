@@ -151,6 +151,9 @@ ul#steps_tabs li {
   text-shadow: 0 -1px #666
 }
 
+ul#steps_tabs li a:focus {
+  outline: 1px dotted #7CA7A7
+ }
 
 ul#steps_tabs li.ui-state-default.ui-tabs-selected {
   background-image: url(/static-media/images/bg-arrow-button-active.png);
@@ -597,12 +600,21 @@ div#gbox_plan_table {
 display:none !important;
 }
 
+tr.chooserAlt td {
+    background-color:#f3f3f3;
+    color:#000000;
+}
+tr.ui-state-hover td {
+    background-color:#e9e9e9;
+    color:#000000;
+}
+
 .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
 background: #ececec url("/static-media/images/bg-button-lg.png") center top repeat-x;
 color: #555;
 }
 
-.ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight {
+.ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight , tr.chooserAlt.ui-state-highlight  td, tr.ui-state-hover.ui-state-highlight  td{
 background-color: #efefef;
 background-image:none;
 }
@@ -647,14 +659,6 @@ div#form_container {
   border-radius:   4px;
   }
 
-tr.chooserAlt td {
-    background-color:#f3f3f3;
-    color:#000000;
-}
-tr.ui-state-hover td {
-    background-color:#e9e9e9;
-    color:#000000;
-}
 div#chooserFileDownloadTarget {
   float:right;
 }
@@ -1446,7 +1450,7 @@ div#map_settings_content {
     background-color: #272727;
     color: #fff;
     border: 1px solid #666666;
-    padding: 5px 10px;
+    padding: 5px 11px;
     opacity: 0.9;
     filter: alpha(opacity=90);
     overflow-y: hidden;
@@ -1492,6 +1496,7 @@ div#map_settings_content .ui-slider .ui-slider-handle {
     position: absolute;
     width: 0.6em;
     z-index: 2;
+    margin-left: -.4em
 }
 
 
