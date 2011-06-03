@@ -112,12 +112,10 @@
             <button id="copy_paste_tool" title="Copy a district from another plan" class="titletip">Copy and</br> Paste</button>
         </div>
 
-        {% if not plan.is_community %}        
         <div class="toolset_group toolset_group_lg">
           <button id="show_splits_button">Show<br/>Splits</button>
           <button id="generate_splits_report_button">Generate<br/>Splits Report</button>
          </div>
-        {% endif %}
         
         <div class="toolset_group toolset_group_lg last">       
           {% if plan.legislative_body.multi_members_allowed %}
