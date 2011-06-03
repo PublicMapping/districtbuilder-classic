@@ -344,6 +344,9 @@
                 {% endfor %}
                 </div>
 
+                {% comment %}
+                Reverse splits detection - disabled for now
+                
                 <h2>Advanced option</h2>
                 <div class="inverse_choice_wrapper">
                     <input id="inverse_choice" type="checkbox" />
@@ -355,6 +358,7 @@
                         Where selected reference layers are split by current plan boundaries
                     </div>
                 </div>                  
+                {% endcomment %}
 
                 <div id="splits_report_ok_div">
                     <button id="splits_report_ok_button">Generate Report</button>

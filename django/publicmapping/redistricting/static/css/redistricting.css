@@ -124,7 +124,7 @@ button#splits_report_button {
     border-radius: 4px;
 }
 #splits_report_results_container { float: left; width: 390px;  font-size: 14px;}
-#splits_report_available_layers { height: 220px; border: 2px solid #CCC; overflow: auto; margin-top: 10px; margin-bottom: 15px }
+#splits_report_available_layers { height: 322px; border: 2px solid #CCC; overflow: auto; margin-top: 10px; margin-bottom: 15px }
 
 .split_report .table_container {
 overflow: auto; height: 320px;
