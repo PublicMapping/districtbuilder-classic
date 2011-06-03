@@ -308,14 +308,21 @@ $(function() {
                 $(this).button({icons: {primary: 'ui-icon-arrow-down'}, text: false})
             })
         .click(function(){
-            if ( $(".map_menu_content:visible'").length === 0) {
+            var show = $(".map_menu_content:visible'").length === 0;
+
+            var sizeCB = function(show){
+                $('#map_menu').css('height', show?'100%':'auto');
+            };
+
+            if ( show ) {
                 $('#map_settings_content, #legend_toggle').removeClass('collapse', 400);
+                sizeCB(show);
                 $storedPanel.slideDown(200);
             }
             else {
                 $('.map_menu_content:visible').each(function() {
                     $storedPanel = $(this);
-                    $storedPanel.slideUp(200);
+                    $storedPanel.slideUp(200,function(){sizeCB(show);});
                     $('#map_settings_content, #legend_toggle').addClass('collapse', 400);
                 });
             }  
