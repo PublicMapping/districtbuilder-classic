@@ -40,9 +40,8 @@ locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 
 class CalculatorBase:
     """
-    A base class for all calculators that defines the result object,
-    and defines a couple default rendering options for HTML, JSON, and 
-    Boolean.
+    The base class for all calculators. CalculatorBase defines the result 
+    object and a couple default rendering options for HTML and JSON.
     """
 
     # This calculator's result
@@ -72,16 +71,20 @@ class CalculatorBase:
 
     def sortkey(self):
         """
-        How should this calculator be compared to others like it? The
-        default sorting method sorts by the value of the result.
+        Generate a key used to sort this calculator relative to all other
+        calculators. The default sorting method sorts by the value of 
+        the result.
+
+        Returns:
+            The value of the result.
         """
         return self.result
 
     def html(self):
         """
-        Return a basic HTML representation of the result.
+        Generate a basic HTML representation of the result.
 
-        The base class generates an HTML span element, with the text
+        The base calculator generates an HTML span element, with the text
         content set to a string representation of the result. If the result
         is None, the string "n/a" is used.
         """
@@ -92,10 +95,10 @@ class CalculatorBase:
 
     def json(self):
         """
-        Return a basic JSON representation of the result.
+        Generate a basic JSON representation of the result.
 
-        The base class generates an simple Javascript object that contains
-        a single property, named "result".
+        The base calculator generates an simple Javascript object that 
+        contains a single property, named "result".
         """
         return json.dumps( {'result':self.result}, use_decimal=True )
 
@@ -111,6 +114,14 @@ class CalculatorBase:
 
         If no district is provided, no subject argument value is ever 
         returned.
+
+        Parameters:
+            argument -- The name of the argument passed to the calculator.
+            district -- An optional district, used to fetch related
+              ComputedCharacteristics.
+
+        Returns:
+            The value of the subject or literal argument.
         """
         try:
             (argtype, argval) = self.arg_dict[argument]
@@ -192,6 +203,9 @@ class Schwartzberg(CalculatorBase):
         """
         Generate an HTML representation of the compactness score. This
         is represented as a percentage or "n/a"
+
+        Returns:
+            A number formatted similar to "1.00%", or "n/a"
         """
         return ("%0.2f%%" % (self.result * 100)) if self.result else "n/a"
 
@@ -255,6 +269,9 @@ class Roeck(CalculatorBase):
         """
         Generate an HTML representation of the compactness score. This
         is represented as a percentage or "n/a"
+
+        Returns:
+            A number formatted similar to "1.00%", or "n/a"
         """
         return ("%0.2f%%" % (self.result * 100)) if self.result else "n/a"
 
@@ -315,6 +332,9 @@ class PolsbyPopper(CalculatorBase):
         """
         Generate an HTML representation of the compactness score. This
         is represented as a percentage or "n/a"
+
+        Returns:
+            A number formatted similar to "1.00%", or "n/a"
         """
         return ("%0.2f%%" % (self.result * 100)) if self.result else "n/a"
 
@@ -372,6 +392,9 @@ class LengthWidthCompactness(CalculatorBase):
         """
         Generate an HTML representation of the compactness score. This
         is represented as a percentage or "n/a"
+
+        Returns:
+            A number formatted similar to "1.00%", or "n/a"
         """
         return ("%0.2f%%" % (self.result * 100)) if self.result else "n/a"
 
@@ -426,7 +449,10 @@ class SumValues(CalculatorBase):
     def html(self):
         """
         Generate an HTML representation of the equivalence score. This
-        is represented as an integer formatted with commas or "n/a"
+        is represented as an integer formatted with commas or "n/a".
+
+        Returns:
+            The result wrapped in an HTML SPAN element: "<span>1</span>".
         """
         if isinstance(self.result, Decimal):
             result = locale.format("%s", self.result, grouping=True)
@@ -494,6 +520,9 @@ class Percent(CalculatorBase):
         """
         Generate an HTML representation of the equivalence score. This
         is represented as an integer formatted with commas or "n/a"
+
+        Returns:
+            A number formatted similar to "1.00%", or "n/a"
         """
         if (type(self.result) == Decimal):
             return '<span>{0:.2%}</span>'.format(self.result)
