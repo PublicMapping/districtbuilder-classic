@@ -1095,7 +1095,8 @@ def get_splits_report(request, planid):
         for layer in layers:
             arg1 = ScoreArgument(argument="boundary_id", value=layer, type="literal")
             arg2 = ScoreArgument(argument="inverse", value=(1 if inverse else 0), type="literal")
-            components = [(panel, [(function, arg1, arg2)])]
+            arg3 = ScoreArgument(argument="version", value=version, type="literal")
+            components = [(panel, [(function, arg1, arg2, arg3)])]
 
             html += display.render(plan, components=components)
 

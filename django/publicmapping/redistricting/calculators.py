@@ -1640,11 +1640,10 @@ class SplitCounter(CalculatorBase):
     the bottom layer will be treated as the top layer and vice versa.
     """
     def compute(self, **kwargs):
-        if 'plan' in kwargs:
-            plan = kwargs['plan']
-            version = kwargs['version'] if 'version' in kwargs else plan.version
-        else:
+        if not 'plan' in kwargs:
             return
+
+        plan = kwargs['plan']
 
         # Use the argument to find "bottom" map
         target = self.get_value('boundary_id')
@@ -1652,7 +1651,11 @@ class SplitCounter(CalculatorBase):
 
         # Check if we should invert the order or the layers
         inverse = self.get_value('inverse') == 1
-        # TODO: implement inverse functionality
+
+        # Set the version
+        version = self.get_value('version')
+        if version is None:
+            version = plan.version
 
         results = {'plan_name': plan.name}
 
@@ -1663,22 +1666,35 @@ class SplitCounter(CalculatorBase):
         my_names = dict((p.district_id, p.name) for p in plan.get_districts_at_version(plan.version))
         if target.startswith('geolevel'):
             results['other_name'] = Geolevel.objects.get(pk=id).name
-            splits = plan.find_geolevel_splits(id, version=version)
+            splits = plan.find_geolevel_splits(id, version=version, inverse=inverse)
         elif target.startswith('plan'):
             other_plan = Plan.objects.get(pk=id)
             results['other_name'] = other_plan.name
-            splits = plan.find_plan_splits(other_plan, version=version)
+            splits = plan.find_plan_splits(other_plan, version=version, inverse=inverse)
             other_names = dict((p.district_id, p.name) for p in other_plan.get_districts_at_version(other_plan.version))
 
-        if other_names:
-            named_splits = [(my_names[s[0]], other_names[s[1]]) for s in splits]
+        # Swap names if inversed
+        if inverse:
+            if other_names:
+                named_splits = [(other_names[s[0]], my_names[s[1]]) for s in splits]
+            else:
+                named_splits = [(s[0], my_names[s[1]]) for s in splits]
         else:
-            named_splits = [(my_names[s[0]], s[1]) for s in splits]
+            if other_names:
+                named_splits = [(my_names[s[0]], other_names[s[1]]) for s in splits]
+            else:
+                named_splits = [(my_names[s[0]], s[1]) for s in splits]
 
         results['splits'] = splits
         results['named_splits'] = named_splits
         results['total_splits'] = len(splits)
         results['total_split_districts'] = len(set(i[0] for i in splits))
+
+        # Swap labels if inversed
+        if inverse:
+            temp = results['plan_name']
+            results['plan_name'] = results['other_name']
+            results['other_name'] = temp
 
         self.result = results
 
@@ -1689,7 +1705,7 @@ class SplitCounter(CalculatorBase):
         """
         r = self.result
         render = '<div class="split_report">'
-        render += '<div>Total districts split by %s: %d</div>' % (r['other_name'], r['total_split_districts'])
+        render += '<div>Total districts splitting %s: %d</div>' % (r['other_name'], r['total_split_districts'])
         render += '<div>Total number of splits: %d</div>' % r['total_splits']
         render += '<div class="table_container"><table class="report"><thead><tr><th>%s district</th><th>%s district</th></tr></thead><tbody>' % (r['plan_name'], r['other_name'])
         for s in r['named_splits']:

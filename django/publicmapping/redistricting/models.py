@@ -1669,7 +1669,98 @@ AND st_intersects(
 
         return districts
 
-    def find_plan_splits(self, other_plan, version=None, other_version=None):
+    @staticmethod
+    def find_splits(above_id, below_id, above_version=None, below_version=None):
+        """
+        Determines if the above layer splits the below layer
+
+        Parameters:
+            above_id -- The id of the layer that is 'above' the below plan hierarchically.
+                        The id is in the form of either 'plan.XXX' or 'geolevel.XXX'
+
+            below_id -- The id of the layer that is 'below' the above plan hierarchically.
+                        The id is in the form of either 'plan.XXX' or 'geolevel.XXX'
+                          
+            above_version -- Required only if the above_id is a Plan
+
+            below_version -- Required only if the below_id is a Plan
+
+        Returns:
+            An array of splits, given as tuples, where the first item is the id of
+            the district in the above layer which causes the split, and the second 
+            item is the id of the district in the other layer which is split.
+        """
+        # Determine whether the layers are plans or geolevels, and extract id
+        is_above_plan = above_id.startswith('plan')
+        above_id = int(above_id.split('.')[1])
+        above_col_id = 'district_id' if is_above_plan else 'portable_id'
+        above_table = 'redistricting_district' if is_above_plan else 'redistricting_geounit'
+
+        is_below_plan = below_id.startswith('plan')
+        below_id = int(below_id.split('.')[1])
+        below_col_id = 'district_id' if is_below_plan else 'portable_id'
+        below_table = 'redistricting_district' if is_below_plan else 'redistricting_geounit'
+
+        # Ensure version is set on plans
+        if is_above_plan and above_version is None:
+            raise Exception('Version must be specified for above plan.')
+
+        if is_below_plan and below_version is None:
+            raise Exception('Version must be specified for below plan.')
+
+        select = "SELECT above.%s, below.%s FROM %s as below" % (above_col_id, below_col_id, below_table)
+        version_join = """
+JOIN (
+    SELECT max(version) as version, district_id FROM redistricting_district
+    WHERE plan_id = %d 
+    AND version <= %d 
+    GROUP BY district_id
+) AS lmt
+"""
+        district_cross_join = """
+CROSS JOIN (
+    SELECT sub.id, sub.district_id, sub.name, sub.geom
+    FROM redistricting_district as sub
+    %s ON sub.district_id = lmt.district_id
+    WHERE sub.plan_id = %d AND sub.version = lmt.version AND sub.district_id > 0
+) AS above
+"""
+        geo_cross = "CROSS JOIN redistricting_geounit as above"
+        on_lmt = "ON below.district_id = lmt.district_id"
+        relate = "AND ST_Relate(above.geom, below.geom, '***T*****')"
+        order = "ORDER BY above.%s, below.%s" % (above_col_id, below_col_id)
+        below_join = version_join % (below_id, below_version) if below_version is not None else ""
+        above_join = version_join % (above_id, above_version) if above_version is not None else ""
+        above_cross = district_cross_join % (above_join, above_id)
+        below_district_cross_join = district_cross_join % (below_join, below_id)
+        below_and = "AND below.district_id > 0 AND below.version = lmt.version"
+        plan_where = "WHERE below.plan_id = %d" % below_id
+        geolevel_where = "WHERE below.geolevel_id = %d" % below_id
+        geolevel_and = "AND above.geolevel_id = %d" % above_id
+
+        # Two Plans
+        if is_above_plan and is_below_plan:
+            query = "%s %s %s %s %s %s %s %s" % (select, below_join, on_lmt, above_cross, plan_where, below_and, relate, order)
+         
+        # Plan above, Geolevel below
+        elif is_above_plan and not is_below_plan:
+            query = "%s %s %s %s %s" % (select, above_cross, geolevel_where, relate, order)
+
+        # Geolevel above, Plan below
+        elif not is_above_plan and is_below_plan:
+            query = "%s %s %s %s %s %s %s %s %s" % (select, below_join, on_lmt, geo_cross, plan_where, below_and, geolevel_and, relate, order)
+
+        # Two geolevels
+        else:
+            raise Exception('Geolevel-geolevel splits not implemented.')
+
+        cursor = connection.cursor()
+        cursor.execute(query)
+        splits = cursor.fetchall()
+        
+        return splits
+
+    def find_plan_splits(self, other_plan, version=None, other_version=None, inverse=False):
         """
         Determines if this plan splits the below Plan.
 
@@ -1688,6 +1779,8 @@ AND st_intersects(
                              omitted, the most recent version of the other plan
                              will be used.
 
+            inverse -- Optional; if specified, performs the inverse split operation
+
         Returns:
             An array of splits, given as tuples, where the first item is the district_id of
             the district in this plan which causes the split, and the second item is the
@@ -1699,42 +1792,15 @@ AND st_intersects(
         version = version if not version is None else self.version
         other_version = other_version if not other_version is None else other_plan.version
 
-        cursor = connection.cursor()
+        top_id = 'plan.%d' % other_plan.id if inverse else 'plan.%d' % self.id
+        top_version = other_version if inverse else version
 
-        # The query does a cross join on the versioned districts of this plan (above) with
-        # the versioned districts of the other plan (below), and returns the rows where
-        # the boundary of the above district intersects the interior of the below district.
-        query = """SELECT above.district_id, below.district_id
-FROM redistricting_district as below
-JOIN (
-    SELECT max(version) as version, district_id FROM redistricting_district
-    WHERE plan_id = %d 
-    AND version <= %d 
-    GROUP BY district_id
-) AS lmt1 ON below.district_id = lmt1.district_id
-CROSS JOIN (
-    SELECT sub.id, sub.district_id, sub.name, sub.geom
-    FROM redistricting_district as sub
-    JOIN (
-        SELECT max(version) as version, district_id FROM redistricting_district
-        WHERE plan_id = %d  
-        AND version <= %d 
-        GROUP BY district_id
-    ) AS lmt2 ON sub.district_id = lmt2.district_id
-    WHERE sub.plan_id = %d AND sub.version = lmt2.version AND sub.district_id > 0
-) AS above
-WHERE below.plan_id = %d  
-AND below.district_id > 0 
-AND below.version = lmt1.version
-AND ST_Relate(above.geom, below.geom, '***T*****')
-ORDER BY above.district_id, below.district_id
-""" % (other_plan.id, other_version, self.id, version, self.id, other_plan.id)
+        bottom_id = 'plan.%d' % self.id if inverse else 'plan.%d' % other_plan.id
+        bottom_version = version if inverse else other_version
+        
+        return Plan.find_splits(top_id, bottom_id, top_version, bottom_version)
 
-        cursor.execute(query)
-        splits = cursor.fetchall()
-        return splits
-
-    def find_geolevel_splits(self, geolevelid, version=None):
+    def find_geolevel_splits(self, geolevelid, version=None, inverse=False):
         """
         Determines if this plan splits the below Plan.
 
@@ -1747,6 +1813,8 @@ ORDER BY above.district_id, below.district_id
                        districts in the specified version of the plan. If
                        omitted, the most recent plan version will be used.
 
+            inverse -- Optional; if specified, performs the inverse split operation
+
         Returns:
             An array of splits, given as tuples, where the first item is the district_id of
             the district in this plan which causes the split, and the second item is the
@@ -1757,32 +1825,13 @@ ORDER BY above.district_id, below.district_id
         
         version = version if not version is None else self.version
 
-        cursor = connection.cursor()
-
-        # The query does a cross join on the versioned districts of this plan (above) with
-        # the geounits of the geolevel (below), and returns the rows where
-        # the boundary of the above district intersects the interior of the below geounit.
-        query = """SELECT above.district_id, below.portable_id
-FROM redistricting_geounit as below
-CROSS JOIN (
-    SELECT sub.id, sub.district_id, sub.name, sub.geom
-    FROM redistricting_district as sub
-    JOIN (
-        SELECT max(version) as version, district_id FROM redistricting_district
-        WHERE plan_id = %d  
-        AND version <= %d 
-        GROUP BY district_id
-    ) AS lmt2 ON sub.district_id = lmt2.district_id
-    WHERE sub.plan_id = %d AND sub.version = lmt2.version AND sub.district_id > 0
-) AS above
-WHERE below.geolevel_id = %d  
-AND ST_Relate(above.geom, below.geom, '***T*****')
-ORDER BY above.district_id, below.portable_id
-""" % (self.id, version, self.id, geolevelid)
-
-        cursor.execute(query)
-        splits = cursor.fetchall()
-        return splits
+        top_id = 'geolevel.%d' % geolevelid if inverse else 'plan.%d' % self.id
+        top_version = None if inverse else version
+        
+        bottom_id = 'plan.%d' % self.id if inverse else 'geolevel.%d' % geolevelid
+        bottom_version = version if inverse else None
+        
+        return Plan.find_splits(top_id, bottom_id, top_version, bottom_version)
 
 class PlanForm(ModelForm):
     """
