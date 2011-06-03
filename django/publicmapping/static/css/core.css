@@ -1635,6 +1635,9 @@ div.info_table .score2{
 div.info_table .score3{  
     width: 35%;
 }
+table#demographics_table td.cellright{
+    text-align:right;
+}
 div.info_table .error {
   font-size: 12px; 
   font-weight: bold;
