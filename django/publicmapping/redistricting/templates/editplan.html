@@ -334,12 +334,10 @@
                     Select up to 3 reference layers for comparison.
                 </div>
                 <div id="splits_report_available_layers">
-                {% for snap in snaplayers %}
                     <div class="layer_choice_wrapper">
-                        <input id="geolevel.{{ snap.geolevel }}" class="layer_choice" type="checkbox" value="geolevel.{{ snap.geolevel }}" />
-                        <label for="geolevel.{{ snap.geolevel }}">{{ snap.name }}</label>
-                    </div>                  
-                {% endfor %}
+                        <input id="geolevel.{{ snaplayers.0.geolevel }}" class="layer_choice" type="checkbox" value="geolevel.{{ snaplayers.0.geolevel }}" />
+                        <label for="geolevel.{{ snaplayers.0.geolevel }}">{{ snaplayers.0.name }}</label>
+                    </div>
                 </div>
 
                 {% comment %}
