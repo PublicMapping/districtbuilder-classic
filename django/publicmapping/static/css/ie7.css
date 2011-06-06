@@ -37,3 +37,7 @@ border:none;
 #app div#control_header  .ui-button {
   border: none
 }
+
+div.info_table .community_name {
+    width: 30%;
+}
