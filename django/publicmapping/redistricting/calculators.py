@@ -33,7 +33,7 @@ from django.contrib.gis.geos import Point
 from django.contrib.humanize.templatetags.humanize import intcomma
 from django.utils import simplejson as json
 from decimal import Decimal
-import locale, sys, traceback, inflect
+import locale, sys, traceback
 
 # This helps in formatting - by default, apache+wsgi uses the "C" locale
 locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
@@ -1663,7 +1663,7 @@ class SplitCounter(CalculatorBase):
 
         from redistricting.models import Geolevel, Plan
 
-        my_names = dict((p.district_id, p.name) for p in plan.get_districts_at_version(plan.version))
+        my_names = dict((p.district_id, p.name) for p in plan.get_districts_at_version(version))
         if target.startswith('geolevel'):
             results['other_name'] = Geolevel.objects.get(pk=id).name
             results['is_geolevel'] = True
@@ -1673,8 +1673,39 @@ class SplitCounter(CalculatorBase):
             results['other_name'] = other_plan.name
             if plan.is_community():
                 results['is_community'] = True
+                
             splits = plan.find_plan_splits(other_plan, version=version, inverse=inverse)
             other_names = dict((p.district_id, p.name) for p in other_plan.get_districts_at_version(other_plan.version))
+
+        # Helpers to get and name community types 
+        def get_community_types(districts):
+            """
+            Given a list of districts, return a dictionary with community types, keyed on district_id
+            """
+            community_types = {}
+            for d in districts:
+                typetags = filter(lambda tag:tag.name[:4]=='type', d.tags)
+                if typetags:
+                    typetags = map(lambda tag:tag.name[5:], typetags)
+                    community_types[d.district_id] = typetags
+            return community_types
+
+        def tag_plan_names(names, types):
+            """
+            Given a dictionary of names and a dictionary of types, return a dictionary of
+            names with optional community types, keyed on district id
+            """
+            name_dict = {}
+            for d in names.keys():
+                name_dict[d] = '%s - %s' % (names[d], ', '.join(types[d])) if d in types else names[d]
+            return name_dict
+        
+        community_types = get_community_types(plan.get_districts_at_version(version))
+        my_names = tag_plan_names(my_names, community_types)
+
+        if other_names:
+            other_community_types = get_community_types(other_plan.get_districts_at_version(other_plan.version))
+            other_names = tag_plan_names(other_names, other_community_types)
 
         # Swap names if inversed
         if inverse:
@@ -1709,16 +1740,19 @@ class SplitCounter(CalculatorBase):
         r = self.result
             
         render = '<div class="split_report">'
+
         if r['is_geolevel']:
-            render += '<div>Total %s split by plan: %d</div>' % \
-                (inflect.engine().plural(r['other_name']), r['total_split_districts'])
+            template = '<div>Total %s which split a %s: %d</div>'
         else:
-            render += '<div>Total %s splitting "%s": %d</div>' % \
-                ('communities' if r['is_community'] else 'districts', r['other_name'], r['total_split_districts'])
+            template = '<div>Total %s splitting "%s": %d</div>'
+
+        render += template % ('communities' if r['is_community'] else 'districts', r['other_name'], r['total_split_districts'])
         render += '<div>Total number of splits: %d</div>' % r['total_splits']
+
         render += '<div class="table_container"><table class="report"><thead><tr><th>%s</th><th>%s</th></tr></thead><tbody>' % (r['plan_name'], r['other_name'].capitalize() if r['is_geolevel'] else r['other_name'])
         for s in r['named_splits']:
             render += '<tr><td>%s</td><td>%s</td></tr>' % (s[0], s[1])
+
         render += '</tbody></table></div></div>'
         return render
 
