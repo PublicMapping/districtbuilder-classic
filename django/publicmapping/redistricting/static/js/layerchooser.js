@@ -45,6 +45,7 @@ layerchooser = function(options) {
             referenceLayerSelect: {},
             referencePlansTable: {},
             referencePlansPager: {},
+            referenceLayerName: {},
             map: {},
             csrfmiddlewaretoken: {},
             referencePlansUrl: '',
@@ -99,6 +100,7 @@ layerchooser = function(options) {
                 selector.val(),
                 selector.find('option:selected').text().trim()
             ]);             
+            _options.referenceLayerName.text(selector.find('option:selected').text().trim());
         });
 
         // Load Plan

@@ -454,6 +454,10 @@
                 <input class="map_settings_layer_type" id="basemap_radio" type="radio" name="layer_types"><span id="base_map_type"></span> Layer</input>
             </span>
             <div id="opacity_slider"></div>          
+            <div id="reference_layer_id" class="layer_type_container">
+                <div id="reference_layer_label">Reference Layer:</div>
+                <div id="reference_layer_name">None</div>
+            </div>
           </div>
           {% block multi_member %}
           {% comment %}
@@ -787,6 +791,7 @@ Include the shared_districts markup if we're using the copy/paste tool
                 okButton: $('#choose_layers_ok_button'),
                 referenceLayerContent: $('#reference_layer_content'),
                 referenceLayerSelect: $('#reference_layer_select'),
+                referenceLayerName: $('#reference_layer_name'),
                 referencePlansTable: $('#reference_plans_table'),
                 referencePlansPager: $('#reference_plans_pager'),
                 referencePlansUrl: '/districtmapping/getplans/',
