@@ -298,7 +298,7 @@ function mapinit(srs,maxExtent) {
          ],
 
         // Restrict panning to the extent of the study area, with a small buffer
-        restrictedExtent: STUDY_BOUNDS.scale(2),
+        restrictedExtent: STUDY_BOUNDS.scale(2)
     });
 
     // These layers are dependent on the layers available in geowebcache
@@ -636,7 +636,7 @@ function mapinit(srs,maxExtent) {
         fill: false,
         strokeColor: '#447700',
         strokeOpacity: 1,
-        strokeWidth: 2,
+        strokeWidth: 2
     };
 
     /**
