@@ -973,6 +973,8 @@ function mapinit(srs,maxExtent) {
             var layer = createReferenceLayer(referenceLayerId);
             if (layer == undefined) { currentReferenceLayer = undefined; return; }
             olmap.addLayer(layer);
+            // slide this layer down the stack
+            olmap.raiseLayer(layer, olmap.getLayerIndex(districtLayer) - olmap.getLayerIndex(layer));
             layer.setVisibility(true);
             if (layer.CLASS_NAME === 'OpenLayers.Layer.Vector') {
                 layer.refresh();
@@ -2390,11 +2392,11 @@ function mapinit(srs,maxExtent) {
                 styleCache[styleUrl] = false;
             }
 
-            OpenLayers.Request.GET({
+            $.ajax({
                 url: styleUrl,
-                method: 'GET',
-                callback: function(xhr){
-                    var sld = sldFormat.read(xhr.responseXML || xhr.responseText);
+                type: 'GET',
+                success: function(data,txtStatus,xhr){
+                    var sld = sldFormat.read(data);
                     styleCache[styleUrl] = sld;
                     callback(sld);
                 }
