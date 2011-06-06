@@ -370,7 +370,7 @@
                   <button class="identify_map_tool btntoggle titletip" title="Click on a geounit to see its demographic info." >Info</button>
               </div>
             <div class="toolset_group toolset_group_lg">
-                  <button id="district_id_map_tool" title="Click on a district to see its ID." class="btntoggle titletip">District<br/>Info</button>
+                  <button id="district_id_map_tool" title="Click on a district to see its ID." class="btntoggle titletip">{{ body_member|capfirst }}<br/>Info</button>
                   {% comment %}
                   
                   This hidden div is used to style the locked districts.
@@ -497,7 +497,7 @@
             <table id="district_legend">
                 <thead>
                     <tr>
-                        <th colspan="2">District</th>
+                        <th colspan="2">{{ body_member|capfirst }}</th>
                     </tr>
                 </thead>
                 <tbody>
