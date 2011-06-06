@@ -1479,6 +1479,11 @@ div#map_settings_content #map_settings_layers, div#map_settings_content .layer_t
     font-weight:bold;
     vertical-align:middle;
     }
+div#map_settings_content #reference_layer_id   {display:none; margin: 4px 0 2px; float:left;  line-height: 14px;}
+div#map_settings_content #reference_layer_name  {
+  font-weight: normal;
+}
+    
 div#map_settings_content .layer_type_container#layer_type_base {
 display:none
 }    

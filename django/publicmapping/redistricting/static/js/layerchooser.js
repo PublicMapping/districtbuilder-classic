@@ -100,7 +100,11 @@ layerchooser = function(options) {
                 selector.val(),
                 selector.find('option:selected').text().trim()
             ]);             
-            _options.referenceLayerName.text(selector.find('option:selected').text().trim());
+            if (selector.find('option:selected').text() == 'None') {
+              _options.referenceLayerName.parent().hide();
+            } else {
+              _options.referenceLayerName.text(selector.find('option:selected').text().trim()).parent().show() 
+            }
         });
 
         // Load Plan
