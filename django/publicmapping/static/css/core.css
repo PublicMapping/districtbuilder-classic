@@ -847,6 +847,7 @@ div#control_header button#choose_layers_button.ui-state-default {
     text-transform: uppercase;
     background-color: #606060;
     margin:0;
+    height: 87px;
     background: url(/static-media/images/bg-button-xl.png) 0 0 repeat-x;
     -moz-box-shadow: 2px 2px 2px rgba(0,0,0,.3);
     -webkit-box-shadow: 2px 2px 2px rgba(0,0,0,.3);
@@ -1289,7 +1290,7 @@ div#map_menu_header select {
     height: 30px;
     line-height: 23px;
     margin: 6px 0 0 12px;
-    padding-left: 3px;
+    padding-left: 0;
     width: 239px;
 }
 
@@ -2074,6 +2075,18 @@ select#newdistrictname {
     -webkit-border-radius: 4px;
 }
 
+.ui-dialog .ui-dialog-buttonpane {padding-top: 0; margin-top: 0;border:none}
+
+
+.ui-dialog .dialog_step h2 {margin-bottom: 5px; font-size: 16px; font-weight:bold;}
+
+.ui-dialog .dialog_step .centered {text-align:center}
+.ui-dialog .dialog_step.indented {margin-left: 3px}
+.ui-dialog .dialog_step .fillwidth {width:93%;}
+.ui-dialog .dialog_step .spacebelow {margin-bottom:4px;}
+.ui-dialog .dialog_step select {margin-top: 0; margin-bottom: 5px}
+
+
 /* OPENLAYERS MAP CONTROLS OVERRIDE */
 
 /*PAN*/
@@ -2158,15 +2171,9 @@ select#newdistrictname {
     
 /* layer chooser */
 #choose_layers_dialog { display:none; }
-#choose_layers_dialog .centered {text-align:center}
-#choose_layers_dialog .indented {margin-left: 3px}
-#choose_layers_dialog .fillwidth {width:93%;}
-#choose_layers_dialog .spacebelow {margin-bottom:4px;}
-#choose_layers_dialog select {margin-top: 0; margin-bottom: 5px}
 #choose_layers_content {float:left}
 #choose_layers_ok_div {clear: both;}
 #choose_layers_ok_button {float: right;}
-#choose_layers_content h2 {margin-bottom: 5px; font-size: 16px; font-weight:bold;}
 #choose_layers_select_div {width:345px; float:left;}
 #reference_layer_content {width:420px; height:311px; float:left; margin-right:0; margin-left: 12px;}
 #choose_layers_content > div {margin-right: 15px; font-size: 12px;}
@@ -2260,6 +2267,8 @@ span.poptot.selected {
 }
 
 /* Commenting css */
+#districtComment {padding-bottom: 0}
+
 #districtComment, #districtCommentErr {
     display:none;
 }
@@ -2270,46 +2279,44 @@ span.poptot.selected {
     font-weight: bold;
 }
 #districtComment #id_comment {
-    width:260px;
     height: 80px;
     -moz-border-radius: 8px;
     border: 1px solid #CCCCCC;
-    padding: 0 0 0 8px;
+    padding: 8px 0 0 8px;
 }
 #districtComment h3 {
-    font-size: 14pt;
-    margin-top: 15px;
+    font-size: 14px;
+    font-weight:normal;
 }
-#districtComment input {
-    width: 260px;
+#districtComment input , #districtComment textarea {
+    width: 96%
 }
 #districtComment select {
-    width: 270px;
-    -moz-border-radius: 8px;
+    width: 96%;
     border: 1px solid #CCCCCC;
-    padding: 0 0 0 8px;
 }
 .community_comments {
     overflow-y: auto;
     height: 98%;
-    margin: 5px;
 }
 .community_comments .comm2 {
     background-color: #F0FCFA;
 }
 .districtComment {
-    padding: 5px 3px;
+    padding: 10px 10px 15px;
     clear: both;
     font-weight: normal;
+    position: relative;
 }
 .districtComment .infoLabel {
     font-size: 12pt;
     font-weight: bold;
     float: left;
     border: none;
-    width: 170px;
-    background: transparent;
+    background: url("/static-media/images/divider.png") repeat-x 0 100% transparent;
     cursor: default;
+    padding-bottom: 3px;
+    padding-right: 38px;
 }
 .districtComment h4 {
     clear:both;
@@ -2317,7 +2324,8 @@ span.poptot.selected {
     font-weight: bold;
 }
 .districtComment .edit_district_info {
-    float:right;
+  position: absolute;
+  right: 10px;
     font-size: 8pt;
     text-decoration: underline;
 }
@@ -2327,7 +2335,7 @@ span.poptot.selected {
 .districtComment .district_comment {
     clear: both;
     font-size: 9pt;
-    margin-top: 1em;
+    margin-top: 5px;
 }
 .districtComment .district_comment textarea {
     border: 1px inset;
@@ -2350,3 +2358,10 @@ span.poptot.selected {
 .districtComment .district_type h4 {
     display: inline;
 }
+
+#community_table .score1, 
+#community_table .score2 {
+  text-align:right
+}
+
+#community_table thead tr {padding-right: 0}

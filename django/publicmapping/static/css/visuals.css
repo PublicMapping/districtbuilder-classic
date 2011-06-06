@@ -326,10 +326,6 @@ color: rgb(62, 107, 127);
 
 /*----------------MAPPING PAGE---------------------------------------*/
 
-/*tabs and tab container */
-#app div#logo {  opacity: .8;}
-
-
 
 div#step_plan .toolbar { background-color:#7cb7b3}
 
@@ -363,8 +359,6 @@ div#form_action{background-color: #8ac7b5;}
 div#toolbar_plans {
   background: transparent url(/static-media/images/bg-app.png) 0 0 repeat;
   }
-
-
   
 div#toolsets .ui-button.ui-state-hover {}
  

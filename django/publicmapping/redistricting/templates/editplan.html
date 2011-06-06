@@ -395,21 +395,31 @@
     <div id="districtComment" title="Community Info">
         <input type="hidden" value="0" id="id_district_pk" name="district_pk"/>
         <input type="hidden" value="" id="id_district_id" name="district_id"/>
-        <h3>1. Edit Community Label:</h3>
-        <div id="district_label" class="district_input">
-            <input type="text" class="field" value="" id="id_label" name="label" maxlength="200"/>
+        
+        <div class="dialog_step">
+          <h3>1. Edit Community Label:</h3>
+          <div id="district_label" class="district_input">
+              <input type="text" class="field" value="" id="id_label" name="label" maxlength="200"/>
+          </div>
         </div>
-        <h3>2. Edit Community Type:</h3>
-        <div id="district_type" class="district_input">
-            <select name="type" id="id_type" multiple="multiple" size="4">
-                {% for tag in tags %}<option value="{{ tag }}">{{ tag }}</option>
-                {% endfor %}
-            </select>
+        
+        <div class="dialog_step">
+          <h3>2. Edit Community Type:</h3>
+          <div id="district_type" class="district_input">
+              <select name="type" id="id_type" multiple="multiple" size="4">
+                  {% for tag in tags %}<option value="{{ tag }}">{{ tag }}</option>
+                  {% endfor %}
+              </select>
+          </div>
         </div>
-        <h3>3. Comments:</h3>
-            <p>
-                <textarea id="id_comment" name="comment" cols="40" rows="10"></textarea>
-            </p>
+        
+        <div class="dialog_step">
+          <h3>3. Comments:</h3>
+              <p>
+                  <textarea id="id_comment" name="comment" cols="40" rows="10"></textarea>
+              </p>
+        </div>
+        
         </div>
     </div>
     <div id="districtCommentErr" title="Oops!">
