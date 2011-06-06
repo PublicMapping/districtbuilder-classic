@@ -33,7 +33,7 @@ from django.contrib.gis.geos import Point
 from django.contrib.humanize.templatetags.humanize import intcomma
 from django.utils import simplejson as json
 from decimal import Decimal
-import locale, sys, traceback
+import locale, sys, traceback, inflect
 
 # This helps in formatting - by default, apache+wsgi uses the "C" locale
 locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
@@ -1657,7 +1657,7 @@ class SplitCounter(CalculatorBase):
         if version is None:
             version = plan.version
 
-        results = {'plan_name': plan.name}
+        results = {'plan_name': plan.name, 'is_community': False, 'is_geolevel': False}
 
         other_names = False
 
@@ -1666,10 +1666,13 @@ class SplitCounter(CalculatorBase):
         my_names = dict((p.district_id, p.name) for p in plan.get_districts_at_version(plan.version))
         if target.startswith('geolevel'):
             results['other_name'] = Geolevel.objects.get(pk=id).name
+            results['is_geolevel'] = True
             splits = plan.find_geolevel_splits(id, version=version, inverse=inverse)
         elif target.startswith('plan'):
             other_plan = Plan.objects.get(pk=id)
             results['other_name'] = other_plan.name
+            if plan.is_community():
+                results['is_community'] = True
             splits = plan.find_plan_splits(other_plan, version=version, inverse=inverse)
             other_names = dict((p.district_id, p.name) for p in other_plan.get_districts_at_version(other_plan.version))
 
@@ -1704,10 +1707,16 @@ class SplitCounter(CalculatorBase):
         is represented as an integer formatted with commas or "n/a"
         """
         r = self.result
+            
         render = '<div class="split_report">'
-        render += '<div>Total districts splitting %s: %d</div>' % (r['other_name'], r['total_split_districts'])
+        if r['is_geolevel']:
+            render += '<div>Total %s split by plan: %d</div>' % \
+                (inflect.engine().plural(r['other_name']), r['total_split_districts'])
+        else:
+            render += '<div>Total %s splitting "%s": %d</div>' % \
+                ('communities' if r['is_community'] else 'districts', r['other_name'], r['total_split_districts'])
         render += '<div>Total number of splits: %d</div>' % r['total_splits']
-        render += '<div class="table_container"><table class="report"><thead><tr><th>%s district</th><th>%s district</th></tr></thead><tbody>' % (r['plan_name'], r['other_name'])
+        render += '<div class="table_container"><table class="report"><thead><tr><th>%s</th><th>%s</th></tr></thead><tbody>' % (r['plan_name'], r['other_name'].capitalize() if r['is_geolevel'] else r['other_name'])
         for s in r['named_splits']:
             render += '<tr><td>%s</td><td>%s</td></tr>' % (s[0], s[1])
         render += '</tbody></table></div></div>'

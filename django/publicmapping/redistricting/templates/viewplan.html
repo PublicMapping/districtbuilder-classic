@@ -544,7 +544,9 @@
       <div class="shadow_top"></div>
       <div class="toolbar ui-widget-header"><h1>Evaluate Statistics</h1></div>
       <div class="tab_content">
-        {% include reporting_template %}
+        {% if reporting_template %}
+            {% include reporting_template %}
+        {% endif %} 
       </div>
     </div>
     {% if has_leaderboard and not plan.is_community %}        

@@ -367,7 +367,7 @@ def commonplan(request, planid):
         default_demo = plan.legislative_body.get_default_subject()
         max_dists = plan.legislative_body.max_districts
         body_member = plan.legislative_body.member
-        reporting_template = 'bard_%s.html' % plan.legislative_body.name.lower()
+        reporting_template = 'bard_%s.html' % plan.legislative_body.name.lower() if not plan.is_community() else None
 
         index = body_member.find('%')
         if index >= 0:
@@ -385,7 +385,7 @@ def commonplan(request, planid):
         default_demo = None
         max_dists = 0
         body_member = 'District '
-        reporting_template = 'empty.html'
+        reporting_template = None
         tags = []
     demos = Subject.objects.all().order_by('sort_key').values_list("id","name", "short_display","is_displayed")[0:3]
     layers = []
