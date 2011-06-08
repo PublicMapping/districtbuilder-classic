@@ -423,7 +423,12 @@ class SumValues(CalculatorBase):
     Each argument should be assigned the argument name "valueN", where N
     is a positive integer. The summation will add all arguments, starting
     at position 1, until an argument is not found.
+
+    This calculator takes an optional "target" argument.  If passed this
+    argument, the calculator will return a string suitable for display in
+    a plan summary
     """
+
     def compute(self, **kwargs):
         """
         Calculate the sum of a series of values.
@@ -462,6 +467,10 @@ class SumValues(CalculatorBase):
 
                 argnum += 1
 
+        if self.get_value('target') is not None:
+            target = self.get_value('target')
+            self.result = "%d (of %s)" % (self.result, target)
+
     def html(self):
         """
         Generate an HTML representation of the summation score. This
@@ -473,6 +482,8 @@ class SumValues(CalculatorBase):
         if isinstance(self.result, Decimal):
             result = locale.format("%d", self.result, grouping=True)
             return '<span>%s</span>' % result
+        elif not self.result is None:
+            return '<span>%s</span>' % self.result
         else:
             return '<span>N/A</span>'
 
@@ -480,7 +491,7 @@ class Percent(CalculatorBase):
     """
     Calculate a percentage for two values.
 
-    A percentage calculator requires two arguments: "numerator", and 
+    A percentage calculator requires two arguments: "numerator" and
     "denominator".
 
     When passed a district, the percentage calculator simply divides the
@@ -1470,15 +1481,6 @@ class Average(CalculatorBase):
     Each argument should be assigned the argument name "valueN", where N
     is a positive integer. The summation will add all arguments, starting
     at position 1, until an argument is not found.
-
-    This calculator also accepts an optional 'min' and 'max' value. If 
-    these arguments are present, the calculator will compute a boolean 
-    result, where True represents a plan where the averaged value lies 
-    between the 'min' and 'max' arguments, inclusive.
-
-    This calculator also accepts an optional 'target' value. If 'min' and
-    'max' are not present and given a target, it will return a string 
-    that's showable in a plan summary.
     """
     def compute(self, **kwargs):
         """
@@ -1532,15 +1534,6 @@ class Average(CalculatorBase):
                 return
             
             self.result /= count
-
-        if not self.get_value('min') is None and not self.get_value('max') is None:
-            minv = float(self.get_value('min'))
-            maxv = float(self.get_value('max'))
-
-            self.result = self.result >= minv and self.result <= maxv
-        elif not self.get_value('target') is None:
-            target = self.get_value('target')
-            self.result = "%d (of %s)" % (self.result, target)
 
     def html(self):
         """
