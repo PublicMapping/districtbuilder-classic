@@ -405,9 +405,11 @@
             {% endcomment %}
 
             <div id="map_menu">
+              {% if is_registered %}
               <div id="stats_options">
                  <button id="open_statistics_editor">Edit Stats</button>
               </div>
+              {% endif %}
 
               <ul class="mapping_tabs">
                 <li><a href="#sidebar_content"><button class="menu_toggle"></button>Statistics</a></li>
