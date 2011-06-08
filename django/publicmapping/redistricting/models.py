@@ -1687,8 +1687,10 @@ AND st_intersects(
 
         Returns:
             An array of splits, given as tuples, where the first item is the id of
-            the district in the above layer which causes the split, and the second 
-            item is the id of the district in the other layer which is split.
+            the district in the above layer which causes the split, the second 
+            item is the id of the district in the other layer which is split, 
+            the third item is the name associated with the first, and
+            the fourth item is the name associated with the second.
         """
         # Determine whether the layers are plans or geolevels, and extract id
         is_above_plan = above_id.startswith('plan')
@@ -1708,7 +1710,7 @@ AND st_intersects(
         if is_below_plan and below_version is None:
             raise Exception('Version must be specified for below plan.')
 
-        select = "SELECT above.%s, below.%s FROM %s as below" % (above_col_id, below_col_id, below_table)
+        select = "SELECT above.%s, below.%s, above.name, below.name FROM %s as below" % (above_col_id, below_col_id, below_table)
         version_join = """
 JOIN (
     SELECT max(version) as version, district_id FROM redistricting_district
@@ -1757,7 +1759,7 @@ CROSS JOIN (
         cursor = connection.cursor()
         cursor.execute(query)
         splits = cursor.fetchall()
-        
+
         return splits
 
     def find_plan_splits(self, other_plan, version=None, other_version=None, inverse=False):
@@ -1783,8 +1785,10 @@ CROSS JOIN (
 
         Returns:
             An array of splits, given as tuples, where the first item is the district_id of
-            the district in this plan which causes the split, and the second item is the
-            district_id of the district in the other plan which is split.
+            the district in this plan which causes the split, the second item is the
+            district_id of the district in the other plan which is split, 
+            the third item is the name associated with the first, and
+            the fourth item is the name associated with the second.
         """
         if not other_plan:
             raise Exception('Other plan must be specified for use in finding splits.')
@@ -1817,8 +1821,10 @@ CROSS JOIN (
 
         Returns:
             An array of splits, given as tuples, where the first item is the district_id of
-            the district in this plan which causes the split, and the second item is the
-            portable_id of the geounit in the geolevel which is split.
+            the district in this plan which causes the split, the second item is the
+            portable_id of the geounit in the geolevel which is split, 
+            the third item is the name associated with the first, and
+            the fourth item is the name associated with the second.
         """
         if not geolevelid:
             raise Exception('geolevelid must be specified for use in finding splits.')

@@ -1712,12 +1712,12 @@ class SplitCounter(CalculatorBase):
             if other_names:
                 named_splits = [(other_names[s[0]], my_names[s[1]]) for s in splits]
             else:
-                named_splits = [(s[0], my_names[s[1]]) for s in splits]
+                named_splits = [(s[2], my_names[s[1]]) for s in splits]
         else:
             if other_names:
                 named_splits = [(my_names[s[0]], other_names[s[1]]) for s in splits]
             else:
-                named_splits = [(my_names[s[0]], s[1]) for s in splits]
+                named_splits = [(my_names[s[0]], s[3]) for s in splits]
 
         results['splits'] = splits
         results['named_splits'] = named_splits
