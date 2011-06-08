@@ -19,7 +19,6 @@
           <PolygonSymbolizer>
             <Fill>
               <CssParameter name="fill">#000000</CssParameter>
-              <CssParameter name="fill-opacity">0.5</CssParameter>
             </Fill>
           </PolygonSymbolizer>
         </Rule>
@@ -40,7 +39,6 @@
           <PolygonSymbolizer>
             <Fill>
               <CssParameter name="fill">#444444</CssParameter>
-              <CssParameter name="fill-opacity">0.5</CssParameter>
             </Fill>
           </PolygonSymbolizer>
         </Rule>
@@ -61,7 +59,6 @@
           <PolygonSymbolizer>
             <Fill>
               <CssParameter name="fill">#777777</CssParameter>
-              <CssParameter name="fill-opacity">0.5</CssParameter>
             </Fill>
           </PolygonSymbolizer>
         </Rule>
@@ -82,7 +79,6 @@
           <PolygonSymbolizer>
             <Fill>
               <CssParameter name="fill">#aaaaaa</CssParameter>
-              <CssParameter name="fill-opacity">0.5</CssParameter>
             </Fill>
           </PolygonSymbolizer>
         </Rule>
@@ -97,7 +93,6 @@
           <PolygonSymbolizer>
             <Fill>
               <CssParameter name="fill">#eeeeee</CssParameter>
-              <CssParameter name="fill-opacity">0.5</CssParameter>
             </Fill>
           </PolygonSymbolizer>
         </Rule>
