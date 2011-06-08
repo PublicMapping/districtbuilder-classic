@@ -1661,6 +1661,8 @@ def getplans(request):
         sidx = sidx[len('fields.'):]
     if sidx == 'owner':
         sidx = 'owner__username'
+    if sidx == 'plan_type':
+        sidx = 'legislative_body__name'
     if sord == 'desc':
         sidx = '-' + sidx
 
