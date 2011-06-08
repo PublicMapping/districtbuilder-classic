@@ -716,7 +716,7 @@ Include the shared_districts markup if we're using the copy/paste tool
             {% endcomment %}
             <div class="dialog_step">
               <h2>1. Select <span id="layer_type">Layer</span> Thematic Map</h2>
-              <select id="showby" class="indented fillwidth">
+              <select id="showby" class="indented fillwidth" autocomplete="off">
                   <option value="none">None</option>
                   {% for demo in demographics %}              
                       <option value="{{ demo.value }}" {% if demo.isdefault == "true" %}selected=true{% endif %}>
@@ -735,7 +735,7 @@ Include the shared_districts markup if we're using the copy/paste tool
               application.
 
             {% endcomment %}
-            <select id="districtby" class="indented fillwidth">
+            <select id="districtby" class="indented fillwidth" autocomplete="off">
                 <option value="0" name="None">None</option>
                 <option value="-1" name="Compactness">Compactness</option>
                 <option value="-2" name="Contiguity">Contiguity</option>
@@ -751,7 +751,7 @@ Include the shared_districts markup if we're using the copy/paste tool
             
             <div class="dialog_step">
               <h2>3. Choose a Reference Layer</h2>
-              <select id="reference_layer_select" class="indented fillwidth">
+              <select id="reference_layer_select" class="indented fillwidth" autocomplete="off">
                   <option value="None">None</option>
                   {% for snap in snaplayers %}
                       <option value="geolevel.{{ snap.geolevel }}">
