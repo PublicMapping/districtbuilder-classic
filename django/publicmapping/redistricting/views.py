@@ -1647,7 +1647,9 @@ def getplans(request):
         else:
             available = Q(owner__exact=request.user)
     elif owner_filter == 'all_available':
-        available = Q(is_template=True) | Q(is_shared=True) | Q(owner__exact=request.user)
+        available = Q(is_template=True) | Q(is_shared=True)
+        if not request.user.is_anonymous():
+            available = available | Q(owner__exact=request.user)
     else:
         return HttpResponseBadRequest("Unknown filter method.")
         
