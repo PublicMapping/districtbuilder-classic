@@ -129,7 +129,7 @@ button#splits_report_button {
 #splits_report_results_panel h2 {padding-bottom: 4px; border-bottom: 2px solid #ddd;}
 
 #splits_report_results_container { width: 100%; font-size: 14px;}
-#splits_report_available_layers { height: 322px; border: 2px solid #CCC; overflow: auto; margin-top: 10px; margin-bottom: 15px }
+#splits_report_available_layers { height: 220px; border: 2px solid #CCC; overflow: auto; margin-top: 10px; margin-bottom: 15px }
 
 .split_report .table_container {
     border-bottom: 1px solid #ddd;
