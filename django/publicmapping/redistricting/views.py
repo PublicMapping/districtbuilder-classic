@@ -1005,7 +1005,6 @@ def fix_unassigned(request, planid):
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
 
-@login_required
 @unique_session_or_json_redirect
 def get_splits(request, planid, otherid, othertype):
     """
@@ -1034,8 +1033,8 @@ def get_splits(request, planid, otherid, othertype):
         status['message'] = 'No plan with the given id'
         return HttpResponse(json.dumps(status),mimetype='application/json')
 
-    if not can_edit(request.user, plan):
-        status['message'] = 'User can\'t edit the given plan'
+    if not can_view(request.user, plan):
+        status['message'] = 'User can\'t view the given plan'
         return HttpResponse(json.dumps(status),mimetype='application/json')
 
     version = int(request.REQUEST['version'] if 'version' in request.REQUEST else plan.version)
@@ -1046,7 +1045,10 @@ def get_splits(request, planid, otherid, othertype):
             except:
                 status['message'] = 'No other plan with the given id'
                 return HttpResponse(json.dumps(status),mimetype='application/json')
-
+            if not can_view(request.user, otherplan):
+                status['message'] = 'User can\'t view the given plan'
+                return HttpResponse(json.dumps(status),mimetype='application/json')
+                
             otherversion = int(request.REQUEST['otherversion'] if 'otherversion' in request.REQUEST else otherplan.version)
             splits = plan.find_plan_splits(otherplan, version, otherversion)
         elif othertype == 'geolevel':
@@ -1076,7 +1078,7 @@ def get_splits_report(request, planid):
     except:
         return HttpResponse('<div>Plan does not exist.</div>', mimetype='text/plain')
 
-    if not using_unique_session(request.user) or not can_edit(request.user, plan):
+    if not using_unique_session(request.user) or not can_view(request.user, plan):
         return HttpResponseForbidden()
 
     version = int(request.REQUEST['version'] if 'version' in request.REQUEST else plan.version)
@@ -1087,7 +1089,7 @@ def get_splits_report(request, planid):
 
     try :
         # Get a ScoreDisplay and components to render
-        display = ScoreDisplay(is_page=False, title="Splits Report", owner=request.user, legislative_body = plan.legislative_body)
+        display = ScoreDisplay(is_page=False, title="Splits Report", owner=User(), legislative_body = plan.legislative_body)
         panel = ScorePanel(title="Splits Report", type="plan", template='split_report.html', cssclass="split_panel")
         function = ScoreFunction(calculator="redistricting.calculators.SplitCounter", name="splits_test", label="Geolevel Splits", is_planscore=True)
 

@@ -2341,7 +2341,7 @@ def can_view(user, plan):
     Returns:
         True if the User has permissions to view the Plan.
     """
-    return plan.is_shared or plan.is_template
+    return plan.owner == user or plan.is_shared or plan.is_template
 
 
 def can_copy(user, plan):
