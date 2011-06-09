@@ -324,6 +324,9 @@ def merge_config(config, verbose):
         settings_out.write("EMAIL_HOST_USER = '%s'\n" % cfg.get('username'))
         settings_out.write("EMAIL_HOST_PASSWORD = '%s'\n" % cfg.get('password'))
         settings_out.write("EMAIL_SUBJECT_PREFIX = '%s '\n" % cfg.get('prefix'))
+        use_tls = cfg.get('use_tls')
+        if use_tls:
+            settings_out.write("EMAIL_USE_TLS = %s\n" % ((use_tls == 'true'),))
 
         settings_out.write("\nSECRET_KEY = '%s'\n" % "".join([random.choice("abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)") for i in range(50)]))
 
