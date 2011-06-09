@@ -527,7 +527,13 @@ function mapinit(srs,maxExtent) {
         var referenceLayerId = $('#reference_layer_select').val();
         if (!referenceLayerId || (referenceLayerId === 'None')) {
             $('<div>No reference layer selected.</div>').dialog({
-                modal: true, autoOpen: true, title: 'Error', resizable:false
+                modal: true, autoOpen: true, title: 'Warning', resizable:false,
+                buttons: {
+                    'Set Reference Layer': function() {
+                        $(this).dialog('close');
+                        $('#choose_layers_button').click();
+                    }
+                }
             });
             return;
         }
