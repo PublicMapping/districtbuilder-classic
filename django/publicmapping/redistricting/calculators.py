@@ -1628,9 +1628,16 @@ class SplitCounter(CalculatorBase):
     This calculator determines which districts are "split" and how
     often by the districts in a different plan.
 
+    This calculator accepts a "boundary_id" argument, which consists of
+    a plan type and id, e.g., "geolevel.1" or "plan.3".
+
     This calculator also accepts an optional 'inverse' value. If this
     is set to 1 (true), the inverse calculation will take place:
     the bottom layer will be treated as the top layer and vice versa.
+    
+    A "version" argument may be supplied to compare a given version of
+    the plan in the keyword args to the plan/geolevel given in the 
+    boundary_id
     """
     def compute(self, **kwargs):
         if not 'plan' in kwargs:
