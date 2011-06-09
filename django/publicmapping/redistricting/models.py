@@ -343,6 +343,11 @@ class Geounit(models.Model):
     # The lite geometry of the geounit (generated from geom via simplify).
     simple = models.MultiPolygonField(srid=3785)
 
+    # The topologically simplified version of the geounit.
+    # Very simplified and usable for speedy intersection operations.
+    # Not usable for display, as it may not look much like the original.
+    toposimplified = models.MultiPolygonField(srid=3785)
+
     # The centroid of the geometry (generated from geom via centroid).
     center = models.PointField(srid=3785)
 
@@ -1885,6 +1890,11 @@ class District(models.Model):
 
     # The simplified geometry of this district
     simple = models.GeometryCollectionField(srid=3785, default=GeometryCollection([]))
+
+    # The topologically simplified version of the district.
+    # Very simplified and usable for speedy intersection operations.
+    # Not usable for display, as it may not look much like the original.
+    toposimplified = models.MultiPolygonField(srid=3785)
 
     # The version of this district.
     version = models.PositiveIntegerField(default=0)
