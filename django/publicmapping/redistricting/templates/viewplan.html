@@ -174,7 +174,7 @@
       <div id="logo"><img src="/static-media/images/title-app.png" /></div>
       <ul id="steps_tabs"> <!-- tabs have to be first UL in #steps or else tabs wont work -->
         <li id="tab_plan"><a href="#step_plan">Plan</a><li>
-        <li id="tab_draw"><a href="#step_draw">Draw</a></li>
+        <li id="tab_draw"><a href="#step_draw">{% if is_registered %}Draw{% else %}View{% endif %}</a></li>
         <li id="tab_evaluate"><a href="#step_evaluate">Evaluate</a></li>
         <li id="tab_share" class="last"><a href="#step_share">Share</a></li>
         {% if has_leaderboard and not plan.is_community %}
