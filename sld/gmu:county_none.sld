@@ -5,7 +5,7 @@
   <NamedLayer>
     <Name>none</Name>
     <UserStyle>
-      <Title>Census Tracts</Title>
+      <Title>Counties</Title>
       <Abstract>A grayscale style showing the boundaries of geounits.</Abstract>
       <FeatureTypeStyle>
         <Rule>
@@ -13,7 +13,6 @@
           <PolygonSymbolizer>
             <Fill>
               <CssParameter name="fill">#FFFFFF</CssParameter>
-              <CssParameter name="fill-opacity">0.5</CssParameter>
             </Fill>
           </PolygonSymbolizer>
         </Rule>

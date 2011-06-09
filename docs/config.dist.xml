@@ -58,7 +58,7 @@
         <Subject id="presrep" field="PRS08REP" name="Republican Voters"
                  short_name="Republican 08" displayed="false" sortkey="16" />
         <Subject id="poptot" field="TOTPOP" name="Total Population" 
-                 short_name="Total Pop." displayed="true" sortkey="17" />
+                 short_name="Total Pop." displayed="true" sortkey="17" default="true" />
         <Subject id="presoth" field="PRS08OTH" name="Other Voters"
                  short_name="Other 08" displayed="false" sortkey="18" />
         <Subject id="govrep" field="GOV09REP" name="Republican Voters, Governor &apos;09"
@@ -73,12 +73,6 @@
             geographic levels. -->
         <!-- <Subject id="pophisp1" field="POPHISP" aliasfor="pophisp"/> -->
     </Subjects>
-
-    <Targets>
-        <Target id="congress_target" subjectref="poptot" value="727366" range1="0.005" range2="0.01" />
-        <Target id="house_target" subjectref="poptot" value="80010" range1="0.05" range2="0.1" />
-        <Target id="senate_target" subjectref="poptot" value="200026" range1="0.05" range2="0.1" />
-    </Targets>
 
     <Scoring>
         <ScoreFunctions>
@@ -466,6 +460,30 @@
                 <LegislativeBody ref="senate"/>
                 <LegislativeBody ref="community"/>
             </ScoreFunction>
+
+            <ScoreFunction id="district_vap" type="district"
+                calculator="publicmapping.redistricting.calculators.SumValues"
+                user_selectable="true" label="Voting Age Pop.">
+                <SubjectArgument name="value1" ref="vap" />
+                <LegislativeBody ref="congress"/>
+                <LegislativeBody ref="house"/>
+                <LegislativeBody ref="senate"/>
+                <LegislativeBody ref="community"/>
+            </ScoreFunction>
+                
+            <ScoreFunction id="district_poptot" type="district"
+                calculator="publicmapping.redistricting.calculators.SumValues"
+                user_selectable="true" label="Total Population">
+                <SubjectArgument name="value1" ref="poptot" />
+                <LegislativeBody ref="community"/>
+            </ScoreFunction>
+
+            <ScoreFunction id="district_comments" type="district"
+                calculator="publicmapping.redistricting.calculators.Comments"
+                user_selectable="false" label="Comments">
+                <LegislativeBody ref="community"/>
+            </ScoreFunction>
+
         </ScoreFunctions>
         
         <ScorePanels>
@@ -527,6 +545,14 @@
                 <Score ref="plan_majority_minority_hisp" />
             </ScorePanel>
 
+            <ScorePanel id="community_panel_summary" type="plan_summary" position="1"
+                title="Community Summary" cssclass="plan_summary community" template="community_summary.html">
+                <Score ref="a_senate_plan_equipopulation_summary"/>
+                <Score ref="b_plan_senate_noncontiguous"/>
+                <Score ref="plan_majority_minority_blk_senate" />
+                <Score ref="plan_majority_minority_hisp" />
+            </ScorePanel>
+
             <!-- Basic Information -->
             <ScorePanel id="congresional_panel_info" type="district" position="2"
                 title="Basic Information" cssclass="district_basic_info congressional" 
@@ -552,6 +578,13 @@
                 <Score ref="district_schwartzberg" />
             </ScorePanel>
             
+            <!-- Community Comments -->
+            <ScorePanel id="community_panel_comments" type="district" position="2"
+                title="Plan Comments" cssclass="district_comments community"
+                template="plan_comments.html">
+                <Score ref="district_comments" />
+            </ScorePanel>
+
             <!-- Demographics -->
             <ScorePanel id="congressional_panel_demo" type="district" position="2"
                 title="Demographics" cssclass="district_demographics congressional" 
@@ -576,6 +609,14 @@
                 <Score ref="district_blkvap_percent" />
                 <Score ref="district_hispvap_percent" />
             </ScorePanel>
+
+            <ScorePanel id="community_panel_demo" type="district" position="2"
+                title="Demographics" cssclass="district_demographics community" 
+                template="communities.html">
+                <Score ref="district_poptot" />
+                <Score ref="district_vap" />
+            </ScorePanel>
+            
         </ScorePanels>
         
         <ScoreDisplays>
@@ -652,6 +693,17 @@
                 <ScorePanel ref="senate_panel_summary" />
                 <ScorePanel ref="senate_panel_demo" />
             </ScoreDisplay>
+
+            <ScoreDisplay legislativebodyref="community" type="sidebar" title="Demographics" cssclass="demographics">
+                <ScorePanel ref="community_panel_summary" />
+                <ScorePanel ref="community_panel_demo" />
+            </ScoreDisplay>
+
+            <ScoreDisplay legislativebodyref="community" type="sidebar" title="Community Mapping" cssclass="demographics">
+                <ScorePanel ref="community_panel_summary" />
+                <ScorePanel ref="community_panel_comments" />
+            </ScoreDisplay>
+
         </ScoreDisplays>
     </Scoring>
     
@@ -770,21 +822,10 @@
           
           -->
           <LegislativeBodies>
-              <LegislativeBody ref="congress">
-                  <LegislativeTargets>
-                      <LegislativeTarget ref="congress_target" default="true" />
-                  </LegislativeTargets>
-              </LegislativeBody>
-              <LegislativeBody ref="house">
-                  <LegislativeTargets>
-                      <LegislativeTarget ref="house_target" default="true" />
-                  </LegislativeTargets>
-              </LegislativeBody>
-              <LegislativeBody ref="senate">
-                  <LegislativeTargets>
-                      <LegislativeTarget ref="senate_target" default="true" />
-                  </LegislativeTargets>
-              </LegislativeBody>
+              <LegislativeBody ref="congress" />
+              <LegislativeBody ref="house" />
+              <LegislativeBody ref="senate" />
+              <LegislativeBody ref="community" />
           </LegislativeBodies>
       </GeoLevel>
 
@@ -850,21 +891,15 @@
           <LegislativeBodies>
               <LegislativeBody ref="congress">
                   <Parent ref="block" />
-                  <LegislativeTargets>
-                      <LegislativeTarget ref="congress_target" default="true" />
-                  </LegislativeTargets>
               </LegislativeBody>
               <LegislativeBody ref="house">
                   <Parent ref="block" />
-                  <LegislativeTargets>
-                      <LegislativeTarget ref="house_target" default="true" />
-                  </LegislativeTargets>
               </LegislativeBody>
               <LegislativeBody ref="senate">
                   <Parent ref="block" />
-                  <LegislativeTargets>
-                      <LegislativeTarget ref="senate_target" default="true" />
-                  </LegislativeTargets>
+              </LegislativeBody>
+              <LegislativeBody ref="community">
+                  <Parent ref="block" />
               </LegislativeBody>
           </LegislativeBodies>
       </GeoLevel>
@@ -930,21 +965,15 @@
           <LegislativeBodies>
               <LegislativeBody ref="congress">
                   <Parent ref="vtd" />
-                  <LegislativeTargets>
-                      <LegislativeTarget ref="congress_target" default="true" />
-                  </LegislativeTargets>
               </LegislativeBody>
               <LegislativeBody ref="house">
                   <Parent ref="vtd" />
-                  <LegislativeTargets>
-                      <LegislativeTarget ref="house_target" default="true" />
-                  </LegislativeTargets>
               </LegislativeBody>
               <LegislativeBody ref="senate">
                   <Parent ref="vtd" />
-                  <LegislativeTargets>
-                      <LegislativeTarget ref="senate_target" default="true" />
-                  </LegislativeTargets>
+              </LegislativeBody>
+              <LegislativeBody ref="community">
+                  <Parent ref="vtd" />
               </LegislativeBody>
           </LegislativeBodies>
       </GeoLevel>
@@ -1099,16 +1128,16 @@
 
                 -->
                 <BardConfig 
-                    id="blocks"
+                    id="tenpercent"
                     shape="/projects/publicmapping/data/vablock_bard_save.Rdata" 
                     temp="/projects/publicmapping/local/reports"
                     transform="/projects/publicmapping/trunk/docs/bard_template.xslt">
                     <PopVars>
-                        <PopVar subjectref="poptot" threshold=".05" default="true" />
-                        <PopVar subjectref="vap" threshold=".1" />
-                        <PopVar subjectref="vapwnh" threshold=".1" />
-                        <PopVar subjectref="vapblk" threshold=".1" />
-                        <PopVar subjectref="vaphisp" threshold=".1" default="false" />
+                        <PopVar subjectref="poptot" threshold=".1" default="true" />
+                        <PopVar subjectref="vap" />
+                        <PopVar subjectref="vapwnh" />
+                        <PopVar subjectref="vapblk" />
+                        <PopVar subjectref="vaphisp" default="false" />
                     </PopVars>
                     <RatioVars>
                         <!--
@@ -1140,9 +1169,41 @@
                         VTd, or tract.
 
                         -->
-                        <SplitVar field="COUNTYST10" label="County" />
+                        <SplitVar field="COUNTYFP10" label="County" />
                         <SplitVar field="VTDST10" label="VTD" />
-                        <SplitVar field="TRACTCE10" label="Tract" />
+                    </SplitVars>
+                </BardConfig>
+                <BardConfig 
+                    id="fivepercent"
+                    shape="/projects/publicmapping/data/vablock_bard_save.Rdata" 
+                    temp="/projects/publicmapping/local/reports"
+                    transform="/projects/publicmapping/trunk/docs/bard_template.xslt">
+                    <PopVars>
+                        <PopVar subjectref="poptot" threshold=".05" default="true" />
+                        <PopVar subjectref="vap" />
+                        <PopVar subjectref="vapwnh" />
+                        <PopVar subjectref="vapblk" />
+                        <PopVar subjectref="vaphisp" default="false" />
+                    </PopVars>
+                    <RatioVars>
+                        <RatioVar id="racialComp" label="Majority Minority Districts" threshold=".5">
+                            <Numerators>
+                                <Numerator subjectref="vapblk" />
+                                <Numerator subjectref="vaphisp" />
+                            </Numerators>
+                            <Denominator subjectref="vap" />
+                        </RatioVar>
+                        <RatioVar id="partyControl" label="Party-Controlled Districts" threshold=".5">
+                            <Numerators>
+                                <Numerator subjectref="govdem" />
+                                <Numerator subjectref="govrep" />
+                            </Numerators>
+                            <Denominator subjectref="vap" />
+                        </RatioVar>
+                    </RatioVars>
+                    <SplitVars>
+                        <SplitVar field="COUNTYFP10" label="County" />
+                        <SplitVar field="VTDST10" label="VTD" />
                     </SplitVars>
                 </BardConfig>
             </BardConfigs>
@@ -1156,15 +1217,15 @@
                 <BardBodyConfig
                     id="congress_blocks"
                     legislativebodyref="congress"
-                    bardconfigref="blocks" />
+                    bardconfigref="fivepercent" />
                 <BardBodyConfig
                     id="house_blocks"
                     legislativebodyref="house"
-                    bardconfigref="blocks" />
+                    bardconfigref="tenpercent" />
                 <BardBodyConfig
                     id="senate_blocks"
                     legislativebodyref="senate"
-                    bardconfigref="blocks" />
+                    bardconfigref="tenpercent" />
             </BardBodyConfigs>
         </Reporting>
         

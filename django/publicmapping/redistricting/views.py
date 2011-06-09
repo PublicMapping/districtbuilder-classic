@@ -361,14 +361,13 @@ def commonplan(request, planid):
     if plan.count() == 1:
         plan = plan[0]   
         plan.edited = getutc(plan.edited)
-        targets = plan.targets()
         levels = plan.legislative_body.get_geolevels()
         districts = plan.get_districts_at_version(plan.version,include_geom=False)
         editable = can_edit(request.user, plan)
         default_demo = plan.legislative_body.get_default_subject()
         max_dists = plan.legislative_body.max_districts
         body_member = plan.legislative_body.member
-        reporting_template = 'bard_%s.html' % plan.legislative_body.name.lower()
+        reporting_template = 'bard_%s.html' % plan.legislative_body.name.lower() if not plan.is_community() else None
 
         index = body_member.find('%')
         if index >= 0:
@@ -380,19 +379,17 @@ def commonplan(request, planid):
     else:
         # If said plan doesn't exist, use an empty plan & district list.
         plan = {}
-        targets = list()
         levels = list()
         districts = {}
         editable = False
         default_demo = None
         max_dists = 0
         body_member = 'District '
-        reporting_template = 'empty.html'
+        reporting_template = None
         tags = []
     demos = Subject.objects.all().order_by('sort_key').values_list("id","name", "short_display","is_displayed")[0:3]
     layers = []
     snaplayers = []
-    rules = []
 
     if len(levels) > 0:
         study_area_extent = list(Geounit.objects.filter(geolevel=levels[0]).extent(field_name='simple'))
@@ -412,13 +409,6 @@ def commonplan(request, planid):
     # If the default demo was not selected among the first three, we'll still need it for the dropdown menus
     if default_demo and not default_selected:
         layers.insert( 0, {'id':default_demo.id,'text':default_demo.short_display,'value':default_demo.name.lower(), 'isdefault':str(True).lower(), 'isdisplayed':str(default_demo.is_displayed).lower()} )
-
-    for target in targets:
-        # The "in there" range
-        range1 = target.value * target.range1
-        # The "out of there" range
-        range2 = target.value * target.range2
-        rules.append( {'subject_id':target.subject_id,'lowest': target.value - range2,'lower':target.value - range1,'upper':target.value + range1,'highest': target.value + range2} )
 
     unassigned_id = 0
     if type(plan) != types.DictType:
@@ -447,7 +437,6 @@ def commonplan(request, planid):
         'feature_limit': settings.FEATURE_LIMIT,
         'demographics': layers,
         'snaplayers': snaplayers,
-        'rules': rules,
         'unassigned_id': unassigned_id,
         'is_registered': request.user.username != 'anonymous' and request.user.username != '',
         'debugging_staff': settings.DEBUG and request.user.is_staff,
@@ -1091,13 +1080,27 @@ def get_splits_report(request, planid):
         return HttpResponseForbidden()
 
     version = int(request.REQUEST['version'] if 'version' in request.REQUEST else plan.version)
+    inverse = request.REQUEST['inverse'] == 'true' if 'inverse' in request.REQUEST else False
     layers = request.REQUEST.getlist('layers[]')
     if len(layers) == 0:
         return HttpResponse('<div>No layers were provided.</div>', mimetype='text/plain')
 
     try :
-        html = '<div>TODO: return rendered splits report for: %s.</div>' % str(layers)
-        return HttpResponse(html, mimetype='text/plain')
+        # Get a ScoreDisplay and components to render
+        display = ScoreDisplay(is_page=False, title="Splits Report", owner=request.user, legislative_body = plan.legislative_body)
+        panel = ScorePanel(title="Splits Report", type="plan", template='split_report.html', cssclass="split_panel")
+        function = ScoreFunction(calculator="redistricting.calculators.SplitCounter", name="splits_test", label="Geolevel Splits", is_planscore=True)
+
+        html = ''
+        for layer in layers:
+            arg1 = ScoreArgument(argument="boundary_id", value=layer, type="literal")
+            arg2 = ScoreArgument(argument="inverse", value=(1 if inverse else 0), type="literal")
+            arg3 = ScoreArgument(argument="version", value=version, type="literal")
+            components = [(panel, [(function, arg1, arg2, arg3)])]
+
+            html += display.render(plan, components=components)
+
+        return HttpResponse(html, mimetype='text/html')
     except Exception as ex:
         print traceback.format_exc()
         return HttpResponse('%s' % ex, mimetype='text/plain')
@@ -1644,7 +1647,9 @@ def getplans(request):
         else:
             available = Q(owner__exact=request.user)
     elif owner_filter == 'all_available':
-        available = Q(is_template=True) | Q(is_shared=True) | Q(owner__exact=request.user)
+        available = Q(is_template=True) | Q(is_shared=True)
+        if not request.user.is_anonymous():
+            available = available | Q(owner__exact=request.user)
     else:
         return HttpResponseBadRequest("Unknown filter method.")
         
@@ -1656,6 +1661,8 @@ def getplans(request):
         sidx = sidx[len('fields.'):]
     if sidx == 'owner':
         sidx = 'owner__username'
+    if sidx == 'plan_type':
+        sidx = 'legislative_body__name'
     if sord == 'desc':
         sidx = '-' + sidx
 

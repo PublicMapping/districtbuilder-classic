@@ -36,6 +36,14 @@
           <input id="history_cursor" type="hidden"/>
       {% endblock %}
       
+      {% block toolset_tabs %}
+          <ul class="mapping_tabs">
+            <li><a href="#toolset_draw">Map Editing</a></li>
+            <li><a href="#toolset_district">{{ body_member|capfirst }} Tools</a></li>
+          </ul>  
+      {% endblock %}
+      
+      
           
       {% block toolset_draw %}
       <div class="toolset" id="toolset_draw">
@@ -48,17 +56,17 @@
        
         <div class="toolset_group toolset_group_lg">
           <div>
-            <button id="single_drawing_tool" title="Single district select; +Shift to select multiple {{ body_members}}" class="btntoggle titletip" >Single<br/>Select</button>
+            <button id="single_drawing_tool" title="Single {{ body_member }} select; +Shift to select multiple {{ body_members}}" class="btntoggle titletip" >Single<br/>Select</button>
             <button id="rectangle_drawing_tool" title="Select by rectangle" class="btntoggle titletip" >Rectangle<br/>Select</button>
             <button id="polygon_drawing_tool" title="Select by drawing a polygon" class="btntoggle titletip">Polygon<br/>Select</button>
           </div>
         </div>  
         <div class="toolset_group toolset_group_lg">
           <div>
-            <button id="anchor_tool" class="titletip" title="Enable anchor mode, then select a district name to repeatedly assign areas to a district">Anchor<br/>District</button>
+            <button id="anchor_tool" class="titletip" title="Enable anchor mode, then select a {{ body_member }} name to repeatedly assign areas to a {{ body_member }}">Anchor<br/>{{ body_member|capfirst }}</button>
             <div class="button_group" id="control_assign_district">
-              <label>Assign to District</label><br/>
-              <select id="assign_district" class="titletip" title="Assign {{ body_members }} currently selected on map by choosing a district name from drop down list">
+              <label>Assign to {{ body_member|capfirst }}</label><br/>
+              <select id="assign_district" class="titletip" title="Assign {{ body_members }} currently selected on map by choosing a {{ body_member }} name from drop down list">
               <option value="-1">-- Select One --</option>
               {% for d in districts %}
                   <option value="{{ d.district_id }}">{{ d.name }}</option>
@@ -68,7 +76,7 @@
               {% endifnotequal %}
             </select>
             </div>
-            <button id="dragdrop_tool" class="titletip" title="Select areas on the map then drag them to into a district for reassignment">Click and<br/>Drag</button>
+            <button id="dragdrop_tool" class="titletip" title="Select areas on the map then drag them to into a {{ body_member }} for reassignment">Click and<br/>Drag</button>
           </div>
         </div>
         <div class="toolset_group toolset_group_lg last">  
@@ -98,16 +106,17 @@
           <button class=" identify_map_tool btntoggle titletip" title="Click on a geounit to see its demographic info.">Info</button>
         </div>
         <div class="toolset_group toolset_group_lg">
-            <button id="lock_district_map_tool" title="Click on a district to lock or unlock it." class="btntoggle titletip">Lock<br/> District</button> 
-            <button id="district_id_map_tool" title="Click on a district to see its ID." class="btntoggle titletip">District<br/>Info</button> 
-            <button id="district_select_tool" title="Unassign all the units in a district" class="btntoggle titletip">Unassign<br/>District</button>
-            <button id="copy_paste_tool" title="Copy a district from another plan" class="titletip">Copy and</br> Paste</button>
+            <button id="lock_district_map_tool" title="Click on a {{ body_member }} to lock or unlock it." class="btntoggle titletip">Lock<br/>{{ body_member|capfirst }}</button> 
+            <button id="district_id_map_tool" title="Click on a {{ body_member }} to see its ID." class="btntoggle titletip">{{ body_member|capfirst }}<br/>Info</button> 
+            <button id="district_select_tool" title="Unassign all the units in a {{ body_member }}" class="btntoggle titletip">Unassign<br/>{{ body_member|capfirst }}</button>
+            <button id="copy_paste_tool" title="Copy a {{ body_member }} from another plan" class="titletip">Copy and</br>Paste</button>
         </div>
-        <div class="toolset_group toolset_group_lg">
 
+        <div class="toolset_group toolset_group_lg">
           <button id="show_splits_button">Show<br/>Splits</button>
           <button id="generate_splits_report_button">Generate<br/>Splits Report</button>
          </div>
+        
         <div class="toolset_group toolset_group_lg last">       
           {% if plan.legislative_body.multi_members_allowed %}
           <button id="multi_member_toggle">Select Multi-<br/>Member Districts</button>
@@ -183,7 +192,7 @@
             </div>
             <div id="shared_districts_column">
                 <input type="hidden" id="available_districts">
-                <h2>2. Select {{ body_member }} to copy</h2>
+                <h2>2. Select {{ body_member|capfirst }} to copy</h2>
                 <table id="shared_districts_table"></table>
                 <div id="shared_districts_pager"></div>
             </div>
@@ -320,33 +329,41 @@
     <div id="splits_report_dialog">
         <div id="splits_report_content">
             <div id="splits_report_select_panel">
-                <h2>1. Generate Splits Report for Current Displayed Plans</h2>
-                <div id="splits_report_current_ok_div">
-                    <button id="splits_report_current_ok_button">OK</button>
-                </div>
-    
-                <div id="splits_report_or_text">OR...</div>
-    
-                <h2>2. Generate an extended splits report by selecting up to 3 additional layers to compare to your current plan.</h2>
+                <h2>Generate Splits Report for Current Plan</h2>
                 <div id="splits_report_reminder_text">
-                    Keep in mind that for each additional plan you select, your report will take additional time to generate.
+                    Select up to 3 reference layers for comparison.
                 </div>
                 <div id="splits_report_available_layers">
-                {% for snap in snaplayers %}
+                    {% for snap in snaplayers %}
+                    {% if not forloop.last %}                    
                     <div class="layer_choice_wrapper">
                         <input id="geolevel.{{ snap.geolevel }}" class="layer_choice" type="checkbox" value="geolevel.{{ snap.geolevel }}" />
                         <label for="geolevel.{{ snap.geolevel }}">{{ snap.name }}</label>
                     </div>                  
-                {% endfor %}
+                    {% endif %}
+                    {% endfor %}
                 </div>
-                <div id="splits_report_extended_ok_div">
-                    <button id="splits_report_extended_ok_button">OK</button>
+
+                <h2>Advanced option</h2>
+                <div class="inverse_choice_wrapper">
+                    <input id="inverse_choice" type="checkbox" />
+                    <label id="inverse_choice_label" for="inverse_choice">
+                        Reverse splits detection:
+                        
+                    </label>
+                    <div id="inverse_choice_label_more">
+                        Where selected reference layers split current plan boundaries
+                    </div>
+                </div>                  
+
+                <div id="splits_report_ok_div">
+                    <button id="splits_report_ok_button">Generate Report</button>
                 </div>
             </div>
             <div id="splits_report_results_panel">
                 <h2>Splits Report</h2>
                 <div id="splits_report_results_container">
-                  <p>Please select a report</p>
+                  <p>No report generated.</p>
                 </div>
             </div>
         </div>
@@ -357,8 +374,8 @@
             splitsreport = splitsreport({
                 container: $('#splits_report_dialog'),
                 target: $('#generate_splits_report_button'),
-                currentOkButton: $('#splits_report_current_ok_button'),
-                extendedOkButton: $('#splits_report_extended_ok_button'),
+                okButton: $('#splits_report_ok_button'),
+                inverseCheckbox: $('#inverse_choice'),
                 availableLayers: $('#splits_report_available_layers'),
                 referenceLayerSelect: $('#reference_layer_select'),
                 splitsReportUrl: '/districtmapping/plan/{{ plan.id }}/splitsreport/',
@@ -378,21 +395,31 @@
     <div id="districtComment" title="Community Info">
         <input type="hidden" value="0" id="id_district_pk" name="district_pk"/>
         <input type="hidden" value="" id="id_district_id" name="district_id"/>
-        <h3>1. Edit Community Label:</h3>
-        <div id="district_label" class="district_input">
-            <input type="text" class="field" value="" id="id_label" name="label" maxlength="200"/>
+        
+        <div class="dialog_step">
+          <h3>1. Edit Community Label:</h3>
+          <div id="district_label" class="district_input">
+              <input type="text" class="field" value="" id="id_label" name="label" maxlength="200"/>
+          </div>
         </div>
-        <h3>2. Edit Community Type:</h3>
-        <div id="district_type" class="district_input">
-            <select name="type" id="id_type" multiple="multiple" size="4">
-                {% for tag in tags %}<option value="{{ tag }}">{{ tag }}</option>
-                {% endfor %}
-            </select>
+        
+        <div class="dialog_step">
+          <h3>2. Edit Community Type:</h3>
+          <div id="district_type" class="district_input">
+              <select name="type" id="id_type" multiple="multiple" size="4">
+                  {% for tag in tags %}<option value="{{ tag }}">{{ tag }}</option>
+                  {% endfor %}
+              </select>
+          </div>
         </div>
-        <h3>3. Comments:</h3>
-            <p>
-                <textarea id="id_comment" name="comment" cols="40" rows="10"></textarea>
-            </p>
+        
+        <div class="dialog_step">
+          <h3>3. Comments:</h3>
+              <p>
+                  <textarea id="id_comment" name="comment" cols="40" rows="10"></textarea>
+              </p>
+        </div>
+        
         </div>
     </div>
     <div id="districtCommentErr" title="Oops!">

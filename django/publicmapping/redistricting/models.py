@@ -159,13 +159,13 @@ class LegislativeBody(models.Model):
     def get_default_subject(self):
         """
         Get the default subject for display. This is related to the
-        LegislativeBody via the LegislativeDefault table.
+        LegislativeBody via the LegislativeLevel table.
 
         Returns:
             The default subject for the legislative body.
         """
-        ldef = self.legislativedefault_set.all()
-        return ldef[0].target.subject
+        ldef = self.legislativelevel_set.filter(parent__isnull=True)
+        return ldef[0].subject
 
     def get_base_geolevel(self):
         """
@@ -178,7 +178,7 @@ class LegislativeBody(models.Model):
             The base geolevel in this legislative body.
         """
         subj = self.get_default_subject()
-        levels = self.legislativelevel_set.filter(target__subject=subj,parent=None)
+        levels = self.legislativelevel_set.filter(subject=subj,parent=None)
         return levels[0].geolevel.id
 
     def get_geolevels(self):
@@ -188,7 +188,7 @@ class LegislativeBody(models.Model):
         order in which they are related.
         """
         subject = self.get_default_subject()
-        geobodies = self.legislativelevel_set.filter(target__subject=subject)
+        geobodies = self.legislativelevel_set.filter(subject=subject)
 
         ordered = []
         allgeobodies = len(geobodies)
@@ -282,24 +282,6 @@ class Geolevel(models.Model):
         return self.name
 
 
-class LegislativeDefault(models.Model):
-    """
-    The default settings for a legislative body.
-    """
-
-    # The legislative body
-    legislative_body = models.ForeignKey(LegislativeBody)
-
-    # The subject for characteristics in this body
-    target = models.ForeignKey('Target')
-
-    class Meta:
-        unique_together = ('legislative_body',)
-
-    def __unicode__(self):
-        return '%s - %s' % (self.legislative_body.name, self.target)
-
-
 class LegislativeLevel(models.Model):
     """
     A geographic classification in a legislative body.
@@ -319,17 +301,17 @@ class LegislativeLevel(models.Model):
     parent = models.ForeignKey('LegislativeLevel',null=True,blank=True)
 
     # The target that refers to this level
-    target = models.ForeignKey('Target',null=True)
+    subject = models.ForeignKey(Subject)
 
     def __unicode__(self):
         """
         Represent the LegislativeLevel as a unicode string. This is the
         LegislativeLevel's LegislativeBody and Geolevel
         """
-        return "%s, %s, %s" % (self.legislative_body.name, self.geolevel.name, self.target)
+        return "%s, %s, %s" % (self.legislative_body.name, self.geolevel.name, self.subject.display)
 
     class Meta:
-        unique_together = ('geolevel','legislative_body','target',)
+        unique_together = ('geolevel','legislative_body','subject',)
 
 
 class Geounit(models.Model):
@@ -563,41 +545,6 @@ class Characteristic(models.Model):
         """
         return u'%s for %s: %s' % (self.subject, self.geounit, self.number)
 
-class Target(models.Model):
-    """
-    A set of data values that bound the ComputedCharacteristics of a 
-    District.
-
-    A Target contains the upper and lower bounds for a Subject. When 
-    editing districts, these targets are used by the symbolizers to 
-    represent districts as over or under the target range.
-    """
-
-    # The subject that this target relates to
-    subject = models.ForeignKey(Subject)
-
-    # The first range value
-    range1 = models.DecimalField(max_digits=12,decimal_places=4)
-
-    # The second data value
-    range2 = models.DecimalField(max_digits=12,decimal_places=4)
-
-    # The central data value
-    value = models.DecimalField(max_digits=12,decimal_places=4)
-
-    class Meta:
-        """
-        Additional information about the Target model.
-        """
-        ordering = ['subject']
-
-    def __unicode__(self):
-        """
-        Represent the Target as a unicode string. The Target string is
-        in the form of "Subject : Value (Range1 - Range2)"
-        """
-        return u'%s : %s (%s - %s)' % (self.subject, self.value, self.range1, self.range2)
-
 class Plan(models.Model):
     """
     A collection of Districts for an area of coverage, like a state.
@@ -674,21 +621,6 @@ class Plan(models.Model):
 
         return self.legislative_body.is_community
     
-    def targets(self):
-        """
-        Get the targets associated with this plan by stepping back through
-        the legislative body and finding distinct targets for displayed subjects
-        among all the geolevels in the body. This will return a django queryset
-        if successful.
-        """
-        try:
-            levels = LegislativeLevel.objects.filter(legislative_body = self.legislative_body).values('target').distinct()
-            targets = Target.objects.filter(id__in=levels, subject__is_displayed = True)
-            return targets
-        except Exception as ex:
-            print('Unable to get targets for plan %s: %s' % (self.name, ex))
-            raise ex
-
     def get_nth_previous_version(self, steps):
         """
         Get the version of this plan N steps away.
@@ -1280,6 +1212,7 @@ AND st_intersects(
                 geom = json.loads( row[8] )
             else:
                 geom = None
+
             compactness_calculator = Schwartzberg()
             compactness_calculator.compute(district=district)
 
@@ -1736,7 +1669,100 @@ AND st_intersects(
 
         return districts
 
-    def find_plan_splits(self, other_plan, version=None, other_version=None):
+    @staticmethod
+    def find_splits(above_id, below_id, above_version=None, below_version=None):
+        """
+        Determines if the above layer splits the below layer
+
+        Parameters:
+            above_id -- The id of the layer that is 'above' the below plan hierarchically.
+                        The id is in the form of either 'plan.XXX' or 'geolevel.XXX'
+
+            below_id -- The id of the layer that is 'below' the above plan hierarchically.
+                        The id is in the form of either 'plan.XXX' or 'geolevel.XXX'
+                          
+            above_version -- Required only if the above_id is a Plan
+
+            below_version -- Required only if the below_id is a Plan
+
+        Returns:
+            An array of splits, given as tuples, where the first item is the id of
+            the district in the above layer which causes the split, the second 
+            item is the id of the district in the other layer which is split, 
+            the third item is the name associated with the first, and
+            the fourth item is the name associated with the second.
+        """
+        # Determine whether the layers are plans or geolevels, and extract id
+        is_above_plan = above_id.startswith('plan')
+        above_id = int(above_id.split('.')[1])
+        above_col_id = 'district_id' if is_above_plan else 'portable_id'
+        above_table = 'redistricting_district' if is_above_plan else 'redistricting_geounit'
+
+        is_below_plan = below_id.startswith('plan')
+        below_id = int(below_id.split('.')[1])
+        below_col_id = 'district_id' if is_below_plan else 'portable_id'
+        below_table = 'redistricting_district' if is_below_plan else 'redistricting_geounit'
+
+        # Ensure version is set on plans
+        if is_above_plan and above_version is None:
+            raise Exception('Version must be specified for above plan.')
+
+        if is_below_plan and below_version is None:
+            raise Exception('Version must be specified for below plan.')
+
+        select = "SELECT above.%s, below.%s, above.name, below.name FROM %s as below" % (above_col_id, below_col_id, below_table)
+        version_join = """
+JOIN (
+    SELECT max(version) as version, district_id FROM redistricting_district
+    WHERE plan_id = %d 
+    AND version <= %d 
+    GROUP BY district_id
+) AS lmt
+"""
+        district_cross_join = """
+CROSS JOIN (
+    SELECT sub.id, sub.district_id, sub.name, sub.geom
+    FROM redistricting_district as sub
+    %s ON sub.district_id = lmt.district_id
+    WHERE sub.plan_id = %d AND sub.version = lmt.version AND sub.district_id > 0
+) AS above
+"""
+        geo_cross = "CROSS JOIN redistricting_geounit as above"
+        on_lmt = "ON below.district_id = lmt.district_id"
+        relate = "AND ST_Relate(above.geom, below.geom, '***T*****')"
+        order = "ORDER BY above.%s, below.%s" % (above_col_id, below_col_id)
+        below_join = version_join % (below_id, below_version) if below_version is not None else ""
+        above_join = version_join % (above_id, above_version) if above_version is not None else ""
+        above_cross = district_cross_join % (above_join, above_id)
+        below_district_cross_join = district_cross_join % (below_join, below_id)
+        below_and = "AND below.district_id > 0 AND below.version = lmt.version"
+        plan_where = "WHERE below.plan_id = %d" % below_id
+        geolevel_where = "WHERE below.geolevel_id = %d" % below_id
+        geolevel_and = "AND above.geolevel_id = %d" % above_id
+
+        # Two Plans
+        if is_above_plan and is_below_plan:
+            query = "%s %s %s %s %s %s %s %s" % (select, below_join, on_lmt, above_cross, plan_where, below_and, relate, order)
+         
+        # Plan above, Geolevel below
+        elif is_above_plan and not is_below_plan:
+            query = "%s %s %s %s %s" % (select, above_cross, geolevel_where, relate, order)
+
+        # Geolevel above, Plan below
+        elif not is_above_plan and is_below_plan:
+            query = "%s %s %s %s %s %s %s %s %s" % (select, below_join, on_lmt, geo_cross, plan_where, below_and, geolevel_and, relate, order)
+
+        # Two geolevels
+        else:
+            raise Exception('Geolevel-geolevel splits not implemented.')
+
+        cursor = connection.cursor()
+        cursor.execute(query)
+        splits = cursor.fetchall()
+
+        return splits
+
+    def find_plan_splits(self, other_plan, version=None, other_version=None, inverse=False):
         """
         Determines if this plan splits the below Plan.
 
@@ -1755,10 +1781,14 @@ AND st_intersects(
                              omitted, the most recent version of the other plan
                              will be used.
 
+            inverse -- Optional; if specified, performs the inverse split operation
+
         Returns:
             An array of splits, given as tuples, where the first item is the district_id of
-            the district in this plan which causes the split, and the second item is the
-            district_id of the district in the other plan which is split.
+            the district in this plan which causes the split, the second item is the
+            district_id of the district in the other plan which is split, 
+            the third item is the name associated with the first, and
+            the fourth item is the name associated with the second.
         """
         if not other_plan:
             raise Exception('Other plan must be specified for use in finding splits.')
@@ -1766,42 +1796,15 @@ AND st_intersects(
         version = version if not version is None else self.version
         other_version = other_version if not other_version is None else other_plan.version
 
-        cursor = connection.cursor()
+        top_id = 'plan.%d' % other_plan.id if inverse else 'plan.%d' % self.id
+        top_version = other_version if inverse else version
 
-        # The query does a cross join on the versioned districts of this plan (above) with
-        # the versioned districts of the other plan (below), and returns the rows where
-        # the boundary of the above district intersects the interior of the below district.
-        query = """SELECT above.district_id, below.district_id
-FROM redistricting_district as below
-JOIN (
-    SELECT max(version) as version, district_id FROM redistricting_district
-    WHERE plan_id = %d 
-    AND version <= %d 
-    GROUP BY district_id
-) AS lmt1 ON below.district_id = lmt1.district_id
-CROSS JOIN (
-    SELECT sub.id, sub.district_id, sub.name, sub.geom
-    FROM redistricting_district as sub
-    JOIN (
-        SELECT max(version) as version, district_id FROM redistricting_district
-        WHERE plan_id = %d  
-        AND version <= %d 
-        GROUP BY district_id
-    ) AS lmt2 ON sub.district_id = lmt2.district_id
-    WHERE sub.plan_id = %d AND sub.version = lmt2.version AND sub.district_id > 0
-) AS above
-WHERE below.plan_id = %d  
-AND below.district_id > 0 
-AND below.version = lmt1.version
-AND ST_Relate(above.geom, below.geom, '***T*****')
-ORDER BY above.district_id, below.district_id
-""" % (other_plan.id, other_version, self.id, version, self.id, other_plan.id)
+        bottom_id = 'plan.%d' % self.id if inverse else 'plan.%d' % other_plan.id
+        bottom_version = version if inverse else other_version
+        
+        return Plan.find_splits(top_id, bottom_id, top_version, bottom_version)
 
-        cursor.execute(query)
-        splits = cursor.fetchall()
-        return splits
-
-    def find_geolevel_splits(self, geolevelid, version=None):
+    def find_geolevel_splits(self, geolevelid, version=None, inverse=False):
         """
         Determines if this plan splits the below Plan.
 
@@ -1814,42 +1817,27 @@ ORDER BY above.district_id, below.district_id
                        districts in the specified version of the plan. If
                        omitted, the most recent plan version will be used.
 
+            inverse -- Optional; if specified, performs the inverse split operation
+
         Returns:
             An array of splits, given as tuples, where the first item is the district_id of
-            the district in this plan which causes the split, and the second item is the
-            portable_id of the geounit in the geolevel which is split.
+            the district in this plan which causes the split, the second item is the
+            portable_id of the geounit in the geolevel which is split, 
+            the third item is the name associated with the first, and
+            the fourth item is the name associated with the second.
         """
         if not geolevelid:
             raise Exception('geolevelid must be specified for use in finding splits.')
         
         version = version if not version is None else self.version
 
-        cursor = connection.cursor()
-
-        # The query does a cross join on the versioned districts of this plan (above) with
-        # the geounits of the geolevel (below), and returns the rows where
-        # the boundary of the above district intersects the interior of the below geounit.
-        query = """SELECT above.district_id, below.portable_id
-FROM redistricting_geounit as below
-CROSS JOIN (
-    SELECT sub.id, sub.district_id, sub.name, sub.geom
-    FROM redistricting_district as sub
-    JOIN (
-        SELECT max(version) as version, district_id FROM redistricting_district
-        WHERE plan_id = %d  
-        AND version <= %d 
-        GROUP BY district_id
-    ) AS lmt2 ON sub.district_id = lmt2.district_id
-    WHERE sub.plan_id = %d AND sub.version = lmt2.version AND sub.district_id > 0
-) AS above
-WHERE below.geolevel_id = %d  
-AND ST_Relate(above.geom, below.geom, '***T*****')
-ORDER BY above.district_id, below.portable_id
-""" % (self.id, version, self.id, geolevelid)
-
-        cursor.execute(query)
-        splits = cursor.fetchall()
-        return splits
+        top_id = 'geolevel.%d' % geolevelid if inverse else 'plan.%d' % self.id
+        top_version = None if inverse else version
+        
+        bottom_id = 'plan.%d' % self.id if inverse else 'geolevel.%d' % geolevelid
+        bottom_version = version if inverse else None
+        
+        return Plan.find_splits(top_id, bottom_id, top_version, bottom_version)
 
 class PlanForm(ModelForm):
     """

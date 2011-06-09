@@ -6,98 +6,93 @@
     <Name>pophisp</Name>
     <UserStyle>
       <Title>Hispanic Population</Title>
-      <Abstract>A grayscale style showing the number of identified members of a party in a given geounit.</Abstract>
+      <Abstract>A grayscale style showing the number of identified members of a population group in a given geounit.</Abstract>
       <FeatureTypeStyle>
         <Rule>
-          <Title>&gt; 197,000</Title>
+          <Title>&gt; 83,225</Title>
           <ogc:Filter>
             <ogc:PropertyIsGreaterThanOrEqualTo>
               <ogc:PropertyName>number</ogc:PropertyName>
-              <ogc:Literal>197000</ogc:Literal>
+              <ogc:Literal>83225</ogc:Literal>
             </ogc:PropertyIsGreaterThanOrEqualTo>
           </ogc:Filter>
           <PolygonSymbolizer>
             <Fill>
               <CssParameter name="fill">#252525</CssParameter>
-              <CssParameter name="fill-opacity">0.5</CssParameter>
             </Fill>
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Title>&gt; 52,800</Title>
+          <Title>&gt; 20,405</Title>
           <ogc:Filter>
             <ogc:And>
               <ogc:PropertyIsLessThan>
                 <ogc:PropertyName>number</ogc:PropertyName>
-                <ogc:Literal>197000</ogc:Literal>
+                <ogc:Literal>83225</ogc:Literal>
               </ogc:PropertyIsLessThan>
               <ogc:PropertyIsGreaterThanOrEqualTo>
                 <ogc:PropertyName>number</ogc:PropertyName>
-                <ogc:Literal>52800</ogc:Literal>
+                <ogc:Literal>20405</ogc:Literal>
               </ogc:PropertyIsGreaterThanOrEqualTo>
             </ogc:And>
           </ogc:Filter>          
           <PolygonSymbolizer>
             <Fill>
               <CssParameter name="fill">#636363</CssParameter>
-              <CssParameter name="fill-opacity">0.5</CssParameter>
             </Fill>
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Title>&gt; 22,900</Title>
+          <Title>&gt; 5,500</Title>
           <ogc:Filter>
             <ogc:And>
               <ogc:PropertyIsLessThan>
                 <ogc:PropertyName>number</ogc:PropertyName>
-                <ogc:Literal>52800</ogc:Literal>
+                <ogc:Literal>20405</ogc:Literal>
               </ogc:PropertyIsLessThan>
               <ogc:PropertyIsGreaterThanOrEqualTo>
                 <ogc:PropertyName>number</ogc:PropertyName>
-                <ogc:Literal>22900</ogc:Literal>
+                <ogc:Literal>5500</ogc:Literal>
               </ogc:PropertyIsGreaterThanOrEqualTo>
             </ogc:And>
           </ogc:Filter>          
           <PolygonSymbolizer>
             <Fill>
               <CssParameter name="fill">#969696</CssParameter>
-              <CssParameter name="fill-opacity">0.5</CssParameter>
             </Fill>
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Title>&gt; 6,525</Title>
+          <Title>&gt; 1,390</Title>
           <ogc:Filter>
             <ogc:And>
               <ogc:PropertyIsLessThan>
                 <ogc:PropertyName>number</ogc:PropertyName>
-                <ogc:Literal>22900</ogc:Literal>
+                <ogc:Literal>5500</ogc:Literal>
               </ogc:PropertyIsLessThan>
               <ogc:PropertyIsGreaterThanOrEqualTo>
                 <ogc:PropertyName>number</ogc:PropertyName>
-                <ogc:Literal>6525</ogc:Literal>
+                <ogc:Literal>1390</ogc:Literal>
               </ogc:PropertyIsGreaterThanOrEqualTo>
             </ogc:And>
           </ogc:Filter>          
           <PolygonSymbolizer>
             <Fill>
               <CssParameter name="fill">#CCCCCC</CssParameter>
-              <CssParameter name="fill-opacity">0.5</CssParameter>
             </Fill>
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Title>&lt; 6,525</Title>
+          <Title>&lt; 1390</Title>
           <ogc:Filter>
             <ogc:PropertyIsLessThan>
               <ogc:PropertyName>number</ogc:PropertyName>
-              <ogc:Literal>6525</ogc:Literal>
+              <ogc:Literal>1390</ogc:Literal>
             </ogc:PropertyIsLessThan>
           </ogc:Filter>          
           <PolygonSymbolizer>
             <Fill>
               <CssParameter name="fill">#F7F7F7</CssParameter>
-              <CssParameter name="fill-opacity">0.5</CssParameter>
             </Fill>
           </PolygonSymbolizer>
         </Rule>
@@ -114,4 +109,3 @@
     </UserStyle>
   </NamedLayer>
 </StyledLayerDescriptor>
-

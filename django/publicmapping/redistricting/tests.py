@@ -2201,7 +2201,7 @@ class CalculatorTestCase(BaseTestCase):
 
         actual = cntcalc.result
 
-        self.assertEqual(0, actual, 'Incorrect value during contiguity. (e:%d,a:%d)' % (0, actual))
+        self.assertEqual(1, actual, 'Incorrect value during contiguity. (e:%d,a:%d)' % (1, actual))
 
         self.plan.add_geounits( self.district1.district_id, [str(self.geounits[4].id)], self.geolevel.id, self.plan.version )
 
@@ -2209,7 +2209,7 @@ class CalculatorTestCase(BaseTestCase):
 
         actual = cntcalc.result
 
-        self.assertEqual(1, actual, 'Incorrect value during contiguity. (e:%d,a:%d)' % (1, actual))
+        self.assertEqual(2, actual, 'Incorrect value during contiguity. (e:%d,a:%d)' % (2, actual))
 
         self.plan.add_geounits( self.district2.district_id, [str(self.geounits[13].id)], self.geolevel.id, self.plan.version )
 
@@ -2217,7 +2217,7 @@ class CalculatorTestCase(BaseTestCase):
 
         actual = cntcalc.result
 
-        self.assertEqual(2, actual, 'Incorrect value during contiguity. (e:%d,a:%d)' % (2, actual))
+        self.assertEqual(3, actual, 'Incorrect value during contiguity. (e:%d,a:%d)' % (3, actual))
 
 
     def test_equivalence1(self):
@@ -2593,8 +2593,8 @@ class CalculatorTestCase(BaseTestCase):
         num_splits = calc.result['total_splits']
         split_tuples = calc.result['splits']
         self.assertEqual(3, num_splits, 'Did not find expected splits. e:3, a:%s' % num_splits)
-        self.assertIn((3,1), calc.result['splits'], 'Split not detected')
-        self.assertIn(('TestMember 3', 'TestMember 1'), calc.result['named_splits'], 'Split not named correctly')
+        self.assertTrue((3,1) in calc.result['splits'], 'Split not detected')
+        self.assertTrue(('TestMember 3', 'TestMember 1') in calc.result['named_splits'], 'Split not named correctly')
 
         # Calc the first plan with geolevel 1 - no splits
         calc.__init__()
@@ -2616,7 +2616,7 @@ class CalculatorTestCase(BaseTestCase):
         calc.compute(plan=p2)
         district_splits = calc.result['total_split_districts']
         self.assertEqual(2, district_splits, 'Did not find expected splits. e:2, a:%s' % district_splits)
-        self.assertIn((4, u'0000004'), calc.result['splits'], 'Did not find expected splits')
+        self.assertTrue((4, u'0000004') in calc.result['splits'], 'Did not find expected splits')
     
 class AllBlocksTestCase(BaseTestCase):
     fixtures = ['redistricting_testdata.json',
@@ -2879,7 +2879,7 @@ class ScoreRenderTestCase(BaseTestCase):
 
         components = [(panel, [(function, arg1)])]
 
-        expected_result = "%s:[u'<div class=\"split_report\"><div>Total districts split by first level: 2<div><div>Total number of splits: 7<div><table><thead><tr><th>testPlan district</th><th>first level district</th></tr></thead><tbody><tr><td>TestMember 1</td><td>0000000</td></tr><tr><td>TestMember 1</td><td>0000001</td></tr><tr><td>TestMember 1</td><td>0000003</td></tr><tr><td>TestMember 1</td><td>0000004</td></tr><tr><td>TestMember 1</td><td>0000006</td></tr><tr><td>TestMember 1</td><td>0000007</td></tr><tr><td>TestMember 5</td><td>0000004</td></tr></tbody></table></div>']" % p1.name
+        expected_result = "%s:[u'<div class=\"split_report\"><div>Total districts split by first level: 2</div><div>Total number of splits: 7</div><div class=\"table_container\"><table class=\"report\"><thead><tr><th>testPlan district</th><th>first level district</th></tr></thead><tbody><tr><td>TestMember 1</td><td>0000000</td></tr><tr><td>TestMember 1</td><td>0000001</td></tr><tr><td>TestMember 1</td><td>0000003</td></tr><tr><td>TestMember 1</td><td>0000004</td></tr><tr><td>TestMember 1</td><td>0000006</td></tr><tr><td>TestMember 1</td><td>0000007</td></tr><tr><td>TestMember 5</td><td>0000004</td></tr></tbody></table></div></div>']" % p1.name
 
         # Check the result
         plan_result = display.render(p1, components=components)

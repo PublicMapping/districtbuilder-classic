@@ -40,9 +40,8 @@ locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 
 class CalculatorBase:
     """
-    A base class for all calculators that defines the result object,
-    and defines a couple default rendering options for HTML, JSON, and 
-    Boolean.
+    The base class for all calculators. CalculatorBase defines the result 
+    object and a couple default rendering options for HTML and JSON.
     """
 
     # This calculator's result
@@ -72,16 +71,20 @@ class CalculatorBase:
 
     def sortkey(self):
         """
-        How should this calculator be compared to others like it? The
-        default sorting method sorts by the value of the result.
+        Generate a key used to sort this calculator relative to all other
+        calculators. The default sorting method sorts by the value of 
+        the result.
+
+        Returns:
+            The value of the result.
         """
         return self.result
 
     def html(self):
         """
-        Return a basic HTML representation of the result.
+        Generate a basic HTML representation of the result.
 
-        The base class generates an HTML span element, with the text
+        The base calculator generates an HTML span element, with the text
         content set to a string representation of the result. If the result
         is None, the string "n/a" is used.
         """
@@ -92,10 +95,10 @@ class CalculatorBase:
 
     def json(self):
         """
-        Return a basic JSON representation of the result.
+        Generate a basic JSON representation of the result.
 
-        The base class generates an simple Javascript object that contains
-        a single property, named "result".
+        The base calculator generates an simple Javascript object that 
+        contains a single property, named "result".
         """
         return json.dumps( {'result':self.result}, use_decimal=True )
 
@@ -111,6 +114,14 @@ class CalculatorBase:
 
         If no district is provided, no subject argument value is ever 
         returned.
+
+        Parameters:
+            argument -- The name of the argument passed to the calculator.
+            district -- An optional district, used to fetch related
+              ComputedCharacteristics.
+
+        Returns:
+            The value of the subject or literal argument.
         """
         try:
             (argtype, argval) = self.arg_dict[argument]
@@ -153,6 +164,8 @@ class Schwartzberg(CalculatorBase):
         Keywords:
             district - A district whose compactness should be computed.
             plan -- A plan whose district compactnesses should be averaged.
+            version -- Optional. The version of the plan, defaults to the 
+                most recent version.
         """
         districts = []
         if 'district' in kwargs:
@@ -192,6 +205,9 @@ class Schwartzberg(CalculatorBase):
         """
         Generate an HTML representation of the compactness score. This
         is represented as a percentage or "n/a"
+
+        Returns:
+            A number formatted similar to "1.00%", or "n/a"
         """
         return ("%0.2f%%" % (self.result * 100)) if self.result else "n/a"
 
@@ -214,6 +230,8 @@ class Roeck(CalculatorBase):
         Keywords:
             district -- A district whose compactness should be computed.
             plan -- A plan whose district compactnesses should be averaged.
+            version -- Optional. The version of the plan, defaults to the 
+                most recent version.
         """
         districts = []
         if 'district' in kwargs:
@@ -255,6 +273,9 @@ class Roeck(CalculatorBase):
         """
         Generate an HTML representation of the compactness score. This
         is represented as a percentage or "n/a"
+
+        Returns:
+            A number formatted similar to "1.00%", or "n/a"
         """
         return ("%0.2f%%" % (self.result * 100)) if self.result else "n/a"
 
@@ -277,6 +298,8 @@ class PolsbyPopper(CalculatorBase):
         Keywords:
             district -- A district whose compactness should be computed.
             plan -- A plan whose district compactnesses should be averaged.
+            version -- Optional. The version of the plan, defaults to the 
+                most recent version.
         """
         districts = []
         if 'district' in kwargs:
@@ -315,6 +338,9 @@ class PolsbyPopper(CalculatorBase):
         """
         Generate an HTML representation of the compactness score. This
         is represented as a percentage or "n/a"
+
+        Returns:
+            A number formatted similar to "1.00%", or "n/a"
         """
         return ("%0.2f%%" % (self.result * 100)) if self.result else "n/a"
 
@@ -338,6 +364,8 @@ class LengthWidthCompactness(CalculatorBase):
         Keywords:
             district -- A district whose compactness should be computed.
             plan -- A plan whose district compactnesses should be averaged.
+            version -- Optional. The version of the plan, defaults to the 
+                most recent version.
         """
         districts = []
         if 'district' in kwargs:
@@ -372,6 +400,9 @@ class LengthWidthCompactness(CalculatorBase):
         """
         Generate an HTML representation of the compactness score. This
         is represented as a percentage or "n/a"
+
+        Returns:
+            A number formatted similar to "1.00%", or "n/a"
         """
         return ("%0.2f%%" % (self.result * 100)) if self.result else "n/a"
 
@@ -392,10 +423,23 @@ class SumValues(CalculatorBase):
     Each argument should be assigned the argument name "valueN", where N
     is a positive integer. The summation will add all arguments, starting
     at position 1, until an argument is not found.
+
+    This calculator takes an optional "target" argument.  If passed this
+    argument, the calculator will return a string suitable for display in
+    a plan summary
     """
+
     def compute(self, **kwargs):
         """
         Calculate the sum of a series of values.
+
+        Keywords:
+            district -- A district whose values should be summed.
+            plan -- A plan whose district values should be summed.
+            version -- Optional. The version of the plan, defaults to the 
+                most recent version.
+            list -- A list of values to sum, when summing a set of 
+                ScoreArguments.
         """
         districts = []
 
@@ -415,9 +459,6 @@ class SumValues(CalculatorBase):
         self.result = 0
 
         for district in districts:
-            if district.district_id == 0:
-                continue
-
             argnum = 1
             while ('value%d'%argnum) in self.arg_dict:
                 number = self.get_value('value%d'%argnum, district)
@@ -426,14 +467,23 @@ class SumValues(CalculatorBase):
 
                 argnum += 1
 
+        if self.get_value('target') is not None:
+            target = self.get_value('target')
+            self.result = "%d (of %s)" % (self.result, target)
+
     def html(self):
         """
-        Generate an HTML representation of the equivalence score. This
-        is represented as an integer formatted with commas or "n/a"
+        Generate an HTML representation of the summation score. This
+        is represented as a decimal formatted with commas or "n/a".
+
+        Returns:
+            The result wrapped in an HTML SPAN element: "<span>1</span>".
         """
         if isinstance(self.result, Decimal):
-            result = locale.format("%s", self.result, grouping=True)
+            result = locale.format("%d", self.result, grouping=True)
             return '<span>%s</span>' % result
+        elif not self.result is None:
+            return '<span>%s</span>' % self.result
         else:
             return '<span>N/A</span>'
 
@@ -441,7 +491,7 @@ class Percent(CalculatorBase):
     """
     Calculate a percentage for two values.
 
-    A percentage calculator requires two arguments: "numerator", and 
+    A percentage calculator requires two arguments: "numerator" and
     "denominator".
 
     When passed a district, the percentage calculator simply divides the
@@ -455,6 +505,12 @@ class Percent(CalculatorBase):
     def compute(self, **kwargs):
         """
         Calculate a percentage.
+
+        Keywords:
+            district -- A district whose percentage should be calculated.
+            plan -- A plan whose set of districts should be calculated.
+            version -- Optional. The version of the plan, defaults to the 
+                most recent version.
         """
         district = None
 
@@ -495,8 +551,11 @@ class Percent(CalculatorBase):
 
     def html(self):
         """
-        Generate an HTML representation of the equivalence score. This
-        is represented as an integer formatted with commas or "n/a"
+        Generate an HTML representation of the percentage score. This
+        is represented as a decimal formatted with commas or "n/a"
+
+        Returns:
+            The result wrapped in an HTML SPAN element, formatted similar to: "<span>1.00%</span>" or "<span>n/a</span>".
         """
         if (type(self.result) == Decimal):
             return '<span>{0:.2%}</span>'.format(self.result)
@@ -524,6 +583,12 @@ class Threshold(CalculatorBase):
     def compute(self, **kwargs):
         """
         Calculate and determine if a value exceeds a threshold.
+
+        Keywords:
+            district -- A district whose threshold should be calculated.
+            plan -- A plan whose set of districts should be thresholded.
+            version -- Optional. The version of the plan, defaults to the 
+                most recent version.
         """
         districts = []
 
@@ -578,6 +643,12 @@ class Range(CalculatorBase):
     def compute(self, **kwargs):
         """
         Calculate and determine if a value lies within a range.
+
+        Keywords:
+            district -- A district whose argument should be evaluated.
+            plan -- A plan whose set of districts should be evaluated.
+            version -- Optional. The version of the plan, defaults to the 
+                most recent version.
         """
         districts = None
 
@@ -647,7 +718,14 @@ class Contiguity(CalculatorBase):
     """
     def compute(self, **kwargs):
         """
-        Determine if a district is continuous.
+        Determine if a district is contiguous.
+
+        Keywords:
+            district -- A district whose contiguity should be evaluated.
+            plan -- A plan whose set of districts should be evaluated for 
+                contiguity.
+            version -- Optional. The version of the plan, defaults to the 
+                most recent version.
         """
         districts = []
 
@@ -669,10 +747,6 @@ class Contiguity(CalculatorBase):
 
         self.result = 0
         for district in districts:
-            if district.district_id == 0:
-                self.result += 1
-                continue
-
             if len(district.geom) == 1: 
                 self.result += 1
             else:
@@ -726,8 +800,12 @@ class Contiguity(CalculatorBase):
 
     def html(self):
         """
-        Generate an HTML representation of the equivalence score. This
-        is represented as an integer formatted with commas or "n/a"
+        Generate an HTML representation of the contiguity score. This
+        is represented as an image element or the string result wrapped
+        in a SPAN element if the result is non-numeric.
+
+        Returns:
+            An HTML IMG element in the form of: '<img class="(yes|no)-contiguous" src="/static-media/images/icon-(check|warning).png">'
         """
         if type(self.result) == int:
             if self.result == 1:
@@ -740,11 +818,24 @@ class Contiguity(CalculatorBase):
 
 class AllContiguous(CalculatorBase):
     """
-    Used to verify that all districts in a plan are contiguous.
+    Determine if all the districts in a plan are contiguous.
+
+    This calculator uses the Contiguity calculator internally to tally up
+    the number of districts that are contiguous, and compares the number
+    of contiguous districts to the total number of districts in the plan.
 
     This calculator will only operate on a plan.
     """
     def compute(self, **kwargs):
+        """
+        Compute the contiguity of all the districts in the plan.
+
+        Keywords:
+            plan -- A plan whose set of districts should be evaluated for 
+                contiguity.
+            version -- Optional. The version of the plan, defaults to the 
+                most recent version.
+        """
         if not 'plan' in kwargs:
             return
 
@@ -769,6 +860,15 @@ class NonContiguous(CalculatorBase):
     This calculator will only operate on a plan.
     """
     def compute(self, **kwargs):
+        """
+        Compute the number of districts in a plan that are non-contiguous.
+
+        Keywords:
+            plan -- A plan whose set of districts should be evaluated for
+                contiguity.
+            version -- Optional. The version of the plan, defaults to the 
+                most recent version.
+        """
         if not 'plan' in kwargs:
             return
 
@@ -807,6 +907,13 @@ class Interval(CalculatorBase):
     def compute(self, **kwargs):
         """
         Determine the interval to which a district's value belongs.
+
+        Keywords:
+            district -- A district whose interval should be computed.
+            plan -- A plan whose set of districts should be evaluated for
+                their intervals.
+            version -- Optional. The version of the plan, defaults to the 
+                most recent version.
         """
         districts = []
         bounds = []
@@ -877,9 +984,14 @@ class Interval(CalculatorBase):
         """
         Returns an HTML representation of the Interval, using a css class 
         called interval_X, with X being the interval index.
+
         An empty value will have a class of no_interval.
+
         The span will also have a class named after the subject to make
         multiple intervals available in a panel.
+
+        Returns:
+            An HTML SPAN element, in the format: '<span class="interval_X X">1,000</span>'
         """
         # Get the name of the subject
         try:
@@ -907,18 +1019,16 @@ class Equivalence(CalculatorBase):
     If this is set to '1' (True), the calculator will consider the number
     of members assigned to each district when performing calculations.
     This should only be used with population subjects.
-
     """
-    def html(self):
-        """
-        Generate an HTML representation of the equivalence score. This
-        is represented as an integer formatted with commas or "n/a"
-        """
-        return intcomma(int(self.result)) if self.result else "n/a"
-
     def compute(self, **kwargs):
         """
         Generate an equivalence score.
+
+        Keywords:
+            plan -- A plan whose set of districts should be evaluated for
+                their equivalence.
+            version -- Optional. The version of the plan, defaults to the 
+                most recent version.
         """
         if 'district' in kwargs or not 'plan' in kwargs:
             return
@@ -950,6 +1060,16 @@ class Equivalence(CalculatorBase):
 
         self.result = max_d - min_d
 
+    def html(self):
+        """
+        Generate an HTML representation of the equivalence score. This
+        is represented as an integer formatted with commas or "n/a"
+
+        Returns:
+            A string in the format of "1,000" or "n/a" if no result.
+        """
+        return intcomma(int(self.result)) if self.result else "n/a"
+
 
 class RepresentationalFairness(CalculatorBase):
     """
@@ -975,8 +1095,13 @@ class RepresentationalFairness(CalculatorBase):
     def compute(self, **kwargs):
         """
         Compute the representational fairness.
-        """
 
+        Keywords:
+            plan -- A plan whose set of districts should be evaluated for
+                representational fairness.
+            version -- Optional. The version of the plan, defaults to the 
+                most recent version.
+        """
         if 'plan' in kwargs:
             plan = kwargs['plan']
             version = kwargs['version'] if 'version' in kwargs else plan.version
@@ -1014,7 +1139,10 @@ class RepresentationalFairness(CalculatorBase):
         Display the results in HTML format. Since the results for this
         calculator are in tuple format for sorting purposes, it's important
         to display a human readable score that explains which party the 
-        plan is biased toward
+        plan is biased toward.
+
+        Returns:
+            An HTML SPAN element similar to the form: "<span>Democrat 5</span>" or "<span>Balanced</span>".
         """
         sort = abs(self.result)
         party = 'Democrat' if self.result > 0 else 'Republican'
@@ -1025,7 +1153,10 @@ class RepresentationalFairness(CalculatorBase):
 
     def json(self):
         """
-        Return a basic JSON representation of the result.
+        Generate a basic JSON representation of the result.
+
+        Returns:
+            A JSON object with 1 property: result.
         """
         sort = abs(self.result)
         party = 'Democrat' if self.result > 0 else 'Republican'
@@ -1036,6 +1167,9 @@ class RepresentationalFairness(CalculatorBase):
         How should this calculator be compared to others like it? 
         Sort by the absolute value of the result (farther from zero
         is a worse score).
+
+        Returns:
+            The absolute value of the result.
         """
         return abs(self.result)
 
@@ -1056,6 +1190,12 @@ class Competitiveness(CalculatorBase):
     def compute(self, **kwargs):
         """
         Compute the competitiveness.
+
+        Keywords:
+            plan -- A plan whose set of districts should be evaluated for
+                competitiveness.
+            version -- Optional. The version of the plan, defaults to the 
+                most recent version.
         """
         if not 'plan' in kwargs:
             return
@@ -1341,15 +1481,6 @@ class Average(CalculatorBase):
     Each argument should be assigned the argument name "valueN", where N
     is a positive integer. The summation will add all arguments, starting
     at position 1, until an argument is not found.
-
-    This calculator also accepts an optional 'min' and 'max' value. If 
-    these arguments are present, the calculator will compute a boolean 
-    result, where True represents a plan where the averaged value lies 
-    between the 'min' and 'max' arguments, inclusive.
-
-    This calculator also accepts an optional 'target' value. If 'min' and
-    'max' are not present and given a target, it will return a string 
-    that's showable in a plan summary.
     """
     def compute(self, **kwargs):
         """
@@ -1403,15 +1534,6 @@ class Average(CalculatorBase):
                 return
             
             self.result /= count
-
-        if not self.get_value('min') is None and not self.get_value('max') is None:
-            minv = float(self.get_value('min'))
-            maxv = float(self.get_value('max'))
-
-            self.result = self.result >= minv and self.result <= maxv
-        elif not self.get_value('target') is None:
-            target = self.get_value('target')
-            self.result = "%d (of %s)" % (self.result, target)
 
     def html(self):
         """
@@ -1505,43 +1627,101 @@ class SplitCounter(CalculatorBase):
     """
     This calculator determines which districts are "split" and how
     often by the districts in a different plan.
+
+    This calculator also accepts an optional 'inverse' value. If this
+    is set to 1 (true), the inverse calculation will take place:
+    the bottom layer will be treated as the top layer and vice versa.
     """
     def compute(self, **kwargs):
-        if 'plan' in kwargs:
-            plan = kwargs['plan']
-            version = kwargs['version'] if 'version' in kwargs else plan.version
-        else:
+        if not 'plan' in kwargs:
             return
+
+        plan = kwargs['plan']
 
         # Use the argument to find "bottom" map
         target = self.get_value('boundary_id')
         id = int(target[target.find('.')+1:])
 
-        results = {'plan_name': plan.name}
+        # Check if we should invert the order or the layers
+        inverse = self.get_value('inverse') == 1
+
+        # Set the version
+        version = self.get_value('version')
+        if version is None:
+            version = plan.version
+
+        results = {'plan_name': plan.name, 'is_community': False, 'is_geolevel': False}
 
         other_names = False
 
         from redistricting.models import Geolevel, Plan
 
-        my_names = dict((p.district_id, p.name) for p in plan.get_districts_at_version(plan.version))
+        my_names = dict((p.district_id, p.name) for p in plan.get_districts_at_version(version))
         if target.startswith('geolevel'):
             results['other_name'] = Geolevel.objects.get(pk=id).name
-            splits = plan.find_geolevel_splits(id, version=version)
+            results['is_geolevel'] = True
+            splits = plan.find_geolevel_splits(id, version=version, inverse=inverse)
         elif target.startswith('plan'):
             other_plan = Plan.objects.get(pk=id)
             results['other_name'] = other_plan.name
-            splits = plan.find_plan_splits(other_plan, version=version)
+            if plan.is_community():
+                results['is_community'] = True
+                
+            splits = plan.find_plan_splits(other_plan, version=version, inverse=inverse)
             other_names = dict((p.district_id, p.name) for p in other_plan.get_districts_at_version(other_plan.version))
 
+        # Helpers to get and name community types 
+        def get_community_types(districts):
+            """
+            Given a list of districts, return a dictionary with community types, keyed on district_id
+            """
+            community_types = {}
+            for d in districts:
+                typetags = filter(lambda tag:tag.name[:4]=='type', d.tags)
+                if typetags:
+                    typetags = map(lambda tag:tag.name[5:], typetags)
+                    community_types[d.district_id] = typetags
+            return community_types
+
+        def tag_plan_names(names, types):
+            """
+            Given a dictionary of names and a dictionary of types, return a dictionary of
+            names with optional community types, keyed on district id
+            """
+            name_dict = {}
+            for d in names.keys():
+                name_dict[d] = '%s - %s' % (names[d], ', '.join(types[d])) if d in types else names[d]
+            return name_dict
+        
+        community_types = get_community_types(plan.get_districts_at_version(version))
+        my_names = tag_plan_names(my_names, community_types)
+
         if other_names:
-            named_splits = [(my_names[s[0]], other_names[s[1]]) for s in splits]
+            other_community_types = get_community_types(other_plan.get_districts_at_version(other_plan.version))
+            other_names = tag_plan_names(other_names, other_community_types)
+
+        # Swap names if inversed
+        if inverse:
+            if other_names:
+                named_splits = [(other_names[s[0]], my_names[s[1]]) for s in splits]
+            else:
+                named_splits = [(s[2], my_names[s[1]]) for s in splits]
         else:
-            named_splits = [(my_names[s[0]], s[1]) for s in splits]
+            if other_names:
+                named_splits = [(my_names[s[0]], other_names[s[1]]) for s in splits]
+            else:
+                named_splits = [(my_names[s[0]], s[3]) for s in splits]
 
         results['splits'] = splits
         results['named_splits'] = named_splits
         results['total_splits'] = len(splits)
         results['total_split_districts'] = len(set(i[0] for i in splits))
+
+        # Swap labels if inversed
+        if inverse:
+            temp = results['plan_name']
+            results['plan_name'] = results['other_name']
+            results['other_name'] = temp
 
         self.result = results
 
@@ -1551,12 +1731,21 @@ class SplitCounter(CalculatorBase):
         is represented as an integer formatted with commas or "n/a"
         """
         r = self.result
+            
         render = '<div class="split_report">'
-        render += '<div>Total districts split by %s: %d<div>' % (r['other_name'], r['total_split_districts'])
-        render += '<div>Total number of splits: %d<div>' % r['total_splits']
-        render += '<table><thead><tr><th>%s district</th><th>%s district</th></tr></thead><tbody>' % (r['plan_name'], r['other_name'])
+
+        if r['is_geolevel']:
+            template = '<div>Total %s which split a %s: %d</div>'
+        else:
+            template = '<div>Total %s splitting "%s": %d</div>'
+
+        render += template % ('communities' if r['is_community'] else 'districts', r['other_name'], r['total_split_districts'])
+        render += '<div>Total number of splits: %d</div>' % r['total_splits']
+
+        render += '<div class="table_container"><table class="report"><thead><tr><th>%s</th><th>%s</th></tr></thead><tbody>' % (r['plan_name'], r['other_name'].capitalize() if r['is_geolevel'] else r['other_name'])
         for s in r['named_splits']:
             render += '<tr><td>%s</td><td>%s</td></tr>' % (s[0], s[1])
-        render += '</tbody></table></div>'
+
+        render += '</tbody></table></div></div>'
         return render
 

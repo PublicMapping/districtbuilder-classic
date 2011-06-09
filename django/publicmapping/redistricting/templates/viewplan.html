@@ -40,9 +40,12 @@
     <link rel="stylesheet" type="text/css" href="/static-media/css/reset.css"/>
     <link rel="stylesheet" type="text/css" href="/static-media/jqGrid/css/ui.jqgrid.css"/>
     <link rel="stylesheet" type="text/css" href="/static-media/jquery/themes/custom-theme/jquery-ui-1.8.2.custom.css"/>
-    <link rel="stylesheet" type="text/css" href="/static-media/css/core.css"/>
-    <link rel="stylesheet" type="text/css" href="/static-media/css/visuals.css"/>    
+    <link rel="stylesheet" type="text/css" href="/static-media/css/core.css"/> 
     <link rel="stylesheet" type="text/css" href="/static-media/css/redistricting.css"/>
+    <!--[if lte IE 7]>
+        <link rel="stylesheet" type="text/css" href="/static-media/css/ie7.css"/>
+        <![endif]-->
+    <link rel="stylesheet" type="text/css" href="/static-media/css/visuals.css"/>   
     <script type="text/javascript" src="/static-media/openlayers/OpenLayers.js"></script>
     <script src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=6.2&mkt=en-us"></script> 
     <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAjpkAC9ePGem0lIq5XcMiuhR_wWLPFku8Ix9i2SXYRVK3e45q1BQUd_beF8dtzKET_EteAjPdGDwqpQ"></script> 
@@ -99,14 +102,12 @@
                 MAP_LAYERS.push( NAMESPACE + ':demo_' + SNAP_LAYERS[i].level + '_' + DEMOGRAPHICS[j].value );
             }
         }
-        // The style rules for all subjects. Each subject has a different
-        // set of ranges, and they are pulled from the django db.
-        var RULES = { {% for rule in rules %}'{{ rule.subject_id }}': {lowest: {{ rule.lowest }}, lower:{{ rule.lower }}, upper:{{ rule.upper }}, highest: {{ rule.highest }} }{% if not forloop.last %},{% endif %}{% endfor %}};
         // The maximum number of districts that can exist in this plan.
         var MAX_DISTRICTS = {{ max_dists }};
         // The name of a 'district' in this plan, could be "District ", etc
         var BODY_MEMBER = '{{ body_member }}';
         var BODY_MEMBERS = '{{ body_members }}';
+        var LEGISLATIVE_BODY = '{{ plan.legislative_body.name|lower }}';
         // This settings determines whether a staff member is viewing the page in debug mode. 
         // It can be used to display messages to help with debugging and/or configuration
         var DEBUG = {{ debugging_staff|lower }};
@@ -340,11 +341,19 @@
             {% endcomment %}
             {% endblock %}
             </div>
-            <ul class="mapping_tabs">
-              <li><a href="#toolset_draw">Map Editing</a></li>
-              <li><a href="#toolset_district">District Tools</a></li>
-            </ul>  
-           
+            
+            {% block toolset_tabs %}
+              {% comment %}
+
+                Default tab setup. Additional tabs get added in edit mode.
+
+              {% endcomment %}
+              <ul class="mapping_tabs">
+                <li><a href="#toolset_draw">Map Tools</a></li>
+              </ul>  
+            {% endblock %}
+            
+  
 
           {% block toolset_draw %}
           {% comment %}
@@ -356,10 +365,12 @@
 
           {% endcomment %}
             <div class="toolset" id="toolset_draw">
-              <div class="toolset_group toolset_group_lg">
-                  <button id="navigate_map_tool" class="active btntoggle toggle">Pan</button>
-                  <button id="identify_map_tool" title="Click on a geounit to see its demographic info." class="btntoggle titletip">Info</button>
-                  <button id="district_id_map_tool" title="Click on a district to see its ID." class="btntoggle titletip">District Info</button>
+              <div class="toolset_group">
+                  <button class="navigate_map_tool active btntoggle toggle">Pan</button><br/>
+                  <button class="identify_map_tool btntoggle titletip" title="Click on a geounit to see its demographic info." >Info</button>
+              </div>
+            <div class="toolset_group toolset_group_lg">
+                  <button id="district_id_map_tool" title="Click on a district to see its ID." class="btntoggle titletip">{{ body_member|capfirst }}<br/>Info</button>
                   {% comment %}
                   
                   This hidden div is used to style the locked districts.
@@ -394,9 +405,11 @@
             {% endcomment %}
 
             <div id="map_menu">
+              {% if is_registered %}
               <div id="stats_options">
                  <button id="open_statistics_editor">Edit Stats</button>
               </div>
+              {% endif %}
 
               <ul class="mapping_tabs">
                 <li><a href="#sidebar_content"><button class="menu_toggle"></button>Statistics</a></li>
@@ -443,6 +456,10 @@
                 <input class="map_settings_layer_type" id="basemap_radio" type="radio" name="layer_types"><span id="base_map_type"></span> Layer</input>
             </span>
             <div id="opacity_slider"></div>          
+            <div id="reference_layer_id" class="layer_type_container">
+                <div id="reference_layer_label">Reference Layer:</div>
+                <div id="reference_layer_name">None</div>
+            </div>
           </div>
           {% block multi_member %}
           {% comment %}
@@ -486,7 +503,7 @@
             <table id="district_legend">
                 <thead>
                     <tr>
-                        <th colspan="2">District</th>
+                        <th colspan="2">{{ body_member|capfirst }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -533,7 +550,9 @@
       <div class="shadow_top"></div>
       <div class="toolbar ui-widget-header"><h1>Evaluate Statistics</h1></div>
       <div class="tab_content">
-        {% include reporting_template %}
+        {% if reporting_template %}
+            {% include reporting_template %}
+        {% endif %} 
       </div>
     </div>
     {% if has_leaderboard and not plan.is_community %}        
@@ -685,12 +704,7 @@ Include the shared_districts markup if we're using the copy/paste tool
 {% endcomment %}
 {% endblock %}
 
-{% comment %}
-
-Include the stats_picker markup if the user can save stats
-
-{% endcomment %}
-
+{% if plan.name %}
 <div id="choose_layers_dialog">
     <div id="choose_layers_content">
         <div id="choose_layers_select_div">
@@ -700,57 +714,64 @@ Include the stats_picker markup if the user can save stats
             on the demographics that are configured in the application.
 
             {% endcomment %}
-            <h2>1. Select <span id="layer_type">Layer</span> Thematic Map</h2>
-            <select id="showby" class="indented fillwidth">
-                <option value="none">None</option>
-                {% for demo in demographics %}              
-                    <option value="{{ demo.value }}" {% if demo.isdefault == "true" %}selected=true{% endif %}>
-                        {{ demo.text }}
-                    </option>
-                {% endfor %}
-            </select>
+            <div class="dialog_step">
+              <h2>1. Select <span id="layer_type">Layer</span> Thematic Map</h2>
+              <select id="showby" class="indented fillwidth" autocomplete="off">
+                  <option value="none">None</option>
+                  {% for demo in demographics %}              
+                      <option value="{{ demo.value }}" {% if demo.isdefault == "true" %}selected=true{% endif %}>
+                          {{ demo.text }}
+                      </option>
+                  {% endfor %}
+              </select>
+            </div>
             
-            <h2>2. Choose District Thematic Map</h2>
-            {% comment %}
+            <div class="dialog_step">
+              <h2>2. Choose District Thematic Map</h2>
+              {% comment %}
 
-            Dynamically populate the "Show Districts by:" dropdown,
-            based on the demographics that are configured in the 
-            application.
+              Dynamically populate the "Show Districts by:" dropdown,
+              based on the demographics that are configured in the 
+              application.
 
             {% endcomment %}
-            <select id="districtby" class="indented fillwidth">
-                <option value="1.None">None</option>
-                <option value="1.Compactness">Compactness</option>
-                <option value="1.Contiguity">Contiguity</option>
-
+            <select id="districtby" class="indented fillwidth" autocomplete="off">
+                <option value="0" name="None">None</option>
+                <option value="-1" name="Compactness">Compactness</option>
+                <option value="-2" name="Contiguity">Contiguity</option>
                 {% for demo in demographics %}
                 {% if demo.isdisplayed == "true" %}
-                    <option value="{{ demo.id }}" {% if demo.isdefault == "true" %}selected=true{% endif %}>
+                    <option value="{{ demo.id }}" name="{{ demo.value }}" {% if demo.isdefault == "true" %}selected="true"{% endif %}>
                         {{ demo.text }}
                     </option>
                 {% endif %}
                 {% endfor %}
             </select>
+            </div>
             
-            <h2>3. Choose a Reference Layer</h2>
-            <select id="reference_layer_select" class="indented fillwidth">
-                <option value="None">None</option>
-                {% for snap in snaplayers %}
-                    <option value="geolevel.{{ snap.geolevel }}">
-                        {{ snap.name }}
-                    </option>
-                {% endfor %}
-            </select>
-
-            <h2 class="indented">OR...</h2>
-            <button id="choose_layers_legislative_button" class="indented fillwidth spacebelow">
-                Select Legislative Plan For Display
-            </button>
-            <button id="choose_layers_community_button" class="indented fillwidth">
-                Select Community Plan For Display
-            </button>
+            <div class="dialog_step">
+              <h2>3. Choose a Reference Layer</h2>
+              <select id="reference_layer_select" class="indented fillwidth" autocomplete="off">
+                  <option value="None">None</option>
+                  {% for snap in snaplayers %}
+                      <option value="geolevel.{{ snap.geolevel }}">
+                          {{ snap.name }}
+                      </option>
+                  {% endfor %}
+              </select>
+              <div id="choose_layers_button_group" class="indented">
+              <h2 class="indented centered">OR...</h2>
+              <button id="choose_layers_legislative_button" class="lg spacebelow">
+                  Select Legislative Plan<br/>For Display
+              </button>
+              <button id="choose_layers_community_button" class="lg">
+                  Select Community Plan<br/>For Display
+              </button>
+              </div>
+              <div class="clear"></div>
+            </div>
         </div>
-        <div id="reference_layer_content">
+        <div id="reference_layer_content" class="dialog_step">
             <h2>4. Select Plan to Display as Reference Layer</h2>
             <table id="reference_plans_table"></table>
             <div id="reference_plans_pager"></div>
@@ -763,22 +784,26 @@ Include the stats_picker markup if the user can save stats
 <script type="text/javascript" src="/static-media/js/layerchooser.js"></script>
 <script type="text/javascript">
     $(function() {
-        layerChooser = layerchooser({
-            container: $('#choose_layers_dialog'),
-            target: $('#choose_layers_button').button({icons:{primary:'icon-layers'}}),
-            legislativeButton: $('#choose_layers_legislative_button'),
-            communityButton: $('#choose_layers_community_button'),
-            okButton: $('#choose_layers_ok_button'),
-            referenceLayerContent: $('#reference_layer_content'),
-            referenceLayerSelect: $('#reference_layer_select'),
-            referencePlansTable: $('#reference_plans_table'),
-            referencePlansPager: $('#reference_plans_pager'),
-            referencePlansUrl: '/districtmapping/getplans/',
-            map: $('#map'),
-            csrfmiddlewaretoken: $('#csrfmiddlewaretoken')
-        }).init();
+        setTimeout(function() {
+            layerChooser = layerchooser({
+                container: $('#choose_layers_dialog'),
+                target: $('#choose_layers_button').button({icons:{primary:'icon-layers'}}),
+                legislativeButton: $('#choose_layers_legislative_button'),
+                communityButton: $('#choose_layers_community_button'),
+                okButton: $('#choose_layers_ok_button'),
+                referenceLayerContent: $('#reference_layer_content'),
+                referenceLayerSelect: $('#reference_layer_select'),
+                referenceLayerName: $('#reference_layer_name'),
+                referencePlansTable: $('#reference_plans_table'),
+                referencePlansPager: $('#reference_plans_pager'),
+                referencePlansUrl: '/districtmapping/getplans/',
+                map: $('#map'),
+                csrfmiddlewaretoken: $('#csrfmiddlewaretoken')
+            }).init();
+        }, 1000);
     });
 </script>
+{% endif %}
 
 {% block stats_editor %}
 {% comment %}
@@ -879,7 +904,9 @@ Include the markup for the account management panel.
             }
         }});
 
-        stats = statisticssets({}).init();
+        if (typeof(stats) == 'undefined') { 
+            stats = statisticssets({}).init();
+        }
 
         {% if plan.is_community %}
         $('#steps').tabs('option', 'disabled', [2]);

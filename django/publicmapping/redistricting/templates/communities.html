@@ -37,10 +37,10 @@
 {% load redistricting_extras %}
 <div class="info_table">
     {% if districtscores %}
-    <table id="demographics_table">
+    <table id="community_table">
         <thead>
             <tr>
-                <th class="district_name">No.</th>
+                <th class="community_name">Community</th>
                 {% for function in functions %}
                 <th class="info_header score{{ forloop.counter }}">{{ function }}</th>
                 {% endfor %}
@@ -49,9 +49,9 @@
         <tbody>
             {% for row in districtscores %}
             <tr class="{% cycle 'odd' 'even' %} inforow_{{ row.district.district_id }}">
-                <td class="district_name">{{ row.district.name|district_number }}</td>
+                <td class="community_name">{{ row.district.name|truncate:"10" }}</td>
                 {% for score in row.scores %}
-                <td class="cellcompact score{{ forloop.counter }}">{{ score.score|safe }}</td>
+                <td class="cellright score{{ forloop.counter }}">{{ score.score|safe }}</td>
                 {% endfor %}
             </tr>
             {% endfor %}

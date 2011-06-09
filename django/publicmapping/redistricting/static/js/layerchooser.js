@@ -31,8 +31,8 @@
  *   options -- Configuration options for the layer chooser tool.
  */
 layerchooser = function(options) {
-    var _minWidth = 350;
-    var _maxWidth = 790;
+    var _minWidth = 380;
+    var _maxWidth = 865;
 
     var _self = {},
         _options = $.extend({
@@ -45,6 +45,7 @@ layerchooser = function(options) {
             referenceLayerSelect: {},
             referencePlansTable: {},
             referencePlansPager: {},
+            referenceLayerName: {},
             map: {},
             csrfmiddlewaretoken: {},
             referencePlansUrl: '',
@@ -99,6 +100,11 @@ layerchooser = function(options) {
                 selector.val(),
                 selector.find('option:selected').text().trim()
             ]);             
+            if (selector.find('option:selected').text() == 'None') {
+              _options.referenceLayerName.parent().hide();
+            } else {
+              _options.referenceLayerName.text(selector.find('option:selected').text().trim()).parent().show() 
+            }
         });
 
         // Load Plan
@@ -165,13 +171,11 @@ layerchooser = function(options) {
             sortname: 'id',
             viewrecords:true,
             mtype: 'POST',
-            ajaxGridOptions: {
-                beforeSend: function(xhr, settings) {
-                    if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
-                        xhr.setRequestHeader("X-CSRFToken", _options.csrfmiddlewaretoken.val());
-                    }
+            loadBeforeSend: function(xhr) {
+                if (!(/^http:.*/.test(this.p.url) || /^https:.*/.test(this.p.url))) {
+                    xhr.setRequestHeader("X-CSRFToken", _options.csrfmiddlewaretoken.val());
                 }
-             }
+            }
         }).jqGrid(
             'navGrid', '#' + _options.referencePlansPager.attr('id'),
             {search:false,edit:false,add:false,del:false,searchText:"Search",refreshText:"Clear Search"}

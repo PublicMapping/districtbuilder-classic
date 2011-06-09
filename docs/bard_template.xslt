@@ -33,7 +33,7 @@
             </div>
             <div id="options">
                 <div id="options1">
-                    <xsl:apply-templates select="//PopVars" />
+                    <xsl:apply-templates select="./PopVars" />
                     <span class="compactness master" ><input id="compactness_master" type="checkbox" /><label for="compactness_master">Compactness</label></span>
                     <span class="compactness child reportVar"><input id="repCompactness" type="checkbox" value="repCompactness" /><label for="repCompactness">Compactness - Length/Width</label></span>
                     <!--<span class="compactness child reportVar"><input id="repCompactnessExtra" type="checkbox" value="repCompactnessExtra" /><label for="repCompactnessExtra">Compactness - Bounding Circle</label></span>-->
@@ -42,8 +42,8 @@
                     <span class="spatial child reportVar"><input id="repSpatial" type="checkbox" value="repSpatial" /><label for="repSpatial">Unassigned Blocks</label></span>
                 </div>
                 <div id="options2">
-                    <xsl:apply-templates select="//RatioVars" />
-                    <xsl:apply-templates select="//SplitVars" />
+                    <xsl:apply-templates select="./RatioVars" />
+                    <xsl:apply-templates select="./SplitVars" />
                 </div>
             </div>
         </div>
@@ -65,10 +65,10 @@
         <xsl:variable name="subjectname" select="key('subject', @subjectref)/@name" />
         <xsl:choose>
             <xsl:when test="@default='true'">
-                <input type="hidden" id = "popVar" value="{$subjectname}|{$subjectfield}" />
+                <input type="hidden" id = "popVar" value="{$subjectname}|{$subjectfield}^tolerance|{@threshold}" />
             </xsl:when>
             <xsl:otherwise>
-                <span class="popVarExtra child reportVar" ><input id="{$subjectfield}" type="checkbox"  value="{$subjectfield}" /><label for="{$subjectfield}"><xsl:value-of select="$subjectname" /></label></span>
+                <span class="popVarExtra child reportVar" ><input id="pop_{$subjectfield}" type="checkbox"  value="{$subjectfield}" /><label for="pop_{$subjectfield}"><xsl:value-of select="$subjectname" /></label></span>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:for-each>
@@ -92,7 +92,7 @@
                 <xsl:variable name="subjectfield" select="key('subject', @subjectref)/@field" />
                 <xsl:variable name="subjectname" select="key('subject', @subjectref)/@name" />
 
-                <span class="{$parentid} child reportVar"><input id="{$subjectfield}" type="checkbox" value="{$subjectfield}" /><label for="{$subjectfield}"><xsl:value-of select="$subjectname" /></label></span>
+                <span class="{$parentid} child reportVar"><input id="ratio_{$subjectfield}" type="checkbox" value="{$subjectfield}" /><label for="ratio_{$subjectfield}"><xsl:value-of select="$subjectname" /></label></span>
 
             </xsl:for-each>
     </xsl:for-each>
@@ -101,7 +101,7 @@
 <xsl:template match="SplitVars">
         <span class="splitVar master" ><input id="splitVar_master" type="checkbox" /><label for="splitVar_master">Split Geographies</label></span>
     <xsl:for-each select="SplitVar">
-        <span class="splitVar child reportVar" ><input id="{@field}" type="checkbox" value = "{@field}" /><label for="{@field}"><xsl:value-of select="@label" /> Splits</label></span>
+        <span class="splitVar child reportVar" ><input id="split_{@field}" type="checkbox" value = "{@field}" /><label for="split_{@field}"><xsl:value-of select="@label" /> Splits</label></span>
     </xsl:for-each>
 </xsl:template>
 

@@ -112,14 +112,65 @@ button#splits_report_button {
 }
 #splits_report_select_panel .layer_choice_wrapper label { margin-left: 3px; font-size: 14px; font-weight:bold; }
 #splits_report_select_panel { float: left; width: 300px; }
-#splits_report_results_panel { float: left; margin-left: 10px; padding-left: 5px; }
-#splits_report_results_container { float: left; width: 440px; height: 475px; border: 2px solid #CCC; overflow: auto; }
-#splits_report_available_layers { height: 220px; border: 2px solid #CCC; overflow: auto; margin-top: 10px; margin-bottom: 10px; }
+#splits_report_results_panel {     
+    float: left; 
+    margin-left: 25px;
+    padding: 12px 12px 15px;
+    border: 1px solid #ccc;
+    background: #FBFBF3;
+    width: 390px;
+    height: 390px;
+    overflow:auto;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+}
+
+#splits_report_results_panel h2 {padding-bottom: 4px; border-bottom: 2px solid #ddd;}
+
+#splits_report_results_container { width: 100%; font-size: 14px;}
+#splits_report_available_layers { height: 220px; border: 2px solid #CCC; overflow: auto; margin-top: 10px; margin-bottom: 15px }
+
+.split_report .table_container {
+    border-bottom: 1px solid #ddd;
+    margin: 10px 0;
+    padding-bottom: 18px;
+}
+
+table.report {
+  font-size: 12px; 
+  width: 100%;
+  border: 1px solid #CCCCCC;
+  border-collapse: collapse;
+  color: #555555;
+  font-size: 11px;
+
+  }
+  
+table.report tr {
+      background: none repeat scroll 0 0 #FAFAFA;
+      
+  }
+  
+table.report th, table.report td {
+    border: 1px solid #CCCCCC;
+    line-height: 14px;
+    padding: 4px 7px;
+    }
+
+table.report th {
+    background: #ECF6F5;
+    font-size: 12px;
+    font-weight: bold;
+}
+
 #splits_report_reminder_text { font-size: 12px; font-weight:bold; }
+#inverse_choice_label { font-size: 12px; font-weight:bold; }
+#inverse_choice_label_more { font-size: 12px; font-weight:bold; margin-left: 25px; margin-bottom: 20px; }
 #splits_report_content h2 {margin-bottom: 8px; font-size: 16px; font-weight:bold;}
 #splits_report_or_text { clear: both; margin-top: 15px; margin-bottom: 15px; }
 button#splits_report_button.ui-state-default {border: 1px solid #ccc;}
-button#splits_report_current_ok_button, button#splits_report_extended_ok_button {
+button#splits_report_ok_button {
     float: right;
     padding-left: 10px;
     padding-right: 10px;

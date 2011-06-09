@@ -3,101 +3,96 @@
   xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.0.0/StyledLayerDescriptor.xsd">
   <NamedLayer>
-    <Name>vapblk</Name>
+    <Name>pophisp</Name>
     <UserStyle>
-      <Title>Voting Age - Black Pop.</Title>
-      <Abstract>A grayscale style showing the percentage of a given geounit&apos;s voting-age population that is black.</Abstract>
-	<FeatureTypeStyle>
+      <Title>Hispanic Population</Title>
+      <Abstract>A grayscale style showing the number of identified members of a party in a given geounit.</Abstract>
+      <FeatureTypeStyle>
         <Rule>
-          <Title>&gt; 60&#37; </Title>
+          <Title>&gt; 775</Title>
           <ogc:Filter>
             <ogc:PropertyIsGreaterThanOrEqualTo>
-              <ogc:PropertyName>percentage</ogc:PropertyName>
-              <ogc:Literal>.60</ogc:Literal>
+              <ogc:PropertyName>number</ogc:PropertyName>
+              <ogc:Literal>775</ogc:Literal>
             </ogc:PropertyIsGreaterThanOrEqualTo>
           </ogc:Filter>
           <PolygonSymbolizer>
             <Fill>
               <CssParameter name="fill">#252525</CssParameter>
-              <CssParameter name="fill-opacity">0.5</CssParameter>
             </Fill>
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Title>&gt; 30&#37; </Title>
+          <Title>&gt; 345</Title>
           <ogc:Filter>
             <ogc:And>
               <ogc:PropertyIsLessThan>
-                <ogc:PropertyName>percentage</ogc:PropertyName>
-                <ogc:Literal>.60</ogc:Literal>
+                <ogc:PropertyName>number</ogc:PropertyName>
+                <ogc:Literal>775</ogc:Literal>
               </ogc:PropertyIsLessThan>
               <ogc:PropertyIsGreaterThanOrEqualTo>
-                <ogc:PropertyName>percentage</ogc:PropertyName>
-                <ogc:Literal>.30</ogc:Literal>
+                <ogc:PropertyName>number</ogc:PropertyName>
+                <ogc:Literal>345</ogc:Literal>
               </ogc:PropertyIsGreaterThanOrEqualTo>
             </ogc:And>
           </ogc:Filter>          
           <PolygonSymbolizer>
             <Fill>
               <CssParameter name="fill">#636363</CssParameter>
-              <CssParameter name="fill-opacity">0.5</CssParameter>
             </Fill>
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Title>&gt; 15&#37;</Title>
+          <Title>&gt; 130</Title>
           <ogc:Filter>
             <ogc:And>
               <ogc:PropertyIsLessThan>
-                <ogc:PropertyName>percentage</ogc:PropertyName>
-                <ogc:Literal>.30</ogc:Literal>
+                <ogc:PropertyName>number</ogc:PropertyName>
+                <ogc:Literal>345</ogc:Literal>
               </ogc:PropertyIsLessThan>
               <ogc:PropertyIsGreaterThanOrEqualTo>
-                <ogc:PropertyName>percentage</ogc:PropertyName>
-                <ogc:Literal>.15</ogc:Literal>
+                <ogc:PropertyName>number</ogc:PropertyName>
+                <ogc:Literal>130</ogc:Literal>
               </ogc:PropertyIsGreaterThanOrEqualTo>
             </ogc:And>
           </ogc:Filter>          
           <PolygonSymbolizer>
             <Fill>
               <CssParameter name="fill">#969696</CssParameter>
-              <CssParameter name="fill-opacity">0.5</CssParameter>
             </Fill>
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Title>&gt; 05&#37;</Title>
+          <Title>&gt; 30</Title>
           <ogc:Filter>
             <ogc:And>
               <ogc:PropertyIsLessThan>
-                <ogc:PropertyName>percentage</ogc:PropertyName>
-                <ogc:Literal>.15</ogc:Literal>
+                <ogc:PropertyName>number</ogc:PropertyName>
+                <ogc:Literal>130</ogc:Literal>
               </ogc:PropertyIsLessThan>
               <ogc:PropertyIsGreaterThanOrEqualTo>
-                <ogc:PropertyName>percentage</ogc:PropertyName>
-                <ogc:Literal>.05</ogc:Literal>
+                <ogc:PropertyName>number</ogc:PropertyName>
+                <ogc:Literal>30</ogc:Literal>
               </ogc:PropertyIsGreaterThanOrEqualTo>
             </ogc:And>
           </ogc:Filter>          
           <PolygonSymbolizer>
             <Fill>
               <CssParameter name="fill">#CCCCCC</CssParameter>
-              <CssParameter name="fill-opacity">0.5</CssParameter>
             </Fill>
           </PolygonSymbolizer>
         </Rule>
         <Rule>
-          <Title>&lt; 05&#37;</Title>
+          <Title>&lt; 30</Title>
           <ogc:Filter>
             <ogc:PropertyIsLessThan>
-              <ogc:PropertyName>percentage</ogc:PropertyName>
-              <ogc:Literal>.05</ogc:Literal>
+              <ogc:PropertyName>number</ogc:PropertyName>
+              <ogc:Literal>30</ogc:Literal>
             </ogc:PropertyIsLessThan>
           </ogc:Filter>          
           <PolygonSymbolizer>
             <Fill>
               <CssParameter name="fill">#F7F7F7</CssParameter>
-              <CssParameter name="fill-opacity">0.5</CssParameter>
             </Fill>
           </PolygonSymbolizer>
         </Rule>
@@ -114,3 +109,4 @@
     </UserStyle>
   </NamedLayer>
 </StyledLayerDescriptor>
+

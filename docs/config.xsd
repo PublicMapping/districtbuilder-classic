@@ -75,23 +75,7 @@
                                     <xs:attribute name="sortkey" type="xs:integer" use="optional" />
                                     <xs:attribute name="aliasfor" type="xs:IDREF" use="optional" />
                                     <xs:attribute name="percentage_denominator" type="xs:IDREF" use="optional" />
-                                </xs:complexType>
-                            </xs:element>
-                        </xs:sequence>
-                    </xs:complexType>
-                </xs:element>
-                <xs:element name="Targets">
-                    <xs:complexType>
-                        <xs:sequence>
-                            <xs:element name="Target" minOccurs="1" maxOccurs="unbounded">
-                                <xs:complexType>
-                                    <xs:sequence>
-                                    </xs:sequence>
-                                    <xs:attribute name="id" type="xs:ID" />
-                                    <xs:attribute name="subjectref" type="xs:IDREF" />
-                                    <xs:attribute name="value" type="xs:decimal" />
-                                    <xs:attribute name="range1" type="xs:decimal" />
-                                    <xs:attribute name="range2" type="xs:decimal" />
+                                    <xs:attribute name="default" type="xs:boolean" use="optional" />
                                 </xs:complexType>
                             </xs:element>
                         </xs:sequence>
@@ -297,19 +281,6 @@
                                                         <xs:complexType>
                                                             <xs:sequence>
                                                                 <xs:element name="Parent" type="RefType" minOccurs="0" maxOccurs="1">
-                                                                </xs:element>
-                                                                <xs:element name="LegislativeTargets">
-                                                                    <xs:complexType>
-                                                                        <xs:sequence>
-                                                                            <xs:element name="LegislativeTarget" minOccurs="1" maxOccurs="unbounded">
-                                                                                <xs:complexType>
-                                                                                    <xs:sequence />
-                                                                                    <xs:attribute name="ref" type="xs:IDREF" />
-                                                                                    <xs:attribute name="default" type="xs:boolean" use="optional" default="false" />
-                                                                                </xs:complexType>
-                                                                            </xs:element>
-                                                                        </xs:sequence>
-                                                                    </xs:complexType>
                                                                 </xs:element>
                                                             </xs:sequence>
                                                             <xs:attribute name="ref" type="xs:IDREF" />

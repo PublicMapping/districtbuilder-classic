@@ -77,7 +77,8 @@ function loadTooltips() {
         opacity: .8,
         // Open this tip on click only, don't close it via tooltip methods
         events: {
-            widget: 'click,click'
+            widget: 'click, none',
+            tooltip: 'none'                    
         },
         onBeforeShow:  function() {
             // ensure proper DOM placement
@@ -307,18 +308,34 @@ $(function() {
                 $(this).button({icons: {primary: 'ui-icon-arrow-down'}, text: false})
             })
         .click(function(){
-            if ( $(".map_menu_content:visible'").length === 0) {
+            var show = $(".map_menu_content:visible'").length === 0;
+
+            var sizeCB = function(show){
+                $('#map_menu').css('height', show?'100%':'auto');
+            };
+
+            if ( show ) {
                 $('#map_settings_content, #legend_toggle').removeClass('collapse', 400);
+                sizeCB(show);
                 $storedPanel.slideDown(200);
             }
             else {
                 $('.map_menu_content:visible').each(function() {
                     $storedPanel = $(this);
-                    $storedPanel.slideUp(200);
+                    $storedPanel.slideUp(200,function(){sizeCB(show);});
                     $('#map_settings_content, #legend_toggle').addClass('collapse', 400);
                 });
             }  
         });
+     
+     
+     //stats picker menu slider activation
+     $('#map_menu_header select').change(function() {
+          if ( $(".map_menu_content:visible'").length === 0) {
+                $('#map_settings_content, #legend_toggle').removeClass('collapse', 400);
+                $storedPanel.slideDown(200);
+          }
+     });
     
     // map editing buttons
     $('.toolset button, #history_tools button, #open_statistics_editor')
@@ -392,16 +409,16 @@ $(function() {
         $this = $(this);
         var id = $this.attr('id');
         var category = id.substring(0, id.indexOf('_'));
-        var checked = $this.attr('checked');
-        $('#reportdescription .' + category + ' input').attr('checked', $this.attr('checked'));     
+        var checked = $this.is(':checked');
+        $('#reportdescription .' + category + ' input').prop('checked', $this.is(':checked'));     
     });
     $('#reportdescription .reportVar input').click( function() {
         $this = $(this).closest('span');
         var id = $this.attr('id');
         var categories = $this.attr('class');
         var category = categories.split(' ')[0]; 
-        if ($this.find('input').attr('checked') == false) {
-            $('#' + category + '_master').attr('checked', false);     
+        if ($this.find('input').is(':checked') == false) {
+            $('#' + category + '_master').prop('checked', false);     
         }
     });
 

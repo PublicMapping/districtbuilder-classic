@@ -23,7 +23,7 @@
             {% get_comment_list for dscore.district as dcoms %}
             <div class="district_comment">
                 <h4>Comments:</h4>
-                <textarea class="infoComment" name="comments" readonly="true">{% for dcom in dcoms %}{{ dcom.comment }}{% endfor %}</textarea>
+                <div class="infoComment">{% for dcom in dcoms %}{{ dcom.comment }}{% endfor %}</div>
             </div>
             <div style="clear:both;height:0;line-height:0;">&nbsp;</div>
         </form>
@@ -36,14 +36,15 @@ $('.edit_district_info').each(function(idx,elem){
         var frm = $(elem.parentNode);
         $('#id_label').val( frm.find('[name="label"]').val() );
         $('#id_type').val( frm.find('[name="type"]').val().split(',') );
-        $('#id_comment').val( frm.find('[name="comments"]').val() );
+        $('#id_comment').val( frm.find('.infoComment').text() );
         $('#id_district_pk').val( frm.find('[name="pk"]').val() );
         $('#id_district_id').val( $(elem).attr('districtid') );
 
         var h3 = $('#districtComment').children('h3');
         $(h3[0]).text('1. Edit Community Label:');
         $(h3[1]).text('2. Edit Community Type:');
-
+          
+        $('#districtComment').dialog({width: 400})  
         $('#districtComment').dialog('open');
     });
 });
