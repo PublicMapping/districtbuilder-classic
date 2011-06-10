@@ -2299,6 +2299,7 @@ span.poptot.selected {
 #districtComment select {
     width: 96%;
     border: 1px solid #CCCCCC;
+    margin-top: 10px;
 }
 .community_comments {
     overflow-y: auto;

@@ -340,7 +340,8 @@
         <div class="dialog_step">
           <h3>2. Edit Community Type:</h3>
           <div id="district_type" class="district_input">
-              <select name="type" id="id_type" multiple="multiple" size="4">
+              <input type="text" class="field" value="" id="id_type" name="type" />
+              <select name="typelist" id="id_typelist" multiple="multiple" size="4">
                   {% for tag in tags %}<option value="{{ tag }}">{{ tag }}</option>
                   {% endfor %}
               </select>

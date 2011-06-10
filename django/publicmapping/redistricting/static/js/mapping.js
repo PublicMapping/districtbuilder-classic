@@ -1446,9 +1446,12 @@ function mapinit(srs,maxExtent) {
             district_id: $('#id_district_id').val(),
             district_name: label_field.val(),
             comment: $('#id_comment').val(),
-            type: $('#id_type').val(),
+            type: $('#id_type').val().split(','),
             version: getPlanVersion()
         };
+        for (var i = 0; i < data.type.length; i++) {
+            data.type[i] = data.type[i].trim();
+        }
         
         var url = '/districtmapping/plan/' + PLAN_ID + '/district/';
 
@@ -1500,9 +1503,52 @@ function mapinit(srs,maxExtent) {
             'Save': postInfo
         },
         open: function(){
+            var typeRE = new RegExp('([^,]+)','g');
             var label_field = $('#id_label');
             label_field.removeClass('error');
             label_field.addClass('field');
+
+            // cache this every time the dialog is opened
+            var opts = $('#id_typelist option');
+
+            var types = $('#id_type').val().match(typeRE);
+            if (types != null) {
+                var selection = [];
+                for (var i = 0; i < types.length; i++) {
+                    var exists = false;
+                    var type = types[i].trim();
+                    for (var j = 0; j < opts.length; j++) {
+                        exists = exists ||
+                            (type.toLowerCase() == 
+                             opts[j].value.toLowerCase());
+                    }
+                    if (!exists) {
+                        $('#id_typelist').append('<option value="' + type + '">' + type + '</option>');
+                    }
+                    selection.push(type);
+                }
+                $('#id_typelist').val(selection);
+            }
+
+            // select any tags like this one (case insensitive match)
+            $('#id_type').keyup(function(evt){
+                var keytypes = $(this).val().match(typeRE);
+                if (keytypes != null) {
+                    var selection = [];
+                    for(var i = 0; i < opts.length; i++) {
+                        var selected = false;
+                        for (var j = 0; j < keytypes.length; j++) {
+                            selected = selected || 
+                                (opts[i].value.toLowerCase() == 
+                                 keytypes[j].trim().toLowerCase());
+                        }
+                        if (selected) {
+                            selection.push(opts[i].value);
+                        }
+                    }
+                    $('#id_typelist').val(selection);
+                }
+            });
         }
     });
     districtCommentErr.dialog({
@@ -2804,13 +2850,14 @@ function mapinit(srs,maxExtent) {
             });
         }
         else {
-            var h3 = districtComment.children('h3');
+            var h3 = districtComment.find('h3');
             $(h3[0]).text('1. Community Label:');
             $(h3[1]).text('2. Community Type:');
 
             districtComment.dialog('open');
             $('#id_label').val('');
             $('#id_type').val('');
+            $('#id_typelist').val([]);
             $('#id_comment').val('');
             $('#id_district_pk').val('0');
             $('#id_district_id').val(avail[0]);
