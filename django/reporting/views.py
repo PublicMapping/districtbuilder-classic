@@ -32,8 +32,6 @@ from django.utils import simplejson as json
 from django.views.decorators.csrf import csrf_exempt
 from django.core.cache import cache
 from rpy2 import robjects
-from rpy2.robjects import r, rinterface
-from rpy2.rlike import container as rpc
 from decimal import *
 import settings, threading, traceback, os, sys, time, tempfile, shutil
 
@@ -48,21 +46,21 @@ def load_bard_workspace():
     responsive during R initialization.
     """
     try:
-        r.library('rgeos')
-        r.library('gpclib')
-        r.library('BARD')
-        r.library('R2HTML')
-        r.gpclibPermit()
+        robjects.r('library("rgeos")')
+        robjects.r('library("gpclib")')
+        robjects.r('library("BARD")')
+        robjects.r('library("R2HTML")')
+        robjects.r('gpclibPermit()')
 
-        global bardmap
-        bardmap = r.readBardMap(settings.BARD_BASESHAPE)
+        robjects.r.assign('bardBasemap', settings.BARD_BASESHAPE)
+        robjects.r('bardmap = readBardMap(bardBasemap)')
 
         global bardWorkSpaceLoaded
         bardWorkSpaceLoaded = True
 
         if settings.DEBUG:
             print 'Workspace loaded: %s' % bardWorkSpaceLoaded
-            r('trace(PMPreport, at=1, tracer=function()print(sys.calls()))')
+            robjects.r('trace(PMPreport, at=1, tracer=function()print(sys.calls()))')
 
     except Exception as e:
         sys.stderr.write('BARD Could not be loaded.  Check your configuration and available memory')
@@ -70,8 +68,6 @@ def load_bard_workspace():
 
 # A flag that indicates that the workspace was loaded
 bardWorkSpaceLoaded = False
-# An object that holds the bardmap for later analysis
-bardmap = {}
 # The loading thread for the BARD setup
 bardLoadingThread = threading.Thread(target=load_bard_workspace, name='loading_bard')
 
@@ -124,7 +120,7 @@ def loadbard(request):
     return HttpResponse(msg, mimetype='text/plain')
 
 
-def get_named_vector(parameter_string, tag = None):
+def get_named_vector(parameter_string, rname, tag = None):
     """
     Helper method to break up the strings that represents lists of 
     variables.
@@ -135,15 +131,19 @@ def get_named_vector(parameter_string, tag = None):
     Returns:
         A StrVector with names, suitable for rpy2 use.
     """
-    vec = robjects.StrVector(())
+    if not parameter_string:
+        robjects.r('%s = NULL' % rname)
+        return
+
+    robjects.r('%s = vector()' % rname)
+
     extras = parameter_string.split('^')
     for extra in extras:
         pair = extra.split('|')
         if re.match('^[\d\.]+$', pair[1]):
-            vec += r('list("%s"=%s)' % (pair[0], Decimal(pair[1])))
+            robjects.r('%s = c(%s, list("%s"=%s))' % (rname, rname, pair[0], Decimal(pair[1])))
         else:
-            vec += r('list("%s"="%s")' % (pair[0], pair[1]))
-    return vec
+            robjects.r('%s = c(%s, list("%s"="%s"))' % (rname, rname, pair[0], pair[1]))
 
 def drop_error(tempdir, basename, msg):
     """
@@ -230,13 +230,12 @@ def getreport(request):
     if settings.DEBUG:
         print "Got district list, getting other POSTed stuff."
 
-    global bardmap
     try:
         # Now we need an R Vector
-        block_ids = robjects.IntVector(sorted_district_list)
-        num_seats = int(nseat_param)
-        magnitude = robjects.IntVector(mag_param)
-        bardplan = r.createAssignedPlan(bardmap, block_ids, nseats=num_seats, magnitude=magnitude)
+        robjects.r.assign('block_ids',sorted_district_list)
+        robjects.r.assign('num_seats',int(nseat_param))
+        robjects.r.assign('magnitude',mag_param)
+        robjects.r('bardplan = createAssignedPlan(bardmap, block_ids, nseats=num_seats, magnitude=magnitude)')
     except Exception as ex:
         status['reason'] = 'Could not create BARD plan from map.'
         if settings.DEBUG:
@@ -249,90 +248,84 @@ def getreport(request):
 
     try: 
         # assign names to the districts
-        sorted_name_list = robjects.StrVector(())
+        robjects.r('sorted_name_list = vector()')
         names = request.POST.get('district_names').split(';')
         for district in names:
-            sorted_name_list += district
-        bardplan.do_slot_assign('levels', sorted_name_list)
+            robjects.r('sorted_name_list = c(sorted_name_list,"%s")' % district) 
+        robjects.r('levels(bardplan) <- sorted_name_list')
 
         # Get the other report variables from the POST request.  We'll only add
         # them to the report if they're in the request
         popVar = request.POST.get('pop_var', None)
         if settings.DEBUG:
             print 'popVar',popVar
-        if popVar:
-            pop_var = get_named_vector(popVar)
+        get_named_vector(popVar,'popVar')
 
         popVarExtra = request.POST.get('pop_var_extra', None)
         if settings.DEBUG:
             print 'popVarExtra',popVarExtra
-        if popVarExtra:
-            pop_var_extra = get_named_vector(popVarExtra)
-        else:
-            pop_var_extra = r('as.null()')
+        get_named_vector(popVarExtra, 'popVarExtra')
         
         post_list = request.POST.get('ratio_vars').split(';')
         if settings.DEBUG:
             print 'post_list',post_list
         if len(post_list) > 0 and post_list[0] != '':
-            ratioVars = robjects.StrVector(())
+            robjects.r('ratioVars = vector()')
             # Each of the ratioVars should have been posted as a list of items separated by
             # double pipes
-            for ratioVar in post_list:
+            for i, ratioVar in enumerate(post_list):
                 ratioAttributes = ratioVar.split('||')
-                rVar = robjects.StrVector(())
-                rVar += r('list("denominator"=%s)' % get_named_vector(ratioAttributes[0]).r_repr())
-                rVar += r('list("threshold"=%s)' % ratioAttributes[1])
-                rVar += r('list("numerators"=%s)' % get_named_vector(ratioAttributes[2]).r_repr())
-                ratioVars += r('list("%s"=%s)' % (ratioAttributes[3], rVar.r_repr()))
-
-            ratio_vars = ratioVars
+                get_named_vector(ratioAttributes[0], 'rden%d'%i)
+                get_named_vector(ratioAttributes[2], 'rnum%d'%i)
+                robjects.r("""
+ratioVars = 
+    c(ratioVars, 
+      list("%s"=list(
+        "denominator"=rden%d,
+        "threshold"=%s,
+        "numerators"=rnum%d)
+      )
+    )
+""" % (ratioAttributes[3], i, ratioAttributes[1], i))
         else:
-            ratio_vars = r('as.null()')
+            robjects.r('ratioVars = NULL')
 
         splitVars = request.POST.get('split_vars', None)
         if settings.DEBUG:
             print 'splitVars',splitVars
-        if splitVars:
-            split_vars = get_named_vector(splitVars)
-        else:
-            split_vars = r('as.null()')
+        get_named_vector(splitVars, 'splitVars')
         
-        blockLabelVar = request.POST.get('block_label_var', 'CTID')
-        if settings.DEBUG:
-            print 'blockLabelVar',blockLabelVar
-
         repCompactness = request.POST.get('rep_comp', None)
         if settings.DEBUG:
             print 'repCompactness',repCompactness
         if 'true' == repCompactness:
-            rep_compactness = r(True)
+            robjects.r('repCompactness = TRUE')
         else:
-            rep_compactness = r(False)
+            robjects.r('repCompactness = FALSE')
 
         repCompactnessExtra = request.POST.get('rep_comp_extra', None)
         if settings.DEBUG:
             print 'repCompactnessExtra',repCompactnessExtra
         if 'true' == repCompactnessExtra:
-            rep_compactness_extra = r(True)
+            robjects.r('repCompactnessExtra = TRUE')
         else:
-            rep_compactness_extra = r(False)
+            robjects.r('repCompactnessExtra = FALSE')
 
         repSpatial = request.POST.get('rep_spatial', None)
         if settings.DEBUG:
             print 'repSpatial',repSpatial
         if 'true' == repSpatial:
-            rep_spatial = r(True)
+            robjects.r('repSpatial = TRUE')
         else:
-            rep_spatial = r(False)
+            robjects.r('repSpatial = FALSE')
 
         repSpatialExtra = request.POST.get('rep_spatial_extra', None)
         if settings.DEBUG:
             print 'repSpatialExtra',repSpatialExtra
         if 'true' == repSpatialExtra:
-            rep_spatial_extra = r(True)
+            robjects.r('repSpatialExtra = TRUE')
         else:
-            rep_spatial_extra = r(False)
+            robjects.r('repSpatialExtra = FALSE')
     except Exception as ex:
         if settings.DEBUG:
             print traceback.format_exc()
@@ -344,21 +337,23 @@ def getreport(request):
         print "Variables loaded, starting BARD."
 
     try:
-        r.copyR2HTMLfiles(tempdir)
+        robjects.r.assign('tempdir', tempdir)
+        robjects.r('copyR2HTMLfiles(tempdir)')
         # Write to a temp file so that the reports-checker doesn't see it early
-        report = r.HTMLInitFile(tempfile.gettempdir(), filename=basename, BackGroundColor="#BBBBEE", Title="Plan Analysis")
-        title = r['HTML.title']
-        r['HTML.title']("Plan Analysis", HR=2, file=report)
-        r.PMPreport( bardplan, block_ids, file=report, 
-            popVar=pop_var, 
-            popVarExtra=pop_var_extra, 
-            ratioVars=ratio_vars, 
-            splitVars=split_vars, 
-            repCompactness=rep_compactness, 
-            repCompactnessExtra=rep_compactness_extra,
-            repSpatial=rep_spatial, 
-            repSpatialExtra=rep_spatial_extra)
-        r.HTMLEndFile()
+        robjects.r.assign('tempfiledir', tempfile.gettempdir())
+        robjects.r.assign('filename', basename)
+        robjects.r('report = HTMLInitFile(tempfiledir, filename=filename, BackGroundColor="#BBBBEE", Title="Plan Analysis")')
+        robjects.r('HTML.title("Plan Analysis", HR=2, file=report)')
+        robjects.r("""PMPreport( bardplan, file=report, 
+            popVar=popVar, 
+            popVarExtra=popVarExtra, 
+            ratioVars=ratioVars, 
+            splitVars=splitVars, 
+            repCompactness=repCompactness, 
+            repCompactnessExtra=repCompactnessExtra,
+            repSpatial=repSpatial, 
+            repSpatialExtra=repSpatialExtra)""")
+        robjects.r('HTMLEndFile()')
 
         # Now move the report back to the reports directory dir
         shutil.move('%s/%s.html' % (tempfile.gettempdir(), basename), tempdir)
