@@ -425,8 +425,12 @@ def commonplan(request, planid):
 
     member = body_member.strip().lower()
 
+    bodies = LegislativeBody.objects.all().order_by('sort_key')
+    l_bodies = [b for b in bodies if b in [sd.legislative_body for sd in ScoreDisplay.objects.filter(is_page=True)]]
+
     return {
-        'bodies': LegislativeBody.objects.all().order_by('sort_key'),
+        'bodies': bodies,
+        'leaderboard_bodies': l_bodies,
         'plan': plan,
         'districts': districts,
         'mapserver': settings.MAP_SERVER,

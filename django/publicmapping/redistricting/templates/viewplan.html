@@ -636,7 +636,7 @@
                    1. Select Legislative Body
                 </span>
                 <select id="legSelectorLeaderboards">
-                    {% for body in bodies %}
+                    {% for body in leaderboard_bodies %}
                         <option value="{{ body.id }}">{{ body.name }}</option>
                     {% endfor %}
                 </select>
