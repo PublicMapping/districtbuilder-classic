@@ -32,6 +32,7 @@ from django.contrib.gis.gdal import *
 from django.contrib.gis.geos import *
 from django.contrib.gis.db.models import Sum, Union
 from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
 from django.conf import settings
@@ -57,6 +58,9 @@ class Command(BaseCommand):
         make_option('-d', '--database', dest="database",
             help="Generate the base data objects.", default=False,
             action='store_true'),
+        make_option('-f', '--force', dest="force",
+            help="Force changes if config differs from database", default=False,
+            action='store_true'),
         make_option('-g', '--geolevel', dest="geolevels",
             action="append", help="Geolevels to import",
             type='int'),
@@ -79,6 +83,7 @@ class Command(BaseCommand):
     )
 
 
+    force = False
     def handle(self, *args, **options):
         """
         Perform the command. 
@@ -117,7 +122,7 @@ contents of the file and try again.
         # used to secure session data. Blow away any old sessions that
         # were in the DB.
         self.purge_sessions(verbose)
-
+        self.force= options.get('force')
         self.create_superuser(config, verbose)
         self.import_prereq(config, verbose)
         self.import_scoring(config, verbose)
@@ -174,23 +179,16 @@ contents of the file and try again.
         """
         from django.contrib.auth.models import User
         admcfg = config.xpath('//Project/Admin')[0]
-        defaults = {'first_name':'Admin','last_name':'User','is_staff':True,'is_active':True,'is_superuser':True}
-        admin,created = User.objects.get_or_create(
-            username=admcfg.get('user'),
-            email=admcfg.get('email'),
-            defaults=defaults
-        )
+        admin_attributes = {'first_name':'Admin','last_name':'User','is_staff':True,'is_active':True,'is_superuser':True}
+        admin_attributes['username'] = admcfg.get('user')
+        admin_attributes['email'] = admcfg.get('email')
+        admin, created, changed, message = consistency_check_and_update(User, unique_id_field='username', overwrite=self.force, **admin_attributes)
 
-        if created:
-            admin.set_password(admcfg.get('password'))
-            admin.save()
+        admin.set_password(admcfg.get('password'))
+        admin.save()
 
-            if verbose > 1:
-                print 'Created administrative user.'
-        else:
-            if verbose > 1:
-                print 'Administrative user exists, not modifying.'
-
+        if verbose > 1 or (verbose > 0 and changed and not self.force):
+            print message
 
     def purge_sessions(self, verbose):
         """
@@ -888,14 +886,13 @@ ERROR:
 
 
     def import_function(self, config, verbose):
-        user_selectable = config.get('user_selectable') == 'true'
-        fn_obj, created = ScoreFunction.objects.get_or_create(
-            calculator=config.get('calculator'),
-            name=config.get('id'),
-            label=config.get('label') or '',
-            description=config.get('description') or '',
-            is_planscore=config.get('type') == 'plan'
-        )
+        attributes = {}
+        attributes['calculator'] = config.get('calculator')
+        attributes['name'] = config.get('id')
+        attributes['label'] = config.get('label') or ''
+        attributes['description'] = config.get('description') or ''
+        attributes['is_planscore'] = config.get('type') == 'plan'
+        fn_obj, created, changed, message = consistency_check_and_update(ScoreFunction, overwrite=self.force, **attributes)
 
         lbodies = []
         for lbitem in config.xpath('LegislativeBody'):
@@ -904,11 +901,8 @@ ERROR:
         lbodies = list(LegislativeBody.objects.filter(name__in=lbodies))
         fn_obj.selectable_bodies.add(*lbodies)
 
-        if verbose > 1:
-            if created:
-                print 'Created ScoreFunction "%s"' % config.get('id')
-            else:
-                print 'ScoreFunction "%s" already exists' % config.get('id')
+        if verbose > 1 or (changed and not self.force):
+            print message
 
         # Recursion if any ScoreArguments!
         self.import_arguments(fn_obj, config, verbose)
@@ -924,49 +918,90 @@ ERROR:
                 function=score_function,
                 type='literal',
                 argument=name,
-                value=arg.get('value')
                 )
-
-            if verbose > 1:
-                if created:
-                    print 'Created literal ScoreArgument "%s"' % name
+            config_value = arg.get('value')
+            if verbose > 1 and created:
+                arg_obj.value = config_value
+                arg_obj.save()
+                print 'Created literal ScoreArgument "%s"' % name
+            else:
+                if arg_obj.value == config_value:
+                    if verbose > 1:
+                        print 'literal ScoreArgument "%s" already exists' % name
+                elif self.force:
+                    arg_obj.value = config_value
+                    arg_obj.save()
+                    if verbose > 0:
+                        print 'literal ScoreArgument "%s" value updated' % name
                 else:
-                    print 'literal ScoreArgument "%s" already exists' % name
-                        
+                    if verbose > 0: 
+                        print 'Didn\'t change ScoreArgument %s; attribute(s) "value" differ(s) from database configuration.\n\tWARNING: Sync your config file to your app configuration or use the -f switch with setup to force changes' % name
+
         # Import subject arguments for this score function
         for subarg in config.xpath('SubjectArgument'):
             name = subarg.get('name')
+            config_value=subarg.get('ref')
             subarg_obj, created = ScoreArgument.objects.get_or_create(
                 function=score_function,
                 type='subject',
                 argument=name,
-                value=subarg.get('ref')
             )
 
-            if verbose > 1:
-                if created:
-                    print 'Created subject ScoreArgument "%s"' % name
+            if verbose > 1 and created:
+                subarg_obj.value = config_value
+                subarg_obj.save()
+                print 'Created subject ScoreArgument "%s"' % name
+            else:
+                if subarg_obj.value == config_value:
+                    if verbose > 1:
+                        print 'subject ScoreArgument "%s" already exists' % name
+                elif self.force:
+                    subarg_obj.value = config_value
+                    subarg_obj.save()
+                    if verbose > 0:
+                        print 'subject ScoreArgument "%s" value updated' % name
                 else:
-                    print 'subject ScoreArgument "%s" already exists' % name
+                    if verbose > 0: 
+                        print 'Didn\'t change ScoreArgument %s; attribute(s) "value" differ(s) from database configuration.\n\tWARNING: Sync your config file to your app configuration or use the -f switch with setup to force changes' % name
+                    
         
         # Import score arguments for this score function
         for scorearg in config.xpath('ScoreArgument'):
-            argfn = config.xpath('//ScoreFunctions/ScoreFunction[@id="%s"]' % scorearg.get('ref'))[0]
-            self.import_function( argfn, verbose )
+            argfn = config.xpath('//ScoreFunctions/ScoreFunction[@id="%s"]' % scorearg.get('ref'))
+            if len(argfn) > 0:
+                argfn = argfn[0]
+            else:
+                if verbose > 0:
+                    print "ERROR: No such function %s can be found for argument of %s" % (scorearg.get('ref'), score_function.name)
+                continue
 
+            self.import_function( argfn, verbose )
+            config_value=scorearg.get('ref')
             name = scorearg.get('name')
+
             scorearg_obj, created = ScoreArgument.objects.get_or_create(
                 function=score_function,
                 type='score',
-                argument=name,
-                value=scorearg.get('ref')
+                argument=name
                 )
 
-            if verbose > 1:
-                if created:
-                    print 'Created subject ScoreArgument "%s"' % name
+            if verbose > 1 and created:
+                scorearg_obj.value = config_value
+                scorearg_obj.save()
+                print 'created subject scoreargument "%s"' % name
+            else:
+                if scorearg_obj.value == config_value:
+                    if verbose > 1:
+                        print 'subject scoreargument "%s" already exists' % name
+                elif self.force:
+                    scorearg_obj.value = config_value
+                    scorearg_obj.save()
+                    if verbose > 0:
+                        print 'subject scoreargument "%s" value updated' % name
                 else:
-                    print 'subject ScoreArgument "%s" already exists' % name
+                    if verbose > 0: 
+                        print 'didn\'t change scoreargument %s; attribute(s) "value" differ(s) from database configuration.\n\twarning: sync your config file to your app configuration or use the -f switch with setup to force changes' % name
+                    
         
         
     @transaction.commit_on_success    
@@ -1092,19 +1127,16 @@ ERROR:
                 sf_obj = self.import_function(sf, verbose)
 
                 # Import this validation criterion
-                name = crit.get('name')
-                crit_obj, created = ValidationCriteria.objects.get_or_create(
-                    function=sf_obj,
-                    name=name,
-                    description=crit.get('description') or '',
-                    legislative_body=lb
-                    )
+                attributes = {}
+                attributes['name'] = crit.get('name')
+                attributes['function'] = sf_obj
+                attributes['description'] = crit.get('description') or ''
+                attributes['legislative_body'] = lb
+                crit_obj, created, changed, message = consistency_check_and_update(ValidationCriteria, overwrite=self.force, **attributes)
 
-                if verbose > 1:
-                    if created:
-                        print 'Created ValidationCriteria "%s"' % name
-                    else:
-                        print 'ValidationCriteria "%s" already exists' % name
+                if verbose > 1 or (changed and not self.force):
+                    print message
+
                 
 
     def import_prereq(self, config, verbose):
@@ -1118,16 +1150,16 @@ ERROR:
         # Import legislative bodies first.
         bodies = config.xpath('//LegislativeBody[@id]')
         for body in bodies:
-            obj, created = LegislativeBody.objects.get_or_create(
-                name=body.get('name'), 
-                member=body.get('member'), 
-                max_districts=body.get('maxdistricts'),
-                is_community=body.get('is_community')=='true')
-            if verbose > 1:
-                if created:
-                    print 'Created LegislativeBody "%s"' % body.get('name')
-                else:
-                    print 'LegislativeBody "%s" already exists' % body.get('name')
+            attributes = {}
+            attributes['name'] = body.get('name')
+            attributes['member'] = body.get('member')
+            attributes['max_districts'] = body.get('maxdistricts')
+            attributes['is_community'] = body.get('is_community')=='true'
+            
+            obj, created, changed, message = consistency_check_and_update(LegislativeBody, overwrite=self.force, **attributes)
+
+            if verbose > 1 or (verbose > 0 and changed and not self.force):
+                print message
 
             # Add multi-member district configuration
             mmconfigs = config.xpath('//MultiMemberDistrictConfig[@legislativebodyref="%s"]' % body.get('id'))
@@ -1162,19 +1194,16 @@ ERROR:
         for subj in subjs:
             if 'aliasfor' in subj.attrib:
                 continue
-            obj, created = Subject.objects.get_or_create(
-                name=subj.get('id').lower(), 
-                display=subj.get('name'), 
-                short_display=subj.get('short_name'), 
-                is_displayed=(subj.get('displayed')=='true'), 
-                sort_key=subj.get('sortkey'))
-                
+            attributes = {}
+            attributes['name'] = subj.get('id').lower()
+            attributes['display'] = subj.get('name')
+            attributes['short_display'] = subj.get('short_name')
+            attributes['is_displayed'] = subj.get('displayed')=='true'
+            attributes['sort_key'] = subj.get('sortkey')
+            obj, created, changed, message = consistency_check_and_update(Subject, overwrite=self.force, **attributes)
 
-            if verbose > 1:
-                if created:
-                    print 'Created Subject "%s"' % subj.get('name')
-                else:
-                    print 'Subject "%s" already exists' % subj.get('name')
+            if verbose > 1 or (verbose > 0 and changed and not self.force):
+                print message
 
         for subj in subjs:
             numerator = Subject.objects.get(name=subj.get('id').lower())
@@ -1196,13 +1225,16 @@ ERROR:
         # themselves need to be imported top-down (smallest area to biggest)
         geolevels = config.xpath('//GeoLevels/GeoLevel')
         for geolevel in geolevels:
-            glvl,created = Geolevel.objects.get_or_create(name=geolevel.get('name').lower(),min_zoom=geolevel.get('min_zoom'),sort_key=geolevel.get('sort_key'),tolerance=geolevel.get('tolerance'))
-
-            if verbose > 1:
-                if created:
-                    print 'Created GeoLevel "%s"' % glvl.name
-                else:
-                    print 'GeoLevel "%s" already exists' % glvl.name
+            attributes = {}
+            attributes['name'] = geolevel.get('name').lower()
+            attributes['min_zoom'] = geolevel.get('min_zoom')
+            attributes['sort_key'] = geolevel.get('sort_key')
+            attributes['tolerance'] = geolevel.get('tolerance')
+            
+            glvl, created, changed, message = consistency_check_and_update(Geolevel, overwrite=self.force, **attributes)
+    
+            if verbose > 1 or (changed and not self.force):
+                print message
 
             # Map the imported geolevel to a legislative body
             lbodies = geolevel.xpath('LegislativeBodies/LegislativeBody')
@@ -1647,3 +1679,45 @@ def enforce_multi(geom):
             return empty_geom(geom.srid)
     else:
         return geom
+
+def consistency_check_and_update(a_model, unique_id_field='name', overwrite=False, **kwargs):
+    """
+    Check whether an object exists with the given name in the database. If the 
+    object exists and "overwrite" is True, overwrite the object.  If "overwrite"
+    is false, don't overwrite.  If the object doesn't exist, it is always created.
+
+    This method returns a tuple - the object in the DB after any changes are made,
+    whether the object had to be created, whether the given attributes were consistent
+    with what was in the database, and a message to return indicating any changes.
+    """
+    name = kwargs[unique_id_field]
+    object_name = '%s %s' % (a_model.__name__, name)
+    # Get the model if it exists
+    try:
+        id_args = { unique_id_field: name }
+        current_object = a_model.objects.get(**id_args)
+    # If it doesn't exist, just save it and return
+    except ObjectDoesNotExist:
+        new = a_model(**kwargs)
+        new.save()
+        return new, True, False, '%s created' % object_name
+    # If it exists, track any changes and overwrite if requested
+    different = []
+    changed = False
+    message = '%s matches database - no changes%s'
+    for key in kwargs:
+        current_value = current_object.__getattribute__(key)
+        config_value = kwargs[key]
+        if not (isinstance(current_value, types.StringTypes)) and not (isinstance(current_value, models.Model)):
+            config_value = type(current_value)(config_value)
+        if current_value != config_value:
+            if overwrite:
+                current_object.__setattr__(key, config_value)
+                changed = True
+                message = '%s updated; Changed attribute(s) "%s"'
+            else:
+                message = 'Didn\'t change %s; attribute(s) "%s" differ(s) from database configuration.\n\tWARNING: Sync your config file to your app configuration or use the -f switch with setup to force changes'
+            different.append(key)
+    if overwrite and changed:
+        current_object.save()
+    return current_object, False, len(different) > 0, message % (object_name, ', '.join(different))
