@@ -2680,11 +2680,11 @@ function mapinit(srs,maxExtent) {
      */
     var drawHighlightedDistricts = function(evt, onlyUpdateRows) {
         // Unselect all rows
-        $('#demographics_table tr .poptot').removeClass('selected');
+        $('#demographics_table tr').removeClass('selected');
 
         // Add selected class for each selected district
         $(highlightedDistricts).each(function(i, district_id) {
-            $('.inforow_' + district_id + ' .poptot').addClass('selected');
+            $('.inforow_' + district_id).addClass('selected');
         });
 
         // Update layer

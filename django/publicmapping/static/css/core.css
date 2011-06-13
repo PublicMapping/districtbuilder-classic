@@ -2252,7 +2252,7 @@ span.multi_val.invalid {
 }
 
 /* District highlighting */
-span.poptot {
+#demographics_table tr {
   cursor: pointer;
 
   /* Make sure the text is not selectable */
@@ -2263,7 +2263,7 @@ span.poptot {
   user-select: none;
 }
 
-span.poptot.selected {
+#demographics_table tr.selected {
   border: 2px solid #007FFF;
 }
 
