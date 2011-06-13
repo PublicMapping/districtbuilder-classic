@@ -2180,7 +2180,7 @@ select#newdistrictname {
 #choose_layers_ok_div {clear: both;}
 #choose_layers_ok_button {float: right;}
 #choose_layers_select_div {width:345px; float:left;}
-#reference_layer_content {width:420px; height:311px; float:left; margin-right:0; margin-left: 12px;}
+#reference_layer_content {width:420px; height:329px; float:left; margin-right:0; margin-left: 12px;}
 #choose_layers_content > div {margin-right: 15px; font-size: 12px;}
 #choose_layers_instructions {margin-bottom: 10px;}
 #choose_layers_button_group button {float:left; margin-right: 10px;}

@@ -175,3 +175,5 @@ button#splits_report_ok_button {
     padding-left: 10px;
     padding-right: 10px;
 }
+
+#choose_reference_layer_button { margin-left: 48px; }

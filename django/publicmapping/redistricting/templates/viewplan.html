@@ -819,18 +819,22 @@ Include the shared_districts markup if we're using the copy/paste tool
               </select>
               <div id="choose_layers_button_group" class="indented">
               <h2 class="indented centered">OR...</h2>
-              <button id="choose_layers_legislative_button" class="lg spacebelow">
-                  Select Legislative Plan<br/>For Display
-              </button>
-              <button id="choose_layers_community_button" class="lg">
-                  Select Community Plan<br/>For Display
+              <button id="choose_reference_layer_button" class="lg spacebelow">
+                  Choose a:<br/>legislative district or community plan<br/>reference layer
               </button>
               </div>
               <div class="clear"></div>
             </div>
         </div>
         <div id="reference_layer_content" class="dialog_step">
-            <h2>4. Select Plan to Display as Reference Layer</h2>
+            <h2>4. Select Plan Type</h2>
+            <select id="ref_leg_selector" class="indented fillwidth">
+                {% for body in bodies %}
+                    <option value="{{ body.id }}">{{ body.name }}</option>
+                {% endfor %}
+            </select>
+
+            <h2>5. Select Plan to Display as Reference Layer</h2>
             <table id="reference_plans_table"></table>
             <div id="reference_plans_pager"></div>
         </div>
@@ -846,8 +850,8 @@ Include the shared_districts markup if we're using the copy/paste tool
             layerChooser = layerchooser({
                 container: $('#choose_layers_dialog'),
                 target: $('#choose_layers_button').button({icons:{primary:'icon-layers'}}),
-                legislativeButton: $('#choose_layers_legislative_button'),
-                communityButton: $('#choose_layers_community_button'),
+                referenceLayerButton: $('#choose_reference_layer_button'),
+                referenceLayerType: $('#ref_leg_selector'),
                 okButton: $('#choose_layers_ok_button'),
                 referenceLayerContent: $('#reference_layer_content'),
                 referenceLayerSelect: $('#reference_layer_select'),

@@ -38,8 +38,8 @@ layerchooser = function(options) {
         _options = $.extend({
             container: {},
             target: {},
-            legislativeButton: {},
-            communityButton: {},
+            referenceLayerButton: {},
+            referenceLayerType: {},
             okButton: {},
             referenceLayerContent: {},
             referenceLayerSelect: {},
@@ -74,23 +74,17 @@ layerchooser = function(options) {
         _options.target.click(showDialog);
         _options.referenceLayerContent.hide();
 
-        // Add button behavior
-        var reload = function() {
-            _planTable.trigger('reloadGrid', [{page:1}]);
+        // Handle click/dropdown change events
+        _options.referenceLayerButton.click(function(){
             _options.referenceLayerContent.show();
             _options.container.dialog('option', 'width', _maxWidth);
             _options.container.dialog('option', 'position', 'center');
-        };
-        _options.legislativeButton.click(function(){
-            _filterCommunities = false;
-            reload();
-        });
-        _options.communityButton.click(function(){
-            _filterCommunities = true;
-            reload();
         });
         _options.okButton.click(function(){
             _options.container.dialog('close');
+        });
+        _options.referenceLayerType.change( function() {
+            _planTable.trigger('reloadGrid', [{page:1}]);
         });
 
         // Trigger event the selected reference layer has changed
@@ -135,7 +129,7 @@ layerchooser = function(options) {
         
         var appendExtraParamsToRequest = function(xhr) {
             _planTable.setPostDataItem( 'owner_filter', 'all_available' );
-            _planTable.setPostDataItem( 'is_community', _filterCommunities );
+            _planTable.setPostDataItem( 'legislative_body', _options.referenceLayerType.val() );
         };
     
         var loadError = function(xhr, textStatus, error) {
@@ -158,14 +152,13 @@ layerchooser = function(options) {
             },
             colModel: [
                 {name:'fields.owner', label:'User Name', search:true, width: '110', fixed: true, sortable:true},
-                {name:'fields.name', label:'Plan Name', search: true, sortable:true},
-                {name:'fields.plan_type', label:'Plan Type', sortable:true, search:false}
+                {name:'fields.name', label:'Plan Name', search: true, width: '300', sortable:true}
             ],
 
             onSelectRow: planSelected,
             beforeRequest: appendExtraParamsToRequest,
             loadError: loadError,
-            height: 'auto',
+            height: '195',
             autowidth: 'true',
             rowNum:10,
             sortname: 'id',
