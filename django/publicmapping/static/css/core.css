@@ -1382,13 +1382,14 @@ div#legend_swatch_2 {
 div#legend_swatch_3 {
     background-color: #666666;
 }
-div#boundary_swatch {
-    background-color: transparent;
-    border-style: solid;
-    border-width: thin;
-    border: solid 2px #447700;
+.reference {
+    background: #447700 url(/static-media/images/icon-legend-boundary.gif) no-repeat top left;
+    border: none;
+    padding 2px;
 }
-
+table#reference_legend {
+    display:none;
+}
 button.map_type_button {
     font-size: 7pt;
     -moz-box-shadow: 2px 2px 2px #888888;
@@ -1687,7 +1688,9 @@ span.poptot {
   border: 2px solid transparent;
 }
 .locked {
-  border: 2px solid #FF0000 !important;
+  background: #FF0000 url(/static-media/images/icon-legend-boundary.gif) no-repeat top left;
+  border: none;
+  padding 2px;
 }
 
 .notOnMap {
@@ -2268,7 +2271,9 @@ span.multi_val.invalid {
 }
 
 .highlighted {
-  border: 2px solid #007FFF !important;
+  background: #007FFF url(/static-media/images/icon-legend-boundary.gif) no-repeat top left;
+  border: none;
+  padding 2px;
 }
 
 /* Commenting css */

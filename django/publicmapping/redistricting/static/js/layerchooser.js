@@ -46,6 +46,7 @@ layerchooser = function(options) {
             referencePlansTable: {},
             referencePlansPager: {},
             referenceLayerName: {},
+            referenceLayerLegend: {}, 
             map: {},
             csrfmiddlewaretoken: {},
             referencePlansUrl: '',
@@ -90,14 +91,18 @@ layerchooser = function(options) {
         // Trigger event the selected reference layer has changed
         _options.referenceLayerSelect.change(function() {
             var selector = _options.referenceLayerSelect;
+            var layerDisplayName = selector.find('option:selected').text().trim();
             _options.map.trigger('reference_layer_changed', [
                 selector.val(),
-                selector.find('option:selected').text().trim()
+                layerDisplayName
             ]);             
             if (selector.find('option:selected').text() == 'None') {
               _options.referenceLayerName.parent().hide();
+              _options.referenceLayerLegend.hide();
             } else {
-              _options.referenceLayerName.text(selector.find('option:selected').text().trim()).parent().show() 
+              _options.referenceLayerName.text(layerDisplayName).parent().show();
+              _options.referenceLayerLegend.find('#reference_title').text(layerDisplayName);
+              _options.referenceLayerLegend.show();
             }
         });
 

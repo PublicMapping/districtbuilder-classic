@@ -372,14 +372,6 @@
               </div>
             <div class="toolset_group toolset_group_lg">
                   <button id="district_id_map_tool" title="Click on a district to see its ID." class="btntoggle titletip">{{ body_member|capfirst }}<br/>Info</button>
-                  {% comment %}
-                  
-                  This hidden div is used to style the locked districts.
-                  This is needed, because the locked legend item does not
-                  exist before the first district layer is drawn.
-                  
-                  {% endcomment %}
-                  <div class="locked" style="display:none"></div>
               </div>
               <div class="toolset_group toolset_group_lg">
                 <button id="show_splits_button">Show<br/>Splits</button>
@@ -538,6 +530,16 @@
           <div id="map_legend">
               <button id="legend_toggle">Map Legend</button>
           </div>
+          {% comment %}
+          
+          These hidden divs are used to style districts.
+          This is needed because the legend items do not
+          exist before the district layer is drawn.
+          
+          {% endcomment %}
+          <div class="locked" style="display:none"></div>
+          <div class="highlighted" style="display:none"></div>
+          <div class="reference" style="display:none"></div>
 
           <div id="map_legend_content">
             <table id="basemap_legend">
@@ -587,7 +589,7 @@
                     </tr>
                 </tbody>
             </table>
-            <table id="boundary_legend">
+            <table id="reference_legend">
                 <thead>
                     <tr>
                         <th colspan="2">Reference</th>
@@ -595,8 +597,8 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td><div id="boundary_swatch" class="swatch boundary border">&nbsp;</div></td>
-                        <td id="boundary_title" >Boundary</td>
+                        <td><div id="reference_swatch" class="swatch reference">&nbsp;</div></td>
+                        <td id="reference_title" >reference</td>
                     <tr>
                 </tbody>
             </table>
@@ -856,6 +858,7 @@ Include the shared_districts markup if we're using the copy/paste tool
                 referenceLayerContent: $('#reference_layer_content'),
                 referenceLayerSelect: $('#reference_layer_select'),
                 referenceLayerName: $('#reference_layer_name'),
+                referenceLayerLegend: $('#reference_legend'),
                 referencePlansTable: $('#reference_plans_table'),
                 referencePlansPager: $('#reference_plans_pager'),
                 referencePlansUrl: '/districtmapping/getplans/',

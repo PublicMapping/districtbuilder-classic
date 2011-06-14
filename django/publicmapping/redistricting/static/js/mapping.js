@@ -629,18 +629,20 @@ function mapinit(srs,maxExtent) {
     };
 
     // The style for the highlighted district layer
+    var highlightColor = $('.highlighted').css('background-color');
     var highlightStyle = {
         fill: false,
-        fillColor: '#007FFF',
-        strokeColor: '#007FFF',
+        fillColor: highlightColor,
+        strokeColor: highlightColor,
         strokeOpacity: 1,
         strokeWidth: 3
     };
 
     // The style for reference layers
+    var referenceColor = $('.reference').css('background-color');
     var referenceStyle = {
         fill: false,
-        strokeColor: '#447700',
+        strokeColor: referenceColor,
         strokeOpacity: 1,
         strokeWidth: 2
     };
@@ -966,7 +968,6 @@ function mapinit(srs,maxExtent) {
     // referenceLayerId is one of: None, plan.XXX, geolevel.XXX
     var currentReferenceLayer;
     var referenceLayerChanged = function(evt, referenceLayerId, referenceLayerName) {
-        updateBoundaryLegend(referenceLayerId, referenceLayerName);
         if (referenceLayerId === 'None') {
             hideCurrentReferenceLayer();
             return;
@@ -1000,18 +1001,7 @@ function mapinit(srs,maxExtent) {
             }
         }
     };
-
     $('#map').bind('reference_layer_changed', referenceLayerChanged);
-    // Update the map legend
-    var updateBoundaryLegend = function(referenceLayerId, referenceLayerName) {
-        var title = 'Boundary';
-        if (referenceLayerId.startsWith('geolevel')) {
-           title = referenceLayerName + ' boundary';
-        } else if (referenceLayerId.startsWith('plan')) {
-            title = 'District / Community boundary';
-        }
-        $('td#boundary_title').text(title);
-    };
 
     // Create a reference layer with the appropriate styling and
     // strategy
@@ -2300,7 +2290,7 @@ function mapinit(srs,maxExtent) {
         };
 
         var getLockedRules = function() {
-            var lockedColor = $('.locked').css('border-top-color');
+            var lockedColor = $('.locked').css('background-color');
 
             rules = [];
             rules.push(new OpenLayers.Rule({
@@ -2453,10 +2443,12 @@ function mapinit(srs,maxExtent) {
     // Update the styles of the districts based on the 'Show District By'
     // dropdown in the menu.
     //
-    var makeDistrictLegendRow = function(id, cls, label) {
+    var makeDistrictLegendRow = function(id, cls, label, noBorder) {
         var div = $('<div id="' + id + '">&nbsp;</div>');
         div.addClass('swatch');
-        div.addClass('district_swatch');
+        if (noBorder != true) {
+            div.addClass('district_swatch');
+        }
         div.addClass(cls)
         var swatch = $('<td/>');
         swatch.width(32);
@@ -2517,11 +2509,11 @@ function mapinit(srs,maxExtent) {
         }
 
         // Add legend row for locked districts.
-        row = makeDistrictLegendRow('district_swatch_within','locked','Locked For Editing');
+        row = makeDistrictLegendRow('district_swatch_locked','locked','Locked For Editing', true);
         lbody.append(row);
 
         // Add legend row for highlighted districts.
-        row = makeDistrictLegendRow('district_swatch_within','highlighted','Highlighted');
+        row = makeDistrictLegendRow('district_swatch_highlighted','highlighted','Highlighted', true);
         lbody.append(row);
     };
 
