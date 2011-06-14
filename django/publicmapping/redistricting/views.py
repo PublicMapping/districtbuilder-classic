@@ -648,6 +648,15 @@ def getreport(request, planid):
     note_session_activity(request)
 
     status = { 'success': False }
+    try:
+        plan = Plan.objects.get(pk=planid)
+    except:
+        status['message'] = 'No plan with the given id'
+        return HttpResponse(json.dumps(status),mimetype='application/json')
+
+    if not can_view(request.user, plan):
+        status['message'] = 'User can\'t view the given plan'
+        return HttpResponse(json.dumps(status),mimetype='application/json')
 
     if not settings.REPORTS_ENABLED:
         status['message'] = 'Reports functionality is turned off.'
