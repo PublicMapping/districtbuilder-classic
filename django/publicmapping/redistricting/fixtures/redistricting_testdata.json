@@ -84,18 +84,10 @@
  }, 
  {
   "pk": 1, 
-  "model": "redistricting.legislativedefault", 
-  "fields": {
-   "legislative_body": 1, 
-   "target": 1
-  }
- }, 
- {
-  "pk": 1, 
   "model": "redistricting.legislativelevel", 
   "fields": {
    "legislative_body": 1, 
-   "target": 1, 
+   "subject": 1, 
    "parent": null, 
    "geolevel": 3
   }
@@ -105,7 +97,7 @@
   "model": "redistricting.legislativelevel", 
   "fields": {
    "legislative_body": 1, 
-   "target": 1, 
+   "subject": 1, 
    "parent": 1, 
    "geolevel": 2
   }
@@ -115,7 +107,7 @@
   "model": "redistricting.legislativelevel", 
   "fields": {
    "legislative_body": 1, 
-   "target": 1, 
+   "subject": 1, 
    "parent": 2, 
    "geolevel": 1
   }
@@ -423,26 +415,6 @@
    "geounit": 9, 
    "percentage": null, 
    "number": "24.0000", 
-   "subject": 2
-  }
- }, 
- {
-  "pk": 1, 
-  "model": "redistricting.target", 
-  "fields": {
-   "range2": "5.0000", 
-   "range1": "1.0000", 
-   "value": "3.0000", 
-   "subject": 1
-  }
- }, 
- {
-  "pk": 2, 
-  "model": "redistricting.target", 
-  "fields": {
-   "range2": "0.2000", 
-   "range1": "0.1000", 
-   "value": "5.0000", 
    "subject": 2
   }
  }, 
