@@ -2327,20 +2327,13 @@ function mapinit(srs,maxExtent) {
 
         var callbackDistrict = function(sld) {
             var userStyle = getDefaultStyle(sld,getDistrictBy().name);
-            var newOptions = OpenLayers.Util.extend({}, districtStyle);
-
-            var rules = userStyle.rules
-            rules = rules.concat(getLockedRules())
-
-            var newStyle = new OpenLayers.Style(newOptions,{
-                rules:rules
-            });
-            $('#map').trigger('style_changed', [newStyle]);
-        };
+            var newStyle = new OpenLayers.Style(districtStyle, {rules: userStyle.rules.concat(getLockedRules())});
+            $('#map').trigger('style_changed', [newStyle]); 
+         };
 
         var callbackContiguity = function() {
             var newOptions = OpenLayers.Util.extend({}, districtStyle);
-            var fill = $('<div class="farover"/>').css('background-color');
+            var fill = $('.farover').first().css('background-color');
             
             var rules = [
                 new OpenLayers.Rule({
@@ -2372,8 +2365,8 @@ function mapinit(srs,maxExtent) {
             var compactnessAvg = computeCompactnessAvg(districtLayer.features);
             var upper = compactnessAvg.mean + (2 * compactnessAvg.deviation);
             var lower = compactnessAvg.mean - (2 * compactnessAvg.deviation); 
-            var highestColor = $('<div class="farover"/>').css('background-color');
-            var lowestColor = $('<div class="farunder"/>').css('background-color');
+            var highestColor = $('.farover').first().css('background-color');
+            var lowestColor = $('.farunder').first().css('background-color');
             var rules = [
                 new OpenLayers.Rule({
                     filter: new OpenLayers.Filter.Comparison({
