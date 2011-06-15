@@ -151,7 +151,10 @@ class Schwartzberg(CalculatorBase):
         
     The Schwartzberg measure of compactness measures the perimeter of 
     the district to the circumference of the circle whose area is 
-    equal to the area of the district.
+    equal to the area of the district. The algorithm here computes the
+    inverse Schwartberg compactness measure, suitable for display as a 
+    percentage, with a higher percentage indicating a more compact 
+    district.
 
     This calculator will calculate either the compactness score of a
     single district, or it will average the compactness scores of all 
@@ -194,8 +197,8 @@ class Schwartzberg(CalculatorBase):
                 continue
         
             r = sqrt(district.geom.area / pi)
-            perimeter = 2 * pi * r
-            compactness += perimeter / district.geom.length
+            circumference = 2 * pi * r
+            compactness += circumference / district.geom.length
             num += 1
 
         self.result = (compactness / num) if num > 0 else 0
