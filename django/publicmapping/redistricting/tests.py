@@ -700,6 +700,49 @@ class PlanTestCase(BaseTestCase):
         os.remove(archive.name)
         self.assertEqual(1053, len(strz), 'Index file was the wrong length: %d' % len(strz))
 
+    def test_community_plan2index(self):
+        """
+        Test exporting a community plan
+        """
+        geounits = self.geounits[self.geolevels[0].id]
+        dist1ids = [str(geounits[0].id)]
+        self.plan.add_geounits(self.district1.district_id, dist1ids, self.geolevels[0].id, self.plan.version)
+        plan = Plan.objects.get(pk=self.plan.id)
+
+        # extract a district to manipulate
+        district = None
+        for d in plan.get_districts_at_version(plan.version, include_geom=False):
+            if d.district_id > 0:
+                district = d
+        
+        # make the plan a community
+        plan.legislative_body.is_community = True
+        plan.legislative_body.save()
+
+        # add label
+        district.name = 'My Test Community'
+        district.save()
+
+        # add comment
+        ct = ContentType.objects.get(app_label='redistricting',model='district')
+        comment = Comment(object_pk=district.id, content_type=ct, site_id=1, user_name=self.username, user_email='', comment='Test comment: a, b, c || ...')
+        comment.save()
+
+        # add types
+        Tag.objects.add_tag(district, 'type=%s' % 'type1')
+        Tag.objects.add_tag(district, 'type=%s' % 'type2')
+
+        # save the plan
+        plan.save()
+
+        # export
+        archive = DistrictIndexFile.plan2index(plan)
+        zin = zipfile.ZipFile(archive.name, "r")
+        strz = zin.read(plan.name + ".csv")
+        zin.close()
+        os.remove(archive.name)
+        self.assertEqual(5994, len(strz), 'Index file was the wrong length: %d' % len(strz))
+
     def test_sorted_district_list(self):
         """
         Test the sorted district list for reporting
