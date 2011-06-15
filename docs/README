@@ -382,11 +382,17 @@ as reports and downloads) and cron jobs.
     the xml file.  Use a fully qualified domain name, e.g. 
     http://reporting.server.com
 
-    If you install the reporting web app on a server apart from DistrictBuilder,
-    keep in mind that no authentication is required to run or read a report.
-    If you're concerned about keeping your reports available only to those
-    who can view a given plan, be sure to set up your apache configuration
-    to allow report requests to come only from the DistrictBuilder server.
+ SECURITY NOTES:
+    No server authentication is required to run or read a report.
+    The only "protection" on viewing a created report is a simple hash in the URL.
+    Because the reports are not protected by a password, consider any reports
+    run on the app to be viewable to the public. It is possible for users to
+    share these URLs with non-users of the system.
+
+    When configuring the reporting server on a machine other than the
+    DistrictBuilder server, be sure to allow the reports server to accept 
+    requests only from the DistrictBuilder server.  This will prevent non-users
+    from requesting report creation.
 
 == Celery Configuration ==
     Some processes take too long to happen over a synchronous web 
