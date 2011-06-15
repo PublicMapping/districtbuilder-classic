@@ -670,8 +670,13 @@
 
               {% endcomment %}
               <div class="explanation">
-                  <h3>Shared Documents not available</h3>
-                  <p>If you were editing a plan, you could use this tab to share your plan with others<p>
+                  <h3>This plan has been shared</h3>
+                  <p>Anyone can view this plan by visiting the following URL in a web browser:</p>
+                  <div id="share_url">
+                      <script type="text/javascript">document.write(window.location.protocol, '//',
+                         window.location.host, '{% url publicmapping.redistricting.views.viewplan planid=plan.id %}');
+                      </script>
+                  </div>
               </div>
               {% endblock %}
               <div class="blockfile">
