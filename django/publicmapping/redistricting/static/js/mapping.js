@@ -316,7 +316,7 @@ function mapinit(srs,maxExtent) {
     // zoom = log(maxmpp/mpp)/log(2)
     var level = Math.log(maxMetersPerPixel / metersPerPixel) / Math.LN2;
     
-    var minZoomLevel = Math.floor(level) - 1;
+    var minZoomLevel = Math.floor(level);
     var maxZoomLevel = 17; // This level is far enough zoomed to view blocks in any state
     var numZoomLevels = maxZoomLevel - minZoomLevel + 1;
 
