@@ -11,6 +11,10 @@
         <Rule>
           <Title>Community</Title>
           <PolygonSymbolizer>
+            <Fill>
+              <CssParameter name="fill">#FFFFFF</CssParameter>
+              <CssParameter name="fill-opacity">.01</CssParameter>
+            </Fill>
             <Stroke>
               <CssParameter name="stroke">#ee9900</CssParameter>
               <CssParameter name="stroke-width">2</CssParameter>
