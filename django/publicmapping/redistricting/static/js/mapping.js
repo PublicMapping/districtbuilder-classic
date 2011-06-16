@@ -2507,14 +2507,6 @@ function mapinit(srs,maxExtent) {
             row = makeDistrictLegendRow('district_swatch_farunder','farunder','Far Under Target');
             lbody.append(row);
         }
-
-        // Add legend row for locked districts.
-        row = makeDistrictLegendRow('district_swatch_locked','locked','Locked For Editing', true);
-        lbody.append(row);
-
-        // Add legend row for highlighted districts.
-        row = makeDistrictLegendRow('district_swatch_highlighted','highlighted','Highlighted', true);
-        lbody.append(row);
     };
 
     // Logic for the 'Snap Map to' dropdown, note that this logic

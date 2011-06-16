@@ -2376,3 +2376,5 @@ span.multi_val.invalid {
 }
 
 #community_table thead tr {padding-right: 0}
+
+.indented_swatch { width: 40px; }
