@@ -1539,6 +1539,11 @@ function mapinit(srs,maxExtent) {
                     $('#id_typelist').val(selection);
                 }
             });
+
+            $('#id_typelist').change(function(evt){
+                var selection = $(this).val();
+                $('#id_type').val( selection.join(', ') );
+            });
         }
     });
     districtCommentErr.dialog({
