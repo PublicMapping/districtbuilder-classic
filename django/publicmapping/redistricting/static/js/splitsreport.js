@@ -65,8 +65,6 @@ splitsreport = function(options) {
 
         // Add button behavior for displaying reports
         var displaySplits = function(ids) {
-            console.debug();
-            
             var waitDialog = $('<div>Please wait while retrieving splits report.</div>').dialog({
                 modal: true,
                 autoOpen: true,
