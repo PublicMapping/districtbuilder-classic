@@ -618,7 +618,7 @@ function mapinit(srs,maxExtent) {
         fillOpacity: 0.01,    // need some opacity for picking districts
         fillColor: '#ee9900', // with ID tool -- fillColor needed, too
         strokeColor: '#ee9900',
-        strokeOpacity: 1,
+        strokeOpacity: .5,
         strokeWidth: 2,
         label: '${label}',
         fontColor: '#663300',
@@ -634,8 +634,8 @@ function mapinit(srs,maxExtent) {
         fill: false,
         fillColor: highlightColor,
         strokeColor: highlightColor,
-        strokeOpacity: 1,
-        strokeWidth: 3
+        strokeOpacity: .75,
+        strokeWidth: 2
     };
 
     // The style for reference layers
@@ -643,8 +643,8 @@ function mapinit(srs,maxExtent) {
     var referenceStyle = {
         fill: false,
         strokeColor: referenceColor,
-        strokeOpacity: 1,
-        strokeWidth: 2
+        strokeOpacity: .45,
+        strokeWidth: 4
     };
 
     /**
@@ -2306,7 +2306,8 @@ function mapinit(srs,maxExtent) {
                 }),
                 symbolizer: {
                     strokeColor: lockedColor,
-                    strokeWidth: 4
+                    strokeWidth: 2,
+                    strokeOpacity: 0.75
                 }
             }));
             rules.push(new OpenLayers.Rule({

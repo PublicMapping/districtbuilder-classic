@@ -100,8 +100,8 @@
           <Title>Boundary</Title>
           <LineSymbolizer>
             <Stroke>
-              <CssParameter name="stroke">#555555</CssParameter>
-              <CssParameter name="stroke-width">0.25</CssParameter>
+              <CssParameter name="stroke">#202020</CssParameter>
+              <CssParameter name="stroke-width">0.50</CssParameter>
             </Stroke>
           </LineSymbolizer>
         </Rule>
