@@ -1,9 +1,4 @@
 publicmapping	publicmapping-module.html
-publicmapping.admin-media	publicmapping.admin-media-module.html
-publicmapping.admin-media.js	publicmapping.admin-media.js-module.html
-publicmapping.admin-media.js.compress	publicmapping.admin-media.js.compress-module.html
-publicmapping.admin-media.js.compress.here	publicmapping.admin-media.js.compress-module.html#here
-publicmapping.admin-media.js.compress.main	publicmapping.admin-media.js.compress-module.html#main
 publicmapping.context_processors	publicmapping.context_processors-module.html
 publicmapping.context_processors.banner_image	publicmapping.context_processors-module.html#banner_image
 publicmapping.redistricting	publicmapping.redistricting-module.html

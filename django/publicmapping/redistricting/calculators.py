@@ -75,8 +75,7 @@ class CalculatorBase:
         calculators. The default sorting method sorts by the value of 
         the result.
 
-        Returns:
-            The value of the result.
+        @return: The value of the result.
         """
         return self.result
 
@@ -87,6 +86,8 @@ class CalculatorBase:
         The base calculator generates an HTML span element, with the text
         content set to a string representation of the result. If the result
         is None, the string "n/a" is used.
+
+        @return: An HTML SPAN element, formatted similar to: "<span>n/a</span>".
         """
         if not self.result is None:
             return '<span>%s</span>' % self.result
@@ -99,6 +100,9 @@ class CalculatorBase:
 
         The base calculator generates an simple Javascript object that 
         contains a single property, named "result".
+
+        @return: A JSON string with a single object that contains the
+            property 'result'.
         """
         return json.dumps( {'result':self.result}, use_decimal=True )
 
@@ -115,13 +119,11 @@ class CalculatorBase:
         If no district is provided, no subject argument value is ever 
         returned.
 
-        Parameters:
-            argument -- The name of the argument passed to the calculator.
-            district -- An optional district, used to fetch related
-              ComputedCharacteristics.
+        @param argument: The name of the argument passed to the calculator.
+        @param district: An optional district, used to fetch related 
+            ComputedCharacteristics.
 
-        Returns:
-            The value of the subject or literal argument.
+        @return: The value of the subject or literal argument.
         """
         try:
             (argtype, argval) = self.arg_dict[argument]
@@ -164,11 +166,12 @@ class Schwartzberg(CalculatorBase):
         """
         Calculate the Schwartzberg measure of compactness.
 
-        Keywords:
-            district - A district whose compactness should be computed.
-            plan -- A plan whose district compactnesses should be averaged.
-            version -- Optional. The version of the plan, defaults to the 
-                most recent version.
+        @keyword district: A L{District} whose compactness should be 
+            computed.
+        @keyword plan: A L{Plan} whose district compactnesses should be 
+            averaged.
+        @keyword version: Optional. The version of the plan, defaults to 
+            the most recent version.
         """
         districts = []
         if 'district' in kwargs:
@@ -209,8 +212,7 @@ class Schwartzberg(CalculatorBase):
         Generate an HTML representation of the compactness score. This
         is represented as a percentage or "n/a"
 
-        Returns:
-            A number formatted similar to "1.00%", or "n/a"
+        @return: A number formatted similar to "1.00%", or "n/a"
         """
         return ("%0.2f%%" % (self.result * 100)) if self.result else "n/a"
 
@@ -230,11 +232,12 @@ class Roeck(CalculatorBase):
         """
         Calculate the Roeck measure of compactness.
 
-        Keywords:
-            district -- A district whose compactness should be computed.
-            plan -- A plan whose district compactnesses should be averaged.
-            version -- Optional. The version of the plan, defaults to the 
-                most recent version.
+        @keyword district: A L{District} whose compactness should be 
+            computed.
+        @keyword plan: A L{Plan} whose district compactnesses should be 
+            averaged.
+        @keyword version: Optional. The version of the plan, defaults to 
+            the most recent version.
         """
         districts = []
         if 'district' in kwargs:
@@ -277,8 +280,7 @@ class Roeck(CalculatorBase):
         Generate an HTML representation of the compactness score. This
         is represented as a percentage or "n/a"
 
-        Returns:
-            A number formatted similar to "1.00%", or "n/a"
+        @return: A number formatted similar to "1.00%", or "n/a"
         """
         return ("%0.2f%%" % (self.result * 100)) if self.result else "n/a"
 
@@ -298,11 +300,12 @@ class PolsbyPopper(CalculatorBase):
         """
         Calculate the Polsby-Popper measure of compactness.
 
-        Keywords:
-            district -- A district whose compactness should be computed.
-            plan -- A plan whose district compactnesses should be averaged.
-            version -- Optional. The version of the plan, defaults to the 
-                most recent version.
+        @keyword district: A L{District} whose compactness should be 
+            computed.
+        @keyword plan: A L{Plan} whose district compactnesses should be 
+            averaged.
+        @keyword version: Optional. The version of the plan, defaults to 
+            the most recent version.
         """
         districts = []
         if 'district' in kwargs:
@@ -342,8 +345,7 @@ class PolsbyPopper(CalculatorBase):
         Generate an HTML representation of the compactness score. This
         is represented as a percentage or "n/a"
 
-        Returns:
-            A number formatted similar to "1.00%", or "n/a"
+        @return: A number formatted similar to "1.00%", or "n/a"
         """
         return ("%0.2f%%" % (self.result * 100)) if self.result else "n/a"
 
@@ -364,11 +366,12 @@ class LengthWidthCompactness(CalculatorBase):
         """
         Calculate the Length/Width measure of compactness.
 
-        Keywords:
-            district -- A district whose compactness should be computed.
-            plan -- A plan whose district compactnesses should be averaged.
-            version -- Optional. The version of the plan, defaults to the 
-                most recent version.
+        @keyword district: A L{District} whose compactness should be 
+            computed.
+        @keyword plan: A L{Plan} whose district compactnesses should be 
+            averaged.
+        @keyword version: Optional. The version of the plan, defaults to 
+            the most recent version.
         """
         districts = []
         if 'district' in kwargs:
@@ -404,8 +407,7 @@ class LengthWidthCompactness(CalculatorBase):
         Generate an HTML representation of the compactness score. This
         is represented as a percentage or "n/a"
 
-        Returns:
-            A number formatted similar to "1.00%", or "n/a"
+        @return: A number formatted similar to "1.00%", or "n/a"
         """
         return ("%0.2f%%" % (self.result * 100)) if self.result else "n/a"
 
@@ -436,13 +438,12 @@ class SumValues(CalculatorBase):
         """
         Calculate the sum of a series of values.
 
-        Keywords:
-            district -- A district whose values should be summed.
-            plan -- A plan whose district values should be summed.
-            version -- Optional. The version of the plan, defaults to the 
-                most recent version.
-            list -- A list of values to sum, when summing a set of 
-                ScoreArguments.
+        @keyword district: A L{District} whose values should be summed.
+        @keyword plan: A L{Plan} whose district values should be summed.
+        @keyword version: Optional. The version of the plan, defaults to 
+            the most recent version.
+        @keyword list: A list of values to sum, when summing a set of 
+            ScoreArguments.
         """
         districts = []
 
@@ -479,8 +480,7 @@ class SumValues(CalculatorBase):
         Generate an HTML representation of the summation score. This
         is represented as a decimal formatted with commas or "n/a".
 
-        Returns:
-            The result wrapped in an HTML SPAN element: "<span>1</span>".
+        @return: The result wrapped in an HTML SPAN element: "<span>1</span>".
         """
         if isinstance(self.result, Decimal):
             result = locale.format("%d", self.result, grouping=True)
@@ -509,11 +509,12 @@ class Percent(CalculatorBase):
         """
         Calculate a percentage.
 
-        Keywords:
-            district -- A district whose percentage should be calculated.
-            plan -- A plan whose set of districts should be calculated.
-            version -- Optional. The version of the plan, defaults to the 
-                most recent version.
+        @keyword district: A L{District} whose percentage should be 
+            calculated.
+        @keyword plan: A L{Plan} whose set of districts should be 
+            calculated.
+        @keyword version: Optional. The version of the plan, defaults to 
+            the most recent version.
         """
         district = None
 
@@ -557,8 +558,7 @@ class Percent(CalculatorBase):
         Generate an HTML representation of the percentage score. This
         is represented as a decimal formatted with commas or "n/a"
 
-        Returns:
-            The result wrapped in an HTML SPAN element, formatted similar to: "<span>1.00%</span>" or "<span>n/a</span>".
+        @return: The result wrapped in an HTML SPAN element, formatted similar to: "<span>1.00%</span>" or "<span>n/a</span>".
         """
         if (type(self.result) == Decimal):
             return '<span>{0:.2%}</span>'.format(self.result)
@@ -587,11 +587,12 @@ class Threshold(CalculatorBase):
         """
         Calculate and determine if a value exceeds a threshold.
 
-        Keywords:
-            district -- A district whose threshold should be calculated.
-            plan -- A plan whose set of districts should be thresholded.
-            version -- Optional. The version of the plan, defaults to the 
-                most recent version.
+        @keyword district: A L{District} whose threshold should be 
+            calculated.
+        @keyword plan: A L{Plan} whose set of districts should be 
+            thresholded.
+        @keyword version: Optional. The version of the plan, defaults to 
+            the most recent version.
         """
         districts = []
 
@@ -647,11 +648,12 @@ class Range(CalculatorBase):
         """
         Calculate and determine if a value lies within a range.
 
-        Keywords:
-            district -- A district whose argument should be evaluated.
-            plan -- A plan whose set of districts should be evaluated.
-            version -- Optional. The version of the plan, defaults to the 
-                most recent version.
+        @keyword district: A L{District} whose argument should be 
+            evaluated.
+        @keyword plan: A L{Plan} whose set of districts should be 
+            evaluated.
+        @keyword version: Optional. The version of the plan, defaults to 
+            the most recent version.
         """
         districts = None
 
@@ -723,12 +725,12 @@ class Contiguity(CalculatorBase):
         """
         Determine if a district is contiguous.
 
-        Keywords:
-            district -- A district whose contiguity should be evaluated.
-            plan -- A plan whose set of districts should be evaluated for 
-                contiguity.
-            version -- Optional. The version of the plan, defaults to the 
-                most recent version.
+        @keyword district: A L{District} whose contiguity should be 
+            evaluated.
+        @keyword plan: A L{Plan} whose set of districts should be 
+            evaluated for contiguity.
+        @keyword version: Optional. The version of the plan, defaults to 
+            the most recent version.
         """
         districts = []
 
@@ -807,8 +809,7 @@ class Contiguity(CalculatorBase):
         is represented as an image element or the string result wrapped
         in a SPAN element if the result is non-numeric.
 
-        Returns:
-            An HTML IMG element in the form of: '<img class="(yes|no)-contiguous" src="/static-media/images/icon-(check|warning).png">'
+        @return: An HTML IMG element in the form of: '<img class="(yes|no)-contiguous" src="/static-media/images/icon-(check|warning).png">'
         """
         if type(self.result) == int:
             if self.result == 1:
@@ -833,11 +834,10 @@ class AllContiguous(CalculatorBase):
         """
         Compute the contiguity of all the districts in the plan.
 
-        Keywords:
-            plan -- A plan whose set of districts should be evaluated for 
-                contiguity.
-            version -- Optional. The version of the plan, defaults to the 
-                most recent version.
+        @keyword plan: A L{Plan} whose set of districts should be 
+            evaluated for contiguity.
+        @keyword version: Optional. The version of the plan, defaults to 
+            the most recent version.
         """
         if not 'plan' in kwargs:
             return
@@ -866,11 +866,10 @@ class NonContiguous(CalculatorBase):
         """
         Compute the number of districts in a plan that are non-contiguous.
 
-        Keywords:
-            plan -- A plan whose set of districts should be evaluated for
-                contiguity.
-            version -- Optional. The version of the plan, defaults to the 
-                most recent version.
+        @keyword plan: A L{Plan} whose set of districts should be 
+            evaluated for contiguity.
+        @keyword version: Optional. The version of the plan, defaults to 
+            the most recent version.
         """
         if not 'plan' in kwargs:
             return
@@ -911,12 +910,11 @@ class Interval(CalculatorBase):
         """
         Determine the interval to which a district's value belongs.
 
-        Keywords:
-            district -- A district whose interval should be computed.
-            plan -- A plan whose set of districts should be evaluated for
-                their intervals.
-            version -- Optional. The version of the plan, defaults to the 
-                most recent version.
+        @keyword district: A L{District} whose interval should be computed.
+        @keyword plan: A L{Plan} whose set of districts should be 
+            evaluated for their intervals.
+        @keyword version: Optional. The version of the plan, defaults to 
+            the most recent version.
         """
         districts = []
         bounds = []
@@ -993,8 +991,7 @@ class Interval(CalculatorBase):
         The span will also have a class named after the subject to make
         multiple intervals available in a panel.
 
-        Returns:
-            An HTML SPAN element, in the format: '<span class="interval_X X">1,000</span>'
+        @return: An HTML SPAN element, in the format: '<span class="interval_X X">1,000</span>'
         """
         # Get the name of the subject
         try:
@@ -1027,11 +1024,10 @@ class Equivalence(CalculatorBase):
         """
         Generate an equivalence score.
 
-        Keywords:
-            plan -- A plan whose set of districts should be evaluated for
-                their equivalence.
-            version -- Optional. The version of the plan, defaults to the 
-                most recent version.
+        @keyword plan: A L{Plan} whose set of districts should be 
+            evaluated for their equivalence.
+        @keyword version: Optional. The version of the plan, defaults to 
+            the most recent version.
         """
         if 'district' in kwargs or not 'plan' in kwargs:
             return
@@ -1068,8 +1064,7 @@ class Equivalence(CalculatorBase):
         Generate an HTML representation of the equivalence score. This
         is represented as an integer formatted with commas or "n/a"
 
-        Returns:
-            A string in the format of "1,000" or "n/a" if no result.
+        @return: A string in the format of "1,000" or "n/a" if no result.
         """
         return intcomma(int(self.result)) if self.result else "n/a"
 
@@ -1099,11 +1094,10 @@ class RepresentationalFairness(CalculatorBase):
         """
         Compute the representational fairness.
 
-        Keywords:
-            plan -- A plan whose set of districts should be evaluated for
-                representational fairness.
-            version -- Optional. The version of the plan, defaults to the 
-                most recent version.
+        @keyword plan: A L{Plan} whose set of districts should be 
+            evaluated for representational fairness.
+        @keyword version: Optional. The version of the plan, defaults to 
+            the most recent version.
         """
         if 'plan' in kwargs:
             plan = kwargs['plan']
@@ -1144,8 +1138,7 @@ class RepresentationalFairness(CalculatorBase):
         to display a human readable score that explains which party the 
         plan is biased toward.
 
-        Returns:
-            An HTML SPAN element similar to the form: "<span>Democrat 5</span>" or "<span>Balanced</span>".
+        @return: An HTML SPAN element similar to the form: "<span>Democrat 5</span>" or "<span>Balanced</span>".
         """
         sort = abs(self.result)
         party = 'Democrat' if self.result > 0 else 'Republican'
@@ -1158,8 +1151,7 @@ class RepresentationalFairness(CalculatorBase):
         """
         Generate a basic JSON representation of the result.
 
-        Returns:
-            A JSON object with 1 property: result.
+        @return: A JSON object with 1 property: result.
         """
         sort = abs(self.result)
         party = 'Democrat' if self.result > 0 else 'Republican'
@@ -1171,8 +1163,7 @@ class RepresentationalFairness(CalculatorBase):
         Sort by the absolute value of the result (farther from zero
         is a worse score).
 
-        Returns:
-            The absolute value of the result.
+        @return: The absolute value of the result.
         """
         return abs(self.result)
 
@@ -1194,11 +1185,10 @@ class Competitiveness(CalculatorBase):
         """
         Compute the competitiveness.
 
-        Keywords:
-            plan -- A plan whose set of districts should be evaluated for
-                competitiveness.
-            version -- Optional. The version of the plan, defaults to the 
-                most recent version.
+        @keyword plan: A L{Plan} whose set of districts should be 
+            evaluated for competitiveness.
+        @keyword version: Optional. The version of the plan, defaults to 
+            the most recent version.
         """
         if not 'plan' in kwargs:
             return
@@ -1255,12 +1245,11 @@ class CountDistricts(CalculatorBase):
         """
         Compute the number of districts in a plan.
 
-        Keywords:
-            plan -- A plan whose set of districts should be verified 
-                against the target.
-            version -- Optional. The version of the plan, defaults to the
-                most recent version.
-            target -- The target number of districts in the plan.
+        @keyword plan: A L{Plan} whose set of districts should be verified 
+            against the target.
+        @keyword version: Optional. The version of the plan, defaults to
+            the most recent version.
+        @keyword target: The target number of districts in the plan.
         """
         if not 'plan' in kwargs or not 'target' in self.arg_dict:
             return
@@ -1289,12 +1278,11 @@ class AllBlocksAssigned(CalculatorBase):
         """
         Determine if all the blocks in the plan are assigned to a district.
 
-        Keywords:
-            plan -- A plan whose blocks are evaluated for assignment.
-            version -- Optional. The version of the plan, defaults to the
-                most recent version.
-            threshold -- Optional. The amount of simplification used 
-                during buffering optimization.
+        @keyword plan: A L{Plan} whose blocks are evaluated for assignment.
+        @keyword version: Optional. The version of the plan, defaults to 
+            the most recent version.
+        @keyword threshold: Optional. The amount of simplification used 
+            during buffering optimization.
         """
         if not 'plan' in kwargs:
             return
@@ -1329,15 +1317,14 @@ class Equipopulation(CalculatorBase):
         Determine if all the districts in a plan fall within a target
         range.
 
-        Keywords:
-            plan -- A plan whose set of districts should be evaluated for
-                equipopulation
-            version -- Optional. The version of the plan, defaults to the
-                most recent version.
-            target -- Optional. The target number of districts to report
-                in the HTML output.
-            validation -- Optional. Change the output of the calculator to
-                a boolean measure for plan validity.
+        @keyword plan: A L{Plan} whose set of districts should be 
+            evaluated for equipopulation.
+        @keyword version: Optional. The version of the plan, defaults to 
+            the most recent version.
+        @keyword target: Optional. The target number of districts to report
+            in the HTML output.
+        @keyword validation: Optional. Change the output of the calculator 
+            to a boolean measure for plan validity.
         """
         if not 'plan' in kwargs:
             return
@@ -1396,19 +1383,20 @@ class MajorityMinority(CalculatorBase):
         Determine if the requisite number of districts in a plan have a 
         majority of minority population. 
 
-        Keywords:
-            plan -- A plan whose set of districts should be evaluated for
-                majority minority compliance.
-            version -- Optional. The version of the plan, defaults to the
-                most recent version.
-            population -- The primary population subject.
-            minorityN -- The minorty population subjects. Numbering starts
-                at 1, and must be continuous.
-            threshold -- Optional. The ratio of all minorityN populations to the population subject when 'majority' is achieved. Defaults to 0.5
-                achieved
-            target -- Optional. The number of districts required to be valid.
-            validation -- Optional. Change the output of the calculator to
-                a boolean measure for plan validity.
+        @keyword plan: A L{Plan} whose set of districts should be 
+            evaluated for majority minority compliance.
+        @keyword version: Optional. The version of the plan, defaults to
+            the most recent version.
+        @keyword population: The primary population subject.
+        @keyword minorityN: The minorty population subjects. Numbering 
+            starts at 1, and must be continuous.
+        @keyword threshold: Optional. The ratio of all minorityN 
+            populations to the population subject when 'majority' is 
+            achieved. Defaults to 0.5.
+        @keyword target: Optional. The number of districts required to be 
+            valid.
+        @keyword validation: Optional. Change the output of the calculator
+            to a boolean measure for plan validity.
         """
         if not 'plan' in kwargs:
             return
@@ -1475,11 +1463,10 @@ class MultiMember(CalculatorBase):
         """
         Verify that multi-member plans satisfy all parameters.
 
-        Keywords:
-            plan -- A plan whose districts should be evaluated for
-                multi-member compliance.
-            version -- Optional. The version of the plan, defaults to the
-                most recent version.
+        @keyword plan: A L{Plan} whose districts should be evaluated for
+            multi-member compliance.
+        @keyword version: Optional. The version of the plan, defaults to 
+            the most recent version.
         """
         self.result = False
 
@@ -1545,14 +1532,13 @@ class Average(CalculatorBase):
         """
         Calculate the average of a series of values.
 
-        Keywords:
-            list -- A list of values to average.
-            district -- Optional. A district to get the subject values 
-                from. If this is not specified, 'plan' must be provided.
-            plan -- Optional. A plan to get the subject values from. If 
-                this is not specified, 'district' must be provided.
-            version -- Optional. The version of the plan, defaults to the 
-                most recent version.
+        @keyword list: A list of values to average.
+        @keyword district: Optional. A L{District} to get the subject 
+            values from. If this is not specified, 'plan' must be provided.
+        @keyword plan: Optional. A L{Plan} to get the subject values from. 
+            If this is not specified, 'district' must be provided.
+        @keyword version: Optional. The version of the plan, defaults to 
+            the most recent version.
         """
         districts = []
 
@@ -1608,8 +1594,7 @@ class Average(CalculatorBase):
         Generate an HTML representation of the competitiveness score. This
         is represented as a percentage or "n/a"
 
-        Returns:
-            The result wrapped in an HTML SPAN element, formatted similar to: "<span>1.00%</span>" or "<span>n/a</span>".
+        @return: The result wrapped in an HTML SPAN element, formatted similar to: "<span>1.00%</span>" or "<span>n/a</span>".
         """
         if type(self.result) == float:
             return ("<span>%0.2f%%</span>" % (self.result * 100)) if self.result else "n/a"
@@ -1638,8 +1623,7 @@ class Comments(CalculatorBase):
         the result. The result is suitable for passing to the template
         that renders the comment sidebar.
 
-        Keywords:
-            district -- The district whose comments should be retrieved.
+        @keyword district: The district whose comments should be retrieved.
         """
         if not 'district' in kwargs:
             return
@@ -1656,8 +1640,7 @@ class Comments(CalculatorBase):
         Override the default html method. This is required due to the cache
         mechanism.
 
-        Returns:
-            A dict of typetags.
+        @return: A dict of typetags.
         """
         return self.result
 
@@ -1679,11 +1662,11 @@ class CommunityTypeCounter(CalculatorBase):
         """
         Count the number of community types which intersect a district.
 
-        Keywords:
-            district -- The district to compare against the community map.
-            community_map_id -- The ID of the community map.
-            version -- Optional. The version of the community map. Defaults
-                to the latest version of the community map.
+        @keyword district: The district to compare against the community 
+            map.
+        @keyword community_map_id: The ID of the community map.
+        @keyword version: Optional. The version of the community map. 
+            Defaults to the latest version of the community map.
         """
         districts = []
 
@@ -1724,13 +1707,13 @@ class SplitCounter(CalculatorBase):
         """
         Calculate splits between a plan and a target layer.
 
-        Keywords:
-            plan -- A plan whose districts will be analyzed for splits.
-            version -- Optional. The version of the plan, defaults to the
-                most recent version.
-            boundary_id -- The layer type and ID to compare for splits.
-            inverse -- A flag to indicato if the splits should be compared
-                forward or backward.
+        @keyword plan: A L{Plan} whose districts will be analyzed for 
+            splits.
+        @keyword version: Optional. The version of the plan, defaults to 
+            the most recent version.
+        @keyword boundary_id: The layer type and ID to compare for splits.
+        @keyword inverse: A flag to indicato if the splits should be 
+            compared forward or backward.
         """
         if not 'plan' in kwargs:
             return
@@ -1756,8 +1739,7 @@ class SplitCounter(CalculatorBase):
         represented as an HTML fragment containing a TABLE element with
         the splits listed in the cells.
 
-        Returns:
-            An HTML TABLE element with the split geographies/districts.
+        @return: An HTML TABLE element with the split geographies/districts.
         """
         r = self.result
         total_split_districts = len(set(i[0] for i in r['splits']))
