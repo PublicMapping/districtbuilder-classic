@@ -21,8 +21,7 @@ if (!all(census.df$GEOID10==merged.df$GEOID10)|| sum(merged.df$TOTPOP)==0) {
 }
 
 # check for the existence of election variables in the data, choose the # best one
-electionvar <- names(merged.df)[charmatch (c("VOTE_DEM","GOV10_DEM","GOV09_DEM","GOV08_DEM",
-"PRS10_DEM","PRS09_DEM","PRS08_DEM","SEN10_DEM","SEN08_DEM","LTG10_DEM","LTG08_DEM"),names(merged.df))]
+electionvar <- names(merged.df)[charmatch (c("VOTE_DEM", "GOV10_DEM","PRS10_DEM","SEN10_DEM", "GOV08_DEM","PRS08_DEM","SEN08_DEM", "GOV06_DEM","PRS06_DEM","SEN06_DEM"), names(merged.df))]
 electionvar<-electionvar[which(!is.na(electionvar))][1]
 if (is.na(electionvar)) {        
 	has_election_data<-0
@@ -31,6 +30,15 @@ if (is.na(electionvar)) {
 	merged.df$VOTE_DEM<-merged.df[[electionvar]]
         merged.df$VOTE_REP<-merged.df[[sub("_DEM","_REP",electionvar)]]        
 	merged.df$VOTE_TOT<-merged.df$VOTE_DEM+merged.df$VOTE_REP
+	dnormAdjust <- .5 - (sum(merged.df$VOTE_DEM,na.rm=TRUE)/(sum(merged.df$VOTE_DEM,na.rm=TRUE)+sum(merged.df$VOTE_REP,na.rm=TRUE)))
+	merged.df$VOTE_DEM_NORM <-
+		((merged.df$VOTE_DEM/(merged.df$VOTE_DEM+merged.df$VOTE_REP))+dnormAdjust) * (merged.df$VOTE_DEM+merged.df$VOTE_REP)
+	merged.df$VOTE_REP_NORM <-
+		((merged.df$VOTE_REP/(merged.df$VOTE_DEM+merged.df$VOTE_REP))-dnormAdjust) * (merged.df$VOTE_DEM+merged.df$VOTE_REP)
+	zero_tot<-which((merged.df$VOTE_DEM+merged.df$VOTE_REP)==0)
+	merged.df$VOTE_DEM_NORM[zero_tot]<-0
+	merged.df$VOTE_REP_NORM[zero_tot]<-0
+	merged.df$VOTE_TOT_NORM<-merged.df$VOTE_DEM_NORM+merged.df$VOTE_REP_NORM
 }
 
 # write merged file

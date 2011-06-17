@@ -363,9 +363,12 @@ class Config_Template(DictionaryTemplate):
         <Subject id="vap_h" field="VAP_H" name="Hispanic or Latino voting age population" short_name="Hispanic VAP" displayed="true" sortkey="2" percentage_denominator="vap" />
         <Subject id="vap_na" field="VAP_NA" name="Native American Voting Age Population" short_name="Nat Amer VAP" displayed="true" sortkey="3" percentage_denominator="vap" />
         %(start_elec)s
-        <Subject id="vote_dem" field="VOTE_DEM" name="number of likely Democratic voters" short_name="democratic voters" displayed="true" sortkey="4" percentage_denominator="vote_tot" />
-        <Subject id="vote_rep" field="VOTE_REP" name="number of likely Republican voters" short_name="democratic voters" displayed="true" sortkey="5" percentage_denominator="vote_tot" />
-        <Subject id="vote_tot" field="VOTE_TOT" name="number of likely Republican voters" short_name="democratic voters" displayed="false" sortkey="6" />
+        <Subject id="vote_dem" field="VOTE_DEM" name="number of likely Democratic voters" short_name="Democratic voters" displayed="true" sortkey="4" percentage_denominator="vote_tot" />
+        <Subject id="vote_rep" field="VOTE_REP" name="number of likely Republican voters" short_name="Republican voters" displayed="true" sortkey="5" percentage_denominator="vote_tot" />
+        <Subject id="vote_tot" field="VOTE_TOT" name="number of likely Republican and Democratic voters" short_name="Republican+ Democratic voters" displayed="false" sortkey="6" />
+        <Subject id="vote_dem_norm" field="VOTE_DEM_NORM" name="number of likely Democratic voters normalized to 50/50 state baseline" short_name="Normalised Democratic voters" displayed="true" sortkey="18" percentage_denominator="vote_tot_norm" />
+        <Subject id="vote_rep_norm" field="VOTE_REP_NORM" name="number of likely Republican voters normalized to 50/50 state baseline" short_name="Normalized Republican voters" displayed="true" sortkey="19" percentage_denominator="vote_tot_norm" />
+        <Subject id="vote_tot" field="VOTE_TOT_NORM" name="number of likely Republican and Democratic voters normalized to 50/50 state baseline" short_name="Normalized Republican+ Democratic voters" displayed="false" sortkey="20" />
         %(end_elec)s
         <Subject id="vap" field="VAP" name="Voting Age Population" short_name="vap" displayed="true" sortkey="7" />
         <Subject id="totpop_b" field="TOTPOP_B" name="African-American" short_name="Black" displayed="false" sortkey="8" />        
@@ -974,8 +977,8 @@ class Config_Template(DictionaryTemplate):
                 label="Representational Fairness"
                 description="Representational fairness is increased when the percentage of districts a party would likely win (based upon the &apos;partisan index&apos; used to determine Competitiveness) closely mirrors that party.s percentage of the statewide vote." >
                 <Argument name="range" value="0.05" />
-                <SubjectArgument name="democratic" ref="vote_dem" />
-                <SubjectArgument name="republican" ref="vote_rep" />
+                <SubjectArgument name="normalized democratic" ref="vote_dem_norm" />
+                <SubjectArgument name="normalized republican" ref="vote_rep_norm" />
             </ScoreFunction>
                 %(end_elec)s
 
@@ -1354,6 +1357,9 @@ class Config_Template(DictionaryTemplate):
               <GeoLevelCharacteristic ref="vote_dem" />
               <GeoLevelCharacteristic ref="vote_rep" />
               <GeoLevelCharacteristic ref="vote_tot" />
+              <GeoLevelCharacteristic ref="vote_dem_norm" />
+              <GeoLevelCharacteristic ref="vote_rep_norm" />
+              <GeoLevelCharacteristic ref="vote_tot_norm" />
                 %(end_elec)s
           </GeoLevelCharacteristics>
          <LegislativeBodies>
@@ -1406,6 +1412,9 @@ class Config_Template(DictionaryTemplate):
               <GeoLevelCharacteristic ref="vote_dem" />
               <GeoLevelCharacteristic ref="vote_rep" />
               <GeoLevelCharacteristic ref="vote_tot" />
+              <GeoLevelCharacteristic ref="vote_dem_norm" />
+              <GeoLevelCharacteristic ref="vote_rep_norm" />
+              <GeoLevelCharacteristic ref="vote_tot_norm" />
                 %(end_elec)s
           </GeoLevelCharacteristics>
          <LegislativeBodies>
@@ -1461,6 +1470,9 @@ class Config_Template(DictionaryTemplate):
               <GeoLevelCharacteristic ref="vote_dem" />
               <GeoLevelCharacteristic ref="vote_rep" />
               <GeoLevelCharacteristic ref="vote_tot" />
+              <GeoLevelCharacteristic ref="vote_dem_norm" />
+              <GeoLevelCharacteristic ref="vote_rep_norm" />
+              <GeoLevelCharacteristic ref="vote_tot_norm" />
                 %(end_elec)s
           </GeoLevelCharacteristics>
        <LegislativeBodies>
@@ -1630,14 +1642,14 @@ target_na_congress=0, target_hisp_congress = 0 , target_bl_congress = 0,
 target_na_house=0, target_hisp_house = 0 , target_bl_house = 0,
 target_na_senate =0, target_hisp_senate = 0 , target_bl_senate = 0, contiguityOverrideString = ""): 
 
-        start_elec="<!--"        
         start_na="<!--"        
-	if (conf_na==True):
-                start_na=""
-                end_na=""
+        start_na="<!--"        
 	end_elec="-->"
 	end_na="-->"
         midlevel="tract"
+	if (conf_na==True):
+                start_na=""
+                end_na=""
         midlevel_width="6"
         midlevel_var="TRACTCE10"        
 	if (has_election_data==1):
@@ -1811,6 +1823,15 @@ if ( parseResults.do_gensld) :
         	gensld_choro("county","VOTE_DEM","Predicted Democratic Vote ",robjects.r.q_county_VOTE_DEM)
         	gensld_choro("county","VOTE_REP","Predicted Republican Vote ",robjects.r.q_county_VOTE_REP)
         	gensld_choro("county","VOTE_TOT","Predicted Republican Vote ",robjects.r.q_county_VOTE_TOT)
+		gensld_choro("block","VOTE_DEM_NORM","Predicted Democratic Vote ",robjects.r.q_block_VOTE_DEM_NORM)
+		gensld_choro("block","VOTE_REP_NORM","Predicted Republican Vote ",robjects.r.q_block_VOTE_REP_NORM)
+        	gensld_choro("block","VOTE_TOT_NORM","Predicted Republican Vote ",robjects.r.q_block_VOTE_TOT_NORM)
+        	gensld_choro("tract","VOTE_DEM_NORM","Predicted Democratic Vote ",robjects.r.q_tract_VOTE_DEM_NORM)
+        	gensld_choro("tract","VOTE_REP_NORM","Predicted Republican Vote ",robjects.r.q_tract_VOTE_REP_NORM)
+        	gensld_choro("tract","VOTE_TOT_NORM","Predicted Republican Vote ",robjects.r.q_tract_VOTE_TOT_NORM)
+        	gensld_choro("county","VOTE_DEM_NORM","Predicted Democratic Vote ",robjects.r.q_county_VOTE_DEM_NORM)
+        	gensld_choro("county","VOTE_REP_NORM","Predicted Republican Vote ",robjects.r.q_county_VOTE_REP_NORM)
+        	gensld_choro("county","VOTE_TOT_NORM","Predicted Republican Vote ",robjects.r.q_county_VOTE_TOT_NORM)
 
 
 # generate config file
