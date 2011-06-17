@@ -1839,6 +1839,80 @@ CROSS JOIN (
         
         return Plan.find_splits(top_id, bottom_id, top_version, bottom_version)
 
+    def compute_splits(self, target, version=None, inverse=None):
+        results = {
+            'splits':None,
+            'named_splits':None,
+            'plan_name':self.name,
+            'other_name':None,
+            'is_geolevel':False,
+            'is_community':False
+        }
+        other_names = None
+
+        id = int(target[target.find('.')+1:])
+        my_names = dict((d.district_id, d.name) for d in self.get_districts_at_version(version))
+
+        if target.startswith('geolevel'):
+            results['other_name'] = Geolevel.objects.get(pk=id).name
+            results['is_geolevel'] = True
+            results['splits'] = self.find_geolevel_splits(id, version=version, inverse=inverse)
+        elif target.startswith('plan'):
+            other_plan = Plan.objects.get(pk=id)
+            results['other_name'] = other_plan.name
+            if self.is_community():
+                results['is_community'] = True
+                
+            results['splits'] = self.find_plan_splits(other_plan, version=version, inverse=inverse)
+            other_names = dict((d.district_id, d.name) for d in other_plan.get_districts_at_version(other_plan.version))
+
+        # Helpers to get and name community types 
+        def get_community_types(districts):
+            """
+            Given a list of districts, return a dictionary with community types, keyed on district_id
+            """
+            community_types = {}
+            for d in districts:
+                typetags = filter(lambda tag:tag.name[:4]=='type', d.tags)
+                if typetags:
+                    typetags = map(lambda tag:tag.name[5:], typetags)
+                    community_types[d.district_id] = typetags
+            return community_types
+
+        def tag_plan_names(names, types):
+            """
+            Given a dictionary of names and a dictionary of types, return a dictionary of
+            names with optional community types, keyed on district id
+            """
+            name_dict = {}
+            for d in names.keys():
+                name_dict[d] = '%s - %s' % (names[d], ', '.join(types[d])) if d in types else names[d]
+            return name_dict
+
+        community_types = get_community_types(self.get_districts_at_version(version))
+        my_names = tag_plan_names(my_names, community_types)
+
+        if other_names:
+            other_community_types = get_community_types(other_plan.get_districts_at_version(other_plan.version))
+            other_names = tag_plan_names(other_names, other_community_types)
+
+        # Swap names if inversed
+        if inverse:
+            if other_names:
+                results['named_splits'] = [(other_names[s[0]], my_names[s[1]]) for s in results['splits']]
+            else:
+                results['named_splits'] = [(s[2], my_names[s[1]]) for s in results['splits']]
+
+            results['plan_name'] = results['other_name']
+            results['other_name'] = self.name
+        else:
+            if other_names:
+                results['named_splits'] = [(my_names[s[0]], other_names[s[1]]) for s in results['splits']]
+            else:
+                results['named_splits'] = [(my_names[s[0]], s[3]) for s in results['splits']]
+
+        return results 
+
 class PlanForm(ModelForm):
     """
     A form for displaying and editing a Plan.
@@ -2138,19 +2212,21 @@ class District(models.Model):
         self.simple = GeometryCollection(tuple(simples),srid=self.geom.srid)
         self.save()
 
-    def get_community_type_intersections(self, community_map, version=None):
+    def count_community_type_intersections(self, community_map_id, version=None):
         """
-        Given a community_map (a Plan object), will determine the number of distinct
+        Given a community_map (a Plan object), count the number of distinct
         types of community that this district intersections.
         
         Parameters:
-            community_map - a Plan linked to the community-mapping legislativebody
+            community_map - a Plan ID linked to the community-mapping legislativebody
             version - the version of the community_map to examine. If not given, 
                 the current plan version will be used
         Returns:
             an integer count of the number of distinct community types intersecting
             this district
         """
+        community_map = Plan.objects.get(id=community_map_id)
+
         if version is None:
             version = community_map.version
         

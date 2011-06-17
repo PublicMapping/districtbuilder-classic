@@ -3619,7 +3619,7 @@ class CommunityTypeTestCase(BaseTestCase):
         d1 = max(District.objects.filter(plan=p,district_id=1),key=lambda d: d.version)
 
         # Check and make sure we get 0 intersections
-        intersections = d1.get_community_type_intersections(c)
+        intersections = d1.count_community_type_intersections(c.id)
         self.assertNotEquals(0, d1.geom.area, 'District 1 has no area')
         self.assertEqual(0, intersections, 'Detected community intersections when there are none a:%d' % intersections)
 
@@ -3627,30 +3627,30 @@ class CommunityTypeTestCase(BaseTestCase):
         c.add_geounits(1, ['57', '58'] , gl.id, c.version)
         c1 = max(District.objects.filter(plan=c,district_id=1),key=lambda d: d.version)
         c1.tags = 'type=type_a'
-        intersections = d1.get_community_type_intersections(c)
+        intersections = d1.count_community_type_intersections(c.id)
         self.assertEqual(1, intersections, 'detected incorrect number of community intersections. e:1;a:%d' % intersections)
 
         # C2 is inside of d1 and shares a border
         c.add_geounits(2, ['42'], gl.id, c.version)
         c2 = max(District.objects.filter(plan=c,district_id=2),key=lambda d: d.version)
         c2.tags = 'type=type_b'
-        intersections = d1.get_community_type_intersections(c)
+        intersections = d1.count_community_type_intersections(c.id)
         self.assertEqual(2, intersections, 'Detected incorrect number of community intersections. e:2;a:%d' % intersections)
 
         #C3 is outside of d1 and shares a border
         c.add_geounits(3, ['66'], gl.id, c.version)
         c3 = max(District.objects.filter(plan=c,district_id=3),key=lambda d: d.version)
         c3.tags = 'type=type_c'
-        intersections = d1.get_community_type_intersections(c)
+        intersections = d1.count_community_type_intersections(c.id)
         self.assertEqual(2, intersections, 'Detected incorrect number of community intersections. e:2;a:%d' % intersections)
 
         # C4 is entirely within d1 and shares no borders
         c.add_geounits(4, ['59'], gl.id, c.version)
         c4 = max(District.objects.filter(plan=c,district_id=4),key=lambda d: d.version)
-        intersections = d1.get_community_type_intersections(c)
+        intersections = d1.count_community_type_intersections(c.id)
         self.assertEqual(2, intersections, 'Detected incorrect number of community intersections. e:2;a:%d' % intersections)
         c4.tags = 'type=type_a type=type_b type=type_c'
-        intersections = d1.get_community_type_intersections(c)
+        intersections = d1.count_community_type_intersections(c.id)
         self.assertEqual(3, intersections, 'Detected incorrect number of community intersections. e:3;a:%d' % intersections)
 
     def test_community_intersection_calculator(self):
