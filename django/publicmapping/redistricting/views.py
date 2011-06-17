@@ -454,7 +454,8 @@ def commonplan(request, planid):
         'reporting_template': reporting_template,
         'study_area_extent': study_area_extent,
         'has_leaderboard' : len(ScoreDisplay.objects.filter(is_page=True)) > 0,
-        'tags': tags
+        'tags': tags,
+        'plan_text': "community map" if (plan and plan.is_community()) else "plan"
     }
 
 

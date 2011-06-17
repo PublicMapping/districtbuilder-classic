@@ -85,6 +85,8 @@
         // the most current plan version is initially displayed.
         var PLAN_VERSION = {% if plan %}{{ plan.version }}{% else %}0{% endif %};
         var PLAN_TYPE = '{% if plan and plan.is_community %}community{% else %}plan{% endif %}';
+        var PLAN_TEXT = '{{ plan_text }}';
+        var PLAN_TEXT_TITLE = '{{ plan_text|title }}';
         // The history tree. This gets populated as the user walks
         // backward in the history.
         var PLAN_HISTORY = {};
@@ -675,7 +677,7 @@
     <div id="step_share" class="main_content share fulltab">
       <div class="shadow_left"></div>
       <div class="shadow_top"></div>
-      <div class="toolbar ui-widget-header"><h1>Share a Plan</h1></div>
+      <div class="toolbar ui-widget-header"><h1>Share a {{ plan_text|title }}</h1></div>
       <div class="tab_content">
           <div id="saveandshare">
               {% block share_panel %}
@@ -698,12 +700,12 @@
               {% endblock %}
               <div class="blockfile">
                   <h3>District Index File export</h3>
-                  <p>You can export this plan to a {{ body_member|lower }} 
+                  <p>You can export this {{ plan_text }} to a {{ body_member|lower }} 
                   index file. The index file is a comma-separated-value file
                   (csv) with each line listing a geounit (such as a census 
                   block) and the {{ body_member|lower }} to which it 
                   belongs. This file can be imported to other instances of 
-                  the publicmapping software or used in analysis of the plan
+                  the publicmapping software or used in analysis of the {{ plan_text }}
                   using your favorite GIS software.</p>
                   <div id='districtIndexFileTarget' />
               </div>
@@ -845,7 +847,7 @@ Include the shared_districts markup if we're using the copy/paste tool
               <div id="choose_layers_button_group" class="indented">
               <h2 class="indented centered">OR...</h2>
               <button id="choose_reference_layer_button" class="lg spacebelow">
-                  Choose a:<br/>legislative district or community plan<br/>reference layer
+                  Choose a:<br/>legislative district or community map<br/>reference layer
               </button>
               </div>
               <div class="clear"></div>

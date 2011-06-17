@@ -109,7 +109,7 @@
             <button id="lock_district_map_tool" title="Click on a {{ body_member }} to lock or unlock it." class="btntoggle titletip">Lock<br/>{{ body_member|capfirst }}</button> 
             <button id="district_id_map_tool" title="Click on a {{ body_member }} to see its ID." class="btntoggle titletip">{{ body_member|capfirst }}<br/>Info</button> 
             <button id="district_select_tool" title="Unassign all the units in a {{ body_member }}" class="btntoggle titletip">Unassign<br/>{{ body_member|capfirst }}</button>
-            <button id="copy_paste_tool" title="Copy a {{ body_member }} from another plan" class="titletip">Copy and</br>Paste</button>
+            <button id="copy_paste_tool" title="Copy a {{ body_member }} from another {{ plan_text }}" class="titletip">Copy and</br>Paste</button>
         </div>
 
         <div class="toolset_group toolset_group_lg">
@@ -132,22 +132,22 @@
         {% block share_panel %}
             <div class="explanation">
                 <h3>Explanation of Shared Documents</h3>
-                <p>You can share your plan with other users here.  Your plan will be available for other users so that they can view reports about your plan or create a plan of their own using yours as a base.</p>
-                <p>Give your plan a unique name in order to share it. A copy of your current plan will be added to the "Shared Plans" section of the plan chooser.</p>
+                <p>You can share your {{ plan_text }} with other users here.  Your {{ plan_text }} will be available for other users so that they can view reports about your {{ plan_text }} or create a {{ plan_text }} of their own using yours as a base.</p>
+                <p>Give your {{ plan_text }} a unique name in order to share it. A copy of your current {{ plan_text }} will be added to the "Shared" section of the plan chooser.</p>
             </div>
             <div id="nameandshare">
                 <div>
-                    <h3>Name your shared plan</h3>
+                    <h3>Name your shared {{ plan_text }}</h3>
                     <input id="txtPlanName" />
                     <button id="btnSaveAndShare">Save and Share</button>
                 </div>
 
             </div>
             <div id="successfulShare" title="Congratulations!" >
-                <p>You have successfully shared your plan. You can share your plan with others by giving them this link:</p>
+                <p>You have successfully shared your {{ plan_text }}. You can share your {{ plan_text }} with others by giving them this link:</p>
                 <p id="sharedPermalink"><p>
-                <button id="continueEditing">Continue Editing Current Plan</button>
-                <a href="/districtmapping/plan/0/view/"><button id="selectNew">Select New Plan to Edit</button></a>
+                <button id="continueEditing">Continue Editing Current {{ plan_text|title }}</button>
+                <a href="/districtmapping/plan/0/view/"><button id="selectNew">Select New {{ plan_text|title }} to Edit</button></a>
             </div>
         {% endblock %}
 
@@ -186,7 +186,7 @@
             {% endif %}
             </div>
             <div id="shared_plans_column">
-                <h2>1. Choose Plan</h2>
+                <h2>1. Choose {{ plan_text|title }}</h2>
                 <table id="shared_plans_table"></table>
                 <div id="shared_plans_pager"></div>
             </div>
@@ -205,7 +205,7 @@
         <div id="footer">
             <div id="message_box"></div>
             <div id="step_3">
-                <h2>3. Paste selected {{ body_member }} into working plan</h2>
+                <h2>3. Paste selected {{ body_member }} into working {{ plan_text }}</h2>
                 <button id="paste_button">Paste</button>
             </div>
         </div>
