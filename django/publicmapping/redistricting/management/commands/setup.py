@@ -122,30 +122,48 @@ contents of the file and try again.
         # used to secure session data. Blow away any old sessions that
         # were in the DB.
         self.purge_sessions(verbose)
-        self.force= options.get('force')
-        self.create_superuser(config, verbose)
-        self.import_prereq(config, verbose)
-        self.import_scoring(config, verbose)
+        self.force = options.get('force')
 
-        optlevels = options.get("geolevels")
-        nestlevels = options.get("nesting")
+        # When configuring, we want to keep track of any failures so we can
+        # return the correct exit code.  Since False evaluates to a 0, we can
+        # multiply values by all_ok so that a single False value means all_ok
+        # will remain false
+        all_ok = True
 
-        if (not optlevels is None) or (not nestlevels is None):
-            # Begin the import process
-            geolevels = config.xpath('/DistrictBuilder/GeoLevels/GeoLevel')
+        all_ok = all_ok * self.create_superuser(config, verbose)
+        try:
+            all_ok = all_ok * self.import_prereq(config, verbose)
+            all_ok = all_ok * self.import_scoring(config, verbose)
+        except:
+            all_ok = False
+            if verbose > 0: 
+                print 'Error importing configuration:\n%s' % traceback.format_exc()
 
-            for i,geolevel in enumerate(geolevels):
-                if not optlevels is None:
-                    importme = len(optlevels) == 0
-                    importme = importme or (i in optlevels)
-                    if importme:
-                        self.import_geolevel(config, geolevel, verbose)
+        try:
+            optlevels = options.get("geolevels")
+            nestlevels = options.get("nesting")
 
-                if not nestlevels is None:
-                    nestme = len(nestlevels) == 0
-                    nestme = nestme or (i in nestlevels)
-                    if nestme:
-                        self.renest_geolevel(geolevel, verbose)
+            if (not optlevels is None) or (not nestlevels is None):
+                # Begin the import process
+                geolevels = config.xpath('/DistrictBuilder/GeoLevels/GeoLevel')
+
+                for i,geolevel in enumerate(geolevels):
+                    if not optlevels is None:
+                        importme = len(optlevels) == 0
+                        importme = importme or (i in optlevels)
+                        if importme:
+                            self.import_geolevel(config, geolevel, verbose)
+
+                    if not nestlevels is None:
+                        nestme = len(nestlevels) == 0
+                        nestme = nestme or (i in nestlevels)
+                        if nestme:
+                            self.renest_geolevel(geolevel, verbose)
+        except:
+            all_ok = False
+            if verbose > 0:
+                print 'ERROR importing geolevels:\n%s' % traceback.format_exc()
+         
 
             # Do this once after processing the geolevels
             self.import_contiguity_overrides(config, verbose)
@@ -153,42 +171,72 @@ contents of the file and try again.
 
         if options.get("views"):
             # Create views based on the subjects and geolevels
-            self.create_views(verbose)
+            try:
+                self.create_views(verbose)
+            except:
+                if verbose > 0:
+                    print traceback.format_exc()
+                all_ok = False
 
         if options.get("geoserver"):
             qset = Geounit.objects.all()
             srid = qset[0].geom.srid
-            self.configure_geoserver(config, srid, verbose)
+            try:
+                all_ok = all_ok * self.configure_geoserver(config, srid, verbose)
+            except:
+                if verbose > 0:
+                    print 'ERROR configuring geoserver:\n%s' % traceback.format_exc()
+                all_ok = False
 
         if options.get("templates"):
-            self.create_template(config, verbose)
+            try:
+                self.create_template(config, verbose)
+            except:
+                if verbose > 0:
+                    print 'ERROR creating templates:\n%s' % traceback.format_exc()
+                all_ok = False
        
         if options.get("static"):
             call_command('collectstatic', interactive=False, verbosity=verbose)
 
         if options.get("bard_templates"):
-            self.create_report_templates(config, verbose)
-
+            try:
+                self.create_report_templates(config, verbose)
+            except:
+                if verbose > 0:
+                    print 'ERROR creating BARD template files:\n%s' % traceback.format_exc()
+                all_ok = False
+    
         if options.get("bard"):
-            self.build_bardmap(config, verbose)
+            all_ok = all_ok * self.build_bardmap(config, verbose)
 
+        # For our return value, a 0 (False) means OK, any nonzero (i.e., True or 1)
+        # means that  an error occurred - the opposite of the meaning of all_ok's bool
+        sys.exit(not all_ok)
 
     def create_superuser(self, config, verbose):
         """
         Create the django superuser, based on the config.
         """
         from django.contrib.auth.models import User
-        admcfg = config.xpath('//Project/Admin')[0]
-        admin_attributes = {'first_name':'Admin','last_name':'User','is_staff':True,'is_active':True,'is_superuser':True}
-        admin_attributes['username'] = admcfg.get('user')
-        admin_attributes['email'] = admcfg.get('email')
-        admin, created, changed, message = consistency_check_and_update(User, unique_id_field='username', overwrite=self.force, **admin_attributes)
+        try:
+            admcfg = config.xpath('//Project/Admin')[0]
+            admin_attributes = {'first_name':'Admin','last_name':'User','is_staff':True,'is_active':True,'is_superuser':True}
+            admin_attributes['username'] = admcfg.get('user')
+            admin_attributes['email'] = admcfg.get('email')
+            admin, created, changed, message = consistency_check_and_update(User, unique_id_field='username', overwrite=self.force, **admin_attributes)
 
-        admin.set_password(admcfg.get('password'))
-        admin.save()
+            admin.set_password(admcfg.get('password'))
+            admin.save()
 
-        if verbose > 1 or (verbose > 0 and changed and not self.force):
-            print message
+            if verbose > 1 or (verbose > 0 and changed and not self.force):
+                print message
+        except:
+            if verbose > 0:
+                print 'Error when creating superuser:\n%s' % traceback.format_exc()    
+            return False
+
+        return True
 
     def purge_sessions(self, verbose):
         """
@@ -694,6 +742,7 @@ ERROR:
                 if verbose > 1:
                     print 'Created demo_%s_%s view ...' % \
                         (geolevel.name, subject.name)
+        return True
 
     def import_geolevel(self, config, geolevel, verbose):
         """
@@ -736,6 +785,8 @@ ERROR:
             gconfig['subject_fields'].append( sconfig )
 
         self.import_shape(gconfig, verbose)
+
+        return True
 
     def renest_geolevel(self, glconf, verbose):
         """
@@ -784,6 +835,8 @@ ERROR:
 
             if verbose > 1:
                 print "Geounits modified: (geometry: %d, data values: %d)" % (geomods, nummods)
+
+        return True
 
 
     def aggregate_unit(self, geounit, geolevel, parent, verbose):
@@ -932,7 +985,7 @@ ERROR:
                     arg_obj.value = config_value
                     arg_obj.save()
                     if verbose > 0:
-                        print 'literal ScoreArgument "%s" value updated' % name
+                        print 'literal ScoreArgument "%s" value UPDATED' % name
                 else:
                     if verbose > 0: 
                         print 'Didn\'t change ScoreArgument %s; attribute(s) "value" differ(s) from database configuration.\n\tWARNING: Sync your config file to your app configuration or use the -f switch with setup to force changes' % name
@@ -959,7 +1012,7 @@ ERROR:
                     subarg_obj.value = config_value
                     subarg_obj.save()
                     if verbose > 0:
-                        print 'subject ScoreArgument "%s" value updated' % name
+                        print 'subject ScoreArgument "%s" value UPDATED' % name
                 else:
                     if verbose > 0: 
                         print 'Didn\'t change ScoreArgument %s; attribute(s) "value" differ(s) from database configuration.\n\tWARNING: Sync your config file to your app configuration or use the -f switch with setup to force changes' % name
@@ -997,7 +1050,7 @@ ERROR:
                     scorearg_obj.value = config_value
                     scorearg_obj.save()
                     if verbose > 0:
-                        print 'subject scoreargument "%s" value updated' % name
+                        print 'subject scoreargument "%s" value UPDATED' % name
                 else:
                     if verbose > 0: 
                         print 'didn\'t change scoreargument %s; attribute(s) "value" differ(s) from database configuration.\n\twarning: sync your config file to your app configuration or use the -f switch with setup to force changes' % name
@@ -1016,7 +1069,7 @@ ERROR:
 
         Scoring is currently optional. Import sections only if they are present.
         """
-
+        result = True
         if (len(config.xpath('//Scoring')) == 0):
             if verbose > 1:
                 print 'Scoring not configured'
@@ -1030,7 +1083,7 @@ ERROR:
     There was no superuser installed; ScoreDisplays need to be assigned
     ownership to a superuser.
 """ 
-            return
+            return False
         else:
             admin = admin[0]
 
@@ -1114,7 +1167,7 @@ ERROR:
         if (len(config.xpath('//Validation')) == 0):
             if verbose > 1:
                 print 'Validation not configured'
-            return;
+            return False;
 
         for vc in config.xpath('//Validation/Criteria'):
             lbconfig = config.xpath('//LegislativeBody[@id="%s"]' % vc.get('legislativebodyref'))[0]
@@ -1123,7 +1176,12 @@ ERROR:
             for crit in vc.xpath('Criterion'):
                 # Import the score function for this validation criterion
                 sfref = crit.xpath('Score')[0]
-                sf = config.xpath('//ScoreFunctions/ScoreFunction[@id="%s"]' % sfref.get('ref'))[0]
+                try:
+                    sf = config.xpath('//ScoreFunctions/ScoreFunction[@id="%s"]' % sfref.get('ref'))[0]
+                except:
+                    if verbose > 0:
+                        print "Couldn't import ScoreFunction for Criteria %s" % crit.get('name')
+                    result = False
                 sf_obj = self.import_function(sf, verbose)
 
                 # Import this validation criterion
@@ -1134,9 +1192,10 @@ ERROR:
                 attributes['legislative_body'] = lb
                 crit_obj, created, changed, message = consistency_check_and_update(ValidationCriteria, overwrite=self.force, **attributes)
 
-                if verbose > 1 or (changed and not self.force):
+                if verbose > 1 or (verbose > 0 and changed and not self.force):
                     print message
 
+        return result
                 
 
     def import_prereq(self, config, verbose):
@@ -1642,6 +1701,8 @@ and try again.
             if verbose > 1:
                 print "The following traceback may provide more information:"
                 print traceback.format_exc()
+            return False
+        return True
 
 def empty_geom(srid):
     """
@@ -1714,7 +1775,7 @@ def consistency_check_and_update(a_model, unique_id_field='name', overwrite=Fals
             if overwrite:
                 current_object.__setattr__(key, config_value)
                 changed = True
-                message = '%s updated; Changed attribute(s) "%s"'
+                message = 'UPDATED %s; CHANGED attribute(s) "%s"'
             else:
                 message = 'Didn\'t change %s; attribute(s) "%s" differ(s) from database configuration.\n\tWARNING: Sync your config file to your app configuration or use the -f switch with setup to force changes'
             different.append(key)
