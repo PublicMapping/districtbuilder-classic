@@ -455,6 +455,63 @@ plan into another plan</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.views-module.html#fix_unassigned" class="summary-sig-name">fix_unassigned</a>(<span class="summary-sig-arg">request</span>,
+        <span class="summary-sig-arg">planid</span>)</span><br />
+      Assign unassigned base geounits that are fully contained or adjacent 
+      to another district</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.views-pysrc.html#fix_unassigned">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.views-module.html#get_splits" class="summary-sig-name">get_splits</a>(<span class="summary-sig-arg">request</span>,
+        <span class="summary-sig-arg">planid</span>,
+        <span class="summary-sig-arg">otherid</span>,
+        <span class="summary-sig-arg">othertype</span>)</span><br />
+      Find all splits between this plan and another plan</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.views-pysrc.html#get_splits">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="get_splits_report"></a><span class="summary-sig-name">get_splits_report</span>(<span class="summary-sig-arg">request</span>,
+        <span class="summary-sig-arg">planid</span>)</span><br />
+      Get the rendered splits report</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.views-pysrc.html#get_splits_report">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
           <td><span class="summary-sig"><a href="publicmapping.redistricting.views-module.html#addtodistrict" class="summary-sig-name">addtodistrict</a>(<span class="summary-sig-arg">request</span>,
         <span class="summary-sig-arg">planid</span>,
         <span class="summary-sig-arg">districtid</span>)</span><br />
@@ -773,6 +830,44 @@ plan into another plan</td>
       
     </td>
   </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="purge_plan_clear_cache"></a><span class="summary-sig-name">purge_plan_clear_cache</span>(<span class="summary-sig-arg">district</span>,
+        <span class="summary-sig-arg">version</span>)</span><br />
+      This is a helper method that purges a plan after a version, and 
+      clears any pre-computed scores at the specified version.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.views-pysrc.html#purge_plan_clear_cache">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.views-module.html#district_info" class="summary-sig-name">district_info</a>(<span class="summary-sig-arg">request</span>,
+        <span class="summary-sig-arg">planid</span>,
+        <span class="summary-sig-arg">district_id</span>)</span><br />
+      Get the comments that are attached to a district.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.views-pysrc.html#district_info">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
 </table>
 <p class="indent-wrapped-lines"><b>Imports:</b>
   <span title="django.http.urlencode">urlencode</span>,
@@ -821,11 +916,12 @@ plan into another plan</td>
   <span title="django.db.IntegrityError">IntegrityError</span>,
   <span title="django.db.connection">connection</span>,
   <span title="django.db.transaction">transaction</span>,
-  <span title="django.db.models.Sum">Sum</span>,
-  <span title="django.db.models.Min">Min</span>,
-  <span title="django.db.models.Max">Max</span>,
   <span title="django.shortcuts.render_to_response">render_to_response</span>,
   <span title="django.core.urlresolvers.reverse">reverse</span>,
+  <span title="django.core.context_processors.csrf">csrf</span>,
+  <span title="django.contrib.comments.models.Comment">Comment</span>,
+  <span title="django.contrib.comments.forms.CommentForm">CommentForm</span>,
+  <span title="django.contrib.contenttypes.models.ContentType">ContentType</span>,
   <span title="django.contrib.auth.decorators.login_required">login_required</span>,
   <span title="django.contrib.auth.decorators.user_passes_test">user_passes_test</span>,
   <span title="django.contrib.sessions.models.Session">Session</span>,
@@ -851,12 +947,14 @@ plan into another plan</td>
   <span title="django.contrib.gis.gdal.gdal_full_version">gdal_full_version</span>,
   <span title="django.contrib.gis.gdal.libgdal.lgdal">lgdal</span>,
   <span title="django.contrib.humanize">humanize</span>,
-  <span title="django.forms">forms</span>,
   <span title="django.utils.simplejson">json</span>,
   <span title="django.views.decorators.cache.cache_control">cache_control</span>,
   <span title="django.template.defaultfilters.slugify">slugify</span>,
   <span title="django.template.defaultfilters.force_escape">force_escape</span>,
   <span title="django.conf.settings">settings</span>,
+  <span title="tagging.utils.parse_tag_input">parse_tag_input</span>,
+  <span title="tagging.models.Tag">Tag</span>,
+  <span title="tagging.models.TaggedItem">TaggedItem</span>,
   <span title="datetime.datetime">datetime</span>,
   <span title="datetime.timedelta">timedelta</span>,
   <span title="decimal.BasicContext">BasicContext</span>,
@@ -898,7 +996,8 @@ plan into another plan</td>
   <span title="sys">sys</span>,
   <span title="tempfile">tempfile</span>,
   <span title="csv">csv</span>,
-  <span title="hashlib">hashlib</span>
+  <span title="hashlib">hashlib</span>,
+  <span title="inflect">inflect</span>
 </p><br />
 <!-- ==================== FUNCTION DETAILS ==================== -->
 <a name="section-FunctionDetails"></a>
@@ -1539,6 +1638,75 @@ Returns:
   </dl>
 </td></tr></table>
 </div>
+<a name="fix_unassigned"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">fix_unassigned</span>(<span class="sig-arg">request</span>,
+        <span class="sig-arg">planid</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.views-pysrc.html#fix_unassigned">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Assign unassigned base geounits that are fully contained or adjacent 
+  to another district</p>
+  <dl class="fields">
+    <dt>Decorators:</dt>
+    <dd><ul class="nomargin-top">
+        <li><code>@login_required</code></li>
+        <li><code>@unique_session_or_json_redirect</code></li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="get_splits"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">get_splits</span>(<span class="sig-arg">request</span>,
+        <span class="sig-arg">planid</span>,
+        <span class="sig-arg">otherid</span>,
+        <span class="sig-arg">othertype</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.views-pysrc.html#get_splits">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Find all splits between this plan and another plan
+
+Parameters:
+    request -- An HttpRequest optionally containing version and/or otherversion
+    planid -- The plan ID
+    otherid -- The plan ID or geolevel ID to find splits with
+    othertype -- One of: 'plan' or 'geolevel'. For specifying otherid
+
+Returns:
+    A JSON HttpResponse that contains an array of splits, given as arrays,
+    where the first item is the district_id of the district in this plan
+    which causes the split, and the second item is the district_id of the
+    district in the other plan or geolevel. When a geolevel is specified,
+    the portable_id will be used, rather than the district_id.
+
+</pre>
+  <dl class="fields">
+    <dt>Decorators:</dt>
+    <dd><ul class="nomargin-top">
+        <li><code>@unique_session_or_json_redirect</code></li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
 <a name="addtodistrict"></a>
 <div>
 <table class="details" border="1" cellpadding="3"
@@ -1683,7 +1851,7 @@ districts in a versioned fashion.
 
 This method accepts 'version__eq' and 'subjects__eq' URL parameters.
 
-This method accepts an optional 'disctrict_ids__eq' parameter, which is
+This method accepts an optional 'district_ids__eq' parameter, which is
 a comma-separated list of district_ids to filter by
 
 Parameters:
@@ -1834,6 +2002,40 @@ Returns:
   </dl>
 </td></tr></table>
 </div>
+<a name="district_info"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">district_info</span>(<span class="sig-arg">request</span>,
+        <span class="sig-arg">planid</span>,
+        <span class="sig-arg">district_id</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.views-pysrc.html#district_info">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Get the comments that are attached to a district.
+
+Parameters:
+    request -- An HttpRequest
+    planid -- The plan ID
+    district_id -- The district ID, this is the district number in a plan, and NOT the id of a district.
+
+</pre>
+  <dl class="fields">
+    <dt>Decorators:</dt>
+    <dd><ul class="nomargin-top">
+        <li><code>@unique_session_or_json_redirect</code></li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
 <br />
 <!-- ==================== NAVIGATION BAR ==================== -->
 <table class="navbar" border="0" width="100%" cellpadding="0"
@@ -1866,7 +2068,7 @@ Returns:
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">
-    Generated by Epydoc 3.0.1 on Sun Apr  3 20:04:07 2011
+    Generated by Epydoc 3.0.1 on Mon May  9 06:04:56 2011
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

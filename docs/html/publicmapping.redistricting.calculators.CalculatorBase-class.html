@@ -63,9 +63,8 @@
 </table>
 <!-- ==================== CLASS DESCRIPTION ==================== -->
 <h1 class="epydoc">Class CalculatorBase</h1><p class="nomargin-top"><span class="codelink"><a href="publicmapping.redistricting.calculators-pysrc.html#CalculatorBase">source&nbsp;code</a></span></p>
-<p>A base class for all calculators that defines the result object, and 
-  defines a couple default rendering options for HTML, JSON, and 
-  Boolean.</p>
+<p>The base class for all calculators. CalculatorBase defines the result 
+  object and a couple default rendering options for HTML and JSON.</p>
 
 <!-- ==================== INSTANCE METHODS ==================== -->
 <a name="section-InstanceMethods"></a>
@@ -90,6 +89,23 @@
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
+          <td><span class="summary-sig"><a name="__init__"></a><span class="summary-sig-name">__init__</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Initialize the result and argument dictionary.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.calculators-pysrc.html#CalculatorBase.__init__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
           <td><span class="summary-sig"><a href="publicmapping.redistricting.calculators.CalculatorBase-class.html#compute" class="summary-sig-name">compute</a>(<span class="summary-sig-arg">self</span>,
         <span class="summary-sig-arg">**kwargs</span>)</span><br />
       Compute the value for this calculator.</td>
@@ -108,9 +124,9 @@
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="sortkey"></a><span class="summary-sig-name">sortkey</span>(<span class="summary-sig-arg">self</span>)</span><br />
-      How should this calculator be compared to others like it? The default
-      sorting method sorts by the value of the result.</td>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.calculators.CalculatorBase-class.html#sortkey" class="summary-sig-name">sortkey</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Generate a key used to sort this calculator relative to all other
+calculators.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="publicmapping.redistricting.calculators-pysrc.html#CalculatorBase.sortkey">source&nbsp;code</a></span>
             
@@ -127,7 +143,7 @@
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
           <td><span class="summary-sig"><a href="publicmapping.redistricting.calculators.CalculatorBase-class.html#html" class="summary-sig-name">html</a>(<span class="summary-sig-arg">self</span>)</span><br />
-      Return a basic HTML representation of the result.</td>
+      Generate a basic HTML representation of the result.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="publicmapping.redistricting.calculators-pysrc.html#CalculatorBase.html">source&nbsp;code</a></span>
             
@@ -144,7 +160,7 @@
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
           <td><span class="summary-sig"><a href="publicmapping.redistricting.calculators.CalculatorBase-class.html#json" class="summary-sig-name">json</a>(<span class="summary-sig-arg">self</span>)</span><br />
-      Return a basic JSON representation of the result.</td>
+      Generate a basic JSON representation of the result.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="publicmapping.redistricting.calculators-pysrc.html#CalculatorBase.json">source&nbsp;code</a></span>
             
@@ -245,6 +261,34 @@
   </dl>
 </td></tr></table>
 </div>
+<a name="sortkey"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">sortkey</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.calculators-pysrc.html#CalculatorBase.sortkey">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Generate a key used to sort this calculator relative to all other
+calculators. The default sorting method sorts by the value of 
+the result.
+
+Returns:
+    The value of the result.
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
 <a name="html"></a>
 <div>
 <table class="details" border="1" cellpadding="3"
@@ -259,10 +303,10 @@
     </td>
   </tr></table>
   
-  <p>Return a basic HTML representation of the result.</p>
-  <p>The base class generates an HTML span element, with the text content 
-  set to a string representation of the result. If the result is None, the 
-  string &quot;n/a&quot; is used.</p>
+  <p>Generate a basic HTML representation of the result.</p>
+  <p>The base calculator generates an HTML span element, with the text 
+  content set to a string representation of the result. If the result is 
+  None, the string &quot;n/a&quot; is used.</p>
   <dl class="fields">
   </dl>
 </td></tr></table>
@@ -281,9 +325,9 @@
     </td>
   </tr></table>
   
-  <p>Return a basic JSON representation of the result.</p>
-  <p>The base class generates an simple Javascript object that contains a 
-  single property, named &quot;result&quot;.</p>
+  <p>Generate a basic JSON representation of the result.</p>
+  <p>The base calculator generates an simple Javascript object that 
+  contains a single property, named &quot;result&quot;.</p>
   <dl class="fields">
   </dl>
 </td></tr></table>
@@ -304,14 +348,28 @@
     </td>
   </tr></table>
   
-  <p>Get the value of an argument if it is a literal or a subject.</p>
-  <p>This method is used anytime a calculator needs to get the value of a 
-  named argument. The type of the argument is determined from the tuple in 
-  the argument dictionary, and either the literal value or the retrieved 
-  ComputedCharacteristic is returned. This only searches for the 
-  ComputedCharacteristic in the set attached to the district.</p>
-  <p>If no district is provided, no subject argument value is ever 
-  returned.</p>
+  <pre class="literalblock">
+
+Get the value of an argument if it is a literal or a subject.
+
+This method is used anytime a calculator needs to get the value of
+a named argument. The type of the argument is determined from the 
+tuple in the argument dictionary, and either the literal value or
+the retrieved ComputedCharacteristic is returned. This only searches
+for the ComputedCharacteristic in the set attached to the district.
+
+If no district is provided, no subject argument value is ever 
+returned.
+
+Parameters:
+    argument -- The name of the argument passed to the calculator.
+    district -- An optional district, used to fetch related
+      ComputedCharacteristics.
+
+Returns:
+    The value of the subject or literal argument.
+
+</pre>
   <dl class="fields">
   </dl>
 </td></tr></table>
@@ -348,7 +406,7 @@
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">
-    Generated by Epydoc 3.0.1 on Sun Apr  3 20:04:09 2011
+    Generated by Epydoc 3.0.1 on Mon May  9 06:04:59 2011
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"
