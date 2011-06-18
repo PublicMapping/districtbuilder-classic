@@ -31,14 +31,14 @@ if (is.na(electionvar)) {
         merged.df$VOTE_REP<-merged.df[[sub("_DEM","_REP",electionvar)]]        
 	merged.df$VOTE_TOT<-merged.df$VOTE_DEM+merged.df$VOTE_REP
 	dnormAdjust <- .5 - (sum(merged.df$VOTE_DEM,na.rm=TRUE)/(sum(merged.df$VOTE_DEM,na.rm=TRUE)+sum(merged.df$VOTE_REP,na.rm=TRUE)))
-	merged.df$VOTE_DEM_NORM <-
+	merged.df$VOTE_DEM_N<-
 		((merged.df$VOTE_DEM/(merged.df$VOTE_DEM+merged.df$VOTE_REP))+dnormAdjust) * (merged.df$VOTE_DEM+merged.df$VOTE_REP)
-	merged.df$VOTE_REP_NORM <-
+	merged.df$VOTE_REP_N<-
 		((merged.df$VOTE_REP/(merged.df$VOTE_DEM+merged.df$VOTE_REP))-dnormAdjust) * (merged.df$VOTE_DEM+merged.df$VOTE_REP)
 	zero_tot<-which((merged.df$VOTE_DEM+merged.df$VOTE_REP)==0)
-	merged.df$VOTE_DEM_NORM[zero_tot]<-0
-	merged.df$VOTE_REP_NORM[zero_tot]<-0
-	merged.df$VOTE_TOT_NORM<-merged.df$VOTE_DEM_NORM+merged.df$VOTE_REP_NORM
+	merged.df$VOTE_DEM_N[zero_tot]<-0
+	merged.df$VOTE_REP_N[zero_tot]<-0
+	merged.df$VOTE_TOT_N<-merged.df$VOTE_DEM_N+merged.df$VOTE_REP_N
 }
 
 # write merged file
