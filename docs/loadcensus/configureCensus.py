@@ -1644,7 +1644,7 @@ target_na_house=0, target_hisp_house = 0 , target_bl_house = 0,
 target_na_senate =0, target_hisp_senate = 0 , target_bl_senate = 0, contiguityOverrideString = ""): 
 
         start_na="<!--"        
-        start_na="<!--"        
+        start_elec="<!--"        
 	end_elec="-->"
 	end_na="-->"
         midlevel="tract"
