@@ -28,6 +28,10 @@
     float:right;
 }
 
+#stats_editor_container {
+    display: none;
+}
+
 #stats_editor_instructions {
     font-size: 12px;
     padding-bottom: 5px;

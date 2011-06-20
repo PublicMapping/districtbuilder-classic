@@ -895,13 +895,33 @@ Include the shared_districts markup if we're using the copy/paste tool
 </script>
 {% endif %}
 
-{% block stats_editor %}
+{% if is_registered %}
 {% comment %}
 
 Include the stats editor if user can edit stats.
 
 {% endcomment %}
-{% endblock %}
+<div id="stats_editor_container" class="stats_editor" title="Edit Statistics Sets">
+    <div id="stats_editor_instructions">
+        You can select up to three statistics at once to display in the sidebar. Each set of three
+        statistics will be saved in the dropdown for you to select or edit later. You may have up
+        to three sets of statistics saved.
+    </div>
+    1. Select up to 3 statistics
+    <button id="clear_statistics">Clear Choices</button>
+    <div id="available_statistics"> </div>
+    
+    <div id="name_statistics_set">
+        2. Name Statistics Set
+        <input type="text" id="statistics_set_name" maxlength="50" />
+        <button id="save_statistics_set">Save Set</button>
+    </div>
+    <div id="existing_statistics_set">
+        ... Or select a saved statistics set
+    </div>
+    <div id="saved_statistics_sets"> </div>
+</div>
+{% endif %}
 
 {% block district_info %}
 {% comment %}

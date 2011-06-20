@@ -1840,13 +1840,14 @@ def statistics_sets(request, planid):
             scorefunctions.append({ 'id': f.id, 'name': force_escape(f.label) })
         result['functions'] = scorefunctions
 
-        # Get the admin displays
-        admin_displays = ScoreDisplay.objects.filter(
-            owner__is_superuser=True,
-            legislative_body=plan.legislative_body,
-            is_page=False).order_by('title')
-        for admin_display in admin_displays:
-            sets.append({ 'id': admin_display.id, 'name': force_escape(admin_display.title), 'functions': [], 'mine':False })
+        if not request.user.is_superuser:
+            # Get the admin displays
+            admin_displays = ScoreDisplay.objects.filter(
+                owner__is_superuser=True,
+                legislative_body=plan.legislative_body,
+                is_page=False).order_by('title')
+            for admin_display in admin_displays:
+                sets.append({ 'id': admin_display.id, 'name': force_escape(admin_display.title), 'functions': [], 'mine':False })
 
         try:
             user_displays = ScoreDisplay.objects.filter(
@@ -1883,7 +1884,7 @@ def statistics_sets(request, planid):
     elif request.method == 'POST':
         # If we're adding a new display, we should make sure they only have 3
         def validate_num(user, limit=3):
-            return ScoreDisplay.objects.filter(owner=user).count() < limit
+            return ScoreDisplay.objects.filter(owner=user, legislative_body=plan.legislative_body, is_page=False).count() < limit
 
         if 'functions[]' in request.POST:
             functions = request.POST.getlist('functions[]')
