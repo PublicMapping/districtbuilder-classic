@@ -1367,7 +1367,8 @@ ERROR:
             return portable
         def get_shape_name(shapefile, feature):
             field = shapefile.xpath('Fields/Field[@type="name"]')[0]
-            return feature.get(field.get('name'))[:200]
+            strname = feature.get(field.get('name'))
+            return strname.decode('latin-1')
 
         for h,shapefile in enumerate(config['shapefiles']):
 
