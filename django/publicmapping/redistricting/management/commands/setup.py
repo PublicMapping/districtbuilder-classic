@@ -785,7 +785,6 @@ ERROR:
 
         self.import_shape(gconfig, verbose)
 
-        return True
 
     def renest_geolevel(self, glconf, verbose):
         """
@@ -1393,6 +1392,18 @@ ERROR:
             return strname.decode('latin-1')
 
         for h,shapefile in enumerate(config['shapefiles']):
+            if not exists(shapefile.get('path')):
+                if verbose > 0:
+                    print """
+ERROR:
+
+    The filename specified by the configuration:
+
+    %s
+
+    Could not be found. Please check the configuration and try again.
+""" % shapefile.get('path')
+                raise IOError('Cannot find the file "%s"' % shapefile.get('path'))
 
             ds = DataSource(shapefile.get('path'))
 
@@ -1516,6 +1527,19 @@ ERROR:
                 sys.stdout.write('0% .. ')
                 sys.stdout.flush()
             for h,attrconfig in enumerate(config['attributes']):
+                if not exists(attrconfig.get('path')):
+                    if verbose > 0:
+                        print """
+ERROR:
+
+    The filename specified by the configuration:
+
+    %s
+
+    Could not be found. Please check the configuration and try again.
+""" % attrconfig.get('path')
+                    raise IOError('Cannot find the file "%s"' % attrconfig.get('path'))
+
                 lyr = DataSource(attrconfig.get('path'))[0]
 
                 found = 0
