@@ -32,6 +32,7 @@ from django.contrib.gis.gdal import *
 from django.contrib.gis.geos import *
 from django.contrib.gis.db.models import Sum, Union
 from django.contrib.auth.models import User
+from django.contrib.sessions.models import Session
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
@@ -218,12 +219,11 @@ contents of the file and try again.
         """
         Create the django superuser, based on the config.
         """
-        from django.contrib.auth.models import User
         try:
             admcfg = config.xpath('//Project/Admin')[0]
             admin_attributes = {'first_name':'Admin','last_name':'User','is_staff':True,'is_active':True,'is_superuser':True}
-            admin_attributes['username'] = admcfg.get('user')
-            admin_attributes['email'] = admcfg.get('email')
+            admin_attributes['username'] = admcfg.get('user')[:30]
+            admin_attributes['email'] = admcfg.get('email')[:75]
             admin, created, changed, message = consistency_check_and_update(User, unique_id_field='username', overwrite=self.force, **admin_attributes)
 
             admin.set_password(admcfg.get('password'))
@@ -246,7 +246,6 @@ contents of the file and try again.
         application that may have been encrypted with an old secret key.
         Secret keys are generated every time the setup.py script is run.
         """
-        from django.contrib.sessions.models import Session
         qset = Session.objects.all()
 
         if verbose > 1:
@@ -772,7 +771,7 @@ ERROR:
         gconfig = {
             'shapefiles': shapeconfig,
             'attributes': attrconfig,
-            'geolevel': geolevel.get('name'),
+            'geolevel': geolevel.get('name')[:50],
             'subject_fields': [],
             'tolerance': geolevel.get('tolerance')
         }
@@ -799,7 +798,7 @@ ERROR:
             geolevel - The configuration geolevel
             verbose - A flag indicating verbose output messages.
         """
-        geolevel = Geolevel.objects.get(name=glconf.get('name').lower())
+        geolevel = Geolevel.objects.get(name=glconf.get('name').lower()[:50])
         llevels = LegislativeLevel.objects.filter(geolevel=geolevel)
         parent = None
         for llevel in llevels:
@@ -940,9 +939,9 @@ ERROR:
 
     def import_function(self, config, verbose):
         attributes = {}
-        attributes['calculator'] = config.get('calculator')
-        attributes['name'] = config.get('id')
-        attributes['label'] = config.get('label') or ''
+        attributes['calculator'] = config.get('calculator')[:500]
+        attributes['name'] = config.get('id')[:50]
+        attributes['label'] = config.get('label')[:100] or ''
         attributes['description'] = config.get('description') or ''
         attributes['is_planscore'] = config.get('type') == 'plan'
         fn_obj, created, changed, message = consistency_check_and_update(ScoreFunction, overwrite=self.force, **attributes)
@@ -950,7 +949,7 @@ ERROR:
         lbodies = []
         for lbitem in config.xpath('LegislativeBody'):
             lb = config.xpath('//LegislativeBody[@id="%s"]' % lbitem.get('ref'))[0]
-            lbodies.append(lb.get('name'))
+            lbodies.append(lb.get('name')[:256])
         lbodies = list(LegislativeBody.objects.filter(name__in=lbodies))
         fn_obj.selectable_bodies.add(*lbodies)
 
@@ -966,13 +965,13 @@ ERROR:
     def import_arguments(self, score_function, config, verbose):
         # Import arguments for this score function
         for arg in config.xpath('Argument'):
-            name = arg.get('name')
+            name = arg.get('name')[:50]
             arg_obj, created = ScoreArgument.objects.get_or_create(
                 function=score_function,
                 type='literal',
                 argument=name,
                 )
-            config_value = arg.get('value')
+            config_value = arg.get('value')[:50]
             if verbose > 1 and created:
                 arg_obj.value = config_value
                 arg_obj.save()
@@ -992,8 +991,8 @@ ERROR:
 
         # Import subject arguments for this score function
         for subarg in config.xpath('SubjectArgument'):
-            name = subarg.get('name')
-            config_value=subarg.get('ref')
+            name = subarg.get('name')[:50]
+            config_value=subarg.get('ref')[:50]
             subarg_obj, created = ScoreArgument.objects.get_or_create(
                 function=score_function,
                 type='subject',
@@ -1029,8 +1028,8 @@ ERROR:
                 continue
 
             self.import_function( argfn, verbose )
-            config_value=scorearg.get('ref')
-            name = scorearg.get('name')
+            config_value=scorearg.get('ref')[:50]
+            name = scorearg.get('name')[:50]
 
             scorearg_obj, created = ScoreArgument.objects.get_or_create(
                 function=score_function,
@@ -1091,13 +1090,13 @@ ERROR:
         for sd in config.xpath('//ScoreDisplays/ScoreDisplay'):
             lbconfig = config.xpath('//LegislativeBody[@id="%s"]' % sd.get('legislativebodyref'))[0]
             lb = LegislativeBody.objects.get(name=lbconfig.get('name'))
-            title = sd.get('title')
+            title = sd.get('title')[:50]
              
             sd_obj, created = ScoreDisplay.objects.get_or_create(
                 title=title, 
                 legislative_body=lb,
                 is_page=sd.get('type') == 'leaderboard',
-                cssclass=sd.get('cssclass') or '',
+                cssclass=sd.get('cssclass')[:50] or '',
                 owner=admin
             )
 
@@ -1110,8 +1109,11 @@ ERROR:
             # Import score panels for this score display.
             for spref in sd.xpath('ScorePanel'):
                 sp = config.xpath('//ScorePanels/ScorePanel[@id="%s"]' % spref.get('ref'))[0]
-                title = sp.get('title')
+                title = sp.get('title')[:50]
                 position = int(sp.get('position'))
+                template = sp.get('template')[:500]
+                cssclass = sp.get('cssclass')[:50] or ''
+                pnltype = sp.get('type')[:20]
 
                 is_ascending = sp.get('is_ascending')
                 if is_ascending is None:
@@ -1119,21 +1121,21 @@ ERROR:
                 
                 ascending = sp.get('is_ascending')
                 sp_obj = ScorePanel.objects.filter(
-                    type=sp.get('type'),
+                    type=pnltype,
                     position=position,
                     title=title,
-                    template=sp.get('template'),
-                    cssclass=sp.get('cssclass') or '',
+                    template=template,
+                    cssclass=cssclass,
                     is_ascending=(ascending is None or ascending=='true'), 
                 )
 
                 if len(sp_obj) == 0:
                     sp_obj = ScorePanel(
-                        type=sp.get('type'),
+                        type=pnltype,
                         position=position,
                         title=title,
-                        template=sp.get('template'),
-                        cssclass=sp.get('cssclass') or '',
+                        template=template,
+                        cssclass=cssclass,
                         is_ascending=(ascending is None or ascending=='true'), 
                     )
                     sp_obj.save()
@@ -1210,8 +1212,8 @@ ERROR:
         bodies = config.xpath('//LegislativeBody[@id]')
         for body in bodies:
             attributes = {}
-            attributes['name'] = body.get('name')
-            attributes['member'] = body.get('member')
+            attributes['name'] = body.get('name')[:256]
+            attributes['member'] = body.get('member')[:32]
             attributes['max_districts'] = body.get('maxdistricts')
             attributes['is_community'] = body.get('is_community')=='true'
             
@@ -1225,7 +1227,7 @@ ERROR:
             if len(mmconfigs) > 0:
                 mmconfig = mmconfigs[0]
                 obj.multi_members_allowed = True
-                obj.multi_district_label_format = mmconfig.get('multi_district_label_format')
+                obj.multi_district_label_format = mmconfig.get('multi_district_label_format')[:32]
                 obj.min_multi_districts = mmconfig.get('min_multi_districts')
                 obj.max_multi_districts = mmconfig.get('max_multi_districts')
                 obj.min_multi_district_members = mmconfig.get('min_multi_district_members')
@@ -1254,9 +1256,9 @@ ERROR:
             if 'aliasfor' in subj.attrib:
                 continue
             attributes = {}
-            attributes['name'] = subj.get('id').lower()
-            attributes['display'] = subj.get('name')
-            attributes['short_display'] = subj.get('short_name')
+            attributes['name'] = subj.get('id').lower()[:50]
+            attributes['display'] = subj.get('name')[:200]
+            attributes['short_display'] = subj.get('short_name')[:25]
             attributes['is_displayed'] = subj.get('displayed')=='true'
             attributes['sort_key'] = subj.get('sortkey')
             obj, created, changed, message = consistency_check_and_update(Subject, overwrite=self.force, **attributes)
@@ -1265,11 +1267,12 @@ ERROR:
                 print message
 
         for subj in subjs:
-            numerator = Subject.objects.get(name=subj.get('id').lower())
+            numerator_name = name=subj.get('id').lower()[:50]
+            numerator = Subject.objects.get(name=numerator_name)
             denominator = None
             denominator_name = subj.get('percentage_denominator')
             if denominator_name:
-                denominator_name = denominator_name.lower()
+                denominator_name = denominator_name.lower()[:50]
                 denominator = Subject.objects.get(name=denominator_name)
 
             numerator.percentage_denominator = denominator
@@ -1285,7 +1288,7 @@ ERROR:
         geolevels = config.xpath('//GeoLevels/GeoLevel')
         for geolevel in geolevels:
             attributes = {}
-            attributes['name'] = geolevel.get('name').lower()
+            attributes['name'] = geolevel.get('name').lower()[:50]
             attributes['min_zoom'] = geolevel.get('min_zoom')
             attributes['sort_key'] = geolevel.get('sort_key')
             attributes['tolerance'] = geolevel.get('tolerance')
@@ -1300,21 +1303,21 @@ ERROR:
             for lbody in lbodies:
                 # de-reference
                 lbconfig = config.xpath('//LegislativeBody[@id="%s"]' % lbody.get('ref'))[0]
-                legislative_body = LegislativeBody.objects.get(name=lbconfig.get('name'))
+                legislative_body = LegislativeBody.objects.get(name=lbconfig.get('name')[:256])
                 
                 # Add a mapping for the subjects in this GL/LB combo.
                 sconfig = lbody.xpath('//Subjects/Subject[@default="true"]')[0]
                 if not sconfig.get('aliasfor') is None:
                     # dereference any subject alias
                     sconfig = config.xpath('//Subject[@id="%s"]' % (sconfig.get('aliasfor')))[0]
-                subject = Subject.objects.get(name=sconfig.get('id').lower())
+                subject = Subject.objects.get(name=sconfig.get('id').lower()[:50])
 
                 pconfig = lbody.xpath('Parent')
                 if len(pconfig) == 0:
                     parent = None
                 else:
                     pconfig = config.xpath('//GeoLevel[@id="%s"]' % pconfig[0].get('ref'))[0]
-                    plvl = Geolevel.objects.get(name=pconfig.get('name').lower())
+                    plvl = Geolevel.objects.get(name=pconfig.get('name').lower()[:50])
                     parent = LegislativeLevel.objects.get(
                         legislative_body=legislative_body, 
                         geolevel=plvl, 
@@ -1364,7 +1367,7 @@ ERROR:
             return portable
         def get_shape_name(shapefile, feature):
             field = shapefile.xpath('Fields/Field[@type="name"]')[0]
-            return feature.get(field.get('name'))
+            return feature.get(field.get('name'))[:200]
 
         for h,shapefile in enumerate(config['shapefiles']):
 
@@ -1377,7 +1380,7 @@ ERROR:
             if verbose > 1:
                 print '%d objects in shapefile' % len(lyr)
 
-            level = Geolevel.objects.get(name=config['geolevel'].lower())
+            level = Geolevel.objects.get(name=config['geolevel'].lower()[:5]])
 
             # Create the subjects we need
             subject_objects = {}
@@ -1387,9 +1390,9 @@ ERROR:
                 for elem in sconfig.getchildren():
                     if elem.tag == 'Subject':
                         foundalias = True
-                        sub = Subject.objects.get(name=elem.get('id').lower())
+                        sub = Subject.objects.get(name=elem.get('id').lower()[:50])
                 if not foundalias:
-                    sub = Subject.objects.get(name=sconfig.get('id').lower())
+                    sub = Subject.objects.get(name=sconfig.get('id').lower()[:50])
                 subject_objects[attr_name] = sub
                 subject_objects['%s_by_id' % sub.name] = attr_name
 
@@ -1567,7 +1570,7 @@ ERROR:
         templates = config.xpath('/DistrictBuilder/Templates/Template')
         for template in templates:
             lbconfig = config.xpath('//LegislativeBody[@id="%s"]' % template.xpath('LegislativeBody')[0].get('ref'))[0]
-            query = LegislativeBody.objects.filter(name=lbconfig.get('name'))
+            query = LegislativeBody.objects.filter(name=lbconfig.get('name')[:256])
             if query.count() == 0:
                 if verbose > 1:
                     print "LegislativeBody '%s' does not exist, skipping." % lbconfig.get('ref')
@@ -1575,24 +1578,25 @@ ERROR:
             else:
                 legislative_body = query[0]
 
-            query = Plan.objects.filter(name=template.get('name'), legislative_body=legislative_body, owner=admin, is_template=True)
+            plan_name = template.get('name')[:200]
+            query = Plan.objects.filter(name=plan_name, legislative_body=legislative_body, owner=admin, is_template=True)
             if query.count() > 0:
                 if verbose > 1:
-                    print "Plan '%s' exists, skipping." % template.get('name')
+                    print "Plan '%s' exists, skipping." % plan_name
                 continue
 
             fconfig = template.xpath('Blockfile')[0]
             path = fconfig.get('path')
 
-            DistrictIndexFile.index2plan( template.get('name'), legislative_body.id, path, owner=admin, template=True, purge=False, email=None)
+            DistrictIndexFile.index2plan( plan_name, legislative_body.id, path, owner=admin, template=True, purge=False, email=None)
 
             if verbose > 1:
-                print 'Created template plan "%s"' % template.get('name')
+                print 'Created template plan "%s"' % plan_name
 
         lbodies = config.xpath('//LegislativeBody[@id]')
         for lbody in lbodies:
             owner = User.objects.filter(is_staff=True)[0]
-            legislative_body = LegislativeBody.objects.get(name=lbody.get('name'))
+            legislative_body = LegislativeBody.objects.get(name=lbody.get('name')[:256])
             plan,created = Plan.objects.get_or_create(name='Blank',legislative_body=legislative_body,owner=owner,is_template=True)
             if verbose > 1:
                 if created:
@@ -1622,7 +1626,7 @@ ERROR:
         for body in bodies:
             # Name  the template after the body's name
             body_id = body.get('id')
-            body_name = body.get('name')
+            body_name = body.get('name')[:256]
 
             if verbose > 0:
                 print "Creating BARD reporting template for %s" % body_name
