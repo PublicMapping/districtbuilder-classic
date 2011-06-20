@@ -342,17 +342,42 @@ def gensld_choro(geoname,varname,vartitle,quantiles):
 ###        paramaterize thresholds?
 
 class Config_Template(DictionaryTemplate):
-    _template = """<DistrictBuilder>
-    <!-- Define Internal Entities to avoid Repeated Entering of Values -->
+    _template = """<!-- Define Internal Entities to avoid Repeated Entering of Values -->
+<!DOCTYPE DistrictBuilder [
+    <!ENTITY num_districts_congress "%(num_districts_congress)s">
+    <!ENTITY num_districts_house "%(num_districts_house)s">
+    <!ENTITY num_districts_senate "%(num_districts_senate)s">
+    <!ENTITY pop_congress "%(pop_congress)s">
+    <!ENTITY pop_house "%(pop_house)s">
+    <!ENTITY pop_senate "%(pop_senate)s">
+    <!ENTITY pop_congress_min "%(pop_congress_min)s">
+    <!ENTITY pop_house_min "%(pop_house_min)s">
+    <!ENTITY pop_senate_min "%(pop_senate_min)s">
+    <!ENTITY pop_congress_max "%(pop_congress_max)s">
+    <!ENTITY pop_house_max "%(pop_house_max)s">
+    <!ENTITY pop_senate_max "%(pop_senate_max)s">
+    <!ENTITY target_hisp_congress "%(target_hisp_congress)s">
+    <!ENTITY target_hisp_senate "%(target_hisp_senate)s">
+    <!ENTITY target_hisp_house "%(target_hisp_house)s">
+    <!ENTITY target_bl_congress "%(target_bl_congress)s">
+    <!ENTITY target_bl_senate "%(target_bl_senate)s">
+    <!ENTITY target_bl_house "%(target_bl_house)s">
+    <!ENTITY target_na_senate "%(target_na_senate)s">
+    <!ENTITY target_na_house "%(target_na_house)s">
+    <!ENTITY target_na_congress "%(target_na_congress)s">
+ ]>
+
+<DistrictBuilder>
+
 
     <!-- Define legislative bodies referenced in the system. -->
     <LegislativeBodies>
         <!-- A Legislative body has an ID (for referencing in GeoLevel
             definitions later), a name, and a label for plan items 
             ("District" for Congressional, etc) -->
-        <LegislativeBody id="congress" name="Congressional" member="District %%s" maxdistricts="%(num_districts_congress)s"/>
-        <LegislativeBody id="house" name="State House" member="District %%s" maxdistricts="%(num_districts_house)s" />
-        <LegislativeBody id="senate" name="State Senate" member="District %%s" maxdistricts="%(num_districts_senate)s" />
+        <LegislativeBody id="congress" name="Congressional" member="District %%s" maxdistricts="&num_districts_congress;"/>
+        <LegislativeBody id="house" name="State House" member="District %%s" maxdistricts="&num_districts_house;" />
+        <LegislativeBody id="senate" name="State Senate" member="District %%s" maxdistricts="&num_districts_senate;" />
     </LegislativeBodies>
     <!-- A list of subjects referenced in the system. -->
     <Subjects>       
@@ -387,8 +412,9 @@ class Config_Template(DictionaryTemplate):
         <!-- A target is an objective measure of a district for a legislative
             district. Each discrete target (usually 1 per legislative body/subject
             combination) must be listed here, with a unique ID.
-        -->
-        <Target id="congress_target" subjectref="totpop" value="%(pop_congress)s" range1="0.005" range2="0.01" />
+	--> 
+
+        <Target id="congress_target" subjectref="totpop" value="&pop_congress;" range1="0.005" range2="0.01" />
         <Target id="house_target" subjectref="totpop" value="%(pop_house)s" range1="0.05" range2="0.1" />
         <Target id="senate_target" subjectref="totpop" value="%(pop_senate)s" range1="0.05" range2="0.1" />
     </Targets>
@@ -587,7 +613,7 @@ class Config_Template(DictionaryTemplate):
             <ScoreFunction id="district_poptot_uitarget_congress" type="district" 
                 calculator="publicmapping.redistricting.calculators.Target">
                 <SubjectArgument name="value" ref="totpop" />
-                <Argument name="target" value="%(pop_congress)s" />
+                <Argument name="target" value="&pop_congress;" />
                 <Argument name="range1" value="0.005"/>
                 <Argument name="range2" value="0.010"/>
             </ScoreFunction>
@@ -612,8 +638,8 @@ class Config_Template(DictionaryTemplate):
                 calculator="publicmapping.redistricting.calculators.Range"
                 label="Tot Pop Range">
                 <SubjectArgument name="value" ref="totpop" />
-                <Argument name="min" value="%(pop_congress_min)s" />
-                <Argument name="max" value="%(pop_congress_max)s" />
+                <Argument name="min" value="&pop_congress_min;" />
+                <Argument name="max" value="&pop_congress_max;" />
             </ScoreFunction>
 
             <!-- A district score that is threshold dependent, and returns 
@@ -721,19 +747,19 @@ class Config_Template(DictionaryTemplate):
             <ScoreFunction id="b_plan_congress_noncontiguous" type="plan"
                 calculator="publicmapping.redistricting.calculators.Contiguity"
                 label="Contiguous">
-                <Argument name="target" value="%(num_districts_congress)s" />
+                <Argument name="target" value="&num_districts_congress;" />
             </ScoreFunction>
 
             <ScoreFunction id="b_plan_house_noncontiguous" type="plan"
                 calculator="publicmapping.redistricting.calculators.Contiguity"
                 label="Contiguous">
-                <Argument name="target" value="%(num_districts_house)s" />
+                <Argument name="target" value="&num_districts_house;" />
             </ScoreFunction>
 
             <ScoreFunction id="b_plan_senate_noncontiguous" type="plan"
                 calculator="publicmapping.redistricting.calculators.Contiguity"
                 label="Contiguous">
-                <Argument name="target" value="%(num_districts_senate)s" />
+                <Argument name="target" value="&num_districts_senate;" />
             </ScoreFunction>
 
 
@@ -743,7 +769,7 @@ class Config_Template(DictionaryTemplate):
                 description="Population interval calculator for congressional."
                 calculator="publicmapping.redistricting.calculators.Interval">
                 <SubjectArgument name="subject" ref="totpop" />
-                <Argument name="target" value="%(pop_congress)s" />
+                <Argument name="target" value="&pop_congress;" />
                 <Argument name="bound1" value=".005" />
                 <Argument name="bound2" value=".01" />
             </ScoreFunction>
@@ -772,51 +798,51 @@ class Config_Template(DictionaryTemplate):
             <ScoreFunction id="a_congress_plan_count_districts" type="plan"
                 calculator="publicmapping.redistricting.calculators.CountDistricts"
                 label="Count Districts"
-                description="The number of districts in a Congressional redistricting plan must be %(num_districts_congress)s.">
-                <Argument name="target" value="%(num_districts_congress)s" />
+                description="The number of districts in a Congressional redistricting plan must be &num_districts_congress;.">
+                <Argument name="target" value="&num_districts_congress;" />
             </ScoreFunction>
 
             <ScoreFunction id="a_house_plan_count_districts" type="plan"
                 calculator="publicmapping.redistricting.calculators.CountDistricts"
                 label="Count Districts"
-                description="The number of districts in a House of Delegates redistricting plan must be %(num_districts_house)s.">
-                <Argument name="target" value="%(num_districts_house)s" />
+                description="The number of districts in a House of Delegates redistricting plan must be &num_districts_house;.">
+                <Argument name="target" value="&num_districts_house;" />
             </ScoreFunction>
 
             <ScoreFunction id="a_senate_plan_count_districts" type="plan"
                 calculator="publicmapping.redistricting.calculators.CountDistricts"
                 label="Count Districts"
-                description="The number of districts in a State Senate redistricting plan must be %(num_districts_senate)s.">
-                <Argument name="target" value="%(num_districts_senate)s" />
+                description="The number of districts in a State Senate redistricting plan must be &num_districts_senate;.">
+                <Argument name="target" value="&num_districts_senate;" />
             </ScoreFunction>
 
 
             <ScoreFunction id="a_congress_plan_equipopulation_validation" type="plan"
                 calculator="publicmapping.redistricting.calculators.Equipopulation"
-                label="Target Pop. %(pop_congress)s"
-                description="The population of each Congressional district must be %(pop_congress_min)s-%(pop_congress_max)s">
-                <Argument name="min" value="%(pop_congress_min)s"/>
-                <Argument name="max" value="%(pop_congress_max)s"/>
+                label="Target Pop. &pop_congress;"
+                description="The population of each Congressional district must be &pop_congress_min;-&pop_congress_max;">
+                <Argument name="min" value="&pop_congress_min;"/>
+                <Argument name="max" value="&pop_congress_max;"/>
                 <SubjectArgument name="value" ref="totpop"/>
                 <Argument name="validation" value="1"/>
             </ScoreFunction>
 
             <ScoreFunction id="a_congress_plan_equipopulation_summary" type="plan"
                 calculator="publicmapping.redistricting.calculators.Equipopulation"
-                label="Target Pop. %(pop_congress)s"
-                description="The population of each Congressional district must be %(pop_congress_min)s-%(pop_congress_max)s">
-                <Argument name="min" value="%(pop_congress_min)s"/>
-                <Argument name="max" value="%(pop_congress_max)s"/>
+                label="Target Pop. &pop_congress;"
+                description="The population of each Congressional district must be &pop_congress_min;-&pop_congress_max;">
+                <Argument name="min" value="&pop_congress_min;"/>
+                <Argument name="max" value="&pop_congress_max;"/>
                 <SubjectArgument name="value" ref="totpop"/>
-		<Argument name="target" value="%(num_districts_congress)s"/>
+		<Argument name="target" value="&num_districts_congress;"/>
             </ScoreFunction>
 
             <ScoreFunction id="a_senate_plan_equipopulation_validation" type="plan"
                 calculator="publicmapping.redistricting.calculators.Equipopulation"
                 label="Target Pop. %(pop_senate)s"
-                description="The population of each Senate district must be %(pop_senate_min)s-%(pop_senate_max)s">
-                <Argument name="min" value="%(pop_senate_min)s"/>
-                <Argument name="max" value="%(pop_senate_max)s"/>
+                description="The population of each Senate district must be &pop_senate_min;-&pop_senate_max;">
+                <Argument name="min" value="&pop_senate_min;"/>
+                <Argument name="max" value="&pop_senate_max;"/>
                 <SubjectArgument name="value" ref="totpop"/>
                 <Argument name="validation" value="1"/>
             </ScoreFunction>
@@ -824,19 +850,19 @@ class Config_Template(DictionaryTemplate):
             <ScoreFunction id="a_senate_plan_equipopulation_summary" type="plan"
                 calculator="publicmapping.redistricting.calculators.Equipopulation"
                 label="Target Pop. %(pop_senate)s"
-                description="The population of each Senate district must be %(pop_senate_min)s-%(pop_senate_max)s">
-                <Argument name="min" value="%(pop_senate_min)s"/>
-                <Argument name="max" value="%(pop_senate_max)s"/>
+                description="The population of each Senate district must be &pop_senate_min;-&pop_senate_max;">
+                <Argument name="min" value="&pop_senate_min;"/>
+                <Argument name="max" value="&pop_senate_max;"/>
                 <SubjectArgument name="value" ref="totpop"/>
-		<Argument name="target" value="%(num_districts_senate)s"/>
+		<Argument name="target" value="&num_districts_senate;"/>
             </ScoreFunction>
 
             <ScoreFunction id="a_house_plan_equipopulation_validation" type="plan"
                 calculator="publicmapping.redistricting.calculators.Equipopulation"
                 label="Target Pop. %(pop_house)s"
-                description="The population of each House district must be %(pop_house_min)s-%(pop_house_max)s">
-                <Argument name="min" value="%(pop_house_min)s"/>
-                <Argument name="max" value="%(pop_house_max)s"/>
+                description="The population of each House district must be &pop_house_min;-&pop_house_max;">
+                <Argument name="min" value="&pop_house_min;"/>
+                <Argument name="max" value="&pop_house_max;"/>
                 <SubjectArgument name="value" ref="totpop"/>
                 <Argument name="validation" value="1"/>
             </ScoreFunction>
@@ -844,11 +870,11 @@ class Config_Template(DictionaryTemplate):
             <ScoreFunction id="a_house_plan_equipopulation_summary" type="plan"
                 calculator="publicmapping.redistricting.calculators.Equipopulation"
                 label="Target Pop. %(pop_house)s"
-                description="The population of each House district must be %(pop_house_min)s-%(pop_house_max)s">
-                <Argument name="min" value="%(pop_house_min)s"/>
-                <Argument name="max" value="%(pop_house_max)s"/>
+                description="The population of each House district must be &pop_house_min;-&pop_house_max;">
+                <Argument name="min" value="&pop_house_min;"/>
+                <Argument name="max" value="&pop_house_max;"/>
                 <SubjectArgument name="value" ref="totpop"/>
-		<Argument name="target" value="%(num_districts_house)s"/>
+		<Argument name="target" value="&num_districts_house;"/>
             </ScoreFunction>
 
             <ScoreFunction id="plan_all_blocks_assigned" type="plan"
@@ -886,7 +912,7 @@ class Config_Template(DictionaryTemplate):
                 description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
                 <SubjectArgument name="population" ref="vap" />
                 <SubjectArgument name="minority1" ref="vap_b" />
-                <Argument name="target" value="%(target_bl_congress)s" />
+                <Argument name="target" value="&target_bl_congress;" />
             </ScoreFunction>
 
             <ScoreFunction id="plan_majority_minority_blk_house" type="plan"
@@ -895,7 +921,7 @@ class Config_Template(DictionaryTemplate):
                 description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
                 <SubjectArgument name="population" ref="vap" />
                 <SubjectArgument name="minority1" ref="vap_b" />
-                <Argument name="target" value="%(target_bl_house)s" />
+                <Argument name="target" value="&target_bl_house;" />
             </ScoreFunction>
 
             <ScoreFunction id="plan_majority_minority_blk_senate" type="plan"
@@ -904,7 +930,7 @@ class Config_Template(DictionaryTemplate):
                 description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
                 <SubjectArgument name="population" ref="vap" />
                 <SubjectArgument name="minority1" ref="vap_b" />
-                <Argument name="target" value="%(target_bl_senate)s" />
+                <Argument name="target" value="&target_bl_senate;" />
             </ScoreFunction>
 
             <ScoreFunction id="plan_majority_minority_hisp_congress" type="plan"
@@ -913,7 +939,7 @@ class Config_Template(DictionaryTemplate):
                 description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
                 <SubjectArgument name="population" ref="vap" />
                 <SubjectArgument name="minority1" ref="vap_h" />
-                <Argument name="target" value="%(target_hisp_congress)s" />
+                <Argument name="target" value="&target_hisp_congress;" />
             </ScoreFunction>
 
             <ScoreFunction id="plan_majority_minority_hisp_house" type="plan"
@@ -922,7 +948,7 @@ class Config_Template(DictionaryTemplate):
                 description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
                 <SubjectArgument name="population" ref="vap" />
                 <SubjectArgument name="minority1" ref="vap_h" />
-                <Argument name="target" value="%(target_hisp_house)s" />
+                <Argument name="target" value="&target_hisp_house;" />
             </ScoreFunction>
 
             <ScoreFunction id="plan_majority_minority_hisp_senate" type="plan"
@@ -931,7 +957,7 @@ class Config_Template(DictionaryTemplate):
                 description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
                 <SubjectArgument name="population" ref="vap" />
                 <SubjectArgument name="minority1" ref="vap_h" />
-                <Argument name="target" value="%(target_hisp_senate)s" />
+                <Argument name="target" value="&target_hisp_senate;" />
             </ScoreFunction>
 
             <ScoreFunction id="plan_majority_minority_na_congress" type="plan"
@@ -940,7 +966,7 @@ class Config_Template(DictionaryTemplate):
                 description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
                 <SubjectArgument name="population" ref="vap" />
                 <SubjectArgument name="minority1" ref="vap_na" />
-                <Argument name="target" value="%(target_na_congress)s" />
+                <Argument name="target" value="&target_na_congress;" />
             </ScoreFunction>
 
             <ScoreFunction id="plan_majority_minority_na_house" type="plan"
@@ -949,7 +975,7 @@ class Config_Template(DictionaryTemplate):
                 description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
                 <SubjectArgument name="population" ref="vap" />
                 <SubjectArgument name="minority1" ref="vap_na" />
-                <Argument name="target" value="%(target_na_house)s" />
+                <Argument name="target" value="&target_na_house;" />
             </ScoreFunction>
 
             <ScoreFunction id="plan_majority_minority_na_senate" type="plan"
@@ -958,7 +984,7 @@ class Config_Template(DictionaryTemplate):
                 description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
                 <SubjectArgument name="population" ref="vap" />
                 <SubjectArgument name="minority1" ref="vap_na" />
-                <Argument name="target" value="%(target_na_senate)s" />
+                <Argument name="target" value="&target_na_senate;" />
             </ScoreFunction>
 
             <ScoreFunction id="plan_majority_minority" type="plan"
@@ -1252,7 +1278,7 @@ class Config_Template(DictionaryTemplate):
 
     <Validation>
         <Criteria legislativebodyref="congress">
-            <Criterion name="Equipopulation - Congress" description="&lt;p&gt;Your plan does not meet the competition criteria for Equipopulation:&lt;/p&gt;&lt;p&gt; The population of each Congressional district must be %(pop_congress_max)s-%(pop_congress_min)s">  
+            <Criterion name="Equipopulation - Congress" description="&lt;p&gt;Your plan does not meet the competition criteria for Equipopulation:&lt;/p&gt;&lt;p&gt; The population of each Congressional district must be &pop_congress_max;-&pop_congress_min;">  
                 <Score ref="a_congress_plan_equipopulation_validation" />
             </Criterion>
             <Criterion name="AllContiguous - Congress" 
@@ -1270,7 +1296,7 @@ class Config_Template(DictionaryTemplate):
             </Criterion>
         </Criteria>
         <Criteria legislativebodyref="house">
-            <Criterion name="Equipopulation - House" description="&lt;p&gt;Your plan does not meet the competition criteria for Equipopulation:&lt;/p&gt;&lt;p&gt;The population of each House of Delegates district must be %(pop_house_min)s - %(pop_house_max)s"> 
+            <Criterion name="Equipopulation - House" description="&lt;p&gt;Your plan does not meet the competition criteria for Equipopulation:&lt;/p&gt;&lt;p&gt;The population of each House of Delegates district must be &pop_house_min; - &pop_house_max;"> 
                 <Score ref="a_house_plan_equipopulation_validation" />
             </Criterion>
             <Criterion name="AllContiguous - House" 
@@ -1288,7 +1314,7 @@ class Config_Template(DictionaryTemplate):
             </Criterion>
         </Criteria>
         <Criteria legislativebodyref="senate">
-            <Criterion name="Equipopulation - Senate" description="&lt;p&gt;Your plan does not meet the competition criteria for Equipopulation:&lt;/p&gt;&lt;p&gt;The population of each State Senate district must be %(pop_house_min)s-%(pop_house_max)s">
+            <Criterion name="Equipopulation - Senate" description="&lt;p&gt;Your plan does not meet the competition criteria for Equipopulation:&lt;/p&gt;&lt;p&gt;The population of each State Senate district must be &pop_house_min;-&pop_house_max;">
                 <Score ref="a_senate_plan_equipopulation_validation" />
             </Criterion>
             <Criterion name="AllContiguous - Senate" 
