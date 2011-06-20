@@ -3610,7 +3610,7 @@ class CommunityTypeTestCase(BaseTestCase):
             print(traceback.format_exc())
             print('Couldn\'t tear down')
 
-    def test_community_intersections(self):
+    def test_community_union(self):
         gl, gs = self.geolevel, list(Geounit.objects.filter(geolevel=self.geolevel).order_by("id"))
         p, c = self.plan, self.community
 
@@ -3619,7 +3619,7 @@ class CommunityTypeTestCase(BaseTestCase):
         d1 = max(District.objects.filter(plan=p,district_id=1),key=lambda d: d.version)
 
         # Check and make sure we get 0 intersections
-        intersections = d1.count_community_type_intersections(c.id)
+        intersections = d1.count_community_type_union(c.id)
         self.assertNotEquals(0, d1.geom.area, 'District 1 has no area')
         self.assertEqual(0, intersections, 'Detected community intersections when there are none a:%d' % intersections)
 
@@ -3627,33 +3627,33 @@ class CommunityTypeTestCase(BaseTestCase):
         c.add_geounits(1, ['57', '58'] , gl.id, c.version)
         c1 = max(District.objects.filter(plan=c,district_id=1),key=lambda d: d.version)
         c1.tags = 'type=type_a'
-        intersections = d1.count_community_type_intersections(c.id)
+        intersections = d1.count_community_type_union(c.id)
         self.assertEqual(1, intersections, 'detected incorrect number of community intersections. e:1;a:%d' % intersections)
 
         # C2 is inside of d1 and shares a border
         c.add_geounits(2, ['42'], gl.id, c.version)
         c2 = max(District.objects.filter(plan=c,district_id=2),key=lambda d: d.version)
         c2.tags = 'type=type_b'
-        intersections = d1.count_community_type_intersections(c.id)
+        intersections = d1.count_community_type_union(c.id)
         self.assertEqual(2, intersections, 'Detected incorrect number of community intersections. e:2;a:%d' % intersections)
 
         #C3 is outside of d1 and shares a border
         c.add_geounits(3, ['66'], gl.id, c.version)
         c3 = max(District.objects.filter(plan=c,district_id=3),key=lambda d: d.version)
         c3.tags = 'type=type_c'
-        intersections = d1.count_community_type_intersections(c.id)
+        intersections = d1.count_community_type_union(c.id)
         self.assertEqual(2, intersections, 'Detected incorrect number of community intersections. e:2;a:%d' % intersections)
 
         # C4 is entirely within d1 and shares no borders
         c.add_geounits(4, ['59'], gl.id, c.version)
         c4 = max(District.objects.filter(plan=c,district_id=4),key=lambda d: d.version)
-        intersections = d1.count_community_type_intersections(c.id)
+        intersections = d1.count_community_type_union(c.id)
         self.assertEqual(2, intersections, 'Detected incorrect number of community intersections. e:2;a:%d' % intersections)
         c4.tags = 'type=type_a type=type_b type=type_c'
-        intersections = d1.count_community_type_intersections(c.id)
+        intersections = d1.count_community_type_union(c.id)
         self.assertEqual(3, intersections, 'Detected incorrect number of community intersections. e:3;a:%d' % intersections)
 
-    def test_community_intersection_calculator(self):
+    def test_community_union_calculator(self):
         calc = CommunityTypeCounter()
         gl, gs = self.geolevel, list(Geounit.objects.filter(geolevel=self.geolevel).order_by("id"))
         p, c = self.plan, self.community
@@ -3675,3 +3675,46 @@ class CommunityTypeTestCase(BaseTestCase):
 
         calc.compute(district=d1, community_map_id=-1, version=c.version)
         self.assertEqual('n/a', calc.result, 'Did\'t get "n/a" when incorrect map_id used. a:%s' % calc.result)
+
+    def test_community_intersection(self):
+        calc = CommunityTypeCompatible()
+        gl, gs = self.geolevel, list(Geounit.objects.filter(geolevel=self.geolevel).order_by("id"))
+        p, c = self.plan, self.community
+
+        # Create a basic district in the plan
+        p.add_geounits(1, [str(x.id) for x in gs if x.id > 28 and x.id < 73 and x.id % 9 in [4, 5, 6]], gl.id, p.version)
+        p.add_geounits(2, [str(x.id) for x in gs if x.id > 28 and x.id < 73 and x.id % 9 in [1,2,3]], gl.id, p.version)
+        d1 = max(District.objects.filter(plan=p,district_id=1),key=lambda d: d.version)
+        d2 = max(District.objects.filter(plan=p,district_id=2),key=lambda d: d.version)
+
+        # Check and make sure we get 0 intersections
+        calc.compute(plan=p, community_map_id=c.id, type='junk')
+        self.assertFalse(calc.result, 'Detected community type compatibility when there is none a:%s' % calc.result)
+
+        # C1 intersects on the left, half-in and half-out of d1 
+        c.add_geounits(1, ['57', '58'] , gl.id, c.version)
+        c1 = max(District.objects.filter(plan=c,district_id=1),key=lambda d: d.version)
+        c1.tags = 'type=type_a'
+        calc.compute(plan=p, community_map_id=c.id, type='type_a')
+        self.assertTrue(calc.result, 'Detected no community type compatibility. a:%s' % calc.result)
+
+        # C2 is inside of d1 and shares a border
+        c.add_geounits(2, ['42'], gl.id, c.version)
+        c2 = max(District.objects.filter(plan=c,district_id=2),key=lambda d: d.version)
+        c2.tags = 'type=type_b type=type_a'
+        calc.compute(plan=p, community_map_id=c.id, type='type_a')
+        self.assertTrue(calc.result, 'Detected no community type compatibility. a:%s' % calc.result)
+
+        # C3 is outside of d1 and shares a border
+        c.add_geounits(3, ['66'], gl.id, c.version)
+        c3 = max(District.objects.filter(plan=c,district_id=3),key=lambda d: d.version)
+        c3.tags = 'type=type_c type=type_a'
+        calc.compute(plan=p, community_map_id=c.id, type='type_a')
+        self.assertTrue(calc.result, 'Detected no community type compatibility. a:%s' % calc.result)
+
+        # C4 is entirely within d1 and shares no borders
+        c.add_geounits(4, ['59'], gl.id, c.version)
+        c4 = max(District.objects.filter(plan=c,district_id=4),key=lambda d: d.version)
+        c4.tags = 'type=type_b type=type_c'
+        calc.compute(plan=p, community_map_id=c.id, type='type_b')
+        self.assertFalse(calc.result, 'Detected community compatibility when there is none. a:%s' % calc.result)

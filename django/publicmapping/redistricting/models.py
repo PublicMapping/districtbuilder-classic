@@ -2212,24 +2212,38 @@ class District(models.Model):
         self.simple = GeometryCollection(tuple(simples),srid=self.geom.srid)
         self.save()
 
-    def count_community_type_intersections(self, community_map_id, version=None):
+    def count_community_type_union(self, community_map_id, version=None):
         """
-        Given a community_map (a Plan object), count the number of distinct
-        types of community that this district intersections.
+        Count the number of distinct types of communities in the provided
+        community map. Only the community types of the communities that 
+        intersect this district are counted.
         
-        Parameters:
-            community_map - a Plan ID linked to the community-mapping legislativebody
-            version - the version of the community_map to examine. If not given, 
-                the current plan version will be used
-        Returns:
-            an integer count of the number of distinct community types intersecting
-            this district
+        @param community_map_id: A L{Plan} ID linked to the 
+            community-mapping L{LegislativeBody}.
+        @param version: The version of the community_map to examine. 
+            Defaults to the current plan version.
+        @return: An integer count of the number of distinct community 
+            types intersecting this district.
+        """
+        return len(self.get_community_type_union(community_map_id, version=version))
+
+    def get_community_type_union(self, community_map_id, version=None):
+        """
+        Get the union of all the types of communities in this district.
+        Only the community types of the communities that intersect this
+        district are counted.
+
+        @param community_map_id: A L{Plan} ID linked to the
+            community-mapping L{LegislativeBody}.
+        @param version: The version of the community_map to examine.
+            Defaults to the current plan version.
+        @return: The set of all community types in this district.
         """
         community_map = Plan.objects.get(id=community_map_id)
 
         if version is None:
             version = community_map.version
-        
+
         # Filters - first get all districts
         communities = community_map.get_districts_at_version(version, include_geom=True)
         # Filter quickly by envelope
@@ -2237,15 +2251,10 @@ class District(models.Model):
         # Filter by relation - must have interior intersection
         communities = filter(lambda z: True if self.geom.relate_pattern(z.geom, 'T********') else False, communities)
 
-        types = {}
+        types = set()
         for community in communities:
-            tags = Tag.objects.get_for_object(community).filter(name__startswith='type=')
-            for tag in tags:
-                if tag.name in types:
-                    types[tag.name] += 1
-                else:
-                    types[tag.name] = 1
-        return len(types)
+            types = types | set(Tag.objects.get_for_object(community).filter(name__startswith='type='))
+        return types
 
 # Enable tagging of districts by registering them with the tagging module
 tagging.register(District)

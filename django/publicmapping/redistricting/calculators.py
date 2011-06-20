@@ -1652,17 +1652,17 @@ class CommunityTypeCounter(CalculatorBase):
 
     This calculator, in addition to requiring a "districts" argument, 
     requires a "community_map_id" argument, which is the primary key
-    of the community map (Plan object) that is being compared
-    to the district, and a "version" argument indicating the version
-    number of the community map.
+    of the community map (L{Plan}) that is being compared to the district,
+    and a "version" argument indicating the version number of the 
+    community map.
 
-    This calculator will only operate on a plan.
+    This calculator will only operate on a district.
     """
     def compute(self, **kwargs):
         """
         Count the number of community types which intersect a district.
 
-        @keyword district: The district to compare against the community 
+        @keyword district: The L{District} to compare against the community
             map.
         @keyword community_map_id: The ID of the community map.
         @keyword version: Optional. The version of the community map. 
@@ -1681,11 +1681,82 @@ class CommunityTypeCounter(CalculatorBase):
 
         if 'community_map_id' in kwargs:
             try:
-                self.result = district.count_community_type_intersections(kwargs['community_map_id'], version=version)
+                self.result = district.count_community_type_union(kwargs['community_map_id'], version=version)
             except:
                 self.result = 'n/a'
         else:
             self.result = 'n/a'
+
+
+class CommunityTypeCompatible(CalculatorBase):
+    """
+    This calculator determines if all districts in a plan are type-
+    compatible. A type-compatible community map contains the same community
+    types in across all districts.
+
+    This calculator requires a "community_map_id" argument, which is the 
+    primary key of the community map (L{Plan}) that is being compared to 
+    the L{Plan} and a "version" argument indicating the version number of
+    the community map.
+
+    This calculator will only operate on a plan.
+    """
+    def compute(self, **kwargs):
+        """
+        Evaluate a L{Plan} to determine if it is type-compatible. A L{Plan}
+        will be type-compatible if the type provided is in all L{District}s
+        of the plan.
+
+        @keyword plan: The L{Plan} to compare against the community
+            map.
+        @keyword community_map_id: The ID of the community map.
+        @keyword plan_version: Optional, The version of the plan.
+            Defaults to the latest version of the plan.
+        @keyword community_version: Optional. The version of the community 
+            map.  Defaults to the latest version of the community map.
+        @keyword type: The community type to check for compatibility.
+        """
+        if not 'plan' in kwargs:
+            return
+
+        plan = kwargs['plan']
+
+        if 'plan_version' in kwargs:
+            pversion = kwargs['plan_version']
+        else:
+            pversion = plan.version
+
+        if 'community_version' in kwargs:
+            cversion = kwargs['community_version']
+        else:
+            cversion = None
+
+        districts = plan.get_districts_at_version(pversion, include_geom=True)
+
+        if not 'community_map_id' in kwargs:
+            self.result = 'n/a'
+            return
+
+        ctype = kwargs['type']
+        if not ctype.startswith('type='):
+            ctype = 'type=' + ctype
+
+        community_id = kwargs['community_map_id']
+        alltypes = None
+        for district in districts:
+            if district.is_unassigned:
+                continue
+
+            tmpset = district.get_community_type_union(community_id, version=cversion)
+
+            if alltypes is None:
+                alltypes = tmpset
+            else:
+                alltypes = alltypes & tmpset
+
+        # simplify all the matching tags to strings, not Tag objects
+        alltypes = map(lambda x:str(x.name), alltypes)
+        self.result = (ctype in alltypes)
 
 class SplitCounter(CalculatorBase):
     """
