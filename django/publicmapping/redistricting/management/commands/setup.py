@@ -941,7 +941,7 @@ ERROR:
         attributes = {}
         attributes['calculator'] = config.get('calculator')[:500]
         attributes['name'] = config.get('id')[:50]
-        attributes['label'] = config.get('label')[:100] or ''
+        attributes['label'] = (config.get('label') or '')[:100]
         attributes['description'] = config.get('description') or ''
         attributes['is_planscore'] = config.get('type') == 'plan'
         fn_obj, created, changed, message = consistency_check_and_update(ScoreFunction, overwrite=self.force, **attributes)
@@ -1096,7 +1096,7 @@ ERROR:
                 title=title, 
                 legislative_body=lb,
                 is_page=sd.get('type') == 'leaderboard',
-                cssclass=sd.get('cssclass')[:50] or '',
+                cssclass=(sd.get('cssclass') or '')[:50],
                 owner=admin
             )
 
@@ -1112,7 +1112,7 @@ ERROR:
                 title = sp.get('title')[:50]
                 position = int(sp.get('position'))
                 template = sp.get('template')[:500]
-                cssclass = sp.get('cssclass')[:50] or ''
+                cssclass = (sp.get('cssclass') or '')[:50]
                 pnltype = sp.get('type')[:20]
 
                 is_ascending = sp.get('is_ascending')
@@ -1268,12 +1268,34 @@ ERROR:
 
         for subj in subjs:
             numerator_name = name=subj.get('id').lower()[:50]
-            numerator = Subject.objects.get(name=numerator_name)
+            try:
+                numerator = Subject.objects.get(name=numerator_name)
+            except Exception, ex:
+                if verbose > 0:
+                    print """
+ERROR:
+
+    Subject "%s" was not found.
+
+    Please verify the settings in the configuration file and try again.
+""" % numerator_name
+                raise
             denominator = None
             denominator_name = subj.get('percentage_denominator')
             if denominator_name:
                 denominator_name = denominator_name.lower()[:50]
-                denominator = Subject.objects.get(name=denominator_name)
+                try:
+                    denominator = Subject.objects.get(name=denominator_name)
+                except Exception, ex:
+                    if verbose > 0:
+                        print """
+ERROR:
+
+    Subject "%s" was not found.
+    
+    Please verify the settings in the configuration file and try again.
+""" % denominator_name
+                    raise
 
             numerator.percentage_denominator = denominator
             numerator.save()
@@ -1381,7 +1403,7 @@ ERROR:
             if verbose > 1:
                 print '%d objects in shapefile' % len(lyr)
 
-            level = Geolevel.objects.get(name=config['geolevel'].lower()[:5]])
+            level = Geolevel.objects.get(name=config['geolevel'].lower()[:5])
 
             # Create the subjects we need
             subject_objects = {}
