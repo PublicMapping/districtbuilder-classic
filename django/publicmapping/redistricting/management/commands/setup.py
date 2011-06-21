@@ -96,7 +96,7 @@ ERROR:
     This management command requires the -c or --config option. This option
     specifies the main configuration file.
 """
-            return
+            sys.exit(1)
 
         verbose = int(options.get('verbosity'))
 
@@ -113,7 +113,8 @@ contents of the file and try again.
             if verbose > 1:
                 print "The following traceback may provide more information:"
                 print traceback.format_exc()
-            return
+            # Indicate that an error has occurred
+            sys.exit(1)
 
         #
         # config is now a XSD validated and id-ref checked configuration

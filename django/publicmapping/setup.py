@@ -87,12 +87,12 @@ ERROR:
     This script requires a configuration file and a schema. Please check
     the command line arguments and try again.
 """
-        return
+        sys.exit(1)
 
     config = validate_config(args[0], args[1], verbose)
 
     if not config:
-       return
+       sys.exit(1)
 
     if verbose > 0:
         print "Validated config."
@@ -101,7 +101,7 @@ ERROR:
         if verbose > 0:
             print "Generated django settings."
     else:
-        return
+        sys.exit(1)
 
     os.environ['DJANGO_SETTINGS_MODULE'] = 'publicmapping.settings'
     
@@ -132,8 +132,9 @@ ERROR:
         bard_templates = options.bard_templates
 
     management.call_command('setup', config=args[1], verbosity=verbose, geolevels=geolevels, views=views, geoserver=geoserver, templates=templates, nesting=nesting, static=static, bard=bard, bard_templates=bard_templates)
-
-    return
+    
+    # Success! Exit-code 0
+    sys.exit(0)
 
 
 def validate_config(sch, cfg, verbose):
