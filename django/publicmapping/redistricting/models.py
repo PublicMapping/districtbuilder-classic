@@ -1237,8 +1237,8 @@ AND st_intersects(
                     'is_locked': row[3],
                     'version': row[4],
                     'number': float(row[7]),
-                    'contiguous': contiguity_calculator.result,
-                    'compactness': compactness_calculator.result,
+                    'contiguous': contiguity_calculator.result['value'],
+                    'compactness': compactness_calculator.result['value'],
                     'num_members': num_members
                 },
                 'geometry': geom
@@ -1525,7 +1525,7 @@ AND st_intersects(
                 for district in districts:
                     # Calculate the comparator value for the district
                     calculator.compute(district=district)
-                    dist_val = calculator.result
+                    dist_val = calculator.result['value']
         
                     # Check if geounits are touching the district
                     for poly in district.geom:
@@ -3161,14 +3161,18 @@ class ComputedPlanScore(models.Model):
         if created:
             score = function.score(plan, format='raw', version=version or plan.version)
             cache.value = cPickle.dumps(score)
+            print "Storing value",cache.value
             cache.save()
         else:
             try:
                 score = cPickle.loads(str(cache.value))
+                print "Restoring value",cache.value
             except:
                 score = function.score(plan, format='raw', version=version or plan.version)
                 cache.value = cPickle.dumps(score)
                 cache.save()
+
+        print "ComputedPlanScore score",score
 
         if format != 'raw':
             calc = function.get_calculator()

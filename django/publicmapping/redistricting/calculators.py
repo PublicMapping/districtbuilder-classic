@@ -38,6 +38,7 @@ import locale, sys, traceback
 # This helps in formatting - by default, apache+wsgi uses the "C" locale
 locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 
+
 class CalculatorBase:
     """
     The base class for all calculators. CalculatorBase defines the result 
@@ -77,6 +78,9 @@ class CalculatorBase:
 
         @return: The value of the result.
         """
+        if not self.result is None and 'value' in self.result:
+            return self.result['value']
+
         return self.result
 
     def html(self):
@@ -89,8 +93,8 @@ class CalculatorBase:
 
         @return: An HTML SPAN element, formatted similar to: "<span>n/a</span>".
         """
-        if not self.result is None:
-            return '<span>%s</span>' % self.result
+        if not self.result is None and 'value' in self.result:
+            return '<span>%s</span>' % self.result['value']
         else:
             return '<span>n/a</span>'
 
@@ -104,7 +108,12 @@ class CalculatorBase:
         @return: A JSON string with a single object that contains the
             property 'result'.
         """
-        return json.dumps( {'result':self.result}, use_decimal=True )
+        if not self.result is None and 'value' in self.result:
+            output = { 'result': self.result['value'] }
+        else:
+            output = { 'result': None }
+
+        return json.dumps( output, use_decimal=True )
 
     def get_value(self, argument, district=None):
         """
@@ -146,6 +155,7 @@ class CalculatorBase:
             if cc.count() > 0:
                 value = cc[0].number
         return value
+
 
 class Schwartzberg(CalculatorBase):
     """
@@ -204,7 +214,7 @@ class Schwartzberg(CalculatorBase):
             compactness += circumference / district.geom.length
             num += 1
 
-        self.result = (compactness / num) if num > 0 else 0
+        self.result = { 'value': (compactness / num) if num > 0 else 0 }
 
 
     def html(self):
@@ -214,7 +224,10 @@ class Schwartzberg(CalculatorBase):
 
         @return: A number formatted similar to "1.00%", or "n/a"
         """
-        return ("%0.2f%%" % (self.result * 100)) if self.result else "n/a"
+        if not self.result is None and 'value' in self.result:
+            return ("%0.2f%%" % (self.result['value'] * 100))
+        else:
+            return "n/a"
 
 
 class Roeck(CalculatorBase):
@@ -273,7 +286,7 @@ class Roeck(CalculatorBase):
             compactness += district.geom.area / cir_area
             num += 1
 
-        self.result = compactness / num
+        self.result = { 'value': compactness / num }
 
     def html(self):
         """
@@ -282,7 +295,10 @@ class Roeck(CalculatorBase):
 
         @return: A number formatted similar to "1.00%", or "n/a"
         """
-        return ("%0.2f%%" % (self.result * 100)) if self.result else "n/a"
+        if not self.result is None and 'value' in self.result:
+            return ("%0.2f%%" % (self.result['value'] * 100))
+        else:
+            return "n/a"
 
 
 class PolsbyPopper(CalculatorBase):
@@ -338,7 +354,7 @@ class PolsbyPopper(CalculatorBase):
             compactness += 4 * pi * district.geom.area / perimeter / perimeter
             num += 1
 
-        self.result = compactness / num
+        self.result = { 'value': compactness / num }
 
     def html(self):
         """
@@ -347,7 +363,10 @@ class PolsbyPopper(CalculatorBase):
 
         @return: A number formatted similar to "1.00%", or "n/a"
         """
-        return ("%0.2f%%" % (self.result * 100)) if self.result else "n/a"
+        if not self.result is None and 'value' in self.result:
+            return ("%0.2f%%" % (self.result['value'] * 100))
+        else:
+            return "n/a"
 
 
 class LengthWidthCompactness(CalculatorBase):
@@ -400,7 +419,7 @@ class LengthWidthCompactness(CalculatorBase):
             compactness += (bbox[3] - bbox[1]) / (bbox[2] - bbox[0])
             num += 1
 
-        self.result = compactness / num
+        self.result = { 'value': compactness / num }
 
     def html(self):
         """
@@ -409,7 +428,10 @@ class LengthWidthCompactness(CalculatorBase):
 
         @return: A number formatted similar to "1.00%", or "n/a"
         """
-        return ("%0.2f%%" % (self.result * 100)) if self.result else "n/a"
+        if not self.result is None and 'value' in self.result:
+            return ("%0.2f%%" % (self.result['value'] * 100))
+        else:
+            return "n/a"
 
 
 class SumValues(CalculatorBase):
@@ -460,20 +482,22 @@ class SumValues(CalculatorBase):
         else:
             return
         
-        self.result = 0
+        sumvals = 0
 
         for district in districts:
             argnum = 1
             while ('value%d'%argnum) in self.arg_dict:
                 number = self.get_value('value%d'%argnum, district)
                 if not number is None:
-                    self.result += number
+                    sumvals += number
 
                 argnum += 1
 
         if self.get_value('target') is not None:
             target = self.get_value('target')
-            self.result = "%d (of %s)" % (self.result, target)
+            self.result = { 'value': "%d (of %s)" % (sumvals, target) }
+        else:
+            self.result = { 'value': sumvals }
 
     def html(self):
         """
@@ -482,13 +506,15 @@ class SumValues(CalculatorBase):
 
         @return: The result wrapped in an HTML SPAN element: "<span>1</span>".
         """
-        if isinstance(self.result, Decimal):
-            result = locale.format("%d", self.result, grouping=True)
-            return '<span>%s</span>' % result
-        elif not self.result is None:
-            return '<span>%s</span>' % self.result
-        else:
-            return '<span>n/a</span>'
+        if not self.result is None and 'value' in self.result:
+            if isinstance(self.result['value'], Decimal):
+                result = locale.format("%d", self.result['value'], grouping=True)
+                return '<span>%s</span>' % result
+            else:
+                return '<span>%s</span>' % self.result['value']
+
+        return '<span>n/a</span>'
+
 
 class Percent(CalculatorBase):
     """
@@ -551,7 +577,7 @@ class Percent(CalculatorBase):
         if num is None or den is None or den == 0:
             return
     
-        self.result = num / den
+        self.result = { 'value': num / den }
 
     def html(self):
         """
@@ -560,10 +586,12 @@ class Percent(CalculatorBase):
 
         @return: The result wrapped in an HTML SPAN element, formatted similar to: "<span>1.00%</span>" or "<span>n/a</span>".
         """
-        if (type(self.result) == Decimal):
-            return '<span>{0:.2%}</span>'.format(self.result)
-        else:
-            return '<span>n/a</span>'
+        if not self.result is None and 'value' in self.result:
+            if (type(self.result['value']) == Decimal):
+                return '<span>{0:.2%}</span>'.format(self.result['value'])
+            
+        return '<span>n/a</span>'
+
 
 class Threshold(CalculatorBase):
     """
@@ -607,7 +635,7 @@ class Threshold(CalculatorBase):
         else:
             return
 
-        self.result = 0
+        count = 0
         for district in districts:
             val = self.get_value('value',district)
             thr = self.get_value('threshold',district)
@@ -616,7 +644,9 @@ class Threshold(CalculatorBase):
                 continue
 
             if float(val) > float(thr):
-                self.result += 1
+                count += 1
+
+        self.result = { 'value': count }
 
 
 class Range(CalculatorBase):
@@ -668,7 +698,7 @@ class Range(CalculatorBase):
         else:
             return
 
-        self.result = 0
+        count = 0
 
         if 'apply_num_members' in self.arg_dict:
             apply_num_members = int(self.arg_dict['apply_num_members'][1]) == 1
@@ -691,7 +721,9 @@ class Range(CalculatorBase):
                 continue
 
             if float(val) > float(minval) and float(val) < float(maxval):
-                self.result += 1
+                count += 1
+
+        self.result = { 'value': count }
 
 
 class Contiguity(CalculatorBase):
@@ -750,10 +782,10 @@ class Contiguity(CalculatorBase):
         else:
             allow_single = False
 
-        self.result = 0
+        count = 0
         for district in districts:
             if len(district.geom) == 1: 
-                self.result += 1
+                count += 1
             else:
                 # obtain the contiguity overrides that need to be applied
                 overrides = district.get_contiguity_overrides()
@@ -793,13 +825,14 @@ class Contiguity(CalculatorBase):
                             break
     
                     if contiguous:
-                        self.result += 1
+                        count += 1
 
+        self.result = { 'value': count }
         try:
             target = self.get_value('target')
             if target != None:
                 # result is -1 because unassigned is always considered contiguous
-                self.result = '<span>%d (of %s)</span>' % (self.result-1, target)
+                self.result = { 'value':'%d (of %s)' % (count-1, target) }
         except:
             pass
 
@@ -811,13 +844,18 @@ class Contiguity(CalculatorBase):
 
         @return: An HTML IMG element in the form of: '<img class="(yes|no)-contiguous" src="/static-media/images/icon-(check|warning).png">'
         """
-        if type(self.result) == int:
-            if self.result == 1:
-                return '<img class="yes-contiguous" src="/static-media/images/icon-check.png">'
+        print self.result
+
+        if not self.result is None and 'value' in self.result:
+            if type(self.result['value']) == int:
+                if self.result['value'] == 1:
+                    return '<img class="yes-contiguous" src="/static-media/images/icon-check.png">'
+                else:
+                    return '<img class="no-contiguous" src="/static-media/images/icon-warning.png">'
             else:
-                return '<img class="no-contiguous" src="/static-media/images/icon-warning.png">'
-        else:
-            return '<span>%s</span>' % self.result
+                return '<span>%s</span>' % self.result['value']
+
+        return '<span>%s</span>' % self.result
 
 
 class AllContiguous(CalculatorBase):
@@ -849,7 +887,7 @@ class AllContiguous(CalculatorBase):
         calc = Contiguity()
         calc.compute(**kwargs)
 
-        self.result = len(districts) == calc.result
+        self.result = { 'value': len(districts) == calc.result }
 
 
 class NonContiguous(CalculatorBase):
@@ -881,14 +919,14 @@ class NonContiguous(CalculatorBase):
         calc = Contiguity()
         calc.compute(**kwargs)
 
-        self.result = len(districts) - calc.result
+        count = len(districts) - calc.result
 
         try:
             target = self.get_value('target')
             if target != None:
-                self.result = '%d (of %s)' % (self.result, target)
+                self.result = { 'value': '%d (of %s)' % (count, target) }
         except:
-            pass
+            self.result = { 'value': count }
 
 
 class Interval(CalculatorBase):
@@ -942,15 +980,24 @@ class Interval(CalculatorBase):
             for district in districts:
                 value = self.get_value('subject', district)
                 if value == None:
-                    return -1
+                    return
                 if apply_num_members and district.num_members > 1:
                     value = value / district.num_members
                 
                 for idx, bound in enumerate(bounds):
                     if value < bound:
-                        self.result = (idx, value, self.arg_dict['subject'][1])
+                        self.result = { 
+                            'index': idx, 
+                            'value': value, 
+                            'subject': self.arg_dict['subject'][1]
+                        }
                         return
-                self.result = (len(bounds), value, self.arg_dict['subject'][1])
+                self.result = {
+                    'index': len(bounds), 
+                    'value': value, 
+                    'subject': self.arg_dict['subject'][1]
+                }
+                return
 
         elif 'plan' in kwargs:
             plan = kwargs['plan']
@@ -969,7 +1016,7 @@ class Interval(CalculatorBase):
             max_bound = target + (target * min_bound)
             min_bound = target - (target * min_bound)
 
-            self.result = 0
+            count = 0
             for district in districts:
                 value = self.get_value('subject', district)
 
@@ -977,7 +1024,9 @@ class Interval(CalculatorBase):
                     value = float(value) / district.num_members
                 
                 if value != None and value >= min_bound and value < max_bound:
-                    self.result += 1 
+                    count += 1
+
+            self.result = { 'value': count }
         else:
             return
 
@@ -994,14 +1043,15 @@ class Interval(CalculatorBase):
         @return: An HTML SPAN element, in the format: '<span class="interval_X X">1,000</span>'
         """
         # Get the name of the subject
-        try:
-            interval = self.result[0]
-            interval_class = "interval_%d" % interval if interval >= 0 else 'no_interval'
-            span_value = locale.format("%d", self.result[1], grouping=True)
-            return '<span class="%s %s">%s</span>' % (interval_class, self.result[2], span_value)
-        except:
-            return '<span>n/a<span>'
-        
+        if not self.result is None and 'value' in self.result:
+            if 'index' in self.result and 'subject' in self.result:
+                interval = self.result['index']
+                interval_class = "interval_%d" % interval if interval >= 0 else 'no_interval'
+                span_value = locale.format("%d", self.result['value'], grouping=True)
+                return '<span class="%s %s">%s</span>' % (interval_class, self.result['subject'], span_value)
+
+        return '<span>n/a</span>' 
+
 
 class Equivalence(CalculatorBase):
     """
@@ -1057,7 +1107,7 @@ class Equivalence(CalculatorBase):
                 min_d = min(float(tmpval), min_d)
                 max_d = max(float(tmpval), max_d)
 
-        self.result = max_d - min_d
+        self.result = { 'value': max_d - min_d }
 
     def html(self):
         """
@@ -1066,7 +1116,10 @@ class Equivalence(CalculatorBase):
 
         @return: A string in the format of "1,000" or "n/a" if no result.
         """
-        return intcomma(int(self.result)) if self.result else "n/a"
+        if not self.result is None and 'value' in self.result:
+            return intcomma(int(self.result))
+        
+        return 'n/a'
 
 
 class RepresentationalFairness(CalculatorBase):
@@ -1129,7 +1182,7 @@ class RepresentationalFairness(CalculatorBase):
                 if rep_pi > .5:
                     reps += 1
 
-        self.result = dems - reps
+        self.result = { 'value': dems - reps }
 
     def html(self):
         """
@@ -1140,12 +1193,15 @@ class RepresentationalFairness(CalculatorBase):
 
         @return: An HTML SPAN element similar to the form: "<span>Democrat 5</span>" or "<span>Balanced</span>".
         """
-        sort = abs(self.result)
-        party = 'Democrat' if self.result > 0 else 'Republican'
-        if sort == 0:
-            return '<span>Balanced</span>'
-        else:
-            return '<span>%s&nbsp;%d</span>' % (party, sort)
+        if not self.result is None and 'value' in self.result:
+            sort = abs(self.result['value'])
+            party = 'Democrat' if self.result['value'] > 0 else 'Republican'
+            if sort == 0:
+                return '<span>Balanced</span>'
+            else:
+                return '<span>%s&nbsp;%d</span>' % (party, sort)
+        
+        return '<span>n/a</span>'
 
     def json(self):
         """
@@ -1153,9 +1209,14 @@ class RepresentationalFairness(CalculatorBase):
 
         @return: A JSON object with 1 property: result.
         """
-        sort = abs(self.result)
-        party = 'Democrat' if self.result > 0 else 'Republican'
-        return json.dumps( {'result': '%s %d' % (party, sort)} )
+        if not self.result is None and 'value' in self.result:
+            sort = abs(self.result['value'])
+            party = 'Democrat' if self.result['value'] > 0 else 'Republican'
+            output = {'result': '%s %d' % (party, sort)}
+        else:
+            output = {'result': None}
+
+        return json.dumps(output)
 
     def sortkey(self):
         """
@@ -1163,9 +1224,16 @@ class RepresentationalFairness(CalculatorBase):
         Sort by the absolute value of the result (farther from zero
         is a worse score).
 
+        If the calculator experiences any error, the sortkey value is
+        fixed at '99', which will sort all errors to the end of any
+        sorted list.
+
         @return: The absolute value of the result.
         """
-        return abs(self.result)
+        if not self.result is None and 'value' in self.result:
+            return abs(self.result['value'])
+
+        return 99
 
 
 class Competitiveness(CalculatorBase):
@@ -1226,7 +1294,8 @@ class Competitiveness(CalculatorBase):
             if pidx > low and pidx < high:
                 fair += 1
 
-        self.result = fair
+        self.result = { 'value': fair }
+
 
 class CountDistricts(CalculatorBase):
     """
@@ -1262,7 +1331,7 @@ class CountDistricts(CalculatorBase):
         # than the number of districts.
         target = int(self.get_value('target'))
 
-        self.result = (len(districts)-1) == target
+        self.result = { 'value': (len(districts)-1) == target }
 
 
 class AllBlocksAssigned(CalculatorBase):
@@ -1295,7 +1364,7 @@ class AllBlocksAssigned(CalculatorBase):
             threshold = 100
 
         geounits = plan.get_unassigned_geounits(threshold=threshold, version=version)
-        self.result = len(geounits) == 0
+        self.result = { 'value': len(geounits) == 0 }
 
 
 class Equipopulation(CalculatorBase):
@@ -1345,9 +1414,9 @@ class Equipopulation(CalculatorBase):
                 # ALL PLANS include 1 district named "Unassigned", which
                 # should never be at the target.
         
-                self.result = inrange.result == (len(districts) - 1)
+                self.result = { 'value': inrange.result['value'] == (len(districts) - 1) }
             elif target != None:
-                self.result = '%d (of %s)' % (inrange.result, target)
+                self.result = { 'value': '%d (of %s)' % (inrange.result['value'], target) }
             else:
                 self.result = inrange.result
         except:
@@ -1406,7 +1475,6 @@ class MajorityMinority(CalculatorBase):
         districts = plan.get_districts_at_version(version, include_geom=False)
 
         districtcount = 0
-        self.result = False
         for district in districts:
             pop = self.get_value('population', district)
 
@@ -1437,15 +1505,15 @@ class MajorityMinority(CalculatorBase):
             if exceeds:
                 districtcount += 1
 
-        self.result = districtcount
+        self.result = { 'value': districtcount }
 
         try:
             target = self.get_value('target')
             validation = self.get_value('validation')
             if validation != None:
-                self.result = districtcount >= Decimal(validation)
+                self.result = { 'value': districtcount >= Decimal(validation) }
             elif target != None:
-                self.result = "%d (of %s)" % (districtcount, target)
+                self.result = { 'value': "%d (of %s)" % (districtcount, target) }
         except:
             pass
 
@@ -1468,7 +1536,7 @@ class MultiMember(CalculatorBase):
         @keyword version: Optional. The version of the plan, defaults to 
             the most recent version.
         """
-        self.result = False
+        self.result = { 'value': False }
 
         if not 'plan' in kwargs:
             return
@@ -1509,7 +1577,8 @@ class MultiMember(CalculatorBase):
             if (total_members < min_plan_mems) or (total_members > max_plan_mems):
                 return
         
-        self.result = True
+        self.result = { 'value': True }
+
 
 class Average(CalculatorBase):
     """
@@ -1551,7 +1620,7 @@ class Average(CalculatorBase):
 
             reduced = reduce(lambda x,y: x+y, filtered)
 
-            self.result = reduced / len(filtered)
+            self.result = { 'value': reduced / len(filtered) }
 
         elif 'district' in kwargs :
             districts.append(kwargs['district'])
@@ -1564,7 +1633,7 @@ class Average(CalculatorBase):
             return
 
         if not 'list' in kwargs:
-            self.result = 0.0
+            total = 0.0
             count = 0.0
             for district in districts:
                 if district.district_id == 0:
@@ -1581,13 +1650,13 @@ class Average(CalculatorBase):
                     if not number is None:
                         argsum += float(number)
 
-                self.result += argsum / argnum
+                total += argsum / argnum
 
             if count == 0:
                 self.result = None
                 return
             
-            self.result /= count
+            self.result = { 'value': total / count }
 
     def html(self):
         """
@@ -1596,12 +1665,13 @@ class Average(CalculatorBase):
 
         @return: The result wrapped in an HTML SPAN element, formatted similar to: "<span>1.00%</span>" or "<span>n/a</span>".
         """
-        if type(self.result) == float:
-            return ("<span>%0.2f%%</span>" % (self.result * 100)) if self.result else "n/a"
-        elif not self.result is None:
-            return '<span>%s</span>' % self.result
-        else:
-            return '<span>n/a</span>'
+        if not self.result is None and 'value' in self.result:
+            if type(self.result['value']) == float:
+                return "<span>%0.2f%%</span>" % (self.result['value'] * 100)
+            else:
+                return '<span>%s</span>' % self.result['value']
+
+        return '<span>n/a</span>'
 
 
 class Comments(CalculatorBase):
@@ -1644,6 +1714,7 @@ class Comments(CalculatorBase):
         """
         return self.result
 
+
 class CommunityTypeCounter(CalculatorBase):
     """
     Count the number of community types which intersect a given district.
@@ -1679,13 +1750,12 @@ class CommunityTypeCounter(CalculatorBase):
         if 'version' in kwargs:
             version = kwargs['version']
 
+        self.result = { 'value': 'n/a' }
         if 'community_map_id' in kwargs:
             try:
-                self.result = district.count_community_type_union(kwargs['community_map_id'], version=version)
+                self.result = { 'value': district.count_community_type_union(kwargs['community_map_id'], version=version) }
             except:
-                self.result = 'n/a'
-        else:
-            self.result = 'n/a'
+                pass
 
 
 class CommunityTypeCompatible(CalculatorBase):
@@ -1734,7 +1804,7 @@ class CommunityTypeCompatible(CalculatorBase):
         districts = plan.get_districts_at_version(pversion, include_geom=True)
 
         if not 'community_map_id' in kwargs:
-            self.result = 'n/a'
+            self.result = { 'value': 'n/a' }
             return
 
         ctype = kwargs['type']
@@ -1756,7 +1826,8 @@ class CommunityTypeCompatible(CalculatorBase):
 
         # simplify all the matching tags to strings, not Tag objects
         alltypes = map(lambda x:str(x.name), alltypes)
-        self.result = (ctype in alltypes)
+        self.result = { 'value': (ctype in alltypes) }
+
 
 class SplitCounter(CalculatorBase):
     """
@@ -1802,7 +1873,7 @@ class SplitCounter(CalculatorBase):
         # Check if we should invert the order or the layers
         inverse = self.get_value('inverse') == 1
 
-        self.result = plan.compute_splits(target, version=version, inverse=inverse)
+        self.result = { 'value': plan.compute_splits(target, version=version, inverse=inverse) }
 
     def html(self):
         """
@@ -1812,23 +1883,27 @@ class SplitCounter(CalculatorBase):
 
         @return: An HTML TABLE element with the split geographies/districts.
         """
-        r = self.result
-        total_split_districts = len(set(i[0] for i in r['splits']))
-            
         render = '<div class="split_report">'
+        if not self.result is None and 'value' in self.result:
+            r = self.result['value']
+            total_split_districts = len(set(i[0] for i in r['splits']))
+            
 
-        if r['is_geolevel']:
-            template = '<div>Total %s which split a %s: %d</div>'
-        else:
-            template = '<div>Total %s splitting "%s": %d</div>'
+            if r['is_geolevel']:
+                template = '<div>Total %s which split a %s: %d</div>'
+            else:
+                template = '<div>Total %s splitting "%s": %d</div>'
 
-        render += template % ('communities' if r['is_community'] else 'districts', r['other_name'], total_split_districts)
-        render += '<div>Total number of splits: %d</div>' % len(r['splits'])
+            render += template % ('communities' if r['is_community'] else 'districts', r['other_name'], total_split_districts)
+            render += '<div>Total number of splits: %d</div>' % len(r['splits'])
 
-        render += '<div class="table_container"><table class="report"><thead><tr><th>%s</th><th>%s</th></tr></thead><tbody>' % (r['plan_name'].capitalize(), r['other_name'].capitalize() if r['is_geolevel'] else r['other_name'].capitalize())
-        for s in r['named_splits']:
-            render += '<tr><td>%s</td><td>%s</td></tr>' % (s[0], s[1])
+            render += '<div class="table_container"><table class="report"><thead><tr><th>%s</th><th>%s</th></tr></thead><tbody>' % (r['plan_name'].capitalize(), r['other_name'].capitalize() if r['is_geolevel'] else r['other_name'].capitalize())
+            for s in r['named_splits']:
+                render += '<tr><td>%s</td><td>%s</td></tr>' % (s[0], s[1])
 
-        render += '</tbody></table></div></div>'
+            render += '</tbody></table></div>'
+
+        render += '</div>'
+
         return render
 
