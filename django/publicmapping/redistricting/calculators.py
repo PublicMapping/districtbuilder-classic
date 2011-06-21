@@ -844,8 +844,6 @@ class Contiguity(CalculatorBase):
 
         @return: An HTML IMG element in the form of: '<img class="(yes|no)-contiguous" src="/static-media/images/icon-(check|warning).png">'
         """
-        print self.result
-
         if not self.result is None and 'value' in self.result:
             if type(self.result['value']) == int:
                 if self.result['value'] == 1:

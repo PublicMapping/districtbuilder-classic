@@ -3161,18 +3161,14 @@ class ComputedPlanScore(models.Model):
         if created:
             score = function.score(plan, format='raw', version=version or plan.version)
             cache.value = cPickle.dumps(score)
-            print "Storing value",cache.value
             cache.save()
         else:
             try:
                 score = cPickle.loads(str(cache.value))
-                print "Restoring value",cache.value
             except:
                 score = function.score(plan, format='raw', version=version or plan.version)
                 cache.value = cPickle.dumps(score)
                 cache.save()
-
-        print "ComputedPlanScore score",score
 
         if format != 'raw':
             calc = function.get_calculator()
