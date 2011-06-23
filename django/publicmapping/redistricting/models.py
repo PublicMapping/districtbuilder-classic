@@ -47,7 +47,7 @@ from datetime import datetime
 from copy import copy
 from decimal import *
 from operator import attrgetter
-import sys, cPickle, traceback, types, tagging
+import sys, cPickle, traceback, types, tagging, re
 
 class Subject(models.Model):
     """
@@ -1670,9 +1670,9 @@ AND st_intersects(
         return districts
 
     @staticmethod
-    def find_splits(above_id, below_id, above_version=None, below_version=None):
+    def find_relationships(above_id, below_id, above_version=None, below_version=None, de_9im='***T*****'):
         """
-        Determines if the above layer splits the below layer
+        Finds all relationships between two layers using the supplied intersection matrix
 
         Parameters:
             above_id -- The id of the layer that is 'above' the below plan hierarchically.
@@ -1685,10 +1685,27 @@ AND st_intersects(
 
             below_version -- Required only if the below_id is a Plan
 
+            de_9im -- Dimensionally extended nine-intersection model string. Optional, by
+                      default this is set to a standard intersection. ST_Relate is called
+                      on each permutation of the two layers with the first parameter being
+                      the above geometry, the second parameter being the below geometry,
+                      and de_9im being the third parameter. Some examples:
+
+                      T*F**FFF* (Equals)
+                      FF*FF**** (Disjoint)
+                      T******** (Intersects)
+                      FT******* (Touches)
+                      T*T****** (Crosses)
+                      T*F**F*** (Within)
+                      T*****FF* (Contains)
+                      T*T***T** (Overlaps)
+                      T*****FF* (Covers)
+                      T*F**F*** (CoveredBy)
+
         Returns:
-            An array of splits, given as tuples, where the first item is the id of
-            the district in the above layer which causes the split, the second 
-            item is the id of the district in the other layer which is split, 
+            An array of relationships, given as tuples, where the first item is the id of
+            the district in the above layer of the relationship, the second 
+            item is the id of the district in the below layer of the relationship, 
             the third item is the name associated with the first, and
             the fourth item is the name associated with the second.
         """
@@ -1710,6 +1727,10 @@ AND st_intersects(
         if is_below_plan and below_version is None:
             raise Exception('Version must be specified for below plan.')
 
+        # Ensure DE-9IM string is valid
+        if not re.match('[012TF\*]{9}', de_9im):
+            raise Exception('DE-9IM string is invalid.')
+
         select = "SELECT above.%s, below.%s, above.name, below.name FROM %s as below" % (above_col_id, below_col_id, below_table)
         version_join = """
 JOIN (
@@ -1729,7 +1750,7 @@ CROSS JOIN (
 """
         geo_cross = "CROSS JOIN redistricting_geounit as above"
         on_lmt = "ON below.district_id = lmt.district_id"
-        relate = "AND ST_Relate(above.geom, below.geom, '***T*****')"
+        relate = "AND ST_Relate(above.geom, below.geom, '%s')" % de_9im
         order = "ORDER BY above.%s, below.%s" % (above_col_id, below_col_id)
         below_join = version_join % (below_id, below_version) if below_version is not None else ""
         above_join = version_join % (above_id, above_version) if above_version is not None else ""
@@ -1754,13 +1775,11 @@ CROSS JOIN (
 
         # Two geolevels
         else:
-            raise Exception('Geolevel-geolevel splits not implemented.')
+            raise Exception('Geolevel-geolevel relationships not implemented.')
 
         cursor = connection.cursor()
         cursor.execute(query)
-        splits = cursor.fetchall()
-
-        return splits
+        return cursor.fetchall()
 
     def find_plan_splits(self, other_plan, version=None, other_version=None, inverse=False):
         """
@@ -1802,7 +1821,7 @@ CROSS JOIN (
         bottom_id = 'plan.%d' % self.id if inverse else 'plan.%d' % other_plan.id
         bottom_version = version if inverse else other_version
         
-        return Plan.find_splits(top_id, bottom_id, top_version, bottom_version)
+        return Plan.find_relationships(top_id, bottom_id, top_version, bottom_version, '***T*****')
 
     def find_geolevel_splits(self, geolevelid, version=None, inverse=False):
         """
@@ -1837,7 +1856,7 @@ CROSS JOIN (
         bottom_id = 'plan.%d' % self.id if inverse else 'geolevel.%d' % geolevelid
         bottom_version = version if inverse else None
         
-        return Plan.find_splits(top_id, bottom_id, top_version, bottom_version)
+        return Plan.find_relationships(top_id, bottom_id, top_version, bottom_version, '***T*****')
 
     def compute_splits(self, target, version=None, inverse=None):
         results = {
