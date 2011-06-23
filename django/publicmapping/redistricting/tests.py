@@ -3519,7 +3519,7 @@ class NestingTestCase(BaseTestCase):
         # Test splits
         splits = p1.find_plan_splits(p2)
         self.assertEqual(len(splits), 1, "Didn't find 1 split")
-        self.assertEqual(splits[0], (2, 2), "Didn't find p1d2 to split p2d2")
+        self.assertEqual(splits[0][:2], (2, 2), "Didn't find p1d2 to split p2d2")
 
     def test_split_move_diagonally(self):
         gl, gs = self.geolevel, list(Geounit.objects.filter(geolevel=self.geolevel).order_by("id"))
@@ -3540,9 +3540,9 @@ class NestingTestCase(BaseTestCase):
         # Test splits
         splits = p1.find_plan_splits(p2)
         self.assertEqual(len(splits), 3, "Didn't find 3 splits")
-        self.assertEqual(splits[0], (1, 1), "Didn't find p1d1 to split p2d1")
-        self.assertEqual(splits[1], (2, 1), "Didn't find p1d2 to split p2d1")
-        self.assertEqual(splits[2], (2, 2), "Didn't find p1d2 to split p2d2")
+        self.assertEqual(splits[0][:2], (1, 1), "Didn't find p1d1 to split p2d1")
+        self.assertEqual(splits[1][:2], (2, 1), "Didn't find p1d2 to split p2d1")
+        self.assertEqual(splits[2][:2], (2, 2), "Didn't find p1d2 to split p2d2")
 
 class CommunityTypeTestCase(BaseTestCase):
     """
