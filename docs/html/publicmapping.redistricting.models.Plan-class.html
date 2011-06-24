@@ -93,7 +93,7 @@
 <area shape="rect" id="node84" href="publicmapping.redistricting.models.Plan-class.html#get_wfs_districts" title="Get the districts in this plan as a GeoJSON WFS response." alt="" coords="17,500,612,519"/>
 <area shape="rect" id="node84" href="publicmapping.redistricting.models.Plan-class.html#get_districts_at_version" title="Get Plan Districts at a specified version." alt="" coords="17,519,612,537"/>
 <area shape="rect" id="node84" href="publicmapping.redistricting.models.Plan-class.html#create_default" title="Create a default plan." alt="" coords="17,537,612,556"/>
-<area shape="rect" id="node84" href="publicmapping.redistricting.models.Plan-class.html#compute_splits" title="publicmapping.redistricting.models.Plan.compute_splits" alt="" coords="17,575,612,593"/>
+<area shape="rect" id="node84" href="publicmapping.redistricting.models.Plan-class.html#count_community_type_union" title="publicmapping.redistricting.models.Plan.count_community_type_union" alt="" coords="17,575,612,593"/>
 <area shape="rect" id="node1" href="publicmapping.redistricting.models.Plan-class.html" title="A collection of Districts for an area of coverage, like a state." alt="" coords="5,6,624,599"/>
 </map>
   <img src="uml_class_diagram_for_publicma_55.gif" alt='' usemap="#uml_class_diagram_for_publicma_55" ismap="ismap" class="graph-without-title" />
@@ -547,14 +547,78 @@ their scores and geography.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.models.Plan-class.html#find_plan_relationships" class="summary-sig-name">find_plan_relationships</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">other_plan</span>,
+        <span class="summary-sig-arg">version</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">other_version</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">inverse</span>=<span class="summary-sig-default">False</span>,
+        <span class="summary-sig-arg">de_9im</span>=<span class="summary-sig-default">'T********'</span>)</span><br />
+      Finds all relationships between this plan and the below one.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#Plan.find_plan_relationships">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
           <td><span class="summary-sig"><a href="publicmapping.redistricting.models.Plan-class.html#find_plan_splits" class="summary-sig-name">find_plan_splits</a>(<span class="summary-sig-arg">self</span>,
         <span class="summary-sig-arg">other_plan</span>,
         <span class="summary-sig-arg">version</span>=<span class="summary-sig-default">None</span>,
         <span class="summary-sig-arg">other_version</span>=<span class="summary-sig-default">None</span>,
         <span class="summary-sig-arg">inverse</span>=<span class="summary-sig-default">False</span>)</span><br />
-      Determines if this plan splits the below Plan.</td>
+      Helper method that finds plan splits.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#Plan.find_plan_splits">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.models.Plan-class.html#find_plan_components" class="summary-sig-name">find_plan_components</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">other_plan</span>,
+        <span class="summary-sig-arg">version</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">other_version</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">inverse</span>=<span class="summary-sig-default">False</span>)</span><br />
+      Helper method that finds the components of districts.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#Plan.find_plan_components">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.models.Plan-class.html#find_geolevel_relationships" class="summary-sig-name">find_geolevel_relationships</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">geolevelid</span>,
+        <span class="summary-sig-arg">version</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">inverse</span>=<span class="summary-sig-default">False</span>,
+        <span class="summary-sig-arg">de_9im</span>=<span class="summary-sig-default">'T********'</span>)</span><br />
+      Finds all relationships between this plan and the below geolevel layer.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#Plan.find_geolevel_relationships">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -572,9 +636,29 @@ their scores and geography.</td>
         <span class="summary-sig-arg">geolevelid</span>,
         <span class="summary-sig-arg">version</span>=<span class="summary-sig-default">None</span>,
         <span class="summary-sig-arg">inverse</span>=<span class="summary-sig-default">False</span>)</span><br />
-      Determines if this plan splits the below Plan.</td>
+      Helper method that finds geolevel splits.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#Plan.find_geolevel_splits">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.models.Plan-class.html#find_geolevel_components" class="summary-sig-name">find_geolevel_components</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">geolevelid</span>,
+        <span class="summary-sig-arg">version</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">inverse</span>=<span class="summary-sig-default">False</span>)</span><br />
+      Helper method that finds components of geolevel units.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#Plan.find_geolevel_components">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -591,9 +675,48 @@ their scores and geography.</td>
           <td><span class="summary-sig"><a name="compute_splits"></a><span class="summary-sig-name">compute_splits</span>(<span class="summary-sig-arg">self</span>,
         <span class="summary-sig-arg">target</span>,
         <span class="summary-sig-arg">version</span>=<span class="summary-sig-default">None</span>,
-        <span class="summary-sig-arg">inverse</span>=<span class="summary-sig-default">None</span>)</span></td>
+        <span class="summary-sig-arg">inverse</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">extended</span>=<span class="summary-sig-default">None</span>)</span></td>
           <td align="right" valign="top">
             <span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#Plan.compute_splits">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="get_community_type_union"></a><span class="summary-sig-name">get_community_type_union</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">target</span>,
+        <span class="summary-sig-arg">version</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">inverse</span>=<span class="summary-sig-default">None</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#Plan.get_community_type_union">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="count_community_type_union"></a><span class="summary-sig-name">count_community_type_union</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">target</span>,
+        <span class="summary-sig-arg">version</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">inverse</span>=<span class="summary-sig-default">None</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#Plan.count_community_type_union">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -647,13 +770,14 @@ their scores and geography.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a href="publicmapping.redistricting.models.Plan-class.html#find_splits" class="summary-sig-name">find_splits</a>(<span class="summary-sig-arg">above_id</span>,
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.models.Plan-class.html#find_relationships" class="summary-sig-name">find_relationships</a>(<span class="summary-sig-arg">above_id</span>,
         <span class="summary-sig-arg">below_id</span>,
         <span class="summary-sig-arg">above_version</span>=<span class="summary-sig-default">None</span>,
-        <span class="summary-sig-arg">below_version</span>=<span class="summary-sig-default">None</span>)</span><br />
-      Determines if the above layer splits the below layer</td>
+        <span class="summary-sig-arg">below_version</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">de_9im</span>=<span class="summary-sig-default">'T********'</span>)</span><br />
+      Finds all relationships between two layers using the supplied intersection matrix</td>
           <td align="right" valign="top">
-            <span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#Plan.find_splits">source&nbsp;code</a></span>
+            <span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#Plan.find_relationships">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -1505,27 +1629,28 @@ Parameters:
   </dl>
 </td></tr></table>
 </div>
-<a name="find_splits"></a>
+<a name="find_relationships"></a>
 <div>
 <table class="details" border="1" cellpadding="3"
        cellspacing="0" width="100%" bgcolor="white">
 <tr><td>
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">find_splits</span>(<span class="sig-arg">above_id</span>,
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">find_relationships</span>(<span class="sig-arg">above_id</span>,
         <span class="sig-arg">below_id</span>,
         <span class="sig-arg">above_version</span>=<span class="sig-default">None</span>,
-        <span class="sig-arg">below_version</span>=<span class="sig-default">None</span>)</span>
+        <span class="sig-arg">below_version</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">de_9im</span>=<span class="sig-default">'T********'</span>)</span>
     <br /><em class="fname">Static Method</em>
   </h3>
   </td><td align="right" valign="top"
-    ><span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#Plan.find_splits">source&nbsp;code</a></span>&nbsp;
+    ><span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#Plan.find_relationships">source&nbsp;code</a></span>&nbsp;
     </td>
   </tr></table>
   
   <pre class="literalblock">
 
-Determines if the above layer splits the below layer
+Finds all relationships between two layers using the supplied intersection matrix
 
 Parameters:
     above_id -- The id of the layer that is 'above' the below plan hierarchically.
@@ -1538,10 +1663,82 @@ Parameters:
 
     below_version -- Required only if the below_id is a Plan
 
+    de_9im -- Dimensionally extended nine-intersection model string. Optional, by
+              default this is set to a standard intersection. ST_Relate is called
+              on each permutation of the two layers with the first parameter being
+              the above geometry, the second parameter being the below geometry,
+              and de_9im being the third parameter. Some examples:
+
+              T*F**FFF* (Equals)
+              FF*FF**** (Disjoint)
+              T******** (Intersects)
+              FT******* (Touches)
+              T*T****** (Crosses)
+              T*F**F*** (Within)
+              T*****FF* (Contains)
+              T*T***T** (Overlaps)
+              T*****FF* (Covers)
+              T*F**F*** (CoveredBy)
+
 Returns:
-    An array of splits, given as tuples, where the first item is the id of
-    the district in the above layer which causes the split, the second 
-    item is the id of the district in the other layer which is split, 
+    An array of relationships, given as tuples, where the first item is the id of
+    the district in the above layer of the relationship, the second 
+    item is the id of the district in the below layer of the relationship, 
+    the third item is the name associated with the first, and
+    the fourth item is the name associated with the second.
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="find_plan_relationships"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">find_plan_relationships</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">other_plan</span>,
+        <span class="sig-arg">version</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">other_version</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">inverse</span>=<span class="sig-default">False</span>,
+        <span class="sig-arg">de_9im</span>=<span class="sig-default">'T********'</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#Plan.find_plan_relationships">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Finds all relationships between this plan and the below one.
+
+Parameters:
+    other_plan -- The plan that is 'below' this plan hierarchically. The below
+                  plan should most likely have a larger number of districts. A split occurs
+                  when a district in this plan crosses the boundary of a district
+                  in the other plan.
+                  
+    version -- Optional; if specified, splits will be calculated using
+               districts in the specified version of the plan. If
+               omitted, the most recent plan version will be used.
+
+    other_version -- Optional; if specified, splits will be calculated using
+                     districts in the specified version of the other plan. If
+                     omitted, the most recent version of the other plan
+                     will be used.
+
+    inverse -- Optional; if specified, performs the inverse split operation
+
+    de_9im -- Dimensionally extended nine-intersection model string. Optional, by
+              default this is set to a standard intersection.            
+
+Returns:
+    An array of relationships, given as tuples, where the first item is the id of
+    the district in the above layer of the relationship, the second 
+    item is the id of the district in the below layer of the relationship, 
     the third item is the name associated with the first, and
     the fourth item is the name associated with the second.
 
@@ -1568,31 +1765,77 @@ Returns:
     </td>
   </tr></table>
   
+  <p>Helper method that finds plan splits. See find_plan_relationships for 
+  parameter details.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="find_plan_components"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">find_plan_components</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">other_plan</span>,
+        <span class="sig-arg">version</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">other_version</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">inverse</span>=<span class="sig-default">False</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#Plan.find_plan_components">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Helper method that finds the components of districts. See 
+  find_plan_relationships for parameter details. Returns a map of all other
+  districts that are fully contained within each district of this plan.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="find_geolevel_relationships"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">find_geolevel_relationships</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">geolevelid</span>,
+        <span class="sig-arg">version</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">inverse</span>=<span class="sig-default">False</span>,
+        <span class="sig-arg">de_9im</span>=<span class="sig-default">'T********'</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#Plan.find_geolevel_relationships">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
   <pre class="literalblock">
 
-Determines if this plan splits the below Plan.
+Finds all relationships between this plan and the below geolevel layer.
 
 Parameters:
-    other_plan -- The plan that is 'below' this plan hierarchically. The below
-                  plan should most likely have a larger number of districts. A split occurs
-                  when a district in this plan crosses the boundary of a district
-                  in the other plan.
+    geolevelid -- The geolevel that is 'below' this plan hierarchically.
+                  A split occurs when a district in this plan crosses the
+                  boundary of a geounit in the geolevel.
                   
     version -- Optional; if specified, splits will be calculated using
                districts in the specified version of the plan. If
                omitted, the most recent plan version will be used.
 
-    other_version -- Optional; if specified, splits will be calculated using
-                     districts in the specified version of the other plan. If
-                     omitted, the most recent version of the other plan
-                     will be used.
-
     inverse -- Optional; if specified, performs the inverse split operation
 
+    de_9im -- Dimensionally extended nine-intersection model string. Optional, by
+              default this is set to a standard intersection.            
+
 Returns:
-    An array of splits, given as tuples, where the first item is the district_id of
-    the district in this plan which causes the split, the second item is the
-    district_id of the district in the other plan which is split, 
+    An array of relationships, given as tuples, where the first item is the id of
+    the district in the above layer of the relationship, the second 
+    item is the portable_id of the geounit in the below layer of the relationship, 
     the third item is the name associated with the first, and
     the fourth item is the name associated with the second.
 
@@ -1618,29 +1861,33 @@ Returns:
     </td>
   </tr></table>
   
-  <pre class="literalblock">
-
-Determines if this plan splits the below Plan.
-
-Parameters:
-    geolevelid -- The geolevel that is 'below' this plan hierarchically.
-                  A split occurs when a district in this plan crosses the
-                  boundary of a geounit in the geolevel.
-                  
-    version -- Optional; if specified, splits will be calculated using
-               districts in the specified version of the plan. If
-               omitted, the most recent plan version will be used.
-
-    inverse -- Optional; if specified, performs the inverse split operation
-
-Returns:
-    An array of splits, given as tuples, where the first item is the district_id of
-    the district in this plan which causes the split, the second item is the
-    portable_id of the geounit in the geolevel which is split, 
-    the third item is the name associated with the first, and
-    the fourth item is the name associated with the second.
-
-</pre>
+  <p>Helper method that finds geolevel splits. See find_plan_relationships 
+  for parameter details.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="find_geolevel_components"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">find_geolevel_components</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">geolevelid</span>,
+        <span class="sig-arg">version</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">inverse</span>=<span class="sig-default">False</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#Plan.find_geolevel_components">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Helper method that finds components of geolevel units. See 
+  find_plan_relationships for parameter details. Returns a map of all 
+  geolevel units that are fully contained within each district of this 
+  plan.</p>
   <dl class="fields">
   </dl>
 </td></tr></table>
@@ -1732,7 +1979,7 @@ models.CharField(max_length= 500, db_index= True, blank= True)
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">
-    Generated by Epydoc 3.0.1 on Mon May  9 09:24:21 2011
+    Generated by Epydoc 3.0.1 on Tue Jun 21 19:10:43 2011
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"
