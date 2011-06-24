@@ -37,6 +37,7 @@ splitsreport = function(options) {
             target: {},
             okButton: {},
             inverseCheckbox: {},
+            extendedCheckbox: {},
             availableLayers: {},
             referenceLayerSelect: {},
             splitsReportUrl: {},
@@ -80,7 +81,8 @@ splitsreport = function(options) {
                 data: {
                     version: _options.getVersionFn(),
                     layers: ids,
-                    inverse: _options.inverseCheckbox.is(':checked')        
+                    inverse: _options.inverseCheckbox.is(':checked'),
+                    extended: _options.extendedCheckbox.is(':checked')
                 },
                 success: function(data, textStatus, xhr) {
                     waitDialog.remove();

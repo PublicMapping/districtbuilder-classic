@@ -1098,6 +1098,7 @@ def get_splits_report(request, planid):
 
     version = int(request.REQUEST['version'] if 'version' in request.REQUEST else plan.version)
     inverse = request.REQUEST['inverse'] == 'true' if 'inverse' in request.REQUEST else False
+    extended = request.REQUEST['extended'] == 'true' if 'extended' in request.REQUEST else False
     layers = request.REQUEST.getlist('layers[]')
     if len(layers) == 0:
         return HttpResponse('<div>No layers were provided.</div>', mimetype='text/plain')
@@ -1106,7 +1107,7 @@ def get_splits_report(request, planid):
         report = loader.get_template('split_report.html')
         html = ''
         for layer in layers:
-            my_context = plan.compute_splits(layer, version = version, inverse = inverse)
+            my_context = plan.compute_splits(layer, version = version, inverse = inverse, extended = extended)
             my_context['type_splits'] = plan.get_community_type_union(layer, version = version, inverse = inverse)
             my_context['type_counts'] = plan.count_community_type_union(layer, version=version, inverse = inverse)
             calc_context = DjangoContext(my_context)

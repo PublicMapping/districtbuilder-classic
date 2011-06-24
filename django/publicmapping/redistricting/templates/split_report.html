@@ -1,6 +1,6 @@
 <div class="split_report">
 <div>Total Splits: {{ splits|length }}</div>
-<div id"split_indicator">* indicates split</div> 
+<div id="split_indicator">* indicates split</div> 
 <div class="table_container">
 <table class="report"><thead><tr><th>{{ plan_name }}</th><th>{{ other_name }}</th><th>Total Splits</th></tr></thead><tbody>
 {% regroup named_splits by geo as split_list %}

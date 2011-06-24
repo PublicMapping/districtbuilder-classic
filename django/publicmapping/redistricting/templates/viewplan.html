@@ -473,7 +473,7 @@
                     <div id="splits_report_select_panel">
                         <h2>Generate Splits Report for Current {{ plan_text|title }}</h2>
                         <div id="splits_report_reminder_text">
-                            Select up to 3 reference layers for comparison.
+                            Select reference layer(s) for comparison.
                         </div>
                         <div id="splits_report_available_layers">
                             {% for snap in snaplayers %}
@@ -486,15 +486,23 @@
                             {% endfor %}
                         </div>
 
-                        <h2>Advanced option</h2>
+                        <h2>Advanced options</h2>
                         <div class="inverse_choice_wrapper">
                             <input id="inverse_choice" type="checkbox" />
-                            <label id="inverse_choice_label" for="inverse_choice">
-                                Reverse splits detection:
-                                
-                            </label>
-                            <div id="inverse_choice_label_more">
-                                Where selected reference layers split current {{ plan_text }} boundaries
+                            <label id="inverse_choice_label" for="inverse_choice">Reverse splits detection</label>
+                        </div>                  
+
+                        <div class="extended_choice_wrapper">
+                            <input id="extended_choice" type="checkbox" />
+                            <label id="extended_choice_label" for="extended_choice">Extended report: List all</label>
+                            <div id="extended_choice_label_more">
+                                districts or communities contained within each district.
+                            </div>
+                            <div id="extended_choice_label_warning">
+                                (Choosing this option will
+                                significantly increase the amount
+                                of time it takes to generate the
+                                report.)
                             </div>
                         </div>                  
 
@@ -517,6 +525,7 @@
                         target: $('#generate_splits_report_button'),
                         okButton: $('#splits_report_ok_button'),
                         inverseCheckbox: $('#inverse_choice'),
+                        extendedCheckbox: $('#extended_choice'),
                         availableLayers: $('#splits_report_available_layers'),
                         referenceLayerSelect: $('#reference_layer_select'),
                         splitsReportUrl: '/districtmapping/plan/{{ plan.id }}/splitsreport/',

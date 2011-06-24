@@ -1891,7 +1891,7 @@ CROSS JOIN (
         """
         return self.find_geolevel_relationships(geolevelid, version, inverse, 'T*****FF*')
 
-    def compute_splits(self, target, version=None, inverse=None):
+    def compute_splits(self, target, version=None, inverse=None, extended=None):
         results = {
             'splits':None,
             'named_splits':None,
