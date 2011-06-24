@@ -135,13 +135,34 @@ as reports and downloads) and cron jobs.
         
     http://spatialreference.org/ref/epsg/3785/
 
- 7. Now we'll use the setup.py script to configure our application. Set the
+ 7. The code is distributed with a set of SLD files that create color, or
+    choropleth maps of Virginia geography. If you are using a dataset other
+    than the sample VA data, edit the SLD files to reflect the population
+    distributions for your area. The SLD files can be found at:
+
+    > /projects/publicmapping/trunk/sld
+
+    In addition, if you change the namespace in the configuration file, you
+    will need to rename the SLD files to match. This restriction is in place
+    for the circumstances where one admin may want to run multiple instances
+    of DistrictBuilder on the same server.  You can run the following 
+    commands to rename the namespace of "gmu" to "xyz" on all the SLD 
+    files:
+
+    > cd /projects/publicmapping/trunk/sld
+    > for f in "gmu:*sld"; do mv "$f" "xyz:${f:4}"; done
+
+    For more information about editing SLDs, see the wiki page:
+
+    https://sourceforge.net/apps/trac/publicmapping/wiki/StyleLayerDescriptors
+
+ 8. Now we'll use the setup.py script to configure our application. Set the
     script to be executable:
     
     > cd /projects/publicmapping/trunk/django/publicmapping
     > sudo chmod u+x setup.py
 
- 8. Run the setup script with the appropriate parameters - the parts of 
+ 9. Run the setup script with the appropriate parameters - the parts of 
     the app you want to set up, along with the path to an xsd and a 
     config.xml file.  
     
@@ -194,7 +215,7 @@ as reports and downloads) and cron jobs.
     * The importing and nesting must occur in the order of smallest 
     geography to largest geography.
 
- 9. Django serves up SLD files to clients, and need this mime type added
+10. Django serves up SLD files to clients, and need this mime type added
     to the system's known mime types in order to serve the content
     properly.
 
@@ -202,12 +223,12 @@ as reports and downloads) and cron jobs.
     b. Find the line that starts with "application/xml"
     c. Add " sld" to the end of this line, after "xml xsl xsd"
 
-10. Now that you have the app configured and your data imported, you can 
+11. Now that you have the app configured and your data imported, you can 
     run the app using Django's testing server
      
     > python ./manage.py runserver
 
-11. You will see a notice that your server is running and you can access 
+12. You will see a notice that your server is running and you can access 
     your application at 127.0.0.1:8000  Enter that location into your 
     browser on the local machine and you should be able to use the 
     application.
