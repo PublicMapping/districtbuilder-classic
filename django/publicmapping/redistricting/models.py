@@ -1997,7 +1997,7 @@ CROSS JOIN (
                 results['named_splits'] += [(other_names[s[0]], my_names[s[1]], False) for s in results['interiors']]
             else:
                 results['named_splits'] = [(s[2], my_names[s[1]], True) for s in results['splits']]
-                results['named_splits'] += [(s[2], my_names[s[1]], False) for s in results['splits']]
+                results['named_splits'] += [(s[2], my_names[s[1]], False) for s in results['interiors']]
 
             results['plan_name'] = results['other_name']
             results['other_name'] = self.name
@@ -2022,15 +2022,15 @@ CROSS JOIN (
         # We only return this for the community on the "bottom" layer
         target_id = int(target[target.find('.')+1:])
         community = None
-        if target.startswith('geolevel') and inverse is True and self.is_community:
+        if target.startswith('geolevel') and inverse is True and self.is_community():
             # Get our splits
             intersections = self.find_geolevel_intersections(target_id, version=version, inverse=inverse)
             community = self
         elif target.startswith('plan'):
             target = Plan.objects.get(pk=target_id)
-            if inverse is True and self.is_community:
+            if inverse is True and self.is_community():
                 community = self
-            elif inverse is False and target.is_community:
+            elif inverse is False and target.is_community():
                 community = target
                 version = target.version
             intersections = self.find_plan_intersections(target, version=version, inverse=inverse)

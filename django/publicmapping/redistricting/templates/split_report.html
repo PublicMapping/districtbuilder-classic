@@ -10,7 +10,11 @@
 {% regroup named_splits|dictsort:"geo" by geo as split_list %}
 {% for geo in split_list %}
     <tr>
-        <td>{{ geo.grouper }}</td><td /><td>{{ geo.list|length }}</td>
+        {% if extended %}
+            <td>{{ geo.grouper }}</td><td /><td>{{ geo.list|count_true_values:"split"}} (of {{ geo.list|length }})</td>
+        {% else %}
+            <td>{{ geo.grouper }}</td><td /><td>{{ geo.list|length }}</td>
+        {% endif %}
     </tr>
     {% for split in geo.list|dictsort_ignorecase:"interior" %}
     <tr>

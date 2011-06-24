@@ -1109,7 +1109,9 @@ def get_splits_report(request, planid):
         for layer in layers:
             my_context = {'extended': extended}
             my_context.update(plan.compute_splits(layer, version = version, inverse = inverse, extended = extended))
-            my_context.update(plan.get_community_type_info(layer, version = version, inverse = inverse))
+            community_info = plan.get_community_type_info(layer, version = version, inverse = inverse)
+            if community_info is not None:
+                my_context.update(community_info)
             calc_context = DjangoContext(my_context)
             html += report.render(calc_context)
         return HttpResponse(html, mimetype='text/html')
