@@ -1670,7 +1670,7 @@ AND st_intersects(
         return districts
 
     @staticmethod
-    def find_relationships(above_id, below_id, above_version=None, below_version=None, de_9im='***T*****'):
+    def find_relationships(above_id, below_id, above_version=None, below_version=None, de_9im='T********'):
         """
         Finds all relationships between two layers using the supplied intersection matrix
 
@@ -1781,9 +1781,9 @@ CROSS JOIN (
         cursor.execute(query)
         return cursor.fetchall()
 
-    def find_plan_splits(self, other_plan, version=None, other_version=None, inverse=False):
+    def find_plan_relationships(self, other_plan, version=None, other_version=None, inverse=False, de_9im='T********'):
         """
-        Determines if this plan splits the below Plan.
+        Finds all relationships between this plan and the below one.
 
         Parameters:
             other_plan -- The plan that is 'below' this plan hierarchically. The below
@@ -1802,15 +1802,18 @@ CROSS JOIN (
 
             inverse -- Optional; if specified, performs the inverse split operation
 
+            de_9im -- Dimensionally extended nine-intersection model string. Optional, by
+                      default this is set to a standard intersection.            
+
         Returns:
-            An array of splits, given as tuples, where the first item is the district_id of
-            the district in this plan which causes the split, the second item is the
-            district_id of the district in the other plan which is split, 
+            An array of relationships, given as tuples, where the first item is the id of
+            the district in the above layer of the relationship, the second 
+            item is the id of the district in the below layer of the relationship, 
             the third item is the name associated with the first, and
             the fourth item is the name associated with the second.
         """
         if not other_plan:
-            raise Exception('Other plan must be specified for use in finding splits.')
+            raise Exception('Other plan must be specified for use in finding relationships.')
         
         version = version if not version is None else self.version
         other_version = other_version if not other_version is None else other_plan.version
@@ -1821,11 +1824,24 @@ CROSS JOIN (
         bottom_id = 'plan.%d' % self.id if inverse else 'plan.%d' % other_plan.id
         bottom_version = version if inverse else other_version
         
-        return Plan.find_relationships(top_id, bottom_id, top_version, bottom_version, '***T*****')
+        return Plan.find_relationships(top_id, bottom_id, top_version, bottom_version, de_9im)
 
-    def find_geolevel_splits(self, geolevelid, version=None, inverse=False):
+    def find_plan_splits(self, other_plan, version=None, other_version=None, inverse=False):
         """
-        Determines if this plan splits the below Plan.
+        Helper method that finds plan splits. See find_plan_relationships for parameter details.
+        """
+        return self.find_plan_relationships(other_plan, version, other_version, inverse, '***T*****')
+
+    def find_plan_components(self, other_plan, version=None, other_version=None, inverse=False):
+        """
+        Helper method that finds the components of districts. See find_plan_relationships for parameter details.
+        Returns a map of all other districts that are fully contained within each district of this plan.
+        """
+        return self.find_plan_relationships(other_plan, version, other_version, inverse, 'T*****FF*')
+
+    def find_geolevel_relationships(self, geolevelid, version=None, inverse=False, de_9im='T********'):
+        """
+        Finds all relationships between this plan and the below geolevel layer.
 
         Parameters:
             geolevelid -- The geolevel that is 'below' this plan hierarchically.
@@ -1838,10 +1854,13 @@ CROSS JOIN (
 
             inverse -- Optional; if specified, performs the inverse split operation
 
+            de_9im -- Dimensionally extended nine-intersection model string. Optional, by
+                      default this is set to a standard intersection.            
+
         Returns:
-            An array of splits, given as tuples, where the first item is the district_id of
-            the district in this plan which causes the split, the second item is the
-            portable_id of the geounit in the geolevel which is split, 
+            An array of relationships, given as tuples, where the first item is the id of
+            the district in the above layer of the relationship, the second 
+            item is the portable_id of the geounit in the below layer of the relationship, 
             the third item is the name associated with the first, and
             the fourth item is the name associated with the second.
         """
@@ -1856,7 +1875,20 @@ CROSS JOIN (
         bottom_id = 'plan.%d' % self.id if inverse else 'geolevel.%d' % geolevelid
         bottom_version = version if inverse else None
         
-        return Plan.find_relationships(top_id, bottom_id, top_version, bottom_version, '***T*****')
+        return Plan.find_relationships(top_id, bottom_id, top_version, bottom_version, de_9im)
+
+    def find_geolevel_splits(self, geolevelid, version=None, inverse=False):
+        """
+        Helper method that finds geolevel splits. See find_plan_relationships for parameter details.
+        """
+        return self.find_geolevel_relationships(geolevelid, version, inverse, '***T*****')
+
+    def find_geolevel_components(self, geolevelid, version=None, inverse=False):
+        """
+        Helper method that finds components of geolevel units. See find_plan_relationships for parameter details.
+        Returns a map of all geolevel units that are fully contained within each district of this plan.
+        """
+        return self.find_geolevel_relationships(geolevelid, version, inverse, 'T*****FF*')
 
     def compute_splits(self, target, version=None, inverse=None):
         results = {

@@ -3460,7 +3460,7 @@ class NestingTestCase(BaseTestCase):
         self.assertFalse(self.top.is_below(self.middle), "Top was below Middle")
         self.assertFalse(self.top.is_below(self.top), "Top was below Top")
 
-    def test_split_identical_districts(self):
+    def test_relationships_identical_districts(self):
         gl, gs = self.geolevel, list(Geounit.objects.filter(geolevel=self.geolevel).order_by("id"))
         p1, p1d1, p1d2 = self.plan, self.p1d1, self.p1d2
         p2, p2d1, p2d2 = self.plan2, self.p2d1, self.p2d2
@@ -3480,7 +3480,13 @@ class NestingTestCase(BaseTestCase):
         splits = p1.find_plan_splits(p2)
         self.assertEqual(len(splits), 0, "Found splits in identical plans")
 
-    def test_split_bottom_district_smaller(self):
+        # Test contains -- two districts should each contain each other
+        contains = p1.find_plan_components(p2)
+        self.assertEqual(len(contains), 2, "Didn't find 2 contained districts")
+        self.assertEqual(contains[0][:2], (1, 1), "Didn't find p1d1 to contain p2d1")
+        self.assertEqual(contains[1][:2], (2, 2), "Didn't find p1d2 to contain p2d1")
+
+    def test_relationships_bottom_district_smaller(self):
         gl, gs = self.geolevel, list(Geounit.objects.filter(geolevel=self.geolevel).order_by("id"))
         p1, p1d1, p1d2 = self.plan, self.p1d1, self.p1d2
         p2, p2d1, p2d2 = self.plan2, self.p2d1, self.p2d2
@@ -3500,7 +3506,13 @@ class NestingTestCase(BaseTestCase):
         splits = p1.find_plan_splits(p2)
         self.assertEqual(len(splits), 0, "Found splits when bottom plan had a smaller district")
 
-    def test_split_top_district_smaller(self):
+        # Test contains -- top two districts should contain bottom two
+        contains = p1.find_plan_components(p2)
+        self.assertEqual(len(contains), 2, "Didn't find 2 contained districts")
+        self.assertEqual(contains[0][:2], (1, 1), "Didn't find p1d1 to contain p2d1")
+        self.assertEqual(contains[1][:2], (2, 2), "Didn't find p1d2 to contain p2d1")
+
+    def test_relationships_top_district_smaller(self):
         gl, gs = self.geolevel, list(Geounit.objects.filter(geolevel=self.geolevel).order_by("id"))
         p1, p1d1, p1d2 = self.plan, self.p1d1, self.p1d2
         p2, p2d1, p2d2 = self.plan2, self.p2d1, self.p2d2
@@ -3521,7 +3533,12 @@ class NestingTestCase(BaseTestCase):
         self.assertEqual(len(splits), 1, "Didn't find 1 split")
         self.assertEqual(splits[0][:2], (2, 2), "Didn't find p1d2 to split p2d2")
 
-    def test_split_move_diagonally(self):
+        # Test contains -- one of the bottom districts should contain the other one
+        contains = p1.find_plan_components(p2)
+        self.assertEqual(len(contains), 1, "Didn't find 1 contained districts")
+        self.assertEqual(contains[0][:2], (1, 1), "Didn't find p1d1 to contain p2d1")
+
+    def test_relationships_move_diagonally(self):
         gl, gs = self.geolevel, list(Geounit.objects.filter(geolevel=self.geolevel).order_by("id"))
         p1, p1d1, p1d2 = self.plan, self.p1d1, self.p1d2
         p2, p2d1, p2d2 = self.plan2, self.p2d1, self.p2d2
@@ -3543,6 +3560,11 @@ class NestingTestCase(BaseTestCase):
         self.assertEqual(splits[0][:2], (1, 1), "Didn't find p1d1 to split p2d1")
         self.assertEqual(splits[1][:2], (2, 1), "Didn't find p1d2 to split p2d1")
         self.assertEqual(splits[2][:2], (2, 2), "Didn't find p1d2 to split p2d2")
+
+        # Test contains -- shouldn't be any districts fully contained
+        contains = p1.find_plan_components(p2)
+        self.assertEqual(len(contains), 0, "Found contained districts when there should be none.")
+        
 
 class CommunityTypeTestCase(BaseTestCase):
     """
