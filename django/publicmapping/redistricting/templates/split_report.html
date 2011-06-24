@@ -1,1 +1,49 @@
-{% for planscore in planscores %}{{ planscore.score.0|safe }}{% endfor %}
+<div class="split_report">
+<div>Total Splits: {{ splits|length }}</div>
+<div id"split_indicator">* indicates split</div> 
+<div class="table_container">
+<table class="report"><thead><tr><th>{{ plan_name }}</th><th>{{ other_name }}</th><th>Total Splits</th></tr></thead><tbody>
+{% regroup named_splits by geo as split_list %}
+{% for geo in split_list %}
+    <tr>
+        <td>{{ geo.grouper }}</td><td /><td>{{ geo.list|length }}</td>
+    </tr>
+    {% for split in geo.list %}
+    <tr>
+        <td /><td>{{ split.splitter }}</td><td />
+    </tr>
+    {% endfor %}
+{% endfor %}
+</tbody></table>
+</div>
+</div>
+{% if type_splits %}
+    <div class="split_table_type">Type Summary By District</div>
+    <table class="report"><thead><tr><th>{{ plan_name }}</th><th>Type</th><th>Total By District</th></tr></thead><tbody>
+    {% regroup type_splits by name as type_list %}
+    {% for name in type_list %}
+        <tr>
+            <td>{{ name.grouper }}</td><td /><td />
+        </tr>
+        {% for split in name.list %}
+        <tr>
+            <td /><td>{{ split.type }}</td><td>{{ split.number }}</td>
+        </tr>
+        {% endfor %}
+    {% endfor %}
+    </tbody></table>
+    </div>
+    </div>
+{% endif %}
+{% if type_counts %}
+<div class="split_table_type">Type Summary</div>
+<table class="report"><thead><tr><th>Type</th><th>Total</th></tr></thead><tbody>
+    {% for type in type_counts %}
+    <tr>
+        <td>{{ type.type }}</td><td>{{ type.number }}</td>
+    </tr>
+    {% endfor %}
+</tbody></table>
+</div>
+</div>
+{% endif %}

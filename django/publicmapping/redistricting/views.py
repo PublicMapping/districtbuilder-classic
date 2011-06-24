@@ -45,6 +45,7 @@ from django.contrib.gis.geos import GEOSGeometry
 from django.contrib.gis.gdal import *
 from django.contrib.gis.gdal.libgdal import lgdal
 from django.contrib import humanize
+from django.template import loader, Context as DjangoContext
 from django.utils import simplejson as json
 from django.views.decorators.cache import cache_control
 from django.template.defaultfilters import slugify, force_escape
@@ -1102,20 +1103,14 @@ def get_splits_report(request, planid):
         return HttpResponse('<div>No layers were provided.</div>', mimetype='text/plain')
 
     try :
-        # Get a ScoreDisplay and components to render
-        display = ScoreDisplay(is_page=False, title="Splits Report", owner=User(), legislative_body = plan.legislative_body)
-        panel = ScorePanel(title="Splits Report", type="plan", template='split_report.html', cssclass="split_panel")
-        function = ScoreFunction(calculator="redistricting.calculators.SplitCounter", name="splits_test", label="Geolevel Splits", is_planscore=True)
-
+        report = loader.get_template('split_report.html')
         html = ''
         for layer in layers:
-            arg1 = ScoreArgument(argument="boundary_id", value=layer, type="literal")
-            arg2 = ScoreArgument(argument="inverse", value=(1 if inverse else 0), type="literal")
-            arg3 = ScoreArgument(argument="version", value=version, type="literal")
-            components = [(panel, [(function, arg1, arg2, arg3)])]
-
-            html += display.render(plan, components=components)
-
+            my_context = plan.compute_splits(layer, version = version, inverse = inverse)
+            my_context['type_splits'] = plan.get_community_type_union(layer, version = version, inverse = inverse)
+            my_context['type_counts'] = plan.count_community_type_union(layer, version=version, inverse = inverse)
+            calc_context = DjangoContext(my_context)
+            html += report.render(calc_context)
         return HttpResponse(html, mimetype='text/html')
     except Exception as ex:
         print traceback.format_exc()
@@ -1464,7 +1459,7 @@ def get_statistics(request, planid):
     else:
         version = plan.version
 
-    display = ScoreDisplay.objects.get(title='Demographics', legislative_body=plan.legislative_body)    
+    display = ScoreDisplay.objects.filter(title='Demographics', legislative_body=plan.legislative_body)[0]
     
     if 'displayId' in request.REQUEST:
         try:

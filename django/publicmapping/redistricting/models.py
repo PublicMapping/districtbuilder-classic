@@ -1,4 +1,5 @@
 """
+bjects.filter(object_id__in=[a.id for a in dists])
 Define the models used by the redistricting app.
 
 The classes in redistricting.models define the data models used in the 
@@ -1962,7 +1963,60 @@ CROSS JOIN (
             else:
                 results['named_splits'] = [(my_names[s[0]], s[3]) for s in results['splits']]
 
+        # Get dictionaries on which we can regroup
+        results['named_splits'] = [{'geo': x, 'splitter': y} for x, y in results['named_splits']]
         return results 
+
+    def get_community_type_union(self, target, version=None, inverse=None):
+        # We only return this for the community on the "bottom" layer
+        id = int(target[target.find('.')+1:])
+
+        if target.startswith('geolevel'):
+            return
+        if target.startswith('plan'):
+            target = Plan.objects.get(pk=id)
+            if self.is_community and inverse is True:
+                community_id = self.id
+            elif target.is_community and inverse is False:
+                community_id = id
+                target = self
+            else:
+                return
+        districts = target.get_districts_at_version(version)
+        my_types = []
+        for district in districts:
+            community_types = district.get_community_type_union(community_id, version=version)
+            for key, value in community_types.items():
+                my_types.append({ 'name':  district.name, 'type': key, 'number': value })
+        return my_types
+
+    def count_community_type_union(self, target, version=None, inverse=None):
+        if inverse is True:
+            districts = self.get_districts_at_version(version)
+        elif target.startswith('plan'):
+            id = int(target[target.find('.')+1:])
+            plan = Plan.objects.get(pk=id)
+            if plan.is_community:
+                districts = plan.get_districts_at_version(plan.version)
+            else:
+                return
+        else:
+            return
+
+        items = TaggedItem.objects.filter(object_id__in=[d.id for d in districts])
+        types = {}
+        for i in items:
+            name = i.tag.name
+            if name.startswith('type='):
+                name = name[5:]
+            else:
+                continue
+
+            if name in items:
+                types[name] += 1
+            else:
+                types[name] = 1
+        return [ {'type': key, 'number': value} for key, value in types.items() ]
 
 class PlanForm(ModelForm):
     """
@@ -2288,7 +2342,10 @@ class District(models.Model):
             community-mapping L{LegislativeBody}.
         @param version: The version of the community_map to examine.
             Defaults to the current plan version.
-        @return: The set of all community types in this district.
+        @return: A dictionary of all community types in this district, with keys
+            representing the type (without a leading 'type=' in the string), and 
+            the values representing the number of times the type intersects the
+            district.
         """
         community_map = Plan.objects.get(id=community_map_id)
 
@@ -2302,9 +2359,15 @@ class District(models.Model):
         # Filter by relation - must have interior intersection
         communities = filter(lambda z: True if self.geom.relate_pattern(z.geom, 'T********') else False, communities)
 
-        types = set()
+        types = {}
         for community in communities:
-            types = types | set(Tag.objects.get_for_object(community).filter(name__startswith='type='))
+            tags = Tag.objects.get_for_object(community).filter(name__startswith='type=')
+            for tag in tags:
+                name = tag.name[5:]
+                if name in types:
+                    types[name] += 1
+                else:
+                    types[name] = 1
         return types
 
 # Enable tagging of districts by registering them with the tagging module
