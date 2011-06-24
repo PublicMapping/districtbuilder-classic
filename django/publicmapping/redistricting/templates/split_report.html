@@ -1,16 +1,20 @@
+{% load redistricting_extras %}
 <div class="split_report">
 <div>Total Splits: {{ splits|length }}</div>
-<div id="split_indicator">* indicates split</div> 
+{% if extended %}
+    <div id="split_indicator">* indicates split</div> 
+{% endif %}
 <div class="table_container">
 <table class="report"><thead><tr><th>{{ plan_name }}</th><th>{{ other_name }}</th><th>Total Splits</th></tr></thead><tbody>
-{% regroup named_splits by geo as split_list %}
+{{ components }}
+{% regroup named_splits|dictsort:"geo" by geo as split_list %}
 {% for geo in split_list %}
     <tr>
         <td>{{ geo.grouper }}</td><td /><td>{{ geo.list|length }}</td>
     </tr>
-    {% for split in geo.list %}
+    {% for split in geo.list|dictsort_ignorecase:"interior" %}
     <tr>
-        <td /><td>{{ split.splitter }}</td><td />
+        <td /><td>{% if extended and split.split %}* {% endif %}{{ split.interior }}</td><td />
     </tr>
     {% endfor %}
 {% endfor %}
@@ -25,7 +29,7 @@
         <tr>
             <td>{{ name.grouper }}</td><td /><td />
         </tr>
-        {% for split in name.list %}
+        {% for split in name.list|dictsort_ignorecase:"type" %}
         <tr>
             <td /><td>{{ split.type }}</td><td>{{ split.number }}</td>
         </tr>
@@ -38,7 +42,7 @@
 {% if type_counts %}
 <div class="split_table_type">Type Summary</div>
 <table class="report"><thead><tr><th>Type</th><th>Total</th></tr></thead><tbody>
-    {% for type in type_counts %}
+    {% for type in type_counts|dictsort_ignorecase:"type" %}
     <tr>
         <td>{{ type.type }}</td><td>{{ type.number }}</td>
     </tr>

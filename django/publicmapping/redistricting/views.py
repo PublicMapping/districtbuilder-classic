@@ -1107,9 +1107,9 @@ def get_splits_report(request, planid):
         report = loader.get_template('split_report.html')
         html = ''
         for layer in layers:
-            my_context = plan.compute_splits(layer, version = version, inverse = inverse, extended = extended)
-            my_context['type_splits'] = plan.get_community_type_union(layer, version = version, inverse = inverse)
-            my_context['type_counts'] = plan.count_community_type_union(layer, version=version, inverse = inverse)
+            my_context = {'extended': extended}
+            my_context.update(plan.compute_splits(layer, version = version, inverse = inverse, extended = extended))
+            my_context.update(plan.get_community_type_info(layer, version = version, inverse = inverse))
             calc_context = DjangoContext(my_context)
             html += report.render(calc_context)
         return HttpResponse(html, mimetype='text/html')

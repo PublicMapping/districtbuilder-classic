@@ -1840,6 +1840,13 @@ CROSS JOIN (
         """
         return self.find_plan_relationships(other_plan, version, other_version, inverse, 'T*****FF*')
 
+    def find_plan_intersections(self, other_plan, version=None, other_version=None, inverse=False):
+        """
+        Helper method that finds intersecting districts. See find_plan_relationships for parameter details.
+        Returns a map of all other districts that intersect each district of this plan.
+        """
+        return self.find_plan_relationships(other_plan, version, other_version, inverse, 'T********')
+
     def find_geolevel_relationships(self, geolevelid, version=None, inverse=False, de_9im='T********'):
         """
         Finds all relationships between this plan and the below geolevel layer.
@@ -1891,9 +1898,63 @@ CROSS JOIN (
         """
         return self.find_geolevel_relationships(geolevelid, version, inverse, 'T*****FF*')
 
+    def find_geolevel_intersections(self, geolevelid, version=None, inverse=False):
+        """
+        Helper method that finds intersections with geounits. See find_plan_relationships for parameter details.
+        Returns a map of all geolevel units that intersect each district of this plan.
+        """
+        return self.find_geolevel_relationships(geolevelid, version, inverse, 'T********')
+
+    def get_community_types(self, version=None):
+        """
+        Given a plan, return a dictionary with community types, keyed on district_id
+        """
+        community_types = {}
+        
+        for d in self.get_districts_at_version(version):
+            typetags = filter(lambda tag:tag.name[:4]=='type', d.tags)
+            if typetags:
+                typetags = map(lambda tag:tag.name[5:], typetags)
+                community_types[d.district_id] = typetags
+        return community_types
+
+    def count_community_types(self, version=None):
+        """
+        Given a plan, return a list of dictionaries, with each community type
+        as the value for the 'type' key and the number of times it appears
+        in the plan as the value for the 'number' key
+        """
+        districts = self.get_districts_at_version(version)
+        items = TaggedItem.objects.filter(object_id__in=[d.id for d in districts])
+        types = {}
+        for i in items:
+            name = i.tag.name
+            if name.startswith('type='):
+                name = name[5:]
+            else:
+                continue
+
+            if name in types:
+                types[name] += 1
+            else:
+                types[name] = 1
+        return [ {'type': key, 'number': value} for key, value in types.items() ]
+
+    @staticmethod
+    def tag_plan_names(names, types):
+        """
+        Given a dictionary of names and a dictionary of types, return a dictionary of
+        names with optional community types, keyed on district id
+        """
+        name_dict = {}
+        for d in names.keys():
+            name_dict[d] = '%s - %s' % (names[d], ', '.join(types[d])) if d in types else names[d]
+        return name_dict
+
     def compute_splits(self, target, version=None, inverse=None, extended=None):
         results = {
             'splits':None,
+            'interiors':[],
             'named_splits':None,
             'plan_name':self.name,
             'other_name':None,
@@ -1909,6 +1970,8 @@ CROSS JOIN (
             results['other_name'] = Geolevel.objects.get(pk=id).name
             results['is_geolevel'] = True
             results['splits'] = self.find_geolevel_splits(id, version=version, inverse=inverse)
+            if extended is True:
+                results['interiors'] = self.find_geolevel_components(id, version=version, inverse=inverse)
         elif target.startswith('plan'):
             other_plan = Plan.objects.get(pk=id)
             results['other_name'] = other_plan.name
@@ -1916,107 +1979,87 @@ CROSS JOIN (
                 results['is_community'] = True
                 
             results['splits'] = self.find_plan_splits(other_plan, version=version, inverse=inverse)
+            if extended is True:
+                results['interiors'] = self.find_plan_components(other_plan, version=version, inverse=inverse)
             other_names = dict((d.district_id, d.name) for d in other_plan.get_districts_at_version(other_plan.version))
 
-        # Helpers to get and name community types 
-        def get_community_types(districts):
-            """
-            Given a list of districts, return a dictionary with community types, keyed on district_id
-            """
-            community_types = {}
-            for d in districts:
-                typetags = filter(lambda tag:tag.name[:4]=='type', d.tags)
-                if typetags:
-                    typetags = map(lambda tag:tag.name[5:], typetags)
-                    community_types[d.district_id] = typetags
-            return community_types
-
-        def tag_plan_names(names, types):
-            """
-            Given a dictionary of names and a dictionary of types, return a dictionary of
-            names with optional community types, keyed on district id
-            """
-            name_dict = {}
-            for d in names.keys():
-                name_dict[d] = '%s - %s' % (names[d], ', '.join(types[d])) if d in types else names[d]
-            return name_dict
-
-        community_types = get_community_types(self.get_districts_at_version(version))
-        my_names = tag_plan_names(my_names, community_types)
+        community_types = self.get_community_types(version=version)
+        my_names = Plan.tag_plan_names(my_names, community_types)
 
         if other_names:
-            other_community_types = get_community_types(other_plan.get_districts_at_version(other_plan.version))
-            other_names = tag_plan_names(other_names, other_community_types)
+            other_community_types = other_plan.get_community_types(other_plan.version)
+            other_names = Plan.tag_plan_names(other_names, other_community_types)
 
         # Swap names if inversed
         if inverse:
             if other_names:
-                results['named_splits'] = [(other_names[s[0]], my_names[s[1]]) for s in results['splits']]
+                results['named_splits'] = [(other_names[s[0]], my_names[s[1]], True) for s in results['splits']]
+                results['named_splits'] += [(other_names[s[0]], my_names[s[1]], False) for s in results['interiors']]
             else:
-                results['named_splits'] = [(s[2], my_names[s[1]]) for s in results['splits']]
+                results['named_splits'] = [(s[2], my_names[s[1]], True) for s in results['splits']]
+                results['named_splits'] += [(s[2], my_names[s[1]], False) for s in results['splits']]
 
             results['plan_name'] = results['other_name']
             results['other_name'] = self.name
         else:
             if other_names:
-                results['named_splits'] = [(my_names[s[0]], other_names[s[1]]) for s in results['splits']]
+                results['named_splits'] = [(my_names[s[0]], other_names[s[1]], True) for s in results['splits']]
+                results['named_splits'] += [(my_names[s[0]], other_names[s[1]], False) for s in results['interiors']]
             else:
-                results['named_splits'] = [(my_names[s[0]], s[3]) for s in results['splits']]
+                results['named_splits'] = [(my_names[s[0]], s[3], True) for s in results['splits']]
+                results['named_splits'] += [(my_names[s[0]], s[3], False) for s in results['interiors']]
 
         # Get dictionaries on which we can regroup
-        results['named_splits'] = [{'geo': x, 'splitter': y} for x, y in results['named_splits']]
+        results['named_splits'] = [{'geo': x, 'interior': y, 'split': z} for x, y, z in results['named_splits']]
         return results 
 
-    def get_community_type_union(self, target, version=None, inverse=None):
+    def get_community_type_info(self, target, version=None, inverse=None):
+        """
+        Given a Plan, return the community type tables used in the split report.
+        If the Plan on the "bottom" of the split report request is not a community map, 
+        this method will return None
+        """
         # We only return this for the community on the "bottom" layer
-        id = int(target[target.find('.')+1:])
-
-        if target.startswith('geolevel'):
-            return
-        if target.startswith('plan'):
-            target = Plan.objects.get(pk=id)
-            if self.is_community and inverse is True:
-                community_id = self.id
-            elif target.is_community and inverse is False:
-                community_id = id
-                target = self
-            else:
-                return
-        districts = target.get_districts_at_version(version)
-        my_types = []
-        for district in districts:
-            community_types = district.get_community_type_union(community_id, version=version)
-            for key, value in community_types.items():
-                my_types.append({ 'name':  district.name, 'type': key, 'number': value })
-        return my_types
-
-    def count_community_type_union(self, target, version=None, inverse=None):
-        if inverse is True:
-            districts = self.get_districts_at_version(version)
+        target_id = int(target[target.find('.')+1:])
+        community = None
+        if target.startswith('geolevel') and inverse is True and self.is_community:
+            # Get our splits
+            intersections = self.find_geolevel_intersections(target_id, version=version, inverse=inverse)
+            community = self
         elif target.startswith('plan'):
-            id = int(target[target.find('.')+1:])
-            plan = Plan.objects.get(pk=id)
-            if plan.is_community:
-                districts = plan.get_districts_at_version(plan.version)
-            else:
-                return
-        else:
+            target = Plan.objects.get(pk=target_id)
+            if inverse is True and self.is_community:
+                community = self
+            elif inverse is False and target.is_community:
+                community = target
+                version = target.version
+            intersections = self.find_plan_intersections(target, version=version, inverse=inverse)
+        if community is None:
+            # There's not community map as the "bottom" layer
             return
+        types = community.get_community_types(version=version)
+        my_names = dict((d.district_id, d.name) for d in community.get_districts_at_version(version))
+        district_dict = {}
+        for i in intersections:
+            community_id = i[1]
+            district_name = i[2]
+            if district_name not in district_dict:
+                district_dict[district_name] = {}
+            current_dist = district_dict[district_name]
+            for t in types[community_id]:
+                if t in current_dist:
+                    current_dist[t] += 1
+                else:
+                    current_dist[t] = 1
 
-        items = TaggedItem.objects.filter(object_id__in=[d.id for d in districts])
-        types = {}
-        for i in items:
-            name = i.tag.name
-            if name.startswith('type='):
-                name = name[5:]
-            else:
-                continue
+        type_splits = []
+        for district, split in district_dict.items():
+            for split_type, number in district_dict[district].items():
+                type_splits.append({'name' :district, 'type': split_type, 'number': number })
 
-            if name in types:
-                types[name] += 1
-            else:
-                types[name] = 1
-        return [ {'type': key, 'number': value} for key, value in types.items() ]
+        type_counts = community.count_community_types(version = version)
+        return {'type_splits': type_splits, 'type_counts': type_counts }
+
 
 class PlanForm(ModelForm):
     """
