@@ -2012,7 +2012,7 @@ CROSS JOIN (
             else:
                 continue
 
-            if name in items:
+            if name in types:
                 types[name] += 1
             else:
                 types[name] = 1
