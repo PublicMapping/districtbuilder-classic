@@ -1806,8 +1806,8 @@ class CommunityTypeCompatible(CalculatorBase):
             return
 
         ctype = kwargs['type']
-        if ctype.startswith('type='):
-            ctype = ctype[5:]
+        if not ctype.startswith('type='):
+            ctype = 'type=' + ctype
 
         community_id = kwargs['community_map_id']
         alltypes = None
