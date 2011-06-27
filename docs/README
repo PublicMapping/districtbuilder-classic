@@ -77,9 +77,10 @@ as reports and downloads) and cron jobs.
         expand it into /projects/publicmapping
     
  2. Create a "local" directory next to the trunk - this is where your 
-    machine-specific settings and data will go:
+    machine-specific settings, reports, and data will go:
 
-    > sudo mkdir /projects/publicmapping/local
+    > sudo mkdir -p /projects/publicmapping/local/reports
+    > sudo chown www-data:www-data /projects/publicmapping/local/reports
 
  3. At this point, make sure that you have postgres and postgis 
     installed.
