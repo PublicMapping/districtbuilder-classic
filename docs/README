@@ -137,9 +137,11 @@ as reports and downloads) and cron jobs.
     http://spatialreference.org/ref/epsg/3785/
 
  7. The code is distributed with a set of SLD files that create color, or
-    choropleth maps of Virginia geography. If you are using a dataset other
-    than the sample VA data, edit the SLD files to reflect the population
-    distributions for your area. The SLD files can be found at:
+    choropleth maps of Virginia geography. These SLD files are specific to
+    the data and configuration that are distributed with the sample AMI.
+    If you are using a different dataset, or modify the configuration, edit
+    the SLD files to reflect the population distributions for your area. 
+    The SLD files can be found at:
 
     > /projects/publicmapping/trunk/sld
 
