@@ -1439,8 +1439,13 @@ function mapinit(srs,maxExtent) {
             type: $('#id_type').val().split(','),
             version: getPlanVersion()
         };
+        var typeList = $('#id_typelist');
         for (var i = 0; i < data.type.length; i++) {
-            data.type[i] = data.type[i].trim();
+            var type = data.type[i].trim();
+            data.type[i] = type;
+            if (!typeList.children().is('*[value="' + type + '"]')) {
+                $('#id_typelist').append('<option />').text(type).attr('value', type);
+            }
         }
         
         var url = '/districtmapping/plan/' + PLAN_ID + '/district/';
