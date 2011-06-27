@@ -2385,10 +2385,7 @@ class District(models.Model):
             community-mapping L{LegislativeBody}.
         @param version: The version of the community_map to examine.
             Defaults to the current plan version.
-        @return: A dictionary of all community types in this district, with keys
-            representing the type (without a leading 'type=' in the string), and 
-            the values representing the number of times the type intersects the
-            district.
+        @return: The set of all community types in this district.
         """
         community_map = Plan.objects.get(id=community_map_id)
 
@@ -2402,15 +2399,9 @@ class District(models.Model):
         # Filter by relation - must have interior intersection
         communities = filter(lambda z: True if self.geom.relate_pattern(z.geom, 'T********') else False, communities)
 
-        types = {}
+        types = set()
         for community in communities:
-            tags = Tag.objects.get_for_object(community).filter(name__startswith='type=')
-            for tag in tags:
-                name = tag.name[5:]
-                if name in types:
-                    types[name] += 1
-                else:
-                    types[name] = 1
+            types = types | set(Tag.objects.get_for_object(community).filter(name__startswith='type='))
         return types
 
 # Enable tagging of districts by registering them with the tagging module
