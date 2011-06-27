@@ -186,4 +186,4 @@ button#splits_report_ok_button {
 }
 
 #choose_reference_layer_button { margin-left: 48px; }
-#split_indicator { color: #F00; }
+#split_indicator, .split_district { color: #F00; }

@@ -44,7 +44,7 @@
     </tr>
     {% for split in geo.list|dictsort_ignorecase:"interior" %}
     <tr>
-        <td /><td>{% if extended and split.split %}* {% endif %}{{ split.interior }}</td><td />
+        <td /><td{% if extended and split.split %} class="split_district" >* {% else %} >{% endif %}{{ split.interior }}</td><td />
     </tr>
     {% endfor %}
 {% endfor %}
