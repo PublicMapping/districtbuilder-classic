@@ -1520,6 +1520,8 @@ function mapinit(srs,maxExtent) {
                 $('#id_typelist').val(selection);
             }
 
+            opts = $('#id_typelist option');
+
             // select any tags like this one (case insensitive match)
             $('#id_type').keyup(function(evt){
                 var keytypes = $(this).val().match(typeRE);
@@ -1541,7 +1543,7 @@ function mapinit(srs,maxExtent) {
             });
 
             $('#id_typelist').change(function(evt){
-                var selection = $(this).val();
+                var selection = $(this).val() || [];
                 $('#id_type').val( selection.join(', ') );
             });
         }
