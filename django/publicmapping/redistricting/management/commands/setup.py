@@ -1415,7 +1415,7 @@ ERROR:
             if verbose > 1:
                 print '%d objects in shapefile' % len(lyr)
 
-            level = Geolevel.objects.get(name=config['geolevel'].lower()[:5])
+            level = Geolevel.objects.get(name=config['geolevel'].lower()[:50])
 
             # Create the subjects we need
             subject_objects = {}
@@ -1706,6 +1706,7 @@ ERROR:
         gconfig = config.xpath('//GeoLevels/GeoLevel[@name="%s"]' % basegl.name)[0]
         shapefile = gconfig.xpath('Shapefile')[0].get('path')
         srs = DataSource(shapefile)[0].srs
+        bconfig = config.find('//Reporting/BardConfigs/BardConfig')
         if srs.name == 'WGS_1984_Web_Mercator_Auxiliary_Sphere':
             # because proj4 doesn't have definitions for this ESRI def,
             # but it does understand 3785
@@ -1739,7 +1740,7 @@ ERROR:
 
             if verbose > 1:
                 print "Created bardmap."
-            r.writeBardMap(settings.BARD_BASESHAPE, bardmap)
+            r.writeBardMap(bconfig.get('shape'), bardmap)
             if verbose > 1:
                 print "Wrote bardmap to disk."
         except:
