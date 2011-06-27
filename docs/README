@@ -147,11 +147,11 @@ as reports and downloads) and cron jobs.
     will need to rename the SLD files to match. This restriction is in place
     for the circumstances where one admin may want to run multiple instances
     of DistrictBuilder on the same server.  You can run the following 
-    commands to rename the namespace of "gmu" to "xyz" on all the SLD 
+    commands to rename the namespace of "pmp" to "xyz" on all the SLD 
     files:
 
     > cd /projects/publicmapping/trunk/sld
-    > for f in "gmu:*sld"; do mv "$f" "xyz:${f:4}"; done
+    > for f in "pmp:*sld"; do mv "$f" "xyz:${f:4}"; done
 
     For more information about editing SLDs, see the wiki page:
 

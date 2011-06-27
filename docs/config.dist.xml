@@ -1066,7 +1066,7 @@
             is to have no base layer, set it to the empty string.
             
             -->
-            <MapServer hostname="" ns="gmu" nshref="http://gmu.azavea.com/"
+            <MapServer hostname="" ns="pmp" nshref="http://publicmapping.sourceforge.net/"
                 adminuser="<geoserver admin user>" adminpass="<geoserver admin pass>" maxfeatures="100" 
                 styles="/projects/publicmapping/trunk/sld" />
 
