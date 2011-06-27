@@ -1115,7 +1115,7 @@ class Equivalence(CalculatorBase):
         @return: A string in the format of "1,000" or "n/a" if no result.
         """
         if not self.result is None and 'value' in self.result:
-            return intcomma(int(self.result))
+            return intcomma(int(self.result['value']))
         
         return 'n/a'
 
