@@ -2013,7 +2013,7 @@ CROSS JOIN (
         results['named_splits'] = [{'geo': x, 'interior': y, 'split': z} for x, y, z in results['named_splits']]
         return results 
 
-    def get_community_type_info(self, target, version=None, inverse=None):
+    def get_community_type_info(self, target, version=None, inverse=None, include_counts=True):
         """
         Given a Plan, return the community type tables used in the split report.
         If the Plan on the "bottom" of the split report request is not a community map, 
@@ -2057,7 +2057,7 @@ CROSS JOIN (
             for split_type, number in district_dict[district].items():
                 type_splits.append({'name' :district, 'type': split_type, 'number': number })
 
-        type_counts = community.count_community_types(version = version)
+        type_counts = community.count_community_types(version = version) if include_counts else None
         return {'type_splits': type_splits, 'type_counts': type_counts }
 
 

@@ -26,7 +26,7 @@
 {% endcomment %}
 {% load redistricting_extras %}
 <div class="split_report">
-<div>Total Splits: {{ splits|length }}</div>
+<div>Total Splits with {{ other_name }}: {{ splits|length }}</div>
 {% if extended %}
     <div id="split_indicator">* indicates split</div> 
 {% endif %}
@@ -52,6 +52,7 @@
 </div>
 </div>
 {% if type_splits %}
+    <hr />
     <div class="split_report">
     <div class="split_table_type">Type Summary By District</div>
     <div class="table_container">
@@ -72,6 +73,7 @@
     </div>
 {% endif %}
 {% if type_counts %}
+    <hr />
     <div class="split_report">
     <div class="split_table_type">Type Summary for {{ other_name }}</div>
     <div class="table_container">

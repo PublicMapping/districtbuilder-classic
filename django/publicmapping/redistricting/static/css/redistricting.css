@@ -136,9 +136,13 @@ button#splits_report_button {
 #splits_report_available_layers { height: 160px; border: 2px solid #CCC; overflow: auto; margin-top: 10px; margin-bottom: 15px }
 
 .split_report .table_container {
-    border-bottom: 1px solid #ddd;
     margin: 10px 0;
-    padding-bottom: 18px;
+    padding-bottom: 8px;
+}
+#splits_report_results_container hr {
+    color:#ddd;
+    background-color:#ddd;
+    border-style:solid;
 }
 
 table.report {
