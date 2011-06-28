@@ -49,9 +49,9 @@
             <tr class="split_totals">
                 <td>Total splits:</td>
                 {% if extended %}
-                    <td class="total">{{ geo.list|count_true_values:"split"}} (of {{ geo.list|length }})</td>
+                    <td>{{ geo.list|count_true_values:"split"}} (of {{ geo.list|length }})</td>
                 {% else %}
-                    <td class="total">{{ geo.list|length }}</td>
+                    <td>{{ geo.list|length }}</td>
                 {% endif %}
             </tr>
         {% endif %}
