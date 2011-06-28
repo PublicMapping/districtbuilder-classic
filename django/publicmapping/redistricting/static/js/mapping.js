@@ -2587,7 +2587,22 @@ function mapinit(srs,maxExtent) {
             var dby = getDistrictBy();
             var visualize = (dby.by > 0) ? LEGISLATIVE_BODY : dby.name;
 
-            getMapStyles(visualize, dby.name);
+            var dff = districtLayer.filter.filters;
+            var sameSubj = false;
+            for (var i = 0; i < dff.length && !sameSubj; i++) {
+                if (dff[i].property == 'subject'&& 
+                    dff[i].subject == dby.by) {
+                    sameSubj = true;
+                }
+            }
+
+            if (!sameSubj) {
+                districtLayer.filter = getVersionAndSubjectFilters(olmap.getExtent());
+                districtLayer.strategies[0].update({force:true});
+            }
+            else {
+                getMapStyles(visualize, dby.name);
+            }
         }
 
         // Since keyboard defaults are on, if focus remains on this
