@@ -437,31 +437,27 @@ function mapinit(srs,maxExtent) {
     // Add a row for each base map to the Basemap Settings container for switching
     $(layers).each(function(i, layer) {
         var container = $('#map_type_content_container');
-        var button = $('<button class="map_type_button">' + layer.name + '</button>');
+        var id = 'radio' + i;
+        var button = $('<input type="radio" id="' + id + '"' + ((i === 0) ? 'checked=checked' : '') +
+                       ' /><label for="' + id + '">' + layer.name + '</label>');
             
         // split is in case the provider is in parens due to there being multiple
         var mapType = layer.name.split(' ')[0];
         var toggle = $('#map_type_toggle');
 
-        // Default to the first map type
-        if (i === 0) {
-            toggle.button('option', 'label', mapType)
-        }
-
-        // Set the base layer, and change label when the option is selected
+        // change the base layer when a new one is selected
         button.click(function() {
-            $('#base_map_type').html(mapType);
-            toggle.button('option', 'label', mapType)
             olmap.setBaseLayer(layer);
-            toggle.click();
         });
            
         container.append(button);
     });
 
+    // Turn the radios into a buttonset
+    $('#map_type_content_container').buttonset();
+
     // Set the default map type label
     $('#base_map_type').html(layers[0].name);
-
 
     // Function for monitoring when map layer radio changes, and updating the slider accordingly
     var getMapLayerRadioChangeFn = function(isThematic){
