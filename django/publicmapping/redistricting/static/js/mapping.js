@@ -425,9 +425,8 @@ function mapinit(srs,maxExtent) {
     $('#opacity_slider').slider({
         value: 100 - defaultThematicOpacity * 100,
         slide: function(event, ui) {
-            var isThematic = $('#thematic_radio').attr('checked');
             $(olmap.layers).each(function(i, layer) {
-                if ((isThematic && !layer.isBaseLayer) || (!isThematic && layer.isBaseLayer)) {
+                if (!layer.isBaseLayer) {
                     layer.setOpacity(1 - ui.value / 100);
                 }
             });
@@ -441,10 +440,6 @@ function mapinit(srs,maxExtent) {
         var button = $('<input type="radio" name="basemap" id="' + id + '"' + ((i === 0) ? 'checked=checked' : '') +
                        ' /><label for="' + id + '">' + layer.name + '</label>');
             
-        // split is in case the provider is in parens due to there being multiple
-        var mapType = layer.name.split(' ')[0];
-        var toggle = $('#map_type_toggle');
-
         // change the base layer when a new one is selected
         button.click(function() {
             olmap.setBaseLayer(layer);
@@ -458,27 +453,6 @@ function mapinit(srs,maxExtent) {
 
     // Set the default map type label
     $('#base_map_type').html(layers[0].name);
-
-    // Function for monitoring when map layer radio changes, and updating the slider accordingly
-    var getMapLayerRadioChangeFn = function(isThematic){
-        return function() {        
-            var found = null;
-            for (var i = 0; i < olmap.layers.length; i++) {
-                var layer = olmap.layers[i];
-                if ((isThematic && !layer.isBaseLayer) || (!isThematic && layer.isBaseLayer)) {
-                    found = layer;
-                    break;
-                }
-            }
-            if (!found) { return; }
-            if (found.opacity === null) {
-                found.opacity = 1; // OpenLayers doesn't set opacity on load when it's 100%
-            }
-            $('#opacity_slider').slider('value', found.opacity * 100);
-        };
-    };
-    $('#thematic_radio').click(getMapLayerRadioChangeFn(true));
-    $('#basemap_radio').click(getMapLayerRadioChangeFn(false));
 
     // Handle Fix Unassigned requests
     $('#fix_unassigned').click(function(){
