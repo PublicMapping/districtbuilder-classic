@@ -2046,11 +2046,15 @@ CROSS JOIN (
             if district_name not in district_dict:
                 district_dict[district_name] = {}
             current_dist = district_dict[district_name]
-            for t in types[community_id]:
-                if t in current_dist:
-                    current_dist[t] += 1
-                else:
-                    current_dist[t] = 1
+            try:
+                for t in types[community_id]:
+                    if t in current_dist:
+                        current_dist[t] += 1
+                    else:
+                        current_dist[t] = 1
+            except KeyError:
+                # This community has no types
+                continue
 
         type_splits = []
         for district, split in district_dict.items():

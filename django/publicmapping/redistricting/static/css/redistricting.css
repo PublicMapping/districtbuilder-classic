@@ -191,3 +191,6 @@ button#splits_report_ok_button {
 
 #choose_reference_layer_button { margin-left: 48px; }
 #split_indicator, .split_district { color: #F00; }
+tr.separator_row { height: 15px; }
+tr.split_totals td, tr.separator_row td { background-color: #ECF6FF; }
+

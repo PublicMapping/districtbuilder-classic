@@ -30,22 +30,31 @@
 {% if extended %}
     <div id="split_indicator">* indicates split</div> 
 {% endif %}
-<div class="table_container"> 
-<table class="report"><thead><tr class="name"><th class="name">{{ plan_name }}</th><th>{{ other_name }}</th><th class="total">Total Splits</th></tr></thead><tbody>
+<div class="table_container">
+<table class="report"><thead><tr class="name"><th class="name">{{ plan_name }}</th><th>{{ other_name }}</th></tr></thead><tbody>
 {{ components }}
 {% regroup named_splits|dictsort:"geo" by geo as split_list %} 
 {% for geo in split_list %}
-    <tr>
-        {% if extended %} 
-            <td>{{ geo.grouper }}</td><td /><td>{{ geo.list|count_true_values:"split"}} (of {{ geo.list|length }})</td>
-        {% else %}
-            <td>{{ geo.grouper }}</td><td /><td class="total">{{ geo.list|length }}</td>
-        {% endif %}
-    </tr>
     {% for split in geo.list|dictsort_ignorecase:"interior" %}
-    <tr>
-        <td /><td{% if extended and split.split %} class="split_district" >* {% else %} >{% endif %}{{ split.interior }}</td><td />
-    </tr>
+        <tr>
+        {% if forloop.first %}
+            <td>{{ geo.grouper }}</td>
+        {% else %}
+            <td />
+        {% endif %}
+            <td{% if extended and split.split %} class="split_district" >* {% else %} >{% endif %}{{ split.interior }}</td>
+        </tr>
+        
+        {% if forloop.last %}
+            <tr class="split_totals">
+                <td>Total splits:</td>
+                {% if extended %}
+                    <td class="total">{{ geo.list|count_true_values:"split"}} (of {{ geo.list|length }})</td>
+                {% else %}
+                    <td class="total">{{ geo.list|length }}</td>
+                {% endif %}
+            </tr>
+        {% endif %}
     {% endfor %}
 {% endfor %}
 </tbody></table>
@@ -57,16 +66,21 @@
     <div class="split_table_type">Type Summary By District</div>
     <div class="table_container">
     <table class="report"><thead><tr><th class="name">{{ plan_name }}</th><th>Type</th><th class="total">Total By District</th></tr></thead><tbody>
-    {% regroup type_splits by name as type_list %}
+    {% regroup type_splits|dictsort_ignorecase:"name" by name as type_list %}
     {% for name in type_list %}
-        <tr>
-            <td>{{ name.grouper }}</td><td /><td />
-        </tr>
         {% for split in name.list|dictsort_ignorecase:"type" %}
-        <tr>
-            <td /><td>{{ split.type }}</td><td class="total">{{ split.number }}</td>
-        </tr>
+            <tr>
+            {% if forloop.first %}
+                <td>{{ name.grouper }}</td>
+            {% else %}
+                <td />
+            {% endif %}
+                <td>{{ split.type }}</td><td class="total">{{ split.number }}</td>
+            </tr>
         {% endfor %}
+        {% if not forloop.last %}
+            <tr class="separator_row"><td /><td /><td /></tr>
+        {% endif %}
     {% endfor %}
     </tbody></table>
     </div>
