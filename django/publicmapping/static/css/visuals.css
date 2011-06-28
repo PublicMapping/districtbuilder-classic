@@ -346,11 +346,11 @@ div#form_action{background-color: #8ac7b5;}
 
 /*buttons */
 
-#app button, .ui-dialog button, #app .ui-buttonset .ui-button { 
+#app button, .ui-dialog button, #app .multiple .ui-buttonset .ui-button { 
     background-color: #1F8CBE;
     border: 1px solid #3B7181;
     }
-#app .ui-buttonset .ui-button.ui-state-active {background-color: #1F8CBE}
+#app .multiple  .ui-buttonset .ui-button.ui-state-active {background-color: #1F8CBE}
     
  button#stats_legend {background-color: #bb9160;}
 

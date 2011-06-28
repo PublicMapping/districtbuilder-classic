@@ -1195,7 +1195,7 @@ div#no_edit_at_zoom_level {
     }
 	
 
-#app .ui-buttonset .ui-button {
+#app .multiple .ui-buttonset .ui-button {
     background-image: url(/static-media/images/bg-button-sm.png);
     background-position: 0 0; 
     background-repeat: repeat-x;
@@ -1206,9 +1206,26 @@ div#no_edit_at_zoom_level {
     text-shadow: 0 -1px rgba(0,0,0,.3);
     color: #fff;
 }	
-#app .ui-buttonset .ui-button.ui-state-active {
+#app  .ui-buttonset .ui-button {
+    background-image: none;
+    background-position: 0 0; 
+    background-repeat: repeat-x;
+    background-color: transparent;
+    border: none;
+    font-size: 11px;
+    font-weight: bold;
+    text-shadow: 0 -1px rgba(0,0,0,.3);
+    color: #fff;
+}
+#app .multiple .ui-buttonset .ui-button.ui-state-active {
 	background-image:none;
 	background-color: #444;
+}
+#app .multiple .ui-buttonset .ui-button .ui-button-text {
+padding: 0.4em 1em;
+}
+#app  .ui-buttonset .ui-button .ui-button-text {
+	padding: 0;
 }
     
 #app button.lg, .ui-dialog button.lg {
@@ -1465,7 +1482,7 @@ div#map_settings_content {
     position: absolute;
     top: 110px;
     right: 280px;
-
+	min-width: 140px;
     background-color: #272727;
     color: #fff;
     border: 1px solid #666666;
