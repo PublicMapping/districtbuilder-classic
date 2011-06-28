@@ -438,7 +438,7 @@ function mapinit(srs,maxExtent) {
     $(layers).each(function(i, layer) {
         var container = $('#map_type_content_container');
         var id = 'radio' + i;
-        var button = $('<input type="radio" id="' + id + '"' + ((i === 0) ? 'checked=checked' : '') +
+        var button = $('<input type="radio" name="basemap" id="' + id + '"' + ((i === 0) ? 'checked=checked' : '') +
                        ' /><label for="' + id + '">' + layer.name + '</label>');
             
         // split is in case the provider is in parens due to there being multiple
