@@ -41,3 +41,5 @@ border:none;
 div.info_table .community_name {
     width: 30%;
 }
+
+#map_settings_content {width: 170px;}
