@@ -139,10 +139,12 @@ button#splits_report_button {
     margin: 10px 0;
     padding-bottom: 8px;
 }
-#splits_report_results_container hr {
+#splits_report_results_container div.divider {
+	height: 2px;
     color:#ddd;
     background-color:#ddd;
     border-style:solid;
+	margin-bottom: 14px;
 }
 
 table.report {
@@ -171,6 +173,8 @@ table.report th {
     font-size: 12px;
     font-weight: bold;
 }
+table.report .name {width: 80px;}
+table.report .total {width: 60px; text-align: right}
 
 #splits_report_reminder_text { font-size: 12px; font-weight:bold; }
 #inverse_choice_label, #extended_choice_label { font-size: 12px; font-weight:bold; }
