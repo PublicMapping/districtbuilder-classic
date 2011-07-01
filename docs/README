@@ -77,9 +77,10 @@ as reports and downloads) and cron jobs.
         expand it into /projects/publicmapping
     
  2. Create a "local" directory next to the trunk - this is where your 
-    machine-specific settings and data will go:
+    machine-specific settings, reports, and data will go:
 
-    > sudo mkdir /projects/publicmapping/local
+    > sudo mkdir -p /projects/publicmapping/local/reports
+    > sudo chown www-data:www-data /projects/publicmapping/local/reports
 
  3. At this point, make sure that you have postgres and postgis 
     installed.
@@ -135,13 +136,36 @@ as reports and downloads) and cron jobs.
         
     http://spatialreference.org/ref/epsg/3785/
 
- 7. Now we'll use the setup.py script to configure our application. Set the
+ 7. The code is distributed with a set of SLD files that create color, or
+    choropleth maps of Virginia geography. These SLD files are specific to
+    the data and configuration that are distributed with the sample AMI.
+    If you are using a different dataset, or modify the configuration, edit
+    the SLD files to reflect the population distributions for your area. 
+    The SLD files can be found at:
+
+    > /projects/publicmapping/trunk/sld
+
+    In addition, if you change the namespace in the configuration file, you
+    will need to rename the SLD files to match. This restriction is in place
+    for the circumstances where one admin may want to run multiple instances
+    of DistrictBuilder on the same server.  You can run the following 
+    commands to rename the namespace of "pmp" to "xyz" on all the SLD 
+    files:
+
+    > cd /projects/publicmapping/trunk/sld
+    > for f in "pmp:*sld"; do mv "$f" "xyz:${f:4}"; done
+
+    For more information about editing SLDs, see the wiki page:
+
+    https://sourceforge.net/apps/trac/publicmapping/wiki/StyleLayerDescriptors
+
+ 8. Now we'll use the setup.py script to configure our application. Set the
     script to be executable:
     
     > cd /projects/publicmapping/trunk/django/publicmapping
     > sudo chmod u+x setup.py
 
- 8. Run the setup script with the appropriate parameters - the parts of 
+ 9. Run the setup script with the appropriate parameters - the parts of 
     the app you want to set up, along with the path to an xsd and a 
     config.xml file.  
     
@@ -194,7 +218,7 @@ as reports and downloads) and cron jobs.
     * The importing and nesting must occur in the order of smallest 
     geography to largest geography.
 
- 9. Django serves up SLD files to clients, and need this mime type added
+10. Django serves up SLD files to clients, and need this mime type added
     to the system's known mime types in order to serve the content
     properly.
 
@@ -202,12 +226,12 @@ as reports and downloads) and cron jobs.
     b. Find the line that starts with "application/xml"
     c. Add " sld" to the end of this line, after "xml xsl xsd"
 
-10. Now that you have the app configured and your data imported, you can 
+11. Now that you have the app configured and your data imported, you can 
     run the app using Django's testing server
      
     > python ./manage.py runserver
 
-11. You will see a notice that your server is running and you can access 
+12. You will see a notice that your server is running and you can access 
     your application at 127.0.0.1:8000  Enter that location into your 
     browser on the local machine and you should be able to use the 
     application.
@@ -381,6 +405,18 @@ as reports and downloads) and cron jobs.
     to do so, you can set the BARD_SERVER variable in your BardConfig in 
     the xml file.  Use a fully qualified domain name, e.g. 
     http://reporting.server.com
+
+ SECURITY NOTES:
+    No server authentication is required to run or read a report.
+    The only "protection" on viewing a created report is a simple hash in the URL.
+    Because the reports are not protected by a password, consider any reports
+    run on the app to be viewable to the public. It is possible for users to
+    share these URLs with non-users of the system.
+
+    When configuring the reporting server on a machine other than the
+    DistrictBuilder server, be sure to allow the reports server to accept 
+    requests only from the DistrictBuilder server.  This will prevent non-users
+    from requesting report creation.
 
 == Celery Configuration ==
     Some processes take too long to happen over a synchronous web 

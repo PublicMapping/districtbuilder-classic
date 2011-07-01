@@ -90,3 +90,33 @@ def district_number(value):
             return m.group('digits') 
     except:
         return value
+
+@register.filter
+def dictsort_ignorecase(value, arg):
+    """
+    Takes a list of dicts, returns that list sorted by the property given in
+    the argument. Sort is case insensitive.
+    """
+
+    def lower_if_string(object): 
+        try: 
+            return object.lower() 
+        except AttributeError: 
+            return object 
+
+    var_resolve = template.Variable(arg).resolve
+    decorated = [(lower_if_string(var_resolve(item)), item) for item in value]
+    decorated.sort()
+    return [item[1] for item in decorated]
+
+@register.filter
+def count_true_values(value, key):
+    """
+    This filter accepts a list of dicts and returns the count of "True"
+    values in the list. The "key" value is the key in the dict to check
+    for True
+    """
+    try:
+        return str(len(filter(lambda x: x[key], value)))
+    except:
+        return ''

@@ -401,6 +401,7 @@
                                     <xs:attribute name="port" type="xs:positiveInteger" use="required" />
                                     <xs:attribute name="username" type="xs:string" use="required" />
                                     <xs:attribute name="password" type="xs:string" use="required" />
+                                    <xs:attribute name="use_tls" type="xs:boolean" use="optional" />
                                 </xs:complexType>
                             </xs:element>
                             <xs:element name="GoogleAnalytics" minOccurs="0" maxOccurs="1" nillable="true">

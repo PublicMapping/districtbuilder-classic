@@ -351,7 +351,9 @@ $(function() {
     
     $('#saveplaninfo').bind('planSaved', function(event, time) {
         var local = getLocalTimeFromIsoformat(time);
-        $('#saveplaninfo').text('Last Saved on ' + local.day + ' at ' + (local.hours % 12) + ':' + ((local.minutes < 10) ? ('0' + local.minutes) : local.minutes));
+        var hour = local.hours % 12;
+        if (hour === 0) { hour = 12; }
+        $('#saveplaninfo').text('Last Saved on ' + local.day + ' at ' + hour + ':' + ((local.minutes < 10) ? ('0' + local.minutes) : local.minutes));
     });
 
 

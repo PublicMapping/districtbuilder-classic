@@ -37,6 +37,7 @@ splitsreport = function(options) {
             target: {},
             okButton: {},
             inverseCheckbox: {},
+            extendedCheckbox: {},
             availableLayers: {},
             referenceLayerSelect: {},
             splitsReportUrl: {},
@@ -65,8 +66,6 @@ splitsreport = function(options) {
 
         // Add button behavior for displaying reports
         var displaySplits = function(ids) {
-            console.debug();
-            
             var waitDialog = $('<div>Please wait while retrieving splits report.</div>').dialog({
                 modal: true,
                 autoOpen: true,
@@ -82,7 +81,8 @@ splitsreport = function(options) {
                 data: {
                     version: _options.getVersionFn(),
                     layers: ids,
-                    inverse: _options.inverseCheckbox.is(':checked')        
+                    inverse: _options.inverseCheckbox.is(':checked'),
+                    extended: _options.extendedCheckbox.is(':checked')
                 },
                 success: function(data, textStatus, xhr) {
                     waitDialog.remove();
@@ -124,6 +124,10 @@ splitsreport = function(options) {
       
             // Only add the option if it hasn't already been added, and is a plan
             if (rid.startsWith('plan') && (_options.availableLayers.find('input[id=' + rid.replace('.', '\\.') + ']').length === 0)) {
+                // Clear out the old plans first
+                _options.availableLayers.find('input[value*=plan]').each( function() { $(this).parent().remove(); });
+                
+                // Then add the newly chosen option
                 var div = $('<div class="layer_choice_wrapper"></div>');
                 div.append($('<input class="layer_choice" id="' + rid + '" value="' + rid + '" type="checkbox"></input>'));
                 div.append($('<label for="' + rid + '">&nbsp;' + rname + '</label>'));

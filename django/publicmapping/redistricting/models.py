@@ -1,4 +1,5 @@
 """
+bjects.filter(object_id__in=[a.id for a in dists])
 Define the models used by the redistricting app.
 
 The classes in redistricting.models define the data models used in the 
@@ -47,7 +48,7 @@ from datetime import datetime
 from copy import copy
 from decimal import *
 from operator import attrgetter
-import sys, cPickle, traceback, types, tagging
+import sys, cPickle, traceback, types, tagging, re
 
 class Subject(models.Model):
     """
@@ -1242,8 +1243,8 @@ AND st_intersects(
                     'is_locked': row[3],
                     'version': row[4],
                     'number': float(row[7]),
-                    'contiguous': contiguity_calculator.result,
-                    'compactness': compactness_calculator.result,
+                    'contiguous': contiguity_calculator.result['value'],
+                    'compactness': compactness_calculator.result['value'],
                     'num_members': num_members
                 },
                 'geometry': geom
@@ -1530,7 +1531,7 @@ AND st_intersects(
                 for district in districts:
                     # Calculate the comparator value for the district
                     calculator.compute(district=district)
-                    dist_val = calculator.result
+                    dist_val = calculator.result['value']
         
                     # Check if geounits are touching the district
                     for poly in district.geom:
@@ -1675,9 +1676,9 @@ AND st_intersects(
         return districts
 
     @staticmethod
-    def find_splits(above_id, below_id, above_version=None, below_version=None):
+    def find_relationships(above_id, below_id, above_version=None, below_version=None, de_9im='T********'):
         """
-        Determines if the above layer splits the below layer
+        Finds all relationships between two layers using the supplied intersection matrix
 
         Parameters:
             above_id -- The id of the layer that is 'above' the below plan hierarchically.
@@ -1690,10 +1691,27 @@ AND st_intersects(
 
             below_version -- Required only if the below_id is a Plan
 
+            de_9im -- Dimensionally extended nine-intersection model string. Optional, by
+                      default this is set to a standard intersection. ST_Relate is called
+                      on each permutation of the two layers with the first parameter being
+                      the above geometry, the second parameter being the below geometry,
+                      and de_9im being the third parameter. Some examples:
+
+                      T*F**FFF* (Equals)
+                      FF*FF**** (Disjoint)
+                      T******** (Intersects)
+                      FT******* (Touches)
+                      T*T****** (Crosses)
+                      T*F**F*** (Within)
+                      T*****FF* (Contains)
+                      T*T***T** (Overlaps)
+                      T*****FF* (Covers)
+                      T*F**F*** (CoveredBy)
+
         Returns:
-            An array of splits, given as tuples, where the first item is the id of
-            the district in the above layer which causes the split, the second 
-            item is the id of the district in the other layer which is split, 
+            An array of relationships, given as tuples, where the first item is the id of
+            the district in the above layer of the relationship, the second 
+            item is the id of the district in the below layer of the relationship, 
             the third item is the name associated with the first, and
             the fourth item is the name associated with the second.
         """
@@ -1715,6 +1733,10 @@ AND st_intersects(
         if is_below_plan and below_version is None:
             raise Exception('Version must be specified for below plan.')
 
+        # Ensure DE-9IM string is valid
+        if not re.match('[012TF\*]{9}', de_9im):
+            raise Exception('DE-9IM string is invalid.')
+
         select = "SELECT above.%s, below.%s, above.name, below.name FROM %s as below" % (above_col_id, below_col_id, below_table)
         version_join = """
 JOIN (
@@ -1734,7 +1756,7 @@ CROSS JOIN (
 """
         geo_cross = "CROSS JOIN redistricting_geounit as above"
         on_lmt = "ON below.district_id = lmt.district_id"
-        relate = "AND ST_Relate(above.geom, below.geom, '***T*****')"
+        relate = "AND ST_Relate(above.geom, below.geom, '%s')" % de_9im
         order = "ORDER BY above.%s, below.%s" % (above_col_id, below_col_id)
         below_join = version_join % (below_id, below_version) if below_version is not None else ""
         above_join = version_join % (above_id, above_version) if above_version is not None else ""
@@ -1759,17 +1781,15 @@ CROSS JOIN (
 
         # Two geolevels
         else:
-            raise Exception('Geolevel-geolevel splits not implemented.')
+            raise Exception('Geolevel-geolevel relationships not implemented.')
 
         cursor = connection.cursor()
         cursor.execute(query)
-        splits = cursor.fetchall()
+        return cursor.fetchall()
 
-        return splits
-
-    def find_plan_splits(self, other_plan, version=None, other_version=None, inverse=False):
+    def find_plan_relationships(self, other_plan, version=None, other_version=None, inverse=False, de_9im='T********'):
         """
-        Determines if this plan splits the below Plan.
+        Finds all relationships between this plan and the below one.
 
         Parameters:
             other_plan -- The plan that is 'below' this plan hierarchically. The below
@@ -1788,15 +1808,18 @@ CROSS JOIN (
 
             inverse -- Optional; if specified, performs the inverse split operation
 
+            de_9im -- Dimensionally extended nine-intersection model string. Optional, by
+                      default this is set to a standard intersection.            
+
         Returns:
-            An array of splits, given as tuples, where the first item is the district_id of
-            the district in this plan which causes the split, the second item is the
-            district_id of the district in the other plan which is split, 
+            An array of relationships, given as tuples, where the first item is the id of
+            the district in the above layer of the relationship, the second 
+            item is the id of the district in the below layer of the relationship, 
             the third item is the name associated with the first, and
             the fourth item is the name associated with the second.
         """
         if not other_plan:
-            raise Exception('Other plan must be specified for use in finding splits.')
+            raise Exception('Other plan must be specified for use in finding relationships.')
         
         version = version if not version is None else self.version
         other_version = other_version if not other_version is None else other_plan.version
@@ -1807,11 +1830,31 @@ CROSS JOIN (
         bottom_id = 'plan.%d' % self.id if inverse else 'plan.%d' % other_plan.id
         bottom_version = version if inverse else other_version
         
-        return Plan.find_splits(top_id, bottom_id, top_version, bottom_version)
+        return Plan.find_relationships(top_id, bottom_id, top_version, bottom_version, de_9im)
 
-    def find_geolevel_splits(self, geolevelid, version=None, inverse=False):
+    def find_plan_splits(self, other_plan, version=None, other_version=None, inverse=False):
         """
-        Determines if this plan splits the below Plan.
+        Helper method that finds plan splits. See find_plan_relationships for parameter details.
+        """
+        return self.find_plan_relationships(other_plan, version, other_version, inverse, '***T*****')
+
+    def find_plan_components(self, other_plan, version=None, other_version=None, inverse=False):
+        """
+        Helper method that finds the components of districts. See find_plan_relationships for parameter details.
+        Returns a map of all other districts that are fully contained within each district of this plan.
+        """
+        return self.find_plan_relationships(other_plan, version, other_version, inverse, 'T*****FF*')
+
+    def find_plan_intersections(self, other_plan, version=None, other_version=None, inverse=False):
+        """
+        Helper method that finds intersecting districts. See find_plan_relationships for parameter details.
+        Returns a map of all other districts that intersect each district of this plan.
+        """
+        return self.find_plan_relationships(other_plan, version, other_version, inverse, 'T********')
+
+    def find_geolevel_relationships(self, geolevelid, version=None, inverse=False, de_9im='T********'):
+        """
+        Finds all relationships between this plan and the below geolevel layer.
 
         Parameters:
             geolevelid -- The geolevel that is 'below' this plan hierarchically.
@@ -1824,10 +1867,13 @@ CROSS JOIN (
 
             inverse -- Optional; if specified, performs the inverse split operation
 
+            de_9im -- Dimensionally extended nine-intersection model string. Optional, by
+                      default this is set to a standard intersection.            
+
         Returns:
-            An array of splits, given as tuples, where the first item is the district_id of
-            the district in this plan which causes the split, the second item is the
-            portable_id of the geounit in the geolevel which is split, 
+            An array of relationships, given as tuples, where the first item is the id of
+            the district in the above layer of the relationship, the second 
+            item is the portable_id of the geounit in the below layer of the relationship, 
             the third item is the name associated with the first, and
             the fourth item is the name associated with the second.
         """
@@ -1842,7 +1888,187 @@ CROSS JOIN (
         bottom_id = 'plan.%d' % self.id if inverse else 'geolevel.%d' % geolevelid
         bottom_version = version if inverse else None
         
-        return Plan.find_splits(top_id, bottom_id, top_version, bottom_version)
+        return Plan.find_relationships(top_id, bottom_id, top_version, bottom_version, de_9im)
+
+    def find_geolevel_splits(self, geolevelid, version=None, inverse=False):
+        """
+        Helper method that finds geolevel splits. See find_plan_relationships for parameter details.
+        """
+        return self.find_geolevel_relationships(geolevelid, version, inverse, '***T*****')
+
+    def find_geolevel_components(self, geolevelid, version=None, inverse=False):
+        """
+        Helper method that finds components of geolevel units. See find_plan_relationships for parameter details.
+        Returns a map of all geolevel units that are fully contained within each district of this plan.
+        """
+        return self.find_geolevel_relationships(geolevelid, version, inverse, 'T*****FF*')
+
+    def find_geolevel_intersections(self, geolevelid, version=None, inverse=False):
+        """
+        Helper method that finds intersections with geounits. See find_plan_relationships for parameter details.
+        Returns a map of all geolevel units that intersect each district of this plan.
+        """
+        return self.find_geolevel_relationships(geolevelid, version, inverse, 'T********')
+
+    def get_community_types(self, version=None):
+        """
+        Given a plan, return a dictionary with community types, keyed on district_id
+        """
+        community_types = {}
+        
+        for d in self.get_districts_at_version(version):
+            typetags = filter(lambda tag:tag.name[:4]=='type', d.tags)
+            if typetags:
+                typetags = map(lambda tag:tag.name[5:], typetags)
+                community_types[d.district_id] = typetags
+        return community_types
+
+    def count_community_types(self, version=None):
+        """
+        Given a plan, return a list of dictionaries, with each community type
+        as the value for the 'type' key and the number of times it appears
+        in the plan as the value for the 'number' key
+        """
+        districts = self.get_districts_at_version(version)
+        items = TaggedItem.objects.filter(object_id__in=[d.id for d in districts])
+        types = {}
+        for i in items:
+            name = i.tag.name
+            if name.startswith('type='):
+                name = name[5:]
+            else:
+                continue
+
+            if name in types:
+                types[name] += 1
+            else:
+                types[name] = 1
+        return [ {'type': key, 'number': value} for key, value in types.items() ]
+
+    @staticmethod
+    def tag_plan_names(names, types):
+        """
+        Given a dictionary of names and a dictionary of types, return a dictionary of
+        names with optional community types, keyed on district id
+        """
+        name_dict = {}
+        for d in names.keys():
+            name_dict[d] = '%s - %s' % (names[d], ', '.join(types[d])) if d in types else names[d]
+        return name_dict
+
+    def compute_splits(self, target, version=None, inverse=None, extended=None):
+        results = {
+            'splits':None,
+            'interiors':[],
+            'named_splits':None,
+            'plan_name':self.name,
+            'other_name':None,
+            'is_geolevel':False,
+            'is_community':False
+        }
+        other_names = None
+
+        id = int(target[target.find('.')+1:])
+        my_names = dict((d.district_id, d.name) for d in self.get_districts_at_version(version))
+
+        if target.startswith('geolevel'):
+            results['other_name'] = Geolevel.objects.get(pk=id).name
+            results['is_geolevel'] = True
+            results['splits'] = self.find_geolevel_splits(id, version=version, inverse=inverse)
+            if extended is True:
+                results['interiors'] = self.find_geolevel_components(id, version=version, inverse=inverse)
+        elif target.startswith('plan'):
+            other_plan = Plan.objects.get(pk=id)
+            results['other_name'] = other_plan.name
+            if self.is_community():
+                results['is_community'] = True
+                
+            results['splits'] = self.find_plan_splits(other_plan, version=version, inverse=inverse)
+            if extended is True:
+                results['interiors'] = self.find_plan_components(other_plan, version=version, inverse=inverse)
+            other_names = dict((d.district_id, d.name) for d in other_plan.get_districts_at_version(other_plan.version))
+
+        community_types = self.get_community_types(version=version)
+        my_names = Plan.tag_plan_names(my_names, community_types)
+
+        if other_names:
+            other_community_types = other_plan.get_community_types(other_plan.version)
+            other_names = Plan.tag_plan_names(other_names, other_community_types)
+
+        # Swap names if inversed
+        if inverse:
+            if other_names:
+                results['named_splits'] = [(other_names[s[0]], my_names[s[1]], True) for s in results['splits']]
+                results['named_splits'] += [(other_names[s[0]], my_names[s[1]], False) for s in results['interiors']]
+            else:
+                results['named_splits'] = [(s[2], my_names[s[1]], True) for s in results['splits']]
+                results['named_splits'] += [(s[2], my_names[s[1]], False) for s in results['interiors']]
+
+            results['plan_name'] = results['other_name']
+            results['other_name'] = self.name
+        else:
+            if other_names:
+                results['named_splits'] = [(my_names[s[0]], other_names[s[1]], True) for s in results['splits']]
+                results['named_splits'] += [(my_names[s[0]], other_names[s[1]], False) for s in results['interiors']]
+            else:
+                results['named_splits'] = [(my_names[s[0]], s[3], True) for s in results['splits']]
+                results['named_splits'] += [(my_names[s[0]], s[3], False) for s in results['interiors']]
+
+        # Get dictionaries on which we can regroup
+        results['named_splits'] = [{'geo': x, 'interior': y, 'split': z} for x, y, z in results['named_splits']]
+        return results 
+
+    def get_community_type_info(self, target, version=None, inverse=None, include_counts=True):
+        """
+        Given a Plan, return the community type tables used in the split report.
+        If the Plan on the "bottom" of the split report request is not a community map, 
+        this method will return None
+        """
+        # We only return this for the community on the "bottom" layer
+        target_id = int(target[target.find('.')+1:])
+        community = None
+        if target.startswith('geolevel') and inverse is True and self.is_community():
+            # Get our splits
+            intersections = self.find_geolevel_intersections(target_id, version=version, inverse=inverse)
+            community = self
+        elif target.startswith('plan'):
+            target = Plan.objects.get(pk=target_id)
+            if inverse is True and self.is_community():
+                community = self
+            elif inverse is False and target.is_community():
+                community = target
+                version = target.version
+            intersections = self.find_plan_intersections(target, version=version, inverse=inverse)
+        if community is None:
+            # There's not community map as the "bottom" layer
+            return
+        types = community.get_community_types(version=version)
+        my_names = dict((d.district_id, d.name) for d in community.get_districts_at_version(version))
+        district_dict = {}
+        for i in intersections:
+            community_id = i[1]
+            district_name = i[2]
+            if district_name not in district_dict:
+                district_dict[district_name] = {}
+            current_dist = district_dict[district_name]
+            try:
+                for t in types[community_id]:
+                    if t in current_dist:
+                        current_dist[t] += 1
+                    else:
+                        current_dist[t] = 1
+            except KeyError:
+                # This community has no types
+                continue
+
+        type_splits = []
+        for district, split in district_dict.items():
+            for split_type, number in district_dict[district].items():
+                type_splits.append({'name' :district, 'type': split_type, 'number': number })
+
+        type_counts = community.count_community_types(version = version) if include_counts else None
+        return {'type_splits': type_splits, 'type_counts': type_counts }
+
 
 class PlanForm(ModelForm):
     """
@@ -2148,22 +2374,38 @@ class District(models.Model):
         self.simple = GeometryCollection(tuple(simples),srid=self.geom.srid)
         self.save()
 
-    def get_community_type_intersections(self, community_map, version=None):
+    def count_community_type_union(self, community_map_id, version=None):
         """
-        Given a community_map (a Plan object), will determine the number of distinct
-        types of community that this district intersections.
+        Count the number of distinct types of communities in the provided
+        community map. Only the community types of the communities that 
+        intersect this district are counted.
         
-        Parameters:
-            community_map - a Plan linked to the community-mapping legislativebody
-            version - the version of the community_map to examine. If not given, 
-                the current plan version will be used
-        Returns:
-            an integer count of the number of distinct community types intersecting
-            this district
+        @param community_map_id: A L{Plan} ID linked to the 
+            community-mapping L{LegislativeBody}.
+        @param version: The version of the community_map to examine. 
+            Defaults to the current plan version.
+        @return: An integer count of the number of distinct community 
+            types intersecting this district.
         """
+        return len(self.get_community_type_union(community_map_id, version=version))
+
+    def get_community_type_union(self, community_map_id, version=None):
+        """
+        Get the union of all the types of communities in this district.
+        Only the community types of the communities that intersect this
+        district are counted.
+
+        @param community_map_id: A L{Plan} ID linked to the
+            community-mapping L{LegislativeBody}.
+        @param version: The version of the community_map to examine.
+            Defaults to the current plan version.
+        @return: The set of all community types in this district.
+        """
+        community_map = Plan.objects.get(id=community_map_id)
+
         if version is None:
             version = community_map.version
-        
+
         # Filters - first get all districts
         communities = community_map.get_districts_at_version(version, include_geom=True)
         # Filter quickly by envelope
@@ -2171,15 +2413,10 @@ class District(models.Model):
         # Filter by relation - must have interior intersection
         communities = filter(lambda z: True if self.geom.relate_pattern(z.geom, 'T********') else False, communities)
 
-        types = {}
+        types = set()
         for community in communities:
-            tags = Tag.objects.get_for_object(community).filter(name__startswith='type=')
-            for tag in tags:
-                if tag.name in types:
-                    types[tag.name] += 1
-                else:
-                    types[tag.name] = 1
-        return len(types)
+            types = types | set(Tag.objects.get_for_object(community).filter(name__startswith='type='))
+        return types
 
 # Enable tagging of districts by registering them with the tagging module
 tagging.register(District)
@@ -2351,7 +2588,7 @@ def can_view(user, plan):
     Returns:
         True if the User has permissions to view the Plan.
     """
-    return plan.is_shared or plan.is_template
+    return plan.owner == user or plan.is_shared or plan.is_template
 
 
 def can_copy(user, plan):

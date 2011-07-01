@@ -283,7 +283,7 @@ class Sld_URange_Template(ListTemplate):
         """
 
 def gensld_none(geoname):
-        target_file = '/projects/publicmapping/trunk/sld/gmu:%s_none.sld' % (geoname)
+        target_file = '/projects/publicmapping/trunk/sld/pmp:%s_none.sld' % (geoname)
         f = open(target_file,'w')
         f.write ( str(SldList_Template(layername="%s No fill" % (geoname),layertitle="%s No Fill" % (geoname) ,layerabs="A style showing the boundaries of a geounit with a transparent fill", slst=[],sli=Empty_Template, lst=[{"title":"Fill","fill":"#FFFFFF","fillopacity":"1.0"}],li=Sld_Poly_Template,elst=[{"title":"Boundary","stroke":"#555555","strokewidth":"3.00","strokeopacity":"1.0"}],eli=Sld_Line_Template)) )
 	f.write("\n")
@@ -291,7 +291,7 @@ def gensld_none(geoname):
         os.chmod(target_file,stat.S_IRUSR|stat.S_IRGRP|stat.S_IROTH)    
 
 def gensld_boundaries(geoname):
-        target_file = '/projects/publicmapping/trunk/sld/gmu:%s_boundaries.sld' % (geoname) 
+        target_file = '/projects/publicmapping/trunk/sld/pmp:%s_boundaries.sld' % (geoname) 
         f = open(target_file,'w')
         f.write ( str(SldList_Template(layername="%s Boundaries" % (geoname) ,layertitle="%s Boundaries Only" %(geoname),layerabs="A style showing the boundaries of a geounit", slst=[] ,sli=Empty_Template, lst=[],li=Empty_Template,elst=[{"title":"County Boundaries","fill":"#000000","fillopacity":"0.0","stroke":"#2255FF","strokewidth":"2","strokeopacity":"0.35"}],eli=Sld_PolyB_Template)))
 	f.write("\n")
@@ -302,7 +302,7 @@ def gensld_boundaries(geoname):
 def gensld_choro(geoname,varname,vartitle,quantiles):
 	# WARNING: sld files need to be lower case to be compatible with postgres views
 	lvarname = string.lower(varname)
-        target_file = '/projects/publicmapping/trunk/sld/gmu:%s_%s.sld' % (geoname,lvarname) 
+        target_file = '/projects/publicmapping/trunk/sld/pmp:%s_%s.sld' % (geoname,lvarname) 
         varabs="Grayscale choropleth based on quantiles of %s" % (varname)
         valuelist= [
           {"top": str(quantiles[4]),
@@ -1300,7 +1300,7 @@ class Config_Template(DictionaryTemplate):
         
         <!-- Configuration items specific to the 'redistricting' app. -->
        <Redistricting>      
-	   <MapServer hostname="" ns="gmu" nshref="http://gmu.azavea.com/"
+	   <MapServer hostname="" ns="pmp" nshref="http://publicmapping.sourceforge.net/"
                 adminuser="admin" adminpass="admin" maxfeatures="100" 
                 styles="/projects/publicmapping/trunk/sld" />
             <!-- 

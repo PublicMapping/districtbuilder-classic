@@ -85,6 +85,8 @@
         // the most current plan version is initially displayed.
         var PLAN_VERSION = {% if plan %}{{ plan.version }}{% else %}0{% endif %};
         var PLAN_TYPE = '{% if plan and plan.is_community %}community{% else %}plan{% endif %}';
+        var PLAN_TEXT = '{{ plan_text }}';
+        var PLAN_TEXT_TITLE = '{{ plan_text|title }}';
         // The history tree. This gets populated as the user walks
         // backward in the history.
         var PLAN_HISTORY = {};
@@ -141,6 +143,7 @@
     <script type="text/javascript" src="/static-media/js/reports.js"></script>
     <script type="text/javascript" src="/static-media/js/register.js"></script>
     <script type="text/javascript" src="/static-media/js/statisticssets.js"></script>
+    <script type="text/javascript" src="/static-media/js/splitsreport.js"></script>
     {% comment %}
 
     Load Google Analytics Script if the ga_account has been set
@@ -173,7 +176,7 @@
       <div id="logo"><img src="/static-media/images/title-app.png" /></div>
       <ul id="steps_tabs"> <!-- tabs have to be first UL in #steps or else tabs wont work -->
         <li id="tab_plan"><a href="#step_plan">Plan</a><li>
-        <li id="tab_draw"><a href="#step_draw">Draw</a></li>
+        <li id="tab_draw"><a href="#step_draw">{% if is_registered %}Draw{% else %}View{% endif %}</a></li>
         <li id="tab_evaluate"><a href="#step_evaluate">Evaluate</a></li>
         <li id="tab_share" class="last"><a href="#step_share">Share</a></li>
         {% if has_leaderboard and not plan.is_community %}
@@ -371,15 +374,11 @@
               </div>
             <div class="toolset_group toolset_group_lg">
                   <button id="district_id_map_tool" title="Click on a district to see its ID." class="btntoggle titletip">{{ body_member|capfirst }}<br/>Info</button>
-                  {% comment %}
-                  
-                  This hidden div is used to style the locked districts.
-                  This is needed, because the locked legend item does not
-                  exist before the first district layer is drawn.
-                  
-                  {% endcomment %}
-                  <div class="locked" style="display:none"></div>
               </div>
+              <div class="toolset_group toolset_group_lg">
+                <button id="show_splits_button">Show<br/>Splits</button>
+                <button id="generate_splits_report_button">Generate<br/>Splits Report</button>
+               </div>
               <div class="clear"></div>
             </div>
           {% endblock %}
@@ -430,31 +429,8 @@
             <div class="shadow_top"></div>
           </div>
 
-          <div id="map_type_settings">
-              <button id="map_type_toggle">Road</button>
-          </div>
-          <div id="map_type_content">
-              <div id="map_type_content_container"></div>
-              <div class="toolset_group toolset_group_lg">
-                  <img src="/static-media/images/icon-help.png" class="help divtip">
-                  <div class="tooltip">Select a base map layer.</div>
-              </div>            
-          </div>
-
-          <div id="map_settings">
-              <button id="settings_toggle">Map Layer Visibility</button>
-          </div>
           <div id="map_settings_content">
-             <div class="float_right">
-                 <img src="/static-media/images/icon-help.png" class="help divtip">
-                 <div class="tooltip">Select a map layer and use the slider to set its visibility.</div>
-             </div>  
-            <span class="layer_type_container" id="layer_type_thematic">
-                <input class="map_settings_layer_type" id="thematic_radio" type="radio" name="layer_types" checked="true">Map</input>
-            </span>
-            <span class="layer_type_container" id="layer_type_base">
-                <input class="map_settings_layer_type" id="basemap_radio" type="radio" name="layer_types"><span id="base_map_type"></span> Layer</input>
-            </span>
+             <div id="map_type_content_container"></div>
             <div id="opacity_slider"></div>          
             <div id="reference_layer_id" class="layer_type_container">
                 <div id="reference_layer_label">Reference Layer:</div>
@@ -469,17 +445,89 @@
           {% endcomment %}
           {% endblock %}
 
-          {% block splits_report %}
-          {% comment %}
+            <div id="splits_report_dialog">
+                <div id="splits_report_content">
+                    <div id="splits_report_select_panel">
+                        <h2>Generate Splits Report for Current {{ plan_text|title }}</h2>
+                        <div id="splits_report_reminder_text">
+                            Select reference layer(s) for comparison.
+                        </div>
+                        <div id="splits_report_available_layers">
+                            {% for snap in snaplayers %}
+                            {% if not forloop.last %}                    
+                            <div class="layer_choice_wrapper">
+                                <input id="geolevel.{{ snap.geolevel }}" class="layer_choice" type="checkbox" value="geolevel.{{ snap.geolevel }}" />
+                                <label for="geolevel.{{ snap.geolevel }}">{{ snap.name }}</label>
+                            </div>                  
+                            {% endif %}
+                            {% endfor %}
+                        </div>
 
-          Include the markup for the splits report
+                        <h2>Advanced options</h2>
+                        <div class="inverse_choice_wrapper">
+                            <input id="inverse_choice" type="checkbox" />
+                            <label id="inverse_choice_label" for="inverse_choice">Reverse splits detection</label>
+                        </div>                  
 
-          {% endcomment %}
-          {% endblock %}
+                        <div class="extended_choice_wrapper">
+                            <input id="extended_choice" type="checkbox" />
+                            <label id="extended_choice_label" for="extended_choice">Extended report: List all</label>
+                            <div id="extended_choice_label_more">
+                                districts or communities contained within each district.
+                            </div>
+                            <div id="extended_choice_label_warning">
+                                (Choosing this option will
+                                significantly increase the amount
+                                of time it takes to generate the
+                                report.)
+                            </div>
+                        </div>                  
+
+                        <div id="splits_report_ok_div">
+                            <button id="splits_report_ok_button">Generate Report</button>
+                        </div>
+                    </div>
+                    <div id="splits_report_results_panel">
+                        <h2>Splits Report</h2>
+                        <div id="splits_report_results_container">
+                          <p>No report generated.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script type="text/javascript">
+                $(function() {
+                    splitsreport = splitsreport({
+                        container: $('#splits_report_dialog'),
+                        target: $('#generate_splits_report_button'),
+                        okButton: $('#splits_report_ok_button'),
+                        inverseCheckbox: $('#inverse_choice'),
+                        extendedCheckbox: $('#extended_choice'),
+                        availableLayers: $('#splits_report_available_layers'),
+                        referenceLayerSelect: $('#reference_layer_select'),
+                        splitsReportUrl: '/districtmapping/plan/{{ plan.id }}/splitsreport/',
+                        resultsContainer: $('#splits_report_results_container'),
+                        map: $('#map'),
+                        getVersionFn: function() {
+                            return $('#history_cursor').val();
+                        }
+                    }).init();
+                });
+            </script>
              
           <div id="map_legend">
               <button id="legend_toggle">Map Legend</button>
           </div>
+          {% comment %}
+          
+          These hidden divs are used to style districts.
+          This is needed because the legend items do not
+          exist before the district layer is drawn.
+          
+          {% endcomment %}
+          <div class="locked" style="display:none"></div>
+          <div class="highlighted" style="display:none"></div>
+          <div class="reference" style="display:none"></div>
 
           <div id="map_legend_content">
             <table id="basemap_legend">
@@ -500,7 +548,7 @@
                     <tr>
                         <td><div id="legend_swatch_3" class="swatch basemap_swatch">&nbsp;</div></td> <td>&gt; 500,000</td> </tr> </tbody>
             </table>
-            <table id="district_legend">
+            <table id="district_legend" {% if plan.is_community %}style="display: none;"{% endif %}>
                 <thead>
                     <tr>
                         <th colspan="2">{{ body_member|capfirst }}</th>
@@ -529,7 +577,24 @@
                     </tr>
                 </tbody>
             </table>
-            <table id="boundary_legend">
+            <table id="district_extras_legend">
+                <tbody>
+                    <tr>
+                        <td class="indented_swatch">
+                            <div id="district_swatch_locked" class="swatch locked">&nbsp;</div>
+                        </td>
+                        <td>Locked For Editing</td>
+                    </tr>
+
+                    <tr>
+                        <td class="indented_swatch">
+                            <div id="district_swatch_highlighted" class="swatch highlighted">&nbsp;</div>
+                        </td>
+                        <td>Highlighted</td>
+                    </tr>
+                </tbody>
+            </table>
+            <table id="reference_legend">
                 <thead>
                     <tr>
                         <th colspan="2">Reference</th>
@@ -537,8 +602,8 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td><div id="boundary_swatch" class="swatch boundary border">&nbsp;</div></td>
-                        <td id="boundary_title" >Boundary</td>
+                        <td class="indented_swatch"><div id="reference_swatch" class="swatch reference">&nbsp;</div></td>
+                        <td id="reference_title" >reference</td>
                     <tr>
                 </tbody>
             </table>
@@ -578,7 +643,7 @@
                    1. Select Legislative Body
                 </span>
                 <select id="legSelectorLeaderboards">
-                    {% for body in bodies %}
+                    {% for body in leaderboard_bodies %}
                         <option value="{{ body.id }}">{{ body.name }}</option>
                     {% endfor %}
                 </select>
@@ -598,7 +663,7 @@
     <div id="step_share" class="main_content share fulltab">
       <div class="shadow_left"></div>
       <div class="shadow_top"></div>
-      <div class="toolbar ui-widget-header"><h1>Share a Plan</h1></div>
+      <div class="toolbar ui-widget-header"><h1>Share a {{ plan_text|title }}</h1></div>
       <div class="tab_content">
           <div id="saveandshare">
               {% block share_panel %}
@@ -610,18 +675,23 @@
 
               {% endcomment %}
               <div class="explanation">
-                  <h3>Shared Documents not available</h3>
-                  <p>If you were editing a plan, you could use this tab to share your plan with others<p>
+                  <h3>This plan has been shared</h3>
+                  <p>Anyone can view this plan by visiting the following URL in a web browser:</p>
+                  <div id="share_url">
+                      <script type="text/javascript">document.write(window.location.protocol, '//',
+                         window.location.host, '{% url publicmapping.redistricting.views.viewplan planid=plan.id %}');
+                      </script>
+                  </div>
               </div>
               {% endblock %}
               <div class="blockfile">
                   <h3>District Index File export</h3>
-                  <p>You can export this plan to a {{ body_member|lower }} 
+                  <p>You can export this {{ plan_text }} to a {{ body_member|lower }} 
                   index file. The index file is a comma-separated-value file
                   (csv) with each line listing a geounit (such as a census 
                   block) and the {{ body_member|lower }} to which it 
                   belongs. This file can be imported to other instances of 
-                  the publicmapping software or used in analysis of the plan
+                  the publicmapping software or used in analysis of the {{ plan_text }}
                   using your favorite GIS software.</p>
                   <div id='districtIndexFileTarget' />
               </div>
@@ -725,32 +795,33 @@ Include the shared_districts markup if we're using the copy/paste tool
                   {% endfor %}
               </select>
             </div>
+
             
-            <div class="dialog_step">
-              <h2>2. Choose District Thematic Map</h2>
-              {% comment %}
+            <div class="dialog_step" {% if plan.is_community %}style="display: none;"{% endif %}>
+                <h2>2. Choose District Thematic Map</h2>
+                {% comment %}
 
-              Dynamically populate the "Show Districts by:" dropdown,
-              based on the demographics that are configured in the 
-              application.
+                Dynamically populate the "Show Districts by:" dropdown,
+                based on the demographics that are configured in the 
+                application.
 
-            {% endcomment %}
-            <select id="districtby" class="indented fillwidth" autocomplete="off">
-                <option value="0" name="None">None</option>
-                <option value="-1" name="Compactness">Compactness</option>
-                <option value="-2" name="Contiguity">Contiguity</option>
-                {% for demo in demographics %}
-                {% if demo.isdisplayed == "true" %}
-                    <option value="{{ demo.id }}" name="{{ demo.value }}" {% if demo.isdefault == "true" %}selected="true"{% endif %}>
-                        {{ demo.text }}
-                    </option>
-                {% endif %}
-                {% endfor %}
-            </select>
+                {% endcomment %}
+                <select id="districtby" class="indented fillwidth" autocomplete="off">
+                    <option value="0" name="None">None</option>
+                    <option value="-1" name="Compactness">Compactness</option>
+                    <option value="-2" name="Contiguity">Contiguity</option>
+                    {% for demo in demographics %}
+                        {% if demo.isdisplayed == "true" %}
+                            <option value="{{ demo.id }}" name="{{ demo.value }}" {% if demo.isdefault == "true" %}selected="true"{% endif %}>
+                                {{ demo.text }}
+                            </option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
             </div>
             
             <div class="dialog_step">
-              <h2>3. Choose a Reference Layer</h2>
+              <h2>{% if plan.is_community %}2{% else %}3{% endif %}. Choose a Reference Layer</h2>
               <select id="reference_layer_select" class="indented fillwidth" autocomplete="off">
                   <option value="None">None</option>
                   {% for snap in snaplayers %}
@@ -761,18 +832,22 @@ Include the shared_districts markup if we're using the copy/paste tool
               </select>
               <div id="choose_layers_button_group" class="indented">
               <h2 class="indented centered">OR...</h2>
-              <button id="choose_layers_legislative_button" class="lg spacebelow">
-                  Select Legislative Plan<br/>For Display
-              </button>
-              <button id="choose_layers_community_button" class="lg">
-                  Select Community Plan<br/>For Display
+              <button id="choose_reference_layer_button" class="lg spacebelow">
+                  Choose a:<br/>legislative district or community map<br/>reference layer
               </button>
               </div>
               <div class="clear"></div>
             </div>
         </div>
         <div id="reference_layer_content" class="dialog_step">
-            <h2>4. Select Plan to Display as Reference Layer</h2>
+            <h2>{% if plan.is_community %}3{% else %}4{% endif %}. Select Plan Type</h2>
+            <select id="ref_leg_selector" class="indented fillwidth">
+                {% for body in bodies %}
+                    <option value="{{ body.id }}">{{ body.name }}</option>
+                {% endfor %}
+            </select>
+
+            <h2>{% if plan.is_community %}4{% else %}5{% endif %}. Select Plan to Display as Reference Layer</h2>
             <table id="reference_plans_table"></table>
             <div id="reference_plans_pager"></div>
         </div>
@@ -788,12 +863,13 @@ Include the shared_districts markup if we're using the copy/paste tool
             layerChooser = layerchooser({
                 container: $('#choose_layers_dialog'),
                 target: $('#choose_layers_button').button({icons:{primary:'icon-layers'}}),
-                legislativeButton: $('#choose_layers_legislative_button'),
-                communityButton: $('#choose_layers_community_button'),
+                referenceLayerButton: $('#choose_reference_layer_button'),
+                referenceLayerType: $('#ref_leg_selector'),
                 okButton: $('#choose_layers_ok_button'),
                 referenceLayerContent: $('#reference_layer_content'),
                 referenceLayerSelect: $('#reference_layer_select'),
                 referenceLayerName: $('#reference_layer_name'),
+                referenceLayerLegend: $('#reference_legend'),
                 referencePlansTable: $('#reference_plans_table'),
                 referencePlansPager: $('#reference_plans_pager'),
                 referencePlansUrl: '/districtmapping/getplans/',
@@ -805,13 +881,33 @@ Include the shared_districts markup if we're using the copy/paste tool
 </script>
 {% endif %}
 
-{% block stats_editor %}
+{% if is_registered %}
 {% comment %}
 
 Include the stats editor if user can edit stats.
 
 {% endcomment %}
-{% endblock %}
+<div id="stats_editor_container" class="stats_editor" title="Edit Statistics Sets">
+    <div id="stats_editor_instructions">
+        You can select up to three statistics at once to display in the sidebar. Each set of three
+        statistics will be saved in the dropdown for you to select or edit later. You may have up
+        to three sets of statistics saved.
+    </div>
+    1. Select up to 3 statistics
+    <button id="clear_statistics">Clear Choices</button>
+    <div id="available_statistics"> </div>
+    
+    <div id="name_statistics_set">
+        2. Name Statistics Set
+        <input type="text" id="statistics_set_name" maxlength="50" />
+        <button id="save_statistics_set">Save Set</button>
+    </div>
+    <div id="existing_statistics_set">
+        ... Or select a saved statistics set
+    </div>
+    <div id="saved_statistics_sets"> </div>
+</div>
+{% endif %}
 
 {% block district_info %}
 {% comment %}

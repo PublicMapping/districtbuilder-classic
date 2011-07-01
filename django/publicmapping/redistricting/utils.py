@@ -27,11 +27,14 @@ Author:
 from celery.decorators import task
 from celery.task.http import HttpDispatchTask
 from django.core import management
+from django.contrib.comments.models import Comment
 from django.contrib.sessions.models import Session
 from django.core.mail import send_mail, mail_admins
 from django.template import loader, Context as DjangoContext
 from django.db.models import Sum, Min, Max
 from redistricting.models import *
+from tagging.utils import parse_tag_input
+from tagging.models import Tag, TaggedItem
 import csv, time, zipfile, tempfile, os, sys, traceback, time
 from datetime import datetime
 import socket, urllib
@@ -187,8 +190,11 @@ class DistrictIndexFile():
         # keyed on the district_id of this plan
         new_districts = dict()
         num_members = dict()
+        community_labels = dict()
+        community_types = dict()
+        community_comments = dict()
         csv_file = open(indexFile)
-        reader = csv.DictReader(csv_file, fieldnames = ['code', 'district', 'num_members'])
+        reader = csv.DictReader(csv_file, fieldnames = ['code', 'district', 'num_members', 'label', 'types', 'comments'])
         for row in reader:
             try:
                 dist_id = int(row['district'])
@@ -201,11 +207,15 @@ class DistrictIndexFile():
                     new_districts[dist_id].append(str(row['code']))
 
                     # num_members may not exist in files exported before the column was added
-                    num = 1
-                    if row['num_members']:
-                        num = int(row['num_members'])
+                    num_members[dist_id] = int(row['num_members']) if row['num_members'] else 1
 
-                    num_members[dist_id] = num
+                    # community components are only present on community plans
+                    if row['label']:
+                        community_labels[dist_id] = row['label']
+                    if row['types']:
+                        community_types[dist_id] = row['types']
+                    if row['comments']:
+                        community_comments[dist_id] = row['comments']
                     
             except Exception as ex:
                 if email:
@@ -222,6 +232,10 @@ class DistrictIndexFile():
         # Get all subjects - those without denominators first to save a calculation
         subjects = Subject.objects.order_by('-percentage_denominator').all()
 
+        # Determine if this is a community plan
+        is_community = bool(community_labels)
+        ct = ContentType.objects.get(app_label='redistricting',model='district')        
+
         # Create the district geometry from the lists of geounits
         for district_id in new_districts.keys():
             # Get a filter using portable_id
@@ -231,12 +245,29 @@ class DistrictIndexFile():
             try:
                 # Build our new geometry from the union of our geounit geometries
                 new_geom = Geounit.objects.filter(guFilter).unionagg()
-
+                
                 # Create a new district and save it
-                new_district = District(name=legislative_body.member % (district_id), 
+                name = community_labels[district_id] if is_community else legislative_body.member % district_id 
+                new_district = District(name=name,
                     district_id = district_id, plan=plan, num_members=num_members[district_id],
                     geom=enforce_multi(new_geom))
                 new_district.simplify() # implicit save
+
+                # Add community fields if this is a community plan
+                if is_community:
+                    # Add comments
+                    comments_str = community_comments[district_id]
+                    if comments_str:
+                        comment = Comment(object_pk=new_district.id, content_type=ct, site_id=1, user_name=owner, user_email=email, comment=comments_str)
+                        comment.save()
+
+                    # Add types
+                    types_str = community_types[district_id]
+                    if types_str:
+                        for strtag in types_str.split('|'):
+                            if strtag:
+                                Tag.objects.add_tag(new_district, 'type=%s' % strtag)
+                
             except Exception as ex:
                 if email:
                     context['errors'].append({
@@ -324,8 +355,25 @@ class DistrictIndexFile():
             archive = open(pending, 'w')
             f = tempfile.NamedTemporaryFile(delete=False)
             try:
-                # Get the geounit mapping (we want the portable id, then the district id)
-                mapping = [(pid, did-1, members) for (gid, pid, did, members) in plan.get_base_geounits()]
+                units = plan.get_base_geounits()
+
+                # csv layout: portable id, district id, num members, label, types, comments
+                # the final three are only written when the plan is a community
+                if not plan.is_community():
+                    mapping = [(pid, did, members) for (gid, pid, did, members) in units]
+                else:
+                    # create a map of district_id -> tuple of community details
+                    dm = {}
+                    ct = ContentType.objects.get(app_label='redistricting',model='district')
+                    for district in plan.get_districts_at_version(plan.version, include_geom=False):
+                        if district.district_id > 0:
+                            types = Tag.objects.get_for_object(district).filter(name__startswith='type=')
+                            types = '|'.join([t.name[5:] for t in types])
+                            comments = Comment.objects.filter(object_pk__in=[str(district.id)],content_type=ct)
+                            comments = comments[0].comment if len(comments) > 0 else ''
+                            dm[district.district_id] = (district.name, types, comments)
+                    mapping = [(pid, did, members, dm[did][0], dm[did][1], dm[did][2]) for (gid, pid, did, members) in units]
+                
                 difile = csv.writer(f)
                 difile.writerows(mapping)
                 f.close()

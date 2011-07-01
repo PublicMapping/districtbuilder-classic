@@ -45,6 +45,7 @@ from django.contrib.gis.geos import GEOSGeometry
 from django.contrib.gis.gdal import *
 from django.contrib.gis.gdal.libgdal import lgdal
 from django.contrib import humanize
+from django.template import loader, Context as DjangoContext
 from django.utils import simplejson as json
 from django.views.decorators.cache import cache_control
 from django.template.defaultfilters import slugify, force_escape
@@ -425,8 +426,12 @@ def commonplan(request, planid):
 
     member = body_member.strip().lower()
 
+    bodies = LegislativeBody.objects.all().order_by('sort_key')
+    l_bodies = [b for b in bodies if b in [sd.legislative_body for sd in ScoreDisplay.objects.filter(is_page=True)]]
+
     return {
-        'bodies': LegislativeBody.objects.all().order_by('sort_key'),
+        'bodies': bodies,
+        'leaderboard_bodies': l_bodies,
         'plan': plan,
         'districts': districts,
         'mapserver': settings.MAP_SERVER,
@@ -450,7 +455,8 @@ def commonplan(request, planid):
         'reporting_template': reporting_template,
         'study_area_extent': study_area_extent,
         'has_leaderboard' : len(ScoreDisplay.objects.filter(is_page=True)) > 0,
-        'tags': tags
+        'tags': tags,
+        'plan_text': "community map" if (plan and plan.is_community()) else "plan"
     }
 
 
@@ -644,6 +650,15 @@ def getreport(request, planid):
     note_session_activity(request)
 
     status = { 'success': False }
+    try:
+        plan = Plan.objects.get(pk=planid)
+    except:
+        status['message'] = 'No plan with the given id'
+        return HttpResponse(json.dumps(status),mimetype='application/json')
+
+    if not can_view(request.user, plan):
+        status['message'] = 'User can\'t view the given plan'
+        return HttpResponse(json.dumps(status),mimetype='application/json')
 
     if not settings.REPORTS_ENABLED:
         status['message'] = 'Reports functionality is turned off.'
@@ -1005,7 +1020,6 @@ def fix_unassigned(request, planid):
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
 
-@login_required
 @unique_session_or_json_redirect
 def get_splits(request, planid, otherid, othertype):
     """
@@ -1034,8 +1048,8 @@ def get_splits(request, planid, otherid, othertype):
         status['message'] = 'No plan with the given id'
         return HttpResponse(json.dumps(status),mimetype='application/json')
 
-    if not can_edit(request.user, plan):
-        status['message'] = 'User can\'t edit the given plan'
+    if not can_view(request.user, plan):
+        status['message'] = 'User can\'t view the given plan'
         return HttpResponse(json.dumps(status),mimetype='application/json')
 
     version = int(request.REQUEST['version'] if 'version' in request.REQUEST else plan.version)
@@ -1046,7 +1060,10 @@ def get_splits(request, planid, otherid, othertype):
             except:
                 status['message'] = 'No other plan with the given id'
                 return HttpResponse(json.dumps(status),mimetype='application/json')
-
+            if not can_view(request.user, otherplan):
+                status['message'] = 'User can\'t view the given plan'
+                return HttpResponse(json.dumps(status),mimetype='application/json')
+                
             otherversion = int(request.REQUEST['otherversion'] if 'otherversion' in request.REQUEST else otherplan.version)
             splits = plan.find_plan_splits(otherplan, version, otherversion)
         elif othertype == 'geolevel':
@@ -1076,30 +1093,30 @@ def get_splits_report(request, planid):
     except:
         return HttpResponse('<div>Plan does not exist.</div>', mimetype='text/plain')
 
-    if not using_unique_session(request.user) or not can_edit(request.user, plan):
+    if not using_unique_session(request.user) or not can_view(request.user, plan):
         return HttpResponseForbidden()
 
     version = int(request.REQUEST['version'] if 'version' in request.REQUEST else plan.version)
     inverse = request.REQUEST['inverse'] == 'true' if 'inverse' in request.REQUEST else False
+    extended = request.REQUEST['extended'] == 'true' if 'extended' in request.REQUEST else False
     layers = request.REQUEST.getlist('layers[]')
     if len(layers) == 0:
         return HttpResponse('<div>No layers were provided.</div>', mimetype='text/plain')
 
     try :
-        # Get a ScoreDisplay and components to render
-        display = ScoreDisplay(is_page=False, title="Splits Report", owner=request.user, legislative_body = plan.legislative_body)
-        panel = ScorePanel(title="Splits Report", type="plan", template='split_report.html', cssclass="split_panel")
-        function = ScoreFunction(calculator="redistricting.calculators.SplitCounter", name="splits_test", label="Geolevel Splits", is_planscore=True)
-
+        report = loader.get_template('split_report.html')
         html = ''
         for layer in layers:
-            arg1 = ScoreArgument(argument="boundary_id", value=layer, type="literal")
-            arg2 = ScoreArgument(argument="inverse", value=(1 if inverse else 0), type="literal")
-            arg3 = ScoreArgument(argument="version", value=version, type="literal")
-            components = [(panel, [(function, arg1, arg2, arg3)])]
-
-            html += display.render(plan, components=components)
-
+            my_context = {'extended': extended}
+            my_context.update(plan.compute_splits(layer, version = version, inverse = inverse, extended = extended))
+            last_item = layer is layers[-1]
+            community_info = plan.get_community_type_info(layer, version = version, inverse = inverse, include_counts=last_item)
+            if community_info is not None:
+                my_context.update(community_info)
+            calc_context = DjangoContext(my_context)
+            html += report.render(calc_context)
+            if not last_item:
+                html += '<hr />'
         return HttpResponse(html, mimetype='text/html')
     except Exception as ex:
         print traceback.format_exc()
@@ -1448,7 +1465,7 @@ def get_statistics(request, planid):
     else:
         version = plan.version
 
-    display = ScoreDisplay.objects.get(title='Demographics', legislative_body=plan.legislative_body)    
+    display = ScoreDisplay.objects.filter(title='Demographics', legislative_body=plan.legislative_body)[0]
     
     if 'displayId' in request.REQUEST:
         try:
@@ -1824,13 +1841,14 @@ def statistics_sets(request, planid):
             scorefunctions.append({ 'id': f.id, 'name': force_escape(f.label) })
         result['functions'] = scorefunctions
 
-        # Get the admin displays
-        admin_displays = ScoreDisplay.objects.filter(
-            owner__is_superuser=True,
-            legislative_body=plan.legislative_body,
-            is_page=False).order_by('title')
-        for admin_display in admin_displays:
-            sets.append({ 'id': admin_display.id, 'name': force_escape(admin_display.title), 'functions': [], 'mine':False })
+        if not request.user.is_superuser:
+            # Get the admin displays
+            admin_displays = ScoreDisplay.objects.filter(
+                owner__is_superuser=True,
+                legislative_body=plan.legislative_body,
+                is_page=False).order_by('title')
+            for admin_display in admin_displays:
+                sets.append({ 'id': admin_display.id, 'name': force_escape(admin_display.title), 'functions': [], 'mine':False })
 
         try:
             user_displays = ScoreDisplay.objects.filter(
@@ -1867,7 +1885,7 @@ def statistics_sets(request, planid):
     elif request.method == 'POST':
         # If we're adding a new display, we should make sure they only have 3
         def validate_num(user, limit=3):
-            return ScoreDisplay.objects.filter(owner=user).count() < limit
+            return ScoreDisplay.objects.filter(owner=user, legislative_body=plan.legislative_body, is_page=False).count() < limit
 
         if 'functions[]' in request.POST:
             functions = request.POST.getlist('functions[]')

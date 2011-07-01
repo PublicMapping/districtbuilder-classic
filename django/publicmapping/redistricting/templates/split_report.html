@@ -1,1 +1,103 @@
-{% for planscore in planscores %}{{ planscore.score.0|safe }}{% endfor %}
+{% comment %}
+
+   Copyright 2010 Micah Altman, Michael McDonald
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+   See the License for the specific language governing permissions and
+   limitations under the License. 
+
+   This file is part of The Public Mapping Project
+   http://sourceforge.net/projects/publicmapping/
+
+   Purpose:
+       This is the template for the "splits report" 
+ 
+   Author: 
+       Andrew Jennings, David Zwarg, Kenny Shepard
+
+{% endcomment %}
+{% load redistricting_extras %}
+<div class="split_report">
+<div>Total Splits with {{ other_name }}: {{ splits|length }}</div>
+{% if extended %}
+    <div id="split_indicator">* indicates split</div> 
+{% endif %}
+<div class="table_container">
+<table class="report"><thead><tr class="name"><th class="name">{{ plan_name }}</th><th>{{ other_name }}</th></tr></thead><tbody>
+{{ components }}
+{% regroup named_splits|dictsort:"geo" by geo as split_list %} 
+{% for geo in split_list %}
+    {% for split in geo.list|dictsort_ignorecase:"interior" %}
+        <tr>
+        {% if forloop.first %}
+            <td>{{ geo.grouper }}</td>
+        {% else %}
+            <td />
+        {% endif %}
+            <td{% if extended and split.split %} class="split_district" >* {% else %} >{% endif %}{{ split.interior }}</td>
+        </tr>
+        
+        {% if forloop.last %}
+            <tr class="split_totals">
+                <td>Total splits:</td>
+                {% if extended %}
+                    <td>{{ geo.list|count_true_values:"split"}} (of {{ geo.list|length }})</td>
+                {% else %}
+                    <td>{{ geo.list|length }}</td>
+                {% endif %}
+            </tr>
+        {% endif %}
+    {% endfor %}
+{% endfor %}
+</tbody></table>
+</div>
+</div>
+{% if type_splits %}
+    <div class="divider"></div>
+    <div class="split_report">
+    <div class="split_table_type">Type Summary By District</div>
+    <div class="table_container">
+    <table class="report"><thead><tr><th class="name">{{ plan_name }}</th><th>Type</th><th class="total">Total By District</th></tr></thead><tbody>
+    {% regroup type_splits|dictsort_ignorecase:"name" by name as type_list %}
+    {% for name in type_list %}
+        {% for split in name.list|dictsort_ignorecase:"type" %}
+            <tr>
+            {% if forloop.first %}
+                <td>{{ name.grouper }}</td>
+            {% else %}
+                <td />
+            {% endif %}
+                <td>{{ split.type }}</td><td class="total">{{ split.number }}</td>
+            </tr>
+        {% endfor %}
+        {% if not forloop.last %}
+            <tr class="separator_row"><td /><td /><td /></tr>
+        {% endif %}
+    {% endfor %}
+    </tbody></table>
+    </div>
+    </div>
+{% endif %}
+{% if type_counts %}
+	<div class="divider"></div>
+    <div class="split_report">
+    <div class="split_table_type">Type Summary for {{ other_name }}</div>
+    <div class="table_container">
+    <table class="report"><thead><tr><th>Type</th><th class="total">Total</th></tr></thead><tbody>
+        {% for type in type_counts|dictsort_ignorecase:"type" %}
+        <tr>
+            <td>{{ type.type }}</td><td class="total">{{ type.number }}</td>
+        </tr>
+        {% endfor %}
+    </tbody></table>
+    </div>
+    </div>
+{% endif %}

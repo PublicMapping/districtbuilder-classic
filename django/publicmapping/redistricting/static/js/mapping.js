@@ -316,7 +316,7 @@ function mapinit(srs,maxExtent) {
     // zoom = log(maxmpp/mpp)/log(2)
     var level = Math.log(maxMetersPerPixel / metersPerPixel) / Math.LN2;
     
-    var minZoomLevel = Math.floor(level) - 1;
+    var minZoomLevel = Math.floor(level);
     var maxZoomLevel = 17; // This level is far enough zoomed to view blocks in any state
     var numZoomLevels = maxZoomLevel - minZoomLevel + 1;
 
@@ -425,9 +425,8 @@ function mapinit(srs,maxExtent) {
     $('#opacity_slider').slider({
         value: 100 - defaultThematicOpacity * 100,
         slide: function(event, ui) {
-            var isThematic = $('#thematic_radio').attr('checked');
             $(olmap.layers).each(function(i, layer) {
-                if ((isThematic && !layer.isBaseLayer) || (!isThematic && layer.isBaseLayer)) {
+                if (!layer.isBaseLayer) {
                     layer.setOpacity(1 - ui.value / 100);
                 }
             });
@@ -437,52 +436,23 @@ function mapinit(srs,maxExtent) {
     // Add a row for each base map to the Basemap Settings container for switching
     $(layers).each(function(i, layer) {
         var container = $('#map_type_content_container');
-        var button = $('<button class="map_type_button">' + layer.name + '</button>');
+        var id = 'radio' + i;
+        var button = $('<input type="radio" name="basemap" id="' + id + '"' + ((i === 0) ? 'checked=checked' : '') +
+                       ' /><label for="' + id + '">' + layer.name + '</label>');
             
-        // split is in case the provider is in parens due to there being multiple
-        var mapType = layer.name.split(' ')[0];
-        var toggle = $('#map_type_toggle');
-
-        // Default to the first map type
-        if (i === 0) {
-            toggle.button('option', 'label', mapType)
-        }
-
-        // Set the base layer, and change label when the option is selected
+        // change the base layer when a new one is selected
         button.click(function() {
-            $('#base_map_type').html(mapType);
-            toggle.button('option', 'label', mapType)
             olmap.setBaseLayer(layer);
-            toggle.click();
         });
            
         container.append(button);
     });
 
+    // Turn the radios into a buttonset
+    $('#map_type_content_container').buttonset();
+
     // Set the default map type label
     $('#base_map_type').html(layers[0].name);
-
-
-    // Function for monitoring when map layer radio changes, and updating the slider accordingly
-    var getMapLayerRadioChangeFn = function(isThematic){
-        return function() {        
-            var found = null;
-            for (var i = 0; i < olmap.layers.length; i++) {
-                var layer = olmap.layers[i];
-                if ((isThematic && !layer.isBaseLayer) || (!isThematic && layer.isBaseLayer)) {
-                    found = layer;
-                    break;
-                }
-            }
-            if (!found) { return; }
-            if (found.opacity === null) {
-                found.opacity = 1; // OpenLayers doesn't set opacity on load when it's 100%
-            }
-            $('#opacity_slider').slider('value', found.opacity * 100);
-        };
-    };
-    $('#thematic_radio').click(getMapLayerRadioChangeFn(true));
-    $('#basemap_radio').click(getMapLayerRadioChangeFn(false));
 
     // Handle Fix Unassigned requests
     $('#fix_unassigned').click(function(){
@@ -527,7 +497,13 @@ function mapinit(srs,maxExtent) {
         var referenceLayerId = $('#reference_layer_select').val();
         if (!referenceLayerId || (referenceLayerId === 'None')) {
             $('<div>No reference layer selected.</div>').dialog({
-                modal: true, autoOpen: true, title: 'Error', resizable:false
+                modal: true, autoOpen: true, title: 'Warning', resizable:false,
+                buttons: {
+                    'Set Reference Layer': function() {
+                        $(this).dialog('close');
+                        $('#choose_layers_button').click();
+                    }
+                }
             });
             return;
         }
@@ -612,7 +588,7 @@ function mapinit(srs,maxExtent) {
         fillOpacity: 0.01,    // need some opacity for picking districts
         fillColor: '#ee9900', // with ID tool -- fillColor needed, too
         strokeColor: '#ee9900',
-        strokeOpacity: 1,
+        strokeOpacity: .5,
         strokeWidth: 2,
         label: '${label}',
         fontColor: '#663300',
@@ -623,20 +599,22 @@ function mapinit(srs,maxExtent) {
     };
 
     // The style for the highlighted district layer
+    var highlightColor = $('.highlighted').css('background-color');
     var highlightStyle = {
         fill: false,
-        fillColor: '#007FFF',
-        strokeColor: '#007FFF',
-        strokeOpacity: 1,
-        strokeWidth: 3
+        fillColor: highlightColor,
+        strokeColor: highlightColor,
+        strokeOpacity: .75,
+        strokeWidth: 2
     };
 
     // The style for reference layers
+    var referenceColor = $('.reference').css('background-color');
     var referenceStyle = {
         fill: false,
-        strokeColor: '#447700',
-        strokeOpacity: 1,
-        strokeWidth: 2
+        strokeColor: referenceColor,
+        strokeOpacity: .45,
+        strokeWidth: 4
     };
 
     /**
@@ -960,7 +938,6 @@ function mapinit(srs,maxExtent) {
     // referenceLayerId is one of: None, plan.XXX, geolevel.XXX
     var currentReferenceLayer;
     var referenceLayerChanged = function(evt, referenceLayerId, referenceLayerName) {
-        updateBoundaryLegend(referenceLayerId, referenceLayerName);
         if (referenceLayerId === 'None') {
             hideCurrentReferenceLayer();
             return;
@@ -994,18 +971,7 @@ function mapinit(srs,maxExtent) {
             }
         }
     };
-
     $('#map').bind('reference_layer_changed', referenceLayerChanged);
-    // Update the map legend
-    var updateBoundaryLegend = function(referenceLayerId, referenceLayerName) {
-        var title = 'Boundary';
-        if (referenceLayerId.startsWith('geolevel')) {
-           title = referenceLayerName + ' boundary';
-        } else if (referenceLayerId.startsWith('plan')) {
-            title = 'District / Community boundary';
-        }
-        $('td#boundary_title').text(title);
-    };
 
     // Create a reference layer with the appropriate styling and
     // strategy
@@ -1440,9 +1406,17 @@ function mapinit(srs,maxExtent) {
             district_id: $('#id_district_id').val(),
             district_name: label_field.val(),
             comment: $('#id_comment').val(),
-            type: $('#id_type').val(),
+            type: $('#id_type').val().split(','),
             version: getPlanVersion()
         };
+        var typeList = $('#id_typelist');
+        for (var i = 0; i < data.type.length; i++) {
+            var type = data.type[i].trim();
+            data.type[i] = type;
+            if (!typeList.children().is('*[value="' + type + '"]')) {
+                $('#id_typelist').append('<option />').text(type).attr('value', type);
+            }
+        }
         
         var url = '/districtmapping/plan/' + PLAN_ID + '/district/';
 
@@ -1494,9 +1468,59 @@ function mapinit(srs,maxExtent) {
             'Save': postInfo
         },
         open: function(){
+            var typeRE = new RegExp('([^,]+)','g');
             var label_field = $('#id_label');
             label_field.removeClass('error');
             label_field.addClass('field');
+
+            // cache this every time the dialog is opened
+            var opts = $('#id_typelist option');
+
+            var types = $('#id_type').val().match(typeRE);
+            if (types != null) {
+                var selection = [];
+                for (var i = 0; i < types.length; i++) {
+                    var exists = false;
+                    var type = types[i].trim();
+                    for (var j = 0; j < opts.length; j++) {
+                        exists = exists ||
+                            (type.toLowerCase() == 
+                             opts[j].value.toLowerCase());
+                    }
+                    if (!exists) {
+                        $('#id_typelist').append('<option value="' + type + '">' + type + '</option>');
+                    }
+                    selection.push(type);
+                }
+                $('#id_typelist').val(selection);
+            }
+
+            opts = $('#id_typelist option');
+
+            // select any tags like this one (case insensitive match)
+            $('#id_type').keyup(function(evt){
+                var keytypes = $(this).val().match(typeRE);
+                if (keytypes != null) {
+                    var selection = [];
+                    for(var i = 0; i < opts.length; i++) {
+                        var selected = false;
+                        for (var j = 0; j < keytypes.length; j++) {
+                            selected = selected || 
+                                (opts[i].value.toLowerCase() == 
+                                 keytypes[j].trim().toLowerCase());
+                        }
+                        if (selected) {
+                            selection.push(opts[i].value);
+                        }
+                    }
+                    $('#id_typelist').val(selection);
+                }
+            });
+
+            $('#id_typelist').change(function(evt){
+                var selection = $(this).val() || [];
+                $('#id_type').val( selection.join(', ') );
+            });
         }
     });
     districtCommentErr.dialog({
@@ -2248,7 +2272,7 @@ function mapinit(srs,maxExtent) {
         };
 
         var getLockedRules = function() {
-            var lockedColor = $('.locked').css('border-top-color');
+            var lockedColor = $('.locked').css('background-color');
 
             rules = [];
             rules.push(new OpenLayers.Rule({
@@ -2259,7 +2283,8 @@ function mapinit(srs,maxExtent) {
                 }),
                 symbolizer: {
                     strokeColor: lockedColor,
-                    strokeWidth: 4
+                    strokeWidth: 2,
+                    strokeOpacity: 0.75
                 }
             }));
             rules.push(new OpenLayers.Rule({
@@ -2275,20 +2300,13 @@ function mapinit(srs,maxExtent) {
 
         var callbackDistrict = function(sld) {
             var userStyle = getDefaultStyle(sld,getDistrictBy().name);
-            var newOptions = OpenLayers.Util.extend({}, districtStyle);
-
-            var rules = userStyle.rules
-            rules = rules.concat(getLockedRules())
-
-            var newStyle = new OpenLayers.Style(newOptions,{
-                rules:rules
-            });
-            $('#map').trigger('style_changed', [newStyle]);
-        };
+            var newStyle = new OpenLayers.Style(districtStyle, {rules: userStyle.rules.concat(getLockedRules())});
+            $('#map').trigger('style_changed', [newStyle]); 
+         };
 
         var callbackContiguity = function() {
             var newOptions = OpenLayers.Util.extend({}, districtStyle);
-            var fill = $('<div class="farover"/>').css('background-color');
+            var fill = $('.farover').first().css('background-color');
             
             var rules = [
                 new OpenLayers.Rule({
@@ -2320,8 +2338,8 @@ function mapinit(srs,maxExtent) {
             var compactnessAvg = computeCompactnessAvg(districtLayer.features);
             var upper = compactnessAvg.mean + (2 * compactnessAvg.deviation);
             var lower = compactnessAvg.mean - (2 * compactnessAvg.deviation); 
-            var highestColor = $('<div class="farover"/>').css('background-color');
-            var lowestColor = $('<div class="farunder"/>').css('background-color');
+            var highestColor = $('.farover').first().css('background-color');
+            var lowestColor = $('.farunder').first().css('background-color');
             var rules = [
                 new OpenLayers.Rule({
                     filter: new OpenLayers.Filter.Comparison({
@@ -2408,10 +2426,12 @@ function mapinit(srs,maxExtent) {
     // Update the styles of the districts based on the 'Show District By'
     // dropdown in the menu.
     //
-    var makeDistrictLegendRow = function(id, cls, label) {
+    var makeDistrictLegendRow = function(id, cls, label, noBorder) {
         var div = $('<div id="' + id + '">&nbsp;</div>');
         div.addClass('swatch');
-        div.addClass('district_swatch');
+        if (noBorder != true) {
+            div.addClass('district_swatch');
+        }
         div.addClass(cls)
         var swatch = $('<td/>');
         swatch.width(32);
@@ -2470,14 +2490,6 @@ function mapinit(srs,maxExtent) {
             row = makeDistrictLegendRow('district_swatch_farunder','farunder','Far Under Target');
             lbody.append(row);
         }
-
-        // Add legend row for locked districts.
-        row = makeDistrictLegendRow('district_swatch_within','locked','Locked For Editing');
-        lbody.append(row);
-
-        // Add legend row for highlighted districts.
-        row = makeDistrictLegendRow('district_swatch_within','highlighted','Highlighted');
-        lbody.append(row);
     };
 
     // Logic for the 'Snap Map to' dropdown, note that this logic
@@ -2549,7 +2561,22 @@ function mapinit(srs,maxExtent) {
             var dby = getDistrictBy();
             var visualize = (dby.by > 0) ? LEGISLATIVE_BODY : dby.name;
 
-            getMapStyles(visualize, dby.name);
+            var dff = districtLayer.filter.filters;
+            var sameSubj = false;
+            for (var i = 0; i < dff.length && !sameSubj; i++) {
+                if (dff[i].property == 'subject'&& 
+                    dff[i].subject == dby.by) {
+                    sameSubj = true;
+                }
+            }
+
+            if (!sameSubj) {
+                districtLayer.filter = getVersionAndSubjectFilters(olmap.getExtent());
+                districtLayer.strategies[0].update({force:true});
+            }
+            else {
+                getMapStyles(visualize, dby.name);
+            }
         }
 
         // Since keyboard defaults are on, if focus remains on this
@@ -2628,11 +2655,11 @@ function mapinit(srs,maxExtent) {
      */
     var drawHighlightedDistricts = function(evt, onlyUpdateRows) {
         // Unselect all rows
-        $('#demographics_table tr .poptot').removeClass('selected');
+        $('#demographics_table tr').removeClass('selected');
 
         // Add selected class for each selected district
         $(highlightedDistricts).each(function(i, district_id) {
-            $('.inforow_' + district_id + ' .poptot').addClass('selected');
+            $('.inforow_' + district_id).addClass('selected');
         });
 
         // Update layer
@@ -2798,13 +2825,14 @@ function mapinit(srs,maxExtent) {
             });
         }
         else {
-            var h3 = districtComment.children('h3');
+            var h3 = districtComment.find('h3');
             $(h3[0]).text('1. Community Label:');
             $(h3[1]).text('2. Community Type:');
 
             districtComment.dialog('open');
             $('#id_label').val('');
             $('#id_type').val('');
+            $('#id_typelist').val([]);
             $('#id_comment').val('');
             $('#id_district_pk').val('0');
             $('#id_district_id').val(avail[0]);

@@ -13,6 +13,7 @@ class Command(BaseCommand):
     help = 'Export the index files for a single plan, or all plans in the system'
     option_list = BaseCommand.option_list + (
         make_option('-p', '--plan', dest='plan_id', default=None, action='store', help='Choose a single plan to export'),
+        make_option('-s', '--shared', dest='is_shared', default=False, action='store_true', help='Only export shared plans'),
     )
 
     def handle(self, *args, **options):
@@ -24,6 +25,10 @@ class Command(BaseCommand):
         # Grab all of the plans from the database
         plan_id = options.get('plan_id')
         plans = [Plan.objects.get(pk=plan_id)] if plan_id else Plan.objects.all()
+
+        # Filter out all non-shared plans if specified
+        if options.get("is_shared"):
+            plans = [p for p in plans if p.is_shared]
             
         if verbosity > 0:
             self.stdout.write('Exporting %d plan(s) - started at %s\n' % (len(plans), datetime.now()))

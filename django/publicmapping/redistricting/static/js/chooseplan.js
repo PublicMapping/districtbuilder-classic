@@ -455,6 +455,8 @@ chooseplan = function(options) {
     };
     
     var initButtons = function() {
+        // Text to display on the button used to view/edit a plan
+        var startText = _options.anonymous ? "View Plan" : "Start Drawing";
     
         // Save these for later        
         _editButton = $('#edit_plan_attr');
@@ -486,7 +488,7 @@ chooseplan = function(options) {
             } else {
                 showItems(true, false, true, false, true);
             }
-            $('#start_mapping .ui-button-text').html('Start Drawing');
+            $('#start_mapping .ui-button-text').html(startText);
             setActiveTab($(this));
            
         });        
@@ -499,7 +501,7 @@ chooseplan = function(options) {
             } else {
                 showItems(true, false, true, false, true);
             }
-            $('#start_mapping .ui-button-text').html('Start Drawing');
+            $('#start_mapping .ui-button-text').html(startText);
             setActiveTab($(this));
         });        
         $('#filter_mine').click( function () {
@@ -509,7 +511,7 @@ chooseplan = function(options) {
             $('input:radio[name=Edit]').filter('[value=edit]').attr('checked', true);
             showItems(false, true, true, true, false);
             setActiveTab($(this));            
-            $('#start_mapping .ui-button-text').html('Start Drawing');
+            $('#start_mapping .ui-button-text').html(startText);
         });        
         $('#new_from_file').click( function() {
             _eventType = 'upload';

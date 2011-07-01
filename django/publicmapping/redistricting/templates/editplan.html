@@ -109,7 +109,7 @@
             <button id="lock_district_map_tool" title="Click on a {{ body_member }} to lock or unlock it." class="btntoggle titletip">Lock<br/>{{ body_member|capfirst }}</button> 
             <button id="district_id_map_tool" title="Click on a {{ body_member }} to see its ID." class="btntoggle titletip">{{ body_member|capfirst }}<br/>Info</button> 
             <button id="district_select_tool" title="Unassign all the units in a {{ body_member }}" class="btntoggle titletip">Unassign<br/>{{ body_member|capfirst }}</button>
-            <button id="copy_paste_tool" title="Copy a {{ body_member }} from another plan" class="titletip">Copy and</br>Paste</button>
+            <button id="copy_paste_tool" title="Copy a {{ body_member }} from another {{ plan_text }}" class="titletip">Copy and</br>Paste</button>
         </div>
 
         <div class="toolset_group toolset_group_lg">
@@ -132,22 +132,22 @@
         {% block share_panel %}
             <div class="explanation">
                 <h3>Explanation of Shared Documents</h3>
-                <p>You can share your plan with other users here.  Your plan will be available for other users so that they can view reports about your plan or create a plan of their own using yours as a base.</p>
-                <p>Give your plan a unique name in order to share it. A copy of your current plan will be added to the "Shared Plans" section of the plan chooser.</p>
+                <p>You can share your {{ plan_text }} with other users here.  Your {{ plan_text }} will be available for other users so that they can view reports about your {{ plan_text }} or create a {{ plan_text }} of their own using yours as a base.</p>
+                <p>Give your {{ plan_text }} a unique name in order to share it. A copy of your current {{ plan_text }} will be added to the "Shared" section of the plan chooser.</p>
             </div>
             <div id="nameandshare">
                 <div>
-                    <h3>Name your shared plan</h3>
+                    <h3>Name your shared {{ plan_text }}</h3>
                     <input id="txtPlanName" />
                     <button id="btnSaveAndShare">Save and Share</button>
                 </div>
 
             </div>
             <div id="successfulShare" title="Congratulations!" >
-                <p>You have successfully shared your plan. You can share your plan with others by giving them this link:</p>
+                <p>You have successfully shared your {{ plan_text }}. You can share your {{ plan_text }} with others by giving them this link:</p>
                 <p id="sharedPermalink"><p>
-                <button id="continueEditing">Continue Editing Current Plan</button>
-                <a href="/districtmapping/plan/0/view/"><button id="selectNew">Select New Plan to Edit</button></a>
+                <button id="continueEditing">Continue Editing Current {{ plan_text|title }}</button>
+                <a href="/districtmapping/plan/0/view/"><button id="selectNew">Select New {{ plan_text|title }} to Edit</button></a>
             </div>
         {% endblock %}
 
@@ -186,7 +186,7 @@
             {% endif %}
             </div>
             <div id="shared_plans_column">
-                <h2>1. Choose Plan</h2>
+                <h2>1. Choose {{ plan_text|title }}</h2>
                 <table id="shared_plans_table"></table>
                 <div id="shared_plans_pager"></div>
             </div>
@@ -205,7 +205,7 @@
         <div id="footer">
             <div id="message_box"></div>
             <div id="step_3">
-                <h2>3. Paste selected {{ body_member }} into working plan</h2>
+                <h2>3. Paste selected {{ body_member }} into working {{ plan_text }}</h2>
                 <button id="paste_button">Paste</button>
             </div>
         </div>
@@ -230,30 +230,6 @@
     </script>
     {% endblock %}
 
-    {% block stats_editor %}
-    <div id="stats_editor_container" class="stats_editor" title="Edit Statistics Sets">
-        <div id="stats_editor_instructions">
-            You can select up to three statistics at once to display in the sidebar. Each set of three
-            statistics will be saved in the dropdown for you to select or edit later. You may have up
-            to three sets of statistics saved.
-        </div>
-        1. Select up to 3 statistics
-        <button id="clear_statistics">Clear Choices</button>
-        <div id="available_statistics"> </div>
-        
-        <div id="name_statistics_set">
-            2. Name Statistics Set
-            <input type="text" id="statistics_set_name" maxlength="50" />
-            <button id="save_statistics_set">Save Set</button>
-        </div>
-        <div id="existing_statistics_set">
-            ... Or select a saved statistics set
-        </div>
-        <div id="saved_statistics_sets"> </div>
-    </div>
-    {% endblock %}
-
-    
     {% block multi_member %}
     {% if plan.legislative_body.multi_members_allowed %}
     <div id="multi_member_dialog">
@@ -324,72 +300,6 @@
     {% endif %}
     {% endblock %}
 
-
-    {% block splits_report %}
-    <div id="splits_report_dialog">
-        <div id="splits_report_content">
-            <div id="splits_report_select_panel">
-                <h2>Generate Splits Report for Current Plan</h2>
-                <div id="splits_report_reminder_text">
-                    Select up to 3 reference layers for comparison.
-                </div>
-                <div id="splits_report_available_layers">
-                    {% for snap in snaplayers %}
-                    {% if not forloop.last %}                    
-                    <div class="layer_choice_wrapper">
-                        <input id="geolevel.{{ snap.geolevel }}" class="layer_choice" type="checkbox" value="geolevel.{{ snap.geolevel }}" />
-                        <label for="geolevel.{{ snap.geolevel }}">{{ snap.name }}</label>
-                    </div>                  
-                    {% endif %}
-                    {% endfor %}
-                </div>
-
-                <h2>Advanced option</h2>
-                <div class="inverse_choice_wrapper">
-                    <input id="inverse_choice" type="checkbox" />
-                    <label id="inverse_choice_label" for="inverse_choice">
-                        Reverse splits detection:
-                        
-                    </label>
-                    <div id="inverse_choice_label_more">
-                        Where selected reference layers split current plan boundaries
-                    </div>
-                </div>                  
-
-                <div id="splits_report_ok_div">
-                    <button id="splits_report_ok_button">Generate Report</button>
-                </div>
-            </div>
-            <div id="splits_report_results_panel">
-                <h2>Splits Report</h2>
-                <div id="splits_report_results_container">
-                  <p>No report generated.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <script type="text/javascript" src="/static-media/js/splitsreport.js"></script>
-    <script type="text/javascript">
-        $(function() {
-            splitsreport = splitsreport({
-                container: $('#splits_report_dialog'),
-                target: $('#generate_splits_report_button'),
-                okButton: $('#splits_report_ok_button'),
-                inverseCheckbox: $('#inverse_choice'),
-                availableLayers: $('#splits_report_available_layers'),
-                referenceLayerSelect: $('#reference_layer_select'),
-                splitsReportUrl: '/districtmapping/plan/{{ plan.id }}/splitsreport/',
-                resultsContainer: $('#splits_report_results_container'),
-                map: $('#map'),
-                getVersionFn: function() {
-                    return $('#history_cursor').val();
-                }
-            }).init();
-        });
-    </script>
-        
-    {% endblock %}
-
     {% block district_info %}
     {% if plan.is_community %}
     <div id="districtComment" title="Community Info">
@@ -406,7 +316,8 @@
         <div class="dialog_step">
           <h3>2. Edit Community Type:</h3>
           <div id="district_type" class="district_input">
-              <select name="type" id="id_type" multiple="multiple" size="4">
+              <input type="text" class="field" value="" id="id_type" name="type" />
+              <select name="typelist" id="id_typelist" multiple="multiple" size="4">
                   {% for tag in tags %}<option value="{{ tag }}">{{ tag }}</option>
                   {% endfor %}
               </select>

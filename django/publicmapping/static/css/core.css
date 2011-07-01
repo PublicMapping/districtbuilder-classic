@@ -1193,6 +1193,40 @@ div#no_edit_at_zoom_level {
     -webkit-border-radius: 4px;
     border-radius: 4px
     }
+	
+
+#app .multiple .ui-buttonset .ui-button {
+    background-image: url(/static-media/images/bg-button-sm.png);
+    background-position: 0 0; 
+    background-repeat: repeat-x;
+    background-color: #333;
+    border: 1px solid #222;
+    font-size: 11px;
+    font-weight: bold;
+    text-shadow: 0 -1px rgba(0,0,0,.3);
+    color: #fff;
+}	
+#app  .ui-buttonset .ui-button {
+    background-image: none;
+    background-position: 0 0; 
+    background-repeat: repeat-x;
+    background-color: transparent;
+    border: none;
+    font-size: 11px;
+    font-weight: bold;
+    text-shadow: 0 -1px rgba(0,0,0,.3);
+    color: #fff;
+}
+#app .multiple .ui-buttonset .ui-button.ui-state-active {
+	background-image:none;
+	background-color: #444;
+}
+#app .multiple .ui-buttonset .ui-button .ui-button-text {
+padding: 0.4em 1em;
+}
+#app  .ui-buttonset .ui-button .ui-button-text {
+	padding: 0;
+}
     
 #app button.lg, .ui-dialog button.lg {
     background-image: url(/static-media/images/bg-button-lg.png);
@@ -1382,13 +1416,14 @@ div#legend_swatch_2 {
 div#legend_swatch_3 {
     background-color: #666666;
 }
-div#boundary_swatch {
-    background-color: transparent;
-    border-style: solid;
-    border-width: thin;
-    border: solid 2px #447700;
+.reference {
+    background: #447700 url(/static-media/images/icon-legend-boundary.gif) no-repeat top left;
+    border: none;
+    padding 2px;
 }
-
+table#reference_legend {
+    display:none;
+}
 button.map_type_button {
     font-size: 7pt;
     -moz-box-shadow: 2px 2px 2px #888888;
@@ -1447,11 +1482,11 @@ div#map_settings_content {
     position: absolute;
     top: 110px;
     right: 280px;
-    width: 130px;
+	min-width: 140px;
     background-color: #272727;
     color: #fff;
     border: 1px solid #666666;
-    padding: 5px 11px;
+    padding: 8px 11px;
     opacity: 0.9;
     filter: alpha(opacity=90);
     overflow-y: hidden;
@@ -1465,9 +1500,7 @@ div#map_settings_content {
 }
 
 
-div#map_settings_content.collapse {
-  right: 15px;
-  }
+div#map_settings_content #map_type_content_container {margin-bottom:10px; margin-right:0;}
 
 div#map_settings_content h1 {
     font-size: 11pt;
@@ -1484,13 +1517,6 @@ div#map_settings_content #reference_layer_name  {
   font-weight: normal;
 }
     
-div#map_settings_content .layer_type_container#layer_type_base {
-display:none
-}    
-div#map_settings_content .layer_type_container#layer_type_thematic input {
-display:none
-}    
-
 div#map_settings_content #opacity_slider {
     width: 100%;
     height: 5px;
@@ -1687,7 +1713,9 @@ span.poptot {
   border: 2px solid transparent;
 }
 .locked {
-  border: 2px solid #FF0000 !important;
+  background: #FF0000 url(/static-media/images/icon-legend-boundary.gif) no-repeat top left;
+  border: none;
+  padding 2px;
 }
 
 .notOnMap {
@@ -2180,7 +2208,7 @@ select#newdistrictname {
 #choose_layers_ok_div {clear: both;}
 #choose_layers_ok_button {float: right;}
 #choose_layers_select_div {width:345px; float:left;}
-#reference_layer_content {width:420px; height:311px; float:left; margin-right:0; margin-left: 12px;}
+#reference_layer_content {width:420px; height:329px; float:left; margin-right:0; margin-left: 12px;}
 #choose_layers_content > div {margin-right: 15px; font-size: 12px;}
 #choose_layers_instructions {margin-bottom: 10px;}
 #choose_layers_button_group button {float:left; margin-right: 10px;}
@@ -2252,7 +2280,7 @@ span.multi_val.invalid {
 }
 
 /* District highlighting */
-span.poptot {
+#demographics_table tr {
   cursor: pointer;
 
   /* Make sure the text is not selectable */
@@ -2263,12 +2291,14 @@ span.poptot {
   user-select: none;
 }
 
-span.poptot.selected {
+#demographics_table tr.selected {
   border: 2px solid #007FFF;
 }
 
 .highlighted {
-  border: 2px solid #007FFF !important;
+  background: #007FFF url(/static-media/images/icon-legend-boundary.gif) no-repeat top left;
+  border: none;
+  padding 2px;
 }
 
 /* Commenting css */
@@ -2299,6 +2329,7 @@ span.poptot.selected {
 #districtComment select {
     width: 96%;
     border: 1px solid #CCCCCC;
+    margin-top: 10px;
 }
 .community_comments {
     overflow-y: auto;
@@ -2370,3 +2401,5 @@ span.poptot.selected {
 }
 
 #community_table thead tr {padding-right: 0}
+
+.indented_swatch { width: 40px; }

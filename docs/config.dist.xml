@@ -448,7 +448,7 @@
             <ScoreFunction id="plan_schwartzberg" type="plan"
                 calculator="publicmapping.redistricting.calculators.Schwartzberg"
                 label="Average Compactness"
-                description="The competition is using the &apos;Schwartzberg&apos; compactness measure. This measure is a ratio of the perimeter of the district to the circumference of the circle whose area is equal to the area of the district." >
+                description="The competition is using the &apos;Inverse Schwartzberg&apos; compactness measure. This measure is a ratio of the circumference of the circle whose area is equal to the area of the district to the perimeter of the district." >
             </ScoreFunction>
 
             <ScoreFunction id="partisan_index" type="district"
@@ -496,11 +496,13 @@
                 <Score ref="plan_equivalence" />
             </ScorePanel>
             <ScorePanel id="panel_compact_all" type="plan" position="2"
-                title="Schwartzberg" template="leaderboard_panel_all.html">
+                title="Schwartzberg" template="leaderboard_panel_all.html"
+                is_ascending="false">
                 <Score ref="plan_schwartzberg" />
             </ScorePanel>
             <ScorePanel id="panel_compact_mine" type="plan" position="2"
-                title="Schwartzberg" template="leaderboard_panel_mine.html">
+                title="Schwartzberg" template="leaderboard_panel_mine.html"
+                is_ascending="false">
                 <Score ref="plan_schwartzberg" />
             </ScorePanel>
             <ScorePanel id="panel_competitive_all" type="plan" position="3"
@@ -1064,7 +1066,7 @@
             is to have no base layer, set it to the empty string.
             
             -->
-            <MapServer hostname="" ns="gmu" nshref="http://gmu.azavea.com/"
+            <MapServer hostname="" ns="pmp" nshref="http://publicmapping.sourceforge.net/"
                 adminuser="<geoserver admin user>" adminpass="<geoserver admin pass>" maxfeatures="100" 
                 styles="/projects/publicmapping/trunk/sld" />
 

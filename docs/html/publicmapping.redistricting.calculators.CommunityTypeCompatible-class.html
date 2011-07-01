@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>publicmapping.redistricting.calculators.CommunityTypeCompatible</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="publicmapping-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a href="http://publicmapping.sf.net">Publicmapping on SourceForge</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="publicmapping-module.html">Package&nbsp;publicmapping</a> ::
+        <a href="publicmapping.redistricting-module.html">Package&nbsp;redistricting</a> ::
+        <a href="publicmapping.redistricting.calculators-module.html">Module&nbsp;calculators</a> ::
+        Class&nbsp;CommunityTypeCompatible
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="publicmapping.redistricting.calculators.CommunityTypeCompatible-class.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS DESCRIPTION ==================== -->
+<h1 class="epydoc">Class CommunityTypeCompatible</h1><p class="nomargin-top"><span class="codelink"><a href="publicmapping.redistricting.calculators-pysrc.html#CommunityTypeCompatible">source&nbsp;code</a></span></p>
+<center>
+<center>  <map id="uml_class_diagram_for_publicma_19" name="uml_class_diagram_for_publicma_19">
+<area shape="rect" id="node23" href="publicmapping.redistricting.calculators.CalculatorBase-class.html#result" title="publicmapping.redistricting.calculators.CalculatorBase.result" alt="" coords="17,31,257,49"/>
+<area shape="rect" id="node23" href="publicmapping.redistricting.calculators.CalculatorBase-class.html#arg_dict" title="publicmapping.redistricting.calculators.CalculatorBase.arg_dict" alt="" coords="17,49,257,68"/>
+<area shape="rect" id="node23" href="publicmapping.redistricting.calculators.CalculatorBase-class.html#__init__" title="Initialize the result and argument dictionary." alt="" coords="17,71,257,89"/>
+<area shape="rect" id="node23" href="publicmapping.redistricting.calculators.CalculatorBase-class.html#sortkey" title="Generate a key used to sort this calculator relative to all other &#160;calculators." alt="" coords="17,89,257,108"/>
+<area shape="rect" id="node23" href="publicmapping.redistricting.calculators.CalculatorBase-class.html#html" title="Generate a basic HTML representation of the result." alt="" coords="17,108,257,127"/>
+<area shape="rect" id="node23" href="publicmapping.redistricting.calculators.CalculatorBase-class.html#json" title="Generate a basic JSON representation of the result." alt="" coords="17,127,257,145"/>
+<area shape="rect" id="node23" href="publicmapping.redistricting.calculators.CalculatorBase-class.html#get_value" title="Get the value of an argument if it is a literal or a subject." alt="" coords="17,145,257,164"/>
+<area shape="rect" id="node1" href="publicmapping.redistricting.calculators.CalculatorBase-class.html" title="The base class for all calculators." alt="" coords="5,6,269,170"/>
+<area shape="rect" id="node22" href="publicmapping.redistricting.calculators.CommunityTypeCompatible-class.html#compute" title="Evaluate a Plan to determine if it is type&#45;compatible." alt="" coords="55,223,219,241"/>
+<area shape="rect" id="node2" href="publicmapping.redistricting.calculators.CommunityTypeCompatible-class.html" title="This calculator determines if all districts in a plan are type&#45; compatible." alt="" coords="43,190,229,247"/>
+</map>
+  <img src="uml_class_diagram_for_publicma_19.gif" alt='' usemap="#uml_class_diagram_for_publicma_19" ismap="ismap" class="graph-without-title" />
+</center>
+</center>
+<hr />
+<p>This calculator determines if all districts in a plan are type- 
+  compatible. A type-compatible community map contains the same community 
+  types in across all districts.</p>
+  <p>This calculator requires a &quot;community_map_id&quot; argument, 
+  which is the primary key of the community map (<a 
+  href="publicmapping.redistricting.models.Plan-class.html" 
+  class="link">Plan</a>) that is being compared to the <a 
+  href="publicmapping.redistricting.models.Plan-class.html" 
+  class="link">Plan</a> and a &quot;version&quot; argument indicating the 
+  version number of the community map.</p>
+  <p>This calculator will only operate on a plan.</p>
+
+<!-- ==================== INSTANCE METHODS ==================== -->
+<a name="section-InstanceMethods"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Instance Methods</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceMethods"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.calculators.CommunityTypeCompatible-class.html#compute" class="summary-sig-name">compute</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">**kwargs</span>)</span><br />
+      Evaluate a <a 
+      href="publicmapping.redistricting.models.Plan-class.html" 
+      class="link">Plan</a> to determine if it is type-compatible.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.calculators-pysrc.html#CommunityTypeCompatible.compute">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="publicmapping.redistricting.calculators.CalculatorBase-class.html">CalculatorBase</a></code></b>:
+      <code><a href="publicmapping.redistricting.calculators.CalculatorBase-class.html#__init__">__init__</a></code>,
+      <code><a href="publicmapping.redistricting.calculators.CalculatorBase-class.html#get_value">get_value</a></code>,
+      <code><a href="publicmapping.redistricting.calculators.CalculatorBase-class.html#html">html</a></code>,
+      <code><a href="publicmapping.redistricting.calculators.CalculatorBase-class.html#json">json</a></code>,
+      <code><a href="publicmapping.redistricting.calculators.CalculatorBase-class.html#sortkey">sortkey</a></code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS VARIABLES ==================== -->
+<a name="section-ClassVariables"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Class Variables</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-ClassVariables"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="publicmapping.redistricting.calculators.CalculatorBase-class.html">CalculatorBase</a></code></b>:
+      <code><a href="publicmapping.redistricting.calculators.CalculatorBase-class.html#arg_dict">arg_dict</a></code>,
+      <code><a href="publicmapping.redistricting.calculators.CalculatorBase-class.html#result">result</a></code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== METHOD DETAILS ==================== -->
+<a name="section-MethodDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Method Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-MethodDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="compute"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">compute</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">**kwargs</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.calculators-pysrc.html#CommunityTypeCompatible.compute">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Evaluate a <a 
+  href="publicmapping.redistricting.models.Plan-class.html" 
+  class="link">Plan</a> to determine if it is type-compatible. A <a 
+  href="publicmapping.redistricting.models.Plan-class.html" 
+  class="link">Plan</a> will be type-compatible if the type provided is in 
+  all <a href="publicmapping.redistricting.models.District-class.html" 
+  class="link">District</a>s of the plan.</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>plan</code></strong> - The <a href="publicmapping.redistricting.models.Plan-class.html" 
+          class="link">Plan</a> to compare against the community map.</li>
+        <li><strong class="pname"><code>community_map_id</code></strong> - The ID of the community map.</li>
+        <li><strong class="pname"><code>plan_version</code></strong> - Optional, The version of the plan. Defaults to the latest version
+          of the plan.</li>
+        <li><strong class="pname"><code>community_version</code></strong> - Optional. The version of the community map.  Defaults to the 
+          latest version of the community map.</li>
+        <li><strong class="pname"><code>type</code></strong> - The community type to check for compatibility.</li>
+    </ul></dd>
+    <dt>Overrides:
+        <a href="publicmapping.redistricting.calculators.CalculatorBase-class.html#compute">CalculatorBase.compute</a>
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="publicmapping-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a href="http://publicmapping.sf.net">Publicmapping on SourceForge</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Mon May  9 09:24:15 2011
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

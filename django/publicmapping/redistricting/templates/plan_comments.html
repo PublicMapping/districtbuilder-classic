@@ -12,7 +12,7 @@
                 {% for forscore in dscore.scores %}
                     {% with forscore.score as score %}
                         {% if score.typetags %}
-                            <span class="infoType">{% for tag in score.typetags %}{{ tag }}{% if not forloop.last %},{% endif %}{% endfor %}</span>
+                            <span class="infoType">{% for tag in score.typetags %}{{ tag }}{% if not forloop.last %}, {% endif %}{% endfor %}</span>
                             <input type="hidden" class="infoType" name="type" value="{% for tag in score.typetags %}{{ tag }}{% if not forloop.last %},{% endif %}{% endfor %}"/>
                         {% else %}
                             <input type="hidden" class="infoType" name="type" value="" readonly="true" />
@@ -35,7 +35,8 @@ $('.edit_district_info').each(function(idx,elem){
     $(elem).click(function(evt){
         var frm = $(elem.parentNode);
         $('#id_label').val( frm.find('[name="label"]').val() );
-        $('#id_type').val( frm.find('[name="type"]').val().split(',') );
+        $('#id_type').val( frm.find('[name="type"]').val().replace(new RegExp(',','g'),', ') );
+        $('#id_typelist').val( frm.find('[name="type"]').val().split(','));
         $('#id_comment').val( frm.find('.infoComment').text() );
         $('#id_district_pk').val( frm.find('[name="pk"]').val() );
         $('#id_district_id').val( $(elem).attr('districtid') );
