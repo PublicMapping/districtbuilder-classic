@@ -26,9 +26,9 @@ Author:
     Andrew Jennings, David Zwarg, Kenny Shepard
 """
 
-import os
+import os, zipfile
 from django.test import TestCase
-import zipfile
+from math import sin,cos
 from django.contrib.gis.db.models import Union
 from django.db.models import Sum, Min, Max
 from django.test.client import Client
@@ -493,17 +493,17 @@ class PlanTestCase(BaseTestCase):
         self.assertEqual(200, response.status_code, 'Copy handler didn\'t return 200:' + str(response))
 
         # Ensure copy exists
-        copy = Plan.objects.get(name=copyname)
-        self.assertNotEqual(copy, None, 'Copied plan doesn\'t exist')
+        copyplan = Plan.objects.get(name=copyname)
+        self.assertNotEqual(copyplan, None, 'Copied plan doesn\'t exist')
 
         # Ensure districts are the same between plans
         numdistricts = len(self.plan.get_districts_at_version(self.plan.version))
-        numdistrictscopy = len(copy.get_districts_at_version(copy.version))
+        numdistrictscopy = len(copyplan.get_districts_at_version(copyplan.version))
         self.assertEqual(numdistricts, numdistrictscopy, 'Districts between original and copy are different. (e:%d, a:%d)' % (numdistricts, numdistrictscopy))
 
         # Ensure geounits are the same between plans
         numunits = len(Plan.objects.get(pk=self.plan.id).get_base_geounits(0.1))
-        numunitscopy = len(Plan.objects.get(pk=copy.id).get_base_geounits(0.1))
+        numunitscopy = len(Plan.objects.get(pk=copyplan.id).get_base_geounits(0.1))
         self.assertEqual(numunits, numunitscopy, 'Geounits between original and copy are different')
         
     def test_district_locking(self):
@@ -1976,6 +1976,30 @@ class CalculatorTestCase(BaseTestCase):
         calc.compute(plan=self.plan)
         expected = (0.636620 + 0.587649) / 2
         self.assertAlmostEquals(expected, calc.result['value'], 6, 'Roeck for plan was incorrect. (e:%0.6f,a:%0.6f)' % (expected, calc.result['value']))
+
+    def test_roeck2(self):
+        """
+        Test the Roeck measure with a half-circle.
+        """
+        dist = 30
+        coords = []
+        for i in range(-dist,dist+1):
+            coords.append( Point(cos(pi*i/dist/2.0), sin(pi*i/dist/2.0)) )
+
+        pcoords = copy(coords)
+        pcoords.append(pcoords[0])
+
+        calc = Roeck()
+        disk = calc.minidisk(coords)
+
+        poly = Polygon(pcoords)
+
+        parea = poly.area
+        darea = pi * disk.r * disk.r
+
+        # Testing to 3 decimal places, since this is an approximation of 
+        # the circle's area -- actual ratio is 0.50014
+        self.assertAlmostEquals( 0.5, parea / darea, 3, 'Roeck half-circle district was incorrect. (e:%0.6f,a:%0.6f)' % (0.5, parea / darea) )
 
     def test_polsbypopper(self):
         """
