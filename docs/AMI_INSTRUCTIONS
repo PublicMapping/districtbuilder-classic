@@ -51,7 +51,7 @@ from their defaults.
         
         sudo service apache2 restart
 
-    (Note: using "touch /projects/publicmapping/trunk/django/publicmapping.wsgi" should
+    (Note: using "touch /projects/PublicMapping/DistrictBuilder/django/publicmapping.wsgi" should
    	also reload the app if changes are limited to the django site )
 
 

@@ -7,7 +7,7 @@ fields may define a second, intermediate table to map the records to one
 another.
 
 This file is part of The Public Mapping Project
-http://sourceforge.net/projects/publicmapping/
+https://github.com/PublicMapping/
 
 License:
     Copyright 2010 Micah Altman, Michael McDonald

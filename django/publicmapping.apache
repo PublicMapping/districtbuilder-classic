@@ -14,7 +14,7 @@
 #   limitations under the License.
 #
 #   This file is part of The Public Mapping Project
-#   http://sourceforge.net/projects/publicmapping/
+#   https://github.com/PublicMapping/
 #
 #   Purpose:
 #       publicmapping.apache is an Apache HTTP configuration file.
@@ -46,30 +46,30 @@
         ServerAdmin AzaveaDev@azavea.com
         WSGIDaemonProcess geodjango user=www-data group=www-data processes=10 threads=1 display-name=publicmapping
         WSGIProcessGroup geodjango
-        WSGIScriptAlias / /projects/publicmapping/trunk/django/publicmapping.wsgi
+        WSGIScriptAlias / /projects/PublicMapping/DistrictBuilder/django/publicmapping.wsgi
 
-        Alias /static-media/ /projects/publicmapping/trunk/django/publicmapping/static-media/
-        <Directory /projects/publicmapping/trunk/django/publicmapping/static-media>
+        Alias /static-media/ /projects/PublicMapping/DistrictBuilder/django/publicmapping/static-media/
+        <Directory /projects/PublicMapping/DistrictBuilder/django/publicmapping/static-media>
             Order deny,allow
             Allow from all
         </Directory>
 
-        Alias /reports/ /projects/publicmapping/local/reports/
-        <Directory /projects/publicmapping/local/reports/>
+        Alias /reports/ /projects/PublicMapping/local/reports/
+        <Directory /projects/PublicMapping/local/reports/>
         Options Indexes FollowSymLinks
             Order deny,allow
             Allow from all
         </Directory>
 
-        Alias /sld/ /projects/publicmapping/trunk/sld/
-        <Directory /projects/publicmapping/trunk/sld/>
+        Alias /sld/ /projects/PublicMapping/DistrictBuilder/sld/
+        <Directory /projects/PublicMapping/DistrictBuilder/sld/>
             Options Indexes
             Order deny,allow
             Allow from all
         </Directory>
 
-        Alias /docs/ /projects/publicmapping/trunk/docs/html/
-        <Directory /projects/publicmapping/trunk/docs/html/>
+        Alias /docs/ /projects/PublicMapping/DistrictBuilder/docs/html/
+        <Directory /projects/PublicMapping/DistrictBuilder/docs/html/>
             Options Indexes
             Order deny,allow
             Allow from all
@@ -125,7 +125,7 @@
     <VirtualHost *:8081>
         ServerAdmin AzaveaDev@azavea.com
         WSGIDaemonProcess bard-reports user=www-data group=www-data processes=1 threads=1 display-name=publicmapping-reports
-        WSGIScriptAlias / /projects/publicmapping/trunk/django/reports.wsgi
+        WSGIScriptAlias / /projects/PublicMapping/DistrictBuilder/django/reports.wsgi
         WSGIProcessGroup bard-reports
         WSGIApplicationGroup bard-reports
         ErrorLog /var/log/apache2/bard-reporting-error.log

@@ -4,7 +4,7 @@ This file is created automatically by the Django administrative tools.
 Do not modify.
 
 This file is part of the Public Mapping Project
-http://sourceforge.net/projects/publicmapping/
+https://github.com/PublicMapping/
 
 License:
     Copyright 2010 Micah Altman, Michael McDonald

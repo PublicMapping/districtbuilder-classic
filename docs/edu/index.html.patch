@@ -1,5 +1,5 @@
 *** index.html.educational 	2011-05-09 09:20:59.852551144 +0000
----  /projects/publicmapping/trunk/django/publicmapping/templates/index.html 2011-05-09 09:19:49.952551154 +0000
+---  /projects/PublicMapping/DistrictBuilder/django/publicmapping/templates/index.html 2011-05-09 09:19:49.952551154 +0000
 ***************
 *** 229,234 ****
 --- 229,239 ----

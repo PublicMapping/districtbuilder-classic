@@ -12,7 +12,7 @@ contiguityRow<-function(pair) {
 	return(retval)
 }
 
-setwd('/projects/publicmapping/data')
+setwd('/projects/PublicMapping/data')
 contiguityOverrideString<-""
 if (file.exists("redist_overrides.csv")) {
 	exceptions.df<-read.csv("redist_overrides.csv",stringsAsFactors=F,colClasses="character",header=F)
@@ -31,5 +31,5 @@ if (file.exists("redist_overrides.csv")) {
 	contiguityOverrideString<-paste(c(crows,recursive=TRUE),sep="",collapse="")
 }
 
-cat(contiguityOverrideString,file="/projects/publicmapping/trunk/docs/generated_overrides.xml")
+cat(contiguityOverrideString,file="/projects/PublicMapping/DistrictBuilder/docs/generated_overrides.xml")
 

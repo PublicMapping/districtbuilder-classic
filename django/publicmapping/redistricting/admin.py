@@ -7,7 +7,7 @@ within change the default behavior of the administrative to make maintenance
 of models easier.
 
 This file is part of The Public Mapping Project
-http://sourceforge.net/projects/publicmapping/
+https://github.com/PublicMapping/
 
 License:
     Copyright 2010 Micah Altman, Michael McDonald

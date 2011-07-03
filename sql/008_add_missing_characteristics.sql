@@ -1,7 +1,7 @@
 create temp table va_characteristic as select g.id,g.portable_id,c.subject_id,c.number,c.percentage
 from redistricting_geounit g join redistricting_characteristic as c on g.id = c.geounit_id where 1=2;
 
-\copy va_characteristic from '/projects/publicmapping/data/missing_characteristic.csv' with csv header
+\copy va_characteristic from '/projects/PublicMapping/data/missing_characteristic.csv' with csv header
 
 update va_characteristic as v set id = g.id from redistricting_geounit as g where g.portable_id = v.portable_id;
 

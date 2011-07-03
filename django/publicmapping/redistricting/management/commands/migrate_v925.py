@@ -5,7 +5,7 @@ This management command will update the way 'Unassigned' districts are
 stored in the database.
 
 This file is part of The Public Mapping Project
-http://sourceforge.net/projects/publicmapping/
+https://github.com/PublicMapping/
 
 License:
     Copyright 2010 Micah Altman, Michael McDonald

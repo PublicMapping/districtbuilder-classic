@@ -30,7 +30,7 @@ create temp table va_data_import as select
 from redistricting_geounit as g join redistricting_characteristic as c on g.id = c.geounit_id where 1 =2;
 
 -- Copy the data from the CSV file extracted from the latest census data
-\copy va_data_import from '/projects/publicmapping/data/va_census_update.csv' with CSV HEADER
+\copy va_data_import from '/projects/PublicMapping/data/va_census_update.csv' with CSV HEADER
 
 -- Add the primary keys to the VA data for fewer joins in the mapping section later.
 update va_data_import as v set id = g.id from redistricting_geounit as g where g.portable_id = v.portable_id;
