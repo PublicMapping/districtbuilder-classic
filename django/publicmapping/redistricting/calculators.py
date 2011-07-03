@@ -29,11 +29,12 @@ Author:
 """
 
 from math import sqrt, pi
-from django.contrib.gis.geos import Point
+from django.contrib.gis.geos import Point, LineString
 from django.contrib.humanize.templatetags.humanize import intcomma
 from django.utils import simplejson as json
 from decimal import Decimal
-import locale, sys, traceback
+from copy import copy
+import locale, sys, traceback, random
 
 # This helps in formatting - by default, apache+wsgi uses the "C" locale
 locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
@@ -245,6 +246,8 @@ class Roeck(CalculatorBase):
     district, or it will average the compactness scores of all districts
     in a plan.
     """
+    rec = 0
+
     def compute(self, **kwargs):
         """
         Calculate the Roeck measure of compactness.
@@ -256,6 +259,7 @@ class Roeck(CalculatorBase):
         @keyword version: Optional. The version of the plan, defaults to 
             the most recent version.
         """
+        random.seed()
         districts = []
         if 'district' in kwargs:
             districts = [kwargs['district']]
@@ -279,13 +283,11 @@ class Roeck(CalculatorBase):
             if district.geom.empty:
                 continue
 
-            centroid = district.geom.centroid
-            maxd = 0
-            for linestring in district.geom.convex_hull:
-                for coord in linestring:
-                    maxd = max(maxd, centroid.distance(Point(coord)))
+            # Convert the coordinates in the convex hull to a list of GEOS Points
+            hull = map(lambda x: Point(x[0],x[1]), list(district.geom.convex_hull.coords[0]))
+            disk = self.minidisk(hull)
 
-            cir_area = pi * maxd * maxd
+            cir_area = pi * disk.r * disk.r
 
             compactness += district.geom.area / cir_area
             num += 1
@@ -294,7 +296,217 @@ class Roeck(CalculatorBase):
             self.result = { 'value': compactness / num if num > 0 else 0 }
         except:
             self.result = { 'value': 'N/A' }
-        
+
+
+    class Circle:
+        """
+        Helper class for the Roeck calculator. A Circle class can create circles based
+        on 1, 2, or 3 coordinates. A circle has a center and a radius. A circle also
+        can test if another point lies within the area of itself.
+        """
+        cx = None
+        cy = None
+        r = None
+
+        def __init__(self,pts):
+            """
+            Create a new Circle helper. Constructing a Circle with one coordinate
+            creates a 0 diameter circle, centered on the coordinate. Constructing
+            a Circle with two coordinates creates a circle positioned between the
+            two coordinates, with the diameter set to the distance between the
+            points. Constructing a Circle with three coordinates creates a circle
+            that passes through all three points.
+
+            @param pts: A set of points that lay on the perimeter of this circle.
+
+            @return: A calculated Circle that contains the coordinates.
+            """
+            if len(pts) == 1:
+                # Create a zero diameter circle at the coordinate location
+                self.cx = pts[0].coords[0]
+                self.cy = pts[0].coords[1]
+                self.r = 0
+            elif len(pts) == 2:
+                # Create a circle between the coordinates, with the diameter
+                # set to the distance between the points.
+                ls = LineString(pts)
+                self.cx = ls.centroid.x
+                self.cy = ls.centroid.y
+                self.r = ls.length / 2
+            elif len(pts) == 3:
+                # Create a circle that contains all three points
+                try:
+                    (p1,p2,p3,) = self.deperpendicularize(pts)
+                except ValueError:
+                    # If the coordinates cannot be deperpendicularized, assume
+                    # that they are colinear.
+                    ls = LineString(pts)
+                    self.cx = ls.centroid.x
+                    self.cy = ls.centroid.y
+                    self.r = ls.length / 2
+                    return
+
+                # If the coordinates describe a pair of lines that are perpendicular
+                # and are parallel to the X and Y axes, the center of that rectangle
+                # is the center of the circle.
+                if abs(p2.coords[0] - p1.coords[0]) == 0 and abs(p3.coords[1] - p2.coords[1]) == 0:
+                    self.cx = (p2.coords[0] + p3.coords[0]) / 2
+                    self.cy = (p1.coords[1] + p2.coords[1]) / 2
+                    ls = LineString([p1,Point(self.cx, self.cy)])
+                    self.r = ls.length
+                    return
+
+                # Determination of the center point is described pretty well here:
+                #
+                # "Equation of a Circle from 3 Points (2 dimensions)"
+                # http://paulbourke.net/geometry/circlefrom3/
+                #
+                m1 = (p2.coords[1] - p1.coords[1]) / (p2.coords[0] - p1.coords[0])
+                m2 = (p3.coords[1] - p2.coords[1]) / (p3.coords[0] - p2.coords[0])
+
+                self.cx = (m1 * m2 * (p1.coords[1] - p3.coords[1]) + \
+                    m2 * (p1.coords[0] + p2.coords[0]) - \
+                    m1 * (p2.coords[0] + p3.coords[0]) ) / \
+                    (2 * (m2-m1) )
+                self.cy = -1 * (self.cx - (p1.coords[0]+p2.coords[0]) / 2.0) / m1 + \
+                    (p1.coords[1] + p2.coords[1]) / 2.0
+                lsR = LineString(pts[0], (self.cx,self.cy,))
+                self.r = lsR.length
+            else:
+                # Creating a circle with 0 or > 3 coordinates is not supported.
+                self.cx = None
+                self.cy = None
+                self.r = None
+
+
+        def deperpendicularize(self, pts):
+            """
+            Reorder coordinates to ensure that they are not perpendicular
+            in a way that may cause divide by zero exceptions. This tests
+            all 6 permutations of the point set, testing it with the
+            isperpendicular method.
+
+            @params pts: A set of points, passed in as an array
+            @return: A 3 element tuple with the reordered points.
+            """
+            if not self.isperpendicular(pts[0], pts[1], pts[2]):
+                return (pts[0], pts[1], pts[2],)
+            if not self.isperpendicular(pts[0], pts[2], pts[1]):
+                return (pts[0], pts[2], pts[1],)
+            if not self.isperpendicular(pts[1], pts[0], pts[2]):
+                return (pts[1], pts[0], pts[2],)
+            if not self.isperpendicular(pts[1], pts[2], pts[0]):
+                return (pts[1], pts[2], pts[0],)
+            if not self.isperpendicular(pts[2], pts[1], pts[0]):
+                return (pts[2], pts[1], pts[0],)
+            if not self.isperpendicular(pts[2], pts[0], pts[1]):
+                return (pts[2], pts[0], pts[1],)
+
+            # Raise a general exception here, and fall back to
+            # estimating a 2 point circle.
+            raise ValueError('All combinations are perpendicular.')
+
+
+        def isperpendicular(self, pt1, pt2, pt3):
+            """
+            Test a set of points to see if they are perpendicular.
+            Points are deemed perpendicular if they describe two 
+            different lines that are parallel to the X and Y axes.
+
+            @param pt1: The first point to test.
+            @param pt2: The second point to test.
+            @param pt3: The third point to test.
+
+            @return: A boolean flag indicating if the points describe
+            a set of perpendicular lines that are parallel with the 
+            X and Y axes.
+            """
+            dy1 = pt2.coords[1] - pt1.coords[1]
+            dx1 = pt2.coords[0] - pt1.coords[0]
+            dy2 = pt3.coords[1] - pt2.coords[1]
+            dx2 = pt3.coords[0] - pt2.coords[0]
+
+            if abs(dx1) == 0 and abs(dy2) == 0:
+                return False
+            elif abs(dy1) == 0:
+                return True
+            elif abs(dy2) == 0:
+                return True
+            elif abs(dx1) == 0:
+                return True
+            elif abs(dx2) == 0:
+                return True
+
+            return False
+                
+
+        def contains(self, pt):
+            """
+            Does this circle contain a specified point.
+
+            @param: pt The specified point
+            @return: A boolean flag indicating if the specified point lies
+                     within the area of the Circle.
+            """
+            ls = LineString([pt,Point(self.cx, self.cy)])
+            return ls.length <= self.r
+
+
+    def minidisk(self, points):
+        """
+        A recursive minimum enclosing disk algorithm. Based on E. Welzl, 
+        "Smallest enclosing disks (balls and ellipsoids)", 1991.
+
+        This code borrows some patterns from the applet source here:
+        http://www.sunshine2k.de/stuff/Java/Welzl/Welzl.html
+
+        @param points: An array of points, from a GEOSGeometry.
+        @return: A L{Roeck.Circle} minimum enclosing disk for the points.
+        """
+        self.rec = 0
+        shuffled = copy(points[1:])
+        random.shuffle(shuffled)
+        return self.b_minidisk(shuffled, len(shuffled), [None,None,None], 0)
+
+
+    def b_minidisk(self, points, npts, boundary, nbnd):
+        """
+        A recursive minimum enclosing disk algorithm. Based on E. Welzl,
+        "Smallest enclosing disks (balls and ellipsoids)", 1991.
+
+        This code borrows some patterns from the applet source here:
+        http://www.sunshine2k.de/stuff/Java/Welzl/Welzl.html
+
+        @param points: A random array of non-duplicating points.
+        @param npts: The position in the point array for searching.
+        @param boundary: The farthest outliers on or in the smallest disk.
+        @param nbnd: The index of the boundary list for the next boundary point.
+        @return: A L{Roeck.Circle} minimum enclosing disk for the points.
+        """
+        if npts == 1 and nbnd == 0:
+            disk = Roeck.Circle([points[0]])
+        elif npts == 1 and nbnd == 1:
+            disk = Roeck.Circle([points[0],boundary[0]])
+        elif npts == 0 and nbnd == 2:
+            disk = Roeck.Circle(boundary[0:2])
+        elif nbnd == 3:
+            disk = Roeck.Circle(boundary)
+        else:
+            self.rec+=1
+            #print '+'*self.rec
+            disk = self.b_minidisk(points, npts - 1, boundary, nbnd)
+            
+            if not disk.contains(points[npts-1]):
+                boundary[nbnd] = points[npts - 1]
+
+                self.rec+=1
+                #print '+'*self.rec
+                disk = self.b_minidisk(points, npts - 1, boundary, nbnd + 1)
+
+        #print '-'*self.rec
+        self.rec-=1
+        return disk
+
 
     def html(self):
         """
