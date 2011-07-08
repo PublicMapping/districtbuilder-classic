@@ -256,13 +256,15 @@ class DistrictIndexFile():
                 # Add community fields if this is a community plan
                 if is_community:
                     # Add comments
-                    comments_str = community_comments[district_id]
+                    if district_id in community_comments:
+                        comments_str = community_comments[district_id]
                     if comments_str:
                         comment = Comment(object_pk=new_district.id, content_type=ct, site_id=1, user_name=owner, user_email=email, comment=comments_str)
                         comment.save()
 
                     # Add types
-                    types_str = community_types[district_id]
+                    if district_id in community_types:
+                        types_str = community_types[district_id]
                     if types_str:
                         for strtag in types_str.split('|'):
                             if strtag:

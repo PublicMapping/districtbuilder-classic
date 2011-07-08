@@ -286,7 +286,11 @@ class Roeck(CalculatorBase):
             compactness += district.geom.area / cir_area
             num += 1
 
-        self.result = { 'value': compactness / num }
+        try:
+            self.result = { 'value': compactness / num }
+        except:
+            self.result = { 'value': 'N/A' }
+        
 
     def html(self):
         """
