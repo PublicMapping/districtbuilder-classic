@@ -2330,7 +2330,7 @@ class District(models.Model):
         filter = filter & Q(connect_to_geounit__geom__within=self.geom)
         return list(ContiguityOverride.objects.filter(filter))
     
-    def simplify(self):
+    def simplify(self, attempts_allowed=5, attempt_step=.80):
         """
         Simplify the geometry into a geometry collection in the simple 
         field.
@@ -2343,10 +2343,9 @@ class District(models.Model):
         # This method returns the geolevels from largest to smallest
         # but we want them the other direction
         levels = body.get_geolevels()
-        levels.reverse()
-
+        levels = sorted(levels, key=lambda l: l.id)
         simples = []
-        index = 1
+        index = 0
         for level in levels:
             while index < level.id:
                 # We want to store the levels within a GeometryCollection, and make it so the level id
@@ -2356,7 +2355,33 @@ class District(models.Model):
                 simples.append(Point((0,0), srid=self.geom.srid))
                 index += 1
             if self.geom.num_coords > 0:
-                simples.append(self.geom.simplify(preserve_topology=True,tolerance=level.tolerance))
+                simplified = False
+                attempts_left = attempts_allowed
+                tolerance = level.tolerance
+
+                while simplified is not True and attempts_left >= 1:
+                    try:
+                        simple_geom = self.geom.simplify(preserve_topology=True,tolerance=tolerance)
+                        if simple_geom.valid:
+                            simples.append(simple_geom)
+                            simplified = True
+                            attempts_left -= 1 # We just used one up
+                            times_attempted = attempts_allowed-attempts_left
+                            if times_attempted > 1:
+                                sys.stderr.write('Took %d attempts to simplify %s in plan "%s"; '
+                                    'Succeeded with tolerance %s\n' % (times_attempted, self.name, self.plan.name, tolerance))
+                        else:
+                            raise Exception ('Polygon simplifies but isn\'t valid')
+                    except Exception as error:
+                        sys.stderr.write('WARNING: Problem when trying to simplify %s at tolerance %s: %s\n' %
+                            (self.name, tolerance, error))
+                        tolerance = tolerance * attempt_step
+                    attempts_left -= 1
+
+                if not simplified:
+                    simples.append(self.geom)
+                    sys.stderr.write('Ran out of attempts to simplify %s in plan "%s" for geolevel %s; using full geometry\n' %
+                        (self.name, self.plan.name, level.name))
             else:
                 simples.append( self.geom )
 
