@@ -167,8 +167,8 @@ contents of the file and try again.
                 print 'ERROR importing geolevels:\n%s' % traceback.format_exc()
          
 
-            # Do this once after processing the geolevels
-            self.import_contiguity_overrides(config, verbose)
+        # Do this once after processing the geolevels
+        self.import_contiguity_overrides(config, verbose)
 
 
         if options.get("views"):
