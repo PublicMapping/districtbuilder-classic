@@ -104,7 +104,7 @@ statisticssets = function(options) {
         });
         _clearButton.click(function() {
             $('.function').each( function() {
-                $(this).attr('checked', false);
+                $(this).prop('checked', false);
             });
             _statisticsSetNameField.val('');
             $('.statistics_set').removeClass('statistics_set_selected');
@@ -304,7 +304,7 @@ statisticssets = function(options) {
             var id = parseInt($(this).val());
             var index = set.functions.indexOf(id);
             var checked = index > -1 ? true : false;
-            $(this).attr('checked', checked);
+            $(this).prop('checked', checked);
         });
     };
 
