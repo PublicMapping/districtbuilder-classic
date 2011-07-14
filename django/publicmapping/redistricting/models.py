@@ -2345,7 +2345,7 @@ class District(models.Model):
         levels = body.get_geolevels()
         levels = sorted(levels, key=lambda l: l.id)
         simples = []
-        index = 0
+        index = 1
         for level in levels:
             while index < level.id:
                 # We want to store the levels within a GeometryCollection, and make it so the level id
