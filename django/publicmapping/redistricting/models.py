@@ -1,5 +1,4 @@
 """
-bjects.filter(object_id__in=[a.id for a in dists])
 Define the models used by the redistricting app.
 
 The classes in redistricting.models define the data models used in the 
@@ -32,6 +31,7 @@ Author:
 from django.core.exceptions import ValidationError
 from django.contrib.gis.db import models
 from django.contrib.gis.geos import MultiPolygon,Polygon,GEOSGeometry,GEOSException,GeometryCollection,Point
+from django.contrib.gis.db.models.query import GeoQuerySet
 from django.contrib.auth.models import User
 from django.db.models import Sum, Max, Q, Count
 from django.db.models.signals import pre_save, post_save, m2m_changed
@@ -398,8 +398,7 @@ class Geounit(models.Model):
                 guFilter = Q(id__in=geounit_ids)
 
                 # Get the area defined by the union of the geounits
-                selection = Geounit.objects.filter(guFilter).collect()
-
+                selection = safe_union(Geounit.objects.filter(guFilter))
                 selection = enforce_multi(selection,collapse=True)
                
                 # Begin crafting the query to get the id and geom
@@ -451,7 +450,7 @@ class Geounit(models.Model):
                 else:
                     # this always rebuilds the current extent of all the
                     # selected geounits
-                    geoms = GeometryCollection(map(lambda unit:unit.geom, units), srid=units[0].geom.srid)
+                    geoms = safe_union(GeometryCollection(map(lambda unit:unit.geom, units), srid=units[0].geom.srid))
                     union = enforce_multi(geoms, collapse=True)
 
                 # set or merge this onto the existing selection
@@ -467,7 +466,8 @@ class Geounit(models.Model):
                     try:
                         remainder = boundary.intersection(intersects)
                     except GEOSException, ex:
-                        # it is not clear what this means
+                        print "Caught GEOSException while intersecting 'boundary' with 'intersects'."
+                        print ex
                         remainder = empty_geom(boundary.srid)
                 else:
                     # the remainder geometry is the geounit selection 
@@ -479,10 +479,18 @@ class Geounit(models.Model):
                     try:
                         remainder = selection.difference(boundary)
 
-                        remainder = remainder.intersection(intersects)
+                        try:
+                            remainder = remainder.intersection(intersects)
+                        except GEOSException, ex:
+                            print "Caught GEOSException while intersecting 'remainder' with 'intersects'."
+                            print ex
+                            remainder = empty_geom(boundary.srid)
+
                     except GEOSException, ex:
-                        # it is not clear what this means, or why it happens
+                        print "Caught GEOSException while differencing 'selection' with 'boundary'."
+                        print ex
                         remainder = empty_geom(boundary.srid)
+
 
                 remainder = enforce_multi(remainder)
 
@@ -782,7 +790,7 @@ class Plan(models.Model):
         version = int(version)
         
         # incremental is the geometry that is changing
-        incremental = Geounit.objects.filter(id__in=geounit_ids).unionagg()
+        incremental = safe_union(Geounit.objects.filter(id__in=geounit_ids))
 
         fixed = False
 
@@ -794,12 +802,8 @@ class Plan(models.Model):
             return False
 
         # Collect locked district geometries, and remove locked sections
-        locked = District.objects.filter(id__in=[d.id for d in districts if d.is_locked]).collect()
-        if locked:
-            # GEOS topology exceptions are sometimes thrown when performing a difference
-            # on complex geometries unless a buffer(0) is first performed.
-            locked = locked if locked.empty else locked.buffer(0)
-            incremental = incremental if locked.empty else incremental.difference(locked)
+        locked = safe_union(District.objects.filter(id__in=[d.id for d in districts if d.is_locked]))
+        incremental = incremental if locked is None else incremental.difference(locked)
 
         self.purge(after=version)
 
@@ -1629,7 +1633,7 @@ AND st_intersects(
             # Create a new copy of the target geometry
             all_geometry = map(lambda d: d.geom, components)
             all_geometry.append(target.geom)
-            target.geom = enforce_multi(GeometryCollection(all_geometry,srid=target.geom.srid).buffer(0), collapse=True)
+            target.geom = enforce_multi(safe_union(GeometryCollection(all_geometry,srid=target.geom.srid)), collapse=True)
             target.simplify()
 
             # Eliminate the component districts from the version
@@ -2676,6 +2680,31 @@ def enforce_multi(geom, collapse=False):
             mpoly = enforce_multi( mpoly, collapse )
 
     return mpoly
+
+def safe_union(collection):
+    """
+    Attempt to safely union a set of geometries. Sometimes, the default
+    union() method on a geometry collection and/or geoqueryset results
+    in a TopologyException. This method attempts to create a safe union
+    of geometries by buffering the collection to 0, then performing a
+    cascaded union on the remainder (if the result of the buffer is a
+    multipolygon).
+    """
+    if isinstance(collection, GeoQuerySet):
+        # collection is a GeoQuerySet
+        thegeom = collection.collect()
+        if collection.count() == 0:
+            return thegeom
+    elif isinstance(collection, GeometryCollection):
+        # collection is a GeometryCollection
+        thegeom = collection
+
+    thegeom = thegeom.buffer(0)
+
+    if thegeom.geom_type == 'MultiPolygon':
+        thegeom = thegeom.cascaded_union
+
+    return thegeom
 
 class ScoreFunction(models.Model):
     """
