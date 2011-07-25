@@ -247,11 +247,11 @@ class Sld_Range_Template(ListTemplate):
           <ogc:Filter>
             <ogc:And>
               <ogc:PropertyIsLessThan>
-                <ogc:PropertyName>number</ogc:PropertyName>
+                <ogc:PropertyName>%(unit)s</ogc:PropertyName>
                 <ogc:Literal>%(top)s</ogc:Literal>
               </ogc:PropertyIsLessThan>
               <ogc:PropertyIsGreaterThanOrEqualTo>
-                <ogc:PropertyName>number</ogc:PropertyName>
+                <ogc:PropertyName>%(unit)s</ogc:PropertyName>
                 <ogc:Literal>%(bottom)s</ogc:Literal>
               </ogc:PropertyIsGreaterThanOrEqualTo>
             </ogc:And>
@@ -272,7 +272,7 @@ class Sld_URange_Template(ListTemplate):
           <Title>%(bottom)s-%(top)s</Title>
           <ogc:Filter>
               <ogc:PropertyIsGreaterThanOrEqualTo>
-                <ogc:PropertyName>number</ogc:PropertyName>
+                <ogc:PropertyName>%(unit)s</ogc:PropertyName>
                 <ogc:Literal>%(bottom)s</ogc:Literal>
               </ogc:PropertyIsGreaterThanOrEqualTo>
           </ogc:Filter>          
@@ -303,6 +303,9 @@ def gensld_boundaries(geoname):
 
 #TODO: generalize to any number of choropleths
 def gensld_choro(geoname,varname,vartitle,quantiles):
+	gensld_choro_internal(geoname,varname,vartitle,quantiles,unit="number")
+
+def gensld_choro_internal(geoname,varname,vartitle,quantiles,unit="number"):
 	# WARNING: sld files need to be lower case to be compatible with postgres views
 	lvarname = string.lower(varname)
         target_file = '/projects/publicmapping/trunk/sld/%s_%s.sld' % (geoname,lvarname) 
@@ -311,30 +314,40 @@ def gensld_choro(geoname,varname,vartitle,quantiles):
           {"top": str(quantiles[4]),
           "bottom": str(quantiles[3]),
           "fill": "#444444",
-          "fillopacity":"1.0"},
+          "fillopacity":"1.0",
+  	   "unit":unit},
           {"top": str(quantiles[3]),
           "bottom": str(quantiles[2]),
           "fill": "#777777",
-          "fillopacity":"1.0"},
+          "fillopacity":"1.0",
+           "unit":unit},
           {"top": str(quantiles[2]),
           "bottom": str(quantiles[1]),
           "fill": "#AAAAAA",
-          "fillopacity":"1.0"},
+          "fillopacity":"1.0",
+	  "unit":unit},
           {"top": str(quantiles[1]),
           "bottom": str(quantiles[0]),
           "fill": "#EEEEEE",
-          "fillopacity":"1.0"}]
+          "fillopacity":"1.0",
+	  "unit":unit}]
 
    	svaluelist = [{"top": str(quantiles[5]),
           "bottom": str(quantiles[4]),
           "fill": "#000000",
-          "fillopacity":"1.0"}]
+          "fillopacity":"1.0",
+	  "unit":unit}]
 
         f = open(target_file,'w')
         f.write(str( SldList_Template(layername=lvarname,layertitle=vartitle,layerabs=varabs,slst=svaluelist,sli=Sld_URange_Template, lst=valuelist,li=Sld_Range_Template,elst=[{"title":"Boundary","stroke":"#555555","strokewidth":"0.25","strokeopacity":"1.0"}],eli=Sld_Line_Template) ))
 	f.write("\n")
         f.close()
         os.chmod(target_file,stat.S_IRUSR|stat.S_IRGRP|stat.S_IROTH)  
+
+
+def gensld_choro_denquint(geoname,varname,vartitle,dummy):
+	quantiles=[0,0.2,0.4,0.6,0.8,1]
+	gensld_choro_internal(geoname,varname,vartitle,quantiles,unit="percentage")
 
 
 ### Config file generation
@@ -397,13 +410,13 @@ class Config_Template(DictionaryTemplate):
         <Subject id="vote_tot_norm" field="VOTE_TOT_N" name="number of likely Republican and Democratic voters normalized to 50/50 state baseline" short_name="Normal 2-party vote" displayed="false" sortkey="20" />
         %(end_elec)s
         <Subject id="vap" field="VAP" name="Voting Age Population" short_name="vap" displayed="true" sortkey="7" />
-        <Subject id="totpop_b" field="TOTPOP_B" name="African-American" short_name="Black" displayed="false" sortkey="8" />        
-	<Subject id="totpop_h" field="TOTPOP_H" name="Hispanic or Latino" short_name="Hispanic" displayed="false" sortkey="9" />
-	<Subject id="totpop_na" field="TOTPOP_NA" name="Native American" short_name="Nat Amer" displayed="false" sortkey="10" />
-	<Subject id="totpop_a" field="TOTPOP_A" name="Asian Population" short_name="Asian" displayed="false" sortkey="11" />
-	<Subject id="totpop_pi" field="TOTPOP_PI" name="Pacific Islander" short_name="Pac Isl" displayed="false" sortkey="12" />
-	<Subject id="totpop_wnh" field="TOTPOP_WNH" name="White Non-Hispanic" short_name="White" displayed="false" sortkey="13" />
-        <Subject id="totpop" field="TOTPOP" name="Total Population" short_name="Total Pop." displayed="true" sortkey="14" percentage_denominator="vap"/>
+        <Subject id="totpop_b" field="TOTPOP_B" name="African-American" short_name="Black" displayed="false" sortkey="8" percentage_denominator="totpop"/>        
+	<Subject id="totpop_h" field="TOTPOP_H" name="Hispanic or Latino" short_name="Hispanic" displayed="false" sortkey="9" percentage_denominator="totpop"/>
+	<Subject id="totpop_na" field="TOTPOP_NA" name="Native American" short_name="Nat Amer" displayed="false" sortkey="10" percentage_denominator="totpop"/>
+	<Subject id="totpop_a" field="TOTPOP_A" name="Asian Population" short_name="Asian" displayed="false" sortkey="11" percentage_denominator="totpop"/>
+	<Subject id="totpop_pi" field="TOTPOP_PI" name="Pacific Islander" short_name="Pac Isl" displayed="false" sortkey="12" percentage_denominator="totpop"/>
+	<Subject id="totpop_wnh" field="TOTPOP_WNH" name="White Non-Hispanic" short_name="White" displayed="false" sortkey="13" percentage_denominator="totpop"/>
+        <Subject id="totpop" field="TOTPOP" name="Total Population" short_name="Total Pop." displayed="true" sortkey="14"/>
         <Subject id="vap_a" field="VAP_A" name="Asian Voting Age Population" short_name="Asian VAP" displayed="true" sortkey="15" percentage_denominator="vap" />
         <Subject id="vap_pi" field="VAP_PI" name="Pacific Islander Voting Age Population" short_name="Pacific VAP" displayed="true" sortkey="16" percentage_denominator="vap"/>
         <Subject id="vap_wnh" field="VAP_WNH" name="White Non-Hispanic Voting Age Population" short_name="White VAP" displayed="true" sortkey="17" percentage_denominator="vap"/>
@@ -1817,48 +1830,48 @@ if ( parseResults.do_genconf) :
 if ( parseResults.do_gensld) :
 	print 'generating choropleth slds ...'
 	gensld_choro("block","TOTPOP","Total Population",robjects.r.q_block_TOTPOP)
-	gensld_choro("block","TOTPOP_H","Total Hispanic Population",robjects.r.q_block_TOTPOP_H)
-	gensld_choro("block","TOTPOP_B","Total Black Population",robjects.r.q_block_TOTPOP_B)
-	gensld_choro("block","TOTPOP_NA","Total Native American Population",robjects.r.q_block_TOTPOP_NA)
+	gensld_choro_denquint("block","TOTPOP_H","Percent Hispanic Population",robjects.r.q_block_TOTPOP_H)
+	gensld_choro_denquint("block","TOTPOP_B","Percent Black Population",robjects.r.q_block_TOTPOP_B)
+	gensld_choro_denquint("block","TOTPOP_NA","Percent Native American Population",robjects.r.q_block_TOTPOP_NA)
 	gensld_choro("block","VAP","Voting Age Population",robjects.r.q_block_VAP)
-	gensld_choro("block","VAP_H","Voting Age Hispanic Population",robjects.r.q_block_VAP_H)
-	gensld_choro("block","VAP_B","Voting Age Black Population",robjects.r.q_block_VAP_B)
-	gensld_choro("block","VAP_NA","Voting Age Native American Population",robjects.r.q_block_VAP_NA)
+	gensld_choro_denquint("block","VAP_H","Percent Voting Age Hispanic Population",robjects.r.q_block_VAP_H)
+	gensld_choro_denquint("block","VAP_B","Percent Voting Age Black Population",robjects.r.q_block_VAP_B)
+	gensld_choro_denquint("block","VAP_NA","Percent Voting Age Native American Population",robjects.r.q_block_VAP_NA)
 	gensld_choro("tract","TOTPOP","Total Population",robjects.r.q_tract_TOTPOP)
-	gensld_choro("tract","TOTPOP_H","Total Hispanic Population",robjects.r.q_tract_TOTPOP_H)
-	gensld_choro("tract","TOTPOP_B","Total Black Population",robjects.r.q_tract_TOTPOP_B)
-	gensld_choro("tract","TOTPOP_NA","Total Native American Population",robjects.r.q_tract_TOTPOP_NA)
+	gensld_choro_denquint("tract","TOTPOP_H","Percent Total Hispanic Population",robjects.r.q_tract_TOTPOP_H)
+	gensld_choro_denquint("tract","TOTPOP_B","Percent Black Population",robjects.r.q_tract_TOTPOP_B)
+	gensld_choro_denquint("tract","TOTPOP_NA","Percent Native American Population",robjects.r.q_tract_TOTPOP_NA)
 	gensld_choro("tract","VAP","Voting Age Population",robjects.r.q_tract_VAP)
-	gensld_choro("tract","VAP_H","Voting Age Hispanic Population",robjects.r.q_tract_VAP_H)
-	gensld_choro("tract","VAP_B","Voting Age Black Population",robjects.r.q_tract_VAP_B)
-	gensld_choro("tract","VAP_NA","Voting Age Native American Population",robjects.r.q_tract_VAP_NA)
+	gensld_choro_denquint("tract","VAP_H","Percent Voting Age Hispanic Population",robjects.r.q_tract_VAP_H)
+	gensld_choro_denquint("tract","VAP_B","Percent Voting Age Black Population",robjects.r.q_tract_VAP_B)
+	gensld_choro_denquint("tract","VAP_NA","Percent Voting Age Native American Population",robjects.r.q_tract_VAP_NA)
 	gensld_choro("county","TOTPOP","Total Population",robjects.r.q_county_TOTPOP)
-	gensld_choro("county","TOTPOP_H","Total Hispanic Population",robjects.r.q_county_TOTPOP_H)
-	gensld_choro("county","TOTPOP_B","Total Black Population",robjects.r.q_county_TOTPOP_B)
-	gensld_choro("county","TOTPOP_NA","Total Native American Population",robjects.r.q_county_TOTPOP_NA)
+	gensld_choro_denquint("county","TOTPOP_H","Percent Hispanic Population",robjects.r.q_county_TOTPOP_H)
+	gensld_choro_denquint("county","TOTPOP_B","Percent Black Population",robjects.r.q_county_TOTPOP_B)
+	gensld_choro_denquint("county","TOTPOP_NA","Percent Native American Population",robjects.r.q_county_TOTPOP_NA)
 	gensld_choro("county","VAP","Voting Age Population",robjects.r.q_county_VAP)
-	gensld_choro("county","VAP_H","Voting Age Hispanic Population",robjects.r.q_county_VAP_H)
-	gensld_choro("county","VAP_B","Voting Age Black Population",robjects.r.q_county_VAP_B)
-	gensld_choro("county","VAP_NA","Voting Age Native American Population",robjects.r.q_county_VAP_NA)
+	gensld_choro_denquint("county","VAP_H","Percent Voting Age Hispanic Population",robjects.r.q_county_VAP_H)
+	gensld_choro_denquint("county","VAP_B","Percent Voting Age Black Population",robjects.r.q_county_VAP_B)
+	gensld_choro_denquint("county","VAP_NA","Percent Voting Age Native American Population",robjects.r.q_county_VAP_NA)
 	if (has_election_data==1) :        
-		gensld_choro("block","VOTE_DEM","Predicted Democratic Vote ",robjects.r.q_block_VOTE_DEM)
-		gensld_choro("block","VOTE_REP","Predicted Republican Vote ",robjects.r.q_block_VOTE_REP)
-        	gensld_choro("block","VOTE_TOT","Predicted Republican Vote ",robjects.r.q_block_VOTE_TOT)
-        	gensld_choro("tract","VOTE_DEM","Predicted Democratic Vote ",robjects.r.q_tract_VOTE_DEM)
-        	gensld_choro("tract","VOTE_REP","Predicted Republican Vote ",robjects.r.q_tract_VOTE_REP)
-        	gensld_choro("tract","VOTE_TOT","Predicted Republican Vote ",robjects.r.q_tract_VOTE_TOT)
-        	gensld_choro("county","VOTE_DEM","Predicted Democratic Vote ",robjects.r.q_county_VOTE_DEM)
-        	gensld_choro("county","VOTE_REP","Predicted Republican Vote ",robjects.r.q_county_VOTE_REP)
-        	gensld_choro("county","VOTE_TOT","Predicted Republican Vote ",robjects.r.q_county_VOTE_TOT)
-		gensld_choro("block","VOTE_DEM_N","Predicted Democratic Vote ",robjects.r.q_block_VOTE_DEM_N)
-		gensld_choro("block","VOTE_REP_N","Predicted Republican Vote ",robjects.r.q_block_VOTE_REP_N)
-        	gensld_choro("block","VOTE_TOT_N","Predicted Republican Vote ",robjects.r.q_block_VOTE_TOT_N)
-        	gensld_choro("tract","VOTE_DEM_N","Predicted Democratic Vote ",robjects.r.q_tract_VOTE_DEM_N)
-        	gensld_choro("tract","VOTE_REP_N","Predicted Republican Vote ",robjects.r.q_tract_VOTE_REP_N)
-        	gensld_choro("tract","VOTE_TOT_N","Predicted Republican Vote ",robjects.r.q_tract_VOTE_TOT_N)
-        	gensld_choro("county","VOTE_DEM_N","Predicted Democratic Vote ",robjects.r.q_county_VOTE_DEM_N)
-        	gensld_choro("county","VOTE_REP_N","Predicted Republican Vote ",robjects.r.q_county_VOTE_REP_N)
-        	gensld_choro("county","VOTE_TOT_N","Predicted Republican Vote ",robjects.r.q_county_VOTE_TOT_N)
+		gensld_choro_denquint("block","VOTE_DEM","Percent Predicted Democratic Vote ",robjects.r.q_block_VOTE_DEM)
+		gensld_choro_denquint("block","VOTE_REP","Percent Predicted Republican Vote ",robjects.r.q_block_VOTE_REP)
+        	gensld_choro("block","VOTE_TOT","Predicted Vote ",robjects.r.q_block_VOTE_TOT)
+        	gensld_choro_denquint("tract","VOTE_DEM","Percent Predicted Democratic Vote ",robjects.r.q_tract_VOTE_DEM)
+        	gensld_choro_denquint("tract","VOTE_REP","Percent Predicted Republican Vote ",robjects.r.q_tract_VOTE_REP)
+        	gensld_choro("tract","VOTE_TOT","Predicted Vote ",robjects.r.q_tract_VOTE_TOT)
+        	gensld_choro_denquint("county","VOTE_DEM","Perecent Predicted Democratic Vote ",robjects.r.q_county_VOTE_DEM)
+        	gensld_choro_denquint("county","VOTE_REP","Percent Predicted Republican Vote ",robjects.r.q_county_VOTE_REP)
+        	gensld_choro("county","VOTE_TOT","Predicted Vote ",robjects.r.q_county_VOTE_TOT)
+		gensld_choro_denquint("block","VOTE_DEM_N","Percent Predicted Democratic Vote ",robjects.r.q_block_VOTE_DEM_N)
+		gensld_choro_denquint("block","VOTE_REP_N","Percent Predicted Republican Vote ",robjects.r.q_block_VOTE_REP_N)
+        	gensld_choro("block","VOTE_TOT_N","Predicted Vote ",robjects.r.q_block_VOTE_TOT_N)
+        	gensld_choro_denquint("tract","VOTE_DEM_N","Percent Predicted Democratic Vote ",robjects.r.q_tract_VOTE_DEM_N)
+        	gensld_choro_denquint("tract","VOTE_REP_N","Percent Predicted Republican Vote ",robjects.r.q_tract_VOTE_REP_N)
+        	gensld_choro("tract","VOTE_TOT_N","Predicted Vote ",robjects.r.q_tract_VOTE_TOT_N)
+        	gensld_choro_denquint("county","VOTE_DEM_N","Percent Predicted Democratic Vote ",robjects.r.q_county_VOTE_DEM_N)
+        	gensld_choro_denquint("county","VOTE_REP_N","Percent Predicted Republican Vote ",robjects.r.q_county_VOTE_REP_N)
+        	gensld_choro("county","VOTE_TOT_N","Predicted Vote ",robjects.r.q_county_VOTE_TOT_N)
 
 
 # generate config file
