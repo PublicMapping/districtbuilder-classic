@@ -391,6 +391,8 @@ class Geounit(models.Model):
         selection = None
         units = []
         searching = False
+        if settings.DEBUG:
+            sys.stderr.write('MIXED GEOUNITS SEARCH: Geolevel %d, geounits: %s, levels: %s\n' % (geolevel, geounit_ids, levels))
         for level in levels:
             # if this geolevel is the requested geolevel
             if geolevel == level.id:
@@ -402,8 +404,7 @@ class Geounit(models.Model):
                 selection = enforce_multi(selection,collapse=True)
                
                 # Begin crafting the query to get the id and geom
-                query = "SELECT id,child_id,geolevel_id,st_ashexewkb(geom,'NDR') FROM redistricting_geounit WHERE id IN (%s) AND " % (','.join(geounit_ids))
-
+                q_ids = Q(id__in=geounit_ids)
                 # create a boundary if one doesn't exist
                 if not boundary:
                     boundary = empty_geom(selection.srid)
@@ -412,29 +413,24 @@ class Geounit(models.Model):
                     # Searching inside the boundary
                     if level != base_geolevel:
                         # Search by geometry
-                        query += "st_within(geom, geomfromewkt('%s'))" % boundary.ewkt
+                        q_geom = Q(geom__within=boundary)
                     else:
                         # Search by centroid
-                        query += "st_intersects(center, geomfromewkt('%s'))" % boundary.ewkt
+                        q_geom = Q(center__intersects=boundary)
+                    results = Geounit.objects.filter(q_ids, q_geom)
                 else:
                     # Searching outside the boundary
                     if level != base_geolevel:
                         # Search by geometry
-                        query += "NOT st_intersects(geom, geomfromewkt('%s'))" % boundary.ewkt
+                        q_geom = Q(geom__within=boundary)
                     else:
                         # Search by centroid
-                        query += "NOT st_intersects(center, geomfromewkt('%s'))" % boundary.ewkt
+                        q_geom = Q(geom__within=boundary)
+                    results = Geounit.objects.filter(q_ids).exclude(q_geom)
 
-                # Execute our custom SQL
-                cursor = connection.cursor()
-                cursor.execute(query)
-                rows = cursor.fetchall()
-                count = 0
-                for row in rows:
-                    count += 1
-                    geom = GEOSGeometry(row[3])
-                    # Create a geounit, and add it to the list of units
-                    units.append(Geounit(id=row[0],geom=geom,child_id=row[1],geolevel_id=row[2]))
+                if settings.DEBUG:
+                    sys.stderr.write('Found %d geounits in boundary at level %s\n' % (len(results), level))
+                units += list(results)
 
                 # if we're at the base level, and haven't collected any
                 # geometries, return the units here
@@ -498,24 +494,16 @@ class Geounit(models.Model):
                 # converted, or errored out above, in which case we just
                 # have to move on.
                 if not remainder.empty:
-                    query = "SELECT id,child_id,geolevel_id,st_ashexewkb(geom,'NDR') FROM redistricting_geounit WHERE geolevel_id = %d AND " % level.id
+                    q_geolevel = Q(geolevel=level)
 
                     if level == base_geolevel:
                         # Query by center
-                        query += "st_intersects(center, geomfromewkt('%s'))" % remainder.ewkt
+                        q_geom = Q(center__intersects=remainder)
                     else:
                         # Query by geom
-                        query += "st_within(geom, geomfromewkt('%s'))" % remainder.ewkt
+                        q_geom = Q(geom__within=remainder)
 
-                    # Execute our custom SQL
-                    cursor = connection.cursor()
-                    cursor.execute(query)
-                    rows = cursor.fetchall()
-                    count = 0
-                    for row in rows:
-                        count += 1
-                        geom = GEOSGeometry(row[3])
-                        units.append(Geounit(id=row[0],geom=geom,child_id=row[1],geolevel_id=row[2]))
+                    units += list(Geounit.objects.filter(q_geolevel, q_geom))
 
         # Send back the collected Geounits
         return units
@@ -2549,7 +2537,10 @@ def create_unassigned_district(sender, **kwargs):
         unassigned = District(name="Unassigned", version = 0, plan = plan, district_id=0)
 
         biggest_geolevel = plan.get_biggest_geolevel()
-        all_geom = Geounit.objects.filter(geolevel=biggest_geolevel).unionagg()
+        all_geom = Geounit.objects.filter(geolevel=biggest_geolevel).collect()
+        all_geom = all_geom.buffer(0)
+        if all_geom.geom_type == 'MultiPolygon':
+            all_geom = all_geom.cascaded_union
 
         if plan.district_set.count() > 0:
             taken = plan.district_set.all().unionagg()
