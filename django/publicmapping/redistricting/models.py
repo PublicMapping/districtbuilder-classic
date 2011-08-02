@@ -417,16 +417,15 @@ class Geounit(models.Model):
                     else:
                         # Search by centroid
                         q_geom = Q(center__intersects=boundary)
-                    results = Geounit.objects.filter(q_ids, q_geom)
                 else:
                     # Searching outside the boundary
                     if level != base_geolevel:
                         # Search by geometry
-                        q_geom = Q(geom__within=boundary)
+                        q_geom = Q(geom__relate=(boundary, 'F********'))
                     else:
                         # Search by centroid
-                        q_geom = Q(geom__within=boundary)
-                    results = Geounit.objects.filter(q_ids).exclude(q_geom)
+                        q_geom = Q(geom__relate=(boundary, 'F********'))
+                results = Geounit.objects.filter(q_ids, q_geom)
 
                 if settings.DEBUG:
                     sys.stderr.write('Found %d geounits in boundary at level %s\n' % (len(results), level))
