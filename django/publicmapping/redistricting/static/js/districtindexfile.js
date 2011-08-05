@@ -90,7 +90,7 @@ districtindexfile = function(options) {
                 if (_visiblyUpdate) {
                     _options.target.empty();
                     var link = $('<a href="' + _options.fetchUrl + '" />');
-                    var button = $('<button id="btnExportDistrictIndexFile" class="button">Download</button>').button();
+                    var button = $('<button type="button" id="btnExportDistrictIndexFile" class="button">Download</button>').button();
                     $(link).append(button);
                     _options.target.append(link);    
                 }
@@ -101,7 +101,7 @@ districtindexfile = function(options) {
             } else if (fileStatus == 'none') {
                 if (_visiblyUpdate) {
                     _options.target.empty();
-                    var button = $('<button id="btnExportDistrictIndexFile" class="button">Request File</button>').button();
+                    var button = $('<button type="button" id="btnExportDistrictIndexFile" class="button">Request File</button>').button();
                     button.click( function() {
                         _autoDownload = true;
                         $.post(_options.fetchUrl, indicatePending(data));
