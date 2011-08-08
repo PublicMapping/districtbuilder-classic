@@ -47,9 +47,16 @@
         <![endif]-->
     <link rel="stylesheet" type="text/css" href="/static-media/css/visuals.css"/>   
     <script type="text/javascript" src="/static-media/openlayers/OpenLayers.js"></script>
+
+    {% if "arc" in basemaps %}
     <script type="text/javascript" src="/static-media/openlayers/ArcGISCache.js"></script>
+    {% endif %}
+    {% if "bing" in basemaps %}
     <script src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=6.2&mkt=en-us"></script> 
-    <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAjpkAC9ePGem0lIq5XcMiuhR_wWLPFku8Ix9i2SXYRVK3e45q1BQUd_beF8dtzKET_EteAjPdGDwqpQ"></script> 
+    {% endif %}
+    {% if "google" in basemaps %}
+    <script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAjpkAC9ePGem0lIq5XcMiuhR_wWLPFku8Ix9i2SXYRVK3e45q1BQUd_beF8dtzKET_EteAjPdGDwqpQ"></script>
+    {% endif %}
 
     {% comment %}
 
