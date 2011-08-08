@@ -788,9 +788,23 @@ class Contiguity(CalculatorBase):
 
         count = 0
         for district in districts:
-            if len(district.geom) == 1: 
+            if len(district.geom) == 1 and district.district_id != 0:
                 count += 1
             else:
+                if district.district_id == 0:
+                    # for plan summations of contiguity, ignore the unassigned in the tally
+                    if 'plan' in kwargs:
+                        continue
+                    elif len(district.geom) == 1:
+                        count += 1
+                        continue
+
+                # if the district has no geometry, i.e. an empty unassigned district,
+                # treat it as contiguous
+                if len(district.geom) == 0:
+                    count += 1
+                    continue
+                    
                 # obtain the contiguity overrides that need to be applied
                 overrides = district.get_contiguity_overrides()
 
@@ -805,6 +819,9 @@ class Contiguity(CalculatorBase):
                     contiguous = True
     
                     while (len(remaining) > 0):
+                        if len(district.geom) == 0:
+                            continue
+
                         match_in_pass = False
                         for geom in remaining:
                             linked = False
@@ -835,8 +852,7 @@ class Contiguity(CalculatorBase):
         try:
             target = self.get_value('target')
             if target != None:
-                # result is -1 because unassigned is always considered contiguous
-                self.result = { 'value':'%d (of %s)' % (count-1, target) }
+                self.result = { 'value':'%d (of %s)' % (count, target) }
         except:
             pass
 
@@ -889,7 +905,7 @@ class AllContiguous(CalculatorBase):
         calc = Contiguity()
         calc.compute(**kwargs)
 
-        self.result = { 'value': len(districts) == calc.result }
+        self.result = { 'value': (len(districts) - 1) == calc.result }
 
 
 class NonContiguous(CalculatorBase):
