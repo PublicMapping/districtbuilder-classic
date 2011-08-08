@@ -1053,6 +1053,7 @@
             The "basemaps" attribute is optional, and can be any set to 
             any combination (CSV) of the following:
               osm-road
+              arc-road
               google-road
               google-aerial
               google-hybrid

@@ -378,6 +378,27 @@ function mapinit(srs,maxExtent) {
                     return new OpenLayers.Layer.OSM(layerName, null, options);
                 }
 
+            case 'arc':
+                var layerInfo = TOPO_LAYER_INFO;
+                var resolutions = [];
+                for (var i = minZoomLevel; i < maxZoomLevel; i++) {
+                    resolutions.push(layerInfo.tileInfo.lods[i].resolution);
+                }
+
+                var options = {
+                    resolutions: resolutions,                        
+                    tileOrigin: new OpenLayers.LonLat(layerInfo.tileInfo.origin.x , layerInfo.tileInfo.origin.y),
+                    maxExtent: maxExtent,                        
+                    projection: projection,
+                    minZoomLevel: minZoomLevel
+                };
+
+                // Only road type is supported for now.
+                if (mapType === 'road') {
+                    var url = "https://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer";
+                    return new OpenLayers.Layer.ArcGISCache(layerName, url, options);
+                }
+
             default:
                 return null;
         }
