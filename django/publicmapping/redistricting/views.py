@@ -302,7 +302,7 @@ def scoreplan(request, planid):
         except:
             print traceback.format_exc()
 
-        if not score:
+        if not score or not score['value']:
             status['success'] = False
             status['message'] = '<p>%s</p><p>%s</p>' % (criteria.name, criteria.description or criteria.function.description)
             break
