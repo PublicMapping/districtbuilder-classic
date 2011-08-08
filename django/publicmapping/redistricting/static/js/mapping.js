@@ -459,7 +459,7 @@ function mapinit(srs,maxExtent) {
         var container = $('#map_type_content_container');
         var id = 'radio' + i;
         var button = $('<input type="radio" name="basemap" id="' + id + '"' + ((i === 0) ? 'checked=checked' : '') +
-                       ' /><label for="' + id + '">' + layer.name + '</label>');
+                       ' /><label for="' + id + '">' + ((layers.length === 1) ? "Map Transparency" : layer.name) + '</label>');
             
         // change the base layer when a new one is selected
         button.click(function() {
