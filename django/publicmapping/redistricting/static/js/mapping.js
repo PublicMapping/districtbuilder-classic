@@ -2357,8 +2357,8 @@ function mapinit(srs,maxExtent) {
         var callbackCompactness = function() {
             var newOptions = OpenLayers.Util.extend({}, districtStyle);
             var compactnessAvg = computeCompactnessAvg(districtLayer.features);
-            var upper = compactnessAvg.mean + (2 * compactnessAvg.deviation);
-            var lower = compactnessAvg.mean - (2 * compactnessAvg.deviation); 
+            var upper = compactnessAvg.mean + (compactnessAvg.deviation);
+            var lower = compactnessAvg.mean - (compactnessAvg.deviation); 
             var highestColor = $('.farover').first().css('background-color');
             var lowestColor = $('.farunder').first().css('background-color');
             var rules = [
