@@ -142,7 +142,7 @@ def is_session_available(req):
     Parameters:
         req - The HttpRequest object, with user and session information.
     """
-    if req.user.is_superuser:
+    if req.user.is_superuser or req.user.is_staff:
         return True
 
     sessions = Session.objects.filter(expire_date__gt=datetime.now())
