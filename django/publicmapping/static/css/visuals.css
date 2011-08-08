@@ -258,6 +258,9 @@ div#dupemail {
 label.required {
     color: #ff0000;
 }
+tr.required {
+    background-color: #ffaaaa;
+}
 div#requiredNote {
     font-size: 0.75em;
     text-align: left;

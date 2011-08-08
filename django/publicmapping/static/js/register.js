@@ -130,7 +130,7 @@ $(function(){
         }
 
         if (agree.length > 0 && !agree[0].checked) {
-            $('#agreelabel').addClass('required');
+            $('#agreerow').addClass('required');
             return false;
         }
 
