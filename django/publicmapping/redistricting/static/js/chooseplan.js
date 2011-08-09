@@ -320,6 +320,14 @@ chooseplan = function(options) {
         var can_edit = _table.jqGrid('getCell', id, 'fields.can_edit');
         _table.jqGrid('GridToForm', id, '#plan_form'); 
 
+        // workaround for problem with jqGrid custom formatter with boolean (is_shared)
+        var shared = $('#is_shared');
+        if (shared.val().contains("unshared")) {
+            shared.val('No');
+        } else {
+            shared.val('Yes');
+        }
+
         if (can_edit == "true") {
             editState('view');
             // clear previous handlers
