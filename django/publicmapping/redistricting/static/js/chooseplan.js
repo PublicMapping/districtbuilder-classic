@@ -245,6 +245,11 @@ chooseplan = function(options) {
         }
     };
 
+    // Formatter used to display images in the shared column of the jqGrid
+    var sharedImageFormatter = function (shared) {
+        return "<img height='16' width='16' src='/static-media/images/icon-" + ((shared) ? "" : "un") + "shared.png' />";
+    };     
+
     /**
      * Set up the jqGrid table and make the initial call to the server for data
      */
@@ -267,7 +272,7 @@ chooseplan = function(options) {
                 {name:'fields.name', label:'Name', search: true, sortable:true},
                 {name:'fields.owner', label:'Author', search:true, width: '110', fixed: true, sortable:true},
                 {name:'fields.description', label:'Description', hidden:true, search:true},
-                {name:'fields.is_shared', label:'Shared', sortable:true, search:false, formatter:'checkbox', width:'70', fixed: true, align: 'center'},
+    {name:'fields.is_shared', label:'Shared', sortable:true, search:false, width:'70', fixed: true, align: 'center', formatter: sharedImageFormatter},
                 {name:'fields.edited', label:'Last Edited', sortable:true, search:false, width:'130', fixed: true, align: 'center', formatter:'date', formatoptions: { srcformat: 'UniversalSortableDateTime', newformat:'m/d/Y g:i A'}},
                 {name:'fields.can_edit', label:'Edit', search:false, hidden: true},
                 {name:'fields.districtCount', label:'# Districts', search:false, sortable:true, hidden:true}
