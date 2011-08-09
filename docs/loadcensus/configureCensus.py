@@ -400,9 +400,9 @@ class Config_Template(DictionaryTemplate):
             for referencing in GeoLevel definitions later. -->
         <Subject id="vap_b" field="VAP_B" name="African-American Voting Age Population" short_name="Black VAP " displayed="true" sortkey="1" percentage_denominator="vap" />
         <Subject id="vap_h" field="VAP_H" name="Hispanic or Latino voting age population" short_name="Hispanic VAP" displayed="true" sortkey="2" percentage_denominator="vap" />
-        <Subject id="vap_na" field="VAP_NA" name="Native American Voting Age Population" short_name="Nat Amer VAP" displayed="true" sortkey="3" percentage_denominator="vap" />
+        <Subject id="vap_na" field="VAP_NA" name="Native American Voting Age Population" short_name="Nat Amer VAP" displayed="true" sortkey="4" percentage_denominator="vap" />
         %(start_elec)s
-        <Subject id="vote_dem" field="VOTE_DEM" name="num likely Democratic voters" short_name="Democratic voters" displayed="true" sortkey="4" percentage_denominator="vote_tot" />
+        <Subject id="vote_dem" field="VOTE_DEM" name="num likely Democratic voters" short_name="Democratic voters" displayed="true" sortkey="3" percentage_denominator="vote_tot" />
         <Subject id="vote_rep" field="VOTE_REP" name="num likely Republican voters" short_name="Republican voters" displayed="true" sortkey="5" percentage_denominator="vote_tot" />
         <Subject id="vote_tot" field="VOTE_TOT" name="num likely Rep/Dem voters" short_name="Rep+ Dem vote" displayed="false" sortkey="6" />
         <Subject id="vote_dem_norm" field="VOTE_DEM_N" name="num of likely Democratic voters normalized to 50/50 state baseline" short_name="Normal Dem vote" displayed="true" sortkey="18" percentage_denominator="vote_tot_norm" />
@@ -592,7 +592,7 @@ class Config_Template(DictionaryTemplate):
             </ScoreFunction>
             <ScoreFunction id="district_vote_rep" type="district"
                 calculator="publicmapping.redistricting.calculators.Sum"
-                label="Estimated Democratic votes" user_selectable="true">
+                label="Estimated votes" user_selectable="true">
                 <SubjectArgument name="value1" ref="vote_rep" />
             </ScoreFunction>
             <ScoreFunction id="district_vote_dem_percent" type="district"
@@ -1028,13 +1028,6 @@ class Config_Template(DictionaryTemplate):
                 description="The competition is using the &apos;Schwartzberg&apos; compactness measure. This measure is a ratio of the perimeter of the district to the circumference of the circle whose area is equal to the area of the district." >
             </ScoreFunction>
 
-                %(start_elec)s
-            <ScoreFunction id="partisan_index" type="district"
-                calculator="publicmapping.redistricting.calculators.Sum"
-                user_selectable="true" label="Partisan Index">
-                <SubjectArgument name="value1" ref="vote_dem" />
-            </ScoreFunction>
-                %(end_elec)s
         </ScoreFunctions>
         
         <ScorePanels>
@@ -1138,7 +1131,7 @@ class Config_Template(DictionaryTemplate):
                 title="Demographics" cssclass="district_demographics congressional" 
                 template="demographics.html">
                 %(start_elec)s
-                <Score ref="partisan_index" />
+                <Score ref="district_vote_dem_percent" />
                 %(end_elec)s
                 <Score ref="district_blkvap_percent" />
                 <Score ref="district_hispvap_percent" />
@@ -1148,7 +1141,7 @@ class Config_Template(DictionaryTemplate):
                 title="Demographics" cssclass="district_demographics house" 
                 template="demographics.html">
                 %(start_elec)s
-                <Score ref="partisan_index" />
+                <Score ref="district_vote_dem_percent" />
                 %(end_elec)s
                 <Score ref="district_blkvap_percent" />
                 <Score ref="district_hispvap_percent" />
@@ -1158,7 +1151,7 @@ class Config_Template(DictionaryTemplate):
                 title="Demographics" cssclass="district_demographics senate" 
                 template="demographics.html">
                 %(start_elec)s
-                <Score ref="partisan_index" />
+                <Score ref="district_vote_dem_percent" />
                 %(end_elec)s
                 <Score ref="district_blkvap_percent" />
                 <Score ref="district_hispvap_percent" />
