@@ -40,10 +40,9 @@
         SSLCertificateKeyFile /etc/ssl/certs/publicmapping.key
         CustomLog ssl_request_log "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \"%r\" %b"
 
-        # Directives from ubuntu's default-ssl site to make IE connections work
-        BrowserMatch "MSIE [2-6]" nokeepalive ssl-unclean-shutdown downgrade-1.0 force-response-1.0
-        BrowserMatch "MSIE [17-9]" ssl-unclean-shutdown
-
+        # Fix IE SSL problems
+        BrowserMatch ".*MSIE.*" nokeepalive ssl-unclean-shutdown downgrade-1.0 force-response-1.0
+        
         ServerAdmin AzaveaDev@azavea.com
         WSGIDaemonProcess geodjango user=www-data group=www-data processes=10 threads=1 display-name=publicmapping
         WSGIProcessGroup geodjango
