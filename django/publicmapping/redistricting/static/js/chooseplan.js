@@ -250,6 +250,14 @@ chooseplan = function(options) {
         return "<img height='16' width='16' src='/static-media/images/icon-" + ((shared) ? "" : "un") + "shared.png' />";
     };     
 
+    // Formatter used for deleting plans
+    var deleteFormatter = function (a, b, obj) {
+        var id = "delete-" + obj.pk;
+        return "<img id='" + id  +
+               "' class='delclick' height='16' width='16' src='/static-media/images/icon-trash.png' alt='" +
+               obj.fields.name + "' />";
+    }    
+
     /**
      * Set up the jqGrid table and make the initial call to the server for data
      */
@@ -272,8 +280,9 @@ chooseplan = function(options) {
                 {name:'fields.name', label:'Name', search: true, sortable:true},
                 {name:'fields.owner', label:'Author', search:true, width: '110', fixed: true, sortable:true},
                 {name:'fields.description', label:'Description', hidden:true, search:true},
-    {name:'fields.is_shared', label:'Shared', sortable:true, search:false, width:'70', fixed: true, align: 'center', formatter: sharedImageFormatter},
+                {name:'fields.is_shared', label:'Shared', sortable:true, search:false, width:'60', fixed: true, align: 'center', formatter: sharedImageFormatter},
                 {name:'fields.edited', label:'Last Edited', sortable:true, search:false, width:'130', fixed: true, align: 'center', formatter:'date', formatoptions: { srcformat: 'UniversalSortableDateTime', newformat:'m/d/Y g:i A'}},
+                {name:'fields.delete', label:'Delete', formatter: deleteFormatter, width:'60', fixed: true, align:'center'},
                 {name:'fields.can_edit', label:'Edit', search:false, hidden: true},
                 {name:'fields.districtCount', label:'# Districts', search:false, sortable:true, hidden:true}
             ],
@@ -294,6 +303,56 @@ chooseplan = function(options) {
                     xhr.setRequestHeader("X-CSRFToken",
                                          $("#csrfmiddlewaretoken").val());
                 }
+            },
+            gridComplete: function() {
+                // Add functionality to the delete plan buttons
+                $('.delclick').click(function(obj) {
+                    var id = obj.target.id.substring('delete-'.length);
+                    var name = obj.target.alt;
+                    
+                    $('<div>Really delete plan: "' + name + '"?</div>').dialog({
+                        modal: true,
+                        autoOpen: true,
+                        title: 'Delete Plan',
+                        buttons: { 
+                            'Yes': function() {
+                                $(this).dialog('close');
+                                var waitDialog = $('<div>Please wait while deleting plan.</div>').dialog({
+                                    modal: true, autoOpen: true, title: 'Deleting Plan',
+                                    escapeOnClose: false, resizable:false,
+                                    open: function() { $(".ui-dialog-titlebar-close", $(this).parent()).hide(); }
+                                });
+
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '/districtmapping/plan/' + id + '/delete/',
+                                    success: function(data) {
+                                        waitDialog.remove();
+                                        if (data.success) {
+                                            _table.jqGrid().trigger('reloadGrid', [{ page:1 }]);
+                                        } else if ('redirect' in data) {
+                                            window.location.href = data.redirect;
+                                        } else if ('message' in data) {
+                                            $('<div title="Error Deleting Plan"><p>' + data.message + '</p></div>')
+                                                .dialog({modal:true, resizable:false});
+                                        }
+                                    },
+                                    error: function(xhr, textStatus, message) {
+                                        waitDialog.remove();
+                                        if (xhr.status == 403) {
+                                            window.location.href = '/?msg=logoff';
+                                        } else {
+                                            $('<div title="Error Deleting Plan"><p>Please try again later.</p></div>')
+                                                .dialog({modal:true, resizable:false});
+                                        }
+                                }})
+                            },
+                            'No': function() {
+                                $(this).dialog('close');
+                            }
+                        }
+                    });
+                });
             }
         }).jqGrid(
             'navGrid',
@@ -446,8 +505,10 @@ chooseplan = function(options) {
 
         if (sharedCol) {
             _options.table.jqGrid('showCol', 'fields.is_shared');
+            _options.table.jqGrid('showCol', 'fields.delete');
         } else {
             _options.table.jqGrid('hideCol', 'fields.is_shared');
+            _options.table.jqGrid('hideCol', 'fields.delete');
         }
         if (ownerCol) {
             _options.table.jqGrid('showCol', 'fields.owner');

@@ -1808,6 +1808,35 @@ def editplanattributes(request, planid):
         status['message'] = "Cannot edit a plan you don\'t own."
     return HttpResponse(json.dumps(status), mimetype='application/json')
 
+@login_required
+@unique_session_or_json_redirect
+def deleteplan(request, planid):
+    """
+    Delete a plan
+    """
+    note_session_activity(request)
+
+    status = { 'success': False }
+    if request.method != 'POST':
+        return HttpResponseNotAllowed(['POST'])
+
+    if not planid:
+        return HttpResponseBadRequest('Must declare planId')
+
+    plan = Plan.objects.filter(pk=planid,owner=request.user)
+    if plan.count() == 1:
+        plan = plan[0]
+        try:
+            plan.delete()
+            status['success'] = True
+            status['message'] = 'Deleted plan'
+        except Exception as ex:
+            status['message'] = 'Failed to delete plan'
+            status['exception'] = ex
+    else:
+        status['message'] = "Cannot delete a plan you don\'t own."
+    return HttpResponse(json.dumps(status), mimetype='application/json')
+
 def get_health(request):
     try:
         result = 'Health retrieved at %s\n' % datetime.now()
