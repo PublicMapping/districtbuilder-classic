@@ -1859,6 +1859,9 @@ class SplitCounter(CalculatorBase):
     is set to 1 (true), the inverse calculation will take place:
     the bottom layer will be treated as the top layer and vice versa.
     
+    This calculator also accepts an optional "only_total" value. If this
+    is set to 1 (true), only the total number of splits will be returned.
+    
     A "version" argument may be supplied to compare a given version of
     the plan in the keyword args to the plan/geolevel given in the 
     boundary_id.
@@ -1872,8 +1875,10 @@ class SplitCounter(CalculatorBase):
         @keyword version: Optional. The version of the plan, defaults to 
             the most recent version.
         @keyword boundary_id: The layer type and ID to compare for splits.
-        @keyword inverse: A flag to indicato if the splits should be 
+        @keyword inverse: A flag to indicate if the splits should be 
             compared forward or backward.
+        @keyword only_total: A flag to indicate if only the total number
+            of splits should be returned.
         """
         if not 'plan' in kwargs:
             return
@@ -1891,7 +1896,14 @@ class SplitCounter(CalculatorBase):
         # Check if we should invert the order or the layers
         inverse = self.get_value('inverse') == 1
 
-        self.result = { 'value': plan.compute_splits(target, version=version, inverse=inverse) }
+        # Check if we only need to return the total in the html
+        only_total = (self.get_value('only_total') == 1)
+        splits = plan.compute_splits(target, version=version, inverse=inverse)
+        
+        self.result = {
+            'value': len(splits['splits']) if only_total else splits,
+            'only_total': only_total
+        }
 
     def html(self):
         """
@@ -1904,8 +1916,12 @@ class SplitCounter(CalculatorBase):
         render = '<div class="split_report">'
         if not self.result is None and 'value' in self.result:
             r = self.result['value']
+
+            # If 'only_total' is set, only return the total number of splits
+            if self.result['only_total']:
+                return '<span>%d</span>' % r
+        
             total_split_districts = len(set(i[0] for i in r['splits']))
-            
 
             if r['is_geolevel']:
                 template = '<div>Total %s which split a %s: %d</div>'
@@ -1916,6 +1932,7 @@ class SplitCounter(CalculatorBase):
             render += '<div>Total number of splits: %d</div>' % len(r['splits'])
 
             render += '<div class="table_container"><table class="report"><thead><tr><th>%s</th><th>%s</th></tr></thead><tbody>' % (r['plan_name'].capitalize(), r['other_name'].capitalize() if r['is_geolevel'] else r['other_name'].capitalize())
+
             for s in r['named_splits']:
                 render += '<tr><td>%s</td><td>%s</td></tr>' % (s[0], s[1])
 
