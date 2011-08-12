@@ -1617,7 +1617,7 @@ def getleaderboardcsv(request):
             for panel in panels:
                 function = panel.score_functions.all()[0]
                 score = ComputedPlanScore.compute(function, plan)
-                row.append(score[0] if isinstance(score, (list, tuple)) else score)
+                row.append(score['value'])
                 
             # write the row
             writer.writerow(row)
