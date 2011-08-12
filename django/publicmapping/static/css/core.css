@@ -659,8 +659,9 @@ div#form_container {
   border-radius:   4px;
   }
 
-div#chooserFileDownloadTarget {
-  float:right;
+.chooserDetailButton {
+  float:left;
+  margin-right:4px;
 }
 div#chooserFileDownloadTarget .loading {
     background: url('/static-media/images/chooser-loading.gif') no-repeat left center;
@@ -697,7 +698,11 @@ div#form_action{
 
 }
 
-
+#lblStartDrawing {
+  font-size: 14px;
+  color: #3e3e3e;
+  font-weight:bold;
+}
 
 div#form_action input#txtNewName {
 width: 100%;
@@ -736,8 +741,7 @@ div#form_container input#districtCount
   background:none repeat scroll 0 0 transparent;
   border:medium none;
   color:#888888;
-  margin-left:5px;
-  width:auto;
+  width:140px;
 }
 
 div#form_column textarea {

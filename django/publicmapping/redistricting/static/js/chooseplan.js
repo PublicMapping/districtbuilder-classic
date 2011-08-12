@@ -277,7 +277,7 @@ chooseplan = function(options) {
                 id: 'pk'
             },
             colModel: [
-                {name:'fields.name', label:'Name', search: true, sortable:true},
+                {name:'fields.name', label:'Plan Name', search: true, sortable:true},
                 {name:'fields.owner', label:'Author', search:true, width: '110', fixed: true, sortable:true},
                 {name:'fields.description', label:'Description', hidden:true, search:true},
                 {name:'fields.is_shared', label:'Shared', sortable:true, search:false, width:'60', fixed: true, align: 'center', formatter: sharedImageFormatter},
@@ -582,7 +582,7 @@ chooseplan = function(options) {
             _eventType = 'mine';
             _nameRequired = false;
             _table.jqGrid().trigger('reloadGrid', [{ page:1 }]);
-            $('input:radio[name=Edit]').filter('[value=edit]').attr('checked', true);
+            $('input:radio[name=Edit]').filter('[value=edit]').prop('checked', true);
             showItems(false, true, true, true, false);
             setActiveTab($(this));            
             $('#start_mapping .ui-button-text').html(startText);

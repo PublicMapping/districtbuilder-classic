@@ -297,41 +297,54 @@
           </div>      
           
             <div id="form_column">
-
-                <div id="form_container">
-                  <form id="plan_form">
-                  <div id="chooserFileDownloadTarget"></div>
-                    <h3>Plan Details</h3>
-                      <label id="name_label" for="name">Name</label><input disabled type="text" id="name" name="fields.name" />
-                      <label id="description_label" for="description">Description</label><textarea disabled type="text" id="description" name="fields.description" rows="5" ></textarea><br/>
-                    <div id="edit_container">
-                    <button id="edit_plan_attr">Edit Details</button>
-                    <button id="save_plan_attr">Save</button>
-                    <button id="cancel_edit_plan_attr">Cancel</button>
-                    </div>
-                      <label id="owner_label" for="owner">Owner:</label><input disabled type="text" id="owner" name="fields.owner" /><br/>
-                      <label id="edited_label" for="edited">Edited:</label><input disabled type="text" id="edited" name="fields.edited" /><br/>
-                      <label id="is_shared_label" for="is_shared">Shared:</label><input disabled type="text" id="is_shared" name="fields.is_shared" /><br/>
-                      <label id="districtCount_label" for="districtCount"># of Districts:</label><input disabled type="text" id="districtCount" name="fields.districtCount" />
-
-                  </form>
-
-                </div>
                 <div id="form_action">
+                    <div>
+                      {% ifnotequal bodies|length 1 %}
+                        <label id="lblStartDrawing">4. Name Plan and Start Drawing:</label>
+                      {% else %}
+                        <label id="lblStartDrawing">3. Name Plan and Start Drawing:</label>
+                      {% endifnotequal %}
+                    </div>
                   <div id='radCopyOrEdit'>
                       <input type="radio" name="Edit" value="edit" checked>Edit Selected Plan</input><br/>
                       <input type="radio" name="Edit" value="saveas">Copy and Save Selected Plan</input>
                   </div>
                   <div id="newName">
-                    {% ifnotequal bodies|length 1 %}
-                      <label for="txtNewName" id="lblNewName">4. Name your new plan:</label>
-                    {% else %}
-                      <label for="txtNewName" id="lblNewName">3. Name your new plan:</label>
-                    {% endifnotequal %}
                       <input type="text" id="txtNewName" name="txtNewName"/>
                   </div>
                   <button id="start_mapping">Start Drawing</button> 
-                </div>              
+                </div>
+
+                <div id="form_container">
+                  <form id="plan_form">
+                    <h3>Plan Details</h3>
+                      <label id="owner_label" for="owner">User Name:</label>
+                      <input disabled type="text" id="owner" name="fields.owner" /><br/>
+                      
+                      <label id="name_label" for="name">Plan Name:</label>
+                      <input disabled type="text" id="name" name="fields.name" />
+                      
+                      <label id="description_label" for="description">Description:</label>
+                      <textarea disabled type="text" id="description" name="fields.description" rows="5" ></textarea><br/>
+
+                      <label id="districtCount_label" for="districtCount"># of Districts:</label>
+                      <input disabled type="text" id="districtCount" name="fields.districtCount" /><br/>
+
+                      <label id="is_shared_label" for="is_shared">Shared:</label>
+                      <input disabled type="text" id="is_shared" name="fields.is_shared" /><br/>
+
+                      <label id="edited_label" for="edited">Last Modified:</label>
+                      <input disabled type="text" id="edited" name="fields.edited" />
+
+                      <div id="edit_container">
+                        <div id="chooserFileDownloadTarget" class="chooserDetailButton"></div>
+                        <button id="edit_plan_attr" class="chooserDetailButton">Edit Details</button>
+                        <button id="save_plan_attr" class="chooserDetailButton">Save</button>
+                        <button id="cancel_edit_plan_attr" class="chooserDetailButton">Cancel</button>
+                        <br />
+                      </div>
+                  </form>
+                </div>
              </div>
         <div class="clear"></div>
       </div>
