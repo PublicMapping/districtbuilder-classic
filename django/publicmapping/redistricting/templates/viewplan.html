@@ -748,8 +748,7 @@
 
           {% endcomment %}
           <label>
-            {{ plan.legislative_body.name|capfirst }}
-            {% if not plan.is_community %}Plan{% endif %}
+            {% if plan.is_community %}Community Map{% else %}Plan{% endif %}
             Name:
           </label> {{ plan.name|truncate:"40" }}
           {% else %}
@@ -763,6 +762,7 @@
           {% endif %}
       </div>
      </div>
+     {% if plan.name %}
      <div class="toolset_group"> 
        <div>
           {% comment %}
@@ -775,6 +775,7 @@
          </label>
        </div>
      </div>
+     {% endif %}
      {% if plan and is_editable %}
      {% comment %}
 
