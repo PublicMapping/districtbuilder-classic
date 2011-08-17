@@ -95,7 +95,7 @@
                                                             <xs:complexType>
                                                                 <xs:sequence></xs:sequence>
                                                                 <xs:attribute name="name" type="xs:string" />
-                                                                <xs:attribute name="value" type="xs:float" />
+                                                                <xs:attribute name="value" type="xs:string" />
                                                             </xs:complexType>
                                                         </xs:element>
                                                         <xs:element name="SubjectArgument" type="NamedRefType">
@@ -402,6 +402,7 @@
                                     <xs:attribute name="username" type="xs:string" use="required" />
                                     <xs:attribute name="password" type="xs:string" use="required" />
                                     <xs:attribute name="use_tls" type="xs:boolean" use="optional" />
+                                    <xs:attribute name="submission_email" type="xs:string" use="optional" />
                                 </xs:complexType>
                             </xs:element>
                             <xs:element name="GoogleAnalytics" minOccurs="0" maxOccurs="1" nillable="true">

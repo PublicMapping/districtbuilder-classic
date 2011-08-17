@@ -210,3 +210,4 @@ tr.split_totals td, tr.separator_row td { background-color: #f0f0f0; font-weight
 #more_info_text { width:100%; }
 #email_plan_submit_column { text-align: right; padding-top: 10px; }
 #email_plan_required_note { font-size: 0.85em; text-align: left; }
+#email_plan_dialog .error { border: 1px solid #ff0000; }

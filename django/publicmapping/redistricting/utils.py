@@ -444,7 +444,7 @@ class DistrictIndexFile():
         email = EmailMessage()
         email.subject = 'Competition submission (user: %s, planid: %d)' % (user.username, plan.pk)
         email.body = template.render(context)
-        email.from_email = "%s@%s" % (settings.EMAIL_HOST_USER or 'webmaster', settings.EMAIL_HOST)
+        email.from_email = settings.EMAIL_HOST_USER
         email.to = [settings.EMAIL_SUBMISSION]
         email.attach_file(archive.name)
         email.send()
