@@ -1276,7 +1276,7 @@ function mapinit(srs,maxExtent) {
         };
 
         polyControl.handler.style = polySelectStyle;
-    }, 100);
+    }, 1000);
 
     // Create a tooltip inside of the map div
     var tipdiv = createMapTipDiv();
