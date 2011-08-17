@@ -763,6 +763,18 @@
           {% endif %}
       </div>
      </div>
+     <div class="toolset_group"> 
+       <div>
+          {% comment %}
+          
+          This label shows which layer is visible at the current zoom level.
+          
+          {% endcomment %}
+         <label>
+           Currently Viewing:&nbsp;<span id="currently_viewing"></span>
+         </label>
+       </div>
+     </div>
      {% if plan and is_editable %}
      {% comment %}
 

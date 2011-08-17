@@ -2536,6 +2536,7 @@ function mapinit(srs,maxExtent) {
         setThematicLayer(layers[0]);
         doMapStyling();
         $('#layer_type').text(snap.display);
+        $('#currently_viewing').text(snap.display);
         getMapStyles(getSnapLayer().layer.split('simple_')[1],getShowBy());
 
         if (olmap.center !== null) {
