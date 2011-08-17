@@ -29,7 +29,7 @@ from celery.task.http import HttpDispatchTask
 from django.core import management
 from django.contrib.comments.models import Comment
 from django.contrib.sessions.models import Session
-from django.core.mail import send_mail, mail_admins
+from django.core.mail import send_mail, mail_admins, EmailMessage
 from django.template import loader, Context as DjangoContext
 from django.db.models import Sum, Min, Max
 from redistricting.models import *
@@ -431,6 +431,30 @@ class DistrictIndexFile():
             index_file = open('%s/plan%dv%d.zip' % (tempfile.gettempdir(), plan.id, plan.version), 'r')
             index_file.close()
             return index_file
+
+    @staticmethod
+    @task
+    def emailfile(plan, user, post):
+        # Create the file (or grab it if it already exists)
+        archive = DistrictIndexFile.plan2index(plan)
+
+        # Add it as an attachment and send the email
+        template = loader.get_template('submission.email')
+        context = DjangoContext({ 'user': user, 'plan': plan, 'post': post })
+        email = EmailMessage()
+        email.subject = 'Competition submission (user: %s, planid: %d)' % (user.username, plan.pk)
+        email.body = template.render(context)
+        email.from_email = "%s@%s" % (settings.EMAIL_HOST_USER or 'webmaster', settings.EMAIL_HOST)
+        email.to = [settings.EMAIL_SUBMISSION]
+        email.attach_file(archive.name)
+        email.send()
+
+        # Send a confirmation email to the user
+        subject = "Plan submitted successfully"
+        user_email = post['email']
+        template = loader.get_template('submitted.email')
+        context = DjangoContext({ 'user': user, 'plan': plan })
+        send_mail(subject, template.render(context), settings.EMAIL_HOST_USER, [user_email], fail_silently=False)
 
 @task
 def cleanup():

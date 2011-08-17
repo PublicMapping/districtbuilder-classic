@@ -141,8 +141,19 @@
                     <input id="txtPlanName" />
                     <button id="btnSaveAndShare">Save and Share</button>
                 </div>
-
             </div>
+
+            {% if allow_email_submissions and not plan.is_community %}
+            <div id="emailplan">
+                <div>
+                    <h3>Submit Final Plan to Contest</h3>
+                    <p>You can submit your completed plan to be considered for the 
+                       contest by filling out this form.</p>
+                    <button id="btnEmailPlan">Submit Final Plan</button>
+                </div>
+            </div>
+            {% endif %}
+
             <div id="successfulShare" title="Congratulations!" >
                 <p>You have successfully shared your {{ plan_text }}. You can share your {{ plan_text }} with others by giving them this link:</p>
                 <p id="sharedPermalink"><p>
@@ -161,7 +172,7 @@
                 <p>
                 How to verify and submit your plan:
                 <ol>
-                  <li>Click the "Verify and Submit" button.</li>
+                  <li>Click the "Verify and Submit to Leaderboards" button.</li>
                   <li>Wait for the plan to be verified. </li>
                   <li>If it is verified, you will be taken to the Leaderboard page. </li>
                   <li>Check the leaderboards to see if your plan ranks in the top ten for any of the four available score types. </li>
@@ -169,7 +180,7 @@
                 </ol>
                 </p>
             </div>
-            <button id="btnVerifyAndSubmit">Verify and Submit Plan</button>            
+            <button id="btnVerifyAndSubmit">Verify and Post Plan to Leaderboards</button>            
         </div>
         {% endif %}
     {% endblock %}
@@ -294,6 +305,78 @@
                 getVersionFn: function() {
                     return $('#history_cursor').val();
                 }
+            }).init();
+        });
+    </script>
+    {% endif %}
+    {% endblock %}
+
+    {% block email_plan %}
+    {% if allow_email_submissions and not plan.is_community %}
+    <div id="email_plan_dialog">
+        <table id="emailTable">
+            <tr>
+                <td class="fname">First Name *</td>
+                <td><input name="first name" class="field required" maxlength="30" value="{{ userinfo.firstname }}" /></td>
+            </tr>
+            <tr>
+                <td class="fname">Last Name *</td>
+                <td><input name="last name" class="field required" maxlength="30" value="{{ userinfo.lastname }}" /></td>
+            </tr>
+            <tr>
+                <td class="fname">Full Names of Team Members (if applicable)</td>
+                <td><input name="team members" class="field" maxlength="120" /></td>
+            </tr>
+            <tr>
+                <td class="fname">Team Name (if applicable)</td>
+                <td><input name="team name" class="field" maxlength="120" /></td>
+            </tr>
+            <tr>
+                <td class="fname">Email Address *</td>
+                <td><input name="email" class="field required" maxlength="75" value="{{ userinfo.email }}" /><br/>
+            </tr>
+            <tr>
+                <td class="fname">Street Address *</td>
+                <td><input name="street address" class="field required" maxlength="120" /></td>
+            </tr>
+            <tr>
+                <td class="fname">Phone Number *</td>
+                <td><input name="phone number" class="field required" maxlength="20" /></td>
+            </tr>
+            <tr>
+                <td colspan="2" id="values_text_column">
+                    Values &ndash; tell us what values, considerations and trade-offs you made in your plan:
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <textarea id="more_info_text" name="description" rows="6" type="text" class="field required"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" id="disclaimer_text_column">
+                    By submitting a plan for consideration, you are agreeing to have the plan
+                    published in local news media outlets and presented to City Council. Unless
+                    you request otherwise, the project partners will attempt to include attribution
+                    (your name or team name) for the plan whenever feasible.
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" id="email_plan_submit_column">
+                    <button id="email_plan_submit_button">Submit Final Plan</button>
+                </td>
+            </tr>
+        </table>
+        <div id="email_plan_required_note"> * Indicates required field </div>        
+    </div>
+    <script type="text/javascript" src="/static-media/js/emailplan.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            emailplan({
+                container: $('#email_plan_dialog'),
+                target: $('#btnEmailPlan'),
+                submitButton: $('#email_plan_submit_button'),
+                handlerUrl: '/districtmapping/plan/{{ plan.id }}/districtindexfilesend/'        
             }).init();
         });
     </script>

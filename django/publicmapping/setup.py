@@ -328,6 +328,9 @@ def merge_config(config, verbose):
         use_tls = cfg.get('use_tls')
         if use_tls:
             settings_out.write("EMAIL_USE_TLS = %s\n" % ((use_tls == 'true'),))
+        submission_email = cfg.get('submission_email')
+        if submission_email:
+            settings_out.write("EMAIL_SUBMISSION = '%s'\n" % submission_email)
 
         settings_out.write("\nSECRET_KEY = '%s'\n" % "".join([random.choice("abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)") for i in range(50)]))
 

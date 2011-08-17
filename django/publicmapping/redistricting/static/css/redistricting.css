@@ -194,3 +194,19 @@ button#splits_report_ok_button {
 tr.separator_row { height: 15px; }
 tr.split_totals td, tr.separator_row td { background-color: #f0f0f0; font-weight:bold;}
 
+/* submit final plan to contest */
+#emailplan {
+   background: url("/static-media/images/divider-horz.png") repeat-x scroll 0 100% transparent;
+   padding-bottom: 15px;
+}
+#email_plan_dialog {
+  display:none;
+  font-size: 14px;
+  color: #6a6a6a;
+  font-weight: bold;
+}
+#values_text_column { font-weight: bold; }
+#disclaimer_text_column { font-size: 0.85em; background-color: #eee; }
+#more_info_text { width:100%; }
+#email_plan_submit_column { text-align: right; padding-top: 10px; }
+#email_plan_required_note { font-size: 0.85em; text-align: left; }

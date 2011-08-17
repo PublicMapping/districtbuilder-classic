@@ -466,6 +466,14 @@
           {% endcomment %}
           {% endblock %}
 
+          {% block email_plan %}
+          {% comment %}
+
+          Include the markup for the email plan dialog
+
+          {% endcomment %}
+          {% endblock %}
+
             <div id="splits_report_dialog">
                 <div id="splits_report_content">
                     <div id="splits_report_select_panel">
@@ -706,7 +714,7 @@
               </div>
               {% endblock %}
               <div class="blockfile">
-                  <h3>District Index File export</h3>
+                  <h3>District Index File Export</h3>
                   <p>You can export this {{ plan_text }} to a {{ body_member|lower }} 
                   index file. The index file is a comma-separated-value file
                   (csv) with each line listing a geounit (such as a census 

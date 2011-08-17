@@ -1,0 +1,18 @@
+{% comment %}
+This template is used to let a user know when his or her plan
+has been submitted via email for a competition.
+
+Context:
+    user: A django user model representing the user who attempted to create a plan
+    plan: The plan that has been submitted
+
+{% endcomment %}
+{% autoescape off %}
+user name: {{ user.username }}
+plan id:  {{ plan.pk }}
+plan version: {{ plan.version }}
+plan name: {{ plan.name }}
+legislative body: {{ plan.legislative_body.name }}
+{% for key,value in post.items %}{{ key }}: {{ value }}
+{% endfor %}
+{% endautoescape %}

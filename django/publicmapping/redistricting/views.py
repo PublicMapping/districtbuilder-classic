@@ -455,6 +455,7 @@ def commonplan(request, planid):
         'reporting_template': reporting_template,
         'study_area_extent': study_area_extent,
         'has_leaderboard' : len(ScoreDisplay.objects.filter(is_page=True)) > 0,
+        'allow_email_submissions': ('EMAIL_SUBMISSION' in settings.__members__),
         'tags': tags,
         'plan_text': "community map" if (plan and plan.is_community()) else "plan"
     }
@@ -1537,6 +1538,25 @@ def getdistrictindexfile(request, planid):
         DistrictIndexFile.plan2index.delay(plan)
         response = HttpResponse('File is not yet ready. Please try again in a few minutes')
     return response
+
+@unique_session_or_json_redirect
+def emaildistrictindexfile(request, planid):
+    """
+    Given a plan id, email a zipped copy of the district 
+    index file to a specified address
+    """
+    note_session_activity(request)
+
+    if request.method != 'POST':
+        return HttpResponseForbidden()
+    
+    plan = Plan.objects.get(pk=planid)
+    if not can_copy(request.user, plan):
+        return HttpResponseForbidden()
+    
+    # Put in a celery task to create the file and send the emails
+    DistrictIndexFile.emailfile.delay(plan, request.user, request.POST)
+    return HttpResponse(json.dumps({ 'success': True, 'message': 'Task submitted' }), mimetype='application/json')
 
 def getvalidplans(leg_body, owner=None):
     """
