@@ -145,9 +145,9 @@ class PlanAdmin(admin.ModelAdmin):
 
     # When displayed as a list, show the name, is_template, is_shared,
     # owner, created, edited flags.
-    list_display = ('name','is_template','is_shared','owner','created','edited',)
+    list_display = ('name','is_template','is_shared','owner','created','edited','is_valid')
 
-    list_filter = ('is_template','is_shared','is_valid','legislative_body','owner')
+    list_filter = ('is_template','is_shared','is_valid','legislative_body','owner','is_valid')
 
     # Order Plans by name by default.
     ordering = ('name',)
