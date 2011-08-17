@@ -130,19 +130,6 @@
       {% endblock %}
       
         {% block share_panel %}
-            <div class="explanation">
-                <h3>Explanation of Shared Documents</h3>
-                <p>You can share your {{ plan_text }} with other users here.  Your {{ plan_text }} will be available for other users so that they can view reports about your {{ plan_text }} or create a {{ plan_text }} of their own using yours as a base.</p>
-                <p>Give your {{ plan_text }} a unique name in order to share it. A copy of your current {{ plan_text }} will be added to the "Shared" section of the plan chooser.</p>
-            </div>
-            <div id="nameandshare">
-                <div>
-                    <h3>Name your shared {{ plan_text }}</h3>
-                    <input id="txtPlanName" />
-                    <button id="btnSaveAndShare">Save and Share</button>
-                </div>
-            </div>
-
             {% if allow_email_submissions and not plan.is_community %}
             <div id="emailplan">
                 <div>
@@ -153,6 +140,16 @@
                 </div>
             </div>
             {% endif %}
+
+            <div class="explanation">
+                <h3>Share Plan With All Users</h3>
+                <p>By sharing a copy of your {{ plan_text }} below, you are making your {{ plan_text }} available to all other users in the system. Give your {{ plan_text }} a unique name in order to share it. A copy of your current {{ plan_text }} will be added to the "Shared" section of the plan chooser.</p>
+                <div>
+                    <h3>Name your shared {{ plan_text }}</h3>
+                    <input id="txtPlanName" />
+                    <button id="btnSaveAndShare">Save and Share</button>
+                </div>
+            </div>
 
             <div id="successfulShare" title="Congratulations!" >
                 <p>You have successfully shared your {{ plan_text }}. You can share your {{ plan_text }} with others by giving them this link:</p>
@@ -166,17 +163,15 @@
         {% if has_leaderboard and not plan.is_community %}
         <div id="verifyandpost">
             <div class="explanation">
-               <h3>Verify and Post Plan to Leaderboards</h3>
-                <p>To be considered for submission to the leaderboard, a plan must first be submitted for verification that it meets the competition criteria for a legal district plan. Keep in mind that as soon as you edit a verified plan, it will automatically become "unverified" and you will need to re-verify it in order for it to again be considered for the leaderboards.</p>
-                <p>By verifying your plan, you are <em><strong>not</strong></em> sharing your plan with other users. If your plan qualifies for the top ten plans list for any of the four score types and you have not yet shared your plan with the public, your <strong>plan name</strong> and <strong>user name</strong> will simply be listed in the leaderboard table. If you HAVE shared your plan with the public, your plan name will be hyperlinked with the plan's unique URL.</p>
+               <h3>Verify and Submit Plan to Leaderboards</h3>
+                <p>In order to be considered for placement on the leaderboards your plan must meet the criteria for creating a legal redistricitng plan. Keep in mind that as soon as you edit a verified plan, it will automatically become "unverified" and you will need to re-verify it in order for it to again be considered for the leaderboards.</p>
+                <p>By verifying your plan, you are <em><strong>not</strong></em> sharing your plan with other users. Your plan title and user name will simply show up in the top ten lists (if your plan ranks in the top ten).</p>
                 <p>
                 How to verify and submit your plan:
                 <ol>
                   <li>Click the "Verify and Submit to Leaderboards" button.</li>
-                  <li>Wait for the plan to be verified. </li>
-                  <li>If it is verified, you will be taken to the Leaderboard page. </li>
-                  <li>Check the leaderboards to see if your plan ranks in the top ten for any of the four available score types. </li>
-                  <li>Click on the "My Ranked Plans" to check your plans' ranking as compared to all verified plans.</li>
+                  <li>If verified, you will be taken to the Leaderboard page.</li>
+                  <li>Check the leaderboards to see if your plan ranks in any of the top ten score types.</li>
                 </ol>
                 </p>
             </div>

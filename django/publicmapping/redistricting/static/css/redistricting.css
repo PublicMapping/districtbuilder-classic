@@ -196,8 +196,16 @@ tr.split_totals td, tr.separator_row td { background-color: #f0f0f0; font-weight
 
 /* submit final plan to contest */
 #emailplan {
-   background: url("/static-media/images/divider-horz.png") repeat-x scroll 0 100% transparent;
-   padding-bottom: 15px;
+  padding: 20px;
+  border-radius: 4px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  box-shadow: 0 0 13px -5px #666;
+  -moz-box-shadow: 0 0 13px -5px #666;
+  -webkit-box-shadow: 0 0 13px -5px #666;
+  background: #D9E6ED;
+  border: 1px solid #AAA;
+  margin-bottom: 20px;
 }
 #email_plan_dialog {
   display:none;
@@ -211,3 +219,28 @@ tr.split_totals td, tr.separator_row td { background-color: #f0f0f0; font-weight
 #email_plan_submit_column { text-align: right; padding-top: 10px; }
 #email_plan_required_note { font-size: 0.85em; text-align: left; }
 #email_plan_dialog .error { border: 1px solid #ff0000; }
+
+.ui-dialog #email_plan_dialog tr {
+  height: 40px;
+}
+.ui-dialog #email_plan_dialog input.field {
+  width: 250px;
+  border: 1px solid #DDDDDD;
+  padding: 5px;
+  border-radius: 4px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+}
+.ui-dialog #email_plan_dialog td#disclaimer_text_column {
+  padding: 5px 10px;
+  border-top: 5px solid #FFF;
+}
+.ui-dialog #email_plan_dialog textarea {
+  width: 495px;
+}
+.ui-dialog #email_plan_dialog td.fname {
+  padding-right: 20px;
+  width: 210px;
+  white-space: normal;
+  line-height: 14px;
+}

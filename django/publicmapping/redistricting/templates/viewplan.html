@@ -714,14 +714,13 @@
               </div>
               {% endblock %}
               <div class="blockfile">
-                  <h3>District Index File Export</h3>
-                  <p>You can export this {{ plan_text }} to a {{ body_member|lower }} 
-                  index file. The index file is a comma-separated-value file
-                  (csv) with each line listing a geounit (such as a census 
-                  block) and the {{ body_member|lower }} to which it 
-                  belongs. This file can be imported to other instances of 
-                  the publicmapping software or used in analysis of the {{ plan_text }}
-                  using your favorite GIS software.</p>
+                  <h3>Plan File Export</h3>
+                  <p>The {{ body_member|lower }} index file is a comma-separated-value file (csv).
+				  Each line lists the unique id of the building blocks of each {{ plan_text }} 
+				  (such as ward, census block, etc.) and the district to which it belongs. This 
+				  file can be imported to your account or someone else's account or used in analysis
+				  of the {{ plan_text }} using other GIS software.
+				  </p>
                   <div id='districtIndexFileTarget' />
               </div>
           </div>
