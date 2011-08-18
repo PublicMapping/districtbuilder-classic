@@ -619,6 +619,7 @@ chooseplan = function(options) {
             $('#new_from_blank').hide();
             $('#new_from_file').hide();
             $('#start_mapping').button('option', 'label', 'View Map');
+            $('#lblStartDrawing').hide();
             if ($('#leg_selector option').length > 1) {
                 $('#start_mapping').before($('<div>4. Click the button to view the map as a guest</div>'));
             } else {
