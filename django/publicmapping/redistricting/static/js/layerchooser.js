@@ -47,6 +47,8 @@ layerchooser = function(options) {
             referencePlansPager: {},
             referenceLayerName: {},
             referenceLayerLegend: {}, 
+            referenceLayerLabelsWrapper: {},
+            referenceLayerLabelsCheck: {},
             map: {},
             csrfmiddlewaretoken: {},
             referencePlansUrl: '',
@@ -104,6 +106,15 @@ layerchooser = function(options) {
               _options.referenceLayerLegend.find('#reference_title').text(layerDisplayName);
               _options.referenceLayerLegend.show();
             }
+
+            // See if we need to display the labels checkbox. This should only
+            // be displayed if the reference layer is a plan.
+            _options.referenceLayerLabelsWrapper.toggle(selector.val().startsWith("plan"))
+        });
+
+        // Trigger event when the show reference layer labels checkbox changes
+        _options.referenceLayerLabelsCheck.click(function() {
+            _options.map.trigger('reference_layer_labels_checked', [$(this).is(':checked')]);
         });
 
         // Load Plan

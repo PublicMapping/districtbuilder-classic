@@ -871,6 +871,10 @@ Include the shared_districts markup if we're using the copy/paste tool
                       </option>
                   {% endfor %}
               </select>
+              <div id="reference_labels_check_wrapper">
+                  <input id="reference_labels_check" type="checkbox" checked="checked" />
+                  <label id="reference_labels_label" for="reference_labels_check">Show Labels?</label>
+              </div>
               <div id="choose_layers_button_group" class="indented">
               <h2 class="indented centered">OR...</h2>
               <button id="choose_reference_layer_button" class="lg spacebelow">
@@ -911,6 +915,8 @@ Include the shared_districts markup if we're using the copy/paste tool
                 referenceLayerSelect: $('#reference_layer_select'),
                 referenceLayerName: $('#reference_layer_name'),
                 referenceLayerLegend: $('#reference_legend'),
+                referenceLayerLabelsCheck: $('#reference_labels_check'),
+                referenceLayerLabelsWrapper: $('#reference_labels_check_wrapper'),
                 referencePlansTable: $('#reference_plans_table'),
                 referencePlansPager: $('#reference_plans_pager'),
                 referencePlansUrl: '/districtmapping/getplans/',

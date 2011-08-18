@@ -635,7 +635,15 @@ function mapinit(srs,maxExtent) {
         fill: false,
         strokeColor: referenceColor,
         strokeOpacity: .45,
-        strokeWidth: 4
+        strokeWidth: 4,
+        label: '${label}',
+
+        // Starts off with labels, but can be toggled with a checkbox
+        fontSize: '10pt',
+        fontColor: referenceColor,
+        fontFamily: 'Arial,Helvetica,sans-serif',
+        fontWeight: '800',
+        labelAlign: 'cm'
     };
 
     /**
@@ -994,6 +1002,18 @@ function mapinit(srs,maxExtent) {
     };
     $('#map').bind('reference_layer_changed', referenceLayerChanged);
 
+    // Update reference layer labels when the label check box changes
+    var referenceLayerLabelsChecked = function(evt, isChecked) {
+        if (!currentReferenceLayer) { return; }
+
+        var layers = olmap.getLayersByName(currentReferenceLayer);
+        if (layers.length == 0) { return; }
+
+        layers[0].styleMap.styles['default'].defaultStyle.label = (isChecked ? "${label}" : "");
+        layers[0].redraw();
+    };
+    $('#map').bind('reference_layer_labels_checked', referenceLayerLabelsChecked);
+
     // Create a reference layer with the appropriate styling and
     // strategy
     var createReferenceLayer = function(referenceLayerId) {
@@ -1019,7 +1039,7 @@ function mapinit(srs,maxExtent) {
                         url: '/districtmapping/plan/' + layerId + '/district/versioned/',
                         format: new OpenLayers.Format.GeoJSON()
                     }),
-                    style: referenceStyle,
+                    styleMap: new OpenLayers.StyleMap(new OpenLayers.Style(referenceStyle)),
                     projection: projection,
                     filter: filter
                 }

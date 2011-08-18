@@ -2216,6 +2216,9 @@ select#newdistrictname {
 #choose_layers_content > div {margin-right: 15px; font-size: 12px;}
 #choose_layers_instructions {margin-bottom: 10px;}
 #choose_layers_button_group button {float:left; margin-right: 10px;}
+#reference_labels_check {vertical-align: bottom;}
+#reference_labels_label {font-weight: bold;}
+#reference_labels_check_wrapper {display: none;}
 
 /* district label&comment */
 
