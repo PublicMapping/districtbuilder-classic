@@ -443,7 +443,7 @@ contents of the file and try again.
             return feature_type_obj
 
         # Make a list of layers
-        feature_type_names = ['identify_geounit']
+        feature_type_names = ['identify_geounit','simple_district']
         for geolevel in Geolevel.objects.all():
             feature_type_names.append('simple_%s' % geolevel.name)
 
@@ -466,127 +466,83 @@ contents of the file and try again.
             'Accepts':'application/xml'
         }
 
-        def get_zoom_range( geolevel ):
-            lls = LegislativeLevel.objects.filter(geolevel=geolevel)
-            maxz = 0
-            for ll in lls:
-                if ll.parent:
-                    # min_zoom will get larger for each parent -- find the
-                    # highest value for min_zoom of all parents
-                    maxz = max(maxz,ll.parent.geolevel.min_zoom)
-            if maxz == 0:
-                # if no min_zoom or parents, only run the cache up to
-                # zoom level 12
-                maxz = 12
+        # This helper method is used for each layer
+        def publish_and_assign_style(subject_name, geolevel_name, style_name, style_type):
+            """
+            A method to assist in publishing styles to geoserver 
+            and configuring the layers to have a default style
+            """
 
-            return (geolevel.min_zoom,maxz,)
+            if not style_type:
+                style_type = subject_name
+
+            if not style_name:
+                layer_name = '%s:demo_%s_%s' % (namespace,geolevel_name, subject_name)
+                style_name = layer_name
+            else:
+                layer_name = style_name
+
+            style_obj = { 'style': {
+                'name': layer_name,
+                'filename': '%s.sld' % layer_name
+            } }
+
+            # Get the SLD file
+            sld = self.get_style_contents( namespace, styledir, geolevel_name, style_type, verbose )
+
+            if sld is None:
+                if verbose > 1:
+                    print 'No style file found for %s' % layer_name
+                style_name = 'polygon'
+            else:
+                # Create the style object on the geoserver
+                create_geoserver_object_if_necessary(style_url, 
+                    style_name, style_obj, 'Map Style')
+
+                # Update the style with the sld file contents
+
+                if self.rest_config( 'PUT', \
+                    host, \
+                    '/geoserver/rest/styles/%s' % style_name, \
+                    sld, \
+                    sld_headers, \
+                    "Could not upload style file '%s.sld'" % style_name, \
+                    verbose):
+                    if verbose > 1:
+                        print "Uploaded '%s.sld' file." % style_name
+
+            # Apply the uploaded style to the demographic layers
+            layer = { 'layer' : {
+                'defaultStyle': {
+                    'name': style_name
+                },
+                'enabled': True
+            } }
+
+            
+            if not self.rest_config( 'PUT', \
+                host, \
+                '/geoserver/rest/layers/%s' % layer_name, \
+                json.dumps(layer), \
+                headers, \
+                "Could not assign style to layer '%s'." % layer_name, \
+                verbose):
+                    return False
+
+            if verbose > 1:
+                print "Assigned style '%s' to layer '%s'." % (style_name, layer_name )
+
+        publish_and_assign_style('simple_district', None, '%s:simple_district' % namespace, None)
+            
+
+        # Create the style for the demographic layer
 
         for geolevel in Geolevel.objects.all():
             is_first_subject = True
 
             for subject in Subject.objects.all().order_by('sort_key'):
 
-                # This helper method is used for each layer
-                def publish_and_assign_style(style_name, style_type, zoom_range):
-                    """
-                    A method to assist in publishing styles to geoserver 
-                    and configuring the layers to have a default style
-                    """
-
-                    if not style_type:
-                        style_type = subject.name
-
-                    if not style_name:
-                        layer_name = '%s:demo_%s_%s' % (namespace,geolevel.name, subject.name)
-                        style_name = layer_name
-                    else:
-                        layer_name = style_name
-
-                    style_obj = { 'style': {
-                        'name': layer_name,
-                        'filename': '%s.sld' % layer_name
-                    } }
-
-                    # Get the SLD file
-                    sld = self.get_style_contents( namespace, styledir, geolevel.name, style_type, verbose )
-
-                    if sld is None:
-                        if verbose > 1:
-                            print 'No style file found for %s' % layer_name
-                        style_name = 'polygon'
-                    else:
-                        # Create the style object on the geoserver
-                        create_geoserver_object_if_necessary(style_url, 
-                            style_name, style_obj, 'Map Style')
-
-                        # Update the style with the sld file contents
-
-                        if self.rest_config( 'PUT', \
-                            host, \
-                            '/geoserver/rest/styles/%s' % style_name, \
-                            sld, \
-                            sld_headers, \
-                            "Could not upload style file '%s.sld'" % style_name, \
-                            verbose):
-                            if verbose > 1:
-                                print "Uploaded '%s.sld' file." % style_name
-
-                    # Apply the uploaded style to the demographic layers
-                    layer = { 'layer' : {
-                        'defaultStyle': {
-                            'name': style_name
-                        },
-                        'enabled': True
-                    } }
-
-                    
-                    if not self.rest_config( 'PUT', \
-                        host, \
-                        '/geoserver/rest/layers/%s' % layer_name, \
-                        json.dumps(layer), \
-                        headers, \
-                        "Could not assign style to layer '%s'." % layer_name, \
-                        verbose):
-                            return False
-
-                    if verbose > 1:
-                        print "Assigned style '%s' to layer '%s'." % (style_name, layer_name )
-
-                    #if not self.rest_config( 'PUT', \
-                    #    host, \
-                    #    '/geoserver/gwc/rest/reload', \
-                    #    '{"reload_configuration":1}', \
-                    #    headers, \
-                    #    "Could not reload GWC configuration.", \
-                    #    verbose):
-                    #    return False
-
-                    #gwc = { 'format': 'image/png',
-                    #    'gridSetId': 'EPSG:%d_%s:%s' % (srid,namespace,style_name,),
-                    #    'maxX': '',
-                    #    'maxY': '',
-                    #    'minX': '',
-                    #    'minY': '',
-                    #    'threadCount': '01',
-                    #    'type': 'seed',
-                    #    'zoomStart': '%02d' % zoom_range[0],
-                    #    'zoomEnd': '%02d' % zoom_range[1]
-                    #}
-
-                    #if verbose > 1:
-                    #    print "Attempting to seed layer with: %s" % json.dumps(gwc)
-                    #if not self.rest_config( 'PUT', \
-                    #    host, \
-                    #    '/geoserver/gwc/rest/seed/%s:%s' % (namespace,style_name,), \
-                    #    json.dumps(gwc), \
-                    #    headers,
-                    #    "Could not initialize seeding for layer '%s'." % style_name, \
-                    #    verbose):
-                    #    return False
-                    
-
-                # Create the style for the demographic layer
-                publish_and_assign_style(None, None, get_zoom_range(geolevel))
+                publish_and_assign_style(subject.name, geolevel.name, None, None)
 
                 if is_first_subject:
                     is_first_subject = False
@@ -595,14 +551,14 @@ contents of the file and try again.
                     feature_type_obj = get_feature_type_obj('demo_%s' % geolevel.name)
                     feature_type_obj['featureType']['nativeName'] = 'demo_%s_%s' % (geolevel.name, subject.name)
                     create_geoserver_object_if_necessary(feature_type_url, 'demo_%s' % geolevel.name, feature_type_obj, 'Feature Type')
-                    publish_and_assign_style('%s:demo_%s' % (namespace, geolevel.name,), 'none',get_zoom_range(geolevel))
+                    publish_and_assign_style(subject.name, geolevel.name, '%s:demo_%s' % (namespace, geolevel.name,), 'none')
 
                     # Create boundary layer, based on geographic boundaries
                     feature_name = '%s_boundaries' % geolevel.name
                     feature_type_obj = get_feature_type_obj(feature_name)
                     feature_type_obj['featureType']['nativeName'] = 'demo_%s_%s' % (geolevel.name, subject.name)
                     create_geoserver_object_if_necessary(feature_type_url, feature_name, feature_type_obj, 'Feature Type')
-                    publish_and_assign_style('%s:%s_boundaries' % (namespace,geolevel.name,), 'boundaries', get_zoom_range(geolevel))
+                    publish_and_assign_style(subject.name, geolevel.name, '%s:%s_boundaries' % (namespace,geolevel.name,), 'boundaries')
 
         if verbose > 0:
             print "Geoserver configuration complete."
@@ -611,7 +567,10 @@ contents of the file and try again.
         return True
 
     def get_style_contents(self, namespace, styledir, geolevel, subject, verbose):
-        path = '%s/%s:%s_%s.sld' % (styledir, namespace, geolevel, subject) 
+        if not geolevel:
+            path = '%s/%s:%s.sld' % (styledir, namespace, subject)
+        else:
+            path = '%s/%s:%s_%s.sld' % (styledir, namespace, geolevel, subject) 
         try:
             stylefile = open(path)
             sld = stylefile.read()
@@ -725,6 +684,12 @@ ERROR:
         transaction.commit()
         if verbose > 1:
             print 'Created identify_geounit view ...'
+
+        sql = "CREATE VIEW simple_district AS SELECT redistricting_district.id, redistricting_district.district_id, redistricting_district.plan_id, st_geometryn(redistricting_district.simple,3) as geom FROM redistricting_district;"
+        cursor.execute(sql)
+        transaction.commit()
+        if verbose > 1:
+            print 'Created identify_district view ...'
 
         for geolevel in Geolevel.objects.all():
             sql = "CREATE OR REPLACE VIEW simple_%s AS SELECT id, name, geolevel_id, simple as geom FROM redistricting_geounit WHERE geolevel_id = %d;" % (geolevel.name, geolevel.id,)

@@ -64,4 +64,6 @@ urlpatterns = patterns('publicmapping.redistricting.views',
     (r'^getleaderboard/$', 'getleaderboard'),
     (r'^getleaderboardcsv/$', 'getleaderboardcsv'),
     (r'^health/$', 'get_health'),
+    (r'^feed/plans/$', 'plan_feed'),
+    (r'^feed/shared/$', 'share_feed'),
 )

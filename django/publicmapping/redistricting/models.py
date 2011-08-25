@@ -2055,6 +2055,18 @@ CROSS JOIN (
         type_counts = community.count_community_types(version = version) if include_counts else None
         return {'type_splits': type_splits, 'type_counts': type_counts }
 
+    def get_last_district_changed(self):
+        """
+        Get the last district that has been changed in this plan.
+
+        Returns:
+            The district with the version number that matches this plan.
+        """
+        districts = self.district_set.filter(version=self.version)
+        if districts.count() == 0:
+            return None
+        return districts[0]
+
 
 class PlanForm(ModelForm):
     """

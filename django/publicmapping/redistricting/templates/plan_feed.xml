@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" 
+      xmlns:georss="http://www.georss.org/georss" 
+      xmlns:gml="http://www.opengis.net/gml">
+    <title>Updated Plans from DistrictBuilder</title>
+ 
+    <subtitle>Plans with recent edits by the community, powered by DistrictBuilder</subtitle>
+    <link href="{% url publicmapping.redistricting.views.plan_feed %}"/>
+    <updated>{% now "c" %}</updated>
+    <author>
+        <name>Community Contributors to DistrictBuilder</name>
+        <email>support@publicmapping.org</email>
+    </author>
+    <id>urn:uuid:60a76c80-d399-11d9-b93C-0003939e0af6</id>
+   
+    {% for plan in plans %}
+    <entry>
+        <title>{{ plan.name }}</title>
+        <link href="{% url publicmapping.redistricting.views.viewplan planid=plan.id %}"/>
+        <id>urn:uuid:1225c695-cfb8-4ebb-aaaa-80da344efa6a</id>
+        <updated>{{ plan.edited|date:"c" }}</updated>
+        <content type="html"><![CDATA[<img src="https://{{ mapserver }}/geoserver/wms?service=WMS&version=1.1.0&request=GetMap&layers={{ mapserver_ns }}:simple_district&styles=&bbox={{ extent|join:"," }}&width={{ width }}&height={{ height }}&srs=EPSG:3785&format=image/png&cql_filter=id%3d{{ plan.get_last_district_changed.id }}"/>]]>
+        </content>
+        <georss:where>
+            <gml:Point srsName="urn:ogc:def:crs:EPSG:6.6:3875">
+                <gml:pos>{{ plan.get_last_district_changed.simple.centroid.y }} {{ plan.get_last_district_changed.simple.centroid.x }}</gml:pos>
+            </gml:Point>
+        </georss:where>
+    </entry>
+    {% endfor %}
+</feed>

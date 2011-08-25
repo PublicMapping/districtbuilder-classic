@@ -2078,3 +2078,62 @@ def district_info(request, planid, district_id):
             status['success'] = True
 
     return HttpResponse(json.dumps(status), mimetype='application/json')
+
+def plan_feed(request):
+    feed = loader.get_template('plan_feed.xml')
+    # MAP_SERVER = ''
+    # MAP_SERVER_NS = 'pmp'
+    plans = Plan.objects.all().order_by('-edited')[0:10]
+    extent = Geounit.objects.filter(geolevel=plans[0].legislative_body.get_geolevels()[0]).collect().extent
+    if extent[2] - extent[0] > extent[3] - extent[1]:
+        # wider maps
+        width = 500
+        height = int(500 * (extent[3]-extent[1]) / (extent[2]-extent[0]))
+    else:
+        # taller maps
+        width = int(500 * (extent[2]-extent[0]) / (extent[3]-extent[1]))
+        height = 500
+    mapserver = settings.MAP_SERVER if settings.MAP_SERVER != '' else request.META['SERVER_NAME']
+    context = {
+        'plans': plans,
+        'mapserver': mapserver,
+        'mapserver_ns': settings.MAP_SERVER_NS,
+        'extent': extent,
+        'width': width,
+        'height': height
+    }
+    xml = feed.render(DjangoContext(context))
+
+    return HttpResponse(xml, mimetype='application/atom+xml')
+
+def share_feed(request):
+    feed = loader.get_template('shared_feed.xml')
+    # MAP_SERVER = ''
+    # MAP_SERVER_NS = 'pmp'
+    plans = Plan.objects.filter(is_shared=True).order_by('-edited')[0:10]
+    if plans.count() < 0:
+        extent = Geounit.objects.filter(geolevel=plans[0].legislative_body.get_geolevels()[0]).collect().extent
+        if extent[2] - extent[0] > extent[3] - extent[1]:
+            # wider maps
+            width = 500
+            height = int(500 * (extent[3]-extent[1]) / (extent[2]-extent[0]))
+        else:
+            # taller maps
+            width = int(500 * (extent[2]-extent[0]) / (extent[3]-extent[1]))
+            height = 500
+    else:
+        extent = (0,0,0,0,)
+        width = 1
+        height = 1
+    mapserver = settings.MAP_SERVER if settings.MAP_SERVER != '' else request.META['SERVER_NAME']
+    context = {
+        'plans': plans,
+        'mapserver': mapserver,
+        'mapserver_ns': settings.MAP_SERVER_NS,
+        'extent': extent,
+        'width': width,
+        'height': height
+    }
+    xml = feed.render(DjangoContext(context))
+
+    return HttpResponse(xml, mimetype='application/atom+xml')
