@@ -1,0 +1,62 @@
+{% comment %}
+
+   Copyright 2010 Micah Altman, Michael McDonald
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+   This file is part of The Public Mapping Project
+   http://sourceforge.net/projects/publicmapping/
+
+   Purpose:
+       This template corresponds to a single panel of the report display.
+
+       This template contains the HTML and logic required to take a
+       set of plan scores and convert it to a panel has two rows:
+       one for the score (a list), and one for a count of the number of
+       items in the list.
+
+   Author:
+       Andrew Jennings, David Zwarg, Kenny Shepard
+
+{% endcomment %}
+
+{% load redistricting_extras %}
+<div class="report_panel {{cssclass}}">
+  <div class="report_panel_title">{{ title }}</div>
+    {% for ps in planscores %}
+      <div class="report_function">
+        <div class="report_function_title">
+          {{ ps.label }}
+        </div>
+        <table cellspacing="0">
+          <tbody>
+            <tr class="report_score_row">
+            {% for row in ps.score %}
+              <td class="report_score_cell {{ row|format_report_class }}" colspan="2">
+                {{ row|format_report_value }}
+              </td>
+            {% endfor %}
+            </tr>
+            <tr class="report_score_row footer">
+              <td class="report_score_cell footer">Count</td>
+              {% for row in ps.score %}
+                <td class="report_score_cell footer right">
+                    {{ row|count_report_row_elements }}
+                </td>
+              {% endfor %}
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    {% endfor %}
+</div>

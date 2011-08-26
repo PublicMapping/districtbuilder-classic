@@ -37,7 +37,8 @@ reports = function(options) {
         _options = $.extend({
             previewContainer: $('#reportPreview'),
             trigger: $('#btnPreviewReport'),
-            reportUrl: '',
+            planId: 0,
+            calculatorReports: [],
             callback: function() {}
         }, options),
         _popVar,
@@ -61,21 +62,91 @@ reports = function(options) {
             submitReportRequestToServer();
             _options.callback(); 
         });
+
+        if (_options.calculatorReports.length > 0) {
+            createCalculatorCheckboxes();
+        }
         return _self;
     };
 
     var pollCount = 0;
     
     /**
+     * Create all of the checkboxes/label for calculator reports.
+     * This is only called when calculator reports are enabled.
+     */
+    var createCalculatorCheckboxes = function() {
+        // master
+        $(_options.calculatorReports).each(function(i, group) {
+            // option1 and option2 are the left and right divs
+            var optionsId = 'options' + ((i % 2 == 0) + 1);
+            if ($('#' + optionsId).length === 0) {
+                $('#options').append($("<div />").prop('id', optionsId));
+            }
+            
+            var masterId = 'master_' + i;
+            $('#' + optionsId).
+                append($("<span class='master' />").
+                    append($("<input type='checkbox' />").prop('id', masterId)).
+                    append($("<label for='" + masterId  + "' />").html(group.title)));
+
+            // children
+            var childIds = [];
+            $(group.functions).each(function(j, fn) {
+                var childId = 'child_' + i + '_' + j;
+                childIds.push(childId);
+                $('#' + optionsId).
+                    append($("<span class='child reportVar' />").
+                        append($("<input type='checkbox' />").prop('id', childId).prop('value', fn.id)).
+                        append($("<label for='" + childId  + "' />").html(fn.label)));
+            });
+
+            // listen for master clicks to check children
+            $('#' + masterId).click(function() {
+                var checked = $(this).is(':checked');
+                $(childIds).each(function(j, childId) {
+                    $('#' + childId).prop('checked', checked);
+                });
+            });
+
+            // listen for children clicks to check master
+            $(childIds).each(function(j, childId) {
+                // when a child is checked, the master should only be checked if
+                // all the other children are also checked.
+                $('#' + childId).click(function() {
+                    var allChecked = true;
+                    $(childIds).each(function(k, childId) {
+                        if (!$('#' + childId).is(':checked')) {
+                            allChecked = false;
+                        }
+                    });
+                    $('#' + masterId).prop('checked', allChecked);
+                });
+            });
+            
+        });
+    };
+
+    /**
      * Submit a request to the server to generate a report.
      */
     var submitReportRequestToServer = function() {
         $('#reportPreview').html('<h1 id="genreport">Generating Report</h1><p>Your report is being constructed.</p><p>You may use the rest of the application while the report is building.</p><p>A preview of your report will appear in this space when it is ready.</p>');
-        data = getReportOptions();
+
+        var data;
+        var url = '/districtmapping/plan/' + _options.planId;
+        if (_options.calculatorReports.length > 0) {
+            data = getCalculatorReportOptions();
+            url += '/getcalculatorreport/';
+        } else {
+            data = getReportOptions();
+            url += '/getreport/';
+        }
+        
         pollCount = 0;
         $.ajax({
             type:'POST',
-            url:_options.reportUrl,
+            url: url,
             data: data,
             success: pollReport,
             error: reportError
@@ -119,7 +190,24 @@ reports = function(options) {
     };
 
     /**
-     * Get the options set in the UI for this report.
+     * Get the options set in the UI for this report when calculator reports are configured.
+     *
+     * Returns:
+     *   The report options with properties set to form values.
+     */
+    var getCalculatorReportOptions = function() {
+        var vals = [];
+        $('.reportVar').each( function() { 
+            $this = $(this);
+            if ($this.children('input:checked').length > 0) {
+                vals.push($this.children('input').val());
+            }
+        });
+        return { functionIds: vals.join(',') };
+    };
+
+    /**
+     * Get the options set in the UI for this report when BARD reports are configured.
      *
      * Returns:
      *   The report options with properties set to form values.

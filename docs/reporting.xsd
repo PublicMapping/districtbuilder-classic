@@ -12,18 +12,23 @@
             </xs:documentation>
         </xs:annotation>
         <xs:all minOccurs="0">
-            <xs:element name="BardConfigs">
+            <xs:element name="BardConfigs" minOccurs="0">
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element name="BardConfig" type="BardConfigType" minOccurs="1" maxOccurs="unbounded" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="BardBodyConfigs">
+            <xs:element name="BardBodyConfigs" minOccurs="0">
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element name="BardBodyConfig" type="BardBodyConfigType" minOccurs="1" maxOccurs="unbounded" />
                     </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="CalculatorReports" minOccurs="0">
+                <xs:complexType>
+                    <xs:attribute name="tempdir" type="xs:string" use="required" />
                 </xs:complexType>
             </xs:element>
         </xs:all>

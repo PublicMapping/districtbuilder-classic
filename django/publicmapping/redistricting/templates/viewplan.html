@@ -646,9 +646,28 @@
       <div class="shadow_top"></div>
       <div class="toolbar ui-widget-header"><h1>Evaluate Statistics</h1></div>
       <div class="tab_content">
-        {% if reporting_template %}
+        {% if calculator_reports != "[]" %}
+          <div id="reportdescription">
+            <div id="description">
+              <h3> Introduction to the reporting tool</h3>
+                <p>
+                  Select the plan statistics you'd like included in a comprehensive report on your redistricting plan.
+                  After you've made your selections click "Create and Preview Report" to view the final report.
+                </p>
+            </div>
+            <div id="options"></div>
+          </div>
+          <div id="reportPreviewContainer">
+            <div id="reportPreview" class="report"></div>
+          </div>
+          <div id="reportButtons">
+            <button id="btnPreviewReport">Create and Preview Report</button>
+          </div>
+        {% else %}
+          {% if reporting_template %}
             {% include reporting_template %}
-        {% endif %} 
+          {% endif %} 
+        {% endif %}
       </div>
     </div>
     {% if has_leaderboard and not plan.is_community %}        
@@ -1064,11 +1083,14 @@ Include the markup for the account management panel.
         choose.init();
         $('#steps').tabs('option', 'disabled', [ 1,2,3 ]);
     {% endif %}
+
+    {% if plan.id %}
         // initialize the reporting interface
         var report = reports({
-            reportUrl: '/districtmapping/plan/{{plan.id}}/getreport/'
+            planId: {{plan.id}},
+            calculatorReports: {% autoescape off %}{{ calculator_reports }}{% endautoescape %}
         }).init();
-        
+    {% endif %}
     });
 
     $(document).ready(function() {

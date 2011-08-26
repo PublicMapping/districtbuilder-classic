@@ -358,30 +358,41 @@ def merge_config(config, verbose):
         if banner:
             settings_out.write("\nBANNER_IMAGE = '%s'\n" % banner)
 
-        cfg = config.xpath('//Reporting')[0]
-        cfg = cfg.find('BardConfigs/BardConfig')
-        if cfg != None:
-            # Write these settings to the report settings.
-            rsettings_out.write("\nREPORTS_ENABLED = True\n")
-            rsettings_out.write("BARD_BASESHAPE = '%s'\n" % cfg.get('shape'))
-            rsettings_out.write("BARD_TEMP = '%s'\n" % cfg.get('temp'))
+        # Reporting is optional
+        cfg = config.xpath('//Reporting')
+        if cfg is not None:
+            bardcfg = cfg[0].find('BardConfigs/BardConfig')
+            calccfg = cfg[0].find('CalculatorReports')
 
-            # Write these settings to the district builder settings.
-            settings_out.write("\nREPORTS_ENABLED = True\n")
-            settings_out.write("BARD_TRANSFORM = '%s'\n" % cfg.get('transform'))
-            settings_out.write("BARD_TEMP = '%s'\n" % cfg.get('temp'))
-            server = cfg.get('server')
-            if server:
-                settings_out.write("BARD_SERVER = '%s'\n" % server)
+            # BARD
+            if bardcfg is not None:
+                cfg = bardcfg
+                
+                # Write these settings to the report settings.
+                rsettings_out.write("\nREPORTS_ENABLED = True\n")
+                rsettings_out.write("BARD_BASESHAPE = '%s'\n" % cfg.get('shape'))
+                rsettings_out.write("BARD_TEMP = '%s'\n" % cfg.get('temp'))
+    
+                # Write these settings to the district builder settings.
+                settings_out.write("\nREPORTS_ENABLED = True\n")
+                settings_out.write("BARD_TRANSFORM = '%s'\n" % cfg.get('transform'))
+                settings_out.write("BARD_TEMP = '%s'\n" % cfg.get('temp'))
+                server = cfg.get('server')
+                if server:
+                    settings_out.write("BARD_SERVER = '%s'\n" % server)
+                else:
+                    settings_out.write("BARD_SERVER = 'https://localhost/reporting'\n")
+    
+            # Calculator reports
+            elif calccfg is not None:
+                cfg = calccfg
+                settings_out.write("CALC_REPORTS_DIR = '%s'\n" % cfg.get('tempdir')) 
             else:
-                settings_out.write("BARD_SERVER = 'https://localhost/reporting'\n")
-
-        else:
-            # Write this setting to the report settings.
-            rsettings_out.write("\nREPORTS_ENABLED = False\n")
-
-            # Write this setting to the district builder settings.
-            settings_out.write("\nREPORTS_ENABLED = False\n")
+                # Write this setting to the report settings.
+                rsettings_out.write("\nREPORTS_ENABLED = False\n")
+    
+                # Write this setting to the district builder settings.
+                settings_out.write("\nREPORTS_ENABLED = False\n")
 
         
         cfg = config.xpath('//GoogleAnalytics')

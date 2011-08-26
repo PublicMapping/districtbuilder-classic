@@ -635,3 +635,102 @@ class PlanReport:
         filename = '%s_p%d_v%d_%s' % (plan.owner.username, plan.id, plan.version, stamp)
 
         return '/reports/%s.html' % filename
+
+class CalculatorReport:
+    """
+    A collection of static methods that assist in asynchronous report
+    generation for calculator-based reports.
+    """
+
+    @staticmethod
+    @task
+    def createcalculatorreport(planid, stamp, request):
+        """
+        Create the report.
+        """
+        if settings.DEBUG:
+            sys.stderr.write('Starting task to create a report.\n')
+        try:
+            plan = Plan.objects.get(pk=planid)
+        except:
+            sys.stderr.write("Couldn't retrieve plan information.\n")
+            return 
+
+        function_ids = map(lambda s: int(s), request['functionIds'].split(','))
+
+        try:
+            # Render the report
+            display = ScoreDisplay.objects.filter(title='%s Reports' % plan.legislative_body.name)[0]
+            html = display.render(plan, request, function_ids=function_ids)
+        except Exception as ex:
+            err = 'Error creating calculator report:\n%s\n' % traceback.format_exc()
+            sys.stderr.write(err)
+            html = err
+
+        # Add to report container template
+        html = loader.get_template('report_panel_container.html').render(DjangoContext({'report_panels': html}))
+            
+        # Write it to file
+        tempdir = settings.CALC_REPORTS_DIR
+        filename = '%s_p%d_v%d_%s' % (plan.owner.username, plan.id, plan.version, stamp)
+        htmlfile = open('%s/%s.html' % (tempdir, filename,),'w')
+        htmlfile.write(html)
+        htmlfile.close()
+            
+        return
+
+    @staticmethod
+    def checkreport(planid, stamp):
+        """
+        Check on the status of a calculator report.
+        """
+        try:
+            plan = Plan.objects.get(pk=planid)
+        except:
+            return 'error'
+
+        tempdir = settings.CALC_REPORTS_DIR
+        filename = '%s_p%d_v%d_%s' % (plan.owner.username, plan.id, plan.version, stamp)
+        pending_file = '%s/%s.pending' % (tempdir, filename)
+        complete_file = '%s/%s.html' % (tempdir, filename)
+        
+        if os.path.exists(complete_file):
+            if os.path.exists(pending_file):
+                os.unlink(pending_file)
+            return 'ready'
+
+        if os.path.exists(pending_file):
+            return 'busy'
+        
+        return 'free'
+
+    @staticmethod
+    def markpending(planid, stamp):
+        """
+        Create a pending file, to indicate that a report is in the works.
+        """
+        try:
+            plan = Plan.objects.get(pk=planid)
+        except:
+            return 'error'
+
+        tempdir = settings.CALC_REPORTS_DIR
+        filename = '%s_p%d_v%d_%s' % (plan.owner.username, plan.id, plan.version, stamp)
+
+        pending = open('%s/%s.pending' % (tempdir, filename,),'w')
+        pending.close()
+
+
+    @staticmethod
+    def getreport(planid, stamp):
+        """
+        Fetch a previously generated calculator report.
+        """
+        try:
+            plan = Plan.objects.get(pk=planid)
+        except:
+            return 'error'
+
+        filename = '%s_p%d_v%d_%s' % (plan.owner.username, plan.id, plan.version, stamp)
+
+        return '/reports/%s.html' % filename

@@ -1,0 +1,84 @@
+{% comment %}
+
+   Copyright 2010 Micah Altman, Michael McDonald
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+   This file is part of The Public Mapping Project
+   http://sourceforge.net/projects/publicmapping/
+
+   Purpose:
+       This template constitutes a single panel of the report display.
+
+       This template contains the HTML and logic required to take a
+       set of district scores and convert it to a panel that can be
+       shown in the reports display.
+
+   Author:
+       Andrew Jennings, David Zwarg, Kenny Shepard
+
+{% endcomment %}
+
+{% load redistricting_extras %}
+<div class="report_panel {{cssclass}}">
+  <div class="report_panel_title">{{ title }}</div>
+    {% for function_name in functions %}
+      <div class="report_function">
+        <div class="report_function_title">
+          {{function_name}}
+        </div>
+      
+        <table cellspacing="0">
+          <tbody>
+            {% for ds in districtscores %}
+              {% for score in ds.scores %}
+                {% if forloop.counter == forloop.parentloop.parentloop.counter %}
+                  {% if forloop.parentloop.first %}
+                    <tr class="report_score_row header">
+                      {% for row in score.score %}
+                        <th class="report_score_cell header">{{ row.label }}</th>
+                      {% endfor %}
+                    </tr>
+                  {% endif %}
+            
+                  {% if ds.district.district_id > 0 %}
+                    <tr class="report_score_row">
+                    {% for row in score.score %}
+                      <td class="report_score_cell {{ row|format_report_class }}">
+                        {{ row|format_report_value }}
+                      </td>
+                    {% endfor %}
+                    </tr>
+                  {% endif %}
+
+                  {% if forloop.parentloop.last %}
+                  <tr class="report_score_row footer">
+                    {% for row in score.score %}
+                      <td class="report_score_cell footer {{ row|format_report_class }}">
+                        {% if forloop.first %}
+                          Average
+                        {% else %}
+                          {{ districtscores|avg_report_column:row }}
+                        {% endif %}
+                      </td>
+                    {% endfor %}
+                  </tr>
+                  {% endif %}
+                {% endif %}
+              {% endfor %}
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% endfor %}
+</div>

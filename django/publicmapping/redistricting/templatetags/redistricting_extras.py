@@ -27,7 +27,7 @@ Author:
 from django import template
 from django.template.defaultfilters import stringfilter
 from django.utils.safestring import mark_safe
-import re
+import re, locale
 
 register = template.Library()
 
@@ -120,3 +120,94 @@ def count_true_values(value, key):
         return str(len(filter(lambda x: x[key], value)))
     except:
         return ''
+
+@register.filter
+def avg_report_column(districtscores, row):
+    """
+    This filter extracts all scores in a set of districtscores that are
+    related to the row, by using 'avg_key', and returns an average of the score.
+    Parameters:
+        districtscores - A list of districtscores
+        row - A single score row
+    """
+    if 'avg_key' not in row:
+        return ''
+
+    try:
+        avg_key = row['avg_key']
+        total = 0
+        num_items = 0
+        
+        for districtscore in districtscores:
+            if districtscore['district'].district_id == 0:
+                continue
+            
+            for score in districtscore['scores']:
+                for scorerow in score['score']:
+                    if 'avg_key' in scorerow and avg_key == scorerow['avg_key']:
+                        num_items += 1
+                        total += float(scorerow['value'])
+    except:
+        return 'N/A'
+    
+    return format_report_value({ 'type': row['type'], 'value': total / num_items })
+
+@register.filter
+def count_report_row_elements(row):
+    """
+    This filter returns the length of a list found in a score row.
+    Parameters:
+        row - A single score row
+    """
+    try:
+        if (row['type'] == 'list'):
+            return locale.format("%d", len(row['value']), grouping=True)
+    except:
+        return ''
+    
+    return ''
+
+@register.filter
+def format_report_value(row):
+    """
+    This filter formats a score based on it's type.
+    Parameters:
+        row - A single score row
+    """
+    try:
+        if row['type'] == 'integer':
+            return locale.format("%d", row['value'], grouping=True)
+    
+        if row['type'] == 'percent':
+            return format(row['value'], '.2%')
+
+        if row['type'] == 'boolean':
+            return str(row['value']).upper()
+
+        if row['type'] == 'list':
+            return '  '.join([str(x) for x in row['value']])
+    except:
+        return 'N/A'
+
+    return row['value']
+
+@register.filter
+def format_report_class(row):
+    """
+    This filter returns a css class based on the score's type.
+    Parameters:
+        row - A single score row
+    """
+    try:
+        if row['type'] in ['integer', 'float', 'percent']:
+            return 'right'
+
+        if row['type'] == 'list':
+            return 'left'
+
+        if row['type'] == 'boolean':
+            return 'center ' + str(row['value']).lower()
+    except:
+        pass
+
+    return 'center'

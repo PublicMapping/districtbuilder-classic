@@ -2963,7 +2963,7 @@ class ScoreDisplay(models.Model):
 
         return self
 
-    def render(self, dorp, context=None, version=None, components=None):
+    def render(self, dorp, context=None, version=None, components=None, function_ids=None):
         """
         Generate the markup for all the panels attached to this display.
 
@@ -2981,6 +2981,7 @@ class ScoreDisplay(models.Model):
                 consist of a ScorePanel at index 0, followed by any number of 
                 ScoreFunctions tuples - a ScoreFunction followed by its arguments.
             version -- Optional; the version of the plan or district to render.
+            function_ids -- Optional list of ScoreFunction ids in which to restrict rendering
 
         Returns:
             The markup for this display.
@@ -3008,14 +3009,14 @@ class ScoreDisplay(models.Model):
             for component in components:
                 panel = component[0]
                 if len(component) > 1:
-                    markup += panel.render(dorp, context=context, version=version, components=list(component[1:]))
+                    markup += panel.render(dorp, context=context, version=version, components=list(component[1:]), function_ids=function_ids)
                 else:
-                    markup += panel.render(dorp, context=context, version=version)
+                    markup += panel.render(dorp, context=context, version=version, function_ids=function_ids)
         else:
             panels = self.scorepanel_set.all().order_by('position')
 
             for panel in panels:
-                markup += panel.render(dorp, context=context, version=version)
+                markup += panel.render(dorp, context=context, version=version, function_ids=function_ids)
 
         return markup
 
@@ -3056,7 +3057,7 @@ class ScorePanel(models.Model):
         """
         return self.title
 
-    def render(self,dorp,context=None,version=None,components=None):
+    def render(self,dorp,context=None,version=None,components=None,function_ids=None):
         """
         Generate the scores for all the functions attached to this panel,
         and render them in the template.
@@ -3071,6 +3072,7 @@ class ScorePanel(models.Model):
                  instead of any ScoreFunctions linked through the database.
                  Each tuple should be a ScoreFunction at index 0 followed by
                  and ScoreArguments
+            function_ids -- Optional list of ScoreFunction ids in which to restrict rendering
 
         Returns:
             A rendered set of scores.
@@ -3120,6 +3122,10 @@ class ScorePanel(models.Model):
                     functions = self.score_functions.filter(is_planscore=True).order_by('name')
 
                 for function in functions:
+                    # Don't process this function if it isn't in the inclusion list
+                    if function_ids and not function.id in function_ids:
+                        continue
+                    
                     if function_override:
                         if len(function) > 1:
                             arguments = function[1:]
@@ -3145,9 +3151,10 @@ class ScorePanel(models.Model):
             if self.type == 'plan':
                 planscores.sort(key=lambda x:x['sort'],reverse=not self.is_ascending)
 
-            return render_to_string(self.template, {
+            return "" if len(planscores) == 0 else render_to_string(self.template, {
                 'settings':settings,
                 'planscores':planscores,
+                'functions':functions,
                 'title':self.title,
                 'cssclass':self.cssclass,
                 'position':self.position,
@@ -3177,6 +3184,10 @@ class ScorePanel(models.Model):
 
 
                 for function in district_functions:
+                    # Don't process this function if it isn't in the inclusion list
+                    if function_ids and not function.id in function_ids:
+                        continue
+
                     if function_override:
                         if len(function) > 1:
                             arguments = function[1:]
@@ -3186,6 +3197,7 @@ class ScorePanel(models.Model):
                         if not function.label in functions:
                             functions.append(function.label)
                         score = ComputedDistrictScore.compute(function,district,format='html')
+
                     districtscore['scores'].append({
                         'district':district,
                         'name':function.name,
@@ -3194,13 +3206,17 @@ class ScorePanel(models.Model):
                         'score':score
                     })
 
-                districtscores.append(districtscore)
+                if len(districtscore['scores']) > 0:
+                    districtscores.append(districtscore)
 
-            return render_to_string(self.template, {
+            return "" if len(districtscores) == 0 else render_to_string(self.template, {
                 'districtscores':districtscores,
                 'functions':functions,
                 'title': self.title,
-                'cssclass': self.cssclass
+                'cssclass': self.cssclass,
+                'settings':settings,
+                'position':self.position,
+                'context':context
             })
 
 class ValidationCriteria(models.Model):

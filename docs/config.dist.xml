@@ -484,6 +484,140 @@
                 <LegislativeBody ref="community"/>
             </ScoreFunction>
 
+            <!-- Calculator Reports configuration -->
+            <!-- Population -->
+            <ScoreFunction id="report_score_total_population_congress" type="district"
+                calculator="publicmapping.redistricting.reportcalculators.Population"
+                label="Total Population" >
+                <LegislativeBody ref="congress"/>
+                <SubjectArgument name="value" ref="poptot" />
+                <Argument name="min" value="723729" />
+                <Argument name="max" value="731003" />
+            </ScoreFunction>
+
+            <ScoreFunction id="report_score_total_population_senate" type="district"
+                calculator="publicmapping.redistricting.reportcalculators.Population"
+                label="Total Population" >
+                <LegislativeBody ref="senate"/>
+                <SubjectArgument name="value" ref="poptot" />
+                <Argument name="min" value="190025" />
+                <Argument name="max" value="210027" />
+            </ScoreFunction>
+
+            <ScoreFunction id="report_score_total_population_house" type="district"
+                calculator="publicmapping.redistricting.reportcalculators.Population"
+                label="Total Population" >
+                <LegislativeBody ref="house"/>              
+                <SubjectArgument name="value" ref="poptot" />
+                <Argument name="min" value="76010" />
+                <Argument name="max" value="84011" />
+            </ScoreFunction>
+
+            <ScoreFunction id="report_score_vap" type="district"
+                calculator="publicmapping.redistricting.reportcalculators.Population"
+                label="Voting Age Population" >
+                <LegislativeBody ref="congress"/>
+                <LegislativeBody ref="senate"/>
+                <LegislativeBody ref="house"/>              
+                <SubjectArgument name="value" ref="vap" />
+            </ScoreFunction>
+
+            <ScoreFunction id="report_score_vapblk" type="district"
+                calculator="publicmapping.redistricting.reportcalculators.Population"
+                label="VAP African-American" >
+                <LegislativeBody ref="congress"/>
+                <LegislativeBody ref="senate"/>
+                <LegislativeBody ref="house"/>              
+                <SubjectArgument name="value" ref="vapblk" />
+            </ScoreFunction>
+
+            <ScoreFunction id="report_score_vaphisp" type="district"
+                calculator="publicmapping.redistricting.reportcalculators.Population"
+                label="VAP Hispanic/Latino" >
+                <LegislativeBody ref="congress"/>
+                <LegislativeBody ref="senate"/>
+                <LegislativeBody ref="house"/>              
+                <SubjectArgument name="value" ref="vaphisp" />
+            </ScoreFunction>
+
+            <!-- Majority Minority Districts -->
+            <ScoreFunction id="report_score_majmin_blk" type="district"
+                calculator="publicmapping.redistricting.reportcalculators.Majority"
+                label="VAP African-American" >
+                <LegislativeBody ref="congress"/>
+                <LegislativeBody ref="senate"/>
+                <LegislativeBody ref="house"/>              
+                <SubjectArgument name="value" ref="vapblk" />
+                <SubjectArgument name="total" ref="vap" />
+            </ScoreFunction>
+
+            <ScoreFunction id="report_score_majmin_hisp" type="district"
+                calculator="publicmapping.redistricting.reportcalculators.Majority"
+                label="VAP Hispanic/Latino" >
+                <LegislativeBody ref="congress"/>
+                <LegislativeBody ref="senate"/>
+                <LegislativeBody ref="house"/>              
+                <SubjectArgument name="value" ref="vaphisp" />
+                <SubjectArgument name="total" ref="vap" />
+            </ScoreFunction>
+
+            <!-- Compactness -->
+            <ScoreFunction id="report_score_compactness_lw" type="district"
+                calculator="publicmapping.redistricting.reportcalculators.Compactness"
+                label="Length/Width" >
+                <LegislativeBody ref="congress"/>
+                <LegislativeBody ref="senate"/>
+                <LegislativeBody ref="house"/>              
+                <Argument name="comptype" value="LengthWidth" />
+            </ScoreFunction>
+
+            <ScoreFunction id="report_score_compactness_sc" type="district"
+                calculator="publicmapping.redistricting.reportcalculators.Compactness"
+                label="Schwartzberg" >
+                <LegislativeBody ref="congress"/>
+                <LegislativeBody ref="senate"/>
+                <LegislativeBody ref="house"/>              
+                <Argument name="comptype" value="Schwartzberg" />
+            </ScoreFunction>
+
+            <ScoreFunction id="report_score_compactness_ro" type="district"
+                calculator="publicmapping.redistricting.reportcalculators.Compactness"
+                label="Roeck" >
+                <LegislativeBody ref="congress"/>
+                <LegislativeBody ref="senate"/>
+                <LegislativeBody ref="house"/>              
+                <Argument name="comptype" value="Roeck" />
+            </ScoreFunction>
+
+            <!-- Party-Controlled Districts -->
+            <ScoreFunction id="report_score_party_dem" type="district"
+                calculator="publicmapping.redistricting.reportcalculators.Majority"
+                label="Democratic" >
+                <LegislativeBody ref="congress"/>
+                <LegislativeBody ref="senate"/>
+                <LegislativeBody ref="house"/>              
+                <SubjectArgument name="value" ref="govdem" />
+                <SubjectArgument name="total" ref="govtot" />
+            </ScoreFunction>
+
+            <ScoreFunction id="report_score_party_rep" type="district"
+                calculator="publicmapping.redistricting.reportcalculators.Majority"
+                label="Republican" >
+                <LegislativeBody ref="congress"/>
+                <LegislativeBody ref="senate"/>
+                <LegislativeBody ref="house"/>              
+                <SubjectArgument name="value" ref="govrep" />
+                <SubjectArgument name="total" ref="govtot" />
+            </ScoreFunction>
+
+            <!-- Spatial Analysis -->
+            <ScoreFunction id="report_score_unassigned" type="plan"
+                calculator="publicmapping.redistricting.reportcalculators.Unassigned"
+                label="Unassigned Blocks" >
+                <LegislativeBody ref="congress"/>
+                <LegislativeBody ref="senate"/>
+                <LegislativeBody ref="house"/>              
+            </ScoreFunction>
         </ScoreFunctions>
         
         <ScorePanels>
@@ -619,6 +753,45 @@
                 <Score ref="district_vap" />
             </ScorePanel>
             
+            <!-- Calculator Reports configuration -->
+            <!-- Population -->
+            <ScorePanel id="report_panel_population" type="district" position="2"
+                title="Population" template="report_panel.html" cssclass="reports population" >
+                <Score ref="report_score_total_population_congress" />
+                <Score ref="report_score_total_population_senate" />
+                <Score ref="report_score_total_population_house" />
+                <Score ref="report_score_vap" />
+                <Score ref="report_score_vapblk" />
+                <Score ref="report_score_vaphisp" />
+            </ScorePanel>
+
+            <!-- Majority Minority Districts -->
+            <ScorePanel id="report_panel_majmin" type="district" position="3"
+                title="Majority Minority Districts" template="report_panel.html" cssclass="reports majmin">
+                <Score ref="report_score_majmin_blk" />
+                <Score ref="report_score_majmin_hisp" />
+            </ScorePanel>
+
+            <!-- Compactness -->
+            <ScorePanel id="report_panel_compactness" type="district" position="1"
+                title="Compactness" template="report_panel.html" cssclass="reports compactness">
+                <Score ref="report_score_compactness_sc" />
+                <Score ref="report_score_compactness_lw" />
+                <Score ref="report_score_compactness_ro" />
+            </ScorePanel>
+
+            <!-- Party-Controlled Districts -->
+            <ScorePanel id="report_panel_party" type="district" position="4"
+                title="Party-Controlled Districts" template="report_panel.html" cssclass="reports party">
+                <Score ref="report_score_party_dem" />
+                <Score ref="report_score_party_rep" />
+            </ScorePanel>
+
+            <!-- Spatial Analysis -->
+            <ScorePanel id="report_panel_spatial" type="plan" position="5"
+                title="Spatial Analysis" template="report_panel_plan_with_count.html" cssclass="reports spatial">
+                <Score ref="report_score_unassigned" />
+            </ScorePanel>
         </ScorePanels>
         
         <ScoreDisplays>
@@ -706,6 +879,33 @@
                 <ScorePanel ref="community_panel_comments" />
             </ScoreDisplay>
 
+            <!-- Calculator Reports configuration -->
+            <ScoreDisplay legislativebodyref="congress" type="reports" 
+                title="Congressional Reports" cssclass="reports congress">
+                <ScorePanel ref="report_panel_population" />
+                <ScorePanel ref="report_panel_majmin" />
+                <ScorePanel ref="report_panel_compactness" />
+                <ScorePanel ref="report_panel_party" />
+                <ScorePanel ref="report_panel_spatial" />
+            </ScoreDisplay>
+
+            <ScoreDisplay legislativebodyref="senate" type="reports" 
+                title="State Senate Reports" cssclass="reports senate">
+                <ScorePanel ref="report_panel_population" />
+                <ScorePanel ref="report_panel_majmin" />
+                <ScorePanel ref="report_panel_compactness" />
+                <ScorePanel ref="report_panel_party" />
+                <ScorePanel ref="report_panel_spatial" />
+            </ScoreDisplay>
+
+            <ScoreDisplay legislativebodyref="house" type="reports" 
+                title="State House Reports" cssclass="reports house">
+                <ScorePanel ref="report_panel_population" />
+                <ScorePanel ref="report_panel_majmin" />
+                <ScorePanel ref="report_panel_compactness" />
+                <ScorePanel ref="report_panel_party" />
+                <ScorePanel ref="report_panel_spatial" />
+            </ScoreDisplay>
         </ScoreDisplays>
     </Scoring>
     
@@ -1098,38 +1298,21 @@
         </Redistricting>
         
         <!-- 
-        
-        Configure the engine used for reporting. Currently, BARD is the
-        only supported reporting engine.
-
+        Configure the engine used for reporting. Can be either Calculator Reports or BARD
         -->
         <Reporting>
-            <!-- BARD specific configuration settings. -->
+            <!--
+               Use calculators for reporting. tempdir is the location where
+               the reports are stored and served from.
+            -->
+            <CalculatorReports tempdir="/projects/publicmapping/local/reports" />          
+
+            <!-- This configuration is set up for reporting using Calculator reports
+                 (report panels are constructed via ScoreDisplays/ScorePanels/ScoreFunctiosn).
+                 The below, commented-out, configuration is an example of reporting
+                 using BARD.
+
             <BardConfigs>
-                <!--
-
-                The BARD configuration. 
-                
-                The "shape" attribute defines where the precomputed BARD
-                map is located.
-
-                The "temp" attribute is the location where temporary reports
-                should be stored.
-
-                The "transform" attribute is the location of the XSLT 
-                transform that generates the HTML content in the reporting
-                tab.
-
-                The "server" attribute is the optional URL of another
-                server that runs BARD reports for this web site.
-                E.G., 'http://reporting.server.com'.  Leave off the trailing
-                slash.
-
-                NOTE: it is important that all subjectref attributes of the
-                "...Var" elements below match attributes of the original
-                block shapefile from which the BARD map is derived.
-
-                -->
                 <BardConfig 
                     id="tenpercent"
                     shape="/projects/publicmapping/data/vablock_bard_save.Rdata" 
@@ -1143,12 +1326,6 @@
                         <PopVar subjectref="vaphisp" default="false" />
                     </PopVars>
                     <RatioVars>
-                        <!--
-                        
-                        Set up RatioVars for both ethnicity and political 
-                        party.
-                        
-                        -->
                         <RatioVar id="racialComp" label="Majority Minority Districts" threshold=".5">
                             <Numerators>
                                 <Numerator subjectref="vapblk" />
@@ -1165,13 +1342,6 @@
                         </RatioVar>
                     </RatioVars>
                     <SplitVars>
-                        <!-- 
-                        
-                        See whether a given district splits a geography.
-                        This can be any higher level geography: a county,
-                        VTd, or tract.
-
-                        -->
                         <SplitVar field="COUNTYFP10" label="County" />
                         <SplitVar field="VTDST10" label="VTD" />
                     </SplitVars>
@@ -1211,12 +1381,6 @@
                 </BardConfig>
             </BardConfigs>
             <BardBodyConfigs>
-                <!--
-
-                For each legislative body, map the configuration to the
-                geography used to generate reports.
-
-                -->
                 <BardBodyConfig
                     id="congress_blocks"
                     legislativebodyref="congress"
@@ -1230,6 +1394,7 @@
                     legislativebodyref="senate"
                     bardconfigref="tenpercent" />
             </BardBodyConfigs>
+            -->
         </Reporting>
         
         <!-- Information about the mailer configuration. -->

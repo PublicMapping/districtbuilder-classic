@@ -89,14 +89,18 @@ class CalculatorBase:
 
         The base calculator generates an HTML span element, with the text
         content set to a string representation of the result. If the result
-        is None, the string "n/a" is used.
+        is None, the string "n/a" is used. If 'raw' is defined, the value
+        of raw is used (for fine-grained control using templates).
 
         @return: An HTML SPAN element, formatted similar to: "<span>n/a</span>".
         """
         if not self.result is None and 'value' in self.result:
             return '<span>%s</span>' % self.result['value']
-        else:
-            return '<span>n/a</span>'
+
+        if not self.result is None and 'raw' in self.result:
+            return self.result['raw']
+
+        return '<span>n/a</span>'
 
     def json(self):
         """
@@ -287,7 +291,7 @@ class Roeck(CalculatorBase):
             num += 1
 
         try:
-            self.result = { 'value': compactness / num }
+            self.result = { 'value': compactness / num if num > 0 else 0 }
         except:
             self.result = { 'value': 'N/A' }
         
@@ -420,10 +424,14 @@ class LengthWidthCompactness(CalculatorBase):
                 continue
 
             bbox = district.geom.extent
-            compactness += (bbox[3] - bbox[1]) / (bbox[2] - bbox[0])
+            lw = (bbox[3] - bbox[1]) / (bbox[2] - bbox[0])
+            if lw > 1:
+                lw = 1 / lw
+            
+            compactness += lw
             num += 1
 
-        self.result = { 'value': compactness / num }
+        self.result = { 'value': compactness / num if num > 0 else 0 }
 
     def html(self):
         """
