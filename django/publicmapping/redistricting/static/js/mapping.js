@@ -2562,6 +2562,17 @@ function mapinit(srs,maxExtent) {
         if (olmap.center !== null) {
             districtLayer.filter = getVersionAndSubjectFilters(olmap.getExtent());
             districtLayer.strategies[0].update({force:true});
+
+            // get a new set of filters, so we don't muddy the districtLayer
+            var filter = getVersionAndSubjectFilters(olmap.getExtent());
+            // remove version criteria
+            filter.filters = filter.filters.splice(1);
+
+            var refLayers = olmap.getLayersByName(new RegExp('^plan\.\d*'));
+            for (var i = 0; i < refLayers.length; i++) {
+                refLayers[i].filter = filter;
+                refLayers[i].strategies[0].update({force:true});
+            }
             $('#map').trigger('draw_highlighted_districts');
         }
 
