@@ -92,11 +92,12 @@ class Compactness(CalculatorBase):
             return
 
         calc.compute(district=district)
+        val = calc.result['value'] if calc.result else 0
         
         self.result = {
             'raw': [
                 { 'label': 'DistrictID', 'type': 'string', 'value': district.name },
-                { 'label': 'Compactness', 'type': 'percent', 'value': calc.result['value'], 'avg_key': comptype }
+                { 'label': 'Compactness', 'type': 'percent', 'value': val, 'avg_key': comptype }
             ]
         }
 
@@ -113,7 +114,7 @@ class Majority(CalculatorBase):
 
         pop_value = self.get_value('value', district)
         tot_value = self.get_value('total', district)
-        proportion = float(pop_value) / float(tot_value)
+        proportion = float(pop_value) / float(tot_value) if tot_value else 0
         pop_avg_key = "majminpop_" + self.arg_dict['value'][1]
         prop_avg_key = pop_avg_key + "_" + "proportion"
 
