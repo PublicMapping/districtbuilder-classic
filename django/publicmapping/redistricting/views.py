@@ -382,11 +382,10 @@ def commonplan(request, planid):
         # Reports defined with calculators (Score Displays, Panels, and Functions)
         # result is a map of relevant panels to score functions with labels and ids,
         # used for generating groups of checkboxes on the evaluate tab.
+        calculator_reports = []
         if 'CALC_REPORTS_DIR' in settings.__members__:
             report_displays = ScoreDisplay.objects.filter(title='%s Reports' % body_name)
-            if len(report_displays) == 0:
-                calculator_reports = []
-            else:
+            if len(report_displays) > 0:
                 calculator_reports = map(lambda p: {
                             'title': p.title,
                             'functions': map(lambda f: {
