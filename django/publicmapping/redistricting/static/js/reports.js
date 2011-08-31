@@ -145,6 +145,9 @@ reports = function(options) {
         }
 
         if (data.functionIds === "") {
+            $('<div>Please select one or more reports to be generated.</div>').dialog({
+                modal: true, autoOpen: true, title: 'Warning', resizable:false
+            });                
             return;
         }
         
