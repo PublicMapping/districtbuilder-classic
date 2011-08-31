@@ -5,7 +5,7 @@ This file uses django's extensible url mapping framework to extend the
 project urls based on this app's urls.
 
 This file is part of The Public Mapping Project
-http://sourceforge.net/projects/publicmapping/
+https://github.com/PublicMapping/
 
 License:
     Copyright 2010 Micah Altman, Michael McDonald

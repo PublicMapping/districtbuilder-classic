@@ -6,7 +6,7 @@ the models in the redistricting application. Each method relates to one
 type of output url. There are views that return GeoJSON, JSON, and HTML.
 
 This file is part of The Public Mapping Project
-http://sourceforge.net/projects/publicmapping/
+https://github.com/PublicMapping/
 
 License:
     Copyright 2010 Micah Altman, Michael McDonald
@@ -1957,7 +1957,7 @@ def get_health(request):
         result = 'Health retrieved at %s\n' % datetime.now()
         result += '%d plans in database\n' % Plan.objects.all().count()
         result += '%d sessions in use out of %s\n' % (Session.objects.all().count(), settings.CONCURRENT_SESSIONS)
-        space = os.statvfs('/projects/publicmapping')
+        space = os.statvfs('/projects/PublicMapping')
         result += '%s MB of disk space free\n' % ((space.f_bsize * space.f_bavail) / (1024*1024))
         result += 'Memory Usage:\n%s\n' % commands.getoutput('free -m')
         return HttpResponse(result, mimetype='text/plain')

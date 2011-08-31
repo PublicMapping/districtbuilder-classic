@@ -14,7 +14,7 @@
    limitations under the License.
 
    This file is part of The Public Mapping Project
-   http://sourceforge.net/projects/publicmapping/
+   https://github.com/PublicMapping/
 
    Purpose:
        This script file defines behaviors of the 'Choose Plan' dialog.

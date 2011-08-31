@@ -25,4 +25,4 @@ PDPATCH="*** ../django/publicmapping/templates/index.html	2010-10-28 01:03:05.00
   
             <h4>To View Other Users' Maps...</h4>
  " 
-echo "$PDPATCH" | patch -bN /projects/publicmapping/trunk/django/publicmapping/templates/index.html
+echo "$PDPATCH" | patch -bN /projects/PublicMapping/DistrictBuilder/django/publicmapping/templates/index.html

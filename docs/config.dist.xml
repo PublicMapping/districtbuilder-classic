@@ -985,7 +985,7 @@
           
           -->
 
-          <Shapefile path="/projects/publicmapping/data/tl_2010_51_block10_3785_join.shp">
+          <Shapefile path="/projects/PublicMapping/data/tl_2010_51_block10_3785_join.shp">
               <Fields>
                   <!-- 
 
@@ -1052,7 +1052,7 @@
           
           -->
           <Files>
-              <Geography path="/projects/publicmapping/data/tl_2010_51_vtd10_3785.shp">
+              <Geography path="/projects/PublicMapping/data/tl_2010_51_vtd10_3785.shp">
                   <!-- 
 
                   Each Field item defines a field in the shapefile that
@@ -1127,7 +1127,7 @@
           
           -->
           <Files>
-              <Geography path="/projects/publicmapping/data/tl_2010_51_county10_3785.shp">
+              <Geography path="/projects/PublicMapping/data/tl_2010_51_county10_3785.shp">
                   <!-- 
 
                   Each Field item defines a field in the shapefile that
@@ -1200,19 +1200,19 @@
             unit of geography, and 2) the district it belongs to.
             
             -->
-            <Blockfile path="/projects/publicmapping/data/cd111_index.csv" />
+            <Blockfile path="/projects/PublicMapping/data/cd111_index.csv" />
         </Template>
         
         <Template name="State House">
             <LegislativeBody ref="house"/>
             
-            <Blockfile path="/projects/publicmapping/data/sldl10_index.csv" />
+            <Blockfile path="/projects/PublicMapping/data/sldl10_index.csv" />
         </Template>
 
         <Template name="State Senate">
             <LegislativeBody ref="senate"/>
 
-            <Blockfile path="/projects/publicmapping/data/sldu10_index.csv" />
+            <Blockfile path="/projects/PublicMapping/data/sldu10_index.csv" />
         </Template>
     </Templates>
     
@@ -1223,7 +1223,7 @@
     which the rest of the application components can be found.
     
     -->
-    <Project root="/projects/publicmapping/trunk" sessionquota="5" 
+    <Project root="/projects/PublicMapping/DistrictBuilder" sessionquota="5" 
              sessiontimeout="15">
         <!-- 
             Database connection information.
@@ -1267,9 +1267,9 @@
             is to have no base layer, set it to the empty string.
             
             -->
-            <MapServer hostname="" ns="pmp" nshref="http://publicmapping.sourceforge.net/"
+            <MapServer hostname="" ns="pmp" nshref="https://github.com/PublicMapping/"
                 adminuser="<geoserver admin user>" adminpass="<geoserver admin pass>" maxfeatures="100" 
-                styles="/projects/publicmapping/trunk/sld" />
+                styles="/projects/PublicMapping/DistrictBuilder/sld" />
 
             <!-- 
             
@@ -1305,7 +1305,7 @@
                Use calculators for reporting. tempdir is the location where
                the reports are stored and served from.
             -->
-            <CalculatorReports tempdir="/projects/publicmapping/local/reports" />          
+            <CalculatorReports tempdir="/projects/PublicMapping/local/reports" />          
 
             <!-- This configuration is set up for reporting using Calculator reports
                  (report panels are constructed via ScoreDisplays/ScorePanels/ScoreFunctiosn).
@@ -1315,9 +1315,9 @@
             <BardConfigs>
                 <BardConfig 
                     id="tenpercent"
-                    shape="/projects/publicmapping/data/vablock_bard_save.Rdata" 
-                    temp="/projects/publicmapping/local/reports"
-                    transform="/projects/publicmapping/trunk/docs/bard_template.xslt">
+                    shape="/projects/PublicMapping/data/vablock_bard_save.Rdata" 
+                    temp="/projects/PublicMapping/local/reports"
+                    transform="/projects/PublicMapping/DistrictBuilder/docs/bard_template.xslt">
                     <PopVars>
                         <PopVar subjectref="poptot" threshold=".1" default="true" />
                         <PopVar subjectref="vap" />
@@ -1348,9 +1348,9 @@
                 </BardConfig>
                 <BardConfig 
                     id="fivepercent"
-                    shape="/projects/publicmapping/data/vablock_bard_save.Rdata" 
-                    temp="/projects/publicmapping/local/reports"
-                    transform="/projects/publicmapping/trunk/docs/bard_template.xslt">
+                    shape="/projects/PublicMapping/data/vablock_bard_save.Rdata" 
+                    temp="/projects/PublicMapping/local/reports"
+                    transform="/projects/PublicMapping/DistrictBuilder/docs/bard_template.xslt">
                     <PopVars>
                         <PopVar subjectref="poptot" threshold=".05" default="true" />
                         <PopVar subjectref="vap" />

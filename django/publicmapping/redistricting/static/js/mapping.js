@@ -14,7 +14,7 @@
    limitations under the License.
 
    This file is part of The Public Mapping Project
-   http://sourceforge.net/projects/publicmapping/
+   https://github.com/PublicMapping/
 
    Purpose:
        This script file creates the map and controls all behaviors of the

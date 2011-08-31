@@ -55,7 +55,7 @@ def     drop_db():
         subprocess.check_call(["service","apache2","restart"])
         subprocess.check_call(["service","postgresql","restart"])
         subprocess.check_call(['su postgres -c "dropdb publicmapping"'],shell=True)
-        subprocess.check_call(['cat /projects/publicmapping/trunk/sql/publicmapping_db.sql | su postgres -c "psql -f - postgres"'],shell=True)
+        subprocess.check_call(['cat /projects/PublicMapping/DistrictBuilder/sql/publicmapping_db.sql | su postgres -c "psql -f - postgres"'],shell=True)
         subprocess.check_call(["service","apache2","start"])
         subprocess.check_call(["service","tomcat6","start"])
 
@@ -83,7 +83,7 @@ def     get_census_data(stateFips):
         print 'Retrieving census shapefiles...'
         # put all data in publicmapping data directory
         olddir = os.getcwd()
-        os.chdir("/projects/publicmapping/data/")
+        os.chdir("/projects/PublicMapping/data/")
         # obtain state boundary files from census
         cenBlockFilePrefix = 'tl_2010_%s_tabblock10' % stateFips
         cenTractFilePrefix = 'tl_2010_%s_tract10' % stateFips
@@ -286,7 +286,7 @@ class Sld_URange_Template(ListTemplate):
         """
 
 def gensld_none(geoname):
-        target_file = '/projects/publicmapping/trunk/sld/pmp:%s_none.sld' % (geoname)       
+        target_file = '/projects/PublicMapping/DistrictBuilder/sld/pmp:%s_none.sld' % (geoname)       
         f = open(target_file,'w')
         f.write ( str(SldList_Template(layername="%s No fill" % (geoname),layertitle="%s No Fill" % (geoname) ,layerabs="A style showing the boundaries of a geounit with a transparent fill", slst=[],sli=Empty_Template, lst=[{"title":"Fill","fill":"#FFFFFF","fillopacity":"1.0"}],li=Sld_Poly_Template,elst=[{"title":"Boundary","stroke":"#555555","strokewidth":"3.00","strokeopacity":"1.0"}],eli=Sld_Line_Template)) )
 	f.write("\n")
@@ -294,7 +294,7 @@ def gensld_none(geoname):
         os.chmod(target_file,stat.S_IRUSR|stat.S_IRGRP|stat.S_IROTH)    
 
 def gensld_boundaries(geoname):
-        target_file = '/projects/publicmapping/trunk/sld/pmp:%s_boundaries.sld' % (geoname) 
+        target_file = '/projects/PublicMapping/DistrictBuilder/sld/pmp:%s_boundaries.sld' % (geoname) 
         f = open(target_file,'w')
         f.write ( str(SldList_Template(layername="%s Boundaries" % (geoname) ,layertitle="%s Boundaries Only" %(geoname),layerabs="A style showing the boundaries of a geounit", slst=[] ,sli=Empty_Template, lst=[],li=Empty_Template,elst=[{"title":"County Boundaries","fill":"#000000","fillopacity":"0.0","stroke":"#2255FF","strokewidth":"2","strokeopacity":"0.35"}],eli=Sld_PolyB_Template)))
 	f.write("\n")
@@ -308,7 +308,7 @@ def gensld_choro(geoname,varname,vartitle,quantiles):
 def gensld_choro_internal(geoname,varname,vartitle,quantiles,unit="number"):
 	# WARNING: sld files need to be lower case to be compatible with postgres views
 	lvarname = string.lower(varname)
-        target_file = '/projects/publicmapping/trunk/sld/pmp:%s_%s.sld' % (geoname,lvarname) 
+        target_file = '/projects/PublicMapping/DistrictBuilder/sld/pmp:%s_%s.sld' % (geoname,lvarname) 
         varabs="Grayscale choropleth based on quantiles of %s" % (varname)
         valuelist= [
           {"top": str(quantiles[4]),
@@ -1349,7 +1349,7 @@ class Config_Template(DictionaryTemplate):
     <GeoLevels>
       <GeoLevel id="block" name="block" min_zoom="6" sort_key="3" tolerance="2.5">
 
-          <Shapefile path="/projects/publicmapping/data/census_blocks.shp">
+          <Shapefile path="/projects/PublicMapping/data/census_blocks.shp">
               <Fields>
 
                   <Field name="NAME10" type="name"/>
@@ -1406,7 +1406,7 @@ class Config_Template(DictionaryTemplate):
      </GeoLevel>
       <GeoLevel id="tract" name="tract" min_zoom="3" sort_key="2" tolerance="25">
          <Files>
-              <Geography path="/projects/publicmapping/data/census_tracts.shp">
+              <Geography path="/projects/PublicMapping/data/census_tracts.shp">
             <Fields>
                       <Field name="NAME10" type="name" />
                       <Field name="GEOID10" type="portable" />
@@ -1465,7 +1465,7 @@ class Config_Template(DictionaryTemplate):
 
       <GeoLevel id="county" name="county" min_zoom="0" sort_key="1" tolerance="250">
           <Files>
-              <Geography path="/projects/publicmapping/data/census_counties.shp">
+              <Geography path="/projects/PublicMapping/data/census_counties.shp">
                   <Fields>
                       <Field name="NAME10" type="name"/>
                       <Field name="GEOID10" type="portable"/>
@@ -1524,19 +1524,19 @@ class Config_Template(DictionaryTemplate):
     <Templates>
         <Template name="Congressional">
             <LegislativeBody ref="congress"/>
-             <Blockfile path="/projects/publicmapping/data/congress_generated_index.csv" />
+             <Blockfile path="/projects/PublicMapping/data/congress_generated_index.csv" />
         </Template>
         <Template name="State House">
             <LegislativeBody ref="house"/>
-            <Blockfile path="/projects/publicmapping/data/house_generated_index.csv" />
+            <Blockfile path="/projects/PublicMapping/data/house_generated_index.csv" />
         </Template>
         <Template name="State Senate">
             <LegislativeBody ref="senate"/>
-            <Blockfile path="/projects/publicmapping/data/senate_generated_index.csv" />
+            <Blockfile path="/projects/PublicMapping/data/senate_generated_index.csv" />
         </Template>
     </Templates>
 
-    <Project root="/projects/publicmapping/trunk" sessionquota="5" 
+    <Project root="/projects/PublicMapping/DistrictBuilder" sessionquota="5" 
              sessiontimeout="15">
         <!-- Database connection information. -->
         <Database name="publicmapping" user="publicmapping" password="publicmapping"/>
@@ -1553,7 +1553,7 @@ class Config_Template(DictionaryTemplate):
        <Redistricting>      
 	   <MapServer hostname="" ns="pmp" nshref="http://publicmapping.sourceforge.net/"
                 adminuser="admin" adminpass="admin" maxfeatures="100" 
-                styles="/projects/publicmapping/trunk/sld" />
+                styles="/projects/PublicMapping/DistrictBuilder/sld" />
             <!-- 
             
             Use a GoogleAnalytics account to tract the usage of the 
@@ -1572,9 +1572,9 @@ class Config_Template(DictionaryTemplate):
             <BardConfigs>
   		 <BardConfig 
                     id="blocks"
-                    shape="/projects/publicmapping/data/census_configured.Rdata" 
-                    temp="/projects/publicmapping/local/reports"
-                    transform="/projects/publicmapping/trunk/docs/bard_template.xslt">
+                    shape="/projects/PublicMapping/data/census_configured.Rdata" 
+                    temp="/projects/PublicMapping/local/reports"
+                    transform="/projects/PublicMapping/DistrictBuilder/docs/bard_template.xslt">
                     <PopVars>
                         <PopVar subjectref="totpop" threshold=".01" default="true" />
                         <PopVar subjectref="vap" threshold=".1" />
@@ -1691,7 +1691,7 @@ target_na_senate =0, target_hisp_senate = 0 , target_bl_senate = 0, contiguityOv
 	pop_senate = int(round((sum_TOTPOP/float(num_districts_senate))))
 	pop_senate_max = int(round((sum_TOTPOP/float(num_districts_senate)) * 1.1))
         pop_senate_min = int(round((sum_TOTPOP/float(num_districts_senate)) * 0.9))
-        target_file = '/projects/publicmapping/trunk/docs/config_census_generated.xml'
+        target_file = '/projects/PublicMapping/DistrictBuilder/docs/config_census_generated.xml'
         f = open(target_file,'w')
         f.write(str( Config_Template(start_elec=start_elec,end_elec=end_elec,num_districts_congress=num_districts_congress,num_districts_house=num_districts_house,num_districts_senate=num_districts_senate,pop_congress_max=pop_congress_max,pop_congress_min=pop_congress_min,pop_senate_max=pop_senate_max, pop_senate_min=pop_senate_min,pop_house_max=pop_house_max,pop_house_min=pop_house_min,pop_congress=pop_congress,pop_senate=pop_senate,pop_house=pop_house,start_na=start_na, end_na=end_na, target_na_congress=target_na_congress, target_hisp_congress=target_hisp_congress, target_bl_congress=target_bl_congress, target_na_house=target_na_house, target_hisp_house=target_hisp_house, target_bl_house=target_bl_house, target_na_senate=target_na_senate, target_hisp_senate=target_hisp_senate, target_bl_senate=target_bl_senate,contiguityOverrideString=contiguityOverrideString)))
 	f.write("\n")
@@ -1790,21 +1790,21 @@ if (parseResults.do_getdata):
 	# merge standard variables
 	# TODO: Refactor entirely in rpy
 	print 'merging data...'
-	robjects.r.source("/projects/publicmapping/trunk/docs/loadcensus/mergeCensus.R")
+	robjects.r.source("/projects/PublicMapping/DistrictBuilder/docs/loadcensus/mergeCensus.R")
 
 if ( (parseResults.do_genconf) or (parseResults.do_gensld)) :
 	print 'calculating statistics for configs and slds...'
-	robjects.r.source("/projects/publicmapping/trunk/docs/loadcensus/calcStats.R")
+	robjects.r.source("/projects/PublicMapping/DistrictBuilder/docs/loadcensus/calcStats.R")
 	sum_TOTPOP= robjects.r.sum_TOTPOP[0]
 	# TODO: Refactor entirely in rpy
 	# NOTE: robject is returning 6-level quantiles, has_election_data, has_vtd, sum_TOTPOP
 	has_election_data = robjects.r.has_election_data[0]
 
 if ( parseResults.do_genconf) :
-	robjects.r.source("/projects/publicmapping/trunk/docs/loadcensus/contiguityOverride.R")
+	robjects.r.source("/projects/PublicMapping/DistrictBuilder/docs/loadcensus/contiguityOverride.R")
 	# TODO: should work but has embedded string forwarding	
 	#contiguityOverrideString = robjects.r.contiguityOverrideString
-	f = open('/projects/publicmapping/trunk/docs/generated_overrides.xml', 'r')
+	f = open('/projects/PublicMapping/DistrictBuilder/docs/generated_overrides.xml', 'r')
 	contiguityOverrideString = f.read()
 	f.close()
 	
@@ -1868,14 +1868,14 @@ target_na_senate=parseResults.target_na_senate, target_hisp_senate = parseResult
 if (parseResults.do_run):
 	print 'running setup-py ... '
         olddir = os.getcwd()
-        os.chdir("/projects/publicmapping/trunk/django/publicmapping/")
+        os.chdir("/projects/PublicMapping/DistrictBuilder/django/publicmapping/")
         subprocess.check_call(["ls"])
-        #subprocess.check_call(["setup.py","-v2","/projects/publicmapping/trunk/docs/config.xsd"," /projects/publicmapping/trunk/docs/config_census_generated.xml"])
-        subprocess.check_call(["./setup.py -v2 /projects/publicmapping/trunk/docs/config.xsd /projects/publicmapping/trunk/docs/config_census_generated.xml"],shell=True)
+        #subprocess.check_call(["setup.py","-v2","/projects/PublicMapping/DistrictBuilder/docs/config.xsd"," /projects/PublicMapping/DistrictBuilder/docs/config_census_generated.xml"])
+        subprocess.check_call(["./setup.py -v2 /projects/PublicMapping/DistrictBuilder/docs/config.xsd /projects/PublicMapping/DistrictBuilder/docs/config_census_generated.xml"],shell=True)
         os.chdir(olddir)
 else:
 	print '\n\n*** Now run: ***\n\n'
-	print '(cd /projects/publicmapping/trunk/django/publicmapping/; python setup.py -v2 /projects/publicmapping/trunk/docs/config.xsd /projects/publicmapping/trunk/docs/config_census_generated.xml)'
+	print '(cd /projects/PublicMapping/DistrictBuilder/django/publicmapping/; python setup.py -v2 /projects/PublicMapping/DistrictBuilder/docs/config.xsd /projects/PublicMapping/DistrictBuilder/docs/config_census_generated.xml)'
 
 
 

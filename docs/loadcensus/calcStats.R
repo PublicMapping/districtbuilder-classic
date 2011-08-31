@@ -8,7 +8,7 @@
 
 # merge census and supplementary data
 library(foreign) 
-setwd('/projects/publicmapping/data')
+setwd('/projects/PublicMapping/data')
 merged.df<-read.dbf("census_blocks.dbf",as.is=TRUE)
 
 # check for the existence of election variables in the data, choose the # best one

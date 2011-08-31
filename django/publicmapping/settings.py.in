@@ -4,10 +4,10 @@ Configuration settings for The Public Mapping Project
 This file contains application settings for the web application,
 The Public Mapping Project. This file requires a local configuration
 file that contains site- and machine-specific configuration settings
-in /projects/publicmapping/local/settings.ini
+in /projects/PublicMapping/local/settings.ini
 
 This file is part of The Public Mapping Project
-http://sourceforge.net/projects/publicmapping/
+https://github.com/PublicMapping/
 
 License:
     Copyright 2010 Micah Altman, Michael McDonald

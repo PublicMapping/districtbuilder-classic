@@ -5,7 +5,7 @@ This file wires up urls from HTTP requests to the methods used
 in the web application to generate the views(content).
 
 This file is part of The Public Mapping Project
-http://sourceforge.net/projects/publicmapping/
+https://github.com/PublicMapping/
  
 License:
     Copyright 2010 Micah Altman, Michael McDonald

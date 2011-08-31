@@ -8,7 +8,7 @@
 
 # merge census and supplementary data
 library(foreign) 
-setwd('/projects/publicmapping/data')
+setwd('/projects/PublicMapping/data')
 supp.df <-read.csv("redist_data.csv",stringsAsFactors=F,colClasses=c(GEOID10="character"))
 census.df<-read.dbf("census_blocks.dbf",as.is=TRUE)
 census.df$orig_rows<-1:dim(census.df)[1]
