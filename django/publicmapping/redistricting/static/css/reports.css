@@ -23,9 +23,9 @@
    Author: 
         Brian Jacobs, Andrew Jennings, David Zwarg, Kenny Shepard
 */
-.report_panel { border: 1px solid #ddd; margin: 5px; }
 .report_panel_title { font-weight: bold; font-size: 1.2em; }
-.report_function { border: 2px solid #ddd; }
+.report_function { border-top: 2px solid #ddd; margin-bottom: 15px; }
+.report_function_wrap {margin-bottom: 30px}
 .report_score_cell { font-size: 0.9em; }
 .report_score_cell.header { font-weight: bold; text-align: center; }
 .report_score_cell.footer { font-weight: bold; }
@@ -36,6 +36,7 @@
 .true { color: #090; }
 .false { color: #900; }
 
+/*
 .report_panel {
     max-width: 500px;
     margin: 10px;
@@ -49,13 +50,17 @@
     -webkit-box-shadow: 0 0 13px -5px #666666;
     box-shadow: 0 0 13px -5px #666666;
 }
+*/
+.report_panel {
+    max-width: 960px;
+	font-family: Arial, Helvetica, sans-serif;
+}
 
 .report_function_title {
   font-size:16px;
   font-weight: bold;
   color: #3E3E3E;
-  margin-bottom: 10px;
-  margin: 5px;
+  margin: 5px 5px 5px 0;
 }
 
 .report_panel table{

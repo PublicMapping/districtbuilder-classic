@@ -1809,27 +1809,61 @@ div#map_menu button#stats_legend {
 
 
 
-/* bard report previews */
-#reportPreview h1#genreport { 
-    text-align:center; 
-} 
-#reportPreview p { 
-    margin: 0 5px 0 10px; 
-    font-size: 0.8em; 
-} 
-div.report {
-	border: 3px solid #779e7b;
-    top:40;
-    height:95%;
-    width: 95%;
-    overflow: auto;
-}
+
 
 /* Evaluate page */
+.evaluate .evaluate_container {
+	width: 960px;
+	margin: 0 auto 0;
+	height: 100%;
+	position:relative;
+}
+.evaluate #options1 .stats-group {margin-right: 0}
+.evaluate .stats-group {
+	background: #fbfbf3;
+	border: 1px solid #c7c7c7;
+	margin: 0 20px 20px 0;
+	-moz-box-shadow: 0 0 8px rgba(0,0,0,0.15);
+	-webkit-box-shadow: 0 0 8px rgba(0,0,0,0.15);
+	box-shadow: 0 0 8px rgba(0,0,0,0.15);
+}
 
+.evaluate .stats-group .master {
+	font-size: 1.5em;
+	font-weight: bold;
+	padding: 7px 3px;
+	background: #f5f5ef;
+	background: -moz-linear-gradient(top, #f5f5ef 0%, #edede8 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f5f5ef), color-stop(100%,#edede8));
+	background: linear-gradient(top, #f5f5ef 0%,#edede8 100%);
+}
+
+.evaluate .stats-group .child{
+	font-size: 1.2em;
+	padding: 4px 3px;
+	border-top: 1px solid #e1e1e1;
+}
+.evaluate .stats-group .child:first-child {
+	border-top: none;
+}
+
+
+.evaluate #description {
+padding: 0 0 10px 0;
+margin-bottom: 10px;
+background: url("/static-media/images/divider-horz.png") 0 100% repeat-x;
+
+}
+
+.evaluate #reportdescription {
+	width: 56%; 
+	padding-top: 10px;
+
+}
 .evaluate #description,
-.evaluate #options {
-    width:55%;
+.evaluate #options, 
+.evaluate #reportButtons  {
+    margin-right: 20px;
 }
 
 .evaluate #description p {
@@ -1848,8 +1882,13 @@ div.report {
 }
 .evaluate #reportButtons {
   clear:both;
-  padding: 30px;
+  padding: 10px 0;
+  margin-bottom: 25px;
+  background: url("/static-media/images/divider-horz.png") repeat-x 100% 0;
 }
+.evaluate #reportButtons #btnOpenReport {float:right}
+.evaluate #reportButtons #btnPreviewReport {float:left}
+
 .evaluate #options span {
     display: block;
 }
@@ -1857,19 +1896,121 @@ div.report {
     display:block;
     float:left;
     vertical-align:top;
-    width: 45%;
+    width: 50%;
 }
+
+
+/* report previews */
+
+.reportStatus {
+    color: #818181;
+    font-size: 23px;
+    font-weight: bold;
+    line-height: 27px;
+    position: absolute;
+    text-align: center;
+    text-shadow: 0 -1px #FFFFFF; 
+    top: 35%;
+    width: 100%;
+}
+
+.reportStatus img {
+	margin-bottom: 12px;
+} 
+
+#reportPreview h1#genreport { 
+    text-align:center; 
+	font-weight:bold;
+	font-size: 23px;
+} 
+#reportPreview p { 
+    margin: 8px 10px 0; 
+    font-size: 14px; 
+	font-weight:normal;
+	line-height: 18px;
+} 
+#reportPreviewContainer {
+    bottom: 10px;
+    overflow: hidden;
+    position: absolute;
+    right: 0;
+    top: 10px;
+    width: 42%;
+	background: #fbfbf3;
+	border: 1px solid #c7c7c7;
+	background: -moz-linear-gradient(top, #fbfbf3 0%, #edede8 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fbfbf3), color-stop(100%,#edede8));
+	background: linear-gradient(top, #fbfbf3 0%,#edede8 100%);
+	-moz-box-shadow: 0 0 8px rgba(0,0,0,0.15);
+	-webkit-box-shadow: 0 0 8px rgba(0,0,0,0.15);
+	box-shadow: 0 0 8px rgba(0,0,0,0.15);
+}
+
+#reportPreview {   
+	border: 0 none;
+	padding: 0;
+	background:none;
+	height: 100%;
+	-moz-border-radius:0;
+	-webkit-border-radius: 0;
+    border-radius: 0;
+}
+#reportPreview  #stats-tab-nav {display:none}
+#reportPreview .report_panel {   
+    padding: 0; 
+	height: 100%;
+    width: 100%;
+	background: #FBFBF3;
+}
+.stats-nav-buttons {cursor:pointer; position: absolute; right: 0; top:0; margin: 8px; }
+.stats-nav-buttons  {padding-left:10px;}
+.stats-nav-buttons .ui-button-icon-primary {display:none}
+#app .multiple .stats-nav-buttons.ui-buttonset .ui-button.ui-state-active  {background-image: url("/static-media/images/bg-button-sm.png")}
+#app .multiple .stats-nav-buttons.ui-buttonset .ui-button:active {background-image:none}
+.stats-nav-buttons .ui-icon-arrow-right {background: url(/static-media/images/icon-arrow-right.png) 0 1px no-repeat; right: 0;}
+
+
+#reportPreview .report_panel_title {	
+	padding: 5px 10px;
+	background: #cbe0cb;
+	background: -moz-linear-gradient(top, #cbe0cb 0%, #bed3be 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#cbe0cb), color-stop(100%,#bed3be));
+	background: linear-gradient(top, #cbe0cb 0%,#bed3be 100%);
+	}
+	
+#reportPreview .report_function_wrap {
+    top: 42px; 
+	padding: 3px 10px 10px;
+	margin: 0;
+	bottom: 0;
+    left: 0;
+    overflow: auto;
+    position: absolute;
+    right: 0;
+}
+
+#reportPreview .report_function {border:0}
 
 .reportVar {
     padding-left:15px;
 }
-#reportPreviewContainer {
-    position:absolute;
-    top:10px;
-    right:10px;
-    height:480px;
-    width: 40%;
+
+
+/* BARD reports styling */
+
+.evaluate .alt_reports #options  {
+	margin-bottom: 25px;
+	float:left;
+	padding-top:0;
 }
+.evaluate .alt_reports #options input {vertical-align: middle}
+.evaluate .alt_reports #options .master {font-weight:bold; font-size: 12px; margin-top: 12px; margin-bottom: 4px;}
+.evaluate .alt_reports #options .child {font-size: 11px; margin-right: 15px;}
+.evaluate .alt_reports #reportButtons {width: 56%; padding-top:20px;}
+.evaluate .alt_reports #reportPreviewContainer {overflow:auto; font-size: 12px;}
+.evaluate .alt_reports #reportPreviewContainer object {height: 1px}
+
+
 #btnSharePlans {
     float:right;
 }
@@ -1964,22 +2105,6 @@ margin-bottom:20px;
 #scoring {display:none}
 
 
-/* Johnny's Fixes
-==================================*/
-
-.master {
-	font-size: 1.5em;
-	font-weight: bold;
-	margin: 1em 0 .4em 0;
-}
-
-.child {
-	font-size: 1.2em;
-}
-
-#reportButtons {
-	margin-top: 2em;
-}
 
 
 /* Report Table Styles

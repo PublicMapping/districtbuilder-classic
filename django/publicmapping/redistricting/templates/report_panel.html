@@ -24,14 +24,15 @@
        set of district scores and convert it to a panel that can be
        shown in the reports display.
 
-   Author:
+   Author: 
        Andrew Jennings, David Zwarg, Kenny Shepard
 
 {% endcomment %}
 
 {% load redistricting_extras %}
-<div class="report_panel {{cssclass}}">
+<div id="stat_{{cssclass|cut:' '}}" class="report_panel {{cssclass}}">
   <div class="report_panel_title">{{ title }}</div>
+    <div class="report_function_wrap">
     {% for function_name in functions %}
       <div class="report_function">
         <div class="report_function_title">
@@ -81,4 +82,5 @@
         </table>
       </div>
     {% endfor %}
+  </div>
 </div>
