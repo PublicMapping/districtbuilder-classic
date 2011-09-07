@@ -36,6 +36,7 @@ from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.shortcuts import render_to_response
 from django.template import loader, Context, RequestContext
 from django.utils import simplejson as json
+from hashlib import sha1
 
 # for proxy
 import urllib2
@@ -241,7 +242,7 @@ def emailpassword(user):
         True if the user was modified and notified successfully.
     """
 
-    newpw = ''.join([choice('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_=+') for i in range(8)])
+    newpw = ''.join([choice('abcdefghjkmnopqrstuvwxyzABCDEFGHJKMNOPQRSTUVWXYZ023456789!@#$%^&*()-_=+') for i in range(8)])
     context = Context({
         'user': user,
         'new_password': newpw
@@ -249,7 +250,9 @@ def emailpassword(user):
     template = loader.get_template('forgottenpassword.email')
 
     try:
-        user.set_password(newpw)
+        s = sha1()
+        s.update(newpw)
+        user.set_password(s.hexdigest())
         user.save()
     except:
         return False

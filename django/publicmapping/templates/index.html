@@ -114,7 +114,8 @@
             <input type="hidden" name="next" value="/districtmapping/plan/0/view/"/>
             <h3>Log In</h3>
 <input id="username" name="username"/>
-<input id="password" name="password" type="password"/>
+<input id="passphrase" type="password"/>
+<input id="password" name="password" type="hidden"/>
 <button id="login" type="submit" />Login</button>
           </form>
 <p><a href="#" onclick="$('#forgotpass').dialog('open');">Forgot your password?</a></p>
@@ -277,5 +278,14 @@ y moral rights that You may have in the Contents.</p>
     <script type="text/javascript" src="/static-media/jquery/external/jquery.tools.tooltip.slide.min.js"></script>
     <script type="text/javascript" src="/static-media/js/ui.js"></script>
     <script type="text/javascript" src="/static-media/js/register.js"></script>
+    <script type="text/javascript" src="/static-media/js/sha1.js"></script>
+    <script type="text/javascript">
+      $('button#login').click(function(){
+          var pp = $('#passphrase'),
+              pw = $('#password');
+        
+          pw.val( Sha1.hash(pp.val() ) );
+      });
+    </script>
   </body>
 </html>

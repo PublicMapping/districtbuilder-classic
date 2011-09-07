@@ -139,8 +139,8 @@ $(function(){
             data: { 
                 userid:$('#userid').val(),
                 newusername:username.val(),
-                newpassword1:newpassword1.val(),
-                newpassword2:newpassword2.val(),
+                newpassword1:Sha1.hash(newpassword1.val()),
+                newpassword2:Sha1.hash(newpassword2.val()),
                 email:email.val(),
                 passwordhint:passwordhint.val(),
                 firstname:$('#firstname').val(),
