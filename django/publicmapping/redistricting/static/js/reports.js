@@ -344,7 +344,7 @@ reports = function(options) {
 			});
 		}); 
 
-        var link = 'https://' + location.host + url
+        var link = window.location.protocol + '//' + window.location.host + url
         $btnOpenReport = $('<a href="' + link + '" target="report" ><button id="btnOpenReport">Open report in a new window</button></a>');
         $('#reportButtons #btnOpenReport').remove();
         $('#reportButtons').append($btnOpenReport);  

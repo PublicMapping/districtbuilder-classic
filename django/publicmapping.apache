@@ -30,19 +30,7 @@
 
 
 <IfDefine !nobuilder>
-    # The main publicmapping host securely serves the web application. If you 
-    # haven't enabled SSL on your web server, the app will not run
-    <IfModule mod_ssl.c>
-    <VirtualHost *:443>
-        # require SSL
-        SSLEngine on
-        SSLCertificateFile /etc/ssl/certs/publicmapping.crt
-        SSLCertificateKeyFile /etc/ssl/certs/publicmapping.key
-        CustomLog ssl_request_log "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \"%r\" %b"
-
-        # Fix IE SSL problems
-        BrowserMatch ".*MSIE.*" nokeepalive ssl-unclean-shutdown downgrade-1.0 force-response-1.0
-        
+    <VirtualHost *:80>        
         ServerAdmin AzaveaDev@azavea.com
         WSGIDaemonProcess geodjango user=www-data group=www-data processes=10 threads=1 display-name=publicmapping
         WSGIProcessGroup geodjango
@@ -95,14 +83,6 @@
         RewriteLog /var/log/apache2/publicmapping-rewrite.log
         RewriteLogLevel 0
 
-    </VirtualHost>
-    </IfModule>
-
-    # All traffic on port 80 should be redirected to a secure port
-    <VirtualHost *:80>
-        RewriteEngine On
-        RewriteCond %{SERVER_PORT} 80
-        RewriteRule ^(.*) https://%{HTTP_HOST}$1 [R,L]
     </VirtualHost>
 </IfDefine>
 
