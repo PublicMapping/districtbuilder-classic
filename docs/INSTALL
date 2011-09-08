@@ -24,7 +24,8 @@ For python libraries that aren't in the ubuntu repositories, you can
 use easy_install (part of python-setuptools) to get celery, which
 is used for background processes:
 
-> sudo easy_install celery==2.1.4 django-celery==2.1.4 ghettoq django-staticfiles django-tagging inflect
+> sudo easy_install pip
+> sudo pip install -r requirements.txt
 
 == Additional Packages==
 
