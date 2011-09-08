@@ -19,10 +19,11 @@ the necessary software using the command:
 > sudo aptitude install apache2 libapache2-mod-wsgi python-django \
     python-lxml python-gdal python-rpy2 python-psycopg2 \
     python-setuptools postgresql-8.4-postgis sun-java6-jdk \
-    tomcat6 tomcat6-admin     
+    tomcat6 tomcat6-admin
+
 For python libraries that aren't in the ubuntu repositories, you can
-use easy_install (part of python-setuptools) to get celery, which
-is used for background processes:
+use pip (a replacement for easy_install) to get secondary python libraries,
+mostly used for background processes:
 
 > sudo easy_install pip
 > sudo pip install -r requirements.txt
