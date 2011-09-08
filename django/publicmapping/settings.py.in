@@ -68,7 +68,7 @@ ADMIN_MEDIA_PREFIX = '/static-media/admin/'
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 # Require https connections to send cookies
-SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = False
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (

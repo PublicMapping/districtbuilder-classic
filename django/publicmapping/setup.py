@@ -381,7 +381,7 @@ def merge_config(config, verbose):
                 if server:
                     settings_out.write("BARD_SERVER = '%s'\n" % server)
                 else:
-                    settings_out.write("BARD_SERVER = 'https://localhost/reporting'\n")
+                    settings_out.write("BARD_SERVER = 'http://localhost/reporting'\n")
     
             # Calculator reports
             elif calccfg is not None:
