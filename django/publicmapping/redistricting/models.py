@@ -1127,57 +1127,17 @@ class Plan(models.Model):
         if district_ids == []:
             return []
         
-        cursor = connection.cursor()
-        query = """SELECT rd.id,
-rd.district_id,
-rd.name,
-rd.is_locked,
-lmt.version,
-rd.plan_id,
-rc.subject_id,
-rc.number,
-st_asgeojson(
-    st_intersection(
-        st_geometryn(rd.simple,%d),
-            st_envelope(
-                ('SRID=' || (select st_srid(rd.simple)) || ';LINESTRING(%f %f,%f %f)')::geometry
-            )
-        )
-    ) as geom ,
-rd.num_members
-FROM redistricting_district as rd 
-JOIN redistricting_computedcharacteristic as rc 
-ON rd.id = rc.district_id 
-JOIN (
-    SELECT max(version) as version,district_id
-    FROM redistricting_district 
-    WHERE plan_id = %d 
-    AND version <= %d 
-    GROUP BY district_id) 
-AS lmt 
-ON rd.district_id = lmt.district_id 
-WHERE rd.plan_id = %d 
-AND rc.subject_id = %d 
-AND lmt.version = rd.version 
-AND st_intersects(
-    st_geometryn(rd.simple,%d),
-        st_envelope(
-            ('SRID=' || (select st_srid(rd.simple)) || ';LINESTRING(%f %f,%f %f)')::geometry
-        )
-    )""" % (geolevel, \
-                extents[0], \
-                extents[1], \
-                extents[2], \
-                extents[3], \
-                int(self.id), \
-                int(version), \
-                int(self.id), \
-                int(subject_id), \
-                geolevel, \
-                extents[0], \
-                extents[1], \
-                extents[2], \
-                extents[3], )
+        qset = District.objects.filter(plan=self,version__lte=version)
+        qset = qset.values('district_id')
+        qset = qset.annotate(latest=Max('version'),max_id=Max('id'))
+        qset = qset.values_list('max_id',flat=True)
+
+        bounds = Polygon.from_bbox(extents)
+        bounds.srid = 3785
+
+        qset = District.objects.filter(id__in=qset)
+        qset = qset.extra(select={'chop':"st_intersection(st_geometryn(simple,%d),st_geomfromewkt('%s'))" % (geolevel,bounds.ewkt)},where=["st_intersects(st_geometryn(simple,%d),st_geomfromewkt('%s'))" % (geolevel, bounds.ewkt)])
+        qset = qset.defer('simple')
 
         exclude_unassigned = True
 
@@ -1185,55 +1145,45 @@ AND st_intersects(
         if district_ids:
             # The 'int' conversion will throw an exception if the value isn't an integer.
             # This is desired, and will keep any harmful array values out of the query.
-            query += ' AND rd.district_id in (' + ','.join(str(int(id)) for id in district_ids) + ')'
+            qset = qset.filter(district_id__in=[int(id) for id in district_ids])
             exclude_unassigned = len(filter(lambda x: int(x) == 0, district_ids)) == 0
 
         # Don't return Unassigned district unless it was explicitly requested
         if exclude_unassigned:
-            query += " AND NOT rd.name = 'Unassigned'"
+            qset = qset.filter( ~Q(name='Unassigned') )
 
-        # Execute our custom query
-        cursor.execute(query)
-        rows = cursor.fetchall()
         features = []
-        
-        for row in rows:
-            district = District.objects.get(pk=int(row[0]))
-            # Maybe the most recent district is empty
-            if row[8]:
-                geom = json.loads( row[8] )
-            else:
-                geom = None
 
+        subj = Subject.objects.get(id=int(subject_id))
+       
+        for district in qset:
             compactness_calculator = Schwartzberg()
             compactness_calculator.compute(district=district)
 
             contiguity_calculator = Contiguity()
             contiguity_calculator.compute(district=district)
 
-            name = row[2]
-            num_members = int(row[9])
-
             # If this district contains multiple members, change the label
-            label = name
-            if (self.legislative_body.multi_members_allowed and (num_members > 1)):
+            label = district.name
+            if (self.legislative_body.multi_members_allowed and (district.num_members > 1)):
                 format = self.legislative_body.multi_district_label_format
-                label = format.format(name=name, num_members=num_members)
+                label = format.format(name=district.name, num_members=district.num_members)
+
             
             features.append({ 
-                'id': row[0],
+                'id': district.id,
                 'properties': {
-                    'district_id': row[1],
-                    'name': name,
+                    'district_id': district.district_id,
+                    'name': district.name,
                     'label': label,
-                    'is_locked': row[3],
-                    'version': row[4],
-                    'number': float(row[7]),
+                    'is_locked': district.is_locked,
+                    'version': district.version,
+                    'number': str(district.computedcharacteristic_set.get(subject=subj).number),
                     'contiguous': contiguity_calculator.result['value'],
                     'compactness': compactness_calculator.result['value'],
-                    'num_members': num_members
+                    'num_members': district.num_members
                 },
-                'geometry': geom
+                'geometry': json.loads(GEOSGeometry(district.chop).geojson)
             })
 
         # Return a python dict, which gets serialized into geojson
@@ -1255,13 +1205,15 @@ AND st_intersects(
         Returns:
             A list of districts that exist in the plan at the version.
         """
+        qset = District.objects.filter(plan=self,version__lte=version)
+        qset = qset.values('district_id')
+        qset = qset.annotate(latest=Max('version'),max_id=Max('id'))
+        qset = qset.values_list('max_id',flat=True)
+        qset = District.objects.filter(id__in=qset)
+        if not include_geom:
+            qset = qset.defer('geom','simple')
 
-        if include_geom:
-            fields = 'd.*'
-        else:
-            fields = 'd.id, d.district_id, d.name, d.plan_id, d.version, d.is_locked'
-
-        return sorted(list(District.objects.raw('select %s from redistricting_district as d join (select max(version) as latest, district_id, plan_id from redistricting_district where plan_id = %%s and version <= %%s group by district_id, plan_id) as v on d.district_id = v.district_id and d.plan_id = v.plan_id and d.version = v.latest where not ST_IsEmpty(d.geom) or d.district_id = 0' % fields, [ self.id, version ])), key=lambda d: d.sortKey())
+        return sorted(list(qset), key=lambda d: d.sortKey())
 
     @staticmethod
     def create_default(name,body,owner=None,template=True,is_pending=True,create_unassigned=True):
@@ -2468,7 +2420,6 @@ class ComputedCharacteristic(models.Model):
         """
         ordering = ['subject']
 
-
 class Profile(models.Model):
     """
     Extra user information that doesn't fit in Django's default user
@@ -3300,7 +3251,7 @@ class ComputedDistrictScore(models.Model):
             cache,created = ComputedDistrictScore.objects.get_or_create(function=function, district=district, defaults=defaults)
 
         except Exception as ex:
-            print(traceback.format_exc())
+            print traceback.format_exc()
             return None
 
         if created == True:
@@ -3311,7 +3262,7 @@ class ComputedDistrictScore(models.Model):
             try:
                 score = cPickle.loads(str(cache.value))
             except:
-                print('Failed to get cached value: %s\n' % traceback.format_exc())
+                print 'Failed to get cached value: %s\n' % traceback.format_exc()
                 score = function.score(district, format='raw')
 
         if format != 'raw':

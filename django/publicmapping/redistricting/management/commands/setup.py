@@ -685,7 +685,7 @@ ERROR:
         if verbose > 1:
             print 'Created identify_geounit view ...'
 
-        sql = "CREATE VIEW simple_district AS SELECT redistricting_district.id, redistricting_district.district_id, redistricting_district.plan_id, st_geometryn(redistricting_district.simple,3) as geom FROM redistricting_district;"
+        sql = "CREATE OR REPLACE VIEW simple_district AS SELECT redistricting_district.id, redistricting_district.district_id, redistricting_district.plan_id, st_geometryn(redistricting_district.simple,3) as geom FROM redistricting_district;"
         cursor.execute(sql)
         transaction.commit()
         if verbose > 1:
@@ -707,6 +707,7 @@ ERROR:
                 if verbose > 1:
                     print 'Created demo_%s_%s view ...' % \
                         (geolevel.name, subject.name)
+
         return True
 
     def import_geolevel(self, config, geolevel, verbose):
