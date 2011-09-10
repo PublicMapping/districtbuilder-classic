@@ -493,17 +493,14 @@ class Roeck(CalculatorBase):
             disk = Roeck.Circle(boundary)
         else:
             self.rec+=1
-            #print '+'*self.rec
             disk = self.b_minidisk(points, npts - 1, boundary, nbnd)
             
             if not disk.contains(points[npts-1]):
                 boundary[nbnd] = points[npts - 1]
 
                 self.rec+=1
-                #print '+'*self.rec
                 disk = self.b_minidisk(points, npts - 1, boundary, nbnd + 1)
 
-        #print '-'*self.rec
         self.rec-=1
         return disk
 

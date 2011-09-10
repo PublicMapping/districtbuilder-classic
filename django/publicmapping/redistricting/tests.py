@@ -1574,7 +1574,7 @@ class CalculatorTestCase(BaseTestCase):
         sumcalc.arg_dict['value3'] = ('literal','2',)
         sumcalc.compute(plan=self.plan)
 
-        self.assertEqual(3, sumcalc.result['value'], 'Incorrect value during summation. (e:%d,a:%d)' % (3, sumcalc.result['value']))
+        self.assertEqual(9, sumcalc.result['value'], 'Incorrect value during summation. (e:%d,a:%d)' % (9, sumcalc.result['value']))
 
     def test_sum2b(self):
         sumcalc = SumValues()
@@ -1779,7 +1779,7 @@ class CalculatorTestCase(BaseTestCase):
         dist2ids = self.geounits[18:21] + self.geounits[27:30] + self.geounits[36:39]
         dist1ids = map(lambda x: str(x.id), dist1ids)
         dist2ids = map(lambda x: str(x.id), dist2ids)
-        
+
         self.plan.add_geounits( self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
         self.plan.add_geounits( self.district2.district_id, dist2ids, self.geolevel.id, self.plan.version)
 
@@ -2546,7 +2546,7 @@ class CalculatorTestCase(BaseTestCase):
 
         self.assertEqual(None, avg.result)
         avg.compute(plan=self.plan)
-        self.assertEqual(None, avg.result)
+        self.assertEqual({'value':15.0}, avg.result)
 
         dist1ids = self.geounits[0:3] + self.geounits[9:12]
         dist2ids = self.geounits[18:21] + self.geounits[27:30] + self.geounits[36:39]
@@ -2571,7 +2571,7 @@ class CalculatorTestCase(BaseTestCase):
         avg.compute(plan=self.plan)
 
         # Average is 15.0, should be between 10.0 and 20.0
-        self.assertEqual(None, avg.result)
+        self.assertEqual({'value':15.0}, avg.result)
 
         dist1ids = self.geounits[0:3] + self.geounits[9:12]
         dist2ids = self.geounits[18:21] + self.geounits[27:30] + self.geounits[36:39]
@@ -3801,12 +3801,10 @@ class ReportCalculatorTestCase(BaseTestCase):
         self.subject2 = Subject.objects.get(name='TestSubject2')
 
         # add some geounits
-        geolevelid = 2
-        geounits = list(Geounit.objects.filter(geolevel=geolevelid).order_by('id'))
         dist1id = self.district1.district_id
-        dist1ids = geounits[0:3] + geounits[9:12]
+        dist1ids = self.geounits[0:3] + self.geounits[9:12]
         dist1ids = map(lambda x: str(x.id), dist1ids)
-        self.plan.add_geounits( self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+        self.plan.add_geounits( self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
         self.district1 = max(District.objects.filter(plan=self.plan,district_id=dist1id),key=lambda d: d.version)
     
     def tearDown(self):
@@ -3829,7 +3827,7 @@ class ReportCalculatorTestCase(BaseTestCase):
         
         col1 = calc.result['raw'][0]
         self.assertEqual('string', col1['type'])
-        self.assertEqual('TestMember 1', col1['value'])
+        self.assertEqual('District 1', col1['value'])
         self.assertEqual('DistrictID', col1['label'])
         self.assertFalse('avg_key' in col1)
 
@@ -3873,7 +3871,7 @@ class ReportCalculatorTestCase(BaseTestCase):
         
         col1 = calc.result['raw'][0]
         self.assertEqual('string', col1['type'])
-        self.assertEqual('TestMember 1', col1['value'])
+        self.assertEqual('District 1', col1['value'])
         self.assertEqual('DistrictID', col1['label'])
         self.assertFalse('avg_key' in col1)
 
@@ -3891,7 +3889,7 @@ class ReportCalculatorTestCase(BaseTestCase):
         
         col1 = calc.result['raw'][0]
         self.assertEqual('string', col1['type'])
-        self.assertEqual('TestMember 1', col1['value'])
+        self.assertEqual('District 1', col1['value'])
         self.assertEqual('DistrictID', col1['label'])
         self.assertFalse('avg_key' in col1)
 
@@ -3909,7 +3907,7 @@ class ReportCalculatorTestCase(BaseTestCase):
         
         col1 = calc.result['raw'][0]
         self.assertEqual('string', col1['type'])
-        self.assertEqual('TestMember 1', col1['value'])
+        self.assertEqual('District 1', col1['value'])
         self.assertEqual('DistrictID', col1['label'])
         self.assertFalse('avg_key' in col1)
 
@@ -3934,7 +3932,7 @@ class ReportCalculatorTestCase(BaseTestCase):
         
         col1 = calc.result['raw'][0]
         self.assertEqual('string', col1['type'])
-        self.assertEqual('TestMember 1', col1['value'])
+        self.assertEqual('District 1', col1['value'])
         self.assertEqual('DistrictID', col1['label'])
         self.assertFalse('avg_key' in col1)
 
@@ -3965,7 +3963,7 @@ class ReportCalculatorTestCase(BaseTestCase):
         
         col1 = calc.result['raw'][0]
         self.assertEqual('string', col1['type'])
-        self.assertEqual('TestMember 1', col1['value'])
+        self.assertEqual('District 1', col1['value'])
         self.assertEqual('DistrictID', col1['label'])
         self.assertFalse('avg_key' in col1)
 
@@ -4000,3 +3998,4 @@ class ReportCalculatorTestCase(BaseTestCase):
         col1 = calc.result['raw'][0]
         self.assertEqual('list', col1['type'])
         self.assertEqual(675, len(col1['value']))
+
