@@ -395,7 +395,7 @@ function mapinit(srs,maxExtent) {
 
                 // Only road type is supported for now.
                 if (mapType === 'road') {
-                    var url = window.location.protocol + "://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer";
+                    var url = window.location.protocol + "//services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer";
                     return new OpenLayers.Layer.ArcGISCache(layerName, url, options);
                 }
 
