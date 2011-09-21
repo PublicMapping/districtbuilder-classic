@@ -116,10 +116,10 @@ as reports and downloads) and cron jobs.
  4. Once postgis is intalled, run the PublicMapping_db.sql script in 
     the sql directory:
 
-    > sudo -u postgres psql -f /projects/PublicMapping/DistrictBuilder/sql/PublicMapping_db.sql
+    > sudo -u postgres psql -f /projects/PublicMapping/DistrictBuilder/sql/publicmapping_db.sql
 
-    This will create a PublicMapping db from the template_postgis 
-    template, along with a PublicMapping user role.  The PublicMapping 
+    This will create a publicmapping db from the template_postgis 
+    template, along with a publicmapping user role.  The publicmapping 
     user will be assigned all permissions and ownership on the db.
 
  5. Make sure your pg_hba file in your postgres configuration allows 
@@ -174,7 +174,7 @@ as reports and downloads) and cron jobs.
  8. Now we'll use the setup.py script to configure our application. Set the
     script to be executable:
     
-    > cd /projects/PublicMapping/DistrictBuilder/django/PublicMapping
+    > cd /projects/PublicMapping/DistrictBuilder/django/publicmapping
     > sudo chmod u+x setup.py
 
  9. Run the setup script with the appropriate parameters - the parts of 
@@ -255,7 +255,7 @@ as reports and downloads) and cron jobs.
     Apache.  First, copy the apache file into the "sites-available" 
     Apache config directory (typically /etc/apache2/sites-available/)
 
-    > cp /projects/PublicMapping/DistrictBuilder/django/PublicMapping.apache \
+    > cp /projects/PublicMapping/DistrictBuilder/django/publicmapping.apache \
         /etc/apache2/sites-available/publicmapping
 
  2. Enable the new publicmapping site in apache
@@ -263,7 +263,7 @@ as reports and downloads) and cron jobs.
     > a2ensite publicmapping
 
  3. If you are NOT running the public mapping project as the default
-    web site in Apache, you will have to edit PublicMapping.apache to
+    web site in Apache, you will have to edit publicmapping.apache to
     reflect your configuration (e.g. VirtualHost directives).
 
  4. If you ARE running the public mapping project as the default web
@@ -293,12 +293,12 @@ as reports and downloads) and cron jobs.
     and line 130 is commented out.
 
  8. This application requires SSL. You will need to generate your
-    own PublicMapping certficate and key and place them in the 
-    /etc/ssl/certs directory with the names PublicMapping.crt and 
-    PublicMapping.key.
+    own publicmapping certficate and key and place them in the 
+    /etc/ssl/certs directory with the names publicmapping.crt and 
+    publicmapping.key.
 
     If you have trusted certificates created (or you prefer different 
-    names), you can edit the location of the files in the PublicMapping 
+    names), you can edit the location of the files in the publicmapping 
     apache file.
 
     Generating SSL certificates is beyond the scope of this README.  Check
@@ -363,7 +363,7 @@ as reports and downloads) and cron jobs.
  6. Use the setup script to configure geoserver via the REST API.  This
     will create your layers, datastores, and styles.
 
-    > cd /projects/PublicMapping/DistrictBuilder/django/PublicMapping
+    > cd /projects/PublicMapping/DistrictBuilder/django/publicmapping
     > sudo python ./setup.py -V -G ../../docs/config.xsd ../../docs/config.xml
 
  7. Set the geowebcache directory to a non-default.  Otherwise your tiles 
@@ -455,9 +455,9 @@ as reports and downloads) and cron jobs.
  3. Paste the following configuration info into the file:
 
     # Where to chdir at start.
-    CELERYD_CHDIR='/projects/PublicMapping/DistrictBuilder/django/PublicMapping/'
+    CELERYD_CHDIR='/projects/PublicMapping/DistrictBuilder/django/publicmapping/'
     # Path to celeryd
-    CELERYD='/projects/PublicMapping/DistrictBuilder/django/PublicMapping/manage.py celeryd'
+    CELERYD='/projects/PublicMapping/DistrictBuilder/django/publicmapping/manage.py celeryd'
     # Options for celeryd that start the scheduler
     CELERYD_OPTS='-B -s /tmp/celerybeat-schedule'
     # Name of the projects settings module.
