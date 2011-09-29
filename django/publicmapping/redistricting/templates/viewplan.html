@@ -359,6 +359,9 @@
          <div id="control_header" class="toolbar ui-widget-header">
          <button id="choose_layers_button">Set Map<br/>Layers</button>
           <div id="toolsets">
+            <div id="print" style="float:right; margin:-5px 0 0 0; padding: 1px 1px 2px 1px; font-size:10px;">
+                <button id="print_btn">Print</button>
+            </div>
             <div id="history_tools">
             {% block toolset_history %}
             {% comment %}
@@ -1000,6 +1003,7 @@ Include the markup for the account management panel.
 {% endcomment %}
 {% include "account.html" %}
 
+<script type="text/javascript" src="/static-media/js/print.js"></script>
 <script type="text/javascript" defer="true">
     // run the initialization for these components when the page is ready
     $( function() {
@@ -1054,6 +1058,13 @@ Include the markup for the account management panel.
             pager: $('#plan_table_pager'),
             dataUrl: '/districtmapping/getplans/'
         });
+
+        // initialize the print feature
+        var printer = printplan({
+            target: $('#print button'),
+            plan: PLAN_ID
+        });
+        printer.init();
     {% if plan.name %}
     {% comment %}
 

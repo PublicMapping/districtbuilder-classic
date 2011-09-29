@@ -2954,6 +2954,8 @@ function mapinit(srs,maxExtent) {
     olmap.events.register('zoomend', olmap, changeSnapLayer);
 
     PLAN_HISTORY[PLAN_VERSION] = true;
+
+    $(document.body).trigger('mapready', olmap);
 }
 
 IdGeounit = OpenLayers.Class(OpenLayers.Control.GetFeature, {

@@ -59,6 +59,8 @@ from redistricting.calculators import *
 from redistricting.models import *
 from redistricting.utils import *
 import random, string, math, types, copy, time, threading, traceback, os, commands, sys, tempfile, csv, hashlib, inflect
+from PIL import Image, ImageChops
+import urllib2
 
 def using_unique_session(u):
     """
@@ -538,7 +540,81 @@ def editplan(request, planid):
     if settings.MAX_UNDOS_AFTER_EDIT > 0:
         plan.purge_beyond_nth_step(settings.MAX_UNDOS_AFTER_EDIT)
 
-    return render_to_response('editplan.html', cfg) 
+    return render_to_response('editplan.html', cfg)
+    
+@user_passes_test(using_unique_session)
+def printplan(request, planid):
+    """
+    Print a static map of a plan.
+    
+    This template renders a static HTML document for use with xhtml2pdf.
+    
+    Parameters:
+        request -- An HttpRequest, which includes the current user.
+        planid -- The plan to edit.
+        
+    Returns:
+        A rendered HTML page suitable for conversion to a PDF.
+    """
+    if not is_session_available(request):
+        return HttpResponseRedirect('/')
+        
+    cfg = commonplan(request, planid)
+
+    if not 'basemap' in request.REQUEST or not 'geography' in request.REQUEST \
+        or not 'districts' in request.REQUEST:
+        return HttpResponseRedirect('../view/')
+
+    height = 500
+    if 'height' in request.REQUEST:
+        height = int(request.REQUEST['height'])
+    width = 1024
+    if 'width' in request.REQUEST:
+        width = int(request.REQUEST['width'])
+
+    cfg['basemap'] = request.REQUEST['basemap']
+    cfg['geography'] = request.REQUEST['geography']
+    cfg['districts'] = request.REQUEST['districts']
+
+    def fetchimage(url, name):
+        # save images locally
+        stream = urllib2.urlopen(url)
+        localfile = open(name, 'w')
+        localfile.write( stream.read() )
+        stream.close()
+        localfile.close()
+
+    basemap = '/tmp/basemap.png'
+    fetchimage( cfg['basemap'], basemap )
+
+    # create container & open images
+    fullImg = Image.new('RGB',(width,height),None)
+    baseImg = Image.open(basemap)
+  
+    # get the size of the base image, resize if necessary
+    baseSz = baseImg.size
+    if baseSz[0] != width or baseSz[1] != height:
+        baseImg = baseImg.resize( (width,height), Image.BICUBIC )
+    
+    # add the base map
+    fullImg.paste(baseImg,None)
+
+    for imginfo in [(cfg['geography'], '/tmp/geography.png',), (cfg['districts'], '/tmp/districts.png',)]:
+        fetchimage( imginfo[0], imginfo[1] )
+        overlayImg = Image.open(imginfo[1])
+
+        # create an invert mask of the districts
+        maskImg = ImageChops.invert(overlayImg)
+  
+        # composite the overlay onto the base, using the mask
+        fullImg = Image.composite(fullImg,overlayImg,maskImg)
+
+    # save
+    cfg['composite'] = '/reports/composite.jpg'
+    fullImg.save(settings.BARD_TEMP + '/composite.jpg','jpeg',quality=85)
+
+    return render_to_response('printplan.html', cfg)
+    
 
 @login_required
 @unique_session_or_json_redirect
