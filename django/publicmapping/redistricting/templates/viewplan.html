@@ -704,6 +704,9 @@
             </div>
           </div>
           {% endifnotequal %}
+         {% ifequal leaderboard_bodies|length 1 %}
+            <input id="legSelectorLeaderboards" type="hidden" value="{{ leaderboard_bodies.1.id }}" />
+         {% endifequal %}
 
           <div id="leaderboard_topranked">
           </div>
