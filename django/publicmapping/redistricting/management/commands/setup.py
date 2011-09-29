@@ -45,7 +45,7 @@ from xml.dom import minidom
 from rpy2.robjects import r
 from redistricting.models import *
 from redistricting.utils import *
-import traceback, pprint, httplib, string, base64, json, types, re
+import traceback, pprint, httplib, string, base64, json, types, re, hashlib
 
 class Command(BaseCommand):
     """
@@ -227,7 +227,9 @@ contents of the file and try again.
             admin_attributes['email'] = admcfg.get('email')[:75]
             admin, created, changed, message = consistency_check_and_update(User, unique_id_field='username', overwrite=self.force, **admin_attributes)
 
-            admin.set_password(admcfg.get('password'))
+            m = hashlib.sha1()
+            m.update(admcfg.get('password'))
+            admin.set_password(m.hexdigest())
             admin.save()
 
             if verbose > 1 or (verbose > 0 and changed and not self.force):
