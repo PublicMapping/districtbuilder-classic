@@ -2973,10 +2973,10 @@ IdGeounit = OpenLayers.Class(OpenLayers.Control.GetFeature, {
         });
 
         // concatenate events specific to vector with those from the base
-        this.EVENT_TYPES =
-            OpenLayers.Control.GetFeature.prototype.EVENT_TYPES.concat(
-            OpenLayers.Control.prototype.EVENT_TYPES
-        );
+        //this.EVENT_TYPES =
+        //    OpenLayers.Control.GetFeature.prototype.EVENT_TYPES.concat(
+        //    OpenLayers.Control.prototype.EVENT_TYPES
+        //);
 
         options.handlerOptions = options.handlerOptions || {};
 

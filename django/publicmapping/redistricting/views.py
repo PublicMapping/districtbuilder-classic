@@ -60,7 +60,7 @@ from redistricting.models import *
 from redistricting.utils import *
 import random, string, math, types, copy, time, threading, traceback, os, commands, sys, tempfile, csv, hashlib, inflect
 from PIL import Image, ImageChops
-import urllib2
+import urllib, urllib2
 
 def using_unique_session(u):
     """
@@ -575,16 +575,25 @@ def printplan(request, planid):
     cfg['basemap'] = request.REQUEST['basemap']
     cfg['geography'] = request.REQUEST['geography']
     cfg['districts'] = request.REQUEST['districts']
+    cfg['sld'] = request.REQUEST['sld']
 
-    def fetchimage(url, name):
+    sha = hashlib.sha1()
+    sha.update(str(datetime.now()))
+    stamp = sha.hexdigest()
+
+    def fetchimage(url, name, data=None):
         # save images locally
+        if data:
+            sld_body = 'SLD_BODY='+data
+            content_len = len(sld_body)
+            url = urllib2.Request(url, sld_body, {'Content-Length':content_len}) 
         stream = urllib2.urlopen(url)
         localfile = open(name, 'w')
         localfile.write( stream.read() )
         stream.close()
         localfile.close()
 
-    basemap = '/tmp/basemap.png'
+    basemap = '/tmp/basemap-%s.png' % stamp
     fetchimage( cfg['basemap'], basemap )
 
     # create container & open images
@@ -599,8 +608,17 @@ def printplan(request, planid):
     # add the base map
     fullImg.paste(baseImg,None)
 
-    for imginfo in [(cfg['geography'], '/tmp/geography.png',), (cfg['districts'], '/tmp/districts.png',)]:
-        fetchimage( imginfo[0], imginfo[1] )
+    imgs = [
+        (cfg['geography'], '/tmp/geography-%s.png' % stamp,), 
+        (cfg['districts'], '/tmp/districts-%s.png' % stamp, cfg['sld'],),
+    ]
+
+    for imginfo in imgs:
+        style = None
+        if len(imginfo) > 2:
+            style = imginfo[2]
+
+        fetchimage( imginfo[0], imginfo[1], style )
         overlayImg = Image.open(imginfo[1])
 
         # create an invert mask of the districts
@@ -610,8 +628,8 @@ def printplan(request, planid):
         fullImg = Image.composite(fullImg,overlayImg,maskImg)
 
     # save
-    cfg['composite'] = '/reports/composite.jpg'
-    fullImg.save(settings.BARD_TEMP + '/composite.jpg','jpeg',quality=85)
+    cfg['composite'] = '/reports/print-%s.jpg' %stamp
+    fullImg.save(settings.BARD_TEMP + ('/print-%s.jpg' % stamp),'jpeg',quality=85)
 
     return render_to_response('printplan.html', cfg)
     

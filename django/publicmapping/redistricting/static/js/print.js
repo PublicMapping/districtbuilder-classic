@@ -63,7 +63,6 @@ printplan = function(options) {
 
     _self.doprint = function() {
         var geolevel = null,
-            districts = [],
             disturl = 'pmp:simple_district', // needs bbox, srs, height, width
             geogurl = '',
             osmurl = 'http://staticmap.openstreetmap.de/staticmap.php?maptype=mapnik', // needs center, zoom, size
@@ -71,14 +70,14 @@ printplan = function(options) {
             cen = sz.getCenterLonLat(),
             sz_array = sz.toArray(),
             zoom = 0,
-            res = 1;
+            res = 1,
+            params = null,
+            uStyle = null;
+            sld = null;
         $.each(_options.map.getLayersBy('CLASS_NAME','OpenLayers.Layer.WMS'),function(idx, item){
             if (item.getVisibility()) {
                 geolevel = item;
             }
-        });
-        districts = $.map(_options.districtLayer.features,function(item, idx){
-            return 'id='+item.fid;
         });
         // pad out dimensions to keep from distorting result map
         if (sz.getWidth()/sz.getHeight() < _options.width/_options.height) {
@@ -93,9 +92,9 @@ printplan = function(options) {
             sz_array[0] = cen.lon - new_w / 2.0;
             sz_array[2] = cen.lon + new_w / 2.0;
         }
-        var params = OpenLayers.Util.extend({}, geolevel.params);
-        delete params.TILES;
-        delete params.TILESORIGIN;
+        params = OpenLayers.Util.extend({}, geolevel.params);
+        params.TILES = null;
+        params.TILESORIGIN = null;
         params.HEIGHT = _options.height;
         params.WIDTH = _options.width;
         params.BBOX = sz_array.join(',');
@@ -103,8 +102,7 @@ printplan = function(options) {
 
         console.log(geogurl);
 
-        params.LAYERS = disturl;
-        params.CQL=districts.join('%20or%20');
+        params.LAYERS = null;
         disturl = geolevel.getFullRequestString(params).replace(new RegExp('gwc/service/'),'');
 
         console.log(disturl);
@@ -120,6 +118,78 @@ printplan = function(options) {
 
         console.log(osmurl);
 
+        uStyle = OpenLayers.Util.extend({},_options.districtLayer.styleMap.styles.default);
+        uStyle.layerName = _options.districtLayer.name;
+        var tmpRules = [];
+        var labeled = false;
+        $.each(uStyle.rules, function(ridx, ruleItem){
+            var fids = [];
+            $.each(_options.districtLayer.features, function(fidx, featureItem) {
+                if (ruleItem.evaluate(featureItem)) {
+                    fids.push(featureItem.fid);
+                }
+                if (!labeled) {
+                    var lblFilter = new OpenLayers.Filter.Comparison({
+                        type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                        property: 'id',
+                        value: featureItem.fid
+                    });
+                    var defStyle = featureItem.layer.styleMap.styles.default.defaultStyle,
+                        ffam = defStyle.fontFamily,
+                        fwht = defStyle.fontWeight,
+                        fsz = defStyle.fontSize,
+                        fclr = defStyle.fontColor;
+                    // process the font stuff a little
+                    ffam = ffam.split(',')[0];
+                    fwht = (fwht > 100) ? 'bold' : 'normal';
+                    fsz = new RegExp('.*pt$').test(fsz) ? convertPtToPx(fsz) : fsz;
+                    var lblRule = new OpenLayers.Rule({
+                        filter: lblFilter,
+                        symbolizer: { Text: new OpenLayers.Symbolizer.Text({
+                            label:featureItem.attributes.name,
+                            fontFamily: ffam,
+                            fontWeight: fwht,
+                            fontSize: fsz,
+                            fillColor: fclr,
+                            fillOpacity: 1.0
+                        })}
+                    });
+                    tmpRules.push(lblRule);
+                }
+            });
+            labeled = true;
+            if (fids.length > 0) {
+                var myStyle = { Polygon: OpenLayers.Util.extend({}, uStyle.defaultStyle) },
+                    subFilters = [];
+                myStyle = OpenLayers.Util.extend(myStyle, ruleItem.symbolizer);
+                for (var i = 0; i < fids.length; i++) {
+                    subFilters.push( new OpenLayers.Filter.Comparison({
+                        type: OpenLayers.Filter.Comparison.EQUAL_TO,
+                        property: 'id',
+                        value: fids[i]
+                    }));
+                }
+                tmpRules.push( new OpenLayers.Rule({
+                    filter: new OpenLayers.Filter.Logical({
+                        type: OpenLayers.Filter.Logical.OR,
+                        filters: subFilters
+                    }),
+                    symbolizer: myStyle
+                }));
+            }
+        });
+        uStyle.rules = tmpRules;
+        delete uStyle.defaultStyle;
+        sld = { namedLayers: {}, version: '1.0.0' };
+        sld.namedLayers['pmp:simple_district'] = {
+            name: 'pmp:simple_district',
+            userStyles: [ uStyle ],
+            namedStyles: []
+        };
+
+        var fmt = new OpenLayers.Format.SLD();
+        sld = fmt.write(sld);
+
         $(document.body).append('<form id="printForm" method="POST" action="../print/">' +
             '<input type="hidden" name="csrfmiddlewaretoken" value="' + $('#csrfmiddlewaretoken').val() + '"/>' +
             '<input type="hidden" name="height" value="' + _options.height + '"/>' +
@@ -127,8 +197,17 @@ printplan = function(options) {
             '<input type="hidden" name="basemap" value="' + osmurl + '"/>' +
             '<input type="hidden" name="geography" value="' + geogurl + '"/>' +
             '<input type="hidden" name="districts" value="' + disturl + '"/>' +
+            '<textarea name="sld" style="display:none;">' + sld + '</textarea>' +
             '</form>');
         $('#printForm').submit();
+    };
+
+    var convertPtToPx = function(str) {
+        var pts = parseInt(str,10), px = 0;
+        pts -= 6;
+        px = pts / 0.75;
+        px += 8;
+        return px.toFixed(1);
     };
 
     return _self;
