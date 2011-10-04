@@ -34,16 +34,16 @@
     <meta name="author" content="David Zwarg, Andrew Jennings" />
     <meta name="copyright" content="&copy; 2011 Micah Altman, Michael McDonald"/>
     <title>Open Source District Mapping Tool</title>
-    <link rel="stylesheet" type="text/css" href="/static-media/css/reset.css"/>
-    <link rel="stylesheet" type="text/css" href="/static-media/css/core.css"/> 
-    <link rel="stylesheet" type="text/css" href="/static-media/css/redistricting.css"/>
-    <link rel="stylesheet" type="text/css" href="/static-media/css/visuals.css"/>   
+    <link rel="stylesheet" type="text/css" href="{{ prefix }}/static-media/css/reset.css"/>
+    <link rel="stylesheet" type="text/css" href="{{ prefix }}/static-media/css/core.css"/> 
+    <link rel="stylesheet" type="text/css" href="{{ prefix }}/static-media/css/redistricting.css"/>
+    <link rel="stylesheet" type="text/css" href="{{ prefix }}/static-media/css/visuals.css"/>   
   </head>
   <body id="app">
 
   <div id="steps">
     <div id="app_header">
-      <div id="logo"><img src="/static-media/images/title-app.png" /></div>
+      <div id="logo"><img src="{{ prefix }}/static-media/images/title-app.png" /></div>
     <div class="clear"></div>
   </div>   
       
@@ -51,13 +51,11 @@
    <div>
       <div id="mapandmenu" class="fulltab" style="height:600px;">
           <h1>{{ plan.name }}</h1><h2>{{ plan.legislative_body.name }}</h2>
+          <input type="button" value="Get PDF" onclick="window.location.href+='&to=.pdf'"/>
           <div id="map" style="overflow:hidden;height:500px;">
             <div class="shadow_left"></div>
             <div class="shadow_top"></div>
-            <img src="{{ composite }}"/>
-            <img src="{{ basemap }}"/>
-            <img src="{{ geography }}"/>
-            <img src="{{ districts }}"/>
+            <img src="{{ prefix }}{{ composite }}"/>
           </div>
       </div>
     </div>

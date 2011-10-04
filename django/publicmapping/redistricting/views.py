@@ -61,6 +61,8 @@ from redistricting.utils import *
 import random, string, math, types, copy, time, threading, traceback, os, commands, sys, tempfile, csv, hashlib, inflect
 from PIL import Image, ImageChops
 import urllib, urllib2
+from xhtml2pdf.pisa import CreatePDF
+import StringIO
 
 def using_unique_session(u):
     """
@@ -561,77 +563,90 @@ def printplan(request, planid):
         
     cfg = commonplan(request, planid)
 
-    if not 'basemap' in request.REQUEST or not 'geography' in request.REQUEST \
-        or not 'districts' in request.REQUEST:
-        return HttpResponseRedirect('../view/')
+    stamp = request.REQUEST['x']
+    cfg['prefix'] = 'http://%s' % request.META['SERVER_NAME']
+    cfg['composite'] = '/reports/print-%s.jpg' % stamp
 
-    height = 500
-    if 'height' in request.REQUEST:
-        height = int(request.REQUEST['height'])
-    width = 1024
-    if 'width' in request.REQUEST:
-        width = int(request.REQUEST['width'])
+    if request.method == 'GET':
+        # render pg to a string
+        t = loader.get_template('printplan.html')
+        page = StringIO.StringIO(t.render(DjangoContext(cfg)))
+        result = StringIO.StringIO()
+        
+        CreatePDF( page, result, show_error_as_pdf=True )
 
-    cfg['basemap'] = request.REQUEST['basemap']
-    cfg['geography'] = request.REQUEST['geography']
-    cfg['districts'] = request.REQUEST['districts']
-    cfg['sld'] = request.REQUEST['sld']
+        response = HttpResponse(result.getvalue(), mimetype='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename=plan.pdf'
 
-    sha = hashlib.sha1()
-    sha.update(str(datetime.now()))
-    stamp = sha.hexdigest()
+        return response
+    elif request.method == 'POST':
+        if not 'basemap' in request.REQUEST or not 'geography' in request.REQUEST \
+            or not 'districts' in request.REQUEST:
+            return HttpResponseRedirect('../view/')
 
-    def fetchimage(url, name, data=None):
-        # save images locally
-        if data:
-            sld_body = 'SLD_BODY='+data
-            content_len = len(sld_body)
-            url = urllib2.Request(url, sld_body, {'Content-Length':content_len}) 
-        stream = urllib2.urlopen(url)
-        localfile = open(name, 'w')
-        localfile.write( stream.read() )
-        stream.close()
-        localfile.close()
+        height = 500
+        if 'height' in request.REQUEST:
+            height = int(request.REQUEST['height'])
+        width = 1024
+        if 'width' in request.REQUEST:
+            width = int(request.REQUEST['width'])
 
-    basemap = '/tmp/basemap-%s.png' % stamp
-    fetchimage( cfg['basemap'], basemap )
+        cfg['basemap'] = request.REQUEST['basemap']
+        cfg['geography'] = request.REQUEST['geography']
+        cfg['districts'] = request.REQUEST['districts']
+        cfg['sld'] = request.REQUEST['sld']
 
-    # create container & open images
-    fullImg = Image.new('RGB',(width,height),None)
-    baseImg = Image.open(basemap)
+
+        def fetchimage(url, name, data=None):
+            # save images locally
+            if data:
+                sld_body = 'SLD_BODY='+data
+                content_len = len(sld_body)
+                url = urllib2.Request(url, sld_body, {'Content-Length':content_len}) 
+            stream = urllib2.urlopen(url)
+            localfile = open(name, 'w')
+            localfile.write( stream.read() )
+            stream.close()
+            localfile.close()
+
+        basemap = '/tmp/basemap-%s.png' % stamp
+        fetchimage( cfg['basemap'], basemap )
+
+        # create container & open images
+        fullImg = Image.new('RGB',(width,height),None)
+        baseImg = Image.open(basemap)
   
-    # get the size of the base image, resize if necessary
-    baseSz = baseImg.size
-    if baseSz[0] != width or baseSz[1] != height:
-        baseImg = baseImg.resize( (width,height), Image.BICUBIC )
-    
-    # add the base map
-    fullImg.paste(baseImg,None)
+        # get the size of the base image, resize if necessary
+        baseSz = baseImg.size
+        if baseSz[0] != width or baseSz[1] != height:
+            baseImg = baseImg.resize( (width,height), Image.BICUBIC )
+        
+        # add the base map
+        fullImg.paste(baseImg,None)
 
-    imgs = [
-        (cfg['geography'], '/tmp/geography-%s.png' % stamp,), 
-        (cfg['districts'], '/tmp/districts-%s.png' % stamp, cfg['sld'],),
-    ]
+        imgs = [
+            (cfg['geography'], '/tmp/geography-%s.png' % stamp,), 
+            (cfg['districts'], '/tmp/districts-%s.png' % stamp, cfg['sld'],),
+        ]
 
-    for imginfo in imgs:
-        style = None
-        if len(imginfo) > 2:
-            style = imginfo[2]
+        for imginfo in imgs:
+            style = None
+            if len(imginfo) > 2:
+                style = imginfo[2]
 
-        fetchimage( imginfo[0], imginfo[1], style )
-        overlayImg = Image.open(imginfo[1])
+            fetchimage( imginfo[0], imginfo[1], style )
+            overlayImg = Image.open(imginfo[1])
 
-        # create an invert mask of the districts
-        maskImg = ImageChops.invert(overlayImg)
-  
-        # composite the overlay onto the base, using the mask
-        fullImg = Image.composite(fullImg,overlayImg,maskImg)
+            # create an invert mask of the districts
+            maskImg = ImageChops.invert(overlayImg)
+      
+            # composite the overlay onto the base, using the mask
+            fullImg = Image.composite(fullImg,overlayImg,maskImg)
 
-    # save
-    cfg['composite'] = '/reports/print-%s.jpg' %stamp
-    fullImg.save(settings.BARD_TEMP + ('/print-%s.jpg' % stamp),'jpeg',quality=85)
+        # save
+        fullImg.save(settings.BARD_TEMP + ('/print-%s.jpg' % stamp),'jpeg',quality=85)
 
-    return render_to_response('printplan.html', cfg)
+        return render_to_response('printplan.html', cfg)
     
 
 @login_required

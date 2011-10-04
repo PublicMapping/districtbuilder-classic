@@ -63,7 +63,7 @@ printplan = function(options) {
 
     _self.doprint = function() {
         var geolevel = null,
-            disturl = 'pmp:simple_district', // needs bbox, srs, height, width
+            disturl = '',
             geogurl = '',
             osmurl = 'http://staticmap.openstreetmap.de/staticmap.php?maptype=mapnik', // needs center, zoom, size
             sz = _options.map.getExtent(),
@@ -107,7 +107,11 @@ printplan = function(options) {
 
         console.log(disturl);
 
-        cen.transform(new OpenLayers.Projection('EPSG:900913'),new OpenLayers.Projection('EPSG:4326'));
+        var proj = _options.map.projection;
+        if (proj.projCode == 'EPSG:3785') {
+            proj = new OpenLayers.Projection('EPSG:900913');
+        }
+        cen.transform(proj,new OpenLayers.Projection('EPSG:4326'));
         while (_options.map.getResolution() * res < 156543.0339) {
             zoom++;
             res *= 2;
@@ -180,9 +184,18 @@ printplan = function(options) {
         });
         uStyle.rules = tmpRules;
         delete uStyle.defaultStyle;
+
+        var lyr = null;
+        var lyrRE = new RegExp('^(.*):demo_(.*)_.*$');
+        $.each(_options.map.getLayersBy('visibility',true),function(idx, item){
+            if (lyrRE.test(item.name)) {
+                lyr = RegExp.$1 + ':simple_district_' + RegExp.$2;
+            }
+        });
+
         sld = { namedLayers: {}, version: '1.0.0' };
-        sld.namedLayers['pmp:simple_district'] = {
-            name: 'pmp:simple_district',
+        sld.namedLayers[lyr] = {
+            name: lyr,
             userStyles: [ uStyle ],
             namedStyles: []
         };
@@ -190,7 +203,9 @@ printplan = function(options) {
         var fmt = new OpenLayers.Format.SLD();
         sld = fmt.write(sld);
 
-        $(document.body).append('<form id="printForm" method="POST" action="../print/">' +
+        var x = Sha1.hash(new Date().toString());
+
+        $(document.body).append('<form id="printForm" method="POST" action="../print/?x='+x+'">' +
             '<input type="hidden" name="csrfmiddlewaretoken" value="' + $('#csrfmiddlewaretoken').val() + '"/>' +
             '<input type="hidden" name="height" value="' + _options.height + '"/>' +
             '<input type="hidden" name="width" value="' + _options.width + '"/>' +
