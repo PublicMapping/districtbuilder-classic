@@ -597,24 +597,23 @@ def printplan(request, planid):
         cfg['sld'] = request.REQUEST['sld']
 
 
-        def fetchimage(url, name, data=None):
+        def fetchimage(url, localfile, data=None):
             # save images locally
             if data:
                 sld_body = 'SLD_BODY='+data
                 content_len = len(sld_body)
                 url = urllib2.Request(url, sld_body, {'Content-Length':content_len}) 
             stream = urllib2.urlopen(url)
-            localfile = open(name, 'w')
             localfile.write( stream.read() )
-            stream.close()
             localfile.close()
+            stream.close()
+            return localfile
 
-        basemap = '/tmp/basemap-%s.png' % stamp
-        fetchimage( cfg['basemap'], basemap )
+        basemap = fetchimage( cfg['basemap'], tempfile.NamedTemporaryFile(delete=False) )
 
         # create container & open images
         fullImg = Image.new('RGB',(width,height),None)
-        baseImg = Image.open(basemap)
+        baseImg = Image.open(basemap.name)
   
         # get the size of the base image, resize if necessary
         baseSz = baseImg.size
@@ -623,10 +622,11 @@ def printplan(request, planid):
         
         # add the base map
         fullImg.paste(baseImg,None)
+        os.remove(basemap.name)
 
         imgs = [
-            (cfg['geography'], '/tmp/geography-%s.png' % stamp,), 
-            (cfg['districts'], '/tmp/districts-%s.png' % stamp, cfg['sld'],),
+            (cfg['geography'], tempfile.NamedTemporaryFile(delete=False),), 
+            (cfg['districts'], tempfile.NamedTemporaryFile(delete=False), cfg['sld'],),
         ]
 
         for imginfo in imgs:
@@ -634,14 +634,17 @@ def printplan(request, planid):
             if len(imginfo) > 2:
                 style = imginfo[2]
 
-            fetchimage( imginfo[0], imginfo[1], style )
-            overlayImg = Image.open(imginfo[1])
+            imgfile = fetchimage( imginfo[0], imginfo[1], style )
+            overlayImg = Image.open(imgfile.name)
 
             # create an invert mask of the districts
             maskImg = ImageChops.invert(overlayImg)
       
             # composite the overlay onto the base, using the mask
             fullImg = Image.composite(fullImg,overlayImg,maskImg)
+
+            imgfile.close()
+            os.remove(imgfile.name)
 
         # save
         fullImg.save(settings.BARD_TEMP + ('/print-%s.jpg' % stamp),'jpeg',quality=85)
