@@ -1980,9 +1980,10 @@ def statistics_sets(request, planid):
         scorefunctions = []
             
         # Get the functions available for the users
-        user_functions = ScoreFunction.objects.filter(selectable_bodies=plan.legislative_body).order_by('name')
+        user_functions = ScoreFunction.objects.filter(selectable_bodies=plan.legislative_body).order_by('label')
         for f in user_functions:
-            scorefunctions.append({ 'id': f.id, 'name': force_escape(f.label) })
+            if 'report' not in f.name.lower():
+                scorefunctions.append({ 'id': f.id, 'name': force_escape(f.label) })
         result['functions'] = scorefunctions
 
         if not request.user.is_superuser:
@@ -1992,7 +1993,8 @@ def statistics_sets(request, planid):
                 legislative_body=plan.legislative_body,
                 is_page=False).order_by('title')
             for admin_display in admin_displays:
-                sets.append({ 'id': admin_display.id, 'name': force_escape(admin_display.title), 'functions': [], 'mine':False })
+                if 'report' not in admin_display.title.lower():
+                    sets.append({ 'id': admin_display.id, 'name': force_escape(admin_display.title), 'functions': [], 'mine':False })
 
         try:
             user_displays = ScoreDisplay.objects.filter(
