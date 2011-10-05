@@ -1592,7 +1592,7 @@ def getutc(t):
     return t.utcfromtimestamp(t_seconds)
 
 @unique_session_or_json_redirect
-def getdistrictindexfilestatus(request, planid):
+def getdistrictfilestatus(request, planid):
     """
     Given a plan id, return the status of the district index file
     """    
@@ -1603,7 +1603,8 @@ def getdistrictindexfilestatus(request, planid):
     if not can_copy(request.user, plan):
         return HttpResponseForbidden()
     try:
-        file_status = DistrictIndexFile.get_index_file_status(plan)
+        is_shape = 'type' in request.REQUEST and request.REQUEST['type'] == 'shape'
+        file_status = DistrictFile.get_file_status(plan, shape=is_shape)
         status['success'] = True
         status['status'] = file_status 
     except Exception as ex:
@@ -1612,7 +1613,7 @@ def getdistrictindexfilestatus(request, planid):
     return HttpResponse(json.dumps(status),mimetype='application/json')
         
 @unique_session_or_json_redirect
-def getdistrictindexfile(request, planid):
+def getdistrictfile(request, planid):
     """
     Given a plan id, email the user a zipped copy of 
     the district index file
@@ -1624,14 +1625,21 @@ def getdistrictindexfile(request, planid):
     if not can_copy(request.user, plan):
         return HttpResponseForbidden()
     
-    file_status = DistrictIndexFile.get_index_file_status(plan)
+    is_shape = 'type' in request.REQUEST and request.REQUEST['type'] == 'shape'
+    file_status = DistrictFile.get_file_status(plan, shape=is_shape)
     if file_status == 'done':
-        archive = DistrictIndexFile.plan2index(plan)
+        if is_shape:
+            archive = DistrictShapeFile.plan2shape(plan)
+        else:
+            archive = DistrictIndexFile.plan2index(plan)
         response = HttpResponse(open(archive.name).read(), content_type='application/zip')
-        response['Content-Disposition'] = 'attachment; filename="%s.zip"' % plan.name
+        response['Content-Disposition'] = 'attachment; filename="%s.zip"' % plan.get_friendly_name()
     else:
         # Put in a celery task to create this file
-        DistrictIndexFile.plan2index.delay(plan)
+        if is_shape:
+            DistrictShapeFile.plan2shape.delay(plan)
+        else:
+            DistrictIndexFile.plan2index.delay(plan)
         response = HttpResponse('File is not yet ready. Please try again in a few minutes')
     return response
 

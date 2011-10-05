@@ -434,9 +434,10 @@ chooseplan = function(options) {
         var row = $(_table.getInd(id, true));
         var difile = row.data('difile');
         if (difile == null) {
-            difile = districtindexfile({
+            difile = districtfile({
                 target: $('#chooserFileDownloadTarget'),
-                planId: id
+                planId: id,
+                type: 'shape'
             });
             row.data('difile', difile);
         }
