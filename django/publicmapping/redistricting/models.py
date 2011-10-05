@@ -2031,6 +2031,14 @@ CROSS JOIN (
             return None
         return districts[0]
 
+    def get_friendly_name(self):
+        """
+        Get an os-friendly name. This removes wildcards, path separators, and 
+        line terminators from the plan name.
+        """
+        cleanRE = re.compile('\W+')
+        return cleanRE.sub('_', self.name)
+
 
 class PlanForm(ModelForm):
     """

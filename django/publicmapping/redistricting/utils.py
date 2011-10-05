@@ -39,6 +39,72 @@ import csv, time, zipfile, tempfile, os, sys, traceback, time
 from datetime import datetime
 import socket, urllib
 
+# all for shapefile exports
+from glob import glob
+from django.contrib.gis.gdal import check_err, OGRGeomType, Driver, OGRGeometry, SpatialReference, CoordTransform
+from django.contrib.gis.gdal.libgdal import lgdal
+from ctypes import c_double
+
+
+class DistrictFile():
+    """
+    A utility class that can check exported file status. DistrictIndexFile and
+    DistrictShapeFile use this utility class to export block correspondence
+    and shape files, respectively.
+    """
+
+    @staticmethod
+    def get_file_name(plan, shape=False):
+        """
+        Given a plan, generate a temporary file name.
+
+        Parameters:
+            plan - the Plan for which a file has been requested
+            shape - a flag indicating if this is to be a shapefile; defaults to False
+        """
+        basename = "%s/plan%dv%d" % (tempfile.gettempdir(), plan.id, plan.version)
+        if shape:
+            basename += '-shp'
+        return basename
+
+    @staticmethod
+    def get_file_status(plan, shape=False):
+        """
+        Given a plan, this method will check to see whether the district file
+        for the given plan exists, is pending, or has not been created.
+        
+        Parameters:
+            plan - the Plan for which a file has been requested
+            shape - a flag indicating if this is to be a shapefile; defaults to False
+
+        Returns:
+            A string representing the file's status: "none", "pending", "done"
+        """
+        basename = DistrictFile.get_file_name(plan,shape)
+        if os.path.exists(basename + '.zip'):
+            return 'done'
+        if os.path.exists(basename + '_pending.zip'):
+            return 'pending'
+        else:
+            return 'none'
+
+    @staticmethod
+    def get_file(plan, shape=False):
+        """
+        Given a plan, return the district file for the plan at the current version.
+        
+        Parameters:
+            plan - the Plan for which a file has been requested.
+            shape - a flag indicating if this is to be a shapefile; defaults to False
+
+        Returns:
+            A file object representing the district file. If the file requested 
+            doesn't exist, nothing is returned.
+        """
+        if (DistrictFile.get_file_status(plan,shape) == 'done'):
+            district_file = open(DistrictFile.get_file_name(plan,shape) + '.zip', 'r')
+            district_file.close()
+            return district_file
 
 class DistrictIndexFile():
     """
@@ -337,7 +403,7 @@ class DistrictIndexFile():
 
     @staticmethod
     @task
-    def plan2index (plan, user=None):
+    def plan2index (plan):
         """
         Gets a zipped copy of the district index file for the
         given plan.
@@ -348,12 +414,12 @@ class DistrictIndexFile():
         Returns:
             A file object representing the zipped index file
         """
-        status = DistrictIndexFile.get_index_file_status(plan)
+        status = DistrictFile.get_file_status(plan)
         while status == 'pending':
             time.sleep(15)
-            status = DistrictIndexFile.get_index_file_status(plan)
+            status = DistrictFile.get_file_status(plan)
         if status == 'none':
-            pending = ('%s/plan%dv%d_pending.zip' % (tempfile.gettempdir(), plan.id, plan.version)) 
+            pending = DistrictFile.get_file_name() + '_pending.zip'
             archive = open(pending, 'w')
             f = tempfile.NamedTemporaryFile(delete=False)
             try:
@@ -382,10 +448,10 @@ class DistrictIndexFile():
 
                 # Zip up the file 
                 zipwriter = zipfile.ZipFile(archive, 'w', zipfile.ZIP_DEFLATED)
-                zipwriter.write(f.name, plan.name + '.csv')
+                zipwriter.write(f.name, plan.get_friendly_name() + '.csv')
                 zipwriter.close()
                 archive.close()
-                os.rename(archive.name, '%s/plan%dv%d.zip' % (tempfile.gettempdir(), plan.id, plan.version))
+                os.rename(archive.name, DistrictFile.get_file_name(plan) + '.zip')
             except Exception as ex:
                 sys.stderr.write('The plan "%s" could not be serialized to a district index file:\n%s\n' % (plan.name, traceback.format_exc()))
                 os.unlink(archive.name)
@@ -393,44 +459,7 @@ class DistrictIndexFile():
             finally:
                 os.unlink(f.name)
 
-        return DistrictIndexFile.get_index_file(plan)
-
-    @staticmethod
-    def get_index_file_status(plan):
-        """
-        Given a plan, this method will check to see whether the district index file
-        for the given plan exists, is pending, or has not been created.
-        
-        Parameters:
-            plan - the Plan for which an index file has been requested
-
-        Returns:
-            A string representing the file's status: "none", "pending", "done"
-        """
-        basename = "%s/plan%dv%d" % (tempfile.gettempdir(), plan.id, plan.version)
-        if os.path.exists('%s.zip' % basename):
-            return 'done'
-        if os.path.exists('%s_pending.zip' % basename):
-            return 'pending'
-        else:
-            return 'none'        
-    @staticmethod
-    def get_index_file(plan):
-        """
-        Given a plan, return the district index file for the plan at the current
-        version
-        
-        Parameters:
-            plan - the Plan for which an index file has been requested
-
-        Returns:
-            A file object representing the district index file. If the 
-            file requested doesn't exist, nothing is returned
-        """
-        if (DistrictIndexFile.get_index_file_status(plan) == 'done'):
-            index_file = open('%s/plan%dv%d.zip' % (tempfile.gettempdir(), plan.id, plan.version), 'r')
-            index_file.close()
-            return index_file
+        return DistrictFile.get_index_file(plan)
 
     @staticmethod
     @task
@@ -455,6 +484,148 @@ class DistrictIndexFile():
         template = loader.get_template('submitted.email')
         context = DjangoContext({ 'user': user, 'plan': plan })
         send_mail(subject, template.render(context), settings.EMAIL_HOST_USER, [user_email], fail_silently=False)
+
+
+class DistrictShapeFile():
+    """
+    The publicmapping projects supports users exporting their plans to 
+    shape files.  These files list all of the districts, their geometries,
+    and the computed characteristics of the plan's districts.
+
+    These files may be downloaded in .zip format.
+    """
+
+    @staticmethod
+    @task
+    def plan2shape(plan):
+        """
+        Gets a zipped copy of the plan shape file.
+
+        Parameters:
+            plan - The plan for which to get a shape file
+        
+        Returns:
+            A file object representing the zipped shape file
+        """
+        exportFile = None
+        status = DistrictFile.get_file_status(plan,True)
+        while status == 'pending':
+            time.sleep(15)
+            status = DistrictFile.get_file_status(plan,True)
+        if status == 'none':
+            pending = DistrictFile.get_file_name(plan, True) + '_pending.zip'
+            archive = open(pending, 'w')
+            try:
+                qset = District.objects.filter(plan=plan,version__lte=plan.version)
+                qset = qset.values('district_id')
+                qset = qset.annotate(latest=Max('version'),max_id=Max('id'))
+                qset = qset.values_list('max_id',flat=True)
+
+                # Create a named temporary file
+                exportFile = tempfile.NamedTemporaryFile(suffix='.shp', mode='w+b')
+                exportFile.close()
+
+                # Get the districts in the plan
+                districts = District.objects.filter(id__in=qset)
+
+                # Open a driver, and create a data source
+                driver = Driver('ESRI Shapefile')
+                datasource = lgdal.OGR_Dr_CreateDataSource(driver._ptr, exportFile.name, None)
+
+                # Get the geometry field
+                geo_field = filter(lambda x: x.name=='geom', District._meta.fields)[0]
+
+                # Determine the geometry type from the field
+                ogr_type = OGRGeomType(geo_field.geom_type).num
+                # Get the spatial reference
+                native_srs = SpatialReference(geo_field.srid)
+                #Create a layer
+                layer = lgdal.OGR_DS_CreateLayer(datasource, 'District', native_srs._ptr, ogr_type, None)
+
+                # Set up mappings of field names for export, as well as shapefile
+                # column aliases (only 8 characters!)
+                (OGRInteger,OGRReal,OGRString,) = (0,2,4,)
+                dfieldnames = ['id', 'district_id', 'name', 'version', 'num_members']
+                sfieldnames = list(Subject.objects.all().values_list('name',flat=True))
+                aliases = {'district_id':'dist_num', 'num_members':'nmembers'}
+                ftypes = {'id':OGRInteger, 'district_id':OGRInteger, 'name':OGRString, 'version':OGRInteger, 'num_members':OGRInteger}
+
+                # set the district attributes
+                for fieldname in dfieldnames + sfieldnames:
+                    # default to double data types, unless the field type is defined
+                    ftype = OGRReal
+                    if fieldname in ftypes:
+                        ftype = ftypes[fieldname]
+
+                    # customize truncated field names
+                    if fieldname in aliases:
+                        fieldname = aliases[fieldname]
+
+                    # create the field definition
+                    fld = lgdal.OGR_Fld_Create(str(fieldname), ftype)
+                    # add the field definition to the layer
+                    added = lgdal.OGR_L_CreateField(layer, fld, 0)
+                    check_err(added)
+
+                # get all the field definitions for the new layer
+                feature_definition = lgdal.OGR_L_GetLayerDefn(layer)
+
+                # begin exporting districts
+                for district in districts:
+                    # create a feature
+                    feature = lgdal.OGR_F_Create(feature_definition)
+
+                    # attach each field from the district model
+                    for idx, field in enumerate(dfieldnames):
+                        value = getattr(district,field)
+                        ftype = ftypes[field]
+                        if ftype == OGRInteger:
+                            lgdal.OGR_F_SetFieldInteger(feature, idx, int(value))
+                        elif ftype == OGRString:
+                            lgdal.OGR_F_SetFieldString(feature, idx, str(value))
+
+                    # attach each field for the subjects that relate to this model
+                    for idx, sname in enumerate(sfieldnames):
+                        try:
+                            subject = district.computedcharacteristic_set.get(subject__name=sname)
+                        except:
+                            subject = 0.0
+                        lgdal.OGR_F_SetFieldDouble(feature, idx+len(dfieldnames), c_double(subject.number))
+
+                    # convert the geos geometry to an ogr geometry
+                    geometry = OGRGeometry(district.geom.wkt, native_srs)
+                    # save the geometry to the feature
+                    added = lgdal.OGR_F_SetGeometry(feature, geometry._ptr)
+                    check_err(added)
+
+                    # add the feature to the layer
+                    added = lgdal.OGR_L_SetFeature(layer, feature)
+                    check_err(added)
+
+                # clean up ogr
+                lgdal.OGR_L_SyncToDisk(layer)
+                lgdal.OGR_DS_Destroy(datasource)
+                lgdal.OGRCleanupAll()
+
+                # Zip up the file 
+                zipwriter = zipfile.ZipFile(archive, 'w', zipfile.ZIP_DEFLATED)
+                exportedFiles = glob(exportFile.name[:-4] + '*')
+                for exp in exportedFiles:
+                    zipwriter.write(exp, '%sv%d%s' % (plan.get_friendly_name(), plan.version, exp[-4:]))
+                zipwriter.close()
+                archive.close()
+                os.rename(archive.name, DistrictFile.get_file_name(plan,True) + '.zip')
+            except Exception as ex:
+                sys.stderr.write('The plan "%s" could not be saved to a shape file:\n%s\n' % (plan.name, traceback.format_exc()))
+                os.unlink(archive.name)
+            # delete the temporary csv file
+            finally:
+                if not exportFile is None:
+                    exportedFiles = glob(exportFile.name[:-4] + '*')
+                    for exp in exportedFiles:
+                        os.remove(exp)
+
+        return DistrictFile.get_file(plan,True)
 
 @task
 def cleanup():
