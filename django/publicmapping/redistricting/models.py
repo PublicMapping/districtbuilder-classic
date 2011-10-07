@@ -1126,16 +1126,13 @@ class Plan(models.Model):
         # If explicitly asked for no district ids, return no features
         if district_ids == []:
             return []
-        
-        qset = District.objects.filter(plan=self,version__lte=version)
-        qset = qset.values('district_id')
-        qset = qset.annotate(latest=Max('version'),max_id=Max('id'))
-        qset = qset.values_list('max_id',flat=True)
+       
+        qset = self.get_district_ids_at_version(version)
 
         bounds = Polygon.from_bbox(extents)
         bounds.srid = 3785
 
-        qset = District.objects.filter(id__in=qset)
+        qset = self.district_set.filter(id__in=qset)
         qset = qset.extra(select={'chop':"st_intersection(st_geometryn(simple,%d),st_geomfromewkt('%s'))" % (geolevel,bounds.ewkt)},where=["st_intersects(st_geometryn(simple,%d),st_geomfromewkt('%s'))" % (geolevel, bounds.ewkt)])
         qset = qset.defer('simple')
 
@@ -1189,6 +1186,22 @@ class Plan(models.Model):
         # Return a python dict, which gets serialized into geojson
         return features
 
+    def get_district_ids_at_version(self, version):
+        """
+        Get IDs of Districts in this Plan at a specified version.
+
+        Parameters:
+            version -- The version of the Districts to fetch.
+
+        Returns:
+            An unevaluated QuerySet that gets the IDs of the Districts
+            in this plan at the specified version.
+        """
+        qset = self.district_set.filter(version__lte=version)
+        qset = qset.values('district_id')
+        qset = qset.annotate(latest=Max('version'),max_id=Max('id'))
+        return qset.values_list('max_id',flat=True)
+
     def get_districts_at_version(self, version, include_geom=False):
         """
         Get Plan Districts at a specified version.
@@ -1205,11 +1218,7 @@ class Plan(models.Model):
         Returns:
             A list of districts that exist in the plan at the version.
         """
-        qset = District.objects.filter(plan=self,version__lte=version)
-        qset = qset.values('district_id')
-        qset = qset.annotate(latest=Max('version'),max_id=Max('id'))
-        qset = qset.values_list('max_id',flat=True)
-        qset = District.objects.filter(id__in=qset)
+        qset = self.district_set.filter(id__in=self.get_district_ids_at_version(version))
         if not include_geom:
             qset = qset.defer('geom','simple')
 
@@ -1377,12 +1386,8 @@ class Plan(models.Model):
         if version == None:
            version = self.version
 
-        qset = District.objects.filter(Q(plan=self) & Q(version__lte=version) | Q(district_id=0))
-        qset = qset.values('district_id')
-        qset = qset.annotate(latest=Max('version'),max_id=Max('id'))
-        qset = qset.values_list('max_id',flat=True)
-
-        current_districts = District.objects.filter(id__in=qset).extra(where=['not st_isempty(geom)']).count()
+        qset = self.get_district_ids_at_version(version)
+        current_districts = self.district_set.filter(id__in=qset).extra(where=['(not st_isempty(geom) or district_id=0)']).count()
         available_districts = self.legislative_body.max_districts
 
         return available_districts - current_districts + 1 #add one for unassigned
