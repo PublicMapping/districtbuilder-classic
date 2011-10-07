@@ -566,8 +566,8 @@ def printplan(request, planid):
     stamp = request.REQUEST['x']
     cfg['prefix'] = 'http://%s' % request.META['SERVER_NAME']
     cfg['composite'] = '/reports/print-%s.jpg' % stamp
-    cfg['legend1'] = request.REQUEST['legend1']
-    cfg['legend2'] = request.REQUEST['legend2']
+    cfg['legend1'] = '/reports/legend1-%s.jpg' % stamp
+    cfg['legend2'] = '/reports/legend2-%s.jpg' % stamp
 
     if request.method == 'GET':
         # render pg to a string
@@ -598,7 +598,6 @@ def printplan(request, planid):
         cfg['districts'] = request.REQUEST['districts']
         cfg['sld'] = request.REQUEST['sld']
 
-
         def fetchimage(url, localfile, data=None):
             # save images locally
             if data:
@@ -627,26 +626,30 @@ def printplan(request, planid):
         os.remove(basemap.name)
 
         imgs = [
-            (cfg['geography'], tempfile.NamedTemporaryFile(delete=False),), 
-            (cfg['districts'], tempfile.NamedTemporaryFile(delete=False), cfg['sld'],),
+            (cfg['geography'], tempfile.NamedTemporaryFile(delete=False), True,), 
+            (cfg['districts'], tempfile.NamedTemporaryFile(delete=False), True, cfg['sld'],),
+            (request.REQUEST['legend1'], open(settings.BARD_TEMP + ('/legend1-%s.jpg' % stamp), 'w+b'), False, ),
+            (request.REQUEST['legend2'], open(settings.BARD_TEMP + ('/legend2-%s.jpg' % stamp), 'w+b'), False, ),
         ]
 
         for imginfo in imgs:
             style = None
-            if len(imginfo) > 2:
-                style = imginfo[2]
+            if len(imginfo) > 3:
+                style = imginfo[3]
 
             imgfile = fetchimage( imginfo[0], imginfo[1], style )
-            overlayImg = Image.open(imgfile.name)
 
-            # create an invert mask of the districts
-            maskImg = ImageChops.invert(overlayImg)
+            if imginfo[2]:
+                overlayImg = Image.open(imgfile.name)
+
+                # create an invert mask of the districts
+                maskImg = ImageChops.invert(overlayImg)
       
-            # composite the overlay onto the base, using the mask
-            fullImg = Image.composite(fullImg,overlayImg,maskImg)
+                # composite the overlay onto the base, using the mask
+                fullImg = Image.composite(fullImg,overlayImg,maskImg)
 
-            imgfile.close()
-            os.remove(imgfile.name)
+                imgfile.close()
+                os.remove(imgfile.name)
 
         # save
         fullImg.save(settings.BARD_TEMP + ('/print-%s.jpg' % stamp),'jpeg',quality=85)

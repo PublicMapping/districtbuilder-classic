@@ -120,6 +120,7 @@ printplan = function(options) {
         params.TRANSPARENT = null;
         params.VERSION = '1.0.0';
         params.LAYER = lyr;
+        params.FORMAT = 'image/jpeg';
         legendurl1 = geolevel.getFullRequestString(params).replace(new RegExp('gwc/service/'),'');
 
         //console.log(legendurl1);
