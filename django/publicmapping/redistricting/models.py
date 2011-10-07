@@ -1376,9 +1376,16 @@ class Plan(models.Model):
         """
         if version == None:
            version = self.version
-        current_districts = self.get_districts_at_version(version, include_geom=False)
+
+        qset = District.objects.filter(Q(plan=self) & Q(version__lte=version) | Q(district_id=0))
+        qset = qset.values('district_id')
+        qset = qset.annotate(latest=Max('version'),max_id=Max('id'))
+        qset = qset.values_list('max_id',flat=True)
+
+        current_districts = District.objects.filter(id__in=qset).extra(where=['not st_isempty(geom)']).count()
         available_districts = self.legislative_body.max_districts
-        return available_districts - len(current_districts) + 1 #add one for unassigned
+
+        return available_districts - current_districts + 1 #add one for unassigned
 
     def fix_unassigned(self, version=None, threshold=100):
         """
