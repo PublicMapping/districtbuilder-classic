@@ -566,6 +566,8 @@ def printplan(request, planid):
     stamp = request.REQUEST['x']
     cfg['prefix'] = 'http://%s' % request.META['SERVER_NAME']
     cfg['composite'] = '/reports/print-%s.jpg' % stamp
+    cfg['legend1'] = request.REQUEST['legend1']
+    cfg['legend2'] = request.REQUEST['legend2']
 
     if request.method == 'GET':
         # render pg to a string

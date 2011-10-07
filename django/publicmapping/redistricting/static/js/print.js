@@ -66,6 +66,8 @@ printplan = function(options) {
             disturl = '',
             geogurl = '',
             osmurl = 'http://staticmap.openstreetmap.de/staticmap.php?maptype=mapnik', // needs center, zoom, size
+            legendurl1 = '',
+            legendurl2 = '',
             sz = _options.map.getExtent(),
             cen = sz.getCenterLonLat(),
             sz_array = sz.toArray(),
@@ -73,7 +75,8 @@ printplan = function(options) {
             res = 1,
             params = null,
             uStyle = null;
-            sld = null;
+            sld = null,
+            fmt = new OpenLayers.Format.SLD();
         $.each(_options.map.getLayersBy('CLASS_NAME','OpenLayers.Layer.WMS'),function(idx, item){
             if (item.getVisibility()) {
                 geolevel = item;
@@ -100,12 +103,26 @@ printplan = function(options) {
         params.BBOX = sz_array.join(',');
         geogurl = geolevel.getFullRequestString(params).replace(new RegExp('gwc/service/'),'');
 
-        console.log(geogurl);
+        //console.log(geogurl);
+        lyr = params.LAYERS;
 
         params.LAYERS = null;
         disturl = geolevel.getFullRequestString(params).replace(new RegExp('gwc/service/'),'');
 
-        console.log(disturl);
+        //console.log(disturl);
+
+        params.REQUEST = 'GetLegendGraphic';
+        params.WIDTH = '20';
+        params.HEIGHT = '20';
+        params.BBOX = null;
+        params.SRS = null;
+        params.STYLES = null;
+        params.TRANSPARENT = null;
+        params.VERSION = '1.0.0';
+        params.LAYER = lyr;
+        legendurl1 = geolevel.getFullRequestString(params).replace(new RegExp('gwc/service/'),'');
+
+        //console.log(legendurl1);
 
         var proj = _options.map.projection;
         if (proj.projCode == 'EPSG:3785') {
@@ -120,11 +137,20 @@ printplan = function(options) {
         osmurl += '&zoom=' + zoom;
         osmurl += '&size=' + _options.width + 'x' + _options.height;
 
-        console.log(osmurl);
+        //console.log(osmurl);
+
+        var lyr = null;
+        var lyrRE = new RegExp('^(.*):demo_(.*)_.*$');
+        $.each(_options.map.getLayersBy('visibility',true),function(idx, item){
+            if (lyrRE.test(item.name)) {
+                lyr = RegExp.$1 + ':simple_district_' + RegExp.$2;
+            }
+        });
 
         uStyle = OpenLayers.Util.extend({},_options.districtLayer.styleMap.styles.default);
         uStyle.layerName = _options.districtLayer.name;
-        var tmpRules = [];
+        var mapRules = [];
+        var legendRules = [];
         var labeled = false;
         $.each(uStyle.rules, function(ridx, ruleItem){
             var fids = [];
@@ -158,13 +184,14 @@ printplan = function(options) {
                             fillOpacity: 1.0
                         })}
                     });
-                    tmpRules.push(lblRule);
+                    mapRules.push(lblRule);
                 }
             });
             labeled = true;
             if (fids.length > 0) {
                 var myStyle = { Polygon: OpenLayers.Util.extend({}, uStyle.defaultStyle) },
-                    subFilters = [];
+                    subFilters = [],
+                    myRule = null;
                 myStyle = OpenLayers.Util.extend(myStyle, ruleItem.symbolizer);
                 for (var i = 0; i < fids.length; i++) {
                     subFilters.push( new OpenLayers.Filter.Comparison({
@@ -173,25 +200,22 @@ printplan = function(options) {
                         value: fids[i]
                     }));
                 }
-                tmpRules.push( new OpenLayers.Rule({
+                myRule = new OpenLayers.Rule({
+                    title: ruleItem.title,
                     filter: new OpenLayers.Filter.Logical({
                         type: OpenLayers.Filter.Logical.OR,
                         filters: subFilters
                     }),
                     symbolizer: myStyle
-                }));
+                });
+                mapRules.push(myRule);
+                if (ruleItem.title !== null && ruleItem.title !='') {
+                    legendRules.push(myRule);
+                }
             }
         });
-        uStyle.rules = tmpRules;
+        uStyle.rules = legendRules;
         delete uStyle.defaultStyle;
-
-        var lyr = null;
-        var lyrRE = new RegExp('^(.*):demo_(.*)_.*$');
-        $.each(_options.map.getLayersBy('visibility',true),function(idx, item){
-            if (lyrRE.test(item.name)) {
-                lyr = RegExp.$1 + ':simple_district_' + RegExp.$2;
-            }
-        });
 
         sld = { namedLayers: {}, version: '1.0.0' };
         sld.namedLayers[lyr] = {
@@ -200,10 +224,21 @@ printplan = function(options) {
             namedStyles: []
         };
 
-        var fmt = new OpenLayers.Format.SLD();
-        sld = fmt.write(sld);
+        params.SLD_BODY = fmt.write(sld);
+        params.LAYER = lyr;
+        legendurl2 = geolevel.getFullRequestString(params).replace(new RegExp('gwc/service/'),'');
+
+        //console.log(legendurl2);
 
         var x = Sha1.hash(new Date().toString());
+
+        uStyle.rules = mapRules;
+        sld = { namedLayers: {}, version: '1.0.0' };
+        sld.namedLayers[lyr] = {
+            name: lyr,
+            userStyles: [ uStyle ],
+            namedStyles: []
+        };
 
         $(document.body).append('<form id="printForm" method="POST" action="../print/?x='+x+'">' +
             '<input type="hidden" name="csrfmiddlewaretoken" value="' + $('#csrfmiddlewaretoken').val() + '"/>' +
@@ -212,8 +247,11 @@ printplan = function(options) {
             '<input type="hidden" name="basemap" value="' + osmurl + '"/>' +
             '<input type="hidden" name="geography" value="' + geogurl + '"/>' +
             '<input type="hidden" name="districts" value="' + disturl + '"/>' +
-            '<textarea name="sld" style="display:none;">' + sld + '</textarea>' +
+            '<input type="hidden" name="legend1" value="' + legendurl1 + '"/>' +
+            '<input type="hidden" name="legend2" value="' + legendurl2 + '"/>' +
+            '<textarea name="sld" style="display:none;">' + fmt.write(sld) + '</textarea>' +
             '</form>');
+
         $('#printForm').submit();
     };
 
