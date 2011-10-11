@@ -258,6 +258,7 @@ def copyplan(request, planid):
 
         district_copy.id = None
         district_copy.version = 0
+        district_copy.is_locked = False
         district_copy.plan = plan_copy
 
         try:
