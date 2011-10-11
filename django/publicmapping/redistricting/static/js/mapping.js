@@ -1237,6 +1237,8 @@ function mapinit(srs,maxExtent) {
             }
             currentTool.deactivate();
 
+            $(document).bind('keyup', cancelDragDrop);
+
             dragdropControl.resumeTool = currentTool;
             dragdropControl.activate();
         }
@@ -1663,6 +1665,18 @@ function mapinit(srs,maxExtent) {
         }
     );
 
+    // canel callback for ESC button
+    var cancelDragDrop = function(evt) {
+        var KEYCODE_ESC = 27;
+        if (evt.keyCode == KEYCODE_ESC) {
+            selection.removeFeatures(selection.features);
+
+            $('#assign_district').val('-1');               
+            dragdropControl.deactivate();
+            dragdropControl.resumeTool.activate();
+        }
+    }
+
     // A callback to create a popup window on the map after a peice
     // of geography is selected.
     var idFeature = function(e) {
@@ -2031,6 +2045,7 @@ function mapinit(srs,maxExtent) {
                 active[i].deactivate();
             }
         }
+        $(document).unbind('keyup', cancelDragDrop);
         navigate.activate();
         $('.navigate_map_tool').addClass('toggle');
         $('#dragdrop_tool').removeClass('toggle');
@@ -2050,6 +2065,7 @@ function mapinit(srs,maxExtent) {
                 active[i].deactivate();
             }
         }
+        $(document).unbind('keyup', cancelDragDrop);
         idControl.activate();
         $('.identify_map_tool').addClass('toggle');
         $('#dragdrop_tool').removeClass('toggle');
@@ -2067,6 +2083,7 @@ function mapinit(srs,maxExtent) {
                 active[i].deactivate();
             }
         }
+        $(document).unbind('keyup', cancelDragDrop);
         districtIdControl.activate();
         $('#dragdrop_tool').removeClass('toggle');
         $('#anchor_tool').removeClass('toggle');
@@ -2083,6 +2100,7 @@ function mapinit(srs,maxExtent) {
                 active[i].deactivate();
             }
         }
+        $(document).unbind('keyup', cancelDragDrop);
         districtSelectTool.activate();
         $('#dragdrop_tool').removeClass('toggle');
         $('#anchor_tool').removeClass('toggle');
@@ -2099,6 +2117,7 @@ function mapinit(srs,maxExtent) {
                 active[i].deactivate();
             }
         }
+        $(document).unbind('keyup', cancelDragDrop);
         lockDistrictControl.activate();
         $('#dragdrop_tool').removeClass('toggle');
         $('#anchor_tool').removeClass('toggle');
@@ -2115,6 +2134,7 @@ function mapinit(srs,maxExtent) {
                 active[i].deactivate();
             }
         }
+        $(document).unbind('keyup', cancelDragDrop);
         getControl.activate();
         getControl.features = selection.features;
         tipdiv.style.display = 'none';
@@ -2130,6 +2150,7 @@ function mapinit(srs,maxExtent) {
                 active[i].deactivate();
             }
         }
+        $(document).unbind('keyup', cancelDragDrop);
         boxControl.activate();
         boxControl.features = selection.features;
         tipdiv.style.display = 'none';
@@ -2145,6 +2166,7 @@ function mapinit(srs,maxExtent) {
                 active[i].deactivate();
             }
         }
+        $(document).unbind('keyup', cancelDragDrop);
         polyControl.activate();
         tipdiv.style.display = 'none';
         districtIdDiv.style.display = 'none';
@@ -2158,6 +2180,7 @@ function mapinit(srs,maxExtent) {
         if (me.hasClass('toggle')) {
             me.removeClass('toggle');
             assignMode = null;
+            $(document).unbind('keyup', cancelDragDrop);
             dragdropControl.deactivate();
             if (dragdropControl.resumeTool) {
                 dragdropControl.resumeTool.activate();
@@ -2175,6 +2198,8 @@ function mapinit(srs,maxExtent) {
                         active[i].deactivate();
                     }
                 }
+                $(document).bind('keyup', cancelDragDrop);
+
                 dragdropControl.activate();
                 selectionAlready = true;
             }
