@@ -1954,10 +1954,21 @@ def deleteplan(request, planid):
     return HttpResponse(json.dumps(status), mimetype='application/json')
 
 def get_health(request):
+    def num_users(minutes):
+        users = 0
+        for session in Session.objects.all():
+            decoded = session.get_decoded()
+            if 'activity_time' in decoded:
+                activity_delta = decoded['activity_time'] - timedelta(0,0,0,0,settings.SESSION_TIMEOUT)
+                if activity_delta > (datetime.now() - timedelta(0,0,0,0,minutes)):
+                    users += 1
+        return users
+
     try:
         result = 'Health retrieved at %s\n' % datetime.now()
         result += '%d plans in database\n' % Plan.objects.all().count()
         result += '%d sessions in use out of %s\n' % (Session.objects.all().count(), settings.CONCURRENT_SESSIONS)
+        result += '%d active users over the last 10 minutes\n' % num_users(10)
         space = os.statvfs('/projects/PublicMapping')
         result += '%s MB of disk space free\n' % ((space.f_bsize * space.f_bavail) / (1024*1024))
         result += 'Memory Usage:\n%s\n' % commands.getoutput('free -m')
