@@ -1957,7 +1957,13 @@ def get_health(request):
     def num_users(minutes):
         users = 0
         for session in Session.objects.all():
-            decoded = session.get_decoded()
+            try:
+                decoded = session.get_decoded()
+            except:
+                #There's a problem with this session, remote it
+                session.delete()
+                continue
+            
             if 'activity_time' in decoded:
                 activity_delta = decoded['activity_time'] - timedelta(0,0,0,0,settings.SESSION_TIMEOUT)
                 if activity_delta > (datetime.now() - timedelta(0,0,0,0,minutes)):
