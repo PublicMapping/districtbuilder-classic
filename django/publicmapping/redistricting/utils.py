@@ -29,6 +29,7 @@ from celery.task.http import HttpDispatchTask
 from django.core import management
 from django.contrib.comments.models import Comment
 from django.contrib.sessions.models import Session
+from django.contrib.sites.models import Site
 from django.core.mail import send_mail, mail_admins, EmailMessage
 from django.template import loader, Context as DjangoContext
 from django.db.models import Sum, Min, Max
@@ -38,10 +39,11 @@ from tagging.models import Tag, TaggedItem
 import csv, time, zipfile, tempfile, os, sys, traceback, time
 from datetime import datetime
 import socket, urllib
+from lxml import etree, objectify
 
 # all for shapefile exports
 from glob import glob
-from django.contrib.gis.gdal import check_err, OGRGeomType, Driver, OGRGeometry, SpatialReference, CoordTransform
+from django.contrib.gis.gdal import *
 from django.contrib.gis.gdal.libgdal import lgdal
 from ctypes import c_double
 
@@ -496,6 +498,230 @@ class DistrictShapeFile():
     """
 
     @staticmethod
+    def contact_from_getcapabilities(site):
+        """
+        Retrieve contact information for metadata from the contact data in geoserver.
+
+        Returns a tuple of information with:
+            contact_person
+            contact_organization
+            contact_position
+            address_type
+            address
+            city
+            state
+            postal
+            country
+            voice_phone
+            fax_phone
+            email
+        """
+        # get the map server URL for the GetCapabilities doc
+        ms_url = settings.MAP_SERVER
+        if ms_url == '':
+            ms_url = site.domain
+        ms_url = 'http://%s/geoserver/ows?service=wms&version=1.1.1&request=GetCapabilities' % ms_url
+
+        stream = urllib.urlopen(ms_url)
+        tree = etree.parse(stream)
+        stream.close()
+
+        contact = tree.xpath('/WMT_MS_Capabilities/Service/ContactInformation')[0]
+
+        parsed_contact = (
+            contact.xpath('ContactPersonPrimary/ContactPerson')[0].text,
+            contact.xpath('ContactPersonPrimary/ContactOrganization')[0].text,
+            contact.xpath('ContactPosition')[0].text,
+            contact.xpath('ContactAddress/AddressType')[0].text,
+            contact.xpath('ContactAddress/Address')[0].text,
+            contact.xpath('ContactAddress/City')[0].text,
+            contact.xpath('ContactAddress/StateOrProvince')[0].text,
+            contact.xpath('ContactAddress/PostCode')[0].text,
+            contact.xpath('ContactAddress/Country')[0].text,
+            contact.xpath('ContactVoiceTelephone')[0].text,
+            contact.xpath('ContactFacsimileTelephone')[0].text,
+            contact.xpath('ContactElectronicMailAddress')[0].text,
+        )
+
+        return tuple(map(lambda x:x if x is not None else '', parsed_contact))
+        
+
+    @staticmethod
+    def generate_metadata(plan, districts):
+        """
+        Generate a base chunk of metadata based on the spatial data in the plan and districts.
+
+        This base chunk does not contain entity or attribute information.
+
+        Parameters:
+            plan -- The plan for which metadata should be generated
+            districts -- The collection of districts that compose the plan
+
+        Returns:
+            A dict of metadata information about this plan.
+        """
+        if len(districts) > 0:
+            srs = SpatialReference(districts[0].geom.srid)
+            districts[0].geom.transform(4326)
+            e = Envelope(districts[0].geom.extent)
+            for i in range(1, len(districts)):
+                districts[i].geom.transform(4326)
+                e.expand_to_include(districts[i].geom.extent)
+        else:
+            srs = SpatialReference(4326)
+            e = Envelope( (-180.0,-90.0,180.0,90.0,) )
+
+        site = Site.objects.get_current()
+
+        contact = DistrictShapeFile.contact_from_getcapabilities(site)
+
+        dt_now = datetime.now()
+        # All references to FGDC below refer to the FGDC-STD-001 June 1998 metadata
+        # reference. A graphical guide may be found at the following url:
+        # http://www.fgdc.gov/csdgmgraphical/index.html
+        meta = {
+            'idinfo':{ # FGDC 1
+                'citation':{ # FGDC 1.1
+                    'citeinfo':{
+                        'origin':site.domain,
+                        'pubdate':dt_now.date().isoformat(),
+                        'pubtime':dt_now.time().isoformat(),
+                        'title':'DistrictBuilder software, from the PublicMapping Project, running on %s' % site.domain
+                    }
+                },
+                'descript':{ # FGDC 1.2
+                    'abstract':'User-created plan "%s" from DistrictBuilder.' % plan.name,
+                    'purpose':'Enable community participation in the redistricting process.'
+                },
+                'timeperd':{ # FGDC 1.3
+                    'timeinfo':{
+                        'caldate':dt_now.date().isoformat(),
+                        'time':dt_now.time().isoformat()
+                    },
+                    'current':'Snapshot of user-created data at the time period of content.'
+                },
+                'status':{ # FGDC 1.4
+                    'progress':'Complete',
+                    'update':'Unknown'
+                },
+                'spdom':{ # FGDC 1.5
+                    'bounding':{
+                        'westbc':e.min_x,
+                        'eastbc':e.max_x,
+                        'northbc':e.max_y,
+                        'southbc':e.min_y
+                    }
+                },
+                'keywords':{ # FGDC 1.6
+                    'theme': {
+                        # The theme keyword thesaurus was chosen from 
+                        # http://www.loc.gov/standards/sourcelist/subject-category.html
+                        'themekt':'nasasscg', # NASA scope and subject category guide
+                        'themekey': 'law'
+                    }
+                },
+                'accconst': 'None', # FGDC 1.7
+                'useconst': 'None', # FGDC 1.8
+            },
+            'spdoinfo':{ # FGDC 3
+                'direct': 'Vector', # FGDC 3.2
+                'ptvctinf': { # FGDC 3.3
+                    'sdtstype': 'G-polygon',
+                    'ptvctcnt': len(districts)
+                }
+            },
+            'spref':{ # FGDC 4
+                'horizsys': {
+                    'planar': { # FGDC 4.1.2
+                        'gridsys':{
+                            'othergrd': srs.wkt
+                        }
+                    }
+                }
+            },
+            'eainfo': { # FGDC 5 
+                'detailed': {
+                    'enttype': {
+                        'enttypl': 'Plan "%s"' % plan.name,
+                        'enttypd': 'Feature Class',
+                        'enttypds': '%s (%s %s)' % (plan.owner.username, plan.owner.first_name, plan.owner.last_name,)
+                    },
+                    'attr':[] # must be populated later, with entity information
+                }
+            }, 
+            'metainfo':{ # FGDC 7
+                'metd': dt_now.date().isoformat(), # FGDC 7.1
+                'metc': { # FGDC 7.4
+                    'cntinfo': {
+                        'cntperp': contact[0],
+                        'cntorgp': contact[1],
+                        'cntpos': contact[2],
+                        'cntaddr':{
+                            'addrtype': contact[3],
+                            'address': contact[4],
+                            'city': contact[5],
+                            'state': contact[6],
+                            'postal': contact[7],
+                            'country': contact[8]
+                        },
+                        'cntvoice': contact[9],
+                        'cntfax': contact[10],
+                        'cntemail': contact[11]
+                    }
+                },
+                'metstdn': 'FGDC Content Standards for Digital Geospatial Metadata',
+                'metstdv': 'FGDC-STD-001 June 1998'
+            }
+        }
+
+        return meta
+
+    @staticmethod
+    def meta2xml(meta, filename):
+        """
+        Serialize a metadata dictionary into XML.
+
+        Parameters:
+            meta -- A dictionary of metadata to serialize
+            filename -- The destination of the serialized metadata
+        """
+        def dict2elem(elem, d):
+            """
+            Recursive dictionary element serializer helper.
+            """
+            if isinstance(d, dict):
+                # the element passed is a dict
+                for key in d:
+                    if isinstance(d[key], list):
+                        # this dict item is a list -- serialize a series of these
+                        items = d[key]
+                        for item in items:
+                            sub = etree.SubElement(elem, key)
+                            dict2elem(sub, item)
+                    else:
+                        # this dict item is a scalar or another dict
+                        sub = etree.SubElement(elem, key)
+                        dict2elem(sub,d[key])
+            else:
+                # the element passed is no longer a dict, it's a scalar value
+                elem._setText(str(d))
+
+            return elem
+                
+
+        elem = objectify.Element('metadata')
+        elem = dict2elem(elem, meta)
+
+        # remove some lxml cruft
+        objectify.deannotate(elem,pytype=True,xsi=True,xsi_nil=True)
+        etree.cleanup_namespaces(elem)
+
+        output = open(filename, 'w+')
+        output.write( etree.tostring(elem, pretty_print=True) )
+        output.close()
+
+
+    @staticmethod
     @task
     def plan2shape(plan):
         """
@@ -516,17 +742,15 @@ class DistrictShapeFile():
             pending = DistrictFile.get_file_name(plan, True) + '_pending.zip'
             archive = open(pending, 'w')
             try:
-                qset = District.objects.filter(plan=plan,version__lte=plan.version)
-                qset = qset.values('district_id')
-                qset = qset.annotate(latest=Max('version'),max_id=Max('id'))
-                qset = qset.values_list('max_id',flat=True)
-
                 # Create a named temporary file
                 exportFile = tempfile.NamedTemporaryFile(suffix='.shp', mode='w+b')
                 exportFile.close()
 
                 # Get the districts in the plan
-                districts = District.objects.filter(id__in=qset)
+                districts = plan.district_set.filter(id__in=plan.get_district_ids_at_version(plan.version))
+
+                # Generate metadata
+                meta = DistrictShapeFile.generate_metadata(plan, districts)
 
                 # Open a driver, and create a data source
                 driver = Driver('ESRI Shapefile')
@@ -552,14 +776,57 @@ class DistrictShapeFile():
 
                 # set the district attributes
                 for fieldname in dfieldnames + sfieldnames:
+
                     # default to double data types, unless the field type is defined
                     ftype = OGRReal
                     if fieldname in ftypes:
                         ftype = ftypes[fieldname]
 
+                    definition = fieldname
                     # customize truncated field names
                     if fieldname in aliases:
                         fieldname = aliases[fieldname]
+
+                    if ftype == OGRString:
+                        domain = { 'udom': 'User entered value.' }
+                    elif ftype == OGRInteger:
+                        rdommin = 0 
+                        rdommax = '+Infinity'
+                        if definition == 'id':
+                            rdommin = 1
+                        elif definition == 'district_id':
+                            rdommax = plan.legislative_body.max_districts
+                        elif definition == 'num_members':
+                            if plan.legislative_body.multi_members_allowed:
+                                rdommax = plan.legislative_body.max_multi_district_members
+                                rdommin = plan.legislative_body.min_multi_district_members
+                            else:
+                                rdommin = 1
+                                rdommax = 1
+
+                        domain = {
+                            'rdom': {
+                                'rdommin': rdommin,
+                                'rdommax': rdommax
+                            }
+                        }
+                    elif ftype == OGRReal:
+                        definition = Subject.objects.get(name=definition).display
+                        domain = {
+                            'rdom': {
+                                'rdommin': 0.0,
+                                'rdommax': '+Infinity'
+                            }
+                        }
+
+
+                    attr = {
+                        'attrlabl': fieldname,
+                        'attrdef': definition,
+                        'attrdomv': domain
+                    }
+
+                    meta['eainfo']['detailed']['attr'].append(attr)
 
                     # create the field definition
                     fld = lgdal.OGR_Fld_Create(str(fieldname), ftype)
@@ -606,6 +873,9 @@ class DistrictShapeFile():
                 lgdal.OGR_L_SyncToDisk(layer)
                 lgdal.OGR_DS_Destroy(datasource)
                 lgdal.OGRCleanupAll()
+
+                # write metadata
+                DistrictShapeFile.meta2xml(meta, exportFile.name[:-4] + '.xml')
 
                 # Zip up the file 
                 zipwriter = zipfile.ZipFile(archive, 'w', zipfile.ZIP_DEFLATED)
