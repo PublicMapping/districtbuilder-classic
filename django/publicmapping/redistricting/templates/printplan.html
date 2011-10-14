@@ -1,5 +1,5 @@
 {% comment %}
-
+ 
    Copyright 2011 Micah Altman, Michael McDonald
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,31 +34,30 @@
     <meta name="author" content="David Zwarg, Andrew Jennings" />
     <meta name="copyright" content="&copy; 2011 Micah Altman, Michael McDonald"/>
     <title>Open Source District Mapping Tool</title>
+    <link rel="stylesheet" type="text/css" href="{{ prefix }}/static-media/css/reset.css"/>
+    <link rel="stylesheet" type="text/css" href="{{ prefix }}/static-media/css/export-print.css"/> 
   </head>
-  <body id="app">
-
-  <div id="steps">
-    <div id="app_header">
-      <div id="logo"><img src="{{ prefix }}/static-media/images/title-app.png" /></div>
-    <div class="clear"></div>
-  </div>   
+  <body id="app" class="print_page">
+    <div id="mapwrap">
+      <div id="app_header">
+        <div id="logo">District Builder</div>
+          <div class="float_left" id="print-plan-title">
+            <h2>{{ plan.name }} &mdash; {{ plan.legislative_body.name }} <button onclick="window.location.href+='&to=.pdf'">Get PDF</button></h2>
+          </div>
       
- </div>
-   <div>
-      <div id="mapandmenu" class="fulltab" style="height:600px;">
-          <h1>{{ plan.name }}</h1><h2>{{ plan.legislative_body.name }}</h2>
-          <input type="button" value="Get PDF" onclick="window.location.href+='&to=.pdf'"/>
-          <div id="map" style="width:1024px; height: 500px;">
-            <div class="shadow_left"></div>
-            <div class="shadow_top"></div>
-            <img src="{{ prefix }}{{ composite }}"/>
-          </div>
-          <div id="legend" style="">
-            <img src="{{ prefix }}{{ legend1 }}"/>
-            <img src="{{ prefix }}{{ legend2 }}"/>
-          </div>
+          <div class="clear"></div>
+        
+        </div>
+      </div>
+
+      <div id="map">
+        <img src="{{ prefix }}{{ composite }}"/>
+      </div>
+      <div id="legend" style="">
+        <img src="{{prefix}}{{ legend1 }}"/>
+        <img src="{{prefix}}{{ legend2 }}"/>
       </div>
     </div>
-</div>  
+    
   </body>
 </html>
