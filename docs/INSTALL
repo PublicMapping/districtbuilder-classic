@@ -444,7 +444,8 @@ as reports and downloads) and cron jobs.
      
     > sudo wget --no-check-certificate -O /etc/init.d/celeryd \
         https://raw.github.com/ask/celery/master/contrib/generic-init.d/celeryd
-    > sudo chmod a+x /etc/init.d/celeryd > sudo update-rc.d celeryd defaults
+    > sudo chmod a+x /etc/init.d/celeryd 
+    > sudo update-rc.d celeryd defaults
    
  2. Configure celeryd to run as the www-data user rather than root
     by creating a settings file in /etc/defaults
