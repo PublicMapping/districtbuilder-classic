@@ -112,7 +112,7 @@ ROOT_URLCONF = 'publicmapping.urls'
 import djcelery
 djcelery.setup_loader()
 
-CARROT_BACKEND = 'ghettoq.taproot.Database'
+BROKER_TRANSPORT = 'djkombu.transport.DatabaseTransport'
 CELERY_IMPORTS = ( 'redistricting.utils', )
 
 from datetime import timedelta
@@ -135,7 +135,7 @@ INSTALLED_APPS = (
     'django.contrib.comments',
     'staticfiles',
     'djcelery',
-    'ghettoq',
+    'djkombu',
     'redistricting',
     'publicmapping',
     'tagging',

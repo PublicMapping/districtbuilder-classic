@@ -9,14 +9,6 @@
       <Abstract>A grayscale style showing the boundaries of geounits.</Abstract>
       <FeatureTypeStyle>
         <Rule>
-          <Title>Fill</Title>
-          <PolygonSymbolizer>
-            <Fill>
-              <CssParameter name="fill">#FFFFFF</CssParameter>
-            </Fill>
-          </PolygonSymbolizer>
-        </Rule>
-        <Rule>
           <Title>Boundary</Title>
           <LineSymbolizer>
             <Stroke>

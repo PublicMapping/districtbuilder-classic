@@ -1126,16 +1126,13 @@ class Plan(models.Model):
         # If explicitly asked for no district ids, return no features
         if district_ids == []:
             return []
-        
-        qset = District.objects.filter(plan=self,version__lte=version)
-        qset = qset.values('district_id')
-        qset = qset.annotate(latest=Max('version'),max_id=Max('id'))
-        qset = qset.values_list('max_id',flat=True)
+       
+        qset = self.get_district_ids_at_version(version)
 
         bounds = Polygon.from_bbox(extents)
         bounds.srid = 3785
 
-        qset = District.objects.filter(id__in=qset)
+        qset = self.district_set.filter(id__in=qset)
         qset = qset.extra(select={'chop':"st_intersection(st_geometryn(simple,%d),st_geomfromewkt('%s'))" % (geolevel,bounds.ewkt)},where=["st_intersects(st_geometryn(simple,%d),st_geomfromewkt('%s'))" % (geolevel, bounds.ewkt)])
         qset = qset.defer('simple')
 
@@ -1189,6 +1186,22 @@ class Plan(models.Model):
         # Return a python dict, which gets serialized into geojson
         return features
 
+    def get_district_ids_at_version(self, version):
+        """
+        Get IDs of Districts in this Plan at a specified version.
+
+        Parameters:
+            version -- The version of the Districts to fetch.
+
+        Returns:
+            An unevaluated QuerySet that gets the IDs of the Districts
+            in this plan at the specified version.
+        """
+        qset = self.district_set.filter(version__lte=version)
+        qset = qset.values('district_id')
+        qset = qset.annotate(latest=Max('version'),max_id=Max('id'))
+        return qset.values_list('max_id',flat=True)
+
     def get_districts_at_version(self, version, include_geom=False):
         """
         Get Plan Districts at a specified version.
@@ -1205,11 +1218,7 @@ class Plan(models.Model):
         Returns:
             A list of districts that exist in the plan at the version.
         """
-        qset = District.objects.filter(plan=self,version__lte=version)
-        qset = qset.values('district_id')
-        qset = qset.annotate(latest=Max('version'),max_id=Max('id'))
-        qset = qset.values_list('max_id',flat=True)
-        qset = District.objects.filter(id__in=qset)
+        qset = self.district_set.filter(id__in=self.get_district_ids_at_version(version))
         if not include_geom:
             qset = qset.defer('geom','simple')
 
@@ -1376,9 +1385,12 @@ class Plan(models.Model):
         """
         if version == None:
            version = self.version
-        current_districts = self.get_districts_at_version(version, include_geom=False)
+
+        qset = self.get_district_ids_at_version(version)
+        current_districts = self.district_set.filter(id__in=qset).extra(where=['(not st_isempty(geom) or district_id=0)']).count()
         available_districts = self.legislative_body.max_districts
-        return available_districts - len(current_districts) + 1 #add one for unassigned
+
+        return available_districts - current_districts + 1 #add one for unassigned
 
     def fix_unassigned(self, version=None, threshold=100):
         """
@@ -2018,6 +2030,14 @@ CROSS JOIN (
         if districts.count() == 0:
             return None
         return districts[0]
+
+    def get_friendly_name(self):
+        """
+        Get an os-friendly name. This removes wildcards, path separators, and 
+        line terminators from the plan name.
+        """
+        cleanRE = re.compile('\W+')
+        return cleanRE.sub('_', self.name)
 
 
 class PlanForm(ModelForm):
@@ -2766,7 +2786,7 @@ class ScoreFunction(models.Model):
             if len(arg_lst) > 0:
                 kwargs = { 'list': arg_lst }
             elif self.is_planscore:
-                kwargs = { 'plan': dp, 'version': version or dp.version }
+                kwargs = { 'plan': dp, 'version': version if version is not None else dp.version }
             else:
                 kwargs = { 'district': dp }
 
@@ -3046,7 +3066,7 @@ class ScorePanel(models.Model):
                 if any(not isinstance(item,District) for item in dorp):
                     return ''
             elif isinstance(dorp,Plan):
-                dorp = dorp.get_districts_at_version(version or dorp.version, include_geom=True)
+                dorp = dorp.get_districts_at_version(version if version is not None else dorp.version, include_geom=True)
                 is_list = True
             else:
                 return ''
@@ -3067,6 +3087,8 @@ class ScorePanel(models.Model):
             description = ''
             
             for plan in plans:
+                plan_version = version if version is not None else plan.version
+                
                 if function_override:
                     functions = map(lambda f: f[0], components)
                 else:
@@ -3081,12 +3103,12 @@ class ScorePanel(models.Model):
                         if len(function) > 1:
                             arguments = function[1:]
                         function = function[0]
-                        score = function.score(plans,format='html',version=version or plan.version,score_arguments=arguments)
+                        score = function.score(plans,format='html',version=plan_version,score_arguments=arguments)
                         sort = score
 
                     else:
-                        score = ComputedPlanScore.compute(function,plan,format='html',version=version or plan.version)
-                        sort = ComputedPlanScore.compute(function,plan,format='sort',version=version or plan.version)
+                        score = ComputedPlanScore.compute(function,plan,format='html',version=plan_version)
+                        sort = ComputedPlanScore.compute(function,plan,format='sort',version=plan_version)
                     
                     description = function.description
 
@@ -3325,23 +3347,24 @@ class ComputedPlanScore(models.Model):
             The cached value for the plan.
         """
         created = False
+        plan_version = version if version is not None else plan.version
         try:
             defaults = {'value':''}
-            cache,created = ComputedPlanScore.objects.get_or_create(function=function, plan=plan, version=version or plan.version, defaults=defaults)
+            cache,created = ComputedPlanScore.objects.get_or_create(function=function, plan=plan, version=plan_version, defaults=defaults)
 
         except Exception,e:
             print e
             return None
 
         if created:
-            score = function.score(plan, format='raw', version=version or plan.version)
+            score = function.score(plan, format='raw', version=plan_version)
             cache.value = cPickle.dumps(score)
             cache.save()
         else:
             try:
                 score = cPickle.loads(str(cache.value))
             except:
-                score = function.score(plan, format='raw', version=version or plan.version)
+                score = function.score(plan, format='raw', version=plan_version)
                 cache.value = cPickle.dumps(score)
                 cache.save()
 

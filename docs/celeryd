@@ -1,0 +1,16 @@
+    # Where to chdir at start.
+    CELERYD_CHDIR='/projects/PublicMapping/DistrictBuilder/django/publicmapping/'
+    # Path to celeryd
+    CELERYD='/projects/PublicMapping/DistrictBuilder/django/publicmapping/manage.py celeryd_detach'
+    # Options for celeryd that start the scheduler
+    CELERYD_OPTS='-B -s /tmp/celerybeat-schedule'
+    # Name of the projects settings module.
+    export DJANGO_SETTINGS_MODULE='settings'
+    # User to run celeryd as. Default is current user.
+    CELERYD_USER='www-data'
+    # Group to run celeryd as. Default is current user.
+    CELERYD_GROUP='www-data'
+    # Where to put the logfile
+    CELERYD_LOGFILE='/var/log/celery/celeryd.log'
+    # Where to track the process id file
+    CELERYD_PIDFILE='/var/run/celery/celeryd.pid'

@@ -29,6 +29,7 @@ from celery.task.http import HttpDispatchTask
 from django.core import management
 from django.contrib.comments.models import Comment
 from django.contrib.sessions.models import Session
+from django.contrib.sites.models import Site
 from django.core.mail import send_mail, mail_admins, EmailMessage
 from django.template import loader, Context as DjangoContext
 from django.db.models import Sum, Min, Max
@@ -38,7 +39,74 @@ from tagging.models import Tag, TaggedItem
 import csv, time, zipfile, tempfile, os, sys, traceback, time
 from datetime import datetime
 import socket, urllib
+from lxml import etree, objectify
 
+# all for shapefile exports
+from glob import glob
+from django.contrib.gis.gdal import *
+from django.contrib.gis.gdal.libgdal import lgdal
+from ctypes import c_double
+
+
+class DistrictFile():
+    """
+    A utility class that can check exported file status. DistrictIndexFile and
+    DistrictShapeFile use this utility class to export block correspondence
+    and shape files, respectively.
+    """
+
+    @staticmethod
+    def get_file_name(plan, shape=False):
+        """
+        Given a plan, generate a temporary file name.
+
+        Parameters:
+            plan - the Plan for which a file has been requested
+            shape - a flag indicating if this is to be a shapefile; defaults to False
+        """
+        basename = "%s/plan%dv%d" % (tempfile.gettempdir(), plan.id, plan.version)
+        if shape:
+            basename += '-shp'
+        return basename
+
+    @staticmethod
+    def get_file_status(plan, shape=False):
+        """
+        Given a plan, this method will check to see whether the district file
+        for the given plan exists, is pending, or has not been created.
+        
+        Parameters:
+            plan - the Plan for which a file has been requested
+            shape - a flag indicating if this is to be a shapefile; defaults to False
+
+        Returns:
+            A string representing the file's status: "none", "pending", "done"
+        """
+        basename = DistrictFile.get_file_name(plan,shape)
+        if os.path.exists(basename + '.zip'):
+            return 'done'
+        if os.path.exists(basename + '_pending.zip'):
+            return 'pending'
+        else:
+            return 'none'
+
+    @staticmethod
+    def get_file(plan, shape=False):
+        """
+        Given a plan, return the district file for the plan at the current version.
+        
+        Parameters:
+            plan - the Plan for which a file has been requested.
+            shape - a flag indicating if this is to be a shapefile; defaults to False
+
+        Returns:
+            A file object representing the district file. If the file requested 
+            doesn't exist, nothing is returned.
+        """
+        if (DistrictFile.get_file_status(plan,shape) == 'done'):
+            district_file = open(DistrictFile.get_file_name(plan,shape) + '.zip', 'r')
+            district_file.close()
+            return district_file
 
 class DistrictIndexFile():
     """
@@ -337,7 +405,7 @@ class DistrictIndexFile():
 
     @staticmethod
     @task
-    def plan2index (plan, user=None):
+    def plan2index (plan):
         """
         Gets a zipped copy of the district index file for the
         given plan.
@@ -348,12 +416,12 @@ class DistrictIndexFile():
         Returns:
             A file object representing the zipped index file
         """
-        status = DistrictIndexFile.get_index_file_status(plan)
+        status = DistrictFile.get_file_status(plan)
         while status == 'pending':
             time.sleep(15)
-            status = DistrictIndexFile.get_index_file_status(plan)
+            status = DistrictFile.get_file_status(plan)
         if status == 'none':
-            pending = ('%s/plan%dv%d_pending.zip' % (tempfile.gettempdir(), plan.id, plan.version)) 
+            pending = DistrictFile.get_file_name() + '_pending.zip'
             archive = open(pending, 'w')
             f = tempfile.NamedTemporaryFile(delete=False)
             try:
@@ -382,10 +450,10 @@ class DistrictIndexFile():
 
                 # Zip up the file 
                 zipwriter = zipfile.ZipFile(archive, 'w', zipfile.ZIP_DEFLATED)
-                zipwriter.write(f.name, plan.name + '.csv')
+                zipwriter.write(f.name, plan.get_friendly_name() + '.csv')
                 zipwriter.close()
                 archive.close()
-                os.rename(archive.name, '%s/plan%dv%d.zip' % (tempfile.gettempdir(), plan.id, plan.version))
+                os.rename(archive.name, DistrictFile.get_file_name(plan) + '.zip')
             except Exception as ex:
                 sys.stderr.write('The plan "%s" could not be serialized to a district index file:\n%s\n' % (plan.name, traceback.format_exc()))
                 os.unlink(archive.name)
@@ -393,44 +461,7 @@ class DistrictIndexFile():
             finally:
                 os.unlink(f.name)
 
-        return DistrictIndexFile.get_index_file(plan)
-
-    @staticmethod
-    def get_index_file_status(plan):
-        """
-        Given a plan, this method will check to see whether the district index file
-        for the given plan exists, is pending, or has not been created.
-        
-        Parameters:
-            plan - the Plan for which an index file has been requested
-
-        Returns:
-            A string representing the file's status: "none", "pending", "done"
-        """
-        basename = "%s/plan%dv%d" % (tempfile.gettempdir(), plan.id, plan.version)
-        if os.path.exists('%s.zip' % basename):
-            return 'done'
-        if os.path.exists('%s_pending.zip' % basename):
-            return 'pending'
-        else:
-            return 'none'        
-    @staticmethod
-    def get_index_file(plan):
-        """
-        Given a plan, return the district index file for the plan at the current
-        version
-        
-        Parameters:
-            plan - the Plan for which an index file has been requested
-
-        Returns:
-            A file object representing the district index file. If the 
-            file requested doesn't exist, nothing is returned
-        """
-        if (DistrictIndexFile.get_index_file_status(plan) == 'done'):
-            index_file = open('%s/plan%dv%d.zip' % (tempfile.gettempdir(), plan.id, plan.version), 'r')
-            index_file.close()
-            return index_file
+        return DistrictFile.get_index_file(plan)
 
     @staticmethod
     @task
@@ -455,6 +486,416 @@ class DistrictIndexFile():
         template = loader.get_template('submitted.email')
         context = DjangoContext({ 'user': user, 'plan': plan })
         send_mail(subject, template.render(context), settings.EMAIL_HOST_USER, [user_email], fail_silently=False)
+
+
+class DistrictShapeFile():
+    """
+    The publicmapping projects supports users exporting their plans to 
+    shape files.  These files list all of the districts, their geometries,
+    and the computed characteristics of the plan's districts.
+
+    These files may be downloaded in .zip format.
+    """
+
+    @staticmethod
+    def contact_from_getcapabilities(site):
+        """
+        Retrieve contact information for metadata from the contact data in geoserver.
+
+        Returns a tuple of information with:
+            contact_person
+            contact_organization
+            contact_position
+            address_type
+            address
+            city
+            state
+            postal
+            country
+            voice_phone
+            fax_phone
+            email
+        """
+        # get the map server URL for the GetCapabilities doc
+        ms_url = settings.MAP_SERVER
+        if ms_url == '':
+            ms_url = site.domain
+        ms_url = 'http://%s/geoserver/ows?service=wms&version=1.1.1&request=GetCapabilities' % ms_url
+
+        stream = urllib.urlopen(ms_url)
+        tree = etree.parse(stream)
+        stream.close()
+
+        contact = tree.xpath('/WMT_MS_Capabilities/Service/ContactInformation')[0]
+
+        parsed_contact = (
+            contact.xpath('ContactPersonPrimary/ContactPerson')[0].text,
+            contact.xpath('ContactPersonPrimary/ContactOrganization')[0].text,
+            contact.xpath('ContactPosition')[0].text,
+            contact.xpath('ContactAddress/AddressType')[0].text,
+            contact.xpath('ContactAddress/Address')[0].text,
+            contact.xpath('ContactAddress/City')[0].text,
+            contact.xpath('ContactAddress/StateOrProvince')[0].text,
+            contact.xpath('ContactAddress/PostCode')[0].text,
+            contact.xpath('ContactAddress/Country')[0].text,
+            contact.xpath('ContactVoiceTelephone')[0].text,
+            contact.xpath('ContactFacsimileTelephone')[0].text,
+            contact.xpath('ContactElectronicMailAddress')[0].text,
+        )
+
+        return tuple(map(lambda x:x if x is not None else '', parsed_contact))
+        
+
+    @staticmethod
+    def generate_metadata(plan, districts):
+        """
+        Generate a base chunk of metadata based on the spatial data in the plan and districts.
+
+        This base chunk does not contain entity or attribute information.
+
+        Parameters:
+            plan -- The plan for which metadata should be generated
+            districts -- The collection of districts that compose the plan
+
+        Returns:
+            A dict of metadata information about this plan.
+        """
+        if len(districts) > 0:
+            srs = SpatialReference(districts[0].geom.srid)
+            districts[0].geom.transform(4326)
+            e = Envelope(districts[0].geom.extent)
+            for i in range(1, len(districts)):
+                districts[i].geom.transform(4326)
+                e.expand_to_include(districts[i].geom.extent)
+        else:
+            srs = SpatialReference(4326)
+            e = Envelope( (-180.0,-90.0,180.0,90.0,) )
+
+        site = Site.objects.get_current()
+
+        contact = DistrictShapeFile.contact_from_getcapabilities(site)
+
+        dt_now = datetime.now()
+        # All references to FGDC below refer to the FGDC-STD-001 June 1998 metadata
+        # reference. A graphical guide may be found at the following url:
+        # http://www.fgdc.gov/csdgmgraphical/index.html
+        meta = {
+            'idinfo':{ # FGDC 1
+                'citation':{ # FGDC 1.1
+                    'citeinfo':{
+                        'origin':site.domain,
+                        'pubdate':dt_now.date().isoformat(),
+                        'pubtime':dt_now.time().isoformat(),
+                        'title':'DistrictBuilder software, from the PublicMapping Project, running on %s' % site.domain
+                    }
+                },
+                'descript':{ # FGDC 1.2
+                    'abstract':'User-created plan "%s" from DistrictBuilder.' % plan.name,
+                    'purpose':'Enable community participation in the redistricting process.'
+                },
+                'timeperd':{ # FGDC 1.3
+                    'timeinfo':{
+                        'caldate':dt_now.date().isoformat(),
+                        'time':dt_now.time().isoformat()
+                    },
+                    'current':'Snapshot of user-created data at the time period of content.'
+                },
+                'status':{ # FGDC 1.4
+                    'progress':'Complete',
+                    'update':'Unknown'
+                },
+                'spdom':{ # FGDC 1.5
+                    'bounding':{
+                        'westbc':e.min_x,
+                        'eastbc':e.max_x,
+                        'northbc':e.max_y,
+                        'southbc':e.min_y
+                    }
+                },
+                'keywords':{ # FGDC 1.6
+                    'theme': {
+                        # The theme keyword thesaurus was chosen from 
+                        # http://www.loc.gov/standards/sourcelist/subject-category.html
+                        'themekt':'nasasscg', # NASA scope and subject category guide
+                        'themekey': 'law'
+                    }
+                },
+                'accconst': 'None', # FGDC 1.7
+                'useconst': 'None', # FGDC 1.8
+            },
+            'spdoinfo':{ # FGDC 3
+                'direct': 'Vector', # FGDC 3.2
+                'ptvctinf': { # FGDC 3.3
+                    'sdtstype': 'G-polygon',
+                    'ptvctcnt': len(districts)
+                }
+            },
+            'spref':{ # FGDC 4
+                'horizsys': {
+                    'planar': { # FGDC 4.1.2
+                        'gridsys':{
+                            'othergrd': srs.wkt
+                        }
+                    }
+                }
+            },
+            'eainfo': { # FGDC 5 
+                'detailed': {
+                    'enttype': {
+                        'enttypl': 'Plan "%s"' % plan.name,
+                        'enttypd': 'Feature Class',
+                        'enttypds': '%s (%s %s)' % (plan.owner.username, plan.owner.first_name, plan.owner.last_name,)
+                    },
+                    'attr':[] # must be populated later, with entity information
+                }
+            }, 
+            'metainfo':{ # FGDC 7
+                'metd': dt_now.date().isoformat(), # FGDC 7.1
+                'metc': { # FGDC 7.4
+                    'cntinfo': {
+                        'cntperp': contact[0],
+                        'cntorgp': contact[1],
+                        'cntpos': contact[2],
+                        'cntaddr':{
+                            'addrtype': contact[3],
+                            'address': contact[4],
+                            'city': contact[5],
+                            'state': contact[6],
+                            'postal': contact[7],
+                            'country': contact[8]
+                        },
+                        'cntvoice': contact[9],
+                        'cntfax': contact[10],
+                        'cntemail': contact[11]
+                    }
+                },
+                'metstdn': 'FGDC Content Standards for Digital Geospatial Metadata',
+                'metstdv': 'FGDC-STD-001 June 1998'
+            }
+        }
+
+        return meta
+
+    @staticmethod
+    def meta2xml(meta, filename):
+        """
+        Serialize a metadata dictionary into XML.
+
+        Parameters:
+            meta -- A dictionary of metadata to serialize
+            filename -- The destination of the serialized metadata
+        """
+        def dict2elem(elem, d):
+            """
+            Recursive dictionary element serializer helper.
+            """
+            if isinstance(d, dict):
+                # the element passed is a dict
+                for key in d:
+                    if isinstance(d[key], list):
+                        # this dict item is a list -- serialize a series of these
+                        items = d[key]
+                        for item in items:
+                            sub = etree.SubElement(elem, key)
+                            dict2elem(sub, item)
+                    else:
+                        # this dict item is a scalar or another dict
+                        sub = etree.SubElement(elem, key)
+                        dict2elem(sub,d[key])
+            else:
+                # the element passed is no longer a dict, it's a scalar value
+                elem._setText(str(d))
+
+            return elem
+                
+
+        elem = objectify.Element('metadata')
+        elem = dict2elem(elem, meta)
+
+        # remove some lxml cruft
+        objectify.deannotate(elem,pytype=True,xsi=True,xsi_nil=True)
+        etree.cleanup_namespaces(elem)
+
+        output = open(filename, 'w+')
+        output.write( etree.tostring(elem, pretty_print=True) )
+        output.close()
+
+
+    @staticmethod
+    @task
+    def plan2shape(plan):
+        """
+        Gets a zipped copy of the plan shape file.
+
+        Parameters:
+            plan - The plan for which to get a shape file
+        
+        Returns:
+            A file object representing the zipped shape file
+        """
+        exportFile = None
+        status = DistrictFile.get_file_status(plan,True)
+        while status == 'pending':
+            time.sleep(15)
+            status = DistrictFile.get_file_status(plan,True)
+        if status == 'none':
+            pending = DistrictFile.get_file_name(plan, True) + '_pending.zip'
+            archive = open(pending, 'w')
+            try:
+                # Create a named temporary file
+                exportFile = tempfile.NamedTemporaryFile(suffix='.shp', mode='w+b')
+                exportFile.close()
+
+                # Get the districts in the plan
+                districts = plan.district_set.filter(id__in=plan.get_district_ids_at_version(plan.version))
+
+                # Generate metadata
+                meta = DistrictShapeFile.generate_metadata(plan, districts)
+
+                # Open a driver, and create a data source
+                driver = Driver('ESRI Shapefile')
+                datasource = lgdal.OGR_Dr_CreateDataSource(driver._ptr, exportFile.name, None)
+
+                # Get the geometry field
+                geo_field = filter(lambda x: x.name=='geom', District._meta.fields)[0]
+
+                # Determine the geometry type from the field
+                ogr_type = OGRGeomType(geo_field.geom_type).num
+                # Get the spatial reference
+                native_srs = SpatialReference(geo_field.srid)
+                #Create a layer
+                layer = lgdal.OGR_DS_CreateLayer(datasource, 'District', native_srs._ptr, ogr_type, None)
+
+                # Set up mappings of field names for export, as well as shapefile
+                # column aliases (only 8 characters!)
+                (OGRInteger,OGRReal,OGRString,) = (0,2,4,)
+                dfieldnames = ['id', 'district_id', 'name', 'version', 'num_members']
+                sfieldnames = list(Subject.objects.all().values_list('name',flat=True))
+                aliases = {'district_id':'dist_num', 'num_members':'nmembers'}
+                ftypes = {'id':OGRInteger, 'district_id':OGRInteger, 'name':OGRString, 'version':OGRInteger, 'num_members':OGRInteger}
+
+                # set the district attributes
+                for fieldname in dfieldnames + sfieldnames:
+
+                    # default to double data types, unless the field type is defined
+                    ftype = OGRReal
+                    if fieldname in ftypes:
+                        ftype = ftypes[fieldname]
+
+                    definition = fieldname
+                    # customize truncated field names
+                    if fieldname in aliases:
+                        fieldname = aliases[fieldname]
+
+                    if ftype == OGRString:
+                        domain = { 'udom': 'User entered value.' }
+                    elif ftype == OGRInteger:
+                        rdommin = 0 
+                        rdommax = '+Infinity'
+                        if definition == 'id':
+                            rdommin = 1
+                        elif definition == 'district_id':
+                            rdommax = plan.legislative_body.max_districts
+                        elif definition == 'num_members':
+                            if plan.legislative_body.multi_members_allowed:
+                                rdommax = plan.legislative_body.max_multi_district_members
+                                rdommin = plan.legislative_body.min_multi_district_members
+                            else:
+                                rdommin = 1
+                                rdommax = 1
+
+                        domain = {
+                            'rdom': {
+                                'rdommin': rdommin,
+                                'rdommax': rdommax
+                            }
+                        }
+                    elif ftype == OGRReal:
+                        definition = Subject.objects.get(name=definition).display
+                        domain = {
+                            'rdom': {
+                                'rdommin': 0.0,
+                                'rdommax': '+Infinity'
+                            }
+                        }
+
+
+                    attr = {
+                        'attrlabl': fieldname,
+                        'attrdef': definition,
+                        'attrdomv': domain
+                    }
+
+                    meta['eainfo']['detailed']['attr'].append(attr)
+
+                    # create the field definition
+                    fld = lgdal.OGR_Fld_Create(str(fieldname), ftype)
+                    # add the field definition to the layer
+                    added = lgdal.OGR_L_CreateField(layer, fld, 0)
+                    check_err(added)
+
+                # get all the field definitions for the new layer
+                feature_definition = lgdal.OGR_L_GetLayerDefn(layer)
+
+                # begin exporting districts
+                for district in districts:
+                    # create a feature
+                    feature = lgdal.OGR_F_Create(feature_definition)
+
+                    # attach each field from the district model
+                    for idx, field in enumerate(dfieldnames):
+                        value = getattr(district,field)
+                        ftype = ftypes[field]
+                        if ftype == OGRInteger:
+                            lgdal.OGR_F_SetFieldInteger(feature, idx, int(value))
+                        elif ftype == OGRString:
+                            lgdal.OGR_F_SetFieldString(feature, idx, str(value))
+
+                    # attach each field for the subjects that relate to this model
+                    for idx, sname in enumerate(sfieldnames):
+                        try:
+                            subject = district.computedcharacteristic_set.get(subject__name=sname)
+                        except:
+                            subject = 0.0
+                        lgdal.OGR_F_SetFieldDouble(feature, idx+len(dfieldnames), c_double(subject.number))
+
+                    # convert the geos geometry to an ogr geometry
+                    geometry = OGRGeometry(district.geom.wkt, native_srs)
+                    # save the geometry to the feature
+                    added = lgdal.OGR_F_SetGeometry(feature, geometry._ptr)
+                    check_err(added)
+
+                    # add the feature to the layer
+                    added = lgdal.OGR_L_SetFeature(layer, feature)
+                    check_err(added)
+
+                # clean up ogr
+                lgdal.OGR_L_SyncToDisk(layer)
+                lgdal.OGR_DS_Destroy(datasource)
+                lgdal.OGRCleanupAll()
+
+                # write metadata
+                DistrictShapeFile.meta2xml(meta, exportFile.name[:-4] + '.xml')
+
+                # Zip up the file 
+                zipwriter = zipfile.ZipFile(archive, 'w', zipfile.ZIP_DEFLATED)
+                exportedFiles = glob(exportFile.name[:-4] + '*')
+                for exp in exportedFiles:
+                    zipwriter.write(exp, '%sv%d%s' % (plan.get_friendly_name(), plan.version, exp[-4:]))
+                zipwriter.close()
+                archive.close()
+                os.rename(archive.name, DistrictFile.get_file_name(plan,True) + '.zip')
+            except Exception as ex:
+                sys.stderr.write('The plan "%s" could not be saved to a shape file:\n%s\n' % (plan.name, traceback.format_exc()))
+                os.unlink(archive.name)
+            # delete the temporary csv file
+            finally:
+                if not exportFile is None:
+                    exportedFiles = glob(exportFile.name[:-4] + '*')
+                    for exp in exportedFiles:
+                        os.remove(exp)
+
+        return DistrictFile.get_file(plan,True)
 
 @task
 def cleanup():

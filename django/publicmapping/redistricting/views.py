@@ -262,6 +262,7 @@ def copyplan(request, planid):
 
         district_copy.id = None
         district_copy.version = 0
+        district_copy.is_locked = False
         district_copy.plan = plan_copy
 
         try:
@@ -1708,7 +1709,7 @@ def getutc(t):
     return t.utcfromtimestamp(t_seconds)
 
 @unique_session_or_json_redirect
-def getdistrictindexfilestatus(request, planid):
+def getdistrictfilestatus(request, planid):
     """
     Given a plan id, return the status of the district index file
     """    
@@ -1719,7 +1720,8 @@ def getdistrictindexfilestatus(request, planid):
     if not can_copy(request.user, plan):
         return HttpResponseForbidden()
     try:
-        file_status = DistrictIndexFile.get_index_file_status(plan)
+        is_shape = 'type' in request.REQUEST and request.REQUEST['type'] == 'shape'
+        file_status = DistrictFile.get_file_status(plan, shape=is_shape)
         status['success'] = True
         status['status'] = file_status 
     except Exception as ex:
@@ -1728,7 +1730,7 @@ def getdistrictindexfilestatus(request, planid):
     return HttpResponse(json.dumps(status),mimetype='application/json')
         
 @unique_session_or_json_redirect
-def getdistrictindexfile(request, planid):
+def getdistrictfile(request, planid):
     """
     Given a plan id, email the user a zipped copy of 
     the district index file
@@ -1740,14 +1742,21 @@ def getdistrictindexfile(request, planid):
     if not can_copy(request.user, plan):
         return HttpResponseForbidden()
     
-    file_status = DistrictIndexFile.get_index_file_status(plan)
+    is_shape = 'type' in request.REQUEST and request.REQUEST['type'] == 'shape'
+    file_status = DistrictFile.get_file_status(plan, shape=is_shape)
     if file_status == 'done':
-        archive = DistrictIndexFile.plan2index(plan)
+        if is_shape:
+            archive = DistrictShapeFile.plan2shape(plan)
+        else:
+            archive = DistrictIndexFile.plan2index(plan)
         response = HttpResponse(open(archive.name).read(), content_type='application/zip')
-        response['Content-Disposition'] = 'attachment; filename="%s.zip"' % plan.name
+        response['Content-Disposition'] = 'attachment; filename="%s.zip"' % plan.get_friendly_name()
     else:
         # Put in a celery task to create this file
-        DistrictIndexFile.plan2index.delay(plan)
+        if is_shape:
+            DistrictShapeFile.plan2shape.delay(plan)
+        else:
+            DistrictIndexFile.plan2index.delay(plan)
         response = HttpResponse('File is not yet ready. Please try again in a few minutes')
     return response
 
@@ -2070,10 +2079,27 @@ def deleteplan(request, planid):
     return HttpResponse(json.dumps(status), mimetype='application/json')
 
 def get_health(request):
+    def num_users(minutes):
+        users = 0
+        for session in Session.objects.all():
+            try:
+                decoded = session.get_decoded()
+            except:
+                #There's a problem with this session, remote it
+                session.delete()
+                continue
+            
+            if 'activity_time' in decoded:
+                activity_delta = decoded['activity_time'] - timedelta(0,0,0,0,settings.SESSION_TIMEOUT)
+                if activity_delta > (datetime.now() - timedelta(0,0,0,0,minutes)):
+                    users += 1
+        return users
+
     try:
         result = 'Health retrieved at %s\n' % datetime.now()
         result += '%d plans in database\n' % Plan.objects.all().count()
         result += '%d sessions in use out of %s\n' % (Session.objects.all().count(), settings.CONCURRENT_SESSIONS)
+        result += '%d active users over the last 10 minutes\n' % num_users(10)
         space = os.statvfs('/projects/PublicMapping')
         result += '%s MB of disk space free\n' % ((space.f_bsize * space.f_bavail) / (1024*1024))
         result += 'Memory Usage:\n%s\n' % commands.getoutput('free -m')
@@ -2097,9 +2123,10 @@ def statistics_sets(request, planid):
         scorefunctions = []
             
         # Get the functions available for the users
-        user_functions = ScoreFunction.objects.filter(selectable_bodies=plan.legislative_body).order_by('name')
+        user_functions = ScoreFunction.objects.filter(selectable_bodies=plan.legislative_body).order_by('label')
         for f in user_functions:
-            scorefunctions.append({ 'id': f.id, 'name': force_escape(f.label) })
+            if 'report' not in f.name.lower():
+                scorefunctions.append({ 'id': f.id, 'name': force_escape(f.label) })
         result['functions'] = scorefunctions
 
         if not request.user.is_superuser:
@@ -2109,7 +2136,8 @@ def statistics_sets(request, planid):
                 legislative_body=plan.legislative_body,
                 is_page=False).order_by('title')
             for admin_display in admin_displays:
-                sets.append({ 'id': admin_display.id, 'name': force_escape(admin_display.title), 'functions': [], 'mine':False })
+                if 'report' not in admin_display.title.lower():
+                    sets.append({ 'id': admin_display.id, 'name': force_escape(admin_display.title), 'functions': [], 'mine':False })
 
         try:
             user_displays = ScoreDisplay.objects.filter(
