@@ -7,13 +7,17 @@ from redistricting.utils import *
 
 class Command(BaseCommand):
     """
-    This command exports the index file for a single plan, or all plans in the system
+    Export a plan or many plans into an index file or shapefile.
     """
     args = None
-    help = 'Export the index files for a single plan, or all plans in the system'
+    help = 'Export a plan or many plans into an index file or shapefile.'
     option_list = BaseCommand.option_list + (
-        make_option('-p', '--plan', dest='plan_id', default=None, action='store', help='Choose a single plan to export'),
-        make_option('-s', '--shared', dest='is_shared', default=False, action='store_true', help='Only export shared plans'),
+        make_option('-p', '--plan', dest='plan_id', default=None, type='int',
+            action='store', help='Choose a single plan to export'),
+        make_option('-s', '--shared', dest='is_shared', default=False, 
+            action='store_true', help='Only export shared plans'),
+        make_option('-t', '--type', dest='export_type', default='index',
+            action='store', help="'index' = index file, 'shape' = shape file"),
     )
 
     def handle(self, *args, **options):
@@ -36,8 +40,13 @@ class Command(BaseCommand):
         for p in plans:
             if verbosity > 0:
                 self.stdout.write('Exporting plan with id: %s and name: %s\n' % (p.id, p.name))
-            # Write each plan to a zipped index file in /tmp
-            f = DistrictIndexFile.plan2index(p)
+            if options.get('export_type') == 'index':
+                # Write each plan to a zipped index file in /tmp
+                f = DistrictIndexFile.plan2index(p)
+            elif options.get('export_type') == 'shape':
+                # Write each plan to a zipped shape file in /tmp
+                f = DistrictShapeFile.plan2shape(p)
+
             if verbosity > 0:
                 self.stdout.write('Data stored in file: %s\n' % f.name)
 

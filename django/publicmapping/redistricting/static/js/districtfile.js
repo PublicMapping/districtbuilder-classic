@@ -30,7 +30,7 @@
  * Parameters:
  *   options -- Configuration options for the dialog.
  */
-districtindexfile = function(options) {
+districtfile = function(options) {
 
     var _self = {},
         _options = $.extend({
@@ -41,9 +41,11 @@ districtindexfile = function(options) {
             /* how often (in milliseconds) to check the index file status */
             timer: 15000, 
             /* The url to check the server for the status of the file */
-            statusUrl: '/districtmapping/plan/' + ( typeof(options.planId) != 'undefined' ? options.planId : PLAN_ID ) + '/districtindexfilestatus/',
+            statusUrl: '/districtmapping/plan/' + ( typeof(options.planId) != 'undefined' ? options.planId : PLAN_ID ) + '/districtfilestatus/',
              /* The url to fetch the district index file */
-            fetchUrl:'/districtmapping/plan/' + ( typeof(options.planId) != 'undefined' ? options.planId : PLAN_ID ) + '/districtindexfile/'
+            fetchUrl:'/districtmapping/plan/' + ( typeof(options.planId) != 'undefined' ? options.planId : PLAN_ID ) + '/districtfile/',
+            /* The type of file to check/request: index or shape */
+            type: 'index'
         }, options),
         
         _autoDownload = false,
@@ -61,7 +63,7 @@ districtindexfile = function(options) {
         _options.target.empty();
         _options.target.append($('<div class="loading"></div>').width('70').height('25'));
         $.ajax({
-           url: _options.statusUrl,
+           url: _options.statusUrl + '?type=' + _options.type,
            dataType: 'json',
            success: statusRequestCallback,
            error: function(xhr, textStatus, message) {
@@ -84,12 +86,12 @@ districtindexfile = function(options) {
             // If the file is ready, add a button/link to download
             if (fileStatus == 'done') {
                 if (_autoDownload) {
-                    window.location = _options.fetchUrl;
+                    window.location = _options.fetchUrl + '?type=' + _options.type;
                     _autoDownload = false;
                 }
                 if (_visiblyUpdate) {
                     _options.target.empty();
-                    var link = $('<a href="' + _options.fetchUrl + '" />');
+                    var link = $('<a href="' + _options.fetchUrl + '?type=' + _options.type + '" />');
                     var button = $('<button type="button" id="btnExportDistrictIndexFile" class="button">Download</button>').button();
                     $(link).append(button);
                     _options.target.append(link);    
@@ -104,7 +106,7 @@ districtindexfile = function(options) {
                     var button = $('<button type="button" id="btnExportDistrictIndexFile" class="button">Request File</button>').button();
                     button.click( function() {
                         _autoDownload = true;
-                        $.post(_options.fetchUrl, indicatePending(data));
+                        $.post(_options.fetchUrl + '?type=' + _options.type, indicatePending(data));
                         return false;
                     });
                     _options.target.append(button);    
@@ -144,7 +146,7 @@ districtindexfile = function(options) {
         
         // Request the status again after the timer time has passed
         var checkagain = function() {
-            $.post(_options.statusUrl, statusRequestCallback);
+            $.post(_options.statusUrl + '?type=' + _options.type, statusRequestCallback);
         };
         _checkInProgress = setTimeout(checkagain, _options.timer);
     };
@@ -201,7 +203,7 @@ districtindexfile = function(options) {
                             $('#dlgMail input').before($("<div class='error'>That is not a valid email address.</div>"));
                         }
                     } else {
-                        $.post('/districtmapping/plan/' + PLAN_ID + '/districtindexfile/', { email: address }, fileRequestCallback);
+                        $.post('/districtmapping/plan/' + PLAN_ID + '/districtfile/', { email: address }, fileRequestCallback);
                         $('#dlgMail').dialog('close');
                     }
                 },

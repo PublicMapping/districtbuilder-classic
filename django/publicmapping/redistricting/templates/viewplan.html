@@ -147,7 +147,7 @@
     <script type="text/javascript" src="/static-media/js/ui.js"></script>
     <script type="text/javascript" src="/static-media/js/viewablesorter.js"></script>
     <script type="text/javascript" src="/static-media/js/mapping.js"></script>
-    <script type="text/javascript" src="/static-media/js/districtindexfile.js"></script>
+    <script type="text/javascript" src="/static-media/js/districtfile.js"></script>
     <script type="text/javascript" src="/static-media/js/chooseplan.js"></script>
     <script type="text/javascript" src="/static-media/js/shareddistricts.js"></script>
     <script type="text/javascript" src="/static-media/js/reports.js"></script>
@@ -1065,8 +1065,9 @@ Include the markup for the account management panel.
 
         // Load up the district index file checker whenever the 
         // appropriate tab is clicked.
-        var exportIndexFile = districtindexfile({
-            target: $('#districtIndexFileTarget')
+        var exportIndexFile = districtfile({
+            target: $('#districtIndexFileTarget'),
+            type: 'shape'
         });
 
         $('#steps').tabs({ show: function(event, ui) {
