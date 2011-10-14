@@ -445,9 +445,10 @@ contents of the file and try again.
             return feature_type_obj
 
         # Make a list of layers
-        feature_type_names = ['identify_geounit','simple_district']
+        feature_type_names = ['identify_geounit']
         for geolevel in Geolevel.objects.all():
             feature_type_names.append('simple_%s' % geolevel.name)
+            feature_type_names.append('simple_district_%s' % geolevel.name)
 
             for subject in Subject.objects.all().order_by('sort_key'):
                 feature_type_names.append('demo_%s_%s' % (geolevel.name, subject.name))
@@ -687,13 +688,13 @@ ERROR:
         if verbose > 1:
             print 'Created identify_geounit view ...'
 
-        sql = "CREATE OR REPLACE VIEW simple_district AS SELECT redistricting_district.id, redistricting_district.district_id, redistricting_district.plan_id, st_geometryn(redistricting_district.simple,3) as geom FROM redistricting_district;"
-        cursor.execute(sql)
-        transaction.commit()
-        if verbose > 1:
-            print 'Created identify_district view ...'
-
         for geolevel in Geolevel.objects.all():
+            sql = "CREATE OR REPLACE VIEW simple_district_%s AS SELECT redistricting_district.id, redistricting_district.district_id, redistricting_district.plan_id, st_geometryn(redistricting_district.simple,%d) as geom FROM redistricting_district;" % (geolevel.name, geolevel.id,)
+            cursor.execute(sql)
+            transaction.commit()
+            if verbose > 1:
+                print 'Created simple_district_%s view ...' % geolevel.name
+
             sql = "CREATE OR REPLACE VIEW simple_%s AS SELECT id, name, geolevel_id, simple as geom FROM redistricting_geounit WHERE geolevel_id = %d;" % (geolevel.name, geolevel.id,)
             cursor.execute(sql)
             transaction.commit()

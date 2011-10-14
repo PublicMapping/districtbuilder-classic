@@ -1,0 +1,65 @@
+.clear {clear:both}
+.clear_left {clear:left}
+.clear_right {clear:right}
+
+
+#app.print_page {font-family: arial, helvetica, sans-serif}
+
+#app.print_page #app_header {
+  background-position: 0 0;
+background-repeat:   repeat-x ;
+	font-size: 1em;
+	line-height: 1.2em;
+	padding: 15px 0;
+	margin-top: 15px;
+	position:relative;
+
+	color: #444;
+	}
+	
+	
+#app.print_page #logo {
+
+	font-size: 1.2em;
+	font-weight: bold;
+	margin-right: 15px;
+	float:left;
+	text-align:center;
+	display:inline;
+}
+	
+#app.print_page 	#print-plan-title {
+	text-align: center;
+	font-weight:bold;
+	display:inline;
+}
+	
+	#app.print_page 	#print-plan-title button{
+	margin: 0 15px;
+}
+
+
+#app.print_page button {
+    background-image: url("/static-media/images/bg-button-sm.png");
+    background-position: 0 0;
+    background-repeat: repeat-x;
+    border-radius: 4px 4px 4px 4px;
+    color: #FFFFFF;
+    font-weight: bold;
+    text-shadow: 0 -1px rgba(0, 0, 0, 0.3);
+    background-color: #1F8CBE;
+    border: 1px solid #3B7181;
+}
+
+#app.print_page #map  {border: 1px solid #ccc;}
+
+#app.print_page #map,
+#app.print_page #legend {
+margin: 15px 0 0 0;
+text-align:center;
+}
+
+
+#app.print_page #legend img {display:inline-block; width:88px; margin-right: 15px; vertical-align: top;}
+
+#app.print_page #mapwrap {width: 1024px; margin: 0 auto}

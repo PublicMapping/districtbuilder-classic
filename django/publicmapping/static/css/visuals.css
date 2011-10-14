@@ -144,9 +144,10 @@ div#login input {
   border: 1px solid #ccc;
   margin: 0 0 10px;
   -moz-border-radius: 8px;
-  -webkit-border-radius: 8px
+  -webkit-border-radius: 8px;
   border-radius: 8px;
 }
+
 div#login input.error {
     border: 1px solid #ff0000;
 }
@@ -226,15 +227,15 @@ form#forgotForm input.field, form#forgotForm input.error {
     border: 1px solid #ccc;
     margin: 0 0 10px 15px;
     -moz-border-radius: 8px;
-    -webkit-border-radius: 8px
+    -webkit-border-radius: 8px;
     border-radius: 8px;
 }
-#districtComment input.field, #districtComment input.error{
+#districtComment input.field, #districtComment input.error {
     padding: 0 0 0 8px;
     height: 30px;
     border: 1px solid #ccc;
     -moz-border-radius: 8px;
-    -webkit-border-radius: 8px
+    -webkit-border-radius: 8px;
     border-radius: 8px;
 }
 form#registerForm input.error, form#forgotForm input.error, #districtComment input.error {
@@ -337,7 +338,7 @@ div#step_share .toolbar {background-color:#acae87}
 div#step_leaderboard .toolbar {background-color: #b09873}
 
 div#step_leaderboard div.toolbar li {background-color: #b7a17f; border: 1px solid #c1af92;}
-div#step_leaderboard div.toolbar  li.ui-state-active {background-color: #967f5b; border: 1px solid: #857152}
+div#step_leaderboard div.toolbar  li.ui-state-active {background-color: #967f5b; border: 1px solid #857152}
 
 
 div.tab_content {background: #e3f0ef;}

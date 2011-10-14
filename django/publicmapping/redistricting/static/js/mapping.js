@@ -2979,6 +2979,8 @@ function mapinit(srs,maxExtent) {
     olmap.events.register('zoomend', olmap, changeSnapLayer);
 
     PLAN_HISTORY[PLAN_VERSION] = true;
+
+    $(document.body).trigger('mapready', olmap);
 }
 
 IdGeounit = OpenLayers.Class(OpenLayers.Control.GetFeature, {
@@ -2996,10 +2998,10 @@ IdGeounit = OpenLayers.Class(OpenLayers.Control.GetFeature, {
         });
 
         // concatenate events specific to vector with those from the base
-        this.EVENT_TYPES =
-            OpenLayers.Control.GetFeature.prototype.EVENT_TYPES.concat(
-            OpenLayers.Control.prototype.EVENT_TYPES
-        );
+        //this.EVENT_TYPES =
+        //    OpenLayers.Control.GetFeature.prototype.EVENT_TYPES.concat(
+        //    OpenLayers.Control.prototype.EVENT_TYPES
+        //);
 
         options.handlerOptions = options.handlerOptions || {};
 

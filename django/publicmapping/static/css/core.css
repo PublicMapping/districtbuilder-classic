@@ -1140,7 +1140,9 @@ font-size: 10px; padding-right: 4px;
   background-image: url(/static-media/images/icon-members.png);
 }
 
-
+#print_btn .ui-icon {
+  background-image: url(/static-media/images/icon-print.png);
+}
 
 
 div.toolset_group {

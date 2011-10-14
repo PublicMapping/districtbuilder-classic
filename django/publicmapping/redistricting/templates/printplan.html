@@ -1,0 +1,62 @@
+{% comment %}
+ 
+   Copyright 2011 Micah Altman, Michael McDonald
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+   See the License for the specific language governing permissions and
+   limitations under the License. 
+
+   This file is part of The Public Mapping Project
+   https://github.com/PublicMapping/
+
+   Purpose:
+       This template is a basic map printing interface.
+
+       This template provides basic printing layout for plans
+ 
+   Author: 
+       Andrew Jennings, David Zwarg, Kenny Shepard
+
+{% endcomment %}
+{% load redistricting_extras %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="author" content="David Zwarg, Andrew Jennings" />
+    <meta name="copyright" content="&copy; 2011 Micah Altman, Michael McDonald"/>
+    <title>Open Source District Mapping Tool</title>
+    <link rel="stylesheet" type="text/css" href="{{ prefix }}/static-media/css/reset.css"/>
+    <link rel="stylesheet" type="text/css" href="{{ prefix }}/static-media/css/export-print.css"/> 
+  </head>
+  <body id="app" class="print_page">
+    <div id="mapwrap">
+      <div id="app_header">
+        <div id="logo">District Builder</div>
+        <div class="float_left" id="print-plan-title">
+          <h2>{{ plan.name }} &mdash; {{ plan.legislative_body.name }} <button onclick="window.location.href+='&to=.pdf'">Get PDF</button></h2>
+        </div>
+      
+        <div class="clear"></div>
+        
+      </div>
+
+      <div id="map">
+        <img src="{{ prefix }}{{ composite }}"/>
+      </div>
+      <div id="legend" style="">
+        <img src="{{prefix}}{{ legend1 }}"/>
+        <img src="{{prefix}}{{ legend2 }}"/>
+      </div>
+    </div>
+    
+  </body>
+</html>

@@ -59,6 +59,10 @@ from redistricting.calculators import *
 from redistricting.models import *
 from redistricting.utils import *
 import random, string, math, types, copy, time, threading, traceback, os, commands, sys, tempfile, csv, hashlib, inflect
+from PIL import Image, ImageChops
+import urllib, urllib2
+from xhtml2pdf.pisa import CreatePDF
+import StringIO
 
 def using_unique_session(u):
     """
@@ -539,7 +543,120 @@ def editplan(request, planid):
     if settings.MAX_UNDOS_AFTER_EDIT > 0:
         plan.purge_beyond_nth_step(settings.MAX_UNDOS_AFTER_EDIT)
 
-    return render_to_response('editplan.html', cfg) 
+    return render_to_response('editplan.html', cfg)
+    
+@user_passes_test(using_unique_session)
+def printplan(request, planid):
+    """
+    Print a static map of a plan.
+    
+    This template renders a static HTML document for use with xhtml2pdf.
+    
+    Parameters:
+        request -- An HttpRequest, which includes the current user.
+        planid -- The plan to edit.
+        
+    Returns:
+        A rendered HTML page suitable for conversion to a PDF.
+    """
+    if not is_session_available(request):
+        return HttpResponseRedirect('/')
+        
+    cfg = commonplan(request, planid)
+
+    stamp = request.REQUEST['x']
+    cfg['prefix'] = 'http://%s' % request.META['SERVER_NAME']
+    cfg['composite'] = '/reports/print-%s.jpg' % stamp
+    cfg['legend1'] = '/reports/legend1-%s.jpg' % stamp
+    cfg['legend2'] = '/reports/legend2-%s.jpg' % stamp
+
+    if request.method == 'GET':
+        # render pg to a string
+        t = loader.get_template('printplan.html')
+        page = StringIO.StringIO(t.render(DjangoContext(cfg)))
+        result = StringIO.StringIO()
+        
+        CreatePDF( page, result, show_error_as_pdf=True )
+
+        response = HttpResponse(result.getvalue(), mimetype='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename=plan.pdf'
+
+        return response
+    elif request.method == 'POST':
+        if not 'basemap' in request.REQUEST or not 'geography' in request.REQUEST \
+            or not 'districts' in request.REQUEST:
+            return HttpResponseRedirect('../view/')
+
+        height = 500
+        if 'height' in request.REQUEST:
+            height = int(request.REQUEST['height'])
+        width = 1024
+        if 'width' in request.REQUEST:
+            width = int(request.REQUEST['width'])
+
+        cfg['basemap'] = request.REQUEST['basemap']
+        cfg['geography'] = request.REQUEST['geography']
+        cfg['districts'] = request.REQUEST['districts']
+        cfg['sld'] = request.REQUEST['sld']
+
+        def fetchimage(url, localfile, data=None):
+            # save images locally
+            if data:
+                sld_body = 'SLD_BODY='+data
+                content_len = len(sld_body)
+                url = urllib2.Request(url, sld_body, {'Content-Length':content_len}) 
+            stream = urllib2.urlopen(url)
+            localfile.write( stream.read() )
+            localfile.close()
+            stream.close()
+            return localfile
+
+        basemap = fetchimage( cfg['basemap'], tempfile.NamedTemporaryFile(delete=False) )
+
+        # create container & open images
+        fullImg = Image.new('RGB',(width,height),None)
+        baseImg = Image.open(basemap.name)
+  
+        # get the size of the base image, resize if necessary
+        baseSz = baseImg.size
+        if baseSz[0] != width or baseSz[1] != height:
+            baseImg = baseImg.resize( (width,height), Image.BICUBIC )
+        
+        # add the base map
+        fullImg.paste(baseImg,None)
+        os.remove(basemap.name)
+
+        imgs = [
+            (cfg['geography'], tempfile.NamedTemporaryFile(delete=False), True,), 
+            (cfg['districts'], tempfile.NamedTemporaryFile(delete=False), True, cfg['sld'],),
+            (request.REQUEST['legend1'], open(settings.BARD_TEMP + ('/legend1-%s.jpg' % stamp), 'w+b'), False, ),
+            (request.REQUEST['legend2'], open(settings.BARD_TEMP + ('/legend2-%s.jpg' % stamp), 'w+b'), False, ),
+        ]
+
+        for imginfo in imgs:
+            style = None
+            if len(imginfo) > 3:
+                style = imginfo[3]
+
+            imgfile = fetchimage( imginfo[0], imginfo[1], style )
+
+            if imginfo[2]:
+                overlayImg = Image.open(imgfile.name)
+
+                # create an invert mask of the districts
+                maskImg = ImageChops.invert(overlayImg)
+      
+                # composite the overlay onto the base, using the mask
+                fullImg = Image.composite(fullImg,overlayImg,maskImg)
+
+                imgfile.close()
+                os.remove(imgfile.name)
+
+        # save
+        fullImg.save(settings.BARD_TEMP + ('/print-%s.jpg' % stamp),'jpeg',quality=85)
+
+        return render_to_response('printplan.html', cfg)
+    
 
 @login_required
 @unique_session_or_json_redirect
