@@ -212,7 +212,10 @@ class DistrictIndexFile():
                 archive.close()
 
                 if purge:
-                    os.unlink(filename)
+                    try:
+                        os.unlink(filename)
+                    except:
+                        sys.stderr.write('Could not unlink file: "%s":\n' % filename)
 
                 indexFile = dest.name
 
