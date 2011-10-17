@@ -447,36 +447,19 @@ as reports and downloads) and cron jobs.
     > sudo chmod a+x /etc/init.d/celeryd 
     > sudo update-rc.d celeryd defaults
    
- 2. Configure celeryd to run as the www-data user rather than root
-    by creating a settings file in /etc/defaults
+ 2. Copy the celeryd default settings file to your /etc/default directory. It
+    contains information such as the location of the log files and the user 
+    account under which celery runs
 
-    > sudo nano /etc/default/celeryd
+    > sudo cp /projects/PublicMapping/DistrictBuilder/docs/celeryd /etc/default
 
- 3. Paste the following configuration info into the file:
-
-    # Where to chdir at start.
-    CELERYD_CHDIR='/projects/PublicMapping/DistrictBuilder/django/publicmapping/'
-    # Path to celeryd
-    CELERYD='/projects/PublicMapping/DistrictBuilder/django/publicmapping/manage.py celeryd'
-    # Options for celeryd that start the scheduler
-    CELERYD_OPTS='-B -s /tmp/celerybeat-schedule'
-    # Name of the projects settings module.
-    export DJANGO_SETTINGS_MODULE='settings'
-    # User to run celeryd as. Default is current user.
-    CELERYD_USER='www-data'
-    # Group to run celeryd as. Default is current user.
-    CELERYD_GROUP='www-data'
-
- 4. Save your file and close your text editor
-
- 5. Create your log and pid files so that www-data can read and 
+ 3. Create your log- and pid-file directories so that www-data can read and 
     write them.
 
-    > sudo touch /var/run/celeryd.pid /var/log/celeryd.log
-    > sudo chown www-data /var/run/celeryd.pid /var/log/celeryd.log
-    > sudo chgrp www-data /var/run/celeryd.pid /var/log/celeryd.log
+    > sudo mkdir /var/log/celery /var/run/celery
+    > sudo chown www-data:www-data /var/log/celery /var/run/celery/
 
- 6. Celery should be ready to go, start it from the init script.
+ 4. Celery should be ready to go, start it from the init script.
 
     > sudo service celeryd start
 
