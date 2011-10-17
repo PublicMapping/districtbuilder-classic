@@ -58,6 +58,8 @@ printplan = function(options) {
 
         $(document.body).bind('mapready',_init);
 
+        $(_options.target).button({icons: {primary:'ui-icon'}});
+
         return _self;
     };
 
