@@ -65,16 +65,20 @@
 <h1 class="epydoc">Class Roeck</h1><p class="nomargin-top"><span class="codelink"><a href="publicmapping.redistricting.calculators-pysrc.html#Roeck">source&nbsp;code</a></span></p>
 <center>
 <center>  <map id="uml_class_diagram_for_publicma_35" name="uml_class_diagram_for_publicma_35">
-<area shape="rect" id="node55" href="publicmapping.redistricting.calculators.CalculatorBase-class.html#result" title="publicmapping.redistricting.calculators.CalculatorBase.result" alt="" coords="17,31,257,49"/>
-<area shape="rect" id="node55" href="publicmapping.redistricting.calculators.CalculatorBase-class.html#arg_dict" title="publicmapping.redistricting.calculators.CalculatorBase.arg_dict" alt="" coords="17,49,257,68"/>
-<area shape="rect" id="node55" href="publicmapping.redistricting.calculators.CalculatorBase-class.html#__init__" title="Initialize the result and argument dictionary." alt="" coords="17,71,257,89"/>
-<area shape="rect" id="node55" href="publicmapping.redistricting.calculators.CalculatorBase-class.html#sortkey" title="Generate a key used to sort this calculator relative to all other &#160;calculators." alt="" coords="17,89,257,108"/>
-<area shape="rect" id="node55" href="publicmapping.redistricting.calculators.CalculatorBase-class.html#json" title="Generate a basic JSON representation of the result." alt="" coords="17,108,257,127"/>
-<area shape="rect" id="node55" href="publicmapping.redistricting.calculators.CalculatorBase-class.html#get_value" title="Get the value of an argument if it is a literal or a subject." alt="" coords="17,127,257,145"/>
-<area shape="rect" id="node1" href="publicmapping.redistricting.calculators.CalculatorBase-class.html" title="The base class for all calculators." alt="" coords="5,6,269,151"/>
-<area shape="rect" id="node54" href="publicmapping.redistricting.calculators.Roeck-class.html#compute" title="Calculate the Roeck measure of compactness." alt="" coords="64,204,211,223"/>
-<area shape="rect" id="node54" href="publicmapping.redistricting.calculators.Roeck-class.html#html" title="Generate an HTML representation of the compactness score." alt="" coords="64,223,211,241"/>
-<area shape="rect" id="node2" href="publicmapping.redistricting.calculators.Roeck-class.html" title="Calculator for the Roeck measure of compactness." alt="" coords="52,171,223,247"/>
+<area shape="rect" id="node55" href="publicmapping.redistricting.calculators.CalculatorBase-class.html#result" title="publicmapping.redistricting.calculators.CalculatorBase.result" alt="" coords="33,31,273,49"/>
+<area shape="rect" id="node55" href="publicmapping.redistricting.calculators.CalculatorBase-class.html#arg_dict" title="publicmapping.redistricting.calculators.CalculatorBase.arg_dict" alt="" coords="33,49,273,68"/>
+<area shape="rect" id="node55" href="publicmapping.redistricting.calculators.CalculatorBase-class.html#__init__" title="Initialize the result and argument dictionary." alt="" coords="33,71,273,89"/>
+<area shape="rect" id="node55" href="publicmapping.redistricting.calculators.CalculatorBase-class.html#sortkey" title="Generate a key used to sort this calculator relative to all other &#160;calculators." alt="" coords="33,89,273,108"/>
+<area shape="rect" id="node55" href="publicmapping.redistricting.calculators.CalculatorBase-class.html#json" title="Generate a basic JSON representation of the result." alt="" coords="33,108,273,127"/>
+<area shape="rect" id="node55" href="publicmapping.redistricting.calculators.CalculatorBase-class.html#get_value" title="Get the value of an argument if it is a literal or a subject." alt="" coords="33,127,273,145"/>
+<area shape="rect" id="node1" href="publicmapping.redistricting.calculators.CalculatorBase-class.html" title="The base class for all calculators." alt="" coords="21,6,285,151"/>
+<area shape="rect" id="node54" href="publicmapping.redistricting.calculators.Roeck-class.html#rec" title="publicmapping.redistricting.calculators.Roeck.rec" alt="" coords="17,196,289,215"/>
+<area shape="rect" id="node54" href="publicmapping.redistricting.calculators.Roeck.Circle-class.html" title="Helper class for the Roeck calculator." alt="" coords="17,215,289,233"/>
+<area shape="rect" id="node54" href="publicmapping.redistricting.calculators.Roeck-class.html#compute" title="Calculate the Roeck measure of compactness." alt="" coords="17,236,289,255"/>
+<area shape="rect" id="node54" href="publicmapping.redistricting.calculators.Roeck-class.html#minidisk" title="A recursive minimum enclosing disk algorithm." alt="" coords="17,255,289,273"/>
+<area shape="rect" id="node54" href="publicmapping.redistricting.calculators.Roeck-class.html#b_minidisk" title="A recursive minimum enclosing disk algorithm." alt="" coords="17,273,289,292"/>
+<area shape="rect" id="node54" href="publicmapping.redistricting.calculators.Roeck-class.html#html" title="Generate an HTML representation of the compactness score." alt="" coords="17,292,289,311"/>
+<area shape="rect" id="node2" href="publicmapping.redistricting.calculators.Roeck-class.html" title="Calculator for the Roeck measure of compactness." alt="" coords="5,171,301,317"/>
 </map>
   <img src="uml_class_diagram_for_publicma_35.gif" alt='' usemap="#uml_class_diagram_for_publicma_35" ismap="ismap" class="graph-without-title" />
 </center>
@@ -88,6 +92,32 @@
   single district, or it will average the compactness scores of all 
   districts in a plan.</p>
 
+<!-- ==================== NESTED CLASSES ==================== -->
+<a name="section-NestedClasses"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Nested Classes</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-NestedClasses"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="publicmapping.redistricting.calculators.Roeck.Circle-class.html" class="summary-name">Circle</a><br />
+      Helper class for the Roeck calculator.
+    </td>
+  </tr>
+</table>
 <!-- ==================== INSTANCE METHODS ==================== -->
 <a name="section-InstanceMethods"></a>
 <table class="summary" border="1" cellpadding="3"
@@ -116,6 +146,45 @@
       Calculate the Roeck measure of compactness.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="publicmapping.redistricting.calculators-pysrc.html#Roeck.compute">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.calculators.Roeck-class.html#minidisk" class="summary-sig-name">minidisk</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">points</span>)</span><br />
+      A recursive minimum enclosing disk algorithm.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.calculators-pysrc.html#Roeck.minidisk">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.calculators.Roeck-class.html#b_minidisk" class="summary-sig-name">b_minidisk</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">points</span>,
+        <span class="summary-sig-arg">npts</span>,
+        <span class="summary-sig-arg">boundary</span>,
+        <span class="summary-sig-arg">nbnd</span>)</span><br />
+      A recursive minimum enclosing disk algorithm.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.calculators-pysrc.html#Roeck.b_minidisk">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -168,6 +237,13 @@
     </table>
   </td>
 </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="rec"></a><span class="summary-name">rec</span> = <code title="0">0</code>
+    </td>
+  </tr>
   <tr>
     <td colspan="2" class="summary">
     <p class="indent-wrapped-lines"><b>Inherited from <code><a href="publicmapping.redistricting.calculators.CalculatorBase-class.html">CalculatorBase</a></code></b>:
@@ -229,6 +305,76 @@
   </dl>
 </td></tr></table>
 </div>
+<a name="minidisk"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">minidisk</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">points</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.calculators-pysrc.html#Roeck.minidisk">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>A recursive minimum enclosing disk algorithm. Based on E. Welzl, 
+  &quot;Smallest enclosing disks (balls and ellipsoids)&quot;, 1991.</p>
+  <p>This code borrows some patterns from the applet source here: 
+  http://www.sunshine2k.de/stuff/Java/Welzl/Welzl.html</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>points</code></strong> - An array of points, from a GEOSGeometry.</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>A <a 
+          href="publicmapping.redistricting.calculators.Roeck.Circle-class.html"
+          class="link">Roeck.Circle</a> minimum enclosing disk for the 
+          points.</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="b_minidisk"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">b_minidisk</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">points</span>,
+        <span class="sig-arg">npts</span>,
+        <span class="sig-arg">boundary</span>,
+        <span class="sig-arg">nbnd</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.calculators-pysrc.html#Roeck.b_minidisk">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>A recursive minimum enclosing disk algorithm. Based on E. Welzl, 
+  &quot;Smallest enclosing disks (balls and ellipsoids)&quot;, 1991.</p>
+  <p>This code borrows some patterns from the applet source here: 
+  http://www.sunshine2k.de/stuff/Java/Welzl/Welzl.html</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>points</code></strong> - A random array of non-duplicating points.</li>
+        <li><strong class="pname"><code>npts</code></strong> - The position in the point array for searching.</li>
+        <li><strong class="pname"><code>boundary</code></strong> - The farthest outliers on or in the smallest disk.</li>
+        <li><strong class="pname"><code>nbnd</code></strong> - The index of the boundary list for the next boundary point.</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>A <a 
+          href="publicmapping.redistricting.calculators.Roeck.Circle-class.html"
+          class="link">Roeck.Circle</a> minimum enclosing disk for the 
+          points.</dd>
+  </dl>
+</td></tr></table>
+</div>
 <a name="html"></a>
 <div>
 <table class="details" border="1" cellpadding="3"
@@ -287,7 +433,7 @@
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">
-    Generated by Epydoc 3.0.1 on Tue Jun 21 19:10:40 2011
+    Generated by Epydoc 3.0.1 on Mon Oct 17 17:51:20 2011
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>publicmapping.redistricting.management.commands.numusers</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="publicmapping-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a href="http://publicmapping.sf.net">Publicmapping on SourceForge</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="publicmapping-module.html">Package&nbsp;publicmapping</a> ::
+        <a href="publicmapping.redistricting-module.html">Package&nbsp;redistricting</a> ::
+        <a href="publicmapping.redistricting.management-module.html">Package&nbsp;management</a> ::
+        <a href="publicmapping.redistricting.management.commands-module.html">Package&nbsp;commands</a> ::
+        Module&nbsp;numusers
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="publicmapping.redistricting.management.commands.numusers-pysrc.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="publicmapping.redistricting.management.commands.numusers-module.html">Module publicmapping.redistricting.management.commands.numusers</a></h1>
+<pre class="py-src">
+<a name="L1"></a><tt class="py-lineno"> 1</tt>  <tt class="py-line"><tt class="py-comment">#!/usr/bin/python</tt> </tt>
+<a name="L2"></a><tt class="py-lineno"> 2</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">datetime</tt> <tt class="py-keyword">import</tt> <tt class="py-name">datetime</tt><tt class="py-op">,</tt> <tt class="py-name">time</tt><tt class="py-op">,</tt> <tt class="py-name">timedelta</tt> </tt>
+<a name="L3"></a><tt class="py-lineno"> 3</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">django</tt><tt class="py-op">.</tt><tt class="py-name">core</tt><tt class="py-op">.</tt><tt id="link-0" class="py-name" targets="Package publicmapping.redistricting.management=publicmapping.redistricting.management-module.html"><a title="publicmapping.redistricting.management" class="py-name" href="#" onclick="return doclink('link-0', 'management', 'link-0');">management</a></tt><tt class="py-op">.</tt><tt class="py-name">base</tt> <tt class="py-keyword">import</tt> <tt class="py-name">BaseCommand</tt> </tt>
+<a name="L4"></a><tt class="py-lineno"> 4</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">optparse</tt> <tt class="py-keyword">import</tt> <tt class="py-name">make_option</tt> </tt>
+<a name="L5"></a><tt class="py-lineno"> 5</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-1" class="py-name" targets="Package publicmapping.redistricting=publicmapping.redistricting-module.html"><a title="publicmapping.redistricting" class="py-name" href="#" onclick="return doclink('link-1', 'redistricting', 'link-1');">redistricting</a></tt><tt class="py-op">.</tt><tt id="link-2" class="py-name" targets="Module publicmapping.redistricting.models=publicmapping.redistricting.models-module.html"><a title="publicmapping.redistricting.models" class="py-name" href="#" onclick="return doclink('link-2', 'models', 'link-2');">models</a></tt> <tt class="py-keyword">import</tt> <tt class="py-op">*</tt> </tt>
+<a name="L6"></a><tt class="py-lineno"> 6</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-3" class="py-name"><a title="publicmapping.redistricting" class="py-name" href="#" onclick="return doclink('link-3', 'redistricting', 'link-1');">redistricting</a></tt><tt class="py-op">.</tt><tt id="link-4" class="py-name" targets="Module publicmapping.redistricting.utils=publicmapping.redistricting.utils-module.html"><a title="publicmapping.redistricting.utils" class="py-name" href="#" onclick="return doclink('link-4', 'utils', 'link-4');">utils</a></tt> <tt class="py-keyword">import</tt> <tt class="py-op">*</tt> </tt>
+<a name="L7"></a><tt class="py-lineno"> 7</tt>  <tt class="py-line"> </tt>
+<a name="Command"></a><div id="Command-def"><a name="L8"></a><tt class="py-lineno"> 8</tt> <a class="py-toggle" href="#" id="Command-toggle" onclick="return toggle('Command');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="publicmapping.redistricting.management.commands.numusers.Command-class.html">Command</a><tt class="py-op">(</tt><tt class="py-base-class">BaseCommand</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="Command-collapsed" style="display:none;" pad="++" indent="++++"></div><div id="Command-expanded"><a name="L9"></a><tt class="py-lineno"> 9</tt>  <tt class="py-line">    <tt class="py-docstring">"""</tt> </tt>
+<a name="L10"></a><tt class="py-lineno">10</tt>  <tt class="py-line"><tt class="py-docstring">    This command prints the number of active users in the system over a period of time</tt> </tt>
+<a name="L11"></a><tt class="py-lineno">11</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="L12"></a><tt class="py-lineno">12</tt>  <tt class="py-line">    <tt id="link-5" class="py-name" targets="Variable publicmapping.redistricting.management.commands.exportplans.Command.args=publicmapping.redistricting.management.commands.exportplans.Command-class.html#args,Variable publicmapping.redistricting.management.commands.migrate_v925.Command.args=publicmapping.redistricting.management.commands.migrate_v925.Command-class.html#args,Variable publicmapping.redistricting.management.commands.numusers.Command.args=publicmapping.redistricting.management.commands.numusers.Command-class.html#args,Variable publicmapping.redistricting.management.commands.reaggregate.Command.args=publicmapping.redistricting.management.commands.reaggregate.Command-class.html#args,Variable publicmapping.redistricting.management.commands.removescoreconfig.Command.args=publicmapping.redistricting.management.commands.removescoreconfig.Command-class.html#args,Variable publicmapping.redistricting.management.commands.setup.Command.args=publicmapping.redistricting.management.commands.setup.Command-class.html#args"><a title="publicmapping.redistricting.management.commands.exportplans.Command.args
+publicmapping.redistricting.management.commands.migrate_v925.Command.args
+publicmapping.redistricting.management.commands.numusers.Command.args
+publicmapping.redistricting.management.commands.reaggregate.Command.args
+publicmapping.redistricting.management.commands.removescoreconfig.Command.args
+publicmapping.redistricting.management.commands.setup.Command.args" class="py-name" href="#" onclick="return doclink('link-5', 'args', 'link-5');">args</a></tt> <tt class="py-op">=</tt> <tt class="py-name">None</tt> </tt>
+<a name="L13"></a><tt class="py-lineno">13</tt>  <tt class="py-line">    <tt id="link-6" class="py-name" targets="Variable publicmapping.redistricting.management.commands.exportplans.Command.help=publicmapping.redistricting.management.commands.exportplans.Command-class.html#help,Variable publicmapping.redistricting.management.commands.migrate_v925.Command.help=publicmapping.redistricting.management.commands.migrate_v925.Command-class.html#help,Variable publicmapping.redistricting.management.commands.numusers.Command.help=publicmapping.redistricting.management.commands.numusers.Command-class.html#help,Variable publicmapping.redistricting.management.commands.reaggregate.Command.help=publicmapping.redistricting.management.commands.reaggregate.Command-class.html#help,Variable publicmapping.redistricting.management.commands.removescoreconfig.Command.help=publicmapping.redistricting.management.commands.removescoreconfig.Command-class.html#help,Variable publicmapping.redistricting.management.commands.setup.Command.help=publicmapping.redistricting.management.commands.setup.Command-class.html#help"><a title="publicmapping.redistricting.management.commands.exportplans.Command.help
+publicmapping.redistricting.management.commands.migrate_v925.Command.help
+publicmapping.redistricting.management.commands.numusers.Command.help
+publicmapping.redistricting.management.commands.reaggregate.Command.help
+publicmapping.redistricting.management.commands.removescoreconfig.Command.help
+publicmapping.redistricting.management.commands.setup.Command.help" class="py-name" href="#" onclick="return doclink('link-6', 'help', 'link-6');">help</a></tt> <tt class="py-op">=</tt> <tt class="py-string">'Print the number of active users in the system over a period of time'</tt> </tt>
+<a name="L14"></a><tt class="py-lineno">14</tt>  <tt class="py-line">    <tt id="link-7" class="py-name" targets="Variable publicmapping.redistricting.management.commands.exportplans.Command.option_list=publicmapping.redistricting.management.commands.exportplans.Command-class.html#option_list,Variable publicmapping.redistricting.management.commands.numusers.Command.option_list=publicmapping.redistricting.management.commands.numusers.Command-class.html#option_list,Variable publicmapping.redistricting.management.commands.reaggregate.Command.option_list=publicmapping.redistricting.management.commands.reaggregate.Command-class.html#option_list,Variable publicmapping.redistricting.management.commands.setup.Command.option_list=publicmapping.redistricting.management.commands.setup.Command-class.html#option_list"><a title="publicmapping.redistricting.management.commands.exportplans.Command.option_list
+publicmapping.redistricting.management.commands.numusers.Command.option_list
+publicmapping.redistricting.management.commands.reaggregate.Command.option_list
+publicmapping.redistricting.management.commands.setup.Command.option_list" class="py-name" href="#" onclick="return doclink('link-7', 'option_list', 'link-7');">option_list</a></tt> <tt class="py-op">=</tt> <tt class="py-name">BaseCommand</tt><tt class="py-op">.</tt><tt id="link-8" class="py-name"><a title="publicmapping.redistricting.management.commands.exportplans.Command.option_list
+publicmapping.redistricting.management.commands.numusers.Command.option_list
+publicmapping.redistricting.management.commands.reaggregate.Command.option_list
+publicmapping.redistricting.management.commands.setup.Command.option_list" class="py-name" href="#" onclick="return doclink('link-8', 'option_list', 'link-7');">option_list</a></tt> <tt class="py-op">+</tt> <tt class="py-op">(</tt> </tt>
+<a name="L15"></a><tt class="py-lineno">15</tt>  <tt class="py-line">        <tt class="py-name">make_option</tt><tt class="py-op">(</tt><tt class="py-string">'-m'</tt><tt class="py-op">,</tt> <tt class="py-string">'--minutes'</tt><tt class="py-op">,</tt> <tt class="py-name">dest</tt><tt class="py-op">=</tt><tt class="py-string">'minutes'</tt><tt class="py-op">,</tt> <tt class="py-name">default</tt><tt class="py-op">=</tt><tt class="py-string">'5'</tt><tt class="py-op">,</tt> <tt class="py-name">action</tt><tt class="py-op">=</tt><tt class="py-string">'store'</tt><tt class="py-op">,</tt> <tt id="link-9" class="py-name"><a title="publicmapping.redistricting.management.commands.exportplans.Command.help
+publicmapping.redistricting.management.commands.migrate_v925.Command.help
+publicmapping.redistricting.management.commands.numusers.Command.help
+publicmapping.redistricting.management.commands.reaggregate.Command.help
+publicmapping.redistricting.management.commands.removescoreconfig.Command.help
+publicmapping.redistricting.management.commands.setup.Command.help" class="py-name" href="#" onclick="return doclink('link-9', 'help', 'link-6');">help</a></tt><tt class="py-op">=</tt><tt class="py-string">'Number of minutes'</tt><tt class="py-op">)</tt><tt class="py-op">,</tt> </tt>
+<a name="L16"></a><tt class="py-lineno">16</tt>  <tt class="py-line">    <tt class="py-op">)</tt> </tt>
+<a name="L17"></a><tt class="py-lineno">17</tt>  <tt class="py-line"> </tt>
+<a name="Command.handle"></a><div id="Command.handle-def"><a name="L18"></a><tt class="py-lineno">18</tt> <a class="py-toggle" href="#" id="Command.handle-toggle" onclick="return toggle('Command.handle');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="publicmapping.redistricting.management.commands.numusers.Command-class.html#handle">handle</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-op">*</tt><tt class="py-param">args</tt><tt class="py-op">,</tt> <tt class="py-op">**</tt><tt class="py-param">options</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="Command.handle-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="Command.handle-expanded"><a name="L19"></a><tt class="py-lineno">19</tt>  <tt class="py-line">        <tt class="py-docstring">"""</tt> </tt>
+<a name="L20"></a><tt class="py-lineno">20</tt>  <tt class="py-line"><tt class="py-docstring">        Print the number of active users</tt> </tt>
+<a name="L21"></a><tt class="py-lineno">21</tt>  <tt class="py-line"><tt class="py-docstring">        """</tt> </tt>
+<a name="L22"></a><tt class="py-lineno">22</tt>  <tt class="py-line">        <tt class="py-name">minutes</tt> <tt class="py-op">=</tt> <tt class="py-name">int</tt><tt class="py-op">(</tt><tt class="py-name">options</tt><tt class="py-op">.</tt><tt class="py-name">get</tt><tt class="py-op">(</tt><tt class="py-string">'minutes'</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+<a name="L23"></a><tt class="py-lineno">23</tt>  <tt class="py-line">        <tt class="py-name">users</tt> <tt class="py-op">=</tt> <tt class="py-number">0</tt> </tt>
+<a name="L24"></a><tt class="py-lineno">24</tt>  <tt class="py-line">        <tt class="py-keyword">for</tt> <tt id="link-10" class="py-name" targets="Function publicmapping.views.session()=publicmapping.views-module.html#session"><a title="publicmapping.views.session" class="py-name" href="#" onclick="return doclink('link-10', 'session', 'link-10');">session</a></tt> <tt class="py-keyword">in</tt> <tt class="py-name">Session</tt><tt class="py-op">.</tt><tt id="link-11" class="py-name" targets="Variable publicmapping.redistricting.models.ContiguityOverride.objects=publicmapping.redistricting.models.ContiguityOverride-class.html#objects,Variable publicmapping.redistricting.models.District.objects=publicmapping.redistricting.models.District-class.html#objects,Variable publicmapping.redistricting.models.Geounit.objects=publicmapping.redistricting.models.Geounit-class.html#objects"><a title="publicmapping.redistricting.models.ContiguityOverride.objects
+publicmapping.redistricting.models.District.objects
+publicmapping.redistricting.models.Geounit.objects" class="py-name" href="#" onclick="return doclink('link-11', 'objects', 'link-11');">objects</a></tt><tt class="py-op">.</tt><tt class="py-name">all</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L25"></a><tt class="py-lineno">25</tt>  <tt class="py-line">            <tt class="py-name">decoded</tt> <tt class="py-op">=</tt> <tt id="link-12" class="py-name"><a title="publicmapping.views.session" class="py-name" href="#" onclick="return doclink('link-12', 'session', 'link-10');">session</a></tt><tt class="py-op">.</tt><tt class="py-name">get_decoded</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L26"></a><tt class="py-lineno">26</tt>  <tt class="py-line">            <tt class="py-keyword">if</tt> <tt class="py-string">'activity_time'</tt> <tt class="py-keyword">in</tt> <tt class="py-name">decoded</tt> <tt class="py-keyword">and</tt> <tt class="py-op">(</tt><tt class="py-name">decoded</tt><tt class="py-op">[</tt><tt class="py-string">'activity_time'</tt><tt class="py-op">]</tt> <tt class="py-op">-</tt> <tt class="py-name">timedelta</tt><tt class="py-op">(</tt><tt class="py-number">0</tt><tt class="py-op">,</tt><tt class="py-number">0</tt><tt class="py-op">,</tt><tt class="py-number">0</tt><tt class="py-op">,</tt><tt class="py-number">0</tt><tt class="py-op">,</tt><tt class="py-name">settings</tt><tt class="py-op">.</tt><tt class="py-name">SESSION_TIMEOUT</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> <tt class="py-op">&gt;</tt> <tt class="py-op">(</tt><tt class="py-name">datetime</tt><tt class="py-op">.</tt><tt class="py-name">now</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> <tt class="py-op">-</tt> <tt class="py-name">timedelta</tt><tt class="py-op">(</tt><tt class="py-number">0</tt><tt class="py-op">,</tt><tt class="py-number">0</tt><tt class="py-op">,</tt><tt class="py-number">0</tt><tt class="py-op">,</tt><tt class="py-number">0</tt><tt class="py-op">,</tt><tt class="py-name">minutes</tt><tt class="py-op">)</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L27"></a><tt class="py-lineno">27</tt>  <tt class="py-line">                <tt class="py-name">users</tt> <tt class="py-op">+=</tt> <tt class="py-number">1</tt> </tt>
+<a name="L28"></a><tt class="py-lineno">28</tt>  <tt class="py-line"> </tt>
+<a name="L29"></a><tt class="py-lineno">29</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">stdout</tt><tt class="py-op">.</tt><tt class="py-name">write</tt><tt class="py-op">(</tt><tt class="py-string">'Number of active users over the last %d minute(s): %d\n'</tt> <tt class="py-op">%</tt> <tt class="py-op">(</tt><tt class="py-name">minutes</tt><tt class="py-op">,</tt> <tt class="py-name">users</tt><tt class="py-op">)</tt><tt class="py-op">)</tt> </tt>
+</div></div><a name="L30"></a><tt class="py-lineno">30</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="publicmapping-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a href="http://publicmapping.sf.net">Publicmapping on SourceForge</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Mon Oct 17 17:51:26 2011
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>
