@@ -198,15 +198,17 @@ def unloadplan(request, planid):
     note_session_activity(request)
     status = { 'success': False }
 
-    p = Plan.objects.get(pk=planid)
+    ps = Plan.objects.filter(pk=planid)
+    if len(ps) > 0:
+        p = ps[0]
 
-    if not can_copy(request.user, p):
-        status['message'] = "User %s doesn't have permission to unload this plan" % request.user.username
-        return HttpResponse(json.dumps(status),mimetype='application/json')
+        if not can_copy(request.user, p):
+            status['message'] = "User %s doesn't have permission to unload this plan" % request.user.username
+            return HttpResponse(json.dumps(status),mimetype='application/json')
 
-    # Purge temporary versions
-    if settings.MAX_UNDOS_AFTER_EDIT > 0:
-        p.purge_beyond_nth_step(settings.MAX_UNDOS_AFTER_EDIT)
+        # Purge temporary versions
+        if settings.MAX_UNDOS_AFTER_EDIT > 0:
+            p.purge_beyond_nth_step(settings.MAX_UNDOS_AFTER_EDIT)
     
     status['success'] = True
     return HttpResponse(json.dumps(status),mimetype='application/json')
