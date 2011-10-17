@@ -3284,7 +3284,6 @@ class ComputedDistrictScore(models.Model):
             try:
                 score = cPickle.loads(str(cache.value))
             except:
-                print 'Failed to get cached value: %s\n' % traceback.format_exc()
                 score = function.score(district, format='raw')
 
         if format != 'raw':
