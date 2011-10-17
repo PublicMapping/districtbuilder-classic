@@ -150,7 +150,7 @@ def avg_report_column(districtscores, row):
     except:
         return 'N/A'
     
-    return format_report_value({ 'type': row['type'], 'value': total / num_items })
+    return format_report_value({ 'type': row['type'], 'value': 0 if not num_items else total / num_items })
 
 @register.filter
 def count_report_row_elements(row):
