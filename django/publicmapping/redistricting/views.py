@@ -1363,10 +1363,14 @@ def addtodistrict(request, planid, districtid):
 
     status = { 'success': False }
 
-    if len(request.REQUEST.items()) >= 2: 
-        geolevel = request.REQUEST["geolevel"]
-        geounit_ids = string.split(request.REQUEST["geounits"], "|")
-        plan = Plan.objects.get(pk=planid,owner=request.user)
+    if len(request.REQUEST.items()) >= 2:
+        try:
+            geolevel = request.REQUEST["geolevel"]
+            geounit_ids = string.split(request.REQUEST["geounits"], "|")
+            plan = Plan.objects.get(pk=planid,owner=request.user)
+        except:
+            status['exception'] = traceback.format_exc()
+            status['message'] = 'Could not add units to district.'
 
         # get the version from the request or the plan
         if 'version' in request.REQUEST:
