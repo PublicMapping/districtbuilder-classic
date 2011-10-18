@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>publicmapping.redistricting.reportcalculators</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="publicmapping-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a href="http://publicmapping.sf.net">Publicmapping on SourceForge</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="publicmapping-module.html">Package&nbsp;publicmapping</a> ::
+        <a href="publicmapping.redistricting-module.html">Package&nbsp;redistricting</a> ::
+        Module&nbsp;reportcalculators
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="publicmapping.redistricting.reportcalculators-pysrc.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="publicmapping.redistricting.reportcalculators-module.html">Module publicmapping.redistricting.reportcalculators</a></h1>
+<pre class="py-src">
+<a name="L1"></a><tt class="py-lineno">  1</tt>  <tt class="py-line"><tt class="py-docstring">"""</tt> </tt>
+<a name="L2"></a><tt class="py-lineno">  2</tt>  <tt class="py-line"><tt class="py-docstring">Define the calculators used for calculator reports in the redistricting app.</tt> </tt>
+<a name="L3"></a><tt class="py-lineno">  3</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L4"></a><tt class="py-lineno">  4</tt>  <tt class="py-line"><tt class="py-docstring">The classes in redistricting.reportcalculators define the scoring</tt> </tt>
+<a name="L5"></a><tt class="py-lineno">  5</tt>  <tt class="py-line"><tt class="py-docstring">calculators used in the reports in the application. Each class relates to</tt> </tt>
+<a name="L6"></a><tt class="py-lineno">  6</tt>  <tt class="py-line"><tt class="py-docstring">one type of calculator that can be referenced within the config</tt> </tt>
+<a name="L7"></a><tt class="py-lineno">  7</tt>  <tt class="py-line"><tt class="py-docstring">file to define how to score a plan or district.</tt> </tt>
+<a name="L8"></a><tt class="py-lineno">  8</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L9"></a><tt class="py-lineno">  9</tt>  <tt class="py-line"><tt class="py-docstring">This file is part of The Public Mapping Project</tt> </tt>
+<a name="L10"></a><tt class="py-lineno"> 10</tt>  <tt class="py-line"><tt class="py-docstring">https://github.com/PublicMapping/</tt> </tt>
+<a name="L11"></a><tt class="py-lineno"> 11</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L12"></a><tt class="py-lineno"> 12</tt>  <tt class="py-line"><tt class="py-docstring">License:</tt> </tt>
+<a name="L13"></a><tt class="py-lineno"> 13</tt>  <tt class="py-line"><tt class="py-docstring">    Copyright 2010 Micah Altman, Michael McDonald</tt> </tt>
+<a name="L14"></a><tt class="py-lineno"> 14</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L15"></a><tt class="py-lineno"> 15</tt>  <tt class="py-line"><tt class="py-docstring">    Licensed under the Apache License, Version 2.0 (the "License");</tt> </tt>
+<a name="L16"></a><tt class="py-lineno"> 16</tt>  <tt class="py-line"><tt class="py-docstring">    you may not use this file except in compliance with the License.</tt> </tt>
+<a name="L17"></a><tt class="py-lineno"> 17</tt>  <tt class="py-line"><tt class="py-docstring">    You may obtain a copy of the License at</tt> </tt>
+<a name="L18"></a><tt class="py-lineno"> 18</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L19"></a><tt class="py-lineno"> 19</tt>  <tt class="py-line"><tt class="py-docstring">        http://www.apache.org/licenses/LICENSE-2.0</tt> </tt>
+<a name="L20"></a><tt class="py-lineno"> 20</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L21"></a><tt class="py-lineno"> 21</tt>  <tt class="py-line"><tt class="py-docstring">    Unless required by applicable law or agreed to in writing, software</tt> </tt>
+<a name="L22"></a><tt class="py-lineno"> 22</tt>  <tt class="py-line"><tt class="py-docstring">    distributed under the License is distributed on an "AS IS" BASIS,</tt> </tt>
+<a name="L23"></a><tt class="py-lineno"> 23</tt>  <tt class="py-line"><tt class="py-docstring">    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</tt> </tt>
+<a name="L24"></a><tt class="py-lineno"> 24</tt>  <tt class="py-line"><tt class="py-docstring">    See the License for the specific language governing permissions and</tt> </tt>
+<a name="L25"></a><tt class="py-lineno"> 25</tt>  <tt class="py-line"><tt class="py-docstring">    limitations under the License.</tt> </tt>
+<a name="L26"></a><tt class="py-lineno"> 26</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L27"></a><tt class="py-lineno"> 27</tt>  <tt class="py-line"><tt class="py-docstring">Author: </tt> </tt>
+<a name="L28"></a><tt class="py-lineno"> 28</tt>  <tt class="py-line"><tt class="py-docstring">    Andrew Jennings, David Zwarg, Kenny Shepard</tt> </tt>
+<a name="L29"></a><tt class="py-lineno"> 29</tt>  <tt class="py-line"><tt class="py-docstring">"""</tt> </tt>
+<a name="L30"></a><tt class="py-lineno"> 30</tt>  <tt class="py-line"> </tt>
+<a name="L31"></a><tt class="py-lineno"> 31</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">math</tt> <tt class="py-keyword">import</tt> <tt class="py-name">sqrt</tt><tt class="py-op">,</tt> <tt class="py-name">pi</tt> </tt>
+<a name="L32"></a><tt class="py-lineno"> 32</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">django</tt><tt class="py-op">.</tt><tt class="py-name">contrib</tt><tt class="py-op">.</tt><tt class="py-name">gis</tt><tt class="py-op">.</tt><tt class="py-name">geos</tt> <tt class="py-keyword">import</tt> <tt class="py-name">Point</tt> </tt>
+<a name="L33"></a><tt class="py-lineno"> 33</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">django</tt><tt class="py-op">.</tt><tt class="py-name">contrib</tt><tt class="py-op">.</tt><tt class="py-name">humanize</tt><tt class="py-op">.</tt><tt id="link-0" class="py-name" targets="Package publicmapping.redistricting.templatetags=publicmapping.redistricting.templatetags-module.html"><a title="publicmapping.redistricting.templatetags" class="py-name" href="#" onclick="return doclink('link-0', 'templatetags', 'link-0');">templatetags</a></tt><tt class="py-op">.</tt><tt class="py-name">humanize</tt> <tt class="py-keyword">import</tt> <tt class="py-name">intcomma</tt> </tt>
+<a name="L34"></a><tt class="py-lineno"> 34</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">django</tt><tt class="py-op">.</tt><tt id="link-1" class="py-name" targets="Module publicmapping.redistricting.utils=publicmapping.redistricting.utils-module.html"><a title="publicmapping.redistricting.utils" class="py-name" href="#" onclick="return doclink('link-1', 'utils', 'link-1');">utils</a></tt> <tt class="py-keyword">import</tt> <tt class="py-name">simplejson</tt> <tt class="py-keyword">as</tt> <tt id="link-2" class="py-name" targets="Method publicmapping.redistricting.calculators.CalculatorBase.json()=publicmapping.redistricting.calculators.CalculatorBase-class.html#json,Method publicmapping.redistricting.calculators.RepresentationalFairness.json()=publicmapping.redistricting.calculators.RepresentationalFairness-class.html#json"><a title="publicmapping.redistricting.calculators.CalculatorBase.json
+publicmapping.redistricting.calculators.RepresentationalFairness.json" class="py-name" href="#" onclick="return doclink('link-2', 'json', 'link-2');">json</a></tt> </tt>
+<a name="L35"></a><tt class="py-lineno"> 35</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">decimal</tt> <tt class="py-keyword">import</tt> <tt class="py-name">Decimal</tt> </tt>
+<a name="L36"></a><tt class="py-lineno"> 36</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-3" class="py-name" targets="Package publicmapping.redistricting=publicmapping.redistricting-module.html"><a title="publicmapping.redistricting" class="py-name" href="#" onclick="return doclink('link-3', 'redistricting', 'link-3');">redistricting</a></tt><tt class="py-op">.</tt><tt id="link-4" class="py-name" targets="Module publicmapping.redistricting.calculators=publicmapping.redistricting.calculators-module.html"><a title="publicmapping.redistricting.calculators" class="py-name" href="#" onclick="return doclink('link-4', 'calculators', 'link-4');">calculators</a></tt> <tt class="py-keyword">import</tt> <tt class="py-op">*</tt> </tt>
+<a name="L37"></a><tt class="py-lineno"> 37</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">locale</tt><tt class="py-op">,</tt> <tt class="py-name">sys</tt><tt class="py-op">,</tt> <tt class="py-name">traceback</tt> </tt>
+<a name="L38"></a><tt class="py-lineno"> 38</tt>  <tt class="py-line"> </tt>
+<a name="Population"></a><div id="Population-def"><a name="L39"></a><tt class="py-lineno"> 39</tt> <a class="py-toggle" href="#" id="Population-toggle" onclick="return toggle('Population');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="publicmapping.redistricting.reportcalculators.Population-class.html">Population</a><tt class="py-op">(</tt><tt class="py-base-class">CalculatorBase</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="Population-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="Population-expanded"><a name="L40"></a><tt class="py-lineno"> 40</tt>  <tt class="py-line">    <tt class="py-docstring">"""</tt> </tt>
+<a name="L41"></a><tt class="py-lineno"> 41</tt>  <tt class="py-line"><tt class="py-docstring">    Report on the population in each district.</tt> </tt>
+<a name="L42"></a><tt class="py-lineno"> 42</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L43"></a><tt class="py-lineno"> 43</tt>  <tt class="py-line"><tt class="py-docstring">    This calculator only operates on districts. It accepts one required</tt> </tt>
+<a name="L44"></a><tt class="py-lineno"> 44</tt>  <tt class="py-line"><tt class="py-docstring">    argument: "value", and two optional arguments: "min" and "max". If</tt> </tt>
+<a name="L45"></a><tt class="py-lineno"> 45</tt>  <tt class="py-line"><tt class="py-docstring">    the optional values are specified, the population of the district will</tt> </tt>
+<a name="L46"></a><tt class="py-lineno"> 46</tt>  <tt class="py-line"><tt class="py-docstring">    be marked within range if it falls between them.</tt> </tt>
+<a name="L47"></a><tt class="py-lineno"> 47</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="Population.compute"></a><div id="Population.compute-def"><a name="L48"></a><tt class="py-lineno"> 48</tt> <a class="py-toggle" href="#" id="Population.compute-toggle" onclick="return toggle('Population.compute');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="publicmapping.redistricting.reportcalculators.Population-class.html#compute">compute</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-op">**</tt><tt class="py-param">kwargs</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="Population.compute-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="Population.compute-expanded"><a name="L49"></a><tt class="py-lineno"> 49</tt>  <tt class="py-line">        <tt id="link-5" class="py-name" targets="Variable publicmapping.redistricting.models.ComputedCharacteristic.district=publicmapping.redistricting.models.ComputedCharacteristic-class.html#district,Variable publicmapping.redistricting.models.ComputedDistrictScore.district=publicmapping.redistricting.models.ComputedDistrictScore-class.html#district"><a title="publicmapping.redistricting.models.ComputedCharacteristic.district
+publicmapping.redistricting.models.ComputedDistrictScore.district" class="py-name" href="#" onclick="return doclink('link-5', 'district', 'link-5');">district</a></tt> <tt class="py-op">=</tt> <tt class="py-name">kwargs</tt><tt class="py-op">[</tt><tt class="py-string">'district'</tt><tt class="py-op">]</tt> </tt>
+<a name="L50"></a><tt class="py-lineno"> 50</tt>  <tt class="py-line"> </tt>
+<a name="L51"></a><tt class="py-lineno"> 51</tt>  <tt class="py-line">        <tt class="py-name">pop_value</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-6" class="py-name" targets="Method publicmapping.redistricting.calculators.CalculatorBase.get_value()=publicmapping.redistricting.calculators.CalculatorBase-class.html#get_value"><a title="publicmapping.redistricting.calculators.CalculatorBase.get_value" class="py-name" href="#" onclick="return doclink('link-6', 'get_value', 'link-6');">get_value</a></tt><tt class="py-op">(</tt><tt class="py-string">'value'</tt><tt class="py-op">,</tt> <tt id="link-7" class="py-name"><a title="publicmapping.redistricting.models.ComputedCharacteristic.district
+publicmapping.redistricting.models.ComputedDistrictScore.district" class="py-name" href="#" onclick="return doclink('link-7', 'district', 'link-5');">district</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L52"></a><tt class="py-lineno"> 52</tt>  <tt class="py-line">        <tt class="py-name">avg_key</tt> <tt class="py-op">=</tt> <tt class="py-string">"population_"</tt> <tt class="py-op">+</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-8" class="py-name" targets="Variable publicmapping.redistricting.calculators.CalculatorBase.arg_dict=publicmapping.redistricting.calculators.CalculatorBase-class.html#arg_dict"><a title="publicmapping.redistricting.calculators.CalculatorBase.arg_dict" class="py-name" href="#" onclick="return doclink('link-8', 'arg_dict', 'link-8');">arg_dict</a></tt><tt class="py-op">[</tt><tt class="py-string">'value'</tt><tt class="py-op">]</tt><tt class="py-op">[</tt><tt class="py-number">1</tt><tt class="py-op">]</tt> </tt>
+<a name="L53"></a><tt class="py-lineno"> 53</tt>  <tt class="py-line"> </tt>
+<a name="L54"></a><tt class="py-lineno"> 54</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-9" class="py-name" targets="Variable publicmapping.redistricting.calculators.CalculatorBase.result=publicmapping.redistricting.calculators.CalculatorBase-class.html#result"><a title="publicmapping.redistricting.calculators.CalculatorBase.result" class="py-name" href="#" onclick="return doclink('link-9', 'result', 'link-9');">result</a></tt> <tt class="py-op">=</tt> <tt class="py-op">{</tt> </tt>
+<a name="L55"></a><tt class="py-lineno"> 55</tt>  <tt class="py-line">            <tt class="py-string">'raw'</tt><tt class="py-op">:</tt> <tt class="py-op">[</tt> </tt>
+<a name="L56"></a><tt class="py-lineno"> 56</tt>  <tt class="py-line">                <tt class="py-op">{</tt> <tt class="py-string">'label'</tt><tt class="py-op">:</tt> <tt class="py-string">'DistrictID'</tt><tt class="py-op">,</tt> <tt class="py-string">'type'</tt><tt class="py-op">:</tt> <tt class="py-string">'string'</tt><tt class="py-op">,</tt> <tt class="py-string">'value'</tt><tt class="py-op">:</tt> <tt id="link-10" class="py-name"><a title="publicmapping.redistricting.models.ComputedCharacteristic.district
+publicmapping.redistricting.models.ComputedDistrictScore.district" class="py-name" href="#" onclick="return doclink('link-10', 'district', 'link-5');">district</a></tt><tt class="py-op">.</tt><tt id="link-11" class="py-name" targets="Variable publicmapping.redistricting.models.District.name=publicmapping.redistricting.models.District-class.html#name,Variable publicmapping.redistricting.models.Geolevel.name=publicmapping.redistricting.models.Geolevel-class.html#name,Variable publicmapping.redistricting.models.Geounit.name=publicmapping.redistricting.models.Geounit-class.html#name,Variable publicmapping.redistricting.models.LegislativeBody.name=publicmapping.redistricting.models.LegislativeBody-class.html#name,Variable publicmapping.redistricting.models.Plan.name=publicmapping.redistricting.models.Plan-class.html#name,Variable publicmapping.redistricting.models.ScoreFunction.name=publicmapping.redistricting.models.ScoreFunction-class.html#name,Variable publicmapping.redistricting.models.Subject.name=publicmapping.redistricting.models.Subject-class.html#name,Variable publicmapping.redistricting.models.ValidationCriteria.name=publicmapping.redistricting.models.ValidationCriteria-class.html#name"><a title="publicmapping.redistricting.models.District.name
+publicmapping.redistricting.models.Geolevel.name
+publicmapping.redistricting.models.Geounit.name
+publicmapping.redistricting.models.LegislativeBody.name
+publicmapping.redistricting.models.Plan.name
+publicmapping.redistricting.models.ScoreFunction.name
+publicmapping.redistricting.models.Subject.name
+publicmapping.redistricting.models.ValidationCriteria.name" class="py-name" href="#" onclick="return doclink('link-11', 'name', 'link-11');">name</a></tt> <tt class="py-op">}</tt><tt class="py-op">,</tt> </tt>
+<a name="L57"></a><tt class="py-lineno"> 57</tt>  <tt class="py-line">                <tt class="py-op">{</tt> <tt class="py-string">'label'</tt><tt class="py-op">:</tt> <tt class="py-string">'Population'</tt><tt class="py-op">,</tt> <tt class="py-string">'type'</tt><tt class="py-op">:</tt> <tt class="py-string">'integer'</tt><tt class="py-op">,</tt> <tt class="py-string">'value'</tt><tt class="py-op">:</tt> <tt class="py-name">pop_value</tt><tt class="py-op">,</tt> <tt class="py-string">'avg_key'</tt><tt class="py-op">:</tt> <tt class="py-name">avg_key</tt> <tt class="py-op">}</tt> </tt>
+<a name="L58"></a><tt class="py-lineno"> 58</tt>  <tt class="py-line">            <tt class="py-op">]</tt> </tt>
+<a name="L59"></a><tt class="py-lineno"> 59</tt>  <tt class="py-line">        <tt class="py-op">}</tt> </tt>
+<a name="L60"></a><tt class="py-lineno"> 60</tt>  <tt class="py-line"> </tt>
+<a name="L61"></a><tt class="py-lineno"> 61</tt>  <tt class="py-line">        <tt class="py-comment"># Add 'Within Target Range' column if min/max are configured</tt> </tt>
+<a name="L62"></a><tt class="py-lineno"> 62</tt>  <tt class="py-line">        <tt class="py-name">minval</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-12" class="py-name"><a title="publicmapping.redistricting.calculators.CalculatorBase.get_value" class="py-name" href="#" onclick="return doclink('link-12', 'get_value', 'link-6');">get_value</a></tt><tt class="py-op">(</tt><tt class="py-string">'min'</tt><tt class="py-op">,</tt><tt id="link-13" class="py-name"><a title="publicmapping.redistricting.models.ComputedCharacteristic.district
+publicmapping.redistricting.models.ComputedDistrictScore.district" class="py-name" href="#" onclick="return doclink('link-13', 'district', 'link-5');">district</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L63"></a><tt class="py-lineno"> 63</tt>  <tt class="py-line">        <tt class="py-name">maxval</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-14" class="py-name"><a title="publicmapping.redistricting.calculators.CalculatorBase.get_value" class="py-name" href="#" onclick="return doclink('link-14', 'get_value', 'link-6');">get_value</a></tt><tt class="py-op">(</tt><tt class="py-string">'max'</tt><tt class="py-op">,</tt><tt id="link-15" class="py-name"><a title="publicmapping.redistricting.models.ComputedCharacteristic.district
+publicmapping.redistricting.models.ComputedDistrictScore.district" class="py-name" href="#" onclick="return doclink('link-15', 'district', 'link-5');">district</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L64"></a><tt class="py-lineno"> 64</tt>  <tt class="py-line">         </tt>
+<a name="L65"></a><tt class="py-lineno"> 65</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">pop_value</tt> <tt class="py-keyword">is</tt> <tt class="py-name">None</tt> <tt class="py-keyword">or</tt> <tt class="py-name">minval</tt> <tt class="py-keyword">is</tt> <tt class="py-name">None</tt> <tt class="py-keyword">or</tt> <tt class="py-name">maxval</tt> <tt class="py-keyword">is</tt> <tt class="py-name">None</tt><tt class="py-op">:</tt> </tt>
+<a name="L66"></a><tt class="py-lineno"> 66</tt>  <tt class="py-line">            <tt class="py-keyword">return</tt> </tt>
+<a name="L67"></a><tt class="py-lineno"> 67</tt>  <tt class="py-line">         </tt>
+<a name="L68"></a><tt class="py-lineno"> 68</tt>  <tt class="py-line">        <tt class="py-name">within_value</tt> <tt class="py-op">=</tt> <tt class="py-name">float</tt><tt class="py-op">(</tt><tt class="py-name">pop_value</tt><tt class="py-op">)</tt> <tt class="py-op">&gt;</tt> <tt class="py-name">float</tt><tt class="py-op">(</tt><tt class="py-name">minval</tt><tt class="py-op">)</tt> <tt class="py-keyword">and</tt> <tt class="py-name">float</tt><tt class="py-op">(</tt><tt class="py-name">pop_value</tt><tt class="py-op">)</tt> <tt class="py-op">&lt;</tt> <tt class="py-name">float</tt><tt class="py-op">(</tt><tt class="py-name">maxval</tt><tt class="py-op">)</tt> </tt>
+<a name="L69"></a><tt class="py-lineno"> 69</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-16" class="py-name"><a title="publicmapping.redistricting.calculators.CalculatorBase.result" class="py-name" href="#" onclick="return doclink('link-16', 'result', 'link-9');">result</a></tt><tt class="py-op">[</tt><tt class="py-string">'raw'</tt><tt class="py-op">]</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-op">{</tt> <tt class="py-string">'label'</tt><tt class="py-op">:</tt> <tt class="py-string">'Within Target Range'</tt><tt class="py-op">,</tt> <tt class="py-string">'value'</tt><tt class="py-op">:</tt> <tt class="py-name">within_value</tt><tt class="py-op">,</tt> <tt class="py-string">'type'</tt><tt class="py-op">:</tt> <tt class="py-string">'boolean'</tt> <tt class="py-op">}</tt><tt class="py-op">)</tt> </tt>
+</div></div><a name="L70"></a><tt class="py-lineno"> 70</tt>  <tt class="py-line"> </tt>
+<a name="Compactness"></a><div id="Compactness-def"><a name="L71"></a><tt class="py-lineno"> 71</tt> <a class="py-toggle" href="#" id="Compactness-toggle" onclick="return toggle('Compactness');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="publicmapping.redistricting.reportcalculators.Compactness-class.html">Compactness</a><tt class="py-op">(</tt><tt class="py-base-class">CalculatorBase</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="Compactness-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="Compactness-expanded"><a name="L72"></a><tt class="py-lineno"> 72</tt>  <tt class="py-line">    <tt class="py-docstring">"""</tt> </tt>
+<a name="L73"></a><tt class="py-lineno"> 73</tt>  <tt class="py-line"><tt class="py-docstring">    Report on the compactness of a district.</tt> </tt>
+<a name="L74"></a><tt class="py-lineno"> 74</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L75"></a><tt class="py-lineno"> 75</tt>  <tt class="py-line"><tt class="py-docstring">    This calculator only operates on districts. It accepts one required</tt> </tt>
+<a name="L76"></a><tt class="py-lineno"> 76</tt>  <tt class="py-line"><tt class="py-docstring">    argument: "comptype", which allows the specification of which type of</tt> </tt>
+<a name="L77"></a><tt class="py-lineno"> 77</tt>  <tt class="py-line"><tt class="py-docstring">    compactness calculation will be performed. Currently available comptypes</tt> </tt>
+<a name="L78"></a><tt class="py-lineno"> 78</tt>  <tt class="py-line"><tt class="py-docstring">    are: 'LengthWidth', 'Roeck', and 'Schwartzberg'</tt> </tt>
+<a name="L79"></a><tt class="py-lineno"> 79</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="Compactness.compute"></a><div id="Compactness.compute-def"><a name="L80"></a><tt class="py-lineno"> 80</tt> <a class="py-toggle" href="#" id="Compactness.compute-toggle" onclick="return toggle('Compactness.compute');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="publicmapping.redistricting.reportcalculators.Compactness-class.html#compute">compute</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-op">**</tt><tt class="py-param">kwargs</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="Compactness.compute-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="Compactness.compute-expanded"><a name="L81"></a><tt class="py-lineno"> 81</tt>  <tt class="py-line">        <tt id="link-17" class="py-name"><a title="publicmapping.redistricting.models.ComputedCharacteristic.district
+publicmapping.redistricting.models.ComputedDistrictScore.district" class="py-name" href="#" onclick="return doclink('link-17', 'district', 'link-5');">district</a></tt> <tt class="py-op">=</tt> <tt class="py-name">kwargs</tt><tt class="py-op">[</tt><tt class="py-string">'district'</tt><tt class="py-op">]</tt> </tt>
+<a name="L82"></a><tt class="py-lineno"> 82</tt>  <tt class="py-line">        <tt class="py-name">comptype</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-18" class="py-name"><a title="publicmapping.redistricting.calculators.CalculatorBase.arg_dict" class="py-name" href="#" onclick="return doclink('link-18', 'arg_dict', 'link-8');">arg_dict</a></tt><tt class="py-op">[</tt><tt class="py-string">'comptype'</tt><tt class="py-op">]</tt><tt class="py-op">[</tt><tt class="py-number">1</tt><tt class="py-op">]</tt> </tt>
+<a name="L83"></a><tt class="py-lineno"> 83</tt>  <tt class="py-line"> </tt>
+<a name="L84"></a><tt class="py-lineno"> 84</tt>  <tt class="py-line">        <tt class="py-name">calc</tt> <tt class="py-op">=</tt> <tt class="py-name">None</tt><tt class="py-op">;</tt> </tt>
+<a name="L85"></a><tt class="py-lineno"> 85</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">comptype</tt> <tt class="py-op">==</tt> <tt class="py-string">'LengthWidth'</tt><tt class="py-op">:</tt> </tt>
+<a name="L86"></a><tt class="py-lineno"> 86</tt>  <tt class="py-line">            <tt class="py-name">calc</tt> <tt class="py-op">=</tt> <tt id="link-19" class="py-name" targets="Class publicmapping.redistricting.calculators.LengthWidthCompactness=publicmapping.redistricting.calculators.LengthWidthCompactness-class.html"><a title="publicmapping.redistricting.calculators.LengthWidthCompactness" class="py-name" href="#" onclick="return doclink('link-19', 'LengthWidthCompactness', 'link-19');">LengthWidthCompactness</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L87"></a><tt class="py-lineno"> 87</tt>  <tt class="py-line">        <tt class="py-keyword">elif</tt> <tt class="py-name">comptype</tt> <tt class="py-op">==</tt> <tt class="py-string">'Roeck'</tt><tt class="py-op">:</tt> </tt>
+<a name="L88"></a><tt class="py-lineno"> 88</tt>  <tt class="py-line">            <tt class="py-name">calc</tt> <tt class="py-op">=</tt> <tt id="link-20" class="py-name" targets="Class publicmapping.redistricting.calculators.Roeck=publicmapping.redistricting.calculators.Roeck-class.html"><a title="publicmapping.redistricting.calculators.Roeck" class="py-name" href="#" onclick="return doclink('link-20', 'Roeck', 'link-20');">Roeck</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L89"></a><tt class="py-lineno"> 89</tt>  <tt class="py-line">        <tt class="py-keyword">elif</tt> <tt class="py-name">comptype</tt> <tt class="py-op">==</tt> <tt class="py-string">'Schwartzberg'</tt><tt class="py-op">:</tt> </tt>
+<a name="L90"></a><tt class="py-lineno"> 90</tt>  <tt class="py-line">            <tt class="py-name">calc</tt> <tt class="py-op">=</tt> <tt id="link-21" class="py-name" targets="Class publicmapping.redistricting.calculators.Schwartzberg=publicmapping.redistricting.calculators.Schwartzberg-class.html"><a title="publicmapping.redistricting.calculators.Schwartzberg" class="py-name" href="#" onclick="return doclink('link-21', 'Schwartzberg', 'link-21');">Schwartzberg</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L91"></a><tt class="py-lineno"> 91</tt>  <tt class="py-line">        <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L92"></a><tt class="py-lineno"> 92</tt>  <tt class="py-line">            <tt class="py-keyword">return</tt> </tt>
+<a name="L93"></a><tt class="py-lineno"> 93</tt>  <tt class="py-line"> </tt>
+<a name="L94"></a><tt class="py-lineno"> 94</tt>  <tt class="py-line">        <tt class="py-name">calc</tt><tt class="py-op">.</tt><tt id="link-22" class="py-name" targets="Method publicmapping.redistricting.calculators.AllBlocksAssigned.compute()=publicmapping.redistricting.calculators.AllBlocksAssigned-class.html#compute,Method publicmapping.redistricting.calculators.AllContiguous.compute()=publicmapping.redistricting.calculators.AllContiguous-class.html#compute,Method publicmapping.redistricting.calculators.Average.compute()=publicmapping.redistricting.calculators.Average-class.html#compute,Method publicmapping.redistricting.calculators.CalculatorBase.compute()=publicmapping.redistricting.calculators.CalculatorBase-class.html#compute,Method publicmapping.redistricting.calculators.Comments.compute()=publicmapping.redistricting.calculators.Comments-class.html#compute,Method publicmapping.redistricting.calculators.CommunityTypeCompatible.compute()=publicmapping.redistricting.calculators.CommunityTypeCompatible-class.html#compute,Method publicmapping.redistricting.calculators.CommunityTypeCounter.compute()=publicmapping.redistricting.calculators.CommunityTypeCounter-class.html#compute,Method publicmapping.redistricting.calculators.Competitiveness.compute()=publicmapping.redistricting.calculators.Competitiveness-class.html#compute,Method publicmapping.redistricting.calculators.Contiguity.compute()=publicmapping.redistricting.calculators.Contiguity-class.html#compute,Method publicmapping.redistricting.calculators.CountDistricts.compute()=publicmapping.redistricting.calculators.CountDistricts-class.html#compute,Method publicmapping.redistricting.calculators.Equipopulation.compute()=publicmapping.redistricting.calculators.Equipopulation-class.html#compute,Method publicmapping.redistricting.calculators.Equivalence.compute()=publicmapping.redistricting.calculators.Equivalence-class.html#compute,Method publicmapping.redistricting.calculators.Interval.compute()=publicmapping.redistricting.calculators.Interval-class.html#compute,Method publicmapping.redistricting.calculators.LengthWidthCompactness.compute()=publicmapping.redistricting.calculators.LengthWidthCompactness-class.html#compute,Method publicmapping.redistricting.calculators.MajorityMinority.compute()=publicmapping.redistricting.calculators.MajorityMinority-class.html#compute,Method publicmapping.redistricting.calculators.MultiMember.compute()=publicmapping.redistricting.calculators.MultiMember-class.html#compute,Method publicmapping.redistricting.calculators.NonContiguous.compute()=publicmapping.redistricting.calculators.NonContiguous-class.html#compute,Method publicmapping.redistricting.calculators.Percent.compute()=publicmapping.redistricting.calculators.Percent-class.html#compute,Method publicmapping.redistricting.calculators.PolsbyPopper.compute()=publicmapping.redistricting.calculators.PolsbyPopper-class.html#compute,Method publicmapping.redistricting.calculators.Range.compute()=publicmapping.redistricting.calculators.Range-class.html#compute,Method publicmapping.redistricting.calculators.RepresentationalFairness.compute()=publicmapping.redistricting.calculators.RepresentationalFairness-class.html#compute,Method publicmapping.redistricting.calculators.Roeck.compute()=publicmapping.redistricting.calculators.Roeck-class.html#compute,Method publicmapping.redistricting.calculators.Schwartzberg.compute()=publicmapping.redistricting.calculators.Schwartzberg-class.html#compute,Method publicmapping.redistricting.calculators.SplitCounter.compute()=publicmapping.redistricting.calculators.SplitCounter-class.html#compute,Method publicmapping.redistricting.calculators.SumValues.compute()=publicmapping.redistricting.calculators.SumValues-class.html#compute,Method publicmapping.redistricting.calculators.Threshold.compute()=publicmapping.redistricting.calculators.Threshold-class.html#compute,Static Method publicmapping.redistricting.models.ComputedDistrictScore.compute()=publicmapping.redistricting.models.ComputedDistrictScore-class.html#compute,Static Method publicmapping.redistricting.models.ComputedPlanScore.compute()=publicmapping.redistricting.models.ComputedPlanScore-class.html#compute,Method publicmapping.redistricting.reportcalculators.Compactness.compute()=publicmapping.redistricting.reportcalculators.Compactness-class.html#compute,Method publicmapping.redistricting.reportcalculators.Majority.compute()=publicmapping.redistricting.reportcalculators.Majority-class.html#compute,Method publicmapping.redistricting.reportcalculators.Population.compute()=publicmapping.redistricting.reportcalculators.Population-class.html#compute,Method publicmapping.redistricting.reportcalculators.Unassigned.compute()=publicmapping.redistricting.reportcalculators.Unassigned-class.html#compute"><a title="publicmapping.redistricting.calculators.AllBlocksAssigned.compute
+publicmapping.redistricting.calculators.AllContiguous.compute
+publicmapping.redistricting.calculators.Average.compute
+publicmapping.redistricting.calculators.CalculatorBase.compute
+publicmapping.redistricting.calculators.Comments.compute
+publicmapping.redistricting.calculators.CommunityTypeCompatible.compute
+publicmapping.redistricting.calculators.CommunityTypeCounter.compute
+publicmapping.redistricting.calculators.Competitiveness.compute
+publicmapping.redistricting.calculators.Contiguity.compute
+publicmapping.redistricting.calculators.CountDistricts.compute
+publicmapping.redistricting.calculators.Equipopulation.compute
+publicmapping.redistricting.calculators.Equivalence.compute
+publicmapping.redistricting.calculators.Interval.compute
+publicmapping.redistricting.calculators.LengthWidthCompactness.compute
+publicmapping.redistricting.calculators.MajorityMinority.compute
+publicmapping.redistricting.calculators.MultiMember.compute
+publicmapping.redistricting.calculators.NonContiguous.compute
+publicmapping.redistricting.calculators.Percent.compute
+publicmapping.redistricting.calculators.PolsbyPopper.compute
+publicmapping.redistricting.calculators.Range.compute
+publicmapping.redistricting.calculators.RepresentationalFairness.compute
+publicmapping.redistricting.calculators.Roeck.compute
+publicmapping.redistricting.calculators.Schwartzberg.compute
+publicmapping.redistricting.calculators.SplitCounter.compute
+publicmapping.redistricting.calculators.SumValues.compute
+publicmapping.redistricting.calculators.Threshold.compute
+publicmapping.redistricting.models.ComputedDistrictScore.compute
+publicmapping.redistricting.models.ComputedPlanScore.compute
+publicmapping.redistricting.reportcalculators.Compactness.compute
+publicmapping.redistricting.reportcalculators.Majority.compute
+publicmapping.redistricting.reportcalculators.Population.compute
+publicmapping.redistricting.reportcalculators.Unassigned.compute" class="py-name" href="#" onclick="return doclink('link-22', 'compute', 'link-22');">compute</a></tt><tt class="py-op">(</tt><tt id="link-23" class="py-name"><a title="publicmapping.redistricting.models.ComputedCharacteristic.district
+publicmapping.redistricting.models.ComputedDistrictScore.district" class="py-name" href="#" onclick="return doclink('link-23', 'district', 'link-5');">district</a></tt><tt class="py-op">=</tt><tt id="link-24" class="py-name"><a title="publicmapping.redistricting.models.ComputedCharacteristic.district
+publicmapping.redistricting.models.ComputedDistrictScore.district" class="py-name" href="#" onclick="return doclink('link-24', 'district', 'link-5');">district</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L95"></a><tt class="py-lineno"> 95</tt>  <tt class="py-line">        <tt class="py-name">val</tt> <tt class="py-op">=</tt> <tt class="py-name">calc</tt><tt class="py-op">.</tt><tt id="link-25" class="py-name"><a title="publicmapping.redistricting.calculators.CalculatorBase.result" class="py-name" href="#" onclick="return doclink('link-25', 'result', 'link-9');">result</a></tt><tt class="py-op">[</tt><tt class="py-string">'value'</tt><tt class="py-op">]</tt> <tt class="py-keyword">if</tt> <tt class="py-name">calc</tt><tt class="py-op">.</tt><tt id="link-26" class="py-name"><a title="publicmapping.redistricting.calculators.CalculatorBase.result" class="py-name" href="#" onclick="return doclink('link-26', 'result', 'link-9');">result</a></tt> <tt class="py-keyword">else</tt> <tt class="py-number">0</tt> </tt>
+<a name="L96"></a><tt class="py-lineno"> 96</tt>  <tt class="py-line">         </tt>
+<a name="L97"></a><tt class="py-lineno"> 97</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-27" class="py-name"><a title="publicmapping.redistricting.calculators.CalculatorBase.result" class="py-name" href="#" onclick="return doclink('link-27', 'result', 'link-9');">result</a></tt> <tt class="py-op">=</tt> <tt class="py-op">{</tt> </tt>
+<a name="L98"></a><tt class="py-lineno"> 98</tt>  <tt class="py-line">            <tt class="py-string">'raw'</tt><tt class="py-op">:</tt> <tt class="py-op">[</tt> </tt>
+<a name="L99"></a><tt class="py-lineno"> 99</tt>  <tt class="py-line">                <tt class="py-op">{</tt> <tt class="py-string">'label'</tt><tt class="py-op">:</tt> <tt class="py-string">'DistrictID'</tt><tt class="py-op">,</tt> <tt class="py-string">'type'</tt><tt class="py-op">:</tt> <tt class="py-string">'string'</tt><tt class="py-op">,</tt> <tt class="py-string">'value'</tt><tt class="py-op">:</tt> <tt id="link-28" class="py-name"><a title="publicmapping.redistricting.models.ComputedCharacteristic.district
+publicmapping.redistricting.models.ComputedDistrictScore.district" class="py-name" href="#" onclick="return doclink('link-28', 'district', 'link-5');">district</a></tt><tt class="py-op">.</tt><tt id="link-29" class="py-name"><a title="publicmapping.redistricting.models.District.name
+publicmapping.redistricting.models.Geolevel.name
+publicmapping.redistricting.models.Geounit.name
+publicmapping.redistricting.models.LegislativeBody.name
+publicmapping.redistricting.models.Plan.name
+publicmapping.redistricting.models.ScoreFunction.name
+publicmapping.redistricting.models.Subject.name
+publicmapping.redistricting.models.ValidationCriteria.name" class="py-name" href="#" onclick="return doclink('link-29', 'name', 'link-11');">name</a></tt> <tt class="py-op">}</tt><tt class="py-op">,</tt> </tt>
+<a name="L100"></a><tt class="py-lineno">100</tt>  <tt class="py-line">                <tt class="py-op">{</tt> <tt class="py-string">'label'</tt><tt class="py-op">:</tt> <tt class="py-string">'Compactness'</tt><tt class="py-op">,</tt> <tt class="py-string">'type'</tt><tt class="py-op">:</tt> <tt class="py-string">'percent'</tt><tt class="py-op">,</tt> <tt class="py-string">'value'</tt><tt class="py-op">:</tt> <tt class="py-name">val</tt><tt class="py-op">,</tt> <tt class="py-string">'avg_key'</tt><tt class="py-op">:</tt> <tt class="py-name">comptype</tt> <tt class="py-op">}</tt> </tt>
+<a name="L101"></a><tt class="py-lineno">101</tt>  <tt class="py-line">            <tt class="py-op">]</tt> </tt>
+<a name="L102"></a><tt class="py-lineno">102</tt>  <tt class="py-line">        <tt class="py-op">}</tt> </tt>
+</div></div><a name="L103"></a><tt class="py-lineno">103</tt>  <tt class="py-line"> </tt>
+<a name="Majority"></a><div id="Majority-def"><a name="L104"></a><tt class="py-lineno">104</tt> <a class="py-toggle" href="#" id="Majority-toggle" onclick="return toggle('Majority');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="publicmapping.redistricting.reportcalculators.Majority-class.html">Majority</a><tt class="py-op">(</tt><tt class="py-base-class">CalculatorBase</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="Majority-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="Majority-expanded"><a name="L105"></a><tt class="py-lineno">105</tt>  <tt class="py-line">    <tt class="py-docstring">"""</tt> </tt>
+<a name="L106"></a><tt class="py-lineno">106</tt>  <tt class="py-line"><tt class="py-docstring">    Report on the proportion of a district's composition by subject.</tt> </tt>
+<a name="L107"></a><tt class="py-lineno">107</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L108"></a><tt class="py-lineno">108</tt>  <tt class="py-line"><tt class="py-docstring">    This calculator only operates on districts. It accepts two required</tt> </tt>
+<a name="L109"></a><tt class="py-lineno">109</tt>  <tt class="py-line"><tt class="py-docstring">    arguments: "value", and "total". If the ratio of the value to the total</tt> </tt>
+<a name="L110"></a><tt class="py-lineno">110</tt>  <tt class="py-line"><tt class="py-docstring">    exceeds 50%, it is marked as a majority.</tt> </tt>
+<a name="L111"></a><tt class="py-lineno">111</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="Majority.compute"></a><div id="Majority.compute-def"><a name="L112"></a><tt class="py-lineno">112</tt> <a class="py-toggle" href="#" id="Majority.compute-toggle" onclick="return toggle('Majority.compute');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="publicmapping.redistricting.reportcalculators.Majority-class.html#compute">compute</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-op">**</tt><tt class="py-param">kwargs</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="Majority.compute-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="Majority.compute-expanded"><a name="L113"></a><tt class="py-lineno">113</tt>  <tt class="py-line">        <tt id="link-30" class="py-name"><a title="publicmapping.redistricting.models.ComputedCharacteristic.district
+publicmapping.redistricting.models.ComputedDistrictScore.district" class="py-name" href="#" onclick="return doclink('link-30', 'district', 'link-5');">district</a></tt> <tt class="py-op">=</tt> <tt class="py-name">kwargs</tt><tt class="py-op">[</tt><tt class="py-string">'district'</tt><tt class="py-op">]</tt> </tt>
+<a name="L114"></a><tt class="py-lineno">114</tt>  <tt class="py-line"> </tt>
+<a name="L115"></a><tt class="py-lineno">115</tt>  <tt class="py-line">        <tt class="py-name">pop_value</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-31" class="py-name"><a title="publicmapping.redistricting.calculators.CalculatorBase.get_value" class="py-name" href="#" onclick="return doclink('link-31', 'get_value', 'link-6');">get_value</a></tt><tt class="py-op">(</tt><tt class="py-string">'value'</tt><tt class="py-op">,</tt> <tt id="link-32" class="py-name"><a title="publicmapping.redistricting.models.ComputedCharacteristic.district
+publicmapping.redistricting.models.ComputedDistrictScore.district" class="py-name" href="#" onclick="return doclink('link-32', 'district', 'link-5');">district</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L116"></a><tt class="py-lineno">116</tt>  <tt class="py-line">        <tt class="py-name">tot_value</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-33" class="py-name"><a title="publicmapping.redistricting.calculators.CalculatorBase.get_value" class="py-name" href="#" onclick="return doclink('link-33', 'get_value', 'link-6');">get_value</a></tt><tt class="py-op">(</tt><tt class="py-string">'total'</tt><tt class="py-op">,</tt> <tt id="link-34" class="py-name"><a title="publicmapping.redistricting.models.ComputedCharacteristic.district
+publicmapping.redistricting.models.ComputedDistrictScore.district" class="py-name" href="#" onclick="return doclink('link-34', 'district', 'link-5');">district</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L117"></a><tt class="py-lineno">117</tt>  <tt class="py-line">        <tt class="py-name">proportion</tt> <tt class="py-op">=</tt> <tt class="py-name">float</tt><tt class="py-op">(</tt><tt class="py-name">pop_value</tt><tt class="py-op">)</tt> <tt class="py-op">/</tt> <tt class="py-name">float</tt><tt class="py-op">(</tt><tt class="py-name">tot_value</tt><tt class="py-op">)</tt> <tt class="py-keyword">if</tt> <tt class="py-name">tot_value</tt> <tt class="py-keyword">else</tt> <tt class="py-number">0</tt> </tt>
+<a name="L118"></a><tt class="py-lineno">118</tt>  <tt class="py-line">        <tt class="py-name">pop_avg_key</tt> <tt class="py-op">=</tt> <tt class="py-string">"majminpop_"</tt> <tt class="py-op">+</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-35" class="py-name"><a title="publicmapping.redistricting.calculators.CalculatorBase.arg_dict" class="py-name" href="#" onclick="return doclink('link-35', 'arg_dict', 'link-8');">arg_dict</a></tt><tt class="py-op">[</tt><tt class="py-string">'value'</tt><tt class="py-op">]</tt><tt class="py-op">[</tt><tt class="py-number">1</tt><tt class="py-op">]</tt> </tt>
+<a name="L119"></a><tt class="py-lineno">119</tt>  <tt class="py-line">        <tt class="py-name">prop_avg_key</tt> <tt class="py-op">=</tt> <tt class="py-name">pop_avg_key</tt> <tt class="py-op">+</tt> <tt class="py-string">"_"</tt> <tt class="py-op">+</tt> <tt class="py-string">"proportion"</tt> </tt>
+<a name="L120"></a><tt class="py-lineno">120</tt>  <tt class="py-line"> </tt>
+<a name="L121"></a><tt class="py-lineno">121</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-36" class="py-name"><a title="publicmapping.redistricting.calculators.CalculatorBase.result" class="py-name" href="#" onclick="return doclink('link-36', 'result', 'link-9');">result</a></tt> <tt class="py-op">=</tt> <tt class="py-op">{</tt> </tt>
+<a name="L122"></a><tt class="py-lineno">122</tt>  <tt class="py-line">            <tt class="py-string">'raw'</tt><tt class="py-op">:</tt> <tt class="py-op">[</tt> </tt>
+<a name="L123"></a><tt class="py-lineno">123</tt>  <tt class="py-line">                <tt class="py-op">{</tt> <tt class="py-string">'label'</tt><tt class="py-op">:</tt> <tt class="py-string">'DistrictID'</tt><tt class="py-op">,</tt> <tt class="py-string">'type'</tt><tt class="py-op">:</tt> <tt class="py-string">'string'</tt><tt class="py-op">,</tt> <tt class="py-string">'value'</tt><tt class="py-op">:</tt> <tt id="link-37" class="py-name"><a title="publicmapping.redistricting.models.ComputedCharacteristic.district
+publicmapping.redistricting.models.ComputedDistrictScore.district" class="py-name" href="#" onclick="return doclink('link-37', 'district', 'link-5');">district</a></tt><tt class="py-op">.</tt><tt id="link-38" class="py-name"><a title="publicmapping.redistricting.models.District.name
+publicmapping.redistricting.models.Geolevel.name
+publicmapping.redistricting.models.Geounit.name
+publicmapping.redistricting.models.LegislativeBody.name
+publicmapping.redistricting.models.Plan.name
+publicmapping.redistricting.models.ScoreFunction.name
+publicmapping.redistricting.models.Subject.name
+publicmapping.redistricting.models.ValidationCriteria.name" class="py-name" href="#" onclick="return doclink('link-38', 'name', 'link-11');">name</a></tt> <tt class="py-op">}</tt><tt class="py-op">,</tt> </tt>
+<a name="L124"></a><tt class="py-lineno">124</tt>  <tt class="py-line">                <tt class="py-op">{</tt> <tt class="py-string">'label'</tt><tt class="py-op">:</tt> <tt class="py-string">'Population'</tt><tt class="py-op">,</tt> <tt class="py-string">'type'</tt><tt class="py-op">:</tt> <tt class="py-string">'integer'</tt><tt class="py-op">,</tt> <tt class="py-string">'value'</tt><tt class="py-op">:</tt> <tt class="py-name">pop_value</tt><tt class="py-op">,</tt> <tt class="py-string">'avg_key'</tt><tt class="py-op">:</tt> <tt class="py-name">pop_avg_key</tt> <tt class="py-op">}</tt><tt class="py-op">,</tt> </tt>
+<a name="L125"></a><tt class="py-lineno">125</tt>  <tt class="py-line">                <tt class="py-op">{</tt> <tt class="py-string">'label'</tt><tt class="py-op">:</tt> <tt class="py-string">'Proportion'</tt><tt class="py-op">,</tt> <tt class="py-string">'type'</tt><tt class="py-op">:</tt> <tt class="py-string">'percent'</tt><tt class="py-op">,</tt> <tt class="py-string">'value'</tt><tt class="py-op">:</tt> <tt class="py-name">proportion</tt><tt class="py-op">,</tt> <tt class="py-string">'avg_key'</tt><tt class="py-op">:</tt> <tt class="py-name">prop_avg_key</tt> <tt class="py-op">}</tt><tt class="py-op">,</tt> </tt>
+<a name="L126"></a><tt class="py-lineno">126</tt>  <tt class="py-line">                <tt class="py-op">{</tt> <tt class="py-string">'label'</tt><tt class="py-op">:</tt> <tt class="py-string">'&gt;= 50%'</tt><tt class="py-op">,</tt> <tt class="py-string">'type'</tt><tt class="py-op">:</tt> <tt class="py-string">'boolean'</tt><tt class="py-op">,</tt> <tt class="py-string">'value'</tt><tt class="py-op">:</tt> <tt class="py-name">proportion</tt> <tt class="py-op">&gt;=</tt> <tt class="py-number">.5</tt> <tt class="py-op">}</tt> </tt>
+<a name="L127"></a><tt class="py-lineno">127</tt>  <tt class="py-line">            <tt class="py-op">]</tt> </tt>
+<a name="L128"></a><tt class="py-lineno">128</tt>  <tt class="py-line">        <tt class="py-op">}</tt> </tt>
+</div></div><a name="L129"></a><tt class="py-lineno">129</tt>  <tt class="py-line"> </tt>
+<a name="Unassigned"></a><div id="Unassigned-def"><a name="L130"></a><tt class="py-lineno">130</tt> <a class="py-toggle" href="#" id="Unassigned-toggle" onclick="return toggle('Unassigned');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="publicmapping.redistricting.reportcalculators.Unassigned-class.html">Unassigned</a><tt class="py-op">(</tt><tt class="py-base-class">CalculatorBase</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="Unassigned-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="Unassigned-expanded"><a name="L131"></a><tt class="py-lineno">131</tt>  <tt class="py-line">    <tt class="py-docstring">"""</tt> </tt>
+<a name="L132"></a><tt class="py-lineno">132</tt>  <tt class="py-line"><tt class="py-docstring">    Report on the unassigned base geounits of a plan.</tt> </tt>
+<a name="L133"></a><tt class="py-lineno">133</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L134"></a><tt class="py-lineno">134</tt>  <tt class="py-line"><tt class="py-docstring">    This calculator only operates on plans. It finds all of the unassigned base</tt> </tt>
+<a name="L135"></a><tt class="py-lineno">135</tt>  <tt class="py-line"><tt class="py-docstring">    geounits, lists them by their portable_id, and tallys them up.</tt> </tt>
+<a name="L136"></a><tt class="py-lineno">136</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="Unassigned.compute"></a><div id="Unassigned.compute-def"><a name="L137"></a><tt class="py-lineno">137</tt> <a class="py-toggle" href="#" id="Unassigned.compute-toggle" onclick="return toggle('Unassigned.compute');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="publicmapping.redistricting.reportcalculators.Unassigned-class.html#compute">compute</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-op">**</tt><tt class="py-param">kwargs</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="Unassigned.compute-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="Unassigned.compute-expanded"><a name="L138"></a><tt class="py-lineno">138</tt>  <tt class="py-line">        <tt id="link-39" class="py-name" targets="Variable publicmapping.redistricting.models.ComputedPlanScore.plan=publicmapping.redistricting.models.ComputedPlanScore-class.html#plan,Variable publicmapping.redistricting.models.District.plan=publicmapping.redistricting.models.District-class.html#plan"><a title="publicmapping.redistricting.models.ComputedPlanScore.plan
+publicmapping.redistricting.models.District.plan" class="py-name" href="#" onclick="return doclink('link-39', 'plan', 'link-39');">plan</a></tt> <tt class="py-op">=</tt> <tt class="py-name">kwargs</tt><tt class="py-op">[</tt><tt class="py-string">'plan'</tt><tt class="py-op">]</tt> </tt>
+<a name="L139"></a><tt class="py-lineno">139</tt>  <tt class="py-line">        <tt id="link-40" class="py-name" targets="Variable publicmapping.redistricting.models.ComputedPlanScore.version=publicmapping.redistricting.models.ComputedPlanScore-class.html#version,Variable publicmapping.redistricting.models.District.version=publicmapping.redistricting.models.District-class.html#version,Variable publicmapping.redistricting.models.Plan.version=publicmapping.redistricting.models.Plan-class.html#version"><a title="publicmapping.redistricting.models.ComputedPlanScore.version
+publicmapping.redistricting.models.District.version
+publicmapping.redistricting.models.Plan.version" class="py-name" href="#" onclick="return doclink('link-40', 'version', 'link-40');">version</a></tt> <tt class="py-op">=</tt> <tt class="py-name">kwargs</tt><tt class="py-op">[</tt><tt class="py-string">'version'</tt><tt class="py-op">]</tt> <tt class="py-keyword">if</tt> <tt class="py-string">'version'</tt> <tt class="py-keyword">in</tt> <tt class="py-name">kwargs</tt> <tt class="py-keyword">else</tt> <tt id="link-41" class="py-name"><a title="publicmapping.redistricting.models.ComputedPlanScore.plan
+publicmapping.redistricting.models.District.plan" class="py-name" href="#" onclick="return doclink('link-41', 'plan', 'link-39');">plan</a></tt><tt class="py-op">.</tt><tt id="link-42" class="py-name"><a title="publicmapping.redistricting.models.ComputedPlanScore.version
+publicmapping.redistricting.models.District.version
+publicmapping.redistricting.models.Plan.version" class="py-name" href="#" onclick="return doclink('link-42', 'version', 'link-40');">version</a></tt>             </tt>
+<a name="L140"></a><tt class="py-lineno">140</tt>  <tt class="py-line">        <tt class="py-name">threshold</tt> <tt class="py-op">=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-43" class="py-name"><a title="publicmapping.redistricting.calculators.CalculatorBase.get_value" class="py-name" href="#" onclick="return doclink('link-43', 'get_value', 'link-6');">get_value</a></tt><tt class="py-op">(</tt><tt class="py-string">'threshold'</tt><tt class="py-op">)</tt> </tt>
+<a name="L141"></a><tt class="py-lineno">141</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-keyword">not</tt> <tt class="py-name">threshold</tt><tt class="py-op">:</tt> </tt>
+<a name="L142"></a><tt class="py-lineno">142</tt>  <tt class="py-line">            <tt class="py-name">threshold</tt> <tt class="py-op">=</tt> <tt class="py-number">100</tt> </tt>
+<a name="L143"></a><tt class="py-lineno">143</tt>  <tt class="py-line"> </tt>
+<a name="L144"></a><tt class="py-lineno">144</tt>  <tt class="py-line">        <tt class="py-name">geounits</tt> <tt class="py-op">=</tt> <tt id="link-44" class="py-name"><a title="publicmapping.redistricting.models.ComputedPlanScore.plan
+publicmapping.redistricting.models.District.plan" class="py-name" href="#" onclick="return doclink('link-44', 'plan', 'link-39');">plan</a></tt><tt class="py-op">.</tt><tt id="link-45" class="py-name" targets="Method publicmapping.redistricting.models.Plan.get_unassigned_geounits()=publicmapping.redistricting.models.Plan-class.html#get_unassigned_geounits"><a title="publicmapping.redistricting.models.Plan.get_unassigned_geounits" class="py-name" href="#" onclick="return doclink('link-45', 'get_unassigned_geounits', 'link-45');">get_unassigned_geounits</a></tt><tt class="py-op">(</tt><tt class="py-name">threshold</tt><tt class="py-op">=</tt><tt class="py-name">threshold</tt><tt class="py-op">,</tt> <tt id="link-46" class="py-name"><a title="publicmapping.redistricting.models.ComputedPlanScore.version
+publicmapping.redistricting.models.District.version
+publicmapping.redistricting.models.Plan.version" class="py-name" href="#" onclick="return doclink('link-46', 'version', 'link-40');">version</a></tt><tt class="py-op">=</tt><tt id="link-47" class="py-name"><a title="publicmapping.redistricting.models.ComputedPlanScore.version
+publicmapping.redistricting.models.District.version
+publicmapping.redistricting.models.Plan.version" class="py-name" href="#" onclick="return doclink('link-47', 'version', 'link-40');">version</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L145"></a><tt class="py-lineno">145</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-48" class="py-name"><a title="publicmapping.redistricting.calculators.CalculatorBase.result" class="py-name" href="#" onclick="return doclink('link-48', 'result', 'link-9');">result</a></tt> <tt class="py-op">=</tt> <tt class="py-op">{</tt> <tt class="py-string">'raw'</tt><tt class="py-op">:</tt> <tt class="py-op">[</tt><tt class="py-op">{</tt> <tt class="py-string">'type'</tt><tt class="py-op">:</tt> <tt class="py-string">'list'</tt><tt class="py-op">,</tt> <tt class="py-string">'value'</tt><tt class="py-op">:</tt> <tt class="py-op">[</tt><tt class="py-name">t</tt><tt class="py-op">[</tt><tt class="py-number">1</tt><tt class="py-op">]</tt> <tt class="py-keyword">for</tt> <tt class="py-name">t</tt> <tt class="py-keyword">in</tt> <tt class="py-name">geounits</tt><tt class="py-op">]</tt> <tt class="py-op">}</tt><tt class="py-op">]</tt> <tt class="py-op">}</tt> </tt>
+</div></div><a name="L146"></a><tt class="py-lineno">146</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="publicmapping-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a href="http://publicmapping.sf.net">Publicmapping on SourceForge</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Mon Oct 17 17:51:23 2011
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

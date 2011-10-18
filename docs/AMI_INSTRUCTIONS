@@ -3,15 +3,15 @@
     AWS Management Console (https://console.aws.amazon.com/ec2/home)
 
     1. Find the Amazon Machine Image (AMI) you want to use.  Check publicmapping.org to
-        get the ID of the latest AMI.
+        get the ID of the latest AMI, or search for "DistrictBuilder".
 
     2. Right-click on the AMI and click Launch Instance.  You can choose whichever size
         image you'd like.  You must also choose a key pair from those you've created in
         Amazon.  Make sure your firewall rules allow access on ports 80 and 443 (http(s)),
         22 (SSH for administration)
 
-       Allow ports 25 (smtp) and 465 (smtps) for all users of the site if you wish the
-	system to receive incoming mail.
+        Allow ports 25 (smtp) and 465 (smtps) for all users of the site if you wish the
+        system to receive incoming mail.
 
         To administer geoserver, you'll need to allow connections on port 8080 for your
         administrators. Port 8081 may also be useful in troubleshooting if BARD reporting
@@ -31,7 +31,7 @@
 
 Optional: 
 
-You can connect to your instance and change any of the settings.ini configuration values 
+You can connect to your instance and change any of the settings.py configuration values 
 from their defaults. 
 
     1. Right-click on your instance in the console and select "Connect".  You'll be shown
@@ -47,11 +47,11 @@ from their defaults.
          
         curl http://169.254.169.254/latest/meta-data/public-hostname/
     
-    6. Once you've changed your map server settings, restart apache with the command:
+    6. Once you've changed your server settings, restart apache with the command:
         
         sudo service apache2 restart
 
     (Note: using "touch /projects/PublicMapping/DistrictBuilder/django/publicmapping.wsgi" should
-   	also reload the app if changes are limited to the django site )
+     also reload the app if changes are limited to the django site )
 
 
