@@ -12,6 +12,45 @@
         <LegislativeBody id="community" name="Community Map" member="Community %s" maxdistricts="999" is_community="true" sort_key="4"/>
     </LegislativeBodies>
 
+    <!-- Define Regions as aggregations of smaller geographic units. -->
+    <Regions>
+
+        <!-- A Region has an ID, name, and description. -->
+        <Region id="va" name="Virginia" description="The Commonwealth of Virginia">
+
+            <!-- A set of filters to apply to the base GeoLevel shapefile. -->
+            <RegionCodes>
+
+                <!-- A Single filter for the GEOID10 field in the block shapefile
+                     that selects all geographic units that match the value at the 
+                     specified text string window. -->
+                <RegionCode attr="GEOID10" value="51" start="0" width="2" />
+            </RegionCodes>
+
+            <!-- A set of legislative bodies that exist in this region. -->
+            <LegislativeBodies>
+                <LegislativeBody ref="congress" />
+                <LegislativeBody ref="house" />
+                <LegislativeBody ref="senate" />
+                <LegislativeBody ref="community" />
+            </LegislativeBodies>
+        </Region>
+
+        <Region id="dc_area" name="District of Columbia Area" description="The metropolitan counties around the District of Columbia">
+            <RegionCodes>
+                <RegionCode attr="GEOID10" value="51059" start="0" width="5" />
+                <RegionCode attr="GEOID10" value="51600" start="0" width="5" />
+                <RegionCode attr="GEOID10" value="51610" start="0" width="5" />
+                <RegionCode attr="GEOID10" value="51510" start="0" width="5" />
+                <RegionCode attr="GEOID10" value="51013" start="0" width="5" />
+            </RegionCodes>
+            <LegislativeBodies>
+                <LegislativeBody ref="dc_area_council" />
+                <LegislativeBody ref="dc_community" />
+            </LegislativeBodies>
+        </Region>
+    </Regions>
+
     <!-- A list of subjects referenced in the system. -->
     <Subjects>
         <!-- A Subject is a measurement type, such as "Total Population". 
@@ -1028,6 +1067,26 @@
               <LegislativeBody ref="house" />
               <LegislativeBody ref="senate" />
               <LegislativeBody ref="community" />
+          </LegislativeBodies>
+      </GeoLevel>
+
+      <!--
+
+      A geolevel that applies to a region, which should use the geography from
+      the specified base GeoLevel.
+
+      -->
+      <GeoLevel id="dc_block" name="dc_block" min_zoom="8" sort_key="1" tolerance="2.5">
+
+          <!-- This geolevel should use the geography that was imported from the ref GeoLevel,
+               which has already beeen defined and configured. -->
+          <BaseGeoLevel ref="block" />
+
+          <!-- This geolevel should be used in a certain region, via previously 
+               defined LegislativeBodies. -->
+          <LegislativeBodies>
+              <LegislativeBody ref="dc_area_council" />
+              <LegislativeBody ref="dc_community" />
           </LegislativeBodies>
       </GeoLevel>
 
