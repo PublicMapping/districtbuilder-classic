@@ -348,7 +348,7 @@ class Geounit(models.Model):
     center = models.PointField(srid=3785)
 
     # The geographic level of this Geounit
-    geolevel = models.ForeignKey(Geolevel)
+    geolevel = models.ManyToManyField(Geolevel)
 
     # Manage the instances of this class with a geographically aware manager
     objects = models.GeoManager()
@@ -1714,8 +1714,11 @@ CROSS JOIN (
         below_district_cross_join = district_cross_join % (below_join, below_id)
         below_and = "AND below.district_id > 0 AND below.version = lmt.version"
         plan_where = "WHERE below.plan_id = %d" % below_id
-        geolevel_where = "WHERE below.geolevel_id = %d" % below_id
-        geolevel_and = "AND above.geolevel_id = %d" % above_id
+        geolevel_join = "JOIN redistricting_geounit_geolevel gl on %s.id = gl.geounit_id"
+        geolevel_below_join = geolevel_join % "below"
+        geolevel_above_join = geolevel_join % "above"
+        geolevel_where = "WHERE gl.geolevel_id = %d" % below_id
+        geolevel_and = "AND gl.geolevel_id = %d" % above_id
 
         # Two Plans
         if is_above_plan and is_below_plan:
@@ -1723,11 +1726,11 @@ CROSS JOIN (
          
         # Plan above, Geolevel below
         elif is_above_plan and not is_below_plan:
-            query = "%s %s %s %s %s" % (select, above_cross, geolevel_where, relate, order)
+            query = "%s %s %s %s %s %s" % (select, above_cross, geolevel_below_join, geolevel_where, relate, order)
 
         # Geolevel above, Plan below
         elif not is_above_plan and is_below_plan:
-            query = "%s %s %s %s %s %s %s %s %s" % (select, below_join, on_lmt, geo_cross, plan_where, below_and, geolevel_and, relate, order)
+            query = "%s %s %s %s %s %s %s %s %s %s" % (select, below_join, on_lmt, geo_cross, geolevel_above_join, plan_where, below_and, geolevel_and, relate, order)
 
         # Two geolevels
         else:
