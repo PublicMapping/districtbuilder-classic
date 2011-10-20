@@ -1122,7 +1122,7 @@ class AllContiguous(CalculatorBase):
         calc = Contiguity()
         calc.compute(**kwargs)
 
-        self.result = { 'value': (len(districts) - 1) == calc.result }
+        self.result = { 'value': (len(districts) - 1) == calc.result['value'] }
 
 
 class NonContiguous(CalculatorBase):
