@@ -83,10 +83,10 @@ class GeounitAdmin(admin.OSMGeoAdmin):
     inlines = [CharacteristicInline]
 
     # When displayed as a list, show the name and geolevel
-    list_display = ('name','geolevel',)
+    list_display = ('name',)
 
     # In admin view, show the name, portable_id, tree_code, geolevel, and geom fields.
-    fields = ('name','portable_id','tree_code','geolevel','geom',)
+    fields = ('name','portable_id','tree_code','geom',)
 
     # Order geounits by name by default.
     ordering = ('name',)
