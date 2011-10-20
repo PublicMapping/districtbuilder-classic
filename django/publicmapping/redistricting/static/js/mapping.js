@@ -106,7 +106,7 @@ function initializeResizeFix() {
 function createMapTipDiv() {
     var tipdiv = document.createElement('div');
     var tipelem = document.createElement('h1');
-    tipelem.appendChild(document.createTextNode(BODY_MEMBER+' Name'));
+    tipelem.appendChild(document.createTextNode(BODY_MEMBER_LONG+' Name'));
     tipdiv.appendChild(tipelem);
     tipelem = document.createElement('div');
     tipelem.id = 'tipclose';
@@ -137,7 +137,7 @@ function createMapTipDiv() {
 function createDistrictTipDiv() {
     var tipdiv = document.createElement('div');
     var tipelem = document.createElement('h1');
-    tipelem.appendChild(document.createTextNode(BODY_MEMBER+' Name'));
+    tipelem.appendChild(document.createTextNode(BODY_MEMBER_LONG+' Name'));
     tipdiv.appendChild(tipelem);
     tipelem = document.createElement('div');
     tipelem.id = 'tipclose';
@@ -1941,7 +1941,7 @@ function mapinit(srs,maxExtent) {
                 if ($('#assign_district option').length < MAX_DISTRICTS + 1) {
 
                     $('#assign_district')
-                        .append('<option value="new">New ' + BODY_MEMBER + '</option>');
+                        .append('<option value="new">New ' + BODY_MEMBER_LONG + '</option>');
                 }
 
                 var all_options = $('#assign_district option').detach();
@@ -2864,7 +2864,7 @@ function mapinit(srs,maxExtent) {
             }
             if (!dtaken) {
                 if (PLAN_TYPE == 'plan') {
-                    var lbl = BODY_MEMBER.charAt(0).toUpperCase()+BODY_MEMBER.substring(1)+' '+d;
+                    var lbl = BODY_MEMBER_LONG.charAt(0).toUpperCase()+BODY_MEMBER_LONG.substring(1)+' '+d;
                     avail.push('<option value="'+d+';'+lbl+'">'+lbl+'</option>');
                 }
                 else {
@@ -2875,14 +2875,14 @@ function mapinit(srs,maxExtent) {
         }
 
         if (PLAN_TYPE == 'plan') {
-            var markup = $('<div id="newdistrictdialog">Please select a ' + BODY_MEMBER.toLowerCase() + ' name:<br/><select id="newdistrictname">' + avail.join('') + '</select></div>')
+            var markup = $('<div id="newdistrictdialog">Please select a ' + BODY_MEMBER_LONG.toLowerCase() + ' name:<br/><select id="newdistrictname">' + avail.join('') + '</select></div>')
 
             // Create a dialog to get the new district's name from the user.
             // On close, destroy the dialog.
             markup.dialog({
                 modal: true,
                 autoOpen: true,
-                title: 'New '+BODY_MEMBER,
+                title: 'New '+BODY_MEMBER_LONG,
                 width: 330,
                 buttons: { 
                     'OK': function() { 

@@ -1182,7 +1182,8 @@ ERROR:
         for body in bodies:
             attributes = {}
             attributes['name'] = body.get('name')[:256]
-            attributes['member'] = body.get('member')[:32]
+            attributes['short_label'] = body.get('short_label')[:10]
+            attributes['long_label'] = body.get('long_label')[:256]
             attributes['max_districts'] = body.get('maxdistricts')
             attributes['is_community'] = body.get('is_community')=='true'
             

@@ -6,10 +6,18 @@
         <!-- A Legislative body has an ID (for referencing in GeoLevel
             definitions later), a name, and a label for plan items 
             ("District" for Congressional, etc) -->
-        <LegislativeBody id="congress" name="Congressional" member="District %s" maxdistricts="11" sort_key="1"/>
-        <LegislativeBody id="house" name="State House" member="District %s" maxdistricts="100" sort_key="2"/>
-        <LegislativeBody id="senate" name="State Senate" member="District %s" maxdistricts="40" sort_key="3"/>
-        <LegislativeBody id="community" name="Community Map" member="Community %s" maxdistricts="999" is_community="true" sort_key="4"/>
+        <LegislativeBody id="congress" name="Congressional" short_label="%s" 
+            long_label="District %s" maxdistricts="11" sort_key="1"/>
+        <LegislativeBody id="house" name="State House" short_label="%s" 
+            long_label="District %s" maxdistricts="100" sort_key="2"/>
+        <LegislativeBody id="senate" name="State Senate" short_label="%s"
+            long_label="District %s" maxdistricts="40" sort_key="3"/>
+        <LegislativeBody id="community" name="Community Map" short_label="%s"
+            long_label="Community %s" maxdistricts="999" is_community="true" sort_key="4"/>
+        <LegislativeBody id="dc_area_council" name="DC Metro Area" short_label="%s"
+            long_label="District %s" maxdistricts="5" sort_key="5"/>
+        <LegislativeBody id="dc_community" name="Community Map" short_label="%s"
+            long_label="Community %s" maxdistricts="999" is_community="true" sort_key="6"/>
     </LegislativeBodies>
 
     <!-- Define Regions as aggregations of smaller geographic units. -->

@@ -374,13 +374,17 @@ def commonplan(request, planid):
         editable = can_edit(request.user, plan)
         default_demo = plan.legislative_body.get_default_subject()
         max_dists = plan.legislative_body.max_districts
-        body_member = plan.legislative_body.member
+        body_member_short_label = plan.legislative_body.short_label
+        body_member_long_label = plan.legislative_body.long_label
         body_name = plan.legislative_body.name
         reporting_template = 'bard_%s.html' % body_name.lower() if not plan.is_community() else None
 
-        index = body_member.find('%')
+        index = body_member_short_label.find('%')
         if index >= 0:
-            body_member = body_member[0:index]
+            body_member_short_label = body_member_short_label[0:index]
+        index = body_member_long_label.find('%')
+        if index >= 0:
+            body_member_long_label = body_member_long_label[0:index]
         if not editable and not can_view(request.user, plan):
             plan = {}
         tags = Tag.objects.filter(name__startswith='type=').order_by('id').values_list('name',flat=True)
@@ -409,7 +413,8 @@ def commonplan(request, planid):
         editable = False
         default_demo = None
         max_dists = 0
-        body_member = 'District '
+        body_member_short_label = ''
+        body_member_long_label = 'District '
         body_name = None
         reporting_template = None
         tags = []
@@ -450,7 +455,8 @@ def commonplan(request, planid):
     else:
         mapserver_protocol = ''
 
-    member = body_member.strip().lower()
+    short_label = body_member_short_label.strip().lower()
+    long_label = body_member_long_label.strip().lower()
 
     bodies = LegislativeBody.objects.all().order_by('sort_key')
     l_bodies = [b for b in bodies if b in [sd.legislative_body for sd in ScoreDisplay.objects.filter(is_page=True)]]
@@ -476,8 +482,9 @@ def commonplan(request, planid):
         'max_dists': max_dists + 1,
         'ga_account': settings.GA_ACCOUNT,
         'ga_domain': settings.GA_DOMAIN,
-        'body_member': member, 
-        'body_members': inflect.engine().plural(member),
+        'body_member_short_label': short_label,
+        'body_member_long_label': long_label,
+        'body_members': inflect.engine().plural(long_label),
         'reporting_template': reporting_template,
         'study_area_extent': study_area_extent,
         'has_leaderboard' : len(ScoreDisplay.objects.filter(is_page=True)) > 0,
@@ -969,12 +976,19 @@ def newdistrict(request, planid):
         else:
             district_id = None
 
-        if 'district_name' in request.REQUEST:
-            district_name = request.REQUEST['district_name']
+        if 'district_short' in request.REQUEST:
+            district_short = request.REQUEST['district_short']
         elif not district_id is None:
-            district_name = plan.legislative_body.member % district_id
+            district_short = plan.legislative_body.short_label % district_id
         else:
-            district_name = None
+            district_short = None
+
+        if 'district_long' in request.REQUEST:
+            district_long = request.REQUEST['district_long']
+        elif not district_id is None:
+            district_long = plan.legislative_body.long_label % district_id
+        else:
+            district_long = None
 
         if 'version' in request.REQUEST:
             version = request.REQUEST['version']
@@ -985,10 +999,10 @@ def newdistrict(request, planid):
             try: 
                 # add the geounits selected to this district -- this will
                 # create a new district w/1 version higher
-                fixed = plan.add_geounits((district_id, district_name,), geounit_ids, geolevel, version)
+                fixed = plan.add_geounits((district_id, district_short, district_long,), geounit_ids, geolevel, version)
 
                 # if there are comments or types, add them to the district
-                district = plan.district_set.filter(district_id=district_id,name=district_name)[0]
+                district = plan.district_set.filter(district_id=district_id,short_label=district_short,long_label=district_long)[0]
                 ct = ContentType.objects.get(app_label='redistricting',model='district')
                 if 'comment' in request.POST and request.POST['comment'] != '':
                     comment = Comment(object_pk = district.id, content_type=ct, site_id=1, user_name=request.user.username, user_email=request.user.email, comment=request.POST['comment'])
@@ -2267,8 +2281,9 @@ def district_info(request, planid, district_id):
         district = filter(lambda d:d.district_id==district_id, district)
 
         if request.method == 'POST':
-            district = District.objects.get(id=request.POST['object_pk'])
-            district.name = request.POST['district_name']
+            district = plan.district_set.get(id=request.POST['object_pk'])
+            district.short_label = request.POST['district_short']
+            district.long_label = request.POST['district_long']
 
 
             if district.version < version:

@@ -558,7 +558,8 @@
                     </xs:all>
                     <xs:attribute name="id" type="xs:ID" use="required" />
                     <xs:attribute name="name" type="xs:string" use="required" />
-                    <xs:attribute name="member" type="xs:string" use="required" />
+                    <xs:attribute name="short_label" type="xs:string" use="required" />
+                    <xs:attribute name="long_label" type="xs:string" use="required" />
                     <xs:attribute name="maxdistricts" type="xs:nonNegativeInteger" use="required" />
                     <xs:attribute name="is_community" type="xs:boolean" use="optional" />
                     <xs:attribute name="sort_key" type="xs:nonNegativeInteger" use="required" />

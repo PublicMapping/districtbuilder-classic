@@ -117,8 +117,11 @@ class LegislativeBody(models.Model):
     # The name of this legislative body
     name = models.CharField(max_length=256)
 
-    # The name of the units in a plan -- "Districts", for example.
-    member = models.CharField(max_length=32)
+    # The short name of the units in a plan -- "%s", for example.
+    short_label = models.CharField(max_length=10)
+
+    # The long name of the units in a plan -- "District %s", for example.
+    long_label = models.CharField(max_length=256)
 
     # The maximum number of districts in this body
     max_districts = models.PositiveIntegerField()
@@ -768,10 +771,12 @@ class Plan(models.Model):
         # fix the district id so that it is definitely an integer
         if type(districtinfo) == tuple:
             districtid = int(districtinfo[0])
-            districtname = districtinfo[1]
+            districtshort = districtinfo[1]
+            districtlong = districtinfo[2]
         else:
             districtid = int(districtinfo)
-            districtname = self.legislative_body.member % districtid
+            districtshort = self.legislative_body.short_label % districtid
+            districtlong = self.legislative_body.long_label % districtid
 
         # fix the version so that it is definitely an integer
         version = int(version)
@@ -865,7 +870,7 @@ class Plan(models.Model):
 
         new_target = False
         if target is None:
-            target = District(name=districtname, plan=self, district_id=districtid, version=self.version, geom=MultiPolygon([]))
+            target = District(short_label=districtshort, long_label=districtlong, plan=self, district_id=districtid, version=self.version, geom=MultiPolygon([]))
             target.save()
             new_target = True
                 
@@ -1035,11 +1040,13 @@ class Plan(models.Model):
         edited_districts = list()
 
         # Save the new district to the plan to start
-        newname = '' if slot == None else self.legislative_body.member % slot
-        pasted = District(name=newname, plan=self, district_id = slot, geom=district.geom, simple = district.simple, version = new_version)
+        newshort = '' if slot == None else self.legislative_body.short_label % slot
+        newlong = '' if slot == None else self.legislative_body.long_label % slot
+        pasted = District(short_label=newshort, long_label=newlong, plan=self, district_id = slot, geom=district.geom, simple = district.simple, version = new_version)
         pasted.save();
         if newname  == '':
-            pasted.name = self.legislative_body.member % pasted.district_id
+            pasted.short_label = self.legislative_body.short_label % pasted.district_id
+            pasted.long_label = self.legislative_body.long_label % pasted.district_id
             pasted.save();
         pasted.clone_relations_from(district)
         
@@ -2071,15 +2078,18 @@ class District(models.Model):
         """
 
         # Order districts by name, by default.
-        ordering = ['name']
+        ordering = ['short_name']
 
     # The district_id of the district, this is not the primary key ID,
     # but rather, an ID of the district that remains constant over all
     # versions of the district.
     district_id = models.PositiveIntegerField(default=None)
 
-    # The name of the district
-    name = models.CharField(max_length=200)
+    # The short name of the district
+    short_label = models.CharField(max_length=10)
+
+    # The long name of the district
+    long_label = models.CharField(max_length=256)
 
     # The parent Plan that contains this District
     plan = models.ForeignKey(Plan)
@@ -2110,7 +2120,7 @@ class District(models.Model):
             The Districts, sorted in numerical order.
         """
         name = self.name;
-        prefix = self.plan.legislative_body.member
+        prefix = self.plan.legislative_body.short_label
         index = prefix.find('%')
         if index >= 0:
             prefix = prefix[0:index]
