@@ -1154,7 +1154,7 @@ class Plan(models.Model):
 
         # Don't return Unassigned district unless it was explicitly requested
         if exclude_unassigned:
-            qset = qset.filter( ~Q(name='Unassigned') )
+            qset = qset.filter( ~Q(long_label='Unassigned') )
 
         features = []
 
@@ -2122,7 +2122,7 @@ class District(models.Model):
         Returns:
             The Districts, sorted in numerical order.
         """
-        name = self.name;
+        name = self.long_label;
         prefix = self.plan.legislative_body.short_label
         index = prefix.find('%')
         if index >= 0:
@@ -2172,7 +2172,7 @@ class District(models.Model):
         Represent the District as a unicode string. This is the District's 
         name.
         """
-        return self.name
+        return self.short_label
 
     def delta_stats(self,geounits,combine):
         """
@@ -2360,19 +2360,19 @@ class District(models.Model):
                             times_attempted = attempts_allowed-attempts_left
                             if times_attempted > 1:
                                 sys.stderr.write('Took %d attempts to simplify %s in plan "%s"; '
-                                    'Succeeded with tolerance %s\n' % (times_attempted, self.name, self.plan.name, tolerance))
+                                    'Succeeded with tolerance %s\n' % (times_attempted, self.long_label, self.plan.name, tolerance))
                         else:
                             raise Exception ('Polygon simplifies but isn\'t valid')
                     except Exception as error:
                         sys.stderr.write('WARNING: Problem when trying to simplify %s at tolerance %s: %s\n' %
-                            (self.name, tolerance, error))
+                            (self.long_label, tolerance, error))
                         tolerance = tolerance * attempt_step
                     attempts_left -= 1
 
                 if not simplified:
                     simples.append(self.geom)
                     sys.stderr.write('Ran out of attempts to simplify %s in plan "%s" for geolevel %s; using full geometry\n' %
-                        (self.name, self.plan.name, level.name))
+                        (self.long_label, self.plan.name, level.name))
             else:
                 simples.append( self.geom )
 

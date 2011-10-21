@@ -444,7 +444,7 @@ def commonplan(request, planid):
 
     unassigned_id = 0
     if type(plan) != types.DictType:
-        unassigned_id = plan.district_set.filter(name='Unassigned').values_list('district_id',flat=True)[0]
+        unassigned_id = plan.district_set.filter(long_label='Unassigned').values_list('district_id',flat=True)[0]
 
     # Try to get the mapserver protocol from the settings module.
     # Set it to an empty string if the setting isn't defined so the 
