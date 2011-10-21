@@ -101,10 +101,31 @@ class Subject(models.Model):
 
     def __unicode__(self):
         """
-        Represent the Subject as a unicode string. This is the Geounit's 
+        Represent the Subject as a unicode string. This is the Subject's 
         display name.
         """
         return self.display
+
+
+class Region(models.Model):
+    """
+    A region is a compartmentalized area of geography, legislative bodies,
+    and validation criteria. Each region shares the base geography, but may
+    be active over a subsection. In addition, legislative bodies are contained
+    within one region at a time.
+    """
+
+    # The name of this region
+    name = models.CharField(max_length=256)
+
+    # A description of this region
+    description = models.CharField(max_length=500, blank=True)
+
+    def __unicode__(self):
+        """
+        Represent the Region as a unicode string. This is the Region's name.
+        """
+        return self.name
 
 
 class LegislativeBody(models.Model):
@@ -159,6 +180,9 @@ class LegislativeBody(models.Model):
 
     # Where in the list of legislative bodies should this item appear?
     sort_key = models.PositiveIntegerField(default=0)
+
+    # The region that this LegislativeBody applies to.
+    region = models.ForeignKey(Region)
 
     def get_default_subject(self):
         """
