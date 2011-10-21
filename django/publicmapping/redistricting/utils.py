@@ -445,7 +445,7 @@ class DistrictIndexFile():
                             types = '|'.join([t.name[5:] for t in types])
                             comments = Comment.objects.filter(object_pk__in=[str(district.id)],content_type=ct)
                             comments = comments[0].comment if len(comments) > 0 else ''
-                            dm[district.district_id] = (district.name, types, comments)
+                            dm[district.district_id] = (district.long_label, types, comments)
                     mapping = [(pid, did, members, dm[did][0], dm[did][1], dm[did][2]) for (gid, pid, did, members) in units]
                 
                 difile = csv.writer(f)

@@ -1932,9 +1932,9 @@ function mapinit(srs,maxExtent) {
                     var district = data.districts[d];
                     max_version = Math.max(district.version,max_version);
 
-                    if (district.name != 'Unassigned') {
+                    if (district.long_label != 'Unassigned') {
                         $('#assign_district')
-                            .append('<option value="' + district.id + '">' + district.name + '</option>');
+                            .append('<option value="' + district.id + '">' + district.long_label + '</option>');
                     }
                 }
 

@@ -1496,7 +1496,8 @@ def getdistricts(request, planid):
         for district in districts:
             status['districts'].append({
                 'id':district.district_id,
-                'name':district.name,
+                'short_label':district.short_label,
+                'long_label':district.long_label,
                 'version':district.version
             })
         status['canUndo'] = can_undo
@@ -2024,7 +2025,8 @@ def get_shared_districts(request, planid):
             districts_list.append({
                 'pk': district.id, 
                 'fields': { 
-                    'name': district.name, 
+                    'short_label': district.short_label,
+                    'long_label': district.long_label,
                     'district_id': district.district_id,
                 }
             })

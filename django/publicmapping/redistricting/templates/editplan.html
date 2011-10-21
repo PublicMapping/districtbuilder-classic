@@ -69,7 +69,7 @@
               <select id="assign_district" class="titletip" title="Assign {{ body_members }} currently selected on map by choosing a {{ body_member }} name from drop down list">
               <option value="-1">-- Select One --</option>
               {% for d in districts %}
-                  <option value="{{ d.district_id }}">{{ d.name }}</option>
+                  <option value="{{ d.district_id }}">{{ d.long_label }}</option>
               {% endfor %}
               {% ifnotequal max_dists districts|length %}
                   <option value="new">New {{ body_member|capfirst }}</option>

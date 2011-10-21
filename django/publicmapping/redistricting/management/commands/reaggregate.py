@@ -71,7 +71,7 @@ class Command(BaseCommand):
             else:
                 all_districts = list(districts,)
                 if verbosity > 1:
-                    self.stdout.write('About to update %s in plan %s\n' % (district.name, p.name))
+                    self.stdout.write('About to update %s in plan %s\n' % (district.long_label, p.name))
             for d in all_districts:
                 success = self.reaggregate_district(d, body=p.legislative_body)
                 if success == True:
@@ -102,4 +102,4 @@ class Command(BaseCommand):
             return True
         except Exception as ex:
             if verbosity > 0:
-                self.stdout.write('Unable to reaggreagate %s because \n%s' % (district.name, ex))
+                self.stdout.write('Unable to reaggreagate %s because \n%s' % (district.long_label, ex))

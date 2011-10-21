@@ -53,7 +53,7 @@ class Population(CalculatorBase):
 
         self.result = {
             'raw': [
-                { 'label': 'DistrictID', 'type': 'string', 'value': district.name },
+                { 'label': 'DistrictID', 'type': 'string', 'value': district.long_label },
                 { 'label': 'Population', 'type': 'integer', 'value': pop_value, 'avg_key': avg_key }
             ]
         }
@@ -96,7 +96,7 @@ class Compactness(CalculatorBase):
         
         self.result = {
             'raw': [
-                { 'label': 'DistrictID', 'type': 'string', 'value': district.name },
+                { 'label': 'DistrictID', 'type': 'string', 'value': district.long_label },
                 { 'label': 'Compactness', 'type': 'percent', 'value': val, 'avg_key': comptype }
             ]
         }
@@ -120,7 +120,7 @@ class Majority(CalculatorBase):
 
         self.result = {
             'raw': [
-                { 'label': 'DistrictID', 'type': 'string', 'value': district.name },
+                { 'label': 'DistrictID', 'type': 'string', 'value': district.long_label },
                 { 'label': 'Population', 'type': 'integer', 'value': pop_value, 'avg_key': pop_avg_key },
                 { 'label': 'Proportion', 'type': 'percent', 'value': proportion, 'avg_key': prop_avg_key },
                 { 'label': '>= 50%', 'type': 'boolean', 'value': proportion >= .5 }

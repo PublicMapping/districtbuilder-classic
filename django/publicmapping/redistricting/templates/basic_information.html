@@ -51,7 +51,7 @@
             <tr class="{% cycle 'odd' 'even' %} inforow_{{ row.district.district_id }}"
                   onclick="toggleDistrict({{ row.district.district_id }})"
                   ondblclick="zoomToDistrict({{ row.district.district_id }})">
-                <td class="district_name">{{ row.district.name|district_number }}</td>
+                <td class="district_name">{{ row.district.short_label }}</td>
                 {% for score in row.scores %}
                 <td class="cellcompact score{{ forloop.counter }}">{{ score.score|safe }}</td>
                 {% endfor %}

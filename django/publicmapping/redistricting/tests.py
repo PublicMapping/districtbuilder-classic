@@ -721,7 +721,7 @@ class PlanTestCase(BaseTestCase):
         plan.legislative_body.save()
 
         # add label
-        district.name = 'My Test Community'
+        district.long_label = 'My Test Community'
         district.save()
 
         # add comment
@@ -2771,7 +2771,7 @@ class ScoreRenderTestCase(BaseTestCase):
 
             tplfile = settings.TEMPLATE_DIRS[0] + '/' + panel.template
             template = open(tplfile,'w')
-            template.write('{% for dscore in districtscores %}{{dscore.district.name }}:{% for score in dscore.scores %}{{ score.score|safe }}{% endfor %}{% endfor %}')
+            template.write('{% for dscore in districtscores %}{{dscore.district.long_label }}:{% for score in dscore.scores %}{{ score.score|safe }}{% endfor %}{% endfor %}')
             template.close()
 
             markup = panel.render(districts)
@@ -2842,7 +2842,7 @@ class ScoreRenderTestCase(BaseTestCase):
         panel = display.scorepanel_set.all()[0]
         tplfile = settings.TEMPLATE_DIRS[0] + '/' + panel.template
         template = open(tplfile,'w')
-        template.write('{% for dscore in districtscores %}{{dscore.district.name }}:{% for score in dscore.scores %}{{ score.score|safe }}{% endfor %}{% endfor %}')
+        template.write('{% for dscore in districtscores %}{{dscore.district.long_label }}:{% for score in dscore.scores %}{{ score.score|safe }}{% endfor %}{% endfor %}')
         template.close()
 
         markup = display.render(self.plan)
@@ -3770,7 +3770,7 @@ class IterativeSimplificationTest(BaseTestCase):
         is the most complex so we check that one for simplification
         """
         d = District.objects.get(pk=4)
-        print d.name
+        #print d.long_label
 
         d.simplify(attempts_allowed=0)
         self.assertTrue(d.geom.equals(d.simple[1]), "District was simplified when it shouldn't have been")

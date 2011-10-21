@@ -1168,17 +1168,17 @@ class Plan(models.Model):
             contiguity_calculator.compute(district=district)
 
             # If this district contains multiple members, change the label
-            label = district.name
+            label = district.long_label
             if (self.legislative_body.multi_members_allowed and (district.num_members > 1)):
                 format = self.legislative_body.multi_district_label_format
-                label = format.format(name=district.name, num_members=district.num_members)
+                label = format.format(name=district.long_label, num_members=district.num_members)
 
             
             features.append({ 
                 'id': district.id,
                 'properties': {
                     'district_id': district.district_id,
-                    'name': district.name,
+                    'name': district.long_label,
                     'label': label,
                     'is_locked': district.is_locked,
                     'version': district.version,
@@ -1630,8 +1630,8 @@ class Plan(models.Model):
         version = version if not version is None else self.version
         districts = self.get_districts_at_version(version, include_geom=False)
         districts = sorted(districts, key=attrgetter('district_id'))
-        districts = filter(lambda d:d.name!='Unassigned', districts)
-        districts = map(lambda d:(d.name,d.num_members,), districts)
+        districts = filter(lambda d:d.long_label!='Unassigned', districts)
+        districts = map(lambda d:(d.long_label,d.num_members,), districts)
 
         return districts
 
@@ -1932,7 +1932,7 @@ CROSS JOIN (
         other_names = None
 
         id = int(target[target.find('.')+1:])
-        my_names = dict((d.district_id, d.name) for d in self.get_districts_at_version(version))
+        my_names = dict((d.district_id, d.long_label) for d in self.get_districts_at_version(version))
 
         if target.startswith('geolevel'):
             results['other_name'] = Geolevel.objects.get(pk=id).name
@@ -1949,7 +1949,7 @@ CROSS JOIN (
             results['splits'] = self.find_plan_splits(other_plan, version=version, inverse=inverse)
             if extended is True:
                 results['interiors'] = self.find_plan_components(other_plan, version=version, inverse=inverse)
-            other_names = dict((d.district_id, d.name) for d in other_plan.get_districts_at_version(other_plan.version))
+            other_names = dict((d.district_id, d.long_label) for d in other_plan.get_districts_at_version(other_plan.version))
 
         community_types = self.get_community_types(version=version)
         my_names = Plan.tag_plan_names(my_names, community_types)
@@ -2006,7 +2006,7 @@ CROSS JOIN (
             # There's not community map as the "bottom" layer
             return
         types = community.get_community_types(version=version)
-        my_names = dict((d.district_id, d.name) for d in community.get_districts_at_version(version))
+        my_names = dict((d.district_id, d.long_label) for d in community.get_districts_at_version(version))
         district_dict = {}
         for i in intersections:
             community_id = i[1]
@@ -2532,7 +2532,7 @@ def create_unassigned_district(sender, **kwargs):
     if created and plan.create_unassigned:
         plan.create_unassigned = False
 
-        unassigned = District(name="Unassigned", version = 0, plan = plan, district_id=0)
+        unassigned = District(short_label=u"\u0398",long_label="Unassigned", version = 0, plan = plan, district_id=0)
 
         biggest_geolevel = plan.get_biggest_geolevel()
         all_geom = Geounit.objects.filter(geolevel=biggest_geolevel).collect()
@@ -3254,9 +3254,9 @@ class ComputedDistrictScore(models.Model):
         name = ''
         if not self.district is None:
             if not self.district.plan is None:
-                name = '%s / %s' % (self.district.name, self.district.plan.name,)
+                name = '%s / %s' % (self.district.long_label, self.district.plan.name,)
             else:
-                name = self.district.name
+                name = self.district.long_label
 
         if not self.function is None:
             name = '%s / %s' % (self.function.name, name)
