@@ -1,4 +1,8 @@
-﻿-- create table for many-to-many mapping of geounits to geolevels
+-- wrap this in a transaction, so to not lose the relationships
+-- if one of the queries fails
+BEGIN;
+
+-- create table for many-to-many mapping of geounits to geolevels
 CREATE TABLE publicmapping.redistricting_geounit_geolevel
 (
   id serial NOT NULL,
@@ -25,3 +29,5 @@ INSERT INTO publicmapping.redistricting_geounit_geolevel(geounit_id, geolevel_id
 -- remove geolevel column from geounit table
 -- this also removes all related views (which need to be regenerated)
 ALTER TABLE publicmapping.redistricting_geounit DROP COLUMN geolevel_id CASCADE;
+
+COMMIT;
