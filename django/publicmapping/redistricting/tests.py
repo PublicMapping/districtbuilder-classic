@@ -63,8 +63,8 @@ class BaseTestCase(TestCase):
         self.plan2 = Plan.objects.get(name='testPlan2')
 
         # Get the test Districts
-        self.district1 = District.objects.get(name='District 1', plan=self.plan)
-        self.district2 = District.objects.get(name='District 2', plan=self.plan)
+        self.district1 = District.objects.get(long_label='District 1', plan=self.plan)
+        self.district2 = District.objects.get(long_label='District 2', plan=self.plan)
 
         # Get a test User
         self.username = 'test_user'
@@ -431,7 +431,7 @@ class PlanTestCase(BaseTestCase):
         # Note: district_id is set to 0 here, because otherwise, the auto-increment code does not get called.
         # It may be best to revisit how district_id is used throughout the app, and to not allow for it to be set,
         # since it should be auto-generated.
-        d3 = District(name='District 3', version=0)
+        d3 = District(long_label='District 3', version=0)
         d3.plan = self.plan
 
         p1 = Polygon( ((1, 1), (1, 1), (1, 1), (1, 1)) )
@@ -441,7 +441,7 @@ class PlanTestCase(BaseTestCase):
         d3.save()
         latest = d3.district_id
 
-        d4 = District(name = 'District 4', version=0)
+        d4 = District(long_label = 'District 4', version=0)
         d4.plan = self.plan
 
         p2 = Polygon( ((0, 0), (0, 1), (1, 1), (0, 0)) )
@@ -470,7 +470,7 @@ class PlanTestCase(BaseTestCase):
         """
         Test the logic for an unassigned district.
         """
-        unassigned = District.objects.filter(name='Unassigned', plan = self.plan)
+        unassigned = District.objects.filter(long_label='Unassigned', plan = self.plan)
         self.assertEqual(1, unassigned.count(), 'No Unassigned district on plan. (e:1, a:%d)' % unassigned.count())
 
     def test_copyplan(self):
@@ -876,7 +876,7 @@ class PlanTestCase(BaseTestCase):
         district2 = District.objects.get(pk=result[0])
         # district2 = max(District.objects.filter(plan=target,district_id=self.district2.district_id),key=lambda d: d.version)
         # Create in self.plan the district we want to see in Paste Plan
-        unassigned = max(District.objects.filter(plan=self.plan,name="Unassigned"),key=lambda d: d.version)
+        unassigned = max(District.objects.filter(plan=self.plan,long_label="Unassigned"),key=lambda d: d.version)
         self.plan.add_geounits(unassigned.district_id, dist1ids, geolevelid, self.plan.version)
         self.district2 = max(District.objects.filter(plan=self.plan,district_id=self.district2.district_id),key=lambda d: d.version)
         # Check stats and geometry
@@ -896,7 +896,7 @@ class PlanTestCase(BaseTestCase):
         dist1ids = map(lambda x: str(x.id), dist1ids)
         self.plan.add_geounits(self.district1.district_id, dist1ids, geolevelid, self.plan.version)
 
-        self.district3 = District(plan=self.plan, name="TestMember 3", district_id = 3)
+        self.district3 = District(plan=self.plan, long_label="TestMember 3", district_id = 3)
         self.district3.save()
         dist3ids = geounits[20:23] + geounits[29:32] + geounits[38:41]
         dist3ids = map(lambda x: str(x.id), dist3ids)
@@ -960,7 +960,7 @@ class PlanTestCase(BaseTestCase):
         self.assertEqual(0, self.plan.get_available_districts(), 'Wrong number of available districts returned after adding a district. (e:0, a:%d)' % self.plan.get_available_districts())
 
         # Unassign the district
-        unassigned = District.objects.filter(plan=self.plan, name="Unassigned").order_by('-version')[0]
+        unassigned = District.objects.filter(plan=self.plan, long_label="Unassigned").order_by('-version')[0]
         self.plan.add_geounits(unassigned.district_id, dist1ids, geolevelid, self.plan.version)
         self.assertEqual(1, self.plan.get_available_districts(), 'Wrong number of available districts returned after removing a district. (e:1, a:%d)' % self.plan.get_available_districts())
         
@@ -986,7 +986,7 @@ class PlanTestCase(BaseTestCase):
         self.plan.add_geounits(dist3_district_id, dist3ids, geolevelid, self.plan.version)
 
         all_4 = self.plan.get_districts_at_version(self.plan.version,include_geom=True)
-        all_3 = filter(lambda x : x.name != "Unassigned", all_4)
+        all_3 = filter(lambda x : x.long_label != "Unassigned", all_4)
         initial_state = { }
         total = 0
         for district in all_3:
@@ -3053,11 +3053,11 @@ class MultiMemberTestCase(BaseTestCase):
         Test the logic for modifying the number of members in a district
         Also tests magnitudes in export process and calculators
         """
-        district10 = District(name='District 10', version=0)
+        district10 = District(long_label='District 10', version=0)
         district10.plan = self.plan
         district10.save()
         
-        district11 = District(name='District 11', version=0)
+        district11 = District(long_label='District 11', version=0)
         district11.plan = self.plan
         district11.save()
         
@@ -3455,11 +3455,11 @@ class NestingTestCase(BaseTestCase):
         # Create references for plans and districts
         self.plan = Plan.objects.get(name='testPlan')
         self.plan2 = Plan.objects.get(name='testPlan2')
-        self.p1d1 = District.objects.get(name='District 1', plan=self.plan)
-        self.p1d2 = District.objects.get(name='District 2', plan=self.plan)
-        self.p2d1 = District(name='District 1', district_id=1, version=0, plan=self.plan2)
+        self.p1d1 = District.objects.get(long_label='District 1', plan=self.plan)
+        self.p1d2 = District.objects.get(long_label='District 2', plan=self.plan)
+        self.p2d1 = District(long_label='District 1', district_id=1, version=0, plan=self.plan2)
         self.p2d1.save()
-        self.p2d2 = District(name='District 2', district_id=2, version=0, plan=self.plan2)
+        self.p2d2 = District(long_label='District 2', district_id=2, version=0, plan=self.plan2)
         self.p2d2.save()
 
     def tearDown(self):
