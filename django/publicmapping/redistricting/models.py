@@ -496,7 +496,7 @@ class Geounit(models.Model):
                 # converted, or errored out above, in which case we just
                 # have to move on.
                 if not remainder.empty:
-                    q_geolevel = Q(geolevel=level)
+                    geolevel = Geolevel.objects.get(id=level)
 
                     if level == base_geolevel:
                         # Query by center
@@ -505,7 +505,7 @@ class Geounit(models.Model):
                         # Query by geom
                         q_geom = Q(geom__within=remainder)
 
-                    units += list(Geounit.objects.filter(q_geolevel, q_geom))
+                    units += list(geolevel.geounit_set.filter(q_geom))
 
         # Send back the collected Geounits
         return units
@@ -1077,7 +1077,7 @@ class Plan(models.Model):
                     else:
                         pasted.geom = enforce_multi(difference)
                         pasted.simplify()
-                    geounit_ids = map(str, Geounit.objects.filter(geom__bboverlaps=enforce_multi(intersection), geolevel=biggest_geolevel).values_list('id', flat=True))
+                    geounit_ids = map(str, biggest_geolevel.geounit_set.filter(geom__bboverlaps=enforce_multi(intersection)).values_list('id', flat=True))
                     geounits = Geounit.get_mixed_geounits(geounit_ids, self.legislative_body, biggest_geolevel.id, intersection, True)
                     pasted.delta_stats(geounits, False)
                 else:
@@ -1099,7 +1099,8 @@ class Plan(models.Model):
                     edited_districts.pop()
                     edited_districts.append(new_district)
 
-                    geounit_ids = Geounit.objects.filter(geom__bboverlaps=intersection, geolevel=biggest_geolevel).values_list('id', flat=True)
+                    geolevel = Geolevel.objects.get(id=biggest_geolevel)
+                    geounit_ids = geolevel.geounit_set.filter(geom__bboverlaps=intersection).values_list('id', flat=True)
                     geounit_ids = map(str, geounit_ids)
 
                     geounits = Geounit.get_mixed_geounits(geounit_ids, self.legislative_body, biggest_geolevel.id, intersection, True)
@@ -1291,9 +1292,9 @@ class Plan(models.Model):
 
         # Perform two queries against the simplified district, one buffered in,
         # and one buffered out using the same distance as the simplification tolerance
-        geolevel = self.legislative_body.get_base_geolevel()
-        b_out = Geounit.objects.filter(geolevel=geolevel, center__within=simple.buffer(threshold))
-        b_in = Geounit.objects.filter(geolevel=geolevel, center__within=simple.buffer(-1 * threshold))
+        geolevel = Geolevel.objects.get(id=self.legislative_body.get_base_geolevel())
+        b_out = geolevel.geounit_set.filter(center__within=simple.buffer(threshold))
+        b_in = geolevel.geounit_set.filter(center__within=simple.buffer(-1 * threshold))
 
         # Find the geounits that are different between the two queries,
         # and check if they are within the unsimplified district
@@ -1462,7 +1463,7 @@ class Plan(models.Model):
             unassigned = list(set(unassigned) - set(to_add.keys()))
     
             # Check that the percentage of assigned base geounits meets the requirements
-            num_total_units = Geounit.objects.filter(geolevel=geolevel).count()
+            num_total_units = geolevel.geounit_set.count()
             pct_unassigned = 1.0 * num_unassigned / num_total_units
             pct_assigned = 1 - pct_unassigned
             min_pct = settings.FIX_UNASSIGNED_MIN_PERCENT / 100.0
@@ -2535,7 +2536,7 @@ def create_unassigned_district(sender, **kwargs):
         unassigned = District(short_label=u"\u0398",long_label="Unassigned", version = 0, plan = plan, district_id=0)
 
         biggest_geolevel = plan.get_biggest_geolevel()
-        all_geom = Geounit.objects.filter(geolevel=biggest_geolevel).collect()
+        all_geom = biggest_geolevel.geounit_set.collect()
         all_geom = all_geom.buffer(0)
         if all_geom.geom_type == 'MultiPolygon':
             all_geom = all_geom.cascaded_union
@@ -2544,12 +2545,12 @@ def create_unassigned_district(sender, **kwargs):
             taken = plan.district_set.all().unionagg()
             unassigned.geom =  enforce_multi(all_geom.difference(taken))
             unassigned.simplify() # implicit save
-            geounit_ids = map(str, Geounit.objects.filter(geom__bboverlaps=unassigned.geom, geolevel=biggest_geolevel).values_list('id', flat=True))
+            geounit_ids = map(str, biggest_geolevel.geounit_set.filter(geom__bboverlaps=unassigned.geom).values_list('id', flat=True))
             geounits = Geounit.get_mixed_geounits(geounit_ids, plan.legislative_body, biggest_geolevel.id, unassigned.geom, True)
         else:
             unassigned.geom = enforce_multi(all_geom)
             unassigned.simplify() #implicit save
-            geounits = Geounit.objects.filter(geolevel=biggest_geolevel)
+            geounits = biggest_geolevel.geounit_set.all()
 
         unassigned.delta_stats(geounits, True)
 

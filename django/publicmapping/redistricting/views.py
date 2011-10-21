@@ -424,11 +424,15 @@ def commonplan(request, planid):
     snaplayers = []
 
     if len(levels) > 0:
-        study_area_extent = list(Geounit.objects.filter(geolevel=levels[0]).extent(field_name='simple'))
+        study_area_extent = list(levels[0].geounit_set.extent(field_name='simple'))
     else:
         # The geolevels with higher indexes are larger geography
-        biglevel = Geolevel.objects.all().order_by('-id')[0]
-        study_area_extent = Geounit.objects.filter(geolevel=biglevel).extent(field_name='simple')
+        # Cycle through legislative bodies, since they may be in different regions
+        for lb in LegislativeBody.objects.all():
+            biglevel = lb.get_geolevels()[0]
+            if biglevel.geounit_set.count() > 0:
+                study_area_extent = biglevel.geounit_set.extent(field_name='simple')
+                break
 
     for level in levels:
         snaplayers.append( {'geolevel':level.id,'layer':level.name.lower(),'name':level.name.capitalize(),'min_zoom':level.min_zoom} )
@@ -1635,7 +1639,7 @@ def get_unlocked_simple_geometries(request,planid):
             locked_buffered = locked.simplify(100, True).buffer(100) if locked else None
 
             # Filter first by geolevel, then selection
-            filtered = Geounit.objects.filter(geolevel=geolevel).filter(selection)
+            filtered = Geolevel.objects.get(id=geolevel).geounit_set.filter(selection)
             # Assemble the matching features into geojson
             features = []
             for feature in filtered:
@@ -2347,7 +2351,8 @@ def plan_feed(request):
     # MAP_SERVER = ''
     # MAP_SERVER_NS = 'pmp'
     plans = Plan.objects.all().order_by('-edited')[0:10]
-    extent = Geounit.objects.filter(geolevel=plans[0].legislative_body.get_geolevels()[0]).collect().extent
+    geolevel = Geolevel.objects.get(id=plans[0].legislative_body.get_geolevels()[0])
+    extent = geolevel.geounit_set.collect().extent
     if extent[2] - extent[0] > extent[3] - extent[1]:
         # wider maps
         width = 500
@@ -2375,7 +2380,8 @@ def share_feed(request):
     # MAP_SERVER_NS = 'pmp'
     plans = Plan.objects.filter(is_shared=True).order_by('-edited')[0:10]
     if plans.count() < 0:
-        extent = Geounit.objects.filter(geolevel=plans[0].legislative_body.get_geolevels()[0]).collect().extent
+        geolevel = Geolevel.objects.get(id=plans[0].legislative_body.get_geolevels()[0])
+        extent = geolevel.geounit_set.collect().extent
         if extent[2] - extent[0] > extent[3] - extent[1]:
             # wider maps
             width = 500
