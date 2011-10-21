@@ -39,7 +39,7 @@
       {% block toolset_tabs %}
           <ul class="mapping_tabs">
             <li><a href="#toolset_draw">Map Editing</a></li>
-            <li><a href="#toolset_district">{{ body_member|capfirst }} Tools</a></li>
+            <li><a href="#toolset_district">{{ body_member_long_label|capfirst }} Tools</a></li>
           </ul>  
       {% endblock %}
       
@@ -56,27 +56,27 @@
        
         <div class="toolset_group toolset_group_lg">
           <div>
-            <button id="single_drawing_tool" title="Single {{ body_member }} select; +Shift to select multiple {{ body_members}}" class="btntoggle titletip" >Single<br/>Select</button>
+            <button id="single_drawing_tool" title="Single {{ body_member_long_label }} select; +Shift to select multiple {{ body_members}}" class="btntoggle titletip" >Single<br/>Select</button>
             <button id="rectangle_drawing_tool" title="Select by rectangle" class="btntoggle titletip" >Rectangle<br/>Select</button>
             <button id="polygon_drawing_tool" title="Select by drawing a polygon" class="btntoggle titletip">Polygon<br/>Select</button>
           </div>
         </div>  
         <div class="toolset_group toolset_group_lg">
           <div>
-            <button id="anchor_tool" class="titletip" title="Enable anchor mode, then select a {{ body_member }} name to repeatedly assign areas to a {{ body_member }}">Anchor<br/>{{ body_member|capfirst }}</button>
+            <button id="anchor_tool" class="titletip" title="Enable anchor mode, then select a {{ body_member_long_label }} name to repeatedly assign areas to a {{ body_member_long_label }}">Anchor<br/>{{ body_member_long_label|capfirst }}</button>
             <div class="button_group" id="control_assign_district">
-              <label>Assign to {{ body_member|capfirst }}</label><br/>
-              <select id="assign_district" class="titletip" title="Assign {{ body_members }} currently selected on map by choosing a {{ body_member }} name from drop down list">
+              <label>Assign to {{ body_member_long_label|capfirst }}</label><br/>
+              <select id="assign_district" class="titletip" title="Assign {{ body_members }} currently selected on map by choosing a {{ body_member_long_label }} name from drop down list">
               <option value="-1">-- Select One --</option>
               {% for d in districts %}
                   <option value="{{ d.district_id }}">{{ d.long_label }}</option>
               {% endfor %}
               {% ifnotequal max_dists districts|length %}
-                  <option value="new">New {{ body_member|capfirst }}</option>
+                  <option value="new">New {{ body_member_long_label|capfirst }}</option>
               {% endifnotequal %}
             </select>
             </div>
-            <button id="dragdrop_tool" class="titletip" title="Select areas on the map then drag them to into a {{ body_member }} for reassignment">Click and<br/>Drag</button>
+            <button id="dragdrop_tool" class="titletip" title="Select areas on the map then drag them to into a {{ body_member_long_label }} for reassignment">Click and<br/>Drag</button>
           </div>
         </div>
         <div class="toolset_group toolset_group_lg last">  
@@ -106,10 +106,10 @@
           <button class=" identify_map_tool btntoggle titletip" title="Click on a geounit to see its demographic info.">Info</button>
         </div>
         <div class="toolset_group toolset_group_lg">
-            <button id="lock_district_map_tool" title="Click on a {{ body_member }} to lock or unlock it." class="btntoggle titletip">Lock<br/>{{ body_member|capfirst }}</button> 
-            <button id="district_id_map_tool" title="Click on a {{ body_member }} to see its ID." class="btntoggle titletip">{{ body_member|capfirst }}<br/>Info</button> 
-            <button id="district_select_tool" title="Unassign all the units in a {{ body_member }}" class="btntoggle titletip">Unassign<br/>{{ body_member|capfirst }}</button>
-            <button id="copy_paste_tool" title="Copy a {{ body_member }} from another {{ plan_text }}" class="titletip">Copy and</br>Paste</button>
+            <button id="lock_district_map_tool" title="Click on a {{ body_member_long_label }} to lock or unlock it." class="btntoggle titletip">Lock<br/>{{ body_member_long_label|capfirst }}</button> 
+            <button id="district_id_map_tool" title="Click on a {{ body_member_long_label }} to see its ID." class="btntoggle titletip">{{ body_member_long_label|capfirst }}<br/>Info</button> 
+            <button id="district_select_tool" title="Unassign all the units in a {{ body_member_long_label }}" class="btntoggle titletip">Unassign<br/>{{ body_member_long_label|capfirst }}</button>
+            <button id="copy_paste_tool" title="Copy a {{ body_member_long_label }} from another {{ plan_text }}" class="titletip">Copy and</br>Paste</button>
         </div>
 
         <div class="toolset_group toolset_group_lg">
@@ -198,20 +198,20 @@
             </div>
             <div id="shared_districts_column">
                 <input type="hidden" id="available_districts">
-                <h2>2. Select {{ body_member|capfirst }} to copy</h2>
+                <h2>2. Select {{ body_member_long_label|capfirst }} to copy</h2>
                 <table id="shared_districts_table"></table>
                 <div id="shared_districts_pager"></div>
             </div>
             <div id="shared_district_maps">
                
                <div id="shared_district_map_div"></div>
-               <p><strong>Click on a {{ body_member }}'s name to see a map</strong></p>
+               <p><strong>Click on a {{ body_member_long_label }}'s name to see a map</strong></p>
             </div>
         </div>
         <div id="footer">
             <div id="message_box"></div>
             <div id="step_3">
-                <h2>3. Paste selected {{ body_member }} into working {{ plan_text }}</h2>
+                <h2>3. Paste selected {{ body_member_long_label }} into working {{ plan_text }}</h2>
                 <button id="paste_button">Paste</button>
             </div>
         </div>
