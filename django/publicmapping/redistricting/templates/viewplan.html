@@ -401,7 +401,7 @@
                   <button class="identify_map_tool btntoggle titletip" title="Click on a geounit to see its demographic info." >Info</button>
               </div>
             <div class="toolset_group toolset_group_lg">
-                  <button id="district_id_map_tool" title="Click on a district to see its ID." class="btntoggle titletip">{{ body_member|capfirst }}<br/>Info</button>
+                  <button id="district_id_map_tool" title="Click on a district to see its ID." class="btntoggle titletip">{{ body_member_long_label|capfirst }}<br/>Info</button>
               </div>
               <div class="toolset_group toolset_group_lg">
                 <button id="show_splits_button">Show<br/>Splits</button>
@@ -587,7 +587,7 @@
             <table id="district_legend" {% if plan.is_community %}style="display: none;"{% endif %}>
                 <thead>
                     <tr>
-                        <th colspan="2">{{ body_member|capfirst }}</th>
+                        <th colspan="2">{{ body_member_long_label|capfirst }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -747,7 +747,7 @@
               {% endblock %}
               <div class="blockfile">
                   <h3>Plan File Export</h3>
-                  <p>The {{ body_member|lower }} index file is a comma-separated-value file (csv).
+                  <p>The {{ body_member_long_label|lower }} index file is a comma-separated-value file (csv).
 				  Each line lists the unique id of the building blocks of each {{ plan_text }} 
 				  (such as ward, census block, etc.) and the district to which it belongs. This 
 				  file can be imported to your account or someone else's account or used in analysis
