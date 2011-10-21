@@ -124,6 +124,7 @@ CELERYBEAT_SCHEDULE = {
     },
 }
 
+import django
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -133,7 +134,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.gis',
     'django.contrib.comments',
-    'staticfiles',
+    'django.contrib.staticfiles' if django.VERSION[1] > 2 else 'staticfiles',
     'djcelery',
     'djkombu',
     'redistricting',
