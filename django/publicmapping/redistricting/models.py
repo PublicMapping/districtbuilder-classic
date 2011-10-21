@@ -2081,7 +2081,7 @@ class District(models.Model):
         """
 
         # Order districts by name, by default.
-        ordering = ['short_name']
+        ordering = ['short_label']
 
     # The district_id of the district, this is not the primary key ID,
     # but rather, an ID of the district that remains constant over all
