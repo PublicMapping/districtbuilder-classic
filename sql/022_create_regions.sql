@@ -1,9 +1,10 @@
 CREATE TABLE "redistricting_region" (
     "id" serial NOT NULL PRIMARY KEY,
     "name" varchar(256) NOT NULL,
-    "description" varchar(500) NOT NULL
+    "description" varchar(500) NOT NULL,
+    "sort_key" integer CHECK ("sort_key" >= 0) NOT NULL
 );
-INSERT INTO "redistricting_region" ("name", "description") VALUES ('Default', 'The region serviced by DistrictBuilder.');
+INSERT INTO "redistricting_region" ("name", "description", "sort_key") VALUES ('Default', 'The region serviced by DistrictBuilder.', 1);
 
 ALTER TABLE "redistricting_legislativebody" ADD COLUMN "region_id" integer;
 UPDATE "redistricting_legislativebody" SET "region_id" = 1;

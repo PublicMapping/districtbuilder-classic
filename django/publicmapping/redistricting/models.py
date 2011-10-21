@@ -121,6 +121,9 @@ class Region(models.Model):
     # A description of this region
     description = models.CharField(max_length=500, blank=True)
 
+    # The sorting order for this region relative to other regions
+    sort_key = models.PositiveIntegerField(default=0)
+
     def __unicode__(self):
         """
         Represent the Region as a unicode string. This is the Region's name.
