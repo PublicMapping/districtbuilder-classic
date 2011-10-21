@@ -462,11 +462,13 @@ def commonplan(request, planid):
     short_label = body_member_short_label.strip().lower()
     long_label = body_member_long_label.strip().lower()
 
-    bodies = LegislativeBody.objects.all().order_by('sort_key')
+    has_regions = Region.objects.all().count() > 1
+    bodies = LegislativeBody.objects.all().order_by('region__sort_key','sort_key')
     l_bodies = [b for b in bodies if b in [sd.legislative_body for sd in ScoreDisplay.objects.filter(is_page=True)]]
 
     return {
         'bodies': bodies,
+        'has_regions': has_regions,
         'leaderboard_bodies': l_bodies,
         'plan': plan,
         'districts': districts,

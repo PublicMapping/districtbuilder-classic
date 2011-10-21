@@ -239,7 +239,7 @@
             </span>
             <select id="leg_selector" class="leg_selector">
                 {% for body in bodies %}
-                    <option value="{{ body.id }}">{{ body.name }}</option>
+                    <option value="{{ body.id }}">{% if has_regions %}{{ body.region.name }} - {{ body.name }}{% else %}{{ body.name }}{% endif %}</option>
                 {% endfor %}
             </select>
         </div>
