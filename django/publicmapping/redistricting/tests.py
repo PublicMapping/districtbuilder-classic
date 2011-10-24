@@ -151,16 +151,16 @@ class ScoringTestCase(BaseTestCase):
 
         # multiple districts
         scores = schwartzFunction.score([self.district1, self.district2])
-        self.assertAlmostEquals(0.86832150547, scores[0], 9, 'Schwartzberg for first district was incorrect: %f' % scores[0])
-        self.assertAlmostEquals(0.88622692545, scores[1], 9, 'Schwartzberg for second district was incorrect: %f' % scores[1])
+        self.assertAlmostEquals(0.86832150547, scores[0]['value'], 9, 'Schwartzberg for first district was incorrect: %f' % scores[0]['value'])
+        self.assertAlmostEquals(0.88622692545, scores[1]['value'], 9, 'Schwartzberg for second district was incorrect: %f' % scores[1]['value'])
 
         # single district as list
         scores = schwartzFunction.score([self.district1])
-        self.assertAlmostEquals(0.86832150547, scores[0], 9, 'Schwartzberg for District 1 was incorrect: %f' % scores[0])
+        self.assertAlmostEquals(0.86832150547, scores[0]['value'], 9, 'Schwartzberg for District 1 was incorrect: %f' % scores[0]['value'])
 
         # single district as object
         score = schwartzFunction.score(self.district1)
-        self.assertAlmostEquals(0.86832150547, score, 9, 'Schwartzberg for District 1 was incorrect: %f' % score)
+        self.assertAlmostEquals(0.86832150547, score['value'], 9, 'Schwartzberg for District 1 was incorrect: %f' % score['value'])
 
         # HTML
         score = schwartzFunction.score(self.district1, 'html')
@@ -168,7 +168,7 @@ class ScoringTestCase(BaseTestCase):
 
         # JSON
         score = schwartzFunction.score(self.district1, 'json')
-        self.assertEqual('{"result": 0.8683215054699209}', score, 'Schwartzberg JSON for District 1 was incorrect: ' + score)
+        self.assertEqual('{"result": 0.86832150546992093}', score, 'Schwartzberg JSON for District 1 was incorrect. (e:"%s", a:"%s")' % ('{"result": 0.86832150546992093}',score,))
 
     def testSumFunction(self):
         """
@@ -185,7 +185,7 @@ class ScoringTestCase(BaseTestCase):
 
         # test raw value
         score = sumThreeFunction.score(self.district1)
-        self.assertEqual(3, score, 'sumThree was incorrect: %d' % score)
+        self.assertEqual(3, score['value'], 'sumThree was incorrect: %d' % score['value'])
 
         # HTML -- also make sure mixed case format works
         score = sumThreeFunction.score(self.district1, 'HtmL')
@@ -205,7 +205,7 @@ class ScoringTestCase(BaseTestCase):
 
         # test raw value
         score = sumMixedFunction.score(self.district1)
-        self.assertEqual(Decimal('11.2'), score, 'sumMixed was incorrect: %d' % score)
+        self.assertEqual(Decimal('11.2'), score['value'], 'sumMixed was incorrect: %d' % score['value'])
 
     def testSumPlanFunction(self):
         """
@@ -219,14 +219,14 @@ class ScoringTestCase(BaseTestCase):
         ScoreArgument(function=sumPlanFunction, argument='value1', value='1', type='literal').save()
 
         # test raw value
-        num_districts = len(self.plan.get_districts_at_version(self.plan.version, include_geom=False)) - 1
+        num_districts = len(self.plan.get_districts_at_version(self.plan.version, include_geom=False))
         score = sumPlanFunction.score(self.plan)
-        self.assertEqual(num_districts, score, 'sumPlanFunction was incorrect. (e:%d, a:%d)' % (num_districts, score))
+        self.assertEqual(num_districts, score['value'], 'sumPlanFunction was incorrect. (e:%d, a:%d)' % (num_districts, score['value']))
 
         # test a list of plans
         score = sumPlanFunction.score([self.plan, self.plan])
-        self.assertEqual(num_districts, score[0], 'sumPlanFunction was incorrect for first plan: %d' % score[0])
-        self.assertEqual(num_districts, score[1], 'sumPlanFunction was incorrect for second plan: %d' % score[1])
+        self.assertEqual(num_districts, score[0]['value'], 'sumPlanFunction was incorrect for first plan: %d' % score[0]['value'])
+        self.assertEqual(num_districts, score[1]['value'], 'sumPlanFunction was incorrect for second plan: %d' % score[1]['value'])
 
     def testThresholdFunction(self):
         # create the scoring function for checking if a value passes a threshold
@@ -239,7 +239,7 @@ class ScoringTestCase(BaseTestCase):
 
         # test raw value
         score = thresholdFunction1.score(self.district1)
-        self.assertEqual(False, score, '1 is not greater than 2')
+        self.assertEqual(False, score['value'], '1 is not greater than 2')
 
         # create a new scoring function to test the inverse
         thresholdFunction2 = ScoreFunction(calculator='redistricting.calculators.Threshold', name='ThresholdFn')
@@ -251,7 +251,7 @@ class ScoringTestCase(BaseTestCase):
 
         # test raw value
         score = thresholdFunction2.score(self.district1)
-        self.assertEqual(1, score, '2 is greater than 1')
+        self.assertEqual(1, score['value'], '2 is greater than 1')
 
         # HTML
         score = thresholdFunction2.score(self.district1, 'html')
@@ -273,7 +273,7 @@ class ScoringTestCase(BaseTestCase):
 
         # test raw value
         score = rangeFunction1.score(self.district1)
-        self.assertEqual(1, score, '2 is between 1 and 3')
+        self.assertEqual(1, score['value'], '2 is between 1 and 3')
 
         # HTML
         score = rangeFunction1.score(self.district1, 'html')
@@ -306,7 +306,7 @@ class ScoringTestCase(BaseTestCase):
 
         # test nested sum
         score = sumLiteralAndScoreFunction.score(self.district1)
-        self.assertEqual(14, score, 'sumLiteralAndScoreFunction was incorrect: %d' % score)
+        self.assertEqual(14, score['value'], 'sumLiteralAndScoreFunction was incorrect: %d' % score['value'])
 
         # sum two of these nested sums
         sumTwoNestedSumsFunction = ScoreFunction(calculator='redistricting.calculators.SumValues', name='SumTwoNestedSumsFn')
@@ -314,12 +314,12 @@ class ScoringTestCase(BaseTestCase):
         ScoreArgument(function=sumTwoNestedSumsFunction, argument='value1', value=sumLiteralAndScoreFunction.name, type='score').save()        
         ScoreArgument(function=sumTwoNestedSumsFunction, argument='value2', value=sumLiteralAndScoreFunction.name, type='score').save()
         score = sumTwoNestedSumsFunction.score(self.district1)
-        self.assertEqual(28, score, 'sumTwoNestedSumsFunction was incorrect: %d' % score)
+        self.assertEqual(28, score['value'], 'sumTwoNestedSumsFunction was incorrect: %d' % score['value'])
 
         # test a list of districts
         score = sumTwoNestedSumsFunction.score([self.district1, self.district1])
-        self.assertEqual(28, score[0], 'sumTwoNestedSumsFunction was incorrect for first district: %d' % score[0])
-        self.assertEqual(28, score[1], 'sumTwoNestedSumsFunction was incorrect for second district: %d' % score[1])
+        self.assertEqual(28, score[0]['value'], 'sumTwoNestedSumsFunction was incorrect for first district: %d' % score[0]['value'])
+        self.assertEqual(28, score[1]['value'], 'sumTwoNestedSumsFunction was incorrect for second district: %d' % score[1]['value'])
 
     def testNestedSumPlanFunction(self):
         """
@@ -331,11 +331,11 @@ class ScoringTestCase(BaseTestCase):
         ScoreArgument(function=sumPlanFunction, argument='value1', value='1', type='literal').save()
 
         # find the number of districts in the plan in an alternate fashion
-        num_districts = len(self.plan.get_districts_at_version(self.plan.version, include_geom=False)) - 1
+        num_districts = len(self.plan.get_districts_at_version(self.plan.version, include_geom=False))
 
         # ensure the sumPlanFunction works correctly
         score = sumPlanFunction.score(self.plan)
-        self.assertEqual(num_districts, score, 'sumPlanFunction was incorrect: %d' % score)
+        self.assertEqual(num_districts, score['value'], 'sumPlanFunction was incorrect. (e:%d, a:%d)' % (num_districts, score['value'],))
 
         # create the scoring function for summing the sum of the districts in a plan
         sumSumPlanFunction = ScoreFunction(calculator='redistricting.calculators.SumValues', name='SumSumPlanFn', is_planscore=True)
@@ -344,12 +344,12 @@ class ScoringTestCase(BaseTestCase):
 
         # test nested sum
         score = sumSumPlanFunction.score(self.plan)
-        self.assertEqual(num_districts ** 2, score, 'sumSumPlanFunction was incorrect: %d' % score)
+        self.assertEqual(num_districts ** 2, score['value'], 'sumSumPlanFunction was incorrect: %d' % score['value'])
 
         # test a list of plans
         score = sumSumPlanFunction.score([self.plan, self.plan])
-        self.assertEqual(num_districts ** 2, score[0], 'sumSumPlanFunction was incorrect for first plan: %d' % score[0])
-        self.assertEqual(num_districts ** 2, score[1], 'sumSumPlanFunction was incorrect for second plan: %d' % score[1])
+        self.assertEqual(num_districts ** 2, score[0]['value'], 'sumSumPlanFunction was incorrect for first plan: %d' % score[0]['value'])
+        self.assertEqual(num_districts ** 2, score[1]['value'], 'sumSumPlanFunction was incorrect for second plan: %d' % score[1]['value'])
 
     def testPlanScoreNestedWithDistrictScore(self):
         """
@@ -370,12 +370,12 @@ class ScoringTestCase(BaseTestCase):
 
         # subject values are 6, 9, and 0; so the total should be 15
         score = planSumFunction.score(self.plan)
-        self.assertEqual(15, score, 'planSumFunction was incorrect: (e:15, a:%d)' % score)
+        self.assertEqual(9, score['value'], 'planSumFunction was incorrect: (e:9, a:%d)' % score['value'])
 
         # test a list of plans
         score = planSumFunction.score([self.plan, self.plan])
-        self.assertEqual(15, score[0], 'planSumFunction was incorrect for first plan: %d' % score[0])
-        self.assertEqual(15, score[1], 'planSumFunction was incorrect for second plan: %d' % score[1])
+        self.assertEqual(9, score[0]['value'], 'planSumFunction was incorrect for first plan: %d' % score[0]['value'])
+        self.assertEqual(9, score[1]['value'], 'planSumFunction was incorrect for second plan: %d' % score[1]['value'])
 
         # test with multiple arguments
         districtSubjectFunction2 = ScoreFunction(calculator='redistricting.calculators.SumValues', name='GetSubjectFn2')
@@ -389,12 +389,12 @@ class ScoringTestCase(BaseTestCase):
 
         # should be twice as much
         score = planSumFunction2.score(self.plan)
-        self.assertEqual(30, score, 'planSumFunction was incorrect: %d' % score)
+        self.assertEqual(18, score['value'], 'planSumFunction was incorrect: %d' % score['value'])
 
         # test with adding another argument to the plan function, should double again
         ScoreArgument(function=planSumFunction2, value=districtSubjectFunction2.name, type='score').save()
         score = planSumFunction2.score(self.plan)
-        self.assertEqual(60, score, 'planSumFunction was incorrect: %d' % score)
+        self.assertEqual(36, score['value'], 'planSumFunction was incorrect: %d' % score['value'])
         
 
 class PlanTestCase(BaseTestCase):

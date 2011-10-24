@@ -2824,7 +2824,10 @@ class ScoreFunction(models.Model):
                     else:
                         version = dp.version if version is None else version
                         for d in dp.get_districts_at_version(version):
-                            arg_lst.append(score_fn.score(d, format=format, version=version))
+                            res = score_fn.score(d, format=format, version=version)
+                            if isinstance(res,dict) and 'value' in res:
+                                res = res['value']
+                            arg_lst.append(res)
 
             # Build the keyword arguments based on whether this is for districts, plans, or list
             if len(arg_lst) > 0:
