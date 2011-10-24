@@ -1378,7 +1378,7 @@ class GeounitMixTestCase(BaseTestCase):
         # this test should return 3, for the large geounits are completely
         # without yet intersect at the corner. the net geometry from this
         # set of mixed geounits is correct, though
-        self.assertEqual(19, numunits, 'Number of geounits outside boundary is incorrect. (%d)' % numunits)
+        self.assertEqual(3, numunits, 'Number of geounits outside boundary is incorrect. (%d)' % numunits)
 
         units = Geounit.get_mixed_geounits([str(bigunits[0].id),str(bigunits[4].id),str(bigunits[8].id)], self.legbod, level.id, boundary, False)
         numunits = len(units)
