@@ -695,12 +695,10 @@ class Plan(models.Model):
             if before <= 0:
                 return
 
-            ds = self.get_districts_at_version(before, include_geom=False)
+            ds = self.get_districts_at_version(before, include_geom=False, filter_empty=False)
+
             allQ = Q(plan__isnull=True)
             for d in ds:
-                #maxqset = self.district_set.filter(district_id=d.district_id)
-                #maxver = maxqset.aggregate(Max('version'))['version__max']
-
                 # Filter on this district
                 q1 = Q(district_id=d.district_id)
 
@@ -1234,7 +1232,7 @@ class Plan(models.Model):
         qset = qset.annotate(latest=Max('version'),max_id=Max('id'))
         return qset.values_list('max_id',flat=True)
 
-    def get_districts_at_version(self, version, include_geom=False):
+    def get_districts_at_version(self, version, include_geom=False, filter_empty=True):
         """
         Get Plan Districts at a specified version.
 
@@ -1256,8 +1254,11 @@ class Plan(models.Model):
 
         districts = sorted(list(qset), key=lambda d: d.sortKey())
 
-        # Don't return any districts that are empty (asside from the Unassigned district)
-        return filter(lambda x: x.district_id == 0 or x.geom.num_coords > 0, districts)
+        if filter_empty:
+            # Don't return any districts that are empty (asside from the Unassigned district)
+            return filter(lambda x: x.district_id == 0 or x.geom.num_coords > 0, districts)
+        else:
+            return districts
 
     @staticmethod
     def create_default(name,body,owner=None,template=True,is_pending=True,create_unassigned=True):
