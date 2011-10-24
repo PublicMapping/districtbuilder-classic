@@ -3837,7 +3837,7 @@ class ReportCalculatorTestCase(BaseTestCase):
         
         col1 = calc.result['raw'][0]
         self.assertEqual('string', col1['type'])
-        self.assertEqual('District 1', col1['value'])
+        self.assertEqual(self.district1.long_label, col1['value'])
         self.assertEqual('DistrictID', col1['label'])
         self.assertFalse('avg_key' in col1)
 
@@ -3878,10 +3878,10 @@ class ReportCalculatorTestCase(BaseTestCase):
         calc.compute(district=self.district1)
 
         self.assertEqual(2, len(calc.result['raw']))
-        
+
         col1 = calc.result['raw'][0]
         self.assertEqual('string', col1['type'])
-        self.assertEqual('District 1', col1['value'])
+        self.assertEqual(self.district1.long_label, col1['value'])
         self.assertEqual('DistrictID', col1['label'])
         self.assertFalse('avg_key' in col1)
 
@@ -3899,7 +3899,7 @@ class ReportCalculatorTestCase(BaseTestCase):
         
         col1 = calc.result['raw'][0]
         self.assertEqual('string', col1['type'])
-        self.assertEqual('District 1', col1['value'])
+        self.assertEqual(self.district1.long_label, col1['value'])
         self.assertEqual('DistrictID', col1['label'])
         self.assertFalse('avg_key' in col1)
 
@@ -3917,7 +3917,7 @@ class ReportCalculatorTestCase(BaseTestCase):
         
         col1 = calc.result['raw'][0]
         self.assertEqual('string', col1['type'])
-        self.assertEqual('District 1', col1['value'])
+        self.assertEqual(self.district1.long_label, col1['value'])
         self.assertEqual('DistrictID', col1['label'])
         self.assertFalse('avg_key' in col1)
 
@@ -3942,7 +3942,7 @@ class ReportCalculatorTestCase(BaseTestCase):
         
         col1 = calc.result['raw'][0]
         self.assertEqual('string', col1['type'])
-        self.assertEqual('District 1', col1['value'])
+        self.assertEqual(self.district1.long_label, col1['value'])
         self.assertEqual('DistrictID', col1['label'])
         self.assertFalse('avg_key' in col1)
 
@@ -3973,7 +3973,7 @@ class ReportCalculatorTestCase(BaseTestCase):
         
         col1 = calc.result['raw'][0]
         self.assertEqual('string', col1['type'])
-        self.assertEqual('District 1', col1['value'])
+        self.assertEqual(self.district1.long_label, col1['value'])
         self.assertEqual('DistrictID', col1['label'])
         self.assertFalse('avg_key' in col1)
 
