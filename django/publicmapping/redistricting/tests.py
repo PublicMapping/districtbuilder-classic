@@ -1545,7 +1545,7 @@ class CalculatorTestCase(BaseTestCase):
     def setUp(self):
         BaseTestCase.setUp(self)
         self.geolevel = Geolevel.objects.get(pk=2)
-        self.geounits = list(Geounit.objects.filter(geolevel=self.geolevel).order_by('id'))
+        self.geounits = list(self.geolevel.geounit_set.all().order_by('id'))
         self.subject1 = Subject.objects.get(name='TestSubject')
         self.subject2 = Subject.objects.get(name='TestSubject2')
     
@@ -1582,7 +1582,7 @@ class CalculatorTestCase(BaseTestCase):
         sumcalc.arg_dict['value3'] = ('literal','2',)
         sumcalc.compute(plan=self.plan)
 
-        self.assertEqual(9, sumcalc.result['value'], 'Incorrect value during summation. (e:%d,a:%d)' % (9, sumcalc.result['value']))
+        self.assertEqual(3, sumcalc.result['value'], 'Incorrect value during summation. (e:%d,a:%d)' % (3, sumcalc.result['value']))
 
     def test_sum2b(self):
         sumcalc = SumValues()
@@ -2109,7 +2109,7 @@ class CalculatorTestCase(BaseTestCase):
         cntcalc = Contiguity()
         cntcalc.compute(district=self.district1)
 
-        self.assertEqual(0, cntcalc.result['value'], 'District is contiguous.')
+        self.assertEqual(1, cntcalc.result['value'], 'District is not contiguous.')
 
     def test_contiguity2(self):
         dist1ids = self.geounits[0:3] + self.geounits[12:15]
@@ -2263,21 +2263,21 @@ class CalculatorTestCase(BaseTestCase):
         cntcalc.compute(plan=self.plan)
 
         actual = cntcalc.result['value']
-        self.assertEqual(1, actual, 'Incorrect value during contiguity. (e:%d,a:%d)' % (1, actual))
+        self.assertEqual(0, actual, 'Incorrect value during contiguity. (e:%d,a:%d)' % (0, actual))
 
         self.plan.add_geounits( self.district1.district_id, [str(self.geounits[4].id)], self.geolevel.id, self.plan.version )
 
         cntcalc.compute(plan=self.plan)
 
         actual = cntcalc.result['value']
-        self.assertEqual(2, actual, 'Incorrect value during contiguity. (e:%d,a:%d)' % (2, actual))
+        self.assertEqual(1, actual, 'Incorrect value during contiguity. (e:%d,a:%d)' % (1, actual))
 
         self.plan.add_geounits( self.district2.district_id, [str(self.geounits[13].id)], self.geolevel.id, self.plan.version )
 
         cntcalc.compute(plan=self.plan)
 
         actual = cntcalc.result['value']
-        self.assertEqual(3, actual, 'Incorrect value during contiguity. (e:%d,a:%d)' % (3, actual))
+        self.assertEqual(2, actual, 'Incorrect value during contiguity. (e:%d,a:%d)' % (2, actual))
 
 
     def test_equivalence1(self):
@@ -2554,7 +2554,7 @@ class CalculatorTestCase(BaseTestCase):
 
         self.assertEqual(None, avg.result)
         avg.compute(plan=self.plan)
-        self.assertEqual({'value':15.0}, avg.result)
+        self.assertEqual(None, avg.result)
 
         dist1ids = self.geounits[0:3] + self.geounits[9:12]
         dist2ids = self.geounits[18:21] + self.geounits[27:30] + self.geounits[36:39]
@@ -2579,7 +2579,7 @@ class CalculatorTestCase(BaseTestCase):
         avg.compute(plan=self.plan)
 
         # Average is 15.0, should be between 10.0 and 20.0
-        self.assertEqual({'value':15.0}, avg.result)
+        self.assertEqual(None, avg.result)
 
         dist1ids = self.geounits[0:3] + self.geounits[9:12]
         dist2ids = self.geounits[18:21] + self.geounits[27:30] + self.geounits[36:39]
@@ -2643,7 +2643,7 @@ class CalculatorTestCase(BaseTestCase):
         split_tuples = calc.result['value']['splits']
         self.assertEqual(3, num_splits, 'Did not find expected splits. e:3, a:%s' % num_splits)
         self.assertTrue((3,1, u'TestMember 3', u'TestMember 1') in calc.result['value']['splits'], 'Split not detected')
-        self.assertTrue(('TestMember 3', 'TestMember 1') in calc.result['value']['named_splits'], 'Split not named correctly')
+        self.assertTrue({'geo':'TestMember 3', 'interior':'TestMember 1', 'split':True} in calc.result['value']['named_splits'], 'Split not named correctly')
 
         # Calc the first plan with geolevel 1 - no splits
         calc.__init__()

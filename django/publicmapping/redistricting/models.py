@@ -1705,11 +1705,13 @@ class Plan(models.Model):
         above_id = int(above_id.split('.')[1])
         above_col_id = 'district_id' if is_above_plan else 'portable_id'
         above_table = 'redistricting_district' if is_above_plan else 'redistricting_geounit'
+        above_name = 'long_label' if is_above_plan else 'name'
 
         is_below_plan = below_id.startswith('plan')
         below_id = int(below_id.split('.')[1])
         below_col_id = 'district_id' if is_below_plan else 'portable_id'
         below_table = 'redistricting_district' if is_below_plan else 'redistricting_geounit'
+        below_name = 'long_label' if is_below_plan else 'name'
 
         # Ensure version is set on plans
         if is_above_plan and above_version is None:
@@ -1722,7 +1724,7 @@ class Plan(models.Model):
         if not re.match('[012TF\*]{9}', de_9im):
             raise Exception('DE-9IM string is invalid.')
 
-        select = "SELECT above.%s, below.%s, above.name, below.name FROM %s as below" % (above_col_id, below_col_id, below_table)
+        select = "SELECT above.%s, below.%s, above.%s, below.%s FROM %s as below" % (above_col_id, below_col_id, above_name, below_name, below_table)
         version_join = """
 JOIN (
     SELECT max(version) as version, district_id FROM redistricting_district
@@ -1733,7 +1735,7 @@ JOIN (
 """
         district_cross_join = """
 CROSS JOIN (
-    SELECT sub.id, sub.district_id, sub.name, sub.geom
+    SELECT sub.id, sub.district_id, sub.long_label, sub.geom
     FROM redistricting_district as sub
     %s ON sub.district_id = lmt.district_id
     WHERE sub.plan_id = %d AND sub.version = lmt.version AND sub.district_id > 0
