@@ -25,16 +25,6 @@
 
         <!-- A Region has an ID, name, and description. -->
         <Region id="va" name="Virginia" description="The Commonwealth of Virginia">
-
-            <!-- A set of filters to apply to the base GeoLevel shapefile. -->
-            <RegionCodes>
-
-                <!-- A Single filter for the GEOID10 field in the block shapefile
-                     that selects all geographic units that match the value at the 
-                     specified text string window. -->
-                <RegionCode attr="GEOID10" value="51" start="0" width="2" />
-            </RegionCodes>
-
             <!-- A set of legislative bodies that exist in this region. -->
             <LegislativeBodies>
                 <LegislativeBody ref="congress" />
@@ -42,20 +32,36 @@
                 <LegislativeBody ref="senate" />
                 <LegislativeBody ref="community" />
             </LegislativeBodies>
+            <GeoLevels>
+                <GeoLevel ref="block">
+                    <GeoLevel ref="vtd">
+                        <GeoLevel ref="county" />
+                    </GeoLevel>
+                </GeoLevel>
+            </GeoLevels>
         </Region>
 
         <Region id="dc_area" name="District of Columbia Area" description="The metropolitan counties around the District of Columbia">
-            <RegionCodes>
+            <!-- A set of filters to apply to the largets GeoLevel shapefile. -->
+            <RegionFilter name="region_dc" >
+                <!-- A Single filter for the GEOID10 field in the vtd shapefile
+                     that selects all geographic units that match the value at the 
+                     specified text string window. -->
                 <RegionCode attr="GEOID10" value="51059" start="0" width="5" />
                 <RegionCode attr="GEOID10" value="51600" start="0" width="5" />
                 <RegionCode attr="GEOID10" value="51610" start="0" width="5" />
                 <RegionCode attr="GEOID10" value="51510" start="0" width="5" />
                 <RegionCode attr="GEOID10" value="51013" start="0" width="5" />
-            </RegionCodes>
+            </RegionFilter>
             <LegislativeBodies>
                 <LegislativeBody ref="dc_area_council" />
                 <LegislativeBody ref="dc_community" />
             </LegislativeBodies>
+            <GeoLevels>
+                <GeoLevel ref="block">
+                    <GeoLevel ref="vtd" />
+                </GeoLevel>
+            </GeoLevels>
         </Region>
     </Regions>
 
@@ -1070,12 +1076,6 @@
           many legislative bodies.
           
           -->
-          <LegislativeBodies>
-              <LegislativeBody ref="congress" />
-              <LegislativeBody ref="house" />
-              <LegislativeBody ref="senate" />
-              <LegislativeBody ref="community" />
-          </LegislativeBodies>
       </GeoLevel>
 
       <!--
@@ -1089,13 +1089,6 @@
           <!-- This geolevel should use the geography that was imported from the ref GeoLevel,
                which has already beeen defined and configured. -->
           <BaseGeoLevel ref="block" />
-
-          <!-- This geolevel should be used in a certain region, via previously 
-               defined LegislativeBodies. -->
-          <LegislativeBodies>
-              <LegislativeBody ref="dc_area_council" />
-              <LegislativeBody ref="dc_community" />
-          </LegislativeBodies>
       </GeoLevel>
 
       <!--
@@ -1150,27 +1143,6 @@
                   </Fields>
               </Geography>
           </Files>
-          
-          <!--
-          
-          A reference to a legislative body. A geolevel may be used by 
-          many legislative bodies. 
-          
-          -->
-          <LegislativeBodies>
-              <LegislativeBody ref="congress">
-                  <Parent ref="block" />
-              </LegislativeBody>
-              <LegislativeBody ref="house">
-                  <Parent ref="block" />
-              </LegislativeBody>
-              <LegislativeBody ref="senate">
-                  <Parent ref="block" />
-              </LegislativeBody>
-              <LegislativeBody ref="community">
-                  <Parent ref="block" />
-              </LegislativeBody>
-          </LegislativeBodies>
       </GeoLevel>
 
       <!--
@@ -1224,27 +1196,6 @@
                   </Fields>
               </Geography>
           </Files>
-          
-          <!--
-          
-          A reference to a legislative body. A geolevel may be used by 
-          many legislative bodies.
-          
-          -->
-          <LegislativeBodies>
-              <LegislativeBody ref="congress">
-                  <Parent ref="vtd" />
-              </LegislativeBody>
-              <LegislativeBody ref="house">
-                  <Parent ref="vtd" />
-              </LegislativeBody>
-              <LegislativeBody ref="senate">
-                  <Parent ref="vtd" />
-              </LegislativeBody>
-              <LegislativeBody ref="community">
-                  <Parent ref="vtd" />
-              </LegislativeBody>
-          </LegislativeBodies>
       </GeoLevel>
     </GeoLevels>
    

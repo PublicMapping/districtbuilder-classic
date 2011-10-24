@@ -23,7 +23,7 @@
                                 </xs:annotation>
                                 <xs:complexType>
                                     <xs:all>
-                                        <xs:element name="RegionCodes">
+                                        <xs:element name="RegionFilter" minOccurs="0">
                                             <xs:annotation>
                                                 <xs:documentation>
                                                     A collection of filters that select geographic units that as an
@@ -47,9 +47,17 @@
                                                         </xs:complexType>
                                                     </xs:element>
                                                 </xs:sequence>
+                                                <xs:attribute name="name" type="xs:string" use="required" />
                                             </xs:complexType>
                                         </xs:element>
                                         <xs:element name="LegislativeBodies" type="LegislativeBodiesRefType"></xs:element>
+                                        <xs:element name="GeoLevels">
+                                            <xs:complexType>
+                                                <xs:all>
+                                                    <xs:element name="GeoLevel" type="NestedGeoLevelType" />
+                                                </xs:all>
+                                            </xs:complexType>
+                                        </xs:element>
                                     </xs:all>
                                     <xs:attribute name="id" type="xs:ID" />
                                     <xs:attribute name="name" type="xs:string" />
@@ -302,7 +310,6 @@
                                             </xs:element>
                                         </xs:choice>
                                         <xs:element name="Description" type="xs:string" minOccurs="0" maxOccurs="1" />
-                                        <xs:element name="LegislativeBodies" type="LegislativeBodiesRefType" />
                                     </xs:sequence>
                                     <xs:attribute name="name" type="xs:string" use="required" />
                                     <xs:attribute name="id" type="xs:ID" />
@@ -457,14 +464,6 @@
             <xs:selector xpath="Scoring/ScorePanels/ScorePanel" />
             <xs:field xpath="@id" />
         </xs:key>
-        <xs:keyref name="GeoLevelLegislativeBody" refer="DistrictBuilderLegislativeBodyKey">
-            <xs:selector xpath="GeoLevels/GeoLevel/LegislativeBodies/LegislativeBody" />
-            <xs:field xpath="@ref" />
-        </xs:keyref>
-        <xs:keyref name="GeoLevelGeoLevelParent" refer="DistrictBuilderGeoLevelKey">
-            <xs:selector xpath="GeoLevels/GeoLevel/LegislativeBodies/LegislativeBody/Parent" />
-            <xs:field xpath="@ref" />
-        </xs:keyref>
         <xs:keyref name="GeoLevelBaseGeoLevel" refer="DistrictBuilderGeoLevelKey">
             <xs:selector xpath="GeoLevels/GeoLevel/BaseGeoLevel" />
             <xs:field xpath="@ref" />
@@ -511,6 +510,10 @@
         </xs:keyref>
         <xs:keyref name="RegionLegislativeBody" refer="DistrictBuilderLegislativeBodyKey">
             <xs:selector xpath="Regions/Region/LegislativeBodies/LegislativeBody" />
+            <xs:field xpath="@ref" />
+        </xs:keyref>
+        <xs:keyref name="RegionGeoLevel" refer="DistrictBuilderGeoLevelKey">
+            <xs:selector xpath="Regions/Region/GeoLevels/*" />
             <xs:field xpath="@ref" />
         </xs:keyref>
         <!-- BARD config keyrefs -->
@@ -579,6 +582,12 @@
                 </xs:complexType>
             </xs:element>
         </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="NestedGeoLevelType">
+        <xs:all minOccurs="0" maxOccurs="1" >
+            <xs:element name="GeoLevel" type="NestedGeoLevelType" />
+        </xs:all>
+        <xs:attribute name="ref" type="xs:IDREF" use="required" />
     </xs:complexType>
     <xs:complexType name="RefType">
         <xs:annotation>
