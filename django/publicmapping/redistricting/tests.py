@@ -2958,7 +2958,7 @@ class ComputedScoresTestCase(BaseTestCase):
 
         score = ComputedDistrictScore.compute(function, district1)
 
-        self.assertEqual(expected, score, 'The score computed is incorrect. (e:%0.1f, a:%0.1f)' % (expected,score,))
+        self.assertEqual(expected['value'], score['value'], 'The score computed is incorrect. (e:%0.1f, a:%0.1f)' % (expected['value'],score['value'],))
 
         numscores = ComputedDistrictScore.objects.all().count()
 
@@ -2974,7 +2974,7 @@ class ComputedScoresTestCase(BaseTestCase):
 
         score = ComputedDistrictScore.compute(function, district1)
 
-        self.assertEqual(expected, score, 'The score computed is incorrect. (e:%0.1f, a:%0.1f)' % (expected,score,))
+        self.assertEqual(expected['value'], score['value'], 'The score computed is incorrect. (e:%0.1f, a:%0.1f)' % (expected['value'],score['value'],))
 
         numscores = ComputedDistrictScore.objects.all().count()
 
@@ -2999,7 +2999,7 @@ class ComputedScoresTestCase(BaseTestCase):
 
         score = ComputedPlanScore.compute(function, self.plan)
 
-        self.assertEqual(48, score, 'The score computed is incorrect. (e:48.0, a:%0.1f)' % score)
+        self.assertEqual(9, score['value'], 'The score computed is incorrect. (e:9.0, a:%0.1f)' % score['value'])
 
         numscores = ComputedPlanScore.objects.all().count()
 
@@ -3012,7 +3012,7 @@ class ComputedScoresTestCase(BaseTestCase):
 
         score = ComputedPlanScore.compute(function, self.plan)
 
-        self.assertEqual(147, score, 'The score computed is incorrect. (e:147.0, a:%0.1f)' % score)
+        self.assertEqual(9, score['value'], 'The score computed is incorrect. (e:9.0, a:%0.1f)' % score['value'])
 
         numscores = ComputedPlanScore.objects.all().count()
 
