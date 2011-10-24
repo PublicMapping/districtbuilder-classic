@@ -3453,11 +3453,13 @@ class NestingTestCase(BaseTestCase):
            self.geounits[gl.id] = list(Geounit.objects.filter(geolevel=gl).order_by('id'))
 
         # Create 3 nested legislative bodies
-        self.bottom = LegislativeBody(name="bottom", max_districts=100)
+        self.region = Region(name='Nesting',description='Nesting Test',sort_key=2)
+        self.region.save()
+        self.bottom = LegislativeBody(name="bottom", max_districts=100, region=self.region)
         self.bottom.save()
-        self.middle = LegislativeBody(name="middle", max_districts=20)
+        self.middle = LegislativeBody(name="middle", max_districts=20, region=self.region)
         self.middle.save()
-        self.top = LegislativeBody(name="top", max_districts=4)
+        self.top = LegislativeBody(name="top", max_districts=4, region=self.region)
         self.top.save()
 
         # Create references for plans and districts
