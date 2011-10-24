@@ -523,8 +523,6 @@ class Geounit(models.Model):
                 # converted, or errored out above, in which case we just
                 # have to move on.
                 if not remainder.empty:
-                    geolevel = Geolevel.objects.get(id=level)
-
                     if level == base_geolevel:
                         # Query by center
                         q_geom = Q(center__intersects=remainder)
@@ -532,7 +530,7 @@ class Geounit(models.Model):
                         # Query by geom
                         q_geom = Q(geom__within=remainder)
 
-                    units += list(geolevel.geounit_set.filter(q_geom))
+                    units += list(level.geounit_set.filter(q_geom))
 
         # Send back the collected Geounits
         return units
@@ -1071,7 +1069,7 @@ class Plan(models.Model):
         newlong = '' if slot == None else self.legislative_body.long_label % slot
         pasted = District(short_label=newshort, long_label=newlong, plan=self, district_id = slot, geom=district.geom, simple = district.simple, version = new_version)
         pasted.save();
-        if newname  == '':
+        if newshort  == '':
             pasted.short_label = self.legislative_body.short_label % pasted.district_id
             pasted.long_label = self.legislative_body.long_label % pasted.district_id
             pasted.save();
@@ -1126,8 +1124,7 @@ class Plan(models.Model):
                     edited_districts.pop()
                     edited_districts.append(new_district)
 
-                    geolevel = Geolevel.objects.get(id=biggest_geolevel)
-                    geounit_ids = geolevel.geounit_set.filter(geom__bboverlaps=intersection).values_list('id', flat=True)
+                    geounit_ids = biggest_geolevel.geounit_set.filter(geom__bboverlaps=intersection).values_list('id', flat=True)
                     geounit_ids = map(str, geounit_ids)
 
                     geounits = Geounit.get_mixed_geounits(geounit_ids, self.legislative_body, biggest_geolevel.id, intersection, True)

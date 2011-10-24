@@ -1446,7 +1446,7 @@ def setdistrictlock(request, planid, district_id):
 
     try:
         plan = Plan.objects.get(pk=planid)
-        district = District.objects.filter(plan=plan,district_id=district_id,version__lte=version).order_by('version').reverse()[0]
+        district = plan.district_set.filter(district_id=district_id,version__lte=version).order_by('version').reverse()[0]
     except ObjectDoesNotExist:
         status['message'] = 'Plan or district does not exist.'
         return HttpResponse(json.dumps(status), mimetype='application/json')

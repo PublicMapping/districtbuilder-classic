@@ -463,8 +463,10 @@ class PlanTestCase(BaseTestCase):
 
         self.plan.add_geounits(districtid, geounitids, self.geolevel.id, self.plan.version)
         district = District.objects.get(plan=self.plan, district_id=districtid, version=1)
-        
-        self.assertEqual(district.geom, self.geounits[1][0].geom, "Geometry for added district doesn't match")
+
+        self.assertEqual(district.geom.area, self.geounits[1][0].geom.area, "Geometry area for added district doesn't match")
+        self.assertEqual(district.geom.extent, self.geounits[1][0].geom.extent, "Geometry area for added district doesn't match")
+        self.assertEqual(district.geom.length, self.geounits[1][0].geom.length, "Geometry area for added district doesn't match")
 
     def test_unassigned(self):
         """
@@ -510,7 +512,8 @@ class PlanTestCase(BaseTestCase):
         """
         Test the logic for locking/unlocking a district.
         """
-        geounitids = [str(self.geounits[1][0].id)]
+        geounitids1 = [str(self.geounits[1][0].id)]
+        geounitids2 = [str(self.geounits[1][-1].id)]
 
         client = Client()
 
@@ -527,6 +530,9 @@ class PlanTestCase(BaseTestCase):
         
         # Login
         client.login(username=self.username, password=self.password)
+
+        self.plan.add_geounits(self.district1.district_id, geounitids1, self.geolevel.id, self.plan.version)
+        self.district1 = max(District.objects.filter(plan=self.plan,district_id=self.district1.district_id),key=lambda d: d.version)
         
         # Issue lock command
         response = client.post('/districtmapping/plan/%d/district/%d/lock/' % (self.plan.id, self.district1.district_id), { 'lock':True, 'version':self.plan.version })
@@ -537,10 +543,12 @@ class PlanTestCase(BaseTestCase):
         self.assertTrue(self.district1.is_locked, 'District wasn\'t locked.' + str(response))
 
         # Try adding geounits to the locked district (not allowed)
-        self.plan.add_geounits(self.district1.district_id, geounitids, self.geolevel.id, self.plan.version)
-        self.assertRaises(District.DoesNotExist, District.objects.get, pk=self.district1.id, version=self.plan.version)
+        self.plan.add_geounits(self.district2.district_id, geounitids1, self.geolevel.id, self.plan.version)
+        self.assertRaises(District.DoesNotExist, District.objects.get, pk=self.district2.id, version=self.plan.version)
+
+        self.district1 = max(District.objects.filter(plan=self.plan,district_id=self.district1.district_id),key=lambda d: d.version)
         numunits = len(self.district1.get_base_geounits(0.1))
-        self.assertEqual(0, numunits, 'Geounits were added to a locked district. Num geounits: %d' % numunits)
+        self.assertEqual(81, numunits, 'Geounits were added to a locked district. Num geounits: %d' % numunits)
         
         # Issue unlock command
         response = client.post('/districtmapping/plan/%d/district/%d/lock/' % (self.plan.id, self.district1.district_id), { 'lock':False, 'version':self.plan.version })
@@ -552,7 +560,7 @@ class PlanTestCase(BaseTestCase):
 
         # Add geounits to the plan
         old_geom = self.district1.geom
-        self.plan.add_geounits(self.district1.district_id, geounitids, self.geolevel.id, self.plan.version)
+        self.plan.add_geounits(self.district1.district_id, geounitids2, self.geolevel.id, self.plan.version)
         self.district1 = max(District.objects.filter(plan=self.plan,district_id=self.district1.district_id),key=lambda d: d.version)
         new_geom = self.district1.geom
         self.assertNotEqual(old_geom, new_geom, "Geounits could not be added to an unlocked district")
@@ -796,7 +804,7 @@ class PlanTestCase(BaseTestCase):
         self.assertEqual(1, len(result), "District1 wasn't pasted into the plan")
         target1 = District.objects.get(pk=result[0])
         self.assertTrue(target1.geom.equals(district1.geom), "Geometries of pasted district doesn't match original")
-        self.assertEqual(target1.name, "TestMember 1", "Proper name wasn't assigned to pasted district. (e:'TestMember 1', a:'%s')" % target1.name)
+        self.assertEqual(target1.long_label, "TestMember 1", "Proper name wasn't assigned to pasted district. (e:'TestMember 1', a:'%s')" % target1.long_label)
 
         target_stats =  ComputedCharacteristic.objects.filter(district = result[0])
         for stat in target_stats:
@@ -816,7 +824,7 @@ class PlanTestCase(BaseTestCase):
         self.assertEqual(1, len(result), "District2 wasn't pasted into the plan")
         target2 = District.objects.get(pk=result[0])
         self.assertTrue(target2.geom.equals(district2.geom), "Geometries of pasted district doesn't match original\n")
-        self.assertEqual(target2.name, "TestMember 2", "Proper name wasn't assigned to pasted district")
+        self.assertEqual(target2.long_label, "TestMember 2", "Proper name wasn't assigned to pasted district")
         
         target2_stats =  ComputedCharacteristic.objects.filter(district=target2)
         for stat in target2_stats:
@@ -827,7 +835,7 @@ class PlanTestCase(BaseTestCase):
             self.assertEqual(stat.percentage, district2_stat.percentage, "Stats for pasted district (percentage) don't match")
             
         # Calculate what district 1 should look like
-        unassigned = max(District.objects.filter(plan=self.plan,name="Unassigned"),key=lambda d: d.version)
+        unassigned = max(District.objects.filter(plan=self.plan,long_label="Unassigned"),key=lambda d: d.version)
         self.plan.add_geounits(unassigned.district_id, dist2ids, geolevelid, self.plan.version)
         self.district1 = max(District.objects.filter(plan=self.plan,district_id=self.district1.district_id),key=lambda d: d.version)
 

@@ -425,7 +425,7 @@ class DistrictIndexFile():
             time.sleep(15)
             status = DistrictFile.get_file_status(plan)
         if status == 'none':
-            pending = DistrictFile.get_file_name() + '_pending.zip'
+            pending = DistrictFile.get_file_name(plan) + '_pending.zip'
             archive = open(pending, 'w')
             f = tempfile.NamedTemporaryFile(delete=False)
             try:
@@ -465,7 +465,7 @@ class DistrictIndexFile():
             finally:
                 os.unlink(f.name)
 
-        return DistrictFile.get_index_file(plan)
+        return DistrictFile.get_file(plan)
 
     @staticmethod
     @task
