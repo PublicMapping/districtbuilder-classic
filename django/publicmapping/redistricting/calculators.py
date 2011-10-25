@@ -2154,7 +2154,7 @@ class SplitCounter(CalculatorBase):
             render += '<div class="table_container"><table class="report"><thead><tr><th>%s</th><th>%s</th></tr></thead><tbody>' % (r['plan_name'].capitalize(), r['other_name'].capitalize() if r['is_geolevel'] else r['other_name'].capitalize())
 
             for s in r['named_splits']:
-                render += '<tr><td>%s</td><td>%s</td></tr>' % (s[0], s[1])
+                render += '<tr><td>%s</td><td>%s</td></tr>' % (s['geo'], s['interior'])
 
             render += '</tbody></table></div>'
 

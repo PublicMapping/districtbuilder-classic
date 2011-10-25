@@ -2751,10 +2751,10 @@ class ScoreRenderTestCase(BaseTestCase):
 
             panel.is_ascending = False
             markup = panel.render([self.plan,self.plan2])
-            expected = 'testPlan2:<span>152.0</span>' + \
-                'testPlan:<span>48.0</span>' + \
-                'testPlan2:<span>0.263888888889</span>' + \
-                'testPlan:<span>0.181818181818</span>'
+            expected = 'testPlan:<span>9</span>' + \
+                'testPlan2:<span>9</span>' + \
+                'testPlan:<span>18.18%</span>' + \
+                'testPlan2:<span>10.64%</span>'
                 
             self.assertEqual(expected, markup, 'The markup was incorrect. (e:"%s", a:"%s")' % (expected, markup))
 
@@ -2783,9 +2783,9 @@ class ScoreRenderTestCase(BaseTestCase):
             template.close()
 
             markup = panel.render(districts)
-            expected = 'District 1:86.83%<span>1</span>' + \
-                'District 2:86.83%<span>1</span>' + \
-                'Unassigned:n/a<span>0</span>'
+            expected = 'TestMember 1:86.83%<img class="yes-contiguous" src="/static-media/images/icon-check.png">' + \
+                'TestMember 2:86.83%<img class="yes-contiguous" src="/static-media/images/icon-check.png">' + \
+                'Unassigned:0.00%<img class="yes-contiguous" src="/static-media/images/icon-check.png">'
             self.assertEqual(expected, markup, 'The markup for districts was incorrect. (e:"%s", a:"%s")' % (expected,markup))
 
             os.remove(tplfile)
@@ -2825,10 +2825,10 @@ class ScoreRenderTestCase(BaseTestCase):
 
         markup = display.render(plans)
 
-        expected = 'testPlan:<span>0.181818181818</span>' + \
-            'testPlan2:<span>0.263888888889</span>' + \
-            'testPlan:<span>48.0</span>' + \
-            'testPlan2:<span>152.0</span>'
+        expected = 'testPlan2:<span>10.64%</span>' + \
+            'testPlan:<span>18.18%</span>' + \
+            'testPlan:<span>9</span>' + \
+            'testPlan2:<span>9</span>'
         self.assertEqual(expected, markup, 'The markup was incorrect. (e:"%s", a:"%s")' % (expected, markup))
 
         os.remove(tplfile)
@@ -2854,13 +2854,16 @@ class ScoreRenderTestCase(BaseTestCase):
         template.close()
 
         markup = display.render(self.plan)
-        self.assertEqual('', markup, 'The markup was incorrect. (e:"", a:"%s")' % markup)
+        expected = 'TestMember 1:86.83%<img class="yes-contiguous" src="/static-media/images/icon-check.png">' + \
+            'TestMember 2:86.83%<img class="yes-contiguous" src="/static-media/images/icon-check.png">' + \
+            'Unassigned:0.00%<img class="yes-contiguous" src="/static-media/images/icon-check.png">'
+        self.assertEqual(expected, markup, 'The markup was incorrect. (e:"%s", a:"%s")' % (expected, markup))
 
         markup = display.render(self.plan.get_districts_at_version(self.plan.version,include_geom=False))
 
-        expected = 'District 1:86.83%<span>1</span>' + \
-            'District 2:86.83%<span>1</span>' + \
-            'Unassigned:n/a<span>0</span>'
+        expected = 'TestMember 1:86.83%<img class="yes-contiguous" src="/static-media/images/icon-check.png">' + \
+            'TestMember 2:86.83%<img class="yes-contiguous" src="/static-media/images/icon-check.png">' + \
+            'Unassigned:0.00%<img class="yes-contiguous" src="/static-media/images/icon-check.png">'
         self.assertEqual(expected, markup, 'The markup was incorrect. (e:"%s", a:"%s")' % (expected, markup))
 
         os.remove(tplfile)
@@ -2878,10 +2881,18 @@ class ScoreRenderTestCase(BaseTestCase):
         arg1 = ScoreArgument(argument="value1", value="5", type="literal")
         arg2 = ScoreArgument(argument="value2", value="TestSubject", type="subject")
 
+        tplfile = settings.TEMPLATE_DIRS[0] + '/' + panel.template
+        template = open(tplfile,'w')
+        template.write('{% for dscore in districtscores %}{{dscore.district.long_label }}:{% for score in dscore.scores %}{{ score.score|safe }}{% endfor %}{% endfor %}')
+        template.close()
+
         # Render the ScoreDisplay
         components = [(panel, [(function, arg1, arg2)])]
         district_result = display.render([self.district1], components=components)
-        self.assertEqual("District 1:<span>14.0000</span>", district_result, 'Didn\'t get expected result when overriding district\'s display')
+        expected = 'District 1:<span>5</span>'
+        self.assertEqual(expected, district_result, 'Didn\'t get expected result when overriding district\'s display')
+
+        os.remove(tplfile)
 
         # Add some districts to our plan
         geolevelid = self.geolevel.id
@@ -2901,9 +2912,17 @@ class ScoreRenderTestCase(BaseTestCase):
         function.is_planscore = True
         components = [(panel, [(function, arg1, arg2)])]
 
+        tplfile = settings.TEMPLATE_DIRS[0] + '/' + panel.template
+        template = open(tplfile,'w')
+        template.write('{% for planscore in planscores %}{{planscore.plan.name}}:{{ planscore.score|safe }}{% endfor %}')
+        template.close()
+
         # Check the result
         plan_result = display.render(self.plan, components=components)
-        self.assertEqual("testPlan:['<span>58.0000</span>']", plan_result, 'Didn\'t get expected result when overriding plan\'s display')
+        expected = "testPlan:['<span>24</span>']"
+        self.assertEqual(expected, plan_result, 'Didn\'t get expected result when overriding plan\'s display')
+
+        os.remove(tplfile)
 
     def test_splitcounter_display(self):
         # Create a plan with two districts - one crosses both 5 and 8
@@ -2928,12 +2947,19 @@ class ScoreRenderTestCase(BaseTestCase):
 
         components = [(panel, [(function, arg1)])]
 
-        expected_result = "%s:[u'<div class=\"split_report\"><div>Total districts split by first level: 2</div><div>Total number of splits: 7</div><div class=\"table_container\"><table class=\"report\"><thead><tr><th>testPlan district</th><th>first level district</th></tr></thead><tbody><tr><td>TestMember 1</td><td>0000000</td></tr><tr><td>TestMember 1</td><td>0000001</td></tr><tr><td>TestMember 1</td><td>0000003</td></tr><tr><td>TestMember 1</td><td>0000004</td></tr><tr><td>TestMember 1</td><td>0000006</td></tr><tr><td>TestMember 1</td><td>0000007</td></tr><tr><td>TestMember 5</td><td>0000004</td></tr></tbody></table></div></div>']" % p1.name
+        expected_result = '%s:[u\'<div class="split_report"><div>Total districts which split a first level: 2</div><div>Total number of splits: 7</div><div class="table_container"><table class="report"><thead><tr><th>Testplan</th><th>First level</th></tr></thead><tbody><tr><td>TestMember 1</td><td>Unit 1-0</td></tr><tr><td>TestMember 1</td><td>Unit 1-1</td></tr><tr><td>TestMember 1</td><td>Unit 1-3</td></tr><tr><td>TestMember 1</td><td>Unit 1-4</td></tr><tr><td>TestMember 1</td><td>Unit 1-6</td></tr><tr><td>TestMember 1</td><td>Unit 1-7</td></tr><tr><td>TestMember 5</td><td>Unit 1-4</td></tr></tbody></table></div></div>\']' % p1.name
+
+        tplfile = settings.TEMPLATE_DIRS[0] + '/' + panel.template
+        template = open(tplfile,'w')
+        template.write('{% for planscore in planscores %}{{planscore.plan.name}}:{{ planscore.score|safe }}{% endfor %}')
+        template.close()
 
         # Check the result
         plan_result = display.render(p1, components=components)
 
         self.assertEqual(expected_result, plan_result, "Didn't get expected result when rendering SplitCounter:\ne:%s\na:%s" % (expected_result, plan_result))
+
+        os.remove(tplfile)
 
 class ComputedScoresTestCase(BaseTestCase):
     def test_district1(self):
