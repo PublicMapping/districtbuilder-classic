@@ -1048,7 +1048,7 @@ class PlanTestCase(BaseTestCase):
 
         # Change the max number of districts, so we don't have to assign them all for testing
         leg_body = plan.legislative_body
-        leg_body.max_districts = 2
+        leg_body.max_districts = 1
         leg_body.save()
 
         # Try fixing when < min % geounits are assigned

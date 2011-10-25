@@ -1449,7 +1449,7 @@ class Plan(models.Model):
            version = self.version
 
         num_unassigned = 0
-        geolevel = self.legislative_body.get_base_geolevel()
+        geolevel = Geolevel.objects.get(id=self.legislative_body.get_base_geolevel())
 
         # Check that there are unassigned geounits to fix
         unassigned_district = self.district_set.filter(district_id=0, version__lte=version).order_by('-version')[0]
@@ -1542,7 +1542,7 @@ class Plan(models.Model):
 
             # Add units for each district, and update version, since it changes when adding geounits
             for did, units in district_units.items():
-                self.add_geounits(did, [str(p) for p in units], geolevel, version, True)
+                self.add_geounits(did, [str(p) for p in units], geolevel.id, version, True)
                 version = self.version
                 
             # Fix versions so a single undo can undo the entire set of fixes
