@@ -1,8 +1,9 @@
 [{
-  "pk": 4,
+  "pk": 4000,
   "model": "redistricting.district",
   "fields": {
-      "name": "District 16 from Ohio",
+      "short_label": "16",
+      "long_label": "District 16 from Ohio",
       "simple": "GEOMETRYCOLLECTION (POINT (0.0000000000000000 0.0000000000000000), POINT (0.0000000000000000 0.0000000000000000), MULTIPOLYGON EMPTY, MULTIPOLYGON EMPTY, MULTIPOLYGON EMPTY)",
       "district_id": 1,
       "is_locked": false,

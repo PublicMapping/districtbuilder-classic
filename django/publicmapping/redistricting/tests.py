@@ -3779,23 +3779,23 @@ class IterativeSimplificationTest(BaseTestCase):
         This district doesn't simplify at 250 or 180 but does at 160.  The sixth poly of the multipoly
         is the most complex so we check that one for simplification
         """
-        d = District.objects.get(pk=4)
+        d = District.objects.get(pk=4000)
         #print d.long_label
 
         d.simplify(attempts_allowed=0)
+        self.assertTrue(d.geom.equals(d.simple[0]), "District was simplified when it shouldn't have been")
         self.assertTrue(d.geom.equals(d.simple[1]), "District was simplified when it shouldn't have been")
         self.assertTrue(d.geom.equals(d.simple[2]), "District was simplified when it shouldn't have been")
-        self.assertTrue(d.geom.equals(d.simple[3]), "District was simplified when it shouldn't have been")
 
         d.simplify(attempts_allowed=1)
+        self.assertTrue(len(d.geom.coords[6][0]) > len(d.simple[0].coords[0]), "District wasn't simplified")
         self.assertTrue(len(d.geom.coords[6][0]) > len(d.simple[1].coords[0]), "District wasn't simplified")
-        self.assertTrue(len(d.geom.coords[6][0]) > len(d.simple[2].coords[0]), "District wasn't simplified")
-        self.assertTrue(d.geom.equals(d.simple[3]), "District was simplified when it shouldn't have been")
+        self.assertTrue(d.geom.equals(d.simple[2]), "District was simplified when it shouldn't have been")
 
         d.simplify(attempts_allowed=3)
+        self.assertTrue(len(d.geom.coords[6][0]) > len(d.simple[0].coords[6][0]), "District wasn't simplified")
         self.assertTrue(len(d.geom.coords[6][0]) > len(d.simple[1].coords[6][0]), "District wasn't simplified")
         self.assertTrue(len(d.geom.coords[6][0]) > len(d.simple[2].coords[6][0]), "District wasn't simplified")
-        self.assertTrue(len(d.geom.coords[6][0]) > len(d.simple[3].coords[6][0]), "District wasn't simplified")
 
 class ReportCalculatorTestCase(BaseTestCase):
     """
