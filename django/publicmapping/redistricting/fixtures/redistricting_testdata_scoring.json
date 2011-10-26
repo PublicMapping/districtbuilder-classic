@@ -1,10 +1,10 @@
 [
  {
-  "pk": 1, 
+  "pk": 1001, 
   "model": "redistricting.scoredisplay", 
   "fields": {
    "owner": 1,
-   "legislative_body": 1, 
+   "legislative_body": 1001, 
    "cssclass": "the_display", 
    "is_page": true, 
    "title": "TestScoreDisplay"
@@ -12,18 +12,18 @@
   }
  }, 
  {
-  "pk": 2, 
+  "pk": 1002, 
   "model": "redistricting.scoredisplay", 
   "fields": {
    "owner": 1,
-   "legislative_body": 1, 
+   "legislative_body": 1001, 
    "cssclass": "", 
    "is_page": false, 
    "title": "TestScoreDisplay2"
   }
  }, 
  {
-  "pk": 1, 
+  "pk": 1001, 
   "model": "redistricting.scorepanel", 
   "fields": {
    "title": "TestScorePanel1", 
@@ -32,12 +32,12 @@
    "position": 1, 
    "cssclass": "panel1", 
    "type": "plan", 
-   "displays": [1],
-   "score_functions": [1,2]
+   "displays": [1001],
+   "score_functions": [1001,1002]
   }
  }, 
  {
-  "pk": 3, 
+  "pk": 1003, 
   "model": "redistricting.scorepanel", 
   "fields": {
    "title": "TestScorePanel2", 
@@ -46,12 +46,12 @@
    "position": 1, 
    "cssclass": "panel2", 
    "type": "district", 
-   "displays": [2],
-   "score_functions": [3,4]
+   "displays": [1002],
+   "score_functions": [1003,1004]
   }
  }, 
  {
-  "pk": 1, 
+  "pk": 1001, 
   "model": "redistricting.scorefunction", 
   "fields": {
    "calculator": "publicmapping.redistricting.calculators.SumValues", 
@@ -62,7 +62,7 @@
   }
  }, 
  {
-  "pk": 2, 
+  "pk": 1002, 
   "model": "redistricting.scorefunction", 
   "fields": {
    "calculator": "publicmapping.redistricting.calculators.Percent", 
@@ -73,7 +73,7 @@
   }
  }, 
  {
-  "pk": 3, 
+  "pk": 1003, 
   "model": "redistricting.scorefunction", 
   "fields": {
    "calculator": "publicmapping.redistricting.calculators.Schwartzberg", 
@@ -84,7 +84,7 @@
   }
  }, 
  {
-  "pk": 4, 
+  "pk": 1004, 
   "model": "redistricting.scorefunction", 
   "fields": {
    "calculator": "publicmapping.redistricting.calculators.Contiguity", 
@@ -95,7 +95,7 @@
   }
  }, 
  {
-  "pk": 6, 
+  "pk": 1006, 
   "model": "redistricting.scorefunction", 
   "fields": {
    "calculator": "publicmapping.redistricting.calculators.Percent", 
@@ -106,7 +106,7 @@
   }
  }, 
  {
-  "pk": 5, 
+  "pk": 1005, 
   "model": "redistricting.scorefunction", 
   "fields": {
    "calculator": "publicmapping.redistricting.calculators.SumValues", 
@@ -117,70 +117,70 @@
   }
  }, 
  {
-  "pk": 3, 
+  "pk": 1003, 
   "model": "redistricting.scoreargument", 
   "fields": {
-   "function": 2, 
+   "function": 1002, 
    "type": "subject", 
    "argument": "denominator", 
    "value": "TestSubject2"
   }
  }, 
  {
-  "pk": 1, 
+  "pk": 1001, 
   "model": "redistricting.scoreargument", 
   "fields": {
-   "function": 1, 
+   "function": 1001, 
    "type": "subject", 
    "argument": "value1", 
    "value": "TestSubject"
   }
  }, 
  {
-  "pk": 2, 
+  "pk": 1002, 
   "model": "redistricting.scoreargument", 
   "fields": {
-   "function": 2, 
+   "function": 1002, 
    "type": "subject", 
    "argument": "numerator", 
    "value": "TestSubject"
   }
  }, 
  {
-  "pk": 4, 
+  "pk": 1004, 
   "model": "redistricting.scoreargument", 
   "fields": {
-   "function": 6, 
+   "function": 1006, 
    "type": "subject", 
    "argument": "numerator", 
    "value": "TestSubject"
   }
  }, 
  {
-  "pk": 5, 
+  "pk": 1005, 
   "model": "redistricting.scoreargument", 
   "fields": {
-   "function": 6, 
+   "function": 1006, 
    "type": "subject", 
    "argument": "denominator", 
    "value": "TestSubject2"
   }
  }, 
  {
-  "pk": 6, 
+  "pk": 1006, 
   "model": "redistricting.scoreargument", 
   "fields": {
-   "function": 5, 
+   "function": 1005, 
    "type": "subject", 
    "argument": "value1", 
    "value": "TestSubject"
   }
  }, 
  {
-  "pk": 7, 
+  "pk": 1007, 
   "model": "redistricting.scoreargument", 
   "fields": {
-   "function": 5, 
+   "function": 1005, 
    "type": "subject", 
    "argument": "value2", 
    "value": "TestSubject2"
