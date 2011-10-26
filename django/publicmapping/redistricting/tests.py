@@ -1065,7 +1065,7 @@ class PlanTestCase(BaseTestCase):
         unassigned = plan.get_unassigned_geounits(threshold=0.1)
         self.assertEqual(0, len(unassigned), ("Unassigned has geounits", len(unassigned), result))
         num = len(district1.get_base_geounits(0.1))
-        self.assertEqual(730, num, ("District 1 doesn't contain all of the geounits", num, result))
+        self.assertEqual(729, num, ("District 1 doesn't contain all of the geounits", num, result))
 
         # Fixing unassigned should fail, since there are no unassigned geounits
         result = plan.fix_unassigned(threshold=0.1)
@@ -1081,7 +1081,7 @@ class PlanTestCase(BaseTestCase):
         unassigned = plan.get_unassigned_geounits(threshold=0.1)
         self.assertEqual(63, len(unassigned), ("Unassigned has wrong number of geounits", len(unassigned), result))
         num = len(district1.get_base_geounits(0.1))
-        self.assertEqual(730 - 63, num, ("District 1 has the wrong number of the geounits", num, result))
+        self.assertEqual(729 - 63, num, ("District 1 has the wrong number of the geounits", num, result))
 
         # Fix the holes
         result = plan.fix_unassigned(threshold=0.1)
@@ -1106,7 +1106,7 @@ class PlanTestCase(BaseTestCase):
         unassigned = plan.get_unassigned_geounits(threshold=0.1)
         self.assertEqual(27, len(unassigned), ("Unassigned has wrong number of geounits", len(unassigned), result))
         num = len(district1.get_base_geounits(0.1))
-        self.assertEqual(730 - 27, num, ("District 1 has the wrong number of the geounits", num, result))
+        self.assertEqual(729 - 27, num, ("District 1 has the wrong number of the geounits", num, result))
 
         # Fix the edges -- this only fixes some of the base geounits
         result = plan.fix_unassigned(threshold=0.1)
@@ -1142,7 +1142,7 @@ class PlanTestCase(BaseTestCase):
         num = len(district2.get_base_geounits(0.1))
         self.assertEqual(18, num, ("District 2 has the wrong number of the geounits", num, result))
         num = len(district1.get_base_geounits(0.1))
-        self.assertEqual(730 - 18 - 36, num, ("District 1 has the wrong number of the geounits", num, result))
+        self.assertEqual(729 - 18 - 36, num, ("District 1 has the wrong number of the geounits", num, result))
 
         # Fix, and ensure the blocks are partially assigned to the one with the lower population
         result = plan.fix_unassigned(threshold=0.1)
@@ -1154,7 +1154,7 @@ class PlanTestCase(BaseTestCase):
         num = len(district2.get_base_geounits(0.1))
         self.assertEqual(18 + 4, num, ("District 2 has the wrong number of the geounits", num, result))
         num = len(district1.get_base_geounits(0.1))
-        self.assertEqual(730 - 18 - 36 + 22, num, ("District 1 has the wrong number of the geounits", num, result))
+        self.assertEqual(729 - 18 - 36 + 22, num, ("District 1 has the wrong number of the geounits", num, result))
         version_before = plan.version
 
         # Fix again -- this fixes the remaining base geounits
@@ -1167,7 +1167,7 @@ class PlanTestCase(BaseTestCase):
         num = len(district2.get_base_geounits(0.1))
         self.assertEqual(18 + 4 + 5, num, ("District 2 has the wrong number of the geounits", num, result))
         num = len(district1.get_base_geounits(0.1))
-        self.assertEqual(730 - 18 - 36 + 22 + 5, num, ("District 1 has the wrong number of the geounits", num, result))
+        self.assertEqual(729 - 18 - 36 + 22 + 5, num, ("District 1 has the wrong number of the geounits", num, result))
 
         # Try that again with the smaller district locked
         district2 = District.objects.get(plan=plan, district_id=self.district2.district_id, version=version_before)
@@ -1182,7 +1182,7 @@ class PlanTestCase(BaseTestCase):
         num = len(district2.get_base_geounits(0.1))
         self.assertEqual(18 + 4, num, ("District 2 has the wrong number of the geounits", num, result))
         num = len(district1.get_base_geounits(0.1))
-        self.assertEqual(730 - 18 - 36 + 22 + 10, num, ("District 1 has the wrong number of the geounits", num, result))
+        self.assertEqual(729 - 18 - 36 + 22 + 10, num, ("District 1 has the wrong number of the geounits", num, result))
 
 
 class GeounitMixTestCase(BaseTestCase):
