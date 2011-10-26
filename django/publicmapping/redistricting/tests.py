@@ -3087,11 +3087,11 @@ class MultiMemberTestCase(BaseTestCase):
         Test the logic for modifying the number of members in a district
         Also tests magnitudes in export process and calculators
         """
-        district10 = District(long_label='District 10', version=0)
+        district10 = District(long_label='District 10', version=0, district_id=10)
         district10.plan = self.plan
         district10.save()
         
-        district11 = District(long_label='District 11', version=0)
+        district11 = District(long_label='District 11', version=0, district_id=11)
         district11.plan = self.plan
         district11.save()
         
@@ -3158,15 +3158,15 @@ class MultiMemberTestCase(BaseTestCase):
         strz = zin.read(plan.name + ".csv")
         zin.close()
         os.remove(archive.name)
-        self.assertTrue(strz.startswith('0000232,2,5'), 'Index file does not have num_members set: %s' % strz)
+        self.assertTrue(strz.startswith('0000231,10,5'), 'Index file does not have num_members set: %s' % strz)
 
         # Verify range calculator accounts for member magnitude
         # First don't apply multi-member magnitude
-        # Value of subject is 6, so we should be within the range
+        # Value of subject is 2, so we should be within the range
         rngcalc = Range()
         rngcalc.arg_dict['value'] = ('subject',self.subject1.name,)
-        rngcalc.arg_dict['min'] = ('literal','5',)
-        rngcalc.arg_dict['max'] = ('literal','7',)
+        rngcalc.arg_dict['min'] = ('literal','1',)
+        rngcalc.arg_dict['max'] = ('literal','3',)
         rngcalc.arg_dict['apply_num_members'] = ('literal','0',)
         rngcalc.compute(district=district10)
         actual = rngcalc.result['value']
@@ -3177,29 +3177,25 @@ class MultiMemberTestCase(BaseTestCase):
         # There are 5 members, so the range would need to be 5x smaller
         rngcalc = Range()
         rngcalc.arg_dict['value'] = ('subject',self.subject1.name,)
-        rngcalc.arg_dict['min'] = ('literal','1',)
-        rngcalc.arg_dict['max'] = ('literal','2',)
+        rngcalc.arg_dict['min'] = ('literal','0',)
+        rngcalc.arg_dict['max'] = ('literal','1',)
         rngcalc.arg_dict['apply_num_members'] = ('literal','1',)
         rngcalc.compute(district=district10)
         actual = rngcalc.result['value']
         expected = 1
         self.assertEqual(expected, actual, 'Incorrect value during range. (e:%s,a:%s)' % (expected, actual))
 
-        # Remove district2 from the plan, since it seems to cause
-        # problems with states between tests
-        District.objects.filter(plan=plan, district_id=2).delete()
-        
         # Verify equipopulation calculator accounts for member magnitude
         # First don't apply multi-member magnitude
-        # Value of subjects are 9 and 6, so we should be within the range
+        # Value of subjects are 2 and 4, so we should be within the range
         equipopcalc = Equipopulation()
         equipopcalc.arg_dict['value'] = ('subject',self.subject1.name,)
-        equipopcalc.arg_dict['min'] = ('literal','5',)
-        equipopcalc.arg_dict['max'] = ('literal','10',)
+        equipopcalc.arg_dict['min'] = ('literal','1',)
+        equipopcalc.arg_dict['max'] = ('literal','5',)
         equipopcalc.arg_dict['apply_num_members'] = ('literal','0',)
         equipopcalc.compute(plan=plan)
         actual = equipopcalc.result['value']
-        expected = True
+        expected = 2
         self.assertEqual(expected, actual, 'Incorrect value during range. (e:%s,a:%s)' % (expected, actual))
 
         # Now apply multi-member magnitude
@@ -3216,23 +3212,23 @@ class MultiMemberTestCase(BaseTestCase):
         
         # Verify equivalence calculator accounts for member magnitude
         # First don't apply multi-member magnitude
-        # min is 6,  max is 9. diff should be 3
+        # min is 2,  max is 4. diff should be 2
         equcalc = Equivalence()
         equcalc.arg_dict['value'] = ('subject',self.subject1.name,)
-        equipopcalc.arg_dict['apply_num_members'] = ('literal','0',)
+        equcalc.arg_dict['apply_num_members'] = ('literal','0',)
         equcalc.compute(plan=plan)
         actual = equcalc.result['value']
-        expected = 3.0
+        expected = 2.0
         self.assertEqual(expected, actual, 'Incorrect value during equivalence. (e:%f,a:%f)' % (expected, actual))
         
         # Now apply multi-member magnitude
-        # min is 1.2 (6/5),  max is 9. diff should be 7.8
+        # min is 0.4 (2/5),  max is 4. diff should be 3.6
         equcalc = Equivalence()
         equcalc.arg_dict['value'] = ('subject',self.subject1.name,)
         equcalc.arg_dict['apply_num_members'] = ('literal','1',)
         equcalc.compute(plan=plan)
         actual = equcalc.result['value']
-        expected = 7.8
+        expected = 3.6
         self.assertAlmostEquals(expected, actual, 3, 'Incorrect value during equivalence. (e:%f,a:%f)' % (expected, actual))
 
         # Verify interval calculator accounts for member magnitude
@@ -3243,11 +3239,11 @@ class MultiMemberTestCase(BaseTestCase):
         interval.arg_dict['bound1'] = ('literal', .10)
         interval.arg_dict['bound2'] = ('literal', .20)
 
-        # Value of 6 for district 1.  Should be in the middle (2)
+        # Value of 2 for district 1.  Should be in the middle
         interval.compute(district=district10)
         self.assertEqual(2, interval.result['value'], "Incorrect interval returned: e:%d,a:%d" % (2, interval.result['value']))
         interval.compute(plan=plan)
-        self.assertEqual(1, interval.result['value'], "Incorrect interval returned: e:%d,a:%d" % (1, interval.result['value']))
+        self.assertEqual(0, interval.result['value'], "Incorrect interval returned: e:%d,a:%d" % (0, interval.result['value']))
 
         # Now apply multi-member magnitude
         interval = Interval()
@@ -3257,11 +3253,9 @@ class MultiMemberTestCase(BaseTestCase):
         interval.arg_dict['bound1'] = ('literal', .10)
         interval.arg_dict['bound2'] = ('literal', .20)
 
-        # Value of 1.2 for district 1.  Should be in the middle (2)
+        # Value of 0.2 for district 1.  Should be in the middle
         interval.compute(district=district10)
-        self.assertEqual(2, interval.result['value'], "Incorrect interval returned: e:%d,a:%d" % (2, interval.result['value']))
-        interval.compute(plan=plan)
-        self.assertEqual(1, interval.result['value'], "Incorrect interval returned: e:%d,a:%d" % (1, interval.result['value']))
+        self.assertAlmostEqual(0.4, float(interval.result['value']), 2, "Incorrect interval returned: e:%d,a:%d" % (0.4, interval.result['value']))
 
         # Perform MultiMember validation
         plan.legislative_body.min_multi_district_members = 3
