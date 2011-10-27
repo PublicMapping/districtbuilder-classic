@@ -24,7 +24,7 @@
     <Regions>
 
         <!-- A Region has an ID, name, and description. -->
-        <Region id="va" name="Virginia" description="The Commonwealth of Virginia">
+        <Region id="va" name="Virginia" description="The Commonwealth of Virginia" sort_key="1">
             <!-- A set of legislative bodies that exist in this region. -->
             <LegislativeBodies>
                 <LegislativeBody ref="congress" />
@@ -41,7 +41,7 @@
             </GeoLevels>
         </Region>
 
-        <Region id="dc_area" name="District of Columbia Area" description="The metropolitan counties around the District of Columbia">
+        <Region id="dc_area" name="District of Columbia Area" description="The metropolitan counties around the District of Columbia" sort_key="2">
             <!-- A set of filters to apply to the largets GeoLevel shapefile. -->
             <RegionFilter name="region_dc" >
                 <!-- A Single filter for the GEOID10 field in the vtd shapefile
@@ -1252,7 +1252,7 @@
 
             The 'host' attribute is optional.
         -->
-        <Database name="<database name>" user="publicmapping" password="<database user password>" host="<optional>"/>
+        <Database name="YOUR-DATABASE-NAME" user="publicmapping" password="YOUR-DATABASE-PASSWORD" host="OPTIONAL"/>
         
         <!-- 
         
@@ -1260,7 +1260,7 @@
         superuser in django with these credentials.
         
         -->
-        <Admin user="<admin user name>" email="<admin email>" password="<STRONG password>"/>
+        <Admin user="ADMIN-USER-NAME" email="ADMIN-EMAIL" password="STRONG-PASSWORD"/>
         
         <!-- Configuration items specific to the redistricting app. -->
         <Redistricting>           
@@ -1286,7 +1286,7 @@
             
             -->
             <MapServer hostname="" ns="pmp" nshref="https://github.com/PublicMapping/"
-                adminuser="<geoserver admin user>" adminpass="<geoserver admin pass>" maxfeatures="100" 
+                adminuser="GEOSERVER-ADMIN-USER" adminpass="GEOSERVER-ADMIN-PASS" maxfeatures="100" 
                 styles="/projects/PublicMapping/DistrictBuilder/sld" />
 
             <!-- 

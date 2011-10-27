@@ -62,6 +62,7 @@
                                     <xs:attribute name="id" type="xs:ID" />
                                     <xs:attribute name="name" type="xs:string" />
                                     <xs:attribute name="description" type="xs:string" />
+                                    <xs:attribute name="sort_key" type="xs:integer" />
                                 </xs:complexType>
                             </xs:element>
                         </xs:sequence>
