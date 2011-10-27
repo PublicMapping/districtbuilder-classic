@@ -1079,19 +1079,6 @@
       </GeoLevel>
 
       <!--
-
-      A geolevel that applies to a region, which should use the geography from
-      the specified base GeoLevel.
-
-      -->
-      <GeoLevel id="dc_block" name="dc_block" min_zoom="8" sort_key="1" tolerance="2.5">
-
-          <!-- This geolevel should use the geography that was imported from the ref GeoLevel,
-               which has already beeen defined and configured. -->
-          <BaseGeoLevel ref="block" />
-      </GeoLevel>
-
-      <!--
       
       A child geolevel. The geography of the parent geolevel must
       be coincident in its child.
