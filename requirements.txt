@@ -1,5 +1,4 @@
-celery==2.1.4
-django-celery==2.1.4
+django-celery==2.3.3
 django-kombu==0.9.4
 django-staticfiles==1.0
 django-tagging==0.3.1
