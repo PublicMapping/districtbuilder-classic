@@ -3081,6 +3081,37 @@ class MultiMemberTestCase(BaseTestCase):
         for gl in self.geolevels:
            self.geounits[gl.id] = list(Geounit.objects.filter(geolevel=gl).order_by('id'))
 
+        # Set up new districts for testing
+        self.district10 = District(long_label='District 10', version=0, district_id=10)
+        self.district10.plan = self.plan
+        self.district10.save()
+        
+        self.district11 = District(long_label='District 11', version=0, district_id=11)
+        self.district11.plan = self.plan
+        self.district11.save()
+        
+        district = self.district10
+        districtid = district.id
+        self.district_id = district.district_id
+        geolevelid = self.geolevels[1].id
+        geounits = self.geounits[geolevelid]
+
+        # Login
+        self.client = Client()
+        self.client.login(username=self.username, password=self.password)
+
+        # Add some geounits
+        dist10ids = [geounits[11]]
+        dist10ids = map(lambda x: str(x.id), dist10ids)
+        self.plan.add_geounits(self.district10.district_id, dist10ids, geolevelid, self.plan.version)
+        self.plan = Plan.objects.get(pk=self.plan.id)
+        
+        dist11ids = [geounits[22]]
+        dist11ids = map(lambda x: str(x.id), dist11ids)
+        self.plan.add_geounits(self.district11.district_id, dist11ids, geolevelid, self.plan.version)
+        self.plan = Plan.objects.get(pk=self.plan.id)
+        self.subject1 = Subject.objects.get(name='TestSubject')
+
     def tearDown(self):
         self.plan = None
         self.district1 = None
@@ -3096,52 +3127,32 @@ class MultiMemberTestCase(BaseTestCase):
             print(traceback.format_exc())
             print('Couldn\'t tear down')
 
-    def test_multi_member(self):
+    def set_multi(self):
+        """
+        Helper to turn a district into a multi-member district
+        """
+        self.plan.legislative_body.multi_members_allowed = True
+        self.plan.legislative_body.save()
+        params = { 'version':self.plan.version, 'counts[]':5, 'districts[]':self.district_id }
+        self.client.post('/districtmapping/plan/%d/districtmembers/' % self.plan.id, params)
+        self.district10 = max(District.objects.filter(plan=self.plan,district_id=self.district10.district_id),key=lambda d: d.version)
+        self.plan = Plan.objects.get(pk=self.plan.id)
+
+    def test_multi_basic(self):
         """
         Test the logic for modifying the number of members in a district
         Also tests magnitudes in export process and calculators
         """
-        district10 = District(long_label='District 10', version=0, district_id=10)
-        district10.plan = self.plan
-        district10.save()
-        
-        district11 = District(long_label='District 11', version=0, district_id=11)
-        district11.plan = self.plan
-        district11.save()
-        
-        district = district10
-        districtid = district.id
-        district_id = district.district_id
-        geolevelid = self.geolevels[1].id
-        geounits = self.geounits[geolevelid]
-
-        self.subject1 = Subject.objects.get(name='TestSubject')
-        
-        # Login
-        client = Client()
-        client.login(username=self.username, password=self.password)
-
-        # Add some geounits
-        dist10ids = [geounits[11]]
-        dist10ids = map(lambda x: str(x.id), dist10ids)
-        self.plan.add_geounits(district10.district_id, dist10ids, geolevelid, self.plan.version)
-        self.plan = Plan.objects.get(pk=self.plan.id)
-        
-        dist11ids = [geounits[22]]
-        dist11ids = map(lambda x: str(x.id), dist11ids)
-        self.plan.add_geounits(district11.district_id, dist11ids, geolevelid, self.plan.version)
-        self.plan = Plan.objects.get(pk=self.plan.id)
-        
         # Issue command to assign 5 members to a district for a legislative body that doesn't support multi-members
         # Should fail
-        params = { 'version':self.plan.version, 'counts[]':5, 'districts[]':district_id }
-        response = client.post('/districtmapping/plan/%d/districtmembers/' % self.plan.id, params)
+        params = { 'version':self.plan.version, 'counts[]':5, 'districts[]':self.district_id }
+        response = self.client.post('/districtmapping/plan/%d/districtmembers/' % self.plan.id, params)
         
         resp_obj = json.loads(response.content)
         self.assertFalse(resp_obj['success'], 'Member assign request for disallowed legbody wasn\'t denied: ' + str(response))
 
         # Verify the number of members is 1
-        num = district10.num_members
+        num = self.district10.num_members
         self.assertEqual(1, num, '# members is incorrect: %d' % num)
 
         # Verify the version number is 2
@@ -3152,27 +3163,37 @@ class MultiMemberTestCase(BaseTestCase):
         # Should pass
         self.plan.legislative_body.multi_members_allowed = True
         self.plan.legislative_body.save()
-        params = { 'version':self.plan.version, 'counts[]':5, 'districts[]':district_id }
-        response = client.post('/districtmapping/plan/%d/districtmembers/' % self.plan.id, params)
+        params = { 'version':self.plan.version, 'counts[]':5, 'districts[]':self.district_id }
+        response = self.client.post('/districtmapping/plan/%d/districtmembers/' % self.plan.id, params)
         resp_obj = json.loads(response.content)
         self.assertTrue(resp_obj['success'], 'Member assign request for allowed legbody was denied: ' + str(response))
         self.assertEqual(1, resp_obj['modified'], '# districts modified was incorrect: %d' % resp_obj['modified'])
 
         # Verify the number of members and version number have been updated
-        district10 = max(District.objects.filter(plan=self.plan,district_id=district10.district_id),key=lambda d: d.version)
-        num = district10.num_members
+        self.district10 = max(District.objects.filter(plan=self.plan,district_id=self.district10.district_id),key=lambda d: d.version)
+        num = self.district10.num_members
         self.assertEqual(5, num, '# members is incorrect: %d' % num)
-        num = district10.version
+        num = self.district10.version
         self.assertEqual(3, num, 'version number is incorrect: %d' % num)
 
-        # Verify number of members is added to the exported file
-        plan = Plan.objects.get(pk=self.plan.id)
-        archive = DistrictIndexFile.plan2index(plan)
+    def test_multi_2(self):
+        """
+        Verify number of members is added to the exported file
+        """
+        self.set_multi()
+        
+        archive = DistrictIndexFile.plan2index(self.plan)
         zin = zipfile.ZipFile(archive.name, "r")
-        strz = zin.read(plan.name + ".csv")
+        strz = zin.read(self.plan.name + ".csv")
         zin.close()
         os.remove(archive.name)
         self.assertTrue(strz.count(','), 36)
+
+    def test_multi_range(self):
+        """
+        Test range calculator
+        """
+        self.set_multi()
 
         # Verify range calculator accounts for member magnitude
         # First don't apply multi-member magnitude
@@ -3182,7 +3203,7 @@ class MultiMemberTestCase(BaseTestCase):
         rngcalc.arg_dict['min'] = ('literal','1',)
         rngcalc.arg_dict['max'] = ('literal','3',)
         rngcalc.arg_dict['apply_num_members'] = ('literal','0',)
-        rngcalc.compute(district=district10)
+        rngcalc.compute(district=self.district10)
         actual = rngcalc.result['value']
         expected = 1
         self.assertEqual(expected, actual, 'Incorrect value during range. (e:%s,a:%s)' % (expected, actual))
@@ -3194,10 +3215,16 @@ class MultiMemberTestCase(BaseTestCase):
         rngcalc.arg_dict['min'] = ('literal','0',)
         rngcalc.arg_dict['max'] = ('literal','1',)
         rngcalc.arg_dict['apply_num_members'] = ('literal','1',)
-        rngcalc.compute(district=district10)
+        rngcalc.compute(district=self.district10)
         actual = rngcalc.result['value']
         expected = 1
         self.assertEqual(expected, actual, 'Incorrect value during range. (e:%s,a:%s)' % (expected, actual))
+
+    def test_multi_equipopulation(self):
+        """
+        Test equipopulation calculator
+        """
+        self.set_multi()
 
         # Verify equipopulation calculator accounts for member magnitude
         # First don't apply multi-member magnitude
@@ -3207,7 +3234,7 @@ class MultiMemberTestCase(BaseTestCase):
         equipopcalc.arg_dict['min'] = ('literal','1',)
         equipopcalc.arg_dict['max'] = ('literal','5',)
         equipopcalc.arg_dict['apply_num_members'] = ('literal','0',)
-        equipopcalc.compute(plan=plan)
+        equipopcalc.compute(plan=self.plan)
         actual = equipopcalc.result['value']
         expected = 2
         self.assertEqual(expected, actual, 'Incorrect value during range. (e:%s,a:%s)' % (expected, actual))
@@ -3219,18 +3246,24 @@ class MultiMemberTestCase(BaseTestCase):
         equipopcalc.arg_dict['min'] = ('literal','1',)
         equipopcalc.arg_dict['max'] = ('literal','10',)
         equipopcalc.arg_dict['apply_num_members'] = ('literal','1',)
-        equipopcalc.compute(plan=plan)
+        equipopcalc.compute(plan=self.plan)
         actual = equipopcalc.result['value']
         expected = True
         self.assertEqual(expected, actual, 'Incorrect value during range. (e:%s,a:%s)' % (expected, actual))
         
+    def test_multi_equivalence(self):
+        """
+        Test equivalence calculator
+        """
+        self.set_multi()
+
         # Verify equivalence calculator accounts for member magnitude
         # First don't apply multi-member magnitude
         # min is 2,  max is 4. diff should be 2
         equcalc = Equivalence()
         equcalc.arg_dict['value'] = ('subject',self.subject1.name,)
         equcalc.arg_dict['apply_num_members'] = ('literal','0',)
-        equcalc.compute(plan=plan)
+        equcalc.compute(plan=self.plan)
         actual = equcalc.result['value']
         expected = 2.0
         self.assertEqual(expected, actual, 'Incorrect value during equivalence. (e:%f,a:%f)' % (expected, actual))
@@ -3240,10 +3273,16 @@ class MultiMemberTestCase(BaseTestCase):
         equcalc = Equivalence()
         equcalc.arg_dict['value'] = ('subject',self.subject1.name,)
         equcalc.arg_dict['apply_num_members'] = ('literal','1',)
-        equcalc.compute(plan=plan)
+        equcalc.compute(plan=self.plan)
         actual = equcalc.result['value']
         expected = 3.6
         self.assertAlmostEquals(expected, actual, 3, 'Incorrect value during equivalence. (e:%f,a:%f)' % (expected, actual))
+
+    def test_multi_interval(self):
+        """
+        Test interval calculator
+        """
+        self.set_multi()
 
         # Verify interval calculator accounts for member magnitude
         interval = Interval()
@@ -3254,9 +3293,9 @@ class MultiMemberTestCase(BaseTestCase):
         interval.arg_dict['bound2'] = ('literal', .20)
 
         # Value of 2 for district 1.  Should be in the middle
-        interval.compute(district=district10)
+        interval.compute(district=self.district10)
         self.assertEqual(2, interval.result['value'], "Incorrect interval returned: e:%d,a:%d" % (2, interval.result['value']))
-        interval.compute(plan=plan)
+        interval.compute(plan=self.plan)
         self.assertEqual(0, interval.result['value'], "Incorrect interval returned: e:%d,a:%d" % (0, interval.result['value']))
 
         # Now apply multi-member magnitude
@@ -3268,37 +3307,42 @@ class MultiMemberTestCase(BaseTestCase):
         interval.arg_dict['bound2'] = ('literal', .20)
 
         # Value of 0.2 for district 1.  Should be in the middle
-        interval.compute(district=district10)
+        interval.compute(district=self.district10)
         self.assertAlmostEqual(0.4, float(interval.result['value']), 2, "Incorrect interval returned: e:%d,a:%d" % (0.4, interval.result['value']))
 
-        # Perform MultiMember validation
-        plan.legislative_body.min_multi_district_members = 3
-        plan.legislative_body.max_multi_district_members = 6
-        plan.legislative_body.min_multi_districts = 1
-        plan.legislative_body.max_multi_districts = 2
-        plan.legislative_body.min_plan_members = 6
-        plan.legislative_body.max_plan_members = 8
-        plan.legislative_body.save()
+    def test_multi_validation(self):
+        """
+        Perform MultiMember validation
+        """
+        self.set_multi()
+
+        self.plan.legislative_body.min_multi_district_members = 3
+        self.plan.legislative_body.max_multi_district_members = 6
+        self.plan.legislative_body.min_multi_districts = 1
+        self.plan.legislative_body.max_multi_districts = 2
+        self.plan.legislative_body.min_plan_members = 6
+        self.plan.legislative_body.max_plan_members = 8
+        self.plan.legislative_body.save()
         
         multicalc = MultiMember()
-        multicalc.compute(plan=plan)
+        multicalc.compute(plan=self.plan)
         self.assertTrue(multicalc.result['value'], "Multi-member district should have been valid")
 
-        plan.legislative_body.min_multi_districts = 2
-        plan.legislative_body.save()
-        multicalc.compute(plan=plan)
+        self.plan.legislative_body.min_multi_districts = 2
+        self.plan.legislative_body.save()
+        multicalc.compute(plan=self.plan)
         self.assertFalse(multicalc.result['value'], "Should be not enough multi-member districts")
         
-        plan.legislative_body.min_multi_districts = 1
-        plan.legislative_body.min_plan_members = 7
-        plan.legislative_body.save()
-        multicalc.compute(plan=plan)
+        self.plan.legislative_body.min_multi_districts = 1
+        self.plan.legislative_body.min_plan_members = 7
+        self.plan.legislative_body.save()
+        multicalc.compute(plan=self.plan)
         self.assertFalse(multicalc.result['value'], "Should be not enough plan members")
         
-        plan.legislative_body.min_plan_members = 6
-        plan.legislative_body.min_multi_district_members = 6
-        plan.legislative_body.save()
-        multicalc.compute(plan=plan)
+        self.plan.legislative_body.min_plan_members = 6
+        self.plan.legislative_body.min_multi_district_members = 6
+        self.plan.legislative_body.save()
+        multicalc.compute(plan=self.plan)
         self.assertFalse(multicalc.result['value'], "Should be not enough members per multi-member district")
 
 class StatisticsSetTestCase(BaseTestCase):
