@@ -739,7 +739,7 @@ ERROR:
             return
 
         region_config = config.xpath('/DistrictBuilder/Regions')[0]
-        region_filters = create_filter_functions(region_config, verbose)
+        region_filters = self.create_filter_functions(region_config, verbose)
 
         gconfig = {
             'shapefiles': shapeconfig,
@@ -1321,7 +1321,7 @@ ERROR:
 
             regions = config.xpath('/DistrictBuilder/Regions/Region') 
             for region in regions:
-                self.get_or_create_geolevels_for_region(region, verbose)
+                self.import_regional_geolevels(region, verbose)
 
             # Map the imported geolevel to a legislative body
             lbodies = geolevel.xpath('LegislativeBodies/LegislativeBody')
@@ -1446,13 +1446,14 @@ ERROR:
                         sys.stdout.flush()
 
                 levels = [level]
-                for geolevel, filter in config['region_filters'].iteritems():
-                    if filter(feature) == True:
-                        levels.append(Geolevel.objects.get(name='%s_%s' % (geolevel, level)))
+                for region, filter_list in config['region_filters'].iteritems():
+                    for f in filter_list:
+                        if f(feat) == True:
+                            levels.append(Geolevel.objects.get(name='%s_%s' % (region, level.name)))
 
                 prefetch = Geounit.objects.filter(
                     Q(name=get_shape_name(shapefile, feat)), 
-                    Q(geolevel=levels),
+                    # Q(geolevel__in=levels),
                     Q(portable_id=get_shape_portable(shapefile, feat)),
                     Q(tree_code=get_shape_tree(shapefile, feat))
                 )
@@ -1505,12 +1506,13 @@ ERROR:
 
                         g = Geounit(geom = my_geom, 
                             name = get_shape_name(shapefile, feat), 
-                            geolevel = levels,
                             simple = simple, 
                             center = center,
                             portable_id = get_shape_portable(shapefile, feat),
                             tree_code = get_shape_tree(shapefile, feat)
                         )
+                        g.save()
+                        g.geolevel = levels
                         g.save()
 
                     except:
@@ -1620,29 +1622,29 @@ ERROR:
         if len(geolevels) > 0:
             return get_youngest_child(geolevels[0]).get('ref')
 
-    def get_or_create_geolevels_for_region(self, config, verbose):
+    def import_regional_geolevels(self, config, verbose):
         """
-        Given a Region node, return a list of geolevels represented.
+        Given a Region nodes, return a list of geolevels represented.
         If the geolevels don't yet exist, create them and save them to
         the database
         """
         regional_geolevels = []
-        has_filter = True if len(config.xpath('RegionFilter')) == 1 else False
         geolevels = config.xpath('GeoLevels//GeoLevel')
         for g in geolevels:
             name = g.get('ref')        
             try:
                 geolevel = Geolevel.objects.get(name=name)
             except:
-                pass
-            if has_filter:
-                attributes = {}
-                attributes['name'] = '%s_%s' % (config.get('name'), name)
-                attributes['min_zoom'] = geolevel.min_zoom
-                attributes['tolerance'] = geolevel.tolerance
-                obj, created, changed, message = consistency_check_and_update(Geolevel, overwrite=self.force, **attributes)
-                if verbose > 1 or (changed and not self.force):
-                    print message
+                if verbose > 1:
+                    print "Base geolevel %s for %s not found in the database.  Import base geolevels before regional geolevels" % (name, config.get('name'))
+                return
+            attributes = {}
+            attributes['name'] = '%s_%s' % (config.get('name'), name)
+            attributes['min_zoom'] = geolevel.min_zoom
+            attributes['tolerance'] = geolevel.tolerance
+            obj, created, changed, message = consistency_check_and_update(Geolevel, overwrite=self.force, **attributes)
+            if verbose > 1 or (changed and not self.force):
+                print message
 
             regional_geolevels.append(geolevel)
         return regional_geolevels

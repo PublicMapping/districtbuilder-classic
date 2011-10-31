@@ -4171,25 +4171,20 @@ class RegionConfigTest(BaseTestCase):
         self.assertEqual('county', bg1, "Didn't get correct geolevel")
         self.assertEqual('vtd', bg2, "Didn't get correct geolevel")
         
-    def test_get_or_create_geolevels_for_region(self):
+    # TODO: Make this "create_regional_geolevels"
+    def test_get_or_create_regional_geolevels(self):
         self.cmd.import_prereq(self.config_xml, 0)
-        
-        geolevel_list1 = self.cmd.get_or_create_geolevels_for_region(self.region1, 0)
-        geolevel_list2 = self.cmd.get_or_create_geolevels_for_region(self.region2, 0)
+        self.cmd.import_regional_geolevels(self.region_tree, 0)
 
-        self.assertEqual(3, len(geolevel_list1), "Didn't return correct number of geolevels")
-        self.assertTrue(reduce(lambda x,y: x or y.name == 'county', geolevel_list1, False),
-            "County geolevel not found in region 1 test")
-        self.assertTrue(reduce(lambda x,y: x or y.name == 'vtd', geolevel_list1, False),
-            "VTD geolevel not found in region 1 test")
-        self.assertTrue(reduce(lambda x,y: x or y.name == 'block', geolevel_list1, False),
-            "Block geolevel not found in region 1 test")
+        expected_geolevels = ['county', 'vtd', 'block', 'va_county', 'va_vtd', 'va_block',
+            'dc_area_vtd', 'dc_area_block']
+        all_geolevels = Geolevel.objects.all()
 
-        self.assertEqual(2, len(geolevel_list2), "Didn't return correct number of geolevels")
-        self.assertTrue(reduce(lambda x,y: x or y.name == 'dc_area_vtd', geolevel_list2, False),
-            "VTD geolevel not found in region 2 test")
-        self.assertTrue(reduce(lambda x,y: x or y.name == 'dc_area_block', geolevel_list2, False),
-            "Block geolevel not found in region 2 test")
+        self.assertEqual(len(expected_geolevels), len(all_geolevels),
+            "Didn't return correct number of geolevels")
+        for geolevel in expected_geolevels:
+            self.assertTrue(reduce(lambda x,y: x or y.name == geolevel, all_geolevels, False),
+                "Regional geolevel %s not created" % geolevel)
 
     def test_filter_functions(self):
         function_dict = self.cmd.create_filter_functions(self.region_tree, 0)
