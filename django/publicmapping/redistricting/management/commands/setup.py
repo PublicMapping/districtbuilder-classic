@@ -1505,7 +1505,7 @@ ERROR:
 
                         g = Geounit(geom = my_geom, 
                             name = get_shape_name(shapefile, feat), 
-                            geolevel = leves,
+                            geolevel = levels,
                             simple = simple, 
                             center = center,
                             portable_id = get_shape_portable(shapefile, feat),
