@@ -738,12 +738,16 @@ ERROR:
     import geographic levels.""";
             return
 
+        region_config = config.xpath('/DistrictBuilder/Regions')[0]
+        region_filters = create_filter_functions(region_config, verbose)
+
         gconfig = {
             'shapefiles': shapeconfig,
             'attributes': attrconfig,
             'geolevel': geolevel.get('name')[:50],
             'subject_fields': [],
-            'tolerance': geolevel.get('tolerance')
+            'tolerance': geolevel.get('tolerance'),
+            'region_filters': region_filters
         }
 
         sconfigs = geolevel.xpath('//Subjects/Subject')
@@ -1167,8 +1171,20 @@ ERROR:
                     print message
 
         return result
-                
 
+    def import_regions(self, config, verbose):
+        regions = config.xpath('Region')
+        for region in regions:
+            attributes = {}
+            attributes['name'] = region.get('name')
+            attributes['label'] = region.get('label')
+            attributes['description'] = region.get('description')
+            attributes['sort_key'] = region.get('sort_key')
+            obj, created, changed, message = consistency_check_and_update(Region, overwrite=self.force, **attributes)
+            if verbose > 1 or (verbose > 0 and changed and not self.force):
+                print message
+
+            
     def import_prereq(self, config, verbose):
         """
         Import the required support data prior to importing.
@@ -1177,6 +1193,9 @@ ERROR:
         relationships prior to loading all the geounits.
         """
 
+        # Import the regions first
+        region_config = config.xpath('/DistrictBuilder/Regions')[0]
+        self.import_regions(region_config, verbose)
         # Import legislative bodies first.
         bodies = config.xpath('//LegislativeBody[@id]')
         for body in bodies:
@@ -1185,8 +1204,18 @@ ERROR:
             attributes['short_label'] = body.get('short_label')[:10]
             attributes['long_label'] = body.get('long_label')[:256]
             attributes['max_districts'] = body.get('maxdistricts')
+            attributes['sort_key'] = body.get('sort_key')
             attributes['is_community'] = body.get('is_community')=='true'
-            
+
+            body_by_region = config.xpath('/DistrictBuilder/Regions/Region/LegislativeBodies/LegislativeBody[@ref="%s"]' % body.get('id'))
+            if len(body_by_region) != 1:
+                if verbose > 0:
+                    print "Legislative body %s not attributed to any region" % attributes['name']
+                continue
+            else:
+                region_name = body_by_region[0].getparent().getparent().get('name')
+            attributes['region'] = Region.objects.get(name=region_name)
+
             obj, created, changed, message = consistency_check_and_update(LegislativeBody, overwrite=self.force, **attributes)
 
             if verbose > 1 or (verbose > 0 and changed and not self.force):
@@ -1277,7 +1306,7 @@ ERROR:
         # Import geolevels third
         # Note that geolevels may be added in any order, but the geounits
         # themselves need to be imported top-down (smallest area to biggest)
-        geolevels = config.xpath('//GeoLevels/GeoLevel')
+        geolevels = config.xpath('/DistrictBuilder/GeoLevels/GeoLevel')
         for geolevel in geolevels:
             attributes = {}
             attributes['name'] = geolevel.get('name').lower()[:50]
@@ -1289,6 +1318,10 @@ ERROR:
     
             if verbose > 1 or (changed and not self.force):
                 print message
+
+            regions = config.xpath('/DistrictBuilder/Regions/Region') 
+            for region in regions:
+                self.get_or_create_geolevels_for_region(region, verbose)
 
             # Map the imported geolevel to a legislative body
             lbodies = geolevel.xpath('LegislativeBodies/LegislativeBody')
@@ -1334,7 +1367,7 @@ ERROR:
         Import a shapefile, based on a config.
 
         Parameters:
-            config -- A dictionary with 'shapepath', 'geolevel', 'name_field', and 'subject_fields' keys.
+            config -- A dictionary with 'shapepath', 'geolevel', 'name_field', 'region_filters' and 'subject_fields' keys.
         """
         def get_shape_tree(shapefile, feature):
             shpfields = shapefile.xpath('Fields/Field')
@@ -1386,7 +1419,6 @@ ERROR:
                 print '%d objects in shapefile' % len(lyr)
 
             level = Geolevel.objects.get(name=config['geolevel'].lower()[:50])
-
             # Create the subjects we need
             subject_objects = {}
             for sconfig in config['subject_fields']:
@@ -1406,15 +1438,21 @@ ERROR:
                 sys.stdout.write('0% .. ')
                 sys.stdout.flush()
             for i,feat in enumerate(lyr):
+                
                 if (float(i) / len(lyr)) > (progress + 0.1):
                     progress += 0.1
                     if verbose > 1:
                         sys.stdout.write('%2.0f%% .. ' % (progress * 100))
                         sys.stdout.flush()
 
+                levels = [level]
+                for geolevel, filter in config['region_filters'].iteritems():
+                    if filter(feature) == True:
+                        levels.append(Geolevel.objects.get(name='%s_%s' % (geolevel, level)))
+
                 prefetch = Geounit.objects.filter(
                     Q(name=get_shape_name(shapefile, feat)), 
-                    Q(geolevel=level),
+                    Q(geolevel=levels),
                     Q(portable_id=get_shape_portable(shapefile, feat)),
                     Q(tree_code=get_shape_tree(shapefile, feat))
                 )
@@ -1467,7 +1505,7 @@ ERROR:
 
                         g = Geounit(geom = my_geom, 
                             name = get_shape_name(shapefile, feat), 
-                            geolevel = level, 
+                            geolevel = leves,
                             simple = simple, 
                             center = center,
                             portable_id = get_shape_portable(shapefile, feat),
@@ -1566,6 +1604,95 @@ ERROR:
                     traceback.print_exc()
                     print ''
 
+
+    def get_largest_geolevel(self, config, verbose):
+        """
+        Given a Region node, return the string representing the 
+        config id of the "largest" geolevel in the region
+        """
+        def get_youngest_child(node):
+            if len(node) == 0:
+                return node
+            else :
+                return get_youngest_child(node[0])
+
+        geolevels = config.xpath('GeoLevels')
+        if len(geolevels) > 0:
+            return get_youngest_child(geolevels[0]).get('ref')
+
+    def get_or_create_geolevels_for_region(self, config, verbose):
+        """
+        Given a Region node, return a list of geolevels represented.
+        If the geolevels don't yet exist, create them and save them to
+        the database
+        """
+        regional_geolevels = []
+        has_filter = True if len(config.xpath('RegionFilter')) == 1 else False
+        geolevels = config.xpath('GeoLevels//GeoLevel')
+        for g in geolevels:
+            name = g.get('ref')        
+            try:
+                geolevel = Geolevel.objects.get(name=name)
+            except:
+                pass
+            if has_filter:
+                attributes = {}
+                attributes['name'] = '%s_%s' % (config.get('name'), name)
+                attributes['min_zoom'] = geolevel.min_zoom
+                attributes['tolerance'] = geolevel.tolerance
+                obj, created, changed, message = consistency_check_and_update(Geolevel, overwrite=self.force, **attributes)
+                if verbose > 1 or (changed and not self.force):
+                    print message
+
+            regional_geolevels.append(geolevel)
+        return regional_geolevels
+
+    def create_filter_functions(self, config, verbose):
+        """
+        Given a Regions node, create a dictionary of functions that can
+        be used to filter a feature from a shapefile into the correct
+        region.  The dictionary keys are region ids from the config, the 
+        values are lists of functions which return true when applied to
+        a feature that should be in the region
+        """
+        def get_filter_lambda(region_code):
+            attribute = region_code.get('attr')
+            pattern = region_code.get('value')
+            start = region_code.get('start')
+            if start is not None:
+                start = int(start)
+            end = region_code.get('width')
+            if end is not None:
+                end = int(end)
+            return lambda feature: feature.get(attribute)[start:end] == pattern
+
+        function_dict = {}
+        regions = config.xpath('Region')
+        for region in regions:
+            key = region.get('name')
+            values = []
+            filters = region.xpath('RegionFilter/RegionCode')
+            if len(filters) == 0:
+                values.append(lambda feature: True)
+            else:
+                for f in filters:
+                    values.append(get_filter_lambda(f))
+            function_dict[key] = values
+        return function_dict
+
+    def get_regions_for_feature(self, feature, functions):
+        """
+        Given a feature and a dictionary of filter functions, returns
+        a list of strings representing the regions to which the feature
+        should belong
+        """
+        regions = []
+        for key, value in functions.iteritems():
+            for filter_function in value:
+                if filter_function(feature) == True:
+                    regions.append(key)
+                    break
+        return regions
 
     def create_template(self, config, verbose):
         """

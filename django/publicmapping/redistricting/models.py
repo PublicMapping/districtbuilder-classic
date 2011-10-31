@@ -117,6 +117,9 @@ class Region(models.Model):
 
     # The name of this region
     name = models.CharField(max_length=256)
+    
+    # A short name for the region
+    label = models.CharField(max_length=256)
 
     # A description of this region
     description = models.CharField(max_length=500, blank=True)

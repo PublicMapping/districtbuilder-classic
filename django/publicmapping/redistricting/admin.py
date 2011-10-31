@@ -226,6 +226,7 @@ class ValidationCriteriaAdmin(admin.ModelAdmin):
 
 # Register these classes with the admin interface.
 admin.site.register(Geounit, GeounitAdmin)
+admin.site.register(Region)
 admin.site.register(ComputedCharacteristic, ComputedCharacteristicAdmin) 
 admin.site.register(Characteristic, CharacteristicAdmin)
 admin.site.register(Subject, SubjectAdmin)

@@ -35,6 +35,7 @@ from django.test.client import Client
 from django.contrib.gis.geos import *
 from django.contrib.auth.models import User
 from django.utils import simplejson as json
+from lxml import etree
 from models import *
 from utils import *
 from calculators import *
@@ -4146,3 +4147,72 @@ class ReportCalculatorTestCase(BaseTestCase):
         self.assertEqual('list', col1['type'])
         self.assertEqual(675, len(col1['value']))
 
+from redistricting.management.commands.setup import Command
+class RegionConfigTest(BaseTestCase):
+    """ 
+    Test the configuration options
+    """
+
+    fixtures = []
+    def setUp(self):
+        self.config_xml = etree.parse('../../docs/config.dist.xml')
+        self.region_tree = self.config_xml.xpath('/DistrictBuilder/Regions')[0]
+        self.region1 = self.config_xml.xpath('/DistrictBuilder/Regions/Region')[0]
+        self.region2 = self.config_xml.xpath('/DistrictBuilder/Regions/Region')[1]
+        self.cmd = Command()
+
+    def test_get_largest_geolevel(self):
+        region1 = self.region_tree.xpath('Region')[0]
+        region2 = self.region_tree.xpath('Region')[1]
+
+        bg1 = self.cmd.get_largest_geolevel(region1, 0)
+        bg2 = self.cmd.get_largest_geolevel(region2, 0)
+
+        self.assertEqual('county', bg1, "Didn't get correct geolevel")
+        self.assertEqual('vtd', bg2, "Didn't get correct geolevel")
+        
+    def test_get_or_create_geolevels_for_region(self):
+        self.cmd.import_prereq(self.config_xml, 0)
+        
+        geolevel_list1 = self.cmd.get_or_create_geolevels_for_region(self.region1, 0)
+        geolevel_list2 = self.cmd.get_or_create_geolevels_for_region(self.region2, 0)
+
+        self.assertEqual(3, len(geolevel_list1), "Didn't return correct number of geolevels")
+        self.assertTrue(reduce(lambda x,y: x or y.name == 'county', geolevel_list1, False),
+            "County geolevel not found in region 1 test")
+        self.assertTrue(reduce(lambda x,y: x or y.name == 'vtd', geolevel_list1, False),
+            "VTD geolevel not found in region 1 test")
+        self.assertTrue(reduce(lambda x,y: x or y.name == 'block', geolevel_list1, False),
+            "Block geolevel not found in region 1 test")
+
+        self.assertEqual(2, len(geolevel_list2), "Didn't return correct number of geolevels")
+        self.assertTrue(reduce(lambda x,y: x or y.name == 'dc_area_vtd', geolevel_list2, False),
+            "VTD geolevel not found in region 2 test")
+        self.assertTrue(reduce(lambda x,y: x or y.name == 'dc_area_block', geolevel_list2, False),
+            "Block geolevel not found in region 2 test")
+
+    def test_filter_functions(self):
+        function_dict = self.cmd.create_filter_functions(self.region_tree, 0)
+        self.assertEqual(2, len(function_dict), 'No filter functions found')
+
+        shapefile = 'redistricting/testdata/test_data.shp'
+        test_layer = DataSource(shapefile)[0]
+
+        va = dc = 0
+        for feat in test_layer:
+            geolevels = self.cmd.get_regions_for_feature(feat, function_dict)
+            if len(geolevels) == 2:
+                self.assertIn('dc_area', geolevels, "Regional feature not found in unfiltered geolevel")
+                self.assertIn('va', geolevels, "Unfiltered feature not found in unfiltered geolevel")
+                va += 1
+                dc += 1
+            elif len(geolevels) == 1:
+                self.assertIn('va', geolevels, "Regional feature not found in unfiltered geolevel")
+                va += 1
+            else:
+                self.fail("Incorrect number of geolevels returned - should never get here")
+        self.assertEqual(1, dc, "Incorrect number of geolevels found for region")
+        self.assertEqual(3, va, "Incorrect number of geolevels found for unfiltered region")
+
+    def tearDown(self):
+        self.region_tree = None
