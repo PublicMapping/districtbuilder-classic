@@ -1222,7 +1222,10 @@ class Plan(models.Model):
         if not include_geom:
             qset = qset.defer('geom','simple')
 
-        return sorted(list(qset), key=lambda d: d.sortKey())
+        districts = sorted(list(qset), key=lambda d: d.sortKey())
+
+        # Don't return any districts that are empty (asside from the Unassigned district)
+        return filter(lambda x: x.district_id == 0 or x.geom.num_coords > 0, districts)
 
     @staticmethod
     def create_default(name,body,owner=None,template=True,is_pending=True,create_unassigned=True):
