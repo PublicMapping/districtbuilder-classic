@@ -26,11 +26,7 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="CalculatorReports" minOccurs="0">
-                <xs:complexType>
-                    <xs:attribute name="tempdir" type="xs:string" use="required" />
-                </xs:complexType>
-            </xs:element>
+            <xs:element name="CalculatorReports" minOccurs="0" />
         </xs:all>
     </xs:complexType>
     <xs:complexType name="BardBodyConfigType">
@@ -151,13 +147,6 @@
             <xs:annotation>
                 <xs:documentation>
                 The path to the R workspace that will be loaded into the app at startup
-                </xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-        <xs:attribute name="temp" type="xs:string" use="required" >
-            <xs:annotation>
-                <xs:documentation>
-                The path to the www-data-readable directory where reports are written and stored
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>

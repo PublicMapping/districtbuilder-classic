@@ -931,7 +931,7 @@ class PlanReport:
             sys.stderr.write("Couldn't retrieve plan information.\n")
             return 
 
-        tempdir = settings.BARD_TEMP
+        tempdir = settings.WEB_TEMP
         filename = '%s_p%d_v%d_%s' % (plan.owner.username, plan.id, plan.version, stamp)
 
         if settings.DEBUG:
@@ -1029,7 +1029,7 @@ class PlanReport:
         except:
             return 'error'
 
-        tempdir = settings.BARD_TEMP
+        tempdir = settings.WEB_TEMP
         filename = '%s_p%d_v%d_%s' % (plan.owner.username, plan.id, plan.version, stamp)
 
         pending_file = '%s/%s.pending' % (tempdir, filename)
@@ -1060,7 +1060,7 @@ class PlanReport:
         except:
             return 'error'
 
-        tempdir = settings.BARD_TEMP
+        tempdir = settings.WEB_TEMP
         filename = '%s_p%d_v%d_%s' % (plan.owner.username, plan.id, plan.version, stamp)
 
         pending = open('%s/%s.pending' % (tempdir, filename,),'w')
@@ -1116,7 +1116,7 @@ class CalculatorReport:
         html = loader.get_template('report_panel_container.html').render(DjangoContext({'report_panels': html}))
             
         # Write it to file
-        tempdir = settings.CALC_REPORTS_DIR
+        tempdir = settings.WEB_TEMP
         filename = '%s_p%d_v%d_%s' % (plan.owner.username, plan.id, plan.version, stamp)
         htmlfile = open('%s/%s.html' % (tempdir, filename,),'w')
         htmlfile.write(html)
@@ -1134,7 +1134,7 @@ class CalculatorReport:
         except:
             return 'error'
 
-        tempdir = settings.CALC_REPORTS_DIR
+        tempdir = settings.WEB_TEMP
         filename = '%s_p%d_v%d_%s' % (plan.owner.username, plan.id, plan.version, stamp)
         pending_file = '%s/%s.pending' % (tempdir, filename)
         complete_file = '%s/%s.html' % (tempdir, filename)
@@ -1159,7 +1159,7 @@ class CalculatorReport:
         except:
             return 'error'
 
-        tempdir = settings.CALC_REPORTS_DIR
+        tempdir = settings.WEB_TEMP
         filename = '%s_p%d_v%d_%s' % (plan.owner.username, plan.id, plan.version, stamp)
 
         pending = open('%s/%s.pending' % (tempdir, filename,),'w')

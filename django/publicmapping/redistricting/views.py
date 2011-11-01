@@ -394,7 +394,7 @@ def commonplan(request, planid):
         # result is a map of relevant panels to score functions with labels and ids,
         # used for generating groups of checkboxes on the evaluate tab.
         calculator_reports = []
-        if 'CALC_REPORTS_DIR' in settings.__members__:
+        if settings.REPORTS_ENABLED == 'CALC':
             report_displays = ScoreDisplay.objects.filter(title='%s Reports' % body_name)
             if len(report_displays) > 0:
                 calculator_reports = map(lambda p: {
@@ -644,8 +644,8 @@ def printplan(request, planid):
         imgs = [
             (cfg['geography'], tempfile.NamedTemporaryFile(delete=False), True,), 
             (cfg['districts'], tempfile.NamedTemporaryFile(delete=False), True, cfg['sld'],),
-            (request.REQUEST['legend1'], open(settings.BARD_TEMP + ('/legend1-%s.jpg' % stamp), 'w+b'), False, ),
-            (request.REQUEST['legend2'], open(settings.BARD_TEMP + ('/legend2-%s.jpg' % stamp), 'w+b'), False, ),
+            (request.REQUEST['legend1'], open(settings.WEB_TEMP + ('/legend1-%s.jpg' % stamp), 'w+b'), False, ),
+            (request.REQUEST['legend2'], open(settings.WEB_TEMP + ('/legend2-%s.jpg' % stamp), 'w+b'), False, ),
         ]
 
         for imginfo in imgs:
@@ -668,7 +668,7 @@ def printplan(request, planid):
                 os.remove(imgfile.name)
 
         # save
-        fullImg.save(settings.BARD_TEMP + ('/print-%s.jpg' % stamp),'jpeg',quality=85)
+        fullImg.save(settings.WEB_TEMP + ('/print-%s.jpg' % stamp),'jpeg',quality=85)
 
         return render_to_response('printplan.html', cfg)
     
@@ -814,7 +814,7 @@ def getreport(request, planid):
         status['message'] = 'User can\'t view the given plan'
         return HttpResponse(json.dumps(status),mimetype='application/json')
 
-    if not settings.REPORTS_ENABLED:
+    if not settings.REPORTS_ENABLED is None:
         status['message'] = 'Reports functionality is turned off.'
         return HttpResponse(json.dumps(status),mimetype='application/json')
               

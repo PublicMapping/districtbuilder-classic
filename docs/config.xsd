@@ -435,6 +435,7 @@
                             </xs:element>
                         </xs:sequence>
                         <xs:attribute name="root" type="xs:string" use="required" />
+                        <xs:attribute name="temp" type="xs:string" use="optional" />
                         <xs:attribute name="sessionquota" type="xs:positiveInteger" use="optional" />
                         <xs:attribute name="sessiontimeout" type="xs:positiveInteger" use="optional" />
                     </xs:complexType>
