@@ -28,6 +28,7 @@ Author:
     Andrew Jennings, David Zwarg, Kenny Shepard
 """
 
+from celery.decorators import task
 from django.core.exceptions import ValidationError
 from django.contrib.gis.db import models
 from django.contrib.gis.geos import MultiPolygon,Polygon,GEOSGeometry,GEOSException,GeometryCollection,Point
@@ -598,6 +599,10 @@ class Plan(models.Model):
     # Is this plan 'pending'? Pending plans are being constructed in the
     # backend, and should not be visible in the UI
     is_pending = models.BooleanField(default=False)
+
+    # Is this plan in the middle of a reaggregation process?
+    # Reaggregating plans should not be selectable in the UI
+    is_reaggregating = models.BooleanField(default=False)
 
     # Is this plan considered a valid plan based on validation criteria?
     is_valid = models.BooleanField(default=False)
@@ -2094,24 +2099,41 @@ CROSS JOIN (
                 geolevel = l.geolevel
         return geolevel
 
+    @task
     def reaggregate(self):
         """
         Reaggregate all computed characteristics for each district in this plan.
         
         @return: An integer count of the number of districts reaggregated
         """
-        # Find the geolevel relevant to this plan that has the largest geounits
-        geolevel = self.get_largest_geolevel()
+        # Set the is_reaggregating flag
+        self.is_reaggregating = True
+        self.save()
 
-         # Get all of the geounit_ids for that geolevel
-        geounit_ids = map(str, Geounit.objects.filter(geolevel=geolevel).values_list('id', flat=True))
+        try:
+            # Find the geolevel relevant to this plan that has the largest geounits
+            geolevel = self.get_largest_geolevel()
+    
+            # Get all of the geounit_ids for that geolevel
+            geounit_ids = map(str, Geounit.objects.filter(geolevel=geolevel).values_list('id', flat=True))
+    
+            # Cycle through each district and update the statistics
+            updated = 0
+            for d in self.district_set.all():
+                success = d.reaggregate(geounit_ids=geounit_ids)
+                if success == True:
+                    updated += 1
 
-        # Cycle through each district and update the statistics
-        updated = 0
-        for d in self.district_set.all():
-            success = d.reaggregate(geounit_ids=geounit_ids)
-            if success == True:
-                updated += 1  
+            # Reaggregation successful, unset the is_pending flag
+            self.is_pending = False
+            self.save()
+        
+        except Exception as ex:
+            sys.stderr.write('Unable to fully reaggreagate %d because \n%s\n' % (self.id, ex))
+
+        # Unset the is_reaggregating flag
+        self.is_reaggregating = False
+        self.save()
 
         return updated
         
