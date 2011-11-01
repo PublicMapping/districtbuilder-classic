@@ -1256,10 +1256,11 @@ class Plan(models.Model):
             qset = qset.defer('geom','simple')
 
         districts = sorted(list(qset), key=lambda d: d.sortKey())
+        simplest_level = self.legislative_body.get_geolevels()[-1]
 
         if filter_empty:
             # Don't return any districts that are empty (asside from the Unassigned district)
-            return filter(lambda x: x.district_id == 0 or x.geom.num_coords > 0, districts)
+            return filter(lambda x: x.district_id == 0 or x.simple[simplest_level.id-1].num_coords > 0, districts)
         else:
             return districts
 
@@ -1425,8 +1426,7 @@ class Plan(models.Model):
         if version == None:
            version = self.version
 
-        qset = self.get_district_ids_at_version(version)
-        current_districts = self.district_set.filter(id__in=qset).extra(where=['(not st_isempty(geom) or district_id=0)']).count()
+        current_districts = len(self.get_districts_at_version(version))
         available_districts = self.legislative_body.max_districts
 
         return available_districts - current_districts + 1 #add one for unassigned

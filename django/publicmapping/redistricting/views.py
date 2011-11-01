@@ -1490,7 +1490,9 @@ def getdistricts(request, planid):
 
         status['districts'] = []
 
-        status['available'] = plan.get_available_districts(version=version)
+        # Same calculation as plan.get_available_districts, but
+        # g_a_d fetches districts all over again -- skip that overhead
+        status['available'] = plan.legislative_body.max_districts - len(districts) + 1
 
         # Find the maximum version in the returned districts
         max_version = max([d.version for d in districts])
@@ -1981,11 +1983,12 @@ def getplans(request):
                 'is_template': plan.is_template, 
                 'is_shared': plan.is_shared, 
                 'owner': plan.owner.username, 
-                'districtCount': len(plan.get_districts_at_version(plan.version, include_geom=False)) - 1, 
+                'districtCount': '--', # load dynamically -- this is a big performance hit
                 'can_edit': can_edit(request.user, plan),
                 'plan_type': plan.legislative_body.name
                 }
             })
+
     json_response = "{ \"total\":\"%d\", \"page\":\"%d\", \"records\":\"%d\", \"rows\":%s }" % (total_pages, page, len(all_plans), json.dumps(plans_list))
     return HttpResponse(json_response,mimetype='application/json') 
 

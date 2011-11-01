@@ -379,6 +379,32 @@ chooseplan = function(options) {
         var can_edit = _table.jqGrid('getCell', id, 'fields.can_edit');
         _table.jqGrid('GridToForm', id, '#plan_form'); 
 
+        $('#districtCount').val('...  ');
+        var progress = setInterval(function(){
+            var val = $('#districtCount').val();
+            $('#districtCount').val( val.substr(4) + val.substr(0,4) );
+        }, 125);
+
+        $.ajax({
+            type:'GET',
+            dataType: 'json',
+            url: '/districtmapping/plan/' + _selectedPlanId + '/districts/',
+            success: function(data) {
+                var dcount = 0;
+                for (var didx = 0; didx < data.districts.length; didx++) {
+                    if (data.districts[didx].id != 0) {
+                        dcount++;
+                    }
+                }
+                clearInterval(progress);
+                $('#districtCount').val(dcount);
+            },
+            error: function() {
+                clearInterval(progress);
+                $('#districtCount').val('n/a');
+            }
+        });
+
         // workaround for problem with jqGrid custom formatter with boolean (is_shared)
         var shared = $('#is_shared');
         if (shared.val().contains("unshared")) {
