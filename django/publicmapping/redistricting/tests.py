@@ -4171,7 +4171,6 @@ class RegionConfigTest(BaseTestCase):
         self.assertEqual('county', bg1, "Didn't get correct geolevel")
         self.assertEqual('vtd', bg2, "Didn't get correct geolevel")
         
-    # TODO: Make this "create_regional_geolevels"
     def test_get_or_create_regional_geolevels(self):
         self.cmd.import_prereq(self.config_xml, 0)
         self.cmd.import_regional_geolevels(self.region_tree, 0)
