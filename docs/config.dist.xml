@@ -32,6 +32,7 @@
                 <LegislativeBody ref="senate" />
                 <LegislativeBody ref="community" />
             </LegislativeBodies>
+            <!-- Only these geolevels are applicable to this region -->
             <GeoLevels>
                 <GeoLevel ref="block">
                     <GeoLevel ref="vtd">
@@ -43,7 +44,7 @@
 
         <Region id="dc_area" name="dc_area" label="District of Columbia Area" description="The metropolitan counties around the District of Columbia" sort_key="2">
             <!-- A set of filters to apply to the largets GeoLevel shapefile. -->
-            <RegionFilter name="region_dc" >
+            <RegionFilter>
                 <!-- A Single filter for the GEOID10 field in the vtd shapefile
                      that selects all geographic units that match the value at the 
                      specified text string window. -->
