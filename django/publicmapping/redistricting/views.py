@@ -584,6 +584,7 @@ def printplan(request, planid):
     cfg['composite'] = '/reports/print-%s.jpg' % stamp
     cfg['legend1'] = '/reports/legend1-%s.jpg' % stamp
     cfg['legend2'] = '/reports/legend2-%s.jpg' % stamp
+    cfg['preview'] = False
 
     if request.method == 'GET':
         # render pg to a string
@@ -598,6 +599,8 @@ def printplan(request, planid):
 
         return response
     elif request.method == 'POST':
+        cfg['preview'] = True
+
         if not 'basemap' in request.REQUEST or not 'geography' in request.REQUEST \
             or not 'districts' in request.REQUEST:
             return HttpResponseRedirect('../view/')
