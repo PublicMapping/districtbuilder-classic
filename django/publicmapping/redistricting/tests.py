@@ -4173,7 +4173,6 @@ class RegionConfigTest(BaseTestCase):
         
     def test_get_or_create_regional_geolevels(self):
         self.cmd.import_prereq(self.config_xml, 0)
-        self.cmd.import_regional_geolevels(self.region_tree, 0)
 
         expected_geolevels = ['county', 'vtd', 'block', 'va_county', 'va_vtd', 'va_block',
             'dc_area_vtd', 'dc_area_block']

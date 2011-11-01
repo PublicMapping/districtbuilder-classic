@@ -1319,12 +1319,16 @@ ERROR:
             if verbose > 1 or (changed and not self.force):
                 print message
 
-            regions = config.xpath('/DistrictBuilder/Regions/Region') 
-            for region in regions:
-                self.import_regional_geolevels(region, verbose)
+        regions = config.xpath('/DistrictBuilder/Regions')
+        if len(regions) > 0:
+            regions = regions[0]
+            self.import_regional_geolevels(config, regions, verbose)
+
+        # Use the Region nodes to link bodies and geolevels
+        for region in regions:
 
             # Map the imported geolevel to a legislative body
-            lbodies = geolevel.xpath('LegislativeBodies/LegislativeBody')
+            lbodies = region.xpath('LegislativeBodies/LegislativeBody')
             for lbody in lbodies:
                 # de-reference
                 lbconfig = config.xpath('//LegislativeBody[@id="%s"]' % lbody.get('ref'))[0]
@@ -1337,28 +1341,32 @@ ERROR:
                     sconfig = config.xpath('//Subject[@id="%s"]' % (sconfig.get('aliasfor')))[0]
                 subject = Subject.objects.get(name=sconfig.get('id').lower()[:50])
 
-                pconfig = lbody.xpath('Parent')
-                if len(pconfig) == 0:
-                    parent = None
-                else:
-                    pconfig = config.xpath('//GeoLevel[@id="%s"]' % pconfig[0].get('ref'))[0]
-                    plvl = Geolevel.objects.get(name=pconfig.get('name').lower()[:50])
-                    parent = LegislativeLevel.objects.get(
-                        legislative_body=legislative_body, 
-                        geolevel=plvl, 
-                        subject=subject)
+                def add_legislative_level_for_geolevel(node, body, subject, parent):
+                    """
+                    Helper method to recursively add LegislativeLevel mappings from Region configs
+                    """
+                    geolevel_node = config.xpath('/DistrictBuilder/GeoLevels/GeoLevel[@id="%s"]' % node.get('ref'))
+                    geolevel_name = "%s_%s" % (region.get('name'), geolevel_node[0].get('name'))
+                    geolevel = Geolevel.objects.get(name=geolevel_name)
+                    # geolevel = Geolevel.objects.get(name = "%s_%s" % (geolevel_node[0].get('name'), region.get('name')))
+                    obj, created = LegislativeLevel.objects.get_or_create(
+                        legislative_body=body,
+                        geolevel=geolevel,
+                        subject=subject, 
+                        parent=parent)
 
-                obj, created = LegislativeLevel.objects.get_or_create(
-                    legislative_body=legislative_body, 
-                    geolevel=glvl, 
-                    subject=subject, 
-                    parent=parent)
+                    if verbose > 1:
+                        if created:
+                            print 'Created LegislativeBody/GeoLevel mapping "%s/%s"' % (legislative_body.name, geolevel.name)
+                        else:
+                            print 'LegislativeBody/GeoLevel mapping "%s/%s" already exists' % (legislative_body.name, geolevel.name)
 
-                if verbose > 1:
-                    if created:
-                        print 'Created LegislativeBody/GeoLevel mapping "%s/%s"' % (legislative_body.name, glvl.name)
-                    else:
-                        print 'LegislativeBody/GeoLevel mapping "%s/%s" already exists' % (legislative_body.name, glvl.name)
+                    if len(node) > 0:
+                        add_legislative_level_for_geolevel(node[0], body, subject, obj)
+
+                parentless = region.xpath('GeoLevels/GeoLevel')
+                if len(parentless) > 0:
+                    add_legislative_level_for_geolevel(parentless[0], legislative_body, subject, None)
 
         return True
 
@@ -1622,32 +1630,32 @@ ERROR:
         if len(geolevels) > 0:
             return get_youngest_child(geolevels[0]).get('ref')
 
-    def import_regional_geolevels(self, config, verbose):
+    def import_regional_geolevels(self, config, regions_node, verbose):
         """
-        Given a Region nodes, return a list of geolevels represented.
+        Given a Regions node, return a list of geolevels represented.
         If the geolevels don't yet exist, create them and save them to
         the database
         """
-        regional_geolevels = []
-        geolevels = config.xpath('GeoLevels//GeoLevel')
-        for g in geolevels:
-            name = g.get('ref')        
-            try:
-                geolevel = Geolevel.objects.get(name=name)
-            except:
-                if verbose > 1:
-                    print "Base geolevel %s for %s not found in the database.  Import base geolevels before regional geolevels" % (name, config.get('name'))
-                return
-            attributes = {}
-            attributes['name'] = '%s_%s' % (config.get('name'), name)
-            attributes['min_zoom'] = geolevel.min_zoom
-            attributes['tolerance'] = geolevel.tolerance
-            obj, created, changed, message = consistency_check_and_update(Geolevel, overwrite=self.force, **attributes)
-            if verbose > 1 or (changed and not self.force):
-                print message
-
-            regional_geolevels.append(geolevel)
-        return regional_geolevels
+        regions = regions_node.xpath('//Region')
+        for region in regions:
+            regional_geolevels = region.xpath('GeoLevels//GeoLevel')
+            for geolevel in regional_geolevels:
+                geolevel_config = config.xpath('/DistrictBuilder/GeoLevels/GeoLevel[@id="%s"]' % geolevel.get('ref'))
+                if len(geolevel_config) > 0:
+                    name = geolevel_config[0].get('name')
+                try:
+                    geolevel = Geolevel.objects.get(name=name)
+                except:
+                    if verbose > 1:
+                        print "Base geolevel %s for %s not found in the database.  Import base geolevels before regional geolevels" % (name, region.get('name'))
+                    return
+                attributes = {}
+                attributes['name'] = '%s_%s' % (region.get('name'), name)
+                attributes['min_zoom'] = geolevel.min_zoom
+                attributes['tolerance'] = geolevel.tolerance
+                obj, created, changed, message = consistency_check_and_update(Geolevel, overwrite=self.force, **attributes)
+                if verbose > 1 or (changed and not self.force):
+                    print message
 
     def create_filter_functions(self, config, verbose):
         """
