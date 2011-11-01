@@ -144,13 +144,26 @@ class PlanAdmin(admin.ModelAdmin):
     inlines = [DistrictInline]
 
     # When displayed as a list, show the name, is_template, is_shared,
-    # owner, created, edited flags.
-    list_display = ('name','is_template','is_shared','owner','created','edited','is_valid')
+    # owner, created, is_pending, is_reaggregating, edited flags.
+    list_display = ('name','is_template','is_shared','owner','created','edited','is_valid', 'is_pending', 'is_reaggregating')
 
-    list_filter = ('is_template','is_shared','is_valid','legislative_body','owner','is_valid')
+    list_filter = ('is_template','is_shared','is_valid','legislative_body','owner','is_valid', 'is_pending', 'is_reaggregating')
 
     # Order Plans by name by default.
     ordering = ('name',)
+
+    # Add custom actions
+    def reaggregate_selected_plans(self, request, queryset):
+        for plan in queryset:
+            # Set the is_reaggregating flag
+            # (needed for the state to display on immediate refresh)
+            plan.is_reaggregating = True
+            plan.save()
+
+            # Reaggregate asynchronously
+            plan.reaggregate.delay(plan)
+
+    actions = [reaggregate_selected_plans]
 
 class SubjectAdmin(admin.ModelAdmin):
     """
