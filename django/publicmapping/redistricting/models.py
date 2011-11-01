@@ -2083,6 +2083,38 @@ CROSS JOIN (
         cleanRE = re.compile('\W+')
         return cleanRE.sub('_', self.name)
 
+    def get_largest_geolevel(self):
+        """
+        Get the geolevel relevant to this plan that has the largest geounits
+        """
+        leg_levels = LegislativeLevel.objects.filter(legislative_body=self.legislative_body)
+        geolevel = leg_levels[0].geolevel
+        for l in leg_levels:
+            if l.geolevel.min_zoom < geolevel.min_zoom:
+                geolevel = l.geolevel
+        return geolevel
+
+    def reaggregate(self):
+        """
+        Reaggregate all computed characteristics for each district in this plan.
+        
+        @return: An integer count of the number of districts reaggregated
+        """
+        # Find the geolevel relevant to this plan that has the largest geounits
+        geolevel = self.get_largest_geolevel()
+
+         # Get all of the geounit_ids for that geolevel
+        geounit_ids = map(str, Geounit.objects.filter(geolevel=geolevel).values_list('id', flat=True))
+
+        # Cycle through each district and update the statistics
+        updated = 0
+        for d in self.district_set.all():
+            success = d.reaggregate(geounit_ids=geounit_ids)
+            if success == True:
+                updated += 1  
+
+        return updated
+        
 
 class PlanForm(ModelForm):
     """
@@ -2454,6 +2486,46 @@ class District(models.Model):
         for community in communities:
             types = types | set(Tag.objects.get_for_object(community).filter(name__startswith='type='))
         return types
+
+    def reaggregate(self, geounit_ids=None):
+        """
+        Reaggregate all computed characteristics for this district.
+
+        @param geounit_ids: Optional set of geounits to filter on. If this is
+            not provided, it will be calculatated by using all geounits
+            in the largest geolevel of the plan.
+        @return: True if reaggregation was successfull, False otherwise. 
+        """
+
+        # Find the geolevel relevant to this plan that has the largest geounits
+        geolevel = self.plan.get_largest_geolevel()
+
+        # If not specified, get all of the geounit_ids for that geolevel
+        if geounit_ids is None:
+            geounit_ids = map(str, Geounit.objects.filter(geolevel=geolevel).values_list('id', flat=True))
+        
+        try:
+            body = self.plan.legislative_body
+            geounits = Geounit.get_mixed_geounits(geounit_ids, body, geolevel.id, self.geom, True)
+        
+            # Grab all the computedcharacteristics for the district and reaggregate
+            for cc in self.computedcharacteristic_set.order_by('-subject__percentage_denominator'):
+                cs = Characteristic.objects.filter(subject=cc.subject, geounit__in=geounits)
+                agg = cs.aggregate(Sum('number'))
+                cc.number = agg['number__sum']
+                cc.percentage = '0000.00000000'
+                if cc.subject.percentage_denominator:
+                    c = self.computedcharacteristic_set.get(subject=cc.subject.percentage_denominator)
+                    denominator = c.number
+                    if cc.number and denominator:
+                        cc.percentage = cc.number / denominator
+                if not cc.number:
+                    cc.number = '00000000.0000'
+                cc.save()
+            return True
+        except Exception as ex:
+            sys.stderr.write('Unable to reaggreagate %s because \n%s\n' % (self.long_label, ex))
+            return False
 
 # Enable tagging of districts by registering them with the tagging module
 tagging.register(District)

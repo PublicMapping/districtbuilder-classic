@@ -792,6 +792,93 @@ class PlanTestCase(BaseTestCase):
 
         self.assertEqual(729, len(sorted_district_list), 'Sorted district list was the wrong length: %d' % len(sorted_district_list))
 
+    def test_reaggregation(self):
+        """
+        Test plan reaggregation
+        """
+        geolevelid = self.geolevels[1].id
+        geounits = self.geounits[geolevelid]
+        subject = Subject.objects.get(name='TestSubject')        
+
+        # Populate district 1
+        dist1ids = geounits[0:3] + geounits[9:12] + geounits[18:21]
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        self.plan.add_geounits(self.district1.district_id, dist1ids, geolevelid, self.plan.version)
+
+        # Populate district 2
+        dist2ids = geounits[10:13] + geounits[19:22] + geounits[28:31]
+        dist2ids = map(lambda x: str(x.id), dist2ids)
+        self.plan.add_geounits(self.district2.district_id, dist2ids, geolevelid, self.plan.version)
+
+        # Helper for getting the value of a computed characteristic
+        def get_cc_val(district):
+            d_id = district.district_id
+            district = max(District.objects.filter(plan=self.plan,district_id=d_id),key=lambda d: d.version)
+            return ComputedCharacteristic.objects.get(district=district,subject=subject).number
+
+        # Ensure starting values are correct
+        self.assertEqual(3, get_cc_val(self.district1), "District1 started with wrong value")
+        self.assertEqual(18, get_cc_val(self.district2), "District2 started with wrong value")
+
+        # Modify characteristic values, and ensure the values don't change
+        c = Characteristic.objects.get(geounit=geounits[0],subject=subject)
+        c.number += 100
+        c.save()
+        d_id = self.district1.district_id
+        self.district1 = max(District.objects.filter(plan=self.plan,district_id=d_id),key=lambda d: d.version)
+        self.assertEqual(3, get_cc_val(self.district1), "District1 value changed unexpectedly")
+
+        c = Characteristic.objects.get(geounit=geounits[10],subject=subject)
+        c.number += 100
+        c.save()
+        d_id = self.district2.district_id
+        self.district2 = max(District.objects.filter(plan=self.plan,district_id=d_id),key=lambda d: d.version)
+        self.assertEqual(18, get_cc_val(self.district2), "District2 value changed unexpectedly")
+
+        # Reaggregate each district, and ensure the values have been updated
+        self.district1.reaggregate()
+        self.assertEqual(103, get_cc_val(self.district1), "District1 not aggregated properly")
+
+        self.district2.reaggregate()
+        self.assertEqual(118, get_cc_val(self.district2), "District2 not aggregated properly")
+
+        # Change the values back to what they were
+        c = Characteristic.objects.get(geounit=geounits[0],subject=subject)
+        c.number -= 100
+        c.save()
+        d_id = self.district1.district_id
+        self.district1 = max(District.objects.filter(plan=self.plan,district_id=d_id),key=lambda d: d.version)
+
+        c = Characteristic.objects.get(geounit=geounits[10],subject=subject)
+        c.number -= 100
+        c.save()
+        d_id = self.district2.district_id
+        self.district2 = max(District.objects.filter(plan=self.plan,district_id=d_id),key=lambda d: d.version)
+
+        # Reaggregate entire plan, and ensure the values have been updated
+        updated = self.plan.reaggregate()
+        self.assertEqual(3, get_cc_val(self.district1), "Plan not aggregated properly for District1")
+        self.assertEqual(18, get_cc_val(self.district2), "Plan not aggregated properly for District2")
+        self.assertEqual(8, updated, "Incorrect number of districts updated")
+
+        # Change the values back to what they were
+        c = Characteristic.objects.get(geounit=geounits[0],subject=subject)
+        c.number += 100
+        c.save()
+        d_id = self.district1.district_id
+        self.district1 = max(District.objects.filter(plan=self.plan,district_id=d_id),key=lambda d: d.version)
+
+        c = Characteristic.objects.get(geounit=geounits[10],subject=subject)
+        c.number += 100
+        c.save()
+        d_id = self.district2.district_id
+        self.district2 = max(District.objects.filter(plan=self.plan,district_id=d_id),key=lambda d: d.version)
+
+        # Reaggregate only the first district, and ensure only the one value has been updated
+        self.district1.reaggregate()
+        self.assertEqual(103, get_cc_val(self.district1), "District1 not aggregated properly")
+        self.assertEqual(18, get_cc_val(self.district2), "District2 aggregated when it shouldn't have been")
+        
     def test_paste_districts(self):
         # TODO - figure out why this fails only when run with the entire test suite
         # Set up the test using geounits in the 2nd level
