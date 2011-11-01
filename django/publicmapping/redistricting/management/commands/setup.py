@@ -101,7 +101,7 @@ ERROR:
         verbose = int(options.get('verbosity'))
 
         try:
-            config = parse( options.get('config') )
+            config = self.config = parse( options.get('config') )
         except Exception, ex:
             if verbose > 0:
                 print """
@@ -1455,13 +1455,18 @@ ERROR:
 
                 levels = [level]
                 for region, filter_list in config['region_filters'].iteritems():
-                    for f in filter_list:
-                        if f(feat) == True:
-                            levels.append(Geolevel.objects.get(name='%s_%s' % (region, level.name)))
-
+                    # Check for applicability of the function by examining the config
+                    geolevel_xpath = '/DistrictBuilder/GeoLevels/GeoLevel[@name="%s"]' % config['geolevel']
+                    geolevel_config = self.config.xpath(geolevel_xpath)
+                    geolevel_region_xpath = '/DistrictBuilder/Regions/Region[@id="%s"]/GeoLevels/GeoLevel[@ref="%s"]' % (region, geolevel_config[0].get('id'))
+                    if len(self.config.xpath(geolevel_region_xpath)) > 0:
+                        # If the geolevel is in the region, check the filters
+                        for f in filter_list:
+                            if f(feat) == True:
+                                levels.append(Geolevel.objects.get(name='%s_%s' % (region, level.name)))
                 prefetch = Geounit.objects.filter(
                     Q(name=get_shape_name(shapefile, feat)), 
-                    # Q(geolevel__in=levels),
+                    Q(geolevel__in=levels),
                     Q(portable_id=get_shape_portable(shapefile, feat)),
                     Q(tree_code=get_shape_tree(shapefile, feat))
                 )
