@@ -14,7 +14,7 @@
             long_label="District %s" maxdistricts="40" sort_key="3"/>
         <LegislativeBody id="community" name="Community Map" short_label="%s"
             long_label="Community %s" maxdistricts="999" is_community="true" sort_key="4"/>
-        <LegislativeBody id="dc_area_council" name="DC Metro Area" short_label="%s"
+        <LegislativeBody id="dc_area_council" name="DC Planning Council" short_label="%s"
             long_label="District %s" maxdistricts="5" sort_key="5"/>
         <LegislativeBody id="dc_community" name="DC Community Map" short_label="%s"
             long_label="Community %s" maxdistricts="999" is_community="true" sort_key="6"/>
@@ -42,7 +42,7 @@
             </GeoLevels>
         </Region>
 
-        <Region id="dc_area" name="dc_area" label="District of Columbia Area" description="The metropolitan counties around the District of Columbia" sort_key="2">
+        <Region id="dc_area" name="dc" label="DC Metro" description="The District of Columbia Metropolitan Area" sort_key="2">
             <!-- A set of filters to apply to the largets GeoLevel shapefile. -->
             <RegionFilter>
                 <!-- A Single filter for the GEOID10 field in the vtd shapefile
