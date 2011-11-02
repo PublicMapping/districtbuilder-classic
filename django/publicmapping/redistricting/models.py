@@ -607,7 +607,7 @@ ProcessingState = ChoicesEnum(
     READY = (0, 'Ready'),
     CREATING = (1, 'Creating'),
     REAGGREGATING = (2, 'Reaggregating'),
-    NEEDS_REAGG = (3, 'Needs Reaggregating'),
+    NEEDS_REAGG = (3, 'Needs reaggregation'),
 )
 
 class Plan(models.Model):
@@ -2138,8 +2138,8 @@ CROSS JOIN (
         
         @return: An integer count of the number of districts reaggregated
         """
-        # Set the is_reaggregating flag
-        self.is_reaggregating = True
+        # Set the reaggregating flag
+        self.processing_state = ProcessingState.REAGGREGATING
         self.save()
 
         try:
@@ -2163,8 +2163,8 @@ CROSS JOIN (
         except Exception as ex:
             sys.stderr.write('Unable to fully reaggreagate %d because \n%s\n' % (self.id, ex))
 
-        # Unset the is_reaggregating flag
-        self.is_reaggregating = False
+        # Unset the reaggregating flag
+        self.processing_state = ProcessingState.READY
         self.save()
 
         return updated
