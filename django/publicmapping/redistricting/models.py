@@ -2131,7 +2131,6 @@ CROSS JOIN (
                 geolevel = l.geolevel
         return geolevel
 
-    @task
     def reaggregate(self):
         """
         Reaggregate all computed characteristics for each district in this plan.
@@ -2168,7 +2167,17 @@ CROSS JOIN (
             self.save()
 
         return updated
-        
+
+    @staticmethod
+    @task
+    def reaggregate_async(plan):
+        """
+        Asynchronously reaggregate all computed characteristics for each district in the plan.
+
+        @param plan: The plan to reaggregate
+        @return: An integer count of the number of districts reaggregated
+        """
+        return plan.reaggregate()
 
 class PlanForm(ModelForm):
     """

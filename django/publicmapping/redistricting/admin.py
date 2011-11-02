@@ -161,7 +161,7 @@ class PlanAdmin(admin.ModelAdmin):
             plan.save()
 
             # Reaggregate asynchronously
-            plan.reaggregate.delay(plan)
+            Plan.reaggregate_async.delay(plan)
 
     actions = [reaggregate_selected_plans]
 
