@@ -30,6 +30,12 @@ Author:
 
 from models import *
 from django.contrib.gis import admin
+from django.shortcuts import render_to_response
+from django.utils.encoding import force_unicode
+from django.contrib.admin import helpers
+from django.utils.translation import ugettext_lazy, ugettext as _
+from django import template
+import inflect
 
 class ComputedCharacteristicAdmin(admin.ModelAdmin):
     """
@@ -180,6 +186,63 @@ class SubjectAdmin(admin.ModelAdmin):
 
     # Enable filtering by the displayed flag
     list_filter = ('is_displayed',)
+
+    # Use a custom object deletion mechanism
+    actions = ['delete_selected_subject']
+
+    def get_actions(modeladmin, request):
+        """
+        Get the actions available for administering subject objects.
+
+        This overrides the default get_actions to remove the 'delete' action, and replace
+        it with our own.
+        """
+        actions = super(SubjectAdmin, modeladmin).get_actions(request)
+        del actions['delete_selected']
+        return actions
+
+    def delete_selected_subject(modeladmin, request, queryset):
+        opts = modeladmin.model._meta
+        app_label = opts.app_label
+
+        # Check that the user has delete permission for the actual model
+        if not modeladmin.has_delete_permission(request):
+            raise PermissionDenied
+
+        if request.POST.get('post'):
+            n = queryset.count()
+            if n:
+                engine = inflect.engine()
+                for obj in queryset:
+                    obj_display = force_unicode(obj)
+                    modeladmin.log_deletion(request, obj, obj_display)
+                queryset.delete()
+                modeladmin.message_user(request, _("Successfully deleted %(count)d %(items)s.") % {
+                    "count": n, "items": engine.plural('subject', n)
+                })
+            # Return None to display the change list page again.
+            return None
+
+        warned = 'warned' in request.REQUEST and request.REQUEST['warned'] == 'on'
+
+        context = {
+            "object_name": force_unicode(opts.verbose_name),
+            "deletable_objects": queryset.all(),
+            "queryset": queryset,
+            "opts": opts,
+            "root_path": modeladmin.admin_site.root_path,
+            "app_label": app_label,
+            "action_checkbox_name": helpers.ACTION_CHECKBOX_NAME,
+            "warned": warned
+        }
+
+        # Display the confirmation page
+        return render_to_response("admin/%s/%s/delete_selected_confirmation.html" % (app_label, opts.object_name.lower()), 
+            context, context_instance=template.RequestContext(request))
+
+        
+    delete_selected_subject.short_description = ugettext_lazy("Delete selected %(verbose_name_plural)s")
+
 
 class ScorePanelAdmin(admin.ModelAdmin):
     """
