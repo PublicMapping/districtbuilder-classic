@@ -2566,16 +2566,7 @@ def create_unassigned_district(sender, **kwargs):
         unassigned = District(short_label=u"\u0398",long_label="Unassigned", version = 0, plan = plan, district_id=0)
 
         biggest_geolevel = plan.get_biggest_geolevel()
-        all_geom = biggest_geolevel.geounit_set.collect()
-        if all_geom is None:
-            print 'Biggest Geolevel',biggest_geolevel.id,biggest_geolevel.name
-            all_geolevels = Geolevel.objects.all()
-            print 'All Geolevels:'
-            for geolevel in all_geolevels:
-                print geolevel.id,geolevel.name
-                for unit in geolevel.geounit_set.all():
-                    print '  ',unit.id, unit.name
-        all_geom = all_geom.buffer(0)
+        all_geom = biggest_geolevel.geounit_set.collect().buffer(0)
         if all_geom.geom_type == 'MultiPolygon':
             all_geom = all_geom.cascaded_union
 
