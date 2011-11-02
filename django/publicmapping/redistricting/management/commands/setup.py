@@ -1458,7 +1458,7 @@ ERROR:
                     # Check for applicability of the function by examining the config
                     geolevel_xpath = '/DistrictBuilder/GeoLevels/GeoLevel[@name="%s"]' % config['geolevel']
                     geolevel_config = self.config.xpath(geolevel_xpath)
-                    geolevel_region_xpath = '/DistrictBuilder/Regions/Region[@id="%s"]/GeoLevels/GeoLevel[@ref="%s"]' % (region, geolevel_config[0].get('id'))
+                    geolevel_region_xpath = '/DistrictBuilder/Regions/Region[@id="%s"]/GeoLevels//GeoLevel[@ref="%s"]' % (region, geolevel_config[0].get('id'))
                     if len(self.config.xpath(geolevel_region_xpath)) > 0:
                         # If the geolevel is in the region, check the filters
                         for f in filter_list:
@@ -1537,6 +1537,8 @@ ERROR:
                         continue
                 else:
                     g = prefetch[0]
+                    g.geolevel = levels
+                    g.save()
 
                 if not config['attributes']:
                     self.set_geounit_characteristic(g, subject_objects, feat, verbose)
