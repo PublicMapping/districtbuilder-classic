@@ -1987,7 +1987,8 @@ def getplans(request):
                 'owner': plan.owner.username, 
                 'districtCount': '--', # load dynamically -- this is a big performance hit
                 'can_edit': can_edit(request.user, plan),
-                'plan_type': plan.legislative_body.name
+                'plan_type': plan.legislative_body.name,
+                'processing_state': plan.get_processing_state_display()
                 }
             })
 

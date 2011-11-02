@@ -256,7 +256,18 @@ chooseplan = function(options) {
         return "<img id='" + id  +
                "' class='delclick' height='16' width='16' src='/static-media/images/icon-trash.png' alt='" +
                obj.fields.name + "' />";
-    }    
+    };
+
+    // Formatter used for coloring rows
+    var rowsToColor = [];
+    var rowColorFormatter = function(cellValue, options, rowObject) {
+        if (cellValue === "Needs reaggregation") {
+            rowsToColor.push({ id: options.rowId, color: "#FF0000" }); // red
+        } else if (cellValue === "Reaggregating") {
+            rowsToColor.push({ id: options.rowId, color: "#FF9933" }); // orange
+        }
+        return cellValue;
+    };
 
     /**
      * Set up the jqGrid table and make the initial call to the server for data
@@ -284,7 +295,8 @@ chooseplan = function(options) {
                 {name:'fields.edited', label:'Last Edited', sortable:true, search:false, width:'130', fixed: true, align: 'center', formatter:'date', formatoptions: { srcformat: 'UniversalSortableDateTime', newformat:'m/d/Y g:i A'}},
                 {name:'fields.delete', label:'Delete', formatter: deleteFormatter, width:'60', fixed: true, align:'center'},
                 {name:'fields.can_edit', label:'Edit', search:false, hidden: true},
-                {name:'fields.districtCount', label:'# Districts', search:false, sortable:true, hidden:true}
+                {name:'fields.districtCount', label:'# Districts', search:false, sortable:true, hidden:true},
+                {name:'fields.processing_state', label:'State', search:false, sortable:false, hidden:true, formatter: rowColorFormatter}
             ],
 
             onSelectRow: rowSelected,
@@ -305,6 +317,12 @@ chooseplan = function(options) {
                 }
             },
             gridComplete: function() {
+                // Color row background based on processing_state
+                $.each(rowsToColor, function(ind, row) {
+                    $("#" + row.id).find("td").css("background-color", row.color);
+                });
+                rowsToColor = []
+                    
                 // Add functionality to the delete plan buttons
                 $('.delclick').click(function(obj) {
                     var id = obj.target.id.substring('delete-'.length);
