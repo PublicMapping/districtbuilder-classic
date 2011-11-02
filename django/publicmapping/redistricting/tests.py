@@ -63,6 +63,9 @@ class BaseTestCase(TestCase):
         self.plan = Plan.objects.get(name='testPlan')
         self.plan2 = Plan.objects.get(name='testPlan2')
 
+        for d in District.objects.all():
+            d.simplify()
+
         # Get the test Districts
         self.district1 = District.objects.get(long_label='District 1', plan=self.plan)
         self.district2 = District.objects.get(long_label='District 2', plan=self.plan)
@@ -439,7 +442,7 @@ class PlanTestCase(BaseTestCase):
         mp1 = MultiPolygon(p1)
         d3.geom = mp1
 
-        d3.save()
+        d3.simplify()
         latest = d3.district_id
 
         d4 = District(long_label = 'District 4', version=0)
@@ -449,7 +452,7 @@ class PlanTestCase(BaseTestCase):
         mp2 = MultiPolygon(p1)
         d4.geom = mp2
 
-        d4.save()
+        d4.simplify()
         incremented = d4.district_id
         self.assertEqual(latest + 1, incremented, 'New district did not have an id greater than the previous district. (e:%d, a:%d)' % (latest+1,incremented))
         
@@ -908,7 +911,7 @@ class PlanTestCase(BaseTestCase):
         self.plan.add_geounits(self.district1.district_id, dist1ids, geolevelid, self.plan.version)
 
         self.district3 = District(plan=self.plan, long_label="TestMember 3", district_id = 3)
-        self.district3.save()
+        self.district3.simplify()
         dist3ids = geounits[20:23] + geounits[29:32] + geounits[38:41]
         dist3ids = map(lambda x: str(x.id), dist3ids)
         self.plan.add_geounits(self.district3.district_id, dist3ids, geolevelid, self.plan.version)
@@ -3085,11 +3088,11 @@ class MultiMemberTestCase(BaseTestCase):
         # Set up new districts for testing
         self.district10 = District(long_label='District 10', version=0, district_id=10)
         self.district10.plan = self.plan
-        self.district10.save()
+        self.district10.simplify()
         
         self.district11 = District(long_label='District 11', version=0, district_id=11)
         self.district11.plan = self.plan
-        self.district11.save()
+        self.district11.simplify()
         
         district = self.district10
         districtid = district.id
@@ -3547,9 +3550,9 @@ class NestingTestCase(BaseTestCase):
         self.p1d1 = District.objects.get(long_label='District 1', plan=self.plan)
         self.p1d2 = District.objects.get(long_label='District 2', plan=self.plan)
         self.p2d1 = District(long_label='District 1', district_id=1, version=0, plan=self.plan2)
-        self.p2d1.save()
+        self.p2d1.simplify()
         self.p2d2 = District(long_label='District 2', district_id=2, version=0, plan=self.plan2)
-        self.p2d2.save()
+        self.p2d2.simplify()
 
     def tearDown(self):
         self.geolevel = None
