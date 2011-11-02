@@ -244,7 +244,7 @@ class DistrictIndexFile():
         except:
             raise Exception('body parameter could not be cast to an integer. Type: %s, %s' % (type(body), body))
         
-        plan = Plan.create_default(name, legislative_body, owner=owner, template=template, is_pending=True, create_unassigned=False)
+        plan = Plan.create_default(name, legislative_body, owner=owner, template=template, processing_state=ProcessingState.CREATING, create_unassigned=False)
 
         if not plan:
             if email:
@@ -391,8 +391,8 @@ class DistrictIndexFile():
         # Now that all of our other districts exist, create an unassigned district
         plan.create_unassigned = True
         create_unassigned_district(plan, instance=plan, created=True)
-        # this plan is complete, and no longer pending
-        plan.is_pending = False
+        # this plan is complete, and no longer creating
+        plan.processing_state = ProcessingState.READY
         plan.save()
 
         if email:

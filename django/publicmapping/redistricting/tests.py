@@ -889,7 +889,7 @@ class PlanTestCase(BaseTestCase):
         self.plan.add_geounits(self.district1.district_id, dist1ids, geolevelid, self.plan.version)
 
         district1 = max(District.objects.filter(plan=self.plan,district_id=self.district1.district_id),key=lambda d: d.version)
-        target = Plan.create_default('Paste Plan 1', self.plan.legislative_body, owner=self.user, template=False, is_pending=False)
+        target = Plan.create_default('Paste Plan 1', self.plan.legislative_body, owner=self.user, template=False, processing_state=ProcessingState.READY)
         target.save();
 
         # Paste the district and check returned number, geometry and stats
@@ -906,7 +906,7 @@ class PlanTestCase(BaseTestCase):
            self.assertEqual(stat.percentage, district1_stat.percentage, "Stats for pasted district (percentage) don't match")
 
         # Add district 2 to a new plan so it doesn't overlap district 1
-        new_for_2 = Plan.create_default('Paste Plan 2', self.plan.legislative_body, self.user, template=False, is_pending=False)
+        new_for_2 = Plan.create_default('Paste Plan 2', self.plan.legislative_body, self.user, template=False, processing_state=ProcessingState.READY)
         dist2ids = geounits[10:13] + geounits[19:22] + geounits[28:31]
         dist2ids = map(lambda x: str(x.id), dist2ids)
         new_for_2.add_geounits(self.district2.district_id, dist2ids, geolevelid, self.plan.version)
@@ -957,7 +957,7 @@ class PlanTestCase(BaseTestCase):
         self.plan.add_geounits(self.district1.district_id, dist1ids, geolevelid, self.plan.version)
 
         district1 = max(District.objects.filter(plan=self.plan,district_id=self.district1.district_id),key=lambda d: d.version)
-        target = Plan.create_default('Paste Plan 1', self.plan.legislative_body, owner=self.user, template=False, is_pending=False)
+        target = Plan.create_default('Paste Plan 1', self.plan.legislative_body, owner=self.user, template=False, processing_state=ProcessingState.READY)
         target.save();
 
         # Add a district to the Paste Plan
@@ -1006,7 +1006,7 @@ class PlanTestCase(BaseTestCase):
         self.district1 = max(District.objects.filter(plan=self.plan,district_id=self.district1.district_id),key=lambda d: d.version)
         self.district3 = max(District.objects.filter(plan=self.plan,district_id=self.district3.district_id),key=lambda d: d.version)
 
-        target = Plan.create_default('Paste Plan', self.plan.legislative_body, owner=self.user, template=False, is_pending=False)
+        target = Plan.create_default('Paste Plan', self.plan.legislative_body, owner=self.user, template=False, processing_state=ProcessingState.READY)
         target.save();
 
         # Add a district to the Paste Plan

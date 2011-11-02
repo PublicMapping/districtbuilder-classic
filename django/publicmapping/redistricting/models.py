@@ -1302,7 +1302,7 @@ class Plan(models.Model):
             return districts
 
     @staticmethod
-    def create_default(name,body,owner=None,template=True,is_pending=True,create_unassigned=True):
+    def create_default(name,body,owner=None,template=True,processing_state=ProcessingState.READY,create_unassigned=True):
         """
         Create a default plan.
 
@@ -1321,7 +1321,7 @@ class Plan(models.Model):
 
         # Create a new plan. This will also create an Unassigned district
         # in the the plan.
-        plan = Plan(name=name, legislative_body=body, is_template=template, version=0, owner=owner, is_pending=is_pending)
+        plan = Plan(name=name, legislative_body=body, is_template=template, version=0, owner=owner, processing_state=processing_state)
         plan.create_unassigned = create_unassigned
 
         try:
@@ -2156,16 +2156,16 @@ CROSS JOIN (
                 if success == True:
                     updated += 1
 
-            # Reaggregation successful, unset the is_pending flag
-            self.is_pending = False
+            # Reaggregation successful, unset the reaggregating flag
+            self.processing_state = ProcessingState.READY
             self.save()
         
         except Exception as ex:
             sys.stderr.write('Unable to fully reaggreagate %d because \n%s\n' % (self.id, ex))
 
-        # Unset the reaggregating flag
-        self.processing_state = ProcessingState.READY
-        self.save()
+            # Reaggregation unsuccessful, set state back to needs reaggregation
+            self.processing_state = ProcessingState.NEEDS_REAGG
+            self.save()
 
         return updated
         

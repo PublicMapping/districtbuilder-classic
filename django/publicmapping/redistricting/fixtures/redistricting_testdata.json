@@ -443,7 +443,7 @@
    "owner": 1, 
    "legislative_body": 1001, 
    "min_version": 0, 
-   "is_pending": false, 
+   "processing_state": 0, 
    "name": "testPlan"
   }
  }, 
@@ -461,7 +461,7 @@
    "owner": 1, 
    "legislative_body": 1001, 
    "min_version": 0, 
-   "is_pending": false, 
+   "processing_state": 0, 
    "name": "testPlan2"
   }
  }, 

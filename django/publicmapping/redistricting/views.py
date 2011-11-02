@@ -1943,8 +1943,7 @@ def getplans(request):
     else:
         return HttpResponseBadRequest("Unknown filter method.")
         
-       
-    not_pending = Q(is_pending=False)
+    not_creating = ~Q(processing_state=ProcessingState.CREATING) & ~Q(processing_state=ProcessingState.UNKNOWN)
 
     # Set up the order_by parameter from sidx and sord in the request
     if sidx.startswith('fields.'):
@@ -1963,10 +1962,10 @@ def getplans(request):
 
     if body_pk:
         body_filter = Q(legislative_body=body_pk)
-        all_plans = Plan.objects.filter(available, not_pending, body_filter, search_filter).order_by(sidx)
+        all_plans = Plan.objects.filter(available, not_creating, body_filter, search_filter).order_by(sidx)
     else:
         community_filter = Q(legislative_body__is_community=is_community)
-        all_plans = Plan.objects.filter(available, not_pending, search_filter, community_filter).order_by(sidx)
+        all_plans = Plan.objects.filter(available, not_creating, search_filter, community_filter).order_by(sidx)
 
     if all_plans.count() > 0:
         total_pages = math.ceil(all_plans.count() / float(rows))
