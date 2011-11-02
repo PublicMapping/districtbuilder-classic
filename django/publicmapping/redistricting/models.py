@@ -573,6 +573,43 @@ class Characteristic(models.Model):
         """
         return u'%s for %s: %s' % (self.subject, self.geounit, self.number)
 
+class ChoicesEnum(object):
+    """
+    Helper class for defining enumerated choices in a Model
+    """
+    def __init__(self, *args, **kwargs):
+        super(ChoicesEnum, self).__init__()
+        vals = {}
+        for key,val in kwargs.iteritems():
+            vals[key] = val
+        object.__setattr__(self, "_vals", vals)
+
+    def choices( self ):
+        cho = []
+        vals = object.__getattribute__(self, "_vals")
+        for key, val in vals.iteritems():
+            cho.append(val)
+        cho.sort()
+        return cho
+
+    def __getattr__(self, name):
+        return object.__getattribute__(self, "_vals")[name][0]
+
+    def __setattr__(self, name, value):
+        object.__setattr__(self, "_vals")[name][0] = value
+
+    def __delattr__(self, name):
+        del object.__setattr__(self, "_vals")[name]
+
+# Enumerated type used for determining a plan's state of processing
+ProcessingState = ChoicesEnum(
+    UNKNOWN = (-1, 'Unknown'),
+    READY = (0, 'Ready'),
+    CREATING = (1, 'Creating'),
+    REAGGREGATING = (2, 'Reaggregating'),
+    NEEDS_REAGG = (3, 'Needs Reaggregating'),
+)
+
 class Plan(models.Model):
     """
     A collection of Districts for an area of coverage, like a state.
@@ -596,14 +633,9 @@ class Plan(models.Model):
     # Is this plan shared?
     is_shared = models.BooleanField(default=False)
 
-    # Is this plan 'pending'? Pending plans are being constructed in the
-    # backend, and should not be visible in the UI
-    is_pending = models.BooleanField(default=False)
-
-    # Is this plan in the middle of a reaggregation process?
-    # Reaggregating plans should not be selectable in the UI
-    is_reaggregating = models.BooleanField(default=False)
-
+    # The processing state of this plan (see ProcessingState Enum)
+    processing_state = models.IntegerField(choices=ProcessingState.choices(), default=ProcessingState.UNKNOWN)
+    
     # Is this plan considered a valid plan based on validation criteria?
     is_valid = models.BooleanField(default=False)
 
