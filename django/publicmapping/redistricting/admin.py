@@ -243,6 +243,14 @@ class SubjectAdmin(admin.ModelAdmin):
         
     delete_selected_subject.short_description = ugettext_lazy("Delete selected %(verbose_name_plural)s")
 
+    def has_delete_permission(modeladmin, request, obj):
+        """
+        Override the delete permission for the Subject model. A Subject may never be deleted.
+        This only affects the admin change form, and not the bulk delete dropdown in the
+        Subject list screen.
+        """
+        return False
+
 
 class ScorePanelAdmin(admin.ModelAdmin):
     """
