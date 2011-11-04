@@ -52,6 +52,7 @@ chooseplan = function(options) {
        
         _table,
         _districtindexfilePublisher,
+        _reaggregator,
         _selectedPlanId,
         _eventType = 'template',
         _nameRequired,
@@ -72,6 +73,8 @@ chooseplan = function(options) {
 
         _table = _options.table;
         _nameRequired = false;
+        _reaggregator = reaggregator({ anonymous: _options.anonymous });
+        _reaggregator.init();
         loadTable();
         resizeToFit();
         initButtons();
@@ -316,7 +319,11 @@ chooseplan = function(options) {
                                          $("#csrfmiddlewaretoken").val());
                 }
             },
-            gridComplete: function() {
+            loadComplete: function(data) {
+                // Notify the reaggregator of the new data
+                _reaggregator.dataUpdated(data);
+            },
+            gridComplete: function(a, b, c) {
                 // Color row background based on processing_state
                 $.each(rowsToColor, function(ind, row) {
                     $("#" + row.id).find("td").css("background-color", row.color);
@@ -487,6 +494,9 @@ chooseplan = function(options) {
         }
         difile.setUpdateVisibility(true).init();
         _districtindexfilePublisher = difile;
+
+        // Notify reaggregator of the new plan
+        _reaggregator.planSelected(id);
     };
     
     var appendExtraParamsToRequest = function(xhr) {
@@ -571,6 +581,9 @@ chooseplan = function(options) {
           $(this).removeClass('active');
         });
         $currTab.addClass('active');
+
+        // Notify the reaggregator of the new filter
+        _reaggregator.filterChanged($currTab.attr('id'));
     };
     
     var initButtons = function() {

@@ -1321,6 +1321,24 @@ def get_splits(request, planid, otherid, othertype):
         status['exception'] = traceback.format_exc()
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
+def get_processing_status(request):
+    """
+    Get the processing status for a list of plan ids
+    """
+    status = { 'success': False }
+    plan_ids = request.REQUEST.getlist('planIds[]')
+    if len(plan_ids) == 0:
+        status['message'] = 'No planIds provided'
+    else:
+        statuses = {}
+        for p in Plan.objects.filter(id__in=plan_ids):
+            statuses[str(p.id)] = p.get_processing_state_display()
+
+        status['success'] = 'True'
+        status['message'] = statuses
+        
+    return HttpResponse(json.dumps(status),mimetype='application/json')
+
 def get_splits_report(request, planid):
     """
     Get the rendered splits report
@@ -2119,7 +2137,7 @@ def get_health(request):
             try:
                 decoded = session.get_decoded()
             except:
-                #There's a problem with this session, remote it
+                #There's a problem with this session, remove it
                 session.delete()
                 continue
             

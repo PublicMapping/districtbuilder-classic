@@ -275,6 +275,8 @@ $(function() {
     // jQuery-UI tab layout
     $('#steps').tabs({
         select: function(e, ui) {
+            $('#steps').trigger('tabSelected', [ui.index]);
+
             // lazy-load the leaderboard
             if ((ui.index === 4) && ($("#topranked_content").length === 0)) {
                 updateLeaderboard();
