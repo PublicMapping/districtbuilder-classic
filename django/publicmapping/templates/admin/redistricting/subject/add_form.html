@@ -1,0 +1,74 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_modify adminmedia %}
+
+{% block title %}
+{% if request.has_upload_template %}
+  {% trans "Upload Subject template" %}
+{% else %}
+  {% trans "Download Subject template" %}
+{% endif %}
+{% endblock %}
+
+{% block extrahead %}{{ block.super }}
+{% url admin:jsi18n as jsi18nurl %}
+<script type="text/javascript" src="{{ jsi18nurl|default:"../../../jsi18n/" }}"></script>
+{{ media }}
+{% endblock %}
+
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css/forms.css" />{% endblock %}
+
+{% block coltype %}{% if ordered_objects %}colMS{% else %}colM{% endif %}{% endblock %}
+
+{% block bodyclass %}{{ opts.app_label }}-{{ opts.object_name.lower }} change-form{% endblock %}
+
+{% block breadcrumbs %}{% if not is_popup %}
+<div class="breadcrumbs">
+     <a href="../../../">{% trans "Home" %}</a> &rsaquo;
+     <a href="../../">{{ app_label|capfirst|escape }}</a> &rsaquo; 
+     {% if has_change_permission %}<a href="../">{{ opts.verbose_name_plural|capfirst }}</a>{% else %}{{ opts.verbose_name_plural|capfirst }}{% endif %} &rsaquo; 
+     {% if add %}{% trans "Add" %} {{ opts.verbose_name }}{% else %}{{ original|truncatewords:"18" }}{% endif %}
+</div>
+{% endif %}{% endblock %}
+
+{% block content_title %}<h1>
+{% if request.has_upload_template %}
+    {% trans "Upload Subject template" %}
+{% else %}
+    {% trans "Download Subject template" %}
+{% endif %}
+</h1>{% endblock %}
+
+{% block content %}
+    <div id="content-main">
+    <p>A Subject in DistrictBuilder has relationships with many objects in the application. For this reason, adding a Subject requires a few extra steps. The following forms will walk you through the process of:</p>
+{% if request.has_upload_template %}
+    <ol>
+        <li>Downloading a Subject template file (CSV)</li>
+        <li><b>Uploading a complete Subject file (CSV)</b></li>
+        <li>Configuring the settings for the uploaded Subject.</li>
+    </ol>
+    <h2>2. Uploading a complete Subject file</h2>
+    <p>Using the file field below, please select the populated Subject template file, and upload the Subject template file with the 'Upload' button below.</p>
+    <form enctype="multipart/form-data" action="../template/" method="post" id="{{ opts.module_name }}_form">{% csrf_token %}
+        <table>
+        {{ upload_form.as_table }}
+        </table>
+        <input type="hidden" name="template_uploaded" value="true" />
+        <input type="submit" value="{% trans "Upload and Verify" %}" />
+{% else %}
+    <ol>
+        <li><b>Downloading a Subject template file (CSV)</b></li>
+        <li>Uploading a complete Subject file (CSV)</li>
+        <li>Configuring the settings for the uploaded Subject.</li>
+    </ol>
+    <h2>1. Download a Subject template file</h2>
+    <p>Please click on the following link, and save the contents of that file on your local filesystem:</p>
+    <p><a href="../template/">Subject template CSV</a></p>
+    <form action="{{ form_url }}" method="post" id="{{ opts.module_name }}_form">{% csrf_token %}
+      <input type="hidden" name="has_upload_template" value="true" />
+      <input type="submit" value="{% trans "Continue" %}" />
+    
+{% endif %}
+    </form>
+    </div>
+{% endblock %}

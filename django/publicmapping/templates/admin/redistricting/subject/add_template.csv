@@ -1,0 +1,3 @@
+"GEOID","Subject 1"
+{% for geounit in geounits %}{{ geounit }}, 0.0
+{% endfor %}

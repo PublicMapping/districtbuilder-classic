@@ -29,13 +29,16 @@ Author:
 """
 
 from models import *
+from forms import *
 from django.contrib.gis import admin
 from django.shortcuts import render_to_response
 from django.utils.encoding import force_unicode
 from django.contrib.admin import helpers
 from django.utils.translation import ugettext_lazy, ugettext as _
 from django import template
+from django.conf import settings
 import inflect
+from django.utils.functional import update_wrapper
 
 class ComputedCharacteristicAdmin(admin.ModelAdmin):
     """
@@ -190,6 +193,23 @@ class SubjectAdmin(admin.ModelAdmin):
     # Use a custom object deletion mechanism
     actions = ['delete_selected_subject']
 
+    def get_urls(modeladmin):
+        from django.conf.urls.defaults import patterns, url
+        def wrap(view):
+            def wrapper(*args, **kwargs):
+                return modeladmin.admin_site.admin_view(view)(*args, **kwargs)
+            return update_wrapper(wrapper, view)
+
+        info = modeladmin.model._meta.app_label, modeladmin.model._meta.module_name
+
+        urlpatterns = patterns('',
+            url(r'^template/$',
+                wrap(modeladmin.template_view),
+                name='%s_%s_add' % info),
+        ) + super(SubjectAdmin, modeladmin).get_urls()
+
+        return urlpatterns
+
     def get_actions(modeladmin, request):
         """
         Get the actions available for administering subject objects.
@@ -239,11 +259,51 @@ class SubjectAdmin(admin.ModelAdmin):
         # Display the confirmation page
         return render_to_response("admin/%s/%s/delete_selected_confirmation.html" % (app_label, opts.object_name.lower()), 
             context, context_instance=template.RequestContext(request))
-
         
     delete_selected_subject.short_description = ugettext_lazy("Delete selected %(verbose_name_plural)s")
 
-    def has_delete_permission(modeladmin, request, obj):
+    add_form_template = 'admin/redistricting/subject/add_form.html'
+    def add_view(modeladmin, request, form_url='', extra_context=None):
+        has_upload_template = 'has_upload_template' in request.REQUEST and request.REQUEST['has_upload_template'] == 'true'
+        form = SubjectUploadForm()
+
+        return super(SubjectAdmin, modeladmin).add_view(request, form_url, {'request':{'has_upload_template':has_upload_template}, 'upload_form':form })
+
+
+    def template_view(modeladmin, request, form_url='', extra_context=None):
+        opts = modeladmin.model._meta
+        app_label = opts.app_label
+
+        if request.method == 'GET':
+            geolevel, nunits = SubjectUploadForm.get_basest_geolevel_and_count()
+            context = {
+                # get geounits at the basest of all base geolevels
+                'geounits': geolevel.geounit_set.all().order_by('portable_id').values_list('portable_id',flat=True)
+            }
+
+            resp = render_to_response("admin/%s/%s/add_template.csv" % (app_label, opts.object_name.lower()), 
+                dictionary=context, mimetype='text/plain')
+            resp['Content-Disposition'] = 'attachement; filename=new_subject.csv'
+
+        else:
+            form = SubjectUploadForm(request.POST, request.FILES)
+            context = {
+                'add': True,
+                'opts': opts,
+                'app_label': app_label,
+                'has_change_permission': True,
+                'upload_form': form,
+                'user': request.user,
+                'errors': form.errors
+            }
+
+            resp = render_to_response('admin/redistricting/subject/upload_form.html', context, context_instance=template.RequestContext(request))
+            return resp
+
+        return resp
+
+
+    def has_delete_permission(modeladmin, request, obj=None):
         """
         Override the delete permission for the Subject model. A Subject may never be deleted.
         This only affects the admin change form, and not the bulk delete dropdown in the
