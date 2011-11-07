@@ -7,6 +7,42 @@
 {% url admin:jsi18n as jsi18nurl %}
 <script type="text/javascript" src="{{ jsi18nurl|default:"../../../jsi18n/" }}"></script>
 {{ media }}
+{% if is_processing %}
+<script type="text/javascript" src="/static-media/jquery/jquery-1.6.js"></script>
+<script type="text/javascript">
+$(function(){
+    var statusInterval = 0;
+    var getStatusUpdate = function(){
+        $.ajax({
+            type:'get',
+            url: $('#id_task_uuid').val() + '/status/',
+            dataType: 'json',
+            success: function(data, txtStatus, xhr) {
+                if (data.state == 'SUCCESS') {
+                    $('#upload_status_messages').empty();
+                    for (var i = 0; i < data.info.messages.length; i++) {
+                        $('#upload_status_messages').append('<p>' + data.info.messages[i] + '</p>');
+                    }
+
+                    if (data.info.task_id !== null) {
+                        $('#id_task_uuid').val(data.info.task_id);
+                    }
+                    else {
+                        $('#upload_status_messages').append('<p>Subject ' + data.info.subject + '</p>');
+                        clearInterval(statusInterval);
+                    }
+                }
+            },
+            error: function(xhr, txtStatus, error) {
+                //console.log('error getting status');
+            }
+        });
+    };
+
+    statusInterval = setInterval(getStatusUpdate, 60000);
+});
+</script>
+{% endif %}
 {% endblock %}
 
 {% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css/forms.css" />{% endblock %}
@@ -47,7 +83,14 @@
         <table>
         {{ upload_form.as_table }}
         </table>
-        <input type="submit" value="{% trans "Upload and Verify" %}" />
+        {% if is_processing %}
+        <div id="upload_status_messages">
+            Verifying counts of uploaded subjects...
+        </div>
+        <input type="button" value="{% trans "Please Wait ..." %}" disabled="true" />
+        {% else %}
+        <input type="submit" value="{% trans "Upload" %}" />
+        {% endif %}
     </form>
     </div>
 {% endblock %}

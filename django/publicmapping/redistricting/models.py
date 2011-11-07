@@ -49,7 +49,7 @@ from datetime import datetime
 from copy import copy
 from decimal import *
 from operator import attrgetter
-import sys, cPickle, traceback, types, tagging, re, csv, inflect
+import sys, cPickle, traceback, types, tagging, re, csv, inflect, os
 
 
 class Subject(models.Model):
@@ -118,6 +118,9 @@ class SubjectUpload(models.Model):
     # The subject file name
     filename = models.CharField(max_length=256)
 
+    # Subject name
+    subject_name = models.CharField(max_length=50)
+
     UPLOAD_STATUSES = (
         ('NA', 'Not Available'),
         ('UL', 'Uploading'),
@@ -139,12 +142,17 @@ class SubjectUpload(models.Model):
         method is called.
 
         Parameters:
+            upload_id - The id of the SubjectUpload record.
             localstore - a temporary file that will get deleted when it is closed
         """
-        upload = SubjectUpload.objects.get(id=upload_id)
         reader = csv.DictReader(open(localstore,'r'))
+        upload = SubjectUpload.objects.get(id=upload_id)
+        upload.subject_name = reader.fieldnames[1]
+        upload.save()
         for row in reader:
             SubjectQuarantine(upload=upload, portable_id=row[reader.fieldnames[0]],number=row[reader.fieldnames[1]]).save()
+
+        os.remove(localstore)
 
         nlines = upload.subjectquarantine_set.all().count()
         geolevel, nunits = LegislativeLevel.get_basest_geolevel_and_count()
@@ -162,17 +170,28 @@ class SubjectUpload(models.Model):
                 extra = nlines - nunits
                 msg += 'There %s %d extra %s.' % (p.plural('is', extra), extra, p.plural('geounit', extra))
 
+            upload.status = 'ER'
+            upload.save()
+            upload.subjectquarantine_set.all().delete()
+
             return {'task_id':None, 'success':False, 'messages':[msg]}
 
         # The next task will preload the units into the quarintine table
         task = SubjectUpload.verify_preload.delay(upload_id).task_id
 
-        return {'task_id':task, 'success':True, 'messages':[]}
+        return {'task_id':task, 'success':True, 'messages':['Verifying consistency of uploaded geounits ...']}
 
     @staticmethod
     @task
     def verify_preload(upload_id):
         """
+        Continue the verification process by counting the number of geounits
+        in the uploaded file and compare it to the number of geounits in the
+        basest geolevel. After this step completes, the copy_to_characteristics
+        method is called.
+
+        Parameters:
+            upload_id - The id of the SubjectUpload record.
         """
         upload = SubjectUpload.objects.get(id=upload_id)
         geolevel, nunits = LegislativeLevel.get_basest_geolevel_and_count()
@@ -187,9 +206,43 @@ class SubjectUpload(models.Model):
             msg = 'There are a correct number of geounits in the uploaded Subject file, '
             msg += 'but %d %s %s not match ' % (mismatched, p.plural('geounit', mismatched), p.plural('do', mismatched))
             msg += 'the geounits in the database.'
+
+            upload.status = 'ER'
+            upload.save()
+            upload.subjectquarantine_set.all().delete()
+
             return {'task_id':None, 'success':False, 'messages':[msg]}
 
-        return {'task_id':None, 'success':True, 'messages':[]}
+        # The next task will load the units into the characteristic table
+        task = SubjectUpload.copy_to_characteristics.delay(upload_id).task_id
+
+        return {'task_id':task, 'success':True, 'messages':['Copying records to characteristic table ...']}
+
+    @staticmethod
+    @task
+    def copy_to_characteristics(upload_id):
+        """
+        Continue the verification process by copying the holding records for
+        the subject into the characteristic table. This is the last step before
+        user intervention for Subject metadata input.
+
+        Parameters:
+            upload_id - The id of the SubjectUpload record.
+        """
+        upload = SubjectUpload.objects.get(id=upload_id)
+        quarantined = upload.subjectquarantine_set.all()
+
+        # create a temporary subject
+        new_sort_key = Subject.objects.all().aggregate(Max('sort_key'))['sort_key__max']
+        new_subject = Subject(name=upload.subject_name, display='', short_display='', description='', percentage_denominator=None, is_displayed=False, sort_key=new_sort_key, format_string='')
+        new_subject.save()
+
+        for characteristic in quarantined:
+            geounit = Geounit.objects.get(portable_id=characteristic.portable_id)
+            dbchar = Characteristic(subject=new_subject,geounit=geounit,number=characteristic.number)
+            dbchar.save()
+
+        return {'task_id':None, 'success':True, 'messages':['Dequarantine successful. You may edit your Subject now.'], 'subject':new_subject.id}
 
 
 class SubjectQuarantine(models.Model):
