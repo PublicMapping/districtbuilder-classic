@@ -59,6 +59,7 @@ chooseplan = function(options) {
         _selectedPlanName,
         _editButton,
         _saveButton,
+        _startText,
         _cancelButton;
 
     /**
@@ -70,10 +71,10 @@ chooseplan = function(options) {
      */
     _self.init = function() {
         _options.target.click(_self.show);
-
+        _startText = _options.anonymous ? "View Plan" : "Start Drawing";
         _table = _options.table;
         _nameRequired = false;
-        _reaggregator = reaggregator({ anonymous: _options.anonymous });
+        _reaggregator = reaggregator({ startText: _startText });
         _reaggregator.init();
         loadTable();
         resizeToFit();
@@ -119,6 +120,12 @@ chooseplan = function(options) {
      * for editing.
      */
     var selectPlan = function () {
+        // Notify the reaggregator of reaggregation button clicks
+        if ($('#start_mapping .ui-button-text').html().startsWith('Reaggregate')) {
+            _reaggregator.reaggregateClicked(_selectedPlanId);
+            return;
+        }
+        
         // If we're anonymous, just view the selected map
         if (_options.anonymous) {
             if (typeof(_selectedPlanId) == 'undefined') {
@@ -265,7 +272,7 @@ chooseplan = function(options) {
     var rowsToColor = [];
     var rowColorFormatter = function(cellValue, options, rowObject) {
         if (cellValue === "Needs reaggregation") {
-            rowsToColor.push({ id: options.rowId, color: "#FF0000" }); // red
+            rowsToColor.push({ id: options.rowId, color: "#DD4444" }); // red
         } else if (cellValue === "Reaggregating") {
             rowsToColor.push({ id: options.rowId, color: "#FF9933" }); // orange
         }
@@ -495,6 +502,10 @@ chooseplan = function(options) {
         difile.setUpdateVisibility(true).init();
         _districtindexfilePublisher = difile;
 
+        // Reset the button to starting text and enabled state
+        $('#start_mapping .ui-button-text').html(_startText);
+        $('#start_mapping').attr('disabled', false);
+
         // Notify reaggregator of the new plan
         _reaggregator.planSelected(id);
     };
@@ -587,9 +598,6 @@ chooseplan = function(options) {
     };
     
     var initButtons = function() {
-        // Text to display on the button used to view/edit a plan
-        var startText = _options.anonymous ? "View Plan" : "Start Drawing";
-    
         // Save these for later        
         _editButton = $('#edit_plan_attr');
         _saveButton = $('#save_plan_attr');
@@ -620,7 +628,7 @@ chooseplan = function(options) {
             } else {
                 showItems(true, false, true, false, true);
             }
-            $('#start_mapping .ui-button-text').html(startText);
+            $('#start_mapping .ui-button-text').html(_startText);
             setActiveTab($(this));
            
         });        
@@ -633,7 +641,7 @@ chooseplan = function(options) {
             } else {
                 showItems(true, false, true, false, true);
             }
-            $('#start_mapping .ui-button-text').html(startText);
+            $('#start_mapping .ui-button-text').html(_startText);
             setActiveTab($(this));
         });        
         $('#filter_mine').click( function () {
@@ -643,7 +651,7 @@ chooseplan = function(options) {
             $('input:radio[name=Edit]').filter('[value=edit]').prop('checked', true);
             showItems(false, true, true, true, false);
             setActiveTab($(this));            
-            $('#start_mapping .ui-button-text').html(startText);
+            $('#start_mapping .ui-button-text').html(_startText);
         });        
         $('#new_from_file').click( function() {
             _eventType = 'upload';
@@ -676,7 +684,6 @@ chooseplan = function(options) {
             $('#filter_mine').hide();
             $('#new_from_blank').hide();
             $('#new_from_file').hide();
-            $('#start_mapping').button('option', 'label', 'View Map');
             $('#lblStartDrawing').hide();
             if ($('#leg_selector option').length > 1) {
                 $('#start_mapping').before($('<div>4. Click the button to view the map as a guest</div>'));

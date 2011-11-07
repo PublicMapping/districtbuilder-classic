@@ -39,8 +39,18 @@ reaggregator = function(options) {
             // The url to check the server for the status of reaggregation
             statusUrl: '/districtmapping/processingstatus/',
 
-            // Anonymous users can only view plans (and need different button text)
-            anonymous: false,
+            // The url prefix and suffix (sandwiching a plan id) for reaggregation
+            reaggregateUrlPrefix: '/districtmapping/plan/',
+            reaggregateUrlSuffix: '/reaggregate/',
+
+            // Starting text of the view/edit plan button
+            startText: 'Start Drawing',
+
+            // Button that starts drawing
+            startButton: $('#start_mapping'),
+
+            // Label node of the button that starts drawing
+            startButtonLabel: $('#start_mapping .ui-button-text'),
 
             // jqGrid object: so refreshes can be triggered
             grid: $('#plan_table'),
@@ -94,6 +104,7 @@ reaggregator = function(options) {
                 }
             });
 
+            // Request status
             $.ajax({
                 url: _options.statusUrl,
                 type: 'GET',
@@ -102,10 +113,6 @@ reaggregator = function(options) {
                     if (data.success) {
                         updateData(data.message);
                     }
-                },
-                error: function() {
-                    $('<div class="error" title="Sorry">Error getting plan status</div>')
-                        .dialog({modal:true, resizable:false});
                 }
             });
         }, _options.timerInterval)
@@ -115,7 +122,28 @@ reaggregator = function(options) {
      * Updates the display for the currently selected plan
      */
     _self.planSelected = function(planId) {
-        // TODO: update buttons/etc.
+        switch (_currData[planId]) {
+            case 'Needs reaggregation':
+                if (_filterId === 'filter_mine') {
+                    // Owner -- allow reaggregation
+                    _options.startButtonLabel.html('Reaggregate & ' + _options.startText);
+                } else {
+                    // Not owner -- show that it needs reaggregation
+                    _options.startButtonLabel.html('Needs reaggregation');
+                    _options.startButton.attr('disabled', true);
+                }
+                break;
+
+            case 'Reaggregating':
+                // Don't allow actions while reaggregating
+                _options.startButtonLabel.html('Reaggregation in progress');
+                _options.startButton.attr('disabled', true);
+                break;
+            
+            default:
+                // Ready, Unknown, etc. No action needed
+                break;
+        }
     };
 
     /**
@@ -127,6 +155,40 @@ reaggregator = function(options) {
             newData[row.pk] = row.fields.processing_state;
         });
         updateData(newData);
+    };
+
+    /**
+     * Issues a reaggregation action for the selected plan
+     */
+    _self.reaggregateClicked = function(planId) {
+        var originalLabel = _options.startButtonLabel.html();
+        var handleError = function() {
+            _options.startButtonLabel.html(originalLabel);
+            _options.startButton.attr('disabled', false);
+            $('<div class="error" title="Sorry">Error reaggregating plan</div>')
+                .dialog({modal:true, resizable:false});
+        };
+
+        // Update the button state to show we are reaggregating
+        _options.startButtonLabel.html('Reaggregation in progress');
+        _options.startButton.attr('disabled', true);
+
+        // Reaggregate
+        $.ajax({
+            url: _options.reaggregateUrlPrefix + planId + _options.reaggregateUrlSuffix,
+            type: 'POST',
+            success: function(data) {
+                if (data.success) {
+                    _options.grid.trigger('reloadGrid');
+                    _reaggregatingIds.push(planId);
+                } else {
+                    handleError();
+                }
+            },
+            error: function() {
+                handleError();
+            }
+        });
     };
 
     // Do the data update -- called from both dataUpdated,
@@ -141,7 +203,7 @@ reaggregator = function(options) {
         // Check if any plans in which reaggregation was requested
         // have completed. If so, redirect to the plan page.
         $(_reaggregatingIds).each(function(i, planId) {
-            if (newData[i] === 'Ready') {
+            if (newData[planId] === 'Ready') {
                 window.location = '/districtmapping/plan/' + planId + '/edit/';
             }
         });

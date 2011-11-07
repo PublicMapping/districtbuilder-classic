@@ -233,6 +233,9 @@ def copyplan(request, planid):
     """
     note_session_activity(request)
 
+    if not is_plan_ready(planid):
+        return HttpResponseRedirect('/')
+
     status = { 'success': False }
     p = Plan.objects.get(pk=planid)
     # Check if this plan is copyable by the current user.
@@ -252,7 +255,7 @@ def copyplan(request, planid):
         status['message'] = "You already have a plan named that. Please pick a unique name."
         return HttpResponse(json.dumps(status),mimetype='application/json')
 
-    plan_copy = Plan(name=newname, owner=request.user, is_shared=shared, legislative_body=p.legislative_body)
+    plan_copy = Plan(name=newname, owner=request.user, is_shared=shared, legislative_body=p.legislative_body, processing_state=ProcessingState.READY)
     plan_copy.create_unassigned = False
     plan_copy.save()
 
@@ -500,6 +503,12 @@ def commonplan(request, planid):
         'plan_text': "community map" if (plan and plan.is_community()) else "plan"
     }
 
+def is_plan_ready(planid):
+    """
+    Determines if a plan is in a Ready state
+    """
+    planid = int(planid)
+    return planid == 0 or len(Plan.objects.filter(id=planid, processing_state=ProcessingState.READY)) > 0
 
 @user_passes_test(using_unique_session)
 def viewplan(request, planid):
@@ -516,7 +525,7 @@ def viewplan(request, planid):
         A rendered HTML page for viewing a plan.
     """
 
-    if not is_session_available(request):
+    if not is_session_available(request) or not is_plan_ready(planid):
         return HttpResponseRedirect('/')
 
     # Cleanup old versions for logged in users
@@ -541,10 +550,7 @@ def editplan(request, planid):
     Returns:
         A rendered HTML page for editing a plan.
     """
-    if not is_session_available(request):
-        return HttpResponseRedirect('/')
-
-    if request.user.is_anonymous():
+    if request.user.is_anonymous() or not is_session_available(request) or not is_plan_ready(planid):
         return HttpResponseRedirect('/')
 
     cfg = commonplan(request, planid)
@@ -698,7 +704,7 @@ def createplan(request):
     if request.method == "POST":
         name = request.POST['name']
         body = LegislativeBody.objects.get(id=int(request.POST['legislativeBody']))
-        plan = Plan(name = name, owner = request.user, legislative_body = body)
+        plan = Plan(name=name, owner=request.user, legislative_body=body, processing_state=ProcessingState.READY)
         try:
             plan.save()
             status = serializers.serialize("json", [ plan ])
@@ -2128,6 +2134,41 @@ def deleteplan(request, planid):
             status['exception'] = ex
     else:
         status['message'] = "Cannot delete a plan you don\'t own."
+    return HttpResponse(json.dumps(status), mimetype='application/json')
+
+@login_required
+@unique_session_or_json_redirect
+def reaggregateplan(request, planid):
+    """
+    Reaggregate a plan
+    """
+    note_session_activity(request)
+
+    status = { 'success': False }
+    if request.method != 'POST':
+        return HttpResponseNotAllowed(['POST'])
+
+    if not planid:
+        return HttpResponseBadRequest('Must declare planId')
+
+    plan = Plan.objects.filter(pk=planid,owner=request.user)
+    if plan.count() == 1:
+        plan = plan[0]
+        try:
+            Plan.reaggregate_async.delay(plan)
+
+            # Set the reaggregating flag
+            # (needed for the state to display on immediate refresh)
+            plan.processing_state = ProcessingState.REAGGREGATING
+            plan.save()
+            
+            status['success'] = True
+            status['message'] = 'Reaggregating plan'
+        except Exception as ex:
+            status['message'] = 'Failed to reaggregate plan'
+            status['exception'] = ex
+    else:
+        status['message'] = "Cannot reaggregate a plan you don\'t own."
     return HttpResponse(json.dumps(status), mimetype='application/json')
 
 def get_health(request):
