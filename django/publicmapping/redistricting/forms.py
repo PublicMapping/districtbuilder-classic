@@ -1,6 +1,6 @@
 from models import *
 from django import forms
-import os, tempfile, csv, inflect
+import os, tempfile
 
 class SubjectUploadForm(forms.Form):
     """
@@ -8,54 +8,41 @@ class SubjectUploadForm(forms.Form):
     """
     subject_upload = forms.FileField()
 
-    def clean_subject_upload(self):
+    processing_file = forms.CharField(required=False, widget=forms.HiddenInput)
+
+    task_uuid = forms.CharField(required=False, widget=forms.HiddenInput)
+
+    def clean(self):
         """
         After requiring that the field be present, this method checks the
         validity of the 'subject_upload' field.
         """
         subject_upload = self.cleaned_data['subject_upload']
+        task_id = ''
 
-        localstore = tempfile.NamedTemporaryFile(mode='w+',delete=False)
-        for chunk in subject_upload.chunks():
-            localstore.write(chunk)
+        sup = SubjectUpload(filename=subject_upload.name, status='UL')
+        sup.save()
 
-        # move to the beginning of the file
-        localstore.seek(0)
+        try:
+            localstore = tempfile.NamedTemporaryFile(mode='w+', delete=False)
+            for chunk in subject_upload.chunks():
+                localstore.write(chunk)
+            localstore.close()
 
-        nlines = 0
-        reader = csv.DictReader(localstore.file)
-        for row in reader:
-            nlines += 1
+            sup.status = 'CH'
 
-        localstore.close()
-        os.remove(localstore.name)
+            # verify_count begins a cascade of validation operations
+            task = SubjectUpload.verify_count.delay(sup.id, localstore.name)
+            sup.task_id = task.task_id
 
-        geolevel, nunits = SubjectUploadForm.get_basest_geolevel_and_count()
+            sup.save()
+        except:
+            sup.status = 'ER'
+            sup.save()
 
-        if nlines != nunits:
-            p = inflect.engine()
-            msg = 'There are an incorrect number of geounits in the uploaded Subject file. '
-            if nlines < nunits:
-                missing = nunits - nlines
-                msg += 'There %s %d %s missing.' % (p.plural('is', missing), missing, p.plural('geounit', missing))
-            else:
-                extra = nlines - nunits
-                msg += 'There %s %d extra %s.' % (p.plural('is', extra), extra, p.plural('geounit', extra))
+            raise forms.ValidationError('Could not store uploaded Subject template.')
 
-            raise forms.ValidationError(msg)
+        self.cleaned_data['task_uuid'] = sup.task_id
+        self.cleaned_data['processing_file'] = sup.filename
 
-        raise forms.ValidationError('Incomplete.')
-
-    @staticmethod
-    def get_basest_geolevel_and_count():
-        base_levels = LegislativeLevel.objects.filter(parent__isnull=True)
-        geolevel = None
-        nunits = 0
-        for base_level in base_levels:
-            if base_level.geolevel.geounit_set.all().count() > nunits:
-                nunits = base_level.geolevel.geounit_set.all().count()
-                geolevel = base_level.geolevel
-
-        return (geolevel, nunits,)
-
-
+        return self.cleaned_data

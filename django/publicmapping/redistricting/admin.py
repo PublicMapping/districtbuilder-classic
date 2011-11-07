@@ -30,6 +30,8 @@ Author:
 
 from models import *
 from forms import *
+from django import forms
+from django.http import HttpResponse
 from django.contrib.gis import admin
 from django.shortcuts import render_to_response
 from django.utils.encoding import force_unicode
@@ -206,6 +208,12 @@ class SubjectAdmin(admin.ModelAdmin):
             url(r'^template/$',
                 wrap(modeladmin.template_view),
                 name='%s_%s_add' % info),
+            url(r'^upload/$',
+                wrap(modeladmin.upload_view),
+                name='%s_%s_upload' % info),
+            url(r'^upload/(?P<task_uuid>.+)/status/$',
+                wrap(modeladmin.upload_status_view),
+                name='%s_%s_status' % info),
         ) + super(SubjectAdmin, modeladmin).get_urls()
 
         return urlpatterns
@@ -263,44 +271,83 @@ class SubjectAdmin(admin.ModelAdmin):
     delete_selected_subject.short_description = ugettext_lazy("Delete selected %(verbose_name_plural)s")
 
     add_form_template = 'admin/redistricting/subject/add_form.html'
-    def add_view(modeladmin, request, form_url='', extra_context=None):
-        has_upload_template = 'has_upload_template' in request.REQUEST and request.REQUEST['has_upload_template'] == 'true'
-        form = SubjectUploadForm()
-
-        return super(SubjectAdmin, modeladmin).add_view(request, form_url, {'request':{'has_upload_template':has_upload_template}, 'upload_form':form })
+    def add_view(modeladmin, request, form_url='../upload/', extra_context=None):
+        return super(SubjectAdmin, modeladmin).add_view(request, form_url, extra_context)
 
 
     def template_view(modeladmin, request, form_url='', extra_context=None):
         opts = modeladmin.model._meta
         app_label = opts.app_label
+        geolevel, nunits = LegislativeLevel.get_basest_geolevel_and_count()
+        context = {
+            # get geounits at the basest of all base geolevels
+            'geounits': geolevel.geounit_set.all().order_by('portable_id').values_list('portable_id',flat=True)
+        }
+
+        resp = render_to_response("admin/%s/%s/add_template.csv" % (app_label, opts.object_name.lower()), 
+            dictionary=context, mimetype='text/plain')
+        resp['Content-Disposition'] = 'attachement; filename=new_subject.csv'
+        return resp
+
+
+    def upload_view(modeladmin, request, form_url='', extra_context=None):
+        opts = modeladmin.model._meta
+        app_label = opts.app_label
 
         if request.method == 'GET':
-            geolevel, nunits = SubjectUploadForm.get_basest_geolevel_and_count()
-            context = {
-                # get geounits at the basest of all base geolevels
-                'geounits': geolevel.geounit_set.all().order_by('portable_id').values_list('portable_id',flat=True)
-            }
-
-            resp = render_to_response("admin/%s/%s/add_template.csv" % (app_label, opts.object_name.lower()), 
-                dictionary=context, mimetype='text/plain')
-            resp['Content-Disposition'] = 'attachement; filename=new_subject.csv'
-
+            form = SubjectUploadForm()
         else:
             form = SubjectUploadForm(request.POST, request.FILES)
-            context = {
-                'add': True,
-                'opts': opts,
-                'app_label': app_label,
-                'has_change_permission': True,
-                'upload_form': form,
-                'user': request.user,
-                'errors': form.errors
-            }
 
-            resp = render_to_response('admin/redistricting/subject/upload_form.html', context, context_instance=template.RequestContext(request))
-            return resp
+        is_processing = form.is_valid()
 
+        if is_processing:
+            # form data is immutable, so we must create a new form with the cleaned
+            # data if we want to re-use it.
+            form = SubjectUploadForm(form.cleaned_data)
+
+            # do not validate this new form, as it replaces one that has already been validated.
+            form._errors = {} 
+
+            # Switch the form input types, as we're now processing the file in the background
+            form.fields['processing_file'].widget = forms.TextInput(attrs={'readOnly':True})
+            form.fields['subject_upload'].widget = forms.HiddenInput()
+
+        context = {
+            'add': True,
+            'opts': opts,
+            'app_label': app_label,
+            'has_change_permission': True,
+            'upload_form': form,
+            'user': request.user,
+            'errors': form.errors,
+            'form_url': '/admin/%s/%s/upload/' % (app_label, opts.object_name.lower(),),
+            'request': { 'has_upload_template': True },
+            'is_processing': is_processing
+        }
+
+        resp = render_to_response('admin/redistricting/subject/upload_form.html', context, context_instance=template.RequestContext(request))
         return resp
+
+    def upload_status_view(modeladmin, request, form_url='', extra_context=None, task_uuid=''):
+        """
+        Get the status of an uploading task.
+        """
+        response = {'success':False}
+        task = SubjectUpload.verify_count.AsyncResult(task_uuid)
+        if task is None:
+            response['message'] = 'No task with that id.'
+        else:
+            response['success'] = True
+            response['state'] = task.state
+            response['task_id'] = task.task_id
+
+            if task.state == 'SUCCESS':
+                response['info'] = task.result
+            else:
+                response['message'] = str(task.result)
+
+        return HttpResponse(json.dumps(response), mimetype='text/plain')
 
 
     def has_delete_permission(modeladmin, request, obj=None):

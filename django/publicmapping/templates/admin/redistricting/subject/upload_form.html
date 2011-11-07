@@ -31,12 +31,19 @@
     <p>A Subject in DistrictBuilder has relationships with many objects in the application. For this reason, adding a Subject requires a few extra steps. The following forms will walk you through the process of:</p>
     <ol>
         <li>Downloading a Subject template file (CSV)</li>
+        {% if is_processing %}
+        <li>Uploading a complete Subject file (CSV)</li>
+        <li><b>Verifying the uploaded Subject file.</b></li>
+        {% else %}
         <li><b>Uploading a complete Subject file (CSV)</b></li>
+        <li>Verifying the uploaded Subject file.</li>
+        {% endif %}
         <li>Configuring the settings for the uploaded Subject.</li>
     </ol>
     <h2>2. Uploading a complete Subject file</h2>
     <p>Using the file field below, please select the populated Subject template file, and upload the Subject template file with the 'Upload' button below.</p>
-    <form enctype="multipart/form-data" action="../template/" method="post" id="{{ opts.module_name }}_form">{% csrf_token %}
+    <form enctype="multipart/form-data" action="{{ form_url }}" method="post" id="{{ opts.module_name }}_form">
+        {% csrf_token %}
         <table>
         {{ upload_form.as_table }}
         </table>

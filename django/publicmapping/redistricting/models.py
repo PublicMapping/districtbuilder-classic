@@ -49,7 +49,8 @@ from datetime import datetime
 from copy import copy
 from decimal import *
 from operator import attrgetter
-import sys, cPickle, traceback, types, tagging, re
+import sys, cPickle, traceback, types, tagging, re, csv, inflect
+
 
 class Subject(models.Model):
     """
@@ -106,6 +107,105 @@ class Subject(models.Model):
         display name.
         """
         return self.display
+
+
+class SubjectUpload(models.Model):
+    """
+    A set of uploaded subjects. This is primarily used to prevent collisions
+    during the long verification step.
+    """
+
+    # The subject file name
+    filename = models.CharField(max_length=256)
+
+    UPLOAD_STATUSES = (
+        ('NA', 'Not Available'),
+        ('UL', 'Uploading'),
+        ('CH', 'Checking'),
+        ('OK', 'Done'),
+        ('ER', 'Error'),
+    )
+
+    status = models.CharField(max_length=2, choices=UPLOAD_STATUSES)
+
+    task_id = models.CharField(max_length=36)
+
+    @staticmethod
+    @task
+    def verify_count(upload_id, localstore):
+        """
+        Initialize the verification process by counting the number of geounits
+        in the uploaded file. After this step completes, the verify_preload
+        method is called.
+
+        Parameters:
+            localstore - a temporary file that will get deleted when it is closed
+        """
+        upload = SubjectUpload.objects.get(id=upload_id)
+        reader = csv.DictReader(open(localstore,'r'))
+        for row in reader:
+            SubjectQuarantine(upload=upload, portable_id=row[reader.fieldnames[0]],number=row[reader.fieldnames[1]]).save()
+
+        nlines = upload.subjectquarantine_set.all().count()
+        geolevel, nunits = LegislativeLevel.get_basest_geolevel_and_count()
+
+        # Validation #1: if the number of geounits in the uploaded file
+        # don't match the geounits in the database, the content is not valid
+        if nlines != nunits:
+            # The number of geounits in the uploaded file do not match the base geolevel geounits
+            p = inflect.engine()
+            msg = 'There are an incorrect number of geounits in the uploaded Subject file. '
+            if nlines < nunits:
+                missing = nunits - nlines
+                msg += 'There %s %d %s missing.' % (p.plural('is', missing), missing, p.plural('geounit', missing))
+            else:
+                extra = nlines - nunits
+                msg += 'There %s %d extra %s.' % (p.plural('is', extra), extra, p.plural('geounit', extra))
+
+            return {'task_id':None, 'success':False, 'messages':[msg]}
+
+        # The next task will preload the units into the quarintine table
+        task = SubjectUpload.verify_preload.delay(upload_id).task_id
+
+        return {'task_id':task, 'success':True, 'messages':[]}
+
+    @staticmethod
+    @task
+    def verify_preload(upload_id):
+        """
+        """
+        upload = SubjectUpload.objects.get(id=upload_id)
+        geolevel, nunits = LegislativeLevel.get_basest_geolevel_and_count()
+
+        permanent_units = geolevel.geounit_set.all().values_list('portable_id',flat=True)
+        aligned_units = upload.subjectquarantine_set.filter(portable_id__in=permanent_units).count()
+
+        if nunits != aligned_units:
+            # The number of geounits in the uploaded file match, but there are some mismatches.
+            p = inflect.engine()
+            mismatched = nunits - aligned_units
+            msg = 'There are a correct number of geounits in the uploaded Subject file, '
+            msg += 'but %d %s %s not match ' % (mismatched, p.plural('geounit', mismatched), p.plural('do', mismatched))
+            msg += 'the geounits in the database.'
+            return {'task_id':None, 'success':False, 'messages':[msg]}
+
+        return {'task_id':None, 'success':True, 'messages':[]}
+
+
+class SubjectQuarantine(models.Model):
+    """
+    A quarantine table for uploaded subjects. This model stores temporary subject
+    datasets that are being imported into the system.
+    """
+
+    # An identifier to discriminate between multiple uploads.
+    upload = models.ForeignKey(SubjectUpload)
+
+    # The GEOID, or FIPS ID of the geounit
+    portable_id = models.CharField(max_length=50)
+
+    # The data value of the geounit.
+    number = models.DecimalField(max_digits=12,decimal_places=4)
 
 
 class Region(models.Model):
@@ -348,6 +448,17 @@ class LegislativeLevel(models.Model):
     class Meta:
         unique_together = ('geolevel','legislative_body','subject',)
 
+    @staticmethod
+    def get_basest_geolevel_and_count():
+        base_levels = LegislativeLevel.objects.filter(parent__isnull=True)
+        geolevel = None
+        nunits = 0
+        for base_level in base_levels:
+            if base_level.geolevel.geounit_set.all().count() > nunits:
+                nunits = base_level.geolevel.geounit_set.all().count()
+                geolevel = base_level.geolevel
+
+        return (geolevel, nunits,)
 
 class Geounit(models.Model):
     """
