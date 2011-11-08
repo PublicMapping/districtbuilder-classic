@@ -147,10 +147,22 @@ class SubjectUpload(models.Model):
         """
         reader = csv.DictReader(open(localstore,'r'))
         upload = SubjectUpload.objects.get(id=upload_id)
-        upload.subject_name = reader.fieldnames[1]
+        upload.subject_name = reader.fieldnames[1][0:50]
         upload.save()
+
+        # do this in bulk!
+        # insert upload_id, portable_id, number
+        sql = 'INSERT INTO "%s" ("%s","%s","%s") VALUES (%%(upload_id)s, %%(geoid)s, %%(number)s)' % (SubjectQuarantine._meta.db_table, SubjectQuarantine._meta.fields[1].attname, SubjectQuarantine._meta.fields[2].attname, SubjectQuarantine._meta.fields[3].attname)
+        args = []
         for row in reader:
-            SubjectQuarantine(upload=upload, portable_id=row[reader.fieldnames[0]],number=row[reader.fieldnames[1]]).save()
+            args.append( {'upload_id':upload.id, 'geoid':row[reader.fieldnames[0]].strip(), 'number':row[reader.fieldnames[1]].strip()} )
+            # django ORM takes about 320s for 280K geounits
+            #SubjectQuarantine(upload=upload, portable_id=row[reader.fieldnames[0]],number=row[reader.fieldnames[1]]).save()
+
+        # direct access to db-api takes about 60s for 280K geounits
+        cursor = connection.cursor()
+        cursor.executemany(sql, tuple(args))
+        transaction.commit_unless_managed()
 
         os.remove(localstore)
 
@@ -230,17 +242,40 @@ class SubjectUpload(models.Model):
             upload_id - The id of the SubjectUpload record.
         """
         upload = SubjectUpload.objects.get(id=upload_id)
-        quarantined = upload.subjectquarantine_set.all()
+        geolevel, nunits = LegislativeLevel.get_basest_geolevel_and_count()
 
-        # create a temporary subject
+        # these two lists have the same number of items, and no items are extra or missing.
+        # therefore, ordering by the same field will create two collections aligned by
+        # the 'portable_id' field
+        quarantined = upload.subjectquarantine_set.all().order_by('portable_id')
+        geounits = geolevel.geounit_set.all().order_by('portable_id').values_list('id','portable_id')
+
+        geo_quar = zip(geounits, quarantined)
+
+        # create a subject to hold these new values
         new_sort_key = Subject.objects.all().aggregate(Max('sort_key'))['sort_key__max']
-        new_subject = Subject(name=upload.subject_name, display='', short_display='', description='', percentage_denominator=None, is_displayed=False, sort_key=new_sort_key, format_string='')
+        new_subject = Subject(name=upload.subject_name, display=upload.subject_name, short_display=upload.subject_name, description=upload.subject_name, percentage_denominator=None, is_displayed=False, sort_key=new_sort_key, format_string='')
         new_subject.save()
 
-        for characteristic in quarantined:
-            geounit = Geounit.objects.get(portable_id=characteristic.portable_id)
-            dbchar = Characteristic(subject=new_subject,geounit=geounit,number=characteristic.number)
-            dbchar.save()
+        sql = 'INSERT INTO "%s" ("%s", "%s", "%s") VALUES (%%(subject)s, %%(geounit)s, %%(number)s)' % (
+            Characteristic._meta.db_table,           # redistricting_characteristic
+            Characteristic._meta.fields[1].attname,  # subject_id (foreign key)
+            Characteristic._meta.fields[2].attname,  # geounit_id (foreign key)
+            Characteristic._meta.fields[3].attname,  # number
+        )
+        args = []
+        for geo_char in geo_quar:
+            args.append({'subject':new_subject.id, 'geounit':geo_char[0][0], 'number':geo_char[1].number})
+
+        cursor = connection.cursor()
+        cursor.executemany(sql, tuple(args))
+        transaction.commit_unless_managed()
+
+        # delete the quarantined items out of the quarantine table
+        quarantined.delete()
+
+        upload.status = 'OK'
+        upload.save()
 
         return {'task_id':None, 'success':True, 'messages':['Dequarantine successful. You may edit your Subject now.'], 'subject':new_subject.id}
 
