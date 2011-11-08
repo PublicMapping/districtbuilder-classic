@@ -37,6 +37,7 @@ from django.shortcuts import render_to_response
 from django.utils.encoding import force_unicode
 from django.contrib.admin import helpers
 from django.utils.translation import ugettext_lazy, ugettext as _
+from django.core.exceptions import PermissionDenied
 from django import template
 from django.conf import settings
 import inflect
@@ -234,7 +235,7 @@ class SubjectAdmin(admin.ModelAdmin):
         app_label = opts.app_label
 
         # Check that the user has delete permission for the actual model
-        if not modeladmin.has_delete_permission(request):
+        if not request.user.has_perm(modeladmin.opts.app_label + '.' + modeladmin.opts.get_delete_permission()):
             raise PermissionDenied
 
         if request.POST.get('post'):
