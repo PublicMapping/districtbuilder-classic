@@ -188,7 +188,7 @@ shareddistricts = function(options) {
                 id: 'pk'
             },
             colModel: [
-                {name:'fields.name', label:BODY_MEMBER_LONG.charAt(0).toUpperCase() + BODY_MEMBER_LONG.substring(1) + ' Name'},
+                {name:'fields.long_label', label:BODY_MEMBER_LONG.charAt(0).toUpperCase() + BODY_MEMBER_LONG.substring(1) + ' Name'},
                 {name:'fields.district_id', hidden: true},
                 {name:'selected', label:' ', width: '55', align: 'center'}
             ],
