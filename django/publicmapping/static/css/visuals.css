@@ -308,12 +308,10 @@ div#footer {
     background: url(/static-media/images/divider.png) 0 0 repeat-x;
     padding: 20px 0 15px 0;
 }
-div#copyright {
-  float:left;
-  color: #474747;
-  font-size: 11px;
-  font-weight:bold;
-}
+
+div.attribution { float:left; }
+span#poweredbytext { font-size: 8pt; line-height: 14pt; color: #777777; }
+
 div #sponsors {
   float:right;
 }
