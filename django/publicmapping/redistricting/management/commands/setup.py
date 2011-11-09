@@ -1760,6 +1760,10 @@ ERROR:
             owner = User.objects.filter(is_staff=True)[0]
             legislative_body = LegislativeBody.objects.get(name=lbody.get('name')[:256])
             plan,created = Plan.objects.get_or_create(name='Blank',legislative_body=legislative_body,owner=owner,is_template=True, processing_state=ProcessingState.READY)
+            if verbose > 1:
+                if created:
+                    print 'Created Plan named "Blank" for LegislativeBody "%s"' % legislative_body.name
+                else:
                     print 'Plan named "Blank" for LegislativeBody "%s" already exists' % legislative_body.name
 
 
