@@ -28,17 +28,25 @@ $(function(){
                         $('#id_task_uuid').val(data.info.task_id);
                     }
                     else {
-                        $('#upload_status_messages').append('<p>Subject ' + data.info.subject + '</p>');
+                        $('#upload_status_messages').append('<p>Subject ingest successful! Press "Continue" to edit the Subject details.</p>');
+                        $('#processing_continue').attr('disabled', false);
+                        $('#processing_continue').val('{% trans "Continue" %}');
+                        $('#processing_continue').click(function(){ window.location.href='../' + data.info.subject;});
                         clearInterval(statusInterval);
                     }
                 }
                 else if (data.state == 'FAILURE') {
-                    $('#upload_status_messages').append('<p>ERROR: ' + data.info + '</p>');
+                    $('#upload_status_messages').append('<p>Sorry! This processing step failed with the following error message: ' + data.info + '</p>');
+                    $('#processing_continue').attr('disabled', false);
+                    $('#processing_continue').val('{% trans "Retry" %}');
+                    $('#processing_continue').click(function(){ window.location.href='../add/'; });
                     clearInterval(statusInterval);
                 }
             },
             error: function(xhr, txtStatus, error) {
-                //console.log('error getting status');
+                $('#upload_status_messages').empty();
+                $('#upload_status_messages').append('<p>Could not retrieve task status.</p>');
+                clearInterval(statusInterval);
             }
         });
     };
@@ -80,8 +88,13 @@ $(function(){
         {% endif %}
         <li>Configuring the settings for the uploaded Subject.</li>
     </ol>
+    {% if processing %}
+    <h2>3. Verifying the uploaded Subject file</h2>
+    <p>Please wait while the uploaded Subject file is checked for consistency and alignment with the currently loaded data. This may take up to 15 minutes, so please wait until the process completes before leaving this page.</p>
+    {% else %}
     <h2>2. Uploading a complete Subject file</h2>
     <p>Using the file field below, please select the populated Subject template file, and upload the Subject template file with the 'Upload' button below.</p>
+    {% endif %}
     <form enctype="multipart/form-data" action="{{ form_url }}" method="post" id="{{ opts.module_name }}_form">
         {% csrf_token %}
         <table>
@@ -89,9 +102,9 @@ $(function(){
         </table>
         {% if is_processing %}
         <div id="upload_status_messages">
-            Verifying counts of uploaded subjects...
+            <p>Verifying counts of uploaded subjects...</p>
         </div>
-        <input type="button" value="{% trans "Please Wait ..." %}" disabled="true" />
+        <input type="button" value="{% trans "Please Wait ..." %}" id="processing_continue" disabled="true" />
         {% else %}
         <input type="submit" value="{% trans "Upload" %}" />
         {% endif %}

@@ -205,7 +205,6 @@ class SubjectUpload(models.Model):
 
     @staticmethod
     @task
-    @transaction.commit_manually
     def verify_preload(upload_id):
         """
         Continue the verification process by counting the number of geounits
@@ -219,28 +218,41 @@ class SubjectUpload(models.Model):
         upload = SubjectUpload.objects.get(id=upload_id)
         geolevel, nunits = LegislativeLevel.get_basest_geolevel_and_count()
 
-        permanent_units = geolevel.geounit_set.all().values_list('portable_id',flat=True)
-        aligned_units = upload.subjectquarantine_set.filter(portable_id__in=permanent_units).count()
+        # This seizes postgres -- probably small memory limits.
+        #aligned_units = upload.subjectquarantine_set.filter(portable_id__in=permanent_units).count()
+
+        permanent_units = geolevel.geounit_set.all().order_by('portable_id').values_list('portable_id',flat=True)
+        temp_units = upload.subjectquarantine_set.all().order_by('portable_id').values_list('portable_id',flat=True)
+
+        # quick check: make sure the first and last items are aligned
+        ends_match = permanent_units[0] == temp_units[0] and \
+            permanent_units[permanent_units.count()-1] == temp_units[temp_units.count()-1]
+        msg = 'There are a correct number of geounits in the uploaded Subject file, '
+        if not ends_match:
+            p = inflect.engine()
+            msg += 'but the geounits do not have the same portable ids as those in the database.'
+
+        # python foo here: count the number of zipped items in the 
+        # permanent_units and temp_units lists that do not have the same portable_id
+        # thus counting the portable_ids that are not mutually shared
+        aligned_units = len(filter(lambda x:x[0] == x[1], zip(permanent_units, temp_units)))
 
         if nunits != aligned_units:
             # The number of geounits in the uploaded file match, but there are some mismatches.
             p = inflect.engine()
             mismatched = nunits - aligned_units
-            msg = 'There are a correct number of geounits in the uploaded Subject file, '
             msg += 'but %d %s %s not match ' % (mismatched, p.plural('geounit', mismatched), p.plural('do', mismatched))
             msg += 'the geounits in the database.'
 
+        if not ends_match or nunits != aligned_units:
             upload.status = 'ER'
             upload.save()
             upload.subjectquarantine_set.all().delete()
-            transaction.commit()
 
             return {'task_id':None, 'success':False, 'messages':[msg]}
 
         # The next task will load the units into the characteristic table
         task = SubjectUpload.copy_to_characteristics.delay(upload_id).task_id
-
-        transaction.commit()
 
         return {'task_id':task, 'success':True, 'messages':['Copying records to characteristic table ...']}
 
@@ -281,31 +293,68 @@ class SubjectUpload(models.Model):
         the_subject, created = Subject.objects.get_or_create(name=upload.subject_name, defaults=defaults)
 
         # Prepare bulk loading into the characteristic table.
-        sql = 'INSERT INTO "%s" ("%s", "%s", "%s") VALUES (%%(subject)s, %%(geounit)s, %%(number)s)' % (
-            Characteristic._meta.db_table,           # redistricting_characteristic
-            Characteristic._meta.fields[1].attname,  # subject_id (foreign key)
-            Characteristic._meta.fields[2].attname,  # geounit_id (foreign key)
-            Characteristic._meta.fields[3].attname,  # number
-        )
-        args = []
-        for geo_char in geo_quar:
-            args.append({'subject':the_subject.id, 'geounit':geo_char[0][0], 'number':geo_char[1].number})
+        if created:
+            sql = 'INSERT INTO "%s" ("%s", "%s", "%s") VALUES (%%(subject)s, %%(geounit)s, %%(number)s)' % (
+                Characteristic._meta.db_table,           # redistricting_characteristic
+                Characteristic._meta.fields[1].attname,  # subject_id (foreign key)
+                Characteristic._meta.fields[2].attname,  # geounit_id (foreign key)
+                Characteristic._meta.fields[3].attname,  # number
+            )
+            args = []
+            for geo_char in geo_quar:
+                args.append({'subject':the_subject.id, 'geounit':geo_char[0][0], 'number':geo_char[1].number})
 
-        # Insert all the records into the characteristic table
-        cursor = connection.cursor()
-        cursor.executemany(sql, tuple(args))
+            # Insert all the records into the characteristic table
+            cursor = connection.cursor()
+            cursor.executemany(sql, tuple(args))
+        else:
+            # reset the computed characteristics for all districts in one fell swoop
+            ComputedCharacteristic.objects.all().update(number=Decimal('0.0'))
 
-        # TODO: bulk load dummy values into the ComputedCharacteristic table.
-
-        task = SubjectUpload.clean_quarantined.delay(upload_id).task_id
+        task = SubjectUpload.update_vacant_characteristics.delay(upload_id, created).task_id
 
         transaction.commit()
 
-        return {'task_id':task, 'success':True, 'messages':['Created characteristics, cleaning quarantine area...'] }
+        return {'task_id':task, 'success':True, 'messages':['Created characteristics, resetting computed characteristics...'] }
 
     @staticmethod
     @task
-    @transaction.commit_manually
+    def update_vacant_characteristics(upload_id, new_subj):
+        """
+        Update the values for the ComputedCharacteristics. This method
+        does not precompute them, just adds dummy values for new subjects.
+        For existing subjects, the current ComputedCharacteristics are
+        untouched. For new and existing subjects, all plans are marked
+        as needing reaggregation.
+        """
+        upload = SubjectUpload.objects.get(id=upload_id)
+        subject = Subject.objects.get(name=upload.subject_name)
+
+        if new_subj:
+            sql = 'INSERT INTO "%s" ("%s", "%s", "%s") VALUES (%%(subject)s, %%(district)s, %%(number)s)' % (
+                ComputedCharacteristic._meta.db_table,           # redistricting_computedcharacteristic
+                ComputedCharacteristic._meta.fields[1].attname,  # subject_id (foreign key)
+                ComputedCharacteristic._meta.fields[2].attname,  # district_id (foreign key)
+                ComputedCharacteristic._meta.fields[3].attname,  # number
+            )
+            args = []
+
+            for district in District.objects.all():
+                args.append({'subject':subject.id, 'district':district.id, 'number':'0.0'})
+
+            # Insert all the records into the characteristic table
+            cursor = connection.cursor()
+            cursor.executemany(sql, tuple(args))
+
+        # reset the processing state for all plans in one fell swoop
+        Plan.objects.all().update(processing_state=ProcessingState.NEEDS_REAGG)
+
+        task = SubjectUpload.clean_quarantined.delay(upload_id).task_id
+
+        return {'task_id':task, 'success':True, 'messages':['Reset computed characteristics, cleaning quarantined data...'] }
+
+    @staticmethod
+    @task
     def clean_quarantined(upload_id):
         """
         Remove all temporary characteristics in the quarantine area for
@@ -323,9 +372,8 @@ class SubjectUpload(models.Model):
 
         # delete the quarantined items out of the quarantine table
         quarantined.delete()
-        transaction.commit()
 
-        return {'task_id':None, 'success':True, 'messages':['Upload complete. Subject "%s" added.'], 'subject':Subject.objects.get(name=upload.subject_name).id}
+        return {'task_id':None, 'success':True, 'messages':['Upload complete. Subject "%s" added.' % upload.subject_name], 'subject':Subject.objects.get(name=upload.subject_name).id}
 
 class SubjectQuarantine(models.Model):
     """
