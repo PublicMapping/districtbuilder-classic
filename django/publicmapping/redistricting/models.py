@@ -108,6 +108,41 @@ class Subject(models.Model):
         """
         return self.display
 
+class ChoicesEnum(object):
+    """
+    Helper class for defining enumerated choices in a Model
+    """
+    def __init__(self, *args, **kwargs):
+        super(ChoicesEnum, self).__init__()
+        vals = {}
+        for key,val in kwargs.iteritems():
+            vals[key] = val
+        object.__setattr__(self, "_vals", vals)
+
+    def choices( self ):
+        cho = []
+        vals = object.__getattribute__(self, "_vals")
+        for key, val in vals.iteritems():
+            cho.append(val)
+        cho.sort()
+        return cho
+
+    def __getattr__(self, name):
+        return object.__getattribute__(self, "_vals")[name][0]
+
+    def __setattr__(self, name, value):
+        object.__setattr__(self, "_vals")[name][0] = value
+
+    def __delattr__(self, name):
+        del object.__setattr__(self, "_vals")[name]
+
+UploadedState = ChoicesEnum(
+    UNKNOWN = ('NA', 'Not Available'),
+    UPLOADING = ('UL', 'Uploading'),
+    CHECKING = ('CH', 'Checking'),
+    DONE = ('OK', 'Done'),
+    ERROR = ('ER', 'Error'),
+)
 
 class SubjectUpload(models.Model):
     """
@@ -124,16 +159,10 @@ class SubjectUpload(models.Model):
     # Subject name
     subject_name = models.CharField(max_length=50)
 
-    UPLOAD_STATUSES = (
-        ('NA', 'Not Available'),
-        ('UL', 'Uploading'),
-        ('CH', 'Checking'),
-        ('OK', 'Done'),
-        ('ER', 'Error'),
-    )
+    # The status of the uploaded subject
+    status = models.CharField(max_length=2, choices=UploadedState.choices(), default=UploadedState.UNKNOWN)
 
-    status = models.CharField(max_length=2, choices=UPLOAD_STATUSES)
-
+    # The task ID that is processing this uploaded subject
     task_id = models.CharField(max_length=36)
 
     @staticmethod
@@ -866,34 +895,6 @@ class Characteristic(models.Model):
         Number"
         """
         return u'%s for %s: %s' % (self.subject, self.geounit, self.number)
-
-class ChoicesEnum(object):
-    """
-    Helper class for defining enumerated choices in a Model
-    """
-    def __init__(self, *args, **kwargs):
-        super(ChoicesEnum, self).__init__()
-        vals = {}
-        for key,val in kwargs.iteritems():
-            vals[key] = val
-        object.__setattr__(self, "_vals", vals)
-
-    def choices( self ):
-        cho = []
-        vals = object.__getattribute__(self, "_vals")
-        for key, val in vals.iteritems():
-            cho.append(val)
-        cho.sort()
-        return cho
-
-    def __getattr__(self, name):
-        return object.__getattribute__(self, "_vals")[name][0]
-
-    def __setattr__(self, name, value):
-        object.__setattr__(self, "_vals")[name][0] = value
-
-    def __delattr__(self, name):
-        del object.__setattr__(self, "_vals")[name]
 
 # Enumerated type used for determining a plan's state of processing
 ProcessingState = ChoicesEnum(
