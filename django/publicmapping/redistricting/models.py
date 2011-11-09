@@ -28,7 +28,7 @@ Author:
     Andrew Jennings, David Zwarg, Kenny Shepard
 """
 
-from celery.decorators import task
+from celery.task import task
 from django.core.exceptions import ValidationError
 from django.contrib.gis.db import models
 from django.contrib.gis.geos import MultiPolygon,Polygon,GEOSGeometry,GEOSException,GeometryCollection,Point
@@ -115,8 +115,11 @@ class SubjectUpload(models.Model):
     during the long verification step.
     """
 
-    # The subject file name
-    filename = models.CharField(max_length=256)
+    # The automatically generated file name
+    processing_filename = models.CharField(max_length=256)
+
+    # The user-specified file name
+    upload_filename = models.CharField(max_length=256)
 
     # Subject name
     subject_name = models.CharField(max_length=50)
@@ -135,6 +138,7 @@ class SubjectUpload(models.Model):
 
     @staticmethod
     @task
+    @transaction.commit_manually
     def verify_count(upload_id, localstore):
         """
         Initialize the verification process by counting the number of geounits
@@ -149,6 +153,7 @@ class SubjectUpload(models.Model):
         upload = SubjectUpload.objects.get(id=upload_id)
         upload.subject_name = reader.fieldnames[1][0:50]
         upload.save()
+        transaction.commit()
 
         # do this in bulk!
         # insert upload_id, portable_id, number
@@ -162,7 +167,6 @@ class SubjectUpload(models.Model):
         # direct access to db-api takes about 60s for 280K geounits
         cursor = connection.cursor()
         cursor.executemany(sql, tuple(args))
-        transaction.commit_unless_managed()
 
         os.remove(localstore)
 
@@ -182,19 +186,26 @@ class SubjectUpload(models.Model):
                 extra = nlines - nunits
                 msg += 'There %s %d extra %s.' % (p.plural('is', extra), extra, p.plural('geounit', extra))
 
+            # since the transaction was never committed after all the inserts, this nullifies
+            # all the insert statements, so there should be no quarantine to clean up
+            transaction.rollback()
+
             upload.status = 'ER'
             upload.save()
-            upload.subjectquarantine_set.all().delete()
+            transaction.commit()
 
             return {'task_id':None, 'success':False, 'messages':[msg]}
 
         # The next task will preload the units into the quarintine table
         task = SubjectUpload.verify_preload.delay(upload_id).task_id
 
+        transaction.commit()
+
         return {'task_id':task, 'success':True, 'messages':['Verifying consistency of uploaded geounits ...']}
 
     @staticmethod
     @task
+    @transaction.commit_manually
     def verify_preload(upload_id):
         """
         Continue the verification process by counting the number of geounits
@@ -222,16 +233,20 @@ class SubjectUpload(models.Model):
             upload.status = 'ER'
             upload.save()
             upload.subjectquarantine_set.all().delete()
+            transaction.commit()
 
             return {'task_id':None, 'success':False, 'messages':[msg]}
 
         # The next task will load the units into the characteristic table
         task = SubjectUpload.copy_to_characteristics.delay(upload_id).task_id
 
+        transaction.commit()
+
         return {'task_id':task, 'success':True, 'messages':['Copying records to characteristic table ...']}
 
     @staticmethod
     @task
+    @transaction.commit_manually
     def copy_to_characteristics(upload_id):
         """
         Continue the verification process by copying the holding records for
@@ -253,10 +268,19 @@ class SubjectUpload(models.Model):
         geo_quar = zip(geounits, quarantined)
 
         # create a subject to hold these new values
-        new_sort_key = Subject.objects.all().aggregate(Max('sort_key'))['sort_key__max']
-        new_subject = Subject(name=upload.subject_name, display=upload.subject_name, short_display=upload.subject_name, description=upload.subject_name, percentage_denominator=None, is_displayed=False, sort_key=new_sort_key, format_string='')
-        new_subject.save()
+        new_sort_key = Subject.objects.all().aggregate(Max('sort_key'))['sort_key__max'] + 1
+        defaults = {
+            'name':upload.subject_name,
+            'display':upload.subject_name,
+            'short_display':upload.subject_name,
+            'description':upload.subject_name,
+            'is_displayed':False,
+            'sort_key':new_sort_key,
+            'format_string':''
+        }
+        the_subject, created = Subject.objects.get_or_create(name=upload.subject_name, defaults=defaults)
 
+        # Prepare bulk loading into the characteristic table.
         sql = 'INSERT INTO "%s" ("%s", "%s", "%s") VALUES (%%(subject)s, %%(geounit)s, %%(number)s)' % (
             Characteristic._meta.db_table,           # redistricting_characteristic
             Characteristic._meta.fields[1].attname,  # subject_id (foreign key)
@@ -265,20 +289,43 @@ class SubjectUpload(models.Model):
         )
         args = []
         for geo_char in geo_quar:
-            args.append({'subject':new_subject.id, 'geounit':geo_char[0][0], 'number':geo_char[1].number})
+            args.append({'subject':the_subject.id, 'geounit':geo_char[0][0], 'number':geo_char[1].number})
 
+        # Insert all the records into the characteristic table
         cursor = connection.cursor()
         cursor.executemany(sql, tuple(args))
-        transaction.commit_unless_managed()
 
-        # delete the quarantined items out of the quarantine table
-        quarantined.delete()
+        # TODO: bulk load dummy values into the ComputedCharacteristic table.
 
+        task = SubjectUpload.clean_quarantined.delay(upload_id).task_id
+
+        transaction.commit()
+
+        return {'task_id':task, 'success':True, 'messages':['Created characteristics, cleaning quarantine area...'] }
+
+    @staticmethod
+    @task
+    @transaction.commit_manually
+    def clean_quarantined(upload_id):
+        """
+        Remove all temporary characteristics in the quarantine area for
+        the given upload.
+
+        Parameters:
+            upload_id - The ID of the uploaded subject data.
+        """
+        upload = SubjectUpload.objects.get(id=upload_id)
+        quarantined = upload.subjectquarantine_set.all()
+
+        # The upload succeeded
         upload.status = 'OK'
         upload.save()
 
-        return {'task_id':None, 'success':True, 'messages':['Dequarantine successful. You may edit your Subject now.'], 'subject':new_subject.id}
+        # delete the quarantined items out of the quarantine table
+        quarantined.delete()
+        transaction.commit()
 
+        return {'task_id':None, 'success':True, 'messages':['Upload complete. Subject "%s" added.'], 'subject':Subject.objects.get(name=upload.subject_name).id}
 
 class SubjectQuarantine(models.Model):
     """

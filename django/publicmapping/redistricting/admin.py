@@ -197,6 +197,13 @@ class SubjectAdmin(admin.ModelAdmin):
     actions = ['delete_selected_subject']
 
     def get_urls(modeladmin):
+        """
+        Get the URLs for the auto-discovered admin pages. The Subject admin pages
+        support a GET url for a subject template, an upload endpoint, and an upload/uuid/status
+        endpoint to check the status of an upload.
+        """
+
+        # This is django wrapper nastiness inherited from the default admin get_url method
         from django.conf.urls.defaults import patterns, url
         def wrap(view):
             def wrapper(*args, **kwargs):
@@ -205,13 +212,17 @@ class SubjectAdmin(admin.ModelAdmin):
 
         info = modeladmin.model._meta.app_label, modeladmin.model._meta.module_name
 
+        # Add patterns special to subject uploading
         urlpatterns = patterns('',
+            # subject/template GETs a csv template
             url(r'^template/$',
                 wrap(modeladmin.template_view),
                 name='%s_%s_add' % info),
+            # subject/upload/ POSTs a user-edited csv template
             url(r'^upload/$',
                 wrap(modeladmin.upload_view),
                 name='%s_%s_upload' % info),
+            # subject/upload/<uuid>/status GETs the status of a celery task
             url(r'^upload/(?P<task_uuid>.+)/status/$',
                 wrap(modeladmin.upload_status_view),
                 name='%s_%s_status' % info),
@@ -230,11 +241,25 @@ class SubjectAdmin(admin.ModelAdmin):
         del actions['delete_selected']
         return actions
 
+    def has_delete_permission(modeladmin, request, obj=None):
+        """
+        Override the delete permission for the Subject model. A Subject may never be deleted.
+        This only affects the admin change form, and not the bulk delete dropdown in the
+        Subject list screen.
+        """
+        return False
+
     def delete_selected_subject(modeladmin, request, queryset):
+        """
+        This is invoked from the dropdown menu in the admin as a bulk action.
+        This overrides the 
+        """
         opts = modeladmin.model._meta
         app_label = opts.app_label
 
         # Check that the user has delete permission for the actual model
+        # BUT we can't use modeladmin.has_delete_permission, as it's overridden
+        # above to hide the delete button on the change form.
         if not request.user.has_perm(modeladmin.opts.app_label + '.' + modeladmin.opts.get_delete_permission()):
             raise PermissionDenied
 
@@ -268,15 +293,18 @@ class SubjectAdmin(admin.ModelAdmin):
         # Display the confirmation page
         return render_to_response("admin/%s/%s/delete_selected_confirmation.html" % (app_label, opts.object_name.lower()), 
             context, context_instance=template.RequestContext(request))
-        
+
+    # Customize the label of the delete_selected_subject action to look like the normal delete label
     delete_selected_subject.short_description = ugettext_lazy("Delete selected %(verbose_name_plural)s")
 
+    # Use a special add_form template
     add_form_template = 'admin/redistricting/subject/add_form.html'
-    def add_view(modeladmin, request, form_url='../upload/', extra_context=None):
-        return super(SubjectAdmin, modeladmin).add_view(request, form_url, extra_context)
-
 
     def template_view(modeladmin, request, form_url='', extra_context=None):
+        """
+        A view function that returns a dynamically generated CSV file, based
+        on the geounits available in the application.
+        """
         opts = modeladmin.model._meta
         app_label = opts.app_label
         geolevel, nunits = LegislativeLevel.get_basest_geolevel_and_count()
@@ -290,29 +318,42 @@ class SubjectAdmin(admin.ModelAdmin):
         resp['Content-Disposition'] = 'attachement; filename=new_subject.csv'
         return resp
 
-
     def upload_view(modeladmin, request, form_url='', extra_context=None):
+        """
+        A view function that displays an upload form or upload verification
+        form input.
+        """
         opts = modeladmin.model._meta
         app_label = opts.app_label
-
+        is_processing = False
+    
         if request.method == 'GET':
             form = SubjectUploadForm()
         else:
             form = SubjectUploadForm(request.POST, request.FILES)
+            is_processing = form.is_valid()
 
-        is_processing = form.is_valid()
+            if is_processing:
+                # form data is immutable, so we must create a new form with the cleaned
+                # data if we want to re-use it.
+                form = SubjectUploadForm(form.cleaned_data)
 
-        if is_processing:
-            # form data is immutable, so we must create a new form with the cleaned
-            # data if we want to re-use it.
-            form = SubjectUploadForm(form.cleaned_data)
+                # do not validate this new form, as it replaces one that has already been validated.
+                form._errors = {} 
 
-            # do not validate this new form, as it replaces one that has already been validated.
-            form._errors = {} 
+                # Switch the form input types, as we're now processing the file in the background
+                form.fields['processing_file'].widget = forms.TextInput(attrs={'readOnly':True})
+                form.fields['subject_upload'].widget = forms.HiddenInput()
+            else:
+                the_errors = form._errors
+                
+                form = SubjectUploadForm({'processing_file':form.ps_file, 'uploaded_file':form.ul_file, 'subject_name':form.temp_subject_name,'subject_upload':form.ul_file})
+                form._errors = the_errors
 
-            # Switch the form input types, as we're now processing the file in the background
-            form.fields['processing_file'].widget = forms.TextInput(attrs={'readOnly':True})
-            form.fields['subject_upload'].widget = forms.HiddenInput()
+                form.fields['uploaded_file'].widget = forms.TextInput(attrs={'readOnly':True})
+                form.fields['force_overwrite'].widget = forms.CheckboxInput()
+                form.fields['subject_upload'].widget = forms.HiddenInput()
+                form.fields['subject_name'].widget = forms.TextInput()
 
         context = {
             'add': True,
@@ -350,14 +391,6 @@ class SubjectAdmin(admin.ModelAdmin):
 
         return HttpResponse(json.dumps(response), mimetype='text/plain')
 
-
-    def has_delete_permission(modeladmin, request, obj=None):
-        """
-        Override the delete permission for the Subject model. A Subject may never be deleted.
-        This only affects the admin change form, and not the bulk delete dropdown in the
-        Subject list screen.
-        """
-        return False
 
 
 class ScorePanelAdmin(admin.ModelAdmin):

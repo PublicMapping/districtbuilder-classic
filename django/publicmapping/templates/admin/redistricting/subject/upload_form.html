@@ -32,6 +32,10 @@ $(function(){
                         clearInterval(statusInterval);
                     }
                 }
+                else if (data.state == 'FAILURE') {
+                    $('#upload_status_messages').append('<p>ERROR: ' + data.info + '</p>');
+                    clearInterval(statusInterval);
+                }
             },
             error: function(xhr, txtStatus, error) {
                 //console.log('error getting status');
@@ -39,7 +43,7 @@ $(function(){
         });
     };
 
-    statusInterval = setInterval(getStatusUpdate, 60000);
+    statusInterval = setInterval(getStatusUpdate, 15000);
 });
 </script>
 {% endif %}

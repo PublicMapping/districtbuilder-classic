@@ -3,7 +3,8 @@
 --
 CREATE TABLE "redistricting_subjectupload" (
     "id" serial NOT NULL PRIMARY KEY,
-    "filename" varchar(256) NOT NULL,
+    "processing_filename" varchar(256) NOT NULL,
+    "upload_filename" varchar(256) NOT NULL,
     "subject_name" varchar(50) NOT NULL,
     "status" varchar(2) NOT NULL,
     "task_id" varchar(36) NOT NULL
