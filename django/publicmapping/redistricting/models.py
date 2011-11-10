@@ -330,24 +330,21 @@ class SubjectUpload(models.Model):
             args.append({'subject':the_subject.id, 'geounit':geo_char[0][0], 'number':geo_char[1].number})
 
         # Prepare bulk loading into the characteristic table.
-        if created:
-            sql = 'INSERT INTO "%s" ("%s", "%s", "%s") VALUES (%%(subject)s, %%(geounit)s, %%(number)s)' % (
-                Characteristic._meta.db_table,           # redistricting_characteristic
-                Characteristic._meta.fields[1].attname,  # subject_id (foreign key)
-                Characteristic._meta.fields[2].attname,  # geounit_id (foreign key)
-                Characteristic._meta.fields[3].attname,  # number
-            )
-        else:
-            sql = 'UPDATE "%s" SET "%s" = %%(number)s WHERE "%s" = %%(subject)s AND "%s" = %%(geounit)s' % (
-                Characteristic._meta.db_table,           # redistricting_characteristic
-                Characteristic._meta.fields[3].attname,  # number
-                Characteristic._meta.fields[1].attname,  # subject_id (foreign key)
-                Characteristic._meta.fields[2].attname,  # geounit_id (foreign key)
-            )
+        if not created:
+            # delete then recreate is a more stable technique than updating all the 
+            # related characteristic items one at a time
+            the_subject.characteristic_set.all().delete()
 
             # increment the subject version, since it's being modified
             the_subject.version += 1
             the_subject.save()
+
+        sql = 'INSERT INTO "%s" ("%s", "%s", "%s") VALUES (%%(subject)s, %%(geounit)s, %%(number)s)' % (
+            Characteristic._meta.db_table,           # redistricting_characteristic
+            Characteristic._meta.fields[1].attname,  # subject_id (foreign key)
+            Characteristic._meta.fields[2].attname,  # geounit_id (foreign key)
+            Characteristic._meta.fields[3].attname,  # number
+        )
 
         # Insert or update all the records into the characteristic table
         cursor = connection.cursor()

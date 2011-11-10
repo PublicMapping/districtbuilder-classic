@@ -28,6 +28,11 @@ $(function(){
                         $('#id_task_uuid').val(data.info.task_id);
                     }
                     else {
+                        $('#li3').css('font-weight','normal');
+                        $('#li4').css('font-weight','bold');
+                        $('#step3').css('display','none');
+                        $('#step4').css('display','block');
+                        $('#upload_status_messages').removeClass('loading');
                         $('#upload_status_messages').append('<p>Subject ingest successful! Press "Continue" to edit the Subject details.</p>');
                         $('#processing_continue').attr('disabled', false);
                         $('#processing_continue').val('{% trans "Continue" %}');
@@ -36,6 +41,7 @@ $(function(){
                     }
                 }
                 else if (data.state == 'FAILURE') {
+                    $('#upload_status_messages').removeClass('loading');
                     $('#upload_status_messages').append('<p>Sorry! This processing step failed with the following error message: ' + data.info + '</p>');
                     $('#processing_continue').attr('disabled', false);
                     $('#processing_continue').val('{% trans "Retry" %}');
@@ -44,6 +50,7 @@ $(function(){
                 }
             },
             error: function(xhr, txtStatus, error) {
+                $('#upload_status_messages').removeClass('loading');
                 $('#upload_status_messages').empty();
                 $('#upload_status_messages').append('<p>Could not retrieve task status.</p>');
                 clearInterval(statusInterval);
@@ -57,7 +64,16 @@ $(function(){
 {% endif %}
 {% endblock %}
 
-{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css/forms.css" />{% endblock %}
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css/forms.css" />
+<style type="text/css">
+    .loading {
+        background: url("/static-media/images/chooser-loading.gif") no-repeat scroll 0 0 transparent;
+    }
+    #upload_status_messages {
+        padding-left: 65px;
+        padding-bottom: 2px;
+    }
+</style>{% endblock %}
 
 {% block coltype %}{% if ordered_objects %}colMS{% else %}colM{% endif %}{% endblock %}
 
@@ -79,29 +95,29 @@ $(function(){
     <p>A Subject in DistrictBuilder has relationships with many objects in the application. For this reason, adding a Subject requires a few extra steps. The following forms will walk you through the process of:</p>
     <ol>
         <li>Downloading a Subject template file (CSV)</li>
-        {% if is_processing %}
-        <li>Uploading a complete Subject file (CSV)</li>
-        <li><b>Verifying the uploaded Subject file.</b></li>
-        {% else %}
-        <li><b>Uploading a complete Subject file (CSV)</b></li>
-        <li>Verifying the uploaded Subject file.</li>
-        {% endif %}
-        <li>Configuring the settings for the uploaded Subject.</li>
+        <li><span id="li2" style="font-weight:{% if is_processing %}normal{% else %}bold{% endif %};">Uploading a complete Subject file (CSV)</span></li>
+        <li><span id="li3" style="font-weight:{% if is_processing %}bold{% else %}normal{% endif %};">Verifying the uploaded Subject file.</span></li>
+        <li><span id="li4">Configuring the settings for the uploaded Subject.</span></li>
     </ol>
-    {% if processing %}
-    <h2>3. Verifying the uploaded Subject file</h2>
-    <p>Please wait while the uploaded Subject file is checked for consistency and alignment with the currently loaded data. This may take up to 15 minutes, so please wait until the process completes before leaving this page.</p>
-    {% else %}
+    <div id="step2" style="display:{% if is_processing %}none{% else %}block{% endif %};">
     <h2>2. Uploading a complete Subject file</h2>
     <p>Using the file field below, please select the populated Subject template file, and upload the Subject template file with the 'Upload' button below.</p>
-    {% endif %}
+    </div>
+    <div id="step3" style="display:{% if is_processing %}block{% else %}none{% endif %};">
+    <h2>3. Verifying the uploaded Subject file</h2>
+    <p>Please wait while the uploaded Subject file is checked for consistency and alignment with the currently loaded data. This may take up to 15 minutes, so please wait until the process completes before leaving this page.</p>
+    </div>
+    <div id="step4" style="display:none;">
+    <h2>4. Configuring the settings for the uploaded Subject.</h2>
+    <p>The verification steps are complete, you may proceed to the Subject change form to complete filling in the Subject details.</p>
+    </div>
     <form enctype="multipart/form-data" action="{{ form_url }}" method="post" id="{{ opts.module_name }}_form">
         {% csrf_token %}
         <table>
         {{ upload_form.as_table }}
         </table>
         {% if is_processing %}
-        <div id="upload_status_messages">
+        <div id="upload_status_messages" class="{% if is_processing %}loading{% endif %}">
             <p>Verifying counts of uploaded subjects...</p>
         </div>
         <input type="button" value="{% trans "Please Wait ..." %}" id="processing_continue" disabled="true" />

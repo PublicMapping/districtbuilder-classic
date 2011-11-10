@@ -346,14 +346,18 @@ class SubjectAdmin(admin.ModelAdmin):
                 form.fields['subject_upload'].widget = forms.HiddenInput()
             else:
                 the_errors = form._errors
+                if 'subject_upload' in the_errors:
+                    form = SubjectUploadForm()
+                    form._errors = the_errors
+                else:
                 
-                form = SubjectUploadForm({'processing_file':form.ps_file, 'uploaded_file':form.ul_file, 'subject_name':form.temp_subject_name,'subject_upload':form.ul_file})
-                form._errors = the_errors
+                    form = SubjectUploadForm({'processing_file':form.ps_file, 'uploaded_file':form.ul_file, 'subject_name':form.temp_subject_name,'subject_upload':form.ul_file})
+                    form._errors = the_errors
 
-                form.fields['uploaded_file'].widget = forms.TextInput(attrs={'readOnly':True})
-                form.fields['force_overwrite'].widget = forms.CheckboxInput()
-                form.fields['subject_upload'].widget = forms.HiddenInput()
-                form.fields['subject_name'].widget = forms.TextInput()
+                    form.fields['uploaded_file'].widget = forms.TextInput(attrs={'readOnly':True})
+                    form.fields['force_overwrite'].widget = forms.CheckboxInput()
+                    form.fields['subject_upload'].widget = forms.HiddenInput()
+                    form.fields['subject_name'].widget = forms.TextInput()
 
         context = {
             'add': True,

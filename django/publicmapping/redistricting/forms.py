@@ -77,10 +77,7 @@ class SubjectUploadForm(forms.Form):
 
         # If the subject_upload is not a file, it was probably already uploaded.
         # Check the processing_file field to see if that file exists on the file system.
-        elif 'processing_file' in self.cleaned_data and self.cleaned_data['processing_file'] != '':
-            if 'uploaded_subject' in self._errors:
-                del self._errors['uploaded_subject']
-
+        elif self.cleaned_data['processing_file'] != '':
             self.ps_file = self.cleaned_data['processing_file']
             self.ul_file = self.cleaned_data['uploaded_file']
             self.temp_subject_name = self.cleaned_data['subject_name']
@@ -94,14 +91,15 @@ class SubjectUploadForm(forms.Form):
                 not os.path.exists(self.ps_file):
                 raise forms.ValidationError('Uploaded file cannot be found.')
         else:
-            raise forms.ValidationError('Uploaded file is required.')
+            self._errors['subject_upload'] = self.error_class(['Uploaded file is required.'])
+            return self.cleaned_data
 
         collisions = Subject.objects.filter(name=self.temp_subject_name).count()
         if collisions > 0:
             if not self.cleaned_data['force_overwrite']:
                 self.temp_subject_name = sup.subject_name
                 self._errors = {}
-                self._errors['subject_name'] = self.error_class(['Please specify the subject name.'])
+                self._errors['subject_name'] = self.error_class(['Please specify a unique subject name.'])
                 self._errors['force_overwrite'] = self.error_class(['Check this box to overwrite the existing subject with the same name.'])
                 return self.cleaned_data
 
