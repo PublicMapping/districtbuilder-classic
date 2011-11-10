@@ -19,3 +19,5 @@ CREATE TABLE "redistricting_subjectquarantine" (
 ;
 CREATE INDEX "redistricting_subjectquarantine_upload_id" ON "redistricting_subjectquarantine" ("upload_id");
 
+ALTER TABLE "redistricting_subject" ADD COLUMN "version" integer NOT NULL DEFAULT 1;
+

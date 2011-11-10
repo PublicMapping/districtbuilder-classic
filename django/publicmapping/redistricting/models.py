@@ -93,6 +93,9 @@ class Subject(models.Model):
     # The way this Subject's values should be represented.
     format_string = models.CharField(max_length=50, blank=True)
 
+    # The version of this subject, to keep track of uploaded changes
+    version = models.PositiveIntegerField(default=1)
+
     class Meta:
         """
         Additional information about the Subject model.
@@ -317,9 +320,14 @@ class SubjectUpload(models.Model):
             'description':upload.subject_name,
             'is_displayed':False,
             'sort_key':new_sort_key,
-            'format_string':''
+            'format_string':'',
+            'version':1
         }
         the_subject, created = Subject.objects.get_or_create(name=upload.subject_name, defaults=defaults)
+
+        args = []
+        for geo_char in geo_quar:
+            args.append({'subject':the_subject.id, 'geounit':geo_char[0][0], 'number':geo_char[1].number})
 
         # Prepare bulk loading into the characteristic table.
         if created:
@@ -329,16 +337,21 @@ class SubjectUpload(models.Model):
                 Characteristic._meta.fields[2].attname,  # geounit_id (foreign key)
                 Characteristic._meta.fields[3].attname,  # number
             )
-            args = []
-            for geo_char in geo_quar:
-                args.append({'subject':the_subject.id, 'geounit':geo_char[0][0], 'number':geo_char[1].number})
-
-            # Insert all the records into the characteristic table
-            cursor = connection.cursor()
-            cursor.executemany(sql, tuple(args))
         else:
-            # reset the computed characteristics for all districts in one fell swoop
-            ComputedCharacteristic.objects.all().update(number=Decimal('0.0'))
+            sql = 'UPDATE "%s" SET "%s" = %%(number)s WHERE "%s" = %%(subject)s AND "%s" = %%(geounit)s' % (
+                Characteristic._meta.db_table,           # redistricting_characteristic
+                Characteristic._meta.fields[3].attname,  # number
+                Characteristic._meta.fields[1].attname,  # subject_id (foreign key)
+                Characteristic._meta.fields[2].attname,  # geounit_id (foreign key)
+            )
+
+            # increment the subject version, since it's being modified
+            the_subject.version += 1
+            the_subject.save()
+
+        # Insert or update all the records into the characteristic table
+        cursor = connection.cursor()
+        cursor.executemany(sql, tuple(args))
 
         task = SubjectUpload.update_vacant_characteristics.delay(upload_id, created).task_id
 
@@ -374,6 +387,9 @@ class SubjectUpload(models.Model):
             # Insert all the records into the characteristic table
             cursor = connection.cursor()
             cursor.executemany(sql, tuple(args))
+        else:
+            # reset the computed characteristics for all districts in one fell swoop
+            ComputedCharacteristic.objects.all().update(number=Decimal('0.0'))
 
         # reset the processing state for all plans in one fell swoop
         Plan.objects.all().update(processing_state=ProcessingState.NEEDS_REAGG)
