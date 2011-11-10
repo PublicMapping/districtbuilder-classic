@@ -71,6 +71,9 @@ def main():
     parser.add_option('-v', '--verbosity', dest="verbosity",
             help="Verbosity level; 0=minimal output, 1=normal output, 2=all output",
             default=1, type="int")
+    parser.add_option('-f', '--force', dest="force",
+            help="Force changes if config differs from database",
+            default=False, action='store_true')
 
 
     (options, args) = parser.parse_args()
@@ -131,7 +134,7 @@ ERROR:
         bard = options.bard
         bard_templates = options.bard_templates
 
-    management.call_command('setup', config=args[1], verbosity=verbose, geolevels=geolevels, views=views, geoserver=geoserver, templates=templates, nesting=nesting, static=static, bard=bard, bard_templates=bard_templates)
+    management.call_command('setup', config=args[1], verbosity=verbose, geolevels=geolevels, views=views, geoserver=geoserver, templates=templates, nesting=nesting, static=static, bard=bard, bard_templates=bard_templates, force=options.force)
     
     # Success! Exit-code 0
     sys.exit(0)
