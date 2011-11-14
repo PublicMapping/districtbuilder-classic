@@ -317,7 +317,10 @@
                   <div id="newName">
                       <input type="text" id="txtNewName" name="txtNewName"/>
                   </div>
-                  <button id="start_mapping">Start Drawing</button> 
+                  <button id="start_mapping">Start Drawing</button>
+                  <div id="start_mapping_help">
+                    This div may be used to display extra explanatory text under the Start Drawing button
+                  </div>
                 </div>
 
                 <div id="form_container">
@@ -1057,6 +1060,7 @@ Include the markup for the account management panel.
             modal: true,
             resizable: false,
             table: $('#plan_table'),
+            helpText: $('#start_mapping_help'),
             pager: $('#plan_table_pager'),
             dataUrl: '/districtmapping/getplans/'
         });

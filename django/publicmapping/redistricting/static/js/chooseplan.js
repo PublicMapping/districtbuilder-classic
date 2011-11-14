@@ -45,6 +45,7 @@ chooseplan = function(options) {
                 $('#PlanChooser').dialog('destroy').detach();
             },
             table: {},
+            helpText: {},
             pager: {},
             dataUrl: ''
         }, options),
@@ -76,6 +77,7 @@ chooseplan = function(options) {
         _nameRequired = false;
         _reaggregator = reaggregator({ startText: _startText });
         _reaggregator.init();
+        _options.helpText.hide();
         loadTable();
         resizeToFit();
         initButtons();

@@ -34,7 +34,7 @@ reaggregator = function(options) {
     var _self = {},
         _options = $.extend({
             // How often (in milliseconds) to check for status updates
-            timerInterval: 5000, 
+            timerInterval: 10000, 
 
             // The url to check the server for the status of reaggregation
             statusUrl: '/districtmapping/processingstatus/',
@@ -54,6 +54,9 @@ reaggregator = function(options) {
 
             // jqGrid object: so refreshes can be triggered
             grid: $('#plan_table'),
+
+            // Div under the button for providing additional info
+            helpText: $('#start_mapping_help'),            
 
             // Tabs object: so we only query for status when viewing the plan chooser
             tabs: $('#steps')
@@ -127,10 +130,14 @@ reaggregator = function(options) {
                     // Owner -- allow reaggregation
                     _options.startButtonLabel.html('Reaggregate');
                     _options.startButton.attr('disabled', false);
+                    _options.helpText.html('Data in the system has changed. This plan needs to be reaggregated before it can be used. Click the button to begin reaggregation. This will run in the background, and the status will be updated when completed. Feel free to use the rest of the system in the meantime.');
+                    _options.helpText.show();
                 } else {
                     // Not owner -- show that it needs reaggregation
                     _options.startButtonLabel.html('Needs reaggregation');
                     _options.startButton.attr('disabled', true);
+                    _options.helpText.html('Data in the system has changed. The owner of this plan needs to reaggregate it before it can be used. The status of the plan will be updated when reaggregation has completed.');
+                    _options.helpText.show();
                 }
                 break;
 
@@ -138,15 +145,20 @@ reaggregator = function(options) {
                 // Don't allow actions while reaggregating
                 _options.startButtonLabel.html('Reaggregation in progress');
                 _options.startButton.attr('disabled', true);
+                _options.helpText.html('Data in the system has changed, and this plan is currently reaggregating to reflect these changes. The plan will not be available until reaggregation has completed.');
+                _options.helpText.show();
                 break;
             
             case 'Ready':
                 _options.startButtonLabel.html(_options.startText);
                 _options.startButton.attr('disabled', false);
+                _options.helpText.hide();
                 break;
             
             default:
-                // Unknown, etc. No action needed
+                _options.startButtonLabel.html('Unknown state');
+                _options.startButton.attr('disabled', true);
+                _options.helpText.hide();
                 break;
         }
     };
@@ -233,6 +245,7 @@ reaggregator = function(options) {
      */
     _self.filterChanged = function(filterId) {
         _filterId = filterId;
+        _options.helpText.hide();        
         _self.planSelected(0);
     };
 
