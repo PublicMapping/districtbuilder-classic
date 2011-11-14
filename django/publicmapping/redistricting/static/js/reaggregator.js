@@ -43,9 +43,6 @@ reaggregator = function(options) {
             reaggregateUrlPrefix: '/districtmapping/plan/',
             reaggregateUrlSuffix: '/reaggregate/',
 
-            // Starting text of the view/edit plan button
-            startText: 'Start Drawing',
-
             // Button that starts drawing
             startButton: $('#start_mapping'),
 
@@ -66,13 +63,8 @@ reaggregator = function(options) {
         _filterId,
 
         // Currently selected tab. Only query status when Plan (index=0) is selected
-        _tabId,
-
-        // If the user selects "Reaggregate and Start Drawing', the plan id gets
-        // added to this array. When new reaggregation statuses come in, and an id 
-        // in this array has a state of 'Ready', user is navigated to the plan page.
-        _reaggregatingIds = [];
-
+        _tabId;
+    
     /**
      * Initializes the reaggregator. 
      *
@@ -98,11 +90,6 @@ reaggregator = function(options) {
             // ones, plus any other ones the user asked for reaggregation.
             var planIds = [];
             $.each(_currData, function(id) {  planIds.push(parseInt(id, 10)); });
-            $(_reaggregatingIds).each(function(i, planId) {
-                if ($.inArray(planId, planIds) < 0) {
-                    planIds.push(planId);
-                }
-            });
 
             // Request status
             $.ajax({
@@ -126,7 +113,7 @@ reaggregator = function(options) {
             case 'Needs reaggregation':
                 if (_filterId === 'filter_mine') {
                     // Owner -- allow reaggregation
-                    _options.startButtonLabel.html('Reaggregate & ' + _options.startText);
+                    _options.startButtonLabel.html('Reaggregate');
                 } else {
                     // Not owner -- show that it needs reaggregation
                     _options.startButtonLabel.html('Needs reaggregation');
@@ -180,7 +167,6 @@ reaggregator = function(options) {
             success: function(data) {
                 if (data.success) {
                     _options.grid.trigger('reloadGrid');
-                    _reaggregatingIds.push(planId);
                 } else {
                     handleError();
                 }
@@ -199,14 +185,6 @@ reaggregator = function(options) {
             _currData = newData;
             return;
         } 
-
-        // Check if any plans in which reaggregation was requested
-        // have completed. If so, redirect to the plan page.
-        $(_reaggregatingIds).each(function(i, planId) {
-            if (newData[planId] === 'Ready') {
-                window.location = '/districtmapping/plan/' + planId + '/edit/';
-            }
-        });
 
         // Check if any statuses have changed. If so, force a grid refresh.
         var changed = false;

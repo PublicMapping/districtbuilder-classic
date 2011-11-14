@@ -74,7 +74,7 @@ chooseplan = function(options) {
         _startText = _options.anonymous ? "View Plan" : "Start Drawing";
         _table = _options.table;
         _nameRequired = false;
-        _reaggregator = reaggregator({ startText: _startText });
+        _reaggregator = reaggregator();
         _reaggregator.init();
         loadTable();
         resizeToFit();
