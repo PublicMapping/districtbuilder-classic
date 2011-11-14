@@ -74,7 +74,7 @@ chooseplan = function(options) {
         _startText = _options.anonymous ? "View Plan" : "Start Drawing";
         _table = _options.table;
         _nameRequired = false;
-        _reaggregator = reaggregator();
+        _reaggregator = reaggregator({ startText: _startText });
         _reaggregator.init();
         loadTable();
         resizeToFit();
@@ -405,6 +405,12 @@ chooseplan = function(options) {
     }
 
     var rowSelected = function(id) {
+        // Don't do anything if the selected plan hasn't changed
+        if (_selectedPlanId === id) {
+            _reaggregator.planSelected(id);            
+            return;
+        }
+        
         // Set the internal variables for later use
         _selectedPlanId = id;
         _selectedPlanName = _table.jqGrid('getCell', id, 'fields.name');
@@ -483,7 +489,6 @@ chooseplan = function(options) {
             editState('none');
         }
 
-
         // Update the district index file publisher
         if (_districtindexfilePublisher) {
             _districtindexfilePublisher.setUpdateVisibility(false);
@@ -522,8 +527,6 @@ chooseplan = function(options) {
                 _table.setPostDataItem( '_search', false );
                 _table.removePostDataItem( 'searchString' );
         }
-        _selectedPlanId = undefined;
-        _selectedPlanName = undefined;
     };
 
     /**
@@ -629,6 +632,7 @@ chooseplan = function(options) {
                 showItems(true, false, true, false, true);
             }
             $('#start_mapping .ui-button-text').html(_startText);
+            $('#start_mapping').attr('disabled', 'disabled');
             setActiveTab($(this));
            
         });        
@@ -642,6 +646,7 @@ chooseplan = function(options) {
                 showItems(true, false, true, false, true);
             }
             $('#start_mapping .ui-button-text').html(_startText);
+            $('#start_mapping').attr('disabled', 'disabled');
             setActiveTab($(this));
         });        
         $('#filter_mine').click( function () {
@@ -650,15 +655,17 @@ chooseplan = function(options) {
             _table.jqGrid().trigger('reloadGrid', [{ page:1 }]);
             $('input:radio[name=Edit]').filter('[value=edit]').prop('checked', true);
             showItems(false, true, true, true, false);
-            setActiveTab($(this));            
             $('#start_mapping .ui-button-text').html(_startText);
+            $('#start_mapping').attr('disabled', 'disabled');
+            setActiveTab($(this));            
         });        
         $('#new_from_file').click( function() {
             _eventType = 'upload';
             _nameRequired = true;
             showItems(true, false, false, false, true);
-            setActiveTab($(this));           
             $('#start_mapping .ui-button-text').html('Upload Plan');
+            $('#start_mapping').attr('disabled', false);            
+            setActiveTab($(this));           
         });
 
         $('#edit_plan').button().click( function() {

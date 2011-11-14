@@ -43,6 +43,9 @@ reaggregator = function(options) {
             reaggregateUrlPrefix: '/districtmapping/plan/',
             reaggregateUrlSuffix: '/reaggregate/',
 
+            // Starting text of the view/edit plan button
+            startText: 'Start Drawing',
+
             // Button that starts drawing
             startButton: $('#start_mapping'),
 
@@ -61,6 +64,9 @@ reaggregator = function(options) {
 
         // Current filter ('Plan Type' tab selection)
         _filterId,
+
+        // Currently selected plan
+        _planId,
 
         // Currently selected tab. Only query status when Plan (index=0) is selected
         _tabId;
@@ -109,11 +115,18 @@ reaggregator = function(options) {
      * Updates the display for the currently selected plan
      */
     _self.planSelected = function(planId) {
+        _planId = planId;
+
+        if (!_currData || !_currData[planId]) {
+            return;
+        }
+        
         switch (_currData[planId]) {
             case 'Needs reaggregation':
                 if (_filterId === 'filter_mine') {
                     // Owner -- allow reaggregation
                     _options.startButtonLabel.html('Reaggregate');
+                    _options.startButton.attr('disabled', false);
                 } else {
                     // Not owner -- show that it needs reaggregation
                     _options.startButtonLabel.html('Needs reaggregation');
@@ -127,8 +140,13 @@ reaggregator = function(options) {
                 _options.startButton.attr('disabled', true);
                 break;
             
+            case 'Ready':
+                _options.startButtonLabel.html(_options.startText);
+                _options.startButton.attr('disabled', false);
+                break;
+            
             default:
-                // Ready, Unknown, etc. No action needed
+                // Unknown, etc. No action needed
                 break;
         }
     };
@@ -156,8 +174,8 @@ reaggregator = function(options) {
                 .dialog({modal:true, resizable:false});
         };
 
-        // Update the button state to show we are reaggregating
-        _options.startButtonLabel.html('Reaggregation in progress');
+        // Update the button state while reaggregation request is being sent
+        _options.startButtonLabel.html('...');
         _options.startButton.attr('disabled', true);
 
         // Reaggregate
@@ -194,19 +212,28 @@ reaggregator = function(options) {
                 changed = true;
             }
         });
+
+        // Update the stored data
+        _currData = newData;
+
+        // If anything has changed, refresh the grid
         if (changed) {
             _options.grid.trigger('reloadGrid');
         }
 
-        // Update the stored data
-        _currData = newData;
+        // Reselect the row, so any new metadata gets displayed
+        if (_planId) {
+            _options.grid.jqGrid().resetSelection()
+            _options.grid.jqGrid().setSelection(_planId);
+        }
     };
 
     /**
      * Updates the current filter ('Plan Type' selection)
      */
     _self.filterChanged = function(filterId) {
-        _filterId = filterId
+        _filterId = filterId;
+        _self.planSelected(0);
     };
 
     return _self;
