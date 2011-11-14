@@ -1674,7 +1674,7 @@ def get_unlocked_simple_geometries(request,planid):
                     'geometry': json.loads(geom.json),
                     'properties': {
                         'name': feature.name,
-                        'geolevel_id': feature.geolevel.get().id,
+                        'geolevel_id': geolevel,
                         'id': feature.id
                     }
                 })
