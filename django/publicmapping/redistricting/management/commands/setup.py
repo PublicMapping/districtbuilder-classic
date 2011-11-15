@@ -772,11 +772,16 @@ ERROR:
             verbose - A flag indicating verbose output messages.
         """
         geolevel = Geolevel.objects.get(name=glconf.get('name').lower()[:50])
-        llevels = LegislativeLevel.objects.filter(geolevel=geolevel)
+        llevels = self.config.xpath('/DistrictBuilder/Regions/Region/GeoLevels//GeoLevel[@ref="%s"]' % glconf.get('id'))
         parent = None
         for llevel in llevels:
-            if not llevel.parent is None:
-                parent = llevel.parent
+            parent = llevel.getparent()
+            while parent.getparent().tag != 'GeoLevels':
+                parent = parent.getparent()
+        parent_geolevel = glconf.xpath('/DistrictBuilder/GeoLevels/GeoLevel[@id="%s"]' % parent.get('ref'))
+        if len(parent_geolevel) == 1:
+            parent = Geolevel.objects.get(name=parent_geolevel[0].get('name').lower()[:50])
+
 
         if parent:
             progress = 0
@@ -817,7 +822,7 @@ ERROR:
 
         parentunits = Geounit.objects.filter(
             tree_code__startswith=geounit.tree_code, 
-            geolevel=parent.geolevel)
+            geolevel__in=[parent])
         
         parentunits.update(child=geounit)
         newgeo = parentunits.unionagg()
@@ -1458,7 +1463,7 @@ ERROR:
                     # Check for applicability of the function by examining the config
                     geolevel_xpath = '/DistrictBuilder/GeoLevels/GeoLevel[@name="%s"]' % config['geolevel']
                     geolevel_config = self.config.xpath(geolevel_xpath)
-                    geolevel_region_xpath = '/DistrictBuilder/Regions/Region[@id="%s"]/GeoLevels//GeoLevel[@ref="%s"]' % (region, geolevel_config[0].get('id'))
+                    geolevel_region_xpath = '/DistrictBuilder/Regions/Region[@name="%s"]/GeoLevels//GeoLevel[@ref="%s"]' % (region, geolevel_config[0].get('id'))
                     if len(self.config.xpath(geolevel_region_xpath)) > 0:
                         # If the geolevel is in the region, check the filters
                         for f in filter_list:
