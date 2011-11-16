@@ -287,6 +287,9 @@ class Geolevel(models.Model):
     # The name of the geolevel
     name = models.CharField(max_length = 50)
 
+    # The label to display on UI elements
+    label = models.CharField(max_length = 20)
+
     # Each geolevel has a maximum and a minimum zoom level at which 
     # features on the map can be selected and added to districts
 

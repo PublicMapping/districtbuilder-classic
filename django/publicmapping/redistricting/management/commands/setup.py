@@ -1327,6 +1327,7 @@ ERROR:
         for geolevel in geolevels:
             attributes = {}
             attributes['name'] = geolevel.get('name').lower()[:50]
+            attributes['label'] = geolevel.get('label')[:20]
             attributes['min_zoom'] = geolevel.get('min_zoom')
             attributes['sort_key'] = geolevel.get('sort_key')
             attributes['tolerance'] = geolevel.get('tolerance')
@@ -1683,6 +1684,7 @@ ERROR:
 
                 attributes = {}
                 attributes['name'] = '%s_%s' % (region.get('name'), name)
+                attributes['label'] = geolevel.label
                 attributes['min_zoom'] = geolevel.min_zoom - zero_zoom
                 attributes['tolerance'] = geolevel.tolerance
                 obj, created, changed, message = consistency_check_and_update(Geolevel, overwrite=self.force, **attributes)
