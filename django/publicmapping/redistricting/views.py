@@ -435,7 +435,7 @@ def commonplan(request, planid):
                 break
 
     for level in levels:
-        snaplayers.append( {'geolevel':level.id,'layer':level.name.lower(),'name':level.name.capitalize(),'min_zoom':level.min_zoom} )
+        snaplayers.append( {'geolevel':level.id,'layer':level.name.lower(),'name':level.label if level.label.isupper() else level.label.capitalize(),'min_zoom':level.min_zoom} )
     default_selected = False
     for demo in demos:
         isdefault = str((not default_demo is None) and (demo[0] == default_demo.id)).lower()
