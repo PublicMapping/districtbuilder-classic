@@ -189,12 +189,12 @@ class SubjectUpload(models.Model):
 
         # do this in bulk!
         # insert upload_id, portable_id, number
-        sql = 'INSERT INTO "%s" ("%s","%s","%s") VALUES (%%(upload_id)s, %%(geoid)s, %%(number)s)' % (SubjectQuarantine._meta.db_table, SubjectQuarantine._meta.fields[1].attname, SubjectQuarantine._meta.fields[2].attname, SubjectQuarantine._meta.fields[3].attname)
+        sql = 'INSERT INTO "%s" ("%s","%s","%s") VALUES (%%(upload_id)s, %%(geoid)s, %%(number)s)' % (SubjectStage._meta.db_table, SubjectStage._meta.fields[1].attname, SubjectStage._meta.fields[2].attname, SubjectStage._meta.fields[3].attname)
         args = []
         for row in reader:
             args.append( {'upload_id':upload.id, 'geoid':row[reader.fieldnames[0]].strip(), 'number':row[reader.fieldnames[1]].strip()} )
             # django ORM takes about 320s for 280K geounits
-            #SubjectQuarantine(upload=upload, portable_id=row[reader.fieldnames[0]],number=row[reader.fieldnames[1]]).save()
+            #SubjectStage(upload=upload, portable_id=row[reader.fieldnames[0]],number=row[reader.fieldnames[1]]).save()
 
         # direct access to db-api takes about 60s for 280K geounits
         cursor = connection.cursor()
@@ -202,7 +202,7 @@ class SubjectUpload(models.Model):
 
         os.remove(localstore)
 
-        nlines = upload.subjectquarantine_set.all().count()
+        nlines = upload.subjectstage_set.all().count()
         geolevel, nunits = LegislativeLevel.get_basest_geolevel_and_count()
 
         # Validation #1: if the number of geounits in the uploaded file
@@ -251,10 +251,10 @@ class SubjectUpload(models.Model):
         geolevel, nunits = LegislativeLevel.get_basest_geolevel_and_count()
 
         # This seizes postgres -- probably small memory limits.
-        #aligned_units = upload.subjectquarantine_set.filter(portable_id__in=permanent_units).count()
+        #aligned_units = upload.subjectstage_set.filter(portable_id__in=permanent_units).count()
 
         permanent_units = geolevel.geounit_set.all().order_by('portable_id').values_list('portable_id',flat=True)
-        temp_units = upload.subjectquarantine_set.all().order_by('portable_id').values_list('portable_id',flat=True)
+        temp_units = upload.subjectstage_set.all().order_by('portable_id').values_list('portable_id',flat=True)
 
         # quick check: make sure the first and last items are aligned
         ends_match = permanent_units[0] == temp_units[0] and \
@@ -279,7 +279,7 @@ class SubjectUpload(models.Model):
         if not ends_match or nunits != aligned_units:
             upload.status = 'ER'
             upload.save()
-            upload.subjectquarantine_set.all().delete()
+            upload.subjectstage_set.all().delete()
 
             return {'task_id':None, 'success':False, 'messages':[msg]}
 
@@ -306,7 +306,7 @@ class SubjectUpload(models.Model):
         # these two lists have the same number of items, and no items are extra or missing.
         # therefore, ordering by the same field will create two collections aligned by
         # the 'portable_id' field
-        quarantined = upload.subjectquarantine_set.all().order_by('portable_id')
+        quarantined = upload.subjectstage_set.all().order_by('portable_id')
         geounits = geolevel.geounit_set.all().order_by('portable_id').values_list('id','portable_id')
 
         geo_quar = zip(geounits, quarantined)
@@ -406,7 +406,7 @@ class SubjectUpload(models.Model):
             upload_id - The ID of the uploaded subject data.
         """
         upload = SubjectUpload.objects.get(id=upload_id)
-        quarantined = upload.subjectquarantine_set.all()
+        quarantined = upload.subjectstage_set.all()
 
         # The upload succeeded
         upload.status = 'OK'
@@ -417,7 +417,7 @@ class SubjectUpload(models.Model):
 
         return {'task_id':None, 'success':True, 'messages':['Upload complete. Subject "%s" added.' % upload.subject_name], 'subject':Subject.objects.get(name=upload.subject_name).id}
 
-class SubjectQuarantine(models.Model):
+class SubjectStage(models.Model):
     """
     A quarantine table for uploaded subjects. This model stores temporary subject
     datasets that are being imported into the system.
