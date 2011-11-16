@@ -507,6 +507,15 @@
                 <Argument name="target" value="5" />
             </ScoreFunction>
 
+            <ScoreFunction id="plan_majority_minority_blk" type="plan"
+                calculator="publicmapping.redistricting.calculators.MajorityMinority"
+                label="Black VAP Majority (&gt;50%)"
+                description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
+                <SubjectArgument name="population" ref="vap" />
+                <SubjectArgument name="minority1" ref="vapblk" />
+                <Argument name="target" value="0" />
+            </ScoreFunction>
+
             <ScoreFunction id="plan_majority_minority_hisp" type="plan"
                 calculator="publicmapping.redistricting.calculators.MajorityMinority"
                 label="Hisp. VAP Majority (&gt;50%)"
@@ -805,7 +814,7 @@
                 title="Plan Summary" cssclass="plan_summary dc_area_council" template="plan_summary.html">
                 <Score ref="a_dc_area_council_plan_equipopulation_summary"/>
                 <Score ref="b_plan_dc_area_council_noncontiguous"/>
-                <Score ref="plan_majority_minority_blk_senate" />
+                <Score ref="plan_majority_minority_blk" />
                 <Score ref="plan_majority_minority_hisp" />
             </ScorePanel>
 
