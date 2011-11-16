@@ -1,0 +1,223 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-11-16 16:30-0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: redistricting/admin.py:274
+#, python-format
+msgid "Successfully deleted %(count)d %(items)s."
+msgstr ""
+
+#: redistricting/admin.py:298
+#, python-format
+msgid "Delete selected %(verbose_name_plural)s"
+msgstr ""
+
+#: templates/index.html:100
+msgid "Frequently Asked Questions"
+msgstr "Preguntas Más Frecuentes"
+
+#: templates/admin/base_site.html:34
+msgid "Redistricting site admin"
+msgstr ""
+
+#: templates/admin/base_site.html:37
+msgid "Redistricting administration"
+msgstr ""
+
+#: templates/admin/login.orig.html:19
+msgid "Username:"
+msgstr ""
+
+#: templates/admin/login.orig.html:22
+msgid "Password:"
+msgstr ""
+
+#: templates/admin/login.orig.html:26
+msgid "Log in"
+msgstr ""
+
+#: templates/admin/auth/user/change_password.orig.html:11
+#: templates/admin/redistricting/subject/add_form.html:20
+#: templates/admin/redistricting/subject/delete_selected_confirmation.html:7
+#: templates/admin/redistricting/subject/upload_form.html:84
+#: templates/registration/password_change_form.orig.html:6
+msgid "Home"
+msgstr ""
+
+#: templates/admin/auth/user/change_password.orig.html:15
+#: templates/admin/auth/user/change_password.orig.html:48
+#: templates/registration/password_change_form.orig.html:5
+msgid "Change password"
+msgstr ""
+
+#: templates/admin/auth/user/change_password.orig.html:24
+#: templates/registration/password_change_form.orig.html:16
+msgid "Please correct the error below."
+msgid_plural "Please correct the errors below."
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/admin/auth/user/change_password.orig.html:28
+#, python-format
+msgid "Enter a new password for the user <strong>%(username)s</strong>."
+msgstr ""
+
+#: templates/admin/auth/user/change_password.orig.html:35
+msgid "Password"
+msgstr ""
+
+#: templates/admin/auth/user/change_password.orig.html:41
+#: templates/registration/password_change_form.orig.html:38
+msgid "Password (again)"
+msgstr ""
+
+#: templates/admin/auth/user/change_password.orig.html:42
+msgid "Enter the same password as above, for verification."
+msgstr ""
+
+#: templates/admin/redistricting/subject/add_form.html:4
+#: templates/admin/redistricting/subject/add_form.html:27
+msgid "Download Subject template"
+msgstr ""
+
+#: templates/admin/redistricting/subject/add_form.html:23
+#: templates/admin/redistricting/subject/upload_form.html:87
+msgid "Add"
+msgstr ""
+
+#: templates/admin/redistricting/subject/add_form.html:41
+#: templates/admin/redistricting/subject/delete_selected_confirmation.html:53
+#: templates/admin/redistricting/subject/upload_form.html:38
+msgid "Continue"
+msgstr ""
+
+#: templates/admin/redistricting/subject/delete_selected_confirmation.html:4
+#: templates/admin/redistricting/subject/delete_selected_confirmation.html:14
+msgid "Are you sure?"
+msgstr ""
+
+#: templates/admin/redistricting/subject/delete_selected_confirmation.html:4
+#: templates/admin/redistricting/subject/delete_selected_confirmation.html:14
+msgid "WARNING"
+msgstr ""
+
+#: templates/admin/redistricting/subject/delete_selected_confirmation.html:10
+msgid "Delete multiple objects"
+msgstr ""
+
+#: templates/admin/redistricting/subject/delete_selected_confirmation.html:17
+#, python-format
+msgid ""
+"Are you sure you want to delete the selected %(object_name)s objects? All of "
+"the following objects and their related items will be deleted:"
+msgstr ""
+
+#: templates/admin/redistricting/subject/delete_selected_confirmation.html:35
+msgid "Yes, I'm sure"
+msgstr ""
+
+#: templates/admin/redistricting/subject/delete_selected_confirmation.html:39
+#, python-format
+msgid ""
+"Deleting the selected %(object_name)s objects must be done with great care! "
+"Please carefully read the following notice regarding the removal of "
+"%(object_name)s objects:"
+msgstr ""
+
+#: templates/admin/redistricting/subject/delete_selected_confirmation.html:41
+#, python-format
+msgid "Deleting a %(object_name)s is irreversible."
+msgstr ""
+
+#: templates/admin/redistricting/subject/delete_selected_confirmation.html:42
+#, python-format
+msgid ""
+"Deleting a %(object_name)s must <em>NOT</em> occur when regular users are "
+"editing plans."
+msgstr ""
+
+#: templates/admin/redistricting/subject/delete_selected_confirmation.html:43
+#, python-format
+msgid ""
+"All references to the %(object_name)s in the application configuration must "
+"be removed."
+msgstr ""
+
+#: templates/admin/redistricting/subject/delete_selected_confirmation.html:44
+#, python-format
+msgid ""
+"The process of deleting a %(object_name)s takes a significant amount of "
+"time, and may not be interrupted once it has been started."
+msgstr ""
+
+#: templates/admin/redistricting/subject/delete_selected_confirmation.html:52
+#, python-format
+msgid ""
+"I understand that the deletion of a %(object_name)s is an irreversible "
+"operation."
+msgstr ""
+
+#: templates/admin/redistricting/subject/upload_form.html:4
+#: templates/admin/redistricting/subject/upload_form.html:91
+msgid "Upload Subject template"
+msgstr ""
+
+#: templates/admin/redistricting/subject/upload_form.html:47
+msgid "Retry"
+msgstr ""
+
+#: templates/admin/redistricting/subject/upload_form.html:123
+msgid "Please Wait ..."
+msgstr ""
+
+#: templates/admin/redistricting/subject/upload_form.html:125
+msgid "Upload"
+msgstr ""
+
+#: templates/registration/password_change_form.orig.html:5
+msgid "Documentation"
+msgstr ""
+
+#: templates/registration/password_change_form.orig.html:5
+msgid "Log out"
+msgstr ""
+
+#: templates/registration/password_change_form.orig.html:6
+#: templates/registration/password_change_form.orig.html:8
+#: templates/registration/password_change_form.orig.html:20
+msgid "Password change"
+msgstr ""
+
+#: templates/registration/password_change_form.orig.html:22
+msgid ""
+"Please enter your old password, for security's sake, and then enter your new "
+"password twice so we can verify you typed it in correctly."
+msgstr ""
+
+#: templates/registration/password_change_form.orig.html:28
+msgid "Old password"
+msgstr ""
+
+#: templates/registration/password_change_form.orig.html:33
+msgid "New password"
+msgstr ""
+
+#: templates/registration/password_change_form.orig.html:44
+msgid "Change my password"
+msgstr ""
