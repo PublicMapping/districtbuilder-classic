@@ -4265,7 +4265,7 @@ class RegionConfigTest(BaseTestCase):
         self.cmd.import_prereq(self.config_xml, 0)
 
         expected_geolevels = ['county', 'vtd', 'block', 'va_county', 'va_vtd', 'va_block',
-            'dc_area_vtd', 'dc_area_block']
+            'dc_vtd', 'dc_block']
         all_geolevels = Geolevel.objects.all()
 
         self.assertEqual(len(expected_geolevels), len(all_geolevels),
@@ -4285,12 +4285,12 @@ class RegionConfigTest(BaseTestCase):
         for feat in test_layer:
             geolevels = self.cmd.get_regions_for_feature(feat, function_dict)
             if len(geolevels) == 2:
-                self.assertIn('dc_area', geolevels, "Regional feature not found in unfiltered geolevel")
-                self.assertIn('va', geolevels, "Unfiltered feature not found in unfiltered geolevel")
+                self.assertTrue('dc' in geolevels, "Regional feature not found in unfiltered geolevel")
+                self.assertTrue('va' in geolevels, "Unfiltered feature not found in unfiltered geolevel")
                 va += 1
                 dc += 1
             elif len(geolevels) == 1:
-                self.assertIn('va', geolevels, "Regional feature not found in unfiltered geolevel")
+                self.assertTrue('va' in geolevels, "Regional feature not found in unfiltered geolevel")
                 va += 1
             else:
                 self.fail("Incorrect number of geolevels returned - should never get here")
