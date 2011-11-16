@@ -1363,6 +1363,20 @@
         -->
         <Database name="YOUR-DATABASE-NAME" user="publicmapping" password="YOUR-DATABASE-PASSWORD" host="OPTIONAL"/>
         
+        <!--
+           Internationalization and localization information.
+
+           At lease one language is required. After running setup, the default
+           LANGUAGE_CODE for the app will be set to the first language defined.
+           Running setup with the '-l' option will create a message file and
+           compile it for each Language defined.
+        -->
+        <Internationalization timezone="US/Eastern">
+            <Language code="en" label="English" />
+            <Language code="fr" label="French" />
+            <Language code="es" label="Spanish" />
+        </Internationalization>
+
         <!-- 
         
         Administrative user information. This will create an administrative

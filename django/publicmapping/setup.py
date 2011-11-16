@@ -62,6 +62,9 @@ def main():
     parser.add_option('-s', '--static', dest="static",
             help="Collect the static javascript and css files.",
             action='store_true', default=False),
+    parser.add_option('-l', '--languages', dest="languages",
+            help="Create and compile a message file for each Language defined.",
+            action='store_true', default=False),
     parser.add_option('-b', '--bard', dest="bard",
             help="Create a BARD map based on the imported spatial data.", 
             default=False, action='store_true'),
@@ -78,7 +81,7 @@ def main():
 
     (options, args) = parser.parse_args()
 
-    allops = (not options.database) and (not options.geolevels) and (not options.views) and (not options.geoserver) and (not options.templates) and (not options.nesting) and (not options.bard) and (not options.static) and (not options.bard_templates)
+    allops = (not options.database) and (not options.geolevels) and (not options.views) and (not options.geoserver) and (not options.templates) and (not options.nesting) and (not options.bard) and (not options.static) and (not options.languages) and (not options.bard_templates)
 
     verbose = options.verbosity
 
@@ -122,6 +125,7 @@ ERROR:
         templates = True
         nesting = []
         static = True
+        languages = True
         bard = True
         bard_templates = True
     else:
@@ -131,10 +135,11 @@ ERROR:
         templates = options.templates
         nesting = options.nesting
         static = options.static
+        languages = options.languages
         bard = options.bard
         bard_templates = options.bard_templates
 
-    management.call_command('setup', config=args[1], verbosity=verbose, geolevels=geolevels, views=views, geoserver=geoserver, templates=templates, nesting=nesting, static=static, bard=bard, bard_templates=bard_templates, force=options.force)
+    management.call_command('setup', config=args[1], verbosity=verbose, geolevels=geolevels, views=views, geoserver=geoserver, templates=templates, nesting=nesting, static=static, languages=languages, bard=bard, bard_templates=bard_templates, force=options.force)
     
     # Success! Exit-code 0
     sys.exit(0)
@@ -297,8 +302,18 @@ def merge_config(config, verbose):
 
         rsettings_in.close()
 
+        settings_out.write('\n#\n# Automatically generated settings.\n#\n\n')
+
+        cfg = config.xpath('//Internationalization')[0]
+        settings_out.write("TIME_ZONE = '%s'\n" % cfg.get('timezone'))
+        settings_out.write("LANGUAGES = (\n")
+        for language in cfg.xpath('Language'):
+            settings_out.write("    ('%s', '%s'),\n" % (language.get('code'), language.get('label')))
+        settings_out.write(")\n")
+        settings_out.write("# Modify to change the language of the application\n")
+        settings_out.write("LANGUAGE_CODE = '%s'\n\n" % cfg[0].get('code'))
+        
         cfg = config.xpath('//Project/Database')[0]
-        settings_out.write('\n#\n# Automatically generated settings.\n#\n')
         settings_out.write("DATABASE_ENGINE = 'postgresql_psycopg2'\n")
         settings_out.write("DATABASE_NAME = '%s'\n" % cfg.get('name'))
         settings_out.write("DATABASE_USER = '%s'\n" % cfg.get('user'))
