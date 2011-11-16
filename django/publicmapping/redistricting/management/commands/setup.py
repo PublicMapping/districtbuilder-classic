@@ -1663,6 +1663,13 @@ ERROR:
         regions = regions_node.xpath('//Region')
         for region in regions:
             regional_geolevels = region.xpath('GeoLevels//GeoLevel')
+
+            # Get the zoom level of the largest geolevel (last one in the regional_geolevels list)
+            zero_geolevel_config = config.xpath('/DistrictBuilder/GeoLevels/GeoLevel[@id="%s"]' %
+                regional_geolevels[len(regional_geolevels)-1].get('ref'))
+            # store this zoom level, and use it as an offset for the geolevels in this region
+            zero_zoom = int(zero_geolevel_config[0].get('min_zoom'))
+
             for geolevel in regional_geolevels:
                 geolevel_config = config.xpath('/DistrictBuilder/GeoLevels/GeoLevel[@id="%s"]' % geolevel.get('ref'))
                 if len(geolevel_config) > 0:
@@ -1673,9 +1680,10 @@ ERROR:
                     if verbose > 1:
                         print "Base geolevel %s for %s not found in the database.  Import base geolevels before regional geolevels" % (name, region.get('name'))
                     return
+
                 attributes = {}
                 attributes['name'] = '%s_%s' % (region.get('name'), name)
-                attributes['min_zoom'] = geolevel.min_zoom
+                attributes['min_zoom'] = geolevel.min_zoom - zero_zoom
                 attributes['tolerance'] = geolevel.tolerance
                 obj, created, changed, message = consistency_check_and_update(Geolevel, overwrite=self.force, **attributes)
                 if verbose > 1 or (changed and not self.force):
