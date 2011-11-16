@@ -312,8 +312,9 @@
                                         </xs:choice>
                                         <xs:element name="Description" type="xs:string" minOccurs="0" maxOccurs="1" />
                                     </xs:sequence>
-                                    <xs:attribute name="name" type="xs:string" use="required" />
                                     <xs:attribute name="id" type="xs:ID" />
+                                    <xs:attribute name="name" type="xs:string" use="required" />
+                                    <xs:attribute name="label" type="xs:string" use="required" />
                                     <xs:attribute name="min_zoom" type="xs:nonNegativeInteger" />
                                     <xs:attribute name="sort_key" type="xs:positiveInteger" />
                                     <xs:attribute name="tolerance" type="xs:decimal" use="required" />

@@ -1145,7 +1145,7 @@
     </Validation>
 
     <GeoLevels>
-      <GeoLevel id="block" name="block" min_zoom="8" sort_key="3" tolerance="2.5">
+      <GeoLevel id="block" name="block" label="block" min_zoom="8" sort_key="3" tolerance="2.5">
           <!--
 
           You may use EITHER the "Shapefile" or "Files" element as a child 
@@ -1206,7 +1206,7 @@
       be coincident in its child.
           
       -->
-      <GeoLevel id="vtd" name="vtd" min_zoom="4" sort_key="2" tolerance="25">
+      <GeoLevel id="vtd" name="vtd" label="VTD" min_zoom="4" sort_key="2" tolerance="25">
           <!--
 
           You may use EITHER the "Shapefile" or "Files" element as a child 
@@ -1260,7 +1260,7 @@
       be coincident in its child.
           
       -->
-      <GeoLevel id="county" name="county" min_zoom="0" sort_key="1" tolerance="250">
+      <GeoLevel id="county" name="county" label="county" min_zoom="0" sort_key="1" tolerance="250">
           <!--
 
           You may use EITHER the "Shapefile" or "Files" element as a child 
