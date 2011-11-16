@@ -678,7 +678,7 @@ ERROR:
                 print traceback.format_exc()
             return None
 
-    @transaction.commit_manually
+    @transaction.commit_on_success
     def create_views(self, verbose):
         """
         Create specialized views for GIS and mapping layers.
@@ -692,7 +692,6 @@ ERROR:
         
         sql = "CREATE OR REPLACE VIEW identify_geounit AS SELECT rg.id, rg.name, rgg.geolevel_id, rg.geom, rc.number, rc.percentage, rc.subject_id FROM redistricting_geounit rg JOIN redistricting_geounit_geolevel rgg ON rg.id = rgg.geounit_id JOIN redistricting_characteristic rc ON rg.id = rc.geounit_id;"
         cursor.execute(sql)
-        transaction.commit()
         if verbose > 1:
             print 'Created identify_geounit view ...'
 
@@ -705,20 +704,17 @@ ERROR:
             sql = "CREATE OR REPLACE VIEW simple_district_%s AS SELECT rd.id, rd.district_id, rd.plan_id, st_geometryn(rd.simple, %d) AS geom, rp.legislative_body_id FROM publicmapping.redistricting_district as rd JOIN publicmapping.redistricting_plan as rp ON rd.plan_id = rp.id WHERE rp.legislative_body_id IN (%s);" % (geolevel.name, geolevel.id, lbset)
 
             cursor.execute(sql)
-            transaction.commit()
             if verbose > 1:
                 print 'Created simple_district_%s view ...' % geolevel.name
 
             sql = "CREATE OR REPLACE VIEW simple_%s AS SELECT rg.id, rg.name, rgg.geolevel_id, rg.simple as geom FROM redistricting_geounit rg JOIN redistricting_geounit_geolevel rgg ON rg.id = rgg.geounit_id WHERE rgg.geolevel_id = %%(geolevel_id)s;" % geolevel.name
             cursor.execute(sql, {'geolevel_id':geolevel.id})
-            transaction.commit()
             if verbose > 1:
                 print 'Created simple_%s view ...' % geolevel.name
             
             for subject in Subject.objects.all():
                 sql = "CREATE OR REPLACE VIEW demo_%s_%s AS SELECT rg.id, rg.name, rgg.geolevel_id, rg.geom, rc.number, rc.percentage FROM redistricting_geounit rg JOIN redistricting_geounit_geolevel rgg ON rg.id = rgg.geounit_id JOIN redistricting_characteristic rc ON rg.id = rc.geounit_id WHERE rc.subject_id = %%(subject_id)s AND rgg.geolevel_id = %%(geolevel_id)s;" % (geolevel.name, subject.name,)
                 cursor.execute(sql, {'subject_id':subject.id, 'geolevel_id':geolevel.id})
-                transaction.commit()
                 if verbose > 1:
                     print 'Created demo_%s_%s view ...' % \
                         (geolevel.name, subject.name)
