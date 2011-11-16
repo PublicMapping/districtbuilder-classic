@@ -447,6 +447,10 @@ contents of the file and try again.
         # Make a list of layers
         feature_type_names = ['identify_geounit']
         for geolevel in Geolevel.objects.all():
+            if geolevel.legislativelevel_set.all().count() == 0:
+                # Skip 'abstract' geolevels if regions are configured
+                continue
+
             feature_type_names.append('simple_%s' % geolevel.name)
             feature_type_names.append('simple_district_%s' % geolevel.name)
 
@@ -541,6 +545,10 @@ contents of the file and try again.
         # Create the style for the demographic layer
 
         for geolevel in Geolevel.objects.all():
+            if geolevel.legislativelevel_set.all().count() == 0:
+                # Skip 'abstract' geolevels if regions are configured
+                continue
+
             is_first_subject = True
 
             for subject in Subject.objects.all().order_by('sort_key'):
@@ -689,23 +697,27 @@ ERROR:
             print 'Created identify_geounit view ...'
 
         for geolevel in Geolevel.objects.all():
-            sql = "CREATE OR REPLACE VIEW simple_district_%s AS SELECT redistricting_district.id, redistricting_district.district_id, redistricting_district.plan_id, st_geometryn(redistricting_district.simple,%d) as geom FROM redistricting_district;" % (geolevel.name, geolevel.id,)
+            if geolevel.legislativelevel_set.all().count() == 0:
+                # Skip 'abstract' geolevels if regions are configured
+                continue
+
+            lbset = ','.join(map( lambda x:str(x.legislative_body_id), geolevel.legislativelevel_set.all()))
+            sql = "CREATE OR REPLACE VIEW simple_district_%s AS SELECT rd.id, rd.district_id, rd.plan_id, st_geometryn(rd.simple, %d) AS geom, rp.legislative_body_id FROM publicmapping.redistricting_district as rd JOIN publicmapping.redistricting_plan as rp ON rd.plan_id = rp.id WHERE rp.legislative_body_id IN (%s);" % (geolevel.name, geolevel.id, lbset)
+
             cursor.execute(sql)
             transaction.commit()
             if verbose > 1:
                 print 'Created simple_district_%s view ...' % geolevel.name
 
-            sql = "CREATE OR REPLACE VIEW simple_%s AS SELECT rg.id, rg.name, rgg.geolevel_id, rg.simple as geom FROM redistricting_geounit rg JOIN redistricting_geounit_geolevel rgg ON rg.id = rgg.geounit_id WHERE rgg.geolevel_id = %d;" % (geolevel.name, geolevel.id,)
-            cursor.execute(sql)
+            sql = "CREATE OR REPLACE VIEW simple_%s AS SELECT rg.id, rg.name, rgg.geolevel_id, rg.simple as geom FROM redistricting_geounit rg JOIN redistricting_geounit_geolevel rgg ON rg.id = rgg.geounit_id WHERE rgg.geolevel_id = %%(geolevel_id)s;" % geolevel.name
+            cursor.execute(sql, {'geolevel_id':geolevel.id})
             transaction.commit()
             if verbose > 1:
                 print 'Created simple_%s view ...' % geolevel.name
             
             for subject in Subject.objects.all():
-                sql = "CREATE OR REPLACE VIEW demo_%s_%s AS SELECT rg.id, rg.name, rgg.geolevel_id, rg.geom, rc.number, rc.percentage FROM redistricting_geounit rg JOIN redistricting_geounit_geolevel rgg ON rg.id = rgg.geounit_id JOIN redistricting_characteristic rc ON rg.id = rc.geounit_id WHERE rc.subject_id = %d AND rgg.geolevel_id = %d;" % \
-                    (geolevel.name, subject.name, 
-                     subject.id, geolevel.id,)
-                cursor.execute(sql)
+                sql = "CREATE OR REPLACE VIEW demo_%s_%s AS SELECT rg.id, rg.name, rgg.geolevel_id, rg.geom, rc.number, rc.percentage FROM redistricting_geounit rg JOIN redistricting_geounit_geolevel rgg ON rg.id = rgg.geounit_id JOIN redistricting_characteristic rc ON rg.id = rc.geounit_id WHERE rc.subject_id = %%(subject_id)s AND rgg.geolevel_id = %%(geolevel_id)s;" % (geolevel.name, subject.name,)
+                cursor.execute(sql, {'subject_id':subject.id, 'geolevel_id':geolevel.id})
                 transaction.commit()
                 if verbose > 1:
                     print 'Created demo_%s_%s view ...' % \
