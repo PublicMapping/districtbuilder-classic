@@ -38,6 +38,7 @@ js_info_dict = {
 
 urlpatterns = patterns('',
     (r'^i18n/', include('django.conf.urls.i18n')), 
+    (r'^rosetta/', include('rosetta.urls')), 
     (r'^jsi18n/$', 'django.views.i18n.javascript_catalog', js_info_dict), 
     (r'^admin/', include(admin.site.urls)),
     (r'^accounts/register/$', 'publicmapping.views.userregister'),
