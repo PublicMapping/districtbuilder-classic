@@ -56,7 +56,7 @@ layerchooser = function(options) {
             modal: false,
             width: _minWidth,
             height: 'auto',
-            title: 'Choose Map Layers',
+            title: gettext('Choose Map Layers'),
             resizable: false,
             closable: true
         }, options),

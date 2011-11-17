@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-16 16:30-0500\n"
+"POT-Creation-Date: 2011-11-17 14:47-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -27,6 +27,10 @@ msgstr ""
 #, python-format
 msgid "Delete selected %(verbose_name_plural)s"
 msgstr ""
+
+#: redistricting/templates/viewplan.html:443
+msgid "Edit Stats"
+msgstr "Modifier Statistiques"
 
 #: templates/index.html:100
 msgid "Frequently Asked Questions"
@@ -55,7 +59,7 @@ msgstr ""
 #: templates/admin/auth/user/change_password.orig.html:11
 #: templates/admin/redistricting/subject/add_form.html:20
 #: templates/admin/redistricting/subject/delete_selected_confirmation.html:7
-#: templates/admin/redistricting/subject/upload_form.html:84
+#: templates/admin/redistricting/subject/upload_form.html:85
 #: templates/registration/password_change_form.orig.html:6
 msgid "Home"
 msgstr ""
@@ -97,13 +101,13 @@ msgid "Download Subject template"
 msgstr ""
 
 #: templates/admin/redistricting/subject/add_form.html:23
-#: templates/admin/redistricting/subject/upload_form.html:87
+#: templates/admin/redistricting/subject/upload_form.html:88
 msgid "Add"
 msgstr ""
 
 #: templates/admin/redistricting/subject/add_form.html:41
 #: templates/admin/redistricting/subject/delete_selected_confirmation.html:53
-#: templates/admin/redistricting/subject/upload_form.html:38
+#: templates/admin/redistricting/subject/upload_form.html:39
 msgid "Continue"
 msgstr ""
 
@@ -174,19 +178,19 @@ msgid ""
 msgstr ""
 
 #: templates/admin/redistricting/subject/upload_form.html:4
-#: templates/admin/redistricting/subject/upload_form.html:91
+#: templates/admin/redistricting/subject/upload_form.html:92
 msgid "Upload Subject template"
 msgstr ""
 
-#: templates/admin/redistricting/subject/upload_form.html:47
+#: templates/admin/redistricting/subject/upload_form.html:48
 msgid "Retry"
 msgstr ""
 
-#: templates/admin/redistricting/subject/upload_form.html:123
+#: templates/admin/redistricting/subject/upload_form.html:124
 msgid "Please Wait ..."
 msgstr ""
 
-#: templates/admin/redistricting/subject/upload_form.html:125
+#: templates/admin/redistricting/subject/upload_form.html:126
 msgid "Upload"
 msgstr ""
 

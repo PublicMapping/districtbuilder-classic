@@ -32,7 +32,13 @@ from django.contrib import admin
 
 admin.autodiscover()
 
+js_info_dict = { 
+    'packages': ('publicmapping',), 
+} 
+
 urlpatterns = patterns('',
+    (r'^i18n/', include('django.conf.urls.i18n')), 
+    (r'^jsi18n/$', 'django.views.i18n.javascript_catalog', js_info_dict), 
     (r'^admin/', include(admin.site.urls)),
     (r'^accounts/register/$', 'publicmapping.views.userregister'),
     (r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'index.html'}),

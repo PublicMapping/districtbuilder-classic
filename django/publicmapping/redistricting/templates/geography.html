@@ -34,6 +34,7 @@
 
 {% load humanize %}
 {% load redistricting_extras %}
+{% load i18n %}
 <div class="plansummary">
     <h3>{{ plan.name|truncate:"25" }}</h3>
     {% for subject in aggregate %}

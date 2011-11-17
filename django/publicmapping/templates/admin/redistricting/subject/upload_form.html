@@ -9,6 +9,7 @@
 {{ media }}
 {% if is_processing %}
 <script type="text/javascript" src="/static-media/jquery/jquery-1.6.js"></script>
+<script type="text/javascript" src="{% url django.views.i18n.javascript_catalog %}"></script>    
 <script type="text/javascript">
 $(function(){
     var statusInterval = 0;
