@@ -1,4 +1,33 @@
 {% extends "admin/base_site.html" %}
+
+{% comment %}
+
+   Copyright 2010-2011 Micah Altman, Michael McDonald
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+   This file is part of The Public Mapping Project
+   https://github.com/PublicMapping/
+
+   Purpose:
+       This file is a template for uploading new or modified Subject data via
+       the administrative interface. This template is used prior to the 
+       change_form template with an empty Subject model.
+
+   Author: David Zwarg, Andrew Jennings, Kenny Shepard
+
+{% endcomment %}
+
 {% load i18n admin_modify adminmedia %}
 
 {% block title %}{% trans "Upload Subject template" %}{% endblock %}
@@ -73,7 +102,8 @@ $(function(){
         padding-left: 65px;
         padding-bottom: 2px;
     }
-</style>{% endblock %}
+</style>
+{% endblock %}
 
 {% block coltype %}{% if ordered_objects %}colMS{% else %}colM{% endif %}{% endblock %}
 
@@ -92,24 +122,24 @@ $(function(){
 
 {% block content %}
     <div id="content-main">
-    <p>A Subject in DistrictBuilder has relationships with many objects in the application. For this reason, adding a Subject requires a few extra steps. The following forms will walk you through the process of:</p>
+    <p>{% blocktrans %}A Subject in DistrictBuilder has relationships with many objects in the application. For this reason, adding a Subject requires a few extra steps. The following forms will walk you through the process of:{% endblocktrans %}</p>
     <ol>
-        <li>Downloading a Subject template file (CSV)</li>
-        <li><span id="li2" style="font-weight:{% if is_processing %}normal{% else %}bold{% endif %};">Uploading a complete Subject file (CSV)</span></li>
-        <li><span id="li3" style="font-weight:{% if is_processing %}bold{% else %}normal{% endif %};">Verifying the uploaded Subject file.</span></li>
-        <li><span id="li4">Configuring the settings for the uploaded Subject.</span></li>
+        <li>{% blocktrans %}Downloading a Subject template file (CSV){% endblocktrans %}</li>
+        <li><span id="li2" style="font-weight:{% if is_processing %}normal{% else %}bold{% endif %};">{% blocktrans %}Uploading a complete Subject file (CSV){% endblocktrans %}</span></li>
+        <li><span id="li3" style="font-weight:{% if is_processing %}bold{% else %}normal{% endif %};">{% blocktrans %}Verifying the uploaded Subject file.{% endblocktrans %}</span></li>
+        <li><span id="li4">{% blocktrans %}Configuring the settings for the uploaded Subject.{% endblocktrans %}</span></li>
     </ol>
     <div id="step2" style="display:{% if is_processing %}none{% else %}block{% endif %};">
-    <h2>2. Uploading a complete Subject file</h2>
-    <p>Using the file field below, please select the populated Subject template file, and upload the Subject template file with the 'Upload' button below.</p>
+    <h2>{% blocktrans %}2. Uploading a complete Subject file{% endblocktrans %}</h2>
+    <p>{% blocktrans %}Using the file field below, please select the populated Subject template file, and upload the Subject template file with the 'Upload' button below.{% endblocktrans %}</p>
     </div>
     <div id="step3" style="display:{% if is_processing %}block{% else %}none{% endif %};">
-    <h2>3. Verifying the uploaded Subject file</h2>
-    <p>Please wait while the uploaded Subject file is checked for consistency and alignment with the currently loaded data. This may take up to 15 minutes, so please wait until the process completes before leaving this page.</p>
+    <h2>{% blocktrans %}3. Verifying the uploaded Subject file{% endblocktrans %}</h2>
+    <p>{% blocktrans %}Please wait while the uploaded Subject file is checked for consistency and alignment with the currently loaded data. This may take up to 15 minutes, so please wait until the process completes before leaving this page.{% endblocktrans %}</p>
     </div>
     <div id="step4" style="display:none;">
-    <h2>4. Configuring the settings for the uploaded Subject.</h2>
-    <p>The verification steps are complete, you may proceed to the Subject change form to complete filling in the Subject details.</p>
+    <h2>{% blocktrans %}4. Configuring the settings for the uploaded Subject.{% endblocktrans %}</h2>
+    <p>{% blocktrans %}The verification steps are complete, you may proceed to the Subject change form to complete filling in the Subject details.{% endblocktrans %}</p>
     </div>
     <form enctype="multipart/form-data" action="{{ form_url }}" method="post" id="{{ opts.module_name }}_form">
         {% csrf_token %}
@@ -118,7 +148,7 @@ $(function(){
         </table>
         {% if is_processing %}
         <div id="upload_status_messages" class="{% if is_processing %}loading{% endif %}">
-            <p>Verifying counts of uploaded subjects...</p>
+            <p>{% blocktrans %}Verifying counts of uploaded subjects...{% endblocktrans %}</p>
         </div>
         <input type="button" value="{% trans "Please Wait ..." %}" id="processing_continue" disabled="true" />
         {% else %}
