@@ -371,6 +371,12 @@ div#form_action{background-color: #8ac7b5;}
     
  button#stats_legend {background-color: #bb9160;}
 
+ .toolbar_menu, div#toolsets .toolbar_menu_container .ui-button.active{
+	background: #99c4b4;
+	border-color: #c2ddde;
+	border-bottom: 1px solid #99c4b4;
+}
+ 
 
     
 /* plan toolbars*/    

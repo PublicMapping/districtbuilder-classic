@@ -338,14 +338,16 @@ $(function() {
      });
     
     // map editing buttons
-    $('.toolset button, #history_tools button, #open_statistics_editor')
+    $('.toolset button, #history_tools button, #open_statistics_editor, #plan_export_container button')
       .button({
           icons: {primary: 'ui-icon'}
       })
       .click(function(){
         if($(this).hasClass('btntoggle')) {
-            $('.toolset_group button.btntoggle').removeClass('toggle');
-            $(this).addClass('toggle');
+			if(!$(this).hasClass('solotoggle')) {
+				$('.toolset_group button.btntoggle').removeClass('toggle');
+				 $(this).addClass('toggle');
+			}
         }
     });    
     
@@ -377,6 +379,20 @@ $(function() {
             panel.slideDown(240);
         }
     });
+	
+    $('#plan_export_button').click(function(){
+        var toggle = $(this);
+        var panel = $('#plan_export_menu');
+
+        if(toggle.hasClass('active')) {
+            toggle.removeClass('active');
+            panel.slideUp(240);
+        }
+        else {
+            toggle.addClass('active');
+            panel.slideDown(240);
+        }
+    });	
     
     $('#map_settings').click(function(){
         var toggle = $(this);

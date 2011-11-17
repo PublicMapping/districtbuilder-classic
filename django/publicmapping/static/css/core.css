@@ -1143,7 +1143,73 @@ font-size: 10px; padding-right: 4px;
 #print_btn .ui-icon {
   background-image: url(/static-media/images/icon-print.png);
 }
+#shapefile_btn .ui-icon {
+  background-image: url(/static-media/images/icon-shape-file.png);
+}
+#plan_export_button .ui-icon {
+  background-image: url(/static-media/images/icon-export.png);
+}
+#rawdata_btn .ui-icon {
+  background-image: url(/static-media/images/icon-raw-data.png);
+}
 
+.toolbar_menu_container#plan_export_container { 
+	float:right;
+	position:relative;
+	margin-top: -2px 
+}
+
+
+div#toolsets .toolbar_menu_container .ui-button.active{
+	background: #6b6b6b;
+	border: 1px solid #5f7f7b;
+	border-bottom: 1px solid #6b6b6b;
+	z-index: 501;
+	border-radius: 4px 4px 0 0;
+	-moz-border-radius: 4px 4px 0 0;
+	-webkit-border-radius: 4px 4px 0 0; 
+}	
+
+
+.toolbar_menu  {
+	display:none;
+	position:absolute;
+	border: 1px solid #5f7f7b;
+	background: #6b6b6b;
+	z-index: 500;
+	border-radius: 3px 0 3px 3px; 
+	-moz-border-radius: 3px 0 3px 3px; 
+	-webkit-border-radius: 3px 0 3px 3px; 
+
+}
+	
+.toolbar_menu#plan_export_menu {
+    right: 3px;
+    text-align: right;
+    width: 110px;
+	top: 24px;
+	}
+	
+
+
+.toolbar_menu#plan_export_menu button {
+    display: block;
+    float: right;
+    margin: 0;
+    width: 100%;
+	text-align:right;
+	border-radius: 0;
+	-moz-border-radius: 0;
+	-webkit-border-radius:0;
+}	
+
+.toolbar_menu#plan_export_menu button, .toolbar_menu#plan_export_menu button.ui-state-hover {
+	border:0
+}
+.toolbar_menu#plan_export_menu button.ui-button.ui-state-hover {
+	background-color: #6B8F8B;
+}
+	
 
 div.toolset_group {
   float:left;
