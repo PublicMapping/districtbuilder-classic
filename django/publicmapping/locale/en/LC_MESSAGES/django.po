@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-18 10:03-0500\n"
+"POT-Creation-Date: 2011-11-18 18:12-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,10 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: views.py:261
+msgid "Your Password Reset Request"
+msgstr ""
 
 #: redistricting/admin.py:274
 #, python-format
@@ -29,6 +33,114 @@ msgstr ""
 
 #: redistricting/templates/viewplan.html:443
 msgid "Edit Stats"
+msgstr ""
+
+#: templates/404.html:32 templates/404.html.py:35 templates/500.html:32
+#: templates/500.html.py:35
+msgid "Oops"
+msgstr ""
+
+#: templates/404.html:36
+msgid ""
+"Sometimes bad things happen. I regret you were not able to find what you "
+"were looking for."
+msgstr ""
+
+#: templates/500.html:36
+msgid ""
+"Sometimes bad things happen. I regret any inconvenience this 500 error has "
+"caused you."
+msgstr ""
+
+#: templates/account.html:10
+msgid "User Name"
+msgstr ""
+
+#: templates/account.html:17
+msgid ""
+"Please use a password of 8 or more characters. Include a number, a capital "
+"letter and a lower-case letter."
+msgstr ""
+
+#: templates/account.html:20
+#: templates/admin/auth/user/change_password.orig.html:35
+msgid "Password"
+msgstr ""
+
+#: templates/account.html:24
+msgid "Confirm Password"
+msgstr ""
+
+#: templates/account.html:28
+msgid "Password Hint"
+msgstr ""
+
+#: templates/account.html:35
+msgid "An email address is recommended to recover a forgotten password"
+msgstr ""
+
+#: templates/account.html:38
+msgid "Email Address"
+msgstr ""
+
+#: templates/account.html:43
+msgid ""
+"Sorry, that email address is already registered. Please use a different "
+"email address."
+msgstr ""
+
+#: templates/account.html:46
+msgid "First Name"
+msgstr ""
+
+#: templates/account.html:53
+msgid "Last Name"
+msgstr ""
+
+#: templates/account.html:60
+msgid "Organization"
+msgstr ""
+
+#: templates/account.html:71
+msgid "I have read the "
+msgstr ""
+
+#: templates/account.html:71 templates/index.html:170
+msgid "Terms of Use"
+msgstr ""
+
+#: templates/account.html:85
+msgid "Update"
+msgstr ""
+
+#: templates/account.html:87 templates/index.html:160
+msgid "Sign Up"
+msgstr ""
+
+#: templates/account.html:91
+msgid "Indicates required field"
+msgstr ""
+
+#: templates/forgottenpassword.email:12
+msgid "Hello"
+msgstr ""
+
+#: templates/forgottenpassword.email:14
+msgid ""
+"You requested a new password for the Public Mapping Project. Sorry for the "
+"inconvenience!  This is your new password"
+msgstr ""
+
+#: templates/forgottenpassword.email:16
+msgid "Thank you for using the Public Mapping Project."
+msgstr ""
+
+#: templates/forgottenpassword.email:18
+msgid "Happy Redistricting!"
+msgstr ""
+
+#: templates/forgottenpassword.email:19
+msgid "The Public Mapping Team"
 msgstr ""
 
 #: templates/index.html:38
@@ -95,20 +207,12 @@ msgstr ""
 msgid "To Draw Your Own Maps..."
 msgstr ""
 
-#: templates/index.html:160
-msgid "Sign Up"
-msgstr ""
-
 #: templates/index.html:162
 msgid "To View Other Users' Maps..."
 msgstr ""
 
 #: templates/index.html:165
 msgid "Enter as a guest"
-msgstr ""
-
-#: templates/index.html:170
-msgid "Terms of Use"
 msgstr ""
 
 #: templates/index.html:182
@@ -417,10 +521,6 @@ msgstr[1] ""
 #: templates/admin/auth/user/change_password.orig.html:28
 #, python-format
 msgid "Enter a new password for the user <strong>%(username)s</strong>."
-msgstr ""
-
-#: templates/admin/auth/user/change_password.orig.html:35
-msgid "Password"
 msgstr ""
 
 #: templates/admin/auth/user/change_password.orig.html:41

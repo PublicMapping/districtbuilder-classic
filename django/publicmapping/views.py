@@ -37,6 +37,7 @@ from django.shortcuts import render_to_response
 from django.template import loader, Context, RequestContext
 from django.utils import simplejson as json
 from hashlib import sha1
+from django.utils.translation import ugettext as _
 
 # for proxy
 import urllib2
@@ -257,7 +258,7 @@ def emailpassword(user):
     except:
         return False
 
-    send_mail('Your Password Reset Request', template.render(context), settings.EMAIL_HOST_USER, [user.email], fail_silently=False)
+    send_mail(_('Your Password Reset Request'), template.render(context), settings.EMAIL_HOST_USER, [user.email], fail_silently=False)
     return True
     
 @cache_control(no_cache=True)

@@ -2,22 +2,26 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-18 10:03-0500\n"
-"PO-Revision-Date: 2011-11-18 10:31\n"
+"POT-Creation-Date: 2011-11-18 18:12-0500\n"
+"PO-Revision-Date: 2011-11-18 18:07\n"
 "Last-Translator: Admin User <kshepard@azavea.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Translated-Using: django-rosetta 0.6.2\n"
+
+#: views.py:261
+msgid "Your Password Reset Request"
+msgstr "Pedir la Restauración de la contraseña"
 
 #: redistricting/admin.py:274
 #, python-format
@@ -32,6 +36,126 @@ msgstr "Eliminar seleccionados %(verbose_name_plural)s"
 #: redistricting/templates/viewplan.html:443
 msgid "Edit Stats"
 msgstr "Editar Estadísticas"
+
+#: templates/404.html:32 templates/404.html.py:35 templates/500.html:32
+#: templates/500.html.py:35
+msgid "Oops"
+msgstr "Oops."
+
+#: templates/404.html:36
+msgid ""
+"Sometimes bad things happen. I regret you were not able to find what you "
+"were looking for."
+msgstr ""
+"A veces suceden cosas malas. Lamento que no fueron capaces de encontrar lo "
+"que estabas buscando."
+
+#: templates/500.html:36
+msgid ""
+"Sometimes bad things happen. I regret any inconvenience this 500 error has "
+"caused you."
+msgstr ""
+"A veces suceden cosas malas. Lamento que no fueron capaces de encontrar lo "
+"que estabas buscando."
+
+#: templates/account.html:10
+msgid "User Name"
+msgstr "Nombre de Usuario:"
+
+#: templates/account.html:17
+msgid ""
+"Please use a password of 8 or more characters. Include a number, a capital "
+"letter and a lower-case letter."
+msgstr ""
+"Por favor, use una contraseña de 8 o más caracteres. Incluya un número, una "
+"letra mayúscula y una letra minúscula."
+
+#: templates/account.html:20
+#: templates/admin/auth/user/change_password.orig.html:35
+msgid "Password"
+msgstr "Contraseña"
+
+#: templates/account.html:24
+msgid "Confirm Password"
+msgstr "Contraseña"
+
+#: templates/account.html:28
+msgid "Password Hint"
+msgstr "Contraseña"
+
+#: templates/account.html:35
+msgid "An email address is recommended to recover a forgotten password"
+msgstr ""
+"Una dirección de correo electrónico es recomendable para recuperar una "
+"contraseña olvidada"
+
+#: templates/account.html:38
+msgid "Email Address"
+msgstr "Correo electrónico enviado"
+
+#: templates/account.html:43
+msgid ""
+"Sorry, that email address is already registered. Please use a different "
+"email address."
+msgstr ""
+"Lo sentimos, su dirección de correo electrónico ya está registrada. Por "
+"favor, use una dirección de correo electrónico diferentes."
+
+#: templates/account.html:46
+msgid "First Name"
+msgstr "Nombre"
+
+#: templates/account.html:53
+msgid "Last Name"
+msgstr "Apellido"
+
+#: templates/account.html:60
+msgid "Organization"
+msgstr "Organización"
+
+#: templates/account.html:71
+msgid "I have read the "
+msgstr "He leído la"
+
+#: templates/account.html:71 templates/index.html:170
+msgid "Terms of Use"
+msgstr "Términos de Uso"
+
+#: templates/account.html:85
+msgid "Update"
+msgstr "Actualización"
+
+#: templates/account.html:87 templates/index.html:160
+msgid "Sign Up"
+msgstr "Regístrate"
+
+#: templates/account.html:91
+msgid "Indicates required field"
+msgstr "Indica el campo requerido"
+
+#: templates/forgottenpassword.email:12
+msgid "Hello"
+msgstr "Hola"
+
+#: templates/forgottenpassword.email:14
+msgid ""
+"You requested a new password for the Public Mapping Project. Sorry for the "
+"inconvenience!  This is your new password"
+msgstr ""
+"Que ha solicitado una nueva contraseña para el Proyecto de Mapeo Pública. "
+"Disculpa las molestias! Esta es la nueva contraseña"
+
+#: templates/forgottenpassword.email:16
+msgid "Thank you for using the Public Mapping Project."
+msgstr "Sobre el Proyecto de Mapeo Pública"
+
+#: templates/forgottenpassword.email:18
+msgid "Happy Redistricting!"
+msgstr "Redistribución de Distritos administrador del sitio"
+
+#: templates/forgottenpassword.email:19
+msgid "The Public Mapping Team"
+msgstr "Sobre el Proyecto de Mapeo Pública"
 
 #: templates/index.html:38
 msgid "Welcome to DistrictBuilder"
@@ -97,10 +221,6 @@ msgstr "¿No tienes una cuenta?"
 msgid "To Draw Your Own Maps..."
 msgstr "Para dibujar tus propios mapas ..."
 
-#: templates/index.html:160
-msgid "Sign Up"
-msgstr "Regístrate"
-
 #: templates/index.html:162
 msgid "To View Other Users' Maps..."
 msgstr "Para ver los mapas de otros usuarios ..."
@@ -108,10 +228,6 @@ msgstr "Para ver los mapas de otros usuarios ..."
 #: templates/index.html:165
 msgid "Enter as a guest"
 msgstr "Entrar como invitado"
-
-#: templates/index.html:170
-msgid "Terms of Use"
-msgstr "Términos de Uso"
 
 #: templates/index.html:182
 msgid "Get A Hint"
@@ -122,8 +238,8 @@ msgid ""
 "Enter your username to retrieve your password hint that you used when "
 "registering for an account."
 msgstr ""
-"Introduzca su nombre de usuario para recuperar su pista de la "
-"contraseña que utilizó al registrarse para una cuenta."
+"Introduzca su nombre de usuario para recuperar su pista de la contraseña que "
+"utilizó al registrarse para una cuenta."
 
 #: templates/index.html:189
 msgid "Username"
@@ -139,11 +255,11 @@ msgstr "Restablecer la contraseña"
 
 #: templates/index.html:197
 msgid ""
-"Enter your email address to reset your password if you have forgotten "
-"your username."
+"Enter your email address to reset your password if you have forgotten your "
+"username."
 msgstr ""
-"Introduzca su dirección de correo electrónico para restablecer su "
-"contraseña si ha olvidado su nombre de usuario."
+"Introduzca su dirección de correo electrónico para restablecer su contraseña "
+"si ha olvidado su nombre de usuario."
 
 #: templates/index.html:202
 msgid "Email"
@@ -159,20 +275,19 @@ msgstr "Aquí está tu Sugerencia"
 
 #: templates/index.html:213
 msgid ""
-"If this helps you remember your password, you can close this dialog and"
-" log in."
+"If this helps you remember your password, you can close this dialog and log "
+"in."
 msgstr ""
-"Si esto le ayuda a recordar su contraseña, puede cerrar esta ventana y"
-" entrar"
+"Si esto le ayuda a recordar su contraseña, puede cerrar esta ventana y entrar"
 
 #: templates/index.html:217
 msgid ""
-"If you still can't recall your password, click on the 'Back' button, "
-"and enter your email address, so we can email your password to you."
+"If you still can't recall your password, click on the 'Back' button, and "
+"enter your email address, so we can email your password to you."
 msgstr ""
-"Si usted todavía no puede recordar su contraseña, haga clic en el "
-"botón \"Atrás\", y escriba su dirección de correo electrónico, para que "
-"podamos enviar su contraseña."
+"Si usted todavía no puede recordar su contraseña, haga clic en el botón "
+"\"Atrás\", y escriba su dirección de correo electrónico, para que podamos "
+"enviar su contraseña."
 
 #: templates/index.html:221
 msgid "Email Sent"
@@ -180,12 +295,11 @@ msgstr "Correo electrónico enviado"
 
 #: templates/index.html:222
 msgid ""
-"Your password has been emailed to you. You should receive your password"
-" in your inbox in the next few minutes."
+"Your password has been emailed to you. You should receive your password in "
+"your inbox in the next few minutes."
 msgstr ""
-"Su contraseña ha sido enviada por correo electrónico. Usted debe "
-"recibir su contraseña en tu correo electrónico en los próximos "
-"minutos."
+"Su contraseña ha sido enviada por correo electrónico. Usted debe recibir su "
+"contraseña en tu correo electrónico en los próximos minutos."
 
 #: templates/index.html:225
 msgid "Back"
@@ -219,13 +333,12 @@ msgstr "Fuerza de cerrar la sesión del otro usuario y conectarse de nuevo."
 
 #: templates/index.html:251
 msgid ""
-"The DistrictBuilder application has reached maximum capacity. Please "
-"try to use the application again shortly. We apologize for the "
-"inconvenience."
+"The DistrictBuilder application has reached maximum capacity. Please try to "
+"use the application again shortly. We apologize for the inconvenience."
 msgstr ""
-"La aplicación DistrictBuilder ha alcanzado su capacidad máxima. Por "
-"favor, trate de usar la aplicación de nuevo en breve. Pedimos "
-"disculpas por las molestias."
+"La aplicación DistrictBuilder ha alcanzado su capacidad máxima. Por favor, "
+"trate de usar la aplicación de nuevo en breve. Pedimos disculpas por las "
+"molestias."
 
 #: templates/index.html:254
 msgid ""
@@ -241,32 +354,32 @@ msgstr "La recopilación de información"
 
 #: templates/index.html:257
 msgid ""
-"Our web server software generates logfiles of the IP addresses of "
-"computers that access this web site and of what files they access."
+"Our web server software generates logfiles of the IP addresses of computers "
+"that access this web site and of what files they access."
 msgstr ""
 "Nuestro software de servidor web genera archivos de registro de las "
-"direcciones IP de los ordenadores que acceden a este sitio web y de "
-"qué archivos acceden."
+"direcciones IP de los ordenadores que acceden a este sitio web y de qué "
+"archivos acceden."
 
 #: templates/index.html:258
 msgid ""
-"These web server logs are retained on a temporary basis and then "
-"deleted completely from our systems."
+"These web server logs are retained on a temporary basis and then deleted "
+"completely from our systems."
 msgstr ""
-"Estos registros del servidor web se mantienen de forma temporal y "
-"luego se elimina completamente de nuestros sistemas."
+"Estos registros del servidor web se mantienen de forma temporal y luego se "
+"elimina completamente de nuestros sistemas."
 
 #: templates/index.html:259
 msgid "We also may ask our visitors to provide information about themselves."
 msgstr ""
-"También podemos pedir a nuestros visitantes a proporcionar información"
-" sobre sí mismos."
+"También podemos pedir a nuestros visitantes a proporcionar información sobre "
+"sí mismos."
 
 #: templates/index.html:260
 msgid "We may use cookies to maintain a user's identity between web sessions."
 msgstr ""
-"Podemos utilizar cookies para mantener la identidad de un usuario "
-"entre sesiones web."
+"Podemos utilizar cookies para mantener la identidad de un usuario entre "
+"sesiones web."
 
 #: templates/index.html:262
 msgid "Contributor Terms"
@@ -274,55 +387,50 @@ msgstr "Condiciones contribuyente"
 
 #: templates/index.html:263
 msgid ""
-"This site enables users to create districting maps and to comment on "
-"the maps of others.  By creating a map, a comment, or an account, you "
-"are agreeing to the following terms for any map, comment, data, or "
-"other content (collectively, 'Contents') you contribute to this site. "
+"This site enables users to create districting maps and to comment on the "
+"maps of others.  By creating a map, a comment, or an account, you are "
+"agreeing to the following terms for any map, comment, data, or other content "
+"(collectively, 'Contents') you contribute to this site. "
 msgstr ""
 "Este sitio permite a los usuarios crear mapas de distritos y hacer "
-"comentarios sobre los mapas de los demás. Mediante la creación de un "
-"mapa, un comentario, o una cuenta, usted está de acuerdo con las "
-"siguientes condiciones para cualquiera de los mapas, comentarios, "
-"datos, o de otros contenidos (colectivamente, \"Contenido\") que "
-"contribuyen a este sitio."
+"comentarios sobre los mapas de los demás. Mediante la creación de un mapa, "
+"un comentario, o una cuenta, usted está de acuerdo con las siguientes "
+"condiciones para cualquiera de los mapas, comentarios, datos, o de otros "
+"contenidos (colectivamente, \"Contenido\") que contribuyen a este sitio."
 
 #: templates/index.html:264
 msgid ""
-"You hereby grant to us a worldwide, royalty-free, non-exclusive, "
-"perpetual, irrevocable license to do any act that is restricted by "
-"copyright over anything within the Contents, whether in the original "
-"medium or any other. These rights explicitly include commercial use, "
-"and do not exclude any field of endeavour. These rights include, "
-"without limitation, the right to sublicense the work through multiple "
-"tiers of sublicensees. To the extent allowable under applicable local "
-"laws and copyright conventions, You also waive and/or agree not to "
-"assert against us or our licensees any moral rights that You may have "
-"in the Contents."
+"You hereby grant to us a worldwide, royalty-free, non-exclusive, perpetual, "
+"irrevocable license to do any act that is restricted by copyright over "
+"anything within the Contents, whether in the original medium or any other. "
+"These rights explicitly include commercial use, and do not exclude any field "
+"of endeavour. These rights include, without limitation, the right to "
+"sublicense the work through multiple tiers of sublicensees. To the extent "
+"allowable under applicable local laws and copyright conventions, You also "
+"waive and/or agree not to assert against us or our licensees any moral "
+"rights that You may have in the Contents."
 msgstr ""
 "Por la presente, nos concede una licencia a nivel mundial, libre de "
-"regalías, no exclusiva, perpetua, irrevocable, para realizar cualquier"
-" acto que está limitado por los derechos de autor sobre cualquier cosa"
-" en el contenido, ya sea en el soporte original o cualquier otro. "
-"Estos derechos incluyen explícitamente el uso comercial, y no excluyen"
-" cualquier campo de actividad. Estos derechos incluyen, sin "
-"limitación, el derecho a sublicenciar la obra a través de múltiples "
-"niveles de sublicencias. En la medida permitida por las leyes locales "
-"y las convenciones de derechos de autor, usted también renuncia y / o "
-"se compromete a no hacer valer en contra de nosotros o nuestros "
-"licenciatarios a cualquier derecho moral que pueda tener en los "
-"Contenidos."
+"regalías, no exclusiva, perpetua, irrevocable, para realizar cualquier acto "
+"que está limitado por los derechos de autor sobre cualquier cosa en el "
+"contenido, ya sea en el soporte original o cualquier otro. Estos derechos "
+"incluyen explícitamente el uso comercial, y no excluyen cualquier campo de "
+"actividad. Estos derechos incluyen, sin limitación, el derecho a "
+"sublicenciar la obra a través de múltiples niveles de sublicencias. En la "
+"medida permitida por las leyes locales y las convenciones de derechos de "
+"autor, usted también renuncia y / o se compromete a no hacer valer en contra "
+"de nosotros o nuestros licenciatarios a cualquier derecho moral que pueda "
+"tener en los Contenidos."
 
 #: templates/index.html:265
 msgid ""
-"We agree to make the Contents that you contribute and designate as "
-"&quot;published&quot; available under at least one of the following "
-"licenses: ODbL 1.0; DbCL 1.0; CC-BY-SA 2.0; or another free and open "
-"license. "
+"We agree to make the Contents that you contribute and designate as &quot;"
+"published&quot; available under at least one of the following licenses: ODbL "
+"1.0; DbCL 1.0; CC-BY-SA 2.0; or another free and open license. "
 msgstr ""
-"Estamos de acuerdo en que el contenido que usted aporte y designar "
-"como \"publicado\", disponible en al menos una de las siguientes "
-"licencias: ODbL 1,0; DbCL 1,0; CC-BY-SA 2.0, u otra licencia libre y "
-"abierta."
+"Estamos de acuerdo en que el contenido que usted aporte y designar como "
+"\"publicado\", disponible en al menos una de las siguientes licencias: ODbL "
+"1,0; DbCL 1,0; CC-BY-SA 2.0, u otra licencia libre y abierta."
 
 #: templates/index.html:266
 msgid "Use of information"
@@ -330,75 +438,70 @@ msgstr "Uso de la información"
 
 #: templates/index.html:267
 msgid ""
-"We use third parties to provide processing functions on our site. When "
-"you register for  services, we may share information as necessary for "
-"the third party to provide those services.  We make commercially "
-"reasonable efforts to ensure that these third parties are prohibited "
-"from using your personally identifiable information for any other "
-"purpose. "
+"We use third parties to provide processing functions on our site. When you "
+"register for  services, we may share information as necessary for the third "
+"party to provide those services.  We make commercially reasonable efforts to "
+"ensure that these third parties are prohibited from using your personally "
+"identifiable information for any other purpose. "
 msgstr ""
-"Usamos a terceros para proporcionar funciones de procesamiento en "
-"nuestro sitio. Cuando usted se registra para los servicios, podemos "
-"compartir información cuando sea necesario para que el tercero para "
-"proporcionar esos servicios. Hacemos todos los esfuerzos "
-"comercialmente razonables para asegurar que estos terceros se les "
-"prohíbe utilizar su información personalmente identificable para "
-"ningún otro propósito."
+"Usamos a terceros para proporcionar funciones de procesamiento en nuestro "
+"sitio. Cuando usted se registra para los servicios, podemos compartir "
+"información cuando sea necesario para que el tercero para proporcionar esos "
+"servicios. Hacemos todos los esfuerzos comercialmente razonables para "
+"asegurar que estos terceros se les prohíbe utilizar su información "
+"personalmente identificable para ningún otro propósito."
 
 #: templates/index.html:268
 msgid ""
-"We use your IP address and files you access to help diagnose problems "
-"with our server and to administer our Web site by identifying (1) which"
-" parts of our site are most heavily used, and (2) which portion of our "
-"audience comes from different geographical regions. We also use this "
-"information to tailor site content to user needs, and to generate "
-"aggregate statistical reports. At no time do we disclose site usage by "
-"individual visitors."
+"We use your IP address and files you access to help diagnose problems with "
+"our server and to administer our Web site by identifying (1) which parts of "
+"our site are most heavily used, and (2) which portion of our audience comes "
+"from different geographical regions. We also use this information to tailor "
+"site content to user needs, and to generate aggregate statistical reports. "
+"At no time do we disclose site usage by individual visitors."
 msgstr ""
 "Utilizamos su dirección IP y los archivos que el acceso para ayudar a "
-"diagnosticar problemas con nuestro servidor y para administrar nuestro"
-" sitio Web mediante la identificación de (1) qué partes de nuestro "
-"sitio son más utilizados, y (2) que parte de nuestra audiencia "
-"proviene de diferentes zonas geográficas regiones. También utilizamos "
-"esta información para adaptar el contenido del sitio a las necesidades"
-" de los usuarios, y generar informes estadísticos agregados. En ningún"
-" momento de divulgar el uso del sitio por los visitantes individuales."
+"diagnosticar problemas con nuestro servidor y para administrar nuestro sitio "
+"Web mediante la identificación de (1) qué partes de nuestro sitio son más "
+"utilizados, y (2) que parte de nuestra audiencia proviene de diferentes "
+"zonas geográficas regiones. También utilizamos esta información para adaptar "
+"el contenido del sitio a las necesidades de los usuarios, y generar informes "
+"estadísticos agregados. En ningún momento de divulgar el uso del sitio por "
+"los visitantes individuales."
 
 #: templates/index.html:269
 msgid ""
-"We reserve the right to disclose your personally identifiable "
-"information as required by law and when we believe that disclosure is "
-"necessary to protect our rights and/or to comply with a judicial "
-"proceeding, court order or legal process served on the hosts. "
+"We reserve the right to disclose your personally identifiable information as "
+"required by law and when we believe that disclosure is necessary to protect "
+"our rights and/or to comply with a judicial proceeding, court order or legal "
+"process served on the hosts. "
 msgstr ""
 "Nos reservamos el derecho de revelar su información de identificación "
-"personal requerido por la ley y cuando creamos que dicha divulgación "
-"es necesaria para proteger nuestros derechos y / o para cumplir con un"
-" procedimiento judicial, orden judicial o proceso legal realizado "
-"sobre los anfitriones."
+"personal requerido por la ley y cuando creamos que dicha divulgación es "
+"necesaria para proteger nuestros derechos y / o para cumplir con un "
+"procedimiento judicial, orden judicial o proceso legal realizado sobre los "
+"anfitriones."
 
 #: templates/index.html:270
 msgid ""
-"All maps created through the system, edits to those maps, and comments "
-"made on those maps are associated with an account id and a timestamp. "
-"These maps, comments, account id's and timestamps may be made available"
-" to the public.  We may use this information to generate aggregate "
-"statistical reports. At no time do we disclose the name, e-mail or "
-"other identifying information associated with individual users "
-"accounts, unless the individual explicitly selects the &quot;make my "
-"account information public&quot; settings in the users profile setting."
-" "
+"All maps created through the system, edits to those maps, and comments made "
+"on those maps are associated with an account id and a timestamp. These maps, "
+"comments, account id's and timestamps may be made available to the public.  "
+"We may use this information to generate aggregate statistical reports. At no "
+"time do we disclose the name, e-mail or other identifying information "
+"associated with individual users accounts, unless the individual explicitly "
+"selects the &quot;make my account information public&quot; settings in the "
+"users profile setting. "
 msgstr ""
-"Todos los mapas creados por el sistema, las modificaciones a los "
-"mapas, y las observaciones formuladas en esos mapas se asocian con un "
-"ID de cuenta y una marca de tiempo. Estos mapas, comentarios, la "
-"cuenta de Identificación y marcas de tiempo pueden ser puestos a "
-"disposición del público. Podemos usar esta información para generar "
-"informes estadísticos agregados. En ningún momento se reveló el "
-"nombre, correo electrónico u otra información asociada a las cuentas "
-"de usuarios individuales, a menos que la persona explícitamente se "
-"selecciona el \"hacer que mi cuenta la información pública\" ajustes en "
-"la configuración del perfil de los usuarios."
+"Todos los mapas creados por el sistema, las modificaciones a los mapas, y "
+"las observaciones formuladas en esos mapas se asocian con un ID de cuenta y "
+"una marca de tiempo. Estos mapas, comentarios, la cuenta de Identificación y "
+"marcas de tiempo pueden ser puestos a disposición del público. Podemos usar "
+"esta información para generar informes estadísticos agregados. En ningún "
+"momento se reveló el nombre, correo electrónico u otra información asociada "
+"a las cuentas de usuarios individuales, a menos que la persona "
+"explícitamente se selecciona el \"hacer que mi cuenta la información pública"
+"\" ajustes en la configuración del perfil de los usuarios."
 
 #: templates/index.html:271
 msgid "Security"
@@ -406,11 +509,11 @@ msgstr "Seguridad"
 
 #: templates/index.html:272
 msgid ""
-"This site has security measures in place to protect the loss, misuse "
-"and alteration of the information under our control."
+"This site has security measures in place to protect the loss, misuse and "
+"alteration of the information under our control."
 msgstr ""
-"Este sitio tiene medidas de seguridad para proteger la pérdida, mal "
-"uso y alteración de la información bajo nuestro control."
+"Este sitio tiene medidas de seguridad para proteger la pérdida, mal uso y "
+"alteración de la información bajo nuestro control."
 
 #: templates/index.html:273
 msgid "Contacting this web site"
@@ -418,22 +521,22 @@ msgstr "Contacto con este sitio web"
 
 #: templates/index.html:274
 msgid ""
-"If you have any questions about this privacy statement, the practices "
-"of this site, or your dealings with this site, you can contact the "
-"support address at the host domain"
+"If you have any questions about this privacy statement, the practices of "
+"this site, or your dealings with this site, you can contact the support "
+"address at the host domain"
 msgstr ""
-"Si usted tiene alguna pregunta sobre esta declaración de privacidad, "
-"las prácticas de este sitio, o sus relaciones con este sitio, usted "
-"puede contactar a la dirección de soporte en el dominio del servidor"
+"Si usted tiene alguna pregunta sobre esta declaración de privacidad, las "
+"prácticas de este sitio, o sus relaciones con este sitio, usted puede "
+"contactar a la dirección de soporte en el dominio del servidor"
 
 #: templates/index.html:274
 msgid ""
-"This web site may contain links to other web sites. We are not "
-"responsible for the privacy practices or the content of such web sites."
+"This web site may contain links to other web sites. We are not responsible "
+"for the privacy practices or the content of such web sites."
 msgstr ""
-"Este sitio web puede contener enlaces a otros sitios web. No nos "
-"hacemos responsables de las prácticas de privacidad o el contenido de "
-"dichos sitios web."
+"Este sitio web puede contener enlaces a otros sitios web. No nos hacemos "
+"responsables de las prácticas de privacidad o el contenido de dichos sitios "
+"web."
 
 #: templates/index.html:275
 msgid "Changes to this policy"
@@ -441,11 +544,11 @@ msgstr "Cambios en esta política"
 
 #: templates/index.html:276
 msgid ""
-"An announcement of any changes to this policy will be posted on this "
-"page for  thirty days before any changes go into effect."
+"An announcement of any changes to this policy will be posted on this page "
+"for  thirty days before any changes go into effect."
 msgstr ""
-"Un anuncio de cualquier cambio a esta política será publicada en esta "
-"página durante treinta días antes de que los cambios entren en efecto."
+"Un anuncio de cualquier cambio a esta política será publicada en esta página "
+"durante treinta días antes de que los cambios entren en efecto."
 
 #: templates/index.html:277
 msgid "Effective Date"
@@ -516,12 +619,8 @@ msgstr[1] "Please correct the error below."
 #, python-format
 msgid "Enter a new password for the user <strong>%(username)s</strong>."
 msgstr ""
-"Introducir una nueva contraseña para el usuario "
-"<strong>%(username)s</strong>."
-
-#: templates/admin/auth/user/change_password.orig.html:35
-msgid "Password"
-msgstr "Contraseña"
+"Introducir una nueva contraseña para el usuario <strong>%(username)s</"
+"strong>."
 
 #: templates/admin/auth/user/change_password.orig.html:41
 #: templates/registration/password_change_form.orig.html:38
@@ -565,12 +664,11 @@ msgstr "Eliminar varios objetos"
 #: templates/admin/redistricting/subject/delete_selected_confirmation.html:17
 #, python-format
 msgid ""
-"Are you sure you want to delete the selected %(object_name)s objects? "
-"All of the following objects and their related items will be deleted:"
+"Are you sure you want to delete the selected %(object_name)s objects? All of "
+"the following objects and their related items will be deleted:"
 msgstr ""
-"¿Está seguro que desea eliminar el seleccionado %(object_name)s "
-"objetos? Todos los siguientes objetos y sus elementos relacionadas se "
-"eliminarán:"
+"¿Está seguro que desea eliminar el seleccionado %(object_name)s objetos? "
+"Todos los siguientes objetos y sus elementos relacionadas se eliminarán:"
 
 #: templates/admin/redistricting/subject/delete_selected_confirmation.html:35
 msgid "Yes, I'm sure"
@@ -579,13 +677,13 @@ msgstr "Sí, estoy seguro"
 #: templates/admin/redistricting/subject/delete_selected_confirmation.html:39
 #, python-format
 msgid ""
-"Deleting the selected %(object_name)s objects must be done with great "
-"care! Please carefully read the following notice regarding the removal "
-"of %(object_name)s objects:"
+"Deleting the selected %(object_name)s objects must be done with great care! "
+"Please carefully read the following notice regarding the removal of "
+"%(object_name)s objects:"
 msgstr ""
-"Eliminar el seleccionado %(object_name)s objetos se debe hacer con "
-"mucho cuidado! Por favor, lea detenidamente el siguiente aviso sobre "
-"la eliminación de %(object_name)s  objetos:"
+"Eliminar el seleccionado %(object_name)s objetos se debe hacer con mucho "
+"cuidado! Por favor, lea detenidamente el siguiente aviso sobre la "
+"eliminación de %(object_name)s  objetos:"
 
 #: templates/admin/redistricting/subject/delete_selected_confirmation.html:41
 #, python-format
@@ -595,17 +693,17 @@ msgstr "Eliminación de un %(object_name)s  es irreversible."
 #: templates/admin/redistricting/subject/delete_selected_confirmation.html:42
 #, python-format
 msgid ""
-"Deleting a %(object_name)s must <em>NOT</em> occur when regular users "
-"are editing plans."
+"Deleting a %(object_name)s must <em>NOT</em> occur when regular users are "
+"editing plans."
 msgstr ""
-"Eliminación de un %(object_name)s  <em>no puede aparecer</em> cuando "
-"los usuarios regulares de edición de planes."
+"Eliminación de un %(object_name)s  <em>no puede aparecer</em> cuando los "
+"usuarios regulares de edición de planes."
 
 #: templates/admin/redistricting/subject/delete_selected_confirmation.html:43
 #, python-format
 msgid ""
-"All references to the %(object_name)s in the application configuration "
-"must be removed."
+"All references to the %(object_name)s in the application configuration must "
+"be removed."
 msgstr ""
 "Todas las referencias a la %(object_name)s  en la configuración de la "
 "aplicación debe ser eliminado."
@@ -613,12 +711,12 @@ msgstr ""
 #: templates/admin/redistricting/subject/delete_selected_confirmation.html:44
 #, python-format
 msgid ""
-"The process of deleting a %(object_name)s takes a significant amount of"
-" time, and may not be interrupted once it has been started."
+"The process of deleting a %(object_name)s takes a significant amount of "
+"time, and may not be interrupted once it has been started."
 msgstr ""
 "El proceso de borrado de un %(object_name)s  tiene una cantidad "
-"significativa de tiempo, y no puede ser interrumpida una vez que se ha"
-" iniciado."
+"significativa de tiempo, y no puede ser interrumpida una vez que se ha "
+"iniciado."
 
 #: templates/admin/redistricting/subject/delete_selected_confirmation.html:52
 #, python-format
@@ -662,12 +760,12 @@ msgstr "Cambio de contraseña"
 
 #: templates/registration/password_change_form.orig.html:22
 msgid ""
-"Please enter your old password, for security's sake, and then enter "
-"your new password twice so we can verify you typed it in correctly."
+"Please enter your old password, for security's sake, and then enter your new "
+"password twice so we can verify you typed it in correctly."
 msgstr ""
-"Por favor, introduzca su antigua contraseña, por el bien de la "
-"seguridad, y luego ingrese su nueva contraseña dos veces para que "
-"podamos verificar que está escrita correctamente."
+"Por favor, introduzca su antigua contraseña, por el bien de la seguridad, y "
+"luego ingrese su nueva contraseña dos veces para que podamos verificar que "
+"está escrita correctamente."
 
 #: templates/registration/password_change_form.orig.html:28
 msgid "Old password"
