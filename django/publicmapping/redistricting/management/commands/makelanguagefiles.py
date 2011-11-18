@@ -31,7 +31,7 @@ class Command(BaseCommand):
         for locale in locales:
             # Make messages for templates (.html, .txt, .email)
             if everything or options.get("templates"):
-                management.call_command('makemessages', locale=locale, extension="html,txt,email", interactive=False)    
+                management.call_command('makemessages', locale=locale, extensions=['html','txt','email'], interactive=False)    
         
             # Make messages for javascript
             if everything or options.get("javascript"):
