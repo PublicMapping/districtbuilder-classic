@@ -172,7 +172,7 @@ class ScoringTestCase(BaseTestCase):
 
         # JSON
         score = schwartzFunction.score(self.district1, 'json')
-        self.assertEqual('{"result": 0.86832150546992093}', score, 'Schwartzberg JSON for District 1 was incorrect. (e:"%s", a:"%s")' % ('{"result": 0.86832150546992093}',score,))
+        self.assertEqual('{"result": 0.8683215054699209}', score, 'Schwartzberg JSON for District 1 was incorrect. (e:"%s", a:"%s")' % ('{"result": 0.8683215054699209}',score,))
 
     def testSumFunction(self):
         """
