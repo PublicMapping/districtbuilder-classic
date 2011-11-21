@@ -32,7 +32,6 @@ from django.contrib.gis.gdal import *
 from django.contrib.gis.geos import *
 from django.contrib.gis.db.models import Sum, Union
 from django.contrib.auth.models import User
-from django.contrib.sessions.models import Session
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
@@ -43,9 +42,11 @@ from os.path import exists
 from lxml.etree import parse, XSLT
 from xml.dom import minidom
 from rpy2.robjects import r
+import redistricting
 from redistricting.models import *
 from redistricting.utils import *
-import traceback, pprint, httplib, string, base64, json, types, re, hashlib
+from redistricting.config import *
+import traceback, pprint, httplib, string, base64, json, re
 
 class Command(BaseCommand):
     """
@@ -101,7 +102,7 @@ ERROR:
         verbose = int(options.get('verbosity'))
 
         try:
-            config = self.config = parse( options.get('config') )
+            store = redistricting.StoredConfig( options.get('config') )
         except Exception, ex:
             if verbose > 0:
                 print """
@@ -116,14 +117,36 @@ contents of the file and try again.
             # Indicate that an error has occurred
             sys.exit(1)
 
-        #
-        # config is now a XSD validated and id-ref checked configuration
-        #
+        (success, msgs,) = store.validate()
+
+        if not success:
+            if verbose > 0:
+                print """
+ERROR:
+
+The configuration file was not valid. Please check the contents of the
+file and try again.
+"""
+            if verbose > 1:
+                for msg in msgs:
+                    print msg
+            # Indicate that an error has occurred
+            sys.exit(1)
+
+        # Create an importer for use in importing the config objects
+        config = ConfigImporter(store)
 
         # When the setup script is run, it re-computes the secret key
         # used to secure session data. Blow away any old sessions that
         # were in the DB.
-        self.purge_sessions(verbose)
+        (success, msgs,) = Utils.purge_sessions()
+        if verbose > 1:
+            for msg in msgs:
+                print msg
+
+        if not success:
+            sys.exit(1)
+
         self.force = options.get('force')
 
         # When configuring, we want to keep track of any failures so we can
@@ -132,10 +155,15 @@ contents of the file and try again.
         # will remain false
         all_ok = True
 
-        all_ok = all_ok * self.create_superuser(config, verbose)
+        (success, msgs,) = config.import_superuser(self.force)
+        if verbose >1:
+            for msg in msgs:
+                print msg
+
+        all_ok = success
         try:
-            all_ok = all_ok * self.import_prereq(config, verbose)
-            all_ok = all_ok * self.import_scoring(config, verbose)
+            all_ok = all_ok * self.import_prereq(config, verbose, self.force)
+            all_ok = all_ok * self.import_scoring(store.data, verbose)
         except:
             all_ok = False
             if verbose > 0: 
@@ -147,20 +175,20 @@ contents of the file and try again.
 
             if (not optlevels is None) or (not nestlevels is None):
                 # Begin the import process
-                geolevels = config.xpath('/DistrictBuilder/GeoLevels/GeoLevel')
+                geolevels = store.data.xpath('/DistrictBuilder/GeoLevels/GeoLevel')
 
                 for i,geolevel in enumerate(geolevels):
                     if not optlevels is None:
                         importme = len(optlevels) == 0
                         importme = importme or (i in optlevels)
                         if importme:
-                            self.import_geolevel(config, geolevel, verbose)
+                            self.import_geolevel(store.data, geolevel, verbose)
 
                     if not nestlevels is None:
                         nestme = len(nestlevels) == 0
                         nestme = nestme or (i in nestlevels)
                         if nestme:
-                            self.renest_geolevel(geolevel, verbose)
+                            self.renest_geolevel(store.data, geolevel, verbose)
         except:
             all_ok = False
             if verbose > 0:
@@ -168,7 +196,7 @@ contents of the file and try again.
          
 
         # Do this once after processing the geolevels
-        self.import_contiguity_overrides(config, verbose)
+        self.import_contiguity_overrides(store.data, verbose)
 
 
         if options.get("views"):
@@ -184,7 +212,7 @@ contents of the file and try again.
             qset = Geounit.objects.all()
             srid = qset[0].geom.srid
             try:
-                all_ok = all_ok * self.configure_geoserver(config, srid, verbose)
+                all_ok = all_ok * self.configure_geoserver(store.data, srid, verbose)
             except:
                 if verbose > 0:
                     print 'ERROR configuring geoserver:\n%s' % traceback.format_exc()
@@ -192,7 +220,7 @@ contents of the file and try again.
 
         if options.get("templates"):
             try:
-                self.create_template(config, verbose)
+                self.create_template(store.data, verbose)
             except:
                 if verbose > 0:
                     print 'ERROR creating templates:\n%s' % traceback.format_exc()
@@ -203,29 +231,28 @@ contents of the file and try again.
 
         if options.get("bard_templates"):
             try:
-                self.create_report_templates(config, verbose)
+                self.create_report_templates(store.data, verbose)
             except:
                 if verbose > 0:
                     print 'ERROR creating BARD template files:\n%s' % traceback.format_exc()
                 all_ok = False
     
         if options.get("bard"):
-            all_ok = all_ok * self.build_bardmap(config, verbose)
+            all_ok = all_ok * self.build_bardmap(store.data, verbose)
 
         # For our return value, a 0 (False) means OK, any nonzero (i.e., True or 1)
         # means that  an error occurred - the opposite of the meaning of all_ok's bool
         sys.exit(not all_ok)
 
-    def create_superuser(self, config, verbose):
+    def create_superuser(self, store, verbose):
         """
-        Create the django superuser, based on the config.
         """
         try:
-            admcfg = config.xpath('//Project/Admin')[0]
+            admcfg = store.get_admin()
             admin_attributes = {'first_name':'Admin','last_name':'User','is_staff':True,'is_active':True,'is_superuser':True}
             admin_attributes['username'] = admcfg.get('user')[:30]
             admin_attributes['email'] = admcfg.get('email')[:75]
-            admin, created, changed, message = consistency_check_and_update(User, unique_id_field='username', overwrite=self.force, **admin_attributes)
+            admin, created, changed, message = ModelHelper.check_and_update(User, unique_id_field='username', overwrite=self.force, **admin_attributes)
 
             m = hashlib.sha1()
             m.update(admcfg.get('password'))
@@ -240,21 +267,6 @@ contents of the file and try again.
             return False
 
         return True
-
-    def purge_sessions(self, verbose):
-        """
-        Delete any sessions that existed in the database.
-
-        This is required to blank out any session information in the
-        application that may have been encrypted with an old secret key.
-        Secret keys are generated every time the setup.py script is run.
-        """
-        qset = Session.objects.all()
-
-        if verbose > 1:
-            print "Purging %d sessions from the database." % qset.count()
-
-        qset.delete()
 
     def purge_geoserver(self, host, namespace, headers, verbose):
         """
@@ -772,7 +784,7 @@ ERROR:
         self.import_shape(gconfig, verbose)
 
 
-    def renest_geolevel(self, glconf, verbose):
+    def renest_geolevel(self, config, glconf, verbose):
         """
         Perform a re-nesting of the geography in the geographic levels.
 
@@ -784,7 +796,7 @@ ERROR:
             verbose - A flag indicating verbose output messages.
         """
         geolevel = Geolevel.objects.get(name=glconf.get('name').lower()[:50])
-        llevels = self.config.xpath('/DistrictBuilder/Regions/Region/GeoLevels//GeoLevel[@ref="%s"]' % glconf.get('id'))
+        llevels = config.xpath('/DistrictBuilder/Regions/Region/GeoLevels//GeoLevel[@ref="%s"]' % glconf.get('id'))
         parent = None
         for llevel in llevels:
             parent = llevel.getparent()
@@ -934,7 +946,7 @@ ERROR:
         attributes['label'] = (config.get('label') or '')[:100]
         attributes['description'] = config.get('description') or ''
         attributes['is_planscore'] = config.get('type') == 'plan'
-        fn_obj, created, changed, message = consistency_check_and_update(ScoreFunction, overwrite=self.force, **attributes)
+        fn_obj, created, changed, message = ModelHelper.check_and_update(ScoreFunction, overwrite=self.force, **attributes)
 
         lbodies = []
         for lbitem in config.xpath('LegislativeBody'):
@@ -1182,27 +1194,15 @@ ERROR:
                 attributes['function'] = sf_obj
                 attributes['description'] = crit.get('description') or ''
                 attributes['legislative_body'] = lb
-                crit_obj, created, changed, message = consistency_check_and_update(ValidationCriteria, overwrite=self.force, **attributes)
+                crit_obj, created, changed, message = ModelHelper.check_and_update(ValidationCriteria, overwrite=self.force, **attributes)
 
                 if verbose > 1 or (verbose > 0 and changed and not self.force):
                     print message
 
         return result
 
-    def import_regions(self, config, verbose):
-        regions = config.xpath('Region')
-        for region in regions:
-            attributes = {}
-            attributes['name'] = region.get('name')
-            attributes['label'] = region.get('label')
-            attributes['description'] = region.get('description')
-            attributes['sort_key'] = region.get('sort_key')
-            obj, created, changed, message = consistency_check_and_update(Region, overwrite=self.force, **attributes)
-            if verbose > 1 or (verbose > 0 and changed and not self.force):
-                print message
-
             
-    def import_prereq(self, config, verbose):
+    def import_prereq(self, config, verbose, force):
         """
         Import the required support data prior to importing.
 
@@ -1211,8 +1211,11 @@ ERROR:
         """
 
         # Import the regions first
-        region_config = config.xpath('/DistrictBuilder/Regions')[0]
-        self.import_regions(region_config, verbose)
+        (success, msgs,) = config.import_regions(force)
+        if verbose > 1 or (verbose > 0 and changed and not self.force):
+            for msg in msgs:
+                print msg
+
         # Import legislative bodies first.
         bodies = config.xpath('//LegislativeBody[@id]')
         for body in bodies:
@@ -1233,7 +1236,7 @@ ERROR:
                 region_name = body_by_region[0].getparent().getparent().get('name')
             attributes['region'] = Region.objects.get(name=region_name)
 
-            obj, created, changed, message = consistency_check_and_update(LegislativeBody, overwrite=self.force, **attributes)
+            obj, created, changed, message = ModelHelper.check_and_update(LegislativeBody, overwrite=self.force, **attributes)
 
             if verbose > 1 or (verbose > 0 and changed and not self.force):
                 print message
@@ -1277,7 +1280,7 @@ ERROR:
             attributes['short_display'] = subj.get('short_name')[:25]
             attributes['is_displayed'] = subj.get('displayed')=='true'
             attributes['sort_key'] = subj.get('sortkey')
-            obj, created, changed, message = consistency_check_and_update(Subject, overwrite=self.force, **attributes)
+            obj, created, changed, message = ModelHelper.check_and_update(Subject, overwrite=self.force, **attributes)
 
             if verbose > 1 or (verbose > 0 and changed and not self.force):
                 print message
@@ -1331,7 +1334,7 @@ ERROR:
             attributes['sort_key'] = geolevel.get('sort_key')
             attributes['tolerance'] = geolevel.get('tolerance')
             
-            glvl, created, changed, message = consistency_check_and_update(Geolevel, overwrite=self.force, **attributes)
+            glvl, created, changed, message = ModelHelper.check_and_update(Geolevel, overwrite=self.force, **attributes)
     
             if verbose > 1 or (changed and not self.force):
                 print message
@@ -1474,9 +1477,9 @@ ERROR:
                 for region, filter_list in config['region_filters'].iteritems():
                     # Check for applicability of the function by examining the config
                     geolevel_xpath = '/DistrictBuilder/GeoLevels/GeoLevel[@name="%s"]' % config['geolevel']
-                    geolevel_config = self.config.xpath(geolevel_xpath)
+                    geolevel_config = config.xpath(geolevel_xpath)
                     geolevel_region_xpath = '/DistrictBuilder/Regions/Region[@name="%s"]/GeoLevels//GeoLevel[@ref="%s"]' % (region, geolevel_config[0].get('id'))
-                    if len(self.config.xpath(geolevel_region_xpath)) > 0:
+                    if len(config.xpath(geolevel_region_xpath)) > 0:
                         # If the geolevel is in the region, check the filters
                         for f in filter_list:
                             if f(feat) == True:
@@ -1685,7 +1688,7 @@ ERROR:
                 attributes['name'] = '%s_%s' % (region.get('name'), name)
                 attributes['min_zoom'] = geolevel.min_zoom - zero_zoom
                 attributes['tolerance'] = geolevel.tolerance
-                obj, created, changed, message = consistency_check_and_update(Geolevel, overwrite=self.force, **attributes)
+                obj, created, changed, message = ModelHelper.check_and_update(Geolevel, overwrite=self.force, **attributes)
                 if verbose > 1 or (changed and not self.force):
                     print message
 
@@ -1933,44 +1936,3 @@ def enforce_multi(geom):
     else:
         return geom
 
-def consistency_check_and_update(a_model, unique_id_field='name', overwrite=False, **kwargs):
-    """
-    Check whether an object exists with the given name in the database. If the 
-    object exists and "overwrite" is True, overwrite the object.  If "overwrite"
-    is false, don't overwrite.  If the object doesn't exist, it is always created.
-
-    This method returns a tuple - the object in the DB after any changes are made,
-    whether the object had to be created, whether the given attributes were consistent
-    with what was in the database, and a message to return indicating any changes.
-    """
-    name = kwargs[unique_id_field]
-    object_name = '%s %s' % (a_model.__name__, name)
-    # Get the model if it exists
-    try:
-        id_args = { unique_id_field: name }
-        current_object = a_model.objects.get(**id_args)
-    # If it doesn't exist, just save it and return
-    except ObjectDoesNotExist:
-        new = a_model(**kwargs)
-        new.save()
-        return new, True, False, '%s created' % object_name
-    # If it exists, track any changes and overwrite if requested
-    different = []
-    changed = False
-    message = '%s matches database - no changes%s'
-    for key in kwargs:
-        current_value = current_object.__getattribute__(key)
-        config_value = kwargs[key]
-        if not (isinstance(current_value, types.StringTypes)) and not (isinstance(current_value, models.Model)):
-            config_value = type(current_value)(config_value)
-        if current_value != config_value:
-            if overwrite:
-                current_object.__setattr__(key, config_value)
-                changed = True
-                message = 'UPDATED %s; CHANGED attribute(s) "%s"'
-            else:
-                message = 'Didn\'t change %s; attribute(s) "%s" differ(s) from database configuration.\n\tWARNING: Sync your config file to your app configuration or use the -f switch with setup to force changes'
-            different.append(key)
-    if overwrite and changed:
-        current_object.save()
-    return current_object, False, len(different) > 0, message % (object_name, ', '.join(different))

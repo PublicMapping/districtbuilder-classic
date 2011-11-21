@@ -34,7 +34,7 @@ from os.path import exists
 from lxml.etree import parse, XMLSchema
 from xml.dom import minidom
 import traceback, os, sys, random
-from redistricting.config import StoredConfig
+from redistricting import StoredConfig
 
 def main():
     """
