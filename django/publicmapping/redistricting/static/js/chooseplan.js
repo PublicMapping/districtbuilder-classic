@@ -50,7 +50,7 @@ chooseplan = function(options) {
         }, options),
         // bunch o variables
        
-        _table,
+        _table = null,
         _districtindexfilePublisher,
         _selectedPlanId,
         _eventType = 'template',
@@ -671,6 +671,7 @@ chooseplan = function(options) {
 
     //resize grid to fit window
     var resizeToFit = function() {
+        if (_table === null) return;
         // Shrink the container and allow for padding
         $('#table_container').width(parseInt($(window).width() - 550));
         var tblContainerWidth = parseInt($('#table_container').width());
