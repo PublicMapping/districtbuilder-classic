@@ -374,13 +374,17 @@ def commonplan(request, planid):
         editable = can_edit(request.user, plan)
         default_demo = plan.legislative_body.get_default_subject()
         max_dists = plan.legislative_body.max_districts
-        body_member = plan.legislative_body.member
+        body_member_short_label = plan.legislative_body.short_label
+        body_member_long_label = plan.legislative_body.long_label
         body_name = plan.legislative_body.name
         reporting_template = 'bard_%s.html' % body_name.lower() if not plan.is_community() else None
 
-        index = body_member.find('%')
+        index = body_member_short_label.find('%')
         if index >= 0:
-            body_member = body_member[0:index]
+            body_member_short_label = body_member_short_label[0:index]
+        index = body_member_long_label.find('%')
+        if index >= 0:
+            body_member_long_label = body_member_long_label[0:index]
         if not editable and not can_view(request.user, plan):
             plan = {}
         tags = Tag.objects.filter(name__startswith='type=').order_by('id').values_list('name',flat=True)
@@ -390,7 +394,7 @@ def commonplan(request, planid):
         # result is a map of relevant panels to score functions with labels and ids,
         # used for generating groups of checkboxes on the evaluate tab.
         calculator_reports = []
-        if 'CALC_REPORTS_DIR' in settings.__members__:
+        if settings.REPORTS_ENABLED == 'CALC':
             report_displays = ScoreDisplay.objects.filter(title='%s Reports' % body_name)
             if len(report_displays) > 0:
                 calculator_reports = map(lambda p: {
@@ -409,7 +413,8 @@ def commonplan(request, planid):
         editable = False
         default_demo = None
         max_dists = 0
-        body_member = 'District '
+        body_member_short_label = ''
+        body_member_long_label = 'District '
         body_name = None
         reporting_template = None
         tags = []
@@ -419,14 +424,18 @@ def commonplan(request, planid):
     snaplayers = []
 
     if len(levels) > 0:
-        study_area_extent = list(Geounit.objects.filter(geolevel=levels[0]).extent(field_name='simple'))
+        study_area_extent = list(levels[0].geounit_set.extent(field_name='simple'))
     else:
         # The geolevels with higher indexes are larger geography
-        biglevel = Geolevel.objects.all().order_by('-id')[0]
-        study_area_extent = Geounit.objects.filter(geolevel=biglevel).extent(field_name='simple')
+        # Cycle through legislative bodies, since they may be in different regions
+        for lb in LegislativeBody.objects.all():
+            biglevel = lb.get_geolevels()[0]
+            if biglevel.geounit_set.count() > 0:
+                study_area_extent = biglevel.geounit_set.extent(field_name='simple')
+                break
 
     for level in levels:
-        snaplayers.append( {'geolevel':level.id,'layer':level.name.lower(),'name':level.name.capitalize(),'min_zoom':level.min_zoom} )
+        snaplayers.append( {'geolevel':level.id,'layer':level.name.lower(),'name':level.label if level.label.isupper() else level.label.capitalize(),'min_zoom':level.min_zoom} )
     default_selected = False
     for demo in demos:
         isdefault = str((not default_demo is None) and (demo[0] == default_demo.id)).lower()
@@ -439,7 +448,7 @@ def commonplan(request, planid):
 
     unassigned_id = 0
     if type(plan) != types.DictType:
-        unassigned_id = plan.district_set.filter(name='Unassigned').values_list('district_id',flat=True)[0]
+        unassigned_id = plan.district_set.filter(long_label='Unassigned').values_list('district_id',flat=True)[0]
 
     # Try to get the mapserver protocol from the settings module.
     # Set it to an empty string if the setting isn't defined so the 
@@ -450,13 +459,16 @@ def commonplan(request, planid):
     else:
         mapserver_protocol = ''
 
-    member = body_member.strip().lower()
+    short_label = body_member_short_label.strip().lower()
+    long_label = body_member_long_label.strip().lower()
 
-    bodies = LegislativeBody.objects.all().order_by('sort_key')
+    has_regions = Region.objects.all().count() > 1
+    bodies = LegislativeBody.objects.all().order_by('region__sort_key','sort_key')
     l_bodies = [b for b in bodies if b in [sd.legislative_body for sd in ScoreDisplay.objects.filter(is_page=True)]]
 
     return {
         'bodies': bodies,
+        'has_regions': has_regions,
         'leaderboard_bodies': l_bodies,
         'plan': plan,
         'districts': districts,
@@ -476,8 +488,9 @@ def commonplan(request, planid):
         'max_dists': max_dists + 1,
         'ga_account': settings.GA_ACCOUNT,
         'ga_domain': settings.GA_DOMAIN,
-        'body_member': member, 
-        'body_members': inflect.engine().plural(member),
+        'body_member_short_label': short_label,
+        'body_member_long_label': long_label,
+        'body_members': inflect.engine().plural(long_label),
         'reporting_template': reporting_template,
         'study_area_extent': study_area_extent,
         'has_leaderboard' : len(ScoreDisplay.objects.filter(is_page=True)) > 0,
@@ -571,6 +584,7 @@ def printplan(request, planid):
     cfg['composite'] = '/reports/print-%s.jpg' % stamp
     cfg['legend1'] = '/reports/legend1-%s.jpg' % stamp
     cfg['legend2'] = '/reports/legend2-%s.jpg' % stamp
+    cfg['preview'] = False
 
     if request.method == 'GET':
         # render pg to a string
@@ -585,6 +599,8 @@ def printplan(request, planid):
 
         return response
     elif request.method == 'POST':
+        cfg['preview'] = True
+
         if not 'basemap' in request.REQUEST or not 'geography' in request.REQUEST \
             or not 'districts' in request.REQUEST:
             return HttpResponseRedirect('../view/')
@@ -631,8 +647,8 @@ def printplan(request, planid):
         imgs = [
             (cfg['geography'], tempfile.NamedTemporaryFile(delete=False), True,), 
             (cfg['districts'], tempfile.NamedTemporaryFile(delete=False), True, cfg['sld'],),
-            (request.REQUEST['legend1'], open(settings.BARD_TEMP + ('/legend1-%s.jpg' % stamp), 'w+b'), False, ),
-            (request.REQUEST['legend2'], open(settings.BARD_TEMP + ('/legend2-%s.jpg' % stamp), 'w+b'), False, ),
+            (request.REQUEST['legend1'], open(settings.WEB_TEMP + ('/legend1-%s.jpg' % stamp), 'w+b'), False, ),
+            (request.REQUEST['legend2'], open(settings.WEB_TEMP + ('/legend2-%s.jpg' % stamp), 'w+b'), False, ),
         ]
 
         for imginfo in imgs:
@@ -655,7 +671,7 @@ def printplan(request, planid):
                 os.remove(imgfile.name)
 
         # save
-        fullImg.save(settings.BARD_TEMP + ('/print-%s.jpg' % stamp),'jpeg',quality=85)
+        fullImg.save(settings.WEB_TEMP + ('/print-%s.jpg' % stamp),'jpeg',quality=85)
 
         return render_to_response('printplan.html', cfg)
     
@@ -801,7 +817,7 @@ def getreport(request, planid):
         status['message'] = 'User can\'t view the given plan'
         return HttpResponse(json.dumps(status),mimetype='application/json')
 
-    if not settings.REPORTS_ENABLED:
+    if not settings.REPORTS_ENABLED is None:
         status['message'] = 'Reports functionality is turned off.'
         return HttpResponse(json.dumps(status),mimetype='application/json')
               
@@ -969,12 +985,19 @@ def newdistrict(request, planid):
         else:
             district_id = None
 
-        if 'district_name' in request.REQUEST:
-            district_name = request.REQUEST['district_name']
+        if 'district_short' in request.REQUEST:
+            district_short = request.REQUEST['district_short']
         elif not district_id is None:
-            district_name = plan.legislative_body.member % district_id
+            district_short = plan.legislative_body.short_label % district_id
         else:
-            district_name = None
+            district_short = None
+
+        if 'district_long' in request.REQUEST:
+            district_long = request.REQUEST['district_long']
+        elif not district_id is None:
+            district_long = plan.legislative_body.long_label % district_id
+        else:
+            district_long = None
 
         if 'version' in request.REQUEST:
             version = request.REQUEST['version']
@@ -985,10 +1008,10 @@ def newdistrict(request, planid):
             try: 
                 # add the geounits selected to this district -- this will
                 # create a new district w/1 version higher
-                fixed = plan.add_geounits((district_id, district_name,), geounit_ids, geolevel, version)
+                fixed = plan.add_geounits((district_id, district_short, district_long,), geounit_ids, geolevel, version)
 
                 # if there are comments or types, add them to the district
-                district = plan.district_set.filter(district_id=district_id,name=district_name)[0]
+                district = plan.district_set.filter(district_id=district_id,short_label=district_short,long_label=district_long)[0]
                 ct = ContentType.objects.get(app_label='redistricting',model='district')
                 if 'comment' in request.POST and request.POST['comment'] != '':
                     comment = Comment(object_pk = district.id, content_type=ct, site_id=1, user_name=request.user.username, user_email=request.user.email, comment=request.POST['comment'])
@@ -1426,7 +1449,7 @@ def setdistrictlock(request, planid, district_id):
 
     try:
         plan = Plan.objects.get(pk=planid)
-        district = District.objects.filter(plan=plan,district_id=district_id,version__lte=version).order_by('version').reverse()[0]
+        district = plan.district_set.filter(district_id=district_id,version__lte=version).order_by('version').reverse()[0]
     except ObjectDoesNotExist:
         status['message'] = 'Plan or district does not exist.'
         return HttpResponse(json.dumps(status), mimetype='application/json')
@@ -1470,7 +1493,9 @@ def getdistricts(request, planid):
 
         status['districts'] = []
 
-        status['available'] = plan.get_available_districts(version=version)
+        # Same calculation as plan.get_available_districts, but
+        # g_a_d fetches districts all over again -- skip that overhead
+        status['available'] = plan.legislative_body.max_districts - len(districts) + 1
 
         # Find the maximum version in the returned districts
         max_version = max([d.version for d in districts])
@@ -1482,7 +1507,8 @@ def getdistricts(request, planid):
         for district in districts:
             status['districts'].append({
                 'id':district.district_id,
-                'name':district.name,
+                'short_label':district.short_label,
+                'long_label':district.long_label,
                 'version':district.version
             })
         status['canUndo'] = can_undo
@@ -1620,7 +1646,7 @@ def get_unlocked_simple_geometries(request,planid):
             locked_buffered = locked.simplify(100, True).buffer(100) if locked else None
 
             # Filter first by geolevel, then selection
-            filtered = Geounit.objects.filter(geolevel=geolevel).filter(selection)
+            filtered = Geolevel.objects.get(id=geolevel).geounit_set.filter(selection)
             # Assemble the matching features into geojson
             features = []
             for feature in filtered:
@@ -1648,7 +1674,7 @@ def get_unlocked_simple_geometries(request,planid):
                     'geometry': json.loads(geom.json),
                     'properties': {
                         'name': feature.name,
-                        'geolevel_id': feature.geolevel.id,
+                        'geolevel_id': geolevel,
                         'id': feature.id
                     }
                 })
@@ -1960,11 +1986,12 @@ def getplans(request):
                 'is_template': plan.is_template, 
                 'is_shared': plan.is_shared, 
                 'owner': plan.owner.username, 
-                'districtCount': len(plan.get_districts_at_version(plan.version, include_geom=False)) - 1, 
+                'districtCount': '--', # load dynamically -- this is a big performance hit
                 'can_edit': can_edit(request.user, plan),
                 'plan_type': plan.legislative_body.name
                 }
             })
+
     json_response = "{ \"total\":\"%d\", \"page\":\"%d\", \"records\":\"%d\", \"rows\":%s }" % (total_pages, page, len(all_plans), json.dumps(plans_list))
     return HttpResponse(json_response,mimetype='application/json') 
 
@@ -2010,7 +2037,8 @@ def get_shared_districts(request, planid):
             districts_list.append({
                 'pk': district.id, 
                 'fields': { 
-                    'name': district.name, 
+                    'short_label': district.short_label,
+                    'long_label': district.long_label,
                     'district_id': district.district_id,
                 }
             })
@@ -2267,8 +2295,9 @@ def district_info(request, planid, district_id):
         district = filter(lambda d:d.district_id==district_id, district)
 
         if request.method == 'POST':
-            district = District.objects.get(id=request.POST['object_pk'])
-            district.name = request.POST['district_name']
+            district = plan.district_set.get(id=request.POST['object_pk'])
+            district.short_label = request.POST['district_short']
+            district.long_label = request.POST['district_long']
 
 
             if district.version < version:
@@ -2330,7 +2359,8 @@ def plan_feed(request):
     # MAP_SERVER = ''
     # MAP_SERVER_NS = 'pmp'
     plans = Plan.objects.all().order_by('-edited')[0:10]
-    extent = Geounit.objects.filter(geolevel=plans[0].legislative_body.get_geolevels()[0]).collect().extent
+    geolevel = Geolevel.objects.get(id=plans[0].legislative_body.get_geolevels()[0])
+    extent = geolevel.geounit_set.collect().extent
     if extent[2] - extent[0] > extent[3] - extent[1]:
         # wider maps
         width = 500
@@ -2358,7 +2388,8 @@ def share_feed(request):
     # MAP_SERVER_NS = 'pmp'
     plans = Plan.objects.filter(is_shared=True).order_by('-edited')[0:10]
     if plans.count() < 0:
-        extent = Geounit.objects.filter(geolevel=plans[0].legislative_body.get_geolevels()[0]).collect().extent
+        geolevel = Geolevel.objects.get(id=plans[0].legislative_body.get_geolevels()[0])
+        extent = geolevel.geounit_set.collect().extent
         if extent[2] - extent[0] > extent[3] - extent[1]:
             # wider maps
             width = 500

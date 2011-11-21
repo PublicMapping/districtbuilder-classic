@@ -6,11 +6,65 @@
         <!-- A Legislative body has an ID (for referencing in GeoLevel
             definitions later), a name, and a label for plan items 
             ("District" for Congressional, etc) -->
-        <LegislativeBody id="congress" name="Congressional" member="District %s" maxdistricts="11" sort_key="1"/>
-        <LegislativeBody id="house" name="State House" member="District %s" maxdistricts="100" sort_key="2"/>
-        <LegislativeBody id="senate" name="State Senate" member="District %s" maxdistricts="40" sort_key="3"/>
-        <LegislativeBody id="community" name="Community Map" member="Community %s" maxdistricts="999" is_community="true" sort_key="4"/>
+        <LegislativeBody id="congress" name="Congressional" short_label="%s" 
+            long_label="District %s" maxdistricts="11" sort_key="1"/>
+        <LegislativeBody id="house" name="State House" short_label="%s" 
+            long_label="District %s" maxdistricts="100" sort_key="2"/>
+        <LegislativeBody id="senate" name="State Senate" short_label="%s"
+            long_label="District %s" maxdistricts="40" sort_key="3"/>
+        <LegislativeBody id="community" name="Community Map" short_label="%s"
+            long_label="Community %s" maxdistricts="999" is_community="true" sort_key="4"/>
+        <LegislativeBody id="dc_area_council" name="DC Planning Council" short_label="%s"
+            long_label="District %s" maxdistricts="5" sort_key="5"/>
+        <LegislativeBody id="dc_community" name="DC Community Map" short_label="%s"
+            long_label="Community %s" maxdistricts="999" is_community="true" sort_key="6"/>
     </LegislativeBodies>
+
+    <!-- Define Regions as aggregations of smaller geographic units. -->
+    <Regions>
+
+        <!-- A Region has an ID, name, and description. -->
+        <Region id="va" name="va" label="Virginia" description="The Commonwealth of Virginia" sort_key="1">
+            <!-- A set of legislative bodies that exist in this region. -->
+            <LegislativeBodies>
+                <LegislativeBody ref="congress" />
+                <LegislativeBody ref="house" />
+                <LegislativeBody ref="senate" />
+                <LegislativeBody ref="community" />
+            </LegislativeBodies>
+            <!-- Only these geolevels are applicable to this region -->
+            <GeoLevels>
+                <GeoLevel ref="block">
+                    <GeoLevel ref="vtd">
+                        <GeoLevel ref="county" />
+                    </GeoLevel>
+                </GeoLevel>
+            </GeoLevels>
+        </Region>
+
+        <Region id="dc_area" name="dc" label="DC Metro" description="The District of Columbia Metropolitan Area" sort_key="2">
+            <!-- A set of filters to apply to the largets GeoLevel shapefile. -->
+            <RegionFilter>
+                <!-- A Single filter for the GEOID10 field in the vtd shapefile
+                     that selects all geographic units that match the value at the 
+                     specified text string window. -->
+                <RegionCode attr="GEOID10" value="51059" start="0" width="5" />
+                <RegionCode attr="GEOID10" value="51600" start="0" width="5" />
+                <RegionCode attr="GEOID10" value="51610" start="0" width="5" />
+                <RegionCode attr="GEOID10" value="51510" start="0" width="5" />
+                <RegionCode attr="GEOID10" value="51013" start="0" width="5" />
+            </RegionFilter>
+            <LegislativeBodies>
+                <LegislativeBody ref="dc_area_council" />
+                <LegislativeBody ref="dc_community" />
+            </LegislativeBodies>
+            <GeoLevels>
+                <GeoLevel ref="block">
+                    <GeoLevel ref="vtd" />
+                </GeoLevel>
+            </GeoLevels>
+        </Region>
+    </Regions>
 
     <!-- A list of subjects referenced in the system. -->
     <Subjects>
@@ -250,6 +304,12 @@
                 <Argument name="target" value="40" />
             </ScoreFunction>
 
+            <ScoreFunction id="b_plan_dc_area_council_noncontiguous" type="plan"
+                calculator="publicmapping.redistricting.calculators.Contiguity"
+                label="Contiguous">
+                <Argument name="target" value="5" />
+            </ScoreFunction>
+
             <!-- interval score function for population -->
             <ScoreFunction id="a_congressional_population" type="district"
                 label="Tot Pop" user_selectable="true"
@@ -279,6 +339,16 @@
                 <Argument name="target" value="200026" />
                 <Argument name="bound1" value=".005" />
                 <Argument name="bound2" value=".01" />
+            </ScoreFunction>
+
+            <ScoreFunction id="a_dc_area_council_population" type="district"
+                label="Tot Pop" user_selectable="true"
+                description="Population interval calculator for senate."
+                calculator="publicmapping.redistricting.calculators.Interval">
+                <SubjectArgument name="subject" ref="poptot" />
+                <Argument name="target" value="292843" />
+                <Argument name="bound1" value=".05" />
+                <Argument name="bound2" value=".1" />
             </ScoreFunction>
 
             <!-- leaderboard functions -->
@@ -363,6 +433,26 @@
                 <Argument name="target" value="40"/>
             </ScoreFunction>
 
+            <ScoreFunction id="a_dc_area_council_plan_equipopulation_validation" type="plan"
+                calculator="publicmapping.redistricting.calculators.Equipopulation"
+                label="Target Pop. (292,843)"
+                description="The population of each State Senate district must be 292,843 +/- 5%.">
+                <Argument name="min" value="278201" />
+                <Argument name="max" value="307485" />
+                <SubjectArgument name="value" ref="poptot"/>
+                <Argument name="validation" value="1"/>
+            </ScoreFunction>
+
+            <ScoreFunction id="a_dc_area_council_plan_equipopulation_summary" type="plan"
+                calculator="publicmapping.redistricting.calculators.Equipopulation"
+                label="Target Pop. (292,843)"
+                description="The population of each State Senate district must be 292,843 +/- 5%.">
+                <Argument name="min" value="278201" />
+                <Argument name="max" value="307485" />
+                <SubjectArgument name="value" ref="poptot"/>
+                <Argument name="target" value="5"/>
+            </ScoreFunction>
+
             <ScoreFunction id="plan_all_blocks_assigned" type="plan"
                 calculator="publicmapping.redistricting.calculators.AllBlocksAssigned"
                 label="All Blocks Assigned"
@@ -417,6 +507,15 @@
                 <Argument name="target" value="5" />
             </ScoreFunction>
 
+            <ScoreFunction id="plan_majority_minority_blk" type="plan"
+                calculator="publicmapping.redistricting.calculators.MajorityMinority"
+                label="Black VAP Majority (&gt;50%)"
+                description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
+                <SubjectArgument name="population" ref="vap" />
+                <SubjectArgument name="minority1" ref="vapblk" />
+                <Argument name="target" value="0" />
+            </ScoreFunction>
+
             <ScoreFunction id="plan_majority_minority_hisp" type="plan"
                 calculator="publicmapping.redistricting.calculators.MajorityMinority"
                 label="Hisp. VAP Majority (&gt;50%)"
@@ -459,6 +558,8 @@
                 <LegislativeBody ref="house"/>
                 <LegislativeBody ref="senate"/>
                 <LegislativeBody ref="community"/>
+                <LegislativeBody ref="dc_area_council"/>
+                <LegislativeBody ref="dc_community"/>
             </ScoreFunction>
 
             <ScoreFunction id="district_vap" type="district"
@@ -469,6 +570,8 @@
                 <LegislativeBody ref="house"/>
                 <LegislativeBody ref="senate"/>
                 <LegislativeBody ref="community"/>
+                <LegislativeBody ref="dc_area_council"/>
+                <LegislativeBody ref="dc_community"/>
             </ScoreFunction>
                 
             <ScoreFunction id="district_poptot" type="district"
@@ -476,12 +579,14 @@
                 user_selectable="true" label="Total Population">
                 <SubjectArgument name="value1" ref="poptot" />
                 <LegislativeBody ref="community"/>
+                <LegislativeBody ref="dc_community"/>
             </ScoreFunction>
 
             <ScoreFunction id="district_comments" type="district"
                 calculator="publicmapping.redistricting.calculators.Comments"
                 user_selectable="false" label="Comments">
                 <LegislativeBody ref="community"/>
+                <LegislativeBody ref="dc_community"/>
             </ScoreFunction>
 
             <!-- Calculator Reports configuration -->
@@ -511,6 +616,15 @@
                 <SubjectArgument name="value" ref="poptot" />
                 <Argument name="min" value="76010" />
                 <Argument name="max" value="84011" />
+            </ScoreFunction>
+
+            <ScoreFunction id="report_score_total_population_dc_council" type="district"
+                calculator="publicmapping.redistricting.reportcalculators.Population"
+                label="Total Population" >
+                <LegislativeBody ref="dc_area_council"/>              
+                <SubjectArgument name="value" ref="poptot" />
+                <Argument name="min" value="278201" />
+                <Argument name="max" value="307485" />
             </ScoreFunction>
 
             <ScoreFunction id="report_score_vap" type="district"
@@ -547,6 +661,7 @@
                 <LegislativeBody ref="congress"/>
                 <LegislativeBody ref="senate"/>
                 <LegislativeBody ref="house"/>              
+                <LegislativeBody ref="dc_area_council"/>              
                 <SubjectArgument name="value" ref="vapblk" />
                 <SubjectArgument name="total" ref="vap" />
             </ScoreFunction>
@@ -568,6 +683,7 @@
                 <LegislativeBody ref="congress"/>
                 <LegislativeBody ref="senate"/>
                 <LegislativeBody ref="house"/>              
+                <LegislativeBody ref="dc_area_council"/>              
                 <Argument name="comptype" value="LengthWidth" />
             </ScoreFunction>
 
@@ -577,6 +693,7 @@
                 <LegislativeBody ref="congress"/>
                 <LegislativeBody ref="senate"/>
                 <LegislativeBody ref="house"/>              
+                <LegislativeBody ref="dc_area_council"/>              
                 <Argument name="comptype" value="Schwartzberg" />
             </ScoreFunction>
 
@@ -586,6 +703,7 @@
                 <LegislativeBody ref="congress"/>
                 <LegislativeBody ref="senate"/>
                 <LegislativeBody ref="house"/>              
+                <LegislativeBody ref="dc_area_council"/>              
                 <Argument name="comptype" value="Roeck" />
             </ScoreFunction>
 
@@ -596,6 +714,7 @@
                 <LegislativeBody ref="congress"/>
                 <LegislativeBody ref="senate"/>
                 <LegislativeBody ref="house"/>              
+                <LegislativeBody ref="dc_area_council"/>              
                 <SubjectArgument name="value" ref="govdem" />
                 <SubjectArgument name="total" ref="govtot" />
             </ScoreFunction>
@@ -606,6 +725,7 @@
                 <LegislativeBody ref="congress"/>
                 <LegislativeBody ref="senate"/>
                 <LegislativeBody ref="house"/>              
+                <LegislativeBody ref="dc_area_council"/>              
                 <SubjectArgument name="value" ref="govrep" />
                 <SubjectArgument name="total" ref="govtot" />
             </ScoreFunction>
@@ -617,6 +737,7 @@
                 <LegislativeBody ref="congress"/>
                 <LegislativeBody ref="senate"/>
                 <LegislativeBody ref="house"/>              
+                <LegislativeBody ref="dc_area_council"/>              
             </ScoreFunction>
         </ScoreFunctions>
         
@@ -689,6 +810,22 @@
                 <Score ref="plan_majority_minority_hisp" />
             </ScorePanel>
 
+            <ScorePanel id="dc_area_council_panel_summary" type="plan_summary" position="1"
+                title="Plan Summary" cssclass="plan_summary dc_area_council" template="plan_summary.html">
+                <Score ref="a_dc_area_council_plan_equipopulation_summary"/>
+                <Score ref="b_plan_dc_area_council_noncontiguous"/>
+                <Score ref="plan_majority_minority_blk" />
+                <Score ref="plan_majority_minority_hisp" />
+            </ScorePanel>
+
+            <ScorePanel id="dc_community_panel_summary" type="plan_summary" position="1"
+                title="Community Summary" cssclass="plan_summary dc_community" template="dc_community_summary.html">
+                <Score ref="a_senate_plan_equipopulation_summary"/>
+                <Score ref="b_plan_senate_noncontiguous"/>
+                <Score ref="plan_majority_minority_blk_senate" />
+                <Score ref="plan_majority_minority_hisp" />
+            </ScorePanel>
+
             <!-- Basic Information -->
             <ScorePanel id="congresional_panel_info" type="district" position="2"
                 title="Basic Information" cssclass="district_basic_info congressional" 
@@ -710,6 +847,14 @@
                 title="Basic Information" cssclass="district_basic_info senate" 
                 template="basic_information.html">
                 <Score ref="a_senate_population" />
+                <Score ref="district_contiguous" />
+                <Score ref="district_schwartzberg" />
+            </ScorePanel>
+            
+            <ScorePanel id="dc_area_council_panel_info" type="district" position="2"
+                title="Basic Information" cssclass="district_basic_info dc_area_council" 
+                template="basic_information.html">
+                <Score ref="a_dc_area_council_population" />
                 <Score ref="district_contiguous" />
                 <Score ref="district_schwartzberg" />
             </ScorePanel>
@@ -746,6 +891,14 @@
                 <Score ref="district_hispvap_percent" />
             </ScorePanel>
 
+            <ScorePanel id="dc_area_council_panel_demo" type="district" position="2"
+                title="Demographics" cssclass="district_demographics dc_area_council" 
+                template="demographics.html">
+                <Score ref="partisan_index" />
+                <Score ref="district_blkvap_percent" />
+                <Score ref="district_hispvap_percent" />
+            </ScorePanel>
+
             <ScorePanel id="community_panel_demo" type="district" position="2"
                 title="Demographics" cssclass="district_demographics community" 
                 template="communities.html">
@@ -760,6 +913,7 @@
                 <Score ref="report_score_total_population_congress" />
                 <Score ref="report_score_total_population_senate" />
                 <Score ref="report_score_total_population_house" />
+                <Score ref="report_score_total_population_dc_council" />
                 <Score ref="report_score_vap" />
                 <Score ref="report_score_vapblk" />
                 <Score ref="report_score_vaphisp" />
@@ -879,6 +1033,26 @@
                 <ScorePanel ref="community_panel_comments" />
             </ScoreDisplay>
 
+            <ScoreDisplay legislativebodyref="dc_area_council" type="sidebar" title="Basic Information" cssclass="basic_information">
+                <ScorePanel ref="dc_area_council_panel_summary" />
+                <ScorePanel ref="dc_area_council_panel_info" />
+            </ScoreDisplay>
+
+            <ScoreDisplay legislativebodyref="dc_area_council" type="sidebar" title="Demographics" cssclass="demographics">
+                <ScorePanel ref="dc_area_council_panel_summary" />
+                <ScorePanel ref="dc_area_council_panel_demo" />
+            </ScoreDisplay>
+
+            <ScoreDisplay legislativebodyref="dc_community" type="sidebar" title="Demographics" cssclass="demographics">
+                <ScorePanel ref="community_panel_summary" />
+                <ScorePanel ref="community_panel_demo" />
+            </ScoreDisplay>
+
+            <ScoreDisplay legislativebodyref="dc_community" type="sidebar" title="Community Mapping" cssclass="demographics">
+                <ScorePanel ref="community_panel_summary" />
+                <ScorePanel ref="community_panel_comments" />
+            </ScoreDisplay>
+
             <!-- Calculator Reports configuration -->
             <ScoreDisplay legislativebodyref="congress" type="reports" 
                 title="Congressional Reports" cssclass="reports congress">
@@ -906,6 +1080,16 @@
                 <ScorePanel ref="report_panel_party" />
                 <ScorePanel ref="report_panel_spatial" />
             </ScoreDisplay>
+
+            <ScoreDisplay legislativebodyref="dc_area_council" type="reports" 
+                title="DC Planning Council Reports" cssclass="reports dc_area_council">
+                <ScorePanel ref="report_panel_population" />
+                <ScorePanel ref="report_panel_majmin" />
+                <ScorePanel ref="report_panel_compactness" />
+                <ScorePanel ref="report_panel_party" />
+                <ScorePanel ref="report_panel_spatial" />
+            </ScoreDisplay>
+
         </ScoreDisplays>
     </Scoring>
     
@@ -970,7 +1154,7 @@
     </Validation>
 
     <GeoLevels>
-      <GeoLevel id="block" name="block" min_zoom="8" sort_key="3" tolerance="2.5">
+      <GeoLevel id="block" name="block" label="block" min_zoom="8" sort_key="3" tolerance="2.5">
           <!--
 
           You may use EITHER the "Shapefile" or "Files" element as a child 
@@ -1023,12 +1207,6 @@
           many legislative bodies.
           
           -->
-          <LegislativeBodies>
-              <LegislativeBody ref="congress" />
-              <LegislativeBody ref="house" />
-              <LegislativeBody ref="senate" />
-              <LegislativeBody ref="community" />
-          </LegislativeBodies>
       </GeoLevel>
 
       <!--
@@ -1037,7 +1215,7 @@
       be coincident in its child.
           
       -->
-      <GeoLevel id="vtd" name="vtd" min_zoom="4" sort_key="2" tolerance="25">
+      <GeoLevel id="vtd" name="vtd" label="VTD" min_zoom="4" sort_key="2" tolerance="25">
           <!--
 
           You may use EITHER the "Shapefile" or "Files" element as a child 
@@ -1083,27 +1261,6 @@
                   </Fields>
               </Geography>
           </Files>
-          
-          <!--
-          
-          A reference to a legislative body. A geolevel may be used by 
-          many legislative bodies. 
-          
-          -->
-          <LegislativeBodies>
-              <LegislativeBody ref="congress">
-                  <Parent ref="block" />
-              </LegislativeBody>
-              <LegislativeBody ref="house">
-                  <Parent ref="block" />
-              </LegislativeBody>
-              <LegislativeBody ref="senate">
-                  <Parent ref="block" />
-              </LegislativeBody>
-              <LegislativeBody ref="community">
-                  <Parent ref="block" />
-              </LegislativeBody>
-          </LegislativeBodies>
       </GeoLevel>
 
       <!--
@@ -1112,7 +1269,7 @@
       be coincident in its child.
           
       -->
-      <GeoLevel id="county" name="county" min_zoom="0" sort_key="1" tolerance="250">
+      <GeoLevel id="county" name="county" label="county" min_zoom="0" sort_key="1" tolerance="250">
           <!--
 
           You may use EITHER the "Shapefile" or "Files" element as a child 
@@ -1157,27 +1314,6 @@
                   </Fields>
               </Geography>
           </Files>
-          
-          <!--
-          
-          A reference to a legislative body. A geolevel may be used by 
-          many legislative bodies.
-          
-          -->
-          <LegislativeBodies>
-              <LegislativeBody ref="congress">
-                  <Parent ref="vtd" />
-              </LegislativeBody>
-              <LegislativeBody ref="house">
-                  <Parent ref="vtd" />
-              </LegislativeBody>
-              <LegislativeBody ref="senate">
-                  <Parent ref="vtd" />
-              </LegislativeBody>
-              <LegislativeBody ref="community">
-                  <Parent ref="vtd" />
-              </LegislativeBody>
-          </LegislativeBodies>
       </GeoLevel>
     </GeoLevels>
    
@@ -1224,7 +1360,7 @@
     
     -->
     <Project root="/projects/PublicMapping/DistrictBuilder" sessionquota="5" 
-             sessiontimeout="15">
+             sessiontimeout="15" temp="/projects/PublicMapping/local/reports">
         <!-- 
             Database connection information.
 
@@ -1234,7 +1370,7 @@
 
             The 'host' attribute is optional.
         -->
-        <Database name="<database name>" user="publicmapping" password="<database user password>" host="<optional>"/>
+        <Database name="YOUR-DATABASE-NAME" user="publicmapping" password="YOUR-DATABASE-PASSWORD" host="OPTIONAL"/>
         
         <!-- 
         
@@ -1242,7 +1378,7 @@
         superuser in django with these credentials.
         
         -->
-        <Admin user="<admin user name>" email="<admin email>" password="<STRONG password>"/>
+        <Admin user="ADMIN-USER-NAME" email="ADMIN-EMAIL" password="STRONG-PASSWORD"/>
         
         <!-- Configuration items specific to the redistricting app. -->
         <Redistricting>           
@@ -1268,7 +1404,7 @@
             
             -->
             <MapServer hostname="" ns="pmp" nshref="https://github.com/PublicMapping/"
-                adminuser="<geoserver admin user>" adminpass="<geoserver admin pass>" maxfeatures="100" 
+                adminuser="GEOSERVER-ADMIN-USER" adminpass="GEOSERVER-ADMIN-PASS" maxfeatures="100" 
                 styles="/projects/PublicMapping/DistrictBuilder/sld" />
 
             <!-- 

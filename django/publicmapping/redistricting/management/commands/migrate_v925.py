@@ -102,7 +102,7 @@ class Command(BaseCommand):
         
         for assigned in allassigned:
             districts = assigned.get_districts_at_version(assigned.version, include_geom=False)
-            unassigned = filter(lambda x:x.name=='Unassigned',districts)[0]
+            unassigned = filter(lambda x:x.long_label=='Unassigned',districts)[0]
             if vrb > 1:
                 print '\tCreating an empty unassigned district:', unassigned.id
             unassigned.geom = MultiPolygon([],srid=allgeom.srid)
@@ -124,7 +124,7 @@ class Command(BaseCommand):
                 bigpoly = None
                 unassigned_district = None
                 for district in districts:
-                    if district.name == 'Unassigned':
+                    if district.long_label == 'Unassigned':
                         unassigned_district = district
                         continue
 

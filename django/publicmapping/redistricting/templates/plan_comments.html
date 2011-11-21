@@ -5,7 +5,7 @@
     <div class="districtComment {% cycle 'comm1' 'comm2' %}">
         <form id="districtInfo{{ dscore.district.district_id }}">
             <input type="hidden" name="pk" value="{{ dscore.district.id }}" />
-            <input type="text" class="infoLabel" name="label" value="{{ dscore.district.name }}" readonly="true" />
+            <input type="text" class="infoLabel" name="label" value="{{ dscore.district.long_label }}" readonly="true" />
             <div class="edit_district_info" districtid="{{ dscore.district.district_id }}">Edit</div>
             <div class="district_type">
                 <h4>Type/s:</h4>

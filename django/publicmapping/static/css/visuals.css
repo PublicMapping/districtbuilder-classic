@@ -291,6 +291,7 @@ div#or {
     font-weight: bolder;
     color: #000000;
     text-align: center;
+    margin: 10px auto;
 }
 div#sessiondupe p {
     font-weight: normal;

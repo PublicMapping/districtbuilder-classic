@@ -358,6 +358,14 @@ def merge_config(config, verbose):
         if banner:
             settings_out.write("\nBANNER_IMAGE = '%s'\n" % banner)
 
+        # Consolidated web-readable temp directory
+        webtmp = cfg.get('temp')
+        if not webtmp:
+            webtmp = '%s/../local/reports/' % root_dir
+
+        rsettings_out.write("\nWEB_TEMP = '%s'\n" % webtmp)
+        settings_out.write("\nWEB_TEMP = '%s'\n" % webtmp)
+
         # Reporting is optional
         cfg = config.xpath('//Reporting')
         if cfg is not None:
@@ -369,14 +377,12 @@ def merge_config(config, verbose):
                 cfg = bardcfg
                 
                 # Write these settings to the report settings.
-                rsettings_out.write("\nREPORTS_ENABLED = True\n")
+                rsettings_out.write("\nREPORTS_ENABLED = 'BARD'\n")
                 rsettings_out.write("BARD_BASESHAPE = '%s'\n" % cfg.get('shape'))
-                rsettings_out.write("BARD_TEMP = '%s'\n" % cfg.get('temp'))
     
                 # Write these settings to the district builder settings.
-                settings_out.write("\nREPORTS_ENABLED = True\n")
+                settings_out.write("\nREPORTS_ENABLED = 'BARD'\n")
                 settings_out.write("BARD_TRANSFORM = '%s'\n" % cfg.get('transform'))
-                settings_out.write("BARD_TEMP = '%s'\n" % cfg.get('temp'))
                 server = cfg.get('server')
                 if server:
                     settings_out.write("BARD_SERVER = '%s'\n" % server)
@@ -385,16 +391,22 @@ def merge_config(config, verbose):
     
             # Calculator reports
             elif calccfg is not None:
-                cfg = calccfg
-                settings_out.write("CALC_REPORTS_DIR = '%s'\n" % cfg.get('tempdir')) 
+                rsettings_out.write("\nREPORTS_ENABLED = 'CALC'\n")
+                settings_out.write("\nREPORTS_ENABLED = 'CALC'\n")
+                pass
             else:
                 # Write this setting to the report settings.
-                rsettings_out.write("\nREPORTS_ENABLED = False\n")
+                rsettings_out.write("\nREPORTS_ENABLED = None\n")
     
                 # Write this setting to the district builder settings.
-                settings_out.write("\nREPORTS_ENABLED = False\n")
+                settings_out.write("\nREPORTS_ENABLED = None\n")
+        else:
+            # Write this setting to the report settings.
+            rsettings_out.write("\nREPORTS_ENABLED = None\n")
 
-        
+            # Write this setting to the district builder settings.
+            settings_out.write("\nREPORTS_ENABLED = None\n")
+
         cfg = config.xpath('//GoogleAnalytics')
         if len(cfg) > 0:
             cfg = cfg[0]

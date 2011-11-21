@@ -147,12 +147,15 @@ class CalculatorBase:
         value = None
         if argtype == 'literal':
             value = argval
-            try:
-                # If our literal is a number, make it a decimal to match models
-                value = Decimal(value)
-            except:
-                # No problem, it may be a string
-                pass
+            if isinstance(argval, dict) and 'value' in argval:
+                value = Decimal(argval['value'])
+            else:
+                try:
+                    # If our literal is a number, make it a decimal to match models
+                    value = Decimal(value)
+                except:
+                    # No problem, it may be a string
+                    pass
         elif argtype == 'subject' and not district is None:
             # This method is more fault tolerant than _set.get, since it 
             # won't throw an exception if the item doesn't exist.
@@ -698,7 +701,7 @@ class SumValues(CalculatorBase):
             districts = plan.get_districts_at_version(version, include_geom=False)
         elif 'list' in kwargs:
             lst = kwargs['list']
-            self.result = reduce(lambda x,y: x + y, lst)
+            self.result = {'value': reduce(lambda x,y: x + y, lst)}
             return
         else:
             return
@@ -1122,7 +1125,7 @@ class AllContiguous(CalculatorBase):
         calc = Contiguity()
         calc.compute(**kwargs)
 
-        self.result = { 'value': (len(districts) - 1) == calc.result }
+        self.result = { 'value': (len(districts) - 1) == calc.result['value'] }
 
 
 class NonContiguous(CalculatorBase):
@@ -2151,7 +2154,7 @@ class SplitCounter(CalculatorBase):
             render += '<div class="table_container"><table class="report"><thead><tr><th>%s</th><th>%s</th></tr></thead><tbody>' % (r['plan_name'].capitalize(), r['other_name'].capitalize() if r['is_geolevel'] else r['other_name'].capitalize())
 
             for s in r['named_splits']:
-                render += '<tr><td>%s</td><td>%s</td></tr>' % (s[0], s[1])
+                render += '<tr><td>%s</td><td>%s</td></tr>' % (s['geo'], s['interior'])
 
             render += '</tbody></table></div>'
 

@@ -110,7 +110,7 @@ def loadbard(request):
         msg = 'Bard is already loaded\n%s' % msg
     elif bardLoadingThread.is_alive():
         msg = 'Bard is already building\n%s' % msg
-    elif threaded and not bardWorkSpaceLoaded and settings.REPORTS_ENABLED:
+    elif threaded and not bardWorkSpaceLoaded and settings.REPORTS_ENABLED == 'BARD':
         bardLoadingThread.daemon = True
         bardLoadingThread.start()
         msg = 'Building bard workspace now\n%s' % msg
@@ -188,11 +188,11 @@ def getreport(request):
     stamp = request.POST.get('stamp','')
 
     # set up the temp dir and filename
-    tempdir = settings.BARD_TEMP
+    tempdir = settings.WEB_TEMP
     basename = '%s_p%d_v%d_%s' % (request.POST['plan_owner'], int(request.POST['plan_id']), int(request.POST['plan_version']), stamp)
 
     if not bardWorkSpaceLoaded:
-        if not settings.REPORTS_ENABLED:
+        if settings.REPORTS_ENABLED != 'BARD':
             status['reason'] = 'Reports functionality is turned off.'
 
             if settings.DEBUG:

@@ -4,29 +4,65 @@
     <xs:element name="DistrictBuilder">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="LegislativeBodies">
+                <xs:element name="LegislativeBodies" type="LegislativeBodiesType"></xs:element>
+                <xs:element name="Regions" minOccurs="0" maxOccurs="1">
                     <xs:annotation>
                         <xs:documentation>
-                            LegislativeBodies model different election contests, the related metrics and the relevant
-                            geography. One such example is "US Congress", with Census Block, Census Tract, and state
-                            county geographies.
-
-                            Subjects, GeoLevels and Templates refer to individual LegislativeBody items.
+                            A collection of regions in DistrictBuilder that define a specific geographic extent,
+                            set of legislative bodies, subjects, scores, and validation criteria.
                         </xs:documentation>
                     </xs:annotation>
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element name="LegislativeBody" minOccurs="1" maxOccurs="unbounded">
+                            <xs:element name="Region" minOccurs="1" maxOccurs="unbounded">
+                                <xs:annotation>
+                                    <xs:documentation>
+                                        A region that defines a specific geographic extent, set of legislative
+                                        bodies, subjects, scores, and validation criteria.
+                                    </xs:documentation>
+                                </xs:annotation>
                                 <xs:complexType>
                                     <xs:all>
-                                        <xs:element name="Description" type="xs:string" maxOccurs="1" minOccurs="0" />
+                                        <xs:element name="RegionFilter" minOccurs="0">
+                                            <xs:annotation>
+                                                <xs:documentation>
+                                                    A collection of filters that select geographic units that as an
+                                                    aggregate, define the limits of this Region.
+                                                </xs:documentation>
+                                            </xs:annotation>
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="RegionCode" minOccurs="1" maxOccurs="unbounded">
+                                                        <xs:annotation>
+                                                            <xs:documentation>
+                                                                A filter definition that defines which geounits to
+                                                                aggregate together for a part of the region.
+                                                            </xs:documentation>
+                                                        </xs:annotation>
+                                                        <xs:complexType>
+                                                            <xs:attribute name="attr" type="xs:string" />
+                                                            <xs:attribute name="value" type="xs:string" />
+                                                            <xs:attribute name="start" type="xs:integer" use="optional" />
+                                                            <xs:attribute name="width" type="xs:integer" use="optional" />
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="LegislativeBodies" type="LegislativeBodiesRefType"></xs:element>
+                                        <xs:element name="GeoLevels">
+                                            <xs:complexType>
+                                                <xs:all>
+                                                    <xs:element name="GeoLevel" type="NestedGeoLevelType" />
+                                                </xs:all>
+                                            </xs:complexType>
+                                        </xs:element>
                                     </xs:all>
-                                    <xs:attribute name="id" type="xs:ID" use="required" />
-                                    <xs:attribute name="name" type="xs:string" use="required" />
-                                    <xs:attribute name="member" type="xs:string" use="required" />
-                                    <xs:attribute name="maxdistricts" type="xs:nonNegativeInteger" use="required" />
-                                    <xs:attribute name="is_community" type="xs:boolean" use="optional" />
-                                    <xs:attribute name="sort_key" type="xs:nonNegativeInteger" use="required" />
+                                    <xs:attribute name="id" type="xs:ID" />
+                                    <xs:attribute name="label" type="xs:string" />
+                                    <xs:attribute name="name" type="xs:string" />
+                                    <xs:attribute name="description" type="xs:string" />
+                                    <xs:attribute name="sort_key" type="xs:integer" />
                                 </xs:complexType>
                             </xs:element>
                         </xs:sequence>
@@ -93,7 +129,6 @@
                                                     <xs:choice minOccurs="0" maxOccurs="unbounded">
                                                         <xs:element name="Argument">
                                                             <xs:complexType>
-                                                                <xs:sequence></xs:sequence>
                                                                 <xs:attribute name="name" type="xs:string" />
                                                                 <xs:attribute name="value" type="xs:string" />
                                                             </xs:complexType>
@@ -272,26 +307,14 @@
                                                     </xs:sequence>
                                                 </xs:complexType>
                                             </xs:element>
+                                            <xs:element name="BaseGeoLevel" type="RefType">
+                                            </xs:element>
                                         </xs:choice>
                                         <xs:element name="Description" type="xs:string" minOccurs="0" maxOccurs="1" />
-                                        <xs:element name="LegislativeBodies">
-                                            <xs:complexType>
-                                                <xs:sequence>
-                                                    <xs:element name="LegislativeBody" minOccurs="1" maxOccurs="unbounded">
-                                                        <xs:complexType>
-                                                            <xs:sequence>
-                                                                <xs:element name="Parent" type="RefType" minOccurs="0" maxOccurs="1">
-                                                                </xs:element>
-                                                            </xs:sequence>
-                                                            <xs:attribute name="ref" type="xs:IDREF" />
-                                                        </xs:complexType>
-                                                    </xs:element>
-                                                </xs:sequence>
-                                            </xs:complexType>
-                                        </xs:element>
                                     </xs:sequence>
-                                    <xs:attribute name="name" type="xs:string" use="required" />
                                     <xs:attribute name="id" type="xs:ID" />
+                                    <xs:attribute name="name" type="xs:string" use="required" />
+                                    <xs:attribute name="label" type="xs:string" use="required" />
                                     <xs:attribute name="min_zoom" type="xs:nonNegativeInteger" />
                                     <xs:attribute name="sort_key" type="xs:positiveInteger" />
                                     <xs:attribute name="tolerance" type="xs:decimal" use="required" />
@@ -407,20 +430,23 @@
                             </xs:element>
                             <xs:element name="GoogleAnalytics" minOccurs="0" maxOccurs="1" nillable="true">
                                 <xs:complexType>
-                                    <xs:sequence>
-                                    </xs:sequence>
                                     <xs:attribute name="account" type="xs:string" />
                                     <xs:attribute name="domain" type="xs:string" />
                                 </xs:complexType>
                             </xs:element>
                         </xs:sequence>
                         <xs:attribute name="root" type="xs:string" use="required" />
+                        <xs:attribute name="temp" type="xs:string" use="optional" />
                         <xs:attribute name="sessionquota" type="xs:positiveInteger" use="optional" />
                         <xs:attribute name="sessiontimeout" type="xs:positiveInteger" use="optional" />
                     </xs:complexType>
                 </xs:element>
             </xs:sequence>
         </xs:complexType>
+        <xs:key name="DistrictBuilderRegionKey">
+            <xs:selector xpath="Regions/Region" />
+            <xs:field xpath="@id" />
+        </xs:key>
         <xs:key name="DistrictBuilderLegislativeBodyKey">
             <xs:selector xpath="LegislativeBodies/LegislativeBody" />
             <xs:field xpath="@id" />
@@ -429,18 +455,10 @@
             <xs:selector xpath="Subjects/Subject" />
             <xs:field xpath="@id" />
         </xs:key>
-        <xs:key name="DistrictBuilderTargetKey">
-            <xs:selector xpath="Targets/Target" />
-            <xs:field xpath="@id" />
-        </xs:key>
         <xs:key name="DistrictBuilderGeoLevelKey">
             <xs:selector xpath="GeoLevels/GeoLevel" />
             <xs:field xpath="@id" />
         </xs:key>
-        <xs:keyref name="TargetSubject" refer="DistrictBuilderSubjectKey">
-            <xs:selector xpath="Targets/Target" />
-            <xs:field xpath="@subjectref" />
-        </xs:keyref>
         <xs:key name="DistrictBuilderScoreFunctionKey">
             <xs:selector xpath="Scoring/ScoreFunctions/ScoreFunction" />
             <xs:field xpath="@id" />
@@ -449,16 +467,8 @@
             <xs:selector xpath="Scoring/ScorePanels/ScorePanel" />
             <xs:field xpath="@id" />
         </xs:key>
-        <xs:keyref name="GeoLevelLegislativeBody" refer="DistrictBuilderLegislativeBodyKey">
-            <xs:selector xpath="GeoLevels/GeoLevel/LegislativeBodies/LegislativeBody" />
-            <xs:field xpath="@ref" />
-        </xs:keyref>
-        <xs:keyref name="GeoLevelGeoLevelParent" refer="DistrictBuilderGeoLevelKey">
-            <xs:selector xpath="GeoLevels/GeoLevel/LegislativeBodies/LegislativeBody/Parent" />
-            <xs:field xpath="@ref" />
-        </xs:keyref>
-        <xs:keyref name="GeoLevelLegislativeTarget" refer="DistrictBuilderTargetKey">
-            <xs:selector xpath="GeoLevels/GeoLevel/LegislativeBodies/LegislativeBody/LegislativeTargets/LegislativeTarget" />
+        <xs:keyref name="GeoLevelBaseGeoLevel" refer="DistrictBuilderGeoLevelKey">
+            <xs:selector xpath="GeoLevels/GeoLevel/BaseGeoLevel" />
             <xs:field xpath="@ref" />
         </xs:keyref>
         <xs:keyref name="TemplateLegislativeBody" refer="DistrictBuilderLegislativeBodyKey">
@@ -501,6 +511,14 @@
             <xs:selector xpath="MultiMemberDistrictConfigs/MultiMemberDistrictConfig" />
             <xs:field xpath="@legislativebodyref" />
         </xs:keyref>
+        <xs:keyref name="RegionLegislativeBody" refer="DistrictBuilderLegislativeBodyKey">
+            <xs:selector xpath="Regions/Region/LegislativeBodies/LegislativeBody" />
+            <xs:field xpath="@ref" />
+        </xs:keyref>
+        <xs:keyref name="RegionGeoLevel" refer="DistrictBuilderGeoLevelKey">
+            <xs:selector xpath="Regions/Region/GeoLevels/*" />
+            <xs:field xpath="@ref" />
+        </xs:keyref>
         <!-- BARD config keyrefs -->
         <xs:key name="BardConfigKey">
             <xs:selector xpath="Project/Reporting/BardConfigs/BardConfig" />
@@ -528,6 +546,52 @@
         </xs:keyref>
         <!-- end of BARD config keyrefs -->
     </xs:element>
+    <xs:complexType name="LegislativeBodiesType">
+        <xs:annotation>
+            <xs:documentation>
+                LegislativeBodies model different election contests, the related metrics and the relevant
+                geography. One such example is "US Congress", with Census Block, Census Tract, and state
+                county geographies.
+
+                Subjects, GeoLevels and Templates refer to individual LegislativeBody items.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="LegislativeBody" minOccurs="1" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:all>
+                        <xs:element name="Description" type="xs:string" maxOccurs="1" minOccurs="0" />
+                    </xs:all>
+                    <xs:attribute name="id" type="xs:ID" use="required" />
+                    <xs:attribute name="name" type="xs:string" use="required" />
+                    <xs:attribute name="short_label" type="xs:string" use="required" />
+                    <xs:attribute name="long_label" type="xs:string" use="required" />
+                    <xs:attribute name="maxdistricts" type="xs:nonNegativeInteger" use="required" />
+                    <xs:attribute name="is_community" type="xs:boolean" use="optional" />
+                    <xs:attribute name="sort_key" type="xs:nonNegativeInteger" use="required" />
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="LegislativeBodiesRefType">
+        <xs:sequence>
+            <xs:element name="LegislativeBody" minOccurs="1" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="Parent" type="RefType" minOccurs="0" maxOccurs="1">
+                        </xs:element>
+                    </xs:sequence>
+                    <xs:attribute name="ref" type="xs:IDREF" />
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="NestedGeoLevelType">
+        <xs:all minOccurs="0" maxOccurs="1" >
+            <xs:element name="GeoLevel" type="NestedGeoLevelType" />
+        </xs:all>
+        <xs:attribute name="ref" type="xs:IDREF" use="required" />
+    </xs:complexType>
     <xs:complexType name="RefType">
         <xs:annotation>
             <xs:documentation>A reference to another element, used in many places in the configuration.</xs:documentation>
@@ -552,8 +616,6 @@
                     <xs:sequence>
                         <xs:element name="Field" minOccurs="1" maxOccurs="unbounded">
                             <xs:complexType>
-                                <xs:sequence>
-                                </xs:sequence>
                                 <xs:attribute name="name" type="xs:string" use="required" />
                                 <xs:attribute name="type" type="xs:string" use="required" />
                                 <xs:attribute name="pos" type="xs:nonNegativeInteger" use="optional" />

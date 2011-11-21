@@ -188,7 +188,7 @@ shareddistricts = function(options) {
                 id: 'pk'
             },
             colModel: [
-                {name:'fields.name', label:BODY_MEMBER.charAt(0).toUpperCase() + BODY_MEMBER.substring(1) + ' Name'},
+                {name:'fields.long_label', label:BODY_MEMBER_LONG.charAt(0).toUpperCase() + BODY_MEMBER_LONG.substring(1) + ' Name'},
                 {name:'fields.district_id', hidden: true},
                 {name:'selected', label:' ', width: '55', align: 'center'}
             ],
@@ -336,7 +336,7 @@ shareddistricts = function(options) {
     var initUI = function() {
         // Create the dialog displayed when the tool is disabled
         _disabledDialog = $('<div id="copy_paste_disabled" title="Maximum ' + BODY_MEMBERS.charAt(0).toUpperCase() + BODY_MEMBERS.substring(1) + ' Reached">' + 
-            'Your plan is at maximum capacity. Please delete a ' + BODY_MEMBER + ' to enable pasting.</div>')
+            'Your plan is at maximum capacity. Please delete a ' + BODY_MEMBER_LONG + ' to enable pasting.</div>')
             .dialog({ autoOpen: false, modal: true, resizable: false});
 
         // Use the closeDialog method to clear out the selections
@@ -352,10 +352,10 @@ shareddistricts = function(options) {
                     break;
                 case 1:
                     if (PLAN_TYPE == 'plan') {
-                        instructions = '2. Select a ' + BODY_MEMBER + ' to copy';
+                        instructions = '2. Select a ' + BODY_MEMBER_LONG + ' to copy';
                     }
                     else {
-                        instructions = '2. Select a ' + BODY_MEMBER;
+                        instructions = '2. Select a ' + BODY_MEMBER_LONG;
                     }
                     break;
                 default:

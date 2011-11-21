@@ -318,8 +318,9 @@ class DistrictIndexFile():
                 new_geom = Geounit.objects.filter(guFilter).unionagg()
                 
                 # Create a new district and save it
-                name = community_labels[district_id] if is_community else legislative_body.member % district_id 
-                new_district = District(name=name,
+                short_label = community_labels[district_id] if is_community else legislative_body.short_label % district_id 
+                long_label = community_labels[district_id] if is_community else legislative_body.long_label % district_id
+                new_district = District(short_label=short_label,long_label=long_label,
                     district_id = district_id, plan=plan, num_members=num_members[district_id],
                     geom=enforce_multi(new_geom))
                 new_district.simplify() # implicit save
@@ -424,7 +425,7 @@ class DistrictIndexFile():
             time.sleep(15)
             status = DistrictFile.get_file_status(plan)
         if status == 'none':
-            pending = DistrictFile.get_file_name() + '_pending.zip'
+            pending = DistrictFile.get_file_name(plan) + '_pending.zip'
             archive = open(pending, 'w')
             f = tempfile.NamedTemporaryFile(delete=False)
             try:
@@ -444,7 +445,7 @@ class DistrictIndexFile():
                             types = '|'.join([t.name[5:] for t in types])
                             comments = Comment.objects.filter(object_pk__in=[str(district.id)],content_type=ct)
                             comments = comments[0].comment if len(comments) > 0 else ''
-                            dm[district.district_id] = (district.name, types, comments)
+                            dm[district.district_id] = (district.long_label, types, comments)
                     mapping = [(pid, did, members, dm[did][0], dm[did][1], dm[did][2]) for (gid, pid, did, members) in units]
                 
                 difile = csv.writer(f)
@@ -464,7 +465,7 @@ class DistrictIndexFile():
             finally:
                 os.unlink(f.name)
 
-        return DistrictFile.get_index_file(plan)
+        return DistrictFile.get_file(plan)
 
     @staticmethod
     @task
@@ -930,7 +931,7 @@ class PlanReport:
             sys.stderr.write("Couldn't retrieve plan information.\n")
             return 
 
-        tempdir = settings.BARD_TEMP
+        tempdir = settings.WEB_TEMP
         filename = '%s_p%d_v%d_%s' % (plan.owner.username, plan.id, plan.version, stamp)
 
         if settings.DEBUG:
@@ -1028,7 +1029,7 @@ class PlanReport:
         except:
             return 'error'
 
-        tempdir = settings.BARD_TEMP
+        tempdir = settings.WEB_TEMP
         filename = '%s_p%d_v%d_%s' % (plan.owner.username, plan.id, plan.version, stamp)
 
         pending_file = '%s/%s.pending' % (tempdir, filename)
@@ -1059,7 +1060,7 @@ class PlanReport:
         except:
             return 'error'
 
-        tempdir = settings.BARD_TEMP
+        tempdir = settings.WEB_TEMP
         filename = '%s_p%d_v%d_%s' % (plan.owner.username, plan.id, plan.version, stamp)
 
         pending = open('%s/%s.pending' % (tempdir, filename,),'w')
@@ -1115,7 +1116,7 @@ class CalculatorReport:
         html = loader.get_template('report_panel_container.html').render(DjangoContext({'report_panels': html}))
             
         # Write it to file
-        tempdir = settings.CALC_REPORTS_DIR
+        tempdir = settings.WEB_TEMP
         filename = '%s_p%d_v%d_%s' % (plan.owner.username, plan.id, plan.version, stamp)
         htmlfile = open('%s/%s.html' % (tempdir, filename,),'w')
         htmlfile.write(html)
@@ -1133,7 +1134,7 @@ class CalculatorReport:
         except:
             return 'error'
 
-        tempdir = settings.CALC_REPORTS_DIR
+        tempdir = settings.WEB_TEMP
         filename = '%s_p%d_v%d_%s' % (plan.owner.username, plan.id, plan.version, stamp)
         pending_file = '%s/%s.pending' % (tempdir, filename)
         complete_file = '%s/%s.html' % (tempdir, filename)
@@ -1158,7 +1159,7 @@ class CalculatorReport:
         except:
             return 'error'
 
-        tempdir = settings.CALC_REPORTS_DIR
+        tempdir = settings.WEB_TEMP
         filename = '%s_p%d_v%d_%s' % (plan.owner.username, plan.id, plan.version, stamp)
 
         pending = open('%s/%s.pending' % (tempdir, filename,),'w')

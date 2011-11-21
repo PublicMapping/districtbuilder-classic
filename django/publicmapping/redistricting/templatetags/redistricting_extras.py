@@ -68,30 +68,6 @@ def spellnumber(value):
         return value
 
 @register.filter
-@stringfilter
-def district_number(value):
-    """
-    This filter removes any extra words from a district name.
-    E.g., "District 10" becomes "10".
-    
-    Special case: "Unassigned" becomes a Theta symbol
-
-    Parameters:
-        a full district name:
-    Returns:
-        a number
-    """
-    try:
-        if value == "Unassigned":
-            return mark_safe('&#216;')
-        p = re.compile('(?P<member>(\w+\s+)+)(?P<digits>\d+)')
-        m = p.match(value)
-        if m != None:
-            return m.group('digits') 
-    except:
-        return value
-
-@register.filter
 def dictsort_ignorecase(value, arg):
     """
     Takes a list of dicts, returns that list sorted by the property given in

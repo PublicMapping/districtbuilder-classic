@@ -83,10 +83,10 @@ class GeounitAdmin(admin.OSMGeoAdmin):
     inlines = [CharacteristicInline]
 
     # When displayed as a list, show the name and geolevel
-    list_display = ('name','geolevel',)
+    list_display = ('name',)
 
     # In admin view, show the name, portable_id, tree_code, geolevel, and geom fields.
-    fields = ('name','portable_id','tree_code','geolevel','geom',)
+    fields = ('name','portable_id','tree_code','geom',)
 
     # Order geounits by name by default.
     ordering = ('name',)
@@ -101,7 +101,7 @@ class DistrictInline(admin.TabularInline):
     """
 
     # The fields that are editable inline.
-    fields = ('district_id','name','version',)
+    fields = ('district_id','short_label', 'long_label','version',)
 
     # The model that this inline class is displaying.
     model = District
@@ -121,10 +121,10 @@ class DistrictAdmin(admin.OSMGeoAdmin):
 
     # In admin view, show the district_id, name, plan, version, and geom
     # fields.
-    fields = ('district_id','name','plan','version','geom',)
+    fields = ('district_id','short_label', 'long_label','plan','version','geom',)
 
     # When displayed as a list, show the name, plan, and version.
-    list_display = ('name','plan','version',)
+    list_display = ('short_label', 'long_label','plan','version',)
 
     # Enable filtering by plan, version and district_id in the admin list view.
     list_filter = ('plan','version','district_id')
@@ -226,6 +226,7 @@ class ValidationCriteriaAdmin(admin.ModelAdmin):
 
 # Register these classes with the admin interface.
 admin.site.register(Geounit, GeounitAdmin)
+admin.site.register(Region)
 admin.site.register(ComputedCharacteristic, ComputedCharacteristicAdmin) 
 admin.site.register(Characteristic, CharacteristicAdmin)
 admin.site.register(Subject, SubjectAdmin)

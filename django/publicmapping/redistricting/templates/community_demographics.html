@@ -49,7 +49,7 @@
         <tbody>
             {% for row in districtscores %}
             <tr class="{% cycle 'odd' 'even' %} inforow_{{ row.district.district_id }}">
-                <td class="community_name">{{ row.district.name|truncate:"12" }}</td>
+                <td class="community_name">{{ row.district.long_label|truncate:"12" }}</td>
                 {% for score in row.scores %}
                 <td class="cellcompact score{{ forloop.counter }}">{{ score.score|safe }}</td>
                 {% endfor %}

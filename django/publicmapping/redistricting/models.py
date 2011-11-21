@@ -101,10 +101,37 @@ class Subject(models.Model):
 
     def __unicode__(self):
         """
-        Represent the Subject as a unicode string. This is the Geounit's 
+        Represent the Subject as a unicode string. This is the Subject's 
         display name.
         """
         return self.display
+
+
+class Region(models.Model):
+    """
+    A region is a compartmentalized area of geography, legislative bodies,
+    and validation criteria. Each region shares the base geography, but may
+    be active over a subsection. In addition, legislative bodies are contained
+    within one region at a time.
+    """
+
+    # The name of this region
+    name = models.CharField(max_length=256)
+    
+    # A short name for the region
+    label = models.CharField(max_length=256)
+
+    # A description of this region
+    description = models.CharField(max_length=500, blank=True)
+
+    # The sorting order for this region relative to other regions
+    sort_key = models.PositiveIntegerField(default=0)
+
+    def __unicode__(self):
+        """
+        Represent the Region as a unicode string. This is the Region's name.
+        """
+        return self.name
 
 
 class LegislativeBody(models.Model):
@@ -117,8 +144,11 @@ class LegislativeBody(models.Model):
     # The name of this legislative body
     name = models.CharField(max_length=256)
 
-    # The name of the units in a plan -- "Districts", for example.
-    member = models.CharField(max_length=32)
+    # The short name of the units in a plan -- "%s", for example.
+    short_label = models.CharField(max_length=10)
+
+    # The long name of the units in a plan -- "District %s", for example.
+    long_label = models.CharField(max_length=256)
 
     # The maximum number of districts in this body
     max_districts = models.PositiveIntegerField()
@@ -156,6 +186,9 @@ class LegislativeBody(models.Model):
 
     # Where in the list of legislative bodies should this item appear?
     sort_key = models.PositiveIntegerField(default=0)
+
+    # The region that this LegislativeBody applies to.
+    region = models.ForeignKey(Region)
 
     def get_default_subject(self):
         """
@@ -254,6 +287,9 @@ class Geolevel(models.Model):
     # The name of the geolevel
     name = models.CharField(max_length = 50)
 
+    # The label to display on UI elements
+    label = models.CharField(max_length = 20)
+
     # Each geolevel has a maximum and a minimum zoom level at which 
     # features on the map can be selected and added to districts
 
@@ -348,7 +384,7 @@ class Geounit(models.Model):
     center = models.PointField(srid=3785)
 
     # The geographic level of this Geounit
-    geolevel = models.ForeignKey(Geolevel)
+    geolevel = models.ManyToManyField(Geolevel)
 
     # Manage the instances of this class with a geographically aware manager
     objects = models.GeoManager()
@@ -493,8 +529,6 @@ class Geounit(models.Model):
                 # converted, or errored out above, in which case we just
                 # have to move on.
                 if not remainder.empty:
-                    q_geolevel = Q(geolevel=level)
-
                     if level == base_geolevel:
                         # Query by center
                         q_geom = Q(center__intersects=remainder)
@@ -502,7 +536,7 @@ class Geounit(models.Model):
                         # Query by geom
                         q_geom = Q(geom__within=remainder)
 
-                    units += list(Geounit.objects.filter(q_geolevel, q_geom))
+                    units += list(level.geounit_set.filter(q_geom))
 
         # Send back the collected Geounits
         return units
@@ -667,12 +701,10 @@ class Plan(models.Model):
             if before <= 0:
                 return
 
-            ds = self.get_districts_at_version(before, include_geom=False)
+            ds = self.get_districts_at_version(before, include_geom=False, filter_empty=False)
+
             allQ = Q(plan__isnull=True)
             for d in ds:
-                #maxqset = self.district_set.filter(district_id=d.district_id)
-                #maxver = maxqset.aggregate(Max('version'))['version__max']
-
                 # Filter on this district
                 q1 = Q(district_id=d.district_id)
 
@@ -768,10 +800,12 @@ class Plan(models.Model):
         # fix the district id so that it is definitely an integer
         if type(districtinfo) == tuple:
             districtid = int(districtinfo[0])
-            districtname = districtinfo[1]
+            districtshort = districtinfo[1]
+            districtlong = districtinfo[2]
         else:
             districtid = int(districtinfo)
-            districtname = self.legislative_body.member % districtid
+            districtshort = self.legislative_body.short_label % districtid
+            districtlong = self.legislative_body.long_label % districtid
 
         # fix the version so that it is definitely an integer
         version = int(version)
@@ -865,7 +899,7 @@ class Plan(models.Model):
 
         new_target = False
         if target is None:
-            target = District(name=districtname, plan=self, district_id=districtid, version=self.version, geom=MultiPolygon([]))
+            target = District(short_label=districtshort, long_label=districtlong, plan=self, district_id=districtid, version=self.version, geom=MultiPolygon([]))
             target.save()
             new_target = True
                 
@@ -1035,11 +1069,13 @@ class Plan(models.Model):
         edited_districts = list()
 
         # Save the new district to the plan to start
-        newname = '' if slot == None else self.legislative_body.member % slot
-        pasted = District(name=newname, plan=self, district_id = slot, geom=district.geom, simple = district.simple, version = new_version)
+        newshort = '' if slot == None else self.legislative_body.short_label % slot
+        newlong = '' if slot == None else self.legislative_body.long_label % slot
+        pasted = District(short_label=newshort, long_label=newlong, plan=self, district_id = slot, geom=district.geom, simple = district.simple, version = new_version)
         pasted.save();
-        if newname  == '':
-            pasted.name = self.legislative_body.member % pasted.district_id
+        if newshort  == '':
+            pasted.short_label = self.legislative_body.short_label % pasted.district_id
+            pasted.long_label = self.legislative_body.long_label % pasted.district_id
             pasted.save();
         pasted.clone_relations_from(district)
         
@@ -1070,7 +1106,7 @@ class Plan(models.Model):
                     else:
                         pasted.geom = enforce_multi(difference)
                         pasted.simplify()
-                    geounit_ids = map(str, Geounit.objects.filter(geom__bboverlaps=enforce_multi(intersection), geolevel=biggest_geolevel).values_list('id', flat=True))
+                    geounit_ids = map(str, biggest_geolevel.geounit_set.filter(geom__bboverlaps=enforce_multi(intersection)).values_list('id', flat=True))
                     geounits = Geounit.get_mixed_geounits(geounit_ids, self.legislative_body, biggest_geolevel.id, intersection, True)
                     pasted.delta_stats(geounits, False)
                 else:
@@ -1092,7 +1128,7 @@ class Plan(models.Model):
                     edited_districts.pop()
                     edited_districts.append(new_district)
 
-                    geounit_ids = Geounit.objects.filter(geom__bboverlaps=intersection, geolevel=biggest_geolevel).values_list('id', flat=True)
+                    geounit_ids = biggest_geolevel.geounit_set.filter(geom__bboverlaps=intersection).values_list('id', flat=True)
                     geounit_ids = map(str, geounit_ids)
 
                     geounits = Geounit.get_mixed_geounits(geounit_ids, self.legislative_body, biggest_geolevel.id, intersection, True)
@@ -1147,7 +1183,7 @@ class Plan(models.Model):
 
         # Don't return Unassigned district unless it was explicitly requested
         if exclude_unassigned:
-            qset = qset.filter( ~Q(name='Unassigned') )
+            qset = qset.filter( ~Q(long_label='Unassigned') )
 
         features = []
 
@@ -1161,17 +1197,17 @@ class Plan(models.Model):
             contiguity_calculator.compute(district=district)
 
             # If this district contains multiple members, change the label
-            label = district.name
+            label = district.long_label
             if (self.legislative_body.multi_members_allowed and (district.num_members > 1)):
                 format = self.legislative_body.multi_district_label_format
-                label = format.format(name=district.name, num_members=district.num_members)
+                label = format.format(name=district.long_label, num_members=district.num_members)
 
             
             features.append({ 
                 'id': district.id,
                 'properties': {
                     'district_id': district.district_id,
-                    'name': district.name,
+                    'name': district.long_label,
                     'label': label,
                     'is_locked': district.is_locked,
                     'version': district.version,
@@ -1202,7 +1238,7 @@ class Plan(models.Model):
         qset = qset.annotate(latest=Max('version'),max_id=Max('id'))
         return qset.values_list('max_id',flat=True)
 
-    def get_districts_at_version(self, version, include_geom=False):
+    def get_districts_at_version(self, version, include_geom=False, filter_empty=True):
         """
         Get Plan Districts at a specified version.
 
@@ -1223,9 +1259,13 @@ class Plan(models.Model):
             qset = qset.defer('geom','simple')
 
         districts = sorted(list(qset), key=lambda d: d.sortKey())
+        simplest_level = self.legislative_body.get_geolevels()[-1]
 
-        # Don't return any districts that are empty (asside from the Unassigned district)
-        return filter(lambda x: x.district_id == 0 or x.geom.num_coords > 0, districts)
+        if filter_empty:
+            # Don't return any districts that are empty (asside from the Unassigned district)
+            return filter(lambda x: x.district_id == 0 or x.simple[simplest_level.id-1].num_coords > 0, districts)
+        else:
+            return districts
 
     @staticmethod
     def create_default(name,body,owner=None,template=True,is_pending=True,create_unassigned=True):
@@ -1284,9 +1324,9 @@ class Plan(models.Model):
 
         # Perform two queries against the simplified district, one buffered in,
         # and one buffered out using the same distance as the simplification tolerance
-        geolevel = self.legislative_body.get_base_geolevel()
-        b_out = Geounit.objects.filter(geolevel=geolevel, center__within=simple.buffer(threshold))
-        b_in = Geounit.objects.filter(geolevel=geolevel, center__within=simple.buffer(-1 * threshold))
+        geolevel = Geolevel.objects.get(id=self.legislative_body.get_base_geolevel())
+        b_out = geolevel.geounit_set.filter(center__within=simple.buffer(threshold))
+        b_in = geolevel.geounit_set.filter(center__within=simple.buffer(-1 * threshold))
 
         # Find the geounits that are different between the two queries,
         # and check if they are within the unsimplified district
@@ -1389,8 +1429,7 @@ class Plan(models.Model):
         if version == None:
            version = self.version
 
-        qset = self.get_district_ids_at_version(version)
-        current_districts = self.district_set.filter(id__in=qset).extra(where=['(not st_isempty(geom) or district_id=0)']).count()
+        current_districts = len(self.get_districts_at_version(version))
         available_districts = self.legislative_body.max_districts
 
         return available_districts - current_districts + 1 #add one for unassigned
@@ -1416,7 +1455,7 @@ class Plan(models.Model):
            version = self.version
 
         num_unassigned = 0
-        geolevel = self.legislative_body.get_base_geolevel()
+        geolevel = Geolevel.objects.get(id=self.legislative_body.get_base_geolevel())
 
         # Check that there are unassigned geounits to fix
         unassigned_district = self.district_set.filter(district_id=0, version__lte=version).order_by('-version')[0]
@@ -1455,7 +1494,7 @@ class Plan(models.Model):
             unassigned = list(set(unassigned) - set(to_add.keys()))
     
             # Check that the percentage of assigned base geounits meets the requirements
-            num_total_units = Geounit.objects.filter(geolevel=geolevel).count()
+            num_total_units = geolevel.geounit_set.count()
             pct_unassigned = 1.0 * num_unassigned / num_total_units
             pct_assigned = 1 - pct_unassigned
             min_pct = settings.FIX_UNASSIGNED_MIN_PERCENT / 100.0
@@ -1509,7 +1548,7 @@ class Plan(models.Model):
 
             # Add units for each district, and update version, since it changes when adding geounits
             for did, units in district_units.items():
-                self.add_geounits(did, [str(p) for p in units], geolevel, version, True)
+                self.add_geounits(did, [str(p) for p in units], geolevel.id, version, True)
                 version = self.version
                 
             # Fix versions so a single undo can undo the entire set of fixes
@@ -1623,8 +1662,8 @@ class Plan(models.Model):
         version = version if not version is None else self.version
         districts = self.get_districts_at_version(version, include_geom=False)
         districts = sorted(districts, key=attrgetter('district_id'))
-        districts = filter(lambda d:d.name!='Unassigned', districts)
-        districts = map(lambda d:(d.name,d.num_members,), districts)
+        districts = filter(lambda d:d.long_label!='Unassigned', districts)
+        districts = map(lambda d:(d.long_label,d.num_members,), districts)
 
         return districts
 
@@ -1673,11 +1712,13 @@ class Plan(models.Model):
         above_id = int(above_id.split('.')[1])
         above_col_id = 'district_id' if is_above_plan else 'portable_id'
         above_table = 'redistricting_district' if is_above_plan else 'redistricting_geounit'
+        above_name = 'long_label' if is_above_plan else 'name'
 
         is_below_plan = below_id.startswith('plan')
         below_id = int(below_id.split('.')[1])
         below_col_id = 'district_id' if is_below_plan else 'portable_id'
         below_table = 'redistricting_district' if is_below_plan else 'redistricting_geounit'
+        below_name = 'long_label' if is_below_plan else 'name'
 
         # Ensure version is set on plans
         if is_above_plan and above_version is None:
@@ -1690,7 +1731,7 @@ class Plan(models.Model):
         if not re.match('[012TF\*]{9}', de_9im):
             raise Exception('DE-9IM string is invalid.')
 
-        select = "SELECT above.%s, below.%s, above.name, below.name FROM %s as below" % (above_col_id, below_col_id, below_table)
+        select = "SELECT above.%s, below.%s, above.%s, below.%s FROM %s as below" % (above_col_id, below_col_id, above_name, below_name, below_table)
         version_join = """
 JOIN (
     SELECT max(version) as version, district_id FROM redistricting_district
@@ -1701,7 +1742,7 @@ JOIN (
 """
         district_cross_join = """
 CROSS JOIN (
-    SELECT sub.id, sub.district_id, sub.name, sub.geom
+    SELECT sub.id, sub.district_id, sub.long_label, sub.geom
     FROM redistricting_district as sub
     %s ON sub.district_id = lmt.district_id
     WHERE sub.plan_id = %d AND sub.version = lmt.version AND sub.district_id > 0
@@ -1717,8 +1758,11 @@ CROSS JOIN (
         below_district_cross_join = district_cross_join % (below_join, below_id)
         below_and = "AND below.district_id > 0 AND below.version = lmt.version"
         plan_where = "WHERE below.plan_id = %d" % below_id
-        geolevel_where = "WHERE below.geolevel_id = %d" % below_id
-        geolevel_and = "AND above.geolevel_id = %d" % above_id
+        geolevel_join = "JOIN redistricting_geounit_geolevel gl on %s.id = gl.geounit_id"
+        geolevel_below_join = geolevel_join % "below"
+        geolevel_above_join = geolevel_join % "above"
+        geolevel_where = "WHERE gl.geolevel_id = %d" % below_id
+        geolevel_and = "AND gl.geolevel_id = %d" % above_id
 
         # Two Plans
         if is_above_plan and is_below_plan:
@@ -1726,11 +1770,11 @@ CROSS JOIN (
          
         # Plan above, Geolevel below
         elif is_above_plan and not is_below_plan:
-            query = "%s %s %s %s %s" % (select, above_cross, geolevel_where, relate, order)
+            query = "%s %s %s %s %s %s" % (select, above_cross, geolevel_below_join, geolevel_where, relate, order)
 
         # Geolevel above, Plan below
         elif not is_above_plan and is_below_plan:
-            query = "%s %s %s %s %s %s %s %s %s" % (select, below_join, on_lmt, geo_cross, plan_where, below_and, geolevel_and, relate, order)
+            query = "%s %s %s %s %s %s %s %s %s %s" % (select, below_join, on_lmt, geo_cross, geolevel_above_join, plan_where, below_and, geolevel_and, relate, order)
 
         # Two geolevels
         else:
@@ -1922,7 +1966,7 @@ CROSS JOIN (
         other_names = None
 
         id = int(target[target.find('.')+1:])
-        my_names = dict((d.district_id, d.name) for d in self.get_districts_at_version(version))
+        my_names = dict((d.district_id, d.long_label) for d in self.get_districts_at_version(version))
 
         if target.startswith('geolevel'):
             results['other_name'] = Geolevel.objects.get(pk=id).name
@@ -1939,7 +1983,7 @@ CROSS JOIN (
             results['splits'] = self.find_plan_splits(other_plan, version=version, inverse=inverse)
             if extended is True:
                 results['interiors'] = self.find_plan_components(other_plan, version=version, inverse=inverse)
-            other_names = dict((d.district_id, d.name) for d in other_plan.get_districts_at_version(other_plan.version))
+            other_names = dict((d.district_id, d.long_label) for d in other_plan.get_districts_at_version(other_plan.version))
 
         community_types = self.get_community_types(version=version)
         my_names = Plan.tag_plan_names(my_names, community_types)
@@ -1996,7 +2040,7 @@ CROSS JOIN (
             # There's not community map as the "bottom" layer
             return
         types = community.get_community_types(version=version)
-        my_names = dict((d.district_id, d.name) for d in community.get_districts_at_version(version))
+        my_names = dict((d.district_id, d.long_label) for d in community.get_districts_at_version(version))
         district_dict = {}
         for i in intersections:
             community_id = i[1]
@@ -2071,15 +2115,18 @@ class District(models.Model):
         """
 
         # Order districts by name, by default.
-        ordering = ['name']
+        ordering = ['short_label']
 
     # The district_id of the district, this is not the primary key ID,
     # but rather, an ID of the district that remains constant over all
     # versions of the district.
     district_id = models.PositiveIntegerField(default=None)
 
-    # The name of the district
-    name = models.CharField(max_length=200)
+    # The short name of the district
+    short_label = models.CharField(max_length=10)
+
+    # The long name of the district
+    long_label = models.CharField(max_length=256)
 
     # The parent Plan that contains this District
     plan = models.ForeignKey(Plan)
@@ -2109,8 +2156,8 @@ class District(models.Model):
         Returns:
             The Districts, sorted in numerical order.
         """
-        name = self.name;
-        prefix = self.plan.legislative_body.member
+        name = self.long_label;
+        prefix = self.plan.legislative_body.short_label
         index = prefix.find('%')
         if index >= 0:
             prefix = prefix[0:index]
@@ -2159,7 +2206,7 @@ class District(models.Model):
         Represent the District as a unicode string. This is the District's 
         name.
         """
-        return self.name
+        return self.short_label
 
     def delta_stats(self,geounits,combine):
         """
@@ -2347,19 +2394,19 @@ class District(models.Model):
                             times_attempted = attempts_allowed-attempts_left
                             if times_attempted > 1:
                                 sys.stderr.write('Took %d attempts to simplify %s in plan "%s"; '
-                                    'Succeeded with tolerance %s\n' % (times_attempted, self.name, self.plan.name, tolerance))
+                                    'Succeeded with tolerance %s\n' % (times_attempted, self.long_label, self.plan.name, tolerance))
                         else:
                             raise Exception ('Polygon simplifies but isn\'t valid')
                     except Exception as error:
                         sys.stderr.write('WARNING: Problem when trying to simplify %s at tolerance %s: %s\n' %
-                            (self.name, tolerance, error))
+                            (self.long_label, tolerance, error))
                         tolerance = tolerance * attempt_step
                     attempts_left -= 1
 
                 if not simplified:
                     simples.append(self.geom)
                     sys.stderr.write('Ran out of attempts to simplify %s in plan "%s" for geolevel %s; using full geometry\n' %
-                        (self.name, self.plan.name, level.name))
+                        (self.long_label, self.plan.name, level.name))
             else:
                 simples.append( self.geom )
 
@@ -2519,11 +2566,10 @@ def create_unassigned_district(sender, **kwargs):
     if created and plan.create_unassigned:
         plan.create_unassigned = False
 
-        unassigned = District(name="Unassigned", version = 0, plan = plan, district_id=0)
+        unassigned = District(short_label=u"\u0398",long_label="Unassigned", version = 0, plan = plan, district_id=0)
 
         biggest_geolevel = plan.get_biggest_geolevel()
-        all_geom = Geounit.objects.filter(geolevel=biggest_geolevel).collect()
-        all_geom = all_geom.buffer(0)
+        all_geom = biggest_geolevel.geounit_set.collect().buffer(0)
         if all_geom.geom_type == 'MultiPolygon':
             all_geom = all_geom.cascaded_union
 
@@ -2531,12 +2577,12 @@ def create_unassigned_district(sender, **kwargs):
             taken = plan.district_set.all().unionagg()
             unassigned.geom =  enforce_multi(all_geom.difference(taken))
             unassigned.simplify() # implicit save
-            geounit_ids = map(str, Geounit.objects.filter(geom__bboverlaps=unassigned.geom, geolevel=biggest_geolevel).values_list('id', flat=True))
+            geounit_ids = map(str, biggest_geolevel.geounit_set.filter(geom__bboverlaps=unassigned.geom).values_list('id', flat=True))
             geounits = Geounit.get_mixed_geounits(geounit_ids, plan.legislative_body, biggest_geolevel.id, unassigned.geom, True)
         else:
             unassigned.geom = enforce_multi(all_geom)
             unassigned.simplify() #implicit save
-            geounits = Geounit.objects.filter(geolevel=biggest_geolevel)
+            geounits = biggest_geolevel.geounit_set.all()
 
         unassigned.delta_stats(geounits, True)
 
@@ -2783,7 +2829,10 @@ class ScoreFunction(models.Model):
                     else:
                         version = dp.version if version is None else version
                         for d in dp.get_districts_at_version(version):
-                            arg_lst.append(score_fn.score(d, format=format, version=version))
+                            res = score_fn.score(d, format=format, version=version)
+                            if isinstance(res,dict) and 'value' in res:
+                                res = res['value']
+                            arg_lst.append(res)
 
             # Build the keyword arguments based on whether this is for districts, plans, or list
             if len(arg_lst) > 0:
@@ -3241,9 +3290,9 @@ class ComputedDistrictScore(models.Model):
         name = ''
         if not self.district is None:
             if not self.district.plan is None:
-                name = '%s / %s' % (self.district.name, self.district.plan.name,)
+                name = '%s / %s' % (self.district.long_label, self.district.plan.name,)
             else:
-                name = self.district.name
+                name = self.district.long_label
 
         if not self.function is None:
             name = '%s / %s' % (self.function.name, name)
