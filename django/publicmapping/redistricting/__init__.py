@@ -23,7 +23,7 @@ Author:
     Andrew Jennings, David Zwarg 
 """
 
-import os, traceback, random, types
+import os, traceback, random, types, logging
 from lxml.etree import parse, clear_error_log, XMLSchema, XMLSyntaxError, XMLSchemaParseError
 
 class StoredConfig:
@@ -42,14 +42,17 @@ class StoredConfig:
         """
         if schema is not None:
             if not os.path.exists(schema):
-                raise Exception('schema', 'Configuration schema could not be found. Please check the path and try again.')
+                logging.warning('Configuration schema could not be found. Please check the path and try again.')
+                raise Exception()
 
             self.schemafile = schema
         else:
             self.schemafile = None
 
         if not os.path.exists(data):
-            raise Exception('data', 'Configuration data could not be found. Please check the path and try again.')
+            logging.warning('Configuration data could not be found. Please check the path and try again.')
+            raise Exception()
+
         self.datafile = data
 
         self.data = None
@@ -61,9 +64,7 @@ class StoredConfig:
         schema file.
 
         Returns:
-           (valid, messages,) -- A tuple with a flag indicating if the data
-           validates against the schema. If the validation fails, then 'messages'
-           contains relevant parsing errors or validation failure messages.
+           A flag indicating if the data validates against the schema. 
         """
          
         # clear any previous xml errors
@@ -74,30 +75,47 @@ class StoredConfig:
                 schdoc = parse(self.schemafile)
             except XMLSyntaxError, e:
                 # The schema was not parsable XML
-                return (False, ['The schema XML file could not be parsed.'] + list(e.error_log),)
+                logging.warning('The schema XML file could not be parsed.')
+                for item in e.error_log:
+                    logging.info(item)
+
+                return False
 
             try:
                 theschema = XMLSchema(schdoc)
             except XMLSchemaParseError, e:
                 # The schema document is XML, but it's not a schema
-                return (False, ['The schema XML file was parsed, but it does not appear to be a valid XML Schema document.'] + list(e.error_log),)
+                logging.warning('The schema XML file was parsed, but it does not appear to be a valid XML Schema document.')
+                for item in e.error_log:
+                    logging.info(item)
+
+                return False
 
         try:
             # Attempt parsing the data file
             thedata = parse(self.datafile)
         except XMLSyntaxError, e:
             # The data was not parsable XML
-            return (False, ['The data XML file could not be parsed.'] + list(e.error_log),)
+            logging.warning('The data XML file could not be parsed.')
+            for item in e.error_log:
+                logging.info(item)
+
+            return False
 
         if self.schemafile is not None:
             if theschema.validate(thedata):
                 self.data = thedata
-                return (True, [],)
+                return True
 
-            return (False, ['The data does not conform to the provided schema.'] + list(theschema.error_log),)
+            logging.warning('The data does not conform to the provided schema.')
+            for item in theschema.error_log:
+                logging.info(item)
+
+            return False
 
         self.data = thedata
-        return (True, [],)
+
+        return True
 
 
     def merge_settings(self, settings):
@@ -120,19 +138,18 @@ class StoredConfig:
 
         settings_in.close()
 
-        status = (False, [],)
         if settings == 'settings.py' or settings == 'reporting_settings.py':
-            (status, msgs,) = self._merge_common_settings(settings_out)
-
-            if not status:
-                return (status, msgs,)
+            if not self._merge_common_settings(settings_out):
+                return False
 
             if settings == 'settings.py':
                 return self._merge_publicmapping_settings(settings_out)
             else:
                 return self._merge_report_settings(settings_out)
         else:
-            return (False, ['The settings file was not recognized.'],)
+            logging.warning('The settings file was not recognized.')
+
+            return False
 
 
     def _merge_common_settings(self, output):
@@ -173,11 +190,13 @@ class StoredConfig:
                 # Write this setting to the settings.
                 output.write("\nREPORTS_ENABLED = None\n")
 
-            return (True, [],)
+            return True
 
         except Exception, ex:
             # An error occurred during the processing of the settings file
-            return (False, [traceback.format_exc()],)
+            logging.warning(traceback.format_exc())
+
+            return False
 
 
     def _merge_publicmapping_settings(self, output):
@@ -301,11 +320,13 @@ class StoredConfig:
        
             output.close()
 
-            return (True, [],)
+            return True
 
         except Exception, ex:
             # An error occurred during the processing of the settings file
-            return (False, [traceback.format_exc()],)
+            logging.warning(traceback.format_exc())
+
+            return False
 
     def _merge_report_settings(self, output):
         try:
@@ -326,10 +347,12 @@ class StoredConfig:
             return (True, [],)
         except Exception, ex:
             # An error occurred during the processing of the settings file
-            return (False, [traceback.format_exc()],)
+            logging.warning(traceback.format_exc())
+
+            return False
 
 
-    def get_node(self, node):
+    def get_node(self, node, parent=None):
         """
         Get a node in the XML data.
 
@@ -340,14 +363,17 @@ class StoredConfig:
         if self.data is None:
             return None
 
-        nodes = self.data.xpath(node)
+        if parent is None:
+            nodes = self.data.xpath(node)
+        else:
+            nodes = parent.xpath(node)
         if len(nodes) != 1:
             return None
 
         return nodes[0]
        
 
-    def filter_nodes(self, node_filter):
+    def filter_nodes(self, node_filter, parent=None):
         """
         Get a list of nodes from the XML data.
 
@@ -357,7 +383,10 @@ class StoredConfig:
         if self.data is None:
             return None
 
-        return self.data.xpath(node_filter)
+        if parent is None:
+            return self.data.xpath(node_filter)
+        else:
+            return parent.xpath(node_filter)
 
 
     def get_admin(self):
@@ -366,6 +395,35 @@ class StoredConfig:
         """
         return self.get_node('//Project/Admin')
 
+    def get_geolevel(self, idattr):
+        """
+        Get the geolevel configuration item by ID.
+        """
+        return self.get_node('/DistrictBuilder/GeoLevels/GeoLevel[@id="%s"]' % idattr)
+
+    def get_legislative_body(self, idattr):
+        """
+        Get the legislative body configuration item by ID.
+        """
+        return self.get_node('//LegislativeBody[@id="%s"]' % idattr)
+
+    def get_subject(self, idattr):
+        """
+        Get the subject configuration item by ID.
+        """
+        return self.get_node('//Subject[@id="%s"]' % idattr)
+
+    def get_legislative_body_default_subject(self, lbody_node):
+        """
+        Get the default subject configuration for a legislative body.
+        """
+        return self.get_node('//Subjects/Subject[@default="true"]', parent=lbody_node)
+
+    def get_top_regional_geolevel(self, rnode):
+        """
+        Get the top level geolevel configuration for a region.
+        """
+        return self.get_node('GeoLevels/GeoLevel', parent=rnode)
 
     def filter_regions(self):
         """
@@ -373,8 +431,33 @@ class StoredConfig:
         """
         return self.filter_nodes('/DistrictBuilder/Regions/Region')
 
+    def filter_regional_geolevel(self, region_node):
+        """
+        Get all the geolevel configurations in a region from the XML data.
+        """
+        return self.filter_nodes('GeoLevels//GeoLevel', parent=region_node)
+
+    def filter_regional_legislative_bodies(self, region_node):
+        """
+        Get all the legislative bodies in a region from the XML data.
+        """
+        return self.filter_nodes('LegislativeBodies/LegislativeBody', parent=region_node)
+
     def filter_legislative_bodies(self):
         """
         Get all the legislative body configurations from the XML data.
         """
         return self.filter_nodes('//LegislativeBody[@id]')
+
+    def filter_subjects(self):
+        """
+        Get all the subject configurations from the XML data.
+        """
+        return self.filter_nodes('//Subject[@id]')
+
+    def filter_geolevels(self):
+        """
+        Get all the geolevel configurations from the XML data.
+        """
+        return self.filter_nodes('/DistrictBuilder/GeoLevels/GeoLevel')
+

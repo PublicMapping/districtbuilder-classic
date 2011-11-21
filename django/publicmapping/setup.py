@@ -35,6 +35,7 @@ from lxml.etree import parse, XMLSchema
 from xml.dom import minidom
 import traceback, os, sys, random
 from redistricting import StoredConfig
+import logging
 
 def main():
     """
@@ -76,62 +77,46 @@ def main():
             help="Force changes if config differs from database",
             default=False, action='store_true')
 
-
     (options, args) = parser.parse_args()
 
     allops = (not options.database) and (not options.geolevels) and (not options.views) and (not options.geoserver) and (not options.templates) and (not options.nesting) and (not options.bard) and (not options.static) and (not options.bard_templates)
 
-    verbose = options.verbosity
+    setup_logging(options.verbosity)
 
     if len(args) != 2:
-        if verbose > 0:
-            print """
+        logging.warning("""
 ERROR:
 
     This script requires a configuration file and a schema. Please check
     the command line arguments and try again.
-"""
+""")
         sys.exit(1)
 
     try:
         config = StoredConfig(args[1], schema=args[0])
     except Exception, e:
-        if verbose > 0:
-            print e[1]
         sys.exit(1)
 
-    (is_valid, msgs,) = config.validate()
+    if not config.validate():
+        logging.info("Configuration could not be validated.")
 
-    if not is_valid:
-        if verbose > 0:
-            print "Configuration could not be validated."
+        for msg in msgs:
+            logging.debug(msg)
 
-        if verbose > 1:
-            for msg in msgs:
-                print msg
         sys.exit(1)
 
-    if verbose > 0:
-        print "Validated config."
+    logging.info("Validated config.")
 
     merge_status = config.merge_settings('settings.py')
-    if merge_status[0]:
-        if verbose > 0:
-            print "Generated django settings for publicmapping."
+    if merge_status:
+        logging.info("Generated django settings for publicmapping.")
     else:
-        if verbose > 0:
-            for msg in merge_status[1]:
-                print msg
         sys.exit(1)
 
     merge_status = config.merge_settings('reporting_settings.py')
-    if merge_status[0]:
-        if verbose > 0:
-            print "Generated django settings for reporting."
+    if merge_status:
+        logging.info("Generated django settings for reporting.")
     else:
-        if verbose > 0:
-            for msg in merge_status[1]:
-                print msg
         sys.exit(1)
 
     os.environ['DJANGO_SETTINGS_MODULE'] = 'publicmapping.settings'
@@ -141,7 +126,7 @@ ERROR:
     from django.core import management
 
     if allops or options.database:
-        management.call_command('syncdb', verbosity=verbose, interactive=False)
+        management.call_command('syncdb', verbosity=options.verbosity, interactive=False)
 
     if allops:
         geolevels = []
@@ -162,10 +147,25 @@ ERROR:
         bard = options.bard
         bard_templates = options.bard_templates
 
-    management.call_command('setup', config=args[1], verbosity=verbose, geolevels=geolevels, views=views, geoserver=geoserver, templates=templates, nesting=nesting, static=static, bard=bard, bard_templates=bard_templates, force=options.force)
+    management.call_command('setup', config=args[1], verbosity=options.verbosity, geolevels=geolevels, views=views, geoserver=geoserver, templates=templates, nesting=nesting, static=static, bard=bard, bard_templates=bard_templates, force=options.force)
     
     # Success! Exit-code 0
     sys.exit(0)
+
+def setup_logging(verbosity):
+    """
+    Setup logging for setup.
+    """
+    level = logging.WARNING
+    if verbosity > 1:
+        level = logging.DEBUG
+    elif verbosity > 0:
+        level = logging.INFO
+
+    logging.basicConfig(level=level, format='%(message)s')
+    logging._srcFile = None
+    logging.logThreads = 0
+    logging.logProcesses = 0
 
 if __name__ == "__main__":
     main()

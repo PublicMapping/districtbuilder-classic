@@ -46,7 +46,7 @@ import redistricting
 from redistricting.models import *
 from redistricting.utils import *
 from redistricting.config import *
-import traceback, pprint, httplib, string, base64, json, re
+import traceback, pprint, httplib, string, base64, json, re, logging
 
 class Command(BaseCommand):
     """
@@ -86,50 +86,57 @@ class Command(BaseCommand):
 
 
     force = False
+
+    def setup_logging(self, verbosity):
+        """
+        Setup the logging facility.
+        """
+        level = logging.WARNING
+        if verbosity > 1:
+            level = logging.DEBUG
+        elif verbosity > 0:
+            level = logging.INFO
+
+        logging.basicConfig(level=level, format='%(message)s')
+        logging._srcfile = None
+        logging.logThreads = 0
+        logging.logProcesses = 0
+
     def handle(self, *args, **options):
         """
         Perform the command. 
         """
+        self.setup_logging(int(options.get('verbosity')))
+
         if options.get('config') is None:
-            print """
+            logging.warning("""
 ERROR:
 
     This management command requires the -c or --config option. This option
     specifies the main configuration file.
-"""
+""")
             sys.exit(1)
 
-        verbose = int(options.get('verbosity'))
 
         try:
             store = redistricting.StoredConfig( options.get('config') )
         except Exception, ex:
-            if verbose > 0:
-                print """
+            logging.info("""
 ERROR:
 
 The configuration file specified could not be parsed. Please check the
 contents of the file and try again.
-"""
-            if verbose > 1:
-                print "The following traceback may provide more information:"
-                print traceback.format_exc()
+""")
             # Indicate that an error has occurred
             sys.exit(1)
 
-        (success, msgs,) = store.validate()
-
-        if not success:
-            if verbose > 0:
-                print """
+        if not store.validate():
+            logging.info("""
 ERROR:
 
 The configuration file was not valid. Please check the contents of the
 file and try again.
-"""
-            if verbose > 1:
-                for msg in msgs:
-                    print msg
+""")
             # Indicate that an error has occurred
             sys.exit(1)
 
@@ -139,10 +146,7 @@ file and try again.
         # When the setup script is run, it re-computes the secret key
         # used to secure session data. Blow away any old sessions that
         # were in the DB.
-        (success, msgs,) = Utils.purge_sessions()
-        if verbose > 1:
-            for msg in msgs:
-                print msg
+        success = Utils.purge_sessions()
 
         if not success:
             sys.exit(1)
@@ -155,19 +159,16 @@ file and try again.
         # will remain false
         all_ok = True
 
-        (success, msgs,) = config.import_superuser(self.force)
-        if verbose >1:
-            for msg in msgs:
-                print msg
+        success = config.import_superuser(self.force)
 
         all_ok = success
         try:
-            all_ok = all_ok * self.import_prereq(config, verbose, self.force)
+            all_ok = all_ok * self.import_prereq(config, self.force)
             all_ok = all_ok * self.import_scoring(store.data, verbose)
         except:
             all_ok = False
-            if verbose > 0: 
-                print 'Error importing configuration:\n%s' % traceback.format_exc()
+            logging.info('Error importing configuration.')
+            logging.info(traceback.format_exc())
 
         try:
             optlevels = options.get("geolevels")
@@ -1202,7 +1203,7 @@ ERROR:
         return result
 
             
-    def import_prereq(self, config, verbose, force):
+    def import_prereq(self, config, force):
         """
         Import the required support data prior to importing.
 
@@ -1211,182 +1212,15 @@ ERROR:
         """
 
         # Import the regions first
-        (success, msgs,) = config.import_regions(force)
-        if verbose > 1 or (verbose > 0 and changed and not self.force):
-            for msg in msgs:
-                print msg
+        success = config.import_regions(force)
 
-        # Import legislative bodies first.
-        bodies = config.xpath('//LegislativeBody[@id]')
-        for body in bodies:
-            attributes = {}
-            attributes['name'] = body.get('name')[:256]
-            attributes['short_label'] = body.get('short_label')[:10]
-            attributes['long_label'] = body.get('long_label')[:256]
-            attributes['max_districts'] = body.get('maxdistricts')
-            attributes['sort_key'] = body.get('sort_key')
-            attributes['is_community'] = body.get('is_community')=='true'
+        success = success * config.import_legislative_bodies(force)
 
-            body_by_region = config.xpath('/DistrictBuilder/Regions/Region/LegislativeBodies/LegislativeBody[@ref="%s"]' % body.get('id'))
-            if len(body_by_region) != 1:
-                if verbose > 0:
-                    print "Legislative body %s not attributed to any region" % attributes['name']
-                continue
-            else:
-                region_name = body_by_region[0].getparent().getparent().get('name')
-            attributes['region'] = Region.objects.get(name=region_name)
+        success = success * config.import_subjects(force)
 
-            obj, created, changed, message = ModelHelper.check_and_update(LegislativeBody, overwrite=self.force, **attributes)
+        success = success * config.import_geolevels(force)
 
-            if verbose > 1 or (verbose > 0 and changed and not self.force):
-                print message
-
-            # Add multi-member district configuration
-            mmconfigs = config.xpath('//MultiMemberDistrictConfig[@legislativebodyref="%s"]' % body.get('id'))
-            if len(mmconfigs) > 0:
-                mmconfig = mmconfigs[0]
-                obj.multi_members_allowed = True
-                obj.multi_district_label_format = mmconfig.get('multi_district_label_format')[:32]
-                obj.min_multi_districts = mmconfig.get('min_multi_districts')
-                obj.max_multi_districts = mmconfig.get('max_multi_districts')
-                obj.min_multi_district_members = mmconfig.get('min_multi_district_members')
-                obj.max_multi_district_members = mmconfig.get('max_multi_district_members')
-                obj.min_plan_members = mmconfig.get('min_plan_members')
-                obj.max_plan_members = mmconfig.get('max_plan_members')
-                if verbose > 1:
-                    print 'Multi-member districts enabled for: %s' % body.get('name')
-            else:
-                obj.multi_members_allowed = False
-                obj.multi_district_label_format = ''
-                obj.min_multi_districts = 0
-                obj.max_multi_districts = 0
-                obj.min_multi_district_members = 0
-                obj.max_multi_district_members = 0
-                obj.min_plan_members = 0
-                obj.max_plan_members = 0
-                if verbose > 1:
-                    print 'Multi-member districts not configured for: %s' % body.get('name')
-
-            obj.save()
-
-        # Import subjects second
-        subjs = config.xpath('//Subject[@id]')
-        for subj in subjs:
-            if 'aliasfor' in subj.attrib:
-                continue
-            attributes = {}
-            attributes['name'] = subj.get('id').lower()[:50]
-            attributes['display'] = subj.get('name')[:200]
-            attributes['short_display'] = subj.get('short_name')[:25]
-            attributes['is_displayed'] = subj.get('displayed')=='true'
-            attributes['sort_key'] = subj.get('sortkey')
-            obj, created, changed, message = ModelHelper.check_and_update(Subject, overwrite=self.force, **attributes)
-
-            if verbose > 1 or (verbose > 0 and changed and not self.force):
-                print message
-
-        for subj in subjs:
-            numerator_name = name=subj.get('id').lower()[:50]
-            try:
-                numerator = Subject.objects.get(name=numerator_name)
-            except Exception, ex:
-                if verbose > 0:
-                    print """
-ERROR:
-
-    Subject "%s" was not found.
-
-    Please verify the settings in the configuration file and try again.
-""" % numerator_name
-                raise
-            denominator = None
-            denominator_name = subj.get('percentage_denominator')
-            if denominator_name:
-                denominator_name = denominator_name.lower()[:50]
-                try:
-                    denominator = Subject.objects.get(name=denominator_name)
-                except Exception, ex:
-                    if verbose > 0:
-                        print """
-ERROR:
-
-    Subject "%s" was not found.
-    
-    Please verify the settings in the configuration file and try again.
-""" % denominator_name
-                    raise
-
-            numerator.percentage_denominator = denominator
-            numerator.save()
-
-            if verbose > 1:
-                print 'Set denominator on "%s" to "%s"' % (numerator.name, denominator_name)
-
-
-        # Import geolevels third
-        # Note that geolevels may be added in any order, but the geounits
-        # themselves need to be imported top-down (smallest area to biggest)
-        geolevels = config.xpath('/DistrictBuilder/GeoLevels/GeoLevel')
-        for geolevel in geolevels:
-            attributes = {}
-            attributes['name'] = geolevel.get('name').lower()[:50]
-            attributes['min_zoom'] = geolevel.get('min_zoom')
-            attributes['sort_key'] = geolevel.get('sort_key')
-            attributes['tolerance'] = geolevel.get('tolerance')
-            
-            glvl, created, changed, message = ModelHelper.check_and_update(Geolevel, overwrite=self.force, **attributes)
-    
-            if verbose > 1 or (changed and not self.force):
-                print message
-
-        regions = config.xpath('/DistrictBuilder/Regions')
-        if len(regions) > 0:
-            regions = regions[0]
-            self.import_regional_geolevels(config, regions, verbose)
-
-        # Use the Region nodes to link bodies and geolevels
-        for region in regions:
-
-            # Map the imported geolevel to a legislative body
-            lbodies = region.xpath('LegislativeBodies/LegislativeBody')
-            for lbody in lbodies:
-                # de-reference
-                lbconfig = config.xpath('//LegislativeBody[@id="%s"]' % lbody.get('ref'))[0]
-                legislative_body = LegislativeBody.objects.get(name=lbconfig.get('name')[:256])
-                
-                # Add a mapping for the subjects in this GL/LB combo.
-                sconfig = lbody.xpath('//Subjects/Subject[@default="true"]')[0]
-                if not sconfig.get('aliasfor') is None:
-                    # dereference any subject alias
-                    sconfig = config.xpath('//Subject[@id="%s"]' % (sconfig.get('aliasfor')))[0]
-                subject = Subject.objects.get(name=sconfig.get('id').lower()[:50])
-
-                def add_legislative_level_for_geolevel(node, body, subject, parent):
-                    """
-                    Helper method to recursively add LegislativeLevel mappings from Region configs
-                    """
-                    geolevel_node = config.xpath('/DistrictBuilder/GeoLevels/GeoLevel[@id="%s"]' % node.get('ref'))
-                    geolevel_name = "%s_%s" % (region.get('name'), geolevel_node[0].get('name'))
-                    geolevel = Geolevel.objects.get(name=geolevel_name)
-                    # geolevel = Geolevel.objects.get(name = "%s_%s" % (geolevel_node[0].get('name'), region.get('name')))
-                    obj, created = LegislativeLevel.objects.get_or_create(
-                        legislative_body=body,
-                        geolevel=geolevel,
-                        subject=subject, 
-                        parent=parent)
-
-                    if verbose > 1:
-                        if created:
-                            print 'Created LegislativeBody/GeoLevel mapping "%s/%s"' % (legislative_body.name, geolevel.name)
-                        else:
-                            print 'LegislativeBody/GeoLevel mapping "%s/%s" already exists' % (legislative_body.name, geolevel.name)
-
-                    if len(node) > 0:
-                        add_legislative_level_for_geolevel(node[0], body, subject, obj)
-
-                parentless = region.xpath('GeoLevels/GeoLevel')
-                if len(parentless) > 0:
-                    add_legislative_level_for_geolevel(parentless[0], legislative_body, subject, None)
+        success = success * config.import_regional_geolevels(force)
 
         return True
 
@@ -1656,41 +1490,6 @@ ERROR:
         geolevels = config.xpath('GeoLevels')
         if len(geolevels) > 0:
             return get_youngest_child(geolevels[0]).get('ref')
-
-    def import_regional_geolevels(self, config, regions_node, verbose):
-        """
-        Given a Regions node, return a list of geolevels represented.
-        If the geolevels don't yet exist, create them and save them to
-        the database
-        """
-        regions = regions_node.xpath('//Region')
-        for region in regions:
-            regional_geolevels = region.xpath('GeoLevels//GeoLevel')
-
-            # Get the zoom level of the largest geolevel (last one in the regional_geolevels list)
-            zero_geolevel_config = config.xpath('/DistrictBuilder/GeoLevels/GeoLevel[@id="%s"]' %
-                regional_geolevels[len(regional_geolevels)-1].get('ref'))
-            # store this zoom level, and use it as an offset for the geolevels in this region
-            zero_zoom = int(zero_geolevel_config[0].get('min_zoom'))
-
-            for geolevel in regional_geolevels:
-                geolevel_config = config.xpath('/DistrictBuilder/GeoLevels/GeoLevel[@id="%s"]' % geolevel.get('ref'))
-                if len(geolevel_config) > 0:
-                    name = geolevel_config[0].get('name')
-                try:
-                    geolevel = Geolevel.objects.get(name=name)
-                except:
-                    if verbose > 1:
-                        print "Base geolevel %s for %s not found in the database.  Import base geolevels before regional geolevels" % (name, region.get('name'))
-                    return
-
-                attributes = {}
-                attributes['name'] = '%s_%s' % (region.get('name'), name)
-                attributes['min_zoom'] = geolevel.min_zoom - zero_zoom
-                attributes['tolerance'] = geolevel.tolerance
-                obj, created, changed, message = ModelHelper.check_and_update(Geolevel, overwrite=self.force, **attributes)
-                if verbose > 1 or (changed and not self.force):
-                    print message
 
     def create_filter_functions(self, config, verbose):
         """
