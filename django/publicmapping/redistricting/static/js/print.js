@@ -76,7 +76,7 @@ printplan = function(options) {
             zoom = 0,
             res = 1,
             params = null,
-            uStyle = null;
+            uStyle = null,
             sld = null,
             fmt = new OpenLayers.Format.SLD();
         $.each(_options.map.getLayersBy('CLASS_NAME','OpenLayers.Layer.WMS'),function(idx, item){
@@ -150,7 +150,7 @@ printplan = function(options) {
             }
         });
 
-        uStyle = OpenLayers.Util.extend({},_options.districtLayer.styleMap.styles.default);
+        uStyle = OpenLayers.Util.extend({},_options.districtLayer.styleMap.styles['default']);
         uStyle.layerName = _options.districtLayer.name;
         var mapRules = [];
         var legendRules = [];
@@ -167,7 +167,7 @@ printplan = function(options) {
                         property: 'id',
                         value: featureItem.fid
                     });
-                    var defStyle = featureItem.layer.styleMap.styles.default.defaultStyle,
+                    var defStyle = featureItem.layer.styleMap.styles['default'].defaultStyle,
                         ffam = defStyle.fontFamily,
                         fwht = defStyle.fontWeight,
                         fsz = defStyle.fontSize,
