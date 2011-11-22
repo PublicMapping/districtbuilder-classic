@@ -341,8 +341,8 @@ $(function(){
             if (matches2[1] == 'msg' && matches2[2] == 'logoff') {
                 var dialog = $('<div id="logoffdlg" />');
                 dialog.attr('title', gettext('Logged Off'));
-                dialog.append('<p />').text(gettext("You have been logged off by another browser. This happens sometimes if you attempt to access the application from two different locations."));
-                dialog.append('<h1 />').text(gettext('Please log in again'));
+                dialog.append($('<p />').text(gettext("You have been logged off by another browser. This happens sometimes if you attempt to access the application from two different locations.")));
+                dialog.append($('<h1 />').text(gettext('Please log in again')));
                 dialog.dialog({
                     modal:true,
                     resizable:false
