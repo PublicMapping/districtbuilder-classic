@@ -62,7 +62,7 @@ function loadTooltips() {
         opacity: .8
     });    
 
-    $('.evaluate .disabled').attr('title', 'Coming Soon...');
+    $('.evaluate .disabled').attr('title', gettext('Coming Soon...'));
 
     // If the user left the stats_legend_panel up when it's refreshed, it may be
     // attached to the body rather than appended to the trigger.
@@ -214,20 +214,22 @@ $(function() {
                     $('#steps').tabs('select', '#step_leaderboard');
                 } else {
                     // score failed, show reason
-                    $('<div title="Validation Failed">' + data.message + '</div>').dialog({autoOpen:true});
+                    $('<div />').attr('title', gettext("Validation Failed")).html(data.message).dialog({autoOpen:true});
                 }
             },
             error: function() {
                 $('#scoring').dialog('close');
-                $('<div title="Error">Server error. Please try again later.</div>').dialog({autoOpen:true});
+                $('<div />').attr('title', gettext('Error')).text(gettext('Server error. Please try again later')).dialog({autoOpen:true});
             }
         });
     });
 
     // create the update leaderboards button
     if ($('#txtPlanName').length > 0) {
-        var button = $('<button class="leaderboard_button">Update Leaderboards<br/>with Working Plan</button>').button();
-        $('#updateLeaderboardsContainer').html(button);
+        var button = $('<button class="leaderboard_button" />');
+        button.html(gettext('Update Leaderboards<br/>with Working Plan'));
+        button.button();
+        $('#updateLeaderboardsContainer').append(button);
                     
         // add handling for updating leaderboard with current plan
         button.click(function() {
@@ -242,20 +244,23 @@ $(function() {
                         updateLeaderboard();
                     } else {
                         // score failed, show reason
-                        $('<div title="Validation Failed">' + data.message + '</div>').dialog({autoOpen:true});
+                        $('<div />').attr('title', gettext("Validation Failed"))
+                            .html(data.message).dialog({autoOpen:true});
                     }
                 },
                 error: function() {
                     $('#waiting').dialog('close');
-                    $('<div title="Error">Server error. Please try again later.</div>').dialog({autoOpen:true});
+                    
+                    $('<div />').attr('title', gettext('Error'))
+                        .text(gettext('Server error. Please try again later')).dialog({autoOpen:true});
                 }
             });
         });
     }
 
     // create the leaderboard CSV download button
-    var button = $('<button class="leaderboard_button">Download Scores<br/>as CSV</button>').button();
-    $('#downloadLeaderboardsContainer').html(button);
+    var button = $('<button class="leaderboard_button" />').html(gettext('Download Scores<br/>as CSV')).button();
+    $('#downloadLeaderboardsContainer').append(button);
     button.click(function() {
         var owner = $("#tab_myranked").hasClass("ui-state-active") ? "mine" : "all";
         window.location="/districtmapping/getleaderboardcsv/?owner_filter=" + owner +
@@ -355,7 +360,7 @@ $(function() {
         var local = getLocalTimeFromIsoformat(time);
         var hour = local.hours % 12;
         if (hour === 0) { hour = 12; }
-        $('#saveplaninfo').text('Last Saved on ' + local.day + ' at ' + hour + ':' + ((local.minutes < 10) ? ('0' + local.minutes) : local.minutes));
+        $('#saveplaninfo').text(gettext('Last Saved on ') + local.day + gettext(' at ') + hour + ':' + ((local.minutes < 10) ? ('0' + local.minutes) : local.minutes));
     });
 
 
@@ -435,11 +440,11 @@ $(function() {
             return { name: name, shared: true }; 
         };
         // The dialog to display while contacting the server.  Shouldn't be closable
-        var $waitPublishing = $('<div title="Please Wait">Publishing with the server</div>').dialog({ autoOpen: true, escapeOnClose: false, resizable:false, open: function(event, ui) { $(".ui-dialog-titlebar-close", $(this).parent()).hide(); } });
+        var $waitPublishing = $('<div />').attr('title', gettext('Please Wait')).text(gettext('Publishing with the server')).dialog({ autoOpen: true, escapeOnClose: false, resizable:false, open: function(event, ui) { $(".ui-dialog-titlebar-close", $(this).parent()).hide(); } });
         var data = getData();
         if (!data) {
             $waitPublishing.dialog('close');
-            $('<div title="Error">Please enter a new name to publish your plan</div>').dialog({ autoOpen: true });
+            $('<div />').attr('title', gettext('Error')).text(gettext('Please enter a new name to publish your plan.')).dialog({ autoOpen: true });
             return false;
         }
         else {
@@ -451,7 +456,7 @@ $(function() {
                     $waitPublishing.dialog('close');
                     if (('success' in data) && !data.success) {
                         $waitPublishing.dialog('close');
-                        $('<div title="Oops!">' + data.message + '</div>').dialog({autoOpen:true});
+                        $('<div />').attr('title', gettext('Oops!')).html(data.message).dialog({autoOpen:true});
                     }
                     else if (textStatus == 'success') {
                         var link = window.location.protocol + '//' + window.location.host + '/districtmapping/plan/' + data[0].pk + '/view/' 
@@ -466,7 +471,7 @@ $(function() {
                 },
                 error: function() {
                     $waitPublishing.dialog('close');
-                    $('<div title="Server Failure">Sorry, we weren\'t able to contact the server.  Please try again later.</div>').dialog({autoOpen:true});
+                    $('<div />').attr('title', gettext('Server Failure')).text(gettext('Sorry, we weren\'t able to contact the server.  Please try again later.')).dialog({autoOpen:true});
                 }
             });
         }

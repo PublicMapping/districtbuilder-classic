@@ -2,20 +2,20 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-22 14:15-0500\n"
-"PO-Revision-Date: 2011-11-22 14:18\n"
+"POT-Creation-Date: 2011-11-22 16:00-0500\n"
+"PO-Revision-Date: 2011-11-22 15:54\n"
 "Last-Translator: Admin User <ajennings+saigon@azavea.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Translated-Using: django-rosetta 0.6.2\n"
 
@@ -39,36 +39,36 @@ msgid ""
 "You have unsaved changes on individual editable fields. If you run an "
 "action, your unsaved changes will be lost."
 msgstr ""
-"No ha guardado los cambios en los campos editables individuales. Si "
-"ejecuta una acción, los cambios no guardados se perderán."
+"No ha guardado los cambios en los campos editables individuales. Si ejecuta "
+"una acción, los cambios no guardados se perderán."
 
 #: static-media/admin/js/actions.js:121 static-media/admin/js/actions.min.js:6
 msgid ""
 "You have selected an action, but you haven't saved your changes to "
-"individual fields yet. Please click OK to save. You'll need to re-run "
-"the action."
+"individual fields yet. Please click OK to save. You'll need to re-run the "
+"action."
 msgstr ""
-"Usted ha seleccionado una acción, pero no ha guardado los cambios en "
-"los campos individuales todavía. Por favor, haga clic en Aceptar para "
-"guardar. Tendrá que volver a ejecutar la acción."
+"Usted ha seleccionado una acción, pero no ha guardado los cambios en los "
+"campos individuales todavía. Por favor, haga clic en Aceptar para guardar. "
+"Tendrá que volver a ejecutar la acción."
 
 #: static-media/admin/js/actions.js:123 static-media/admin/js/actions.min.js:6
 msgid ""
-"You have selected an action, and you haven't made any changes on "
-"individual fields. You're probably looking for the Go button rather "
-"than the Save button."
+"You have selected an action, and you haven't made any changes on individual "
+"fields. You're probably looking for the Go button rather than the Save "
+"button."
 msgstr ""
-"Usted ha seleccionado una acción, y no ha realizado ningún cambio en "
-"campos individuales. Probablemente usted está buscando en el botón Ir "
-"en lugar de en el botón Guardar."
+"Usted ha seleccionado una acción, y no ha realizado ningún cambio en campos "
+"individuales. Probablemente usted está buscando en el botón Ir en lugar de "
+"en el botón Guardar."
 
 #: static-media/admin/js/calendar.js:24 static-media/admin/js/dateparse.js:32
 msgid ""
-"January February March April May June July August September October "
-"November December"
+"January February March April May June July August September October November "
+"December"
 msgstr ""
-"Enero Febrero Marzo Abril Mayo Junio ​​Julio Agosto Septiembre Octubre"
-" Noviembre Diciembre"
+"Enero Febrero Marzo Abril Mayo Junio ​​Julio Agosto Septiembre Octubre "
+"Noviembre Diciembre"
 
 #: static-media/admin/js/calendar.js:25
 msgid "S M T W T F S"
@@ -153,11 +153,11 @@ msgstr "Los usuarios ha superado el máximo"
 
 #: static-media/js/register.js:48 static/js/register.js:48
 msgid ""
-"Sorry, registration is not available at this time.  Please try logging "
-"in anonymously or coming back later"
+"Sorry, registration is not available at this time.  Please try logging in "
+"anonymously or coming back later"
 msgstr ""
-"Lo sentimos, el registro no está disponible en este momento. Intenta "
-"acceder de forma anónima o regresar más tarde"
+"Lo sentimos, el registro no está disponible en este momento. Intenta acceder "
+"de forma anónima o regresar más tarde"
 
 #: static-media/js/register.js:50 static/js/register.js:50
 msgid "Signup Unavailable"
@@ -180,17 +180,19 @@ msgid "User Name already exists. Please choose another one."
 msgstr "Nombre de usuario ya existe. Por favor elija otro."
 
 #: static-media/js/register.js:176 static-media/js/register.js.py:184
-#: static/js/register.js:176 static/js/register.js.py:184
+#: static-media/js/ui.js:211 static-media/js/ui.js.py:241
+#: static-media/js/ui.js:419 static/js/register.js:176
+#: static/js/register.js.py:184 static/js/ui.js:211 static/js/ui.js.py:241
+#: static/js/ui.js.py:419
 msgid "Error"
 msgstr "Error"
 
 #: static-media/js/register.js:183 static/js/register.js:183
 msgid ""
-"Email already exists. Enter another one, or use the password retrieval "
-"form"
+"Email already exists. Enter another one, or use the password retrieval form"
 msgstr ""
-"Correo electrónico ya existe. Entrar en otro, o utilizar el formulario"
-" de recuperación de contraseña"
+"Correo electrónico ya existe. Entrar en otro, o utilizar el formulario de "
+"recuperación de contraseña"
 
 #: static-media/js/register.js:219 static/js/register.js:219
 msgid "Please Wait..."
@@ -210,12 +212,60 @@ msgstr "Sesión de usuario"
 
 #: static-media/js/register.js:336 static/js/register.js:336
 msgid ""
-"You have been logged off by another browser. This happens sometimes if "
-"you attempt to access the application from two different locations."
+"You have been logged off by another browser. This happens sometimes if you "
+"attempt to access the application from two different locations."
 msgstr ""
-"Usted ha sido desconectado por otro navegador. Esto ocurre a veces si "
-"se intenta acceder a la aplicación de dos lugares diferentes."
+"Usted ha sido desconectado por otro navegador. Esto ocurre a veces si se "
+"intenta acceder a la aplicación de dos lugares diferentes."
 
 #: static-media/js/register.js:337 static/js/register.js:337
 msgid "Please log in again"
 msgstr "Por favor, acceda de nuevo"
+
+#: static-media/js/ui.js:64 static/js/ui.js:64
+msgid "Coming Soon..."
+msgstr "Muy pronto ..."
+
+#: static-media/js/ui.js:206 static-media/js/ui.js.py:234 static/js/ui.js:206
+#: static/js/ui.js.py:234
+msgid "Validation Failed"
+msgstr "Error de validación"
+
+#: static-media/js/ui.js:211 static-media/js/ui.js.py:242 static/js/ui.js:211
+#: static/js/ui.js.py:242
+msgid "Server error. Please try again later"
+msgstr "Error del servidor. Por favor, inténtelo de nuevo más tarde"
+
+#: static-media/js/ui.js:218 static/js/ui.js:218
+msgid "Update Leaderboards<br/>with Working Plan"
+msgstr "Líderes de actualización <br/> con el Plan de Trabajo"
+
+#: static-media/js/ui.js:248 static/js/ui.js:248
+msgid "Download Scores<br/>as CSV"
+msgstr "Las puntuaciones de <br/> descarga  como CSV"
+
+#: static-media/js/ui.js:415 static/js/ui.js:415
+msgid "Please Wait"
+msgstr "Por favor espere ..."
+
+#: static-media/js/ui.js:415 static/js/ui.js:415
+msgid "Publishing with the server"
+msgstr "Publicación con el servidor"
+
+#: static-media/js/ui.js:419 static/js/ui.js:419
+msgid "Please enter a new name to publish your plan."
+msgstr "Por favor, introduzca un nuevo nombre para publicar su plan."
+
+#: static-media/js/ui.js:431 static/js/ui.js:431
+msgid "Oops!"
+msgstr "Oops!"
+
+#: static-media/js/ui.js:446 static/js/ui.js:446
+msgid "Server Failure"
+msgstr "Fallas del servidor"
+
+#: static-media/js/ui.js:446 static/js/ui.js:446
+msgid "Sorry, we weren't able to contact the server.  Please try again later."
+msgstr ""
+"Lo sentimos, no hemos podido contactar con el servidor. Por favor, inténtelo "
+"de nuevo más tarde."

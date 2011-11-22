@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-22 14:14-0500\n"
+"POT-Creation-Date: 2011-11-22 16:00-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -166,7 +166,10 @@ msgid "User Name already exists. Please choose another one."
 msgstr ""
 
 #: static-media/js/register.js:176 static-media/js/register.js.py:184
-#: static/js/register.js:176 static/js/register.js.py:184
+#: static-media/js/ui.js:211 static-media/js/ui.js.py:241
+#: static-media/js/ui.js:419 static/js/register.js:176
+#: static/js/register.js.py:184 static/js/ui.js:211 static/js/ui.js.py:241
+#: static/js/ui.js.py:419
 msgid "Error"
 msgstr ""
 
@@ -199,4 +202,50 @@ msgstr ""
 
 #: static-media/js/register.js:337 static/js/register.js:337
 msgid "Please log in again"
+msgstr ""
+
+#: static-media/js/ui.js:64 static/js/ui.js:64
+msgid "Coming Soon..."
+msgstr ""
+
+#: static-media/js/ui.js:206 static-media/js/ui.js.py:234 static/js/ui.js:206
+#: static/js/ui.js.py:234
+msgid "Validation Failed"
+msgstr ""
+
+#: static-media/js/ui.js:211 static-media/js/ui.js.py:242 static/js/ui.js:211
+#: static/js/ui.js.py:242
+msgid "Server error. Please try again later"
+msgstr ""
+
+#: static-media/js/ui.js:218 static/js/ui.js:218
+msgid "Update Leaderboards<br/>with Working Plan"
+msgstr ""
+
+#: static-media/js/ui.js:248 static/js/ui.js:248
+msgid "Download Scores<br/>as CSV"
+msgstr ""
+
+#: static-media/js/ui.js:415 static/js/ui.js:415
+msgid "Please Wait"
+msgstr ""
+
+#: static-media/js/ui.js:415 static/js/ui.js:415
+msgid "Publishing with the server"
+msgstr ""
+
+#: static-media/js/ui.js:419 static/js/ui.js:419
+msgid "Please enter a new name to publish your plan."
+msgstr ""
+
+#: static-media/js/ui.js:431 static/js/ui.js:431
+msgid "Oops!"
+msgstr ""
+
+#: static-media/js/ui.js:446 static/js/ui.js:446
+msgid "Server Failure"
+msgstr ""
+
+#: static-media/js/ui.js:446 static/js/ui.js:446
+msgid "Sorry, we weren't able to contact the server.  Please try again later."
 msgstr ""
