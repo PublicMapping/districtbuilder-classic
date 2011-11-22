@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-18 18:12-0500\n"
+"POT-Creation-Date: 2011-11-22 13:59-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,7 +22,7 @@ msgstr ""
 msgid "Choose Map Layers"
 msgstr ""
 
-#: static-media/admin/js/SelectFilter2.js:63
+#: static-media/admin/js/SelectFilter2.js:77
 msgid "Clear all"
 msgstr ""
 
@@ -123,6 +123,76 @@ msgstr ""
 msgid "Tomorrow"
 msgstr ""
 
+#: static-media/js/register.js:39 static/js/register.js:39
+msgid "Terms of Use"
+msgstr ""
+
 #: static-media/js/register.js:40 static/js/register.js:40
 msgid "Forgot Password"
+msgstr ""
+
+#: static-media/js/register.js:41 static/js/register.js:41
+msgid "Duplicate Session"
+msgstr ""
+
+#: static-media/js/register.js:42 static/js/register.js:42
+msgid "Maximum Users Exceeded"
+msgstr ""
+
+#: static-media/js/register.js:48 static/js/register.js:48
+msgid ""
+"Sorry, registration is not available at this time.  Please try logging in "
+"anonymously or coming back later"
+msgstr ""
+
+#: static-media/js/register.js:50 static/js/register.js:50
+msgid "Signup Unavailable"
+msgstr ""
+
+#: static-media/js/register.js:157 static/js/register.js:157
+msgid "You've been registered for the public mapping project."
+msgstr ""
+
+#: static-media/js/register.js:160 static/js/register.js:160
+msgid "Success!"
+msgstr ""
+
+#: static-media/js/register.js:162 static/js/register.js:162
+msgid "Start Mapping"
+msgstr ""
+
+#: static-media/js/register.js:175 static/js/register.js:175
+msgid "User Name already exists. Please choose another one."
+msgstr ""
+
+#: static-media/js/register.js:176 static-media/js/register.js.py:184
+#: static/js/register.js:176 static/js/register.js.py:184
+msgid "Error"
+msgstr ""
+
+#: static-media/js/register.js:183 static/js/register.js:183
+msgid ""
+"Email already exists. Enter another one, or use the password retrieval form"
+msgstr ""
+
+#: static-media/js/register.js:219 static/js/register.js:219
+msgid "Please Wait..."
+msgstr ""
+
+#: static-media/js/register.js:282 static/js/register.js:282
+msgid "You entered an incorrect user name or password"
+msgstr ""
+
+#: static-media/js/register.js:286 static/js/register.js:286
+msgid "Login Error"
+msgstr ""
+
+#: static-media/js/register.js:335 static/js/register.js:335
+msgid ""
+"You have been logged off by another browser. This happens sometimes if you "
+"attempt to access the application from two different locations."
+msgstr ""
+
+#: static-media/js/register.js:336 static/js/register.js:336
+msgid "Please log in again"
 msgstr ""

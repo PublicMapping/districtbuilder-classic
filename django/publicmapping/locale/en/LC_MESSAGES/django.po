@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-18 18:12-0500\n"
+"POT-Creation-Date: 2011-11-22 13:58-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,7 +31,7 @@ msgstr ""
 msgid "Delete selected %(verbose_name_plural)s"
 msgstr ""
 
-#: redistricting/templates/viewplan.html:443
+#: redistricting/templates/viewplan.html:455
 msgid "Edit Stats"
 msgstr ""
 
@@ -52,72 +52,80 @@ msgid ""
 "caused you."
 msgstr ""
 
-#: templates/account.html:10
+#: templates/account.html:3
+msgid "Account Information"
+msgstr ""
+
+#: templates/account.html:6
+msgid "Sign Up For An Account"
+msgstr ""
+
+#: templates/account.html:11
 msgid "User Name"
 msgstr ""
 
-#: templates/account.html:17
+#: templates/account.html:18
 msgid ""
 "Please use a password of 8 or more characters. Include a number, a capital "
 "letter and a lower-case letter."
 msgstr ""
 
-#: templates/account.html:20
+#: templates/account.html:21
 #: templates/admin/auth/user/change_password.orig.html:35
 msgid "Password"
 msgstr ""
 
-#: templates/account.html:24
+#: templates/account.html:25
 msgid "Confirm Password"
 msgstr ""
 
-#: templates/account.html:28
+#: templates/account.html:29
 msgid "Password Hint"
 msgstr ""
 
-#: templates/account.html:35
+#: templates/account.html:36
 msgid "An email address is recommended to recover a forgotten password"
 msgstr ""
 
-#: templates/account.html:38
+#: templates/account.html:39
 msgid "Email Address"
 msgstr ""
 
-#: templates/account.html:43
+#: templates/account.html:44
 msgid ""
 "Sorry, that email address is already registered. Please use a different "
 "email address."
 msgstr ""
 
-#: templates/account.html:46
+#: templates/account.html:47
 msgid "First Name"
 msgstr ""
 
-#: templates/account.html:53
+#: templates/account.html:54
 msgid "Last Name"
 msgstr ""
 
-#: templates/account.html:60
+#: templates/account.html:61
 msgid "Organization"
 msgstr ""
 
-#: templates/account.html:71
+#: templates/account.html:72
 msgid "I have read the "
 msgstr ""
 
-#: templates/account.html:71 templates/index.html:170
+#: templates/account.html:72 templates/index.html:171
 msgid "Terms of Use"
 msgstr ""
 
-#: templates/account.html:85
+#: templates/account.html:86
 msgid "Update"
 msgstr ""
 
-#: templates/account.html:87 templates/index.html:160
+#: templates/account.html:88 templates/index.html:161
 msgid "Sign Up"
 msgstr ""
 
-#: templates/account.html:91
+#: templates/account.html:92
 msgid "Indicates required field"
 msgstr ""
 
@@ -147,205 +155,205 @@ msgstr ""
 msgid "Welcome to DistrictBuilder"
 msgstr ""
 
-#: templates/index.html:77
+#: templates/index.html:78
 msgid "DistrictBuilder"
 msgstr ""
 
-#: templates/index.html:86
+#: templates/index.html:87
 msgid "About"
 msgstr ""
 
-#: templates/index.html:89
+#: templates/index.html:90
 msgid "Support"
 msgstr ""
 
-#: templates/index.html:104
+#: templates/index.html:105
 msgid "About the Public Mapping Project"
 msgstr ""
 
-#: templates/index.html:106
+#: templates/index.html:107
 msgid "Frequently Asked Questions"
 msgstr ""
 
-#: templates/index.html:107
+#: templates/index.html:108
 msgid "Quick Start Guide"
 msgstr ""
 
-#: templates/index.html:108
+#: templates/index.html:109
 msgid "Redistricting Resources"
 msgstr ""
 
-#: templates/index.html:114
+#: templates/index.html:115
 msgid "NEW TO REDISTRICTING?"
 msgstr ""
 
-#: templates/index.html:114
+#: templates/index.html:115
 msgid "Take a Tour"
 msgstr ""
 
-#: templates/index.html:121
+#: templates/index.html:122
 msgid "Tweet"
 msgstr ""
 
-#: templates/index.html:145
+#: templates/index.html:146
 msgid "Log In"
 msgstr ""
 
-#: templates/index.html:149
+#: templates/index.html:150
 msgid "Login"
 msgstr ""
 
-#: templates/index.html:151
+#: templates/index.html:152
 msgid "Forgot your password?"
 msgstr ""
 
-#: templates/index.html:156
+#: templates/index.html:157
 msgid "Don't have an account?"
 msgstr ""
 
-#: templates/index.html:158
+#: templates/index.html:159
 msgid "To Draw Your Own Maps..."
 msgstr ""
 
-#: templates/index.html:162
+#: templates/index.html:163
 msgid "To View Other Users' Maps..."
 msgstr ""
 
-#: templates/index.html:165
+#: templates/index.html:166
 msgid "Enter as a guest"
 msgstr ""
 
-#: templates/index.html:182
+#: templates/index.html:183
 msgid "Get A Hint"
 msgstr ""
 
-#: templates/index.html:184
+#: templates/index.html:185
 msgid ""
 "Enter your username to retrieve your password hint that you used when "
 "registering for an account."
 msgstr ""
 
-#: templates/index.html:189
+#: templates/index.html:190
 msgid "Username"
 msgstr ""
 
-#: templates/index.html:193
+#: templates/index.html:194
 msgid "OR"
 msgstr ""
 
-#: templates/index.html:195
+#: templates/index.html:196
 msgid "Reset Your Password"
 msgstr ""
 
-#: templates/index.html:197
+#: templates/index.html:198
 msgid ""
 "Enter your email address to reset your password if you have forgotten your "
 "username."
 msgstr ""
 
-#: templates/index.html:202
+#: templates/index.html:203
 msgid "Email"
 msgstr ""
 
-#: templates/index.html:208
+#: templates/index.html:209
 msgid "Begin"
 msgstr ""
 
-#: templates/index.html:212
+#: templates/index.html:213
 msgid "Here Is Your Hint"
 msgstr ""
 
-#: templates/index.html:213
+#: templates/index.html:214
 msgid ""
 "If this helps you remember your password, you can close this dialog and log "
 "in."
 msgstr ""
 
-#: templates/index.html:217
+#: templates/index.html:218
 msgid ""
 "If you still can't recall your password, click on the 'Back' button, and "
 "enter your email address, so we can email your password to you."
 msgstr ""
 
-#: templates/index.html:221
+#: templates/index.html:222
 msgid "Email Sent"
 msgstr ""
 
-#: templates/index.html:222
+#: templates/index.html:223
 msgid ""
 "Your password has been emailed to you. You should receive your password in "
 "your inbox in the next few minutes."
 msgstr ""
 
-#: templates/index.html:225
+#: templates/index.html:226
 msgid "Back"
 msgstr ""
 
-#: templates/index.html:226
+#: templates/index.html:227
 msgid "Close"
 msgstr ""
 
-#: templates/index.html:232
+#: templates/index.html:233
 msgid "Your account has too many sessions."
 msgstr ""
 
-#: templates/index.html:233
+#: templates/index.html:234
 msgid "To use DistrictBuilder, you must do one of the following actions:"
 msgstr ""
 
-#: templates/index.html:236
+#: templates/index.html:237
 msgid "Log in as a different user."
 msgstr ""
 
-#: templates/index.html:239
+#: templates/index.html:240
 msgid "Use the system as a guest."
 msgstr ""
 
-#: templates/index.html:244
+#: templates/index.html:245
 msgid "Force close the other user's session and log in again."
 msgstr ""
 
-#: templates/index.html:251
+#: templates/index.html:252
 msgid ""
 "The DistrictBuilder application has reached maximum capacity. Please try to "
 "use the application again shortly. We apologize for the inconvenience."
 msgstr ""
 
-#: templates/index.html:254
+#: templates/index.html:255
 msgid ""
 "The following discloses our information gathering and dissemination "
 "practices; and terms of use for this web site."
 msgstr ""
 
-#: templates/index.html:255
+#: templates/index.html:256
 msgid "Information gathering"
 msgstr ""
 
-#: templates/index.html:257
+#: templates/index.html:258
 msgid ""
 "Our web server software generates logfiles of the IP addresses of computers "
 "that access this web site and of what files they access."
 msgstr ""
 
-#: templates/index.html:258
+#: templates/index.html:259
 msgid ""
 "These web server logs are retained on a temporary basis and then deleted "
 "completely from our systems."
 msgstr ""
 
-#: templates/index.html:259
+#: templates/index.html:260
 msgid "We also may ask our visitors to provide information about themselves."
 msgstr ""
 
-#: templates/index.html:260
+#: templates/index.html:261
 msgid "We may use cookies to maintain a user's identity between web sessions."
 msgstr ""
 
-#: templates/index.html:262
+#: templates/index.html:263
 msgid "Contributor Terms"
 msgstr ""
 
-#: templates/index.html:263
+#: templates/index.html:264
 msgid ""
 "This site enables users to create districting maps and to comment on the "
 "maps of others.  By creating a map, a comment, or an account, you are "
@@ -353,7 +361,7 @@ msgid ""
 "(collectively, 'Contents') you contribute to this site. "
 msgstr ""
 
-#: templates/index.html:264
+#: templates/index.html:265
 msgid ""
 "You hereby grant to us a worldwide, royalty-free, non-exclusive, perpetual, "
 "irrevocable license to do any act that is restricted by copyright over "
@@ -366,18 +374,18 @@ msgid ""
 "rights that You may have in the Contents."
 msgstr ""
 
-#: templates/index.html:265
+#: templates/index.html:266
 msgid ""
 "We agree to make the Contents that you contribute and designate as &quot;"
 "published&quot; available under at least one of the following licenses: ODbL "
 "1.0; DbCL 1.0; CC-BY-SA 2.0; or another free and open license. "
 msgstr ""
 
-#: templates/index.html:266
+#: templates/index.html:267
 msgid "Use of information"
 msgstr ""
 
-#: templates/index.html:267
+#: templates/index.html:268
 msgid ""
 "We use third parties to provide processing functions on our site. When you "
 "register for  services, we may share information as necessary for the third "
@@ -386,7 +394,7 @@ msgid ""
 "identifiable information for any other purpose. "
 msgstr ""
 
-#: templates/index.html:268
+#: templates/index.html:269
 msgid ""
 "We use your IP address and files you access to help diagnose problems with "
 "our server and to administer our Web site by identifying (1) which parts of "
@@ -396,7 +404,7 @@ msgid ""
 "At no time do we disclose site usage by individual visitors."
 msgstr ""
 
-#: templates/index.html:269
+#: templates/index.html:270
 msgid ""
 "We reserve the right to disclose your personally identifiable information as "
 "required by law and when we believe that disclosure is necessary to protect "
@@ -404,7 +412,7 @@ msgid ""
 "process served on the hosts. "
 msgstr ""
 
-#: templates/index.html:270
+#: templates/index.html:271
 msgid ""
 "All maps created through the system, edits to those maps, and comments made "
 "on those maps are associated with an account id and a timestamp. These maps, "
@@ -416,64 +424,64 @@ msgid ""
 "users profile setting. "
 msgstr ""
 
-#: templates/index.html:271
+#: templates/index.html:272
 msgid "Security"
 msgstr ""
 
-#: templates/index.html:272
+#: templates/index.html:273
 msgid ""
 "This site has security measures in place to protect the loss, misuse and "
 "alteration of the information under our control."
 msgstr ""
 
-#: templates/index.html:273
+#: templates/index.html:274
 msgid "Contacting this web site"
 msgstr ""
 
-#: templates/index.html:274
+#: templates/index.html:275
 msgid ""
 "If you have any questions about this privacy statement, the practices of "
 "this site, or your dealings with this site, you can contact the support "
 "address at the host domain"
 msgstr ""
 
-#: templates/index.html:274
+#: templates/index.html:275
 msgid ""
 "This web site may contain links to other web sites. We are not responsible "
 "for the privacy practices or the content of such web sites."
 msgstr ""
 
-#: templates/index.html:275
+#: templates/index.html:276
 msgid "Changes to this policy"
 msgstr ""
 
-#: templates/index.html:276
+#: templates/index.html:277
 msgid ""
 "An announcement of any changes to this policy will be posted on this page "
 "for  thirty days before any changes go into effect."
 msgstr ""
 
-#: templates/index.html:277
+#: templates/index.html:278
 msgid "Effective Date"
 msgstr ""
 
-#: templates/index.html:278
+#: templates/index.html:279
 msgid "The effective date of this policy was May 2, 2011."
 msgstr ""
 
-#: templates/index.html:292
+#: templates/index.html:293
 msgid "Powered By District Builder"
 msgstr ""
 
-#: templates/index.html:295
+#: templates/index.html:296
 msgid "A project of"
 msgstr ""
 
-#: templates/index.html:305
+#: templates/index.html:306
 msgid "We've designed the software to run on"
 msgstr ""
 
-#: templates/index.html:307
+#: templates/index.html:308
 msgid "a free web browser"
 msgstr ""
 

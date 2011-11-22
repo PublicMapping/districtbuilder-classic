@@ -36,19 +36,19 @@ $(function(){
     };
     // configure the registration dialog
     $('#register').dialog(dOptions);
-    $('#privacy').dialog($.extend({title:'Terms of Use', height: 375},dOptions));
+    $('#privacy').dialog($.extend({title:gettext('Terms of Use'), height: 375},dOptions));
     $('#forgotpass').dialog($.extend({title:gettext('Forgot Password')},dOptions));
-    $('#sessiondupe').dialog($.extend({title:'Duplicate Session'},dOptions));
-    $('#sessionsmax').dialog($.extend({title:'Maximum Users Exceeded'},dOptions));
+    $('#sessiondupe').dialog($.extend({title:gettext('Duplicate Session')},dOptions));
+    $('#sessionsmax').dialog($.extend({title:gettext('Maximum Users Exceeded')},dOptions));
 
     // generic dialog in case registration is unavailable
     var genericRegistrationError = function() {
         $('#register').dialog('close');
         $('#doRegister').attr('disabled',true).css('cursor', 'not-allowed');
         $('#sign_up').attr('disabled',true).css('cursor', 'not-allowed');
-        $('<div class="error">Sorry, registration is not available at this time.  Please try logging in anonymously or coming back later.</div>').dialog({
+        $('<div class="error">').text(gettext("Sorry, registration is not available at this time.  Please try logging in anonymously or coming back later")).dialog({
             modal: true,
-            title: 'Signup Unavailable',
+            title: gettext("Signup Unavailable"),
             resizable:false, 
             width:300
         });
@@ -157,16 +157,15 @@ $(function(){
                     if (data.success) {
                         if (typeof(_gaq) != 'undefined') { _gaq.push(['_trackEvent', 'Users', 'Registered']); }
                         $('#register').dialog('close');
-                        $('<div>You\'ve been registered for the public mapping project.</div>').dialog({
+                        $('<div />').text(gettext("You've been registered for the public mapping project.")).dialog({
                             modal:true,
                             width:300,
-                            title:'Success!',
-                            buttons: {
-                                "Start Mapping": function() {
+                            title:gettext("Success!"),
+                            buttons: [{
+                                text: gettext("Start Mapping"),
+                                click: function() {
                                     window.location.href = data.redirect;
-                                    return;
-                                }
-                            },
+                                    return; }}],
                             resizable:false,
                             open: function(event, ui) {
                                 $(".ui-dialog-titlebar-close", $(this).parent()).hide();
@@ -176,16 +175,16 @@ $(function(){
                         var newusername = $('#newusername');
                         newusername.removeClass('field');
                         newusername.addClass('error');
-                        $('<div>User Name already exists. Please choose another one.</div>').dialog({
-                            modal: true, autoOpen: true, title: 'Error', resizable:false
+                        $('<div />').text(gettext("User Name already exists. Please choose another one.")).dialog({
+                            modal: true, autoOpen: true, title: gettext('Error'), resizable:false
                         });                
                     } else if (data.message == 'email exists') {
                         var email = $('#email');
                         email.removeClass('field');
                         email.addClass('error');
                         $('#dupemail').css('display','block');
-                        $('<div>Email already exists. Enter another one, or use the password retrieval form.</div>').dialog({
-                            modal: true, autoOpen: true, title: 'Error', resizable:false
+                        $('<div />').text(gettext("Email already exists. Enter another one, or use the password retrieval form")).dialog({
+                            modal: true, autoOpen: true, title: gettext('Error'), resizable:false
                         });                
                     } else {
                         genericRegistrationError();
@@ -222,7 +221,7 @@ $(function(){
         var remindBtn = $('#doRemind');
         remindBtn.attr('disabled',true);
         var btnText = remindBtn.text();
-        remindBtn.html('<span class="ui-button-text">Please Wait...</span>');
+        remindBtn.html('<span class="ui-button-text" />').text(gettext('Please Wait...'));
 
         $.ajax({
             context:frm,
@@ -288,11 +287,11 @@ $(function(){
     // been the result of a failed login redirect. display error notices
     // around the username and password fields
     if (new RegExp('.*/accounts/login/$').test(window.location.href)) {
-        $('<div class="error">You entered an incorrect user name or password</div>').dialog({
+        $('<div class="error" />').text(gettext('You entered an incorrect user name or password')).dialog({
             modal:true,
             width:300,
             resizable:false,
-            title:'Login Error'
+            title:gettext('Login Error')
         });
         $('#username, #password').addClass('error');
     } else if( 'opensessions' in window && opensessions > 1 ) {
@@ -340,7 +339,10 @@ $(function(){
             var matches2 = matches[i].match(re2);
 
             if (matches2[1] == 'msg' && matches2[2] == 'logoff') {
-                $('<div title="Logged Off" id="logoffdlg"><p>You have been logged off by another browser. This happens sometimes if you attempt to access the application from two different locations.</p><h1>Please log in again.</h1></div>').dialog({
+                var dialog = $('<div title="Logged Off" id="logoffdlg" />');
+                dialog.append('<p /').text(gettext("You have been logged off by another browser. This happens sometimes if you attempt to access the application from two different locations."));
+                dialog.append('<h1 />').text(gettext('Please log in again'));
+                dialog.dialog({
                     modal:true,
                     resizable:false
                 });
