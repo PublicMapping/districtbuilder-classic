@@ -26,10 +26,11 @@ Author:
     Andrew Jennings, David Zwarg, Kenny Shepard
 """
 
-import hashlib, logging
+import hashlib, logging, httplib, string, base64, pprint, json
 import django.db.models
 from django.contrib.sessions.models import Session
 from django.contrib.auth.models import User
+from django.db import transaction
 from models import *
 
 class ModelHelper:
@@ -401,3 +402,761 @@ class ConfigImporter:
                     add_legislative_level_for_geolevel(parentless, legislative_body, subject, None)
 
         return True
+
+    def import_scoring(self, force):
+        """
+        Create the Scoring models.
+
+        Scoring is currently optional. Import sections only if they are present.
+
+        Returns:
+            A flag indicating if the import was successful.
+        """
+        result = True
+        if not self.store.has_scoring():
+            logging.debug('Scoring not configured')
+        
+        admin = User.objects.filter(is_superuser=True)
+        if admin.count() == 0:
+            logging.debug('There was no superuser installed; ScoreDisplays need to be assigned ownership to a superuser.')
+            return False
+        else:
+            admin = admin[0]
+
+        # Import score displays.
+        for sd in self.store.filter_scoredisplays():
+            lbconfig = self.store.get_legislative_body(sd.get('legislativebodyref'))
+            lb = LegislativeBody.objects.get(name=lbconfig.get('name'))
+            title = sd.get('title')[:50]
+             
+            sd_obj, created = ScoreDisplay.objects.get_or_create(
+                title=title, 
+                legislative_body=lb,
+                is_page=sd.get('type') == 'leaderboard',
+                cssclass=(sd.get('cssclass') or '')[:50],
+                owner=admin
+            )
+
+            if created:
+                logging.debug('Created ScoreDisplay "%s"', title)
+            else:
+                logging.debug('ScoreDisplay "%s" already exists', title)
+
+            # Import score panels for this score display.
+            for spref in self.store.filter_displayed_score_panels(sd):
+                sp = self.store.get_score_panel(spref.get('ref'))
+                title = sp.get('title')[:50]
+                position = int(sp.get('position'))
+                template = sp.get('template')[:500]
+                cssclass = (sp.get('cssclass') or '')[:50]
+                pnltype = sp.get('type')[:20]
+
+                is_ascending = sp.get('is_ascending')
+                if is_ascending is None:
+                    is_ascending = True
+                
+                ascending = sp.get('is_ascending')
+                sp_obj = ScorePanel.objects.filter(
+                    type=pnltype,
+                    position=position,
+                    title=title,
+                    template=template,
+                    cssclass=cssclass,
+                    is_ascending=(ascending is None or ascending=='true'), 
+                )
+
+                if len(sp_obj) == 0:
+                    sp_obj = ScorePanel(
+                        type=pnltype,
+                        position=position,
+                        title=title,
+                        template=template,
+                        cssclass=cssclass,
+                        is_ascending=(ascending is None or ascending=='true'), 
+                    )
+                    sp_obj.save()
+                    sd_obj.scorepanel_set.add(sp_obj)
+
+                    logging.debug('Created ScorePanel "%s"', title)
+                else:
+                    sp_obj = sp_obj[0]
+                    attached = sd_obj.scorepanel_set.filter(id=sp_obj.id).count() == 1
+                    if not attached:
+                        sd_obj.scorepanel_set.add(sp_obj)
+
+                    logging.debug('ScorePanel "%s" already exists', title)
+
+                # Import score functions for this score panel
+                for sfref in self.store.filter_paneled_score_functions(sp):
+                    sf_node = self.store.get_score_function(sfref.get('ref'))
+                    sf_obj = self.import_function(sf_node, force)
+
+                    # Add ScoreFunction reference to ScorePanel
+                    sp_obj.score_functions.add(sf_obj)
+
+        # It's possible to define ScoreFunctions that are not part of any ScorePanels, yet
+        # still need to be added to allow for user selection. Find and import these functions.
+        for sf_node in self.store.filter_score_functions():
+            self.import_function(sf_node, force)
+
+        # Import validation criteria.
+        if not self.store.has_validation():
+            logging.debug('Validation not configured')
+            return False;
+
+        for vc in self.store.filter_criteria():
+            lbconfig = self.store.get_legislative_body(vc.get('legislativebodyref'))
+            lb = LegislativeBody.objects.get(name=lbconfig.get('name'))
+
+            for crit in self.store.filter_criteria_criterion(vc):
+                # Import the score function for this validation criterion
+                sfref = self.store.get_criterion_score(crit)
+                try:
+                    sf = self.store.get_score_function(sfref.get('ref'))
+                except:
+                    logging.info("Couldn't import ScoreFunction for Criteria %s", crit.get('name'))
+                    result = False
+
+                sf_obj = self.import_function(sf, force)
+
+                # Import this validation criterion
+                attributes = {
+                    'name': crit.get('name'),
+                    'function': sf_obj,
+                    'description': crit.get('description') or '',
+                    'legislative_body': lb
+                }
+                crit_obj, created, changed, message = ModelHelper.check_and_update(ValidationCriteria, overwrite=force, **attributes)
+
+                if changed and not force:
+                    logging.info(message)
+                else:
+                    logging.debug(message)
+
+        return result
+
+    def import_function(self, node, force):
+        """
+        Create the ScoreFunction models and child scores.
+
+        Returns:
+            A newly created score function object.
+        """
+        attributes = {
+            'calculator': node.get('calculator')[:500],
+            'name': node.get('id')[:50],
+            'label': (node.get('label') or '')[:100],
+            'description': node.get('description') or '',
+            'is_planscore': node.get('type') == 'plan'
+        }
+        fn_obj, created, changed, message = ModelHelper.check_and_update(ScoreFunction, overwrite=force, **attributes)
+
+        lbodies = []
+        for lbitem in self.store.filter_function_legislative_bodies(node):
+            lb = self.store.get_legislative_body(lbitem.get('ref'))
+            lbodies.append(lb.get('name')[:256])
+        lbodies = list(LegislativeBody.objects.filter(name__in=lbodies))
+        fn_obj.selectable_bodies.add(*lbodies)
+
+        if changed and not force:
+            logging.info(message)
+        else:
+            logging.debug(message)
+
+        # Recursion if any ScoreArguments!
+        self.import_arguments(fn_obj, node, force)
+
+        return fn_obj
+
+    def import_arguments(self, score_function, node, force):
+        """
+        Create the ScoreArgument models.
+
+        Returns:
+            A flag indicating if the import was successful.
+        """
+        # Import arguments for this score function
+        for arg in self.store.filter_function_arguments(node):
+            name = arg.get('name')[:50]
+            arg_obj, created = ScoreArgument.objects.get_or_create(
+                function=score_function,
+                type='literal',
+                argument=name,
+                )
+            config_value = arg.get('value')[:50]
+            if created:
+                arg_obj.value = config_value
+                arg_obj.save()
+                logging.debug('Created literal ScoreArgument "%s"', name)
+            else:
+                if arg_obj.value == config_value:
+                    logging.debug('literal ScoreArgument "%s" already exists', name)
+                elif force:
+                    arg_obj.value = config_value
+                    arg_obj.save()
+                    logging.info('literal ScoreArgument "%s" value UPDATED', name)
+                else:
+                    logging.info('Didn\'t change ScoreArgument %s; attribute(s) "value" differ(s) from database configuration.\n\tWARNING: Sync your config file to your app configuration or use the -f switch with setup to force changes', name)
+
+        # Import subject arguments for this score function
+        for subarg in self.store.filter_function_subject_arguments(node):
+            name = subarg.get('name')[:50]
+            config_value=subarg.get('ref')[:50]
+            subarg_obj, created = ScoreArgument.objects.get_or_create(
+                function=score_function,
+                type='subject',
+                argument=name,
+            )
+
+            if created:
+                subarg_obj.value = config_value
+                subarg_obj.save()
+                logging.debug('Created subject ScoreArgument "%s"', name)
+            else:
+                if subarg_obj.value == config_value:
+                    logging.debug('subject ScoreArgument "%s" already exists', name)
+                elif force:
+                    subarg_obj.value = config_value
+                    subarg_obj.save()
+                    logging.info('subject ScoreArgument "%s" value UPDATED', name)
+                else:
+                    logging.info('Didn\'t change ScoreArgument %s; attribute(s) "value" differ(s) from database configuration.\n\tWARNING: Sync your config file to your app configuration or use the -f switch with setup to force changes', name)
+                    
+        
+        # Import score arguments for this score function
+        for scorearg in self.store.filter_function_score_arguments(node):
+            argfn = self.store.get_score_function(scorearg.get('ref'))
+            if argfn is None:
+                logging.info("ERROR: No such function %s can be found for argument of %s", scorearg.get('ref'), score_function.name)
+                continue
+
+            self.import_function(argfn, force)
+            config_value=scorearg.get('ref')[:50]
+            name = scorearg.get('name')[:50]
+
+            scorearg_obj, created = ScoreArgument.objects.get_or_create(
+                function=score_function,
+                type='score',
+                argument=name
+                )
+
+            if created:
+                scorearg_obj.value = config_value
+                scorearg_obj.save()
+                logging.debug('created subject scoreargument "%s"', name)
+            else:
+                if scorearg_obj.value == config_value:
+                    logging.debug('subject scoreargument "%s" already exists', name)
+                elif force:
+                    scorearg_obj.value = config_value
+                    scorearg_obj.save()
+                    logging.info('subject scoreargument "%s" value UPDATED', name)
+                else:
+                    logging.info('Didn\'t change scoreargument %s; attribute(s) "value" differ(s) from database configuration.\n\twarning: sync your config file to your app configuration or use the -f switch with setup to force changes', name)
+
+        return True
+
+    def import_contiguity_overrides(self):
+        """
+        Create the ContiguityOverride models. This is optional.
+
+        Returns:
+            A flag indicating if the import was successful.
+        """
+        # Remove previous contiguity overrides
+        ContiguityOverride.objects.all().delete()
+            
+        if not self.store.has_contiguity_overrides():
+            logging.debug('ContiguityOverrides not configured')
+
+        # Import contiguity overrides.
+        for co in self.store.filter_contiguity_overrides():
+            portable_id = co.get('id')
+            temp = Geounit.objects.filter(portable_id=portable_id)
+            if (len(temp) == 0):
+                raise Exception('There exists no geounit with portable_id: %s' % portable_id)
+            override_geounit = temp[0]
+
+            portable_id = co.get('connect_to')
+            temp = Geounit.objects.filter(portable_id=portable_id)
+            if (len(temp) == 0):
+                raise Exception('There exists no geounit with portable_id: %s' % portable_id)
+            connect_to_geounit = temp[0]
+
+            co_obj, created = ContiguityOverride.objects.get_or_create(
+                override_geounit=override_geounit, 
+                connect_to_geounit=connect_to_geounit 
+                )
+
+            if created:
+                logging.debug('Created ContiguityOverride "%s"', str(co_obj))
+            else:
+                logging.debug('ContiguityOverride "%s" already exists', str(co_obj))
+
+        return True
+
+class SpatialUtils:
+    """
+    A utility that aids in th configuration of the spatial components in the
+    configuration.
+    """
+    def __init__(self, store):
+        """
+        Create a new spatial utility, based on the stored config.
+        """
+        self.store = store
+
+        mapconfig = self.store.get_mapserver()
+
+        self.host = mapconfig.get('hostname')
+        self.port = 8080 # should this be parameterized?
+
+        if self.host == '':
+            self.host = 'localhost'
+        self.ns = mapconfig.get('ns')
+        self.nshref = mapconfig.get('nshref')
+
+        user_pass = '%s:%s' % (mapconfig.get('adminuser'), mapconfig.get('adminpass'))
+        auth = 'Basic %s' % string.strip(base64.encodestring(user_pass))
+        self.headers = {
+            'default': {
+                'Authorization': auth, 
+                'Content-Type': 'application/json', 
+                'Accepts':'application/json'
+            },
+            'sld': {
+                'Authorization': auth,
+                'Content-Type': 'application/vnd.ogc.sld+xml',
+                'Accepts':'application/xml'
+            }
+        }
+
+        self.styledir = mapconfig.get('styles')
+
+    @staticmethod
+    @transaction.commit_manually
+    def configure_views():
+        """
+        Create the spatial views for all the regions, geolevels and subjects.
+
+        This creates views in the database that are used to map the features
+        at different geographic levels, and for different choropleth map
+        visualizations. All parameters for creating the views are saved
+        in the database at this point.
+        """
+        cursor = connection.cursor()
+        
+        sql = "CREATE OR REPLACE VIEW identify_geounit AS SELECT rg.id, rg.name, rgg.geolevel_id, rg.geom, rc.number, rc.percentage, rc.subject_id FROM redistricting_geounit rg JOIN redistricting_geounit_geolevel rgg ON rg.id = rgg.geounit_id JOIN redistricting_characteristic rc ON rg.id = rc.geounit_id;"
+        cursor.execute(sql)
+        transaction.commit()
+
+        logging.debug('Created identify_geounit view ...')
+
+        for geolevel in Geolevel.objects.all():
+            if geolevel.legislativelevel_set.all().count() == 0:
+                # Skip 'abstract' geolevels if regions are configured
+                continue
+
+            lbset = ','.join(map( lambda x:str(x.legislative_body_id), geolevel.legislativelevel_set.all()))
+            sql = "CREATE OR REPLACE VIEW simple_district_%s AS SELECT rd.id, rd.district_id, rd.plan_id, st_geometryn(rd.simple, %d) AS geom, rp.legislative_body_id FROM publicmapping.redistricting_district as rd JOIN publicmapping.redistricting_plan as rp ON rd.plan_id = rp.id WHERE rp.legislative_body_id IN (%s);" % (geolevel.name, geolevel.id, lbset)
+            cursor.execute(sql)
+            transaction.commit()
+
+            logging.debug('Created simple_district_%s view ...', geolevel.name)
+
+            sql = "CREATE OR REPLACE VIEW simple_%s AS SELECT rg.id, rg.name, rgg.geolevel_id, rg.simple as geom FROM redistricting_geounit rg JOIN redistricting_geounit_geolevel rgg ON rg.id = rgg.geounit_id WHERE rgg.geolevel_id = %%(geolevel_id)s;" % geolevel.name
+            cursor.execute(sql, {'geolevel_id':geolevel.id})
+            transaction.commit()
+
+            logging.debug('Created simple_%s view ...', geolevel.name)
+            
+            for subject in Subject.objects.all():
+                sql = "CREATE OR REPLACE VIEW demo_%s_%s AS SELECT rg.id, rg.name, rgg.geolevel_id, rg.geom, rc.number, rc.percentage FROM redistricting_geounit rg JOIN redistricting_geounit_geolevel rgg ON rg.id = rgg.geounit_id JOIN redistricting_characteristic rc ON rg.id = rc.geounit_id WHERE rc.subject_id = %%(subject_id)s AND rgg.geolevel_id = %%(geolevel_id)s;" % (geolevel.name, subject.name,)
+                cursor.execute(sql, {'subject_id':subject.id, 'geolevel_id':geolevel.id})
+                transaction.commit()
+
+                logging.debug('Created demo_%s_%s view ...', geolevel.name, subject.name)
+
+
+    def purge_geoserver(self):
+        """
+        Remove any configured items in geoserver for the namespace.
+
+        This prevents conflicts in geowebcache when the datastore and
+        featuretype is reconfigured without discarding the old featuretype.
+        """
+        # get the workspace 
+        ws_cfg = self._read_config('/geoserver/rest/workspaces/%s.json' % self.ns, 'Could not get workspace %s.' % self.ns)
+        if ws_cfg is None:
+            logging.debug("%s configuration could not be fetched.", self.ns)
+            return True
+
+        # get the data stores in the workspace
+        wsds_cfg = self._read_config(ws_cfg['workspace']['dataStores'], 'Could not get data stores in workspace %s' % ws_cfg['workspace']['name'])
+        if wsds_cfg is None:
+            logging.debug("Workspace '%s' datastore configuration could not be fetched.", self.ns)
+            return False
+
+        # get the data source configuration
+        ds_cfg = self._read_config(wsds_cfg['dataStores']['dataStore'][0]['href'], "Could not get datastore configuration for '%s'" % wsds_cfg['dataStores']['dataStore'][0]['name'])
+        if ds_cfg is None:
+            logging.debug("Datastore configuration could not be fetched.")
+            return False
+
+        # get all the feature types in the data store
+        fts_cfg = self._read_config(ds_cfg['dataStore']['featureTypes'] + '?list=all', "Could not get feature types in datastore '%s'" % wsds_cfg['dataStores']['dataStore'][0]['name'])
+        if fts_cfg is None:
+            logging.debug("Data store '%s' feature type configuration could not be fetched.", wsds_cfg['dataStores']['dataStore'][0]['name'])
+            return False
+
+        if not 'featureType' in fts_cfg['featureTypes']: 
+            fts_cfg['featureTypes'] = { 'featureType':[] }
+
+        for ft_cfg in fts_cfg['featureTypes']['featureType']:
+            # Delete the layer
+            if not self._rest_config('DELETE', '/geoserver/rest/layers/%s.json' % ft_cfg['name'], None, 'Could not delete layer %s' % (ft_cfg['name'],)):
+                logging.debug("Could not delete layer %s", ft_cfg['name'])
+                continue
+
+            # Delete the feature type
+            if not self._rest_config('DELETE', ft_cfg['href'], None, 'Could not delete feature type %s' % (ft_cfg['name'],)):
+                logging.debug("Could not delete feature type '%s'", ft_cfg['name'])
+            else:
+                logging.debug("Deleted feature type '%s'", ft_cfg['name'])
+
+        # now that the data store is empty, delete it
+        if not self._rest_config('DELETE', wsds_cfg['dataStores']['dataStore'][0]['href'], None, 'Could not delete datastore %s' % wsds_cfg['dataStores']['dataStore'][0]['name']):
+            logging.debug("Could not delete datastore %s", wsds_cfg['dataStores']['dataStore'][0]['name'])
+            return False
+
+        # now that the workspace is empty, delete it
+        if not self._rest_config('DELETE', '/geoserver/rest/workspaces/%s.json' % self.ns, None, 'Could not delete workspace %s' % self.ns):
+            logging.debug("Could not delete workspace %s", self.ns)
+            return False
+
+        # Get a list of styles
+        sts_cfg = self._read_config('/geoserver/rest/styles.json', "Could not get styles.")
+        if not sts_cfg is None:
+            includes = ['^%s:.*' % self.ns]
+            for st_cfg in sts_cfg['styles']['style']:
+                skip = False
+                for inc in includes:
+                    skip = skip or re.compile(inc).match(st_cfg['name']) is None
+                if skip:
+                    # This style doesn't match any style starting with the prefix.
+                    continue
+
+                # Delete the style
+                if not self._rest_config('DELETE', st_cfg['href'], None, 'Could not delete style %s' % st_cfg['name']):
+                    logging.debug("Could not delete style %s", st_cfg['name'])
+                else:
+                    logging.debug("Deleted style %s", st_cfg['name'])
+
+        return True
+            
+
+    def configure_geoserver(self):
+        """
+        Configure all the components in Geoserver. This method configures the
+        geoserver workspace, datastore, feature types, and styles. All 
+        configuration steps get processed through the REST config.
+
+        Returns:
+            A flag indicating if geoserver was configured correctly.
+        """
+        try:
+            srid = Geounit.objects.all()[0].geom.srid
+        except:
+            srid = 0
+            logging.debug('Spatial Reference could not be determined, defaulting to %d', srid)
+
+        # Create our namespace
+        namespace_url = '/geoserver/rest/namespaces'
+        namespace_obj = { 'namespace': { 'prefix': self.ns, 'uri': self.nshref } }
+        self._check_spatial_resource(namespace_url, self.ns, namespace_obj, 'Namespace')
+
+        # Create our DataStore
+        dbconfig = self.store.get_database()
+
+        data_store_url = '/geoserver/rest/workspaces/%s/datastores' % self.ns
+        data_store_name = 'PostGIS'
+
+        data_store_obj = {
+            'dataStore': {
+                'name': data_store_name,
+                'connectionParameters': {
+                    'host': dbconfig.get('host',self.host),
+                    'port': 5432,
+                    'database': dbconfig.get('name'),
+                    'user': dbconfig.get('user'),
+                    'passwd': dbconfig.get('password'),
+                    'dbtype': 'postgis',
+                    'namespace': self.ns,
+                    'schema': dbconfig.get('user')
+                }
+            }
+        }
+
+        self._check_spatial_resource(data_store_url, data_store_name, data_store_obj, 'Data Store')
+
+        # Make a list of layers
+        feature_type_names = ['identify_geounit']
+        for geolevel in Geolevel.objects.all():
+            if geolevel.legislativelevel_set.all().count() == 0:
+                # Skip 'abstract' geolevels if regions are configured
+                continue
+
+            feature_type_names.append('simple_%s' % geolevel.name)
+            feature_type_names.append('simple_district_%s' % geolevel.name)
+
+            for subject in Subject.objects.all().order_by('sort_key'):
+                feature_type_names.append('demo_%s_%s' % (geolevel.name, subject.name))
+
+        # Check for each layer in the list.  If it doesn't exist, make it
+        feature_type_url = '/geoserver/rest/workspaces/%s/datastores/%s/featuretypes' % (self.ns, data_store_name)
+        for feature_type_name in feature_type_names:
+            feature_type_obj = SpatialUtils.feature_template(feature_type_name)
+            self._check_spatial_resource(feature_type_url, feature_type_name, feature_type_obj, 'Feature Type')
+
+        self._create_style('simple_district', None, '%s:simple_district' % self.ns, None)
+
+        # Create the style for the demographic layer
+
+        for geolevel in Geolevel.objects.all():
+            if geolevel.legislativelevel_set.all().count() == 0:
+                # Skip 'abstract' geolevels if regions are configured
+                continue
+
+            is_first_subject = True
+
+            for subject in Subject.objects.all().order_by('sort_key'):
+
+                self._create_style(subject.name, geolevel.name, None, None)
+
+                if is_first_subject:
+                    is_first_subject = False
+
+                    # Create NONE demographic layer, based on first subject
+                    feature_type_obj = SpatialUtils.feature_template('demo_%s' % geolevel.name)
+                    feature_type_obj['featureType']['nativeName'] = 'demo_%s_%s' % (geolevel.name, subject.name)
+                    self._check_spatial_resource(feature_type_url, 'demo_%s' % geolevel.name, feature_type_obj, 'Feature Type')
+                    self._create_style(subject.name, geolevel.name, '%s:demo_%s' % (self.ns, geolevel.name,), 'none')
+
+                    # Create boundary layer, based on geographic boundaries
+                    feature_name = '%s_boundaries' % geolevel.name
+                    feature_type_obj = SpatialUtils.feature_template(feature_name)
+                    feature_type_obj['featureType']['nativeName'] = 'demo_%s_%s' % (geolevel.name, subject.name)
+                    self._check_spatial_resource(feature_type_url, feature_name, feature_type_obj, 'Feature Type')
+                    self._create_style(subject.name, geolevel.name, '%s:%s_boundaries' % (self.ns,geolevel.name,), 'boundaries')
+
+        logging.info("Geoserver configuration complete.")
+
+        # finished configure_geoserver
+        return True
+
+    def _check_spatial_resource(self, url, name, dictionary, type_name=None, update=False):
+        """ 
+        This method will check geoserver for the existence of an object.
+        It will create the object if it doesn't exist and log messages
+        to the configured logger.
+        """
+        verbose_name = '%s:%s' % ('Geoserver object' if type_name is None else type_name, name)
+        if self._rest_check('%s/%s.json' % (url, name)):
+            logging.debug("%s already exists", verbose_name)
+            if update:
+                if not self._rest_config( 'PUT', url, json.dumps(dictionary), 'Could not create %s' % (verbose_name,)):
+                    logging.info("%s couldn't be updated.", verbose_name)
+                    return False
+                
+        else:
+            if not self._rest_config( 'POST', url, json.dumps(dictionary), 'Could not create %s' % (verbose_name,)):
+                return False
+
+            logging.debug('Created %s', verbose_name)
+
+        return True
+
+    @staticmethod
+    def feature_template(name, title=None):
+        """
+        Return a common format for feature types.
+        """
+        return {
+            'featureType': {
+                'name': name,
+                'title': name if title is None else title,
+
+                # Set the bounding box to the maximum spherical mercator extent
+                # in order to avoid all issues with geowebcache tile offsets
+                'nativeBoundingBox': {
+                    'minx': '%0.1f' % -20037508.342789244,
+                    'miny': '%0.1f' % -20037508.342789244,
+                    'maxx': '%0.1f' % 20037508.342789244,
+                    'maxy': '%0.1f' % 20037508.342789244
+                },
+                'maxFeatures': settings.FEATURE_LIMIT + 1
+            }
+        }
+
+    def _rest_check(self, url):
+        """
+        Attempt to get a REST resource. If the resource exists, and can
+        be retrieved successfully, it will pass the check.
+        """
+        try:
+            conn = httplib.HTTPConnection(self.host, self.port)
+            conn.request('GET', url, None, self.headers['default'])
+            rsp = conn.getresponse()
+            rsp.read() # and discard
+            conn.close()
+            return rsp.status == 200
+        except:
+            # HTTP 400, 500 errors are also considered exceptions by the httplib
+            return False
+
+    def _rest_config(self, method, url, data, msg, headers=None):
+        """
+        Configure a REST resource. This issues an HTTP POST or PUT request
+        to configure or update the specified resource.
+        """
+        if headers is None:
+            headers = self.headers['default']
+        try:
+            conn = httplib.HTTPConnection(self.host, self.port)
+            conn.request(method, url, data, headers)
+            rsp = conn.getresponse()
+            rsp.read() # and discard
+            conn.close()
+            if rsp.status != 201 and rsp.status != 200:
+                logging.info("""
+ERROR:
+
+        Could not configure geoserver: 
+
+        %s 
+
+        Please check the configuration settings, and try again.
+""", msg)
+                logging.debug("        HTTP Status: %d", rsp.status)
+                return False
+        except Exception, ex:
+            logging.info("""
+ERROR:
+
+        Exception thrown while configuring geoserver.
+""")
+            return False
+
+        return True
+
+    def _read_config(self, url, msg, headers=None):
+        """
+        Read a configured REST resource.
+        """
+        if headers is None:
+            headers = self.headers['default']
+        try:
+            conn = httplib.HTTPConnection(self.host, self.port)
+            conn.request('GET', url, None, headers)
+            rsp = conn.getresponse()
+            response = rsp.read() # and discard
+            conn.close()
+            if rsp.status != 201 and rsp.status != 200:
+                logging.info("""
+ERROR:
+
+        Could not fetch geoserver configuration:
+
+        %s
+
+        Please chece the configuration settings, and try again.
+""", msg)
+                return None
+
+            return json.loads(response)
+        except Exception, ex:
+            logging.info("""
+ERROR:
+
+        Exception thrown while fetching geoserver configuration.
+""")
+            logging.debug(traceback.format_exc())
+            return None
+
+    def _create_style(self, subject_name, geolevel_name, style_name, style_type):
+        """
+        Create a style for a layer, defaulting to 'polygon' for a polygon
+        layer if the style file is not available.
+        """
+
+        if not style_type:
+            style_type = subject_name
+
+        if not style_name:
+            layer_name = '%s:demo_%s_%s' % (self.ns, geolevel_name, subject_name)
+            style_name = layer_name
+        else:
+            layer_name = style_name
+
+        style_obj = { 'style': {
+            'name': layer_name,
+            'filename': '%s.sld' % layer_name
+        } }
+
+        # Get the SLD file
+        sld = self._get_style(geolevel_name, style_type)
+
+        if sld is None:
+            logging.debug('No style file found for %s', layer_name)
+            style_name = 'polygon'
+        else:
+            # Create the styles for the demographic layers
+            style_url = '/geoserver/rest/styles'
+
+            # Create the style object on the geoserver
+            self._check_spatial_resource(style_url, style_name, style_obj, 'Map Style')
+
+            # Update the style with the sld file contents
+
+            if self._rest_config( 'PUT', '/geoserver/rest/styles/%s' % style_name, \
+                sld, "Could not upload style file '%s.sld'" % style_name, \
+                headers=self.headers['sld']):
+                logging.debug("Uploaded '%s.sld' file.", style_name)
+
+        # Apply the uploaded style to the demographic layers
+        layer = { 'layer' : {
+            'defaultStyle': {
+                'name': style_name
+            },
+            'enabled': True
+        } }
+
+        
+        if self._rest_config( 'PUT', '/geoserver/rest/layers/%s' % layer_name, \
+            json.dumps(layer), "Could not assign style to layer '%s'." % layer_name):
+            logging.debug("Assigned style '%s' to layer '%s'.", style_name, layer_name)
+
+    def _get_style(self, geolevel, subject):
+        if not geolevel:
+            path = '%s/%s:%s.sld' % (self.styledir, self.ns, subject)
+        else:
+            path = '%s/%s:%s_%s.sld' % (self.styledir, self.ns, geolevel, subject) 
+        try:
+            stylefile = open(path)
+            sld = stylefile.read()
+            stylefile.close()
+
+            return sld
+        except:
+            logging.debug("""
+WARNING:
+
+        The style file:
+        
+        %s
+        
+        could not be loaded. Please confirm that the
+        style files are named according to the "geolevel_subject.sld"
+        convention, and try again.
+""", path)
+            return None

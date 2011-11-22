@@ -425,6 +425,36 @@ class StoredConfig:
         """
         return self.get_node('GeoLevels/GeoLevel', parent=rnode)
 
+    def get_score_panel(self, idattr):
+        """
+        Get the score panel configuration node.
+        """
+        return self.get_node('//ScorePanels/ScorePanel[@id="%s"]' % idattr)
+
+    def get_score_function(self, idattr):
+        """
+        Get the score function configuration node.
+        """
+        return self.get_node('//ScoreFunctions/ScoreFunction[@id="%s"]' % idattr)
+
+    def get_criterion_score(self, crit_node):
+        """
+        Get the score for a given criterion from the XML data.
+        """
+        return self.get_node('Score', parent=crit_node)
+
+    def get_mapserver(self):
+        """
+        Get the map server configuration node.
+        """
+        return self.get_node('//MapServer')
+
+    def get_database(self):
+        """
+        Get the database configuration node.
+        """
+        return self.get_node('//Database')
+
     def filter_regions(self):
         """
         Get all the region configurations from the XML data.
@@ -453,7 +483,7 @@ class StoredConfig:
         """
         Get all the subject configurations from the XML data.
         """
-        return self.filter_nodes('//Subject[@id]')
+        return self.filter_nodes('/Subjects/Subject')
 
     def filter_geolevels(self):
         """
@@ -461,3 +491,86 @@ class StoredConfig:
         """
         return self.filter_nodes('/DistrictBuilder/GeoLevels/GeoLevel')
 
+    def filter_scoredisplays(self):
+        """
+        Get all the score display configurations from the XML data.
+        """
+        return self.filter_nodes('//ScoreDisplays/ScoreDisplay')
+
+    def filter_displayed_score_panels(self, disp_node):
+        """
+        Get all the score panels configured in a score display.
+        """
+        return self.filter_nodes('ScorePanel', parent=disp_node)
+
+    def filter_paneled_score_functions(self, pnl_node):
+        """
+        Get all the score functions configured in a score panel.
+        """
+        return self.filter_nodes('Score', parent=pnl_node)
+
+    def filter_score_functions(self):
+        """
+        Get all the score functions from the XML data.
+        """
+        return self.filter_nodes('//ScoreFunctions/ScoreFunction')
+
+    def filter_criteria(self):
+        """
+        Get all the validation criteria from the XML data.
+        """
+        return self.filter_nodes('//Validation/Criteria')
+
+    def filter_criteria_criterion(self, crit_node):
+        """
+        Get all the criterion for a given criteria from the XML data.
+        """
+        return self.filter_nodes('Criterion', parent=crit_node)
+
+    def filter_function_legislative_bodies(self, fn_node):
+        """
+        Get all the legislative bodies for a given score function from the XML data.
+        """
+        return self.filter_nodes('LegislativeBody', parent=fn_node)
+
+    def filter_function_arguments(self, fn_node):
+        """
+        Get all the score function arguments from the XML data.
+        """
+        return self.filter_nodes('Argument', parent=fn_node)
+
+    def filter_function_subject_arguments(self, fn_node):
+        """
+        Get all the score function subject arguments from the XML data.
+        """
+        return self.filter_nodes('SubjectArgument', parent=fn_node)
+
+    def filter_function_score_arguments(self, fn_node):
+        """
+        Get all the score function subject arguments from the XML data.
+        """
+        return self.filter_nodes('ScoreArgument', parent=fn_node)
+
+    def filter_contiguity_overrides(self):
+        """
+        Get all the contiguity overrides from the XML data.
+        """
+        return self.filter_nodes('//ContiguityOverrides/ContiguityOverride')
+
+    def has_scoring(self):
+        """
+        Does the configuration contain any scoring nodes?
+        """
+        return not self.get_node('//Scoring') is None
+
+    def has_validation(self):
+        """
+        Does the configuration contain any validation nodes?
+        """
+        return not self.get_node('//Validation') is None
+
+    def has_contiguity_overrides(self):
+        """
+        Does the configuration contain any contiguity override nodes?
+        """
+        return not self.get_node('//ContiguityOverrides') is None
