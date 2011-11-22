@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-22 13:59-0500\n"
+"POT-Creation-Date: 2011-11-22 14:14-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -188,11 +188,15 @@ msgid "Login Error"
 msgstr ""
 
 #: static-media/js/register.js:335 static/js/register.js:335
+msgid "Logged Off"
+msgstr ""
+
+#: static-media/js/register.js:336 static/js/register.js:336
 msgid ""
 "You have been logged off by another browser. This happens sometimes if you "
 "attempt to access the application from two different locations."
 msgstr ""
 
-#: static-media/js/register.js:336 static/js/register.js:336
+#: static-media/js/register.js:337 static/js/register.js:337
 msgid "Please log in again"
 msgstr ""
