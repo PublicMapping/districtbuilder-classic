@@ -1,8 +1,9 @@
+{% load i18n %}
 {% if is_registered %}
-<div id="register" title="Account Information">
+<div id="register" title="{% trans "Account Information" %}">
     <form id="registerForm" action="/accounts/update/" method="post">
 {% else %}
-<div id="register" title="Sign Up For An Account">
+<div id="register" title="{% trans "Sign Up For An Account" %}">
     <form id="registerForm" action="/accounts/register/" method="post">
 {% endif %}
         <table id="registerTable">
