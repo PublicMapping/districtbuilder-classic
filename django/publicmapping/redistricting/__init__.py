@@ -483,7 +483,7 @@ class StoredConfig:
         """
         Get all the subject configurations from the XML data.
         """
-        return self.filter_nodes('/Subjects/Subject')
+        return self.filter_nodes('//Subjects/Subject')
 
     def filter_geolevels(self):
         """

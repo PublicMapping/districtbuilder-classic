@@ -28,6 +28,7 @@ Author:
 
 import hashlib, logging, httplib, string, base64, pprint, json
 import django.db.models
+from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.sessions.models import Session
 from django.contrib.auth.models import User
 from django.db import transaction

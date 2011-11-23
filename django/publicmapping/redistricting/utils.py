@@ -239,6 +239,10 @@ class DistrictIndexFile():
         else: # filename.endswith('.csv'):
             indexFile = filename
 
+            if not os.exists(indexFile):
+                sys.stderr.write('The .csv file could not be found, plan "%s" was not created.' % name)
+                return
+
         try:
             legislative_body = LegislativeBody.objects.get(id=int(body))
         except:

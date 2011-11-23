@@ -32,7 +32,6 @@ from django.contrib.gis.gdal import *
 from django.contrib.gis.geos import *
 from django.contrib.gis.db.models import Sum, Union
 from django.contrib.auth.models import User
-from django.core.exceptions import ObjectDoesNotExist
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
 from django.conf import settings
@@ -290,7 +289,7 @@ ERROR:
                 sconfig.append(salconfig)
             gconfig['subject_fields'].append( sconfig )
 
-        self.import_shape(gconfig)
+        self.import_shape(store, gconfig)
 
 
     def renest_geolevel(self, config, glconf):
@@ -425,7 +424,7 @@ ERROR:
 
         return success
 
-    def import_shape(self,config):
+    def import_shape(self, store, config):
         """
         Import a shapefile, based on a config.
 
@@ -505,9 +504,9 @@ ERROR:
                 for region, filter_list in config['region_filters'].iteritems():
                     # Check for applicability of the function by examining the config
                     geolevel_xpath = '/DistrictBuilder/GeoLevels/GeoLevel[@name="%s"]' % config['geolevel']
-                    geolevel_config = config.xpath(geolevel_xpath)
+                    geolevel_config = store.data.xpath(geolevel_xpath)
                     geolevel_region_xpath = '/DistrictBuilder/Regions/Region[@name="%s"]/GeoLevels//GeoLevel[@ref="%s"]' % (region, geolevel_config[0].get('id'))
-                    if len(config.xpath(geolevel_region_xpath)) > 0:
+                    if len(store.data.xpath(geolevel_region_xpath)) > 0:
                         # If the geolevel is in the region, check the filters
                         for f in filter_list:
                             if f(feat) == True:
