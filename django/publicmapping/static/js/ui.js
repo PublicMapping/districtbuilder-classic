@@ -288,13 +288,27 @@ $(function() {
             }
         }
     });
-    $('#leaderboard_tabs').tabs();
+
+    // leaderboard tabs construction
+    $('#leaderboard_tabs').tabs({
+        // implement surrogate behavior as a workaround to new jQuery UI Tab design changes.
+        select: function(e, ui) {
+            if (ui.index == 0) {
+                // Top ranked plans
+                $('#leaderboard_myranked').hide();
+                $('#leaderboard_topranked').show();
+            } else {
+                // My ranked plans
+                $('#leaderboard_topranked').hide();
+                $('#leaderboard_myranked').show();
+            }
+        }
+    });
+    // start myranked container as hidden
+    $('#leaderboard_myranked').hide();
+
     $('#map_menu').tabs();
-    
-    
     $('#toolsets').tabs();
-   
-   
    
     // jQuery Tools tooltips   
     loadTooltips();

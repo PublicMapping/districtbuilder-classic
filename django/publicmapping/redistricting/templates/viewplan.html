@@ -690,13 +690,26 @@
       <div class="shadow_top"></div>
       <div class="toolbar  ui-widget-header" id="leaderboard_tabs">
           <ul id="leaderboard_nav">
-              <li id="tab_topranked"><a href="#leaderboard_topranked">{% trans "Top Ranked Users' Plans" %}</a><li>
+              <li id="tab_topranked"><a href="#leaderboard_topranked_surrogate">{% trans "Top Ranked Users' Plans" %}</a><li>
               {% if is_registered %}                  
-              <li id="tab_myranked"><a href="#leaderboard_myranked">{% trans "My Ranked Plans" %}</a></li>
+              <li id="tab_myranked"><a href="#leaderboard_myranked_surrogate">{% trans "My Ranked Plans" %}</a></li>
               {% endif %}
           </ul>
           <div id="updateLeaderboardsContainer"></div>
           <div id="downloadLeaderboardsContainer"></div>
+
+          {% comment %}
+
+          These two 'surrogate' divs are needed due to changes in the jQuery UI Tab control 
+          that make it so the tab content divs are required to be within the parent tab control.
+          Without a complete stylistic redesign, the simplest workaround is to intercept tab 
+          change events to these fake containers to hide/show the real containers (below).
+
+          {% endcomment %}
+          <div id="leaderboard_topranked_surrogate"></div>
+          {% if is_registered %}                  
+          <div id="leaderboard_myranked_surrogate"></div>
+          {% endif %}
        </div>
     
       <div class="tab_content">
