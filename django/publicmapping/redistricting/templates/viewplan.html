@@ -690,9 +690,9 @@
       <div class="shadow_top"></div>
       <div class="toolbar  ui-widget-header" id="leaderboard_tabs">
           <ul id="leaderboard_nav">
-              <li id="tab_topranked"><a href="#leaderboard_topranked">Top Ranked Users' Plans</a><li>
+              <li id="tab_topranked"><a href="#leaderboard_topranked">{% trans "Top Ranked Users' Plans" %}</a><li>
               {% if is_registered %}                  
-              <li id="tab_myranked"><a href="#leaderboard_myranked">My Ranked Plans</a></li>
+              <li id="tab_myranked"><a href="#leaderboard_myranked">{% trans "My Ranked Plans" %}</a></li>
               {% endif %}
           </ul>
           <div id="updateLeaderboardsContainer"></div>
@@ -704,7 +704,7 @@
           <div class="leaderboard_panels">
             <div class="leg_selector_container">
                 <span class="leg_selector_instructions">
-                   1. Select Legislative Body
+                   1. {% trans "Select Legislative Body" %}
                 </span>
                 <select id="legSelectorLeaderboards">
                     {% for body in leaderboard_bodies %}
