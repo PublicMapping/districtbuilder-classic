@@ -7,11 +7,12 @@ Context:
     plan: The plan that has been submitted
 
 {% endcomment %}
+{% load i18n %}
 {% autoescape off %}
-Hello {{ user.username }},
+{% trans "Hello" %} {{ user.username }},
 
-Your plan ("{{ plan.name }}") has been successfully submitted. Thank you for your submission.
+{% trans "Your plan" %} ("{{ plan.name }}") {% trans "has been successfully submitted. Thank you for your submission." %}
 
-Happy Redistricting!
-The Public Mapping Team
+{% trans "Happy Redistricting!" %}
+{% trans "The Public Mapping Team" %}
 {% endautoescape %}

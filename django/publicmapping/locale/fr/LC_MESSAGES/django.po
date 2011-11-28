@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-28 10:57-0500\n"
+"POT-Creation-Date: 2011-11-28 17:15-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,6 +30,76 @@ msgstr ""
 #: redistricting/admin.py:298
 #, python-format
 msgid "Delete selected %(verbose_name_plural)s"
+msgstr ""
+
+#: redistricting/templates/admin.email:17
+msgid "Hello Admin"
+msgstr ""
+
+#: redistricting/templates/admin.email:19
+msgid "There was a problem importing a plan file from user"
+msgstr ""
+
+#: redistricting/templates/admin.email:19
+msgid ""
+"This user attempted to upload a file containing a plan but had some "
+"trouble.  The plan may have been imported."
+msgstr ""
+
+#: redistricting/templates/admin.email:22
+msgid "Plan name"
+msgstr ""
+
+#: redistricting/templates/admin.email:32
+msgid ""
+"If the user continues to have problems with this process, please check the "
+"application settings."
+msgstr ""
+
+#: redistricting/templates/admin.email:34
+msgid "Thank you."
+msgstr ""
+
+#: redistricting/templates/error.email:15
+#: redistricting/templates/importedplan.email:16
+#: redistricting/templates/submitted.email:12
+#: templates/forgottenpassword.email:12
+msgid "Hello"
+msgstr ""
+
+#: redistricting/templates/error.email:17
+msgid ""
+"We apologize for the inconvenience, but your uploaded file was not converted "
+"into a plan. There are a few reasons why this might have happened. As best "
+"we can tell, your file failed to upload for the following reason:"
+msgstr ""
+
+#: redistricting/templates/error.email:23
+msgid "If you correct this issue and upload your file again, we can try again."
+msgstr ""
+
+#: redistricting/templates/error.email:25
+#: redistricting/templates/importedplan.email:28
+#: redistricting/templates/submitted.email:16
+#: templates/forgottenpassword.email:18
+msgid "Happy Redistricting!"
+msgstr ""
+
+#: redistricting/templates/error.email:26
+#: redistricting/templates/importedplan.email:29
+#: redistricting/templates/submitted.email:17
+#: templates/forgottenpassword.email:19
+msgid "The Public Mapping Team"
+msgstr ""
+
+#: redistricting/templates/importedplan.email:18
+msgid ""
+"Your plan was created successfully. You can view, edit, and share your new "
+"plan by logging in to District Builder, and pulling up the plan entitled"
+msgstr ""
+
+#: redistricting/templates/importedplan.email:21
+msgid "There were a few errors during import:"
 msgstr ""
 
 #: redistricting/templates/leaderboard_panel_all.html:38
@@ -59,6 +129,34 @@ msgstr ""
 
 #: redistricting/templates/leaderboard_panel_mine.html:36
 msgid "My Plans"
+msgstr ""
+
+#: redistricting/templates/submission.email:12
+msgid "user name"
+msgstr ""
+
+#: redistricting/templates/submission.email:13
+msgid "plan id"
+msgstr ""
+
+#: redistricting/templates/submission.email:14
+msgid "plan version"
+msgstr ""
+
+#: redistricting/templates/submission.email:15
+msgid "plan name"
+msgstr ""
+
+#: redistricting/templates/submission.email:16
+msgid "legislative body"
+msgstr ""
+
+#: redistricting/templates/submitted.email:14
+msgid "Your plan"
+msgstr ""
+
+#: redistricting/templates/submitted.email:14
+msgid "has been successfully submitted. Thank you for your submission."
 msgstr ""
 
 #: redistricting/templates/viewplan.html:443
@@ -251,10 +349,6 @@ msgstr ""
 msgid "Indicates required field"
 msgstr ""
 
-#: templates/forgottenpassword.email:12
-msgid "Hello"
-msgstr ""
-
 #: templates/forgottenpassword.email:14
 msgid ""
 "You requested a new password for the Public Mapping Project. Sorry for the "
@@ -263,14 +357,6 @@ msgstr ""
 
 #: templates/forgottenpassword.email:16
 msgid "Thank you for using the Public Mapping Project."
-msgstr ""
-
-#: templates/forgottenpassword.email:18
-msgid "Happy Redistricting!"
-msgstr ""
-
-#: templates/forgottenpassword.email:19
-msgid "The Public Mapping Team"
 msgstr ""
 
 #: templates/index.html:38
