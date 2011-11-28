@@ -28,15 +28,15 @@
 
 {% block content %}
     <div id="content-main">
-    <p>A Subject in DistrictBuilder has relationships with many objects in the application. For this reason, adding a Subject requires a few extra steps. The following forms will walk you through the process of:</p>
+    <p>{% trans "A Subject in DistrictBuilder has relationships with many objects in the application. For this reason, adding a Subject requires a few extra steps. The following forms will walk you through the process of:" %}</p>
     <ol>
-        <li><b>Downloading a Subject template file (CSV)</b></li>
-        <li>Uploading a complete Subject file (CSV)</li>
-        <li>Configuring the settings for the uploaded Subject.</li>
+        <li><b>{% trans "Downloading a Subject template file (CSV)" %}</b></li>
+        <li>{% trans "Uploading a complete Subject file (CSV)" %}</li>
+        <li>{% trans "Configuring the settings for the uploaded Subject." %}</li>
     </ol>
-    <h2>1. Download a Subject template file</h2>
-    <p>Please click on the following link, and save the contents of that file on your local filesystem:</p>
-    <p><a href="../template/">Subject template CSV</a></p>
+    <h2>{% trans "1. Download a Subject template file" %}</h2>
+    <p>{% trans "Please click on the following link, and save the contents of that file on your local filesystem:" %}</p>
+    <p><a href="../template/">{% trans "Subject template CSV" %}</a></p>
     <form action="../upload/" method="get" id="{{ opts.module_name }}_form">
       <input type="submit" value="{% trans "Continue" %}" />
     </form>

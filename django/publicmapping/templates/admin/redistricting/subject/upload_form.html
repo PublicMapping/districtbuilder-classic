@@ -34,7 +34,7 @@ $(function(){
                         $('#step3').css('display','none');
                         $('#step4').css('display','block');
                         $('#upload_status_messages').removeClass('loading');
-                        $('#upload_status_messages').append('<p>Subject ingest successful! Press "Continue" to edit the Subject details.</p>');
+                        $('#upload_status_messages').append('<p>{% trans 'Subject ingest successful! Press "Continue" to edit the Subject details.' %}</p>');
                         $('#processing_continue').attr('disabled', false);
                         $('#processing_continue').val('{% trans "Continue" %}');
                         $('#processing_continue').click(function(){ window.location.href='../' + data.info.subject;});
@@ -43,7 +43,7 @@ $(function(){
                 }
                 else if (data.state == 'FAILURE') {
                     $('#upload_status_messages').removeClass('loading');
-                    $('#upload_status_messages').append('<p>Sorry! This processing step failed with the following error message: ' + data.info + '</p>');
+                    $('#upload_status_messages').append('<p>{% trans "Sorry! This processing step failed with the following error message: " %}' + data.info + '</p>');
                     $('#processing_continue').attr('disabled', false);
                     $('#processing_continue').val('{% trans "Retry" %}');
                     $('#processing_continue').click(function(){ window.location.href='../add/'; });
@@ -53,7 +53,7 @@ $(function(){
             error: function(xhr, txtStatus, error) {
                 $('#upload_status_messages').removeClass('loading');
                 $('#upload_status_messages').empty();
-                $('#upload_status_messages').append('<p>Could not retrieve task status.</p>');
+                $('#upload_status_messages').append('<p>{% trans "Could not retrieve task status." %}</p>');
                 clearInterval(statusInterval);
             }
         });
@@ -93,24 +93,24 @@ $(function(){
 
 {% block content %}
     <div id="content-main">
-    <p>A Subject in DistrictBuilder has relationships with many objects in the application. For this reason, adding a Subject requires a few extra steps. The following forms will walk you through the process of:</p>
+    <p>{% trans "A Subject in DistrictBuilder has relationships with many objects in the application. For this reason, adding a Subject requires a few extra steps. The following forms will walk you through the process of:" %}</p>
     <ol>
-        <li>Downloading a Subject template file (CSV)</li>
-        <li><span id="li2" style="font-weight:{% if is_processing %}normal{% else %}bold{% endif %};">Uploading a complete Subject file (CSV)</span></li>
-        <li><span id="li3" style="font-weight:{% if is_processing %}bold{% else %}normal{% endif %};">Verifying the uploaded Subject file.</span></li>
-        <li><span id="li4">Configuring the settings for the uploaded Subject.</span></li>
+        <li>{% trans "Downloading a Subject template file (CSV)" %}</li>
+        <li><span id="li2" style="font-weight:{% if is_processing %}normal{% else %}bold{% endif %};">{% trans "Uploading a complete Subject file (CSV)" %}</span></li>
+        <li><span id="li3" style="font-weight:{% if is_processing %}bold{% else %}normal{% endif %};">{% trans "Verifying the uploaded Subject file." %}</span></li>
+        <li><span id="li4">{% trans "Configuring the settings for the uploaded Subject." %}</span></li>
     </ol>
     <div id="step2" style="display:{% if is_processing %}none{% else %}block{% endif %};">
-    <h2>2. Uploading a complete Subject file</h2>
-    <p>Using the file field below, please select the populated Subject template file, and upload the Subject template file with the 'Upload' button below.</p>
+    <h2>{% trans "2. Uploading a complete Subject file" %}</h2>
+    <p>{% trans "Using the file field below, please select the populated Subject template file, and upload the Subject template file with the 'Upload' button below." %}</p>
     </div>
     <div id="step3" style="display:{% if is_processing %}block{% else %}none{% endif %};">
-    <h2>3. Verifying the uploaded Subject file</h2>
-    <p>Please wait while the uploaded Subject file is checked for consistency and alignment with the currently loaded data. This may take up to 15 minutes, so please wait until the process completes before leaving this page.</p>
+    <h2>{% trans "3. Verifying the uploaded Subject file" %}</h2>
+    <p>{% trans "Please wait while the uploaded Subject file is checked for consistency and alignment with the currently loaded data. This may take up to 15 minutes, so please wait until the process completes before leaving this page." %}</p>
     </div>
     <div id="step4" style="display:none;">
-    <h2>4. Configuring the settings for the uploaded Subject.</h2>
-    <p>The verification steps are complete, you may proceed to the Subject change form to complete filling in the Subject details.</p>
+    <h2>{% trans "4. Configuring the settings for the uploaded Subject" %} </h2>
+    <p>{% trans "The verification steps are complete, you may proceed to the Subject change form to complete filling in the Subject details." %}</p>
     </div>
     <form enctype="multipart/form-data" action="{{ form_url }}" method="post" id="{{ opts.module_name }}_form">
         {% csrf_token %}
@@ -119,7 +119,7 @@ $(function(){
         </table>
         {% if is_processing %}
         <div id="upload_status_messages" class="{% if is_processing %}loading{% endif %}">
-            <p>Verifying counts of uploaded subjects...</p>
+            <p>{% trans "Verifying counts of uploaded subjects..." %}</p>
         </div>
         <input type="button" value="{% trans "Please Wait ..." %}" id="processing_continue" disabled="true" />
         {% else %}

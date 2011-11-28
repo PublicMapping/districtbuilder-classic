@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-22 18:00-0500\n"
+"POT-Creation-Date: 2011-11-28 10:57-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -72,7 +72,7 @@ msgstr ""
 msgid "My Ranked Plans"
 msgstr ""
 
-#: redistricting/templates/viewplan.html:707
+#: redistricting/templates/viewplan.html:720
 msgid "Select Legislative Body"
 msgstr ""
 
@@ -671,6 +671,43 @@ msgstr ""
 msgid "Add"
 msgstr ""
 
+#: templates/admin/redistricting/subject/add_form.html:31
+#: templates/admin/redistricting/subject/upload_form.html:96
+msgid ""
+"A Subject in DistrictBuilder has relationships with many objects in the "
+"application. For this reason, adding a Subject requires a few extra steps. "
+"The following forms will walk you through the process of:"
+msgstr ""
+
+#: templates/admin/redistricting/subject/add_form.html:33
+#: templates/admin/redistricting/subject/upload_form.html:98
+msgid "Downloading a Subject template file (CSV)"
+msgstr ""
+
+#: templates/admin/redistricting/subject/add_form.html:34
+#: templates/admin/redistricting/subject/upload_form.html:99
+msgid "Uploading a complete Subject file (CSV)"
+msgstr ""
+
+#: templates/admin/redistricting/subject/add_form.html:35
+#: templates/admin/redistricting/subject/upload_form.html:101
+msgid "Configuring the settings for the uploaded Subject."
+msgstr ""
+
+#: templates/admin/redistricting/subject/add_form.html:37
+msgid "1. Download a Subject template file"
+msgstr ""
+
+#: templates/admin/redistricting/subject/add_form.html:38
+msgid ""
+"Please click on the following link, and save the contents of that file on "
+"your local filesystem:"
+msgstr ""
+
+#: templates/admin/redistricting/subject/add_form.html:39
+msgid "Subject template CSV"
+msgstr ""
+
 #: templates/admin/redistricting/subject/add_form.html:41
 #: templates/admin/redistricting/subject/delete_selected_confirmation.html:53
 #: templates/admin/redistricting/subject/upload_form.html:39
@@ -696,6 +733,18 @@ msgstr ""
 msgid ""
 "Are you sure you want to delete the selected %(object_name)s objects? All of "
 "the following objects and their related items will be deleted:"
+msgstr ""
+
+#: templates/admin/redistricting/subject/delete_selected_confirmation.html:22
+msgid "characteristics"
+msgstr ""
+
+#: templates/admin/redistricting/subject/delete_selected_confirmation.html:23
+msgid "computed characteristics"
+msgstr ""
+
+#: templates/admin/redistricting/subject/delete_selected_confirmation.html:24
+msgid "related subject(s)"
 msgstr ""
 
 #: templates/admin/redistricting/subject/delete_selected_confirmation.html:35
@@ -748,8 +797,60 @@ msgstr ""
 msgid "Upload Subject template"
 msgstr ""
 
+#: templates/admin/redistricting/subject/upload_form.html:37
+msgid ""
+"Subject ingest successful! Press \"Continue\" to edit the Subject details."
+msgstr ""
+
+#: templates/admin/redistricting/subject/upload_form.html:46
+msgid "Sorry! This processing step failed with the following error message: "
+msgstr ""
+
 #: templates/admin/redistricting/subject/upload_form.html:48
 msgid "Retry"
+msgstr ""
+
+#: templates/admin/redistricting/subject/upload_form.html:56
+msgid "Could not retrieve task status."
+msgstr ""
+
+#: templates/admin/redistricting/subject/upload_form.html:100
+msgid "Verifying the uploaded Subject file."
+msgstr ""
+
+#: templates/admin/redistricting/subject/upload_form.html:104
+msgid "2. Uploading a complete Subject file"
+msgstr ""
+
+#: templates/admin/redistricting/subject/upload_form.html:105
+msgid ""
+"Using the file field below, please select the populated Subject template "
+"file, and upload the Subject template file with the 'Upload' button below."
+msgstr ""
+
+#: templates/admin/redistricting/subject/upload_form.html:108
+msgid "3. Verifying the uploaded Subject file"
+msgstr ""
+
+#: templates/admin/redistricting/subject/upload_form.html:109
+msgid ""
+"Please wait while the uploaded Subject file is checked for consistency and "
+"alignment with the currently loaded data. This may take up to 15 minutes, so "
+"please wait until the process completes before leaving this page."
+msgstr ""
+
+#: templates/admin/redistricting/subject/upload_form.html:112
+msgid "4. Configuring the settings for the uploaded Subject"
+msgstr ""
+
+#: templates/admin/redistricting/subject/upload_form.html:113
+msgid ""
+"The verification steps are complete, you may proceed to the Subject change "
+"form to complete filling in the Subject details."
+msgstr ""
+
+#: templates/admin/redistricting/subject/upload_form.html:122
+msgid "Verifying counts of uploaded subjects..."
 msgstr ""
 
 #: templates/admin/redistricting/subject/upload_form.html:124

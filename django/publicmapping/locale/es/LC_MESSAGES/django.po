@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-22 18:00-0500\n"
-"PO-Revision-Date: 2011-11-22 18:05\n"
+"POT-Creation-Date: 2011-11-28 10:57-0500\n"
+"PO-Revision-Date: 2011-11-28 11:01\n"
 "Last-Translator: Admin User <kshepard@azavea.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -74,7 +74,7 @@ msgstr "Planes Inicio Usuarios Clasificado"
 msgid "My Ranked Plans"
 msgstr "Mis planes Clasificado"
 
-#: redistricting/templates/viewplan.html:707
+#: redistricting/templates/viewplan.html:720
 msgid "Select Legislative Body"
 msgstr "Seleccione Cuerpo Legislativo"
 
@@ -783,6 +783,48 @@ msgstr "Descargar plantilla de sujeción"
 msgid "Add"
 msgstr "Añadir"
 
+#: templates/admin/redistricting/subject/add_form.html:31
+#: templates/admin/redistricting/subject/upload_form.html:96
+msgid ""
+"A Subject in DistrictBuilder has relationships with many objects in the"
+" application. For this reason, adding a Subject requires a few extra "
+"steps. The following forms will walk you through the process of:"
+msgstr ""
+"Un tema en el DistrictBuilder tiene relaciones con muchos objetos en "
+"la aplicación. Por esta razón, la adición de un tema requiere algunos "
+"pasos adicionales. Las formas siguientes le guiarán en el proceso de:"
+
+#: templates/admin/redistricting/subject/add_form.html:33
+#: templates/admin/redistricting/subject/upload_form.html:98
+msgid "Downloading a Subject template file (CSV)"
+msgstr "Descargar plantilla de sujeción"
+
+#: templates/admin/redistricting/subject/add_form.html:34
+#: templates/admin/redistricting/subject/upload_form.html:99
+msgid "Uploading a complete Subject file (CSV)"
+msgstr "Cargar un archivo de reserva completa (CSV)"
+
+#: templates/admin/redistricting/subject/add_form.html:35
+#: templates/admin/redistricting/subject/upload_form.html:101
+msgid "Configuring the settings for the uploaded Subject."
+msgstr "Configuración de los ajustes de la reserva cargado."
+
+#: templates/admin/redistricting/subject/add_form.html:37
+msgid "1. Download a Subject template file"
+msgstr "1. Descargar plantilla de sujeción"
+
+#: templates/admin/redistricting/subject/add_form.html:38
+msgid ""
+"Please click on the following link, and save the contents of that file "
+"on your local filesystem:"
+msgstr ""
+"Por favor haga click en el siguiente enlace y guardar el contenido de "
+"ese archivo en el sistema de archivos local:"
+
+#: templates/admin/redistricting/subject/add_form.html:39
+msgid "Subject template CSV"
+msgstr "Cargar plantilla de reserva"
+
 #: templates/admin/redistricting/subject/add_form.html:41
 #: templates/admin/redistricting/subject/delete_selected_confirmation.html:53
 #: templates/admin/redistricting/subject/upload_form.html:39
@@ -812,6 +854,18 @@ msgstr ""
 "¿Está seguro que desea eliminar el seleccionado %(object_name)s "
 "objetos? Todos los siguientes objetos y sus elementos relacionadas se "
 "eliminarán:"
+
+#: templates/admin/redistricting/subject/delete_selected_confirmation.html:22
+msgid "characteristics"
+msgstr "características"
+
+#: templates/admin/redistricting/subject/delete_selected_confirmation.html:23
+msgid "computed characteristics"
+msgstr "calcula las características"
+
+#: templates/admin/redistricting/subject/delete_selected_confirmation.html:24
+msgid "related subject(s)"
+msgstr "tema relacionado (s)"
 
 #: templates/admin/redistricting/subject/delete_selected_confirmation.html:35
 msgid "Yes, I'm sure"
@@ -875,9 +929,77 @@ msgstr ""
 msgid "Upload Subject template"
 msgstr "Cargar plantilla de reserva"
 
+#: templates/admin/redistricting/subject/upload_form.html:37
+msgid ""
+"Subject ingest successful! Press \"Continue\" to edit the Subject "
+"details."
+msgstr ""
+"Asunto ingerir un éxito! Pulse el botón \"Continuar\" para editar los "
+"datos del paciente."
+
+#: templates/admin/redistricting/subject/upload_form.html:46
+msgid "Sorry! This processing step failed with the following error message: "
+msgstr ""
+"¡Lo siento! Este paso del proceso ha fallado con el siguiente mensaje "
+"de error:"
+
 #: templates/admin/redistricting/subject/upload_form.html:48
 msgid "Retry"
 msgstr "Vuelva a intentar"
+
+#: templates/admin/redistricting/subject/upload_form.html:56
+msgid "Could not retrieve task status."
+msgstr "No se pudo recuperar el estado de tarea."
+
+#: templates/admin/redistricting/subject/upload_form.html:100
+msgid "Verifying the uploaded Subject file."
+msgstr "Configuración de los ajustes de la reserva cargado."
+
+#: templates/admin/redistricting/subject/upload_form.html:104
+msgid "2. Uploading a complete Subject file"
+msgstr "2. Cargar un archivo de reserva completa (CSV)"
+
+#: templates/admin/redistricting/subject/upload_form.html:105
+msgid ""
+"Using the file field below, please select the populated Subject "
+"template file, and upload the Subject template file with the 'Upload' "
+"button below."
+msgstr ""
+"Utilizando el campo de archivo abajo, por favor seleccione el archivo "
+"de plantilla de sujeción de población, y cargar el archivo de "
+"plantilla de sujeción con el botón 'Subir' a continuación."
+
+#: templates/admin/redistricting/subject/upload_form.html:108
+msgid "3. Verifying the uploaded Subject file"
+msgstr "3. Verificación de la subida de archivos Tema"
+
+#: templates/admin/redistricting/subject/upload_form.html:109
+msgid ""
+"Please wait while the uploaded Subject file is checked for consistency "
+"and alignment with the currently loaded data. This may take up to 15 "
+"minutes, so please wait until the process completes before leaving this"
+" page."
+msgstr ""
+"Por favor espere mientras el archivo Asunto subida se comprueba la "
+"coherencia y la alineación con los datos cargados. Esto puede tomar "
+"hasta 15 minutos, así que por favor espere hasta que el proceso se "
+"complete antes de salir de esta página."
+
+#: templates/admin/redistricting/subject/upload_form.html:112
+msgid "4. Configuring the settings for the uploaded Subject"
+msgstr "4. Configuración de los ajustes de la reserva cargado."
+
+#: templates/admin/redistricting/subject/upload_form.html:113
+msgid ""
+"The verification steps are complete, you may proceed to the Subject "
+"change form to complete filling in the Subject details."
+msgstr ""
+"Los pasos de verificación completa, puede proceder a la forma de "
+"cambio de reserva de completar el llenado de los datos del paciente."
+
+#: templates/admin/redistricting/subject/upload_form.html:122
+msgid "Verifying counts of uploaded subjects..."
+msgstr "Cuenta la verificación de los temas subidos ..."
 
 #: templates/admin/redistricting/subject/upload_form.html:124
 msgid "Please Wait ..."

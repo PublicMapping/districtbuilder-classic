@@ -19,9 +19,9 @@
     {% for deletable_object in deletable_objects %}
         <li>{{ deletable_object }}</li>
         <ul>
-        <li>{{ deletable_object.characteristic_set.count }} characteristics</li>
-        <li>{{ deletable_object.computedcharacteristic_set.count }} computed characteristics</li>
-        <li>{{ deletable_object.subject_set.count }} related subject(s)</li>
+        <li>{{ deletable_object.characteristic_set.count }} {% trans "characteristics" %}</li>
+        <li>{{ deletable_object.computedcharacteristic_set.count }} {% trans "computed characteristics" %}</li>
+        <li>{{ deletable_object.subject_set.count }} {% trans "related subject(s)" %}</li>
         </ul>
     {% endfor %}
     </ul>
