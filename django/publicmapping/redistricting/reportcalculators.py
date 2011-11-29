@@ -28,13 +28,8 @@ Author:
     Andrew Jennings, David Zwarg, Kenny Shepard
 """
 
-from math import sqrt, pi
-from django.contrib.gis.geos import Point
-from django.contrib.humanize.templatetags.humanize import intcomma
-from django.utils import simplejson as json
-from decimal import Decimal
-from redistricting.calculators import *
-import locale, sys, traceback
+from django.utils.translation import ugettext as _
+from redistricting.calculators import CalculatorBase, LengthWidthCompactness, Roeck, Schwartzberg
 
 class Population(CalculatorBase):
     """
@@ -53,8 +48,8 @@ class Population(CalculatorBase):
 
         self.result = {
             'raw': [
-                { 'label': 'DistrictID', 'type': 'string', 'value': district.long_label },
-                { 'label': 'Population', 'type': 'integer', 'value': pop_value, 'avg_key': avg_key }
+                { 'label': _('DistrictID'), 'type': 'string', 'value': district.long_label },
+                { 'label': _('Population'), 'type': 'integer', 'value': pop_value, 'avg_key': avg_key }
             ]
         }
 
@@ -66,7 +61,7 @@ class Population(CalculatorBase):
             return
         
         within_value = float(pop_value) > float(minval) and float(pop_value) < float(maxval)
-        self.result['raw'].append({ 'label': 'Within Target Range', 'value': within_value, 'type': 'boolean' })
+        self.result['raw'].append({ 'label': _('Within Target Range'), 'value': within_value, 'type': 'boolean' })
 
 class Compactness(CalculatorBase):
     """
@@ -96,8 +91,8 @@ class Compactness(CalculatorBase):
         
         self.result = {
             'raw': [
-                { 'label': 'DistrictID', 'type': 'string', 'value': district.long_label },
-                { 'label': 'Compactness', 'type': 'percent', 'value': val, 'avg_key': comptype }
+                { 'label': _('DistrictID'), 'type': 'string', 'value': district.long_label },
+                { 'label': _('Compactness'), 'type': 'percent', 'value': val, 'avg_key': comptype }
             ]
         }
 
@@ -120,9 +115,9 @@ class Majority(CalculatorBase):
 
         self.result = {
             'raw': [
-                { 'label': 'DistrictID', 'type': 'string', 'value': district.long_label },
-                { 'label': 'Population', 'type': 'integer', 'value': pop_value, 'avg_key': pop_avg_key },
-                { 'label': 'Proportion', 'type': 'percent', 'value': proportion, 'avg_key': prop_avg_key },
+                { 'label': _('DistrictID'), 'type': 'string', 'value': district.long_label },
+                { 'label': _('Population'), 'type': 'integer', 'value': pop_value, 'avg_key': pop_avg_key },
+                { 'label': _('Proportion'), 'type': 'percent', 'value': proportion, 'avg_key': prop_avg_key },
                 { 'label': '>= 50%', 'type': 'boolean', 'value': proportion >= .5 }
             ]
         }

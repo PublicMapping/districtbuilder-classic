@@ -32,9 +32,10 @@ from math import sqrt, pi
 from django.contrib.gis.geos import Point, LineString
 from django.contrib.humanize.templatetags.humanize import intcomma
 from django.utils import simplejson as json
+from django.utils.translation import ugettext as _
 from decimal import Decimal
 from copy import copy
-import locale, sys, traceback, random
+import locale, random
 
 # This helps in formatting - by default, apache+wsgi uses the "C" locale
 locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
@@ -101,7 +102,7 @@ class CalculatorBase:
         if not self.result is None and 'raw' in self.result:
             return self.result['raw']
 
-        return '<span>n/a</span>'
+        return '<span>%s</span>' % _('n/a')
 
     def json(self):
         """
@@ -235,7 +236,7 @@ class Schwartzberg(CalculatorBase):
         if not self.result is None and 'value' in self.result:
             return ("%0.2f%%" % (self.result['value'] * 100))
         else:
-            return "n/a"
+            return _('n/a')
 
 
 class Roeck(CalculatorBase):
@@ -298,7 +299,7 @@ class Roeck(CalculatorBase):
         try:
             self.result = { 'value': compactness / num if num > 0 else 0 }
         except:
-            self.result = { 'value': 'N/A' }
+            self.result = { 'value': _('n/a') }
 
 
     class Circle:
@@ -518,7 +519,7 @@ class Roeck(CalculatorBase):
         if not self.result is None and 'value' in self.result:
             return ("%0.2f%%" % (self.result['value'] * 100))
         else:
-            return "n/a"
+            return _("n/a")
 
 
 class PolsbyPopper(CalculatorBase):
@@ -586,7 +587,7 @@ class PolsbyPopper(CalculatorBase):
         if not self.result is None and 'value' in self.result:
             return ("%0.2f%%" % (self.result['value'] * 100))
         else:
-            return "n/a"
+            return _("n/a")
 
 
 class LengthWidthCompactness(CalculatorBase):
@@ -655,7 +656,7 @@ class LengthWidthCompactness(CalculatorBase):
         if not self.result is None and 'value' in self.result:
             return ("%0.2f%%" % (self.result['value'] * 100))
         else:
-            return "n/a"
+            return _("n/a")
 
 
 class SumValues(CalculatorBase):
@@ -737,7 +738,7 @@ class SumValues(CalculatorBase):
             else:
                 return '<span>%s</span>' % self.result['value']
 
-        return '<span>n/a</span>'
+        return '<span>%s</span>' % _('n/a')
 
 
 class Percent(CalculatorBase):
@@ -814,7 +815,7 @@ class Percent(CalculatorBase):
             if (type(self.result['value']) == Decimal):
                 return '<span>{0:.2%}</span>'.format(self.result['value'])
             
-        return '<span>n/a</span>'
+        return '<span>%s</span>' % _('n/a')
 
 
 class Threshold(CalculatorBase):
@@ -1072,7 +1073,7 @@ class Contiguity(CalculatorBase):
         try:
             target = self.get_value('target')
             if target != None:
-                self.result = { 'value':'%d (of %s)' % (count, target) }
+                self.result = { 'value':_('%(value)d (of %(target)s)') % {'value': count, 'target': target} }
         except:
             pass
 
@@ -1162,7 +1163,7 @@ class NonContiguous(CalculatorBase):
         try:
             target = self.get_value('target')
             if target != None:
-                self.result = { 'value': '%d (of %s)' % (count, target) }
+                self.result = { 'value':_('%(value)d (of %(target)s)') % {'value': count, 'target': target} }
         except:
             self.result = { 'value': count }
 
@@ -1288,7 +1289,7 @@ class Interval(CalculatorBase):
                 span_value = locale.format("%d", self.result['value'], grouping=True)
                 return '<span class="%s %s">%s</span>' % (interval_class, self.result['subject'], span_value)
 
-        return '<span>n/a</span>' 
+        return '<span>%s</span>' % _('n/a')
 
 
 class Equivalence(CalculatorBase):
@@ -1357,7 +1358,7 @@ class Equivalence(CalculatorBase):
         if not self.result is None and 'value' in self.result:
             return intcomma(int(self.result['value']))
         
-        return 'n/a'
+        return _('n/a')
 
 
 class RepresentationalFairness(CalculatorBase):
@@ -1433,13 +1434,13 @@ class RepresentationalFairness(CalculatorBase):
         """
         if not self.result is None and 'value' in self.result:
             sort = abs(self.result['value'])
-            party = 'Democrat' if self.result['value'] > 0 else 'Republican'
+            party = _('Democrat') if self.result['value'] > 0 else _('Republican')
             if sort == 0:
-                return '<span>Balanced</span>'
+                return '<span>%s</span>' % _('Balanced')
             else:
                 return '<span>%s&nbsp;%d</span>' % (party, sort)
         
-        return '<span>n/a</span>'
+        return '<span>%s</span>' % _('n/a')
 
     def json(self):
         """
@@ -1449,7 +1450,7 @@ class RepresentationalFairness(CalculatorBase):
         """
         if not self.result is None and 'value' in self.result:
             sort = abs(self.result['value'])
-            party = 'Democrat' if self.result['value'] > 0 else 'Republican'
+            party = _('Democrat') if self.result['value'] > 0 else _('Republican')
             output = {'result': '%s %d' % (party, sort)}
         else:
             output = {'result': None}
@@ -1654,7 +1655,7 @@ class Equipopulation(CalculatorBase):
         
                 self.result = { 'value': inrange.result['value'] == (len(districts) - 1) }
             elif target != None:
-                self.result = { 'value': '%d (of %s)' % (inrange.result['value'], target) }
+                self.result = { 'value':_('%(value)d (of %(target)s)') % {'value': inrange.result['value'], 'target': target} }
             else:
                 self.result = inrange.result
         except:
@@ -1751,7 +1752,7 @@ class MajorityMinority(CalculatorBase):
             if validation != None:
                 self.result = { 'value': districtcount >= Decimal(validation) }
             elif target != None:
-                self.result = { 'value': "%d (of %s)" % (districtcount, target) }
+                self.result = { 'value':_('%(value)d (of %(target)s)') % {'value': districtcount, 'target': target} }
         except:
             pass
 
@@ -1909,7 +1910,7 @@ class Average(CalculatorBase):
             else:
                 return '<span>%s</span>' % self.result['value']
 
-        return '<span>n/a</span>'
+        return '<span>%s</span>' % _('n/a')
 
 
 class Comments(CalculatorBase):
@@ -1977,8 +1978,6 @@ class CommunityTypeCounter(CalculatorBase):
         @keyword version: Optional. The version of the community map. 
             Defaults to the latest version of the community map.
         """
-        districts = []
-
         if 'district' in kwargs:
             district = kwargs['district']
         else:
@@ -1988,7 +1987,7 @@ class CommunityTypeCounter(CalculatorBase):
         if 'version' in kwargs:
             version = kwargs['version']
 
-        self.result = { 'value': 'n/a' }
+        self.result = { 'value': _('n/a') }
         if 'community_map_id' in kwargs:
             try:
                 self.result = { 'value': district.count_community_type_union(kwargs['community_map_id'], version=version) }
@@ -2144,12 +2143,12 @@ class SplitCounter(CalculatorBase):
             total_split_districts = len(set(i[0] for i in r['splits']))
 
             if r['is_geolevel']:
-                template = '<div>Total %s which split a %s: %d</div>'
+                template = '<div>Total %(district_type_a)s which split a %(district_type_b)s: %(result)d</div>'
             else:
-                template = '<div>Total %s splitting "%s": %d</div>'
+                template = '<div>Total %(district_type_a)s splitting "%(district_type_b)s": %(result)d</div>'
 
-            render += template % ('communities' if r['is_community'] else 'districts', r['other_name'], total_split_districts)
-            render += '<div>Total number of splits: %d</div>' % len(r['splits'])
+            render += template % { 'district_type_a': 'communities' if r['is_community'] else 'districts', 'district_type_b': r['other_name'], 'result': total_split_districts}
+            render += '<div>%s: %d</div>' % ( _('Total number of splits'), len(r['splits']))
 
             render += '<div class="table_container"><table class="report"><thead><tr><th>%s</th><th>%s</th></tr></thead><tbody>' % (r['plan_name'].capitalize(), r['other_name'].capitalize() if r['is_geolevel'] else r['other_name'].capitalize())
 
