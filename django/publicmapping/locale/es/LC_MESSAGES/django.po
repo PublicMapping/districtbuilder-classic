@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-29 16:14-0500\n"
-"PO-Revision-Date: 2011-11-29 16:19\n"
+"POT-Creation-Date: 2011-11-29 17:32-0500\n"
+"PO-Revision-Date: 2011-11-29 17:34\n"
 "Last-Translator: Admin User <kshepard@azavea.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -73,6 +73,7 @@ msgstr "DistrictID"
 #: redistricting/reportcalculators.py:52
 #: redistricting/reportcalculators.py:119
 #: redistricting/templates/basic_information.html:71
+#: redistricting/templates/geography.html:93
 msgid "Population"
 msgstr "Población"
 
@@ -81,6 +82,7 @@ msgid "Within Target Range"
 msgstr "Dentro del rango meta"
 
 #: redistricting/reportcalculators.py:95
+#: redistricting/templates/geography.html:53
 msgid "Compactness"
 msgstr "Compacidad"
 
@@ -122,6 +124,7 @@ msgstr "Gracias."
 
 #: redistricting/templates/basic_information.html:44
 #: redistricting/templates/demographics.html:44
+#: redistricting/templates/geography.html:50
 msgid "Dist."
 msgstr "Dist."
 
@@ -133,38 +136,48 @@ msgid "Sorry, there is no demographic data for this plan"
 msgstr "Lo sentimos, no hay datos demográficos correspondientes a este plan"
 
 #: redistricting/templates/basic_information.html:68
+#: redistricting/templates/geography.html:90
 msgid "Stats Legend"
 msgstr "Estadísticas Leyenda"
 
 #: redistricting/templates/basic_information.html:73
+#: redistricting/templates/geography.html:95
 msgid "Far over target"
 msgstr "Mucho sobre el objetivo"
 
 #: redistricting/templates/basic_information.html:74
+#: redistricting/templates/geography.html:96
 msgid "Over target"
 msgstr "Sobre el objetivo"
 
 #: redistricting/templates/basic_information.html:75
+#: redistricting/templates/geography.html:97
 msgid "Meets target"
 msgstr "Cumple con los objetivos"
 
 #: redistricting/templates/basic_information.html:76
+#: redistricting/templates/geography.html:98
 msgid "Under target"
 msgstr "En la meta"
 
 #: redistricting/templates/basic_information.html:77
+#: redistricting/templates/geography.html:99
 msgid "Far Under target"
 msgstr "Lejos en la meta"
 
 #: redistricting/templates/basic_information.html:81
+#: redistricting/templates/geography.html:52
+#: redistricting/templates/geography.html:103
 msgid "Contiguity"
 msgstr "Continuar"
 
 #: redistricting/templates/basic_information.html:83
+#: redistricting/templates/geography.html:105
 msgid "Contiguous"
 msgstr "Continuar"
 
 #: redistricting/templates/basic_information.html:84
+#: redistricting/templates/geography.html:106
 msgid "Non-contiguous"
 msgstr "No contiguos"
 
@@ -613,6 +626,8 @@ msgid "Community Info"
 msgstr "Comunidad"
 
 #: redistricting/templates/editplan.html:384
+#: redistricting/templates/extra_demographics_congressional.html:3
+#: redistricting/templates/extra_demographics_state senate.html:3
 msgid "0"
 msgstr "0"
 
@@ -676,6 +691,28 @@ msgstr "Redistribución de Distritos administrador del sitio"
 #: templates/forgottenpassword.email:19
 msgid "The Public Mapping Team"
 msgstr "Sobre el Proyecto de Mapeo Pública"
+
+#: redistricting/templates/extra_demographics_congressional.html:2
+#: redistricting/templates/extra_demographics_state senate.html:2
+msgid "Black VAP Majority (2000)"
+msgstr "Negro VAP Mayoría (2000)"
+
+#: redistricting/templates/extra_demographics_congressional.html:2
+msgid "1"
+msgstr "1"
+
+#: redistricting/templates/extra_demographics_congressional.html:3
+#: redistricting/templates/extra_demographics_state senate.html:3
+msgid "Hisp. VAP Majority (2000)"
+msgstr "Hisp. VAP Mayoría (2000)"
+
+#: redistricting/templates/extra_demographics_state senate.html:2
+msgid "5"
+msgstr "5"
+
+#: redistricting/templates/geography.html:86
+msgid "Sorry, there is no geographic data for this plan"
+msgstr "Lo sentimos, no hay datos demográficos correspondientes a este plan"
 
 #: redistricting/templates/importedplan.email:18
 msgid ""
