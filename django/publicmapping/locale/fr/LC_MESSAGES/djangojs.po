@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-29 14:11-0500\n"
+"POT-Creation-Date: 2011-11-29 16:14-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,7 +23,7 @@ msgstr ""
 msgid "Choose Map Layers"
 msgstr "Choisissez Couches Cartographiques"
 
-#: static-media/admin/js/SelectFilter2.js:77
+#: static-media/admin/js/SelectFilter2.js:63
 msgid "Clear all"
 msgstr ""
 
@@ -168,7 +168,7 @@ msgstr ""
 
 #: static-media/js/register.js:176 static-media/js/register.js.py:184
 #: static-media/js/ui.js:211 static-media/js/ui.js.py:241
-#: static-media/js/ui.js:419 static/js/register.js:176
+#: static-media/js/ui.js:434 static/js/register.js:176
 #: static/js/register.js.py:184 static/js/ui.js:211 static/js/ui.js.py:241
 #: static/js/ui.js.py:434
 msgid "Error"
@@ -227,26 +227,26 @@ msgstr ""
 msgid "Download Scores<br/>as CSV"
 msgstr ""
 
-#: static-media/js/ui.js:415 static/js/ui.js:430
+#: static-media/js/ui.js:430 static/js/ui.js:430
 msgid "Please Wait"
 msgstr ""
 
-#: static-media/js/ui.js:415 static/js/ui.js:430
+#: static-media/js/ui.js:430 static/js/ui.js:430
 msgid "Publishing with the server"
 msgstr ""
 
-#: static-media/js/ui.js:419 static/js/ui.js:434
+#: static-media/js/ui.js:434 static/js/ui.js:434
 msgid "Please enter a new name to publish your plan."
 msgstr ""
 
-#: static-media/js/ui.js:431 static/js/ui.js:446
+#: static-media/js/ui.js:446 static/js/ui.js:446
 msgid "Oops!"
 msgstr ""
 
-#: static-media/js/ui.js:446 static/js/ui.js:461
+#: static-media/js/ui.js:461 static/js/ui.js:461
 msgid "Server Failure"
 msgstr ""
 
-#: static-media/js/ui.js:446 static/js/ui.js:461
+#: static-media/js/ui.js:461 static/js/ui.js:461
 msgid "Sorry, we weren't able to contact the server.  Please try again later."
 msgstr ""

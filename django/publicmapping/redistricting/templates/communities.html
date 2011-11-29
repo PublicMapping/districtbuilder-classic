@@ -41,7 +41,7 @@
     <table id="community_table">
         <thead>
             <tr>
-                <th class="community_name">Community</th>
+                <th class="community_name">{% trans "Community" %}</th>
                 {% for function in functions %}
                 <th class="info_header score{{ forloop.counter }}">{{ function }}</th>
                 {% endfor %}
@@ -59,6 +59,6 @@
         </tbody>
     </table>
     {% else %}
-    <div class="error"> Sorry, there is no demographic data for this plan</div>
+    <div class="error"> {% trans "Sorry, there is no demographic data for this plan" %}</div>
     {% endif %}                    
 </div>

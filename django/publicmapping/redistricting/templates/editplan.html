@@ -29,17 +29,18 @@
        Andrew Jennings, David Zwarg
 
 {% endcomment %}
+{% load i18n %}
 
       {% block toolset_history %}
-          <button id="history_undo" class="{% if not plan %}disabled{% else %}{% ifequal plan.version 0 %}disabled{% endifequal %}{% endif %}">Undo</button>
-          <button id="history_redo" class="disabled">Redo</button>
+          <button id="history_undo" class="{% if not plan %}disabled{% else %}{% ifequal plan.version 0 %}disabled{% endifequal %}{% endif %}">{% trans "Undo" %}</button>
+          <button id="history_redo" class="disabled">{% trans "Redo" %}</button>
           <input id="history_cursor" type="hidden"/>
       {% endblock %}
       
       {% block toolset_tabs %}
           <ul class="mapping_tabs">
-            <li><a href="#toolset_draw">Map Editing</a></li>
-            <li><a href="#toolset_district">{{ body_member_long_label|capfirst }} Tools</a></li>
+            <li><a href="#toolset_draw">{% trans "Map Editing" %}</a></li>
+            <li><a href="#toolset_district">{{ body_member_long_label|capfirst }} {% trans "Tools" %}</a></li>
           </ul>  
       {% endblock %}
       
@@ -49,40 +50,40 @@
       <div class="toolset" id="toolset_draw">
         <div class="toolset_group">
           <div>
-          <button class="navigate_map_tool active btntoggle toggle">Pan</button><br/>
-          <button class="identify_map_tool btntoggle titletip" title="Click on a geounit to see its demographic info." >Info</button>
+          <button class="navigate_map_tool active btntoggle toggle">{% trans "Pan" %}</button><br/>
+          <button class="identify_map_tool btntoggle titletip" title="{% trans "Click on a geounit to see its demographic info." %}" >{% trans "Info" %}</button>
           </div>
          </div>
        
         <div class="toolset_group toolset_group_lg">
           <div>
-            <button id="single_drawing_tool" title="Single {{ body_member_long_label }} select; +Shift to select multiple {{ body_members}}" class="btntoggle titletip" >Single<br/>Select</button>
-            <button id="rectangle_drawing_tool" title="Select by rectangle" class="btntoggle titletip" >Rectangle<br/>Select</button>
-            <button id="polygon_drawing_tool" title="Select by drawing a polygon" class="btntoggle titletip">Polygon<br/>Select</button>
+            <button id="single_drawing_tool" title="{% blocktrans %}Single {{ body_member_long_label }} select; +Shift to select multiple {{ body_members}}{% endblocktrans %}" class="btntoggle titletip" >{% trans "Single" %}<br/>{% trans "Select" %}</button>
+            <button id="rectangle_drawing_tool" title="{% trans "Select by rectangle" %}" class="btntoggle titletip" >{% trans "Rectangle" %}<br/>{% trans "Select" %}</button>
+            <button id="polygon_drawing_tool" title="{% trans "Select by drawing a polygon" %}" class="btntoggle titletip">{% trans "Polygon" %}<br/>{% trans "Select" %}</button>
           </div>
         </div>  
         <div class="toolset_group toolset_group_lg">
           <div>
-            <button id="anchor_tool" class="titletip" title="Enable anchor mode, then select a {{ body_member_long_label }} name to repeatedly assign areas to a {{ body_member_long_label }}">Anchor<br/>{{ body_member_long_label|capfirst }}</button>
+            <button id="anchor_tool" class="titletip" title="{% blocktrans %}Enable anchor mode, then select a {{ body_member_long_label }} name to repeatedly assign areas to a {{ body_member_long_label }}{% endblocktrans %}">{% trans "Anchor" %}<br/>{{ body_member_long_label|capfirst }}</button>
             <div class="button_group" id="control_assign_district">
-              <label>Assign to {{ body_member_long_label|capfirst }}</label><br/>
-              <select id="assign_district" class="titletip" title="Assign {{ body_members }} currently selected on map by choosing a {{ body_member_long_label }} name from drop down list">
-              <option value="-1">-- Select One --</option>
+              <label>{% trans "Assign to" %} {{ body_member_long_label|capfirst }}</label><br/>
+              <select id="assign_district" class="titletip" title="{% blocktrans %}Assign {{ body_members }} currently selected on map by choosing a {{ body_member_long_label }} name from drop down list{% endblocktrans %}">
+              <option value="-1">-- {% trans "Select One" %} --</option>
               {% for d in districts %}
                   <option value="{{ d.district_id }}">{{ d.long_label }}</option>
               {% endfor %}
               {% ifnotequal max_dists districts|length %}
-                  <option value="new">New {{ body_member_long_label|capfirst }}</option>
+                  <option value="new">{% trans "New" %} {{ body_member_long_label|capfirst }}</option>
               {% endifnotequal %}
             </select>
             </div>
-            <button id="dragdrop_tool" class="titletip" title="Select areas on the map then drag them to into a {{ body_member_long_label }} for reassignment">Click and<br/>Drag</button>
+            <button id="dragdrop_tool" class="titletip" title="{% blocktrans %}Select areas on the map then drag them to into a {{ body_member_long_label }} for reassignment{% endblocktrans %}">{% blocktrans %}Click and<br/>Drag{% endblocktrans %}</button>
           </div>
         </div>
         <div class="toolset_group toolset_group_lg last">  
         {% if not plan.is_community %}
           <div id="fix_unassigned">
-            <button id="fix_unassigned_button">Fix<br/>Unassigned</button>
+            <button id="fix_unassigned_button">{% blocktrans %}Fix<br/>Unassigned{% endblocktrans %}</button>
           </div>
           {% endif %}
           
@@ -102,24 +103,24 @@
       {% block toolset_district %}
       <div class="toolset" id="toolset_district">
         <div class="toolset_group">
-          <button class="navigate_map_tool active btntoggle toggle">Pan</button><br/>
-          <button class=" identify_map_tool btntoggle titletip" title="Click on a geounit to see its demographic info.">Info</button>
+          <button class="navigate_map_tool active btntoggle toggle">{% trans "Pan" %}</button><br/>
+          <button class=" identify_map_tool btntoggle titletip" title="{% trans "Click on a geounit to see its demographic info." %}">{% trans "Info" %}</button>
         </div>
         <div class="toolset_group toolset_group_lg">
-            <button id="lock_district_map_tool" title="Click on a {{ body_member_long_label }} to lock or unlock it." class="btntoggle titletip">Lock<br/>{{ body_member_long_label|capfirst }}</button> 
-            <button id="district_id_map_tool" title="Click on a {{ body_member_long_label }} to see its ID." class="btntoggle titletip">{{ body_member_long_label|capfirst }}<br/>Info</button> 
-            <button id="district_select_tool" title="Unassign all the units in a {{ body_member_long_label }}" class="btntoggle titletip">Unassign<br/>{{ body_member_long_label|capfirst }}</button>
-            <button id="copy_paste_tool" title="Copy a {{ body_member_long_label }} from another {{ plan_text }}" class="titletip">Copy and</br>Paste</button>
+            <button id="lock_district_map_tool" title="{% blocktrans %}Click on a {{ body_member_long_label }} to lock or unlock it.{% endblocktrans %}" class="btntoggle titletip">{% trans "Lock" %}<br/>{{ body_member_long_label|capfirst }}</button> 
+            <button id="district_id_map_tool" title="{% blocktrans %}Click on a {{ body_member_long_label }} to see its ID.{% endblocktrans %}" class="btntoggle titletip">{{ body_member_long_label|capfirst }}<br/>{% trans "Info" %}</button> 
+            <button id="district_select_tool" title="{% blocktrans %}Unassign all the units in a {{ body_member_long_label }}{% endblocktrans %}" class="btntoggle titletip">{% trans "Unassign" %}<br/>{{ body_member_long_label|capfirst }}</button>
+            <button id="copy_paste_tool" title="{% blocktrans %}Copy a {{ body_member_long_label }} from another {{ plan_text }}{% endblocktrans %}" class="titletip">{% blocktrans %}Copy and</br>Paste{% endblocktrans %}</button>
         </div>
 
         <div class="toolset_group toolset_group_lg">
-          <button id="show_splits_button">Show<br/>Splits</button>
-          <button id="generate_splits_report_button">Generate<br/>Splits Report</button>
+          <button id="show_splits_button">{% blocktrans %}Show<br/>Splits{% endblocktrans %}</button>
+          <button id="generate_splits_report_button">{% blocktrans %}Generate<br/>Splits Report{% endblocktrans %}</button>
          </div>
         
         <div class="toolset_group toolset_group_lg last">       
           {% if plan.legislative_body.multi_members_allowed %}
-          <button id="multi_member_toggle">Select Multi-<br/>Member Districts</button>
+          <button id="multi_member_toggle">{% blocktrans %}Select Multi-<br/>Member Districts{% endblocktrans %}</button>
           {% endif %}
         </div>
         <div class="clear"></div>
@@ -133,29 +134,28 @@
             {% if allow_email_submissions and not plan.is_community %}
             <div id="emailplan">
                 <div>
-                    <h3>Submit Final Plan to Contest</h3>
-                    <p>You can submit your completed plan to be considered for the 
-                       contest by filling out this form.</p>
-                    <button id="btnEmailPlan">Submit Final Plan</button>
+                    <h3>{% trans "Submit Final Plan to Contest" %}</h3>
+                    <p>{% trans "You can submit your completed plan to be considered for the contest by filling out this form." %}</p>
+                    <button id="btnEmailPlan">{% trans "Submit Final Plan" %}</button>
                 </div>
             </div>
             {% endif %}
 
             <div class="explanation">
-                <h3>Share Plan With All Users</h3>
-                <p>By sharing a copy of your {{ plan_text }} below, you are making your {{ plan_text }} available to all other users in the system. Give your {{ plan_text }} a unique name in order to share it. A copy of your current {{ plan_text }} will be added to the "Shared" section of the plan chooser.</p>
+                <h3>{% trans "Share Plan With All Users" %}</h3>
+                <p>{% blocktrans %}By sharing a copy of your {{ plan_text }} below, you are making your {{ plan_text }} available to all other users in the system. Give your {{ plan_text }} a unique name in order to share it. A copy of your current {{ plan_text }} will be added to the "Shared" section of the plan chooser.{% endblocktrans %}</p>
                 <div>
-                    <h3>Name your shared {{ plan_text }}</h3>
+                    <h3>{% blocktrans %}Name your shared {{ plan_text }}{% endblocktrans %}</h3>
                     <input id="txtPlanName" />
-                    <button id="btnSaveAndShare">Save and Share</button>
+                    <button id="btnSaveAndShare">{% trans "Save and Share" %}</button>
                 </div>
             </div>
 
-            <div id="successfulShare" title="Congratulations!" >
-                <p>You have successfully shared your {{ plan_text }}. You can share your {{ plan_text }} with others by giving them this link:</p>
+            <div id="successfulShare" title="{% trans "Congratulations!" %}" >
+                <p>{% blocktrans %}You have successfully shared your {{ plan_text }}. You can share your {{ plan_text }} with others by giving them this link:{% endblocktrans %}</p>
                 <p id="sharedPermalink"><p>
-                <button id="continueEditing">Continue Editing Current {{ plan_text|title }}</button>
-                <a href="/districtmapping/plan/0/view/"><button id="selectNew">Select New {{ plan_text|title }} to Edit</button></a>
+                <button id="continueEditing">{% blocktrans with plan_text|title as plantext %}Continue Editing Current {{ plantext }}{% endblocktrans %}</button>
+                <a href="/districtmapping/plan/0/view/"><button id="selectNew">{% blocktrans with plan_text|title as plantext %}Select New {{ plan_text }} to Edit{% endblocktrans %}</button></a>
             </div>
         {% endblock %}
 
@@ -163,19 +163,19 @@
         {% if has_leaderboard and not plan.is_community %}
         <div id="verifyandpost">
             <div class="explanation">
-               <h3>Verify and Submit Plan to Leaderboards</h3>
-                <p>In order to be considered for placement on the leaderboards your plan must meet the criteria for creating a legal redistricitng plan. Keep in mind that as soon as you edit a verified plan, it will automatically become "unverified" and you will need to re-verify it in order for it to again be considered for the leaderboards.</p>
-                <p>By verifying your plan, you are <em><strong>not</strong></em> sharing your plan with other users. Your plan title and user name will simply show up in the top ten lists (if your plan ranks in the top ten).</p>
+               <h3>{% trans "Verify and Submit Plan to Leaderboards" %}</h3>
+                <p>{% trans 'In order to be considered for placement on the leaderboards your plan must meet the criteria for creating a legal redistricitng plan. Keep in mind that as soon as you edit a verified plan, it will automatically become "unverified" and you will need to re-verify it in order for it to again be considered for the leaderboards.' %}</p>
+                <p>{% blocktrans %}By verifying your plan, you are <em><strong>not</strong></em> sharing your plan with other users. Your plan title and user name will simply show up in the top ten lists (if your plan ranks in the top ten).{% endblocktrans %}</p>
                 <p>
-                How to verify and submit your plan:
+                {% trans "How to verify and submit your plan:" %}
                 <ol>
-                  <li>Click the "Verify and Submit to Leaderboards" button.</li>
-                  <li>If verified, you will be taken to the Leaderboard page.</li>
-                  <li>Check the leaderboards to see if your plan ranks in any of the top ten score types.</li>
+                  <li>{% trans 'Click the "Verify and Submit to Leaderboards" button.' %}</li>
+                  <li>{% trans "If verified, you will be taken to the Leaderboard page." %}</li>
+                  <li>{% trans "Check the leaderboards to see if your plan ranks in any of the top ten score types." %}</li>
                 </ol>
                 </p>
             </div>
-            <button id="btnVerifyAndSubmit">Verify and Post Plan to Leaderboards</button>            
+            <button id="btnVerifyAndSubmit">{% trans "Verify and Post Plan to Leaderboards" %}</button>            
         </div>
         {% endif %}
     {% endblock %}
@@ -186,32 +186,32 @@
         <div id="shared_districts_content">
             <div id="shared_districts_instructions">
             {% if plan.is_community %}
-            <p>Choose communities to paste into your map. A map can contain any number of communities. If you would like to remove communities from your map, use the community unassign tool.</p>
+            <p>{% trans "Choose communities to paste into your map. A map can contain any number of communities. If you would like to remove communities from your map, use the community unassign tool." %}</p>
             {% else %}
-            <p>Choose districts to paste into your plan.  A plan has a maximum number of districts allowed by law.  If you would like to paste districts into a plan, you must have fewer districts in your plan than the maximum allowed.  If you would like to remove districts from your plan, use the district unassign tool.</p>
+            <p>{% trans "Choose districts to paste into your plan.  A plan has a maximum number of districts allowed by law.  If you would like to paste districts into a plan, you must have fewer districts in your plan than the maximum allowed.  If you would like to remove districts from your plan, use the district unassign tool." %}</p>
             {% endif %}
             </div>
             <div id="shared_plans_column">
-                <h2>1. Choose {{ plan_text|title }}</h2>
+                <h2>{% blocktrans with plan_text|title as plantext %}1. Choose {{ plantext }}{% endblocktrans %}</h2>
                 <table id="shared_plans_table"></table>
                 <div id="shared_plans_pager"></div>
             </div>
             <div id="shared_districts_column">
                 <input type="hidden" id="available_districts">
-                <h2>2. Select {{ body_member_long_label|capfirst }} to copy</h2>
+                <h2>{% blocktrans with body_member_long_label|capfirst as bodymember %}2. Select {{ bodymember }} to copy{% endblocktrans %}</h2>
                 <table id="shared_districts_table"></table>
                 <div id="shared_districts_pager"></div>
             </div>
             <div id="shared_district_maps">
                
                <div id="shared_district_map_div"></div>
-               <p><strong>Click on a {{ body_member_long_label }}'s name to see a map</strong></p>
+               <p><strong>{% blocktrans %}Click on a {{ body_member_long_label }}'s name to see a map{% endblocktrans %}</strong></p>
             </div>
         </div>
         <div id="footer">
             <div id="message_box"></div>
             <div id="step_3">
-                <h2>3. Paste selected {{ body_member_long_label }} into working {{ plan_text }}</h2>
+                <h2>{% blocktrans %}3. Paste selected {{ body_member_long_label }} into working {{ plan_text }}{% endblocktrans %}</h2>
                 <button id="paste_button">Paste</button>
             </div>
         </div>
@@ -246,26 +246,24 @@
             <div id="multi_member_info">
                 <div id="multi_member_instructions">
                     <p>
-                        Click on a row to edit the number of members for the selected
-                        district. Press ENTER to complete editing a district.
+                        {% trans "Click on a row to edit the number of members for the selected district. Press ENTER to complete editing a district." %}
                     </p>
                     <br />
                     <p>
-                        When all desired edits are made, press the Save button to
-                        save all changes to the database.
+                        {% trans "When all desired edits are made, press the Save button to save all changes to the database." %}
                     </p>
                 </div>
                 <div id="multi_member_targets">
-                    <p>Target # of representatives: <span id="multi_target_reps"></span></p>
-                    <p>Target # of multi-member districts: <span id="multi_target_dists"></span></p>
-                    <p>Target # of members per multi-member district: <span id="multi_target_per"></span></p>
+                    <p>{% trans "Target # of representatives:" %} <span id="multi_target_reps"></span></p>
+                    <p>{% trans "Target # of multi-member districts:" %} <span id="multi_target_dists"></span></p>
+                    <p>{% trans "Target # of members per multi-member district:" %} <span id="multi_target_per"></span></p>
                 </div>
                 <div id="multi_member_values">
-                    <p>Your plan currently has <span id="multi_num_reps" class="multi_val"></span> representatives.</p>
-                    <p>Your plan currently has <span id="multi_num_dists" class="multi_val"></span> multi-member districts.</p>
+                    <p>{% trans 'Your plan currently has <span id="multi_num_reps" class="multi_val"></span> representatives.' %}</p>
+                    <p>{% trans 'Your plan currently has <span id="multi_num_dists" class="multi_val"></span> multi-member districts.' %}</p>
                 </div>
                 <div id="multi_member_footer">
-                    <button id="multi_member_save_button">Save</button>
+                    <button id="multi_member_save_button">{% trans "Save" %}</button>
                 </div>
             </div>
         </div>
@@ -311,36 +309,36 @@
     <div id="email_plan_dialog">
         <table id="emailTable">
             <tr>
-                <td class="fname">First Name *</td>
+                <td class="fname">{% trans "First Name" %} *</td>
                 <td><input name="first name" class="field required" maxlength="30" value="{{ userinfo.firstname }}" /></td>
             </tr>
             <tr>
-                <td class="fname">Last Name *</td>
+                <td class="fname">{% trans "Last Name" %} *</td>
                 <td><input name="last name" class="field required" maxlength="30" value="{{ userinfo.lastname }}" /></td>
             </tr>
             <tr>
-                <td class="fname">Full Names of Team Members (if applicable)</td>
+                <td class="fname">{% trans "Full Names of Team Members (if applicable)" %}</td>
                 <td><input name="team members" class="field" maxlength="120" /></td>
             </tr>
             <tr>
-                <td class="fname">Team Name (if applicable)</td>
+                <td class="fname">{% trans "Team Name (if applicable)" %}</td>
                 <td><input name="team name" class="field" maxlength="120" /></td>
             </tr>
             <tr>
-                <td class="fname">Email Address *</td>
+                <td class="fname">{% trans "Email Address" %} *</td>
                 <td><input name="email" class="field required" maxlength="75" value="{{ userinfo.email }}" /><br/>
             </tr>
             <tr>
-                <td class="fname">Street Address *</td>
+                <td class="fname">{% trans "Street Address" %} *</td>
                 <td><input name="street address" class="field required" maxlength="120" /></td>
             </tr>
             <tr>
-                <td class="fname">Phone Number *</td>
+                <td class="fname">{% trans "Phone Number" %} *</td>
                 <td><input name="phone number" class="field required" maxlength="20" /></td>
             </tr>
             <tr>
                 <td colspan="2" id="values_text_column">
-                    Values &ndash; tell us what values, considerations and trade-offs you made in your plan:
+                    {% trans "Values &ndash; tell us what values, considerations and trade-offs you made in your plan:" %}
                 </td>
             </tr>
             <tr>
@@ -350,19 +348,21 @@
             </tr>
             <tr>
                 <td colspan="2" id="disclaimer_text_column">
+                    {% blocktrans %}
                     By submitting a plan for consideration, you are agreeing to have the plan
                     published in local news media outlets and presented to City Council. Unless
                     you request otherwise, the project partners will attempt to include attribution
                     (your name or team name) for the plan whenever feasible.
+                    {% endblocktrans %}
                 </td>
             </tr>
             <tr>
                 <td colspan="2" id="email_plan_submit_column">
-                    <button id="email_plan_submit_button">Submit Final Plan</button>
+                    <button id="email_plan_submit_button">{% trans "Submit Final Plan" %}</button>
                 </td>
             </tr>
         </table>
-        <div id="email_plan_required_note"> * Indicates required field </div>        
+        <div id="email_plan_required_note"> * {% trans "Indicates required field" %} </div>        
     </div>
     <script type="text/javascript" src="/static-media/js/emailplan.js"></script>
     <script type="text/javascript">
@@ -380,19 +380,19 @@
 
     {% block district_info %}
     {% if plan.is_community %}
-    <div id="districtComment" title="Community Info">
-        <input type="hidden" value="0" id="id_district_pk" name="district_pk"/>
+    <div id="districtComment" title="{% trans "Community Info" %}">
+        <input type="hidden" value="{% trans "0" %}" id="id_district_pk" name="district_pk"/>
         <input type="hidden" value="" id="id_district_id" name="district_id"/>
         
         <div class="dialog_step">
-          <h3>1. Edit Community Label:</h3>
+          <h3>{% trans "1. Edit Community Label:" %}</h3>
           <div id="district_label" class="district_input">
               <input type="text" class="field" value="" id="id_label" name="label" maxlength="200"/>
           </div>
         </div>
         
         <div class="dialog_step">
-          <h3>2. Edit Community Type:</h3>
+          <h3>{% trans "2. Edit Community Type:" %}</h3>
           <div id="district_type" class="district_input">
               <input type="text" class="field" value="" id="id_type" name="type" />
               <select name="typelist" id="id_typelist" multiple="multiple" size="4">
@@ -403,7 +403,7 @@
         </div>
         
         <div class="dialog_step">
-          <h3>3. Comments:</h3>
+          <h3>{% trans "3. Comments:" %}</h3>
               <p>
                   <textarea id="id_comment" name="comment" cols="40" rows="10"></textarea>
               </p>
@@ -411,8 +411,8 @@
         
         </div>
     </div>
-    <div id="districtCommentErr" title="Oops!">
-        <div>Sorry, your information could not be saved. Please try again later.</div>
+    <div id="districtCommentErr" title="{% trans "Oops!" %}">
+        <div>{% trans "Sorry, your information could not be saved. Please try again later." %}</div>
     </div>
     {% endif %}
     {% endblock %}
