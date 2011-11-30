@@ -72,7 +72,7 @@ chooseplan = function(options) {
      */
     _self.init = function() {
         _options.target.click(_self.show);
-        _startText = _options.anonymous ? "View Plan" : "Start Drawing";
+        _startText = _options.anonymous ? gettext("View Plan") : gettext("Start Drawing");
         _table = _options.table;
         _nameRequired = false;
         _reaggregator = reaggregator({ startText: _startText });
@@ -84,8 +84,9 @@ chooseplan = function(options) {
         setUpSearch();
         
         if (window.UPLOADED) {
-            var text = window.UPLOAD_STATUS ? 'Thanks! Your file has been uploaded, and your plan is being constructed. When your plan is completely constructed, you will receive an email from us.' : 'We\'re sorry! Your file was transferred to us, but there was a problem converting it into a plan. Make sure the file is a zipped block equivalency file, and please try again.';
-            $('<div title="Uploaded">' + text + '</div>').dialog({modal:true,resizable:false})
+            var div = $('<div />');
+            var text = window.UPLOAD_STATUS ? gettext('Thanks! Your file has been uploaded, and your plan is being constructed. When your plan is completely constructed, you will receive an email from us.') : gettext('We\'re sorry! Your file was transferred to us, but there was a problem converting it into a plan. Make sure the file is a zipped block equivalency file, and please try again.');
+            div.attr('title', gettext('Uploaded')).text(text).dialog({modal:true,resizable:false})
         }
         return _self;
     };
@@ -123,7 +124,7 @@ chooseplan = function(options) {
      */
     var selectPlan = function () {
         // Notify the reaggregator of reaggregation button clicks
-        if ($('#start_mapping .ui-button-text').html().startsWith('Reaggregate')) {
+        if ($('#start_mapping .ui-button-text').html().startsWith(gettext('Reaggregate'))) {
             _reaggregator.reaggregateClicked(_selectedPlanId);
             return;
         }
@@ -131,7 +132,7 @@ chooseplan = function(options) {
         // If we're anonymous, just view the selected map
         if (_options.anonymous) {
             if (typeof(_selectedPlanId) == 'undefined') {
-                alert('Choose a plan from the table first');
+                alert(gettext('Choose a plan from the table first'));
                 return false;
             }
             window.location = '/districtmapping/plan/' + _selectedPlanId + '/view/';
@@ -140,7 +141,7 @@ chooseplan = function(options) {
 
         // If the user is using a template, they should have clicked the table first
         if (typeof(_selectedPlanId) == 'undefined' && 'blank|upload'.indexOf(_eventType) == -1 ) {
-            alert('Choose a plan from the table first');
+            alert(gettext('Choose a plan from the table first'));
             return false;
         }
 
@@ -148,7 +149,7 @@ chooseplan = function(options) {
         if (_nameRequired) {
             var name = $('#txtNewName').val();
             if (name.trim().length == 0) { 
-                alert ('A name for the copied template is required'); 
+                alert (gettext('A name for the copied template is required')); 
                 return false; 
             }
 
@@ -160,15 +161,15 @@ chooseplan = function(options) {
             if (_eventType == 'upload') {
                 var email = $('#userEmail').val();
                 if (email.trim() == '' || !email.match(/^([\w\-\.\+])+\@([\w\-\.])+\.([A-Za-z]{2,4})$/)) {
-                    alert('Please provide a valid email address.');
+                    alert(gettext('Please provide a valid email address.'));
                     return false;
                 }
                 if ($('#indexFile').val() == '') {
-                    alert('Please provide a zipped district index file.');
+                    alert(gettext('Please provide a zipped district index file.'));
                     return false;
                 } 
                 if ($('#leg_selector_upload').val() == '') {
-                    alert('You must select a legislative body from the dropdown in the upload form');
+                    alert(gettext('You must select a legislative body from the dropdown in the upload form'));
                     return false;
                 }
                 // Get the form for uploading.  Be sure not to move the input:file element
@@ -181,8 +182,8 @@ chooseplan = function(options) {
             }
             else {
                 $('#start_mapping').attr('disabled', 'disabled');                
-                $('#start_mapping .ui-button-text').html('Creating New Plan...');
-                window.status = 'Please standby while creating new plan ...';
+                $('#start_mapping .ui-button-text').html(gettext('Creating New Plan...'));
+                window.status = gettext('Please standby while creating new plan ...');
                 $.ajax({
                     url:url, 
                     data:{ 
@@ -228,7 +229,12 @@ chooseplan = function(options) {
                 return;
             }
 
-            $('<div title="Creation Error"><p>' + data.message + "</p><p><b>Tip</b>: Make sure the new plan's name is unique.</p></div>").dialog({
+            var div = $('<div />').attr('title', gettext('Creation Error'));
+            div.append('<p />').text(data.message);
+            var tip = $('<div />');
+            tip.append($('<b />').text(gettext('Tip: ')));
+            tip.append($('<span />').text(gettext('Make sure the new plan\'s name is unique.')));
+            div.append(tip).dialog({
                 modal:true,
                 resizable:false
             });
@@ -273,9 +279,9 @@ chooseplan = function(options) {
     // Formatter used for coloring rows
     var rowsToColor = [];
     var rowColorFormatter = function(cellValue, options, rowObject) {
-        if (cellValue === "Needs reaggregation") {
+        if (cellValue === gettext("Needs reaggregation")) {
             rowsToColor.push({ id: options.rowId, color: "#DD4444" }); // red
-        } else if (cellValue === "Reaggregating") {
+        } else if (cellValue === gettext("Reaggregating")) {
             rowsToColor.push({ id: options.rowId, color: "#FF9933" }); // orange
         }
         return cellValue;
@@ -344,15 +350,17 @@ chooseplan = function(options) {
                     var id = obj.target.id.substring('delete-'.length);
                     var name = obj.target.alt;
                     
-                    $('<div>Really delete plan: "' + name + '"?</div>').dialog({
+                    $('<div />').text(gettext('Really delete plan: ') + name + '?').dialog({
                         modal: true,
                         autoOpen: true,
-                        title: 'Delete Plan',
-                        buttons: { 
-                            'Yes': function() {
+                        title: gettext('Delete Plan'),
+                        buttons: [{ 
+                            text: gettext('Yes'),
+                            click: function() {
                                 $(this).dialog('close');
-                                var waitDialog = $('<div>Please wait while deleting plan.</div>').dialog({
-                                    modal: true, autoOpen: true, title: 'Deleting Plan',
+                                var waitDialog = $('<div />').text(
+                                        gettext('Please wait while deleting plan.')).dialog({
+                                    modal: true, autoOpen: true, title: gettext('Deleting Plan'),
                                     escapeOnClose: false, resizable:false,
                                     open: function() { $(".ui-dialog-titlebar-close", $(this).parent()).hide(); }
                                 });
@@ -367,8 +375,8 @@ chooseplan = function(options) {
                                         } else if ('redirect' in data) {
                                             window.location.href = data.redirect;
                                         } else if ('message' in data) {
-                                            $('<div title="Error Deleting Plan"><p>' + data.message + '</p></div>')
-                                                .dialog({modal:true, resizable:false});
+                                            $('<div />').attr('title', gettext('Error Deleting Plan'))
+                                                .text(data.message).dialog({modal:true, resizable:false});
                                         }
                                     },
                                     error: function(xhr, textStatus, message) {
@@ -376,22 +384,22 @@ chooseplan = function(options) {
                                         if (xhr.status == 403) {
                                             window.location.href = '/?msg=logoff';
                                         } else {
-                                            $('<div title="Error Deleting Plan"><p>Please try again later.</p></div>')
+                                            $('<div />').attr('title', gettext('Error Deleting Plan'))
+                                                .text(gettext('Please try again later.'))
                                                 .dialog({modal:true, resizable:false});
                                         }
-                                }})
-                            },
-                            'No': function() {
-                                $(this).dialog('close');
-                            }
-                        }
+                                }});}
+                        }, {
+                             text: gettext('No'),
+                             click: function() { $(this).dialog('close'); }
+                        }]
                     });
                 });
             }
         }).jqGrid(
             'navGrid',
             '#' + _options.pager.attr('id'),
-            {search:false,edit:false,add:false,del:false,searchText:"Search",refreshText:"Clear Search"},
+            {search:false,edit:false,add:false,del:false,searchText:gettext("Search"),refreshText:gettext("Clear Search")},
             {}, //edit
             {}, //add
             {}, //del
@@ -476,7 +484,8 @@ chooseplan = function(options) {
                             window.location.href = data.redirect;
                         }
                         else if ('message' in data) {
-                            $('<div title="Error Saving Details"><p>' + data.message + '</p></div>').dialog({modal:true, resizable:false});
+                            $('<div />').attr('title', gettext('Error Saving Details'))
+                                .text(data.message).dialog({modal:true, resizable:false});
                         }
                     },
                     error: function(xhr, textStatus, message) {
@@ -548,7 +557,7 @@ chooseplan = function(options) {
         if (document.getElementById('plan_search').getAttribute('placeholder') != 'Search' ||
                 navigator.userAgent.indexOf('Firefox/3') > -1) {
             searchBox.focus( function() {
-                if ($(this).val() == ' Search ') {
+                if ($(this).val() == gettext(' Search ')) {
                     $(this).val('');
                     $(this).css('color', '#000000');
                 }
@@ -556,13 +565,13 @@ chooseplan = function(options) {
             searchBox.blur( function() {
                 if ($(this).val() == '') {
                     $(this).css('color', '#666666');
-                    $(this).val(' Search ');
+                    $(this).val(gettext(' Search '));
                 }
             });
 
             // initial state showing watermark
             searchBox.css('font', 'gray');
-            searchBox.val(' Search ');
+            searchBox.val(gettext(' Search '));
         }
         
     };
@@ -694,11 +703,13 @@ chooseplan = function(options) {
             $('#new_from_blank').hide();
             $('#new_from_file').hide();
             $('#lblStartDrawing').hide();
+            var anonText = gettext('Click the button to view the map as a guest');
             if ($('#leg_selector option').length > 1) {
-                $('#start_mapping').before($('<div>4. Click the button to view the map as a guest</div>'));
+                anonText = '4. ' + anonText;
             } else {
-                $('#start_mapping').before($('<div>3. Click the button to view the map as a guest</div>'));
+                anonText = '3. ' + anonText;
             }
+            $('#start_mapping').before($('<div />').text(anonText));
         }
 
         // set the start mapping button to select the plan

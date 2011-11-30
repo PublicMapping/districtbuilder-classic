@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-30 09:38-0500\n"
+"POT-Creation-Date: 2011-11-30 16:49-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,134 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n>1\n"
+
+#: redistricting/static/js/chooseplan.js:88 static-media/js/chooseplan.js:88
+msgid ""
+"Thanks! Your file has been uploaded, and your plan is being constructed. "
+"When your plan is completely constructed, you will receive an email from us."
+msgstr ""
+
+#: redistricting/static/js/chooseplan.js:88 static-media/js/chooseplan.js:88
+msgid ""
+"We're sorry! Your file was transferred to us, but there was a problem "
+"converting it into a plan. Make sure the file is a zipped block equivalency "
+"file, and please try again."
+msgstr ""
+
+#: redistricting/static/js/chooseplan.js:89 static-media/js/chooseplan.js:89
+msgid "Uploaded"
+msgstr ""
+
+#: redistricting/static/js/chooseplan.js:127 static-media/js/chooseplan.js:127
+msgid "Reaggregate"
+msgstr ""
+
+#: redistricting/static/js/chooseplan.js:134
+#: redistricting/static/js/chooseplan.js:142 static-media/js/chooseplan.js:134
+#: static-media/js/chooseplan.js.py:142
+msgid "Choose a plan from the table first"
+msgstr ""
+
+#: redistricting/static/js/chooseplan.js:149 static-media/js/chooseplan.js:149
+msgid "A name for the copied template is required"
+msgstr ""
+
+#: redistricting/static/js/chooseplan.js:161 static-media/js/chooseplan.js:161
+msgid "Please provide a valid email address."
+msgstr ""
+
+#: redistricting/static/js/chooseplan.js:165 static-media/js/chooseplan.js:165
+msgid "Please provide a zipped district index file."
+msgstr ""
+
+#: redistricting/static/js/chooseplan.js:169 static-media/js/chooseplan.js:169
+msgid "You must select a legislative body from the dropdown in the upload form"
+msgstr ""
+
+#: redistricting/static/js/chooseplan.js:182 static-media/js/chooseplan.js:182
+msgid "Creating New Plan..."
+msgstr ""
+
+#: redistricting/static/js/chooseplan.js:183 static-media/js/chooseplan.js:183
+msgid "Please standby while creating new plan ..."
+msgstr ""
+
+#: redistricting/static/js/chooseplan.js:229 static-media/js/chooseplan.js:229
+msgid "Creation Error"
+msgstr ""
+
+#: redistricting/static/js/chooseplan.js:232 static-media/js/chooseplan.js:232
+msgid "Tip: "
+msgstr ""
+
+#: redistricting/static/js/chooseplan.js:233 static-media/js/chooseplan.js:233
+msgid "Make sure the new plan's name is unique."
+msgstr ""
+
+#: redistricting/static/js/chooseplan.js:276 static-media/js/chooseplan.js:276
+msgid "Needs reaggregation"
+msgstr ""
+
+#: redistricting/static/js/chooseplan.js:278 static-media/js/chooseplan.js:278
+msgid "Reaggregating"
+msgstr ""
+
+#: redistricting/static/js/chooseplan.js:346 static-media/js/chooseplan.js:346
+msgid "Really delete plan: "
+msgstr ""
+
+#: redistricting/static/js/chooseplan.js:349 static-media/js/chooseplan.js:349
+msgid "Delete Plan"
+msgstr ""
+
+#: redistricting/static/js/chooseplan.js:351 static-media/js/chooseplan.js:351
+msgid "Yes"
+msgstr ""
+
+#: redistricting/static/js/chooseplan.js:355 static-media/js/chooseplan.js:355
+msgid "Please wait while deleting plan."
+msgstr ""
+
+#: redistricting/static/js/chooseplan.js:356 static-media/js/chooseplan.js:356
+msgid "Deleting Plan"
+msgstr ""
+
+#: redistricting/static/js/chooseplan.js:371
+#: redistricting/static/js/chooseplan.js:380 static-media/js/chooseplan.js:371
+#: static-media/js/chooseplan.js.py:380
+msgid "Error Deleting Plan"
+msgstr ""
+
+#: redistricting/static/js/chooseplan.js:381 static-media/js/chooseplan.js:381
+msgid "Please try again later."
+msgstr ""
+
+#: redistricting/static/js/chooseplan.js:386 static-media/js/chooseplan.js:386
+msgid "No"
+msgstr ""
+
+#: redistricting/static/js/chooseplan.js:395 static-media/js/chooseplan.js:395
+msgid "Search"
+msgstr ""
+
+#: redistricting/static/js/chooseplan.js:395 static-media/js/chooseplan.js:395
+msgid "Clear Search"
+msgstr ""
+
+#: redistricting/static/js/chooseplan.js:478 static-media/js/chooseplan.js:478
+msgid "Error Saving Details"
+msgstr ""
+
+#: redistricting/static/js/chooseplan.js:547
+#: redistricting/static/js/chooseplan.js:555
+#: redistricting/static/js/chooseplan.js:560 static-media/js/chooseplan.js:547
+#: static-media/js/chooseplan.js.py:555 static-media/js/chooseplan.js:560
+msgid " Search "
+msgstr ""
+
+#: redistricting/static/js/chooseplan.js:687 static-media/js/chooseplan.js:687
+msgid "Click the button to view the map as a guest"
+msgstr ""
 
 #: redistricting/static/js/layerchooser.js:59
 #: static-media/js/layerchooser.js:59

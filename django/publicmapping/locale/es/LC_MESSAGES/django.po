@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-30 09:38-0500\n"
-"PO-Revision-Date: 2011-11-30 09:33\n"
-"Last-Translator: Admin User <kshepard@azavea.com>\n"
+"POT-Creation-Date: 2011-11-30 16:49-0500\n"
+"PO-Revision-Date: 2011-11-29 14:20\n"
+"Last-Translator: Admin User <ajennings+saigon@azavea.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
@@ -1017,6 +1017,10 @@ msgstr ""
 "Una dirección de correo electrónico es recomendable para recuperar una "
 "contraseña olvidada"
 
+#: templates/account.html:39
+msgid "Email Address"
+msgstr "Correo electrónico enviado"
+
 #: templates/account.html:44
 msgid ""
 "Sorry, that email address is already registered. Please use a different "
@@ -1024,6 +1028,14 @@ msgid ""
 msgstr ""
 "Lo sentimos, su dirección de correo electrónico ya está registrada. Por "
 "favor, use una dirección de correo electrónico diferentes."
+
+#: templates/account.html:47
+msgid "First Name"
+msgstr "Nombre"
+
+#: templates/account.html:54
+msgid "Last Name"
+msgstr "Apellido"
 
 #: templates/account.html:61
 msgid "Organization"

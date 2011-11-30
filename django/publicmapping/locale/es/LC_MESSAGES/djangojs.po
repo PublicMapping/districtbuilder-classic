@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-30 09:38-0500\n"
-"PO-Revision-Date: 2011-11-22 15:54\n"
+"POT-Creation-Date: 2011-11-30 16:49-0500\n"
+"PO-Revision-Date: 2011-11-30 16:49\n"
 "Last-Translator: Admin User <ajennings+saigon@azavea.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -18,6 +18,146 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Translated-Using: django-rosetta 0.6.2\n"
+
+#: redistricting/static/js/chooseplan.js:88 static-media/js/chooseplan.js:88
+msgid ""
+"Thanks! Your file has been uploaded, and your plan is being constructed. "
+"When your plan is completely constructed, you will receive an email from us."
+msgstr ""
+"Gracias! El archivo se ha subido, y su plan se está construyendo. Cuando el "
+"plan esté completamente construido, usted recibirá un mensaje de correo "
+"electrónico."
+
+#: redistricting/static/js/chooseplan.js:88 static-media/js/chooseplan.js:88
+msgid ""
+"We're sorry! Your file was transferred to us, but there was a problem "
+"converting it into a plan. Make sure the file is a zipped block equivalency "
+"file, and please try again."
+msgstr ""
+"Lo sentimos! Su archivo fue transferido a nosotros, pero había un problema "
+"para convertirlo en un plan. Asegúrese de que el archivo es un archivo de "
+"bloque de equivalencia con cremallera, y vuelva a intentarlo."
+
+#: redistricting/static/js/chooseplan.js:89 static-media/js/chooseplan.js:89
+msgid "Uploaded"
+msgstr "Subido"
+
+#: redistricting/static/js/chooseplan.js:127 static-media/js/chooseplan.js:127
+msgid "Reaggregate"
+msgstr "Reaggregate"
+
+#: redistricting/static/js/chooseplan.js:134
+#: redistricting/static/js/chooseplan.js:142 static-media/js/chooseplan.js:134
+#: static-media/js/chooseplan.js.py:142
+msgid "Choose a plan from the table first"
+msgstr "Elija un plan de la primera tabla"
+
+#: redistricting/static/js/chooseplan.js:149 static-media/js/chooseplan.js:149
+msgid "A name for the copied template is required"
+msgstr "Un nombre para la plantilla de copiado se requiere"
+
+#: redistricting/static/js/chooseplan.js:161 static-media/js/chooseplan.js:161
+msgid "Please provide a valid email address."
+msgstr "Por favor ingrese su dirección de correo electrónico válida."
+
+#: redistricting/static/js/chooseplan.js:165 static-media/js/chooseplan.js:165
+msgid "Please provide a zipped district index file."
+msgstr "Por favor ingrese su distrito comprimido archivo de índice."
+
+#: redistricting/static/js/chooseplan.js:169 static-media/js/chooseplan.js:169
+msgid "You must select a legislative body from the dropdown in the upload form"
+msgstr ""
+"Debe seleccionar un cuerpo legislativo en el menú desplegable en el "
+"formulario de carga"
+
+#: redistricting/static/js/chooseplan.js:182 static-media/js/chooseplan.js:182
+msgid "Creating New Plan..."
+msgstr "Crear nuevo plan ..."
+
+#: redistricting/static/js/chooseplan.js:183 static-media/js/chooseplan.js:183
+msgid "Please standby while creating new plan ..."
+msgstr "Por favor, espera mientras se crea el nuevo plan ..."
+
+#: redistricting/static/js/chooseplan.js:229 static-media/js/chooseplan.js:229
+#, fuzzy
+msgid "Creation Error"
+msgstr "Error de inicio de sesión"
+
+#: redistricting/static/js/chooseplan.js:232 static-media/js/chooseplan.js:232
+msgid "Tip: "
+msgstr "Consejo:"
+
+#: redistricting/static/js/chooseplan.js:233 static-media/js/chooseplan.js:233
+msgid "Make sure the new plan's name is unique."
+msgstr "Asegúrese de que el nombre del nuevo plan es único."
+
+#: redistricting/static/js/chooseplan.js:276 static-media/js/chooseplan.js:276
+msgid "Needs reaggregation"
+msgstr "Las necesidades de reagrupamiento"
+
+#: redistricting/static/js/chooseplan.js:278 static-media/js/chooseplan.js:278
+msgid "Reaggregating"
+msgstr "Reaggregating"
+
+#: redistricting/static/js/chooseplan.js:346 static-media/js/chooseplan.js:346
+msgid "Really delete plan: "
+msgstr "Realmente eliminar el plan:"
+
+#: redistricting/static/js/chooseplan.js:349 static-media/js/chooseplan.js:349
+msgid "Delete Plan"
+msgstr "Eliminar el Plan"
+
+#: redistricting/static/js/chooseplan.js:351 static-media/js/chooseplan.js:351
+msgid "Yes"
+msgstr "Sí"
+
+#: redistricting/static/js/chooseplan.js:355 static-media/js/chooseplan.js:355
+msgid "Please wait while deleting plan."
+msgstr "Por favor, espera mientras borra plan."
+
+#: redistricting/static/js/chooseplan.js:356 static-media/js/chooseplan.js:356
+msgid "Deleting Plan"
+msgstr "Plan de eliminación de"
+
+#: redistricting/static/js/chooseplan.js:371
+#: redistricting/static/js/chooseplan.js:380 static-media/js/chooseplan.js:371
+#: static-media/js/chooseplan.js.py:380
+msgid "Error Deleting Plan"
+msgstr "Error al eliminar el Plan de"
+
+#: redistricting/static/js/chooseplan.js:381 static-media/js/chooseplan.js:381
+#, fuzzy
+msgid "Please try again later."
+msgstr "Error del servidor. Por favor, inténtelo de nuevo más tarde"
+
+#: redistricting/static/js/chooseplan.js:386 static-media/js/chooseplan.js:386
+#, fuzzy
+msgid "No"
+msgstr "Ahora"
+
+#: redistricting/static/js/chooseplan.js:395 static-media/js/chooseplan.js:395
+msgid "Search"
+msgstr "Búsqueda"
+
+#: redistricting/static/js/chooseplan.js:395 static-media/js/chooseplan.js:395
+#, fuzzy
+msgid "Clear Search"
+msgstr "Borrar todos"
+
+#: redistricting/static/js/chooseplan.js:478 static-media/js/chooseplan.js:478
+msgid "Error Saving Details"
+msgstr "Detalles de error de ahorro"
+
+#: redistricting/static/js/chooseplan.js:547
+#: redistricting/static/js/chooseplan.js:555
+#: redistricting/static/js/chooseplan.js:560 static-media/js/chooseplan.js:547
+#: static-media/js/chooseplan.js.py:555 static-media/js/chooseplan.js:560
+msgid " Search "
+msgstr "Búsqueda"
+
+#: redistricting/static/js/chooseplan.js:687 static-media/js/chooseplan.js:687
+msgid "Click the button to view the map as a guest"
+msgstr "Haga clic en el botón para ver el mapa como un invitado"
 
 #: redistricting/static/js/layerchooser.js:59
 #: static-media/js/layerchooser.js:59
