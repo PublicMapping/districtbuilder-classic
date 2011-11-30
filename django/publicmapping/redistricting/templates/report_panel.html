@@ -68,7 +68,7 @@
                     {% for row in score.score %}
                       <td class="report_score_cell footer {{ row|format_report_class }}">
                         {% if forloop.first %}
-                          Average
+                          {% trans "Average" %}
                         {% else %}
                           {{ districtscores|avg_report_column:row }}
                         {% endif %}

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-29 17:32-0500\n"
+"POT-Creation-Date: 2011-11-30 09:38-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -684,6 +684,82 @@ msgstr ""
 
 #: redistricting/templates/leaderboard_panel_mine.html:36
 msgid "My Plans"
+msgstr ""
+
+#: redistricting/templates/plan_comments.html:10
+msgid "Edit"
+msgstr ""
+
+#: redistricting/templates/plan_comments.html:12
+msgid "Type/s:"
+msgstr ""
+
+#: redistricting/templates/plan_comments.html:26
+msgid "Comments:"
+msgstr ""
+
+#: redistricting/templates/plan_summary.html:39
+msgid "Score (Target)"
+msgstr ""
+
+#: redistricting/templates/plan_summary.html:39
+msgid "Districts"
+msgstr ""
+
+#: redistricting/templates/printplan.html:37
+msgid "Open Source District Mapping Tool"
+msgstr ""
+
+#: redistricting/templates/printplan.html:44
+msgid "District Builder"
+msgstr ""
+
+#: redistricting/templates/printplan.html:48
+msgid "Get PDF"
+msgstr ""
+
+#: redistricting/templates/report_panel.html:71
+msgid "Average"
+msgstr ""
+
+#: redistricting/templates/split_report.html:30
+#, python-format
+msgid "Total Splits with %(other_name)s:"
+msgstr ""
+
+#: redistricting/templates/split_report.html:32
+msgid "indicates split"
+msgstr ""
+
+#: redistricting/templates/split_report.html:51
+msgid "Total splits"
+msgstr ""
+
+#: redistricting/templates/split_report.html:53
+#, python-format
+msgid "of %(numgeographies)s"
+msgstr ""
+
+#: redistricting/templates/split_report.html:67
+msgid "Type Summary By District"
+msgstr ""
+
+#: redistricting/templates/split_report.html:69
+#: redistricting/templates/split_report.html:95
+msgid "Type"
+msgstr ""
+
+#: redistricting/templates/split_report.html:69
+msgid "Total By District"
+msgstr ""
+
+#: redistricting/templates/split_report.html:93
+#, python-format
+msgid "Type Summary for %(other_name)s"
+msgstr ""
+
+#: redistricting/templates/split_report.html:95
+msgid "Total"
 msgstr ""
 
 #: redistricting/templates/submission.email:12

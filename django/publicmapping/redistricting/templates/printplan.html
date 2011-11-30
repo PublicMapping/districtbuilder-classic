@@ -34,18 +34,18 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="author" content="David Zwarg, Andrew Jennings" />
     <meta name="copyright" content="&copy; 2011 Micah Altman, Michael McDonald"/>
-    <title>Open Source District Mapping Tool</title>
+    <title>{% trans "Open Source District Mapping Tool" %}</title>
     <link rel="stylesheet" type="text/css" href="{{ prefix }}/static-media/css/reset.css"/>
     <link rel="stylesheet" type="text/css" href="{{ prefix }}/static-media/css/export-print.css"/> 
   </head>
   <body id="app" class="print_page">
     <div id="mapwrap">
       <div id="app_header">
-        <div id="logo">District Builder</div>
+        <div id="logo">{% trans "District Builder" %}</div>
         <div class="float_left" id="print-plan-title">
           <h2>
             {{ plan.name }} &mdash; {{ plan.legislative_body.name }} 
-            {% if preview %}<button onclick="window.location.href+='&to=.pdf'">Get PDF</button>{% endif %}
+            {% if preview %}<button onclick="window.location.href+='&to=.pdf'">{% trans "Get PDF" %}</button>{% endif %}
           </h2>
         </div>
       

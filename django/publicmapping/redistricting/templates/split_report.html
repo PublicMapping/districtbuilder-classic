@@ -27,9 +27,9 @@
 {% load redistricting_extras %}
 {% load i18n %}
 <div class="split_report">
-<div>Total Splits with {{ other_name }}: {{ splits|length }}</div>
+<div>{% blocktrans %}Total Splits with {{ other_name }}:{% endblocktrans %} {{ splits|length }}</div>
 {% if extended %}
-    <div id="split_indicator">* indicates split</div> 
+    <div id="split_indicator">* {% trans "indicates split" %}</div> 
 {% endif %}
 <div class="table_container">
 <table class="report"><thead><tr class="name"><th class="name">{{ plan_name }}</th><th>{{ other_name }}</th></tr></thead><tbody>
@@ -48,9 +48,9 @@
         
         {% if forloop.last %}
             <tr class="split_totals">
-                <td>Total splits:</td>
+                <td>{% trans "Total splits" %}:</td>
                 {% if extended %}
-                    <td>{{ geo.list|count_true_values:"split"}} (of {{ geo.list|length }})</td>
+                    <td>{{ geo.list|count_true_values:"split"}} ({% blocktrans with geo.list|length as numgeographies %}of {{ numgeographies }}{% endblocktrans %})</td>
                 {% else %}
                     <td>{{ geo.list|length }}</td>
                 {% endif %}
@@ -64,9 +64,9 @@
 {% if type_splits %}
     <div class="divider"></div>
     <div class="split_report">
-    <div class="split_table_type">Type Summary By District</div>
+    <div class="split_table_type">{% trans "Type Summary By District" %}</div>
     <div class="table_container">
-    <table class="report"><thead><tr><th class="name">{{ plan_name }}</th><th>Type</th><th class="total">Total By District</th></tr></thead><tbody>
+    <table class="report"><thead><tr><th class="name">{{ plan_name }}</th><th>{% trans "Type" %}</th><th class="total">{% trans "Total By District" %}</th></tr></thead><tbody>
     {% regroup type_splits|dictsort_ignorecase:"name" by name as type_list %}
     {% for name in type_list %}
         {% for split in name.list|dictsort_ignorecase:"type" %}
@@ -90,9 +90,9 @@
 {% if type_counts %}
 	<div class="divider"></div>
     <div class="split_report">
-    <div class="split_table_type">Type Summary for {{ other_name }}</div>
+    <div class="split_table_type">{% blocktrans %}Type Summary for {{ other_name }}{% endblocktrans %}</div>
     <div class="table_container">
-    <table class="report"><thead><tr><th>Type</th><th class="total">Total</th></tr></thead><tbody>
+    <table class="report"><thead><tr><th>{% trans "Type" %}</th><th class="total">{% trans "Total" %}</th></tr></thead><tbody>
         {% for type in type_counts|dictsort_ignorecase:"type" %}
         <tr>
             <td>{{ type.type }}</td><td class="total">{{ type.number }}</td>
