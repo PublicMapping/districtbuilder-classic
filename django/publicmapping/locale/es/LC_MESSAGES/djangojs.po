@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-30 16:49-0500\n"
+"POT-Creation-Date: 2011-12-05 13:30-0500\n"
 "PO-Revision-Date: 2011-11-30 16:49\n"
 "Last-Translator: Admin User <ajennings+saigon@azavea.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -159,12 +159,27 @@ msgstr "Búsqueda"
 msgid "Click the button to view the map as a guest"
 msgstr "Haga clic en el botón para ver el mapa como un invitado"
 
+#: redistricting/static/js/districtfile.js:96
+#: static-media/js/districtfile.js:96
+msgid "Download"
+msgstr ""
+
+#: redistricting/static/js/districtfile.js:107
+#: static-media/js/districtfile.js:107
+msgid "Request File"
+msgstr ""
+
+#: redistricting/static/js/districtfile.js:131
+#: static-media/js/districtfile.js:131
+msgid "Please wait. File is being created on the server"
+msgstr ""
+
 #: redistricting/static/js/layerchooser.js:59
 #: static-media/js/layerchooser.js:59
 msgid "Choose Map Layers"
 msgstr "Elija Capas Mapa"
 
-#: static-media/admin/js/SelectFilter2.js:63
+#: static-media/admin/js/SelectFilter2.js:77
 msgid "Clear all"
 msgstr "Borrar todos"
 
@@ -409,3 +424,11 @@ msgid "Sorry, we weren't able to contact the server.  Please try again later."
 msgstr ""
 "Lo sentimos, no hemos podido contactar con el servidor. Por favor, inténtelo "
 "de nuevo más tarde."
+
+#, fuzzy
+#~ msgid "Please suppy a valid email address so we "
+#~ msgstr "Por favor ingrese su dirección de correo electrónico válida."
+
+#, fuzzy
+#~ msgid "That is not a valid email address."
+#~ msgstr "Por favor ingrese su dirección de correo electrónico válida."
