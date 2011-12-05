@@ -698,29 +698,52 @@ class ConfigImporter:
 
 class SpatialUtils:
     """
-    A utility that aids in th configuration of the spatial components in the
+    A utility that aids in the configuration of the spatial components in the
     configuration.
     """
-    def __init__(self, store):
+    def __init__(self, store=None, config=None):
         """
         Create a new spatial utility, based on the stored config.
         """
-        self.store = store
+        if not store is None:
+            self.store = store
 
-        mapconfig = self.store.get_mapserver()
+            mapconfig = self.store.get_mapserver()
 
-        self.host = mapconfig.get('hostname')
-        self.port = 8080 # should this be parameterized?
+            self.host = mapconfig.get('hostname')
+            self.port = 8080 # should this be parameterized?
+
+            self.ns = mapconfig.get('ns')
+            self.nshref = mapconfig.get('nshref')
+
+            user_pass = '%s:%s' % (mapconfig.get('adminuser'), mapconfig.get('adminpass'))
+
+            self.styledir = mapconfig.get('styles')
+        elif isinstance(config, dict):
+            try:
+                self.host = config['host']
+                self.port = 8080
+
+                self.ns = config['ns']
+                self.nshref = config['nshref']
+
+                user_pass = '%s:%s' % (config['adminuser'], config['adminpass'])
+
+                self.styledir = config['styles']
+            except:
+                logging.error('SpatialUtils is missing a required key in the settings dictionary.')
+                raise
+
+        else:
+            logging.error('SpatialUtils requires either a stored config or a dictionary of settings.')
+            raise Exception()
 
         if self.host == '':
             self.host = 'localhost'
-        self.ns = mapconfig.get('ns')
-        self.nshref = mapconfig.get('nshref')
 
-        user_pass = '%s:%s' % (mapconfig.get('adminuser'), mapconfig.get('adminpass'))
-        auth = 'Basic %s' % string.strip(base64.encodestring(user_pass))
+        auth = 'Basic %s' % base64.b64encode(user_pass)
         self.headers = {
-            'default': {
+                'default': {
                 'Authorization': auth, 
                 'Content-Type': 'application/json', 
                 'Accepts':'application/json'
@@ -732,7 +755,6 @@ class SpatialUtils:
             }
         }
 
-        self.styledir = mapconfig.get('styles')
 
     @staticmethod
     @transaction.commit_manually
@@ -772,11 +794,11 @@ class SpatialUtils:
             logging.debug('Created simple_%s view ...', geolevel.name)
             
             for subject in Subject.objects.all():
-                sql = "CREATE OR REPLACE VIEW demo_%s_%s AS SELECT rg.id, rg.name, rgg.geolevel_id, rg.geom, rc.number, rc.percentage FROM redistricting_geounit rg JOIN redistricting_geounit_geolevel rgg ON rg.id = rgg.geounit_id JOIN redistricting_characteristic rc ON rg.id = rc.geounit_id WHERE rc.subject_id = %%(subject_id)s AND rgg.geolevel_id = %%(geolevel_id)s;" % (geolevel.name, subject.name,)
+                sql = "CREATE OR REPLACE VIEW %s AS SELECT rg.id, rg.name, rgg.geolevel_id, rg.geom, rc.number, rc.percentage FROM redistricting_geounit rg JOIN redistricting_geounit_geolevel rgg ON rg.id = rgg.geounit_id JOIN redistricting_characteristic rc ON rg.id = rc.geounit_id WHERE rc.subject_id = %%(subject_id)s AND rgg.geolevel_id = %%(geolevel_id)s;" % SpatialUtils.get_featuretype_name(geolevel.name, subject.name)
                 cursor.execute(sql, {'subject_id':subject.id, 'geolevel_id':geolevel.id})
                 transaction.commit()
 
-                logging.debug('Created demo_%s_%s view ...', geolevel.name, subject.name)
+                logging.debug('Created %s view ...', SpatialUtils.get_featuretype_name(geolevel.name, subject.name))
 
 
     def purge_geoserver(self):
@@ -877,6 +899,10 @@ class SpatialUtils:
         self._check_spatial_resource(namespace_url, self.ns, namespace_obj, 'Namespace')
 
         # Create our DataStore
+        if self.store is None:
+            logging.warning('Geoserver cannot be fully configured without a stored config.')
+            return
+
         dbconfig = self.store.get_database()
 
         data_store_url = '/geoserver/rest/workspaces/%s/datastores' % self.ns
@@ -900,60 +926,54 @@ class SpatialUtils:
 
         self._check_spatial_resource(data_store_url, data_store_name, data_store_obj, 'Data Store')
 
-        # Make a list of layers
-        feature_type_names = ['identify_geounit']
-        for geolevel in Geolevel.objects.all():
-            if geolevel.legislativelevel_set.all().count() == 0:
-                # Skip 'abstract' geolevels if regions are configured
-                continue
+        # Create the feature types and their styles
 
-            feature_type_names.append('simple_%s' % geolevel.name)
-            feature_type_names.append('simple_district_%s' % geolevel.name)
-
-            for subject in Subject.objects.all().order_by('sort_key'):
-                feature_type_names.append('demo_%s_%s' % (geolevel.name, subject.name))
-
-        # Check for each layer in the list.  If it doesn't exist, make it
-        feature_type_url = '/geoserver/rest/workspaces/%s/datastores/%s/featuretypes' % (self.ns, data_store_name)
-        for feature_type_name in feature_type_names:
-            feature_type_obj = SpatialUtils.feature_template(feature_type_name)
-            self._check_spatial_resource(feature_type_url, feature_type_name, feature_type_obj, 'Feature Type')
-
-        self._create_style('simple_district', None, '%s:simple_district' % self.ns, None)
-
-        # Create the style for the demographic layer
+        self.create_featuretype('identify_geounit')
+        self.create_style('simple_district', None, '%s:simple_district' % self.ns, None)
 
         for geolevel in Geolevel.objects.all():
             if geolevel.legislativelevel_set.all().count() == 0:
                 # Skip 'abstract' geolevels if regions are configured
                 continue
 
-            is_first_subject = True
+            self.create_featuretype('simple_%s' % geolevel.name)
+            self.create_featuretype('simple_district_%s' % geolevel.name)
 
-            for subject in Subject.objects.all().order_by('sort_key'):
+            all_subjects = Subject.objects.all().order_by('sort_key') 
+            if all_subjects.count() > 0:
+                subject = all_subjects[0]
 
-                self._create_style(subject.name, geolevel.name, None, None)
+                # Create NONE demographic layer, based on first subject
+                featuretype_name = SpatialUtils.get_featuretype_name(geolevel.name)
+                self.create_featuretype(
+                    featuretype_name, alias=SpatialUtils.get_featuretype_name(geolevel.name, subject.name)
+                )
+                self.create_style(subject.name, geolevel.name, '%s:%s' % (self.ns, featuretype_name,), 'none')
 
-                if is_first_subject:
-                    is_first_subject = False
+                # Create boundary layer, based on geographic boundaries
+                featuretype_name = '%s_boundaries' % geolevel.name,
+                self.create_featuretype(
+                    featuretype_name, alias=SpatialUtils.get_featuretype_name(geolevel.name, subject.name)
+                )
+                self.create_style(subject.name, geolevel.name, '%s:%s' % (self.ns, featuretype_name,), 'boundaries')
 
-                    # Create NONE demographic layer, based on first subject
-                    feature_type_obj = SpatialUtils.feature_template('demo_%s' % geolevel.name)
-                    feature_type_obj['featureType']['nativeName'] = 'demo_%s_%s' % (geolevel.name, subject.name)
-                    self._check_spatial_resource(feature_type_url, 'demo_%s' % geolevel.name, feature_type_obj, 'Feature Type')
-                    self._create_style(subject.name, geolevel.name, '%s:demo_%s' % (self.ns, geolevel.name,), 'none')
-
-                    # Create boundary layer, based on geographic boundaries
-                    feature_name = '%s_boundaries' % geolevel.name
-                    feature_type_obj = SpatialUtils.feature_template(feature_name)
-                    feature_type_obj['featureType']['nativeName'] = 'demo_%s_%s' % (geolevel.name, subject.name)
-                    self._check_spatial_resource(feature_type_url, feature_name, feature_type_obj, 'Feature Type')
-                    self._create_style(subject.name, geolevel.name, '%s:%s_boundaries' % (self.ns,geolevel.name,), 'boundaries')
+            for subject in all_subjects:
+                self.create_featuretype(SpatialUtils.get_featuretype_name(geolevel.name, subject.name))
+                self.create_style(subject.name, geolevel.name, None, None)
 
         logging.info("Geoserver configuration complete.")
 
         # finished configure_geoserver
         return True
+
+    def create_featuretype(feature_type_name, data_store_name='PostGIS', alias=None):
+        """
+        Create a featuretype. Assuming the datastore name is always 'PostGIS'.
+        """
+        feature_type_url = '/geoserver/rest/workspaces/%s/datastores/%s/featuretypes' % (self.ns, data_store_name)
+
+        feature_type_obj = SpatialUtils.feature_template(feature_type_name, alias=alias)
+        self._check_spatial_resource(feature_type_url, feature_type_name, feature_type_obj, 'Feature Type')
 
     def _check_spatial_resource(self, url, name, dictionary, type_name=None, update=False):
         """ 
@@ -977,11 +997,26 @@ class SpatialUtils:
 
         return True
 
+
     @staticmethod
-    def feature_template(name, title=None):
+    def get_featuretype_name(geolevel_name, subject_name=None):
+        """
+        A uniform mechanism for generating featuretype names.
+        """
+        if subject is None:
+            return 'demo_%s' % geolevel_name
+        else:
+            return 'demo_%s_%s' % (geolevel_name, subject_name)
+
+
+    @staticmethod
+    def feature_template(name, title=None, alias=None):
         """
         Return a common format for feature types.
         """
+        nativeName = name
+        if not alias is None:
+            nativeName = alias
         return {
             'featureType': {
                 'name': name,
@@ -995,7 +1030,8 @@ class SpatialUtils:
                     'maxx': '%0.1f' % 20037508.342789244,
                     'maxy': '%0.1f' % 20037508.342789244
                 },
-                'maxFeatures': settings.FEATURE_LIMIT + 1
+                'maxFeatures': settings.FEATURE_LIMIT + 1,
+                'nativeName': nativeName
             }
         }
 
@@ -1084,7 +1120,7 @@ ERROR:
             logging.debug(traceback.format_exc())
             return None
 
-    def _create_style(self, subject_name, geolevel_name, style_name, style_type):
+    def create_style(self, subject_name, geolevel_name, style_name, style_type):
         """
         Create a style for a layer, defaulting to 'polygon' for a polygon
         layer if the style file is not available.
@@ -1094,7 +1130,7 @@ ERROR:
             style_type = subject_name
 
         if not style_name:
-            layer_name = '%s:demo_%s_%s' % (self.ns, geolevel_name, subject_name)
+            layer_name = '%s:%s' % (self.ns, geolevel_name, subject_name)
             style_name = layer_name
         else:
             layer_name = style_name

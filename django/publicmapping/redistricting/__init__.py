@@ -218,6 +218,8 @@ class StoredConfig:
             output.write("MAP_SERVER_NS = '%s'\n" % cfg.get('ns'))
             output.write("MAP_SERVER_NSHREF = '%s'\n" % cfg.get('nshref'))
             output.write("FEATURE_LIMIT = %d\n" % int(cfg.get('maxfeatures')))
+            output.write("MAP_SERVER_USER = '%s'\n" % cfg.get('adminuser'))
+            output.write("MAP_SERVER_PASS = '%s'\n" % cfg.get('adminpass'))
 
             cfg = self.data.xpath('//Mailer')[0]
             output.write("\nEMAIL_HOST = '%s'\n" % cfg.get('server'))

@@ -44,6 +44,7 @@ from django.template.loader import render_to_string
 from django.contrib.comments.models import Comment
 from django.contrib.contenttypes.models import ContentType
 from redistricting.calculators import Schwartzberg, Contiguity, SumValues
+from redistricting.config import SpatialUtils
 from tagging.models import TaggedItem, Tag
 from datetime import datetime
 from copy import copy
@@ -391,9 +392,34 @@ class SubjectUpload(models.Model):
         # reset the processing state for all plans in one fell swoop
         Plan.objects.all().update(processing_state=ProcessingState.NEEDS_REAGG)
 
+        task = SubjectUpload.create_views_and_styles.delay(upload_id).task_id
+
+        return {'task_id':task, 'success':True, 'messages':['Reset computed characteristics, creating spatial views and styles...'] }
+
+    @staticmethod
+    @task
+    def create_views_and_styles(upload_id):
+        """
+        Create the spatial views required for visualizing the subject data on the map.
+        """
+
+        # Configure ALL views. This will replace view definitions with identical
+        # view defintions as well as create the new view definitions.
+        SpatialUtils.configure_views()
+
+        # Get the spatial configuration settings.
+        utils = SpatialUtils({
+            'host':settings.MAP_SERVER,
+            'ns':settings.MAP_SERVER_NS,
+            'nshref':settings.MAP_SERVER_NSHREF,
+            'adminuser':settings.MAP_SERVER_USER,
+            'adminpass':settings.MAP_SERVER_PASS,
+            'styles':settings.SLD_ROOT
+        })
+
         task = SubjectUpload.clean_quarantined.delay(upload_id).task_id
 
-        return {'task_id':task, 'success':True, 'messages':['Reset computed characteristics, cleaning quarantined data...'] }
+        return {'task_id':task, 'success':True, 'messages':['Created spatial views and styles, cleaning quarantined data...'] }
 
     @staticmethod
     @task
