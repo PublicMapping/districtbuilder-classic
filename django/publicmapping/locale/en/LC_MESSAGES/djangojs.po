@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-05 14:15-0500\n"
+"POT-Creation-Date: 2011-12-05 14:55-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -122,11 +122,15 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: redistricting/static/js/chooseplan.js:395 static-media/js/chooseplan.js:395
+#: redistricting/static/js/chooseplan.js:395
+#: redistricting/static/js/layerchooser.js:184
+#: static-media/js/chooseplan.js:395 static-media/js/layerchooser.js:184
 msgid "Search"
 msgstr ""
 
-#: redistricting/static/js/chooseplan.js:395 static-media/js/chooseplan.js:395
+#: redistricting/static/js/chooseplan.js:395
+#: redistricting/static/js/layerchooser.js:184
+#: static-media/js/chooseplan.js:395 static-media/js/layerchooser.js:184
 msgid "Clear Search"
 msgstr ""
 
@@ -198,6 +202,16 @@ msgstr ""
 #: redistricting/static/js/layerchooser.js:59
 #: static-media/js/layerchooser.js:59
 msgid "Choose Map Layers"
+msgstr ""
+
+#: redistricting/static/js/layerchooser.js:164
+#: static-media/js/layerchooser.js:164
+msgid "User Name"
+msgstr ""
+
+#: redistricting/static/js/layerchooser.js:165
+#: static-media/js/layerchooser.js:165
+msgid "Plan Name"
 msgstr ""
 
 #: static-media/admin/js/SelectFilter2.js:77
