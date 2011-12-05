@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-05 13:30-0500\n"
+"POT-Creation-Date: 2011-12-05 14:15-0500\n"
 "PO-Revision-Date: 2011-11-30 16:49\n"
 "Last-Translator: Admin User <ajennings+saigon@azavea.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -173,6 +173,45 @@ msgstr ""
 #: static-media/js/districtfile.js:131
 msgid "Please wait. File is being created on the server"
 msgstr ""
+
+#: redistricting/static/js/emailplan.js:42 static-media/js/emailplan.js:42
+msgid "Submit Final Plan to Contest"
+msgstr ""
+
+#: redistricting/static/js/emailplan.js:93 static-media/js/emailplan.js:93
+#, fuzzy
+msgid "Please wait while emailing plan"
+msgstr "Por favor, espera mientras borra plan."
+
+#: redistricting/static/js/emailplan.js:94
+#: redistricting/static/js/emailplan.js:106 static-media/js/emailplan.js:94
+#: static-media/js/emailplan.js.py:106
+#, fuzzy
+msgid "Emailing Plan"
+msgstr "Plan de eliminación de"
+
+#: redistricting/static/js/emailplan.js:107 static-media/js/emailplan.js:107
+msgid ""
+"Your plan is in the process of being submitted. You will receive a "
+"confirmation email once it has completed successfully. This may take a few "
+"minutes."
+msgstr ""
+
+#: redistricting/static/js/emailplan.js:110 static-media/js/emailplan.js:110
+msgid "OK"
+msgstr ""
+
+#: redistricting/static/js/emailplan.js:117
+#: redistricting/static/js/emailplan.js:126 static-media/js/emailplan.js:117
+#: static-media/js/emailplan.js.py:126
+#, fuzzy
+msgid "Error Emailing Plan"
+msgstr "Error al eliminar el Plan de"
+
+#: redistricting/static/js/emailplan.js:127 static-media/js/emailplan.js:127
+#, fuzzy
+msgid "Please try again later"
+msgstr "Error del servidor. Por favor, inténtelo de nuevo más tarde"
 
 #: redistricting/static/js/layerchooser.js:59
 #: static-media/js/layerchooser.js:59
