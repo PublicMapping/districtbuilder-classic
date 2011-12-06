@@ -361,12 +361,12 @@
          <button id="choose_layers_button">Set Map<br/>Layers</button>
           <div id="toolsets">
             <div id="plan_export_container" class="toolbar_menu_container">
-					<button id="plan_export_button" class="btntoggle solotoggle">Export</button>
+                <button id="plan_export_button" class="btntoggle solotoggle">Export</button>
                 <div id="plan_export_menu" class="toolbar_menu">
-					<button id="print_btn">Print</button>
-					<button id="shapefile_btn">Shape File</button>
-					<button id="rawdata_btn">Raw Data</button>
-				</div>
+                    <button id="print_btn">Print</button>
+                    <button id="shapefile_btn">Shape File</button>
+                    <button id="rawdata_btn">Raw Data</button>
+                </div>
             </div>
             <div id="history_tools">
             {% block toolset_history %}
@@ -1079,12 +1079,27 @@ Include the markup for the account management panel.
 
     {% endcomment %}
         $('#steps').tabs('select', '#step_draw');
+        // Export to shape menu option
+        var exportShape = districtfile({
+            target: $('#shapefile_btn'),
+            type: 'shape',
+            menu_icon: '/static-media/images/icon-shape-file.png'
+        });
+        exportShape.init();
+
+        // Export to raw data menu option
+        var exportRaw = districtfile({
+            target: $('#rawdata_btn'),
+            type: 'index',
+            menu_icon: '/static-media/images/icon-raw-data.png'
+        });
+        exportRaw.init();
 
         // Load up the district index file checker whenever the 
         // appropriate tab is clicked.
         var exportIndexFile = districtfile({
             target: $('#districtIndexFileTarget'),
-            type: 'shape'
+            type: 'index'
         });
 
         $('#steps').tabs({ show: function(event, ui) {
