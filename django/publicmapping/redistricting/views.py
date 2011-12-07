@@ -243,7 +243,7 @@ def copyplan(request, planid):
     # Create a random name if there is no name provided
     newname = p.name + " " + str(random.random()) 
     if (request.method == "POST" ):
-        newname = request.POST["name"]
+        newname = request.POST["name"][0:200]
         shared = request.POST.get("shared", False)
 
     plan_copy = Plan.objects.filter(name=newname, owner=request.user, legislative_body=p.legislative_body)
@@ -699,7 +699,7 @@ def createplan(request):
 
     status = { 'success': False }
     if request.method == "POST":
-        name = request.POST['name']
+        name = request.POST['name'][0:200]
         body = LegislativeBody.objects.get(id=int(request.POST['legislativeBody']))
         plan = Plan(name = name, owner = request.user, legislative_body = body)
         try:

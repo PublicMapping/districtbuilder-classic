@@ -444,7 +444,7 @@ $(function() {
     $('#btnSaveAndShare').click( function() { 
         // Helper function to get name for shared plan
         var getData = function() {
-            var name = $('#txtPlanName').val();
+            var name = $('#txtPlanName').val().trim();
             if (name == '') { return false; }
             return { name: name, shared: true }; 
         };
@@ -473,6 +473,7 @@ $(function() {
                         $('#continueEditing').click( function() {
                             $('#successfulShare').dialog('close');
                             $('#steps').tabs('select', '#step_draw');
+                            $('#txtPlanName').val('');
                         });
                         if (typeof(_gaq) != 'undefined') { _gaq.push(['_trackEvent', 'Plans', 'Shared']); }
                         $('#successfulShare').dialog({autoOpen: true, width:460, resizable:false});
