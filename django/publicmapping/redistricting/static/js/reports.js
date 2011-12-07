@@ -151,7 +151,7 @@ reports = function(options) {
             return;
         }
         
-        $('#reportPreview').html('<div class="reportStatus"><img class="reportLoading" src="/static-media/images/loading-large.gif" /><h1 id="genreport">Generating Report</h1><p>You may use the rest of the</br>application while the report is building.</p><p>A preview of your report will appear <br/>in this space when it is ready.</p></div>');
+        $('#reportPreview').html('<div class="reportStatus"><img class="reportLoading" src="/static-media/images/loading-large.gif" /><h1 id="genreport">Generating Report</h1><p>You may use the rest of the </br>application while the report is building.</p><p>A preview of your report will appear <br/>in this space when it is ready.</p></div>');
 
         pollCount = 0;
         $.ajax({
