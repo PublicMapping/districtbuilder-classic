@@ -387,23 +387,26 @@ def commonplan(request, planid):
             body_member_long_label = body_member_long_label[0:index]
         if not editable and not can_view(request.user, plan):
             plan = {}
-        tags = Tag.objects.filter(name__startswith='type=').order_by('id').values_list('name',flat=True)
-        tags = map(lambda x:x[5:], tags)
+            tags = []
+            calculator_reports = []
+        else:
+            tags = Tag.objects.filter(name__startswith='type=').order_by('id').values_list('name',flat=True)
+            tags = map(lambda x:x[5:], tags)
 
-        # Reports defined with calculators (Score Displays, Panels, and Functions)
-        # result is a map of relevant panels to score functions with labels and ids,
-        # used for generating groups of checkboxes on the evaluate tab.
-        calculator_reports = []
-        if settings.REPORTS_ENABLED == 'CALC':
-            report_displays = ScoreDisplay.objects.filter(title='%s Reports' % body_name)
-            if len(report_displays) > 0:
-                calculator_reports = map(lambda p: {
-                            'title': p.title,
-                            'functions': map(lambda f: {
-                                'label': f.label,
-                                'id': f.id
-                            }, p.score_functions.all().filter(selectable_bodies=plan.legislative_body))
-                        }, report_displays[0].scorepanel_set.all().order_by('position'))
+            # Reports defined with calculators (Score Displays, Panels, and Functions)
+            # result is a map of relevant panels to score functions with labels and ids,
+            # used for generating groups of checkboxes on the evaluate tab.
+            calculator_reports = []
+            if settings.REPORTS_ENABLED == 'CALC':
+                report_displays = ScoreDisplay.objects.filter(title='%s Reports' % body_name)
+                if len(report_displays) > 0:
+                    calculator_reports = map(lambda p: {
+                                'title': p.title,
+                                'functions': map(lambda f: {
+                                    'label': f.label,
+                                    'id': f.id
+                                }, p.score_functions.all().filter(selectable_bodies=plan.legislative_body))
+                            }, report_displays[0].scorepanel_set.all().order_by('position'))
         
     else:
         # If said plan doesn't exist, use an empty plan & district list.
