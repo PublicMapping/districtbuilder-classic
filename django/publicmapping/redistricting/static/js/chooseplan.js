@@ -218,7 +218,11 @@ chooseplan = function(options) {
 
             $('<div title="Creation Error"><p>' + data.message + "</p><p><b>Tip</b>: Make sure the new plan's name is unique.</p></div>").dialog({
                 modal:true,
-                resizable:false
+                resizable:false,
+                close: function(event, ui){
+                    $('#start_mapping').attr('disabled', null);
+                    $('#start_mapping .ui-button-text').html(_options.anonymous ? "View Plan" : "Start Drawing");
+                }
             });
 
             if (OpenLayers) {
