@@ -989,14 +989,14 @@ def newdistrict(request, planid):
             district_id = None
 
         if 'district_short' in request.REQUEST:
-            district_short = request.REQUEST['district_short']
+            district_short = request.REQUEST['district_short'][0:10]
         elif not district_id is None:
             district_short = plan.legislative_body.short_label % district_id
         else:
             district_short = None
 
         if 'district_long' in request.REQUEST:
-            district_long = request.REQUEST['district_long']
+            district_long = request.REQUEST['district_long'][0:256]
         elif not district_id is None:
             district_long = plan.legislative_body.long_label % district_id
         else:
@@ -2299,8 +2299,8 @@ def district_info(request, planid, district_id):
 
         if request.method == 'POST':
             district = plan.district_set.get(id=request.POST['object_pk'])
-            district.short_label = request.POST['district_short']
-            district.long_label = request.POST['district_long']
+            district.short_label = request.POST['district_short'][0:10]
+            district.long_label = request.POST['district_long'][0:256]
 
 
             if district.version < version:

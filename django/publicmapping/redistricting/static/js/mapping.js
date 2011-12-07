@@ -1447,7 +1447,8 @@ function mapinit(srs,maxExtent) {
 
         var data = {
             district_id: $('#id_district_id').val(),
-            district_name: label_field.val(),
+            district_short: label_field.val(),
+            district_long: label_field.val(),
             comment: $('#id_comment').val(),
             type: $('#id_type').val().split(','),
             version: getPlanVersion()
@@ -1456,8 +1457,11 @@ function mapinit(srs,maxExtent) {
         for (var i = 0; i < data.type.length; i++) {
             var type = data.type[i].trim();
             data.type[i] = type;
-            if (!typeList.children().is('*[value="' + type + '"]')) {
-                $('#id_typelist').append('<option />').text(type).attr('value', type);
+            if (!typeList.children().is('*[value="' + escape(type) + '"]')) {
+                var newopt = $('<option/>')
+                    .text(type)
+                    .attr('value', type);
+                $('#id_typelist').append(newopt);
             }
         }
         
@@ -1519,6 +1523,30 @@ function mapinit(srs,maxExtent) {
             // cache this every time the dialog is opened
             var opts = $('#id_typelist option');
 
+            // fetch all types specified in this plan -- they may have
+            // been added dynamically, and not come from the DB
+            var typeValues = $('.districtComment input.infoType');
+            for (var i = 0; i < typeValues.length; i++) {
+                if (typeValues[i].value.trim().length == 0) {
+                    continue;
+                }
+                var exists = false;
+                var vals = typeValues[i].value.split(',');
+                for (var j = 0; j < vals.length; j++) {
+                    for (var k = 0; k < opts.length; k++) {
+                        exists = exists || (vals[j].toLowerCase() == opts[k].value.toLowerCase());
+                    }
+                }
+                if (!exists) {
+                    var newopt = $('<option />')
+                        .text(typeValues[i].value)
+                        .attr('value', typeValues[i].value);
+                    $('#id_typelist').append(newopt);
+                }
+            }
+
+            opts = $('#id_typelist option');
+
             var types = $('#id_type').val().match(typeRE);
             if (types != null) {
                 var selection = [];
@@ -1531,7 +1559,10 @@ function mapinit(srs,maxExtent) {
                              opts[j].value.toLowerCase());
                     }
                     if (!exists) {
-                        $('#id_typelist').append('<option value="' + type + '">' + type + '</option>');
+                        var newopt = $('<option />')
+                            .text(type)
+                            .attr('value', type);
+                        $('#id_typelist').append(newopt);
                     }
                     selection.push(type);
                 }
