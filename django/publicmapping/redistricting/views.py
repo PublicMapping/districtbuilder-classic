@@ -2062,7 +2062,7 @@ def editplanattributes(request, planid):
     if request.method != 'POST':
         return HttpResponseNotAllowed(['POST'])
     new_name = request.POST.get('name', None)
-    new_description = request.POST.get('description', None)
+    new_description = request.POST.get('description', '')
 
     if not planid or not (new_name or new_description):
         return HttpResponseBadRequest('Must declare planId, name and description')
@@ -2070,10 +2070,10 @@ def editplanattributes(request, planid):
     plan = Plan.objects.filter(pk=planid,owner=request.user)
     if plan.count() == 1:
         plan = plan[0]
-        if new_name: 
+        if not new_name is None:
             plan.name = new_name
-        if new_description:
-            plan.description = new_description
+
+        plan.description = new_description
         try:
             plan.save()
 
