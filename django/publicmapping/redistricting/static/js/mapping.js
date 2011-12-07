@@ -1662,10 +1662,12 @@ function mapinit(srs,maxExtent) {
                 var ll = olmap.getLonLatFromPixel(pixel);
                 var pt = new OpenLayers.Geometry.Point(ll.lon, ll.lat);
                 var dist = featureAtPoint(pt, districtLayer);
-                if (dist == null) {
-                    dist = { data: { district_id: 1 } };
+                if (dist != null) {
+                    $('#assign_district').val(dist.data.district_id);
                 }
-                $('#assign_district').val(dist.data.district_id);
+                else {
+                    $('#assign_district').val('-1');
+                }
                 for (var i = 0; i < selection.features.length; i++) {
                     if (selection.features[i].fid != feature.fid) {
                         selection.features[i].geometry.move(

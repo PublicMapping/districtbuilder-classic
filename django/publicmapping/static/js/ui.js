@@ -449,7 +449,13 @@ $(function() {
             return { name: name, shared: true }; 
         };
         // The dialog to display while contacting the server.  Shouldn't be closable
-        var $waitPublishing = $('<div title="Please Wait">Publishing with the server</div>').dialog({ autoOpen: true, escapeOnClose: false, resizable:false, open: function(event, ui) { $(".ui-dialog-titlebar-close", $(this).parent()).hide(); } });
+        var $waitPublishing = $('<div title="Please Wait">Publishing with the server</div>').dialog({ 
+            modal: true,
+            autoOpen: true, 
+            escapeOnClose: false, 
+            resizable:false, 
+            open: function(event, ui) { $(".ui-dialog-titlebar-close", $(this).parent()).hide(); } 
+        });
         var data = getData();
         if (!data) {
             $waitPublishing.dialog('close');
