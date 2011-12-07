@@ -393,7 +393,7 @@ class SubjectAdmin(admin.ModelAdmin):
             else:
                 response['message'] = str(task.result)
 
-        return HttpResponse(json.dumps(response), mimetype='text/plain')
+        return HttpResponse(json.dumps(response), mimetype='application/json')
 
 
 
