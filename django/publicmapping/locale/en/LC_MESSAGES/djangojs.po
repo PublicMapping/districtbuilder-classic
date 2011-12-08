@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-05 14:55-0500\n"
+"POT-Creation-Date: 2011-12-08 15:20-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -214,6 +214,92 @@ msgstr ""
 msgid "Plan Name"
 msgstr ""
 
+#: redistricting/static/js/mapping.js:108 static-media/js/mapping.js:108
+msgid " Name"
+msgstr ""
+
+#: redistricting/static/js/mapping.js:120 static-media/js/mapping.js:120
+msgid "Demographic "
+msgstr ""
+
+#: redistricting/static/js/mapping.js:411 static-media/js/mapping.js:411
+msgid "Map Transparency"
+msgstr ""
+
+#: redistricting/static/js/mapping.js:425 static-media/js/mapping.js:425
+msgid "Please wait while fixing unassigned. This may take a couple minutes."
+msgstr ""
+
+#: redistricting/static/js/mapping.js:428 static-media/js/mapping.js:428
+msgid "Fixing Unassigned"
+msgstr ""
+
+#: redistricting/static/js/mapping.js:1030 static-media/js/mapping.js:1030
+msgid "No districts were updated"
+msgstr ""
+
+#: redistricting/static/js/mapping.js:1033 static-media/js/mapping.js:1033
+#: static-media/js/register.js:176 static-media/js/register.js.py:184
+#: static-media/js/ui.js:211 static-media/js/ui.js.py:241
+#: static-media/js/ui.js:434 static/js/register.js:176
+#: static/js/register.js.py:184 static/js/ui.js:211 static/js/ui.js.py:241
+#: static/js/ui.js.py:434
+msgid "Error"
+msgstr ""
+
+#: redistricting/static/js/mapping.js:1092 static-media/js/mapping.js:1092
+msgid ""
+"You cannot select that many features at once.\\n\\nConsider drawing a "
+"smaller area with the selection tool."
+msgstr ""
+
+#: redistricting/static/js/mapping.js:1095
+#: redistricting/static/js/mapping.js:1108
+#: redistricting/static/js/mapping.js:1262 static-media/js/mapping.js:1095
+#: static-media/js/mapping.js.py:1108 static-media/js/mapping.js:1262
+msgid "Sorry"
+msgstr ""
+
+#: redistricting/static/js/mapping.js:1105 static-media/js/mapping.js:1105
+msgid ""
+"You cannot select any more features.\\n\\nConsider assigning your current "
+"selection to a district first."
+msgstr ""
+
+#: redistricting/static/js/mapping.js:1238 static-media/js/mapping.js:1238
+msgid "Would you like to unassign the geography in "
+msgstr ""
+
+#: redistricting/static/js/mapping.js:1263 static-media/js/mapping.js:1263
+msgid "Unable to combine districts: "
+msgstr ""
+
+#: redistricting/static/js/mapping.js:1823 static-media/js/mapping.js:1823
+msgid "Select One"
+msgstr ""
+
+#: redistricting/static/js/mapping.js:1824
+#: redistricting/static/js/mapping.js:1837 static-media/js/mapping.js:1824
+#: static-media/js/mapping.js.py:1837
+msgid "Unassigned"
+msgstr ""
+
+#: redistricting/static/js/mapping.js:1846 static-media/js/mapping.js:1846
+msgid "New "
+msgstr ""
+
+#: redistricting/static/js/mapping.js:2330 static-media/js/mapping.js:2330
+msgid "Contiguity"
+msgstr ""
+
+#: redistricting/static/js/mapping.js:2334 static-media/js/mapping.js:2334
+msgid "Compactness"
+msgstr ""
+
+#: redistricting/static/js/mapping.js:2338 static-media/js/mapping.js:2338
+msgid "None"
+msgstr ""
+
 #: static-media/admin/js/SelectFilter2.js:77
 msgid "Clear all"
 msgstr ""
@@ -355,14 +441,6 @@ msgstr ""
 
 #: static-media/js/register.js:175 static/js/register.js:175
 msgid "User Name already exists. Please choose another one."
-msgstr ""
-
-#: static-media/js/register.js:176 static-media/js/register.js.py:184
-#: static-media/js/ui.js:211 static-media/js/ui.js.py:241
-#: static-media/js/ui.js:434 static/js/register.js:176
-#: static/js/register.js.py:184 static/js/ui.js:211 static/js/ui.js.py:241
-#: static/js/ui.js.py:434
-msgid "Error"
 msgstr ""
 
 #: static-media/js/register.js:183 static/js/register.js:183
