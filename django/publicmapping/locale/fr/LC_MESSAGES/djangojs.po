@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-08 16:12-0500\n"
+"POT-Creation-Date: 2011-12-08 17:14-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -373,6 +373,44 @@ msgstr ""
 #: redistricting/static/js/reaggregator.js:170
 #: static-media/js/reaggregator.js:170
 msgid "Error reaggregating plan"
+msgstr ""
+
+#: redistricting/static/js/reports.js:145 static-media/js/reports.js:145
+msgid "Please select one or more reports to be generated."
+msgstr ""
+
+#: redistricting/static/js/reports.js:153 static-media/js/reports.js:153
+msgid "Generating Report"
+msgstr ""
+
+#: redistricting/static/js/reports.js:154 static-media/js/reports.js:154
+msgid "You may use the rest of the application while the report is building."
+msgstr ""
+
+#: redistricting/static/js/reports.js:155 static-media/js/reports.js:155
+msgid "A preview of your report will appear in this space when it is ready."
+msgstr ""
+
+#: redistricting/static/js/reports.js:174 static-media/js/reports.js:174
+msgid "Report Error"
+msgstr ""
+
+#: redistricting/static/js/reports.js:175 static-media/js/reports.js:175
+msgid "Sorry, this report cannot be previewed."
+msgstr ""
+
+#: redistricting/static/js/reports.js:206 static-media/js/reports.js:206
+msgid "Connection Failed"
+msgstr ""
+
+#: redistricting/static/js/reports.js:207 static-media/js/reports.js:207
+msgid ""
+"There was a problem checking your report status. You can resume checking by "
+"clicking on the \"Create and Preview Report\" button."
+msgstr ""
+
+#: redistricting/static/js/reports.js:356 static-media/js/reports.js:356
+msgid "Open report in a new window"
 msgstr ""
 
 #: static-media/admin/js/SelectFilter2.js:77
