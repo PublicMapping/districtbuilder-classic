@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-08 15:20-0500\n"
+"POT-Creation-Date: 2011-12-08 15:56-0500\n"
 "PO-Revision-Date: 2011-11-30 16:49\n"
 "Last-Translator: Admin User <ajennings+saigon@azavea.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -273,8 +273,11 @@ msgstr ""
 
 #: redistricting/static/js/mapping.js:1095
 #: redistricting/static/js/mapping.js:1108
-#: redistricting/static/js/mapping.js:1262 static-media/js/mapping.js:1095
+#: redistricting/static/js/mapping.js:1262
+#: redistricting/static/js/multimember.js:187
+#: redistricting/static/js/multimember.js:193 static-media/js/mapping.js:1095
 #: static-media/js/mapping.js.py:1108 static-media/js/mapping.js:1262
+#: static-media/js/multimember.js:187 static-media/js/multimember.js.py:193
 msgid "Sorry"
 msgstr ""
 
@@ -316,6 +319,40 @@ msgstr ""
 
 #: redistricting/static/js/mapping.js:2338 static-media/js/mapping.js:2338
 msgid "None"
+msgstr ""
+
+#: redistricting/static/js/multimember.js:59 static-media/js/multimember.js:59
+msgid "Set Multi-Member Districts"
+msgstr ""
+
+#: redistricting/static/js/multimember.js:188
+#: static-media/js/multimember.js:188
+msgid "Unable to assign representatives:"
+msgstr ""
+
+#: redistricting/static/js/multimember.js:194
+#: static-media/js/multimember.js:194
+msgid "Unable to assign representatives"
+msgstr ""
+
+#: redistricting/static/js/multimember.js:198
+#: static-media/js/multimember.js:198
+msgid "close"
+msgstr ""
+
+#: redistricting/static/js/multimember.js:234
+#: static-media/js/multimember.js:234
+msgid "District"
+msgstr ""
+
+#: redistricting/static/js/multimember.js:234
+#: static-media/js/multimember.js:234
+msgid "District ID"
+msgstr ""
+
+#: redistricting/static/js/multimember.js:234
+#: static-media/js/multimember.js:234
+msgid "# Members"
 msgstr ""
 
 #: static-media/admin/js/SelectFilter2.js:77
