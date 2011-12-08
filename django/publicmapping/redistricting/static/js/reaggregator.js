@@ -111,7 +111,7 @@ reaggregator = function(options) {
                     }
                 }
             });
-        }, _options.timerInterval)
+        }, _options.timerInterval);
     };
     
     /**
@@ -130,13 +130,13 @@ reaggregator = function(options) {
                     // Owner -- allow reaggregation
                     _options.startButtonLabel.html('Reaggregate');
                     _options.startButton.attr('disabled', false);
-                    _options.helpText.html('Data in the system has changed. This plan needs to be reaggregated before it can be used. Click the button to begin reaggregation. This will run in the background, and the status will be updated when completed. Feel free to use the rest of the system in the meantime.');
+                    _options.helpText.text(gettext('Data in the system has changed. This plan needs to be reaggregated before it can be used. Click the button to begin reaggregation. This will run in the background, and the status will be updated when completed. Feel free to use the rest of the system in the meantime.'));
                     _options.helpText.show();
                 } else {
                     // Not owner -- show that it needs reaggregation
                     _options.startButtonLabel.html('Needs reaggregation');
                     _options.startButton.attr('disabled', true);
-                    _options.helpText.html('Data in the system has changed. The owner of this plan needs to reaggregate it before it can be used. The status of the plan will be updated when reaggregation has completed.');
+                    _options.helpText.text(gettext('Data in the system has changed. The owner of this plan needs to reaggregate it before it can be used. The status of the plan will be updated when reaggregation has completed.'));
                     _options.helpText.show();
                 }
                 break;
@@ -145,7 +145,7 @@ reaggregator = function(options) {
                 // Don't allow actions while reaggregating
                 _options.startButtonLabel.html('Reaggregation in progress');
                 _options.startButton.attr('disabled', true);
-                _options.helpText.html('Data in the system has changed, and this plan is currently reaggregating to reflect these changes. The plan will not be available until reaggregation has completed.');
+                _options.helpText.text(gettext('Data in the system has changed, and this plan is currently reaggregating to reflect these changes. The plan will not be available until reaggregation has completed.'));
                 _options.helpText.show();
                 break;
             
@@ -156,7 +156,7 @@ reaggregator = function(options) {
                 break;
             
             default:
-                _options.startButtonLabel.html('Unknown state');
+                _options.startButtonLabel.text(gettext('Unknown state'));
                 _options.startButton.attr('disabled', true);
                 _options.helpText.hide();
                 break;
@@ -182,12 +182,13 @@ reaggregator = function(options) {
         var handleError = function() {
             _options.startButtonLabel.html(originalLabel);
             _options.startButton.attr('disabled', false);
-            $('<div class="error" title="Sorry">Error reaggregating plan</div>')
+            $('<div class="error" /').attr('title', gettext('Sorry'))
+                .text(gettext('Error reaggregating plan'))
                 .dialog({modal:true, resizable:false});
         };
 
         // Update the button state while reaggregation request is being sent
-        _options.startButtonLabel.html('...');
+        _options.startButtonLabel.text('...');
         _options.startButton.attr('disabled', true);
 
         // Reaggregate
@@ -235,7 +236,7 @@ reaggregator = function(options) {
 
         // Reselect the row, so any new metadata gets displayed
         if (_planId) {
-            _options.grid.jqGrid().resetSelection()
+            _options.grid.jqGrid().resetSelection();
             _options.grid.jqGrid().setSelection(_planId);
         }
     };

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-08 15:56-0500\n"
+"POT-Creation-Date: 2011-12-08 16:12-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -257,9 +257,11 @@ msgstr ""
 #: redistricting/static/js/mapping.js:1108
 #: redistricting/static/js/mapping.js:1262
 #: redistricting/static/js/multimember.js:187
-#: redistricting/static/js/multimember.js:193 static-media/js/mapping.js:1095
+#: redistricting/static/js/multimember.js:193
+#: redistricting/static/js/reaggregator.js:169 static-media/js/mapping.js:1095
 #: static-media/js/mapping.js.py:1108 static-media/js/mapping.js:1262
 #: static-media/js/multimember.js:187 static-media/js/multimember.js.py:193
+#: static-media/js/reaggregator.js:169
 msgid "Sorry"
 msgstr ""
 
@@ -335,6 +337,41 @@ msgstr ""
 #: redistricting/static/js/multimember.js:234
 #: static-media/js/multimember.js:234
 msgid "# Members"
+msgstr ""
+
+#: redistricting/static/js/reaggregator.js:117
+#: static-media/js/reaggregator.js:117
+msgid ""
+"Data in the system has changed. This plan needs to be reaggregated before it "
+"can be used. Click the button to begin reaggregation. This will run in the "
+"background, and the status will be updated when completed. Feel free to use "
+"the rest of the system in the meantime."
+msgstr ""
+
+#: redistricting/static/js/reaggregator.js:123
+#: static-media/js/reaggregator.js:123
+msgid ""
+"Data in the system has changed. The owner of this plan needs to reaggregate "
+"it before it can be used. The status of the plan will be updated when "
+"reaggregation has completed."
+msgstr ""
+
+#: redistricting/static/js/reaggregator.js:132
+#: static-media/js/reaggregator.js:132
+msgid ""
+"Data in the system has changed, and this plan is currently reaggregating to "
+"reflect these changes. The plan will not be available until reaggregation "
+"has completed."
+msgstr ""
+
+#: redistricting/static/js/reaggregator.js:143
+#: static-media/js/reaggregator.js:143
+msgid "Unknown state"
+msgstr ""
+
+#: redistricting/static/js/reaggregator.js:170
+#: static-media/js/reaggregator.js:170
+msgid "Error reaggregating plan"
 msgstr ""
 
 #: static-media/admin/js/SelectFilter2.js:77
