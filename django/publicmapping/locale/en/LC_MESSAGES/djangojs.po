@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-08 17:14-0500\n"
+"POT-Creation-Date: 2011-12-09 16:24-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -124,13 +124,17 @@ msgstr ""
 
 #: redistricting/static/js/chooseplan.js:395
 #: redistricting/static/js/layerchooser.js:184
+#: redistricting/static/js/shareddistricts.js:170
 #: static-media/js/chooseplan.js:395 static-media/js/layerchooser.js:184
+#: static-media/js/shareddistricts.js:170
 msgid "Search"
 msgstr ""
 
 #: redistricting/static/js/chooseplan.js:395
 #: redistricting/static/js/layerchooser.js:184
+#: redistricting/static/js/shareddistricts.js:170
 #: static-media/js/chooseplan.js:395 static-media/js/layerchooser.js:184
+#: static-media/js/shareddistricts.js:170
 msgid "Clear Search"
 msgstr ""
 
@@ -258,10 +262,14 @@ msgstr ""
 #: redistricting/static/js/mapping.js:1262
 #: redistricting/static/js/multimember.js:187
 #: redistricting/static/js/multimember.js:193
-#: redistricting/static/js/reaggregator.js:169 static-media/js/mapping.js:1095
-#: static-media/js/mapping.js.py:1108 static-media/js/mapping.js:1262
-#: static-media/js/multimember.js:187 static-media/js/multimember.js.py:193
-#: static-media/js/reaggregator.js:169
+#: redistricting/static/js/reaggregator.js:169
+#: redistricting/static/js/shareddistricts.js:367
+#: redistricting/static/js/shareddistricts.js:374
+#: static-media/js/mapping.js:1095 static-media/js/mapping.js.py:1108
+#: static-media/js/mapping.js:1262 static-media/js/multimember.js:187
+#: static-media/js/multimember.js.py:193 static-media/js/reaggregator.js:169
+#: static-media/js/shareddistricts.js:367
+#: static-media/js/shareddistricts.js:374
 msgid "Sorry"
 msgstr ""
 
@@ -410,6 +418,100 @@ msgstr ""
 
 #: redistricting/static/js/reports.js:356 static-media/js/reports.js:356
 msgid "Open report in a new window"
+msgstr ""
+
+#: redistricting/static/js/shareddistricts.js:60
+#: static-media/js/shareddistricts.js:60
+msgid "Copy and Paste %(bodyMembersCap)s"
+msgstr ""
+
+#: redistricting/static/js/shareddistricts.js:140
+#: static-media/js/shareddistricts.js:140
+msgid "Author"
+msgstr ""
+
+#: redistricting/static/js/shareddistricts.js:141
+#: static-media/js/shareddistricts.js:141
+msgid "Plan"
+msgstr ""
+
+#: redistricting/static/js/shareddistricts.js:142
+#: static-media/js/shareddistricts.js:142
+msgid "Description"
+msgstr ""
+
+#: redistricting/static/js/shareddistricts.js:143
+#: static-media/js/shareddistricts.js:143
+msgid "Shared"
+msgstr ""
+
+#: redistricting/static/js/shareddistricts.js:144
+#: static-media/js/shareddistricts.js:144
+msgid "Last Edited"
+msgstr ""
+
+#: redistricting/static/js/shareddistricts.js:145
+#: static-media/js/shareddistricts.js:145
+msgid "Edit"
+msgstr ""
+
+#: redistricting/static/js/shareddistricts.js:146
+#: static-media/js/shareddistricts.js:146
+msgid "# Districts"
+msgstr ""
+
+#: redistricting/static/js/shareddistricts.js:198
+#: static-media/js/shareddistricts.js:198
+msgid "%(bodyMemberLongCap)s Name"
+msgstr ""
+
+#: redistricting/static/js/shareddistricts.js:297
+#: static-media/js/shareddistricts.js:297
+msgid "Maximum %(bodyMembers)s Reached"
+msgstr ""
+
+#: redistricting/static/js/shareddistricts.js:298
+#: static-media/js/shareddistricts.js:298
+msgid ""
+"Your plan is at maximum capacity. Please delete a %(bodyMemberLong)s to "
+"enable pasting."
+msgstr ""
+
+#: redistricting/static/js/shareddistricts.js:306
+#: static-media/js/shareddistricts.js:306
+msgid "2. Remove %(num_available_districts)s before submitting"
+msgstr ""
+
+#: redistricting/static/js/shareddistricts.js:310
+#: static-media/js/shareddistricts.js:310
+msgid "2. Check your selections"
+msgstr ""
+
+#: redistricting/static/js/shareddistricts.js:315
+#: static-media/js/shareddistricts.js:315
+msgid "2. Select a %(bodyMemberLong)s to copy"
+msgstr ""
+
+#: redistricting/static/js/shareddistricts.js:319
+#: static-media/js/shareddistricts.js:319
+msgid "2. Select a %(bodyMemberLong)s"
+msgstr ""
+
+#: redistricting/static/js/shareddistricts.js:326
+#: static-media/js/shareddistricts.js:326
+msgid "2. Select up to %(available_districts)s %(bodyMembers)s to copy"
+msgstr ""
+
+#: redistricting/static/js/shareddistricts.js:333
+#: static-media/js/shareddistricts.js:333
+msgid "2. Select %(bodyMembers)s"
+msgstr ""
+
+#: redistricting/static/js/shareddistricts.js:368
+#: redistricting/static/js/shareddistricts.js:375
+#: static-media/js/shareddistricts.js:368
+#: static-media/js/shareddistricts.js:375
+msgid "Unable to paste %(bodyMembers)s"
 msgstr ""
 
 #: static-media/admin/js/SelectFilter2.js:77

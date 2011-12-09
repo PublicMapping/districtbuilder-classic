@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-08 17:14-0500\n"
+"POT-Creation-Date: 2011-12-09 16:25-0500\n"
 "PO-Revision-Date: 2011-11-29 14:20\n"
 "Last-Translator: Admin User <ajennings+saigon@azavea.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -861,19 +861,19 @@ msgstr "Su plan de"
 msgid "has been successfully submitted. Thank you for your submission."
 msgstr "se ha enviado correctamente. Muchas gracias por su presentación."
 
-#: redistricting/templates/viewplan.html:455
+#: redistricting/templates/viewplan.html:456
 msgid "Edit Stats"
 msgstr "Editar Estadísticas"
 
-#: redistricting/templates/viewplan.html:708
+#: redistricting/templates/viewplan.html:709
 msgid "Top Ranked Users' Plans"
 msgstr "Planes Inicio Usuarios Clasificado"
 
-#: redistricting/templates/viewplan.html:710
+#: redistricting/templates/viewplan.html:711
 msgid "My Ranked Plans"
 msgstr "Mis planes Clasificado"
 
-#: redistricting/templates/viewplan.html:736
+#: redistricting/templates/viewplan.html:737
 msgid "Select Legislative Body"
 msgstr "Seleccione Cuerpo Legislativo"
 
