@@ -168,6 +168,9 @@ file and try again.
             logging.info('Error importing configuration.')
             logging.info(traceback.format_exc())
 
+        # Create the utilities for spatial operations (renesting and geoserver)
+        geoutil = SpatialUtils(store)
+
         try:
             optlevels = options.get("geolevels")
             nestlevels = options.get("nesting")
@@ -187,7 +190,7 @@ file and try again.
                         nestme = len(nestlevels) == 0
                         nestme = nestme or (i in nestlevels)
                         if nestme:
-                            self.renest_geolevel(store.data, geolevel)
+                            geoutil.renest_geolevel(geolevel)
         except:
             all_ok = False
             logging.info('ERROR importing geolevels.')
@@ -207,7 +210,6 @@ file and try again.
                 all_ok = False
 
         if options.get("geoserver"):
-            geoutil = SpatialUtils(store)
             try:
                 all_ok = all_ok * geoutil.purge_geoserver()
                 if all_ok:
@@ -291,115 +293,6 @@ ERROR:
 
         self.import_shape(store, gconfig)
 
-
-    def renest_geolevel(self, config, glconf):
-        """
-        Perform a re-nesting of the geography in the geographic levels.
-
-        Renesting the geometry works with Census Geography only that
-        has treecodes.
-
-        Parameters:
-            geolevel - The configuration geolevel
-        """
-        geolevel = Geolevel.objects.get(name=glconf.get('name').lower()[:50])
-        llevels = config.xpath('/DistrictBuilder/Regions/Region/GeoLevels//GeoLevel[@ref="%s"]' % glconf.get('id'))
-        parent = None
-        for llevel in llevels:
-            parent = llevel.getparent()
-            while parent.getparent().tag != 'GeoLevels':
-                parent = parent.getparent()
-        parent_geolevel = glconf.xpath('/DistrictBuilder/GeoLevels/GeoLevel[@id="%s"]' % parent.get('ref'))
-        if len(parent_geolevel) == 1:
-            parent = Geolevel.objects.get(name=parent_geolevel[0].get('name').lower()[:50])
-
-
-        if parent:
-            progress = 0
-            logging.info("Recomputing geometric and numerical aggregates...")
-            logging.info('0% .. ')
-
-            geomods = 0
-            nummods = 0
-
-            unitqset = Geounit.objects.filter(geolevel=geolevel)
-            for i,geounit in enumerate(unitqset):
-                if (float(i) / unitqset.count()) > (progress + 0.1):
-                    progress += 0.1
-                    logging.info('%2.0f%% .. ', (progress * 100))
-                
-                geo,num = self.aggregate_unit(geounit, geolevel, parent)
-
-                geomods += geo
-                nummods += num
-
-
-            logging.info('100%')
-
-            logging.debug("Geounits modified: (geometry: %d, data values: %d)", geomods, nummods)
-
-        return True
-
-
-    def aggregate_unit(self, geounit, geolevel, parent):
-        geo = 0
-        num = 0
-
-        parentunits = Geounit.objects.filter(
-            tree_code__startswith=geounit.tree_code, 
-            geolevel__in=[parent])
-        
-        parentunits.update(child=geounit)
-        newgeo = parentunits.unionagg()
-
-        if newgeo is None:
-            return (geo, num,)
-
-        difference = newgeo.difference(geounit.geom).area
-        if difference != 0:
-            # if there is any difference in the area, then assume that 
-            # this aggregate is an inaccurate aggregate of it's parents
-
-            # aggregate geometry
-
-            newsimple = newgeo.simplify(preserve_topology=True,tolerance=geolevel.tolerance)
-
-            geounit.geom = enforce_multi(newgeo)
-            geounit.simple = enforce_multi(newsimple)
-            geounit.save()
-
-            geo += 1
-
-        # aggregate data values
-        for subject in Subject.objects.all():
-            qset = Characteristic.objects.filter(geounit__in=parentunits, subject=subject)
-            aggdata = qset.aggregate(Sum('number'))['number__sum']
-            percentage = '0000.00000000'
-            if aggdata and subject.percentage_denominator:
-                dset = Characteristic.objects.filter(geounit__in=parentunits, subject=subject.percentage_denominator)
-                denominator_data = dset.aggregate(Sum('number'))['number__sum']
-                if denominator_data > 0:
-                    percentage = aggdata / denominator_data
-
-            if aggdata is None:
-                aggdata = "0.0"
-
-            mychar = Characteristic.objects.filter(geounit=geounit, subject=subject)
-            if mychar.count() < 1:
-                mychar = Characteristic(geounit=geounit, subject=subject, number=aggdata, percentage=percentage)
-                mychar.save()
-                num += 1
-            else:
-                mychar = mychar[0]
-
-                if aggdata != mychar.number:
-                    mychar.number = aggdata
-                    mychar.percentage = percentage
-                    mychar.save()
-
-                    num += 1
-
-        return (geo, num,)
 
     def import_prereq(self, config, force):
         """
@@ -820,41 +713,4 @@ and try again.
             logging.debug(traceback.format_exc())
             return False
         return True
-
-def empty_geom(srid):
-    """
-    Create an empty GeometryCollection.
-
-    Parameters:
-        srid -- The spatial reference for this empty geometry.
-
-    Returns:
-        An empty geometry.
-    """
-    geom = GeometryCollection([])
-    geom.srid = srid
-    return geom
-
-def enforce_multi(geom):
-    """
-    Make a geometry a multi-polygon geometry.
-
-    This method wraps Polygons in MultiPolygons. If geometry exists, but is
-    neither polygon or multipolygon, an empty geometry is returned. If no
-    geometry is provided, no geometry (None) is returned.
-
-    Parameters:
-        geom -- The geometry to check/enforce.
-    Returns:
-        A multi-polygon from any polygon type.
-    """
-    if geom:
-        if geom.geom_type == 'MultiPolygon':
-            return geom
-        elif geom.geom_type == 'Polygon':
-            return MultiPolygon(geom)
-        else:
-            return empty_geom(geom.srid)
-    else:
-        return geom
 

@@ -44,13 +44,12 @@ from django.template.loader import render_to_string
 from django.contrib.comments.models import Comment
 from django.contrib.contenttypes.models import ContentType
 from redistricting.calculators import Schwartzberg, Contiguity, SumValues
-from redistricting.config import SpatialUtils
 from tagging.models import TaggedItem, Tag
 from datetime import datetime
 from copy import copy
 from decimal import *
 from operator import attrgetter
-import sys, cPickle, traceback, types, tagging, re, csv, inflect, os
+import sys, cPickle, traceback, types, tagging, re, csv, inflect, os, logging
 
 
 class Subject(models.Model):
@@ -405,17 +404,20 @@ class SubjectUpload(models.Model):
 
         # Configure ALL views. This will replace view definitions with identical
         # view defintions as well as create the new view definitions.
-        SpatialUtils.configure_views()
+        #SpatialUtils.configure_views()
 
         # Get the spatial configuration settings.
-        utils = SpatialUtils({
-            'host':settings.MAP_SERVER,
-            'ns':settings.MAP_SERVER_NS,
-            'nshref':settings.MAP_SERVER_NSHREF,
-            'adminuser':settings.MAP_SERVER_USER,
-            'adminpass':settings.MAP_SERVER_PASS,
-            'styles':settings.SLD_ROOT
-        })
+        #utils = SpatialUtils({
+        #    'host':settings.MAP_SERVER,
+        #    'ns':settings.MAP_SERVER_NS,
+        #    'nshref':settings.MAP_SERVER_NSHREF,
+        #    'adminuser':settings.MAP_SERVER_USER,
+        #    'adminpass':settings.MAP_SERVER_PASS,
+        #    'styles':settings.SLD_ROOT
+        #})
+
+        upload = SubjectUpload.objects.get(id=upload_id)
+        subject = Subject.objects.get(name=upload.subject_name)
 
         task = SubjectUpload.clean_quarantined.delay(upload_id).task_id
 
@@ -667,6 +669,47 @@ class Geolevel(models.Model):
         """
         return self.name
 
+    def renest(self, parent, subject=None, spatial=True):
+        """
+        Renest all geounits in this geolevel, based on the parent (smaller!)
+        geography in the parent.
+
+        Parameters:
+            parent -- The smaller geographic areas that comprise this geography.
+            subject -- The subject to aggregate. Optional. If omitted, i
+                aggregate all subjects.
+            spatial -- A flag indicating that the spatial aggregates should be
+                computed as well as the numerical aggregates.
+        """
+        if parent is None:
+            return True
+
+        progress = 0
+        logging.info("Recomputing geometric and numerical aggregates...")
+        logging.info('0% .. ')
+
+        geomods = 0
+        nummods = 0
+
+        unitqset = self.geounit_set.all()
+        for i,geounit in enumerate(unitqset):
+            if (float(i) / unitqset.count()) > (progress + 0.1):
+                progress += 0.1
+                logging.info('%2.0f%% .. ', (progress * 100))
+                
+            geo,num = geounit.aggregate(parent, subject, spatial)
+
+            geomods += geo
+            nummods += num
+
+
+        logging.info('100%')
+
+        logging.debug("Geounits modified: (geometry: %d, data values: %d)", geomods, nummods)
+
+        return True
+        
+
 
 class LegislativeLevel(models.Model):
     """
@@ -907,6 +950,96 @@ class Geounit(models.Model):
         name.
         """
         return self.name
+
+    def aggregate(self, parent, subject=None, spatial=True):
+        """
+        Aggregate this geounit to the composite boundary of the geounits
+        in "parent" geolevel.  Compute numerical aggregates on the subject,
+        if specified.
+
+        Parameters:
+            parent -- The 'parent' geolevel, which contains the smaller
+                geographic units that comprise this geounit.
+            subject -- The subject to aggregate and compute. If omitted,
+                all subjects are computed.
+            spatial -- Compute the geometric aggregates as well as
+                numeric aggregates.
+        """
+        geo = 0
+        num = 0
+
+        parentunits = Geounit.objects.filter(
+            tree_code__startswith=self.tree_code, 
+            geolevel__in=[parent])
+
+        parentunits.update(child=self)
+        newgeo = parentunits.unionagg()
+
+        if newgeo is None:
+            return (geo, num,)
+
+        if spatial:
+            difference = newgeo.difference(self.geom).area
+            if difference != 0:
+                # if there is any difference in the area, then assume that 
+                # this aggregate is an inaccurate aggregate of it's parents
+
+                # aggregate geometry
+
+                newsimple = newgeo.simplify(preserve_topology=True,tolerance=self.geolevel.tolerance)
+
+                # enforce_multi is defined in redistricting.models
+                self.geom = enforce_multi(newgeo)
+                self.simple = enforce_multi(newsimple)
+                self.save()
+
+                geo += 1
+
+        if subject is None:
+            # No subject provided? Do all of them
+            subject_qs = Subject.objects.all()
+        else:
+            if isinstance(subject, Subject):
+                # Subject parameter is a Subject object, wrap it in a list
+                subject_qs = [subject]
+            elif isinstance(subject, str):
+                # Subject parameter is a Subject name, filter by name
+                subject_qs = Subject.objects.filter(name=subject)
+            else:
+                # Subject parameter is an ID, filter by ID
+                subject_qs = Subject.objects.filter(id=subject)
+
+        # aggregate data values
+        for subject_item in subject_qs:
+            qset = Characteristic.objects.filter(geounit__in=parentunits, subject=subject_item)
+            aggdata = qset.aggregate(Sum('number'))['number__sum']
+            percentage = '0000.00000000'
+            if aggdata and subject_item.percentage_denominator:
+                dset = Characteristic.objects.filter(geounit__in=parentunits, subject=subject_item.percentage_denominator)
+                denominator_data = dset.aggregate(Sum('number'))['number__sum']
+                if denominator_data > 0:
+                    percentage = aggdata / denominator_data
+
+            if aggdata is None:
+                aggdata = "0.0"
+
+            mychar = self.characteristic_set.filter(subject=subject_item)
+            if mychar.count() < 1:
+                mychar = Characteristic(geounit=self, subject=subject_item, number=aggdata, percentage=percentage)
+                mychar.save()
+                num += 1
+            else:
+                mychar = mychar[0]
+
+                if aggdata != mychar.number:
+                    mychar.number = aggdata
+                    mychar.percentage = percentage
+                    mychar.save()
+
+                    num += 1
+
+        return (geo, num,)
+
 
 class Characteristic(models.Model):
     """

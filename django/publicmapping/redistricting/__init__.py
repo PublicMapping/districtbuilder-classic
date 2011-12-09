@@ -403,6 +403,12 @@ class StoredConfig:
         """
         return self.get_node('/DistrictBuilder/GeoLevels/GeoLevel[@id="%s"]' % idattr)
 
+    def get_regional_geolevel(self, rnode, idattr):
+        """
+        Get the regional geolevel by reference.
+        """
+        return self.get_node('GeoLevels//GeoLevel[@ref="%s"]' % idattr, parent=rnode)
+
     def get_legislative_body(self, idattr):
         """
         Get the legislative body configuration item by ID.

@@ -26,8 +26,8 @@ Author:
     Andrew Jennings, David Zwarg, Kenny Shepard
 """
 
-import hashlib, logging, httplib, string, base64, pprint, json
-import django.db.models
+import hashlib, logging, httplib, string, base64, pprint, json, traceback, types
+from django.db.models import Model
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.sessions.models import Session
 from django.contrib.auth.models import User
@@ -64,7 +64,7 @@ class ModelHelper:
         for key in kwargs:
             current_value = current_object.__getattribute__(key)
             config_value = kwargs[key]
-            if not (isinstance(current_value, types.StringTypes)) and not (isinstance(current_value, models.Model)):
+            if not (isinstance(current_value, types.StringTypes)) and not (isinstance(current_value, Model)):
                 config_value = type(current_value)(config_value)
             if current_value != config_value:
                 if overwrite:
@@ -1120,7 +1120,7 @@ ERROR:
             logging.debug(traceback.format_exc())
             return None
 
-    def create_style(self, subject_name, geolevel_name, style_name, style_type):
+    def create_style(self, subject_name, geolevel_name, style_name, style_type, sld_content=None):
         """
         Create a style for a layer, defaulting to 'polygon' for a polygon
         layer if the style file is not available.
@@ -1141,9 +1141,10 @@ ERROR:
         } }
 
         # Get the SLD file
-        sld = self._get_style(geolevel_name, style_type)
+        if sld_content is None:
+            sld_content = self._get_style(geolevel_name, style_type)
 
-        if sld is None:
+        if sld_content is None:
             logging.debug('No style file found for %s', layer_name)
             style_name = 'polygon'
         else:
@@ -1156,7 +1157,7 @@ ERROR:
             # Update the style with the sld file contents
 
             if self._rest_config( 'PUT', '/geoserver/rest/styles/%s' % style_name, \
-                sld, "Could not upload style file '%s.sld'" % style_name, \
+                sld_content, "Could not upload style file '%s.sld'" % style_name, \
                 headers=self.headers['sld']):
                 logging.debug("Uploaded '%s.sld' file.", style_name)
 
@@ -1197,3 +1198,46 @@ WARNING:
         convention, and try again.
 """, path)
             return None
+
+
+    def renest_geolevel(self, glconf, subject=None):
+        """
+        Perform a re-nesting of the geography in the geographic levels.
+
+        Renesting the geometry works with Census Geography only that
+        has treecodes.
+
+        Parameters:
+            glconf - The configuration geolevel
+            subject - The subject to aggregate, default aggregates everything.
+        """
+        parent = None
+
+        # For each region in the stored config
+        for region in self.store.filter_regions():
+            # Get the specific geolevel from the region
+            llevel = self.store.get_regional_geolevel(region, glconf.get('id'))
+
+            # If this geolevel doesn't exist in this region, try the next region
+            if llevel is None:
+                continue
+       
+            # Get the parent node
+            parent = llevel.getparent()
+            while parent.getparent().tag != 'GeoLevels':
+                # Find the parent node (the geographic THIS geolevel should
+                # match after renesting) by traveling up the nested GeoLevel
+                # nodes until we get to the top.
+                parent = parent.getparent()
+
+            # Don't check any other regions if we've found a parent
+            break
+
+        parent_geolevel = self.store.get_geolevel(parent.get('ref'))
+        if not parent_geolevel is None:
+            parent = Geolevel.objects.get(name=parent_geolevel.get('name').lower()[:50])
+        else:
+            return False
+
+        geolevel = Geolevel.objects.get(name=glconf.get('name').lower()[:50])
+        return geolevel.renest(parent, subject=None, spatial=True)
