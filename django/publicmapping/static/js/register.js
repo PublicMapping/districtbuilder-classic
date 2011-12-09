@@ -294,7 +294,7 @@ $(function(){
             resizable:false,
             title:'Login Error'
         });
-        $('#username, #password').addClass('error');
+        $('#username, #passphrase').addClass('error');
     } else if( 'opensessions' in window && opensessions > 1 ) {
         // If there is a page variable named opensessions, and it is
         // greater than one, that means that we've been bumped back to

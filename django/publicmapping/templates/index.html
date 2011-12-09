@@ -320,10 +320,30 @@ y moral rights that You may have in the Contents.</p>
     <script type="text/javascript" src="/static-media/js/register.js"></script>
     <script type="text/javascript" src="/static-media/js/sha1.js"></script>
     <script type="text/javascript">
-      $('button#login').click(function(){
-          var pp = $('#passphrase'),
+      $('button#login').click(function(event){
+          var un = $('#username'),
+              pp = $('#passphrase'),
               pw = $('#password');
-        
+
+          $('#username, #passphrase').removeClass('error');
+       
+          if (un.val().trim() == '' || pp.val().trim() == '') {
+              $('<div class="error">Please enter user name and password.</div>').dialog({
+                  modal:true,
+                  width:300,
+                  resizable:false,
+                  title:'Login Error'
+              });
+              if (un.val().trim() == '') {
+                  $('#username').addClass('error');
+              }
+              if (pp.val().trim() == '') {
+                  $('#passphrase').addClass('error');
+              }
+              event.stopPropagation();
+              return false;
+          }
+
           pw.val( Sha1.hash(pp.val() ) );
       });
     </script>
