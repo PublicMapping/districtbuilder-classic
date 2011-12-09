@@ -155,3 +155,36 @@ POSTGIS_TEMPLATE='template_postgis'
 # This is the base url for the application, where the login page is
 LOGIN_URL = '/'
 
+# Enable logging for django 1.3 and 1.2
+if django.VERSION[1] > 2:
+    import sys
+    LOGGING = {
+        'version': 1,
+        'handlers': {
+            'default': {
+                'class': 'logging.StreamHandler',
+                'stream': sys.stderr
+            }
+        },
+        'loggers': {
+            'django': {
+                'handlers':['default'],
+                'level': 'DEBUG' if DEBUG else 'WARNING'
+            },
+            'redistricting': {
+                'handlers':['default'],
+                'level': 'DEBUG' if DEBUG else 'WARNING'
+            }
+        }
+    }
+else:
+    import logging
+    logger = logging.getLogger('publicmapping')
+    stderr = logging.StreamHandler()
+    stderr.setFormatter(logging.Formatter())
+    logger.addHandler(stderr)
+    if DEBUG:
+        logger.setLevel(logging.DEBUG)
+    else:
+        logger.setLevel(logging.WARNING)
+

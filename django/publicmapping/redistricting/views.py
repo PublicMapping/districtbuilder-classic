@@ -58,11 +58,14 @@ from functools import wraps
 from redistricting.calculators import *
 from redistricting.models import *
 from redistricting.utils import *
-import random, string, math, types, copy, time, threading, traceback, os, commands, sys, tempfile, csv, hashlib, inflect
+import random, string, math, types, copy, time, threading, traceback, os
+import commands, sys, tempfile, csv, hashlib, inflect, logging
 from PIL import Image, ImageChops
 import urllib, urllib2
 from xhtml2pdf.pisa import CreatePDF
 import StringIO
+
+logger = logging.getLogger(__name__)
 
 def using_unique_session(u):
     """
@@ -96,8 +99,7 @@ def using_unique_session(u):
                 else:
                     count += 1
         except SuspiciousOperation:
-            if settings.DEBUG:
-                print "SuspiciousOperation caught while checking the number of sessions a user has open. Session key: %s" % session.session_key
+            logger.debug("SuspiciousOperation caught while checking the number of sessions a user has open. Session key: %s", session.session_key)
 
     # after counting all the open and active sessions, go back through
     # the session list and assign the session count to all web sessions
@@ -110,8 +112,7 @@ def using_unique_session(u):
                 websession['count'] = count
                 websession.save()
         except SuspiciousOperation:
-            if settings.DEBUG:
-                print "SuspiciousOperation caught while setting the session count on all user sessions. Session key: %s" % session.session_key
+            logger.debug("SuspiciousOperation caught while setting the session count on all user sessions. Session key: %s", session.session_key)
 
     return (count <= 1)
 
@@ -157,8 +158,7 @@ def is_session_available(req):
             if (not req.user.is_anonymous()) and 'activity_time' in decoded and decoded['activity_time'] > datetime.now():
                 count += 1
         except SuspiciousOperation:
-            if settings.DEBUG:
-                print "SuspiciousOperation caught while checking the last activity time in a user's session. Session key: %s" % session.session_key
+            logger.debug("SuspiciousOperation caught while checking the last activity time in a user's session. Session key: %s", session.session_key)
 
     avail = count < settings.CONCURRENT_SESSIONS
     req.session['avail'] = avail
@@ -307,7 +307,7 @@ def scoreplan(request, planid):
         try:
             score = ComputedPlanScore.compute(criteria.function, plan)
         except:
-            print traceback.format_exc()
+            logger.debug(traceback.format_exc())
 
         if not score or not score['value']:
             status['success'] = False
@@ -378,7 +378,7 @@ def commonplan(request, planid):
         body_member_long_label = plan.legislative_body.long_label
         body_name = plan.legislative_body.name
         reporting_template = 'bard_%s.html' % body_name.lower() if not plan.is_community() else None
-
+       
         index = body_member_short_label.find('%')
         if index >= 0:
             body_member_short_label = body_member_short_label[0:index]
@@ -468,6 +468,11 @@ def commonplan(request, planid):
     has_regions = Region.objects.all().count() > 1
     bodies = LegislativeBody.objects.all().order_by('region__sort_key','sort_key')
     l_bodies = [b for b in bodies if b in [sd.legislative_body for sd in ScoreDisplay.objects.filter(is_page=True)]]
+
+    try:
+        loader.get_template(reporting_template)
+    except:
+        reporting_template = None
 
     return {
         'bodies': bodies,
@@ -1040,7 +1045,7 @@ def newdistrict(request, planid):
             except ValidationError:
                 status['message'] = 'Reached Max districts already'
             except:
-                print traceback.format_exc()
+                logger.debug(traceback.format_exc())
                 status['message'] = 'Couldn\'t save new district.'
         else:
             status['message'] = 'Must specify name, geolevel, and geounit ids for new district.'
@@ -1361,7 +1366,7 @@ def get_splits_report(request, planid):
                 html += '<hr />'
         return HttpResponse(html, mimetype='text/html')
     except Exception as ex:
-        print traceback.format_exc()
+        logger.debug(traceback.format_exc())
         return HttpResponse('%s' % ex, mimetype='text/plain')
 
 
@@ -1854,7 +1859,7 @@ def getleaderboard(request):
         html = display.render(plans, request)
         return HttpResponse(html, mimetype='text/plain')
     except Exception as ex:
-        print traceback.format_exc()
+        logger.debug(traceback.format_exc())
         return HttpResponse('%s' % ex, mimetype='text/plain')
 
 def getleaderboardcsv(request):
@@ -1900,7 +1905,7 @@ def getleaderboardcsv(request):
             
         return response    
     except Exception as ex:
-        print traceback.format_exc()
+        logger.debug(traceback.format_exc())
         return HttpResponse('%s' % ex, mimetype='text/plain')
 
 
