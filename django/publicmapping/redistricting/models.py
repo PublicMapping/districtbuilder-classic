@@ -388,12 +388,33 @@ class SubjectUpload(models.Model):
             # reset the computed characteristics for all districts in one fell swoop
             ComputedCharacteristic.objects.all().update(number=Decimal('0.0'))
 
+        task = SubjectUpload.renest_uploaded_subject.delay(upload_id).task_id
+
+        return {'task_id':task, 'success':True, 'messages':['Reset computed characteristics, renesting foundation geographies...'] }
+
+    @staticmethod
+    @task
+    def renest_uploaded_subject(upload_id):
+        """
+        Renest all higher level geographies for the uploaded subject.
+        """
+        leg_levels = LegislativeLevel.objects.all().values_list('geolevel',flat=True)
+        geolevels = Geolevel.objects.filter(~Q(id__in=leg_levels))
+        geolevels = geolevels.annotate(geounit_count=Count('geounit'))
+        geolevels = geolevels.order_by('-geounit_count') # descending count of geounits per geolevel
+
+        # TODO: Cycle through the geolevels and re-nest them.
+        # how to do this when the knowledge of the config is lost?
+        # probably need to crawl through the legislative levels, and not 
+        # just the number of geolevels as started above
+
         # reset the processing state for all plans in one fell swoop
         Plan.objects.all().update(processing_state=ProcessingState.NEEDS_REAGG)
 
         task = SubjectUpload.create_views_and_styles.delay(upload_id).task_id
 
-        return {'task_id':task, 'success':True, 'messages':['Reset computed characteristics, creating spatial views and styles...'] }
+        return {'task_id':task, 'success':True, 'messages':['Renested foundation geographies, creating spatial views and styles...'] }
+
 
     @staticmethod
     @task
