@@ -268,6 +268,10 @@ $(function(){
                 var remindBtn = $('#doRemind');
                 remindBtn.html('<span class="ui-button-text">'+btnText+'</span>');
                 remindBtn.attr('disabled',true);
+            },
+            complete:function(xhr, textStatus){
+                $('#forgotusername').val('');
+                $('#forgotemail').val('');
             }
         });
 
