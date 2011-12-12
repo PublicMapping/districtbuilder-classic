@@ -354,14 +354,14 @@ font-weight: bold;
 color: rgb(62, 107, 127);
 }
 
-div#tour_news ul.share-buttons{
+ul.share-buttons{
 float: left;
 list-style: none;
-margin: 5px 0 0 5px;
+margin: 15px 0 0 10px;
 padding: 0;
 width: 100%;
 }
-div#tour_news ul.share-buttons li{
+ul.share-buttons li{
 display: block;
 float: left;
 margin-right: 1px;
@@ -432,5 +432,8 @@ div.info_table tbody tr {
 background: #ECF6F5 
 }
 .ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight, tr.chooserAlt.ui-state-highlight  td, tr.ui-state-hover.ui-state-highlight  td {
+background: #EFD695
+}
+ {
 background: #EFD695
 }

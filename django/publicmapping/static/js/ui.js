@@ -475,7 +475,10 @@ $(function() {
                     }
                     else if (textStatus == 'success') {
                         var link = window.location.protocol + '//' + window.location.host + '/districtmapping/plan/' + data[0].pk + '/view/' 
-                        $('#sharedPermalink').html('<a href="' + link + '">' + link + '</a>')
+                        $('#sharedPermalink').html('<a href="' + link + '">' + link + '</a>');
+                        // insert correct link for social network
+                        //$('.twitter-tweet a').attr('data-url', link);
+                        //$('.facebook-like fb\\:like, .google-plusone g\\:plusone' ).attr('href',link);
                         $('#continueEditing').click( function() {
                             $('#successfulShare').dialog('close');
                             $('#steps').tabs('select', '#step_draw');
