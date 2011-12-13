@@ -39,7 +39,8 @@ printplan = function(options) {
             map: null,
             height: 500,
             width: 1024
-        }, options);
+        }, options),
+        _styleCache = {};
 
     /**
      * Initialize the print button. Setup the click event for the target to
@@ -54,6 +55,8 @@ printplan = function(options) {
 
             _options.map = map;
             _options.districtLayer = map.getLayersByName('Current Plan')[0];
+
+            $(map.div).bind('style_changed',{type:'district'},_self.styletracker);
         };
 
         $(document.body).bind('mapready',_init);
@@ -63,92 +66,82 @@ printplan = function(options) {
         return _self;
     };
 
+    _self.styletracker = function(event, style, layername) {
+        console.log('tracking style for '+layername);
+        _styleCache[layername] = style;
+    };
+
     _self.doprint = function() {
         var geolevel = null,
             disturl = '',
             geogurl = '',
-            osmurl = 'http://staticmap.openstreetmap.de/staticmap.php?maptype=mapnik', // needs center, zoom, size
-            legendurl1 = '',
-            legendurl2 = '',
+            geolyr = '',
+            legend = [],
             sz = _options.map.getExtent(),
-            cen = sz.getCenterLonLat(),
-            sz_array = sz.toArray(),
-            zoom = 0,
-            res = 1,
-            params = null,
+            cen = _options.map.getCenter(),
             uStyle = null,
             sld = null,
-            fmt = new OpenLayers.Format.SLD();
+            fmt = new OpenLayers.Format.SLD(),
+            legendfmt = new OpenLayers.Format.JSON();
+        // get the visible geolevel
         $.each(_options.map.getLayersBy('CLASS_NAME','OpenLayers.Layer.WMS'),function(idx, item){
             if (item.getVisibility()) {
                 geolevel = item;
             }
         });
-        // pad out dimensions to keep from distorting result map
-        if (sz.getWidth()/sz.getHeight() < _options.width/_options.height) {
-            // sz_array height needs to be smaller
-            var new_h = sz.getWidth() * _options.height / _options.width;
-            sz_array[1] = cen.lat - new_h / 2.0;
-            sz_array[3] = cen.lat + new_h / 2.0;
-        }
-        else if (sz.getWidth()/sz.getHeight() > _options.width/_options.height) {
-            // sz_array width needs to be smaller
-            var new_w = sz.getHeight() * _options.width / _options.height;
-            sz_array[0] = cen.lon - new_w / 2.0;
-            sz_array[2] = cen.lon + new_w / 2.0;
-        }
-        params = OpenLayers.Util.extend({}, geolevel.params);
-        params.TILES = null;
-        params.TILESORIGIN = null;
-        params.HEIGHT = _options.height;
-        params.WIDTH = _options.width;
-        params.BBOX = sz_array.join(',');
-        geogurl = geolevel.getFullRequestString(params).replace(new RegExp('gwc/service/'),'');
 
-        //console.log(geogurl);
-        lyr = params.LAYERS;
+        console.log('Style cache for geography: ' + _styleCache[geolevel.name]);
+        $.each(_styleCache[geolevel.name].rules, function(idx, item) {
+            if (item.symbolizer.Polygon != null) {
+                legend.push({
+                    title: item.title,
+                    fillColor: item.symbolizer.Polygon.fillColor,
+                    strokeColor: item.symbolizer.Polygon.strokeColor,
+                    strokeWidth: item.symbolizer.Polygon.strokeWidth
+                });
+            }
+            else if (item.symbolizer.Line != null) {
+                $.each(legend, function(idx, litem) {
+                    litem.strokeColor = item.symbolizer.Line.strokeColor;
+                    litem.strokeWidth = item.symbolizer.Line.strokeWidth;
+                });
+            }
+        });
 
-        params.LAYERS = null;
-        disturl = geolevel.getFullRequestString(params).replace(new RegExp('gwc/service/'),'');
+        // get the base URL for the geographic WMS
+        geogurl = geolevel.url;
+        // get the name of the geographic layer
+        geolyr = geolevel.params.LAYERS;
 
-        //console.log(disturl);
+        dlstart = legend.length;
+        console.log('Style cache for districts: ' + _styleCache[_options.districtLayer.name]);
+        $.each(_styleCache[_options.districtLayer.name].rules, function(idx, item) {
+            if (item.symbolizer.Polygon != null) {
+                legend.push({
+                    title: item.title,
+                    fillColor: item.symbolizer.Polygon.fillColor,
+                    strokeColor: item.symbolizer.Polygon.strokeColor,
+                    strokeWidth: item.symbolizer.Polygon.strokeWidth
+                });
+            }
+            else if (item.symbolizer.Line != null) {
+                $.each(legend, function(idx, litem){
+                    if (idx < dlstart) { return; }
+                    litem.strokeColor = item.symbolizer.Line.strokeColor;
+                    litem.strokeWidth = item.symbolizer.Line.strokeWidth;
+                });
+            }
+        });
 
-        params.REQUEST = 'GetLegendGraphic';
-        params.WIDTH = '20';
-        params.HEIGHT = '20';
-        params.BBOX = null;
-        params.SRS = null;
-        params.STYLES = null;
-        params.TRANSPARENT = null;
-        params.VERSION = '1.0.0';
-        params.LAYER = lyr;
-        params.FORMAT = 'image/jpeg';
-        legendurl1 = geolevel.getFullRequestString(params).replace(new RegExp('gwc/service/'),'');
-
-        //console.log(legendurl1);
-
-        var proj = _options.map.projection;
-        if (proj.projCode == 'EPSG:3785') {
-            proj = new OpenLayers.Projection('EPSG:900913');
-        }
-        cen.transform(proj,new OpenLayers.Projection('EPSG:4326'));
-        while (_options.map.getResolution() * res < 156543.0339) {
-            zoom++;
-            res *= 2;
-        }
-        osmurl += '&center=' + cen.lat + ',' + cen.lon
-        osmurl += '&zoom=' + zoom;
-        osmurl += '&size=' + _options.width + 'x' + _options.height;
-
-        //console.log(osmurl);
-
-        var lyr = null;
+        disturl = geolevel.url;
         var lyrRE = new RegExp('^(.*):demo_(.*)_.*$');
         $.each(_options.map.getLayersBy('visibility',true),function(idx, item){
             if (lyrRE.test(item.name)) {
-                lyr = RegExp.$1 + ':simple_district_' + RegExp.$2;
+                distlyr = RegExp.$1 + ':simple_district_' + RegExp.$2;
             }
         });
+
+        // needs the reference layer, too!
 
         uStyle = OpenLayers.Util.extend({},_options.districtLayer.styleMap.styles['default']);
         uStyle.layerName = _options.districtLayer.name;
@@ -196,6 +189,9 @@ printplan = function(options) {
                     subFilters = [],
                     myRule = null;
                 myStyle = OpenLayers.Util.extend(myStyle, ruleItem.symbolizer);
+                if (myStyle.Polygon.fillColor) {
+                    myStyle.Polygon.fillColor = colorToHex(myStyle.Polygon.fillColor);
+                }
                 for (var i = 0; i < fids.length; i++) {
                     subFilters.push( new OpenLayers.Filter.Comparison({
                         type: OpenLayers.Filter.Comparison.EQUAL_TO,
@@ -217,41 +213,43 @@ printplan = function(options) {
                 }
             }
         });
-        uStyle.rules = legendRules;
         delete uStyle.defaultStyle;
-
-        sld = { namedLayers: {}, version: '1.0.0' };
-        sld.namedLayers[lyr] = {
-            name: lyr,
-            userStyles: [ uStyle ],
-            namedStyles: []
-        };
-
-        params.SLD_BODY = fmt.write(sld);
-        params.LAYER = lyr;
-        legendurl2 = geolevel.getFullRequestString(params).replace(new RegExp('gwc/service/'),'');
-
-        //console.log(legendurl2);
 
         var x = Sha1.hash(new Date().toString());
 
         uStyle.rules = mapRules;
         sld = { namedLayers: {}, version: '1.0.0' };
-        sld.namedLayers[lyr] = {
-            name: lyr,
+        sld.namedLayers[distlyr] = {
+            name: distlyr,
             userStyles: [ uStyle ],
             namedStyles: []
         };
 
-        $(document.body).append('<form id="printForm" method="POST" action="../print/?x='+x+'">' +
+        // pad out dimensions to keep from distorting result map
+        if (sz.getWidth()/sz.getHeight() < _options.width/_options.height) {
+            // sz_array height needs to be smaller
+            var new_h = sz.getWidth() * _options.height / _options.width;
+            sz.bottom = cen.lat - new_h / 2.0;
+            sz.top = cen.lat + new_h / 2.0;
+        }
+        else if (sz.getWidth()/sz.getHeight() > _options.width/_options.height) {
+            // sz_array width needs to be smaller
+            var new_w = sz.getHeight() * _options.width / _options.height;
+            sz.left = cen.lon - new_w / 2.0;
+            sz.right = cen.lon + new_w / 2.0;
+        }
+
+        $(document.body).append('<form id="printForm" method="POST" action="../print/?x='+x+'" target="_blank">' +
             '<input type="hidden" name="csrfmiddlewaretoken" value="' + $('#csrfmiddlewaretoken').val() + '"/>' +
             '<input type="hidden" name="height" value="' + _options.height + '"/>' +
             '<input type="hidden" name="width" value="' + _options.width + '"/>' +
-            '<input type="hidden" name="basemap" value="' + osmurl + '"/>' +
-            '<input type="hidden" name="geography" value="' + geogurl + '"/>' +
-            '<input type="hidden" name="districts" value="' + disturl + '"/>' +
-            '<input type="hidden" name="legend1" value="' + legendurl1 + '"/>' +
-            '<input type="hidden" name="legend2" value="' + legendurl2 + '"/>' +
+            '<input type="hidden" name="geography_url" value="' + geogurl + '"/>' +
+            '<input type="hidden" name="geography_lyr" value="' + geolyr + '"/>' +
+            '<input type="hidden" name="district_url" value="' + disturl + '"/>' +
+            '<input type="hidden" name="district_lyr" value="' + distlyr + '"/>' +
+            '<input type="hidden" name="bbox" value="' + sz.toBBOX() + '"/>' +
+            '<input type="hidden" name="opacity" value="' + _options.districtLayer.opacity + '"/>' +
+            '<textarea name="legend" style="display:none;">' + legendfmt.write(legend) + '"</textarea>' +
             '<textarea name="sld" style="display:none;">' + fmt.write(sld) + '</textarea>' +
             '</form>');
 
@@ -263,7 +261,24 @@ printplan = function(options) {
         pts -= 6;
         px = pts / 0.75;
         px += 8;
+        px *= 2; // superscale
         return px.toFixed(1);
+    };
+
+    var colorToHex = function(color) {
+        if (color.substr(0, 1) === '#') {
+            return color;
+        }
+        var digits = /(.*?)rgb\((\d+), (\d+), (\d+)\)/.exec(color);
+                                    
+        var red = parseInt(digits[2]);
+        var green = parseInt(digits[3]);
+        var blue = parseInt(digits[4]);
+                                                    
+        var rgb = blue | (green << 8) | (red << 16);
+        var str = rgb.toString(16);
+        while (str.length < 6) { str = '0' + str; }
+        return '#' + str;
     };
 
     return _self;

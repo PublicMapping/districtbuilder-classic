@@ -60,7 +60,9 @@ from redistricting.models import *
 from redistricting.utils import *
 import random, string, math, types, copy, time, threading, traceback, os
 import commands, sys, tempfile, csv, hashlib, inflect, logging
-from PIL import Image, ImageChops
+
+import ModestMaps
+from PIL import Image, ImageChops, ImageMath
 import urllib, urllib2
 from xhtml2pdf.pisa import CreatePDF
 import StringIO
@@ -590,8 +592,6 @@ def printplan(request, planid):
     stamp = request.REQUEST['x']
     cfg['prefix'] = 'http://%s' % request.META['SERVER_NAME']
     cfg['composite'] = '/reports/print-%s.jpg' % stamp
-    cfg['legend1'] = '/reports/legend1-%s.jpg' % stamp
-    cfg['legend2'] = '/reports/legend2-%s.jpg' % stamp
     cfg['preview'] = False
 
     if request.method == 'GET':
@@ -609,77 +609,89 @@ def printplan(request, planid):
     elif request.method == 'POST':
         cfg['preview'] = True
 
-        if not 'basemap' in request.REQUEST or not 'geography' in request.REQUEST \
-            or not 'districts' in request.REQUEST:
+        if not 'bbox' in request.REQUEST or \
+            not 'geography_url' in request.REQUEST or \
+            not 'geography_lyr' in request.REQUEST or \
+            not 'district_url' in request.REQUEST or \
+            not 'district_lyr' in request.REQUEST:
+            logger.warning('Missing required "bbox", "geography_url", "geography_lyr", "district_url", or "districts_lyr" parameter.')
             return HttpResponseRedirect('../view/')
 
-        height = 500
+        height = 500*2
         if 'height' in request.REQUEST:
-            height = int(request.REQUEST['height'])
-        width = 1024
+            height = int(request.REQUEST['height'])*2
+        width = 1024*2
         if 'width' in request.REQUEST:
-            width = int(request.REQUEST['width'])
+            width = int(request.REQUEST['width'])*2
+        opacity = 0.8
+        if 'opacity' in request.REQUEST:
+            opacity = float(request.REQUEST['opacity'])
 
-        cfg['basemap'] = request.REQUEST['basemap']
-        cfg['geography'] = request.REQUEST['geography']
-        cfg['districts'] = request.REQUEST['districts']
+        cfg['geography_url'] = request.REQUEST['geography_url']
+        cfg['geography_lyr'] = request.REQUEST['geography_lyr']
+        cfg['district_url'] = request.REQUEST['district_url']
+        cfg['district_lyr'] = request.REQUEST['district_lyr']
         cfg['sld'] = request.REQUEST['sld']
+        cfg['legend'] = request.REQUEST['legend']
 
-        def fetchimage(url, localfile, data=None):
-            # save images locally
-            if data:
-                sld_body = 'SLD_BODY='+data
-                content_len = len(sld_body)
-                url = urllib2.Request(url, sld_body, {'Content-Length':content_len}) 
-            stream = urllib2.urlopen(url)
-            localfile.write( stream.read() )
-            localfile.close()
-            stream.close()
-            return localfile
+        # use modestmaps to get the basemap
+        bbox = request.REQUEST['bbox'].split(',')
 
-        basemap = fetchimage( cfg['basemap'], tempfile.NamedTemporaryFile(delete=False) )
+        pt1 = Point(float(bbox[0]), float(bbox[1]), srid=3785)
+        pt1.transform(SpatialReference('EPSG:4326'))
+        ll = ModestMaps.Geo.Location(pt1.y, pt1.x)
 
-        # create container & open images
-        fullImg = Image.new('RGB',(width,height),None)
-        baseImg = Image.open(basemap.name)
-  
-        # get the size of the base image, resize if necessary
-        baseSz = baseImg.size
-        if baseSz[0] != width or baseSz[1] != height:
-            baseImg = baseImg.resize( (width,height), Image.BICUBIC )
-        
-        # add the base map
-        fullImg.paste(baseImg,None)
-        os.remove(basemap.name)
+        pt2 = Point(float(bbox[2]), float(bbox[3]), srid=3785)
+        pt2.transform(SpatialReference('EPSG:4326'))
+        ur = ModestMaps.Geo.Location(pt2.y, pt2.x)
 
-        imgs = [
-            (cfg['geography'], tempfile.NamedTemporaryFile(delete=False), True,), 
-            (cfg['districts'], tempfile.NamedTemporaryFile(delete=False), True, cfg['sld'],),
-            (request.REQUEST['legend1'], open(settings.WEB_TEMP + ('/legend1-%s.jpg' % stamp), 'w+b'), False, ),
-            (request.REQUEST['legend2'], open(settings.WEB_TEMP + ('/legend2-%s.jpg' % stamp), 'w+b'), False, ),
-        ]
+        dims = ModestMaps.Core.Point(width, height)
+        provider = ModestMaps.OpenStreetMap.Provider()
+        basemap = ModestMaps.mapByExtent(provider, ll, ur, dims)
 
-        for imginfo in imgs:
-            style = None
-            if len(imginfo) > 3:
-                style = imginfo[3]
+        # create basemap for compositing
+        fullImg = basemap.draw()
 
-            imgfile = fetchimage( imginfo[0], imginfo[1], style )
 
-            if imginfo[2]:
-                overlayImg = Image.open(imgfile.name)
+        # geography layer
+        provider = ModestMaps.WMS.Provider(cfg['geography_url'], {
+            'LAYERS':cfg['geography_lyr'],
+            'TRANSPARENT':'true',
+            'SRS': 'EPSG:3785',
+            'HEIGHT': 512,
+            'WIDTH': 512
+        })
+        overlayImg = ModestMaps.mapByExtent(provider, ll, ur, dims).draw()
 
-                # create an invert mask of the districts
-                maskImg = ImageChops.invert(overlayImg)
-      
-                # composite the overlay onto the base, using the mask
-                fullImg = Image.composite(fullImg,overlayImg,maskImg)
+        # create an invert mask of the geography
+        maskImg = ImageChops.invert(overlayImg)
 
-                imgfile.close()
-                os.remove(imgfile.name)
+        # composite the overlay onto the base, using the mask
+        fullImg = Image.composite(fullImg,Image.blend(fullImg,overlayImg, opacity),maskImg)
+
+
+        # district layer
+        provider = ModestMaps.WMS.Provider(cfg['district_url'], {
+            'LAYERS':cfg['district_lyr'],
+            'TRANSPARENT':'false',
+            'SRS': 'EPSG:3785',
+            'SLD_BODY': cfg['sld'],
+            'HEIGHT': 512,
+            'WIDTH': 512
+        })
+        overlayImg = ModestMaps.mapByExtent(provider, ll, ur, dims).draw()
+
+        # create an invert mask of the districts
+        maskImg = overlayImg.convert('L')
+        maskImg = maskImg.point(lambda x: 255 if x == 255 else 0)
+        overlayImg.putalpha(maskImg)
+
+        # composite the overlay onto the base, using the mask
+        fullImg = Image.composite(fullImg, Image.blend(fullImg, overlayImg, opacity), maskImg)
+
 
         # save
-        fullImg.save(settings.WEB_TEMP + ('/print-%s.jpg' % stamp),'jpeg',quality=85)
+        fullImg.save(settings.WEB_TEMP + ('/print-%s.jpg' % stamp),'jpeg',quality=100)
 
         return render_to_response('printplan.html', cfg)
     

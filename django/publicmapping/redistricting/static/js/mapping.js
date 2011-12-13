@@ -739,7 +739,8 @@ function mapinit(srs,maxExtent) {
             }),
             styleMap: new OpenLayers.StyleMap(new OpenLayers.Style(districtStyle)),
             projection: projection,
-            filter: getVersionAndSubjectFilters(maxExtent)
+            filter: getVersionAndSubjectFilters(maxExtent),
+            opacity: defaultThematicOpacity
         }
     );
 
@@ -969,6 +970,7 @@ function mapinit(srs,maxExtent) {
     var referenceLayerChanged = function(evt, referenceLayerId, referenceLayerName) {
         if (referenceLayerId === 'None') {
             hideCurrentReferenceLayer();
+            $('#map').trigger('style_changed', [null, referenceLayerId]);
             return;
         }
             
@@ -976,7 +978,7 @@ function mapinit(srs,maxExtent) {
         if (layer.length == 0) {
             hideCurrentReferenceLayer();
 
-            var layer = createReferenceLayer(referenceLayerId);
+            layer = createReferenceLayer(referenceLayerId);
             if (layer == undefined) { currentReferenceLayer = undefined; return; }
             olmap.addLayer(layer);
             // slide this layer down the stack
@@ -987,7 +989,7 @@ function mapinit(srs,maxExtent) {
             }
             currentReferenceLayer = referenceLayerId;
         } else {
-            var layer = layer[0];
+            layer = layer[0];
             if (referenceLayerId == currentReferenceLayer) {
                 // Already viewing this layer
             } else {
@@ -999,6 +1001,7 @@ function mapinit(srs,maxExtent) {
                 currentReferenceLayer = referenceLayerId;
             }
         }
+        $('#map').trigger('style_changed', [referenceStyle, layer.id]);
     };
     $('#map').bind('reference_layer_changed', referenceLayerChanged);
 
@@ -2368,6 +2371,14 @@ function mapinit(srs,maxExtent) {
 
                 lbody.append(row);
             }
+            vislayers = olmap.getLayersBy('visibility',true);
+            for (var i = 0; i < vislayers.length; i++ ) {
+                if (vislayers[i].name.startsWith(NAMESPACE)) {
+                    vislayers = vislayers[i].name;
+                    break;
+                }
+            }
+            $('#map').trigger('style_changed', [userStyle, vislayers]); 
         };
 
         var getLockedRules = function() {
@@ -2381,9 +2392,11 @@ function mapinit(srs,maxExtent) {
                     value: true
                 }),
                 symbolizer: {
-                    strokeColor: lockedColor,
-                    strokeWidth: 2,
-                    strokeOpacity: 0.75
+                    Line: {
+                        strokeColor: lockedColor,
+                        strokeWidth: 2,
+                        strokeOpacity: 0.75
+                    }
                 }
             }));
             rules.push(new OpenLayers.Rule({
@@ -2400,7 +2413,7 @@ function mapinit(srs,maxExtent) {
         var callbackDistrict = function(sld) {
             var userStyle = getDefaultStyle(sld,getDistrictBy().name);
             var newStyle = new OpenLayers.Style(districtStyle, {rules: userStyle.rules.concat(getLockedRules())});
-            $('#map').trigger('style_changed', [newStyle]); 
+            $('#map').trigger('style_changed', [newStyle, districtLayer.name]); 
          };
 
         var callbackContiguity = function() {
@@ -2409,27 +2422,43 @@ function mapinit(srs,maxExtent) {
             
             var rules = [
                 new OpenLayers.Rule({
+                    title: 'Non-contiguous',
                     filter: new OpenLayers.Filter.Comparison({
                         type: OpenLayers.Filter.Comparison.EQUAL_TO,
                         property: 'contiguous',
                         value: false
                     }),
                     symbolizer: {
-                        fillColor: fill,
-                        fillOpacity: 0.5
+                        Polygon: {
+                            fillColor: fill,
+                            fillOpacity: 0.5,
+                            strokeColor: newOptions.strokeColor,
+                            strokeOpacity: newOptions.strokeOpacity,
+                            strokeWidth: newOptions.strokeWidth
+                        }
                     }
                 }),
                 new OpenLayers.Rule({
+                    title: 'Contiguous',
                     filter: new OpenLayers.Filter.Comparison({
                         type: OpenLayers.Filter.Comparison.NOT_EQUAL_TO,
                         property: 'contiguous',
                         value: false
-                    })
+                    }),
+                    symbolizer: {
+                        Polygon: {
+                            fillColor: '#ffffff',
+                            fillOpacity: 0.01,
+                            strokeColor: newOptions.strokeColor,
+                            strokeOpacity: newOptions.strokeOpacity,
+                            strokeWidth: newOptions.strokeWidth
+                        }
+                    }
                 })
             ];
             rules = rules.concat(getLockedRules());
             var newStyle = new OpenLayers.Style(newOptions,{rules: rules});
-            $('#map').trigger('style_changed', [newStyle]);
+            $('#map').trigger('style_changed', [newStyle, districtLayer.name]);
         };
 
         var callbackCompactness = function() {
@@ -2441,39 +2470,61 @@ function mapinit(srs,maxExtent) {
             var lowestColor = $('.farunder').first().css('background-color');
             var rules = [
                 new OpenLayers.Rule({
+                    title: 'Very Compact',
                     filter: new OpenLayers.Filter.Comparison({
                         type: OpenLayers.Filter.Comparison.LESS_THAN,
                         property: 'compactness',
                         value: lower 
                     }),
                     symbolizer: {
-                        fillColor: lowestColor,
-                        fillOpacity: 0.5
+                        Polygon: {
+                            fillColor: lowestColor,
+                            fillOpacity: 0.5,
+                            strokeColor: newOptions.strokeColor,
+                            strokeWidth: newOptions.strokeWidth,
+                            strokeOpacity: newOptions.strokeOpacity
+                        }
                     }
                 }),
                 new OpenLayers.Rule({
+                    title: 'Average',
                     filter: new OpenLayers.Filter.Comparison({
                         type: OpenLayers.Filter.Comparison.BETWEEN,
                         property: 'compactness',
                         lowerBoundary: lower,
                         upperBoundary: upper
-                    })
+                    }),
+                    symbolizer: {
+                        Polygon: {
+                            fillColor: '#ffffff',
+                            fillOpacity: 0.01,
+                            strokeColor: newOptions.strokeColor,
+                            strokeWidth: newOptions.strokeWidth,
+                            strokeOpacity: newOptions.strokeOpacity
+                        }
+                    }
                 }),
                 new OpenLayers.Rule({
+                    title: 'Hardly Compact',
                     filter: new OpenLayers.Filter.Comparison({
                         type: OpenLayers.Filter.Comparison.GREATER_THAN,
                         property: 'compactness',
                         value: upper 
                     }),
                     symbolizer: {
-                        fillColor: highestColor,
-                        fillOpacity: 0.5
+                        Polygon: {
+                            fillColor: highestColor,
+                            fillOpacity: 0.5,
+                            strokeColor: newOptions.strokeColor,
+                            strokeWidth: newOptions.strokeWidth,
+                            strokeOpacity: newOptions.strokeOpacity
+                        }
                     }
                 })
             ];
             rules = rules.concat(getLockedRules());
             var newStyle = new OpenLayers.Style(newOptions,{rules: rules});
-            $('#map').trigger('style_changed', [newStyle]);
+            $('#map').trigger('style_changed', [newStyle, districtLayer.name]);
         };
 
         return function(snap, show) {
@@ -2488,7 +2539,7 @@ function mapinit(srs,maxExtent) {
             if (snap == 'None') {
                 var newOptions = OpenLayers.Util.extend({}, districtStyle);
                 var newStyle = new OpenLayers.Style(newOptions,{rules: getLockedRules()});
-                $('#map').trigger('style_changed', [newStyle]);
+                $('#map').trigger('style_changed', [newStyle, 'None']);
                 return;
             }
             var styleUrl = '/sld/' + NAMESPACE + ':' + snap + '_' + show + '.sld';

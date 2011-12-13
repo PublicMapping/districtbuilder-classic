@@ -63,3 +63,5 @@ text-align:center;
 #app.print_page #legend img {display:inline-block; width:88px; margin-right: 15px; vertical-align: top;}
 
 #app.print_page #mapwrap {width: 1024px; margin: 0 auto}
+
+#app.print_page #map img { width: 1024px; height: 500px; }
