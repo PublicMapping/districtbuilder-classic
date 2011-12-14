@@ -631,7 +631,7 @@ def printplan(request, planid):
         cfg['geography_lyr'] = request.REQUEST['geography_lyr']
         cfg['district_url'] = request.REQUEST['district_url']
         cfg['district_lyr'] = request.REQUEST['district_lyr']
-        cfg['sld'] = request.REQUEST['sld']
+        cfg['district_sld'] = request.REQUEST['district_sld']
         cfg['legend'] = json.loads(request.REQUEST['legend'])
         cfg['plan'] = Plan.objects.get(id=int(request.REQUEST['plan_id']))
         cfg['printed'] = datetime.now()
@@ -668,29 +668,39 @@ def printplan(request, planid):
         # create an invert mask of the geography
         maskImg = ImageChops.invert(overlayImg)
 
-        # composite the overlay onto the base, using the mask
-        fullImg = Image.composite(fullImg,Image.blend(fullImg,overlayImg, opacity),maskImg)
 
-
-        # district layer
+        # district fill layer
         provider = ModestMaps.WMS.Provider(cfg['district_url'], {
             'LAYERS':cfg['district_lyr'],
             'TRANSPARENT':'false',
             'SRS': 'EPSG:3785',
-            'SLD_BODY': cfg['sld'],
+            'SLD_BODY': cfg['district_sld'],
+            'HEIGHT': 512,
+            'WIDTH': 512
+        })
+        #overlayImg = Image.blend(overlayImg, ModestMaps.mapByExtent(provider, ll, ur, dims).draw(), 0.3)
+        overlayImg = ModestMaps.mapByExtent(provider, ll, ur, dims).draw()
+
+        # composite the overlay onto the base, using the mask (from geography)
+        fullImg = Image.composite(fullImg, Image.blend(fullImg, overlayImg, opacity), maskImg)
+
+
+        # district line & label layer
+        provider = ModestMaps.WMS.Provider(cfg['district_url'], {
+            'LAYERS':cfg['district_lyr'],
+            'TRANSPARENT':'true',
+            'SRS': 'EPSG:3785',
+            'SLD_BODY': request.REQUEST['label_sld'],
             'HEIGHT': 512,
             'WIDTH': 512
         })
         overlayImg = ModestMaps.mapByExtent(provider, ll, ur, dims).draw()
 
-        # create an invert mask of the districts
-        maskImg = overlayImg.convert('L')
-        maskImg = maskImg.point(lambda x: 255 if x == 255 else 0)
-        overlayImg.putalpha(maskImg)
+        # create an invert mask of the labels & lines
+        maskImg = ImageChops.invert(overlayImg)
 
-        # composite the overlay onto the base, using the mask
+        # composite the district labels on top of the composited basemap, geography & district areas
         fullImg = Image.composite(fullImg, Image.blend(fullImg, overlayImg, opacity), maskImg)
-
 
         # save
         fullImg.save(settings.WEB_TEMP + ('/print-%s.jpg' % stamp),'jpeg',quality=100)

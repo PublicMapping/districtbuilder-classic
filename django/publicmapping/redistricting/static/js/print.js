@@ -66,10 +66,16 @@ printplan = function(options) {
         return _self;
     };
 
+    /**
+     * Track the style changes to the layers, and cache the JSON-ified SLDs.
+     */
     _self.styletracker = function(event, style, layername) {
         _styleCache[layername] = style;
     };
 
+    /**
+     * Print the current map view.
+     */
     _self.doprint = function() {
         var geolevel = null,
             disturl = '',
@@ -80,6 +86,8 @@ printplan = function(options) {
             cen = _options.map.getCenter(),
             uStyle = null,
             sld = null,
+            district_sld = null,
+            label_sld = null,
             fmt = new OpenLayers.Format.SLD(),
             legendfmt = new OpenLayers.Format.JSON();
         // get the visible geolevel
@@ -89,7 +97,9 @@ printplan = function(options) {
             }
         });
 
-        console.log('Style cache for geography: ' + _styleCache[geolevel.name]);
+        // iterate over the rules of the geolevel style cache,
+        // adding the polygon styles first, then appending the
+        // line style to all features
         $.each(_styleCache[geolevel.name].rules, function(idx, item) {
             if (item.symbolizer.Polygon != null) {
                 legend.push({
@@ -112,8 +122,8 @@ printplan = function(options) {
         // get the name of the geographic layer
         geolyr = geolevel.params.LAYERS;
 
-        dlstart = legend.length;
-        console.log('Style cache for districts: ' + _styleCache[_options.districtLayer.name]);
+        // iterate over the rules of the district style cache,
+        // adding the polygon styles, which contain the borders, too
         $.each(_styleCache[_options.districtLayer.name].rules, function(idx, item) {
             if (item.symbolizer.Polygon != null) {
                 legend.push({
@@ -123,15 +133,9 @@ printplan = function(options) {
                     strokeWidth: item.symbolizer.Polygon.strokeWidth
                 });
             }
-            else if (item.symbolizer.Line != null) {
-                $.each(legend, function(idx, litem){
-                    if (idx < dlstart) { return; }
-                    litem.strokeColor = item.symbolizer.Line.strokeColor;
-                    litem.strokeWidth = item.symbolizer.Line.strokeWidth;
-                });
-            }
         });
 
+        // reconstitute the geoserver name of the district layer
         disturl = geolevel.url;
         var lyrRE = new RegExp('^(.*):demo_(.*)_.*$');
         $.each(_options.map.getLayersBy('visibility',true),function(idx, item){
@@ -142,14 +146,21 @@ printplan = function(options) {
 
         // needs the reference layer, too!
 
+        // begin constructing a full SLD for the district layer
         uStyle = OpenLayers.Util.extend({},_options.districtLayer.styleMap.styles['default']);
         uStyle.layerName = _options.districtLayer.name;
-        var mapRules = [];
-        var legendRules = [];
+        // the collection of rules for this area-part of the district
+        var areaRules = [];
+        // the collection of rules for this border(+label) part of the district
+        var lineRules = [];
+
         var labeled = false;
+        // for each rule in the district layer user style
         $.each(uStyle.rules, function(ridx, ruleItem){
             var fids = [];
+            // for each feature in the district layer
             $.each(_options.districtLayer.features, function(fidx, featureItem) {
+                // if the rule applies to the feature, store the feature id
                 if (ruleItem.evaluate(featureItem)) {
                     fids.push(featureItem.fid);
                 }
@@ -179,17 +190,24 @@ printplan = function(options) {
                             fillOpacity: 1.0
                         })}
                     });
-                    mapRules.push(lblRule);
+                    lineRules.push(lblRule);
                 }
             });
             labeled = true;
             if (fids.length > 0) {
-                var myStyle = { Polygon: OpenLayers.Util.extend({}, uStyle.defaultStyle) },
+                var myAreaStyle = { Polygon: OpenLayers.Util.extend({}, uStyle.defaultStyle) },
+                    myLineStyle = { Line: OpenLayers.Util.extend({}, uStyle.defaultStyle) },
                     subFilters = [],
                     myRule = null;
-                myStyle = OpenLayers.Util.extend(myStyle, ruleItem.symbolizer);
-                if (myStyle.Polygon.fillColor) {
-                    myStyle.Polygon.fillColor = colorToHex(myStyle.Polygon.fillColor);
+                myAreaStyle = OpenLayers.Util.extend(myAreaStyle, ruleItem.symbolizer);
+                myLineStyle = OpenLayers.Util.extend(myLineStyle, ruleItem.symbolizer);
+                if (myAreaStyle.Polygon.fillColor) {
+                    // convert the rgb() colors to #... notation
+                    myAreaStyle.Polygon.fillColor = colorToHex(myAreaStyle.Polygon.fillColor);
+                }
+                if (myLineStyle.Line.strokeColor) {
+                    // convert the rgb() colors to #... notation
+                    myLineStyle.Line.strokeColor = colorToHex(myLineStyle.Line.strokeColor);
                 }
                 for (var i = 0; i < fids.length; i++) {
                     subFilters.push( new OpenLayers.Filter.Comparison({
@@ -198,31 +216,57 @@ printplan = function(options) {
                         value: fids[i]
                     }));
                 }
-                myRule = new OpenLayers.Rule({
+                // create a rule for the features that match this rule
+                myAreaRule = new OpenLayers.Rule({
                     title: ruleItem.title,
                     filter: new OpenLayers.Filter.Logical({
                         type: OpenLayers.Filter.Logical.OR,
                         filters: subFilters
                     }),
-                    symbolizer: myStyle
+                    symbolizer: myAreaStyle
                 });
-                mapRules.push(myRule);
-                if (ruleItem.title !== null && ruleItem.title !='') {
-                    legendRules.push(myRule);
-                }
+                areaRules.push(myAreaRule);
+
+                // create a rule for the features that match this rule
+                myLineRule = new OpenLayers.Rule({
+                    title: ruleItem.title,
+                    filter: new OpenLayers.Filter.Logical({
+                        type: OpenLayers.Filter.Logical.OR,
+                        filters: subFilters
+                    }),
+                    symbolizer: myLineStyle
+                });
+                lineRules.push(myLineRule);
             }
         });
         delete uStyle.defaultStyle;
 
         var x = Sha1.hash(new Date().toString());
 
-        uStyle.rules = mapRules;
+        // construct the full userstyle
+        uStyle.rules = areaRules;
         sld = { namedLayers: {}, version: '1.0.0' };
         sld.namedLayers[distlyr] = {
             name: distlyr,
             userStyles: [ uStyle ],
             namedStyles: []
         };
+        // serialize to a string variable
+        district_sld = fmt.write(sld);
+
+        // construct the full userstyle
+        uStyle.rules = lineRules;
+        sld = { namedLayers: {}, version: '1.0.0' };
+        sld.namedLayers[distlyr] = {
+            name: distlyr,
+            userStyles: [ uStyle ],
+            namedStyles: []
+        }
+        // serialize to a string variable
+        label_sld = fmt.write(sld);
+
+        // the area district layer SLD now lives in 'district_sld'
+        // the line district layer SLD now lives in 'label_sld'
 
         // pad out dimensions to keep from distorting result map
         if (sz.getWidth()/sz.getHeight() < _options.width/_options.height) {
@@ -238,6 +282,7 @@ printplan = function(options) {
             sz.right = cen.lon + new_w / 2.0;
         }
 
+        // POST all these items to the printing endpoint
         $(document.body).append('<form id="printForm" method="POST" action="../print/?x='+x+'" target="_blank">' +
             '<input type="hidden" name="csrfmiddlewaretoken" value="' + $('#csrfmiddlewaretoken').val() + '"/>' +
             '<input type="hidden" name="plan_id" value="' + PLAN_ID + '"/>' +
@@ -250,10 +295,15 @@ printplan = function(options) {
             '<input type="hidden" name="bbox" value="' + sz.toBBOX() + '"/>' +
             '<input type="hidden" name="opacity" value="' + _options.districtLayer.opacity + '"/>' +
             '<textarea name="legend" style="display:none;">' + legendfmt.write(legend) + '</textarea>' +
-            '<textarea name="sld" style="display:none;">' + fmt.write(sld) + '</textarea>' +
+            '<textarea name="district_sld" style="display:none;">' + district_sld + '</textarea>' +
+            '<textarea name="label_sld" style="display:none;">' + label_sld + '</textarea>' +
             '</form>');
 
+        // submit the form
         $('#printForm').submit();
+
+        // remove the form from the document, so you can print more than once
+        $('#printForm').remove();
     };
 
     var convertPtToPx = function(str) {
