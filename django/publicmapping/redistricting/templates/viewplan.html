@@ -185,7 +185,16 @@
 
   <div id="steps" style="visibility: hidden;">
      <div id="app_header">
+      {% comment %}
+      ATTRIBUTION NOTICE SECTION
+
+      Under section 4.3 of the license following section may not be altered
+      without the express written permission of the copyright holders.
+      {% endcomment %}
       <div id="logo"><a href="/"><img src="/static-media/images/title-app.png" alt="DistrictBuilder" /></a></div>
+      {% comment %}
+      ATTRIBUTION NOTICE SECTION ENDS
+      {% endcomment %}
       <ul id="steps_tabs"> <!-- tabs have to be first UL in #steps or else tabs wont work -->
         <li id="tab_plan"><a href="#step_plan">Plan</a><li>
         <li id="tab_draw"><a href="#step_draw">{% if is_registered %}Draw{% else %}View{% endif %}</a></li>

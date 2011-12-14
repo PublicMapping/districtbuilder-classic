@@ -1,0 +1,91 @@
+DistrictBuilder   
+
+Copyright (C) 2010-2011 Micah Altman & Michael McDonald
+
+
+LICENSE
+
+DistrictBuilder is licensed under the Apache License, Version 2.0 (the 
+"License"); you may not use this program except in compliance with the License.
+
+You may obtain a copy of the License at:  
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+
+ATTRIBUTION 
+
+Section 4.3 of the LICENSE requires retention of all copyright, patent, 
+trademark, and attribution notices. Note that attribution notices include all 
+code sections clearly labeled “ATTRIBUTION NOTICE”.
+
+
+ACKNOWLEDGEMENTS
+
+DistrictBuilder is developed by The Public Mapping Project 
+(http://www.publicmapping.org), with software engineering and implementation 
+services provided by Azavea (www.azavea.com), and the generous support of the 
+Sloan Foundation.
+
+Lead Developers:
+
+   Andrew Jennings, Kenny Shepard, David Zwarg
+
+Design and oversight:
+
+   Micah Altman, Michael McDonald, Robert Cheetham, Abby Fretz
+
+This material is based upon work supported by the Sloan Foundation and Joyce 
+Foundation.
+
+
+OBTAINING THIS SOFTWARE
+
+Source code for DistrictBuilder may be obtained from http://districtbuilder.org
+
+
+SOCIAL CONTRACT
+
+In return for the effort so many people contribute to the DistrictBuilder 
+project, we would appreciate it if you would give back to this collective effort
+through one of the following ways:
+
+  - If you like the DistrictBuilder project, please use it. Install it at your 
+    institution, create a site and encourage others to do the same. Please also 
+    cite the DistrictBuilder project in your reports and publications, and 
+    spread the word at conferences, meetings and in casual conversation. The 
+    broader our user base becomes, the easier it is for all of us to improve the
+    software to the benefit of everyone.
+
+  - If you think of a useful new feature that could improve DistrictBuilder, 
+    please suggest improvements, send us code to implement them, or sponsor the 
+    development of specific features with grants or gifts.
+
+  - If you find a problem, please report the issue so that we can try to fix it 
+    (or even better, send us a patch).
+
+  - Commercial profit-making ventures also are welcome to use DistrictBuilder 
+    software in any way consistent with our licensing requirements. In some 
+    cases our team may be able to provide training and technical assistance in 
+    support of your development efforts, when feasible and when we judge that 
+    such help improves the general applicability of, or promotes, the overall 
+    project. Support for DistrictBuilder via financial contributions, coding 
+    assistance, or temporary personnel detailed to our team, make it easier for 
+    us to assist your efforts.
+
+
+INCLUDED WORKS
+
+DistrictBuilder includes works under other copyright notices and distributed 
+according to the terms of the Apache License, v.2 or a compatible license, 
+including portions of:
+
+OpenLayers, Copyright 2005-2011 OpenLayers Contributors.
+
+
+NO WARRANTIES
+
+Unless required by applicable law or agreed to in writing, software distributed 
+under the License is distributed on an "AS IS" BASIS,  WITHOUT WARRANTIES OR 
+CONDITIONS OF ANY KIND, either express or implied.  See the License for the 
+specific language governing permissions and  limitations under the License.
