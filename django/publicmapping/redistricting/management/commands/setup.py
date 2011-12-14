@@ -78,7 +78,7 @@ class Command(BaseCommand):
         make_option('-b', '--bard', dest="bard",
             action='store_true', help="Create a BARD map based on the imported spatial data.", default=False),
         make_option('-s', '--static', dest="static",
-            action='store_true', help="Collect the static javascript and css files.", default=False),
+            action='store_true', help="Collect and compress the static javascript and css files.", default=False),
         make_option('-B', '--bardtemplates', dest="bard_templates",
             action='store_true', help="Create the BARD reporting templates.", default=False),
     )
@@ -200,6 +200,7 @@ contents of the file and try again.
        
         if options.get("static"):
             call_command('collectstatic', interactive=False, verbosity=verbose)
+            call_command('compress', interactive=False, verbosity=verbose, force=True)
 
         if options.get("bard_templates"):
             try:
