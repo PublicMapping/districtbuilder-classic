@@ -82,7 +82,10 @@ including portions of:
 
 OpenLayers, Copyright 2005-2011 OpenLayers Contributors.
 SHA-1 implementation in JavaScript, Copyright 2002-2010 Chris Viness.
-jQuery, Copyright 2010-2011 django/publicmapping/static/jquery/AUTHORS.txt.
+jQuery, Copyright 2010-2011 John Resig.
+jQuery UI, Copyright 2011 django/publicmapping/static/jquery/AUTHORS.txt.
+jqGrid, Copyright 2008 Tony Tomov
+
 
 
 NO WARRANTIES
