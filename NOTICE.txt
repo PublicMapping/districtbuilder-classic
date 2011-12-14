@@ -81,6 +81,8 @@ according to the terms of the Apache License, v.2 or a compatible license,
 including portions of:
 
 OpenLayers, Copyright 2005-2011 OpenLayers Contributors.
+SHA-1 implementation in JavaScript, Copyright 2002-2010 Chris Viness.
+jQuery, Copyright 2010-2011 django/publicmapping/static/jquery/AUTHORS.txt.
 
 
 NO WARRANTIES
