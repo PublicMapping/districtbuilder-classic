@@ -632,7 +632,7 @@ def printplan(request, planid):
         cfg['district_url'] = request.REQUEST['district_url']
         cfg['district_lyr'] = request.REQUEST['district_lyr']
         cfg['sld'] = request.REQUEST['sld']
-        cfg['legend'] = request.REQUEST['legend']
+        cfg['legend'] = json.loads(request.REQUEST['legend'])
 
         # use modestmaps to get the basemap
         bbox = request.REQUEST['bbox'].split(',')

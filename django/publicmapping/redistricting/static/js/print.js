@@ -249,7 +249,7 @@ printplan = function(options) {
             '<input type="hidden" name="district_lyr" value="' + distlyr + '"/>' +
             '<input type="hidden" name="bbox" value="' + sz.toBBOX() + '"/>' +
             '<input type="hidden" name="opacity" value="' + _options.districtLayer.opacity + '"/>' +
-            '<textarea name="legend" style="display:none;">' + legendfmt.write(legend) + '"</textarea>' +
+            '<textarea name="legend" style="display:none;">' + legendfmt.write(legend) + '</textarea>' +
             '<textarea name="sld" style="display:none;">' + fmt.write(sld) + '</textarea>' +
             '</form>');
 

@@ -57,7 +57,12 @@
       </div>
       <div id="legend" style="">
         <h1>LEGEND</h1>
-        <textarea>{{ legend }}</textarea>
+        {% for litem in legend %}
+        <p>
+            <span style="display:inline-block; height:15pt; width:15pt; background-color:{{litem.fillColor}}; border-width:{{litem.strokeWidth}}pt; border-color:{{litem.strokeColor}}; border-style:solid;">&nbsp;</span>
+            {{ litem.title }}
+        </p>
+        {% endfor %}
       </div>
     </div>
     
