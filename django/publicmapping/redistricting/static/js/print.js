@@ -67,7 +67,6 @@ printplan = function(options) {
     };
 
     _self.styletracker = function(event, style, layername) {
-        console.log('tracking style for '+layername);
         _styleCache[layername] = style;
     };
 

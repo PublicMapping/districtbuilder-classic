@@ -956,11 +956,13 @@ function mapinit(srs,maxExtent) {
     };
     $('#map').bind('version_changed', versionChanged);
 
-    var styleChanged = function(evt, newStyle) {
-        districtLayer.styleMap = new OpenLayers.StyleMap(newStyle);
-        districtLayer.redraw();
+    var styleChanged = function(evt, newStyle, layername) {
+        if (layername == districtLayer.name) {
+            districtLayer.styleMap = new OpenLayers.StyleMap(newStyle);
+            districtLayer.redraw();
 
-        updateDistrictStyles();
+            updateDistrictStyles();
+        }
     };
     $('#map').bind('style_changed', styleChanged);
 
