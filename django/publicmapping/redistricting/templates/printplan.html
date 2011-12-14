@@ -55,6 +55,15 @@
       <div id="map">
         <img src="{{ prefix }}{{ composite }}"/>
       </div>
+      <div id="author">
+        {% if plan.owner.first_name != '' or plan.owner.last_name != '' %}
+        Author: {{plan.owner.first_name}} {{plan.owner.last_name}} ({{ plan.owner.username }})
+        {% else %}
+        Author: {{ plan.owner.username }}
+        {% endif %}<br/>
+        Edited on: {{ plan.edited|date:"SHORT_DATE_FORMAT" }}<br/>
+        Printed on: {{ printed|date:"SHORT_DATE_FORMAT" }}
+      </div>
       <div id="legend" style="">
         <h1>LEGEND</h1>
         {% for litem in legend %}

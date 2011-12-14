@@ -633,6 +633,8 @@ def printplan(request, planid):
         cfg['district_lyr'] = request.REQUEST['district_lyr']
         cfg['sld'] = request.REQUEST['sld']
         cfg['legend'] = json.loads(request.REQUEST['legend'])
+        cfg['plan'] = Plan.objects.get(id=int(request.REQUEST['plan_id']))
+        cfg['printed'] = datetime.now()
 
         # use modestmaps to get the basemap
         bbox = request.REQUEST['bbox'].split(',')

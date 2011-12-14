@@ -241,6 +241,7 @@ printplan = function(options) {
 
         $(document.body).append('<form id="printForm" method="POST" action="../print/?x='+x+'" target="_blank">' +
             '<input type="hidden" name="csrfmiddlewaretoken" value="' + $('#csrfmiddlewaretoken').val() + '"/>' +
+            '<input type="hidden" name="plan_id" value="' + PLAN_ID + '"/>' +
             '<input type="hidden" name="height" value="' + _options.height + '"/>' +
             '<input type="hidden" name="width" value="' + _options.width + '"/>' +
             '<input type="hidden" name="geography_url" value="' + geogurl + '"/>' +

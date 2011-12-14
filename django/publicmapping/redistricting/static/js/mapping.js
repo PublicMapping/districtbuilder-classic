@@ -737,7 +737,7 @@ function mapinit(srs,maxExtent) {
                 url: '/districtmapping/plan/' + PLAN_ID + '/district/versioned/',
                 format: new OpenLayers.Format.GeoJSON()
             }),
-            styleMap: new OpenLayers.StyleMap(new OpenLayers.Style(districtStyle)),
+            styleMap: new OpenLayers.StyleMap({'default':new OpenLayers.Style(districtStyle)}),
             projection: projection,
             filter: getVersionAndSubjectFilters(maxExtent),
             opacity: defaultThematicOpacity
