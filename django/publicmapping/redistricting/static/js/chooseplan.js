@@ -575,6 +575,12 @@ chooseplan = function(options) {
         });
         _cancelButton.button().click( function() {
             _table.jqGrid('GridToForm', _selectedPlanId, '#plan_form'); 
+            var shared = $('#is_shared');
+            if (shared.val().contains("unshared")) {
+                shared.val('No');
+            } else {
+                shared.val('Yes');
+            }
             editState('view');
             return false;
         });
