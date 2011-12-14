@@ -27,6 +27,7 @@
         Andrew Jennings, David Zwarg
 
 {% endcomment %}
+{% load compress %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -35,10 +36,12 @@
     <meta name="author" content="David Zwarg, Andrew Jennings, Kenny Shepard" />
     <meta name="copyright" content="&copy; 2010 Micah Altman, Michael McDonald"/>
     <title>Welcome to DistrictBuilder</title>
+    {% compress css %}
     <link rel="stylesheet" type="text/css" href="/static-media/css/reset.css"/>
     <link rel="stylesheet" type="text/css" href="/static-media/jquery/themes/custom-theme/jquery-ui-1.8.2.custom.css"/>
     <link rel="stylesheet" type="text/css" href="/static-media/css/core.css"/>
     <link rel="stylesheet" type="text/css" href="/static-media/css/visuals.css"/>
+    {% endcompress %}
     {% comment %}
 
     Load Google Analytics Script if the ga_account has been set

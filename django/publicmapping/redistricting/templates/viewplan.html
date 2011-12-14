@@ -29,6 +29,7 @@
 
 {% endcomment %}
 {% load redistricting_extras %}
+{% load compress %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
@@ -39,6 +40,7 @@
     <title>Open Source District Mapping Tool</title>
     <link rel="alternate" type="application/atom+xml" title="Updated Plans from DistrictBuilder" href="{% url publicmapping.redistricting.views.plan_feed %}"/>
     <link rel="alternate" type="application/atom+xml" title="Recently Shared Plans from DistrictBuilder" href="{% url publicmapping.redistricting.views.share_feed %}"/>
+    {% compress css %}
     <link rel="stylesheet" type="text/css" href="/static-media/css/reset.css"/>
     <link rel="stylesheet" type="text/css" href="/static-media/jqGrid/css/ui.jqgrid.css"/>
     <link rel="stylesheet" type="text/css" href="/static-media/jquery/themes/custom-theme/jquery-ui-1.8.2.custom.css"/>
@@ -48,11 +50,45 @@
         <link rel="stylesheet" type="text/css" href="/static-media/css/ie7.css"/>
         <![endif]-->
     <link rel="stylesheet" type="text/css" href="/static-media/css/visuals.css"/>   
+    {% endcompress %}
     <script type="text/javascript" src="/static-media/openlayers/OpenLayers.js"></script>
-
     {% if "arc" in basemaps %}
     <script type="text/javascript" src="/static-media/openlayers/ArcGISCache.js"></script>
     {% endif %}
+
+    {% compress js %}
+    {% comment %}
+
+    Load external javascript libraries.
+
+    {% endcomment %}
+    <script type="text/javascript" src="/static-media/jquery/jquery-1.6.js"></script>
+    <script type="text/javascript" src="/static-media/jquery/jquery-ui-1.8.2.custom.min.js"></script>
+    <script type="text/javascript" src="/static-media/jquery/external/jquery.tools.tooltip.slide.min.js"></script>
+    <script type="text/javascript" src="/static-media/jqGrid/js/i18n/grid.locale-en.js"></script>
+    <script type="text/javascript" src="/static-media/jqGrid/js/jquery.jqGrid.min.js"></script>
+    <script type="text/javascript" src="/static-media/jqGrid/plugins/grid.postext.js"></script>
+    {% comment %}
+
+    Load internal javascript logic.
+
+    {% endcomment %}
+    <script type="text/javascript" src="/static-media/js/ui.js"></script>
+    <script type="text/javascript" src="/static-media/js/viewablesorter.js"></script>
+    <script type="text/javascript" src="/static-media/js/mapping.js"></script>
+    <script type="text/javascript" src="/static-media/js/districtfile.js"></script>
+    <script type="text/javascript" src="/static-media/js/chooseplan.js"></script>
+    <script type="text/javascript" src="/static-media/js/shareddistricts.js"></script>
+    <script type="text/javascript" src="/static-media/js/reports.js"></script>
+    <script type="text/javascript" src="/static-media/js/register.js"></script>
+    <script type="text/javascript" src="/static-media/js/statisticssets.js"></script>
+    <script type="text/javascript" src="/static-media/js/splitsreport.js"></script>
+    <script type="text/javascript" src="/static-media/js/sha1.js"></script>
+    <script type="text/javascript" src="/static-media/js/layerchooser.js"></script>
+    <script type="text/javascript" src="/static-media/js/print.js"></script>
+    <script type="text/javascript" src="/static-media/js/multimember.js"></script>
+    {% endcompress %}
+
     {% if "bing" in basemaps %}
     <script src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=6.2&mkt=en-us"></script> 
     {% endif %}
@@ -129,33 +165,6 @@
         var UPLOAD_STATUS = {% if upload_status %}true{% else %}false{% endif %};
         {% endif %}
     </script>
-    {% comment %}
-
-    Load external javascript libraries.
-
-    {% endcomment %}
-    <script type="text/javascript" src="/static-media/jquery/jquery-1.6.js"></script>
-    <script type="text/javascript" src="/static-media/jquery/jquery-ui-1.8.2.custom.min.js"></script>
-    <script type="text/javascript" src="/static-media/jquery/external/jquery.tools.tooltip.slide.min.js"></script>
-    <script type="text/javascript" src="/static-media/jqGrid/js/i18n/grid.locale-en.js"></script>
-    <script type="text/javascript" src="/static-media/jqGrid/js/jquery.jqGrid.min.js"></script>
-    <script type="text/javascript" src="/static-media/jqGrid/plugins/grid.postext.js"></script>
-    {% comment %}
-
-    Load internal javascript logic.
-
-    {% endcomment %}
-    <script type="text/javascript" src="/static-media/js/ui.js"></script>
-    <script type="text/javascript" src="/static-media/js/viewablesorter.js"></script>
-    <script type="text/javascript" src="/static-media/js/mapping.js"></script>
-    <script type="text/javascript" src="/static-media/js/districtfile.js"></script>
-    <script type="text/javascript" src="/static-media/js/chooseplan.js"></script>
-    <script type="text/javascript" src="/static-media/js/shareddistricts.js"></script>
-    <script type="text/javascript" src="/static-media/js/reports.js"></script>
-    <script type="text/javascript" src="/static-media/js/register.js"></script>
-    <script type="text/javascript" src="/static-media/js/statisticssets.js"></script>
-    <script type="text/javascript" src="/static-media/js/splitsreport.js"></script>
-    <script type="text/javascript" src="/static-media/js/sha1.js"></script>
     {% comment %}
 
     Load Google Analytics Script if the ga_account has been set
@@ -947,7 +956,6 @@ Include the shared_districts markup if we're using the copy/paste tool
         </div>
     </div>
 </div>
-<script type="text/javascript" src="/static-media/js/layerchooser.js"></script>
 <script type="text/javascript">
     $(function() {
         setTimeout(function() {
@@ -1018,7 +1026,6 @@ Include the markup for the account management panel.
 {% endcomment %}
 {% include "account.html" %}
 
-<script type="text/javascript" src="/static-media/js/print.js"></script>
 <script type="text/javascript" defer="true">
     // run the initialization for these components when the page is ready
     $( function() {
