@@ -589,26 +589,12 @@ def printplan(request, planid):
         
     cfg = commonplan(request, planid)
 
-    stamp = request.REQUEST['x']
+    sha = hashlib.sha1()
+    sha.update(str(planid) + str(datetime.now()))
+    cfg['composite'] = '/reports/print-%s.jpg' % sha.hexdigest()
     cfg['prefix'] = 'http://%s' % request.META['SERVER_NAME']
-    cfg['composite'] = '/reports/print-%s.jpg' % stamp
-    cfg['preview'] = False
 
-    if request.method == 'GET':
-        # render pg to a string
-        t = loader.get_template('printplan.html')
-        page = StringIO.StringIO(t.render(DjangoContext(cfg)))
-        result = StringIO.StringIO()
-        
-        CreatePDF( page, result, show_error_as_pdf=True )
-
-        response = HttpResponse(result.getvalue(), mimetype='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename=plan.pdf'
-
-        return response
-    elif request.method == 'POST':
-        cfg['preview'] = True
-
+    if request.method == 'POST':
         if not 'bbox' in request.REQUEST or \
             not 'geography_url' in request.REQUEST or \
             not 'geography_lyr' in request.REQUEST or \
@@ -702,10 +688,22 @@ def printplan(request, planid):
         fullImg = Image.composite(fullImg, Image.blend(fullImg, overlayImg, opacity), maskImg)
 
         # save
-        fullImg.save(settings.WEB_TEMP + ('/print-%s.jpg' % stamp),'jpeg',quality=100)
+        fullImg.save(settings.WEB_TEMP + ('/print-%s.jpg' % sha.hexdigest()),'jpeg',quality=100)
 
-        return render_to_response('printplan.html', cfg)
-    
+        # render pg to a string
+        t = loader.get_template('printplan.html')
+        page = StringIO.StringIO(t.render(DjangoContext(cfg)))
+        result = StringIO.StringIO()
+        
+        CreatePDF( page, result, show_error_as_pdf=True )
+
+        response = HttpResponse(result.getvalue(), mimetype='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename=plan.pdf'
+
+        return response
+   
+    else:
+        return HttpResponseRedirect('../view/')
 
 @login_required
 @unique_session_or_json_redirect
