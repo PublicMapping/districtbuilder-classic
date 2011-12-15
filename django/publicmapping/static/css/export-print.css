@@ -23,48 +23,21 @@
    Author: 
         Brian Jacobs, David Zwarg
 */
+
+@page {
+  size: letter landscape;
+}
+
+
 .clear {clear:both}
 .clear_left {clear:left}
 .clear_right {clear:right}
 
 
-#app.print_page {font-family: arial, helvetica, sans-serif}
-
-#app.print_page #app_header {
-  background-position: 0 0;
-background-repeat:   repeat-x ;
-	font-size: 1em;
-	line-height: 1.2em;
-	padding: 15px 0;
-	margin-top: 15px;
-	position:relative;
-
-	color: #444;
-	}
-	
-	
-#app.print_page #logo {
-
-	font-size: 1.2em;
-	font-weight: bold;
-	margin-right: 15px;
-	float:left;
-	text-align:center;
-	display:inline;
-}
-	
-#app.print_page 	#print-plan-title {
-	text-align: center;
-	font-weight:bold;
-	display:inline;
-}
-	
-	#app.print_page 	#print-plan-title button{
-	margin: 0 15px;
-}
+body {font-size: 100%; font-family: 'Myriad Web', 'Myriad Pro', Myriad, Arial, helvetica, sans-serif}
 
 
-#app.print_page button {
+button {
     background-image: url("/static-media/images/bg-button-sm.png");
     background-position: 0 0;
     background-repeat: repeat-x;
@@ -76,17 +49,24 @@ background-repeat:   repeat-x ;
     border: 1px solid #3B7181;
 }
 
-#app.print_page #map  {border: 1px solid #ccc;}
+h1 {
+  font-size: 25pt;
+  font-weight: bold;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #bfbfbf;
+}
 
-#app.print_page #map,
-#app.print_page #legend {
-margin: 15px 0 0 0;
-text-align:center;
+table#container {
+  border: 1px solid #999999;
+  margin: 15px;
 }
 
 
-#app.print_page #legend img {display:inline-block; width:88px; margin-right: 15px; vertical-align: top;}
 
-#app.print_page #mapwrap {width: 1024px; margin: 0 auto}
 
-#app.print_page #map img { width: 1024px; height: 500px; }
+
+#legend {
+
+}
+
+

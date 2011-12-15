@@ -41,24 +41,34 @@
     {% endcompress %}
   </head>
   <body id="app" class="print_page">
-    <div id="mapwrap">
-      <div id="app_header">
-        <div id="logo">DistrictBuilder</div>
-        <div class="float_left" id="print-plan-title">
-          <h2>
-            {{ plan.name }} &mdash; {{ plan.legislative_body.name }} 
-            {% if preview %}<button onclick="window.location.href+='&to=.pdf'">Get PDF</button>{% endif %}
-          </h2>
-        </div>
-      
-        <div class="clear"></div>
-        
-      </div>
+      {% if preview %}<button onclick="window.location.href+='&to=.pdf'">Get PDF</button>{% endif %}
+      <table id="container">
+        <tr>
+          <td>
+          <h1>{{ plan.name }} &mdash; {{ plan.legislative_body.name }}</h1>
 
-      <div id="map">
-        <img src="{{ prefix }}{{ composite }}"/>
+          </td>
+        
+        </tr>
+        <tr>
+        <td width="800">
+          <img src="{{ prefix }}{{ composite }}"/>
+        </td>
+        <td width="200">
+        
+        <div id="legend" style="">
+          <h1>LEGEND</h1>
+          {% for litem in legend %}
+          <p>
+              <span style="display:block; height:15px; width:15px; background-color:{{litem.fillColor}}; border-width:{{litem.strokeWidth}}px; border-color:{{litem.strokeColor}}; border-style:solid;">&nbsp;</span>
+              {{ litem.title }}
+          </p>
+          {% endfor %}
       </div>
+        
+        
       <div id="author">
+      
         {% if plan.owner.first_name != '' or plan.owner.last_name != '' %}
         Author: {{plan.owner.first_name}} {{plan.owner.last_name}} ({{ plan.owner.username }})
         {% else %}
@@ -67,16 +77,11 @@
         Edited on: {{ plan.edited|date:"SHORT_DATE_FORMAT" }}<br/>
         Printed on: {{ printed|date:"SHORT_DATE_FORMAT" }}
       </div>
-      <div id="legend" style="">
-        <h1>LEGEND</h1>
-        {% for litem in legend %}
-        <p>
-            <span style="display:inline-block; height:15pt; width:15pt; background-color:{{litem.fillColor}}; border-width:{{litem.strokeWidth}}pt; border-color:{{litem.strokeColor}}; border-style:solid;">&nbsp;</span>
-            {{ litem.title }}
-        </p>
-        {% endfor %}
-      </div>
-    </div>
+      </td>
+      </tr>
+      </table>
+
+
     
   </body>
 </html>
