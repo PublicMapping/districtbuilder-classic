@@ -678,8 +678,7 @@ def printplan(request, planid):
             'HEIGHT': 512,
             'WIDTH': 512
         })
-        #overlayImg = Image.blend(overlayImg, ModestMaps.mapByExtent(provider, ll, ur, dims).draw(), 0.3)
-        overlayImg = ModestMaps.mapByExtent(provider, ll, ur, dims).draw()
+        overlayImg = Image.blend(overlayImg, ModestMaps.mapByExtent(provider, ll, ur, dims).draw(), 0.5)
 
         # composite the overlay onto the base, using the mask (from geography)
         fullImg = Image.composite(fullImg, Image.blend(fullImg, overlayImg, opacity), maskImg)
