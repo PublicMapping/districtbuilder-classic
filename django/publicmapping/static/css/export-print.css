@@ -25,9 +25,8 @@
 */
 
 @page {
-  size: letter landscape;
+  size: letter landscape; 
 }
-
 
 .clear {clear:both}
 .clear_left {clear:left}
@@ -50,7 +49,7 @@ button {
 }
 
 h1 {
-  font-size: 25pt;
+  font-size: 25px;
   font-weight: bold;
   padding-bottom: 15px;
   border-bottom: 1px solid #bfbfbf;
@@ -68,5 +67,4 @@ table#container {
 #legend {
 
 }
-
 
