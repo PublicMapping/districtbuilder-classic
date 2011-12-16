@@ -25,46 +25,58 @@
 */
 
 @page {
-  size: letter landscape; 
-}
+    size: letter landscape;
+    margin: 0.4in;
+  }  
+  
+
 
 .clear {clear:both}
 .clear_left {clear:left}
 .clear_right {clear:right}
 
 
-body {font-size: 100%; font-family: 'Myriad Web', 'Myriad Pro', Myriad, Arial, helvetica, sans-serif}
+body {font-size: 100%; font-family: 'Myriad Web', 'Myriad Pro', Myriad, Arial, helvetica, sans-serif; /*margin: 30px*/}
 
-
-button {
-    background-image: url("/static-media/images/bg-button-sm.png");
-    background-position: 0 0;
-    background-repeat: repeat-x;
-    border-radius: 4px 4px 4px 4px;
-    color: #FFFFFF;
-    font-weight: bold;
-    text-shadow: 0 -1px rgba(0, 0, 0, 0.3);
-    background-color: #1F8CBE;
-    border: 1px solid #3B7181;
-}
 
 h1 {
-  font-size: 25px;
-  font-weight: bold;
-  padding-bottom: 15px;
-  border-bottom: 1px solid #bfbfbf;
+
+
 }
 
 table#container {
-  border: 1px solid #999999;
-  margin: 15px;
+  border-color: #999999;
+  border-style: solid;
+  border-width: 1px;
+}
+  
+table#container td {  
+   vertical-align: top;
+   text-align:left;
 }
 
+#header {}
+#header h1 {  
+  font-size: 25px;
+  font-weight: bold;
+  border-bottom-color: #bfbfbf;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  padding-top:25px; padding-bottom: 25px; margin-left: 25px; margin-right: 25px; 
+  }
+#map {padding-top:25px; padding-bottom:25px; padding-left: 25px; }
+#map div  {border-width: 1px; border-style: solid; border-color: #bfbfbf;  }
+#sidebar {width: 9cm }
 
+#sidebar {padding-top:25px; }
 
+#sidebarinner  {margin-left: 25px; margin-right: 25px; }
+  #legend {padding-top: 25px; padding-left: 25px; padding-right:25px; padding-bottom: 25px; background-color: #f2f2f2; border-width: 1px; border-style: solid; border-color: #bfbfbf;}
+  #author {margin-top:75px}
+  #logo {}
+#legendinner   {padding-top:25px;}
 
+h2 {padding-top:15px}
+.addpad {padding-left: 15px; padding-right:15px;}
 
-#legend {
-
-}
 
