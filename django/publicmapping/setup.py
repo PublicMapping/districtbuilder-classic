@@ -100,9 +100,6 @@ ERROR:
     if not config.validate():
         logging.info("Configuration could not be validated.")
 
-        for msg in msgs:
-            logging.debug(msg)
-
         sys.exit(1)
 
     logging.info("Validated config.")
