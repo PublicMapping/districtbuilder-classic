@@ -1183,3 +1183,4 @@ class CalculatorReport:
         filename = '%s_p%d_v%d_%s' % (plan.owner.username, plan.id, plan.version, stamp)
 
         return '/reports/%s.html' % filename
+
