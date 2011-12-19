@@ -328,7 +328,7 @@ def renest_uploaded_subject(upload_id):
                 logger.debug('Geolevel "%s" already renested.', basename)
                 continue
 
-            renested[basename] = True # geolevel.renest(geolevels[i-1], subject=subject, spatial=False)
+            renested[basename] = geolevel.renest(geolevels[i-1], subject=subject, spatial=False)
 
             logger.debug('Renesting of "%s" %s', basename, 'succeeded' if renested[basename] else 'failed')
 

@@ -921,7 +921,7 @@ class SpatialUtils:
         # finished configure_geoserver
         return True
 
-    def create_featuretype(feature_type_name, data_store_name='PostGIS', alias=None):
+    def create_featuretype(self, feature_type_name, data_store_name='PostGIS', alias=None):
         """
         Create a featuretype. Assuming the datastore name is always 'PostGIS'.
         """
@@ -1074,7 +1074,7 @@ ERROR:
             style_type = subject_name
 
         if not style_name:
-            layer_name = '%s:%s' % (self.ns, geolevel_name, subject_name)
+            layer_name = '%s:demo_%s_%s' % (self.ns, geolevel_name, subject_name)
             style_name = layer_name
         else:
             layer_name = style_name
