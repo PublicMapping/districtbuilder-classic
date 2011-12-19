@@ -34,7 +34,7 @@
 .clear_right {clear:right}
 
 
-body {font-size: 100%; font-family: "Open Sans", Arial, Helvetica, sans-serif;}
+body {font-family: Arial, Helvetica, sans-serif;}
 
 a {color: #666}
 
@@ -63,10 +63,12 @@ vertical-align:top;
 #sidebar {width: 9cm; padding-top:25px; padding-bottom:25px; padding-left: 25px; padding-right: 25px; }
 
 #legend {border-width: 1px; border-style: solid; border-color: #bfbfbf; background-color: #f2f2f2; }
+  
+  #legendinner   {padding-left: 20px; padding-right: 20px; padding-top: 15px; }
 
-  #legendinner   {padding-left: 15px; padding-right: 15px; padding-top: 15px; }
- .legendtitle { font-size: 18px; color: #a9abae; font-weight: bold }
-    #legendinner .filler {font-size: 1px; height: 1;}
+  #legendinner .title { font-size: 14px; color: #a9abae; font-weight: bold; padding-bottom: 5px; }
+  #legendinner #districts-legend .title{ padding-top: 1px;}
+    #legendinner .filler {font-size: 1px; height: 1; }
     #legendinner .values {font-size: 12px; color: #000000; font-weight:bold; padding-left: 8px; }
 
 #meta {padding-top:25px; padding-bottom:25px; padding-left: 25px; padding-right: 25px;}
