@@ -61,7 +61,21 @@
           <table id="legend" style="">
             <tr><td id="legendinner">
                <table  cellpadding="0" cellspacing="0">
-                {% for litem in legend %}
+                  <tr>
+                    <td>Geography</td>
+                  </tr>
+                {% for litem in geo_legend %}
+                  <tr>
+                    <td class="swatches" style="height:10px; width:40px; background-color:{{litem.fillColor}}; border-width:{{litem.strokeWidth}}px; border-color:{{litem.strokeColor}}; border-style:solid;"><span></span></td>
+                    <td class="values">{{ litem.title }}</td>
+                  </tr>
+                  <tr><td colspan="2" class="filler"></td></tr>
+                {% endfor %}
+
+                  <tr>
+                    <td>Districts</td>
+                  </tr>
+                {% for litem in dist_legend %}
                   <tr>
                     <td class="swatches" style="height:10px; width:40px; background-color:{{litem.fillColor}}; border-width:{{litem.strokeWidth}}px; border-color:{{litem.strokeColor}}; border-style:solid;"><span></span></td>
                     <td class="values">{{ litem.title }}</td>

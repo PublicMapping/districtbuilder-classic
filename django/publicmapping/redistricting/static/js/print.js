@@ -81,7 +81,10 @@ printplan = function(options) {
             disturl = '',
             geogurl = '',
             geolyr = '',
-            legend = [],
+            legend = {
+                geo:[],
+                dist:[]
+            },
             sz = _options.map.getExtent(),
             cen = _options.map.getCenter(),
             uStyle = null,
@@ -102,7 +105,7 @@ printplan = function(options) {
         // line style to all features
         $.each(_styleCache[geolevel.name].rules, function(idx, item) {
             if (item.symbolizer.Polygon != null) {
-                legend.push({
+                legend.geo.push({
                     title: item.title,
                     fillColor: item.symbolizer.Polygon.fillColor,
                     strokeColor: item.symbolizer.Polygon.strokeColor,
@@ -110,7 +113,7 @@ printplan = function(options) {
                 });
             }
             else if (item.symbolizer.Line != null) {
-                $.each(legend, function(idx, litem) {
+                $.each(legend.geo, function(idx, litem) {
                     litem.strokeColor = item.symbolizer.Line.strokeColor;
                     litem.strokeWidth = item.symbolizer.Line.strokeWidth;
                 });
@@ -126,7 +129,7 @@ printplan = function(options) {
         // adding the polygon styles, which contain the borders, too
         $.each(_styleCache[_options.districtLayer.name].rules, function(idx, item) {
             if (item.symbolizer.Polygon != null) {
-                legend.push({
+                legend.dist.push({
                     title: item.title,
                     fillColor: item.symbolizer.Polygon.fillColor,
                     strokeColor: item.symbolizer.Polygon.strokeColor,

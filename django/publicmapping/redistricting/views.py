@@ -613,12 +613,15 @@ def printplan(request, planid):
         if 'opacity' in request.REQUEST:
             opacity = float(request.REQUEST['opacity'])
 
+        full_legend = json.loads(request.REQUEST['legend'])
+
         cfg['geography_url'] = request.REQUEST['geography_url']
         cfg['geography_lyr'] = request.REQUEST['geography_lyr']
         cfg['district_url'] = request.REQUEST['district_url']
         cfg['district_lyr'] = request.REQUEST['district_lyr']
         cfg['district_sld'] = request.REQUEST['district_sld']
-        cfg['legend'] = json.loads(request.REQUEST['legend'])
+        cfg['geo_legend'] = full_legend['geo']
+        cfg['dist_legend'] = full_legend['dist']
         cfg['plan'] = Plan.objects.get(id=int(request.REQUEST['plan_id']))
         cfg['printed'] = datetime.now()
 
