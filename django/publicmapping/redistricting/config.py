@@ -1087,6 +1087,12 @@ ERROR:
         # Get the SLD file
         if sld_content is None:
             sld_content = self._get_style(geolevel_name, style_type)
+            if sld_content is None:
+                from_file = False
+            else:
+                from_file = True
+        else:
+            from_file = False
 
         if sld_content is None:
             logging.debug('No style file found for %s', layer_name)
@@ -1100,10 +1106,13 @@ ERROR:
 
             # Update the style with the sld file contents
 
+            msg = 'Could not upload style %s' % (("file %s.sld" % style_name) if from_file else style_name)
             if self._rest_config( 'PUT', '/geoserver/rest/styles/%s' % style_name, \
-                sld_content, "Could not upload style file '%s.sld'" % style_name, \
-                headers=self.headers['sld']):
-                logging.debug("Uploaded '%s.sld' file.", style_name)
+                sld_content, msg, headers=self.headers['sld']):
+                if from_file:
+                    logging.debug("Uploaded '%s.sld' file.", style_name)
+                else:
+                    logging.debug("Uploaded '%s' style.", style_name)
 
         # Apply the uploaded style to the demographic layers
         layer = { 'layer' : {

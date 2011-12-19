@@ -416,7 +416,9 @@ class Geolevel(models.Model):
         nummods = 0
 
         unitqset = self.geounit_set.all()
+        count = unitqset.count()
         for i,geounit in enumerate(unitqset):
+            #logging.debug('Aggregating geounit "%s" (%d of %d)', geounit.id, i, count)
             if (float(i) / unitqset.count()) > (progress + 0.1):
                 progress += 0.1
                 logging.info('%2.0f%% .. ', (progress * 100))

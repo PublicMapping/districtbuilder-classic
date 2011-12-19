@@ -380,7 +380,7 @@ def create_views_and_styles(upload_id):
         logger.debug('Generated SLD content, creating featuretype.')
 
         geoutil.create_featuretype(get_featuretype_name(geolevel.name, subject.name))
-        geoutil.create_style(subject.name, geolevel.name, None, sld_body)
+        geoutil.create_style(subject.name, geolevel.name, None, None, sld_content=sld_body)
 
         logger.debug('Created featuretype and style for %s, %s', geolevel.name, subject.name)
 
