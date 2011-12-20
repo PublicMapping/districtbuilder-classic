@@ -621,7 +621,9 @@ def printplan(request, planid):
         cfg['district_lyr'] = request.REQUEST['district_lyr']
         cfg['district_sld'] = request.REQUEST['district_sld']
         cfg['geo_legend'] = full_legend['geo']
+        cfg['geo_legend_title'] = full_legend['geotitle']
         cfg['dist_legend'] = full_legend['dist']
+        cfg['dist_legend_title'] = full_legend['disttitle']
         cfg['plan'] = Plan.objects.get(id=int(request.REQUEST['plan_id']))
         cfg['printed'] = datetime.now()
 

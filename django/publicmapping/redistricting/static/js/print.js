@@ -82,7 +82,9 @@ printplan = function(options) {
             geogurl = '',
             geolyr = '',
             legend = {
+                geotitle:'',
                 geo:[],
+                disttitle:'',
                 dist:[]
             },
             sz = _options.map.getExtent(),
@@ -124,6 +126,8 @@ printplan = function(options) {
         geogurl = geolevel.url;
         // get the name of the geographic layer
         geolyr = geolevel.params.LAYERS;
+        // get the title of the geographic style layer
+        legend.geotitle = _styleCache[geolevel.name].title;
 
         // iterate over the rules of the district style cache,
         // adding the polygon styles, which contain the borders, too
@@ -146,6 +150,9 @@ printplan = function(options) {
                 distlyr = RegExp.$1 + ':simple_district_' + RegExp.$2;
             }
         });
+
+        // get the title of the district style layer
+        legend.disttitle = _styleCache[_options.districtLayer.name].title;
 
         // needs the reference layer, too!
 

@@ -2414,7 +2414,10 @@ function mapinit(srs,maxExtent) {
 
         var callbackDistrict = function(sld) {
             var userStyle = getDefaultStyle(sld,getDistrictBy().name);
-            var newStyle = new OpenLayers.Style(districtStyle, {rules: userStyle.rules.concat(getLockedRules())});
+            var newStyle = new OpenLayers.Style(districtStyle, {
+                title: userStyle.title, 
+                rules: userStyle.rules.concat(getLockedRules())
+            });
             $('#map').trigger('style_changed', [newStyle, districtLayer.name]); 
          };
 
@@ -2459,7 +2462,10 @@ function mapinit(srs,maxExtent) {
                 })
             ];
             rules = rules.concat(getLockedRules());
-            var newStyle = new OpenLayers.Style(newOptions,{rules: rules});
+            var newStyle = new OpenLayers.Style(newOptions,{
+                title:'Contiguity',
+                rules: rules
+            });
             $('#map').trigger('style_changed', [newStyle, districtLayer.name]);
         };
 
@@ -2525,7 +2531,10 @@ function mapinit(srs,maxExtent) {
                 })
             ];
             rules = rules.concat(getLockedRules());
-            var newStyle = new OpenLayers.Style(newOptions,{rules: rules});
+            var newStyle = new OpenLayers.Style(newOptions,{
+                title:'Compactness',
+                rules: rules
+            });
             $('#map').trigger('style_changed', [newStyle, districtLayer.name]);
         };
 
@@ -2540,7 +2549,10 @@ function mapinit(srs,maxExtent) {
             }
             if (snap == 'None') {
                 var newOptions = OpenLayers.Util.extend({}, districtStyle);
-                var newStyle = new OpenLayers.Style(newOptions,{rules: getLockedRules()});
+                var newStyle = new OpenLayers.Style(newOptions,{
+                    title:'Districts',
+                    rules: getLockedRules()
+                });
                 $('#map').trigger('style_changed', [newStyle, 'None']);
                 return;
             }
