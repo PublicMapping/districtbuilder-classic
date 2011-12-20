@@ -375,12 +375,13 @@ def create_views_and_styles(upload_id):
         logger.debug('Creating queryset and SLD content for %s, %s', geolevel.name, subject.name)
 
         qset = Geounit.objects.filter(characteristic__subject=subject, geolevel=geolevel).annotate(Avg('characteristic__number'))
-        sld_body = generator.as_quantiles(qset, 'characteristic__number__avg', 5)
+        sld_body = generator.as_quantiles(qset, 'characteristic__number__avg', 5, 
+            propertyname='number', userstyletitle=subject.short_display)
 
         logger.debug('Generated SLD content, creating featuretype.')
 
         geoutil.create_featuretype(get_featuretype_name(geolevel.name, subject.name))
-        geoutil.create_style(subject.name, geolevel.name, None, None, sld_content=sld_body)
+        geoutil.create_style(subject.name, geolevel.name, None, None, sld_content=sld_body.as_sld(pretty_print=True))
 
         logger.debug('Created featuretype and style for %s, %s', geolevel.name, subject.name)
 

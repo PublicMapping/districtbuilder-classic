@@ -34,6 +34,8 @@ from django.contrib.auth.models import User
 from models import *
 from utils import *
 
+logger = logging.getLogger(__name__)
+
 class ModelHelper:
     @staticmethod
     def check_and_update(a_model, unique_id_field='name', overwrite=False, **kwargs):
@@ -95,12 +97,12 @@ class Utils:
         """
         qset = Session.objects.all()
 
-        logging.debug('Purging %d sessions from the database.', qset.count())
+        logger.debug('Purging %d sessions from the database.', qset.count())
 
         try:
             qset.delete()
         except Exception, e:
-            logging.info('Could not delete sessions.')
+            logger.info('Could not delete sessions.')
             return False
 
         return True
@@ -138,9 +140,9 @@ class ConfigImporter:
             admin, created, changed, message = ModelHelper.check_and_update(User, unique_id_field='username', overwrite=force, **admin_attributes)
 
             if changed and not force:
-                logging.info(message)
+                logger.info(message)
             else:
-                logging.debug(message)
+                logger.debug(message)
 
             if created or changed or force:
                 m = hashlib.sha1()
@@ -151,8 +153,8 @@ class ConfigImporter:
             return True
 
         except:
-            logging.info('Error when creating superuser.')
-            logging.info(traceback.format_exc())
+            logger.info('Error when creating superuser.')
+            logger.info(traceback.format_exc())
 
             return False
 
@@ -173,9 +175,9 @@ class ConfigImporter:
             }
             obj, created, changed, message = ModelHelper.check_and_update(Region, overwrite=force, **attributes)
             if changed and not force:
-                logging.info(message)
+                logger.info(message)
             else:
-                logging.debug(message)
+                logger.debug(message)
 
         return True
 
@@ -199,7 +201,7 @@ class ConfigImporter:
 
             body_by_region = self.store.filter_nodes('/DistrictBuilder/Regions/Region/LegislativeBodies/LegislativeBody[@ref="%s"]' % body.get('id'))
             if len(body_by_region) != 1:
-                logging.info( "Legislative body %s not attributed to any region", attributes['name'])
+                logger.info( "Legislative body %s not attributed to any region", attributes['name'])
                 continue
             else:
                 region_name = body_by_region[0].getparent().getparent().get('name')
@@ -208,9 +210,9 @@ class ConfigImporter:
             obj, created, changed, message = ModelHelper.check_and_update(LegislativeBody, overwrite=force, **attributes)
 
             if changed and not force:
-                logging.info(message)
+                logger.info(message)
             else:
-                logging.debug(message)
+                logger.debug(message)
 
             if obj is None:
                 continue
@@ -226,7 +228,7 @@ class ConfigImporter:
                 obj.max_multi_district_members = mmconfig.get('max_multi_district_members')
                 obj.min_plan_members = mmconfig.get('min_plan_members')
                 obj.max_plan_members = mmconfig.get('max_plan_members')
-                logging.debug( 'Multi-member districts enabled for: %s', body.get('name') )
+                logger.debug( 'Multi-member districts enabled for: %s', body.get('name') )
             else:
                 obj.multi_members_allowed = False
                 obj.multi_district_label_format = ''
@@ -236,7 +238,7 @@ class ConfigImporter:
                 obj.max_multi_district_members = 0
                 obj.min_plan_members = 0
                 obj.max_plan_members = 0
-                logging.debug( 'Multi-member districts not configured for: %s', body.get('name'))
+                logger.debug( 'Multi-member districts not configured for: %s', body.get('name'))
 
             obj.save()
 
@@ -265,16 +267,16 @@ class ConfigImporter:
             obj, created, changed, message = ModelHelper.check_and_update(Subject, overwrite=force, **attributes)
 
             if changed and not force:
-                logging.info(message)
+                logger.info(message)
             else:
-                logging.debug(message)
+                logger.debug(message)
 
         for subj in subjs:
             numerator_name = name=subj.get('id').lower()[:50]
             try:
                 numerator = Subject.objects.get(name=numerator_name)
             except Exception, ex:
-                logging.info('Subject "%s" was not found.', numerator_name)
+                logger.info('Subject "%s" was not found.', numerator_name)
                 raise
 
             denominator = None
@@ -284,13 +286,13 @@ class ConfigImporter:
                 try:
                     denominator = Subject.objects.get(name=denominator_name)
                 except Exception, ex:
-                    logging.info('Subject "%s" was not found.', denominator_name)
+                    logger.info('Subject "%s" was not found.', denominator_name)
                     raise
 
             numerator.percentage_denominator = denominator
             numerator.save()
 
-            logging.debug('Set denominator on "%s" to "%s"', numerator.name, denominator_name)
+            logger.debug('Set denominator on "%s" to "%s"', numerator.name, denominator_name)
 
         return True
 
@@ -316,9 +318,9 @@ class ConfigImporter:
             glvl, created, changed, message = ModelHelper.check_and_update(Geolevel, overwrite=force, **attributes)
     
             if changed and not force:
-                logging.info(message)
+                logger.info(message)
             else:
-                logging.debug(message)
+                logger.debug(message)
 
         return True
 
@@ -345,7 +347,7 @@ class ConfigImporter:
                 try:
                     geolevel = Geolevel.objects.get(name=name)
                 except:
-                    logging.debug("Base geolevel %s for %s not found in the database.  Import base geolevels before regional geolevels", name, region.get('name'))
+                    logger.debug("Base geolevel %s for %s not found in the database.  Import base geolevels before regional geolevels", name, region.get('name'))
                     return
 
                 attributes = {
@@ -355,9 +357,9 @@ class ConfigImporter:
                 }
                 obj, created, changed, message = ModelHelper.check_and_update(Geolevel, overwrite=force, **attributes)
                 if changed and not self.force:
-                    logging.info(message)
+                    logger.info(message)
                 else:
-                    logging.debug(message)
+                    logger.debug(message)
 
 
         # Use the Region nodes to link bodies and geolevels
@@ -391,9 +393,9 @@ class ConfigImporter:
                         parent=parent)
 
                     if created:
-                        logging.debug('Created LegislativeBody/GeoLevel mapping "%s/%s"', legislative_body.name, geolevel.name)
+                        logger.debug('Created LegislativeBody/GeoLevel mapping "%s/%s"', legislative_body.name, geolevel.name)
                     else:
-                        logging.debug('LegislativeBody/GeoLevel mapping "%s/%s" already exists', legislative_body.name, geolevel.name)
+                        logger.debug('LegislativeBody/GeoLevel mapping "%s/%s" already exists', legislative_body.name, geolevel.name)
 
                     if len(node) > 0:
                         add_legislative_level_for_geolevel(node[0], body, subject, obj)
@@ -415,11 +417,11 @@ class ConfigImporter:
         """
         result = True
         if not self.store.has_scoring():
-            logging.debug('Scoring not configured')
+            logger.debug('Scoring not configured')
         
         admin = User.objects.filter(is_superuser=True)
         if admin.count() == 0:
-            logging.debug('There was no superuser installed; ScoreDisplays need to be assigned ownership to a superuser.')
+            logger.debug('There was no superuser installed; ScoreDisplays need to be assigned ownership to a superuser.')
             return False
         else:
             admin = admin[0]
@@ -439,9 +441,9 @@ class ConfigImporter:
             )
 
             if created:
-                logging.debug('Created ScoreDisplay "%s"', title)
+                logger.debug('Created ScoreDisplay "%s"', title)
             else:
-                logging.debug('ScoreDisplay "%s" already exists', title)
+                logger.debug('ScoreDisplay "%s" already exists', title)
 
             # Import score panels for this score display.
             for spref in self.store.filter_displayed_score_panels(sd):
@@ -478,14 +480,14 @@ class ConfigImporter:
                     sp_obj.save()
                     sd_obj.scorepanel_set.add(sp_obj)
 
-                    logging.debug('Created ScorePanel "%s"', title)
+                    logger.debug('Created ScorePanel "%s"', title)
                 else:
                     sp_obj = sp_obj[0]
                     attached = sd_obj.scorepanel_set.filter(id=sp_obj.id).count() == 1
                     if not attached:
                         sd_obj.scorepanel_set.add(sp_obj)
 
-                    logging.debug('ScorePanel "%s" already exists', title)
+                    logger.debug('ScorePanel "%s" already exists', title)
 
                 # Import score functions for this score panel
                 for sfref in self.store.filter_paneled_score_functions(sp):
@@ -502,7 +504,7 @@ class ConfigImporter:
 
         # Import validation criteria.
         if not self.store.has_validation():
-            logging.debug('Validation not configured')
+            logger.debug('Validation not configured')
             return False;
 
         for vc in self.store.filter_criteria():
@@ -515,7 +517,7 @@ class ConfigImporter:
                 try:
                     sf = self.store.get_score_function(sfref.get('ref'))
                 except:
-                    logging.info("Couldn't import ScoreFunction for Criteria %s", crit.get('name'))
+                    logger.info("Couldn't import ScoreFunction for Criteria %s", crit.get('name'))
                     result = False
 
                 sf_obj = self.import_function(sf, force)
@@ -530,9 +532,9 @@ class ConfigImporter:
                 crit_obj, created, changed, message = ModelHelper.check_and_update(ValidationCriteria, overwrite=force, **attributes)
 
                 if changed and not force:
-                    logging.info(message)
+                    logger.info(message)
                 else:
-                    logging.debug(message)
+                    logger.debug(message)
 
         return result
 
@@ -560,9 +562,9 @@ class ConfigImporter:
         fn_obj.selectable_bodies.add(*lbodies)
 
         if changed and not force:
-            logging.info(message)
+            logger.info(message)
         else:
-            logging.debug(message)
+            logger.debug(message)
 
         # Recursion if any ScoreArguments!
         self.import_arguments(fn_obj, node, force)
@@ -588,16 +590,16 @@ class ConfigImporter:
             if created:
                 arg_obj.value = config_value
                 arg_obj.save()
-                logging.debug('Created literal ScoreArgument "%s"', name)
+                logger.debug('Created literal ScoreArgument "%s"', name)
             else:
                 if arg_obj.value == config_value:
-                    logging.debug('literal ScoreArgument "%s" already exists', name)
+                    logger.debug('literal ScoreArgument "%s" already exists', name)
                 elif force:
                     arg_obj.value = config_value
                     arg_obj.save()
-                    logging.info('literal ScoreArgument "%s" value UPDATED', name)
+                    logger.info('literal ScoreArgument "%s" value UPDATED', name)
                 else:
-                    logging.info('Didn\'t change ScoreArgument %s; attribute(s) "value" differ(s) from database configuration.\n\tWARNING: Sync your config file to your app configuration or use the -f switch with setup to force changes', name)
+                    logger.info('Didn\'t change ScoreArgument %s; attribute(s) "value" differ(s) from database configuration.\n\tWARNING: Sync your config file to your app configuration or use the -f switch with setup to force changes', name)
 
         # Import subject arguments for this score function
         for subarg in self.store.filter_function_subject_arguments(node):
@@ -612,23 +614,23 @@ class ConfigImporter:
             if created:
                 subarg_obj.value = config_value
                 subarg_obj.save()
-                logging.debug('Created subject ScoreArgument "%s"', name)
+                logger.debug('Created subject ScoreArgument "%s"', name)
             else:
                 if subarg_obj.value == config_value:
-                    logging.debug('subject ScoreArgument "%s" already exists', name)
+                    logger.debug('subject ScoreArgument "%s" already exists', name)
                 elif force:
                     subarg_obj.value = config_value
                     subarg_obj.save()
-                    logging.info('subject ScoreArgument "%s" value UPDATED', name)
+                    logger.info('subject ScoreArgument "%s" value UPDATED', name)
                 else:
-                    logging.info('Didn\'t change ScoreArgument %s; attribute(s) "value" differ(s) from database configuration.\n\tWARNING: Sync your config file to your app configuration or use the -f switch with setup to force changes', name)
+                    logger.info('Didn\'t change ScoreArgument %s; attribute(s) "value" differ(s) from database configuration.\n\tWARNING: Sync your config file to your app configuration or use the -f switch with setup to force changes', name)
                     
         
         # Import score arguments for this score function
         for scorearg in self.store.filter_function_score_arguments(node):
             argfn = self.store.get_score_function(scorearg.get('ref'))
             if argfn is None:
-                logging.info("ERROR: No such function %s can be found for argument of %s", scorearg.get('ref'), score_function.name)
+                logger.info("ERROR: No such function %s can be found for argument of %s", scorearg.get('ref'), score_function.name)
                 continue
 
             self.import_function(argfn, force)
@@ -644,16 +646,16 @@ class ConfigImporter:
             if created:
                 scorearg_obj.value = config_value
                 scorearg_obj.save()
-                logging.debug('created subject scoreargument "%s"', name)
+                logger.debug('created subject scoreargument "%s"', name)
             else:
                 if scorearg_obj.value == config_value:
-                    logging.debug('subject scoreargument "%s" already exists', name)
+                    logger.debug('subject scoreargument "%s" already exists', name)
                 elif force:
                     scorearg_obj.value = config_value
                     scorearg_obj.save()
-                    logging.info('subject scoreargument "%s" value UPDATED', name)
+                    logger.info('subject scoreargument "%s" value UPDATED', name)
                 else:
-                    logging.info('Didn\'t change scoreargument %s; attribute(s) "value" differ(s) from database configuration.\n\twarning: sync your config file to your app configuration or use the -f switch with setup to force changes', name)
+                    logger.info('Didn\'t change scoreargument %s; attribute(s) "value" differ(s) from database configuration.\n\twarning: sync your config file to your app configuration or use the -f switch with setup to force changes', name)
 
         return True
 
@@ -668,7 +670,7 @@ class ConfigImporter:
         ContiguityOverride.objects.all().delete()
             
         if not self.store.has_contiguity_overrides():
-            logging.debug('ContiguityOverrides not configured')
+            logger.debug('ContiguityOverrides not configured')
 
         # Import contiguity overrides.
         for co in self.store.filter_contiguity_overrides():
@@ -690,9 +692,9 @@ class ConfigImporter:
                 )
 
             if created:
-                logging.debug('Created ContiguityOverride "%s"', str(co_obj))
+                logger.debug('Created ContiguityOverride "%s"', str(co_obj))
             else:
-                logging.debug('ContiguityOverride "%s" already exists', str(co_obj))
+                logger.debug('ContiguityOverride "%s" already exists', str(co_obj))
 
         return True
 
@@ -731,11 +733,11 @@ class SpatialUtils:
 
                 self.styledir = config['styles']
             except:
-                logging.error('SpatialUtils is missing a required key in the settings dictionary.')
+                logger.error('SpatialUtils is missing a required key in the settings dictionary.')
                 raise
 
         else:
-            logging.error('SpatialUtils requires either a stored config or a dictionary of settings.')
+            logger.error('SpatialUtils requires either a stored config or a dictionary of settings.')
             raise Exception()
 
         if self.host == '':
@@ -766,25 +768,25 @@ class SpatialUtils:
         # get the workspace 
         ws_cfg = self._read_config('/geoserver/rest/workspaces/%s.json' % self.ns, 'Could not get workspace %s.' % self.ns)
         if ws_cfg is None:
-            logging.debug("%s configuration could not be fetched.", self.ns)
+            logger.debug("%s configuration could not be fetched.", self.ns)
             return True
 
         # get the data stores in the workspace
         wsds_cfg = self._read_config(ws_cfg['workspace']['dataStores'], 'Could not get data stores in workspace %s' % ws_cfg['workspace']['name'])
         if wsds_cfg is None:
-            logging.debug("Workspace '%s' datastore configuration could not be fetched.", self.ns)
+            logger.debug("Workspace '%s' datastore configuration could not be fetched.", self.ns)
             return False
 
         # get the data source configuration
         ds_cfg = self._read_config(wsds_cfg['dataStores']['dataStore'][0]['href'], "Could not get datastore configuration for '%s'" % wsds_cfg['dataStores']['dataStore'][0]['name'])
         if ds_cfg is None:
-            logging.debug("Datastore configuration could not be fetched.")
+            logger.debug("Datastore configuration could not be fetched.")
             return False
 
         # get all the feature types in the data store
         fts_cfg = self._read_config(ds_cfg['dataStore']['featureTypes'] + '?list=all', "Could not get feature types in datastore '%s'" % wsds_cfg['dataStores']['dataStore'][0]['name'])
         if fts_cfg is None:
-            logging.debug("Data store '%s' feature type configuration could not be fetched.", wsds_cfg['dataStores']['dataStore'][0]['name'])
+            logger.debug("Data store '%s' feature type configuration could not be fetched.", wsds_cfg['dataStores']['dataStore'][0]['name'])
             return False
 
         if not 'featureType' in fts_cfg['featureTypes']: 
@@ -793,23 +795,23 @@ class SpatialUtils:
         for ft_cfg in fts_cfg['featureTypes']['featureType']:
             # Delete the layer
             if not self._rest_config('DELETE', '/geoserver/rest/layers/%s.json' % ft_cfg['name'], None, 'Could not delete layer %s' % (ft_cfg['name'],)):
-                logging.debug("Could not delete layer %s", ft_cfg['name'])
+                logger.debug("Could not delete layer %s", ft_cfg['name'])
                 continue
 
             # Delete the feature type
             if not self._rest_config('DELETE', ft_cfg['href'], None, 'Could not delete feature type %s' % (ft_cfg['name'],)):
-                logging.debug("Could not delete feature type '%s'", ft_cfg['name'])
+                logger.debug("Could not delete feature type '%s'", ft_cfg['name'])
             else:
-                logging.debug("Deleted feature type '%s'", ft_cfg['name'])
+                logger.debug("Deleted feature type '%s'", ft_cfg['name'])
 
         # now that the data store is empty, delete it
         if not self._rest_config('DELETE', wsds_cfg['dataStores']['dataStore'][0]['href'], None, 'Could not delete datastore %s' % wsds_cfg['dataStores']['dataStore'][0]['name']):
-            logging.debug("Could not delete datastore %s", wsds_cfg['dataStores']['dataStore'][0]['name'])
+            logger.debug("Could not delete datastore %s", wsds_cfg['dataStores']['dataStore'][0]['name'])
             return False
 
         # now that the workspace is empty, delete it
         if not self._rest_config('DELETE', '/geoserver/rest/workspaces/%s.json' % self.ns, None, 'Could not delete workspace %s' % self.ns):
-            logging.debug("Could not delete workspace %s", self.ns)
+            logger.debug("Could not delete workspace %s", self.ns)
             return False
 
         # Get a list of styles
@@ -826,9 +828,9 @@ class SpatialUtils:
 
                 # Delete the style
                 if not self._rest_config('DELETE', st_cfg['href'], None, 'Could not delete style %s' % st_cfg['name']):
-                    logging.debug("Could not delete style %s", st_cfg['name'])
+                    logger.debug("Could not delete style %s", st_cfg['name'])
                 else:
-                    logging.debug("Deleted style %s", st_cfg['name'])
+                    logger.debug("Deleted style %s", st_cfg['name'])
 
         return True
             
@@ -846,7 +848,7 @@ class SpatialUtils:
             srid = Geounit.objects.all()[0].geom.srid
         except:
             srid = 0
-            logging.debug('Spatial Reference could not be determined, defaulting to %d', srid)
+            logger.debug('Spatial Reference could not be determined, defaulting to %d', srid)
 
         # Create our namespace
         namespace_url = '/geoserver/rest/namespaces'
@@ -855,7 +857,7 @@ class SpatialUtils:
 
         # Create our DataStore
         if self.store is None:
-            logging.warning('Geoserver cannot be fully configured without a stored config.')
+            logger.warning('Geoserver cannot be fully configured without a stored config.')
             return
 
         dbconfig = self.store.get_database()
@@ -916,7 +918,7 @@ class SpatialUtils:
                 self.create_featuretype(get_featuretype_name(geolevel.name, subject.name))
                 self.create_style(subject.name, geolevel.name, None, None)
 
-        logging.info("Geoserver configuration complete.")
+        logger.info("Geoserver configuration complete.")
 
         # finished configure_geoserver
         return True
@@ -938,17 +940,17 @@ class SpatialUtils:
         """
         verbose_name = '%s:%s' % ('Geoserver object' if type_name is None else type_name, name)
         if self._rest_check('%s/%s.json' % (url, name)):
-            logging.debug("%s already exists", verbose_name)
+            logger.debug("%s already exists", verbose_name)
             if update:
                 if not self._rest_config( 'PUT', url, json.dumps(dictionary), 'Could not create %s' % (verbose_name,)):
-                    logging.info("%s couldn't be updated.", verbose_name)
+                    logger.info("%s couldn't be updated.", verbose_name)
                     return False
                 
         else:
             if not self._rest_config( 'POST', url, json.dumps(dictionary), 'Could not create %s' % (verbose_name,)):
                 return False
 
-            logging.debug('Created %s', verbose_name)
+            logger.debug('Created %s', verbose_name)
 
         return True
 
@@ -1009,7 +1011,7 @@ class SpatialUtils:
             rsp.read() # and discard
             conn.close()
             if rsp.status != 201 and rsp.status != 200:
-                logging.info("""
+                logger.info("""
 ERROR:
 
         Could not configure geoserver: 
@@ -1018,14 +1020,14 @@ ERROR:
 
         Please check the configuration settings, and try again.
 """, msg)
-                logging.debug("        HTTP Status: %d", rsp.status)
+                logger.debug("        HTTP Status: %d", rsp.status)
                 return False
         except Exception, ex:
-            logging.info("""
+            logger.info("""
 ERROR:
 
         Exception thrown while configuring geoserver.
-""")
+""", ex)
             return False
 
         return True
@@ -1043,7 +1045,7 @@ ERROR:
             response = rsp.read() # and discard
             conn.close()
             if rsp.status != 201 and rsp.status != 200:
-                logging.info("""
+                logger.info("""
 ERROR:
 
         Could not fetch geoserver configuration:
@@ -1056,12 +1058,12 @@ ERROR:
 
             return json.loads(response)
         except Exception, ex:
-            logging.info("""
+            logger.info("""
 ERROR:
 
         Exception thrown while fetching geoserver configuration.
 """)
-            logging.debug(traceback.format_exc())
+            logger.debug(traceback.format_exc())
             return None
 
     def create_style(self, subject_name, geolevel_name, style_name, style_type, sld_content=None):
@@ -1095,7 +1097,7 @@ ERROR:
             from_file = False
 
         if sld_content is None:
-            logging.debug('No style file found for %s', layer_name)
+            logger.debug('No style file found for %s', layer_name)
             style_name = 'polygon'
         else:
             # Create the styles for the demographic layers
@@ -1110,9 +1112,9 @@ ERROR:
             if self._rest_config( 'PUT', '/geoserver/rest/styles/%s' % style_name, \
                 sld_content, msg, headers=self.headers['sld']):
                 if from_file:
-                    logging.debug("Uploaded '%s.sld' file.", style_name)
+                    logger.debug("Uploaded '%s.sld' file.", style_name)
                 else:
-                    logging.debug("Uploaded '%s' style.", style_name)
+                    logger.debug("Uploaded '%s' style.", style_name)
 
         # Apply the uploaded style to the demographic layers
         layer = { 'layer' : {
@@ -1125,7 +1127,7 @@ ERROR:
         
         if self._rest_config( 'PUT', '/geoserver/rest/layers/%s' % layer_name, \
             json.dumps(layer), "Could not assign style to layer '%s'." % layer_name):
-            logging.debug("Assigned style '%s' to layer '%s'.", style_name, layer_name)
+            logger.debug("Assigned style '%s' to layer '%s'.", style_name, layer_name)
 
     def _get_style(self, geolevel, subject):
         if not geolevel:
@@ -1139,7 +1141,7 @@ ERROR:
 
             return sld
         except:
-            logging.debug("""
+            logger.debug("""
 WARNING:
 
         The style file:

@@ -418,7 +418,6 @@ class Geolevel(models.Model):
         unitqset = self.geounit_set.all()
         count = unitqset.count()
         for i,geounit in enumerate(unitqset):
-            #logging.debug('Aggregating geounit "%s" (%d of %d)', geounit.id, i, count)
             if (float(i) / unitqset.count()) > (progress + 0.1):
                 progress += 0.1
                 logging.info('%2.0f%% .. ', (progress * 100))
@@ -700,6 +699,9 @@ class Geounit(models.Model):
 
         parentunits.update(child=self)
         newgeo = parentunits.unionagg()
+
+        # reform the parent units as a list of IDs
+        parentunits = list(parentunits.values_list('id',flat=True))
 
         if newgeo is None:
             return (geo, num,)
