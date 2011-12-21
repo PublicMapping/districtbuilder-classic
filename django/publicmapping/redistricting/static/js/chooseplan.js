@@ -97,18 +97,21 @@ chooseplan = function(options) {
         if (state === 'view') {
             $('#plan_form #name').attr('disabled', 'disabled');
             $('#plan_form #description').attr('disabled', 'disabled');
+            $('#start_mapping').removeAttr('disabled');
             _editButton.button('enable').show();
             _saveButton.button('disable').hide();
             _cancelButton.button('disable').hide();
         } else if (state === 'edit') {
             $('#plan_form #name').removeAttr('disabled');
             $('#plan_form #description').removeAttr('disabled');
+            $('#start_mapping').attr('disabled', 'disabled');
             _editButton.button('disable').hide();
             _saveButton.button('enable').show();
             _cancelButton.button('enable').show();
         } else {
             $('#plan_form #name').attr('disabled', 'disabled');
             $('#plan_form #description').attr('disabled', 'disabled');
+            $('#start_mapping').removeAttr('disabled');
             _editButton.button('disable').hide();
             _saveButton.button('disable').hide();
             _cancelButton.button('disable').hide();
@@ -230,7 +233,11 @@ chooseplan = function(options) {
 
             $('<div title="Creation Error"><p>' + data.message + "</p><p><b>Tip</b>: Make sure the new plan's name is unique.</p></div>").dialog({
                 modal:true,
-                resizable:false
+                resizable:false,
+                close: function(event, ui){
+                    $('#start_mapping').attr('disabled', null);
+                    $('#start_mapping .ui-button-text').html(_options.anonymous ? "View Plan" : "Start Drawing");
+                }
             });
 
             if (OpenLayers) {
@@ -615,6 +622,12 @@ chooseplan = function(options) {
         });
         _cancelButton.button().click( function() {
             _table.jqGrid('GridToForm', _selectedPlanId, '#plan_form'); 
+            var shared = $('#is_shared');
+            if (shared.val().contains("unshared")) {
+                shared.val('No');
+            } else {
+                shared.val('Yes');
+            }
             editState('view');
             return false;
         });

@@ -5,3 +5,5 @@ django-tagging==0.3.1
 django-sld==1.0.3
 inflect==0.2.1
 xhtml2pdf==0.0.3
+django-compressor==1.1.1
+git+git://github.com/dzwarg/modestmaps-py.git@db-mod_1.4

@@ -72,8 +72,8 @@ SESSION_COOKIE_SECURE = False
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.load_template_source',
-    'django.template.loaders.app_directories.load_template_source',
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
 #     'django.template.loaders.eggs.load_template_source',
 )
 
@@ -125,6 +125,8 @@ CELERYBEAT_SCHEDULE = {
 }
 
 import django
+staticfiles = 'django.contrib.staticfiles' if django.VERSION[1] > 2 else 'staticfiles'
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -134,13 +136,26 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.gis',
     'django.contrib.comments',
-    'django.contrib.staticfiles' if django.VERSION[1] > 2 else 'staticfiles',
     'djcelery',
     'djkombu',
     'redistricting',
     'publicmapping',
     'tagging',
+    staticfiles,
+    'compressor',
 )
+
+# Compressor settings
+COMPRESS_ENABLED = not DEBUG
+COMPRESS_PARSER = 'compressor.parser.HtmlParser'
+
+STATICFILES_FINDERS = (
+    staticfiles + '.finders.FileSystemFinder',
+    staticfiles + '.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
+)
+
+# end Compressor settings
 
 #
 # Settings specific to The Public Mapping Project
@@ -154,4 +169,37 @@ POSTGIS_TEMPLATE='template_postgis'
 
 # This is the base url for the application, where the login page is
 LOGIN_URL = '/'
+
+# Enable logging for django 1.3 and 1.2
+if django.VERSION[1] > 2:
+    import sys
+    LOGGING = {
+        'version': 1,
+        'handlers': {
+            'default': {
+                'class': 'logging.StreamHandler',
+                'stream': sys.stderr
+            }
+        },
+        'loggers': {
+            'django': {
+                'handlers':['default'],
+                'level': 'DEBUG' if DEBUG else 'WARNING'
+            },
+            'redistricting': {
+                'handlers':['default'],
+                'level': 'DEBUG' if DEBUG else 'WARNING'
+            }
+        }
+    }
+else:
+    import logging
+    logger = logging.getLogger('publicmapping')
+    stderr = logging.StreamHandler()
+    stderr.setFormatter(logging.Formatter())
+    logger.addHandler(stderr)
+    if DEBUG:
+        logger.setLevel(logging.DEBUG)
+    else:
+        logger.setLevel(logging.WARNING)
 

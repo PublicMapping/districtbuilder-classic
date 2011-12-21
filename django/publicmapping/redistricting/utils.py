@@ -38,7 +38,7 @@ from tagging.utils import parse_tag_input
 from tagging.models import Tag, TaggedItem
 import csv, time, zipfile, tempfile, os, sys, traceback, time
 from datetime import datetime
-import socket, urllib
+import socket, urllib2
 from lxml import etree, objectify
 
 # all for shapefile exports
@@ -530,7 +530,7 @@ class DistrictShapeFile():
             ms_url = site.domain
         ms_url = 'http://%s/geoserver/ows?service=wms&version=1.1.1&request=GetCapabilities' % ms_url
 
-        stream = urllib.urlopen(ms_url)
+        stream = urllib2.urlopen(ms_url)
         tree = etree.parse(stream)
         stream.close()
 
@@ -571,10 +571,14 @@ class DistrictShapeFile():
         if len(districts) > 0:
             srs = SpatialReference(districts[0].geom.srid)
             districts[0].geom.transform(4326)
-            e = Envelope(districts[0].geom.extent)
+            e = None
             for i in range(1, len(districts)):
                 districts[i].geom.transform(4326)
-                e.expand_to_include(districts[i].geom.extent)
+                if not districts[i].geom.empty:
+                    if e is None:
+                        e = Envelope(districts[i].geom.extent)
+                    else: 
+                        e.expand_to_include(districts[i].geom.extent)
         else:
             srs = SpatialReference(4326)
             e = Envelope( (-180.0,-90.0,180.0,90.0,) )
@@ -777,10 +781,10 @@ class DistrictShapeFile():
                 # Set up mappings of field names for export, as well as shapefile
                 # column aliases (only 8 characters!)
                 (OGRInteger,OGRReal,OGRString,) = (0,2,4,)
-                dfieldnames = ['id', 'district_id', 'name', 'version', 'num_members']
+                dfieldnames = ['id', 'district_id', 'short_label', 'long_label', 'version', 'num_members']
                 sfieldnames = list(Subject.objects.all().values_list('name',flat=True))
-                aliases = {'district_id':'dist_num', 'num_members':'nmembers'}
-                ftypes = {'id':OGRInteger, 'district_id':OGRInteger, 'name':OGRString, 'version':OGRInteger, 'num_members':OGRInteger}
+                aliases = {'district_id':'dist_num', 'num_members':'nmembers', 'short_label':'label', 'long_label':'descr'}
+                ftypes = {'id':OGRInteger, 'district_id':OGRInteger, 'short_label':OGRString, 'long_label':OGRString, 'version':OGRInteger, 'num_members':OGRInteger}
 
                 # set the district attributes
                 for fieldname in dfieldnames + sfieldnames:
@@ -857,15 +861,19 @@ class DistrictShapeFile():
                         if ftype == OGRInteger:
                             lgdal.OGR_F_SetFieldInteger(feature, idx, int(value))
                         elif ftype == OGRString:
-                            lgdal.OGR_F_SetFieldString(feature, idx, str(value))
+                            try:
+                                lgdal.OGR_F_SetFieldString(feature, idx, str(value))
+                            except UnicodeEncodeError:
+                                lgdal.OGR_F_SetFieldString(feature, idx, '')
 
                     # attach each field for the subjects that relate to this model
                     for idx, sname in enumerate(sfieldnames):
+                        subject = Subject.objects.get(name=sname)
                         try:
-                            subject = district.computedcharacteristic_set.get(subject__name=sname)
+                            compchar = district.computedcharacteristic_set.get(subject=subject)
                         except:
-                            subject = 0.0
-                        lgdal.OGR_F_SetFieldDouble(feature, idx+len(dfieldnames), c_double(subject.number))
+                            compchar = ComputedCharacteristic(subject=subject, district=district, number=0.0)
+                        lgdal.OGR_F_SetFieldDouble(feature, idx+len(dfieldnames), c_double(compchar.number))
 
                     # convert the geos geometry to an ogr geometry
                     geometry = OGRGeometry(district.geom.wkt, native_srs)
@@ -1042,7 +1050,7 @@ class PlanReport:
             if not 'localhost'  in settings.BARD_SERVER:
                 path = '%s/reports/%s.html' % (settings.BARD_SERVER,filename)
                 try:
-                    result = urllib.urlopen(path)
+                    result = urllib2.urlopen(path)
                     if result.getcode() == 200:
                         os.unlink(pending_file)
                         return 'ready'

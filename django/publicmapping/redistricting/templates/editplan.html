@@ -14,7 +14,7 @@
    distributed under the License is distributed on an "AS IS" BASIS,
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
-   limitations under the License.
+   limitations under the License. 
 
    This file is part of The Public Mapping Project
    https://github.com/PublicMapping/
@@ -82,7 +82,7 @@
         <div class="toolset_group toolset_group_lg last">  
         {% if not plan.is_community %}
           <div id="fix_unassigned">
-            <button id="fix_unassigned_button">Fix<br/>Unassigned</button>
+            <button id="fix_unassigned_button" class="titletip" title="Perform automated resolution of minor unassigned geographies">Fix<br/>Unassigned</button>
           </div>
           {% endif %}
           
@@ -153,7 +153,7 @@
 
             <div id="successfulShare" title="Congratulations!" >
                 <p>You have successfully shared your {{ plan_text }}. You can share your {{ plan_text }} with others by giving them this link:</p>
-                <p id="sharedPermalink"><p>
+                <p id="sharedPermalink"></p>      
                 <button id="continueEditing">Continue Editing Current {{ plan_text|title }}</button>
                 <a href="/districtmapping/plan/0/view/"><button id="selectNew">Select New {{ plan_text|title }} to Edit</button></a>
             </div>
@@ -186,9 +186,9 @@
         <div id="shared_districts_content">
             <div id="shared_districts_instructions">
             {% if plan.is_community %}
-            <p>Choose communities to paste into your map. A map can contain any number of communities. If you would like to remove communities from your map, use the community unassign tool.</p>
+            <h3>Choose communities to paste into your map. A map can contain any number of communities. If you would like to remove communities from your map, use the community unassign tool.</h3>
             {% else %}
-            <p>Choose districts to paste into your plan.  A plan has a maximum number of districts allowed by law.  If you would like to paste districts into a plan, you must have fewer districts in your plan than the maximum allowed.  If you would like to remove districts from your plan, use the district unassign tool.</p>
+            <h3>Choose districts to paste into your plan.  A plan has a maximum number of districts allowed by law.  If you would like to paste districts into a plan, you must have fewer districts in your plan than the maximum allowed.  If you would like to remove districts from your plan, use the district unassign tool.</h3>
             {% endif %}
             </div>
             <div id="shared_plans_column">
@@ -216,7 +216,6 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript" src="/static-media/js/shareddistricts.js"></script>
     <script type="text/javascript">
         $(function() {
             var shared = shareddistricts({
@@ -270,7 +269,6 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript" src="/static-media/js/multimember.js"></script>
     <script type="text/javascript">
         $(function() {
             multimember({

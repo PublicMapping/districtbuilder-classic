@@ -340,14 +340,16 @@ $(function() {
      });
     
     // map editing buttons
-    $('.toolset button, #history_tools button, #open_statistics_editor')
+    $('.toolset button, #history_tools button, #open_statistics_editor, #plan_export_container button')
       .button({
           icons: {primary: 'ui-icon'}
       })
       .click(function(){
         if($(this).hasClass('btntoggle')) {
-            $('.toolset_group button.btntoggle').removeClass('toggle');
-            $(this).addClass('toggle');
+			if(!$(this).hasClass('solotoggle')) {
+				$('.toolset_group button.btntoggle').removeClass('toggle');
+				 $(this).addClass('toggle');
+			}
         }
     });    
     
@@ -379,6 +381,20 @@ $(function() {
             panel.slideDown(240);
         }
     });
+	
+    $('#plan_export_button').click(function(){
+        var toggle = $(this);
+        var panel = $('#plan_export_menu');
+
+        if(toggle.hasClass('active')) {
+            toggle.removeClass('active');
+            panel.slideUp(240);
+        }
+        else {
+            toggle.addClass('active');
+            panel.slideDown(240);
+        }
+    });	
     
     $('#map_settings').click(function(){
         var toggle = $(this);
@@ -430,12 +446,18 @@ $(function() {
     $('#btnSaveAndShare').click( function() { 
         // Helper function to get name for shared plan
         var getData = function() {
-            var name = $('#txtPlanName').val();
+            var name = $('#txtPlanName').val().trim();
             if (name == '') { return false; }
             return { name: name, shared: true }; 
         };
         // The dialog to display while contacting the server.  Shouldn't be closable
-        var $waitPublishing = $('<div title="Please Wait">Publishing with the server</div>').dialog({ autoOpen: true, escapeOnClose: false, resizable:false, open: function(event, ui) { $(".ui-dialog-titlebar-close", $(this).parent()).hide(); } });
+        var $waitPublishing = $('<div title="Please Wait">Publishing with the server</div>').dialog({ 
+            modal: true,
+            autoOpen: true, 
+            escapeOnClose: false, 
+            resizable:false, 
+            open: function(event, ui) { $(".ui-dialog-titlebar-close", $(this).parent()).hide(); } 
+        });
         var data = getData();
         if (!data) {
             $waitPublishing.dialog('close');
@@ -455,10 +477,14 @@ $(function() {
                     }
                     else if (textStatus == 'success') {
                         var link = window.location.protocol + '//' + window.location.host + '/districtmapping/plan/' + data[0].pk + '/view/' 
-                        $('#sharedPermalink').html('<a href="' + link + '">' + link + '</a>')
+                        $('#sharedPermalink').html('<a href="' + link + '">' + link + '</a>');
+                        // insert correct link for social network
+                        //$('.twitter-tweet a').attr('data-url', link);
+                        //$('.facebook-like fb\\:like, .google-plusone g\\:plusone' ).attr('href',link);
                         $('#continueEditing').click( function() {
                             $('#successfulShare').dialog('close');
                             $('#steps').tabs('select', '#step_draw');
+                            $('#txtPlanName').val('');
                         });
                         if (typeof(_gaq) != 'undefined') { _gaq.push(['_trackEvent', 'Plans', 'Shared']); }
                         $('#successfulShare').dialog({autoOpen: true, width:460, resizable:false});
