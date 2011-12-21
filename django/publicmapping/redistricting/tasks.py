@@ -224,7 +224,7 @@ class DistrictIndexFile():
 
                 indexFile = dest.name
 
-            except Exception as ex:
+            except Exception, ex:
                 if email:
                     context['errors'].append({'message': 'Unexpected error during zip file processing', 'traceback': traceback.format_exc()}) 
                     # report error to owner
@@ -233,9 +233,9 @@ class DistrictIndexFile():
                     # report error to admin
                     email_template = loader.get_template('admin.email')
                     mail_admins(admin_subject, email_template.render(context))
-                else Exception, ex2:
+                else:
                     logger.info('The .zip file could not be imported')
-                    logger.debug('Reason:', ex2)
+                    logger.debug('Reason:', ex)
 
                 if purge:
                     # Some problem opening the zip file, bail now
@@ -263,9 +263,8 @@ class DistrictIndexFile():
                 send_mail(error_subject, template.render(context), settings.EMAIL_HOST_USER, [email], fail_silently=False)
                 template = loader.get_template('admin.email')
                 mail_admins(error_subject, template.render(context))
-            else Exception, ex:
+            else:
                 logger.warn('The plan "%s" could not be created', name)
-                logger.debug('Reason:', ex)
             return
                 
         # initialize the dicts we'll use to store the portable_ids,
@@ -299,13 +298,13 @@ class DistrictIndexFile():
                     if row['comments']:
                         community_comments[dist_id] = row['comments']
                     
-            except Exception as ex:
+            except Exception, ex:
                 if email:
                     context['errors'].append({
                         'message': 'Did not import row:\n  "%s, %s"\n' % (row['code'], row['district']),
                         'traceback': traceback.format_exc()
                     })
-                else Exception, ex:
+                else:
                     logger.debug("Did not import row: '%s'", row)
                     logger.debug(ex)
         csv_file.close()
