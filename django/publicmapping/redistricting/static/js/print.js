@@ -79,6 +79,7 @@ printplan = function(options) {
     _self.doprint = function() {
         var geolevel = null,
             disturl = '',
+            distlyr = '',
             geogurl = '',
             geolyr = '',
             legend = {
@@ -94,7 +95,19 @@ printplan = function(options) {
             district_sld = null,
             label_sld = null,
             fmt = new OpenLayers.Format.SLD(),
-            legendfmt = new OpenLayers.Format.JSON();
+            legendfmt = new OpenLayers.Format.JSON(),
+            // regexp grouping:
+            //   $1 = namespace
+            //   $2 = region
+            //   $3 = geography
+            //   $4 = demographic
+            lyrRE = new RegExp('^(.*):demo_([^_]*)_([^_]*)(_([^_]*))?$'),
+            // the collection of rules for this area-part of the district
+            areaRules = [],
+            // the collection of rules for this border(+label) part of the district
+            lineRules = [],
+            labeled = false;
+
         // get the visible geolevel
         $.each(_options.map.getLayersBy('CLASS_NAME','OpenLayers.Layer.WMS'),function(idx, item){
             if (item.getVisibility()) {
@@ -115,10 +128,20 @@ printplan = function(options) {
                 });
             }
             else if (item.symbolizer.Line != null) {
-                $.each(legend.geo, function(idx, litem) {
-                    litem.strokeColor = item.symbolizer.Line.strokeColor;
-                    litem.strokeWidth = item.symbolizer.Line.strokeWidth;
-                });
+                if (legend.geo.length == 0) {
+                    legend.geo.push({
+                        title:item.title,
+                        fillColor: '#eeeeee',
+                        strokeColor: item.symbolizer.Line.strokeColor,
+                        strokeWidth: item.symbolizer.Line.strokeWidth
+                    });
+                }
+                else {
+                    $.each(legend.geo, function(idx, litem) {
+                        litem.strokeColor = item.symbolizer.Line.strokeColor;
+                        litem.strokeWidth = item.symbolizer.Line.strokeWidth;
+                    });
+                }
             }
         });
 
@@ -150,8 +173,8 @@ printplan = function(options) {
         // for the district, so pull them out of the default style
         if (legend.dist.length == 0) {
             legend.dist.push({
-                title: 'Boundaries',
-                fillColor: '#cccccc',
+                title: 'Boundary',
+                fillColor: '#eeeeee',
                 strokeColor: uStyle.defaultStyle.strokeColor,
                 strokeWidth: uStyle.defaultStyle.strokeWidth
             });
@@ -159,24 +182,15 @@ printplan = function(options) {
 
         // reconstitute the geoserver name of the district layer
         disturl = geolevel.url;
-        var lyrRE = new RegExp('^(.*):demo_(.*)_.*$');
         $.each(_options.map.getLayersBy('visibility',true),function(idx, item){
             if (lyrRE.test(item.name)) {
-                distlyr = RegExp.$1 + ':simple_district_' + RegExp.$2;
+                distlyr = RegExp.$1 + ':simple_district_' + RegExp.$2 + '_' + RegExp.$3;
             }
         });
 
         // get the title of the district style layer
         legend.disttitle = _styleCache[_options.districtLayer.name].title;
 
-        // needs the reference layer, too!
-
-        // the collection of rules for this area-part of the district
-        var areaRules = [];
-        // the collection of rules for this border(+label) part of the district
-        var lineRules = [];
-
-        var labeled = false;
         // for each rule in the district layer user style
         $.each(uStyle.rules, function(ridx, ruleItem){
             var fids = [];

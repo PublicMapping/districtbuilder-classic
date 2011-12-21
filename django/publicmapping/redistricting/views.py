@@ -619,7 +619,6 @@ def printplan(request, planid):
         cfg['geography_lyr'] = request.REQUEST['geography_lyr']
         cfg['district_url'] = request.REQUEST['district_url']
         cfg['district_lyr'] = request.REQUEST['district_lyr']
-        cfg['district_sld'] = request.REQUEST['district_sld']
         cfg['geo_legend'] = full_legend['geo']
         cfg['geo_legend_title'] = full_legend['geotitle']
         cfg['dist_legend'] = full_legend['dist']
@@ -665,7 +664,7 @@ def printplan(request, planid):
             'LAYERS':cfg['district_lyr'],
             'TRANSPARENT':'false',
             'SRS': 'EPSG:3785',
-            'SLD_BODY': cfg['district_sld'],
+            'SLD_BODY': request.REQUEST['district_sld'],
             'HEIGHT': 512,
             'WIDTH': 512
         })
