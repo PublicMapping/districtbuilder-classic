@@ -142,6 +142,21 @@ printplan = function(options) {
             }
         });
 
+        // begin constructing a full SLD for the district layer
+        uStyle = OpenLayers.Util.extend({},_options.districtLayer.styleMap.styles['default']);
+        uStyle.layerName = _options.districtLayer.name;
+
+        // if the 'none' style is selected, there will be no polygon styles
+        // for the district, so pull them out of the default style
+        if (legend.dist.length == 0) {
+            legend.dist.push({
+                title: 'Boundaries',
+                fillColor: '#cccccc',
+                strokeColor: uStyle.defaultStyle.strokeColor,
+                strokeWidth: uStyle.defaultStyle.strokeWidth
+            });
+        }
+
         // reconstitute the geoserver name of the district layer
         disturl = geolevel.url;
         var lyrRE = new RegExp('^(.*):demo_(.*)_.*$');
@@ -156,9 +171,6 @@ printplan = function(options) {
 
         // needs the reference layer, too!
 
-        // begin constructing a full SLD for the district layer
-        uStyle = OpenLayers.Util.extend({},_options.districtLayer.styleMap.styles['default']);
-        uStyle.layerName = _options.districtLayer.name;
         // the collection of rules for this area-part of the district
         var areaRules = [];
         // the collection of rules for this border(+label) part of the district
@@ -251,8 +263,6 @@ printplan = function(options) {
         });
         delete uStyle.defaultStyle;
 
-        var x = Sha1.hash(new Date().toString());
-
         // construct the full userstyle
         uStyle.rules = areaRules;
         sld = { namedLayers: {}, version: '1.0.0' };
@@ -293,7 +303,7 @@ printplan = function(options) {
         }
 
         // POST all these items to the printing endpoint
-        $(document.body).append('<form id="printForm" method="POST" action="../print/?x='+x+'" target="_blank">' +
+        $(document.body).append('<form id="printForm" method="POST" action="../print/" target="_blank">' +
             '<input type="hidden" name="csrfmiddlewaretoken" value="' + $('#csrfmiddlewaretoken').val() + '"/>' +
             '<input type="hidden" name="plan_id" value="' + PLAN_ID + '"/>' +
             '<input type="hidden" name="height" value="' + _options.height + '"/>' +

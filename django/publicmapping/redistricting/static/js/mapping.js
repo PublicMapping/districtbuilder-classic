@@ -2553,7 +2553,7 @@ function mapinit(srs,maxExtent) {
                     title:'Districts',
                     rules: getLockedRules()
                 });
-                $('#map').trigger('style_changed', [newStyle, 'None']);
+                $('#map').trigger('style_changed', [newStyle, districtLayer.name]);
                 return;
             }
             var styleUrl = '/sld/' + NAMESPACE + ':' + snap + '_' + show + '.sld';
