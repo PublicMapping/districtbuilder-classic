@@ -49,8 +49,9 @@ from datetime import datetime
 from copy import copy
 from decimal import *
 from operator import attrgetter
-import sys, cPickle, traceback, types, tagging, re, logging
+import sys, cPickle, types, tagging, re, logging
 
+logger = logging.getLogger(__name__)
 
 class Subject(models.Model):
     """
@@ -412,8 +413,8 @@ class Geolevel(models.Model):
             return True
 
         progress = 0
-        logging.info("Recomputing geometric and numerical aggregates...")
-        logging.info('0% .. ')
+        logger.info("Recomputing geometric and numerical aggregates...")
+        logger.info('0% .. ')
 
         geomods = 0
         nummods = 0
@@ -423,7 +424,7 @@ class Geolevel(models.Model):
         for i,geounit in enumerate(unitqset):
             if (float(i) / unitqset.count()) > (progress + 0.1):
                 progress += 0.1
-                logging.info('%2.0f%% .. ', (progress * 100))
+                logger.info('%2.0f%% .. ', (progress * 100))
                 
             geo,num = geounit.aggregate(parent, subject, spatial)
 
@@ -431,9 +432,9 @@ class Geolevel(models.Model):
             nummods += num
 
 
-        logging.info('100%')
+        logger.info('100%')
 
-        logging.debug("Geounits modified: (geometry: %d, data values: %d)", geomods, nummods)
+        logger.debug("Geounits modified: (geometry: %d, data values: %d)", geomods, nummods)
 
         return True
         
@@ -558,8 +559,7 @@ class Geounit(models.Model):
         selection = None
         units = []
         searching = False
-        if settings.DEBUG:
-            sys.stderr.write('MIXED GEOUNITS SEARCH: Geolevel %d, geounits: %s, levels: %s\n' % (geolevel, geounit_ids, levels))
+        logger.debug('MIXED GEOUNITS SEARCH: Geolevel %d, geounits: %s, levels: %s', geolevel, geounit_ids, levels)
         for level in levels:
             # if this geolevel is the requested geolevel
             if geolevel == level.id:
@@ -594,8 +594,7 @@ class Geounit(models.Model):
                         q_geom = Q(geom__relate=(boundary, 'F********'))
                 results = Geounit.objects.filter(q_ids, q_geom)
 
-                if settings.DEBUG:
-                    sys.stderr.write('Found %d geounits in boundary at level %s\n' % (len(results), level))
+                logger.debug('Found %d geounits in boundary at level %s', len(results), level)
                 units += list(results)
 
                 # if we're at the base level, and haven't collected any
@@ -628,8 +627,8 @@ class Geounit(models.Model):
                     try:
                         remainder = boundary.intersection(intersects)
                     except GEOSException, ex:
-                        print "Caught GEOSException while intersecting 'boundary' with 'intersects'."
-                        print ex
+                        logger.info("Caught GEOSException while intersecting 'boundary' with 'intersects'.")
+                        logger.debug('Reason:', ex)
                         remainder = empty_geom(boundary.srid)
                 else:
                     # the remainder geometry is the geounit selection 
@@ -644,13 +643,13 @@ class Geounit(models.Model):
                         try:
                             remainder = remainder.intersection(intersects)
                         except GEOSException, ex:
-                            print "Caught GEOSException while intersecting 'remainder' with 'intersects'."
-                            print ex
+                            logger.info("Caught GEOSException while intersecting 'remainder' with 'intersects'.")
+                            logger.debug('Reason:', ex)
                             remainder = empty_geom(boundary.srid)
 
                     except GEOSException, ex:
-                        print "Caught GEOSException while differencing 'selection' with 'boundary'."
-                        print ex
+                        logger.info("Caught GEOSException while differencing 'selection' with 'boundary'.")
+                        logger.debug('Reason:', ex)
                         remainder = empty_geom(boundary.srid)
 
 
@@ -1525,7 +1524,7 @@ class Plan(models.Model):
         try:
             plan.save()
         except Exception as ex:
-            print( "Couldn't save plan: %s\n" % ex )
+            logger.warn( "Couldn't save plan: %s\n", ex )
             return None
 
         return plan
@@ -2358,7 +2357,8 @@ CROSS JOIN (
             self.save()
         
         except Exception as ex:
-            sys.stderr.write('Unable to fully reaggreagate %d because \n%s\n' % (self.id, ex))
+            logger.info('Unable to fully reaggreagate %d', self.id)
+            logger.debug('Reason:', ex)
 
             # Reaggregation unsuccessful, set state back to needs reaggregation
             self.processing_state = ProcessingState.NEEDS_REAGG
@@ -2366,16 +2366,6 @@ CROSS JOIN (
 
         return updated
 
-    @staticmethod
-    @task
-    def reaggregate_async(plan):
-        """
-        Asynchronously reaggregate all computed characteristics for each district in the plan.
-
-        @param plan: The plan to reaggregate
-        @return: An integer count of the number of districts reaggregated
-        """
-        return plan.reaggregate()
 
 class PlanForm(ModelForm):
     """
@@ -2683,20 +2673,20 @@ class District(models.Model):
                             attempts_left -= 1 # We just used one up
                             times_attempted = attempts_allowed-attempts_left
                             if times_attempted > 1:
-                                sys.stderr.write('Took %d attempts to simplify %s in plan "%s"; '
-                                    'Succeeded with tolerance %s\n' % (times_attempted, self.long_label, self.plan.name, tolerance))
+                                logger.debug('Took %d attempts to simplify %s in plan "%s"; '
+                                    'Succeeded with tolerance %s', times_attempted, self.long_label, self.plan.name, tolerance)
                         else:
                             raise Exception ('Polygon simplifies but isn\'t valid')
                     except Exception as error:
-                        sys.stderr.write('WARNING: Problem when trying to simplify %s at tolerance %s: %s\n' %
-                            (self.long_label, tolerance, error))
+                        logger.debug('WARNING: Problem when trying to simplify %s at tolerance %s: %s',
+                            self.long_label, tolerance, error)
                         tolerance = tolerance * attempt_step
                     attempts_left -= 1
 
                 if not simplified:
                     simples.append(self.geom)
-                    sys.stderr.write('Ran out of attempts to simplify %s in plan "%s" for geolevel %s; using full geometry\n' %
-                        (self.long_label, self.plan.name, level.name))
+                    logger.debug('Ran out of attempts to simplify %s in plan "%s" for geolevel %s; using full geometry',
+                        self.long_label, self.plan.name, level.name)
             else:
                 simples.append( self.geom )
 
@@ -2785,7 +2775,8 @@ class District(models.Model):
                 cc.save()
             return True
         except Exception as ex:
-            sys.stderr.write('Unable to reaggreagate %s because \n%s\n' % (self.long_label, ex))
+            logger.info('Unable to reaggreagate district "%s"', self.long_label)
+            logger.debug('Reason:', ex)
             return False
 
 # Enable tagging of districts by registering them with the tagging module
@@ -3311,8 +3302,9 @@ class ScoreDisplay(models.Model):
             demo_panel.save()
             self.scorepanel_set.add(demo_panel)
             self.save()
-        except:
-            sys.stderr.write('Failed to copy ScoreDisplay %s to %s: %s\n' % (display.title, self.title, traceback.format_exc()))
+        except Exception, ex:
+            logger.info('Failed to copy ScoreDisplay %s to %s', display.title, self.title)
+            logger.debug('Reason:', ex)
 
         return self
 
@@ -3655,7 +3647,8 @@ class ComputedDistrictScore(models.Model):
             cache,created = ComputedDistrictScore.objects.get_or_create(function=function, district=district, defaults=defaults)
 
         except Exception as ex:
-            print traceback.format_exc()
+            logger.info('Could not retrieve nor create computed district score for district %d.', district.id)
+            logger.debug('Reason:', ex)
             return None
 
         if created == True:
@@ -3733,8 +3726,9 @@ class ComputedPlanScore(models.Model):
             defaults = {'value':''}
             cache,created = ComputedPlanScore.objects.get_or_create(function=function, plan=plan, version=plan_version, defaults=defaults)
 
-        except Exception,e:
-            print e
+        except Exception,ex:
+            logger.info('Could not retrieve nor create ComputedPlanScore for plan %d', plan.id)
+            logger.debug('Reason:', ex)
             return None
 
         if created:
@@ -3813,7 +3807,7 @@ def configure_views():
     cursor.execute(sql)
     transaction.commit()
 
-    logging.debug('Created identify_geounit view ...')
+    logger.debug('Created identify_geounit view ...')
 
     for geolevel in Geolevel.objects.all():
         if geolevel.legislativelevel_set.all().count() == 0:
@@ -3825,20 +3819,20 @@ def configure_views():
         cursor.execute(sql)
         transaction.commit()
 
-        logging.debug('Created simple_district_%s view ...', geolevel.name)
+        logger.debug('Created simple_district_%s view ...', geolevel.name)
 
         sql = "CREATE OR REPLACE VIEW simple_%s AS SELECT rg.id, rg.name, rgg.geolevel_id, rg.simple as geom FROM redistricting_geounit rg JOIN redistricting_geounit_geolevel rgg ON rg.id = rgg.geounit_id WHERE rgg.geolevel_id = %%(geolevel_id)s;" % geolevel.name
         cursor.execute(sql, {'geolevel_id':geolevel.id})
         transaction.commit()
 
-        logging.debug('Created simple_%s view ...', geolevel.name)
+        logger.debug('Created simple_%s view ...', geolevel.name)
         
         for subject in Subject.objects.all():
             sql = "CREATE OR REPLACE VIEW %s AS SELECT rg.id, rg.name, rgg.geolevel_id, rg.geom, rc.number, rc.percentage FROM redistricting_geounit rg JOIN redistricting_geounit_geolevel rgg ON rg.id = rgg.geounit_id JOIN redistricting_characteristic rc ON rg.id = rc.geounit_id WHERE rc.subject_id = %%(subject_id)s AND rgg.geolevel_id = %%(geolevel_id)s;" % get_featuretype_name(geolevel.name, subject.name)
             cursor.execute(sql, {'subject_id':subject.id, 'geolevel_id':geolevel.id})
             transaction.commit()
 
-            logging.debug('Created %s view ...', get_featuretype_name(geolevel.name, subject.name))
+            logger.debug('Created %s view ...', get_featuretype_name(geolevel.name, subject.name))
 
 def get_featuretype_name(geolevel_name, subject_name=None):
     """

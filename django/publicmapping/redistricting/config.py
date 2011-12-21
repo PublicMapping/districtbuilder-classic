@@ -32,7 +32,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.sessions.models import Session
 from django.contrib.auth.models import User
 from models import *
-from utils import *
 
 logger = logging.getLogger(__name__)
 

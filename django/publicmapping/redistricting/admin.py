@@ -30,7 +30,7 @@ Author:
 
 from models import *
 from forms import *
-import tasks
+from utils import *
 from django import forms
 from django.http import HttpResponse
 from django.contrib.gis import admin
@@ -384,7 +384,7 @@ class SubjectAdmin(admin.ModelAdmin):
         Get the status of an uploading task.
         """
         response = {'success':False}
-        task = tasks.verify_count.AsyncResult(task_uuid)
+        task = verify_count.AsyncResult(task_uuid)
         if task is None:
             response['message'] = 'No task with that id.'
         else:

@@ -2188,7 +2188,7 @@ def reaggregateplan(request, planid):
     if plan.count() == 1:
         plan = plan[0]
         try:
-            Plan.reaggregate_async.delay(plan)
+            reaggregate_plan.delay(plan.id)
 
             # Set the reaggregating flag
             # (needed for the state to display on immediate refresh)
