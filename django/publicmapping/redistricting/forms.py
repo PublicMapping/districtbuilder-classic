@@ -28,7 +28,7 @@ Author:
 """
 
 from models import *
-from utils import verify_count
+from tasks import verify_count
 from django import forms
 from django.core.files.uploadedfile import UploadedFile
 import os, tempfile, csv, re

@@ -57,7 +57,7 @@ from decimal import *
 from functools import wraps
 from redistricting.calculators import *
 from redistricting.models import *
-from redistricting.utils import *
+from redistricting.tasks import *
 import random, string, math, types, copy, time, threading, traceback, os
 import commands, sys, tempfile, csv, hashlib, inflect, logging
 

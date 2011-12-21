@@ -37,7 +37,7 @@ from django.contrib.auth.models import User
 from django.utils import simplejson as json
 from lxml import etree
 from models import *
-from utils import *
+from tasks import *
 from calculators import *
 from reportcalculators import *
 from config import *

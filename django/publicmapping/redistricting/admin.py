@@ -30,7 +30,7 @@ Author:
 
 from models import *
 from forms import *
-from utils import *
+from tasks import *
 from django import forms
 from django.http import HttpResponse
 from django.contrib.gis import admin

@@ -113,12 +113,12 @@ import djcelery
 djcelery.setup_loader()
 
 BROKER_TRANSPORT = 'djkombu.transport.DatabaseTransport'
-CELERY_IMPORTS = ( 'redistricting.utils', )
+CELERY_IMPORTS = ( 'redistricting.tasks', )
 
 from datetime import timedelta
 CELERYBEAT_SCHEDULE = {
     'cleanup-sessions': {
-        'task': 'redistricting.utils.cleanup',
+        'task': 'redistricting.tasks.cleanup',
         'schedule': timedelta(hours=1),
         'args': None
     },
