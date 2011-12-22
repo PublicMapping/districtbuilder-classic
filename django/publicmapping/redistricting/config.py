@@ -357,7 +357,7 @@ class ConfigImporter:
                     'tolerance': geolevel.tolerance
                 }
                 obj, created, changed, message = ModelHelper.check_and_update(Geolevel, overwrite=force, **attributes)
-                if changed and not self.force:
+                if changed and not force:
                     logger.info(message)
                 else:
                     logger.debug(message)
