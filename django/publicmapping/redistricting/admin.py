@@ -275,8 +275,10 @@ class SubjectAdmin(admin.ModelAdmin):
                     obj_display = force_unicode(obj)
                     modeladmin.log_deletion(request, obj, obj_display)
                 queryset.delete()
-                modeladmin.message_user(request, _("Successfully deleted %(count)d %(items)s.") % {
-                    "count": n, "items": engine.plural('subject', n)
+                modeladmin.message_user(request, '%(success)s %(count)d %(item)s' % {
+                    'success':_('Successfully deleted'),
+                    'count': n, 
+                    'items': _(engine.plural('subject', n))
                 })
             # Return None to display the change list page again.
             return None
@@ -386,7 +388,7 @@ class SubjectAdmin(admin.ModelAdmin):
         response = {'success':False}
         task = verify_count.AsyncResult(task_uuid)
         if task is None:
-            response['message'] = 'No task with that id.'
+            response['message'] = _('No task with that id.')
         else:
             response['success'] = True
             response['state'] = task.state

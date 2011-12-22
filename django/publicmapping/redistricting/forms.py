@@ -31,6 +31,7 @@ from models import *
 from tasks import verify_count
 from django import forms
 from django.core.files.uploadedfile import UploadedFile
+from django.utils.translation import ugettext as _
 import os, tempfile, csv, re
 
 class SubjectUploadForm(forms.Form):
@@ -91,7 +92,7 @@ class SubjectUploadForm(forms.Form):
                 sup.status = 'ER'
                 sup.save()
 
-                raise forms.ValidationError('Could not store uploaded Subject template.')
+                raise forms.ValidationError(_('Could not store uploaded Subject template.'))
 
             sup.processing_filename = self.ps_file = localstore.name
             sup.save()
@@ -121,9 +122,9 @@ class SubjectUploadForm(forms.Form):
             if not self.temp_path_re.match(self.ps_file) or \
                 self.dotdot_path_re.match(self.ps_file) or \
                 not os.path.exists(self.ps_file):
-                raise forms.ValidationError('Uploaded file cannot be found.')
+                raise forms.ValidationError(_('Uploaded file cannot be found.'))
         else:
-            self._errors['subject_upload'] = self.error_class(['Uploaded file is required.'])
+            self._errors['subject_upload'] = self.error_class([_('Uploaded file is required.')])
             return self.cleaned_data
 
         collisions = Subject.objects.filter(name=self.temp_subject_name).count()
@@ -131,8 +132,8 @@ class SubjectUploadForm(forms.Form):
             if not self.cleaned_data['force_overwrite']:
                 self.temp_subject_name = sup.subject_name
                 self._errors = {}
-                self._errors['subject_name'] = self.error_class(['Please specify a unique subject name.'])
-                self._errors['force_overwrite'] = self.error_class(['Check this box to overwrite the existing subject with the same name.'])
+                self._errors['subject_name'] = self.error_class([_('Please specify a unique subject name.')])
+                self._errors['force_overwrite'] = self.error_class([_('Check this box to overwrite the existing subject with the same name.')])
                 return self.cleaned_data
 
         sup.subject_name = self.temp_subject_name
@@ -156,5 +157,5 @@ class SubjectUploadForm(forms.Form):
             cmp2 = re.findall(r'[\w]+', inputname)
             return '_'.join([cmp1] + cmp2[1:]).lower()
         except:
-            raise forms.ValidationError('Uploaded file contains an invalid subject name.')
+            raise forms.ValidationError(_('Uploaded file contains an invalid subject name.'))
             
