@@ -43,7 +43,7 @@ from xml.dom import minidom
 from rpy2.robjects import r
 import redistricting
 from redistricting.models import *
-from redistricting.utils import *
+from redistricting.tasks import *
 from redistricting.config import *
 import traceback, logging
 
@@ -237,7 +237,7 @@ file and try again.
             call_command('compress', interactive=False, verbosity=options.get('verbosity'), force=True)
 
         if options.get("languages"):
-            call_command('makelanguagefiles', interactive=False, verbosity=verbose)
+            call_command('makelanguagefiles', interactive=False, verbosity=options.get('verbosity'))
 
         if options.get("bard_templates"):
             try:
