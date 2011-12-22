@@ -146,7 +146,6 @@ STATICFILES_FINDERS = (
     staticfiles + '.finders.FileSystemFinder',
     staticfiles + '.finders.AppDirectoriesFinder',
     'compressor.finders.CompressorFinder',
->>>>>>> datatools
 )
 
 # end Compressor settings
