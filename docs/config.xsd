@@ -375,6 +375,7 @@
                                         </xs:element>
                                     </xs:sequence>
                                     <xs:attribute name="timezone" type="xs:string" use="required" />
+                                    <xs:attribute name="default" type="xs:string" use="optional" />
                                 </xs:complexType>
                             </xs:element>
                             <xs:element name="Admin">
