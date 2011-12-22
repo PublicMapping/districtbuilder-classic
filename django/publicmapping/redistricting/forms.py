@@ -1,4 +1,34 @@
+"""
+Define the forms used by the redistricting app.
+
+The forms in redistricting.forms define the UI forms used in the 
+application. Each class relates to a form used to capture user input
+in the application.
+
+This file is part of The Public Mapping Project
+https://github.com/PublicMapping/
+
+License:
+    Copyright 2010-2011 Micah Altman, Michael McDonald
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+Author: 
+    Andrew Jennings, David Zwarg, Kenny Shepard
+"""
+
 from models import *
+from tasks import verify_count
 from django import forms
 from django.core.files.uploadedfile import UploadedFile
 import os, tempfile, csv, re
@@ -70,17 +100,19 @@ class SubjectUploadForm(forms.Form):
             localstore.seek(0)
 
             reader = csv.DictReader(localstore)
-            sup.subject_name = self.temp_subject_name = reader.fieldnames[1][0:50]
-            sup.save()
-
-            localstore.close()
+            try:
+                clean_name = self._clean_name(reader.fieldnames[1][0:50])
+                sup.subject_name = self.temp_subject_name = clean_name
+                sup.save()
+            finally:
+                localstore.close()
 
         # If the subject_upload is not a file, it was probably already uploaded.
         # Check the processing_file field to see if that file exists on the file system.
         elif self.cleaned_data['processing_file'] != '':
             self.ps_file = self.cleaned_data['processing_file']
             self.ul_file = self.cleaned_data['uploaded_file']
-            self.temp_subject_name = self.cleaned_data['subject_name']
+            self.temp_subject_name = self._clean_name(self.cleaned_data['subject_name'])
 
             sup = SubjectUpload.objects.get(upload_filename=self.ul_file,
                 processing_filename=self.ps_file)
@@ -108,7 +140,7 @@ class SubjectUploadForm(forms.Form):
         sup.save()
 
         # verify_count begins a cascade of validation operations
-        task = SubjectUpload.verify_count.delay(sup.id, self.ps_file)
+        task = verify_count.delay(sup.id, self.ps_file)
         sup.task_id = task.task_id
 
         sup.save()
@@ -117,3 +149,12 @@ class SubjectUploadForm(forms.Form):
         self.cleaned_data['processing_file'] = sup.upload_filename
 
         return self.cleaned_data
+
+    def _clean_name(self, inputname):
+        try:
+            cmp1 = re.match(r'.+?([a-zA-Z_]+)', inputname).groups()[0]
+            cmp2 = re.findall(r'[\w]+', inputname)
+            return '_'.join([cmp1] + cmp2[1:]).lower()
+        except:
+            raise forms.ValidationError('Uploaded file contains an invalid subject name.')
+            

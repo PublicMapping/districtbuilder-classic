@@ -1,0 +1,9 @@
+/*
+* jqGrid 4.0.0 - jQuery Grid
+* Copyright (c) 2008, Tony Tomov, tony@trirand.com
+* Dual licensed under the MIT and GPL licenses
+* http://www.opensource.org/licenses/mit-license.php
+* http://www.gnu.org/licenses/gpl-2.0.html
+* Date:2011-04-09
+* Modules: grid.base.js; jquery.fmatter.js; grid.custom.js; grid.common.js; grid.formedit.js; grid.filter.js; grid.inlinedit.js; grid.celledit.js; jqModal.js; jqDnR.js; grid.subgrid.js; grid.grouping.js; grid.treegrid.js; grid.import.js; JsonXml.js; grid.tbltogrid.js; grid.jqueryui.js;
+*/

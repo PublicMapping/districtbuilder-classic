@@ -30,6 +30,7 @@
 {% endcomment %}
 {% load redistricting_extras %}
 {% load i18n %}
+{% load compress %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
@@ -37,9 +38,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=8" />        
     <meta name="author" content="David Zwarg, Andrew Jennings" />
     <meta name="copyright" content="&copy; 2010 Micah Altman, Michael McDonald"/>
+    <meta property="og:title" content="Redistricting plan by DistrictBuilder" />
+    <meta property="og:description" content="DistrictBuilder is web-based, open source software for collaborative redistricting." />
+    <meta property="og:image" content="/static-media/images/db_sprite.png" />
     <title>Open Source District Mapping Tool</title>
     <link rel="alternate" type="application/atom+xml" title="Updated Plans from DistrictBuilder" href="{% url publicmapping.redistricting.views.plan_feed %}"/>
     <link rel="alternate" type="application/atom+xml" title="Recently Shared Plans from DistrictBuilder" href="{% url publicmapping.redistricting.views.share_feed %}"/>
+    {% compress css %}
     <link rel="stylesheet" type="text/css" href="/static-media/css/reset.css"/>
     <link rel="stylesheet" type="text/css" href="/static-media/jqGrid/css/ui.jqgrid.css"/>
     <link rel="stylesheet" type="text/css" href="/static-media/jquery/themes/custom-theme/jquery-ui.custom.css"/>
@@ -49,11 +54,48 @@
         <link rel="stylesheet" type="text/css" href="/static-media/css/ie7.css"/>
         <![endif]-->
     <link rel="stylesheet" type="text/css" href="/static-media/css/visuals.css"/>   
+    {% endcompress %}
     <script type="text/javascript" src="/static-media/openlayers/OpenLayers.js"></script>
-
     {% if "arc" in basemaps %}
     <script type="text/javascript" src="/static-media/openlayers/ArcGISCache.js"></script>
     {% endif %}
+
+    {% compress js %}
+    {% comment %}
+
+    Load external javascript libraries.
+
+    {% endcomment %}
+    <script type="text/javascript" src="/static-media/jquery/jquery-1.6.js"></script>
+    <script type="text/javascript" src="{% url django.views.i18n.javascript_catalog %}"></script>    
+    <script type="text/javascript" src="/static-media/jquery/jquery-ui-1.8.2.custom.min.js"></script>
+    <script type="text/javascript" src="/static-media/jquery/external/jquery.tools.tooltip.slide.min.js"></script>
+    <script type="text/javascript" src="/static-media/jqGrid/js/i18n/grid.locale-en.js"></script>
+    <script type="text/javascript" src="/static-media/jqGrid/js/jquery.jqGrid.min.js"></script>
+    <script type="text/javascript" src="/static-media/jqGrid/plugins/grid.postext.js"></script>
+    <script type="text/javascript" src="/static-media/js/sprintf.js"></script>
+    {% comment %}
+
+    Load internal javascript logic.
+
+    {% endcomment %}
+    <script type="text/javascript" src="/static-media/js/ui.js"></script>
+    <script type="text/javascript" src="/static-media/js/viewablesorter.js"></script>
+    <script type="text/javascript" src="/static-media/js/mapping.js"></script>
+    <script type="text/javascript" src="/static-media/js/districtfile.js"></script>
+    <script type="text/javascript" src="/static-media/js/chooseplan.js"></script>
+    <script type="text/javascript" src="/static-media/js/reaggregator.js"></script>
+    <script type="text/javascript" src="/static-media/js/shareddistricts.js"></script>
+    <script type="text/javascript" src="/static-media/js/reports.js"></script>
+    <script type="text/javascript" src="/static-media/js/register.js"></script>
+    <script type="text/javascript" src="/static-media/js/statisticssets.js"></script>
+    <script type="text/javascript" src="/static-media/js/splitsreport.js"></script>
+    <script type="text/javascript" src="/static-media/js/sha1.js"></script>
+    <script type="text/javascript" src="/static-media/js/layerchooser.js"></script>
+    <script type="text/javascript" src="/static-media/js/print.js"></script>
+    <script type="text/javascript" src="/static-media/js/multimember.js"></script>
+    {% endcompress %}
+
     {% if "bing" in basemaps %}
     <script src="http://ecn.dev.virtualearth.net/mapcontrol/mapcontrol.ashx?v=6.2&mkt=en-us"></script> 
     {% endif %}
@@ -132,36 +174,6 @@
     </script>
     {% comment %}
 
-    Load external javascript libraries.
-
-    {% endcomment %}
-    <script type="text/javascript" src="/static-media/jquery/jquery-1.6.2.min.js"></script>
-    <script type="text/javascript" src="{% url django.views.i18n.javascript_catalog %}"></script>    
-    <script type="text/javascript" src="/static-media/jquery/jquery-ui-1.8.16.custom.min.js"></script>
-    <script type="text/javascript" src="/static-media/jquery/external/jquery.tools.tooltip.slide.min.js"></script>
-    <script type="text/javascript" src="/static-media/jqGrid/js/i18n/grid.locale-en.js"></script>
-    <script type="text/javascript" src="/static-media/jqGrid/js/jquery.jqGrid.min.js"></script>
-    <script type="text/javascript" src="/static-media/jqGrid/plugins/grid.postext.js"></script>
-    <script type="text/javascript" src="/static-media/js/sprintf.js"></script>
-    {% comment %}
-
-    Load internal javascript logic.
-
-    {% endcomment %}
-    <script type="text/javascript" src="/static-media/js/ui.js"></script>
-    <script type="text/javascript" src="/static-media/js/viewablesorter.js"></script>
-    <script type="text/javascript" src="/static-media/js/mapping.js"></script>
-    <script type="text/javascript" src="/static-media/js/districtfile.js"></script>
-    <script type="text/javascript" src="/static-media/js/chooseplan.js"></script>
-    <script type="text/javascript" src="/static-media/js/reaggregator.js"></script>
-    <script type="text/javascript" src="/static-media/js/shareddistricts.js"></script>
-    <script type="text/javascript" src="/static-media/js/reports.js"></script>
-    <script type="text/javascript" src="/static-media/js/register.js"></script>
-    <script type="text/javascript" src="/static-media/js/statisticssets.js"></script>
-    <script type="text/javascript" src="/static-media/js/splitsreport.js"></script>
-    <script type="text/javascript" src="/static-media/js/sha1.js"></script>
-    {% comment %}
-
     Load Google Analytics Script if the ga_account has been set
 
     {% endcomment %}
@@ -189,7 +201,16 @@
 
   <div id="steps" style="visibility: hidden;">
      <div id="app_header">
-      <div id="logo"><img src="/static-media/images/title-app.png" /></div>
+      {% comment %}
+      ATTRIBUTION NOTICE SECTION
+
+      Under section 4.3 of the license following section may not be altered
+      without the express written permission of the copyright holders.
+      {% endcomment %}
+      <div id="logo"><a href="/"><img src="/static-media/images/title-app.png" alt="DistrictBuilder" /></a></div>
+      {% comment %}
+      ATTRIBUTION NOTICE SECTION ENDS
+      {% endcomment %}
       <ul id="steps_tabs"> <!-- tabs have to be first UL in #steps or else tabs wont work -->
         <li id="tab_plan"><a href="#step_plan">Plan</a><li>
         <li id="tab_draw"><a href="#step_draw">{% if is_registered %}Draw{% else %}View{% endif %}</a></li>
@@ -367,8 +388,13 @@
          <div id="control_header" class="toolbar ui-widget-header">
          <button id="choose_layers_button">Set Map<br/>Layers</button>
           <div id="toolsets">
-            <div id="print" style="float:right; margin:-5px 0 0 0; padding: 1px 1px 2px 1px; font-size:10px;">
-                <button id="print_btn">Print</button>
+            <div id="plan_export_container" class="toolbar_menu_container">
+                <button id="plan_export_button" class="btntoggle solotoggle">Export</button>
+                <div id="plan_export_menu" class="toolbar_menu">
+                    <button id="print_btn">Print</button>
+                    <button id="shapefile_btn">Shape File</button>
+                    <button id="rawdata_btn">Raw Data</button>
+                </div>
             </div>
             <div id="history_tools">
             {% block toolset_history %}
@@ -416,7 +442,7 @@
                </div>
               <div class="clear"></div>
             </div>
-          {% endblock %}
+          {% endblock %} 
 
           {% block toolset_district %}
           {% comment %}
@@ -762,6 +788,26 @@
                       <script type="text/javascript">document.write(window.location.protocol, '//',
                          window.location.host, '{% url publicmapping.redistricting.views.viewplan planid=plan.id %}');
                       </script>
+                 <ul class="share-buttons">
+                  <li class="twitter-tweet">
+                    <a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal">
+                      Tweet
+                    </a>
+                    <script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script>
+                  </li>   
+
+                  <li class="facebook-like">
+                    <div id="fb-root"></div>
+                    <script src="https://connect.facebook.net/en_US/all.js#xfbml=1"></script>
+                    <fb:like width="90" show_faces="false" action="like" layout="button_count"></fb:like>
+                  </li>
+
+                  <li class="google-plusone">
+                    <script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+                    <g:plusone size="medium"></g:plusone>
+                  </li>
+                </ul>            
+                  <div class="clear"></div>
                   </div>
               </div>
               {% endblock %}
@@ -953,7 +999,6 @@ Include the shared_districts markup if we're using the copy/paste tool
         </div>
     </div>
 </div>
-<script type="text/javascript" src="/static-media/js/layerchooser.js"></script>
 <script type="text/javascript">
     $(function() {
         setTimeout(function() {
@@ -988,9 +1033,9 @@ Include the stats editor if user can edit stats.
 {% endcomment %}
 <div id="stats_editor_container" class="stats_editor" title="Edit Statistics Sets">
     <div id="stats_editor_instructions">
-        You can select up to three statistics at once to display in the sidebar. Each set of three
+        <h3>You can select up to three statistics at once to display in the sidebar. Each set of three
         statistics will be saved in the dropdown for you to select or edit later. You may have up
-        to three sets of statistics saved.
+        to three sets of statistics saved.</h3>
     </div>
     1. Select up to 3 statistics
     <button id="clear_statistics">Clear Choices</button>
@@ -1024,7 +1069,6 @@ Include the markup for the account management panel.
 {% endcomment %}
 {% include "account.html" %}
 
-<script type="text/javascript" src="/static-media/js/print.js"></script>
 <script type="text/javascript" defer="true">
     // run the initialization for these components when the page is ready
     $( function() {
@@ -1083,7 +1127,9 @@ Include the markup for the account management panel.
 
         // initialize the print feature
         var printer = printplan({
-            target: $('#print button'),
+            target: $('#print_btn'),
+            height: 850, 
+            width: 1024,
             plan: PLAN_ID
         });
         printer.init();
@@ -1095,12 +1141,27 @@ Include the markup for the account management panel.
 
     {% endcomment %}
         $('#steps').tabs('select', '#step_draw');
+        // Export to shape menu option
+        var exportShape = districtfile({
+            target: $('#shapefile_btn'),
+            type: 'shape',
+            menu_icon: '/static-media/images/icon-shape-file.png'
+        });
+        exportShape.init();
+
+        // Export to raw data menu option
+        var exportRaw = districtfile({
+            target: $('#rawdata_btn'),
+            type: 'index',
+            menu_icon: '/static-media/images/icon-raw-data.png'
+        });
+        exportRaw.init();
 
         // Load up the district index file checker whenever the 
         // appropriate tab is clicked.
         var exportIndexFile = districtfile({
             target: $('#districtIndexFileTarget'),
-            type: 'shape'
+            type: 'index'
         });
 
         $('#steps').tabs({ show: function(event, ui) {

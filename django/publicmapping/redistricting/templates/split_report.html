@@ -39,7 +39,7 @@
     {% for split in geo.list|dictsort_ignorecase:"interior" %}
         <tr>
         {% if forloop.first %}
-            <td>{{ geo.grouper }}</td>
+            <td>{{ geo.grouper|truncate:"40" }}</td>
         {% else %}
             <td />
         {% endif %}

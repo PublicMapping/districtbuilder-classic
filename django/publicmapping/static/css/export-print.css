@@ -1,65 +1,82 @@
+/*
+   Copyright 2010-2011 Micah Altman, Michael McDonald
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software 
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+   This file is part of The Public Mapping Project
+   https://github.com/PublicMapping/
+
+   Purpose:
+       This stylesheet defines all the styles used in The Public Mapping
+       Project django web application.
+
+   Author: 
+        Brian Jacobs, David Zwarg
+*/
+
+@page {
+    size: letter landscape;
+    margin: 0.4in;
+  }  
+
 .clear {clear:both}
 .clear_left {clear:left}
 .clear_right {clear:right}
 
 
-#app.print_page {font-family: arial, helvetica, sans-serif}
+body {font-family: Arial, Helvetica, sans-serif;}
 
-#app.print_page #app_header {
-  background-position: 0 0;
-background-repeat:   repeat-x ;
-	font-size: 1em;
-	line-height: 1.2em;
-	padding: 15px 0;
-	margin-top: 15px;
-	position:relative;
+a {color: #666}
 
-	color: #444;
-	}
-	
-	
-#app.print_page #logo {
-
-	font-size: 1.2em;
-	font-weight: bold;
-	margin-right: 15px;
-	float:left;
-	text-align:center;
-	display:inline;
+table#container {
+  border-color: #999999;
+  border-style: solid;
+  border-width: 1px;
 }
-	
-#app.print_page 	#print-plan-title {
-	text-align: center;
-	font-weight:bold;
-	display:inline;
-}
-	
-	#app.print_page 	#print-plan-title button{
-	margin: 0 15px;
+  
+table#container td {  
+vertical-align:top;
 }
 
+#header {}
+#header h1 {  
+  font-size: 32px;
+  font-weight: bold;
+  border-bottom-color: #bfbfbf;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  padding-top:25px; padding-bottom: 15px; margin-left: 25px; margin-right: 25px; 
+  }
+#map {padding-top:25px; padding-bottom:25px; padding-left: 25px; }
+#map #mapinner  {border-width: 1px; border-style: solid; border-color: #bfbfbf;  }
 
-#app.print_page button {
-    background-image: url("/static-media/images/bg-button-sm.png");
-    background-position: 0 0;
-    background-repeat: repeat-x;
-    border-radius: 4px 4px 4px 4px;
-    color: #FFFFFF;
-    font-weight: bold;
-    text-shadow: 0 -1px rgba(0, 0, 0, 0.3);
-    background-color: #1F8CBE;
-    border: 1px solid #3B7181;
-}
+#sidebar {width: 9cm; padding-top:25px; padding-bottom:25px; padding-left: 25px; padding-right: 25px; }
 
-#app.print_page #map  {border: 1px solid #ccc;}
+#legend {border-width: 1px; border-style: solid; border-color: #bfbfbf; background-color: #f2f2f2; }
+  
+  #legendinner   {padding-left: 15px; padding-right: 15px; padding-top: 15px; }
 
-#app.print_page #map,
-#app.print_page #legend {
-margin: 15px 0 0 0;
-text-align:center;
-}
+  #legendinner .title { font-size: 14px; color: #a9abae; font-weight: bold; padding-bottom: 5px; }
+  #legendinner #districts-legend .title{ padding-top: 1px;}
+    #legendinner .filler {font-size: 1px; height: 1; }
+    #legendinner .values {font-size: 12px; color: #000000; font-weight:bold; padding-left: 8px; }
 
-
-#app.print_page #legend img {display:inline-block; width:88px; margin-right: 15px; vertical-align: top;}
-
-#app.print_page #mapwrap {width: 1024px; margin: 0 auto}
+#meta {padding-top:5px; padding-bottom:25px; padding-left: 25px; padding-right: 25px;}
+  #author {border-top-width: 1px; border-top-style: solid; border-top-color: #bfbfbf; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #bfbfbf; line-height: 14px} 
+    #author td {padding-top:15px;}
+    #author .label {font-size: 12px; color: #a9abae; padding-bottom: 5px; }
+    #author .value {font-size: 16px; font-weight:bold; padding-bottom: 15px;}  
+    
+    #db_attribution {padding-top: 15px;}
+    #poweredbytext {color: #aaaaaa; padding-top: 5px; font-size: 12px; }
+    #osm_attribution {color: #aaaaaa; padding-top: 10px; font-size: 10px; text-align:right;}

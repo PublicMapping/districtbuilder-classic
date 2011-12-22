@@ -59,8 +59,10 @@ $(function(){
     $('#doRegister').click(function(evt) {
         var frm = $('#registerForm'),
             username = frm.find('#newusername'),
-            newpassword1 = frm.find('#newpassword1'),
-            newpassword2 = frm.find('#newpassword2'),
+            newpasswordfield1 = frm.find('#newpassword1'),
+            newpasswordfield2 = frm.find('#newpassword2'),
+            newpassword1 = '',
+            newpassword2 = '',
             passwordhint = frm.find('#passwordhint'),
             email = frm.find('#email'),
             agree = frm.find('#agree'),
@@ -76,36 +78,39 @@ $(function(){
             username.addClass('field');
         }
 
-        if ((newpassword1.val() == '' && userid.val() == '') ||
-            newpassword1.val() != newpassword2.val()) {
-            newpassword1.removeClass('field');
-            newpassword1.addClass('error');
-            newpassword2.removeClass('field');
-            newpassword2.addClass('error');
+        if (newpasswordfield1.val() != newpasswordfield2.val()) {
+            newpasswordfield1.removeClass('field');
+            newpasswordfield1.addClass('error');
+            newpasswordfield2.removeClass('field');
+            newpasswordfield2.addClass('error');
             return false;
         }
         else {
-            newpassword1.removeClass('error');
-            newpassword1.addClass('field');
-            newpassword2.removeClass('error');
-            newpassword2.addClass('field');
+            newpasswordfield1.removeClass('error');
+            newpasswordfield1.addClass('field');
+            newpasswordfield2.removeClass('error');
+            newpasswordfield2.addClass('field');
         }
 
-        // A basic password complexity test; At least 8 characters and at least
-        // one number, one lower-case letter and one upper-case letter
-        var isComplex = function(password) {
-            return /\d/.test(password) &&
-                 /[a-z]/.test(password) &&
-                 /[A-Z]/.test(password) &&
-                 password.length >= 8;
-        };
+        if ( username.attr('disabled') == null || newpasswordfield1.val() != '') {
+            // A basic password complexity test; At least 8 characters and at least
+            // one number, one lower-case letter and one upper-case letter
+            var isComplex = function(password) {
+                return /\d/.test(password) &&
+                     /[a-z]/.test(password) &&
+                     /[A-Z]/.test(password) &&
+                     password.length >= 8;
+            };
 
-        if (!isComplex(newpassword1.val())) {
-            $('#passwordinstructions').css('color', 'red');
-            return false;
-        }
-        else {
-            $('#passwordinstructions').css('color', '');
+            if (!isComplex(newpasswordfield1.val())) {
+                $('#passwordinstructions').css('color', 'red');
+                return false;
+            }
+            else {
+                $('#passwordinstructions').css('color', '');
+            }
+            newpassword1 = Sha1.hash(newpasswordfield1.val());
+            newpassword2 = Sha1.hash(newpasswordfield2.val());
         }
 
         if (passwordhint.val() == '') {
@@ -139,8 +144,8 @@ $(function(){
             data: { 
                 userid:$('#userid').val(),
                 newusername:username.val(),
-                newpassword1:Sha1.hash(newpassword1.val()),
-                newpassword2:Sha1.hash(newpassword2.val()),
+                newpassword1:newpassword1,
+                newpassword2:newpassword2,
                 email:email.val(),
                 passwordhint:passwordhint.val(),
                 firstname:$('#firstname').val(),
@@ -192,8 +197,8 @@ $(function(){
                 }
                 else {
                     if (data.success) {
-                        newpassword1.val('');
-                        newpassword2.val('');
+                        newpasswordfield1.val('');
+                        newpasswordfield2.val('');
                     }
                     $('#register').dialog('close');
                 }
@@ -262,6 +267,10 @@ $(function(){
                 var remindBtn = $('#doRemind');
                 remindBtn.html('<span class="ui-button-text">'+btnText+'</span>');
                 remindBtn.attr('disabled',true);
+            },
+            complete:function(xhr, textStatus){
+                $('#forgotusername').val('');
+                $('#forgotemail').val('');
             }
         });
 
@@ -293,7 +302,7 @@ $(function(){
             resizable:false,
             title:gettext('Login Error')
         });
-        $('#username, #password').addClass('error');
+        $('#username, #passphrase').addClass('error');
     } else if( 'opensessions' in window && opensessions > 1 ) {
         // If there is a page variable named opensessions, and it is
         // greater than one, that means that we've been bumped back to

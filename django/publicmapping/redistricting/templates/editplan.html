@@ -14,7 +14,7 @@
    distributed under the License is distributed on an "AS IS" BASIS,
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
-   limitations under the License.
+   limitations under the License. 
 
    This file is part of The Public Mapping Project
    https://github.com/PublicMapping/
@@ -83,7 +83,7 @@
         <div class="toolset_group toolset_group_lg last">  
         {% if not plan.is_community %}
           <div id="fix_unassigned">
-            <button id="fix_unassigned_button">{% blocktrans %}Fix<br/>Unassigned{% endblocktrans %}</button>
+            <button id="fix_unassigned_button" class="titletip" title="{% blocktrans %}Perform automated resolution of minor unassigned geographies{% endblocktrans %}">{% blocktrans %}Fix<br/>Unassigned{% endblocktrans %}</button>
           </div>
           {% endif %}
           
@@ -216,7 +216,6 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript" src="/static-media/js/shareddistricts.js"></script>
     <script type="text/javascript">
         $(function() {
             var shared = shareddistricts({
@@ -268,7 +267,6 @@
             </div>
         </div>
     </div>
-    <script type="text/javascript" src="/static-media/js/multimember.js"></script>
     <script type="text/javascript">
         $(function() {
             multimember({

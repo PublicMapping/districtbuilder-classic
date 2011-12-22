@@ -2,6 +2,9 @@ django-celery==2.3.3
 django-kombu==0.9.4
 django-staticfiles==1.0
 django-tagging==0.3.1
+django-sld==1.0.3
 inflect==0.2.1
 xhtml2pdf==0.0.3
 django-rosetta==0.6.2
+django-compressor==1.1.1
+git+git://github.com/dzwarg/modestmaps-py.git@db-mod_1.4

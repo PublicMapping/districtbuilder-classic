@@ -28,6 +28,7 @@
 
 {% endcomment %}
 {% load i18n %}
+{% load compress %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -36,10 +37,12 @@
     <meta name="author" content="David Zwarg, Andrew Jennings, Kenny Shepard" />
     <meta name="copyright" content="&copy; 2010 Micah Altman, Michael McDonald"/>
     <title>{% trans "Welcome to DistrictBuilder" %}</title>
+    {% compress css %}
     <link rel="stylesheet" type="text/css" href="/static-media/css/reset.css"/>
     <link rel="stylesheet" type="text/css" href="/static-media/jquery/themes/custom-theme/jquery-ui.custom.css"/>
     <link rel="stylesheet" type="text/css" href="/static-media/css/core.css"/>
     <link rel="stylesheet" type="text/css" href="/static-media/css/visuals.css"/>
+    {% endcompress %}
     {% comment %}
 
     Load Google Analytics Script if the ga_account has been set
@@ -287,6 +290,12 @@
       </div>
       -->
 
+      {% comment %}
+      ATTRIBUTION NOTICE SECTION
+
+      Under section 4.3 of the license following section may not be altered
+      without the express written permission of the copyright holders.
+      {% endcomment %}
       <div class="attribution">
         <!-- Keep this on one line to avoid an underscore in Chrome -->
         <a target="_blank" href="http://www.districtbuilder.org"><img alt="{% trans "Powered By District Builder" %}" src="/static-media/images/db_sprite.png"></a>
@@ -296,6 +305,9 @@
           <a target="_blank" href="http://www.publicmapping.org">PublicMapping.org</a>
         </span>
       </div>
+      {% comment %}
+      ATTRIBUTION NOTICE SECTION ENDS
+      {% endcomment %}
         
       <div id="sponsors">
         <a target="_blank" class="logoRight" href="http://www.mozilla.com/?from=sfx&amp;uid=0&amp;t=306">
@@ -319,10 +331,30 @@
     <script type="text/javascript" src="/static-media/js/register.js"></script>
     <script type="text/javascript" src="/static-media/js/sha1.js"></script>
     <script type="text/javascript">
-      $('button#login').click(function(){
-          var pp = $('#passphrase'),
+      $('button#login').click(function(event){
+          var un = $('#username'),
+              pp = $('#passphrase'),
               pw = $('#password');
-        
+
+          $('#username, #passphrase').removeClass('error');
+       
+          if (un.val().trim() == '' || pp.val().trim() == '') {
+              $('<div class="error">Please enter user name and password.</div>').dialog({
+                  modal:true,
+                  width:300,
+                  resizable:false,
+                  title:'Login Error'
+              });
+              if (un.val().trim() == '') {
+                  $('#username').addClass('error');
+              }
+              if (pp.val().trim() == '') {
+                  $('#passphrase').addClass('error');
+              }
+              event.stopPropagation();
+              return false;
+          }
+
           pw.val( Sha1.hash(pp.val() ) );
       });
     </script>

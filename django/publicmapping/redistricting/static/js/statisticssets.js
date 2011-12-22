@@ -382,6 +382,13 @@ statisticssets = function(options) {
                             modal:true
                         });
                     }
+                    else {
+                        $('<div>Please select 1-3 statistics to save in the named set.</div>').dialog({
+                            title: 'Incomplete',
+                            resizable:false,
+                            modal:true
+                        });
+                    }
                 }
             }
         });

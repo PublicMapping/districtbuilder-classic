@@ -34,6 +34,7 @@
         ServerAdmin AzaveaDev@azavea.com
         WSGIDaemonProcess geodjango user=www-data group=www-data processes=10 threads=1 display-name=publicmapping
         WSGIProcessGroup geodjango
+        WSGIApplicationGroup %{GLOBAL}
         WSGIScriptAlias / /projects/PublicMapping/DistrictBuilder/django/publicmapping.wsgi
 
         Alias /static-media/ /projects/PublicMapping/DistrictBuilder/django/publicmapping/static-media/

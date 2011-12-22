@@ -57,12 +57,17 @@ from decimal import *
 from functools import wraps
 from redistricting.calculators import *
 from redistricting.models import *
-from redistricting.utils import *
-import random, string, math, types, copy, time, threading, traceback, os, commands, sys, tempfile, csv, hashlib, inflect
-from PIL import Image, ImageChops
+from redistricting.tasks import *
+import random, string, math, types, copy, time, threading, traceback, os
+import commands, sys, tempfile, csv, hashlib, inflect, logging
+
+import ModestMaps
+from PIL import Image, ImageChops, ImageMath
 import urllib, urllib2
 from xhtml2pdf.pisa import CreatePDF
 import StringIO
+
+logger = logging.getLogger(__name__)
 
 def using_unique_session(u):
     """
@@ -96,8 +101,7 @@ def using_unique_session(u):
                 else:
                     count += 1
         except SuspiciousOperation:
-            if settings.DEBUG:
-                print "SuspiciousOperation caught while checking the number of sessions a user has open. Session key: %s" % session.session_key
+            logger.debug("SuspiciousOperation caught while checking the number of sessions a user has open. Session key: %s", session.session_key)
 
     # after counting all the open and active sessions, go back through
     # the session list and assign the session count to all web sessions
@@ -110,8 +114,7 @@ def using_unique_session(u):
                 websession['count'] = count
                 websession.save()
         except SuspiciousOperation:
-            if settings.DEBUG:
-                print "SuspiciousOperation caught while setting the session count on all user sessions. Session key: %s" % session.session_key
+            logger.debug("SuspiciousOperation caught while setting the session count on all user sessions. Session key: %s", session.session_key)
 
     return (count <= 1)
 
@@ -157,8 +160,7 @@ def is_session_available(req):
             if (not req.user.is_anonymous()) and 'activity_time' in decoded and decoded['activity_time'] > datetime.now():
                 count += 1
         except SuspiciousOperation:
-            if settings.DEBUG:
-                print "SuspiciousOperation caught while checking the last activity time in a user's session. Session key: %s" % session.session_key
+            logger.debug("SuspiciousOperation caught while checking the last activity time in a user's session. Session key: %s", session.session_key)
 
     avail = count < settings.CONCURRENT_SESSIONS
     req.session['avail'] = avail
@@ -246,7 +248,7 @@ def copyplan(request, planid):
     # Create a random name if there is no name provided
     newname = p.name + " " + str(random.random()) 
     if (request.method == "POST" ):
-        newname = request.POST["name"]
+        newname = request.POST["name"][0:200]
         shared = request.POST.get("shared", False)
 
     plan_copy = Plan.objects.filter(name=newname, owner=request.user, legislative_body=p.legislative_body)
@@ -310,7 +312,7 @@ def scoreplan(request, planid):
         try:
             score = ComputedPlanScore.compute(criteria.function, plan)
         except:
-            print traceback.format_exc()
+            logger.debug(traceback.format_exc())
 
         if not score or not score['value']:
             status['success'] = False
@@ -381,7 +383,7 @@ def commonplan(request, planid):
         body_member_long_label = plan.legislative_body.long_label
         body_name = plan.legislative_body.name
         reporting_template = 'bard_%s.html' % body_name.lower() if not plan.is_community() else None
-
+       
         index = body_member_short_label.find('%')
         if index >= 0:
             body_member_short_label = body_member_short_label[0:index]
@@ -390,23 +392,26 @@ def commonplan(request, planid):
             body_member_long_label = body_member_long_label[0:index]
         if not editable and not can_view(request.user, plan):
             plan = {}
-        tags = Tag.objects.filter(name__startswith='type=').order_by('id').values_list('name',flat=True)
-        tags = map(lambda x:x[5:], tags)
+            tags = []
+            calculator_reports = []
+        else:
+            tags = Tag.objects.filter(name__startswith='type=').order_by('id').values_list('name',flat=True)
+            tags = map(lambda x:x[5:], tags)
 
-        # Reports defined with calculators (Score Displays, Panels, and Functions)
-        # result is a map of relevant panels to score functions with labels and ids,
-        # used for generating groups of checkboxes on the evaluate tab.
-        calculator_reports = []
-        if settings.REPORTS_ENABLED == 'CALC':
-            report_displays = ScoreDisplay.objects.filter(title='%s Reports' % body_name)
-            if len(report_displays) > 0:
-                calculator_reports = map(lambda p: {
-                            'title': p.title,
-                            'functions': map(lambda f: {
-                                'label': f.label,
-                                'id': f.id
-                            }, p.score_functions.all().filter(selectable_bodies=plan.legislative_body))
-                        }, report_displays[0].scorepanel_set.all().order_by('position'))
+            # Reports defined with calculators (Score Displays, Panels, and Functions)
+            # result is a map of relevant panels to score functions with labels and ids,
+            # used for generating groups of checkboxes on the evaluate tab.
+            calculator_reports = []
+            if settings.REPORTS_ENABLED == 'CALC':
+                report_displays = ScoreDisplay.objects.filter(title='%s Reports' % body_name)
+                if len(report_displays) > 0:
+                    calculator_reports = map(lambda p: {
+                                'title': p.title,
+                                'functions': map(lambda f: {
+                                    'label': f.label,
+                                    'id': f.id
+                                }, p.score_functions.all().filter(selectable_bodies=plan.legislative_body))
+                            }, report_displays[0].scorepanel_set.all().order_by('position'))
         
     else:
         # If said plan doesn't exist, use an empty plan & district list.
@@ -438,7 +443,7 @@ def commonplan(request, planid):
                 break
 
     for level in levels:
-        snaplayers.append( {'geolevel':level.id,'layer':level.name.lower(),'name':level.name.capitalize(),'min_zoom':level.min_zoom} )
+        snaplayers.append( {'geolevel':level.id,'layer':level.name.lower(),'name':level.label if level.label.isupper() else level.label.capitalize(),'min_zoom':level.min_zoom} )
     default_selected = False
     for demo in demos:
         isdefault = str((not default_demo is None) and (demo[0] == default_demo.id)).lower()
@@ -468,6 +473,11 @@ def commonplan(request, planid):
     has_regions = Region.objects.all().count() > 1
     bodies = LegislativeBody.objects.all().order_by('region__sort_key','sort_key')
     l_bodies = [b for b in bodies if b in [sd.legislative_body for sd in ScoreDisplay.objects.filter(is_page=True)]]
+
+    try:
+        loader.get_template(reporting_template)
+    except:
+        reporting_template = None
 
     return {
         'bodies': bodies,
@@ -585,14 +595,111 @@ def printplan(request, planid):
         
     cfg = commonplan(request, planid)
 
-    stamp = request.REQUEST['x']
+    sha = hashlib.sha1()
+    sha.update(str(planid) + str(datetime.now()))
+    cfg['composite'] = '/reports/print-%s.jpg' % sha.hexdigest()
     cfg['prefix'] = 'http://%s' % request.META['SERVER_NAME']
-    cfg['composite'] = '/reports/print-%s.jpg' % stamp
-    cfg['legend1'] = '/reports/legend1-%s.jpg' % stamp
-    cfg['legend2'] = '/reports/legend2-%s.jpg' % stamp
-    cfg['preview'] = False
 
-    if request.method == 'GET':
+    if request.method == 'POST':
+        if not 'bbox' in request.REQUEST or \
+            not 'geography_url' in request.REQUEST or \
+            not 'geography_lyr' in request.REQUEST or \
+            not 'district_url' in request.REQUEST or \
+            not 'district_lyr' in request.REQUEST:
+            logger.warning('Missing required "bbox", "geography_url", "geography_lyr", "district_url", or "districts_lyr" parameter.')
+            return HttpResponseRedirect('../view/')
+
+        height = 500*2
+        if 'height' in request.REQUEST:
+            height = int(request.REQUEST['height'])*2
+        width = 1024*2
+        if 'width' in request.REQUEST:
+            width = int(request.REQUEST['width'])*2
+        opacity = 0.8
+        if 'opacity' in request.REQUEST:
+            opacity = float(request.REQUEST['opacity'])
+
+        full_legend = json.loads(request.REQUEST['legend'])
+
+        cfg['geography_url'] = request.REQUEST['geography_url']
+        cfg['geography_lyr'] = request.REQUEST['geography_lyr']
+        cfg['district_url'] = request.REQUEST['district_url']
+        cfg['district_lyr'] = request.REQUEST['district_lyr']
+        cfg['geo_legend'] = full_legend['geo']
+        cfg['geo_legend_title'] = full_legend['geotitle']
+        cfg['dist_legend'] = full_legend['dist']
+        cfg['dist_legend_title'] = full_legend['disttitle']
+        cfg['plan'] = Plan.objects.get(id=int(request.REQUEST['plan_id']))
+        cfg['printed'] = datetime.now()
+
+        # use modestmaps to get the basemap
+        bbox = request.REQUEST['bbox'].split(',')
+
+        pt1 = Point(float(bbox[0]), float(bbox[1]), srid=3785)
+        pt1.transform(SpatialReference('EPSG:4326'))
+        ll = ModestMaps.Geo.Location(pt1.y, pt1.x)
+
+        pt2 = Point(float(bbox[2]), float(bbox[3]), srid=3785)
+        pt2.transform(SpatialReference('EPSG:4326'))
+        ur = ModestMaps.Geo.Location(pt2.y, pt2.x)
+
+        dims = ModestMaps.Core.Point(width, height)
+        provider = ModestMaps.OpenStreetMap.Provider()
+        basemap = ModestMaps.mapByExtent(provider, ll, ur, dims)
+
+        # create basemap for compositing
+        fullImg = basemap.draw()
+
+
+        # geography layer
+        provider = ModestMaps.WMS.Provider(cfg['geography_url'], {
+            'LAYERS':cfg['geography_lyr'],
+            'TRANSPARENT':'true',
+            'SRS': 'EPSG:3785',
+            'HEIGHT': 512,
+            'WIDTH': 512
+        })
+        overlayImg = ModestMaps.mapByExtent(provider, ll, ur, dims).draw()
+
+        # create an invert mask of the geography
+        maskImg = ImageChops.invert(overlayImg)
+
+
+        # district fill layer
+        provider = ModestMaps.WMS.Provider(cfg['district_url'], {
+            'LAYERS':cfg['district_lyr'],
+            'TRANSPARENT':'false',
+            'SRS': 'EPSG:3785',
+            'SLD_BODY': request.REQUEST['district_sld'],
+            'HEIGHT': 512,
+            'WIDTH': 512
+        })
+        overlayImg = Image.blend(overlayImg, ModestMaps.mapByExtent(provider, ll, ur, dims).draw(), 0.5)
+
+        # composite the overlay onto the base, using the mask (from geography)
+        fullImg = Image.composite(fullImg, Image.blend(fullImg, overlayImg, opacity), maskImg)
+
+
+        # district line & label layer
+        provider = ModestMaps.WMS.Provider(cfg['district_url'], {
+            'LAYERS':cfg['district_lyr'],
+            'TRANSPARENT':'true',
+            'SRS': 'EPSG:3785',
+            'SLD_BODY': request.REQUEST['label_sld'],
+            'HEIGHT': 512,
+            'WIDTH': 512
+        })
+        overlayImg = ModestMaps.mapByExtent(provider, ll, ur, dims).draw()
+
+        # create an invert mask of the labels & lines
+        maskImg = ImageChops.invert(overlayImg)
+
+        # composite the district labels on top of the composited basemap, geography & district areas
+        fullImg = Image.composite(fullImg, Image.blend(fullImg, overlayImg, opacity), maskImg)
+
+        # save
+        fullImg.save(settings.WEB_TEMP + ('/print-%s.jpg' % sha.hexdigest()),'jpeg',quality=100)
+
         # render pg to a string
         t = loader.get_template('printplan.html')
         page = StringIO.StringIO(t.render(DjangoContext(cfg)))
@@ -604,83 +711,9 @@ def printplan(request, planid):
         response['Content-Disposition'] = 'attachment; filename=plan.pdf'
 
         return response
-    elif request.method == 'POST':
-        cfg['preview'] = True
-
-        if not 'basemap' in request.REQUEST or not 'geography' in request.REQUEST \
-            or not 'districts' in request.REQUEST:
-            return HttpResponseRedirect('../view/')
-
-        height = 500
-        if 'height' in request.REQUEST:
-            height = int(request.REQUEST['height'])
-        width = 1024
-        if 'width' in request.REQUEST:
-            width = int(request.REQUEST['width'])
-
-        cfg['basemap'] = request.REQUEST['basemap']
-        cfg['geography'] = request.REQUEST['geography']
-        cfg['districts'] = request.REQUEST['districts']
-        cfg['sld'] = request.REQUEST['sld']
-
-        def fetchimage(url, localfile, data=None):
-            # save images locally
-            if data:
-                sld_body = 'SLD_BODY='+data
-                content_len = len(sld_body)
-                url = urllib2.Request(url, sld_body, {'Content-Length':content_len}) 
-            stream = urllib2.urlopen(url)
-            localfile.write( stream.read() )
-            localfile.close()
-            stream.close()
-            return localfile
-
-        basemap = fetchimage( cfg['basemap'], tempfile.NamedTemporaryFile(delete=False) )
-
-        # create container & open images
-        fullImg = Image.new('RGB',(width,height),None)
-        baseImg = Image.open(basemap.name)
-  
-        # get the size of the base image, resize if necessary
-        baseSz = baseImg.size
-        if baseSz[0] != width or baseSz[1] != height:
-            baseImg = baseImg.resize( (width,height), Image.BICUBIC )
-        
-        # add the base map
-        fullImg.paste(baseImg,None)
-        os.remove(basemap.name)
-
-        imgs = [
-            (cfg['geography'], tempfile.NamedTemporaryFile(delete=False), True,), 
-            (cfg['districts'], tempfile.NamedTemporaryFile(delete=False), True, cfg['sld'],),
-            (request.REQUEST['legend1'], open(settings.WEB_TEMP + ('/legend1-%s.jpg' % stamp), 'w+b'), False, ),
-            (request.REQUEST['legend2'], open(settings.WEB_TEMP + ('/legend2-%s.jpg' % stamp), 'w+b'), False, ),
-        ]
-
-        for imginfo in imgs:
-            style = None
-            if len(imginfo) > 3:
-                style = imginfo[3]
-
-            imgfile = fetchimage( imginfo[0], imginfo[1], style )
-
-            if imginfo[2]:
-                overlayImg = Image.open(imgfile.name)
-
-                # create an invert mask of the districts
-                maskImg = ImageChops.invert(overlayImg)
-      
-                # composite the overlay onto the base, using the mask
-                fullImg = Image.composite(fullImg,overlayImg,maskImg)
-
-                imgfile.close()
-                os.remove(imgfile.name)
-
-        # save
-        fullImg.save(settings.WEB_TEMP + ('/print-%s.jpg' % stamp),'jpeg',quality=85)
-
-        return render_to_response('printplan.html', cfg)
-    
+   
+    else:
+        return HttpResponseRedirect('../view/')
 
 @login_required
 @unique_session_or_json_redirect
@@ -702,7 +735,7 @@ def createplan(request):
 
     status = { 'success': False }
     if request.method == "POST":
-        name = request.POST['name']
+        name = request.POST['name'][0:200]
         body = LegislativeBody.objects.get(id=int(request.POST['legislativeBody']))
         plan = Plan(name=name, owner=request.user, legislative_body=body, processing_state=ProcessingState.READY)
         try:
@@ -992,14 +1025,14 @@ def newdistrict(request, planid):
             district_id = None
 
         if 'district_short' in request.REQUEST:
-            district_short = request.REQUEST['district_short']
+            district_short = request.REQUEST['district_short'][0:10]
         elif not district_id is None:
             district_short = plan.legislative_body.short_label % district_id
         else:
             district_short = None
 
         if 'district_long' in request.REQUEST:
-            district_long = request.REQUEST['district_long']
+            district_long = request.REQUEST['district_long'][0:256]
         elif not district_id is None:
             district_long = plan.legislative_body.long_label % district_id
         else:
@@ -1043,7 +1076,7 @@ def newdistrict(request, planid):
             except ValidationError:
                 status['message'] = 'Reached Max districts already'
             except:
-                print traceback.format_exc()
+                logger.debug(traceback.format_exc())
                 status['message'] = 'Couldn\'t save new district.'
         else:
             status['message'] = 'Must specify name, geolevel, and geounit ids for new district.'
@@ -1382,7 +1415,7 @@ def get_splits_report(request, planid):
                 html += '<hr />'
         return HttpResponse(html, mimetype='text/html')
     except Exception as ex:
-        print traceback.format_exc()
+        logger.debug(traceback.format_exc())
         return HttpResponse('%s' % ex, mimetype='text/plain')
 
 
@@ -1875,7 +1908,7 @@ def getleaderboard(request):
         html = display.render(plans, request)
         return HttpResponse(html, mimetype='text/plain')
     except Exception as ex:
-        print traceback.format_exc()
+        logger.debug(traceback.format_exc())
         return HttpResponse('%s' % ex, mimetype='text/plain')
 
 def getleaderboardcsv(request):
@@ -1921,7 +1954,7 @@ def getleaderboardcsv(request):
             
         return response    
     except Exception as ex:
-        print traceback.format_exc()
+        logger.debug(traceback.format_exc())
         return HttpResponse('%s' % ex, mimetype='text/plain')
 
 
@@ -2083,7 +2116,7 @@ def editplanattributes(request, planid):
     if request.method != 'POST':
         return HttpResponseNotAllowed(['POST'])
     new_name = request.POST.get('name', None)
-    new_description = request.POST.get('description', None)
+    new_description = request.POST.get('description', '')
 
     if not planid or not (new_name or new_description):
         return HttpResponseBadRequest('Must declare planId, name and description')
@@ -2091,10 +2124,10 @@ def editplanattributes(request, planid):
     plan = Plan.objects.filter(pk=planid,owner=request.user)
     if plan.count() == 1:
         plan = plan[0]
-        if new_name: 
+        if not new_name is None:
             plan.name = new_name
-        if new_description:
-            plan.description = new_description
+
+        plan.description = new_description
         try:
             plan.save()
 
@@ -2155,7 +2188,7 @@ def reaggregateplan(request, planid):
     if plan.count() == 1:
         plan = plan[0]
         try:
-            Plan.reaggregate_async.delay(plan)
+            reaggregate_plan.delay(plan.id)
 
             # Set the reaggregating flag
             # (needed for the state to display on immediate refresh)
@@ -2218,7 +2251,7 @@ def statistics_sets(request, planid):
         # Get the functions available for the users
         user_functions = ScoreFunction.objects.filter(selectable_bodies=plan.legislative_body).order_by('label')
         for f in user_functions:
-            if 'report' not in f.name.lower():
+            if 'report' not in f.name.lower() and 'comments' not in f.name.lower():
                 scorefunctions.append({ 'id': f.id, 'name': force_escape(f.label) })
         result['functions'] = scorefunctions
 
@@ -2355,8 +2388,8 @@ def district_info(request, planid, district_id):
 
         if request.method == 'POST':
             district = plan.district_set.get(id=request.POST['object_pk'])
-            district.short_label = request.POST['district_short']
-            district.long_label = request.POST['district_long']
+            district.short_label = request.POST['district_short'][0:10]
+            district.long_label = request.POST['district_long'][0:256]
 
 
             if district.version < version:

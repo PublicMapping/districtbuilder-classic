@@ -45,7 +45,9 @@ districtfile = function(options) {
              /* The url to fetch the district index file */
             fetchUrl:'/districtmapping/plan/' + ( typeof(options.planId) != 'undefined' ? options.planId : PLAN_ID ) + '/districtfile/',
             /* The type of file to check/request: index or shape */
-            type: 'index'
+            type: 'index',
+            /* Is this a menu item or a button? */
+            menu_icon: null
         }, options),
         
         _autoDownload = false,
@@ -60,8 +62,20 @@ districtfile = function(options) {
      *   The publisher.
      */
     _self.init = function() {
-        _options.target.empty();
-        _options.target.append($('<div class="loading"></div>').width('70').height('25'));
+        if (_visiblyUpdate) {
+            if (options.menu_icon == null) {
+                _options.target.empty();
+                _options.target.append($('<div class="loading"></div>').width('70').height('25'));
+            }
+            else {
+                _options.target.click(function(){
+                    _autoDownload = true;
+                    $.post(_options.fetchUrl + '?type=' + _options.type, indicatePending());
+                    return false;
+                });
+            }
+
+        }
         $.ajax({
            url: _options.statusUrl + '?type=' + _options.type,
            dataType: 'json',
@@ -92,26 +106,38 @@ districtfile = function(options) {
                     _autoDownload = false;
                 }
                 if (_visiblyUpdate) {
-                    _options.target.empty();
-                    var link = $('<a href="' + _options.fetchUrl + '?type=' + _options.type + '" />');
-                    button.text(gettext('Download')).button();
-                    $(link).append(button);
-                    _options.target.append(link);    
+                    if (_options.menu_icon != null) {
+                        $('.ui-icon', _options.target).css('background-image','url("'+_options.menu_icon+'")');
+                        _options.target.unbind('click');
+                        _options.target.click(function(){
+                            window.location = _options.fetchUrl + '?type=' + _options.type;
+                            return false;
+                        });
+                    }
+                    else {
+                        _options.target.empty();
+                        var link = $('<a href="' + _options.fetchUrl + '?type=' + _options.type + '" />');
+                        button.text(gettext('Download')).button();
+                        $(link).append(button);
+                        _options.target.append(link);    
+                    }
                 }
             // If the file is in progress, show that
             } else if (fileStatus == 'pending') {
-                indicatePending(data);
+                indicatePending();
             // Else let the user request the file, then move to pending
             } else if (fileStatus == 'none') {
                 if (_visiblyUpdate) {
-                    _options.target.empty();
-                    button.text(gettext('Request File')).button();
-                    button.click( function() {
-                        _autoDownload = true;
-                        $.post(_options.fetchUrl + '?type=' + _options.type, indicatePending(data));
-                        return false;
-                    });
-                    _options.target.append(button);    
+                    if (_options.menu_icon == null) {
+                        _options.target.empty();
+                        button.text(gettext('Request File')).button();
+                        button.click(function(){
+                            _autoDownload = true;
+                            $.post(_options.fetchUrl + '?type=' + _options.type, indicatePending());
+                            return false;
+                        });
+                        _options.target.append(button);
+                    }
                 }
             }
         } else {
@@ -125,12 +151,17 @@ districtfile = function(options) {
      * Show the loading indicator.  If the file is loaded totally, show 
      * a button to download the file
      */
-    var indicatePending = function(data) {
+    var indicatePending = function() {
         if (_visiblyUpdate && !_options.target.children().hasClass('pending')) {
-            _options.target.empty();
-            var pending = $('<div id="pendingMessage" class="loading" />');
-            pending.text(gettext('Please wait. File is being created on the server'));
-            _options.target.append(pending);
+            if (_options.menu_icon != null) {
+                $('.ui-icon', _options.target).css('background-image','url("/static-media/images/share-loading.gif")');
+            }
+            else {
+                _options.target.empty();
+                var pending = $('<div id="pendingMessage" class="loading" />');
+                pending.text(gettext('Please wait. File is being created on the server'));
+                _options.target.append(pending);
+            }
         }
         
         // Request the status again after the timer time has passed

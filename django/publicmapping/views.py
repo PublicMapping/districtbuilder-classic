@@ -47,6 +47,9 @@ import sys, os
 # for password reminders
 from random import choice
 
+import logging
+logger = logging.getLogger(__name__)
+
 def index(request):
     """
     Generate the index page for the application. The
@@ -188,7 +191,7 @@ def userupdate(request):
                 user.email = email
                 user.first_name = fname
                 user.last_name = lname
-                if password1 != '':
+                if not (password1 == '' or password1 is None):
                     user.set_password(password1)
                 user.save()
 

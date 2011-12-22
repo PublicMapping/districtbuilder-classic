@@ -30,6 +30,7 @@ Author:
 
 from models import *
 from forms import *
+from tasks import *
 from django import forms
 from django.http import HttpResponse
 from django.contrib.gis import admin
@@ -189,6 +190,9 @@ class SubjectAdmin(admin.ModelAdmin):
     # and a flag indicating if it should be displayed (in the app), and
     # the percentage denominator.
     list_display = ('display', 'short_display', 'sort_key', 'is_displayed','percentage_denominator',)
+
+    fields = ('display', 'short_display', 'description', 'percentage_denominator', 'is_displayed', 'sort_key', 'format_string', )
+
 
     # Enable filtering by the displayed flag
     list_filter = ('is_displayed',)
@@ -380,7 +384,7 @@ class SubjectAdmin(admin.ModelAdmin):
         Get the status of an uploading task.
         """
         response = {'success':False}
-        task = SubjectUpload.verify_count.AsyncResult(task_uuid)
+        task = verify_count.AsyncResult(task_uuid)
         if task is None:
             response['message'] = 'No task with that id.'
         else:
@@ -393,7 +397,7 @@ class SubjectAdmin(admin.ModelAdmin):
             else:
                 response['message'] = str(task.result)
 
-        return HttpResponse(json.dumps(response), mimetype='text/plain')
+        return HttpResponse(json.dumps(response), mimetype='application/json')
 
 
 

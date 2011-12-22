@@ -49,8 +49,9 @@ from datetime import datetime
 from copy import copy
 from decimal import *
 from operator import attrgetter
-import sys, cPickle, traceback, types, tagging, re, csv, inflect, os
+import sys, cPickle, types, tagging, re, logging
 
+logger = logging.getLogger(__name__)
 
 class Subject(models.Model):
     """
@@ -168,254 +169,6 @@ class SubjectUpload(models.Model):
     # The task ID that is processing this uploaded subject
     task_id = models.CharField(max_length=36)
 
-    @staticmethod
-    @task
-    @transaction.commit_manually
-    def verify_count(upload_id, localstore):
-        """
-        Initialize the verification process by counting the number of geounits
-        in the uploaded file. After this step completes, the verify_preload
-        method is called.
-
-        Parameters:
-            upload_id - The id of the SubjectUpload record.
-            localstore - a temporary file that will get deleted when it is closed
-        """
-        reader = csv.DictReader(open(localstore,'r'))
-        upload = SubjectUpload.objects.get(id=upload_id)
-        upload.subject_name = reader.fieldnames[1][0:50]
-        upload.save()
-        transaction.commit()
-
-        # do this in bulk!
-        # insert upload_id, portable_id, number
-        sql = 'INSERT INTO "%s" ("%s","%s","%s") VALUES (%%(upload_id)s, %%(geoid)s, %%(number)s)' % (SubjectStage._meta.db_table, SubjectStage._meta.fields[1].attname, SubjectStage._meta.fields[2].attname, SubjectStage._meta.fields[3].attname)
-        args = []
-        for row in reader:
-            args.append( {'upload_id':upload.id, 'geoid':row[reader.fieldnames[0]].strip(), 'number':row[reader.fieldnames[1]].strip()} )
-            # django ORM takes about 320s for 280K geounits
-            #SubjectStage(upload=upload, portable_id=row[reader.fieldnames[0]],number=row[reader.fieldnames[1]]).save()
-
-        # direct access to db-api takes about 60s for 280K geounits
-        cursor = connection.cursor()
-        cursor.executemany(sql, tuple(args))
-
-        os.remove(localstore)
-
-        nlines = upload.subjectstage_set.all().count()
-        geolevel, nunits = LegislativeLevel.get_basest_geolevel_and_count()
-
-        # Validation #1: if the number of geounits in the uploaded file
-        # don't match the geounits in the database, the content is not valid
-        if nlines != nunits:
-            # The number of geounits in the uploaded file do not match the base geolevel geounits
-            p = inflect.engine()
-            msg = 'There are an incorrect number of geounits in the uploaded Subject file. '
-            if nlines < nunits:
-                missing = nunits - nlines
-                msg += 'There %s %d %s missing.' % (p.plural('is', missing), missing, p.plural('geounit', missing))
-            else:
-                extra = nlines - nunits
-                msg += 'There %s %d extra %s.' % (p.plural('is', extra), extra, p.plural('geounit', extra))
-
-            # since the transaction was never committed after all the inserts, this nullifies
-            # all the insert statements, so there should be no quarantine to clean up
-            transaction.rollback()
-
-            upload.status = 'ER'
-            upload.save()
-            transaction.commit()
-
-            return {'task_id':None, 'success':False, 'messages':[msg]}
-
-        # The next task will preload the units into the quarintine table
-        task = SubjectUpload.verify_preload.delay(upload_id).task_id
-
-        transaction.commit()
-
-        return {'task_id':task, 'success':True, 'messages':['Verifying consistency of uploaded geounits ...']}
-
-    @staticmethod
-    @task
-    def verify_preload(upload_id):
-        """
-        Continue the verification process by counting the number of geounits
-        in the uploaded file and compare it to the number of geounits in the
-        basest geolevel. After this step completes, the copy_to_characteristics
-        method is called.
-
-        Parameters:
-            upload_id - The id of the SubjectUpload record.
-        """
-        upload = SubjectUpload.objects.get(id=upload_id)
-        geolevel, nunits = LegislativeLevel.get_basest_geolevel_and_count()
-
-        # This seizes postgres -- probably small memory limits.
-        #aligned_units = upload.subjectstage_set.filter(portable_id__in=permanent_units).count()
-
-        permanent_units = geolevel.geounit_set.all().order_by('portable_id').values_list('portable_id',flat=True)
-        temp_units = upload.subjectstage_set.all().order_by('portable_id').values_list('portable_id',flat=True)
-
-        # quick check: make sure the first and last items are aligned
-        ends_match = permanent_units[0] == temp_units[0] and \
-            permanent_units[permanent_units.count()-1] == temp_units[temp_units.count()-1]
-        msg = 'There are a correct number of geounits in the uploaded Subject file, '
-        if not ends_match:
-            p = inflect.engine()
-            msg += 'but the geounits do not have the same portable ids as those in the database.'
-
-        # python foo here: count the number of zipped items in the 
-        # permanent_units and temp_units lists that do not have the same portable_id
-        # thus counting the portable_ids that are not mutually shared
-        aligned_units = len(filter(lambda x:x[0] == x[1], zip(permanent_units, temp_units)))
-
-        if nunits != aligned_units:
-            # The number of geounits in the uploaded file match, but there are some mismatches.
-            p = inflect.engine()
-            mismatched = nunits - aligned_units
-            msg += 'but %d %s %s not match ' % (mismatched, p.plural('geounit', mismatched), p.plural('do', mismatched))
-            msg += 'the geounits in the database.'
-
-        if not ends_match or nunits != aligned_units:
-            upload.status = 'ER'
-            upload.save()
-            upload.subjectstage_set.all().delete()
-
-            return {'task_id':None, 'success':False, 'messages':[msg]}
-
-        # The next task will load the units into the characteristic table
-        task = SubjectUpload.copy_to_characteristics.delay(upload_id).task_id
-
-        return {'task_id':task, 'success':True, 'messages':['Copying records to characteristic table ...']}
-
-    @staticmethod
-    @task
-    @transaction.commit_manually
-    def copy_to_characteristics(upload_id):
-        """
-        Continue the verification process by copying the holding records for
-        the subject into the characteristic table. This is the last step before
-        user intervention for Subject metadata input.
-
-        Parameters:
-            upload_id - The id of the SubjectUpload record.
-        """
-        upload = SubjectUpload.objects.get(id=upload_id)
-        geolevel, nunits = LegislativeLevel.get_basest_geolevel_and_count()
-
-        # these two lists have the same number of items, and no items are extra or missing.
-        # therefore, ordering by the same field will create two collections aligned by
-        # the 'portable_id' field
-        quarantined = upload.subjectstage_set.all().order_by('portable_id')
-        geounits = geolevel.geounit_set.all().order_by('portable_id').values_list('id','portable_id')
-
-        geo_quar = zip(geounits, quarantined)
-
-        # create a subject to hold these new values
-        new_sort_key = Subject.objects.all().aggregate(Max('sort_key'))['sort_key__max'] + 1
-        defaults = {
-            'name':upload.subject_name,
-            'display':upload.subject_name,
-            'short_display':upload.subject_name,
-            'description':upload.subject_name,
-            'is_displayed':False,
-            'sort_key':new_sort_key,
-            'format_string':'',
-            'version':1
-        }
-        the_subject, created = Subject.objects.get_or_create(name=upload.subject_name, defaults=defaults)
-
-        args = []
-        for geo_char in geo_quar:
-            args.append({'subject':the_subject.id, 'geounit':geo_char[0][0], 'number':geo_char[1].number})
-
-        # Prepare bulk loading into the characteristic table.
-        if not created:
-            # delete then recreate is a more stable technique than updating all the 
-            # related characteristic items one at a time
-            the_subject.characteristic_set.all().delete()
-
-            # increment the subject version, since it's being modified
-            the_subject.version += 1
-            the_subject.save()
-
-        sql = 'INSERT INTO "%s" ("%s", "%s", "%s") VALUES (%%(subject)s, %%(geounit)s, %%(number)s)' % (
-            Characteristic._meta.db_table,           # redistricting_characteristic
-            Characteristic._meta.fields[1].attname,  # subject_id (foreign key)
-            Characteristic._meta.fields[2].attname,  # geounit_id (foreign key)
-            Characteristic._meta.fields[3].attname,  # number
-        )
-
-        # Insert or update all the records into the characteristic table
-        cursor = connection.cursor()
-        cursor.executemany(sql, tuple(args))
-
-        task = SubjectUpload.update_vacant_characteristics.delay(upload_id, created).task_id
-
-        transaction.commit()
-
-        return {'task_id':task, 'success':True, 'messages':['Created characteristics, resetting computed characteristics...'] }
-
-    @staticmethod
-    @task
-    def update_vacant_characteristics(upload_id, new_subj):
-        """
-        Update the values for the ComputedCharacteristics. This method
-        does not precompute them, just adds dummy values for new subjects.
-        For existing subjects, the current ComputedCharacteristics are
-        untouched. For new and existing subjects, all plans are marked
-        as needing reaggregation.
-        """
-        upload = SubjectUpload.objects.get(id=upload_id)
-        subject = Subject.objects.get(name=upload.subject_name)
-
-        if new_subj:
-            sql = 'INSERT INTO "%s" ("%s", "%s", "%s") VALUES (%%(subject)s, %%(district)s, %%(number)s)' % (
-                ComputedCharacteristic._meta.db_table,           # redistricting_computedcharacteristic
-                ComputedCharacteristic._meta.fields[1].attname,  # subject_id (foreign key)
-                ComputedCharacteristic._meta.fields[2].attname,  # district_id (foreign key)
-                ComputedCharacteristic._meta.fields[3].attname,  # number
-            )
-            args = []
-
-            for district in District.objects.all():
-                args.append({'subject':subject.id, 'district':district.id, 'number':'0.0'})
-
-            # Insert all the records into the characteristic table
-            cursor = connection.cursor()
-            cursor.executemany(sql, tuple(args))
-        else:
-            # reset the computed characteristics for all districts in one fell swoop
-            ComputedCharacteristic.objects.all().update(number=Decimal('0.0'))
-
-        # reset the processing state for all plans in one fell swoop
-        Plan.objects.all().update(processing_state=ProcessingState.NEEDS_REAGG)
-
-        task = SubjectUpload.clean_quarantined.delay(upload_id).task_id
-
-        return {'task_id':task, 'success':True, 'messages':['Reset computed characteristics, cleaning quarantined data...'] }
-
-    @staticmethod
-    @task
-    def clean_quarantined(upload_id):
-        """
-        Remove all temporary characteristics in the quarantine area for
-        the given upload.
-
-        Parameters:
-            upload_id - The ID of the uploaded subject data.
-        """
-        upload = SubjectUpload.objects.get(id=upload_id)
-        quarantined = upload.subjectstage_set.all()
-
-        # The upload succeeded
-        upload.status = 'OK'
-        upload.save()
-
-        # delete the quarantined items out of the quarantine table
-        quarantined.delete()
-
-        return {'task_id':None, 'success':True, 'messages':['Upload complete. Subject "%s" added.' % upload.subject_name], 'subject':Subject.objects.get(name=upload.subject_name).id}
 
 class SubjectStage(models.Model):
     """
@@ -644,6 +397,48 @@ class Geolevel(models.Model):
         """
         return self.name
 
+    def renest(self, parent, subject=None, spatial=True):
+        """
+        Renest all geounits in this geolevel, based on the parent (smaller!)
+        geography in the parent.
+
+        Parameters:
+            parent -- The smaller geographic areas that comprise this geography.
+            subject -- The subject to aggregate. Optional. If omitted, i
+                aggregate all subjects.
+            spatial -- A flag indicating that the spatial aggregates should be
+                computed as well as the numerical aggregates.
+        """
+        if parent is None:
+            return True
+
+        progress = 0
+        logger.info("Recomputing geometric and numerical aggregates...")
+        logger.info('0% .. ')
+
+        geomods = 0
+        nummods = 0
+
+        unitqset = self.geounit_set.all()
+        count = unitqset.count()
+        for i,geounit in enumerate(unitqset):
+            if (float(i) / unitqset.count()) > (progress + 0.1):
+                progress += 0.1
+                logger.info('%2.0f%% .. ', (progress * 100))
+                
+            geo,num = geounit.aggregate(parent, subject, spatial)
+
+            geomods += geo
+            nummods += num
+
+
+        logger.info('100%')
+
+        logger.debug("Geounits modified: (geometry: %d, data values: %d)", geomods, nummods)
+
+        return True
+        
+
 
 class LegislativeLevel(models.Model):
     """
@@ -764,8 +559,7 @@ class Geounit(models.Model):
         selection = None
         units = []
         searching = False
-        if settings.DEBUG:
-            sys.stderr.write('MIXED GEOUNITS SEARCH: Geolevel %d, geounits: %s, levels: %s\n' % (geolevel, geounit_ids, levels))
+        logger.debug('MIXED GEOUNITS SEARCH: Geolevel %d, geounits: %s, levels: %s', geolevel, geounit_ids, levels)
         for level in levels:
             # if this geolevel is the requested geolevel
             if geolevel == level.id:
@@ -800,8 +594,7 @@ class Geounit(models.Model):
                         q_geom = Q(geom__relate=(boundary, 'F********'))
                 results = Geounit.objects.filter(q_ids, q_geom)
 
-                if settings.DEBUG:
-                    sys.stderr.write('Found %d geounits in boundary at level %s\n' % (len(results), level))
+                logger.debug('Found %d geounits in boundary at level %s', len(results), level)
                 units += list(results)
 
                 # if we're at the base level, and haven't collected any
@@ -834,8 +627,8 @@ class Geounit(models.Model):
                     try:
                         remainder = boundary.intersection(intersects)
                     except GEOSException, ex:
-                        print "Caught GEOSException while intersecting 'boundary' with 'intersects'."
-                        print ex
+                        logger.info("Caught GEOSException while intersecting 'boundary' with 'intersects'.")
+                        logger.debug('Reason:', ex)
                         remainder = empty_geom(boundary.srid)
                 else:
                     # the remainder geometry is the geounit selection 
@@ -850,13 +643,13 @@ class Geounit(models.Model):
                         try:
                             remainder = remainder.intersection(intersects)
                         except GEOSException, ex:
-                            print "Caught GEOSException while intersecting 'remainder' with 'intersects'."
-                            print ex
+                            logger.info("Caught GEOSException while intersecting 'remainder' with 'intersects'.")
+                            logger.debug('Reason:', ex)
                             remainder = empty_geom(boundary.srid)
 
                     except GEOSException, ex:
-                        print "Caught GEOSException while differencing 'selection' with 'boundary'."
-                        print ex
+                        logger.info("Caught GEOSException while differencing 'selection' with 'boundary'.")
+                        logger.debug('Reason:', ex)
                         remainder = empty_geom(boundary.srid)
 
 
@@ -884,6 +677,99 @@ class Geounit(models.Model):
         name.
         """
         return self.name
+
+    def aggregate(self, parent, subject=None, spatial=True):
+        """
+        Aggregate this geounit to the composite boundary of the geounits
+        in "parent" geolevel.  Compute numerical aggregates on the subject,
+        if specified.
+
+        Parameters:
+            parent -- The 'parent' geolevel, which contains the smaller
+                geographic units that comprise this geounit.
+            subject -- The subject to aggregate and compute. If omitted,
+                all subjects are computed.
+            spatial -- Compute the geometric aggregates as well as
+                numeric aggregates.
+        """
+        geo = 0
+        num = 0
+
+        parentunits = Geounit.objects.filter(
+            tree_code__startswith=self.tree_code, 
+            geolevel__in=[parent])
+
+        parentunits.update(child=self)
+        newgeo = parentunits.unionagg()
+
+        # reform the parent units as a list of IDs
+        parentunits = list(parentunits.values_list('id',flat=True))
+
+        if newgeo is None:
+            return (geo, num,)
+
+        if spatial:
+            difference = newgeo.difference(self.geom).area
+            if difference != 0:
+                # if there is any difference in the area, then assume that 
+                # this aggregate is an inaccurate aggregate of it's parents
+
+                # aggregate geometry
+
+                newsimple = newgeo.simplify(preserve_topology=True,tolerance=self.geolevel.tolerance)
+
+                # enforce_multi is defined in redistricting.models
+                self.geom = enforce_multi(newgeo)
+                self.simple = enforce_multi(newsimple)
+                self.save()
+
+                geo += 1
+
+        if subject is None:
+            # No subject provided? Do all of them
+            subject_qs = Subject.objects.all()
+        else:
+            if isinstance(subject, Subject):
+                # Subject parameter is a Subject object, wrap it in a list
+                subject_qs = [subject]
+            elif isinstance(subject, str):
+                # Subject parameter is a Subject name, filter by name
+                subject_qs = Subject.objects.filter(name=subject)
+            else:
+                # Subject parameter is an ID, filter by ID
+                subject_qs = Subject.objects.filter(id=subject)
+
+        # aggregate data values
+        for subject_item in subject_qs:
+            qset = Characteristic.objects.filter(geounit__in=parentunits, subject=subject_item)
+            aggdata = qset.aggregate(Sum('number'))['number__sum']
+            percentage = '0000.00000000'
+            if aggdata and subject_item.percentage_denominator:
+                dset = Characteristic.objects.filter(geounit__in=parentunits, subject=subject_item.percentage_denominator)
+                denominator_data = dset.aggregate(Sum('number'))['number__sum']
+                if denominator_data > 0:
+                    percentage = aggdata / denominator_data
+
+            if aggdata is None:
+                aggdata = "0.0"
+
+            mychar = self.characteristic_set.filter(subject=subject_item)
+            if mychar.count() < 1:
+                mychar = Characteristic(geounit=self, subject=subject_item, number=aggdata, percentage=percentage)
+                mychar.save()
+                num += 1
+            else:
+                mychar = mychar[0]
+
+                if aggdata != mychar.number:
+                    mychar.number = aggdata
+                    mychar.percentage = percentage
+                    mychar.save()
+
+                    num += 1
+
+        return (geo, num,)
+
 
 class Characteristic(models.Model):
     """
@@ -1638,7 +1524,7 @@ class Plan(models.Model):
         try:
             plan.save()
         except Exception as ex:
-            print( "Couldn't save plan: %s\n" % ex )
+            logger.warn( "Couldn't save plan: %s\n", ex )
             return None
 
         return plan
@@ -2471,7 +2357,8 @@ CROSS JOIN (
             self.save()
         
         except Exception as ex:
-            sys.stderr.write('Unable to fully reaggreagate %d because \n%s\n' % (self.id, ex))
+            logger.info('Unable to fully reaggreagate %d', self.id)
+            logger.debug('Reason:', ex)
 
             # Reaggregation unsuccessful, set state back to needs reaggregation
             self.processing_state = ProcessingState.NEEDS_REAGG
@@ -2479,16 +2366,6 @@ CROSS JOIN (
 
         return updated
 
-    @staticmethod
-    @task
-    def reaggregate_async(plan):
-        """
-        Asynchronously reaggregate all computed characteristics for each district in the plan.
-
-        @param plan: The plan to reaggregate
-        @return: An integer count of the number of districts reaggregated
-        """
-        return plan.reaggregate()
 
 class PlanForm(ModelForm):
     """
@@ -2796,20 +2673,20 @@ class District(models.Model):
                             attempts_left -= 1 # We just used one up
                             times_attempted = attempts_allowed-attempts_left
                             if times_attempted > 1:
-                                sys.stderr.write('Took %d attempts to simplify %s in plan "%s"; '
-                                    'Succeeded with tolerance %s\n' % (times_attempted, self.long_label, self.plan.name, tolerance))
+                                logger.debug('Took %d attempts to simplify %s in plan "%s"; '
+                                    'Succeeded with tolerance %s', times_attempted, self.long_label, self.plan.name, tolerance)
                         else:
                             raise Exception ('Polygon simplifies but isn\'t valid')
                     except Exception as error:
-                        sys.stderr.write('WARNING: Problem when trying to simplify %s at tolerance %s: %s\n' %
-                            (self.long_label, tolerance, error))
+                        logger.debug('WARNING: Problem when trying to simplify %s at tolerance %s: %s',
+                            self.long_label, tolerance, error)
                         tolerance = tolerance * attempt_step
                     attempts_left -= 1
 
                 if not simplified:
                     simples.append(self.geom)
-                    sys.stderr.write('Ran out of attempts to simplify %s in plan "%s" for geolevel %s; using full geometry\n' %
-                        (self.long_label, self.plan.name, level.name))
+                    logger.debug('Ran out of attempts to simplify %s in plan "%s" for geolevel %s; using full geometry',
+                        self.long_label, self.plan.name, level.name)
             else:
                 simples.append( self.geom )
 
@@ -2898,7 +2775,8 @@ class District(models.Model):
                 cc.save()
             return True
         except Exception as ex:
-            sys.stderr.write('Unable to reaggreagate %s because \n%s\n' % (self.long_label, ex))
+            logger.info('Unable to reaggreagate district "%s"', self.long_label)
+            logger.debug('Reason:', ex)
             return False
 
 # Enable tagging of districts by registering them with the tagging module
@@ -3424,8 +3302,9 @@ class ScoreDisplay(models.Model):
             demo_panel.save()
             self.scorepanel_set.add(demo_panel)
             self.save()
-        except:
-            sys.stderr.write('Failed to copy ScoreDisplay %s to %s: %s\n' % (display.title, self.title, traceback.format_exc()))
+        except Exception, ex:
+            logger.info('Failed to copy ScoreDisplay %s to %s', display.title, self.title)
+            logger.debug('Reason:', ex)
 
         return self
 
@@ -3768,7 +3647,8 @@ class ComputedDistrictScore(models.Model):
             cache,created = ComputedDistrictScore.objects.get_or_create(function=function, district=district, defaults=defaults)
 
         except Exception as ex:
-            print traceback.format_exc()
+            logger.info('Could not retrieve nor create computed district score for district %d.', district.id)
+            logger.debug('Reason:', ex)
             return None
 
         if created == True:
@@ -3846,8 +3726,9 @@ class ComputedPlanScore(models.Model):
             defaults = {'value':''}
             cache,created = ComputedPlanScore.objects.get_or_create(function=function, plan=plan, version=plan_version, defaults=defaults)
 
-        except Exception,e:
-            print e
+        except Exception,ex:
+            logger.info('Could not retrieve nor create ComputedPlanScore for plan %d', plan.id)
+            logger.debug('Reason:', ex)
             return None
 
         if created:
@@ -3909,3 +3790,55 @@ class ContiguityOverride(models.Model):
     def __unicode__(self):
         return '%s / %s' % (self.override_geounit.portable_id, self.connect_to_geounit.portable_id)
 
+
+@transaction.commit_manually
+def configure_views():
+    """
+    Create the spatial views for all the regions, geolevels and subjects.
+
+    This creates views in the database that are used to map the features
+    at different geographic levels, and for different choropleth map
+    visualizations. All parameters for creating the views are saved
+    in the database at this point.
+    """
+    cursor = connection.cursor()
+    
+    sql = "CREATE OR REPLACE VIEW identify_geounit AS SELECT rg.id, rg.name, rgg.geolevel_id, rg.geom, rc.number, rc.percentage, rc.subject_id FROM redistricting_geounit rg JOIN redistricting_geounit_geolevel rgg ON rg.id = rgg.geounit_id JOIN redistricting_characteristic rc ON rg.id = rc.geounit_id;"
+    cursor.execute(sql)
+    transaction.commit()
+
+    logger.debug('Created identify_geounit view ...')
+
+    for geolevel in Geolevel.objects.all():
+        if geolevel.legislativelevel_set.all().count() == 0:
+            # Skip 'abstract' geolevels if regions are configured
+            continue
+
+        lbset = ','.join(map( lambda x:str(x.legislative_body_id), geolevel.legislativelevel_set.all()))
+        sql = "CREATE OR REPLACE VIEW simple_district_%s AS SELECT rd.id, rd.district_id, rd.plan_id, st_geometryn(rd.simple, %d) AS geom, rp.legislative_body_id FROM publicmapping.redistricting_district as rd JOIN publicmapping.redistricting_plan as rp ON rd.plan_id = rp.id WHERE rp.legislative_body_id IN (%s);" % (geolevel.name, geolevel.id, lbset)
+        cursor.execute(sql)
+        transaction.commit()
+
+        logger.debug('Created simple_district_%s view ...', geolevel.name)
+
+        sql = "CREATE OR REPLACE VIEW simple_%s AS SELECT rg.id, rg.name, rgg.geolevel_id, rg.simple as geom FROM redistricting_geounit rg JOIN redistricting_geounit_geolevel rgg ON rg.id = rgg.geounit_id WHERE rgg.geolevel_id = %%(geolevel_id)s;" % geolevel.name
+        cursor.execute(sql, {'geolevel_id':geolevel.id})
+        transaction.commit()
+
+        logger.debug('Created simple_%s view ...', geolevel.name)
+        
+        for subject in Subject.objects.all():
+            sql = "CREATE OR REPLACE VIEW %s AS SELECT rg.id, rg.name, rgg.geolevel_id, rg.geom, rc.number, rc.percentage FROM redistricting_geounit rg JOIN redistricting_geounit_geolevel rgg ON rg.id = rgg.geounit_id JOIN redistricting_characteristic rc ON rg.id = rc.geounit_id WHERE rc.subject_id = %%(subject_id)s AND rgg.geolevel_id = %%(geolevel_id)s;" % get_featuretype_name(geolevel.name, subject.name)
+            cursor.execute(sql, {'subject_id':subject.id, 'geolevel_id':geolevel.id})
+            transaction.commit()
+
+            logger.debug('Created %s view ...', get_featuretype_name(geolevel.name, subject.name))
+
+def get_featuretype_name(geolevel_name, subject_name=None):
+    """
+    A uniform mechanism for generating featuretype names.
+    """
+    if subject_name is None:
+        return 'demo_%s' % geolevel_name
+    else:
+        return 'demo_%s_%s' % (geolevel_name, subject_name)

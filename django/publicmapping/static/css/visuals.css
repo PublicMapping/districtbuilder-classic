@@ -1,3 +1,30 @@
+/*
+   Copyright 2010-2011 Micah Altman, Michael McDonald
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software 
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+   This file is part of The Public Mapping Project
+   https://github.com/PublicMapping/
+
+   Purpose:
+       This stylesheet defines all the styles used in The Public Mapping
+       Project django web application.
+
+   Author: 
+        Brian Jacobs, Andrew Jennings, David Zwarg, Kenny Shepard
+*/
+
+
 /*body bg*/
 
 body#static {  background: url(/static-media/images/bg-body-home.png) 0 0 repeat-x;}
@@ -327,14 +354,14 @@ font-weight: bold;
 color: rgb(62, 107, 127);
 }
 
-div#tour_news ul.share-buttons{
+ul.share-buttons{
 float: left;
 list-style: none;
-margin: 5px 0 0 5px;
+margin: 15px 0 0 10px;
 padding: 0;
 width: 100%;
 }
-div#tour_news ul.share-buttons li{
+ul.share-buttons li{
 display: block;
 float: left;
 margin-right: 1px;
@@ -381,6 +408,12 @@ div#start_mapping_help {
     
  button#stats_legend {background-color: #bb9160;}
 
+ .toolbar_menu, div#toolsets .toolbar_menu_container .ui-button.active{
+	background: #99c4b4;
+	border-color: #c2ddde;
+	border-bottom: 1px solid #99c4b4;
+}
+ 
 
     
 /* plan toolbars*/    
@@ -409,5 +442,8 @@ div.info_table tbody tr {
 background: #ECF6F5 
 }
 .ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight, tr.chooserAlt.ui-state-highlight  td, tr.ui-state-hover.ui-state-highlight  td {
+background: #EFD695
+}
+ {
 background: #EFD695
 }
