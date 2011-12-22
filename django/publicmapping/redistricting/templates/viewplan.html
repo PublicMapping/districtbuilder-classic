@@ -60,6 +60,7 @@
     <script type="text/javascript" src="/static-media/openlayers/ArcGISCache.js"></script>
     {% endif %}
 
+    <script type="text/javascript" src="{% url django.views.i18n.javascript_catalog %}"></script>    
     {% compress js %}
     {% comment %}
 
@@ -67,7 +68,6 @@
 
     {% endcomment %}
     <script type="text/javascript" src="/static-media/jquery/jquery-1.6.js"></script>
-    <script type="text/javascript" src="{% url django.views.i18n.javascript_catalog %}"></script>    
     <script type="text/javascript" src="/static-media/jquery/jquery-ui-1.8.2.custom.min.js"></script>
     <script type="text/javascript" src="/static-media/jquery/external/jquery.tools.tooltip.slide.min.js"></script>
     <script type="text/javascript" src="/static-media/jqGrid/js/i18n/grid.locale-en.js"></script>
