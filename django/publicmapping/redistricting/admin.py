@@ -275,10 +275,9 @@ class SubjectAdmin(admin.ModelAdmin):
                     obj_display = force_unicode(obj)
                     modeladmin.log_deletion(request, obj, obj_display)
                 queryset.delete()
-                modeladmin.message_user(request, '%(success)s %(count)d %(item)s' % {
-                    'success':_('Successfully deleted'),
+                modeladmin.message_user(request, _('Successfully deleted %(count)d %(item)s') % {
                     'count': n, 
-                    'items': _(engine.plural('subject', n))
+                    'items': engine.plural('subject', n)
                 })
             # Return None to display the change list page again.
             return None
