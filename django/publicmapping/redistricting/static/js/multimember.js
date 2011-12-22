@@ -208,7 +208,7 @@ multimember = function(options) {
                         .dialog({modal:true, resizable:false});
                 }
             });
-            _options.container.dialog(gettext('close'));
+            _options.container.dialog('close');
             $(_options.workingDialog).dialog('open');
         });
     };
