@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-22 16:06-0500\n"
+"POT-Creation-Date: 2011-12-22 17:26-0500\n"
 "PO-Revision-Date: 2011-11-30 16:49\n"
 "Last-Translator: Admin User <ajennings+saigon@azavea.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -591,7 +591,9 @@ msgstr "Por favor el nombre de su conjunto de estadísticas"
 #: redistricting/static/js/statisticssets.js:391
 #: static-media/js/statisticssets.js:391
 msgid "Please select 1-3 statistics to save in the named set."
-msgstr "Por favor, seleccione les estadísticas de 1-3 para ahorrar en el conjunto con nombre."
+msgstr ""
+"Por favor, seleccione les estadísticas de 1-3 para ahorrar en el conjunto "
+"con nombre."
 
 #: redistricting/static/js/statisticssets.js:392
 #: static-media/js/statisticssets.js:392

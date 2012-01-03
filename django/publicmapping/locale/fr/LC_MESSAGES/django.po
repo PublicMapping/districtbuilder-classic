@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-22 16:05-0500\n"
+"POT-Creation-Date: 2011-12-22 17:25-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -115,6 +115,109 @@ msgstr ""
 
 #: redistricting/reportcalculators.py:120
 msgid "Proportion"
+msgstr ""
+
+#: redistricting/tasks.py:154
+msgid "Problem importing your uploaded file."
+msgstr ""
+
+#: redistricting/tasks.py:155
+msgid "Upload and import plan confirmation."
+msgstr ""
+
+#: redistricting/tasks.py:156
+msgid "Problem importing user uploaded file."
+msgstr ""
+
+#: redistricting/tasks.py:175
+msgid "The zip file contains too many files"
+msgstr ""
+
+#: redistricting/tasks.py:194
+msgid "The zip file must contain a comma separated value (.csv) file."
+msgstr ""
+
+#: redistricting/tasks.py:232
+msgid "Unexpected error during zip file processing"
+msgstr ""
+
+#: redistricting/tasks.py:261
+msgid "Plan couldn't be created. Be sure the plan name is unique."
+msgstr ""
+
+#: redistricting/tasks.py:304
+msgid "Did not import row:"
+msgstr ""
+
+#: redistricting/tasks.py:359
+msgid "Unable to create district"
+msgstr ""
+
+#: redistricting/tasks.py:396
+#, python-format
+msgid ""
+"Unable to create ComputedCharacteristic for district %(district_id)s, "
+"subject %(subject_name)s"
+msgstr ""
+
+#: redistricting/tasks.py:493
+#, python-format
+msgid "Competition submission (user: %(username)s, planid: %(plan_id)d)"
+msgstr ""
+
+#: redistricting/tasks.py:501
+msgid "Plan submitted successfully"
+msgstr ""
+
+#: redistricting/tasks.py:1271
+msgid ""
+"There are an incorrect number of geounits in the uploaded Subject file. "
+msgstr ""
+
+#: redistricting/tasks.py:1302
+msgid "Verifying consistency of uploaded geounits ..."
+msgstr ""
+
+#: redistricting/tasks.py:1328
+msgid "There are a correct number of geounits in the uploaded Subject file, "
+msgstr ""
+
+#: redistricting/tasks.py:1331
+msgid ""
+"but the geounits do not have the same portable ids as those in the database."
+msgstr ""
+
+#: redistricting/tasks.py:1359
+msgid "Copying records to characteristic table ..."
+msgstr ""
+
+#: redistricting/tasks.py:1392
+msgid "The subject name contains invalid characters."
+msgstr ""
+
+#: redistricting/tasks.py:1400
+msgid "Please correct the error and try again."
+msgstr ""
+
+#: redistricting/tasks.py:1455
+msgid "Created characteristics, resetting computed characteristics..."
+msgstr ""
+
+#: redistricting/tasks.py:1501
+msgid "Reset computed characteristics, renesting foundation geographies..."
+msgstr ""
+
+#: redistricting/tasks.py:1539
+msgid "Renested foundation geographies, creating spatial views and styles..."
+msgstr ""
+
+#: redistricting/tasks.py:1587
+msgid "Created spatial views and styles, cleaning quarantined data..."
+msgstr ""
+
+#: redistricting/tasks.py:1617
+#, python-format
+msgid "Upload complete. Subject \"%(subject_name)s\" added."
 msgstr ""
 
 #: redistricting/templates/admin.email:17

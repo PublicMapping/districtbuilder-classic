@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-22 16:06-0500\n"
+"POT-Creation-Date: 2011-12-22 17:25-0500\n"
 "PO-Revision-Date: 2011-11-29 14:20\n"
 "Last-Translator: Admin User <ajennings+saigon@azavea.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -35,7 +35,7 @@ msgstr "Eliminar seleccionados %(verbose_name_plural)s"
 
 #: redistricting/admin.py:390
 msgid "No task with that id."
-msgstr ""
+msgstr "No es una tarea con ese id."
 
 #: redistricting/calculators.py:105 redistricting/calculators.py:239
 #: redistricting/calculators.py:302 redistricting/calculators.py:522
@@ -76,23 +76,25 @@ msgstr "Descargar plantilla de sujeción"
 
 #: redistricting/forms.py:125
 msgid "Uploaded file cannot be found."
-msgstr ""
+msgstr "El archivo cargado no se puede encontrar."
 
 #: redistricting/forms.py:127
 msgid "Uploaded file is required."
-msgstr ""
+msgstr "El archivo cargado es necesario."
 
 #: redistricting/forms.py:135
 msgid "Please specify a unique subject name."
-msgstr ""
+msgstr "Especifique un nombre único subject."
 
 #: redistricting/forms.py:136
 msgid "Check this box to overwrite the existing subject with the same name."
 msgstr ""
+"Marque esta casilla si desea sobrescribir el objeto existente con el mismo "
+"nombre."
 
 #: redistricting/forms.py:160
 msgid "Uploaded file contains an invalid subject name."
-msgstr ""
+msgstr "El archivo cargado contiene un nombre de subject no válido."
 
 #: redistricting/reportcalculators.py:51 redistricting/reportcalculators.py:94
 #: redistricting/reportcalculators.py:118
@@ -118,6 +120,119 @@ msgstr "Compacidad"
 #: redistricting/reportcalculators.py:120
 msgid "Proportion"
 msgstr "Proporción"
+
+#: redistricting/tasks.py:154
+msgid "Problem importing your uploaded file."
+msgstr "Problema al importar el archivo subido."
+
+#: redistricting/tasks.py:155
+msgid "Upload and import plan confirmation."
+msgstr "Subir y confirmación de la importación del plan."
+
+#: redistricting/tasks.py:156
+#, fuzzy
+msgid "Problem importing user uploaded file."
+msgstr "Configuración de los ajustes de la reserva cargado."
+
+#: redistricting/tasks.py:175
+msgid "The zip file contains too many files"
+msgstr "El archivo contiene demasiados archivos"
+
+#: redistricting/tasks.py:194
+msgid "The zip file must contain a comma separated value (.csv) file."
+msgstr "El archivo debe contener un archivo separado por comas valor."
+
+#: redistricting/tasks.py:232
+msgid "Unexpected error during zip file processing"
+msgstr "Error inesperado durante el proceso de archivo de almacenamiento"
+
+#: redistricting/tasks.py:261
+#, fuzzy
+msgid "Plan couldn't be created. Be sure the plan name is unique."
+msgstr "Plan no pudo ser creado. Asegúrese de que el nombre del plan es único."
+
+#: redistricting/tasks.py:304
+msgid "Did not import row:"
+msgstr "No importar fila:"
+
+#: redistricting/tasks.py:359
+msgid "Unable to create district"
+msgstr "No se puede crear el distrito"
+
+#: redistricting/tasks.py:396
+#, python-format
+msgid ""
+"Unable to create ComputedCharacteristic for district %(district_id)s, "
+"subject %(subject_name)s"
+msgstr ""
+"No se puede crear para el distrito ComputedCharacteristic %(district_id)s, "
+"%(subject_name)s tema"
+
+#: redistricting/tasks.py:493
+#, python-format
+msgid "Competition submission (user: %(username)s, planid: %(plan_id)d)"
+msgstr "Competencia presentación (usuario: %(username)s, planid: %(plan_id)d)"
+
+#: redistricting/tasks.py:501
+msgid "Plan submitted successfully"
+msgstr "Plan presentado con éxito"
+
+#: redistricting/tasks.py:1271
+msgid ""
+"There are an incorrect number of geounits in the uploaded Subject file. "
+msgstr "Hay un número incorrecto de geounits en el archivo Subject subida."
+
+#: redistricting/tasks.py:1302
+msgid "Verifying consistency of uploaded geounits ..."
+msgstr "Verificar la consistencia de la subida geounits ..."
+
+#: redistricting/tasks.py:1328
+msgid "There are a correct number of geounits in the uploaded Subject file, "
+msgstr "Hay un número correcto de geounits en el archivo cargado Subject, "
+
+#: redistricting/tasks.py:1331
+msgid ""
+"but the geounits do not have the same portable ids as those in the database."
+msgstr ""
+"pero el geounits no tienen la portable ids mismos que los de la base de "
+"datos."
+
+#: redistricting/tasks.py:1359
+msgid "Copying records to characteristic table ..."
+msgstr "Copiar los registros a la tabla characteristic ..."
+
+#: redistricting/tasks.py:1392
+msgid "The subject name contains invalid characters."
+msgstr "El nombre de subject contiene caracteres no válidos."
+
+#: redistricting/tasks.py:1400
+msgid "Please correct the error and try again."
+msgstr "Por favor, corrija el error y vuelva a intentarlo."
+
+#: redistricting/tasks.py:1455
+msgid "Created characteristics, resetting computed characteristics..."
+msgstr "Characteristics creado, restablecer computed characteristics..."
+
+#: redistricting/tasks.py:1501
+msgid "Reset computed characteristics, renesting foundation geographies..."
+msgstr "Restablecer computed characteristics, renesting geografías base..."
+
+#: redistricting/tasks.py:1539
+msgid "Renested foundation geographies, creating spatial views and styles..."
+msgstr ""
+"Renested geografías base, la creación de puntos de vista espacial y "
+"estilos..."
+
+#: redistricting/tasks.py:1587
+msgid "Created spatial views and styles, cleaning quarantined data..."
+msgstr ""
+"Creado puntos de vista espacial y estilos, la limpieza de datos en "
+"cuarentena..."
+
+#: redistricting/tasks.py:1617
+#, python-format
+msgid "Upload complete. Subject \"%(subject_name)s\" added."
+msgstr "Carga completa. Subject \"%(subject_name)s\" añadido."
 
 #: redistricting/templates/admin.email:17
 msgid "Hello Admin"
