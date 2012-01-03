@@ -31,6 +31,7 @@ from django.contrib.auth.models import User, AnonymousUser
 from django.contrib.sessions.models import Session
 from django.contrib.auth.decorators import login_required
 from django.contrib.csrf.middleware import csrf_exempt
+from django.contrib.sites.models import Site
 from django.views.decorators.cache import cache_control
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.shortcuts import render_to_response
@@ -77,7 +78,8 @@ def index(request):
         'sessionavail':avail,
         'ga_account': settings.GA_ACCOUNT,
         'ga_domain': settings.GA_DOMAIN,
-        'user': request.user
+        'user': request.user,
+        'site': Site.objects.get_current()
     }, context_instance=RequestContext(request))
 
 
