@@ -31,7 +31,7 @@ from models import *
 from tasks import verify_count
 from django import forms
 from django.core.files.uploadedfile import UploadedFile
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext as _, get_language
 import os, tempfile, csv, re
 
 class SubjectUploadForm(forms.Form):
@@ -141,7 +141,7 @@ class SubjectUploadForm(forms.Form):
         sup.save()
 
         # verify_count begins a cascade of validation operations
-        task = verify_count.delay(sup.id, self.ps_file)
+        task = verify_count.delay(sup.id, self.ps_file, language=get_language())
         sup.task_id = task.task_id
 
         sup.save()

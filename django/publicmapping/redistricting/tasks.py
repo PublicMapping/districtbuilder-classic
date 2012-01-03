@@ -35,6 +35,7 @@ from django.template import loader, Context as DjangoContext
 from django.db import connection, transaction
 from django.db.models import Sum, Min, Max, Avg
 from django.conf import settings
+from django.utils.translation import ugettext as _, ungettext as _n, get_language, activate
 from redistricting.models import *
 from redistricting.config import *
 from tagging.utils import parse_tag_input
@@ -52,6 +53,7 @@ from django.contrib.gis.gdal.libgdal import lgdal
 from ctypes import c_double
 
 logger = logging.getLogger(__name__)
+
 
 class DistrictFile():
     """
@@ -113,6 +115,7 @@ class DistrictFile():
             district_file.close()
             return district_file
 
+
 class DistrictIndexFile():
     """
     The publicmapping projects supports users importing and exporting
@@ -127,7 +130,7 @@ class DistrictIndexFile():
 
     @staticmethod
     @task
-    def index2plan(name, body, filename, owner=None, template=False, purge=False, email=None):
+    def index2plan(name, body, filename, owner=None, template=False, purge=False, email=None, language=None):
         """
         Imports a plan using a district index file in csv format. 
         There should be only two columns: a CODE matching the 
@@ -145,12 +148,19 @@ class DistrictIndexFile():
                 was converted should be disposed.
             email - Optional. If provided, feedback should be directed
                 through email, otherwise, output to the console.
+            language - Optional. If provided, the task output will be
+                translated to this language (provided message files have
+                been completed).
         """
+        prev_lang = None
+        if not language is None:
+            prev_lang = get_language()
+            activate(language)
 
         if email:
-            error_subject = "Problem importing your uploaded file."
-            success_subject = "Upload and import plan confirmation."
-            admin_subject = "Problem importing user uploaded file."
+            error_subject = _("Problem importing your uploaded file.")
+            success_subject = _("Upload and import plan confirmation.")
+            admin_subject = _("Problem importing user uploaded file.")
             
             context = DjangoContext({
                 'user': owner,
@@ -169,7 +179,7 @@ class DistrictIndexFile():
                         os.unlink(filename)
 
                     if email:
-                        context['errors'].append({'message': 'The zip file contains too many files', 'traceback': None})
+                        context['errors'].append({'message': _('The zip file contains too many files'), 'traceback': None})
                         # report error to owner
                         email_template = loader.get_template('error.email')
                         send_mail(error_subject, email_template.render(context), settings.EMAIL_HOST_USER, [email], fail_silently=False)
@@ -178,6 +188,11 @@ class DistrictIndexFile():
                         mail_admins(admin_subject, email_template.render(context))
                     else:
                         logger.warn('District Index .zip file contains too many files.')
+
+                    # reset translation to default
+                    if not prev_lang is None:
+                        activate(prev_lang)
+
                     return
 
                 item = archive.namelist()[0]
@@ -188,7 +203,7 @@ class DistrictIndexFile():
                         os.unlink(filename)
 
                     if email:
-                        context['errors'].append({'message': 'The zip file must contain a comma separated value (.csv) file.', 'traceback': None})
+                        context['errors'].append({'message': _('The zip file must contain a comma separated value (.csv) file.'), 'traceback': None})
 
                         # report error to owner
                         email_template = loader.get_template('error.email')
@@ -198,6 +213,10 @@ class DistrictIndexFile():
                         mail_admins(admin_subject, email_template.render(context))
                     else:
                         logger.warn('District Index .zip file does not contain a .csv file.\n')
+
+                    # reset translation to default
+                    if not prev_lang is None:
+                        activate(prev_lang)
 
                     return
 
@@ -226,7 +245,7 @@ class DistrictIndexFile():
 
             except Exception, ex:
                 if email:
-                    context['errors'].append({'message': 'Unexpected error during zip file processing', 'traceback': traceback.format_exc()}) 
+                    context['errors'].append({'message': _('Unexpected error during zip file processing'), 'traceback': traceback.format_exc()}) 
                     # report error to owner
                     email_template = loader.get_template('error.email')
                     send_mail(error_subject, email_template.render(context), settings.EMAIL_HOST_USER, [email], fail_silently=False)
@@ -240,6 +259,11 @@ class DistrictIndexFile():
                 if purge:
                     # Some problem opening the zip file, bail now
                     os.unlink(filename)
+
+                # reset translation to default
+                if not prev_lang is None:
+                    activate(prev_lang)
+
                 return
        
         else: # filename.endswith('.csv'):
@@ -249,22 +273,24 @@ class DistrictIndexFile():
                 logger.warn('The .csv file could not be found, plan "%s" was not created.', name)
                 return
 
-        try:
-            legislative_body = LegislativeBody.objects.get(id=int(body))
-        except:
-            raise Exception('body parameter could not be cast to an integer. Type: %s, %s' % (type(body), body))
+        legislative_body = LegislativeBody.objects.get(id=int(body))
         
         plan = Plan.create_default(name, legislative_body, owner=owner, template=template, processing_state=ProcessingState.CREATING, create_unassigned=False)
 
         if not plan:
             if email:
-                context['errors'].append({'message': 'Plan couldn\'t be created. Be sure the plan name is unique.', 'tracback': None })
+                context['errors'].append({'message': _("Plan couldn't be created. Be sure the plan name is unique."), 'tracback': None })
                 template = loader.get_template('error.email')
                 send_mail(error_subject, template.render(context), settings.EMAIL_HOST_USER, [email], fail_silently=False)
                 template = loader.get_template('admin.email')
                 mail_admins(error_subject, template.render(context))
             else:
                 logger.warn('The plan "%s" could not be created', name)
+
+            # reset translation to default
+            if not prev_lang is None:
+                activate(prev_lang)
+
             return
                 
         # initialize the dicts we'll use to store the portable_ids,
@@ -301,12 +327,13 @@ class DistrictIndexFile():
             except Exception, ex:
                 if email:
                     context['errors'].append({
-                        'message': 'Did not import row:\n  "%s, %s"\n' % (row['code'], row['district']),
+                        'message': '%s\n  "%s, %s"\n' % (_('Did not import row:'), row['code'], row['district']),
                         'traceback': traceback.format_exc()
                     })
                 else:
                     logger.debug("Did not import row: '%s'", row)
                     logger.debug(ex)
+
         csv_file.close()
 
         if purge:
@@ -356,7 +383,7 @@ class DistrictIndexFile():
             except Exception, ex:
                 if email:
                     context['errors'].append({
-                        'message': 'Unable to create district %s.' % district_id,
+                        'message': '%s %s' % (_('Unable to create district'), district_id),
                         'traceback': traceback.format_exc()
                     })
                 else:
@@ -393,7 +420,7 @@ class DistrictIndexFile():
                 except Exception, ex:
                     if email:
                         context['errors'].append({
-                            'message': 'Unable to create ComputedCharacteristic for district %s, subject %s' % (district_id, subject.name),
+                            'message': _('Unable to create ComputedCharacteristic for district %(district_id)s, subject %(subject_name)s') % {'district':district_id, 'subject_name':subject.name},
                             'traceback': None
                         })
                     else:
@@ -418,6 +445,10 @@ class DistrictIndexFile():
 
             template = loader.get_template('importedplan.email')
             send_mail(success_subject, template.render(context), settings.EMAIL_HOST_USER, [email], fail_silently=False)
+
+        # reset translation back to default
+        if not prev_lang is None:
+            activate(prev_lang)
 
     @staticmethod
     @task
@@ -482,7 +513,22 @@ class DistrictIndexFile():
 
     @staticmethod
     @task
-    def emailfile(plan, user, post):
+    def emailfile(plan, user, post, language=None):
+        """
+        Email an archived district index file to a user.
+
+        Parameters:
+            plan - The plan to export and mail.
+            user - The user requesting the plan.
+            post - The request context.
+            language - Optional. If provided, translate the email contents to
+                the specified language (if message files are complete).
+        """
+        prev_lang = None
+        if not language is None:
+            prev_lang = get_language()
+            activate(language)
+
         # Create the file (or grab it if it already exists)
         archive = DistrictIndexFile.plan2index(plan)
 
@@ -490,7 +536,7 @@ class DistrictIndexFile():
         template = loader.get_template('submission.email')
         context = DjangoContext({ 'user': user, 'plan': plan, 'post': post })
         email = EmailMessage()
-        email.subject = 'Competition submission (user: %s, planid: %d)' % (user.username, plan.pk)
+        email.subject = _('Competition submission (user: %(username)s, planid: %(plan_id)d)') % {'username':user.username, 'plan_id':plan.pk}
         email.body = template.render(context)
         email.from_email = settings.EMAIL_HOST_USER
         email.to = [settings.EMAIL_SUBMISSION]
@@ -498,11 +544,15 @@ class DistrictIndexFile():
         email.send()
 
         # Send a confirmation email to the user
-        subject = "Plan submitted successfully"
+        subject = _("Plan submitted successfully")
         user_email = post['email']
         template = loader.get_template('submitted.email')
         context = DjangoContext({ 'user': user, 'plan': plan })
         send_mail(subject, template.render(context), settings.EMAIL_HOST_USER, [user_email], fail_silently=False)
+
+        # reset the translation back to default
+        if not prev_lang is None:
+            activate(prev_lang)
 
 
 class DistrictShapeFile():
@@ -923,6 +973,7 @@ class DistrictShapeFile():
 
         return DistrictFile.get_file(plan,True)
 
+
 @task
 def cleanup():
     """
@@ -932,6 +983,7 @@ def cleanup():
     """
     management.call_command('cleanup') 
 
+
 class PlanReport:
     """
     A collection of static methods that assist in asynchronous report
@@ -940,10 +992,18 @@ class PlanReport:
 
     @staticmethod
     @task
-    def createreport(planid, stamp, request):
+    def createreport(planid, stamp, request, language=None):
         """
         Create the data structures required for a BARD report, and call
         the django reporting apache process to create the report.
+
+        Parameters:
+            planid - The Plan ID.
+            stamp - A unique stamp for this report.
+            request - The request context.
+            language - Optional. If provided, translate the report
+                into the specified language. This is a passthrough
+                into BARD.
         """
         logger.debug('Starting task to create a report.')
         try:
@@ -1033,7 +1093,7 @@ class PlanReport:
             rep_comp_extra=request['repCompExtra'],
             rep_spatial=request['repSpatial'],
             rep_spatial_extra=request['repSpatialExtra'],
-            stamp=stamp)
+            stamp=stamp) # TODO: Add language when BARD supports it.
         return
 
     @staticmethod
@@ -1098,6 +1158,7 @@ class PlanReport:
 
         return '/reports/%s.html' % filename
 
+
 class CalculatorReport:
     """
     A collection of static methods that assist in asynchronous report
@@ -1106,9 +1167,16 @@ class CalculatorReport:
 
     @staticmethod
     @task
-    def createcalculatorreport(planid, stamp, request):
+    def createcalculatorreport(planid, stamp, request, language=None):
         """
         Create the report.
+
+        Parameters:
+            planid - The plan ID.
+            stamp - A unique identifier for this report.
+            request - The request context.
+            language - Optional. If provided, translate the report output
+                into the specified language (if message files are complete).
         """
         logger.debug('Starting task to create a report.')
         try:
@@ -1118,6 +1186,11 @@ class CalculatorReport:
             return 
 
         function_ids = map(lambda s: int(s), request['functionIds'].split(','))
+
+        prev_lang = None
+        if not language is None:
+            prev_lang = get_language()
+            activate(language)
 
         try:
             # Render the report
@@ -1137,6 +1210,10 @@ class CalculatorReport:
         htmlfile = open('%s/%s.html' % (tempdir, filename,),'w')
         htmlfile.write(html)
         htmlfile.close()
+
+        # reset the language back to default
+        if not prev_lang is None:
+            activate(prev_lang)
             
         return
 
@@ -1196,6 +1273,7 @@ class CalculatorReport:
 
         return '/reports/%s.html' % filename
 
+
 #
 # Reaggregation tasks
 #
@@ -1222,7 +1300,7 @@ def reaggregate_plan(plan_id):
 
 @task
 @transaction.commit_manually
-def verify_count(upload_id, localstore):
+def verify_count(upload_id, localstore, language):
     """
     Initialize the verification process by counting the number of geounits
     in the uploaded file. After this step completes, the verify_preload
@@ -1231,6 +1309,8 @@ def verify_count(upload_id, localstore):
     Parameters:
         upload_id - The id of the SubjectUpload record.
         localstore - a temporary file that will get deleted when it is closed
+        language - Optional. If provided, translate the status messages
+            into the specified language (if message files are complete).
     """
     reader = csv.DictReader(open(localstore,'r'))
     upload = SubjectUpload.objects.get(id=upload_id)
@@ -1260,18 +1340,28 @@ def verify_count(upload_id, localstore):
     nlines = upload.subjectstage_set.all().count()
     geolevel, nunits = LegislativeLevel.get_basest_geolevel_and_count()
 
+    prev_lang = None
+    if not language is None:
+        prev_lang = get_language()
+        activate(language)
+
     # Validation #1: if the number of geounits in the uploaded file
     # don't match the geounits in the database, the content is not valid
     if nlines != nunits:
         # The number of geounits in the uploaded file do not match the base geolevel geounits
-        p = inflect.engine()
-        msg = 'There are an incorrect number of geounits in the uploaded Subject file. '
+        msg = _('There are an incorrect number of geounits in the uploaded Subject file. ')
         if nlines < nunits:
             missing = nunits - nlines
-            msg += 'There %s %d %s missing.' % (p.plural('is', missing), missing, p.plural('geounit', missing))
+            msg += _n(
+                'There is %(count)d geounit missing.', 
+                'There are %(count)d geounits missing.',
+                missing) % { 'count':missing }
         else:
             extra = nlines - nunits
-            msg += 'There %s %d extra %s.' % (p.plural('is', extra), extra, p.plural('geounit', extra))
+            msg += _n(
+                'There is %(count)d extra geounit.',
+                'There are %(count)d extra geounits.',
+                extra) % { 'count':extra }
 
         # since the transaction was never committed after all the inserts, this nullifies
         # all the insert statements, so there should be no quarantine to clean up
@@ -1281,20 +1371,26 @@ def verify_count(upload_id, localstore):
 
         upload.status = 'ER'
         upload.save()
-        transaction.commit()
 
-        return {'task_id':None, 'success':False, 'messages':[msg]}
+        status = {'task_id':None, 'success':False, 'messages':[msg]}
 
-    # The next task will preload the units into the quarintine table
-    task = verify_preload.delay(upload_id).task_id
+    else:
+        # The next task will preload the units into the quarintine table
+        task = verify_preload.delay(upload_id, language=language).task_id
+
+        status = {'task_id':task, 'success':True, 'messages':[_('Verifying consistency of uploaded geounits ...')]}
 
     transaction.commit()
 
-    return {'task_id':task, 'success':True, 'messages':['Verifying consistency of uploaded geounits ...']}
+    # reset language to default
+    if not prev_lang is None:
+        activate(prev_lang)
+
+    return status
 
 
 @task
-def verify_preload(upload_id):
+def verify_preload(upload_id, language=None):
     """
     Continue the verification process by counting the number of geounits
     in the uploaded file and compare it to the number of geounits in the
@@ -1303,7 +1399,14 @@ def verify_preload(upload_id):
 
     Parameters:
         upload_id - The id of the SubjectUpload record.
+        language - Optional. If provided, translate the status messages
+            into the specified language (if message files are complete).
     """
+    prev_lang = None
+    if not language is None:
+        prev_lang = get_language()
+        activate(language)
+
     upload = SubjectUpload.objects.get(id=upload_id)
     geolevel, nunits = LegislativeLevel.get_basest_geolevel_and_count()
 
@@ -1316,10 +1419,10 @@ def verify_preload(upload_id):
     # quick check: make sure the first and last items are aligned
     ends_match = permanent_units[0] == temp_units[0] and \
         permanent_units[permanent_units.count()-1] == temp_units[temp_units.count()-1]
-    msg = 'There are a correct number of geounits in the uploaded Subject file, '
+    msg = _('There are a correct number of geounits in the uploaded Subject file, ')
     if not ends_match:
         p = inflect.engine()
-        msg += 'but the geounits do not have the same portable ids as those in the database.'
+        msg += _('but the geounits do not have the same portable ids as those in the database.')
 
     # python foo here: count the number of zipped items in the 
     # permanent_units and temp_units lists that do not have the same portable_id
@@ -1330,8 +1433,10 @@ def verify_preload(upload_id):
         # The number of geounits in the uploaded file match, but there are some mismatches.
         p = inflect.engine()
         mismatched = nunits - aligned_units
-        msg += 'but %d %s %s not match ' % (mismatched, p.plural('geounit', mismatched), p.plural('do', mismatched))
-        msg += 'the geounits in the database.'
+        msg += _n(
+            'but %(count)d geounit does not match the geounits in the database.',
+            'but %(count)d geounits do not match the geounits in the database.',
+            mismatched) % { 'count':mismatched }
 
     if not ends_match or nunits != aligned_units:
         logger.debug(msg)
@@ -1340,17 +1445,24 @@ def verify_preload(upload_id):
         upload.save()
         upload.subjectstage_set.all().delete()
 
-        return {'task_id':None, 'success':False, 'messages':[msg]}
+        status = {'task_id':None, 'success':False, 'messages':[msg]}
 
-    # The next task will load the units into the characteristic table
-    task = copy_to_characteristics.delay(upload_id).task_id
+    else:
+        # The next task will load the units into the characteristic table
+        task = copy_to_characteristics.delay(upload_id, language=language).task_id
 
-    return {'task_id':task, 'success':True, 'messages':['Copying records to characteristic table ...']}
+        status = {'task_id':task, 'success':True, 'messages':[_('Copying records to characteristic table ...')]}
+
+    # reset the language back to the default
+    if not prev_lang is None:
+        activate(prev_lang)
+
+    return status
 
 
 @task
 @transaction.commit_manually
-def copy_to_characteristics(upload_id):
+def copy_to_characteristics(upload_id, language=None):
     """
     Continue the verification process by copying the holding records for
     the subject into the characteristic table. This is the last step before
@@ -1358,7 +1470,14 @@ def copy_to_characteristics(upload_id):
 
     Parameters:
         upload_id - The id of the SubjectUpload record.
+        language - Optional. If provided, translate the status messages
+            into the specified language (if message files are complete).
     """
+    prev_lang = None
+    if not language is None:
+        prev_lang = get_language()
+        activate(language)
+
     upload = SubjectUpload.objects.get(id=upload_id)
     geolevel, nunits = LegislativeLevel.get_basest_geolevel_and_count()
 
@@ -1378,7 +1497,7 @@ def copy_to_characteristics(upload_id):
         cmp2 = re.findall(r'[\w]+', upload.subject_name)
         clean_name = '_'.join([cmp1] + cmp2[1:]).lower()
     except:
-        msg = 'The subject name contains invalid characters.'
+        msg = _('The subject name contains invalid characters.')
 
         logger.debug(msg)
 
@@ -1386,7 +1505,13 @@ def copy_to_characteristics(upload_id):
         upload.save()
         transaction.commit()
 
-        return {'task_id':None, 'success':False, 'messages':[msg, 'Please correct the error and try again.']}
+        status = {'task_id':None, 'success':False, 'messages':[msg, _('Please correct the error and try again.')]}
+
+        # reset the translation to default
+        if not prev_lang is None:
+            activate(prev_lang)
+
+        return status
 
     defaults = {
         'name':clean_name,
@@ -1437,21 +1562,33 @@ def copy_to_characteristics(upload_id):
 
     logger.debug('Loaded new Characteristic values for subject "%s"', the_subject.name)
 
-    task = update_vacant_characteristics.delay(upload_id, created).task_id
+    task = update_vacant_characteristics.delay(upload_id, created, language=language).task_id
 
     transaction.commit()
 
-    return {'task_id':task, 'success':True, 'messages':['Created characteristics, resetting computed characteristics...'] }
+    status = {'task_id':task, 'success':True, 'messages':[_('Created characteristics, resetting computed characteristics...')]}
+
+    # reset the translation to default
+    if not prev_lang is None:
+        activate(prev_lang)
+
+    return status
 
 
 @task
-def update_vacant_characteristics(upload_id, new_subj):
+def update_vacant_characteristics(upload_id, new_subj, language=None):
     """
     Update the values for the ComputedCharacteristics. This method
     does not precompute them, just adds dummy values for new subjects.
     For existing subjects, the current ComputedCharacteristics are
     untouched. For new and existing subjects, all plans are marked
     as needing reaggregation.
+
+    Parameters:
+        upload_id - The id of the SubjectUpload record.
+        new_subj -
+        language - Optional. If provided, translate the status messages
+            into the specified language (if message files are complete).
     """
     upload = SubjectUpload.objects.get(id=upload_id)
     subject = Subject.objects.get(name=upload.subject_name)
@@ -1485,15 +1622,31 @@ def update_vacant_characteristics(upload_id, new_subj):
             logger.debug('Cleared existing district characteristics for dependent subject "%s"', dependent.name)
 
 
-    task = renest_uploaded_subject.delay(upload_id).task_id
+    task = renest_uploaded_subject.delay(upload_id, language=language).task_id
 
-    return {'task_id':task, 'success':True, 'messages':['Reset computed characteristics, renesting foundation geographies...'] }
+    prev_lang = None
+    if not language is None:
+        prev_lang = get_language()
+        activate(language)
+
+    status = {'task_id':task, 'success':True, 'messages':[_('Reset computed characteristics, renesting foundation geographies...')]}
+
+    # reset language back to default
+    if not prev_lang is None:
+        activate(prev_lang)
+
+    return status
 
 
 @task
-def renest_uploaded_subject(upload_id):
+def renest_uploaded_subject(upload_id, language=None):
     """
     Renest all higher level geographies for the uploaded subject.
+
+    Parameters:
+        upload_id - The id of the SubjectUpload record.
+        language - Optional. If provided, translate the status messages
+            into the specified language (if message files are complete).
     """
     upload = SubjectUpload.objects.get(id=upload_id)
     subject = Subject.objects.get(name=upload.subject_name)
@@ -1525,13 +1678,29 @@ def renest_uploaded_subject(upload_id):
 
     task = create_views_and_styles.delay(upload_id).task_id
 
-    return {'task_id':task, 'success':True, 'messages':['Renested foundation geographies, creating spatial views and styles...'] }
+    prev_lang = None
+    if not language is None:
+        prev_lang = get_language()
+        activate(language)
+
+    status = {'task_id':task, 'success':True, 'messages':[_('Renested foundation geographies, creating spatial views and styles...')]}
+
+    # reset language back to default
+    if not prev_lang is None:
+        activate(prev_lang)
+
+    return status
 
 
 @task
-def create_views_and_styles(upload_id):
+def create_views_and_styles(upload_id, language=None):
     """
     Create the spatial views required for visualizing the subject data on the map.
+
+    Parameters:
+        upload_id - The id of the SubjectUpload record.
+        language - Optional. If provided, translate the status messages
+            into the specified language (if message files are complete).
     """
 
     # Configure ALL views. This will replace view definitions with identical
@@ -1571,19 +1740,32 @@ def create_views_and_styles(upload_id):
 
         logger.debug('Created featuretype and style for %s, %s', geolevel.name, subject.name)
 
-    task = clean_quarantined.delay(upload_id).task_id
+    task = clean_quarantined.delay(upload_id, language=language).task_id
 
-    return {'task_id':task, 'success':True, 'messages':['Created spatial views and styles, cleaning quarantined data...'] }
+    prev_lang = None
+    if not language is None:
+        prev_lang = get_language()
+        activate(language)
+
+    status = {'task_id':task, 'success':True, 'messages':[_('Created spatial views and styles, cleaning quarantined data...')]}
+
+    # reset language back to default
+    if not prev_lang is None:
+        activate(prev_lang)
+
+    return status
 
 
 @task
-def clean_quarantined(upload_id):
+def clean_quarantined(upload_id, language=None):
     """
     Remove all temporary characteristics in the quarantine area for
     the given upload.
 
     Parameters:
-        upload_id - The ID of the uploaded subject data.
+        upload_id - The id of the SubjectUpload record.
+        language - Optional. If provided, translate the status messages
+            into the specified language (if message files are complete).
     """
     upload = SubjectUpload.objects.get(id=upload_id)
     quarantined = upload.subjectstage_set.all()
@@ -1599,4 +1781,23 @@ def clean_quarantined(upload_id):
 
     logger.debug('Removed quarantined subject data.')
 
-    return {'task_id':None, 'success':True, 'messages':['Upload complete. Subject "%s" added.' % upload.subject_name], 'subject':Subject.objects.get(name=upload.subject_name).id}
+    prev_lang = None
+    if not language is None:
+        prev_lang = get_language()
+        activate(language)
+
+    status = {
+        'task_id':None, 
+        'success':True, 
+        'messages':[
+            _('Upload complete. Subject "%(subject_name)s" added.') % {
+                'subject_name':upload.subject_name
+            }],
+        'subject':Subject.objects.get(name=upload.subject_name).id
+    }
+
+    # reset language back to default
+    if not prev_lang is None:
+        activate(prev_lang)
+
+    return status

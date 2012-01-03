@@ -46,7 +46,7 @@ from django.contrib.gis.gdal import *
 from django.contrib.gis.gdal.libgdal import lgdal
 from django.contrib import humanize
 from django.template import loader, Context as DjangoContext
-from django.utils import simplejson as json
+from django.utils import simplejson as json, translation
 from django.views.decorators.cache import cache_control
 from django.template.defaultfilters import slugify, force_escape
 from django.conf import settings
@@ -805,7 +805,7 @@ def uploadfile(request):
             return render_to_response('viewplan.html', status)
 
         # Put in a celery task to create the plan and email user on completion
-        DistrictIndexFile.index2plan.delay(request.POST['txtNewName'], request.POST['legislativeBody'], filename, owner = request.user, template = False, purge = True, email = request.POST['userEmail'])
+        DistrictIndexFile.index2plan.delay(request.POST['txtNewName'], request.POST['legislativeBody'], filename, owner = request.user, template = False, purge = True, email = request.POST['userEmail'], language=translation.get_language())
 
     return render_to_response('viewplan.html', status) 
 
@@ -906,7 +906,7 @@ def getreport(request, planid):
         }
 
         PlanReport.markpending(planid, stamp)
-        PlanReport.createreport.delay(planid, stamp, req)
+        PlanReport.createreport.delay(planid, stamp, req, language=translation.get_language())
     else:
         status['message'] = 'Unrecognized status when checking report status.'
 
@@ -981,7 +981,7 @@ def getcalculatorreport(request, planid):
 
         req = { 'functionIds': function_ids }
         CalculatorReport.markpending(planid, stamp)
-        CalculatorReport.createcalculatorreport.delay(planid, stamp, req)
+        CalculatorReport.createcalculatorreport.delay(planid, stamp, req, language=translation.get_language())
     else:
         status['message'] = 'Unrecognized status when checking report status.'
 
@@ -1865,7 +1865,7 @@ def emaildistrictindexfile(request, planid):
         return HttpResponseForbidden()
     
     # Put in a celery task to create the file and send the emails
-    DistrictIndexFile.emailfile.delay(plan, request.user, request.POST)
+    DistrictIndexFile.emailfile.delay(plan, request.user, request.POST, translation.get_language())
     return HttpResponse(json.dumps({ 'success': True, 'message': 'Task submitted' }), mimetype='application/json')
 
 def getvalidplans(leg_body, owner=None):
