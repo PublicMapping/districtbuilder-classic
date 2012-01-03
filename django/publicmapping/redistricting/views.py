@@ -44,6 +44,7 @@ from django.contrib.gis.geos.collections import MultiPolygon
 from django.contrib.gis.geos import GEOSGeometry
 from django.contrib.gis.gdal import *
 from django.contrib.gis.gdal.libgdal import lgdal
+from django.contrib.sites.models import Site
 from django.contrib import humanize
 from django.template import loader, Context as DjangoContext
 from django.utils import simplejson as json
@@ -507,7 +508,8 @@ def commonplan(request, planid):
         'calculator_reports' : json.dumps(calculator_reports),
         'allow_email_submissions': ('EMAIL_SUBMISSION' in settings.__members__),
         'tags': tags,
-        'plan_text': "community map" if (plan and plan.is_community()) else "plan"
+        'plan_text': "community map" if (plan and plan.is_community()) else "plan",
+        'site': Site.objects.get_current()
     }
 
 
@@ -1047,7 +1049,13 @@ def newdistrict(request, planid):
                 district = plan.district_set.filter(district_id=district_id,short_label=district_short,long_label=district_long)[0]
                 ct = ContentType.objects.get(app_label='redistricting',model='district')
                 if 'comment' in request.POST and request.POST['comment'] != '':
-                    comment = Comment(object_pk = district.id, content_type=ct, site_id=1, user_name=request.user.username, user_email=request.user.email, comment=request.POST['comment'])
+                    comment = Comment(
+                        object_pk=district.id, 
+                        content_type=ct, 
+                        site_id=Site.objects.get_current().id, 
+                        user_name=request.user.username, 
+                        user_email=request.user.email, 
+                        comment=request.POST['comment'])
                     comment.save()
 
                 if len(request.REQUEST.getlist('type[]')) > 0:
@@ -2357,7 +2365,13 @@ def district_info(request, planid, district_id):
                 # Don't thread comments, keep only the latest and greatest
                 ct = ContentType.objects.get(app_label='redistricting',model='district')
                 Comment.objects.filter(object_pk = district.id, content_type=ct).delete()
-                comment = Comment(object_pk = district.id, content_type=ct, site_id=1, user_name=request.user.username, user_email=request.user.email, comment=request.POST['comment'])
+                comment = Comment(
+                    object_pk=district.id, 
+                    content_type=ct, 
+                    site_id=Site.objects.get_current().id, 
+                    user_name=request.user.username, 
+                    user_email=request.user.email, 
+                    comment=request.POST['comment'])
                 comment.save()
             else:
                 # save this if the label changed
