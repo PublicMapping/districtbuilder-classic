@@ -134,11 +134,14 @@ as reports and downloads) and cron jobs.
     Put that above the line that reads "local all all ident" so that 
     password authentication is allowed before user ident authentication
      
- 6. Unzip the datafile in /projects/PublicMapping/DistrictBuilder/data to the import 
-    directory: /projects/local/data/:
+ 6. Download the datafile to /projects/PublicMapping/DistrictBuilder/data, and unzip into
+    the import directory: /projects/local/data/:
 
-    > sudo mkdir /projects/PublicMapping/local/data 
-    > cd  /projects/PublicMapping/local/data; sudo unzip /projects/PublicMapping/data/VA_data.zip
+    > cd /projects/PublicMapping/DistrictBuilder/data
+    > sudo wget -O VA_data.zip http://ftp.azavea.com/download/DistrictBuilder/VA_data.zip
+    > sudo mkdir /projects/PublicMapping/local/data
+    > cd /projects/PublicMapping/local/data
+    > sudo unzip /projects/PublicMapping/data/VA_data.zip
 
     *Note* that if you are loading spatial data for a coverage other than
     the demonstration coverage over Ohio, you will need to ensure that the 
