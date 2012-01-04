@@ -138,7 +138,8 @@ as reports and downloads) and cron jobs.
     the import directory: /projects/local/data/:
 
     > cd /projects/PublicMapping/DistrictBuilder/data
-    > sudo wget -O VA_data.zip http://ftp.azavea.com/download/DistrictBuilder/VA_data.zip
+    > sudo wget --no-check-certificate -O VA_data.zip \
+          https://s3.amazonaws.com/districtbuilderdata/VA_data.zip
     > sudo mkdir /projects/PublicMapping/local/data
     > cd /projects/PublicMapping/local/data
     > sudo unzip /projects/PublicMapping/data/VA_data.zip
