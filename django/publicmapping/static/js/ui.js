@@ -352,31 +352,37 @@ $(function() {
      
      //stats picker menu slider activation
      $('#map_menu_header select').change(function() {
-          if ( $(".map_menu_content:visible'").length === 0) {
-                $('#map_settings_content, #legend_toggle').removeClass('collapse', 400);
-                $storedPanel.slideDown(200);
-          }
+         if ( $(".map_menu_content:visible'").length === 0) {
+             $('#map_settings_content, #legend_toggle').removeClass('collapse', 400);
+             $storedPanel.slideDown(200);
+         }
      });
     
     // map editing buttons
     $('.toolset button, #history_tools button, #open_statistics_editor, #plan_export_container button')
-      .button({
-          icons: {primary: 'ui-icon'}
-      })
-      .click(function(){
-        if($(this).hasClass('btntoggle')) {
-			if(!$(this).hasClass('solotoggle')) {
-				$('.toolset_group button.btntoggle').removeClass('toggle');
-				 $(this).addClass('toggle');
-			}
-        }
-    });    
+        .button({
+            icons: {primary: 'ui-icon'}
+        })
+        .click(function(){
+            if($(this).hasClass('btntoggle')) {
+                if(!$(this).hasClass('solotoggle')) {
+                    $('.toolset_group button.btntoggle').removeClass('toggle');
+                    $(this).addClass('toggle');
+                }
+            }
+        });    
     
     $('#saveplaninfo').bind('planSaved', function(event, time) {
         var local = getLocalTimeFromIsoformat(time);
         var hour = local.hours % 12;
         if (hour === 0) { hour = 12; }
-        $('#saveplaninfo').text(gettext('Last Saved on ') + local.day + gettext(' at ') + hour + ':' + ((local.minutes < 10) ? ('0' + local.minutes) : local.minutes));
+        var i18nParams = {
+            day: local.day,
+            hour: hour,
+            minute: ((local.minutes < 10) ? ('0' + local.minutes) : local.minutes)
+        };
+
+        $('#saveplaninfo').text(printFormat(gettext('Last Saved on %(day)s at %(hour)s:%(minute)s'), i18nParams));
     });
 
 

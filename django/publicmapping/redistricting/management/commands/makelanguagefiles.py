@@ -32,12 +32,34 @@ class Command(BaseCommand):
         for locale in locales:
             # Make messages for templates (.html, .txt, .email)
             if everything or options.get("templates"):
-                management.call_command('makemessages', locale=locale, extensions=['html','txt','email'], interactive=False)    
+                management.call_command('makemessages', 
+                    locale=locale, 
+                    extensions=['html','txt','email'], 
+                    interactive=False,
+                    verbosity=options.get('verbosity'),
+                    ignore_patterns=[ 'static/jquery/*.*',
+                        'static-media/jquery/*.*']
+                )
         
             # Make messages for javascript
             if everything or options.get("javascript"):
-                management.call_command('makemessages', locale=locale, domain='djangojs', interactive=False)
+                management.call_command('makemessages', 
+                    locale=locale, 
+                    domain='djangojs', 
+                    interactive=False,
+                    verbosity=options.get('verbosity'),
+                    ignore_patterns=[ 'redistricting/static/*.*',
+                        'static/*.*',
+                        'static-media/jqGrid/*.*',
+                        'static-media/openlayers/*.*',
+                        'static-media/admin/*.*',
+                        'static-media/jquery/*.*']
+                )
 
             # Compile message file
             if everything or options.get("compile"):
-                management.call_command('compilemessages', locale=locale, interactive=False)
+                management.call_command('compilemessages', 
+                    locale=locale,
+                    interactive=False,
+                    verbosity=options.get('verbosity')
+                )

@@ -242,7 +242,7 @@ chooseplan = function(options) {
                 resizable:false,
                 close: function(event, ui){
                     $('#start_mapping').attr('disabled', null);
-                    $('#start_mapping .ui-button-text').html(_options.anonymous ? "View Plan" : "Start Drawing");
+                    $('#start_mapping .ui-button-text').html(_options.anonymous ? gettext("View Plan") : gettext("Start Drawing"));
                 }
             });
 
@@ -313,15 +313,15 @@ chooseplan = function(options) {
                 id: 'pk'
             },
             colModel: [
-                {name:'fields.name', label:'Plan Name', search: true, sortable:true},
-                {name:'fields.owner', label:'Author', search:true, width: '110', fixed: true, sortable:true},
-                {name:'fields.description', label:'Description', hidden:true, search:true},
-                {name:'fields.is_shared', label:'Shared', sortable:true, search:false, width:'60', fixed: true, align: 'center', formatter: sharedImageFormatter},
-                {name:'fields.edited', label:'Last Edited', sortable:true, search:false, width:'130', fixed: true, align: 'center', formatter:'date', formatoptions: { srcformat: 'UniversalSortableDateTime', newformat:'m/d/Y g:i A'}},
-                {name:'fields.delete', label:'Delete', formatter: deleteFormatter, width:'60', fixed: true, align:'center'},
-                {name:'fields.can_edit', label:'Edit', search:false, hidden: true},
-                {name:'fields.districtCount', label:'# Districts', search:false, sortable:true, hidden:true},
-                {name:'fields.processing_state', label:'State', search:false, sortable:false, hidden:true, formatter: rowColorFormatter}
+                {name:'fields.name', label:gettext('Plan Name'), search: true, sortable:true},
+                {name:'fields.owner', label:gettext('Author'), search:true, width: '110', fixed: true, sortable:true},
+                {name:'fields.description', label:gettext('Description'), hidden:true, search:true},
+                {name:'fields.is_shared', label:gettext('Shared'), sortable:true, search:false, width:'60', fixed: true, align: 'center', formatter: sharedImageFormatter},
+                {name:'fields.edited', label:gettext('Last Edited'), sortable:true, search:false, width:'130', fixed: true, align: 'center', formatter:'date', formatoptions: { srcformat: 'UniversalSortableDateTime', newformat:'m/d/Y g:i A'}},
+                {name:'fields.delete', label:gettext('Delete'), formatter: deleteFormatter, width:'60', fixed: true, align:'center'},
+                {name:'fields.can_edit', label:gettext('Edit'), search:false, hidden: true},
+                {name:'fields.districtCount', label:gettext('# Districts'), search:false, sortable:true, hidden:true},
+                {name:'fields.processing_state', label:gettext('State'), search:false, sortable:false, hidden:true, formatter: rowColorFormatter}
             ],
 
             onSelectRow: rowSelected,
@@ -366,7 +366,7 @@ chooseplan = function(options) {
                             click: function() {
                                 $(this).dialog('close');
                                 var waitDialog = $('<div />').text(
-                                        gettext('Please wait while deleting plan.')).dialog({
+                                        gettext('Please wait. Deleting plan.')).dialog({
                                     modal: true, autoOpen: true, title: gettext('Deleting Plan'),
                                     escapeOnClose: false, resizable:false,
                                     open: function() { $(".ui-dialog-titlebar-close", $(this).parent()).hide(); }
@@ -463,9 +463,9 @@ chooseplan = function(options) {
         // workaround for problem with jqGrid custom formatter with boolean (is_shared)
         var shared = $('#is_shared');
         if (shared.val().contains("unshared")) {
-            shared.val('No');
+            shared.val(gettext('No'));
         } else {
-            shared.val('Yes');
+            shared.val(gettext('Yes'));
         }
 
         if (can_edit == "true") {
@@ -538,7 +538,7 @@ chooseplan = function(options) {
         _table.setPostDataItem( 'legislative_body', $('#leg_selector').val() );
         /* If the search box has a value, apply that to any filter */
         var search = $('#plan_search');
-        if (search.val() != '' && search.val() != ' Search ') {
+        if (search.val() != '' && search.val() != gettext('Search')) {
                 _table.setPostDataItem( '_search', true );
                 _table.setPostDataItem( 'searchString', $('#plan_search').val() );
         } else {
@@ -561,10 +561,10 @@ chooseplan = function(options) {
         });
 
         // watermark for non-html5 browsers
-        if (document.getElementById('plan_search').getAttribute('placeholder') != 'Search' ||
+        if (document.getElementById('plan_search').getAttribute('placeholder') != gettext('Search') ||
                 navigator.userAgent.indexOf('Firefox/3') > -1) {
             searchBox.focus( function() {
-                if ($(this).val() == gettext(' Search ')) {
+                if ($(this).val() == gettext('Search')) {
                     $(this).val('');
                     $(this).css('color', '#000000');
                 }
@@ -572,13 +572,13 @@ chooseplan = function(options) {
             searchBox.blur( function() {
                 if ($(this).val() == '') {
                     $(this).css('color', '#666666');
-                    $(this).val(gettext(' Search '));
+                    $(this).val(gettext('Search'));
                 }
             });
 
             // initial state showing watermark
             searchBox.css('font', 'gray');
-            searchBox.val(gettext(' Search '));
+            searchBox.val(gettext('Search'));
         }
         
     };
@@ -633,9 +633,9 @@ chooseplan = function(options) {
             _table.jqGrid('GridToForm', _selectedPlanId, '#plan_form'); 
             var shared = $('#is_shared');
             if (shared.val().contains("unshared")) {
-                shared.val('No');
+                shared.val(gettext('No'));
             } else {
-                shared.val('Yes');
+                shared.val(gettext('Yes'));
             }
             editState('view');
             return false;
@@ -687,7 +687,7 @@ chooseplan = function(options) {
             _eventType = 'upload';
             _nameRequired = true;
             showItems(true, false, false, false, true);
-            $('#start_mapping .ui-button-text').html('Upload Plan');
+            $('#start_mapping .ui-button-text').html(gettext('Upload Plan'));
             $('#start_mapping').attr('disabled', false);            
             setActiveTab($(this));           
         });

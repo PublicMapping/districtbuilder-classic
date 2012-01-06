@@ -38,12 +38,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=8" />        
     <meta name="author" content="David Zwarg, Andrew Jennings" />
     <meta name="copyright" content="&copy; 2010 Micah Altman, Michael McDonald"/>
-    <meta property="og:title" content="Redistricting plan by DistrictBuilder" />
-    <meta property="og:description" content="DistrictBuilder is web-based, open source software for collaborative redistricting." />
+    <meta property="og:title" content="{% trans "Redistricting plan by DistrictBuilder" %}" />
+    <meta property="og:description" content="{% trans "DistrictBuilder is web-based, open source software for collaborative redistricting." %}" />
     <meta property="og:image" content="/static-media/images/db_sprite.png" />
-    <title>Open Source District Mapping Tool</title>
-    <link rel="alternate" type="application/atom+xml" title="Updated Plans from DistrictBuilder" href="{% url publicmapping.redistricting.views.plan_feed %}"/>
-    <link rel="alternate" type="application/atom+xml" title="Recently Shared Plans from DistrictBuilder" href="{% url publicmapping.redistricting.views.share_feed %}"/>
+    <title>{% trans "Open Source District Mapping Tool" %}</title>
+    <link rel="alternate" type="application/atom+xml" title="{% trans "Updated Plans from DistrictBuilder" %}" href="{% url publicmapping.redistricting.views.plan_feed %}"/>
+    <link rel="alternate" type="application/atom+xml" title="{% trans "Recently Shared Plans from DistrictBuilder" %}" href="{% url publicmapping.redistricting.views.share_feed %}"/>
     {% compress css %}
     <link rel="stylesheet" type="text/css" href="/static-media/css/reset.css"/>
     <link rel="stylesheet" type="text/css" href="/static-media/jqGrid/css/ui.jqgrid.css"/>
@@ -70,7 +70,9 @@
     <script type="text/javascript" src="/static-media/jquery/jquery-1.6.js"></script>
     <script type="text/javascript" src="/static-media/jquery/jquery-ui-1.8.2.custom.min.js"></script>
     <script type="text/javascript" src="/static-media/jquery/external/jquery.tools.tooltip.slide.min.js"></script>
-    <script type="text/javascript" src="/static-media/jqGrid/js/i18n/grid.locale-en.js"></script>
+    {% endcompress %}
+    <script type="text/javascript" src="/static-media/jqGrid/js/i18n/grid.locale-{{ language_code }}.js"></script>
+    {% compress js %}
     <script type="text/javascript" src="/static-media/jqGrid/js/jquery.jqGrid.min.js"></script>
     <script type="text/javascript" src="/static-media/jqGrid/plugins/grid.postext.js"></script>
     <script type="text/javascript" src="/static-media/js/sprintf.js"></script>
@@ -212,12 +214,12 @@
       ATTRIBUTION NOTICE SECTION ENDS
       {% endcomment %}
       <ul id="steps_tabs"> <!-- tabs have to be first UL in #steps or else tabs wont work -->
-        <li id="tab_plan"><a href="#step_plan">Plan</a><li>
-        <li id="tab_draw"><a href="#step_draw">{% if is_registered %}Draw{% else %}View{% endif %}</a></li>
-        <li id="tab_evaluate"><a href="#step_evaluate">Evaluate</a></li>
-        <li id="tab_share" class="last"><a href="#step_share">Share</a></li>
+        <li id="tab_plan"><a href="#step_plan">{% trans "Plan" %}</a><li>
+        <li id="tab_draw"><a href="#step_draw">{% if is_registered %}{% trans "Draw" %}{% else %}{% trans "View" %}{% endif %}</a></li>
+        <li id="tab_evaluate"><a href="#step_evaluate">{% trans "Evaluate" %}</a></li>
+        <li id="tab_share" class="last"><a href="#step_share">{% trans "Share" %}</a></li>
         {% if has_leaderboard and not plan.is_community %}
-        <li id="tab_leaderboard" class="rounded"><a href="#step_leaderboard">Leaderboards</a></li>
+        <li id="tab_leaderboard" class="rounded"><a href="#step_leaderboard">{% trans "Leaderboards" %}</a></li>
         {% endif %}
       </ul>
       
@@ -231,7 +233,7 @@
             If the user is anonymous, display a login link.
 
             {% endcomment %}
-            <li><a class="last" href="/">Login</a></li>
+            <li><a class="last" href="/">{% trans "Login" %}</a></li>
             {% else %}
             {% comment %}
 
@@ -239,8 +241,8 @@
             management panel, and a logout link.
 
             {% endcomment %}
-            <li><a href="#" onclick="$('#register').dialog('open');return false;">My Account</a></li>
-            <li><a class="last" href="/accounts/logout/">Logout</a></li>
+            <li><a href="#" onclick="$('#register').dialog('open');return false;">{% trans "My Account" %}</a></li>
+            <li><a class="last" href="/accounts/logout/">{% trans "Logout" %}</a></li>
             {% endif %}
         </ul>
     </div>
@@ -248,11 +250,10 @@
   </div>   
       
    <div id="step_plan" class="main_content plan fulltab">
-            <div class="shadow_left"></div>
-            <div class="shadow_top"></div>
-         <div class="toolbar ui-widget-header"><h1>Choose a Plan. Start Drawing.</h1></div>
-         <div class="tab_content">
-         
+     <div class="shadow_left"></div>
+     <div class="shadow_top"></div>
+     <div class="toolbar ui-widget-header"><h1>{% trans "Choose a Plan. Start Drawing." %}</h1></div>
+     <div class="tab_content">
         {% comment %}
         If there is only one legislative body, we won't display selectors or force
         the user to choose one
@@ -260,7 +261,7 @@
         {% ifnotequal bodies|length 1 %}
         <div class="leg_selector_container">
             <span class="leg_selector_instructions">
-               1. Select District Layer
+               1. {% trans "Select District Layer" %}
             </span>
             <select id="leg_selector" class="leg_selector">
                 {% for body in bodies %}
@@ -271,39 +272,39 @@
         {% endifnotequal %}
         <div id="plan_type">
         {% ifnotequal bodies|length 1 %}
-          <h3>2. Select Plan Type</h3>
+          <h3>2. {% trans "Select Plan Type" %}</h3>
         {% else %}
-          <h3>1. Select Plan Type</h3>
+          <h3>1. {% trans "Select Plan Type" %}</h3>
         {% endifnotequal %}
           <ul id="plan_buttons">
-              <li id="filter_templates">Template</li>
-              <li id="filter_shared">Shared</li>
-              <li id="filter_mine">My Plans</li>
-              <li id="new_from_file">Upload Plan</li>
+              <li id="filter_templates">{% trans "Template" %}</li>
+              <li id="filter_shared">{% trans "Shared" %}</li>
+              <li id="filter_mine">{% trans "My Plans" %}</li>
+              <li id="new_from_file">{% trans "Upload Plan" %}</li>
           </ul>
         </div>
         <div>
           <div id="content_container">
             <div id="table_container" class="middlecolumn" >
                     {% ifnotequal bodies|length 1 %}
-                      <h3>3. Select Plan</h3>
+                      <h3>3. {% trans "Select Plan" %}</h3>
                     {% else %}
-                      <h3>2. Select Plan</h3>
+                      <h3>2. {% trans "Select Plan" %}</h3>
                     {% endifnotequal %}
-                <input id="plan_search" type="search" placeholder="Search" />
+                <input id="plan_search" type="search" placeholder="{% trans "Search" %}" />
                 <table id="plan_table"></table>
                 <div id="plan_table_pager"></div>  
             </div>
           <div id="upload_selection" class="middlecolumn" >
-              <label>Upload a District Index file:</label>
+              <label>{% trans "Upload a District Index file:" %}</label>
               <form method="POST" enctype="multipart/form-data" action="/districtmapping/plan/upload/" id="frmUpload">
                 <input type="file" id="indexFile" name="indexFile"/>
                 {% ifnotequal bodies|length 1 %}
                 <div>
-                    <p>You must choose a legislative body to which the new plan will be applied.</p>
+                    <p>{% trans "You must choose a legislative body to which the new plan will be applied." %}</p>
                 </div>
                 <select id="leg_selector_upload" name="legislativeBody">
-                    <option value="">Select a body</option>
+                    <option value="">{% trans "Select a body" %}</option>
                     {% for body in bodies %}
                         <option value="{{ body.id }}">{{ body.name }}</option>
                     {% endfor %}
@@ -318,7 +319,7 @@
                 <input type="hidden" id="userEmail" name="userEmail" value="{{ userinfo.email }}"/>
                   {% else %}
                   <div>
-                      <p>Please enter your email address so District Builder can send you a confirmation when your plan has been uploaded. Your email will not be saved or shared.</p>
+                      <p>{% trans "Please enter your email address so DistrictBuilder can send you a confirmation when your plan has been uploaded. Your email will not be saved or shared." %}</p>
                       <input type="text" id="userEmail" name="userEmail"/>
                   </div>
                   {% endif %}
@@ -329,50 +330,49 @@
                 <div id="form_action">
                     <div>
                       {% ifnotequal bodies|length 1 %}
-                        <label id="lblStartDrawing">4. Name Plan and Start Drawing:</label>
+                        <label id="lblStartDrawing">4. {% trans "Name Plan and Start Drawing:" %}</label>
                       {% else %}
-                        <label id="lblStartDrawing">3. Name Plan and Start Drawing:</label>
+                        <label id="lblStartDrawing">3. {% trans "Name Plan and Start Drawing:" %}</label>
                       {% endifnotequal %}
                     </div>
                   <div id='radCopyOrEdit'>
-                      <input type="radio" name="Edit" value="edit" checked>Edit Selected Plan</input><br/>
-                      <input type="radio" name="Edit" value="saveas">Copy and Save Selected Plan</input>
+                      <input type="radio" name="Edit" value="edit" checked="checked">{% trans "Edit Selected Plan" %}</input><br/>
+                      <input type="radio" name="Edit" value="saveas">{% trans "Copy and Save Selected Plan" %}</input>
                   </div>
                   <div id="newName">
                       <input type="text" id="txtNewName" name="txtNewName"/>
                   </div>
-                  <button id="start_mapping">Start Drawing</button>
+                  <button id="start_mapping">{% trans "Start Drawing" %}</button>
                   <div id="start_mapping_help">
-                    This div may be used to display extra explanatory text under the Start Drawing button
                   </div>
                 </div>
 
                 <div id="form_container">
                   <form id="plan_form">
-                    <h3>Plan Details</h3>
-                      <label id="owner_label" for="owner">User Name:</label>
+                    <h3>{% trans "Plan Details" %}</h3>
+                      <label id="owner_label" for="owner">{% trans "User Name:" %}</label>
                       <input disabled type="text" id="owner" name="fields.owner" /><br/>
                       
-                      <label id="name_label" for="name">Plan Name:</label>
+                      <label id="name_label" for="name">{% trans "Plan Name:" %}</label>
                       <input disabled type="text" id="name" name="fields.name" />
                       
-                      <label id="description_label" for="description">Description:</label>
+                      <label id="description_label" for="description">{% trans "Description:" %}</label>
                       <textarea disabled type="text" id="description" name="fields.description" rows="5" ></textarea><br/>
 
-                      <label id="districtCount_label" for="districtCount"># of Districts:</label>
+                      <label id="districtCount_label" for="districtCount">{% trans "# of Districts:" %}</label>
                       <input disabled type="text" id="districtCount" name="fields.districtCount" /><br/>
 
-                      <label id="is_shared_label" for="is_shared">Shared:</label>
+                      <label id="is_shared_label" for="is_shared">{% trans "Shared:" %}</label>
                       <input disabled type="text" id="is_shared" name="fields.is_shared" /><br/>
 
-                      <label id="edited_label" for="edited">Last Modified:</label>
+                      <label id="edited_label" for="edited">{% trans "Last Modified:" %}</label>
                       <input disabled type="text" id="edited" name="fields.edited" />
 
                       <div id="edit_container">
                         <div id="chooserFileDownloadTarget" class="chooserDetailButton"></div>
-                        <button id="edit_plan_attr" class="chooserDetailButton">Edit Details</button>
-                        <button id="save_plan_attr" class="chooserDetailButton">Save</button>
-                        <button id="cancel_edit_plan_attr" class="chooserDetailButton">Cancel</button>
+                        <button id="edit_plan_attr" class="chooserDetailButton">{% trans "Edit Details" %}</button>
+                        <button id="save_plan_attr" class="chooserDetailButton">{% trans "Save" %}</button>
+                        <button id="cancel_edit_plan_attr" class="chooserDetailButton">{% trans "Cancel" %}</button>
                         <br />
                       </div>
                   </form>
@@ -386,14 +386,14 @@
    <div id="step_draw" class="main_content">
       <div id="mapandmenu" class="fulltab" >
          <div id="control_header" class="toolbar ui-widget-header">
-         <button id="choose_layers_button">Set Map<br/>Layers</button>
+         <button id="choose_layers_button">{% trans "Set Map<br/>Layers" %}</button>
           <div id="toolsets">
             <div id="plan_export_container" class="toolbar_menu_container">
-                <button id="plan_export_button" class="btntoggle solotoggle">Export</button>
+                <button id="plan_export_button" class="btntoggle solotoggle">{% trans "Export" %}</button>
                 <div id="plan_export_menu" class="toolbar_menu">
-                    <button id="print_btn">Print</button>
-                    <button id="shapefile_btn">Shape File</button>
-                    <button id="rawdata_btn">Raw Data</button>
+                    <button id="print_btn">{% trans "Print" %}</button>
+                    <button id="shapefile_btn">{% trans "Shape File" %}</button>
+                    <button id="rawdata_btn">{% trans "Raw Data" %}</button>
                 </div>
             </div>
             <div id="history_tools">
@@ -413,7 +413,7 @@
 
               {% endcomment %}
               <ul class="mapping_tabs">
-                <li><a href="#toolset_draw">Map Tools</a></li>
+                <li><a href="#toolset_draw">{% trans "Map Tools" %}</a></li>
               </ul>  
             {% endblock %}
             
@@ -430,15 +430,15 @@
           {% endcomment %}
             <div class="toolset" id="toolset_draw">
               <div class="toolset_group">
-                  <button class="navigate_map_tool active btntoggle toggle">Pan</button><br/>
-                  <button class="identify_map_tool btntoggle titletip" title="Click on a geounit to see its demographic info." >Info</button>
+                  <button class="navigate_map_tool active btntoggle toggle">{% trans "Pan" %}</button><br/>
+                  <button class="identify_map_tool btntoggle titletip" title="{% trans "Click on a geounit to see its demographic info." %}" >{% trans "Info" %}</button>
               </div>
             <div class="toolset_group toolset_group_lg">
-                  <button id="district_id_map_tool" title="Click on a district to see its ID." class="btntoggle titletip">{{ body_member_long_label|capfirst }}<br/>Info</button>
+                  <button id="district_id_map_tool" title="{% trans "Click on a district to see its ID." %}" class="btntoggle titletip">{{ body_member_long_label|capfirst }}<br/>{% trans "Info" %}</button>
               </div>
               <div class="toolset_group toolset_group_lg">
-                <button id="show_splits_button">Show<br/>Splits</button>
-                <button id="generate_splits_report_button">Generate<br/>Splits Report</button>
+                <button id="show_splits_button">{% trans "Show<br/>Splits" %}</button>
+                <button id="generate_splits_report_button">{% trans "Generate<br/>Splits Report" %}</button>
                </div>
               <div class="clear"></div>
             </div>
@@ -472,14 +472,14 @@
               {% endif %}
 
               <ul class="mapping_tabs">
-                <li><a href="#sidebar_content"><button class="menu_toggle"></button>Statistics</a></li>
+                <li><a href="#sidebar_content"><button class="menu_toggle"></button>{% trans "Statistics" %}</a></li>
               </ul> 
                 <div class="sidebar_content">
                   <div id="map_menu_header">
                       <select></select>
                     </div>
                   <div class="map_menu_content demographics">
-                      <div class="sidebarload"><h3>Loading Statistics...</h3></div>
+                      <div class="sidebarload"><h3>{% trans "Loading Statistics..." %}</h3></div>
                   </div>
                 </div>
             </div>
@@ -494,8 +494,8 @@
              <div id="map_type_content_container"></div>
             <div id="opacity_slider"></div>          
             <div id="reference_layer_id" class="layer_type_container">
-                <div id="reference_layer_label">Reference Layer:</div>
-                <div id="reference_layer_name">None</div>
+                <div id="reference_layer_label">{% trans "Reference Layer:" %}</div>
+                <div id="reference_layer_name">{% trans "None" %}</div>
             </div>
           </div>
           {% block multi_member %}
@@ -517,10 +517,9 @@
             <div id="splits_report_dialog">
                 <div id="splits_report_content">
                     <div id="splits_report_select_panel">
-                        <h2>Generate Splits Report for Current {{ plan_text|title }}</h2>
+                        <h2>{% blocktrans with plan_text|title as plan_text_title %}Generate Splits Report for Current {{ plan_text_title }}{% endblocktrans %}</h2>
                         <div id="splits_report_reminder_text">
-                            Select reference layer(s) for comparison.
-                        </div>
+                            {% trans "Select reference layer(s) for comparison." %}</div>
                         <div id="splits_report_available_layers">
                             {% for snap in snaplayers %}
                             {% if not forloop.last %}                    
@@ -532,34 +531,31 @@
                             {% endfor %}
                         </div>
 
-                        <h2>Advanced options</h2>
+                        <h2>{% trans "Advanced options" %}</h2>
                         <div class="inverse_choice_wrapper">
                             <input id="inverse_choice" type="checkbox" />
-                            <label id="inverse_choice_label" for="inverse_choice">Reverse splits detection</label>
+                            <label id="inverse_choice_label" for="inverse_choice">{% trans "Reverse splits detection" %}</label>
                         </div>                  
 
                         <div class="extended_choice_wrapper">
                             <input id="extended_choice" type="checkbox" />
-                            <label id="extended_choice_label" for="extended_choice">Extended report: List all</label>
+                            <label id="extended_choice_label" for="extended_choice">{% trans "Extended report: List all" %}</label>
                             <div id="extended_choice_label_more">
-                                districts or communities contained within each district.
+                                {% trans "districts or communities contained within each district." %}
                             </div>
                             <div id="extended_choice_label_warning">
-                                (Choosing this option will
-                                significantly increase the amount
-                                of time it takes to generate the
-                                report.)
+                                {% trans "(Choosing this option will significantly increase the amount of time it takes to generate the report.)" %}
                             </div>
                         </div>                  
 
                         <div id="splits_report_ok_div">
-                            <button id="splits_report_ok_button">Generate Report</button>
+                            <button id="splits_report_ok_button">{% trans "Generate Report" %}</button>
                         </div>
                     </div>
                     <div id="splits_report_results_panel">
-                        <h2>Splits Report</h2>
+                        <h2>{% trans "Splits Report" %}</h2>
                         <div id="splits_report_results_container">
-                          <p>No report generated.</p>
+                          <p>{% trans "No report generated." %}</p>
                         </div>
                     </div>
                 </div>
@@ -585,7 +581,7 @@
             </script>
              
           <div id="map_legend">
-              <button id="legend_toggle">Map Legend</button>
+              <button id="legend_toggle">{% trans "Map Legend" %}</button>
           </div>
           {% comment %}
           
@@ -602,7 +598,7 @@
             <table id="basemap_legend">
                 <thead>
                     <tr>
-                        <th colspan="2" id="legend_title">Total Population</th>
+                        <th colspan="2" id="legend_title">{% trans "Total Population" %}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -626,23 +622,23 @@
                 <tbody>
                     <tr>
                         <td><div id="district_swatch_farover" class="swatch farover district_swatch">&nbsp;</div></td>
-                        <td>Far Over Target</td>
+                        <td>{% trans "Far Over Target" %}</td>
                     </tr>
                     <tr>
                         <td><div id="district_swatch_over" class="swatch over district_swatch">&nbsp;</div></td>
-                        <td>Over Target</td>
+                        <td>{% trans "Over Target" %}</td>
                     </tr>
                     <tr>
                         <td><div id="district_swatch_within" class="swatch target district_swatch">&nbsp;</div></td>
-                        <td>Within Target</td>
+                        <td>{% trans "Within Target" %}</td>
                     </tr>
                     <tr>
                         <td><div id="district_swatch_under" class="swatch under district_swatch">&nbsp;</div></td>
-                        <td>Under Target</td>
+                        <td>{% trans "Under Target" %}</td>
                     </tr>
                     <tr>
                         <td><div id="district_swatch_farunder" class="swatch farunder district_swatch">&nbsp;</div></td>
-                        <td>Far Under Target</td>
+                        <td>{% trans "Far Under Target" %}</td>
                     </tr>
                 </tbody>
             </table>
@@ -652,27 +648,27 @@
                         <td class="indented_swatch">
                             <div id="district_swatch_locked" class="swatch locked">&nbsp;</div>
                         </td>
-                        <td>Locked For Editing</td>
+                        <td>{% trans "Locked For Editing" %}</td>
                     </tr>
 
                     <tr>
                         <td class="indented_swatch">
                             <div id="district_swatch_highlighted" class="swatch highlighted">&nbsp;</div>
                         </td>
-                        <td>Highlighted</td>
+                        <td>{% trans "Highlighted" %}</td>
                     </tr>
                 </tbody>
             </table>
             <table id="reference_legend">
                 <thead>
                     <tr>
-                        <th colspan="2">Reference</th>
+                        <th colspan="2">{% trans "Reference" %}</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td class="indented_swatch"><div id="reference_swatch" class="swatch reference">&nbsp;</div></td>
-                        <td id="reference_title" >reference</td>
+                        <td id="reference_title" >{% trans "reference" %}</td>
                     <tr>
                 </tbody>
             </table>
@@ -682,34 +678,32 @@
     <div id="step_evaluate" class="main_content evaluate fulltab">
       <div class="shadow_left"></div>
       <div class="shadow_top"></div>
-      <div class="toolbar ui-widget-header"><h1>Evaluate Statistics</h1></div>
+      <div class="toolbar ui-widget-header"><h1>{% trans "Evaluate Statistics" %}</h1></div>
       <div class="tab_content">
 		<div class="evaluate_container">
         {% if calculator_reports != "[]" %}
           <div id="reportdescription">
             <div id="description">
-               <h3> Select the plan statistics you'd like included in a comprehensive report on your redistricting plan.
-					  After you've made your selections click "Create and Preview Report" to view the final report.
-				</h3>
+               <h3>{% blocktrans %}Select the plan statistics you'd like included in a comprehensive report on your redistricting plan.  After you've made your selections click "Create and Preview Report" to view the final report.{% endblocktrans %}</h3>
             </div>
             <div id="options"></div>
 		    <div id="reportButtons">
-              <button id="btnPreviewReport">Create and Preview Reports</button>
+              <button id="btnPreviewReport">{% trans "Create and Preview Reports" %}</button>
             </div>
           </div>
           <div id="reportPreviewContainer">
-            <div id="reportPreview" class="report multiple"><div class="reportStatus"><img src="/static-media/images/icon-table-lg.png" /><h1>Please generate a report<br/>to preview statistics</h1></div></div>
+            <div id="reportPreview" class="report multiple"><div class="reportStatus"><img src="/static-media/images/icon-table-lg.png" /><h1>{% trans "Please generate a report<br/>to preview statistics" %}</h1></div></div>
           </div>
 
         {% else %}
           {% if reporting_template %}
-			<div class="alt_reports">
+            <div class="alt_reports">
             {% include reporting_template %}
-			</div>
+            </div>
           {% endif %} 
         {% endif %}
-		</div>
-	  </div>
+        </div>
+      </div>
     </div>
     {% if has_leaderboard and not plan.is_community %}        
     <div id="step_leaderboard" class="main_content leaderboard fulltab">
@@ -754,15 +748,13 @@
             </div>
           </div>
           {% endifnotequal %}
-         {% ifequal leaderboard_bodies|length 1 %}
+          {% ifequal leaderboard_bodies|length 1 %}
             <input id="legSelectorLeaderboards" type="hidden" value="{{ leaderboard_bodies.1.id }}" />
-         {% endifequal %}
+          {% endifequal %}
 
-          <div id="leaderboard_topranked">
-          </div>
+          <div id="leaderboard_topranked"></div>
           {% if is_registered %}                  
-          <div id="leaderboard_myranked">
-          </div>
+          <div id="leaderboard_myranked"></div>
           {% endif %}
       </div>
     </div>
@@ -770,7 +762,7 @@
     <div id="step_share" class="main_content share fulltab">
       <div class="shadow_left"></div>
       <div class="shadow_top"></div>
-      <div class="toolbar ui-widget-header"><h1>Share a {{ plan_text|title }}</h1></div>
+      <div class="toolbar ui-widget-header"><h1>{% blocktrans with plan_text|title as plan_text_title %}Share a {{ plan_text_title }}{% endblocktrans %}</h1></div>
       <div class="tab_content">
           <div id="saveandshare">
               {% block share_panel %}
@@ -782,8 +774,8 @@
 
               {% endcomment %}
               <div class="explanation">
-                  <h3>This plan has been shared</h3>
-                  <p>Anyone can view this plan by visiting the following URL in a web browser:</p>
+                  <h3>{% trans "This plan has been shared" %}</h3>
+                  <p>{% trans "Anyone can view this plan by visiting the following URL in a web browser:" %}</p>
                   <div id="share_url">
                       <script type="text/javascript">document.write(window.location.protocol, '//',
                          window.location.host, '{% url publicmapping.redistricting.views.viewplan planid=plan.id %}');
@@ -791,7 +783,7 @@
                  <ul class="share-buttons">
                   <li class="twitter-tweet">
                     <a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal">
-                      Tweet
+                      {% trans "Tweet" %}
                     </a>
                     <script type="text/javascript" src="https://platform.twitter.com/widgets.js"></script>
                   </li>   
@@ -812,13 +804,15 @@
               </div>
               {% endblock %}
               <div class="blockfile">
-                  <h3>Plan File Export</h3>
-                  <p>The {{ body_member_long_label|lower }} index file is a comma-separated-value file (csv).
-				  Each line lists the unique id of the building blocks of each {{ plan_text }} 
-				  (such as ward, census block, etc.) and the district to which it belongs. This 
-				  file can be imported to your account or someone else's account or used in analysis
-				  of the {{ plan_text }} using other GIS software.
-				  </p>
+                  <h3>{% trans "Plan File Export" %}</h3>
+                  <p>{% blocktrans with body_member_long_label|lower as bmlll %}
+                  The {{ bmlll }} index file is a comma-separated-value file (csv).
+                  Each line lists the unique id of the building blocks of each {{ plan_text }} 
+                  (such as ward, census block, etc.) and the district to which it belongs. This 
+                  file can be imported to your account or someone else's account or used in analysis
+                  of the {{ plan_text }} using other GIS software.
+                  {% endblocktrans %}
+                  </p>
                   <div id='districtIndexFileTarget' />
               </div>
           </div>
@@ -845,8 +839,8 @@
 
           {% endcomment %}
           <label>
-            {% if plan.is_community %}Community Map{% else %}Plan{% endif %}
-            Name:
+            {% if plan.is_community %}{% trans "Community Map" %}{% else %}{% trans "Plan" %}{% endif %}
+            {% trans "Name:" %}
           </label> {{ plan.name|truncate:"40" }}
           {% else %}
           {% comment %}
@@ -855,7 +849,7 @@
           a plan before anything else can happen.
 
           {% endcomment %}
-          Please select a plan
+          {% trans "Please select a plan" %}
           {% endif %}
       </div>
      </div>
@@ -868,7 +862,7 @@
           
           {% endcomment %}
          <label>
-           Currently Viewing:&nbsp;<span id="currently_viewing"></span>
+           {% trans "Currently Viewing:" %}&nbsp;<span id="currently_viewing"></span>
          </label>
        </div>
      </div>
@@ -887,21 +881,21 @@
           Show the edited time of the plan.
 
           {% endcomment %}
-          <div id="saveplaninfo" class="savedat">{{ plan.edited.isoformat }} </div>
+          <div id="saveplaninfo" class="savedat">{{ plan.edited.isoformat }}</div>
         {% else %}
           {% comment %}
 
           Indicate that the plan has not yet been saved.
 
           {% endcomment %}
-          <div id="saveplaninfo" class="savedat">Plan not saved</div>
+          <div id="saveplaninfo" class="savedat">{% trans "Plan not saved" %}</div>
         {% endif %}
       </div>
       {% endif %}
 </div>
-<div id="working" title="Please Wait">Please wait while new {{ body_members }} are computed...</div>
-<div id="waiting" title="Please Wait">Please wait while data is being retrieved...</div>
-<div id="scoring" title="Please Wait">Please wait while the plan is being validated. This may take a few minutes.</div>
+<div id="working" title="{% trans "Please Wait" %}">{% blocktrans %}Please wait. New {{ body_members }} are computed...{% endblocktrans %}</div>
+<div id="waiting" title="{% trans "Please Wait" %}">{% trans "Please wait. Data is being retrieved..." %}</div>
+<div id="scoring" title="{% trans "Please Wait" %}">{% trans "Please wait. Plan is being validated. This may take a few minutes." %}</div>
 <div id="DialogContainer"></div>
 <div class="olHandlerBoxSelectFeature" style="display:none;"></div>
 
@@ -924,9 +918,9 @@ Include the shared_districts markup if we're using the copy/paste tool
 
             {% endcomment %}
             <div class="dialog_step">
-              <h2>1. Select <span id="layer_type">Layer</span> Thematic Map</h2>
+              <h2>1. {% trans "Select" %} <span id="layer_type">Layer</span> {% trans "Thematic Map" %}</h2>
               <select id="showby" class="indented fillwidth" autocomplete="off">
-                  <option value="none">None</option>
+                  <option value="none">{% trans "None" %}</option>
                   {% for demo in demographics %}              
                       <option value="{{ demo.value }}" {% if demo.isdefault == "true" %}selected=true{% endif %}>
                           {{ demo.text }}
@@ -937,7 +931,7 @@ Include the shared_districts markup if we're using the copy/paste tool
 
             
             <div class="dialog_step" {% if plan.is_community %}style="display: none;"{% endif %}>
-                <h2>2. Choose District Thematic Map</h2>
+                <h2>2. {% trans "Choose District Thematic Map" %}</h2>
                 {% comment %}
 
                 Dynamically populate the "Show Districts by:" dropdown,
@@ -946,9 +940,9 @@ Include the shared_districts markup if we're using the copy/paste tool
 
                 {% endcomment %}
                 <select id="districtby" class="indented fillwidth" autocomplete="off">
-                    <option value="0" name="None">None</option>
-                    <option value="-1" name="Compactness">Compactness</option>
-                    <option value="-2" name="Contiguity">Contiguity</option>
+                    <option value="0" name="None">{% trans "None" %}</option>
+                    <option value="-1" name="Compactness">{% trans "Compactness" %}</option>
+                    <option value="-2" name="Contiguity">{% trans "Contiguity" %}</option>
                     {% for demo in demographics %}
                         {% if demo.isdisplayed == "true" %}
                             <option value="{{ demo.id }}" name="{{ demo.value }}" {% if demo.isdefault == "true" %}selected="true"{% endif %}>
@@ -960,9 +954,9 @@ Include the shared_districts markup if we're using the copy/paste tool
             </div>
             
             <div class="dialog_step">
-              <h2>{% if plan.is_community %}2{% else %}3{% endif %}. Choose a Reference Layer</h2>
+              <h2>{% if plan.is_community %}2{% else %}3{% endif %}. {% trans "Choose a Reference Layer" %}</h2>
               <select id="reference_layer_select" class="indented fillwidth" autocomplete="off">
-                  <option value="None">None</option>
+                  <option value="None">{% trans "None" %}</option>
                   {% for snap in snaplayers %}
                       <option value="geolevel.{{ snap.geolevel }}">
                           {{ snap.name }}
@@ -971,31 +965,31 @@ Include the shared_districts markup if we're using the copy/paste tool
               </select>
               <div id="reference_labels_check_wrapper">
                   <input id="reference_labels_check" type="checkbox" checked="checked" />
-                  <label id="reference_labels_label" for="reference_labels_check">Show Labels?</label>
+                  <label id="reference_labels_label" for="reference_labels_check">{% trans "Show Labels?" %}</label>
               </div>
               <div id="choose_layers_button_group" class="indented">
-              <h2 class="indented centered">OR...</h2>
+              <h2 class="indented centered">{% trans "OR..." %}</h2>
               <button id="choose_reference_layer_button" class="lg spacebelow">
-                  Choose a:<br/>legislative district or community map<br/>reference layer
+                  {% trans "Choose a:<br/>legislative district or community map<br/>reference layer" %}
               </button>
               </div>
               <div class="clear"></div>
             </div>
         </div>
         <div id="reference_layer_content" class="dialog_step">
-            <h2>{% if plan.is_community %}3{% else %}4{% endif %}. Select Plan Type</h2>
+            <h2>{% if plan.is_community %}3{% else %}4{% endif %}. {% trans "Select Plan Type" %}</h2>
             <select id="ref_leg_selector" class="indented fillwidth">
                 {% for body in bodies %}
                     <option value="{{ body.id }}">{{ body.name }}</option>
                 {% endfor %}
             </select>
 
-            <h2>{% if plan.is_community %}4{% else %}5{% endif %}. Select Plan to Display as Reference Layer</h2>
+            <h2>{% if plan.is_community %}4{% else %}5{% endif %}. {% trans "Select Plan to Display as Reference Layer" %}</h2>
             <table id="reference_plans_table"></table>
             <div id="reference_plans_pager"></div>
         </div>
         <div id="choose_layers_ok_div">
-          <button id="choose_layers_ok_button">OK</button>
+          <button id="choose_layers_ok_button">{% trans "OK" %}</button>
         </div>
     </div>
 </div>
@@ -1033,21 +1027,22 @@ Include the stats editor if user can edit stats.
 {% endcomment %}
 <div id="stats_editor_container" class="stats_editor" title="Edit Statistics Sets">
     <div id="stats_editor_instructions">
-        <h3>You can select up to three statistics at once to display in the sidebar. Each set of three
-        statistics will be saved in the dropdown for you to select or edit later. You may have up
-        to three sets of statistics saved.</h3>
+        <h3>{% blocktrans %}You can select up to three statistics at once to display in 
+        the sidebar. Each set of three statistics will be saved in the dropdown 
+        for you to select or edit later. You may have up to three sets of 
+        statistics saved.{% endblocktrans %}</h3>
     </div>
-    1. Select up to 3 statistics
-    <button id="clear_statistics">Clear Choices</button>
+    1. {% trans "Select up to 3 statistics" %}
+    <button id="clear_statistics">{% trans "Clear Choices" %}</button>
     <div id="available_statistics"> </div>
     
     <div id="name_statistics_set">
-        2. Name Statistics Set
+        2. {% trans "Name Statistics Set" %}
         <input type="text" id="statistics_set_name" maxlength="50" />
-        <button id="save_statistics_set">Save Set</button>
+        <button id="save_statistics_set">{% trans "Save Set" %}</button>
     </div>
     <div id="existing_statistics_set">
-        ... Or select a saved statistics set
+        {% trans "... Or select a saved statistics set" %}
     </div>
     <div id="saved_statistics_sets"> </div>
 </div>

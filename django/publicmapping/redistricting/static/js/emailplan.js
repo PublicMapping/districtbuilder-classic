@@ -96,7 +96,7 @@ emailplan = function(options) {
 
         // Everything is valid, send a request to the server
         _options.container.dialog('close');
-        var waitDialog = $('<div />').text(gettext('Please wait while emailing plan')).dialog({
+        var waitDialog = $('<div />').text(gettext('Please wait. Emailing plan.')).dialog({
             modal: true, autoOpen: true, title: gettext('Emailing Plan'),
             escapeOnClose: false, resizable:false,
             open: function() { $(".ui-dialog-titlebar-close", $(this).parent()).hide(); }

@@ -44,7 +44,7 @@ reaggregator = function(options) {
             reaggregateUrlSuffix: '/reaggregate/',
 
             // Starting text of the view/edit plan button
-            startText: 'Start Drawing',
+            startText: gettext('Start Drawing'),
 
             // Button that starts drawing
             startButton: $('#start_mapping'),
@@ -128,13 +128,13 @@ reaggregator = function(options) {
             case 'Needs reaggregation':
                 if (_filterId === 'filter_mine') {
                     // Owner -- allow reaggregation
-                    _options.startButtonLabel.html('Reaggregate');
+                    _options.startButtonLabel.html(gettext('Reaggregate'));
                     _options.startButton.attr('disabled', false);
                     _options.helpText.text(gettext('Data in the system has changed. This plan needs to be reaggregated before it can be used. Click the button to begin reaggregation. This will run in the background, and the status will be updated when completed. Feel free to use the rest of the system in the meantime.'));
                     _options.helpText.show();
                 } else {
                     // Not owner -- show that it needs reaggregation
-                    _options.startButtonLabel.html('Needs reaggregation');
+                    _options.startButtonLabel.html(gettext('Needs reaggregation'));
                     _options.startButton.attr('disabled', true);
                     _options.helpText.text(gettext('Data in the system has changed. The owner of this plan needs to reaggregate it before it can be used. The status of the plan will be updated when reaggregation has completed.'));
                     _options.helpText.show();
@@ -143,7 +143,7 @@ reaggregator = function(options) {
 
             case 'Reaggregating':
                 // Don't allow actions while reaggregating
-                _options.startButtonLabel.html('Reaggregation in progress');
+                _options.startButtonLabel.html(gettext('Reaggregation in progress'));
                 _options.startButton.attr('disabled', true);
                 _options.helpText.text(gettext('Data in the system has changed, and this plan is currently reaggregating to reflect these changes. The plan will not be available until reaggregation has completed.'));
                 _options.helpText.show();

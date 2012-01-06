@@ -443,12 +443,14 @@ def commonplan(request, planid):
                 break
 
     for level in levels:
+        # i18n-ize name here, not in js
         snaplayers.append( {'geolevel':level.id,'layer':level.name.lower(),'name':level.label if level.label.isupper() else level.label.capitalize(),'min_zoom':level.min_zoom} )
     default_selected = False
     for demo in demos:
         isdefault = str((not default_demo is None) and (demo[0] == default_demo.id)).lower()
         if isdefault == 'true':
             default_selected = True
+        # i18n-ize name & short_display here, not in js
         layers.append( {'id':demo[0],'text':demo[2],'value':demo[1].lower(), 'isdefault':isdefault, 'isdisplayed':str(demo[3]).lower()} )
     # If the default demo was not selected among the first three, we'll still need it for the dropdown menus
     if default_demo and not default_selected:
@@ -501,16 +503,17 @@ def commonplan(request, planid):
         'max_dists': max_dists + 1,
         'ga_account': settings.GA_ACCOUNT,
         'ga_domain': settings.GA_DOMAIN,
-        'body_member_short_label': short_label,
-        'body_member_long_label': long_label,
-        'body_members': inflect.engine().plural(long_label),
+        'body_member_short_label': short_label, # i18n, plz
+        'body_member_long_label': long_label,   # i18n, plz
+        'body_members': inflect.engine().plural(long_label),  # i18n, plz
         'reporting_template': reporting_template,
         'study_area_extent': study_area_extent,
         'has_leaderboard' : len(ScoreDisplay.objects.filter(is_page=True)) > 0,
         'calculator_reports' : json.dumps(calculator_reports),
         'allow_email_submissions': ('EMAIL_SUBMISSION' in settings.__members__),
         'tags': tags,
-        'plan_text': "community map" if (plan and plan.is_community()) else "plan"
+        'plan_text': "community map" if (plan and plan.is_community()) else "plan",  # i18n, plz
+        'language_code': translation.get_language()
     }
 
 def is_plan_ready(planid):

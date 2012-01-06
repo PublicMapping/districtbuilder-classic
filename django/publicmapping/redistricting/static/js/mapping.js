@@ -452,7 +452,7 @@ function mapinit(srs,maxExtent) {
 
     // Handle Fix Unassigned requests
     $('#fix_unassigned').click(function(){
-        var pleaseWait = $('<div />').text(gettext('Please wait while fixing unassigned. This may take a couple minutes.')).dialog({
+        var pleaseWait = $('<div />').text(gettext('Please wait. Fixing unassigned blocks. This may take a couple minutes.')).dialog({
             modal: true,
             autoOpen: true,
             title: gettext('Fixing Unassigned'),
@@ -492,15 +492,14 @@ function mapinit(srs,maxExtent) {
     $('#show_splits_button').click(function(){
         var referenceLayerId = $('#reference_layer_select').val();
         if (!referenceLayerId || (referenceLayerId === 'None')) {
+            var buttons = {};
+            buttons[gettext('OK')] = function(){
+                $(this).dialog('close');
+                $('#choose_layers_button').click();
+            };
             $('<div />').text(gettext('No reference layer selected.')).dialog({
                 modal: true, autoOpen: true, title: gettext('Warning'), resizable:false,
-                buttons: [{
-                    text: gettext('Set Reference Layer'),
-                    click: function() {
-                        $(this).dialog('close');
-                        $('#choose_layers_button').click();
-                    }
-                }]
+                buttons: buttons
             });
             return;
         }
@@ -512,7 +511,7 @@ function mapinit(srs,maxExtent) {
             urlSuffix = 'geolevel/' + referenceLayerId.substring('geolevel.'.length);
         }
     
-        var waitDialog = $('<div />').text(gettext('Please wait while querying for splits.'))
+        var waitDialog = $('<div />').text(gettext('Please wait. Querying for splits.'))
                 .dialog({
             modal: true,
             autoOpen: true,
@@ -1048,7 +1047,7 @@ function mapinit(srs,maxExtent) {
             buttons[gettext('OK')] = function() {
                 $('#busyDiv').remove();
             };
-            $('<div id="busyDiv" />').text(gettext('Please wait until your previous changes have been accepted')).dialog({
+            $('<div id="busyDiv" />').text(gettext('Please wait until your previous changes have been accepted.')).dialog({
                 modal: true,
                 autoOpen: true,
                 title: gettext('Busy'),
@@ -2953,8 +2952,11 @@ function mapinit(srs,maxExtent) {
         }
 
         if (PLAN_TYPE == 'plan') {
+            var i18nParams = {
+                bml: BODY_MEMBER_LONG.toLowerCase()
+            };
             var markup = $('<div id="newdistrictdialog" />')
-                .text(gettext('Please select a name for the ') + BODY_MEMBER_LONG.toLowerCase());
+                .text(printFormat(gettext('Please select a name for the %(bml)s'), i18nParams));
             markup.append($('<br/><select id="newdistrictname">' + avail.join('') + '</select>'));
 
             buttons = {};
