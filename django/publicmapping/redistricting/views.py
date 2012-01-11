@@ -50,6 +50,7 @@ from django.utils import simplejson as json, translation
 from django.utils.translation import ugettext as _, ungettext as _n
 from django.views.decorators.cache import cache_control
 from django.template.defaultfilters import slugify, force_escape
+from django.utils.translation import ugettext as _
 from django.conf import settings
 from tagging.utils import parse_tag_input
 from tagging.models import Tag, TaggedItem
@@ -134,7 +135,8 @@ def unique_session_or_json_redirect(function):
     def decorator(request, *args, **kwargs) :
         def return_nonunique_session_result():
             status = { 'success': False }
-            status['message'] = _("The current user may only have one session open at a time.")
+            status['message'] = _(
+                "The current user may only have one session open at a time.")
             status['redirect'] = '/?msg=logoff'
             return HttpResponse(json.dumps(status),mimetype='application/json')
 
@@ -246,7 +248,8 @@ def copyplan(request, planid):
     p = Plan.objects.get(pk=planid)
     # Check if this plan is copyable by the current user.
     if not can_copy(request.user, p):
-        status['message'] = _("User %(user)s doesn't have permission to copy this model") % {'user':request.user.username}
+        status['message'] = _("User %(username)s doesn't have permission to " \
+            "copy this model" % {'username': request.user.username})
         return HttpResponse(json.dumps(status),mimetype='application/json')
 
     # Create a random name if there is no name provided
@@ -258,7 +261,8 @@ def copyplan(request, planid):
     plan_copy = Plan.objects.filter(name=newname, owner=request.user, legislative_body=p.legislative_body)
     # Check that the copied plan's name doesn't already exist.
     if len(plan_copy) > 0:
-        status['message'] = _("You already have a plan named that. Please pick a unique name.")
+        status['message'] = _("You already have a plan named that. " \
+            "Please pick a unique name.")
         return HttpResponse(json.dumps(status),mimetype='application/json')
 
     plan_copy = Plan(name=newname, owner=request.user, is_shared=shared, legislative_body=p.legislative_body, processing_state=ProcessingState.READY)
@@ -408,6 +412,8 @@ def commonplan(request, planid):
             calculator_reports = []
             if settings.REPORTS_ENABLED == 'CALC':
                 report_displays = ScoreDisplay.objects.filter(title=_('%(body_name)s Reports') % {'body_name':body_name})
+                report_displays = ScoreDisplay.objects.filter(
+                    title='%(body_name)s Reports' % {'body_name': body_name})
                 if len(report_displays) > 0:
                     calculator_reports = map(lambda p: {
                                 'title': p.title,
@@ -780,15 +786,15 @@ def uploadfile(request):
         filename = index_file.name
 
     if index_file.size > settings.MAX_UPLOAD_SIZE:
-        logger.warn('File size exceeds allowable size.')
+        logger.error('File size exceeds allowable size.')
         status['upload_status'] = False
         return render_to_response('viewplan.html', status)
 
     if not filename.endswith(('.csv','.zip')):
-        logger.warn('Uploaded file must be ".csv" or ".zip".')
+        logger.error('Uploaded file must be ".csv" or ".zip".')
         status['upload_status'] = False
     elif request.POST['userEmail'] == '':
-        logger.warn('No email provided for user notification.')
+        logger.error('No email provided for user notification.')
         status['upload_status'] = False
     else:
         try:
@@ -912,7 +918,8 @@ def getreport(request, planid):
         PlanReport.markpending(planid, stamp)
         PlanReport.createreport.delay(planid, stamp, req, language=translation.get_language())
     else:
-        status['message'] = _('Unrecognized status when checking report status.')
+        status['message'] = _(
+            'Unrecognized status when checking report status.')
 
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
@@ -987,7 +994,8 @@ def getcalculatorreport(request, planid):
         CalculatorReport.markpending(planid, stamp)
         CalculatorReport.createcalculatorreport.delay(planid, stamp, req, language=translation.get_language())
     else:
-        status['message'] = _('Unrecognized status when checking report status.')
+        status['message'] = _(
+            'Unrecognized status when checking report status.')
 
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
@@ -1083,7 +1091,8 @@ def newdistrict(request, planid):
                 logger.warn('Error saving new district.', ex)
                 status['message'] = _("Couldn't save new district.")
         else:
-            status['message'] = _('Must specify name, geolevel, and geounit ids for new district.')
+            status['message'] = _('Must specify name, geolevel, ' \
+                'and geounit ids for new district.')
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
 @login_required
@@ -1119,26 +1128,28 @@ def add_districts_to_plan(request, planid):
     # Get the districts we want to merge
     district_list = request.POST.getlist('districts[]')
     if len(district_list) == 0:
-        status['message'] = _('No districts selected to add to the given plan')
+        status['message'] = _("No districts selected to add to the given plan")
         return HttpResponse(json.dumps(status),mimetype='application/json')
     else:
         districts = District.objects.filter(id__in=district_list)
         version = int(request.POST.get('version', None))
-        status['message'] = _('Going to merge %(num_districts)d districts') % { 'num_districts': len(districts) }
+        status['message'] = _('Going to merge %(number_of_merged_districts)d' \
+            ' districts') % {'number_of_merged_districts': len(districts)}
     
     # Check to see if we have enough room to add these districts without
     # going over MAX_DISTRICTS for the legislative_body
     allowed_districts = plan.get_available_districts(version=version)
     
     if len(districts) > allowed_districts:
-        status['message'] = _('Tried to merge too many districts; %(num_slots)d slots left') % { 'num_slots':allowed_districts }
+        status['message'] = _('Tried to merge too many districts; ' \
+            '%(allowed_districts)d slots left') % {'allowed_districts': allowed_districts}
 
     # Everything checks out, let's paste those districts
     try:
         results = plan.paste_districts(districts, version=version)
         transaction.commit()
         status['success'] = True
-        status['message'] = _('Merged %(num_districts)d districts') % { 'num_districts':len(results) }
+        status['message'] = _('Merged %(num_merged_districts)d districts') % {'num_merged_districts': len(results)}
         status['version'] = plan.version
     except Exception as ex:
         transaction.rollback()
@@ -1179,7 +1190,8 @@ def assign_district_members(request, planid):
     # Make sure this district allows multi-member assignment
     leg_bod = plan.legislative_body
     if (not leg_bod.multi_members_allowed):
-        status['message'] = _('Multi-members not allowed for this legislative body')
+        status['message'] = _(
+            'Multi-members not allowed for this legislative body')
         return HttpResponse(json.dumps(status),mimetype='application/json')
     
     # Get the districts we want to assign members to
@@ -1211,7 +1223,8 @@ def assign_district_members(request, planid):
         status['success'] = True
         status['version'] = plan.version
         status['modified'] = changed
-        status['message'] = _('Modified members for %(num_districts)d districts') % { 'num_districts':changed }
+        status['message'] = _('Modified members for %(num_districts)d '
+            'districts') % {'num_districts': changed}
     except Exception, ex:
         transaction.rollback()
         status['message'] = str(ex)
@@ -1357,8 +1370,11 @@ def get_splits(request, planid, otherid, othertype):
             status['message'] = _('othertype not supported: %(other)s') % { 'other': othertype }
             return HttpResponse(json.dumps(status),mimetype='application/json')
 
+        split_word = _('split') if len(splits) == 1 else inflect.engine().plural(_('split'))
+
         status['success'] = True
-        status['message'] = _n('Found %(num_splits)d split', 'Found %(num_splits)d splits', len(splits)) % { 'num_splits': len(splits) }
+        status['message'] = _('Found %(num_splits)d %(split_word)s') % \
+                {'num_splits': len(splits), 'split_word': split_word}
         status['splits'] = splits
         status['above_ids'] = list(set([i[0] for i in splits]))
         status['below_ids'] = list(set([i[1] for i in splits]))
@@ -1469,7 +1485,8 @@ def addtodistrict(request, planid, districtid):
         try:
             fixed = plan.add_geounits(districtid, geounit_ids, geolevel, version)
             status['success'] = True;
-            status['message'] = _('Updated %(num_districts)d districts') % { 'num_districts': fixed }
+            status['message'] = _('Updated %(num_fixed_districts)d districts') \
+                % {'num_fixed_districts': fixed}
             status['updated'] = fixed
             plan = Plan.objects.get(pk=planid,owner=request.user)
             status['edited'] = getutc(plan.edited).isoformat()
@@ -1526,7 +1543,8 @@ def setdistrictlock(request, planid, district_id):
     district.is_locked = lock
     district.save()
     status['success'] = True
-    status['message'] = _('District successfully %(lock_status)s') % { 'lock_status': 'locked' if lock else 'unlocked' }
+    status['message'] = _('District successfully %(locked_state)s') % \
+            {'locked_state': _('locked') if lock else _('unlocked')}
   
     return HttpResponse(json.dumps(status), mimetype='application/json')
         
@@ -1766,7 +1784,8 @@ def get_statistics(request, planid):
     try:
         plan = Plan.objects.get(pk=planid)
     except:
-        status['message'] = _("Couldn't get geography info from the server. No plan with the given id.")
+        status['message'] = _(
+                "Couldn't get geography info from the server. No plan with the given id.")
         return HttpResponse( json.dumps(status), mimetype='application/json', status=500)
 
     if 'version' in request.REQUEST:
@@ -1858,7 +1877,8 @@ def getdistrictfile(request, planid):
             DistrictShapeFile.plan2shape.delay(plan)
         else:
             DistrictIndexFile.plan2index.delay(plan)
-        response = HttpResponse(_('File is not yet ready. Please try again in a few minutes'))
+        response = HttpResponse(_('File is not yet ready. Please try again in '
+            'a few minutes'))
     return response
 
 @unique_session_or_json_redirect
@@ -1878,7 +1898,10 @@ def emaildistrictindexfile(request, planid):
     
     # Put in a celery task to create the file and send the emails
     DistrictIndexFile.emailfile.delay(plan, request.user, request.POST, translation.get_language())
-    return HttpResponse(json.dumps({ 'success': True, 'message': _('Task submitted') }), mimetype='application/json')
+    return HttpResponse(json.dumps({
+                                    'success': True,
+                                    'message': _('Task submitted') }),
+                                    mimetype='application/json')
 
 def getvalidplans(leg_body, owner=None):
     """
@@ -2132,7 +2155,8 @@ def editplanattributes(request, planid):
     new_description = request.POST.get('description', '')
 
     if not planid or not (new_name or new_description):
-        return HttpResponseBadRequest(_('Must declare planId, name and description'))
+        return HttpResponseBadRequest(
+            _('Must declare planId, name and description'))
 
     plan = Plan.objects.filter(pk=planid,owner=request.user)
     if plan.count() == 1:
@@ -2182,7 +2206,8 @@ def deleteplan(request, planid):
             logger.warn('Could not delete plan.', ex)
     else:
         status['message'] = _("Cannot delete a plan you don't own.")
-        return HttpResponse(json.dumps(status), mimetype='application/json')
+    
+    return HttpResponse(json.dumps(status), mimetype='application/json')
 
 @login_required
 @unique_session_or_json_redirect
@@ -2238,16 +2263,22 @@ def get_health(request):
         return users
 
     try:
-        result = 'Health retrieved at %s\n' % datetime.now()
-        result += '%d plans in database\n' % Plan.objects.all().count()
-        result += '%d sessions in use out of %s\n' % (Session.objects.all().count(), settings.CONCURRENT_SESSIONS)
-        result += '%d active users over the last 10 minutes\n' % num_users(10)
+        result = _('Health retrieved at %(time)s\n') % {'time': datetime.now()}
+        result += _('%(plan_count)d plans in database\n') % \
+                {'plan_count': Plan.objects.all().count()}
+        result += _('%(session_count)d sessions in use out of %(session_limit)s\n') % \
+                {'session_count': Session.objects.all().count(),
+                'session_limit': settings.CONCURRENT_SESSIONS}
+        result += _('%(num_users)d active users over the last 10 minutes\n') % \
+                {'num_users':  num_users(10)}
         space = os.statvfs('/projects/PublicMapping')
-        result += '%s MB of disk space free\n' % ((space.f_bsize * space.f_bavail) / (1024*1024))
-        result += 'Memory Usage:\n%s\n' % commands.getoutput('free -m')
+        result += _('%(mb_free)s MB of disk space free\n') % \
+                {'mb_free': ((space.f_bsize * space.f_bavail) / (1024*1024))}
+        result += _('Memory Usage:\n%(mem_free)s\n') % \
+                {'mem_free':  commands.getoutput('free -m')}
         return HttpResponse(result, mimetype='text/plain')
     except:
-        return HttpResponse('ERROR! Couldn\'t get health:\n%s' % traceback.format_exc())
+        return HttpResponse(_("ERROR! Couldn't get health:\n%s") % traceback.format_exc())
 
 
 def statistics_sets(request, planid):
@@ -2293,10 +2324,12 @@ def statistics_sets(request, planid):
                     if panel.type == 'district':
                         functions = map(lambda x: x.id, panel.score_functions.all())
                         if len(functions) == 0:
-                            result['message'] = _('No functions for %(panel_id)s') % { 'panel_id': panel }
+                            result['message'] = _("No functions for %(panel)s") % \
+                                                {'panel_name': panel}
                 sets.append({ 'id': display.id, 'name': force_escape(display.title), 'functions': functions, 'mine': display.owner==request.user })
         except Exception, ex:
-            result['message'] = _('No user displays for %(user_name)s') % { 'user_name':request.user.username }
+            result['message'] = _('No user displays for %(user)s') % \
+                 {'user': request.user}
             logger.warn('Error fetching ScoreDisplays for user.', ex)
 
         result['sets'] = sets
@@ -2312,7 +2345,7 @@ def statistics_sets(request, planid):
             result['message'] = _("Couldn't delete personalized scoredisplay")
             result['exception'] = traceback.format_exc()
             logger.warn("Couldn't delete personalized ScoreDisplay", ex)
-        
+            
     # If it's a post, edit or create the ScoreDisplay and return 
     # the id and name as usual
     elif request.method == 'POST':
@@ -2348,7 +2381,9 @@ def statistics_sets(request, planid):
                     display = display.copy_from(display=demo, title=request.POST.get('name'), owner=request.user, functions=functions)
                     result['newRecord'] = True
                 else:
-                    result['message'] = _('Each user is limited to %(limit) statistics sets. Please delete one or edit an existing set.') % { 'limit': limit }
+                    result['message'] = _('Each user is limited to %(limit)d '
+                        'statistics sets. Please delete one or edit '
+                        'an existing set.') % { 'limit': limit }
                     result['error'] = 'limit'
                     return HttpResponse(json.dumps(result),mimetype='application/json')
 

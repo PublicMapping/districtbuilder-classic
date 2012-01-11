@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-06 15:07-0500\n"
+"POT-Creation-Date: 2012-01-11 14:43-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -238,7 +238,7 @@ msgstr ""
 
 #: static-media/js/layerchooser.js:59
 msgid "Choose Map Layers"
-msgstr "Choisissez Couches Cartographiques"
+msgstr ""
 
 #: static-media/js/layerchooser.js:170
 msgid "User Name"
@@ -513,7 +513,7 @@ msgstr ""
 
 #: static-media/js/register.js:40
 msgid "Forgot Password"
-msgstr "Mot de Passe Oublié"
+msgstr ""
 
 #: static-media/js/register.js:41
 msgid "Duplicate Session"
