@@ -90,7 +90,10 @@ splitsreport = function(options) {
                 },
                 error: function(xhr, textStatus, error) {
                     waitDialog.remove();                        
-                    $('<div/>').text(gettext('Error encountered while retrieving splits report: ') + textStatus).dialog({
+                    $('<div/>').text(
+                            gettext('Error encountered while retrieving splits report: ') + 
+                            '<div>' + textStatus + '</div>'
+                        ).dialog({
                         modal: true, autoOpen: true, title: gettext('Error'), resizable:false
                     });                
                 }
