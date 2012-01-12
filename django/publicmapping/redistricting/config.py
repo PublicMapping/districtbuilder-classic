@@ -26,12 +26,15 @@ Author:
     Andrew Jennings, David Zwarg, Kenny Shepard
 """
 
-import hashlib, logging, httplib, string, base64, pprint, json, traceback, types
+import os, hashlib, logging, httplib, string, base64, pprint, json, traceback, types
+from datetime import datetime, timedelta, tzinfo
+from django.conf import settings
 from django.db.models import Model
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.sessions.models import Session
 from django.contrib.auth.models import User
 from models import *
+from rosetta import polib
 
 logger = logging.getLogger(__name__)
 
@@ -1199,3 +1202,52 @@ WARNING:
         return geolevel.renest(parent, subject=None, spatial=True)
 
 
+class PoUtils:
+    def __init__(self, locale):
+        self.popath = 'locale/%(locale)s/LC_MESSAGES/xmlconfig.po' % {'locale':locale}
+        if os.path.exists(self.popath):
+            logger.debug('Using existing xmlconfig message catalog.')
+            self.pofile = polib.pofile(self.popath, check_for_duplicates=True)
+        else:
+            logger.debug('Creating new xmlconfig message catalog.')
+            now = datetime.utcnow()
+            now = now.replace(tzinfo=UTC())
+
+            self.pofile = polib.POFile(check_for_duplicates=True)
+            self.pofile.metadata = {
+                'Project-Id-Version': '1.0',
+                'Report-Msgid-Bugs-To': 'districtbuilder-dev@googlegroups.com',
+                'POT-Creation-Date': now.strftime('%Y-%m-%d %H:%M%z'),
+                'PO-Revision-Date': now.strftime('%Y-%m-%d %H:%M%z'),
+                'Last-Translator': '%s <%s>' % (settings.ADMINS[0][0], settings.ADMINS[0][1]),
+                'Language-Team': '%s <%s>' % (settings.ADMINS[0][0], settings.ADMINS[0][1]),
+                'Language': locale,
+                'MIME-Version': '1.0',
+                'Content-Type': 'text/plain; charset=UTF-8',
+                'Content-Transfer-Encoding': '8bit'
+            }
+
+    def add_or_update(self, msgid='', msgstr=''):
+        """
+        Add a POEntry to the .po file, or update it if it already exists.
+        """
+        entry = self.pofile.find(msgid)
+        if entry is None:
+            entry = polib.POEntry(msgid=msgid, msgstr=msgstr)
+            self.pofile.append(entry)
+        else:
+            entry.msgstr = msgstr
+
+    def save(self):
+        logger.debug('Saving file %(po)s.', {'po':self.popath})
+        self.pofile.save(self.popath)
+
+
+class UTC(tzinfo):
+    """UTC"""
+    def utcoffset(self, dt):
+        return timedelta(0)
+    def tzname(self, dt):
+        return 'UTC'
+    def dst(self, dt):
+        return timedelta(0)
