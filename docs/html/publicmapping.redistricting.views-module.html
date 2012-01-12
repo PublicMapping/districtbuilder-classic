@@ -311,6 +311,24 @@ and editing.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.views-module.html#printplan" class="summary-sig-name">printplan</a>(<span class="summary-sig-arg">request</span>,
+        <span class="summary-sig-arg">planid</span>)</span><br />
+      Print a static map of a plan.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.views-pysrc.html#printplan">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
           <td><span class="summary-sig"><a href="publicmapping.redistricting.views-module.html#createplan" class="summary-sig-name">createplan</a>(<span class="summary-sig-arg">request</span>)</span><br />
       Create a plan.</td>
           <td align="right" valign="top">
@@ -657,11 +675,11 @@ plan into another plan</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a href="publicmapping.redistricting.views-module.html#getdistrictindexfilestatus" class="summary-sig-name">getdistrictindexfilestatus</a>(<span class="summary-sig-arg">request</span>,
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.views-module.html#getdistrictfilestatus" class="summary-sig-name">getdistrictfilestatus</a>(<span class="summary-sig-arg">request</span>,
         <span class="summary-sig-arg">planid</span>)</span><br />
       Given a plan id, return the status of the district index file</td>
           <td align="right" valign="top">
-            <span class="codelink"><a href="publicmapping.redistricting.views-pysrc.html#getdistrictindexfilestatus">source&nbsp;code</a></span>
+            <span class="codelink"><a href="publicmapping.redistricting.views-pysrc.html#getdistrictfilestatus">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -675,12 +693,12 @@ plan into another plan</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a href="publicmapping.redistricting.views-module.html#getdistrictindexfile" class="summary-sig-name">getdistrictindexfile</a>(<span class="summary-sig-arg">request</span>,
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.views-module.html#getdistrictfile" class="summary-sig-name">getdistrictfile</a>(<span class="summary-sig-arg">request</span>,
         <span class="summary-sig-arg">planid</span>)</span><br />
       Given a plan id, email the user a zipped copy of the district index 
       file</td>
           <td align="right" valign="top">
-            <span class="codelink"><a href="publicmapping.redistricting.views-pysrc.html#getdistrictindexfile">source&nbsp;code</a></span>
+            <span class="codelink"><a href="publicmapping.redistricting.views-pysrc.html#getdistrictfile">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -956,6 +974,31 @@ plan into another plan</td>
     </td>
   </tr>
 </table>
+<!-- ==================== VARIABLES ==================== -->
+<a name="section-Variables"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Variables</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Variables"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="logger"></a><span class="summary-name">logger</span> = <code title="logging.getLogger(__name__)">logging.getLogger(__name__)</code>
+    </td>
+  </tr>
+</table>
 <p class="indent-wrapped-lines"><b>Imports:</b>
   <span title="django.http.urlencode">urlencode</span>,
   <span title="django.http.force_unicode">force_unicode</span>,
@@ -1033,6 +1076,7 @@ plan into another plan</td>
   <span title="django.contrib.gis.gdal.CoordTransform">CoordTransform</span>,
   <span title="django.contrib.gis.gdal.gdal_full_version">gdal_full_version</span>,
   <span title="django.contrib.gis.gdal.libgdal.lgdal">lgdal</span>,
+  <span title="django.contrib.sites.models.Site">Site</span>,
   <span title="django.contrib.humanize">humanize</span>,
   <span title="django.template.loader">loader</span>,
   <span title="django.template.Context">DjangoContext</span>,
@@ -1086,7 +1130,16 @@ plan into another plan</td>
   <span title="tempfile">tempfile</span>,
   <span title="csv">csv</span>,
   <span title="hashlib">hashlib</span>,
-  <span title="inflect">inflect</span>
+  <span title="inflect">inflect</span>,
+  <span title="logging">logging</span>,
+  <span title="ModestMaps">ModestMaps</span>,
+  <span title="PIL.Image">Image</span>,
+  <span title="PIL.ImageChops">ImageChops</span>,
+  <span title="PIL.ImageMath">ImageMath</span>,
+  <span title="urllib">urllib</span>,
+  <span title="urllib2">urllib2</span>,
+  <span title="xhtml2pdf.pisa.CreatePDF">CreatePDF</span>,
+  <span title="StringIO">StringIO</span>
 </p><br />
 <!-- ==================== FUNCTION DETAILS ==================== -->
 <a name="section-FunctionDetails"></a>
@@ -1463,6 +1516,43 @@ Parameters:
 
 Returns:
     A rendered HTML page for editing a plan.
+
+</pre>
+  <dl class="fields">
+    <dt>Decorators:</dt>
+    <dd><ul class="nomargin-top">
+        <li><code>@user_passes_test(using_unique_session)</code></li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="printplan"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">printplan</span>(<span class="sig-arg">request</span>,
+        <span class="sig-arg">planid</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.views-pysrc.html#printplan">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Print a static map of a plan.
+
+This template renders a static HTML document for use with xhtml2pdf.
+
+Parameters:
+    request -- An HttpRequest, which includes the current user.
+    planid -- The plan to edit.
+    
+Returns:
+    A rendered HTML page suitable for conversion to a PDF.
 
 </pre>
   <dl class="fields">
@@ -2055,18 +2145,18 @@ Returns:
   </dl>
 </td></tr></table>
 </div>
-<a name="getdistrictindexfilestatus"></a>
+<a name="getdistrictfilestatus"></a>
 <div>
 <table class="details" border="1" cellpadding="3"
        cellspacing="0" width="100%" bgcolor="white">
 <tr><td>
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">getdistrictindexfilestatus</span>(<span class="sig-arg">request</span>,
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">getdistrictfilestatus</span>(<span class="sig-arg">request</span>,
         <span class="sig-arg">planid</span>)</span>
   </h3>
   </td><td align="right" valign="top"
-    ><span class="codelink"><a href="publicmapping.redistricting.views-pysrc.html#getdistrictindexfilestatus">source&nbsp;code</a></span>&nbsp;
+    ><span class="codelink"><a href="publicmapping.redistricting.views-pysrc.html#getdistrictfilestatus">source&nbsp;code</a></span>&nbsp;
     </td>
   </tr></table>
   
@@ -2079,18 +2169,18 @@ Returns:
   </dl>
 </td></tr></table>
 </div>
-<a name="getdistrictindexfile"></a>
+<a name="getdistrictfile"></a>
 <div>
 <table class="details" border="1" cellpadding="3"
        cellspacing="0" width="100%" bgcolor="white">
 <tr><td>
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">getdistrictindexfile</span>(<span class="sig-arg">request</span>,
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">getdistrictfile</span>(<span class="sig-arg">request</span>,
         <span class="sig-arg">planid</span>)</span>
   </h3>
   </td><td align="right" valign="top"
-    ><span class="codelink"><a href="publicmapping.redistricting.views-pysrc.html#getdistrictindexfile">source&nbsp;code</a></span>&nbsp;
+    ><span class="codelink"><a href="publicmapping.redistricting.views-pysrc.html#getdistrictfile">source&nbsp;code</a></span>&nbsp;
     </td>
   </tr></table>
   
@@ -2246,7 +2336,7 @@ Parameters:
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">
-    Generated by Epydoc 3.0.1 on Tue Oct 18 11:11:00 2011
+    Generated by Epydoc 3.0.1 on Thu Jan 12 09:54:04 2012
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

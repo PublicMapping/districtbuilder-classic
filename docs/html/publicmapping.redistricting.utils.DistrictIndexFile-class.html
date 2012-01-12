@@ -117,48 +117,11 @@
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a href="publicmapping.redistricting.utils.DistrictIndexFile-class.html#plan2index" class="summary-sig-name">plan2index</a>(<span class="summary-sig-arg">plan</span>,
-        <span class="summary-sig-arg">user</span>=<span class="summary-sig-default">None</span>)</span><br />
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.utils.DistrictIndexFile-class.html#plan2index" class="summary-sig-name">plan2index</a>(<span class="summary-sig-arg">plan</span>)</span><br />
       Gets a zipped copy of the district index file for the
 given plan.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="publicmapping.redistricting.utils-pysrc.html#DistrictIndexFile.plan2index">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td><span class="summary-sig"><a href="publicmapping.redistricting.utils.DistrictIndexFile-class.html#get_index_file_status" class="summary-sig-name">get_index_file_status</a>(<span class="summary-sig-arg">plan</span>)</span><br />
-      Given a plan, this method will check to see whether the district index file
-for the given plan exists, is pending, or has not been created.</td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="publicmapping.redistricting.utils-pysrc.html#DistrictIndexFile.get_index_file_status">source&nbsp;code</a></span>
-            
-          </td>
-        </tr>
-      </table>
-      
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-      <table width="100%" cellpadding="0" cellspacing="0" border="0">
-        <tr>
-          <td><span class="summary-sig"><a href="publicmapping.redistricting.utils.DistrictIndexFile-class.html#get_index_file" class="summary-sig-name">get_index_file</a>(<span class="summary-sig-arg">plan</span>)</span><br />
-      Given a plan, return the district index file for the plan at the current
-version</td>
-          <td align="right" valign="top">
-            <span class="codelink"><a href="publicmapping.redistricting.utils-pysrc.html#DistrictIndexFile.get_index_file">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -259,8 +222,7 @@ Parameters:
 <tr><td>
   <table width="100%" cellpadding="0" cellspacing="0" border="0">
   <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">plan2index</span>(<span class="sig-arg">plan</span>,
-        <span class="sig-arg">user</span>=<span class="sig-default">None</span>)</span>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">plan2index</span>(<span class="sig-arg">plan</span>)</span>
     <br /><em class="fname">Static Method</em>
   </h3>
   </td><td align="right" valign="top"
@@ -285,69 +247,6 @@ Returns:
     <dd><ul class="nomargin-top">
         <li><code>@task</code></li>
     </ul></dd>
-  </dl>
-</td></tr></table>
-</div>
-<a name="get_index_file_status"></a>
-<div>
-<table class="details" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr><td>
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">get_index_file_status</span>(<span class="sig-arg">plan</span>)</span>
-    <br /><em class="fname">Static Method</em>
-  </h3>
-  </td><td align="right" valign="top"
-    ><span class="codelink"><a href="publicmapping.redistricting.utils-pysrc.html#DistrictIndexFile.get_index_file_status">source&nbsp;code</a></span>&nbsp;
-    </td>
-  </tr></table>
-  
-  <pre class="literalblock">
-
-Given a plan, this method will check to see whether the district index file
-for the given plan exists, is pending, or has not been created.
-
-Parameters:
-    plan - the Plan for which an index file has been requested
-
-Returns:
-    A string representing the file's status: &quot;none&quot;, &quot;pending&quot;, &quot;done&quot;
-
-</pre>
-  <dl class="fields">
-  </dl>
-</td></tr></table>
-</div>
-<a name="get_index_file"></a>
-<div>
-<table class="details" border="1" cellpadding="3"
-       cellspacing="0" width="100%" bgcolor="white">
-<tr><td>
-  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-  <tr valign="top"><td>
-  <h3 class="epydoc"><span class="sig"><span class="sig-name">get_index_file</span>(<span class="sig-arg">plan</span>)</span>
-    <br /><em class="fname">Static Method</em>
-  </h3>
-  </td><td align="right" valign="top"
-    ><span class="codelink"><a href="publicmapping.redistricting.utils-pysrc.html#DistrictIndexFile.get_index_file">source&nbsp;code</a></span>&nbsp;
-    </td>
-  </tr></table>
-  
-  <pre class="literalblock">
-
-Given a plan, return the district index file for the plan at the current
-version
-
-Parameters:
-    plan - the Plan for which an index file has been requested
-
-Returns:
-    A file object representing the district index file. If the 
-    file requested doesn't exist, nothing is returned
-
-</pre>
-  <dl class="fields">
   </dl>
 </td></tr></table>
 </div>
@@ -409,7 +308,7 @@ Returns:
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">
-    Generated by Epydoc 3.0.1 on Tue Oct 18 11:11:05 2011
+    Generated by Epydoc 3.0.1 on Thu Jan 12 09:54:09 2012
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

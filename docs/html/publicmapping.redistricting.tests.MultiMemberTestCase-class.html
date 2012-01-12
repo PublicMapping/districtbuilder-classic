@@ -64,15 +64,22 @@
 <!-- ==================== CLASS DESCRIPTION ==================== -->
 <h1 class="epydoc">Class MultiMemberTestCase</h1><p class="nomargin-top"><span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#MultiMemberTestCase">source&nbsp;code</a></span></p>
 <center>
-<center>  <map id="uml_class_diagram_for_publicma_76" name="uml_class_diagram_for_publicma_76">
-<area shape="rect" id="node1" href="publicmapping.redistricting.tests.BaseTestCase-class.html" title="Only contains setUp and tearDown, which are shared among all other TestCases" alt="" coords="35,6,147,50"/>
-<area shape="rect" id="node116" href="publicmapping.redistricting.tests.MultiMemberTestCase-class.html#fixtures" title="publicmapping.redistricting.tests.MultiMemberTestCase.fixtures" alt="" coords="17,95,165,113"/>
-<area shape="rect" id="node116" href="publicmapping.redistricting.tests.MultiMemberTestCase-class.html#setUp" title="Setup the general tests." alt="" coords="17,116,165,135"/>
-<area shape="rect" id="node116" href="publicmapping.redistricting.tests.MultiMemberTestCase-class.html#tearDown" title="publicmapping.redistricting.tests.MultiMemberTestCase.tearDown" alt="" coords="17,135,165,153"/>
-<area shape="rect" id="node116" href="publicmapping.redistricting.tests.MultiMemberTestCase-class.html#test_multi_member" title="Test the logic for modifying the number of members in a district Also tests magnitudes in export process and calculators" alt="" coords="17,153,165,172"/>
-<area shape="rect" id="node2" href="publicmapping.redistricting.tests.MultiMemberTestCase-class.html" title="Unit tests to multi&#45;member districts" alt="" coords="5,70,176,178"/>
+<center>  <map id="uml_class_diagram_for_publicma_77" name="uml_class_diagram_for_publicma_77">
+<area shape="rect" id="node1" href="publicmapping.redistricting.tests.BaseTestCase-class.html" title="Only contains setUp and tearDown, which are shared among all other TestCases" alt="" coords="52,6,164,50"/>
+<area shape="rect" id="node117" href="publicmapping.redistricting.tests.MultiMemberTestCase-class.html#fixtures" title="publicmapping.redistricting.tests.MultiMemberTestCase.fixtures" alt="" coords="17,95,201,113"/>
+<area shape="rect" id="node117" href="publicmapping.redistricting.tests.MultiMemberTestCase-class.html#setUp" title="Setup the general tests." alt="" coords="17,116,201,135"/>
+<area shape="rect" id="node117" href="publicmapping.redistricting.tests.MultiMemberTestCase-class.html#tearDown" title="publicmapping.redistricting.tests.MultiMemberTestCase.tearDown" alt="" coords="17,135,201,153"/>
+<area shape="rect" id="node117" href="publicmapping.redistricting.tests.MultiMemberTestCase-class.html#set_multi" title="Helper to turn a district into a multi&#45;member district" alt="" coords="17,153,201,172"/>
+<area shape="rect" id="node117" href="publicmapping.redistricting.tests.MultiMemberTestCase-class.html#test_multi_basic" title="Test the logic for modifying the number of members in a district Also tests magnitudes in export process and calculators" alt="" coords="17,172,201,191"/>
+<area shape="rect" id="node117" href="publicmapping.redistricting.tests.MultiMemberTestCase-class.html#test_multi_2" title="Verify number of members is added to the exported file" alt="" coords="17,191,201,209"/>
+<area shape="rect" id="node117" href="publicmapping.redistricting.tests.MultiMemberTestCase-class.html#test_multi_range" title="Test range calculator" alt="" coords="17,209,201,228"/>
+<area shape="rect" id="node117" href="publicmapping.redistricting.tests.MultiMemberTestCase-class.html#test_multi_equipopulation" title="Test equipopulation calculator" alt="" coords="17,228,201,247"/>
+<area shape="rect" id="node117" href="publicmapping.redistricting.tests.MultiMemberTestCase-class.html#test_multi_equivalence" title="Test equivalence calculator" alt="" coords="17,247,201,265"/>
+<area shape="rect" id="node117" href="publicmapping.redistricting.tests.MultiMemberTestCase-class.html#test_multi_interval" title="Test interval calculator" alt="" coords="17,265,201,284"/>
+<area shape="rect" id="node117" href="publicmapping.redistricting.tests.MultiMemberTestCase-class.html#test_multi_validation" title="Perform MultiMember validation" alt="" coords="17,284,201,303"/>
+<area shape="rect" id="node2" href="publicmapping.redistricting.tests.MultiMemberTestCase-class.html" title="Unit tests to multi&#45;member districts" alt="" coords="5,70,213,309"/>
 </map>
-  <img src="uml_class_diagram_for_publicma_76.gif" alt='' usemap="#uml_class_diagram_for_publicma_76" ismap="ismap" class="graph-without-title" />
+  <img src="uml_class_diagram_for_publicma_77.gif" alt='' usemap="#uml_class_diagram_for_publicma_77" ismap="ismap" class="graph-without-title" />
 </center>
 </center>
 <hr />
@@ -138,11 +145,130 @@
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="test_multi_member"></a><span class="summary-sig-name">test_multi_member</span>(<span class="summary-sig-arg">self</span>)</span><br />
+          <td><span class="summary-sig"><a name="set_multi"></a><span class="summary-sig-name">set_multi</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Helper to turn a district into a multi-member district</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#MultiMemberTestCase.set_multi">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_multi_basic"></a><span class="summary-sig-name">test_multi_basic</span>(<span class="summary-sig-arg">self</span>)</span><br />
       Test the logic for modifying the number of members in a district Also
       tests magnitudes in export process and calculators</td>
           <td align="right" valign="top">
-            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#MultiMemberTestCase.test_multi_member">source&nbsp;code</a></span>
+            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#MultiMemberTestCase.test_multi_basic">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_multi_2"></a><span class="summary-sig-name">test_multi_2</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Verify number of members is added to the exported file</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#MultiMemberTestCase.test_multi_2">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_multi_range"></a><span class="summary-sig-name">test_multi_range</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Test range calculator</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#MultiMemberTestCase.test_multi_range">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_multi_equipopulation"></a><span class="summary-sig-name">test_multi_equipopulation</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Test equipopulation calculator</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#MultiMemberTestCase.test_multi_equipopulation">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_multi_equivalence"></a><span class="summary-sig-name">test_multi_equivalence</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Test equivalence calculator</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#MultiMemberTestCase.test_multi_equivalence">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_multi_interval"></a><span class="summary-sig-name">test_multi_interval</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Test interval calculator</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#MultiMemberTestCase.test_multi_interval">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_multi_validation"></a><span class="summary-sig-name">test_multi_validation</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Perform MultiMember validation</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#MultiMemberTestCase.test_multi_validation">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -311,7 +437,7 @@
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">
-    Generated by Epydoc 3.0.1 on Tue Oct 18 11:11:04 2011
+    Generated by Epydoc 3.0.1 on Thu Jan 12 09:54:08 2012
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

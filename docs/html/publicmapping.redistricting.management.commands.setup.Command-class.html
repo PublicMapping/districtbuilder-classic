@@ -463,6 +463,24 @@
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
+          <td><span class="summary-sig"><a name="import_regions"></a><span class="summary-sig-name">import_regions</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">config</span>,
+        <span class="summary-sig-arg">verbose</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.management.commands.setup-pysrc.html#Command.import_regions">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
           <td><span class="summary-sig"><a href="publicmapping.redistricting.management.commands.setup.Command-class.html#import_prereq" class="summary-sig-name">import_prereq</a>(<span class="summary-sig-arg">self</span>,
         <span class="summary-sig-arg">config</span>,
         <span class="summary-sig-arg">verbose</span>)</span><br />
@@ -508,6 +526,87 @@
         <span class="summary-sig-arg">verbose</span>)</span></td>
           <td align="right" valign="top">
             <span class="codelink"><a href="publicmapping.redistricting.management.commands.setup-pysrc.html#Command.set_geounit_characteristic">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="get_largest_geolevel"></a><span class="summary-sig-name">get_largest_geolevel</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">config</span>,
+        <span class="summary-sig-arg">verbose</span>)</span><br />
+      Given a Region node, return the string representing the config id of 
+      the &quot;largest&quot; geolevel in the region</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.management.commands.setup-pysrc.html#Command.get_largest_geolevel">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.management.commands.setup.Command-class.html#import_regional_geolevels" class="summary-sig-name">import_regional_geolevels</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">config</span>,
+        <span class="summary-sig-arg">regions_node</span>,
+        <span class="summary-sig-arg">verbose</span>)</span><br />
+      Given a Regions node, return a list of geolevels represented.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.management.commands.setup-pysrc.html#Command.import_regional_geolevels">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.management.commands.setup.Command-class.html#create_filter_functions" class="summary-sig-name">create_filter_functions</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">config</span>,
+        <span class="summary-sig-arg">verbose</span>)</span><br />
+      Given a Regions node, create a dictionary of functions that can be 
+      used to filter a feature from a shapefile into the correct region.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.management.commands.setup-pysrc.html#Command.create_filter_functions">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="get_regions_for_feature"></a><span class="summary-sig-name">get_regions_for_feature</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">feature</span>,
+        <span class="summary-sig-arg">functions</span>)</span><br />
+      Given a feature and a dictionary of filter functions, returns a list 
+      of strings representing the regions to which the feature should 
+      belong</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.management.commands.setup-pysrc.html#Command.get_regions_for_feature">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -804,7 +903,7 @@ ort&quot;, type= 'int'), make_option('-n', '--nesting', dest= &quot;nesting&quot
   <dl class="fields">
     <dt>Decorators:</dt>
     <dd><ul class="nomargin-top">
-        <li><code>@transaction.commit_manually</code></li>
+        <li><code>@transaction.commit_on_success</code></li>
     </ul></dd>
   </dl>
 </td></tr></table>
@@ -985,9 +1084,57 @@ Parameters:
 Import a shapefile, based on a config.
 
 Parameters:
-    config -- A dictionary with 'shapepath', 'geolevel', 'name_field', and 'subject_fields' keys.
+    config -- A dictionary with 'shapepath', 'geolevel', 'name_field', 'region_filters' and 'subject_fields' keys.
 
 </pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="import_regional_geolevels"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">import_regional_geolevels</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">config</span>,
+        <span class="sig-arg">regions_node</span>,
+        <span class="sig-arg">verbose</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.management.commands.setup-pysrc.html#Command.import_regional_geolevels">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Given a Regions node, return a list of geolevels represented. If the 
+  geolevels don't yet exist, create them and save them to the database</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="create_filter_functions"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">create_filter_functions</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">config</span>,
+        <span class="sig-arg">verbose</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.management.commands.setup-pysrc.html#Command.create_filter_functions">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Given a Regions node, create a dictionary of functions that can be 
+  used to filter a feature from a shapefile into the correct region.  The 
+  dictionary keys are region ids from the config, the values are lists of 
+  functions which return true when applied to a feature that should be in 
+  the region</p>
   <dl class="fields">
   </dl>
 </td></tr></table>
@@ -1147,7 +1294,7 @@ ort&quot;, type= 'int'), make_option('-n', '--nesting', dest= &quot;nesting&quot
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">
-    Generated by Epydoc 3.0.1 on Tue Oct 18 11:11:03 2011
+    Generated by Epydoc 3.0.1 on Thu Jan 12 09:54:06 2012
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"
