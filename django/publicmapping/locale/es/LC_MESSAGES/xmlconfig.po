@@ -1,0 +1,898 @@
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.0\n"
+"Report-Msgid-Bugs-To: districtbuilder-dev@googlegroups.com\n"
+"POT-Creation-Date: 2012-01-12 17:20+0000\n"
+"PO-Revision-Date: 2012-01-12 17:20+0000\n"
+"Last-Translator: admin <dzwarg+admin@azavea.com>\n"
+"Language-Team: admin <dzwarg+admin@azavea.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: es\n"
+
+msgid "va label"
+msgstr "Virginia"
+
+msgid "va description"
+msgstr "The Commonwealth of Virginia"
+
+msgid "Congressional name"
+msgstr "Congressional"
+
+msgid "Congressional short label"
+msgstr "%(district_id)s"
+
+msgid "Congressional long label"
+msgstr "District %(district_id)s"
+
+msgid "State House name"
+msgstr "State House"
+
+msgid "State House short label"
+msgstr "%(district_id)s"
+
+msgid "State House long label"
+msgstr "District %(district_id)s"
+
+msgid "State Senate name"
+msgstr "State Senate"
+
+msgid "State Senate short label"
+msgstr "%(district_id)s"
+
+msgid "State Senate long label"
+msgstr "District %(district_id)s"
+
+msgid "Community Map name"
+msgstr "Community Map"
+
+msgid "Community Map short label"
+msgstr "%(district_id)s"
+
+msgid "Community Map long label"
+msgstr "Community %(district_id)s"
+
+msgid "dc label"
+msgstr "DC Metro"
+
+msgid "dc description"
+msgstr "The District of Columbia Metropolitan Area"
+
+msgid "DC Planning Council name"
+msgstr "DC Planning Council"
+
+msgid "DC Planning Council short label"
+msgstr "%(district_id)s"
+
+msgid "DC Planning Council long label"
+msgstr "District %(district_id)s"
+
+msgid "DC Community Map name"
+msgstr "DC Community Map"
+
+msgid "DC Community Map short label"
+msgstr "%(district_id)s"
+
+msgid "DC Community Map long label"
+msgstr "Community %(district_id)s"
+
+msgid "dc_vtd label"
+msgstr "dc_vtd"
+
+msgid "va_county label"
+msgstr "va_county"
+
+msgid "dc_block label"
+msgstr "dc_block"
+
+msgid "county label"
+msgstr "county"
+
+msgid "va_block label"
+msgstr "va_block"
+
+msgid "va_vtd label"
+msgstr "va_vtd"
+
+msgid "vtd label"
+msgstr "vtd"
+
+msgid "block label"
+msgstr "block"
+
+msgid "Congressional Leaderboard - All title"
+msgstr "Congressional Leaderboard - All"
+
+msgid "Congressional Leaderboard - Mine title"
+msgstr "Congressional Leaderboard - Mine"
+
+msgid "State House Leaderboard - All title"
+msgstr "State House Leaderboard - All"
+
+msgid "State House Leaderboard - Mine title"
+msgstr "State House Leaderboard - Mine"
+
+msgid "State Senate Leaderboard - All title"
+msgstr "State Senate Leaderboard - All"
+
+msgid "State Senate Leaderboard - Mine title"
+msgstr "State Senate Leaderboard - Mine"
+
+msgid "Basic Information title"
+msgstr "Basic Information"
+
+msgid "Demographics title"
+msgstr "Demographics"
+
+msgid "Community Mapping title"
+msgstr "Community Mapping"
+
+msgid "Congressional Reports title"
+msgstr "Congressional Reports"
+
+msgid "State Senate Reports title"
+msgstr "State Senate Reports"
+
+msgid "State House Reports title"
+msgstr "State House Reports"
+
+msgid "aoeu title"
+msgstr "aoeu"
+
+msgid "a_congressional_population label"
+msgstr "Tot Pop"
+
+msgid "a_congressional_population description"
+msgstr "Population interval calculator for congressional."
+
+msgid "a_congress_plan_count_districts label"
+msgstr "Count Districts"
+
+msgid "a_congress_plan_count_districts description"
+msgstr ""
+"The number of districts in a Congressional redistricting plan must be "
+"11."
+
+msgid "a_congress_plan_equipopulation_summary label"
+msgstr "Target Pop. (727,366)"
+
+msgid "a_congress_plan_equipopulation_summary description"
+msgstr ""
+"The population of each Congressional district must be 727,366 +/- "
+"0.5%."
+
+msgid "a_congress_plan_equipopulation_validation label"
+msgstr "Target Pop. (727,366)"
+
+msgid "a_congress_plan_equipopulation_validation description"
+msgstr ""
+"The population of each Congressional district must be 727,366 +/- "
+"0.5%."
+
+msgid "a_house_plan_count_districts label"
+msgstr "Count Districts"
+
+msgid "a_house_plan_count_districts description"
+msgstr ""
+"The number of districts in a House of Delegates redistricting plan "
+"must be 100."
+
+msgid "a_house_plan_equipopulation_summary label"
+msgstr "Target Pop. (80,010)"
+
+msgid "a_house_plan_equipopulation_summary description"
+msgstr ""
+"The population of each House of Delegates district must be 80,010 +/- "
+"5%."
+
+msgid "a_house_plan_equipopulation_validation label"
+msgstr "Target Pop. (80,010)"
+
+msgid "a_house_plan_equipopulation_validation description"
+msgstr ""
+"The population of each House of Delegates district must be 80,010 +/- "
+"5%."
+
+msgid "a_house_population label"
+msgstr "Tot Pop"
+
+msgid "a_house_population description"
+msgstr "Population interval calculator for house."
+
+msgid "a_senate_plan_count_districts label"
+msgstr "Count Districts"
+
+msgid "a_senate_plan_count_districts description"
+msgstr ""
+"The number of districts in a State Senate redistricting plan must be "
+"100."
+
+msgid "a_senate_plan_equipopulation_summary label"
+msgstr "Target Pop. (200,026)"
+
+msgid "a_senate_plan_equipopulation_summary description"
+msgstr "The population of each State Senate district must be 200,026 +/- 5%."
+
+msgid "a_senate_plan_equipopulation_validation label"
+msgstr "Target Pop. (200,026)"
+
+msgid "a_senate_plan_equipopulation_validation description"
+msgstr "The population of each State Senate district must be 200,026 +/- 5%."
+
+msgid "a_senate_population label"
+msgstr "Tot Pop"
+
+msgid "a_senate_population description"
+msgstr "Population interval calculator for senate."
+
+msgid "b_plan_congress_noncontiguous label"
+msgstr "Contiguous"
+
+msgid "b_plan_congress_noncontiguous description"
+msgstr ""
+
+msgid "b_plan_house_noncontiguous label"
+msgstr "Contiguous"
+
+msgid "b_plan_house_noncontiguous description"
+msgstr ""
+
+msgid "b_plan_senate_noncontiguous label"
+msgstr "Contiguous"
+
+msgid "b_plan_senate_noncontiguous description"
+msgstr ""
+
+msgid "district_blkvap_percent label"
+msgstr "Black VAP"
+
+msgid "district_blkvap_percent description"
+msgstr ""
+
+msgid "district_blkvap_thresh label"
+msgstr "Black VAP Threshold"
+
+msgid "district_blkvap_thresh description"
+msgstr ""
+
+msgid "district_comments label"
+msgstr "Comments"
+
+msgid "district_comments description"
+msgstr ""
+
+msgid "district_contiguous label"
+msgstr "Contiguous"
+
+msgid "district_contiguous description"
+msgstr ""
+
+msgid "district_hispvap_percent label"
+msgstr "His. VAP"
+
+msgid "district_hispvap_percent description"
+msgstr ""
+
+msgid "district_hispvap_thresh label"
+msgstr "His. VAP Threshold"
+
+msgid "district_hispvap_thresh description"
+msgstr ""
+
+msgid "district_majmin label"
+msgstr ""
+
+msgid "district_majmin description"
+msgstr ""
+
+msgid "district_mintot label"
+msgstr ""
+
+msgid "district_mintot description"
+msgstr ""
+
+msgid "district_poptot label"
+msgstr "Total Population"
+
+msgid "district_poptot description"
+msgstr ""
+
+msgid "district_poptot_range label"
+msgstr "Tot Pop Range"
+
+msgid "district_poptot_range description"
+msgstr ""
+
+msgid "district_poptot_uitarget_congress label"
+msgstr ""
+
+msgid "district_poptot_uitarget_congress description"
+msgstr ""
+
+msgid "district_poptot_uitarget_house label"
+msgstr ""
+
+msgid "district_poptot_uitarget_house description"
+msgstr ""
+
+msgid "district_poptot_uitarget_senate label"
+msgstr ""
+
+msgid "district_poptot_uitarget_senate description"
+msgstr ""
+
+msgid "district_schwartzberg label"
+msgstr "Compactness"
+
+msgid "district_schwartzberg description"
+msgstr ""
+
+msgid "district_vap label"
+msgstr "Voting Age Pop."
+
+msgid "district_vap description"
+msgstr ""
+
+msgid "partisan_index label"
+msgstr "Partisan Index"
+
+msgid "partisan_index description"
+msgstr ""
+
+msgid "plan_all_blocks_assigned label"
+msgstr "All Blocks Assigned"
+
+msgid "plan_all_blocks_assigned description"
+msgstr "All blocks in the plan must be assigned."
+
+msgid "plan_all_contiguous label"
+msgstr "All Contiguous"
+
+msgid "plan_all_contiguous description"
+msgstr ""
+"Contiguity means that every part of a district must be reachable from "
+"every other part without crossing the district's borders. All "
+"districts within a plan must be contiguous. Water contiguity is "
+"permitted given Virginia's extensive coastal region. 'Point "
+"contiguity' or 'touch-point contiguity' where two sections of a "
+"district are connected at a single point is not permitted."
+
+msgid "plan_all_equipop label"
+msgstr ""
+
+msgid "plan_all_equipop description"
+msgstr ""
+
+msgid "plan_blkvap_thresh label"
+msgstr ""
+
+msgid "plan_blkvap_thresh description"
+msgstr ""
+
+msgid "plan_competitiveness label"
+msgstr "Competitiveness"
+
+msgid "plan_competitiveness description"
+msgstr ""
+"Each plan's overall political competitiveness is determined by "
+"averaging each district.s 'partisan differential'.  The partisan "
+"differential of each district is calculated by subtracting the "
+"Democratic 'partisan index' from the Republican 'partisan "
+"index'.<br/><br/>'Heavily' competitive districts are districts with "
+"partisan differentials of less than or equal to 5%. 'Generally' "
+"competitive districts are districts with partisan differentials of "
+"greater than 5% but less than 10%."
+
+msgid "plan_contiguous label"
+msgstr "Contiguous"
+
+msgid "plan_contiguous description"
+msgstr ""
+
+msgid "plan_count_majmin label"
+msgstr ""
+
+msgid "plan_count_majmin description"
+msgstr ""
+
+msgid "plan_equivalence label"
+msgstr "Equal Population"
+
+msgid "plan_equivalence description"
+msgstr ""
+"The Equipopulation score is the difference between the district with "
+"the highest population and the district with the lowest population."
+
+msgid "plan_hispvap_thresh label"
+msgstr ""
+
+msgid "plan_hispvap_thresh description"
+msgstr ""
+
+msgid "plan_majority_minority label"
+msgstr "Majority Minority District"
+
+msgid "plan_majority_minority description"
+msgstr ""
+"Compliance with the Voting Rights Act will be assumed if maps include "
+"a minority-majority district in any area where a minority group is (as"
+" described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) "
+"'sufficiently large and geographically compact to constitute a "
+"majority in a single-member district'."
+
+msgid "plan_majority_minority_blk_congress label"
+msgstr "Black VAP Majority (>50%)"
+
+msgid "plan_majority_minority_blk_congress description"
+msgstr ""
+"Compliance with the Voting Rights Act will be assumed if maps include "
+"a minority-majority district in any area where a minority group is (as"
+" described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) "
+"'sufficiently large and geographically compact to constitute a "
+"majority in a single-member district'."
+
+msgid "plan_majority_minority_blk_house label"
+msgstr "Black VAP Majority (>50%)"
+
+msgid "plan_majority_minority_blk_house description"
+msgstr ""
+"Compliance with the Voting Rights Act will be assumed if maps include "
+"a minority-majority district in any area where a minority group is (as"
+" described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) "
+"'sufficiently large and geographically compact to constitute a "
+"majority in a single-member district'."
+
+msgid "plan_majority_minority_blk_senate label"
+msgstr "Black VAP Majority (>50%)"
+
+msgid "plan_majority_minority_blk_senate description"
+msgstr ""
+"Compliance with the Voting Rights Act will be assumed if maps include "
+"a minority-majority district in any area where a minority group is (as"
+" described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) "
+"'sufficiently large and geographically compact to constitute a "
+"majority in a single-member district'."
+
+msgid "plan_majority_minority_hisp label"
+msgstr "Hisp. VAP Majority (>50%)"
+
+msgid "plan_majority_minority_hisp description"
+msgstr ""
+"Compliance with the Voting Rights Act will be assumed if maps include "
+"a minority-majority district in any area where a minority group is (as"
+" described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) "
+"'sufficiently large and geographically compact to constitute a "
+"majority in a single-member district'."
+
+msgid "plan_major_minor label"
+msgstr "Majority-Minority"
+
+msgid "plan_major_minor description"
+msgstr ""
+
+msgid "plan_poptot_inrange label"
+msgstr ""
+
+msgid "plan_poptot_inrange description"
+msgstr ""
+
+msgid "plan_repfairness label"
+msgstr "Representational Fairness"
+
+msgid "plan_repfairness description"
+msgstr ""
+"Representational fairness is increased when the percentage of "
+"districts a party would likely win (based upon the 'partisan index' "
+"used to determine Competitiveness) closely mirrors that party.s "
+"percentage of the statewide vote."
+
+msgid "plan_schwartzberg label"
+msgstr "Average Compactness"
+
+msgid "plan_schwartzberg description"
+msgstr ""
+"The competition is using the 'Inverse Schwartzberg' compactness "
+"measure. This measure is a ratio of the circumference of the circle "
+"whose area is equal to the area of the district to the perimeter of "
+"the district."
+
+msgid "plan_sum_equipop label"
+msgstr "Equal Population"
+
+msgid "plan_sum_equipop description"
+msgstr ""
+
+msgid "report_score_compactness_lw label"
+msgstr "Length/Width"
+
+msgid "report_score_compactness_lw description"
+msgstr ""
+
+msgid "report_score_compactness_ro label"
+msgstr "Roeck"
+
+msgid "report_score_compactness_ro description"
+msgstr ""
+
+msgid "report_score_compactness_sc label"
+msgstr "Schwartzberg"
+
+msgid "report_score_compactness_sc description"
+msgstr ""
+
+msgid "report_score_majmin_blk label"
+msgstr "VAP African-American"
+
+msgid "report_score_majmin_blk description"
+msgstr ""
+
+msgid "report_score_majmin_hisp label"
+msgstr "VAP Hispanic/Latino"
+
+msgid "report_score_majmin_hisp description"
+msgstr ""
+
+msgid "report_score_party_dem label"
+msgstr "Democratic"
+
+msgid "report_score_party_dem description"
+msgstr ""
+
+msgid "report_score_party_rep label"
+msgstr "Republican"
+
+msgid "report_score_party_rep description"
+msgstr ""
+
+msgid "report_score_total_population_congress label"
+msgstr "Total Population"
+
+msgid "report_score_total_population_congress description"
+msgstr ""
+
+msgid "report_score_total_population_house label"
+msgstr "Total Population"
+
+msgid "report_score_total_population_house description"
+msgstr ""
+
+msgid "report_score_total_population_senate label"
+msgstr "Total Population"
+
+msgid "report_score_total_population_senate description"
+msgstr ""
+
+msgid "report_score_unassigned label"
+msgstr "Unassigned Blocks"
+
+msgid "report_score_unassigned description"
+msgstr ""
+
+msgid "report_score_vap label"
+msgstr "Voting Age Population"
+
+msgid "report_score_vap description"
+msgstr ""
+
+msgid "report_score_vapblk label"
+msgstr "VAP African-American"
+
+msgid "report_score_vapblk description"
+msgstr ""
+
+msgid "report_score_vaphisp label"
+msgstr "VAP Hispanic/Latino"
+
+msgid "report_score_vaphisp description"
+msgstr ""
+
+msgid "Equipopulation title"
+msgstr "Equipopulation"
+
+msgid "Schwartzberg title"
+msgstr "Schwartzberg"
+
+msgid "Competitiveness title"
+msgstr "Competitiveness"
+
+msgid "Representational Fairness title"
+msgstr "Representational Fairness"
+
+msgid "Plan Summary title"
+msgstr "Plan Summary"
+
+msgid "Community Summary title"
+msgstr "Community Summary"
+
+msgid "Plan Comments title"
+msgstr "Plan Comments"
+
+msgid "Population title"
+msgstr "Population"
+
+msgid "Majority Minority Districts title"
+msgstr "Majority Minority Districts"
+
+msgid "Compactness title"
+msgstr "Compactness"
+
+msgid "Party-Controlled Districts title"
+msgstr "Party-Controlled Districts"
+
+msgid "Spatial Analysis title"
+msgstr "Spatial Analysis"
+
+msgid "govdem display"
+msgstr "Democratic Voters, Governor '09"
+
+msgid "govdem short display"
+msgstr "% Dem Gov. '09, Two-Party"
+
+msgid "govdem description"
+msgstr ""
+
+msgid "vapblk display"
+msgstr "Voting Age Population - African-American"
+
+msgid "vapblk short display"
+msgstr "Black VAP"
+
+msgid "vapblk description"
+msgstr ""
+
+msgid "vaphisp display"
+msgstr "Voting Age Population - Hispanic/Latino"
+
+msgid "vaphisp short display"
+msgstr "Hisp. VAP"
+
+msgid "vaphisp description"
+msgstr ""
+
+msgid "pophisp display"
+msgstr "Hispanic or Latino"
+
+msgid "pophisp short display"
+msgstr "Hispanic"
+
+msgid "pophisp description"
+msgstr ""
+
+msgid "popasn display"
+msgstr "Asian-American"
+
+msgid "popasn short display"
+msgstr "As Amer"
+
+msgid "popasn description"
+msgstr ""
+
+msgid "popnam display"
+msgstr "Native American"
+
+msgid "popnam short display"
+msgstr "Nat Amer"
+
+msgid "popnam description"
+msgstr ""
+
+msgid "poppild display"
+msgstr "Pacific Islander"
+
+msgid "poppild short display"
+msgstr "Pac Isldr"
+
+msgid "poppild description"
+msgstr ""
+
+msgid "vap display"
+msgstr "Voting Age Population"
+
+msgid "vap short display"
+msgstr "Voters"
+
+msgid "vap description"
+msgstr ""
+
+msgid "vapwnh display"
+msgstr "Voting Age Population - White"
+
+msgid "vapwnh short display"
+msgstr "Wht Votng Age"
+
+msgid "vapwnh description"
+msgstr ""
+
+msgid "popblk display"
+msgstr "African-American"
+
+msgid "popblk short display"
+msgstr "Black"
+
+msgid "popblk description"
+msgstr ""
+
+msgid "popwnh display"
+msgstr "Total White Non-Hispanic"
+
+msgid "popwnh short display"
+msgstr "White"
+
+msgid "popwnh description"
+msgstr ""
+
+msgid "vapasn display"
+msgstr "Voting Age Population - Asian-American"
+
+msgid "vapasn short display"
+msgstr "As Am Votng Age"
+
+msgid "vapasn description"
+msgstr ""
+
+msgid "vapnam display"
+msgstr "Voting Age Population - Native American"
+
+msgid "vapnam short display"
+msgstr "Nat Amer Votng Age"
+
+msgid "vapnam description"
+msgstr ""
+
+msgid "vappild display"
+msgstr "Voting Age Population - Pacific Islander"
+
+msgid "vappild short display"
+msgstr "Pac Isldr Votng Age"
+
+msgid "vappild description"
+msgstr ""
+
+msgid "presdem display"
+msgstr "Democratic Voters"
+
+msgid "presdem short display"
+msgstr "Democrat 08"
+
+msgid "presdem description"
+msgstr ""
+
+msgid "presrep display"
+msgstr "Republican Voters"
+
+msgid "presrep short display"
+msgstr "Republican 08"
+
+msgid "presrep description"
+msgstr ""
+
+msgid "poptot display"
+msgstr "Total Population"
+
+msgid "poptot short display"
+msgstr "Total Pop."
+
+msgid "poptot description"
+msgstr ""
+
+msgid "presoth display"
+msgstr "Other Voters"
+
+msgid "presoth short display"
+msgstr "Other 08"
+
+msgid "presoth description"
+msgstr ""
+
+msgid "govrep display"
+msgstr "Republican Voters, Governor '09"
+
+msgid "govrep short display"
+msgstr "Republican 09"
+
+msgid "govrep description"
+msgstr ""
+
+msgid "govoth display"
+msgstr "Sum All Other Candidates, Governor '09"
+
+msgid "govoth short display"
+msgstr "Other Cand 09"
+
+msgid "govoth description"
+msgstr ""
+
+msgid "govtot display"
+msgstr "Total Voter, Governor '09"
+
+msgid "govtot short display"
+msgstr "Governor"
+
+msgid "govtot description"
+msgstr ""
+
+msgid "have_you_heard_about_this_55_guy_lulz display"
+msgstr "99have; you' heard\" about -- this 55 guy? lulz!"
+
+msgid "have_you_heard_about_this_55_guy_lulz short display"
+msgstr "99have; you' heard\" about"
+
+msgid "have_you_heard_about_this_55_guy_lulz description"
+msgstr "99have; you' heard\" about -- this 55 guy? lulz!"
+
+msgid "Equipopulation - Congress description"
+msgstr ""
+"<p>Your plan does not meet the competition criteria for "
+"Equipopulation:</p><p>The population of each Congressional district "
+"must be 727,366 +/- 0.5%.</p>"
+
+msgid "AllContiguous - Congress description"
+msgstr ""
+"<p>Your plan does not meet the competition criteria for "
+"Contiguity</p><p>Every part of a district must be reachable from every"
+" other part without crossing the district's borders. All districts "
+"within a plan must be contiguous. Water contiguity is permitted given "
+"Virginia's extensive coastal region. 'Point contiguity' or 'touch-"
+"point contiguity' where two sections of a district are connected at a "
+"single point is not permitted.</p>"
+
+msgid "MajorityMinority - Congress description"
+msgstr ""
+
+msgid "CountDistricts - Congress description"
+msgstr ""
+
+msgid "AllBlocksAssigned - Congress description"
+msgstr ""
+
+msgid "Equipopulation - House description"
+msgstr ""
+"<p>Your plan does not meet the competition criteria for "
+"Equipopulation:</p><p>The population of each House of Delegates "
+"district must be 80,010 +/- 5%.</p>"
+
+msgid "AllContiguous - House description"
+msgstr ""
+"<p>Your plan does not meet the competition criteria for "
+"Contiguity</p><p>Every part of a district must be reachable from every"
+" other part without crossing the district's borders. All districts "
+"within a plan must be contiguous. Water contiguity is permitted given "
+"Virginia's extensive coastal region. 'Point contiguity' or 'touch-"
+"point contiguity' where two sections of a district are connected at a "
+"single point is not permitted.</p>"
+
+msgid "MajorityMinority - House description"
+msgstr ""
+
+msgid "CountDistricts - House description"
+msgstr ""
+
+msgid "AllBlocksAssigned - House description"
+msgstr ""
+
+msgid "Equipopulation - Senate description"
+msgstr ""
+"<p>Your plan does not meet the competition criteria for "
+"Equipopulation:</p><p>The population of each House of Delegates "
+"district must be 200,026 +/- 5%.</p>"
+
+msgid "AllContiguous - Senate description"
+msgstr ""
+"<p>Your plan does not meet the competition criteria for "
+"Contiguity</p><p>Every part of a district must be reachable from every"
+" other part without crossing the district's borders. All districts "
+"within a plan must be contiguous. Water contiguity is permitted given "
+"Virginia's extensive coastal region. 'Point contiguity' or 'touch-"
+"point contiguity' where two sections of a district are connected at a "
+"single point is not permitted.</p>"
+
+msgid "MajorityMinority - Senate description"
+msgstr ""
+
+msgid "CountDistricts - Senate description"
+msgstr ""
+
+msgid "AllBlocksAssigned - Senate description"
+msgstr ""

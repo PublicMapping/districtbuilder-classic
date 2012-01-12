@@ -73,6 +73,9 @@ class Command(BaseCommand):
         logging.logProcesses = 0
 
     def add_or_update(self, msgid='', msgstr=''):
+        """
+        Add a POEntry to the .po file, or update it if it already exists.
+        """
         entry = self.pofile.find(msgid)
         if entry is None:
             entry = polib.POEntry(msgid=msgid, msgstr=msgstr)
@@ -158,8 +161,13 @@ class Command(BaseCommand):
 
             for scoredisplay in ScoreDisplay.objects.all():
                 # The title for the score display
+                if 'name' in scoredisplay.__dict__:
+                    sdname = scoredisplay.name
+                else:
+                    sdname = scoredisplay.title
+
                 self.add_or_update(
-                    msgid=u'%s title' % scoredisplay.title, #TODO: change this to 'name'
+                    msgid=u'%s title' % sdname,
                     msgstr=scoredisplay.title
                 )
 
@@ -178,8 +186,13 @@ class Command(BaseCommand):
 
             for scorepanel in ScorePanel.objects.all():
                 # The title for the score panel
+                if 'name' in scorepanel.__dict__:
+                    spname = scorepanel.name
+                else:
+                    spname = scorepanel.title
+
                 self.add_or_update(
-                    msgid=u'%s title' % scorepanel.title, #TODO: change this to 'name'
+                    msgid=u'%s title' % spname,
                     msgstr=scorepanel.title
                 )
 
