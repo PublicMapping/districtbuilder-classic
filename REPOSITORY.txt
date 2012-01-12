@@ -13,19 +13,18 @@ root/
   |                 application, which is powered by the django framework.
   |
   +- docs/          Contains documentation of the Public Mapping Project.
-  |                 This directory contains the project's README file,
+  |                 This directory contains the project's INSTALL file,
   |                 which contains information on installation and
   |                 configuration of the web application. 
   |
   |                 The ADDING_LAYERS document describes the process of
   |                 adding a new set of geography for display and editing.
   |
-  |                 A set of automatically generated python class 
-  |                 documentation is contained in the html/ directory.
+  |                 Automatically generated python class documentation is 
+  |                 saved in the html/ directory. To view the current class
+  |                 documentation, please see:
   |
-  +- example_data/  Contains the sample data used to power the reference
-  |                 implementation at http://gmu.azavea.com/, as well as
-  |                 the Amazon Web Services machine AMI: ami-5cf40135.
+  |                 http://publicmapping.github.com/districtbuilder/docs/1.4/
   |
   +- python/        Contains any auxiliary python code required for the
   |                 application. This was used for custom tools during
@@ -37,4 +36,6 @@ root/
   |                 map legend.
   |
   +- sql/           Contains sql setup scripts for creating the initial
-                    spatial database.
+                    spatial database, in addition to upgrade sql scripts
+                    for migrating old versions of DistrictBuilder to newer
+                    versions.
