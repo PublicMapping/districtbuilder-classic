@@ -70,4 +70,5 @@ urlpatterns = patterns('publicmapping.redistricting.views',
     (r'^processingstatus/$', 'get_processing_status'),
     (r'^feed/plans/$', 'plan_feed'),
     (r'^feed/shared/$', 'share_feed'),
+    (r'^i18n/', include('django.conf.urls.i18n')),
 )
