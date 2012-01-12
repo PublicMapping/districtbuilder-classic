@@ -872,7 +872,8 @@ class DistrictShapeFile():
                         lgdal.OGR_F_SetFieldDouble(feature, idx+len(dfieldnames), c_double(compchar.number))
 
                     # convert the geos geometry to an ogr geometry
-                    geometry = OGRGeometry(district.geom.wkt, native_srs)
+                    geometry = OGRGeometry(district.geom.ewkt)
+                    geometry.transform(native_srs)
                     # save the geometry to the feature
                     added = lgdal.OGR_F_SetGeometry(feature, geometry._ptr)
                     check_err(added)

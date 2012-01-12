@@ -308,15 +308,19 @@ function mapinit(srs,maxExtent) {
 
     // Calculate the minimum zoom level based on the extent of the study area
     var studyWidthMeters = STUDY_EXTENT[2] - STUDY_EXTENT[0];
+    var studyHeightMeters = STUDY_EXTENT[3] - STUDY_EXTENT[1];
     var mapWidthPixels = $('div.olMapViewport').width();
-    var metersPerPixel = studyWidthMeters / mapWidthPixels;
+    var mapHeightPixels = $('div.olMapViewport').height();
+    var hMetersPerPixel = studyWidthMeters / mapWidthPixels;
+    var vMetersPerPixel = studyHeightMeters / mapHeightPixels;
     var maxMetersPerPixel = 156543.033928; // at zoom 0 (20037508.342789244 * 2 / 256)
 
     // maxmpp / 2^zoom = mpp
     // zoom = log(maxmpp/mpp)/log(2)
-    var level = Math.log(maxMetersPerPixel / metersPerPixel) / Math.LN2;
+    var hlevel = Math.log(maxMetersPerPixel / hMetersPerPixel) / Math.LN2;
+    var vlevel = Math.log(maxMetersPerPixel / vMetersPerPixel) / Math.LN2;
     
-    var minZoomLevel = Math.floor(level);
+    var minZoomLevel = (hlevel < vlevel) ? Math.floor(hlevel) : Math.floor(vlevel);
     var maxZoomLevel = 17; // This level is far enough zoomed to view blocks in any state
     var numZoomLevels = maxZoomLevel - minZoomLevel + 1;
 
