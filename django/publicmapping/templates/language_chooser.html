@@ -27,14 +27,19 @@
 
 {% load redistricting_extras %}
 {% load i18n %}
-<form action="/i18n/setlang/" method="post">
-    {% csrf_token %}
-    <input name="next" type="hidden" value="/districtmapping/plan/0/view" />
-        <select name="language">
-            {% get_language_info_list for LANGUAGES as languages %}
-            {% for language in languages %}
-            <option value="{{ language.code }}">{{ language.name_local }} ({{ language.code }})</option>
-            {% endfor %}
-        </select>
-    <input type="submit" value="Go" />
-</form>
+
+<div id="language_menu_target" class="toggle_menu_target" >
+    Language
+</div>
+<div id="language_menu_div" class="toggle_menu_target" >
+    <form id="language_form" action="/i18n/setlang/" method="POST">
+        {% comment %} CSRF token is automatically inserted {% endcomment %}
+        <input id="language" name="language" type="hidden" />
+    </form>
+    {% get_language_info_list for LANGUAGES as languages %}
+    {% for language in languages %}
+    <div id="{{language.code}}" class="language_selection" >
+        {{ language.name_local }} ({{ language.code }})
+    </div>
+    {% endfor %}
+</div>

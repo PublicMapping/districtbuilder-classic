@@ -519,7 +519,8 @@ def commonplan(request, planid):
         'allow_email_submissions': ('EMAIL_SUBMISSION' in settings.__members__),
         'tags': tags,
         'plan_text': _("community map") if (plan and plan.is_community()) else _("plan"),
-        'language_code': translation.get_language()
+        'language_code': translation.get_language(),
+        'LANGUAGES': settings.LANGUAGES # needed (as CAPS) for language chooser
     }
 
 def is_plan_ready(planid):

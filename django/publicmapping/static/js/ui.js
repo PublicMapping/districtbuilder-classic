@@ -407,19 +407,28 @@ $(function() {
         }
     });
 	
-    $('#plan_export_button').click(function(){
-        var toggle = $(this);
-        var panel = $('#plan_export_menu');
+    var toggleMenu = function(targetId, menuDivId) {
+        var target = $(targetId);
+        var menuDiv = $(menuDivId);
+        target.toggle(
+            function() {
+                menuDiv.slideDown(240);
+            },
+             function() {
+                menuDiv.slideUp(240);
+            }
+        );
+        menuDiv.slideUp(0);
+    };
+    
+    toggleMenu('#plan_export_button', '#plan_export_menu');
 
-        if(toggle.hasClass('active')) {
-            toggle.removeClass('active');
-            panel.slideUp(240);
-        }
-        else {
-            toggle.addClass('active');
-            panel.slideDown(240);
-        }
-    });	
+    // Set up the language chooser
+    toggleMenu('#language_menu_target', '#language_menu_div');
+    $('.language_selection').click(function() {
+        $('#language_form #language').val($(this).attr('id'));
+        $('#language_form').submit();
+    });
     
     $('#map_settings').click(function(){
         var toggle = $(this);

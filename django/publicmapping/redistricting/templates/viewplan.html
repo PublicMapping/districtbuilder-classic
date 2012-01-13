@@ -36,7 +36,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=8" />        
-    <meta name="author" content="David Zwarg, Andrew Jennings" />
+    <meta name="author" content="David Zwarg, Andrew Jennings, Kenny Shepard" />
     <meta name="copyright" content="&copy; 2010 Micah Altman, Michael McDonald"/>
     <meta property="og:title" content="{% trans "Redistricting plan by DistrictBuilder" %}" />
     <meta property="og:description" content="{% trans "DistrictBuilder is web-based, open source software for collaborative redistricting." %}" />
@@ -245,6 +245,7 @@
             <li><a href="#" onclick="$('#register').dialog('open');return false;">{% trans "My Account" %}</a></li>
             <li><a class="last" href="/accounts/logout/">{% trans "Logout" %}</a></li>
             {% endif %}
+            {% include 'language_chooser.html' %}
         </ul>
     </div>
     <div class="clear"></div>
