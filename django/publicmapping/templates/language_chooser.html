@@ -28,18 +28,20 @@
 {% load redistricting_extras %}
 {% load i18n %}
 
-<div id="language_menu_target" class="toggle_menu_target" >
-    Language
-</div>
-<div id="language_menu_div" class="toggle_menu" >
-    <form id="language_form" action="/i18n/setlang/" method="POST">
-        {% comment %} CSRF token is automatically inserted {% endcomment %}
-        <input id="language" name="language" type="hidden" />
-    </form>
-    {% get_language_info_list for LANGUAGES as languages %}
-    {% for language in languages %}
-    <div id="{{language.code}}" class="language_selection" >
-        {{ language.name_local }} ({{ language.code }})
+<div id="language_menu_wrapper" class="toggle_menu_wrapper" >
+    <div id="language_menu_target" class="toggle_menu_target" >
+        Language
     </div>
-    {% endfor %}
+    <div id="language_menu_div" class="toggle_menu" >
+        <form id="language_form" action="/i18n/setlang/" method="POST">
+            {% comment %} CSRF token is automatically inserted {% endcomment %}
+            <input id="language" name="language" type="hidden" />
+        </form>
+        {% get_language_info_list for LANGUAGES as languages %}
+        {% for language in languages %}
+        <div id="{{language.code}}" class="language_selection" >
+            {{ language.name_local }} ({{ language.code }})
+        </div>
+        {% endfor %}
+    </div>
 </div>

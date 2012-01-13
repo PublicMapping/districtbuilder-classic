@@ -114,7 +114,7 @@ div#site_nav li {
   webkit-box-shadow: 0 0 2px #95bec6;
   box-shadow: 0 0 2px #95bec6;
   border: 1px black;
-  background: url(/static-media/images/bg-body-home.png);
+  background-color: #7FAAAA;
 }
 
 /*header styles*/
@@ -1206,15 +1206,22 @@ div#toolsets .toolbar_menu_container .ui-button.active{
 	top: 24px;
 	}
 	
+.toggle_menu_wrapper {
+  position: relative;
+}
+
 .toggle_menu_target, 
 .toggle_menu {
     cursor: pointer;
 }
 
 .toggle_menu {
-    position: relative;
+    position: absolute;
+    right: 0;
+    width: 95px;
     z-index: 1001;
 }
+
 
 
 .toolbar_menu#plan_export_menu button {
