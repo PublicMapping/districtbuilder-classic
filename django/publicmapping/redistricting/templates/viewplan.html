@@ -245,7 +245,9 @@
             <li><a href="#" onclick="$('#register').dialog('open');return false;">{% trans "My Account" %}</a></li>
             <li><a class="last" href="/accounts/logout/">{% trans "Logout" %}</a></li>
             {% endif %}
+            <li>
             {% include 'language_chooser.html' %}
+            </li>
         </ul>
     </div>
     <div class="clear"></div>
