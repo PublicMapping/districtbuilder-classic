@@ -182,6 +182,7 @@
                                                     <xs:element name="ScorePanel" minOccurs="1" maxOccurs="unbounded" type="RefType" >
                                                     </xs:element>
                                                 </xs:sequence>
+                                                <xs:attribute name="id" type="xs:ID" />
                                                 <xs:attribute name="legislativebodyref" type="xs:IDREF" />
                                                 <xs:attribute name="type" type="xs:string" />
                                                 <xs:attribute name="cssclass" type="xs:string" use="optional" />
@@ -205,6 +206,7 @@
                                                 <xs:sequence>
                                                     <xs:element name="Score" type="RefType" />
                                                 </xs:sequence>
+                                                <xs:attribute name="id" type="xs:ID" />
                                                 <xs:attribute name="name" type="xs:string" />
                                                 <xs:attribute name="description" type="xs:string" />
                                             </xs:complexType>
