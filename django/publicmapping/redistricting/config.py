@@ -193,7 +193,7 @@ class ConfigImporter:
         bodies = self.store.filter_legislative_bodies()
         for body in bodies:
             attributes = {
-                'name': body.get('name')[:256],
+                'title': body.get('name')[:256],
                 'short_label': body.get('short_label')[:10], 
                 'long_label': body.get('long_label')[:256],
                 'max_districts': body.get('maxdistricts'),
@@ -209,7 +209,12 @@ class ConfigImporter:
                 region_name = body_by_region[0].getparent().getparent().get('name')
             attributes['region'] = Region.objects.get(name=region_name)
 
-            obj, created, changed, message = ModelHelper.check_and_update(LegislativeBody, overwrite=force, **attributes)
+            obj, created, changed, message = ModelHelper.check_and_update(LegislativeBody, unique_id_field='title', overwrite=force, **attributes)
+
+            # TODO: temporarily set the name to the xml id
+            obj.name = body.get('id')
+            obj.save()
+            #
 
             if changed and not force:
                 logger.info(message)
@@ -374,7 +379,7 @@ class ConfigImporter:
             for lbody in lbodies:
                 # de-reference
                 lbconfig = self.store.get_legislative_body(lbody.get('ref'))
-                legislative_body = LegislativeBody.objects.get(name=lbconfig.get('name')[:256])
+                legislative_body = LegislativeBody.objects.get(title=lbconfig.get('name')[:256])
                 
                 # Add a mapping for the subjects in this GL/LB combo.
                 sconfig = self.store.get_legislative_body_default_subject(lbody)
@@ -397,9 +402,9 @@ class ConfigImporter:
                         parent=parent)
 
                     if created:
-                        logger.debug('Created LegislativeBody/GeoLevel mapping "%s/%s"', legislative_body.name, geolevel.name)
+                        logger.debug('Created LegislativeBody/GeoLevel mapping "%s/%s"', legislative_body.title, geolevel.name)
                     else:
-                        logger.debug('LegislativeBody/GeoLevel mapping "%s/%s" already exists', legislative_body.name, geolevel.name)
+                        logger.debug('LegislativeBody/GeoLevel mapping "%s/%s" already exists', legislative_body.title, geolevel.name)
 
                     if len(node) > 0:
                         add_legislative_level_for_geolevel(node[0], body, subject, obj)
@@ -433,7 +438,7 @@ class ConfigImporter:
         # Import score displays.
         for sd in self.store.filter_scoredisplays():
             lbconfig = self.store.get_legislative_body(sd.get('legislativebodyref'))
-            lb = LegislativeBody.objects.get(name=lbconfig.get('name'))
+            lb = LegislativeBody.objects.get(title=lbconfig.get('name'))
             title = sd.get('title')[:50]
              
             sd_obj, created = ScoreDisplay.objects.get_or_create(
@@ -521,7 +526,7 @@ class ConfigImporter:
 
         for vc in self.store.filter_criteria():
             lbconfig = self.store.get_legislative_body(vc.get('legislativebodyref'))
-            lb = LegislativeBody.objects.get(name=lbconfig.get('name'))
+            lb = LegislativeBody.objects.get(title=lbconfig.get('name'))
 
             for crit in self.store.filter_criteria_criterion(vc):
                 # Import the score function for this validation criterion
@@ -575,7 +580,7 @@ class ConfigImporter:
         for lbitem in self.store.filter_function_legislative_bodies(node):
             lb = self.store.get_legislative_body(lbitem.get('ref'))
             lbodies.append(lb.get('name')[:256])
-        lbodies = list(LegislativeBody.objects.filter(name__in=lbodies))
+        lbodies = list(LegislativeBody.objects.filter(title__in=lbodies))
         fn_obj.selectable_bodies.add(*lbodies)
 
         if changed and not force:

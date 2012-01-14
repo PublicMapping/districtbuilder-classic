@@ -80,101 +80,138 @@ class Command(BaseCommand):
             poutil = PoUtils(locale)
 
             for region in Region.objects.all():
+                # The short label of the region
+                poutil.add_or_update(
+                    msgid=u'%s short label' % region.name,
+                    msgstr=region.label
+                )
                 # The label of the region
                 poutil.add_or_update(
                     msgid=u'%s label' % region.name,
                     msgstr=region.label
                 )
-                # The description of the region
+                # The long description of the region
                 poutil.add_or_update(
-                    msgid=u'%s description' % region.name,
+                    msgid=u'%s long description' % region.name,
                     msgstr=region.description
                 )
 
                 for legislativebody in region.legislativebody_set.all():
-                    # The name of the legislative body
-                    poutil.add_or_update(
-                        msgid=u'%s name' % legislativebody.name,
-                        msgstr=legislativebody.name
-                    )
                     # The short label for all districts in this body
                     poutil.add_or_update(
                         msgid=u'%s short label' % legislativebody.name,
-                        msgstr=legislativebody.short_label.replace('%s', '%(district_id)s')
+                        msgstr=legislativebody.title.replace('%s', '%(district_id)s')
                     )
-                    # The long label for all districts in this body
+                    # The label for all districts in this body
                     poutil.add_or_update(
-                        msgid=u'%s long label' % legislativebody.name,
+                        msgid=u'%s label' % legislativebody.name,
                         msgstr=legislativebody.long_label.replace('%s', '%(district_id)s')
                     )
-
-                    # No messages in plans or districts or computed scores of any type
+                    # The description for all districts in this body (unused)
+                    poutil.add_or_update(
+                        msgid=u'%s long description' % legislativebody.name,
+                        msgstr=''
+                    )
 
             for geolevel in Geolevel.objects.all():
-                # The label for the geolevel
+                # The short label of the geolevel
+                poutil.add_or_update(
+                    msgid=u'%s short label' % geolevel.name,
+                    msgstr=geolevel.label
+                )
+                # The label of the geolevel
                 poutil.add_or_update(
                     msgid=u'%s label' % geolevel.name,
                     msgstr=geolevel.label
                 )
+                # The long description of the geolevel (unused)
+                poutil.add_or_update(
+                    msgid=u'%s long description' % geolevel.name,
+                    msgstr=''
+                )
 
             for scoredisplay in ScoreDisplay.objects.all():
-                # The title for the score display
-                if 'name' in scoredisplay.__dict__:
-                    sdname = scoredisplay.name
-                else:
-                    sdname = scoredisplay.title
-
+                # The short label of the score display
                 poutil.add_or_update(
-                    msgid=u'%s title' % sdname,
+                    msgid=u'%s short label' % scoredisplay.name,
                     msgstr=scoredisplay.title
+                )
+                # The label of the score display
+                poutil.add_or_update(
+                    msgid=u'%s label' % scoredisplay.name,
+                    msgstr=scoredisplay.title
+                )
+                # The long description of the score display (unused)
+                poutil.add_or_update(
+                    msgid=u'%s long description' % scoredisplay.name,
+                    msgstr=''
                 )
 
             for scorefunction in ScoreFunction.objects.all():
-                # The label for the score function
+                # The short label of the score function
+                poutil.add_or_update(
+                    msgid=u'%s short label' % scorefunction.name,
+                    msgstr=scorefunction.label
+                )
+                # The label of the score function
                 poutil.add_or_update(
                     msgid=u'%s label' % scorefunction.name,
                     msgstr=scorefunction.label
                 )
-
-                # The description for the score function
+                # The long description of the score function
                 poutil.add_or_update(
-                    msgid=u'%s description' % scorefunction.name,
+                    msgid=u'%s long description' % scorefunction.name,
                     msgstr=scorefunction.description
                 )
 
             for scorepanel in ScorePanel.objects.all():
-                # The title for the score panel
-                if 'name' in scorepanel.__dict__:
-                    spname = scorepanel.name
-                else:
-                    spname = scorepanel.title
-
+                # The short label of the score panel
                 poutil.add_or_update(
-                    msgid=u'%s title' % spname,
+                    msgid=u'%s short label' % scorepanel.name,
                     msgstr=scorepanel.title
+                )
+                # The label of the score panel
+                poutil.add_or_update(
+                    msgid=u'%s label' % scorepanel.name,
+                    msgstr=scorepanel.title
+                )
+                # The long description of the score panel
+                poutil.add_or_update(
+                    msgid=u'%s long description' % scorepanel.name,
+                    msgstr=''
                 )
 
             for subject in Subject.objects.all():
-                # The display of the subject
+                # The short label of the subject
                 poutil.add_or_update(
-                    msgid=u'%s display' % subject.name,
-                    msgstr=subject.display
-                )
-                # The short display of the subject
-                poutil.add_or_update(
-                    msgid=u'%s short display' % subject.name,
+                    msgid=u'%s short label' % subject.name,
                     msgstr=subject.short_display
                 )
-                # The description of the subject
+                # The label of the subject
                 poutil.add_or_update(
-                    msgid=u'%s description' % subject.name,
+                    msgid=u'%s label' % subject.name,
+                    msgstr=subject.display
+                )
+                # The long description of the subject
+                poutil.add_or_update(
+                    msgid=u'%s long description' % subject.name,
                     msgstr=subject.description
                 )
 
             for validationcriterion in ValidationCriteria.objects.all():
-                # The description of the validation criterion
+                # The short label of the validation criterion
                 poutil.add_or_update(
-                    msgid=u'%s description' % validationcriterion.name,
+                    msgid=u'%s short label' % validationcriterion.name,
+                    msgstr=validationcriterion.title
+                )
+                # The label of the validation criterion
+                poutil.add_or_update(
+                    msgid=u'%s label' % validationcriterion.name,
+                    msgstr=validationcriterion.title
+                )
+                # The long description of the validation criterion
+                poutil.add_or_update(
+                    msgid=u'%s long description' % validationcriterion.name,
                     msgstr=validationcriterion.description
                 )
 

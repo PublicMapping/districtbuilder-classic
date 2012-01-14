@@ -223,6 +223,9 @@ class LegislativeBody(models.Model):
     # The name of this legislative body
     name = models.CharField(max_length=256)
 
+    # TODO: a temporary title for this model
+    title = models.CharField(max_length=256)
+
     # The short name of the units in a plan -- "%s", for example.
     short_label = models.CharField(max_length=10)
 
