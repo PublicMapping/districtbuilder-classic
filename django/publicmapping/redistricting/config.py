@@ -449,6 +449,11 @@ class ConfigImporter:
             else:
                 logger.debug('ScoreDisplay "%s" already exists', title)
 
+            # TODO: temporarily set the name to the xml id
+            sd_obj.name = sd.get('id')
+            sd_obj.save()
+            #
+
             # Import score panels for this score display.
             for spref in self.store.filter_displayed_score_panels(sd):
                 sp = self.store.get_score_panel(spref.get('ref'))
@@ -480,6 +485,7 @@ class ConfigImporter:
                         template=template,
                         cssclass=cssclass,
                         is_ascending=(ascending is None or ascending=='true'), 
+                        name=spref.get('ref')
                     )
                     sp_obj.save()
                     sd_obj.scorepanel_set.add(sp_obj)
@@ -487,6 +493,8 @@ class ConfigImporter:
                     logger.debug('Created ScorePanel "%s"', title)
                 else:
                     sp_obj = sp_obj[0]
+                    sp_obj.name = spref.get('ref')
+                    sp_obj.save()
                     attached = sd_obj.scorepanel_set.filter(id=sp_obj.id).count() == 1
                     if not attached:
                         sd_obj.scorepanel_set.add(sp_obj)
@@ -528,12 +536,17 @@ class ConfigImporter:
 
                 # Import this validation criterion
                 attributes = {
-                    'name': crit.get('name'),
+                    'title': crit.get('name'),
                     'function': sf_obj,
                     'description': crit.get('description') or '',
                     'legislative_body': lb
                 }
-                crit_obj, created, changed, message = ModelHelper.check_and_update(ValidationCriteria, overwrite=force, **attributes)
+                crit_obj, created, changed, message = ModelHelper.check_and_update(ValidationCriteria, unique_id_field='title', overwrite=force, **attributes)
+
+                # TODO: temporarily set the name to the xml id
+                crit_obj.name = crit.get('id')
+                crit_obj.save()
+                #
 
                 if changed and not force:
                     logger.info(message)

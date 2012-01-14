@@ -3210,6 +3210,9 @@ class ScoreDisplay(models.Model):
     Container for displaying score panels
     """
 
+    # The name of the score display
+    name = models.CharField(max_length=50)
+
     # The title of the score display
     title = models.CharField(max_length=50)
 
@@ -3379,7 +3382,10 @@ class ScorePanel(models.Model):
 
     # Where this panel belongs within a score display
     position = models.PositiveIntegerField(default=0)
-    
+  
+    # The name of this score panel
+    name = models.CharField(max_length=50)
+
     # The title of the score panel
     title = models.CharField(max_length=50)
     
@@ -3576,6 +3582,9 @@ class ValidationCriteria(models.Model):
 
     # Name of this validation criteria
     name = models.CharField(max_length=50)
+
+    # TODO: temp field while upgrading i18n
+    title = models.CharField(max_length=50)
 
     # Description of this validation criteria
     description = models.TextField(blank=True)
