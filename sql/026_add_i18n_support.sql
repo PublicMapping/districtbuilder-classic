@@ -7,3 +7,6 @@ ALTER TABLE publicmapping.redistricting_validationcriteria ADD COLUMN title char
 UPDATE publicmapping.redistricting_validationcriteria SET title = "name";
 UPDATE publicmapping.redistricting_validationcriteria SET "name" = '';
 
+ALTER TABLE publicmapping.redistricting_legislativebody ADD COLUMN title character varying(256) NOT NULL DEFAULT '';
+UPDATE publicmapping.redistricting_legislativebody SET title = "name";
+UPDATE publicmapping.redistricting_legislativebody SET "name" = '';
