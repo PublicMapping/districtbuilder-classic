@@ -2156,7 +2156,7 @@ class District(models.Model):
         Returns:
             The Districts, sorted in numerical order.
         """
-        name = self.long_label;
+        name = self.short_label;
         prefix = self.plan.legislative_body.short_label
         index = prefix.find('%')
         if index >= 0:
