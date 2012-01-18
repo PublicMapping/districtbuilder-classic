@@ -364,13 +364,7 @@ as reports and downloads) and cron jobs.
      
         > sudo /etc/init.d/tomcat6 restart
 
- 6. Use the setup script to configure geoserver via the REST API.  This
-    will create your layers, datastores, and styles.
-
-    > cd /projects/PublicMapping/DistrictBuilder/django/publicmapping
-    > sudo python ./setup.py -V -G ../../docs/config.xsd ../../docs/config.xml
-
- 7. Set the geowebcache directory to a non-default.  Otherwise your tiles 
+ 6. Set the geowebcache directory to a non-default.  Otherwise your tiles 
     will be saved to /tmp and possibly disappear on reboot.  Add the 
     following snippet to your <web-app> configuration in geoserver's webapp
     configuration:
@@ -384,7 +378,7 @@ as reports and downloads) and cron jobs.
         <param-value>/var/lib/tomcat6/webapps/geoserver/data/gwc</param-value>
       </context-param>
 
- 8. Now that your GeoServer is configured, you should use the Services > 
+ 7. Now that your GeoServer is configured, you should use the Services > 
     GWC link in the menu to seed some of your layers.  This will make the 
     base map layers appear faster.
 
