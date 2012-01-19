@@ -25,10 +25,8 @@ Author:
 """
 
 from django import template
-from django.template.defaultfilters import stringfilter
-from django.utils.safestring import mark_safe
+from django.template.defaultfilters import stringfilter, floatformat
 from django.utils.translation import ugettext as _
-import re, locale
 
 register = template.Library()
 
@@ -138,7 +136,7 @@ def count_report_row_elements(row):
     """
     try:
         if (row['type'] == 'list'):
-            return locale.format("%d", len(row['value']), grouping=True)
+            return floatformat(len(row['value']), 0)
     except:
         return ''
     
@@ -153,10 +151,10 @@ def format_report_value(row):
     """
     try:
         if row['type'] == 'integer':
-            return locale.format("%d", row['value'], grouping=True)
+            return floatformat(row['value'], 0)
     
         if row['type'] == 'percent':
-            return format(row['value'], '.2%')
+            return floatformat(row['value'] * 100, 2) + '%'
 
         if row['type'] == 'boolean':
             return str(row['value']).upper()

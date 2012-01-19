@@ -33,13 +33,10 @@ from django.contrib.gis.geos import Point, LineString
 from django.contrib.humanize.templatetags.humanize import intcomma
 from django.utils import simplejson as json
 from django.utils.translation import ugettext as _
+from django.template import Template, Context
 from decimal import Decimal
 from copy import copy
-import locale, random
-
-# This helps in formatting - by default, apache+wsgi uses the "C" locale
-locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
-
+import random
 
 class CalculatorBase:
     """
@@ -97,12 +94,18 @@ class CalculatorBase:
         @return: An HTML SPAN element, formatted similar to: "<span>n/a</span>".
         """
         if not self.result is None and 'value' in self.result:
-            return '<span>%s</span>' % self.result['value']
+            return self.template('<span>{{ result.value }}</span>');
 
         if not self.result is None and 'raw' in self.result:
             return self.result['raw']
 
-        return '<span>%s</span>' % _('n/a')
+        return self.empty_html_result
+
+    empty_html_result = '<span>%s</span>' % _('n/a')
+    """
+    In case of an empty result, return a span with the properly 
+    localized version of 'n/a'
+    """
 
     def json(self):
         """
@@ -120,6 +123,39 @@ class CalculatorBase:
             output = { 'result': None }
 
         return json.dumps( output, use_decimal=True )
+
+    def template(self, template, context=None):
+        """
+        Generate a representation of the score using the django
+        templating system and the calculator's result. Required 
+        for localizing number formats.
+
+        @param template: A string that may use django template tags
+        @param context: A dict object representing additional context
+            to be used when rendering the template. The "result" of
+            the calculator is always available.
+
+        @return: A string representing the rendering template and context
+        """
+        t = Template(template)
+        c = Context({'result': self.result})
+        if context is not None:
+            c.update(context)
+        return t.render(c)
+
+    def percentage(self, span=False):
+        """
+        Return the calculator's result value as a properly localized
+        percentage
+
+        @return: A string representing the result as a percentage
+        """
+        if span:
+            t = Template('<span>{{ percentage|floatformat:2 }}%</span>')
+        else:
+            t = Template('{{ percentage|floatformat:2 }}%')
+        c = Context({'percentage': self.result['value'] * 100})
+        return t.render(c)
 
     def get_value(self, argument, district=None):
         """
@@ -234,7 +270,7 @@ class Schwartzberg(CalculatorBase):
         @return: A number formatted similar to "1.00%", or "n/a"
         """
         if not self.result is None and 'value' in self.result:
-            return ("%0.2f%%" % (self.result['value'] * 100))
+            return self.percentage()
         else:
             return _('n/a')
 
@@ -517,7 +553,7 @@ class Roeck(CalculatorBase):
         @return: A number formatted similar to "1.00%", or "n/a"
         """
         if not self.result is None and 'value' in self.result:
-            return ("%0.2f%%" % (self.result['value'] * 100))
+            return self.percentage()
         else:
             return _("n/a")
 
@@ -585,7 +621,7 @@ class PolsbyPopper(CalculatorBase):
         @return: A number formatted similar to "1.00%", or "n/a"
         """
         if not self.result is None and 'value' in self.result:
-            return ("%0.2f%%" % (self.result['value'] * 100))
+            return self.percentage()
         else:
             return _("n/a")
 
@@ -654,7 +690,7 @@ class LengthWidthCompactness(CalculatorBase):
         @return: A number formatted similar to "1.00%", or "n/a"
         """
         if not self.result is None and 'value' in self.result:
-            return ("%0.2f%%" % (self.result['value'] * 100))
+            return self.percentage()
         else:
             return _("n/a")
 
@@ -732,14 +768,9 @@ class SumValues(CalculatorBase):
         @return: The result wrapped in an HTML SPAN element: "<span>1</span>".
         """
         if not self.result is None and 'value' in self.result:
-            if isinstance(self.result['value'], Decimal):
-                result = locale.format("%d", self.result['value'], grouping=True)
-                return '<span>%s</span>' % result
-            else:
-                return '<span>%s</span>' % self.result['value']
-
-        return '<span>%s</span>' % _('n/a')
-
+            return self.template(
+                '<span>{{ result.value|floatformat:0 }}</span>')
+        return self.empty_html_result
 
 class Percent(CalculatorBase):
     """
@@ -812,10 +843,9 @@ class Percent(CalculatorBase):
         @return: The result wrapped in an HTML SPAN element, formatted similar to: "<span>1.00%</span>" or "<span>n/a</span>".
         """
         if not self.result is None and 'value' in self.result:
-            if (type(self.result['value']) == Decimal):
-                return '<span>{0:.2%}</span>'.format(self.result['value'])
+            return self.percentage()
             
-        return '<span>%s</span>' % _('n/a')
+        return self.empty_html_result
 
 
 class Threshold(CalculatorBase):
@@ -1092,7 +1122,7 @@ class Contiguity(CalculatorBase):
                 else:
                     return '<img class="no-contiguous" src="/static-media/images/icon-warning.png">'
             else:
-                return '<span>%s</span>' % self.result['value']
+                return CalculatorBase.html(self)
 
         return '<span>%s</span>' % self.result
 
@@ -1286,10 +1316,11 @@ class Interval(CalculatorBase):
             if 'index' in self.result and 'subject' in self.result:
                 interval = self.result['index']
                 interval_class = "interval_%d" % interval if interval >= 0 else 'no_interval'
-                span_value = locale.format("%d", self.result['value'], grouping=True)
-                return '<span class="%s %s">%s</span>' % (interval_class, self.result['subject'], span_value)
-
-        return '<span>%s</span>' % _('n/a')
+                t = '<span class="{{ class }} {{ result.subject }}">' \
+                    '{{ result.value|floatformat:0 }}</span>'
+                c = {'class': interval_class}
+                return self.template(t, c)
+        return self.empty_html_result
 
 
 class Equivalence(CalculatorBase):
@@ -1356,7 +1387,7 @@ class Equivalence(CalculatorBase):
         @return: A string in the format of "1,000" or "n/a" if no result.
         """
         if not self.result is None and 'value' in self.result:
-            return intcomma(int(self.result['value']))
+            return self.template('{{ result.value|floatformat:0 }}')
         
         return _('n/a')
 
@@ -1906,11 +1937,11 @@ class Average(CalculatorBase):
         """
         if not self.result is None and 'value' in self.result:
             if type(self.result['value']) == float:
-                return "<span>%0.2f%%</span>" % (self.result['value'] * 100)
+                return self.percentage(span=True)
             else:
-                return '<span>%s</span>' % self.result['value']
+                return CalculatorBase.html(self)
 
-        return '<span>%s</span>' % _('n/a')
+        return self.empty_html_result
 
 
 class Comments(CalculatorBase):
@@ -2143,9 +2174,11 @@ class SplitCounter(CalculatorBase):
             total_split_districts = len(set(i[0] for i in r['splits']))
 
             if r['is_geolevel']:
-                template = '<div>Total %(district_type_a)s which split a %(district_type_b)s: %(result)d</div>'
+                template = '<div>%s</div>' % _('Total %(district_type_a)s ' \
+                    'which split a %(district_type_b)s: %(result)d')
             else:
-                template = '<div>Total %(district_type_a)s splitting "%(district_type_b)s": %(result)d</div>'
+                template = '<div>%s</div>' % _('Total %(district_type_a)s ' \
+                    'splitting "%(district_type_b)s": %(result)d</div>')
 
             render += template % { 'district_type_a': 'communities' if r['is_community'] else 'districts', 'district_type_b': r['other_name'], 'result': total_split_districts}
             render += '<div>%s: %d</div>' % ( _('Total number of splits'), len(r['splits']))
