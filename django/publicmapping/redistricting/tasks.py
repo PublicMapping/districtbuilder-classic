@@ -356,8 +356,8 @@ class DistrictIndexFile():
                 new_geom = Geounit.objects.filter(guFilter).unionagg()
                 
                 # Create a new district and save it
-                short_label = community_labels[district_id] if is_community else legislative_body.short_label % district_id 
-                long_label = community_labels[district_id] if is_community else legislative_body.long_label % district_id
+                short_label = community_labels[district_id] if is_community else legislative_body.get_short_label() % district_id 
+                long_label = community_labels[district_id] if is_community else legislative_body.get_label() % district_id
                 new_district = District(short_label=short_label,long_label=long_label,
                     district_id = district_id, plan=plan, num_members=num_members[district_id],
                     geom=enforce_multi(new_geom))
@@ -1731,7 +1731,7 @@ def create_views_and_styles(upload_id, language=None):
 
         qset = Geounit.objects.filter(characteristic__subject=subject, geolevel=geolevel).annotate(Avg('characteristic__number'))
         sld_body = generator.as_quantiles(qset, 'characteristic__number__avg', 5, 
-            propertyname='number', userstyletitle=subject.short_display)
+            propertyname='number', userstyletitle=subject.get_short_label())
 
         logger.debug('Generated SLD content, creating featuretype.')
 

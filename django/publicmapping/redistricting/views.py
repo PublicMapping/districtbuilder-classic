@@ -324,7 +324,7 @@ def scoreplan(request, planid):
 
         if not score or not score['value']:
             status['success'] = False
-            status['message'] = '<p>%s</p><p>%s</p>' % (criteria.name, criteria.description or criteria.function.description)
+            status['message'] = '<p>%s</p><p>%s</p>' % (criteria.get_short_label(), criteria.get_long_description() or criteria.function.get_long_description())
             break
 
     if status['success']:
@@ -387,9 +387,9 @@ def commonplan(request, planid):
         editable = can_edit(request.user, plan)
         default_demo = plan.legislative_body.get_default_subject()
         max_dists = plan.legislative_body.max_districts
-        body_member_short_label = plan.legislative_body.short_label
-        body_member_long_label = plan.legislative_body.long_label
-        body_name = plan.legislative_body.name
+        body_member_short_label = plan.legislative_body.get_short_label()
+        body_member_long_label = plan.legislative_body.get_label()
+        body_name = plan.legislative_body.get_short_label()
         reporting_template = 'bard_%s.html' % body_name.lower() if not plan.is_community() else None
        
         index = body_member_short_label.find('%')
@@ -416,9 +416,9 @@ def commonplan(request, planid):
                     title='%(body_name)s Reports' % {'body_name': body_name})
                 if len(report_displays) > 0:
                     calculator_reports = map(lambda p: {
-                                'title': p.title,
+                                'title': p.__unicode__(),
                                 'functions': map(lambda f: {
-                                    'label': f.label,
+                                    'label': f.get_label(),
                                     'id': f.id
                                 }, p.score_functions.all().filter(selectable_bodies=plan.legislative_body))
                             }, report_displays[0].scorepanel_set.all().order_by('position'))
@@ -454,7 +454,7 @@ def commonplan(request, planid):
 
     for level in levels:
         # i18n-ize name here, not in js
-        snaplayers.append( {'geolevel':level.id,'layer':level.name.lower(),'name':level.label if level.label.isupper() else level.label.capitalize(),'min_zoom':level.min_zoom} )
+        snaplayers.append( {'geolevel':level.id,'layer':level.get_short_label.lower(),'name':level.get_label() if level.get_label().isupper() else level.get_label().capitalize(),'min_zoom':level.min_zoom} )
     default_selected = False
     for demo in demos:
         isdefault = str((not default_demo is None) and (demo[0] == default_demo.id)).lower()
@@ -464,7 +464,7 @@ def commonplan(request, planid):
         layers.append( {'id':demo[0],'text':demo[2],'value':demo[1].lower(), 'isdefault':isdefault, 'isdisplayed':str(demo[3]).lower()} )
     # If the default demo was not selected among the first three, we'll still need it for the dropdown menus
     if default_demo and not default_selected:
-        layers.insert( 0, {'id':default_demo.id,'text':default_demo.short_display,'value':default_demo.name.lower(), 'isdefault':str(True).lower(), 'isdisplayed':str(default_demo.is_displayed).lower()} )
+        layers.insert( 0, {'id':default_demo.id,'text':default_demo.get_short_label(),'value':default_demo.get_short_label().lower(), 'isdefault':str(True).lower(), 'isdisplayed':str(default_demo.is_displayed).lower()} )
 
     # Try to get the mapserver protocol from the settings module.
     # Set it to an empty string if the setting isn't defined so the 
@@ -1040,14 +1040,14 @@ def newdistrict(request, planid):
         if 'district_short' in request.REQUEST:
             district_short = request.REQUEST['district_short'][0:10]
         elif not district_id is None:
-            district_short = plan.legislative_body.short_label % district_id
+            district_short = plan.legislative_body.get_short_label() % district_id
         else:
             district_short = None
 
         if 'district_long' in request.REQUEST:
             district_long = request.REQUEST['district_long'][0:256]
         elif not district_id is None:
-            district_long = plan.legislative_body.long_label % district_id
+            district_long = plan.legislative_body.get_label() % district_id
         else:
             district_long = None
 
@@ -1919,7 +1919,7 @@ def getleaderboarddisplay(leg_body, owner_filter):
     Returns the leaderboard ScoreDisplay given a legislative body and owner
     """
     # TODO: 'Leaderboard' is hardcoded into the scoredisplay title
-    displays = ScoreDisplay.objects.filter(title='%s Leaderboard - %s' % (leg_body.name, owner_filter.title()))
+    displays = ScoreDisplay.objects.filter(title='%s Leaderboard - %s' % (leg_body.get_short_label(), owner_filter.title()))
     return displays[0] if len(displays) > 0 else None
 
 def getleaderboard(request):
@@ -1974,7 +1974,7 @@ def getleaderboardcsv(request):
         writer = csv.writer(response)
 
         # write headers
-        writer.writerow(['Plan ID', 'Plan Name', 'User Name'] + [p.title for p in panels])
+        writer.writerow(['Plan ID', 'Plan Name', 'User Name'] + [p.__unicode__() for p in panels])
 
         # write row for each plan
         for plan in plans:
@@ -2081,7 +2081,7 @@ def getplans(request):
                 'owner': plan.owner.username, 
                 'districtCount': '--', # load dynamically -- this is a big performance hit
                 'can_edit': can_edit(request.user, plan),
-                'plan_type': plan.legislative_body.name,
+                'plan_type': plan.legislative_body.get_short_label(),
                 'processing_state': plan.get_processing_state_display()
                 }
             })
@@ -2299,8 +2299,8 @@ def statistics_sets(request, planid):
         # Get the functions available for the users
         user_functions = ScoreFunction.objects.filter(selectable_bodies=plan.legislative_body).order_by('label')
         for f in user_functions:
-            if 'report' not in f.name.lower() and 'comments' not in f.name.lower():
-                scorefunctions.append({ 'id': f.id, 'name': force_escape(f.label) })
+            if 'report' not in f.get_short_label().lower() and 'comments' not in f.get_short_label().lower():
+                scorefunctions.append({ 'id': f.id, 'name': force_escape(f.get_label()) })
         result['functions'] = scorefunctions
 
         if not request.user.is_superuser:
@@ -2310,8 +2310,8 @@ def statistics_sets(request, planid):
                 legislative_body=plan.legislative_body,
                 is_page=False).order_by('title')
             for admin_display in admin_displays:
-                if 'report' not in admin_display.title.lower():
-                    sets.append({ 'id': admin_display.id, 'name': force_escape(admin_display.title), 'functions': [], 'mine':False })
+                if 'report' not in admin_display.__unicode__().lower():
+                    sets.append({ 'id': admin_display.id, 'name': force_escape(admin_display.__unicode__()), 'functions': [], 'mine':False })
 
         try:
             user_displays = ScoreDisplay.objects.filter(
@@ -2327,7 +2327,7 @@ def statistics_sets(request, planid):
                         if len(functions) == 0:
                             result['message'] = _("No functions for %(panel)s") % \
                                                 {'panel_name': panel}
-                sets.append({ 'id': display.id, 'name': force_escape(display.title), 'functions': functions, 'mine': display.owner==request.user })
+                sets.append({ 'id': display.id, 'name': force_escape(display.__unicode__()), 'functions': functions, 'mine': display.owner==request.user })
         except Exception, ex:
             result['message'] = _('No user displays for %(user)s') % \
                  {'user': request.user}
@@ -2339,7 +2339,7 @@ def statistics_sets(request, planid):
     elif request.method == 'POST' and 'delete' in request.POST:
         try:
             display = ScoreDisplay.objects.get(pk=request.REQUEST.get('id', -1))
-            result['set'] = {'name':force_escape(display.title), 'id':display.id}
+            result['set'] = {'name':force_escape(display.__unicode__()), 'id':display.id}
             display.delete()
             result['success'] = True
         except Exception, ex:
@@ -2388,7 +2388,7 @@ def statistics_sets(request, planid):
                     result['error'] = 'limit'
                     return HttpResponse(json.dumps(result),mimetype='application/json')
 
-            result['set'] = {'name':force_escape(display.title), 'id':display.id, 'functions':functions, 'mine': display.owner==request.user}
+            result['set'] = {'name':force_escape(display.__unicode__()), 'id':display.id, 'functions':functions, 'mine': display.owner==request.user}
             result['success'] = True
 
         else:

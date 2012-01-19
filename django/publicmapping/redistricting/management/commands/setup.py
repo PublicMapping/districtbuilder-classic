@@ -36,6 +36,7 @@ from django.core.management import call_command
 from django.core.management.base import BaseCommand
 from django.conf import settings
 from django.utils import simplejson as json
+from django.utils import translation
 from optparse import make_option
 from os.path import exists
 from lxml.etree import parse, XSLT
@@ -108,6 +109,8 @@ class Command(BaseCommand):
         Perform the command. 
         """
         self.setup_logging(int(options.get('verbosity')))
+
+        translation.activate('en')
 
         if options.get('config') is None:
             logging.warning("""
@@ -202,6 +205,8 @@ file and try again.
         # Do this once after processing the geolevels
         config.import_contiguity_overrides()
 
+        # Save any changes to the config locale files
+        config.save()
 
         if options.get("views"):
             # Create views based on the subjects and geolevels

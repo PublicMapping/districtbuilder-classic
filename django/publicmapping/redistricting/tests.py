@@ -3475,7 +3475,7 @@ class StatisticsSetTestCase(BaseTestCase):
         # We'll set the owner but it's overwritten
         copy = ScoreDisplay(owner=user)
         copy = copy.copy_from(display=self.display)
-        self.assertEqual("%s copy" % self.display.title, copy.title, 
+        self.assertEqual("%s copy" % self.display.__unicode__(), copy.__unicode__(), 
             "ScoreDisplay title copied, allowing same name for user more than once")
         self.assertEqual(len(copy.scorepanel_set.all()), len(self.display.scorepanel_set.all()), 
             "Copied scoredisplay has wrong number of panels attached")
@@ -3483,7 +3483,7 @@ class StatisticsSetTestCase(BaseTestCase):
 
         copy = ScoreDisplay(owner=user)
         copy = copy.copy_from(display=self.display, owner=user)
-        self.assertEqual(self.display.title, copy.title, "Title of scoredisplay not copied")
+        self.assertEqual(self.display.__unicode__(), copy.__unicode__(), "Title of scoredisplay not copied")
         self.assertEqual(len(copy.scorepanel_set.all()), len(self.display.scorepanel_set.all()), 
             "Copied scoredisplay has wrong number of panels attached")
 

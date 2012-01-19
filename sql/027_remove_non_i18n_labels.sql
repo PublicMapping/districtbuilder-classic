@@ -6,6 +6,7 @@ ALTER TABLE publicmapping.redistricting_geolevel ADD CONSTRAINT redistricting_ge
 
 ALTER TABLE publicmapping.redistricting_legislativebody DROP COLUMN long_label;
 ALTER TABLE publicmapping.redistricting_legislativebody DROP COLUMN short_label;
+ALTER TABLE publicmapping.redistricting_legislativebody DROP COLUMN title;
 ALTER TABLE publicmapping.redistricting_legislativebody ADD CONSTRAINT redistricting_legislativebody_name_check UNIQUE ("name");
 
 ALTER TABLE publicmapping.redistricting_region DROP COLUMN label;

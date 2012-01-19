@@ -189,9 +189,9 @@ class SubjectAdmin(admin.ModelAdmin):
     # When displayed as a list, show the display name, the short display,
     # and a flag indicating if it should be displayed (in the app), and
     # the percentage denominator.
-    list_display = ('display', 'short_display', 'sort_key', 'is_displayed','percentage_denominator',)
+    list_display = ('name', 'sort_key', 'is_displayed','percentage_denominator',)
 
-    fields = ('display', 'short_display', 'description', 'percentage_denominator', 'is_displayed', 'sort_key', 'format_string', )
+    fields = ('name', 'percentage_denominator', 'is_displayed', 'sort_key', 'format_string', )
 
 
     # Enable filtering by the displayed flag
@@ -407,13 +407,13 @@ class ScorePanelAdmin(admin.ModelAdmin):
     Administrative settings for ScorePanels.
     """
 
-    fields = ('title', 'displays', 'type', 'template', 'position', 'is_ascending', 'cssclass', 'score_functions',)
+    fields = ('name', 'title', 'displays', 'type', 'template', 'position', 'is_ascending', 'cssclass', 'score_functions',)
 
-    list_display = ('title', 'type', 'template', 'cssclass',)
+    list_display = ('name', 'title', 'type', 'template', 'cssclass',)
 
     list_filter = ('type','cssclass',)
 
-    ordering = ['title']
+    ordering = ['name', 'title']
 
 class ScoreArgumentInline(admin.TabularInline):
     model = ScoreArgument
@@ -422,9 +422,9 @@ class ScoreFunctionAdmin(admin.ModelAdmin):
     """
     Administrative settings for ScoreFunctions.
     """
-    fields = ('name', 'calculator', 'selectable_bodies', 'is_planscore', 'label', 'description',)
+    fields = ('name', 'calculator', 'selectable_bodies', 'is_planscore', )
 
-    list_display = ('name', 'label', 'description', 'is_planscore',)
+    list_display = ('name', 'is_planscore',)
 
     list_filter = ('is_planscore', 'calculator',)
 
@@ -455,7 +455,7 @@ class ValidationCriteriaAdmin(admin.ModelAdmin):
     """
     Administrative settings for ValidationCriteria.
     """
-    fields = ('name','legislative_body','function','description',)
+    fields = ('name','legislative_body','function',)
 
 
 # Register these classes with the admin interface.

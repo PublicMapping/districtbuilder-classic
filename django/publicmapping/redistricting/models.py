@@ -40,6 +40,7 @@ from django.db import connection, transaction
 from django.forms import ModelForm
 from django.conf import settings
 from django.utils import simplejson as json
+from django.utils import translation
 from django.template.loader import render_to_string
 from django.contrib.comments.models import Comment
 from django.contrib.contenttypes.models import ContentType
@@ -49,11 +50,71 @@ from datetime import datetime
 from copy import copy
 from decimal import *
 from operator import attrgetter
+from rosetta import polib
 import sys, cPickle, types, tagging, re, logging
 
 logger = logging.getLogger(__name__)
 
-class Subject(models.Model):
+# Caches for po files
+I18N_CACHE = {}
+
+class BaseModel(models.Model):
+    """
+    A base class for models that have short labels, labels, and long descriptions.
+    Any class that extends this base class must have a 'name' field.
+    """
+    def __init__(self, *args, **kwargs):
+        """
+        Initialize the message file cache.
+        """
+        super(BaseModel, self).__init__(*args, **kwargs)
+        lang = translation.get_language()
+        if not lang in I18N_CACHE:
+            try:
+                I18N_CACHE[lang] = polib.mofile('locale/%s/LC_MESSAGES/xmlconfig.mo' % lang)
+            except:
+                I18N_CACHE[lang] = polib.pofile('locale/%s/LC_MESSAGES/xmlconfig.po' % lang)
+
+    def get_short_label(self):
+        """
+        Get the short label (a.k.a. title) of the object.
+        """
+        msgid = u'%s short label' % self.name
+        try:
+            lang = translation.get_language()
+            return I18N_CACHE[lang].find(msgid).msgstr
+        except:
+            return msgid
+
+    def get_label(self):
+        """
+        Get the label of the object. This is longer than the short label, and
+        shorter than the description. Most often, this is the default text
+        representation of an object.
+        """
+        msgid = u'%s label' % self.name
+        try:
+            lang = translation.get_language()
+            return I18N_CACHE[lang].find(msgid).msgstr
+        except:
+            return msgid
+
+    def get_long_description(self):
+        """
+        Get the description of the object. This is a verbose description of the
+        object.
+        """
+        msgid = u'%s long description' % self.name
+        try:
+            lang = translation.get_language()
+            return I18N_CACHE[lang].find(msgid).msgstr
+        except:
+            return msgid
+
+    class Meta:
+        abstract = True
+
+class Subject(BaseModel):
     """
     A classification of a set of Characteristics.
 
@@ -68,15 +129,6 @@ class Subject(models.Model):
 
     # The name of the subject (POPTOT)
     name = models.CharField(max_length=50)
-
-    # The display name of the subject (Total Population)
-    display = models.CharField(max_length=200, blank=True)
-
-    # A short display name of the subject (Tot. Pop.)
-    short_display = models.CharField(max_length = 25, blank=True)
-
-    # A description of this subject
-    description = models.CharField(max_length= 500, blank=True)
 
     # If this subject should be displayed as a percentage,
     # a district's value for this subject will be divided by
@@ -105,12 +157,15 @@ class Subject(models.Model):
         # The default method of sorting Subjects should be by 'sort_key'
         ordering = ['sort_key']
 
+        # A unique constraint on the name
+        unique_together = ('name',)
+
     def __unicode__(self):
         """
         Represent the Subject as a unicode string. This is the Subject's 
         display name.
         """
-        return self.display
+        return self.get_label()
 
 class ChoicesEnum(object):
     """
@@ -186,7 +241,7 @@ class SubjectStage(models.Model):
     number = models.DecimalField(max_digits=12,decimal_places=4)
 
 
-class Region(models.Model):
+class Region(BaseModel):
     """
     A region is a compartmentalized area of geography, legislative bodies,
     and validation criteria. Each region shares the base geography, but may
@@ -197,12 +252,6 @@ class Region(models.Model):
     # The name of this region
     name = models.CharField(max_length=256)
     
-    # A short name for the region
-    label = models.CharField(max_length=256)
-
-    # A description of this region
-    description = models.CharField(max_length=500, blank=True)
-
     # The sorting order for this region relative to other regions
     sort_key = models.PositiveIntegerField(default=0)
 
@@ -212,8 +261,15 @@ class Region(models.Model):
         """
         return self.name
 
+    class Meta:
+        """
+        Additional information about the Region model.
+        """
 
-class LegislativeBody(models.Model):
+        # A unique constraint on the name
+        unique_together = ('name',)
+
+class LegislativeBody(BaseModel):
     """
     A legislative body that plans belong to. This is to support the
     scenario where one application is supporting both "Congressional"
@@ -223,15 +279,6 @@ class LegislativeBody(models.Model):
     # The name of this legislative body
     name = models.CharField(max_length=256)
 
-    # TODO: a temporary title for this model
-    title = models.CharField(max_length=256)
-
-    # The short name of the units in a plan -- "%s", for example.
-    short_label = models.CharField(max_length=10)
-
-    # The long name of the units in a plan -- "District %s", for example.
-    long_label = models.CharField(max_length=256)
-
     # The maximum number of districts in this body
     max_districts = models.PositiveIntegerField()
 
@@ -240,10 +287,10 @@ class LegislativeBody(models.Model):
     
     # The format to be used for displaying a map label of a multi-member district.
     # This format string will be passed to python's 'format' function with the named
-    # arguments: 'name' (district name) and 'num_members' (number of representatives)
-    # For example: "{name} - [{num_members}]" will display "District 5 - [3]" for a district named
+    # arguments: 'label' (district label) and 'num_members' (number of representatives)
+    # For example: "{label} - [{num_members}]" will display "District 5 - [3]" for a district named
     # "District 5" that is configured with 3 representatives.
-    multi_district_label_format = models.CharField(max_length=32, default='{name} - [{num_members}]')
+    multi_district_label_format = models.CharField(max_length=32, default='{label} - [{num_members}]')
 
     # The minimimum number of multi-member districts allowed in a plan.
     min_multi_districts = models.PositiveIntegerField(default=0)
@@ -354,10 +401,16 @@ class LegislativeBody(models.Model):
         return self.name
 
     class Meta:
+        """
+        Additional information about the LegislativeBody model.
+        """
         verbose_name_plural = "Legislative bodies"
 
+        # A unique constraint on the name
+        unique_together = ('name',)
 
-class Geolevel(models.Model):
+
+class Geolevel(BaseModel):
     """
     A geographic classification for Geounits.
 
@@ -368,9 +421,6 @@ class Geolevel(models.Model):
 
     # The name of the geolevel
     name = models.CharField(max_length = 50)
-
-    # The label to display on UI elements
-    label = models.CharField(max_length = 20)
 
     # Each geolevel has a maximum and a minimum zoom level at which 
     # features on the map can be selected and added to districts
@@ -393,12 +443,15 @@ class Geolevel(models.Model):
         # The default method of sorting Geolevels should be by 'sort_key'
         ordering = ['sort_key']
 
+        # A unique constraint on the name
+        unique_together = ('name',)
+
     def __unicode__(self):
         """
         Represent the Geolevel as a unicode string. This is the Geolevel's 
         name.
         """
-        return self.name
+        return self.get_label()
 
     def renest(self, parent, subject=None, spatial=True):
         """
@@ -469,7 +522,7 @@ class LegislativeLevel(models.Model):
         Represent the LegislativeLevel as a unicode string. This is the
         LegislativeLevel's LegislativeBody and Geolevel
         """
-        return "%s, %s, %s" % (self.legislative_body.name, self.geolevel.name, self.subject.display)
+        return "%s, %s, %s" % (self.legislative_body.get_short_label(), self.geolevel.get_short_label(), self.subject.get_short_label())
 
     class Meta:
         unique_together = ('geolevel','legislative_body','subject',)
@@ -1038,8 +1091,8 @@ class Plan(models.Model):
             districtlong = districtinfo[2]
         else:
             districtid = int(districtinfo)
-            districtshort = self.legislative_body.short_label % districtid
-            districtlong = self.legislative_body.long_label % districtid
+            districtshort = self.legislative_body.get_short_label() % districtid
+            districtlong = self.legislative_body.get_label() % districtid
 
         # fix the version so that it is definitely an integer
         version = int(version)
@@ -1303,13 +1356,13 @@ class Plan(models.Model):
         edited_districts = list()
 
         # Save the new district to the plan to start
-        newshort = '' if slot == None else self.legislative_body.short_label % slot
-        newlong = '' if slot == None else self.legislative_body.long_label % slot
+        newshort = '' if slot == None else self.legislative_body.get_short_label() % slot
+        newlong = '' if slot == None else self.legislative_body.get_label() % slot
         pasted = District(short_label=newshort, long_label=newlong, plan=self, district_id = slot, geom=district.geom, simple = district.simple, version = new_version)
         pasted.save();
         if newshort  == '':
-            pasted.short_label = self.legislative_body.short_label % pasted.district_id
-            pasted.long_label = self.legislative_body.long_label % pasted.district_id
+            pasted.short_label = self.legislative_body.get_short_label() % pasted.district_id
+            pasted.long_label = self.legislative_body.get_label() % pasted.district_id
             pasted.save();
         pasted.clone_relations_from(district)
         
@@ -2203,7 +2256,7 @@ CROSS JOIN (
         my_names = dict((d.district_id, d.long_label) for d in self.get_districts_at_version(version))
 
         if target.startswith('geolevel'):
-            results['other_name'] = Geolevel.objects.get(pk=id).name
+            results['other_name'] = Geolevel.objects.get(pk=id).get_short_label()
             results['is_geolevel'] = True
             results['splits'] = self.find_geolevel_splits(id, version=version, inverse=inverse)
             if extended is True:
@@ -2440,7 +2493,7 @@ class District(models.Model):
             The Districts, sorted in numerical order.
         """
         name = self.long_label;
-        prefix = self.plan.legislative_body.short_label
+        prefix = self.plan.legislative_body.get_short_label()
         index = prefix.find('%')
         if index >= 0:
             prefix = prefix[0:index]
@@ -2689,7 +2742,7 @@ class District(models.Model):
                 if not simplified:
                     simples.append(self.geom)
                     logger.debug('Ran out of attempts to simplify %s in plan "%s" for geolevel %s; using full geometry',
-                        self.long_label, self.plan.name, level.name)
+                        self.long_label, self.plan.name, level.get_short_label())
             else:
                 simples.append( self.geom )
 
@@ -3052,7 +3105,7 @@ def safe_union(collection):
 
     return thegeom
 
-class ScoreFunction(models.Model):
+class ScoreFunction(BaseModel):
     """
     Score calculation definition
     """
@@ -3062,12 +3115,6 @@ class ScoreFunction(models.Model):
 
     # Name of this score function
     name = models.CharField(max_length=50)
-
-    # Label to be displayed for scores calculated with this funciton
-    label = models.CharField(max_length=100, blank=True)
-
-    # Description of this score function
-    description = models.TextField(blank=True)
 
     # Whether or not this score function is for a plan
     is_planscore = models.BooleanField(default=False)
@@ -3083,6 +3130,9 @@ class ScoreFunction(models.Model):
 
         # The default method of sorting Subjects should be by 'sort_key'
         ordering = ['name']
+
+        # A unique constraint on the name
+        unique_together = ('name',)
 
     def get_calculator(self):
         """
@@ -3181,7 +3231,7 @@ class ScoreFunction(models.Model):
         Get a unicode representation of this object. This is the 
         ScoreFunction's name.
         """
-        return self.name
+        return self.get_label()
 
 
 class ScoreArgument(models.Model):
@@ -3208,7 +3258,7 @@ class ScoreArgument(models.Model):
         """
         return "%s / %s / %s" % (self.argument, self.type, self.value)
 
-class ScoreDisplay(models.Model):
+class ScoreDisplay(BaseModel):
     """
     Container for displaying score panels
     """
@@ -3216,7 +3266,7 @@ class ScoreDisplay(models.Model):
     # The name of the score display
     name = models.CharField(max_length=50)
 
-    # The title of the score display
+    # The title of the score display, user-specifiable
     title = models.CharField(max_length=50)
 
     # The legislative body that this score display is for
@@ -3235,14 +3285,17 @@ class ScoreDisplay(models.Model):
         """
         Define a unique constraint on 2 fields of this model.
         """
-        unique_together = ('title','owner','legislative_body')
+        unique_together = ('name','title','owner','legislative_body')
 
     def __unicode__(self):
         """
         Get a unicode representation of this object. This is the Display's
         title.
         """
-        return self.title
+        if not self.title is None and self.title != '':
+            return self.title
+        else:
+            return self.get_short_label()
 
     def copy_from(self, display=None, functions=[], owner=None, title=None):
         """ 
@@ -3273,9 +3326,9 @@ class ScoreDisplay(models.Model):
 
             # We can't have duplicate titles per owner so append "copy" if we must
             if self.owner == display.owner:
-                self.title = title if title != None else "%s copy" % display.title
+                self.title = title if not title is None else "%s copy" % display.__unicode__()
             else:
-                self.title = title if title != None else display.title
+                self.title = title if not title is None else display.__unicode__()
 
             self.save()
             self.scorepanel_set = display.scorepanel_set.all()
@@ -3309,7 +3362,7 @@ class ScoreDisplay(models.Model):
             self.scorepanel_set.add(demo_panel)
             self.save()
         except Exception, ex:
-            logger.info('Failed to copy ScoreDisplay %s to %s', display.title, self.title)
+            logger.info('Failed to copy ScoreDisplay %s to %s', display.__unicode__(), self.__unicode__())
             logger.debug('Reason:', ex)
 
         return self
@@ -3372,10 +3425,16 @@ class ScoreDisplay(models.Model):
         return markup
 
 
-class ScorePanel(models.Model):
+class ScorePanel(BaseModel):
     """
     Container for displaying multiple scores of a given type
     """
+
+    # The name of this score panel
+    name = models.CharField(max_length=50)
+
+    # The title of this score panel - possibly user-specified
+    title = models.CharField(max_length=50)
 
     # The type of the score display (plan, plan summary, district)
     type = models.CharField(max_length=20)
@@ -3386,12 +3445,6 @@ class ScorePanel(models.Model):
     # Where this panel belongs within a score display
     position = models.PositiveIntegerField(default=0)
   
-    # The name of this score panel
-    name = models.CharField(max_length=50)
-
-    # The title of the score panel
-    title = models.CharField(max_length=50)
-    
     # The filename of the template to be used for formatting this panel
     template = models.CharField(max_length=500)
 
@@ -3409,7 +3462,10 @@ class ScorePanel(models.Model):
         Get a unicode representation of this object. This is the Panel's
         title.
         """
-        return self.title
+        if not self.title is None and self.title != '':
+            return self.title
+        else:
+            return self.get_short_label()
 
     def render(self,dorp,context=None,version=None,components=None,function_ids=None):
         """
@@ -3466,9 +3522,6 @@ class ScorePanel(models.Model):
 
             planscores = []
 
-            # TODO: do we need a seperate per-panel description?
-            description = ''
-            
             for plan in plans:
                 plan_version = version if version is not None else plan.version
                 
@@ -3493,30 +3546,28 @@ class ScorePanel(models.Model):
                         score = ComputedPlanScore.compute(function,plan,format='html',version=plan_version)
                         sort = ComputedPlanScore.compute(function,plan,format='sort',version=plan_version)
                     
-                    description = function.description
-
                     planscores.append({
-                        'plan':plan,
-                        'name':function.name,
-                        'label':function.label,
-                        'description':function.description,
-                        'score':score,
-                        'sort':sort
+                        'plan': plan,
+                        'name': function.get_short_label(),
+                        'label': function.get_label(),
+                        'description': function.get_long_description(),
+                        'score': score,
+                        'sort': sort
                     })
 
             if self.type == 'plan':
                 planscores.sort(key=lambda x:x['sort'],reverse=not self.is_ascending)
 
             return "" if len(planscores) == 0 else render_to_string(self.template, {
-                'settings':settings,
-                'planscores':planscores,
-                'functions':functions,
-                'title':self.title,
-                'cssclass':self.cssclass,
-                'position':self.position,
-                'description':description,
+                'settings': settings,
+                'planscores': planscores,
+                'functions': functions,
+                'title': self.get_short_label(),
+                'cssclass': self.cssclass,
+                'position': self.position,
+                'description': self.get_long_description(),
                 'planname': '' if len(plans) == 0 else plans[0].name,
-                'context':context
+                'context': context
             })
 
         # Render each district with multiple scores
@@ -3550,16 +3601,16 @@ class ScorePanel(models.Model):
                         function = function[0]
                         score = function.score(district,format='html',score_arguments=arguments)
                     else:
-                        if not function.label in functions:
-                            functions.append(function.label)
+                        if not function.get_label() in functions:
+                            functions.append(function.get_label())
                         score = ComputedDistrictScore.compute(function,district,format='html')
 
                     districtscore['scores'].append({
-                        'district':district,
-                        'name':function.name,
-                        'label':function.label,
-                        'description':function.description,
-                        'score':score
+                        'district': district,
+                        'name': function.get_short_label(),
+                        'label': function.get_label(),
+                        'description': function.get_long_description(),
+                        'score': score
                     })
 
                 if len(districtscore['scores']) > 0:
@@ -3568,14 +3619,14 @@ class ScorePanel(models.Model):
             return "" if len(districtscores) == 0 else render_to_string(self.template, {
                 'districtscores':districtscores,
                 'functions':functions,
-                'title': self.title,
+                'title': self.__unicode__(),
                 'cssclass': self.cssclass,
                 'settings':settings,
                 'position':self.position,
                 'context':context
             })
 
-class ValidationCriteria(models.Model):
+class ValidationCriteria(BaseModel):
     """
     Defines the required score functions to validate a legislative body
     """
@@ -3586,20 +3637,19 @@ class ValidationCriteria(models.Model):
     # Name of this validation criteria
     name = models.CharField(max_length=50)
 
-    # TODO: temp field while upgrading i18n
-    title = models.CharField(max_length=50)
-
-    # Description of this validation criteria
-    description = models.TextField(blank=True)
-
     # The legislative body that this validation criteria is for
     legislative_body = models.ForeignKey(LegislativeBody)
 
     def __unicode__(self):
-        return self.name
+        return self.get_label()
 
     class Meta:
+        """
+        Additional properties about the ValidationCriteria model.
+        """
         verbose_name_plural = "Validation criterion"
+
+        unique_together = ('name',)
 
 
 class ComputedDistrictScore(models.Model):
@@ -3629,7 +3679,7 @@ class ComputedDistrictScore(models.Model):
                 name = self.district.long_label
 
         if not self.function is None:
-            name = '%s / %s' % (self.function.name, name)
+            name = '%s / %s' % (self.function.get_short_label(), name)
         else:
             name = 'None / %s' % name
 
@@ -3776,7 +3826,7 @@ class ComputedPlanScore(models.Model):
             name = self.plan.name
 
         if not self.function is None:
-            name = '%s / %s' % (self.function.name, name)
+            name = '%s / %s' % (self.function.get_short_label(), name)
         else:
             name = 'None / %s' % name
 

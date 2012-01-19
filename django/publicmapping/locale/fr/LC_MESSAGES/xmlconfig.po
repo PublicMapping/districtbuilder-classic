@@ -22,43 +22,43 @@ msgid "default long description"
 msgstr "The region serviced by DistrictBuilder."
 
 msgid "congress short label"
-msgstr "Congressional"
+msgstr "%s"
 
 msgid "congress label"
-msgstr "District %(district_id)s"
+msgstr "District %s"
 
 msgid "congress long description"
 msgstr ""
 
 msgid "house short label"
-msgstr "State House"
+msgstr "%s"
 
 msgid "house label"
-msgstr "District %(district_id)s"
+msgstr "District %s"
 
 msgid "house long description"
 msgstr ""
 
 msgid "senate short label"
-msgstr "State Senate"
+msgstr "%s"
 
 msgid "senate label"
-msgstr "District %(district_id)s"
+msgstr "District %s"
 
 msgid "senate long description"
 msgstr ""
 
 msgid "community short label"
-msgstr "Community Map"
+msgstr "%s"
 
 msgid "community label"
-msgstr "Community %(district_id)s"
+msgstr "Community %s"
 
 msgid "community long description"
 msgstr ""
 
 msgid "va short label"
-msgstr "Virginia"
+msgstr "va"
 
 msgid "va label"
 msgstr "Virginia"
@@ -67,7 +67,7 @@ msgid "va long description"
 msgstr "The Commonwealth of Virginia"
 
 msgid "dc short label"
-msgstr "DC Metro"
+msgstr "dc"
 
 msgid "dc label"
 msgstr "DC Metro"
@@ -76,19 +76,19 @@ msgid "dc long description"
 msgstr "The District of Columbia Metropolitan Area"
 
 msgid "dc_area_council short label"
-msgstr "DC Planning Council"
+msgstr "%s"
 
 msgid "dc_area_council label"
-msgstr "District %(district_id)s"
+msgstr "District %s"
 
 msgid "dc_area_council long description"
 msgstr ""
 
 msgid "dc_community short label"
-msgstr "DC Community Map"
+msgstr "%s"
 
 msgid "dc_community label"
-msgstr "Community %(district_id)s"
+msgstr "Community %s"
 
 msgid "dc_community long description"
 msgstr ""
@@ -151,7 +151,7 @@ msgid "vtd short label"
 msgstr "vtd"
 
 msgid "vtd label"
-msgstr "vtd"
+msgstr "VTD"
 
 msgid "vtd long description"
 msgstr ""
@@ -912,10 +912,10 @@ msgstr "Average Compactness"
 
 msgid "plan_schwartzberg long description"
 msgstr ""
-"The competition is using the 'Schwartzberg' compactness measure. This "
-"measure is a ratio of the perimeter of the district to the "
-"circumference of the circle whose area is equal to the area of the "
-"district."
+"The competition is using the 'Inverse Schwartzberg' compactness "
+"measure. This measure is a ratio of the circumference of the circle "
+"whose area is equal to the area of the district to the perimeter of "
+"the district."
 
 msgid "plan_sum_equipop short label"
 msgstr "Equal Population"
@@ -1665,4 +1665,40 @@ msgid "senate_all_assigned label"
 msgstr "AllBlocksAssigned - Senate"
 
 msgid "senate_all_assigned long description"
+msgstr ""
+
+msgid "dc_area short label"
+msgstr "dc"
+
+msgid "dc_area label"
+msgstr "DC Metro"
+
+msgid "dc_area long description"
+msgstr "The District of Columbia Metropolitan Area"
+
+msgid "ublock long description"
+msgstr ""
+
+msgid "uvtd long description"
+msgstr ""
+
+msgid "ucounty long description"
+msgstr ""
+
+msgid "va_None short label"
+msgstr ""
+
+msgid "va_None label"
+msgstr ""
+
+msgid "va_None long description"
+msgstr ""
+
+msgid "dc_None short label"
+msgstr ""
+
+msgid "dc_None label"
+msgstr ""
+
+msgid "dc_None long description"
 msgstr ""

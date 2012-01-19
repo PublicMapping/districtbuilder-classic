@@ -56,6 +56,7 @@ class ModelHelper:
         try:
             id_args = { unique_id_field: name }
             current_object = a_model.objects.get(**id_args)
+            #print current_object
         # If it doesn't exist, just save it and return
         except ObjectDoesNotExist:
             new = a_model(**kwargs)
@@ -66,8 +67,11 @@ class ModelHelper:
         changed = False
         message = '%s matches database - no changes%s'
         for key in kwargs:
+            #print key
             current_value = current_object.__getattribute__(key)
+            #print current_value
             config_value = kwargs[key]
+            #print config_value
             if not (isinstance(current_value, types.StringTypes)) and not (isinstance(current_value, Model)):
                 config_value = type(current_value)(config_value)
             if current_value != config_value:
@@ -116,9 +120,21 @@ class ConfigImporter:
     """
     def __init__(self, store):
         """
-        Create a new config imported, based on the stored config.
+        Create a new config importer, based on the stored config.
         """
         self.store = store
+
+        # store the utils for all the po file processing
+        self.poutils = {}
+        for locale in [l[0] for l in settings.LANGUAGES]:
+            self.poutils[locale] = PoUtils(locale)
+
+    def save(self):
+        """
+        Save all modified po files.
+        """
+        for locale in self.poutils:
+            self.poutils[locale].save()
 
     def import_superuser(self, force):
         """
@@ -170,12 +186,27 @@ class ConfigImporter:
         regions = self.store.filter_regions()
         for region in regions:
             attributes = {
-                'name': region.get('name'),
-                'label': region.get('label'),
-                'description': region.get('description'),
+                'name': region.get('id')[0:256],
                 'sort_key': region.get('sort_key')
             }
+
             obj, created, changed, message = ModelHelper.check_and_update(Region, overwrite=force, **attributes)
+
+            for locale in [l[0] for l in settings.LANGUAGES]:
+                po = self.poutils[locale]
+                po.add_or_update(
+                    msgid=u'%s short label' % attributes['name'],
+                    msgstr=region.get('name') or ''
+                )
+                po.add_or_update(
+                    msgid=u'%s label' % attributes['name'],
+                    msgstr=region.get('label') or ''
+                )
+                po.add_or_update(
+                    msgid=u'%s long description' % attributes['name'],
+                    msgstr=region.get('description') or ''
+                )
+
             if changed and not force:
                 logger.info(message)
             else:
@@ -193,9 +224,7 @@ class ConfigImporter:
         bodies = self.store.filter_legislative_bodies()
         for body in bodies:
             attributes = {
-                'title': body.get('name')[:256],
-                'short_label': body.get('short_label')[:10], 
-                'long_label': body.get('long_label')[:256],
+                'name': body.get('id')[:256],
                 'max_districts': body.get('maxdistricts'),
                 'sort_key': body.get('sort_key'),
                 'is_community': body.get('is_community')=='true'
@@ -206,15 +235,25 @@ class ConfigImporter:
                 logger.info( "Legislative body %s not attributed to any region", attributes['name'])
                 continue
             else:
-                region_name = body_by_region[0].getparent().getparent().get('name')
+                region_name = body_by_region[0].getparent().getparent().get('id')
             attributes['region'] = Region.objects.get(name=region_name)
 
-            obj, created, changed, message = ModelHelper.check_and_update(LegislativeBody, unique_id_field='title', overwrite=force, **attributes)
+            obj, created, changed, message = ModelHelper.check_and_update(LegislativeBody, overwrite=force, **attributes)
 
-            # TODO: temporarily set the name to the xml id
-            obj.name = body.get('id')
-            obj.save()
-            #
+            for locale in [l[0] for l in settings.LANGUAGES]:
+                po = self.poutils[locale]
+                po.add_or_update(
+                    msgid=u'%s short label' % attributes['name'],
+                    msgstr=body.get('short_label') or ''
+                )
+                po.add_or_update(
+                    msgid=u'%s label' % attributes['name'],
+                    msgstr=body.get('long_label') or ''
+                )
+                po.add_or_update(
+                    msgid=u'%s long description' % attributes['name'],
+                    msgstr=''
+                )
 
             if changed and not force:
                 logger.info(message)
@@ -265,13 +304,26 @@ class ConfigImporter:
 
             attributes = {
                 'name': subj.get('id').lower()[:50],
-                'display': subj.get('name')[:200],
-                'short_display': subj.get('short_name')[:25],
                 'is_displayed': subj.get('displayed')=='true',
                 'sort_key': subj.get('sortkey')
             }
                 
             obj, created, changed, message = ModelHelper.check_and_update(Subject, overwrite=force, **attributes)
+
+            for locale in [l[0] for l in settings.LANGUAGES]:
+                po = self.poutils[locale]
+                po.add_or_update(
+                    msgid=u'%s short label' % attributes['name'],
+                    msgstr=subj.get('short_name') or ''
+                )
+                po.add_or_update(
+                    msgid=u'%s label' % attributes['name'],
+                    msgstr=subj.get('name') or ''
+                )
+                po.add_or_update(
+                    msgid=u'%s long description' % attributes['name'],
+                    msgstr=''
+                )
 
             if changed and not force:
                 logger.info(message)
@@ -316,8 +368,7 @@ class ConfigImporter:
         geolevels = self.store.filter_geolevels()
         for geolevel in geolevels:
             attributes = {
-                'name': geolevel.get('name').lower()[:50],
-                'label': geolevel.get('label')[:20],
+                'name': geolevel.get('id').lower()[:50],
                 'min_zoom': geolevel.get('min_zoom'),
                 'sort_key': geolevel.get('sort_key'),
                 'tolerance': geolevel.get('tolerance')
@@ -325,6 +376,21 @@ class ConfigImporter:
             
             glvl, created, changed, message = ModelHelper.check_and_update(Geolevel, overwrite=force, **attributes)
     
+            for locale in [l[0] for l in settings.LANGUAGES]:
+                po = self.poutils[locale]
+                po.add_or_update(
+                    msgid=u'%s short label' % attributes['name'],
+                    msgstr=geolevel.get('name') or ''
+                )
+                po.add_or_update(
+                    msgid=u'%s label' % attributes['name'],
+                    msgstr=geolevel.get('label') or ''
+                )
+                po.add_or_update(
+                    msgid='u%s long description' % attributes['name'],
+                    msgstr=''
+                )
+
             if changed and not force:
                 logger.info(message)
             else:
@@ -349,22 +415,34 @@ class ConfigImporter:
             zero_zoom = int(zero_geolevel_config.get('min_zoom'))
 
             for geolevel in regional_geolevels:
-                geolevel_config = self.store.get_geolevel(geolevel.get('ref'))
-                if geolevel_config is not None:
-                    name = geolevel_config.get('name')
                 try:
-                    geolevel = Geolevel.objects.get(name=name)
+                    geolevel_obj = Geolevel.objects.get(name=geolevel.get('ref'))
                 except:
                     logger.debug("Base geolevel %s for %s not found in the database.  Import base geolevels before regional geolevels", name, region.get('name'))
                     return
 
                 attributes = {
-                    'name': '%s_%s' % (region.get('name'), name),
-                    'label': geolevel.label,
-                    'min_zoom': geolevel.min_zoom - zero_zoom,
-                    'tolerance': geolevel.tolerance
+                    'name': '%s_%s' % (region.get('name'), geolevel.get('id')),
+                    'min_zoom': geolevel_obj.min_zoom - zero_zoom,
+                    'tolerance': geolevel_obj.tolerance
                 }
                 obj, created, changed, message = ModelHelper.check_and_update(Geolevel, overwrite=force, **attributes)
+
+                for locale in [l[0] for l in settings.LANGUAGES]:
+                    po = self.poutils[locale]
+                    po.add_or_update(
+                        msgid=u'%s short label' % attributes['name'],
+                        msgstr=geolevel.get('name') or ''
+                    )
+                    po.add_or_update(
+                        msgid=u'%s label' % attributes['name'],
+                        msgstr=geolevel.get('label') or ''
+                    )
+                    po.add_or_update(
+                        msgid=u'%s long description' % attributes['name'],
+                        msgstr=''
+                    )
+
                 if changed and not force:
                     logger.info(message)
                 else:
@@ -377,9 +455,7 @@ class ConfigImporter:
             # Map the imported geolevel to a legislative body
             lbodies = self.store.filter_regional_legislative_bodies(region)
             for lbody in lbodies:
-                # de-reference
-                lbconfig = self.store.get_legislative_body(lbody.get('ref'))
-                legislative_body = LegislativeBody.objects.get(title=lbconfig.get('name')[:256])
+                legislative_body = LegislativeBody.objects.get(name=lbody.get('ref')[:256])
                 
                 # Add a mapping for the subjects in this GL/LB combo.
                 sconfig = self.store.get_legislative_body_default_subject(lbody)
@@ -393,7 +469,7 @@ class ConfigImporter:
                     Helper method to recursively add LegislativeLevel mappings from Region configs
                     """
                     geolevel_node = self.store.get_geolevel(node.get('ref'))
-                    geolevel_name = "%s_%s" % (region.get('name'), geolevel_node.get('name'))
+                    geolevel_name = "%s_%s" % (region.get('id'), geolevel_node.get('id'))
                     geolevel = Geolevel.objects.get(name=geolevel_name)
                     obj, created = LegislativeLevel.objects.get_or_create(
                         legislative_body=body,
@@ -402,9 +478,9 @@ class ConfigImporter:
                         parent=parent)
 
                     if created:
-                        logger.debug('Created LegislativeBody/GeoLevel mapping "%s/%s"', legislative_body.title, geolevel.name)
+                        logger.debug('Created LegislativeBody/GeoLevel mapping "%s/%s"', legislative_body.name, geolevel.name)
                     else:
-                        logger.debug('LegislativeBody/GeoLevel mapping "%s/%s" already exists', legislative_body.title, geolevel.name)
+                        logger.debug('LegislativeBody/GeoLevel mapping "%s/%s" already exists', legislative_body.name, geolevel.name)
 
                     if len(node) > 0:
                         add_legislative_level_for_geolevel(node[0], body, subject, obj)
@@ -437,32 +513,41 @@ class ConfigImporter:
 
         # Import score displays.
         for sd in self.store.filter_scoredisplays():
-            lbconfig = self.store.get_legislative_body(sd.get('legislativebodyref'))
-            lb = LegislativeBody.objects.get(title=lbconfig.get('name'))
-            title = sd.get('title')[:50]
+            lb = LegislativeBody.objects.get(name=sd.get('legislativebodyref'))
              
             sd_obj, created = ScoreDisplay.objects.get_or_create(
-                title=title, 
+                name=sd.get('id')[:50],
                 legislative_body=lb,
                 is_page=sd.get('type') == 'leaderboard',
                 cssclass=(sd.get('cssclass') or '')[:50],
                 owner=admin
             )
 
-            if created:
-                logger.debug('Created ScoreDisplay "%s"', title)
-            else:
-                logger.debug('ScoreDisplay "%s" already exists', title)
+            for locale in [l[0] for l in settings.LANGUAGES]:
+                po = self.poutils[locale]
+                po.add_or_update(
+                    msgid=u'%s short label' % sd.get('id'),
+                    msgstr=sd.get('title') or ''
+                )
+                po.add_or_update(
+                    msgid=u'%s label' % sd.get('id'),
+                    msgstr=sd.get('title') or ''
+                )
+                po.add_or_update(
+                    msgid=u'%s long description' % sd.get('id'),
+                    msgstr=''
+                )
 
-            # TODO: temporarily set the name to the xml id
-            sd_obj.name = sd.get('id')
-            sd_obj.save()
-            #
+
+            if created:
+                logger.debug('Created ScoreDisplay "%s"', sd.get('title'))
+            else:
+                logger.debug('ScoreDisplay "%s" already exists', sd.get('title'))
 
             # Import score panels for this score display.
             for spref in self.store.filter_displayed_score_panels(sd):
                 sp = self.store.get_score_panel(spref.get('ref'))
-                title = sp.get('title')[:50]
+                name = sp.get('id')[:50]
                 position = int(sp.get('position'))
                 template = sp.get('template')[:500]
                 cssclass = (sp.get('cssclass') or '')[:50]
@@ -473,38 +558,40 @@ class ConfigImporter:
                     is_ascending = True
                 
                 ascending = sp.get('is_ascending')
-                sp_obj = ScorePanel.objects.filter(
+                sp_obj, created = ScorePanel.objects.get_or_create(
                     type=pnltype,
                     position=position,
-                    title=title,
+                    name=name,
                     template=template,
                     cssclass=cssclass,
                     is_ascending=(ascending is None or ascending=='true'), 
                 )
 
-                if len(sp_obj) == 0:
-                    sp_obj = ScorePanel(
-                        type=pnltype,
-                        position=position,
-                        title=title,
-                        template=template,
-                        cssclass=cssclass,
-                        is_ascending=(ascending is None or ascending=='true'), 
-                        name=spref.get('ref')
-                    )
-                    sp_obj.save()
+                if created:
                     sd_obj.scorepanel_set.add(sp_obj)
 
-                    logger.debug('Created ScorePanel "%s"', title)
+                    logger.debug('Created ScorePanel "%s"', name)
                 else:
-                    sp_obj = sp_obj[0]
-                    sp_obj.name = spref.get('ref')
-                    sp_obj.save()
                     attached = sd_obj.scorepanel_set.filter(id=sp_obj.id).count() == 1
                     if not attached:
                         sd_obj.scorepanel_set.add(sp_obj)
 
-                    logger.debug('ScorePanel "%s" already exists', title)
+                    logger.debug('ScorePanel "%s" already exists', name)
+
+                for locale in[l[0] for l in settings.LANGUAGES]:
+                    po = self.poutils[locale]
+                    po.add_or_update(
+                        msgid=u'%s short label' % sp_obj.name,
+                        msgstr=sp.get('title') or ''
+                    )
+                    po.add_or_update(
+                        msgid=u'%s label' % sp_obj.name,
+                        msgstr=sp.get('title') or ''
+                    )
+                    po.add_or_update(
+                        msgid=u'%s long description' % sp_obj.name,
+                        msgstr=''
+                    )
 
                 # Import score functions for this score panel
                 for sfref in self.store.filter_paneled_score_functions(sp):
@@ -525,8 +612,7 @@ class ConfigImporter:
             return False;
 
         for vc in self.store.filter_criteria():
-            lbconfig = self.store.get_legislative_body(vc.get('legislativebodyref'))
-            lb = LegislativeBody.objects.get(title=lbconfig.get('name'))
+            lb = LegislativeBody.objects.get(name=vc.get('legislativebodyref'))
 
             for crit in self.store.filter_criteria_criterion(vc):
                 # Import the score function for this validation criterion
@@ -541,17 +627,26 @@ class ConfigImporter:
 
                 # Import this validation criterion
                 attributes = {
-                    'title': crit.get('name'),
+                    'name': crit.get('id')[0:50],
                     'function': sf_obj,
-                    'description': crit.get('description') or '',
                     'legislative_body': lb
                 }
-                crit_obj, created, changed, message = ModelHelper.check_and_update(ValidationCriteria, unique_id_field='title', overwrite=force, **attributes)
+                crit_obj, created, changed, message = ModelHelper.check_and_update(ValidationCriteria, overwrite=force, **attributes)
 
-                # TODO: temporarily set the name to the xml id
-                crit_obj.name = crit.get('id')
-                crit_obj.save()
-                #
+                for locale in [l[0] for l in settings.LANGUAGES]:
+                    po = self.poutils[locale]
+                    po.add_or_update(
+                        msgid=u'%s short label' % attributes['name'],
+                        msgstr=crit.get('name') or ''
+                    )
+                    po.add_or_update(
+                        msgid=u'%s label' % attributes['name'],
+                        msgstr=crit.get('name') or ''
+                    )
+                    po.add_or_update(
+                        msgid=u'%s long description' % attributes['name'],
+                        msgstr=crit.get('description') or ''
+                    )
 
                 if changed and not force:
                     logger.info(message)
@@ -570,17 +665,29 @@ class ConfigImporter:
         attributes = {
             'calculator': node.get('calculator')[:500],
             'name': node.get('id')[:50],
-            'label': (node.get('label') or '')[:100],
-            'description': node.get('description') or '',
             'is_planscore': node.get('type') == 'plan'
         }
         fn_obj, created, changed, message = ModelHelper.check_and_update(ScoreFunction, overwrite=force, **attributes)
 
+        for locale in [l[0] for l in settings.LANGUAGES]:
+            po = self.poutils[locale]
+            po.add_or_update(
+                msgid=u'%s short label' % attributes['name'],
+                msgstr=node.get('label') or ''
+            )
+            po.add_or_update(
+                msgid=u'%s label' % attributes['name'],
+                msgstr=node.get('label') or ''
+            )
+            po.add_or_update(
+                msgid=u'%s long description' % attributes['name'],
+                msgstr=node.get('description') or ''
+            )
+
         lbodies = []
-        for lbitem in self.store.filter_function_legislative_bodies(node):
-            lb = self.store.get_legislative_body(lbitem.get('ref'))
-            lbodies.append(lb.get('name')[:256])
-        lbodies = list(LegislativeBody.objects.filter(title__in=lbodies))
+        for lb in self.store.filter_function_legislative_bodies(node):
+            lbodies.append(lb.get('ref'))
+        lbodies = list(LegislativeBody.objects.filter(name__in=lbodies))
         fn_obj.selectable_bodies.add(*lbodies)
 
         if changed and not force:
@@ -1223,6 +1330,7 @@ WARNING:
 class PoUtils:
     def __init__(self, locale):
         self.popath = 'locale/%(locale)s/LC_MESSAGES/xmlconfig.po' % {'locale':locale}
+        self.mopath = 'locale/%(locale)s/LC_MESSAGES/xmlconfig.mo' % {'locale':locale}
         if os.path.exists(self.popath):
             logger.debug('Using existing xmlconfig message catalog.')
             self.pofile = polib.pofile(self.popath, check_for_duplicates=True)
@@ -1259,6 +1367,9 @@ class PoUtils:
     def save(self):
         logger.debug('Saving file %(po)s.', {'po':self.popath})
         self.pofile.save(self.popath)
+
+        logger.debug('Saving file %(mo)s.', {'mo':self.mopath})
+        self.pofile.save_as_mofile(self.mopath)
 
 
 class UTC(tzinfo):
