@@ -173,8 +173,8 @@ class ScoringTestCase(BaseTestCase):
         self.assertEqual("86.83%", score, 'Schwartzberg HTML for District 1 was incorrect: ' + score)
 
         # JSON
-        score = schwartzFunction.score(self.district1, 'json')
-        self.assertEqual('{"result": 0.8683215054699209}', score, 'Schwartzberg JSON for District 1 was incorrect. (e:"%s", a:"%s")' % ('{"result": 0.8683215054699209}',score,))
+        score = json.loads(schwartzFunction.score(self.district1, 'json'))
+        self.assertAlmostEqual(0.8683215054699209, score['result'], 15, 'Schwartzberg JSON for District 1 was incorrect. (e:"%s", a:"%s")' % (0.8683215054699209,score['result'],))
 
     def testSumFunction(self):
         """
@@ -236,7 +236,7 @@ class ScoringTestCase(BaseTestCase):
 
     def testThresholdFunction(self):
         # create the scoring function for checking if a value passes a threshold
-        thresholdFunction1 = ScoreFunction(calculator='redistricting.calculators.Threshold', name='ThresholdFn')
+        thresholdFunction1 = ScoreFunction(calculator='redistricting.calculators.Threshold', name='ThresholdFn1')
         thresholdFunction1.save()
 
         # create the arguments
@@ -248,7 +248,7 @@ class ScoringTestCase(BaseTestCase):
         self.assertEqual(False, score['value'], '1 is not greater than 2')
 
         # create a new scoring function to test the inverse
-        thresholdFunction2 = ScoreFunction(calculator='redistricting.calculators.Threshold', name='ThresholdFn')
+        thresholdFunction2 = ScoreFunction(calculator='redistricting.calculators.Threshold', name='ThresholdFn2')
         thresholdFunction2.save()
 
         # create the arguments
@@ -882,7 +882,6 @@ class PlanTestCase(BaseTestCase):
         self.assertEqual(18, get_cc_val(self.district2), "District2 aggregated when it shouldn't have been")
         
     def test_paste_districts(self):
-        # TODO - figure out why this fails only when run with the entire test suite
         # Set up the test using geounits in the 2nd level
         geolevelid = self.geolevels[1].id
         geounits = self.geounits[geolevelid]
@@ -899,7 +898,8 @@ class PlanTestCase(BaseTestCase):
         self.assertEqual(1, len(result), "District1 wasn't pasted into the plan")
         target1 = District.objects.get(pk=result[0])
         self.assertTrue(target1.geom.equals(district1.geom), "Geometries of pasted district doesn't match original")
-        self.assertEqual(target1.long_label, "TestMember 1", "Proper name wasn't assigned to pasted district. (e:'TestMember 1', a:'%s')" % target1.long_label)
+        # Without any language (.po) message strings, the members generated default to 'District %s'
+        self.assertEqual(target1.long_label, "District 1", "Proper name wasn't assigned to pasted district. (e:'District 1', a:'%s')" % target1.long_label)
 
         target_stats =  ComputedCharacteristic.objects.filter(district = result[0])
         for stat in target_stats:
@@ -919,7 +919,7 @@ class PlanTestCase(BaseTestCase):
         self.assertEqual(1, len(result), "District2 wasn't pasted into the plan")
         target2 = District.objects.get(pk=result[0])
         self.assertTrue(target2.geom.equals(district2.geom), "Geometries of pasted district doesn't match original\n")
-        self.assertEqual(target2.long_label, "TestMember 2", "Proper name wasn't assigned to pasted district")
+        self.assertEqual(target2.long_label, "District 2", "Proper name wasn't assigned to pasted district")
         
         target2_stats =  ComputedCharacteristic.objects.filter(district=target2)
         for stat in target2_stats:
@@ -950,7 +950,6 @@ class PlanTestCase(BaseTestCase):
         self.assertRaises(Exception, target.paste_districts, (district2,), 'Allowed to merge too many districts')
 
     def test_paste_districts_onto_locked(self):
-        # TODO - figure out why this fails only when run with the entire test suite
         # Set up the test using geounits in the 2nd level
         geolevelid = self.geolevels[1].id
         geounits = self.geounits[geolevelid]
@@ -2742,8 +2741,8 @@ class CalculatorTestCase(BaseTestCase):
         num_splits = len(calc.result['value']['splits'])
         split_tuples = calc.result['value']['splits']
         self.assertEqual(3, num_splits, 'Did not find expected splits. e:3, a:%s' % num_splits)
-        self.assertTrue((3,1, u'TestMember 3', u'TestMember 1') in calc.result['value']['splits'], 'Split not detected')
-        self.assertTrue({'geo':'TestMember 3', 'interior':'TestMember 1', 'split':True} in calc.result['value']['named_splits'], 'Split not named correctly')
+        self.assertTrue((3,1, u'District 3', u'District 1') in calc.result['value']['splits'], 'Split not detected')
+        self.assertTrue({'geo':'District 3', 'interior':'District 1', 'split':True} in calc.result['value']['named_splits'], 'Split not named correctly')
 
         # Calc the first plan with the smallest geolevel - no splits
         geolevel = self.plan.legislative_body.get_geolevels()[2]
@@ -2767,7 +2766,7 @@ class CalculatorTestCase(BaseTestCase):
         calc.compute(plan=p2)
         district_splits = len(set(i[0] for i in calc.result['value']['splits']))
         self.assertEqual(2, district_splits, 'Did not find expected splits. e:2, a:%s' % district_splits)
-        self.assertTrue((4, u'0000004', u'TestMember 4', u'Unit 1-4') in calc.result['value']['splits'], 'Did not find expected splits')
+        self.assertTrue((3, u'0000004', u'District 3', u'Unit 1-4') in calc.result['value']['splits'], 'Did not find expected splits')
 
 class AllBlocksTestCase(BaseTestCase):
     fixtures = ['redistricting_testdata.json',
@@ -2885,8 +2884,8 @@ class ScoreRenderTestCase(BaseTestCase):
             template.close()
 
             markup = panel.render(districts)
-            expected = 'TestMember 1:86.83%<img class="yes-contiguous" src="/static-media/images/icon-check.png">' + \
-                'TestMember 2:86.83%<img class="yes-contiguous" src="/static-media/images/icon-check.png">' + \
+            expected = 'District 1:86.83%<img class="yes-contiguous" src="/static-media/images/icon-check.png">' + \
+                'District 2:86.83%<img class="yes-contiguous" src="/static-media/images/icon-check.png">' + \
                 'Unassigned:0.00%<img class="yes-contiguous" src="/static-media/images/icon-check.png">'
             self.assertEqual(expected, markup, 'The markup for districts was incorrect. (e:"%s", a:"%s")' % (expected,markup))
 
@@ -2956,15 +2955,15 @@ class ScoreRenderTestCase(BaseTestCase):
         template.close()
 
         markup = display.render(self.plan)
-        expected = 'TestMember 1:86.83%<img class="yes-contiguous" src="/static-media/images/icon-check.png">' + \
-            'TestMember 2:86.83%<img class="yes-contiguous" src="/static-media/images/icon-check.png">' + \
+        expected = 'District 1:86.83%<img class="yes-contiguous" src="/static-media/images/icon-check.png">' + \
+            'District 2:86.83%<img class="yes-contiguous" src="/static-media/images/icon-check.png">' + \
             'Unassigned:0.00%<img class="yes-contiguous" src="/static-media/images/icon-check.png">'
         self.assertEqual(expected, markup, 'The markup was incorrect. (e:"%s", a:"%s")' % (expected, markup))
 
         markup = display.render(self.plan.get_districts_at_version(self.plan.version,include_geom=False))
 
-        expected = 'TestMember 1:86.83%<img class="yes-contiguous" src="/static-media/images/icon-check.png">' + \
-            'TestMember 2:86.83%<img class="yes-contiguous" src="/static-media/images/icon-check.png">' + \
+        expected = 'District 1:86.83%<img class="yes-contiguous" src="/static-media/images/icon-check.png">' + \
+            'District 2:86.83%<img class="yes-contiguous" src="/static-media/images/icon-check.png">' + \
             'Unassigned:0.00%<img class="yes-contiguous" src="/static-media/images/icon-check.png">'
         self.assertEqual(expected, markup, 'The markup was incorrect. (e:"%s", a:"%s")' % (expected, markup))
 
@@ -2978,7 +2977,7 @@ class ScoreRenderTestCase(BaseTestCase):
         # Make up a ScorePanel - don't save it
         panel = ScorePanel(title="My Fresh Panel", type="district", template="sp_template2.html")
         # Create two functions, one with an arg and one without
-        function = ScoreFunction(calculator="redistricting.calculators.SumValues", name="My Fresh Calc", label="Hot Sums",is_planscore=False)
+        function = ScoreFunction(calculator="redistricting.calculators.SumValues", name="My Fresh Calc", is_planscore=False)
 
         arg1 = ScoreArgument(argument="value1", value="5", type="literal")
         arg2 = ScoreArgument(argument="value2", value="TestSubject", type="subject")
@@ -3048,13 +3047,13 @@ class ScoreRenderTestCase(BaseTestCase):
         display.save()
 
         panel = ScorePanel(title="Splits Report", type="plan", template="sp_template1.html", cssclass="split_panel")
-        function = ScoreFunction(calculator="redistricting.calculators.SplitCounter", name="splits_test", label="Geolevel Splits", is_planscore=True)
+        function = ScoreFunction(calculator="redistricting.calculators.SplitCounter", name="splits_test", is_planscore=True)
         geolevel = self.plan.legislative_body.get_geolevels()[0]
         arg1 = ScoreArgument(argument="boundary_id", value="geolevel.%d" % geolevel.id, type="literal")
 
         components = [(panel, [(function, arg1)])]
 
-        expected_result = '%s:[u\'<div class="split_report"><div>Total districts which split a biggest level: 2</div><div>Total number of splits: 7</div><div class="table_container"><table class="report"><thead><tr><th>Testplan</th><th>Biggest level</th></tr></thead><tbody><tr><td>TestMember 1</td><td>Unit 1-0</td></tr><tr><td>TestMember 1</td><td>Unit 1-1</td></tr><tr><td>TestMember 1</td><td>Unit 1-3</td></tr><tr><td>TestMember 1</td><td>Unit 1-4</td></tr><tr><td>TestMember 1</td><td>Unit 1-6</td></tr><tr><td>TestMember 1</td><td>Unit 1-7</td></tr><tr><td>TestMember 5</td><td>Unit 1-4</td></tr></tbody></table></div></div>\']' % p1.name
+        expected_result = '%s:[u\'<div class="split_report"><div>Total districts which split a biggest level short label: 2</div><div>Total number of splits: 7</div><div class="table_container"><table class="report"><thead><tr><th>Testplan</th><th>Biggest level short label</th></tr></thead><tbody><tr><td>District 1</td><td>Unit 1-0</td></tr><tr><td>District 1</td><td>Unit 1-1</td></tr><tr><td>District 1</td><td>Unit 1-3</td></tr><tr><td>District 1</td><td>Unit 1-4</td></tr><tr><td>District 1</td><td>Unit 1-6</td></tr><tr><td>District 1</td><td>Unit 1-7</td></tr><tr><td>District 5</td><td>Unit 1-4</td></tr></tbody></table></div></div>\']' % p1.name
 
         tplfile = settings.TEMPLATE_DIRS[0] + '/' + panel.template
         template = open(tplfile,'w')
@@ -3454,7 +3453,7 @@ class StatisticsSetTestCase(BaseTestCase):
         display.scorepanel_set.add(summary)
         display.scorepanel_set.add(demographics)
 
-        functions = ScoreFunction.objects.filter(label__in=('Black VAP', 'His. VAP', 'Tot Pop'))
+        functions = ScoreFunction.objects.filter(name__in=('Voting Age Population', 'Hispanic voting-age population', 'Total Population'))
         demographics.score_functions = functions.all()
         demographics.save()
 
@@ -3487,7 +3486,7 @@ class StatisticsSetTestCase(BaseTestCase):
         self.assertEqual(len(copy.scorepanel_set.all()), len(self.display.scorepanel_set.all()), 
             "Copied scoredisplay has wrong number of panels attached")
 
-        vap = ScoreFunction.objects.get(label="VAP")
+        vap = ScoreFunction.objects.get(name="Voting Age Population")
         copy = copy.copy_from(display=self.display, functions=[unicode(str(vap.id))], title="Copied from")
         self.assertEqual(len(copy.scorepanel_set.all()), len(self.display.scorepanel_set.all()), 
             "Copied scoredisplay has wrong number of panels attached")
@@ -3624,7 +3623,7 @@ class NestingTestCase(BaseTestCase):
            self.geounits[gl.id] = list(Geounit.objects.filter(geolevel=gl).order_by('id'))
 
         # Create 3 nested legislative bodies
-        self.region = Region(name='Nesting',description='Nesting Test',sort_key=2)
+        self.region = Region(name='Nesting',sort_key=2)
         self.region.save()
         self.bottom = LegislativeBody(name="bottom", max_districts=100, region=self.region)
         self.bottom.save()
@@ -4240,6 +4239,8 @@ class ReportCalculatorTestCase(BaseTestCase):
         self.assertEqual(675, len(col1['value']))
 
 from redistricting.management.commands.setup import Command
+from redistricting.config import ConfigImporter
+from redistricting import StoredConfig
 class RegionConfigTest(BaseTestCase):
     """ 
     Test the configuration options
@@ -4247,24 +4248,33 @@ class RegionConfigTest(BaseTestCase):
 
     fixtures = []
     def setUp(self):
-        self.config_xml = etree.parse('../../docs/config.dist.xml')
-        self.region_tree = self.config_xml.xpath('/DistrictBuilder/Regions')[0]
-        self.region1 = self.config_xml.xpath('/DistrictBuilder/Regions/Region')[0]
-        self.region2 = self.config_xml.xpath('/DistrictBuilder/Regions/Region')[1]
+        self.store = StoredConfig('../../docs/config.dist.xml')
+        self.store.validate()
         self.cmd = Command()
 
     def test_get_largest_geolevel(self):
-        region1 = self.region_tree.xpath('Region')[0]
-        region2 = self.region_tree.xpath('Region')[1]
+        region1 = self.store.filter_regions()[0]
+        region2 = self.store.filter_regions()[1]
 
-        bg1 = self.cmd.get_largest_geolevel(region1, 0)
-        bg2 = self.cmd.get_largest_geolevel(region2, 0)
+        def get_largest_geolevel(region_node):
+            def get_youngest_child(node):
+                if len(node) == 0:
+                    return node
+                else:
+                    return get_youngest_child(node[0])
+
+            geolevels = self.store.get_top_regional_geolevel(region_node)
+            if len(geolevels) > 0:
+                return get_youngest_child(geolevels[0]).get('ref')
+
+        bg1 = get_largest_geolevel(region1)
+        bg2 = get_largest_geolevel(region2)
 
         self.assertEqual('county', bg1, "Didn't get correct geolevel")
         self.assertEqual('vtd', bg2, "Didn't get correct geolevel")
         
     def test_get_or_create_regional_geolevels(self):
-        self.cmd.import_prereq(self.config_xml, 0)
+        self.cmd.import_prereq(ConfigImporter(self.store), False)
 
         expected_geolevels = ['county', 'vtd', 'block', 'va_county', 'va_vtd', 'va_block',
             'dc_vtd', 'dc_block']
@@ -4277,7 +4287,7 @@ class RegionConfigTest(BaseTestCase):
                 "Regional geolevel %s not created" % geolevel)
 
     def test_filter_functions(self):
-        function_dict = self.cmd.create_filter_functions(self.region_tree, 0)
+        function_dict = self.cmd.create_filter_functions(self.store)
         self.assertEqual(2, len(function_dict), 'No filter functions found')
 
         shapefile = 'redistricting/testdata/test_data.shp'
@@ -4285,7 +4295,13 @@ class RegionConfigTest(BaseTestCase):
 
         va = dc = 0
         for feat in test_layer:
-            geolevels = self.cmd.get_regions_for_feature(feat, function_dict)
+            geolevels = []
+            for key, value in function_dict.iteritems():
+                for filter_function in value:
+                    if filter_function(feat) == True:
+                        geolevels.append(key)
+                        break
+
             if len(geolevels) == 2:
                 self.assertTrue('dc' in geolevels, "Regional feature not found in unfiltered geolevel")
                 self.assertTrue('va' in geolevels, "Unfiltered feature not found in unfiltered geolevel")
@@ -4307,6 +4323,9 @@ class ConfigTestCase(TestCase):
     good_schema_filename = '../../docs/config.xsd'
     bad_data_filename = '/tmp/bad_data.xsd'
     bad_schema_filename = '/tmp/bad_schema.xsd'
+
+    def setUp(self):
+        logging.basicConfig(level=logging.ERROR)
 
     def make_simple_schema(self):
         test_schema = tempfile.NamedTemporaryFile(delete=False)
@@ -4348,13 +4367,11 @@ class ConfigTestCase(TestCase):
         test_schema.close()
 
         x = StoredConfig(self.good_data_filename, schema=test_schema.name)
-        (is_valid, msgs,) = x.validate()
+        is_valid = x.validate()
 
         os.remove(test_schema.name)
 
         self.assertFalse(is_valid, 'Configuration schema was not valid.')
-        self.assertEqual(3, len(msgs), 'The number of XML parsing errors is incorrect.')
-        self.assertEqual(msgs[0], 'The schema XML file could not be parsed.', 'Error message does not indicate proper failure for schema parsing failure.')
 
     def test_validation_schema_xml_wellformed(self):
         test_schema = tempfile.NamedTemporaryFile(delete=False)
@@ -4363,24 +4380,21 @@ class ConfigTestCase(TestCase):
         test_schema.close()
 
         x = StoredConfig(self.good_data_filename, schema=test_schema.name)
-        (is_valid, msgs,) = x.validate()
+        is_valid = x.validate()
 
         os.remove(test_schema.name)
 
         self.assertFalse(is_valid, 'Configuration schema was not valid.')
-        self.assertEqual(len(msgs), 2, 'The number of XML parsing errors is incorrect.')
-        self.assertEqual(msgs[0], 'The schema XML file was parsed, but it does not appear to be a valid XML Schema document.', 'Error message does not indicate proper failure for schema parsing failure.')
 
     def test_validation_schema_xml(self):
         test_schema = self.make_simple_schema()
 
         x = StoredConfig(self.good_data_filename, schema=test_schema.name)
-        (is_valid, msgs,) = x.validate()
+        is_valid = x.validate()
 
         os.remove(test_schema.name)
 
         self.assertTrue(is_valid, 'Configuration schema should be valid.')
-        self.assertEqual(len(msgs), 0, 'The number of XML parsing errors is incorrect.')
 
     def test_validation_data_xml_parser(self):
         test_schema = self.make_simple_schema()
@@ -4391,14 +4405,12 @@ class ConfigTestCase(TestCase):
         test_data.close()
 
         x = StoredConfig(test_data.name, schema=test_schema.name)
-        (is_valid, msgs,) = x.validate()
+        is_valid = x.validate()
 
         os.remove(test_data.name)
         os.remove(test_schema.name)
 
         self.assertFalse(is_valid, 'Configuration data was not valid.')
-        self.assertEqual(3, len(msgs), 'The number of XML parsing errors is incorrect.')
-        self.assertEqual(msgs[0], 'The data XML file could not be parsed.', 'Error message does not indicate proper failure for data parsing failure.')
 
     def test_validation_data_xml_wellformed(self):
         test_schema = self.make_simple_schema()
@@ -4408,7 +4420,7 @@ class ConfigTestCase(TestCase):
         test_data.close()
 
         x = StoredConfig(test_data.name, schema=test_schema.name)
-        (is_valid, msgs,) = x.validate()
+        is_valid = x.validate()
 
         os.remove(test_data.name)
         os.remove(test_schema.name)
@@ -4418,6 +4430,6 @@ class ConfigTestCase(TestCase):
     def test_validation(self):
         x = StoredConfig(self.good_data_filename, schema=self.good_schema_filename)
 
-        (is_valid, msgs,) = x.validate()
+        is_valid = x.validate()
 
         self.assertTrue(is_valid, 'Configuration schema and data should be valid and should validate successfully.')

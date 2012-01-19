@@ -7,7 +7,8 @@
       "legislative_body": 1, 
       "cssclass": "basic_information", 
       "is_page": false, 
-      "title": "Basic Information"
+      "title": "Basic Information",
+      "name": ""
     }
   }, 
   {
@@ -18,7 +19,8 @@
       "legislative_body": 1, 
       "cssclass": "demographics", 
       "is_page": false, 
-      "title": "Demographics"
+      "title": "Demographics",
+      "name": ""
     }
   }, 
   {
@@ -29,7 +31,8 @@
       "legislative_body": 1, 
       "cssclass": "congress_leaderboard", 
       "is_page": true, 
-      "title": "Congressional Leaderboard - All"
+      "title": "Congressional Leaderboard - All",
+      "name": ""
     }
   }, 
   {
@@ -40,7 +43,8 @@
       "legislative_body": 1, 
       "cssclass": "congress_leaderboard", 
       "is_page": true, 
-      "title": "Congressional Leaderboard - Mine"
+      "title": "Congressional Leaderboard - Mine",
+      "name": ""
     }
   }, 
   {
@@ -51,7 +55,8 @@
       "legislative_body": 2, 
       "cssclass": "statehouse_leaderboard", 
       "is_page": true, 
-      "title": "State House Leaderboard - All"
+      "title": "State House Leaderboard - All",
+      "name": ""
     }
   }, 
   {
@@ -62,7 +67,8 @@
       "legislative_body": 2, 
       "cssclass": "statehouse_leaderboard", 
       "is_page": true, 
-      "title": "State House Leaderboard - Mine"
+      "title": "State House Leaderboard - Mine",
+      "name": ""
     }
   }, 
   {
@@ -73,7 +79,8 @@
       "legislative_body": 3, 
       "cssclass": "statesenate_leaderboard", 
       "is_page": true, 
-      "title": "State Senate Leaderboard - All"
+      "title": "State Senate Leaderboard - All",
+      "name": ""
     }
   }, 
   {
@@ -84,7 +91,8 @@
       "legislative_body": 3, 
       "cssclass": "statesenate_leaderboard", 
       "is_page": true, 
-      "title": "State Senate Leaderboard - Mine"
+      "title": "State Senate Leaderboard - Mine",
+      "name": ""
     }
   }, 
   {
@@ -98,7 +106,8 @@
       "template": "leaderboard_panel_mine.html", 
       "position": 4, 
       "cssclass": "repfairness", 
-      "type": "plan"
+      "type": "plan",
+      "name": ""
     }
   }, 
   {
@@ -112,7 +121,8 @@
       "template": "leaderboard_panel_all.html", 
       "position": 1, 
       "cssclass": "equipop", 
-      "type": "plan"
+      "type": "plan",
+      "name": ""
     }
   }, 
   {
@@ -126,7 +136,8 @@
       "template": "leaderboard_panel_mine.html", 
       "position": 1, 
       "cssclass": "equipop", 
-      "type": "plan"
+      "type": "plan",
+      "name": ""
     }
   }, 
   {
@@ -140,7 +151,8 @@
       "template": "leaderboard_panel_all.html", 
       "position": 2, 
       "cssclass": "avgcompact", 
-      "type": "plan"
+      "type": "plan",
+      "name": ""
     }
   }, 
   {
@@ -154,7 +166,8 @@
       "template": "leaderboard_panel_mine.html", 
       "position": 2, 
       "cssclass": "avgcompact", 
-      "type": "plan"
+      "type": "plan",
+      "name": ""
     }
   }, 
   {
@@ -168,7 +181,8 @@
       "template": "leaderboard_panel_all.html", 
       "position": 3, 
       "cssclass": "competitiveness", 
-      "type": "plan"
+      "type": "plan",
+      "name": ""
     }
   }, 
   {
@@ -182,7 +196,8 @@
       "template": "leaderboard_panel_mine.html", 
       "position": 3, 
       "cssclass": "competitiveness", 
-      "type": "plan"
+      "type": "plan",
+      "name": ""
     }
   }, 
   {
@@ -196,7 +211,8 @@
       "template": "leaderboard_panel_all.html", 
       "position": 4, 
       "cssclass": "repfairness", 
-      "type": "plan"
+      "type": "plan",
+      "name": ""
     }
   }, 
   {
@@ -210,7 +226,8 @@
       "template": "leaderboard_panel_all.html", 
       "position": 1, 
       "cssclass": "equipop", 
-      "type": "plan"
+      "type": "plan",
+      "name": ""
     }
   }, 
   {
@@ -224,7 +241,8 @@
       "template": "leaderboard_panel_all.html", 
       "position": 2, 
       "cssclass": "avgcompact", 
-      "type": "plan"
+      "type": "plan",
+      "name": ""
     }
   }, 
   {
@@ -238,7 +256,8 @@
       "template": "leaderboard_panel_all.html", 
       "position": 3, 
       "cssclass": "competitiveness", 
-      "type": "plan"
+      "type": "plan",
+      "name": ""
     }
   }, 
   {
@@ -252,7 +271,8 @@
       "template": "leaderboard_panel_all.html", 
       "position": 4, 
       "cssclass": "repfairness", 
-      "type": "plan"
+      "type": "plan",
+      "name": ""
     }
   }, 
   {
@@ -266,7 +286,8 @@
       "template": "leaderboard_panel_mine.html", 
       "position": 1, 
       "cssclass": "equipop", 
-      "type": "plan"
+      "type": "plan",
+      "name": ""
     }
   }, 
   {
@@ -280,7 +301,8 @@
       "template": "leaderboard_panel_mine.html", 
       "position": 2, 
       "cssclass": "avgcompact", 
-      "type": "plan"
+      "type": "plan",
+      "name": ""
     }
   }, 
   {
@@ -294,7 +316,8 @@
       "template": "leaderboard_panel_mine.html", 
       "position": 3, 
       "cssclass": "competitiveness", 
-      "type": "plan"
+      "type": "plan",
+      "name": ""
     }
   }, 
   {
@@ -308,7 +331,8 @@
       "template": "leaderboard_panel_mine.html", 
       "position": 4, 
       "cssclass": "repfairness", 
-      "type": "plan"
+      "type": "plan",
+      "name": ""
     }
   }, 
   {
@@ -322,7 +346,8 @@
       "template": "leaderboard_panel_all.html", 
       "position": 1, 
       "cssclass": "equipop", 
-      "type": "plan"
+      "type": "plan",
+      "name": ""
     }
   }, 
   {
@@ -336,7 +361,8 @@
       "template": "leaderboard_panel_all.html", 
       "position": 2, 
       "cssclass": "avgcompact", 
-      "type": "plan"
+      "type": "plan",
+      "name": ""
     }
   }, 
   {
@@ -350,7 +376,8 @@
       "template": "leaderboard_panel_all.html", 
       "position": 3, 
       "cssclass": "competitiveness", 
-      "type": "plan"
+      "type": "plan",
+      "name": ""
     }
   }, 
   {
@@ -364,7 +391,8 @@
       "template": "leaderboard_panel_all.html", 
       "position": 4, 
       "cssclass": "repfairness", 
-      "type": "plan"
+      "type": "plan",
+      "name": ""
     }
   }, 
   {
@@ -378,7 +406,8 @@
       "template": "leaderboard_panel_mine.html", 
       "position": 1, 
       "cssclass": "equipop", 
-      "type": "plan"
+      "type": "plan",
+      "name": ""
     }
   }, 
   {
@@ -392,7 +421,8 @@
       "template": "leaderboard_panel_mine.html", 
       "position": 2, 
       "cssclass": "avgcompact", 
-      "type": "plan"
+      "type": "plan",
+      "name": ""
     }
   }, 
   {
@@ -406,7 +436,8 @@
       "template": "leaderboard_panel_mine.html", 
       "position": 3, 
       "cssclass": "competitiveness", 
-      "type": "plan"
+      "type": "plan",
+      "name": ""
     }
   }, 
   {
@@ -420,7 +451,8 @@
       "template": "leaderboard_panel_mine.html", 
       "position": 4, 
       "cssclass": "repfairness", 
-      "type": "plan"
+      "type": "plan",
+      "name": ""
     }
   }, 
   {
@@ -443,7 +475,8 @@
       "template": "plan_summary.html", 
       "position": 0, 
       "cssclass": "plan_summary", 
-      "type": "plan_summary"
+      "type": "plan_summary",
+      "name": ""
     }
   }, 
   {
@@ -464,7 +497,8 @@
       "template": "basic_information.html", 
       "position": 1, 
       "cssclass": "", 
-      "type": "district"
+      "type": "district",
+      "name": ""
     }
   }, 
   {
@@ -484,7 +518,8 @@
       "template": "demographics.html", 
       "position": 1, 
       "cssclass": "", 
-      "type": "district"
+      "type": "district",
+      "name": ""
     }
   }, 
   {
@@ -492,10 +527,8 @@
     "model": "redistricting.scorefunction", 
     "fields": {
       "calculator": "publicmapping.redistricting.calculators.AllBlocksAssigned", 
-      "description": "All blocks in the plan must be assigned.", 
       "is_planscore": true, 
-      "name": "All Blocks Assigned  - Congress", 
-      "label": "All Blocks Assigned"
+      "name": "All Blocks Assigned  - Congress" 
     }
   }, 
   {
@@ -503,10 +536,8 @@
     "model": "redistricting.scorefunction", 
     "fields": {
       "calculator": "publicmapping.redistricting.calculators.AllBlocksAssigned", 
-      "description": "All blocks in the plan must be assigned.", 
       "is_planscore": true, 
-      "name": "All Blocks Assigned - State House", 
-      "label": "All Blocks Assigned"
+      "name": "All Blocks Assigned - State House" 
     }
   }, 
   {
@@ -514,10 +545,8 @@
     "model": "redistricting.scorefunction", 
     "fields": {
       "calculator": "publicmapping.redistricting.calculators.AllBlocksAssigned", 
-      "description": "All blocks in the plan must be assigned.", 
       "is_planscore": true, 
-      "name": "All Blocks Assigned  - State Senate", 
-      "label": "All Blocks Assigned"
+      "name": "All Blocks Assigned  - State Senate" 
     }
   }, 
   {
@@ -525,10 +554,8 @@
     "model": "redistricting.scorefunction", 
     "fields": {
       "calculator": "publicmapping.redistricting.calculators.PartisanDifferential", 
-      "description": "Democracy thrives when the marketplace of ideas is truly competitive. Competitiveness is increased when either major political party has the opportunity to win a particular district. Teams should seek to draw maps that contain as many districts as possible that are \"heavily\" or \"generally\" competitive.", 
       "is_planscore": true, 
-      "name": "Competitiveness", 
-      "label": "Competitiveness"
+      "name": "Competitiveness" 
     }
   }, 
   {
@@ -536,10 +563,8 @@
     "model": "redistricting.scorefunction", 
     "fields": {
       "calculator": "publicmapping.redistricting.calculators.Interval", 
-      "description": "The class breaks for total population", 
       "is_planscore": false, 
-      "name": "Congressional Population", 
-      "label": "Tot Pop"
+      "name": "Congressional Population" 
     }
   }, 
   {
@@ -547,10 +572,8 @@
     "model": "redistricting.scorefunction", 
     "fields": {
       "calculator": "publicmapping.redistricting.calculators.Contiguity", 
-      "description": "Contiguity means that every part of a district must be reachable from every other part without crossing the district's borders. All districts within a plan must be contiguous. Water contiguity is permitted given Virginia's extensive coastal region. \"Point contiguity\" or \"touch-point contiguity\" where two sections of a district are connected at a single point is not permitted.", 
       "is_planscore": false, 
-      "name": "Contiguous", 
-      "label": "Contiguous"
+      "name": "Contiguous" 
     }
   }, 
   {
@@ -558,10 +581,8 @@
     "model": "redistricting.scorefunction", 
     "fields": {
       "calculator": "publicmapping.redistricting.calculators.Equivalence", 
-      "description": "The Equipopulation score is the difference between the district with the highest population and the district with the lowest population.", 
       "is_planscore": true, 
-      "name": "Equipopulation", 
-      "label": "Equal Population"
+      "name": "Equipopulation" 
     }
   }, 
   {
@@ -569,10 +590,8 @@
     "model": "redistricting.scorefunction", 
     "fields": {
       "calculator": "publicmapping.redistricting.calculators.Sum", 
-      "description": "", 
       "is_planscore": false, 
-      "name": "Hispanic voting-age population", 
-      "label": "His. VAP"
+      "name": "Hispanic voting-age population" 
     }
   }, 
   {
@@ -580,10 +599,8 @@
     "model": "redistricting.scorefunction", 
     "fields": {
       "calculator": "publicmapping.redistricting.calculators.MajorityMinority", 
-      "description": "Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S> 30, 49 (1986)) \"sufficiently large and geographically compact to constitute a majority in a single-member district\".", 
       "is_planscore": true, 
-      "name": "Minority Majority", 
-      "label": "Minority-Majority"
+      "name": "Minority Majority" 
     }
   }, 
   {
@@ -591,10 +608,8 @@
     "model": "redistricting.scorefunction", 
     "fields": {
       "calculator": "publicmapping.redistricting.calculators.Contiguity", 
-      "description": "The number of noncontiguous districts in a plan", 
       "is_planscore": false, 
-      "name": "Noncontiguous", 
-      "label": "Noncontiguous"
+      "name": "Noncontiguous" 
     }
   }, 
   {
@@ -602,10 +617,8 @@
     "model": "redistricting.scorefunction", 
     "fields": {
       "calculator": "publicmapping.redistricting.calculators.Sum", 
-      "description": "", 
       "is_planscore": false, 
-      "name": "Partisan Index", 
-      "label": "Partisan Index"
+      "name": "Partisan Index" 
     }
   }, 
   {
@@ -613,10 +626,8 @@
     "model": "redistricting.scorefunction", 
     "fields": {
       "calculator": "publicmapping.redistricting.calculators.RepresentationalFairness", 
-      "description": "The counterbalance to competitiveness is assuring that a final redistricting plan does not unfairly bias one party over another.", 
       "is_planscore": true, 
-      "name": "Representational Fairness", 
-      "label": "Representational Fairness"
+      "name": "Representational Fairness" 
     }
   }, 
   {
@@ -624,10 +635,8 @@
     "model": "redistricting.scorefunction", 
     "fields": {
       "calculator": "publicmapping.redistricting.calculators.Schwartzberg", 
-      "description": "The competition is using the 'Schwartzberg' compactness measure. This measure is a ratio of the perimeter of the district to the circumference of the circle whose area is equal to the area of the district.", 
       "is_planscore": true, 
-      "name": "Schwartzberg", 
-      "label": "Average Compactness"
+      "name": "Schwartzberg" 
     }
   }, 
   {
@@ -635,10 +644,8 @@
     "model": "redistricting.scorefunction", 
     "fields": {
       "calculator": "publicmapping.redistricting.calculators.Sum", 
-      "description": "The total populations of a district", 
       "is_planscore": false, 
-      "name": "Total Population", 
-      "label": "Tot Pop"
+      "name": "Total Population" 
     }
   }, 
   {
@@ -646,10 +653,8 @@
     "model": "redistricting.scorefunction", 
     "fields": {
       "calculator": "publicmapping.redistricting.calculators.CountDistricts", 
-      "description": "The number of districts in a Congressional redistricting plan must be 11.", 
       "is_planscore": true, 
-      "name": "Valid Count - Congress", 
-      "label": "District Count"
+      "name": "Valid Count - Congress" 
     }
   }, 
   {
@@ -657,10 +662,8 @@
     "model": "redistricting.scorefunction", 
     "fields": {
       "calculator": "publicmapping.redistricting.calculators.CountDistricts", 
-      "description": "The number of districts in a House of Delegates redistricting plan must be 100.", 
       "is_planscore": true, 
-      "name": "Valid Count - State House", 
-      "label": "District Count"
+      "name": "Valid Count - State House" 
     }
   }, 
   {
@@ -668,10 +671,8 @@
     "model": "redistricting.scorefunction", 
     "fields": {
       "calculator": "publicmapping.redistricting.calculators.CountDistricts", 
-      "description": "The number of districts in a State Senate redistricting plan must be 40.", 
       "is_planscore": true, 
-      "name": "Valid Count - State Senate", 
-      "label": "District Count"
+      "name": "Valid Count - State Senate" 
     }
   }, 
   {
@@ -679,10 +680,8 @@
     "model": "redistricting.scorefunction", 
     "fields": {
       "calculator": "publicmapping.redistricting.calculators.Equipopulation", 
-      "description": "The population of each Congressional district must be 727,366 +/- 0.5%.", 
       "is_planscore": true, 
-      "name": "Valid Population - Congress", 
-      "label": "Equal Population"
+      "name": "Valid Population - Congress" 
     }
   }, 
   {
@@ -690,10 +689,8 @@
     "model": "redistricting.scorefunction", 
     "fields": {
       "calculator": "publicmapping.redistricting.calculators.Equipopulation", 
-      "description": "The population of each House of Delegates district must be 80,010 +/- 5%", 
       "is_planscore": true, 
-      "name": "Valid Population - State House", 
-      "label": "Equal Population"
+      "name": "Valid Population - State House" 
     }
   }, 
   {
@@ -701,10 +698,8 @@
     "model": "redistricting.scorefunction", 
     "fields": {
       "calculator": "publicmapping.redistricting.calculators.Equipopulation", 
-      "description": "The population of each State Senate district must be 200,026 +/- 5%", 
       "is_planscore": true, 
-      "name": "Valid Population - State Senate", 
-      "label": "Equal Population"
+      "name": "Valid Population - State Senate" 
     }
   }, 
   {
@@ -712,10 +707,8 @@
     "model": "redistricting.scorefunction", 
     "fields": {
       "calculator": "publicmapping.redistricting.calculators.Sum", 
-      "description": "", 
       "is_planscore": false, 
-      "name": "Voting Age Population", 
-      "label": "VAP"
+      "name": "Voting Age Population" 
     }
   }, 
   {
@@ -723,10 +716,8 @@
     "model": "redistricting.scorefunction", 
     "fields": {
       "calculator": "publicmapping.redistricting.calculators.Percent", 
-      "description": "", 
       "is_planscore": false, 
-      "name": "Voting Age Population - Black", 
-      "label": "Black VAP"
+      "name": "Voting Age Population - Black" 
     }
   }, 
   {

@@ -5,11 +5,10 @@
   "fields": {
    "multi_district_label_format": "", 
    "max_multi_districts": 0, 
-   "name": "Community Map", 
+   "name": "community_map", 
    "is_community": true, 
    "max_districts": 999, 
    "min_multi_districts": 0, 
-   "member": "Community %s", 
    "max_plan_members": 0, 
    "multi_members_allowed": false, 
    "min_plan_members": 0, 
@@ -71,9 +70,7 @@
   "fields": {
    "is_user_selectable": true, 
    "is_planscore": false, 
-   "description": "Population interval calculator for congressional.", 
    "calculator": "publicmapping.redistricting.calculators.Interval", 
-   "label": "Tot Pop", 
    "name": "a_congressional_population"
   }
  }, 
@@ -83,9 +80,7 @@
   "fields": {
    "is_user_selectable": true, 
    "is_planscore": false, 
-   "description": "", 
    "calculator": "publicmapping.redistricting.calculators.Percent", 
-   "label": "Black VAP", 
    "name": "district_blkvap_percent"
   }
  }, 
@@ -95,9 +90,7 @@
   "fields": {
    "is_user_selectable": false, 
    "is_planscore": false, 
-   "description": "A pseudo-calculator that gets comments for districts in a plan.", 
    "calculator": "publicmapping.redistricting.calculators.Comments", 
-   "label": "Comments", 
    "name": "district_comments"
   }
  }, 
@@ -107,9 +100,7 @@
   "fields": {
    "is_user_selectable": true, 
    "is_planscore": false, 
-   "description": "", 
    "calculator": "publicmapping.redistricting.calculators.Contiguity", 
-   "label": "Contiguous", 
    "name": "district_contiguous"
   }
  }, 
@@ -119,9 +110,7 @@
   "fields": {
    "is_user_selectable": true, 
    "is_planscore": false, 
-   "description": "", 
    "calculator": "publicmapping.redistricting.calculators.Percent", 
-   "label": "His. VAP", 
    "name": "district_hispvap_percent"
   }
  }, 
@@ -140,7 +129,8 @@
    "template": "plan_comments.html", 
    "position": 0, 
    "cssclass": "plan_summary", 
-   "type": "district"
+   "type": "district",
+   "name": ""
   }
  }, 
  {
@@ -158,7 +148,8 @@
    "template": "community_summary.html", 
    "position": 1, 
    "cssclass": "plan_summary", 
-   "type": "plan_summary"
+   "type": "plan_summary",
+   "name": ""
   }
  }, 
  {
@@ -178,7 +169,8 @@
    "template": "communities.html", 
    "position": 2, 
    "cssclass": "district_basic_info congressional", 
-   "type": "district"
+   "type": "district",
+   "name": ""
   }
  }, 
  {
@@ -189,7 +181,8 @@
    "legislative_body": 6, 
    "cssclass": "demographics", 
    "is_page": false, 
-   "title": "Community Mapping"
+   "title": "Community Mapping",
+   "name": ""
   }
  }, 
  {
@@ -200,7 +193,8 @@
    "legislative_body": 6, 
    "cssclass": "demographics", 
    "is_page": false, 
-   "title": "Demographics"
+   "title": "Demographics",
+   "name": ""
   }
  },
  {

@@ -422,7 +422,7 @@ class ConfigImporter:
                     return
 
                 attributes = {
-                    'name': '%s_%s' % (region.get('name'), geolevel.get('id')),
+                    'name': '%s_%s' % (region.get('name'), geolevel.get('ref')),
                     'min_zoom': geolevel_obj.min_zoom - zero_zoom,
                     'tolerance': geolevel_obj.tolerance
                 }

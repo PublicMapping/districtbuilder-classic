@@ -400,6 +400,18 @@ class LegislativeBody(BaseModel):
         """
         return self.name
 
+    def get_short_label(self):
+        short_label = super(LegislativeBody, self).get_short_label()
+        if short_label == ('%s short label' % self.name):
+            short_label = '%s'
+        return short_label
+
+    def get_label(self):
+        label = super(LegislativeBody, self).get_label()
+        if label == ('%s label' % self.name):
+            label = 'District %s'
+        return label
+
     class Meta:
         """
         Additional information about the LegislativeBody model.
