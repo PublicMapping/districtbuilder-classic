@@ -37,10 +37,9 @@
             {% comment %} CSRF token is automatically inserted {% endcomment %}
             <input id="language" name="language" type="hidden" />
         </form>
-        {% get_language_info_list for LANGUAGES as languages %}
-        {% for language in languages %}
+        {% for language in LANGUAGES %}
         <div id="{{language.code}}" class="language_selection" >
-            {{ language.name_local }} ({{ language.code }})
+            {{ language.1 }} ({{ language.0 }})
         </div>
         {% endfor %}
     </div>
