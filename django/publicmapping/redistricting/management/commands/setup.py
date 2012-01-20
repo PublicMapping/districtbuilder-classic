@@ -876,7 +876,7 @@ ERROR:
             else:
                 mychar = mychar[0]
 
-                if aggdata != mychar.number:
+                if aggdata != mychar.number or percentage != mychar.percentage:
                     mychar.number = aggdata
                     mychar.percentage = percentage
                     mychar.save()
