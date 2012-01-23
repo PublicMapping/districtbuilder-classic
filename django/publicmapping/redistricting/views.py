@@ -437,7 +437,7 @@ def commonplan(request, planid):
         reporting_template = None
         tags = []
         calculator_reports = []
-    demos = Subject.objects.all().order_by('sort_key').values_list("id","name", "short_display","is_displayed")[0:3]
+    demos = Subject.objects.all().order_by('sort_key')[0:3]
     layers = []
     snaplayers = []
 
@@ -457,14 +457,14 @@ def commonplan(request, planid):
         snaplayers.append( {'geolevel':level.id,'layer':level.get_short_label.lower(),'name':level.get_label() if level.get_label().isupper() else level.get_label().capitalize(),'min_zoom':level.min_zoom} )
     default_selected = False
     for demo in demos:
-        isdefault = str((not default_demo is None) and (demo[0] == default_demo.id)).lower()
+        isdefault = str((not default_demo is None) and (demo.id == default_demo.id)).lower()
         if isdefault == 'true':
             default_selected = True
         # i18n-ize name & short_display here, not in js
-        layers.append( {'id':demo[0],'text':demo[2],'value':demo[1].lower(), 'isdefault':isdefault, 'isdisplayed':str(demo[3]).lower()} )
+        layers.append( {'id':demo.id,'text':demo.get_short_label(),'value':demo.name, 'isdefault':isdefault, 'isdisplayed':str(demo.is_displayed).lower()} )
     # If the default demo was not selected among the first three, we'll still need it for the dropdown menus
     if default_demo and not default_selected:
-        layers.insert( 0, {'id':default_demo.id,'text':default_demo.get_short_label(),'value':default_demo.get_short_label().lower(), 'isdefault':str(True).lower(), 'isdisplayed':str(default_demo.is_displayed).lower()} )
+        layers.insert( 0, {'id':default_demo.id,'text':default_demo.get_short_label(),'value':default_demo.name, 'isdefault':str(True).lower(), 'isdisplayed':str(default_demo.is_displayed).lower()} )
 
     # Try to get the mapserver protocol from the settings module.
     # Set it to an empty string if the setting isn't defined so the 

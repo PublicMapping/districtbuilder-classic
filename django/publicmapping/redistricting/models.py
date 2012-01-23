@@ -51,7 +51,7 @@ from copy import copy
 from decimal import *
 from operator import attrgetter
 from rosetta import polib
-import sys, cPickle, types, tagging, re, logging
+import os, sys, cPickle, types, tagging, re, logging
 
 logger = logging.getLogger(__name__)
 
@@ -71,9 +71,13 @@ class BaseModel(models.Model):
         lang = translation.get_language()
         if not lang in I18N_CACHE:
             try:
-                I18N_CACHE[lang] = polib.mofile('locale/%s/LC_MESSAGES/xmlconfig.mo' % lang)
-            except:
-                I18N_CACHE[lang] = polib.pofile('locale/%s/LC_MESSAGES/xmlconfig.po' % lang)
+                path = os.path.join(settings.MEDIA_ROOT, '../locale/%s/LC_MESSAGES/xmlconfig.mo' % lang)
+                path = os.path.normpath(path)
+                I18N_CACHE[lang] = polib.mofile(path)
+            except Exception, ex:
+                path = os.path.join(settings.MEDIA_ROOT, '../locale/%s/LC_MESSAGES/xmlconfig.po' % lang)
+                path = os.path.normpath(path)
+                I18N_CACHE[lang] = polib.pofile(path)
 
     def get_short_label(self):
         """
@@ -83,7 +87,8 @@ class BaseModel(models.Model):
         try:
             lang = translation.get_language()
             return I18N_CACHE[lang].find(msgid).msgstr
-        except:
+        except Exception, ex:
+            logger.debug('Cannot find msgid %s, fallback to msgid', msgid)
             return msgid
 
     def get_label(self):
@@ -96,7 +101,8 @@ class BaseModel(models.Model):
         try:
             lang = translation.get_language()
             return I18N_CACHE[lang].find(msgid).msgstr
-        except:
+        except Exception, ex:
+            logger.debug('Cannot find msgid %s, fallback to msgid', msgid)
             return msgid
 
     def get_long_description(self):
@@ -108,7 +114,8 @@ class BaseModel(models.Model):
         try:
             lang = translation.get_language()
             return I18N_CACHE[lang].find(msgid).msgstr
-        except:
+        except Exception, ex:
+            logger.debug('Cannot find msgid %s, fallback to msgid', msgid)
             return msgid
 
     class Meta:
