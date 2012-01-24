@@ -38,7 +38,7 @@
             <input id="language" name="language" type="hidden" />
         </form>
         {% for language in LANGUAGES %}
-        <div id="{{language.code}}" class="language_selection" >
+        <div id="{{language.0}}" class="language_selection" >
             {{ language.1 }} ({{ language.0 }})
         </div>
         {% endfor %}

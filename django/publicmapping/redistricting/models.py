@@ -44,6 +44,7 @@ from django.utils import translation
 from django.template.loader import render_to_string
 from django.contrib.comments.models import Comment
 from django.contrib.contenttypes.models import ContentType
+from django.template.defaultfilters import title
 from redistricting.calculators import Schwartzberg, Contiguity, SumValues
 from tagging.models import TaggedItem, Tag
 from datetime import datetime
@@ -418,6 +419,12 @@ class LegislativeBody(BaseModel):
         if label == ('%s label' % self.name):
             label = 'District %s'
         return label
+
+    def get_long_description(self):
+        long_description = super(LegislativeBody, self).get_long_description()
+        if long_description == '':
+            long_description = title(self.name)
+        return long_description
 
     class Meta:
         """

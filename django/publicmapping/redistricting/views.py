@@ -454,7 +454,7 @@ def commonplan(request, planid):
 
     for level in levels:
         # i18n-ize name here, not in js
-        snaplayers.append( {'geolevel':level.id,'layer':level.get_short_label.lower(),'name':level.get_label() if level.get_label().isupper() else level.get_label().capitalize(),'min_zoom':level.min_zoom} )
+        snaplayers.append( {'geolevel':level.id,'layer':level.get_short_label().lower(),'name':level.get_label() if level.get_label().isupper() else level.get_label().capitalize(),'min_zoom':level.min_zoom} )
     default_selected = False
     for demo in demos:
         isdefault = str((not default_demo is None) and (demo.id == default_demo.id)).lower()
@@ -2297,7 +2297,7 @@ def statistics_sets(request, planid):
         scorefunctions = []
             
         # Get the functions available for the users
-        user_functions = ScoreFunction.objects.filter(selectable_bodies=plan.legislative_body).order_by('label')
+        user_functions = ScoreFunction.objects.filter(selectable_bodies=plan.legislative_body).order_by('name')
         for f in user_functions:
             if 'report' not in f.get_short_label().lower() and 'comments' not in f.get_short_label().lower():
                 scorefunctions.append({ 'id': f.id, 'name': force_escape(f.get_label()) })
