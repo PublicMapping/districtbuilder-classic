@@ -387,7 +387,7 @@ class ConfigImporter:
                     msgstr=geolevel.get('label') or ''
                 )
                 po.add_or_update(
-                    msgid='u%s long description' % attributes['name'],
+                    msgid=u'%s long description' % attributes['name'],
                     msgstr=''
                 )
 

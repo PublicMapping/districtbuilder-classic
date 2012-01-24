@@ -100,7 +100,7 @@ class Command(BaseCommand):
                     # The short label for all districts in this body
                     poutil.add_or_update(
                         msgid=u'%s short label' % legislativebody.name,
-                        msgstr=legislativebody.title.replace('%s', '%(district_id)s')
+                        msgstr=legislativebody.short_label.replace('%s', '%(district_id)s')
                     )
                     # The label for all districts in this body
                     poutil.add_or_update(
@@ -110,7 +110,7 @@ class Command(BaseCommand):
                     # The description for all districts in this body (unused)
                     poutil.add_or_update(
                         msgid=u'%s long description' % legislativebody.name,
-                        msgstr=''
+                        msgstr=legislativebody.title
                     )
 
             for geolevel in Geolevel.objects.all():

@@ -22,40 +22,40 @@ msgid "default long description"
 msgstr "The region serviced by DistrictBuilder."
 
 msgid "congress short label"
-msgstr "%s"
+msgstr "%(district_id)s"
 
 msgid "congress label"
 msgstr "District %s"
 
 msgid "congress long description"
-msgstr ""
+msgstr "Congressional"
 
 msgid "house short label"
-msgstr "%s"
+msgstr "%(district_id)s"
 
 msgid "house label"
 msgstr "District %s"
 
 msgid "house long description"
-msgstr ""
+msgstr "State House"
 
 msgid "senate short label"
-msgstr "%s"
+msgstr "%(district_id)s"
 
 msgid "senate label"
 msgstr "District %s"
 
 msgid "senate long description"
-msgstr ""
+msgstr "State Senate"
 
 msgid "community short label"
-msgstr "%s"
+msgstr "%(district_id)s"
 
 msgid "community label"
 msgstr "Community %s"
 
 msgid "community long description"
-msgstr ""
+msgstr "Community Map"
 
 msgid "va short label"
 msgstr "va"
@@ -76,37 +76,37 @@ msgid "dc long description"
 msgstr "The District of Columbia Metropolitan Area"
 
 msgid "dc_area_council short label"
-msgstr "%s"
+msgstr "%(district_id)s"
 
 msgid "dc_area_council label"
 msgstr "District %s"
 
 msgid "dc_area_council long description"
-msgstr ""
+msgstr "DC Planning Council"
 
 msgid "dc_community short label"
-msgstr "%s"
+msgstr "%(district_id)s"
 
 msgid "dc_community label"
 msgstr "Community %s"
 
 msgid "dc_community long description"
-msgstr ""
+msgstr "DC Community Map"
 
 msgid "dc_vtd short label"
-msgstr "vtd"
+msgstr "dc_vtd"
 
 msgid "dc_vtd label"
-msgstr "vtd"
+msgstr "dc_vtd"
 
 msgid "dc_vtd long description"
 msgstr ""
 
 msgid "dc_block short label"
-msgstr "block"
+msgstr "dc_block"
 
 msgid "dc_block label"
-msgstr "block"
+msgstr "dc_block"
 
 msgid "dc_block long description"
 msgstr ""
@@ -121,28 +121,28 @@ msgid "county long description"
 msgstr ""
 
 msgid "va_block short label"
-msgstr "block"
+msgstr "va_block"
 
 msgid "va_block label"
-msgstr "block"
+msgstr "va_block"
 
 msgid "va_block long description"
 msgstr ""
 
 msgid "va_vtd short label"
-msgstr "vtd"
+msgstr "va_vtd"
 
 msgid "va_vtd label"
-msgstr "vtd"
+msgstr "va_vtd"
 
 msgid "va_vtd long description"
 msgstr ""
 
 msgid "va_county short label"
-msgstr "county"
+msgstr "va_county"
 
 msgid "va_county label"
-msgstr "county"
+msgstr "va_county"
 
 msgid "va_county long description"
 msgstr ""
@@ -1667,38 +1667,338 @@ msgstr "AllBlocksAssigned - Senate"
 msgid "senate_all_assigned long description"
 msgstr ""
 
-msgid "dc_area short label"
-msgstr "dc"
+msgid " short label"
+msgstr "Demographics"
 
-msgid "dc_area label"
-msgstr "DC Metro"
+msgid " label"
+msgstr "Demographics"
 
-msgid "dc_area long description"
-msgstr "The District of Columbia Metropolitan Area"
-
-msgid "ublock long description"
+msgid " long description"
 msgstr ""
 
-msgid "uvtd long description"
+msgid "congress-leader-all short label"
+msgstr "Congressional Leaderboard - All"
+
+msgid "congress-leader-all label"
+msgstr "Congressional Leaderboard - All"
+
+msgid "congress-leader-all long description"
 msgstr ""
 
-msgid "ucounty long description"
+msgid "congress-leader-mine short label"
+msgstr "Congressional Leaderboard - Mine"
+
+msgid "congress-leader-mine label"
+msgstr "Congressional Leaderboard - Mine"
+
+msgid "congress-leader-mine long description"
 msgstr ""
 
-msgid "va_None short label"
+msgid "house-leader-all short label"
+msgstr "State House Leaderboard - All"
+
+msgid "house-leader-all label"
+msgstr "State House Leaderboard - All"
+
+msgid "house-leader-all long description"
 msgstr ""
 
-msgid "va_None label"
+msgid "house-leader-mine short label"
+msgstr "State House Leaderboard - Mine"
+
+msgid "house-leader-mine label"
+msgstr "State House Leaderboard - Mine"
+
+msgid "house-leader-mine long description"
 msgstr ""
 
-msgid "va_None long description"
+msgid "senate-leader-all short label"
+msgstr "State Senate Leaderboard - All"
+
+msgid "senate-leader-all label"
+msgstr "State Senate Leaderboard - All"
+
+msgid "senate-leader-all long description"
 msgstr ""
 
-msgid "dc_None short label"
+msgid "senate-leader-mine short label"
+msgstr "State Senate Leaderboard - Mine"
+
+msgid "senate-leader-mine label"
+msgstr "State Senate Leaderboard - Mine"
+
+msgid "senate-leader-mine long description"
 msgstr ""
 
-msgid "dc_None label"
+msgid "congress-sidebar-basic short label"
+msgstr "Basic Information"
+
+msgid "congress-sidebar-basic label"
+msgstr "Basic Information"
+
+msgid "congress-sidebar-basic long description"
 msgstr ""
 
-msgid "dc_None long description"
+msgid "congress-sidebar-demo short label"
+msgstr "Demographics"
+
+msgid "congress-sidebar-demo label"
+msgstr "Demographics"
+
+msgid "congress-sidebar-demo long description"
+msgstr ""
+
+msgid "house-sidebar-basic short label"
+msgstr "Basic Information"
+
+msgid "house-sidebar-basic label"
+msgstr "Basic Information"
+
+msgid "house-sidebar-basic long description"
+msgstr ""
+
+msgid "house-sidebar-demo short label"
+msgstr "Demographics"
+
+msgid "house-sidebar-demo label"
+msgstr "Demographics"
+
+msgid "house-sidebar-demo long description"
+msgstr ""
+
+msgid "senate-sidebar-basic short label"
+msgstr "Basic Information"
+
+msgid "senate-sidebar-basic label"
+msgstr "Basic Information"
+
+msgid "senate-sidebar-basic long description"
+msgstr ""
+
+msgid "senate-sidebar-demo short label"
+msgstr "Demographics"
+
+msgid "senate-sidebar-demo label"
+msgstr "Demographics"
+
+msgid "senate-sidebar-demo long description"
+msgstr ""
+
+msgid "community-sidebar-demo short label"
+msgstr "Demographics"
+
+msgid "community-sidebar-demo label"
+msgstr "Demographics"
+
+msgid "community-sidebar-demo long description"
+msgstr ""
+
+msgid "community-sidebar-comments short label"
+msgstr "Community Mapping"
+
+msgid "community-sidebar-comments label"
+msgstr "Community Mapping"
+
+msgid "community-sidebar-comments long description"
+msgstr ""
+
+msgid "congress-reports short label"
+msgstr "Congressional Reports"
+
+msgid "congress-reports label"
+msgstr "Congressional Reports"
+
+msgid "congress-reports long description"
+msgstr ""
+
+msgid "senate-reports short label"
+msgstr "State Senate Reports"
+
+msgid "senate-reports label"
+msgstr "State Senate Reports"
+
+msgid "senate-reports long description"
+msgstr ""
+
+msgid "house-reports short label"
+msgstr "State House Reports"
+
+msgid "house-reports label"
+msgstr "State House Reports"
+
+msgid "house-reports long description"
+msgstr ""
+
+msgid "have_you_heard_about_this_55_guy_lulz short label"
+msgstr "99have; you' heard\" about"
+
+msgid "have_you_heard_about_this_55_guy_lulz label"
+msgstr "99have; you' heard\" about -- this 55 guy? lulz!"
+
+msgid "have_you_heard_about_this_55_guy_lulz long description"
+msgstr "99have; you' heard\" about -- this 55 guy? lulz!"
+
+msgid "congress-equipop short label"
+msgstr "Equipopulation - Congress"
+
+msgid "congress-equipop label"
+msgstr "Equipopulation - Congress"
+
+msgid "congress-equipop long description"
+msgstr ""
+"<p>Your plan does not meet the competition criteria for "
+"Equipopulation:</p><p>The population of each Congressional district "
+"must be 727,366 +/- 0.5%.</p>"
+
+msgid "congress-contiguous short label"
+msgstr "AllContiguous - Congress"
+
+msgid "congress-contiguous label"
+msgstr "AllContiguous - Congress"
+
+msgid "congress-contiguous long description"
+msgstr ""
+"<p>Your plan does not meet the competition criteria for "
+"Contiguity</p><p>Every part of a district must be reachable from every"
+" other part without crossing the district's borders. All districts "
+"within a plan must be contiguous. Water contiguity is permitted given "
+"Virginia's extensive coastal region. 'Point contiguity' or 'touch-"
+"point contiguity' where two sections of a district are connected at a "
+"single point is not permitted.</p>"
+
+msgid "congress-major-minor short label"
+msgstr "MajorityMinority - Congress"
+
+msgid "congress-major-minor label"
+msgstr "MajorityMinority - Congress"
+
+msgid "congress-major-minor long description"
+msgstr ""
+
+msgid "congress-district-count short label"
+msgstr "CountDistricts - Congress"
+
+msgid "congress-district-count label"
+msgstr "CountDistricts - Congress"
+
+msgid "congress-district-count long description"
+msgstr ""
+
+msgid "congress-assigned short label"
+msgstr "AllBlocksAssigned - Congress"
+
+msgid "congress-assigned label"
+msgstr "AllBlocksAssigned - Congress"
+
+msgid "congress-assigned long description"
+msgstr ""
+
+msgid "house-equipop short label"
+msgstr "Equipopulation - House"
+
+msgid "house-equipop label"
+msgstr "Equipopulation - House"
+
+msgid "house-equipop long description"
+msgstr ""
+"<p>Your plan does not meet the competition criteria for "
+"Equipopulation:</p><p>The population of each House of Delegates "
+"district must be 80,010 +/- 5%.</p>"
+
+msgid "house-contiguous short label"
+msgstr "AllContiguous - House"
+
+msgid "house-contiguous label"
+msgstr "AllContiguous - House"
+
+msgid "house-contiguous long description"
+msgstr ""
+"<p>Your plan does not meet the competition criteria for "
+"Contiguity</p><p>Every part of a district must be reachable from every"
+" other part without crossing the district's borders. All districts "
+"within a plan must be contiguous. Water contiguity is permitted given "
+"Virginia's extensive coastal region. 'Point contiguity' or 'touch-"
+"point contiguity' where two sections of a district are connected at a "
+"single point is not permitted.</p>"
+
+msgid "house-major-minor short label"
+msgstr "MajorityMinority - House"
+
+msgid "house-major-minor label"
+msgstr "MajorityMinority - House"
+
+msgid "house-major-minor long description"
+msgstr ""
+
+msgid "house-district-count short label"
+msgstr "CountDistricts - House"
+
+msgid "house-district-count label"
+msgstr "CountDistricts - House"
+
+msgid "house-district-count long description"
+msgstr ""
+
+msgid "house-assigned short label"
+msgstr "AllBlocksAssigned - House"
+
+msgid "house-assigned label"
+msgstr "AllBlocksAssigned - House"
+
+msgid "house-assigned long description"
+msgstr ""
+
+msgid "senate-major-minor short label"
+msgstr "MajorityMinority - Senate"
+
+msgid "senate-major-minor label"
+msgstr "MajorityMinority - Senate"
+
+msgid "senate-major-minor long description"
+msgstr ""
+
+msgid "senate-district-count short label"
+msgstr "CountDistricts - Senate"
+
+msgid "senate-district-count label"
+msgstr "CountDistricts - Senate"
+
+msgid "senate-district-count long description"
+msgstr ""
+
+msgid "senate-equipop short label"
+msgstr "Equipopulation - Senate"
+
+msgid "senate-equipop label"
+msgstr "Equipopulation - Senate"
+
+msgid "senate-equipop long description"
+msgstr ""
+"<p>Your plan does not meet the competition criteria for "
+"Equipopulation:</p><p>The population of each House of Delegates "
+"district must be 200,026 +/- 5%.</p>"
+
+msgid "senate-contiguous short label"
+msgstr "AllContiguous - Senate"
+
+msgid "senate-contiguous label"
+msgstr "AllContiguous - Senate"
+
+msgid "senate-contiguous long description"
+msgstr ""
+"<p>Your plan does not meet the competition criteria for "
+"Contiguity</p><p>Every part of a district must be reachable from every"
+" other part without crossing the district's borders. All districts "
+"within a plan must be contiguous. Water contiguity is permitted given "
+"Virginia's extensive coastal region. 'Point contiguity' or 'touch-"
+"point contiguity' where two sections of a district are connected at a "
+"single point is not permitted.</p>"
+
+msgid "senate-assigned short label"
+msgstr "AllBlocksAssigned - Senate"
+
+msgid "senate-assigned label"
+msgstr "AllBlocksAssigned - Senate"
+
+msgid "senate-assigned long description"
 msgstr ""
