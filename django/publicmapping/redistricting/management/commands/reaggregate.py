@@ -102,8 +102,8 @@ class Command(BaseCommand):
                 else:
                     aggval = agg['number__sum']
 
-		cc, created = ComputedCharacteristic.objects.get_or_create(district=district, subject=subj, defaults={'number':aggval, 'percentage':'0000.00000000'})
-		if not created:
+                cc, created = ComputedCharacteristic.objects.get_or_create(district=district, subject=subj, defaults={'number':aggval, 'percentage':'0000.00000000'})
+                if not created:
                     cc.number = aggval
                     cc.percentage = '0000.00000000'
 
