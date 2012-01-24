@@ -12,7 +12,8 @@ class Command(BaseCommand):
     help = 'Reaggregate data for a give district or plan'
     option_list = BaseCommand.option_list + (
         make_option('-d', '--district', dest='district_id', default=None, action='store', help='Choose a single district to update'),
-        make_option('-p', '--plan', dest='plan_id', default=None, action='store', help='Choose a single plan to update')
+        make_option('-p', '--plan', dest='plan_id', default=None, action='store', help='Choose a single plan to update'),
+	make_option('-t', '--thread', dest='thread', default=1, type='int', action='store', help='Which thread to use? 1-4'),
     )
 
     def handle(self, *args, **options):
@@ -46,6 +47,10 @@ class Command(BaseCommand):
 
         else:
             plans = Plan.objects.all()
+            plancount = plans.count()
+            begin = int((options.get('thread')-1) * (plancount/4))
+            end = int(options.get('thread') * (plancount/4))
+            plans = plans[begin:end]
 
         # Counts of the updated geounits
         updated_plans = 0;
@@ -58,6 +63,8 @@ class Command(BaseCommand):
             for l in leg_levels:
                 if l.geolevel.min_zoom < geolevel.min_zoom:
                     geolevel = l.geolevel
+
+            self.stdout.write('\t%d / %d\n' % (updated_plans, len(plans),))
 
             # Get all of the geounit_ids for that geolevel
             geounit_ids = map(str, Geounit.objects.filter(geolevel = geolevel).values_list('id', flat=True))
@@ -87,11 +94,19 @@ class Command(BaseCommand):
                 body = district.plan.legislative_body
             geounits = Geounit.get_mixed_geounits(geounit_ids, body, geolevel.id, district.geom, True)
         
-            # Grab all the computedcharacteristics for the district and reaggregate
-            for cc in district.computedcharacteristic_set.order_by('-subject__percentage_denominator'):
-                agg = Characteristic.objects.filter(subject = cc.subject, geounit__in = geounits).aggregate(Sum('number'))
-                cc.number = agg['number__sum']
-                cc.percentage = '0000.00000000'
+            # Grab all the computedcharacteristics for the district/subject combo and reaggregate
+            for subj in Subject.objects.all().order_by('-percentage_denominator'):
+                agg = Characteristic.objects.filter(subject = subj, geounit__in = geounits).aggregate(Sum('number'))
+                if agg['number__sum'] is None:
+                    aggval = '0000.00000000'
+                else:
+                    aggval = agg['number__sum']
+
+		cc, created = ComputedCharacteristic.objects.get_or_create(district=district, subject=subj, defaults={'number':aggval, 'percentage':'0000.00000000'})
+		if not created:
+                    cc.number = aggval
+                    cc.percentage = '0000.00000000'
+
                 if cc.subject.percentage_denominator:
                     denominator = district.computedcharacteristic_set.get(subject = cc.subject.percentage_denominator).number
                     if cc.number and denominator:
