@@ -801,7 +801,15 @@ class Percent(CalculatorBase):
         if num is None or den is None or den == 0:
             return
     
-        self.result = { 'value': num / den }
+        try:
+            self.result = { 'value': num / den }
+        except:
+            # TODO: temporary fix
+            if den['value'] == 0:
+                self.result = { 'value': 0 }
+            else:
+                self.result = { 'value': num / den['value'] }
+            
 
     def html(self):
         """
