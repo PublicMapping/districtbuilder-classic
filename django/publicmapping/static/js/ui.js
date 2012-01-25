@@ -116,9 +116,12 @@ function getLocalTimeFromIsoformat(time) {
             .replace(tzRE, ' ');
         date = new Date(time);
     }
-    // get the time zone offset in minutes, then multiply to get milliseconds
-    var offset = date.getTimezoneOffset() * 60000;
-    date = new Date(date - offset);
+    // Check whether timezone conversion is needed
+    if ($.browser.mozilla) {
+        // get the time zone offset in minutes, then multiply to get milliseconds
+        var offset = date.getTimezoneOffset() * 60000;
+        date = new Date(date - offset);
+    }
     var hours = date.getHours();
     var minutes = date.getMinutes();
 
