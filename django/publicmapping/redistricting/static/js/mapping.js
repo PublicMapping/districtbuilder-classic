@@ -643,8 +643,9 @@ function mapinit(srs,maxExtent) {
         
         return { 
             layer: min_layer.layer, 
-            level:min_layer.level, 
-            display:min_layer.name, 
+            level: min_layer.level,
+            name: min_layer.name,
+            display: min_layer.short_label, 
             geolevel: min_layer.geolevel
         };
     }
@@ -2685,7 +2686,7 @@ function mapinit(srs,maxExtent) {
     $('#showby').change(function(evt){
         var snap = getSnapLayer();
         var show = evt.target.value;
-        var layername = NAMESPACE + ':demo_' + snap.level;
+        var layername = NAMESPACE + ':demo_' + snap.name;
         if (show != 'none') {
             layername += '_' + show;
         }

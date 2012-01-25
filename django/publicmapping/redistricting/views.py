@@ -390,7 +390,7 @@ def commonplan(request, planid):
         body_member_short_label = plan.legislative_body.get_short_label()
         body_member_long_label = plan.legislative_body.get_label()
         body_name = plan.legislative_body.get_short_label()
-        reporting_template = 'bard_%s.html' % body_name.lower() if not plan.is_community() else None
+        reporting_template = 'bard_%s.html' % plan.legislative_body.name if not plan.is_community() else None
        
         index = body_member_short_label.find('%')
         if index >= 0:
@@ -411,9 +411,10 @@ def commonplan(request, planid):
             # used for generating groups of checkboxes on the evaluate tab.
             calculator_reports = []
             if settings.REPORTS_ENABLED == 'CALC':
-                report_displays = ScoreDisplay.objects.filter(title=_('%(body_name)s Reports') % {'body_name':body_name})
-                report_displays = ScoreDisplay.objects.filter(
-                    title='%(body_name)s Reports' % {'body_name': body_name})
+                report_displays = ScoreDisplay.objects.all()
+                logger.debug('prefilter report displays:%d', len(report_displays))
+                report_displays = filter(lambda x:x.get_short_label()==(_('%(body_name)s Reports') % {'body_name':plan.legislative_body.get_long_description()}), report_displays)
+                logger.debug('report displays:%d', len(report_displays))
                 if len(report_displays) > 0:
                     calculator_reports = map(lambda p: {
                                 'title': p.__unicode__(),
@@ -454,17 +455,35 @@ def commonplan(request, planid):
 
     for level in levels:
         # i18n-ize name here, not in js
-        snaplayers.append( {'geolevel':level.id,'layer':level.get_short_label().lower(),'name':level.get_label() if level.get_label().isupper() else level.get_label().capitalize(),'min_zoom':level.min_zoom} )
+        snaplayers.append({
+            'geolevel': level.id,
+            'level': level.name,
+            'layer': 'simple_' + level.name, 
+            'short_label': level.get_short_label(),
+            'min_zoom': level.min_zoom
+        })
     default_selected = False
     for demo in demos:
         isdefault = str((not default_demo is None) and (demo.id == default_demo.id)).lower()
         if isdefault == 'true':
             default_selected = True
         # i18n-ize name & short_display here, not in js
-        layers.append( {'id':demo.id,'text':demo.get_short_label(),'value':demo.name, 'isdefault':isdefault, 'isdisplayed':str(demo.is_displayed).lower()} )
+        layers.append({
+            'id':demo.id,
+            'text':demo.get_short_label(),
+            'value':demo.name, 
+            'isdefault':isdefault, 
+            'isdisplayed':str(demo.is_displayed).lower()
+        })
     # If the default demo was not selected among the first three, we'll still need it for the dropdown menus
     if default_demo and not default_selected:
-        layers.insert( 0, {'id':default_demo.id,'text':default_demo.get_short_label(),'value':default_demo.name, 'isdefault':str(True).lower(), 'isdisplayed':str(default_demo.is_displayed).lower()} )
+        layers.insert( 0, {
+            'id':default_demo.id,
+            'text':default_demo.get_short_label(),
+            'value':default_demo.name, 
+            'isdefault':str(True).lower(), 
+            'isdisplayed':str(default_demo.is_displayed).lower()
+        })
 
     # Try to get the mapserver protocol from the settings module.
     # Set it to an empty string if the setting isn't defined so the 
@@ -485,6 +504,7 @@ def commonplan(request, planid):
     try:
         loader.get_template(reporting_template)
     except:
+        logger.debug('Reporting template %s could not be found', reporting_template)
         reporting_template = None
 
     return {
@@ -1040,14 +1060,14 @@ def newdistrict(request, planid):
         if 'district_short' in request.REQUEST:
             district_short = request.REQUEST['district_short'][0:10]
         elif not district_id is None:
-            district_short = plan.legislative_body.get_short_label() % district_id
+            district_short = plan.legislative_body.get_short_label() % {'district_id':district_id}
         else:
             district_short = None
 
         if 'district_long' in request.REQUEST:
             district_long = request.REQUEST['district_long'][0:256]
         elif not district_id is None:
-            district_long = plan.legislative_body.get_label() % district_id
+            district_long = plan.legislative_body.get_label() % {'district_id':district_id}
         else:
             district_long = None
 
@@ -1920,7 +1940,7 @@ def getleaderboarddisplay(leg_body, owner_filter):
     Returns the leaderboard ScoreDisplay given a legislative body and owner
     """
     # TODO: 'Leaderboard' is hardcoded into the scoredisplay title
-    displays = ScoreDisplay.objects.filter(title='%s Leaderboard - %s' % (leg_body.get_short_label(), owner_filter.title()))
+    displays = ScoreDisplay.objects.filter(title='%s Leaderboard - %s' % (leg_body.get_long_description(), owner_filter.title()))
     return displays[0] if len(displays) > 0 else None
 
 def getleaderboard(request):
@@ -2082,7 +2102,7 @@ def getplans(request):
                 'owner': plan.owner.username, 
                 'districtCount': '--', # load dynamically -- this is a big performance hit
                 'can_edit': can_edit(request.user, plan),
-                'plan_type': plan.legislative_body.get_short_label(),
+                'plan_type': plan.legislative_body.get_long_description(),
                 'processing_state': plan.get_processing_state_display()
                 }
             })

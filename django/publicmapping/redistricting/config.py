@@ -244,15 +244,15 @@ class ConfigImporter:
                 po = self.poutils[locale]
                 po.add_or_update(
                     msgid=u'%s short label' % attributes['name'],
-                    msgstr=body.get('short_label') or ''
+                    msgstr=body.get('short_label') or '%(district_id)s'
                 )
                 po.add_or_update(
                     msgid=u'%s label' % attributes['name'],
-                    msgstr=body.get('long_label') or ''
+                    msgstr=body.get('long_label') or '%(district_id)s'
                 )
                 po.add_or_update(
                     msgid=u'%s long description' % attributes['name'],
-                    msgstr=''
+                    msgstr=body.get('name')
                 )
 
             if changed and not force:
@@ -470,6 +470,7 @@ class ConfigImporter:
                     """
                     geolevel_node = self.store.get_geolevel(node.get('ref'))
                     geolevel_name = "%s_%s" % (region.get('id'), geolevel_node.get('id'))
+                    logging.debug('geolevel_name: %s', geolevel_name)
                     geolevel = Geolevel.objects.get(name=geolevel_name)
                     obj, created = LegislativeLevel.objects.get_or_create(
                         legislative_body=body,

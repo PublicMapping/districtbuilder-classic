@@ -25,7 +25,7 @@ msgid "congress short label"
 msgstr "%(district_id)s"
 
 msgid "congress label"
-msgstr "District %s"
+msgstr "District %(district_id)s"
 
 msgid "congress long description"
 msgstr "Congressional"
@@ -34,7 +34,7 @@ msgid "house short label"
 msgstr "%(district_id)s"
 
 msgid "house label"
-msgstr "District %s"
+msgstr "District %(district_id)s"
 
 msgid "house long description"
 msgstr "State House"
@@ -43,7 +43,7 @@ msgid "senate short label"
 msgstr "%(district_id)s"
 
 msgid "senate label"
-msgstr "District %s"
+msgstr "District %(district_id)s"
 
 msgid "senate long description"
 msgstr "State Senate"
@@ -52,7 +52,7 @@ msgid "community short label"
 msgstr "%(district_id)s"
 
 msgid "community label"
-msgstr "Community %s"
+msgstr "Community %(district_id)s"
 
 msgid "community long description"
 msgstr "Community Map"
@@ -79,7 +79,7 @@ msgid "dc_area_council short label"
 msgstr "%(district_id)s"
 
 msgid "dc_area_council label"
-msgstr "District %s"
+msgstr "District %(district_id)s"
 
 msgid "dc_area_council long description"
 msgstr "DC Planning Council"
@@ -88,25 +88,25 @@ msgid "dc_community short label"
 msgstr "%(district_id)s"
 
 msgid "dc_community label"
-msgstr "Community %s"
+msgstr "Community %(district_id)s"
 
 msgid "dc_community long description"
 msgstr "DC Community Map"
 
 msgid "dc_vtd short label"
-msgstr "dc_vtd"
+msgstr ""
 
 msgid "dc_vtd label"
-msgstr "dc_vtd"
+msgstr ""
 
 msgid "dc_vtd long description"
 msgstr ""
 
 msgid "dc_block short label"
-msgstr "dc_block"
+msgstr ""
 
 msgid "dc_block label"
-msgstr "dc_block"
+msgstr ""
 
 msgid "dc_block long description"
 msgstr ""
@@ -121,28 +121,28 @@ msgid "county long description"
 msgstr ""
 
 msgid "va_block short label"
-msgstr "va_block"
+msgstr ""
 
 msgid "va_block label"
-msgstr "va_block"
+msgstr ""
 
 msgid "va_block long description"
 msgstr ""
 
 msgid "va_vtd short label"
-msgstr "va_vtd"
+msgstr ""
 
 msgid "va_vtd label"
-msgstr "va_vtd"
+msgstr ""
 
 msgid "va_vtd long description"
 msgstr ""
 
 msgid "va_county short label"
-msgstr "va_county"
+msgstr ""
 
 msgid "va_county label"
-msgstr "va_county"
+msgstr ""
 
 msgid "va_county long description"
 msgstr ""
@@ -151,7 +151,7 @@ msgid "vtd short label"
 msgstr "vtd"
 
 msgid "vtd label"
-msgstr "VTD"
+msgstr "vtd"
 
 msgid "vtd long description"
 msgstr ""
@@ -2002,3 +2002,12 @@ msgstr "AllBlocksAssigned - Senate"
 
 msgid "senate-assigned long description"
 msgstr ""
+
+msgid "dc_area short label"
+msgstr "dc"
+
+msgid "dc_area label"
+msgstr "DC Metro"
+
+msgid "dc_area long description"
+msgstr "The District of Columbia Metropolitan Area"

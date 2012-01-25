@@ -411,13 +411,13 @@ class LegislativeBody(BaseModel):
     def get_short_label(self):
         short_label = super(LegislativeBody, self).get_short_label()
         if short_label == ('%s short label' % self.name):
-            short_label = '%s'
+            short_label = '%(district_id)s'
         return short_label
 
     def get_label(self):
         label = super(LegislativeBody, self).get_label()
         if label == ('%s label' % self.name):
-            label = 'District %s'
+            label = 'District %(district_id)s'
         return label
 
     def get_long_description(self):
@@ -548,7 +548,7 @@ class LegislativeLevel(models.Model):
         Represent the LegislativeLevel as a unicode string. This is the
         LegislativeLevel's LegislativeBody and Geolevel
         """
-        return "%s, %s, %s" % (self.legislative_body.get_short_label(), self.geolevel.get_short_label(), self.subject.get_short_label())
+        return "%s, %s, %s" % (self.legislative_body.get_long_description(), self.geolevel.get_short_label(), self.subject.get_short_label())
 
     class Meta:
         unique_together = ('geolevel','legislative_body','subject',)
@@ -1117,8 +1117,8 @@ class Plan(models.Model):
             districtlong = districtinfo[2]
         else:
             districtid = int(districtinfo)
-            districtshort = self.legislative_body.get_short_label() % districtid
-            districtlong = self.legislative_body.get_label() % districtid
+            districtshort = self.legislative_body.get_short_label() % {'district_id':districtid}
+            districtlong = self.legislative_body.get_label() % {'district_id':districtid}
 
         # fix the version so that it is definitely an integer
         version = int(version)
@@ -1382,13 +1382,13 @@ class Plan(models.Model):
         edited_districts = list()
 
         # Save the new district to the plan to start
-        newshort = '' if slot == None else self.legislative_body.get_short_label() % slot
-        newlong = '' if slot == None else self.legislative_body.get_label() % slot
+        newshort = '' if slot == None else self.legislative_body.get_short_label() % {'district_id':slot}
+        newlong = '' if slot == None else self.legislative_body.get_label() % {'district_id':slot}
         pasted = District(short_label=newshort, long_label=newlong, plan=self, district_id = slot, geom=district.geom, simple = district.simple, version = new_version)
         pasted.save();
         if newshort  == '':
-            pasted.short_label = self.legislative_body.get_short_label() % pasted.district_id
-            pasted.long_label = self.legislative_body.get_label() % pasted.district_id
+            pasted.short_label = self.legislative_body.get_short_label() % {'district_id':pasted.district_id}
+            pasted.long_label = self.legislative_body.get_label() % {'district_id':pasted.district_id}
             pasted.save();
         pasted.clone_relations_from(district)
         

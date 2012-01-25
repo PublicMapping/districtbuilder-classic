@@ -151,10 +151,24 @@
         var UNASSIGNED_DISTRICT_ID = {% if unassigned_id %}{{ unassigned_id }}{% else %}0{% endif %};
         // An array of configuration settings for the layers that are
         // used to select geography.
-        var SNAP_LAYERS = [ {% for snap in snaplayers %} { geolevel: {{ snap.geolevel }}, level: '{{ snap.layer }}',layer: 'simple_{{ snap.layer }}', name: '{{ snap.name }}', min_zoom: {{ snap.min_zoom }} }{% if not forloop.last %},{% endif %} {% endfor %} ];
+        var SNAP_LAYERS = [ {% for snap in snaplayers %}{ 
+            geolevel: {{ snap.geolevel }}, 
+            level: '{{ snap.level }}',
+            layer: '{{ snap.layer }}', 
+            short_label: '{{ snap.short_label }}',
+            min_zoom: {{ snap.min_zoom }} 
+        }{% if not forloop.last %},{% endif %}{% endfor %} ];
         // An array of demographic settings for the choropleth variations 
         // of the snap layer
-        var DEMOGRAPHICS = [{% for demo in demographics %} { id: {{ demo.id }}, text: '{{ demo.text }}', value: '{{ demo.value }}', isdefault: {{ demo.isdefault }}, isdisplayed: {{ demo.isdisplayed }} }{% if not forloop.last %},{% endif %} {% endfor %} ];         var MAP_LAYERS = []; for (var i = 0; i < SNAP_LAYERS.length; i++) { MAP_LAYERS.push( NAMESPACE + ':demo_' + SNAP_LAYERS[i].level );
+        var DEMOGRAPHICS = [ {% for demo in demographics %}{
+            id: {{ demo.id }},
+            text: '{{ demo.text }}',
+            value: '{{ demo.value }}',
+            isdefault: {{ demo.isdefault }},
+            isdisplayed: {{ demo.isdisplayed }} }{% if not forloop.last %},{% endif %} {% endfor %} ];
+        var MAP_LAYERS = []; 
+        for (var i = 0; i < SNAP_LAYERS.length; i++) { 
+            MAP_LAYERS.push( NAMESPACE + ':demo_' + SNAP_LAYERS[i].level );
             for (var j = 0; j < DEMOGRAPHICS.length; j++) {
                 MAP_LAYERS.push( NAMESPACE + ':demo_' + SNAP_LAYERS[i].level + '_' + DEMOGRAPHICS[j].value );
             }
@@ -529,7 +543,7 @@
                             {% if not forloop.last %}                    
                             <div class="layer_choice_wrapper">
                                 <input id="geolevel.{{ snap.geolevel }}" class="layer_choice" type="checkbox" value="geolevel.{{ snap.geolevel }}" />
-                                <label for="geolevel.{{ snap.geolevel }}">{{ snap.name }}</label>
+                                <label for="geolevel.{{ snap.geolevel }}">{{ snap.short_label }}</label>
                             </div>                  
                             {% endif %}
                             {% endfor %}
@@ -963,7 +977,7 @@ Include the shared_districts markup if we're using the copy/paste tool
                   <option value="None">{% trans "None" %}</option>
                   {% for snap in snaplayers %}
                       <option value="geolevel.{{ snap.geolevel }}">
-                          {{ snap.name }}
+                          {{ snap.short_label }}
                       </option>
                   {% endfor %}
               </select>
