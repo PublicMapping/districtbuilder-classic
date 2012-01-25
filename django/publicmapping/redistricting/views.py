@@ -1798,7 +1798,8 @@ def get_statistics(request, planid):
         version = plan.version
 
     # TODO: 'Demographics' is hardcoded as a panel title. Is there another way to designate a permanent display?
-    display = ScoreDisplay.objects.filter(title='Demographics', legislative_body=plan.legislative_body)[0]
+    display = ScoreDisplay.objects.filter(legislative_body=plan.legislative_body)
+    display = filter(lambda x:x.get_short_label() == 'Demographics', display)[0]
     
     if 'displayId' in request.REQUEST:
         try:
