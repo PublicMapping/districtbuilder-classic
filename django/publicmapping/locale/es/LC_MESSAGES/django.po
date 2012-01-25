@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-01-18 10:42-0500\n"
+"POT-Creation-Date: 2012-01-25 13:49-0500\n"
 "PO-Revision-Date: 2011-11-29 14:20\n"
 "Last-Translator: Admin User <ajennings+saigon@azavea.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -37,35 +37,44 @@ msgstr "Eliminar seleccionados %(verbose_name_plural)s"
 msgid "No task with that id."
 msgstr "No es una tarea con ese id."
 
-#: redistricting/calculators.py:105 redistricting/calculators.py:239
-#: redistricting/calculators.py:302 redistricting/calculators.py:522
-#: redistricting/calculators.py:590 redistricting/calculators.py:659
-#: redistricting/calculators.py:741 redistricting/calculators.py:818
-#: redistricting/calculators.py:1292 redistricting/calculators.py:1361
-#: redistricting/calculators.py:1443 redistricting/calculators.py:1913
-#: redistricting/calculators.py:1990
+#: redistricting/calculators.py:104 redistricting/calculators.py:275
+#: redistricting/calculators.py:338 redistricting/calculators.py:558
+#: redistricting/calculators.py:626 redistricting/calculators.py:695
+#: redistricting/calculators.py:1392 redistricting/calculators.py:1474
+#: redistricting/calculators.py:2021
 msgid "n/a"
 msgstr "n / a"
 
-#: redistricting/calculators.py:1076 redistricting/calculators.py:1166
-#: redistricting/calculators.py:1658 redistricting/calculators.py:1755
+#: redistricting/calculators.py:1106 redistricting/calculators.py:1196
+#: redistricting/calculators.py:1689 redistricting/calculators.py:1786
 #, python-format
 msgid "%(value)d (of %(target)s)"
 msgstr "%(value)d (de %(target)s)"
 
-#: redistricting/calculators.py:1437 redistricting/calculators.py:1453
+#: redistricting/calculators.py:1468 redistricting/calculators.py:1484
 msgid "Democrat"
 msgstr "Demócrata"
 
-#: redistricting/calculators.py:1437 redistricting/calculators.py:1453
+#: redistricting/calculators.py:1468 redistricting/calculators.py:1484
 msgid "Republican"
 msgstr "Republicano"
 
-#: redistricting/calculators.py:1439
+#: redistricting/calculators.py:1470
 msgid "Balanced"
 msgstr "Equilibrado"
 
-#: redistricting/calculators.py:2151
+#: redistricting/calculators.py:2177
+#, python-format
+msgid "Total %(district_type_a)s which split a %(district_type_b)s: %(result)d"
+msgstr ""
+
+#: redistricting/calculators.py:2180
+#, python-format
+msgid ""
+"Total %(district_type_a)s splitting \"%(district_type_b)s\": %(result)d</div>"
+msgstr ""
+
+#: redistricting/calculators.py:2184
 msgid "Total number of splits"
 msgstr "Número total de divisiones"
 
@@ -488,148 +497,148 @@ msgstr ""
 msgid "Couldn't get geography info from the server. No plan with the given id."
 msgstr ""
 
-#: redistricting/views.py:1807
+#: redistricting/views.py:1808
 msgid "Unable to get Personalized ScoreDisplay"
 msgstr ""
 
-#: redistricting/views.py:1818
+#: redistricting/views.py:1819
 msgid "Couldn't render display tab."
 msgstr ""
 
-#: redistricting/views.py:1849
+#: redistricting/views.py:1850
 msgid "Failed to get file status"
 msgstr ""
 
-#: redistricting/views.py:1881
+#: redistricting/views.py:1882
 msgid "File is not yet ready. Please try again in a few minutes"
 msgstr ""
 
-#: redistricting/views.py:1904
+#: redistricting/views.py:1905
 msgid "Task submitted"
 msgstr ""
 
-#: redistricting/views.py:1940
+#: redistricting/views.py:1941
 msgid "No display configured"
 msgstr ""
 
-#: redistricting/views.py:2038
+#: redistricting/views.py:2039
 msgid "Unknown filter method."
 msgstr ""
 
-#: redistricting/views.py:2160
+#: redistricting/views.py:2161
 msgid "Must declare planId, name and description"
 msgstr ""
 
-#: redistricting/views.py:2173
+#: redistricting/views.py:2174
 msgid "Updated plan attributes"
 msgstr ""
 
-#: redistricting/views.py:2175
+#: redistricting/views.py:2176
 msgid "Failed to save the changes to your plan"
 msgstr ""
 
-#: redistricting/views.py:2179
+#: redistricting/views.py:2180
 msgid "Cannot edit a plan you don't own."
 msgstr ""
 
-#: redistricting/views.py:2195 redistricting/views.py:2226
+#: redistricting/views.py:2196 redistricting/views.py:2227
 msgid "Must declare planId"
 msgstr ""
 
-#: redistricting/views.py:2203
+#: redistricting/views.py:2204
 msgid "Deleted plan"
 msgstr ""
 
-#: redistricting/views.py:2205
+#: redistricting/views.py:2206
 msgid "Failed to delete plan"
 msgstr ""
 
-#: redistricting/views.py:2209
+#: redistricting/views.py:2210
 msgid "Cannot delete a plan you don't own."
 msgstr ""
 
-#: redistricting/views.py:2240
+#: redistricting/views.py:2241
 msgid "Reaggregating plan"
 msgstr ""
 
-#: redistricting/views.py:2242
+#: redistricting/views.py:2243
 msgid "Failed to reaggregate plan"
 msgstr ""
 
-#: redistricting/views.py:2246
+#: redistricting/views.py:2247
 msgid "Cannot reaggregate a plan you don't own."
-msgstr ""
-
-#: redistricting/views.py:2267
-#, python-format
-msgid "Health retrieved at %(time)s\n"
 msgstr ""
 
 #: redistricting/views.py:2268
 #, python-format
+msgid "Health retrieved at %(time)s\n"
+msgstr ""
+
+#: redistricting/views.py:2269
+#, python-format
 msgid "%(plan_count)d plans in database\n"
 msgstr ""
 
-#: redistricting/views.py:2270
+#: redistricting/views.py:2271
 #, python-format
 msgid "%(session_count)d sessions in use out of %(session_limit)s\n"
 msgstr ""
 
-#: redistricting/views.py:2273
+#: redistricting/views.py:2274
 #, python-format
 msgid "%(num_users)d active users over the last 10 minutes\n"
 msgstr ""
 
-#: redistricting/views.py:2276
+#: redistricting/views.py:2277
 #, python-format
 msgid "%(mb_free)s MB of disk space free\n"
 msgstr ""
 
-#: redistricting/views.py:2278
+#: redistricting/views.py:2279
 #, python-format
 msgid ""
 "Memory Usage:\n"
 "%(mem_free)s\n"
 msgstr ""
 
-#: redistricting/views.py:2282
+#: redistricting/views.py:2283
 #, python-format
 msgid ""
 "ERROR! Couldn't get health:\n"
 "%s"
 msgstr ""
 
-#: redistricting/views.py:2290
+#: redistricting/views.py:2291
 #, fuzzy
 msgid "No plan with that ID exists."
 msgstr "No es una tarea con ese id."
 
-#: redistricting/views.py:2328
+#: redistricting/views.py:2329
 #, python-format
 msgid "No functions for %(panel)s"
 msgstr ""
 
-#: redistricting/views.py:2332
+#: redistricting/views.py:2333
 #, python-format
 msgid "No user displays for %(user)s"
 msgstr ""
 
-#: redistricting/views.py:2346
+#: redistricting/views.py:2347
 msgid "Couldn't delete personalized scoredisplay"
 msgstr ""
 
-#: redistricting/views.py:2385
+#: redistricting/views.py:2386
 #, python-format
 msgid ""
 "Each user is limited to %(limit)d statistics sets. Please delete one or edit "
 "an existing set."
 msgstr ""
 
-#: redistricting/views.py:2395
+#: redistricting/views.py:2396
 msgid "Didn't get functions in POST parameter"
 msgstr ""
 
-#: redistricting/views.py:2428
+#: redistricting/views.py:2429
 #, fuzzy
 msgid "No plan with that ID was found."
 msgstr "No es una tarea con ese id."
@@ -1952,87 +1961,87 @@ msgstr "Ahorrar"
 msgid "... Or select a saved statistics set"
 msgstr ""
 
-#: redistricting/templatetags/redistricting_extras.py:65
+#: redistricting/templatetags/redistricting_extras.py:63
 msgid "zero"
 msgstr "cero"
 
-#: redistricting/templatetags/redistricting_extras.py:65
+#: redistricting/templatetags/redistricting_extras.py:63
 msgid "one"
 msgstr "uno"
 
-#: redistricting/templatetags/redistricting_extras.py:65
+#: redistricting/templatetags/redistricting_extras.py:63
 msgid "two"
 msgstr "dos"
 
-#: redistricting/templatetags/redistricting_extras.py:65
+#: redistricting/templatetags/redistricting_extras.py:63
 msgid "three"
 msgstr "tres"
 
-#: redistricting/templatetags/redistricting_extras.py:65
+#: redistricting/templatetags/redistricting_extras.py:63
 msgid "four"
 msgstr "cuatro"
 
-#: redistricting/templatetags/redistricting_extras.py:65
+#: redistricting/templatetags/redistricting_extras.py:63
 msgid "five"
 msgstr "cinco"
 
-#: redistricting/templatetags/redistricting_extras.py:65
+#: redistricting/templatetags/redistricting_extras.py:63
 msgid "six"
 msgstr "seis"
 
-#: redistricting/templatetags/redistricting_extras.py:65
+#: redistricting/templatetags/redistricting_extras.py:63
 msgid "seven"
 msgstr "siete"
 
-#: redistricting/templatetags/redistricting_extras.py:65
+#: redistricting/templatetags/redistricting_extras.py:63
 msgid "eight"
 msgstr "ocho"
 
-#: redistricting/templatetags/redistricting_extras.py:65
+#: redistricting/templatetags/redistricting_extras.py:63
 msgid "nine"
 msgstr "nueve"
 
-#: redistricting/templatetags/redistricting_extras.py:66
+#: redistricting/templatetags/redistricting_extras.py:64
 msgid "ten"
 msgstr "diez"
 
-#: redistricting/templatetags/redistricting_extras.py:66
+#: redistricting/templatetags/redistricting_extras.py:64
 msgid "eleven"
 msgstr "once"
 
-#: redistricting/templatetags/redistricting_extras.py:66
+#: redistricting/templatetags/redistricting_extras.py:64
 msgid "twelve"
 msgstr "doce"
 
-#: redistricting/templatetags/redistricting_extras.py:66
+#: redistricting/templatetags/redistricting_extras.py:64
 msgid "thirteen"
 msgstr "trece"
 
-#: redistricting/templatetags/redistricting_extras.py:66
+#: redistricting/templatetags/redistricting_extras.py:64
 msgid "fourteen"
 msgstr "catorce"
 
-#: redistricting/templatetags/redistricting_extras.py:66
+#: redistricting/templatetags/redistricting_extras.py:64
 msgid "fifteen"
 msgstr "quince"
 
-#: redistricting/templatetags/redistricting_extras.py:66
+#: redistricting/templatetags/redistricting_extras.py:64
 msgid "sixteen"
 msgstr "dieciséis"
 
-#: redistricting/templatetags/redistricting_extras.py:67
+#: redistricting/templatetags/redistricting_extras.py:65
 msgid "seventeen"
 msgstr "diecisiete"
 
-#: redistricting/templatetags/redistricting_extras.py:67
+#: redistricting/templatetags/redistricting_extras.py:65
 msgid "eighteen"
 msgstr "dieciocho"
 
-#: redistricting/templatetags/redistricting_extras.py:67
+#: redistricting/templatetags/redistricting_extras.py:65
 msgid "nineteen"
 msgstr "diecinueve"
 
-#: redistricting/templatetags/redistricting_extras.py:67
+#: redistricting/templatetags/redistricting_extras.py:65
 msgid "twenty"
 msgstr "veinte"
 
