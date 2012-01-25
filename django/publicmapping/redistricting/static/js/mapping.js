@@ -106,9 +106,9 @@ function initializeResizeFix() {
 function createToolTipHeader() {
     var tipDiv = $('<div />').addClass('tooltip');
     tipDiv.append($('<h1 />').text(BODY_MEMBER_LONG + gettext(" Name")));
-    tipDiv.append($('<div id="tipclose">[x]</div>').click( function() {
+    tipDiv.append($('<div id="tipclose">[x]</div>').click( function(e) {
         OpenLayers.Event.stop(e || event);
-        $(this).hide();
+        tipDiv.hide();
     }));
     return tipDiv;
 
