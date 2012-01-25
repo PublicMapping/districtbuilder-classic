@@ -1194,12 +1194,13 @@ class CalculatorReport:
 
         try:
             # Render the report
-            display = ScoreDisplay.objects.filter(title='%s Reports' % plan.legislative_body.name)[0]
+            display = ScoreDisplay.objects.all()
+            display = filter(lambda x:x.get_short_label()==_('%s Reports') % plan.legislative_body.get_long_description(), display)[0]
             html = display.render(plan, request, function_ids=function_ids)
         except Exception as ex:
             logger.warn('Error creating calculator report')
-            logger.debug('Reason:', ex)
-            html = err
+            logger.debug('Reason: %s', ex)
+            html = _('Error creating calculator report.')
 
         # Add to report container template
         html = loader.get_template('report_panel_container.html').render(DjangoContext({'report_panels': html}))

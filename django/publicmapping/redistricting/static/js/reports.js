@@ -359,9 +359,9 @@ reports = function(options) {
         }); 
 
         var link = window.location.protocol + '//' + window.location.host + url;
-        var $btnOpenReport = $('<a href="' + link + '" target="report" >');
-        $btnOpenReport.append('<button id="btnOpenReport" />')
-            .text(gettext('Open report in a new window'));
+        var $btnOpenReport = $('<a href="' + link + '" target="report" />');
+        $btnOpenReport.append($('<button id="btnOpenReport" />').
+            text(gettext('Open report in a new window')));
         $('#reportButtons #btnOpenReport').remove();
         $('#reportButtons').append($btnOpenReport);  
         $('button', $btnOpenReport).button();
