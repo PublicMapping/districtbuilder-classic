@@ -3347,6 +3347,7 @@ class ScoreDisplay(BaseModel):
         if self != display:
             self = copy(display)
             self.id = None
+            self.name = ''
 
             self.owner = owner if owner != None else display.owner
 
@@ -3369,6 +3370,7 @@ class ScoreDisplay(BaseModel):
                 self.scorepanel_set.remove(public_demo)
                 demo_panel = copy(public_demo)
                 demo_panel.id = None
+                demo_panel.name = '%(display_title)s Demographics' % {'display_title':self.title}
                 demo_panel.save()
                 self.scorepanel_set.add(demo_panel)
             else:
@@ -3389,7 +3391,7 @@ class ScoreDisplay(BaseModel):
             self.save()
         except Exception, ex:
             logger.info('Failed to copy ScoreDisplay %s to %s', display.__unicode__(), self.__unicode__())
-            logger.debug('Reason:', ex)
+            logger.debug('Reason: %s', ex)
 
         return self
 
@@ -3571,7 +3573,7 @@ class ScorePanel(BaseModel):
                     else:
                         score = ComputedPlanScore.compute(function,plan,format='html',version=plan_version)
                         sort = ComputedPlanScore.compute(function,plan,format='sort',version=plan_version)
-                    
+
                     planscores.append({
                         'plan': plan,
                         'name': function.get_short_label(),

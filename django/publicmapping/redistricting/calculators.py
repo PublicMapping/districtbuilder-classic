@@ -38,7 +38,7 @@ from decimal import Decimal
 from copy import copy
 import random
 
-class CalculatorBase:
+class CalculatorBase(object):
     """
     The base class for all calculators. CalculatorBase defines the result 
     object and a couple default rendering options for HTML and JSON.

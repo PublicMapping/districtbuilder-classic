@@ -63,6 +63,15 @@ class Population(CalculatorBase):
         within_value = float(pop_value) > float(minval) and float(pop_value) < float(maxval)
         self.result['raw'].append({ 'label': _('Within Target Range'), 'value': within_value, 'type': 'boolean' })
 
+    def html(self):
+        tmpresult = self.result
+        self.result = {'value': round(self.result['raw'][1]['value'],0)}
+        
+        html = super(Population, self).html()
+        self.result = tmpresult
+
+        return html
+
 class Compactness(CalculatorBase):
     """
     Report on the compactness of a district.
@@ -96,6 +105,18 @@ class Compactness(CalculatorBase):
             ]
         }
 
+    def html(self):
+        if self.result is None:
+            return self.empty_html_result
+
+        tmpresult = self.result
+        self.result = {'value': self.result['raw'][1]['value']}
+
+        html = self.percentage()
+        self.result = tmpresult
+
+        return html
+
 class Majority(CalculatorBase):
     """
     Report on the proportion of a district's composition by subject.
@@ -122,6 +143,15 @@ class Majority(CalculatorBase):
             ]
         }
 
+    def html(self):
+        tmpresult = self.result
+        self.result = {'value': 'Y' if self.result['raw'][3]['value'] else 'N'}
+
+        html = super(Majority, self).html()
+        self.result = tmpresult
+
+        return html
+
 class Unassigned(CalculatorBase):
     """
     Report on the unassigned base geounits of a plan.
@@ -138,3 +168,12 @@ class Unassigned(CalculatorBase):
 
         geounits = plan.get_unassigned_geounits(threshold=threshold, version=version)
         self.result = { 'raw': [{ 'type': 'list', 'value': [t[1] for t in geounits] }] }
+
+    def html(self):
+        tmpresult = self.result
+        self.result = { 'value': self.result['raw'][0]['value'] }
+
+        html = super(Unassigned, self).html()
+        self.result = tmpresult
+
+        return html

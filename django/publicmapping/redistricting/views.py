@@ -412,9 +412,7 @@ def commonplan(request, planid):
             calculator_reports = []
             if settings.REPORTS_ENABLED == 'CALC':
                 report_displays = ScoreDisplay.objects.all()
-                logger.debug('prefilter report displays:%d', len(report_displays))
                 report_displays = filter(lambda x:x.get_short_label()==(_('%(body_name)s Reports') % {'body_name':plan.legislative_body.get_long_description()}), report_displays)
-                logger.debug('report displays:%d', len(report_displays))
                 if len(report_displays) > 0:
                     calculator_reports = map(lambda p: {
                                 'title': p.__unicode__(),
@@ -504,7 +502,6 @@ def commonplan(request, planid):
     try:
         loader.get_template(reporting_template)
     except:
-        logger.debug('Reporting template %s could not be found', reporting_template)
         reporting_template = None
 
     return {
@@ -831,7 +828,7 @@ def uploadfile(request):
 
         except Exception as ex:
             logger.error('Could not save uploaded file')
-            logger.error('Reason:', ex)
+            logger.error('Reason: %s', ex)
             status['upload_status'] = False
             return render_to_response('viewplan.html', status)
 
@@ -1109,7 +1106,8 @@ def newdistrict(request, planid):
             except ValidationError:
                 status['message'] = _('Reached Max districts already')
             except Exception, ex:
-                logger.warn('Error saving new district.', ex)
+                logger.warn('Error saving new district')
+                logger.debug('Reason: %s', ex)
                 status['message'] = _("Couldn't save new district.")
         else:
             status['message'] = _('Must specify name, geolevel, ' \
@@ -1250,7 +1248,8 @@ def assign_district_members(request, planid):
         transaction.rollback()
         status['message'] = str(ex)
         status['exception'] = traceback.format_exc()
-        logger.warn('Could not assign district members', ex)
+        logger.warn('Could not assign district members')
+        logger.debug('Reason: %s', ex)
 
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
@@ -1303,7 +1302,8 @@ def combine_districts(request, planid):
     except Exception, ex:
         status['message'] = _('Could not combine districts')
         status['exception'] = traceback.format_exc()
-        logger.warn('Could not combine districts', ex)
+        logger.warn('Could not combine districts')
+        logger.debug('Reason: %s', ex)
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
 @login_required
@@ -1335,7 +1335,8 @@ def fix_unassigned(request, planid):
     except Exception, ex:
         status['message'] = _('Could not fix unassigned')
         status['exception'] = traceback.format_exc()
-        logger.warn('Could not fix unassigned', ex)
+        logger.warn('Could not fix unassigned')
+        logger.debug('Reason: %s', ex)
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
 
@@ -1402,7 +1403,8 @@ def get_splits(request, planid, otherid, othertype):
     except Exception, ex:
         status['message'] = _('Could not query for splits')
         status['exception'] = traceback.format_exc()
-        logger.warn('Could not query for splits', ex)
+        logger.warn('Could not query for splits')
+        logger.debug('Reason: %s', ex)
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
 def get_processing_status(request):
@@ -1460,7 +1462,8 @@ def get_splits_report(request, planid):
                 html += '<hr />'
         return HttpResponse(html, mimetype='text/html')
     except Exception, ex:
-        logger.warn('Could not produce split report', ex)
+        logger.warn('Could not produce split report')
+        logger.debug('Reason: %s', ex)
         return HttpResponse(str(ex), mimetype='text/plain')
 
 
@@ -1515,7 +1518,8 @@ def addtodistrict(request, planid, districtid):
         except Exception, ex: 
             status['exception'] = traceback.format_exc()
             status['message'] = _('Could not add units to district.')
-            logger.warn('Could not add units to district.', ex)
+            logger.warn('Could not add units to district')
+            logger.debug('Reason: %s', ex)
 
     else:
         status['message'] = _("Geounits weren't found in a district.")
@@ -1838,7 +1842,8 @@ def get_statistics(request, planid):
     except Exception, ex:
         status['message'] = _("Couldn't render display tab.")
         status['exception'] = traceback.format_exc()
-        logger.warn("Couldn't render display tab", ex)
+        logger.warn("Couldn't render display tab")
+        logger.debug('Reason: %s', ex)
         return HttpResponse( json.dumps(status), mimetype='application/json', status=500)
 
 
@@ -1940,7 +1945,8 @@ def getleaderboarddisplay(leg_body, owner_filter):
     Returns the leaderboard ScoreDisplay given a legislative body and owner
     """
     # TODO: 'Leaderboard' is hardcoded into the scoredisplay title
-    displays = ScoreDisplay.objects.filter(title='%s Leaderboard - %s' % (leg_body.get_long_description(), owner_filter.title()))
+    displays = ScoreDisplay.objects.all()
+    displays = filter(lambda x:(x.get_short_label()==_('%s Leaderboard - %s') % (leg_body.get_long_description(), owner_filter.title())), displays)
     return displays[0] if len(displays) > 0 else None
 
 def getleaderboard(request):
@@ -1966,7 +1972,8 @@ def getleaderboard(request):
         html = display.render(plans, request)
         return HttpResponse(html, mimetype='text/plain')
     except Exception, ex:
-        logger.warn('Leaderboard could not be fetched.', ex)
+        logger.warn('Leaderboard could not be fetched.')
+        logger.debug('Reason: %s', ex)
         return HttpResponse(str(ex), mimetype='text/plain')
 
 def getleaderboardcsv(request):
@@ -2012,7 +2019,8 @@ def getleaderboardcsv(request):
             
         return response    
     except Exception, ex:
-        logger.warn("Couldn't generate CSV of leaderboard.", ex)
+        logger.warn("Couldn't generate CSV of leaderboard.")
+        logger.debug('Reason: %s', ex)
         return HttpResponse(str(ex), mimetype='text/plain')
 
 
@@ -2195,7 +2203,8 @@ def editplanattributes(request, planid):
         except Exception, ex:
             status['message'] = _('Failed to save the changes to your plan')
             status['exception'] = ex
-            logger.warn('Could not save changes to plan.', ex)
+            logger.warn('Could not save changes to plan.')
+            logger.debug('Reason: %s', ex)
     else:
         status['message'] = _("Cannot edit a plan you don't own.")
     return HttpResponse(json.dumps(status), mimetype='application/json')
@@ -2225,7 +2234,8 @@ def deleteplan(request, planid):
         except Exception, ex:
             status['message'] = _('Failed to delete plan')
             status['exception'] = ex
-            logger.warn('Could not delete plan.', ex)
+            logger.warn('Could not delete plan.')
+            logger.debug('Reason: %s', ex)
     else:
         status['message'] = _("Cannot delete a plan you don't own.")
     
@@ -2262,7 +2272,8 @@ def reaggregateplan(request, planid):
         except Exception, ex:
             status['message'] = _('Failed to reaggregate plan')
             status['exception'] = ex
-            logger.warn('Could not reaggregate plan.', ex)
+            logger.warn('Could not reaggregate plan.')
+            logger.debug('Reason: %s', ex)
     else:
         status['message'] = _("Cannot reaggregate a plan you don't own.")
     return HttpResponse(json.dumps(status), mimetype='application/json')
@@ -2331,7 +2342,7 @@ def statistics_sets(request, planid):
                 legislative_body=plan.legislative_body,
                 is_page=False).order_by('title')
             for admin_display in admin_displays:
-                if 'report' not in admin_display.__unicode__().lower():
+                if 'reports' not in admin_display.cssclass:
                     sets.append({ 'id': admin_display.id, 'name': force_escape(admin_display.__unicode__()), 'functions': [], 'mine':False })
 
         try:
@@ -2352,7 +2363,8 @@ def statistics_sets(request, planid):
         except Exception, ex:
             result['message'] = _('No user displays for %(user)s') % \
                  {'user': request.user}
-            logger.warn('Error fetching ScoreDisplays for user.', ex)
+            logger.warn('Error fetching ScoreDisplays for user')
+            logger.debug('Reason: %s', ex)
 
         result['sets'] = sets
         result['success'] = True
@@ -2361,12 +2373,17 @@ def statistics_sets(request, planid):
         try:
             display = ScoreDisplay.objects.get(pk=request.REQUEST.get('id', -1))
             result['set'] = {'name':force_escape(display.__unicode__()), 'id':display.id}
+            qset = display.scorepanel_set.all()
+            for panel in qset:
+                if panel.displays.count() == 1:
+                    panel.delete()
             display.delete()
             result['success'] = True
         except Exception, ex:
             result['message'] = _("Couldn't delete personalized scoredisplay")
             result['exception'] = traceback.format_exc()
-            logger.warn("Couldn't delete personalized ScoreDisplay", ex)
+            logger.warn("Couldn't delete personalized ScoreDisplay")
+            logger.debug('Reason: %s', ex)
             
     # If it's a post, edit or create the ScoreDisplay and return 
     # the id and name as usual
