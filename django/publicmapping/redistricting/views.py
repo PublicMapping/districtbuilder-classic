@@ -2104,7 +2104,7 @@ def getplans(request):
             'fields': { 
                 'name': plan.name, 
                 'description': plan.description, 
-                'edited': str(plan.edited), 
+                'edited': time.mktime(plan.edited.timetuple()), 
                 'is_template': plan.is_template, 
                 'is_shared': plan.is_shared, 
                 'owner': plan.owner.username, 

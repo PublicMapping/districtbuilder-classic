@@ -270,29 +270,50 @@ chooseplan = function(options) {
         }
     };
 
+    // Formatters for the jqGrid plugin used in the plan chooser table
+    
     // Formatter used to display images in the shared column of the jqGrid
-    var sharedImageFormatter = function (shared) {
-        return "<img height='16' width='16' src='/static-media/images/icon-" + ((shared) ? "" : "un") + "shared.png' />";
-    };     
+    $.extend($.fn.fmatter, {
+        sharedImageFormatter: function (shared) {
+            return "<img height='16' width='16' src='/static-media/images/icon-" + ((shared) ? "" : "un") + "shared.png' />";
+        }, 
 
-    // Formatter used for deleting plans
-    var deleteFormatter = function (a, b, obj) {
-        var id = "delete-" + obj.pk;
-        return "<img id='" + id  +
-               "' class='delclick' height='16' width='16' src='/static-media/images/icon-trash.png' alt='" +
-               obj.fields.name + "' />";
-    };
+        // Formatter used for dates. The server returns a UTC timestamp
+        // This formatter shifts the timestamp to local time if neccesary
+        tzAwareDateFormatter: function(cellvalue, options, rowdata) {
+            var newDate = new Date(cellvalue * 1000);
+            if ($.browser.mozilla) {
+                 // get the time zone offset in minutes, then multiply to get
+                 // milliseconds
+                 var offset = date.getTimezoneOffset() * 60000;
+                 newDate = new Date(newDate - offset);
+            }
+            return $.fn.fmatter.date(newDate.valueOf(), options, rowdata, 'show');
+        },
 
-    // Formatter used for coloring rows
-    var rowsToColor = [];
-    var rowColorFormatter = function(cellValue, options, rowObject) {
-        if (cellValue === gettext("Needs reaggregation")) {
-            rowsToColor.push({ id: options.rowId, color: "#DD4444" }); // red
-        } else if (cellValue === gettext("Reaggregating")) {
-            rowsToColor.push({ id: options.rowId, color: "#FF9933" }); // orange
+        // Formatter used to display the "trash can" image in the delete
+        // column.
+        deleteFormatter: function (a, b, obj) {
+            var id = "delete-" + obj.pk;
+            return "<img id='" + id  + "' class='delclick' height='16'" + 
+                "width='16' src='/static-media/images/icon-trash.png' alt='" +
+                obj.fields.name + "' />";
+        },
+
+        // Formatter and state objects used for coloring reaggregating plans
+        rowColorFormatterState: [],
+        rowColorFormatter: function(cellValue, options, rowObject) {
+            if (cellValue === gettext("Needs reaggregation")) {
+                $.fn.fmatter.rowColorFormatterState
+                    .push({ id: options.rowId, color: "#DD4444" }); // red
+            } else if (cellValue === gettext("Reaggregating")) {
+                $.fn.fmatter.rowColorFormatterState
+                    .push({ id: options.rowId, color: "#FF9933" }); // orange
+            }
+            return cellValue;
         }
-        return cellValue;
-    };
+    });
+
 
     /**
      * Set up the jqGrid table and make the initial call to the server for data
@@ -316,12 +337,12 @@ chooseplan = function(options) {
                 {name:'fields.name', label:gettext('Plan Name'), search: true, sortable:true},
                 {name:'fields.owner', label:gettext('Author'), search:true, width: '110', fixed: true, sortable:true},
                 {name:'fields.description', label:gettext('Description'), hidden:true, search:true},
-                {name:'fields.is_shared', label:gettext('Shared'), sortable:true, search:false, width:'60', fixed: true, align: 'center', formatter: sharedImageFormatter},
-                {name:'fields.edited', label:gettext('Last Edited'), sortable:true, search:false, width:'130', fixed: true, align: 'center', formatter:'date', formatoptions: { srcformat: 'UniversalSortableDateTime', newformat:'m/d/Y g:i A'}},
-                {name:'fields.delete', label:gettext('Delete'), formatter: deleteFormatter, width:'60', fixed: true, align:'center'},
+                {name:'fields.is_shared', label:gettext('Shared'), sortable:true, search:false, width:'60', fixed: true, align: 'center', formatter:'sharedImageFormatter'},
+                {name:'fields.edited', label:gettext('Last Edited'), sortable:true, search:false, width:'130', fixed: true, align: 'center', formatter:'tzAwareDateFormatter', formatoptions: { srcformat: 'UniversalSortableDateTime', newformat:'m/d/Y g:i A'}},
+                {name:'fields.delete', label:gettext('Delete'), formatter: 'deleteFormatter', width:'60', fixed: true, align:'center'},
                 {name:'fields.can_edit', label:gettext('Edit'), search:false, hidden: true},
                 {name:'fields.districtCount', label:gettext('# Districts'), search:false, sortable:true, hidden:true},
-                {name:'fields.processing_state', label:gettext('State'), search:false, sortable:false, hidden:true, formatter: rowColorFormatter}
+                {name:'fields.processing_state', label:gettext('State'), search:false, sortable:false, hidden:true, formatter:'rowColorFormatter'}
             ],
 
             onSelectRow: rowSelected,
@@ -347,10 +368,10 @@ chooseplan = function(options) {
             },
             gridComplete: function(a, b, c) {
                 // Color row background based on processing_state
-                $.each(rowsToColor, function(ind, row) {
+                $.each($.fn.fmatter.rowColorFormatterState, function(ind, row) {
                     $("#" + row.id).find("td").css("background-color", row.color);
                 });
-                rowsToColor = []
+                $.fn.fmatter.rowColorFormatterState = [];
                     
                 // Add functionality to the delete plan buttons
                 $('.delclick').click(function(obj) {
