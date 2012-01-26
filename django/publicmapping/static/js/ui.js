@@ -62,7 +62,7 @@ function loadTooltips() {
         opacity: .8
     });    
 
-    $('.evaluate .disabled').attr('title', 'Coming Soon...');
+    $('.evaluate .disabled').attr('title', gettext('Coming Soon...'));
 
     // If the user left the stats_legend_panel up when it's refreshed, it may be
     // attached to the body rather than appended to the trigger.
@@ -116,9 +116,12 @@ function getLocalTimeFromIsoformat(time) {
             .replace(tzRE, ' ');
         date = new Date(time);
     }
-    // get the time zone offset in minutes, then multiply to get milliseconds
-    var offset = date.getTimezoneOffset() * 60000;
-    date = new Date(date - offset);
+    // Check whether timezone conversion is needed
+    if ($.browser.mozilla) {
+        // get the time zone offset in minutes, then multiply to get milliseconds
+        var offset = date.getTimezoneOffset() * 60000;
+        date = new Date(date - offset);
+    }
     var hours = date.getHours();
     var minutes = date.getMinutes();
 
@@ -214,20 +217,22 @@ $(function() {
                     $('#steps').tabs('select', '#step_leaderboard');
                 } else {
                     // score failed, show reason
-                    $('<div title="Validation Failed">' + data.message + '</div>').dialog({autoOpen:true});
+                    $('<div />').attr('title', gettext("Validation Failed")).html(data.message).dialog({autoOpen:true});
                 }
             },
             error: function() {
                 $('#scoring').dialog('close');
-                $('<div title="Error">Server error. Please try again later.</div>').dialog({autoOpen:true});
+                $('<div />').attr('title', gettext('Error')).text(gettext('Server error. Please try again later')).dialog({autoOpen:true});
             }
         });
     });
 
     // create the update leaderboards button
     if ($('#txtPlanName').length > 0) {
-        var button = $('<button class="leaderboard_button">Update Leaderboards<br/>with Working Plan</button>').button();
-        $('#updateLeaderboardsContainer').html(button);
+        var button = $('<button class="leaderboard_button" />');
+        button.html(gettext('Update Leaderboards<br/>with Working Plan'));
+        button.button();
+        $('#updateLeaderboardsContainer').append(button);
                     
         // add handling for updating leaderboard with current plan
         button.click(function() {
@@ -242,20 +247,23 @@ $(function() {
                         updateLeaderboard();
                     } else {
                         // score failed, show reason
-                        $('<div title="Validation Failed">' + data.message + '</div>').dialog({autoOpen:true});
+                        $('<div />').attr('title', gettext("Validation Failed"))
+                            .html(data.message).dialog({autoOpen:true});
                     }
                 },
                 error: function() {
                     $('#waiting').dialog('close');
-                    $('<div title="Error">Server error. Please try again later.</div>').dialog({autoOpen:true});
+                    
+                    $('<div />').attr('title', gettext('Error'))
+                        .text(gettext('Server error. Please try again later')).dialog({autoOpen:true});
                 }
             });
         });
     }
 
     // create the leaderboard CSV download button
-    var button = $('<button class="leaderboard_button">Download Scores<br/>as CSV</button>').button();
-    $('#downloadLeaderboardsContainer').html(button);
+    var button = $('<button class="leaderboard_button" />').html(gettext('Download Scores<br/>as CSV')).button();
+    $('#downloadLeaderboardsContainer').append(button);
     button.click(function() {
         var owner = $("#tab_myranked").hasClass("ui-state-active") ? "mine" : "all";
         window.location="/districtmapping/getleaderboardcsv/?owner_filter=" + owner +
@@ -275,19 +283,35 @@ $(function() {
     // jQuery-UI tab layout
     $('#steps').tabs({
         select: function(e, ui) {
+            $('#steps').trigger('tabSelected', [ui.index]);
+
             // lazy-load the leaderboard
             if ((ui.index === 4) && ($("#topranked_content").length === 0)) {
                 updateLeaderboard();
             }
         }
     });
-    $('#leaderboard_tabs').tabs();
+
+    // leaderboard tabs construction
+    $('#leaderboard_tabs').tabs({
+        // implement surrogate behavior as a workaround to new jQuery UI Tab design changes.
+        select: function(e, ui) {
+            if (ui.index == 0) {
+                // Top ranked plans
+                $('#leaderboard_myranked').hide();
+                $('#leaderboard_topranked').show();
+            } else {
+                // My ranked plans
+                $('#leaderboard_topranked').hide();
+                $('#leaderboard_myranked').show();
+            }
+        }
+    });
+    // start myranked container as hidden
+    $('#leaderboard_myranked').hide();
+
     $('#map_menu').tabs();
-    
-    
     $('#toolsets').tabs();
-   
-   
    
     // jQuery Tools tooltips   
     loadTooltips();
@@ -331,31 +355,37 @@ $(function() {
      
      //stats picker menu slider activation
      $('#map_menu_header select').change(function() {
-          if ( $(".map_menu_content:visible'").length === 0) {
-                $('#map_settings_content, #legend_toggle').removeClass('collapse', 400);
-                $storedPanel.slideDown(200);
-          }
+         if ( $(".map_menu_content:visible'").length === 0) {
+             $('#map_settings_content, #legend_toggle').removeClass('collapse', 400);
+             $storedPanel.slideDown(200);
+         }
      });
     
     // map editing buttons
     $('.toolset button, #history_tools button, #open_statistics_editor, #plan_export_container button')
-      .button({
-          icons: {primary: 'ui-icon'}
-      })
-      .click(function(){
-        if($(this).hasClass('btntoggle')) {
-			if(!$(this).hasClass('solotoggle')) {
-				$('.toolset_group button.btntoggle').removeClass('toggle');
-				 $(this).addClass('toggle');
-			}
-        }
-    });    
+        .button({
+            icons: {primary: 'ui-icon'}
+        })
+        .click(function(){
+            if($(this).hasClass('btntoggle')) {
+                if(!$(this).hasClass('solotoggle')) {
+                    $('.toolset_group button.btntoggle').removeClass('toggle');
+                    $(this).addClass('toggle');
+                }
+            }
+        });    
     
     $('#saveplaninfo').bind('planSaved', function(event, time) {
         var local = getLocalTimeFromIsoformat(time);
         var hour = local.hours % 12;
         if (hour === 0) { hour = 12; }
-        $('#saveplaninfo').text('Last Saved on ' + local.day + ' at ' + hour + ':' + ((local.minutes < 10) ? ('0' + local.minutes) : local.minutes));
+        var i18nParams = {
+            day: local.day,
+            hour: hour,
+            minute: ((local.minutes < 10) ? ('0' + local.minutes) : local.minutes)
+        };
+
+        $('#saveplaninfo').text(printFormat(gettext('Last Saved on %(day)s at %(hour)s:%(minute)s'), i18nParams));
     });
 
 
@@ -380,19 +410,28 @@ $(function() {
         }
     });
 	
-    $('#plan_export_button').click(function(){
-        var toggle = $(this);
-        var panel = $('#plan_export_menu');
+    var toggleMenu = function(targetId, menuDivId) {
+        var target = $(targetId);
+        var menuDiv = $(menuDivId);
+        target.toggle(
+            function() {
+                menuDiv.slideDown(240);
+            },
+             function() {
+                menuDiv.slideUp(240);
+            }
+        );
+        menuDiv.slideUp(0);
+    };
+    
+    toggleMenu('#plan_export_button', '#plan_export_menu');
 
-        if(toggle.hasClass('active')) {
-            toggle.removeClass('active');
-            panel.slideUp(240);
-        }
-        else {
-            toggle.addClass('active');
-            panel.slideDown(240);
-        }
-    });	
+    // Set up the language chooser
+    toggleMenu('#language_menu_target', '#language_menu_div');
+    $('.language_selection').click(function() {
+        $('#language_form #language').val($(this).attr('id'));
+        $('#language_form').submit();
+    });
     
     $('#map_settings').click(function(){
         var toggle = $(this);
@@ -449,7 +488,8 @@ $(function() {
             return { name: name, shared: true }; 
         };
         // The dialog to display while contacting the server.  Shouldn't be closable
-        var $waitPublishing = $('<div title="Please Wait">Publishing with the server</div>').dialog({ 
+        var $waitPublishing = $('<div />').attr('title', gettext('Please Wait')).text(gettext('Publishing with the server'));
+        $waitPublishing.dialog({ 
             modal: true,
             autoOpen: true, 
             escapeOnClose: false, 
@@ -459,7 +499,7 @@ $(function() {
         var data = getData();
         if (!data) {
             $waitPublishing.dialog('close');
-            $('<div title="Error">Please enter a new name to publish your plan</div>').dialog({ autoOpen: true });
+            $('<div />').attr('title', gettext('Error')).text(gettext('Please enter a new name to publish your plan.')).dialog({ autoOpen: true });
             return false;
         }
         else {
@@ -471,7 +511,7 @@ $(function() {
                     $waitPublishing.dialog('close');
                     if (('success' in data) && !data.success) {
                         $waitPublishing.dialog('close');
-                        $('<div title="Oops!">' + data.message + '</div>').dialog({autoOpen:true});
+                        $('<div />').attr('title', gettext('Oops!')).html(data.message).dialog({autoOpen:true});
                     }
                     else if (textStatus == 'success') {
                         var link = window.location.protocol + '//' + window.location.host + '/districtmapping/plan/' + data[0].pk + '/view/' 
@@ -490,7 +530,7 @@ $(function() {
                 },
                 error: function() {
                     $waitPublishing.dialog('close');
-                    $('<div title="Server Failure">Sorry, we weren\'t able to contact the server.  Please try again later.</div>').dialog({autoOpen:true});
+                    $('<div />').attr('title', gettext('Server Failure')).text(gettext('Sorry, we weren\'t able to contact the server.  Please try again later.')).dialog({autoOpen:true});
                 }
             });
         }

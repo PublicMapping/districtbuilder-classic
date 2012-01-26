@@ -45,6 +45,7 @@ chooseplan = function(options) {
                 $('#PlanChooser').dialog('destroy').detach();
             },
             table: {},
+            helpText: {},
             pager: {},
             dataUrl: ''
         }, options),
@@ -52,12 +53,14 @@ chooseplan = function(options) {
        
         _table = null,
         _districtindexfilePublisher,
+        _reaggregator,
         _selectedPlanId,
         _eventType = 'template',
         _nameRequired,
         _selectedPlanName,
         _editButton,
         _saveButton,
+        _startText,
         _cancelButton;
 
     /**
@@ -69,17 +72,21 @@ chooseplan = function(options) {
      */
     _self.init = function() {
         _options.target.click(_self.show);
-
+        _startText = _options.anonymous ? gettext("View Plan") : gettext("Start Drawing");
         _table = _options.table;
         _nameRequired = false;
+        _reaggregator = reaggregator({ startText: _startText });
+        _reaggregator.init();
+        _options.helpText.hide();
         loadTable();
         resizeToFit();
         initButtons();
         setUpSearch();
         
         if (window.UPLOADED) {
-            var text = window.UPLOAD_STATUS ? 'Thanks! Your file has been uploaded, and your plan is being constructed. When your plan is completely constructed, you will receive an email from us.' : 'We\'re sorry! Your file was transferred to us, but there was a problem converting it into a plan. Make sure the file is a zipped block equivalency file, and please try again.';
-            $('<div title="Uploaded">' + text + '</div>').dialog({modal:true,resizable:false})
+            var div = $('<div />');
+            var text = window.UPLOAD_STATUS ? gettext('Thanks! Your file has been uploaded, and your plan is being constructed. When your plan is completely constructed, you will receive an email from us.') : gettext('We\'re sorry! Your file was transferred to us, but there was a problem converting it into a plan. Make sure the file is a zipped block equivalency file, and please try again.');
+            div.attr('title', gettext('Uploaded')).text(text).dialog({modal:true,resizable:false})
         }
         return _self;
     };
@@ -119,10 +126,16 @@ chooseplan = function(options) {
      * for editing.
      */
     var selectPlan = function () {
+        // Notify the reaggregator of reaggregation button clicks
+        if ($('#start_mapping .ui-button-text').html().startsWith(gettext('Reaggregate'))) {
+            _reaggregator.reaggregateClicked(_selectedPlanId);
+            return;
+        }
+        
         // If we're anonymous, just view the selected map
         if (_options.anonymous) {
             if (typeof(_selectedPlanId) == 'undefined') {
-                alert('Choose a plan from the table first');
+                alert(gettext('Choose a plan from the table first'));
                 return false;
             }
             window.location = '/districtmapping/plan/' + _selectedPlanId + '/view/';
@@ -131,7 +144,7 @@ chooseplan = function(options) {
 
         // If the user is using a template, they should have clicked the table first
         if (typeof(_selectedPlanId) == 'undefined' && 'blank|upload'.indexOf(_eventType) == -1 ) {
-            alert('Choose a plan from the table first');
+            alert(gettext('Choose a plan from the table first'));
             return false;
         }
 
@@ -139,7 +152,7 @@ chooseplan = function(options) {
         if (_nameRequired) {
             var name = $('#txtNewName').val();
             if (name.trim().length == 0) { 
-                alert ('A name for the copied template is required'); 
+                alert (gettext('A name for the copied template is required')); 
                 return false; 
             }
 
@@ -151,15 +164,15 @@ chooseplan = function(options) {
             if (_eventType == 'upload') {
                 var email = $('#userEmail').val();
                 if (email.trim() == '' || !email.match(/^([\w\-\.\+])+\@([\w\-\.])+\.([A-Za-z]{2,4})$/)) {
-                    alert('Please provide a valid email address.');
+                    alert(gettext('Please provide a valid email address.'));
                     return false;
                 }
                 if ($('#indexFile').val() == '') {
-                    alert('Please provide a zipped district index file.');
+                    alert(gettext('Please provide a zipped district index file.'));
                     return false;
                 } 
                 if ($('#leg_selector_upload').val() == '') {
-                    alert('You must select a legislative body from the dropdown in the upload form');
+                    alert(gettext('You must select a legislative body from the dropdown in the upload form'));
                     return false;
                 }
                 // Get the form for uploading.  Be sure not to move the input:file element
@@ -172,8 +185,8 @@ chooseplan = function(options) {
             }
             else {
                 $('#start_mapping').attr('disabled', 'disabled');                
-                $('#start_mapping .ui-button-text').html('Creating New Plan...');
-                window.status = 'Please standby while creating new plan ...';
+                $('#start_mapping .ui-button-text').html(gettext('Creating New Plan...'));
+                window.status = gettext('Please standby while creating new plan ...');
                 $.ajax({
                     url:url, 
                     data:{ 
@@ -219,12 +232,17 @@ chooseplan = function(options) {
                 return;
             }
 
-            $('<div title="Creation Error"><p>' + data.message + "</p><p><b>Tip</b>: Make sure the new plan's name is unique.</p></div>").dialog({
+            var div = $('<div />').attr('title', gettext('Creation Error'));
+            div.append('<p />').text(data.message);
+            var tip = $('<div />');
+            tip.append($('<b />').text(gettext('Tip: ')));
+            tip.append($('<span />').text(gettext('Make sure the new plan\'s name is unique.')));
+            div.append(tip).dialog({
                 modal:true,
                 resizable:false,
                 close: function(event, ui){
                     $('#start_mapping').attr('disabled', null);
-                    $('#start_mapping .ui-button-text').html(_options.anonymous ? "View Plan" : "Start Drawing");
+                    $('#start_mapping .ui-button-text').html(_options.anonymous ? gettext("View Plan") : gettext("Start Drawing"));
                 }
             });
 
@@ -252,18 +270,50 @@ chooseplan = function(options) {
         }
     };
 
+    // Formatters for the jqGrid plugin used in the plan chooser table
+    
     // Formatter used to display images in the shared column of the jqGrid
-    var sharedImageFormatter = function (shared) {
-        return "<img height='16' width='16' src='/static-media/images/icon-" + ((shared) ? "" : "un") + "shared.png' />";
-    };     
+    $.extend($.fn.fmatter, {
+        sharedImageFormatter: function (shared) {
+            return "<img height='16' width='16' src='/static-media/images/icon-" + ((shared) ? "" : "un") + "shared.png' />";
+        }, 
 
-    // Formatter used for deleting plans
-    var deleteFormatter = function (a, b, obj) {
-        var id = "delete-" + obj.pk;
-        return "<img id='" + id  +
-               "' class='delclick' height='16' width='16' src='/static-media/images/icon-trash.png' alt='" +
-               obj.fields.name + "' />";
-    }    
+        // Formatter used for dates. The server returns a UTC timestamp
+        // This formatter shifts the timestamp to local time if neccesary
+        tzAwareDateFormatter: function(cellvalue, options, rowdata) {
+            var newDate = new Date(cellvalue * 1000);
+            if ($.browser.mozilla) {
+                 // get the time zone offset in minutes, then multiply to get
+                 // milliseconds
+                 var offset = date.getTimezoneOffset() * 60000;
+                 newDate = new Date(newDate - offset);
+            }
+            return $.fn.fmatter.date(newDate.valueOf(), options, rowdata, 'show');
+        },
+
+        // Formatter used to display the "trash can" image in the delete
+        // column.
+        deleteFormatter: function (a, b, obj) {
+            var id = "delete-" + obj.pk;
+            return "<img id='" + id  + "' class='delclick' height='16'" + 
+                "width='16' src='/static-media/images/icon-trash.png' alt='" +
+                obj.fields.name + "' />";
+        },
+
+        // Formatter and state objects used for coloring reaggregating plans
+        rowColorFormatterState: [],
+        rowColorFormatter: function(cellValue, options, rowObject) {
+            if (cellValue === gettext("Needs reaggregation")) {
+                $.fn.fmatter.rowColorFormatterState
+                    .push({ id: options.rowId, color: "#DD4444" }); // red
+            } else if (cellValue === gettext("Reaggregating")) {
+                $.fn.fmatter.rowColorFormatterState
+                    .push({ id: options.rowId, color: "#FF9933" }); // orange
+            }
+            return cellValue;
+        }
+    });
+
 
     /**
      * Set up the jqGrid table and make the initial call to the server for data
@@ -284,14 +334,15 @@ chooseplan = function(options) {
                 id: 'pk'
             },
             colModel: [
-                {name:'fields.name', label:'Plan Name', search: true, sortable:true},
-                {name:'fields.owner', label:'Author', search:true, width: '110', fixed: true, sortable:true},
-                {name:'fields.description', label:'Description', hidden:true, search:true},
-                {name:'fields.is_shared', label:'Shared', sortable:true, search:false, width:'60', fixed: true, align: 'center', formatter: sharedImageFormatter},
-                {name:'fields.edited', label:'Last Edited', sortable:true, search:false, width:'130', fixed: true, align: 'center', formatter:'date', formatoptions: { srcformat: 'UniversalSortableDateTime', newformat:'m/d/Y g:i A'}},
-                {name:'fields.delete', label:'Delete', formatter: deleteFormatter, width:'60', fixed: true, align:'center'},
-                {name:'fields.can_edit', label:'Edit', search:false, hidden: true},
-                {name:'fields.districtCount', label:'# Districts', search:false, sortable:true, hidden:true}
+                {name:'fields.name', label:gettext('Plan Name'), search: true, sortable:true},
+                {name:'fields.owner', label:gettext('Author'), search:true, width: '110', fixed: true, sortable:true},
+                {name:'fields.description', label:gettext('Description'), hidden:true, search:true},
+                {name:'fields.is_shared', label:gettext('Shared'), sortable:true, search:false, width:'60', fixed: true, align: 'center', formatter:'sharedImageFormatter'},
+                {name:'fields.edited', label:gettext('Last Edited'), sortable:true, search:false, width:'130', fixed: true, align: 'center', formatter:'tzAwareDateFormatter', formatoptions: { srcformat: 'UniversalSortableDateTime', newformat:'m/d/Y g:i A'}},
+                {name:'fields.delete', label:gettext('Delete'), formatter: 'deleteFormatter', width:'60', fixed: true, align:'center'},
+                {name:'fields.can_edit', label:gettext('Edit'), search:false, hidden: true},
+                {name:'fields.districtCount', label:gettext('# Districts'), search:false, sortable:true, hidden:true},
+                {name:'fields.processing_state', label:gettext('State'), search:false, sortable:false, hidden:true, formatter:'rowColorFormatter'}
             ],
 
             onSelectRow: rowSelected,
@@ -311,21 +362,33 @@ chooseplan = function(options) {
                                          $("#csrfmiddlewaretoken").val());
                 }
             },
-            gridComplete: function() {
+            loadComplete: function(data) {
+                // Notify the reaggregator of the new data
+                _reaggregator.dataUpdated(data);
+            },
+            gridComplete: function(a, b, c) {
+                // Color row background based on processing_state
+                $.each($.fn.fmatter.rowColorFormatterState, function(ind, row) {
+                    $("#" + row.id).find("td").css("background-color", row.color);
+                });
+                $.fn.fmatter.rowColorFormatterState = [];
+                    
                 // Add functionality to the delete plan buttons
                 $('.delclick').click(function(obj) {
                     var id = obj.target.id.substring('delete-'.length);
                     var name = obj.target.alt;
                     
-                    $('<div>Really delete plan: "' + name + '"?</div>').dialog({
+                    $('<div />').text(gettext('Really delete plan: ') + name + '?').dialog({
                         modal: true,
                         autoOpen: true,
-                        title: 'Delete Plan',
-                        buttons: { 
-                            'Yes': function() {
+                        title: gettext('Delete Plan'),
+                        buttons: [{ 
+                            text: gettext('Yes'),
+                            click: function() {
                                 $(this).dialog('close');
-                                var waitDialog = $('<div>Please wait while deleting plan.</div>').dialog({
-                                    modal: true, autoOpen: true, title: 'Deleting Plan',
+                                var waitDialog = $('<div />').text(
+                                        gettext('Please wait. Deleting plan.')).dialog({
+                                    modal: true, autoOpen: true, title: gettext('Deleting Plan'),
                                     escapeOnClose: false, resizable:false,
                                     open: function() { $(".ui-dialog-titlebar-close", $(this).parent()).hide(); }
                                 });
@@ -340,8 +403,8 @@ chooseplan = function(options) {
                                         } else if ('redirect' in data) {
                                             window.location.href = data.redirect;
                                         } else if ('message' in data) {
-                                            $('<div title="Error Deleting Plan"><p>' + data.message + '</p></div>')
-                                                .dialog({modal:true, resizable:false});
+                                            $('<div />').attr('title', gettext('Error Deleting Plan'))
+                                                .text(data.message).dialog({modal:true, resizable:false});
                                         }
                                     },
                                     error: function(xhr, textStatus, message) {
@@ -349,22 +412,22 @@ chooseplan = function(options) {
                                         if (xhr.status == 403) {
                                             window.location.href = '/?msg=logoff';
                                         } else {
-                                            $('<div title="Error Deleting Plan"><p>Please try again later.</p></div>')
+                                            $('<div />').attr('title', gettext('Error Deleting Plan'))
+                                                .text(gettext('Please try again later.'))
                                                 .dialog({modal:true, resizable:false});
                                         }
-                                }})
-                            },
-                            'No': function() {
-                                $(this).dialog('close');
-                            }
-                        }
+                                }});}
+                        }, {
+                             text: gettext('No'),
+                             click: function() { $(this).dialog('close'); }
+                        }]
                     });
                 });
             }
         }).jqGrid(
             'navGrid',
             '#' + _options.pager.attr('id'),
-            {search:false,edit:false,add:false,del:false,searchText:"Search",refreshText:"Clear Search"},
+            {search:false,edit:false,add:false,del:false,searchText:gettext("Search"),refreshText:gettext("Clear Search")},
             {}, //edit
             {}, //add
             {}, //del
@@ -380,6 +443,12 @@ chooseplan = function(options) {
     }
 
     var rowSelected = function(id) {
+        // Don't do anything if the selected plan hasn't changed
+        if (_selectedPlanId === id) {
+            _reaggregator.planSelected(id);            
+            return;
+        }
+        
         // Set the internal variables for later use
         _selectedPlanId = id;
         _selectedPlanName = _table.jqGrid('getCell', id, 'fields.name');
@@ -415,9 +484,9 @@ chooseplan = function(options) {
         // workaround for problem with jqGrid custom formatter with boolean (is_shared)
         var shared = $('#is_shared');
         if (shared.val().contains("unshared")) {
-            shared.val('No');
+            shared.val(gettext('No'));
         } else {
-            shared.val('Yes');
+            shared.val(gettext('Yes'));
         }
 
         if (can_edit == "true") {
@@ -443,7 +512,8 @@ chooseplan = function(options) {
                             window.location.href = data.redirect;
                         }
                         else if ('message' in data) {
-                            $('<div title="Error Saving Details"><p>' + data.message + '</p></div>').dialog({modal:true, resizable:false});
+                            $('<div />').attr('title', gettext('Error Saving Details'))
+                                .text(data.message).dialog({modal:true, resizable:false});
                         }
                     },
                     error: function(xhr, textStatus, message) {
@@ -457,7 +527,6 @@ chooseplan = function(options) {
         } else {
             editState('none');
         }
-
 
         // Update the district index file publisher
         if (_districtindexfilePublisher) {
@@ -476,6 +545,13 @@ chooseplan = function(options) {
         }
         difile.setUpdateVisibility(true).init();
         _districtindexfilePublisher = difile;
+
+        // Reset the button to starting text and enabled state
+        $('#start_mapping .ui-button-text').html(_startText);
+        $('#start_mapping').attr('disabled', false);
+
+        // Notify reaggregator of the new plan
+        _reaggregator.planSelected(id);
     };
     
     var appendExtraParamsToRequest = function(xhr) {
@@ -483,15 +559,13 @@ chooseplan = function(options) {
         _table.setPostDataItem( 'legislative_body', $('#leg_selector').val() );
         /* If the search box has a value, apply that to any filter */
         var search = $('#plan_search');
-        if (search.val() != '' && search.val() != ' Search ') {
+        if (search.val() != '' && search.val() != gettext('Search')) {
                 _table.setPostDataItem( '_search', true );
                 _table.setPostDataItem( 'searchString', $('#plan_search').val() );
         } else {
                 _table.setPostDataItem( '_search', false );
                 _table.removePostDataItem( 'searchString' );
         }
-        _selectedPlanId = undefined;
-        _selectedPlanName = undefined;
     };
 
     /**
@@ -508,10 +582,10 @@ chooseplan = function(options) {
         });
 
         // watermark for non-html5 browsers
-        if (document.getElementById('plan_search').getAttribute('placeholder') != 'Search' ||
+        if (document.getElementById('plan_search').getAttribute('placeholder') != gettext('Search') ||
                 navigator.userAgent.indexOf('Firefox/3') > -1) {
             searchBox.focus( function() {
-                if ($(this).val() == ' Search ') {
+                if ($(this).val() == gettext('Search')) {
                     $(this).val('');
                     $(this).css('color', '#000000');
                 }
@@ -519,13 +593,13 @@ chooseplan = function(options) {
             searchBox.blur( function() {
                 if ($(this).val() == '') {
                     $(this).css('color', '#666666');
-                    $(this).val(' Search ');
+                    $(this).val(gettext('Search'));
                 }
             });
 
             // initial state showing watermark
             searchBox.css('font', 'gray');
-            searchBox.val(' Search ');
+            searchBox.val(gettext('Search'));
         }
         
     };
@@ -560,12 +634,12 @@ chooseplan = function(options) {
           $(this).removeClass('active');
         });
         $currTab.addClass('active');
+
+        // Notify the reaggregator of the new filter
+        _reaggregator.filterChanged($currTab.attr('id'));
     };
     
     var initButtons = function() {
-        // Text to display on the button used to view/edit a plan
-        var startText = _options.anonymous ? "View Plan" : "Start Drawing";
-    
         // Save these for later        
         _editButton = $('#edit_plan_attr');
         _saveButton = $('#save_plan_attr');
@@ -580,9 +654,9 @@ chooseplan = function(options) {
             _table.jqGrid('GridToForm', _selectedPlanId, '#plan_form'); 
             var shared = $('#is_shared');
             if (shared.val().contains("unshared")) {
-                shared.val('No');
+                shared.val(gettext('No'));
             } else {
-                shared.val('Yes');
+                shared.val(gettext('Yes'));
             }
             editState('view');
             return false;
@@ -602,7 +676,8 @@ chooseplan = function(options) {
             } else {
                 showItems(true, false, true, false, true);
             }
-            $('#start_mapping .ui-button-text').html(startText);
+            $('#start_mapping .ui-button-text').html(_startText);
+            $('#start_mapping').attr('disabled', 'disabled');
             setActiveTab($(this));
            
         });        
@@ -615,7 +690,8 @@ chooseplan = function(options) {
             } else {
                 showItems(true, false, true, false, true);
             }
-            $('#start_mapping .ui-button-text').html(startText);
+            $('#start_mapping .ui-button-text').html(_startText);
+            $('#start_mapping').attr('disabled', 'disabled');
             setActiveTab($(this));
         });        
         $('#filter_mine').click( function () {
@@ -624,15 +700,17 @@ chooseplan = function(options) {
             _table.jqGrid().trigger('reloadGrid', [{ page:1 }]);
             $('input:radio[name=Edit]').filter('[value=edit]').prop('checked', true);
             showItems(false, true, true, true, false);
+            $('#start_mapping .ui-button-text').html(_startText);
+            $('#start_mapping').attr('disabled', 'disabled');
             setActiveTab($(this));            
-            $('#start_mapping .ui-button-text').html(startText);
         });        
         $('#new_from_file').click( function() {
             _eventType = 'upload';
             _nameRequired = true;
             showItems(true, false, false, false, true);
+            $('#start_mapping .ui-button-text').html(gettext('Upload Plan'));
+            $('#start_mapping').attr('disabled', false);            
             setActiveTab($(this));           
-            $('#start_mapping .ui-button-text').html('Upload Plan');
         });
 
         $('#edit_plan').button().click( function() {
@@ -658,13 +736,14 @@ chooseplan = function(options) {
             $('#filter_mine').hide();
             $('#new_from_blank').hide();
             $('#new_from_file').hide();
-            $('#start_mapping').button('option', 'label', 'View Map');
             $('#lblStartDrawing').hide();
+            var anonText = gettext('Click the button to view the map as a guest');
             if ($('#leg_selector option').length > 1) {
-                $('#start_mapping').before($('<div>4. Click the button to view the map as a guest</div>'));
+                anonText = '4. ' + anonText;
             } else {
-                $('#start_mapping').before($('<div>3. Click the button to view the map as a guest</div>'));
+                anonText = '3. ' + anonText;
             }
+            $('#start_mapping').before($('<div />').text(anonText));
         }
 
         // set the start mapping button to select the plan

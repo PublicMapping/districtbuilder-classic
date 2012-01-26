@@ -79,29 +79,29 @@ reports = function(options) {
         // master
         $(_options.calculatorReports).each(function(i, group) {
             // option1 and option2 are the left and right divs
-            var optionsId = 'options' + ((i % 2 == 0) + 1);
+            var optionsId = 'options' + ((i % 2 === 0) + 1);
             if ($('#' + optionsId).length === 0) {
                 $('#options').append($("<div />").prop('id', optionsId));
             }
             
             var masterId = 'master_' + i;
-			var statsGroupId = 'stats_group_'+ masterId;
+            var statsGroupId = 'stats_group_'+ masterId;
             $('#' + optionsId).append($("<div class='stats-group' />").prop('id', statsGroupId));
-			
-			$('#' + statsGroupId).
-					append($("<span class='master' />").
-						append($("<input type='checkbox' />").prop('id', masterId)).
-						append($("<label for='" + masterId  + "' />").html(group.title)));
+            
+            $('#' + statsGroupId)
+                .append($("<span class='master' />")
+                    .append($("<input type='checkbox' />").prop('id', masterId))
+                    .append($("<label for='" + masterId  + "' />").html(group.title)));
 
             // children
             var childIds = [];
             $(group.functions).each(function(j, fn) {
                 var childId = 'child_' + i + '_' + j;
                 childIds.push(childId);
-                $('#' + statsGroupId).
-                    append($("<span class='child reportVar' />").
-                        append($("<input type='checkbox' />").prop('id', childId).prop('value', fn.id)).
-                        append($("<label for='" + childId  + "' />").html(fn.label)));
+                $('#' + statsGroupId)
+                    .append($("<span class='child reportVar' />")
+                        .append($("<input type='checkbox' />").prop('id', childId).prop('value', fn.id))
+                        .append($("<label for='" + childId  + "' />").html(fn.label)));
             });
 
             // listen for master clicks to check children
@@ -145,13 +145,19 @@ reports = function(options) {
         }
 
         if (data.functionIds === "") {
-            $('<div>Please select one or more reports to be generated.</div>').dialog({
+            $('<div />').text(gettext('Please select one or more reports to be generated.')).dialog({
                 modal: true, autoOpen: true, title: 'Warning', resizable:false
             });                
             return;
         }
         
-        $('#reportPreview').html('<div class="reportStatus"><img class="reportLoading" src="/static-media/images/loading-large.gif" /><h1 id="genreport">Generating Report</h1><p>You may use the rest of the </br>application while the report is building.</p><p>A preview of your report will appear <br/>in this space when it is ready.</p></div>');
+        var statusDiv = $('<div class="reportStatus" />');
+        statusDiv.append('<img class="reportLoading" src="/static-media/images/loading-large.gif" />');
+        statusDiv.append($('<h1 id="genreport" />').text(gettext('Generating Report')));
+        statusDiv.append($('<p />').text(gettext('You may use the rest of the application while the report is building.')));
+        statusDiv.append($('<p />').text(gettext('A preview of your report will appear in this space when it is ready.')));
+        $('#reportPreview').empty();
+        $('#reportPreview').append(statusDiv);
 
         pollCount = 0;
         $.ajax({
@@ -167,8 +173,12 @@ reports = function(options) {
         if (typeof(msg) == 'undefined') {
             msg = '';
         }
-        $('#reportPreview').html('<div class="reportStatus"><h1 id="genreport">Report Error</h1>' + "<p>Sorry, this report cannot be previewed.</p></div>");
-    }
+        var statusDiv = $('<div class="reportStatus" />');
+        statusDiv.append($('<h1 id="genreport" />').text(gettext('Report Error')));
+        statusDiv.append($('<p />').text(gettext('Sorry, this report cannot be previewed.')));
+        $('#reportPreview').empty();
+        $('#reportPreview').append(statusDiv);
+    };
 
     var pollReport = function(data, textStatus, xhr) {
         if (data.success) {
@@ -176,7 +186,7 @@ reports = function(options) {
             var success = null,
                 type = null,
                 newdata = null;
-            if (data.retry != 0) {
+            if (data.retry !== 0) {
                 type = 'POST';
                 success = pollReport;
                 newdata = { stamp: data.stamp };
@@ -187,7 +197,7 @@ reports = function(options) {
                         data: newdata,
                         success: success,
                         error: reportError
-                    })
+                    });
                 }, data.retry * 1000);
             }
             else {
@@ -195,7 +205,11 @@ reports = function(options) {
             }
         }
         else {
-            $('#reportPreview').html('<div class="reportStatus"><h1 id="genreport">Connection Failed</h1><p>There was a problem checking your report status. You can resume checking by clicking on the "Create and Preview Report" button.</p></div>');
+            var statusDiv = $('<div class="reportStatus" />');
+            statusDiv.append($('<h1 id="genreport" />').text(gettext('Connection Failed')));
+            statusDiv.append($('<p />').text(gettext('There was a problem checking your report status. You can resume checking by clicking on the "Create and Preview Report" button.')));
+            $('#reportPreview').empty();
+            $('#reportPreview').append(statusDiv);
         }
     };
 
@@ -289,63 +303,65 @@ reports = function(options) {
     var loadPreviewContent = function(url) {
         if (typeof(_gaq) != 'undefined') { _gaq.push(['_trackEvent', 'Reports', 'RanReport']); }
         _options.previewContainer.load(url, function(){
-			
-			var resultsAmt = _options.previewContainer.find(".report_panel").length;
-			var $resultsPanels = _options.previewContainer.find(".report_panel");
-			
-			//build tab structure from report response, necessary for jqueryUI
-			var $tabNav = $('<ul/>', {id: 'stats-tab-nav'});
-			var $tabNextButton = $('<input/>', {'type': 'radio', 'id': 'stats-tab-next'});
-			var $tabNextLabel = $('<label/>', {'for': 'stats-tab-next', 'html': 'Next'});
-			var $tabPrevButton = $('<input/>', {'type': 'radio', 'id': 'stats-tab-prev'});
-			var $tabPrevLabel = $('<label/>', {'for': 'stats-tab-prev', 'html': 'Prev'});
-			   
-			var $tabNavButtons = $('<div/>', {'class': 'stats-nav-buttons'});
-				$tabNavButtons.append($tabPrevButton, $tabPrevLabel ,$tabNextButton, $tabNextLabel);
-				$tabNavButtons.buttonset();	
-					
-			$resultsPanels.each(function(){
-				var $tabNavItem = $('<a/>', {html: $(this).find('.report_panel_title').html(), href: '#'+ $(this).attr('id')});
-				$tabNav.append($('<li/>', {html: $tabNavItem }));
-			});
-			
-			//add nav buttons
-			if (resultsAmt > 1) {
-				$(this).prepend($tabNavButtons);
-			}			
-		
-			//prepend tab nav 
-			_options.previewContainer.prepend($tabNav);
-			//destroy previous tab init, check for existance for IE7
-			if (_options.previewContainer.data('tabs') != undefined) {
-				_options.previewContainer.tabs("destroy");
-			}
-			//init tab scrip
-			_options.previewContainer.tabs();
-			
-			//nav button tab switching behaviors
-			$('#stats-tab-next').click(function() { 
-				var $tabs = _options.previewContainer.tabs(); 
-				var selected = $tabs.tabs('option', 'selected'); 
-				if (selected + 1 == resultsAmt) {
-					$tabs.tabs('select', 0); 
-				} else {
-					$tabs.tabs('select', selected + 1); 
-				}
-			});
-			$('#stats-tab-prev').click(function() { 
-				var $tabs = _options.previewContainer.tabs(); 
-				var selected = $tabs.tabs('option', 'selected'); 
-				if (selected == 0) {
-					$tabs.tabs('select', resultsAmt - 1); 
-				} else {
-					$tabs.tabs('select', selected - 1); 
-				}
-			});
-		}); 
+            
+            var resultsAmt = _options.previewContainer.find(".report_panel").length;
+            var $resultsPanels = _options.previewContainer.find(".report_panel");
+            
+            //build tab structure from report response, necessary for jqueryUI
+            var $tabNav = $('<ul/>', {id: 'stats-tab-nav'});
+            var $tabNextButton = $('<input/>', {'type': 'radio', 'id': 'stats-tab-next'});
+            var $tabNextLabel = $('<label/>', {'for': 'stats-tab-next', 'html': 'Next'});
+            var $tabPrevButton = $('<input/>', {'type': 'radio', 'id': 'stats-tab-prev'});
+            var $tabPrevLabel = $('<label/>', {'for': 'stats-tab-prev', 'html': 'Prev'});
+               
+            var $tabNavButtons = $('<div/>', {'class': 'stats-nav-buttons'});
+                $tabNavButtons.append($tabPrevButton, $tabPrevLabel ,$tabNextButton, $tabNextLabel);
+                $tabNavButtons.buttonset(); 
+                    
+            $resultsPanels.each(function(){
+                var $tabNavItem = $('<a/>', {html: $(this).find('.report_panel_title').html(), href: '#'+ $(this).attr('id')});
+                $tabNav.append($('<li/>', {html: $tabNavItem }));
+            });
+            
+            //add nav buttons
+            if (resultsAmt > 1) {
+                $(this).prepend($tabNavButtons);
+            }           
+        
+            //prepend tab nav 
+            _options.previewContainer.prepend($tabNav);
+            //destroy previous tab init, check for existance for IE7
+            if (_options.previewContainer.data('tabs') !== undefined) {
+                _options.previewContainer.tabs("destroy");
+            }
+            //init tab scrip
+            _options.previewContainer.tabs();
+            
+            //nav button tab switching behaviors
+            $('#stats-tab-next').click(function() { 
+                var $tabs = _options.previewContainer.tabs(); 
+                var selected = $tabs.tabs('option', 'selected'); 
+                if (selected + 1 == resultsAmt) {
+                    $tabs.tabs('select', 0); 
+                } else {
+                    $tabs.tabs('select', selected + 1); 
+                }
+            });
+            $('#stats-tab-prev').click(function() { 
+                var $tabs = _options.previewContainer.tabs(); 
+                var selected = $tabs.tabs('option', 'selected'); 
+                if (selected === 0) {
+                    $tabs.tabs('select', resultsAmt - 1); 
+                } else {
+                    $tabs.tabs('select', selected - 1); 
+                }
+            });
+        }); 
 
-        var link = window.location.protocol + '//' + window.location.host + url
-        $btnOpenReport = $('<a href="' + link + '" target="report" ><button id="btnOpenReport">Open report in a new window</button></a>');
+        var link = window.location.protocol + '//' + window.location.host + url;
+        var $btnOpenReport = $('<a href="' + link + '" target="report" />');
+        $btnOpenReport.append($('<button id="btnOpenReport" />').
+            text(gettext('Open report in a new window')));
         $('#reportButtons #btnOpenReport').remove();
         $('#reportButtons').append($btnOpenReport);  
         $('button', $btnOpenReport).button();

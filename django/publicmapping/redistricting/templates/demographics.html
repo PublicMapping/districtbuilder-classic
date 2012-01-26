@@ -35,12 +35,13 @@
 
 {% load humanize %}
 {% load redistricting_extras %}
+{% load i18n %}
 <div class="info_table">
     {% if districtscores %}
     <table id="demographics_table">
         <thead>
             <tr>
-                <th class="district_name">Dist.</th>
+                <th class="district_name">{% trans "Dist." %}</th>
                 {% for function in functions %}
                 <th class="info_header score{{ forloop.counter }}">{{ function }}</th>
                 {% endfor %}
@@ -60,6 +61,6 @@
         </tbody>
     </table>
     {% else %}
-    <div class="error"> Sorry, there is no demographic data for this plan</div>
+    <div class="error"> {% trans "Sorry, there is no demographic data for this plan" %}</div>
     {% endif %}                    
 </div>

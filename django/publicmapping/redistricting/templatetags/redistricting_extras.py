@@ -25,9 +25,8 @@ Author:
 """
 
 from django import template
-from django.template.defaultfilters import stringfilter
-from django.utils.safestring import mark_safe
-import re, locale
+from django.template.defaultfilters import stringfilter, floatformat
+from django.utils.translation import ugettext as _
 
 register = template.Library()
 
@@ -61,9 +60,9 @@ def spellnumber(value):
         value - A number value
     """
     try:
-        return ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
-         "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen",
-         "seventeen", "eighteen", "nineteen", "twenty"][value]
+        return [_("zero"), _("one"), _("two"), _("three"), _("four"), _("five"), _("six"), _("seven"), _("eight"), _("nine"),
+         _("ten"), _("eleven"), _("twelve"), _("thirteen"), _("fourteen"), _("fifteen"), _("sixteen"),
+         _("seventeen"), _("eighteen"), _("nineteen"), _("twenty")][value]
     except:
         return value
 
@@ -137,7 +136,7 @@ def count_report_row_elements(row):
     """
     try:
         if (row['type'] == 'list'):
-            return locale.format("%d", len(row['value']), grouping=True)
+            return floatformat(len(row['value']), 0)
     except:
         return ''
     
@@ -152,10 +151,10 @@ def format_report_value(row):
     """
     try:
         if row['type'] == 'integer':
-            return locale.format("%d", row['value'], grouping=True)
+            return floatformat(row['value'], 0)
     
         if row['type'] == 'percent':
-            return format(row['value'], '.2%')
+            return floatformat(row['value'] * 100, 2) + '%'
 
         if row['type'] == 'boolean':
             return str(row['value']).upper()

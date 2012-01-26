@@ -11,13 +11,10 @@
   "pk": 1001, 
   "model": "redistricting.subject", 
   "fields": {
-   "description": "TestSubject", 
    "sort_key": 1, 
    "format_string": "%0.2f", 
    "name": "TestSubject", 
    "is_displayed": true, 
-   "short_display": "TestSubject", 
-   "display": "TestSubject", 
    "percentage_denominator": null
   }
  }, 
@@ -25,13 +22,10 @@
   "pk": 1002, 
   "model": "redistricting.subject", 
   "fields": {
-   "description": "TestSubject2", 
    "sort_key": 2, 
    "format_string": "%0.2f", 
    "name": "TestSubject2", 
    "is_displayed": true, 
-   "short_display": "TestSubject2", 
-   "display": "TestSubject2", 
    "percentage_denominator": null
   }
  },
@@ -40,7 +34,6 @@
   "model": "redistricting.region",
   "fields": {
    "name": "Default",
-   "description": "The default region",
    "sort_key": 1
   }
  },
@@ -48,8 +41,6 @@
   "pk": 1001, 
   "model": "redistricting.legislativebody", 
   "fields": {
-   "short_label": "%d",
-   "long_label": "TestMember %d", 
    "name": "TestLegislativeBody", 
    "max_districts": 20,
    "multi_members_allowed": false,
@@ -443,7 +434,7 @@
    "owner": 1, 
    "legislative_body": 1001, 
    "min_version": 0, 
-   "is_pending": false, 
+   "processing_state": 0, 
    "name": "testPlan"
   }
  }, 
@@ -461,7 +452,7 @@
    "owner": 1, 
    "legislative_body": 1001, 
    "min_version": 0, 
-   "is_pending": false, 
+   "processing_state": 0, 
    "name": "testPlan2"
   }
  }, 

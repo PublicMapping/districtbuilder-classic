@@ -12,13 +12,14 @@ Context:
         traceback: A traceback from the exception thrown when the plan was made
 
 {% endcomment %}
+{% load i18n %}
 {% autoescape off %}
-Hello Admin,
+{% trans "Hello Admin" %},
 
-There was a problem importing a plan file from user '{{ user.username }}'. This user attempted to upload a file containing a plan but had some trouble.  The plan may have been imported.
+{% trans "There was a problem importing a plan file from user" %} '{{ user.username }}'. {% trans "This user attempted to upload a file containing a plan but had some trouble.  The plan may have been imported." %}
 
 {% if plan %}
-Plan name: {{ plan.name }}
+{% trans "Plan name" %}: {{ plan.name }}
 {% endif %}
 
 {% for error in errors %}
@@ -28,7 +29,7 @@ Plan name: {{ plan.name }}
 {{ error.traceback }}
 {% endif %}
 {% endfor %}
-If the user continues to have problems with this process, please check the application settings.
+{% trans "If the user continues to have problems with this process, please check the application settings." %}
 
-Thank you.
+{% trans "Thank you." %}
 {% endautoescape %}

@@ -7,8 +7,8 @@
    "legislative_body": 1001, 
    "cssclass": "the_display", 
    "is_page": true, 
-   "title": "TestScoreDisplay"
-    
+   "title": "TestScoreDisplay",
+   "name": ""
   }
  }, 
  {
@@ -19,7 +19,8 @@
    "legislative_body": 1001, 
    "cssclass": "", 
    "is_page": false, 
-   "title": "TestScoreDisplay2"
+   "title": "TestScoreDisplay2",
+   "name": ""
   }
  }, 
  {
@@ -33,7 +34,8 @@
    "cssclass": "panel1", 
    "type": "plan", 
    "displays": [1001],
-   "score_functions": [1001,1002]
+   "score_functions": [1001,1002],
+   "name": ""
   }
  }, 
  {
@@ -47,7 +49,8 @@
    "cssclass": "panel2", 
    "type": "district", 
    "displays": [1002],
-   "score_functions": [1003,1004]
+   "score_functions": [1003,1004],
+   "name": ""
   }
  }, 
  {
@@ -55,10 +58,8 @@
   "model": "redistricting.scorefunction", 
   "fields": {
    "calculator": "publicmapping.redistricting.calculators.SumValues", 
-   "description": "The combined population in the plan.", 
    "is_planscore": true, 
-   "name": "Population Sum", 
-   "label": "Population"
+   "name": "Population Sum"
   }
  }, 
  {
@@ -66,10 +67,8 @@
   "model": "redistricting.scorefunction", 
   "fields": {
    "calculator": "publicmapping.redistricting.calculators.Percent", 
-   "description": "Divide two subjects by one another.", 
    "is_planscore": true, 
-   "name": "Percentage Points", 
-   "label": "The percentage of A/B"
+   "name": "Percentage Points" 
   }
  }, 
  {
@@ -77,10 +76,8 @@
   "model": "redistricting.scorefunction", 
   "fields": {
    "calculator": "publicmapping.redistricting.calculators.Schwartzberg", 
-   "description": "The Schwartzberg measure of compactness.", 
    "is_planscore": false, 
-   "name": "Compactness", 
-   "label": "Compactness"
+   "name": "Compactness" 
   }
  }, 
  {
@@ -88,10 +85,8 @@
   "model": "redistricting.scorefunction", 
   "fields": {
    "calculator": "publicmapping.redistricting.calculators.Contiguity", 
-   "description": "Is a district contiguous?", 
    "is_planscore": false, 
-   "name": "Contiguity", 
-   "label": "Contiguous"
+   "name": "Contiguity" 
   }
  }, 
  {
@@ -99,10 +94,8 @@
   "model": "redistricting.scorefunction", 
   "fields": {
    "calculator": "publicmapping.redistricting.calculators.Percent", 
-   "description": "Percentage for a district.", 
    "is_planscore": false, 
-   "name": "Percentage", 
-   "label": "The percentage of A/B"
+   "name": "Percentage" 
   }
  }, 
  {
@@ -110,10 +103,8 @@
   "model": "redistricting.scorefunction", 
   "fields": {
    "calculator": "publicmapping.redistricting.calculators.SumValues", 
-   "description": "Sum values in a district.", 
    "is_planscore": false, 
-   "name": "Sum", 
-   "label": "Sum"
+   "name": "Sum" 
   }
  }, 
  {

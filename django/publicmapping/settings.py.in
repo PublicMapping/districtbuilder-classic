@@ -25,30 +25,23 @@ License:
     limitations under the License.
  
 Author: 
-    David Zwarg, Andrew Jennings
+    David Zwarg, Andrew Jennings, Kenny Shepard
 """
 
 # Django settings for publicmapping project.
 
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
-
-# Local time zone for this installation. Choices can be found here:
-# http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
-# although not all choices may be available on all operating systems.
-# If running in a Windows environment this must be set to the same as your
-# system time zone.
-TIME_ZONE = 'US/Eastern'
-
-# Language code for this installation. All choices can be found here:
-# http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'en-us'
-
 SITE_ID = 1
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
 USE_I18N = True
+
+# Use these settings to localize numbers within the application
+USE_L10N = True
+NUMBER_GROUPING = 3
+USE_THOUSAND_SEPARATOR = True
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
@@ -92,6 +85,10 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.csrf.middleware.CsrfMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+
+# Uncomment the following line to enable browser-level localization selection
+#    'django.middleware.locale.LocaleMiddleware',
+    
 #    'django.middleware.cache.FetchFromCacheMiddleware',
 )
 
@@ -113,12 +110,12 @@ import djcelery
 djcelery.setup_loader()
 
 BROKER_TRANSPORT = 'djkombu.transport.DatabaseTransport'
-CELERY_IMPORTS = ( 'redistricting.utils', )
+CELERY_IMPORTS = ( 'redistricting.tasks', )
 
 from datetime import timedelta
 CELERYBEAT_SCHEDULE = {
     'cleanup-sessions': {
-        'task': 'redistricting.utils.cleanup',
+        'task': 'redistricting.tasks.cleanup',
         'schedule': timedelta(hours=1),
         'args': None
     },
@@ -141,6 +138,7 @@ INSTALLED_APPS = (
     'redistricting',
     'publicmapping',
     'tagging',
+    'rosetta',
     staticfiles,
     'compressor',
 )
@@ -194,7 +192,7 @@ if django.VERSION[1] > 2:
     }
 else:
     import logging
-    logger = logging.getLogger('publicmapping')
+    logger = logging.getLogger()
     stderr = logging.StreamHandler()
     stderr.setFormatter(logging.Formatter())
     logger.addHandler(stderr)

@@ -56,7 +56,7 @@ layerchooser = function(options) {
             modal: false,
             width: _minWidth,
             height: 'auto',
-            title: 'Choose Map Layers',
+            title: gettext('Choose Map Layers'),
             resizable: false,
             closable: true
         }, options),
@@ -167,8 +167,8 @@ layerchooser = function(options) {
                 id: 'pk'
             },
             colModel: [
-                {name:'fields.owner', label:'User Name', search:true, width: '110', fixed: true, sortable:true},
-                {name:'fields.name', label:'Plan Name', search: true, width: '300', sortable:true}
+                {name:'fields.owner', label:gettext('User Name'), search:true, width: '110', fixed: true, sortable:true},
+                {name:'fields.name', label:gettext('Plan Name'), search: true, width: '300', sortable:true}
             ],
 
             onSelectRow: planSelected,
@@ -187,7 +187,7 @@ layerchooser = function(options) {
             }
         }).jqGrid(
             'navGrid', '#' + _options.referencePlansPager.attr('id'),
-            {search:false,edit:false,add:false,del:false,searchText:"Search",refreshText:"Clear Search"}
+            {search:false,edit:false,add:false,del:false,searchText:gettext("Search"),refreshText:gettext("Clear Search")}
         );
     };
 

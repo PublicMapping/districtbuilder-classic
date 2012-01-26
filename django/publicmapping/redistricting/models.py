@@ -28,6 +28,7 @@ Author:
     Andrew Jennings, David Zwarg, Kenny Shepard
 """
 
+from celery.task import task
 from django.core.exceptions import ValidationError
 from django.contrib.gis.db import models
 from django.contrib.gis.geos import MultiPolygon,Polygon,GEOSGeometry,GEOSException,GeometryCollection,Point
@@ -39,18 +40,89 @@ from django.db import connection, transaction
 from django.forms import ModelForm
 from django.conf import settings
 from django.utils import simplejson as json
+from django.utils import translation
 from django.template.loader import render_to_string
 from django.contrib.comments.models import Comment
 from django.contrib.contenttypes.models import ContentType
+from django.template.defaultfilters import title
 from redistricting.calculators import Schwartzberg, Contiguity, SumValues
 from tagging.models import TaggedItem, Tag
 from datetime import datetime
 from copy import copy
 from decimal import *
 from operator import attrgetter
-import sys, cPickle, traceback, types, tagging, re
+from rosetta import polib
+import os, sys, cPickle, types, tagging, re, logging
 
-class Subject(models.Model):
+logger = logging.getLogger(__name__)
+
+# Caches for po files
+I18N_CACHE = {}
+
+class BaseModel(models.Model):
+    """
+    A base class for models that have short labels, labels, and long descriptions.
+    Any class that extends this base class must have a 'name' field.
+    """
+    def __init__(self, *args, **kwargs):
+        """
+        Initialize the message file cache.
+        """
+        super(BaseModel, self).__init__(*args, **kwargs)
+        lang = translation.get_language()
+        if not lang in I18N_CACHE:
+            try:
+                path = os.path.join(settings.MEDIA_ROOT, '../locale/%s/LC_MESSAGES/xmlconfig.mo' % lang)
+                path = os.path.normpath(path)
+                I18N_CACHE[lang] = polib.mofile(path)
+            except Exception, ex:
+                path = os.path.join(settings.MEDIA_ROOT, '../locale/%s/LC_MESSAGES/xmlconfig.po' % lang)
+                path = os.path.normpath(path)
+                I18N_CACHE[lang] = polib.pofile(path)
+
+    def get_short_label(self):
+        """
+        Get the short label (a.k.a. title) of the object.
+        """
+        msgid = u'%s short label' % self.name
+        try:
+            lang = translation.get_language()
+            return I18N_CACHE[lang].find(msgid).msgstr
+        except Exception, ex:
+            logger.debug('Cannot find msgid %s, fallback to msgid', msgid)
+            return msgid
+
+    def get_label(self):
+        """
+        Get the label of the object. This is longer than the short label, and
+        shorter than the description. Most often, this is the default text
+        representation of an object.
+        """
+        msgid = u'%s label' % self.name
+        try:
+            lang = translation.get_language()
+            return I18N_CACHE[lang].find(msgid).msgstr
+        except Exception, ex:
+            logger.debug('Cannot find msgid %s, fallback to msgid', msgid)
+            return msgid
+
+    def get_long_description(self):
+        """
+        Get the description of the object. This is a verbose description of the
+        object.
+        """
+        msgid = u'%s long description' % self.name
+        try:
+            lang = translation.get_language()
+            return I18N_CACHE[lang].find(msgid).msgstr
+        except Exception, ex:
+            logger.debug('Cannot find msgid %s, fallback to msgid', msgid)
+            return msgid
+
+    class Meta:
+        abstract = True
+
+class Subject(BaseModel):
     """
     A classification of a set of Characteristics.
 
@@ -65,15 +137,6 @@ class Subject(models.Model):
 
     # The name of the subject (POPTOT)
     name = models.CharField(max_length=50)
-
-    # The display name of the subject (Total Population)
-    display = models.CharField(max_length=200, blank=True)
-
-    # A short display name of the subject (Tot. Pop.)
-    short_display = models.CharField(max_length = 25, blank=True)
-
-    # A description of this subject
-    description = models.CharField(max_length= 500, blank=True)
 
     # If this subject should be displayed as a percentage,
     # a district's value for this subject will be divided by
@@ -91,6 +154,9 @@ class Subject(models.Model):
     # The way this Subject's values should be represented.
     format_string = models.CharField(max_length=50, blank=True)
 
+    # The version of this subject, to keep track of uploaded changes
+    version = models.PositiveIntegerField(default=1)
+
     class Meta:
         """
         Additional information about the Subject model.
@@ -99,15 +165,91 @@ class Subject(models.Model):
         # The default method of sorting Subjects should be by 'sort_key'
         ordering = ['sort_key']
 
+        # A unique constraint on the name
+        unique_together = ('name',)
+
     def __unicode__(self):
         """
         Represent the Subject as a unicode string. This is the Subject's 
         display name.
         """
-        return self.display
+        return self.get_label()
+
+class ChoicesEnum(object):
+    """
+    Helper class for defining enumerated choices in a Model
+    """
+    def __init__(self, *args, **kwargs):
+        super(ChoicesEnum, self).__init__()
+        vals = {}
+        for key,val in kwargs.iteritems():
+            vals[key] = val
+        object.__setattr__(self, "_vals", vals)
+
+    def choices( self ):
+        cho = []
+        vals = object.__getattribute__(self, "_vals")
+        for key, val in vals.iteritems():
+            cho.append(val)
+        cho.sort()
+        return cho
+
+    def __getattr__(self, name):
+        return object.__getattribute__(self, "_vals")[name][0]
+
+    def __setattr__(self, name, value):
+        object.__setattr__(self, "_vals")[name][0] = value
+
+    def __delattr__(self, name):
+        del object.__setattr__(self, "_vals")[name]
+
+UploadedState = ChoicesEnum(
+    UNKNOWN = ('NA', 'Not Available'),
+    UPLOADING = ('UL', 'Uploading'),
+    CHECKING = ('CH', 'Checking'),
+    DONE = ('OK', 'Done'),
+    ERROR = ('ER', 'Error'),
+)
+
+class SubjectUpload(models.Model):
+    """
+    A set of uploaded subjects. This is primarily used to prevent collisions
+    during the long verification step.
+    """
+
+    # The automatically generated file name
+    processing_filename = models.CharField(max_length=256)
+
+    # The user-specified file name
+    upload_filename = models.CharField(max_length=256)
+
+    # Subject name
+    subject_name = models.CharField(max_length=50)
+
+    # The status of the uploaded subject
+    status = models.CharField(max_length=2, choices=UploadedState.choices(), default=UploadedState.UNKNOWN)
+
+    # The task ID that is processing this uploaded subject
+    task_id = models.CharField(max_length=36)
 
 
-class Region(models.Model):
+class SubjectStage(models.Model):
+    """
+    A quarantine table for uploaded subjects. This model stores temporary subject
+    datasets that are being imported into the system.
+    """
+
+    # An identifier to discriminate between multiple uploads.
+    upload = models.ForeignKey(SubjectUpload)
+
+    # The GEOID, or FIPS ID of the geounit
+    portable_id = models.CharField(max_length=50)
+
+    # The data value of the geounit.
+    number = models.DecimalField(max_digits=12,decimal_places=4)
+
+
+class Region(BaseModel):
     """
     A region is a compartmentalized area of geography, legislative bodies,
     and validation criteria. Each region shares the base geography, but may
@@ -118,12 +260,6 @@ class Region(models.Model):
     # The name of this region
     name = models.CharField(max_length=256)
     
-    # A short name for the region
-    label = models.CharField(max_length=256)
-
-    # A description of this region
-    description = models.CharField(max_length=500, blank=True)
-
     # The sorting order for this region relative to other regions
     sort_key = models.PositiveIntegerField(default=0)
 
@@ -133,8 +269,15 @@ class Region(models.Model):
         """
         return self.name
 
+    class Meta:
+        """
+        Additional information about the Region model.
+        """
 
-class LegislativeBody(models.Model):
+        # A unique constraint on the name
+        unique_together = ('name',)
+
+class LegislativeBody(BaseModel):
     """
     A legislative body that plans belong to. This is to support the
     scenario where one application is supporting both "Congressional"
@@ -144,12 +287,6 @@ class LegislativeBody(models.Model):
     # The name of this legislative body
     name = models.CharField(max_length=256)
 
-    # The short name of the units in a plan -- "%s", for example.
-    short_label = models.CharField(max_length=10)
-
-    # The long name of the units in a plan -- "District %s", for example.
-    long_label = models.CharField(max_length=256)
-
     # The maximum number of districts in this body
     max_districts = models.PositiveIntegerField()
 
@@ -158,10 +295,10 @@ class LegislativeBody(models.Model):
     
     # The format to be used for displaying a map label of a multi-member district.
     # This format string will be passed to python's 'format' function with the named
-    # arguments: 'name' (district name) and 'num_members' (number of representatives)
-    # For example: "{name} - [{num_members}]" will display "District 5 - [3]" for a district named
+    # arguments: 'label' (district label) and 'num_members' (number of representatives)
+    # For example: "{label} - [{num_members}]" will display "District 5 - [3]" for a district named
     # "District 5" that is configured with 3 representatives.
-    multi_district_label_format = models.CharField(max_length=32, default='{name} - [{num_members}]')
+    multi_district_label_format = models.CharField(max_length=32, default='{label} - [{num_members}]')
 
     # The minimimum number of multi-member districts allowed in a plan.
     min_multi_districts = models.PositiveIntegerField(default=0)
@@ -271,11 +408,35 @@ class LegislativeBody(models.Model):
         """
         return self.name
 
+    def get_short_label(self):
+        short_label = super(LegislativeBody, self).get_short_label()
+        if short_label == ('%s short label' % self.name):
+            short_label = '%(district_id)s'
+        return short_label
+
+    def get_label(self):
+        label = super(LegislativeBody, self).get_label()
+        if label == ('%s label' % self.name):
+            label = 'District %(district_id)s'
+        return label
+
+    def get_long_description(self):
+        long_description = super(LegislativeBody, self).get_long_description()
+        if long_description == '':
+            long_description = title(self.name)
+        return long_description
+
     class Meta:
+        """
+        Additional information about the LegislativeBody model.
+        """
         verbose_name_plural = "Legislative bodies"
 
+        # A unique constraint on the name
+        unique_together = ('name',)
 
-class Geolevel(models.Model):
+
+class Geolevel(BaseModel):
     """
     A geographic classification for Geounits.
 
@@ -286,9 +447,6 @@ class Geolevel(models.Model):
 
     # The name of the geolevel
     name = models.CharField(max_length = 50)
-
-    # The label to display on UI elements
-    label = models.CharField(max_length = 20)
 
     # Each geolevel has a maximum and a minimum zoom level at which 
     # features on the map can be selected and added to districts
@@ -311,12 +469,57 @@ class Geolevel(models.Model):
         # The default method of sorting Geolevels should be by 'sort_key'
         ordering = ['sort_key']
 
+        # A unique constraint on the name
+        unique_together = ('name',)
+
     def __unicode__(self):
         """
         Represent the Geolevel as a unicode string. This is the Geolevel's 
         name.
         """
-        return self.name
+        return self.get_label()
+
+    def renest(self, parent, subject=None, spatial=True):
+        """
+        Renest all geounits in this geolevel, based on the parent (smaller!)
+        geography in the parent.
+
+        Parameters:
+            parent -- The smaller geographic areas that comprise this geography.
+            subject -- The subject to aggregate. Optional. If omitted, i
+                aggregate all subjects.
+            spatial -- A flag indicating that the spatial aggregates should be
+                computed as well as the numerical aggregates.
+        """
+        if parent is None:
+            return True
+
+        progress = 0
+        logger.info("Recomputing geometric and numerical aggregates...")
+        logger.info('0% .. ')
+
+        geomods = 0
+        nummods = 0
+
+        unitqset = self.geounit_set.all()
+        count = unitqset.count()
+        for i,geounit in enumerate(unitqset):
+            if (float(i) / unitqset.count()) > (progress + 0.1):
+                progress += 0.1
+                logger.info('%2.0f%% .. ', (progress * 100))
+                
+            geo,num = geounit.aggregate(parent, subject, spatial)
+
+            geomods += geo
+            nummods += num
+
+
+        logger.info('100%')
+
+        logger.debug("Geounits modified: (geometry: %d, data values: %d)", geomods, nummods)
+
+        return True
+        
 
 
 class LegislativeLevel(models.Model):
@@ -345,11 +548,22 @@ class LegislativeLevel(models.Model):
         Represent the LegislativeLevel as a unicode string. This is the
         LegislativeLevel's LegislativeBody and Geolevel
         """
-        return "%s, %s, %s" % (self.legislative_body.name, self.geolevel.name, self.subject.display)
+        return "%s, %s, %s" % (self.legislative_body.get_long_description(), self.geolevel.get_short_label(), self.subject.get_short_label())
 
     class Meta:
         unique_together = ('geolevel','legislative_body','subject',)
 
+    @staticmethod
+    def get_basest_geolevel_and_count():
+        base_levels = LegislativeLevel.objects.filter(parent__isnull=True)
+        geolevel = None
+        nunits = 0
+        for base_level in base_levels:
+            if base_level.geolevel.geounit_set.all().count() > nunits:
+                nunits = base_level.geolevel.geounit_set.all().count()
+                geolevel = base_level.geolevel
+
+        return (geolevel, nunits,)
 
 class Geounit(models.Model):
     """
@@ -427,8 +641,7 @@ class Geounit(models.Model):
         selection = None
         units = []
         searching = False
-        if settings.DEBUG:
-            sys.stderr.write('MIXED GEOUNITS SEARCH: Geolevel %d, geounits: %s, levels: %s\n' % (geolevel, geounit_ids, levels))
+        logger.debug('MIXED GEOUNITS SEARCH: Geolevel %d, geounits: %s, levels: %s', geolevel, geounit_ids, levels)
         for level in levels:
             # if this geolevel is the requested geolevel
             if geolevel == level.id:
@@ -463,8 +676,7 @@ class Geounit(models.Model):
                         q_geom = Q(geom__relate=(boundary, 'F********'))
                 results = Geounit.objects.filter(q_ids, q_geom)
 
-                if settings.DEBUG:
-                    sys.stderr.write('Found %d geounits in boundary at level %s\n' % (len(results), level))
+                logger.debug('Found %d geounits in boundary at level %s', len(results), level)
                 units += list(results)
 
                 # if we're at the base level, and haven't collected any
@@ -497,8 +709,8 @@ class Geounit(models.Model):
                     try:
                         remainder = boundary.intersection(intersects)
                     except GEOSException, ex:
-                        print "Caught GEOSException while intersecting 'boundary' with 'intersects'."
-                        print ex
+                        logger.info("Caught GEOSException while intersecting 'boundary' with 'intersects'.")
+                        logger.debug('Reason:', ex)
                         remainder = empty_geom(boundary.srid)
                 else:
                     # the remainder geometry is the geounit selection 
@@ -513,13 +725,13 @@ class Geounit(models.Model):
                         try:
                             remainder = remainder.intersection(intersects)
                         except GEOSException, ex:
-                            print "Caught GEOSException while intersecting 'remainder' with 'intersects'."
-                            print ex
+                            logger.info("Caught GEOSException while intersecting 'remainder' with 'intersects'.")
+                            logger.debug('Reason:', ex)
                             remainder = empty_geom(boundary.srid)
 
                     except GEOSException, ex:
-                        print "Caught GEOSException while differencing 'selection' with 'boundary'."
-                        print ex
+                        logger.info("Caught GEOSException while differencing 'selection' with 'boundary'.")
+                        logger.debug('Reason:', ex)
                         remainder = empty_geom(boundary.srid)
 
 
@@ -548,6 +760,99 @@ class Geounit(models.Model):
         """
         return self.name
 
+    def aggregate(self, parent, subject=None, spatial=True):
+        """
+        Aggregate this geounit to the composite boundary of the geounits
+        in "parent" geolevel.  Compute numerical aggregates on the subject,
+        if specified.
+
+        Parameters:
+            parent -- The 'parent' geolevel, which contains the smaller
+                geographic units that comprise this geounit.
+            subject -- The subject to aggregate and compute. If omitted,
+                all subjects are computed.
+            spatial -- Compute the geometric aggregates as well as
+                numeric aggregates.
+        """
+        geo = 0
+        num = 0
+
+        parentunits = Geounit.objects.filter(
+            tree_code__startswith=self.tree_code, 
+            geolevel__in=[parent])
+
+        parentunits.update(child=self)
+        newgeo = parentunits.unionagg()
+
+        # reform the parent units as a list of IDs
+        parentunits = list(parentunits.values_list('id',flat=True))
+
+        if newgeo is None:
+            return (geo, num,)
+
+        if spatial:
+            difference = newgeo.difference(self.geom).area
+            if difference != 0:
+                # if there is any difference in the area, then assume that 
+                # this aggregate is an inaccurate aggregate of it's parents
+
+                # aggregate geometry
+
+                newsimple = newgeo.simplify(preserve_topology=True,tolerance=self.geolevel.tolerance)
+
+                # enforce_multi is defined in redistricting.models
+                self.geom = enforce_multi(newgeo)
+                self.simple = enforce_multi(newsimple)
+                self.save()
+
+                geo += 1
+
+        if subject is None:
+            # No subject provided? Do all of them
+            subject_qs = Subject.objects.all()
+        else:
+            if isinstance(subject, Subject):
+                # Subject parameter is a Subject object, wrap it in a list
+                subject_qs = [subject]
+            elif isinstance(subject, str):
+                # Subject parameter is a Subject name, filter by name
+                subject_qs = Subject.objects.filter(name=subject)
+            else:
+                # Subject parameter is an ID, filter by ID
+                subject_qs = Subject.objects.filter(id=subject)
+
+        # aggregate data values
+        for subject_item in subject_qs:
+            qset = Characteristic.objects.filter(geounit__in=parentunits, subject=subject_item)
+            aggdata = qset.aggregate(Sum('number'))['number__sum']
+            percentage = '0000.00000000'
+            if aggdata and subject_item.percentage_denominator:
+                dset = Characteristic.objects.filter(geounit__in=parentunits, subject=subject_item.percentage_denominator)
+                denominator_data = dset.aggregate(Sum('number'))['number__sum']
+                if denominator_data > 0:
+                    percentage = aggdata / denominator_data
+
+            if aggdata is None:
+                aggdata = "0.0"
+
+            mychar = self.characteristic_set.filter(subject=subject_item)
+            if mychar.count() < 1:
+                mychar = Characteristic(geounit=self, subject=subject_item, number=aggdata, percentage=percentage)
+                mychar.save()
+                num += 1
+            else:
+                mychar = mychar[0]
+
+                if aggdata != mychar.number:
+                    mychar.number = aggdata
+                    mychar.percentage = percentage
+                    mychar.save()
+
+                    num += 1
+
+        return (geo, num,)
+
+
 class Characteristic(models.Model):
     """
     A data value for a Geounit's Subject.
@@ -575,6 +880,15 @@ class Characteristic(models.Model):
         """
         return u'%s for %s: %s' % (self.subject, self.geounit, self.number)
 
+# Enumerated type used for determining a plan's state of processing
+ProcessingState = ChoicesEnum(
+    UNKNOWN = (-1, 'Unknown'),
+    READY = (0, 'Ready'),
+    CREATING = (1, 'Creating'),
+    REAGGREGATING = (2, 'Reaggregating'),
+    NEEDS_REAGG = (3, 'Needs reaggregation'),
+)
+
 class Plan(models.Model):
     """
     A collection of Districts for an area of coverage, like a state.
@@ -598,10 +912,9 @@ class Plan(models.Model):
     # Is this plan shared?
     is_shared = models.BooleanField(default=False)
 
-    # Is this plan 'pending'? Pending plans are being constructed in the
-    # backend, and should not be visible in the UI
-    is_pending = models.BooleanField(default=False)
-
+    # The processing state of this plan (see ProcessingState Enum)
+    processing_state = models.IntegerField(choices=ProcessingState.choices(), default=ProcessingState.UNKNOWN)
+    
     # Is this plan considered a valid plan based on validation criteria?
     is_valid = models.BooleanField(default=False)
 
@@ -804,8 +1117,8 @@ class Plan(models.Model):
             districtlong = districtinfo[2]
         else:
             districtid = int(districtinfo)
-            districtshort = self.legislative_body.short_label % districtid
-            districtlong = self.legislative_body.long_label % districtid
+            districtshort = self.legislative_body.get_short_label() % {'district_id':districtid}
+            districtlong = self.legislative_body.get_label() % {'district_id':districtid}
 
         # fix the version so that it is definitely an integer
         version = int(version)
@@ -1069,13 +1382,13 @@ class Plan(models.Model):
         edited_districts = list()
 
         # Save the new district to the plan to start
-        newshort = '' if slot == None else self.legislative_body.short_label % slot
-        newlong = '' if slot == None else self.legislative_body.long_label % slot
+        newshort = '' if slot == None else self.legislative_body.get_short_label() % {'district_id':slot}
+        newlong = '' if slot == None else self.legislative_body.get_label() % {'district_id':slot}
         pasted = District(short_label=newshort, long_label=newlong, plan=self, district_id = slot, geom=district.geom, simple = district.simple, version = new_version)
         pasted.save();
         if newshort  == '':
-            pasted.short_label = self.legislative_body.short_label % pasted.district_id
-            pasted.long_label = self.legislative_body.long_label % pasted.district_id
+            pasted.short_label = self.legislative_body.get_short_label() % {'district_id':pasted.district_id}
+            pasted.long_label = self.legislative_body.get_label() % {'district_id':pasted.district_id}
             pasted.save();
         pasted.clone_relations_from(district)
         
@@ -1268,7 +1581,7 @@ class Plan(models.Model):
             return districts
 
     @staticmethod
-    def create_default(name,body,owner=None,template=True,is_pending=True,create_unassigned=True):
+    def create_default(name,body,owner=None,template=True,processing_state=ProcessingState.READY,create_unassigned=True):
         """
         Create a default plan.
 
@@ -1287,13 +1600,13 @@ class Plan(models.Model):
 
         # Create a new plan. This will also create an Unassigned district
         # in the the plan.
-        plan = Plan(name=name, legislative_body=body, is_template=template, version=0, owner=owner, is_pending=is_pending)
+        plan = Plan(name=name, legislative_body=body, is_template=template, version=0, owner=owner, processing_state=processing_state)
         plan.create_unassigned = create_unassigned
 
         try:
             plan.save()
         except Exception as ex:
-            print( "Couldn't save plan: %s\n" % ex )
+            logger.warn( "Couldn't save plan: %s\n", ex )
             return None
 
         return plan
@@ -1969,7 +2282,7 @@ CROSS JOIN (
         my_names = dict((d.district_id, d.long_label) for d in self.get_districts_at_version(version))
 
         if target.startswith('geolevel'):
-            results['other_name'] = Geolevel.objects.get(pk=id).name
+            results['other_name'] = Geolevel.objects.get(pk=id).get_short_label()
             results['is_geolevel'] = True
             results['splits'] = self.find_geolevel_splits(id, version=version, inverse=inverse)
             if extended is True:
@@ -2086,6 +2399,55 @@ CROSS JOIN (
         cleanRE = re.compile('\W+')
         return cleanRE.sub('_', self.name)
 
+    def get_largest_geolevel(self):
+        """
+        Get the geolevel relevant to this plan that has the largest geounits
+        """
+        leg_levels = LegislativeLevel.objects.filter(legislative_body=self.legislative_body)
+        geolevel = leg_levels[0].geolevel
+        for l in leg_levels:
+            if l.geolevel.min_zoom < geolevel.min_zoom:
+                geolevel = l.geolevel
+        return geolevel
+
+    def reaggregate(self):
+        """
+        Reaggregate all computed characteristics for each district in this plan.
+        
+        @return: An integer count of the number of districts reaggregated
+        """
+        # Set the reaggregating flag
+        self.processing_state = ProcessingState.REAGGREGATING
+        self.save()
+
+        try:
+            # Find the geolevel relevant to this plan that has the largest geounits
+            geolevel = self.get_largest_geolevel()
+    
+            # Get all of the geounit_ids for that geolevel
+            geounit_ids = map(str, Geounit.objects.filter(geolevel=geolevel).values_list('id', flat=True))
+    
+            # Cycle through each district and update the statistics
+            updated = 0
+            for d in self.district_set.all():
+                success = d.reaggregate(geounit_ids=geounit_ids)
+                if success == True:
+                    updated += 1
+
+            # Reaggregation successful, unset the reaggregating flag
+            self.processing_state = ProcessingState.READY
+            self.save()
+        
+        except Exception as ex:
+            logger.info('Unable to fully reaggreagate %d', self.id)
+            logger.debug('Reason:', ex)
+
+            # Reaggregation unsuccessful, set state back to needs reaggregation
+            self.processing_state = ProcessingState.NEEDS_REAGG
+            self.save()
+
+        return updated
+
 
 class PlanForm(ModelForm):
     """
@@ -2157,7 +2519,7 @@ class District(models.Model):
             The Districts, sorted in numerical order.
         """
         name = self.short_label;
-        prefix = self.plan.legislative_body.short_label
+        prefix = self.plan.legislative_body.get_short_label()
         index = prefix.find('%')
         if index >= 0:
             prefix = prefix[0:index]
@@ -2393,20 +2755,20 @@ class District(models.Model):
                             attempts_left -= 1 # We just used one up
                             times_attempted = attempts_allowed-attempts_left
                             if times_attempted > 1:
-                                sys.stderr.write('Took %d attempts to simplify %s in plan "%s"; '
-                                    'Succeeded with tolerance %s\n' % (times_attempted, self.long_label, self.plan.name, tolerance))
+                                logger.debug('Took %d attempts to simplify %s in plan "%s"; '
+                                    'Succeeded with tolerance %s', times_attempted, self.long_label, self.plan.name, tolerance)
                         else:
                             raise Exception ('Polygon simplifies but isn\'t valid')
                     except Exception as error:
-                        sys.stderr.write('WARNING: Problem when trying to simplify %s at tolerance %s: %s\n' %
-                            (self.long_label, tolerance, error))
+                        logger.debug('WARNING: Problem when trying to simplify %s at tolerance %s: %s',
+                            self.long_label, tolerance, error)
                         tolerance = tolerance * attempt_step
                     attempts_left -= 1
 
                 if not simplified:
                     simples.append(self.geom)
-                    sys.stderr.write('Ran out of attempts to simplify %s in plan "%s" for geolevel %s; using full geometry\n' %
-                        (self.long_label, self.plan.name, level.name))
+                    logger.debug('Ran out of attempts to simplify %s in plan "%s" for geolevel %s; using full geometry',
+                        self.long_label, self.plan.name, level.get_short_label())
             else:
                 simples.append( self.geom )
 
@@ -2457,6 +2819,47 @@ class District(models.Model):
         for community in communities:
             types = types | set(Tag.objects.get_for_object(community).filter(name__startswith='type='))
         return types
+
+    def reaggregate(self, geounit_ids=None):
+        """
+        Reaggregate all computed characteristics for this district.
+
+        @param geounit_ids: Optional set of geounits to filter on. If this is
+            not provided, it will be calculatated by using all geounits
+            in the largest geolevel of the plan.
+        @return: True if reaggregation was successfull, False otherwise. 
+        """
+
+        # Find the geolevel relevant to this plan that has the largest geounits
+        geolevel = self.plan.get_largest_geolevel()
+
+        # If not specified, get all of the geounit_ids for that geolevel
+        if geounit_ids is None:
+            geounit_ids = map(str, Geounit.objects.filter(geolevel=geolevel).values_list('id', flat=True))
+        
+        try:
+            body = self.plan.legislative_body
+            geounits = Geounit.get_mixed_geounits(geounit_ids, body, geolevel.id, self.geom, True)
+        
+            # Grab all the computedcharacteristics for the district and reaggregate
+            for cc in self.computedcharacteristic_set.order_by('-subject__percentage_denominator'):
+                cs = Characteristic.objects.filter(subject=cc.subject, geounit__in=geounits)
+                agg = cs.aggregate(Sum('number'))
+                cc.number = agg['number__sum']
+                cc.percentage = '0000.00000000'
+                if cc.subject.percentage_denominator:
+                    c = self.computedcharacteristic_set.get(subject=cc.subject.percentage_denominator)
+                    denominator = c.number
+                    if cc.number and denominator:
+                        cc.percentage = cc.number / denominator
+                if not cc.number:
+                    cc.number = '00000000.0000'
+                cc.save()
+            return True
+        except Exception as ex:
+            logger.info('Unable to reaggreagate district "%s"', self.long_label)
+            logger.debug('Reason:', ex)
+            return False
 
 # Enable tagging of districts by registering them with the tagging module
 tagging.register(District)
@@ -2728,7 +3131,7 @@ def safe_union(collection):
 
     return thegeom
 
-class ScoreFunction(models.Model):
+class ScoreFunction(BaseModel):
     """
     Score calculation definition
     """
@@ -2738,12 +3141,6 @@ class ScoreFunction(models.Model):
 
     # Name of this score function
     name = models.CharField(max_length=50)
-
-    # Label to be displayed for scores calculated with this funciton
-    label = models.CharField(max_length=100, blank=True)
-
-    # Description of this score function
-    description = models.TextField(blank=True)
 
     # Whether or not this score function is for a plan
     is_planscore = models.BooleanField(default=False)
@@ -2759,6 +3156,9 @@ class ScoreFunction(models.Model):
 
         # The default method of sorting Subjects should be by 'sort_key'
         ordering = ['name']
+
+        # A unique constraint on the name
+        unique_together = ('name',)
 
     def get_calculator(self):
         """
@@ -2857,7 +3257,7 @@ class ScoreFunction(models.Model):
         Get a unicode representation of this object. This is the 
         ScoreFunction's name.
         """
-        return self.name
+        return self.get_label()
 
 
 class ScoreArgument(models.Model):
@@ -2884,12 +3284,15 @@ class ScoreArgument(models.Model):
         """
         return "%s / %s / %s" % (self.argument, self.type, self.value)
 
-class ScoreDisplay(models.Model):
+class ScoreDisplay(BaseModel):
     """
     Container for displaying score panels
     """
 
-    # The title of the score display
+    # The name of the score display
+    name = models.CharField(max_length=50)
+
+    # The title of the score display, user-specifiable
     title = models.CharField(max_length=50)
 
     # The legislative body that this score display is for
@@ -2908,14 +3311,17 @@ class ScoreDisplay(models.Model):
         """
         Define a unique constraint on 2 fields of this model.
         """
-        unique_together = ('title','owner','legislative_body')
+        unique_together = ('name','title','owner','legislative_body')
 
     def __unicode__(self):
         """
         Get a unicode representation of this object. This is the Display's
         title.
         """
-        return self.title
+        if not self.title is None and self.title != '':
+            return self.title
+        else:
+            return self.get_short_label()
 
     def copy_from(self, display=None, functions=[], owner=None, title=None):
         """ 
@@ -2941,14 +3347,15 @@ class ScoreDisplay(models.Model):
         if self != display:
             self = copy(display)
             self.id = None
+            self.name = ''
 
             self.owner = owner if owner != None else display.owner
 
             # We can't have duplicate titles per owner so append "copy" if we must
             if self.owner == display.owner:
-                self.title = title if title != None else "%s copy" % display.title
+                self.title = title if not title is None else "%s copy" % display.__unicode__()
             else:
-                self.title = title if title != None else display.title
+                self.title = title if not title is None else display.__unicode__()
 
             self.save()
             self.scorepanel_set = display.scorepanel_set.all()
@@ -2963,6 +3370,7 @@ class ScoreDisplay(models.Model):
                 self.scorepanel_set.remove(public_demo)
                 demo_panel = copy(public_demo)
                 demo_panel.id = None
+                demo_panel.name = '%(display_title)s Demographics' % {'display_title':self.title}
                 demo_panel.save()
                 self.scorepanel_set.add(demo_panel)
             else:
@@ -2981,8 +3389,9 @@ class ScoreDisplay(models.Model):
             demo_panel.save()
             self.scorepanel_set.add(demo_panel)
             self.save()
-        except:
-            sys.stderr.write('Failed to copy ScoreDisplay %s to %s: %s\n' % (display.title, self.title, traceback.format_exc()))
+        except Exception, ex:
+            logger.info('Failed to copy ScoreDisplay %s to %s', display.__unicode__(), self.__unicode__())
+            logger.debug('Reason: %s', ex)
 
         return self
 
@@ -3044,10 +3453,16 @@ class ScoreDisplay(models.Model):
         return markup
 
 
-class ScorePanel(models.Model):
+class ScorePanel(BaseModel):
     """
     Container for displaying multiple scores of a given type
     """
+
+    # The name of this score panel
+    name = models.CharField(max_length=50)
+
+    # The title of this score panel - possibly user-specified
+    title = models.CharField(max_length=50)
 
     # The type of the score display (plan, plan summary, district)
     type = models.CharField(max_length=20)
@@ -3057,10 +3472,7 @@ class ScorePanel(models.Model):
 
     # Where this panel belongs within a score display
     position = models.PositiveIntegerField(default=0)
-    
-    # The title of the score panel
-    title = models.CharField(max_length=50)
-    
+  
     # The filename of the template to be used for formatting this panel
     template = models.CharField(max_length=500)
 
@@ -3078,7 +3490,10 @@ class ScorePanel(models.Model):
         Get a unicode representation of this object. This is the Panel's
         title.
         """
-        return self.title
+        if not self.title is None and self.title != '':
+            return self.title
+        else:
+            return self.get_short_label()
 
     def render(self,dorp,context=None,version=None,components=None,function_ids=None):
         """
@@ -3135,9 +3550,6 @@ class ScorePanel(models.Model):
 
             planscores = []
 
-            # TODO: do we need a seperate per-panel description?
-            description = ''
-            
             for plan in plans:
                 plan_version = version if version is not None else plan.version
                 
@@ -3161,31 +3573,29 @@ class ScorePanel(models.Model):
                     else:
                         score = ComputedPlanScore.compute(function,plan,format='html',version=plan_version)
                         sort = ComputedPlanScore.compute(function,plan,format='sort',version=plan_version)
-                    
-                    description = function.description
 
                     planscores.append({
-                        'plan':plan,
-                        'name':function.name,
-                        'label':function.label,
-                        'description':function.description,
-                        'score':score,
-                        'sort':sort
+                        'plan': plan,
+                        'name': function.get_short_label(),
+                        'label': function.get_label(),
+                        'description': function.get_long_description(),
+                        'score': score,
+                        'sort': sort
                     })
 
             if self.type == 'plan':
                 planscores.sort(key=lambda x:x['sort'],reverse=not self.is_ascending)
 
             return "" if len(planscores) == 0 else render_to_string(self.template, {
-                'settings':settings,
-                'planscores':planscores,
-                'functions':functions,
-                'title':self.title,
-                'cssclass':self.cssclass,
-                'position':self.position,
-                'description':description,
+                'settings': settings,
+                'planscores': planscores,
+                'functions': functions,
+                'title': self.get_short_label(),
+                'cssclass': self.cssclass,
+                'position': self.position,
+                'description': self.get_long_description(),
                 'planname': '' if len(plans) == 0 else plans[0].name,
-                'context':context
+                'context': context
             })
 
         # Render each district with multiple scores
@@ -3219,16 +3629,16 @@ class ScorePanel(models.Model):
                         function = function[0]
                         score = function.score(district,format='html',score_arguments=arguments)
                     else:
-                        if not function.label in functions:
-                            functions.append(function.label)
+                        if not function.get_label() in functions:
+                            functions.append(function.get_label())
                         score = ComputedDistrictScore.compute(function,district,format='html')
 
                     districtscore['scores'].append({
-                        'district':district,
-                        'name':function.name,
-                        'label':function.label,
-                        'description':function.description,
-                        'score':score
+                        'district': district,
+                        'name': function.get_short_label(),
+                        'label': function.get_label(),
+                        'description': function.get_long_description(),
+                        'score': score
                     })
 
                 if len(districtscore['scores']) > 0:
@@ -3237,14 +3647,14 @@ class ScorePanel(models.Model):
             return "" if len(districtscores) == 0 else render_to_string(self.template, {
                 'districtscores':districtscores,
                 'functions':functions,
-                'title': self.title,
+                'title': self.__unicode__(),
                 'cssclass': self.cssclass,
                 'settings':settings,
                 'position':self.position,
                 'context':context
             })
 
-class ValidationCriteria(models.Model):
+class ValidationCriteria(BaseModel):
     """
     Defines the required score functions to validate a legislative body
     """
@@ -3255,17 +3665,19 @@ class ValidationCriteria(models.Model):
     # Name of this validation criteria
     name = models.CharField(max_length=50)
 
-    # Description of this validation criteria
-    description = models.TextField(blank=True)
-
     # The legislative body that this validation criteria is for
     legislative_body = models.ForeignKey(LegislativeBody)
 
     def __unicode__(self):
-        return self.name
+        return self.get_label()
 
     class Meta:
+        """
+        Additional properties about the ValidationCriteria model.
+        """
         verbose_name_plural = "Validation criterion"
+
+        unique_together = ('name',)
 
 
 class ComputedDistrictScore(models.Model):
@@ -3295,7 +3707,7 @@ class ComputedDistrictScore(models.Model):
                 name = self.district.long_label
 
         if not self.function is None:
-            name = '%s / %s' % (self.function.name, name)
+            name = '%s / %s' % (self.function.get_short_label(), name)
         else:
             name = 'None / %s' % name
 
@@ -3325,7 +3737,8 @@ class ComputedDistrictScore(models.Model):
             cache,created = ComputedDistrictScore.objects.get_or_create(function=function, district=district, defaults=defaults)
 
         except Exception as ex:
-            print traceback.format_exc()
+            logger.info('Could not retrieve nor create computed district score for district %d.', district.id)
+            logger.debug('Reason:', ex)
             return None
 
         if created == True:
@@ -3403,8 +3816,9 @@ class ComputedPlanScore(models.Model):
             defaults = {'value':''}
             cache,created = ComputedPlanScore.objects.get_or_create(function=function, plan=plan, version=plan_version, defaults=defaults)
 
-        except Exception,e:
-            print e
+        except Exception,ex:
+            logger.info('Could not retrieve nor create ComputedPlanScore for plan %d', plan.id)
+            logger.debug('Reason:', ex)
             return None
 
         if created:
@@ -3440,7 +3854,7 @@ class ComputedPlanScore(models.Model):
             name = self.plan.name
 
         if not self.function is None:
-            name = '%s / %s' % (self.function.name, name)
+            name = '%s / %s' % (self.function.get_short_label(), name)
         else:
             name = 'None / %s' % name
 
@@ -3466,3 +3880,55 @@ class ContiguityOverride(models.Model):
     def __unicode__(self):
         return '%s / %s' % (self.override_geounit.portable_id, self.connect_to_geounit.portable_id)
 
+
+@transaction.commit_manually
+def configure_views():
+    """
+    Create the spatial views for all the regions, geolevels and subjects.
+
+    This creates views in the database that are used to map the features
+    at different geographic levels, and for different choropleth map
+    visualizations. All parameters for creating the views are saved
+    in the database at this point.
+    """
+    cursor = connection.cursor()
+    
+    sql = "CREATE OR REPLACE VIEW identify_geounit AS SELECT rg.id, rg.name, rgg.geolevel_id, rg.geom, rc.number, rc.percentage, rc.subject_id FROM redistricting_geounit rg JOIN redistricting_geounit_geolevel rgg ON rg.id = rgg.geounit_id JOIN redistricting_characteristic rc ON rg.id = rc.geounit_id;"
+    cursor.execute(sql)
+    transaction.commit()
+
+    logger.debug('Created identify_geounit view ...')
+
+    for geolevel in Geolevel.objects.all():
+        if geolevel.legislativelevel_set.all().count() == 0:
+            # Skip 'abstract' geolevels if regions are configured
+            continue
+
+        lbset = ','.join(map( lambda x:str(x.legislative_body_id), geolevel.legislativelevel_set.all()))
+        sql = "CREATE OR REPLACE VIEW simple_district_%s AS SELECT rd.id, rd.district_id, rd.plan_id, st_geometryn(rd.simple, %d) AS geom, rp.legislative_body_id FROM publicmapping.redistricting_district as rd JOIN publicmapping.redistricting_plan as rp ON rd.plan_id = rp.id WHERE rp.legislative_body_id IN (%s);" % (geolevel.name, geolevel.id, lbset)
+        cursor.execute(sql)
+        transaction.commit()
+
+        logger.debug('Created simple_district_%s view ...', geolevel.name)
+
+        sql = "CREATE OR REPLACE VIEW simple_%s AS SELECT rg.id, rg.name, rgg.geolevel_id, rg.simple as geom FROM redistricting_geounit rg JOIN redistricting_geounit_geolevel rgg ON rg.id = rgg.geounit_id WHERE rgg.geolevel_id = %%(geolevel_id)s;" % geolevel.name
+        cursor.execute(sql, {'geolevel_id':geolevel.id})
+        transaction.commit()
+
+        logger.debug('Created simple_%s view ...', geolevel.name)
+        
+        for subject in Subject.objects.all():
+            sql = "CREATE OR REPLACE VIEW %s AS SELECT rg.id, rg.name, rgg.geolevel_id, rg.geom, rc.number, rc.percentage FROM redistricting_geounit rg JOIN redistricting_geounit_geolevel rgg ON rg.id = rgg.geounit_id JOIN redistricting_characteristic rc ON rg.id = rc.geounit_id WHERE rc.subject_id = %%(subject_id)s AND rgg.geolevel_id = %%(geolevel_id)s;" % get_featuretype_name(geolevel.name, subject.name)
+            cursor.execute(sql, {'subject_id':subject.id, 'geolevel_id':geolevel.id})
+            transaction.commit()
+
+            logger.debug('Created %s view ...', get_featuretype_name(geolevel.name, subject.name))
+
+def get_featuretype_name(geolevel_name, subject_name=None):
+    """
+    A uniform mechanism for generating featuretype names.
+    """
+    if subject_name is None:
+        return 'demo_%s' % geolevel_name
+    else:
+        return 'demo_%s_%s' % (geolevel_name, subject_name)

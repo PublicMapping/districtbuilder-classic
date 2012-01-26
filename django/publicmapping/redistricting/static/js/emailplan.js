@@ -39,7 +39,7 @@ emailplan = function(options) {
             submitButton: {},
             handlerUrl: '',            
 
-            title: 'Submit Final Plan to Contest',
+            title: gettext('Submit Final Plan to Contest'),
             autoOpen: false,
             modal: true,
             width: 525,
@@ -96,8 +96,8 @@ emailplan = function(options) {
 
         // Everything is valid, send a request to the server
         _options.container.dialog('close');
-        var waitDialog = $('<div>Please wait while emailing plan.</div>').dialog({
-            modal: true, autoOpen: true, title: 'Emailing Plan',
+        var waitDialog = $('<div />').text(gettext('Please wait. Emailing plan.')).dialog({
+            modal: true, autoOpen: true, title: gettext('Emailing Plan'),
             escapeOnClose: false, resizable:false,
             open: function() { $(".ui-dialog-titlebar-close", $(this).parent()).hide(); }
         });
@@ -109,17 +109,18 @@ emailplan = function(options) {
             success: function(data) {
                 waitDialog.remove();
                 if (data.success) {
-                    $('<div title="Emailing Plan"><p>' +
-                      'Your plan is in the process of being submitted. You will receive a confirmation ' +
-                      'email once it has completed successfully. This may take a few minutes.' +
-                      '</p></div>').dialog({
+                    $('<div />').attr('title', gettext('Emailing Plan'))
+                        .text(gettext('Your plan is in the process of being submitted. You will receive a confirmation email once it has completed successfully. This may take a few minutes.')).dialog({
                           modal:true, resizable:false,
-                          buttons: { OK: function() { $(this).dialog('close'); }}
+                          buttons: [{
+                            text: gettext("OK"),
+                            click: function() { $(this).dialog('close'); }
+                          }]
                       });
                 } else if ('redirect' in data) {
                     window.location.href = data.redirect;
                 } else if ('message' in data) {
-                    $('<div title="Error Emailing Plan"><p>' + data.message + '</p></div>')
+                    $('<div />').attr('title', gettext('Error Emailing Plan')).text(data.message)
                         .dialog({modal:true, resizable:false});
                 }
             },
@@ -128,8 +129,8 @@ emailplan = function(options) {
                 if (xhr.status == 403) {
                     window.location.href = '/?msg=logoff';
                 } else {
-                    $('<div title="Error Emailing Plan"><p>Please try again later.</p></div>')
-                        .dialog({modal:true, resizable:false});
+                    $('<div />').attr('title', gettext('Error Emailing Plan'))
+                        .text(gettext('Please try again later')).dialog({modal:true, resizable:false});
                 }
         }});
     };

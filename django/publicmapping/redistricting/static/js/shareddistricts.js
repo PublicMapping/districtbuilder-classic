@@ -30,7 +30,16 @@
  * Parameters:
  *   options -- Configuration options for the chooser.
  */
+
+
 shareddistricts = function(options) {
+
+    var _i18nParams = {
+        bodyMembers: BODY_MEMBERS,
+        bodyMembersCap: BODY_MEMBERS.charAt(0).toUpperCase() + BODY_MEMBERS.substring(1),
+        bodyMemberLong: BODY_MEMBER_LONG,
+        bodyMemberLongCap: BODY_MEMBER_LONG.charAt(0).toUpperCase() + BODY_MEMBER_LONG.substring(1)
+    };
 
     var _self = {},
         _options = $.extend({
@@ -48,7 +57,7 @@ shareddistricts = function(options) {
             autoOpen: false,
             modal: true,
             width: 975,
-            title: 'Copy and Paste ' + BODY_MEMBERS.charAt(0).toUpperCase() + BODY_MEMBERS.substring(1),
+            title: printFormat(gettext('Copy and Paste %(bodyMembersCap)s'), _i18nParams),
             resizable: false,
             closable: true
         }, options),
@@ -68,6 +77,7 @@ shareddistricts = function(options) {
         // jqGrid variables
         _planTable,
         _districtTable;
+
 
     /**
      * Initialize the chooser. Setup the click event for the target to
@@ -93,7 +103,7 @@ shareddistricts = function(options) {
 
     var showDialog = function() {
         _options.container.dialog('open');
-        if (_map == undefined) {
+        if (_map === undefined) {
             initMap();
         }
     };
@@ -118,7 +128,6 @@ shareddistricts = function(options) {
             pager:_options.planPager,
             url:_options.planUrl,
             hidegrid: false,
-            /* scroll: true, /* dynamically scroll grid instead of using pager */
             gridview: true,
             altRows: true,
             altclass: 'chooserAlt',
@@ -129,13 +138,13 @@ shareddistricts = function(options) {
                 id: 'pk'
             },
             colModel: [
-                {name:'fields.owner', label:'Author', search:true, width: '110', fixed: true, sortable:true},
-                {name:'fields.name', label:'Plan', search: true, sortable:true},
-                {name:'fields.description', label:'Description', hidden:true, search:true},
-                {name:'fields.is_shared', label:'Shared', hidden:true, search:false, formatter:'checkbox', width:'70', fixed: true, align: 'center'},
-                {name:'fields.edited', label:'Last Edited', sortable:true, search:false, width:'130', fixed: true, align: 'center', formatter:'date', formatoptions: { srcformat: 'UniversalSortableDateTime', newformat:'m/d/Y g:i A'}},
-                {name:'fields.can_edit', label:'Edit', search:false, hidden: true},
-                {name:'fields.districtCount', label:'# Districts', search:false, sortable:true, hidden:true}
+                {name:'fields.owner', label:gettext('Author'), search:true, width: '110', fixed: true, sortable:true},
+                {name:'fields.name', label:gettext('Plan'), search: true, sortable:true},
+                {name:'fields.description', label:gettext('Description'), hidden:true, search:true},
+                {name:'fields.is_shared', label:gettext('Shared'), hidden:true, search:false, formatter:'checkbox', width:'70', fixed: true, align: 'center'},
+                {name:'fields.edited', label:gettext('Last Edited'), sortable:true, search:false, width:'130', fixed: true, align: 'center', formatter:'date', formatoptions: { srcformat: 'UniversalSortableDateTime', newformat:'m/d/Y g:i A'}},
+                {name:'fields.can_edit', label:gettext('Edit'), search:false, hidden: true},
+                {name:'fields.districtCount', label:gettext('# Districts'), search:false, sortable:true, hidden:true}
             ],
 
             onSelectRow: planSelected,
@@ -159,14 +168,14 @@ shareddistricts = function(options) {
         }).jqGrid(
             'navGrid',
             '#' + _options.planPager.attr('id'),
-            {search:false,edit:false,add:false,del:false,searchText:"Search",refreshText:"Clear Search"},
+            {search:false,edit:false,add:false,del:false,searchText:gettext('Search'),refreshText:gettext('Clear Search')},
             {}, //edit
             {}, //add
             {}, //del
             {}, //search
             {} //view
         );
-    }
+    };
 
     /**
      * Set up the jqGrid table and make the initial call to the server for data
@@ -177,7 +186,6 @@ shareddistricts = function(options) {
             pager:_options.districtPager,
             url:_options.districtUrl,
             hidegrid: false,
-            /* scroll: true, /* dynamically scroll grid instead of using pager */
             gridview: true,
             altRows: true,
             altclass: 'chooserAlt',
@@ -188,7 +196,7 @@ shareddistricts = function(options) {
                 id: 'pk'
             },
             colModel: [
-                {name:'fields.long_label', label:BODY_MEMBER_LONG.charAt(0).toUpperCase() + BODY_MEMBER_LONG.substring(1) + ' Name'},
+                {name:'fields.long_label', label: printFormat(gettext('%(bodyMemberLongCap)s Name'), _i18nParams)},
                 {name:'fields.district_id', hidden: true},
                 {name:'selected', label:' ', width: '55', align: 'center'}
             ],
@@ -211,11 +219,6 @@ shareddistricts = function(options) {
                                              $("#csrfmiddlewaretoken").val());
                     }
                 }
-            },
-            beforeRequest: function () {
-                // If we don't do this, the grid gets a 500 error the first time
-                // before a plan is selected
-                this.p.url = this.p.url.replace('PLAN_ID', 0);
             }
         }).jqGrid(
             'navGrid',
@@ -227,17 +230,17 @@ shareddistricts = function(options) {
             {}, //search
             {} //view
         );
-    }
+    };
 
     var loadError = function(xhr, textStatus, error) {
-        if (xhr.status == 403) {
+        if (xhr.status === 403) {
             window.location.href = '/?msg=logoff';
         }
-    }
+    };
 
     var planSelected = function(id) {
         // Set the internal variables for later use
-        if (_selectedPlanId != id) {
+        if (_selectedPlanId !== id) {
             _selectedPlanId = id;
             _options.target.trigger('available_districts_updated', [_available_districts + _selectedDistricts.length]);
             _selectedDistricts = [];
@@ -262,18 +265,19 @@ shareddistricts = function(options) {
 
     var checkSelections = function(grid) {
         var ids = _districtTable.jqGrid('getDataIDs');
-        for (var i = 0; i < ids.length; i++) {
+        var i = 0;
+        for (i; i < ids.length; i++) {
             var cl = ids[i];
             var selectionIndex = $.inArray(cl, _selectedDistricts);
             var checked = selectionIndex > -1 ? ' checked ' : '';
-            var content = '<input class="district_selection" type="checkbox" value="' + cl + '"' + checked + '/>'
+            var content = '<input class="district_selection" type="checkbox" value="' + cl + '"' + checked + '/>';
             _districtTable.jqGrid('setRowData', cl, { selected: content });
         }
-    }
+    };
 
     /**
      * When a plan is selected, load the districts in that plan
-     * in the second grib
+     * in the second grid
      */
     var loadDistrictsForPlan = function(id) {
         _selectedDistricts = [];
@@ -283,60 +287,16 @@ shareddistricts = function(options) {
     };
 
     var appendExtraParamsToRequest = function(xhr) {
+        this.p.url = this.p.url.replace('PLAN_ID', 0);
         _planTable.setPostDataItem( 'owner_filter', 'all_available' );
         _planTable.setPostDataItem( 'legislative_body', BODY_ID );
-        /* TODO: implement search
-        If the search box has a value, apply that to any filter
-        var search = $('#plan_search');
-        if (search.val() != '') {
-                _planTable.setPostDataItem( '_search', true );
-                _planTable.setPostDataItem( 'searchString', $('#plan_search').val() );
-        } else {
-                _planTable.setPostDataItem( '_search', false );
-                _planTable.removePostDataItem( 'searchString' );
-        } */
-        _selectedPlanId = undefined;
-        _selectedPlanName = undefined;
-    };
-
-    /**
-     * Set up the search box feature
-     */
-    var setUpSearch = function() {
-        // On enter key, search
-        var searchBox = $('#plan_search');
-        searchBox.keyup( function(event) {
-            if (event.which == 13) {
-                _planTable.jqGrid().trigger('reloadGrid');
-            }
-        });
-
-        // watermark for non-html5 browsers
-        if (document.getElementById('plan_search').getAttribute('placeholder') != 'Search') {
-            searchBox.focus( function() {
-                if ($(this).val() == 'Search') {
-                    $(this).val('');
-                    $(this).css('font', '');
-                }
-            });
-            searchBox.blur( function() {
-                if ($(this).val() == '') {
-                    $(this).css('font', 'gray');
-                    $(this).val('Search');
-                }
-            });
-
-            // initial state showing watermark
-            searchBox.css('font', 'gray');
-            searchBox.val('Search');
-        }
-        
     };
 
     var initUI = function() {
         // Create the dialog displayed when the tool is disabled
-        _disabledDialog = $('<div id="copy_paste_disabled" title="Maximum ' + BODY_MEMBERS.charAt(0).toUpperCase() + BODY_MEMBERS.substring(1) + ' Reached">' + 
-            'Your plan is at maximum capacity. Please delete a ' + BODY_MEMBER_LONG + ' to enable pasting.</div>')
+        _disabledDialog = $('<div id="copy_paste_disabled" />')
+            .attr('title', printFormat(gettext('Maximum %(bodyMembers)s Reached'), _i18nParams))
+            .text(printFormat(gettext('Your plan is at maximum capacity. Please delete a %(bodyMemberLong)s to enable pasting.'), _i18nParams))
             .dialog({ autoOpen: false, modal: true, resizable: false});
 
         // Use the closeDialog method to clear out the selections
@@ -345,26 +305,35 @@ shareddistricts = function(options) {
         // Set up the message that displays how many districts are available for pasting
         _options.target.bind('available_districts_updated', function(event, new_value) {
             _available_districts = new_value;
-            var instructions = '2. Remove ' + Math.abs(_available_districts) + ' before submitting';
+            var instructions = printFormat(gettext(
+                '2. Remove %(num_available_districts)s before submitting'),
+                { num_available_districts: Math.abs(_available_districts)});
             switch (_available_districts) {
                 case 0:
-                    instructions = '2. Check your selections';
+                    instructions = gettext('2. Check your selections');
                     break;
                 case 1:
                     if (PLAN_TYPE == 'plan') {
-                        instructions = '2. Select a ' + BODY_MEMBER_LONG + ' to copy';
+                        instructions = printFormat(gettext(
+                            '2. Select a %(bodyMemberLong)s to copy'), _i18nParams);
                     }
                     else {
-                        instructions = '2. Select a ' + BODY_MEMBER_LONG;
+                        instructions = printFormat(gettext(
+                            '2. Select a %(bodyMemberLong)s'), _i18nParams);
                     }
                     break;
                 default:
                     if (_available_districts > 0) {
                         if (PLAN_TYPE == 'plan') {
-                            instructions = '2. Select up to ' + _available_districts + ' ' + BODY_MEMBERS + ' to copy';
+                            instructions = printFormat(gettext(
+                                '2. Select up to %(available_districts)s %(bodyMembers)s to copy'), {
+                                available_districts: _available_districts,
+                                bodyMembers: BODY_MEMBERS
+                            });
                         }
                         else {
-                            instructions = '2. Select ' + BODY_MEMBERS;
+                            instructions = printFormat(gettext(
+                                '2. Select %(bodyMembers)s'), _i18nParams);
                         }
                     }
             }
@@ -400,12 +369,15 @@ shareddistricts = function(options) {
                         var updateAssignments = true;
                         $('#map').trigger('version_changed', [data.version, updateAssignments]); 
                     } else {
-                        $('<div class="error" title="Sorry">Unable to paste ' + BODY_MEMBERS + ':<p>' + data.message + '</p></div>')
+                        $('<div class="error" />').attr('title', gettext('Sorry'))
+                            .text(printFormat(gettext('Unable to paste %(bodyMembers)s'), _i18nParams))
+                            .append('<p>' + data.message + '</p>')
                             .dialog({modal:true, resizable:false});
                     }
                 },
                 error: function() {
-                    $('<div class="error" title="Sorry">Unable to paste ' + BODY_MEMBERS + '</div>')
+                    $('<div class="error" />').attr('title', gettext('Sorry'))
+                        .text(printFormat(gettext('Unable to paste %(bodyMembers)s'), _i18nParams))
                         .dialog({modal:true, resizable:false});
                 }
             });

@@ -48,7 +48,7 @@ splitsreport = function(options) {
             modal: true,
             width: 778,
             height: 'auto',
-            title: 'Splits Report',
+            title: gettext('Splits Report'),
             resizable: false,
             closable: true
         }, options);
@@ -66,10 +66,10 @@ splitsreport = function(options) {
 
         // Add button behavior for displaying reports
         var displaySplits = function(ids) {
-            var waitDialog = $('<div>Please wait while retrieving splits report.</div>').dialog({
+            var waitDialog = $('<div />').text(gettext('Please wait. Retrieving splits report.')).dialog({
                 modal: true,
                 autoOpen: true,
-                title: 'Retrieving Splits Report',
+                title: gettext('Retrieving Splits Report'),
                 escapeOnClose: false,
                 resizable:false,
                 open: function() { $(".ui-dialog-titlebar-close", $(this).parent()).hide(); }                    
@@ -90,8 +90,11 @@ splitsreport = function(options) {
                 },
                 error: function(xhr, textStatus, error) {
                     waitDialog.remove();                        
-                    $('<div>Error encountered while retrieving splits report: ' + textStatus + '</div>').dialog({
-                        modal: true, autoOpen: true, title: 'Error', resizable:false
+                    $('<div/>').text(
+                            gettext('Error encountered while retrieving splits report: ') + 
+                            '<div>' + textStatus + '</div>'
+                        ).dialog({
+                        modal: true, autoOpen: true, title: gettext('Error'), resizable:false
                     });                
                 }
             });
@@ -102,8 +105,8 @@ splitsreport = function(options) {
                 selected.push($(this).val());
             });
             if ((selected.length < 1) || (selected.length > 3)) {
-                $("<div>Please select either 1, 2, or 3 layers for comparison.</div>").dialog({
-                    title: 'Warning',
+                $('<div />').text(gettext('Please select either 1, 2, or 3 layers for comparison.')).dialog({
+                    title: gettext('Warning'),
                     resizable:false,
                     modal:true
                 });

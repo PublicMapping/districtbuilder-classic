@@ -388,6 +388,16 @@ ul#plan_buttons li {background-color:#8BD1BC;}
 div#form_container, div#name_statistics_set  {background-color: #ecf6f5;}
 div#form_action{background-color: #8ac7b5;}
 
+/*plan chooser */
+div#start_mapping_help {
+    border: 1px solid #AAAAAA;
+    background-color: #EDDA74;
+    color: #111111;
+    font-size: 11px;
+    margin-top: 2px;
+    padding-left: 5px;
+}
+
 /*buttons */
 
 #app button, .ui-dialog button, #app .multiple .ui-buttonset .ui-button { 

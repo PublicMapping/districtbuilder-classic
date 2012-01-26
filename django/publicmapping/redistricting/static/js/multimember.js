@@ -56,7 +56,7 @@ multimember = function(options) {
             autoOpen: false,
             modal: true,
             width: 650,
-            title: 'Set Multi-Member Districts',
+            title: gettext('Set Multi-Member Districts'),
             resizable: false,
             closable: true
         }, options);
@@ -197,12 +197,14 @@ multimember = function(options) {
                             $('#map').trigger('version_changed', [data.version, false]);
                         }
                     } else {
-                        $('<div class="error" title="Sorry">Unable to assign representatives:<p>' + data.message + '</p></div>')
+                        $('<div class="error" />').attr('title', gettext('Sorry'))
+                            .text(gettext('Unable to assign representatives:') + data.message)
                             .dialog({modal:true, resizable:false});
                     }
                 },
                 error: function() {
-                    $('<div class="error" title="Sorry">Unable to assign representatives</div>')
+                    $('<div class="error" />').attr('title', gettext('Sorry'))
+                        .text(gettext('Unable to assign representatives'))
                         .dialog({modal:true, resizable:false});
                 }
             });
@@ -247,7 +249,7 @@ multimember = function(options) {
         // Create the grid
         $(_options.memberGrid).jqGrid({
             datatype: 'local',
-            colNames: ['District', 'District ID', '# Members'],
+            colNames: [gettext('District'), gettext('District ID'), gettext('# Members')],
             colModel: [
                 { name: 'name', index: 'district_id', width: 90, align: 'left', sorttype: 'int' },
                 { name: 'district_id', index: 'district_id', hidden: true },

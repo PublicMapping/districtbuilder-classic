@@ -159,7 +159,13 @@ statisticssets = function(options) {
             _displayCache = { dirty: false };
         }
 
-        $('.demographics').html('<div class="sidebarload"><h3>Loading Statistics...</h3></div>');
+        
+        $('.demographics').empty().append(
+            $('<div class="sidebarload"/>').append(
+                $('<h3/>').text(gettext('Loading Statistics...'))
+            )
+        );
+
         $('.demographics').load(
             _options.loadDemographicsUrl,
             {
@@ -328,8 +334,8 @@ statisticssets = function(options) {
         
         var functionArray = getSelectedScoreFunctions();
         if (functionArray.length > 3) {
-            $("<div>Please select 3 or fewer statistics.</div>").dialog({
-                title: 'Warning',
+            $('<div/>').text(gettext('Please select 3 or fewer statistics.')).dialog({
+                title: gettext('Warning'),
                 resizable:false,
                 modal:true
             });
@@ -337,8 +343,8 @@ statisticssets = function(options) {
         }
         var name = _statisticsSetNameField.val();
         if ($.trim(name) == '') {
-            $("<div>Please name your statistics set.</div>").dialog({
-                title: 'Warning',
+            $('<div/>').text(gettext('Please name your statistics set.')).dialog({
+                title: gettext('Warning'),
                 resizable:false,
                 modal:true
             });
@@ -376,15 +382,15 @@ statisticssets = function(options) {
                     }
                 } else {
                     if (data.error == 'limit') {
-                        $('<div>' + data.message + '</div>').dialog({
-                            title: 'Warning',
+                        $('<div/>').text(data.message).dialog({
+                            title: gettext('Warning'),
                             resizable:false,
                             modal:true
                         });
                     }
                     else {
-                        $('<div>Please select 1-3 statistics to save in the named set.</div>').dialog({
-                            title: 'Incomplete',
+                        $('<div>').text(gettext('Please select 1-3 statistics to save in the named set.')).dialog({
+                            title: gettext('Incomplete'),
                             resizable:false,
                             modal:true
                         });

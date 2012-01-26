@@ -97,6 +97,8 @@ districtfile = function(options) {
     var statusRequestCallback = function(data) {
         if (data !== null && data.success) {
             var fileStatus = data.status;
+            var button = $('<button type="button" id="btnExportDistrictIndexFile" class="button" />');
+            
             // If the file is ready, add a button/link to download
             if (fileStatus == 'done') {
                 if (_autoDownload) {
@@ -115,7 +117,7 @@ districtfile = function(options) {
                     else {
                         _options.target.empty();
                         var link = $('<a href="' + _options.fetchUrl + '?type=' + _options.type + '" />');
-                        var button = $('<button type="button" id="btnExportDistrictIndexFile" class="button">Download</button>').button();
+                        button.text(gettext('Download')).button();
                         $(link).append(button);
                         _options.target.append(link);    
                     }
@@ -128,7 +130,7 @@ districtfile = function(options) {
                 if (_visiblyUpdate) {
                     if (_options.menu_icon == null) {
                         _options.target.empty();
-                        var button = $('<button type="button" id="btnExportDistrictIndexFile" class="button">Request File</button>').button();
+                        button.text(gettext('Request File')).button();
                         button.click(function(){
                             _autoDownload = true;
                             $.post(_options.fetchUrl + '?type=' + _options.type, indicatePending());
@@ -144,20 +146,6 @@ districtfile = function(options) {
             }
         }
     };
-    /**
-     * The callback after the initial attempt to get a district index file
-     * If the user has not defined an email address, they'll be asked to 
-     * supply one to which the district index file can be mailed
-     */
-    var fileRequestCallback = function(data) {
-        if (data.success) {
-            successfulSend(data);
-        } else {
-            if (data.askforemail) {
-                askForEmail();
-            }
-        }
-    };
 
     /** 
      * Show the loading indicator.  If the file is loaded totally, show 
@@ -170,7 +158,8 @@ districtfile = function(options) {
             }
             else {
                 _options.target.empty();
-                var pending = $('<div id="pendingMessage" class="loading">Please wait. File is being created on the server.</div>');
+                var pending = $('<div id="pendingMessage" class="loading" />');
+                pending.text(gettext('Please wait. File is being created on the server'));
                 _options.target.append(pending);
             }
         }
@@ -182,17 +171,6 @@ districtfile = function(options) {
         _checkInProgress = setTimeout(checkagain, _options.timer);
     };
 
-    /**
-     * The callback for a successful send.  Let the user know that the
-     * file will come via email.
-     */
-    var successfulSend = function(data) {
-        $('<div title=\'Exporting\'>' + data.message + '</div>').dialog({
-             modal:true,
-             resizable:false
-        });
-    };
-    
     /**
      * Clear out the setTimeout item that checks for the file status
      */
@@ -209,41 +187,6 @@ districtfile = function(options) {
         _visiblyUpdate = visible;
         return _self;
     }
-        
-
-    /**
-     * If the user has no email address, this dialog will give them the opportunity
-     * to supply one to which a district index file can be mailed.
-     */
-    var askForEmail = function() {
-        // Clean up any old dialogs that are in the DOM
-        $('#dlgMail').remove();
-        var dlgMail = $("<div id='dlgMail'><div>Please suppy a valid email address so we " + 
-            "can email the file to you. The address won't be saved or shared.</div><input id='email' type='text' /></div>");
-        dlgMail.dialog({
-            modal:true,
-            resizable:false,
-            title: 'Email address needed',
-            buttons: {
-                'Email Me': function() {
-                    // Check for a properly formatted email address first
-                    var address = $('#dlgMail #email').val();
-                    if (!(address.match(/^([\w\-\.\+])+\@([\w\-\.])+\.([A-Za-z]{2,4})$/))) {
-                        if ($('#dlgMail .error').length == 0) {
-                            $('#dlgMail input').css('border', '1px solid #ff0000');
-                            $('#dlgMail input').before($("<div class='error'>That is not a valid email address.</div>"));
-                        }
-                    } else {
-                        $.post('/districtmapping/plan/' + PLAN_ID + '/districtfile/', { email: address }, fileRequestCallback);
-                        $('#dlgMail').dialog('close');
-                    }
-                },
-                'No thanks': function() {
-                    $('#dlgMail').dialog('close');
-                }
-            }
-        });
-    };
 
     return _self;
 };

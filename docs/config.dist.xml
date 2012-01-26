@@ -6,18 +6,18 @@
         <!-- A Legislative body has an ID (for referencing in GeoLevel
             definitions later), a name, and a label for plan items 
             ("District" for Congressional, etc) -->
-        <LegislativeBody id="congress" name="Congressional" short_label="%s" 
-            long_label="District %s" maxdistricts="11" sort_key="1"/>
-        <LegislativeBody id="house" name="State House" short_label="%s" 
-            long_label="District %s" maxdistricts="100" sort_key="2"/>
-        <LegislativeBody id="senate" name="State Senate" short_label="%s"
-            long_label="District %s" maxdistricts="40" sort_key="3"/>
-        <LegislativeBody id="community" name="Community Map" short_label="%s"
-            long_label="Community %s" maxdistricts="999" is_community="true" sort_key="4"/>
-        <LegislativeBody id="dc_area_council" name="DC Planning Council" short_label="%s"
-            long_label="District %s" maxdistricts="5" sort_key="5"/>
-        <LegislativeBody id="dc_community" name="DC Community Map" short_label="%s"
-            long_label="Community %s" maxdistricts="999" is_community="true" sort_key="6"/>
+        <LegislativeBody id="congress" name="Congressional" short_label="%(district_id)s" 
+            long_label="District %(district_id)s" maxdistricts="11" sort_key="1"/>
+        <LegislativeBody id="house" name="State House" short_label="%(district_id)s" 
+            long_label="District %(district_id)s" maxdistricts="100" sort_key="2"/>
+        <LegislativeBody id="senate" name="State Senate" short_label="%(district_id)s"
+            long_label="District %(district_id)s" maxdistricts="40" sort_key="3"/>
+        <LegislativeBody id="community" name="Community Map" short_label="%(district_id)s"
+            long_label="Community %(district_id)s" maxdistricts="999" is_community="true" sort_key="4"/>
+        <LegislativeBody id="dc_area_council" name="DC Planning Council" short_label="%(district_id)s"
+            long_label="District %(district_id)s" maxdistricts="5" sort_key="5"/>
+        <LegislativeBody id="dc_community" name="DC Community Map" short_label="%(district_id)s"
+            long_label="Community %(district_id)s" maxdistricts="999" is_community="true" sort_key="6"/>
     </LegislativeBodies>
 
     <!-- Define Regions as aggregations of smaller geographic units. -->
@@ -42,7 +42,7 @@
             </GeoLevels>
         </Region>
 
-        <Region id="dc_area" name="dc" label="DC Metro" description="The District of Columbia Metropolitan Area" sort_key="2">
+        <Region id="dc" name="dc" label="DC Metro" description="The District of Columbia Metropolitan Area" sort_key="2">
             <!-- A set of filters to apply to the largets GeoLevel shapefile. -->
             <RegionFilter>
                 <!-- A Single filter for the GEOID10 field in the vtd shapefile
@@ -304,12 +304,6 @@
                 <Argument name="target" value="40" />
             </ScoreFunction>
 
-            <ScoreFunction id="b_plan_dc_area_council_noncontiguous" type="plan"
-                calculator="publicmapping.redistricting.calculators.Contiguity"
-                label="Contiguous">
-                <Argument name="target" value="5" />
-            </ScoreFunction>
-
             <!-- interval score function for population -->
             <ScoreFunction id="a_congressional_population" type="district"
                 label="Tot Pop" user_selectable="true"
@@ -339,16 +333,6 @@
                 <Argument name="target" value="200026" />
                 <Argument name="bound1" value=".005" />
                 <Argument name="bound2" value=".01" />
-            </ScoreFunction>
-
-            <ScoreFunction id="a_dc_area_council_population" type="district"
-                label="Tot Pop" user_selectable="true"
-                description="Population interval calculator for senate."
-                calculator="publicmapping.redistricting.calculators.Interval">
-                <SubjectArgument name="subject" ref="poptot" />
-                <Argument name="target" value="292843" />
-                <Argument name="bound1" value=".05" />
-                <Argument name="bound2" value=".1" />
             </ScoreFunction>
 
             <!-- leaderboard functions -->
@@ -433,26 +417,6 @@
                 <Argument name="target" value="40"/>
             </ScoreFunction>
 
-            <ScoreFunction id="a_dc_area_council_plan_equipopulation_validation" type="plan"
-                calculator="publicmapping.redistricting.calculators.Equipopulation"
-                label="Target Pop. (292,843)"
-                description="The population of each State Senate district must be 292,843 +/- 5%.">
-                <Argument name="min" value="278201" />
-                <Argument name="max" value="307485" />
-                <SubjectArgument name="value" ref="poptot"/>
-                <Argument name="validation" value="1"/>
-            </ScoreFunction>
-
-            <ScoreFunction id="a_dc_area_council_plan_equipopulation_summary" type="plan"
-                calculator="publicmapping.redistricting.calculators.Equipopulation"
-                label="Target Pop. (292,843)"
-                description="The population of each State Senate district must be 292,843 +/- 5%.">
-                <Argument name="min" value="278201" />
-                <Argument name="max" value="307485" />
-                <SubjectArgument name="value" ref="poptot"/>
-                <Argument name="target" value="5"/>
-            </ScoreFunction>
-
             <ScoreFunction id="plan_all_blocks_assigned" type="plan"
                 calculator="publicmapping.redistricting.calculators.AllBlocksAssigned"
                 label="All Blocks Assigned"
@@ -507,15 +471,6 @@
                 <Argument name="target" value="5" />
             </ScoreFunction>
 
-            <ScoreFunction id="plan_majority_minority_blk" type="plan"
-                calculator="publicmapping.redistricting.calculators.MajorityMinority"
-                label="Black VAP Majority (&gt;50%)"
-                description="Compliance with the Voting Rights Act will be assumed if maps include a minority-majority district in any area where a minority group is (as described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) &apos;sufficiently large and geographically compact to constitute a majority in a single-member district&apos;.">
-                <SubjectArgument name="population" ref="vap" />
-                <SubjectArgument name="minority1" ref="vapblk" />
-                <Argument name="target" value="0" />
-            </ScoreFunction>
-
             <ScoreFunction id="plan_majority_minority_hisp" type="plan"
                 calculator="publicmapping.redistricting.calculators.MajorityMinority"
                 label="Hisp. VAP Majority (&gt;50%)"
@@ -558,8 +513,6 @@
                 <LegislativeBody ref="house"/>
                 <LegislativeBody ref="senate"/>
                 <LegislativeBody ref="community"/>
-                <LegislativeBody ref="dc_area_council"/>
-                <LegislativeBody ref="dc_community"/>
             </ScoreFunction>
 
             <ScoreFunction id="district_vap" type="district"
@@ -570,8 +523,6 @@
                 <LegislativeBody ref="house"/>
                 <LegislativeBody ref="senate"/>
                 <LegislativeBody ref="community"/>
-                <LegislativeBody ref="dc_area_council"/>
-                <LegislativeBody ref="dc_community"/>
             </ScoreFunction>
                 
             <ScoreFunction id="district_poptot" type="district"
@@ -579,14 +530,12 @@
                 user_selectable="true" label="Total Population">
                 <SubjectArgument name="value1" ref="poptot" />
                 <LegislativeBody ref="community"/>
-                <LegislativeBody ref="dc_community"/>
             </ScoreFunction>
 
             <ScoreFunction id="district_comments" type="district"
                 calculator="publicmapping.redistricting.calculators.Comments"
                 user_selectable="false" label="Comments">
                 <LegislativeBody ref="community"/>
-                <LegislativeBody ref="dc_community"/>
             </ScoreFunction>
 
             <!-- Calculator Reports configuration -->
@@ -616,15 +565,6 @@
                 <SubjectArgument name="value" ref="poptot" />
                 <Argument name="min" value="76010" />
                 <Argument name="max" value="84011" />
-            </ScoreFunction>
-
-            <ScoreFunction id="report_score_total_population_dc_council" type="district"
-                calculator="publicmapping.redistricting.reportcalculators.Population"
-                label="Total Population" >
-                <LegislativeBody ref="dc_area_council"/>              
-                <SubjectArgument name="value" ref="poptot" />
-                <Argument name="min" value="278201" />
-                <Argument name="max" value="307485" />
             </ScoreFunction>
 
             <ScoreFunction id="report_score_vap" type="district"
@@ -661,7 +601,6 @@
                 <LegislativeBody ref="congress"/>
                 <LegislativeBody ref="senate"/>
                 <LegislativeBody ref="house"/>              
-                <LegislativeBody ref="dc_area_council"/>              
                 <SubjectArgument name="value" ref="vapblk" />
                 <SubjectArgument name="total" ref="vap" />
             </ScoreFunction>
@@ -683,7 +622,6 @@
                 <LegislativeBody ref="congress"/>
                 <LegislativeBody ref="senate"/>
                 <LegislativeBody ref="house"/>              
-                <LegislativeBody ref="dc_area_council"/>              
                 <Argument name="comptype" value="LengthWidth" />
             </ScoreFunction>
 
@@ -693,7 +631,6 @@
                 <LegislativeBody ref="congress"/>
                 <LegislativeBody ref="senate"/>
                 <LegislativeBody ref="house"/>              
-                <LegislativeBody ref="dc_area_council"/>              
                 <Argument name="comptype" value="Schwartzberg" />
             </ScoreFunction>
 
@@ -703,7 +640,6 @@
                 <LegislativeBody ref="congress"/>
                 <LegislativeBody ref="senate"/>
                 <LegislativeBody ref="house"/>              
-                <LegislativeBody ref="dc_area_council"/>              
                 <Argument name="comptype" value="Roeck" />
             </ScoreFunction>
 
@@ -714,7 +650,6 @@
                 <LegislativeBody ref="congress"/>
                 <LegislativeBody ref="senate"/>
                 <LegislativeBody ref="house"/>              
-                <LegislativeBody ref="dc_area_council"/>              
                 <SubjectArgument name="value" ref="govdem" />
                 <SubjectArgument name="total" ref="govtot" />
             </ScoreFunction>
@@ -725,7 +660,6 @@
                 <LegislativeBody ref="congress"/>
                 <LegislativeBody ref="senate"/>
                 <LegislativeBody ref="house"/>              
-                <LegislativeBody ref="dc_area_council"/>              
                 <SubjectArgument name="value" ref="govrep" />
                 <SubjectArgument name="total" ref="govtot" />
             </ScoreFunction>
@@ -737,7 +671,6 @@
                 <LegislativeBody ref="congress"/>
                 <LegislativeBody ref="senate"/>
                 <LegislativeBody ref="house"/>              
-                <LegislativeBody ref="dc_area_council"/>              
             </ScoreFunction>
         </ScoreFunctions>
         
@@ -810,22 +743,6 @@
                 <Score ref="plan_majority_minority_hisp" />
             </ScorePanel>
 
-            <ScorePanel id="dc_area_council_panel_summary" type="plan_summary" position="1"
-                title="Plan Summary" cssclass="plan_summary dc_area_council" template="plan_summary.html">
-                <Score ref="a_dc_area_council_plan_equipopulation_summary"/>
-                <Score ref="b_plan_dc_area_council_noncontiguous"/>
-                <Score ref="plan_majority_minority_blk" />
-                <Score ref="plan_majority_minority_hisp" />
-            </ScorePanel>
-
-            <ScorePanel id="dc_community_panel_summary" type="plan_summary" position="1"
-                title="Community Summary" cssclass="plan_summary dc_community" template="dc_community_summary.html">
-                <Score ref="a_senate_plan_equipopulation_summary"/>
-                <Score ref="b_plan_senate_noncontiguous"/>
-                <Score ref="plan_majority_minority_blk_senate" />
-                <Score ref="plan_majority_minority_hisp" />
-            </ScorePanel>
-
             <!-- Basic Information -->
             <ScorePanel id="congresional_panel_info" type="district" position="2"
                 title="Basic Information" cssclass="district_basic_info congressional" 
@@ -847,14 +764,6 @@
                 title="Basic Information" cssclass="district_basic_info senate" 
                 template="basic_information.html">
                 <Score ref="a_senate_population" />
-                <Score ref="district_contiguous" />
-                <Score ref="district_schwartzberg" />
-            </ScorePanel>
-            
-            <ScorePanel id="dc_area_council_panel_info" type="district" position="2"
-                title="Basic Information" cssclass="district_basic_info dc_area_council" 
-                template="basic_information.html">
-                <Score ref="a_dc_area_council_population" />
                 <Score ref="district_contiguous" />
                 <Score ref="district_schwartzberg" />
             </ScorePanel>
@@ -891,14 +800,6 @@
                 <Score ref="district_hispvap_percent" />
             </ScorePanel>
 
-            <ScorePanel id="dc_area_council_panel_demo" type="district" position="2"
-                title="Demographics" cssclass="district_demographics dc_area_council" 
-                template="demographics.html">
-                <Score ref="partisan_index" />
-                <Score ref="district_blkvap_percent" />
-                <Score ref="district_hispvap_percent" />
-            </ScorePanel>
-
             <ScorePanel id="community_panel_demo" type="district" position="2"
                 title="Demographics" cssclass="district_demographics community" 
                 template="communities.html">
@@ -913,7 +814,6 @@
                 <Score ref="report_score_total_population_congress" />
                 <Score ref="report_score_total_population_senate" />
                 <Score ref="report_score_total_population_house" />
-                <Score ref="report_score_total_population_dc_council" />
                 <Score ref="report_score_vap" />
                 <Score ref="report_score_vapblk" />
                 <Score ref="report_score_vaphisp" />
@@ -949,42 +849,42 @@
         </ScorePanels>
         
         <ScoreDisplays>
-            <ScoreDisplay legislativebodyref="congress" type="leaderboard" 
+            <ScoreDisplay id="congress-leader-all" legislativebodyref="congress" type="leaderboard" 
                 title="Congressional Leaderboard - All" cssclass="leaderboard congress">
                 <ScorePanel ref="panel_equipop_all" />
                 <ScorePanel ref="panel_compact_all" />
                 <ScorePanel ref="panel_competitive_all" />
                 <ScorePanel ref="panel_rf_all" />
             </ScoreDisplay>
-            <ScoreDisplay legislativebodyref="congress" type="leaderboard" 
+            <ScoreDisplay id="congress-leader-mine" legislativebodyref="congress" type="leaderboard" 
                 title="Congressional Leaderboard - Mine" cssclass="leaderboard congress">
                 <ScorePanel ref="panel_equipop_mine" />
                 <ScorePanel ref="panel_compact_mine" />
                 <ScorePanel ref="panel_competitive_mine" />
                 <ScorePanel ref="panel_rf_mine" />
             </ScoreDisplay>
-            <ScoreDisplay legislativebodyref="house" type="leaderboard" 
+            <ScoreDisplay id="house-leader-all" legislativebodyref="house" type="leaderboard" 
                 title="State House Leaderboard - All" cssclass="leaderboard house">
                 <ScorePanel ref="panel_equipop_all" />
                 <ScorePanel ref="panel_compact_all" />
                 <ScorePanel ref="panel_competitive_all" />
                 <ScorePanel ref="panel_rf_all" />
             </ScoreDisplay>
-            <ScoreDisplay legislativebodyref="house" type="leaderboard" 
+            <ScoreDisplay id="house-leader-mine" legislativebodyref="house" type="leaderboard" 
                 title="State House Leaderboard - Mine" cssclass="leaderboard house">
                 <ScorePanel ref="panel_equipop_mine" />
                 <ScorePanel ref="panel_compact_mine" />
                 <ScorePanel ref="panel_competitive_mine" />
                 <ScorePanel ref="panel_rf_mine" />
             </ScoreDisplay>
-            <ScoreDisplay legislativebodyref="senate" type="leaderboard" 
+            <ScoreDisplay id="senate-leader-all" legislativebodyref="senate" type="leaderboard" 
                 title="State Senate Leaderboard - All" cssclass="leaderboard senate">
                 <ScorePanel ref="panel_equipop_all" />
                 <ScorePanel ref="panel_compact_all" />
                 <ScorePanel ref="panel_competitive_all" />
                 <ScorePanel ref="panel_rf_all" />
             </ScoreDisplay>
-            <ScoreDisplay legislativebodyref="senate" type="leaderboard" 
+            <ScoreDisplay id="senate-leader-mine" legislativebodyref="senate" type="leaderboard" 
                 title="State Senate Leaderboard - Mine" cssclass="leaderboard senate">
                 <ScorePanel ref="panel_equipop_mine" />
                 <ScorePanel ref="panel_compact_mine" />
@@ -993,68 +893,48 @@
             </ScoreDisplay>
 
              <!-- Sidebar configuration -->
-            <ScoreDisplay legislativebodyref="congress" type="sidebar" title="Basic Information" cssclass="basic_information">
+            <ScoreDisplay id="congress-sidebar-basic" legislativebodyref="congress" type="sidebar" title="Basic Information" cssclass="basic_information">
                 <ScorePanel ref="congressional_panel_summary" />
                 <ScorePanel ref="congresional_panel_info" />
             </ScoreDisplay>
 
-            <ScoreDisplay legislativebodyref="congress" type="sidebar" title="Demographics" cssclass="demographics">
+            <ScoreDisplay id="congress-sidebar-demo" legislativebodyref="congress" type="sidebar" title="Demographics" cssclass="demographics">
                 <ScorePanel ref="congressional_panel_summary" />
                 <ScorePanel ref="congressional_panel_demo" />
             </ScoreDisplay>
 
-            <ScoreDisplay legislativebodyref="house" type="sidebar" title="Basic Information" cssclass="basic_information">
+            <ScoreDisplay id="house-sidebar-basic" legislativebodyref="house" type="sidebar" title="Basic Information" cssclass="basic_information">
                 <ScorePanel ref="house_panel_summary" />
                 <ScorePanel ref="house_panel_info" />
             </ScoreDisplay>
 
-            <ScoreDisplay legislativebodyref="house" type="sidebar" title="Demographics" cssclass="demographics">
+            <ScoreDisplay id="house-sidebar-demo" legislativebodyref="house" type="sidebar" title="Demographics" cssclass="demographics">
                 <ScorePanel ref="house_panel_summary" />
                 <ScorePanel ref="house_panel_demo" />
             </ScoreDisplay>
 
-            <ScoreDisplay legislativebodyref="senate" type="sidebar" title="Basic Information" cssclass="basic_information">
+            <ScoreDisplay id="senate-sidebar-basic" legislativebodyref="senate" type="sidebar" title="Basic Information" cssclass="basic_information">
                 <ScorePanel ref="senate_panel_summary" />
                 <ScorePanel ref="senate_panel_info" />
             </ScoreDisplay>
 
-            <ScoreDisplay legislativebodyref="senate" type="sidebar" title="Demographics" cssclass="demographics">
+            <ScoreDisplay id="senate-sidebar-demo" legislativebodyref="senate" type="sidebar" title="Demographics" cssclass="demographics">
                 <ScorePanel ref="senate_panel_summary" />
                 <ScorePanel ref="senate_panel_demo" />
             </ScoreDisplay>
 
-            <ScoreDisplay legislativebodyref="community" type="sidebar" title="Demographics" cssclass="demographics">
+            <ScoreDisplay id="community-sidebar-demo" legislativebodyref="community" type="sidebar" title="Demographics" cssclass="demographics">
                 <ScorePanel ref="community_panel_summary" />
                 <ScorePanel ref="community_panel_demo" />
             </ScoreDisplay>
 
-            <ScoreDisplay legislativebodyref="community" type="sidebar" title="Community Mapping" cssclass="demographics">
-                <ScorePanel ref="community_panel_summary" />
-                <ScorePanel ref="community_panel_comments" />
-            </ScoreDisplay>
-
-            <ScoreDisplay legislativebodyref="dc_area_council" type="sidebar" title="Basic Information" cssclass="basic_information">
-                <ScorePanel ref="dc_area_council_panel_summary" />
-                <ScorePanel ref="dc_area_council_panel_info" />
-            </ScoreDisplay>
-
-            <ScoreDisplay legislativebodyref="dc_area_council" type="sidebar" title="Demographics" cssclass="demographics">
-                <ScorePanel ref="dc_area_council_panel_summary" />
-                <ScorePanel ref="dc_area_council_panel_demo" />
-            </ScoreDisplay>
-
-            <ScoreDisplay legislativebodyref="dc_community" type="sidebar" title="Demographics" cssclass="demographics">
-                <ScorePanel ref="community_panel_summary" />
-                <ScorePanel ref="community_panel_demo" />
-            </ScoreDisplay>
-
-            <ScoreDisplay legislativebodyref="dc_community" type="sidebar" title="Community Mapping" cssclass="demographics">
+            <ScoreDisplay id="community-sidebar-comments" legislativebodyref="community" type="sidebar" title="Community Mapping" cssclass="demographics">
                 <ScorePanel ref="community_panel_summary" />
                 <ScorePanel ref="community_panel_comments" />
             </ScoreDisplay>
 
             <!-- Calculator Reports configuration -->
-            <ScoreDisplay legislativebodyref="congress" type="reports" 
+            <ScoreDisplay id="congress-reports" legislativebodyref="congress" type="reports" 
                 title="Congressional Reports" cssclass="reports congress">
                 <ScorePanel ref="report_panel_population" />
                 <ScorePanel ref="report_panel_majmin" />
@@ -1063,7 +943,7 @@
                 <ScorePanel ref="report_panel_spatial" />
             </ScoreDisplay>
 
-            <ScoreDisplay legislativebodyref="senate" type="reports" 
+            <ScoreDisplay id="senate-reports" legislativebodyref="senate" type="reports" 
                 title="State Senate Reports" cssclass="reports senate">
                 <ScorePanel ref="report_panel_population" />
                 <ScorePanel ref="report_panel_majmin" />
@@ -1072,7 +952,7 @@
                 <ScorePanel ref="report_panel_spatial" />
             </ScoreDisplay>
 
-            <ScoreDisplay legislativebodyref="house" type="reports" 
+            <ScoreDisplay id="house-reports" legislativebodyref="house" type="reports" 
                 title="State House Reports" cssclass="reports house">
                 <ScorePanel ref="report_panel_population" />
                 <ScorePanel ref="report_panel_majmin" />
@@ -1080,74 +960,64 @@
                 <ScorePanel ref="report_panel_party" />
                 <ScorePanel ref="report_panel_spatial" />
             </ScoreDisplay>
-
-            <ScoreDisplay legislativebodyref="dc_area_council" type="reports" 
-                title="DC Planning Council Reports" cssclass="reports dc_area_council">
-                <ScorePanel ref="report_panel_population" />
-                <ScorePanel ref="report_panel_majmin" />
-                <ScorePanel ref="report_panel_compactness" />
-                <ScorePanel ref="report_panel_party" />
-                <ScorePanel ref="report_panel_spatial" />
-            </ScoreDisplay>
-
         </ScoreDisplays>
     </Scoring>
     
     <Validation>
         <Criteria legislativebodyref="congress">
-            <Criterion name="Equipopulation - Congress" 
+            <Criterion id="congress-equipop" name="Equipopulation - Congress" 
                 description="&lt;p&gt;Your plan does not meet the competition criteria for Equipopulation:&lt;/p&gt;&lt;p&gt;The population of each Congressional district must be 727,366 +/- 0.5%.&lt;/p&gt;">
                 <Score ref="a_congress_plan_equipopulation_validation" />
             </Criterion>
-            <Criterion name="AllContiguous - Congress" 
+            <Criterion id="congress-contiguous" name="AllContiguous - Congress" 
                 description="&lt;p&gt;Your plan does not meet the competition criteria for Contiguity&lt;/p&gt;&lt;p&gt;Every part of a district must be reachable from every other part without crossing the district's borders. All districts within a plan must be contiguous. Water contiguity is permitted given Virginia's extensive coastal region. 'Point contiguity' or 'touch-point contiguity' where two sections of a district are connected at a single point is not permitted.&lt;/p&gt;">
                 <Score ref="plan_all_contiguous" />
             </Criterion>
-            <Criterion name="MajorityMinority - Congress" description="">
+            <Criterion id="congress-major-minor" name="MajorityMinority - Congress" description="">
                 <Score ref="plan_majority_minority" />
             </Criterion>
-            <Criterion name="CountDistricts - Congress" description="">
+            <Criterion id="congress-district-count" name="CountDistricts - Congress" description="">
                 <Score ref="a_congress_plan_count_districts" />
             </Criterion>
-            <Criterion name="AllBlocksAssigned - Congress" description="">
+            <Criterion id="congress-assigned" name="AllBlocksAssigned - Congress" description="">
                 <Score ref="plan_all_blocks_assigned" />
             </Criterion>
         </Criteria>
         <Criteria legislativebodyref="house">
-            <Criterion name="Equipopulation - House" 
+            <Criterion id="house-equipop" name="Equipopulation - House" 
                 description="&lt;p&gt;Your plan does not meet the competition criteria for Equipopulation:&lt;/p&gt;&lt;p&gt;The population of each House of Delegates district must be 80,010 +/- 5%.&lt;/p&gt;">
                 <Score ref="a_house_plan_equipopulation_validation" />
             </Criterion>
-            <Criterion name="AllContiguous - House" 
+            <Criterion id="house-contiguous" name="AllContiguous - House" 
                 description="&lt;p&gt;Your plan does not meet the competition criteria for Contiguity&lt;/p&gt;&lt;p&gt;Every part of a district must be reachable from every other part without crossing the district's borders. All districts within a plan must be contiguous. Water contiguity is permitted given Virginia's extensive coastal region. 'Point contiguity' or 'touch-point contiguity' where two sections of a district are connected at a single point is not permitted.&lt;/p&gt;">
                 <Score ref="plan_all_contiguous" />
             </Criterion>
-            <Criterion name="MajorityMinority - House" description="">
+            <Criterion id="house-major-minor" name="MajorityMinority - House" description="">
                 <Score ref="plan_majority_minority" />
             </Criterion>
-            <Criterion name="CountDistricts - House" description="">
+            <Criterion id="house-district-count" name="CountDistricts - House" description="">
                 <Score ref="a_house_plan_count_districts" />
             </Criterion>
-            <Criterion name="AllBlocksAssigned - House" description="">
+            <Criterion id="house-assigned" name="AllBlocksAssigned - House" description="">
                 <Score ref="plan_all_blocks_assigned" />
             </Criterion>
         </Criteria>
         <Criteria legislativebodyref="senate">
-            <Criterion name="Equipopulation - Senate" 
+            <Criterion id="senate-equipop" name="Equipopulation - Senate" 
                 description="&lt;p&gt;Your plan does not meet the competition criteria for Equipopulation:&lt;/p&gt;&lt;p&gt;The population of each House of Delegates district must be 200,026 +/- 5%.&lt;/p&gt;">
                 <Score ref="a_senate_plan_equipopulation_validation" />
             </Criterion>
-            <Criterion name="AllContiguous - Senate" 
+            <Criterion id="senate-contiguous" name="AllContiguous - Senate" 
                 description="&lt;p&gt;Your plan does not meet the competition criteria for Contiguity&lt;/p&gt;&lt;p&gt;Every part of a district must be reachable from every other part without crossing the district's borders. All districts within a plan must be contiguous. Water contiguity is permitted given Virginia's extensive coastal region. 'Point contiguity' or 'touch-point contiguity' where two sections of a district are connected at a single point is not permitted.&lt;/p&gt;">
                 <Score ref="plan_all_contiguous" />
             </Criterion>
-            <Criterion name="MajorityMinority - Senate" description="">
+            <Criterion id="senate-major-minor" name="MajorityMinority - Senate" description="">
                 <Score ref="plan_majority_minority" />
             </Criterion>
-            <Criterion name="CountDistricts - Senate" description="">
+            <Criterion id="senate-district-count" name="CountDistricts - Senate" description="">
                 <Score ref="a_senate_plan_count_districts" />
             </Criterion>
-            <Criterion name="AllBlocksAssigned - Senate" description="">
+            <Criterion id="senate-assigned" name="AllBlocksAssigned - Senate" description="">
                 <Score ref="plan_all_blocks_assigned" />
             </Criterion>
         </Criteria>
@@ -1215,7 +1085,7 @@
       be coincident in its child.
           
       -->
-      <GeoLevel id="vtd" name="vtd" label="VTD" min_zoom="4" sort_key="2" tolerance="25">
+      <GeoLevel id="vtd" name="vtd" label="vtd" min_zoom="4" sort_key="2" tolerance="25">
           <!--
 
           You may use EITHER the "Shapefile" or "Files" element as a child 
@@ -1371,6 +1241,20 @@
             The 'host' attribute is optional.
         -->
         <Database name="YOUR-DATABASE-NAME" user="publicmapping" password="YOUR-DATABASE-PASSWORD" host="OPTIONAL"/>
+
+        <!--
+           Internationalization and localization information.
+
+           At lease one language is required. After running setup, the default
+           LANGUAGE_CODE for the app will be set to the first language defined.
+           Running setup with the '-l' option will create a message file and
+           compile it for each Language defined.
+        -->
+        <Internationalization timezone="US/Eastern" default="en">
+            <Language code="en" label="English" />
+            <Language code="fr" label="French" />
+            <Language code="es" label="Spanish" />
+        </Internationalization>
         
         <!-- 
         

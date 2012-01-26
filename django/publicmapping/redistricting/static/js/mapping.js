@@ -88,7 +88,7 @@ function initializeResizeFix() {
     }
 
     var resizemap = function() {
-        var mapElem = $('#mapandmenu')[0]
+        var mapElem = $('#mapandmenu')[0];
         if(!window.innerHeight) {
             mapElem.style.height = (window.document.body.clientHeight - 90) + 'px';
             vp.style.height = (window.document.body.clientHeight - 150) + 'px';
@@ -103,60 +103,31 @@ function initializeResizeFix() {
  * Create a div for tooltips on the map itself; this is used
  * when the info tool is activated.
  */
-function createMapTipDiv() {
-    var tipdiv = document.createElement('div');
-    var tipelem = document.createElement('h1');
-    tipelem.appendChild(document.createTextNode(BODY_MEMBER_LONG+' Name'));
-    tipdiv.appendChild(tipelem);
-    tipelem = document.createElement('div');
-    tipelem.id = 'tipclose';
-    tipelem.onclick = function(e){
+function createToolTipHeader() {
+    var tipDiv = $('<div />').addClass('tooltip');
+    tipDiv.append($('<h1 />').text(BODY_MEMBER_LONG + gettext(" Name")));
+    tipDiv.append($('<div id="tipclose">[x]</div>').click( function(e) {
         OpenLayers.Event.stop(e || event);
-        tipdiv.style.display = 'none';
-    };
-    tipelem.appendChild(document.createTextNode('[x]'));
-    tipdiv.appendChild(tipelem);
-    tipelem = document.createElement('div');
-    tipelem.appendChild(document.createTextNode('Demographic 1:'));
-    tipdiv.appendChild(tipelem);
-    tipelem = document.createElement('div');
-    tipelem.appendChild(document.createTextNode('Demographic 2:'));
-    tipdiv.appendChild(tipelem);
-    tipelem = document.createElement('div');
-    tipelem.appendChild(document.createTextNode('Demographic 3:'));
-    tipdiv.appendChild(tipelem);
-    tipdiv.style.zIndex = 100000;
-    tipdiv.style.position = 'absolute';
-    tipdiv.style.opacity = '0.8';
-    tipdiv.style.maxWidth = '300px';
-    tipdiv.className = 'tooltip';
+        tipDiv.hide();
+    }));
+    return tipDiv;
 
-    return tipdiv;
+}
+
+function createMapTipDiv() {
+    var tipDiv = createToolTipHeader();
+    for (i = 1; i < 4; i++) {
+        tipDiv.append($('<div />').text(gettext("Demographic ") + i + ":"));
+    }
+    tipDiv.addClass('maptip');
+    return tipDiv[0];
 }
 
 function createDistrictTipDiv() {
-    var tipdiv = document.createElement('div');
-    var tipelem = document.createElement('h1');
-    tipelem.appendChild(document.createTextNode(BODY_MEMBER_LONG+' Name'));
-    tipdiv.appendChild(tipelem);
-    tipelem = document.createElement('div');
-    tipelem.id = 'tipclose';
-    tipelem.onclick = function(e){
-        OpenLayers.Event.stop(e || event);
-        tipdiv.style.display = 'none';
-    };
-    tipelem.appendChild(document.createTextNode('[x]'));
-    tipdiv.appendChild(tipelem);
-
-    tipdiv.style.zIndex = 100000;
-    tipdiv.style.position = 'absolute';
-    tipdiv.style.opacity = '0.8';
-    tipdiv.style.width = '85px';
-    tipdiv.className = 'tooltip districtidtip';
-
-    return tipdiv;
+    var tipDiv = createToolTipHeader();
+    tipDiv.addClass('districtidtip');
+    return tipDiv[0];
 }
-
 
 /**
  * Initialize the map from WMS GetCapabilities.
@@ -168,13 +139,13 @@ function init() {
     }
 
     // default map_server is on same host unless otherwise specified 
-    if (MAP_SERVER=="") {
-	MAP_SERVER=window.location.host
+    if (MAP_SERVER === "") {
+        MAP_SERVER = window.location.host;
     }
 
     // default map_server protocol is the same as the request unless 
     // otherwise specified
-    if (MAP_SERVER_PROTOCOL=="") {
+    if (MAP_SERVER_PROTOCOL === "") {
         MAP_SERVER_PROTOCOL = window.location.protocol;
     }
 
@@ -349,6 +320,7 @@ function mapinit(srs,maxExtent) {
                 if (options.type) {
                     return new OpenLayers.Layer.VirtualEarth(layerName, options);
                 }
+                break;
 
             case 'google':
                 options = {
@@ -369,6 +341,7 @@ function mapinit(srs,maxExtent) {
                 if (options.type) {
                     return new OpenLayers.Layer.Google(layerName, options);
                 }
+                break;
 
             case 'osm':
                 options = {
@@ -381,6 +354,7 @@ function mapinit(srs,maxExtent) {
                 if (mapType === 'road') {
                     return new OpenLayers.Layer.OSM(layerName, null, options);
                 }
+                break;
 
             case 'arc':
                 var layerInfo = TOPO_LAYER_INFO;
@@ -402,6 +376,7 @@ function mapinit(srs,maxExtent) {
                     var url = window.location.protocol + "//services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer";
                     return new OpenLayers.Layer.ArcGISCache(layerName, url, options);
                 }
+                break;
 
             default:
                 return null;
@@ -410,9 +385,9 @@ function mapinit(srs,maxExtent) {
 
     // Map type -> label. Also used for determining if there are multiple of the same type.
     var mapTypes = {
-        aerial: { label: 'Satellite' },
-        hybrid: { label: 'Hybrid' },
-        road: { label: 'Road' }
+        aerial: { label: gettext('Satellite') },
+        hybrid: { label: gettext('Hybrid') },
+        road: { label: gettext('Road') }
     };
 
     // Construct each layer, and assign a label.
@@ -463,7 +438,7 @@ function mapinit(srs,maxExtent) {
         var container = $('#map_type_content_container');
         var id = 'radio' + i;
         var button = $('<input type="radio" name="basemap" id="' + id + '"' + ((i === 0) ? 'checked=checked' : '') +
-                       ' /><label for="' + id + '">' + ((layers.length === 1) ? "Map Transparency" : layer.name) + '</label>');
+                       ' /><label for="' + id + '">' + ((layers.length === 1) ? gettext("Map Transparency") : layer.name) + '</label>');
             
         // change the base layer when a new one is selected
         button.click(function() {
@@ -481,10 +456,10 @@ function mapinit(srs,maxExtent) {
 
     // Handle Fix Unassigned requests
     $('#fix_unassigned').click(function(){
-        var pleaseWait = $('<div>Please wait while fixing unassigned. This may take a couple minutes.</div>').dialog({
+        var pleaseWait = $('<div />').text(gettext('Please wait. Fixing unassigned blocks. This may take a couple minutes.')).dialog({
             modal: true,
             autoOpen: true,
-            title: 'Fixing Unassigned',
+            title: gettext('Fixing Unassigned'),
             escapeOnClose: false,
             resizable:false,
             open: function() { $(".ui-dialog-titlebar-close", $(this).parent()).hide(); }                    
@@ -504,14 +479,14 @@ function mapinit(srs,maxExtent) {
                     modal: false,
                     autoOpen: true,
                     resizable:false,
-                    title: (data.success ? 'Success' : 'Error'),
+                    title: (data.success ? gettext('Success') : gettext('Error')),
                     buttons: { OK: function() { $(this).dialog('close'); }}
                 });                
             },
             error: function(xhr, textStatus, error) {
                 pleaseWait.remove();                        
-                $('<div>Error encountered while fixing unassigned</div>').dialog({
-                    modal: true, autoOpen: true, title: 'Error', resizable:false
+                $('<div />').text(gettext('Error encountered while fixing unassigned')).dialog({
+                    modal: true, autoOpen: true, title: gettext('Error'), resizable:false
                 });                
             }
         });
@@ -521,14 +496,14 @@ function mapinit(srs,maxExtent) {
     $('#show_splits_button').click(function(){
         var referenceLayerId = $('#reference_layer_select').val();
         if (!referenceLayerId || (referenceLayerId === 'None')) {
-            $('<div>No reference layer selected.</div>').dialog({
-                modal: true, autoOpen: true, title: 'Warning', resizable:false,
-                buttons: {
-                    'Set Reference Layer': function() {
-                        $(this).dialog('close');
-                        $('#choose_layers_button').click();
-                    }
-                }
+            var buttons = {};
+            buttons[gettext('OK')] = function(){
+                $(this).dialog('close');
+                $('#choose_layers_button').click();
+            };
+            $('<div />').text(gettext('No reference layer selected.')).dialog({
+                modal: true, autoOpen: true, title: gettext('Warning'), resizable:false,
+                buttons: buttons
             });
             return;
         }
@@ -540,10 +515,11 @@ function mapinit(srs,maxExtent) {
             urlSuffix = 'geolevel/' + referenceLayerId.substring('geolevel.'.length);
         }
     
-        var waitDialog = $('<div>Please wait while querying for splits.</div>').dialog({
+        var waitDialog = $('<div />').text(gettext('Please wait. Querying for splits.'))
+                .dialog({
             modal: true,
             autoOpen: true,
-            title: 'Finding Splits',
+            title: gettext('Finding Splits'),
             escapeOnClose: false,
             resizable:false,
             open: function() { $(".ui-dialog-titlebar-close", $(this).parent()).hide(); }                    
@@ -558,20 +534,20 @@ function mapinit(srs,maxExtent) {
                 if (data.success) {
                     setHighlightedDistricts(data.above_ids);
                     if (data.splits.length === 0) {
-                        $('<div>This plan contains no splits.</div>').dialog({
-                            modal: true, autoOpen: true, title: 'No Splits Found', resizable:false
+                        $('<div />').text(gettext('This plan contains no splits.')).dialog({
+                            modal: true, autoOpen: true, title: gettext('No Splits Found'), resizable:false
                         });                
                     }
                 } else {
-                    $('<div>Error encountered while querying for splits: ' + data.message + '</div>').dialog({
-                        modal: true, autoOpen: true, title: 'Error', resizable:false
+                    $('<div />').text(gettext('Error encountered while querying for splits: ') + data.message).dialog({
+                        modal: true, autoOpen: true, title: gettext('Error'), resizable:false
                     });                
                 }
             },
             error: function(xhr, textStatus, error) {
                 waitDialog.remove();                        
-                $('<div>Error encountered while querying for splits: ' + textStatus + '</div>').dialog({
-                    modal: true, autoOpen: true, title: 'Error', resizable:false
+                $('<div />').text(gettext('Error encountered while querying for splits: ') + textStatus).dialog({
+                    modal: true, autoOpen: true, title: gettext('Error'), resizable:false
                 });                
             }
         });
@@ -671,8 +647,9 @@ function mapinit(srs,maxExtent) {
         
         return { 
             layer: min_layer.layer, 
-            level:min_layer.level, 
-            display:min_layer.name, 
+            level: min_layer.level,
+            name: min_layer.name,
+            display: min_layer.short_label, 
             geolevel: min_layer.geolevel
         };
     }
@@ -1071,15 +1048,15 @@ function mapinit(srs,maxExtent) {
     var assignOnSelect = function(feature) {
         // If there's an outbound request, hold the user from more clicking
         if (outboundRequest === true) {
-            $('<div id="busyDiv">Please wait until your previous changes have been accepted.</div>').dialog({
+            var buttons = {};
+            buttons[gettext('OK')] = function() {
+                $('#busyDiv').remove();
+            };
+            $('<div id="busyDiv" />').text(gettext('Please wait until your previous changes have been accepted.')).dialog({
                 modal: true,
                 autoOpen: true,
-                title: 'Busy',
-                buttons: { 
-                    'OK': function() {
-                        $('#busyDiv').remove();
-                    }
-                }
+                title: gettext('Busy'),
+                buttons: buttons
             });
             return false;
         }
@@ -1114,17 +1091,17 @@ function mapinit(srs,maxExtent) {
                 if (data.success) {
                     // if no districts were updated, display a warning
                     if (!data.updated) {
+                        var buttons = {};
+                        buttons[gettext('OK')] = function() {
+                            $('#errorDiv').remove();
+                        };
                         OpenLayers.Element.removeClass(olmap.viewPortDiv, 'olCursorWait');
                         $('#working').dialog('close');
-                        $('<div id="errorDiv">No districts were updated.</div>').dialog({
+                        $('<div id="errorDiv" />').text(gettext('No districts were updated')).dialog({
                             modal: true,
                             autoOpen: true,
-                            title: 'Error',
-                            buttons: { 
-                                'OK': function() {
-                                    $('#errorDiv').remove();
-                                }
-                            }
+                            title: gettext('Error'),
+                            buttons: buttons
                         });
                         updateInfoDisplay();
                     } else {
@@ -1179,27 +1156,27 @@ function mapinit(srs,maxExtent) {
         else {
 	    // Check to make sure we haven't exceeded the FEATURE_LIMIT in this selection or total selection
             if (features.length > FEATURE_LIMIT) {
-                $('<div id="toomanyfeaturesdialog">You cannot select that many features at once.\n\nConsider drawing a smaller area with the selection tool.</div>').dialog({
+                var buttons = {};
+                buttons[gettext('OK')] = function() {
+                    $('#toomanyfeaturesdialog').remove();
+                };
+                $('<div  id="toomanyfeaturesdialog" />').text(gettext('You cannot select that many features at once.\n\nConsider drawing a smaller area with the selection tool.')).dialog({
                     modal: true,
                     autoOpen: true,
-                    title: 'Sorry',
-                    buttons: { 
-                        'OK': function() {
-                        $('#toomanyfeaturesdialog').remove();
-                        }
-                    }
+                    title: gettext('Sorry'),
+                    buttons: buttons
                 });
                 return;
             } else if (features.length + selection.features.length > FEATURE_LIMIT) {
-                $('<div id="toomanyfeaturesdialog">You cannot select any more features.\n\nConsider assigning your current selection to a district first.</div>').dialog({
+                var buttons = {};
+                buttons[gettext('OK')] = function() {
+                    $('#toomanyfeaturesdialog').remove();
+                };
+                $('<div id="toomanyfeaturesdialog" />').text(gettext('You cannot select any more features.\n\nConsider assigning your current selection to a district first.')).dialog({
                     modal: true,
                     autoOpen: true,
-                    title: 'Sorry',
-                    buttons: { 
-                        'OK': function() {
-                        $('#toomanyfeaturesdialog').remove();
-                        }
-                    }
+                    title: gettext('Sorry'),
+                    buttons: buttons
                 });
                 return;
             }
@@ -1327,42 +1304,45 @@ function mapinit(srs,maxExtent) {
             clickFeature: function(feature, event) {
                 // Show a dialog asking to unmerge
                 // to combine with unassigned
-                $('<div id="unassign_district">Would you like to unassign the geography in ' + 
-                feature.attributes.name + '?</div>').dialog({
+                var buttons = {};
+                buttons[gettext('OK')] = function() {
+                    $(this).dialog('close');
+                    // submit an ajax call to the handler
+                    $('#working').dialog('open');
+                    $.ajax({
+                        type: 'POST',
+                        url: '/districtmapping/plan/' + PLAN_ID + '/combinedistricts/',
+                        data: {
+                            from_district_id: feature.attributes.district_id,
+                            to_district_id: 0, /*Always Unassigned */
+                            version: getPlanVersion()
+                        },
+                        success: function(data, textStatus, xhr) {
+                            $('#working').dialog('close');
+                            if (data.success == true) {
+                                var updateAssignments = true;
+                                $('#map').trigger('version_changed', [data.version, updateAssignments]);
+                            } else {
+                                $('<div class="error" />').attr('title', gettext('Sorry'))
+                                        .text(gettext('Unable to combine districts: ') + 
+                                        data.message ).dialog({
+                                    modal: true,
+                                    autoOpen: true,
+                                    resizable: false
+                                });
+                            }
+                        }
+                    });
+                };
+                buttons[gettext('No')] = function() {
+                    $(this).dialog('close');
+                };
+                $('<div id="unassign_district" />').text(
+                        gettext('Would you like to unassign the geography in ') + 
+                        feature.attributes.name + '?').dialog({
                     resizable: false,
                     modal: true,
-                    buttons: {  
-                        'OK': function() {
-                            $(this).dialog('close');
-                            // submit an ajax call to the handler
-                            $('#working').dialog('open');
-                            $.ajax({
-                                type: 'POST',
-                                url: '/districtmapping/plan/' + PLAN_ID + '/combinedistricts/',
-                                data: {
-                                    from_district_id: feature.attributes.district_id,
-                                    to_district_id: 0, /*Always Unassigned */
-                                    version: getPlanVersion()
-                                },
-                                success: function(data, textStatus, xhr) {
-                                    $('#working').dialog('close');
-                                    if (data.success == true) {
-                                        var updateAssignments = true;
-                                        $('#map').trigger('version_changed', [data.version, updateAssignments]);
-                                    } else {
-                                        $('<div class="error" title="Sorry">Unable to combine districts:<p>' + data.message + '</p></div>').dialog({
-                                            modal: true,
-                                            autoOpen: true,
-                                            resizable: false
-                                        });
-                                    }
-                                }
-                            });
-                        }, 
-                        'No': function() {
-                            $(this).dialog('close');
-                        }
-                    },
+                    buttons: buttons,
                     modal: true
                 }); // end dialog
         }
@@ -1441,7 +1421,7 @@ function mapinit(srs,maxExtent) {
             OpenLayers.Element.removeClass(olmap.viewPortDiv,'olCursorWait'); 
         }
         else {
-            infoErrorCallback(xhr, textStatus, 'Sorry, your information could not be saved. Please try again later.</div>');
+            infoErrorCallback(xhr, textStatus, gettext('Sorry, your information could not be saved. Please try again later.'));
         }
     };
 
@@ -1959,8 +1939,8 @@ function mapinit(srs,maxExtent) {
 
                 $('#assign_district option').detach();
                 $('#assign_district')
-                    .append('<option value="-1">-- Select One --</option>')
-                    .append('<option value="0">Unassigned</option>');
+                    .append('<option value="-1">-- ' + gettext('Select One') + ' --</option>')
+                    .append('<option value="0">' + gettext('Unassigned') + '</option>');
 
                 // get the maximum version of all districts. If walking 
                 // backward, it may be possible that the version you 
@@ -1974,7 +1954,7 @@ function mapinit(srs,maxExtent) {
                     var district = data.districts[d];
                     max_version = Math.max(district.version,max_version);
 
-                    if (district.long_label != 'Unassigned') {
+                    if (district.long_label != gettext('Unassigned')) {
                         $('#assign_district')
                             .append('<option value="' + district.id + '">' + district.long_label + '</option>');
                     }
@@ -1983,7 +1963,7 @@ function mapinit(srs,maxExtent) {
                 if ($('#assign_district option').length < MAX_DISTRICTS + 1) {
 
                     $('#assign_district')
-                        .append('<option value="new">New ' + BODY_MEMBER_LONG + '</option>');
+                        .append('<option value="new">' + gettext('New ') + BODY_MEMBER_LONG + '</option>');
                 }
 
                 var all_options = $('#assign_district option').detach();
@@ -2543,15 +2523,15 @@ function mapinit(srs,maxExtent) {
         };
 
         return function(snap, show) {
-            if (snap == 'Contiguity') {
+            if (snap == gettext('Contiguity')) {
                 callbackContiguity();
                 return;
             }
-            if (snap == 'Compactness') {
+            if (snap == gettext('Compactness')) {
                 callbackCompactness();
                 return;
             }
-            if (snap == 'None') {
+            if (snap == gettext('None')) {
                 var newOptions = OpenLayers.Util.extend({}, districtStyle);
                 var newStyle = new OpenLayers.Style(newOptions,{
                     title:'Districts',
@@ -2623,39 +2603,39 @@ function mapinit(srs,maxExtent) {
         if (distDisplay.by == 0) {
             lbody.empty();
 
-            var row = makeDistrictLegendRow('district_swatch_within','target','Boundary');
+            var row = makeDistrictLegendRow('district_swatch_within','target',gettext('Boundary'));
 
             lbody.append(row);
         }
         else if (distDisplay.by == -2) {
             lbody.empty();
-            var row = makeDistrictLegendRow('district_swatch_farover','farover','Noncontiguous');
+            var row = makeDistrictLegendRow('district_swatch_farover','farover',gettext('Noncontiguous'));
             lbody.append(row);
-            row = makeDistrictLegendRow('district_swatch_within','target','Contiguous');
+            row = makeDistrictLegendRow('district_swatch_within','target',gettext('Contiguous'));
             lbody.append(row);
         }
         else if (distDisplay.by == -1) {
             lbody.empty();
 
-            var row = makeDistrictLegendRow('district_swatch_farover','farover','Very Compact');
+            var row = makeDistrictLegendRow('district_swatch_farover','farover',gettext('Very Compact'));
             lbody.append(row);
-            row = makeDistrictLegendRow('district_swatch_within','target','Average');
+            row = makeDistrictLegendRow('district_swatch_within','target',gettext('Average'));
             lbody.append(row);
-            row = makeDistrictLegendRow('district_swatch_farunder','farunder','Hardly Compact');
+            row = makeDistrictLegendRow('district_swatch_farunder','farunder',gettext('Hardly Compact'));
             lbody.append(row);
         }
         else {
             lbody.empty();
 
-            var row = makeDistrictLegendRow('district_swatch_farover','farover','Far Over Target');
+            var row = makeDistrictLegendRow('district_swatch_farover','farover',gettext('Far Over Target'));
             lbody.append(row);
-            row = makeDistrictLegendRow('district_swatch_over','over','Over Target');
+            row = makeDistrictLegendRow('district_swatch_over','over',gettext('Over Target'));
             lbody.append(row);
-            row = makeDistrictLegendRow('district_swatch_within','target','Within Target');
+            row = makeDistrictLegendRow('district_swatch_within','target',gettext('Within Target'));
             lbody.append(row);
-            row = makeDistrictLegendRow('district_swatch_under','under','Under Target');
+            row = makeDistrictLegendRow('district_swatch_under','under',gettext('Under Target'));
             lbody.append(row);
-            row = makeDistrictLegendRow('district_swatch_farunder','farunder','Far Under Target');
+            row = makeDistrictLegendRow('district_swatch_farunder','farunder',gettext('Far Under Target'));
             lbody.append(row);
         }
     };
@@ -2710,7 +2690,7 @@ function mapinit(srs,maxExtent) {
     $('#showby').change(function(evt){
         var snap = getSnapLayer();
         var show = evt.target.value;
-        var layername = NAMESPACE + ':demo_' + snap.level;
+        var layername = NAMESPACE + ':demo_' + snap.name;
         if (show != 'none') {
             layername += '_' + show;
         }
@@ -2729,13 +2709,13 @@ function mapinit(srs,maxExtent) {
     // Logic for the 'Show Districts by' dropdown
     $('#districtby').change(function(evt){
         if (evt.target.value == '-2') {
-            getMapStyles('Contiguity','');
+            getMapStyles(gettext('Contiguity'),'');
         }
         else if (evt.target.value == '-1') {
-            getMapStyles('Compactness','');
+            getMapStyles(gettext('Compactness'),'');
         }
         else if (evt.target.value == '0') {
-            getMapStyles('None', '');
+            getMapStyles(gettext('None'), '');
         }
         else {
             var dby = getDistrictBy();
@@ -2977,37 +2957,42 @@ function mapinit(srs,maxExtent) {
         }
 
         if (PLAN_TYPE == 'plan') {
-            var markup = $('<div id="newdistrictdialog">Please select a ' + BODY_MEMBER_LONG.toLowerCase() + ' name:<br/><select id="newdistrictname">' + avail.join('') + '</select></div>')
+            var i18nParams = {
+                bml: BODY_MEMBER_LONG.toLowerCase()
+            };
+            var markup = $('<div id="newdistrictdialog" />')
+                .text(printFormat(gettext('Please select a name for the %(bml)s'), i18nParams));
+            markup.append($('<br/><select id="newdistrictname">' + avail.join('') + '</select>'));
 
+            buttons = {};
+            buttons[gettext('OK')] = function() { 
+                var did, dname;
+                var dinfo = $('#newdistrictname').val().split(';');
+                did = dinfo[0];
+                dname = dinfo[1];
+                createDistrict(did, dname);
+                $(this).dialog("close"); 
+                $('#newdistrictdialog').remove(); 
+            };
+            buttons[gettext('Cancel')] = function() { 
+                $(this).dialog("close"); 
+                $('#newdistrictdialog').remove(); 
+                $('#assign_district').val('-1');
+            };
             // Create a dialog to get the new district's name from the user.
             // On close, destroy the dialog.
             markup.dialog({
                 modal: true,
                 autoOpen: true,
-                title: 'New '+BODY_MEMBER_LONG,
+                title: gettext('New ')+BODY_MEMBER_LONG,
                 width: 330,
-                buttons: { 
-                    'OK': function() { 
-                        var did, dname;
-                        var dinfo = $('#newdistrictname').val().split(';');
-                        did = dinfo[0];
-                        dname = dinfo[1];
-                        createDistrict(did, dname);
-                        $(this).dialog("close"); 
-                        $('#newdistrictdialog').remove(); 
-                    },
-                    'Cancel': function() { 
-                        $(this).dialog("close"); 
-                        $('#newdistrictdialog').remove(); 
-                        $('#assign_district').val('-1');
-                    }
-                }
+                buttons: buttons
             });
         }
         else {
             var h3 = districtComment.find('h3');
-            $(h3[0]).text('1. Community Label:');
-            $(h3[1]).text('2. Community Type:');
+            $(h3[0]).text('1. ' + gettext('Community Label') + ':');
+            $(h3[1]).text('2. ' + gettext('Community Type') + ':');
 
             districtComment.dialog('open');
             $('#id_label').val('');

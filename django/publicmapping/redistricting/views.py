@@ -47,9 +47,11 @@ from django.contrib.gis.gdal.libgdal import lgdal
 from django.contrib.sites.models import Site
 from django.contrib import humanize
 from django.template import loader, Context as DjangoContext
-from django.utils import simplejson as json
+from django.utils import simplejson as json, translation
+from django.utils.translation import ugettext as _, ungettext as _n
 from django.views.decorators.cache import cache_control
 from django.template.defaultfilters import slugify, force_escape
+from django.utils.translation import ugettext as _
 from django.conf import settings
 from tagging.utils import parse_tag_input
 from tagging.models import Tag, TaggedItem
@@ -58,7 +60,7 @@ from decimal import *
 from functools import wraps
 from redistricting.calculators import *
 from redistricting.models import *
-from redistricting.utils import *
+from redistricting.tasks import *
 import random, string, math, types, copy, time, threading, traceback, os
 import commands, sys, tempfile, csv, hashlib, inflect, logging
 
@@ -69,6 +71,9 @@ from xhtml2pdf.pisa import CreatePDF
 import StringIO
 
 logger = logging.getLogger(__name__)
+
+# This constant is reused in multiple places.
+UNASSIGNED_DISTRICT_ID = 0
 
 def using_unique_session(u):
     """
@@ -131,7 +136,8 @@ def unique_session_or_json_redirect(function):
     def decorator(request, *args, **kwargs) :
         def return_nonunique_session_result():
             status = { 'success': False }
-            status['message'] = "The current user may only have one session open at a time."
+            status['message'] = _(
+                "The current user may only have one session open at a time.")
             status['redirect'] = '/?msg=logoff'
             return HttpResponse(json.dumps(status),mimetype='application/json')
 
@@ -206,7 +212,7 @@ def unloadplan(request, planid):
         p = ps[0]
 
         if not can_copy(request.user, p):
-            status['message'] = "User %s doesn't have permission to unload this plan" % request.user.username
+            status['message'] = _("User %(user)s doesn't have permission to unload this plan") % {'user':request.user.username}
             return HttpResponse(json.dumps(status),mimetype='application/json')
 
         # Purge temporary versions
@@ -236,11 +242,15 @@ def copyplan(request, planid):
     """
     note_session_activity(request)
 
+    if not is_plan_ready(planid):
+        return HttpResponseRedirect('/')
+
     status = { 'success': False }
     p = Plan.objects.get(pk=planid)
     # Check if this plan is copyable by the current user.
     if not can_copy(request.user, p):
-        status['message'] = "User %s doesn't have permission to copy this model" % request.user.username
+        status['message'] = _("User %(username)s doesn't have permission to " \
+            "copy this model" % {'username': request.user.username})
         return HttpResponse(json.dumps(status),mimetype='application/json')
 
     # Create a random name if there is no name provided
@@ -252,10 +262,11 @@ def copyplan(request, planid):
     plan_copy = Plan.objects.filter(name=newname, owner=request.user, legislative_body=p.legislative_body)
     # Check that the copied plan's name doesn't already exist.
     if len(plan_copy) > 0:
-        status['message'] = "You already have a plan named that. Please pick a unique name."
+        status['message'] = _("You already have a plan named that. " \
+            "Please pick a unique name.")
         return HttpResponse(json.dumps(status),mimetype='application/json')
 
-    plan_copy = Plan(name=newname, owner=request.user, is_shared=shared, legislative_body=p.legislative_body)
+    plan_copy = Plan(name=newname, owner=request.user, is_shared=shared, legislative_body=p.legislative_body, processing_state=ProcessingState.READY)
     plan_copy.create_unassigned = False
     plan_copy.save()
 
@@ -273,7 +284,7 @@ def copyplan(request, planid):
         try:
             district_copy.save() 
         except Exception as inst:
-            status["message"] = "Could not save district copies"
+            status["message"] = _("Could not save district copies")
             status["exception"] = inst.message
             return HttpResponse(json.dumps(status),mimetype='application/json')
 
@@ -314,12 +325,12 @@ def scoreplan(request, planid):
 
         if not score or not score['value']:
             status['success'] = False
-            status['message'] = '<p>%s</p><p>%s</p>' % (criteria.name, criteria.description or criteria.function.description)
+            status['message'] = '<p>%s</p><p>%s</p>' % (criteria.get_short_label(), criteria.get_long_description() or criteria.function.get_long_description())
             break
 
     if status['success']:
         status['success'] = True
-        status['message'] = "Validation successful"
+        status['message'] = _("Validation successful")
 
         # Set is_valid status on the plan
         plan.is_valid = True
@@ -377,10 +388,10 @@ def commonplan(request, planid):
         editable = can_edit(request.user, plan)
         default_demo = plan.legislative_body.get_default_subject()
         max_dists = plan.legislative_body.max_districts
-        body_member_short_label = plan.legislative_body.short_label
-        body_member_long_label = plan.legislative_body.long_label
-        body_name = plan.legislative_body.name
-        reporting_template = 'bard_%s.html' % body_name.lower() if not plan.is_community() else None
+        body_member_short_label = plan.legislative_body.get_short_label()
+        body_member_long_label = plan.legislative_body.get_label()
+        body_name = plan.legislative_body.get_short_label()
+        reporting_template = 'bard_%s.html' % plan.legislative_body.name if not plan.is_community() else None
        
         index = body_member_short_label.find('%')
         if index >= 0:
@@ -401,12 +412,13 @@ def commonplan(request, planid):
             # used for generating groups of checkboxes on the evaluate tab.
             calculator_reports = []
             if settings.REPORTS_ENABLED == 'CALC':
-                report_displays = ScoreDisplay.objects.filter(title='%s Reports' % body_name)
+                report_displays = ScoreDisplay.objects.all()
+                report_displays = filter(lambda x:x.get_short_label()==(_('%(body_name)s Reports') % {'body_name':plan.legislative_body.get_long_description()}), report_displays)
                 if len(report_displays) > 0:
                     calculator_reports = map(lambda p: {
-                                'title': p.title,
+                                'title': p.__unicode__(),
                                 'functions': map(lambda f: {
-                                    'label': f.label,
+                                    'label': f.get_label(),
                                     'id': f.id
                                 }, p.score_functions.all().filter(selectable_bodies=plan.legislative_body))
                             }, report_displays[0].scorepanel_set.all().order_by('position'))
@@ -420,12 +432,12 @@ def commonplan(request, planid):
         default_demo = None
         max_dists = 0
         body_member_short_label = ''
-        body_member_long_label = 'District '
+        body_member_long_label = _('District') + ' '
         body_name = None
         reporting_template = None
         tags = []
         calculator_reports = []
-    demos = Subject.objects.all().order_by('sort_key').values_list("id","name", "short_display","is_displayed")[0:3]
+    demos = Subject.objects.all().order_by('sort_key')[0:3]
     layers = []
     snaplayers = []
 
@@ -441,20 +453,36 @@ def commonplan(request, planid):
                 break
 
     for level in levels:
-        snaplayers.append( {'geolevel':level.id,'layer':level.name.lower(),'name':level.label if level.label.isupper() else level.label.capitalize(),'min_zoom':level.min_zoom} )
+        # i18n-ize name here, not in js
+        snaplayers.append({
+            'geolevel': level.id,
+            'level': level.name,
+            'layer': 'simple_' + level.name, 
+            'short_label': level.get_short_label(),
+            'min_zoom': level.min_zoom
+        })
     default_selected = False
     for demo in demos:
-        isdefault = str((not default_demo is None) and (demo[0] == default_demo.id)).lower()
+        isdefault = str((not default_demo is None) and (demo.id == default_demo.id)).lower()
         if isdefault == 'true':
             default_selected = True
-        layers.append( {'id':demo[0],'text':demo[2],'value':demo[1].lower(), 'isdefault':isdefault, 'isdisplayed':str(demo[3]).lower()} )
+        # i18n-ize name & short_display here, not in js
+        layers.append({
+            'id':demo.id,
+            'text':demo.get_short_label(),
+            'value':demo.name, 
+            'isdefault':isdefault, 
+            'isdisplayed':str(demo.is_displayed).lower()
+        })
     # If the default demo was not selected among the first three, we'll still need it for the dropdown menus
     if default_demo and not default_selected:
-        layers.insert( 0, {'id':default_demo.id,'text':default_demo.short_display,'value':default_demo.name.lower(), 'isdefault':str(True).lower(), 'isdisplayed':str(default_demo.is_displayed).lower()} )
-
-    unassigned_id = 0
-    if type(plan) != types.DictType:
-        unassigned_id = plan.district_set.filter(long_label='Unassigned').values_list('district_id',flat=True)[0]
+        layers.insert( 0, {
+            'id':default_demo.id,
+            'text':default_demo.get_short_label(),
+            'value':default_demo.name, 
+            'isdefault':str(True).lower(), 
+            'isdisplayed':str(default_demo.is_displayed).lower()
+        })
 
     # Try to get the mapserver protocol from the settings module.
     # Set it to an empty string if the setting isn't defined so the 
@@ -491,7 +519,7 @@ def commonplan(request, planid):
         'feature_limit': settings.FEATURE_LIMIT,
         'demographics': layers,
         'snaplayers': snaplayers,
-        'unassigned_id': unassigned_id,
+        'unassigned_id': UNASSIGNED_DISTRICT_ID,
         'is_registered': request.user.username != 'anonymous' and request.user.username != '',
         'debugging_staff': settings.DEBUG and request.user.is_staff,
         'userinfo': get_user_info(request.user),
@@ -499,19 +527,27 @@ def commonplan(request, planid):
         'max_dists': max_dists + 1,
         'ga_account': settings.GA_ACCOUNT,
         'ga_domain': settings.GA_DOMAIN,
-        'body_member_short_label': short_label,
-        'body_member_long_label': long_label,
-        'body_members': inflect.engine().plural(long_label),
+        'body_member_short_label': short_label, # i18n, plz
+        'body_member_long_label': long_label,   # i18n, plz
+        'body_members': inflect.engine().plural(long_label),  # i18n, plz
         'reporting_template': reporting_template,
         'study_area_extent': study_area_extent,
         'has_leaderboard' : len(ScoreDisplay.objects.filter(is_page=True)) > 0,
         'calculator_reports' : json.dumps(calculator_reports),
         'allow_email_submissions': ('EMAIL_SUBMISSION' in settings.__members__),
         'tags': tags,
-        'plan_text': "community map" if (plan and plan.is_community()) else "plan",
-        'site': Site.objects.get_current()
+        'site': Site.objects.get_current(),
+        'plan_text': _("community map") if (plan and plan.is_community()) else _("plan"),
+        'language_code': translation.get_language(),
+        'LANGUAGES': settings.LANGUAGES # needed (as CAPS) for language chooser
     }
 
+def is_plan_ready(planid):
+    """
+    Determines if a plan is in a Ready state
+    """
+    planid = int(planid)
+    return planid == 0 or len(Plan.objects.filter(id=planid, processing_state=ProcessingState.READY)) > 0
 
 @user_passes_test(using_unique_session)
 def viewplan(request, planid):
@@ -528,7 +564,7 @@ def viewplan(request, planid):
         A rendered HTML page for viewing a plan.
     """
 
-    if not is_session_available(request):
+    if not is_session_available(request) or not is_plan_ready(planid):
         return HttpResponseRedirect('/')
 
     # Cleanup old versions for logged in users
@@ -553,10 +589,7 @@ def editplan(request, planid):
     Returns:
         A rendered HTML page for editing a plan.
     """
-    if not is_session_available(request):
-        return HttpResponseRedirect('/')
-
-    if request.user.is_anonymous():
+    if request.user.is_anonymous() or not is_session_available(request) or not is_plan_ready(planid):
         return HttpResponseRedirect('/')
 
     cfg = commonplan(request, planid)
@@ -733,12 +766,12 @@ def createplan(request):
     if request.method == "POST":
         name = request.POST['name'][0:200]
         body = LegislativeBody.objects.get(id=int(request.POST['legislativeBody']))
-        plan = Plan(name = name, owner = request.user, legislative_body = body)
+        plan = Plan(name=name, owner=request.user, legislative_body=body, processing_state=ProcessingState.READY)
         try:
             plan.save()
             status = serializers.serialize("json", [ plan ])
         except:
-            status = { 'success': False, 'message': 'Couldn\'t save new plan' }
+            status = { 'success': False, 'message': _("Couldn't save new plan") }
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
 @unique_session_or_json_redirect
@@ -773,15 +806,15 @@ def uploadfile(request):
         filename = index_file.name
 
     if index_file.size > settings.MAX_UPLOAD_SIZE:
-        sys.stderr.write('File size exceeds allowable size.\n')
+        logger.error('File size exceeds allowable size.')
         status['upload_status'] = False
         return render_to_response('viewplan.html', status)
 
     if not filename.endswith(('.csv','.zip')):
-        sys.stderr.write('Uploaded file must be ".csv" or ".zip".\n')
+        logger.error('Uploaded file must be ".csv" or ".zip".')
         status['upload_status'] = False
     elif request.POST['userEmail'] == '':
-        sys.stderr.write('No email provided for user notification.\n')
+        logger.error('No email provided for user notification.')
         status['upload_status'] = False
     else:
         try:
@@ -796,12 +829,13 @@ def uploadfile(request):
                 filename = dest.name
 
         except Exception as ex:
-            sys.stderr.write( 'Could not save uploaded file: %s\n' % ex )
+            logger.error('Could not save uploaded file')
+            logger.error('Reason: %s', ex)
             status['upload_status'] = False
             return render_to_response('viewplan.html', status)
 
         # Put in a celery task to create the plan and email user on completion
-        DistrictIndexFile.index2plan.delay(request.POST['txtNewName'], request.POST['legislativeBody'], filename, owner = request.user, template = False, purge = True, email = request.POST['userEmail'])
+        DistrictIndexFile.index2plan.delay(request.POST['txtNewName'], request.POST['legislativeBody'], filename, owner = request.user, template = False, purge = True, email = request.POST['userEmail'], language=translation.get_language())
 
     return render_to_response('viewplan.html', status) 
 
@@ -845,20 +879,20 @@ def getreport(request, planid):
     try:
         plan = Plan.objects.get(pk=planid)
     except:
-        status['message'] = 'No plan with the given id'
+        status['message'] = _('No plan with the given id')
         return HttpResponse(json.dumps(status),mimetype='application/json')
 
     if not can_view(request.user, plan):
-        status['message'] = 'User can\'t view the given plan'
+        status['message'] = _("User can't view the given plan")
         return HttpResponse(json.dumps(status),mimetype='application/json')
 
     if not settings.REPORTS_ENABLED is None:
-        status['message'] = 'Reports functionality is turned off.'
+        status['message'] = _('Reports functionality is turned off.')
         return HttpResponse(json.dumps(status),mimetype='application/json')
               
     # Get the variables from the request
     if request.method != 'POST':
-        status['message'] = 'Information for report wasn\'t sent via POST'
+        status['message'] = _("Information for report wasn't sent via POST")
         return HttpResponse(json.dumps(status),mimetype='application/json')
 
     stamp = request.POST.get('stamp', generate_report_hash(request.POST))
@@ -869,7 +903,7 @@ def getreport(request, planid):
             'success': True,
             'url': PlanReport.getreport(planid, stamp),
             'retry': 0,
-            'message': 'Plan report is ready.',
+            'message': _('Plan report is ready.'),
             'stamp': stamp
         }
     elif rptstatus == 'busy':
@@ -877,7 +911,7 @@ def getreport(request, planid):
             'success': True,
             'url': reverse(getreport, args=[planid]),
             'retry': 10,
-            'message': 'Report is building.',
+            'message': _('Report is building.'),
             'stamp': stamp
         }
     elif rptstatus == 'free':
@@ -885,7 +919,7 @@ def getreport(request, planid):
             'success': True,
             'url': reverse(getreport, args=[planid]),
             'retry': 10,
-            'message': 'Report generation started.',
+            'message': _('Report generation started.'),
             'stamp': stamp
         }
 
@@ -902,9 +936,10 @@ def getreport(request, planid):
         }
 
         PlanReport.markpending(planid, stamp)
-        PlanReport.createreport.delay(planid, stamp, req)
+        PlanReport.createreport.delay(planid, stamp, req, language=translation.get_language())
     else:
-        status['message'] = 'Unrecognized status when checking report status.'
+        status['message'] = _(
+            'Unrecognized status when checking report status.')
 
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
@@ -930,15 +965,15 @@ def getcalculatorreport(request, planid):
     try:
         plan = Plan.objects.get(pk=planid)
     except:
-        status['message'] = 'No plan with the given id'
+        status['message'] = _('No plan with the given id')
         return HttpResponse(json.dumps(status),mimetype='application/json')
 
     if not can_view(request.user, plan):
-        status['message'] = 'User can\'t view the given plan'
+        status['message'] = _("User can't view the given plan")
         return HttpResponse(json.dumps(status),mimetype='application/json')
 
     if request.method != 'POST':
-        status['message'] = 'Information for report wasn\'t sent via POST'
+        status['message'] = _("Information for report wasn't sent via POST")
         return HttpResponse(json.dumps(status),mimetype='application/json')
 
     # extract the function ids from the POST
@@ -955,7 +990,7 @@ def getcalculatorreport(request, planid):
             'success': True,
             'url': CalculatorReport.getreport(planid, stamp),
             'retry': 0,
-            'message': 'Plan report is ready.',
+            'message': _('Plan report is ready.'),
             'stamp': stamp
         }
     elif rptstatus == 'busy':
@@ -963,7 +998,7 @@ def getcalculatorreport(request, planid):
             'success': True,
             'url': reverse(getcalculatorreport, args=[planid]),
             'retry': 5,
-            'message': 'Report is building.',
+            'message': _('Report is building.'),
             'stamp': stamp
         }
     elif rptstatus == 'free':
@@ -971,15 +1006,16 @@ def getcalculatorreport(request, planid):
             'success': True,
             'url': reverse(getcalculatorreport, args=[planid]),
             'retry': 5,
-            'message': 'Report generation started.',
+            'message': _('Report generation started.'),
             'stamp': stamp
         }
 
         req = { 'functionIds': function_ids }
         CalculatorReport.markpending(planid, stamp)
-        CalculatorReport.createcalculatorreport.delay(planid, stamp, req)
+        CalculatorReport.createcalculatorreport.delay(planid, stamp, req, language=translation.get_language())
     else:
-        status['message'] = 'Unrecognized status when checking report status.'
+        status['message'] = _(
+            'Unrecognized status when checking report status.')
 
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
@@ -1023,14 +1059,14 @@ def newdistrict(request, planid):
         if 'district_short' in request.REQUEST:
             district_short = request.REQUEST['district_short'][0:10]
         elif not district_id is None:
-            district_short = plan.legislative_body.short_label % district_id
+            district_short = plan.legislative_body.get_short_label() % {'district_id':district_id}
         else:
             district_short = None
 
         if 'district_long' in request.REQUEST:
             district_long = request.REQUEST['district_long'][0:256]
         elif not district_id is None:
-            district_long = plan.legislative_body.long_label % district_id
+            district_long = plan.legislative_body.get_label() % {'district_id':district_id}
         else:
             district_long = None
 
@@ -1070,18 +1106,20 @@ def newdistrict(request, planid):
                         Tag.objects.add_tag(district, strtag)
 
                 status['success'] = True
-                status['message'] = 'Created 1 new district'
+                status['message'] = _('Created 1 new district')
                 plan = Plan.objects.get(pk=planid, owner=request.user)
                 status['edited'] = getutc(plan.edited).isoformat()
                 status['district_id'] = district_id
                 status['version'] = plan.version
             except ValidationError:
-                status['message'] = 'Reached Max districts already'
-            except:
-                logger.debug(traceback.format_exc())
-                status['message'] = 'Couldn\'t save new district.'
+                status['message'] = _('Reached Max districts already')
+            except Exception, ex:
+                logger.warn('Error saving new district')
+                logger.debug('Reason: %s', ex)
+                status['message'] = _("Couldn't save new district.")
         else:
-            status['message'] = 'Must specify name, geolevel, and geounit ids for new district.'
+            status['message'] = _('Must specify name, geolevel, ' \
+                'and geounit ids for new district.')
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
 @login_required
@@ -1107,36 +1145,38 @@ def add_districts_to_plan(request, planid):
     try:
         plan = Plan.objects.get(pk=planid)
     except:
-        status['message'] = 'No plan with the given id'
+        status['message'] = _('No plan with the given id')
         return HttpResponse(json.dumps(status),mimetype='application/json')
 
     if not can_edit(request.user, plan):
-        status['message'] = 'User can\'t edit the given plan'
+        status['message'] = _("User can't edit the given plan")
         return HttpResponse(json.dumps(status),mimetype='application/json')
     
     # Get the districts we want to merge
     district_list = request.POST.getlist('districts[]')
     if len(district_list) == 0:
-        status['message'] = 'No districts selected to add to the given plan'
+        status['message'] = _("No districts selected to add to the given plan")
         return HttpResponse(json.dumps(status),mimetype='application/json')
     else:
         districts = District.objects.filter(id__in=district_list)
         version = int(request.POST.get('version', None))
-        status['message'] = 'Going to merge %d districts' % len(districts)
+        status['message'] = _('Going to merge %(number_of_merged_districts)d' \
+            ' districts') % {'number_of_merged_districts': len(districts)}
     
     # Check to see if we have enough room to add these districts without
     # going over MAX_DISTRICTS for the legislative_body
     allowed_districts = plan.get_available_districts(version=version)
     
     if len(districts) > allowed_districts:
-        status['message'] = 'Tried to merge too many districts; %d slots left' % allowed_districts
+        status['message'] = _('Tried to merge too many districts; ' \
+            '%(allowed_districts)d slots left') % {'allowed_districts': allowed_districts}
 
     # Everything checks out, let's paste those districts
     try:
         results = plan.paste_districts(districts, version=version)
         transaction.commit()
         status['success'] = True
-        status['message'] = 'Merged %d districts' % len(results)
+        status['message'] = _('Merged %(num_merged_districts)d districts') % {'num_merged_districts': len(results)}
         status['version'] = plan.version
     except Exception as ex:
         transaction.rollback()
@@ -1167,17 +1207,18 @@ def assign_district_members(request, planid):
     try:
         plan = Plan.objects.get(pk=planid)
     except:
-        status['message'] = 'No plan with the given id'
+        status['message'] = _('No plan with the given id')
         return HttpResponse(json.dumps(status),mimetype='application/json')
 
     if not can_edit(request.user, plan):
-        status['message'] = 'User can\'t edit the given plan'
+        status['message'] = _("User can't edit the given plan")
         return HttpResponse(json.dumps(status),mimetype='application/json')
 
     # Make sure this district allows multi-member assignment
     leg_bod = plan.legislative_body
     if (not leg_bod.multi_members_allowed):
-        status['message'] = 'Multi-members not allowed for this legislative body'
+        status['message'] = _(
+            'Multi-members not allowed for this legislative body')
         return HttpResponse(json.dumps(status),mimetype='application/json')
     
     # Get the districts we want to assign members to
@@ -1209,11 +1250,14 @@ def assign_district_members(request, planid):
         status['success'] = True
         status['version'] = plan.version
         status['modified'] = changed
-        status['message'] = 'Modified members for %d districts' % changed
-    except Exception as ex:
+        status['message'] = _('Modified members for %(num_districts)d '
+            'districts') % {'num_districts': changed}
+    except Exception, ex:
         transaction.rollback()
         status['message'] = str(ex)
         status['exception'] = traceback.format_exc()
+        logger.warn('Could not assign district members')
+        logger.debug('Reason: %s', ex)
 
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
@@ -1230,11 +1274,11 @@ def combine_districts(request, planid):
     try:
         plan = Plan.objects.get(pk=planid)
     except:
-        status['message'] = 'No plan with the given id'
+        status['message'] = _('No plan with the given id')
         return HttpResponse(json.dumps(status),mimetype='application/json')
 
     if not can_edit(request.user, plan):
-        status['message'] = 'User can\'t edit the given plan'
+        status['message'] = _("User can't edit the given plan")
         return HttpResponse(json.dumps(status),mimetype='application/json')
     
     # Get the districts we want to merge
@@ -1254,18 +1298,20 @@ def combine_districts(request, planid):
                 locked = True
 
         if locked:
-            status['message'] = 'Can\'t combine locked districts'
+            status['message'] = _("Can't combine locked districts")
             return HttpResponse(json.dumps(status),mimetype='application/json')
 
         result = plan.combine_districts(to_district, from_districts, version=version)
 
         if result[0] == True:
             status['success'] = True
-            status['message'] = 'Successfully combined districts'
+            status['message'] = _('Successfully combined districts')
             status['version'] = result[1]
-    except:
-        status['message'] = 'Could not combine districts'
+    except Exception, ex:
+        status['message'] = _('Could not combine districts')
         status['exception'] = traceback.format_exc()
+        logger.warn('Could not combine districts')
+        logger.debug('Reason: %s', ex)
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
 @login_required
@@ -1281,11 +1327,11 @@ def fix_unassigned(request, planid):
     try:
         plan = Plan.objects.get(pk=planid)
     except:
-        status['message'] = 'No plan with the given id'
+        status['message'] = _('No plan with the given id')
         return HttpResponse(json.dumps(status),mimetype='application/json')
 
     if not can_edit(request.user, plan):
-        status['message'] = 'User can\'t edit the given plan'
+        status['message'] = _("User can't edit the given plan")
         return HttpResponse(json.dumps(status),mimetype='application/json')
 
     try:
@@ -1294,9 +1340,11 @@ def fix_unassigned(request, planid):
         status['success'] = result[0]
         status['message'] = result[1]
         status['version'] = plan.version
-    except:
-        status['message'] = 'Could not fix unassigned'
+    except Exception, ex:
+        status['message'] = _('Could not fix unassigned')
         status['exception'] = traceback.format_exc()
+        logger.warn('Could not fix unassigned')
+        logger.debug('Reason: %s', ex)
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
 
@@ -1325,11 +1373,11 @@ def get_splits(request, planid, otherid, othertype):
     try:
         plan = Plan.objects.get(pk=planid)
     except:
-        status['message'] = 'No plan with the given id'
+        status['message'] = _('No plan with the given id')
         return HttpResponse(json.dumps(status),mimetype='application/json')
 
     if not can_view(request.user, plan):
-        status['message'] = 'User can\'t view the given plan'
+        status['message'] = _("User can't view the given plan")
         return HttpResponse(json.dumps(status),mimetype='application/json')
 
     version = int(request.REQUEST['version'] if 'version' in request.REQUEST else plan.version)
@@ -1338,10 +1386,10 @@ def get_splits(request, planid, otherid, othertype):
             try:
                 otherplan = Plan.objects.get(pk=otherid)
             except:
-                status['message'] = 'No other plan with the given id'
+                status['message'] = _('No other plan with the given id')
                 return HttpResponse(json.dumps(status),mimetype='application/json')
             if not can_view(request.user, otherplan):
-                status['message'] = 'User can\'t view the given plan'
+                status['message'] = _("User can't view the given plan")
                 return HttpResponse(json.dumps(status),mimetype='application/json')
                 
             otherversion = int(request.REQUEST['otherversion'] if 'otherversion' in request.REQUEST else otherplan.version)
@@ -1349,17 +1397,40 @@ def get_splits(request, planid, otherid, othertype):
         elif othertype == 'geolevel':
             splits = plan.find_geolevel_splits(otherid, version)
         else:
-            status['message'] = 'othertype not supported: ' + othertype
+            status['message'] = _('othertype not supported: %(other)s') % { 'other': othertype }
             return HttpResponse(json.dumps(status),mimetype='application/json')
 
+        split_word = _('split') if len(splits) == 1 else inflect.engine().plural(_('split'))
+
         status['success'] = True
-        status['message'] = 'Found %d split%s' % (len(splits), '' if len(splits) == 1 else 's')
+        status['message'] = _('Found %(num_splits)d %(split_word)s') % \
+                {'num_splits': len(splits), 'split_word': split_word}
         status['splits'] = splits
         status['above_ids'] = list(set([i[0] for i in splits]))
         status['below_ids'] = list(set([i[1] for i in splits]))
-    except:
-        status['message'] = 'Could not query for splits'
+    except Exception, ex:
+        status['message'] = _('Could not query for splits')
         status['exception'] = traceback.format_exc()
+        logger.warn('Could not query for splits')
+        logger.debug('Reason: %s', ex)
+    return HttpResponse(json.dumps(status),mimetype='application/json')
+
+def get_processing_status(request):
+    """
+    Get the processing status for a list of plan ids
+    """
+    status = { 'success': False }
+    plan_ids = request.REQUEST.getlist('planIds[]')
+    if len(plan_ids) == 0:
+        status['message'] = _('No planIds provided')
+    else:
+        statuses = {}
+        for p in Plan.objects.filter(id__in=plan_ids):
+            statuses[str(p.id)] = p.get_processing_state_display()
+
+        status['success'] = True
+        status['message'] = statuses
+        
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
 def get_splits_report(request, planid):
@@ -1371,7 +1442,7 @@ def get_splits_report(request, planid):
     try:
         plan = Plan.objects.get(pk=planid)
     except:
-        return HttpResponse('<div>Plan does not exist.</div>', mimetype='text/plain')
+        return HttpResponse(_('Plan does not exist.'), mimetype='text/plain')
 
     if not using_unique_session(request.user) or not can_view(request.user, plan):
         return HttpResponseForbidden()
@@ -1381,7 +1452,7 @@ def get_splits_report(request, planid):
     extended = request.REQUEST['extended'] == 'true' if 'extended' in request.REQUEST else False
     layers = request.REQUEST.getlist('layers[]')
     if len(layers) == 0:
-        return HttpResponse('<div>No layers were provided.</div>', mimetype='text/plain')
+        return HttpResponse(_('No layers were provided.'), mimetype='text/plain')
 
     try :
         report = loader.get_template('split_report.html')
@@ -1398,9 +1469,10 @@ def get_splits_report(request, planid):
             if not last_item:
                 html += '<hr />'
         return HttpResponse(html, mimetype='text/html')
-    except Exception as ex:
-        logger.debug(traceback.format_exc())
-        return HttpResponse('%s' % ex, mimetype='text/plain')
+    except Exception, ex:
+        logger.warn('Could not produce split report')
+        logger.debug('Reason: %s', ex)
+        return HttpResponse(str(ex), mimetype='text/plain')
 
 
 @login_required
@@ -1434,7 +1506,7 @@ def addtodistrict(request, planid, districtid):
             plan = Plan.objects.get(pk=planid,owner=request.user)
         except:
             status['exception'] = traceback.format_exc()
-            status['message'] = 'Could not add units to district.'
+            status['message'] = _('Could not add units to district.')
 
         # get the version from the request or the plan
         if 'version' in request.REQUEST:
@@ -1445,17 +1517,20 @@ def addtodistrict(request, planid, districtid):
         try:
             fixed = plan.add_geounits(districtid, geounit_ids, geolevel, version)
             status['success'] = True;
-            status['message'] = 'Updated %d districts' % fixed
+            status['message'] = _('Updated %(num_fixed_districts)d districts') \
+                % {'num_fixed_districts': fixed}
             status['updated'] = fixed
             plan = Plan.objects.get(pk=planid,owner=request.user)
             status['edited'] = getutc(plan.edited).isoformat()
             status['version'] = plan.version
-        except: 
+        except Exception, ex: 
             status['exception'] = traceback.format_exc()
-            status['message'] = 'Could not add units to district.'
+            status['message'] = _('Could not add units to district.')
+            logger.warn('Could not add units to district')
+            logger.debug('Reason: %s', ex)
 
     else:
-        status['message'] = 'Geounits weren\'t found in a district.'
+        status['message'] = _("Geounits weren't found in a district.")
 
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
@@ -1484,15 +1559,15 @@ def setdistrictlock(request, planid, district_id):
     lock = request.POST.get('lock').lower() == 'true'
     version = request.POST.get('version')
     if lock == None:
-        status['message'] = 'Must include lock parameter.'
+        status['message'] = _('Must include lock parameter.')
     elif version == None:
-        status['message'] = 'Must include version parameter.'
+        status['message'] = _('Must include version parameter.')
 
     try:
         plan = Plan.objects.get(pk=planid)
         district = plan.district_set.filter(district_id=district_id,version__lte=version).order_by('version').reverse()[0]
     except ObjectDoesNotExist:
-        status['message'] = 'Plan or district does not exist.'
+        status['message'] = _('Plan or district does not exist.')
         return HttpResponse(json.dumps(status), mimetype='application/json')
 
     if plan.owner != request.user:
@@ -1501,7 +1576,8 @@ def setdistrictlock(request, planid, district_id):
     district.is_locked = lock
     district.save()
     status['success'] = True
-    status['message'] = 'District successfully %s' % ('locked' if lock else 'unlocked')
+    status['message'] = _('District successfully %(locked_state)s') % \
+            {'locked_state': _('locked') if lock else _('unlocked')}
   
     return HttpResponse(json.dumps(status), mimetype='application/json')
         
@@ -1556,7 +1632,7 @@ def getdistricts(request, planid):
         status['success'] = True
 
     else:
-        status['message'] = 'No plan exists with that ID.'
+        status['message'] = _('No plan exists with that ID.')
 
     return HttpResponse(json.dumps(status), mimetype='application/json')
 
@@ -1624,10 +1700,10 @@ def simple_district_versioned(request, planid, district_ids=None):
             status['features'] = plan.get_wfs_districts(version, subject_id, bbox, geolevel, district_ids)
         else:
             status['features'] = []
-            status['message'] = 'Subject for districts is required.'
+            status['message'] = _('Subject for districts is required.')
     else:
         status['features'] = []
-        status['message'] = 'Query failed.'
+        status['message'] = _('Query failed.')
 
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
@@ -1725,11 +1801,11 @@ def get_unlocked_simple_geometries(request,planid):
             
         else:
             status['features'] = []
-            status['message'] = 'Geometry is required.'
+            status['message'] = _('Geometry is required.')
             
     else:
         status['features'] = []
-        status['message'] = 'Invalid plan.'
+        status['message'] = _('Invalid plan.')
 
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
@@ -1741,7 +1817,8 @@ def get_statistics(request, planid):
     try:
         plan = Plan.objects.get(pk=planid)
     except:
-        status['message'] = "Couldn't get geography info from the server. No plan with the given id."
+        status['message'] = _(
+                "Couldn't get geography info from the server. No plan with the given id.")
         return HttpResponse( json.dumps(status), mimetype='application/json', status=500)
 
     if 'version' in request.REQUEST:
@@ -1752,24 +1829,29 @@ def get_statistics(request, planid):
     else:
         version = plan.version
 
-    display = ScoreDisplay.objects.filter(title='Demographics', legislative_body=plan.legislative_body)[0]
+    # TODO: 'Demographics' is hardcoded as a panel title. Is there another way to designate a permanent display?
+    display = ScoreDisplay.objects.filter(legislative_body=plan.legislative_body)
+    display = filter(lambda x:x.get_short_label() == 'Demographics', display)[0]
     
     if 'displayId' in request.REQUEST:
         try:
             display = ScoreDisplay.objects.get(pk=request.POST['displayId'])
         except:
-            status['message'] = "Unable to get Personalized ScoreDisplay"
+            status['message'] = _('Unable to get Personalized ScoreDisplay')
             status['exception'] = traceback.format_exc()
 
     else:
-        sys.stderr.write('No displayId in request: %s\n' % request.POST)
+        logger.warn('No displayId in request.')
+        logger.warn(str(request.POST))
         
     try :
         html = display.render(plan, request, version=version)
         return HttpResponse(html, mimetype='text/html')
-    except:
-        status['message'] = "Couldn't render display tab."
+    except Exception, ex:
+        status['message'] = _("Couldn't render display tab.")
         status['exception'] = traceback.format_exc()
+        logger.warn("Couldn't render display tab")
+        logger.debug('Reason: %s', ex)
         return HttpResponse( json.dumps(status), mimetype='application/json', status=500)
 
 
@@ -1798,7 +1880,7 @@ def getdistrictfilestatus(request, planid):
         status['success'] = True
         status['status'] = file_status 
     except Exception as ex:
-        status['message'] = 'Failed to get file status'
+        status['message'] = _('Failed to get file status')
         status['exception'] = ex 
     return HttpResponse(json.dumps(status),mimetype='application/json')
         
@@ -1830,7 +1912,8 @@ def getdistrictfile(request, planid):
             DistrictShapeFile.plan2shape.delay(plan)
         else:
             DistrictIndexFile.plan2index.delay(plan)
-        response = HttpResponse('File is not yet ready. Please try again in a few minutes')
+        response = HttpResponse(_('File is not yet ready. Please try again in '
+            'a few minutes'))
     return response
 
 @unique_session_or_json_redirect
@@ -1849,8 +1932,11 @@ def emaildistrictindexfile(request, planid):
         return HttpResponseForbidden()
     
     # Put in a celery task to create the file and send the emails
-    DistrictIndexFile.emailfile.delay(plan, request.user, request.POST)
-    return HttpResponse(json.dumps({ 'success': True, 'message': 'Task submitted' }), mimetype='application/json')
+    DistrictIndexFile.emailfile.delay(plan, request.user, request.POST, translation.get_language())
+    return HttpResponse(json.dumps({
+                                    'success': True,
+                                    'message': _('Task submitted') }),
+                                    mimetype='application/json')
 
 def getvalidplans(leg_body, owner=None):
     """
@@ -1866,7 +1952,9 @@ def getleaderboarddisplay(leg_body, owner_filter):
     """
     Returns the leaderboard ScoreDisplay given a legislative body and owner
     """
-    displays = ScoreDisplay.objects.filter(title='%s Leaderboard - %s' % (leg_body.name, owner_filter.title()))
+    # TODO: 'Leaderboard' is hardcoded into the scoredisplay title
+    displays = ScoreDisplay.objects.all()
+    displays = filter(lambda x:(x.get_short_label()==_('%s Leaderboard - %s') % (leg_body.get_long_description(), owner_filter.title())), displays)
     return displays[0] if len(displays) > 0 else None
 
 def getleaderboard(request):
@@ -1884,16 +1972,17 @@ def getleaderboard(request):
     
     display = getleaderboarddisplay(leg_body, owner_filter)
     if display is None:
-        return HttpResponse('No display configured', mimetype='text/plain')
+        return HttpResponse(_('No display configured'), mimetype='text/plain')
     
     plans = getvalidplans(leg_body, request.user if owner_filter == 'mine' else None)
 
     try :
         html = display.render(plans, request)
         return HttpResponse(html, mimetype='text/plain')
-    except Exception as ex:
-        logger.debug(traceback.format_exc())
-        return HttpResponse('%s' % ex, mimetype='text/plain')
+    except Exception, ex:
+        logger.warn('Leaderboard could not be fetched.')
+        logger.debug('Reason: %s', ex)
+        return HttpResponse(str(ex), mimetype='text/plain')
 
 def getleaderboardcsv(request):
     """
@@ -1921,7 +2010,7 @@ def getleaderboardcsv(request):
         writer = csv.writer(response)
 
         # write headers
-        writer.writerow(['Plan ID', 'Plan Name', 'User Name'] + [p.title for p in panels])
+        writer.writerow(['Plan ID', 'Plan Name', 'User Name'] + [p.__unicode__() for p in panels])
 
         # write row for each plan
         for plan in plans:
@@ -1937,9 +2026,10 @@ def getleaderboardcsv(request):
             writer.writerow(row)
             
         return response    
-    except Exception as ex:
-        logger.debug(traceback.format_exc())
-        return HttpResponse('%s' % ex, mimetype='text/plain')
+    except Exception, ex:
+        logger.warn("Couldn't generate CSV of leaderboard.")
+        logger.debug('Reason: %s', ex)
+        return HttpResponse(str(ex), mimetype='text/plain')
 
 
 def getplans(request):
@@ -1982,10 +2072,9 @@ def getplans(request):
         if not request.user.is_anonymous():
             available = available | Q(owner__exact=request.user)
     else:
-        return HttpResponseBadRequest("Unknown filter method.")
+        return HttpResponseBadRequest(_("Unknown filter method."))
         
-       
-    not_pending = Q(is_pending=False)
+    not_creating = ~Q(processing_state=ProcessingState.CREATING) & ~Q(processing_state=ProcessingState.UNKNOWN)
 
     # Set up the order_by parameter from sidx and sord in the request
     if sidx.startswith('fields.'):
@@ -2004,10 +2093,10 @@ def getplans(request):
 
     if body_pk:
         body_filter = Q(legislative_body=body_pk)
-        all_plans = Plan.objects.filter(available, not_pending, body_filter, search_filter).order_by(sidx)
+        all_plans = Plan.objects.filter(available, not_creating, body_filter, search_filter).order_by(sidx)
     else:
         community_filter = Q(legislative_body__is_community=is_community)
-        all_plans = Plan.objects.filter(available, not_pending, search_filter, community_filter).order_by(sidx)
+        all_plans = Plan.objects.filter(available, not_creating, search_filter, community_filter).order_by(sidx)
 
     if all_plans.count() > 0:
         total_pages = math.ceil(all_plans.count() / float(rows))
@@ -2023,13 +2112,14 @@ def getplans(request):
             'fields': { 
                 'name': plan.name, 
                 'description': plan.description, 
-                'edited': str(plan.edited), 
+                'edited': time.mktime(plan.edited.timetuple()), 
                 'is_template': plan.is_template, 
                 'is_shared': plan.is_shared, 
                 'owner': plan.owner.username, 
                 'districtCount': '--', # load dynamically -- this is a big performance hit
                 'can_edit': can_edit(request.user, plan),
-                'plan_type': plan.legislative_body.name
+                'plan_type': plan.legislative_body.get_long_description(),
+                'processing_state': plan.get_processing_state_display()
                 }
             })
 
@@ -2103,7 +2193,8 @@ def editplanattributes(request, planid):
     new_description = request.POST.get('description', '')
 
     if not planid or not (new_name or new_description):
-        return HttpResponseBadRequest('Must declare planId, name and description')
+        return HttpResponseBadRequest(
+            _('Must declare planId, name and description'))
 
     plan = Plan.objects.filter(pk=planid,owner=request.user)
     if plan.count() == 1:
@@ -2116,12 +2207,14 @@ def editplanattributes(request, planid):
             plan.save()
 
             status['success'] = True
-            status['message'] = 'Updated plan attributes'
-        except Exception as ex:
-            status['message'] = 'Failed to save the changes to your plan'
+            status['message'] = _('Updated plan attributes')
+        except Exception, ex:
+            status['message'] = _('Failed to save the changes to your plan')
             status['exception'] = ex
+            logger.warn('Could not save changes to plan.')
+            logger.debug('Reason: %s', ex)
     else:
-        status['message'] = "Cannot edit a plan you don\'t own."
+        status['message'] = _("Cannot edit a plan you don't own.")
     return HttpResponse(json.dumps(status), mimetype='application/json')
 
 @login_required
@@ -2137,7 +2230,7 @@ def deleteplan(request, planid):
         return HttpResponseNotAllowed(['POST'])
 
     if not planid:
-        return HttpResponseBadRequest('Must declare planId')
+        return HttpResponseBadRequest(_('Must declare planId'))
 
     plan = Plan.objects.filter(pk=planid,owner=request.user)
     if plan.count() == 1:
@@ -2145,12 +2238,52 @@ def deleteplan(request, planid):
         try:
             plan.delete()
             status['success'] = True
-            status['message'] = 'Deleted plan'
-        except Exception as ex:
-            status['message'] = 'Failed to delete plan'
+            status['message'] = _('Deleted plan')
+        except Exception, ex:
+            status['message'] = _('Failed to delete plan')
             status['exception'] = ex
+            logger.warn('Could not delete plan.')
+            logger.debug('Reason: %s', ex)
     else:
-        status['message'] = "Cannot delete a plan you don\'t own."
+        status['message'] = _("Cannot delete a plan you don't own.")
+    
+    return HttpResponse(json.dumps(status), mimetype='application/json')
+
+@login_required
+@unique_session_or_json_redirect
+def reaggregateplan(request, planid):
+    """
+    Reaggregate a plan
+    """
+    note_session_activity(request)
+
+    status = { 'success': False }
+    if request.method != 'POST':
+        return HttpResponseNotAllowed(['POST'])
+
+    if not planid:
+        return HttpResponseBadRequest(_('Must declare planId'))
+
+    plan = Plan.objects.filter(pk=planid,owner=request.user)
+    if plan.count() == 1:
+        plan = plan[0]
+        try:
+            reaggregate_plan.delay(plan.id)
+
+            # Set the reaggregating flag
+            # (needed for the state to display on immediate refresh)
+            plan.processing_state = ProcessingState.REAGGREGATING
+            plan.save()
+            
+            status['success'] = True
+            status['message'] = _('Reaggregating plan')
+        except Exception, ex:
+            status['message'] = _('Failed to reaggregate plan')
+            status['exception'] = ex
+            logger.warn('Could not reaggregate plan.')
+            logger.debug('Reason: %s', ex)
+    else:
+        status['message'] = _("Cannot reaggregate a plan you don't own.")
     return HttpResponse(json.dumps(status), mimetype='application/json')
 
 def get_health(request):
@@ -2160,7 +2293,7 @@ def get_health(request):
             try:
                 decoded = session.get_decoded()
             except:
-                #There's a problem with this session, remote it
+                #There's a problem with this session, remove it
                 session.delete()
                 continue
             
@@ -2171,16 +2304,22 @@ def get_health(request):
         return users
 
     try:
-        result = 'Health retrieved at %s\n' % datetime.now()
-        result += '%d plans in database\n' % Plan.objects.all().count()
-        result += '%d sessions in use out of %s\n' % (Session.objects.all().count(), settings.CONCURRENT_SESSIONS)
-        result += '%d active users over the last 10 minutes\n' % num_users(10)
+        result = _('Health retrieved at %(time)s\n') % {'time': datetime.now()}
+        result += _('%(plan_count)d plans in database\n') % \
+                {'plan_count': Plan.objects.all().count()}
+        result += _('%(session_count)d sessions in use out of %(session_limit)s\n') % \
+                {'session_count': Session.objects.all().count(),
+                'session_limit': settings.CONCURRENT_SESSIONS}
+        result += _('%(num_users)d active users over the last 10 minutes\n') % \
+                {'num_users':  num_users(10)}
         space = os.statvfs('/projects/PublicMapping')
-        result += '%s MB of disk space free\n' % ((space.f_bsize * space.f_bavail) / (1024*1024))
-        result += 'Memory Usage:\n%s\n' % commands.getoutput('free -m')
+        result += _('%(mb_free)s MB of disk space free\n') % \
+                {'mb_free': ((space.f_bsize * space.f_bavail) / (1024*1024))}
+        result += _('Memory Usage:\n%(mem_free)s\n') % \
+                {'mem_free':  commands.getoutput('free -m')}
         return HttpResponse(result, mimetype='text/plain')
     except:
-        return HttpResponse('ERROR! Couldn\'t get health:\n%s' % traceback.format_exc())
+        return HttpResponse(_("ERROR! Couldn't get health:\n%s") % traceback.format_exc())
 
 
 def statistics_sets(request, planid):
@@ -2188,7 +2327,7 @@ def statistics_sets(request, planid):
 
     plan = Plan.objects.filter(id=planid)
     if plan.count() == 0:
-        result['message'] = 'No plan with that ID exists.'
+        result['message'] = _('No plan with that ID exists.')
         return HttpResponse(json.dumps(result),mimetype='application/json')
     else:
         plan = plan[0]
@@ -2198,10 +2337,10 @@ def statistics_sets(request, planid):
         scorefunctions = []
             
         # Get the functions available for the users
-        user_functions = ScoreFunction.objects.filter(selectable_bodies=plan.legislative_body).order_by('label')
+        user_functions = ScoreFunction.objects.filter(selectable_bodies=plan.legislative_body).order_by('name')
         for f in user_functions:
-            if 'report' not in f.name.lower() and 'comments' not in f.name.lower():
-                scorefunctions.append({ 'id': f.id, 'name': force_escape(f.label) })
+            if 'report' not in f.get_short_label().lower() and 'comments' not in f.get_short_label().lower():
+                scorefunctions.append({ 'id': f.id, 'name': force_escape(f.get_label()) })
         result['functions'] = scorefunctions
 
         if not request.user.is_superuser:
@@ -2211,8 +2350,8 @@ def statistics_sets(request, planid):
                 legislative_body=plan.legislative_body,
                 is_page=False).order_by('title')
             for admin_display in admin_displays:
-                if 'report' not in admin_display.title.lower():
-                    sets.append({ 'id': admin_display.id, 'name': force_escape(admin_display.title), 'functions': [], 'mine':False })
+                if 'reports' not in admin_display.cssclass:
+                    sets.append({ 'id': admin_display.id, 'name': force_escape(admin_display.__unicode__()), 'functions': [], 'mine':False })
 
         try:
             user_displays = ScoreDisplay.objects.filter(
@@ -2226,10 +2365,14 @@ def statistics_sets(request, planid):
                     if panel.type == 'district':
                         functions = map(lambda x: x.id, panel.score_functions.all())
                         if len(functions) == 0:
-                            result['message'] = "No functions for %s" % panel
-                sets.append({ 'id': display.id, 'name': force_escape(display.title), 'functions': functions, 'mine': display.owner==request.user })
-        except:
-            result['message'] = 'No user displays for %s: %s' % (request.user, traceback.format_exc())
+                            result['message'] = _("No functions for %(panel)s") % \
+                                                {'panel_name': panel}
+                sets.append({ 'id': display.id, 'name': force_escape(display.__unicode__()), 'functions': functions, 'mine': display.owner==request.user })
+        except Exception, ex:
+            result['message'] = _('No user displays for %(user)s') % \
+                 {'user': request.user}
+            logger.warn('Error fetching ScoreDisplays for user')
+            logger.debug('Reason: %s', ex)
 
         result['sets'] = sets
         result['success'] = True
@@ -2237,13 +2380,19 @@ def statistics_sets(request, planid):
     elif request.method == 'POST' and 'delete' in request.POST:
         try:
             display = ScoreDisplay.objects.get(pk=request.REQUEST.get('id', -1))
-            result['set'] = {'name':force_escape(display.title), 'id':display.id}
+            result['set'] = {'name':force_escape(display.__unicode__()), 'id':display.id}
+            qset = display.scorepanel_set.all()
+            for panel in qset:
+                if panel.displays.count() == 1:
+                    panel.delete()
             display.delete()
             result['success'] = True
-        except:
-            result['message'] = 'Couldn\'t delete personalized scoredisplay'
+        except Exception, ex:
+            result['message'] = _("Couldn't delete personalized scoredisplay")
             result['exception'] = traceback.format_exc()
-        
+            logger.warn("Couldn't delete personalized ScoreDisplay")
+            logger.debug('Reason: %s', ex)
+            
     # If it's a post, edit or create the ScoreDisplay and return 
     # the id and name as usual
     elif request.method == 'POST':
@@ -2258,7 +2407,8 @@ def statistics_sets(request, planid):
                 display = ScoreDisplay.objects.get(title=request.POST.get('name'), owner=request.user)
                 display = display.copy_from(display=display, functions=functions)
             except:
-                if validate_num(request.user):
+                limit = 3
+                if validate_num(request.user, limit):
                     demo = ScoreDisplay.objects.filter(
                         owner__is_superuser=True,
                         legislative_body=plan.legislative_body,
@@ -2278,15 +2428,17 @@ def statistics_sets(request, planid):
                     display = display.copy_from(display=demo, title=request.POST.get('name'), owner=request.user, functions=functions)
                     result['newRecord'] = True
                 else:
-                    result['message'] = 'Each user is limited to 3 statistics sets. Please delete one or edit an existing set.'
+                    result['message'] = _('Each user is limited to %(limit)d '
+                        'statistics sets. Please delete one or edit '
+                        'an existing set.') % { 'limit': limit }
                     result['error'] = 'limit'
                     return HttpResponse(json.dumps(result),mimetype='application/json')
 
-            result['set'] = {'name':force_escape(display.title), 'id':display.id, 'functions':functions, 'mine': display.owner==request.user}
+            result['set'] = {'name':force_escape(display.__unicode__()), 'id':display.id, 'functions':functions, 'mine': display.owner==request.user}
             result['success'] = True
 
         else:
-            result['message'] = "Didn't get functions in POST parameter"
+            result['message'] = _("Didn't get functions in POST parameter")
 
     return HttpResponse(json.dumps(result),mimetype='application/json')
 
@@ -2319,7 +2471,7 @@ def district_info(request, planid, district_id):
     status = { 'success': False }
     plan = Plan.objects.filter(id=planid)
     if plan.count() == 0:
-        status['message'] = 'No plan with that ID was found.'
+        status['message'] = _('No plan with that ID was found.')
     else:
         plan = plan[0]
 
@@ -2406,7 +2558,7 @@ def plan_feed(request):
     # MAP_SERVER = ''
     # MAP_SERVER_NS = 'pmp'
     plans = Plan.objects.all().order_by('-edited')[0:10]
-    geolevel = Geolevel.objects.get(id=plans[0].legislative_body.get_geolevels()[0])
+    geolevel = plans[0].legislative_body.get_geolevels()[0]
     extent = geolevel.geounit_set.collect().extent
     if extent[2] - extent[0] > extent[3] - extent[1]:
         # wider maps
@@ -2435,7 +2587,7 @@ def share_feed(request):
     # MAP_SERVER_NS = 'pmp'
     plans = Plan.objects.filter(is_shared=True).order_by('-edited')[0:10]
     if plans.count() < 0:
-        geolevel = Geolevel.objects.get(id=plans[0].legislative_body.get_geolevels()[0])
+        geolevel = plans[0].legislative_body.get_geolevels()[0]
         extent = geolevel.geounit_set.collect().extent
         if extent[2] - extent[0] > extent[3] - extent[1]:
             # wider maps

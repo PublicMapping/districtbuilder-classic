@@ -35,12 +35,13 @@
 
 {% load humanize %}
 {% load redistricting_extras %}
+{% load i18n %}
 <div class="info_table basic">
     {% if districtscores %}
     <table id="demographics_table">
         <thead> 
             <tr>
-                <th class="district_name">Dist.</th>
+                <th class="district_name">{% trans "Dist." %}</th>
                 {% for function in functions %}
                 <th class="info_header score{{ forloop.counter }}">{{ function }}</th>
                 {% endfor %}
@@ -60,27 +61,27 @@
         </tbody>
     </table>
     {% else %}
-    <div class="error"> Sorry, there is no demographic data for this plan</div>
+    <div class="error"> {% trans "Sorry, there is no demographic data for this plan" %}</div>
     {% endif %}                    
 </div>
 <div class="menu_footer">
-    <button id="stats_legend" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false"><span class="ui-button-text">Stats Legend</span></button>
+    <button id="stats_legend" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false"><span class="ui-button-text">{% trans "Stats Legend" %}</span></button>
     <div id="stats_legend_panel" class="tooltip">
         <div class="legend_item">
-            <h5>Population</h5>
+            <h5>{% trans "Population" %}</h5>
             <ul>
-                <li><span class="swatch popstatus farover"></span> Far over target</li>
-                <li><span class="swatch popstatus over"></span> Over target</li>
-                <li><span id="swatch-target" class="swatch popstatus target"></span> Meets target</li>
-                <li><span id="swatch-under" class="swatch popstatus under"></span> Under target</li>
-                <li><span id="swatch-farunder" class="swatch popstatus farunder"></span>Far Under target</li>
+                <li><span class="swatch popstatus farover"></span> {% trans "Far over target" %}</li>
+                <li><span class="swatch popstatus over"></span> {% trans "Over target" %}</li>
+                <li><span id="swatch-target" class="swatch popstatus target"></span> {% trans "Meets target" %}</li>
+                <li><span id="swatch-under" class="swatch popstatus under"></span> {% trans "Under target" %}</li>
+                <li><span id="swatch-farunder" class="swatch popstatus farunder"></span>{% trans "Far Under target" %}</li>
             </ul>
         </div>
         <div class="legend_item last">
-            <h5>Contiguity</h5>
+            <h5>{% trans "Contiguity" %}</h5>
             <ul>
-                <li><img class="yes-contiguous" src="/static-media/images/icon-check.png"> Contiguous</li>
-                <li><img class="no-contiguous" src="/static-media/images/icon-warning.png"> Non-contiguous</li>                 
+                <li><img class="yes-contiguous" src="/static-media/images/icon-check.png"> {% trans "Contiguous" %}</li>
+                <li><img class="no-contiguous" src="/static-media/images/icon-warning.png"> {% trans "Non-contiguous" %}</li> 
             </ul>
         </div>                    
     </div>

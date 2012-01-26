@@ -1,4 +1,5 @@
 {% load comments %}
+{% load i18n %}
 
 <div class="community_comments">
 {% for dscore in districtscores %}
@@ -6,9 +7,9 @@
         <form id="districtInfo{{ dscore.district.district_id }}">
             <input type="hidden" name="pk" value="{{ dscore.district.id }}" />
             <input type="text" class="infoLabel" name="label" value="{{ dscore.district.long_label }}" readonly="true" />
-            <div class="edit_district_info" districtid="{{ dscore.district.district_id }}">Edit</div>
+            <div class="edit_district_info" districtid="{{ dscore.district.district_id }}">{% trans "Edit" %}</div>
             <div class="district_type">
-                <h4>Type/s:</h4>
+                <h4>{% trans "Type/s:" %}</h4>
                 {% for forscore in dscore.scores %}
                     {% with forscore.score as score %}
                         {% if score.typetags %}
@@ -22,7 +23,7 @@
             </div>
             {% get_comment_list for dscore.district as dcoms %}
             <div class="district_comment">
-                <h4>Comments:</h4>
+                <h4>{% trans "Comments:" %}</h4>
                 <div class="infoComment">{% for dcom in dcoms %}{{ dcom.comment }}{% endfor %}</div>
             </div>
             <div style="clear:both;height:0;line-height:0;">&nbsp;</div>

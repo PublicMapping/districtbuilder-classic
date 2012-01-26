@@ -7,12 +7,13 @@ Context:
     plan: The plan that has been submitted
 
 {% endcomment %}
+{% load i18n %}
 {% autoescape off %}
-user name: {{ user.username }}
-plan id:  {{ plan.pk }}
-plan version: {{ plan.version }}
-plan name: {{ plan.name }}
-legislative body: {{ plan.legislative_body.name }}
+{% trans "user name" %}: {{ user.username }}
+{% trans "plan id" %}:  {{ plan.pk }}
+{% trans "plan version" %}: {{ plan.version }}
+{% trans "plan name" %}: {{ plan.name }}
+{% trans "legislative body" %}: {{ plan.legislative_body.name }}
 {% for key,value in post.items %}{{ key }}: {{ value }}
 {% endfor %}
 {% endautoescape %}

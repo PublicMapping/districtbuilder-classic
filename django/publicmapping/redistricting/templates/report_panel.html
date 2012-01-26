@@ -30,6 +30,7 @@
 {% endcomment %}
 
 {% load redistricting_extras %}
+{% load i18n %}
 <div id="stat_{{cssclass|cut:' '}}" class="report_panel {{cssclass}}">
   <div class="report_panel_title">{{ title }}</div>
     <div class="report_function_wrap">
@@ -67,7 +68,7 @@
                     {% for row in score.score %}
                       <td class="report_score_cell footer {{ row|format_report_class }}">
                         {% if forloop.first %}
-                          Average
+                          {% trans "Average" %}
                         {% else %}
                           {{ districtscores|avg_report_column:row }}
                         {% endif %}
