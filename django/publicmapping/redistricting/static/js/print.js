@@ -154,7 +154,7 @@ printplan = function(options) {
 
         // iterate over the rules of the district style cache,
         // adding the polygon styles, which contain the borders, too
-        $.each(_styleCache[_options.districtLayer.name].rules, function(idx, item) {
+        $.each(_styleCache[geolevel.name].rules, function(idx, item) {
             if (item.symbolizer.Polygon != null) {
                 legend.dist.push({
                     title: item.title,
@@ -189,7 +189,7 @@ printplan = function(options) {
         });
 
         // get the title of the district style layer
-        legend.disttitle = _styleCache[_options.districtLayer.name].title;
+        legend.disttitle = _styleCache[geolevel.name].title;
 
         // for each rule in the district layer user style
         $.each(uStyle.rules, function(ridx, ruleItem){

@@ -1954,7 +1954,10 @@ def getleaderboarddisplay(leg_body, owner_filter):
     """
     # TODO: 'Leaderboard' is hardcoded into the scoredisplay title
     displays = ScoreDisplay.objects.all()
-    displays = filter(lambda x:(x.get_short_label()==_('%s Leaderboard - %s') % (leg_body.get_long_description(), owner_filter.title())), displays)
+    displays = filter(lambda x:(x.get_short_label()==\
+            _('%(legislative_body)s Leaderboard - %(owner_filter)s' % \
+            {'legislative_body': leg_body.get_long_description(), \
+            'owner_filter': owner_filter.title()})), displays)
     return displays[0] if len(displays) > 0 else None
 
 def getleaderboard(request):
