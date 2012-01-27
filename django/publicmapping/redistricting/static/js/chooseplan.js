@@ -285,7 +285,7 @@ chooseplan = function(options) {
             if ($.browser.mozilla) {
                  // get the time zone offset in minutes, then multiply to get
                  // milliseconds
-                 var offset = date.getTimezoneOffset() * 60000;
+                 var offset = newDate.getTimezoneOffset() * 60000;
                  newDate = new Date(newDate - offset);
             }
             return $.fn.fmatter.date(newDate.valueOf(), options, rowdata, 'show');
