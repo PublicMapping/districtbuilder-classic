@@ -29,5 +29,6 @@ ALTER TABLE publicmapping.redistricting_subject DROP COLUMN description;
 ALTER TABLE publicmapping.redistricting_subject ADD CONSTRAINT redistricting_subject_name_check UNIQUE ("name");
 
 ALTER TABLE publicmapping.redistricting_validationcriteria DROP COLUMN title;
+ALTER TABLE publicmapping.redistricting_validationcriteria DROP COLUMN description;
 ALTER TABLE publicmapping.redistricting_validationcriteria ADD UNIQUE ("name");
 

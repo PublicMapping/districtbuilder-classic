@@ -518,6 +518,7 @@ class ConfigImporter:
              
             sd_obj, created = ScoreDisplay.objects.get_or_create(
                 name=sd.get('id')[:50],
+                title=sd.get('title')[:50],
                 legislative_body=lb,
                 is_page=sd.get('type') == 'leaderboard',
                 cssclass=(sd.get('cssclass') or '')[:50],
