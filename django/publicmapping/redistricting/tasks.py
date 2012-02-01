@@ -269,7 +269,7 @@ class DistrictIndexFile():
         else: # filename.endswith('.csv'):
             indexFile = filename
 
-            if not os.exists(indexFile):
+            if not os.path.exists(indexFile):
                 logger.warn('The .csv file could not be found, plan "%s" was not created.', name)
                 return
 

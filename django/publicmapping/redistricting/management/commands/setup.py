@@ -601,7 +601,7 @@ ERROR:
         templates = config.xpath('/DistrictBuilder/Templates/Template')
         for template in templates:
             lbconfig = config.xpath('//LegislativeBody[@id="%s"]' % template.xpath('LegislativeBody')[0].get('ref'))[0]
-            query = LegislativeBody.objects.filter(name=lbconfig.get('name')[:256])
+            query = LegislativeBody.objects.filter(name=lbconfig.get('id')[:256])
             if query.count() == 0:
                 logging.info("LegislativeBody '%s' does not exist, skipping.", lbconfig.get('ref'))
                 continue
@@ -624,7 +624,7 @@ ERROR:
         lbodies = config.xpath('//LegislativeBody[@id]')
         for lbody in lbodies:
             owner = User.objects.filter(is_staff=True)[0]
-            legislative_body = LegislativeBody.objects.get(name=lbody.get('name')[:256])
+            legislative_body = LegislativeBody.objects.get(name=lbody.get('id')[:256])
             plan,created = Plan.objects.get_or_create(name='Blank',legislative_body=legislative_body,owner=owner,is_template=True, processing_state=ProcessingState.READY)
             if created:
                 logging.debug('Created Plan named "Blank" for LegislativeBody "%s"', legislative_body.name)
