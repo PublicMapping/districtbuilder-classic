@@ -24,8 +24,8 @@
               <CssParameter name="fill-opacity">.3</CssParameter>
             </Fill>
             <Stroke>
-              <CssParameter name="stroke">#ee9900</CssParameter>
-              <CssParameter name="stroke-width">2</CssParameter>
+              <CssParameter name="stroke">#fdb913</CssParameter>
+              <CssParameter name="stroke-width">6</CssParameter>
               <CssParameter name="stroke-opacity">1</CssParameter>
             </Stroke>
           </PolygonSymbolizer>
@@ -50,8 +50,8 @@
               <CssParameter name="fill-opacity">.3</CssParameter>
             </Fill>
             <Stroke>
-              <CssParameter name="stroke">#ee9900</CssParameter>
-              <CssParameter name="stroke-width">2</CssParameter>
+              <CssParameter name="stroke">#fdb913</CssParameter>
+              <CssParameter name="stroke-width">6</CssParameter>
               <CssParameter name="stroke-opacity">1</CssParameter>
             </Stroke>
           </PolygonSymbolizer>
@@ -74,8 +74,8 @@
               <CssParameter name="fill-opacity">.1</CssParameter>
             </Fill>
             <Stroke>
-              <CssParameter name="stroke">#ee9900</CssParameter>
-              <CssParameter name="stroke-width">2</CssParameter>
+              <CssParameter name="stroke">#fdb913</CssParameter>
+              <CssParameter name="stroke-width">6</CssParameter>
               <CssParameter name="stroke-opacity">1</CssParameter>
             </Stroke>
           </PolygonSymbolizer>
@@ -100,8 +100,8 @@
               <CssParameter name="fill-opacity">.3</CssParameter>
             </Fill>
             <Stroke>
-              <CssParameter name="stroke">#ee9900</CssParameter>
-              <CssParameter name="stroke-width">2</CssParameter>
+              <CssParameter name="stroke">#fdb913</CssParameter>
+              <CssParameter name="stroke-width">6</CssParameter>
               <CssParameter name="stroke-opacity">1</CssParameter>
             </Stroke>
           </PolygonSymbolizer>
@@ -120,8 +120,8 @@
               <CssParameter name="fill-opacity">.3</CssParameter>
             </Fill>
             <Stroke>
-              <CssParameter name="stroke">#ee9900</CssParameter>
-              <CssParameter name="stroke-width">2</CssParameter>
+              <CssParameter name="stroke">#fdb913</CssParameter>
+              <CssParameter name="stroke-width">6</CssParameter>
               <CssParameter name="stroke-opacity">1</CssParameter>
             </Stroke>
           </PolygonSymbolizer>
