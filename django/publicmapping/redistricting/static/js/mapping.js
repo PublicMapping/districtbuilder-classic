@@ -587,10 +587,10 @@ function mapinit(srs,maxExtent) {
     var districtStyle = {
         fill: true,
         fillOpacity: 0.01,    // need some opacity for picking districts
-        fillColor: '#ee9900', // with ID tool -- fillColor needed, too
-        strokeColor: '#ee9900',
+        fillColor: '#fdB913', // with ID tool -- fillColor needed, too
+        strokeColor: '#fdB913',
         strokeOpacity: .5,
-        strokeWidth: 2,
+        strokeWidth: 6,
         label: '${label}',
         fontColor: '#663300',
         fontSize: '10pt',
@@ -606,7 +606,7 @@ function mapinit(srs,maxExtent) {
         fillColor: highlightColor,
         strokeColor: highlightColor,
         strokeOpacity: .75,
-        strokeWidth: 2
+        strokeWidth: 6
     };
 
     // The style for reference layers
@@ -614,8 +614,8 @@ function mapinit(srs,maxExtent) {
     var referenceStyle = {
         fill: false,
         strokeColor: referenceColor,
-        strokeOpacity: .45,
-        strokeWidth: 4,
+        strokeOpacity: .35,
+        strokeWidth: 3,
         label: '${label}',
 
         // Starts off with labels, but can be toggled with a checkbox
@@ -761,8 +761,8 @@ function mapinit(srs,maxExtent) {
                 OpenLayers.Util.applyDefaults(
                     { 
                         fill: true, 
-                        fillColor: '#ee9900',
-                        strokeColor: '#ee9900'
+                        fillColor: '#fdB913',
+                        strokeColor: '#fdB913'
                     }, 
                     OpenLayers.Feature.Vector.style["select"]
                 )
@@ -2380,7 +2380,7 @@ function mapinit(srs,maxExtent) {
                 symbolizer: {
                     Line: {
                         strokeColor: lockedColor,
-                        strokeWidth: 2,
+                        strokeWidth: 6,
                         strokeOpacity: 0.75
                     }
                 }
