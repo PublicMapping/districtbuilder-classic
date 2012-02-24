@@ -1517,9 +1517,6 @@ def copy_to_characteristics(upload_id, language=None):
 
     defaults = {
         'name':clean_name,
-        'display':upload.subject_name, # wider than upload.subject_name
-        'short_display':upload.subject_name[0:25], # truncate to field max length
-        'description':upload.subject_name, # wider than upload.subject_name
         'is_displayed':False,
         'sort_key':new_sort_key,
         'format_string':'',
@@ -1527,6 +1524,26 @@ def copy_to_characteristics(upload_id, language=None):
     }
     the_subject, created = Subject.objects.get_or_create(name=clean_name, defaults=defaults)
 
+    # If the subject is newly created, we need catalog entries for each locale
+    if created:
+        logger.debug('Writing catalog entries for %s' % the_subject.name)
+        for locale in [l[0] for l in settings.LANGUAGES]:
+            logger.debug('Writing catalog entry for %s' % locale)
+            po = PoUtils(locale)
+            po.add_or_update(
+                msgid=u'%s short label' % the_subject.name,
+                msgstr=upload.subject_name[0:25]
+            )
+            po.add_or_update(
+                msgid=u'%s label' % the_subject.name,
+                msgstr=upload.subject_name
+            )
+            po.add_or_update(
+                msgid=u'%s long description' % the_subject.name,
+                msgstr=''
+            )
+            po.save()
+           
     logger.debug('Using %ssubject "%s" for new Characteristic values.', 'new ' if created else '', the_subject.name)
 
     upload.subject_name = clean_name
