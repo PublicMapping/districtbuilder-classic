@@ -882,7 +882,7 @@ class DistrictShapeFile():
                             }
                         }
                     elif ftype == OGRReal:
-                        definition = Subject.objects.get(name=definition).display
+                        definition = Subject.objects.get(name=definition).get_label()
                         domain = {
                             'rdom': {
                                 'rdommin': 0.0,
@@ -963,7 +963,7 @@ class DistrictShapeFile():
                 os.rename(archive.name, DistrictFile.get_file_name(plan,True) + '.zip')
             except Exception, ex:
                 logger.warn('The plan "%s" could not be saved to a shape file', plan.name)
-                logger.debug('Reason:', ex)
+                logger.debug('Reason: %s', ex)
                 os.unlink(archive.name)
             # delete the temporary csv file
             finally:
