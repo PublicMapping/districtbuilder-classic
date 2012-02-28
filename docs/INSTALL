@@ -94,7 +94,15 @@ as reports and downloads) and cron jobs.
     > sudo mkdir -p /projects/PublicMapping/local/reports
     > sudo chown www-data:www-data /projects/PublicMapping/local/reports
 
- 3. At this point, make sure that you have postgres and postgis 
+ 3. Allow write access by the web user to the locale message files,
+    if you are supporting more than one language. For each language,
+    run:
+
+    > sudo chown www-data:www-data /projects/PublicMapping/DistrictBuilder/django/publicmapping/locale/en/LC_MESSAGES/*o
+
+    Substitute "en" above for the language code that you will support.
+
+ 4. At this point, make sure that you have postgres and postgis 
     installed.
 
     You may need to run the postgis install script if you don't have a 
@@ -103,7 +111,7 @@ as reports and downloads) and cron jobs.
 
        http://postgis.refractions.net/docs/ch02.html
 
-    Note that the aptitude install above will not generate templates to 
+    Note that the aptitude install above will not generate templates. To 
     generate templates:
 
     > sudo su postgres 
@@ -113,7 +121,7 @@ as reports and downloads) and cron jobs.
     > psql -d template_postgis -f /usr/share/postgresql/8.4/contrib/postgis-1.5/spatial_ref_sys.sql 
     > exit
 
- 4. Once postgis is intalled, run the PublicMapping_db.sql script in 
+ 5. Once postgis is intalled, run the PublicMapping_db.sql script in 
     the sql directory:
 
     > sudo -u postgres psql -f /projects/PublicMapping/DistrictBuilder/sql/publicmapping_db.sql
@@ -122,7 +130,7 @@ as reports and downloads) and cron jobs.
     template, along with a publicmapping user role.  The publicmapping 
     user will be assigned all permissions and ownership on the db.
 
- 5. Make sure your pg_hba file in your postgres configuration allows 
+ 6. Make sure your pg_hba file in your postgres configuration allows 
     password-based authentication on the local machine:
 
     http://developer.postgresql.org/pgdocs/postgres/auth-pg-hba-conf.html
@@ -134,7 +142,7 @@ as reports and downloads) and cron jobs.
     Put that above the line that reads "local all all ident" so that 
     password authentication is allowed before user ident authentication
      
- 6. Download the datafile to /projects/PublicMapping/DistrictBuilder/data, and unzip into
+ 7. Download the datafile to /projects/PublicMapping/DistrictBuilder/data, and unzip into
     the import directory: /projects/local/data/:
 
     > cd /projects/PublicMapping/DistrictBuilder/data
@@ -152,7 +160,7 @@ as reports and downloads) and cron jobs.
         
     http://spatialreference.org/ref/epsg/3785/
 
- 7. The code is distributed with a set of SLD files that create color, or
+ 8. The code is distributed with a set of SLD files that create color, or
     choropleth maps of Virginia geography. These SLD files are specific to
     the data and configuration that are distributed with the sample AMI.
     If you are using a different dataset, or modify the configuration, edit
@@ -175,13 +183,13 @@ as reports and downloads) and cron jobs.
 
     https://sourceforge.net/apps/trac/PublicMapping/wiki/StyleLayerDescriptors
 
- 8. Now we'll use the setup.py script to configure our application. Set the
+ 9. Now we'll use the setup.py script to configure our application. Set the
     script to be executable:
     
     > cd /projects/PublicMapping/DistrictBuilder/django/publicmapping
     > sudo chmod u+x setup.py
 
- 9. Run the setup script with the appropriate parameters - the parts of 
+10. Run the setup script with the appropriate parameters - the parts of 
     the app you want to set up, along with the path to an xsd and a 
     config.xml file.  
     
@@ -234,7 +242,7 @@ as reports and downloads) and cron jobs.
     * The importing and nesting must occur in the order of smallest 
     geography to largest geography.
 
-10. Django serves up SLD files to clients, and need this mime type added
+11. Django serves up SLD files to clients, and need this mime type added
     to the system's known mime types in order to serve the content
     properly.
 
@@ -242,12 +250,12 @@ as reports and downloads) and cron jobs.
     b. Find the line that starts with "application/xml"
     c. Add " sld" to the end of this line, after "xml xsl xsd"
 
-11. Now that you have the app configured and your data imported, you can 
+12. Now that you have the app configured and your data imported, you can 
     run the app using Django's testing server
      
     > python ./manage.py runserver
 
-12. You will see a notice that your server is running and you can access 
+13. You will see a notice that your server is running and you can access 
     your application at 127.0.0.1:8000  Enter that location into your 
     browser on the local machine and you should be able to use the 
     application.
