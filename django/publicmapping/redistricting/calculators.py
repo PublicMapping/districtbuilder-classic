@@ -196,9 +196,13 @@ class CalculatorBase(object):
         elif argtype == 'subject' and not district is None:
             # This method is more fault tolerant than _set.get, since it 
             # won't throw an exception if the item doesn't exist.
+            add_subject = True
+            if argval.startswith('-'):
+                add_subject = False
+                argval = argval[1:]
             cc = district.computedcharacteristic_set.filter(subject__name=argval)
             if cc.count() > 0:
-                value = cc[0].number
+                value = cc[0].number if add_subject else -cc[0].number
         return value
 
 
