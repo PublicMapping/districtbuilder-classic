@@ -576,6 +576,12 @@ chooseplan = function(options) {
         var searchBox = $('#plan_search');
         searchBox.keyup( function(event) {
             if (event.which == 13) {
+                var search_filter = $.trim($('#plan_search').val());
+                if (search_filter !== '') {
+                    $('#search_filter').text(gettext('Current Filter: ') + search_filter);
+                } else {
+                    $('#search_filter').text('');
+                }
                 clearPlanForm();
                 _table.jqGrid().trigger('reloadGrid', [{ page:1 }]);
             }

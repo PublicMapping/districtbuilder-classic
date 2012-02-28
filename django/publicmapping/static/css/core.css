@@ -594,6 +594,14 @@ div#step_plan div.middlecolumn  {
   
 }  
 
+div#search_filter {
+    position:absolute;
+    top: 19px;
+    right: 31%;
+    width: 40%;
+    text-align: right;
+}
+
 input#plan_search {
     position:absolute;
     top: 16px;
