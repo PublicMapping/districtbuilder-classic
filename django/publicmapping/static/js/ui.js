@@ -145,8 +145,14 @@ $(function() {
                 var panels = $('<div class="leaderboard_panels"></div>');
                 container.append(panels);
 
-                // insert the score panels HTML
-                panels.html(html);
+                // insert the score panels HTML or a message stating that the 
+                // leaderboards are not yet filled
+                if (html !== '') {
+                    panels.html(html);
+                } else {
+                    panels.append($('<div id="no_leaderboards" />')
+                        .text(gettext('No plans have been submitted for this leaderboard. Please check back later.')));
+                }
 
                 // check if we are no longer waiting for data
                 outstandingRequests -= 1;
