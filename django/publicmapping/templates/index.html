@@ -346,17 +346,17 @@
 
           $('#username, #passphrase').removeClass('error');
        
-          if (un.val().trim() == '' || pp.val().trim() == '') {
+          if ($.trim(un.val()) == '' || $.trim(pp.val()) == '') {
               $('<div class="error">Please enter user name and password.</div>').dialog({
                   modal:true,
                   width:300,
                   resizable:false,
                   title:'Login Error'
               });
-              if (un.val().trim() == '') {
+              if ($.trim(un.val()) == '') {
                   $('#username').addClass('error');
               }
-              if (pp.val().trim() == '') {
+              if ($.trim(pp.val()) == '') {
                   $('#passphrase').addClass('error');
               }
               event.stopPropagation();
