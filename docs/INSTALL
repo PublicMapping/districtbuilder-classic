@@ -196,7 +196,8 @@ as reports and downloads) and cron jobs.
         should be good enough to start with.
 
      b. To set up the application database, import the spatial
-        data, configure geoserver, and create the BARD data files, run:
+        data, configure geoserver, and create BARD data files (if
+        necessary), run:
 
         > sudo ./setup.py ../../docs/config.xsd ../../docs/config.xml
 
@@ -383,13 +384,17 @@ as reports and downloads) and cron jobs.
     base map layers appear faster.
 
 == BARD / Reports Configuration ==
- 1. The PublicMapping project uses the BARD packages, written in the 
-    R statistical language, to create customizable reports.  In order to 
-    use these features (you can turn them off by changing the 
-    ENABLE_REPORTS setting in settings.py to "False"), you will need to 
+    DistrictBuilder can create reports using one of two backends.  If you'd
+    like to use the ScoreFunctions written into DistrictBuilder, please see 
+    the documentation on reporting configuration in the DistrictBuilder wiki.
+    If you'd like to use reports created by BARD - a statistical package
+    written in R - you'll need to follow the directions below to install BARD
+    and its dependencies.
+
+ 1. In order to use the BARD Reporting features, you will need to 
     install BARD and R2HTML as the root user so that it's accessible to 
     the django process.  Installing the geos dev libraries is needed to
-    install the rgeos package
+    install the rgeos package.
     
     > sudo aptitude install r-base-dev build-essential libgeos-dev 
     > sudo R CMD javareconf
