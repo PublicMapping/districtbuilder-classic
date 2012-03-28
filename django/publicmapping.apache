@@ -67,7 +67,7 @@
         Alias /data/ /projects/PublicMapping/local/
         <Directory /projects/PublicMapping/local/>
             Options Indexes
-            Order deny, allow
+            Order deny,allow
             Allow from all
         </Directory>
 
