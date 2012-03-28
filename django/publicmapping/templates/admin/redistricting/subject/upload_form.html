@@ -83,6 +83,9 @@ $(function(){
                 $('#upload_status_messages').removeClass('loading');
                 $('#upload_status_messages').empty();
                 $('#upload_status_messages').append('<p>{% trans "Could not retrieve task status." %}</p>');
+                $('#processing_continue').attr('disabled', false);
+                $('#processing_continue').val('{% trans "Retry" %}');
+                $('#processing_continue').click(function(){ window.location.href='../add/'; });
                 clearInterval(statusInterval);
             }
         });
