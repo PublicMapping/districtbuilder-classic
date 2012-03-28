@@ -1310,7 +1310,7 @@ def verify_count(upload_id, localstore, language):
 
     Parameters:
         upload_id - The id of the SubjectUpload record.
-        localstore - a temporary file that will get deleted when it is closed
+        localstore - a new subject file that remains when the task is complete
         language - Optional. If provided, translate the status messages
             into the specified language (if message files are complete).
     """
@@ -1334,8 +1334,6 @@ def verify_count(upload_id, localstore, language):
     # direct access to db-api takes about 60s for 280K geounits
     cursor = connection.cursor()
     cursor.executemany(sql, tuple(args))
-
-    os.remove(localstore)
 
     logger.debug('Bulk loaded CSV records into the staging area.')
 

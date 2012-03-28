@@ -113,7 +113,9 @@ class SubjectUploadForm(forms.Form):
         elif self.cleaned_data['processing_file'] != '':
             self.ps_file = self.cleaned_data['processing_file']
             self.ul_file = self.cleaned_data['uploaded_file']
+            print 'self.cleaned_data[subject_name]:',self.cleaned_data['subject_name']
             self.temp_subject_name = self._clean_name(self.cleaned_data['subject_name'])
+            print 'self.temp_subject_name:',self.temp_subject_name
 
             sup = SubjectUpload.objects.get(upload_filename=self.ul_file,
                 processing_filename=self.ps_file)
@@ -127,14 +129,30 @@ class SubjectUploadForm(forms.Form):
             self._errors['subject_upload'] = self.error_class([_('Uploaded file is required.')])
             return self.cleaned_data
 
-        collisions = Subject.objects.filter(name=self.temp_subject_name).count()
-        if collisions > 0:
+        # path for data dir is adjacent to the web_temp setting
+        pathspec = settings.WEB_TEMP.split('/')
+        pathspec[-1] = 'data'
+        pathspec = '/'.join(pathspec)
+
+        saved_ul = '%s/%s' % (pathspec, self.temp_subject_name)
+
+        collisions = Subject.objects.filter(name=self.temp_subject_name)
+        if collisions.count() > 0:
             if not self.cleaned_data['force_overwrite']:
                 self.temp_subject_name = sup.subject_name
                 self._errors = {}
                 self._errors['subject_name'] = self.error_class([_('Please specify a unique subject name.')])
                 self._errors['force_overwrite'] = self.error_class([_('Check this box to overwrite the existing subject with the same name.')])
                 return self.cleaned_data
+            saved_ul = '%s_%s.csv' % (saved_ul, str(collisions[0].version))
+        else:
+            saved_ul = '%s_1.csv' % saved_ul
+
+        # move the uploaded subject file to the data directory
+        os.rename(self.ps_file, saved_ul)
+
+        # update the location of the processing_file
+        sup.processing_filename = self.ps_file = saved_ul
 
         sup.subject_name = self.temp_subject_name
         sup.status = 'CH'
@@ -153,9 +171,17 @@ class SubjectUploadForm(forms.Form):
 
     def _clean_name(self, inputname):
         try:
-            cmp1 = re.match(r'.+?([a-zA-Z_]+)', inputname).groups()[0]
+            cmp1 = re.match(r'[^a-zA-Z_]+?([a-zA-Z_]+)', inputname)
             cmp2 = re.findall(r'[\w]+', inputname)
+            if cmp1 is None: 
+                if cmp2[0] == inputname:
+                    return inputname
+                else:
+                    return '_'.join(cmp2).lower()
+            else:
+                cmp1 = cmp1.groups()[0]
+
             return '_'.join([cmp1] + cmp2[1:]).lower()
-        except:
+        except Exception, ex:
             raise forms.ValidationError(_('Uploaded file contains an invalid subject name.'))
             
