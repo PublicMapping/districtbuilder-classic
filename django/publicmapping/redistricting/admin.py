@@ -191,7 +191,7 @@ class SubjectAdmin(admin.ModelAdmin):
     # the percentage denominator.
     list_display = ('name', 'sort_key', 'is_displayed','percentage_denominator',)
 
-    fields = ('name', 'percentage_denominator', 'is_displayed', 'sort_key', 'format_string', )
+    fields = ('name', 'percentage_denominator', 'is_displayed', 'sort_key', 'format_string', 'version',)
 
 
     # Enable filtering by the displayed flag
