@@ -8,6 +8,10 @@
 {% endif %}
         <table id="registerTable">
             <tr>
+                <td colspan="2"><span id="usernameinstructions"
+                class="recommended">{% trans "Please choose a username between 6 and 30 characters. Include at least one letter. Do not leave leading or trailing spaces." %}</span></td>
+            </tr>
+            <tr>
                 <td class="fname">{% trans "User Name" %} *</td>
                 <td><input id="newusername" name="newusername" class="field" maxlength="30"
                 {% if is_registered %}

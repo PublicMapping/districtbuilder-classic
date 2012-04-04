@@ -1742,6 +1742,41 @@ class CalculatorTestCase(BaseTestCase):
         self.assertAlmostEquals(expected, actual, 8, 'Incorrect value during summation. (e:%d,a:%d)' % (expected, actual))
 
 
+    def test_sum_negative_subject(self):
+        dist1ids = self.geounits[0:3] + self.geounits[9:12]
+        exqset = Characteristic.objects.filter(geounit__in=dist1ids,subject=self.subject1)
+        expected = 5.0 - float(exqset.aggregate(Sum('number'))['number__sum'])
+
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        
+        self.plan.add_geounits( self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
+        district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
+
+        sumcalc = SumValues()
+        sumcalc.arg_dict['value1'] = ('subject','-' + self.subject1.name,)
+        sumcalc.arg_dict['value2'] = ('literal','5.0',)
+        sumcalc.compute(district=district1)
+
+        actual = float(sumcalc.result['value'])
+        self.assertEqual(expected, actual, 'Incorrect value during summation. (e:%s-%d,a:%s-%d)' % (type(expected), expected, type(actual), actual))
+
+    def test_sum_negative_subject2(self):
+        dist1ids = self.geounits[0:3] + self.geounits[9:12]
+
+        dist1ids = map(lambda x: str(x.id), dist1ids)
+        
+        self.plan.add_geounits( self.district1.district_id, dist1ids, self.geolevel.id, self.plan.version)
+        district1 = self.plan.district_set.get(district_id=self.district1.district_id,version=self.plan.version)
+
+        sumcalc = SumValues()
+        sumcalc.arg_dict['value1'] = ('subject','-' + self.subject1.name,)
+        sumcalc.arg_dict['value2'] = ('subject', self.subject1.name)
+        sumcalc.compute(district=district1)
+
+        expected = 0
+        actual = float(sumcalc.result['value'])
+        self.assertEqual(expected, actual, 'Incorrect value during summation. (e:%s-%d,a:%s-%d)' % (type(expected), expected, type(actual), actual))
+
     def test_percent1(self):
         pctcalc = Percent()
         pctcalc.arg_dict['numerator'] = ('literal','1',)

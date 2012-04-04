@@ -2415,7 +2415,9 @@ def statistics_sets(request, planid):
                     demo = ScoreDisplay.objects.filter(
                         owner__is_superuser=True,
                         legislative_body=plan.legislative_body,
-                        is_page=False)
+                        is_page=False,
+			title="Demographics"
+                    )
                     # DO NOT select the ScoreDisplay that contains
                     # the comment calculator
                     for disp in demo:

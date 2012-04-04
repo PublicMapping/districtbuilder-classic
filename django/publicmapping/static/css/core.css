@@ -594,6 +594,14 @@ div#step_plan div.middlecolumn  {
   
 }  
 
+div#search_filter {
+    position:absolute;
+    top: 19px;
+    right: 31%;
+    width: 40%;
+    text-align: right;
+}
+
 input#plan_search {
     position:absolute;
     top: 16px;
@@ -1509,7 +1517,7 @@ div#map_legend_content .basemap_swatch {
     border: solid 1px #555555;
 }
 div#map_legend_content .district_swatch {
-    border: solid 2px #ee9900;
+    border: solid 2px #fdb913;
 }
 div#legend_swatch_1 {
     background-color: #dcdcdc;
@@ -1521,9 +1529,8 @@ div#legend_swatch_3 {
     background-color: #666666;
 }
 .reference {
-    background: #447700 url(/static-media/images/icon-legend-boundary.gif) no-repeat top left;
+    background: #2BB673 url(/static-media/images/icon-legend-boundary.gif) no-repeat top left;
     border: none;
-    padding 2px;
 }
 table#reference_legend {
     display:none;

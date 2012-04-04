@@ -68,7 +68,19 @@ $(function(){
             agree = frm.find('#agree'),
             userid = frm.find('#userid');
 
-        if (username.val() == '' || username.val().length > 30) {
+        var validateUsername = function(name) {
+            if ($.trim(name) === '' ||
+                    // No beginning or trailing spaces.
+                    name.indexOf(' ') == 0 ||
+                    name.lastIndexOf(' ') == name.length - 1 ||
+                    name.length < 6 || name.length > 30 ||
+                    !name.match(/.*[A-Za-z]+.*/)) {
+                return false;
+            }
+            return true;
+        };
+
+        if (!validateUsername(username.val())) {
             username.removeClass('field');
             username.addClass('error');
             return false;
