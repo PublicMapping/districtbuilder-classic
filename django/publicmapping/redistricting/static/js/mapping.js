@@ -2378,11 +2378,11 @@ function mapinit(srs,maxExtent) {
                     value: true
                 }),
                 symbolizer: {
-                    Line: {
+                    //Line: {
                         strokeColor: lockedColor,
                         strokeWidth: 2,
                         strokeOpacity: 0.75
-                    }
+                    //}
                 }
             }));
             rules.push(new OpenLayers.Rule({
@@ -2418,13 +2418,13 @@ function mapinit(srs,maxExtent) {
                         value: false
                     }),
                     symbolizer: {
-                        Polygon: {
+                        //Polygon: {
                             fillColor: fill,
                             fillOpacity: 0.5,
                             strokeColor: newOptions.strokeColor,
                             strokeOpacity: newOptions.strokeOpacity,
                             strokeWidth: newOptions.strokeWidth
-                        }
+                        //}
                     }
                 }),
                 new OpenLayers.Rule({
@@ -2435,13 +2435,13 @@ function mapinit(srs,maxExtent) {
                         value: false
                     }),
                     symbolizer: {
-                        Polygon: {
+                        //Polygon: {
                             fillColor: '#ffffff',
                             fillOpacity: 0.01,
                             strokeColor: newOptions.strokeColor,
                             strokeOpacity: newOptions.strokeOpacity,
                             strokeWidth: newOptions.strokeWidth
-                        }
+                        //}
                     }
                 })
             ];
@@ -2469,13 +2469,13 @@ function mapinit(srs,maxExtent) {
                         value: lower 
                     }),
                     symbolizer: {
-                        Polygon: {
+                        //Polygon: {
                             fillColor: lowestColor,
                             fillOpacity: 0.5,
                             strokeColor: newOptions.strokeColor,
                             strokeWidth: newOptions.strokeWidth,
                             strokeOpacity: newOptions.strokeOpacity
-                        }
+                        //}
                     }
                 }),
                 new OpenLayers.Rule({
@@ -2487,13 +2487,13 @@ function mapinit(srs,maxExtent) {
                         upperBoundary: upper
                     }),
                     symbolizer: {
-                        Polygon: {
+                        //Polygon: {
                             fillColor: '#ffffff',
                             fillOpacity: 0.01,
                             strokeColor: newOptions.strokeColor,
                             strokeWidth: newOptions.strokeWidth,
                             strokeOpacity: newOptions.strokeOpacity
-                        }
+                        //}
                     }
                 }),
                 new OpenLayers.Rule({
@@ -2504,13 +2504,13 @@ function mapinit(srs,maxExtent) {
                         value: upper 
                     }),
                     symbolizer: {
-                        Polygon: {
+                        //Polygon: {
                             fillColor: highestColor,
                             fillOpacity: 0.5,
                             strokeColor: newOptions.strokeColor,
                             strokeWidth: newOptions.strokeWidth,
                             strokeOpacity: newOptions.strokeOpacity
-                        }
+                        //}
                     }
                 })
             ];

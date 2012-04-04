@@ -24,7 +24,7 @@
               <CssParameter name="fill-opacity">.5</CssParameter>
             </Fill>
             <Stroke>
-              <CssParameter name="stroke">#ee9900</CssParameter>
+              <CssParameter name="stroke">#fdb913</CssParameter>
               <CssParameter name="stroke-width">2</CssParameter>
               <CssParameter name="stroke-opacity">1</CssParameter>
             </Stroke>
@@ -50,7 +50,7 @@
               <CssParameter name="fill-opacity">.5</CssParameter>
             </Fill>
             <Stroke>
-              <CssParameter name="stroke">#ee9900</CssParameter>
+              <CssParameter name="stroke">#fdb913</CssParameter>
               <CssParameter name="stroke-width">2</CssParameter>
               <CssParameter name="stroke-opacity">1</CssParameter>
             </Stroke>
@@ -59,14 +59,16 @@
         <Rule>
           <Title>Meets Target</Title>
           <ogc:Filter>
-            <ogc:PropertyIsLessThan>
-              <ogc:PropertyName>number</ogc:PropertyName>
-              <ogc:Literal>210027</ogc:Literal>
-            </ogc:PropertyIsLessThan>
-            <ogc:PropertyIsGreaterThanOrEqualTo>
-              <ogc:PropertyName>number</ogc:PropertyName>
-              <ogc:Literal>190025</ogc:Literal>
-            </ogc:PropertyIsGreaterThanOrEqualTo>
+            <ogc:And>
+              <ogc:PropertyIsLessThan>
+                <ogc:PropertyName>number</ogc:PropertyName>
+                <ogc:Literal>210027</ogc:Literal>
+              </ogc:PropertyIsLessThan>
+              <ogc:PropertyIsGreaterThanOrEqualTo>
+                <ogc:PropertyName>number</ogc:PropertyName>
+                <ogc:Literal>190025</ogc:Literal>
+              </ogc:PropertyIsGreaterThanOrEqualTo>
+            </ogc:And>
           </ogc:Filter>
           <PolygonSymbolizer>
             <Fill>
@@ -74,7 +76,7 @@
               <CssParameter name="fill-opacity">.5</CssParameter>
             </Fill>
             <Stroke>
-              <CssParameter name="stroke">#ee9900</CssParameter>
+              <CssParameter name="stroke">#fdb913</CssParameter>
               <CssParameter name="stroke-width">2</CssParameter>
               <CssParameter name="stroke-opacity">1</CssParameter>
             </Stroke>
@@ -100,7 +102,7 @@
               <CssParameter name="fill-opacity">.5</CssParameter>
             </Fill>
             <Stroke>
-              <CssParameter name="stroke">#ee9900</CssParameter>
+              <CssParameter name="stroke">#fdb913</CssParameter>
               <CssParameter name="stroke-width">2</CssParameter>
               <CssParameter name="stroke-opacity">1</CssParameter>
             </Stroke>
@@ -120,7 +122,7 @@
               <CssParameter name="fill-opacity">.5</CssParameter>
             </Fill>
             <Stroke>
-              <CssParameter name="stroke">#ee9900</CssParameter>
+              <CssParameter name="stroke">#fdb913</CssParameter>
               <CssParameter name="stroke-width">2</CssParameter>
               <CssParameter name="stroke-opacity">1</CssParameter>
             </Stroke>

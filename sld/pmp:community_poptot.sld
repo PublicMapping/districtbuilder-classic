@@ -16,7 +16,7 @@
               <CssParameter name="fill-opacity">.01</CssParameter>
             </Fill>
             <Stroke>
-              <CssParameter name="stroke">#ee9900</CssParameter>
+              <CssParameter name="stroke">#fdb913</CssParameter>
               <CssParameter name="stroke-width">2</CssParameter>
               <CssParameter name="stroke-opacity">1</CssParameter>
             </Stroke>
