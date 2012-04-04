@@ -590,7 +590,7 @@ function mapinit(srs,maxExtent) {
         fillColor: '#fdB913', // with ID tool -- fillColor needed, too
         strokeColor: '#fdB913',
         strokeOpacity: .5,
-        strokeWidth: 6,
+        strokeWidth: 2,
         label: '${label}',
         fontColor: '#663300',
         fontSize: '10pt',
@@ -606,7 +606,7 @@ function mapinit(srs,maxExtent) {
         fillColor: highlightColor,
         strokeColor: highlightColor,
         strokeOpacity: .75,
-        strokeWidth: 6
+        strokeWidth: 2
     };
 
     // The style for reference layers
@@ -2378,11 +2378,11 @@ function mapinit(srs,maxExtent) {
                     value: true
                 }),
                 symbolizer: {
-                    Line: {
+                    //Line: {
                         strokeColor: lockedColor,
-                        strokeWidth: 6,
+                        strokeWidth: 2,
                         strokeOpacity: 0.75
-                    }
+                    //}
                 }
             }));
             rules.push(new OpenLayers.Rule({
@@ -2418,13 +2418,13 @@ function mapinit(srs,maxExtent) {
                         value: false
                     }),
                     symbolizer: {
-                        Polygon: {
+                        //Polygon: {
                             fillColor: fill,
                             fillOpacity: 0.5,
                             strokeColor: newOptions.strokeColor,
                             strokeOpacity: newOptions.strokeOpacity,
                             strokeWidth: newOptions.strokeWidth
-                        }
+                        //}
                     }
                 }),
                 new OpenLayers.Rule({
@@ -2435,13 +2435,13 @@ function mapinit(srs,maxExtent) {
                         value: false
                     }),
                     symbolizer: {
-                        Polygon: {
+                        //Polygon: {
                             fillColor: '#ffffff',
                             fillOpacity: 0.01,
                             strokeColor: newOptions.strokeColor,
                             strokeOpacity: newOptions.strokeOpacity,
                             strokeWidth: newOptions.strokeWidth
-                        }
+                        //}
                     }
                 })
             ];
@@ -2469,13 +2469,13 @@ function mapinit(srs,maxExtent) {
                         value: lower 
                     }),
                     symbolizer: {
-                        Polygon: {
+                        //Polygon: {
                             fillColor: lowestColor,
                             fillOpacity: 0.5,
                             strokeColor: newOptions.strokeColor,
                             strokeWidth: newOptions.strokeWidth,
                             strokeOpacity: newOptions.strokeOpacity
-                        }
+                        //}
                     }
                 }),
                 new OpenLayers.Rule({
@@ -2487,13 +2487,13 @@ function mapinit(srs,maxExtent) {
                         upperBoundary: upper
                     }),
                     symbolizer: {
-                        Polygon: {
+                        //Polygon: {
                             fillColor: '#ffffff',
                             fillOpacity: 0.01,
                             strokeColor: newOptions.strokeColor,
                             strokeWidth: newOptions.strokeWidth,
                             strokeOpacity: newOptions.strokeOpacity
-                        }
+                        //}
                     }
                 }),
                 new OpenLayers.Rule({
@@ -2504,13 +2504,13 @@ function mapinit(srs,maxExtent) {
                         value: upper 
                     }),
                     symbolizer: {
-                        Polygon: {
+                        //Polygon: {
                             fillColor: highestColor,
                             fillOpacity: 0.5,
                             strokeColor: newOptions.strokeColor,
                             strokeWidth: newOptions.strokeWidth,
                             strokeOpacity: newOptions.strokeOpacity
-                        }
+                        //}
                     }
                 })
             ];
