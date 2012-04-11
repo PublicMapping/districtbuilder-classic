@@ -938,7 +938,7 @@ Include the shared_districts markup if we're using the copy/paste tool
 
             {% endcomment %}
             <div class="dialog_step">
-              <h2>1. {% trans "Select" %} <span id="layer_type">Layer</span> {% trans "Thematic Map" %}</h2>
+              <h2>1. {% blocktrans with layer_type='<span id="layer_type">Layer</span>' %}Select {{ layer_type }} Thematic Map{% endblocktrans %}</h2>
               <select id="showby" class="indented fillwidth" autocomplete="off">
                   <option value="none">{% trans "None" %}</option>
                   {% for demo in demographics %}              
