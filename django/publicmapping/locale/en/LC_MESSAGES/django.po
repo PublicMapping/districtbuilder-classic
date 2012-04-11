@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-28 17:02-0500\n"
+"POT-Creation-Date: 2012-04-11 12:41-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -80,23 +80,23 @@ msgstr ""
 msgid "Could not store uploaded Subject template."
 msgstr ""
 
-#: redistricting/forms.py:125
+#: redistricting/forms.py:127
 msgid "Uploaded file cannot be found."
 msgstr ""
 
-#: redistricting/forms.py:127
+#: redistricting/forms.py:129
 msgid "Uploaded file is required."
 msgstr ""
 
-#: redistricting/forms.py:135
+#: redistricting/forms.py:144
 msgid "Please specify a unique subject name."
 msgstr ""
 
-#: redistricting/forms.py:136
+#: redistricting/forms.py:145
 msgid "Check this box to overwrite the existing subject with the same name."
 msgstr ""
 
-#: redistricting/forms.py:160
+#: redistricting/forms.py:186
 msgid "Uploaded file contains an invalid subject name."
 msgstr ""
 
@@ -185,53 +185,53 @@ msgstr ""
 msgid "Error creating calculator report."
 msgstr ""
 
-#: redistricting/tasks.py:1354
+#: redistricting/tasks.py:1352
 msgid ""
 "There are an incorrect number of geounits in the uploaded Subject file. "
 msgstr ""
 
-#: redistricting/tasks.py:1383
+#: redistricting/tasks.py:1381
 msgid "Verifying consistency of uploaded geounits ..."
 msgstr ""
 
-#: redistricting/tasks.py:1424
+#: redistricting/tasks.py:1422
 msgid "There are a correct number of geounits in the uploaded Subject file, "
 msgstr ""
 
-#: redistricting/tasks.py:1427
+#: redistricting/tasks.py:1425
 msgid ""
 "but the geounits do not have the same portable ids as those in the database."
 msgstr ""
 
-#: redistricting/tasks.py:1456
+#: redistricting/tasks.py:1454
 msgid "Copying records to characteristic table ..."
 msgstr ""
 
-#: redistricting/tasks.py:1502
+#: redistricting/tasks.py:1500
 msgid "The subject name contains invalid characters."
 msgstr ""
 
-#: redistricting/tasks.py:1510
+#: redistricting/tasks.py:1508
 msgid "Please correct the error and try again."
 msgstr ""
 
-#: redistricting/tasks.py:1588
+#: redistricting/tasks.py:1586
 msgid "Created characteristics, resetting computed characteristics..."
 msgstr ""
 
-#: redistricting/tasks.py:1651
+#: redistricting/tasks.py:1649
 msgid "Reset computed characteristics, renesting foundation geographies..."
 msgstr ""
 
-#: redistricting/tasks.py:1705
+#: redistricting/tasks.py:1703
 msgid "Renested foundation geographies, creating spatial views and styles..."
 msgstr ""
 
-#: redistricting/tasks.py:1769
+#: redistricting/tasks.py:1767
 msgid "Created spatial views and styles, cleaning quarantined data..."
 msgstr ""
 
-#: redistricting/tasks.py:1812
+#: redistricting/tasks.py:1810
 #, python-format
 msgid "Upload complete. Subject \"%(subject_name)s\" added."
 msgstr ""
@@ -728,174 +728,170 @@ msgid "Tools"
 msgstr ""
 
 #: redistricting/templates/editplan.html:53
-#: redistricting/templates/editplan.html:107
+#: redistricting/templates/editplan.html:120
 #: redistricting/templates/viewplan.html:465
 msgid "Pan"
 msgstr ""
 
 #: redistricting/templates/editplan.html:54
-#: redistricting/templates/editplan.html:108
+#: redistricting/templates/editplan.html:121
 #: redistricting/templates/viewplan.html:466
 msgid "Click on a geounit to see its demographic info."
 msgstr ""
 
 #: redistricting/templates/editplan.html:54
-#: redistricting/templates/editplan.html:108
-#: redistricting/templates/editplan.html:112
+#: redistricting/templates/editplan.html:121
+#: redistricting/templates/editplan.html:125
 #: redistricting/templates/viewplan.html:466
 #: redistricting/templates/viewplan.html:469
 msgid "Info"
 msgstr ""
 
-#: redistricting/templates/editplan.html:60
+#: redistricting/templates/editplan.html:62
 #, python-format
 msgid ""
 "Single %(body_member_long_label)s select; +Shift to select multiple "
 "%(body_members)s"
 msgstr ""
 
-#: redistricting/templates/editplan.html:60
-msgid "Single"
+#: redistricting/templates/editplan.html:63
+msgid "Single<br/>Select "
 msgstr ""
 
-#: redistricting/templates/editplan.html:60
-#: redistricting/templates/editplan.html:61
-#: redistricting/templates/editplan.html:62
-#: redistricting/templates/viewplan.html:968
-msgid "Select"
-msgstr ""
-
-#: redistricting/templates/editplan.html:61
+#: redistricting/templates/editplan.html:65
 msgid "Select by rectangle"
 msgstr ""
 
-#: redistricting/templates/editplan.html:61
-msgid "Rectangle"
+#: redistricting/templates/editplan.html:66
+msgid "Rectangle<br/>Select"
 msgstr ""
 
-#: redistricting/templates/editplan.html:62
+#: redistricting/templates/editplan.html:68
 msgid "Select by drawing a polygon"
 msgstr ""
 
-#: redistricting/templates/editplan.html:62
-msgid "Polygon"
+#: redistricting/templates/editplan.html:69
+msgid "Polygon<br/>Select"
 msgstr ""
 
-#: redistricting/templates/editplan.html:67
+#: redistricting/templates/editplan.html:74
 #, python-format
 msgid ""
 "Enable anchor mode, then select a %(body_member_long_label)s name to "
 "repeatedly assign areas to a %(body_member_long_label)s"
 msgstr ""
 
-#: redistricting/templates/editplan.html:67
-msgid "Anchor"
+#: redistricting/templates/editplan.html:75
+#, python-format
+msgid "Anchor<br/>%(district_label)s"
 msgstr ""
 
-#: redistricting/templates/editplan.html:69
-msgid "Assign to"
+#: redistricting/templates/editplan.html:78
+#, python-format
+msgid "Assign to %(district_label)s"
 msgstr ""
 
-#: redistricting/templates/editplan.html:70
+#: redistricting/templates/editplan.html:79
 #, python-format
 msgid ""
 "Assign %(body_members)s currently selected on map by choosing a "
 "%(body_member_long_label)s name from drop down list"
 msgstr ""
 
-#: redistricting/templates/editplan.html:71
+#: redistricting/templates/editplan.html:80
 msgid "Select One"
 msgstr ""
 
-#: redistricting/templates/editplan.html:76
-msgid "New"
+#: redistricting/templates/editplan.html:85
+#, python-format
+msgid "New %(district_label)s"
 msgstr ""
 
-#: redistricting/templates/editplan.html:80
+#: redistricting/templates/editplan.html:89
 #, python-format
 msgid ""
 "Select areas on the map then drag them to into a %(body_member_long_label)s "
 "for reassignment"
 msgstr ""
 
-#: redistricting/templates/editplan.html:80
+#: redistricting/templates/editplan.html:89
 msgid "Click and<br/>Drag"
 msgstr ""
 
-#: redistricting/templates/editplan.html:86
+#: redistricting/templates/editplan.html:95
 msgid "Perform automated resolution of minor unassigned geographies"
 msgstr ""
 
-#: redistricting/templates/editplan.html:86
+#: redistricting/templates/editplan.html:95
 msgid "Fix<br/>Unassigned"
 msgstr ""
 
-#: redistricting/templates/editplan.html:111
+#: redistricting/templates/editplan.html:124
 #, python-format
 msgid "Click on a %(body_member_long_label)s to lock or unlock it."
 msgstr ""
 
-#: redistricting/templates/editplan.html:111
+#: redistricting/templates/editplan.html:124
 msgid "Lock"
 msgstr ""
 
-#: redistricting/templates/editplan.html:112
+#: redistricting/templates/editplan.html:125
 #, python-format
 msgid "Click on a %(body_member_long_label)s to see its ID."
 msgstr ""
 
-#: redistricting/templates/editplan.html:113
+#: redistricting/templates/editplan.html:126
 #, python-format
 msgid "Unassign all the units in a %(body_member_long_label)s"
 msgstr ""
 
-#: redistricting/templates/editplan.html:113
+#: redistricting/templates/editplan.html:126
 msgid "Unassign"
 msgstr ""
 
-#: redistricting/templates/editplan.html:114
+#: redistricting/templates/editplan.html:127
 #, python-format
 msgid "Copy a %(body_member_long_label)s from another %(plan_text)s"
 msgstr ""
 
-#: redistricting/templates/editplan.html:114
+#: redistricting/templates/editplan.html:127
 msgid "Copy and</br>Paste"
 msgstr ""
 
-#: redistricting/templates/editplan.html:118
+#: redistricting/templates/editplan.html:131
 #: redistricting/templates/viewplan.html:472
 msgid "Show<br/>Splits"
 msgstr ""
 
-#: redistricting/templates/editplan.html:119
+#: redistricting/templates/editplan.html:132
 #: redistricting/templates/viewplan.html:473
 msgid "Generate<br/>Splits Report"
 msgstr ""
 
-#: redistricting/templates/editplan.html:124
+#: redistricting/templates/editplan.html:137
 msgid "Select Multi-<br/>Member Districts"
 msgstr ""
 
-#: redistricting/templates/editplan.html:138
+#: redistricting/templates/editplan.html:151
 msgid "Submit Final Plan to Contest"
 msgstr ""
 
-#: redistricting/templates/editplan.html:139
+#: redistricting/templates/editplan.html:152
 msgid ""
 "You can submit your completed plan to be considered for the contest by "
 "filling out this form."
 msgstr ""
 
-#: redistricting/templates/editplan.html:140
-#: redistricting/templates/editplan.html:360
+#: redistricting/templates/editplan.html:153
+#: redistricting/templates/editplan.html:375
 msgid "Submit Final Plan"
 msgstr ""
 
-#: redistricting/templates/editplan.html:146
+#: redistricting/templates/editplan.html:159
 msgid "Share Plan With All Users"
 msgstr ""
 
-#: redistricting/templates/editplan.html:147
+#: redistricting/templates/editplan.html:160
 #, python-format
 msgid ""
 "By sharing a copy of your %(plan_text)s below, you are making your "
@@ -904,41 +900,42 @@ msgid ""
 "%(plan_text)s will be added to the \"Shared\" section of the plan chooser."
 msgstr ""
 
-#: redistricting/templates/editplan.html:149
+#: redistricting/templates/editplan.html:162
 #, python-format
 msgid "Name your shared %(plan_text)s"
 msgstr ""
 
-#: redistricting/templates/editplan.html:151
+#: redistricting/templates/editplan.html:164
 msgid "Save and Share"
 msgstr ""
 
-#: redistricting/templates/editplan.html:155
+#: redistricting/templates/editplan.html:168
 msgid "Congratulations!"
 msgstr ""
 
-#: redistricting/templates/editplan.html:156
+#: redistricting/templates/editplan.html:169
 #, python-format
 msgid ""
 "You have successfully shared your %(plan_text)s. You can share your "
 "%(plan_text)s with others by giving them this link:"
 msgstr ""
 
-#: redistricting/templates/editplan.html:158
+#: redistricting/templates/editplan.html:171
 #, python-format
 msgid "Continue Editing Current %(plantext)s"
 msgstr ""
 
-#: redistricting/templates/editplan.html:159
+#: redistricting/templates/editplan.html:172
 #, python-format
 msgid "Select New %(plan_text)s to Edit"
 msgstr ""
 
-#: redistricting/templates/editplan.html:167
+#: redistricting/templates/editplan.html:180
+#: redistricting/templates/editplan.html:192
 msgid "Verify and Submit Plan to Leaderboards"
 msgstr ""
 
-#: redistricting/templates/editplan.html:168
+#: redistricting/templates/editplan.html:181
 msgid ""
 "In order to be considered for placement on the leaderboards your plan must "
 "meet the criteria for creating a legal redistricitng plan. Keep in mind that "
@@ -947,43 +944,39 @@ msgid ""
 "considered for the leaderboards."
 msgstr ""
 
-#: redistricting/templates/editplan.html:169
+#: redistricting/templates/editplan.html:182
 msgid ""
 "By verifying your plan, you are <em><strong>not</strong></em> sharing your "
 "plan with other users. Your plan title and user name will simply show up in "
 "the top ten lists (if your plan ranks in the top ten)."
 msgstr ""
 
-#: redistricting/templates/editplan.html:171
+#: redistricting/templates/editplan.html:184
 msgid "How to verify and submit your plan:"
 msgstr ""
 
-#: redistricting/templates/editplan.html:173
+#: redistricting/templates/editplan.html:186
 msgid "Click the \"Verify and Submit to Leaderboards\" button."
 msgstr ""
 
-#: redistricting/templates/editplan.html:174
+#: redistricting/templates/editplan.html:187
 msgid "If verified, you will be taken to the Leaderboard page."
 msgstr ""
 
-#: redistricting/templates/editplan.html:175
+#: redistricting/templates/editplan.html:188
 msgid ""
 "Check the leaderboards to see if your plan ranks in any of the top ten score "
 "types."
 msgstr ""
 
-#: redistricting/templates/editplan.html:179
-msgid "Verify and Post Plan to Leaderboards"
-msgstr ""
-
-#: redistricting/templates/editplan.html:190
+#: redistricting/templates/editplan.html:203
 msgid ""
 "Choose communities to paste into your map. A map can contain any number of "
 "communities. If you would like to remove communities from your map, use the "
 "community unassign tool."
 msgstr ""
 
-#: redistricting/templates/editplan.html:192
+#: redistricting/templates/editplan.html:205
 msgid ""
 "Choose districts to paste into your plan.  A plan has a maximum number of "
 "districts allowed by law.  If you would like to paste districts into a plan, "
@@ -992,144 +985,144 @@ msgid ""
 "tool."
 msgstr ""
 
-#: redistricting/templates/editplan.html:196
+#: redistricting/templates/editplan.html:209
 #, python-format
 msgid "1. Choose %(plantext)s"
 msgstr ""
 
-#: redistricting/templates/editplan.html:202
+#: redistricting/templates/editplan.html:215
 #, python-format
 msgid "2. Select %(bodymember)s to copy"
 msgstr ""
 
-#: redistricting/templates/editplan.html:209
+#: redistricting/templates/editplan.html:222
 #, python-format
 msgid "Click on a %(body_member_long_label)s's name to see a map"
 msgstr ""
 
-#: redistricting/templates/editplan.html:215
+#: redistricting/templates/editplan.html:228
 #, python-format
 msgid "3. Paste selected %(body_member_long_label)s into working %(plan_text)s"
 msgstr ""
 
-#: redistricting/templates/editplan.html:249
+#: redistricting/templates/editplan.html:262
 msgid ""
 "Click on a row to edit the number of members for the selected district. "
 "Press ENTER to complete editing a district."
 msgstr ""
 
-#: redistricting/templates/editplan.html:253
+#: redistricting/templates/editplan.html:266
 msgid ""
 "When all desired edits are made, press the Save button to save all changes "
 "to the database."
 msgstr ""
 
-#: redistricting/templates/editplan.html:257
+#: redistricting/templates/editplan.html:270
 msgid "Target # of representatives:"
 msgstr ""
 
-#: redistricting/templates/editplan.html:258
+#: redistricting/templates/editplan.html:271
 msgid "Target # of multi-member districts:"
 msgstr ""
 
-#: redistricting/templates/editplan.html:259
+#: redistricting/templates/editplan.html:272
 msgid "Target # of members per multi-member district:"
 msgstr ""
 
-#: redistricting/templates/editplan.html:262
+#: redistricting/templates/editplan.html:275
 msgid ""
 "Your plan currently has <span id=\"multi_num_reps\" class=\"multi_val\"></"
 "span> representatives."
 msgstr ""
 
-#: redistricting/templates/editplan.html:263
+#: redistricting/templates/editplan.html:276
 msgid ""
 "Your plan currently has <span id=\"multi_num_dists\" class=\"multi_val\"></"
 "span> multi-member districts."
 msgstr ""
 
-#: redistricting/templates/editplan.html:266
+#: redistricting/templates/editplan.html:279
 #: redistricting/templates/viewplan.html:403
 msgid "Save"
 msgstr ""
 
-#: redistricting/templates/editplan.html:311 templates/account.html:47
+#: redistricting/templates/editplan.html:324 templates/account.html:51
 msgid "First Name"
 msgstr ""
 
-#: redistricting/templates/editplan.html:315 templates/account.html:54
+#: redistricting/templates/editplan.html:328 templates/account.html:58
 msgid "Last Name"
 msgstr ""
 
-#: redistricting/templates/editplan.html:319
+#: redistricting/templates/editplan.html:332
 msgid "Full Names of Team Members (if applicable)"
 msgstr ""
 
-#: redistricting/templates/editplan.html:323
+#: redistricting/templates/editplan.html:336
 msgid "Team Name (if applicable)"
 msgstr ""
 
-#: redistricting/templates/editplan.html:327 templates/account.html:39
+#: redistricting/templates/editplan.html:340 templates/account.html:43
 msgid "Email Address"
 msgstr ""
 
-#: redistricting/templates/editplan.html:331
+#: redistricting/templates/editplan.html:344
 msgid "Street Address"
 msgstr ""
 
-#: redistricting/templates/editplan.html:335
+#: redistricting/templates/editplan.html:348
 msgid "Phone Number"
 msgstr ""
 
-#: redistricting/templates/editplan.html:340
+#: redistricting/templates/editplan.html:353
 msgid ""
 "Values &ndash; tell us what values, considerations and trade-offs you made "
 "in your plan:"
 msgstr ""
 
-#: redistricting/templates/editplan.html:350
+#: redistricting/templates/editplan.html:363
 msgid ""
 "\n"
-"                    By submitting a plan for consideration, you are agreeing "
-"to have the plan\n"
-"                    published in local news media outlets and presented to "
-"City Council. Unless\n"
-"                    you request otherwise, the project partners will attempt "
-"to include attribution\n"
-"                    (your name or team name) for the plan whenever "
-"feasible.\n"
+"                    By submitting a plan for consideration, you are "
+"agreeing\n"
+"                    to have your plan published in local news media outlets\n"
+"                    and have it presented to a legislative body. Unless\n"
+"                    you request otherwise, the project partners will "
+"attempt\n"
+"                    to include attribution (your name or team name) for the\n"
+"                    plan whenever feasible.\n"
 "                    "
 msgstr ""
 
-#: redistricting/templates/editplan.html:364 templates/account.html:92
+#: redistricting/templates/editplan.html:379 templates/account.html:96
 msgid "Indicates required field"
 msgstr ""
 
-#: redistricting/templates/editplan.html:382
+#: redistricting/templates/editplan.html:397
 msgid "Community Info"
 msgstr ""
 
-#: redistricting/templates/editplan.html:383
+#: redistricting/templates/editplan.html:398
 msgid "0"
 msgstr ""
 
-#: redistricting/templates/editplan.html:387
+#: redistricting/templates/editplan.html:402
 msgid "1. Edit Community Label:"
 msgstr ""
 
-#: redistricting/templates/editplan.html:394
+#: redistricting/templates/editplan.html:409
 msgid "2. Edit Community Type:"
 msgstr ""
 
-#: redistricting/templates/editplan.html:405
+#: redistricting/templates/editplan.html:420
 msgid "3. Comments:"
 msgstr ""
 
-#: redistricting/templates/editplan.html:413
+#: redistricting/templates/editplan.html:428
 msgid "Oops!"
 msgstr ""
 
-#: redistricting/templates/editplan.html:414
+#: redistricting/templates/editplan.html:429
 msgid "Sorry, your information could not be saved. Please try again later."
 msgstr ""
 
@@ -1168,7 +1161,7 @@ msgstr ""
 #: redistricting/templates/importedplan.email:18
 msgid ""
 "Your plan was created successfully. You can view, edit, and share your new "
-"plan by logging in to District Builder, and pulling up the plan entitled"
+"plan by logging in to DistrictBuilder, and pulling up the plan entitled"
 msgstr ""
 
 #: redistricting/templates/importedplan.email:21
@@ -1186,7 +1179,7 @@ msgstr ""
 
 #: redistricting/templates/leaderboard_panel_all.html:45
 #: redistricting/templates/leaderboard_panel_mine.html:43
-#: templates/account.html:11
+#: templates/account.html:15
 msgid "User Name"
 msgstr ""
 
@@ -1259,11 +1252,11 @@ msgstr ""
 msgid "Printed on:"
 msgstr ""
 
-#: redistricting/templates/printplan.html:109
+#: redistricting/templates/printplan.html:109 templates/index.html:313
 msgid "Powered By DistrictBuilder"
 msgstr ""
 
-#: redistricting/templates/printplan.html:111 templates/index.html:314
+#: redistricting/templates/printplan.html:111 templates/index.html:316
 msgid "A project of"
 msgstr ""
 
@@ -1382,7 +1375,7 @@ msgstr ""
 msgid "Leaderboards"
 msgstr ""
 
-#: redistricting/templates/viewplan.html:259 templates/index.html:161
+#: redistricting/templates/viewplan.html:259 templates/index.html:163
 msgid "Login"
 msgstr ""
 
@@ -1652,7 +1645,7 @@ msgid ""
 msgstr ""
 
 #: redistricting/templates/viewplan.html:728
-msgid "Create and Preview Reports"
+msgid "Create and Preview New Report"
 msgstr ""
 
 #: redistricting/templates/viewplan.html:732
@@ -1685,7 +1678,7 @@ msgid ""
 "Anyone can view this plan by visiting the following URL in a web browser:"
 msgstr ""
 
-#: redistricting/templates/viewplan.html:825 templates/index.html:133
+#: redistricting/templates/viewplan.html:825 templates/index.html:135
 msgid "Tweet"
 msgstr ""
 
@@ -1749,7 +1742,8 @@ msgid "Please wait. Plan is being validated. This may take a few minutes."
 msgstr ""
 
 #: redistricting/templates/viewplan.html:968
-msgid "Thematic Map"
+#, python-format
+msgid "Select %(layer_type)s Thematic Map"
 msgstr ""
 
 #: redistricting/templates/viewplan.html:981
@@ -1918,52 +1912,58 @@ msgstr ""
 msgid "Sign Up For An Account"
 msgstr ""
 
-#: templates/account.html:18
+#: templates/account.html:12
+msgid ""
+"Please choose a username between 6 and 30 characters. Include at least one "
+"letter. Do not leave leading or trailing spaces."
+msgstr ""
+
+#: templates/account.html:22
 msgid ""
 "Please use a password of 8 or more characters. Include a number, a capital "
 "letter and a lower-case letter."
 msgstr ""
 
-#: templates/account.html:21
+#: templates/account.html:25
 #: templates/admin/auth/user/change_password.orig.html:35
 msgid "Password"
 msgstr ""
 
-#: templates/account.html:25
+#: templates/account.html:29
 msgid "Confirm Password"
 msgstr ""
 
-#: templates/account.html:29
+#: templates/account.html:33
 msgid "Password Hint"
 msgstr ""
 
-#: templates/account.html:36
+#: templates/account.html:40
 msgid "An email address is recommended to recover a forgotten password"
 msgstr ""
 
-#: templates/account.html:44
+#: templates/account.html:48
 msgid ""
 "Sorry, that email address is already registered. Please use a different "
 "email address."
 msgstr ""
 
-#: templates/account.html:61
+#: templates/account.html:65
 msgid "Organization"
 msgstr ""
 
-#: templates/account.html:72
+#: templates/account.html:76
 msgid "I have read the "
 msgstr ""
 
-#: templates/account.html:72 templates/index.html:182
+#: templates/account.html:76 templates/index.html:184
 msgid "Terms of Use"
 msgstr ""
 
-#: templates/account.html:86
+#: templates/account.html:90
 msgid "Update"
 msgstr ""
 
-#: templates/account.html:88 templates/index.html:172
+#: templates/account.html:92 templates/index.html:174
 msgid "Sign Up"
 msgstr ""
 
@@ -2009,169 +2009,173 @@ msgstr ""
 msgid "Redistricting Resources"
 msgstr ""
 
-#: templates/index.html:126
-msgid "NEW TO REDISTRICTING?"
+#: templates/index.html:122
+msgid "About this DistrictBuilder instance"
 msgstr ""
 
-#: templates/index.html:126
-msgid "Take a Tour"
+#: templates/index.html:125
+msgid "Virginia on the Public Mapping Project"
 msgstr ""
 
-#: templates/index.html:157
+#: templates/index.html:128
+msgid "Virginia data"
+msgstr ""
+
+#: templates/index.html:159
 msgid "Log In"
 msgstr ""
 
-#: templates/index.html:163
+#: templates/index.html:165
 msgid "Forgot your password?"
 msgstr ""
 
-#: templates/index.html:168
+#: templates/index.html:170
 msgid "Don't have an account?"
 msgstr ""
 
-#: templates/index.html:170
+#: templates/index.html:172
 msgid "To Draw Your Own Maps..."
 msgstr ""
 
-#: templates/index.html:174
+#: templates/index.html:176
 msgid "To View Other Users' Maps..."
 msgstr ""
 
-#: templates/index.html:177
+#: templates/index.html:179
 msgid "Enter as a guest"
 msgstr ""
 
-#: templates/index.html:194
+#: templates/index.html:196
 msgid "Get A Hint"
 msgstr ""
 
-#: templates/index.html:196
+#: templates/index.html:198
 msgid ""
 "Enter your username to retrieve your password hint that you used when "
 "registering for an account."
 msgstr ""
 
-#: templates/index.html:201
+#: templates/index.html:203
 msgid "Username"
 msgstr ""
 
-#: templates/index.html:205
+#: templates/index.html:207
 msgid "OR"
 msgstr ""
 
-#: templates/index.html:207
+#: templates/index.html:209
 msgid "Reset Your Password"
 msgstr ""
 
-#: templates/index.html:209
+#: templates/index.html:211
 msgid ""
 "Enter your email address to reset your password if you have forgotten your "
 "username."
 msgstr ""
 
-#: templates/index.html:214
+#: templates/index.html:216
 msgid "Email"
 msgstr ""
 
-#: templates/index.html:220
+#: templates/index.html:222
 msgid "Begin"
 msgstr ""
 
-#: templates/index.html:224
+#: templates/index.html:226
 msgid "Here Is Your Hint"
 msgstr ""
 
-#: templates/index.html:225
+#: templates/index.html:227
 msgid ""
 "If this helps you remember your password, you can close this dialog and log "
 "in."
 msgstr ""
 
-#: templates/index.html:229
+#: templates/index.html:231
 msgid ""
 "If you still can't recall your password, click on the 'Back' button, and "
 "enter your email address, so we can email your password to you."
 msgstr ""
 
-#: templates/index.html:233
+#: templates/index.html:235
 msgid "Email Sent"
 msgstr ""
 
-#: templates/index.html:234
+#: templates/index.html:236
 msgid ""
 "Your password has been emailed to you. You should receive your password in "
 "your inbox in the next few minutes."
 msgstr ""
 
-#: templates/index.html:237
+#: templates/index.html:239
 msgid "Back"
 msgstr ""
 
-#: templates/index.html:238
+#: templates/index.html:240
 msgid "Close"
 msgstr ""
 
-#: templates/index.html:244
+#: templates/index.html:246
 msgid "Your account has too many sessions."
 msgstr ""
 
-#: templates/index.html:245
+#: templates/index.html:247
 msgid "To use DistrictBuilder, you must do one of the following actions:"
 msgstr ""
 
-#: templates/index.html:248
+#: templates/index.html:250
 msgid "Log in as a different user."
 msgstr ""
 
-#: templates/index.html:251
+#: templates/index.html:253
 msgid "Use the system as a guest."
 msgstr ""
 
-#: templates/index.html:256
+#: templates/index.html:258
 msgid "Force close the other user's session and log in again."
 msgstr ""
 
-#: templates/index.html:263
+#: templates/index.html:265
 msgid ""
 "The DistrictBuilder application has reached maximum capacity. Please try to "
 "use the application again shortly. We apologize for the inconvenience."
 msgstr ""
 
-#: templates/index.html:266
+#: templates/index.html:268
 msgid ""
 "The following discloses our information gathering and dissemination "
 "practices; and terms of use for this web site."
 msgstr ""
 
-#: templates/index.html:267
+#: templates/index.html:269
 msgid "Information gathering"
 msgstr ""
 
-#: templates/index.html:269
+#: templates/index.html:271
 msgid ""
 "Our web server software generates logfiles of the IP addresses of computers "
 "that access this web site and of what files they access."
 msgstr ""
 
-#: templates/index.html:270
+#: templates/index.html:272
 msgid ""
 "These web server logs are retained on a temporary basis and then deleted "
 "completely from our systems."
 msgstr ""
 
-#: templates/index.html:271
+#: templates/index.html:273
 msgid "We also may ask our visitors to provide information about themselves."
 msgstr ""
 
-#: templates/index.html:272
+#: templates/index.html:274
 msgid "We may use cookies to maintain a user's identity between web sessions."
 msgstr ""
 
-#: templates/index.html:274
+#: templates/index.html:276
 msgid "Contributor Terms"
 msgstr ""
 
-#: templates/index.html:275
+#: templates/index.html:277
 msgid ""
 "This site enables users to create districting maps and to comment on the "
 "maps of others.  By creating a map, a comment, or an account, you are "
@@ -2179,7 +2183,7 @@ msgid ""
 "(collectively, 'Contents') you contribute to this site. "
 msgstr ""
 
-#: templates/index.html:276
+#: templates/index.html:278
 msgid ""
 "You hereby grant to us a worldwide, royalty-free, non-exclusive, perpetual, "
 "irrevocable license to do any act that is restricted by copyright over "
@@ -2192,18 +2196,18 @@ msgid ""
 "rights that You may have in the Contents."
 msgstr ""
 
-#: templates/index.html:277
+#: templates/index.html:279
 msgid ""
 "We agree to make the Contents that you contribute and designate as &quot;"
 "published&quot; available under at least one of the following licenses: ODbL "
 "1.0; DbCL 1.0; CC-BY-SA 2.0; or another free and open license. "
 msgstr ""
 
-#: templates/index.html:278
+#: templates/index.html:280
 msgid "Use of information"
 msgstr ""
 
-#: templates/index.html:279
+#: templates/index.html:281
 msgid ""
 "We use third parties to provide processing functions on our site. When you "
 "register for  services, we may share information as necessary for the third "
@@ -2212,7 +2216,7 @@ msgid ""
 "identifiable information for any other purpose. "
 msgstr ""
 
-#: templates/index.html:280
+#: templates/index.html:282
 msgid ""
 "We use your IP address and files you access to help diagnose problems with "
 "our server and to administer our Web site by identifying (1) which parts of "
@@ -2222,7 +2226,7 @@ msgid ""
 "At no time do we disclose site usage by individual visitors."
 msgstr ""
 
-#: templates/index.html:281
+#: templates/index.html:283
 msgid ""
 "We reserve the right to disclose your personally identifiable information as "
 "required by law and when we believe that disclosure is necessary to protect "
@@ -2230,7 +2234,7 @@ msgid ""
 "process served on the hosts. "
 msgstr ""
 
-#: templates/index.html:282
+#: templates/index.html:284
 msgid ""
 "All maps created through the system, edits to those maps, and comments made "
 "on those maps are associated with an account id and a timestamp. These maps, "
@@ -2242,60 +2246,56 @@ msgid ""
 "users profile setting. "
 msgstr ""
 
-#: templates/index.html:283
+#: templates/index.html:285
 msgid "Security"
 msgstr ""
 
-#: templates/index.html:284
+#: templates/index.html:286
 msgid ""
 "This site has security measures in place to protect the loss, misuse and "
 "alteration of the information under our control."
 msgstr ""
 
-#: templates/index.html:285
+#: templates/index.html:287
 msgid "Contacting this web site"
 msgstr ""
 
-#: templates/index.html:286
+#: templates/index.html:288
 msgid ""
 "If you have any questions about this privacy statement, the practices of "
 "this site, or your dealings with this site, you can contact the support "
 "address at the host domain"
 msgstr ""
 
-#: templates/index.html:286
+#: templates/index.html:288
 msgid ""
 "This web site may contain links to other web sites. We are not responsible "
 "for the privacy practices or the content of such web sites."
 msgstr ""
 
-#: templates/index.html:287
+#: templates/index.html:289
 msgid "Changes to this policy"
 msgstr ""
 
-#: templates/index.html:288
+#: templates/index.html:290
 msgid ""
 "An announcement of any changes to this policy will be posted on this page "
 "for  thirty days before any changes go into effect."
 msgstr ""
 
-#: templates/index.html:289
+#: templates/index.html:291
 msgid "Effective Date"
 msgstr ""
 
-#: templates/index.html:290
+#: templates/index.html:292
 msgid "The effective date of this policy was May 2, 2011."
 msgstr ""
 
-#: templates/index.html:311
-msgid "Powered By District Builder"
-msgstr ""
-
-#: templates/index.html:328
+#: templates/index.html:330
 msgid "We've designed the software to run on"
 msgstr ""
 
-#: templates/index.html:330
+#: templates/index.html:332
 msgid "a free web browser"
 msgstr ""
 
@@ -2322,7 +2322,7 @@ msgstr ""
 #: templates/admin/auth/user/change_password.orig.html:11
 #: templates/admin/redistricting/subject/add_form.html:49
 #: templates/admin/redistricting/subject/delete_selected_confirmation.html:37
-#: templates/admin/redistricting/subject/upload_form.html:115
+#: templates/admin/redistricting/subject/upload_form.html:118
 #: templates/registration/password_change_form.orig.html:35
 msgid "Home"
 msgstr ""
@@ -2360,12 +2360,12 @@ msgid "Download Subject template"
 msgstr ""
 
 #: templates/admin/redistricting/subject/add_form.html:52
-#: templates/admin/redistricting/subject/upload_form.html:118
+#: templates/admin/redistricting/subject/upload_form.html:121
 msgid "Add"
 msgstr ""
 
 #: templates/admin/redistricting/subject/add_form.html:60
-#: templates/admin/redistricting/subject/upload_form.html:126
+#: templates/admin/redistricting/subject/upload_form.html:129
 msgid ""
 "A Subject in DistrictBuilder has relationships with many objects in the "
 "application. For this reason, adding a Subject requires a few extra steps. "
@@ -2373,12 +2373,12 @@ msgid ""
 msgstr ""
 
 #: templates/admin/redistricting/subject/add_form.html:62
-#: templates/admin/redistricting/subject/upload_form.html:128
+#: templates/admin/redistricting/subject/upload_form.html:131
 msgid "Downloading a Subject template file (CSV)"
 msgstr ""
 
 #: templates/admin/redistricting/subject/add_form.html:63
-#: templates/admin/redistricting/subject/upload_form.html:129
+#: templates/admin/redistricting/subject/upload_form.html:132
 msgid "Uploading a complete Subject file (CSV)"
 msgstr ""
 
@@ -2387,7 +2387,7 @@ msgid "Verifying the upload Subject file."
 msgstr ""
 
 #: templates/admin/redistricting/subject/add_form.html:65
-#: templates/admin/redistricting/subject/upload_form.html:131
+#: templates/admin/redistricting/subject/upload_form.html:134
 msgid "Configuring the settings for the uploaded Subject."
 msgstr ""
 
@@ -2490,7 +2490,7 @@ msgid ""
 msgstr ""
 
 #: templates/admin/redistricting/subject/upload_form.html:33
-#: templates/admin/redistricting/subject/upload_form.html:122
+#: templates/admin/redistricting/subject/upload_form.html:125
 msgid "Upload Subject template"
 msgstr ""
 
@@ -2504,6 +2504,7 @@ msgid "Sorry! This processing step failed with the following error message: "
 msgstr ""
 
 #: templates/admin/redistricting/subject/upload_form.html:77
+#: templates/admin/redistricting/subject/upload_form.html:87
 msgid "Retry"
 msgstr ""
 
@@ -2511,50 +2512,50 @@ msgstr ""
 msgid "Could not retrieve task status."
 msgstr ""
 
-#: templates/admin/redistricting/subject/upload_form.html:130
+#: templates/admin/redistricting/subject/upload_form.html:133
 msgid "Verifying the uploaded Subject file."
 msgstr ""
 
-#: templates/admin/redistricting/subject/upload_form.html:134
+#: templates/admin/redistricting/subject/upload_form.html:137
 msgid "2. Uploading a complete Subject file"
 msgstr ""
 
-#: templates/admin/redistricting/subject/upload_form.html:135
+#: templates/admin/redistricting/subject/upload_form.html:138
 msgid ""
 "Using the file field below, please select the populated Subject template "
 "file, and upload the Subject template file with the 'Upload' button below."
 msgstr ""
 
-#: templates/admin/redistricting/subject/upload_form.html:138
+#: templates/admin/redistricting/subject/upload_form.html:141
 msgid "3. Verifying the uploaded Subject file"
 msgstr ""
 
-#: templates/admin/redistricting/subject/upload_form.html:139
+#: templates/admin/redistricting/subject/upload_form.html:142
 msgid ""
 "Please wait while the uploaded Subject file is checked for consistency and "
 "alignment with the currently loaded data. This may take up to 15 minutes, so "
 "please wait until the process completes before leaving this page."
 msgstr ""
 
-#: templates/admin/redistricting/subject/upload_form.html:142
+#: templates/admin/redistricting/subject/upload_form.html:145
 msgid "4. Configuring the settings for the uploaded Subject"
 msgstr ""
 
-#: templates/admin/redistricting/subject/upload_form.html:143
+#: templates/admin/redistricting/subject/upload_form.html:146
 msgid ""
 "The verification steps are complete, you may proceed to the Subject change "
 "form to complete filling in the Subject details."
 msgstr ""
 
-#: templates/admin/redistricting/subject/upload_form.html:152
+#: templates/admin/redistricting/subject/upload_form.html:155
 msgid "Verifying counts of uploaded subjects..."
 msgstr ""
 
-#: templates/admin/redistricting/subject/upload_form.html:154
+#: templates/admin/redistricting/subject/upload_form.html:157
 msgid "Please Wait ..."
 msgstr ""
 
-#: templates/admin/redistricting/subject/upload_form.html:156
+#: templates/admin/redistricting/subject/upload_form.html:159
 msgid "Upload"
 msgstr ""
 

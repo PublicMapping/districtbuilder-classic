@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-28 17:02-0500\n"
+"POT-Creation-Date: 2012-04-11 12:41-0400\n"
 "PO-Revision-Date: 2011-11-30 16:49\n"
 "Last-Translator: Admin User <ajennings+saigon@azavea.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,846 +19,6 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Translated-Using: django-rosetta 0.6.2\n"
 
-#: static-media/CACHE/js/4bd62bdb2da4.js:78
-#: static-media/CACHE/js/b4775468438b.js:78 static-media/js/ui.js:64
-msgid "Coming Soon..."
-msgstr "Muy pronto ..."
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:85
-#: static-media/CACHE/js/b4775468438b.js:85 static-media/js/ui.js:215
-#: static-media/js/ui.js.py:243
-msgid "Validation Failed"
-msgstr "Error de validación"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:85
-#: static-media/CACHE/js/4bd62bdb2da4.js:94
-#: static-media/CACHE/js/4bd62bdb2da4.js:378
-#: static-media/CACHE/js/4bd62bdb2da4.js:401
-#: static-media/CACHE/js/b4775468438b.js:85
-#: static-media/CACHE/js/b4775468438b.js:94
-#: static-media/CACHE/js/b4775468438b.js:378
-#: static-media/CACHE/js/b4775468438b.js:401 static-media/js/mapping.js:1046
-#: static-media/js/register.js:182 static-media/js/register.js.py:190
-#: static-media/js/splitsreport.js:96 static-media/js/ui.js:220
-#: static-media/js/ui.js.py:250 static-media/js/ui.js:480
-msgid "Error"
-msgstr "Error"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:85
-#: static-media/CACHE/js/b4775468438b.js:85 static-media/js/ui.js:220
-#: static-media/js/ui.js.py:251
-msgid "Server error. Please try again later"
-msgstr "Error del servidor. Por favor, inténtelo de nuevo más tarde"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:85
-#: static-media/CACHE/js/b4775468438b.js:85 static-media/js/ui.js:227
-msgid "Update Leaderboards<br/>with Working Plan"
-msgstr "Líderes de actualización <br/> con el Plan de Trabajo"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:86
-#: static-media/CACHE/js/b4775468438b.js:86 static-media/js/ui.js:257
-msgid "Download Scores<br/>as CSV"
-msgstr "Las puntuaciones de <br/> descarga  como CSV"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:89
-#: static-media/CACHE/js/b4775468438b.js:89 static-media/js/ui.js:368
-msgid "Last Saved on %(day)s at %(hour)s:%(minute)s"
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:94
-#: static-media/CACHE/js/b4775468438b.js:94 static-media/js/ui.js:469
-msgid "Please Wait"
-msgstr "Por favor espere ..."
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:94
-#: static-media/CACHE/js/b4775468438b.js:94 static-media/js/ui.js:469
-msgid "Publishing with the server"
-msgstr "Publicación con el servidor"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:94
-#: static-media/CACHE/js/b4775468438b.js:94 static-media/js/ui.js:480
-msgid "Please enter a new name to publish your plan."
-msgstr "Por favor, introduzca un nuevo nombre para publicar su plan."
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:95
-#: static-media/CACHE/js/b4775468438b.js:95 static-media/js/ui.js:492
-msgid "Oops!"
-msgstr "Oops!"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:98
-#: static-media/CACHE/js/b4775468438b.js:98 static-media/js/ui.js:511
-msgid "Server Failure"
-msgstr "Fallas del servidor"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:98
-#: static-media/CACHE/js/b4775468438b.js:98 static-media/js/ui.js:511
-msgid "Sorry, we weren't able to contact the server.  Please try again later."
-msgstr ""
-"Lo sentimos, no hemos podido contactar con el servidor. Por favor, inténtelo "
-"de nuevo más tarde."
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:114
-#: static-media/CACHE/js/b4775468438b.js:114 static-media/js/mapping.js:108
-msgid " Name"
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:115
-#: static-media/CACHE/js/b4775468438b.js:115 static-media/js/mapping.js:120
-msgid "Demographic "
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:132
-#: static-media/CACHE/js/b4775468438b.js:132 static-media/js/mapping.js:366
-msgid "Satellite"
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:132
-#: static-media/CACHE/js/b4775468438b.js:132 static-media/js/mapping.js:367
-msgid "Hybrid"
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:132
-#: static-media/CACHE/js/b4775468438b.js:132 static-media/js/mapping.js:368
-msgid "Road"
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:159
-#: static-media/CACHE/js/b4775468438b.js:159 static-media/js/emailplan.js:110
-#: static-media/js/mapping.js:1038 static-media/js/mapping.js.py:1102
-#: static-media/js/mapping.js:1114 static-media/js/mapping.js.py:1245
-msgid "OK"
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:159
-#: static-media/CACHE/js/b4775468438b.js:159
-msgid "Please wait until your previous changes have been accepted."
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:159
-#: static-media/CACHE/js/b4775468438b.js:159
-msgid "Busy"
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:186
-#: static-media/CACHE/js/b4775468438b.js:186
-#, fuzzy
-msgid "Sorry, your information could not be saved. Please try again later."
-msgstr ""
-"Lo sentimos, no hemos podido contactar con el servidor. Por favor, inténtelo "
-"de nuevo más tarde."
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:226
-#: static-media/CACHE/js/b4775468438b.js:226 static-media/js/mapping.js:1860
-#: static-media/js/mapping.js.py:1873
-msgid "Unassigned"
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:227
-#: static-media/CACHE/js/b4775468438b.js:227 static-media/js/mapping.js:1882
-msgid "New "
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:252
-#: static-media/CACHE/js/b4775468438b.js:252 static-media/js/mapping.js:2423
-msgid "Contiguity"
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:253
-#: static-media/CACHE/js/b4775468438b.js:253 static-media/js/mapping.js:2427
-msgid "Compactness"
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:254
-#: static-media/CACHE/js/b4775468438b.js:254 static-media/js/mapping.js:2431
-msgid "None"
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:299
-#: static-media/CACHE/js/b4775468438b.js:299
-#: static-media/js/districtfile.js:119
-msgid "Download"
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:299
-#: static-media/CACHE/js/b4775468438b.js:299
-#: static-media/js/districtfile.js:132
-msgid "Request File"
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:300
-#: static-media/CACHE/js/b4775468438b.js:300
-#: static-media/js/districtfile.js:161
-msgid "Please wait. File is being created on the server"
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:302
-#: static-media/CACHE/js/b4775468438b.js:302 static-media/js/chooseplan.js:88
-msgid ""
-"We're sorry! Your file was transferred to us, but there was a problem "
-"converting it into a plan. Make sure the file is a zipped block equivalency "
-"file, and please try again."
-msgstr ""
-"Lo sentimos! Su archivo fue transferido a nosotros, pero había un problema "
-"para convertirlo en un plan. Asegúrese de que el archivo es un archivo de "
-"bloque de equivalencia con cremallera, y vuelva a intentarlo."
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:302
-#: static-media/CACHE/js/b4775468438b.js:302 static-media/js/chooseplan.js:89
-msgid "Uploaded"
-msgstr "Subido"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:304
-#: static-media/CACHE/js/4bd62bdb2da4.js:344
-#: static-media/CACHE/js/b4775468438b.js:304
-#: static-media/CACHE/js/b4775468438b.js:344 static-media/js/chooseplan.js:130
-#: static-media/js/reaggregator.js:115
-msgid "Reaggregate"
-msgstr "Reaggregate"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:305
-#: static-media/CACHE/js/4bd62bdb2da4.js:307
-#: static-media/CACHE/js/b4775468438b.js:305
-#: static-media/CACHE/js/b4775468438b.js:307 static-media/js/chooseplan.js:137
-#: static-media/js/chooseplan.js.py:145
-msgid "Choose a plan from the table first"
-msgstr "Elija un plan de la primera tabla"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:308
-#: static-media/CACHE/js/b4775468438b.js:308 static-media/js/chooseplan.js:152
-msgid "A name for the copied template is required"
-msgstr "Un nombre para la plantilla de copiado se requiere"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:310
-#: static-media/CACHE/js/b4775468438b.js:310 static-media/js/chooseplan.js:164
-msgid "Please provide a valid email address."
-msgstr "Por favor ingrese su dirección de correo electrónico válida."
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:311
-#: static-media/CACHE/js/b4775468438b.js:311 static-media/js/chooseplan.js:168
-msgid "Please provide a zipped district index file."
-msgstr "Por favor ingrese su distrito comprimido archivo de índice."
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:312
-#: static-media/CACHE/js/b4775468438b.js:312 static-media/js/chooseplan.js:172
-msgid "You must select a legislative body from the dropdown in the upload form"
-msgstr ""
-"Debe seleccionar un cuerpo legislativo en el menú desplegable en el "
-"formulario de carga"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:314
-#: static-media/CACHE/js/b4775468438b.js:314 static-media/js/chooseplan.js:185
-msgid "Creating New Plan..."
-msgstr "Crear nuevo plan ..."
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:314
-#: static-media/CACHE/js/b4775468438b.js:314 static-media/js/chooseplan.js:186
-msgid "Please standby while creating new plan ..."
-msgstr "Por favor, espera mientras se crea el nuevo plan ..."
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:318
-#: static-media/CACHE/js/b4775468438b.js:318 static-media/js/chooseplan.js:232
-#, fuzzy
-msgid "Creation Error"
-msgstr "Error de inicio de sesión"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:318
-#: static-media/CACHE/js/b4775468438b.js:318 static-media/js/chooseplan.js:235
-msgid "Tip: "
-msgstr "Consejo:"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:318
-#: static-media/CACHE/js/b4775468438b.js:318 static-media/js/chooseplan.js:236
-msgid "Make sure the new plan's name is unique."
-msgstr "Asegúrese de que el nombre del nuevo plan es único."
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:323
-#: static-media/CACHE/js/4bd62bdb2da4.js:344
-#: static-media/CACHE/js/b4775468438b.js:323
-#: static-media/CACHE/js/b4775468438b.js:344 static-media/js/chooseplan.js:298
-#: static-media/js/reaggregator.js:121
-msgid "Needs reaggregation"
-msgstr "Las necesidades de reagrupamiento"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:323
-#: static-media/CACHE/js/b4775468438b.js:323 static-media/js/chooseplan.js:301
-msgid "Reaggregating"
-msgstr "Reaggregating"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:324
-#: static-media/CACHE/js/4bd62bdb2da4.js:418
-#: static-media/CACHE/js/b4775468438b.js:324
-#: static-media/CACHE/js/b4775468438b.js:418 static-media/js/chooseplan.js:329
-#: static-media/js/layerchooser.js:165
-msgid "Plan Name"
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:324
-#: static-media/CACHE/js/4bd62bdb2da4.js:347
-#: static-media/CACHE/js/b4775468438b.js:324
-#: static-media/CACHE/js/b4775468438b.js:347 static-media/js/chooseplan.js:330
-#: static-media/js/shareddistricts.js:140
-msgid "Author"
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:324
-#: static-media/CACHE/js/4bd62bdb2da4.js:347
-#: static-media/CACHE/js/b4775468438b.js:324
-#: static-media/CACHE/js/b4775468438b.js:347 static-media/js/chooseplan.js:331
-#: static-media/js/shareddistricts.js:142
-msgid "Description"
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:324
-#: static-media/CACHE/js/4bd62bdb2da4.js:347
-#: static-media/CACHE/js/b4775468438b.js:324
-#: static-media/CACHE/js/b4775468438b.js:347 static-media/js/chooseplan.js:332
-#: static-media/js/shareddistricts.js:143
-msgid "Shared"
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:324
-#: static-media/CACHE/js/4bd62bdb2da4.js:347
-#: static-media/CACHE/js/b4775468438b.js:324
-#: static-media/CACHE/js/b4775468438b.js:347 static-media/js/chooseplan.js:333
-#: static-media/js/shareddistricts.js:144
-msgid "Last Edited"
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:324
-#: static-media/CACHE/js/b4775468438b.js:324 static-media/js/chooseplan.js:334
-#, fuzzy
-msgid "Delete"
-msgstr "Eliminar el Plan"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:324
-#: static-media/CACHE/js/4bd62bdb2da4.js:347
-#: static-media/CACHE/js/b4775468438b.js:324
-#: static-media/CACHE/js/b4775468438b.js:347 static-media/js/chooseplan.js:335
-#: static-media/js/shareddistricts.js:145
-msgid "Edit"
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:324
-#: static-media/CACHE/js/4bd62bdb2da4.js:347
-#: static-media/CACHE/js/b4775468438b.js:324
-#: static-media/CACHE/js/b4775468438b.js:347 static-media/js/chooseplan.js:336
-#: static-media/js/shareddistricts.js:146
-msgid "# Districts"
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:324
-#: static-media/CACHE/js/b4775468438b.js:324 static-media/js/chooseplan.js:337
-msgid "State"
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:324
-#: static-media/CACHE/js/b4775468438b.js:324 static-media/js/chooseplan.js:372
-msgid "Really delete plan: "
-msgstr "Realmente eliminar el plan:"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:324
-#: static-media/CACHE/js/b4775468438b.js:324 static-media/js/chooseplan.js:375
-msgid "Delete Plan"
-msgstr "Eliminar el Plan"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:324
-#: static-media/CACHE/js/4bd62bdb2da4.js:328
-#: static-media/CACHE/js/4bd62bdb2da4.js:336
-#: static-media/CACHE/js/b4775468438b.js:324
-#: static-media/CACHE/js/b4775468438b.js:328
-#: static-media/CACHE/js/b4775468438b.js:336 static-media/js/chooseplan.js:377
-#: static-media/js/chooseplan.js.py:478 static-media/js/chooseplan.js:647
-msgid "Yes"
-msgstr "Sí"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:324
-#: static-media/CACHE/js/b4775468438b.js:324 static-media/js/chooseplan.js:381
-#, fuzzy
-msgid "Please wait. Deleting plan."
-msgstr "Por favor, espera mientras borra plan."
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:324
-#: static-media/CACHE/js/b4775468438b.js:324 static-media/js/chooseplan.js:382
-msgid "Deleting Plan"
-msgstr "Plan de eliminación de"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:324
-#: static-media/CACHE/js/b4775468438b.js:324 static-media/js/chooseplan.js:397
-#: static-media/js/chooseplan.js.py:406
-msgid "Error Deleting Plan"
-msgstr "Error al eliminar el Plan de"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:324
-#: static-media/CACHE/js/b4775468438b.js:324 static-media/js/chooseplan.js:407
-#, fuzzy
-msgid "Please try again later."
-msgstr "Error del servidor. Por favor, inténtelo de nuevo más tarde"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:324
-#: static-media/CACHE/js/4bd62bdb2da4.js:328
-#: static-media/CACHE/js/4bd62bdb2da4.js:336
-#: static-media/CACHE/js/b4775468438b.js:324
-#: static-media/CACHE/js/b4775468438b.js:328
-#: static-media/CACHE/js/b4775468438b.js:336 static-media/js/chooseplan.js:412
-#: static-media/js/chooseplan.js.py:476 static-media/js/chooseplan.js:645
-#: static-media/js/mapping.js:1274
-#, fuzzy
-msgid "No"
-msgstr "Ahora"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:324
-#: static-media/CACHE/js/4bd62bdb2da4.js:334
-#: static-media/CACHE/js/4bd62bdb2da4.js:347
-#: static-media/CACHE/js/4bd62bdb2da4.js:418
-#: static-media/CACHE/js/b4775468438b.js:324
-#: static-media/CACHE/js/b4775468438b.js:334
-#: static-media/CACHE/js/b4775468438b.js:347
-#: static-media/CACHE/js/b4775468438b.js:418 static-media/js/chooseplan.js:421
-#: static-media/js/chooseplan.js.py:548 static-media/js/chooseplan.js:576
-#: static-media/js/chooseplan.js.py:579 static-media/js/chooseplan.js:587
-#: static-media/js/chooseplan.js.py:592 static-media/js/layerchooser.js:184
-#: static-media/js/shareddistricts.js:170
-msgid "Search"
-msgstr "Búsqueda"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:324
-#: static-media/CACHE/js/4bd62bdb2da4.js:347
-#: static-media/CACHE/js/4bd62bdb2da4.js:418
-#: static-media/CACHE/js/b4775468438b.js:324
-#: static-media/CACHE/js/b4775468438b.js:347
-#: static-media/CACHE/js/b4775468438b.js:418 static-media/js/chooseplan.js:421
-#: static-media/js/layerchooser.js:184 static-media/js/shareddistricts.js:170
-#, fuzzy
-msgid "Clear Search"
-msgstr "Borrar todos"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:331
-#: static-media/CACHE/js/b4775468438b.js:331 static-media/js/chooseplan.js:504
-msgid "Error Saving Details"
-msgstr "Detalles de error de ahorro"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:339
-#: static-media/CACHE/js/b4775468438b.js:339 static-media/js/chooseplan.js:698
-#, fuzzy
-msgid "Upload Plan"
-msgstr "Subido"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:339
-#: static-media/CACHE/js/b4775468438b.js:339 static-media/js/chooseplan.js:725
-msgid "Click the button to view the map as a guest"
-msgstr "Haga clic en el botón para ver el mapa como un invitado"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:342
-#: static-media/CACHE/js/b4775468438b.js:342
-#: static-media/js/reaggregator.js:44
-#, fuzzy
-msgid "Start Drawing"
-msgstr "Inicio Cartografía"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:344
-#: static-media/CACHE/js/b4775468438b.js:344
-#: static-media/js/reaggregator.js:117
-msgid ""
-"Data in the system has changed. This plan needs to be reaggregated before it "
-"can be used. Click the button to begin reaggregation. This will run in the "
-"background, and the status will be updated when completed. Feel free to use "
-"the rest of the system in the meantime."
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:344
-#: static-media/CACHE/js/b4775468438b.js:344
-#: static-media/js/reaggregator.js:123
-msgid ""
-"Data in the system has changed. The owner of this plan needs to reaggregate "
-"it before it can be used. The status of the plan will be updated when "
-"reaggregation has completed."
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:345
-#: static-media/CACHE/js/b4775468438b.js:345
-#: static-media/js/reaggregator.js:130
-#, fuzzy
-msgid "Reaggregation in progress"
-msgstr "Reaggregating"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:345
-#: static-media/CACHE/js/b4775468438b.js:345
-#: static-media/js/reaggregator.js:132
-msgid ""
-"Data in the system has changed, and this plan is currently reaggregating to "
-"reflect these changes. The plan will not be available until reaggregation "
-"has completed."
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:345
-#: static-media/CACHE/js/b4775468438b.js:345
-#: static-media/js/reaggregator.js:143
-msgid "Unknown state"
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:345
-#: static-media/CACHE/js/4bd62bdb2da4.js:352
-#: static-media/CACHE/js/4bd62bdb2da4.js:437
-#: static-media/CACHE/js/b4775468438b.js:345
-#: static-media/CACHE/js/b4775468438b.js:352
-#: static-media/CACHE/js/b4775468438b.js:437 static-media/js/mapping.js:1108
-#: static-media/js/mapping.js.py:1120 static-media/js/mapping.js:1263
-#: static-media/js/multimember.js:187 static-media/js/multimember.js.py:193
-#: static-media/js/reaggregator.js:169 static-media/js/shareddistricts.js:367
-#: static-media/js/shareddistricts.js:374
-msgid "Sorry"
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:345
-#: static-media/CACHE/js/b4775468438b.js:345
-#: static-media/js/reaggregator.js:170
-#, fuzzy
-msgid "Error reaggregating plan"
-msgstr "Error al eliminar el Plan de"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:347
-#: static-media/CACHE/js/b4775468438b.js:347
-#: static-media/js/shareddistricts.js:60
-msgid "Copy and Paste %(bodyMembersCap)s"
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:347
-#: static-media/CACHE/js/b4775468438b.js:347
-#: static-media/js/shareddistricts.js:141
-msgid "Plan"
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:347
-#: static-media/CACHE/js/b4775468438b.js:347
-#: static-media/js/shareddistricts.js:198
-msgid "%(bodyMemberLongCap)s Name"
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:347
-#: static-media/CACHE/js/b4775468438b.js:347
-#: static-media/js/shareddistricts.js:297
-msgid "Maximum %(bodyMembers)s Reached"
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:347
-#: static-media/CACHE/js/b4775468438b.js:347
-#: static-media/js/shareddistricts.js:298
-msgid ""
-"Your plan is at maximum capacity. Please delete a %(bodyMemberLong)s to "
-"enable pasting."
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:347
-#: static-media/CACHE/js/b4775468438b.js:347
-#: static-media/js/shareddistricts.js:306
-msgid "2. Remove %(num_available_districts)s before submitting"
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:347
-#: static-media/CACHE/js/b4775468438b.js:347
-#: static-media/js/shareddistricts.js:310
-msgid "2. Check your selections"
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:347
-#: static-media/CACHE/js/b4775468438b.js:347
-#: static-media/js/shareddistricts.js:315
-msgid "2. Select a %(bodyMemberLong)s to copy"
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:348
-#: static-media/CACHE/js/b4775468438b.js:348
-#: static-media/js/shareddistricts.js:319
-msgid "2. Select a %(bodyMemberLong)s"
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:349
-#: static-media/CACHE/js/b4775468438b.js:349
-#: static-media/js/shareddistricts.js:326
-msgid "2. Select up to %(available_districts)s %(bodyMembers)s to copy"
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:350
-#: static-media/CACHE/js/b4775468438b.js:350
-#: static-media/js/shareddistricts.js:333
-msgid "2. Select %(bodyMembers)s"
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:352
-#: static-media/CACHE/js/b4775468438b.js:352
-#: static-media/js/shareddistricts.js:368
-#: static-media/js/shareddistricts.js:375
-msgid "Unable to paste %(bodyMembers)s"
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:357
-#: static-media/CACHE/js/b4775468438b.js:357 static-media/js/reports.js:145
-msgid "Please select one or more reports to be generated."
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:358
-#: static-media/CACHE/js/b4775468438b.js:358 static-media/js/reports.js:153
-msgid "Generating Report"
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:358
-#: static-media/CACHE/js/b4775468438b.js:358 static-media/js/reports.js:154
-msgid "You may use the rest of the application while the report is building."
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:358
-#: static-media/CACHE/js/b4775468438b.js:358 static-media/js/reports.js:155
-msgid "A preview of your report will appear in this space when it is ready."
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:359
-#: static-media/CACHE/js/b4775468438b.js:359 static-media/js/reports.js:174
-#, fuzzy
-msgid "Report Error"
-msgstr "Error de inicio de sesión"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:359
-#: static-media/CACHE/js/b4775468438b.js:359 static-media/js/reports.js:175
-msgid "Sorry, this report cannot be previewed."
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:361
-#: static-media/CACHE/js/b4775468438b.js:361 static-media/js/reports.js:206
-#, fuzzy
-msgid "Connection Failed"
-msgstr "Error de validación"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:361
-#: static-media/CACHE/js/b4775468438b.js:361 static-media/js/reports.js:207
-msgid ""
-"There was a problem checking your report status. You can resume checking by "
-"clicking on the \"Create and Preview Report\" button."
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:364
-#: static-media/CACHE/js/b4775468438b.js:364 static-media/js/reports.js:356
-msgid "Open report in a new window"
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:365
-#: static-media/CACHE/js/b4775468438b.js:365 static-media/js/register.js:39
-msgid "Terms of Use"
-msgstr "Términos de Uso"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:365
-#: static-media/CACHE/js/b4775468438b.js:365 static-media/js/register.js:40
-msgid "Forgot Password"
-msgstr "Olvidó Su Contraseña"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:365
-#: static-media/CACHE/js/b4775468438b.js:365 static-media/js/register.js:41
-msgid "Duplicate Session"
-msgstr "Duplicado de sesión"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:365
-#: static-media/CACHE/js/b4775468438b.js:365 static-media/js/register.js:42
-msgid "Maximum Users Exceeded"
-msgstr "Los usuarios ha superado el máximo"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:365
-#: static-media/CACHE/js/b4775468438b.js:365 static-media/js/register.js:48
-msgid ""
-"Sorry, registration is not available at this time.  Please try logging in "
-"anonymously or coming back later"
-msgstr ""
-"Lo sentimos, el registro no está disponible en este momento. Intenta acceder "
-"de forma anónima o regresar más tarde"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:365
-#: static-media/CACHE/js/b4775468438b.js:365 static-media/js/register.js:50
-msgid "Signup Unavailable"
-msgstr "Registro no está disponible"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:378
-#: static-media/CACHE/js/b4775468438b.js:378 static-media/js/register.js:163
-msgid "You've been registered for the public mapping project."
-msgstr "Usted ha sido registrado para el proyecto de mapeo público."
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:378
-#: static-media/CACHE/js/b4775468438b.js:378 static-media/js/register.js:166
-msgid "Success!"
-msgstr "Éxito!"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:378
-#: static-media/CACHE/js/b4775468438b.js:378 static-media/js/register.js:168
-msgid "Start Mapping"
-msgstr "Inicio Cartografía"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:378
-#: static-media/CACHE/js/b4775468438b.js:378 static-media/js/register.js:181
-msgid "User Name already exists. Please choose another one."
-msgstr "Nombre de usuario ya existe. Por favor elija otro."
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:378
-#: static-media/CACHE/js/b4775468438b.js:378 static-media/js/register.js:189
-msgid ""
-"Email already exists. Enter another one, or use the password retrieval form"
-msgstr ""
-"Correo electrónico ya existe. Entrar en otro, o utilizar el formulario de "
-"recuperación de contraseña"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:380
-#: static-media/CACHE/js/b4775468438b.js:380 static-media/js/register.js:225
-msgid "Please Wait..."
-msgstr "Por favor espere ..."
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:383
-#: static-media/CACHE/js/b4775468438b.js:383 static-media/js/register.js:292
-msgid "You entered an incorrect user name or password"
-msgstr "Ha introducido un nombre de usuario o contraseña incorrectos"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:383
-#: static-media/CACHE/js/b4775468438b.js:383 static-media/js/register.js:296
-msgid "Login Error"
-msgstr "Error de inicio de sesión"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:383
-#: static-media/CACHE/js/b4775468438b.js:383 static-media/js/register.js:345
-msgid "Logged Off"
-msgstr "Sesión de usuario"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:383
-#: static-media/CACHE/js/b4775468438b.js:383 static-media/js/register.js:346
-msgid ""
-"You have been logged off by another browser. This happens sometimes if you "
-"attempt to access the application from two different locations."
-msgstr ""
-"Usted ha sido desconectado por otro navegador. Esto ocurre a veces si se "
-"intenta acceder a la aplicación de dos lugares diferentes."
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:383
-#: static-media/CACHE/js/b4775468438b.js:383 static-media/js/register.js:347
-msgid "Please log in again"
-msgstr "Por favor, acceda de nuevo"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:389
-#: static-media/CACHE/js/b4775468438b.js:389
-#: static-media/js/statisticssets.js:164
-msgid "Loading Statistics..."
-msgstr "Las estadísticas de carga..."
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:395
-#: static-media/CACHE/js/b4775468438b.js:395
-#: static-media/js/statisticssets.js:336
-msgid "Please select 3 or fewer statistics."
-msgstr "Por favor, seleccione 3 o menos las estadísticas."
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:395
-#: static-media/CACHE/js/4bd62bdb2da4.js:396
-#: static-media/CACHE/js/4bd62bdb2da4.js:398
-#: static-media/CACHE/js/4bd62bdb2da4.js:401
-#: static-media/CACHE/js/b4775468438b.js:395
-#: static-media/CACHE/js/b4775468438b.js:396
-#: static-media/CACHE/js/b4775468438b.js:398
-#: static-media/CACHE/js/b4775468438b.js:401
-#: static-media/js/splitsreport.js:108 static-media/js/statisticssets.js:337
-#: static-media/js/statisticssets.js:346 static-media/js/statisticssets.js:385
-msgid "Warning"
-msgstr "Advertencia"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:396
-#: static-media/CACHE/js/b4775468438b.js:396
-#: static-media/js/statisticssets.js:345
-msgid "Please name your statistics set."
-msgstr "Por favor el nombre de su conjunto de estadísticas"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:399
-#: static-media/CACHE/js/b4775468438b.js:399
-#: static-media/js/statisticssets.js:391
-msgid "Please select 1-3 statistics to save in the named set."
-msgstr ""
-"Por favor, seleccione les estadísticas de 1-3 para ahorrar en el conjunto "
-"con nombre."
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:399
-#: static-media/CACHE/js/b4775468438b.js:399
-#: static-media/js/statisticssets.js:392
-msgid "Incomplete"
-msgstr "Incompleto"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:401
-#: static-media/CACHE/js/b4775468438b.js:401
-#: static-media/js/splitsreport.js:51
-msgid "Splits Report"
-msgstr "Divide Informe"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:401
-#: static-media/CACHE/js/b4775468438b.js:401
-#: static-media/js/splitsreport.js:68
-#, fuzzy
-msgid "Please wait. Retrieving splits report."
-msgstr "Por favor, espere mientras se recuperaban divide informe."
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:401
-#: static-media/CACHE/js/b4775468438b.js:401
-#: static-media/js/splitsreport.js:71
-msgid "Retrieving Splits Report"
-msgstr "Recuperación de Informe"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:401
-#: static-media/CACHE/js/b4775468438b.js:401
-#: static-media/js/splitsreport.js:93
-msgid "Error encountered while retrieving splits report: "
-msgstr "Ha encontrado un error al recuperar divide informe: "
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:401
-#: static-media/CACHE/js/b4775468438b.js:401
-#: static-media/js/splitsreport.js:107
-msgid "Please select either 1, 2, or 3 layers for comparison."
-msgstr "Por favor, seleccionar 1,2 o 3 capas para la comparación."
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:416
-#: static-media/CACHE/js/b4775468438b.js:416
-#: static-media/js/layerchooser.js:59
-msgid "Choose Map Layers"
-msgstr "Elija Capas Mapa"
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:418
-#: static-media/CACHE/js/b4775468438b.js:418
-#: static-media/js/layerchooser.js:164
-msgid "User Name"
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:430
-#: static-media/CACHE/js/b4775468438b.js:430 static-media/js/multimember.js:59
-msgid "Set Multi-Member Districts"
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:437
-#: static-media/CACHE/js/b4775468438b.js:437
-#: static-media/js/multimember.js:188
-msgid "Unable to assign representatives:"
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:437
-#: static-media/CACHE/js/b4775468438b.js:437
-#: static-media/js/multimember.js:194
-msgid "Unable to assign representatives"
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:437
-#: static-media/CACHE/js/b4775468438b.js:437
-#: static-media/js/multimember.js:234
-msgid "District"
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:437
-#: static-media/CACHE/js/b4775468438b.js:437
-#: static-media/js/multimember.js:234
-msgid "District ID"
-msgstr ""
-
-#: static-media/CACHE/js/4bd62bdb2da4.js:437
-#: static-media/CACHE/js/b4775468438b.js:437
-#: static-media/js/multimember.js:234
-msgid "# Members"
-msgstr ""
-
 #: static-media/js/chooseplan.js:88
 msgid ""
 "Thanks! Your file has been uploaded, and your plan is being constructed. "
@@ -868,8 +28,189 @@ msgstr ""
 "plan esté completamente construido, usted recibirá un mensaje de correo "
 "electrónico."
 
+#: static-media/js/chooseplan.js:88
+msgid ""
+"We're sorry! Your file was transferred to us, but there was a problem "
+"converting it into a plan. Make sure the file is a zipped block equivalency "
+"file, and please try again."
+msgstr ""
+"Lo sentimos! Su archivo fue transferido a nosotros, pero había un problema "
+"para convertirlo en un plan. Asegúrese de que el archivo es un archivo de "
+"bloque de equivalencia con cremallera, y vuelva a intentarlo."
+
+#: static-media/js/chooseplan.js:89
+msgid "Uploaded"
+msgstr "Subido"
+
+#: static-media/js/chooseplan.js:130 static-media/js/reaggregator.js:115
+msgid "Reaggregate"
+msgstr "Reaggregate"
+
+#: static-media/js/chooseplan.js:137 static-media/js/chooseplan.js.py:145
+msgid "Choose a plan from the table first"
+msgstr "Elija un plan de la primera tabla"
+
+#: static-media/js/chooseplan.js:152
+msgid "A name for the copied template is required"
+msgstr "Un nombre para la plantilla de copiado se requiere"
+
+#: static-media/js/chooseplan.js:164
+msgid "Please provide a valid email address."
+msgstr "Por favor ingrese su dirección de correo electrónico válida."
+
+#: static-media/js/chooseplan.js:168
+msgid "Please provide a zipped district index file."
+msgstr "Por favor ingrese su distrito comprimido archivo de índice."
+
+#: static-media/js/chooseplan.js:172
+msgid "You must select a legislative body from the dropdown in the upload form"
+msgstr ""
+"Debe seleccionar un cuerpo legislativo en el menú desplegable en el "
+"formulario de carga"
+
+#: static-media/js/chooseplan.js:185
+msgid "Creating New Plan..."
+msgstr "Crear nuevo plan ..."
+
+#: static-media/js/chooseplan.js:186
+msgid "Please standby while creating new plan ..."
+msgstr "Por favor, espera mientras se crea el nuevo plan ..."
+
+#: static-media/js/chooseplan.js:232
+#, fuzzy
+msgid "Creation Error"
+msgstr "Error de inicio de sesión"
+
+#: static-media/js/chooseplan.js:235
+msgid "Tip: "
+msgstr "Consejo:"
+
+#: static-media/js/chooseplan.js:236
+msgid "Make sure the new plan's name is unique."
+msgstr "Asegúrese de que el nombre del nuevo plan es único."
+
+#: static-media/js/chooseplan.js:298 static-media/js/reaggregator.js:121
+msgid "Needs reaggregation"
+msgstr "Las necesidades de reagrupamiento"
+
+#: static-media/js/chooseplan.js:301
+msgid "Reaggregating"
+msgstr "Reaggregating"
+
+#: static-media/js/chooseplan.js:329 static-media/js/layerchooser.js:165
+msgid "Plan Name"
+msgstr ""
+
+#: static-media/js/chooseplan.js:330 static-media/js/shareddistricts.js:140
+msgid "Author"
+msgstr ""
+
+#: static-media/js/chooseplan.js:331 static-media/js/shareddistricts.js:142
+msgid "Description"
+msgstr ""
+
+#: static-media/js/chooseplan.js:332 static-media/js/shareddistricts.js:143
+msgid "Shared"
+msgstr ""
+
+#: static-media/js/chooseplan.js:333 static-media/js/shareddistricts.js:144
+msgid "Last Edited"
+msgstr ""
+
+#: static-media/js/chooseplan.js:334
+#, fuzzy
+msgid "Delete"
+msgstr "Eliminar el Plan"
+
+#: static-media/js/chooseplan.js:335 static-media/js/shareddistricts.js:145
+msgid "Edit"
+msgstr ""
+
+#: static-media/js/chooseplan.js:336 static-media/js/shareddistricts.js:146
+msgid "# Districts"
+msgstr ""
+
+#: static-media/js/chooseplan.js:337
+msgid "State"
+msgstr ""
+
+#: static-media/js/chooseplan.js:372
+msgid "Really delete plan: "
+msgstr "Realmente eliminar el plan:"
+
+#: static-media/js/chooseplan.js:375
+msgid "Delete Plan"
+msgstr "Eliminar el Plan"
+
+#: static-media/js/chooseplan.js:377 static-media/js/chooseplan.js.py:478
+#: static-media/js/chooseplan.js:647
+msgid "Yes"
+msgstr "Sí"
+
+#: static-media/js/chooseplan.js:381
+#, fuzzy
+msgid "Please wait. Deleting plan."
+msgstr "Por favor, espera mientras borra plan."
+
+#: static-media/js/chooseplan.js:382
+msgid "Deleting Plan"
+msgstr "Plan de eliminación de"
+
+#: static-media/js/chooseplan.js:397 static-media/js/chooseplan.js.py:406
+msgid "Error Deleting Plan"
+msgstr "Error al eliminar el Plan de"
+
+#: static-media/js/chooseplan.js:407
+#, fuzzy
+msgid "Please try again later."
+msgstr "Error del servidor. Por favor, inténtelo de nuevo más tarde"
+
+#: static-media/js/chooseplan.js:412 static-media/js/chooseplan.js.py:476
+#: static-media/js/chooseplan.js:645 static-media/js/mapping.js:1274
+#, fuzzy
+msgid "No"
+msgstr "Ahora"
+
+#: static-media/js/chooseplan.js:421 static-media/js/chooseplan.js.py:548
+#: static-media/js/chooseplan.js:576 static-media/js/chooseplan.js.py:579
+#: static-media/js/chooseplan.js:587 static-media/js/chooseplan.js.py:592
+#: static-media/js/layerchooser.js:184 static-media/js/shareddistricts.js:170
+msgid "Search"
+msgstr "Búsqueda"
+
+#: static-media/js/chooseplan.js:421 static-media/js/layerchooser.js:184
+#: static-media/js/shareddistricts.js:170
+#, fuzzy
+msgid "Clear Search"
+msgstr "Borrar todos"
+
+#: static-media/js/chooseplan.js:504
+msgid "Error Saving Details"
+msgstr "Detalles de error de ahorro"
+
 #: static-media/js/chooseplan.js:567
 msgid "Current Filter: "
+msgstr ""
+
+#: static-media/js/chooseplan.js:698
+#, fuzzy
+msgid "Upload Plan"
+msgstr "Subido"
+
+#: static-media/js/chooseplan.js:725
+msgid "Click the button to view the map as a guest"
+msgstr "Haga clic en el botón para ver el mapa como un invitado"
+
+#: static-media/js/districtfile.js:119
+msgid "Download"
+msgstr ""
+
+#: static-media/js/districtfile.js:132
+msgid "Request File"
+msgstr ""
+
+#: static-media/js/districtfile.js:161
+msgid "Please wait. File is being created on the server"
 msgstr ""
 
 #: static-media/js/emailplan.js:42
@@ -893,6 +234,12 @@ msgid ""
 "minutes."
 msgstr ""
 
+#: static-media/js/emailplan.js:110 static-media/js/mapping.js:1038
+#: static-media/js/mapping.js.py:1102 static-media/js/mapping.js:1114
+#: static-media/js/mapping.js.py:1245
+msgid "OK"
+msgstr ""
+
 #: static-media/js/emailplan.js:117 static-media/js/emailplan.js.py:126
 #, fuzzy
 msgid "Error Emailing Plan"
@@ -903,14 +250,57 @@ msgstr "Error al eliminar el Plan de"
 msgid "Please try again later"
 msgstr "Error del servidor. Por favor, inténtelo de nuevo más tarde"
 
+#: static-media/js/layerchooser.js:59
+msgid "Choose Map Layers"
+msgstr "Elija Capas Mapa"
+
+#: static-media/js/layerchooser.js:164
+msgid "User Name"
+msgstr ""
+
+#: static-media/js/mapping.js:108
+msgid " Name"
+msgstr ""
+
+#: static-media/js/mapping.js:120
+msgid "Demographic "
+msgstr ""
+
+#: static-media/js/mapping.js:366
+msgid "Satellite"
+msgstr ""
+
+#: static-media/js/mapping.js:367
+msgid "Hybrid"
+msgstr ""
+
+#: static-media/js/mapping.js:368
+msgid "Road"
+msgstr ""
+
 #: static-media/js/mapping.js:1043
 msgid "No districts were updated"
 msgstr ""
+
+#: static-media/js/mapping.js:1046 static-media/js/register.js:194
+#: static-media/js/register.js.py:202 static-media/js/splitsreport.js:96
+#: static-media/js/ui.js:220 static-media/js/ui.js.py:250
+#: static-media/js/ui.js:480
+msgid "Error"
+msgstr "Error"
 
 #: static-media/js/mapping.js:1105
 msgid ""
 "You cannot select that many features at once.\\n\\nConsider drawing a "
 "smaller area with the selection tool."
+msgstr ""
+
+#: static-media/js/mapping.js:1108 static-media/js/mapping.js.py:1120
+#: static-media/js/mapping.js:1263 static-media/js/multimember.js:187
+#: static-media/js/multimember.js.py:193 static-media/js/reaggregator.js:169
+#: static-media/js/shareddistricts.js:367
+#: static-media/js/shareddistricts.js:374
+msgid "Sorry"
 msgstr ""
 
 #: static-media/js/mapping.js:1117
@@ -931,10 +321,369 @@ msgstr ""
 msgid "Select One"
 msgstr ""
 
+#: static-media/js/mapping.js:1860 static-media/js/mapping.js.py:1873
+msgid "Unassigned"
+msgstr ""
+
+#: static-media/js/mapping.js:1882
+msgid "New "
+msgstr ""
+
+#: static-media/js/mapping.js:2423
+msgid "Contiguity"
+msgstr ""
+
+#: static-media/js/mapping.js:2427
+msgid "Compactness"
+msgstr ""
+
+#: static-media/js/mapping.js:2431
+msgid "None"
+msgstr ""
+
+#: static-media/js/multimember.js:59
+msgid "Set Multi-Member Districts"
+msgstr ""
+
+#: static-media/js/multimember.js:188
+msgid "Unable to assign representatives:"
+msgstr ""
+
+#: static-media/js/multimember.js:194
+msgid "Unable to assign representatives"
+msgstr ""
+
+#: static-media/js/multimember.js:234
+msgid "District"
+msgstr ""
+
+#: static-media/js/multimember.js:234
+msgid "District ID"
+msgstr ""
+
+#: static-media/js/multimember.js:234
+msgid "# Members"
+msgstr ""
+
+#: static-media/js/reaggregator.js:44
+#, fuzzy
+msgid "Start Drawing"
+msgstr "Inicio Cartografía"
+
+#: static-media/js/reaggregator.js:117
+msgid ""
+"Data in the system has changed. This plan needs to be reaggregated before it "
+"can be used. Click the button to begin reaggregation. This will run in the "
+"background, and the status will be updated when completed. Feel free to use "
+"the rest of the system in the meantime."
+msgstr ""
+
+#: static-media/js/reaggregator.js:123
+msgid ""
+"Data in the system has changed. The owner of this plan needs to reaggregate "
+"it before it can be used. The status of the plan will be updated when "
+"reaggregation has completed."
+msgstr ""
+
+#: static-media/js/reaggregator.js:130
+#, fuzzy
+msgid "Reaggregation in progress"
+msgstr "Reaggregating"
+
+#: static-media/js/reaggregator.js:132
+msgid ""
+"Data in the system has changed, and this plan is currently reaggregating to "
+"reflect these changes. The plan will not be available until reaggregation "
+"has completed."
+msgstr ""
+
+#: static-media/js/reaggregator.js:143
+msgid "Unknown state"
+msgstr ""
+
+#: static-media/js/reaggregator.js:170
+#, fuzzy
+msgid "Error reaggregating plan"
+msgstr "Error al eliminar el Plan de"
+
+#: static-media/js/register.js:39
+msgid "Terms of Use"
+msgstr "Términos de Uso"
+
+#: static-media/js/register.js:40
+msgid "Forgot Password"
+msgstr "Olvidó Su Contraseña"
+
+#: static-media/js/register.js:41
+msgid "Duplicate Session"
+msgstr "Duplicado de sesión"
+
+#: static-media/js/register.js:42
+msgid "Maximum Users Exceeded"
+msgstr "Los usuarios ha superado el máximo"
+
+#: static-media/js/register.js:48
+msgid ""
+"Sorry, registration is not available at this time.  Please try logging in "
+"anonymously or coming back later"
+msgstr ""
+"Lo sentimos, el registro no está disponible en este momento. Intenta acceder "
+"de forma anónima o regresar más tarde"
+
+#: static-media/js/register.js:50
+msgid "Signup Unavailable"
+msgstr "Registro no está disponible"
+
+#: static-media/js/register.js:175
+msgid "You've been registered for the public mapping project."
+msgstr "Usted ha sido registrado para el proyecto de mapeo público."
+
+#: static-media/js/register.js:178
+msgid "Success!"
+msgstr "Éxito!"
+
+#: static-media/js/register.js:180
+msgid "Start Mapping"
+msgstr "Inicio Cartografía"
+
+#: static-media/js/register.js:193
+msgid "User Name already exists. Please choose another one."
+msgstr "Nombre de usuario ya existe. Por favor elija otro."
+
+#: static-media/js/register.js:201
+msgid ""
+"Email already exists. Enter another one, or use the password retrieval form"
+msgstr ""
+"Correo electrónico ya existe. Entrar en otro, o utilizar el formulario de "
+"recuperación de contraseña"
+
+#: static-media/js/register.js:237
+msgid "Please Wait..."
+msgstr "Por favor espere ..."
+
+#: static-media/js/register.js:304
+msgid "You entered an incorrect user name or password"
+msgstr "Ha introducido un nombre de usuario o contraseña incorrectos"
+
+#: static-media/js/register.js:308
+msgid "Login Error"
+msgstr "Error de inicio de sesión"
+
+#: static-media/js/register.js:357
+msgid "Logged Off"
+msgstr "Sesión de usuario"
+
+#: static-media/js/register.js:358
+msgid ""
+"You have been logged off by another browser. This happens sometimes if you "
+"attempt to access the application from two different locations."
+msgstr ""
+"Usted ha sido desconectado por otro navegador. Esto ocurre a veces si se "
+"intenta acceder a la aplicación de dos lugares diferentes."
+
+#: static-media/js/register.js:359
+msgid "Please log in again"
+msgstr "Por favor, acceda de nuevo"
+
+#: static-media/js/reports.js:145
+msgid "Please select one or more reports to be generated."
+msgstr ""
+
+#: static-media/js/reports.js:153
+msgid "Generating Report"
+msgstr ""
+
+#: static-media/js/reports.js:154
+msgid "You may use the rest of the application while the report is building."
+msgstr ""
+
+#: static-media/js/reports.js:155
+msgid "A preview of your report will appear in this space when it is ready."
+msgstr ""
+
+#: static-media/js/reports.js:174
+#, fuzzy
+msgid "Report Error"
+msgstr "Error de inicio de sesión"
+
+#: static-media/js/reports.js:175
+msgid "Sorry, this report cannot be previewed."
+msgstr ""
+
+#: static-media/js/reports.js:206
+#, fuzzy
+msgid "Connection Failed"
+msgstr "Error de validación"
+
+#: static-media/js/reports.js:207
+msgid ""
+"There was a problem checking your report status. You can resume checking by "
+"clicking on the \"Create and Preview Report\" button."
+msgstr ""
+
+#: static-media/js/reports.js:356
+msgid "Open Current Report in New Window"
+msgstr ""
+
+#: static-media/js/shareddistricts.js:60
+msgid "Copy and Paste %(bodyMembersCap)s"
+msgstr ""
+
+#: static-media/js/shareddistricts.js:141
+msgid "Plan"
+msgstr ""
+
+#: static-media/js/shareddistricts.js:198
+msgid "%(bodyMemberLongCap)s Name"
+msgstr ""
+
+#: static-media/js/shareddistricts.js:297
+msgid "Maximum %(bodyMembers)s Reached"
+msgstr ""
+
+#: static-media/js/shareddistricts.js:298
+msgid ""
+"Your plan is at maximum capacity. Please delete a %(bodyMemberLong)s to "
+"enable pasting."
+msgstr ""
+
+#: static-media/js/shareddistricts.js:306
+msgid "2. Remove %(num_available_districts)s before submitting"
+msgstr ""
+
+#: static-media/js/shareddistricts.js:310
+msgid "2. Check your selections"
+msgstr ""
+
+#: static-media/js/shareddistricts.js:315
+msgid "2. Select a %(bodyMemberLong)s to copy"
+msgstr ""
+
+#: static-media/js/shareddistricts.js:319
+msgid "2. Select a %(bodyMemberLong)s"
+msgstr ""
+
+#: static-media/js/shareddistricts.js:326
+msgid "2. Select up to %(available_districts)s %(bodyMembers)s to copy"
+msgstr ""
+
+#: static-media/js/shareddistricts.js:333
+msgid "2. Select %(bodyMembers)s"
+msgstr ""
+
+#: static-media/js/shareddistricts.js:368
+#: static-media/js/shareddistricts.js:375
+msgid "Unable to paste %(bodyMembers)s"
+msgstr ""
+
+#: static-media/js/splitsreport.js:51
+msgid "Splits Report"
+msgstr "Divide Informe"
+
+#: static-media/js/splitsreport.js:68
+#, fuzzy
+msgid "Please wait. Retrieving splits report."
+msgstr "Por favor, espere mientras se recuperaban divide informe."
+
+#: static-media/js/splitsreport.js:71
+msgid "Retrieving Splits Report"
+msgstr "Recuperación de Informe"
+
+#: static-media/js/splitsreport.js:93
+msgid "Error encountered while retrieving splits report: "
+msgstr "Ha encontrado un error al recuperar divide informe: "
+
+#: static-media/js/splitsreport.js:107
+msgid "Please select either 1, 2, or 3 layers for comparison."
+msgstr "Por favor, seleccionar 1,2 o 3 capas para la comparación."
+
+#: static-media/js/splitsreport.js:108 static-media/js/statisticssets.js:337
+#: static-media/js/statisticssets.js:346 static-media/js/statisticssets.js:385
+msgid "Warning"
+msgstr "Advertencia"
+
+#: static-media/js/statisticssets.js:164
+msgid "Loading Statistics..."
+msgstr "Las estadísticas de carga..."
+
+#: static-media/js/statisticssets.js:336
+msgid "Please select 3 or fewer statistics."
+msgstr "Por favor, seleccione 3 o menos las estadísticas."
+
+#: static-media/js/statisticssets.js:345
+msgid "Please name your statistics set."
+msgstr "Por favor el nombre de su conjunto de estadísticas"
+
+#: static-media/js/statisticssets.js:391
+msgid "Please select 1-3 statistics to save in the named set."
+msgstr ""
+"Por favor, seleccione les estadísticas de 1-3 para ahorrar en el conjunto "
+"con nombre."
+
+#: static-media/js/statisticssets.js:392
+msgid "Incomplete"
+msgstr "Incompleto"
+
+#: static-media/js/ui.js:64
+msgid "Coming Soon..."
+msgstr "Muy pronto ..."
+
 #: static-media/js/ui.js:148
 msgid ""
 "No plans have been submitted for this leaderboard. Please check back later."
 msgstr ""
+
+#: static-media/js/ui.js:215 static-media/js/ui.js.py:243
+msgid "Validation Failed"
+msgstr "Error de validación"
+
+#: static-media/js/ui.js:220 static-media/js/ui.js.py:251
+msgid "Server error. Please try again later"
+msgstr "Error del servidor. Por favor, inténtelo de nuevo más tarde"
+
+#: static-media/js/ui.js:227
+msgid "Update Leaderboards<br/>with Working Plan"
+msgstr "Líderes de actualización <br/> con el Plan de Trabajo"
+
+#: static-media/js/ui.js:257
+msgid "Download Scores<br/>as CSV"
+msgstr "Las puntuaciones de <br/> descarga  como CSV"
+
+#: static-media/js/ui.js:368
+msgid "Last Saved on %(day)s at %(hour)s:%(minute)s"
+msgstr ""
+
+#: static-media/js/ui.js:469
+msgid "Please Wait"
+msgstr "Por favor espere ..."
+
+#: static-media/js/ui.js:469
+msgid "Publishing with the server"
+msgstr "Publicación con el servidor"
+
+#: static-media/js/ui.js:480
+msgid "Please enter a new name to publish your plan."
+msgstr "Por favor, introduzca un nuevo nombre para publicar su plan."
+
+#: static-media/js/ui.js:492
+msgid "Oops!"
+msgstr "Oops!"
+
+#: static-media/js/ui.js:511
+msgid "Server Failure"
+msgstr "Fallas del servidor"
+
+#: static-media/js/ui.js:511
+msgid "Sorry, we weren't able to contact the server.  Please try again later."
+msgstr ""
+"Lo sentimos, no hemos podido contactar con el servidor. Por favor, inténtelo "
+"de nuevo más tarde."
+
+#, fuzzy
+#~ msgid "Sorry, your information could not be saved. Please try again later."
+#~ msgstr ""
+#~ "Lo sentimos, no hemos podido contactar con el servidor. Por favor, "
+#~ "inténtelo de nuevo más tarde."
 
 #~ msgid "Please wait while deleting plan."
 #~ msgstr "Por favor, espera mientras borra plan."
