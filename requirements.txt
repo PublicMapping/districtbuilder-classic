@@ -8,3 +8,5 @@ xhtml2pdf==0.0.3
 django-rosetta==0.6.2
 django-compressor==1.1.1
 git+git://github.com/dzwarg/modestmaps-py.git@db-mod_1.4
+python-sld==1.0.8
+pysal==1.3.0
