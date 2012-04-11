@@ -1,5 +1,5 @@
 """
-Set up District Builder.
+Set up DistrictBuilder.
 
 This management command will examine the main configuration file for 
 correctness, import geographic levels, create spatial views, create 
@@ -50,10 +50,10 @@ import traceback, logging
 
 class Command(BaseCommand):
     """
-    Set up District Builder.
+    Set up DistrictBuilder.
     """
     args = '<config>'
-    help = 'Sets up District Builder based on the main XML configuration.'
+    help = 'Sets up DistrictBuilder based on the main XML configuration.'
     option_list = BaseCommand.option_list + (
         make_option('-c', '--config', dest="config",
             help="Use configuration file CONFIG", metavar="CONFIG"),

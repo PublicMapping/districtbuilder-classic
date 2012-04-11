@@ -1,6 +1,6 @@
 #!/usr/bin/python
 """
-Set up District Builder.
+Set up DistrictBuilder.
 
 This management command will examine the main configuration file for 
 correctness, import geographic levels, create spatial views, create 
@@ -39,7 +39,7 @@ import logging
 
 def main():
     """
-    Main method to start the setup of District Builder.
+    Main method to start the setup of DistrictBuilder.
     """
     usage = "usage: %prog [options] SCHEMA CONFIG"
     parser = OptionParser(usage=usage)
