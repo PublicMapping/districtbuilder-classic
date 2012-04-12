@@ -1310,7 +1310,7 @@ WARNING:
        
             # Get the parent node
             parent = llevel.getparent()
-            while parent.getparent().tag != 'GeoLevels':
+            while parent.getparent() is not None and parent.getparent().tag != 'GeoLevels':
                 # Find the parent node (the geographic THIS geolevel should
                 # match after renesting) by traveling up the nested GeoLevel
                 # nodes until we get to the top.
