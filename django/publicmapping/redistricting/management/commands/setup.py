@@ -41,7 +41,6 @@ from optparse import make_option
 from os.path import exists
 from lxml.etree import parse, XSLT
 from xml.dom import minidom
-from rpy2.robjects import r
 import redistricting
 from redistricting.models import *
 from redistricting.tasks import *
@@ -211,7 +210,7 @@ file and try again.
         if options.get("views"):
             # Create views based on the subjects and geolevels
             try:
-                SpatialUtils.configure_views()
+                configure_views()
             except:
                 logging.info(traceback.format_exc())
                 all_ok = False
@@ -690,6 +689,8 @@ ERROR:
             srs = SpatialReference(3785)
 
         try:
+            # We don't need to install rpy unless we're doing this
+            from rpy2.robjects import r
             r.library('rgeos')
             logging.debug("Loaded rgeos library.")
             r.library('BARD')
