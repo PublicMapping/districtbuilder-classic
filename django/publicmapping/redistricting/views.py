@@ -2342,7 +2342,7 @@ def statistics_sets(request, planid):
         # Get the functions available for the users
         user_functions = ScoreFunction.objects.filter(selectable_bodies=plan.legislative_body).order_by('name')
         for f in user_functions:
-            if 'report' not in f.get_short_label().lower() and 'comments' not in f.get_short_label().lower():
+            if 'report' not in f.name.lower() and 'comments' not in f.name.lower():
                 scorefunctions.append({ 'id': f.id, 'name': force_escape(f.get_label()) })
         result['functions'] = scorefunctions
 
