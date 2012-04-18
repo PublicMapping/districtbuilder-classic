@@ -648,7 +648,7 @@ function mapinit(srs,maxExtent) {
         return { 
             layer: min_layer.layer, 
             level: min_layer.level,
-            name: min_layer.name,
+            name: min_layer.level,
             display: min_layer.short_label, 
             geolevel: min_layer.geolevel
         };
