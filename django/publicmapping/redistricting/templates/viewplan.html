@@ -326,7 +326,7 @@
                 <select id="leg_selector_upload" name="legislativeBody">
                     <option value="">{% trans "Select a body" %}</option>
                     {% for body in bodies %}
-                        <option value="{{ body.id }}">{{ body.name }}</option>
+                        <option value="{{ body.id }}">{% if has_regions %}{{ body.region.get_label }} - {{ body.get_long_description }}{% else %}{{ body.get_long_description }}{% endif %}</option>
                     {% endfor %}
                 </select>
                 {% else %}
