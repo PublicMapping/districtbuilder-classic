@@ -341,7 +341,7 @@ $(function() {
             var show = $(".map_menu_content:visible'").length === 0;
 
             var sizeCB = function(show){
-                $('#map_menu').css('height', show?'100%':'auto');
+                $('#map_menu').css('bottom', show?'0':'auto');
             };
 
             if ( show ) {
