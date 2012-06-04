@@ -38,7 +38,7 @@ from django.shortcuts import render_to_response
 from django.template import loader, Context, RequestContext
 from django.utils import simplejson as json
 from hashlib import sha1
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext as _, get_language
 
 # for proxy
 import urllib2
@@ -80,7 +80,8 @@ def index(request):
         'ga_account': settings.GA_ACCOUNT,
         'ga_domain': settings.GA_DOMAIN,
         'user': request.user,
-        'site': Site.objects.get_current()
+        'site': Site.objects.get_current(),
+        'language_code': get_language(),
     }, context_instance=RequestContext(request))
 
 

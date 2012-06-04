@@ -31,6 +31,7 @@ $(function(){
     var dOptions = {
         autoOpen:false,
         width:425,
+        dialogClass:'register-dialog',
         modal:true,
         resizable: false
     };
