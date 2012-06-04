@@ -1621,7 +1621,7 @@ msgstr "Annuler"
 
 #: redistricting/templates/viewplan.html:418
 msgid "Set Map<br/>Layers"
-msgstr "Réglez les calques<br/>de la carte"
+msgstr "Couches<br/>de carte"
 
 #: redistricting/templates/viewplan.html:421
 msgid "Export"
