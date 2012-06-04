@@ -59,30 +59,23 @@
     {% with district_label=body_member_long_label|capfirst %}
         <div class="toolset_group toolset_group_lg">
           <div>
-            <button id="single_drawing_tool" title="{% blocktrans %}Single {{ body_member_long_label }} select; +Shift to select multiple {{ body_members}}{% endblocktrans %}" class="btntoggle titletip" >
-                {% blocktrans %}Single<br/>Select {% endblocktrans %}
-            </button>
-            <button id="rectangle_drawing_tool" title="{% trans "Select by rectangle" %}" class="btntoggle titletip" >
-                {% blocktrans %}Rectangle<br/>Select{% endblocktrans%}
-            </button>
-            <button id="polygon_drawing_tool" title="{% trans "Select by drawing a polygon" %}" class="btntoggle titletip">
-                {% blocktrans %}Polygon<br/>Select{% endblocktrans %}</button>
+            <button id="single_drawing_tool" title="{% blocktrans %}Single {{ body_member_long_label }} select; +Shift to select multiple {{ body_members}}{% endblocktrans %}" class="btntoggle titletip" >{% blocktrans %}Single<br/>Select{% endblocktrans %}</button>
+            <button id="rectangle_drawing_tool" title="{% trans "Select by rectangle" %}" class="btntoggle titletip" >{% blocktrans %}Rectangle<br/>Select{% endblocktrans %}</button>
+            <button id="polygon_drawing_tool" title="{% trans "Select by drawing a polygon" %}" class="btntoggle titletip">{% trans "Polygon" %}<br/>{% trans "Select" %}</button>
           </div>
         </div>  
         <div class="toolset_group toolset_group_lg">
           <div>
-            <button id="anchor_tool" class="titletip" title="{% blocktrans %}Enable anchor mode, then select a {{ body_member_long_label }} name to repeatedly assign areas to a {{ body_member_long_label }}{% endblocktrans %}">
-                {% blocktrans %}Anchor<br/>{{ district_label }}{% endblocktrans %}
-            </button>
+            <button id="anchor_tool" class="titletip" title="{% blocktrans %}Enable anchor mode, then select a {{ body_member_long_label }} name to repeatedly assign areas to a {{ body_member_long_label }}{% endblocktrans %}">{% blocktrans with body_member_long_label|capfirst as district_label %}Anchor<br/>{{ district_label }}{% endblocktrans %}</button>
             <div class="button_group" id="control_assign_district">
-              <label>{% blocktrans %}Assign to {{ district_label }}{% endblocktrans %}</label><br/>
+              <label>{% blocktrans with body_member_long_label|capfirst as district_label %}Assign to {{ district_label }}{% endblocktrans %}</label><br/>
               <select id="assign_district" class="titletip" title="{% blocktrans %}Assign {{ body_members }} currently selected on map by choosing a {{ body_member_long_label }} name from drop down list{% endblocktrans %}">
               <option value="-1">-- {% trans "Select One" %} --</option>
               {% for d in districts %}
                   <option value="{{ d.district_id }}">{{ d.long_label }}</option>
               {% endfor %}
               {% ifnotequal max_dists districts|length %}
-                  <option value="new">{% blocktrans %}New {{ district_label }}{% endblocktrans %}</option>
+                  <option value="new">{% blocktrans with body_member_long_label|capfirst as district_label %}New {{ district_label }}{% endblocktrans %}</option>
               {% endifnotequal %}
             </select>
             </div>

@@ -213,10 +213,6 @@ msgstr ""
 msgid "Please wait. File is being created on the server"
 msgstr ""
 
-#: static-media/js/emailplan.js:42
-msgid "Submit Final Plan to Contest"
-msgstr ""
-
 #: static-media/js/emailplan.js:93
 #, fuzzy
 msgid "Please wait. Emailing plan."
@@ -641,6 +637,10 @@ msgstr "Error de validación"
 msgid "Server error. Please try again later"
 msgstr "Error del servidor. Por favor, inténtelo de nuevo más tarde"
 
+#: static-media/js/emailplan.js:42
+msgid "Submit Final Plan to Contest"
+msgstr ""
+
 #: static-media/js/ui.js:227
 msgid "Update Leaderboards<br/>with Working Plan"
 msgstr "Líderes de actualización <br/> con el Plan de Trabajo"
@@ -678,111 +678,3 @@ msgid "Sorry, we weren't able to contact the server.  Please try again later."
 msgstr ""
 "Lo sentimos, no hemos podido contactar con el servidor. Por favor, inténtelo "
 "de nuevo más tarde."
-
-#, fuzzy
-#~ msgid "Sorry, your information could not be saved. Please try again later."
-#~ msgstr ""
-#~ "Lo sentimos, no hemos podido contactar con el servidor. Por favor, "
-#~ "inténtelo de nuevo más tarde."
-
-#~ msgid "Please wait while deleting plan."
-#~ msgstr "Por favor, espera mientras borra plan."
-
-#~ msgid " Search "
-#~ msgstr "Búsqueda"
-
-#~ msgid "Please wait while retrieving splits report."
-#~ msgstr "Por favor, espere mientras se recuperaban divide informe."
-
-#~ msgid "Clear all"
-#~ msgstr "Borrar todos"
-
-#~ msgid "%(sel)s of %(cnt)s selected"
-#~ msgid_plural "%(sel)s of %(cnt)s selected"
-#~ msgstr[0] "%(sel)s de %(cnt)s seleccionado"
-#~ msgstr[1] "%(sel)s de %(cnt)s seleccionado"
-
-#~ msgid ""
-#~ "You have unsaved changes on individual editable fields. If you run an "
-#~ "action, your unsaved changes will be lost."
-#~ msgstr ""
-#~ "No ha guardado los cambios en los campos editables individuales. Si "
-#~ "ejecuta una acción, los cambios no guardados se perderán."
-
-#~ msgid ""
-#~ "You have selected an action, but you haven't saved your changes to "
-#~ "individual fields yet. Please click OK to save. You'll need to re-run the "
-#~ "action."
-#~ msgstr ""
-#~ "Usted ha seleccionado una acción, pero no ha guardado los cambios en los "
-#~ "campos individuales todavía. Por favor, haga clic en Aceptar para "
-#~ "guardar. Tendrá que volver a ejecutar la acción."
-
-#~ msgid ""
-#~ "You have selected an action, and you haven't made any changes on "
-#~ "individual fields. You're probably looking for the Go button rather than "
-#~ "the Save button."
-#~ msgstr ""
-#~ "Usted ha seleccionado una acción, y no ha realizado ningún cambio en "
-#~ "campos individuales. Probablemente usted está buscando en el botón Ir en "
-#~ "lugar de en el botón Guardar."
-
-#~ msgid ""
-#~ "January February March April May June July August September October "
-#~ "November December"
-#~ msgstr ""
-#~ "Enero Febrero Marzo Abril Mayo Junio ​​Julio Agosto Septiembre Octubre "
-#~ "Noviembre Diciembre"
-
-#~ msgid "S M T W T F S"
-#~ msgstr "DLMMJVS"
-
-#~ msgid "Show"
-#~ msgstr "Mostrar"
-
-#~ msgid "Hide"
-#~ msgstr "Ocultar"
-
-#~ msgid "Sunday Monday Tuesday Wednesday Thursday Friday Saturday"
-#~ msgstr "Lunes Martes Miércoles Jueves Viernes Sábado Domingo"
-
-#~ msgid "Now"
-#~ msgstr "Ahora"
-
-#~ msgid "Clock"
-#~ msgstr "Reloj"
-
-#~ msgid "Choose a time"
-#~ msgstr "Elija un momento en"
-
-#~ msgid "Midnight"
-#~ msgstr "Medianoche"
-
-#~ msgid "6 a.m."
-#~ msgstr "6 a.m."
-
-#~ msgid "Noon"
-#~ msgstr "Mediodía"
-
-#~ msgid "Cancel"
-#~ msgstr "Cancelar"
-
-#~ msgid "Today"
-#~ msgstr "Hoy"
-
-#~ msgid "Calendar"
-#~ msgstr "Calendario"
-
-#~ msgid "Yesterday"
-#~ msgstr "Ayer"
-
-#~ msgid "Tomorrow"
-#~ msgstr "Mañana"
-
-#, fuzzy
-#~ msgid "Please suppy a valid email address so we "
-#~ msgstr "Por favor ingrese su dirección de correo electrónico válida."
-
-#, fuzzy
-#~ msgid "That is not a valid email address."
-#~ msgstr "Por favor ingrese su dirección de correo electrónico válida."

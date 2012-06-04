@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-11 12:41-0400\n"
+"POT-Creation-Date: 2012-06-04 10:35-0500\n"
 "PO-Revision-Date: 2011-11-30 16:49\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: fr\n"
@@ -18,185 +18,98 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Translated-Using: django-rosetta 0.6.2\n"
 
-#: static-media/js/chooseplan.js:88
-msgid ""
-"Thanks! Your file has been uploaded, and your plan is being constructed. "
-"When your plan is completely constructed, you will receive an email from us."
+msgid "Coming Soon..."
+msgstr "Prochainement..."
+
+#: static-media/js/ui.js.py:243
+msgid "Validation Failed"
+msgstr "La validation a échoué"
+
+#: static-media/js/register.js:194 static-media/js/register.js.py:202
+#: static-media/js/splitsreport.js:96 static-media/js/ui.js:220
+#: static-media/js/ui.js.py:250 static-media/js/ui.js:480
+msgid "Error"
+msgstr "Erreur"
+
+#: static-media/js/ui.js.py:251
+msgid "Server error. Please try again later"
+msgstr "Erreur de serveur. Veuillez réessayer plus tard"
+
+msgid "Update Leaderboards<br/>with Working Plan"
+msgstr "Réactualisez les classements<br/>avec le plan de travail"
+
+msgid "Download Scores<br/>as CSV"
+msgstr "Télécharger les scores<br/>en format CSV"
+
+msgid "Last Saved on %(day)s at %(hour)s:%(minute)s"
+msgstr "Dernièrement sauvegardé le %(day)s à %(hour)s:%(minute)s"
+
+msgid "Please Wait"
+msgstr "Veuillez patienter"
+
+msgid "Publishing with the server"
+msgstr "Publication sur le serveur"
+
+msgid "Please enter a new name to publish your plan."
+msgstr "Veuillez entrer un nouveau nom pour publier votre plan."
+
+msgid "Oops!"
+msgstr "Oups!"
+
+msgid "Server Failure"
+msgstr "Défaillance du serveur"
+
+msgid "Sorry, we weren't able to contact the server.  Please try again later."
 msgstr ""
-"Merci! Votre fichier a été téléchargé, et votre plan est en cours de construction. "
-"Quand votre plan sera entièrement construit, vous recevrez un e-mail de notre part. "
+"Désolé, nous n'étions pas en mesure de communiquer avec le serveur. Veuillez "
+"réessayer plus tard."
 
-#: static-media/js/chooseplan.js:88
-msgid ""
-"We're sorry! Your file was transferred to us, but there was a problem "
-"converting it into a plan. Make sure the file is a zipped block equivalency "
-"file, and please try again."
+msgid " Name"
+msgstr "Nom"
+
+msgid "Demographic "
+msgstr "Démographique"
+
+msgid "Satellite"
+msgstr "Satellite"
+
+msgid "Hybrid"
+msgstr "Hybride"
+
+msgid "Road"
+msgstr "Route"
+
+#: static-media/js/mapping.js:1038 static-media/js/mapping.js.py:1102
+#: static-media/js/mapping.js:1114 static-media/js/mapping.js.py:1245
+msgid "OK"
+msgstr "OK"
+
+msgid "Please wait until your previous changes have been accepted."
 msgstr ""
-"Nous sommes désolés! Votre fichier nous a été transféré, mais il y a eu un problème "
-"durant sa conversion en plan. Assurez-vous que le fichier est un fichier zippé bloc d'équivalence, "
-"et recommencez." 
 
-#: static-media/js/chooseplan.js:89
-msgid "Uploaded"
-msgstr "Téléchargé"
-
-#: static-media/js/chooseplan.js:130 static-media/js/reaggregator.js:115
-msgid "Reaggregate"
-msgstr "Réagréger"
-
-#: static-media/js/chooseplan.js:137 static-media/js/chooseplan.js.py:145
-msgid "Choose a plan from the table first"
-msgstr "Choissisez d'abord un plan de la table"
-
-#: static-media/js/chooseplan.js:152
-msgid "A name for the copied template is required"
-msgstr "Un nom pour le modèle copié est obligatoire "
-
-#: static-media/js/chooseplan.js:164
-msgid "Please provide a valid email address."
-msgstr "Veuillez fournir une adresse électronique valide."
-
-#: static-media/js/chooseplan.js:168
-msgid "Please provide a zipped district index file."
-msgstr "Veuillez fournir un fichier d'index zippé de circonscription."
-
-#: static-media/js/chooseplan.js:172
-msgid "You must select a legislative body from the dropdown in the upload form"
+msgid "Busy"
 msgstr ""
-"Vous devez sélectionner un corps législatif dans la liste déroulante du formulaire de téléchargement "
 
-#: static-media/js/chooseplan.js:185
-msgid "Creating New Plan..."
-msgstr "Création du nouveau Plan..."
+msgid "Sorry, your information could not be saved. Please try again later."
+msgstr ""
+"Désolé, votre information n'a pu être sauvegardée. Veuillez réessayer plus "
+"tard"
 
-#: static-media/js/chooseplan.js:186
-msgid "Please standby while creating new plan ..."
-msgstr "Veuillez rester en attente durant la creation du nouveau plan ..."
+#: static-media/js/mapping.js.py:1873
+msgid "Unassigned"
+msgstr "Non attribué"
 
-#: static-media/js/chooseplan.js:232
-#, fuzzy
-msgid "Creation Error"
-msgstr "Erreur de création "
+msgid "New "
+msgstr "Nouveau"
 
-#: static-media/js/chooseplan.js:235
-msgid "Tip: "
-msgstr "Astuce:"
+msgid "Contiguity"
+msgstr "Contiguïté "
 
-#: static-media/js/chooseplan.js:236
-msgid "Make sure the new plan's name is unique."
-msgstr "Assurez-vous que le nom du nouveau plan est unique."
+msgid "Compactness"
+msgstr "Compacité"
 
-#: static-media/js/chooseplan.js:298 static-media/js/reaggregator.js:121
-msgid "Needs reaggregation"
-msgstr "a besoin de réagrégation"
-
-#: static-media/js/chooseplan.js:301
-msgid "Reaggregating"
-msgstr "Réagrégation"
-
-#: static-media/js/chooseplan.js:329 static-media/js/layerchooser.js:165
-msgid "Plan Name"
-msgstr "Nom du plan"
-
-#: static-media/js/chooseplan.js:330 static-media/js/shareddistricts.js:140
-msgid "Author"
-msgstr "Auteur"
-
-#: static-media/js/chooseplan.js:331 static-media/js/shareddistricts.js:142
-msgid "Description"
-msgstr "Description"
-
-#: static-media/js/chooseplan.js:332 static-media/js/shareddistricts.js:143
-msgid "Shared"
-msgstr "Partagé"
-
-#: static-media/js/chooseplan.js:333 static-media/js/shareddistricts.js:144
-msgid "Last Edited"
-msgstr "Modifiée dernièrement"
-
-#: static-media/js/chooseplan.js:334
-#, fuzzy
-msgid "Delete"
-msgstr "Supprimez"
-
-#: static-media/js/chooseplan.js:335 static-media/js/shareddistricts.js:145
-msgid "Edit"
-msgstr "Modifiez"
-
-#: static-media/js/chooseplan.js:336 static-media/js/shareddistricts.js:146
-msgid "# Districts"
-msgstr "# de circonscriptions"
-
-#: static-media/js/chooseplan.js:337
-msgid "State"
-msgstr "État"
-
-#: static-media/js/chooseplan.js:372
-msgid "Really delete plan: "
-msgstr "Supprimez réellement le plan:"
-
-#: static-media/js/chooseplan.js:375
-msgid "Delete Plan"
-msgstr "Supprimez le Plan "
-
-#: static-media/js/chooseplan.js:377 static-media/js/chooseplan.js.py:478
-#: static-media/js/chooseplan.js:647
-msgid "Yes"
-msgstr "Oui"
-
-#: static-media/js/chooseplan.js:381
-#, fuzzy
-msgid "Please wait. Deleting plan."
-msgstr "Veuillez patienter. Suppression du plan."
-
-#: static-media/js/chooseplan.js:382
-msgid "Deleting Plan"
-msgstr "Suppression du plan"
-
-#: static-media/js/chooseplan.js:397 static-media/js/chooseplan.js.py:406
-msgid "Error Deleting Plan"
-msgstr "Erreur durant la suppression du Plan"
-
-#: static-media/js/chooseplan.js:407
-#, fuzzy
-msgid "Please try again later."
-msgstr "Veuillez réessayer plus tard"
-
-#: static-media/js/chooseplan.js:412 static-media/js/chooseplan.js.py:476
-#: static-media/js/chooseplan.js:645 static-media/js/mapping.js:1274
-#, fuzzy
-msgid "No"
-msgstr "Non"
-
-#: static-media/js/chooseplan.js:421 static-media/js/chooseplan.js.py:548
-#: static-media/js/chooseplan.js:576 static-media/js/chooseplan.js.py:579
-#: static-media/js/chooseplan.js:587 static-media/js/chooseplan.js.py:592
-#: static-media/js/layerchooser.js:184 static-media/js/shareddistricts.js:170
-msgid "Search"
-msgstr "Recherche"
-
-#: static-media/js/chooseplan.js:421 static-media/js/layerchooser.js:184
-#: static-media/js/shareddistricts.js:170
-#, fuzzy
-msgid "Clear Search"
-msgstr "Effacez la recherche"
-
-#: static-media/js/chooseplan.js:504
-msgid "Error Saving Details"
-msgstr "Erreur durant l'enregistrement des détails "
-
-#: static-media/js/chooseplan.js:567
-msgid "Current Filter: "
-msgstr "Filtre actuel: "
-
-#: static-media/js/chooseplan.js:698
-#, fuzzy
-msgid "Upload Plan"
-msgstr "Téléchargez le plan"
-
-#: static-media/js/chooseplan.js:725
-msgid "Click the button to view the map as a guest"
-msgstr "Cliquez sur le bouton pour afficher la carte en tant qu'invité"
+msgid "None"
+msgstr "Aucun"
 
 #: static-media/js/districtfile.js:119
 msgid "Download"
@@ -210,97 +123,191 @@ msgstr "Demande de fichier "
 msgid "Please wait. File is being created on the server"
 msgstr "Veuillez patienter. Le fichier se créé sur le serveur"
 
-#: static-media/js/emailplan.js:42
-msgid "Submit Final Plan to Contest"
-msgstr "Soumettez le Plan final au concours"
-
-#: static-media/js/emailplan.js:93
-#, fuzzy
-msgid "Please wait. Emailing plan."
-msgstr "Veuillez patienter. envoi du plan par e-mail."
-
-#: static-media/js/emailplan.js:94 static-media/js/emailplan.js.py:106
-#, fuzzy
-msgid "Emailing Plan"
-msgstr "Envoi du plan par e-mail"
-
-#: static-media/js/emailplan.js:107
 msgid ""
-"Your plan is in the process of being submitted. You will receive a "
-"confirmation email once it has completed successfully. This may take a few "
-"minutes."
+"We're sorry! Your file was transferred to us, but there was a problem "
+"converting it into a plan. Make sure the file is a zipped block equivalency "
+"file, and please try again."
 msgstr ""
-"Votre plan est en train d'être soumis. Vous recevrez un e-mail de confirmation "
-"une fois qu'il aura été complété avec succès. Cela peut prendre quelques "
-"minutes."
+"Nous sommes désolés! Votre fichier nous a été transféré, mais il y a eu un "
+"problème durant sa conversion en plan. Assurez-vous que le fichier est un "
+"fichier zippé bloc d'équivalence, et recommencez."
 
-#: static-media/js/emailplan.js:110 static-media/js/mapping.js:1038
-#: static-media/js/mapping.js.py:1102 static-media/js/mapping.js:1114
-#: static-media/js/mapping.js.py:1245
-msgid "OK"
-msgstr "OK"
+msgid "Uploaded"
+msgstr "Téléchargé"
 
-#: static-media/js/emailplan.js:117 static-media/js/emailplan.js.py:126
-#, fuzzy
-msgid "Error Emailing Plan"
-msgstr "Erreur durant l'envoi du plan par e-mail"
+#: static-media/js/reaggregator.js:115
+msgid "Reaggregate"
+msgstr "Réagréger"
 
-#: static-media/js/emailplan.js:127
-#, fuzzy
-msgid "Please try again later"
-msgstr "Veuillez réessayer plus tard "
+#: static-media/js/chooseplan.js.py:145
+msgid "Choose a plan from the table first"
+msgstr "Choissisez d'abord un plan de la table"
 
-#: static-media/js/layerchooser.js:59
-msgid "Choose Map Layers"
-msgstr "Choisissez les calques de la carte "
+msgid "A name for the copied template is required"
+msgstr "Un nom pour le modèle copié est obligatoire "
 
-#: static-media/js/layerchooser.js:164
-msgid "User Name"
-msgstr "Nom d'utilisateur"
+msgid "Please provide a valid email address."
+msgstr "Veuillez fournir une adresse électronique valide."
 
-#: static-media/js/mapping.js:108
-msgid " Name"
-msgstr "Nom"
+msgid "Please provide a zipped district index file."
+msgstr "Veuillez fournir un fichier d'index zippé de circonscription."
 
-#: static-media/js/mapping.js:120
-msgid "Demographic "
-msgstr "Démographique"
+msgid "You must select a legislative body from the dropdown in the upload form"
+msgstr ""
+"Vous devez sélectionner un corps législatif dans la liste déroulante du "
+"formulaire de téléchargement "
 
-#: static-media/js/mapping.js:366
-msgid "Satellite"
-msgstr "Satellite"
+msgid "Creating New Plan..."
+msgstr "Création du nouveau Plan..."
 
-#: static-media/js/mapping.js:367
-msgid "Hybrid"
-msgstr "Hybride"
+msgid "Please standby while creating new plan ..."
+msgstr "Veuillez rester en attente durant la creation du nouveau plan ..."
 
-#: static-media/js/mapping.js:368
-msgid "Road"
-msgstr "Route"
+msgid "Creation Error"
+msgstr "Erreur de création "
 
-#: static-media/js/mapping.js:1043
-msgid "No districts were updated"
-msgstr "Aucune circonscription n'a été réactualisée"
+msgid "Tip: "
+msgstr "Astuce:"
 
-#: static-media/js/mapping.js:1046 static-media/js/register.js:194
-#: static-media/js/register.js.py:202 static-media/js/splitsreport.js:96
-#: static-media/js/ui.js:220 static-media/js/ui.js.py:250
-#: static-media/js/ui.js:480
-msgid "Error"
-msgstr "Erreur"
+msgid "Make sure the new plan's name is unique."
+msgstr "Assurez-vous que le nom du nouveau plan est unique."
 
-#: static-media/js/mapping.js:1105
+#: static-media/js/reaggregator.js:121
+msgid "Needs reaggregation"
+msgstr "a besoin de réagrégation"
+
+msgid "Reaggregating"
+msgstr "Réagrégation"
+
+#: static-media/js/layerchooser.js:165
+msgid "Plan Name"
+msgstr "Nom du plan"
+
+#: static-media/js/shareddistricts.js:140
+msgid "Author"
+msgstr "Auteur"
+
+#: static-media/js/shareddistricts.js:142
+msgid "Description"
+msgstr "Description"
+
+#: static-media/js/shareddistricts.js:143
+msgid "Shared"
+msgstr "Partagé"
+
+#: static-media/js/shareddistricts.js:144
+msgid "Last Edited"
+msgstr "Modifiée dernièrement"
+
+msgid "Delete"
+msgstr "Supprimez"
+
+#: static-media/js/shareddistricts.js:145
+msgid "Edit"
+msgstr "Modifiez"
+
+#: static-media/js/shareddistricts.js:146
+msgid "# Districts"
+msgstr "# de circonscriptions"
+
+msgid "State"
+msgstr "État"
+
+msgid "Really delete plan: "
+msgstr "Supprimez réellement le plan:"
+
+msgid "Delete Plan"
+msgstr "Supprimez le Plan "
+
+#: static-media/js/chooseplan.js.py:478 static-media/js/chooseplan.js:647
+msgid "Yes"
+msgstr "Oui"
+
+msgid "Please wait. Deleting plan."
+msgstr "Veuillez patienter. Suppression du plan."
+
+msgid "Deleting Plan"
+msgstr "Suppression du plan"
+
+#: static-media/js/chooseplan.js.py:406
+msgid "Error Deleting Plan"
+msgstr "Erreur durant la suppression du Plan"
+
+msgid "Please try again later."
+msgstr "Veuillez réessayer plus tard"
+
+#: static-media/js/chooseplan.js.py:476 static-media/js/chooseplan.js:645
+#: static-media/js/mapping.js:1274
+msgid "No"
+msgstr "Non"
+
+#: static-media/js/chooseplan.js.py:548 static-media/js/chooseplan.js:576
+#: static-media/js/chooseplan.js.py:579 static-media/js/chooseplan.js:587
+#: static-media/js/chooseplan.js.py:592 static-media/js/layerchooser.js:184
+#: static-media/js/shareddistricts.js:170
+msgid "Search"
+msgstr "Recherche"
+
+#: static-media/js/layerchooser.js:184 static-media/js/shareddistricts.js:170
+msgid "Clear Search"
+msgstr "Effacez la recherche"
+
+msgid "Error Saving Details"
+msgstr "Erreur durant l'enregistrement des détails "
+
+msgid "Upload Plan"
+msgstr "Téléchargez le plan"
+
+msgid "Click the button to view the map as a guest"
+msgstr "Cliquez sur le bouton pour afficher la carte en tant qu'invité"
+
+#: static-media/js/reaggregator.js:44
+msgid "Start Drawing"
+msgstr "Commencez à dessiner"
+
+#: static-media/js/reaggregator.js:117
 msgid ""
-"You cannot select that many features at once.\\n\\nConsider drawing a "
-"smaller area with the selection tool."
+"Data in the system has changed. This plan needs to be reaggregated before it "
+"can be used. Click the button to begin reaggregation. This will run in the "
+"background, and the status will be updated when completed. Feel free to use "
+"the rest of the system in the meantime."
 msgstr ""
-"Vous ne pouvez pas sélectionner autant de fonctionnalités à la fois.\\n\\nEnvisagez de dessiner une "
-" plus petite zone avec l'outil de sélection."
+"Les données ont changé dans le système. Ce plan doit être réagrégé avant de "
+"pouvoir être utilisé. Cliquez sur le bouton pour commencer la réagrégation. "
+"Cela sera exécuté en arrière-plan, et le statut sera actualisé une fois "
+"terminé. N'hésitez pas à utiliser le reste du système pendant ce temps."
 
-#: static-media/js/mapping.js:1108 static-media/js/mapping.js.py:1120
-#: static-media/js/mapping.js:1263 static-media/js/multimember.js:187
-#: static-media/js/multimember.js.py:193 static-media/js/reaggregator.js:169
-#: static-media/js/shareddistricts.js:367
+#: static-media/js/reaggregator.js:123
+msgid ""
+"Data in the system has changed. The owner of this plan needs to reaggregate "
+"it before it can be used. The status of the plan will be updated when "
+"reaggregation has completed."
+msgstr ""
+"Les données ont changé dans le système. Le propriétaire de ce plan doit le "
+"réagréger avant qu'il ne soit utilisable. Le statut du plan sera actualisé "
+"lorsque la réagrégation sera achevée."
+
+#: static-media/js/reaggregator.js:130
+msgid "Reaggregation in progress"
+msgstr "Réagrégation en cours"
+
+#: static-media/js/reaggregator.js:132
+msgid ""
+"Data in the system has changed, and this plan is currently reaggregating to "
+"reflect these changes. The plan will not be available until reaggregation "
+"has completed."
+msgstr ""
+"Les données ont changé dans le système, et ce plan se réagrège pour refléter "
+"ces changements. Le plan ne sera pas disponible avant la fin de la "
+"réagrégation."
+
+#: static-media/js/reaggregator.js:143
+msgid "Unknown state"
+msgstr "État inconnu"
+
+#: static-media/js/mapping.js.py:1120 static-media/js/mapping.js:1263
+#: static-media/js/multimember.js:187 static-media/js/multimember.js.py:193
+#: static-media/js/reaggregator.js:169 static-media/js/shareddistricts.js:367
 #: static-media/js/shareddistricts.js:374
 msgid "Sorry"
 msgstr "Désolé"
@@ -309,7 +316,6 @@ msgstr "Désolé"
 msgid ""
 "You cannot select any more features.\\n\\nConsider assigning your current "
 "selection to a district first."
->>>>>>> Add french translations
 msgstr ""
 "Vous ne pouvez plus sélectionner de fonctionnalités.\\n\\nEnvisagez de confier la sélection "
 "en cours à une circonscription d'abord."
@@ -322,31 +328,217 @@ msgstr "Impossible de combiner les circonscriptions: "
 msgid "Would you like to unassign the geography in "
 msgstr "Aimeriez-vous désaffecter la géographie en "
 
-#: static-media/js/mapping.js:1859
-msgid "Select One"
-msgstr "Choisir un "
+#: static-media/js/reaggregator.js:170
+msgid "Error reaggregating plan"
+msgstr "Erreur durant la réagrégation du plan"
 
-#: static-media/js/mapping.js:1860 static-media/js/mapping.js.py:1873
-msgid "Unassigned"
-msgstr "Non attribué"
+#: static-media/js/shareddistricts.js:60
+msgid "Copy and Paste %(bodyMembersCap)s"
+msgstr "Copier et coller %(bodyMembersCap)s"
 
-#: static-media/js/mapping.js:1882
-msgid "New "
-msgstr "Nouveau"
+#: static-media/js/shareddistricts.js:141
+msgid "Plan"
+msgstr "Plan"
 
-#: static-media/js/mapping.js:2423
-msgid "Contiguity"
-msgstr "Contiguïté "
+#: static-media/js/shareddistricts.js:198
+msgid "%(bodyMemberLongCap)s Name"
+msgstr "Nom de %(bodyMemberLongCap)s"
 
-#: static-media/js/mapping.js:2427
-msgid "Compactness"
-msgstr "Compacité"
+#: static-media/js/shareddistricts.js:297
+msgid "Maximum %(bodyMembers)s Reached"
+msgstr "Nombre maximum de %(bodyMembers)s atteint"
 
-#: static-media/js/mapping.js:2431
-msgid "None"
-msgstr "Aucun"
+#: static-media/js/shareddistricts.js:298
+msgid ""
+"Your plan is at maximum capacity. Please delete a %(bodyMemberLong)s to "
+"enable pasting."
+msgstr ""
+"Votre plan est à capacité maximale. Veuillez supprimer une % (bodyMemberLong)"
+"s pour pouvoir coller"
 
-#: static-media/js/multimember.js:59
+#: static-media/js/shareddistricts.js:306
+msgid "2. Remove %(num_available_districts)s before submitting"
+msgstr "2. Supprimez %(num_available_districts)s avant de soumettre"
+
+#: static-media/js/shareddistricts.js:310
+msgid "2. Check your selections"
+msgstr "2. Vérifiez vos sélections "
+
+#: static-media/js/shareddistricts.js:315
+msgid "2. Select a %(bodyMemberLong)s to copy"
+msgstr "2. Sélectionnez une %(bodyMemberLong)s pour copier"
+
+#: static-media/js/shareddistricts.js:319
+msgid "2. Select a %(bodyMemberLong)s"
+msgstr "2. Sélectionnez une %(bodyMemberLong)s"
+
+#: static-media/js/shareddistricts.js:326
+msgid "2. Select up to %(available_districts)s %(bodyMembers)s to copy"
+msgstr ""
+"2. Sélectionnez jusqu'à %(available_districts)s %(bodyMembers)s pour copier"
+
+#: static-media/js/shareddistricts.js:333
+msgid "2. Select %(bodyMembers)s"
+msgstr "2. Sélectionnez %(bodyMembers)s"
+
+#: static-media/js/shareddistricts.js:368
+#: static-media/js/shareddistricts.js:375
+msgid "Unable to paste %(bodyMembers)s"
+msgstr "Impossible de coller %(bodyMembers)s"
+
+msgid "Please select one or more reports to be generated."
+msgstr "Veuillez sélectionner un ou plusieurs rapports à générer."
+
+msgid "Generating Report"
+msgstr "Génération du rapport"
+
+msgid "You may use the rest of the application while the report is building."
+msgstr ""
+"Vous pouvez utiliser le reste de l'application durant la construction du "
+"rapport."
+
+msgid "A preview of your report will appear in this space when it is ready."
+msgstr ""
+"Un aperçu de votre rapport apparaîtra dans cet espace lorsqu'il sera prêt."
+
+msgid "Report Error"
+msgstr "Rapport d’erreur"
+
+msgid "Sorry, this report cannot be previewed."
+msgstr "Désolé, ce rapport ne peut être prévisualisé"
+
+msgid "Connection Failed"
+msgstr "Échec de connexion"
+
+msgid ""
+"There was a problem checking your report status. You can resume checking by "
+"clicking on the \"Create and Preview Report\" button."
+msgstr ""
+"Il y avait un problème de vérification de l'état de votre rapport. Vous "
+"pouvez reprendre la vérification en cliquant sur le bouton \"Créer et "
+"prévisualiser le rapport\"."
+
+msgid "Open report in a new window"
+msgstr "Ouvrir le rapport actuel dans une nouvelle fenêtre"
+
+msgid "Terms of Use"
+msgstr "Conditions d'utilisation"
+
+msgid "Forgot Password"
+msgstr "Mot de passe oublié"
+
+msgid "Duplicate Session"
+msgstr "Double Session"
+
+msgid "Maximum Users Exceeded"
+msgstr "Nombre maximum d'utilisateurs dépassé "
+
+msgid ""
+"Sorry, registration is not available at this time.  Please try logging in "
+"anonymously or coming back later"
+msgstr ""
+"Désolé, l'inscription n'est pas disponible en ce moment. Veuillez essayer de "
+"vous connecter anonymement ou revenez plus tard "
+
+msgid "Signup Unavailable"
+msgstr "Inscription indisponible"
+
+msgid "You've been registered for the public mapping project."
+msgstr "Vous avez été inscrit au projet de cartographie publique."
+
+msgid "Success!"
+msgstr "Réussite!"
+
+msgid "Start Mapping"
+msgstr "Commencez la cartographie"
+
+msgid "User Name already exists. Please choose another one."
+msgstr "Ce nom d'utilisateur existe déjà. Veuillez choisir un autre."
+
+msgid ""
+"Email already exists. Enter another one, or use the password retrieval form"
+msgstr ""
+"Cette adresse électronique existe déjà. Entrez une autre, ou utilisez le "
+"formulaire de récupération de mot de passe"
+
+msgid "Please Wait..."
+msgstr "Veuillez patienter..."
+
+msgid "You entered an incorrect user name or password"
+msgstr "Vous avez entré un nom d'utilisateur ou un mot de passe incorrect"
+
+msgid "Login Error"
+msgstr "Erreur de connexion"
+
+msgid "Logged Off"
+msgstr "Déconnexion"
+
+msgid ""
+"You have been logged off by another browser. This happens sometimes if you "
+"attempt to access the application from two different locations."
+msgstr ""
+"Vous avez été déconnecté par un autre navigateur. Cela se produit parfois si "
+"vous  essayez d'accéder à l'application de deux endroits différents."
+
+msgid "Please log in again"
+msgstr "Veuillez vous connectez à nouveau"
+
+#: static-media/js/statisticssets.js:164
+msgid "Loading Statistics..."
+msgstr "Chargement des statistiques..."
+
+#: static-media/js/statisticssets.js:336
+msgid "Please select 3 or fewer statistics."
+msgstr "Veuillez sélectionner 3 statistiques ou moins."
+
+#: static-media/js/splitsreport.js:108 static-media/js/statisticssets.js:337
+#: static-media/js/statisticssets.js:346 static-media/js/statisticssets.js:385
+msgid "Warning"
+msgstr "Avertissement"
+
+#: static-media/js/statisticssets.js:345
+msgid "Please name your statistics set."
+msgstr "Veuillez nommer votre ensemble de statistiques."
+
+#: static-media/js/statisticssets.js:391
+msgid "Please select 1-3 statistics to save in the named set."
+msgstr ""
+"Veuillez sélectionner 1-3 statistiques à sauvegarder dans l'ensemble désigné "
+"des statistiques."
+
+#: static-media/js/statisticssets.js:392
+msgid "Incomplete"
+msgstr "Incomplet"
+
+#: static-media/js/splitsreport.js:51
+msgid "Splits Report"
+msgstr "Rapport des divisions"
+
+#: static-media/js/splitsreport.js:68
+msgid "Please wait. Retrieving splits report."
+msgstr "Veuillez patienter. Récupération du rapport des divisions."
+
+#: static-media/js/splitsreport.js:71
+msgid "Retrieving Splits Report"
+msgstr "Récupération du rapport des divisions."
+
+#: static-media/js/splitsreport.js:93
+msgid "Error encountered while retrieving splits report: "
+msgstr ""
+"Une erreur s'est produite lors de la récupération du rapport des divisions: "
+
+#: static-media/js/splitsreport.js:107
+msgid "Please select either 1, 2, or 3 layers for comparison."
+msgstr "Veuillez sélectionner soit 1, 2, ou 3 calques à comparer."
+
+#: static-media/js/layerchooser.js:59
+msgid "Choose Map Layers"
+msgstr "Choisissez les calques de la carte "
+
+#: static-media/js/layerchooser.js:164
+msgid "User Name"
+msgstr "Nom d'utilisateur"
+
 msgid "Set Multi-Member Districts"
 msgstr "Définir des circonscriptions plurinominales"
 
@@ -370,329 +562,71 @@ msgstr "Identifiant de circonscription"
 msgid "# Members"
 msgstr "# de membres"
 
-#: static-media/js/reaggregator.js:44
-#, fuzzy
-msgid "Start Drawing"
-msgstr "Commencez à dessiner"
-
-#: static-media/js/reaggregator.js:117
-msgid ""
-"Data in the system has changed. This plan needs to be reaggregated before it "
-"can be used. Click the button to begin reaggregation. This will run in the "
-"background, and the status will be updated when completed. Feel free to use "
-"the rest of the system in the meantime."
-msgstr ""
-"Les données ont changé dans le système. Ce plan doit être réagrégé avant de pouvoir "
-"être utilisé. Cliquez sur le bouton pour commencer la réagrégation. Cela sera exécuté en "
-"arrière-plan, et le statut sera actualisé une fois terminé. N'hésitez pas à utiliser "
-"le reste du système pendant ce temps."
-
-#: static-media/js/reaggregator.js:123
-msgid ""
-"Data in the system has changed. The owner of this plan needs to reaggregate "
-"it before it can be used. The status of the plan will be updated when "
-"reaggregation has completed."
-msgstr ""
-"Les données ont changé dans le système. Le propriétaire de ce plan doit le réagréger "
-"avant qu'il ne soit utilisable. Le statut du plan sera actualisé lorsque la " 
-"réagrégation sera achevée."
-
-#: static-media/js/reaggregator.js:130
-#, fuzzy
-msgid "Reaggregation in progress"
-msgstr "Réagrégation en cours"
-
-#: static-media/js/reaggregator.js:132
-msgid ""
-"Data in the system has changed, and this plan is currently reaggregating to "
-"reflect these changes. The plan will not be available until reaggregation "
-"has completed."
-msgstr ""
-"Les données ont changé dans le système, et ce plan se réagrège pour refléter "
-"ces changements. Le plan ne sera pas disponible avant la fin de la réagrégation."
-
-
-#: static-media/js/reaggregator.js:143
-msgid "Unknown state"
-msgstr "État inconnu"
-
-#: static-media/js/reaggregator.js:170
-#, fuzzy
-msgid "Error reaggregating plan"
-msgstr "Erreur durant la réagrégation du plan"
-
-#: static-media/js/register.js:39
-msgid "Terms of Use"
-msgstr "Conditions d'utilisation"
-
-#: static-media/js/register.js:40
-msgid "Forgot Password"
-msgstr "Mot de passe oublié"
-
-#: static-media/js/register.js:41
-msgid "Duplicate Session"
-msgstr "Double Session"
-
-#: static-media/js/register.js:42
-msgid "Maximum Users Exceeded"
-msgstr "Nombre maximum d'utilisateurs dépassé "
-
-#: static-media/js/register.js:48
-msgid ""
-"Sorry, registration is not available at this time.  Please try logging in "
-"anonymously or coming back later"
-msgstr ""
-"Désolé, l'inscription n'est pas disponible en ce moment. Veuillez essayer de vous connecter "
-"anonymement ou revenez plus tard "
-
-#: static-media/js/register.js:50
-msgid "Signup Unavailable"
-msgstr "Inscription indisponible"
-
-#: static-media/js/register.js:175
-msgid "You've been registered for the public mapping project."
-msgstr "Vous avez été inscrit au projet de cartographie publique."
-
-#: static-media/js/register.js:178
-msgid "Success!"
-msgstr "Réussite!"
-
-#: static-media/js/register.js:180
-msgid "Start Mapping"
-msgstr "Commencez la cartographie"
-
-#: static-media/js/register.js:193
-msgid "User Name already exists. Please choose another one."
-msgstr "Ce nom d'utilisateur existe déjà. Veuillez choisir un autre."
-
-#: static-media/js/register.js:201
-msgid ""
-"Email already exists. Enter another one, or use the password retrieval form"
-msgstr ""
-"Cette adresse électronique existe déjà. Entrez une autre, ou utilisez le formulaire "
-"de récupération de mot de passe"
-
-#: static-media/js/register.js:237
-msgid "Please Wait..."
-msgstr "Veuillez patienter..."
-
-#: static-media/js/register.js:304
-msgid "You entered an incorrect user name or password"
-msgstr "Vous avez entré un nom d'utilisateur ou un mot de passe incorrect"
-
-#: static-media/js/register.js:308
-msgid "Login Error"
-msgstr "Erreur de connexion"
-
-#: static-media/js/register.js:357
-msgid "Logged Off"
-msgstr "Déconnexion"
-
-#: static-media/js/register.js:358
-msgid ""
-"You have been logged off by another browser. This happens sometimes if you "
-"attempt to access the application from two different locations."
-msgstr ""
-"Vous avez été déconnecté par un autre navigateur. Cela se produit parfois si vous  "
-"essayez d'accéder à l'application de deux endroits différents."
-
-#: static-media/js/register.js:359
-msgid "Please log in again"
-msgstr "Veuillez vous connectez à nouveau"
-
-#: static-media/js/reports.js:145
-msgid "Please select one or more reports to be generated."
-msgstr "Veuillez sélectionner un ou plusieurs rapports à générer."
-
-#: static-media/js/reports.js:153
-msgid "Generating Report"
-msgstr "Génération du rapport"
-
-#: static-media/js/reports.js:154
-msgid "You may use the rest of the application while the report is building."
-msgstr "Vous pouvez utiliser le reste de l'application durant la construction du rapport."
-
-#: static-media/js/reports.js:155
-msgid "A preview of your report will appear in this space when it is ready."
-msgstr "Un aperçu de votre rapport apparaîtra dans cet espace lorsqu'il sera prêt."
-
-#: static-media/js/reports.js:174
-#, fuzzy
-msgid "Report Error"
-msgstr "Rapport d’erreur"
-
-#: static-media/js/reports.js:175
-msgid "Sorry, this report cannot be previewed."
-msgstr "Désolé, ce rapport ne peut être prévisualisé"
-
-#: static-media/js/reports.js:206
-#, fuzzy
-msgid "Connection Failed"
-msgstr "Échec de connexion"
-
-#: static-media/js/reports.js:207
-msgid ""
-"There was a problem checking your report status. You can resume checking by "
-"clicking on the \"Create and Preview Report\" button."
-msgstr ""
-"Il y avait un problème de vérification de l'état de votre rapport. Vous pouvez reprendre la vérification "
-"en cliquant sur le bouton \"Créer et prévisualiser le rapport\"." 
-
-#: static-media/js/reports.js:356
-msgid "Open Current Report in New Window"
-msgstr "Ouvrir le rapport actuel dans une nouvelle fenêtre"
-
-#: static-media/js/shareddistricts.js:60
-msgid "Copy and Paste %(bodyMembersCap)s"
-msgstr "Copier et coller %(bodyMembersCap)s"
-
-#: static-media/js/shareddistricts.js:141
-msgid "Plan"
-msgstr "Plan"
-
-#: static-media/js/shareddistricts.js:198
-msgid "%(bodyMemberLongCap)s Name"
-msgstr "Nom de %(bodyMemberLongCap)s"
-
-#: static-media/js/shareddistricts.js:297
-msgid "Maximum %(bodyMembers)s Reached"
-msgstr "Nombre maximum de %(bodyMembers)s atteint"
-
-#: static-media/js/shareddistricts.js:298
-msgid ""
-"Your plan is at maximum capacity. Please delete a %(bodyMemberLong)s to "
-"enable pasting."
-msgstr ""
-"Votre plan est à capacité maximale. Veuillez supprimer une % (bodyMemberLong)s "
-"pour pouvoir coller"
-
-#: static-media/js/shareddistricts.js:306
-msgid "2. Remove %(num_available_districts)s before submitting"
-msgstr "2. Supprimez %(num_available_districts)s avant de soumettre"
-
-#: static-media/js/shareddistricts.js:310
-msgid "2. Check your selections"
-msgstr "2. Vérifiez vos sélections "
-
-#: static-media/js/shareddistricts.js:315
-msgid "2. Select a %(bodyMemberLong)s to copy"
-msgstr "2. Sélectionnez une %(bodyMemberLong)s pour copier"
-
-#: static-media/js/shareddistricts.js:319
-msgid "2. Select a %(bodyMemberLong)s"
-msgstr "2. Sélectionnez une %(bodyMemberLong)s"
-
-#: static-media/js/shareddistricts.js:326
-msgid "2. Select up to %(available_districts)s %(bodyMembers)s to copy"
-msgstr "2. Sélectionnez jusqu'à %(available_districts)s %(bodyMembers)s pour copier"
-
-#: static-media/js/shareddistricts.js:333
-msgid "2. Select %(bodyMembers)s"
-msgstr "2. Sélectionnez %(bodyMembers)s"
-
-#: static-media/js/shareddistricts.js:368
-#: static-media/js/shareddistricts.js:375
-msgid "Unable to paste %(bodyMembers)s"
-msgstr "Impossible de coller %(bodyMembers)s"
-
-#: static-media/js/splitsreport.js:51
-msgid "Splits Report"
-msgstr "Rapport des divisions"
-
-#: static-media/js/splitsreport.js:68
-#, fuzzy
-msgid "Please wait. Retrieving splits report."
-msgstr "Veuillez patienter. Récupération du rapport des divisions."
-
-#: static-media/js/splitsreport.js:71
-msgid "Retrieving Splits Report"
-msgstr "Récupération du rapport des divisions."
-
-#: static-media/js/splitsreport.js:93
-msgid "Error encountered while retrieving splits report: "
-msgstr "Une erreur s'est produite lors de la récupération du rapport des divisions: "
-
-#: static-media/js/splitsreport.js:107
-msgid "Please select either 1, 2, or 3 layers for comparison."
-msgstr "Veuillez sélectionner soit 1, 2, ou 3 calques à comparer."
-
-#: static-media/js/splitsreport.js:108 static-media/js/statisticssets.js:337
-#: static-media/js/statisticssets.js:346 static-media/js/statisticssets.js:385
-msgid "Warning"
-msgstr "Avertissement"
-
-#: static-media/js/statisticssets.js:164
-msgid "Loading Statistics..."
-msgstr "Chargement des statistiques..."
-
-#: static-media/js/statisticssets.js:336
-msgid "Please select 3 or fewer statistics."
-msgstr "Veuillez sélectionner 3 statistiques ou moins."
-
-#: static-media/js/statisticssets.js:345
-msgid "Please name your statistics set."
-msgstr "Veuillez nommer votre ensemble de statistiques."
-
-#: static-media/js/statisticssets.js:391
-msgid "Please select 1-3 statistics to save in the named set."
-msgstr ""
-"Veuillez sélectionner 1-3 statistiques à sauvegarder dans l'ensemble désigné des statistiques."
-
-#: static-media/js/statisticssets.js:392
-msgid "Incomplete"
-msgstr "Incomplet"
-
-#: static-media/js/ui.js:64
-msgid "Coming Soon..."
-msgstr "Prochainement..."
-
-#: static-media/js/ui.js:148
 msgid ""
 "No plans have been submitted for this leaderboard. Please check back later."
 msgstr ""
-"Aucun plan n'a été soumis au tableau de classement. Veuillez vérifier plus tard."
+"Aucun plan n'a été soumis au tableau de classement. Veuillez vérifier plus "
+"tard."
 
-#: static-media/js/ui.js:215 static-media/js/ui.js.py:243
-msgid "Validation Failed"
-msgstr "La validation a échoué"
+msgid "Current Filter: "
+msgstr "Filtre actuel: "
 
-#: static-media/js/ui.js:220 static-media/js/ui.js.py:251
-msgid "Server error. Please try again later"
-msgstr "Erreur de serveur. Veuillez réessayer plus tard"
-
-#: static-media/js/ui.js:227
-msgid "Update Leaderboards<br/>with Working Plan"
-msgstr "Réactualisez les classements<br/>avec le plan de travail"
-
-#: static-media/js/ui.js:257
-msgid "Download Scores<br/>as CSV"
-msgstr "Télécharger les scores<br/>en format CSV"
-
-#: static-media/js/ui.js:368
-msgid "Last Saved on %(day)s at %(hour)s:%(minute)s"
-msgstr "Dernièrement sauvegardé le %(day)s à %(hour)s:%(minute)s"
-
-#: static-media/js/ui.js:469
-msgid "Please Wait"
-msgstr "Veuillez patienter"
-
-#: static-media/js/ui.js:469
-msgid "Publishing with the server"
-msgstr "Publication sur le serveur"
-
-#: static-media/js/ui.js:480
-msgid "Please enter a new name to publish your plan."
-msgstr "Veuillez entrer un nouveau nom pour publier votre plan."
-
-#: static-media/js/ui.js:492
-msgid "Oops!"
-msgstr "Oups!"
-
-#: static-media/js/ui.js:511
-msgid "Server Failure"
-msgstr "Défaillance du serveur"
-
-#: static-media/js/ui.js:511
-msgid "Sorry, we weren't able to contact the server.  Please try again later."
+#: static-media/js/chooseplan.js:88
+msgid ""
+"Thanks! Your file has been uploaded, and your plan is being constructed. "
+"When your plan is completely constructed, you will receive an email from us."
 msgstr ""
-"Désolé, nous n'étions pas en mesure de communiquer avec le serveur. Veuillez réessayer plus tard."
+"Merci! Votre fichier a été téléchargé, et votre plan est en cours de "
+"construction. Quand votre plan sera entièrement construit, vous recevrez un "
+"e-mail de notre part. "
+
+#: static-media/js/emailplan.js:42
+msgid "Submit Final Plan to Contest"
+msgstr "Soumettez le Plan final au concours"
+
+#: static-media/js/emailplan.js:93
+msgid "Please wait. Emailing plan."
+msgstr "Veuillez patienter. envoi du plan par e-mail."
+
+#: static-media/js/emailplan.js:94 static-media/js/emailplan.js.py:106
+msgid "Emailing Plan"
+msgstr "Envoi du plan par e-mail"
+
+#: static-media/js/emailplan.js:107
+msgid ""
+"Your plan is in the process of being submitted. You will receive a "
+"confirmation email once it has completed successfully. This may take a few "
+"minutes."
+msgstr ""
+"Votre plan est en train d'être soumis. Vous recevrez un e-mail de "
+"confirmation une fois qu'il aura été complété avec succès. Cela peut prendre "
+"quelques minutes."
+
+#: static-media/js/emailplan.js:117 static-media/js/emailplan.js.py:126
+msgid "Error Emailing Plan"
+msgstr "Erreur durant l'envoi du plan par e-mail"
+
+#: static-media/js/emailplan.js:127
+msgid "Please try again later"
+msgstr "Veuillez réessayer plus tard "
+
+#: static-media/js/mapping.js:1043
+msgid "No districts were updated"
+msgstr "Aucune circonscription n'a été réactualisée"
+
+#: static-media/js/mapping.js:1105
+msgid ""
+"You cannot select that many features at once.\\n\\nConsider drawing a "
+"smaller area with the selection tool."
+msgstr ""
+"Vous ne pouvez pas sélectionner autant de fonctionnalités à la fois.\\n"
+"\\nEnvisagez de dessiner une  plus petite zone avec l'outil de sélection."
+
+#: static-media/js/mapping.js:1859
+msgid "Select One"
+msgstr "Choisir un "
+
+#: static-media/js/mapping.js:441
+msgid "Map Transparency"
+msgstr "Transparence Carte"
+
