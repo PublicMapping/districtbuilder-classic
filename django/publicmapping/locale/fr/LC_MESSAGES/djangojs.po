@@ -353,8 +353,8 @@ msgid ""
 "Your plan is at maximum capacity. Please delete a %(bodyMemberLong)s to "
 "enable pasting."
 msgstr ""
-"Votre plan est à capacité maximale. Veuillez supprimer une % (bodyMemberLong)"
-"s pour pouvoir coller"
+"Votre plan est à capacité maximale. Veuillez supprimer une "
+"%(bodyMemberLong)s pour pouvoir coller"
 
 #: static-media/js/shareddistricts.js:306
 msgid "2. Remove %(num_available_districts)s before submitting"
