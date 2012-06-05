@@ -412,8 +412,7 @@ def commonplan(request, planid):
             # used for generating groups of checkboxes on the evaluate tab.
             calculator_reports = []
             if settings.REPORTS_ENABLED == 'CALC':
-                report_displays = ScoreDisplay.objects.all()
-                report_displays = filter(lambda x:x.get_short_label()==(_('%(body_name)s Reports') % {'body_name':plan.legislative_body.get_long_description()}), report_displays)
+                report_displays = ScoreDisplay.objects.filter(name="%s_reports" % plan.legislative_body.name)
                 if len(report_displays) > 0:
                     calculator_reports = map(lambda p: {
                                 'title': p.__unicode__(),
@@ -731,10 +730,10 @@ def printplan(request, planid):
 
         # render pg to a string
         t = loader.get_template('printplan.html')
-        page = StringIO.StringIO(t.render(DjangoContext(cfg)))
+        page = t.render(DjangoContext(cfg))
         result = StringIO.StringIO()
         
-        CreatePDF( page, result, show_error_as_pdf=True )
+        CreatePDF( page, result, show_error_as_pdf=True, encoding='UTF-8')
 
         response = HttpResponse(result.getvalue(), mimetype='application/pdf')
         response['Content-Disposition'] = 'attachment; filename=plan.pdf'
@@ -1829,9 +1828,11 @@ def get_statistics(request, planid):
     else:
         version = plan.version
 
-    # TODO: 'Demographics' is hardcoded as a panel title. Is there another way to designate a permanent display?
-    display = ScoreDisplay.objects.filter(legislative_body=plan.legislative_body)
-    display = filter(lambda x:x.get_short_label() == 'Demographics', display)[0]
+    try:
+        display = ScoreDisplay.objects.filter(legislative_body=plan.legislative_body, name="%s_sidebar_demo" % plan.legislative_body.name)
+    except:
+        status['message'] = _('Unable to get Demographics ScoreDisplay')
+        status['exception'] = traceback.format_exc()
     
     if 'displayId' in request.REQUEST:
         try:
@@ -1952,13 +1953,10 @@ def getleaderboarddisplay(leg_body, owner_filter):
     """
     Returns the leaderboard ScoreDisplay given a legislative body and owner
     """
-    # TODO: 'Leaderboard' is hardcoded into the scoredisplay title
-    displays = ScoreDisplay.objects.all()
-    displays = filter(lambda x:(x.get_short_label()==\
-            _('%(legislative_body)s Leaderboard - %(owner_filter)s' % \
-            {'legislative_body': leg_body.get_long_description(), \
-            'owner_filter': owner_filter.title()})), displays)
-    return displays[0] if len(displays) > 0 else None
+    try:
+        return ScoreDisplay.objects.get(name="%s_leader_%s" % (leg_body.name, owner_filter))
+    except:
+        return None
 
 def getleaderboard(request):
     """
@@ -1981,7 +1979,7 @@ def getleaderboard(request):
 
     try :
         html = display.render(plans, request)
-        return HttpResponse(html, mimetype='text/plain')
+        return HttpResponse(html, mimetype='text/html; charset=utf-8')
     except Exception, ex:
         logger.warn('Leaderboard could not be fetched.')
         logger.debug('Reason: %s', ex)

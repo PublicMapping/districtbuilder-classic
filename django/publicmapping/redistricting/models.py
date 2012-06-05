@@ -2526,8 +2526,11 @@ class District(models.Model):
         else:
             index = 0
 
-        if name.startswith(prefix):
-            name = name[index:]
+        try:
+            if name.startswith(prefix):
+                name = name[index:]
+        except UnicodeDecodeError:
+            pass
         if name.isdigit():
             return '%03d' % int(name)
         return name 

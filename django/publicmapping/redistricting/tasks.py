@@ -26,6 +26,7 @@ Author:
 
 from celery.task import task
 from celery.task.http import HttpDispatchTask
+from codecs import open
 from django.core import management
 from django.contrib.comments.models import Comment
 from django.contrib.sessions.models import Session
@@ -40,11 +41,11 @@ from redistricting.models import *
 from redistricting.config import *
 from tagging.utils import parse_tag_input
 from tagging.models import Tag, TaggedItem
-import csv, time, zipfile, tempfile, os, sys, traceback, time
 from datetime import datetime
-import socket, urllib2, logging, re, inflect
 from lxml import etree, objectify
 from djsld import generator
+import csv, time, zipfile, tempfile, os, sys, traceback, time
+import socket, urllib2, logging, re, inflect
 
 # all for shapefile exports
 from glob import glob
@@ -1195,8 +1196,7 @@ class CalculatorReport:
 
         try:
             # Render the report
-            display = ScoreDisplay.objects.all()
-            display = filter(lambda x:x.get_short_label()==_('%s Reports') % plan.legislative_body.get_long_description(), display)[0]
+            display = ScoreDisplay.objects.get(name='%s_reports' % plan.legislative_body.name)
             html = display.render(plan, request, function_ids=function_ids)
         except Exception as ex:
             logger.warn('Error creating calculator report')
@@ -1209,7 +1209,7 @@ class CalculatorReport:
         # Write it to file
         tempdir = settings.WEB_TEMP
         filename = '%s_p%d_v%d_%s' % (plan.owner.username, plan.id, plan.version, stamp)
-        htmlfile = open('%s/%s.html' % (tempdir, filename,),'w')
+        htmlfile = open('%s/%s.html' % (tempdir, filename,), mode='w', encoding='utf=8')
         htmlfile.write(html)
         htmlfile.close()
 
