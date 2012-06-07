@@ -1254,6 +1254,7 @@
             <Language code="en" label="English" />
             <Language code="fr" label="French" />
             <Language code="es" label="Spanish" />
+            <Language code="ja" label="Japanese" />
         </Internationalization>
         
         <!-- 
