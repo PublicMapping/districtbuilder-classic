@@ -37,6 +37,13 @@ import traceback, os, sys, random
 from redistricting import StoredConfig
 import logging
 
+logging.basicConfig(format='%(message)s')
+logging._srcFile = None
+logging.logThreads = 0
+logging.logProcesses = 0
+
+logger = logging.getLogger()
+
 def main():
     """
     Main method to start the setup of DistrictBuilder.
@@ -87,7 +94,7 @@ def main():
     setup_logging(options.verbosity)
 
     if len(args) != 2:
-        logging.warning("""
+        logger.warning("""
 ERROR:
 
     This script requires a configuration file and a schema. Please check
@@ -101,21 +108,21 @@ ERROR:
         sys.exit(1)
 
     if not config.validate():
-        logging.info("Configuration could not be validated.")
+        logger.info("Configuration could not be validated.")
 
         sys.exit(1)
 
-    logging.info("Validated config.")
+    logger.info("Validated config.")
 
     merge_status = config.merge_settings('settings.py')
     if merge_status:
-        logging.info("Generated django settings for publicmapping.")
+        logger.info("Generated django settings for publicmapping.")
     else:
         sys.exit(1)
 
     merge_status = config.merge_settings('reporting_settings.py')
     if merge_status:
-        logging.info("Generated django settings for reporting.")
+        logger.info("Generated django settings for reporting.")
     else:
         sys.exit(1)
 
@@ -129,6 +136,7 @@ ERROR:
         management.call_command('syncdb', verbosity=options.verbosity, interactive=False)
 
     if allops:
+        database = True
         geolevels = []
         views = True
         geoserver = True
@@ -139,6 +147,7 @@ ERROR:
         bard = True
         bard_templates = True
     else:
+        database = options.database
         geolevels = options.geolevels
         views = options.views
         geoserver = options.geoserver
@@ -149,7 +158,7 @@ ERROR:
         bard = options.bard
         bard_templates = options.bard_templates
 
-    management.call_command('setup', config=args[1], verbosity=options.verbosity, geolevels=geolevels, views=views, geoserver=geoserver, templates=templates, nesting=nesting, static=static, languages=languages, bard=bard, bard_templates=bard_templates, force=options.force)
+    management.call_command('setup', config=args[1], verbosity=options.verbosity, database=database, geolevels=geolevels, views=views, geoserver=geoserver, templates=templates, nesting=nesting, static=static, languages=languages, bard=bard, bard_templates=bard_templates, force=options.force)
     
     # Success! Exit-code 0
     sys.exit(0)
@@ -158,16 +167,10 @@ def setup_logging(verbosity):
     """
     Setup logging for setup.
     """
-    level = logging.WARNING
     if verbosity > 1:
-        level = logging.DEBUG
+        logger.setLevel(logging.DEBUG)
     elif verbosity > 0:
-        level = logging.INFO
-
-    logging.basicConfig(level=level, format='%(message)s')
-    logging._srcFile = None
-    logging.logThreads = 0
-    logging.logProcesses = 0
+        logger.setLevel(logging.INFO)
 
 if __name__ == "__main__":
     main()

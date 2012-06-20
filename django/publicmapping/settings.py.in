@@ -192,7 +192,8 @@ if django.VERSION[1] > 2:
     }
 else:
     import logging
-    logger = logging.getLogger()
+    logger = logging.getLogger('publicmapping')
+    logger.propagate = False
     stderr = logging.StreamHandler()
     stderr.setFormatter(logging.Formatter())
     logger.addHandler(stderr)
