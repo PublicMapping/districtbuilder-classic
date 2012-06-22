@@ -30,7 +30,7 @@ Author:
 
 # Django settings for publicmapping project.
 
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 SITE_ID = 1
 
@@ -87,7 +87,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
 
 # Uncomment the following line to enable browser-level localization selection
-#    'django.middleware.locale.LocaleMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     
 #    'django.middleware.cache.FetchFromCacheMiddleware',
 )
