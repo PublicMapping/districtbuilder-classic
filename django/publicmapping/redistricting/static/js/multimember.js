@@ -91,7 +91,7 @@ multimember = function(options) {
         var sortedDistricts = $(_options.getDistrictsFn()).sort(function(d1, d2){ return d1.district_id > d2.district_id; });
         sortedDistricts.each(function(i, district) {
             $(_options.memberGrid).jqGrid('addRowData', i+1, {
-                name: district.long_label,
+                name: district.label,
                 num_members: district.num_members,
                 district_id: district.district_id        
             });
