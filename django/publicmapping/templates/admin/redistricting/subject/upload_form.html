@@ -72,7 +72,7 @@ $(function(){
                 }
                 else if (data.state == 'FAILURE') {
                     $('#upload_status_messages').removeClass('loading');
-                    $('#upload_status_messages').append('<p>{% trans "Sorry! This processing step failed with the following error message: " %}' + data.info.message + '</p>');
+                    $('#upload_status_messages').append('<p>{% trans "Sorry! This processing step failed with the following error message: " %}' + data.message + '</p>');
                     $('#processing_continue').attr('disabled', false);
                     $('#processing_continue').val('{% trans "Retry" %}');
                     $('#processing_continue').click(function(){ window.location.href='../add/'; });

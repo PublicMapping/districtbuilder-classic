@@ -1526,21 +1526,24 @@ def copy_to_characteristics(upload_id, language=None):
     if created:
         logger.debug('Writing catalog entries for %s' % the_subject.name)
         for locale in [l[0] for l in settings.LANGUAGES]:
-            logger.debug('Writing catalog entry for %s' % locale)
-            po = PoUtils(locale)
-            po.add_or_update(
-                msgid=u'%s short label' % the_subject.name,
-                msgstr=upload.subject_name[0:25]
-            )
-            po.add_or_update(
-                msgid=u'%s label' % the_subject.name,
-                msgstr=upload.subject_name
-            )
-            po.add_or_update(
-                msgid=u'%s long description' % the_subject.name,
-                msgstr=''
-            )
-            po.save()
+            try:
+                logger.debug('Writing catalog entry for %s' % locale)
+                po = PoUtils(locale)
+                po.add_or_update(
+                    msgid=u'%s short label' % the_subject.name,
+                    msgstr=upload.subject_name[0:25]
+                )
+                po.add_or_update(
+                    msgid=u'%s label' % the_subject.name,
+                    msgstr=upload.subject_name
+                )
+                po.add_or_update(
+                    msgid=u'%s long description' % the_subject.name,
+                    msgstr=''
+                )
+                po.save()
+            except:
+                logger.error("Couldn't write catalog entries for %s" % locale)
            
     logger.debug('Using %ssubject "%s" for new Characteristic values.', 'new ' if created else '', the_subject.name)
 
