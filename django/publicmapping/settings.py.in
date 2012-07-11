@@ -168,6 +168,9 @@ POSTGIS_TEMPLATE='template_postgis'
 # This is the base url for the application, where the login page is
 LOGIN_URL = '/'
 
+# Where the user is redirected after login
+LOGIN_REDIRECT_URL = '/admin/'
+
 # Enable logging for django 1.3 and 1.2
 if django.VERSION[1] > 2:
     import sys
