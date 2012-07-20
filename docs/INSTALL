@@ -11,7 +11,7 @@ Apache v 2.2
 Geoserver v 2.0.2
 Postgresql v 8.4 w/ PostGIS
 Python v 2.6
-Django v 1.2.3
+Django v 1.3.0
 
 On a debian-based system with aptitude installed, you can install most of
 the necessary software using the command:
