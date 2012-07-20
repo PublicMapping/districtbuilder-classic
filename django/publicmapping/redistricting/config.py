@@ -1182,7 +1182,7 @@ ERROR:
 
         %s
 
-        Please chece the configuration settings, and try again.
+        Please check the configuration settings, and try again.
 """, msg)
                 return None
 
