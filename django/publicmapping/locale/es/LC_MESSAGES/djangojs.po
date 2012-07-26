@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-26 17:03-0400\n"
+"POT-Creation-Date: 2012-07-26 17:09-0400\n"
 "PO-Revision-Date: 2011-11-30 16:49\n"
 "Last-Translator: Admin User <ajennings+saigon@azavea.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -313,7 +313,7 @@ msgstr "Error al recuperar informe de separaciones: "
 
 #: static-media/js/mapping.js:504
 msgid "No reference layer selected."
-msgstr ""
+msgstr "No se ha seleccionado ninguna capa de referencia."
 
 #: static-media/js/mapping.js:505 static-media/js/splitsreport.js:109
 #: static-media/js/statisticssets.js:338 static-media/js/statisticssets.js:347
