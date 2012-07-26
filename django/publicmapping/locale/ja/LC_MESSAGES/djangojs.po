@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-07 09:06-0500\n"
+"POT-Creation-Date: 2012-07-25 16:26-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,1431 +18,575 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0\n"
 
-#: static-media/CACHE/js/01ec5c663726.js:78
-#: static-media/CACHE/js/3eeee3706ebf.js:78
-#: static-media/CACHE/js/4bd62bdb2da4.js:78
-#: static-media/CACHE/js/6b79d088a188.js:78
-#: static-media/CACHE/js/8347635feab9.js:78
-#: static-media/CACHE/js/9e2f3acda32a.js:78
-#: static-media/CACHE/js/a7eed9cbce79.js:78
-#: static-media/CACHE/js/af1972b73435.js:78
-#: static-media/CACHE/js/b4775468438b.js:78
-#: static-media/CACHE/js/c02f606639b0.js:78
-#: static-media/CACHE/js/db7c2b1caabb.js:78
-#: static-media/CACHE/js/f9a5a40a526d.js:78
-#: static-media/CACHE/js/fef441dc0d83.js:78 static-media/js/ui.js:64
-msgid "Coming Soon..."
+#: redistricting/static/js/chooseplan.js:75
+#: redistricting/static/js/chooseplan.js:245 static-media/js/chooseplan.js:75
+#: static-media/js/chooseplan.js.c:245
+msgid "View Plan"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:85
-#: static-media/CACHE/js/3eeee3706ebf.js:86
-#: static-media/CACHE/js/4bd62bdb2da4.js:85
-#: static-media/CACHE/js/6b79d088a188.js:85
-#: static-media/CACHE/js/8347635feab9.js:86
-#: static-media/CACHE/js/9e2f3acda32a.js:85
-#: static-media/CACHE/js/a7eed9cbce79.js:86
-#: static-media/CACHE/js/af1972b73435.js:85
-#: static-media/CACHE/js/b4775468438b.js:85
-#: static-media/CACHE/js/c02f606639b0.js:85
-#: static-media/CACHE/js/db7c2b1caabb.js:85
-#: static-media/CACHE/js/f9a5a40a526d.js:85
-#: static-media/CACHE/js/fef441dc0d83.js:85 static-media/js/ui.js:215
-#: static-media/js/ui.js.py:243
-msgid "Validation Failed"
+#: redistricting/static/js/chooseplan.js:75
+#: redistricting/static/js/chooseplan.js:245
+#: redistricting/static/js/reaggregator.js:47 static-media/js/chooseplan.js:75
+#: static-media/js/chooseplan.js.c:245 static-media/js/reaggregator.js:47
+msgid "Start Drawing"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:85
-#: static-media/CACHE/js/01ec5c663726.js:94
-#: static-media/CACHE/js/01ec5c663726.js:378
-#: static-media/CACHE/js/01ec5c663726.js:401
-#: static-media/CACHE/js/3eeee3706ebf.js:86
-#: static-media/CACHE/js/3eeee3706ebf.js:95
-#: static-media/CACHE/js/3eeee3706ebf.js:381
-#: static-media/CACHE/js/3eeee3706ebf.js:404
-#: static-media/CACHE/js/4bd62bdb2da4.js:85
-#: static-media/CACHE/js/4bd62bdb2da4.js:94
-#: static-media/CACHE/js/4bd62bdb2da4.js:378
-#: static-media/CACHE/js/4bd62bdb2da4.js:401
-#: static-media/CACHE/js/6b79d088a188.js:85
-#: static-media/CACHE/js/6b79d088a188.js:94
-#: static-media/CACHE/js/6b79d088a188.js:378
-#: static-media/CACHE/js/6b79d088a188.js:401
-#: static-media/CACHE/js/8347635feab9.js:86
-#: static-media/CACHE/js/8347635feab9.js:95
-#: static-media/CACHE/js/8347635feab9.js:381
-#: static-media/CACHE/js/8347635feab9.js:404
-#: static-media/CACHE/js/9e2f3acda32a.js:85
-#: static-media/CACHE/js/9e2f3acda32a.js:94
-#: static-media/CACHE/js/9e2f3acda32a.js:378
-#: static-media/CACHE/js/9e2f3acda32a.js:401
-#: static-media/CACHE/js/a7eed9cbce79.js:86
-#: static-media/CACHE/js/a7eed9cbce79.js:95
-#: static-media/CACHE/js/a7eed9cbce79.js:380
-#: static-media/CACHE/js/a7eed9cbce79.js:403
-#: static-media/CACHE/js/af1972b73435.js:85
-#: static-media/CACHE/js/af1972b73435.js:94
-#: static-media/CACHE/js/af1972b73435.js:378
-#: static-media/CACHE/js/af1972b73435.js:401
-#: static-media/CACHE/js/b4775468438b.js:85
-#: static-media/CACHE/js/b4775468438b.js:94
-#: static-media/CACHE/js/b4775468438b.js:378
-#: static-media/CACHE/js/b4775468438b.js:401
-#: static-media/CACHE/js/c02f606639b0.js:85
-#: static-media/CACHE/js/c02f606639b0.js:94
-#: static-media/CACHE/js/c02f606639b0.js:378
-#: static-media/CACHE/js/c02f606639b0.js:401
-#: static-media/CACHE/js/db7c2b1caabb.js:85
-#: static-media/CACHE/js/db7c2b1caabb.js:94
-#: static-media/CACHE/js/db7c2b1caabb.js:378
-#: static-media/CACHE/js/db7c2b1caabb.js:401
-#: static-media/CACHE/js/f9a5a40a526d.js:85
-#: static-media/CACHE/js/f9a5a40a526d.js:94
-#: static-media/CACHE/js/f9a5a40a526d.js:378
-#: static-media/CACHE/js/f9a5a40a526d.js:401
-#: static-media/CACHE/js/fef441dc0d83.js:85
-#: static-media/CACHE/js/fef441dc0d83.js:94
-#: static-media/CACHE/js/fef441dc0d83.js:378
-#: static-media/CACHE/js/fef441dc0d83.js:401 static-media/js/mapping.js:1046
-#: static-media/js/register.js:195 static-media/js/register.js.py:203
-#: static-media/js/splitsreport.js:96 static-media/js/ui.js:220
-#: static-media/js/ui.js.py:250 static-media/js/ui.js:480
-msgid "Error"
+#: redistricting/static/js/chooseplan.js:88 static-media/js/chooseplan.js:88
+msgid ""
+"Thanks! Your file has been uploaded, and your plan is being constructed. "
+"When your plan is completely constructed, you will receive an email from us."
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:85
-#: static-media/CACHE/js/3eeee3706ebf.js:86
-#: static-media/CACHE/js/4bd62bdb2da4.js:85
-#: static-media/CACHE/js/6b79d088a188.js:85
-#: static-media/CACHE/js/8347635feab9.js:86
-#: static-media/CACHE/js/9e2f3acda32a.js:85
-#: static-media/CACHE/js/a7eed9cbce79.js:86
-#: static-media/CACHE/js/af1972b73435.js:85
-#: static-media/CACHE/js/b4775468438b.js:85
-#: static-media/CACHE/js/c02f606639b0.js:85
-#: static-media/CACHE/js/db7c2b1caabb.js:85
-#: static-media/CACHE/js/f9a5a40a526d.js:85
-#: static-media/CACHE/js/fef441dc0d83.js:85 static-media/js/ui.js:220
-#: static-media/js/ui.js.py:251
-msgid "Server error. Please try again later"
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:85
-#: static-media/CACHE/js/3eeee3706ebf.js:86
-#: static-media/CACHE/js/4bd62bdb2da4.js:85
-#: static-media/CACHE/js/6b79d088a188.js:85
-#: static-media/CACHE/js/8347635feab9.js:86
-#: static-media/CACHE/js/9e2f3acda32a.js:85
-#: static-media/CACHE/js/a7eed9cbce79.js:86
-#: static-media/CACHE/js/af1972b73435.js:85
-#: static-media/CACHE/js/b4775468438b.js:85
-#: static-media/CACHE/js/c02f606639b0.js:85
-#: static-media/CACHE/js/db7c2b1caabb.js:85
-#: static-media/CACHE/js/f9a5a40a526d.js:85
-#: static-media/CACHE/js/fef441dc0d83.js:85 static-media/js/ui.js:227
-msgid "Update Leaderboards<br/>with Working Plan"
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:86
-#: static-media/CACHE/js/3eeee3706ebf.js:87
-#: static-media/CACHE/js/4bd62bdb2da4.js:86
-#: static-media/CACHE/js/6b79d088a188.js:86
-#: static-media/CACHE/js/8347635feab9.js:87
-#: static-media/CACHE/js/9e2f3acda32a.js:86
-#: static-media/CACHE/js/a7eed9cbce79.js:87
-#: static-media/CACHE/js/af1972b73435.js:86
-#: static-media/CACHE/js/b4775468438b.js:86
-#: static-media/CACHE/js/c02f606639b0.js:86
-#: static-media/CACHE/js/db7c2b1caabb.js:86
-#: static-media/CACHE/js/f9a5a40a526d.js:86
-#: static-media/CACHE/js/fef441dc0d83.js:86 static-media/js/ui.js:257
-msgid "Download Scores<br/>as CSV"
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:89
-#: static-media/CACHE/js/3eeee3706ebf.js:90
-#: static-media/CACHE/js/4bd62bdb2da4.js:89
-#: static-media/CACHE/js/6b79d088a188.js:89
-#: static-media/CACHE/js/8347635feab9.js:90
-#: static-media/CACHE/js/9e2f3acda32a.js:89
-#: static-media/CACHE/js/a7eed9cbce79.js:90
-#: static-media/CACHE/js/af1972b73435.js:89
-#: static-media/CACHE/js/b4775468438b.js:89
-#: static-media/CACHE/js/c02f606639b0.js:89
-#: static-media/CACHE/js/db7c2b1caabb.js:89
-#: static-media/CACHE/js/f9a5a40a526d.js:89
-#: static-media/CACHE/js/fef441dc0d83.js:89 static-media/js/ui.js:368
-msgid "Last Saved on %(day)s at %(hour)s:%(minute)s"
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:94
-#: static-media/CACHE/js/3eeee3706ebf.js:95
-#: static-media/CACHE/js/4bd62bdb2da4.js:94
-#: static-media/CACHE/js/6b79d088a188.js:94
-#: static-media/CACHE/js/8347635feab9.js:95
-#: static-media/CACHE/js/9e2f3acda32a.js:94
-#: static-media/CACHE/js/a7eed9cbce79.js:95
-#: static-media/CACHE/js/af1972b73435.js:94
-#: static-media/CACHE/js/b4775468438b.js:94
-#: static-media/CACHE/js/c02f606639b0.js:94
-#: static-media/CACHE/js/db7c2b1caabb.js:94
-#: static-media/CACHE/js/f9a5a40a526d.js:94
-#: static-media/CACHE/js/fef441dc0d83.js:94 static-media/js/ui.js:469
-msgid "Please Wait"
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:94
-#: static-media/CACHE/js/3eeee3706ebf.js:95
-#: static-media/CACHE/js/4bd62bdb2da4.js:94
-#: static-media/CACHE/js/6b79d088a188.js:94
-#: static-media/CACHE/js/8347635feab9.js:95
-#: static-media/CACHE/js/9e2f3acda32a.js:94
-#: static-media/CACHE/js/a7eed9cbce79.js:95
-#: static-media/CACHE/js/af1972b73435.js:94
-#: static-media/CACHE/js/b4775468438b.js:94
-#: static-media/CACHE/js/c02f606639b0.js:94
-#: static-media/CACHE/js/db7c2b1caabb.js:94
-#: static-media/CACHE/js/f9a5a40a526d.js:94
-#: static-media/CACHE/js/fef441dc0d83.js:94 static-media/js/ui.js:469
-msgid "Publishing with the server"
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:94
-#: static-media/CACHE/js/3eeee3706ebf.js:95
-#: static-media/CACHE/js/4bd62bdb2da4.js:94
-#: static-media/CACHE/js/6b79d088a188.js:94
-#: static-media/CACHE/js/8347635feab9.js:95
-#: static-media/CACHE/js/9e2f3acda32a.js:94
-#: static-media/CACHE/js/a7eed9cbce79.js:95
-#: static-media/CACHE/js/af1972b73435.js:94
-#: static-media/CACHE/js/b4775468438b.js:94
-#: static-media/CACHE/js/c02f606639b0.js:94
-#: static-media/CACHE/js/db7c2b1caabb.js:94
-#: static-media/CACHE/js/f9a5a40a526d.js:94
-#: static-media/CACHE/js/fef441dc0d83.js:94 static-media/js/ui.js:480
-msgid "Please enter a new name to publish your plan."
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:95
-#: static-media/CACHE/js/3eeee3706ebf.js:96
-#: static-media/CACHE/js/4bd62bdb2da4.js:95
-#: static-media/CACHE/js/6b79d088a188.js:95
-#: static-media/CACHE/js/8347635feab9.js:96
-#: static-media/CACHE/js/9e2f3acda32a.js:95
-#: static-media/CACHE/js/a7eed9cbce79.js:96
-#: static-media/CACHE/js/af1972b73435.js:95
-#: static-media/CACHE/js/b4775468438b.js:95
-#: static-media/CACHE/js/c02f606639b0.js:95
-#: static-media/CACHE/js/db7c2b1caabb.js:95
-#: static-media/CACHE/js/f9a5a40a526d.js:95
-#: static-media/CACHE/js/fef441dc0d83.js:95 static-media/js/ui.js:492
-msgid "Oops!"
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:98
-#: static-media/CACHE/js/3eeee3706ebf.js:99
-#: static-media/CACHE/js/4bd62bdb2da4.js:98
-#: static-media/CACHE/js/6b79d088a188.js:98
-#: static-media/CACHE/js/8347635feab9.js:99
-#: static-media/CACHE/js/9e2f3acda32a.js:98
-#: static-media/CACHE/js/a7eed9cbce79.js:99
-#: static-media/CACHE/js/af1972b73435.js:98
-#: static-media/CACHE/js/b4775468438b.js:98
-#: static-media/CACHE/js/c02f606639b0.js:98
-#: static-media/CACHE/js/db7c2b1caabb.js:98
-#: static-media/CACHE/js/f9a5a40a526d.js:98
-#: static-media/CACHE/js/fef441dc0d83.js:98 static-media/js/ui.js:511
-msgid "Server Failure"
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:98
-#: static-media/CACHE/js/3eeee3706ebf.js:99
-#: static-media/CACHE/js/4bd62bdb2da4.js:98
-#: static-media/CACHE/js/6b79d088a188.js:98
-#: static-media/CACHE/js/8347635feab9.js:99
-#: static-media/CACHE/js/9e2f3acda32a.js:98
-#: static-media/CACHE/js/a7eed9cbce79.js:99
-#: static-media/CACHE/js/af1972b73435.js:98
-#: static-media/CACHE/js/b4775468438b.js:98
-#: static-media/CACHE/js/c02f606639b0.js:98
-#: static-media/CACHE/js/db7c2b1caabb.js:98
-#: static-media/CACHE/js/f9a5a40a526d.js:98
-#: static-media/CACHE/js/fef441dc0d83.js:98 static-media/js/ui.js:511
-msgid "Sorry, we weren't able to contact the server.  Please try again later."
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:114
-#: static-media/CACHE/js/3eeee3706ebf.js:115
-#: static-media/CACHE/js/4bd62bdb2da4.js:114
-#: static-media/CACHE/js/6b79d088a188.js:114
-#: static-media/CACHE/js/8347635feab9.js:115
-#: static-media/CACHE/js/9e2f3acda32a.js:114
-#: static-media/CACHE/js/a7eed9cbce79.js:115
-#: static-media/CACHE/js/af1972b73435.js:114
-#: static-media/CACHE/js/b4775468438b.js:114
-#: static-media/CACHE/js/c02f606639b0.js:114
-#: static-media/CACHE/js/db7c2b1caabb.js:114
-#: static-media/CACHE/js/f9a5a40a526d.js:114
-#: static-media/CACHE/js/fef441dc0d83.js:114 static-media/js/mapping.js:108
-msgid " Name"
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:115
-#: static-media/CACHE/js/3eeee3706ebf.js:116
-#: static-media/CACHE/js/4bd62bdb2da4.js:115
-#: static-media/CACHE/js/6b79d088a188.js:115
-#: static-media/CACHE/js/8347635feab9.js:116
-#: static-media/CACHE/js/9e2f3acda32a.js:115
-#: static-media/CACHE/js/a7eed9cbce79.js:116
-#: static-media/CACHE/js/af1972b73435.js:115
-#: static-media/CACHE/js/b4775468438b.js:115
-#: static-media/CACHE/js/c02f606639b0.js:115
-#: static-media/CACHE/js/db7c2b1caabb.js:115
-#: static-media/CACHE/js/f9a5a40a526d.js:115
-#: static-media/CACHE/js/fef441dc0d83.js:115 static-media/js/mapping.js:120
-msgid "Demographic "
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:132
-#: static-media/CACHE/js/3eeee3706ebf.js:133
-#: static-media/CACHE/js/4bd62bdb2da4.js:132
-#: static-media/CACHE/js/6b79d088a188.js:132
-#: static-media/CACHE/js/8347635feab9.js:133
-#: static-media/CACHE/js/9e2f3acda32a.js:132
-#: static-media/CACHE/js/a7eed9cbce79.js:133
-#: static-media/CACHE/js/af1972b73435.js:132
-#: static-media/CACHE/js/b4775468438b.js:132
-#: static-media/CACHE/js/c02f606639b0.js:132
-#: static-media/CACHE/js/db7c2b1caabb.js:132
-#: static-media/CACHE/js/f9a5a40a526d.js:132
-#: static-media/CACHE/js/fef441dc0d83.js:132 static-media/js/mapping.js:366
-msgid "Satellite"
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:132
-#: static-media/CACHE/js/3eeee3706ebf.js:133
-#: static-media/CACHE/js/4bd62bdb2da4.js:132
-#: static-media/CACHE/js/6b79d088a188.js:132
-#: static-media/CACHE/js/8347635feab9.js:133
-#: static-media/CACHE/js/9e2f3acda32a.js:132
-#: static-media/CACHE/js/a7eed9cbce79.js:133
-#: static-media/CACHE/js/af1972b73435.js:132
-#: static-media/CACHE/js/b4775468438b.js:132
-#: static-media/CACHE/js/c02f606639b0.js:132
-#: static-media/CACHE/js/db7c2b1caabb.js:132
-#: static-media/CACHE/js/f9a5a40a526d.js:132
-#: static-media/CACHE/js/fef441dc0d83.js:132 static-media/js/mapping.js:367
-msgid "Hybrid"
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:132
-#: static-media/CACHE/js/3eeee3706ebf.js:133
-#: static-media/CACHE/js/4bd62bdb2da4.js:132
-#: static-media/CACHE/js/6b79d088a188.js:132
-#: static-media/CACHE/js/8347635feab9.js:133
-#: static-media/CACHE/js/9e2f3acda32a.js:132
-#: static-media/CACHE/js/a7eed9cbce79.js:133
-#: static-media/CACHE/js/af1972b73435.js:132
-#: static-media/CACHE/js/b4775468438b.js:132
-#: static-media/CACHE/js/c02f606639b0.js:132
-#: static-media/CACHE/js/db7c2b1caabb.js:132
-#: static-media/CACHE/js/f9a5a40a526d.js:132
-#: static-media/CACHE/js/fef441dc0d83.js:132 static-media/js/mapping.js:368
-msgid "Road"
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:159
-#: static-media/CACHE/js/3eeee3706ebf.js:160
-#: static-media/CACHE/js/4bd62bdb2da4.js:159
-#: static-media/CACHE/js/6b79d088a188.js:159
-#: static-media/CACHE/js/8347635feab9.js:160
-#: static-media/CACHE/js/9e2f3acda32a.js:159
-#: static-media/CACHE/js/a7eed9cbce79.js:160
-#: static-media/CACHE/js/af1972b73435.js:159
-#: static-media/CACHE/js/b4775468438b.js:159
-#: static-media/CACHE/js/c02f606639b0.js:159
-#: static-media/CACHE/js/db7c2b1caabb.js:159
-#: static-media/CACHE/js/f9a5a40a526d.js:159
-#: static-media/CACHE/js/fef441dc0d83.js:159 static-media/js/emailplan.js:110
-#: static-media/js/mapping.js:1038 static-media/js/mapping.js.py:1102
-#: static-media/js/mapping.js:1114 static-media/js/mapping.js.py:1245
-msgid "OK"
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:159
-#: static-media/CACHE/js/3eeee3706ebf.js:160
-#: static-media/CACHE/js/4bd62bdb2da4.js:159
-#: static-media/CACHE/js/6b79d088a188.js:159
-#: static-media/CACHE/js/8347635feab9.js:160
-#: static-media/CACHE/js/9e2f3acda32a.js:159
-#: static-media/CACHE/js/a7eed9cbce79.js:160
-#: static-media/CACHE/js/af1972b73435.js:159
-#: static-media/CACHE/js/b4775468438b.js:159
-#: static-media/CACHE/js/c02f606639b0.js:159
-#: static-media/CACHE/js/db7c2b1caabb.js:159
-#: static-media/CACHE/js/f9a5a40a526d.js:159
-#: static-media/CACHE/js/fef441dc0d83.js:159
-msgid "Please wait until your previous changes have been accepted."
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:159
-#: static-media/CACHE/js/3eeee3706ebf.js:160
-#: static-media/CACHE/js/4bd62bdb2da4.js:159
-#: static-media/CACHE/js/6b79d088a188.js:159
-#: static-media/CACHE/js/8347635feab9.js:160
-#: static-media/CACHE/js/9e2f3acda32a.js:159
-#: static-media/CACHE/js/a7eed9cbce79.js:160
-#: static-media/CACHE/js/af1972b73435.js:159
-#: static-media/CACHE/js/b4775468438b.js:159
-#: static-media/CACHE/js/c02f606639b0.js:159
-#: static-media/CACHE/js/db7c2b1caabb.js:159
-#: static-media/CACHE/js/f9a5a40a526d.js:159
-#: static-media/CACHE/js/fef441dc0d83.js:159
-msgid "Busy"
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:186
-#: static-media/CACHE/js/3eeee3706ebf.js:187
-#: static-media/CACHE/js/4bd62bdb2da4.js:186
-#: static-media/CACHE/js/6b79d088a188.js:186
-#: static-media/CACHE/js/8347635feab9.js:187
-#: static-media/CACHE/js/9e2f3acda32a.js:186
-#: static-media/CACHE/js/a7eed9cbce79.js:187
-#: static-media/CACHE/js/af1972b73435.js:186
-#: static-media/CACHE/js/b4775468438b.js:186
-#: static-media/CACHE/js/c02f606639b0.js:186
-#: static-media/CACHE/js/db7c2b1caabb.js:186
-#: static-media/CACHE/js/f9a5a40a526d.js:186
-#: static-media/CACHE/js/fef441dc0d83.js:186
-msgid "Sorry, your information could not be saved. Please try again later."
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:226
-#: static-media/CACHE/js/3eeee3706ebf.js:227
-#: static-media/CACHE/js/4bd62bdb2da4.js:226
-#: static-media/CACHE/js/6b79d088a188.js:226
-#: static-media/CACHE/js/8347635feab9.js:227
-#: static-media/CACHE/js/9e2f3acda32a.js:226
-#: static-media/CACHE/js/a7eed9cbce79.js:227
-#: static-media/CACHE/js/af1972b73435.js:226
-#: static-media/CACHE/js/b4775468438b.js:226
-#: static-media/CACHE/js/c02f606639b0.js:226
-#: static-media/CACHE/js/db7c2b1caabb.js:226
-#: static-media/CACHE/js/f9a5a40a526d.js:226
-#: static-media/CACHE/js/fef441dc0d83.js:226 static-media/js/mapping.js:1860
-#: static-media/js/mapping.js.py:1873
-msgid "Unassigned"
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:227
-#: static-media/CACHE/js/3eeee3706ebf.js:228
-#: static-media/CACHE/js/4bd62bdb2da4.js:227
-#: static-media/CACHE/js/6b79d088a188.js:227
-#: static-media/CACHE/js/8347635feab9.js:228
-#: static-media/CACHE/js/9e2f3acda32a.js:227
-#: static-media/CACHE/js/a7eed9cbce79.js:228
-#: static-media/CACHE/js/af1972b73435.js:227
-#: static-media/CACHE/js/b4775468438b.js:227
-#: static-media/CACHE/js/c02f606639b0.js:227
-#: static-media/CACHE/js/db7c2b1caabb.js:227
-#: static-media/CACHE/js/f9a5a40a526d.js:227
-#: static-media/CACHE/js/fef441dc0d83.js:227 static-media/js/mapping.js:1882
-msgid "New "
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:252
-#: static-media/CACHE/js/3eeee3706ebf.js:253
-#: static-media/CACHE/js/4bd62bdb2da4.js:252
-#: static-media/CACHE/js/6b79d088a188.js:252
-#: static-media/CACHE/js/8347635feab9.js:253
-#: static-media/CACHE/js/9e2f3acda32a.js:252
-#: static-media/CACHE/js/a7eed9cbce79.js:253
-#: static-media/CACHE/js/af1972b73435.js:252
-#: static-media/CACHE/js/b4775468438b.js:252
-#: static-media/CACHE/js/c02f606639b0.js:252
-#: static-media/CACHE/js/db7c2b1caabb.js:252
-#: static-media/CACHE/js/f9a5a40a526d.js:252
-#: static-media/CACHE/js/fef441dc0d83.js:252 static-media/js/mapping.js:2423
-msgid "Contiguity"
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:253
-#: static-media/CACHE/js/3eeee3706ebf.js:254
-#: static-media/CACHE/js/4bd62bdb2da4.js:253
-#: static-media/CACHE/js/6b79d088a188.js:253
-#: static-media/CACHE/js/8347635feab9.js:254
-#: static-media/CACHE/js/9e2f3acda32a.js:253
-#: static-media/CACHE/js/a7eed9cbce79.js:254
-#: static-media/CACHE/js/af1972b73435.js:253
-#: static-media/CACHE/js/b4775468438b.js:253
-#: static-media/CACHE/js/c02f606639b0.js:253
-#: static-media/CACHE/js/db7c2b1caabb.js:253
-#: static-media/CACHE/js/f9a5a40a526d.js:253
-#: static-media/CACHE/js/fef441dc0d83.js:253 static-media/js/mapping.js:2427
-msgid "Compactness"
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:254
-#: static-media/CACHE/js/3eeee3706ebf.js:255
-#: static-media/CACHE/js/4bd62bdb2da4.js:254
-#: static-media/CACHE/js/6b79d088a188.js:254
-#: static-media/CACHE/js/8347635feab9.js:255
-#: static-media/CACHE/js/9e2f3acda32a.js:254
-#: static-media/CACHE/js/a7eed9cbce79.js:255
-#: static-media/CACHE/js/af1972b73435.js:254
-#: static-media/CACHE/js/b4775468438b.js:254
-#: static-media/CACHE/js/c02f606639b0.js:254
-#: static-media/CACHE/js/db7c2b1caabb.js:254
-#: static-media/CACHE/js/f9a5a40a526d.js:254
-#: static-media/CACHE/js/fef441dc0d83.js:254 static-media/js/mapping.js:2431
-msgid "None"
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:299
-#: static-media/CACHE/js/3eeee3706ebf.js:300
-#: static-media/CACHE/js/4bd62bdb2da4.js:299
-#: static-media/CACHE/js/6b79d088a188.js:299
-#: static-media/CACHE/js/8347635feab9.js:300
-#: static-media/CACHE/js/9e2f3acda32a.js:299
-#: static-media/CACHE/js/a7eed9cbce79.js:300
-#: static-media/CACHE/js/af1972b73435.js:299
-#: static-media/CACHE/js/b4775468438b.js:299
-#: static-media/CACHE/js/c02f606639b0.js:299
-#: static-media/CACHE/js/db7c2b1caabb.js:299
-#: static-media/CACHE/js/f9a5a40a526d.js:299
-#: static-media/CACHE/js/fef441dc0d83.js:299
-#: static-media/js/districtfile.js:119
-msgid "Download"
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:299
-#: static-media/CACHE/js/3eeee3706ebf.js:300
-#: static-media/CACHE/js/4bd62bdb2da4.js:299
-#: static-media/CACHE/js/6b79d088a188.js:299
-#: static-media/CACHE/js/8347635feab9.js:300
-#: static-media/CACHE/js/9e2f3acda32a.js:299
-#: static-media/CACHE/js/a7eed9cbce79.js:300
-#: static-media/CACHE/js/af1972b73435.js:299
-#: static-media/CACHE/js/b4775468438b.js:299
-#: static-media/CACHE/js/c02f606639b0.js:299
-#: static-media/CACHE/js/db7c2b1caabb.js:299
-#: static-media/CACHE/js/f9a5a40a526d.js:299
-#: static-media/CACHE/js/fef441dc0d83.js:299
-#: static-media/js/districtfile.js:132
-msgid "Request File"
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:300
-#: static-media/CACHE/js/3eeee3706ebf.js:301
-#: static-media/CACHE/js/4bd62bdb2da4.js:300
-#: static-media/CACHE/js/6b79d088a188.js:300
-#: static-media/CACHE/js/8347635feab9.js:301
-#: static-media/CACHE/js/9e2f3acda32a.js:300
-#: static-media/CACHE/js/a7eed9cbce79.js:301
-#: static-media/CACHE/js/af1972b73435.js:300
-#: static-media/CACHE/js/b4775468438b.js:300
-#: static-media/CACHE/js/c02f606639b0.js:300
-#: static-media/CACHE/js/db7c2b1caabb.js:300
-#: static-media/CACHE/js/f9a5a40a526d.js:300
-#: static-media/CACHE/js/fef441dc0d83.js:300
-#: static-media/js/districtfile.js:161
-msgid "Please wait. File is being created on the server"
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:302
-#: static-media/CACHE/js/3eeee3706ebf.js:303
-#: static-media/CACHE/js/4bd62bdb2da4.js:302
-#: static-media/CACHE/js/6b79d088a188.js:302
-#: static-media/CACHE/js/8347635feab9.js:303
-#: static-media/CACHE/js/9e2f3acda32a.js:302
-#: static-media/CACHE/js/a7eed9cbce79.js:303
-#: static-media/CACHE/js/af1972b73435.js:302
-#: static-media/CACHE/js/b4775468438b.js:302
-#: static-media/CACHE/js/c02f606639b0.js:302
-#: static-media/CACHE/js/db7c2b1caabb.js:302
-#: static-media/CACHE/js/f9a5a40a526d.js:302
-#: static-media/CACHE/js/fef441dc0d83.js:302 static-media/js/chooseplan.js:88
+#: redistricting/static/js/chooseplan.js:88 static-media/js/chooseplan.js:88
 msgid ""
 "We're sorry! Your file was transferred to us, but there was a problem "
 "converting it into a plan. Make sure the file is a zipped block equivalency "
 "file, and please try again."
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:302
-#: static-media/CACHE/js/3eeee3706ebf.js:303
-#: static-media/CACHE/js/4bd62bdb2da4.js:302
-#: static-media/CACHE/js/6b79d088a188.js:302
-#: static-media/CACHE/js/8347635feab9.js:303
-#: static-media/CACHE/js/9e2f3acda32a.js:302
-#: static-media/CACHE/js/a7eed9cbce79.js:303
-#: static-media/CACHE/js/af1972b73435.js:302
-#: static-media/CACHE/js/b4775468438b.js:302
-#: static-media/CACHE/js/c02f606639b0.js:302
-#: static-media/CACHE/js/db7c2b1caabb.js:302
-#: static-media/CACHE/js/f9a5a40a526d.js:302
-#: static-media/CACHE/js/fef441dc0d83.js:302 static-media/js/chooseplan.js:89
+#: redistricting/static/js/chooseplan.js:89 static-media/js/chooseplan.js:89
 msgid "Uploaded"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:304
-#: static-media/CACHE/js/01ec5c663726.js:344
-#: static-media/CACHE/js/3eeee3706ebf.js:305
-#: static-media/CACHE/js/3eeee3706ebf.js:346
-#: static-media/CACHE/js/4bd62bdb2da4.js:304
-#: static-media/CACHE/js/4bd62bdb2da4.js:344
-#: static-media/CACHE/js/6b79d088a188.js:304
-#: static-media/CACHE/js/6b79d088a188.js:344
-#: static-media/CACHE/js/8347635feab9.js:305
-#: static-media/CACHE/js/8347635feab9.js:346
-#: static-media/CACHE/js/9e2f3acda32a.js:304
-#: static-media/CACHE/js/9e2f3acda32a.js:344
-#: static-media/CACHE/js/a7eed9cbce79.js:305
-#: static-media/CACHE/js/a7eed9cbce79.js:346
-#: static-media/CACHE/js/af1972b73435.js:304
-#: static-media/CACHE/js/af1972b73435.js:344
-#: static-media/CACHE/js/b4775468438b.js:304
-#: static-media/CACHE/js/b4775468438b.js:344
-#: static-media/CACHE/js/c02f606639b0.js:304
-#: static-media/CACHE/js/c02f606639b0.js:344
-#: static-media/CACHE/js/db7c2b1caabb.js:304
-#: static-media/CACHE/js/db7c2b1caabb.js:344
-#: static-media/CACHE/js/f9a5a40a526d.js:304
-#: static-media/CACHE/js/f9a5a40a526d.js:344
-#: static-media/CACHE/js/fef441dc0d83.js:304
-#: static-media/CACHE/js/fef441dc0d83.js:344 static-media/js/chooseplan.js:130
-#: static-media/js/reaggregator.js:115
+#: redistricting/static/js/chooseplan.js:130
+#: redistricting/static/js/reaggregator.js:131
+#: static-media/js/chooseplan.js:130 static-media/js/reaggregator.js:131
 msgid "Reaggregate"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:305
-#: static-media/CACHE/js/01ec5c663726.js:307
-#: static-media/CACHE/js/3eeee3706ebf.js:306
-#: static-media/CACHE/js/3eeee3706ebf.js:308
-#: static-media/CACHE/js/4bd62bdb2da4.js:305
-#: static-media/CACHE/js/4bd62bdb2da4.js:307
-#: static-media/CACHE/js/6b79d088a188.js:305
-#: static-media/CACHE/js/6b79d088a188.js:307
-#: static-media/CACHE/js/8347635feab9.js:306
-#: static-media/CACHE/js/8347635feab9.js:308
-#: static-media/CACHE/js/9e2f3acda32a.js:305
-#: static-media/CACHE/js/9e2f3acda32a.js:307
-#: static-media/CACHE/js/a7eed9cbce79.js:306
-#: static-media/CACHE/js/a7eed9cbce79.js:308
-#: static-media/CACHE/js/af1972b73435.js:305
-#: static-media/CACHE/js/af1972b73435.js:307
-#: static-media/CACHE/js/b4775468438b.js:305
-#: static-media/CACHE/js/b4775468438b.js:307
-#: static-media/CACHE/js/c02f606639b0.js:305
-#: static-media/CACHE/js/c02f606639b0.js:307
-#: static-media/CACHE/js/db7c2b1caabb.js:305
-#: static-media/CACHE/js/db7c2b1caabb.js:307
-#: static-media/CACHE/js/f9a5a40a526d.js:305
-#: static-media/CACHE/js/f9a5a40a526d.js:307
-#: static-media/CACHE/js/fef441dc0d83.js:305
-#: static-media/CACHE/js/fef441dc0d83.js:307 static-media/js/chooseplan.js:137
-#: static-media/js/chooseplan.js.py:145
+#: redistricting/static/js/chooseplan.js:138
+#: redistricting/static/js/chooseplan.js:147 static-media/js/chooseplan.js:138
+#: static-media/js/chooseplan.js.c:147
 msgid "Choose a plan from the table first"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:308
-#: static-media/CACHE/js/3eeee3706ebf.js:309
-#: static-media/CACHE/js/4bd62bdb2da4.js:308
-#: static-media/CACHE/js/6b79d088a188.js:308
-#: static-media/CACHE/js/8347635feab9.js:309
-#: static-media/CACHE/js/9e2f3acda32a.js:308
-#: static-media/CACHE/js/a7eed9cbce79.js:309
-#: static-media/CACHE/js/af1972b73435.js:308
-#: static-media/CACHE/js/b4775468438b.js:308
-#: static-media/CACHE/js/c02f606639b0.js:308
-#: static-media/CACHE/js/db7c2b1caabb.js:308
-#: static-media/CACHE/js/f9a5a40a526d.js:308
-#: static-media/CACHE/js/fef441dc0d83.js:308 static-media/js/chooseplan.js:152
+#: redistricting/static/js/chooseplan.js:155 static-media/js/chooseplan.js:155
 msgid "A name for the copied template is required"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:310
-#: static-media/CACHE/js/3eeee3706ebf.js:311
-#: static-media/CACHE/js/4bd62bdb2da4.js:310
-#: static-media/CACHE/js/6b79d088a188.js:310
-#: static-media/CACHE/js/8347635feab9.js:311
-#: static-media/CACHE/js/9e2f3acda32a.js:310
-#: static-media/CACHE/js/a7eed9cbce79.js:311
-#: static-media/CACHE/js/af1972b73435.js:310
-#: static-media/CACHE/js/b4775468438b.js:310
-#: static-media/CACHE/js/c02f606639b0.js:310
-#: static-media/CACHE/js/db7c2b1caabb.js:310
-#: static-media/CACHE/js/f9a5a40a526d.js:310
-#: static-media/CACHE/js/fef441dc0d83.js:310 static-media/js/chooseplan.js:164
+#: redistricting/static/js/chooseplan.js:167 static-media/js/chooseplan.js:167
 msgid "Please provide a valid email address."
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:311
-#: static-media/CACHE/js/3eeee3706ebf.js:312
-#: static-media/CACHE/js/4bd62bdb2da4.js:311
-#: static-media/CACHE/js/6b79d088a188.js:311
-#: static-media/CACHE/js/8347635feab9.js:312
-#: static-media/CACHE/js/9e2f3acda32a.js:311
-#: static-media/CACHE/js/a7eed9cbce79.js:312
-#: static-media/CACHE/js/af1972b73435.js:311
-#: static-media/CACHE/js/b4775468438b.js:311
-#: static-media/CACHE/js/c02f606639b0.js:311
-#: static-media/CACHE/js/db7c2b1caabb.js:311
-#: static-media/CACHE/js/f9a5a40a526d.js:311
-#: static-media/CACHE/js/fef441dc0d83.js:311 static-media/js/chooseplan.js:168
+#: redistricting/static/js/chooseplan.js:171 static-media/js/chooseplan.js:171
 msgid "Please provide a zipped district index file."
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:312
-#: static-media/CACHE/js/3eeee3706ebf.js:313
-#: static-media/CACHE/js/4bd62bdb2da4.js:312
-#: static-media/CACHE/js/6b79d088a188.js:312
-#: static-media/CACHE/js/8347635feab9.js:313
-#: static-media/CACHE/js/9e2f3acda32a.js:312
-#: static-media/CACHE/js/a7eed9cbce79.js:313
-#: static-media/CACHE/js/af1972b73435.js:312
-#: static-media/CACHE/js/b4775468438b.js:312
-#: static-media/CACHE/js/c02f606639b0.js:312
-#: static-media/CACHE/js/db7c2b1caabb.js:312
-#: static-media/CACHE/js/f9a5a40a526d.js:312
-#: static-media/CACHE/js/fef441dc0d83.js:312 static-media/js/chooseplan.js:172
+#: redistricting/static/js/chooseplan.js:175 static-media/js/chooseplan.js:175
 msgid "You must select a legislative body from the dropdown in the upload form"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:314
-#: static-media/CACHE/js/3eeee3706ebf.js:315
-#: static-media/CACHE/js/4bd62bdb2da4.js:314
-#: static-media/CACHE/js/6b79d088a188.js:314
-#: static-media/CACHE/js/8347635feab9.js:315
-#: static-media/CACHE/js/9e2f3acda32a.js:314
-#: static-media/CACHE/js/a7eed9cbce79.js:315
-#: static-media/CACHE/js/af1972b73435.js:314
-#: static-media/CACHE/js/b4775468438b.js:314
-#: static-media/CACHE/js/c02f606639b0.js:314
-#: static-media/CACHE/js/db7c2b1caabb.js:314
-#: static-media/CACHE/js/f9a5a40a526d.js:314
-#: static-media/CACHE/js/fef441dc0d83.js:314 static-media/js/chooseplan.js:185
+#: redistricting/static/js/chooseplan.js:188 static-media/js/chooseplan.js:188
 msgid "Creating New Plan..."
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:314
-#: static-media/CACHE/js/3eeee3706ebf.js:315
-#: static-media/CACHE/js/4bd62bdb2da4.js:314
-#: static-media/CACHE/js/6b79d088a188.js:314
-#: static-media/CACHE/js/8347635feab9.js:315
-#: static-media/CACHE/js/9e2f3acda32a.js:314
-#: static-media/CACHE/js/a7eed9cbce79.js:315
-#: static-media/CACHE/js/af1972b73435.js:314
-#: static-media/CACHE/js/b4775468438b.js:314
-#: static-media/CACHE/js/c02f606639b0.js:314
-#: static-media/CACHE/js/db7c2b1caabb.js:314
-#: static-media/CACHE/js/f9a5a40a526d.js:314
-#: static-media/CACHE/js/fef441dc0d83.js:314 static-media/js/chooseplan.js:186
+#: redistricting/static/js/chooseplan.js:189 static-media/js/chooseplan.js:189
 msgid "Please standby while creating new plan ..."
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:318
-#: static-media/CACHE/js/3eeee3706ebf.js:319
-#: static-media/CACHE/js/4bd62bdb2da4.js:318
-#: static-media/CACHE/js/6b79d088a188.js:318
-#: static-media/CACHE/js/8347635feab9.js:319
-#: static-media/CACHE/js/9e2f3acda32a.js:318
-#: static-media/CACHE/js/a7eed9cbce79.js:319
-#: static-media/CACHE/js/af1972b73435.js:318
-#: static-media/CACHE/js/b4775468438b.js:318
-#: static-media/CACHE/js/c02f606639b0.js:318
-#: static-media/CACHE/js/db7c2b1caabb.js:318
-#: static-media/CACHE/js/f9a5a40a526d.js:318
-#: static-media/CACHE/js/fef441dc0d83.js:318 static-media/js/chooseplan.js:232
+#: redistricting/static/js/chooseplan.js:235 static-media/js/chooseplan.js:235
 msgid "Creation Error"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:318
-#: static-media/CACHE/js/3eeee3706ebf.js:319
-#: static-media/CACHE/js/4bd62bdb2da4.js:318
-#: static-media/CACHE/js/6b79d088a188.js:318
-#: static-media/CACHE/js/8347635feab9.js:319
-#: static-media/CACHE/js/9e2f3acda32a.js:318
-#: static-media/CACHE/js/a7eed9cbce79.js:319
-#: static-media/CACHE/js/af1972b73435.js:318
-#: static-media/CACHE/js/b4775468438b.js:318
-#: static-media/CACHE/js/c02f606639b0.js:318
-#: static-media/CACHE/js/db7c2b1caabb.js:318
-#: static-media/CACHE/js/f9a5a40a526d.js:318
-#: static-media/CACHE/js/fef441dc0d83.js:318 static-media/js/chooseplan.js:235
+#: redistricting/static/js/chooseplan.js:238 static-media/js/chooseplan.js:238
 msgid "Tip: "
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:318
-#: static-media/CACHE/js/3eeee3706ebf.js:319
-#: static-media/CACHE/js/4bd62bdb2da4.js:318
-#: static-media/CACHE/js/6b79d088a188.js:318
-#: static-media/CACHE/js/8347635feab9.js:319
-#: static-media/CACHE/js/9e2f3acda32a.js:318
-#: static-media/CACHE/js/a7eed9cbce79.js:319
-#: static-media/CACHE/js/af1972b73435.js:318
-#: static-media/CACHE/js/b4775468438b.js:318
-#: static-media/CACHE/js/c02f606639b0.js:318
-#: static-media/CACHE/js/db7c2b1caabb.js:318
-#: static-media/CACHE/js/f9a5a40a526d.js:318
-#: static-media/CACHE/js/fef441dc0d83.js:318 static-media/js/chooseplan.js:236
+#: redistricting/static/js/chooseplan.js:239 static-media/js/chooseplan.js:239
 msgid "Make sure the new plan's name is unique."
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:323
-#: static-media/CACHE/js/01ec5c663726.js:344
-#: static-media/CACHE/js/3eeee3706ebf.js:324
-#: static-media/CACHE/js/3eeee3706ebf.js:346
-#: static-media/CACHE/js/4bd62bdb2da4.js:323
-#: static-media/CACHE/js/4bd62bdb2da4.js:344
-#: static-media/CACHE/js/6b79d088a188.js:323
-#: static-media/CACHE/js/6b79d088a188.js:344
-#: static-media/CACHE/js/8347635feab9.js:324
-#: static-media/CACHE/js/8347635feab9.js:346
-#: static-media/CACHE/js/9e2f3acda32a.js:323
-#: static-media/CACHE/js/9e2f3acda32a.js:344
-#: static-media/CACHE/js/a7eed9cbce79.js:324
-#: static-media/CACHE/js/a7eed9cbce79.js:346
-#: static-media/CACHE/js/af1972b73435.js:323
-#: static-media/CACHE/js/af1972b73435.js:344
-#: static-media/CACHE/js/b4775468438b.js:323
-#: static-media/CACHE/js/b4775468438b.js:344
-#: static-media/CACHE/js/c02f606639b0.js:323
-#: static-media/CACHE/js/c02f606639b0.js:344
-#: static-media/CACHE/js/db7c2b1caabb.js:323
-#: static-media/CACHE/js/db7c2b1caabb.js:344
-#: static-media/CACHE/js/f9a5a40a526d.js:323
-#: static-media/CACHE/js/f9a5a40a526d.js:344
-#: static-media/CACHE/js/fef441dc0d83.js:323
-#: static-media/CACHE/js/fef441dc0d83.js:344 static-media/js/chooseplan.js:298
-#: static-media/js/reaggregator.js:121
+#: redistricting/static/js/chooseplan.js:306
+#: redistricting/static/js/reaggregator.js:137
+#: static-media/js/chooseplan.js:306 static-media/js/reaggregator.js:137
 msgid "Needs reaggregation"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:323
-#: static-media/CACHE/js/3eeee3706ebf.js:324
-#: static-media/CACHE/js/4bd62bdb2da4.js:323
-#: static-media/CACHE/js/6b79d088a188.js:323
-#: static-media/CACHE/js/8347635feab9.js:324
-#: static-media/CACHE/js/9e2f3acda32a.js:323
-#: static-media/CACHE/js/a7eed9cbce79.js:324
-#: static-media/CACHE/js/af1972b73435.js:323
-#: static-media/CACHE/js/b4775468438b.js:323
-#: static-media/CACHE/js/c02f606639b0.js:323
-#: static-media/CACHE/js/db7c2b1caabb.js:323
-#: static-media/CACHE/js/f9a5a40a526d.js:323
-#: static-media/CACHE/js/fef441dc0d83.js:323 static-media/js/chooseplan.js:301
+#: redistricting/static/js/chooseplan.js:309 static-media/js/chooseplan.js:309
 msgid "Reaggregating"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:324
-#: static-media/CACHE/js/01ec5c663726.js:418
-#: static-media/CACHE/js/3eeee3706ebf.js:325
-#: static-media/CACHE/js/3eeee3706ebf.js:421
-#: static-media/CACHE/js/4bd62bdb2da4.js:324
-#: static-media/CACHE/js/4bd62bdb2da4.js:418
-#: static-media/CACHE/js/6b79d088a188.js:324
-#: static-media/CACHE/js/6b79d088a188.js:418
-#: static-media/CACHE/js/8347635feab9.js:325
-#: static-media/CACHE/js/8347635feab9.js:421
-#: static-media/CACHE/js/9e2f3acda32a.js:324
-#: static-media/CACHE/js/9e2f3acda32a.js:418
-#: static-media/CACHE/js/a7eed9cbce79.js:325
-#: static-media/CACHE/js/a7eed9cbce79.js:420
-#: static-media/CACHE/js/af1972b73435.js:324
-#: static-media/CACHE/js/af1972b73435.js:418
-#: static-media/CACHE/js/b4775468438b.js:324
-#: static-media/CACHE/js/b4775468438b.js:418
-#: static-media/CACHE/js/c02f606639b0.js:324
-#: static-media/CACHE/js/c02f606639b0.js:418
-#: static-media/CACHE/js/db7c2b1caabb.js:324
-#: static-media/CACHE/js/db7c2b1caabb.js:418
-#: static-media/CACHE/js/f9a5a40a526d.js:324
-#: static-media/CACHE/js/f9a5a40a526d.js:418
-#: static-media/CACHE/js/fef441dc0d83.js:324
-#: static-media/CACHE/js/fef441dc0d83.js:418 static-media/js/chooseplan.js:329
-#: static-media/js/layerchooser.js:165
+#: redistricting/static/js/chooseplan.js:337
+#: redistricting/static/js/layerchooser.js:171
+#: static-media/js/chooseplan.js:337 static-media/js/layerchooser.js:171
 msgid "Plan Name"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:324
-#: static-media/CACHE/js/01ec5c663726.js:347
-#: static-media/CACHE/js/3eeee3706ebf.js:325
-#: static-media/CACHE/js/3eeee3706ebf.js:349
-#: static-media/CACHE/js/4bd62bdb2da4.js:324
-#: static-media/CACHE/js/4bd62bdb2da4.js:347
-#: static-media/CACHE/js/6b79d088a188.js:324
-#: static-media/CACHE/js/6b79d088a188.js:347
-#: static-media/CACHE/js/8347635feab9.js:325
-#: static-media/CACHE/js/8347635feab9.js:349
-#: static-media/CACHE/js/9e2f3acda32a.js:324
-#: static-media/CACHE/js/9e2f3acda32a.js:347
-#: static-media/CACHE/js/a7eed9cbce79.js:325
-#: static-media/CACHE/js/a7eed9cbce79.js:349
-#: static-media/CACHE/js/af1972b73435.js:324
-#: static-media/CACHE/js/af1972b73435.js:347
-#: static-media/CACHE/js/b4775468438b.js:324
-#: static-media/CACHE/js/b4775468438b.js:347
-#: static-media/CACHE/js/c02f606639b0.js:324
-#: static-media/CACHE/js/c02f606639b0.js:347
-#: static-media/CACHE/js/db7c2b1caabb.js:324
-#: static-media/CACHE/js/db7c2b1caabb.js:347
-#: static-media/CACHE/js/f9a5a40a526d.js:324
-#: static-media/CACHE/js/f9a5a40a526d.js:347
-#: static-media/CACHE/js/fef441dc0d83.js:324
-#: static-media/CACHE/js/fef441dc0d83.js:347 static-media/js/chooseplan.js:330
-#: static-media/js/shareddistricts.js:140
+#: redistricting/static/js/chooseplan.js:338
+#: redistricting/static/js/shareddistricts.js:141
+#: static-media/js/chooseplan.js:338 static-media/js/shareddistricts.js:141
 msgid "Author"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:324
-#: static-media/CACHE/js/01ec5c663726.js:347
-#: static-media/CACHE/js/3eeee3706ebf.js:325
-#: static-media/CACHE/js/3eeee3706ebf.js:349
-#: static-media/CACHE/js/4bd62bdb2da4.js:324
-#: static-media/CACHE/js/4bd62bdb2da4.js:347
-#: static-media/CACHE/js/6b79d088a188.js:324
-#: static-media/CACHE/js/6b79d088a188.js:347
-#: static-media/CACHE/js/8347635feab9.js:325
-#: static-media/CACHE/js/8347635feab9.js:349
-#: static-media/CACHE/js/9e2f3acda32a.js:324
-#: static-media/CACHE/js/9e2f3acda32a.js:347
-#: static-media/CACHE/js/a7eed9cbce79.js:325
-#: static-media/CACHE/js/a7eed9cbce79.js:349
-#: static-media/CACHE/js/af1972b73435.js:324
-#: static-media/CACHE/js/af1972b73435.js:347
-#: static-media/CACHE/js/b4775468438b.js:324
-#: static-media/CACHE/js/b4775468438b.js:347
-#: static-media/CACHE/js/c02f606639b0.js:324
-#: static-media/CACHE/js/c02f606639b0.js:347
-#: static-media/CACHE/js/db7c2b1caabb.js:324
-#: static-media/CACHE/js/db7c2b1caabb.js:347
-#: static-media/CACHE/js/f9a5a40a526d.js:324
-#: static-media/CACHE/js/f9a5a40a526d.js:347
-#: static-media/CACHE/js/fef441dc0d83.js:324
-#: static-media/CACHE/js/fef441dc0d83.js:347 static-media/js/chooseplan.js:331
-#: static-media/js/shareddistricts.js:142
+#: redistricting/static/js/chooseplan.js:339
+#: redistricting/static/js/shareddistricts.js:143
+#: static-media/js/chooseplan.js:339 static-media/js/shareddistricts.js:143
 msgid "Description"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:324
-#: static-media/CACHE/js/01ec5c663726.js:347
-#: static-media/CACHE/js/3eeee3706ebf.js:325
-#: static-media/CACHE/js/3eeee3706ebf.js:349
-#: static-media/CACHE/js/4bd62bdb2da4.js:324
-#: static-media/CACHE/js/4bd62bdb2da4.js:347
-#: static-media/CACHE/js/6b79d088a188.js:324
-#: static-media/CACHE/js/6b79d088a188.js:347
-#: static-media/CACHE/js/8347635feab9.js:325
-#: static-media/CACHE/js/8347635feab9.js:349
-#: static-media/CACHE/js/9e2f3acda32a.js:324
-#: static-media/CACHE/js/9e2f3acda32a.js:347
-#: static-media/CACHE/js/a7eed9cbce79.js:325
-#: static-media/CACHE/js/a7eed9cbce79.js:349
-#: static-media/CACHE/js/af1972b73435.js:324
-#: static-media/CACHE/js/af1972b73435.js:347
-#: static-media/CACHE/js/b4775468438b.js:324
-#: static-media/CACHE/js/b4775468438b.js:347
-#: static-media/CACHE/js/c02f606639b0.js:324
-#: static-media/CACHE/js/c02f606639b0.js:347
-#: static-media/CACHE/js/db7c2b1caabb.js:324
-#: static-media/CACHE/js/db7c2b1caabb.js:347
-#: static-media/CACHE/js/f9a5a40a526d.js:324
-#: static-media/CACHE/js/f9a5a40a526d.js:347
-#: static-media/CACHE/js/fef441dc0d83.js:324
-#: static-media/CACHE/js/fef441dc0d83.js:347 static-media/js/chooseplan.js:332
-#: static-media/js/shareddistricts.js:143
+#: redistricting/static/js/chooseplan.js:340
+#: redistricting/static/js/shareddistricts.js:144
+#: static-media/js/chooseplan.js:340 static-media/js/shareddistricts.js:144
 msgid "Shared"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:324
-#: static-media/CACHE/js/01ec5c663726.js:347
-#: static-media/CACHE/js/3eeee3706ebf.js:325
-#: static-media/CACHE/js/3eeee3706ebf.js:349
-#: static-media/CACHE/js/4bd62bdb2da4.js:324
-#: static-media/CACHE/js/4bd62bdb2da4.js:347
-#: static-media/CACHE/js/6b79d088a188.js:324
-#: static-media/CACHE/js/6b79d088a188.js:347
-#: static-media/CACHE/js/8347635feab9.js:325
-#: static-media/CACHE/js/8347635feab9.js:349
-#: static-media/CACHE/js/9e2f3acda32a.js:324
-#: static-media/CACHE/js/9e2f3acda32a.js:347
-#: static-media/CACHE/js/a7eed9cbce79.js:325
-#: static-media/CACHE/js/a7eed9cbce79.js:349
-#: static-media/CACHE/js/af1972b73435.js:324
-#: static-media/CACHE/js/af1972b73435.js:347
-#: static-media/CACHE/js/b4775468438b.js:324
-#: static-media/CACHE/js/b4775468438b.js:347
-#: static-media/CACHE/js/c02f606639b0.js:324
-#: static-media/CACHE/js/c02f606639b0.js:347
-#: static-media/CACHE/js/db7c2b1caabb.js:324
-#: static-media/CACHE/js/db7c2b1caabb.js:347
-#: static-media/CACHE/js/f9a5a40a526d.js:324
-#: static-media/CACHE/js/f9a5a40a526d.js:347
-#: static-media/CACHE/js/fef441dc0d83.js:324
-#: static-media/CACHE/js/fef441dc0d83.js:347 static-media/js/chooseplan.js:333
-#: static-media/js/shareddistricts.js:144
+#: redistricting/static/js/chooseplan.js:341
+#: redistricting/static/js/shareddistricts.js:145
+#: static-media/js/chooseplan.js:341 static-media/js/shareddistricts.js:145
 msgid "Last Edited"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:324
-#: static-media/CACHE/js/3eeee3706ebf.js:325
-#: static-media/CACHE/js/4bd62bdb2da4.js:324
-#: static-media/CACHE/js/6b79d088a188.js:324
-#: static-media/CACHE/js/8347635feab9.js:325
-#: static-media/CACHE/js/9e2f3acda32a.js:324
-#: static-media/CACHE/js/a7eed9cbce79.js:325
-#: static-media/CACHE/js/af1972b73435.js:324
-#: static-media/CACHE/js/b4775468438b.js:324
-#: static-media/CACHE/js/c02f606639b0.js:324
-#: static-media/CACHE/js/db7c2b1caabb.js:324
-#: static-media/CACHE/js/f9a5a40a526d.js:324
-#: static-media/CACHE/js/fef441dc0d83.js:324 static-media/js/chooseplan.js:334
+#: redistricting/static/js/chooseplan.js:342 static-media/js/chooseplan.js:342
 msgid "Delete"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:324
-#: static-media/CACHE/js/01ec5c663726.js:347
-#: static-media/CACHE/js/3eeee3706ebf.js:325
-#: static-media/CACHE/js/3eeee3706ebf.js:349
-#: static-media/CACHE/js/4bd62bdb2da4.js:324
-#: static-media/CACHE/js/4bd62bdb2da4.js:347
-#: static-media/CACHE/js/6b79d088a188.js:324
-#: static-media/CACHE/js/6b79d088a188.js:347
-#: static-media/CACHE/js/8347635feab9.js:325
-#: static-media/CACHE/js/8347635feab9.js:349
-#: static-media/CACHE/js/9e2f3acda32a.js:324
-#: static-media/CACHE/js/9e2f3acda32a.js:347
-#: static-media/CACHE/js/a7eed9cbce79.js:325
-#: static-media/CACHE/js/a7eed9cbce79.js:349
-#: static-media/CACHE/js/af1972b73435.js:324
-#: static-media/CACHE/js/af1972b73435.js:347
-#: static-media/CACHE/js/b4775468438b.js:324
-#: static-media/CACHE/js/b4775468438b.js:347
-#: static-media/CACHE/js/c02f606639b0.js:324
-#: static-media/CACHE/js/c02f606639b0.js:347
-#: static-media/CACHE/js/db7c2b1caabb.js:324
-#: static-media/CACHE/js/db7c2b1caabb.js:347
-#: static-media/CACHE/js/f9a5a40a526d.js:324
-#: static-media/CACHE/js/f9a5a40a526d.js:347
-#: static-media/CACHE/js/fef441dc0d83.js:324
-#: static-media/CACHE/js/fef441dc0d83.js:347 static-media/js/chooseplan.js:335
-#: static-media/js/shareddistricts.js:145
+#: redistricting/static/js/chooseplan.js:343
+#: redistricting/static/js/shareddistricts.js:146
+#: static-media/js/chooseplan.js:343 static-media/js/shareddistricts.js:146
 msgid "Edit"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:324
-#: static-media/CACHE/js/01ec5c663726.js:347
-#: static-media/CACHE/js/3eeee3706ebf.js:325
-#: static-media/CACHE/js/3eeee3706ebf.js:349
-#: static-media/CACHE/js/4bd62bdb2da4.js:324
-#: static-media/CACHE/js/4bd62bdb2da4.js:347
-#: static-media/CACHE/js/6b79d088a188.js:324
-#: static-media/CACHE/js/6b79d088a188.js:347
-#: static-media/CACHE/js/8347635feab9.js:325
-#: static-media/CACHE/js/8347635feab9.js:349
-#: static-media/CACHE/js/9e2f3acda32a.js:324
-#: static-media/CACHE/js/9e2f3acda32a.js:347
-#: static-media/CACHE/js/a7eed9cbce79.js:325
-#: static-media/CACHE/js/a7eed9cbce79.js:349
-#: static-media/CACHE/js/af1972b73435.js:324
-#: static-media/CACHE/js/af1972b73435.js:347
-#: static-media/CACHE/js/b4775468438b.js:324
-#: static-media/CACHE/js/b4775468438b.js:347
-#: static-media/CACHE/js/c02f606639b0.js:324
-#: static-media/CACHE/js/c02f606639b0.js:347
-#: static-media/CACHE/js/db7c2b1caabb.js:324
-#: static-media/CACHE/js/db7c2b1caabb.js:347
-#: static-media/CACHE/js/f9a5a40a526d.js:324
-#: static-media/CACHE/js/f9a5a40a526d.js:347
-#: static-media/CACHE/js/fef441dc0d83.js:324
-#: static-media/CACHE/js/fef441dc0d83.js:347 static-media/js/chooseplan.js:336
-#: static-media/js/shareddistricts.js:146
+#: redistricting/static/js/chooseplan.js:344
+#: redistricting/static/js/shareddistricts.js:147
+#: static-media/js/chooseplan.js:344 static-media/js/shareddistricts.js:147
 msgid "# Districts"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:324
-#: static-media/CACHE/js/3eeee3706ebf.js:325
-#: static-media/CACHE/js/4bd62bdb2da4.js:324
-#: static-media/CACHE/js/6b79d088a188.js:324
-#: static-media/CACHE/js/8347635feab9.js:325
-#: static-media/CACHE/js/9e2f3acda32a.js:324
-#: static-media/CACHE/js/a7eed9cbce79.js:325
-#: static-media/CACHE/js/af1972b73435.js:324
-#: static-media/CACHE/js/b4775468438b.js:324
-#: static-media/CACHE/js/c02f606639b0.js:324
-#: static-media/CACHE/js/db7c2b1caabb.js:324
-#: static-media/CACHE/js/f9a5a40a526d.js:324
-#: static-media/CACHE/js/fef441dc0d83.js:324 static-media/js/chooseplan.js:337
+#: redistricting/static/js/chooseplan.js:345 static-media/js/chooseplan.js:345
 msgid "State"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:324
-#: static-media/CACHE/js/3eeee3706ebf.js:325
-#: static-media/CACHE/js/4bd62bdb2da4.js:324
-#: static-media/CACHE/js/6b79d088a188.js:324
-#: static-media/CACHE/js/8347635feab9.js:325
-#: static-media/CACHE/js/9e2f3acda32a.js:324
-#: static-media/CACHE/js/a7eed9cbce79.js:325
-#: static-media/CACHE/js/af1972b73435.js:324
-#: static-media/CACHE/js/b4775468438b.js:324
-#: static-media/CACHE/js/c02f606639b0.js:324
-#: static-media/CACHE/js/db7c2b1caabb.js:324
-#: static-media/CACHE/js/f9a5a40a526d.js:324
-#: static-media/CACHE/js/fef441dc0d83.js:324 static-media/js/chooseplan.js:372
+#: redistricting/static/js/chooseplan.js:381 static-media/js/chooseplan.js:381
 msgid "Really delete plan: "
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:324
-#: static-media/CACHE/js/3eeee3706ebf.js:325
-#: static-media/CACHE/js/4bd62bdb2da4.js:324
-#: static-media/CACHE/js/6b79d088a188.js:324
-#: static-media/CACHE/js/8347635feab9.js:325
-#: static-media/CACHE/js/9e2f3acda32a.js:324
-#: static-media/CACHE/js/a7eed9cbce79.js:325
-#: static-media/CACHE/js/af1972b73435.js:324
-#: static-media/CACHE/js/b4775468438b.js:324
-#: static-media/CACHE/js/c02f606639b0.js:324
-#: static-media/CACHE/js/db7c2b1caabb.js:324
-#: static-media/CACHE/js/f9a5a40a526d.js:324
-#: static-media/CACHE/js/fef441dc0d83.js:324 static-media/js/chooseplan.js:375
+#: redistricting/static/js/chooseplan.js:384 static-media/js/chooseplan.js:384
 msgid "Delete Plan"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:324
-#: static-media/CACHE/js/01ec5c663726.js:328
-#: static-media/CACHE/js/01ec5c663726.js:336
-#: static-media/CACHE/js/3eeee3706ebf.js:325
-#: static-media/CACHE/js/3eeee3706ebf.js:329
-#: static-media/CACHE/js/3eeee3706ebf.js:338
-#: static-media/CACHE/js/4bd62bdb2da4.js:324
-#: static-media/CACHE/js/4bd62bdb2da4.js:328
-#: static-media/CACHE/js/4bd62bdb2da4.js:336
-#: static-media/CACHE/js/6b79d088a188.js:324
-#: static-media/CACHE/js/6b79d088a188.js:328
-#: static-media/CACHE/js/6b79d088a188.js:336
-#: static-media/CACHE/js/8347635feab9.js:325
-#: static-media/CACHE/js/8347635feab9.js:329
-#: static-media/CACHE/js/8347635feab9.js:338
-#: static-media/CACHE/js/9e2f3acda32a.js:324
-#: static-media/CACHE/js/9e2f3acda32a.js:328
-#: static-media/CACHE/js/9e2f3acda32a.js:336
-#: static-media/CACHE/js/a7eed9cbce79.js:325
-#: static-media/CACHE/js/a7eed9cbce79.js:329
-#: static-media/CACHE/js/a7eed9cbce79.js:338
-#: static-media/CACHE/js/af1972b73435.js:324
-#: static-media/CACHE/js/af1972b73435.js:328
-#: static-media/CACHE/js/af1972b73435.js:336
-#: static-media/CACHE/js/b4775468438b.js:324
-#: static-media/CACHE/js/b4775468438b.js:328
-#: static-media/CACHE/js/b4775468438b.js:336
-#: static-media/CACHE/js/c02f606639b0.js:324
-#: static-media/CACHE/js/c02f606639b0.js:328
-#: static-media/CACHE/js/c02f606639b0.js:336
-#: static-media/CACHE/js/db7c2b1caabb.js:324
-#: static-media/CACHE/js/db7c2b1caabb.js:328
-#: static-media/CACHE/js/db7c2b1caabb.js:336
-#: static-media/CACHE/js/f9a5a40a526d.js:324
-#: static-media/CACHE/js/f9a5a40a526d.js:328
-#: static-media/CACHE/js/f9a5a40a526d.js:336
-#: static-media/CACHE/js/fef441dc0d83.js:324
-#: static-media/CACHE/js/fef441dc0d83.js:328
-#: static-media/CACHE/js/fef441dc0d83.js:336 static-media/js/chooseplan.js:377
-#: static-media/js/chooseplan.js.py:478 static-media/js/chooseplan.js:647
+#: redistricting/static/js/chooseplan.js:386
+#: redistricting/static/js/chooseplan.js:489
+#: redistricting/static/js/chooseplan.js:665 static-media/js/chooseplan.js:386
+#: static-media/js/chooseplan.js.c:489 static-media/js/chooseplan.js:665
 msgid "Yes"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:324
-#: static-media/CACHE/js/3eeee3706ebf.js:325
-#: static-media/CACHE/js/4bd62bdb2da4.js:324
-#: static-media/CACHE/js/6b79d088a188.js:324
-#: static-media/CACHE/js/8347635feab9.js:325
-#: static-media/CACHE/js/9e2f3acda32a.js:324
-#: static-media/CACHE/js/a7eed9cbce79.js:325
-#: static-media/CACHE/js/af1972b73435.js:324
-#: static-media/CACHE/js/b4775468438b.js:324
-#: static-media/CACHE/js/c02f606639b0.js:324
-#: static-media/CACHE/js/db7c2b1caabb.js:324
-#: static-media/CACHE/js/f9a5a40a526d.js:324
-#: static-media/CACHE/js/fef441dc0d83.js:324 static-media/js/chooseplan.js:381
+#: redistricting/static/js/chooseplan.js:390 static-media/js/chooseplan.js:390
 msgid "Please wait. Deleting plan."
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:324
-#: static-media/CACHE/js/3eeee3706ebf.js:325
-#: static-media/CACHE/js/4bd62bdb2da4.js:324
-#: static-media/CACHE/js/6b79d088a188.js:324
-#: static-media/CACHE/js/8347635feab9.js:325
-#: static-media/CACHE/js/9e2f3acda32a.js:324
-#: static-media/CACHE/js/a7eed9cbce79.js:325
-#: static-media/CACHE/js/af1972b73435.js:324
-#: static-media/CACHE/js/b4775468438b.js:324
-#: static-media/CACHE/js/c02f606639b0.js:324
-#: static-media/CACHE/js/db7c2b1caabb.js:324
-#: static-media/CACHE/js/f9a5a40a526d.js:324
-#: static-media/CACHE/js/fef441dc0d83.js:324 static-media/js/chooseplan.js:382
+#: redistricting/static/js/chooseplan.js:391 static-media/js/chooseplan.js:391
 msgid "Deleting Plan"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:324
-#: static-media/CACHE/js/3eeee3706ebf.js:325
-#: static-media/CACHE/js/4bd62bdb2da4.js:324
-#: static-media/CACHE/js/6b79d088a188.js:324
-#: static-media/CACHE/js/8347635feab9.js:325
-#: static-media/CACHE/js/9e2f3acda32a.js:324
-#: static-media/CACHE/js/a7eed9cbce79.js:325
-#: static-media/CACHE/js/af1972b73435.js:324
-#: static-media/CACHE/js/b4775468438b.js:324
-#: static-media/CACHE/js/c02f606639b0.js:324
-#: static-media/CACHE/js/db7c2b1caabb.js:324
-#: static-media/CACHE/js/f9a5a40a526d.js:324
-#: static-media/CACHE/js/fef441dc0d83.js:324 static-media/js/chooseplan.js:397
-#: static-media/js/chooseplan.js.py:406
+#: redistricting/static/js/chooseplan.js:406
+#: redistricting/static/js/chooseplan.js:415 static-media/js/chooseplan.js:406
+#: static-media/js/chooseplan.js.c:415
 msgid "Error Deleting Plan"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:324
-#: static-media/CACHE/js/3eeee3706ebf.js:325
-#: static-media/CACHE/js/4bd62bdb2da4.js:324
-#: static-media/CACHE/js/6b79d088a188.js:324
-#: static-media/CACHE/js/8347635feab9.js:325
-#: static-media/CACHE/js/9e2f3acda32a.js:324
-#: static-media/CACHE/js/a7eed9cbce79.js:325
-#: static-media/CACHE/js/af1972b73435.js:324
-#: static-media/CACHE/js/b4775468438b.js:324
-#: static-media/CACHE/js/c02f606639b0.js:324
-#: static-media/CACHE/js/db7c2b1caabb.js:324
-#: static-media/CACHE/js/f9a5a40a526d.js:324
-#: static-media/CACHE/js/fef441dc0d83.js:324 static-media/js/chooseplan.js:407
+#: redistricting/static/js/chooseplan.js:416 static-media/js/chooseplan.js:416
 msgid "Please try again later."
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:324
-#: static-media/CACHE/js/01ec5c663726.js:328
-#: static-media/CACHE/js/01ec5c663726.js:336
-#: static-media/CACHE/js/3eeee3706ebf.js:325
-#: static-media/CACHE/js/3eeee3706ebf.js:329
-#: static-media/CACHE/js/3eeee3706ebf.js:338
-#: static-media/CACHE/js/4bd62bdb2da4.js:324
-#: static-media/CACHE/js/4bd62bdb2da4.js:328
-#: static-media/CACHE/js/4bd62bdb2da4.js:336
-#: static-media/CACHE/js/6b79d088a188.js:324
-#: static-media/CACHE/js/6b79d088a188.js:328
-#: static-media/CACHE/js/6b79d088a188.js:336
-#: static-media/CACHE/js/8347635feab9.js:325
-#: static-media/CACHE/js/8347635feab9.js:329
-#: static-media/CACHE/js/8347635feab9.js:338
-#: static-media/CACHE/js/9e2f3acda32a.js:324
-#: static-media/CACHE/js/9e2f3acda32a.js:328
-#: static-media/CACHE/js/9e2f3acda32a.js:336
-#: static-media/CACHE/js/a7eed9cbce79.js:325
-#: static-media/CACHE/js/a7eed9cbce79.js:329
-#: static-media/CACHE/js/a7eed9cbce79.js:338
-#: static-media/CACHE/js/af1972b73435.js:324
-#: static-media/CACHE/js/af1972b73435.js:328
-#: static-media/CACHE/js/af1972b73435.js:336
-#: static-media/CACHE/js/b4775468438b.js:324
-#: static-media/CACHE/js/b4775468438b.js:328
-#: static-media/CACHE/js/b4775468438b.js:336
-#: static-media/CACHE/js/c02f606639b0.js:324
-#: static-media/CACHE/js/c02f606639b0.js:328
-#: static-media/CACHE/js/c02f606639b0.js:336
-#: static-media/CACHE/js/db7c2b1caabb.js:324
-#: static-media/CACHE/js/db7c2b1caabb.js:328
-#: static-media/CACHE/js/db7c2b1caabb.js:336
-#: static-media/CACHE/js/f9a5a40a526d.js:324
-#: static-media/CACHE/js/f9a5a40a526d.js:328
-#: static-media/CACHE/js/f9a5a40a526d.js:336
-#: static-media/CACHE/js/fef441dc0d83.js:324
-#: static-media/CACHE/js/fef441dc0d83.js:328
-#: static-media/CACHE/js/fef441dc0d83.js:336 static-media/js/chooseplan.js:412
-#: static-media/js/chooseplan.js.py:476 static-media/js/chooseplan.js:645
-#: static-media/js/mapping.js:1274
+#: redistricting/static/js/chooseplan.js:421
+#: redistricting/static/js/chooseplan.js:487
+#: redistricting/static/js/chooseplan.js:663
+#: redistricting/static/js/mapping.js:1340 static-media/js/chooseplan.js:421
+#: static-media/js/chooseplan.js.c:487 static-media/js/chooseplan.js:663
+#: static-media/js/mapping.js:1340
 msgid "No"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:324
-#: static-media/CACHE/js/01ec5c663726.js:334
-#: static-media/CACHE/js/01ec5c663726.js:347
-#: static-media/CACHE/js/01ec5c663726.js:418
-#: static-media/CACHE/js/3eeee3706ebf.js:325
-#: static-media/CACHE/js/3eeee3706ebf.js:335
-#: static-media/CACHE/js/3eeee3706ebf.js:336
-#: static-media/CACHE/js/3eeee3706ebf.js:349
-#: static-media/CACHE/js/3eeee3706ebf.js:421
-#: static-media/CACHE/js/4bd62bdb2da4.js:324
-#: static-media/CACHE/js/4bd62bdb2da4.js:334
-#: static-media/CACHE/js/4bd62bdb2da4.js:347
-#: static-media/CACHE/js/4bd62bdb2da4.js:418
-#: static-media/CACHE/js/6b79d088a188.js:324
-#: static-media/CACHE/js/6b79d088a188.js:334
-#: static-media/CACHE/js/6b79d088a188.js:347
-#: static-media/CACHE/js/6b79d088a188.js:418
-#: static-media/CACHE/js/8347635feab9.js:325
-#: static-media/CACHE/js/8347635feab9.js:335
-#: static-media/CACHE/js/8347635feab9.js:336
-#: static-media/CACHE/js/8347635feab9.js:349
-#: static-media/CACHE/js/8347635feab9.js:421
-#: static-media/CACHE/js/9e2f3acda32a.js:324
-#: static-media/CACHE/js/9e2f3acda32a.js:334
-#: static-media/CACHE/js/9e2f3acda32a.js:347
-#: static-media/CACHE/js/9e2f3acda32a.js:418
-#: static-media/CACHE/js/a7eed9cbce79.js:325
-#: static-media/CACHE/js/a7eed9cbce79.js:335
-#: static-media/CACHE/js/a7eed9cbce79.js:336
-#: static-media/CACHE/js/a7eed9cbce79.js:349
-#: static-media/CACHE/js/a7eed9cbce79.js:420
-#: static-media/CACHE/js/af1972b73435.js:324
-#: static-media/CACHE/js/af1972b73435.js:334
-#: static-media/CACHE/js/af1972b73435.js:347
-#: static-media/CACHE/js/af1972b73435.js:418
-#: static-media/CACHE/js/b4775468438b.js:324
-#: static-media/CACHE/js/b4775468438b.js:334
-#: static-media/CACHE/js/b4775468438b.js:347
-#: static-media/CACHE/js/b4775468438b.js:418
-#: static-media/CACHE/js/c02f606639b0.js:324
-#: static-media/CACHE/js/c02f606639b0.js:334
-#: static-media/CACHE/js/c02f606639b0.js:347
-#: static-media/CACHE/js/c02f606639b0.js:418
-#: static-media/CACHE/js/db7c2b1caabb.js:324
-#: static-media/CACHE/js/db7c2b1caabb.js:334
-#: static-media/CACHE/js/db7c2b1caabb.js:347
-#: static-media/CACHE/js/db7c2b1caabb.js:418
-#: static-media/CACHE/js/f9a5a40a526d.js:324
-#: static-media/CACHE/js/f9a5a40a526d.js:334
-#: static-media/CACHE/js/f9a5a40a526d.js:347
-#: static-media/CACHE/js/f9a5a40a526d.js:418
-#: static-media/CACHE/js/fef441dc0d83.js:324
-#: static-media/CACHE/js/fef441dc0d83.js:334
-#: static-media/CACHE/js/fef441dc0d83.js:347
-#: static-media/CACHE/js/fef441dc0d83.js:418 static-media/js/chooseplan.js:421
-#: static-media/js/chooseplan.js.py:548 static-media/js/chooseplan.js:576
-#: static-media/js/chooseplan.js.py:579 static-media/js/chooseplan.js:587
-#: static-media/js/chooseplan.js.py:592 static-media/js/layerchooser.js:184
-#: static-media/js/shareddistricts.js:170
+#: redistricting/static/js/chooseplan.js:430
+#: redistricting/static/js/chooseplan.js:562
+#: redistricting/static/js/chooseplan.js:591
+#: redistricting/static/js/chooseplan.js:594
+#: redistricting/static/js/chooseplan.js:602
+#: redistricting/static/js/chooseplan.js:608
+#: redistricting/static/js/layerchooser.js:190
+#: redistricting/static/js/shareddistricts.js:171
+#: static-media/js/chooseplan.js:430 static-media/js/chooseplan.js.c:562
+#: static-media/js/chooseplan.js:591 static-media/js/chooseplan.js.c:594
+#: static-media/js/chooseplan.js:602 static-media/js/chooseplan.js.c:608
+#: static-media/js/layerchooser.js:190 static-media/js/shareddistricts.js:171
 msgid "Search"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:324
-#: static-media/CACHE/js/01ec5c663726.js:347
-#: static-media/CACHE/js/01ec5c663726.js:418
-#: static-media/CACHE/js/3eeee3706ebf.js:325
-#: static-media/CACHE/js/3eeee3706ebf.js:349
-#: static-media/CACHE/js/3eeee3706ebf.js:421
-#: static-media/CACHE/js/4bd62bdb2da4.js:324
-#: static-media/CACHE/js/4bd62bdb2da4.js:347
-#: static-media/CACHE/js/4bd62bdb2da4.js:418
-#: static-media/CACHE/js/6b79d088a188.js:324
-#: static-media/CACHE/js/6b79d088a188.js:347
-#: static-media/CACHE/js/6b79d088a188.js:418
-#: static-media/CACHE/js/8347635feab9.js:325
-#: static-media/CACHE/js/8347635feab9.js:349
-#: static-media/CACHE/js/8347635feab9.js:421
-#: static-media/CACHE/js/9e2f3acda32a.js:324
-#: static-media/CACHE/js/9e2f3acda32a.js:347
-#: static-media/CACHE/js/9e2f3acda32a.js:418
-#: static-media/CACHE/js/a7eed9cbce79.js:325
-#: static-media/CACHE/js/a7eed9cbce79.js:349
-#: static-media/CACHE/js/a7eed9cbce79.js:420
-#: static-media/CACHE/js/af1972b73435.js:324
-#: static-media/CACHE/js/af1972b73435.js:347
-#: static-media/CACHE/js/af1972b73435.js:418
-#: static-media/CACHE/js/b4775468438b.js:324
-#: static-media/CACHE/js/b4775468438b.js:347
-#: static-media/CACHE/js/b4775468438b.js:418
-#: static-media/CACHE/js/c02f606639b0.js:324
-#: static-media/CACHE/js/c02f606639b0.js:347
-#: static-media/CACHE/js/c02f606639b0.js:418
-#: static-media/CACHE/js/db7c2b1caabb.js:324
-#: static-media/CACHE/js/db7c2b1caabb.js:347
-#: static-media/CACHE/js/db7c2b1caabb.js:418
-#: static-media/CACHE/js/f9a5a40a526d.js:324
-#: static-media/CACHE/js/f9a5a40a526d.js:347
-#: static-media/CACHE/js/f9a5a40a526d.js:418
-#: static-media/CACHE/js/fef441dc0d83.js:324
-#: static-media/CACHE/js/fef441dc0d83.js:347
-#: static-media/CACHE/js/fef441dc0d83.js:418 static-media/js/chooseplan.js:421
-#: static-media/js/layerchooser.js:184 static-media/js/shareddistricts.js:170
+#: redistricting/static/js/chooseplan.js:430
+#: redistricting/static/js/layerchooser.js:190
+#: redistricting/static/js/shareddistricts.js:171
+#: static-media/js/chooseplan.js:430 static-media/js/layerchooser.js:190
+#: static-media/js/shareddistricts.js:171
 msgid "Clear Search"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:331
-#: static-media/CACHE/js/3eeee3706ebf.js:332
-#: static-media/CACHE/js/4bd62bdb2da4.js:331
-#: static-media/CACHE/js/6b79d088a188.js:331
-#: static-media/CACHE/js/8347635feab9.js:332
-#: static-media/CACHE/js/9e2f3acda32a.js:331
-#: static-media/CACHE/js/a7eed9cbce79.js:332
-#: static-media/CACHE/js/af1972b73435.js:331
-#: static-media/CACHE/js/b4775468438b.js:331
-#: static-media/CACHE/js/c02f606639b0.js:331
-#: static-media/CACHE/js/db7c2b1caabb.js:331
-#: static-media/CACHE/js/f9a5a40a526d.js:331
-#: static-media/CACHE/js/fef441dc0d83.js:331 static-media/js/chooseplan.js:504
+#: redistricting/static/js/chooseplan.js:515 static-media/js/chooseplan.js:515
 msgid "Error Saving Details"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:339
-#: static-media/CACHE/js/3eeee3706ebf.js:341
-#: static-media/CACHE/js/4bd62bdb2da4.js:339
-#: static-media/CACHE/js/6b79d088a188.js:339
-#: static-media/CACHE/js/8347635feab9.js:341
-#: static-media/CACHE/js/9e2f3acda32a.js:339
-#: static-media/CACHE/js/a7eed9cbce79.js:341
-#: static-media/CACHE/js/af1972b73435.js:339
-#: static-media/CACHE/js/b4775468438b.js:339
-#: static-media/CACHE/js/c02f606639b0.js:339
-#: static-media/CACHE/js/db7c2b1caabb.js:339
-#: static-media/CACHE/js/f9a5a40a526d.js:339
-#: static-media/CACHE/js/fef441dc0d83.js:339 static-media/js/chooseplan.js:698
+#: redistricting/static/js/chooseplan.js:581 static-media/js/chooseplan.js:581
+msgid "Current Filter: "
+msgstr ""
+
+#: redistricting/static/js/chooseplan.js:717 static-media/js/chooseplan.js:717
 msgid "Upload Plan"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:339
-#: static-media/CACHE/js/3eeee3706ebf.js:341
-#: static-media/CACHE/js/4bd62bdb2da4.js:339
-#: static-media/CACHE/js/6b79d088a188.js:339
-#: static-media/CACHE/js/8347635feab9.js:341
-#: static-media/CACHE/js/9e2f3acda32a.js:339
-#: static-media/CACHE/js/a7eed9cbce79.js:341
-#: static-media/CACHE/js/af1972b73435.js:339
-#: static-media/CACHE/js/b4775468438b.js:339
-#: static-media/CACHE/js/c02f606639b0.js:339
-#: static-media/CACHE/js/db7c2b1caabb.js:339
-#: static-media/CACHE/js/f9a5a40a526d.js:339
-#: static-media/CACHE/js/fef441dc0d83.js:339 static-media/js/chooseplan.js:725
+#: redistricting/static/js/chooseplan.js:746 static-media/js/chooseplan.js:746
 msgid "Click the button to view the map as a guest"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:342
-#: static-media/CACHE/js/3eeee3706ebf.js:344
-#: static-media/CACHE/js/4bd62bdb2da4.js:342
-#: static-media/CACHE/js/6b79d088a188.js:342
-#: static-media/CACHE/js/8347635feab9.js:344
-#: static-media/CACHE/js/9e2f3acda32a.js:342
-#: static-media/CACHE/js/a7eed9cbce79.js:344
-#: static-media/CACHE/js/af1972b73435.js:342
-#: static-media/CACHE/js/b4775468438b.js:342
-#: static-media/CACHE/js/c02f606639b0.js:342
-#: static-media/CACHE/js/db7c2b1caabb.js:342
-#: static-media/CACHE/js/f9a5a40a526d.js:342
-#: static-media/CACHE/js/fef441dc0d83.js:342
-#: static-media/js/reaggregator.js:44
-msgid "Start Drawing"
+#: redistricting/static/js/districtfile.js:120
+#: static-media/js/districtfile.js:120
+msgid "Download"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:344
-#: static-media/CACHE/js/3eeee3706ebf.js:346
-#: static-media/CACHE/js/4bd62bdb2da4.js:344
-#: static-media/CACHE/js/6b79d088a188.js:344
-#: static-media/CACHE/js/8347635feab9.js:346
-#: static-media/CACHE/js/9e2f3acda32a.js:344
-#: static-media/CACHE/js/a7eed9cbce79.js:346
-#: static-media/CACHE/js/af1972b73435.js:344
-#: static-media/CACHE/js/b4775468438b.js:344
-#: static-media/CACHE/js/c02f606639b0.js:344
-#: static-media/CACHE/js/db7c2b1caabb.js:344
-#: static-media/CACHE/js/f9a5a40a526d.js:344
-#: static-media/CACHE/js/fef441dc0d83.js:344
-#: static-media/js/reaggregator.js:117
+#: redistricting/static/js/districtfile.js:133
+#: static-media/js/districtfile.js:133
+msgid "Request File"
+msgstr ""
+
+#: redistricting/static/js/districtfile.js:162
+#: static-media/js/districtfile.js:162
+msgid "Please wait. File is being created on the server"
+msgstr ""
+
+#: redistricting/static/js/emailplan.js:42 static-media/js/emailplan.js:42
+msgid "Submit Final Plan to Contest"
+msgstr ""
+
+#: redistricting/static/js/emailplan.js:99 static-media/js/emailplan.js:99
+msgid "Please wait. Emailing plan."
+msgstr ""
+
+#: redistricting/static/js/emailplan.js:100
+#: redistricting/static/js/emailplan.js:112 static-media/js/emailplan.js:100
+#: static-media/js/emailplan.js.c:112
+msgid "Emailing Plan"
+msgstr ""
+
+#: redistricting/static/js/emailplan.js:113 static-media/js/emailplan.js:113
+msgid ""
+"Your plan is in the process of being submitted. You will receive a "
+"confirmation email once it has completed successfully. This may take a few "
+"minutes."
+msgstr ""
+
+#: redistricting/static/js/emailplan.js:116
+#: redistricting/static/js/mapping.js:503
+#: redistricting/static/js/mapping.js:1055
+#: redistricting/static/js/mapping.js:1098
+#: redistricting/static/js/mapping.js:1163
+#: redistricting/static/js/mapping.js:1175
+#: redistricting/static/js/mapping.js:1311
+#: redistricting/static/js/mapping.js:2971 static-media/js/emailplan.js:116
+#: static-media/js/mapping.js:503 static-media/js/mapping.js.c:1055
+#: static-media/js/mapping.js:1098 static-media/js/mapping.js.c:1163
+#: static-media/js/mapping.js:1175 static-media/js/mapping.js.c:1311
+#: static-media/js/mapping.js:2971
+msgid "OK"
+msgstr ""
+
+#: redistricting/static/js/emailplan.js:123
+#: redistricting/static/js/emailplan.js:132 static-media/js/emailplan.js:123
+#: static-media/js/emailplan.js.c:132
+msgid "Error Emailing Plan"
+msgstr ""
+
+#: redistricting/static/js/emailplan.js:133 static-media/js/emailplan.js:133
+msgid "Please try again later"
+msgstr ""
+
+#: redistricting/static/js/layerchooser.js:59
+#: static-media/js/layerchooser.js:59
+msgid "Choose Map Layers"
+msgstr ""
+
+#: redistricting/static/js/layerchooser.js:170
+#: static-media/js/layerchooser.js:170
+msgid "User Name"
+msgstr ""
+
+#: redistricting/static/js/mapping.js:108 static-media/js/mapping.js:108
+msgid " Name"
+msgstr ""
+
+#: redistricting/static/js/mapping.js:120 static-media/js/mapping.js:120
+msgid "Demographic "
+msgstr ""
+
+#: redistricting/static/js/mapping.js:388 static-media/js/mapping.js:388
+msgid "Satellite"
+msgstr ""
+
+#: redistricting/static/js/mapping.js:389 static-media/js/mapping.js:389
+msgid "Hybrid"
+msgstr ""
+
+#: redistricting/static/js/mapping.js:390 static-media/js/mapping.js:390
+msgid "Road"
+msgstr ""
+
+#: redistricting/static/js/mapping.js:433 static-media/js/mapping.js:433
+msgid "testing, testing, 1234"
+msgstr ""
+
+#: redistricting/static/js/mapping.js:444 static-media/js/mapping.js:444
+msgid "Map Transparency"
+msgstr ""
+
+#: redistricting/static/js/mapping.js:462 static-media/js/mapping.js:462
+msgid "Please wait. Fixing unassigned blocks. This may take a couple minutes."
+msgstr ""
+
+#: redistricting/static/js/mapping.js:465 static-media/js/mapping.js:465
+msgid "Fixing Unassigned"
+msgstr ""
+
+#: redistricting/static/js/mapping.js:485 static-media/js/mapping.js:485
+msgid "Success"
+msgstr ""
+
+#: redistricting/static/js/mapping.js:485
+#: redistricting/static/js/mapping.js:492
+#: redistricting/static/js/mapping.js:546
+#: redistricting/static/js/mapping.js:553
+#: redistricting/static/js/mapping.js:1106
+#: redistricting/static/js/splitsreport.js:97 static-media/js/mapping.js:485
+#: static-media/js/mapping.js.c:492 static-media/js/mapping.js:546
+#: static-media/js/mapping.js.c:553 static-media/js/mapping.js:1106
+#: static-media/js/register.js:197 static-media/js/register.js.c:205
+#: static-media/js/splitsreport.js:97 static-media/js/ui.js:231
+#: static-media/js/ui.js.c:263 static-media/js/ui.js:508
+#: static/js/register.js:197 static/js/register.js.c:205 static/js/ui.js:231
+#: static/js/ui.js.c:263 static/js/ui.js.c:508
+msgid "Error"
+msgstr ""
+
+#: redistricting/static/js/mapping.js:491 static-media/js/mapping.js:491
+msgid "Error encountered while fixing unassigned"
+msgstr ""
+
+#: redistricting/static/js/mapping.js:507 static-media/js/mapping.js:507
+msgid "No reference layer selected."
+msgstr ""
+
+#: redistricting/static/js/mapping.js:508
+#: redistricting/static/js/splitsreport.js:109
+#: redistricting/static/js/statisticssets.js:338
+#: redistricting/static/js/statisticssets.js:347
+#: redistricting/static/js/statisticssets.js:386
+#: static-media/js/mapping.js:508 static-media/js/splitsreport.js:109
+#: static-media/js/statisticssets.js:338 static-media/js/statisticssets.js:347
+#: static-media/js/statisticssets.js:386
+msgid "Warning"
+msgstr ""
+
+#: redistricting/static/js/mapping.js:521 static-media/js/mapping.js:521
+msgid "Please wait. Querying for splits."
+msgstr ""
+
+#: redistricting/static/js/mapping.js:525 static-media/js/mapping.js:525
+msgid "Finding Splits"
+msgstr ""
+
+#: redistricting/static/js/mapping.js:540 static-media/js/mapping.js:540
+msgid "This plan contains no splits."
+msgstr ""
+
+#: redistricting/static/js/mapping.js:541 static-media/js/mapping.js:541
+msgid "No Splits Found"
+msgstr ""
+
+#: redistricting/static/js/mapping.js:545
+#: redistricting/static/js/mapping.js:552 static-media/js/mapping.js:545
+#: static-media/js/mapping.js.c:552
+msgid "Error encountered while querying for splits: "
+msgstr ""
+
+#: redistricting/static/js/mapping.js:1058 static-media/js/mapping.js:1058
+msgid "Please wait until your previous changes have been accepted."
+msgstr ""
+
+#: redistricting/static/js/mapping.js:1061 static-media/js/mapping.js:1061
+msgid "Busy"
+msgstr ""
+
+#: redistricting/static/js/mapping.js:1103 static-media/js/mapping.js:1103
+msgid "No districts were updated"
+msgstr ""
+
+#: redistricting/static/js/mapping.js:1166 static-media/js/mapping.js:1166
+msgid ""
+"You cannot select that many features at once.\n"
+"\n"
+"Consider drawing a smaller area with the selection tool."
+msgstr ""
+
+#: redistricting/static/js/mapping.js:1169
+#: redistricting/static/js/mapping.js:1181
+#: redistricting/static/js/mapping.js:1329
+#: redistricting/static/js/multimember.js:200
+#: redistricting/static/js/multimember.js:206
+#: redistricting/static/js/reaggregator.js:185
+#: redistricting/static/js/shareddistricts.js:372
+#: redistricting/static/js/shareddistricts.js:379
+#: static-media/js/mapping.js:1169 static-media/js/mapping.js.c:1181
+#: static-media/js/mapping.js:1329 static-media/js/multimember.js:200
+#: static-media/js/multimember.js.c:206 static-media/js/reaggregator.js:185
+#: static-media/js/shareddistricts.js:372
+#: static-media/js/shareddistricts.js:379
+msgid "Sorry"
+msgstr ""
+
+#: redistricting/static/js/mapping.js:1178 static-media/js/mapping.js:1178
+msgid ""
+"You cannot select any more features.\n"
+"\n"
+"Consider assigning your current selection to a district first."
+msgstr ""
+
+#: redistricting/static/js/mapping.js:1330 static-media/js/mapping.js:1330
+msgid "Unable to combine districts: "
+msgstr ""
+
+#: redistricting/static/js/mapping.js:1344 static-media/js/mapping.js:1344
+msgid "Would you like to unassign the geography in "
+msgstr ""
+
+#: redistricting/static/js/mapping.js:1427 static-media/js/mapping.js:1427
+msgid "Sorry, your information could not be saved. Please try again later."
+msgstr ""
+
+#: redistricting/static/js/mapping.js:1945 static-media/js/mapping.js:1945
+msgid "Select One"
+msgstr ""
+
+#: redistricting/static/js/mapping.js:1946
+#: redistricting/static/js/mapping.js:1960 static-media/js/mapping.js:1946
+#: static-media/js/mapping.js.c:1960
+msgid "Unassigned"
+msgstr ""
+
+#: redistricting/static/js/mapping.js:1969
+#: redistricting/static/js/mapping.js:2990 static-media/js/mapping.js:1969
+#: static-media/js/mapping.js.c:2990
+msgid "New "
+msgstr ""
+
+#: redistricting/static/js/mapping.js:2529
+#: redistricting/static/js/mapping.js:2715 static-media/js/mapping.js:2529
+#: static-media/js/mapping.js.c:2715
+msgid "Contiguity"
+msgstr ""
+
+#: redistricting/static/js/mapping.js:2533
+#: redistricting/static/js/mapping.js:2718 static-media/js/mapping.js:2533
+#: static-media/js/mapping.js.c:2718
+msgid "Compactness"
+msgstr ""
+
+#: redistricting/static/js/mapping.js:2537
+#: redistricting/static/js/mapping.js:2721 static-media/js/mapping.js:2537
+#: static-media/js/mapping.js.c:2721
+msgid "None"
+msgstr ""
+
+#: redistricting/static/js/mapping.js:2609 static-media/js/mapping.js:2609
+msgid "Boundary"
+msgstr ""
+
+#: redistricting/static/js/mapping.js:2615 static-media/js/mapping.js:2615
+msgid "Noncontiguous"
+msgstr ""
+
+#: redistricting/static/js/mapping.js:2617 static-media/js/mapping.js:2617
+msgid "Contiguous"
+msgstr ""
+
+#: redistricting/static/js/mapping.js:2623 static-media/js/mapping.js:2623
+msgid "Very Compact"
+msgstr ""
+
+#: redistricting/static/js/mapping.js:2625 static-media/js/mapping.js:2625
+msgid "Average"
+msgstr ""
+
+#: redistricting/static/js/mapping.js:2627 static-media/js/mapping.js:2627
+msgid "Hardly Compact"
+msgstr ""
+
+#: redistricting/static/js/mapping.js:2633 static-media/js/mapping.js:2633
+msgid "Far Over Target"
+msgstr ""
+
+#: redistricting/static/js/mapping.js:2635 static-media/js/mapping.js:2635
+msgid "Over Target"
+msgstr ""
+
+#: redistricting/static/js/mapping.js:2637 static-media/js/mapping.js:2637
+msgid "Within Target"
+msgstr ""
+
+#: redistricting/static/js/mapping.js:2639 static-media/js/mapping.js:2639
+msgid "Under Target"
+msgstr ""
+
+#: redistricting/static/js/mapping.js:2641 static-media/js/mapping.js:2641
+msgid "Far Under Target"
+msgstr ""
+
+#: redistricting/static/js/mapping.js:2967 static-media/js/mapping.js:2967
+msgid "Please select a name for the %(bml)s"
+msgstr ""
+
+#: redistricting/static/js/mapping.js:2980
+#: static-media/admin/js/admin/DateTimeShortcuts.js:92
+#: static-media/admin/js/admin/DateTimeShortcuts.js:204
+#: static-media/js/mapping.js:2980
+msgid "Cancel"
+msgstr ""
+
+#: redistricting/static/js/mapping.js:2997 static-media/js/mapping.js:2997
+msgid "Community Label"
+msgstr ""
+
+#: redistricting/static/js/mapping.js:2998 static-media/js/mapping.js:2998
+msgid "Community Type"
+msgstr ""
+
+#: redistricting/static/js/multimember.js:59 static-media/js/multimember.js:59
+msgid "Set Multi-Member Districts"
+msgstr ""
+
+#: redistricting/static/js/multimember.js:201
+#: static-media/js/multimember.js:201
+msgid "Unable to assign representatives:"
+msgstr ""
+
+#: redistricting/static/js/multimember.js:207
+#: static-media/js/multimember.js:207
+msgid "Unable to assign representatives"
+msgstr ""
+
+#: redistricting/static/js/multimember.js:252
+#: static-media/js/multimember.js:252
+msgid "District"
+msgstr ""
+
+#: redistricting/static/js/multimember.js:252
+#: static-media/js/multimember.js:252
+msgid "District ID"
+msgstr ""
+
+#: redistricting/static/js/multimember.js:252
+#: static-media/js/multimember.js:252
+msgid "# Members"
+msgstr ""
+
+#: redistricting/static/js/reaggregator.js:133
+#: static-media/js/reaggregator.js:133
 msgid ""
 "Data in the system has changed. This plan needs to be reaggregated before it "
 "can be used. Click the button to begin reaggregation. This will run in the "
@@ -1450,1209 +594,459 @@ msgid ""
 "the rest of the system in the meantime."
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:344
-#: static-media/CACHE/js/3eeee3706ebf.js:346
-#: static-media/CACHE/js/4bd62bdb2da4.js:344
-#: static-media/CACHE/js/6b79d088a188.js:344
-#: static-media/CACHE/js/8347635feab9.js:346
-#: static-media/CACHE/js/9e2f3acda32a.js:344
-#: static-media/CACHE/js/a7eed9cbce79.js:346
-#: static-media/CACHE/js/af1972b73435.js:344
-#: static-media/CACHE/js/b4775468438b.js:344
-#: static-media/CACHE/js/c02f606639b0.js:344
-#: static-media/CACHE/js/db7c2b1caabb.js:344
-#: static-media/CACHE/js/f9a5a40a526d.js:344
-#: static-media/CACHE/js/fef441dc0d83.js:344
-#: static-media/js/reaggregator.js:123
+#: redistricting/static/js/reaggregator.js:139
+#: static-media/js/reaggregator.js:139
 msgid ""
 "Data in the system has changed. The owner of this plan needs to reaggregate "
 "it before it can be used. The status of the plan will be updated when "
 "reaggregation has completed."
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:345
-#: static-media/CACHE/js/3eeee3706ebf.js:347
-#: static-media/CACHE/js/4bd62bdb2da4.js:345
-#: static-media/CACHE/js/6b79d088a188.js:345
-#: static-media/CACHE/js/8347635feab9.js:347
-#: static-media/CACHE/js/9e2f3acda32a.js:345
-#: static-media/CACHE/js/a7eed9cbce79.js:347
-#: static-media/CACHE/js/af1972b73435.js:345
-#: static-media/CACHE/js/b4775468438b.js:345
-#: static-media/CACHE/js/c02f606639b0.js:345
-#: static-media/CACHE/js/db7c2b1caabb.js:345
-#: static-media/CACHE/js/f9a5a40a526d.js:345
-#: static-media/CACHE/js/fef441dc0d83.js:345
-#: static-media/js/reaggregator.js:130
+#: redistricting/static/js/reaggregator.js:146
+#: static-media/js/reaggregator.js:146
 msgid "Reaggregation in progress"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:345
-#: static-media/CACHE/js/3eeee3706ebf.js:347
-#: static-media/CACHE/js/4bd62bdb2da4.js:345
-#: static-media/CACHE/js/6b79d088a188.js:345
-#: static-media/CACHE/js/8347635feab9.js:347
-#: static-media/CACHE/js/9e2f3acda32a.js:345
-#: static-media/CACHE/js/a7eed9cbce79.js:347
-#: static-media/CACHE/js/af1972b73435.js:345
-#: static-media/CACHE/js/b4775468438b.js:345
-#: static-media/CACHE/js/c02f606639b0.js:345
-#: static-media/CACHE/js/db7c2b1caabb.js:345
-#: static-media/CACHE/js/f9a5a40a526d.js:345
-#: static-media/CACHE/js/fef441dc0d83.js:345
-#: static-media/js/reaggregator.js:132
+#: redistricting/static/js/reaggregator.js:148
+#: static-media/js/reaggregator.js:148
 msgid ""
 "Data in the system has changed, and this plan is currently reaggregating to "
 "reflect these changes. The plan will not be available until reaggregation "
 "has completed."
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:345
-#: static-media/CACHE/js/3eeee3706ebf.js:347
-#: static-media/CACHE/js/4bd62bdb2da4.js:345
-#: static-media/CACHE/js/6b79d088a188.js:345
-#: static-media/CACHE/js/8347635feab9.js:347
-#: static-media/CACHE/js/9e2f3acda32a.js:345
-#: static-media/CACHE/js/a7eed9cbce79.js:347
-#: static-media/CACHE/js/af1972b73435.js:345
-#: static-media/CACHE/js/b4775468438b.js:345
-#: static-media/CACHE/js/c02f606639b0.js:345
-#: static-media/CACHE/js/db7c2b1caabb.js:345
-#: static-media/CACHE/js/f9a5a40a526d.js:345
-#: static-media/CACHE/js/fef441dc0d83.js:345
-#: static-media/js/reaggregator.js:143
+#: redistricting/static/js/reaggregator.js:159
+#: static-media/js/reaggregator.js:159
 msgid "Unknown state"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:345
-#: static-media/CACHE/js/01ec5c663726.js:352
-#: static-media/CACHE/js/01ec5c663726.js:437
-#: static-media/CACHE/js/3eeee3706ebf.js:347
-#: static-media/CACHE/js/3eeee3706ebf.js:354
-#: static-media/CACHE/js/3eeee3706ebf.js:440
-#: static-media/CACHE/js/4bd62bdb2da4.js:345
-#: static-media/CACHE/js/4bd62bdb2da4.js:352
-#: static-media/CACHE/js/4bd62bdb2da4.js:437
-#: static-media/CACHE/js/6b79d088a188.js:345
-#: static-media/CACHE/js/6b79d088a188.js:352
-#: static-media/CACHE/js/6b79d088a188.js:437
-#: static-media/CACHE/js/8347635feab9.js:347
-#: static-media/CACHE/js/8347635feab9.js:354
-#: static-media/CACHE/js/8347635feab9.js:440
-#: static-media/CACHE/js/9e2f3acda32a.js:345
-#: static-media/CACHE/js/9e2f3acda32a.js:352
-#: static-media/CACHE/js/9e2f3acda32a.js:437
-#: static-media/CACHE/js/a7eed9cbce79.js:347
-#: static-media/CACHE/js/a7eed9cbce79.js:354
-#: static-media/CACHE/js/a7eed9cbce79.js:439
-#: static-media/CACHE/js/af1972b73435.js:345
-#: static-media/CACHE/js/af1972b73435.js:352
-#: static-media/CACHE/js/af1972b73435.js:437
-#: static-media/CACHE/js/b4775468438b.js:345
-#: static-media/CACHE/js/b4775468438b.js:352
-#: static-media/CACHE/js/b4775468438b.js:437
-#: static-media/CACHE/js/c02f606639b0.js:345
-#: static-media/CACHE/js/c02f606639b0.js:352
-#: static-media/CACHE/js/c02f606639b0.js:437
-#: static-media/CACHE/js/db7c2b1caabb.js:345
-#: static-media/CACHE/js/db7c2b1caabb.js:352
-#: static-media/CACHE/js/db7c2b1caabb.js:437
-#: static-media/CACHE/js/f9a5a40a526d.js:345
-#: static-media/CACHE/js/f9a5a40a526d.js:352
-#: static-media/CACHE/js/f9a5a40a526d.js:437
-#: static-media/CACHE/js/fef441dc0d83.js:345
-#: static-media/CACHE/js/fef441dc0d83.js:352
-#: static-media/CACHE/js/fef441dc0d83.js:437 static-media/js/mapping.js:1108
-#: static-media/js/mapping.js.py:1120 static-media/js/mapping.js:1263
-#: static-media/js/multimember.js:187 static-media/js/multimember.js.py:193
-#: static-media/js/reaggregator.js:169 static-media/js/shareddistricts.js:367
-#: static-media/js/shareddistricts.js:374
-msgid "Sorry"
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:345
-#: static-media/CACHE/js/3eeee3706ebf.js:347
-#: static-media/CACHE/js/4bd62bdb2da4.js:345
-#: static-media/CACHE/js/6b79d088a188.js:345
-#: static-media/CACHE/js/8347635feab9.js:347
-#: static-media/CACHE/js/9e2f3acda32a.js:345
-#: static-media/CACHE/js/a7eed9cbce79.js:347
-#: static-media/CACHE/js/af1972b73435.js:345
-#: static-media/CACHE/js/b4775468438b.js:345
-#: static-media/CACHE/js/c02f606639b0.js:345
-#: static-media/CACHE/js/db7c2b1caabb.js:345
-#: static-media/CACHE/js/f9a5a40a526d.js:345
-#: static-media/CACHE/js/fef441dc0d83.js:345
-#: static-media/js/reaggregator.js:170
+#: redistricting/static/js/reaggregator.js:186
+#: static-media/js/reaggregator.js:186
 msgid "Error reaggregating plan"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:347
-#: static-media/CACHE/js/3eeee3706ebf.js:349
-#: static-media/CACHE/js/4bd62bdb2da4.js:347
-#: static-media/CACHE/js/6b79d088a188.js:347
-#: static-media/CACHE/js/8347635feab9.js:349
-#: static-media/CACHE/js/9e2f3acda32a.js:347
-#: static-media/CACHE/js/a7eed9cbce79.js:349
-#: static-media/CACHE/js/af1972b73435.js:347
-#: static-media/CACHE/js/b4775468438b.js:347
-#: static-media/CACHE/js/c02f606639b0.js:347
-#: static-media/CACHE/js/db7c2b1caabb.js:347
-#: static-media/CACHE/js/f9a5a40a526d.js:347
-#: static-media/CACHE/js/fef441dc0d83.js:347
-#: static-media/js/shareddistricts.js:60
-msgid "Copy and Paste %(bodyMembersCap)s"
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:347
-#: static-media/CACHE/js/3eeee3706ebf.js:349
-#: static-media/CACHE/js/4bd62bdb2da4.js:347
-#: static-media/CACHE/js/6b79d088a188.js:347
-#: static-media/CACHE/js/8347635feab9.js:349
-#: static-media/CACHE/js/9e2f3acda32a.js:347
-#: static-media/CACHE/js/a7eed9cbce79.js:349
-#: static-media/CACHE/js/af1972b73435.js:347
-#: static-media/CACHE/js/b4775468438b.js:347
-#: static-media/CACHE/js/c02f606639b0.js:347
-#: static-media/CACHE/js/db7c2b1caabb.js:347
-#: static-media/CACHE/js/f9a5a40a526d.js:347
-#: static-media/CACHE/js/fef441dc0d83.js:347
-#: static-media/js/shareddistricts.js:141
-msgid "Plan"
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:347
-#: static-media/CACHE/js/3eeee3706ebf.js:349
-#: static-media/CACHE/js/4bd62bdb2da4.js:347
-#: static-media/CACHE/js/6b79d088a188.js:347
-#: static-media/CACHE/js/8347635feab9.js:349
-#: static-media/CACHE/js/9e2f3acda32a.js:347
-#: static-media/CACHE/js/a7eed9cbce79.js:349
-#: static-media/CACHE/js/af1972b73435.js:347
-#: static-media/CACHE/js/b4775468438b.js:347
-#: static-media/CACHE/js/c02f606639b0.js:347
-#: static-media/CACHE/js/db7c2b1caabb.js:347
-#: static-media/CACHE/js/f9a5a40a526d.js:347
-#: static-media/CACHE/js/fef441dc0d83.js:347
-#: static-media/js/shareddistricts.js:198
-msgid "%(bodyMemberLongCap)s Name"
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:347
-#: static-media/CACHE/js/3eeee3706ebf.js:349
-#: static-media/CACHE/js/4bd62bdb2da4.js:347
-#: static-media/CACHE/js/6b79d088a188.js:347
-#: static-media/CACHE/js/8347635feab9.js:349
-#: static-media/CACHE/js/9e2f3acda32a.js:347
-#: static-media/CACHE/js/a7eed9cbce79.js:349
-#: static-media/CACHE/js/af1972b73435.js:347
-#: static-media/CACHE/js/b4775468438b.js:347
-#: static-media/CACHE/js/c02f606639b0.js:347
-#: static-media/CACHE/js/db7c2b1caabb.js:347
-#: static-media/CACHE/js/f9a5a40a526d.js:347
-#: static-media/CACHE/js/fef441dc0d83.js:347
-#: static-media/js/shareddistricts.js:297
-msgid "Maximum %(bodyMembers)s Reached"
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:347
-#: static-media/CACHE/js/3eeee3706ebf.js:349
-#: static-media/CACHE/js/4bd62bdb2da4.js:347
-#: static-media/CACHE/js/6b79d088a188.js:347
-#: static-media/CACHE/js/8347635feab9.js:349
-#: static-media/CACHE/js/9e2f3acda32a.js:347
-#: static-media/CACHE/js/a7eed9cbce79.js:349
-#: static-media/CACHE/js/af1972b73435.js:347
-#: static-media/CACHE/js/b4775468438b.js:347
-#: static-media/CACHE/js/c02f606639b0.js:347
-#: static-media/CACHE/js/db7c2b1caabb.js:347
-#: static-media/CACHE/js/f9a5a40a526d.js:347
-#: static-media/CACHE/js/fef441dc0d83.js:347
-#: static-media/js/shareddistricts.js:298
-msgid ""
-"Your plan is at maximum capacity. Please delete a %(bodyMemberLong)s to "
-"enable pasting."
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:347
-#: static-media/CACHE/js/3eeee3706ebf.js:349
-#: static-media/CACHE/js/4bd62bdb2da4.js:347
-#: static-media/CACHE/js/6b79d088a188.js:347
-#: static-media/CACHE/js/8347635feab9.js:349
-#: static-media/CACHE/js/9e2f3acda32a.js:347
-#: static-media/CACHE/js/a7eed9cbce79.js:349
-#: static-media/CACHE/js/af1972b73435.js:347
-#: static-media/CACHE/js/b4775468438b.js:347
-#: static-media/CACHE/js/c02f606639b0.js:347
-#: static-media/CACHE/js/db7c2b1caabb.js:347
-#: static-media/CACHE/js/f9a5a40a526d.js:347
-#: static-media/CACHE/js/fef441dc0d83.js:347
-#: static-media/js/shareddistricts.js:306
-msgid "2. Remove %(num_available_districts)s before submitting"
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:347
-#: static-media/CACHE/js/3eeee3706ebf.js:349
-#: static-media/CACHE/js/4bd62bdb2da4.js:347
-#: static-media/CACHE/js/6b79d088a188.js:347
-#: static-media/CACHE/js/8347635feab9.js:349
-#: static-media/CACHE/js/9e2f3acda32a.js:347
-#: static-media/CACHE/js/a7eed9cbce79.js:349
-#: static-media/CACHE/js/af1972b73435.js:347
-#: static-media/CACHE/js/b4775468438b.js:347
-#: static-media/CACHE/js/c02f606639b0.js:347
-#: static-media/CACHE/js/db7c2b1caabb.js:347
-#: static-media/CACHE/js/f9a5a40a526d.js:347
-#: static-media/CACHE/js/fef441dc0d83.js:347
-#: static-media/js/shareddistricts.js:310
-msgid "2. Check your selections"
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:347
-#: static-media/CACHE/js/3eeee3706ebf.js:349
-#: static-media/CACHE/js/4bd62bdb2da4.js:347
-#: static-media/CACHE/js/6b79d088a188.js:347
-#: static-media/CACHE/js/8347635feab9.js:349
-#: static-media/CACHE/js/9e2f3acda32a.js:347
-#: static-media/CACHE/js/a7eed9cbce79.js:349
-#: static-media/CACHE/js/af1972b73435.js:347
-#: static-media/CACHE/js/b4775468438b.js:347
-#: static-media/CACHE/js/c02f606639b0.js:347
-#: static-media/CACHE/js/db7c2b1caabb.js:347
-#: static-media/CACHE/js/f9a5a40a526d.js:347
-#: static-media/CACHE/js/fef441dc0d83.js:347
-#: static-media/js/shareddistricts.js:315
-msgid "2. Select a %(bodyMemberLong)s to copy"
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:348
-#: static-media/CACHE/js/3eeee3706ebf.js:350
-#: static-media/CACHE/js/4bd62bdb2da4.js:348
-#: static-media/CACHE/js/6b79d088a188.js:348
-#: static-media/CACHE/js/8347635feab9.js:350
-#: static-media/CACHE/js/9e2f3acda32a.js:348
-#: static-media/CACHE/js/a7eed9cbce79.js:350
-#: static-media/CACHE/js/af1972b73435.js:348
-#: static-media/CACHE/js/b4775468438b.js:348
-#: static-media/CACHE/js/c02f606639b0.js:348
-#: static-media/CACHE/js/db7c2b1caabb.js:348
-#: static-media/CACHE/js/f9a5a40a526d.js:348
-#: static-media/CACHE/js/fef441dc0d83.js:348
-#: static-media/js/shareddistricts.js:319
-msgid "2. Select a %(bodyMemberLong)s"
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:349
-#: static-media/CACHE/js/3eeee3706ebf.js:351
-#: static-media/CACHE/js/4bd62bdb2da4.js:349
-#: static-media/CACHE/js/6b79d088a188.js:349
-#: static-media/CACHE/js/8347635feab9.js:351
-#: static-media/CACHE/js/9e2f3acda32a.js:349
-#: static-media/CACHE/js/a7eed9cbce79.js:351
-#: static-media/CACHE/js/af1972b73435.js:349
-#: static-media/CACHE/js/b4775468438b.js:349
-#: static-media/CACHE/js/c02f606639b0.js:349
-#: static-media/CACHE/js/db7c2b1caabb.js:349
-#: static-media/CACHE/js/f9a5a40a526d.js:349
-#: static-media/CACHE/js/fef441dc0d83.js:349
-#: static-media/js/shareddistricts.js:326
-msgid "2. Select up to %(available_districts)s %(bodyMembers)s to copy"
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:350
-#: static-media/CACHE/js/3eeee3706ebf.js:352
-#: static-media/CACHE/js/4bd62bdb2da4.js:350
-#: static-media/CACHE/js/6b79d088a188.js:350
-#: static-media/CACHE/js/8347635feab9.js:352
-#: static-media/CACHE/js/9e2f3acda32a.js:350
-#: static-media/CACHE/js/a7eed9cbce79.js:352
-#: static-media/CACHE/js/af1972b73435.js:350
-#: static-media/CACHE/js/b4775468438b.js:350
-#: static-media/CACHE/js/c02f606639b0.js:350
-#: static-media/CACHE/js/db7c2b1caabb.js:350
-#: static-media/CACHE/js/f9a5a40a526d.js:350
-#: static-media/CACHE/js/fef441dc0d83.js:350
-#: static-media/js/shareddistricts.js:333
-msgid "2. Select %(bodyMembers)s"
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:352
-#: static-media/CACHE/js/3eeee3706ebf.js:354
-#: static-media/CACHE/js/4bd62bdb2da4.js:352
-#: static-media/CACHE/js/6b79d088a188.js:352
-#: static-media/CACHE/js/8347635feab9.js:354
-#: static-media/CACHE/js/9e2f3acda32a.js:352
-#: static-media/CACHE/js/a7eed9cbce79.js:354
-#: static-media/CACHE/js/af1972b73435.js:352
-#: static-media/CACHE/js/b4775468438b.js:352
-#: static-media/CACHE/js/c02f606639b0.js:352
-#: static-media/CACHE/js/db7c2b1caabb.js:352
-#: static-media/CACHE/js/f9a5a40a526d.js:352
-#: static-media/CACHE/js/fef441dc0d83.js:352
-#: static-media/js/shareddistricts.js:368
-#: static-media/js/shareddistricts.js:375
-msgid "Unable to paste %(bodyMembers)s"
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:357
-#: static-media/CACHE/js/3eeee3706ebf.js:359
-#: static-media/CACHE/js/4bd62bdb2da4.js:357
-#: static-media/CACHE/js/6b79d088a188.js:357
-#: static-media/CACHE/js/8347635feab9.js:359
-#: static-media/CACHE/js/9e2f3acda32a.js:357
-#: static-media/CACHE/js/a7eed9cbce79.js:359
-#: static-media/CACHE/js/af1972b73435.js:357
-#: static-media/CACHE/js/b4775468438b.js:357
-#: static-media/CACHE/js/c02f606639b0.js:357
-#: static-media/CACHE/js/db7c2b1caabb.js:357
-#: static-media/CACHE/js/f9a5a40a526d.js:357
-#: static-media/CACHE/js/fef441dc0d83.js:357 static-media/js/reports.js:145
+#: redistricting/static/js/reports.js:148 static-media/js/reports.js:148
 msgid "Please select one or more reports to be generated."
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:358
-#: static-media/CACHE/js/3eeee3706ebf.js:360
-#: static-media/CACHE/js/4bd62bdb2da4.js:358
-#: static-media/CACHE/js/6b79d088a188.js:358
-#: static-media/CACHE/js/8347635feab9.js:360
-#: static-media/CACHE/js/9e2f3acda32a.js:358
-#: static-media/CACHE/js/a7eed9cbce79.js:360
-#: static-media/CACHE/js/af1972b73435.js:358
-#: static-media/CACHE/js/b4775468438b.js:358
-#: static-media/CACHE/js/c02f606639b0.js:358
-#: static-media/CACHE/js/db7c2b1caabb.js:358
-#: static-media/CACHE/js/f9a5a40a526d.js:358
-#: static-media/CACHE/js/fef441dc0d83.js:358 static-media/js/reports.js:153
+#: redistricting/static/js/reports.js:156 static-media/js/reports.js:156
 msgid "Generating Report"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:358
-#: static-media/CACHE/js/3eeee3706ebf.js:360
-#: static-media/CACHE/js/4bd62bdb2da4.js:358
-#: static-media/CACHE/js/6b79d088a188.js:358
-#: static-media/CACHE/js/8347635feab9.js:360
-#: static-media/CACHE/js/9e2f3acda32a.js:358
-#: static-media/CACHE/js/a7eed9cbce79.js:360
-#: static-media/CACHE/js/af1972b73435.js:358
-#: static-media/CACHE/js/b4775468438b.js:358
-#: static-media/CACHE/js/c02f606639b0.js:358
-#: static-media/CACHE/js/db7c2b1caabb.js:358
-#: static-media/CACHE/js/f9a5a40a526d.js:358
-#: static-media/CACHE/js/fef441dc0d83.js:358 static-media/js/reports.js:154
+#: redistricting/static/js/reports.js:157 static-media/js/reports.js:157
 msgid "You may use the rest of the application while the report is building."
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:358
-#: static-media/CACHE/js/3eeee3706ebf.js:360
-#: static-media/CACHE/js/4bd62bdb2da4.js:358
-#: static-media/CACHE/js/6b79d088a188.js:358
-#: static-media/CACHE/js/8347635feab9.js:360
-#: static-media/CACHE/js/9e2f3acda32a.js:358
-#: static-media/CACHE/js/a7eed9cbce79.js:360
-#: static-media/CACHE/js/af1972b73435.js:358
-#: static-media/CACHE/js/b4775468438b.js:358
-#: static-media/CACHE/js/c02f606639b0.js:358
-#: static-media/CACHE/js/db7c2b1caabb.js:358
-#: static-media/CACHE/js/f9a5a40a526d.js:358
-#: static-media/CACHE/js/fef441dc0d83.js:358 static-media/js/reports.js:155
+#: redistricting/static/js/reports.js:158 static-media/js/reports.js:158
 msgid "A preview of your report will appear in this space when it is ready."
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:359
-#: static-media/CACHE/js/3eeee3706ebf.js:361
-#: static-media/CACHE/js/4bd62bdb2da4.js:359
-#: static-media/CACHE/js/6b79d088a188.js:359
-#: static-media/CACHE/js/8347635feab9.js:361
-#: static-media/CACHE/js/9e2f3acda32a.js:359
-#: static-media/CACHE/js/a7eed9cbce79.js:361
-#: static-media/CACHE/js/af1972b73435.js:359
-#: static-media/CACHE/js/b4775468438b.js:359
-#: static-media/CACHE/js/c02f606639b0.js:359
-#: static-media/CACHE/js/db7c2b1caabb.js:359
-#: static-media/CACHE/js/f9a5a40a526d.js:359
-#: static-media/CACHE/js/fef441dc0d83.js:359 static-media/js/reports.js:174
+#: redistricting/static/js/reports.js:177 static-media/js/reports.js:177
 msgid "Report Error"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:359
-#: static-media/CACHE/js/3eeee3706ebf.js:361
-#: static-media/CACHE/js/4bd62bdb2da4.js:359
-#: static-media/CACHE/js/6b79d088a188.js:359
-#: static-media/CACHE/js/8347635feab9.js:361
-#: static-media/CACHE/js/9e2f3acda32a.js:359
-#: static-media/CACHE/js/a7eed9cbce79.js:361
-#: static-media/CACHE/js/af1972b73435.js:359
-#: static-media/CACHE/js/b4775468438b.js:359
-#: static-media/CACHE/js/c02f606639b0.js:359
-#: static-media/CACHE/js/db7c2b1caabb.js:359
-#: static-media/CACHE/js/f9a5a40a526d.js:359
-#: static-media/CACHE/js/fef441dc0d83.js:359 static-media/js/reports.js:175
+#: redistricting/static/js/reports.js:178 static-media/js/reports.js:178
 msgid "Sorry, this report cannot be previewed."
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:361
-#: static-media/CACHE/js/3eeee3706ebf.js:363
-#: static-media/CACHE/js/4bd62bdb2da4.js:361
-#: static-media/CACHE/js/6b79d088a188.js:361
-#: static-media/CACHE/js/8347635feab9.js:363
-#: static-media/CACHE/js/9e2f3acda32a.js:361
-#: static-media/CACHE/js/a7eed9cbce79.js:363
-#: static-media/CACHE/js/af1972b73435.js:361
-#: static-media/CACHE/js/b4775468438b.js:361
-#: static-media/CACHE/js/c02f606639b0.js:361
-#: static-media/CACHE/js/db7c2b1caabb.js:361
-#: static-media/CACHE/js/f9a5a40a526d.js:361
-#: static-media/CACHE/js/fef441dc0d83.js:361 static-media/js/reports.js:206
+#: redistricting/static/js/reports.js:209 static-media/js/reports.js:209
 msgid "Connection Failed"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:361
-#: static-media/CACHE/js/3eeee3706ebf.js:363
-#: static-media/CACHE/js/4bd62bdb2da4.js:361
-#: static-media/CACHE/js/6b79d088a188.js:361
-#: static-media/CACHE/js/8347635feab9.js:363
-#: static-media/CACHE/js/9e2f3acda32a.js:361
-#: static-media/CACHE/js/a7eed9cbce79.js:363
-#: static-media/CACHE/js/af1972b73435.js:361
-#: static-media/CACHE/js/b4775468438b.js:361
-#: static-media/CACHE/js/c02f606639b0.js:361
-#: static-media/CACHE/js/db7c2b1caabb.js:361
-#: static-media/CACHE/js/f9a5a40a526d.js:361
-#: static-media/CACHE/js/fef441dc0d83.js:361 static-media/js/reports.js:207
+#: redistricting/static/js/reports.js:210 static-media/js/reports.js:210
 msgid ""
 "There was a problem checking your report status. You can resume checking by "
 "clicking on the \"Create and Preview Report\" button."
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:364
-#: static-media/CACHE/js/3eeee3706ebf.js:366
-#: static-media/CACHE/js/4bd62bdb2da4.js:364
-#: static-media/CACHE/js/6b79d088a188.js:364
-#: static-media/CACHE/js/8347635feab9.js:366
-#: static-media/CACHE/js/9e2f3acda32a.js:364
-#: static-media/CACHE/js/a7eed9cbce79.js:366
-#: static-media/CACHE/js/af1972b73435.js:364
-#: static-media/CACHE/js/b4775468438b.js:364
-#: static-media/CACHE/js/c02f606639b0.js:364
-#: static-media/CACHE/js/db7c2b1caabb.js:364
-#: static-media/CACHE/js/f9a5a40a526d.js:364
-#: static-media/CACHE/js/fef441dc0d83.js:364
-msgid "Open report in a new window"
+#: redistricting/static/js/reports.js:364 static-media/js/reports.js:364
+msgid "Open Current Report in New Window"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:365
-#: static-media/CACHE/js/3eeee3706ebf.js:367
-#: static-media/CACHE/js/4bd62bdb2da4.js:365
-#: static-media/CACHE/js/6b79d088a188.js:365
-#: static-media/CACHE/js/8347635feab9.js:367
-#: static-media/CACHE/js/9e2f3acda32a.js:365
-#: static-media/CACHE/js/a7eed9cbce79.js:367
-#: static-media/CACHE/js/af1972b73435.js:365
-#: static-media/CACHE/js/b4775468438b.js:365
-#: static-media/CACHE/js/c02f606639b0.js:365
-#: static-media/CACHE/js/db7c2b1caabb.js:365
-#: static-media/CACHE/js/f9a5a40a526d.js:365
-#: static-media/CACHE/js/fef441dc0d83.js:365 static-media/js/register.js:40
+#: redistricting/static/js/shareddistricts.js:60
+#: static-media/js/shareddistricts.js:60
+msgid "Copy and Paste %(bodyMembersCap)s"
+msgstr ""
+
+#: redistricting/static/js/shareddistricts.js:142
+#: static-media/js/shareddistricts.js:142
+msgid "Plan"
+msgstr ""
+
+#: redistricting/static/js/shareddistricts.js:199
+#: static-media/js/shareddistricts.js:199
+msgid "%(bodyMemberLongCap)s Name"
+msgstr ""
+
+#: redistricting/static/js/shareddistricts.js:298
+#: static-media/js/shareddistricts.js:298
+msgid "Maximum %(bodyMembers)s Reached"
+msgstr ""
+
+#: redistricting/static/js/shareddistricts.js:299
+#: static-media/js/shareddistricts.js:299
+msgid ""
+"Your plan is at maximum capacity. Please delete a %(bodyMemberLong)s to "
+"enable pasting."
+msgstr ""
+
+#: redistricting/static/js/shareddistricts.js:309
+#: static-media/js/shareddistricts.js:309
+msgid "2. Remove %(num_available_districts)s before submitting"
+msgstr ""
+
+#: redistricting/static/js/shareddistricts.js:313
+#: static-media/js/shareddistricts.js:313
+msgid "2. Check your selections"
+msgstr ""
+
+#: redistricting/static/js/shareddistricts.js:318
+#: static-media/js/shareddistricts.js:318
+msgid "2. Select a %(bodyMemberLong)s to copy"
+msgstr ""
+
+#: redistricting/static/js/shareddistricts.js:322
+#: static-media/js/shareddistricts.js:322
+msgid "2. Select a %(bodyMemberLong)s"
+msgstr ""
+
+#: redistricting/static/js/shareddistricts.js:329
+#: static-media/js/shareddistricts.js:329
+msgid "2. Select up to %(available_districts)s %(bodyMembers)s to copy"
+msgstr ""
+
+#: redistricting/static/js/shareddistricts.js:336
+#: static-media/js/shareddistricts.js:336
+msgid "2. Select %(bodyMembers)s"
+msgstr ""
+
+#: redistricting/static/js/shareddistricts.js:373
+#: redistricting/static/js/shareddistricts.js:380
+#: static-media/js/shareddistricts.js:373
+#: static-media/js/shareddistricts.js:380
+msgid "Unable to paste %(bodyMembers)s"
+msgstr ""
+
+#: redistricting/static/js/splitsreport.js:51
+#: static-media/js/splitsreport.js:51
+msgid "Splits Report"
+msgstr ""
+
+#: redistricting/static/js/splitsreport.js:69
+#: static-media/js/splitsreport.js:69
+msgid "Please wait. Retrieving splits report."
+msgstr ""
+
+#: redistricting/static/js/splitsreport.js:72
+#: static-media/js/splitsreport.js:72
+msgid "Retrieving Splits Report"
+msgstr ""
+
+#: redistricting/static/js/splitsreport.js:94
+#: static-media/js/splitsreport.js:94
+msgid "Error encountered while retrieving splits report: "
+msgstr ""
+
+#: redistricting/static/js/splitsreport.js:108
+#: static-media/js/splitsreport.js:108
+msgid "Please select either 1, 2, or 3 layers for comparison."
+msgstr ""
+
+#: redistricting/static/js/statisticssets.js:165
+#: static-media/js/statisticssets.js:165
+msgid "Loading Statistics..."
+msgstr ""
+
+#: redistricting/static/js/statisticssets.js:337
+#: static-media/js/statisticssets.js:337
+msgid "Please select 3 or fewer statistics."
+msgstr ""
+
+#: redistricting/static/js/statisticssets.js:346
+#: static-media/js/statisticssets.js:346
+msgid "Please name your statistics set."
+msgstr ""
+
+#: redistricting/static/js/statisticssets.js:392
+#: static-media/js/statisticssets.js:392
+msgid "Please select 1-3 statistics to save in the named set."
+msgstr ""
+
+#: redistricting/static/js/statisticssets.js:393
+#: static-media/js/statisticssets.js:393
+msgid "Incomplete"
+msgstr ""
+
+#: static-media/admin/js/SelectFilter2.js:45
+#, c-format
+msgid "Available %s"
+msgstr ""
+
+#: static-media/admin/js/SelectFilter2.js:46
+#, c-format
+msgid ""
+"This is the list of available %s. You may choose some by selecting them in "
+"the box below and then clicking the \"Choose\" arrow between the two boxes."
+msgstr ""
+
+#: static-media/admin/js/SelectFilter2.js:53
+#, c-format
+msgid "Type into this box to filter down the list of available %s."
+msgstr ""
+
+#: static-media/admin/js/SelectFilter2.js:57
+msgid "Filter"
+msgstr ""
+
+#: static-media/admin/js/SelectFilter2.js:61
+msgid "Choose all"
+msgstr ""
+
+#: static-media/admin/js/SelectFilter2.js:61
+#, c-format
+msgid "Click to choose all %s at once."
+msgstr ""
+
+#: static-media/admin/js/SelectFilter2.js:67
+msgid "Choose"
+msgstr ""
+
+#: static-media/admin/js/SelectFilter2.js:69
+msgid "Remove"
+msgstr ""
+
+#: static-media/admin/js/SelectFilter2.js:75
+#, c-format
+msgid "Chosen %s"
+msgstr ""
+
+#: static-media/admin/js/SelectFilter2.js:76
+#, c-format
+msgid ""
+"This is the list of chosen %s. You may remove some by selecting them in the "
+"box below and then clicking the \"Remove\" arrow between the two boxes."
+msgstr ""
+
+#: static-media/admin/js/SelectFilter2.js:80
+msgid "Remove all"
+msgstr ""
+
+#: static-media/admin/js/SelectFilter2.js:80
+#, c-format
+msgid "Click to remove all chosen %s at once."
+msgstr ""
+
+#: static-media/admin/js/actions.js:18 static-media/admin/js/actions.min.js:1
+msgid "%(sel)s of %(cnt)s selected"
+msgid_plural "%(sel)s of %(cnt)s selected"
+msgstr[0] ""
+
+#: static-media/admin/js/actions.js:109 static-media/admin/js/actions.min.js:5
+msgid ""
+"You have unsaved changes on individual editable fields. If you run an "
+"action, your unsaved changes will be lost."
+msgstr ""
+
+#: static-media/admin/js/actions.js:121 static-media/admin/js/actions.min.js:6
+msgid ""
+"You have selected an action, but you haven't saved your changes to "
+"individual fields yet. Please click OK to save. You'll need to re-run the "
+"action."
+msgstr ""
+
+#: static-media/admin/js/actions.js:123 static-media/admin/js/actions.min.js:6
+msgid ""
+"You have selected an action, and you haven't made any changes on individual "
+"fields. You're probably looking for the Go button rather than the Save "
+"button."
+msgstr ""
+
+#: static-media/admin/js/calendar.js:26
+msgid ""
+"January February March April May June July August September October November "
+"December"
+msgstr ""
+
+#: static-media/admin/js/calendar.js:27
+msgid "S M T W T F S"
+msgstr ""
+
+#: static-media/admin/js/collapse.js:8 static-media/admin/js/collapse.js:19
+#: static-media/admin/js/collapse.min.js:1
+msgid "Show"
+msgstr ""
+
+#: static-media/admin/js/collapse.js:15
+#: static-media/admin/js/collapse.min.js:1
+msgid "Hide"
+msgstr ""
+
+#: static-media/admin/js/admin/DateTimeShortcuts.js:49
+#: static-media/admin/js/admin/DateTimeShortcuts.js:85
+msgid "Now"
+msgstr ""
+
+#: static-media/admin/js/admin/DateTimeShortcuts.js:53
+msgid "Clock"
+msgstr ""
+
+#: static-media/admin/js/admin/DateTimeShortcuts.js:81
+msgid "Choose a time"
+msgstr ""
+
+#: static-media/admin/js/admin/DateTimeShortcuts.js:86
+msgid "Midnight"
+msgstr ""
+
+#: static-media/admin/js/admin/DateTimeShortcuts.js:87
+msgid "6 a.m."
+msgstr ""
+
+#: static-media/admin/js/admin/DateTimeShortcuts.js:88
+msgid "Noon"
+msgstr ""
+
+#: static-media/admin/js/admin/DateTimeShortcuts.js:144
+#: static-media/admin/js/admin/DateTimeShortcuts.js:197
+msgid "Today"
+msgstr ""
+
+#: static-media/admin/js/admin/DateTimeShortcuts.js:148
+msgid "Calendar"
+msgstr ""
+
+#: static-media/admin/js/admin/DateTimeShortcuts.js:195
+msgid "Yesterday"
+msgstr ""
+
+#: static-media/admin/js/admin/DateTimeShortcuts.js:199
+msgid "Tomorrow"
+msgstr ""
+
+#: static-media/js/register.js:40 static/js/register.js:40
 msgid "Terms of Use"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:365
-#: static-media/CACHE/js/3eeee3706ebf.js:367
-#: static-media/CACHE/js/4bd62bdb2da4.js:365
-#: static-media/CACHE/js/6b79d088a188.js:365
-#: static-media/CACHE/js/8347635feab9.js:367
-#: static-media/CACHE/js/9e2f3acda32a.js:365
-#: static-media/CACHE/js/a7eed9cbce79.js:367
-#: static-media/CACHE/js/af1972b73435.js:365
-#: static-media/CACHE/js/b4775468438b.js:365
-#: static-media/CACHE/js/c02f606639b0.js:365
-#: static-media/CACHE/js/db7c2b1caabb.js:365
-#: static-media/CACHE/js/f9a5a40a526d.js:365
-#: static-media/CACHE/js/fef441dc0d83.js:365 static-media/js/register.js:41
+#: static-media/js/register.js:41 static/js/register.js:41
 msgid "Forgot Password"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:365
-#: static-media/CACHE/js/3eeee3706ebf.js:367
-#: static-media/CACHE/js/4bd62bdb2da4.js:365
-#: static-media/CACHE/js/6b79d088a188.js:365
-#: static-media/CACHE/js/8347635feab9.js:367
-#: static-media/CACHE/js/9e2f3acda32a.js:365
-#: static-media/CACHE/js/a7eed9cbce79.js:367
-#: static-media/CACHE/js/af1972b73435.js:365
-#: static-media/CACHE/js/b4775468438b.js:365
-#: static-media/CACHE/js/c02f606639b0.js:365
-#: static-media/CACHE/js/db7c2b1caabb.js:365
-#: static-media/CACHE/js/f9a5a40a526d.js:365
-#: static-media/CACHE/js/fef441dc0d83.js:365 static-media/js/register.js:42
+#: static-media/js/register.js:42 static/js/register.js:42
 msgid "Duplicate Session"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:365
-#: static-media/CACHE/js/3eeee3706ebf.js:367
-#: static-media/CACHE/js/4bd62bdb2da4.js:365
-#: static-media/CACHE/js/6b79d088a188.js:365
-#: static-media/CACHE/js/8347635feab9.js:367
-#: static-media/CACHE/js/9e2f3acda32a.js:365
-#: static-media/CACHE/js/a7eed9cbce79.js:367
-#: static-media/CACHE/js/af1972b73435.js:365
-#: static-media/CACHE/js/b4775468438b.js:365
-#: static-media/CACHE/js/c02f606639b0.js:365
-#: static-media/CACHE/js/db7c2b1caabb.js:365
-#: static-media/CACHE/js/f9a5a40a526d.js:365
-#: static-media/CACHE/js/fef441dc0d83.js:365 static-media/js/register.js:43
+#: static-media/js/register.js:43 static/js/register.js:43
 msgid "Maximum Users Exceeded"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:365
-#: static-media/CACHE/js/3eeee3706ebf.js:367
-#: static-media/CACHE/js/4bd62bdb2da4.js:365
-#: static-media/CACHE/js/6b79d088a188.js:365
-#: static-media/CACHE/js/8347635feab9.js:367
-#: static-media/CACHE/js/9e2f3acda32a.js:365
-#: static-media/CACHE/js/a7eed9cbce79.js:367
-#: static-media/CACHE/js/af1972b73435.js:365
-#: static-media/CACHE/js/b4775468438b.js:365
-#: static-media/CACHE/js/c02f606639b0.js:365
-#: static-media/CACHE/js/db7c2b1caabb.js:365
-#: static-media/CACHE/js/f9a5a40a526d.js:365
-#: static-media/CACHE/js/fef441dc0d83.js:365 static-media/js/register.js:49
+#: static-media/js/register.js:50 static/js/register.js:50
 msgid ""
 "Sorry, registration is not available at this time.  Please try logging in "
 "anonymously or coming back later"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:365
-#: static-media/CACHE/js/3eeee3706ebf.js:367
-#: static-media/CACHE/js/4bd62bdb2da4.js:365
-#: static-media/CACHE/js/6b79d088a188.js:365
-#: static-media/CACHE/js/8347635feab9.js:367
-#: static-media/CACHE/js/9e2f3acda32a.js:365
-#: static-media/CACHE/js/a7eed9cbce79.js:367
-#: static-media/CACHE/js/af1972b73435.js:365
-#: static-media/CACHE/js/b4775468438b.js:365
-#: static-media/CACHE/js/c02f606639b0.js:365
-#: static-media/CACHE/js/db7c2b1caabb.js:365
-#: static-media/CACHE/js/f9a5a40a526d.js:365
-#: static-media/CACHE/js/fef441dc0d83.js:365 static-media/js/register.js:51
+#: static-media/js/register.js:52 static/js/register.js:52
 msgid "Signup Unavailable"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:378
-#: static-media/CACHE/js/3eeee3706ebf.js:381
-#: static-media/CACHE/js/4bd62bdb2da4.js:378
-#: static-media/CACHE/js/6b79d088a188.js:378
-#: static-media/CACHE/js/8347635feab9.js:381
-#: static-media/CACHE/js/9e2f3acda32a.js:378
-#: static-media/CACHE/js/a7eed9cbce79.js:380
-#: static-media/CACHE/js/af1972b73435.js:378
-#: static-media/CACHE/js/b4775468438b.js:378
-#: static-media/CACHE/js/c02f606639b0.js:378
-#: static-media/CACHE/js/db7c2b1caabb.js:378
-#: static-media/CACHE/js/f9a5a40a526d.js:378
-#: static-media/CACHE/js/fef441dc0d83.js:378 static-media/js/register.js:176
+#: static-media/js/register.js:178 static/js/register.js:178
 msgid "You've been registered for the public mapping project."
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:378
-#: static-media/CACHE/js/3eeee3706ebf.js:381
-#: static-media/CACHE/js/4bd62bdb2da4.js:378
-#: static-media/CACHE/js/6b79d088a188.js:378
-#: static-media/CACHE/js/8347635feab9.js:381
-#: static-media/CACHE/js/9e2f3acda32a.js:378
-#: static-media/CACHE/js/a7eed9cbce79.js:380
-#: static-media/CACHE/js/af1972b73435.js:378
-#: static-media/CACHE/js/b4775468438b.js:378
-#: static-media/CACHE/js/c02f606639b0.js:378
-#: static-media/CACHE/js/db7c2b1caabb.js:378
-#: static-media/CACHE/js/f9a5a40a526d.js:378
-#: static-media/CACHE/js/fef441dc0d83.js:378 static-media/js/register.js:179
+#: static-media/js/register.js:181 static/js/register.js:181
 msgid "Success!"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:378
-#: static-media/CACHE/js/3eeee3706ebf.js:381
-#: static-media/CACHE/js/4bd62bdb2da4.js:378
-#: static-media/CACHE/js/6b79d088a188.js:378
-#: static-media/CACHE/js/8347635feab9.js:381
-#: static-media/CACHE/js/9e2f3acda32a.js:378
-#: static-media/CACHE/js/a7eed9cbce79.js:380
-#: static-media/CACHE/js/af1972b73435.js:378
-#: static-media/CACHE/js/b4775468438b.js:378
-#: static-media/CACHE/js/c02f606639b0.js:378
-#: static-media/CACHE/js/db7c2b1caabb.js:378
-#: static-media/CACHE/js/f9a5a40a526d.js:378
-#: static-media/CACHE/js/fef441dc0d83.js:378 static-media/js/register.js:181
+#: static-media/js/register.js:183 static/js/register.js:183
 msgid "Start Mapping"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:378
-#: static-media/CACHE/js/3eeee3706ebf.js:381
-#: static-media/CACHE/js/4bd62bdb2da4.js:378
-#: static-media/CACHE/js/6b79d088a188.js:378
-#: static-media/CACHE/js/8347635feab9.js:381
-#: static-media/CACHE/js/9e2f3acda32a.js:378
-#: static-media/CACHE/js/a7eed9cbce79.js:380
-#: static-media/CACHE/js/af1972b73435.js:378
-#: static-media/CACHE/js/b4775468438b.js:378
-#: static-media/CACHE/js/c02f606639b0.js:378
-#: static-media/CACHE/js/db7c2b1caabb.js:378
-#: static-media/CACHE/js/f9a5a40a526d.js:378
-#: static-media/CACHE/js/fef441dc0d83.js:378 static-media/js/register.js:194
+#: static-media/js/register.js:196 static/js/register.js:196
 msgid "User Name already exists. Please choose another one."
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:378
-#: static-media/CACHE/js/3eeee3706ebf.js:381
-#: static-media/CACHE/js/4bd62bdb2da4.js:378
-#: static-media/CACHE/js/6b79d088a188.js:378
-#: static-media/CACHE/js/8347635feab9.js:381
-#: static-media/CACHE/js/9e2f3acda32a.js:378
-#: static-media/CACHE/js/a7eed9cbce79.js:380
-#: static-media/CACHE/js/af1972b73435.js:378
-#: static-media/CACHE/js/b4775468438b.js:378
-#: static-media/CACHE/js/c02f606639b0.js:378
-#: static-media/CACHE/js/db7c2b1caabb.js:378
-#: static-media/CACHE/js/f9a5a40a526d.js:378
-#: static-media/CACHE/js/fef441dc0d83.js:378 static-media/js/register.js:202
+#: static-media/js/register.js:204 static/js/register.js:204
 msgid ""
 "Email already exists. Enter another one, or use the password retrieval form"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:380
-#: static-media/CACHE/js/3eeee3706ebf.js:383
-#: static-media/CACHE/js/4bd62bdb2da4.js:380
-#: static-media/CACHE/js/6b79d088a188.js:380
-#: static-media/CACHE/js/8347635feab9.js:383
-#: static-media/CACHE/js/9e2f3acda32a.js:380
-#: static-media/CACHE/js/a7eed9cbce79.js:382
-#: static-media/CACHE/js/af1972b73435.js:380
-#: static-media/CACHE/js/b4775468438b.js:380
-#: static-media/CACHE/js/c02f606639b0.js:380
-#: static-media/CACHE/js/db7c2b1caabb.js:380
-#: static-media/CACHE/js/f9a5a40a526d.js:380
-#: static-media/CACHE/js/fef441dc0d83.js:380 static-media/js/register.js:238
+#: static-media/js/register.js:242 static/js/register.js:242
 msgid "Please Wait..."
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:383
-#: static-media/CACHE/js/3eeee3706ebf.js:386
-#: static-media/CACHE/js/4bd62bdb2da4.js:383
-#: static-media/CACHE/js/6b79d088a188.js:383
-#: static-media/CACHE/js/8347635feab9.js:386
-#: static-media/CACHE/js/9e2f3acda32a.js:383
-#: static-media/CACHE/js/a7eed9cbce79.js:385
-#: static-media/CACHE/js/af1972b73435.js:383
-#: static-media/CACHE/js/b4775468438b.js:383
-#: static-media/CACHE/js/c02f606639b0.js:383
-#: static-media/CACHE/js/db7c2b1caabb.js:383
-#: static-media/CACHE/js/f9a5a40a526d.js:383
-#: static-media/CACHE/js/fef441dc0d83.js:383 static-media/js/register.js:305
+#: static-media/js/register.js:312 static/js/register.js:312
 msgid "You entered an incorrect user name or password"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:383
-#: static-media/CACHE/js/3eeee3706ebf.js:386
-#: static-media/CACHE/js/4bd62bdb2da4.js:383
-#: static-media/CACHE/js/6b79d088a188.js:383
-#: static-media/CACHE/js/8347635feab9.js:386
-#: static-media/CACHE/js/9e2f3acda32a.js:383
-#: static-media/CACHE/js/a7eed9cbce79.js:385
-#: static-media/CACHE/js/af1972b73435.js:383
-#: static-media/CACHE/js/b4775468438b.js:383
-#: static-media/CACHE/js/c02f606639b0.js:383
-#: static-media/CACHE/js/db7c2b1caabb.js:383
-#: static-media/CACHE/js/f9a5a40a526d.js:383
-#: static-media/CACHE/js/fef441dc0d83.js:383 static-media/js/register.js:309
+#: static-media/js/register.js:316 static/js/register.js:316
 msgid "Login Error"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:383
-#: static-media/CACHE/js/3eeee3706ebf.js:386
-#: static-media/CACHE/js/4bd62bdb2da4.js:383
-#: static-media/CACHE/js/6b79d088a188.js:383
-#: static-media/CACHE/js/8347635feab9.js:386
-#: static-media/CACHE/js/9e2f3acda32a.js:383
-#: static-media/CACHE/js/a7eed9cbce79.js:385
-#: static-media/CACHE/js/af1972b73435.js:383
-#: static-media/CACHE/js/b4775468438b.js:383
-#: static-media/CACHE/js/c02f606639b0.js:383
-#: static-media/CACHE/js/db7c2b1caabb.js:383
-#: static-media/CACHE/js/f9a5a40a526d.js:383
-#: static-media/CACHE/js/fef441dc0d83.js:383 static-media/js/register.js:358
+#: static-media/js/register.js:365 static/js/register.js:365
 msgid "Logged Off"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:383
-#: static-media/CACHE/js/3eeee3706ebf.js:386
-#: static-media/CACHE/js/4bd62bdb2da4.js:383
-#: static-media/CACHE/js/6b79d088a188.js:383
-#: static-media/CACHE/js/8347635feab9.js:386
-#: static-media/CACHE/js/9e2f3acda32a.js:383
-#: static-media/CACHE/js/a7eed9cbce79.js:385
-#: static-media/CACHE/js/af1972b73435.js:383
-#: static-media/CACHE/js/b4775468438b.js:383
-#: static-media/CACHE/js/c02f606639b0.js:383
-#: static-media/CACHE/js/db7c2b1caabb.js:383
-#: static-media/CACHE/js/f9a5a40a526d.js:383
-#: static-media/CACHE/js/fef441dc0d83.js:383 static-media/js/register.js:359
+#: static-media/js/register.js:366 static/js/register.js:366
 msgid ""
 "You have been logged off by another browser. This happens sometimes if you "
 "attempt to access the application from two different locations."
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:383
-#: static-media/CACHE/js/3eeee3706ebf.js:386
-#: static-media/CACHE/js/4bd62bdb2da4.js:383
-#: static-media/CACHE/js/6b79d088a188.js:383
-#: static-media/CACHE/js/8347635feab9.js:386
-#: static-media/CACHE/js/9e2f3acda32a.js:383
-#: static-media/CACHE/js/a7eed9cbce79.js:385
-#: static-media/CACHE/js/af1972b73435.js:383
-#: static-media/CACHE/js/b4775468438b.js:383
-#: static-media/CACHE/js/c02f606639b0.js:383
-#: static-media/CACHE/js/db7c2b1caabb.js:383
-#: static-media/CACHE/js/f9a5a40a526d.js:383
-#: static-media/CACHE/js/fef441dc0d83.js:383 static-media/js/register.js:360
+#: static-media/js/register.js:367 static/js/register.js:367
 msgid "Please log in again"
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:389
-#: static-media/CACHE/js/3eeee3706ebf.js:392
-#: static-media/CACHE/js/4bd62bdb2da4.js:389
-#: static-media/CACHE/js/6b79d088a188.js:389
-#: static-media/CACHE/js/8347635feab9.js:392
-#: static-media/CACHE/js/9e2f3acda32a.js:389
-#: static-media/CACHE/js/a7eed9cbce79.js:391
-#: static-media/CACHE/js/af1972b73435.js:389
-#: static-media/CACHE/js/b4775468438b.js:389
-#: static-media/CACHE/js/c02f606639b0.js:389
-#: static-media/CACHE/js/db7c2b1caabb.js:389
-#: static-media/CACHE/js/f9a5a40a526d.js:389
-#: static-media/CACHE/js/fef441dc0d83.js:389
-#: static-media/js/statisticssets.js:164
-msgid "Loading Statistics..."
+#: static-media/js/ui.js:65 static/js/ui.js:65
+msgid "Coming Soon..."
 msgstr ""
 
-#: static-media/CACHE/js/01ec5c663726.js:395
-#: static-media/CACHE/js/3eeee3706ebf.js:398
-#: static-media/CACHE/js/4bd62bdb2da4.js:395
-#: static-media/CACHE/js/6b79d088a188.js:395
-#: static-media/CACHE/js/8347635feab9.js:398
-#: static-media/CACHE/js/9e2f3acda32a.js:395
-#: static-media/CACHE/js/a7eed9cbce79.js:397
-#: static-media/CACHE/js/af1972b73435.js:395
-#: static-media/CACHE/js/b4775468438b.js:395
-#: static-media/CACHE/js/c02f606639b0.js:395
-#: static-media/CACHE/js/db7c2b1caabb.js:395
-#: static-media/CACHE/js/f9a5a40a526d.js:395
-#: static-media/CACHE/js/fef441dc0d83.js:395
-#: static-media/js/statisticssets.js:336
-msgid "Please select 3 or fewer statistics."
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:395
-#: static-media/CACHE/js/01ec5c663726.js:396
-#: static-media/CACHE/js/01ec5c663726.js:398
-#: static-media/CACHE/js/01ec5c663726.js:401
-#: static-media/CACHE/js/3eeee3706ebf.js:398
-#: static-media/CACHE/js/3eeee3706ebf.js:399
-#: static-media/CACHE/js/3eeee3706ebf.js:401
-#: static-media/CACHE/js/3eeee3706ebf.js:404
-#: static-media/CACHE/js/4bd62bdb2da4.js:395
-#: static-media/CACHE/js/4bd62bdb2da4.js:396
-#: static-media/CACHE/js/4bd62bdb2da4.js:398
-#: static-media/CACHE/js/4bd62bdb2da4.js:401
-#: static-media/CACHE/js/6b79d088a188.js:395
-#: static-media/CACHE/js/6b79d088a188.js:396
-#: static-media/CACHE/js/6b79d088a188.js:398
-#: static-media/CACHE/js/6b79d088a188.js:401
-#: static-media/CACHE/js/8347635feab9.js:398
-#: static-media/CACHE/js/8347635feab9.js:399
-#: static-media/CACHE/js/8347635feab9.js:401
-#: static-media/CACHE/js/8347635feab9.js:404
-#: static-media/CACHE/js/9e2f3acda32a.js:395
-#: static-media/CACHE/js/9e2f3acda32a.js:396
-#: static-media/CACHE/js/9e2f3acda32a.js:398
-#: static-media/CACHE/js/9e2f3acda32a.js:401
-#: static-media/CACHE/js/a7eed9cbce79.js:397
-#: static-media/CACHE/js/a7eed9cbce79.js:398
-#: static-media/CACHE/js/a7eed9cbce79.js:400
-#: static-media/CACHE/js/a7eed9cbce79.js:403
-#: static-media/CACHE/js/af1972b73435.js:395
-#: static-media/CACHE/js/af1972b73435.js:396
-#: static-media/CACHE/js/af1972b73435.js:398
-#: static-media/CACHE/js/af1972b73435.js:401
-#: static-media/CACHE/js/b4775468438b.js:395
-#: static-media/CACHE/js/b4775468438b.js:396
-#: static-media/CACHE/js/b4775468438b.js:398
-#: static-media/CACHE/js/b4775468438b.js:401
-#: static-media/CACHE/js/c02f606639b0.js:395
-#: static-media/CACHE/js/c02f606639b0.js:396
-#: static-media/CACHE/js/c02f606639b0.js:398
-#: static-media/CACHE/js/c02f606639b0.js:401
-#: static-media/CACHE/js/db7c2b1caabb.js:395
-#: static-media/CACHE/js/db7c2b1caabb.js:396
-#: static-media/CACHE/js/db7c2b1caabb.js:398
-#: static-media/CACHE/js/db7c2b1caabb.js:401
-#: static-media/CACHE/js/f9a5a40a526d.js:395
-#: static-media/CACHE/js/f9a5a40a526d.js:396
-#: static-media/CACHE/js/f9a5a40a526d.js:398
-#: static-media/CACHE/js/f9a5a40a526d.js:401
-#: static-media/CACHE/js/fef441dc0d83.js:395
-#: static-media/CACHE/js/fef441dc0d83.js:396
-#: static-media/CACHE/js/fef441dc0d83.js:398
-#: static-media/CACHE/js/fef441dc0d83.js:401
-#: static-media/js/splitsreport.js:108 static-media/js/statisticssets.js:337
-#: static-media/js/statisticssets.js:346 static-media/js/statisticssets.js:385
-msgid "Warning"
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:396
-#: static-media/CACHE/js/3eeee3706ebf.js:399
-#: static-media/CACHE/js/4bd62bdb2da4.js:396
-#: static-media/CACHE/js/6b79d088a188.js:396
-#: static-media/CACHE/js/8347635feab9.js:399
-#: static-media/CACHE/js/9e2f3acda32a.js:396
-#: static-media/CACHE/js/a7eed9cbce79.js:398
-#: static-media/CACHE/js/af1972b73435.js:396
-#: static-media/CACHE/js/b4775468438b.js:396
-#: static-media/CACHE/js/c02f606639b0.js:396
-#: static-media/CACHE/js/db7c2b1caabb.js:396
-#: static-media/CACHE/js/f9a5a40a526d.js:396
-#: static-media/CACHE/js/fef441dc0d83.js:396
-#: static-media/js/statisticssets.js:345
-msgid "Please name your statistics set."
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:399
-#: static-media/CACHE/js/3eeee3706ebf.js:402
-#: static-media/CACHE/js/4bd62bdb2da4.js:399
-#: static-media/CACHE/js/6b79d088a188.js:399
-#: static-media/CACHE/js/8347635feab9.js:402
-#: static-media/CACHE/js/9e2f3acda32a.js:399
-#: static-media/CACHE/js/a7eed9cbce79.js:401
-#: static-media/CACHE/js/af1972b73435.js:399
-#: static-media/CACHE/js/b4775468438b.js:399
-#: static-media/CACHE/js/c02f606639b0.js:399
-#: static-media/CACHE/js/db7c2b1caabb.js:399
-#: static-media/CACHE/js/f9a5a40a526d.js:399
-#: static-media/CACHE/js/fef441dc0d83.js:399
-#: static-media/js/statisticssets.js:391
-msgid "Please select 1-3 statistics to save in the named set."
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:399
-#: static-media/CACHE/js/3eeee3706ebf.js:402
-#: static-media/CACHE/js/4bd62bdb2da4.js:399
-#: static-media/CACHE/js/6b79d088a188.js:399
-#: static-media/CACHE/js/8347635feab9.js:402
-#: static-media/CACHE/js/9e2f3acda32a.js:399
-#: static-media/CACHE/js/a7eed9cbce79.js:401
-#: static-media/CACHE/js/af1972b73435.js:399
-#: static-media/CACHE/js/b4775468438b.js:399
-#: static-media/CACHE/js/c02f606639b0.js:399
-#: static-media/CACHE/js/db7c2b1caabb.js:399
-#: static-media/CACHE/js/f9a5a40a526d.js:399
-#: static-media/CACHE/js/fef441dc0d83.js:399
-#: static-media/js/statisticssets.js:392
-msgid "Incomplete"
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:401
-#: static-media/CACHE/js/3eeee3706ebf.js:404
-#: static-media/CACHE/js/4bd62bdb2da4.js:401
-#: static-media/CACHE/js/6b79d088a188.js:401
-#: static-media/CACHE/js/8347635feab9.js:404
-#: static-media/CACHE/js/9e2f3acda32a.js:401
-#: static-media/CACHE/js/a7eed9cbce79.js:403
-#: static-media/CACHE/js/af1972b73435.js:401
-#: static-media/CACHE/js/b4775468438b.js:401
-#: static-media/CACHE/js/c02f606639b0.js:401
-#: static-media/CACHE/js/db7c2b1caabb.js:401
-#: static-media/CACHE/js/f9a5a40a526d.js:401
-#: static-media/CACHE/js/fef441dc0d83.js:401
-#: static-media/js/splitsreport.js:51
-msgid "Splits Report"
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:401
-#: static-media/CACHE/js/3eeee3706ebf.js:404
-#: static-media/CACHE/js/4bd62bdb2da4.js:401
-#: static-media/CACHE/js/6b79d088a188.js:401
-#: static-media/CACHE/js/8347635feab9.js:404
-#: static-media/CACHE/js/9e2f3acda32a.js:401
-#: static-media/CACHE/js/a7eed9cbce79.js:403
-#: static-media/CACHE/js/af1972b73435.js:401
-#: static-media/CACHE/js/b4775468438b.js:401
-#: static-media/CACHE/js/c02f606639b0.js:401
-#: static-media/CACHE/js/db7c2b1caabb.js:401
-#: static-media/CACHE/js/f9a5a40a526d.js:401
-#: static-media/CACHE/js/fef441dc0d83.js:401
-#: static-media/js/splitsreport.js:68
-msgid "Please wait. Retrieving splits report."
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:401
-#: static-media/CACHE/js/3eeee3706ebf.js:404
-#: static-media/CACHE/js/4bd62bdb2da4.js:401
-#: static-media/CACHE/js/6b79d088a188.js:401
-#: static-media/CACHE/js/8347635feab9.js:404
-#: static-media/CACHE/js/9e2f3acda32a.js:401
-#: static-media/CACHE/js/a7eed9cbce79.js:403
-#: static-media/CACHE/js/af1972b73435.js:401
-#: static-media/CACHE/js/b4775468438b.js:401
-#: static-media/CACHE/js/c02f606639b0.js:401
-#: static-media/CACHE/js/db7c2b1caabb.js:401
-#: static-media/CACHE/js/f9a5a40a526d.js:401
-#: static-media/CACHE/js/fef441dc0d83.js:401
-#: static-media/js/splitsreport.js:71
-msgid "Retrieving Splits Report"
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:401
-#: static-media/CACHE/js/3eeee3706ebf.js:404
-#: static-media/CACHE/js/4bd62bdb2da4.js:401
-#: static-media/CACHE/js/6b79d088a188.js:401
-#: static-media/CACHE/js/8347635feab9.js:404
-#: static-media/CACHE/js/9e2f3acda32a.js:401
-#: static-media/CACHE/js/a7eed9cbce79.js:403
-#: static-media/CACHE/js/af1972b73435.js:401
-#: static-media/CACHE/js/b4775468438b.js:401
-#: static-media/CACHE/js/c02f606639b0.js:401
-#: static-media/CACHE/js/db7c2b1caabb.js:401
-#: static-media/CACHE/js/f9a5a40a526d.js:401
-#: static-media/CACHE/js/fef441dc0d83.js:401
-#: static-media/js/splitsreport.js:93
-msgid "Error encountered while retrieving splits report: "
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:401
-#: static-media/CACHE/js/3eeee3706ebf.js:404
-#: static-media/CACHE/js/4bd62bdb2da4.js:401
-#: static-media/CACHE/js/6b79d088a188.js:401
-#: static-media/CACHE/js/8347635feab9.js:404
-#: static-media/CACHE/js/9e2f3acda32a.js:401
-#: static-media/CACHE/js/a7eed9cbce79.js:403
-#: static-media/CACHE/js/af1972b73435.js:401
-#: static-media/CACHE/js/b4775468438b.js:401
-#: static-media/CACHE/js/c02f606639b0.js:401
-#: static-media/CACHE/js/db7c2b1caabb.js:401
-#: static-media/CACHE/js/f9a5a40a526d.js:401
-#: static-media/CACHE/js/fef441dc0d83.js:401
-#: static-media/js/splitsreport.js:107
-msgid "Please select either 1, 2, or 3 layers for comparison."
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:416
-#: static-media/CACHE/js/3eeee3706ebf.js:419
-#: static-media/CACHE/js/4bd62bdb2da4.js:416
-#: static-media/CACHE/js/6b79d088a188.js:416
-#: static-media/CACHE/js/8347635feab9.js:419
-#: static-media/CACHE/js/9e2f3acda32a.js:416
-#: static-media/CACHE/js/a7eed9cbce79.js:418
-#: static-media/CACHE/js/af1972b73435.js:416
-#: static-media/CACHE/js/b4775468438b.js:416
-#: static-media/CACHE/js/c02f606639b0.js:416
-#: static-media/CACHE/js/db7c2b1caabb.js:416
-#: static-media/CACHE/js/f9a5a40a526d.js:416
-#: static-media/CACHE/js/fef441dc0d83.js:416
-#: static-media/js/layerchooser.js:59
-msgid "Choose Map Layers"
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:418
-#: static-media/CACHE/js/3eeee3706ebf.js:421
-#: static-media/CACHE/js/4bd62bdb2da4.js:418
-#: static-media/CACHE/js/6b79d088a188.js:418
-#: static-media/CACHE/js/8347635feab9.js:421
-#: static-media/CACHE/js/9e2f3acda32a.js:418
-#: static-media/CACHE/js/a7eed9cbce79.js:420
-#: static-media/CACHE/js/af1972b73435.js:418
-#: static-media/CACHE/js/b4775468438b.js:418
-#: static-media/CACHE/js/c02f606639b0.js:418
-#: static-media/CACHE/js/db7c2b1caabb.js:418
-#: static-media/CACHE/js/f9a5a40a526d.js:418
-#: static-media/CACHE/js/fef441dc0d83.js:418
-#: static-media/js/layerchooser.js:164
-msgid "User Name"
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:430
-#: static-media/CACHE/js/3eeee3706ebf.js:433
-#: static-media/CACHE/js/4bd62bdb2da4.js:430
-#: static-media/CACHE/js/6b79d088a188.js:430
-#: static-media/CACHE/js/8347635feab9.js:433
-#: static-media/CACHE/js/9e2f3acda32a.js:430
-#: static-media/CACHE/js/a7eed9cbce79.js:432
-#: static-media/CACHE/js/af1972b73435.js:430
-#: static-media/CACHE/js/b4775468438b.js:430
-#: static-media/CACHE/js/c02f606639b0.js:430
-#: static-media/CACHE/js/db7c2b1caabb.js:430
-#: static-media/CACHE/js/f9a5a40a526d.js:430
-#: static-media/CACHE/js/fef441dc0d83.js:430 static-media/js/multimember.js:59
-msgid "Set Multi-Member Districts"
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:437
-#: static-media/CACHE/js/3eeee3706ebf.js:440
-#: static-media/CACHE/js/4bd62bdb2da4.js:437
-#: static-media/CACHE/js/6b79d088a188.js:437
-#: static-media/CACHE/js/8347635feab9.js:440
-#: static-media/CACHE/js/9e2f3acda32a.js:437
-#: static-media/CACHE/js/a7eed9cbce79.js:439
-#: static-media/CACHE/js/af1972b73435.js:437
-#: static-media/CACHE/js/b4775468438b.js:437
-#: static-media/CACHE/js/c02f606639b0.js:437
-#: static-media/CACHE/js/db7c2b1caabb.js:437
-#: static-media/CACHE/js/f9a5a40a526d.js:437
-#: static-media/CACHE/js/fef441dc0d83.js:437
-#: static-media/js/multimember.js:188
-msgid "Unable to assign representatives:"
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:437
-#: static-media/CACHE/js/3eeee3706ebf.js:440
-#: static-media/CACHE/js/4bd62bdb2da4.js:437
-#: static-media/CACHE/js/6b79d088a188.js:437
-#: static-media/CACHE/js/8347635feab9.js:440
-#: static-media/CACHE/js/9e2f3acda32a.js:437
-#: static-media/CACHE/js/a7eed9cbce79.js:439
-#: static-media/CACHE/js/af1972b73435.js:437
-#: static-media/CACHE/js/b4775468438b.js:437
-#: static-media/CACHE/js/c02f606639b0.js:437
-#: static-media/CACHE/js/db7c2b1caabb.js:437
-#: static-media/CACHE/js/f9a5a40a526d.js:437
-#: static-media/CACHE/js/fef441dc0d83.js:437
-#: static-media/js/multimember.js:194
-msgid "Unable to assign representatives"
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:437
-#: static-media/CACHE/js/3eeee3706ebf.js:440
-#: static-media/CACHE/js/4bd62bdb2da4.js:437
-#: static-media/CACHE/js/6b79d088a188.js:437
-#: static-media/CACHE/js/8347635feab9.js:440
-#: static-media/CACHE/js/9e2f3acda32a.js:437
-#: static-media/CACHE/js/a7eed9cbce79.js:439
-#: static-media/CACHE/js/af1972b73435.js:437
-#: static-media/CACHE/js/b4775468438b.js:437
-#: static-media/CACHE/js/c02f606639b0.js:437
-#: static-media/CACHE/js/db7c2b1caabb.js:437
-#: static-media/CACHE/js/f9a5a40a526d.js:437
-#: static-media/CACHE/js/fef441dc0d83.js:437
-#: static-media/js/multimember.js:234
-msgid "District"
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:437
-#: static-media/CACHE/js/3eeee3706ebf.js:440
-#: static-media/CACHE/js/4bd62bdb2da4.js:437
-#: static-media/CACHE/js/6b79d088a188.js:437
-#: static-media/CACHE/js/8347635feab9.js:440
-#: static-media/CACHE/js/9e2f3acda32a.js:437
-#: static-media/CACHE/js/a7eed9cbce79.js:439
-#: static-media/CACHE/js/af1972b73435.js:437
-#: static-media/CACHE/js/b4775468438b.js:437
-#: static-media/CACHE/js/c02f606639b0.js:437
-#: static-media/CACHE/js/db7c2b1caabb.js:437
-#: static-media/CACHE/js/f9a5a40a526d.js:437
-#: static-media/CACHE/js/fef441dc0d83.js:437
-#: static-media/js/multimember.js:234
-msgid "District ID"
-msgstr ""
-
-#: static-media/CACHE/js/01ec5c663726.js:437
-#: static-media/CACHE/js/3eeee3706ebf.js:440
-#: static-media/CACHE/js/4bd62bdb2da4.js:437
-#: static-media/CACHE/js/6b79d088a188.js:437
-#: static-media/CACHE/js/8347635feab9.js:440
-#: static-media/CACHE/js/9e2f3acda32a.js:437
-#: static-media/CACHE/js/a7eed9cbce79.js:439
-#: static-media/CACHE/js/af1972b73435.js:437
-#: static-media/CACHE/js/b4775468438b.js:437
-#: static-media/CACHE/js/c02f606639b0.js:437
-#: static-media/CACHE/js/db7c2b1caabb.js:437
-#: static-media/CACHE/js/f9a5a40a526d.js:437
-#: static-media/CACHE/js/fef441dc0d83.js:437
-#: static-media/js/multimember.js:234
-msgid "# Members"
-msgstr ""
-
-#: static-media/CACHE/js/3eeee3706ebf.js:83
-#: static-media/CACHE/js/8347635feab9.js:83
-#: static-media/CACHE/js/a7eed9cbce79.js:83 static-media/js/ui.js:148
+#: static-media/js/ui.js:154 static/js/ui.js:154
 msgid ""
 "No plans have been submitted for this leaderboard. Please check back later."
 msgstr ""
 
-#: static-media/CACHE/js/3eeee3706ebf.js:335
-#: static-media/CACHE/js/8347635feab9.js:335
-#: static-media/CACHE/js/a7eed9cbce79.js:335 static-media/js/chooseplan.js:567
-msgid "Current Filter: "
+#: static-media/js/ui.js:226 static-media/js/ui.js.c:256 static/js/ui.js:226
+#: static/js/ui.js.c:256
+msgid "Validation Failed"
 msgstr ""
 
-#: static-media/js/chooseplan.js:88
-msgid ""
-"Thanks! Your file has been uploaded, and your plan is being constructed. "
-"When your plan is completely constructed, you will receive an email from us."
+#: static-media/js/ui.js:231 static-media/js/ui.js.c:264 static/js/ui.js:231
+#: static/js/ui.js.c:264
+msgid "Server error. Please try again later"
 msgstr ""
 
-#: static-media/js/emailplan.js:42
-msgid "Submit Final Plan to Contest"
+#: static-media/js/ui.js:239 static/js/ui.js:239
+msgid "Update Leaderboards<br/>with Working Plan"
 msgstr ""
 
-#: static-media/js/emailplan.js:93
-msgid "Please wait. Emailing plan."
+#: static-media/js/ui.js:271 static/js/ui.js:271
+msgid "Download Scores<br/>as CSV"
 msgstr ""
 
-#: static-media/js/emailplan.js:94 static-media/js/emailplan.js.py:106
-msgid "Emailing Plan"
+#: static-media/js/ui.js:394 static/js/ui.js:394
+msgid "Last Saved on %(day)s at %(hour)s:%(minute)s"
 msgstr ""
 
-#: static-media/js/emailplan.js:107
-msgid ""
-"Your plan is in the process of being submitted. You will receive a "
-"confirmation email once it has completed successfully. This may take a few "
-"minutes."
+#: static-media/js/ui.js:497 static/js/ui.js:497
+msgid "Please Wait"
 msgstr ""
 
-#: static-media/js/emailplan.js:117 static-media/js/emailplan.js.py:126
-msgid "Error Emailing Plan"
+#: static-media/js/ui.js:497 static/js/ui.js:497
+msgid "Publishing with the server"
 msgstr ""
 
-#: static-media/js/emailplan.js:127
-msgid "Please try again later"
+#: static-media/js/ui.js:508 static/js/ui.js:508
+msgid "Please enter a new name to publish your plan."
 msgstr ""
 
-#: static-media/js/mapping.js:1043
-msgid "No districts were updated"
+#: static-media/js/ui.js:520 static/js/ui.js:520
+msgid "Oops!"
 msgstr ""
 
-#: static-media/js/mapping.js:1105
-msgid ""
-"You cannot select that many features at once.\\n\\nConsider drawing a "
-"smaller area with the selection tool."
+#: static-media/js/ui.js:539 static/js/ui.js:539
+msgid "Server Failure"
 msgstr ""
 
-#: static-media/js/mapping.js:1117
-msgid ""
-"You cannot select any more features.\\n\\nConsider assigning your current "
-"selection to a district first."
-msgstr ""
-
-#: static-media/js/mapping.js:1264
-msgid "Unable to combine districts: "
-msgstr ""
-
-#: static-media/js/mapping.js:1278
-msgid "Would you like to unassign the geography in "
-msgstr ""
-
-#: static-media/js/mapping.js:1859
-msgid "Select One"
-msgstr ""
-
-#: static-media/js/reports.js:356
-msgid "Open Current Report in New Window"
+#: static-media/js/ui.js:539 static/js/ui.js:539
+msgid "Sorry, we weren't able to contact the server.  Please try again later."
 msgstr ""

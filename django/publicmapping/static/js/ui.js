@@ -541,6 +541,11 @@ $(function() {
             });
         }
     });
+
+    $('#agreelabel a').click( function() {
+        $('#privacy').dialog('open');
+    });
+
 });
 
 // When a plan is unloaded, allow the server to do any required cleanup

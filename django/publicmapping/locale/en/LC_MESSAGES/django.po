@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-06-07 09:06-0500\n"
+"POT-Creation-Date: 2012-07-26 17:02-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -210,23 +210,23 @@ msgstr ""
 msgid "Please correct the error and try again."
 msgstr ""
 
-#: redistricting/tasks.py:1586
+#: redistricting/tasks.py:1589
 msgid "Created characteristics, resetting computed characteristics..."
 msgstr ""
 
-#: redistricting/tasks.py:1649
+#: redistricting/tasks.py:1652
 msgid "Reset computed characteristics, renesting foundation geographies..."
 msgstr ""
 
-#: redistricting/tasks.py:1703
+#: redistricting/tasks.py:1706
 msgid "Renested foundation geographies, creating spatial views and styles..."
 msgstr ""
 
-#: redistricting/tasks.py:1767
+#: redistricting/tasks.py:1770
 msgid "Created spatial views and styles, cleaning quarantined data..."
 msgstr ""
 
-#: redistricting/tasks.py:1810
+#: redistricting/tasks.py:1813
 #, python-format
 msgid "Upload complete. Subject \"%(subject_name)s\" added."
 msgstr ""
@@ -652,8 +652,8 @@ msgid "Dist."
 msgstr ""
 
 #: redistricting/templates/basic_information.html:64
-#: redistricting/templates/communities.html:62
-#: redistricting/templates/community_demographics.html:62
+#: redistricting/templates/communities.html:61
+#: redistricting/templates/community_demographics.html:61
 #: redistricting/templates/demographics.html:64
 msgid "Sorry, there is no demographic data for this plan"
 msgstr ""
@@ -695,8 +695,8 @@ msgstr ""
 msgid "Non-contiguous"
 msgstr ""
 
-#: redistricting/templates/communities.html:44
-#: redistricting/templates/community_demographics.html:44
+#: redistricting/templates/communities.html:43
+#: redistricting/templates/community_demographics.html:43
 msgid "Community"
 msgstr ""
 
@@ -1087,7 +1087,7 @@ msgid ""
 "                    "
 msgstr ""
 
-#: redistricting/templates/editplan.html:372 templates/account.html:96
+#: redistricting/templates/editplan.html:372 templates/account.html:98
 msgid "Indicates required field"
 msgstr ""
 
@@ -1245,11 +1245,11 @@ msgstr ""
 msgid "Printed on:"
 msgstr ""
 
-#: redistricting/templates/printplan.html:109 templates/index.html:313
+#: redistricting/templates/printplan.html:109 templates/index.html:314
 msgid "Powered By DistrictBuilder"
 msgstr ""
 
-#: redistricting/templates/printplan.html:111 templates/index.html:316
+#: redistricting/templates/printplan.html:111 templates/index.html:317
 msgid "A project of"
 msgstr ""
 
@@ -1368,7 +1368,7 @@ msgstr ""
 msgid "Leaderboards"
 msgstr ""
 
-#: redistricting/templates/viewplan.html:259 templates/index.html:163
+#: redistricting/templates/viewplan.html:259 templates/index.html:164
 msgid "Login"
 msgstr ""
 
@@ -1767,7 +1767,11 @@ msgstr ""
 msgid "OK"
 msgstr ""
 
-#: redistricting/templates/viewplan.html:1078
+#: redistricting/templates/viewplan.html:1077
+msgid "Edit Statistics Sets"
+msgstr ""
+
+#: redistricting/templates/viewplan.html:1079
 msgid ""
 "You can select up to three statistics at once to display in \n"
 "        the sidebar. Each set of three statistics will be saved in the "
@@ -1776,107 +1780,107 @@ msgid ""
 "        statistics saved."
 msgstr ""
 
-#: redistricting/templates/viewplan.html:1083
+#: redistricting/templates/viewplan.html:1084
 msgid "Select up to 3 statistics"
 msgstr ""
 
-#: redistricting/templates/viewplan.html:1084
+#: redistricting/templates/viewplan.html:1085
 msgid "Clear Choices"
 msgstr ""
 
-#: redistricting/templates/viewplan.html:1088
+#: redistricting/templates/viewplan.html:1089
 msgid "Name Statistics Set"
 msgstr ""
 
-#: redistricting/templates/viewplan.html:1090
+#: redistricting/templates/viewplan.html:1091
 msgid "Save Set"
 msgstr ""
 
-#: redistricting/templates/viewplan.html:1093
+#: redistricting/templates/viewplan.html:1094
 msgid "... Or select a saved statistics set"
 msgstr ""
 
-#: redistricting/templatetags/redistricting_extras.py:63
+#: redistricting/templatetags/redistricting_extras.py:43
 msgid "zero"
 msgstr ""
 
-#: redistricting/templatetags/redistricting_extras.py:63
+#: redistricting/templatetags/redistricting_extras.py:43
 msgid "one"
 msgstr ""
 
-#: redistricting/templatetags/redistricting_extras.py:63
+#: redistricting/templatetags/redistricting_extras.py:43
 msgid "two"
 msgstr ""
 
-#: redistricting/templatetags/redistricting_extras.py:63
+#: redistricting/templatetags/redistricting_extras.py:43
 msgid "three"
 msgstr ""
 
-#: redistricting/templatetags/redistricting_extras.py:63
+#: redistricting/templatetags/redistricting_extras.py:43
 msgid "four"
 msgstr ""
 
-#: redistricting/templatetags/redistricting_extras.py:63
+#: redistricting/templatetags/redistricting_extras.py:43
 msgid "five"
 msgstr ""
 
-#: redistricting/templatetags/redistricting_extras.py:63
+#: redistricting/templatetags/redistricting_extras.py:43
 msgid "six"
 msgstr ""
 
-#: redistricting/templatetags/redistricting_extras.py:63
+#: redistricting/templatetags/redistricting_extras.py:43
 msgid "seven"
 msgstr ""
 
-#: redistricting/templatetags/redistricting_extras.py:63
+#: redistricting/templatetags/redistricting_extras.py:43
 msgid "eight"
 msgstr ""
 
-#: redistricting/templatetags/redistricting_extras.py:63
+#: redistricting/templatetags/redistricting_extras.py:43
 msgid "nine"
 msgstr ""
 
-#: redistricting/templatetags/redistricting_extras.py:64
+#: redistricting/templatetags/redistricting_extras.py:44
 msgid "ten"
 msgstr ""
 
-#: redistricting/templatetags/redistricting_extras.py:64
+#: redistricting/templatetags/redistricting_extras.py:44
 msgid "eleven"
 msgstr ""
 
-#: redistricting/templatetags/redistricting_extras.py:64
+#: redistricting/templatetags/redistricting_extras.py:44
 msgid "twelve"
 msgstr ""
 
-#: redistricting/templatetags/redistricting_extras.py:64
+#: redistricting/templatetags/redistricting_extras.py:44
 msgid "thirteen"
 msgstr ""
 
-#: redistricting/templatetags/redistricting_extras.py:64
+#: redistricting/templatetags/redistricting_extras.py:44
 msgid "fourteen"
 msgstr ""
 
-#: redistricting/templatetags/redistricting_extras.py:64
+#: redistricting/templatetags/redistricting_extras.py:44
 msgid "fifteen"
 msgstr ""
 
-#: redistricting/templatetags/redistricting_extras.py:64
+#: redistricting/templatetags/redistricting_extras.py:44
 msgid "sixteen"
 msgstr ""
 
-#: redistricting/templatetags/redistricting_extras.py:65
+#: redistricting/templatetags/redistricting_extras.py:45
 msgid "seventeen"
 msgstr ""
 
-#: redistricting/templatetags/redistricting_extras.py:65
+#: redistricting/templatetags/redistricting_extras.py:45
 msgid "eighteen"
 msgstr ""
 
-#: redistricting/templatetags/redistricting_extras.py:65
+#: redistricting/templatetags/redistricting_extras.py:45
 msgid "nineteen"
 msgstr ""
 
-#: redistricting/templatetags/redistricting_extras.py:65
+#: redistricting/templatetags/redistricting_extras.py:45
 msgid "twenty"
 msgstr ""
 
@@ -1944,19 +1948,15 @@ msgstr ""
 msgid "Organization"
 msgstr ""
 
-#: templates/account.html:76
-msgid "I have read the "
+#: templates/account.html:77
+msgid "I have read the <a href=\"#\">Terms of Use</a>"
 msgstr ""
 
-#: templates/account.html:76 templates/index.html:184
-msgid "Terms of Use"
-msgstr ""
-
-#: templates/account.html:90
+#: templates/account.html:92
 msgid "Update"
 msgstr ""
 
-#: templates/account.html:92 templates/index.html:174
+#: templates/account.html:94 templates/index.html:175
 msgid "Sign Up"
 msgstr ""
 
@@ -2014,161 +2014,165 @@ msgstr ""
 msgid "Virginia data"
 msgstr ""
 
-#: templates/index.html:159
+#: templates/index.html:160
 msgid "Log In"
 msgstr ""
 
-#: templates/index.html:165
+#: templates/index.html:166
 msgid "Forgot your password?"
 msgstr ""
 
-#: templates/index.html:170
+#: templates/index.html:171
 msgid "Don't have an account?"
 msgstr ""
 
-#: templates/index.html:172
+#: templates/index.html:173
 msgid "To Draw Your Own Maps..."
 msgstr ""
 
-#: templates/index.html:176
+#: templates/index.html:177
 msgid "To View Other Users' Maps..."
 msgstr ""
 
-#: templates/index.html:179
+#: templates/index.html:180
 msgid "Enter as a guest"
 msgstr ""
 
-#: templates/index.html:196
+#: templates/index.html:185
+msgid "Terms of Use"
+msgstr ""
+
+#: templates/index.html:197
 msgid "Get A Hint"
 msgstr ""
 
-#: templates/index.html:198
+#: templates/index.html:199
 msgid ""
 "Enter your username to retrieve your password hint that you used when "
 "registering for an account."
 msgstr ""
 
-#: templates/index.html:203
+#: templates/index.html:204
 msgid "Username"
 msgstr ""
 
-#: templates/index.html:207
+#: templates/index.html:208
 msgid "OR"
 msgstr ""
 
-#: templates/index.html:209
+#: templates/index.html:210
 msgid "Reset Your Password"
 msgstr ""
 
-#: templates/index.html:211
+#: templates/index.html:212
 msgid ""
 "Enter your email address to reset your password if you have forgotten your "
 "username."
 msgstr ""
 
-#: templates/index.html:216
+#: templates/index.html:217
 msgid "Email"
 msgstr ""
 
-#: templates/index.html:222
+#: templates/index.html:223
 msgid "Begin"
 msgstr ""
 
-#: templates/index.html:226
+#: templates/index.html:227
 msgid "Here Is Your Hint"
 msgstr ""
 
-#: templates/index.html:227
+#: templates/index.html:228
 msgid ""
 "If this helps you remember your password, you can close this dialog and log "
 "in."
 msgstr ""
 
-#: templates/index.html:231
+#: templates/index.html:232
 msgid ""
 "If you still can't recall your password, click on the 'Back' button, and "
 "enter your email address, so we can email your password to you."
 msgstr ""
 
-#: templates/index.html:235
+#: templates/index.html:236
 msgid "Email Sent"
 msgstr ""
 
-#: templates/index.html:236
+#: templates/index.html:237
 msgid ""
 "Your password has been emailed to you. You should receive your password in "
 "your inbox in the next few minutes."
 msgstr ""
 
-#: templates/index.html:239
+#: templates/index.html:240
 msgid "Back"
 msgstr ""
 
-#: templates/index.html:240
+#: templates/index.html:241
 msgid "Close"
 msgstr ""
 
-#: templates/index.html:246
+#: templates/index.html:247
 msgid "Your account has too many sessions."
 msgstr ""
 
-#: templates/index.html:247
+#: templates/index.html:248
 msgid "To use DistrictBuilder, you must do one of the following actions:"
 msgstr ""
 
-#: templates/index.html:250
+#: templates/index.html:251
 msgid "Log in as a different user."
 msgstr ""
 
-#: templates/index.html:253
+#: templates/index.html:254
 msgid "Use the system as a guest."
 msgstr ""
 
-#: templates/index.html:258
+#: templates/index.html:259
 msgid "Force close the other user's session and log in again."
 msgstr ""
 
-#: templates/index.html:265
+#: templates/index.html:266
 msgid ""
 "The DistrictBuilder application has reached maximum capacity. Please try to "
 "use the application again shortly. We apologize for the inconvenience."
 msgstr ""
 
-#: templates/index.html:268
+#: templates/index.html:269
 msgid ""
 "The following discloses our information gathering and dissemination "
 "practices; and terms of use for this web site."
 msgstr ""
 
-#: templates/index.html:269
+#: templates/index.html:270
 msgid "Information gathering"
 msgstr ""
 
-#: templates/index.html:271
+#: templates/index.html:272
 msgid ""
 "Our web server software generates logfiles of the IP addresses of computers "
 "that access this web site and of what files they access."
 msgstr ""
 
-#: templates/index.html:272
+#: templates/index.html:273
 msgid ""
 "These web server logs are retained on a temporary basis and then deleted "
 "completely from our systems."
 msgstr ""
 
-#: templates/index.html:273
+#: templates/index.html:274
 msgid "We also may ask our visitors to provide information about themselves."
 msgstr ""
 
-#: templates/index.html:274
+#: templates/index.html:275
 msgid "We may use cookies to maintain a user's identity between web sessions."
 msgstr ""
 
-#: templates/index.html:276
+#: templates/index.html:277
 msgid "Contributor Terms"
 msgstr ""
 
-#: templates/index.html:277
+#: templates/index.html:278
 msgid ""
 "This site enables users to create districting maps and to comment on the "
 "maps of others.  By creating a map, a comment, or an account, you are "
@@ -2176,7 +2180,7 @@ msgid ""
 "(collectively, 'Contents') you contribute to this site. "
 msgstr ""
 
-#: templates/index.html:278
+#: templates/index.html:279
 msgid ""
 "You hereby grant to us a worldwide, royalty-free, non-exclusive, perpetual, "
 "irrevocable license to do any act that is restricted by copyright over "
@@ -2189,18 +2193,18 @@ msgid ""
 "rights that You may have in the Contents."
 msgstr ""
 
-#: templates/index.html:279
+#: templates/index.html:280
 msgid ""
 "We agree to make the Contents that you contribute and designate as &quot;"
 "published&quot; available under at least one of the following licenses: ODbL "
 "1.0; DbCL 1.0; CC-BY-SA 2.0; or another free and open license. "
 msgstr ""
 
-#: templates/index.html:280
+#: templates/index.html:281
 msgid "Use of information"
 msgstr ""
 
-#: templates/index.html:281
+#: templates/index.html:282
 msgid ""
 "We use third parties to provide processing functions on our site. When you "
 "register for  services, we may share information as necessary for the third "
@@ -2209,7 +2213,7 @@ msgid ""
 "identifiable information for any other purpose. "
 msgstr ""
 
-#: templates/index.html:282
+#: templates/index.html:283
 msgid ""
 "We use your IP address and files you access to help diagnose problems with "
 "our server and to administer our Web site by identifying (1) which parts of "
@@ -2219,7 +2223,7 @@ msgid ""
 "At no time do we disclose site usage by individual visitors."
 msgstr ""
 
-#: templates/index.html:283
+#: templates/index.html:284
 msgid ""
 "We reserve the right to disclose your personally identifiable information as "
 "required by law and when we believe that disclosure is necessary to protect "
@@ -2227,7 +2231,7 @@ msgid ""
 "process served on the hosts. "
 msgstr ""
 
-#: templates/index.html:284
+#: templates/index.html:285
 msgid ""
 "All maps created through the system, edits to those maps, and comments made "
 "on those maps are associated with an account id and a timestamp. These maps, "
@@ -2239,56 +2243,56 @@ msgid ""
 "users profile setting. "
 msgstr ""
 
-#: templates/index.html:285
+#: templates/index.html:286
 msgid "Security"
 msgstr ""
 
-#: templates/index.html:286
+#: templates/index.html:287
 msgid ""
 "This site has security measures in place to protect the loss, misuse and "
 "alteration of the information under our control."
 msgstr ""
 
-#: templates/index.html:287
+#: templates/index.html:288
 msgid "Contacting this web site"
 msgstr ""
 
-#: templates/index.html:288
+#: templates/index.html:289
 msgid ""
 "If you have any questions about this privacy statement, the practices of "
 "this site, or your dealings with this site, you can contact the support "
 "address at the host domain"
 msgstr ""
 
-#: templates/index.html:288
+#: templates/index.html:289
 msgid ""
 "This web site may contain links to other web sites. We are not responsible "
 "for the privacy practices or the content of such web sites."
 msgstr ""
 
-#: templates/index.html:289
+#: templates/index.html:290
 msgid "Changes to this policy"
 msgstr ""
 
-#: templates/index.html:290
+#: templates/index.html:291
 msgid ""
 "An announcement of any changes to this policy will be posted on this page "
 "for  thirty days before any changes go into effect."
 msgstr ""
 
-#: templates/index.html:291
+#: templates/index.html:292
 msgid "Effective Date"
 msgstr ""
 
-#: templates/index.html:292
+#: templates/index.html:293
 msgid "The effective date of this policy was May 2, 2011."
 msgstr ""
 
-#: templates/index.html:330
+#: templates/index.html:331
 msgid "We've designed the software to run on"
 msgstr ""
 
-#: templates/index.html:332
+#: templates/index.html:333
 msgid "a free web browser"
 msgstr ""
 

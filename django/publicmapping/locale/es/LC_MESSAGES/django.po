@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-04-11 12:41-0400\n"
+"POT-Creation-Date: 2012-07-26 17:03-0400\n"
 "PO-Revision-Date: 2011-11-29 14:20\n"
 "Last-Translator: Admin User <ajennings+saigon@azavea.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Translated-Using: django-rosetta 0.6.2\n"
 
-#: views.py:266
+#: views.py:267
 msgid "Your Password Reset Request"
 msgstr "Su Pedido de Restauración de contraseña"
 
@@ -65,14 +65,16 @@ msgstr "Equilibrado"
 #: redistricting/calculators.py:2189
 #, python-format
 msgid "Total %(district_type_a)s which split a %(district_type_b)s: %(result)d"
-msgstr "Total de %(district_type_a)s que separan un %(district_type_b)s: %(result)d"
+msgstr ""
+"Total de %(district_type_a)s que separan un %(district_type_b)s: %(result)d"
 
 #: redistricting/calculators.py:2192
 #, python-format
 msgid ""
 "Total %(district_type_a)s splitting \"%(district_type_b)s\": %(result)d</div>"
 msgstr ""
-"Total de %(district_type_a)s separando \"%(district_type_b)s\": %(result)d</div>"
+"Total de %(district_type_a)s separando \"%(district_type_b)s\": %(result)d</"
+"div>"
 
 #: redistricting/calculators.py:2196
 msgid "Total number of splits"
@@ -128,65 +130,60 @@ msgstr "Compacidad"
 msgid "Proportion"
 msgstr "Proporción"
 
-#: redistricting/tasks.py:161
+#: redistricting/tasks.py:162
 msgid "Problem importing your uploaded file."
 msgstr "Problema al importar su archivo subido."
 
-#: redistricting/tasks.py:162
+#: redistricting/tasks.py:163
 msgid "Upload and import plan confirmation."
 msgstr "Subir e importar confirmación del plan."
 
-#: redistricting/tasks.py:163
+#: redistricting/tasks.py:164
 msgid "Problem importing user uploaded file."
 msgstr "Problema al importar archivo subido del usuario."
 
-#: redistricting/tasks.py:182
+#: redistricting/tasks.py:183
 msgid "The zip file contains too many files"
 msgstr "El archivo comprimido contiene demasiados archivos"
 
-#: redistricting/tasks.py:206
+#: redistricting/tasks.py:207
 msgid "The zip file must contain a comma separated value (.csv) file."
 msgstr "El archivo comprimido debe contener un archivo de csv."
 
-#: redistricting/tasks.py:248
+#: redistricting/tasks.py:249
 msgid "Unexpected error during zip file processing"
 msgstr "Error inesperado mientras se procesa archivo comprimido"
 
-#: redistricting/tasks.py:282
+#: redistricting/tasks.py:283
 msgid "Plan couldn't be created. Be sure the plan name is unique."
 msgstr "Plan no pudo ser creado. Asegúrese que el nombre del plan sea único."
 
-#: redistricting/tasks.py:330
+#: redistricting/tasks.py:331
 msgid "Did not import row:"
 msgstr "No se pudo importar fila:"
 
-#: redistricting/tasks.py:386
+#: redistricting/tasks.py:387
 msgid "Unable to create district"
 msgstr "Incapaz de crear distrito"
 
-#: redistricting/tasks.py:423
+#: redistricting/tasks.py:424
 #, python-format
 msgid ""
 "Unable to create ComputedCharacteristic for district %(district_id)s, "
 "subject %(subject_name)s"
 msgstr ""
-"Incapaz de crear ComputedCharacteristic para el distrito %(district_id)s, "
-"el tema %(subject_name)s"
+"Incapaz de crear ComputedCharacteristic para el distrito %(district_id)s, el "
+"tema %(subject_name)s"
 
-#: redistricting/tasks.py:539
+#: redistricting/tasks.py:540
 #, python-format
 msgid "Competition submission (user: %(username)s, planid: %(plan_id)d)"
 msgstr ""
 "Presentación de concurso de (usuario: %(username)s, planid: %(plan_id)d)"
 
-#: redistricting/tasks.py:547
+#: redistricting/tasks.py:548
 msgid "Plan submitted successfully"
 msgstr "Plan fue presentado satisfactoramente"
-
-#: redistricting/tasks.py:1199
-#, python-format
-msgid "%s Reports"
-msgstr "%s Informes"
 
 #: redistricting/tasks.py:1204
 msgid "Error creating calculator report."
@@ -209,8 +206,8 @@ msgstr "Hay un número adecuado de geounidades en el archivo subido, "
 msgid ""
 "but the geounits do not have the same portable ids as those in the database."
 msgstr ""
-"pero las geounidades no tienen las mismas identificaciones portables que "
-"los de la base de datos."
+"pero las geounidades no tienen las mismas identificaciones portables que los "
+"de la base de datos."
 
 #: redistricting/tasks.py:1454
 msgid "Copying records to characteristic table ..."
@@ -224,29 +221,27 @@ msgstr "El nombre de tema contiene caracteres inválidos."
 msgid "Please correct the error and try again."
 msgstr "Por favor, corrija el error y vuelva a intentarlo."
 
-#: redistricting/tasks.py:1586
+#: redistricting/tasks.py:1589
 msgid "Created characteristics, resetting computed characteristics..."
-msgstr "Se crearon caracteristicas, restableciendo características calculadas..."
+msgstr ""
+"Se crearon caracteristicas, restableciendo características calculadas..."
 
-#: redistricting/tasks.py:1649
+#: redistricting/tasks.py:1652
 msgid "Reset computed characteristics, renesting foundation geographies..."
 msgstr ""
-"Se restableció características calculadas, recreando geografías de la " 
-"base..."
+"Se restableció características calculadas, recreando geografías de la base..."
 
-#: redistricting/tasks.py:1703
+#: redistricting/tasks.py:1706
 msgid "Renested foundation geographies, creating spatial views and styles..."
 msgstr ""
-"Se recreó geografías de la base, creando vistas espaciales y "
-"estilos..."
+"Se recreó geografías de la base, creando vistas espaciales y estilos..."
 
-#: redistricting/tasks.py:1767
+#: redistricting/tasks.py:1770
 msgid "Created spatial views and styles, cleaning quarantined data..."
 msgstr ""
-"Se creó vistas espaciales y estilos, limpiando los datos en "
-"cuarentena..."
+"Se creó vistas espaciales y estilos, limpiando los datos en cuarentena..."
 
-#: redistricting/tasks.py:1810
+#: redistricting/tasks.py:1813
 #, python-format
 msgid "Upload complete. Subject \"%(subject_name)s\" added."
 msgstr "Carga completa. Tema \"%(subject_name)s\" añadido."
@@ -268,8 +263,8 @@ msgstr "Usuario %(username)s no tiene permiso para copiar este modelo"
 #: redistricting/views.py:265
 msgid "You already have a plan named that. Please pick a unique name."
 msgstr ""
-"Usted ya tiene un plan con ese nombre. Por favor, elija un nombre que"
-"sea único."
+"Usted ya tiene un plan con ese nombre. Por favor, elija un nombre quesea "
+"único."
 
 #: redistricting/views.py:287
 msgid "Could not save district copies"
@@ -279,338 +274,330 @@ msgstr "No se pudieron guardar copias de distritos"
 msgid "Validation successful"
 msgstr "Validación exitosa"
 
-#: redistricting/views.py:416
-#, python-format
-msgid "%(body_name)s Reports"
-msgstr "%(body_name)s Informes"
-
-#: redistricting/views.py:435
+#: redistricting/views.py:434
 msgid "District"
 msgstr "Distritos"
 
-#: redistricting/views.py:540
+#: redistricting/views.py:539
 msgid "community map"
 msgstr "mapa de comunidad"
 
-#: redistricting/views.py:540
+#: redistricting/views.py:539
 msgid "plan"
 msgstr "plan"
 
-#: redistricting/views.py:774
+#: redistricting/views.py:773
 msgid "Couldn't save new plan"
 msgstr "No se pudo guardar el nuevo plan"
 
-#: redistricting/views.py:882 redistricting/views.py:968
-#: redistricting/views.py:1148 redistricting/views.py:1210
-#: redistricting/views.py:1277 redistricting/views.py:1330
-#: redistricting/views.py:1376
+#: redistricting/views.py:881 redistricting/views.py:967
+#: redistricting/views.py:1147 redistricting/views.py:1209
+#: redistricting/views.py:1276 redistricting/views.py:1329
+#: redistricting/views.py:1375
 msgid "No plan with the given id"
 msgstr "No existe un plan bajo la identificación proporcionada"
 
-#: redistricting/views.py:886 redistricting/views.py:972
-#: redistricting/views.py:1380 redistricting/views.py:1392
+#: redistricting/views.py:885 redistricting/views.py:971
+#: redistricting/views.py:1379 redistricting/views.py:1391
 msgid "User can't view the given plan"
 msgstr "Usuario no puede visualizar este plan"
 
-#: redistricting/views.py:890
+#: redistricting/views.py:889
 msgid "Reports functionality is turned off."
 msgstr "La funcionalidad de informes se encuentra apagada."
 
-#: redistricting/views.py:895 redistricting/views.py:976
+#: redistricting/views.py:894 redistricting/views.py:975
 msgid "Information for report wasn't sent via POST"
 msgstr "La información para el informe no fue enviado por POST"
 
-#: redistricting/views.py:906 redistricting/views.py:993
+#: redistricting/views.py:905 redistricting/views.py:992
 msgid "Plan report is ready."
 msgstr "Informe de plan está listo."
 
-#: redistricting/views.py:914 redistricting/views.py:1001
+#: redistricting/views.py:913 redistricting/views.py:1000
 msgid "Report is building."
 msgstr "Informe está en construcción"
 
-#: redistricting/views.py:922 redistricting/views.py:1009
+#: redistricting/views.py:921 redistricting/views.py:1008
 msgid "Report generation started."
 msgstr "El informe se empezó a generar."
 
-#: redistricting/views.py:942 redistricting/views.py:1018
+#: redistricting/views.py:941 redistricting/views.py:1017
 msgid "Unrecognized status when checking report status."
 msgstr "Estado desconocido al revisar estado de informe."
 
-#: redistricting/views.py:1109
+#: redistricting/views.py:1108
 msgid "Created 1 new district"
 msgstr "Se creó 1 nuevo distrito"
 
-#: redistricting/views.py:1115
+#: redistricting/views.py:1114
 msgid "Reached Max districts already"
 msgstr "Ya alcanzó el número máximo de distritos"
 
-#: redistricting/views.py:1119
+#: redistricting/views.py:1118
 msgid "Couldn't save new district."
 msgstr "No se pudo guardar nuevo distrito."
 
-#: redistricting/views.py:1121
+#: redistricting/views.py:1120
 msgid "Must specify name, geolevel, and geounit ids for new district."
 msgstr ""
-"Se debe espicificar identificaciones de nombre, geocapa, y geounidad "
-"para el nuevo distrito."
+"Se debe espicificar identificaciones de nombre, geocapa, y geounidad para el "
+"nuevo distrito."
 
-#: redistricting/views.py:1152 redistricting/views.py:1214
-#: redistricting/views.py:1281 redistricting/views.py:1334
+#: redistricting/views.py:1151 redistricting/views.py:1213
+#: redistricting/views.py:1280 redistricting/views.py:1333
 msgid "User can't edit the given plan"
 msgstr "Usuario no puede editar este plan"
 
-#: redistricting/views.py:1158
+#: redistricting/views.py:1157
 msgid "No districts selected to add to the given plan"
 msgstr "No se ha seleccionado ningún distrito para añadir a este plan"
 
-#: redistricting/views.py:1163
+#: redistricting/views.py:1162
 #, python-format
 msgid "Going to merge %(number_of_merged_districts)d districts"
 msgstr "Se fusionarán %(number_of_merged_districts)d distritos"
 
-#: redistricting/views.py:1171
+#: redistricting/views.py:1170
 #, python-format
 msgid "Tried to merge too many districts; %(allowed_districts)d slots left"
 msgstr ""
 "Se intentó fusionar demasiado distritos; %(allowed_districts)d espacios "
 "vacios"
 
-#: redistricting/views.py:1179
+#: redistricting/views.py:1178
 #, python-format
 msgid "Merged %(num_merged_districts)d districts"
 msgstr "Se fusionaron %(num_merged_districts)d distritos"
 
-#: redistricting/views.py:1221
+#: redistricting/views.py:1220
 msgid "Multi-members not allowed for this legislative body"
 msgstr ""
-"Distritos plurinomionales no son permitidos para este cuerpo "
-"legislativo"
+"Distritos plurinomionales no son permitidos para este cuerpo legislativo"
 
-#: redistricting/views.py:1253
+#: redistricting/views.py:1252
 #, python-format
 msgid "Modified members for %(num_districts)d districts"
 msgstr "Se modificaron miembros %(num_districts)d para distritos"
 
-#: redistricting/views.py:1301
+#: redistricting/views.py:1300
 msgid "Can't combine locked districts"
 msgstr "No se puede combinar distritos bloqueados"
 
-#: redistricting/views.py:1308
+#: redistricting/views.py:1307
 msgid "Successfully combined districts"
 msgstr "Los distritos fueron combinados satisfactoramente"
 
-#: redistricting/views.py:1311
+#: redistricting/views.py:1310
 msgid "Could not combine districts"
 msgstr "No se pudieron combinar los distritos"
 
-#: redistricting/views.py:1344
+#: redistricting/views.py:1343
 msgid "Could not fix unassigned"
 msgstr "No se pudieron arreglar los no asignados"
 
-#: redistricting/views.py:1389
+#: redistricting/views.py:1388
 msgid "No other plan with the given id"
 msgstr "No existe otro plan bajo la identificación proporcionada"
 
-#: redistricting/views.py:1400
+#: redistricting/views.py:1399
 #, python-format
 msgid "othertype not supported: %(other)s"
 msgstr "othertype no compatible: %(other)s"
 
-#: redistricting/views.py:1403
+#: redistricting/views.py:1402
 msgid "split"
 msgstr "separación"
 
-#: redistricting/views.py:1406
+#: redistricting/views.py:1405
 #, python-format
 msgid "Found %(num_splits)d %(split_word)s"
 msgstr "Se encontró %(num_splits)d %(split_word)s"
 
-#: redistricting/views.py:1412
+#: redistricting/views.py:1411
 msgid "Could not query for splits"
 msgstr "No se pudo preguntar por separaciones"
 
-#: redistricting/views.py:1425
+#: redistricting/views.py:1424
 msgid "No planIds provided"
 msgstr "No se proporcionó ninguna planId"
 
-#: redistricting/views.py:1445
+#: redistricting/views.py:1444
 msgid "Plan does not exist."
 msgstr "Plan no existe."
 
-#: redistricting/views.py:1455
+#: redistricting/views.py:1454
 msgid "No layers were provided."
 msgstr "No se proporcionó ninguna capa."
 
-#: redistricting/views.py:1509 redistricting/views.py:1528
+#: redistricting/views.py:1508 redistricting/views.py:1527
 msgid "Could not add units to district."
 msgstr "No se pudo añadir unidades al distrito"
 
-#: redistricting/views.py:1520
+#: redistricting/views.py:1519
 #, python-format
 msgid "Updated %(num_fixed_districts)d districts"
 msgstr "Se actualizó %(num_fixed_districts)d distritos"
 
-#: redistricting/views.py:1533
+#: redistricting/views.py:1532
 msgid "Geounits weren't found in a district."
 msgstr "No se encontraron geounidades en un distrito"
 
-#: redistricting/views.py:1562
+#: redistricting/views.py:1561
 msgid "Must include lock parameter."
 msgstr "Se tiene que incluir parámetro de bloqueo."
 
-#: redistricting/views.py:1564
+#: redistricting/views.py:1563
 msgid "Must include version parameter."
 msgstr "Se tiene que incluir parámetro de versión."
 
-#: redistricting/views.py:1570
+#: redistricting/views.py:1569
 msgid "Plan or district does not exist."
 msgstr "El plan o distrito no existen."
 
-#: redistricting/views.py:1579
+#: redistricting/views.py:1578
 #, python-format
 msgid "District successfully %(locked_state)s"
 msgstr "Distrito satisfactoriamente %(locked_state)s"
 
-#: redistricting/views.py:1580
+#: redistricting/views.py:1579
 msgid "locked"
 msgstr "bloqueado"
 
-#: redistricting/views.py:1580
+#: redistricting/views.py:1579
 msgid "unlocked"
 msgstr "desbloqueado"
 
-#: redistricting/views.py:1635
+#: redistricting/views.py:1634
 msgid "No plan exists with that ID."
 msgstr "No existe un plan con esa identificación"
 
-#: redistricting/views.py:1703
+#: redistricting/views.py:1702
 msgid "Subject for districts is required."
 msgstr "Se requiere un tema para distritos"
 
-#: redistricting/views.py:1706
+#: redistricting/views.py:1705
 msgid "Query failed."
 msgstr "Pregunta falló."
 
-#: redistricting/views.py:1804
+#: redistricting/views.py:1803
 msgid "Geometry is required."
 msgstr "Se requiere geometría."
 
-#: redistricting/views.py:1808
+#: redistricting/views.py:1807
 msgid "Invalid plan."
 msgstr "Plan inválido."
 
-#: redistricting/views.py:1821
+#: redistricting/views.py:1820
 msgid "Couldn't get geography info from the server. No plan with the given id."
 msgstr ""
-"No se pudo obtener infomación geográfica desde el servidor. No existe un plan "
-"con la identificación proporcionada."
+"No se pudo obtener infomación geográfica desde el servidor. No existe un "
+"plan con la identificación proporcionada."
 
-#: redistricting/views.py:1840
+#: redistricting/views.py:1834
+#, fuzzy
+msgid "Unable to get Demographics ScoreDisplay"
+msgstr "No se pudo obtener ScoreDisplay personalizado"
+
+#: redistricting/views.py:1841
 msgid "Unable to get Personalized ScoreDisplay"
 msgstr "No se pudo obtener ScoreDisplay personalizado"
 
-#: redistricting/views.py:1851
+#: redistricting/views.py:1852
 msgid "Couldn't render display tab."
 msgstr "No se pudo pasar a la pestaña de visualización."
 
-#: redistricting/views.py:1883
+#: redistricting/views.py:1884
 msgid "Failed to get file status"
 msgstr "No se pudo obtener estado del archivo"
 
-#: redistricting/views.py:1915
+#: redistricting/views.py:1916
 msgid "File is not yet ready. Please try again in a few minutes"
 msgstr ""
-"El archivo no está listo aún. Por favor vuelva a intentarlo en "
-"unos minutos"
+"El archivo no está listo aún. Por favor vuelva a intentarlo en unos minutos"
 
-#: redistricting/views.py:1938
+#: redistricting/views.py:1939
 msgid "Task submitted"
 msgstr "Tarea presentada"
 
-#: redistricting/views.py:1958
-#, python-format
-msgid "%(legislative_body)s Leaderboard - %(owner_filter)s"
-msgstr "%(legislative_body)s Tabla de Posiciones - %(owner_filter)s"
-
-#: redistricting/views.py:1978
+#: redistricting/views.py:1976
 msgid "No display configured"
 msgstr "No hay visualización configurada"
 
-#: redistricting/views.py:2078
+#: redistricting/views.py:2076
 msgid "Unknown filter method."
 msgstr "Método de filtro desconocido."
 
-#: redistricting/views.py:2200
+#: redistricting/views.py:2198
 msgid "Must declare planId, name and description"
-msgstr ""
-"Se debe declarar planId, nombre, y descripción"
+msgstr "Se debe declarar planId, nombre, y descripción"
 
-#: redistricting/views.py:2213
+#: redistricting/views.py:2211
 msgid "Updated plan attributes"
 msgstr "Se actualizó atributos de plan"
 
-#: redistricting/views.py:2215
+#: redistricting/views.py:2213
 msgid "Failed to save the changes to your plan"
 msgstr "Falla al guardar los cambios hechos a su plan"
 
-#: redistricting/views.py:2220
+#: redistricting/views.py:2218
 msgid "Cannot edit a plan you don't own."
 msgstr "No puede editar un plan que no es suyo."
 
-#: redistricting/views.py:2236 redistricting/views.py:2268
+#: redistricting/views.py:2234 redistricting/views.py:2266
 msgid "Must declare planId"
 msgstr "Se debe declarar planId"
 
-#: redistricting/views.py:2244
+#: redistricting/views.py:2242
 msgid "Deleted plan"
 msgstr "Se eliminó plan"
 
-#: redistricting/views.py:2246
+#: redistricting/views.py:2244
 msgid "Failed to delete plan"
 msgstr "Falla al eliminar plan"
 
-#: redistricting/views.py:2251
+#: redistricting/views.py:2249
 msgid "Cannot delete a plan you don't own."
 msgstr "No puede eliminar un plan que no es suyo."
 
-#: redistricting/views.py:2282
+#: redistricting/views.py:2280
 msgid "Reaggregating plan"
 msgstr "Reagregando plan"
 
-#: redistricting/views.py:2284
+#: redistricting/views.py:2282
 msgid "Failed to reaggregate plan"
 msgstr "Falló en reagregar plan"
 
-#: redistricting/views.py:2289
+#: redistricting/views.py:2287
 msgid "Cannot reaggregate a plan you don't own."
 msgstr "No puede reagregar un plan que no es suyo."
 
-#: redistricting/views.py:2310
+#: redistricting/views.py:2308
 #, python-format
 msgid "Health retrieved at %(time)s\n"
 msgstr "Salud obtenida el %(time)s\n"
 
-#: redistricting/views.py:2311
+#: redistricting/views.py:2309
 #, python-format
 msgid "%(plan_count)d plans in database\n"
 msgstr "%(plan_count)d planes en la base de datos\n"
 
-#: redistricting/views.py:2313
+#: redistricting/views.py:2311
 #, python-format
 msgid "%(session_count)d sessions in use out of %(session_limit)s\n"
 msgstr "%(session_count)d sesiones en uso de %(session_limit)s\n"
 
-#: redistricting/views.py:2316
+#: redistricting/views.py:2314
 #, python-format
 msgid "%(num_users)d active users over the last 10 minutes\n"
 msgstr "%(num_users)d usuarios activos en los últimos 10 minutos\n"
 
-#: redistricting/views.py:2319
+#: redistricting/views.py:2317
 #, python-format
 msgid "%(mb_free)s MB of disk space free\n"
 msgstr "%(mb_free)s MB de espacio libre en disco\n"
 
-#: redistricting/views.py:2321
+#: redistricting/views.py:2319
 #, python-format
 msgid ""
 "Memory Usage:\n"
@@ -619,7 +606,7 @@ msgstr ""
 "Uso de Memoria:\n"
 "%(mem_free)s\n"
 
-#: redistricting/views.py:2325
+#: redistricting/views.py:2323
 #, python-format
 msgid ""
 "ERROR! Couldn't get health:\n"
@@ -628,25 +615,25 @@ msgstr ""
 "ERROR! No se pudo obtener salud:\n"
 "%s"
 
-#: redistricting/views.py:2333
+#: redistricting/views.py:2331
 msgid "No plan with that ID exists."
 msgstr "No existe un plan bajo esa identificación."
 
-#: redistricting/views.py:2371
+#: redistricting/views.py:2369
 #, python-format
 msgid "No functions for %(panel)s"
 msgstr "No hay funciones para %(panel)s"
 
-#: redistricting/views.py:2375
+#: redistricting/views.py:2373
 #, python-format
 msgid "No user displays for %(user)s"
 msgstr "No hay visualizaciones de usuario para %(user)s"
 
-#: redistricting/views.py:2394
+#: redistricting/views.py:2392
 msgid "Couldn't delete personalized scoredisplay"
 msgstr "No se pudo eliminar personalizado scoredisplay"
 
-#: redistricting/views.py:2436
+#: redistricting/views.py:2434
 #, python-format
 msgid ""
 "Each user is limited to %(limit)d statistics sets. Please delete one or edit "
@@ -655,11 +642,11 @@ msgstr ""
 "Cada usuario está limitado a %(limit)d conjuntos de estadísticas. Por favor, "
 "elimine uno o edite un conjunto ya existente."
 
-#: redistricting/views.py:2446
+#: redistricting/views.py:2444
 msgid "Didn't get functions in POST parameter"
 msgstr "No se obtuvo funciones en parámetro POST"
 
-#: redistricting/views.py:2479
+#: redistricting/views.py:2477
 msgid "No plan with that ID was found."
 msgstr "No se encontró un plan bajo esa identificación."
 
@@ -676,8 +663,8 @@ msgid ""
 "This user attempted to upload a file containing a plan but had some "
 "trouble.  The plan may have been imported."
 msgstr ""
-"Este usuario intentó cargar un archivo que contiene un plan, pero "
-"se presentaron algunos problemas. El plan puede haber sido importado."
+"Este usuario intentó cargar un archivo que contiene un plan, pero se "
+"presentaron algunos problemas. El plan puede haber sido importado."
 
 #: redistricting/templates/admin.email:22
 msgid "Plan name"
@@ -701,8 +688,8 @@ msgid "Dist."
 msgstr "Dist."
 
 #: redistricting/templates/basic_information.html:64
-#: redistricting/templates/communities.html:62
-#: redistricting/templates/community_demographics.html:62
+#: redistricting/templates/communities.html:61
+#: redistricting/templates/community_demographics.html:61
 #: redistricting/templates/demographics.html:64
 msgid "Sorry, there is no demographic data for this plan"
 msgstr "Disculpe, no hay datos demográficos correspondientes a este plan"
@@ -744,8 +731,8 @@ msgstr "Contiguo"
 msgid "Non-contiguous"
 msgstr "No contiguos"
 
-#: redistricting/templates/communities.html:44
-#: redistricting/templates/community_demographics.html:44
+#: redistricting/templates/communities.html:43
+#: redistricting/templates/community_demographics.html:43
 msgid "Community"
 msgstr "Comunidad"
 
@@ -766,20 +753,20 @@ msgid "Tools"
 msgstr "Herramientas"
 
 #: redistricting/templates/editplan.html:53
-#: redistricting/templates/editplan.html:120
+#: redistricting/templates/editplan.html:113
 #: redistricting/templates/viewplan.html:465
 msgid "Pan"
 msgstr "Deslizar"
 
 #: redistricting/templates/editplan.html:54
-#: redistricting/templates/editplan.html:121
+#: redistricting/templates/editplan.html:114
 #: redistricting/templates/viewplan.html:466
 msgid "Click on a geounit to see its demographic info."
 msgstr "Haga clic sobre una geounit para ver su información demográfica."
 
 #: redistricting/templates/editplan.html:54
-#: redistricting/templates/editplan.html:121
-#: redistricting/templates/editplan.html:125
+#: redistricting/templates/editplan.html:114
+#: redistricting/templates/editplan.html:118
 #: redistricting/templates/viewplan.html:466
 #: redistricting/templates/viewplan.html:469
 msgid "Info"
@@ -794,64 +781,69 @@ msgstr ""
 "Selección única de %(body_member_long_label)s; + Mayús para seleccionar "
 "múltiples %(body_members)s"
 
-#: redistricting/templates/editplan.html:63
-msgid "Single<br/>Select "
+#: redistricting/templates/editplan.html:62
+#, fuzzy
+msgid "Single<br/>Select"
 msgstr "Selección<br/>Única"
 
-#: redistricting/templates/editplan.html:65
+#: redistricting/templates/editplan.html:63
 msgid "Select by rectangle"
 msgstr "Seleccionar por rectángulo"
 
-#: redistricting/templates/editplan.html:66
+#: redistricting/templates/editplan.html:63
 msgid "Rectangle<br/>Select"
 msgstr "Seleccionar<br/>Rectángulo"
 
-#: redistricting/templates/editplan.html:68
+#: redistricting/templates/editplan.html:64
 msgid "Select by drawing a polygon"
 msgstr "Seleccionar dibujando un polígono"
 
-#: redistricting/templates/editplan.html:69
-msgid "Polygon<br/>Select"
-msgstr "Seleccionar<br/>Polígono"
+#: redistricting/templates/editplan.html:64
+msgid "Polygon"
+msgstr "Polígono"
 
-#: redistricting/templates/editplan.html:74
+#: redistricting/templates/editplan.html:64
+msgid "Select"
+msgstr "Seleccionar"
+
+#: redistricting/templates/editplan.html:69
 #, python-format
 msgid ""
 "Enable anchor mode, then select a %(body_member_long_label)s name to "
 "repeatedly assign areas to a %(body_member_long_label)s"
 msgstr ""
-"Active modo de anclaje, luego seleccione un nombre para asignar"
-"repetidamente áreas a un %(body_member_long_label)s"
+"Active modo de anclaje, luego seleccione un nombre para asignarrepetidamente "
+"áreas a un %(body_member_long_label)s"
 
-#: redistricting/templates/editplan.html:75
+#: redistricting/templates/editplan.html:69
 #, python-format
 msgid "Anchor<br/>%(district_label)s"
 msgstr "Anclar<br/>%(district_label)s"
 
-#: redistricting/templates/editplan.html:78
+#: redistricting/templates/editplan.html:71
 #, python-format
 msgid "Assign to %(district_label)s"
 msgstr "Asignar a %(district_label)s"
 
-#: redistricting/templates/editplan.html:79
+#: redistricting/templates/editplan.html:72
 #, python-format
 msgid ""
 "Assign %(body_members)s currently selected on map by choosing a "
 "%(body_member_long_label)s name from drop down list"
 msgstr ""
-"Asignar %(body_members)s  actualmente seleccionado en el mapa mediante "
-"la elección de un %(body_member_long_label)s nombre de la lista desplegable"
+"Asignar %(body_members)s  actualmente seleccionado en el mapa mediante la "
+"elección de un %(body_member_long_label)s nombre de la lista desplegable"
 
-#: redistricting/templates/editplan.html:80
+#: redistricting/templates/editplan.html:73
 msgid "Select One"
 msgstr "Seleccione uno"
 
-#: redistricting/templates/editplan.html:85
+#: redistricting/templates/editplan.html:78
 #, python-format
 msgid "New %(district_label)s"
 msgstr "Nuevo %(district_label)s"
 
-#: redistricting/templates/editplan.html:89
+#: redistricting/templates/editplan.html:82
 #, python-format
 msgid ""
 "Select areas on the map then drag them to into a %(body_member_long_label)s "
@@ -860,74 +852,73 @@ msgstr ""
 "Seleccione las áreas en el mapa y arrástrelas a un "
 "%(body_member_long_label)s  para ser reasignados"
 
-#: redistricting/templates/editplan.html:89
+#: redistricting/templates/editplan.html:82
 msgid "Click and<br/>Drag"
 msgstr "Hacer clic y <br/> Arrastrar"
 
-#: redistricting/templates/editplan.html:95
+#: redistricting/templates/editplan.html:88
 msgid "Perform automated resolution of minor unassigned geographies"
 msgstr "Realizar la resolución automatizada de geografías menores sin asignar"
 
-#: redistricting/templates/editplan.html:95
+#: redistricting/templates/editplan.html:88
 msgid "Fix<br/>Unassigned"
 msgstr "Arreglar <br/> Sin asignar"
 
-#: redistricting/templates/editplan.html:124
+#: redistricting/templates/editplan.html:117
 #, python-format
 msgid "Click on a %(body_member_long_label)s to lock or unlock it."
 msgstr ""
 "Haga clic en un %(body_member_long_label)s  para bloquear o desbloquear."
 
-#: redistricting/templates/editplan.html:124
+#: redistricting/templates/editplan.html:117
 msgid "Lock"
 msgstr "Bloquear"
 
-#: redistricting/templates/editplan.html:125
+#: redistricting/templates/editplan.html:118
 #, python-format
 msgid "Click on a %(body_member_long_label)s to see its ID."
 msgstr ""
-"Haga clic en un %(body_member_long_label)s  para ver su "
-"identificación."
+"Haga clic en un %(body_member_long_label)s  para ver su identificación."
 
-#: redistricting/templates/editplan.html:126
+#: redistricting/templates/editplan.html:119
 #, python-format
 msgid "Unassign all the units in a %(body_member_long_label)s"
 msgstr ""
 "Cancelar la asignación de todas las unidades en un "
 "%(body_member_long_label)s "
 
-#: redistricting/templates/editplan.html:126
+#: redistricting/templates/editplan.html:119
 msgid "Unassign"
 msgstr "Desasignar"
 
-#: redistricting/templates/editplan.html:127
+#: redistricting/templates/editplan.html:120
 #, python-format
 msgid "Copy a %(body_member_long_label)s from another %(plan_text)s"
 msgstr "Copiar un %(body_member_long_label)s de otro %(plan_text)s "
 
-#: redistricting/templates/editplan.html:127
+#: redistricting/templates/editplan.html:120
 msgid "Copy and</br>Paste"
 msgstr "Copiar y</br>Pegar"
 
-#: redistricting/templates/editplan.html:131
+#: redistricting/templates/editplan.html:124
 #: redistricting/templates/viewplan.html:472
 msgid "Show<br/>Splits"
 msgstr "Mostrar<br/>Separaciones"
 
-#: redistricting/templates/editplan.html:132
+#: redistricting/templates/editplan.html:125
 #: redistricting/templates/viewplan.html:473
 msgid "Generate<br/>Splits Report"
 msgstr "Generar Informe<br/>de Separaciones"
 
-#: redistricting/templates/editplan.html:137
+#: redistricting/templates/editplan.html:130
 msgid "Select Multi-<br/>Member Districts"
 msgstr "Seleccionar Distritos<br/>Plurinominales"
 
-#: redistricting/templates/editplan.html:151
+#: redistricting/templates/editplan.html:144
 msgid "Submit Final Plan to Contest"
 msgstr "Presentar Plan Final al Concurso"
 
-#: redistricting/templates/editplan.html:152
+#: redistricting/templates/editplan.html:145
 msgid ""
 "You can submit your completed plan to be considered for the contest by "
 "filling out this form."
@@ -935,16 +926,16 @@ msgstr ""
 "Usted puede presentar su plan final para ser considerado en el concurso "
 "llenando este formulario."
 
-#: redistricting/templates/editplan.html:153
-#: redistricting/templates/editplan.html:375
+#: redistricting/templates/editplan.html:146
+#: redistricting/templates/editplan.html:368
 msgid "Submit Final Plan"
 msgstr "Presentar Plan Final"
 
-#: redistricting/templates/editplan.html:159
+#: redistricting/templates/editplan.html:152
 msgid "Share Plan With All Users"
 msgstr "Compartir Plan con Todos los Usuarios"
 
-#: redistricting/templates/editplan.html:160
+#: redistricting/templates/editplan.html:153
 #, python-format
 msgid ""
 "By sharing a copy of your %(plan_text)s below, you are making your "
@@ -953,25 +944,25 @@ msgid ""
 "%(plan_text)s will be added to the \"Shared\" section of the plan chooser."
 msgstr ""
 "Mediante el intercambio de una copia de su %(plan_text)s mostrado abajo, "
-"usted está haciendo su %(plan_text)s disponible a todos los demás usuarios"
-"del sistema. Dele a su %(plan_text)s un nombre único para poder compartirlo. "
-"Una copia de su actual %(plan_text)s será agregada a la sección \"Compartido\""
-"del selector de planes."
+"usted está haciendo su %(plan_text)s disponible a todos los demás "
+"usuariosdel sistema. Dele a su %(plan_text)s un nombre único para poder "
+"compartirlo. Una copia de su actual %(plan_text)s será agregada a la sección "
+"\"Compartido\"del selector de planes."
 
-#: redistricting/templates/editplan.html:162
+#: redistricting/templates/editplan.html:155
 #, python-format
 msgid "Name your shared %(plan_text)s"
 msgstr "Nombrar su %(plan_text)s compartido"
 
-#: redistricting/templates/editplan.html:164
+#: redistricting/templates/editplan.html:157
 msgid "Save and Share"
 msgstr "Guardar y Compartir"
 
-#: redistricting/templates/editplan.html:168
+#: redistricting/templates/editplan.html:161
 msgid "Congratulations!"
 msgstr "¡Felicidades!"
 
-#: redistricting/templates/editplan.html:169
+#: redistricting/templates/editplan.html:162
 #, python-format
 msgid ""
 "You have successfully shared your %(plan_text)s. You can share your "
@@ -980,22 +971,22 @@ msgstr ""
 "Ha compartido su %(plan_text)s exitosamente. Puede compartir su "
 "%(plan_text)s con los demás, dándoles el siguiente enlace:"
 
-#: redistricting/templates/editplan.html:171
+#: redistricting/templates/editplan.html:164
 #, python-format
 msgid "Continue Editing Current %(plantext)s"
 msgstr "Continuar Editando %(plantext)s Actual"
 
-#: redistricting/templates/editplan.html:172
+#: redistricting/templates/editplan.html:165
 #, python-format
 msgid "Select New %(plan_text)s to Edit"
 msgstr "Seleccionar Nuevo %(plan_text)s  para editar"
 
-#: redistricting/templates/editplan.html:180
-#: redistricting/templates/editplan.html:192
+#: redistricting/templates/editplan.html:173
+#: redistricting/templates/editplan.html:185
 msgid "Verify and Submit Plan to Leaderboards"
 msgstr "Verificar y Presentar a la Tabla de Posiciones"
 
-#: redistricting/templates/editplan.html:181
+#: redistricting/templates/editplan.html:174
 msgid ""
 "In order to be considered for placement on the leaderboards your plan must "
 "meet the criteria for creating a legal redistricitng plan. Keep in mind that "
@@ -1005,12 +996,11 @@ msgid ""
 msgstr ""
 "Para ser considerado para la colocación en las tablas de posiciones, su plan "
 "debe cumplir con los criterios para la creación de un plan de redistribución "
-"de distritos legal. Tenga en cuenta que tan pronto edite un plan "
-"verificado, se convertirá automáticamente en \"no verificado\" y tendrá que "
-"volver a verificarlo con el fin de que vuelva a ser considerado para la "
-"clasificación."
+"de distritos legal. Tenga en cuenta que tan pronto edite un plan verificado, "
+"se convertirá automáticamente en \"no verificado\" y tendrá que volver a "
+"verificarlo con el fin de que vuelva a ser considerado para la clasificación."
 
-#: redistricting/templates/editplan.html:182
+#: redistricting/templates/editplan.html:175
 msgid ""
 "By verifying your plan, you are <em><strong>not</strong></em> sharing your "
 "plan with other users. Your plan title and user name will simply show up in "
@@ -1021,19 +1011,20 @@ msgstr ""
 "usuario simplemente se mostrarán en las listas de los 10 mejores (si su plan "
 "se encuentra entre los diez primeros)."
 
-#: redistricting/templates/editplan.html:184
+#: redistricting/templates/editplan.html:177
 msgid "How to verify and submit your plan:"
 msgstr "Cómo verificar y presentar su plan:"
 
-#: redistricting/templates/editplan.html:186
+#: redistricting/templates/editplan.html:179
 msgid "Click the \"Verify and Submit to Leaderboards\" button."
-msgstr "Haga clic en el botón \"Verificar y Presentar a la Tabla de Posiciones\"."
+msgstr ""
+"Haga clic en el botón \"Verificar y Presentar a la Tabla de Posiciones\"."
 
-#: redistricting/templates/editplan.html:187
+#: redistricting/templates/editplan.html:180
 msgid "If verified, you will be taken to the Leaderboard page."
 msgstr "Si se verifica, se le llevará a la página de la tabla de posiciones."
 
-#: redistricting/templates/editplan.html:188
+#: redistricting/templates/editplan.html:181
 msgid ""
 "Check the leaderboards to see if your plan ranks in any of the top ten score "
 "types."
@@ -1041,17 +1032,17 @@ msgstr ""
 "Revise las tablas de posiciones para ver si su plan se encuentra en alguna "
 "de las tablas que contienen las diez primera posiciones."
 
-#: redistricting/templates/editplan.html:203
+#: redistricting/templates/editplan.html:196
 msgid ""
 "Choose communities to paste into your map. A map can contain any number of "
 "communities. If you would like to remove communities from your map, use the "
 "community unassign tool."
 msgstr ""
 "Elija las comunidades para pegarlas en su mapa. Un mapa puede contener "
-"cualquier número de comunidades. Si desea eliminar comunidades de su "
-"mapa, use la herramienta de cancelar la asignación de la comunidad."
+"cualquier número de comunidades. Si desea eliminar comunidades de su mapa, "
+"use la herramienta de cancelar la asignación de la comunidad."
 
-#: redistricting/templates/editplan.html:205
+#: redistricting/templates/editplan.html:198
 msgid ""
 "Choose districts to paste into your plan.  A plan has a maximum number of "
 "districts allowed by law.  If you would like to paste districts into a plan, "
@@ -1059,35 +1050,35 @@ msgid ""
 "would like to remove districts from your plan, use the district unassign "
 "tool."
 msgstr ""
-"Elija los distritos para pegar en su plan. Un plan tiene un número máximo "
-"de distritos permitidos por ley. Si desea pegar  distritos en un plan, "
-"usted debe tener menos distritos en su plan que el máximo permitido. "
-"Si desea eliminar distritos de su plan, utilice la herramienta de cancelar "
-"la asignación del distrito."
+"Elija los distritos para pegar en su plan. Un plan tiene un número máximo de "
+"distritos permitidos por ley. Si desea pegar  distritos en un plan, usted "
+"debe tener menos distritos en su plan que el máximo permitido. Si desea "
+"eliminar distritos de su plan, utilice la herramienta de cancelar la "
+"asignación del distrito."
 
-#: redistricting/templates/editplan.html:209
+#: redistricting/templates/editplan.html:202
 #, python-format
 msgid "1. Choose %(plantext)s"
 msgstr "1. Eligir %(plantext)s "
 
-#: redistricting/templates/editplan.html:215
+#: redistricting/templates/editplan.html:208
 #, python-format
 msgid "2. Select %(bodymember)s to copy"
 msgstr "2. Seleccionar %(bodymember)s  para copiar"
 
-#: redistricting/templates/editplan.html:222
+#: redistricting/templates/editplan.html:215
 #, python-format
 msgid "Click on a %(body_member_long_label)s's name to see a map"
-msgstr "Haga clic en el nombre de un %(body_member_long_label)s's para ver un mapa"
+msgstr ""
+"Haga clic en el nombre de un %(body_member_long_label)s's para ver un mapa"
 
-#: redistricting/templates/editplan.html:228
+#: redistricting/templates/editplan.html:221
 #, python-format
 msgid "3. Paste selected %(body_member_long_label)s into working %(plan_text)s"
 msgstr ""
-"3. Pegar %(body_member_long_label)s seleccionados en %(plan_text)s de "
-"trabajo"
+"3. Pegar %(body_member_long_label)s seleccionados en %(plan_text)s de trabajo"
 
-#: redistricting/templates/editplan.html:262
+#: redistricting/templates/editplan.html:255
 msgid ""
 "Click on a row to edit the number of members for the selected district. "
 "Press ENTER to complete editing a district."
@@ -1095,7 +1086,7 @@ msgstr ""
 "Haga clic en una fila para editar el número de miembros para el distrito "
 "seleccionado. Pulse ENTRAR para completar la edición de un distrito."
 
-#: redistricting/templates/editplan.html:266
+#: redistricting/templates/editplan.html:259
 msgid ""
 "When all desired edits are made, press the Save button to save all changes "
 "to the database."
@@ -1103,19 +1094,19 @@ msgstr ""
 "Cuando se hayan realizado todas las ediciones deseadas, pulse el botón "
 "Guardar para guardar todos los cambios en la base de datos."
 
-#: redistricting/templates/editplan.html:270
+#: redistricting/templates/editplan.html:263
 msgid "Target # of representatives:"
 msgstr "El # de objetivo de representantes:"
 
-#: redistricting/templates/editplan.html:271
+#: redistricting/templates/editplan.html:264
 msgid "Target # of multi-member districts:"
 msgstr "El # de objetivo de distritos plurinominales:"
 
-#: redistricting/templates/editplan.html:272
+#: redistricting/templates/editplan.html:265
 msgid "Target # of members per multi-member district:"
 msgstr "El # de objetivo de miembros en cada distrito plurinominal:"
 
-#: redistricting/templates/editplan.html:275
+#: redistricting/templates/editplan.html:268
 msgid ""
 "Your plan currently has <span id=\"multi_num_reps\" class=\"multi_val\"></"
 "span> representatives."
@@ -1123,7 +1114,7 @@ msgstr ""
 "Su plan actualmente tiene <span id=\"multi_num_reps\" class=\"multi_val\"></"
 "span> representantes."
 
-#: redistricting/templates/editplan.html:276
+#: redistricting/templates/editplan.html:269
 msgid ""
 "Your plan currently has <span id=\"multi_num_dists\" class=\"multi_val\"></"
 "span> multi-member districts."
@@ -1131,40 +1122,40 @@ msgstr ""
 "Su plan actualmente tiene <span id=\"multi_num_dists\" class=\"multi_val\"></"
 "span> distritos plurinominales."
 
-#: redistricting/templates/editplan.html:279
+#: redistricting/templates/editplan.html:272
 #: redistricting/templates/viewplan.html:403
 msgid "Save"
 msgstr "Guardar"
 
-#: redistricting/templates/editplan.html:324 templates/account.html:51
+#: redistricting/templates/editplan.html:317 templates/account.html:51
 msgid "First Name"
 msgstr "Nombre"
 
-#: redistricting/templates/editplan.html:328 templates/account.html:58
+#: redistricting/templates/editplan.html:321 templates/account.html:58
 msgid "Last Name"
 msgstr "Apellido"
 
-#: redistricting/templates/editplan.html:332
+#: redistricting/templates/editplan.html:325
 msgid "Full Names of Team Members (if applicable)"
 msgstr "Nombres y apellidos de los miembros del equipo (si aplica)"
 
-#: redistricting/templates/editplan.html:336
+#: redistricting/templates/editplan.html:329
 msgid "Team Name (if applicable)"
 msgstr "Nombre del equipo (si aplica)"
 
-#: redistricting/templates/editplan.html:340 templates/account.html:43
+#: redistricting/templates/editplan.html:333 templates/account.html:43
 msgid "Email Address"
 msgstr "Correo electrónico"
 
-#: redistricting/templates/editplan.html:344
+#: redistricting/templates/editplan.html:337
 msgid "Street Address"
 msgstr "Dirección"
 
-#: redistricting/templates/editplan.html:348
+#: redistricting/templates/editplan.html:341
 msgid "Phone Number"
 msgstr "Número de teléfono"
 
-#: redistricting/templates/editplan.html:353
+#: redistricting/templates/editplan.html:346
 msgid ""
 "Values &ndash; tell us what values, considerations and trade-offs you made "
 "in your plan:"
@@ -1172,7 +1163,7 @@ msgstr ""
 "Valores &ndash; diganos cuáles son los valores, las consideraciones y "
 "compromisos que hizo en su plan:"
 
-#: redistricting/templates/editplan.html:363
+#: redistricting/templates/editplan.html:356
 msgid ""
 "\n"
 "                    By submitting a plan for consideration, you are "
@@ -1192,35 +1183,35 @@ msgstr ""
 "del proyecto tratarán de incluir la atribución (su nombre o el nombre del "
 "equipo) heacha al plan cuando sea posible."
 
-#: redistricting/templates/editplan.html:379 templates/account.html:96
+#: redistricting/templates/editplan.html:372 templates/account.html:98
 msgid "Indicates required field"
 msgstr "Indica el campo requerido"
 
-#: redistricting/templates/editplan.html:397
+#: redistricting/templates/editplan.html:390
 msgid "Community Info"
 msgstr "Informacion de la Comunidad"
 
-#: redistricting/templates/editplan.html:398
+#: redistricting/templates/editplan.html:391
 msgid "0"
 msgstr "0"
 
-#: redistricting/templates/editplan.html:402
+#: redistricting/templates/editplan.html:395
 msgid "1. Edit Community Label:"
 msgstr "1. Editar etiqueta de la comunidad:"
 
-#: redistricting/templates/editplan.html:409
+#: redistricting/templates/editplan.html:402
 msgid "2. Edit Community Type:"
 msgstr "2. Editar tipo de comunidad:"
 
-#: redistricting/templates/editplan.html:420
+#: redistricting/templates/editplan.html:413
 msgid "3. Comments:"
 msgstr "3. Comentarios:"
 
-#: redistricting/templates/editplan.html:428
+#: redistricting/templates/editplan.html:421
 msgid "Oops!"
 msgstr "¡Uy!"
 
-#: redistricting/templates/editplan.html:429
+#: redistricting/templates/editplan.html:422
 msgid "Sorry, your information could not be saved. Please try again later."
 msgstr ""
 "Lo sentimos, su información no se pudo guardar. Por favor, inténtelo de "
@@ -1241,14 +1232,13 @@ msgid ""
 msgstr ""
 "Pedimos disculpas por la molestia, pero el archivo cargado no se convirtió "
 "en un plan. Hay muchas razones por las que esto pudo haber sucedido. "
-"Aparentemente, su archivo no se ha cargado por la(s) siguiente(s) "
-"razon(es):"
+"Aparentemente, su archivo no se ha cargado por la(s) siguiente(s) razon(es):"
 
 #: redistricting/templates/error.email:23
 msgid "If you correct this issue and upload your file again, we can try again."
 msgstr ""
-"Si corrige este problema y carga el archivo nuevamente, podemos intentarlo de "
-"nuevo."
+"Si corrige este problema y carga el archivo nuevamente, podemos intentarlo "
+"de nuevo."
 
 #: redistricting/templates/error.email:25
 #: redistricting/templates/importedplan.email:28
@@ -1361,11 +1351,11 @@ msgstr "Última edición:"
 msgid "Printed on:"
 msgstr "Imprimido:"
 
-#: redistricting/templates/printplan.html:109 templates/index.html:313
+#: redistricting/templates/printplan.html:109 templates/index.html:314
 msgid "Powered By DistrictBuilder"
 msgstr "Desarrollado por DistrictBuilder"
 
-#: redistricting/templates/printplan.html:111 templates/index.html:316
+#: redistricting/templates/printplan.html:111 templates/index.html:317
 msgid "A project of"
 msgstr "Un proyecto de"
 
@@ -1486,7 +1476,7 @@ msgstr "Compartir"
 msgid "Leaderboards"
 msgstr "Tablas de Posiciones"
 
-#: redistricting/templates/viewplan.html:259 templates/index.html:163
+#: redistricting/templates/viewplan.html:259 templates/index.html:164
 msgid "Login"
 msgstr "Iniciar sesión"
 
@@ -1637,8 +1627,7 @@ msgstr "Herramientas de Mapeo"
 #: redistricting/templates/viewplan.html:469
 msgid "Click on a district to see its ID."
 msgstr ""
-"Haga clic en un %(body_member_long_label)s  para ver su "
-"identificación."
+"Haga clic en un %(body_member_long_label)s  para ver su identificación."
 
 #: redistricting/templates/viewplan.html:504
 msgid "Edit Stats"
@@ -1666,9 +1655,7 @@ msgstr "Ninguno"
 #: redistricting/templates/viewplan.html:556
 #, python-format
 msgid "Generate Splits Report for Current %(plan_text_title)s"
-msgstr ""
-"Generar Informe de Separaciones para %(plan_text_title)s "
-"Actual"
+msgstr "Generar Informe de Separaciones para %(plan_text_title)s Actual"
 
 #: redistricting/templates/viewplan.html:558
 msgid "Select reference layer(s) for comparison."
@@ -1695,8 +1682,8 @@ msgid ""
 "(Choosing this option will significantly increase the amount of time it "
 "takes to generate the report.)"
 msgstr ""
-"(La elección de esta opción aumentara significativamente el tiempo que "
-"se necesita para generar el informe.)"
+"(La elección de esta opción aumentara significativamente el tiempo que se "
+"necesita para generar el informe.)"
 
 #: redistricting/templates/viewplan.html:588
 msgid "Generate Report"
@@ -1814,7 +1801,7 @@ msgid "Plan File Export"
 msgstr "Exportación de Archivo de Plan"
 
 #: redistricting/templates/viewplan.html:847
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "\n"
 "                  The %(bmlll)s index file is a comma-separated-value file "
@@ -1826,16 +1813,17 @@ msgid ""
 "                  file can be imported to your account or someone else's "
 "account or used in analysis\n"
 "                  of the %(plan_text)s using other GIS software.\n"
+"                  "
 msgstr ""
 "\n"
 "                  El %(bmlll)s archivo de índice es un archivo con valores "
 "separados por comas (csv).\n"
 "                  Cada fila tiene la identificación única de las bases "
 "geográficas de cada %(plan_text)s \n"
-"                  (tales como distrito electoral, conjunto de cuadras, "
-"etc.) y el distrito al que \n"
-"                  pertenece. Este archivo puede ser importado a su cuenta "
-"o a la cuenta de algiuen más o \n"
+"                  (tales como distrito electoral, conjunto de cuadras, etc.) "
+"y el distrito al que \n"
+"                  pertenece. Este archivo puede ser importado a su cuenta o "
+"a la cuenta de algiuen más o \n"
 "                  usado en análisis del %(plan_text)s usando otro software "
 "GIS.\n"
 
@@ -1876,8 +1864,9 @@ msgstr "Por favor espere. Los datos están siendo recuperados..."
 
 #: redistricting/templates/viewplan.html:944
 msgid "Please wait. Plan is being validated. This may take a few minutes."
-msgstr ":Por favor espere. El plan está siendo validado. Esto puede tomar "
-"algunos minutos."
+msgstr ""
+":Por favor espere. El plan está siendo validado. Esto puede tomar algunos "
+"minutos."
 
 #: redistricting/templates/viewplan.html:968
 #, python-format
@@ -1902,7 +1891,9 @@ msgstr "O..."
 
 #: redistricting/templates/viewplan.html:1021
 msgid "Choose a:<br/>legislative district or community map<br/>reference layer"
-msgstr "Elija una<br/>capa de referencia:<br/>distrito legislativo o mapa de comunidad"
+msgstr ""
+"Elija una<br/>capa de referencia:<br/>distrito legislativo o mapa de "
+"comunidad"
 
 #: redistricting/templates/viewplan.html:1035
 msgid "Select Plan to Display as Reference Layer"
@@ -1912,7 +1903,11 @@ msgstr "Seleccionar Plan a Mostrar como Capa de Referencia"
 msgid "OK"
 msgstr "Aceptar"
 
-#: redistricting/templates/viewplan.html:1078
+#: redistricting/templates/viewplan.html:1077
+msgid "Edit Statistics Sets"
+msgstr "Editar Conjuntos de Estadísticas"
+
+#: redistricting/templates/viewplan.html:1079
 msgid ""
 "You can select up to three statistics at once to display in \n"
 "        the sidebar. Each set of three statistics will be saved in the "
@@ -1923,112 +1918,110 @@ msgstr ""
 "Usted puede seleccionar hasta tres estadísticas a la vez para \n"
 "        ser mostrados en la barra lateral. Cada conjunto de tres "
 "estadísticas \n"
-"        se guardarán en el menú desplegable para que lo seleccione "
-"o modifique más tarde."
+"        se guardarán en el menú desplegable para que lo seleccione o "
+"modifique más tarde."
 
-#: redistricting/templates/viewplan.html:1083
+#: redistricting/templates/viewplan.html:1084
 msgid "Select up to 3 statistics"
 msgstr "Seleccione un máximo de 3 estadísticas"
 
-#: redistricting/templates/viewplan.html:1084
+#: redistricting/templates/viewplan.html:1085
 msgid "Clear Choices"
 msgstr "Limpiar Opciones"
 
-#: redistricting/templates/viewplan.html:1088
+#: redistricting/templates/viewplan.html:1089
 msgid "Name Statistics Set"
 msgstr "Nombrar Conjunto de Estadísticas"
 
-#: redistricting/templates/viewplan.html:1090
+#: redistricting/templates/viewplan.html:1091
 msgid "Save Set"
 msgstr "Guardar Conjunto"
 
-#: redistricting/templates/viewplan.html:1093
+#: redistricting/templates/viewplan.html:1094
 msgid "... Or select a saved statistics set"
-msgstr ""
-"... O seleccione un conjunto de estadísticas anteriormente "
-"guardado"
+msgstr "... O seleccione un conjunto de estadísticas anteriormente guardado"
 
-#: redistricting/templatetags/redistricting_extras.py:63
+#: redistricting/templatetags/redistricting_extras.py:43
 msgid "zero"
 msgstr "cero"
 
-#: redistricting/templatetags/redistricting_extras.py:63
+#: redistricting/templatetags/redistricting_extras.py:43
 msgid "one"
 msgstr "uno"
 
-#: redistricting/templatetags/redistricting_extras.py:63
+#: redistricting/templatetags/redistricting_extras.py:43
 msgid "two"
 msgstr "dos"
 
-#: redistricting/templatetags/redistricting_extras.py:63
+#: redistricting/templatetags/redistricting_extras.py:43
 msgid "three"
 msgstr "tres"
 
-#: redistricting/templatetags/redistricting_extras.py:63
+#: redistricting/templatetags/redistricting_extras.py:43
 msgid "four"
 msgstr "cuatro"
 
-#: redistricting/templatetags/redistricting_extras.py:63
+#: redistricting/templatetags/redistricting_extras.py:43
 msgid "five"
 msgstr "cinco"
 
-#: redistricting/templatetags/redistricting_extras.py:63
+#: redistricting/templatetags/redistricting_extras.py:43
 msgid "six"
 msgstr "seis"
 
-#: redistricting/templatetags/redistricting_extras.py:63
+#: redistricting/templatetags/redistricting_extras.py:43
 msgid "seven"
 msgstr "siete"
 
-#: redistricting/templatetags/redistricting_extras.py:63
+#: redistricting/templatetags/redistricting_extras.py:43
 msgid "eight"
 msgstr "ocho"
 
-#: redistricting/templatetags/redistricting_extras.py:63
+#: redistricting/templatetags/redistricting_extras.py:43
 msgid "nine"
 msgstr "nueve"
 
-#: redistricting/templatetags/redistricting_extras.py:64
+#: redistricting/templatetags/redistricting_extras.py:44
 msgid "ten"
 msgstr "diez"
 
-#: redistricting/templatetags/redistricting_extras.py:64
+#: redistricting/templatetags/redistricting_extras.py:44
 msgid "eleven"
 msgstr "once"
 
-#: redistricting/templatetags/redistricting_extras.py:64
+#: redistricting/templatetags/redistricting_extras.py:44
 msgid "twelve"
 msgstr "doce"
 
-#: redistricting/templatetags/redistricting_extras.py:64
+#: redistricting/templatetags/redistricting_extras.py:44
 msgid "thirteen"
 msgstr "trece"
 
-#: redistricting/templatetags/redistricting_extras.py:64
+#: redistricting/templatetags/redistricting_extras.py:44
 msgid "fourteen"
 msgstr "catorce"
 
-#: redistricting/templatetags/redistricting_extras.py:64
+#: redistricting/templatetags/redistricting_extras.py:44
 msgid "fifteen"
 msgstr "quince"
 
-#: redistricting/templatetags/redistricting_extras.py:64
+#: redistricting/templatetags/redistricting_extras.py:44
 msgid "sixteen"
 msgstr "dieciséis"
 
-#: redistricting/templatetags/redistricting_extras.py:65
+#: redistricting/templatetags/redistricting_extras.py:45
 msgid "seventeen"
 msgstr "diecisiete"
 
-#: redistricting/templatetags/redistricting_extras.py:65
+#: redistricting/templatetags/redistricting_extras.py:45
 msgid "eighteen"
 msgstr "dieciocho"
 
-#: redistricting/templatetags/redistricting_extras.py:65
+#: redistricting/templatetags/redistricting_extras.py:45
 msgid "nineteen"
 msgstr "diecinueve"
 
-#: redistricting/templatetags/redistricting_extras.py:65
+#: redistricting/templatetags/redistricting_extras.py:45
 msgid "twenty"
 msgstr "veinte"
 
@@ -2042,8 +2035,8 @@ msgid ""
 "Sometimes bad things happen. I regret you were not able to find what you "
 "were looking for."
 msgstr ""
-"A veces suceden cosas malas. Lamento que no fue posible encontrar lo que"
-"estaba buscando."
+"A veces suceden cosas malas. Lamento que no fue posible encontrar lo "
+"queestaba buscando."
 
 #: templates/500.html:36
 msgid ""
@@ -2108,19 +2101,15 @@ msgstr ""
 msgid "Organization"
 msgstr "Organización"
 
-#: templates/account.html:76
-msgid "I have read the "
-msgstr "He leído los"
+#: templates/account.html:77
+msgid "I have read the <a href=\"#\">Terms of Use</a>"
+msgstr ""
 
-#: templates/account.html:76 templates/index.html:184
-msgid "Terms of Use"
-msgstr "Términos de Uso"
-
-#: templates/account.html:90
+#: templates/account.html:92
 msgid "Update"
 msgstr "Actualizar"
 
-#: templates/account.html:92 templates/index.html:174
+#: templates/account.html:94 templates/index.html:175
 msgid "Sign Up"
 msgstr "Registrarse"
 
@@ -2180,35 +2169,39 @@ msgstr "Virginia en el Proyecto de Mapeo Público"
 msgid "Virginia data"
 msgstr "Información de Virginia"
 
-#: templates/index.html:159
+#: templates/index.html:160
 msgid "Log In"
 msgstr "Iniciar Sesión"
 
-#: templates/index.html:165
+#: templates/index.html:166
 msgid "Forgot your password?"
 msgstr "¿Olvidó su contraseña?"
 
-#: templates/index.html:170
+#: templates/index.html:171
 msgid "Don't have an account?"
 msgstr "¿No tiene una cuenta?"
 
-#: templates/index.html:172
+#: templates/index.html:173
 msgid "To Draw Your Own Maps..."
 msgstr "Para dibujar sus propios mapas ..."
 
-#: templates/index.html:176
+#: templates/index.html:177
 msgid "To View Other Users' Maps..."
 msgstr "Para ver los mapas de otros usuarios ..."
 
-#: templates/index.html:179
+#: templates/index.html:180
 msgid "Enter as a guest"
 msgstr "Entrar como invitado"
 
-#: templates/index.html:196
+#: templates/index.html:185
+msgid "Terms of Use"
+msgstr "Términos de Uso"
+
+#: templates/index.html:197
 msgid "Get A Hint"
 msgstr "Obtener una pista"
 
-#: templates/index.html:198
+#: templates/index.html:199
 msgid ""
 "Enter your username to retrieve your password hint that you used when "
 "registering for an account."
@@ -2216,39 +2209,39 @@ msgstr ""
 "Ingrese su nombre de usuario para recuperar su pista de contraseña que "
 "utilizó al registrarse para obtener una cuenta."
 
-#: templates/index.html:203
+#: templates/index.html:204
 msgid "Username"
 msgstr "Nombre de Usuario:"
 
-#: templates/index.html:207
+#: templates/index.html:208
 msgid "OR"
 msgstr "O"
 
-#: templates/index.html:209
+#: templates/index.html:210
 msgid "Reset Your Password"
 msgstr "Restablecer Contraseña"
 
-#: templates/index.html:211
+#: templates/index.html:212
 msgid ""
 "Enter your email address to reset your password if you have forgotten your "
 "username."
 msgstr ""
-"Ingrese su dirección de correo electrónico para restablecer su contraseña "
-"si ha olvidado su nombre de usuario."
+"Ingrese su dirección de correo electrónico para restablecer su contraseña si "
+"ha olvidado su nombre de usuario."
 
-#: templates/index.html:216
+#: templates/index.html:217
 msgid "Email"
 msgstr "Correo Electrónico"
 
-#: templates/index.html:222
+#: templates/index.html:223
 msgid "Begin"
 msgstr "Empezar"
 
-#: templates/index.html:226
+#: templates/index.html:227
 msgid "Here Is Your Hint"
 msgstr "Aquí Está su Pista"
 
-#: templates/index.html:227
+#: templates/index.html:228
 msgid ""
 "If this helps you remember your password, you can close this dialog and log "
 "in."
@@ -2256,7 +2249,7 @@ msgstr ""
 "Si esto le ayuda a recordar su contraseña, puede cerrar esta ventana e "
 "iniciar sesión."
 
-#: templates/index.html:231
+#: templates/index.html:232
 msgid ""
 "If you still can't recall your password, click on the 'Back' button, and "
 "enter your email address, so we can email your password to you."
@@ -2265,11 +2258,11 @@ msgstr ""
 "\"Atrás\", e ingrese su dirección de correo electrónico, para que podamos "
 "enviarle su contraseña."
 
-#: templates/index.html:235
+#: templates/index.html:236
 msgid "Email Sent"
 msgstr "Correo electrónico enviado"
 
-#: templates/index.html:236
+#: templates/index.html:237
 msgid ""
 "Your password has been emailed to you. You should receive your password in "
 "your inbox in the next few minutes."
@@ -2277,38 +2270,38 @@ msgstr ""
 "Su contraseña ha sido enviada a su correo electrónico. Usted debería recibir "
 "su contraseña en su correo electrónico en los próximos minutos."
 
-#: templates/index.html:239
+#: templates/index.html:240
 msgid "Back"
 msgstr "Atrás"
 
-#: templates/index.html:240
+#: templates/index.html:241
 msgid "Close"
 msgstr "Cerca"
 
-#: templates/index.html:246
+#: templates/index.html:247
 msgid "Your account has too many sessions."
 msgstr "Su cuenta tiene demasiadas sesiones."
 
-#: templates/index.html:247
+#: templates/index.html:248
 msgid "To use DistrictBuilder, you must do one of the following actions:"
 msgstr ""
 "Para utilizar DistrictBuilder, usted debe ejecutar una de las siguientes "
 "acciones:"
 
-#: templates/index.html:250
+#: templates/index.html:251
 msgid "Log in as a different user."
 msgstr "Inicie sesión con un usuario diferente."
 
-#: templates/index.html:253
+#: templates/index.html:254
 msgid "Use the system as a guest."
 msgstr "Utilizar el sistema como un invitado."
 
-#: templates/index.html:258
+#: templates/index.html:259
 msgid "Force close the other user's session and log in again."
 msgstr ""
 "Cerrar la sesión del otro usuario de manera forzada y conectarse de nuevo."
 
-#: templates/index.html:265
+#: templates/index.html:266
 msgid ""
 "The DistrictBuilder application has reached maximum capacity. Please try to "
 "use the application again shortly. We apologize for the inconvenience."
@@ -2317,7 +2310,7 @@ msgstr ""
 "trate de usar la aplicación de nuevo en breve. Pedimos disculpas por los "
 "inconvenientes."
 
-#: templates/index.html:268
+#: templates/index.html:269
 msgid ""
 "The following discloses our information gathering and dissemination "
 "practices; and terms of use for this web site."
@@ -2325,11 +2318,11 @@ msgstr ""
 "La siguiente información revela nuestras prácticas de recopilación y "
 "difusión, y condiciones de uso de este sitio web."
 
-#: templates/index.html:269
+#: templates/index.html:270
 msgid "Information gathering"
 msgstr "Recopilación de información"
 
-#: templates/index.html:271
+#: templates/index.html:272
 msgid ""
 "Our web server software generates logfiles of the IP addresses of computers "
 "that access this web site and of what files they access."
@@ -2338,7 +2331,7 @@ msgstr ""
 "direcciones IP de los ordenadores que acceden a este sitio web y de los "
 "archivos a los que acceden."
 
-#: templates/index.html:272
+#: templates/index.html:273
 msgid ""
 "These web server logs are retained on a temporary basis and then deleted "
 "completely from our systems."
@@ -2346,23 +2339,23 @@ msgstr ""
 "Estos registros del servidor web se retienen de forma temporal y luego se "
 "elimina completamente de nuestros sistemas."
 
-#: templates/index.html:273
+#: templates/index.html:274
 msgid "We also may ask our visitors to provide information about themselves."
 msgstr ""
 "También podemos pedirles a nuestros visitantes que proporcionen información "
 "sobre sí mismos."
 
-#: templates/index.html:274
+#: templates/index.html:275
 msgid "We may use cookies to maintain a user's identity between web sessions."
 msgstr ""
 "Podemos utilizar cookies para mantener la identidad de un usuario entre "
 "sesiones web."
 
-#: templates/index.html:276
+#: templates/index.html:277
 msgid "Contributor Terms"
 msgstr "Términos de Uso del Contribuyente"
 
-#: templates/index.html:277
+#: templates/index.html:278
 msgid ""
 "This site enables users to create districting maps and to comment on the "
 "maps of others.  By creating a map, a comment, or an account, you are "
@@ -2370,12 +2363,12 @@ msgid ""
 "(collectively, 'Contents') you contribute to this site. "
 msgstr ""
 "Este sitio permite a los usuarios crear mapas de distritos y hacer "
-"comentarios en los mapas de los demás. Al crear un mapa, un comentario, "
-"o una cuenta, usted acepta las siguientes condiciones aplicables a todos "
-"los mapas, comentarios, informacion, o cualquier otro contenido "
-"(colectivamente, \"Contenidos\") que Ud. aporte a este sitio."
+"comentarios en los mapas de los demás. Al crear un mapa, un comentario, o "
+"una cuenta, usted acepta las siguientes condiciones aplicables a todos los "
+"mapas, comentarios, informacion, o cualquier otro contenido (colectivamente, "
+"\"Contenidos\") que Ud. aporte a este sitio."
 
-#: templates/index.html:278
+#: templates/index.html:279
 msgid ""
 "You hereby grant to us a worldwide, royalty-free, non-exclusive, perpetual, "
 "irrevocable license to do any act that is restricted by copyright over "
@@ -2391,29 +2384,29 @@ msgstr ""
 "regalías, sin exclusividad, perpetua, irrevocable, para realizar cualquier "
 "acto que está limitado por los derechos de autor sobre cualquier cosa dentro "
 "de los contenidos, ya sea en su forma original o cualquier otra. Estos "
-"derechos incluyen explícitamente el uso comercial, y no excluyen ningún campo "
-"de actividad. Estos derechos incluyen, sin limitación, el derecho a "
+"derechos incluyen explícitamente el uso comercial, y no excluyen ningún "
+"campo de actividad. Estos derechos incluyen, sin limitación, el derecho a "
 "sublicenciar la obra a través de múltiples niveles de sublicencias. En la "
 "medida permitida por las leyes locales y las convenciones de derechos de "
-"autor, usted también renuncia y / o se compromete a no imponer en contra "
-"de nosotros o nuestros licenciatarios ningún derecho moral que pueda "
-"tener en los Contenidos."
+"autor, usted también renuncia y / o se compromete a no imponer en contra de "
+"nosotros o nuestros licenciatarios ningún derecho moral que pueda tener en "
+"los Contenidos."
 
-#: templates/index.html:279
+#: templates/index.html:280
 msgid ""
 "We agree to make the Contents that you contribute and designate as &quot;"
 "published&quot; available under at least one of the following licenses: ODbL "
 "1.0; DbCL 1.0; CC-BY-SA 2.0; or another free and open license. "
 msgstr ""
-"Nos comprometemos a hacer disponibles los Contenido que usted aporte y designe como "
-"\"publicado\", en al menos una de las siguientes licencias: ODbL 1,0; DbCL 1,0; "
-"CC-BY-SA 2.0, u otra licencia libre y abierta."
+"Nos comprometemos a hacer disponibles los Contenido que usted aporte y "
+"designe como \"publicado\", en al menos una de las siguientes licencias: "
+"ODbL 1,0; DbCL 1,0; CC-BY-SA 2.0, u otra licencia libre y abierta."
 
-#: templates/index.html:280
+#: templates/index.html:281
 msgid "Use of information"
 msgstr "Uso de la información"
 
-#: templates/index.html:281
+#: templates/index.html:282
 msgid ""
 "We use third parties to provide processing functions on our site. When you "
 "register for  services, we may share information as necessary for the third "
@@ -2425,10 +2418,10 @@ msgstr ""
 "sitio. Cuando usted se registra para los servicios, podemos compartir "
 "información cuando sea necesario para que el tercero pueda proporcionarnos "
 "esos servicios. Hacemos todos los esfuerzos comercialmente razonables para "
-"evitar que estos terceros utilicen su información de identificación "
-"personal para ningún otro propósito."
+"evitar que estos terceros utilicen su información de identificación personal "
+"para ningún otro propósito."
 
-#: templates/index.html:282
+#: templates/index.html:283
 msgid ""
 "We use your IP address and files you access to help diagnose problems with "
 "our server and to administer our Web site by identifying (1) which parts of "
@@ -2446,7 +2439,7 @@ msgstr ""
 "estadísticos agregados. En ningún momento divulgamos el uso del sitio por "
 "los visitantes individuales."
 
-#: templates/index.html:283
+#: templates/index.html:284
 msgid ""
 "We reserve the right to disclose your personally identifiable information as "
 "required by law and when we believe that disclosure is necessary to protect "
@@ -2456,10 +2449,9 @@ msgstr ""
 "Nos reservamos el derecho de revelar su información de identificación "
 "personal requerido por la ley y cuando creamos que dicha divulgación es "
 "necesaria para proteger nuestros derechos y / o para cumplir con un "
-"procedimiento judicial, orden judicial o proceso legal en nuestro sitio "
-"web."
+"procedimiento judicial, orden judicial o proceso legal en nuestro sitio web."
 
-#: templates/index.html:284
+#: templates/index.html:285
 msgid ""
 "All maps created through the system, edits to those maps, and comments made "
 "on those maps are associated with an account id and a timestamp. These maps, "
@@ -2477,14 +2469,14 @@ msgstr ""
 "Podemos usar esta información para generar informes estadísticos agregados. "
 "En ningún momento se revela el nombre, correo electrónico u otra información "
 "asociada a las cuentas individuales de usuarios, a menos que la persona "
-"explícitamente seleccione el &quot;hacer pública la información de mi "
-" cuenta&quot; en la configuración del perfil de usuario."
+"explícitamente seleccione el &quot;hacer pública la información de mi  "
+"cuenta&quot; en la configuración del perfil de usuario."
 
-#: templates/index.html:285
+#: templates/index.html:286
 msgid "Security"
 msgstr "Seguridad"
 
-#: templates/index.html:286
+#: templates/index.html:287
 msgid ""
 "This site has security measures in place to protect the loss, misuse and "
 "alteration of the information under our control."
@@ -2492,11 +2484,11 @@ msgstr ""
 "Este sitio tiene medidas de seguridad para proteger la pérdida, mal uso y "
 "alteración de la información bajo nuestro control."
 
-#: templates/index.html:287
+#: templates/index.html:288
 msgid "Contacting this web site"
 msgstr "Contactando este sitio web"
 
-#: templates/index.html:288
+#: templates/index.html:289
 msgid ""
 "If you have any questions about this privacy statement, the practices of "
 "this site, or your dealings with this site, you can contact the support "
@@ -2506,7 +2498,7 @@ msgstr ""
 "prácticas de este sitio, o sus relaciones con este sitio, usted puede "
 "contactarse con la dirección de soporte en el dominio del servidor"
 
-#: templates/index.html:288
+#: templates/index.html:289
 msgid ""
 "This web site may contain links to other web sites. We are not responsible "
 "for the privacy practices or the content of such web sites."
@@ -2515,33 +2507,37 @@ msgstr ""
 "responsables de las prácticas de privacidad o el contenido de dichos sitios "
 "web."
 
-#: templates/index.html:289
+#: templates/index.html:290
 msgid "Changes to this policy"
 msgstr "Cambios de política"
 
-#: templates/index.html:290
+#: templates/index.html:291
 msgid ""
 "An announcement of any changes to this policy will be posted on this page "
 "for  thirty days before any changes go into effect."
 msgstr ""
-"Cualquier cambio de política será publicada en esta página por treinta "
-"días antes de que los cambios sean efectivos."
+"Cualquier cambio de política será publicada en esta página por treinta días "
+"antes de que los cambios sean efectivos."
 
-#: templates/index.html:291
+#: templates/index.html:292
 msgid "Effective Date"
 msgstr "Fecha de vigencia"
 
-#: templates/index.html:292
+#: templates/index.html:293
 msgid "The effective date of this policy was May 2, 2011."
 msgstr "Esta política es efectiva desde 02 de mayo 2011."
 
-#: templates/index.html:330
+#: templates/index.html:331
 msgid "We've designed the software to run on"
 msgstr "Hemos diseñado el software para funcionar en"
 
-#: templates/index.html:332
+#: templates/index.html:333
 msgid "a free web browser"
 msgstr "un navegador web gratuito"
+
+#: templates/language_chooser.html:33
+msgid "Language"
+msgstr ""
 
 #: templates/admin/base_site.html:34
 msgid "Redistricting site admin"
@@ -2588,8 +2584,7 @@ msgstr[1] "Por favor corregir errores de abajo."
 #, python-format
 msgid "Enter a new password for the user <strong>%(username)s</strong>."
 msgstr ""
-"Ingrese una nueva contraseña para el usuario <strong>%(username)s</"
-"strong>."
+"Ingrese una nueva contraseña para el usuario <strong>%(username)s</strong>."
 
 #: templates/admin/auth/user/change_password.orig.html:41
 #: templates/registration/password_change_form.orig.html:67
@@ -2649,8 +2644,8 @@ msgid ""
 "Please click on the following link, and save the contents of that file on "
 "your local filesystem:"
 msgstr ""
-"Por favor haga click en el siguiente enlace y guarde los contenidos de "
-"ese archivo en su sistema local de archivos:"
+"Por favor haga click en el siguiente enlace y guarde los contenidos de ese "
+"archivo en su sistema local de archivos:"
 
 #: templates/admin/redistricting/subject/add_form.html:69
 msgid "Subject template CSV"
@@ -2741,9 +2736,8 @@ msgid ""
 "The process of deleting a %(object_name)s takes a significant amount of "
 "time, and may not be interrupted once it has been started."
 msgstr ""
-"El proceso de borrado de un %(object_name)s  toma una cantidad "
-"significativa de tiempo, y no puede ser interrumpida una vez que se ha "
-"iniciado."
+"El proceso de borrado de un %(object_name)s  toma una cantidad significativa "
+"de tiempo, y no puede ser interrumpida una vez que se ha iniciado."
 
 #: templates/admin/redistricting/subject/delete_selected_confirmation.html:82
 #, python-format
@@ -2822,8 +2816,8 @@ msgid ""
 "The verification steps are complete, you may proceed to the Subject change "
 "form to complete filling in the Subject details."
 msgstr ""
-"Se han completado los pasos de verificación, puede proceder al formulario "
-"de cambio de Tema para completar el llenado de los detalles del Tema."
+"Se han completado los pasos de verificación, puede proceder al formulario de "
+"cambio de Tema para completar el llenado de los detalles del Tema."
 
 #: templates/admin/redistricting/subject/upload_form.html:155
 msgid "Verifying counts of uploaded subjects..."
@@ -2872,8 +2866,20 @@ msgstr "Nueva contraseña"
 msgid "Change my password"
 msgstr "Cambiar mi contraseña"
 
-#~ msgid "Select"
-#~ msgstr "Seleccionar"
+#~ msgid "I have read the "
+#~ msgstr "He leído los"
+
+#~ msgid "%s Reports"
+#~ msgstr "%s Informes"
+
+#~ msgid "%(body_name)s Reports"
+#~ msgstr "%(body_name)s Informes"
+
+#~ msgid "%(legislative_body)s Leaderboard - %(owner_filter)s"
+#~ msgstr "%(legislative_body)s Tabla de Posiciones - %(owner_filter)s"
+
+#~ msgid "Polygon<br/>Select"
+#~ msgstr "Seleccionar<br/>Polígono"
 
 #~ msgid "Assign to"
 #~ msgstr "Asignar a"
@@ -2883,9 +2889,6 @@ msgstr "Cambiar mi contraseña"
 
 #~ msgid "Anchor"
 #~ msgstr "Anclar"
-
-#~ msgid "Polygon"
-#~ msgstr "Polígono"
 
 #~ msgid "Verify and Post Plan to Leaderboards"
 #~ msgstr "Verificar y Publicar el Plan en la Tabla de Posiciones"
