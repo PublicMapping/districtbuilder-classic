@@ -81,8 +81,8 @@ TEMPLATE_LOADERS = (
 MIDDLEWARE_CLASSES = (
 #    'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.gzip.GZipMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.contrib.csrf.middleware.CsrfMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
 
@@ -158,9 +158,6 @@ STATICFILES_FINDERS = (
 #
 # Settings specific to The Public Mapping Project
 #
-
-# Use the GIS test runner for django tests, since we are using geo features
-TEST_RUNNER = 'django.contrib.gis.tests.run_tests'
 
 # The database template to use to create test databases
 POSTGIS_TEMPLATE='template_postgis'

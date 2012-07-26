@@ -849,7 +849,7 @@ function mapinit(srs,maxExtent) {
                     headers: {
                         "Content-Type": "application/x-www-form-urlencoded",
                         "X-Requested-With": "XMLHttpRequest",
-                        "X-CSRFToken": $('#csrfmiddlewaretoken').val()
+                        "X-CSRFToken": $('input[name=csrfmiddlewaretoken]').val()
                     }
                 });
                 return resp;

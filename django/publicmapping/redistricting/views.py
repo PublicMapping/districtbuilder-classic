@@ -46,7 +46,7 @@ from django.contrib.gis.gdal import *
 from django.contrib.gis.gdal.libgdal import lgdal
 from django.contrib.sites.models import Site
 from django.contrib import humanize
-from django.template import loader, Context as DjangoContext
+from django.template import loader, Context as DjangoContext, RequestContext
 from django.utils import simplejson as json, translation
 from django.utils.translation import ugettext as _, ungettext as _n
 from django.views.decorators.cache import cache_control
@@ -504,7 +504,7 @@ def commonplan(request, planid):
     except:
         reporting_template = None
 
-    return {
+    return RequestContext(request, {
         'bodies': bodies,
         'has_regions': has_regions,
         'leaderboard_bodies': l_bodies,
@@ -539,7 +539,7 @@ def commonplan(request, planid):
         'plan_text': _("community map") if (plan and plan.is_community()) else _("plan"),
         'language_code': translation.get_language(),
         'LANGUAGES': settings.LANGUAGES # needed (as CAPS) for language chooser
-    }
+    })
 
 def is_plan_ready(planid):
     """

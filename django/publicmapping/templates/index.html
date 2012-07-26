@@ -154,6 +154,7 @@
 
         <div id="login">
           <form action="/accounts/login/" method="post">
+            {% csrf_token %}
             <input type="hidden" name="next" value="/districtmapping/plan/0/view/"/>
             <h3>{% trans "Log In" %}</h3>
 <input id="username" name="username"/>

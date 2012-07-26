@@ -239,7 +239,7 @@
         {% endif %}
       </ul>
       
-
+    {% csrf_token %}
 
     <div id="site_nav">
         <ul>
@@ -861,7 +861,7 @@
           <label>
             {% if plan.is_community %}{% trans "Community Map" %}{% else %}{% trans "Plan" %}{% endif %}
             {% trans "Name:" %}
-          </label> {{ plan.name|truncate:"40" }}
+          </label> {{ plan.name|truncatechars:40 }}
           {% else %}
           {% comment %}
 
@@ -1032,7 +1032,7 @@ Include the shared_districts markup if we're using the copy/paste tool
                 referencePlansPager: $('#reference_plans_pager'),
                 referencePlansUrl: '/districtmapping/getplans/',
                 map: $('#map'),
-                csrfmiddlewaretoken: $('#csrfmiddlewaretoken')
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]')
             }).init();
         }, 1000);
     });
@@ -1045,7 +1045,8 @@ Include the shared_districts markup if we're using the copy/paste tool
 Include the stats editor if user can edit stats.
 
 {% endcomment %}
-<div id="stats_editor_container" class="stats_editor" title="Edit Statistics Sets">
+<div id="stats_editor_container" class="stats_editor"
+        title="{% trans "Edit Statistics Sets" %}" >
     <div id="stats_editor_instructions">
         <h3>{% blocktrans %}You can select up to three statistics at once to display in 
         the sidebar. Each set of three statistics will be saved in the dropdown 
@@ -1093,7 +1094,7 @@ Include the markup for the account management panel.
                 if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
                     // Only send the token to relative URLs i.e. locally.
                     xhr.setRequestHeader("X-CSRFToken",
-                                         $("#csrfmiddlewaretoken").val());
+                                         $("input[name=csrfmiddlewaretoken]").val());
                 }
             }
         });

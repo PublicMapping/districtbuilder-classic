@@ -23,7 +23,7 @@ Author:
     Andrew Jennings, David Zwarg 
 """
 
-import os, traceback, random, types, logging
+import os, traceback, random, logging
 from lxml.etree import parse, clear_error_log, XMLSchema, XMLSyntaxError, XMLSchemaParseError
 
 class StoredConfig:
@@ -215,11 +215,16 @@ class StoredConfig:
 
             cfg = self.data.xpath('//Project/Database')[0]
             output.write('\n#\n# Automatically generated settings.\n#\n')
-            output.write("DATABASE_ENGINE = 'postgresql_psycopg2'\n")
-            output.write("DATABASE_NAME = '%s'\n" % cfg.get('name'))
-            output.write("DATABASE_USER = '%s'\n" % cfg.get('user'))
-            output.write("DATABASE_PASSWORD = '%s'\n" % cfg.get('password'))
-            output.write("DATABASE_HOST = '%s'\n" % cfg.get('host',''))
+
+            output.write("DATABASES = {\n")
+            output.write("    'default': {\n")
+            output.write("        'ENGINE': 'django.contrib.gis.db.backends.postgis',\n")
+            output.write("        'NAME': '%s',\n" % cfg.get('name'))
+            output.write("        'USER': '%s',\n" % cfg.get('user'))
+            output.write("        'PASSWORD': '%s',\n" % cfg.get('password'))
+            output.write("        'HOST': '%s',\n" % cfg.get('host'))
+            output.write("    }\n")
+            output.write("}\n")
 
             cfg = self.data.xpath('//MapServer')[0]
             output.write("\nMAP_SERVER = '%s'\n" % cfg.get('hostname'))

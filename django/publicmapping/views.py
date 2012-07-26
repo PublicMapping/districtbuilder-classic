@@ -30,9 +30,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User, AnonymousUser
 from django.contrib.sessions.models import Session
 from django.contrib.auth.decorators import login_required
-from django.contrib.csrf.middleware import csrf_exempt
 from django.contrib.sites.models import Site
 from django.views.decorators.cache import cache_control
+from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.shortcuts import render_to_response
 from django.template import loader, Context, RequestContext

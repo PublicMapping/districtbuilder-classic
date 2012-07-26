@@ -25,30 +25,10 @@ Author:
 """
 
 from django import template
-from django.template.defaultfilters import stringfilter, floatformat
+from django.template.defaultfilters import floatformat
 from django.utils.translation import ugettext as _
 
 register = template.Library()
-
-@register.filter
-@stringfilter
-def truncate(value, length):
-    """
-    This filter reduces the given string value to length 
-    and appends an ellipsis to the end. If the string is
-    not of the given length, it is returned as-is
-    Parameters:
-        value - A string value
-        length - The length of the string desired (ellipsis included)
-    """
-    try:
-        length = int(length)
-        if len(value) > length:
-            short = format('%s%s' % (value[:length - 3], '...'))
-            return short
-        return value
-    except:
-        return value
 
 @register.filter
 def spellnumber(value):
