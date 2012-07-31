@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-26 17:03-0400\n"
+"POT-Creation-Date: 2012-07-31 14:17-0400\n"
 "PO-Revision-Date: 2011-11-30 16:49\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: fr\n"
@@ -18,7 +18,6 @@ msgstr ""
 "X-Translated-Using: django-rosetta 0.6.2\n"
 
 #: static-media/js/chooseplan.js:75 static-media/js/chooseplan.js.c:245
-#, fuzzy
 msgid "View Plan"
 msgstr "Plan"
 
@@ -288,12 +287,10 @@ msgid "Please wait. Fixing unassigned blocks. This may take a couple minutes."
 msgstr ""
 
 #: static-media/js/mapping.js:462
-#, fuzzy
 msgid "Fixing Unassigned"
 msgstr "Non attribué"
 
 #: static-media/js/mapping.js:482
-#, fuzzy
 msgid "Success"
 msgstr "Réussite!"
 
@@ -307,7 +304,6 @@ msgid "Error"
 msgstr "Erreur"
 
 #: static-media/js/mapping.js:488
-#, fuzzy
 msgid "Error encountered while fixing unassigned"
 msgstr ""
 "Une erreur s'est produite lors de la récupération du rapport des divisions: "
@@ -323,7 +319,6 @@ msgid "Warning"
 msgstr "Avertissement"
 
 #: static-media/js/mapping.js:518
-#, fuzzy
 msgid "Please wait. Querying for splits."
 msgstr "Veuillez patienter. Récupération du rapport des divisions."
 
@@ -340,7 +335,6 @@ msgid "No Splits Found"
 msgstr ""
 
 #: static-media/js/mapping.js:542 static-media/js/mapping.js.c:549
-#, fuzzy
 msgid "Error encountered while querying for splits: "
 msgstr ""
 "Une erreur s'est produite lors de la récupération du rapport des divisions: "
@@ -360,7 +354,6 @@ msgid "No districts were updated"
 msgstr "Aucune circonscription n'a été réactualisée"
 
 #: static-media/js/mapping.js:1163
-#, fuzzy
 msgid ""
 "You cannot select that many features at once.\n"
 "\n"
@@ -378,7 +371,6 @@ msgid "Sorry"
 msgstr "Désolé"
 
 #: static-media/js/mapping.js:1175
-#, fuzzy
 msgid ""
 "You cannot select any more features.\n"
 "\n"
@@ -434,12 +426,10 @@ msgid "Noncontiguous"
 msgstr ""
 
 #: static-media/js/mapping.js:2614
-#, fuzzy
 msgid "Contiguous"
 msgstr "Contiguïté "
 
 #: static-media/js/mapping.js:2620
-#, fuzzy
 msgid "Very Compact"
 msgstr "Compacité"
 
@@ -831,26 +821,6 @@ msgid "Sorry, we weren't able to contact the server.  Please try again later."
 msgstr ""
 "Désolé, nous n'étions pas en mesure de communiquer avec le serveur. Veuillez "
 "réessayer plus tard."
-
-#, fuzzy
-#~ msgid "Choose all"
-#~ msgstr "Choisissez les couches cartographiques "
-
-#, fuzzy
-#~ msgid "Choose"
-#~ msgstr "Choisissez les couches cartographiques "
-
-#, fuzzy
-#~ msgid "Now"
-#~ msgstr "Non"
-
-#, fuzzy
-#~ msgid "Choose a time"
-#~ msgstr "Choisissez les couches cartographiques "
-
-#, fuzzy
-#~ msgid "Clear all"
-#~ msgstr "Effacer la recherche"
 
 #~ msgid "Open report in a new window"
 #~ msgstr "Ouvrir le rapport actuel dans une nouvelle fenêtre"

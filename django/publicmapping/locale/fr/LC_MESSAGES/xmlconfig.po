@@ -22,49 +22,49 @@ msgid "default long description"
 msgstr "La région desservie par DistrictBuilder."
 
 msgid "congress short label"
-msgstr "%s"
+msgstr "%(district_id)s"
 
 msgid "congress label"
-msgstr "District %s"
+msgstr "Circonscription %(district_id)s"
 
 msgid "congress long description"
-msgstr "Congressional"
+msgstr "Congrès"
 
 msgid "house short label"
-msgstr "%s"
+msgstr "%(district_id)s"
 
 msgid "house label"
-msgstr "District %s"
+msgstr "Circonscription %(district_id)s"
 
 msgid "house long description"
-msgstr "State House"
+msgstr "La Chambre de l'État" 
 
 msgid "senate short label"
-msgstr "%s"
+msgstr "%(district_id)s"
 
 msgid "senate label"
-msgstr "District %s"
+msgstr "Circonscription %(district_id)s"
 
 msgid "senate long description"
-msgstr "State Senate"
+msgstr "Sénat de l'État" 
 
 msgid "community short label"
-msgstr "%s"
+msgstr "%(district_id)s"
 
 msgid "community label"
-msgstr "Community %s"
+msgstr "Communauté %(district_id)s"
 
 msgid "community long description"
-msgstr "Community Map"
+msgstr "Carte de la communauté" 
 
 msgid "va short label"
-msgstr "va"
+msgstr "VA"
 
 msgid "va label"
-msgstr "Virginia"
+msgstr "Virginie"
 
 msgid "va long description"
-msgstr "The Commonwealth of Virginia"
+msgstr "Le Commonwealth de la Virginie" 
 
 msgid "dc short label"
 msgstr "DC"
@@ -73,76 +73,76 @@ msgid "dc label"
 msgstr "DC Metro"
 
 msgid "dc long description"
-msgstr "Zone métropolitaine du District de Columbia"
+msgstr "Zone métropolitaine du District de Columbia" 
 
 msgid "dc_area_council short label"
-msgstr "%s"
+msgstr "%(district_id)s"
 
 msgid "dc_area_council label"
-msgstr "District %s"
+msgstr "Circonscription %(district_id)s"
 
 msgid "dc_area_council long description"
-msgstr "DC Planning Council"
+msgstr "Conseil d'aménagement de DC" 
 
 msgid "dc_community short label"
-msgstr "%s"
+msgstr "%(district_id)s"
 
 msgid "dc_community label"
-msgstr "Community %s"
+msgstr "Communauté %(district_id)s"
 
 msgid "dc_community long description"
-msgstr "DC Community Map"
+msgstr "Carte de la communauté de DC"
 
 msgid "dc_vtd short label"
-msgstr ""
+msgstr "vtd"
 
 msgid "dc_vtd label"
-msgstr ""
+msgstr "vtd"
 
 msgid "dc_vtd long description"
 msgstr ""
 
 msgid "dc_block short label"
-msgstr ""
+msgstr "bloc"
 
 msgid "dc_block label"
-msgstr ""
+msgstr "bloc"
 
 msgid "dc_block long description"
 msgstr ""
 
 msgid "county short label"
-msgstr "county"
+msgstr "comté"
 
 msgid "county label"
-msgstr "county"
+msgstr "comté"
 
 msgid "county long description"
 msgstr ""
 
 msgid "va_block short label"
-msgstr ""
+msgstr "bloc"
 
 msgid "va_block label"
-msgstr ""
+msgstr "bloc"
 
 msgid "va_block long description"
 msgstr ""
 
 msgid "va_vtd short label"
-msgstr ""
+msgstr "vtd"
 
 msgid "va_vtd label"
-msgstr ""
+msgstr "vtd"
 
 msgid "va_vtd long description"
 msgstr ""
 
 msgid "va_county short label"
-msgstr ""
+msgstr "comté"
 
 msgid "va_county label"
-msgstr ""
+msgstr "comté"
 
 msgid "va_county long description"
 msgstr ""
@@ -151,16 +151,16 @@ msgid "vtd short label"
 msgstr "vtd"
 
 msgid "vtd label"
-msgstr "VTD"
+msgstr "vtd"
 
 msgid "vtd long description"
 msgstr ""
 
 msgid "block short label"
-msgstr "block"
+msgstr "bloc"
 
 msgid "block label"
-msgstr "block"
+msgstr "bloc"
 
 msgid "block long description"
 msgstr ""
@@ -220,10 +220,10 @@ msgid "senate_leader_mine long description"
 msgstr ""
 
 msgid "congress_sidebar_basic short label"
-msgstr "Informations de base"
+msgstr "Informations de base" 
 
 msgid "congress_sidebar_basic label"
-msgstr "Informations de base"
+msgstr "Informations de base" 
 
 msgid "congress_sidebar_basic long description"
 msgstr ""
@@ -238,7 +238,7 @@ msgid "congress_sidebar_demo long description"
 msgstr ""
 
 msgid "house_sidebar_basic short label"
-msgstr "Informations de base"
+msgstr "Informations de base" 
 
 msgid "house_sidebar_basic label"
 msgstr "Informations de base"
@@ -283,7 +283,7 @@ msgid "community_demo long description"
 msgstr ""
 
 msgid "community_comments short label"
-msgstr "Cartographie de la communauté"
+msgstr "Cartographie de la communauté" 
 
 msgid "community_comments label"
 msgstr "Cartographie de la communauté"
@@ -328,7 +328,7 @@ msgid "dc_community_sidebar_comments long description"
 msgstr ""
 
 msgid "congress_reports short label"
-msgstr "Rapports du Congrès"
+msgstr "Rapports du Congrès" 
 
 msgid "congress_reports label"
 msgstr "Rapports du Congrès"
@@ -337,7 +337,7 @@ msgid "congress_reports long description"
 msgstr ""
 
 msgid "senate_reports short label"
-msgstr "Rapports du Sénat de l'État"
+msgstr "Rapports du Sénat de l'État" 
 
 msgid "senate_reports label"
 msgstr "Rapports du Sénat de l'État"
@@ -379,9 +379,7 @@ msgid "a_congress_plan_count_districts label"
 msgstr "Décompte des circonscriptions"
 
 msgid "a_congress_plan_count_districts long description"
-msgstr ""
-"Le nombre de circonscriptions dans un plan de redécoupage électoral du"
-" Congrès doit être 11."
+msgstr "Le nombre de circonscriptions dans un plan de redécoupage électoral du Congrès doit être 11." 
 
 msgid "a_congress_plan_equipopulation_summary short label"
 msgstr "Pop. cible (727366)"
@@ -390,9 +388,7 @@ msgid "a_congress_plan_equipopulation_summary label"
 msgstr "Pop. cible (727366)"
 
 msgid "a_congress_plan_equipopulation_summary long description"
-msgstr ""
-"La population de chaque circonscription du Congrès doit être 727366 "
-"+/-0,5%."
+msgstr "La population de chaque circonscription du Congrès doit être 727366 +/-0,5%." 
 
 msgid "a_congress_plan_equipopulation_validation short label"
 msgstr "Pop. cible (727366)"
@@ -401,9 +397,7 @@ msgid "a_congress_plan_equipopulation_validation label"
 msgstr "Pop. cible (727366)"
 
 msgid "a_congress_plan_equipopulation_validation long description"
-msgstr ""
-"La population de chaque circonscription du Congrès doit être 727366 "
-"+/-0,5%."
+msgstr "La population de chaque circonscription du Congrès doit être 727366 +/-0,5%."
 
 msgid "a_dc_area_council_plan_equipopulation_summary short label"
 msgstr "Pop. cible (292843)"
@@ -412,9 +406,7 @@ msgid "a_dc_area_council_plan_equipopulation_summary label"
 msgstr "Pop. cible (292843)"
 
 msgid "a_dc_area_council_plan_equipopulation_summary long description"
-msgstr ""
-"La population de chaque circonscription du Sénat de l'État doit être "
-"292843 +/-5 %."
+msgstr "La population de chaque circonscription du Sénat de l'État doit être 292843 +/-5 %."
 
 msgid "a_dc_area_council_plan_equipopulation_validation short label"
 msgstr "Pop. cible (292843)"
@@ -423,9 +415,7 @@ msgid "a_dc_area_council_plan_equipopulation_validation label"
 msgstr "Pop. cible (292843)"
 
 msgid "a_dc_area_council_plan_equipopulation_validation long description"
-msgstr ""
-"La population de chaque circonscription du Sénat de l'État doit être "
-"292843 +/-5 %."
+msgstr "La population de chaque circonscription du Sénat de l'État doit être 292843 +/-5 %."
 
 msgid "a_dc_area_council_population short label"
 msgstr "Pop tot"
@@ -443,9 +433,8 @@ msgid "a_house_plan_count_districts label"
 msgstr "Décompte des circonscriptions"
 
 msgid "a_house_plan_count_districts long description"
-msgstr ""
-"Le nombre de circonscriptions dans un plan de redécoupage électoral de"
-" la Chambre des délégués doit être 100."
+msgstr "Le nombre de circonscriptions dans un plan de redécoupage électoral de la Chambre "
+"des délégués doit être 100." 
 
 msgid "a_house_plan_equipopulation_summary short label"
 msgstr "Pop. cible (80010)"
@@ -454,9 +443,8 @@ msgid "a_house_plan_equipopulation_summary label"
 msgstr "Pop. cible (80010)"
 
 msgid "a_house_plan_equipopulation_summary long description"
-msgstr ""
-"La population de chaque circonscription de la Chambre des délégués "
-"doit être 80010 +/-5 %."
+msgstr "La population de chaque circonscription de la Chambre des délégués doit "
+"être 80010 +/-5 %." 
 
 msgid "a_house_plan_equipopulation_validation short label"
 msgstr "Pop. cible (80010)"
@@ -465,9 +453,8 @@ msgid "a_house_plan_equipopulation_validation label"
 msgstr "Pop. cible (80010)"
 
 msgid "a_house_plan_equipopulation_validation long description"
-msgstr ""
-"La population de chaque circonscription de la Chambre des délégués "
-"doit être 80010 +/-5 %."
+msgstr "La population de chaque circonscription de la Chambre des délégués doit "
+"être 80010 +/-5 %."
 
 msgid "a_house_population short label"
 msgstr "Pop tot"
@@ -485,9 +472,8 @@ msgid "a_senate_plan_count_districts label"
 msgstr "Décompte des circonscriptions"
 
 msgid "a_senate_plan_count_districts long description"
-msgstr ""
-"Le nombre de circonscriptions dans un plan de redécoupage électoral du"
-" Sénat de l'État doit être 100."
+msgstr "Le nombre de circonscriptions dans un plan de redécoupage électoral du Sénat "
+"de l'État doit être 100."
 
 msgid "a_senate_plan_equipopulation_summary short label"
 msgstr "Pop. cible (200026)"
@@ -496,9 +482,7 @@ msgid "a_senate_plan_equipopulation_summary label"
 msgstr "Pop. cible (200026)"
 
 msgid "a_senate_plan_equipopulation_summary long description"
-msgstr ""
-"La population de chaque circonscription du Sénat de l'État doit être "
-"200026 +/-5%."
+msgstr "La population de chaque circonscription du Sénat de l'État doit être 200026 +/-5%." 
 
 msgid "a_senate_plan_equipopulation_validation short label"
 msgstr "Pop. cible (200026)"
@@ -507,9 +491,7 @@ msgid "a_senate_plan_equipopulation_validation label"
 msgstr "Pop. cible (200026)"
 
 msgid "a_senate_plan_equipopulation_validation long description"
-msgstr ""
-"La population de chaque circonscription du Sénat de l'État doit être "
-"200026 +/-5%."
+msgstr "La population de chaque circonscription du Sénat de l'État doit être 200026 +/-5%."
 
 msgid "a_senate_population short label"
 msgstr "Pop tot"
@@ -695,7 +677,8 @@ msgid "partisan_index short label"
 msgstr "Index de partisans"
 
 msgid "partisan_index label"
-msgstr "Partisan IndexIndex de partisans"
+msgstr "Partisan Index"
+"Index de partisans"
 
 msgid "partisan_index long description"
 msgstr ""
@@ -710,20 +693,19 @@ msgid "plan_all_blocks_assigned long description"
 msgstr "Tous les blocs du plan doivent être attribués."
 
 msgid "plan_all_contiguous short label"
-msgstr "Tous contigus"
+msgstr "Tous contigus" 
 
 msgid "plan_all_contiguous label"
-msgstr "Tous contigus"
+msgstr "Tous contigus" 
 
 msgid "plan_all_contiguous long description"
-msgstr ""
-"Contiguïté signifie que chaque partie d'une circonscription doit être "
-"accessible à partir de chaque autre partie sans quitter les frontières"
-" de la circonscription. Toutes les circonscriptions au sein d'un plan "
-"doivent être contiguës. La contiguïté de l'eau est permise compte tenu"
-" de la vaste région côtière de la Virginie. 'Point de contiguïté' ou "
-"'point de contact de contiguïté' où deux sections d'une "
-"circonscription sont connectées à un seul point n'est pas autorisé."
+msgstr "Contiguïté signifie que chaque partie d'une circonscription doit être accessible à "
+"partir de chaque autre partie sans quitter les frontières de la circonscription. Toutes "
+"les circonscriptions au sein d'un plan doivent être contiguës. La contiguïté de l'eau est "
+"permise compte tenu de la vaste région côtière de la Virginie. 'Point de contiguïté' "
+"ou 'point de contact de contiguïté' où deux sections d'une circonscription "
+"sont connectées à un seul point n'est pas autorisé." 
+ 
 
 msgid "plan_all_equipop short label"
 msgstr ""
@@ -750,16 +732,14 @@ msgid "plan_competitiveness label"
 msgstr "Compétitivité"
 
 msgid "plan_competitiveness long description"
-msgstr ""
-"La compétitivité de politique globale de chaque plan est déterminée "
-"par la moyenne du 'différentiel de partisans' de chaque "
-"circonscription. Le différentiel de partisans de chaque "
-"circonscription est calculé en soustrayant 'l'index de partisans' "
-"démocratique de 'l'index de partisans' républicain.<br/><br/>Les "
-"circonscriptions 'très' compétitives sont des circonscriptions avec "
-"des différentiels de partisans inférieur ou égal à 5%. 'Généralement' "
-"les circonscriptions compétitives sont des circonscriptions avec des "
-"différentiels de partisans supérieur à 5% mais inferieur à 10%."
+msgstr "La compétitivité de politique globale de chaque plan est déterminée par "
+"la moyenne du 'différentiel de partisans' de chaque circonscription. Le "
+"différentiel de partisans de chaque circonscription est calculé en soustrayant "
+"'l'index de partisans' démocratique de 'l'index de partisans' républicain."
+"<br/><br/>Les circonscriptions 'très' compétitives sont des circonscriptions avec "
+"des différentiels de partisans inférieur ou égal à 5%. 'Généralement' les "
+"circonscriptions compétitives sont des circonscriptions avec des différentiels "
+"de partisans supérieur à 5% mais inferieur à 10%."  
 
 msgid "plan_contiguous short label"
 msgstr "Contigu"
@@ -780,16 +760,15 @@ msgid "plan_count_majmin long description"
 msgstr ""
 
 msgid "plan_equivalence short label"
-msgstr "Population égale"
+msgstr "Population égale" 
 
 msgid "plan_equivalence label"
-msgstr "Population égale"
+msgstr "Population égale" 
 
 msgid "plan_equivalence long description"
-msgstr ""
-"Le score d'égalité de la population est la différence entre la "
-"circonscription avec la population la plus élevée et la "
-"circonscription avec la plus faible population."
+msgstr "Le score d'égalité de la population est la différence entre la circonscription avec "
+"la population la plus élevée et la circonscription avec la plus faible population." 
+
 
 msgid "plan_hispvap_thresh short label"
 msgstr ""
@@ -801,19 +780,17 @@ msgid "plan_hispvap_thresh long description"
 msgstr ""
 
 msgid "plan_majority_minority short label"
-msgstr "Circonscription de la majorité et minorité"
+msgstr "Circonscription de la majorité et minorité" 
 
 msgid "plan_majority_minority label"
-msgstr "Circonscription de la majorité et minorité"
+msgstr "Circonscription de la majorité et minorité" 
 
 msgid "plan_majority_minority long description"
-msgstr ""
-"Le respect de la Loi des droits de vote sera supposé si les cartes "
-"comprennent une circonscription de minorité-majorité dans toutes zones"
-" où un groupe minoritaire est (comme décrit dans Thornburg V. Gingles,"
-" 478 U.S. 30, 49 (1986)) 'suffisamment grand et géographiquement "
-"compact pour constituer une majorité dans une circonscription "
-"uninominale'."
+msgstr "Le respect de la Loi des droits de vote sera supposé si les cartes comprennent "
+"une circonscription de minorité-majorité dans toutes zones où un groupe minoritaire est "
+"(comme décrit dans Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) 'suffisamment grand "
+"et géographiquement compact pour constituer une majorité "
+"dans une circonscription uninominale'."
 
 msgid "plan_majority_minority_blk short label"
 msgstr "Majorité de VAP noire (>50%)"
@@ -822,13 +799,11 @@ msgid "plan_majority_minority_blk label"
 msgstr "Majorité de VAP noire (>50%)"
 
 msgid "plan_majority_minority_blk long description"
-msgstr ""
-"Le respect de la Loi des droits de vote sera supposé si les cartes "
-"comprennent une circonscription de minorité-majorité dans toutes zones"
-" où un groupe minoritaire est (comme décrit dans Thornburg V. Gingles,"
-" 478 U.S. 30, 49 (1986)) 'suffisamment grand et géographiquement "
-"compact pour constituer une majorité dans une circonscription "
-"uninominale'."
+msgstr "Le respect de la Loi des droits de vote sera supposé si les cartes comprennent "
+"une circonscription de minorité-majorité dans toutes zones où un groupe minoritaire est "
+"(comme décrit dans Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) 'suffisamment grand "
+"et géographiquement compact pour constituer une majorité "
+"dans une circonscription uninominale'."
 
 msgid "plan_majority_minority_blk_congress short label"
 msgstr "Majorité de VAP noire (>50%)"
@@ -837,13 +812,11 @@ msgid "plan_majority_minority_blk_congress label"
 msgstr "Majorité de VAP noire (>50%)"
 
 msgid "plan_majority_minority_blk_congress long description"
-msgstr ""
-"Le respect de la Loi des droits de vote sera supposé si les cartes "
-"comprennent une circonscription de minorité-majorité dans toutes zones"
-" où un groupe minoritaire est (comme décrit dans Thornburg V. Gingles,"
-" 478 U.S. 30, 49 (1986)) 'suffisamment grand et géographiquement "
-"compact pour constituer une majorité dans une circonscription "
-"uninominale'."
+msgstr "Le respect de la Loi des droits de vote sera supposé si les cartes comprennent "
+"une circonscription de minorité-majorité dans toutes zones où un groupe minoritaire est "
+"(comme décrit dans Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) 'suffisamment grand "
+"et géographiquement compact pour constituer une majorité "
+"dans une circonscription uninominale'."
 
 msgid "plan_majority_minority_blk_house short label"
 msgstr "Majorité de VAP noire (>50%)"
@@ -852,13 +825,11 @@ msgid "plan_majority_minority_blk_house label"
 msgstr "Majorité de VAP noire (>50%)"
 
 msgid "plan_majority_minority_blk_house long description"
-msgstr ""
-"Le respect de la Loi des droits de vote sera supposé si les cartes "
-"comprennent une circonscription de minorité-majorité dans toutes zones"
-" où un groupe minoritaire est (comme décrit dans Thornburg V. Gingles,"
-" 478 U.S. 30, 49 (1986)) 'suffisamment grand et géographiquement "
-"compact pour constituer une majorité dans une circonscription "
-"uninominale'."
+msgstr "Le respect de la Loi des droits de vote sera supposé si les cartes comprennent "
+"une circonscription de minorité-majorité dans toutes zones où un groupe minoritaire est "
+"(comme décrit dans Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) 'suffisamment grand "
+"et géographiquement compact pour constituer une majorité "
+"dans une circonscription uninominale'."
 
 msgid "plan_majority_minority_blk_senate short label"
 msgstr "Majorité de VAP noire (>50%)"
@@ -867,13 +838,11 @@ msgid "plan_majority_minority_blk_senate label"
 msgstr "Majorité de VAP noire (>50%)"
 
 msgid "plan_majority_minority_blk_senate long description"
-msgstr ""
-"Le respect de la Loi des droits de vote sera supposé si les cartes "
-"comprennent une circonscription de minorité-majorité dans toutes zones"
-" où un groupe minoritaire est (comme décrit dans Thornburg V. Gingles,"
-" 478 U.S. 30, 49 (1986)) 'suffisamment grand et géographiquement "
-"compact pour constituer une majorité dans une circonscription "
-"uninominale'."
+msgstr "Le respect de la Loi des droits de vote sera supposé si les cartes comprennent "
+"une circonscription de minorité-majorité dans toutes zones où un groupe minoritaire est "
+"(comme décrit dans Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) 'suffisamment grand "
+"et géographiquement compact pour constituer une majorité "
+"dans une circonscription uninominale'."
 
 msgid "plan_majority_minority_hisp short label"
 msgstr "Majorité de VAP hisp. (>50%)"
@@ -882,13 +851,11 @@ msgid "plan_majority_minority_hisp label"
 msgstr "Majorité de VAP hisp. (>50%)"
 
 msgid "plan_majority_minority_hisp long description"
-msgstr ""
-"Le respect de la Loi des droits de vote sera supposé si les cartes "
-"comprennent une circonscription de minorité-majorité dans toutes zones"
-" où un groupe minoritaire est (comme décrit dans Thornburg V. Gingles,"
-" 478 U.S. 30, 49 (1986)) 'suffisamment grand et géographiquement "
-"compact pour constituer une majorité dans une circonscription "
-"uninominale'."
+msgstr "Le respect de la Loi des droits de vote sera supposé si les cartes comprennent "
+"une circonscription de minorité-majorité dans toutes zones où un groupe minoritaire est "
+"(comme décrit dans Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) 'suffisamment grand "
+"et géographiquement compact pour constituer une majorité "
+"dans une circonscription uninominale'."
 
 msgid "plan_major_minor short label"
 msgstr "Majorité-minorité"
@@ -915,31 +882,28 @@ msgid "plan_repfairness label"
 msgstr "Représentation équitable"
 
 msgid "plan_repfairness long description"
-msgstr ""
-"La représentation équitable est augmentée lorsque le pourcentage de "
-"circonscriptions qu'un parti pourrait probablement remporter (basé sur"
-" 'l'index de partisans' utilisé pour déterminer la "
-"compétitivité)reflète fidèlement le pourcentage de vote dans l'État "
-"obtenu par ce parti."
+msgstr "La représentation équitable est augmentée lorsque le pourcentage de "
+"circonscriptions qu'un parti pourrait probablement remporter (basé sur "
+"'l'index de partisans' utilisé pour déterminer la compétitivité)reflète "
+"fidèlement le pourcentage de vote dans l'État obtenu par ce parti."   
 
 msgid "plan_schwartzberg short label"
-msgstr "Compacité moyenne"
+msgstr "Compacité moyenne" 
 
 msgid "plan_schwartzberg label"
-msgstr "Compacité moyenne"
+msgstr "Compacité moyenne" 
 
 msgid "plan_schwartzberg long description"
-msgstr ""
-"La compétition utilise la mesure de compacité 'Inverse Schwartzberg.' "
+msgstr "La compétition utilise la mesure de compacité 'Inverse Schwartzberg.' "
 "Cette mesure est un rapport entre la circonférence du cercle dont la "
 "superficie est égale à la superficie de la circonscription au "
 "périmètre de la circonscription."
 
 msgid "plan_sum_equipop short label"
-msgstr "Population égale"
+msgstr "Population égale" 
 
 msgid "plan_sum_equipop label"
-msgstr "Population égale"
+msgstr "Population égale" 
 
 msgid "plan_sum_equipop long description"
 msgstr ""
@@ -972,10 +936,10 @@ msgid "report_score_compactness_sc long description"
 msgstr ""
 
 msgid "report_score_majmin_blk short label"
-msgstr "VAP Afro-américaine"
+msgstr "VAP Afro-américaine" 
 
 msgid "report_score_majmin_blk label"
-msgstr "VAP Afro-américaine"
+msgstr "VAP Afro-américaine" 
 
 msgid "report_score_majmin_blk long description"
 msgstr ""
@@ -1008,7 +972,7 @@ msgid "report_score_party_rep long description"
 msgstr ""
 
 msgid "report_score_total_population_congress short label"
-msgstr "Population totale"
+msgstr "Population totale" 
 
 msgid "report_score_total_population_congress label"
 msgstr "Population totale"
@@ -1045,7 +1009,7 @@ msgstr ""
 
 msgid "report_score_unassigned short label"
 msgstr "Blocs non attribués"
-
+ 
 msgid "report_score_unassigned label"
 msgstr "Blocs non attribués"
 
@@ -1053,19 +1017,20 @@ msgid "report_score_unassigned long description"
 msgstr ""
 
 msgid "report_score_vap short label"
-msgstr "Population en âge de voter"
+msgstr "Population en âge de voter" 
 
 msgid "report_score_vap label"
-msgstr "Population en âge de voter"
+msgstr "Population en âge de voter" 
 
 msgid "report_score_vap long description"
 msgstr ""
 
 msgid "report_score_vapblk short label"
-msgstr "VAP Afro-américaine"
+msgstr "VAP Afro-américaine" 
+
 
 msgid "report_score_vapblk label"
-msgstr "VAP Afro-américaine"
+msgstr "VAP Afro-américaine" 
 
 msgid "report_score_vapblk long description"
 msgstr ""
@@ -1086,12 +1051,10 @@ msgid "panel_competitive_mine label"
 msgstr "Compétitivité"
 
 msgid "panel_competitive_mine long description"
-msgstr ""
-"La compétitivité de politique globale de chaque plan est déterminée "
-"par la moyenne du 'différentiel de partisans' de chaque "
-"circonscription. Le différentiel de partisans de chaque "
-"circonscription est calculé en soustrayant 'l'index de partisans' "
-"démocratique de 'l'index de partisans' républicain."
+msgstr "La compétitivité de politique globale de chaque plan est déterminée par "
+"la moyenne du 'différentiel de partisans' de chaque circonscription. Le "
+"différentiel de partisans de chaque circonscription est calculé en soustrayant "
+"'l'index de partisans' démocratique de 'l'index de partisans' républicain."
 
 msgid "panel_rf_mine short label"
 msgstr "Représentation équitable"
@@ -1100,12 +1063,10 @@ msgid "panel_rf_mine label"
 msgstr "Représentation équitable"
 
 msgid "panel_rf_mine long description"
-msgstr ""
-"La représentation équitable est augmentée lorsque le pourcentage de "
-"circonscriptions qu'un parti pourrait probablement remporter (basé sur"
-" 'l'index de partisans' utilisé pour déterminer la "
-"compétitivité)reflète fidèlement le pourcentage de vote dans l'État "
-"obtenu par ce parti."
+msgstr "La représentation équitable est augmentée lorsque le pourcentage de "
+"circonscriptions qu'un parti pourrait probablement remporter (basé sur "
+"'l'index de partisans' utilisé pour déterminer la compétitivité)reflète "
+"fidèlement le pourcentage de vote dans l'État obtenu par ce parti."   
 
 msgid "community_panel_comments short label"
 msgstr "Commentaires du plan"
@@ -1117,16 +1078,16 @@ msgid "community_panel_comments long description"
 msgstr ""
 
 msgid "congressional_panel_info short label"
-msgstr "Informations de base"
+msgstr "Informations de base" 
 
 msgid "congressional_panel_info label"
-msgstr "Informations de base"
+msgstr "Informations de base" 
 
 msgid "congressional_panel_info long description"
 msgstr ""
 
 msgid "congressional_panel_summary short label"
-msgstr "Résumé du plan"
+msgstr "Résumé du plan" 
 
 msgid "congressional_panel_summary label"
 msgstr "Résumé du plan"
@@ -1144,10 +1105,10 @@ msgid "congressional_panel_demo long description"
 msgstr ""
 
 msgid "house_panel_info short label"
-msgstr "Informations de base"
+msgstr "Informations de base" 
 
 msgid "house_panel_info label"
-msgstr "Informations de base"
+msgstr "Informations de base" 
 
 msgid "house_panel_info long description"
 msgstr ""
@@ -1162,7 +1123,7 @@ msgid "house_panel_summary long description"
 msgstr ""
 
 msgid "house_panel_demo short label"
-msgstr "Démographiques"
+msgstr "Démographiques" 
 
 msgid "house_panel_demo label"
 msgstr "Démographiques"
@@ -1171,10 +1132,10 @@ msgid "house_panel_demo long description"
 msgstr ""
 
 msgid "senate_panel_info short label"
-msgstr "Informations de base"
+msgstr "Informations de base" 
 
 msgid "senate_panel_info label"
-msgstr "Informations de base"
+msgstr "Informations de base" 
 
 msgid "senate_panel_info long description"
 msgstr ""
@@ -1198,16 +1159,17 @@ msgid "senate_panel_demo long description"
 msgstr ""
 
 msgid "dc_area_council_panel_info short label"
-msgstr "Informations de base"
+msgstr "Informations de base" 
 
 msgid "dc_area_council_panel_info label"
-msgstr "Informations de base"
+msgstr "Informations de base" 
 
 msgid "dc_area_council_panel_info long description"
 msgstr ""
 
 msgid "dc_area_council_panel_summary short label"
-msgstr "Plan SummaryRésumé du plan"
+msgstr "Plan Summary"
+"Résumé du plan"
 
 msgid "dc_area_council_panel_summary label"
 msgstr "Résumé du plan"
@@ -1243,7 +1205,7 @@ msgid "community_panel_demo long description"
 msgstr ""
 
 msgid "community_panel_summary short label"
-msgstr "Résumé de la communauté"
+msgstr "Résumé de la communauté" 
 
 msgid "community_panel_summary label"
 msgstr "Résumé de la communauté"
@@ -1252,10 +1214,10 @@ msgid "community_panel_summary long description"
 msgstr ""
 
 msgid "report_panel_majmin short label"
-msgstr "Circonscriptions majoritaires minoritaires"
+msgstr "Circonscriptions majoritaires minoritaires" 
 
 msgid "report_panel_majmin label"
-msgstr "Circonscriptions majoritaires minoritaires"
+msgstr "Circonscriptions majoritaires minoritaires" 
 
 msgid "report_panel_majmin long description"
 msgstr ""
@@ -1270,7 +1232,7 @@ msgid "report_panel_compactness long description"
 msgstr ""
 
 msgid "report_panel_party short label"
-msgstr "Circonscriptions contrôlées par le parti"
+msgstr "Circonscriptions contrôlées par le parti" 
 
 msgid "report_panel_party label"
 msgstr "Circonscriptions contrôlées par le parti"
@@ -1294,9 +1256,8 @@ msgid "panel_equipop_all label"
 msgstr "Population-égale"
 
 msgid "panel_equipop_all long description"
-msgstr ""
-"\"<p> votre plan ne respecte pas les critères de concurrence d'égalité "
-"de la population:</p>"
+msgstr "<p> votre plan ne respecte pas les critères de concurrence "
+"d'égalité de la population:</p>"
 
 msgid "panel_compact_all short label"
 msgstr "Schwartzberg"
@@ -1305,8 +1266,7 @@ msgid "panel_compact_all label"
 msgstr "Schwartzberg"
 
 msgid "panel_compact_all long description"
-msgstr ""
-"La compétition utilise la mesure de compacité 'Inverse Schwartzberg.' "
+msgstr "La compétition utilise la mesure de compacité 'Inverse Schwartzberg.' "
 "Cette mesure est un rapport entre la circonférence du cercle dont la "
 "superficie est égale à la superficie de la circonscription au "
 "périmètre de la circonscription."
@@ -1318,12 +1278,10 @@ msgid "panel_competitive_all label"
 msgstr "Compétitivité"
 
 msgid "panel_competitive_all long description"
-msgstr ""
-"La compétitivité de politique globale de chaque plan est déterminée "
-"par la moyenne du 'différentiel de partisans' de chaque "
-"circonscription. Le différentiel de partisans de chaque "
-"circonscription est calculé en soustrayant 'l'index de partisans' "
-"démocratique de 'l'index de partisans' républicain."
+msgstr "La compétitivité de politique globale de chaque plan est déterminée par "
+"la moyenne du 'différentiel de partisans' de chaque circonscription. Le "
+"différentiel de partisans de chaque circonscription est calculé en soustrayant "
+"'l'index de partisans' démocratique de 'l'index de partisans' républicain."
 
 msgid "panel_rf_all short label"
 msgstr "Représentation équitable"
@@ -1332,12 +1290,10 @@ msgid "panel_rf_all label"
 msgstr "Représentation équitable"
 
 msgid "panel_rf_all long description"
-msgstr ""
-"La représentation équitable est augmentée lorsque le pourcentage de "
-"circonscriptions qu'un parti pourrait probablement remporter (basé sur"
-" 'l'index de partisans' utilisé pour déterminer la "
-"compétitivité)reflète fidèlement le pourcentage de vote dans l'État "
-"obtenu par ce parti."
+msgstr "La représentation équitable est augmentée lorsque le pourcentage de "
+"circonscriptions qu'un parti pourrait probablement remporter (basé sur "
+"'l'index de partisans' utilisé pour déterminer la compétitivité)reflète "
+"fidèlement le pourcentage de vote dans l'État obtenu par ce parti."   
 
 msgid "panel_equipop_mine short label"
 msgstr "Population-égale"
@@ -1346,9 +1302,8 @@ msgid "panel_equipop_mine label"
 msgstr "Population-égale"
 
 msgid "panel_equipop_mine long description"
-msgstr ""
-"\"<p> votre plan ne respecte pas les critères de concurrence d'égalité "
-"de la population:</p>"
+msgstr "<p> votre plan ne respecte pas les critères de concurrence "
+"d'égalité de la population:</p>"
 
 msgid "panel_compact_mine short label"
 msgstr "Schwartzberg"
@@ -1357,197 +1312,196 @@ msgid "panel_compact_mine label"
 msgstr "Schwartzberg"
 
 msgid "panel_compact_mine long description"
-msgstr ""
-"La compétition utilise la mesure de compacité 'Inverse Schwartzberg.' "
+msgstr "La compétition utilise la mesure de compacité 'Inverse Schwartzberg.' "
 "Cette mesure est un rapport entre la circonférence du cercle dont la "
 "superficie est égale à la superficie de la circonscription au "
 "périmètre de la circonscription."
 
 msgid "govdem short label"
-msgstr "% Dem Gov. '09, Two-Party"
+msgstr "% Dém Gouv. '09, Deux-Partis" 
 
 msgid "govdem label"
-msgstr "Democratic Voters, Governor '09"
+msgstr "Les électeurs démocratiques, gouverneur '09" 
 
 msgid "govdem long description"
 msgstr ""
 
 msgid "vapblk short label"
-msgstr "Black VAP"
+msgstr "VAP noire"
 
 msgid "vapblk label"
-msgstr "Voting Age Population - African-American"
+msgstr "Population en âge de voter - Afro-américain" 
 
 msgid "vapblk long description"
 msgstr ""
 
 msgid "vaphisp short label"
-msgstr "Hisp. VAP"
+msgstr "VAP Hisp."
 
 msgid "vaphisp label"
-msgstr "Voting Age Population - Hispanic/Latino"
+msgstr "Population en âge de voter - Hispanique/Latino" 
 
 msgid "vaphisp long description"
 msgstr ""
 
 msgid "pophisp short label"
-msgstr "Hispanic"
+msgstr "Hispanique"
 
 msgid "pophisp label"
-msgstr "Hispanic or Latino"
+msgstr "Hispanique ou Latino" 
 
 msgid "pophisp long description"
 msgstr ""
 
 msgid "popasn short label"
-msgstr "As Amer"
+msgstr "As Amér"
 
 msgid "popasn label"
-msgstr "Asian-American"
+msgstr "Américains d'origine asiatique"
 
 msgid "popasn long description"
 msgstr ""
 
 msgid "popnam short label"
-msgstr "Nat Amer"
+msgstr "Amérindiens"
 
 msgid "popnam label"
-msgstr "Native American"
+msgstr "Amérindiens"
 
 msgid "popnam long description"
 msgstr ""
 
 msgid "poppild short label"
-msgstr "Pac Isldr"
+msgstr "îles du Pac"
 
 msgid "poppild label"
-msgstr "Pacific Islander"
+msgstr "Originaire des îles du Pacifique"
 
 msgid "poppild long description"
 msgstr ""
 
 msgid "vap short label"
-msgstr "Voters"
+msgstr "Électeurs"
 
 msgid "vap label"
-msgstr "Voting Age Population"
+msgstr "Population en âge de voter" 
 
 msgid "vap long description"
 msgstr ""
 
 msgid "vapwnh short label"
-msgstr "Wht Votng Age"
+msgstr "Blanc en âge de voter"
 
 msgid "vapwnh label"
-msgstr "Voting Age Population - White"
+msgstr "Population en âge de voter - Blanche"
 
 msgid "vapwnh long description"
 msgstr ""
 
 msgid "popblk short label"
-msgstr "Black"
+msgstr "Noir"
 
 msgid "popblk label"
-msgstr "African-American"
+msgstr "Afro-américain"
 
 msgid "popblk long description"
 msgstr ""
 
 msgid "popwnh short label"
-msgstr "White"
+msgstr "Blanc"
 
 msgid "popwnh label"
-msgstr "Total White Non-Hispanic"
+msgstr "Nombre total de Blancs non-Hispaniques"
 
 msgid "popwnh long description"
 msgstr ""
 
 msgid "vapasn short label"
-msgstr "As Am Votng Age"
+msgstr "As Am en âge de voter"
 
 msgid "vapasn label"
-msgstr "Voting Age Population - Asian-American"
+msgstr "Population en âge de voter - Américains d'origine asiatique"
 
 msgid "vapasn long description"
 msgstr ""
 
 msgid "vapnam short label"
-msgstr "Nat Amer Votng Age"
+msgstr "Amérindiens en âge de voter"
 
 msgid "vapnam label"
-msgstr "Voting Age Population - Native American"
+msgstr "Population en âge de voter - Amérindiens"
 
 msgid "vapnam long description"
 msgstr ""
 
 msgid "vappild short label"
-msgstr "Pac Isldr Votng Age"
+msgstr "Orig îles Pac en âge de voter"
 
 msgid "vappild label"
-msgstr "Voting Age Population - Pacific Islander"
+msgstr "Population en âge de voter - originaire des îles du Pacifique"
 
 msgid "vappild long description"
 msgstr ""
 
 msgid "presdem short label"
-msgstr "Democrat 08"
+msgstr "Démocrate 08" 
 
 msgid "presdem label"
-msgstr "Democratic Voters"
+msgstr "Électeurs démocrates" 
 
 msgid "presdem long description"
 msgstr ""
 
 msgid "presrep short label"
-msgstr "Republican 08"
+msgstr "Républicain 08" 
 
 msgid "presrep label"
-msgstr "Republican Voters"
+msgstr "Électeurs républicains"
 
 msgid "presrep long description"
 msgstr ""
 
 msgid "poptot short label"
-msgstr "Total Pop."
+msgstr "Pop. totale"
 
 msgid "poptot label"
-msgstr "Total Population"
+msgstr "Population totale"
 
 msgid "poptot long description"
 msgstr ""
 
 msgid "presoth short label"
-msgstr "Other 08"
+msgstr "Autres 08"
 
 msgid "presoth label"
-msgstr "Other Voters"
+msgstr "Autres électeurs" 
 
 msgid "presoth long description"
 msgstr ""
 
 msgid "govrep short label"
-msgstr "Republican 09"
+msgstr "Républicain 09" 
 
 msgid "govrep label"
-msgstr "Republican Voters, Governor '09"
+msgstr "Électeurs républicains, gouverneur '09" 
 
 msgid "govrep long description"
 msgstr ""
 
 msgid "govoth short label"
-msgstr "Other Cand 09"
+msgstr "Autres Cand 09"
 
 msgid "govoth label"
-msgstr "Sum All Other Candidates, Governor '09"
+msgstr "Somme de tous les autres candidats, gouverneur '09"
 
 msgid "govoth long description"
 msgstr ""
 
 msgid "govtot short label"
-msgstr "Governor"
+msgstr "Gouverneur"
 
 msgid "govtot label"
-msgstr "Total Voter, Governor '09"
+msgstr "Nombre total des électeurs, gouverneur '09"
 
 msgid "govtot long description"
 msgstr ""
@@ -1559,22 +1513,19 @@ msgid "house_contiguity label"
 msgstr "Tous contigus - Chambre"
 
 msgid "house_contiguity long description"
-msgstr ""
-"<p>Votre plan ne respecte pas les critères de concurrence de "
-"Contiguïté</p><p>Chaque partie d'une circonscription doit être "
-"accessible depuis toutes les autres parties sans quitter les "
-"frontières de la circonscription. Toutes les circonscriptions au sein "
-"d'un plan doivent être contiguës. La contiguïté de l'eau est  "
-"autorisée compte tenu de la vaste région côtière de la Virginie. "
-"'Point de contiguïté' ou 'point de contact de contiguïté' où deux "
-"sections d'une circonscription sont connectées à un seul point n'est "
-"pas autorisé.</p>"
+msgstr "<p>Votre plan ne respecte pas les critères de concurrence de " 
+"Contiguïté</p><p>Chaque partie d'une circonscription doit être accessible depuis " 
+"toutes les autres parties sans quitter les frontières de la circonscription. Toutes les "
+"circonscriptions au sein d'un plan doivent être contiguës. La contiguïté de l'eau est  "
+"autorisée compte tenu de la vaste région côtière de la Virginie. 'Point de contiguïté' ou "
+"'point de contact de contiguïté' où deux sections d'une circonscription sont connectées à un " 
+"seul point n'est pas autorisé.</p>" 
 
 msgid "house_majority_minority short label"
-msgstr "MajoritéMinorité - Chambre"
+msgstr "MajoritéMinorité - Chambre" 
 
 msgid "house_majority_minority label"
-msgstr "MajoritéMinorité - Chambre"
+msgstr "MajoritéMinorité - Chambre" 
 
 msgid "house_majority_minority long description"
 msgstr ""
@@ -1598,52 +1549,48 @@ msgid "house_all_assigned long description"
 msgstr ""
 
 msgid "senate_majority_minority short label"
-msgstr "MajoritéMinorité - Sénat"
+msgstr "MajoritéMinorité - Sénat" 
 
 msgid "senate_majority_minority label"
-msgstr "MajoritéMinorité - Sénat"
+msgstr "MajoritéMinorité - Sénat" 
 
 msgid "senate_majority_minority long description"
 msgstr ""
 
 msgid "senate_count_districts short label"
-msgstr "Décompte des circonscriptions - Sénat"
+msgstr "Décompte des circonscriptions - Sénat" 
 
 msgid "senate_count_districts label"
-msgstr "Décompte des circonscriptions - Sénat"
+msgstr "Décompte des circonscriptions - Sénat" 
 
 msgid "senate_count_districts long description"
 msgstr ""
 
 msgid "congress_equipop short label"
-msgstr "Population-égale  - Congrès"
+msgstr "Population-égale  - Congrès" 
 
 msgid "congress_equipop label"
-msgstr "Population-égale  - Congrès"
+msgstr "Population-égale  - Congrès" 
 
 msgid "congress_equipop long description"
-msgstr ""
-"<p> votre plan ne respecte pas les critères de concurrence d'égalité "
-"de la population:</p><p>La population de chaque circonscription du "
-"Congrès doit être 727366 +/-0,5%.</p>"
+msgstr "<p> votre plan ne respecte pas les critères de concurrence "
+"d'égalité de la population:</p><p>La population de chaque circonscription du Congrès "
+"doit être 727366 +/-0,5%.</p>" 
 
 msgid "congress_contiguity short label"
-msgstr "Tous contigus - Congrès"
+msgstr "Tous contigus - Congrès" 
 
 msgid "congress_contiguity label"
 msgstr "Tous contigus - Congrès"
 
 msgid "congress_contiguity long description"
-msgstr ""
-"<p>Votre plan ne respecte pas les critères de concurrence de "
-"Contiguïté</p><p>Chaque partie d'une circonscription doit être "
-"accessible depuis toutes les autres parties sans quitter les "
-"frontières de la circonscription. Toutes les circonscriptions au sein "
-"d'un plan doivent être contiguës. La contiguïté de l'eau est  "
-"autorisée compte tenu de la vaste région côtière de la Virginie. "
-"'Point de contiguïté' ou 'point de contact de contiguïté' où deux "
-"sections d'une circonscription sont connectées à un seul point n'est "
-"pas autorisé.</p>"
+msgstr "<p>Votre plan ne respecte pas les critères de concurrence de " 
+"Contiguïté</p><p>Chaque partie d'une circonscription doit être accessible depuis " 
+"toutes les autres parties sans quitter les frontières de la circonscription. Toutes les "
+"circonscriptions au sein d'un plan doivent être contiguës. La contiguïté de l'eau est  "
+"autorisée compte tenu de la vaste région côtière de la Virginie. 'Point de contiguïté' ou "
+"'point de contact de contiguïté' où deux sections d'une circonscription sont connectées à un " 
+"seul point n'est pas autorisé.</p>" 
 
 msgid "congress_majority_minority short label"
 msgstr "MajoritéMinorité - Congrès"
@@ -1679,22 +1626,21 @@ msgid "house_equipop label"
 msgstr "Population-égale - Chambre"
 
 msgid "house_equipop long description"
-msgstr ""
-"<p> votre plan ne respecte pas les critères de concurrence d'égalité "
-"de la population:</p><p>La population de chaque circonscription de la "
-"Chambre des délégués doit être 80010 +/-5%.</p>"
+msgstr "<p> votre plan ne respecte pas les critères de concurrence "
+"d'égalité de la population:</p><p>La population de chaque circonscription " 
+"de la Chambre des délégués doit être 80010 +/-5%.</p>"
+
 
 msgid "senate_equipop short label"
-msgstr "Population-égale - Sénat"
+msgstr "Population-égale - Sénat" 
 
 msgid "senate_equipop label"
-msgstr "Population-égale - Sénat"
+msgstr "Population-égale - Sénat" 
 
 msgid "senate_equipop long description"
-msgstr ""
-"<p> votre plan ne respecte pas les critères de concurrence d'égalité "
-"de la population:</p><p>La population de chaque circonscription de la "
-"Chambre des délégués doit être 200026 +/-5%.</p>"
+msgstr "<p> votre plan ne respecte pas les critères de concurrence "
+"d'égalité de la population:</p><p>La population de chaque circonscription " 
+"de la Chambre des délégués doit être 200026 +/-5%.</p>" 
 
 msgid "senate_contiguity short label"
 msgstr "Tous contigus - Sénat"
@@ -1703,16 +1649,13 @@ msgid "senate_contiguity label"
 msgstr "Tous contigus - Sénat"
 
 msgid "senate_contiguity long description"
-msgstr ""
-"<p>Votre plan ne respecte pas les critères de concurrence de "
-"Contiguïté</p><p>Chaque partie d'une circonscription doit être "
-"accessible depuis toutes les autres parties sans quitter les "
-"frontières de la circonscription. Toutes les circonscriptions au sein "
-"d'un plan doivent être contiguës. La contiguïté de l'eau est  "
-"autorisée compte tenu de la vaste région côtière de la Virginie. "
-"'Point de contiguïté' ou 'point de contact de contiguïté' où deux "
-"sections d'une circonscription sont connectées à un seul point n'est "
-"pas autorisé.</p>"
+msgstr "<p>Votre plan ne respecte pas les critères de concurrence de " 
+"Contiguïté</p><p>Chaque partie d'une circonscription doit être accessible depuis " 
+"toutes les autres parties sans quitter les frontières de la circonscription. Toutes les "
+"circonscriptions au sein d'un plan doivent être contiguës. La contiguïté de l'eau est  "
+"autorisée compte tenu de la vaste région côtière de la Virginie. 'Point de contiguïté' ou "
+"'point de contact de contiguïté' où deux sections d'une circonscription sont connectées à un " 
+"seul point n'est pas autorisé.</p>" 
 
 msgid "senate_all_assigned short label"
 msgstr "Tous les blocs attribués - Sénat"
@@ -1850,73 +1793,69 @@ msgid "community-sidebar-demo long description"
 msgstr ""
 
 msgid "community-sidebar-comments short label"
-msgstr "Cartographie de la communauté"
+msgstr "Cartographie de la communauté" 
 
 msgid "community-sidebar-comments label"
-msgstr "Cartographie de la communauté"
+msgstr "Cartographie de la communauté" 
 
 msgid "community-sidebar-comments long description"
 msgstr ""
 
 msgid "congress-reports short label"
-msgstr "Rapports du Congrès"
+msgstr "Rapports du Congrès" 
 
 msgid "congress-reports label"
-msgstr "Rapports du Congrès"
+msgstr "Rapports du Congrès" 
 
 msgid "congress-reports long description"
 msgstr ""
 
 msgid "senate-reports short label"
-msgstr "Rapports du Sénat de l'État"
+msgstr "Rapports du Sénat de l'État" 
 
 msgid "senate-reports label"
-msgstr "Rapports du Sénat de l'État"
+msgstr "Rapports du Sénat de l'État" 
 
 msgid "senate-reports long description"
 msgstr ""
 
 msgid "house-reports short label"
-msgstr "Rapports de la Chambre d'État"
+msgstr "Rapports de la Chambre d'État" 
 
 msgid "house-reports label"
-msgstr "Rapports de la Chambre d'État"
+msgstr "Rapports de la Chambre d'État" 
 
 msgid "house-reports long description"
 msgstr ""
 
 msgid "congress-equipop short label"
-msgstr "Population-égale - Congrès"
+msgstr "Population-égale - Congrès" 
 
 msgid "congress-equipop label"
-msgstr "Population-égale - Congrès"
+msgstr "Population-égale - Congrès" 
 
 msgid "congress-equipop long description"
-msgstr ""
-"<p> votre plan ne respecte pas les critères de concurrence d'égalité "
-"de la population:</p><p>La population de chaque circonscription du "
-"Congrès doit être 727366 +/- 0,5%.</p>"
+msgstr "<p> votre plan ne respecte pas les critères de concurrence "
+"d'égalité de la population:</p><p>La population de chaque circonscription " 
+"du Congrès doit être 727366 +/- 0,5%.</p>" 
 
 msgid "congress-contiguous short label"
-msgstr "Tous contigus - Congrès"
+msgstr "Tous contigus - Congrès" 
 
 msgid "congress-contiguous label"
-msgstr "Tous contigus - Congrès"
+msgstr "Tous contigus - Congrès" 
 
 msgid "congress-contiguous long description"
-msgstr ""
-"<p>Votre plan ne respecte pas les critères de concurrence de "
-"Contiguïté</p><p>Chaque partie d'une circonscription doit être "
-"accessible depuis toutes les autres parties sans quitter les "
-"frontières de la circonscription. Toutes les circonscriptions au sein "
-"d'un plan doivent être contiguës. La contiguïté de l'eau est  "
-"autorisée compte tenu de la vaste région côtière de la Virginie. "
-"'Point de contiguïté' ou 'point de contact de contiguïté' où deux "
-"sections d'une circonscription sont connectées à un seul point n'est "
-"pas autorisé.</p>"
+msgstr "<p>Votre plan ne respecte pas les critères de concurrence de " 
+"Contiguïté</p><p>Chaque partie d'une circonscription doit être accessible depuis " 
+"toutes les autres parties sans quitter les frontières de la circonscription. Toutes les "
+"circonscriptions au sein d'un plan doivent être contiguës. La contiguïté de l'eau est  "
+"autorisée compte tenu de la vaste région côtière de la Virginie. 'Point de contiguïté' ou "
+"'point de contact de contiguïté' où deux sections d'une circonscription sont connectées à un " 
+"seul point n'est pas autorisé.</p>" 
 
 msgid "congress-major-minor short label"
-msgstr "MajoritéMinorité - Congrès"
+msgstr "MajoritéMinorité - Congrès" 
 
 msgid "congress-major-minor label"
 msgstr "MajoritéMinorité - Congrès"
@@ -1925,19 +1864,19 @@ msgid "congress-major-minor long description"
 msgstr ""
 
 msgid "congress-district-count short label"
-msgstr "Décompte des circonscriptions - Congrès"
+msgstr "Décompte des circonscriptions - Congrès" 
 
 msgid "congress-district-count label"
-msgstr "Décompte des circonscriptions - Congrès"
+msgstr "Décompte des circonscriptions - Congrès" 
 
 msgid "congress-district-count long description"
 msgstr ""
 
 msgid "congress-assigned short label"
-msgstr "Tous les blocs attribués - Congrès"
+msgstr "Tous les blocs attribués - Congrès"  
 
 msgid "congress-assigned label"
-msgstr "Tous les blocs attribués - Congrès"
+msgstr "Tous les blocs attribués - Congrès"  
 
 msgid "congress-assigned long description"
 msgstr ""
@@ -1949,10 +1888,9 @@ msgid "house-equipop label"
 msgstr "Population-égale - Chambre"
 
 msgid "house-equipop long description"
-msgstr ""
-"<p> votre plan ne respecte pas les critères de concurrence d'égalité "
-"de la population:</p><p>La population de chaque circonscription de la "
-"Chambre des délégués doit être 80010 +/- 5%.</p>"
+msgstr "<p> votre plan ne respecte pas les critères de concurrence "
+"d'égalité de la population:</p><p>La population de chaque circonscription " 
+"de la Chambre des délégués doit être 80010 +/- 5%.</p>"
 
 msgid "house-contiguous short label"
 msgstr "Tous contigus - Chambre"
@@ -1961,22 +1899,19 @@ msgid "house-contiguous label"
 msgstr "Tous contigus - Chambre"
 
 msgid "house-contiguous long description"
-msgstr ""
-"<p>Votre plan ne respecte pas les critères de concurrence de "
-"Contiguïté</p><p>Chaque partie d'une circonscription doit être "
-"accessible depuis toutes les autres parties sans quitter les "
-"frontières de la circonscription. Toutes les circonscriptions au sein "
-"d'un plan doivent être contiguës. La contiguïté de l'eau est  "
-"autorisée compte tenu de la vaste région côtière de la Virginie. "
-"'Point de contiguïté' ou 'point de contact de contiguïté' où deux "
-"sections d'une circonscription sont connectées à un seul point n'est "
-"pas autorisé.</p>"
+msgstr "<p>Votre plan ne respecte pas les critères de concurrence de " 
+"Contiguïté</p><p>Chaque partie d'une circonscription doit être accessible depuis " 
+"toutes les autres parties sans quitter les frontières de la circonscription. Toutes les "
+"circonscriptions au sein d'un plan doivent être contiguës. La contiguïté de l'eau est  "
+"autorisée compte tenu de la vaste région côtière de la Virginie. 'Point de contiguïté' ou "
+"'point de contact de contiguïté' où deux sections d'une circonscription sont connectées à un " 
+"seul point n'est pas autorisé.</p>" 
 
 msgid "house-major-minor short label"
-msgstr "MajoritéMinorité - Chambre"
+msgstr "MajoritéMinorité - Chambre" 
 
 msgid "house-major-minor label"
-msgstr "MajoritéMinorité - Chambre"
+msgstr "MajoritéMinorité - Chambre" 
 
 msgid "house-major-minor long description"
 msgstr ""
@@ -2024,43 +1959,39 @@ msgid "senate-equipop label"
 msgstr "Population-égale - Sénat"
 
 msgid "senate-equipop long description"
-msgstr ""
-"<p> votre plan ne respecte pas les critères de concurrence d'égalité "
-"de la population:</p><p>La population de chaque circonscription de la "
-"Chambre des délégués doit être 200026 +/- 5%.</p>"
+msgstr "<p> votre plan ne respecte pas les critères de concurrence "
+"d'égalité de la population:</p><p>La population de chaque circonscription " 
+"de la Chambre des délégués doit être 200026 +/- 5%.</p>"
 
 msgid "senate-contiguous short label"
-msgstr "Tous contigus - Sénat"
+msgstr "Tous contigus - Sénat" 
 
 msgid "senate-contiguous label"
-msgstr "Tous contigus - Sénat"
+msgstr "Tous contigus - Sénat" 
 
 msgid "senate-contiguous long description"
-msgstr ""
-"<p>Votre plan ne respecte pas les critères de concurrence de "
-"Contiguïté</p><p>Chaque partie d'une circonscription doit être "
-"accessible depuis toutes les autres parties sans quitter les "
-"frontières de la circonscription. Toutes les circonscriptions au sein "
-"d'un plan doivent être contiguës. La contiguïté de l'eau est  "
-"autorisée compte tenu de la vaste région côtière de la Virginie. "
-"'Point de contiguïté' ou 'point de contact de contiguïté' où deux "
-"sections d'une circonscription sont connectées à un seul point n'est "
-"pas autorisé.</p>"
+msgstr "<p>Votre plan ne respecte pas les critères de concurrence de " 
+"Contiguïté</p><p>Chaque partie d'une circonscription doit être accessible depuis " 
+"toutes les autres parties sans quitter les frontières de la circonscription. Toutes les "
+"circonscriptions au sein d'un plan doivent être contiguës. La contiguïté de l'eau est  "
+"autorisée compte tenu de la vaste région côtière de la Virginie. 'Point de contiguïté' ou "
+"'point de contact de contiguïté' où deux sections d'une circonscription sont connectées à un " 
+"seul point n'est pas autorisé.</p>" 
 
 msgid "senate-assigned short label"
-msgstr "Tous les blocs attribués - Sénat"
+msgstr "Tous les blocs attribués - Sénat" 
 
 msgid "senate-assigned label"
-msgstr "Tous les blocs attribués - Sénat"
+msgstr "Tous les blocs attribués - Sénat" 
 
 msgid "senate-assigned long description"
 msgstr ""
 
 msgid "dc_area short label"
-msgstr "dc"
+msgstr "DC"
 
 msgid "dc_area label"
-msgstr "DC Metro"
+msgstr "DC Métro"
 
 msgid "dc_area long description"
-msgstr "The District of Columbia Metropolitan Area"
+msgstr "Zone métropolitaine du District de Columbia" 

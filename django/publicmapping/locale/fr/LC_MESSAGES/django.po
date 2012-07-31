@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-26 17:03-0400\n"
+"POT-Creation-Date: 2012-07-31 14:22-0400\n"
 "PO-Revision-Date: 2011-11-29 14:20\n"
 "Last-Translator: Admin User <ajennings+saigon@azavea.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -651,39 +651,6 @@ msgstr "N'a pas obtenu les fonctions dans le paramètre POST"
 msgid "No plan with that ID was found."
 msgstr "Impossible de trouver un plan avec cet identifiant."
 
-#: redistricting/templates/admin.email:17
-msgid "Hello Admin"
-msgstr "Bonjour Admin"
-
-#: redistricting/templates/admin.email:19
-msgid "There was a problem importing a plan file from user"
-msgstr ""
-"Il y a eu un problème d'importation d'un fichier de plan de l'utilisateur"
-
-#: redistricting/templates/admin.email:19
-msgid ""
-"This user attempted to upload a file containing a plan but had some "
-"trouble.  The plan may have been imported."
-msgstr ""
-"Cet utilisateur tente de télécharger un fichier contenant un plan mais a eu "
-"quelques problèmes. Il se peut que le plan ait été importé."
-
-#: redistricting/templates/admin.email:22
-msgid "Plan name"
-msgstr "Nom du plan"
-
-#: redistricting/templates/admin.email:32
-msgid ""
-"If the user continues to have problems with this process, please check the "
-"application settings."
-msgstr ""
-"Si l'utilisateur continue à avoir des problèmes avec ce processus, veuillez "
-"consulter les paramètres de l'application."
-
-#: redistricting/templates/admin.email:34
-msgid "Thank you."
-msgstr "Merci."
-
 #: redistricting/templates/basic_information.html:44
 #: redistricting/templates/demographics.html:44
 msgid "Dist."
@@ -1221,57 +1188,6 @@ msgstr ""
 "Désolé, votre information n'a pu être sauvegardée. Veuillez réessayer plus "
 "tard."
 
-#: redistricting/templates/error.email:15
-#: redistricting/templates/importedplan.email:16
-#: redistricting/templates/submitted.email:12
-#: templates/forgottenpassword.email:12
-msgid "Hello"
-msgstr "Bonjour"
-
-#: redistricting/templates/error.email:17
-msgid ""
-"We apologize for the inconvenience, but your uploaded file was not converted "
-"into a plan. There are a few reasons why this might have happened. As best "
-"we can tell, your file failed to upload for the following reason:"
-msgstr ""
-"Nous nous excusons pour le désagrément, mais votre fichier téléchargé n'a "
-"pas été converti en un plan. Il y a quelques raisons pour lesquelles cela "
-"pourrait avoir eu lieu. Le mieux que nous pouvons vous dire, votre fichier a "
-"échoué au téléchargement pour la raison suivante:"
-
-#: redistricting/templates/error.email:23
-msgid "If you correct this issue and upload your file again, we can try again."
-msgstr ""
-"Si vous corrigez ce problème et téléchargez votre fichier à nouveau, nous "
-"pourrons tenter encore une fois."
-
-#: redistricting/templates/error.email:25
-#: redistricting/templates/importedplan.email:28
-#: redistricting/templates/submitted.email:16
-#: templates/forgottenpassword.email:18
-msgid "Happy Redistricting!"
-msgstr "Heureux redécoupage!"
-
-#: redistricting/templates/error.email:26
-#: redistricting/templates/importedplan.email:29
-#: redistricting/templates/submitted.email:17
-#: templates/forgottenpassword.email:19
-msgid "The Public Mapping Team"
-msgstr "L'équipe de cartographie publique"
-
-#: redistricting/templates/importedplan.email:18
-msgid ""
-"Your plan was created successfully. You can view, edit, and share your new "
-"plan by logging in to DistrictBuilder, and pulling up the plan entitled"
-msgstr ""
-"Votre plan a été créé avec succès. Vous pouvez afficher, modifier, et "
-"partager votre nouveau plan en vous connectant à DistrictBuilder, et en "
-"retirant le plan intitulé"
-
-#: redistricting/templates/importedplan.email:21
-msgid "There were a few errors during import:"
-msgstr "Il y a eu quelques erreurs lors de l'importation:"
-
 #: redistricting/templates/leaderboard_panel_all.html:38
 msgid "Top"
 msgstr "Rang supérieur"
@@ -1407,34 +1323,6 @@ msgstr "Tapez le résumé pour %(other_name)s"
 #: redistricting/templates/split_report.html:95
 msgid "Total"
 msgstr "Nombre total"
-
-#: redistricting/templates/submission.email:12
-msgid "user name"
-msgstr "nom d'utilisateur"
-
-#: redistricting/templates/submission.email:13
-msgid "plan id"
-msgstr "identifiant du plan"
-
-#: redistricting/templates/submission.email:14
-msgid "plan version"
-msgstr "version du plan"
-
-#: redistricting/templates/submission.email:15
-msgid "plan name"
-msgstr "nom du plan"
-
-#: redistricting/templates/submission.email:16
-msgid "legislative body"
-msgstr "corps législatif"
-
-#: redistricting/templates/submitted.email:14
-msgid "Your plan"
-msgstr "Votre plan"
-
-#: redistricting/templates/submitted.email:14
-msgid "has been successfully submitted. Thank you for your submission."
-msgstr "a été soumis avec succès. Merci pour la soumission."
 
 #: redistricting/templates/viewplan.html:41
 msgid "Redistricting plan by DistrictBuilder"
@@ -1908,7 +1796,6 @@ msgid "OK"
 msgstr "OK"
 
 #: redistricting/templates/viewplan.html:1077
-#, fuzzy
 msgid "Edit Statistics Sets"
 msgstr "Nommer l'ensemble de statistiques"
 
@@ -2119,18 +2006,6 @@ msgstr "Réactualisation"
 #: templates/account.html:94 templates/index.html:175
 msgid "Sign Up"
 msgstr "Inscrivez-vous"
-
-#: templates/forgottenpassword.email:14
-msgid ""
-"You requested a new password for the Public Mapping Project. Sorry for the "
-"inconvenience!  This is your new password"
-msgstr ""
-"Vous avez demandé un nouveau mot de passe pour le projet de cartographie "
-"publique. Désolé pour l'inconvénient! Voici votre nouveau mot de passe"
-
-#: templates/forgottenpassword.email:16
-msgid "Thank you for using the Public Mapping Project."
-msgstr "Merci d'utiliser le projet de cartographie publique."
 
 #: templates/index.html:43
 msgid "Welcome to DistrictBuilder"
@@ -2876,6 +2751,102 @@ msgstr "Nouveau mot de passe"
 #: templates/registration/password_change_form.orig.html:73
 msgid "Change my password"
 msgstr "Changer mon mot de passe"
+
+#~ msgid "Hello Admin"
+#~ msgstr "Bonjour Admin"
+
+#~ msgid "There was a problem importing a plan file from user"
+#~ msgstr ""
+#~ "Il y a eu un problème d'importation d'un fichier de plan de l'utilisateur"
+
+#~ msgid ""
+#~ "This user attempted to upload a file containing a plan but had some "
+#~ "trouble.  The plan may have been imported."
+#~ msgstr ""
+#~ "Cet utilisateur tente de télécharger un fichier contenant un plan mais a "
+#~ "eu quelques problèmes. Il se peut que le plan ait été importé."
+
+#~ msgid "Plan name"
+#~ msgstr "Nom du plan"
+
+#~ msgid ""
+#~ "If the user continues to have problems with this process, please check "
+#~ "the application settings."
+#~ msgstr ""
+#~ "Si l'utilisateur continue à avoir des problèmes avec ce processus, "
+#~ "veuillez consulter les paramètres de l'application."
+
+#~ msgid "Thank you."
+#~ msgstr "Merci."
+
+#~ msgid "Hello"
+#~ msgstr "Bonjour"
+
+#~ msgid ""
+#~ "We apologize for the inconvenience, but your uploaded file was not "
+#~ "converted into a plan. There are a few reasons why this might have "
+#~ "happened. As best we can tell, your file failed to upload for the "
+#~ "following reason:"
+#~ msgstr ""
+#~ "Nous nous excusons pour le désagrément, mais votre fichier téléchargé n'a "
+#~ "pas été converti en un plan. Il y a quelques raisons pour lesquelles cela "
+#~ "pourrait avoir eu lieu. Le mieux que nous pouvons vous dire, votre "
+#~ "fichier a échoué au téléchargement pour la raison suivante:"
+
+#~ msgid ""
+#~ "If you correct this issue and upload your file again, we can try again."
+#~ msgstr ""
+#~ "Si vous corrigez ce problème et téléchargez votre fichier à nouveau, nous "
+#~ "pourrons tenter encore une fois."
+
+#~ msgid "Happy Redistricting!"
+#~ msgstr "Heureux redécoupage!"
+
+#~ msgid "The Public Mapping Team"
+#~ msgstr "L'équipe de cartographie publique"
+
+#~ msgid ""
+#~ "Your plan was created successfully. You can view, edit, and share your "
+#~ "new plan by logging in to DistrictBuilder, and pulling up the plan "
+#~ "entitled"
+#~ msgstr ""
+#~ "Votre plan a été créé avec succès. Vous pouvez afficher, modifier, et "
+#~ "partager votre nouveau plan en vous connectant à DistrictBuilder, et en "
+#~ "retirant le plan intitulé"
+
+#~ msgid "There were a few errors during import:"
+#~ msgstr "Il y a eu quelques erreurs lors de l'importation:"
+
+#~ msgid "user name"
+#~ msgstr "nom d'utilisateur"
+
+#~ msgid "plan id"
+#~ msgstr "identifiant du plan"
+
+#~ msgid "plan version"
+#~ msgstr "version du plan"
+
+#~ msgid "plan name"
+#~ msgstr "nom du plan"
+
+#~ msgid "legislative body"
+#~ msgstr "corps législatif"
+
+#~ msgid "Your plan"
+#~ msgstr "Votre plan"
+
+#~ msgid "has been successfully submitted. Thank you for your submission."
+#~ msgstr "a été soumis avec succès. Merci pour la soumission."
+
+#~ msgid ""
+#~ "You requested a new password for the Public Mapping Project. Sorry for "
+#~ "the inconvenience!  This is your new password"
+#~ msgstr ""
+#~ "Vous avez demandé un nouveau mot de passe pour le projet de cartographie "
+#~ "publique. Désolé pour l'inconvénient! Voici votre nouveau mot de passe"
+
+#~ msgid "Thank you for using the Public Mapping Project."
+#~ msgstr "Merci d'utiliser le projet de cartographie publique."
 
 #~ msgid "I have read the "
 #~ msgstr "J'ai lu les "
