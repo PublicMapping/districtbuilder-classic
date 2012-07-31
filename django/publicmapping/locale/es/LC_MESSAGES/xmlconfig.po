@@ -25,7 +25,7 @@ msgid "congress short label"
 msgstr "%s"
 
 msgid "congress label"
-msgstr "District %s"
+msgstr "Distrito %s"
 
 msgid "congress long description"
 msgstr "Congressional"
@@ -34,7 +34,7 @@ msgid "house short label"
 msgstr "%s"
 
 msgid "house label"
-msgstr "District %s"
+msgstr "Distrito %s"
 
 msgid "house long description"
 msgstr "State House"
@@ -43,7 +43,7 @@ msgid "senate short label"
 msgstr "%s"
 
 msgid "senate label"
-msgstr "District %s"
+msgstr "Distrito %s"
 
 msgid "senate long description"
 msgstr "State Senate"
@@ -79,7 +79,7 @@ msgid "dc_area_council short label"
 msgstr "%s"
 
 msgid "dc_area_council label"
-msgstr "District %s"
+msgstr "Distrito %s"
 
 msgid "dc_area_council long description"
 msgstr "DC Planning Council"

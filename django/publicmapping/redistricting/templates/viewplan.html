@@ -454,7 +454,9 @@
                   <button class="identify_map_tool btntoggle titletip" title="{% trans "Click on a geounit to see its demographic info." %}" >{% trans "Info" %}</button>
               </div>
             <div class="toolset_group toolset_group_lg">
-                  <button id="district_id_map_tool" title="{% trans "Click on a district to see its ID." %}" class="btntoggle titletip">{{ body_member_long_label|capfirst }}<br/>{% trans "Info" %}</button>
+                  <button id="district_id_map_tool" title="{% trans "Click on a district to see its ID." %}" class="btntoggle titletip"><br/>
+                    {% blocktrans with body_member_long_label|capfirst as district_label %}{{ district_label }} Info{% endblocktrans %}
+                </button>
               </div>
               <div class="toolset_group toolset_group_lg">
                 <button id="show_splits_button">{% trans "Show<br/>Splits" %}</button>
@@ -859,8 +861,11 @@
 
           {% endcomment %}
           <label>
-            {% if plan.is_community %}{% trans "Community Map" %}{% else %}{% trans "Plan" %}{% endif %}
-            {% trans "Name:" %}
+            {% if plan.is_community %}
+                {% trans "Community Map Name:" %}
+            {% else %}
+                {% trans "Plan Name:" %}
+            {% endif %}
           </label> {{ plan.name|truncatechars:40 }}
           {% else %}
           {% comment %}
