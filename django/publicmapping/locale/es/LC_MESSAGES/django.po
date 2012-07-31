@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-31 12:14-0400\n"
+"POT-Creation-Date: 2012-07-31 14:13-0400\n"
 "PO-Revision-Date: 2011-11-29 14:20\n"
 "Last-Translator: Admin User <ajennings+saigon@azavea.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2866,60 +2866,3 @@ msgstr "Nueva contraseña"
 #: templates/registration/password_change_form.orig.html:73
 msgid "Change my password"
 msgstr "Cambiar mi contraseña"
-
-#~ msgid "I have read the "
-#~ msgstr "He leído los"
-
-#~ msgid "%s Reports"
-#~ msgstr "%s Informes"
-
-#~ msgid "%(body_name)s Reports"
-#~ msgstr "%(body_name)s Informes"
-
-#~ msgid "%(legislative_body)s Leaderboard - %(owner_filter)s"
-#~ msgstr "%(legislative_body)s Tabla de Posiciones - %(owner_filter)s"
-
-#~ msgid "Polygon<br/>Select"
-#~ msgstr "Seleccionar<br/>Polígono"
-
-#~ msgid "Assign to"
-#~ msgstr "Asignar a"
-
-#~ msgid "New"
-#~ msgstr "Nuevo"
-
-#~ msgid "Anchor"
-#~ msgstr "Anclar"
-
-#~ msgid "Verify and Post Plan to Leaderboards"
-#~ msgstr "Verificar y Publicar el Plan en la Tabla de Posiciones"
-
-#~ msgid "Powered By District Builder"
-#~ msgstr "Desarrollado por DistrictBuilder"
-
-#~ msgid "NEW TO REDISTRICTING?"
-#~ msgstr "¿ES UD. NUEVO EN LA REDISTRIBUCIÓN DE DISTRITOS?"
-
-#~ msgid "Take a Tour"
-#~ msgstr "Hacer un Tour Virtual"
-
-#~ msgid "Black VAP Majority (2000)"
-#~ msgstr "Negro VAP Mayoría (2000)"
-
-#~ msgid "1"
-#~ msgstr "1"
-
-#~ msgid "Hisp. VAP Majority (2000)"
-#~ msgstr "Hisp. VAP Mayoría (2000)"
-
-#~ msgid "5"
-#~ msgstr "5"
-
-#~ msgid "Sorry, there is no geographic data for this plan"
-#~ msgstr "Lo sentimos, no hay datos demográficos correspondientes a este plan"
-
-#~ msgid "District Builder"
-#~ msgstr "DistrictBuilder"
-
-#~ msgid "Get PDF"
-#~ msgstr "Obtener PDF"
