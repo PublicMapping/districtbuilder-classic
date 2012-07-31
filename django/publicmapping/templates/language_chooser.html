@@ -34,7 +34,7 @@
     </div>
     <div id="language_menu_div" class="toggle_menu" >
         <form id="language_form" action="/i18n/setlang/" method="POST">
-            {% comment %} CSRF token is automatically inserted {% endcomment %}
+            {% csrf_token %}
             <input id="language" name="language" type="hidden" />
         </form>
         {% for language in LANGUAGES %}
