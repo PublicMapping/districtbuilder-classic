@@ -137,7 +137,9 @@ def format_report_value(row):
             return floatformat(row['value'] * 100, 2) + '%'
 
         if row['type'] == 'boolean':
-            return str(row['value']).upper()
+            # Rather than using Upper on the string value, we'll be specific
+            # for the sake of i18n
+            return _("True") if row['value'] is True else _("False")
 
         if row['type'] == 'list':
             return '  '.join([str(x) for x in row['value']])
