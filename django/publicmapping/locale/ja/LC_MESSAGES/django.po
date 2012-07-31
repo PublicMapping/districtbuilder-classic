@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-25 16:07-0400\n"
+"POT-Creation-Date: 2012-07-31 14:13-0400\n"
 "PO-Revision-Date: 2012-06-07 14:20\n"
 "Language: Japanese\n"
 "MIME-Version: 1.0\n"
@@ -105,6 +105,7 @@ msgstr "選挙区ID"
 
 #: redistricting/reportcalculators.py:52
 #: redistricting/reportcalculators.py:119
+#: redistricting/templates/basic_information.html:71
 msgid "Population"
 msgstr "人口"
 
@@ -113,6 +114,7 @@ msgid "Within Target Range"
 msgstr "目標人口範囲内"
 
 #: redistricting/reportcalculators.py:95
+#: redistricting/templates/viewplan.html:992
 msgid "Compactness"
 msgstr "Compacidad"
 
@@ -633,1614 +635,2143 @@ msgstr "POST parameterの機能を取得できませんでした"
 msgid "No plan with that ID was found."
 msgstr "そのIDの計画案は見つかりませんでした。"
 
-#: redistricting/templatetags/redistricting_extras.py:63
+#: redistricting/templates/admin.email:17
+msgid "Hello Admin"
+msgstr "こんにちはAdminさん"
+
+#: redistricting/templates/admin.email:19
+msgid "There was a problem importing a plan file from user"
+msgstr "ﾕｰｻﾞｰからのﾌﾟﾗﾝﾌｧｲﾙの取り込みに問題が生じました"
+
+#: redistricting/templates/admin.email:19
+msgid ""
+"This user attempted to upload a file containing a plan but had some "
+"trouble.  The plan may have been imported."
+msgstr ""
+"このﾕｰｻﾞｰは計画案の入ったﾌｧｲﾙをｱｯﾌﾟﾛｰﾄﾞしようとしましたが、成功しませんでし"
+"た。計画案は取り込まれた可能性があります。"
+
+#: redistricting/templates/admin.email:22
+msgid "Plan name"
+msgstr "計画案名"
+
+#: redistricting/templates/admin.email:32
+msgid ""
+"If the user continues to have problems with this process, please check the "
+"application settings."
+msgstr "このﾌﾟﾛｾｽに問題が続くようであれば、ｱﾌﾟﾘｹｰｼｮﾝ設定を確認してください。"
+
+#: redistricting/templates/admin.email:34
+msgid "Thank you."
+msgstr "ありがとうございます。"
+
+#: redistricting/templates/basic_information.html:44
+#: redistricting/templates/demographics.html:44
+msgid "Dist."
+msgstr "選挙区"
+
+#: redistricting/templates/basic_information.html:64
+#: redistricting/templates/communities.html:61
+#: redistricting/templates/community_demographics.html:61
+#: redistricting/templates/demographics.html:64
+msgid "Sorry, there is no demographic data for this plan"
+msgstr "この計画案には人口統計ﾃﾞｰﾀがありません。"
+
+#: redistricting/templates/basic_information.html:68
+msgid "Stats Legend"
+msgstr "統計凡例"
+
+#: redistricting/templates/basic_information.html:73
+msgid "Far over target"
+msgstr "目標数をかなり超過"
+
+#: redistricting/templates/basic_information.html:74
+msgid "Over target"
+msgstr "目標数を超過"
+
+#: redistricting/templates/basic_information.html:75
+msgid "Meets target"
+msgstr "目標数を達成"
+
+#: redistricting/templates/basic_information.html:76
+msgid "Under target"
+msgstr "目標数に届きません"
+
+#: redistricting/templates/basic_information.html:77
+msgid "Far Under target"
+msgstr "目標数に遠く届きません"
+
+#: redistricting/templates/basic_information.html:81
+#: redistricting/templates/viewplan.html:993
+msgid "Contiguity"
+msgstr "近接性"
+
+#: redistricting/templates/basic_information.html:83
+msgid "Contiguous"
+msgstr "近接"
+
+#: redistricting/templates/basic_information.html:84
+msgid "Non-contiguous"
+msgstr "非近接"
+
+#: redistricting/templates/communities.html:43
+#: redistricting/templates/community_demographics.html:43
+msgid "Community"
+msgstr "地域"
+
+#: redistricting/templates/editplan.html:35
+msgid "Undo"
+msgstr "元に戻す"
+
+#: redistricting/templates/editplan.html:36
+msgid "Redo"
+msgstr "やり直し"
+
+#: redistricting/templates/editplan.html:42
+msgid "Map Editing"
+msgstr "地図編集"
+
+#: redistricting/templates/editplan.html:43
+msgid "Tools"
+msgstr "ﾂｰﾙ"
+
+#: redistricting/templates/editplan.html:53
+#: redistricting/templates/editplan.html:113
+#: redistricting/templates/viewplan.html:465
+msgid "Pan"
+msgstr "ﾊﾟﾝ操作"
+
+#: redistricting/templates/editplan.html:54
+#: redistricting/templates/editplan.html:114
+#: redistricting/templates/viewplan.html:466
+msgid "Click on a geounit to see its demographic info."
+msgstr "人口統計情報を見るには地域単位をｸﾘｯｸしてください。"
+
+#: redistricting/templates/editplan.html:54
+#: redistricting/templates/editplan.html:114
+#: redistricting/templates/editplan.html:118
+#: redistricting/templates/viewplan.html:466
+#: redistricting/templates/viewplan.html:469
+msgid "Info"
+msgstr "情報"
+
+#: redistricting/templates/editplan.html:62
+#, python-format
+msgid ""
+"Single %(body_member_long_label)s select; +Shift to select multiple "
+"%(body_members)s"
+msgstr ""
+"単独%(body_member_long_label)s選択; 複数の%(body_members)sを選択するには"
+"+Shift を押してください"
+
+#: redistricting/templates/editplan.html:62
+#, fuzzy
+msgid "Single<br/>Select"
+msgstr "単独<br/>選択 "
+
+#: redistricting/templates/editplan.html:63
+msgid "Select by rectangle"
+msgstr "四角範囲選択"
+
+#: redistricting/templates/editplan.html:63
+msgid "Rectangle<br/>Select"
+msgstr "四角<br/>選択"
+
+#: redistricting/templates/editplan.html:64
+msgid "Select by drawing a polygon"
+msgstr "多角形を描いて選択"
+
+#: redistricting/templates/editplan.html:64
+msgid "Polygon"
+msgstr "Polígono"
+
+#: redistricting/templates/editplan.html:64
+msgid "Select"
+msgstr "Seleccionar"
+
+#: redistricting/templates/editplan.html:69
+#, python-format
+msgid ""
+"Enable anchor mode, then select a %(body_member_long_label)s name to "
+"repeatedly assign areas to a %(body_member_long_label)s"
+msgstr ""
+"ｱﾝｶｰﾓｰﾄﾞを有効にし、%(body_member_long_label)sの名前を選択する"
+"と%(body_member_long_label)sに繰り返し配置されます。"
+
+#: redistricting/templates/editplan.html:69
+#, python-format
+msgid "Anchor<br/>%(district_label)s"
+msgstr "<br/>%(district_label)sをｱﾝｶｰ選択"
+
+#: redistricting/templates/editplan.html:71
+#, python-format
+msgid "Assign to %(district_label)s"
+msgstr "%(district_label)sに配置する"
+
+#: redistricting/templates/editplan.html:72
+#, python-format
+msgid ""
+"Assign %(body_members)s currently selected on map by choosing a "
+"%(body_member_long_label)s name from drop down list"
+msgstr ""
+"現在地図上で選択されている%(body_members)sを配置するに"
+"は%(body_member_long_label)sの名前をﾄﾞﾛｯﾌﾟﾀｳﾝﾘｽﾄから選択してください"
+
+#: redistricting/templates/editplan.html:73
+msgid "Select One"
+msgstr "単独選択"
+
+#: redistricting/templates/editplan.html:78
+#, python-format
+msgid "New %(district_label)s"
+msgstr "新しい%(district_label)s"
+
+#: redistricting/templates/editplan.html:82
+#, python-format
+msgid ""
+"Select areas on the map then drag them to into a %(body_member_long_label)s "
+"for reassignment"
+msgstr ""
+"地図上のｴﾘｱを選択し%(body_member_long_label)sの中にﾄﾞﾗｯｸﾞすると再配置できます"
+
+#: redistricting/templates/editplan.html:82
+msgid "Click and<br/>Drag"
+msgstr "ｸﾘｯｸしてﾄﾞﾗｯｸﾞ"
+
+#: redistricting/templates/editplan.html:88
+msgid "Perform automated resolution of minor unassigned geographies"
+msgstr "配置されていないｴﾘｱを自動配置する"
+
+#: redistricting/templates/editplan.html:88
+msgid "Fix<br/>Unassigned"
+msgstr "未配置の修復"
+
+#: redistricting/templates/editplan.html:117
+#, python-format
+msgid "Click on a %(body_member_long_label)s to lock or unlock it."
+msgstr "ﾛｯｸ・ﾛｯｸ解除するには%(body_member_long_label)sをｸﾘｯｸしてください。"
+
+#: redistricting/templates/editplan.html:117
+msgid "Lock"
+msgstr "ﾛｯｸ"
+
+#: redistricting/templates/editplan.html:118
+#, python-format
+msgid "Click on a %(body_member_long_label)s to see its ID."
+msgstr "IDを見るには%(body_member_long_label)sをｸﾘｯｸしてください。"
+
+#: redistricting/templates/editplan.html:119
+#, python-format
+msgid "Unassign all the units in a %(body_member_long_label)s"
+msgstr "%(body_member_long_label)sの中のﾕﾆｯﾄをすべて配置から外す"
+
+#: redistricting/templates/editplan.html:119
+msgid "Unassign"
+msgstr "配置解除"
+
+#: redistricting/templates/editplan.html:120
+#, python-format
+msgid "Copy a %(body_member_long_label)s from another %(plan_text)s"
+msgstr "他の%(plan_text)sから%(body_member_long_label)sをｺﾋﾟｰする"
+
+#: redistricting/templates/editplan.html:120
+msgid "Copy and</br>Paste"
+msgstr "ｺﾋﾟｰ･ﾍﾟｰｽﾄ"
+
+#: redistricting/templates/editplan.html:124
+#: redistricting/templates/viewplan.html:472
+msgid "Show<br/>Splits"
+msgstr "境界を表示"
+
+#: redistricting/templates/editplan.html:125
+#: redistricting/templates/viewplan.html:473
+msgid "Generate<br/>Splits Report"
+msgstr "境界のﾚﾎﾟｰﾄを作成する"
+
+#: redistricting/templates/editplan.html:130
+msgid "Select Multi-<br/>Member Districts"
+msgstr "複数定員区を選択"
+
+#: redistricting/templates/editplan.html:144
+msgid "Submit Final Plan to Contest"
+msgstr "最終計画案をｺﾝﾃｽﾄに提出する"
+
+#: redistricting/templates/editplan.html:145
+msgid ""
+"You can submit your completed plan to be considered for the contest by "
+"filling out this form."
+msgstr "完成した計画案をｺﾝﾃｽﾄに提出するにはこのﾌｫｰﾑを記入してください。"
+
+#: redistricting/templates/editplan.html:146
+#: redistricting/templates/editplan.html:368
+msgid "Submit Final Plan"
+msgstr "最終計画案を提出"
+
+#: redistricting/templates/editplan.html:152
+msgid "Share Plan With All Users"
+msgstr "計画案を全てのﾕｰｻﾞｰと共有する"
+
+#: redistricting/templates/editplan.html:153
+#, python-format
+msgid ""
+"By sharing a copy of your %(plan_text)s below, you are making your "
+"%(plan_text)s available to all other users in the system. Give your "
+"%(plan_text)s a unique name in order to share it. A copy of your current "
+"%(plan_text)s will be added to the \"Shared\" section of the plan chooser."
+msgstr ""
+"下記の%(plan_text)sを共有すると、%(plan_text)sをｼｽﾃﾑ内のﾕｰｻﾞｰ全員が見ることが"
+"できます。共有するには、%(plan_text)sに特有の名前をつけてください。現在"
+"の%(plan_text)sが「共有」ｾｸｼｮﾝの計画案選択表に追加されます。"
+
+#: redistricting/templates/editplan.html:155
+#, python-format
+msgid "Name your shared %(plan_text)s"
+msgstr "共有した%(plan_text)sに名前をつける"
+
+#: redistricting/templates/editplan.html:157
+msgid "Save and Share"
+msgstr "保存して共有"
+
+#: redistricting/templates/editplan.html:161
+msgid "Congratulations!"
+msgstr "おめでとうございます！"
+
+#: redistricting/templates/editplan.html:162
+#, python-format
+msgid ""
+"You have successfully shared your %(plan_text)s. You can share your "
+"%(plan_text)s with others by giving them this link:"
+msgstr ""
+"%(plan_text)sの共有に成功しました。このﾘﾝｸを使ってあなたの%(plan_text)sを他の"
+"人に見せることができます:"
+
+#: redistricting/templates/editplan.html:164
+#, python-format
+msgid "Continue Editing Current %(plantext)s"
+msgstr "現在の%(plantext)sの編集を続ける"
+
+#: redistricting/templates/editplan.html:165
+#, python-format
+msgid "Select New %(plan_text)s to Edit"
+msgstr "新しい%(plan_text)sを選択して編集"
+
+#: redistricting/templates/editplan.html:173
+#: redistricting/templates/editplan.html:185
+msgid "Verify and Submit Plan to Leaderboards"
+msgstr "計画案を照合してｽｺｱﾎﾞｰﾄﾞに提出する"
+
+#: redistricting/templates/editplan.html:174
+msgid ""
+"In order to be considered for placement on the leaderboards your plan must "
+"meet the criteria for creating a legal redistricitng plan. Keep in mind that "
+"as soon as you edit a verified plan, it will automatically become "
+"\"unverified\" and you will need to re-verify it in order for it to again be "
+"considered for the leaderboards."
+msgstr ""
+"ｽｺｱﾎﾞｰﾄﾞに表示するには、あなたの計画案が選挙区再編のﾙｰﾙを満たしている必要があ"
+"ります。照合済み計画案をもう一度編集すると、自動的に「未照合」になり、再度照"
+"合をするまでｽｺｱﾎﾞｰﾄﾞに提出できなくなります。"
+
+#: redistricting/templates/editplan.html:175
+msgid ""
+"By verifying your plan, you are <em><strong>not</strong></em> sharing your "
+"plan with other users. Your plan title and user name will simply show up in "
+"the top ten lists (if your plan ranks in the top ten)."
+msgstr ""
+"計画案を照合しただけでは計画案を共有することにはなりません。あなたの計画案が"
+"もしﾄｯﾌﾟ10にﾗﾝｸｲﾝした場合、計画案名とﾕｰｻﾞｰ名のみがﾄｯﾌﾟ10ﾘｽﾄに表示されます。"
+
+#: redistricting/templates/editplan.html:177
+msgid "How to verify and submit your plan:"
+msgstr "計画案を照合・提出するには:"
+
+#: redistricting/templates/editplan.html:179
+msgid "Click the \"Verify and Submit to Leaderboards\" button."
+msgstr "「照合しｽｺｱﾎﾞｰﾄﾞに提出する」ﾎﾞﾀﾝをｸﾘｯｸしてください。"
+
+#: redistricting/templates/editplan.html:180
+msgid "If verified, you will be taken to the Leaderboard page."
+msgstr "照合が済むと、ｽｺｱﾎﾞｰﾄﾞﾍﾟｰｼﾞに移ります。"
+
+#: redistricting/templates/editplan.html:181
+msgid ""
+"Check the leaderboards to see if your plan ranks in any of the top ten score "
+"types."
+msgstr "あなたの計画案がﾄｯﾌﾟ10に入ったかどうかをｽｺｱﾎﾞｰﾄﾞで確認できます。"
+
+#: redistricting/templates/editplan.html:196
+msgid ""
+"Choose communities to paste into your map. A map can contain any number of "
+"communities. If you would like to remove communities from your map, use the "
+"community unassign tool."
+msgstr ""
+"地図に貼り付ける地域を選んでください。ひとつの地図にはいくつでも地域を入れる"
+"ことができます。地図から地域を削除したい場合は、地域配置解除ﾂｰﾙを使ってくださ"
+"い。"
+
+#: redistricting/templates/editplan.html:198
+msgid ""
+"Choose districts to paste into your plan.  A plan has a maximum number of "
+"districts allowed by law.  If you would like to paste districts into a plan, "
+"you must have fewer districts in your plan than the maximum allowed.  If you "
+"would like to remove districts from your plan, use the district unassign "
+"tool."
+msgstr ""
+"計画案に貼り付ける選挙区を選んでください。計画案ごとに法律で定められた選挙区"
+"数の上限があります。計画案に選挙区を入れるときは、その上限以下の選挙区数にす"
+"る必要があります。計画案から選挙区を削除したい場合は、選挙区配置解除ﾂｰﾙを使っ"
+"てください。"
+
+#: redistricting/templates/editplan.html:202
+#, python-format
+msgid "1. Choose %(plantext)s"
+msgstr "1. %(plantext)sを選択する"
+
+#: redistricting/templates/editplan.html:208
+#, python-format
+msgid "2. Select %(bodymember)s to copy"
+msgstr "2. %(bodymember)sを選択してｺﾋﾟｰ"
+
+#: redistricting/templates/editplan.html:215
+#, python-format
+msgid "Click on a %(body_member_long_label)s's name to see a map"
+msgstr "地図を見るには%(body_member_long_label)sの名前をｸﾘｯｸしてください"
+
+#: redistricting/templates/editplan.html:221
+#, python-format
+msgid "3. Paste selected %(body_member_long_label)s into working %(plan_text)s"
+msgstr ""
+"3. 選択した%(body_member_long_label)sを現在編集中の%(plan_text)sに貼り付ける"
+
+#: redistricting/templates/editplan.html:255
+msgid ""
+"Click on a row to edit the number of members for the selected district. "
+"Press ENTER to complete editing a district."
+msgstr ""
+"選択した選挙区の定員数を変えるには、列をｸﾘｯｸしてください。ENTERを押すと編集が"
+"完了します。"
+
+#: redistricting/templates/editplan.html:259
+msgid ""
+"When all desired edits are made, press the Save button to save all changes "
+"to the database."
+msgstr "必要な編集が全て終わったら、「保存」ﾎﾞﾀﾝを押して変更を保存します。"
+
+#: redistricting/templates/editplan.html:263
+msgid "Target # of representatives:"
+msgstr "選出者目標数:"
+
+#: redistricting/templates/editplan.html:264
+msgid "Target # of multi-member districts:"
+msgstr "複数定員区目標数:"
+
+#: redistricting/templates/editplan.html:265
+msgid "Target # of members per multi-member district:"
+msgstr "複数定員区の目標定員数:"
+
+#: redistricting/templates/editplan.html:268
+msgid ""
+"Your plan currently has <span id=\"multi_num_reps\" class=\"multi_val\"></"
+"span> representatives."
+msgstr ""
+"あなたの計画案には現在<span id=\"multi_num_reps\" class=\"multi_val\"></span>"
+"人の選出者がいます。"
+
+#: redistricting/templates/editplan.html:269
+msgid ""
+"Your plan currently has <span id=\"multi_num_dists\" class=\"multi_val\"></"
+"span> multi-member districts."
+msgstr ""
+"あなたの計画案には現在<span id=\"multi_num_dists\" class=\"multi_val\"></"
+"span>個の複数定員区があります。"
+
+#: redistricting/templates/editplan.html:272
+#: redistricting/templates/viewplan.html:403
+msgid "Save"
+msgstr "保存"
+
+#: redistricting/templates/editplan.html:317 templates/account.html:51
+msgid "First Name"
+msgstr "名"
+
+#: redistricting/templates/editplan.html:321 templates/account.html:58
+msgid "Last Name"
+msgstr "姓"
+
+#: redistricting/templates/editplan.html:325
+msgid "Full Names of Team Members (if applicable)"
+msgstr "（該当する場合）ﾁｰﾑﾒﾝﾊﾞｰの氏名"
+
+#: redistricting/templates/editplan.html:329
+msgid "Team Name (if applicable)"
+msgstr "（該当する場合）ﾁｰﾑ名"
+
+#: redistricting/templates/editplan.html:333 templates/account.html:43
+msgid "Email Address"
+msgstr "Ｅメールアドレス"
+
+#: redistricting/templates/editplan.html:337
+msgid "Street Address"
+msgstr "住所"
+
+#: redistricting/templates/editplan.html:341
+msgid "Phone Number"
+msgstr "電話番号"
+
+#: redistricting/templates/editplan.html:346
+msgid ""
+"Values &ndash; tell us what values, considerations and trade-offs you made "
+"in your plan:"
+msgstr ""
+"価値観 &ndash; この計画案の作成にどのような価値観、考慮、また取引が反映されて"
+"いますか。:"
+
+#: redistricting/templates/editplan.html:356
+msgid ""
+"\n"
+"                    By submitting a plan for consideration, you are "
+"agreeing\n"
+"                    to have your plan published in local news media outlets\n"
+"                    and have it presented to a legislative body. Unless\n"
+"                    you request otherwise, the project partners will "
+"attempt\n"
+"                    to include attribution (your name or team name) for the\n"
+"                    plan whenever feasible.\n"
+"                    "
+msgstr ""
+
+#: redistricting/templates/editplan.html:372 templates/account.html:98
+msgid "Indicates required field"
+msgstr "必須項目"
+
+#: redistricting/templates/editplan.html:390
+msgid "Community Info"
+msgstr "地域情報"
+
+#: redistricting/templates/editplan.html:391
+msgid "0"
+msgstr "0"
+
+#: redistricting/templates/editplan.html:395
+msgid "1. Edit Community Label:"
+msgstr "1. 地域名を編集:"
+
+#: redistricting/templates/editplan.html:402
+msgid "2. Edit Community Type:"
+msgstr "2. 地域ﾀｲﾌﾟを編集:"
+
+#: redistricting/templates/editplan.html:413
+msgid "3. Comments:"
+msgstr "3. ｺﾒﾝﾄ:"
+
+#: redistricting/templates/editplan.html:421
+msgid "Oops!"
+msgstr "おぉっと！"
+
+#: redistricting/templates/editplan.html:422
+msgid "Sorry, your information could not be saved. Please try again later."
+msgstr ""
+"残念ながら、あなたの情報は保存されませんでした。しばらく経ってからやり直して"
+"ください。"
+
+#: redistricting/templates/error.email:15
+#: redistricting/templates/importedplan.email:16
+#: redistricting/templates/submitted.email:12
+#: templates/forgottenpassword.email:12
+msgid "Hello"
+msgstr "こんにちは"
+
+#: redistricting/templates/error.email:17
+msgid ""
+"We apologize for the inconvenience, but your uploaded file was not converted "
+"into a plan. There are a few reasons why this might have happened. As best "
+"we can tell, your file failed to upload for the following reason:"
+msgstr ""
+"申し訳ありません。ｱｯﾌﾟﾛｰﾄﾞされたﾌｧｲﾙが計画案に変換されませんでした。いくつか"
+"の理由が考えられます。おそらく、以下の理由によりﾌｧｲﾙのｱｯﾌﾟﾛｰﾄﾞに失敗しまし"
+"た。:"
+
+#: redistricting/templates/error.email:23
+msgid "If you correct this issue and upload your file again, we can try again."
+msgstr ""
+"この問題を直してからﾌｧｲﾙを再ｱｯﾌﾟﾛｰﾄﾞしてください。もう一度変換を行います。"
+
+#: redistricting/templates/error.email:25
+#: redistricting/templates/importedplan.email:28
+#: redistricting/templates/submitted.email:16
+#: templates/forgottenpassword.email:18
+msgid "Happy Redistricting!"
+msgstr "選挙区再編をお楽しみください！"
+
+#: redistricting/templates/error.email:26
+#: redistricting/templates/importedplan.email:29
+#: redistricting/templates/submitted.email:17
+#: templates/forgottenpassword.email:19
+msgid "The Public Mapping Team"
+msgstr "公共選挙区再編ﾁｰﾑ"
+
+#: redistricting/templates/importedplan.email:18
+msgid ""
+"Your plan was created successfully. You can view, edit, and share your new "
+"plan by logging in to DistrictBuilder, and pulling up the plan entitled"
+msgstr ""
+"計画案の作成に成功しました。DistrictBbuilderにログインして新しい計画案を見た"
+"り、編集・共有することができます。また該当する計画案を見ることができます。"
+
+#: redistricting/templates/importedplan.email:21
+msgid "There were a few errors during import:"
+msgstr "ｲﾝﾎﾟｰﾄ中にｴﾗｰが発生しました。:"
+
+#: redistricting/templates/leaderboard_panel_all.html:38
+msgid "Top"
+msgstr "ﾄｯﾌﾟ"
+
+#: redistricting/templates/leaderboard_panel_all.html:44
+#: redistricting/templates/leaderboard_panel_mine.html:42
+msgid "Rank"
+msgstr "ﾗﾝｸ"
+
+#: redistricting/templates/leaderboard_panel_all.html:45
+#: redistricting/templates/leaderboard_panel_mine.html:43
+#: templates/account.html:15
+msgid "User Name"
+msgstr "ﾕｰｻﾞｰ名:"
+
+#: redistricting/templates/leaderboard_panel_all.html:46
+#: redistricting/templates/leaderboard_panel_mine.html:44
+msgid "Plan Name"
+msgstr "計画案名"
+
+#: redistricting/templates/leaderboard_panel_all.html:47
+#: redistricting/templates/leaderboard_panel_mine.html:45
+msgid "Score"
+msgstr "ｽｺｱ"
+
+#: redistricting/templates/leaderboard_panel_mine.html:36
+#: redistricting/templates/viewplan.html:310
+msgid "My Plans"
+msgstr "マイ計画案"
+
+#: redistricting/templates/plan_comments.html:10
+msgid "Edit"
+msgstr "編集"
+
+#: redistricting/templates/plan_comments.html:12
+msgid "Type/s:"
+msgstr "ﾀｲﾌﾟ:"
+
+#: redistricting/templates/plan_comments.html:26
+msgid "Comments:"
+msgstr "3. ｺﾒﾝﾄ:"
+
+#: redistricting/templates/plan_summary.html:39
+msgid "Score (Target)"
+msgstr "ｽｺｱ（目標）"
+
+#: redistricting/templates/plan_summary.html:39
+msgid "Districts"
+msgstr "選挙区"
+
+#: redistricting/templates/printplan.html:37
+#: redistricting/templates/viewplan.html:44
+msgid "Open Source District Mapping Tool"
+msgstr "ｵｰﾌﾟﾝｿｰｽ選挙区再編計画ﾂｰﾙ"
+
+#: redistricting/templates/printplan.html:55
+msgid "Basemap:"
+msgstr "白地図:"
+
+#: redistricting/templates/printplan.html:55
+msgid "contributors"
+msgstr "参加ﾒﾝﾊﾞｰ"
+
+#: redistricting/templates/printplan.html:63
+msgid "Geography:"
+msgstr "地理:"
+
+#: redistricting/templates/printplan.html:75
+msgid "Districts:"
+msgstr "選挙区:"
+
+#: redistricting/templates/printplan.html:94
+#: redistricting/templates/printplan.html:97
+msgid "Author:"
+msgstr "作成者:"
+
+#: redistricting/templates/printplan.html:100
+msgid "Edited on:"
+msgstr "最終編集日時:"
+
+#: redistricting/templates/printplan.html:103
+msgid "Printed on:"
+msgstr "印刷日時:"
+
+#: redistricting/templates/printplan.html:109 templates/index.html:314
+msgid "Powered By DistrictBuilder"
+msgstr "Powered By DistrictBuilder"
+
+#: redistricting/templates/printplan.html:111 templates/index.html:317
+msgid "A project of"
+msgstr "ﾌﾟﾛｼﾞｪｸﾄ"
+
+#: redistricting/templates/report_panel.html:71
+msgid "Average"
+msgstr "平均"
+
+#: redistricting/templates/split_report.html:30
+#, python-format
+msgid "Total Splits with %(other_name)s:"
+msgstr "%(other_name)sの境界総数:"
+
+#: redistricting/templates/split_report.html:32
+msgid "indicates split"
+msgstr "境界"
+
+#: redistricting/templates/split_report.html:51
+msgid "Total splits"
+msgstr "境界総数"
+
+#: redistricting/templates/split_report.html:53
+#, python-format
+msgid "of %(numgeographies)s"
+msgstr "%(numgeographies)sのうち"
+
+#: redistricting/templates/split_report.html:67
+msgid "Type Summary By District"
+msgstr "選挙区ごとのﾀｲﾌﾟ概要"
+
+#: redistricting/templates/split_report.html:69
+#: redistricting/templates/split_report.html:95
+msgid "Type"
+msgstr "ﾀｲﾌﾟ"
+
+#: redistricting/templates/split_report.html:69
+msgid "Total By District"
+msgstr "選挙区ごとの総数"
+
+#: redistricting/templates/split_report.html:93
+#, python-format
+msgid "Type Summary for %(other_name)s"
+msgstr "%(other_name)sのﾀｲﾌﾟ概要"
+
+#: redistricting/templates/split_report.html:95
+msgid "Total"
+msgstr "総数"
+
+#: redistricting/templates/submission.email:12
+msgid "user name"
+msgstr "ﾕｰｻﾞｰ名:"
+
+#: redistricting/templates/submission.email:13
+msgid "plan id"
+msgstr "計画案ID"
+
+#: redistricting/templates/submission.email:14
+msgid "plan version"
+msgstr "計画案ﾊﾞｰｼﾞｮﾝ"
+
+#: redistricting/templates/submission.email:15
+msgid "plan name"
+msgstr "計画案名"
+
+#: redistricting/templates/submission.email:16
+msgid "legislative body"
+msgstr "議会"
+
+#: redistricting/templates/submitted.email:14
+msgid "Your plan"
+msgstr "あなたの計画案"
+
+#: redistricting/templates/submitted.email:14
+msgid "has been successfully submitted. Thank you for your submission."
+msgstr "は提出されました。ありがとうございました。"
+
+#: redistricting/templates/viewplan.html:41
+msgid "Redistricting plan by DistrictBuilder"
+msgstr "DistrictBuilderによる選挙区再編計画案"
+
+#: redistricting/templates/viewplan.html:42
+msgid ""
+"DistrictBuilder is web-based, open source software for collaborative "
+"redistricting."
+msgstr ""
+"DistrictBuilderは、ｳｪﾌﾞをﾍﾞｰｽとした、協力的な選挙区再編計画のｵｰﾌﾟﾝｿｰｽのｿﾌﾄｳｪｱ"
+"です。"
+
+#: redistricting/templates/viewplan.html:45
+msgid "Updated Plans from DistrictBuilder"
+msgstr "DistrictBuilderからの最新計画案"
+
+#: redistricting/templates/viewplan.html:46
+msgid "Recently Shared Plans from DistrictBuilder"
+msgstr "DistrictBuilderから最近共有された計画案"
+
+#: redistricting/templates/viewplan.html:239
+#: redistricting/templates/viewplan.html:883
+msgid "Plan"
+msgstr "計画案"
+
+#: redistricting/templates/viewplan.html:240
+msgid "Draw"
+msgstr "描く"
+
+#: redistricting/templates/viewplan.html:240
+msgid "View"
+msgstr "見る"
+
+#: redistricting/templates/viewplan.html:241
+msgid "Evaluate"
+msgstr "審査"
+
+#: redistricting/templates/viewplan.html:242
+msgid "Share"
+msgstr "共有"
+
+#: redistricting/templates/viewplan.html:244
+msgid "Leaderboards"
+msgstr "ｽｺｱﾎﾞｰﾄﾞ"
+
+#: redistricting/templates/viewplan.html:259 templates/index.html:164
+msgid "Login"
+msgstr "ログイン"
+
+#: redistricting/templates/viewplan.html:268
+msgid "My Account"
+msgstr "マイアカウント"
+
+#: redistricting/templates/viewplan.html:269
+msgid "Logout"
+msgstr "ログアウト"
+
+#: redistricting/templates/viewplan.html:282
+msgid "Choose a Plan. Start Drawing."
+msgstr "計画案を選んでください。再編を始めましょう。"
+
+#: redistricting/templates/viewplan.html:292
+msgid "Select District Layer"
+msgstr "選挙区Layerを選んでください"
+
+#: redistricting/templates/viewplan.html:303
+#: redistricting/templates/viewplan.html:305
+#: redistricting/templates/viewplan.html:1028
+msgid "Select Plan Type"
+msgstr "選挙区ﾀｲﾌﾟを選んでください"
+
+#: redistricting/templates/viewplan.html:308
+msgid "Template"
+msgstr "ﾃﾝﾌﾟﾚｰﾄ"
+
+#: redistricting/templates/viewplan.html:309
+msgid "Shared"
+msgstr "共有された"
+
+#: redistricting/templates/viewplan.html:311
+msgid "Upload Plan"
+msgstr "計画案をｱｯﾌﾟﾛｰﾄﾞ"
+
+#: redistricting/templates/viewplan.html:318
+#: redistricting/templates/viewplan.html:320
+msgid "Select Plan"
+msgstr "計画案を選択"
+
+#: redistricting/templates/viewplan.html:323
+msgid "Search"
+msgstr "検索"
+
+#: redistricting/templates/viewplan.html:328
+msgid "Upload a District Index file:"
+msgstr "選挙区ｲﾝﾃﾞｯｸｽﾌｧｲﾙをｱｯﾌﾟﾛｰﾄﾞ"
+
+#: redistricting/templates/viewplan.html:333
+msgid ""
+"You must choose a legislative body to which the new plan will be applied."
+msgstr "新しい計画案が該当する議会を選ぶ必要があります。"
+
+#: redistricting/templates/viewplan.html:336
+msgid "Select a body"
+msgstr "議会を選択"
+
+#: redistricting/templates/viewplan.html:351
+msgid ""
+"Please enter your email address so DistrictBuilder can send you a "
+"confirmation when your plan has been uploaded. Your email will not be saved "
+"or shared."
+msgstr ""
+"計画案のｱｯﾌﾟﾛｰﾄﾞが完了したときにDistrictBuilderから確認メールを送れるよう、"
+"Eﾒｰﾙｱﾄﾞﾚｽを入力してください。あなたのEﾒｰﾙｱﾄﾞﾚｽは保存・共有されることはありま"
+"せん。"
+
+#: redistricting/templates/viewplan.html:362
+#: redistricting/templates/viewplan.html:364
+msgid "Name Plan and Start Drawing:"
+msgstr "計画案に名前をつけ、再編をスタート:"
+
+#: redistricting/templates/viewplan.html:368
+msgid "Edit Selected Plan"
+msgstr "選択した計画案を編集"
+
+#: redistricting/templates/viewplan.html:369
+msgid "Copy and Save Selected Plan"
+msgstr "選択した計画案をｺﾋﾟｰして保存"
+
+#: redistricting/templates/viewplan.html:374
+msgid "Start Drawing"
+msgstr "再編をスタート"
+
+#: redistricting/templates/viewplan.html:381
+msgid "Plan Details"
+msgstr "計画案詳細"
+
+#: redistricting/templates/viewplan.html:382
+msgid "User Name:"
+msgstr "ﾕｰｻﾞｰ名:"
+
+#: redistricting/templates/viewplan.html:385
+msgid "Plan Name:"
+msgstr "計画案名:"
+
+#: redistricting/templates/viewplan.html:388
+msgid "Description:"
+msgstr "説明:"
+
+#: redistricting/templates/viewplan.html:391
+msgid "# of Districts:"
+msgstr "選挙区数:"
+
+#: redistricting/templates/viewplan.html:394
+msgid "Shared:"
+msgstr "共有済:"
+
+#: redistricting/templates/viewplan.html:397
+msgid "Last Modified:"
+msgstr "最終更新日時:"
+
+#: redistricting/templates/viewplan.html:402
+msgid "Edit Details"
+msgstr "詳細を編集"
+
+#: redistricting/templates/viewplan.html:404
+msgid "Cancel"
+msgstr "ｷｬﾝｾﾙ"
+
+#: redistricting/templates/viewplan.html:418
+msgid "Set Map<br/>Layers"
+msgstr "地図Layerを設定"
+
+#: redistricting/templates/viewplan.html:421
+msgid "Export"
+msgstr "出力"
+
+#: redistricting/templates/viewplan.html:423
+msgid "Print"
+msgstr "印刷"
+
+#: redistricting/templates/viewplan.html:424
+msgid "Shape File"
+msgstr ""
+
+#: redistricting/templates/viewplan.html:425
+msgid "Raw Data"
+msgstr "未加工ﾃﾞｰﾀ"
+
+#: redistricting/templates/viewplan.html:447
+msgid "Map Tools"
+msgstr "地図ﾂｰﾙ"
+
+#: redistricting/templates/viewplan.html:469
+msgid "Click on a district to see its ID."
+msgstr "IDを見るには選挙区をｸﾘｯｸしてください。"
+
+#: redistricting/templates/viewplan.html:504
+msgid "Edit Stats"
+msgstr "統計を編集"
+
+#: redistricting/templates/viewplan.html:509
+msgid "Statistics"
+msgstr "統計"
+
+#: redistricting/templates/viewplan.html:516
+msgid "Loading Statistics..."
+msgstr "統計を読み込んでいます..."
+
+#: redistricting/templates/viewplan.html:531
+msgid "Reference Layer:"
+msgstr "参考Layer:"
+
+#: redistricting/templates/viewplan.html:532
+#: redistricting/templates/viewplan.html:970
+#: redistricting/templates/viewplan.html:991
+#: redistricting/templates/viewplan.html:1007
+msgid "None"
+msgstr "該当なし"
+
+#: redistricting/templates/viewplan.html:556
+#, python-format
+msgid "Generate Splits Report for Current %(plan_text_title)s"
+msgstr "現在の%(plan_text_title)sの境界ﾚﾎﾟｰﾄを作成する"
+
+#: redistricting/templates/viewplan.html:558
+msgid "Select reference layer(s) for comparison."
+msgstr "比較する参考Layerを選択"
+
+#: redistricting/templates/viewplan.html:570
+msgid "Advanced options"
+msgstr "応用ｵﾌﾟｼｮﾝ"
+
+#: redistricting/templates/viewplan.html:573
+msgid "Reverse splits detection"
+msgstr "境界検出を元に戻す"
+
+#: redistricting/templates/viewplan.html:578
+msgid "Extended report: List all"
+msgstr "詳細ﾚﾎﾟｰﾄ: 全てﾘｽﾄする"
+
+#: redistricting/templates/viewplan.html:580
+msgid "districts or communities contained within each district."
+msgstr "選挙区、または各選挙区内の地域"
+
+#: redistricting/templates/viewplan.html:583
+msgid ""
+"(Choosing this option will significantly increase the amount of time it "
+"takes to generate the report.)"
+msgstr "（このｵﾌﾟｼｮﾝを選ぶとﾚﾎﾟｰﾄ作成の時間が長くなります。）"
+
+#: redistricting/templates/viewplan.html:588
+msgid "Generate Report"
+msgstr "ﾚﾎﾟｰﾄを作成する"
+
+#: redistricting/templates/viewplan.html:592
+msgid "Splits Report"
+msgstr "境界ﾚﾎﾟｰﾄ"
+
+#: redistricting/templates/viewplan.html:594
+msgid "No report generated."
+msgstr "ﾚﾎﾟｰﾄが作成されませんでした。"
+
+#: redistricting/templates/viewplan.html:620
+msgid "Map Legend"
+msgstr "地図凡例"
+
+#: redistricting/templates/viewplan.html:638
+msgid "Total Population"
+msgstr "人口総数"
+
+#: redistricting/templates/viewplan.html:662
+msgid "Far Over Target"
+msgstr "目標数をかなり超過"
+
+#: redistricting/templates/viewplan.html:666
+msgid "Over Target"
+msgstr "目標数を超過"
+
+#: redistricting/templates/viewplan.html:670
+msgid "Within Target"
+msgstr "目標数を達成"
+
+#: redistricting/templates/viewplan.html:674
+msgid "Under Target"
+msgstr "目標数に届きません"
+
+#: redistricting/templates/viewplan.html:678
+msgid "Far Under Target"
+msgstr "目標数に遠く届きません"
+
+#: redistricting/templates/viewplan.html:688
+msgid "Locked For Editing"
+msgstr "編集ﾛｯｸ済"
+
+#: redistricting/templates/viewplan.html:695
+msgid "Highlighted"
+msgstr "強調表示"
+
+#: redistricting/templates/viewplan.html:702
+msgid "Reference"
+msgstr "参考"
+
+#: redistricting/templates/viewplan.html:708
+msgid "reference"
+msgstr "参考"
+
+#: redistricting/templates/viewplan.html:718
+msgid "Evaluate Statistics"
+msgstr "統計を審査"
+
+#: redistricting/templates/viewplan.html:724
+msgid ""
+"Select the plan statistics you'd like included in a comprehensive report on "
+"your redistricting plan.  After you've made your selections click \"Create "
+"and Preview Report\" to view the final report."
+msgstr ""
+"再編計画案の総合ﾚﾎﾟｰﾄに入れる計画案統計を選んだあと、「ﾚﾎﾟｰﾄを作成してﾌﾟ"
+"ﾚﾋﾞｭｰ」をｸﾘｯｸすると最終ﾚﾎﾟｰﾄを見ることができます。"
+
+#: redistricting/templates/viewplan.html:728
+msgid "Create and Preview New Report"
+msgstr "新しいﾚﾎﾟｰﾄを作成してﾌﾟﾚﾋﾞｭｰ"
+
+#: redistricting/templates/viewplan.html:732
+msgid "Please generate a report<br/>to preview statistics"
+msgstr "統計を見るにはﾚﾎﾟｰﾄを作成してください。"
+
+#: redistricting/templates/viewplan.html:751
+msgid "Top Ranked Users' Plans"
+msgstr "ﾄｯﾌﾟにﾗﾝｸｲﾝしたﾕｰｻﾞｰの計画案"
+
+#: redistricting/templates/viewplan.html:753
+msgid "My Ranked Plans"
+msgstr "ﾗﾝｸｲﾝした自分の計画案"
+
+#: redistricting/templates/viewplan.html:779
+msgid "Select Legislative Body"
+msgstr "議会を選択"
+
+#: redistricting/templates/viewplan.html:803
+#, fuzzy, python-format
+msgid "Share a %(plan_text_title)s"
+msgstr "%(plan_text)sを共有"
+
+#: redistricting/templates/viewplan.html:816
+msgid "This plan has been shared"
+msgstr "この計画案は共有されました"
+
+#: redistricting/templates/viewplan.html:817
+msgid ""
+"Anyone can view this plan by visiting the following URL in a web browser:"
+msgstr "このURLから誰でもこの計画案を見ることができます。"
+
+#: redistricting/templates/viewplan.html:825 templates/index.html:135
+msgid "Tweet"
+msgstr "ﾂｲｰﾄする"
+
+#: redistricting/templates/viewplan.html:846
+msgid "Plan File Export"
+msgstr "ﾌﾟﾗﾝﾌｧｲﾙを出力"
+
+#: redistricting/templates/viewplan.html:847
+#, python-format
+msgid ""
+"\n"
+"                  The %(bmlll)s index file is a comma-separated-value file "
+"(csv).\n"
+"                  Each line lists the unique id of the building blocks of "
+"each %(plan_text)s \n"
+"                  (such as ward, census block, etc.) and the district to "
+"which it belongs. This \n"
+"                  file can be imported to your account or someone else's "
+"account or used in analysis\n"
+"                  of the %(plan_text)s using other GIS software.\n"
+"                  "
+msgstr ""
+
+#: redistricting/templates/viewplan.html:883
+msgid "Community Map"
+msgstr "地域ﾏｯﾌﾟ"
+
+#: redistricting/templates/viewplan.html:884
+msgid "Name:"
+msgstr "名前:"
+
+#: redistricting/templates/viewplan.html:894
+msgid "Please select a plan"
+msgstr "計画案を選択してください"
+
+#: redistricting/templates/viewplan.html:908
+msgid "Currently Viewing:"
+msgstr "現在見ている計画案："
+
+#: redistricting/templates/viewplan.html:937
+msgid "Plan not saved"
+msgstr "計画案が保存されませんでした"
+
+#: redistricting/templates/viewplan.html:942
+#: redistricting/templates/viewplan.html:943
+#: redistricting/templates/viewplan.html:944
+msgid "Please Wait"
+msgstr "少々お待ちください..."
+
+#: redistricting/templates/viewplan.html:942
+#, python-format
+msgid "Please wait. New %(body_members)s are computed..."
+msgstr "少々お待ちください。新しい%(body_members)sを計算しています..."
+
+#: redistricting/templates/viewplan.html:943
+msgid "Please wait. Data is being retrieved..."
+msgstr "少々お待ちください。ﾃﾞｰﾀを読み込んでいます..."
+
+#: redistricting/templates/viewplan.html:944
+msgid "Please wait. Plan is being validated. This may take a few minutes."
+msgstr "少々お待ちください。計画案を確認しています。"
+
+#: redistricting/templates/viewplan.html:968
+#, python-format
+msgid "Select %(layer_type)s Thematic Map"
+msgstr "%(layer_type)sのﾃｰﾏﾏｯﾌﾟを選択"
+
+#: redistricting/templates/viewplan.html:981
+msgid "Choose District Thematic Map"
+msgstr "選挙区ﾃｰﾏﾏｯﾌﾟを選択"
+
+#: redistricting/templates/viewplan.html:1005
+msgid "Choose a Reference Layer"
+msgstr "参考Layerを選択"
+
+#: redistricting/templates/viewplan.html:1016
+msgid "Show Labels?"
+msgstr "名前を見せますか？"
+
+#: redistricting/templates/viewplan.html:1019
+msgid "OR..."
+msgstr "もしくは..."
+
+#: redistricting/templates/viewplan.html:1021
+msgid "Choose a:<br/>legislative district or community map<br/>reference layer"
+msgstr "選挙区か地域ﾏｯﾌﾟLayerを選択"
+
+#: redistricting/templates/viewplan.html:1035
+msgid "Select Plan to Display as Reference Layer"
+msgstr "参考Layerとして表示する計画案を選択"
+
+#: redistricting/templates/viewplan.html:1040
+msgid "OK"
+msgstr "OK."
+
+#: redistricting/templates/viewplan.html:1077
+#, fuzzy
+msgid "Edit Statistics Sets"
+msgstr "統計ｾｯﾄに名前をつける"
+
+#: redistricting/templates/viewplan.html:1079
+msgid ""
+"You can select up to three statistics at once to display in \n"
+"        the sidebar. Each set of three statistics will be saved in the "
+"dropdown \n"
+"        for you to select or edit later. You may have up to three sets of \n"
+"        statistics saved."
+msgstr ""
+
+#: redistricting/templates/viewplan.html:1084
+msgid "Select up to 3 statistics"
+msgstr "統計を３つまで選択"
+
+#: redistricting/templates/viewplan.html:1085
+msgid "Clear Choices"
+msgstr "選択を解除する"
+
+#: redistricting/templates/viewplan.html:1089
+msgid "Name Statistics Set"
+msgstr "統計ｾｯﾄに名前をつける"
+
+#: redistricting/templates/viewplan.html:1091
+msgid "Save Set"
+msgstr "ｾｯﾄを保存"
+
+#: redistricting/templates/viewplan.html:1094
+msgid "... Or select a saved statistics set"
+msgstr "... もしくは、保存した統計ｾｯﾄを選択"
+
+#: redistricting/templatetags/redistricting_extras.py:43
 msgid "zero"
 msgstr "０"
 
-#: redistricting/templatetags/redistricting_extras.py:63
+#: redistricting/templatetags/redistricting_extras.py:43
 msgid "one"
 msgstr "ひとつ"
 
-#: redistricting/templatetags/redistricting_extras.py:63
+#: redistricting/templatetags/redistricting_extras.py:43
 msgid "two"
 msgstr "ふたつ"
 
-#: redistricting/templatetags/redistricting_extras.py:63
+#: redistricting/templatetags/redistricting_extras.py:43
 msgid "three"
 msgstr "三つ"
 
-#: redistricting/templatetags/redistricting_extras.py:63
+#: redistricting/templatetags/redistricting_extras.py:43
 msgid "four"
 msgstr "四つ"
 
-#: redistricting/templatetags/redistricting_extras.py:63
+#: redistricting/templatetags/redistricting_extras.py:43
 msgid "five"
 msgstr "五つ"
 
-#: redistricting/templatetags/redistricting_extras.py:63
+#: redistricting/templatetags/redistricting_extras.py:43
 msgid "six"
 msgstr "六つ"
 
-#: redistricting/templatetags/redistricting_extras.py:63
+#: redistricting/templatetags/redistricting_extras.py:43
 msgid "seven"
 msgstr "七つ"
 
-#: redistricting/templatetags/redistricting_extras.py:63
+#: redistricting/templatetags/redistricting_extras.py:43
 msgid "eight"
 msgstr "八つ"
 
-#: redistricting/templatetags/redistricting_extras.py:63
+#: redistricting/templatetags/redistricting_extras.py:43
 msgid "nine"
 msgstr "九つ"
 
-#: redistricting/templatetags/redistricting_extras.py:64
+#: redistricting/templatetags/redistricting_extras.py:44
 msgid "ten"
 msgstr "10個"
 
-#: redistricting/templatetags/redistricting_extras.py:64
+#: redistricting/templatetags/redistricting_extras.py:44
 msgid "eleven"
 msgstr "11個"
 
-#: redistricting/templatetags/redistricting_extras.py:64
+#: redistricting/templatetags/redistricting_extras.py:44
 msgid "twelve"
 msgstr "12個"
 
-#: redistricting/templatetags/redistricting_extras.py:64
+#: redistricting/templatetags/redistricting_extras.py:44
 msgid "thirteen"
 msgstr "13個"
 
-#: redistricting/templatetags/redistricting_extras.py:64
+#: redistricting/templatetags/redistricting_extras.py:44
 msgid "fourteen"
 msgstr "14個"
 
-#: redistricting/templatetags/redistricting_extras.py:64
+#: redistricting/templatetags/redistricting_extras.py:44
 msgid "fifteen"
 msgstr "15個"
 
-#: redistricting/templatetags/redistricting_extras.py:64
+#: redistricting/templatetags/redistricting_extras.py:44
 msgid "sixteen"
 msgstr "16個"
 
-#: redistricting/templatetags/redistricting_extras.py:65
+#: redistricting/templatetags/redistricting_extras.py:45
 msgid "seventeen"
 msgstr "17個"
 
-#: redistricting/templatetags/redistricting_extras.py:65
+#: redistricting/templatetags/redistricting_extras.py:45
 msgid "eighteen"
 msgstr "18個"
 
-#: redistricting/templatetags/redistricting_extras.py:65
+#: redistricting/templatetags/redistricting_extras.py:45
 msgid "nineteen"
 msgstr "19個"
 
-#: redistricting/templatetags/redistricting_extras.py:65
+#: redistricting/templatetags/redistricting_extras.py:45
 msgid "twenty"
 msgstr "20個"
 
-#~ msgid "Hello Admin"
-#~ msgstr "こんにちはAdminさん"
-
-#~ msgid "There was a problem importing a plan file from user"
-#~ msgstr "ﾕｰｻﾞｰからのﾌﾟﾗﾝﾌｧｲﾙの取り込みに問題が生じました"
-
-#~ msgid ""
-#~ "This user attempted to upload a file containing a plan but had some "
-#~ "trouble.  The plan may have been imported."
-#~ msgstr ""
-#~ "このﾕｰｻﾞｰは計画案の入ったﾌｧｲﾙをｱｯﾌﾟﾛｰﾄﾞしようとしましたが、成功しませんで"
-#~ "した。計画案は取り込まれた可能性があります。"
-
-#~ msgid "Plan name"
-#~ msgstr "計画案名"
-
-#~ msgid ""
-#~ "If the user continues to have problems with this process, please check "
-#~ "the application settings."
-#~ msgstr ""
-#~ "このﾌﾟﾛｾｽに問題が続くようであれば、ｱﾌﾟﾘｹｰｼｮﾝ設定を確認してください。"
-
-#~ msgid "Thank you."
-#~ msgstr "ありがとうございます。"
-
-#~ msgid "Dist."
-#~ msgstr "選挙区"
-
-#~ msgid "Sorry, there is no demographic data for this plan"
-#~ msgstr "この計画案には人口統計ﾃﾞｰﾀがありません。"
-
-#~ msgid "Stats Legend"
-#~ msgstr "統計凡例"
-
-#~ msgid "Far over target"
-#~ msgstr "目標数をかなり超過"
-
-#~ msgid "Over target"
-#~ msgstr "目標数を超過"
-
-#~ msgid "Meets target"
-#~ msgstr "目標数を達成"
-
-#~ msgid "Under target"
-#~ msgstr "目標数に届きません"
-
-#~ msgid "Far Under target"
-#~ msgstr "目標数に遠く届きません"
-
-#~ msgid "Contiguity"
-#~ msgstr "近接性"
-
-#~ msgid "Contiguous"
-#~ msgstr "近接"
-
-#~ msgid "Non-contiguous"
-#~ msgstr "非近接"
-
-#~ msgid "Community"
-#~ msgstr "地域"
-
-#~ msgid "Undo"
-#~ msgstr "元に戻す"
-
-#~ msgid "Redo"
-#~ msgstr "やり直し"
-
-#~ msgid "Map Editing"
-#~ msgstr "地図編集"
-
-#~ msgid "Tools"
-#~ msgstr "ﾂｰﾙ"
-
-#~ msgid "Pan"
-#~ msgstr "ﾊﾟﾝ操作"
-
-#~ msgid "Click on a geounit to see its demographic info."
-#~ msgstr "人口統計情報を見るには地域単位をｸﾘｯｸしてください。"
-
-#~ msgid "Info"
-#~ msgstr "情報"
-
-#~ msgid ""
-#~ "Single %(body_member_long_label)s select; +Shift to select multiple "
-#~ "%(body_members)s"
-#~ msgstr ""
-#~ "単独%(body_member_long_label)s選択; 複数の%(body_members)sを選択するには"
-#~ "+Shift を押してください"
-
-#, fuzzy
-#~ msgid "Single<br/>Select"
-#~ msgstr "単独<br/>選択 "
-
-#~ msgid "Select by rectangle"
-#~ msgstr "四角範囲選択"
-
-#~ msgid "Rectangle<br/>Select"
-#~ msgstr "四角<br/>選択"
-
-#~ msgid "Select by drawing a polygon"
-#~ msgstr "多角形を描いて選択"
-
-#~ msgid "Polygon"
-#~ msgstr "Polígono"
-
-#~ msgid "Select"
-#~ msgstr "Seleccionar"
-
-#~ msgid ""
-#~ "Enable anchor mode, then select a %(body_member_long_label)s name to "
-#~ "repeatedly assign areas to a %(body_member_long_label)s"
-#~ msgstr ""
-#~ "ｱﾝｶｰﾓｰﾄﾞを有効にし、%(body_member_long_label)sの名前を選択する"
-#~ "と%(body_member_long_label)sに繰り返し配置されます。"
-
-#~ msgid "Anchor<br/>%(district_label)s"
-#~ msgstr "<br/>%(district_label)sをｱﾝｶｰ選択"
-
-#~ msgid "Assign to %(district_label)s"
-#~ msgstr "%(district_label)sに配置する"
-
-#~ msgid ""
-#~ "Assign %(body_members)s currently selected on map by choosing a "
-#~ "%(body_member_long_label)s name from drop down list"
-#~ msgstr ""
-#~ "現在地図上で選択されている%(body_members)sを配置するに"
-#~ "は%(body_member_long_label)sの名前をﾄﾞﾛｯﾌﾟﾀｳﾝﾘｽﾄから選択してください"
-
-#~ msgid "Select One"
-#~ msgstr "単独選択"
-
-#~ msgid "New %(district_label)s"
-#~ msgstr "新しい%(district_label)s"
-
-#~ msgid ""
-#~ "Select areas on the map then drag them to into a %(body_member_long_label)"
-#~ "s for reassignment"
-#~ msgstr ""
-#~ "地図上のｴﾘｱを選択し%(body_member_long_label)sの中にﾄﾞﾗｯｸﾞすると再配置でき"
-#~ "ます"
-
-#~ msgid "Click and<br/>Drag"
-#~ msgstr "ｸﾘｯｸしてﾄﾞﾗｯｸﾞ"
-
-#~ msgid "Perform automated resolution of minor unassigned geographies"
-#~ msgstr "配置されていないｴﾘｱを自動配置する"
-
-#~ msgid "Fix<br/>Unassigned"
-#~ msgstr "未配置の修復"
-
-#~ msgid "Click on a %(body_member_long_label)s to lock or unlock it."
-#~ msgstr "ﾛｯｸ・ﾛｯｸ解除するには%(body_member_long_label)sをｸﾘｯｸしてください。"
-
-#~ msgid "Lock"
-#~ msgstr "ﾛｯｸ"
-
-#~ msgid "Click on a %(body_member_long_label)s to see its ID."
-#~ msgstr "IDを見るには%(body_member_long_label)sをｸﾘｯｸしてください。"
-
-#~ msgid "Unassign all the units in a %(body_member_long_label)s"
-#~ msgstr "%(body_member_long_label)sの中のﾕﾆｯﾄをすべて配置から外す"
-
-#~ msgid "Unassign"
-#~ msgstr "配置解除"
-
-#~ msgid "Copy a %(body_member_long_label)s from another %(plan_text)s"
-#~ msgstr "他の%(plan_text)sから%(body_member_long_label)sをｺﾋﾟｰする"
-
-#~ msgid "Copy and</br>Paste"
-#~ msgstr "ｺﾋﾟｰ･ﾍﾟｰｽﾄ"
-
-#~ msgid "Show<br/>Splits"
-#~ msgstr "境界を表示"
-
-#~ msgid "Generate<br/>Splits Report"
-#~ msgstr "境界のﾚﾎﾟｰﾄを作成する"
-
-#~ msgid "Select Multi-<br/>Member Districts"
-#~ msgstr "複数定員区を選択"
-
-#~ msgid "Submit Final Plan to Contest"
-#~ msgstr "最終計画案をｺﾝﾃｽﾄに提出する"
-
-#~ msgid ""
-#~ "You can submit your completed plan to be considered for the contest by "
-#~ "filling out this form."
-#~ msgstr "完成した計画案をｺﾝﾃｽﾄに提出するにはこのﾌｫｰﾑを記入してください。"
-
-#~ msgid "Submit Final Plan"
-#~ msgstr "最終計画案を提出"
-
-#~ msgid "Share Plan With All Users"
-#~ msgstr "計画案を全てのﾕｰｻﾞｰと共有する"
-
-#~ msgid ""
-#~ "By sharing a copy of your %(plan_text)s below, you are making your "
-#~ "%(plan_text)s available to all other users in the system. Give your "
-#~ "%(plan_text)s a unique name in order to share it. A copy of your current "
-#~ "%(plan_text)s will be added to the \"Shared\" section of the plan chooser."
-#~ msgstr ""
-#~ "下記の%(plan_text)sを共有すると、%(plan_text)sをｼｽﾃﾑ内のﾕｰｻﾞｰ全員が見るこ"
-#~ "とができます。共有するには、%(plan_text)sに特有の名前をつけてください。現"
-#~ "在の%(plan_text)sが「共有」ｾｸｼｮﾝの計画案選択表に追加されます。"
-
-#~ msgid "Name your shared %(plan_text)s"
-#~ msgstr "共有した%(plan_text)sに名前をつける"
-
-#~ msgid "Save and Share"
-#~ msgstr "保存して共有"
-
-#~ msgid "Congratulations!"
-#~ msgstr "おめでとうございます！"
-
-#~ msgid ""
-#~ "You have successfully shared your %(plan_text)s. You can share your "
-#~ "%(plan_text)s with others by giving them this link:"
-#~ msgstr ""
-#~ "%(plan_text)sの共有に成功しました。このﾘﾝｸを使ってあなたの%(plan_text)sを"
-#~ "他の人に見せることができます:"
-
-#~ msgid "Continue Editing Current %(plantext)s"
-#~ msgstr "現在の%(plantext)sの編集を続ける"
-
-#~ msgid "Select New %(plan_text)s to Edit"
-#~ msgstr "新しい%(plan_text)sを選択して編集"
-
-#~ msgid "Verify and Submit Plan to Leaderboards"
-#~ msgstr "計画案を照合してｽｺｱﾎﾞｰﾄﾞに提出する"
-
-#~ msgid ""
-#~ "In order to be considered for placement on the leaderboards your plan "
-#~ "must meet the criteria for creating a legal redistricitng plan. Keep in "
-#~ "mind that as soon as you edit a verified plan, it will automatically "
-#~ "become \"unverified\" and you will need to re-verify it in order for it "
-#~ "to again be considered for the leaderboards."
-#~ msgstr ""
-#~ "ｽｺｱﾎﾞｰﾄﾞに表示するには、あなたの計画案が選挙区再編のﾙｰﾙを満たしている必要"
-#~ "があります。照合済み計画案をもう一度編集すると、自動的に「未照合」になり、"
-#~ "再度照合をするまでｽｺｱﾎﾞｰﾄﾞに提出できなくなります。"
-
-#~ msgid ""
-#~ "By verifying your plan, you are <em><strong>not</strong></em> sharing "
-#~ "your plan with other users. Your plan title and user name will simply "
-#~ "show up in the top ten lists (if your plan ranks in the top ten)."
-#~ msgstr ""
-#~ "計画案を照合しただけでは計画案を共有することにはなりません。あなたの計画案"
-#~ "がもしﾄｯﾌﾟ10にﾗﾝｸｲﾝした場合、計画案名とﾕｰｻﾞｰ名のみがﾄｯﾌﾟ10ﾘｽﾄに表示されま"
-#~ "す。"
-
-#~ msgid "How to verify and submit your plan:"
-#~ msgstr "計画案を照合・提出するには:"
-
-#~ msgid "Click the \"Verify and Submit to Leaderboards\" button."
-#~ msgstr "「照合しｽｺｱﾎﾞｰﾄﾞに提出する」ﾎﾞﾀﾝをｸﾘｯｸしてください。"
-
-#~ msgid "If verified, you will be taken to the Leaderboard page."
-#~ msgstr "照合が済むと、ｽｺｱﾎﾞｰﾄﾞﾍﾟｰｼﾞに移ります。"
-
-#~ msgid ""
-#~ "Check the leaderboards to see if your plan ranks in any of the top ten "
-#~ "score types."
-#~ msgstr "あなたの計画案がﾄｯﾌﾟ10に入ったかどうかをｽｺｱﾎﾞｰﾄﾞで確認できます。"
-
-#~ msgid ""
-#~ "Choose communities to paste into your map. A map can contain any number "
-#~ "of communities. If you would like to remove communities from your map, "
-#~ "use the community unassign tool."
-#~ msgstr ""
-#~ "地図に貼り付ける地域を選んでください。ひとつの地図にはいくつでも地域を入れ"
-#~ "ることができます。地図から地域を削除したい場合は、地域配置解除ﾂｰﾙを使って"
-#~ "ください。"
-
-#~ msgid ""
-#~ "Choose districts to paste into your plan.  A plan has a maximum number of "
-#~ "districts allowed by law.  If you would like to paste districts into a "
-#~ "plan, you must have fewer districts in your plan than the maximum "
-#~ "allowed.  If you would like to remove districts from your plan, use the "
-#~ "district unassign tool."
-#~ msgstr ""
-#~ "計画案に貼り付ける選挙区を選んでください。計画案ごとに法律で定められた選挙"
-#~ "区数の上限があります。計画案に選挙区を入れるときは、その上限以下の選挙区数"
-#~ "にする必要があります。計画案から選挙区を削除したい場合は、選挙区配置解除ﾂｰ"
-#~ "ﾙを使ってください。"
-
-#~ msgid "1. Choose %(plantext)s"
-#~ msgstr "1. %(plantext)sを選択する"
-
-#~ msgid "2. Select %(bodymember)s to copy"
-#~ msgstr "2. %(bodymember)sを選択してｺﾋﾟｰ"
-
-#~ msgid "Click on a %(body_member_long_label)s's name to see a map"
-#~ msgstr "地図を見るには%(body_member_long_label)sの名前をｸﾘｯｸしてください"
-
-#~ msgid ""
-#~ "3. Paste selected %(body_member_long_label)s into working %(plan_text)s"
-#~ msgstr ""
-#~ "3. 選択した%(body_member_long_label)sを現在編集中の%(plan_text)sに貼り付け"
-#~ "る"
-
-#~ msgid ""
-#~ "Click on a row to edit the number of members for the selected district. "
-#~ "Press ENTER to complete editing a district."
-#~ msgstr ""
-#~ "選択した選挙区の定員数を変えるには、列をｸﾘｯｸしてください。ENTERを押すと編"
-#~ "集が完了します。"
-
-#~ msgid ""
-#~ "When all desired edits are made, press the Save button to save all "
-#~ "changes to the database."
-#~ msgstr "必要な編集が全て終わったら、「保存」ﾎﾞﾀﾝを押して変更を保存します。"
-
-#~ msgid "Target # of representatives:"
-#~ msgstr "選出者目標数:"
-
-#~ msgid "Target # of multi-member districts:"
-#~ msgstr "複数定員区目標数:"
-
-#~ msgid "Target # of members per multi-member district:"
-#~ msgstr "複数定員区の目標定員数:"
-
-#~ msgid ""
-#~ "Your plan currently has <span id=\"multi_num_reps\" class=\"multi_val\"></"
-#~ "span> representatives."
-#~ msgstr ""
-#~ "あなたの計画案には現在<span id=\"multi_num_reps\" class=\"multi_val\"></"
-#~ "span>人の選出者がいます。"
-
-#~ msgid ""
-#~ "Your plan currently has <span id=\"multi_num_dists\" class=\"multi_val"
-#~ "\"></span> multi-member districts."
-#~ msgstr ""
-#~ "あなたの計画案には現在<span id=\"multi_num_dists\" class=\"multi_val\"></"
-#~ "span>個の複数定員区があります。"
-
-#~ msgid "Save"
-#~ msgstr "保存"
-
-#~ msgid "First Name"
-#~ msgstr "名"
-
-#~ msgid "Last Name"
-#~ msgstr "姓"
-
-#~ msgid "Full Names of Team Members (if applicable)"
-#~ msgstr "（該当する場合）ﾁｰﾑﾒﾝﾊﾞｰの氏名"
-
-#~ msgid "Team Name (if applicable)"
-#~ msgstr "（該当する場合）ﾁｰﾑ名"
-
-#~ msgid "Email Address"
-#~ msgstr "Ｅメールアドレス"
-
-#~ msgid "Street Address"
-#~ msgstr "住所"
-
-#~ msgid "Phone Number"
-#~ msgstr "電話番号"
-
-#~ msgid ""
-#~ "Values &ndash; tell us what values, considerations and trade-offs you "
-#~ "made in your plan:"
-#~ msgstr ""
-#~ "価値観 &ndash; この計画案の作成にどのような価値観、考慮、また取引が反映さ"
-#~ "れていますか。:"
-
-#~ msgid "Indicates required field"
-#~ msgstr "必須項目"
-
-#~ msgid "Community Info"
-#~ msgstr "地域情報"
-
-#~ msgid "0"
-#~ msgstr "0"
-
-#~ msgid "1. Edit Community Label:"
-#~ msgstr "1. 地域名を編集:"
-
-#~ msgid "2. Edit Community Type:"
-#~ msgstr "2. 地域ﾀｲﾌﾟを編集:"
-
-#~ msgid "3. Comments:"
-#~ msgstr "3. ｺﾒﾝﾄ:"
-
-#~ msgid "Oops!"
-#~ msgstr "おぉっと！"
-
-#~ msgid "Sorry, your information could not be saved. Please try again later."
-#~ msgstr ""
-#~ "残念ながら、あなたの情報は保存されませんでした。しばらく経ってからやり直し"
-#~ "てください。"
-
-#~ msgid "Hello"
-#~ msgstr "こんにちは"
-
-#~ msgid ""
-#~ "We apologize for the inconvenience, but your uploaded file was not "
-#~ "converted into a plan. There are a few reasons why this might have "
-#~ "happened. As best we can tell, your file failed to upload for the "
-#~ "following reason:"
-#~ msgstr ""
-#~ "申し訳ありません。ｱｯﾌﾟﾛｰﾄﾞされたﾌｧｲﾙが計画案に変換されませんでした。いくつ"
-#~ "かの理由が考えられます。おそらく、以下の理由によりﾌｧｲﾙのｱｯﾌﾟﾛｰﾄﾞに失敗しま"
-#~ "した。:"
-
-#~ msgid ""
-#~ "If you correct this issue and upload your file again, we can try again."
-#~ msgstr ""
-#~ "この問題を直してからﾌｧｲﾙを再ｱｯﾌﾟﾛｰﾄﾞしてください。もう一度変換を行います。"
-
-#~ msgid "Happy Redistricting!"
-#~ msgstr "選挙区再編をお楽しみください！"
-
-#~ msgid "The Public Mapping Team"
-#~ msgstr "公共選挙区再編ﾁｰﾑ"
-
-#~ msgid ""
-#~ "Your plan was created successfully. You can view, edit, and share your "
-#~ "new plan by logging in to DistrictBuilder, and pulling up the plan "
-#~ "entitled"
-#~ msgstr ""
-#~ "計画案の作成に成功しました。DistrictBbuilderにログインして新しい計画案を見"
-#~ "たり、編集・共有することができます。また該当する計画案を見ることができま"
-#~ "す。"
-
-#~ msgid "There were a few errors during import:"
-#~ msgstr "ｲﾝﾎﾟｰﾄ中にｴﾗｰが発生しました。:"
-
-#~ msgid "Top"
-#~ msgstr "ﾄｯﾌﾟ"
-
-#~ msgid "Rank"
-#~ msgstr "ﾗﾝｸ"
-
-#~ msgid "User Name"
-#~ msgstr "ﾕｰｻﾞｰ名:"
-
-#~ msgid "Plan Name"
-#~ msgstr "計画案名"
-
-#~ msgid "Score"
-#~ msgstr "ｽｺｱ"
-
-#~ msgid "My Plans"
-#~ msgstr "マイ計画案"
-
-#~ msgid "Edit"
-#~ msgstr "編集"
-
-#~ msgid "Type/s:"
-#~ msgstr "ﾀｲﾌﾟ:"
-
-#~ msgid "Comments:"
-#~ msgstr "3. ｺﾒﾝﾄ:"
-
-#~ msgid "Score (Target)"
-#~ msgstr "ｽｺｱ（目標）"
-
-#~ msgid "Districts"
-#~ msgstr "選挙区"
-
-#~ msgid "Open Source District Mapping Tool"
-#~ msgstr "ｵｰﾌﾟﾝｿｰｽ選挙区再編計画ﾂｰﾙ"
-
-#~ msgid "Basemap:"
-#~ msgstr "白地図:"
-
-#~ msgid "contributors"
-#~ msgstr "参加ﾒﾝﾊﾞｰ"
-
-#~ msgid "Geography:"
-#~ msgstr "地理:"
-
-#~ msgid "Districts:"
-#~ msgstr "選挙区:"
-
-#~ msgid "Author:"
-#~ msgstr "作成者:"
-
-#~ msgid "Edited on:"
-#~ msgstr "最終編集日時:"
-
-#~ msgid "Printed on:"
-#~ msgstr "印刷日時:"
-
-#~ msgid "Powered By DistrictBuilder"
-#~ msgstr "Powered By DistrictBuilder"
-
-#~ msgid "A project of"
-#~ msgstr "ﾌﾟﾛｼﾞｪｸﾄ"
-
-#~ msgid "Average"
-#~ msgstr "平均"
-
-#~ msgid "Total Splits with %(other_name)s:"
-#~ msgstr "%(other_name)sの境界総数:"
-
-#~ msgid "indicates split"
-#~ msgstr "境界"
-
-#~ msgid "Total splits"
-#~ msgstr "境界総数"
-
-#~ msgid "of %(numgeographies)s"
-#~ msgstr "%(numgeographies)sのうち"
-
-#~ msgid "Type Summary By District"
-#~ msgstr "選挙区ごとのﾀｲﾌﾟ概要"
-
-#~ msgid "Type"
-#~ msgstr "ﾀｲﾌﾟ"
-
-#~ msgid "Total By District"
-#~ msgstr "選挙区ごとの総数"
-
-#~ msgid "Type Summary for %(other_name)s"
-#~ msgstr "%(other_name)sのﾀｲﾌﾟ概要"
-
-#~ msgid "Total"
-#~ msgstr "総数"
-
-#~ msgid "user name"
-#~ msgstr "ﾕｰｻﾞｰ名:"
-
-#~ msgid "plan id"
-#~ msgstr "計画案ID"
-
-#~ msgid "plan version"
-#~ msgstr "計画案ﾊﾞｰｼﾞｮﾝ"
-
-#~ msgid "plan name"
-#~ msgstr "計画案名"
-
-#~ msgid "legislative body"
-#~ msgstr "議会"
-
-#~ msgid "Your plan"
-#~ msgstr "あなたの計画案"
-
-#~ msgid "has been successfully submitted. Thank you for your submission."
-#~ msgstr "は提出されました。ありがとうございました。"
-
-#~ msgid "Redistricting plan by DistrictBuilder"
-#~ msgstr "DistrictBuilderによる選挙区再編計画案"
-
-#~ msgid ""
-#~ "DistrictBuilder is web-based, open source software for collaborative "
-#~ "redistricting."
-#~ msgstr ""
-#~ "DistrictBuilderは、ｳｪﾌﾞをﾍﾞｰｽとした、協力的な選挙区再編計画のｵｰﾌﾟﾝｿｰｽの"
-#~ "ｿﾌﾄｳｪｱです。"
-
-#~ msgid "Updated Plans from DistrictBuilder"
-#~ msgstr "DistrictBuilderからの最新計画案"
-
-#~ msgid "Recently Shared Plans from DistrictBuilder"
-#~ msgstr "DistrictBuilderから最近共有された計画案"
-
-#~ msgid "Plan"
-#~ msgstr "計画案"
-
-#~ msgid "Draw"
-#~ msgstr "描く"
-
-#~ msgid "View"
-#~ msgstr "見る"
-
-#~ msgid "Evaluate"
-#~ msgstr "審査"
-
-#~ msgid "Share"
-#~ msgstr "共有"
-
-#~ msgid "Leaderboards"
-#~ msgstr "ｽｺｱﾎﾞｰﾄﾞ"
-
-#~ msgid "Login"
-#~ msgstr "ログイン"
-
-#~ msgid "My Account"
-#~ msgstr "マイアカウント"
-
-#~ msgid "Logout"
-#~ msgstr "ログアウト"
-
-#~ msgid "Choose a Plan. Start Drawing."
-#~ msgstr "計画案を選んでください。再編を始めましょう。"
-
-#~ msgid "Select District Layer"
-#~ msgstr "選挙区Layerを選んでください"
-
-#~ msgid "Select Plan Type"
-#~ msgstr "選挙区ﾀｲﾌﾟを選んでください"
-
-#~ msgid "Template"
-#~ msgstr "ﾃﾝﾌﾟﾚｰﾄ"
-
-#~ msgid "Shared"
-#~ msgstr "共有された"
-
-#~ msgid "Upload Plan"
-#~ msgstr "計画案をｱｯﾌﾟﾛｰﾄﾞ"
-
-#~ msgid "Select Plan"
-#~ msgstr "計画案を選択"
-
-#~ msgid "Search"
-#~ msgstr "検索"
-
-#~ msgid "Upload a District Index file:"
-#~ msgstr "選挙区ｲﾝﾃﾞｯｸｽﾌｧｲﾙをｱｯﾌﾟﾛｰﾄﾞ"
-
-#~ msgid ""
-#~ "You must choose a legislative body to which the new plan will be applied."
-#~ msgstr "新しい計画案が該当する議会を選ぶ必要があります。"
-
-#~ msgid "Select a body"
-#~ msgstr "議会を選択"
-
-#~ msgid ""
-#~ "Please enter your email address so DistrictBuilder can send you a "
-#~ "confirmation when your plan has been uploaded. Your email will not be "
-#~ "saved or shared."
-#~ msgstr ""
-#~ "計画案のｱｯﾌﾟﾛｰﾄﾞが完了したときにDistrictBuilderから確認メールを送れるよ"
-#~ "う、Eﾒｰﾙｱﾄﾞﾚｽを入力してください。あなたのEﾒｰﾙｱﾄﾞﾚｽは保存・共有されることは"
-#~ "ありません。"
-
-#~ msgid "Name Plan and Start Drawing:"
-#~ msgstr "計画案に名前をつけ、再編をスタート:"
-
-#~ msgid "Edit Selected Plan"
-#~ msgstr "選択した計画案を編集"
-
-#~ msgid "Copy and Save Selected Plan"
-#~ msgstr "選択した計画案をｺﾋﾟｰして保存"
-
-#~ msgid "Start Drawing"
-#~ msgstr "再編をスタート"
-
-#~ msgid "Plan Details"
-#~ msgstr "計画案詳細"
-
-#~ msgid "User Name:"
-#~ msgstr "ﾕｰｻﾞｰ名:"
-
-#~ msgid "Plan Name:"
-#~ msgstr "計画案名:"
-
-#~ msgid "Description:"
-#~ msgstr "説明:"
-
-#~ msgid "# of Districts:"
-#~ msgstr "選挙区数:"
-
-#~ msgid "Shared:"
-#~ msgstr "共有済:"
-
-#~ msgid "Last Modified:"
-#~ msgstr "最終更新日時:"
-
-#~ msgid "Edit Details"
-#~ msgstr "詳細を編集"
-
-#~ msgid "Cancel"
-#~ msgstr "ｷｬﾝｾﾙ"
-
-#~ msgid "Set Map<br/>Layers"
-#~ msgstr "地図Layerを設定"
-
-#~ msgid "Export"
-#~ msgstr "出力"
-
-#~ msgid "Print"
-#~ msgstr "印刷"
-
-#~ msgid "Raw Data"
-#~ msgstr "未加工ﾃﾞｰﾀ"
-
-#~ msgid "Map Tools"
-#~ msgstr "地図ﾂｰﾙ"
-
-#~ msgid "Click on a district to see its ID."
-#~ msgstr "IDを見るには選挙区をｸﾘｯｸしてください。"
-
-#~ msgid "Edit Stats"
-#~ msgstr "統計を編集"
-
-#~ msgid "Statistics"
-#~ msgstr "統計"
-
-#~ msgid "Loading Statistics..."
-#~ msgstr "統計を読み込んでいます..."
-
-#~ msgid "Reference Layer:"
-#~ msgstr "参考Layer:"
-
-#~ msgid "None"
-#~ msgstr "該当なし"
-
-#~ msgid "Generate Splits Report for Current %(plan_text_title)s"
-#~ msgstr "現在の%(plan_text_title)sの境界ﾚﾎﾟｰﾄを作成する"
-
-#~ msgid "Select reference layer(s) for comparison."
-#~ msgstr "比較する参考Layerを選択"
-
-#~ msgid "Advanced options"
-#~ msgstr "応用ｵﾌﾟｼｮﾝ"
-
-#~ msgid "Reverse splits detection"
-#~ msgstr "境界検出を元に戻す"
-
-#~ msgid "Extended report: List all"
-#~ msgstr "詳細ﾚﾎﾟｰﾄ: 全てﾘｽﾄする"
-
-#~ msgid "districts or communities contained within each district."
-#~ msgstr "選挙区、または各選挙区内の地域"
-
-#~ msgid ""
-#~ "(Choosing this option will significantly increase the amount of time it "
-#~ "takes to generate the report.)"
-#~ msgstr "（このｵﾌﾟｼｮﾝを選ぶとﾚﾎﾟｰﾄ作成の時間が長くなります。）"
-
-#~ msgid "Generate Report"
-#~ msgstr "ﾚﾎﾟｰﾄを作成する"
-
-#~ msgid "Splits Report"
-#~ msgstr "境界ﾚﾎﾟｰﾄ"
-
-#~ msgid "No report generated."
-#~ msgstr "ﾚﾎﾟｰﾄが作成されませんでした。"
-
-#~ msgid "Map Legend"
-#~ msgstr "地図凡例"
-
-#~ msgid "Total Population"
-#~ msgstr "人口総数"
-
-#~ msgid "Far Over Target"
-#~ msgstr "目標数をかなり超過"
-
-#~ msgid "Over Target"
-#~ msgstr "目標数を超過"
-
-#~ msgid "Within Target"
-#~ msgstr "目標数を達成"
-
-#~ msgid "Under Target"
-#~ msgstr "目標数に届きません"
-
-#~ msgid "Far Under Target"
-#~ msgstr "目標数に遠く届きません"
-
-#~ msgid "Locked For Editing"
-#~ msgstr "編集ﾛｯｸ済"
-
-#~ msgid "Highlighted"
-#~ msgstr "強調表示"
-
-#~ msgid "Reference"
-#~ msgstr "参考"
-
-#~ msgid "reference"
-#~ msgstr "参考"
-
-#~ msgid "Evaluate Statistics"
-#~ msgstr "統計を審査"
-
-#~ msgid ""
-#~ "Select the plan statistics you'd like included in a comprehensive report "
-#~ "on your redistricting plan.  After you've made your selections click "
-#~ "\"Create and Preview Report\" to view the final report."
-#~ msgstr ""
-#~ "再編計画案の総合ﾚﾎﾟｰﾄに入れる計画案統計を選んだあと、「ﾚﾎﾟｰﾄを作成してﾌﾟ"
-#~ "ﾚﾋﾞｭｰ」をｸﾘｯｸすると最終ﾚﾎﾟｰﾄを見ることができます。"
-
-#~ msgid "Create and Preview New Report"
-#~ msgstr "新しいﾚﾎﾟｰﾄを作成してﾌﾟﾚﾋﾞｭｰ"
-
-#~ msgid "Please generate a report<br/>to preview statistics"
-#~ msgstr "統計を見るにはﾚﾎﾟｰﾄを作成してください。"
-
-#~ msgid "Top Ranked Users' Plans"
-#~ msgstr "ﾄｯﾌﾟにﾗﾝｸｲﾝしたﾕｰｻﾞｰの計画案"
-
-#~ msgid "My Ranked Plans"
-#~ msgstr "ﾗﾝｸｲﾝした自分の計画案"
-
-#~ msgid "Select Legislative Body"
-#~ msgstr "議会を選択"
-
-#, fuzzy
-#~ msgid "Share a %(plan_text_title)s"
-#~ msgstr "%(plan_text)sを共有"
-
-#~ msgid "This plan has been shared"
-#~ msgstr "この計画案は共有されました"
-
-#~ msgid ""
-#~ "Anyone can view this plan by visiting the following URL in a web browser:"
-#~ msgstr "このURLから誰でもこの計画案を見ることができます。"
-
-#~ msgid "Tweet"
-#~ msgstr "ﾂｲｰﾄする"
-
-#~ msgid "Plan File Export"
-#~ msgstr "ﾌﾟﾗﾝﾌｧｲﾙを出力"
-
-#~ msgid "Community Map"
-#~ msgstr "地域ﾏｯﾌﾟ"
-
-#~ msgid "Name:"
-#~ msgstr "名前:"
-
-#~ msgid "Please select a plan"
-#~ msgstr "計画案を選択してください"
-
-#~ msgid "Currently Viewing:"
-#~ msgstr "現在見ている計画案："
-
-#~ msgid "Plan not saved"
-#~ msgstr "計画案が保存されませんでした"
-
-#~ msgid "Please Wait"
-#~ msgstr "少々お待ちください..."
-
-#~ msgid "Please wait. New %(body_members)s are computed..."
-#~ msgstr "少々お待ちください。新しい%(body_members)sを計算しています..."
-
-#~ msgid "Please wait. Data is being retrieved..."
-#~ msgstr "少々お待ちください。ﾃﾞｰﾀを読み込んでいます..."
-
-#~ msgid "Please wait. Plan is being validated. This may take a few minutes."
-#~ msgstr "少々お待ちください。計画案を確認しています。"
-
-#~ msgid "Select %(layer_type)s Thematic Map"
-#~ msgstr "%(layer_type)sのﾃｰﾏﾏｯﾌﾟを選択"
-
-#~ msgid "Choose District Thematic Map"
-#~ msgstr "選挙区ﾃｰﾏﾏｯﾌﾟを選択"
-
-#~ msgid "Choose a Reference Layer"
-#~ msgstr "参考Layerを選択"
-
-#~ msgid "Show Labels?"
-#~ msgstr "名前を見せますか？"
-
-#~ msgid "OR..."
-#~ msgstr "もしくは..."
-
-#~ msgid ""
-#~ "Choose a:<br/>legislative district or community map<br/>reference layer"
-#~ msgstr "選挙区か地域ﾏｯﾌﾟLayerを選択"
-
-#~ msgid "Select Plan to Display as Reference Layer"
-#~ msgstr "参考Layerとして表示する計画案を選択"
-
-#~ msgid "OK"
-#~ msgstr "OK."
-
-#~ msgid "Select up to 3 statistics"
-#~ msgstr "統計を３つまで選択"
-
-#~ msgid "Clear Choices"
-#~ msgstr "選択を解除する"
-
-#~ msgid "Name Statistics Set"
-#~ msgstr "統計ｾｯﾄに名前をつける"
-
-#~ msgid "Save Set"
-#~ msgstr "ｾｯﾄを保存"
-
-#~ msgid "... Or select a saved statistics set"
-#~ msgstr "... もしくは、保存した統計ｾｯﾄを選択"
-
-#~ msgid "Oops"
-#~ msgstr "ｴﾗｰが発生しました。"
-
-#~ msgid ""
-#~ "Sometimes bad things happen. I regret you were not able to find what you "
-#~ "were looking for."
-#~ msgstr ""
-#~ "ときには悪いことも起きるものです。残念ながらあなたの探していたものは見つか"
-#~ "りませんでした。"
-
-#~ msgid ""
-#~ "Sometimes bad things happen. I regret any inconvenience this 500 error "
-#~ "has caused you."
-#~ msgstr "ときには悪いことも起きるものです。ｴﾗｰ500が起きました。"
-
-#~ msgid "Account Information"
-#~ msgstr "ｱｶｳﾝﾄ情報"
-
-#~ msgid "Sign Up For An Account"
-#~ msgstr "ｱｶｳﾝﾄを開く"
-
-#~ msgid ""
-#~ "Please choose a username between 6 and 30 characters. Include at least "
-#~ "one letter. Do not leave leading or trailing spaces."
-#~ msgstr ""
-#~ "半角ローマ字で6～30文字以内のﾕｰｻﾞｰ名を指定してください。１文字以上はｱﾙﾌｧ"
-#~ "ﾍﾞｯﾄを使用してください。前後にｽﾍﾟｰｽを使用しないようにしてください。"
-
-#~ msgid ""
-#~ "Please use a password of 8 or more characters. Include a number, a "
-#~ "capital letter and a lower-case letter."
-#~ msgstr ""
-#~ "半角ローマ字で８文字以上のパスワードを入力してください。数字と大文字・小文"
-#~ "字の全てを使ってください。"
-
-#~ msgid "Password"
-#~ msgstr "ﾊﾟｽﾜｰﾄﾞ"
-
-#~ msgid "Confirm Password"
-#~ msgstr "ﾊﾟｽﾜｰﾄﾞを再入力"
-
-#~ msgid "Password Hint"
-#~ msgstr "ﾊﾟｽﾜｰﾄﾞのﾋﾝﾄ"
-
-#~ msgid "An email address is recommended to recover a forgotten password"
-#~ msgstr "ﾊﾟｽﾜｰﾄﾞを忘れたときのために、Eﾒｰﾙｱﾄﾞﾚｽの入力が推奨されています。"
-
-#~ msgid ""
-#~ "Sorry, that email address is already registered. Please use a different "
-#~ "email address."
-#~ msgstr ""
-#~ "同じEﾒｰﾙｱﾄﾞﾚｽがすでに登録済みです。別のEﾒｰﾙｱﾄﾞﾚｽを入力してください。"
-
-#~ msgid "Organization"
-#~ msgstr "組織"
+#: templates/404.html:32 templates/404.html.py:35 templates/500.html:32
+#: templates/500.html.py:35
+msgid "Oops"
+msgstr "ｴﾗｰが発生しました。"
+
+#: templates/404.html:36
+msgid ""
+"Sometimes bad things happen. I regret you were not able to find what you "
+"were looking for."
+msgstr ""
+"ときには悪いことも起きるものです。残念ながらあなたの探していたものは見つかり"
+"ませんでした。"
+
+#: templates/500.html:36
+msgid ""
+"Sometimes bad things happen. I regret any inconvenience this 500 error has "
+"caused you."
+msgstr "ときには悪いことも起きるものです。ｴﾗｰ500が起きました。"
+
+#: templates/account.html:3
+msgid "Account Information"
+msgstr "ｱｶｳﾝﾄ情報"
+
+#: templates/account.html:6
+msgid "Sign Up For An Account"
+msgstr "ｱｶｳﾝﾄを開く"
+
+#: templates/account.html:12
+msgid ""
+"Please choose a username between 6 and 30 characters. Include at least one "
+"letter. Do not leave leading or trailing spaces."
+msgstr ""
+"半角ローマ字で6～30文字以内のﾕｰｻﾞｰ名を指定してください。１文字以上はｱﾙﾌｧﾍﾞｯﾄ"
+"を使用してください。前後にｽﾍﾟｰｽを使用しないようにしてください。"
+
+#: templates/account.html:22
+msgid ""
+"Please use a password of 8 or more characters. Include a number, a capital "
+"letter and a lower-case letter."
+msgstr ""
+"半角ローマ字で８文字以上のパスワードを入力してください。数字と大文字・小文字"
+"の全てを使ってください。"
+
+#: templates/account.html:25
+#: templates/admin/auth/user/change_password.orig.html:35
+msgid "Password"
+msgstr "ﾊﾟｽﾜｰﾄﾞ"
+
+#: templates/account.html:29
+msgid "Confirm Password"
+msgstr "ﾊﾟｽﾜｰﾄﾞを再入力"
+
+#: templates/account.html:33
+msgid "Password Hint"
+msgstr "ﾊﾟｽﾜｰﾄﾞのﾋﾝﾄ"
+
+#: templates/account.html:40
+msgid "An email address is recommended to recover a forgotten password"
+msgstr "ﾊﾟｽﾜｰﾄﾞを忘れたときのために、Eﾒｰﾙｱﾄﾞﾚｽの入力が推奨されています。"
+
+#: templates/account.html:48
+msgid ""
+"Sorry, that email address is already registered. Please use a different "
+"email address."
+msgstr "同じEﾒｰﾙｱﾄﾞﾚｽがすでに登録済みです。別のEﾒｰﾙｱﾄﾞﾚｽを入力してください。"
+
+#: templates/account.html:65
+msgid "Organization"
+msgstr "組織"
+
+#: templates/account.html:77
+msgid "I have read the <a href=\"#\">Terms of Use</a>"
+msgstr ""
+
+#: templates/account.html:92
+msgid "Update"
+msgstr "更新"
+
+#: templates/account.html:94 templates/index.html:175
+msgid "Sign Up"
+msgstr "登録"
+
+#: templates/forgottenpassword.email:14
+msgid ""
+"You requested a new password for the Public Mapping Project. Sorry for the "
+"inconvenience!  This is your new password"
+msgstr ""
+"公共選挙区再編ﾌﾟﾛｼﾞｪｸﾄの新しいﾊﾟｽﾜｰﾄﾞのﾘｸｴｽﾄを受け付けました。下記が新しいﾊﾟ"
+"ｽﾜｰﾄﾞです。ご迷惑をおかけいたしました。"
+
+#: templates/forgottenpassword.email:16
+msgid "Thank you for using the Public Mapping Project."
+msgstr "公共選挙区再編ﾌﾟﾛｼﾞｪｸﾄのご利用ありがとうございます。"
+
+#: templates/index.html:43
+msgid "Welcome to DistrictBuilder"
+msgstr "ようこそDistrictBuilderへ"
+
+#: templates/index.html:86
+msgid "DistrictBuilder"
+msgstr "DistrictBuilder"
+
+#: templates/index.html:95
+msgid "About"
+msgstr "ﾊﾞｰｼﾞｮﾝ情報"
+
+#: templates/index.html:98
+msgid "Support"
+msgstr "ｻﾎﾟｰﾄ"
+
+#: templates/index.html:116
+msgid "About the Public Mapping Project"
+msgstr "公共選挙区再編ﾌﾟﾛｼﾞｪｸﾄについて"
+
+#: templates/index.html:118
+msgid "Frequently Asked Questions"
+msgstr "よくある質問"
+
+#: templates/index.html:119
+msgid "Quick Start Guide"
+msgstr "ｸｲｯｸｽﾀｰﾄｶﾞｲﾄﾞ"
+
+#: templates/index.html:120
+msgid "Redistricting Resources"
+msgstr "選挙区再編情報"
+
+#: templates/index.html:122
+msgid "About this DistrictBuilder instance"
+msgstr "このDistrictBuilderのｲﾝｽﾀﾝｽについて"
+
+#: templates/index.html:125
+msgid "Virginia on the Public Mapping Project"
+msgstr "公共選挙区再編ﾌﾟﾛｼﾞｪｸﾄ・ﾊﾞｰｼﾞﾆｱ州"
+
+#: templates/index.html:128
+msgid "Virginia data"
+msgstr "ﾊﾞｰｼﾞﾆｱ州ﾃﾞｰﾀ"
+
+#: templates/index.html:160
+msgid "Log In"
+msgstr "ログイン"
+
+#: templates/index.html:166
+msgid "Forgot your password?"
+msgstr "ﾊﾟｽﾜｰﾄﾞを忘れた場合はここをｸﾘｯｸ"
+
+#: templates/index.html:171
+msgid "Don't have an account?"
+msgstr "ｱｶｳﾝﾄをお持ちでない場合はここをｸﾘｯｸ"
+
+#: templates/index.html:173
+msgid "To Draw Your Own Maps..."
+msgstr "自分の地図を描くには..."
+
+#: templates/index.html:177
+msgid "To View Other Users' Maps..."
+msgstr "他のﾕｰｻﾞｰの地図を見るには..."
+
+#: templates/index.html:180
+msgid "Enter as a guest"
+msgstr "ｹﾞｽﾄとして利用する"
+
+#: templates/index.html:185
+msgid "Terms of Use"
+msgstr "利用規約"
+
+#: templates/index.html:197
+msgid "Get A Hint"
+msgstr "ﾊﾟｽﾜｰﾄﾞのﾋﾝﾄを見る"
+
+#: templates/index.html:199
+msgid ""
+"Enter your username to retrieve your password hint that you used when "
+"registering for an account."
+msgstr ""
+"ｱｶｳﾝﾄ登録時に入力したﾊﾟｽﾜｰﾄﾞのﾋﾝﾄを見るには、ﾕｰｻﾞｰ名を入力してください。"
+
+#: templates/index.html:204
+msgid "Username"
+msgstr "ﾕｰｻﾞｰ名"
+
+#: templates/index.html:208
+msgid "OR"
+msgstr "もしくは"
+
+#: templates/index.html:210
+msgid "Reset Your Password"
+msgstr "ﾊﾟｽﾜｰﾄﾞを再設定する"
+
+#: templates/index.html:212
+msgid ""
+"Enter your email address to reset your password if you have forgotten your "
+"username."
+msgstr ""
+"ﾕｰｻﾞｰ名を忘れた場合は、Eﾒｰﾙｱﾄﾞﾚｽを入力してﾊﾟｽﾜｰﾄﾞを再設定してください。"
+
+#: templates/index.html:217
+msgid "Email"
+msgstr "Eﾒｰﾙ"
+
+#: templates/index.html:223
+msgid "Begin"
+msgstr "開始する"
+
+#: templates/index.html:227
+msgid "Here Is Your Hint"
+msgstr "これがあなたのﾊﾟｽﾜｰﾄﾞのﾋﾝﾄです"
+
+#: templates/index.html:228
+msgid ""
+"If this helps you remember your password, you can close this dialog and log "
+"in."
+msgstr "このﾋﾝﾄでﾊﾟｽﾜｰﾄﾞが思い出せたら、このﾀﾞｲｱﾛｸﾞを閉じてﾛｸﾞｲﾝしてください。"
+
+#: templates/index.html:232
+msgid ""
+"If you still can't recall your password, click on the 'Back' button, and "
+"enter your email address, so we can email your password to you."
+msgstr ""
+"このﾋﾝﾄでもﾊﾟｽﾜｰﾄﾞが思い出せない場合は、「戻る」ﾎﾞﾀﾝをｸﾘｯｸして、Eﾒｰﾙｱﾄﾞﾚｽを入"
+"力すれば新しいﾊﾟｽﾜｰﾄﾞがEﾒｰﾙで送られます。"
+
+#: templates/index.html:236
+msgid "Email Sent"
+msgstr "Eﾒｰﾙが送られました"
+
+#: templates/index.html:237
+msgid ""
+"Your password has been emailed to you. You should receive your password in "
+"your inbox in the next few minutes."
+msgstr "ﾊﾟｽﾜｰﾄﾞがEﾒｰﾙで送られました。数分で受信箱に届くはずです。"
+
+#: templates/index.html:240
+msgid "Back"
+msgstr "戻る"
+
+#: templates/index.html:241
+msgid "Close"
+msgstr "閉じる"
+
+#: templates/index.html:247
+msgid "Your account has too many sessions."
+msgstr "あなたのｱｶｳﾝﾄで開けられているｾｯｼｮﾝが多すぎます。"
+
+#: templates/index.html:248
+msgid "To use DistrictBuilder, you must do one of the following actions:"
+msgstr "DistrictBuilderを使うには、次のどれかを行ってください。:"
+
+#: templates/index.html:251
+msgid "Log in as a different user."
+msgstr "別のﾕｰｻﾞｰ名でﾛｸﾞｲﾝする。"
+
+#: templates/index.html:254
+msgid "Use the system as a guest."
+msgstr "ｼｽﾃﾑをｹﾞｽﾄとして利用する。"
+
+#: templates/index.html:259
+msgid "Force close the other user's session and log in again."
+msgstr "他のﾕｰｻﾞｰのｾｯｼｮﾝを強制終了し、再度ﾛｸﾞｲﾝする。"
+
+#: templates/index.html:266
+msgid ""
+"The DistrictBuilder application has reached maximum capacity. Please try to "
+"use the application again shortly. We apologize for the inconvenience."
+msgstr ""
+"DistrictBuilderｱﾌﾟﾘｹｰｼｮﾝが最大容量に達しました。しばらく経ってからやり直して"
+"ください。ご迷惑をおかけいたします。"
+
+#: templates/index.html:269
+msgid ""
+"The following discloses our information gathering and dissemination "
+"practices; and terms of use for this web site."
+msgstr "当ｻｲﾄの情報の収集・提供の方針と利用規約は下記の通りです。"
+
+#: templates/index.html:270
+msgid "Information gathering"
+msgstr "情報の収集について"
+
+#: templates/index.html:272
+msgid ""
+"Our web server software generates logfiles of the IP addresses of computers "
+"that access this web site and of what files they access."
+msgstr ""
+"当ｳｪﾌﾞｻｰﾊﾞｰｿﾌﾄｳｪｱはこのｻｲﾄにｱｸｾｽするｺﾝﾋﾟｭｰﾀｰのIPｱﾄﾞﾚｽとｱｸｾｽしたﾌｧｲﾙからﾛｸﾞﾌｧ"
+"ｲﾙを取得します。"
+
+#: templates/index.html:273
+msgid ""
+"These web server logs are retained on a temporary basis and then deleted "
+"completely from our systems."
+msgstr ""
+"これらのｳｪﾌﾞｻｰﾊﾞｰのﾛｸﾞﾌｧｲﾙは短期間保存され、その後ｼｽﾃﾑから完全に削除されま"
+"す。"
+
+#: templates/index.html:274
+msgid "We also may ask our visitors to provide information about themselves."
+msgstr "また、ｻｲﾄにｱｸｾｽした方から情報の入力をお願いすることもあります。"
+
+#: templates/index.html:275
+msgid "We may use cookies to maintain a user's identity between web sessions."
+msgstr ""
+"ﾛｸﾞｲﾝ情報を次のｾｯｼｮﾝにも保持する場合は、ｸｯｷｰ(cookie)を利用することがありま"
+"す。"
+
+#: templates/index.html:277
+msgid "Contributor Terms"
+msgstr "提供者規約"
+
+#: templates/index.html:278
+msgid ""
+"This site enables users to create districting maps and to comment on the "
+"maps of others.  By creating a map, a comment, or an account, you are "
+"agreeing to the following terms for any map, comment, data, or other content "
+"(collectively, 'Contents') you contribute to this site. "
+msgstr ""
+"当ｻｲﾄはﾕｰｻﾞｰが選挙区地図を作成し、また他のﾕｰｻﾞｰの作成した地図にｺﾒﾝﾄする目的で"
+"運営されています。当サイトの利用、つまり、地図の作成やコメント、またアカウン"
+"トを作成することで、利用者は提供する地図、コメント、その他の内容（以下「内"
+"容」とします）について、以下の規約を承諾し、同意したものとみなされます。"
+
+#: templates/index.html:279
+msgid ""
+"You hereby grant to us a worldwide, royalty-free, non-exclusive, perpetual, "
+"irrevocable license to do any act that is restricted by copyright over "
+"anything within the Contents, whether in the original medium or any other. "
+"These rights explicitly include commercial use, and do not exclude any field "
+"of endeavour. These rights include, without limitation, the right to "
+"sublicense the work through multiple tiers of sublicensees. To the extent "
+"allowable under applicable local laws and copyright conventions, You also "
+"waive and/or agree not to assert against us or our licensees any moral "
+"rights that You may have in the Contents."
+msgstr ""
+"当サイトの利用者はregalías, no exclusiva, perpetua, irrevocable, para "
+"realizar cualquier acto que está limitado por los derechos de autor sobre "
+"cualquier cosa en el contenido, ya sea en el soporte original o cualquier "
+"otro. Estos derechos incluyen explícitamente el uso comercial, y no excluyen "
+"cualquier campo de actividad. Estos derechos incluyen, sin limitación, el "
+"derecho a sublicenciar la obra a través de múltiples niveles de "
+"sublicencias. En la medida permitida por las leyes locales y las "
+"convenciones de derechos de autor, usted también renuncia y / o se "
+"compromete a no hacer valer en contra de nosotros o nuestros licenciatarios "
+"a cualquier derecho moral que pueda tener en los Contenidos."
+
+#: templates/index.html:280
+msgid ""
+"We agree to make the Contents that you contribute and designate as &quot;"
+"published&quot; available under at least one of the following licenses: ODbL "
+"1.0; DbCL 1.0; CC-BY-SA 2.0; or another free and open license. "
+msgstr ""
+"Estamos de acuerdo en que el contenido que usted aporte y designar como "
+"\"publicado\", disponible en al menos una de las siguientes licencias: ODbL "
+"1,0; DbCL 1,0; CC-BY-SA 2.0, u otra licencia libre y abierta."
+
+#: templates/index.html:281
+msgid "Use of information"
+msgstr "Uso de la información"
+
+#: templates/index.html:282
+msgid ""
+"We use third parties to provide processing functions on our site. When you "
+"register for  services, we may share information as necessary for the third "
+"party to provide those services.  We make commercially reasonable efforts to "
+"ensure that these third parties are prohibited from using your personally "
+"identifiable information for any other purpose. "
+msgstr ""
+"Usamos a terceros para proporcionar funciones de procesamiento en nuestro "
+"sitio. Cuando usted se registra para los servicios, podemos compartir "
+"información cuando sea necesario para que el tercero para proporcionar esos "
+"servicios. Hacemos todos los esfuerzos comercialmente razonables para "
+"asegurar que estos terceros se les prohíbe utilizar su información "
+"personalmente identificable para ningún otro propósito."
+
+#: templates/index.html:283
+msgid ""
+"We use your IP address and files you access to help diagnose problems with "
+"our server and to administer our Web site by identifying (1) which parts of "
+"our site are most heavily used, and (2) which portion of our audience comes "
+"from different geographical regions. We also use this information to tailor "
+"site content to user needs, and to generate aggregate statistical reports. "
+"At no time do we disclose site usage by individual visitors."
+msgstr ""
+"Utilizamos su dirección IP y los archivos que el acceso para ayudar a "
+"diagnosticar problemas con nuestro servidor y para administrar nuestro sitio "
+"Web mediante la identificación de (1) qué partes de nuestro sitio son más "
+"utilizados, y (2) que parte de nuestra audiencia proviene de diferentes "
+"zonas geográficas regiones. También utilizamos esta información para adaptar "
+"el contenido del sitio a las necesidades de los usuarios, y generar informes "
+"estadísticos agregados. En ningún momento de divulgar el uso del sitio por "
+"los visitantes individuales."
+
+#: templates/index.html:284
+msgid ""
+"We reserve the right to disclose your personally identifiable information as "
+"required by law and when we believe that disclosure is necessary to protect "
+"our rights and/or to comply with a judicial proceeding, court order or legal "
+"process served on the hosts. "
+msgstr ""
+"Nos reservamos el derecho de revelar su información de identificación "
+"personal requerido por la ley y cuando creamos que dicha divulgación es "
+"necesaria para proteger nuestros derechos y / o para cumplir con un "
+"procedimiento judicial, orden judicial o proceso legal realizado sobre los "
+"anfitriones."
+
+#: templates/index.html:285
+msgid ""
+"All maps created through the system, edits to those maps, and comments made "
+"on those maps are associated with an account id and a timestamp. These maps, "
+"comments, account id's and timestamps may be made available to the public.  "
+"We may use this information to generate aggregate statistical reports. At no "
+"time do we disclose the name, e-mail or other identifying information "
+"associated with individual users accounts, unless the individual explicitly "
+"selects the &quot;make my account information public&quot; settings in the "
+"users profile setting. "
+msgstr ""
+"Todos los mapas creados por el sistema, las modificaciones a los mapas, y "
+"las observaciones formuladas en esos mapas se asocian con un ID de cuenta y "
+"una marca de tiempo. Estos mapas, comentarios, la cuenta de Identificación y "
+"marcas de tiempo pueden ser puestos a disposición del público. Podemos usar "
+"esta información para generar informes estadísticos agregados. En ningún "
+"momento se reveló el nombre, correo electrónico u otra información asociada "
+"a las cuentas de usuarios individuales, a menos que la persona "
+"explícitamente se selecciona el \"hacer que mi cuenta la información pública"
+"\" ajustes en la configuración del perfil de los usuarios."
+
+#: templates/index.html:286
+msgid "Security"
+msgstr "Seguridad"
+
+#: templates/index.html:287
+msgid ""
+"This site has security measures in place to protect the loss, misuse and "
+"alteration of the information under our control."
+msgstr ""
+"Este sitio tiene medidas de seguridad para proteger la pérdida, mal uso y "
+"alteración de la información bajo nuestro control."
+
+#: templates/index.html:288
+msgid "Contacting this web site"
+msgstr "Contacto con este sitio web"
+
+#: templates/index.html:289
+msgid ""
+"If you have any questions about this privacy statement, the practices of "
+"this site, or your dealings with this site, you can contact the support "
+"address at the host domain"
+msgstr ""
+"Si usted tiene alguna pregunta sobre esta declaración de privacidad, las "
+"prácticas de este sitio, o sus relaciones con este sitio, usted puede "
+"contactar a la dirección de soporte en el dominio del servidor"
+
+#: templates/index.html:289
+msgid ""
+"This web site may contain links to other web sites. We are not responsible "
+"for the privacy practices or the content of such web sites."
+msgstr ""
+"Este sitio web puede contener enlaces a otros sitios web. No nos hacemos "
+"responsables de las prácticas de privacidad o el contenido de dichos sitios "
+"web."
+
+#: templates/index.html:290
+msgid "Changes to this policy"
+msgstr "Cambios en esta política"
+
+#: templates/index.html:291
+msgid ""
+"An announcement of any changes to this policy will be posted on this page "
+"for  thirty days before any changes go into effect."
+msgstr ""
+"Un anuncio de cualquier cambio a esta política será publicada en esta página "
+"durante treinta días antes de que los cambios entren en efecto."
+
+#: templates/index.html:292
+msgid "Effective Date"
+msgstr "Fecha de vigencia"
+
+#: templates/index.html:293
+msgid "The effective date of this policy was May 2, 2011."
+msgstr "La fecha efectiva de esta política fue 02 de mayo 2011."
+
+#: templates/index.html:331
+msgid "We've designed the software to run on"
+msgstr "Hemos diseñado el software para funcionar en"
+
+#: templates/index.html:333
+msgid "a free web browser"
+msgstr "un navegador web gratuito"
+
+#: templates/language_chooser.html:33
+msgid "Language"
+msgstr ""
+
+#: templates/admin/base_site.html:34
+msgid "Redistricting site admin"
+msgstr "Redistribución de Distritos administrador del sitio"
+
+#: templates/admin/base_site.html:37
+msgid "Redistricting administration"
+msgstr "Redistribución de la administración"
+
+#: templates/admin/login.orig.html:19
+msgid "Username:"
+msgstr "Nombre de Usuario:"
+
+#: templates/admin/login.orig.html:22
+msgid "Password:"
+msgstr "Contraseña:"
+
+#: templates/admin/login.orig.html:26
+msgid "Log in"
+msgstr "Acceder"
+
+#: templates/admin/auth/user/change_password.orig.html:11
+#: templates/admin/redistricting/subject/add_form.html:49
+#: templates/admin/redistricting/subject/delete_selected_confirmation.html:37
+#: templates/admin/redistricting/subject/upload_form.html:118
+#: templates/registration/password_change_form.orig.html:35
+msgid "Home"
+msgstr "Casa"
+
+#: templates/admin/auth/user/change_password.orig.html:15
+#: templates/admin/auth/user/change_password.orig.html:48
+#: templates/registration/password_change_form.orig.html:34
+msgid "Change password"
+msgstr "Cambiar la contraseña"
+
+#: templates/admin/auth/user/change_password.orig.html:24
+#: templates/registration/password_change_form.orig.html:45
+msgid "Please correct the error below."
+msgid_plural "Please correct the errors below."
+msgstr[0] "Please correct the error below."
+msgstr[1] "Please correct the error below."
+
+#: templates/admin/auth/user/change_password.orig.html:28
+#, python-format
+msgid "Enter a new password for the user <strong>%(username)s</strong>."
+msgstr ""
+"Introducir una nueva contraseña para el usuario <strong>%(username)s</"
+"strong>."
+
+#: templates/admin/auth/user/change_password.orig.html:41
+#: templates/registration/password_change_form.orig.html:67
+msgid "Password (again)"
+msgstr "Contraseña (otra vez)"
+
+#: templates/admin/auth/user/change_password.orig.html:42
+msgid "Enter the same password as above, for verification."
+msgstr "Introducir la misma contraseña que el anterior, para su verificación."
+
+#: templates/admin/redistricting/subject/add_form.html:33
+#: templates/admin/redistricting/subject/add_form.html:56
+msgid "Download Subject template"
+msgstr "Descargar plantilla de sujeción"
+
+#: templates/admin/redistricting/subject/add_form.html:52
+#: templates/admin/redistricting/subject/upload_form.html:121
+msgid "Add"
+msgstr "Añadir"
+
+#: templates/admin/redistricting/subject/add_form.html:60
+#: templates/admin/redistricting/subject/upload_form.html:129
+msgid ""
+"A Subject in DistrictBuilder has relationships with many objects in the "
+"application. For this reason, adding a Subject requires a few extra steps. "
+"The following forms will walk you through the process of:"
+msgstr ""
+"Un tema en el DistrictBuilder tiene relaciones con muchos objetos en la "
+"aplicación. Por esta razón, la adición de un tema requiere algunos pasos "
+"adicionales. Las formas siguientes le guiarán en el proceso de:"
+
+#: templates/admin/redistricting/subject/add_form.html:62
+#: templates/admin/redistricting/subject/upload_form.html:131
+msgid "Downloading a Subject template file (CSV)"
+msgstr "Descargar plantilla de sujeción"
+
+#: templates/admin/redistricting/subject/add_form.html:63
+#: templates/admin/redistricting/subject/upload_form.html:132
+msgid "Uploading a complete Subject file (CSV)"
+msgstr "Cargar un archivo de reserva completa (CSV)"
+
+#: templates/admin/redistricting/subject/add_form.html:64
+msgid "Verifying the upload Subject file."
+msgstr "Configuración de los ajustes de la reserva cargado."
+
+#: templates/admin/redistricting/subject/add_form.html:65
+#: templates/admin/redistricting/subject/upload_form.html:134
+msgid "Configuring the settings for the uploaded Subject."
+msgstr "Configuración de los ajustes de la reserva cargado."
+
+#: templates/admin/redistricting/subject/add_form.html:67
+msgid "1. Download a Subject template file"
+msgstr "1. Descargar plantilla de sujeción"
+
+#: templates/admin/redistricting/subject/add_form.html:68
+msgid ""
+"Please click on the following link, and save the contents of that file on "
+"your local filesystem:"
+msgstr ""
+"Por favor haga click en el siguiente enlace y guardar el contenido de ese "
+"archivo en el sistema de archivos local:"
+
+#: templates/admin/redistricting/subject/add_form.html:69
+msgid "Subject template CSV"
+msgstr "Cargar plantilla de reserva"
+
+#: templates/admin/redistricting/subject/add_form.html:71
+#: templates/admin/redistricting/subject/delete_selected_confirmation.html:83
+#: templates/admin/redistricting/subject/upload_form.html:68
+msgid "Continue"
+msgstr "続ける"
+
+#: templates/admin/redistricting/subject/delete_selected_confirmation.html:34
+#: templates/admin/redistricting/subject/delete_selected_confirmation.html:44
+msgid "Are you sure?"
+msgstr "本当によろしいですか？"
+
+#: templates/admin/redistricting/subject/delete_selected_confirmation.html:34
+#: templates/admin/redistricting/subject/delete_selected_confirmation.html:44
+msgid "WARNING"
+msgstr "警告"
+
+#: templates/admin/redistricting/subject/delete_selected_confirmation.html:40
+msgid "Delete multiple objects"
+msgstr "Eliminar varios objetos"
+
+#: templates/admin/redistricting/subject/delete_selected_confirmation.html:47
+#, python-format
+msgid ""
+"Are you sure you want to delete the selected %(object_name)s objects? All of "
+"the following objects and their related items will be deleted:"
+msgstr ""
+"¿Está seguro que desea eliminar el seleccionado %(object_name)s objetos? "
+"Todos los siguientes objetos y sus elementos relacionadas se eliminarán:"
+
+#: templates/admin/redistricting/subject/delete_selected_confirmation.html:52
+msgid "characteristics"
+msgstr "características"
+
+#: templates/admin/redistricting/subject/delete_selected_confirmation.html:53
+msgid "computed characteristics"
+msgstr "calcula las características"
+
+#: templates/admin/redistricting/subject/delete_selected_confirmation.html:54
+msgid "related subject(s)"
+msgstr "tema relacionado (s)"
+
+#: templates/admin/redistricting/subject/delete_selected_confirmation.html:65
+msgid "Yes, I'm sure"
+msgstr "Sí, estoy seguro"
+
+#: templates/admin/redistricting/subject/delete_selected_confirmation.html:69
+#, python-format
+msgid ""
+"Deleting the selected %(object_name)s objects must be done with great care! "
+"Please carefully read the following notice regarding the removal of "
+"%(object_name)s objects:"
+msgstr ""
+"Eliminar el seleccionado %(object_name)s objetos se debe hacer con mucho "
+"cuidado! Por favor, lea detenidamente el siguiente aviso sobre la "
+"eliminación de %(object_name)s  objetos:"
+
+#: templates/admin/redistricting/subject/delete_selected_confirmation.html:71
+#, python-format
+msgid "Deleting a %(object_name)s is irreversible."
+msgstr "Eliminación de un %(object_name)s  es irreversible."
+
+#: templates/admin/redistricting/subject/delete_selected_confirmation.html:72
+#, python-format
+msgid ""
+"Deleting a %(object_name)s must <em>NOT</em> occur when regular users are "
+"editing plans."
+msgstr ""
+"Eliminación de un %(object_name)s  <em>no puede aparecer</em> cuando los "
+"usuarios regulares de edición de planes."
+
+#: templates/admin/redistricting/subject/delete_selected_confirmation.html:73
+#, python-format
+msgid ""
+"All references to the %(object_name)s in the application configuration must "
+"be removed."
+msgstr ""
+"Todas las referencias a la %(object_name)s  en la configuración de la "
+"aplicación debe ser eliminado."
+
+#: templates/admin/redistricting/subject/delete_selected_confirmation.html:74
+#, python-format
+msgid ""
+"The process of deleting a %(object_name)s takes a significant amount of "
+"time, and may not be interrupted once it has been started."
+msgstr ""
+"El proceso de borrado de un %(object_name)s  tiene una cantidad "
+"significativa de tiempo, y no puede ser interrumpida una vez que se ha "
+"iniciado."
+
+#: templates/admin/redistricting/subject/delete_selected_confirmation.html:82
+#, python-format
+msgid ""
+"I understand that the deletion of a %(object_name)s is an irreversible "
+"operation."
+msgstr ""
+"Entiendo que la supresión de un %(object_name)s  es una operación "
+"irreversible."
+
+#: templates/admin/redistricting/subject/upload_form.html:33
+#: templates/admin/redistricting/subject/upload_form.html:125
+msgid "Upload Subject template"
+msgstr "Cargar plantilla de reserva"
+
+#: templates/admin/redistricting/subject/upload_form.html:66
+msgid ""
+"Subject ingest successful! Press \"Continue\" to edit the Subject details."
+msgstr ""
+"Asunto ingerir un éxito! Pulse el botón \"Continuar\" para editar los datos "
+"del paciente."
+
+#: templates/admin/redistricting/subject/upload_form.html:75
+msgid "Sorry! This processing step failed with the following error message: "
+msgstr "申し訳ありません。ﾌﾟﾛｾｽ作業中にｴﾗｰが発生しました。ｴﾗｰ番号:"
+
+#: templates/admin/redistricting/subject/upload_form.html:77
+#: templates/admin/redistricting/subject/upload_form.html:87
+msgid "Retry"
+msgstr "もう一度やり直す"
+
+#: templates/admin/redistricting/subject/upload_form.html:85
+msgid "Could not retrieve task status."
+msgstr "ﾀｽｸ状況を取得できませんでした。"
+
+#: templates/admin/redistricting/subject/upload_form.html:133
+msgid "Verifying the uploaded Subject file."
+msgstr "ｱｯﾌﾟﾛｰﾄﾞされたSubjectﾌｧｲﾙの確認中です。"
+
+#: templates/admin/redistricting/subject/upload_form.html:137
+msgid "2. Uploading a complete Subject file"
+msgstr "2. 全てのSubjectﾌｧｲﾙをｱｯﾌﾟﾛｰﾄﾞする"
+
+#: templates/admin/redistricting/subject/upload_form.html:138
+msgid ""
+"Using the file field below, please select the populated Subject template "
+"file, and upload the Subject template file with the 'Upload' button below."
+msgstr ""
+"Utilizando el campo de archivo abajo, por favor seleccione el archivo de "
+"plantilla de sujeción de población, y cargar el archivo de plantilla de "
+"sujeción con el botón 'Subir' a continuación."
+
+#: templates/admin/redistricting/subject/upload_form.html:141
+msgid "3. Verifying the uploaded Subject file"
+msgstr "3. Verificación de la subida de archivos Tema"
+
+#: templates/admin/redistricting/subject/upload_form.html:142
+msgid ""
+"Please wait while the uploaded Subject file is checked for consistency and "
+"alignment with the currently loaded data. This may take up to 15 minutes, so "
+"please wait until the process completes before leaving this page."
+msgstr ""
+"Por favor espere mientras el archivo Asunto subida se comprueba la "
+"coherencia y la alineación con los datos cargados. Esto puede tomar hasta 15 "
+"minutos, así que por favor espere hasta que el proceso se complete antes de "
+"salir de esta página."
+
+#: templates/admin/redistricting/subject/upload_form.html:145
+msgid "4. Configuring the settings for the uploaded Subject"
+msgstr "4. Configuración de los ajustes de la reserva cargado."
+
+#: templates/admin/redistricting/subject/upload_form.html:146
+msgid ""
+"The verification steps are complete, you may proceed to the Subject change "
+"form to complete filling in the Subject details."
+msgstr ""
+"確認作業が完了しました。Subject変更ﾌｫｰﾑに進み、Subjectの詳細の入力を完了して"
+"ください。"
+
+#: templates/admin/redistricting/subject/upload_form.html:155
+msgid "Verifying counts of uploaded subjects..."
+msgstr "ｱｯﾌﾟﾛｰﾄﾞされたSubjectの数を確認しています..."
+
+#: templates/admin/redistricting/subject/upload_form.html:157
+msgid "Please Wait ..."
+msgstr "しばらくお待ちください..."
+
+#: templates/admin/redistricting/subject/upload_form.html:159
+msgid "Upload"
+msgstr "ｱｯﾌﾟﾛｰﾄﾞ"
+
+#: templates/registration/password_change_form.orig.html:34
+msgid "Documentation"
+msgstr "文書"
+
+#: templates/registration/password_change_form.orig.html:34
+msgid "Log out"
+msgstr "ログアウト"
+
+#: templates/registration/password_change_form.orig.html:35
+#: templates/registration/password_change_form.orig.html:37
+#: templates/registration/password_change_form.orig.html:49
+msgid "Password change"
+msgstr "ﾊﾟｽﾜｰﾄﾞの変更"
+
+#: templates/registration/password_change_form.orig.html:51
+msgid ""
+"Please enter your old password, for security's sake, and then enter your new "
+"password twice so we can verify you typed it in correctly."
+msgstr ""
+"ｾｷｭﾘﾃｨ保護のため、現在のﾊﾟｽﾜｰﾄﾞを入力し、新しいﾊﾟｽﾜｰﾄﾞを確認のため２度入力し"
+"てください。"
+
+#: templates/registration/password_change_form.orig.html:57
+msgid "Old password"
+msgstr "現在のﾊﾟｽﾜｰﾄﾞ"
+
+#: templates/registration/password_change_form.orig.html:62
+msgid "New password"
+msgstr "新しいﾊﾟｽﾜｰﾄﾞ"
+
+#: templates/registration/password_change_form.orig.html:73
+msgid "Change my password"
+msgstr "ﾊﾟｽﾜｰﾄﾞを変更する"
 
 #~ msgid "I have read the "
 #~ msgstr "He leído la"
-
-#~ msgid "Terms of Use"
-#~ msgstr "利用規約"
-
-#~ msgid "Update"
-#~ msgstr "更新"
-
-#~ msgid "Sign Up"
-#~ msgstr "登録"
-
-#~ msgid ""
-#~ "You requested a new password for the Public Mapping Project. Sorry for "
-#~ "the inconvenience!  This is your new password"
-#~ msgstr ""
-#~ "公共選挙区再編ﾌﾟﾛｼﾞｪｸﾄの新しいﾊﾟｽﾜｰﾄﾞのﾘｸｴｽﾄを受け付けました。下記が新しい"
-#~ "ﾊﾟｽﾜｰﾄﾞです。ご迷惑をおかけいたしました。"
-
-#~ msgid "Thank you for using the Public Mapping Project."
-#~ msgstr "公共選挙区再編ﾌﾟﾛｼﾞｪｸﾄのご利用ありがとうございます。"
-
-#~ msgid "Welcome to DistrictBuilder"
-#~ msgstr "ようこそDistrictBuilderへ"
-
-#~ msgid "DistrictBuilder"
-#~ msgstr "DistrictBuilder"
-
-#~ msgid "About"
-#~ msgstr "ﾊﾞｰｼﾞｮﾝ情報"
-
-#~ msgid "Support"
-#~ msgstr "ｻﾎﾟｰﾄ"
-
-#~ msgid "About the Public Mapping Project"
-#~ msgstr "公共選挙区再編ﾌﾟﾛｼﾞｪｸﾄについて"
-
-#~ msgid "Frequently Asked Questions"
-#~ msgstr "よくある質問"
-
-#~ msgid "Quick Start Guide"
-#~ msgstr "ｸｲｯｸｽﾀｰﾄｶﾞｲﾄﾞ"
-
-#~ msgid "Redistricting Resources"
-#~ msgstr "選挙区再編情報"
-
-#~ msgid "About this DistrictBuilder instance"
-#~ msgstr "このDistrictBuilderのｲﾝｽﾀﾝｽについて"
-
-#~ msgid "Virginia on the Public Mapping Project"
-#~ msgstr "公共選挙区再編ﾌﾟﾛｼﾞｪｸﾄ・ﾊﾞｰｼﾞﾆｱ州"
-
-#~ msgid "Virginia data"
-#~ msgstr "ﾊﾞｰｼﾞﾆｱ州ﾃﾞｰﾀ"
-
-#~ msgid "Log In"
-#~ msgstr "ログイン"
-
-#~ msgid "Forgot your password?"
-#~ msgstr "ﾊﾟｽﾜｰﾄﾞを忘れた場合はここをｸﾘｯｸ"
-
-#~ msgid "Don't have an account?"
-#~ msgstr "ｱｶｳﾝﾄをお持ちでない場合はここをｸﾘｯｸ"
-
-#~ msgid "To Draw Your Own Maps..."
-#~ msgstr "自分の地図を描くには..."
-
-#~ msgid "To View Other Users' Maps..."
-#~ msgstr "他のﾕｰｻﾞｰの地図を見るには..."
-
-#~ msgid "Enter as a guest"
-#~ msgstr "ｹﾞｽﾄとして利用する"
-
-#~ msgid "Get A Hint"
-#~ msgstr "ﾊﾟｽﾜｰﾄﾞのﾋﾝﾄを見る"
-
-#~ msgid ""
-#~ "Enter your username to retrieve your password hint that you used when "
-#~ "registering for an account."
-#~ msgstr ""
-#~ "ｱｶｳﾝﾄ登録時に入力したﾊﾟｽﾜｰﾄﾞのﾋﾝﾄを見るには、ﾕｰｻﾞｰ名を入力してください。"
-
-#~ msgid "Username"
-#~ msgstr "ﾕｰｻﾞｰ名"
-
-#~ msgid "OR"
-#~ msgstr "もしくは"
-
-#~ msgid "Reset Your Password"
-#~ msgstr "ﾊﾟｽﾜｰﾄﾞを再設定する"
-
-#~ msgid ""
-#~ "Enter your email address to reset your password if you have forgotten "
-#~ "your username."
-#~ msgstr ""
-#~ "ﾕｰｻﾞｰ名を忘れた場合は、Eﾒｰﾙｱﾄﾞﾚｽを入力してﾊﾟｽﾜｰﾄﾞを再設定してください。"
-
-#~ msgid "Email"
-#~ msgstr "Eﾒｰﾙ"
-
-#~ msgid "Begin"
-#~ msgstr "開始する"
-
-#~ msgid "Here Is Your Hint"
-#~ msgstr "これがあなたのﾊﾟｽﾜｰﾄﾞのﾋﾝﾄです"
-
-#~ msgid ""
-#~ "If this helps you remember your password, you can close this dialog and "
-#~ "log in."
-#~ msgstr ""
-#~ "このﾋﾝﾄでﾊﾟｽﾜｰﾄﾞが思い出せたら、このﾀﾞｲｱﾛｸﾞを閉じてﾛｸﾞｲﾝしてください。"
-
-#~ msgid ""
-#~ "If you still can't recall your password, click on the 'Back' button, and "
-#~ "enter your email address, so we can email your password to you."
-#~ msgstr ""
-#~ "このﾋﾝﾄでもﾊﾟｽﾜｰﾄﾞが思い出せない場合は、「戻る」ﾎﾞﾀﾝをｸﾘｯｸして、Eﾒｰﾙｱﾄﾞﾚｽ"
-#~ "を入力すれば新しいﾊﾟｽﾜｰﾄﾞがEﾒｰﾙで送られます。"
-
-#~ msgid "Email Sent"
-#~ msgstr "Eﾒｰﾙが送られました"
-
-#~ msgid ""
-#~ "Your password has been emailed to you. You should receive your password "
-#~ "in your inbox in the next few minutes."
-#~ msgstr "ﾊﾟｽﾜｰﾄﾞがEﾒｰﾙで送られました。数分で受信箱に届くはずです。"
-
-#~ msgid "Back"
-#~ msgstr "戻る"
-
-#~ msgid "Close"
-#~ msgstr "閉じる"
-
-#~ msgid "Your account has too many sessions."
-#~ msgstr "あなたのｱｶｳﾝﾄで開けられているｾｯｼｮﾝが多すぎます。"
-
-#~ msgid "To use DistrictBuilder, you must do one of the following actions:"
-#~ msgstr "DistrictBuilderを使うには、次のどれかを行ってください。:"
-
-#~ msgid "Log in as a different user."
-#~ msgstr "別のﾕｰｻﾞｰ名でﾛｸﾞｲﾝする。"
-
-#~ msgid "Use the system as a guest."
-#~ msgstr "ｼｽﾃﾑをｹﾞｽﾄとして利用する。"
-
-#~ msgid "Force close the other user's session and log in again."
-#~ msgstr "他のﾕｰｻﾞｰのｾｯｼｮﾝを強制終了し、再度ﾛｸﾞｲﾝする。"
-
-#~ msgid ""
-#~ "The DistrictBuilder application has reached maximum capacity. Please try "
-#~ "to use the application again shortly. We apologize for the inconvenience."
-#~ msgstr ""
-#~ "DistrictBuilderｱﾌﾟﾘｹｰｼｮﾝが最大容量に達しました。しばらく経ってからやり直し"
-#~ "てください。ご迷惑をおかけいたします。"
-
-#~ msgid ""
-#~ "The following discloses our information gathering and dissemination "
-#~ "practices; and terms of use for this web site."
-#~ msgstr "当ｻｲﾄの情報の収集・提供の方針と利用規約は下記の通りです。"
-
-#~ msgid "Information gathering"
-#~ msgstr "情報の収集について"
-
-#~ msgid ""
-#~ "Our web server software generates logfiles of the IP addresses of "
-#~ "computers that access this web site and of what files they access."
-#~ msgstr ""
-#~ "当ｳｪﾌﾞｻｰﾊﾞｰｿﾌﾄｳｪｱはこのｻｲﾄにｱｸｾｽするｺﾝﾋﾟｭｰﾀｰのIPｱﾄﾞﾚｽとｱｸｾｽしたﾌｧｲﾙからﾛｸﾞ"
-#~ "ﾌｧｲﾙを取得します。"
-
-#~ msgid ""
-#~ "These web server logs are retained on a temporary basis and then deleted "
-#~ "completely from our systems."
-#~ msgstr ""
-#~ "これらのｳｪﾌﾞｻｰﾊﾞｰのﾛｸﾞﾌｧｲﾙは短期間保存され、その後ｼｽﾃﾑから完全に削除されま"
-#~ "す。"
-
-#~ msgid ""
-#~ "We also may ask our visitors to provide information about themselves."
-#~ msgstr "また、ｻｲﾄにｱｸｾｽした方から情報の入力をお願いすることもあります。"
-
-#~ msgid ""
-#~ "We may use cookies to maintain a user's identity between web sessions."
-#~ msgstr ""
-#~ "ﾛｸﾞｲﾝ情報を次のｾｯｼｮﾝにも保持する場合は、ｸｯｷｰ(cookie)を利用することがありま"
-#~ "す。"
-
-#~ msgid "Contributor Terms"
-#~ msgstr "提供者規約"
-
-#~ msgid ""
-#~ "This site enables users to create districting maps and to comment on the "
-#~ "maps of others.  By creating a map, a comment, or an account, you are "
-#~ "agreeing to the following terms for any map, comment, data, or other "
-#~ "content (collectively, 'Contents') you contribute to this site. "
-#~ msgstr ""
-#~ "当ｻｲﾄはﾕｰｻﾞｰが選挙区地図を作成し、また他のﾕｰｻﾞｰの作成した地図にｺﾒﾝﾄする目"
-#~ "的で運営されています。当サイトの利用、つまり、地図の作成やコメント、またア"
-#~ "カウントを作成することで、利用者は提供する地図、コメント、その他の内容（以"
-#~ "下「内容」とします）について、以下の規約を承諾し、同意したものとみなされま"
-#~ "す。"
-
-#~ msgid ""
-#~ "You hereby grant to us a worldwide, royalty-free, non-exclusive, "
-#~ "perpetual, irrevocable license to do any act that is restricted by "
-#~ "copyright over anything within the Contents, whether in the original "
-#~ "medium or any other. These rights explicitly include commercial use, and "
-#~ "do not exclude any field of endeavour. These rights include, without "
-#~ "limitation, the right to sublicense the work through multiple tiers of "
-#~ "sublicensees. To the extent allowable under applicable local laws and "
-#~ "copyright conventions, You also waive and/or agree not to assert against "
-#~ "us or our licensees any moral rights that You may have in the Contents."
-#~ msgstr ""
-#~ "当サイトの利用者はregalías, no exclusiva, perpetua, irrevocable, para "
-#~ "realizar cualquier acto que está limitado por los derechos de autor sobre "
-#~ "cualquier cosa en el contenido, ya sea en el soporte original o cualquier "
-#~ "otro. Estos derechos incluyen explícitamente el uso comercial, y no "
-#~ "excluyen cualquier campo de actividad. Estos derechos incluyen, sin "
-#~ "limitación, el derecho a sublicenciar la obra a través de múltiples "
-#~ "niveles de sublicencias. En la medida permitida por las leyes locales y "
-#~ "las convenciones de derechos de autor, usted también renuncia y / o se "
-#~ "compromete a no hacer valer en contra de nosotros o nuestros "
-#~ "licenciatarios a cualquier derecho moral que pueda tener en los "
-#~ "Contenidos."
-
-#~ msgid ""
-#~ "We agree to make the Contents that you contribute and designate as &quot;"
-#~ "published&quot; available under at least one of the following licenses: "
-#~ "ODbL 1.0; DbCL 1.0; CC-BY-SA 2.0; or another free and open license. "
-#~ msgstr ""
-#~ "Estamos de acuerdo en que el contenido que usted aporte y designar como "
-#~ "\"publicado\", disponible en al menos una de las siguientes licencias: "
-#~ "ODbL 1,0; DbCL 1,0; CC-BY-SA 2.0, u otra licencia libre y abierta."
-
-#~ msgid "Use of information"
-#~ msgstr "Uso de la información"
-
-#~ msgid ""
-#~ "We use third parties to provide processing functions on our site. When "
-#~ "you register for  services, we may share information as necessary for the "
-#~ "third party to provide those services.  We make commercially reasonable "
-#~ "efforts to ensure that these third parties are prohibited from using your "
-#~ "personally identifiable information for any other purpose. "
-#~ msgstr ""
-#~ "Usamos a terceros para proporcionar funciones de procesamiento en nuestro "
-#~ "sitio. Cuando usted se registra para los servicios, podemos compartir "
-#~ "información cuando sea necesario para que el tercero para proporcionar "
-#~ "esos servicios. Hacemos todos los esfuerzos comercialmente razonables "
-#~ "para asegurar que estos terceros se les prohíbe utilizar su información "
-#~ "personalmente identificable para ningún otro propósito."
-
-#~ msgid ""
-#~ "We use your IP address and files you access to help diagnose problems "
-#~ "with our server and to administer our Web site by identifying (1) which "
-#~ "parts of our site are most heavily used, and (2) which portion of our "
-#~ "audience comes from different geographical regions. We also use this "
-#~ "information to tailor site content to user needs, and to generate "
-#~ "aggregate statistical reports. At no time do we disclose site usage by "
-#~ "individual visitors."
-#~ msgstr ""
-#~ "Utilizamos su dirección IP y los archivos que el acceso para ayudar a "
-#~ "diagnosticar problemas con nuestro servidor y para administrar nuestro "
-#~ "sitio Web mediante la identificación de (1) qué partes de nuestro sitio "
-#~ "son más utilizados, y (2) que parte de nuestra audiencia proviene de "
-#~ "diferentes zonas geográficas regiones. También utilizamos esta "
-#~ "información para adaptar el contenido del sitio a las necesidades de los "
-#~ "usuarios, y generar informes estadísticos agregados. En ningún momento de "
-#~ "divulgar el uso del sitio por los visitantes individuales."
-
-#~ msgid ""
-#~ "We reserve the right to disclose your personally identifiable information "
-#~ "as required by law and when we believe that disclosure is necessary to "
-#~ "protect our rights and/or to comply with a judicial proceeding, court "
-#~ "order or legal process served on the hosts. "
-#~ msgstr ""
-#~ "Nos reservamos el derecho de revelar su información de identificación "
-#~ "personal requerido por la ley y cuando creamos que dicha divulgación es "
-#~ "necesaria para proteger nuestros derechos y / o para cumplir con un "
-#~ "procedimiento judicial, orden judicial o proceso legal realizado sobre "
-#~ "los anfitriones."
-
-#~ msgid ""
-#~ "All maps created through the system, edits to those maps, and comments "
-#~ "made on those maps are associated with an account id and a timestamp. "
-#~ "These maps, comments, account id's and timestamps may be made available "
-#~ "to the public.  We may use this information to generate aggregate "
-#~ "statistical reports. At no time do we disclose the name, e-mail or other "
-#~ "identifying information associated with individual users accounts, unless "
-#~ "the individual explicitly selects the &quot;make my account information "
-#~ "public&quot; settings in the users profile setting. "
-#~ msgstr ""
-#~ "Todos los mapas creados por el sistema, las modificaciones a los mapas, y "
-#~ "las observaciones formuladas en esos mapas se asocian con un ID de cuenta "
-#~ "y una marca de tiempo. Estos mapas, comentarios, la cuenta de "
-#~ "Identificación y marcas de tiempo pueden ser puestos a disposición del "
-#~ "público. Podemos usar esta información para generar informes estadísticos "
-#~ "agregados. En ningún momento se reveló el nombre, correo electrónico u "
-#~ "otra información asociada a las cuentas de usuarios individuales, a menos "
-#~ "que la persona explícitamente se selecciona el \"hacer que mi cuenta la "
-#~ "información pública\" ajustes en la configuración del perfil de los "
-#~ "usuarios."
-
-#~ msgid "Security"
-#~ msgstr "Seguridad"
-
-#~ msgid ""
-#~ "This site has security measures in place to protect the loss, misuse and "
-#~ "alteration of the information under our control."
-#~ msgstr ""
-#~ "Este sitio tiene medidas de seguridad para proteger la pérdida, mal uso y "
-#~ "alteración de la información bajo nuestro control."
-
-#~ msgid "Contacting this web site"
-#~ msgstr "Contacto con este sitio web"
-
-#~ msgid ""
-#~ "If you have any questions about this privacy statement, the practices of "
-#~ "this site, or your dealings with this site, you can contact the support "
-#~ "address at the host domain"
-#~ msgstr ""
-#~ "Si usted tiene alguna pregunta sobre esta declaración de privacidad, las "
-#~ "prácticas de este sitio, o sus relaciones con este sitio, usted puede "
-#~ "contactar a la dirección de soporte en el dominio del servidor"
-
-#~ msgid ""
-#~ "This web site may contain links to other web sites. We are not "
-#~ "responsible for the privacy practices or the content of such web sites."
-#~ msgstr ""
-#~ "Este sitio web puede contener enlaces a otros sitios web. No nos hacemos "
-#~ "responsables de las prácticas de privacidad o el contenido de dichos "
-#~ "sitios web."
-
-#~ msgid "Changes to this policy"
-#~ msgstr "Cambios en esta política"
-
-#~ msgid ""
-#~ "An announcement of any changes to this policy will be posted on this page "
-#~ "for  thirty days before any changes go into effect."
-#~ msgstr ""
-#~ "Un anuncio de cualquier cambio a esta política será publicada en esta "
-#~ "página durante treinta días antes de que los cambios entren en efecto."
-
-#~ msgid "Effective Date"
-#~ msgstr "Fecha de vigencia"
-
-#~ msgid "The effective date of this policy was May 2, 2011."
-#~ msgstr "La fecha efectiva de esta política fue 02 de mayo 2011."
-
-#~ msgid "We've designed the software to run on"
-#~ msgstr "Hemos diseñado el software para funcionar en"
-
-#~ msgid "a free web browser"
-#~ msgstr "un navegador web gratuito"
-
-#~ msgid "Redistricting site admin"
-#~ msgstr "Redistribución de Distritos administrador del sitio"
-
-#~ msgid "Redistricting administration"
-#~ msgstr "Redistribución de la administración"
-
-#~ msgid "Username:"
-#~ msgstr "Nombre de Usuario:"
-
-#~ msgid "Password:"
-#~ msgstr "Contraseña:"
-
-#~ msgid "Log in"
-#~ msgstr "Acceder"
-
-#~ msgid "Home"
-#~ msgstr "Casa"
-
-#~ msgid "Change password"
-#~ msgstr "Cambiar la contraseña"
-
-#~ msgid "Please correct the error below."
-#~ msgid_plural "Please correct the errors below."
-#~ msgstr[0] "Please correct the error below."
-#~ msgstr[1] "Please correct the error below."
-
-#~ msgid "Enter a new password for the user <strong>%(username)s</strong>."
-#~ msgstr ""
-#~ "Introducir una nueva contraseña para el usuario <strong>%(username)s</"
-#~ "strong>."
-
-#~ msgid "Password (again)"
-#~ msgstr "Contraseña (otra vez)"
-
-#~ msgid "Enter the same password as above, for verification."
-#~ msgstr ""
-#~ "Introducir la misma contraseña que el anterior, para su verificación."
-
-#~ msgid "Download Subject template"
-#~ msgstr "Descargar plantilla de sujeción"
-
-#~ msgid "Add"
-#~ msgstr "Añadir"
-
-#~ msgid ""
-#~ "A Subject in DistrictBuilder has relationships with many objects in the "
-#~ "application. For this reason, adding a Subject requires a few extra "
-#~ "steps. The following forms will walk you through the process of:"
-#~ msgstr ""
-#~ "Un tema en el DistrictBuilder tiene relaciones con muchos objetos en la "
-#~ "aplicación. Por esta razón, la adición de un tema requiere algunos pasos "
-#~ "adicionales. Las formas siguientes le guiarán en el proceso de:"
-
-#~ msgid "Downloading a Subject template file (CSV)"
-#~ msgstr "Descargar plantilla de sujeción"
-
-#~ msgid "Uploading a complete Subject file (CSV)"
-#~ msgstr "Cargar un archivo de reserva completa (CSV)"
-
-#~ msgid "Verifying the upload Subject file."
-#~ msgstr "Configuración de los ajustes de la reserva cargado."
-
-#~ msgid "Configuring the settings for the uploaded Subject."
-#~ msgstr "Configuración de los ajustes de la reserva cargado."
-
-#~ msgid "1. Download a Subject template file"
-#~ msgstr "1. Descargar plantilla de sujeción"
-
-#~ msgid ""
-#~ "Please click on the following link, and save the contents of that file on "
-#~ "your local filesystem:"
-#~ msgstr ""
-#~ "Por favor haga click en el siguiente enlace y guardar el contenido de ese "
-#~ "archivo en el sistema de archivos local:"
-
-#~ msgid "Subject template CSV"
-#~ msgstr "Cargar plantilla de reserva"
-
-#~ msgid "Continue"
-#~ msgstr "続ける"
-
-#~ msgid "Are you sure?"
-#~ msgstr "本当によろしいですか？"
-
-#~ msgid "WARNING"
-#~ msgstr "警告"
-
-#~ msgid "Delete multiple objects"
-#~ msgstr "Eliminar varios objetos"
-
-#~ msgid ""
-#~ "Are you sure you want to delete the selected %(object_name)s objects? All "
-#~ "of the following objects and their related items will be deleted:"
-#~ msgstr ""
-#~ "¿Está seguro que desea eliminar el seleccionado %(object_name)s objetos? "
-#~ "Todos los siguientes objetos y sus elementos relacionadas se eliminarán:"
-
-#~ msgid "characteristics"
-#~ msgstr "características"
-
-#~ msgid "computed characteristics"
-#~ msgstr "calcula las características"
-
-#~ msgid "related subject(s)"
-#~ msgstr "tema relacionado (s)"
-
-#~ msgid "Yes, I'm sure"
-#~ msgstr "Sí, estoy seguro"
-
-#~ msgid ""
-#~ "Deleting the selected %(object_name)s objects must be done with great "
-#~ "care! Please carefully read the following notice regarding the removal of "
-#~ "%(object_name)s objects:"
-#~ msgstr ""
-#~ "Eliminar el seleccionado %(object_name)s objetos se debe hacer con mucho "
-#~ "cuidado! Por favor, lea detenidamente el siguiente aviso sobre la "
-#~ "eliminación de %(object_name)s  objetos:"
-
-#~ msgid "Deleting a %(object_name)s is irreversible."
-#~ msgstr "Eliminación de un %(object_name)s  es irreversible."
-
-#~ msgid ""
-#~ "Deleting a %(object_name)s must <em>NOT</em> occur when regular users are "
-#~ "editing plans."
-#~ msgstr ""
-#~ "Eliminación de un %(object_name)s  <em>no puede aparecer</em> cuando los "
-#~ "usuarios regulares de edición de planes."
-
-#~ msgid ""
-#~ "All references to the %(object_name)s in the application configuration "
-#~ "must be removed."
-#~ msgstr ""
-#~ "Todas las referencias a la %(object_name)s  en la configuración de la "
-#~ "aplicación debe ser eliminado."
-
-#~ msgid ""
-#~ "The process of deleting a %(object_name)s takes a significant amount of "
-#~ "time, and may not be interrupted once it has been started."
-#~ msgstr ""
-#~ "El proceso de borrado de un %(object_name)s  tiene una cantidad "
-#~ "significativa de tiempo, y no puede ser interrumpida una vez que se ha "
-#~ "iniciado."
-
-#~ msgid ""
-#~ "I understand that the deletion of a %(object_name)s is an irreversible "
-#~ "operation."
-#~ msgstr ""
-#~ "Entiendo que la supresión de un %(object_name)s  es una operación "
-#~ "irreversible."
-
-#~ msgid "Upload Subject template"
-#~ msgstr "Cargar plantilla de reserva"
-
-#~ msgid ""
-#~ "Subject ingest successful! Press \"Continue\" to edit the Subject details."
-#~ msgstr ""
-#~ "Asunto ingerir un éxito! Pulse el botón \"Continuar\" para editar los "
-#~ "datos del paciente."
-
-#~ msgid ""
-#~ "Sorry! This processing step failed with the following error message: "
-#~ msgstr "申し訳ありません。ﾌﾟﾛｾｽ作業中にｴﾗｰが発生しました。ｴﾗｰ番号:"
-
-#~ msgid "Retry"
-#~ msgstr "もう一度やり直す"
-
-#~ msgid "Could not retrieve task status."
-#~ msgstr "ﾀｽｸ状況を取得できませんでした。"
-
-#~ msgid "Verifying the uploaded Subject file."
-#~ msgstr "ｱｯﾌﾟﾛｰﾄﾞされたSubjectﾌｧｲﾙの確認中です。"
-
-#~ msgid "2. Uploading a complete Subject file"
-#~ msgstr "2. 全てのSubjectﾌｧｲﾙをｱｯﾌﾟﾛｰﾄﾞする"
-
-#~ msgid ""
-#~ "Using the file field below, please select the populated Subject template "
-#~ "file, and upload the Subject template file with the 'Upload' button below."
-#~ msgstr ""
-#~ "Utilizando el campo de archivo abajo, por favor seleccione el archivo de "
-#~ "plantilla de sujeción de población, y cargar el archivo de plantilla de "
-#~ "sujeción con el botón 'Subir' a continuación."
-
-#~ msgid "3. Verifying the uploaded Subject file"
-#~ msgstr "3. Verificación de la subida de archivos Tema"
-
-#~ msgid ""
-#~ "Please wait while the uploaded Subject file is checked for consistency "
-#~ "and alignment with the currently loaded data. This may take up to 15 "
-#~ "minutes, so please wait until the process completes before leaving this "
-#~ "page."
-#~ msgstr ""
-#~ "Por favor espere mientras el archivo Asunto subida se comprueba la "
-#~ "coherencia y la alineación con los datos cargados. Esto puede tomar hasta "
-#~ "15 minutos, así que por favor espere hasta que el proceso se complete "
-#~ "antes de salir de esta página."
-
-#~ msgid "4. Configuring the settings for the uploaded Subject"
-#~ msgstr "4. Configuración de los ajustes de la reserva cargado."
-
-#~ msgid ""
-#~ "The verification steps are complete, you may proceed to the Subject "
-#~ "change form to complete filling in the Subject details."
-#~ msgstr ""
-#~ "確認作業が完了しました。Subject変更ﾌｫｰﾑに進み、Subjectの詳細の入力を完了し"
-#~ "てください。"
-
-#~ msgid "Verifying counts of uploaded subjects..."
-#~ msgstr "ｱｯﾌﾟﾛｰﾄﾞされたSubjectの数を確認しています..."
-
-#~ msgid "Please Wait ..."
-#~ msgstr "しばらくお待ちください..."
-
-#~ msgid "Upload"
-#~ msgstr "ｱｯﾌﾟﾛｰﾄﾞ"
-
-#~ msgid "Documentation"
-#~ msgstr "文書"
-
-#~ msgid "Log out"
-#~ msgstr "ログアウト"
-
-#~ msgid "Password change"
-#~ msgstr "ﾊﾟｽﾜｰﾄﾞの変更"
-
-#~ msgid ""
-#~ "Please enter your old password, for security's sake, and then enter your "
-#~ "new password twice so we can verify you typed it in correctly."
-#~ msgstr ""
-#~ "ｾｷｭﾘﾃｨ保護のため、現在のﾊﾟｽﾜｰﾄﾞを入力し、新しいﾊﾟｽﾜｰﾄﾞを確認のため２度入力"
-#~ "してください。"
-
-#~ msgid "Old password"
-#~ msgstr "現在のﾊﾟｽﾜｰﾄﾞ"
-
-#~ msgid "New password"
-#~ msgstr "新しいﾊﾟｽﾜｰﾄﾞ"
-
-#~ msgid "Change my password"
-#~ msgstr "ﾊﾟｽﾜｰﾄﾞを変更する"
 
 #~ msgid "%s Reports"
 #~ msgstr "Generar <br/> Divide Informe"
