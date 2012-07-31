@@ -782,7 +782,6 @@ msgstr ""
 "múltiples %(body_members)s"
 
 #: redistricting/templates/editplan.html:62
-#, fuzzy
 msgid "Single<br/>Select"
 msgstr "Selección<br/>Única"
 
