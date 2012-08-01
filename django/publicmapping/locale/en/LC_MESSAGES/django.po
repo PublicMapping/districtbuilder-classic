@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-08-01 13:54-0400\n"
+"POT-Creation-Date: 2012-08-01 16:57-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -589,32 +589,32 @@ msgstr ""
 msgid "No plan with that ID exists."
 msgstr ""
 
-#: redistricting/views.py:2369
+#: redistricting/views.py:2379
 #, python-format
 msgid "No functions for %(panel)s"
 msgstr ""
 
-#: redistricting/views.py:2373
+#: redistricting/views.py:2383
 #, python-format
 msgid "No user displays for %(user)s"
 msgstr ""
 
-#: redistricting/views.py:2392
+#: redistricting/views.py:2402
 msgid "Couldn't delete personalized scoredisplay"
 msgstr ""
 
-#: redistricting/views.py:2434
+#: redistricting/views.py:2444
 #, python-format
 msgid ""
 "Each user is limited to %(limit)d statistics sets. Please delete one or edit "
 "an existing set."
 msgstr ""
 
-#: redistricting/views.py:2444
+#: redistricting/views.py:2454
 msgid "Didn't get functions in POST parameter"
 msgstr ""
 
-#: redistricting/views.py:2477
+#: redistricting/views.py:2487
 msgid "No plan with that ID was found."
 msgstr ""
 
@@ -2307,12 +2307,10 @@ msgstr ""
 msgid "The effective date of this policy was May 2, 2011."
 msgstr ""
 
-#: templates/index.html:331
-msgid "We've designed the software to run on"
-msgstr ""
-
-#: templates/index.html:333
-msgid "a free web browser"
+#: templates/index.html:332
+#, python-format
+msgid ""
+"We've designed the software to run on %(firefox_link)s - a free web browser"
 msgstr ""
 
 #: templates/language_chooser.html:33

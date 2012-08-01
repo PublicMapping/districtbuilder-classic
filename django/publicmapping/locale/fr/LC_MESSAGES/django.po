@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-08-01 13:54-0400\n"
+"POT-Creation-Date: 2012-08-01 16:57-0400\n"
 "PO-Revision-Date: 2011-11-29 14:20\n"
 "Last-Translator: Admin User <ajennings+saigon@azavea.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -620,21 +620,21 @@ msgstr ""
 msgid "No plan with that ID exists."
 msgstr "Il n'existe aucun plan avec cet identifiant."
 
-#: redistricting/views.py:2369
+#: redistricting/views.py:2379
 #, python-format
 msgid "No functions for %(panel)s"
 msgstr "Aucune fonction pour %(panel)s"
 
-#: redistricting/views.py:2373
+#: redistricting/views.py:2383
 #, python-format
 msgid "No user displays for %(user)s"
 msgstr "Aucun utilisateur ne s'affiche pour %(user)s"
 
-#: redistricting/views.py:2392
+#: redistricting/views.py:2402
 msgid "Couldn't delete personalized scoredisplay"
 msgstr "Impossible de supprimer un affichage de score personnalisé"
 
-#: redistricting/views.py:2434
+#: redistricting/views.py:2444
 #, python-format
 msgid ""
 "Each user is limited to %(limit)d statistics sets. Please delete one or edit "
@@ -643,11 +643,11 @@ msgstr ""
 "Chaque utilisateur est limité à %(limit)d d'ensembles statistiques. Veuillez "
 "supprimer un ou modifier un ensemble existant."
 
-#: redistricting/views.py:2444
+#: redistricting/views.py:2454
 msgid "Didn't get functions in POST parameter"
 msgstr "N'a pas obtenu les fonctions dans le paramètre POST"
 
-#: redistricting/views.py:2477
+#: redistricting/views.py:2487
 msgid "No plan with that ID was found."
 msgstr "Impossible de trouver un plan avec cet identifiant."
 
@@ -2556,13 +2556,11 @@ msgid "The effective date of this policy was May 2, 2011."
 msgstr ""
 "La date d'entrée en vigueur de la présente politique était le 2 Mai 2011."
 
-#: templates/index.html:331
-msgid "We've designed the software to run on"
+#: templates/index.html:332
+#, fuzzy, python-format
+msgid ""
+"We've designed the software to run on %(firefox_link)s - a free web browser"
 msgstr "Nous avons conçu le logiciel pour fonctionner sur"
-
-#: templates/index.html:333
-msgid "a free web browser"
-msgstr "un navigateur libre"
 
 #: templates/language_chooser.html:33
 msgid "Language"
@@ -2895,6 +2893,9 @@ msgstr "Nouveau mot de passe"
 #: templates/registration/password_change_form.orig.html:73
 msgid "Change my password"
 msgstr "Changer mon mot de passe"
+
+#~ msgid "a free web browser"
+#~ msgstr "un navigateur libre"
 
 #~ msgid "Tools"
 #~ msgstr "Outils"

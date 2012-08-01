@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-08-01 13:54-0400\n"
+"POT-Creation-Date: 2012-08-01 16:57-0400\n"
 "PO-Revision-Date: 2012-06-07 14:20\n"
 "Language: Japanese\n"
 "MIME-Version: 1.0\n"
@@ -604,21 +604,21 @@ msgstr ""
 msgid "No plan with that ID exists."
 msgstr "そのIDの計画案はありません。"
 
-#: redistricting/views.py:2369
+#: redistricting/views.py:2379
 #, python-format
 msgid "No functions for %(panel)s"
 msgstr "%(panel)sの機能はありません"
 
-#: redistricting/views.py:2373
+#: redistricting/views.py:2383
 #, python-format
 msgid "No user displays for %(user)s"
 msgstr "%(user)sのﾕｰｻﾞｰﾃﾞｨｽﾌﾟﾚｲはありません"
 
-#: redistricting/views.py:2392
+#: redistricting/views.py:2402
 msgid "Couldn't delete personalized scoredisplay"
 msgstr "個人用のscoredisplayを削除できませんした"
 
-#: redistricting/views.py:2434
+#: redistricting/views.py:2444
 #, python-format
 msgid ""
 "Each user is limited to %(limit)d statistics sets. Please delete one or edit "
@@ -627,11 +627,11 @@ msgstr ""
 "ﾕｰｻﾞｰ一名につき%(limit)d個までの統計しか使えません。削除をするか現存する統計"
 "を編集してください。"
 
-#: redistricting/views.py:2444
+#: redistricting/views.py:2454
 msgid "Didn't get functions in POST parameter"
 msgstr "POST parameterの機能を取得できませんでした"
 
-#: redistricting/views.py:2477
+#: redistricting/views.py:2487
 msgid "No plan with that ID was found."
 msgstr "そのIDの計画案は見つかりませんでした。"
 
@@ -2452,13 +2452,11 @@ msgstr "Fecha de vigencia"
 msgid "The effective date of this policy was May 2, 2011."
 msgstr "La fecha efectiva de esta política fue 02 de mayo 2011."
 
-#: templates/index.html:331
-msgid "We've designed the software to run on"
+#: templates/index.html:332
+#, fuzzy, python-format
+msgid ""
+"We've designed the software to run on %(firefox_link)s - a free web browser"
 msgstr "Hemos diseñado el software para funcionar en"
-
-#: templates/index.html:333
-msgid "a free web browser"
-msgstr "un navegador web gratuito"
 
 #: templates/language_chooser.html:33
 msgid "Language"
@@ -2789,6 +2787,9 @@ msgstr "新しいﾊﾟｽﾜｰﾄﾞ"
 #: templates/registration/password_change_form.orig.html:73
 msgid "Change my password"
 msgstr "ﾊﾟｽﾜｰﾄﾞを変更する"
+
+#~ msgid "a free web browser"
+#~ msgstr "un navegador web gratuito"
 
 #~ msgid "Tools"
 #~ msgstr "ﾂｰﾙ"

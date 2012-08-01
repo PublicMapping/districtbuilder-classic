@@ -325,9 +325,8 @@
           <img border="0" src="http://sfx-images.mozilla.org/affiliates/Buttons/firefox3/110x32_get_ffx.png"
                alt="Spread Firefox Affiliate Button">
         </a>
-        <p> {% trans "We've designed the software to run on" %}
-          <a target="_blank" href="http://www.mozilla.com/?from=sfx&amp;uid=0&amp;t=306">Mozilla Firefox</a>
-          - {% trans "a free web browser" %}
+        <p> 
+            {% blocktrans with '<a target="_blank" href="http://www.mozilla.com/?from=sfx&amp;uid=0&amp;t=306">Mozilla Firefox</a>' as firefox_link %}We've designed the software to run on {{ firefox_link }} - a free web browser{% endblocktrans %}
         </p>
       </div>
     </div>
