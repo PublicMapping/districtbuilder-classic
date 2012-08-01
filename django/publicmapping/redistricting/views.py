@@ -2357,13 +2357,12 @@ def statistics_sets(request, planid):
         )
 
         for admin_display in admin_displays:
-            if 'reports' not in admin_display.cssclass:
-                sets.append({ 
-                    'id': admin_display.id,
-                    'name': force_escape(admin_display.__unicode__()),
-                    'functions': [],
-                    'mine':False
-                })
+            sets.append({ 
+                'id': admin_display.id,
+                'name': force_escape(admin_display.__unicode__()),
+                'functions': [],
+                'mine':False
+            })
 
         try:
             user_displays = ScoreDisplay.objects.filter(
