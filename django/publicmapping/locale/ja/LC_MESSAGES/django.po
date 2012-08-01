@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-31 14:13-0400\n"
+"POT-Creation-Date: 2012-08-01 13:54-0400\n"
 "PO-Revision-Date: 2012-06-07 14:20\n"
 "Language: Japanese\n"
 "MIME-Version: 1.0\n"
@@ -114,7 +114,7 @@ msgid "Within Target Range"
 msgstr "目標人口範囲内"
 
 #: redistricting/reportcalculators.py:95
-#: redistricting/templates/viewplan.html:992
+#: redistricting/templates/viewplan.html:997
 msgid "Compactness"
 msgstr "Compacidad"
 
@@ -702,7 +702,7 @@ msgid "Far Under target"
 msgstr "目標数に遠く届きません"
 
 #: redistricting/templates/basic_information.html:81
-#: redistricting/templates/viewplan.html:993
+#: redistricting/templates/viewplan.html:998
 msgid "Contiguity"
 msgstr "近接性"
 
@@ -727,35 +727,34 @@ msgstr "元に戻す"
 msgid "Redo"
 msgstr "やり直し"
 
-#: redistricting/templates/editplan.html:42
+#: redistricting/templates/editplan.html:43
 msgid "Map Editing"
 msgstr "地図編集"
 
-#: redistricting/templates/editplan.html:43
-msgid "Tools"
-msgstr "ﾂｰﾙ"
+#: redistricting/templates/editplan.html:45
+#, fuzzy, python-format
+msgid "%(district_label)s Tools"
+msgstr "新しい%(district_label)s"
 
-#: redistricting/templates/editplan.html:53
-#: redistricting/templates/editplan.html:113
+#: redistricting/templates/editplan.html:58
+#: redistricting/templates/editplan.html:119
 #: redistricting/templates/viewplan.html:465
 msgid "Pan"
 msgstr "ﾊﾟﾝ操作"
 
-#: redistricting/templates/editplan.html:54
-#: redistricting/templates/editplan.html:114
+#: redistricting/templates/editplan.html:59
+#: redistricting/templates/editplan.html:120
 #: redistricting/templates/viewplan.html:466
 msgid "Click on a geounit to see its demographic info."
 msgstr "人口統計情報を見るには地域単位をｸﾘｯｸしてください。"
 
-#: redistricting/templates/editplan.html:54
-#: redistricting/templates/editplan.html:114
-#: redistricting/templates/editplan.html:118
+#: redistricting/templates/editplan.html:59
+#: redistricting/templates/editplan.html:120
 #: redistricting/templates/viewplan.html:466
-#: redistricting/templates/viewplan.html:469
 msgid "Info"
 msgstr "情報"
 
-#: redistricting/templates/editplan.html:62
+#: redistricting/templates/editplan.html:67
 #, python-format
 msgid ""
 "Single %(body_member_long_label)s select; +Shift to select multiple "
@@ -764,32 +763,32 @@ msgstr ""
 "単独%(body_member_long_label)s選択; 複数の%(body_members)sを選択するには"
 "+Shift を押してください"
 
-#: redistricting/templates/editplan.html:62
+#: redistricting/templates/editplan.html:67
 #, fuzzy
 msgid "Single<br/>Select"
 msgstr "単独<br/>選択 "
 
-#: redistricting/templates/editplan.html:63
+#: redistricting/templates/editplan.html:68
 msgid "Select by rectangle"
 msgstr "四角範囲選択"
 
-#: redistricting/templates/editplan.html:63
+#: redistricting/templates/editplan.html:68
 msgid "Rectangle<br/>Select"
 msgstr "四角<br/>選択"
 
-#: redistricting/templates/editplan.html:64
+#: redistricting/templates/editplan.html:69
 msgid "Select by drawing a polygon"
 msgstr "多角形を描いて選択"
 
-#: redistricting/templates/editplan.html:64
+#: redistricting/templates/editplan.html:69
 msgid "Polygon"
 msgstr "Polígono"
 
-#: redistricting/templates/editplan.html:64
+#: redistricting/templates/editplan.html:69
 msgid "Select"
 msgstr "Seleccionar"
 
-#: redistricting/templates/editplan.html:69
+#: redistricting/templates/editplan.html:74
 #, python-format
 msgid ""
 "Enable anchor mode, then select a %(body_member_long_label)s name to "
@@ -798,17 +797,17 @@ msgstr ""
 "ｱﾝｶｰﾓｰﾄﾞを有効にし、%(body_member_long_label)sの名前を選択する"
 "と%(body_member_long_label)sに繰り返し配置されます。"
 
-#: redistricting/templates/editplan.html:69
+#: redistricting/templates/editplan.html:74
 #, python-format
 msgid "Anchor<br/>%(district_label)s"
 msgstr "<br/>%(district_label)sをｱﾝｶｰ選択"
 
-#: redistricting/templates/editplan.html:71
+#: redistricting/templates/editplan.html:76
 #, python-format
 msgid "Assign to %(district_label)s"
 msgstr "%(district_label)sに配置する"
 
-#: redistricting/templates/editplan.html:72
+#: redistricting/templates/editplan.html:77
 #, python-format
 msgid ""
 "Assign %(body_members)s currently selected on map by choosing a "
@@ -817,16 +816,16 @@ msgstr ""
 "現在地図上で選択されている%(body_members)sを配置するに"
 "は%(body_member_long_label)sの名前をﾄﾞﾛｯﾌﾟﾀｳﾝﾘｽﾄから選択してください"
 
-#: redistricting/templates/editplan.html:73
+#: redistricting/templates/editplan.html:78
 msgid "Select One"
 msgstr "単独選択"
 
-#: redistricting/templates/editplan.html:78
+#: redistricting/templates/editplan.html:83
 #, python-format
 msgid "New %(district_label)s"
 msgstr "新しい%(district_label)s"
 
-#: redistricting/templates/editplan.html:82
+#: redistricting/templates/editplan.html:87
 #, python-format
 msgid ""
 "Select areas on the map then drag them to into a %(body_member_long_label)s "
@@ -834,84 +833,91 @@ msgid ""
 msgstr ""
 "地図上のｴﾘｱを選択し%(body_member_long_label)sの中にﾄﾞﾗｯｸﾞすると再配置できます"
 
-#: redistricting/templates/editplan.html:82
+#: redistricting/templates/editplan.html:87
 msgid "Click and<br/>Drag"
 msgstr "ｸﾘｯｸしてﾄﾞﾗｯｸﾞ"
 
-#: redistricting/templates/editplan.html:88
+#: redistricting/templates/editplan.html:93
 msgid "Perform automated resolution of minor unassigned geographies"
 msgstr "配置されていないｴﾘｱを自動配置する"
 
-#: redistricting/templates/editplan.html:88
+#: redistricting/templates/editplan.html:93
 msgid "Fix<br/>Unassigned"
 msgstr "未配置の修復"
 
-#: redistricting/templates/editplan.html:117
+#: redistricting/templates/editplan.html:123
 #, python-format
 msgid "Click on a %(body_member_long_label)s to lock or unlock it."
 msgstr "ﾛｯｸ・ﾛｯｸ解除するには%(body_member_long_label)sをｸﾘｯｸしてください。"
 
-#: redistricting/templates/editplan.html:117
-msgid "Lock"
-msgstr "ﾛｯｸ"
+#: redistricting/templates/editplan.html:124
+#, fuzzy, python-format
+msgid "Lock<br />%(district_label)s"
+msgstr "<br/>%(district_label)sをｱﾝｶｰ選択"
 
-#: redistricting/templates/editplan.html:118
+#: redistricting/templates/editplan.html:126
 #, python-format
 msgid "Click on a %(body_member_long_label)s to see its ID."
 msgstr "IDを見るには%(body_member_long_label)sをｸﾘｯｸしてください。"
 
-#: redistricting/templates/editplan.html:119
+#: redistricting/templates/editplan.html:127
+#, fuzzy, python-format
+msgid "%(district_label)s<br />Info"
+msgstr "新しい%(district_label)s"
+
+#: redistricting/templates/editplan.html:129
 #, python-format
 msgid "Unassign all the units in a %(body_member_long_label)s"
 msgstr "%(body_member_long_label)sの中のﾕﾆｯﾄをすべて配置から外す"
 
-#: redistricting/templates/editplan.html:119
-msgid "Unassign"
-msgstr "配置解除"
+#: redistricting/templates/editplan.html:130
+#, fuzzy, python-format
+msgid "Unassign<br/>%(district_label)s"
+msgstr "<br/>%(district_label)sをｱﾝｶｰ選択"
 
-#: redistricting/templates/editplan.html:120
+#: redistricting/templates/editplan.html:132
 #, python-format
 msgid "Copy a %(body_member_long_label)s from another %(plan_text)s"
 msgstr "他の%(plan_text)sから%(body_member_long_label)sをｺﾋﾟｰする"
 
-#: redistricting/templates/editplan.html:120
+#: redistricting/templates/editplan.html:132
 msgid "Copy and</br>Paste"
 msgstr "ｺﾋﾟｰ･ﾍﾟｰｽﾄ"
 
-#: redistricting/templates/editplan.html:124
-#: redistricting/templates/viewplan.html:472
+#: redistricting/templates/editplan.html:136
+#: redistricting/templates/viewplan.html:474
 msgid "Show<br/>Splits"
 msgstr "境界を表示"
 
-#: redistricting/templates/editplan.html:125
-#: redistricting/templates/viewplan.html:473
+#: redistricting/templates/editplan.html:137
+#: redistricting/templates/viewplan.html:475
 msgid "Generate<br/>Splits Report"
 msgstr "境界のﾚﾎﾟｰﾄを作成する"
 
-#: redistricting/templates/editplan.html:130
+#: redistricting/templates/editplan.html:142
 msgid "Select Multi-<br/>Member Districts"
 msgstr "複数定員区を選択"
 
-#: redistricting/templates/editplan.html:144
+#: redistricting/templates/editplan.html:154
 msgid "Submit Final Plan to Contest"
 msgstr "最終計画案をｺﾝﾃｽﾄに提出する"
 
-#: redistricting/templates/editplan.html:145
+#: redistricting/templates/editplan.html:155
 msgid ""
 "You can submit your completed plan to be considered for the contest by "
 "filling out this form."
 msgstr "完成した計画案をｺﾝﾃｽﾄに提出するにはこのﾌｫｰﾑを記入してください。"
 
-#: redistricting/templates/editplan.html:146
-#: redistricting/templates/editplan.html:368
+#: redistricting/templates/editplan.html:156
+#: redistricting/templates/editplan.html:378
 msgid "Submit Final Plan"
 msgstr "最終計画案を提出"
 
-#: redistricting/templates/editplan.html:152
+#: redistricting/templates/editplan.html:162
 msgid "Share Plan With All Users"
 msgstr "計画案を全てのﾕｰｻﾞｰと共有する"
 
-#: redistricting/templates/editplan.html:153
+#: redistricting/templates/editplan.html:163
 #, python-format
 msgid ""
 "By sharing a copy of your %(plan_text)s below, you are making your "
@@ -923,20 +929,20 @@ msgstr ""
 "できます。共有するには、%(plan_text)sに特有の名前をつけてください。現在"
 "の%(plan_text)sが「共有」ｾｸｼｮﾝの計画案選択表に追加されます。"
 
-#: redistricting/templates/editplan.html:155
+#: redistricting/templates/editplan.html:165
 #, python-format
 msgid "Name your shared %(plan_text)s"
 msgstr "共有した%(plan_text)sに名前をつける"
 
-#: redistricting/templates/editplan.html:157
+#: redistricting/templates/editplan.html:167
 msgid "Save and Share"
 msgstr "保存して共有"
 
-#: redistricting/templates/editplan.html:161
+#: redistricting/templates/editplan.html:171
 msgid "Congratulations!"
 msgstr "おめでとうございます！"
 
-#: redistricting/templates/editplan.html:162
+#: redistricting/templates/editplan.html:172
 #, python-format
 msgid ""
 "You have successfully shared your %(plan_text)s. You can share your "
@@ -945,22 +951,22 @@ msgstr ""
 "%(plan_text)sの共有に成功しました。このﾘﾝｸを使ってあなたの%(plan_text)sを他の"
 "人に見せることができます:"
 
-#: redistricting/templates/editplan.html:164
+#: redistricting/templates/editplan.html:174
 #, python-format
 msgid "Continue Editing Current %(plantext)s"
 msgstr "現在の%(plantext)sの編集を続ける"
 
-#: redistricting/templates/editplan.html:165
+#: redistricting/templates/editplan.html:175
 #, python-format
 msgid "Select New %(plan_text)s to Edit"
 msgstr "新しい%(plan_text)sを選択して編集"
 
-#: redistricting/templates/editplan.html:173
-#: redistricting/templates/editplan.html:185
+#: redistricting/templates/editplan.html:183
+#: redistricting/templates/editplan.html:195
 msgid "Verify and Submit Plan to Leaderboards"
 msgstr "計画案を照合してｽｺｱﾎﾞｰﾄﾞに提出する"
 
-#: redistricting/templates/editplan.html:174
+#: redistricting/templates/editplan.html:184
 msgid ""
 "In order to be considered for placement on the leaderboards your plan must "
 "meet the criteria for creating a legal redistricitng plan. Keep in mind that "
@@ -972,7 +978,7 @@ msgstr ""
 "ります。照合済み計画案をもう一度編集すると、自動的に「未照合」になり、再度照"
 "合をするまでｽｺｱﾎﾞｰﾄﾞに提出できなくなります。"
 
-#: redistricting/templates/editplan.html:175
+#: redistricting/templates/editplan.html:185
 msgid ""
 "By verifying your plan, you are <em><strong>not</strong></em> sharing your "
 "plan with other users. Your plan title and user name will simply show up in "
@@ -981,25 +987,25 @@ msgstr ""
 "計画案を照合しただけでは計画案を共有することにはなりません。あなたの計画案が"
 "もしﾄｯﾌﾟ10にﾗﾝｸｲﾝした場合、計画案名とﾕｰｻﾞｰ名のみがﾄｯﾌﾟ10ﾘｽﾄに表示されます。"
 
-#: redistricting/templates/editplan.html:177
+#: redistricting/templates/editplan.html:187
 msgid "How to verify and submit your plan:"
 msgstr "計画案を照合・提出するには:"
 
-#: redistricting/templates/editplan.html:179
+#: redistricting/templates/editplan.html:189
 msgid "Click the \"Verify and Submit to Leaderboards\" button."
 msgstr "「照合しｽｺｱﾎﾞｰﾄﾞに提出する」ﾎﾞﾀﾝをｸﾘｯｸしてください。"
 
-#: redistricting/templates/editplan.html:180
+#: redistricting/templates/editplan.html:190
 msgid "If verified, you will be taken to the Leaderboard page."
 msgstr "照合が済むと、ｽｺｱﾎﾞｰﾄﾞﾍﾟｰｼﾞに移ります。"
 
-#: redistricting/templates/editplan.html:181
+#: redistricting/templates/editplan.html:191
 msgid ""
 "Check the leaderboards to see if your plan ranks in any of the top ten score "
 "types."
 msgstr "あなたの計画案がﾄｯﾌﾟ10に入ったかどうかをｽｺｱﾎﾞｰﾄﾞで確認できます。"
 
-#: redistricting/templates/editplan.html:196
+#: redistricting/templates/editplan.html:206
 msgid ""
 "Choose communities to paste into your map. A map can contain any number of "
 "communities. If you would like to remove communities from your map, use the "
@@ -1009,7 +1015,7 @@ msgstr ""
 "ことができます。地図から地域を削除したい場合は、地域配置解除ﾂｰﾙを使ってくださ"
 "い。"
 
-#: redistricting/templates/editplan.html:198
+#: redistricting/templates/editplan.html:208
 msgid ""
 "Choose districts to paste into your plan.  A plan has a maximum number of "
 "districts allowed by law.  If you would like to paste districts into a plan, "
@@ -1022,28 +1028,28 @@ msgstr ""
 "る必要があります。計画案から選挙区を削除したい場合は、選挙区配置解除ﾂｰﾙを使っ"
 "てください。"
 
-#: redistricting/templates/editplan.html:202
+#: redistricting/templates/editplan.html:212
 #, python-format
 msgid "1. Choose %(plantext)s"
 msgstr "1. %(plantext)sを選択する"
 
-#: redistricting/templates/editplan.html:208
+#: redistricting/templates/editplan.html:218
 #, python-format
 msgid "2. Select %(bodymember)s to copy"
 msgstr "2. %(bodymember)sを選択してｺﾋﾟｰ"
 
-#: redistricting/templates/editplan.html:215
+#: redistricting/templates/editplan.html:225
 #, python-format
 msgid "Click on a %(body_member_long_label)s's name to see a map"
 msgstr "地図を見るには%(body_member_long_label)sの名前をｸﾘｯｸしてください"
 
-#: redistricting/templates/editplan.html:221
+#: redistricting/templates/editplan.html:231
 #, python-format
 msgid "3. Paste selected %(body_member_long_label)s into working %(plan_text)s"
 msgstr ""
 "3. 選択した%(body_member_long_label)sを現在編集中の%(plan_text)sに貼り付ける"
 
-#: redistricting/templates/editplan.html:255
+#: redistricting/templates/editplan.html:265
 msgid ""
 "Click on a row to edit the number of members for the selected district. "
 "Press ENTER to complete editing a district."
@@ -1051,25 +1057,25 @@ msgstr ""
 "選択した選挙区の定員数を変えるには、列をｸﾘｯｸしてください。ENTERを押すと編集が"
 "完了します。"
 
-#: redistricting/templates/editplan.html:259
+#: redistricting/templates/editplan.html:269
 msgid ""
 "When all desired edits are made, press the Save button to save all changes "
 "to the database."
 msgstr "必要な編集が全て終わったら、「保存」ﾎﾞﾀﾝを押して変更を保存します。"
 
-#: redistricting/templates/editplan.html:263
+#: redistricting/templates/editplan.html:273
 msgid "Target # of representatives:"
 msgstr "選出者目標数:"
 
-#: redistricting/templates/editplan.html:264
+#: redistricting/templates/editplan.html:274
 msgid "Target # of multi-member districts:"
 msgstr "複数定員区目標数:"
 
-#: redistricting/templates/editplan.html:265
+#: redistricting/templates/editplan.html:275
 msgid "Target # of members per multi-member district:"
 msgstr "複数定員区の目標定員数:"
 
-#: redistricting/templates/editplan.html:268
+#: redistricting/templates/editplan.html:278
 msgid ""
 "Your plan currently has <span id=\"multi_num_reps\" class=\"multi_val\"></"
 "span> representatives."
@@ -1077,7 +1083,7 @@ msgstr ""
 "あなたの計画案には現在<span id=\"multi_num_reps\" class=\"multi_val\"></span>"
 "人の選出者がいます。"
 
-#: redistricting/templates/editplan.html:269
+#: redistricting/templates/editplan.html:279
 msgid ""
 "Your plan currently has <span id=\"multi_num_dists\" class=\"multi_val\"></"
 "span> multi-member districts."
@@ -1085,40 +1091,40 @@ msgstr ""
 "あなたの計画案には現在<span id=\"multi_num_dists\" class=\"multi_val\"></"
 "span>個の複数定員区があります。"
 
-#: redistricting/templates/editplan.html:272
+#: redistricting/templates/editplan.html:282
 #: redistricting/templates/viewplan.html:403
 msgid "Save"
 msgstr "保存"
 
-#: redistricting/templates/editplan.html:317 templates/account.html:51
+#: redistricting/templates/editplan.html:327 templates/account.html:51
 msgid "First Name"
 msgstr "名"
 
-#: redistricting/templates/editplan.html:321 templates/account.html:58
+#: redistricting/templates/editplan.html:331 templates/account.html:58
 msgid "Last Name"
 msgstr "姓"
 
-#: redistricting/templates/editplan.html:325
+#: redistricting/templates/editplan.html:335
 msgid "Full Names of Team Members (if applicable)"
 msgstr "（該当する場合）ﾁｰﾑﾒﾝﾊﾞｰの氏名"
 
-#: redistricting/templates/editplan.html:329
+#: redistricting/templates/editplan.html:339
 msgid "Team Name (if applicable)"
 msgstr "（該当する場合）ﾁｰﾑ名"
 
-#: redistricting/templates/editplan.html:333 templates/account.html:43
+#: redistricting/templates/editplan.html:343 templates/account.html:43
 msgid "Email Address"
 msgstr "Ｅメールアドレス"
 
-#: redistricting/templates/editplan.html:337
+#: redistricting/templates/editplan.html:347
 msgid "Street Address"
 msgstr "住所"
 
-#: redistricting/templates/editplan.html:341
+#: redistricting/templates/editplan.html:351
 msgid "Phone Number"
 msgstr "電話番号"
 
-#: redistricting/templates/editplan.html:346
+#: redistricting/templates/editplan.html:356
 msgid ""
 "Values &ndash; tell us what values, considerations and trade-offs you made "
 "in your plan:"
@@ -1126,7 +1132,7 @@ msgstr ""
 "価値観 &ndash; この計画案の作成にどのような価値観、考慮、また取引が反映されて"
 "いますか。:"
 
-#: redistricting/templates/editplan.html:356
+#: redistricting/templates/editplan.html:366
 msgid ""
 "\n"
 "                    By submitting a plan for consideration, you are "
@@ -1140,35 +1146,35 @@ msgid ""
 "                    "
 msgstr ""
 
-#: redistricting/templates/editplan.html:372 templates/account.html:98
+#: redistricting/templates/editplan.html:382 templates/account.html:98
 msgid "Indicates required field"
 msgstr "必須項目"
 
-#: redistricting/templates/editplan.html:390
+#: redistricting/templates/editplan.html:400
 msgid "Community Info"
 msgstr "地域情報"
 
-#: redistricting/templates/editplan.html:391
+#: redistricting/templates/editplan.html:401
 msgid "0"
 msgstr "0"
 
-#: redistricting/templates/editplan.html:395
+#: redistricting/templates/editplan.html:405
 msgid "1. Edit Community Label:"
 msgstr "1. 地域名を編集:"
 
-#: redistricting/templates/editplan.html:402
+#: redistricting/templates/editplan.html:412
 msgid "2. Edit Community Type:"
 msgstr "2. 地域ﾀｲﾌﾟを編集:"
 
-#: redistricting/templates/editplan.html:413
+#: redistricting/templates/editplan.html:423
 msgid "3. Comments:"
 msgstr "3. ｺﾒﾝﾄ:"
 
-#: redistricting/templates/editplan.html:421
+#: redistricting/templates/editplan.html:431
 msgid "Oops!"
 msgstr "おぉっと！"
 
-#: redistricting/templates/editplan.html:422
+#: redistricting/templates/editplan.html:432
 msgid "Sorry, your information could not be saved. Please try again later."
 msgstr ""
 "残念ながら、あなたの情報は保存されませんでした。しばらく経ってからやり直して"
@@ -1318,6 +1324,10 @@ msgstr "ﾌﾟﾛｼﾞｪｸﾄ"
 msgid "Average"
 msgstr "平均"
 
+#: redistricting/templates/report_panel_plan_with_count.html:53
+msgid "Count"
+msgstr ""
+
 #: redistricting/templates/split_report.html:30
 #, python-format
 msgid "Total Splits with %(other_name)s:"
@@ -1407,7 +1417,6 @@ msgid "Recently Shared Plans from DistrictBuilder"
 msgstr "DistrictBuilderから最近共有された計画案"
 
 #: redistricting/templates/viewplan.html:239
-#: redistricting/templates/viewplan.html:883
 msgid "Plan"
 msgstr "計画案"
 
@@ -1453,7 +1462,7 @@ msgstr "選挙区Layerを選んでください"
 
 #: redistricting/templates/viewplan.html:303
 #: redistricting/templates/viewplan.html:305
-#: redistricting/templates/viewplan.html:1028
+#: redistricting/templates/viewplan.html:1033
 msgid "Select Plan Type"
 msgstr "選挙区ﾀｲﾌﾟを選んでください"
 
@@ -1527,6 +1536,7 @@ msgid "User Name:"
 msgstr "ﾕｰｻﾞｰ名:"
 
 #: redistricting/templates/viewplan.html:385
+#: redistricting/templates/viewplan.html:888
 msgid "Plan Name:"
 msgstr "計画案名:"
 
@@ -1582,121 +1592,126 @@ msgstr "地図ﾂｰﾙ"
 msgid "Click on a district to see its ID."
 msgstr "IDを見るには選挙区をｸﾘｯｸしてください。"
 
-#: redistricting/templates/viewplan.html:504
+#: redistricting/templates/viewplan.html:470
+#, fuzzy, python-format
+msgid "%(district_label)s Info"
+msgstr "新しい%(district_label)s"
+
+#: redistricting/templates/viewplan.html:506
 msgid "Edit Stats"
 msgstr "統計を編集"
 
-#: redistricting/templates/viewplan.html:509
+#: redistricting/templates/viewplan.html:511
 msgid "Statistics"
 msgstr "統計"
 
-#: redistricting/templates/viewplan.html:516
+#: redistricting/templates/viewplan.html:518
 msgid "Loading Statistics..."
 msgstr "統計を読み込んでいます..."
 
-#: redistricting/templates/viewplan.html:531
+#: redistricting/templates/viewplan.html:533
 msgid "Reference Layer:"
 msgstr "参考Layer:"
 
-#: redistricting/templates/viewplan.html:532
-#: redistricting/templates/viewplan.html:970
-#: redistricting/templates/viewplan.html:991
-#: redistricting/templates/viewplan.html:1007
+#: redistricting/templates/viewplan.html:534
+#: redistricting/templates/viewplan.html:975
+#: redistricting/templates/viewplan.html:996
+#: redistricting/templates/viewplan.html:1012
 msgid "None"
 msgstr "該当なし"
 
-#: redistricting/templates/viewplan.html:556
+#: redistricting/templates/viewplan.html:558
 #, python-format
 msgid "Generate Splits Report for Current %(plan_text_title)s"
 msgstr "現在の%(plan_text_title)sの境界ﾚﾎﾟｰﾄを作成する"
 
-#: redistricting/templates/viewplan.html:558
+#: redistricting/templates/viewplan.html:560
 msgid "Select reference layer(s) for comparison."
 msgstr "比較する参考Layerを選択"
 
-#: redistricting/templates/viewplan.html:570
+#: redistricting/templates/viewplan.html:572
 msgid "Advanced options"
 msgstr "応用ｵﾌﾟｼｮﾝ"
 
-#: redistricting/templates/viewplan.html:573
+#: redistricting/templates/viewplan.html:575
 msgid "Reverse splits detection"
 msgstr "境界検出を元に戻す"
 
-#: redistricting/templates/viewplan.html:578
+#: redistricting/templates/viewplan.html:580
 msgid "Extended report: List all"
 msgstr "詳細ﾚﾎﾟｰﾄ: 全てﾘｽﾄする"
 
-#: redistricting/templates/viewplan.html:580
+#: redistricting/templates/viewplan.html:582
 msgid "districts or communities contained within each district."
 msgstr "選挙区、または各選挙区内の地域"
 
-#: redistricting/templates/viewplan.html:583
+#: redistricting/templates/viewplan.html:585
 msgid ""
 "(Choosing this option will significantly increase the amount of time it "
 "takes to generate the report.)"
 msgstr "（このｵﾌﾟｼｮﾝを選ぶとﾚﾎﾟｰﾄ作成の時間が長くなります。）"
 
-#: redistricting/templates/viewplan.html:588
+#: redistricting/templates/viewplan.html:590
 msgid "Generate Report"
 msgstr "ﾚﾎﾟｰﾄを作成する"
 
-#: redistricting/templates/viewplan.html:592
+#: redistricting/templates/viewplan.html:594
 msgid "Splits Report"
 msgstr "境界ﾚﾎﾟｰﾄ"
 
-#: redistricting/templates/viewplan.html:594
+#: redistricting/templates/viewplan.html:596
 msgid "No report generated."
 msgstr "ﾚﾎﾟｰﾄが作成されませんでした。"
 
-#: redistricting/templates/viewplan.html:620
+#: redistricting/templates/viewplan.html:622
 msgid "Map Legend"
 msgstr "地図凡例"
 
-#: redistricting/templates/viewplan.html:638
+#: redistricting/templates/viewplan.html:640
 msgid "Total Population"
 msgstr "人口総数"
 
-#: redistricting/templates/viewplan.html:662
+#: redistricting/templates/viewplan.html:664
 msgid "Far Over Target"
 msgstr "目標数をかなり超過"
 
-#: redistricting/templates/viewplan.html:666
+#: redistricting/templates/viewplan.html:668
 msgid "Over Target"
 msgstr "目標数を超過"
 
-#: redistricting/templates/viewplan.html:670
+#: redistricting/templates/viewplan.html:672
 msgid "Within Target"
 msgstr "目標数を達成"
 
-#: redistricting/templates/viewplan.html:674
+#: redistricting/templates/viewplan.html:676
 msgid "Under Target"
 msgstr "目標数に届きません"
 
-#: redistricting/templates/viewplan.html:678
+#: redistricting/templates/viewplan.html:680
 msgid "Far Under Target"
 msgstr "目標数に遠く届きません"
 
-#: redistricting/templates/viewplan.html:688
+#: redistricting/templates/viewplan.html:690
 msgid "Locked For Editing"
 msgstr "編集ﾛｯｸ済"
 
-#: redistricting/templates/viewplan.html:695
+#: redistricting/templates/viewplan.html:697
 msgid "Highlighted"
 msgstr "強調表示"
 
-#: redistricting/templates/viewplan.html:702
+#: redistricting/templates/viewplan.html:704
 msgid "Reference"
 msgstr "参考"
 
-#: redistricting/templates/viewplan.html:708
+#: redistricting/templates/viewplan.html:710
 msgid "reference"
 msgstr "参考"
 
-#: redistricting/templates/viewplan.html:718
+#: redistricting/templates/viewplan.html:720
 msgid "Evaluate Statistics"
 msgstr "統計を審査"
 
-#: redistricting/templates/viewplan.html:724
+#: redistricting/templates/viewplan.html:726
 msgid ""
 "Select the plan statistics you'd like included in a comprehensive report on "
 "your redistricting plan.  After you've made your selections click \"Create "
@@ -1705,49 +1720,49 @@ msgstr ""
 "再編計画案の総合ﾚﾎﾟｰﾄに入れる計画案統計を選んだあと、「ﾚﾎﾟｰﾄを作成してﾌﾟ"
 "ﾚﾋﾞｭｰ」をｸﾘｯｸすると最終ﾚﾎﾟｰﾄを見ることができます。"
 
-#: redistricting/templates/viewplan.html:728
+#: redistricting/templates/viewplan.html:730
 msgid "Create and Preview New Report"
 msgstr "新しいﾚﾎﾟｰﾄを作成してﾌﾟﾚﾋﾞｭｰ"
 
-#: redistricting/templates/viewplan.html:732
+#: redistricting/templates/viewplan.html:734
 msgid "Please generate a report<br/>to preview statistics"
 msgstr "統計を見るにはﾚﾎﾟｰﾄを作成してください。"
 
-#: redistricting/templates/viewplan.html:751
+#: redistricting/templates/viewplan.html:753
 msgid "Top Ranked Users' Plans"
 msgstr "ﾄｯﾌﾟにﾗﾝｸｲﾝしたﾕｰｻﾞｰの計画案"
 
-#: redistricting/templates/viewplan.html:753
+#: redistricting/templates/viewplan.html:755
 msgid "My Ranked Plans"
 msgstr "ﾗﾝｸｲﾝした自分の計画案"
 
-#: redistricting/templates/viewplan.html:779
+#: redistricting/templates/viewplan.html:781
 msgid "Select Legislative Body"
 msgstr "議会を選択"
 
-#: redistricting/templates/viewplan.html:803
+#: redistricting/templates/viewplan.html:805
 #, fuzzy, python-format
 msgid "Share a %(plan_text_title)s"
 msgstr "%(plan_text)sを共有"
 
-#: redistricting/templates/viewplan.html:816
+#: redistricting/templates/viewplan.html:818
 msgid "This plan has been shared"
 msgstr "この計画案は共有されました"
 
-#: redistricting/templates/viewplan.html:817
+#: redistricting/templates/viewplan.html:819
 msgid ""
 "Anyone can view this plan by visiting the following URL in a web browser:"
 msgstr "このURLから誰でもこの計画案を見ることができます。"
 
-#: redistricting/templates/viewplan.html:825 templates/index.html:135
+#: redistricting/templates/viewplan.html:827 templates/index.html:135
 msgid "Tweet"
 msgstr "ﾂｲｰﾄする"
 
-#: redistricting/templates/viewplan.html:846
+#: redistricting/templates/viewplan.html:848
 msgid "Plan File Export"
 msgstr "ﾌﾟﾗﾝﾌｧｲﾙを出力"
 
-#: redistricting/templates/viewplan.html:847
+#: redistricting/templates/viewplan.html:849
 #, python-format
 msgid ""
 "\n"
@@ -1763,84 +1778,81 @@ msgid ""
 "                  "
 msgstr ""
 
-#: redistricting/templates/viewplan.html:883
-msgid "Community Map"
+#: redistricting/templates/viewplan.html:886
+#, fuzzy
+msgid "Community Map Name:"
 msgstr "地域ﾏｯﾌﾟ"
 
-#: redistricting/templates/viewplan.html:884
-msgid "Name:"
-msgstr "名前:"
-
-#: redistricting/templates/viewplan.html:894
+#: redistricting/templates/viewplan.html:899
 msgid "Please select a plan"
 msgstr "計画案を選択してください"
 
-#: redistricting/templates/viewplan.html:908
+#: redistricting/templates/viewplan.html:913
 msgid "Currently Viewing:"
 msgstr "現在見ている計画案："
 
-#: redistricting/templates/viewplan.html:937
+#: redistricting/templates/viewplan.html:942
 msgid "Plan not saved"
 msgstr "計画案が保存されませんでした"
 
-#: redistricting/templates/viewplan.html:942
-#: redistricting/templates/viewplan.html:943
-#: redistricting/templates/viewplan.html:944
+#: redistricting/templates/viewplan.html:947
+#: redistricting/templates/viewplan.html:948
+#: redistricting/templates/viewplan.html:949
 msgid "Please Wait"
 msgstr "少々お待ちください..."
 
-#: redistricting/templates/viewplan.html:942
+#: redistricting/templates/viewplan.html:947
 #, python-format
 msgid "Please wait. New %(body_members)s are computed..."
 msgstr "少々お待ちください。新しい%(body_members)sを計算しています..."
 
-#: redistricting/templates/viewplan.html:943
+#: redistricting/templates/viewplan.html:948
 msgid "Please wait. Data is being retrieved..."
 msgstr "少々お待ちください。ﾃﾞｰﾀを読み込んでいます..."
 
-#: redistricting/templates/viewplan.html:944
+#: redistricting/templates/viewplan.html:949
 msgid "Please wait. Plan is being validated. This may take a few minutes."
 msgstr "少々お待ちください。計画案を確認しています。"
 
-#: redistricting/templates/viewplan.html:968
+#: redistricting/templates/viewplan.html:973
 #, python-format
 msgid "Select %(layer_type)s Thematic Map"
 msgstr "%(layer_type)sのﾃｰﾏﾏｯﾌﾟを選択"
 
-#: redistricting/templates/viewplan.html:981
+#: redistricting/templates/viewplan.html:986
 msgid "Choose District Thematic Map"
 msgstr "選挙区ﾃｰﾏﾏｯﾌﾟを選択"
 
-#: redistricting/templates/viewplan.html:1005
+#: redistricting/templates/viewplan.html:1010
 msgid "Choose a Reference Layer"
 msgstr "参考Layerを選択"
 
-#: redistricting/templates/viewplan.html:1016
+#: redistricting/templates/viewplan.html:1021
 msgid "Show Labels?"
 msgstr "名前を見せますか？"
 
-#: redistricting/templates/viewplan.html:1019
+#: redistricting/templates/viewplan.html:1024
 msgid "OR..."
 msgstr "もしくは..."
 
-#: redistricting/templates/viewplan.html:1021
+#: redistricting/templates/viewplan.html:1026
 msgid "Choose a:<br/>legislative district or community map<br/>reference layer"
 msgstr "選挙区か地域ﾏｯﾌﾟLayerを選択"
 
-#: redistricting/templates/viewplan.html:1035
+#: redistricting/templates/viewplan.html:1040
 msgid "Select Plan to Display as Reference Layer"
 msgstr "参考Layerとして表示する計画案を選択"
 
-#: redistricting/templates/viewplan.html:1040
+#: redistricting/templates/viewplan.html:1045
 msgid "OK"
 msgstr "OK."
 
-#: redistricting/templates/viewplan.html:1077
+#: redistricting/templates/viewplan.html:1082
 #, fuzzy
 msgid "Edit Statistics Sets"
 msgstr "統計ｾｯﾄに名前をつける"
 
-#: redistricting/templates/viewplan.html:1079
+#: redistricting/templates/viewplan.html:1084
 msgid ""
 "You can select up to three statistics at once to display in \n"
 "        the sidebar. Each set of three statistics will be saved in the "
@@ -1849,23 +1861,23 @@ msgid ""
 "        statistics saved."
 msgstr ""
 
-#: redistricting/templates/viewplan.html:1084
+#: redistricting/templates/viewplan.html:1089
 msgid "Select up to 3 statistics"
 msgstr "統計を３つまで選択"
 
-#: redistricting/templates/viewplan.html:1085
+#: redistricting/templates/viewplan.html:1090
 msgid "Clear Choices"
 msgstr "選択を解除する"
 
-#: redistricting/templates/viewplan.html:1089
+#: redistricting/templates/viewplan.html:1094
 msgid "Name Statistics Set"
 msgstr "統計ｾｯﾄに名前をつける"
 
-#: redistricting/templates/viewplan.html:1091
+#: redistricting/templates/viewplan.html:1096
 msgid "Save Set"
 msgstr "ｾｯﾄを保存"
 
-#: redistricting/templates/viewplan.html:1094
+#: redistricting/templates/viewplan.html:1099
 msgid "... Or select a saved statistics set"
 msgstr "... もしくは、保存した統計ｾｯﾄを選択"
 
@@ -1952,6 +1964,14 @@ msgstr "19個"
 #: redistricting/templatetags/redistricting_extras.py:45
 msgid "twenty"
 msgstr "20個"
+
+#: redistricting/templatetags/redistricting_extras.py:142
+msgid "True"
+msgstr ""
+
+#: redistricting/templatetags/redistricting_extras.py:142
+msgid "False"
+msgstr ""
 
 #: templates/404.html:32 templates/404.html.py:35 templates/500.html:32
 #: templates/500.html.py:35
@@ -2769,6 +2789,18 @@ msgstr "新しいﾊﾟｽﾜｰﾄﾞ"
 #: templates/registration/password_change_form.orig.html:73
 msgid "Change my password"
 msgstr "ﾊﾟｽﾜｰﾄﾞを変更する"
+
+#~ msgid "Tools"
+#~ msgstr "ﾂｰﾙ"
+
+#~ msgid "Lock"
+#~ msgstr "ﾛｯｸ"
+
+#~ msgid "Unassign"
+#~ msgstr "配置解除"
+
+#~ msgid "Name:"
+#~ msgstr "名前:"
 
 #~ msgid "I have read the "
 #~ msgstr "He leído la"
