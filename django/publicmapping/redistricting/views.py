@@ -1829,7 +1829,7 @@ def get_statistics(request, planid):
         version = plan.version
 
     try:
-        display = ScoreDisplay.objects.filter(legislative_body=plan.legislative_body, name="%s_sidebar_demo" % plan.legislative_body.name)
+        display = ScoreDisplay.objects.get(legislative_body=plan.legislative_body, name="%s_sidebar_demo" % plan.legislative_body.name)
     except:
         status['message'] = _('Unable to get Demographics ScoreDisplay')
         status['exception'] = traceback.format_exc()
@@ -2344,15 +2344,26 @@ def statistics_sets(request, planid):
                 scorefunctions.append({ 'id': f.id, 'name': force_escape(f.get_label()) })
         result['functions'] = scorefunctions
 
-        if not request.user.is_superuser:
-            # Get the admin displays
-            admin_displays = ScoreDisplay.objects.filter(
-                owner__is_superuser=True,
-                legislative_body=plan.legislative_body,
-                is_page=False).order_by('title')
-            for admin_display in admin_displays:
-                if 'reports' not in admin_display.cssclass:
-                    sets.append({ 'id': admin_display.id, 'name': force_escape(admin_display.__unicode__()), 'functions': [], 'mine':False })
+        admin_display_names = [
+            "%s_sidebar_demo" % plan.legislative_body.name,
+            "%s_sidebar_basic" % plan.legislative_body.name,
+        ]
+
+        # Get the admin displays
+        admin_displays = ScoreDisplay.objects.filter(
+            owner__is_superuser=True,
+            legislative_body=plan.legislative_body,
+            name__in=admin_display_names
+        )
+
+        for admin_display in admin_displays:
+            if 'reports' not in admin_display.cssclass:
+                sets.append({ 
+                    'id': admin_display.id,
+                    'name': force_escape(admin_display.__unicode__()),
+                    'functions': [],
+                    'mine':False
+                })
 
         try:
             user_displays = ScoreDisplay.objects.filter(
