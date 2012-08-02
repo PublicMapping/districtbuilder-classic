@@ -266,10 +266,15 @@ multimember = function(options) {
                 $(_options.memberGrid).jqGrid('restoreRow', lastId);
                 $(_options.memberGrid).jqGrid('editRow', id, true);
                 lastId = id;
+
+                $("input[id^='" + id + "_num_members']", $(_options.memberGrid)).bind('blur',
+                    function() { 
+                        $(_options.memberGrid).saveRow(id);
+                    }
+                );
             }
         });
         $(_options.memberGrid).jqGrid('navGrid');
     };
-
     return _self;
 };
