@@ -22,37 +22,37 @@ msgid "default long description"
 msgstr "The region serviced by DistrictBuilder."
 
 msgid "congress short label"
-msgstr "%s"
+msgstr "%(district_id)s"
 
 msgid "congress label"
-msgstr "District %s"
+msgstr "District %(district_id)s"
 
 msgid "congress long description"
 msgstr "Congressional"
 
 msgid "house short label"
-msgstr "%s"
+msgstr "%(district_id)s"
 
 msgid "house label"
-msgstr "District %s"
+msgstr "District %(district_id)s"
 
 msgid "house long description"
 msgstr "State House"
 
 msgid "senate short label"
-msgstr "%s"
+msgstr "%(district_id)s"
 
 msgid "senate label"
-msgstr "District %s"
+msgstr "District %(district_id)s"
 
 msgid "senate long description"
 msgstr "State Senate"
 
 msgid "community short label"
-msgstr "%s"
+msgstr "%(district_id)s"
 
 msgid "community label"
-msgstr "Community %s"
+msgstr "Community %(district_id)s"
 
 msgid "community long description"
 msgstr "Community Map"
@@ -76,19 +76,19 @@ msgid "dc long description"
 msgstr "The District of Columbia Metropolitan Area"
 
 msgid "dc_area_council short label"
-msgstr "%s"
+msgstr "%(district_id)s"
 
 msgid "dc_area_council label"
-msgstr "District %s"
+msgstr "District %(district_id)s"
 
 msgid "dc_area_council long description"
 msgstr "DC Planning Council"
 
 msgid "dc_community short label"
-msgstr "%s"
+msgstr "%(district_id)s"
 
 msgid "dc_community label"
-msgstr "Community %s"
+msgstr "Community %(district_id)s"
 
 msgid "dc_community long description"
 msgstr "DC Community Map"

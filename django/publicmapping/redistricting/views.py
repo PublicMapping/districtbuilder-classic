@@ -2344,11 +2344,17 @@ def statistics_sets(request, planid):
                 scorefunctions.append({ 'id': f.id, 'name': force_escape(f.get_label()) })
         result['functions'] = scorefunctions
 
+        
         admin_display_names = [
             "%s_sidebar_demo" % plan.legislative_body.name,
-            "%s_sidebar_basic" % plan.legislative_body.name,
         ]
 
+        if plan.legislative_body.is_community:
+            admin_display_names.append("%s_sidebar_comments" %
+                    plan.legislative_body.name)
+        else:
+            admin_display_names.append("%s_sidebar_basic" %
+                    plan.legislative_body.name)
         # Get the admin displays
         admin_displays = ScoreDisplay.objects.filter(
             owner__is_superuser=True,
