@@ -357,8 +357,8 @@ class DistrictIndexFile():
                 new_geom = Geounit.objects.filter(guFilter).unionagg()
                 
                 # Create a new district and save it
-                short_label = community_labels[district_id] if is_community else legislative_body.get_short_label() % {'district_id':district_id }
-                long_label = community_labels[district_id] if is_community else legislative_body.get_label() % {'district_id':district_id}
+                short_label = community_labels[district_id][:10] if is_community else legislative_body.get_short_label() % {'district_id':district_id }
+                long_label = community_labels[district_id][:256] if is_community else legislative_body.get_label() % {'district_id':district_id}
                 new_district = District(short_label=short_label,long_label=long_label,
                     district_id = district_id, plan=plan, num_members=num_members[district_id],
                     geom=enforce_multi(new_geom))
