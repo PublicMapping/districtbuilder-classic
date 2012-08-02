@@ -1384,7 +1384,10 @@ class Plan(models.Model):
         # Save the new district to the plan to start
         newshort = '' if slot == None else self.legislative_body.get_short_label() % {'district_id':slot}
         newlong = '' if slot == None else self.legislative_body.get_label() % {'district_id':slot}
-        pasted = District(short_label=newshort, long_label=newlong, plan=self, district_id = slot, geom=district.geom, simple = district.simple, version = new_version)
+        pasted = District(short_label = newshort, long_label = newlong,
+                plan = self,district_id = slot, geom = district.geom, 
+                simple = district.simple, version = new_version, 
+                num_members = district.num_members)
         pasted.save();
         if newshort  == '':
             pasted.short_label = self.legislative_body.get_short_label() % {'district_id':pasted.district_id}
