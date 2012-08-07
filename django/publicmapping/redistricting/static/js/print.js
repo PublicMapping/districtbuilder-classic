@@ -218,7 +218,7 @@ printplan = function(options) {
                     var lblRule = new OpenLayers.Rule({
                         filter: lblFilter,
                         symbolizer: { Text: new OpenLayers.Symbolizer.Text({
-                            label:featureItem.attributes.name,
+                            label:featureItem.attributes.label,
                             fontFamily: ffam,
                             fontWeight: fwht,
                             fontSize: fsz,
