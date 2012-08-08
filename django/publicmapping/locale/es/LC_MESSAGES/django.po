@@ -1610,7 +1610,7 @@ msgstr "Cancelar"
 
 #: redistricting/templates/viewplan.html:418
 msgid "Set Map<br/>Layers"
-msgstr "Fijar Capas<br/>de Mapa"
+msgstr "Capas<br/>de Mapa"
 
 #: redistricting/templates/viewplan.html:421
 msgid "Export"
