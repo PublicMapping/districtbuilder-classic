@@ -809,8 +809,8 @@ msgid ""
 "Enable anchor mode, then select a %(body_member_long_label)s name to "
 "repeatedly assign areas to a %(body_member_long_label)s"
 msgstr ""
-"Active modo de anclaje, luego seleccione un nombre para asignarrepetidamente "
-"áreas a un %(body_member_long_label)s"
+"Active modo de anclaje, luego seleccione un nombre para asignar "
+"repetidamente áreas a un %(body_member_long_label)s"
 
 #: redistricting/templates/editplan.html:74
 #, python-format
@@ -847,7 +847,7 @@ msgid ""
 "for reassignment"
 msgstr ""
 "Seleccione las áreas en el mapa y arrástrelas a un "
-"%(body_member_long_label)s  para ser reasignados"
+"%(body_member_long_label)s  para ser reasignadas"
 
 #: redistricting/templates/editplan.html:87
 msgid "Click and<br/>Drag"
@@ -949,9 +949,9 @@ msgid ""
 msgstr ""
 "Mediante el intercambio de una copia de su %(plan_text)s mostrado abajo, "
 "usted está haciendo su %(plan_text)s disponible a todos los demás "
-"usuariosdel sistema. Dele a su %(plan_text)s un nombre único para poder "
+"usuarios del sistema. Dele a su %(plan_text)s un nombre único para poder "
 "compartirlo. Una copia de su actual %(plan_text)s será agregada a la sección "
-"\"Compartido\"del selector de planes."
+"\"Compartido\" del selector de planes."
 
 #: redistricting/templates/editplan.html:165
 #, python-format
@@ -1189,7 +1189,7 @@ msgstr ""
 
 #: redistricting/templates/editplan.html:382 templates/account.html:98
 msgid "Indicates required field"
-msgstr "Indica el campo requerido"
+msgstr "Indica los campos requeridos"
 
 #: redistricting/templates/editplan.html:400
 msgid "Community Info"
@@ -1273,7 +1273,7 @@ msgstr "Hubieron algunos errores durante la importación:"
 
 #: redistricting/templates/leaderboard_panel_all.html:38
 msgid "Top"
-msgstr "Superior"
+msgstr "Primeros"
 
 #: redistricting/templates/leaderboard_panel_all.html:44
 #: redistricting/templates/leaderboard_panel_mine.html:42
@@ -1461,7 +1461,7 @@ msgstr "Planes compartidos recienmente de DistrictBuilder"
 
 #: redistricting/templates/viewplan.html:239
 msgid "Plan"
-msgstr "Plan"
+msgstr "Planear"
 
 #: redistricting/templates/viewplan.html:240
 msgid "Draw"
@@ -1497,7 +1497,7 @@ msgstr "Cerrar Sesión"
 
 #: redistricting/templates/viewplan.html:282
 msgid "Choose a Plan. Start Drawing."
-msgstr "Eligir un Plan. Empezar a Dibujar."
+msgstr "Elegir un Plan. Empezar a Dibujar."
 
 #: redistricting/templates/viewplan.html:292
 msgid "Select District Layer"
@@ -1926,7 +1926,7 @@ msgid ""
 "        statistics saved."
 msgstr ""
 "Usted puede seleccionar hasta tres estadísticas a la vez para \n"
-"        ser mostrados en la barra lateral. Cada conjunto de tres "
+"        ser mostradas en la barra lateral. Cada conjunto de tres "
 "estadísticas \n"
 "        se guardarán en el menú desplegable para que lo seleccione o "
 "modifique más tarde."
@@ -2078,7 +2078,8 @@ msgid ""
 "letter. Do not leave leading or trailing spaces."
 msgstr ""
 "Por favor, elija un nombre de usuario que contenga entre 6 y 30 caracteres. "
-"Incluya una letra por lo menos. No deje espacio ni al principio ni al final."
+"Incluya una letra por lo menos. No deje espacios ni al principio ni al "
+"final."
 
 #: templates/account.html:22
 msgid ""
@@ -2165,7 +2166,7 @@ msgstr "Sobre el Proyecto de Mapeo Público"
 
 #: templates/index.html:118
 msgid "Frequently Asked Questions"
-msgstr "Preguntas Más Frecuentes"
+msgstr "Preguntas Frecuentes"
 
 #: templates/index.html:119
 msgid "Quick Start Guide"
@@ -2333,7 +2334,7 @@ msgid ""
 "The following discloses our information gathering and dissemination "
 "practices; and terms of use for this web site."
 msgstr ""
-"La siguiente información revela nuestras prácticas de recopilación y "
+"La siguiente información revela nuestras prácticas de recopilación, "
 "difusión, y condiciones de uso de este sitio web."
 
 #: templates/index.html:270
@@ -2355,7 +2356,7 @@ msgid ""
 "completely from our systems."
 msgstr ""
 "Estos registros del servidor web se retienen de forma temporal y luego se "
-"elimina completamente de nuestros sistemas."
+"eliminan completamente de nuestros sistemas."
 
 #: templates/index.html:274
 msgid "We also may ask our visitors to provide information about themselves."
