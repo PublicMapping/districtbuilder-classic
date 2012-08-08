@@ -1491,27 +1491,10 @@ def copy_to_characteristics(upload_id, language=None):
 
     # create a subject to hold these new values
     new_sort_key = Subject.objects.all().aggregate(Max('sort_key'))['sort_key__max'] + 1
-    clean_name = ''
-    try:
-        cmp1 = re.match(r'.+?([a-zA-Z_]+)', upload.subject_name).groups()[0]
-        cmp2 = re.findall(r'[\w]+', upload.subject_name)
-        clean_name = '_'.join([cmp1] + cmp2[1:]).lower()
-    except:
-        msg = _('The subject name contains invalid characters.')
-
-        logger.debug(msg)
-
-        upload.status = 'ER'
-        upload.save()
-        transaction.commit()
-
-        status = {'task_id':None, 'success':False, 'messages':[msg, _('Please correct the error and try again.')]}
-
-        # reset the translation to default
-        if not prev_lang is None:
-            activate(prev_lang)
-
-        return status
+     
+    # To create a clean name, replace all non-word characters with an
+    # underscore
+    clean_name = re.sub(r"\W", "_", subject).lower()[:50]
 
     defaults = {
         'name':clean_name,
