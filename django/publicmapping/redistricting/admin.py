@@ -289,7 +289,6 @@ class SubjectAdmin(admin.ModelAdmin):
             "deletable_objects": queryset.all(),
             "queryset": queryset,
             "opts": opts,
-            "root_path": modeladmin.admin_site.root_path,
             "app_label": app_label,
             "action_checkbox_name": helpers.ACTION_CHECKBOX_NAME,
             "warned": warned
