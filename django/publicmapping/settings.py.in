@@ -109,8 +109,7 @@ ROOT_URLCONF = 'publicmapping.urls'
 import djcelery
 djcelery.setup_loader()
 
-BROKER_TRANSPORT = 'djkombu.transport.DatabaseTransport'
-CELERY_IMPORTS = ( 'redistricting.tasks', )
+BROKER_URL = 'django://'
 
 from datetime import timedelta
 CELERYBEAT_SCHEDULE = {
@@ -134,9 +133,8 @@ INSTALLED_APPS = (
     'django.contrib.gis',
     'django.contrib.comments',
     'djcelery',
-    'djkombu',
+    'djcelery.transport',
     'redistricting',
-    'publicmapping',
     'tagging',
     'rosetta',
     staticfiles,
