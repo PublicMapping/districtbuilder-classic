@@ -277,7 +277,7 @@ class SubjectAdmin(admin.ModelAdmin):
                 queryset.delete()
                 modeladmin.message_user(request, _('Successfully deleted %(count)d %(item)s') % {
                     'count': n, 
-                    'items': engine.plural('subject', n)
+                    'item': engine.plural('subject', n)
                 })
             # Return None to display the change list page again.
             return None
