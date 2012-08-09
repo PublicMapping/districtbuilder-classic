@@ -1494,7 +1494,7 @@ def copy_to_characteristics(upload_id, language=None):
      
     # To create a clean name, replace all non-word characters with an
     # underscore
-    clean_name = re.sub(r"\W", "_", subject).lower()[:50]
+    clean_name = re.sub(r"\W", "_", upload.subject_name).lower()[:50]
 
     defaults = {
         'name':clean_name,
