@@ -117,13 +117,17 @@ multimember = function(options) {
             }
         }
 
+        var invalidDistricts = false, invalidMembers = false
         // Populate num members
         $(_options.numMembersContainer).html(numMembers);
         if ((numMembers >= _options.minPlanMembers) && (numMembers <= _options.maxPlanMembers)) {
             $(_options.numMembersContainer).addClass('valid');
             $(_options.numMembersContainer).removeClass('invalid');
+            $(_options.numMembersContainer).parent().removeClass('invalid')
         } else {
+            invalidMembers = true;
             $(_options.numMembersContainer).addClass('invalid');
+            $(_options.numMembersContainer).parent().addClass('invalid')
             $(_options.numMembersContainer).removeClass('valid');
         }
 
@@ -132,9 +136,18 @@ multimember = function(options) {
         if ((numMultiDists >= _options.minMultiDistricts) && (numMultiDists <= _options.maxMultiDistricts)) {
             $(_options.numMultiDistsContainer).addClass('valid');
             $(_options.numMultiDistsContainer).removeClass('invalid');
+            $(_options.numMultiDistsContainer).parent().removeClass('invalid')
         } else {
+            invalidDistricts = true;
             $(_options.numMultiDistsContainer).addClass('invalid');
+            $(_options.numMultiDistsContainer).parent().addClass('invalid')
             $(_options.numMultiDistsContainer).removeClass('valid');
+        }
+
+        if (invalidMembers || invalidDistricts) {
+            $(_options.assignButton).button('disable');
+        } else {
+            $(_options.assignButton).button('enable');
         }
     };
 
@@ -230,7 +243,6 @@ multimember = function(options) {
                 if (!isNaN(newVal) && ((val === 1) || (val >= min) && (val <= max))) {
                     // Valid - update the counts
                     updateStats();
-                    $(_options.assignButton).button('enable');
                 } else {
                     // Invalid - revert to 1 and return to edit mode
                     var rows = $(_options.memberGrid).jqGrid('getRowData');

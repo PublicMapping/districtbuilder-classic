@@ -1080,8 +1080,11 @@ def newdistrict(request, planid):
                 # create a new district w/1 version higher
                 fixed = plan.add_geounits((district_id, district_short, district_long,), geounit_ids, geolevel, version)
 
-                # if there are comments or types, add them to the district
+                # if there are comments, types or multiple members, add them to the district
                 district = plan.district_set.filter(district_id=district_id,short_label=district_short,long_label=district_long)[0]
+                if plan.legislative_body.multi_members_allowed:
+                    district.num_members = plan.legislative_body.min_multi_district_members
+                    district.save()
                 ct = ContentType.objects.get(app_label='redistricting',model='district')
                 if 'comment' in request.POST and request.POST['comment'] != '':
                     comment = Comment(

@@ -2525,6 +2525,10 @@ span.multi_val.invalid {
     color: #900;
 }
 
+#multi_member_values p.invalid {
+    background-color: #FFFF9C;
+}
+
 #gview_multi_member_grid div.ui-jqgrid-bdiv {
     height: 230px !important;
 }
