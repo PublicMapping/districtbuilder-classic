@@ -1756,6 +1756,9 @@ class MajorityMinority(CalculatorBase):
         version = kwargs['version'] if 'version' in kwargs else plan.version
         districts = plan.get_districts_at_version(version, include_geom=False)
 
+        if 'apply_num_members' in self.arg_dict:
+            apply_num_members = int(self.arg_dict['apply_num_members'][1]) == 1
+
         districtcount = 0
         for district in districts:
             pop = self.get_value('population', district)
@@ -1785,7 +1788,10 @@ class MajorityMinority(CalculatorBase):
                     break
 
             if exceeds:
-                districtcount += 1
+                if apply_num_members:
+                    districtcount += district.num_members
+                else:
+                    districtcount += 1
 
         self.result = { 'value': districtcount }
 
