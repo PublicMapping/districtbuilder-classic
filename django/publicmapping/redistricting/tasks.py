@@ -1326,16 +1326,24 @@ def verify_count(upload_id, localstore, language):
     # insert upload_id, portable_id, number
     sql = 'INSERT INTO "%s" ("%s","%s","%s") VALUES (%%(upload_id)s, %%(geoid)s, %%(number)s)' % (SubjectStage._meta.db_table, SubjectStage._meta.fields[1].attname, SubjectStage._meta.fields[2].attname, SubjectStage._meta.fields[3].attname)
     args = []
-    for row in reader:
-        args.append( {'upload_id':upload.id, 'geoid':row[reader.fieldnames[0]].strip(), 'number':row[reader.fieldnames[1]].strip()} )
-        # django ORM takes about 320s for 280K geounits
-        #SubjectStage(upload=upload, portable_id=row[reader.fieldnames[0]],number=row[reader.fieldnames[1]]).save()
 
-    # direct access to db-api takes about 60s for 280K geounits
-    cursor = connection.cursor()
-    cursor.executemany(sql, tuple(args))
+    try:
+        for row in reader:
+            args.append( {'upload_id':upload.id, 'geoid':row[reader.fieldnames[0]].strip(), 'number':row[reader.fieldnames[1]].strip()} )
+            # django ORM takes about 320s for 280K geounits
+            #SubjectStage(upload=upload, portable_id=row[reader.fieldnames[0]],number=row[reader.fieldnames[1]]).save()
 
-    logger.debug('Bulk loaded CSV records into the staging area.')
+        # direct access to db-api takes about 60s for 280K geounits
+        cursor = connection.cursor()
+        cursor.executemany(sql, tuple(args))
+
+        logger.debug('Bulk loaded CSV records into the staging area.')
+    except AttributeError:
+        msg = _('There are an incorrect number of columns in the uploaded '
+            'Subject file')
+
+        transaction.rollback()
+        return {'task_id':None, 'success':False, 'messages':[msg]}
 
     nlines = upload.subjectstage_set.all().count()
     geolevel, nunits = LegislativeLevel.get_basest_geolevel_and_count()
@@ -1448,11 +1456,15 @@ def verify_preload(upload_id, language=None):
         status = {'task_id':None, 'success':False, 'messages':[msg]}
 
     else:
-        # The next task will load the units into the characteristic table
-        task = copy_to_characteristics.delay(upload_id, language=language).task_id
+        try:
+            # The next task will load the units into the characteristic table
+            task = copy_to_characteristics.delay(upload_id, language=language).task_id
 
-        status = {'task_id':task, 'success':True, 'messages':[_('Copying records to characteristic table ...')]}
+            status = {'task_id':task, 'success':True, 'messages':[_('Copying records to characteristic table ...')]}
 
+        except:
+            logger.error("Couldn't copy characteristics: %s" %
+                traceback.format_exc())
     # reset the language back to the default
     if not prev_lang is None:
         activate(prev_lang)
@@ -1560,17 +1572,26 @@ def copy_to_characteristics(upload_id, language=None):
     )
 
     # Insert or update all the records into the characteristic table
-    cursor = connection.cursor()
-    cursor.executemany(sql, tuple(args))
+    try:
+        cursor = connection.cursor()
+        cursor.executemany(sql, tuple(args))
 
-    logger.debug('Loaded new Characteristic values for subject "%s"', the_subject.name)
+        transaction.commit()
+        logger.debug('Loaded new Characteristic values for subject "%s"', the_subject.name)
 
-    task = update_vacant_characteristics.delay(upload_id, created, language=language).task_id
 
-    transaction.commit()
+    except:
+        transaction.rollback()
 
-    status = {'task_id':task, 'success':True, 'messages':[_('Created characteristics, resetting computed characteristics...')]}
+    try:
+        task = update_vacant_characteristics.delay(upload_id, created, language=language).task_id
 
+        status = {'task_id':task, 'success':True, 'messages':[_('Created characteristics, resetting computed characteristics...')]}
+        transaction.commit()
+
+    except:
+        status = {'task_id':task, 'success':False, 'messages':[_('Not able to create task for update_vacant_characteristics.')]}
+        transaction.rollback()
     # reset the translation to default
     if not prev_lang is None:
         activate(prev_lang)

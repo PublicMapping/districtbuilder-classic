@@ -48,7 +48,7 @@ $(function(){
             url: $('#id_task_uuid').val() + '/status/',
             dataType: 'json',
             success: function(data, txtStatus, xhr) {
-                if (data.state == 'SUCCESS') {
+                if (data.state == 'SUCCESS' && data.info.success === true) {
                     $('#upload_status_messages').empty();
                     for (var i = 0; i < data.info.messages.length; i++) {
                         $('#upload_status_messages').append('<p>' + data.info.messages[i] + '</p>');
@@ -70,9 +70,10 @@ $(function(){
                         clearInterval(statusInterval);
                     }
                 }
-                else if (data.state == 'FAILURE') {
+                else if (data.state == 'FAILURE' ||
+                        (data.info && data.info.success === false)) {
                     $('#upload_status_messages').removeClass('loading');
-                    $('#upload_status_messages').append('<p>{% trans "Sorry! This processing step failed with the following error message: " %}' + data.message + '</p>');
+                    $('#upload_status_messages').append('<p>{% trans "Sorry! This processing step failed with the following error message: " %}' + data.info.messages[0] + '</p>');
                     $('#processing_continue').attr('disabled', false);
                     $('#processing_continue').val('{% trans "Retry" %}');
                     $('#processing_continue').click(function(){ window.location.href='../add/'; });
