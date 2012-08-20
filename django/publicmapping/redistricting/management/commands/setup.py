@@ -47,10 +47,6 @@ from redistricting.tasks import *
 from redistricting.config import *
 import traceback, logging
 
-logging.basicConfig(format='%(message)s')
-logging._srcfile = None
-logging.logThreads = 0
-logging.logProcesses = 0
 logger = logging.getLogger()
 
 class Command(BaseCommand):
