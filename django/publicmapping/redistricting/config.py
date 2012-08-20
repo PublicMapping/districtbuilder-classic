@@ -1038,7 +1038,7 @@ class SpatialUtils:
                 self.create_style(subject.name, geolevel.name, '%s:%s' % (self.ns, featuretype_name,), 'none')
 
                 # Create boundary layer, based on geographic boundaries
-                featuretype_name = '%s_boundaries' % geolevel.name,
+                featuretype_name = '%s_boundaries' % geolevel.name
                 self.create_featuretype(
                     featuretype_name, alias=get_featuretype_name(geolevel.name, subject.name)
                 )
