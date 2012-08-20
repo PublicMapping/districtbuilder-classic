@@ -340,7 +340,7 @@ as reports and downloads) and cron jobs.
 
  2. Download Geoserver in WAR (Web Archive) format from:
  
-        http://geoserver.org/display/GEOS/Stable
+        http://geoserver.org/display/GEOS/GeoServer+2.0.2
 
  3. Unzip the downloaded zip file so you can access the geoserver.war file.
 
@@ -358,8 +358,7 @@ as reports and downloads) and cron jobs.
         > cd /var/lib/tomcat6/webapps/geoserver/WEB-INF/lib
 
      b. Download the GeoServer REST Extension that matches your installed
-        version of GeoServer. As of this writing, the most recent stable
-        version of GeoServer is 2.0.2
+        version of GeoServer. 
 
         > sudo wget http://downloads.sourceforge.net/project/geoserver/GeoServer%20Extensions/2.0.2/geoserver-2.0.2-restconfig-plugin.zip
 
