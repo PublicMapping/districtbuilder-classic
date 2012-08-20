@@ -1758,6 +1758,8 @@ class MajorityMinority(CalculatorBase):
 
         if 'apply_num_members' in self.arg_dict:
             apply_num_members = int(self.arg_dict['apply_num_members'][1]) == 1
+        else:
+            apply_num_members = False
 
         districtcount = 0
         for district in districts:
