@@ -3902,7 +3902,6 @@ def configure_views():
     
     sql = "CREATE OR REPLACE VIEW identify_geounit AS SELECT rg.id, rg.name, rgg.geolevel_id, rg.geom, rc.number, rc.percentage, rc.subject_id FROM redistricting_geounit rg JOIN redistricting_geounit_geolevel rgg ON rg.id = rgg.geounit_id JOIN redistricting_characteristic rc ON rg.id = rc.geounit_id;"
     cursor.execute(sql)
-    transaction.commit()
 
     logger.debug('Created identify_geounit view ...')
 
@@ -3947,6 +3946,11 @@ def configure_views():
                 logger.error(format_exc())
 
             logger.debug('Created %s view ...', get_featuretype_name(geolevel.name, subject.name))
+
+    try:
+        transaction.commit()
+    except:
+        transaction.rollback()
 
 def get_featuretype_name(geolevel_name, subject_name=None):
     """
