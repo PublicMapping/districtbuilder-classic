@@ -45,7 +45,7 @@ from datetime import datetime
 from lxml import etree, objectify
 from djsld import generator
 import csv, time, zipfile, tempfile, os, sys, traceback, time
-import socket, urllib2, logging, re, inflect
+import socket, urllib2, logging, re
 
 # all for shapefile exports
 from glob import glob
@@ -1429,7 +1429,6 @@ def verify_preload(upload_id, language=None):
         permanent_units[permanent_units.count()-1] == temp_units[temp_units.count()-1]
     msg = _('There are a correct number of geounits in the uploaded Subject file, ')
     if not ends_match:
-        p = inflect.engine()
         msg += _('but the geounits do not have the same portable ids as those in the database.')
 
     # python foo here: count the number of zipped items in the 
@@ -1437,9 +1436,8 @@ def verify_preload(upload_id, language=None):
     # thus counting the portable_ids that are not mutually shared
     aligned_units = len(filter(lambda x:x[0] == x[1], zip(permanent_units, temp_units)))
 
-    if nunits != aligned_units:
+    if ends_match and nunits != aligned_units:
         # The number of geounits in the uploaded file match, but there are some mismatches.
-        p = inflect.engine()
         mismatched = nunits - aligned_units
         msg += _n(
             'but %(count)d geounit does not match the geounits in the database.',
