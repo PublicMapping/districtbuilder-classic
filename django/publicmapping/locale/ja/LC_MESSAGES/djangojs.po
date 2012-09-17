@@ -20,18 +20,20 @@ msgstr ""
 
 #: static-media/js/chooseplan.js:75 static-media/js/chooseplan.js.c:245
 msgid "View Plan"
-msgstr ""
+msgstr "計画案を見る"
 
 #: static-media/js/chooseplan.js:75 static-media/js/chooseplan.js.c:245
 #: static-media/js/reaggregator.js:47
 msgid "Start Drawing"
-msgstr ""
+msgstr "境界線を描く"
 
 #: static-media/js/chooseplan.js:88
 msgid ""
 "Thanks! Your file has been uploaded, and your plan is being constructed. "
 "When your plan is completely constructed, you will receive an email from us."
 msgstr ""
+"ファイルがアップロードされました。計画案を作成しています。"
+"作成が完成次第、eメールにでお知らせします。"
 
 #: static-media/js/chooseplan.js:88
 msgid ""
@@ -39,119 +41,122 @@ msgid ""
 "converting it into a plan. Make sure the file is a zipped block equivalency "
 "file, and please try again."
 msgstr ""
+"申し訳ございません。ファイルはこちらに転送されましたが、計画案に変換する間にエラーが"
+"発生しました。ファイルが圧縮block equivalencyファイルであることを確認して、"
+"再度やり直してください。"
 
 #: static-media/js/chooseplan.js:89
 msgid "Uploaded"
-msgstr ""
+msgstr "アップロード完了"
 
 #: static-media/js/chooseplan.js:130 static-media/js/reaggregator.js:131
 msgid "Reaggregate"
-msgstr ""
+msgstr "再統合"
 
 #: static-media/js/chooseplan.js:138 static-media/js/chooseplan.js.c:147
 msgid "Choose a plan from the table first"
-msgstr ""
+msgstr "先に表から計画案を選んでください"
 
 #: static-media/js/chooseplan.js:155
 msgid "A name for the copied template is required"
-msgstr ""
+msgstr "コピーされたテンプレートに名前が必要です"
 
 #: static-media/js/chooseplan.js:167
 msgid "Please provide a valid email address."
-msgstr ""
+msgstr "有効なEメールアドレスを入力してください。"
 
 #: static-media/js/chooseplan.js:171
 msgid "Please provide a zipped district index file."
-msgstr ""
+msgstr "圧縮された選挙区インデックスファイルが必要です。"
 
 #: static-media/js/chooseplan.js:175
 msgid "You must select a legislative body from the dropdown in the upload form"
-msgstr ""
+msgstr "アップロード・フォームの中のドロップダインから議会の種類を選んでください。"
 
 #: static-media/js/chooseplan.js:188
 msgid "Creating New Plan..."
-msgstr ""
+msgstr "新しい計画案を作成中..."
 
 #: static-media/js/chooseplan.js:189
 msgid "Please standby while creating new plan ..."
-msgstr ""
+msgstr "計画案作成中。お待ちください ..."
 
 #: static-media/js/chooseplan.js:235
 msgid "Creation Error"
-msgstr ""
+msgstr "作成エラー"
 
 #: static-media/js/chooseplan.js:238
 msgid "Tip: "
-msgstr ""
+msgstr "ヒント: "
 
 #: static-media/js/chooseplan.js:239
 msgid "Make sure the new plan's name is unique."
-msgstr ""
+msgstr "新しい計画案の名前が他と重複していないか確認してください。"
 
 #: static-media/js/chooseplan.js:306 static-media/js/reaggregator.js:137
 msgid "Needs reaggregation"
-msgstr ""
+msgstr "再統合が必要です"
 
 #: static-media/js/chooseplan.js:309
 msgid "Reaggregating"
-msgstr ""
+msgstr "再統合中"
 
 #: static-media/js/chooseplan.js:337 static-media/js/layerchooser.js:171
 msgid "Plan Name"
-msgstr ""
+msgstr "計画案名"
 
 #: static-media/js/chooseplan.js:338 static-media/js/shareddistricts.js:141
 msgid "Author"
-msgstr ""
+msgstr "作成者"
 
 #: static-media/js/chooseplan.js:339 static-media/js/shareddistricts.js:143
 msgid "Description"
-msgstr ""
+msgstr "説明"
 
 #: static-media/js/chooseplan.js:340 static-media/js/shareddistricts.js:144
 msgid "Shared"
-msgstr ""
+msgstr "共有済"
 
 #: static-media/js/chooseplan.js:341 static-media/js/shareddistricts.js:145
 msgid "Last Edited"
-msgstr ""
+msgstr "最終更新日"
 
 #: static-media/js/chooseplan.js:342
 msgid "Delete"
-msgstr ""
+msgstr "削除"
 
 #: static-media/js/chooseplan.js:343 static-media/js/shareddistricts.js:146
 msgid "Edit"
-msgstr ""
+msgstr "編集"
 
 #: static-media/js/chooseplan.js:344 static-media/js/shareddistricts.js:147
 msgid "# Districts"
-msgstr ""
+msgstr "選挙区数"
 
 #: static-media/js/chooseplan.js:345
 msgid "State"
-msgstr ""
+msgstr "州"
 
 #: static-media/js/chooseplan.js:381
 msgid "Really delete plan: "
-msgstr ""
+msgstr "計画案を本当に削除しますか"
 
 #: static-media/js/chooseplan.js:384
 msgid "Delete Plan"
-msgstr ""
+msgstr "削除する"
 
 #: static-media/js/chooseplan.js:386 static-media/js/chooseplan.js.c:489
 #: static-media/js/chooseplan.js:665
 msgid "Yes"
-msgstr ""
+msgstr "はい"
 
 #: static-media/js/chooseplan.js:390
 msgid "Please wait. Deleting plan."
-msgstr ""
+msgstr "計画案削除中。お待ちください。"
 
 #: static-media/js/chooseplan.js:391
 msgid "Deleting Plan"
-msgstr ""
+msgstr "計画案削除中。"
 
 #: static-media/js/chooseplan.js:406 static-media/js/chooseplan.js.c:415
 msgid "Error Deleting Plan"
@@ -164,59 +169,59 @@ msgstr ""
 #: static-media/js/chooseplan.js:421 static-media/js/chooseplan.js.c:487
 #: static-media/js/chooseplan.js:663 static-media/js/mapping.js:1337
 msgid "No"
-msgstr ""
+msgstr "いいえ"
 
 #: static-media/js/chooseplan.js:430 static-media/js/chooseplan.js.c:562
 #: static-media/js/chooseplan.js:591 static-media/js/chooseplan.js.c:594
 #: static-media/js/chooseplan.js:602 static-media/js/chooseplan.js.c:608
 #: static-media/js/layerchooser.js:190 static-media/js/shareddistricts.js:171
 msgid "Search"
-msgstr ""
+msgstr "検索"
 
 #: static-media/js/chooseplan.js:430 static-media/js/layerchooser.js:190
 #: static-media/js/shareddistricts.js:171
 msgid "Clear Search"
-msgstr ""
+msgstr "検索クリア"
 
 #: static-media/js/chooseplan.js:515
 msgid "Error Saving Details"
-msgstr ""
+msgstr "詳細保存エラー"
 
 #: static-media/js/chooseplan.js:581
 msgid "Current Filter: "
-msgstr ""
+msgstr "現在の絞り込み条件: "
 
 #: static-media/js/chooseplan.js:717
 msgid "Upload Plan"
-msgstr ""
+msgstr "計画案のアップロード"
 
 #: static-media/js/chooseplan.js:746
 msgid "Click the button to view the map as a guest"
-msgstr ""
+msgstr "ゲストとして地図を見るにはここをクリックしてください"
 
 #: static-media/js/districtfile.js:120
 msgid "Download"
-msgstr ""
+msgstr "ダウンロード"
 
 #: static-media/js/districtfile.js:133
 msgid "Request File"
-msgstr ""
+msgstr "ファイルのリクエスト"
 
 #: static-media/js/districtfile.js:162
 msgid "Please wait. File is being created on the server"
-msgstr ""
+msgstr "サーバ上にファイルを作成中です。お待ちください。"
 
 #: static-media/js/emailplan.js:42
 msgid "Submit Final Plan to Contest"
-msgstr ""
+msgstr "最終計画案をコンテストに提出する"
 
 #: static-media/js/emailplan.js:99
 msgid "Please wait. Emailing plan."
-msgstr ""
+msgstr "計画案を送信中です。お待ちください。"
 
 #: static-media/js/emailplan.js:100 static-media/js/emailplan.js.c:112
 msgid "Emailing Plan"
-msgstr ""
+msgstr "計画案送信中"
 
 #: static-media/js/emailplan.js:113
 msgid ""
@@ -224,65 +229,67 @@ msgid ""
 "confirmation email once it has completed successfully. This may take a few "
 "minutes."
 msgstr ""
+"計画案は提出途上にあります。提出に成功すると確認のEメールが送られます。これには数分かかる"
+"ことがあります。"
 
 #: static-media/js/emailplan.js:116 static-media/js/mapping.js:500
 #: static-media/js/mapping.js.c:1052 static-media/js/mapping.js:1095
 #: static-media/js/mapping.js.c:1160 static-media/js/mapping.js:1172
 #: static-media/js/mapping.js.c:1308 static-media/js/mapping.js:2968
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #: static-media/js/emailplan.js:123 static-media/js/emailplan.js.c:132
 msgid "Error Emailing Plan"
-msgstr ""
+msgstr "計画案送信エラー"
 
 #: static-media/js/emailplan.js:133
 msgid "Please try again later"
-msgstr ""
+msgstr "後ほどやり直してください"
 
 #: static-media/js/layerchooser.js:59
 msgid "Choose Map Layers"
-msgstr ""
+msgstr "地図レイヤーを選択"
 
 #: static-media/js/layerchooser.js:170
 msgid "User Name"
-msgstr ""
+msgstr "ユーザ名"
 
 #: static-media/js/mapping.js:108
 msgid " Name"
-msgstr ""
+msgstr "名前"
 
 #: static-media/js/mapping.js:120
 msgid "Demographic "
-msgstr ""
+msgstr "人口情報"
 
 #: static-media/js/mapping.js:388
 msgid "Satellite"
-msgstr ""
+msgstr "航空写真"
 
 #: static-media/js/mapping.js:389
 msgid "Hybrid"
-msgstr ""
+msgstr "地図＋航空写真"
 
 #: static-media/js/mapping.js:390
 msgid "Road"
-msgstr ""
+msgstr "道路"
 
 #: static-media/js/mapping.js:441
 msgid "Map Transparency"
-msgstr ""
+msgstr "地図透過度"
 
 #: static-media/js/mapping.js:459
 msgid "Please wait. Fixing unassigned blocks. This may take a couple minutes."
-msgstr ""
+msgstr "未割り当てブロックを修復中です。お待ちください。これには数分かかることがあります。"
 
 #: static-media/js/mapping.js:462
 msgid "Fixing Unassigned"
-msgstr ""
+msgstr "未割り当てブロック修復中"
 
 #: static-media/js/mapping.js:482
 msgid "Success"
-msgstr ""
+msgstr "成功"
 
 #: static-media/js/mapping.js:482 static-media/js/mapping.js.c:489
 #: static-media/js/mapping.js:543 static-media/js/mapping.js.c:550
@@ -291,53 +298,53 @@ msgstr ""
 #: static-media/js/ui.js:231 static-media/js/ui.js.c:263
 #: static-media/js/ui.js:508
 msgid "Error"
-msgstr ""
+msgstr "エラー"
 
 #: static-media/js/mapping.js:488
 msgid "Error encountered while fixing unassigned"
-msgstr ""
+msgstr "未割り当て修復中にエラーが発生しました"
 
 #: static-media/js/mapping.js:504
 msgid "No reference layer selected."
-msgstr ""
+msgstr "参照レイヤーが選択されていません。"
 
 #: static-media/js/mapping.js:505 static-media/js/splitsreport.js:109
 #: static-media/js/statisticssets.js:338 static-media/js/statisticssets.js:347
 #: static-media/js/statisticssets.js:386
 msgid "Warning"
-msgstr ""
+msgstr "警告"
 
 #: static-media/js/mapping.js:518
 msgid "Please wait. Querying for splits."
-msgstr ""
+msgstr "境界線を問い合わせ中です。お待ちください。"
 
 #: static-media/js/mapping.js:522
 msgid "Finding Splits"
-msgstr ""
+msgstr "境界線を探しています"
 
 #: static-media/js/mapping.js:537
 msgid "This plan contains no splits."
-msgstr ""
+msgstr "この計画案には境界線はありません。"
 
 #: static-media/js/mapping.js:538
 msgid "No Splits Found"
-msgstr ""
+msgstr "境界線は見つかりませんでした"
 
 #: static-media/js/mapping.js:542 static-media/js/mapping.js.c:549
 msgid "Error encountered while querying for splits: "
-msgstr ""
+msgstr "境界線問い合わせ中にエラーが発生しました: "
 
 #: static-media/js/mapping.js:1055
 msgid "Please wait until your previous changes have been accepted."
-msgstr ""
+msgstr "直前の変更が受け入れられるまでお待ちください。"
 
 #: static-media/js/mapping.js:1058
 msgid "Busy"
-msgstr ""
+msgstr "混雑中"
 
 #: static-media/js/mapping.js:1100
 msgid "No districts were updated"
-msgstr ""
+msgstr "どの選挙区も更新されませんでした"
 
 #: static-media/js/mapping.js:1163
 msgid ""
@@ -345,6 +352,9 @@ msgid ""
 "\n"
 "Consider drawing a smaller area with the selection tool."
 msgstr ""
+"一度に沢山の機能を選択することはできません。\n"
+"\n"
+"選択ツールで小さな地域を描いてみてください。"
 
 #: static-media/js/mapping.js:1166 static-media/js/mapping.js.c:1178
 #: static-media/js/mapping.js:1326 static-media/js/multimember.js:200
@@ -352,7 +362,7 @@ msgstr ""
 #: static-media/js/shareddistricts.js:372
 #: static-media/js/shareddistricts.js:379
 msgid "Sorry"
-msgstr ""
+msgstr "申し訳ありません"
 
 #: static-media/js/mapping.js:1175
 msgid ""
@@ -360,34 +370,37 @@ msgid ""
 "\n"
 "Consider assigning your current selection to a district first."
 msgstr ""
+"これ以上機能を選択できません。\n"
+"\n"
+"現在選択している機能を先に選挙区に割り当ててください。"
 
 #: static-media/js/mapping.js:1327
 msgid "Unable to combine districts: "
-msgstr ""
+msgstr "選挙区を統合できません: "
 
 #: static-media/js/mapping.js:1341
 msgid "Would you like to unassign the geography in "
-msgstr ""
+msgstr "〜の中の地域の割り当てを外しますか"
 
 #: static-media/js/mapping.js:1424
 msgid "Sorry, your information could not be saved. Please try again later."
-msgstr ""
+msgstr "申し訳ありません。情報が保存されませんでした。後ほどやり直してください。"
 
 #: static-media/js/mapping.js:1942
 msgid "Select One"
-msgstr ""
+msgstr "単独選択"
 
 #: static-media/js/mapping.js:1943 static-media/js/mapping.js.c:1957
 msgid "Unassigned"
-msgstr ""
+msgstr "未割り当て"
 
 #: static-media/js/mapping.js:1966 static-media/js/mapping.js.c:2987
 msgid "New "
-msgstr ""
+msgstr "新しい"
 
 #: static-media/js/mapping.js:2526 static-media/js/mapping.js.c:2712
 msgid "Contiguity"
-msgstr ""
+msgstr "同一境界内"
 
 #: static-media/js/mapping.js:2530 static-media/js/mapping.js.c:2715
 msgid "Compactness"
@@ -395,19 +408,19 @@ msgstr ""
 
 #: static-media/js/mapping.js:2534 static-media/js/mapping.js.c:2718
 msgid "None"
-msgstr ""
+msgstr "なし"
 
 #: static-media/js/mapping.js:2606
 msgid "Boundary"
-msgstr ""
+msgstr "境界"
 
 #: static-media/js/mapping.js:2612
 msgid "Noncontiguous"
-msgstr ""
+msgstr "同一境界外"
 
 #: static-media/js/mapping.js:2614
 msgid "Contiguous"
-msgstr ""
+msgstr "同一境界内"
 
 #: static-media/js/mapping.js:2620
 msgid "Very Compact"
@@ -415,7 +428,7 @@ msgstr ""
 
 #: static-media/js/mapping.js:2622
 msgid "Average"
-msgstr ""
+msgstr "平均的"
 
 #: static-media/js/mapping.js:2624
 msgid "Hardly Compact"
@@ -423,63 +436,63 @@ msgstr ""
 
 #: static-media/js/mapping.js:2630
 msgid "Far Over Target"
-msgstr ""
+msgstr "目標数をはるかに超過"
 
 #: static-media/js/mapping.js:2632
 msgid "Over Target"
-msgstr ""
+msgstr "目標数超過"
 
 #: static-media/js/mapping.js:2634
 msgid "Within Target"
-msgstr ""
+msgstr "目標数範囲内"
 
 #: static-media/js/mapping.js:2636
 msgid "Under Target"
-msgstr ""
+msgstr "目標数に不足"
 
 #: static-media/js/mapping.js:2638
 msgid "Far Under Target"
-msgstr ""
+msgstr "目標数にかなり不足"
 
 #: static-media/js/mapping.js:2964
 msgid "Please select a name for the %(bml)s"
-msgstr ""
+msgstr "%(bml)sに名前をつけてください"
 
 #: static-media/js/mapping.js:2977
 msgid "Cancel"
-msgstr ""
+msgstr "キャンセル"
 
 #: static-media/js/mapping.js:2994
 msgid "Community Label"
-msgstr ""
+msgstr "コミュニティ名"
 
 #: static-media/js/mapping.js:2995
 msgid "Community Type"
-msgstr ""
+msgstr "コミュニティタイプ"
 
 #: static-media/js/multimember.js:59
 msgid "Set Multi-Member Districts"
-msgstr ""
+msgstr "複数定員区を設定する"
 
 #: static-media/js/multimember.js:201
 msgid "Unable to assign representatives:"
-msgstr ""
+msgstr "代表者を割り当てられませんでした:"
 
 #: static-media/js/multimember.js:207
 msgid "Unable to assign representatives"
-msgstr ""
+msgstr "代表者を割り当てられませんでした"
 
 #: static-media/js/multimember.js:252
 msgid "District"
-msgstr ""
+msgstr "選挙区"
 
 #: static-media/js/multimember.js:252
 msgid "District ID"
-msgstr ""
+msgstr "選挙区ID"
 
 #: static-media/js/multimember.js:252
 msgid "# Members"
-msgstr ""
+msgstr "定員"
 
 #: static-media/js/reaggregator.js:133
 msgid ""
@@ -488,6 +501,10 @@ msgid ""
 "background, and the status will be updated when completed. Feel free to use "
 "the rest of the system in the meantime."
 msgstr ""
+"システム内のデータが変更されました。この計画案を使用する前に再統合する必要があります。"
+"再統合を開始するにはこのボタンをクリックしてください。再統合はバックグラウンドで実行されます。"
+"再統合が完了するとステータスが更新されます。実行中もシステムの他の部分を利用することが"
+"できます。"
 
 #: static-media/js/reaggregator.js:139
 msgid ""
@@ -495,10 +512,12 @@ msgid ""
 "it before it can be used. The status of the plan will be updated when "
 "reaggregation has completed."
 msgstr ""
+"システム内のデータが変更されました。この計画案の所有者は、使用の前に再統合をする必要があります。"
+"再統合が完了すると、計画案のステータスが更新されます。"
 
 #: static-media/js/reaggregator.js:146
 msgid "Reaggregation in progress"
-msgstr ""
+msgstr "再統合実行中"
 
 #: static-media/js/reaggregator.js:148
 msgid ""
@@ -506,266 +525,278 @@ msgid ""
 "reflect these changes. The plan will not be available until reaggregation "
 "has completed."
 msgstr ""
+"システム内のデータが変更されたので、この計画案は変更を反映するために再統合中です。"
+"再統合が完了するまで、この計画案を使用することはできません。"
 
 #: static-media/js/reaggregator.js:159
 msgid "Unknown state"
-msgstr ""
+msgstr "ステータス不明"
 
 #: static-media/js/reaggregator.js:186
 msgid "Error reaggregating plan"
-msgstr ""
+msgstr "計画案再統合エラー"
 
 #: static-media/js/register.js:40
 msgid "Terms of Use"
-msgstr ""
+msgstr "利用規約"
 
 #: static-media/js/register.js:41
 msgid "Forgot Password"
-msgstr ""
+msgstr "パスワードを忘れたら"
 
 #: static-media/js/register.js:42
 msgid "Duplicate Session"
-msgstr ""
+msgstr "セッションを複写する"
 
 #: static-media/js/register.js:43
 msgid "Maximum Users Exceeded"
-msgstr ""
+msgstr "利用可能ユーザ数を超過しています"
 
 #: static-media/js/register.js:50
 msgid ""
 "Sorry, registration is not available at this time.  Please try logging in "
 "anonymously or coming back later"
 msgstr ""
+"申し訳ありません。現在は登録を受け付けておりません。登録せずにログインするか、再度やり直してください。"
 
 #: static-media/js/register.js:52
 msgid "Signup Unavailable"
-msgstr ""
+msgstr "登録受付停止中"
 
 #: static-media/js/register.js:178
 msgid "You've been registered for the public mapping project."
-msgstr ""
+msgstr "公共選挙区再編プロジェクトへの登録が完了しました。"
 
 #: static-media/js/register.js:181
 msgid "Success!"
-msgstr ""
+msgstr "成功しました！"
 
 #: static-media/js/register.js:183
 msgid "Start Mapping"
-msgstr ""
+msgstr "再編を開始する"
 
 #: static-media/js/register.js:196
 msgid "User Name already exists. Please choose another one."
-msgstr ""
+msgstr "このユーザ名は既に利用されています。他のユーザ名を選んでください。"
 
 #: static-media/js/register.js:204
 msgid ""
 "Email already exists. Enter another one, or use the password retrieval form"
 msgstr ""
+"このEメールは既に登録されています。他のEメールアドレスを入力するか、"
+"パスワード回復フォームを利用してください。"
 
 #: static-media/js/register.js:242
 msgid "Please Wait..."
-msgstr ""
+msgstr "お待ちください..."
 
 #: static-media/js/register.js:312
 msgid "You entered an incorrect user name or password"
-msgstr ""
+msgstr "ユーザ名かパスワードが間違っています"
 
 #: static-media/js/register.js:316
 msgid "Login Error"
-msgstr ""
+msgstr "ログインエラー"
 
 #: static-media/js/register.js:365
 msgid "Logged Off"
-msgstr ""
+msgstr "ログアウト完了"
 
 #: static-media/js/register.js:366
 msgid ""
 "You have been logged off by another browser. This happens sometimes if you "
 "attempt to access the application from two different locations."
 msgstr ""
+"他のブラウザで既にログアウトしています。これは、別々の場所からアプリケーションに接続しようとすると"
+"起きることがあります。"
 
 #: static-media/js/register.js:367
 msgid "Please log in again"
-msgstr ""
+msgstr "再度ログインしてください"
 
 #: static-media/js/reports.js:148
 msgid "Please select one or more reports to be generated."
-msgstr ""
+msgstr "作成するレポートを選択してください。"
 
 #: static-media/js/reports.js:156
 msgid "Generating Report"
-msgstr ""
+msgstr "レポート作成中"
 
 #: static-media/js/reports.js:157
 msgid "You may use the rest of the application while the report is building."
-msgstr ""
+msgstr "レポートを作成している間、アプリケーションの他の部分は利用することができます。"
 
 #: static-media/js/reports.js:158
 msgid "A preview of your report will appear in this space when it is ready."
-msgstr ""
+msgstr "レポート作成が完了すると、ここにプレビューが表示されます。"
 
 #: static-media/js/reports.js:177
 msgid "Report Error"
-msgstr ""
+msgstr "レポートエラー"
 
 #: static-media/js/reports.js:178
 msgid "Sorry, this report cannot be previewed."
-msgstr ""
+msgstr "申し訳ありません。このレポートのプレビューは表示できません。"
 
 #: static-media/js/reports.js:209
 msgid "Connection Failed"
-msgstr ""
+msgstr "接続失敗"
 
 #: static-media/js/reports.js:210
 msgid ""
 "There was a problem checking your report status. You can resume checking by "
 "clicking on the \"Create and Preview Report\" button."
 msgstr ""
+"レポートのステータス確認に問題が生じました。「レポートを作成してプレビューを表示」ボタンを"
+"クリックして再度実行することができます。"
 
 #: static-media/js/reports.js:364
 msgid "Open Current Report in New Window"
-msgstr ""
+msgstr "現在のレポートを新しいウィンドウで表示する"
 
 #: static-media/js/shareddistricts.js:60
 msgid "Copy and Paste %(bodyMembersCap)s"
-msgstr ""
+msgstr "%(bodyMembersCap)sをコピーしてペースト"
 
 #: static-media/js/shareddistricts.js:142
 msgid "Plan"
-msgstr ""
+msgstr "計画案"
 
 #: static-media/js/shareddistricts.js:199
 msgid "%(bodyMemberLongCap)s Name"
-msgstr ""
+msgstr "%(bodyMemberLongCap)s名"
 
 #: static-media/js/shareddistricts.js:298
 msgid "Maximum %(bodyMembers)s Reached"
-msgstr ""
+msgstr "%(bodyMembers)sの人数制限に達しました"
 
 #: static-media/js/shareddistricts.js:299
 msgid ""
 "Your plan is at maximum capacity. Please delete a %(bodyMemberLong)s to "
 "enable pasting."
 msgstr ""
+"あなたの計画案はキャパシティの最高限度に達しました。 %(bodyMemberLong)sを削除すると"
+"ペーストが可能になります。"
 
 #: static-media/js/shareddistricts.js:309
 msgid "2. Remove %(num_available_districts)s before submitting"
-msgstr ""
+msgstr "2. 提出する前に%(num_available_districts)sを削除する"
 
 #: static-media/js/shareddistricts.js:313
 msgid "2. Check your selections"
-msgstr ""
+msgstr "2. 選択を確認する"
 
 #: static-media/js/shareddistricts.js:318
 msgid "2. Select a %(bodyMemberLong)s to copy"
-msgstr ""
+msgstr "2. %(bodyMemberLong)sを選択してコピー"
 
 #: static-media/js/shareddistricts.js:322
 msgid "2. Select a %(bodyMemberLong)s"
-msgstr ""
+msgstr "2. %(bodyMemberLong)sを選択"
 
 #: static-media/js/shareddistricts.js:329
 msgid "2. Select up to %(available_districts)s %(bodyMembers)s to copy"
-msgstr ""
+msgstr "2. %(bodyMembers)sを%(available_districts)s個まで選択してコピー"
 
 #: static-media/js/shareddistricts.js:336
 msgid "2. Select %(bodyMembers)s"
-msgstr ""
+msgstr "2. %(bodyMembers)sを選択"
 
 #: static-media/js/shareddistricts.js:373
 #: static-media/js/shareddistricts.js:380
 msgid "Unable to paste %(bodyMembers)s"
-msgstr ""
+msgstr "%(bodyMembers)sをペーストすることができません"
 
 #: static-media/js/splitsreport.js:51
 msgid "Splits Report"
-msgstr ""
+msgstr "境界線レポート"
 
 #: static-media/js/splitsreport.js:69
 msgid "Please wait. Retrieving splits report."
-msgstr ""
+msgstr "境界線レポートを取得しています。お待ちください。"
 
 #: static-media/js/splitsreport.js:72
 msgid "Retrieving Splits Report"
-msgstr ""
+msgstr "境界線レポート取得中"
 
 #: static-media/js/splitsreport.js:94
 msgid "Error encountered while retrieving splits report: "
-msgstr ""
+msgstr "境界線レポートの取得中にエラーが発生しました: "
 
 #: static-media/js/splitsreport.js:108
 msgid "Please select either 1, 2, or 3 layers for comparison."
-msgstr ""
+msgstr "比較するレイヤーを１〜３つまで選んでください"
 
 #: static-media/js/statisticssets.js:165
 msgid "Loading Statistics..."
-msgstr ""
+msgstr "統計を読み込んでいます..."
 
 #: static-media/js/statisticssets.js:337
 msgid "Please select 3 or fewer statistics."
-msgstr ""
+msgstr "選択する統計は３つ以下にしてください。"
 
 #: static-media/js/statisticssets.js:346
 msgid "Please name your statistics set."
-msgstr ""
+msgstr "統計セットに名前をつけてください。"
 
 #: static-media/js/statisticssets.js:392
 msgid "Please select 1-3 statistics to save in the named set."
-msgstr ""
+msgstr "このセットに保存する統計を１〜３つまで選んでください。"
 
 #: static-media/js/statisticssets.js:393
 msgid "Incomplete"
-msgstr ""
+msgstr "未完了"
 
 #: static-media/js/ui.js:65
 msgid "Coming Soon..."
-msgstr ""
+msgstr "建設中です"
 
 #: static-media/js/ui.js:154
 msgid ""
 "No plans have been submitted for this leaderboard. Please check back later."
 msgstr ""
+"このスコアボードには計画案が提出されていません。しばらくしてから再度確認してください。"
 
 #: static-media/js/ui.js:226 static-media/js/ui.js.c:256
 msgid "Validation Failed"
-msgstr ""
+msgstr "検証失敗"
 
 #: static-media/js/ui.js:231 static-media/js/ui.js.c:264
 msgid "Server error. Please try again later"
-msgstr ""
+msgstr "サーバーにエラーが発生しました。再度やり直してください。"
 
 #: static-media/js/ui.js:239
 msgid "Update Leaderboards<br/>with Working Plan"
-msgstr ""
+msgstr "スコアボードを<br/>現在の計画案で更新する"
 
 #: static-media/js/ui.js:271
 msgid "Download Scores<br/>as CSV"
-msgstr ""
+msgstr "スコアをCSV形式で<br/>ダウンロードする"
 
 #: static-media/js/ui.js:394
 msgid "Last Saved on %(day)s at %(hour)s:%(minute)s"
-msgstr ""
+msgstr "最終保存日 %(day)s %(hour)s:%(minute)s"
 
 #: static-media/js/ui.js:497
 msgid "Please Wait"
-msgstr ""
+msgstr "お待ちください"
 
 #: static-media/js/ui.js:497
 msgid "Publishing with the server"
-msgstr ""
+msgstr "サーバー上に公開しています"
 
 #: static-media/js/ui.js:508
 msgid "Please enter a new name to publish your plan."
-msgstr ""
+msgstr "計画案を公開するために新しい名前をつけてください"
 
 #: static-media/js/ui.js:520
 msgid "Oops!"
-msgstr ""
+msgstr "おぉっと。"
 
 #: static-media/js/ui.js:539
 msgid "Server Failure"
-msgstr ""
+msgstr "サーバーエラー"
 
 #: static-media/js/ui.js:539
 msgid "Sorry, we weren't able to contact the server.  Please try again later."
-msgstr ""
+msgstr "申し訳ありません。サーバーに接続できませんでした。再度やり直してください。"
