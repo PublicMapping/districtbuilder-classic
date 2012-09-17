@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-08-01 16:57-0400\n"
+"POT-Creation-Date: 2012-09-17 09:38-0400\n"
 "PO-Revision-Date: 2012-06-07 14:20\n"
 "Language: Japanese\n"
 "MIME-Version: 1.0\n"
@@ -24,12 +24,12 @@ msgstr "パスワードのリセット申請"
 msgid "Successfully deleted %(count)d %(item)s"
 msgstr "%(count)d %(item)sは削除されました。"
 
-#: redistricting/admin.py:303
+#: redistricting/admin.py:302
 #, python-format
 msgid "Delete selected %(verbose_name_plural)s"
 msgstr "選択した%(verbose_name_plural)sを削除する"
 
-#: redistricting/admin.py:390
+#: redistricting/admin.py:389
 msgid "No task with that id."
 msgstr "そのIDに該当するタスクはありません。"
 
@@ -37,12 +37,12 @@ msgstr "そのIDに該当するタスクはありません。"
 #: redistricting/calculators.py:342 redistricting/calculators.py:562
 #: redistricting/calculators.py:630 redistricting/calculators.py:699
 #: redistricting/calculators.py:1404 redistricting/calculators.py:1486
-#: redistricting/calculators.py:2033
+#: redistricting/calculators.py:2041
 msgid "n/a"
 msgstr "該当なし"
 
 #: redistricting/calculators.py:1118 redistricting/calculators.py:1208
-#: redistricting/calculators.py:1701 redistricting/calculators.py:1798
+#: redistricting/calculators.py:1701 redistricting/calculators.py:1806
 #, python-format
 msgid "%(value)d (of %(target)s)"
 msgstr "%(value)d (%(target)sのうち)"
@@ -59,18 +59,18 @@ msgstr "共和党派"
 msgid "Balanced"
 msgstr "均等"
 
-#: redistricting/calculators.py:2189
+#: redistricting/calculators.py:2197
 #, python-format
 msgid "Total %(district_type_a)s which split a %(district_type_b)s: %(result)d"
 msgstr ""
 
-#: redistricting/calculators.py:2192
+#: redistricting/calculators.py:2200
 #, python-format
 msgid ""
 "Total %(district_type_a)s splitting \"%(district_type_b)s\": %(result)d</div>"
 msgstr ""
 
-#: redistricting/calculators.py:2196
+#: redistricting/calculators.py:2204
 msgid "Total number of splits"
 msgstr "境界線総数"
 
@@ -180,57 +180,58 @@ msgstr "計画案を提出しました"
 msgid "Error creating calculator report."
 msgstr "計算レポートの作成中にエラーが発生しました。"
 
-#: redistricting/tasks.py:1352
+#: redistricting/tasks.py:1342
+#, fuzzy
+msgid "There are an incorrect number of columns in the uploaded Subject file"
+msgstr "アップロードされたSubjectファイル内の地域単位の数が正しくありません。"
+
+#: redistricting/tasks.py:1360
 msgid ""
 "There are an incorrect number of geounits in the uploaded Subject file. "
 msgstr "アップロードされたSubjectファイル内の地域単位の数が正しくありません。"
 
-#: redistricting/tasks.py:1381
+#: redistricting/tasks.py:1389
 msgid "Verifying consistency of uploaded geounits ..."
 msgstr "アップロードされた地域単位の整合性を確認しています ..."
 
-#: redistricting/tasks.py:1422
+#: redistricting/tasks.py:1430
 msgid "There are a correct number of geounits in the uploaded Subject file, "
 msgstr "アップロードされたSubjectファイル内の地域単位数が一致しました。"
 
-#: redistricting/tasks.py:1425
+#: redistricting/tasks.py:1432
 msgid ""
 "but the geounits do not have the same portable ids as those in the database."
 msgstr "地域単位のポータブルIDとデータベース内のポータブルIDが一致しません。"
 
-#: redistricting/tasks.py:1454
+#: redistricting/tasks.py:1461
 msgid "Copying records to characteristic table ..."
 msgstr "記録をcharacteristic表にコピーしています ..."
 
-#: redistricting/tasks.py:1500
-msgid "The subject name contains invalid characters."
-msgstr "subject名に使用できない文字が含まれています。"
-
-#: redistricting/tasks.py:1508
-msgid "Please correct the error and try again."
-msgstr "エラーを直してもう一度やり直してください。"
-
-#: redistricting/tasks.py:1589
+#: redistricting/tasks.py:1587
 msgid "Created characteristics, resetting computed characteristics..."
 msgstr ""
 "Characteristicsを作成しました。計算されたcharacteristicsをリセットしていま"
 "す..."
 
-#: redistricting/tasks.py:1652
+#: redistricting/tasks.py:1591
+msgid "Not able to create task for update_vacant_characteristics."
+msgstr ""
+
+#: redistricting/tasks.py:1654
 msgid "Reset computed characteristics, renesting foundation geographies..."
 msgstr ""
 "計算されたcharacteristicsはリセットされました。renesting geografías base..."
 
-#: redistricting/tasks.py:1706
+#: redistricting/tasks.py:1708
 msgid "Renested foundation geographies, creating spatial views and styles..."
 msgstr "Renested geografías base。空間ビューとスタイルを作成しています..."
 
-#: redistricting/tasks.py:1770
+#: redistricting/tasks.py:1772
 msgid "Created spatial views and styles, cleaning quarantined data..."
 msgstr ""
 "空間ビューとスタイルを作成しました。quarantineされたデータを削除しています..."
 
-#: redistricting/tasks.py:1813
+#: redistricting/tasks.py:1815
 #, python-format
 msgid "Upload complete. Subject \"%(subject_name)s\" added."
 msgstr ""
@@ -279,14 +280,14 @@ msgid "Couldn't save new plan"
 msgstr "新しい計画案を保存できませんでした"
 
 #: redistricting/views.py:881 redistricting/views.py:967
-#: redistricting/views.py:1147 redistricting/views.py:1209
-#: redistricting/views.py:1276 redistricting/views.py:1329
-#: redistricting/views.py:1375
+#: redistricting/views.py:1150 redistricting/views.py:1212
+#: redistricting/views.py:1279 redistricting/views.py:1332
+#: redistricting/views.py:1378
 msgid "No plan with the given id"
 msgstr "指定されたIDの計画案は存在しません"
 
 #: redistricting/views.py:885 redistricting/views.py:971
-#: redistricting/views.py:1379 redistricting/views.py:1391
+#: redistricting/views.py:1382 redistricting/views.py:1394
 msgid "User can't view the given plan"
 msgstr "指定された計画案を見ることはできません"
 
@@ -314,274 +315,275 @@ msgstr "レポート作成を開始しました"
 msgid "Unrecognized status when checking report status."
 msgstr ""
 
-#: redistricting/views.py:1108
+#: redistricting/views.py:1111
 msgid "Created 1 new district"
 msgstr "新しい選挙区を作成しました"
 
-#: redistricting/views.py:1114
+#: redistricting/views.py:1117
 msgid "Reached Max districts already"
 msgstr "選挙区数の上限に達しています"
 
-#: redistricting/views.py:1118
+#: redistricting/views.py:1121
 msgid "Couldn't save new district."
 msgstr "新しい選挙区を保存できませんでした。"
 
-#: redistricting/views.py:1120
+#: redistricting/views.py:1123
 msgid "Must specify name, geolevel, and geounit ids for new district."
 msgstr "新しい選挙区の名前、地域レベル、地域単位を指定してください。"
 
-#: redistricting/views.py:1151 redistricting/views.py:1213
-#: redistricting/views.py:1280 redistricting/views.py:1333
+#: redistricting/views.py:1154 redistricting/views.py:1216
+#: redistricting/views.py:1283 redistricting/views.py:1336
 msgid "User can't edit the given plan"
 msgstr "この計画案は編集することができません"
 
-#: redistricting/views.py:1157
+#: redistricting/views.py:1160
 msgid "No districts selected to add to the given plan"
 msgstr "新しい計画案に追加する選挙区が選択されていません"
 
-#: redistricting/views.py:1162
+#: redistricting/views.py:1165
 #, python-format
 msgid "Going to merge %(number_of_merged_districts)d districts"
 msgstr "%(number_of_merged_districts)d個の選挙区を統合します"
 
-#: redistricting/views.py:1170
+#: redistricting/views.py:1173
 #, python-format
 msgid "Tried to merge too many districts; %(allowed_districts)d slots left"
 msgstr ""
 "統合しようとした選挙区が多すぎます。%(allowed_districts)d個分のスロットが残っ"
 "ています。"
 
-#: redistricting/views.py:1178
+#: redistricting/views.py:1181
 #, python-format
 msgid "Merged %(num_merged_districts)d districts"
 msgstr "%(num_merged_districts)d個の選挙区を統合しました"
 
-#: redistricting/views.py:1220
+#: redistricting/views.py:1223
 msgid "Multi-members not allowed for this legislative body"
 msgstr "この議会は複数定員区にすることはできません"
 
-#: redistricting/views.py:1252
+#: redistricting/views.py:1255
 #, python-format
 msgid "Modified members for %(num_districts)d districts"
 msgstr "%(num_districts)d個の選挙区の議員を変更しました"
 
-#: redistricting/views.py:1300
+#: redistricting/views.py:1303
 msgid "Can't combine locked districts"
 msgstr "ロックされた選挙区を統合することはできません"
 
-#: redistricting/views.py:1307
+#: redistricting/views.py:1310
 msgid "Successfully combined districts"
 msgstr "選挙区の統合に成功しました"
 
-#: redistricting/views.py:1310
+#: redistricting/views.py:1313
 msgid "Could not combine districts"
 msgstr "選挙区を統合できませんでした"
 
-#: redistricting/views.py:1343
+#: redistricting/views.py:1346
 msgid "Could not fix unassigned"
 msgstr "未配置地域の修復ができませんでした"
 
-#: redistricting/views.py:1388
+#: redistricting/views.py:1391
 msgid "No other plan with the given id"
 msgstr "指定されたIDの計画案は他にありません。"
 
-#: redistricting/views.py:1399
+#: redistricting/views.py:1402
 #, python-format
 msgid "othertype not supported: %(other)s"
 msgstr "othertypeはサポートされていません: %(other)s"
 
-#: redistricting/views.py:1402
+#: redistricting/views.py:1405
 msgid "split"
 msgstr "分割"
 
-#: redistricting/views.py:1405
+#: redistricting/views.py:1408
 #, python-format
 msgid "Found %(num_splits)d %(split_word)s"
 msgstr "%(num_splits)d個の%(split_word)sが見つかりました"
 
-#: redistricting/views.py:1411
+#: redistricting/views.py:1414
 msgid "Could not query for splits"
 msgstr "分割の問い合わせができませんでした"
 
-#: redistricting/views.py:1424
+#: redistricting/views.py:1427
 msgid "No planIds provided"
 msgstr "計画案IDが指定されていません"
 
-#: redistricting/views.py:1444
+#: redistricting/views.py:1447
 msgid "Plan does not exist."
 msgstr "計画案が存在しません。"
 
-#: redistricting/views.py:1454
+#: redistricting/views.py:1457
 msgid "No layers were provided."
 msgstr "layerが指定されていません。"
 
-#: redistricting/views.py:1508 redistricting/views.py:1527
+#: redistricting/views.py:1511 redistricting/views.py:1530
 msgid "Could not add units to district."
 msgstr "地域単位を選挙区に追加できませんでした。"
 
-#: redistricting/views.py:1519
+#: redistricting/views.py:1522
 #, python-format
 msgid "Updated %(num_fixed_districts)d districts"
 msgstr "%(num_fixed_districts)d個の選挙区を更新しました"
 
-#: redistricting/views.py:1532
+#: redistricting/views.py:1535
 msgid "Geounits weren't found in a district."
 msgstr "選挙区内に地域単位が見つかりませんでした。"
 
-#: redistricting/views.py:1561
+#: redistricting/views.py:1564
 msgid "Must include lock parameter."
 msgstr "lock parameterを組み込んでください。"
 
-#: redistricting/views.py:1563
+#: redistricting/views.py:1566
 msgid "Must include version parameter."
 msgstr "version parameterを組み込んでください。"
 
-#: redistricting/views.py:1569
+#: redistricting/views.py:1572
 msgid "Plan or district does not exist."
 msgstr "計画案か選挙区が存在しません。"
 
-#: redistricting/views.py:1578
+#: redistricting/views.py:1581
 #, python-format
 msgid "District successfully %(locked_state)s"
 msgstr ""
 
-#: redistricting/views.py:1579
+#: redistricting/views.py:1582
 msgid "locked"
 msgstr "ロックされました"
 
-#: redistricting/views.py:1579
+#: redistricting/views.py:1582
 msgid "unlocked"
 msgstr "ロックを解除しました"
 
-#: redistricting/views.py:1634
+#: redistricting/views.py:1637
 msgid "No plan exists with that ID."
 msgstr "そのIDの計画案は存在しません。"
 
-#: redistricting/views.py:1702
+#: redistricting/views.py:1705
 msgid "Subject for districts is required."
 msgstr "選挙区のSubjectが必要です。"
 
-#: redistricting/views.py:1705
+#: redistricting/views.py:1708
 msgid "Query failed."
 msgstr "クエリーに失敗しました。"
 
-#: redistricting/views.py:1803
+#: redistricting/views.py:1806
 msgid "Geometry is required."
 msgstr "Geometryが必要です。"
 
-#: redistricting/views.py:1807
+#: redistricting/views.py:1810
 msgid "Invalid plan."
 msgstr "無効な計画案です。"
 
-#: redistricting/views.py:1820
+#: redistricting/views.py:1823
 msgid "Couldn't get geography info from the server. No plan with the given id."
 msgstr ""
-"サーバーから地域情報が取得できませんでした。指定されたIDの計画案はありません。"
+"サーバーから地域情報が取得できませんでした。指定されたIDの計画案はありませ"
+"ん。"
 
-#: redistricting/views.py:1834
+#: redistricting/views.py:1837
 #, fuzzy
 msgid "Unable to get Demographics ScoreDisplay"
 msgstr "Personalized ScoreDisplayを取得できません。"
 
-#: redistricting/views.py:1841
+#: redistricting/views.py:1844
 msgid "Unable to get Personalized ScoreDisplay"
 msgstr "Personalized ScoreDisplayを取得できません。"
 
-#: redistricting/views.py:1852
+#: redistricting/views.py:1855
 msgid "Couldn't render display tab."
 msgstr "display tabが作成できませんでした。"
 
-#: redistricting/views.py:1884
+#: redistricting/views.py:1887
 msgid "Failed to get file status"
 msgstr "ファイルステータスを取得できませんでした"
 
-#: redistricting/views.py:1916
+#: redistricting/views.py:1919
 msgid "File is not yet ready. Please try again in a few minutes"
 msgstr "ファイルが準備できていません。しばらくしてやり直してください。"
 
-#: redistricting/views.py:1939
+#: redistricting/views.py:1942
 msgid "Task submitted"
 msgstr "タスクを提出しました。"
 
-#: redistricting/views.py:1976
+#: redistricting/views.py:1979
 msgid "No display configured"
 msgstr "ディスプレイが設定されていません"
 
-#: redistricting/views.py:2076
+#: redistricting/views.py:2079
 msgid "Unknown filter method."
 msgstr "検索条件が不明です。"
 
-#: redistricting/views.py:2198
+#: redistricting/views.py:2201
 msgid "Must declare planId, name and description"
 msgstr "計画案IDと名前、説明の記入が必要です"
 
-#: redistricting/views.py:2211
+#: redistricting/views.py:2214
 msgid "Updated plan attributes"
 msgstr "計画案の属性を更新しました"
 
-#: redistricting/views.py:2213
+#: redistricting/views.py:2216
 msgid "Failed to save the changes to your plan"
 msgstr "計画案への変更を保存できませんでした"
 
-#: redistricting/views.py:2218
+#: redistricting/views.py:2221
 msgid "Cannot edit a plan you don't own."
 msgstr "他のユーザの計画案は編集できません。"
 
-#: redistricting/views.py:2234 redistricting/views.py:2266
+#: redistricting/views.py:2237 redistricting/views.py:2269
 msgid "Must declare planId"
 msgstr "計画案IDの指定が必要です"
 
-#: redistricting/views.py:2242
+#: redistricting/views.py:2245
 msgid "Deleted plan"
 msgstr "計画案を削除しました"
 
-#: redistricting/views.py:2244
+#: redistricting/views.py:2247
 msgid "Failed to delete plan"
 msgstr "計画案が削除できませんでした"
 
-#: redistricting/views.py:2249
+#: redistricting/views.py:2252
 msgid "Cannot delete a plan you don't own."
 msgstr "他のユーザの計画案は削除できません。"
 
-#: redistricting/views.py:2280
+#: redistricting/views.py:2283
 msgid "Reaggregating plan"
 msgstr "計画案を再統合しています"
 
-#: redistricting/views.py:2282
+#: redistricting/views.py:2285
 msgid "Failed to reaggregate plan"
 msgstr "計画案の再統合に失敗しました"
 
-#: redistricting/views.py:2287
+#: redistricting/views.py:2290
 msgid "Cannot reaggregate a plan you don't own."
 msgstr "他のユーザの計画案は再統合できません"
 
-#: redistricting/views.py:2308
+#: redistricting/views.py:2311
 #, python-format
 msgid "Health retrieved at %(time)s\n"
 msgstr "プログラム状況取得時刻: %(time)s\n"
 
-#: redistricting/views.py:2309
+#: redistricting/views.py:2312
 #, python-format
 msgid "%(plan_count)d plans in database\n"
 msgstr "データベースには%(plan_count)d個の計画案があります\n"
 
-#: redistricting/views.py:2311
+#: redistricting/views.py:2314
 #, python-format
 msgid "%(session_count)d sessions in use out of %(session_limit)s\n"
 msgstr ""
 "%(session_limit)s個のうち%(session_count)d個のセッションを利用中です。\n"
 
-#: redistricting/views.py:2314
+#: redistricting/views.py:2317
 #, python-format
 msgid "%(num_users)d active users over the last 10 minutes\n"
 msgstr "最新10分間内のｱｸﾃｨﾌﾞﾕｰｻﾞｰ数: %(num_users)d人\n"
 
-#: redistricting/views.py:2317
+#: redistricting/views.py:2320
 #, python-format
 msgid "%(mb_free)s MB of disk space free\n"
 msgstr "空ﾃﾞｨｽｸｽﾍﾟｰｽ: %(mb_free)s MB\n"
 
-#: redistricting/views.py:2319
+#: redistricting/views.py:2322
 #, python-format
 msgid ""
 "Memory Usage:\n"
@@ -590,7 +592,7 @@ msgstr ""
 "メモリ使用量:\n"
 "%(mem_free)s\n"
 
-#: redistricting/views.py:2323
+#: redistricting/views.py:2326
 #, python-format
 msgid ""
 "ERROR! Couldn't get health:\n"
@@ -599,25 +601,25 @@ msgstr ""
 "エラー！プログラム状況が取得できませんでした:\n"
 "%s"
 
-#: redistricting/views.py:2331
+#: redistricting/views.py:2334
 msgid "No plan with that ID exists."
 msgstr "そのIDの計画案はありません。"
 
-#: redistricting/views.py:2379
+#: redistricting/views.py:2388
 #, python-format
 msgid "No functions for %(panel)s"
 msgstr "%(panel)sの機能はありません"
 
-#: redistricting/views.py:2383
+#: redistricting/views.py:2392
 #, python-format
 msgid "No user displays for %(user)s"
 msgstr "%(user)sのﾕｰｻﾞｰﾃﾞｨｽﾌﾟﾚｲはありません"
 
-#: redistricting/views.py:2402
+#: redistricting/views.py:2411
 msgid "Couldn't delete personalized scoredisplay"
 msgstr "個人用のscoredisplayを削除できませんした"
 
-#: redistricting/views.py:2444
+#: redistricting/views.py:2453
 #, python-format
 msgid ""
 "Each user is limited to %(limit)d statistics sets. Please delete one or edit "
@@ -626,11 +628,11 @@ msgstr ""
 "ユーザ１名につき%(limit)d個までの統計しか使えません。削除をするか現存する統計"
 "を編集してください。"
 
-#: redistricting/views.py:2454
+#: redistricting/views.py:2463
 msgid "Didn't get functions in POST parameter"
 msgstr "POST parameterの機能を取得できませんでした"
 
-#: redistricting/views.py:2487
+#: redistricting/views.py:2496
 msgid "No plan with that ID was found."
 msgstr "そのIDの計画案は見つかりませんでした。"
 
@@ -647,8 +649,8 @@ msgid ""
 "This user attempted to upload a file containing a plan but had some "
 "trouble.  The plan may have been imported."
 msgstr ""
-"このユーザは計画案の入ったファイルをアップロードしようとしましたが、成功しませんでし"
-"た。計画案は取り込まれた可能性があります。"
+"このユーザは計画案の入ったファイルをアップロードしようとしましたが、成功しま"
+"せんでした。計画案は取り込まれた可能性があります。"
 
 #: redistricting/templates/admin.email:22
 msgid "Plan name"
@@ -658,7 +660,9 @@ msgstr "計画案名"
 msgid ""
 "If the user continues to have problems with this process, please check the "
 "application settings."
-msgstr "このプロセスに問題が続くようであれば、アプリケーション設定を確認してください。"
+msgstr ""
+"このプロセスに問題が続くようであれば、アプリケーション設定を確認してくださ"
+"い。"
 
 #: redistricting/templates/admin.email:34
 msgid "Thank you."
@@ -830,7 +834,8 @@ msgid ""
 "Select areas on the map then drag them to into a %(body_member_long_label)s "
 "for reassignment"
 msgstr ""
-"地図上のエリアを選択し%(body_member_long_label)sの中にドラッグすると再配置できます"
+"地図上のエリアを選択し%(body_member_long_label)sの中にドラッグすると再配置で"
+"きます"
 
 #: redistricting/templates/editplan.html:87
 msgid "Click and<br/>Drag"
@@ -847,7 +852,8 @@ msgstr "未割り当ての<br/>修復"
 #: redistricting/templates/editplan.html:123
 #, python-format
 msgid "Click on a %(body_member_long_label)s to lock or unlock it."
-msgstr "ロック・ロック解除するには%(body_member_long_label)sをクリックしてください。"
+msgstr ""
+"ロック・ロック解除するには%(body_member_long_label)sをクリックしてください。"
 
 #: redistricting/templates/editplan.html:124
 #, fuzzy, python-format
@@ -905,7 +911,8 @@ msgstr "最終計画案をコンテストに提出する"
 msgid ""
 "You can submit your completed plan to be considered for the contest by "
 "filling out this form."
-msgstr "完成した計画案をコンテストに提出するにはこのフォームを記入してください。"
+msgstr ""
+"完成した計画案をコンテストに提出するにはこのフォームを記入してください。"
 
 #: redistricting/templates/editplan.html:156
 #: redistricting/templates/editplan.html:378
@@ -924,8 +931,8 @@ msgid ""
 "%(plan_text)s a unique name in order to share it. A copy of your current "
 "%(plan_text)s will be added to the \"Shared\" section of the plan chooser."
 msgstr ""
-"下記の%(plan_text)sを共有すると、%(plan_text)sをシステム内のユーザ全員が見ることが"
-"できます。共有するには、%(plan_text)sに特有の名前をつけてください。現在"
+"下記の%(plan_text)sを共有すると、%(plan_text)sをシステム内のユーザ全員が見る"
+"ことができます。共有するには、%(plan_text)sに特有の名前をつけてください。現在"
 "の%(plan_text)sが「共有」セクションの計画案選択表に追加されます。"
 
 #: redistricting/templates/editplan.html:165
@@ -947,8 +954,8 @@ msgid ""
 "You have successfully shared your %(plan_text)s. You can share your "
 "%(plan_text)s with others by giving them this link:"
 msgstr ""
-"%(plan_text)sの共有に成功しました。このリンクを使ってあなたの%(plan_text)sを他の"
-"人に見せることができます:"
+"%(plan_text)sの共有に成功しました。このリンクを使ってあなたの%(plan_text)sを"
+"他の人に見せることができます:"
 
 #: redistricting/templates/editplan.html:174
 #, python-format
@@ -973,9 +980,9 @@ msgid ""
 "\"unverified\" and you will need to re-verify it in order for it to again be "
 "considered for the leaderboards."
 msgstr ""
-"スコアボードに表示するには、あなたの計画案が選挙区再編の規定を満たしている必要があ"
-"ります。照合済み計画案をもう一度編集すると、自動的に「未照合」になり、再度照"
-"合をするまでスコアボードに提出できなくなります。"
+"スコアボードに表示するには、あなたの計画案が選挙区再編の規定を満たしている必"
+"要があります。照合済み計画案をもう一度編集すると、自動的に「未照合」になり、"
+"再度照合をするまでスコアボードに提出できなくなります。"
 
 #: redistricting/templates/editplan.html:185
 msgid ""
@@ -984,7 +991,8 @@ msgid ""
 "the top ten lists (if your plan ranks in the top ten)."
 msgstr ""
 "計画案を照合しただけでは計画案を共有することにはなりません。あなたの計画案が"
-"もしトップ10にランクインした場合、計画案名とユーザ名のみがトップ10リストに表示されます。"
+"もしトップ10にランクインした場合、計画案名とユーザ名のみがトップ10リストに表"
+"示されます。"
 
 #: redistricting/templates/editplan.html:187
 msgid "How to verify and submit your plan:"
@@ -1053,8 +1061,8 @@ msgid ""
 "Click on a row to edit the number of members for the selected district. "
 "Press ENTER to complete editing a district."
 msgstr ""
-"選択した選挙区の定員数を変えるには、列をクリックしてください。ENTERを押すと編集が"
-"完了します。"
+"選択した選挙区の定員数を変えるには、列をクリックしてください。ENTERを押すと編"
+"集が完了します。"
 
 #: redistricting/templates/editplan.html:269
 msgid ""
@@ -1132,6 +1140,7 @@ msgstr ""
 "いますか。:"
 
 #: redistricting/templates/editplan.html:366
+#, fuzzy
 msgid ""
 "\n"
 "                    By submitting a plan for consideration, you are "
@@ -1143,9 +1152,12 @@ msgid ""
 "                    to include attribution (your name or team name) for the\n"
 "                    plan whenever feasible.\n"
 "                    "
-msgstr "\n"
-"                    計画案を提出すると、地元ニュースメディアで報道されることと議会に提出する\n"
-"                    ことに同意したとみなされます。要請がない限り、プロジェクトのパートナーは\n"
+msgstr ""
+"\n"
+"                    計画案を提出すると、地元ニュースメディアで報道されること"
+"と議会に提出する\n"
+"                    ことに同意したとみなされます。要請がない限り、プロジェク"
+"トのパートナーは\n"
 "                    あなたの名前やチーム名などの計画案の情報を公開します。\n"
 
 #: redistricting/templates/editplan.html:382 templates/account.html:98
@@ -1195,14 +1207,15 @@ msgid ""
 "into a plan. There are a few reasons why this might have happened. As best "
 "we can tell, your file failed to upload for the following reason:"
 msgstr ""
-"申し訳ありません。アップロードされたファイルが計画案に変換されませんでした。いくつか"
-"の理由が考えられます。おそらく、以下の理由によりファイルのアップロードに失敗しまし"
-"た。:"
+"申し訳ありません。アップロードされたファイルが計画案に変換されませんでした。"
+"いくつかの理由が考えられます。おそらく、以下の理由によりファイルのアップロー"
+"ドに失敗しました。:"
 
 #: redistricting/templates/error.email:23
 msgid "If you correct this issue and upload your file again, we can try again."
 msgstr ""
-"この問題を直してからファイルを再アップロードしてください。もう一度変換を行います。"
+"この問題を直してからファイルを再アップロードしてください。もう一度変換を行い"
+"ます。"
 
 #: redistricting/templates/error.email:25
 #: redistricting/templates/importedplan.email:28
@@ -1407,8 +1420,8 @@ msgid ""
 "DistrictBuilder is web-based, open source software for collaborative "
 "redistricting."
 msgstr ""
-"DistrictBuilderは、ウェブをベースとした、協力的な選挙区再編計画のオープンソースの"
-"ソフトウェアです。"
+"DistrictBuilderは、ウェブをベースとした、協力的な選挙区再編計画のオープンソー"
+"スのソフトウェアです。"
 
 #: redistricting/templates/viewplan.html:45
 msgid "Updated Plans from DistrictBuilder"
@@ -1508,9 +1521,9 @@ msgid ""
 "confirmation when your plan has been uploaded. Your email will not be saved "
 "or shared."
 msgstr ""
-"計画案のアップロードが完了したときにDistrictBuilderから確認メールを送れるよう、"
-"Eメールアドレスを入力してください。あなたのEメールアドレスは保存・共有されることはありま"
-"せん。"
+"計画案のアップロードが完了したときにDistrictBuilderから確認メールを送れるよ"
+"う、Eメールアドレスを入力してください。あなたのEメールアドレスは保存・共有さ"
+"れることはありません。"
 
 #: redistricting/templates/viewplan.html:362
 #: redistricting/templates/viewplan.html:364
@@ -1719,8 +1732,8 @@ msgid ""
 "your redistricting plan.  After you've made your selections click \"Create "
 "and Preview Report\" to view the final report."
 msgstr ""
-"再編計画案の総合レポートに入れる計画案統計を選んだあと、「レポートを作成してプレビュー」"
-"をクリックすると最終レポートを見ることができます。"
+"再編計画案の総合レポートに入れる計画案統計を選んだあと、「レポートを作成して"
+"プレビュー」をクリックすると最終レポートを見ることができます。"
 
 #: redistricting/templates/viewplan.html:730
 msgid "Create and Preview New Report"
@@ -1765,7 +1778,7 @@ msgid "Plan File Export"
 msgstr "プランファイルプランファイルを出力"
 
 #: redistricting/templates/viewplan.html:849
-#, python-format
+#, fuzzy, python-format
 msgid ""
 "\n"
 "                  The %(bmlll)s index file is a comma-separated-value file "
@@ -1778,11 +1791,16 @@ msgid ""
 "account or used in analysis\n"
 "                  of the %(plan_text)s using other GIS software.\n"
 "                  "
-msgstr "\n"
-"                  %(bmlll)sインデックスファイルはcomma-separated-value(csv)ファイル\n"
-"                  です。それぞれの行が各%(plan_text)sの構成ブロック（区、世論調査ブロック\n"
-"                  など）のIDと、どこの地区に属すかを示します。このファイルを自分や他ユーザの\n
-"                  アカウントにインポートし、他のGISソフトウェアを使って%(plan_text)sの\n"
+msgstr ""
+"\n"
+"                  %(bmlll)sインデックスファイルはcomma-separated-value(csv)"
+"ファイル\n"
+"                  です。それぞれの行が各%(plan_text)sの構成ブロック（区、世論"
+"調査ブロック\n"
+"                  など）のIDと、どこの地区に属すかを示します。このファイルを"
+"自分や他ユーザの\n"
+"                  アカウントにインポートし、他のGISソフトウェアを使っ"
+"て%(plan_text)sの\n"
 "                  分析に使うことができます。\n"
 
 #: redistricting/templates/viewplan.html:886
@@ -1860,6 +1878,7 @@ msgid "Edit Statistics Sets"
 msgstr "統計セットに名前をつける"
 
 #: redistricting/templates/viewplan.html:1084
+#, fuzzy
 msgid ""
 "You can select up to three statistics at once to display in \n"
 "        the sidebar. Each set of three statistics will be saved in the "
@@ -1867,8 +1886,10 @@ msgid ""
 "        for you to select or edit later. You may have up to three sets of \n"
 "        statistics saved."
 msgstr ""
-"        一度に統計を３セットまで選択してサイドバーに表示することができます。各統計セットが\n"
-"        ドロップダウンに保存され、後から選択・編集することができます。統計は一度に３セット\n"
+"        一度に統計を３セットまで選択してサイドバーに表示することができます。"
+"各統計セットが\n"
+"        ドロップダウンに保存され、後から選択・編集することができます。統計は"
+"一度に３セット\n"
 "        まで保存することができます。\n"
 
 #: redistricting/templates/viewplan.html:1089
@@ -2015,8 +2036,8 @@ msgid ""
 "Please choose a username between 6 and 30 characters. Include at least one "
 "letter. Do not leave leading or trailing spaces."
 msgstr ""
-"半角ローマ字で6～30文字以内のユーザ名を指定してください。１文字以上はアルファベット"
-"を使用してください。前後にスペースを使用しないようにしてください。"
+"半角ローマ字で6～30文字以内のユーザ名を指定してください。１文字以上はアルファ"
+"ベットを使用してください。前後にスペースを使用しないようにしてください。"
 
 #: templates/account.html:22
 msgid ""
@@ -2041,13 +2062,16 @@ msgstr "パスワードのヒント"
 
 #: templates/account.html:40
 msgid "An email address is recommended to recover a forgotten password"
-msgstr "パスワードを忘れたときのために、Eメールアドレスの入力が推奨されています。"
+msgstr ""
+"パスワードを忘れたときのために、Eメールアドレスの入力が推奨されています。"
 
 #: templates/account.html:48
 msgid ""
 "Sorry, that email address is already registered. Please use a different "
 "email address."
-msgstr "同じEメールアドレスがすでに登録済みです。別のEメールアドレスを入力してください。"
+msgstr ""
+"同じEメールアドレスがすでに登録済みです。別のEメールアドレスを入力してくださ"
+"い。"
 
 #: templates/account.html:65
 msgid "Organization"
@@ -2070,8 +2094,8 @@ msgid ""
 "You requested a new password for the Public Mapping Project. Sorry for the "
 "inconvenience!  This is your new password"
 msgstr ""
-"公共選挙区再編プロジェクトの新しいパスワードのリクエストを受け付けました。下記が新しい"
-"パスワードです。ご迷惑をおかけいたしました。"
+"公共選挙区再編プロジェクトの新しいパスワードのリクエストを受け付けました。下"
+"記が新しいパスワードです。ご迷惑をおかけいたしました。"
 
 #: templates/forgottenpassword.email:16
 msgid "Thank you for using the Public Mapping Project."
@@ -2158,7 +2182,8 @@ msgid ""
 "Enter your username to retrieve your password hint that you used when "
 "registering for an account."
 msgstr ""
-"アカウント登録時に入力したパスワードのヒントを見るには、ユーザ名を入力してください。"
+"アカウント登録時に入力したパスワードのヒントを見るには、ユーザ名を入力してく"
+"ださい。"
 
 #: templates/index.html:204
 msgid "Username"
@@ -2177,7 +2202,8 @@ msgid ""
 "Enter your email address to reset your password if you have forgotten your "
 "username."
 msgstr ""
-"ユーザ名を忘れた場合は、Eメールアドレスを入力してパスワードを再設定してください。"
+"ユーザ名を忘れた場合は、Eメールアドレスを入力してパスワードを再設定してくださ"
+"い。"
 
 #: templates/index.html:217
 msgid "Email"
@@ -2195,15 +2221,17 @@ msgstr "これがあなたのパスワードのヒントです"
 msgid ""
 "If this helps you remember your password, you can close this dialog and log "
 "in."
-msgstr "このヒントでパスワードが思い出せたら、このダイアログを閉じてログインしてください。"
+msgstr ""
+"このヒントでパスワードが思い出せたら、このダイアログを閉じてログインしてくだ"
+"さい。"
 
 #: templates/index.html:232
 msgid ""
 "If you still can't recall your password, click on the 'Back' button, and "
 "enter your email address, so we can email your password to you."
 msgstr ""
-"このヒントでもパスワードが思い出せない場合は、「戻る」ボタンをクリックして、Eメールアドレス"
-"を入力すれば新しいパスワードがEメールで送られます。"
+"このヒントでもパスワードが思い出せない場合は、「戻る」ボタンをクリックして、E"
+"メールアドレスを入力すれば新しいパスワードがEメールで送られます。"
 
 #: templates/index.html:236
 msgid "Email Sent"
@@ -2248,8 +2276,8 @@ msgid ""
 "The DistrictBuilder application has reached maximum capacity. Please try to "
 "use the application again shortly. We apologize for the inconvenience."
 msgstr ""
-"DistrictBuilderアプリケーションが最大容量に達しました。しばらく経ってからやり直して"
-"ください。ご迷惑をおかけいたします。"
+"DistrictBuilderアプリケーションが最大容量に達しました。しばらく経ってからやり"
+"直してください。ご迷惑をおかけいたします。"
 
 #: templates/index.html:269
 msgid ""
@@ -2266,16 +2294,16 @@ msgid ""
 "Our web server software generates logfiles of the IP addresses of computers "
 "that access this web site and of what files they access."
 msgstr ""
-"当ウェブサーバーソフトウェアはこのサイトにアクセスするコンピューターのIPアドレスと"
-"アクセスしたファイルからログファイルを取得します。"
+"当ウェブサーバーソフトウェアはこのサイトにアクセスするコンピューターのIPアド"
+"レスとアクセスしたファイルからログファイルを取得します。"
 
 #: templates/index.html:273
 msgid ""
 "These web server logs are retained on a temporary basis and then deleted "
 "completely from our systems."
 msgstr ""
-"これらのウェブサーバーのログファイルは短期間保存され、その後システムから完全に削除されま"
-"す。"
+"これらのウェブサーバーのログファイルは短期間保存され、その後システムから完全"
+"に削除されます。"
 
 #: templates/index.html:274
 msgid "We also may ask our visitors to provide information about themselves."
@@ -2284,8 +2312,8 @@ msgstr "また、サイトにアクセスした方から情報の入力をお願
 #: templates/index.html:275
 msgid "We may use cookies to maintain a user's identity between web sessions."
 msgstr ""
-"ログイン情報を次のセッションにも保持する場合は、クッキー(cookie)を利用することがありま"
-"す。"
+"ログイン情報を次のセッションにも保持する場合は、クッキー(cookie)を利用するこ"
+"とがあります。"
 
 #: templates/index.html:277
 msgid "Contributor Terms"
@@ -2298,10 +2326,11 @@ msgid ""
 "agreeing to the following terms for any map, comment, data, or other content "
 "(collectively, 'Contents') you contribute to this site. "
 msgstr ""
-"当サイトはユーザが選挙区地図を作成し、また他のウーザの作成した地図にコメントする目的で"
-"運営されています。当サイトの利用、つまり、地図の作成やコメント、またアカウン"
-"トを作成することで、利用者は提供する地図、コメント、その他の内容（以下「内"
-"容」とします）について、以下の規約を承諾し、同意したものとみなされます。"
+"当サイトはユーザが選挙区地図を作成し、また他のウーザの作成した地図にコメント"
+"する目的で運営されています。当サイトの利用、つまり、地図の作成やコメント、ま"
+"たアカウントを作成することで、利用者は提供する地図、コメント、その他の内容"
+"（以下「内容」とします）について、以下の規約を承諾し、同意したものとみなされ"
+"ます。"
 
 #: templates/index.html:279
 msgid ""
@@ -2315,17 +2344,14 @@ msgid ""
 "waive and/or agree not to assert against us or our licensees any moral "
 "rights that You may have in the Contents."
 msgstr ""
-"当サイトの利用者は、コンテンツのオリジナル媒体であるなしに関わらず、著作権で保護された範囲内での"
-"いかなる利用に対する認可を本サービスに与えるものとみなします。この認可は世界共通、無償使用可能、"
-"非独占、永久、かつ取消不能のものです。この権利は明確に商業利用を含むものとし、どの活動分野も"
-"除外しないものとします。この権利は、無制限に、複数段階のサブライセンスを伴うサブライセンスの権利を"
-"含むものとします。各地の法律と著作権協定にしたがって許可される範囲内で、利用者はコンテンツに関する"
-"いかなる倫理的権利を本サービス及び非許諾者に対して対抗しないこと、及び放棄するものとします。"
-""
-""
-""
-""
-""
+"当サイトの利用者は、コンテンツのオリジナル媒体であるなしに関わらず、著作権で"
+"保護された範囲内でのいかなる利用に対する認可を本サービスに与えるものとみなし"
+"ます。この認可は世界共通、無償使用可能、非独占、永久、かつ取消不能のもので"
+"す。この権利は明確に商業利用を含むものとし、どの活動分野も除外しないものとし"
+"ます。この権利は、無制限に、複数段階のサブライセンスを伴うサブライセンスの権"
+"利を含むものとします。各地の法律と著作権協定にしたがって許可される範囲内で、"
+"利用者はコンテンツに関するいかなる倫理的権利を本サービス及び非許諾者に対して"
+"対抗しないこと、及び放棄するものとします。"
 
 #: templates/index.html:280
 msgid ""
@@ -2333,9 +2359,9 @@ msgid ""
 "published&quot; available under at least one of the following licenses: ODbL "
 "1.0; DbCL 1.0; CC-BY-SA 2.0; or another free and open license. "
 msgstr ""
-"当サービスは利用者の提供し「公開した」とされるコンテンツを次のうちひとつ以上の認可のもとに利用可能"
-"とします: ODbL 1,0; DbCL 1,0; CC-BY-SA 2.0, もしくはその他の無料・オープンライセンス。"
-""
+"当サービスは利用者の提供し「公開した」とされるコンテンツを次のうちひとつ以上"
+"の認可のもとに利用可能とします: ODbL 1,0; DbCL 1,0; CC-BY-SA 2.0, もしくはそ"
+"の他の無料・オープンライセンス。"
 
 #: templates/index.html:281
 msgid "Use of information"
@@ -2349,12 +2375,10 @@ msgid ""
 "ensure that these third parties are prohibited from using your personally "
 "identifiable information for any other purpose. "
 msgstr ""
-"当サイトは第三者による処理機能の提供を利用しています。利用者がサービスに登録した際、当サイトは"
-"第三者のサービス提供に必要な情報を共有することがあります。当サイトは、商業的に妥当な範囲で、"
-"第三者に対し、共有された個人情報を他の目的に使用しないよう義務づけています。"
-""
-""
-""
+"当サイトは第三者による処理機能の提供を利用しています。利用者がサービスに登録"
+"した際、当サイトは第三者のサービス提供に必要な情報を共有することがあります。"
+"当サイトは、商業的に妥当な範囲で、第三者に対し、共有された個人情報を他の目的"
+"に使用しないよう義務づけています。"
 
 #: templates/index.html:283
 msgid ""
@@ -2365,14 +2389,12 @@ msgid ""
 "site content to user needs, and to generate aggregate statistical reports. "
 "At no time do we disclose site usage by individual visitors."
 msgstr ""
-"当サイトはサーバー上の不都合の診断とサイト運営のために利用者のIPアドレスとアクセスしたファイル"
-"を利用します。利用する情報は主に（１）サイトのどの箇所が重点的に利用されているか、（２）どの"
-"利用者層が異なる地域よりアクセスしているか、です。またこの情報は、サイト内容を利用者のニーズに"
-"合わせて調整するため、および、情報集約統計レポートを出力する際に利用されます。利用者個人のサイト"
-"利用情報はいかなる時も公開されることはありません。"
-""
-""
-""
+"当サイトはサーバー上の不都合の診断とサイト運営のために利用者のIPアドレスとア"
+"クセスしたファイルを利用します。利用する情報は主に（１）サイトのどの箇所が重"
+"点的に利用されているか、（２）どの利用者層が異なる地域よりアクセスしている"
+"か、です。またこの情報は、サイト内容を利用者のニーズに合わせて調整するため、"
+"および、情報集約統計レポートを出力する際に利用されます。利用者個人のサイト利"
+"用情報はいかなる時も公開されることはありません。"
 
 #: templates/index.html:284
 msgid ""
@@ -2381,11 +2403,9 @@ msgid ""
 "our rights and/or to comply with a judicial proceeding, court order or legal "
 "process served on the hosts. "
 msgstr ""
-"当サイトは、法律で定められ、また情報公開が当サイトの権利保護のため、もしくは司法手続・裁判所"
-"命令・訴訟手続に応じるために必要であると判断した場合に、個人情報の開示をする権利を有します。"
-""
-""
-""
+"当サイトは、法律で定められ、また情報公開が当サイトの権利保護のため、もしくは"
+"司法手続・裁判所命令・訴訟手続に応じるために必要であると判断した場合に、個人"
+"情報の開示をする権利を有します。"
 
 #: templates/index.html:285
 msgid ""
@@ -2398,15 +2418,13 @@ msgid ""
 "selects the &quot;make my account information public&quot; settings in the "
 "users profile setting. "
 msgstr ""
-"当システムで作成された全ての地図、及び、地図の編集と地図へのコメントはアカウントIDとタイム"
-"スタンプに関連付けられます。これらの地図、コメント、アカウントID、及びタイムスタンプは公開"
-"されることがあります。当サイトはこれらの情報を情報集約統計レポートの出力の際に利用することが"
-"あります。利用者が明確にプロファイル設定の中で「アカウント情報を公開する」設定を選択しない限り、"
-"いかなる時も、名前、Eメールアドレス、その他のアカウント個人情報を公開することはありません。"
-""
-""
-""
-""
+"当システムで作成された全ての地図、及び、地図の編集と地図へのコメントはアカウ"
+"ントIDとタイムスタンプに関連付けられます。これらの地図、コメント、アカウント"
+"ID、及びタイムスタンプは公開されることがあります。当サイトはこれらの情報を情"
+"報集約統計レポートの出力の際に利用することがあります。利用者が明確にプロファ"
+"イル設定の中で「アカウント情報を公開する」設定を選択しない限り、いかなる時"
+"も、名前、Eメールアドレス、その他のアカウント個人情報を公開することはありませ"
+"ん。"
 
 #: templates/index.html:286
 msgid "Security"
@@ -2417,8 +2435,8 @@ msgid ""
 "This site has security measures in place to protect the loss, misuse and "
 "alteration of the information under our control."
 msgstr ""
-"当サイトは当管理下の情報の削除、悪用、改変を防ぐためのセキュリティ対策を講じています。"
-""
+"当サイトは当管理下の情報の削除、悪用、改変を防ぐためのセキュリティ対策を講じ"
+"ています。"
 
 #: templates/index.html:288
 msgid "Contacting this web site"
@@ -2430,18 +2448,17 @@ msgid ""
 "this site, or your dealings with this site, you can contact the support "
 "address at the host domain"
 msgstr ""
-"このプライバシーポリシー、サイト運営方針、サイト利用などに関するお問い合わせは、"
-"ホスト・ドメインのサポートアドレスをご利用ください。"
-""
+"このプライバシーポリシー、サイト運営方針、サイト利用などに関するお問い合わせ"
+"は、ホスト・ドメインのサポートアドレスをご利用ください。"
 
 #: templates/index.html:289
 msgid ""
 "This web site may contain links to other web sites. We are not responsible "
 "for the privacy practices or the content of such web sites."
 msgstr ""
-"当サイトには他ウェブサイトへのリンクが含まれていることがあります。当サイトはそのような他サイトの"
-"プライバシー方針や内容について一切の責任を負わないものとします。"
-""
+"当サイトには他ウェブサイトへのリンクが含まれていることがあります。当サイトは"
+"そのような他サイトのプライバシー方針や内容について一切の責任を負わないものと"
+"します。"
 
 #: templates/index.html:290
 msgid "Changes to this policy"
@@ -2452,8 +2469,8 @@ msgid ""
 "An announcement of any changes to this policy will be posted on this page "
 "for  thirty days before any changes go into effect."
 msgstr ""
-"当方針の内容に変更が生じる際は、変更が実施される30日前にこのページに告知されます。"
-""
+"当方針の内容に変更が生じる際は、変更が実施される30日前にこのページに告知され"
+"ます。"
 
 #: templates/index.html:292
 msgid "Effective Date"
@@ -2467,7 +2484,9 @@ msgstr "本方針は2011年5月2日に発効しました。"
 #, fuzzy, python-format
 msgid ""
 "We've designed the software to run on %(firefox_link)s - a free web browser"
-msgstr "このソフトウェアは無料ウェブブラウザ%(firefox_link)sで利用できるように設計されました。"
+msgstr ""
+"このソフトウェアは無料ウェブブラウザ%(firefox_link)sで利用できるように設計さ"
+"れました。"
 
 #: templates/language_chooser.html:33
 msgid "Language"
@@ -2496,7 +2515,7 @@ msgstr "ログイン"
 #: templates/admin/auth/user/change_password.orig.html:11
 #: templates/admin/redistricting/subject/add_form.html:49
 #: templates/admin/redistricting/subject/delete_selected_confirmation.html:37
-#: templates/admin/redistricting/subject/upload_form.html:118
+#: templates/admin/redistricting/subject/upload_form.html:119
 #: templates/registration/password_change_form.orig.html:35
 msgid "Home"
 msgstr "ホーム"
@@ -2519,7 +2538,6 @@ msgstr[1] "以下のエラーを修正してください。"
 msgid "Enter a new password for the user <strong>%(username)s</strong>."
 msgstr ""
 "<strong>%(username)s</strong>さんの新しいパスワードを入力してください。"
-""
 
 #: templates/admin/auth/user/change_password.orig.html:41
 #: templates/registration/password_change_form.orig.html:67
@@ -2536,28 +2554,28 @@ msgid "Download Subject template"
 msgstr "Subjectテンプレートをダウンロードする"
 
 #: templates/admin/redistricting/subject/add_form.html:52
-#: templates/admin/redistricting/subject/upload_form.html:121
+#: templates/admin/redistricting/subject/upload_form.html:122
 msgid "Add"
 msgstr "追加"
 
 #: templates/admin/redistricting/subject/add_form.html:60
-#: templates/admin/redistricting/subject/upload_form.html:129
+#: templates/admin/redistricting/subject/upload_form.html:130
 msgid ""
 "A Subject in DistrictBuilder has relationships with many objects in the "
 "application. For this reason, adding a Subject requires a few extra steps. "
 "The following forms will walk you through the process of:"
 msgstr ""
-"DistrictBuilderのSubjectはアプリケーション内のさまざまなオブジェクトに関連して"
-"います。このため、Subjectを追加するにはいくつかのステップを踏む必要があります。"
-"以下のフォームに従ってプロセスを完了してください:"
+"DistrictBuilderのSubjectはアプリケーション内のさまざまなオブジェクトに関連し"
+"ています。このため、Subjectを追加するにはいくつかのステップを踏む必要がありま"
+"す。以下のフォームに従ってプロセスを完了してください:"
 
 #: templates/admin/redistricting/subject/add_form.html:62
-#: templates/admin/redistricting/subject/upload_form.html:131
+#: templates/admin/redistricting/subject/upload_form.html:132
 msgid "Downloading a Subject template file (CSV)"
 msgstr "Subjectテンプレート・ファイル(CSV)をダウンロード中"
 
 #: templates/admin/redistricting/subject/add_form.html:63
-#: templates/admin/redistricting/subject/upload_form.html:132
+#: templates/admin/redistricting/subject/upload_form.html:133
 msgid "Uploading a complete Subject file (CSV)"
 msgstr "完全なSubjectファイル(CSV)をアップロード中"
 
@@ -2566,7 +2584,7 @@ msgid "Verifying the upload Subject file."
 msgstr "Subjectファイルのアップロードを確認中"
 
 #: templates/admin/redistricting/subject/add_form.html:65
-#: templates/admin/redistricting/subject/upload_form.html:134
+#: templates/admin/redistricting/subject/upload_form.html:135
 msgid "Configuring the settings for the uploaded Subject."
 msgstr "アップロードされたSubjectを設定中"
 
@@ -2579,8 +2597,8 @@ msgid ""
 "Please click on the following link, and save the contents of that file on "
 "your local filesystem:"
 msgstr ""
-"以下のリンクをクリックし、ファイルの中身をローカル・ファイル上に保存してください:"
-""
+"以下のリンクをクリックし、ファイルの中身をローカル・ファイル上に保存してくだ"
+"さい:"
 
 #: templates/admin/redistricting/subject/add_form.html:69
 msgid "Subject template CSV"
@@ -2612,8 +2630,8 @@ msgid ""
 "Are you sure you want to delete the selected %(object_name)s objects? All of "
 "the following objects and their related items will be deleted:"
 msgstr ""
-"選択された%(object_name)sオブジェクトを本当に削除してよろしいですか？"
-"以下のオブジェクトと関連したアイテムが全て削除されます。"
+"選択された%(object_name)sオブジェクトを本当に削除してよろしいですか？以下のオ"
+"ブジェクトと関連したアイテムが全て削除されます。"
 
 #: templates/admin/redistricting/subject/delete_selected_confirmation.html:52
 msgid "characteristics"
@@ -2638,9 +2656,9 @@ msgid ""
 "Please carefully read the following notice regarding the removal of "
 "%(object_name)s objects:"
 msgstr ""
-"選択された%(object_name)sオブジェクトの削除には細心の注意を払ってください。"
-"%(object_name)sオブジェクトの削除についての以下の警告を注意深く読んでください:"
-""
+"選択された%(object_name)sオブジェクトの削除には細心の注意を払ってくださ"
+"い。%(object_name)sオブジェクトの削除についての以下の警告を注意深く読んでくだ"
+"さい:"
 
 #: templates/admin/redistricting/subject/delete_selected_confirmation.html:71
 #, python-format
@@ -2654,7 +2672,6 @@ msgid ""
 "editing plans."
 msgstr ""
 "一般のユーザーが計画案を編集しているときには%(object_name)sは削除できません。"
-""
 
 #: templates/admin/redistricting/subject/delete_selected_confirmation.html:73
 #, python-format
@@ -2662,8 +2679,8 @@ msgid ""
 "All references to the %(object_name)s in the application configuration must "
 "be removed."
 msgstr ""
-"アプリケーション設定内の全ての%(object_name)sへの参照は削除されなければなりません。"
-""
+"アプリケーション設定内の全ての%(object_name)sへの参照は削除されなければなりま"
+"せん。"
 
 #: templates/admin/redistricting/subject/delete_selected_confirmation.html:74
 #, python-format
@@ -2671,21 +2688,18 @@ msgid ""
 "The process of deleting a %(object_name)s takes a significant amount of "
 "time, and may not be interrupted once it has been started."
 msgstr ""
-"%(object_name)sの削除には長い時間がかかります。また、削除が一旦開始されたら、途中で中断"
-"することはできません。"
-""
+"%(object_name)sの削除には長い時間がかかります。また、削除が一旦開始されたら、"
+"途中で中断することはできません。"
 
 #: templates/admin/redistricting/subject/delete_selected_confirmation.html:82
 #, python-format
 msgid ""
 "I understand that the deletion of a %(object_name)s is an irreversible "
 "operation."
-msgstr ""
-"%(object_name)sの削除が元に戻せないことを確認しました。"
-""
+msgstr "%(object_name)sの削除が元に戻せないことを確認しました。"
 
 #: templates/admin/redistricting/subject/upload_form.html:33
-#: templates/admin/redistricting/subject/upload_form.html:125
+#: templates/admin/redistricting/subject/upload_form.html:126
 msgid "Upload Subject template"
 msgstr "Subjectテンプレートのアップロード"
 
@@ -2693,75 +2707,76 @@ msgstr "Subjectテンプレートのアップロード"
 msgid ""
 "Subject ingest successful! Press \"Continue\" to edit the Subject details."
 msgstr ""
-"Subjectの取り込みに成功しました。「続ける」を押してSubjectの詳細を編集してください。"
-""
+"Subjectの取り込みに成功しました。「続ける」を押してSubjectの詳細を編集してく"
+"ださい。"
 
-#: templates/admin/redistricting/subject/upload_form.html:75
+#: templates/admin/redistricting/subject/upload_form.html:76
 msgid "Sorry! This processing step failed with the following error message: "
 msgstr "申し訳ありません。プロセス作業中にエラーが発生しました。エラー番号:"
 
-#: templates/admin/redistricting/subject/upload_form.html:77
-#: templates/admin/redistricting/subject/upload_form.html:87
+#: templates/admin/redistricting/subject/upload_form.html:78
+#: templates/admin/redistricting/subject/upload_form.html:88
 msgid "Retry"
 msgstr "もう一度やり直す"
 
-#: templates/admin/redistricting/subject/upload_form.html:85
+#: templates/admin/redistricting/subject/upload_form.html:86
 msgid "Could not retrieve task status."
 msgstr "タスク状況を取得できませんでした。"
 
-#: templates/admin/redistricting/subject/upload_form.html:133
+#: templates/admin/redistricting/subject/upload_form.html:134
 msgid "Verifying the uploaded Subject file."
 msgstr "アップロードされたSubjectファイルの確認中です。"
 
-#: templates/admin/redistricting/subject/upload_form.html:137
+#: templates/admin/redistricting/subject/upload_form.html:138
 msgid "2. Uploading a complete Subject file"
 msgstr "2. 全てのSubjectファイルをアップロードする"
 
-#: templates/admin/redistricting/subject/upload_form.html:138
+#: templates/admin/redistricting/subject/upload_form.html:139
 msgid ""
 "Using the file field below, please select the populated Subject template "
 "file, and upload the Subject template file with the 'Upload' button below."
 msgstr ""
-"下のファイル・フィールドを使って、追加投入したSubjectテンプレート・ファイルを選択し、"
-"「アップロード」ボタンでSubjectテンプレート・ファイルをアップロードしてください。"
-""
+"下のファイル・フィールドを使って、追加投入したSubjectテンプレート・ファイルを"
+"選択し、「アップロード」ボタンでSubjectテンプレート・ファイルをアップロードし"
+"てください。"
 
-#: templates/admin/redistricting/subject/upload_form.html:141
+#: templates/admin/redistricting/subject/upload_form.html:142
 msgid "3. Verifying the uploaded Subject file"
 msgstr "3. ｱｯﾌﾟﾛｰﾄﾞされたSubjectﾌｧｲﾙの確認"
 
-#: templates/admin/redistricting/subject/upload_form.html:142
+#: templates/admin/redistricting/subject/upload_form.html:143
+#, fuzzy
 msgid ""
 "Please wait while the uploaded Subject file is checked for consistency and "
-"alignment with the currently loaded data. This may take up to 15 minutes, so "
-"please wait until the process completes before leaving this page."
+"alignment with the currently loaded data. This may take up to 1 hour on "
+"older hardware, so please wait until the process completes before leaving "
+"this page."
 msgstr ""
-"アップロードされたSubjectファイルの一貫性と現在のデータとの合致を調べる間、少々お待ちください。"
-"このプロセスには15分ほどかかることもあります。プロセスが完了するまでこのページから"
-"離れないでください。"
-""
+"アップロードされたSubjectファイルの一貫性と現在のデータとの合致を調べる間、"
+"少々お待ちください。このプロセスには15分ほどかかることもあります。プロセスが"
+"完了するまでこのページから離れないでください。"
 
-#: templates/admin/redistricting/subject/upload_form.html:145
+#: templates/admin/redistricting/subject/upload_form.html:146
 msgid "4. Configuring the settings for the uploaded Subject"
 msgstr "4. アップロードされたSubjectの設定"
 
-#: templates/admin/redistricting/subject/upload_form.html:146
+#: templates/admin/redistricting/subject/upload_form.html:147
 msgid ""
 "The verification steps are complete, you may proceed to the Subject change "
 "form to complete filling in the Subject details."
 msgstr ""
-"確認作業が完了しました。Subject変更フォームに進み、Subjectの詳細の入力を完了して"
-"ください。"
+"確認作業が完了しました。Subject変更フォームに進み、Subjectの詳細の入力を完了"
+"してください。"
 
-#: templates/admin/redistricting/subject/upload_form.html:155
+#: templates/admin/redistricting/subject/upload_form.html:156
 msgid "Verifying counts of uploaded subjects..."
 msgstr "アップロードされたSubjectの数を確認しています..."
 
-#: templates/admin/redistricting/subject/upload_form.html:157
+#: templates/admin/redistricting/subject/upload_form.html:158
 msgid "Please Wait ..."
 msgstr "しばらくお待ちください..."
 
-#: templates/admin/redistricting/subject/upload_form.html:159
+#: templates/admin/redistricting/subject/upload_form.html:160
 msgid "Upload"
 msgstr "アップロード"
 
@@ -2784,8 +2799,8 @@ msgid ""
 "Please enter your old password, for security's sake, and then enter your new "
 "password twice so we can verify you typed it in correctly."
 msgstr ""
-"セキュリティ保護のため、現在のパスワードを入力し、新しいパスワードを確認のため２度入力して"
-"ください。"
+"セキュリティ保護のため、現在のパスワードを入力し、新しいパスワードを確認のた"
+"め２度入力してください。"
 
 #: templates/registration/password_change_form.orig.html:57
 msgid "Old password"
@@ -2798,6 +2813,12 @@ msgstr "新しいパスワード"
 #: templates/registration/password_change_form.orig.html:73
 msgid "Change my password"
 msgstr "パスワードを変更する"
+
+#~ msgid "The subject name contains invalid characters."
+#~ msgstr "subject名に使用できない文字が含まれています。"
+
+#~ msgid "Please correct the error and try again."
+#~ msgstr "エラーを直してもう一度やり直してください。"
 
 #~ msgid "a free web browser"
 #~ msgstr "無料ウェブブラウザ"
