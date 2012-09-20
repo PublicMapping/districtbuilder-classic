@@ -281,7 +281,7 @@ msgstr "Calle"
 
 #: static-media/js/mapping.js:441
 msgid "Map Transparency"
-msgstr ""
+msgstr "Transparence Carte"
 
 #: static-media/js/mapping.js:459
 msgid "Please wait. Fixing unassigned blocks. This may take a couple minutes."
