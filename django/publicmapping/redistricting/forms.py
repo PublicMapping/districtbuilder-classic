@@ -101,10 +101,21 @@ class SubjectUploadForm(forms.Form):
             localstore.seek(0)
 
             reader = csv.DictReader(localstore)
+
+            if len(reader.fieldnames) < 2:
+                localstore.close()
+
+                sup.status = 'ER'
+                sup.save()
+
+                raise forms.ValidationError(_('The uploaded file is missing subject data.'))
+
             try:
                 clean_name = self._clean_name(reader.fieldnames[1][0:50])
                 sup.subject_name = self.temp_subject_name = clean_name
                 sup.save()
+            except Exception, ex:
+                raise forms.ValidationError(_('The new subject name could not be determined.'))
             finally:
                 localstore.close()
 
@@ -113,9 +124,7 @@ class SubjectUploadForm(forms.Form):
         elif self.cleaned_data['processing_file'] != '':
             self.ps_file = self.cleaned_data['processing_file']
             self.ul_file = self.cleaned_data['uploaded_file']
-            print 'self.cleaned_data[subject_name]:',self.cleaned_data['subject_name']
             self.temp_subject_name = self._clean_name(self.cleaned_data['subject_name'])
-            print 'self.temp_subject_name:',self.temp_subject_name
 
             sup = SubjectUpload.objects.get(upload_filename=self.ul_file,
                 processing_filename=self.ps_file)

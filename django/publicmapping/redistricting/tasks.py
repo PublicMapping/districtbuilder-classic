@@ -1315,6 +1315,13 @@ def verify_count(upload_id, localstore, language):
             into the specified language (if message files are complete).
     """
     reader = csv.DictReader(open(localstore,'r'))
+
+    if len(reader.fieldnames) < 2:
+        msg = _('There are missing columns in the uploaded Subject file')
+
+        return {'task_id':None, 'success':False, 'messages':[msg]}
+        
+
     upload = SubjectUpload.objects.get(id=upload_id)
     upload.subject_name = reader.fieldnames[1][0:50]
     upload.save()
