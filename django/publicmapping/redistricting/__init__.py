@@ -260,6 +260,8 @@ class StoredConfig:
             output.write("\nTEMPLATE_DIRS = (\n  '%s/django/publicmapping/templates',\n)\n" % root_dir)
             output.write("\nSLD_ROOT = '%s/sld/'\n" % root_dir)
 
+            output.write("\nSTATICFILES_DIRS = (\n  '%s/django/publicmapping/static/',\n)\n" % root_dir)
+
             quota = cfg.get('sessionquota')
             if not quota:
                 quota = 5
