@@ -368,12 +368,11 @@ as reports and downloads) and cron jobs.
      c. Extract this plugin in the current folder (lib):
 
         > sudo unzip geoserver-2.0.2-restconfig-plugin.zip
-        > sudo chown tomcat6 restconfig*
-        > sudo chgrp tomcat6 restconfig*
+        > sudo chown tomcat6:tomcat6 restconfig*
 
      d. Restart tomcat to pick up the changes to the geoserver application:
      
-        > sudo /etc/init.d/tomcat6 restart
+        > sudo service tomcat6 restart
 
  6. Set the geowebcache directory to a non-default.  Otherwise your tiles 
     will be saved to /tmp and possibly disappear on reboot.  Add the 
