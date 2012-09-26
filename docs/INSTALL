@@ -9,8 +9,8 @@ configure:
 
 Apache v 2.2
 Geoserver v 2.0.2
-Postgresql v 8.4 w/ PostGIS
-Python v 2.6
+Postgresql v 9.1 w/ PostGIS
+Python v 2.7
 Django v 1.4
 
 On a debian-based system with aptitude installed, you can install most of
@@ -18,8 +18,8 @@ the necessary software using the command:
 
 > sudo aptitude install apache2 libapache2-mod-wsgi python-dev \
     python-django python-lxml python-gdal python-rpy2 python-scipy \
-    python-psycopg2 python-setuptools postgresql-8.4-postgis \
-    sun-java6-jdk tomcat6 tomcat6-admin gettext
+    python-psycopg2 python-setuptools postgresql-9.1-postgis \
+    tomcat6 tomcat6-admin gettext
 
 For python libraries that aren't in the ubuntu repositories, you can
 use pip (a replacement for easy_install) to get secondary python libraries,
