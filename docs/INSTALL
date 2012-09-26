@@ -156,7 +156,7 @@ as reports and downloads) and cron jobs.
     > sudo unzip /projects/PublicMapping/data/VA_data.zip
 
     *Note* that if you are loading spatial data for a coverage other than
-    the demonstration coverage over Ohio, you will need to ensure that the 
+    the demonstration coverage over Virginia, you will need to ensure that the 
     spatial reference of the data is "Web Auxiliary Sphere" or "Popular 
     Visualisation CRS / Mercator". The definition for all GIS software 
     packages is available here:
