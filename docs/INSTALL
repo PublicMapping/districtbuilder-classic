@@ -26,7 +26,6 @@ use pip (a replacement for easy_install) to get secondary python libraries,
 mostly used for background processes:
 
 > sudo easy_install pip
-> sudo pip install -r requirements.txt
 
 == Additional Packages==
 
@@ -53,8 +52,8 @@ as reports and downloads) and cron jobs.
  1. Check out the public mapping projects to the /projects directory of 
     your linux installation.
 
-    > sudo mkdir /projects
-    > cd /projects
+    > sudo mkdir -p /projects/PublicMapping
+    > cd /projects/PublicMapping
 
     You can download the PublicMapping source from the website or use git
     to grab the code
@@ -69,6 +68,10 @@ as reports and downloads) and cron jobs.
 	
 	> git clone git://github.com/PublicMapping/DistrictBuilder.git
 	> cd DistrictBuilder
+
+	Install additional python library requirements.
+
+        > sudo pip install -r requirements.txt
 
 	You may want to switch to a stable tag rather than using the master 
 	branch.  You can see all the availale tags with.
