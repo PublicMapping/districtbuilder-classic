@@ -184,7 +184,7 @@ as reports and downloads) and cron jobs.
 
     For more information about editing SLDs, see the wiki page:
 
-    https://sourceforge.net/apps/trac/PublicMapping/wiki/StyleLayerDescriptors
+    https://github.com/PublicMapping/DistrictBuilder/wiki/Style-Layer-Descriptors
 
  9. Now we'll use the setup.py script to configure our application. Set the
     script to be executable:
