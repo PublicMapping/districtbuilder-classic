@@ -59,7 +59,10 @@ reaggregator = function(options) {
             helpText: $('#start_mapping_help'),            
 
             // Tabs object: so we only query for status when viewing the plan chooser
-            tabs: $('#steps')
+            tabs: $('#steps'),
+
+            // The controls to disable when reaggregation is required
+            forbiddenControls: $('#radCopyOrEdit input')
         }, options),
 
         // Mapping of id -> state for last returned data state
@@ -126,6 +129,7 @@ reaggregator = function(options) {
         
         switch (_currData[planId]) {
             case 'Needs reaggregation':
+                _options.forbiddenControls.attr('disabled',true);
                 if (_filterId === 'filter_mine') {
                     // Owner -- allow reaggregation
                     _options.startButtonLabel.html(gettext('Reaggregate'));
@@ -142,6 +146,7 @@ reaggregator = function(options) {
                 break;
 
             case 'Reaggregating':
+                _options.forbiddenControls.attr('disabled',true);
                 // Don't allow actions while reaggregating
                 _options.startButtonLabel.html(gettext('Reaggregation in progress'));
                 _options.startButton.attr('disabled', true);
@@ -150,12 +155,14 @@ reaggregator = function(options) {
                 break;
             
             case 'Ready':
+                _options.forbiddenControls.attr('disabled',false);
                 _options.startButtonLabel.html(_options.startText);
                 _options.startButton.attr('disabled', false);
                 _options.helpText.hide();
                 break;
             
             default:
+                _options.forbiddenControls.attr('disabled',true);
                 _options.startButtonLabel.text(gettext('Unknown state'));
                 _options.startButton.attr('disabled', true);
                 _options.helpText.hide();
