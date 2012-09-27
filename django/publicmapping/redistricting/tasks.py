@@ -1290,14 +1290,25 @@ def reaggregate_plan(plan_id):
     try:
         plan = Plan.objects.get(id=plan_id)
     except Exception, ex:
-        logger.info('Could not retrieve plan %d for reaggregation.', plan_id)
+        logger.info('Could not retrieve plan %d for reaggregation.' % plan_id)
+        logger.debug('Reason:', ex)
+        return None
+
+    try:
+        count = plan.reaggregate()
+
+        logger.debug('Reaggregated %d districts.', count)
+
+        return count
+
+    except Exception, ex:
+        plan.processing_state = ProcessingState.NEEDS_REAGG
+        plan.save()
+
+        logger.warn('Could not reaggregate plan %d.' % plan_id)
         logger.debug('Reason:', ex)
 
-    count = plan.reaggregate()
-
-    logger.debug('Reaggregated %d districts.', count)
-
-    return count
+        return None
 
 
 @task
