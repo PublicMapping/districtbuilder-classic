@@ -52,6 +52,9 @@ MEDIA_URL = '/site-media/'
 # use a trailing slash
 STATIC_URL = '/static-media/'
 
+# django-rosetta still uses this, even if it's obsolete in 1.4
+ADMIN_MEDIA_PREFIX = STATIC_URL + 'admin/'
+
 # Sessions expire when browser is close
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
@@ -66,26 +69,30 @@ TEMPLATE_LOADERS = (
 )
 
 # configure cache, according to guidelines for configuring django's
-# cache framework: http://docs.djangoproject.com/en/1.0/topics/cache
-#CACHE_BACKEND = 'locmem:///?timeout=3600&max_entries=400'
-#CACHE_MIDDLEWARE_SECONDS = 3600
-#CACHE_MIDDLEWARE_KEY_PREFIX = ''
+# cache framework: http://docs.djangoproject.com/en/1.4/topics/cache
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'redistricting4ever',
+        'TIMEOUT': 600, # 10 minute timeout
+        'OPTIONS': {
+            'MAX_ENTRIES': 1000
+        }
+    }
+}
 
 # Middleware classes. Please note that cache middleware MUST be placed in
 # the first and last positions of the middleware classes.  Order matters.
 MIDDLEWARE_CLASSES = (
-#    'django.middleware.cache.UpdateCacheMiddleware',
+    'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.gzip.GZipMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-
-# Uncomment the following line to enable browser-level localization selection
     'django.middleware.locale.LocaleMiddleware',
-    
-#    'django.middleware.cache.FetchFromCacheMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
