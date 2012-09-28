@@ -199,6 +199,10 @@ msgstr ""
 msgid "Verifying consistency of uploaded geounits ..."
 msgstr "Vérification de la cohérence des géounits téléchargées ..."
 
+#: redistricting/tasks.py:1402
+msgid "Invalid data detected in the uploaded Subject file"
+msgstr ""
+
 #: redistricting/tasks.py:1422
 msgid "There are a correct number of geounits in the uploaded Subject file, "
 msgstr ""

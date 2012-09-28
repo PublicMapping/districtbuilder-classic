@@ -194,6 +194,10 @@ msgstr "アップロードされたSubjectファイル内の地域単位の数�
 msgid "Verifying consistency of uploaded geounits ..."
 msgstr "アップロードされた地域単位の整合性を確認しています ..."
 
+#: redistricting/tasks.py:1402
+msgid "Invalid data detected in the uploaded Subject file"
+msgstr ""
+
 #: redistricting/tasks.py:1430
 msgid "There are a correct number of geounits in the uploaded Subject file, "
 msgstr "アップロードされたSubjectファイル内の地域単位数が一致しました。"

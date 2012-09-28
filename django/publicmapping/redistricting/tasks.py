@@ -1392,9 +1392,14 @@ def verify_count(upload_id, localstore, language):
         cursor.executemany(sql, tuple(args))
 
         logger.debug('Bulk loaded CSV records into the staging area.')
-    except AttributeError:
+    except AttributeError, aex:
         msg = _('There are an incorrect number of columns in the uploaded '
             'Subject file')
+
+        transaction.rollback()
+        return {'task_id':None, 'success':False, 'messages':[msg]}
+    except Exception, ex:
+        msg = _('Invalid data detected in the uploaded Subject file')
 
         transaction.rollback()
         return {'task_id':None, 'success':False, 'messages':[msg]}
