@@ -97,46 +97,46 @@ msgid "dc_vtd short label"
 msgstr "vtd"
 
 msgid "dc_vtd label"
-msgstr "vtd"
+msgstr "VTD"
 
 msgid "dc_vtd long description"
-msgstr "vtd"
+msgstr "VTD"
 
 msgid "dc_block short label"
 msgstr "cuadra"
 
 msgid "dc_block label"
-msgstr "cuadra"
+msgstr "Cuadra"
 
 msgid "dc_block long description"
-msgstr "cuadra"
+msgstr "Cuadra"
 
 msgid "county short label"
 msgstr "condado"
 
 msgid "county label"
-msgstr "condado"
+msgstr "Condado"
 
 msgid "county long description"
-msgstr "condado"
+msgstr "Condado"
 
 msgid "va_block short label"
 msgstr "cuadra"
 
 msgid "va_block label"
-msgstr "cuadra"
+msgstr "Cuadra"
 
 msgid "va_block long description"
-msgstr "cuadra"
+msgstr "Cuadra"
 
 msgid "va_vtd short label"
 msgstr "vtd"
 
 msgid "va_vtd label"
-msgstr "vtd"
+msgstr "VTD"
 
 msgid "va_vtd long description"
-msgstr "vtd"
+msgstr "VTD"
 
 msgid "va_county short label"
 msgstr "condado"
@@ -145,25 +145,25 @@ msgid "va_county label"
 msgstr "condado"
 
 msgid "va_county long description"
-msgstr "condado"
+msgstr "Condado"
 
 msgid "vtd short label"
 msgstr "vtd"
 
 msgid "vtd label"
-msgstr "vtd"
+msgstr "VTD"
 
 msgid "vtd long description"
-msgstr "vtd"
+msgstr "VTD"
 
 msgid "block short label"
 msgstr "cyadra"
 
 msgid "block label"
-msgstr "cuadra"
+msgstr "Cuadra"
 
 msgid "block long description"
-msgstr "cuadra"
+msgstr "Cuadra"
 
 msgid "congress_leader_all short label"
 msgstr "Tabla de Posiciones del Congreso - Todos"
@@ -2014,3 +2014,22 @@ msgstr "DC Metro"
 
 msgid "dc_area long description"
 msgstr "The District of Columbia Metropolitan Area"
+
+msgid "community_sidebar_demo short label"
+msgstr "Demografía"
+
+msgid "community_sidebar_demo label"
+msgstr "Demografía"
+
+msgid "community_sidebar_demo long description"
+msgstr ""
+
+msgid "community_sidebar_comments short label"
+msgstr "Mapeo de Comunidad"
+
+msgid "community_sidebar_comments label"
+msgstr "Mapeo de Comunidad"
+
+msgid "community_sidebar_comments long description"
+msgstr ""
+

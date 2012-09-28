@@ -94,76 +94,76 @@ msgid "dc_community long description"
 msgstr "DC Community Map"
 
 msgid "dc_vtd short label"
-msgstr "vtd"
-
-msgid "dc_vtd label"
-msgstr "vtd"
-
-msgid "dc_vtd long description"
-msgstr ""
-
-msgid "dc_block short label"
-msgstr "block"
-
-msgid "dc_block label"
-msgstr "block"
-
-msgid "dc_block long description"
-msgstr ""
-
-msgid "county short label"
-msgstr "county"
-
-msgid "county label"
-msgstr "county"
-
-msgid "county long description"
-msgstr ""
-
-msgid "va_block short label"
-msgstr "block"
-
-msgid "va_block label"
-msgstr "block"
-
-msgid "va_block long description"
-msgstr ""
-
-msgid "va_vtd short label"
-msgstr "vtd"
-
-msgid "va_vtd label"
-msgstr "vtd"
-
-msgid "va_vtd long description"
-msgstr ""
-
-msgid "va_county short label"
-msgstr "county"
-
-msgid "va_county label"
-msgstr "county"
-
-msgid "va_county long description"
-msgstr ""
-
-msgid "vtd short label"
-msgstr "vtd"
-
-msgid "vtd label"
 msgstr "VTD"
 
+msgid "dc_vtd label"
+msgstr "Voter Tabulation District"
+
+msgid "dc_vtd long description"
+msgstr "Voter Tabulation Districts"
+
+msgid "dc_block short label"
+msgstr "Blocks"
+
+msgid "dc_block label"
+msgstr "Census Block"
+
+msgid "dc_block long description"
+msgstr "Census Blocks"
+
+msgid "county short label"
+msgstr "County"
+
+msgid "county label"
+msgstr "County"
+
+msgid "county long description"
+msgstr "Counties"
+
+msgid "va_block short label"
+msgstr "Block"
+
+msgid "va_block label"
+msgstr "Census Block"
+
+msgid "va_block long description"
+msgstr "Census Blocks"
+
+msgid "va_vtd short label"
+msgstr "VTD"
+
+msgid "va_vtd label"
+msgstr "Voter Tabulation District"
+
+msgid "va_vtd long description"
+msgstr "Voter Tabulation Districts"
+
+msgid "va_county short label"
+msgstr "County"
+
+msgid "va_county label"
+msgstr "County"
+
+msgid "va_county long description"
+msgstr "Counties"
+
+msgid "vtd short label"
+msgstr "VTD"
+
+msgid "vtd label"
+msgstr "Voter Tabulation District"
+
 msgid "vtd long description"
-msgstr ""
+msgstr "Voter Tabulation Districts"
 
 msgid "block short label"
-msgstr "block"
+msgstr "Block"
 
 msgid "block label"
-msgstr "block"
+msgstr "Census Block"
 
 msgid "block long description"
-msgstr ""
+msgstr "Census Blocks"
 
 msgid "congress_leader_all short label"
 msgstr "Congressional Leaderboard - All"
@@ -2002,3 +2002,21 @@ msgstr "DC Metro"
 
 msgid "dc_area long description"
 msgstr "The District of Columbia Metropolitan Area"
+
+msgid "community_sidebar_demo short label"
+msgstr "Demographics"
+
+msgid "community_sidebar_demo label"
+msgstr "Demographics"
+
+msgid "community_sidebar_demo long description"
+msgstr ""
+
+msgid "community_sidebar_comments short label"
+msgstr "Community Mapping"
+
+msgid "community_sidebar_comments label"
+msgstr "Community Mapping"
+
+msgid "community_sidebar_comments long description"
+msgstr ""

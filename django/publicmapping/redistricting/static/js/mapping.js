@@ -646,7 +646,7 @@ function mapinit(srs,maxExtent) {
             layer: min_layer.layer, 
             level: min_layer.level,
             name: min_layer.level,
-            display: min_layer.short_label, 
+            display: min_layer.long_description, 
             geolevel: min_layer.geolevel
         };
     }

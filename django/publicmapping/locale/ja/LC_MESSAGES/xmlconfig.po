@@ -25,250 +25,250 @@ msgid "congress short label"
 msgstr "%(district_id)s"
 
 msgid "congress label"
-msgstr "%(district_id)s区"
+msgstr "District %(district_id)s"
 
 msgid "congress long description"
-msgstr "連邦議会"
+msgstr "Congressional"
 
 msgid "house short label"
 msgstr "%(district_id)s"
 
 msgid "house label"
-msgstr "%(district_id)s区"
+msgstr "District %(district_id)s"
 
 msgid "house long description"
-msgstr "州下院"
+msgstr "State House"
 
 msgid "senate short label"
 msgstr "%(district_id)s"
 
 msgid "senate label"
-msgstr "%(district_id)s区"
+msgstr "District %(district_id)s"
 
 msgid "senate long description"
-msgstr "州上院"
+msgstr "State Senate"
 
 msgid "community short label"
 msgstr "%(district_id)s"
 
 msgid "community label"
-msgstr "コミュニティ%(district_id)s"
+msgstr "Community %(district_id)s"
 
 msgid "community long description"
-msgstr "コミュニティ・マップ"
+msgstr "Community Map"
 
 msgid "va short label"
-msgstr "VA"
+msgstr "va"
 
 msgid "va label"
-msgstr "バージニア"
+msgstr "Virginia"
 
 msgid "va long description"
-msgstr "バージニア州"
+msgstr "The Commonwealth of Virginia"
 
 msgid "dc short label"
-msgstr "DC"
+msgstr "dc"
 
 msgid "dc label"
-msgstr "DC首都圏"
+msgstr "DC Metro"
 
 msgid "dc long description"
-msgstr "コロンビア特別区首都圏"
+msgstr "The District of Columbia Metropolitan Area"
 
 msgid "dc_area_council short label"
 msgstr "%(district_id)s"
 
 msgid "dc_area_council label"
-msgstr "%(district_id)s区"
+msgstr "District %(district_id)s"
 
 msgid "dc_area_council long description"
-msgstr "DC都市計画審議会"
+msgstr "DC Planning Council"
 
 msgid "dc_community short label"
 msgstr "%(district_id)s"
 
 msgid "dc_community label"
-msgstr "コミュニティ%(district_id)s"
+msgstr "Community %(district_id)s"
 
 msgid "dc_community long description"
-msgstr "DCコミュニティ・マップ"
+msgstr "DC Community Map"
 
 msgid "dc_vtd short label"
-msgstr "VTD"
+msgstr "vtd"
 
 msgid "dc_vtd label"
-msgstr ""
+msgstr "VTD"
 
 msgid "dc_vtd long description"
-msgstr ""
+msgstr "Voter Tabulation Districts"
 
 msgid "dc_block short label"
-msgstr "ブロック"
+msgstr "block"
 
 msgid "dc_block label"
-msgstr "ブロック"
+msgstr "Block"
 
 msgid "dc_block long description"
-msgstr ""
+msgstr "Census Blocks"
 
 msgid "county short label"
-msgstr "郡"
+msgstr "county"
 
 msgid "county label"
-msgstr "郡"
+msgstr "County"
 
 msgid "county long description"
-msgstr ""
+msgstr "Counties"
 
 msgid "va_block short label"
-msgstr "ブロック"
+msgstr "block"
 
 msgid "va_block label"
-msgstr "ブロック"
+msgstr "Block"
 
 msgid "va_block long description"
-msgstr ""
+msgstr "Census Blocks"
 
 msgid "va_vtd short label"
-msgstr "VTD"
+msgstr "vtd"
 
 msgid "va_vtd label"
 msgstr "VTD"
 
 msgid "va_vtd long description"
-msgstr ""
+msgstr "Voter Tabulation Districts"
 
 msgid "va_county short label"
-msgstr "郡"
+msgstr "county"
 
 msgid "va_county label"
-msgstr "郡"
+msgstr "County"
 
 msgid "va_county long description"
-msgstr ""
+msgstr "Counties"
 
 msgid "vtd short label"
 msgstr "vtd"
 
 msgid "vtd label"
-msgstr "vtd"
+msgstr "VTD"
 
 msgid "vtd long description"
-msgstr ""
+msgstr "Voter Tabulation Districts"
 
 msgid "block short label"
-msgstr "ブロック"
+msgstr "block"
 
 msgid "block label"
-msgstr "ブロック"
+msgstr "Block"
 
 msgid "block long description"
-msgstr ""
+msgstr "Census Blocks"
 
 msgid "congress_leader_all short label"
-msgstr "全ての連邦議会スコアボード"
+msgstr "Congressional Leaderboard - All"
 
 msgid "congress_leader_all label"
-msgstr "全ての連邦議会スコアボード"
+msgstr "Congressional Leaderboard - All"
 
 msgid "congress_leader_all long description"
 msgstr ""
 
 msgid "congress_leader_mine short label"
-msgstr "マイ連邦議会スコアボード"
+msgstr "Congressional Leaderboard - Mine"
 
 msgid "congress_leader_mine label"
-msgstr "マイ連邦議会スコアボード"
+msgstr "Congressional Leaderboard - Mine"
 
 msgid "congress_leader_mine long description"
 msgstr ""
 
 msgid "house_leader_all short label"
-msgstr "全ての州下院スコアボード"
+msgstr "State House Leaderboard - All"
 
 msgid "house_leader_all label"
-msgstr "全ての州下院スコアボード"
+msgstr "State House Leaderboard - All"
 
 msgid "house_leader_all long description"
 msgstr ""
 
 msgid "house_leader_mine short label"
-msgstr "マイ州下院スコアボード"
+msgstr "State House Leaderboard - Mine"
 
 msgid "house_leader_mine label"
-msgstr "マイ州下院スコアボード"
+msgstr "State House Leaderboard - Mine"
 
 msgid "house_leader_mine long description"
 msgstr ""
 
 msgid "senate_leader_all short label"
-msgstr "全ての州上院スコアボード"
+msgstr "State Senate Leaderboard - All"
 
 msgid "senate_leader_all label"
-msgstr "全ての州上院スコアボード"
+msgstr "State Senate Leaderboard - All"
 
 msgid "senate_leader_all long description"
 msgstr ""
 
 msgid "senate_leader_mine short label"
-msgstr "マイ州上院スコアボード"
+msgstr "State Senate Leaderboard - Mine"
 
 msgid "senate_leader_mine label"
-msgstr "マイ州上院スコアボード"
+msgstr "State Senate Leaderboard - Mine"
 
 msgid "senate_leader_mine long description"
 msgstr ""
 
 msgid "congress_sidebar_basic short label"
-msgstr "基本情報"
+msgstr "Basic Information"
 
 msgid "congress_sidebar_basic label"
-msgstr "基本情報"
+msgstr "Basic Information"
 
 msgid "congress_sidebar_basic long description"
 msgstr ""
 
 msgid "congress_sidebar_demo short label"
-msgstr "人口統計"
+msgstr "Demographics"
 
 msgid "congress_sidebar_demo label"
-msgstr "人口統計"
+msgstr "Demographics"
 
 msgid "congress_sidebar_demo long description"
 msgstr ""
 
 msgid "house_sidebar_basic short label"
-msgstr "基本情報"
+msgstr "Basic Information"
 
 msgid "house_sidebar_basic label"
-msgstr "基本情報"
+msgstr "Basic Information"
 
 msgid "house_sidebar_basic long description"
 msgstr ""
 
 msgid "house_sidebar_demo short label"
-msgstr "人口統計"
+msgstr "Demographics"
 
 msgid "house_sidebar_demo label"
-msgstr "人口統計"
+msgstr "Demographics"
 
 msgid "house_sidebar_demo long description"
 msgstr ""
 
 msgid "senate_sidebar_basic short label"
-msgstr "基本情報"
+msgstr "Basic Information"
 
 msgid "senate_sidebar_basic label"
-msgstr "基本情報"
+msgstr "Basic Information"
 
 msgid "senate_sidebar_basic long description"
 msgstr ""
 
 msgid "senate_sidebar_demo short label"
-msgstr "人口統計"
+msgstr "Demographics"
 
 msgid "senate_sidebar_demo label"
-msgstr "人口統計"
+msgstr "Demographics"
 
 msgid "senate_sidebar_demo long description"
 msgstr ""
@@ -328,28 +328,28 @@ msgid "dc_community_sidebar_comments long description"
 msgstr ""
 
 msgid "congress_reports short label"
-msgstr "連邦議会レポート"
+msgstr "Congressional Reports"
 
 msgid "congress_reports label"
-msgstr "連邦議会レポート"
+msgstr "Congressional Reports"
 
 msgid "congress_reports long description"
 msgstr ""
 
 msgid "senate_reports short label"
-msgstr "州上院レポート"
+msgstr "State Senate Reports"
 
 msgid "senate_reports label"
-msgstr "州上院レポート"
+msgstr "State Senate Reports"
 
 msgid "senate_reports long description"
 msgstr ""
 
 msgid "house_reports short label"
-msgstr "州下院レポート"
+msgstr "State House Reports"
 
 msgid "house_reports label"
-msgstr "州下院レポート"
+msgstr "State House Reports"
 
 msgid "house_reports long description"
 msgstr ""
@@ -364,46 +364,46 @@ msgid "dc_area_reports long description"
 msgstr ""
 
 msgid "a_congressional_population short label"
-msgstr "総人口"
+msgstr "Tot Pop"
 
 msgid "a_congressional_population label"
-msgstr "総人口"
+msgstr "Tot Pop"
 
 msgid "a_congressional_population long description"
 msgstr "Population interval calculator for congressional."
 
 msgid "a_congress_plan_count_districts short label"
-msgstr "選挙区数"
+msgstr "Count Districts"
 
 msgid "a_congress_plan_count_districts label"
-msgstr "選挙区数"
+msgstr "Count Districts"
 
 msgid "a_congress_plan_count_districts long description"
 msgstr ""
-"連邦議会の再編計画の中に含まれる選挙区数は11区です。"
-""
+"The number of districts in a Congressional redistricting plan must be "
+"11."
 
 msgid "a_congress_plan_equipopulation_summary short label"
-msgstr "人口目標数 (727,366)"
+msgstr "Target Pop. (727,366)"
 
 msgid "a_congress_plan_equipopulation_summary label"
-msgstr "人口目標数 (727,366)"
+msgstr "Target Pop. (727,366)"
 
 msgid "a_congress_plan_equipopulation_summary long description"
 msgstr ""
-"各連邦議会選挙区内の人口は727,366人 +/- "
-"0.5%にしてください。"
+"The population of each Congressional district must be 727,366 +/- "
+"0.5%."
 
 msgid "a_congress_plan_equipopulation_validation short label"
-msgstr "人口目標数 (727,366)"
+msgstr "Target Pop. (727,366)"
 
 msgid "a_congress_plan_equipopulation_validation label"
-msgstr "人口目標数 (727,366)"
+msgstr "Target Pop. (727,366)"
 
 msgid "a_congress_plan_equipopulation_validation long description"
 msgstr ""
-"各連邦議会選挙区内の人口は727,366人 +/-"
-"0.5%にしてください。"
+"The population of each Congressional district must be 727,366 +/- "
+"0.5%."
 
 msgid "a_dc_area_council_plan_equipopulation_summary short label"
 msgstr "人口目標数 (292,843)"
@@ -433,90 +433,90 @@ msgid "a_dc_area_council_population long description"
 msgstr "連邦議会上院人口差カーキュレータ"
 
 msgid "a_house_plan_count_districts short label"
-msgstr "選挙区数"
+msgstr "Count Districts"
 
 msgid "a_house_plan_count_districts label"
-msgstr "選挙区数"
+msgstr "Count Districts"
 
 msgid "a_house_plan_count_districts long description"
 msgstr ""
-"州議会下院再編計画内の選挙区数は100にしてください。"
-""
+"The number of districts in a House of Delegates redistricting plan "
+"must be 100."
 
 msgid "a_house_plan_equipopulation_summary short label"
-msgstr "人口目標数 (80,010)"
+msgstr "Target Pop. (80,010)"
 
 msgid "a_house_plan_equipopulation_summary label"
-msgstr "人口目標数 (80,010)"
+msgstr "Target Pop. (80,010)"
 
 msgid "a_house_plan_equipopulation_summary long description"
 msgstr ""
-"州議会下院の各選挙区内の人口は80,010人 +/- "
-"5%にしてください。"
+"The population of each House of Delegates district must be 80,010 +/- "
+"5%."
 
 msgid "a_house_plan_equipopulation_validation short label"
-msgstr "人口目標数 (80,010)"
+msgstr "Target Pop. (80,010)"
 
 msgid "a_house_plan_equipopulation_validation label"
-msgstr "人口目標数 (80,010)"
+msgstr "Target Pop. (80,010)"
 
 msgid "a_house_plan_equipopulation_validation long description"
 msgstr ""
-"州議会下院の各選挙区内の人口は80,010人 +/- "
-"5%にしてください。"
+"The population of each House of Delegates district must be 80,010 +/- "
+"5%."
 
 msgid "a_house_population short label"
-msgstr "総人口"
+msgstr "Tot Pop"
 
 msgid "a_house_population label"
-msgstr "総人口"
+msgstr "Tot Pop"
 
 msgid "a_house_population long description"
-msgstr "連邦議会下院人口差カーキュレータ"
+msgstr "Population interval calculator for house."
 
 msgid "a_senate_plan_count_districts short label"
-msgstr "選挙区数"
+msgstr "Count Districts"
 
 msgid "a_senate_plan_count_districts label"
-msgstr "選挙区数"
+msgstr "Count Districts"
 
 msgid "a_senate_plan_count_districts long description"
 msgstr ""
-"州上院再編計画内の選挙区数は100にしてください。"
-""
+"The number of districts in a State Senate redistricting plan must be "
+"100."
 
 msgid "a_senate_plan_equipopulation_summary short label"
-msgstr "人口目標数 (200,026)"
+msgstr "Target Pop. (200,026)"
 
 msgid "a_senate_plan_equipopulation_summary label"
-msgstr "人口目標数 (200,026)"
+msgstr "Target Pop. (200,026)"
 
 msgid "a_senate_plan_equipopulation_summary long description"
-msgstr "連邦議会上院の各選挙区内の人口は200,026人 +/- 5%にしてください。"
+msgstr "The population of each State Senate district must be 200,026 +/- 5%."
 
 msgid "a_senate_plan_equipopulation_validation short label"
-msgstr "人口目標数 (200,026)"
+msgstr "Target Pop. (200,026)"
 
 msgid "a_senate_plan_equipopulation_validation label"
-msgstr "人口目標数 (200,026)"
+msgstr "Target Pop. (200,026)"
 
 msgid "a_senate_plan_equipopulation_validation long description"
-msgstr "連邦議会上院の各選挙区内の人口は200,026人 +/- 5%にしてください。"
+msgstr "The population of each State Senate district must be 200,026 +/- 5%."
 
 msgid "a_senate_population short label"
-msgstr "総人口"
+msgstr "Tot Pop"
 
 msgid "a_senate_population label"
-msgstr "総人口"
+msgstr "Tot Pop"
 
 msgid "a_senate_population long description"
-msgstr "連邦議会下院人口差カーキュレータ"
+msgstr "Population interval calculator for senate."
 
 msgid "b_plan_congress_noncontiguous short label"
-msgstr "同一境界内"
+msgstr "Contiguous"
 
 msgid "b_plan_congress_noncontiguous label"
-msgstr "同一境界内"
+msgstr "Contiguous"
 
 msgid "b_plan_congress_noncontiguous long description"
 msgstr ""
@@ -531,73 +531,73 @@ msgid "b_plan_dc_area_council_noncontiguous long description"
 msgstr ""
 
 msgid "b_plan_house_noncontiguous short label"
-msgstr "同一境界内"
+msgstr "Contiguous"
 
 msgid "b_plan_house_noncontiguous label"
-msgstr "同一境界内"
+msgstr "Contiguous"
 
 msgid "b_plan_house_noncontiguous long description"
 msgstr ""
 
 msgid "b_plan_senate_noncontiguous short label"
-msgstr "同一境界内"
+msgstr "Contiguous"
 
 msgid "b_plan_senate_noncontiguous label"
-msgstr "同一境界内"
+msgstr "Contiguous"
 
 msgid "b_plan_senate_noncontiguous long description"
 msgstr ""
 
 msgid "district_blkvap_percent short label"
-msgstr "黒人投票年齢人口"
+msgstr "Black VAP"
 
 msgid "district_blkvap_percent label"
-msgstr "黒人投票年齢人口"
+msgstr "Black VAP"
 
 msgid "district_blkvap_percent long description"
 msgstr ""
 
 msgid "district_blkvap_thresh short label"
-msgstr "黒人投票年齢人口境界値"
+msgstr "Black VAP Threshold"
 
 msgid "district_blkvap_thresh label"
-msgstr "黒人投票年齢人口境界値"
+msgstr "Black VAP Threshold"
 
 msgid "district_blkvap_thresh long description"
 msgstr ""
 
 msgid "district_comments short label"
-msgstr "コメント"
+msgstr "Comments"
 
 msgid "district_comments label"
-msgstr "コメント"
+msgstr "Comments"
 
 msgid "district_comments long description"
 msgstr ""
 
 msgid "district_contiguous short label"
-msgstr "同一境界内"
+msgstr "Contiguous"
 
 msgid "district_contiguous label"
-msgstr "同一境界内"
+msgstr "Contiguous"
 
 msgid "district_contiguous long description"
 msgstr ""
 
 msgid "district_hispvap_percent short label"
-msgstr "ヒスパニック投票年齢人口"
+msgstr "His. VAP"
 
 msgid "district_hispvap_percent label"
-msgstr "ヒスパニック投票年齢人口"
+msgstr "His. VAP"
 
 msgid "district_hispvap_percent long description"
 msgstr ""
 
 msgid "district_hispvap_thresh short label"
-msgstr "ヒスパニック投票年齢人口境界値"
+msgstr "His. VAP Threshold"
 
 msgid "district_hispvap_thresh label"
-msgstr "ヒスパニック投票年齢人口境界値"
+msgstr "His. VAP Threshold"
 
 msgid "district_hispvap_thresh long description"
 msgstr ""
@@ -621,19 +621,19 @@ msgid "district_mintot long description"
 msgstr ""
 
 msgid "district_poptot short label"
-msgstr "総人口"
+msgstr "Total Population"
 
 msgid "district_poptot label"
-msgstr "総人口"
+msgstr "Total Population"
 
 msgid "district_poptot long description"
 msgstr ""
 
 msgid "district_poptot_range short label"
-msgstr "総人口範囲"
+msgstr "Tot Pop Range"
 
 msgid "district_poptot_range label"
-msgstr "総人口範囲"
+msgstr "Tot Pop Range"
 
 msgid "district_poptot_range long description"
 msgstr ""
@@ -675,46 +675,46 @@ msgid "district_schwartzberg long description"
 msgstr ""
 
 msgid "district_vap short label"
-msgstr "投票年齢人口"
+msgstr "Voting Age Pop."
 
 msgid "district_vap label"
-msgstr "投票年齢人口"
+msgstr "Voting Age Pop."
 
 msgid "district_vap long description"
 msgstr ""
 
 msgid "partisan_index short label"
-msgstr "党派インデックス"
+msgstr "Partisan Index"
 
 msgid "partisan_index label"
-msgstr "党派インデックス"
+msgstr "Partisan Index"
 
 msgid "partisan_index long description"
 msgstr ""
 
 msgid "plan_all_blocks_assigned short label"
-msgstr "全ブロック割り当て"
+msgstr "All Blocks Assigned"
 
 msgid "plan_all_blocks_assigned label"
-msgstr "全ブロック割り当て"
+msgstr "All Blocks Assigned"
 
 msgid "plan_all_blocks_assigned long description"
-msgstr "計画内の全てのブロックが選挙区に割り当てられなければなりません。"
+msgstr "All blocks in the plan must be assigned."
 
 msgid "plan_all_contiguous short label"
-msgstr "全て同一境界内"
+msgstr "All Contiguous"
 
 msgid "plan_all_contiguous label"
-msgstr "全て同一境界内"
+msgstr "All Contiguous"
 
 msgid "plan_all_contiguous long description"
 msgstr ""
-"同一選挙区内の全ての地域が選挙区境界をまたがずにつながっていれば同一境界内とみなされます。"
-"再編計画内の全ての選挙区が同一境界内でなければなりません。"
-"バージニア州には長い海岸線があるので、海岸を挟んでの同一選挙区は認められます。"
-"同一選挙区内の複数の地区がある一点のみをもって接触している「一点境界」や「接触時点境界」は認められません。"
-""
-""
+"Contiguity means that every part of a district must be reachable from "
+"every other part without crossing the district's borders. All "
+"districts within a plan must be contiguous. Water contiguity is "
+"permitted given Virginia's extensive coastal region. 'Point "
+"contiguity' or 'touch-point contiguity' where two sections of a "
+"district are connected at a single point is not permitted."
 
 msgid "plan_all_equipop short label"
 msgstr ""
@@ -735,27 +735,27 @@ msgid "plan_blkvap_thresh long description"
 msgstr ""
 
 msgid "plan_competitiveness short label"
-msgstr "拮抗率"
+msgstr "Competitiveness"
 
 msgid "plan_competitiveness label"
-msgstr "拮抗率"
+msgstr "Competitiveness"
 
 msgid "plan_competitiveness long description"
 msgstr ""
-"各再編計画全体の拮抗率は計画内の選挙区の「党派差」の平均で決められます。"
-"各選挙区の党派差は、共和党「党派インデックス」から民主党「党派インデックス」を差し引いて"
-"計算されます。"
-""
-"<br/><br/>党派差が５％以下の選挙区は「かなり拮抗した」選挙区、"
-"５％より大きく10％以下の選挙区は「多少拮抗した」選挙区と見なされます。"
-""
-""
+"Each plan's overall political competitiveness is determined by "
+"averaging each district.s 'partisan differential'.  The partisan "
+"differential of each district is calculated by subtracting the "
+"Democratic 'partisan index' from the Republican 'partisan "
+"index'.<br/><br/>'Heavily' competitive districts are districts with "
+"partisan differentials of less than or equal to 5%. 'Generally' "
+"competitive districts are districts with partisan differentials of "
+"greater than 5% but less than 10%."
 
 msgid "plan_contiguous short label"
-msgstr "同一境界内"
+msgstr "Contiguous"
 
 msgid "plan_contiguous label"
-msgstr "同一境界内"
+msgstr "Contiguous"
 
 msgid "plan_contiguous long description"
 msgstr ""
@@ -770,15 +770,15 @@ msgid "plan_count_majmin long description"
 msgstr ""
 
 msgid "plan_equivalence short label"
-msgstr "等人口"
+msgstr "Equal Population"
 
 msgid "plan_equivalence label"
-msgstr "等人口"
+msgstr "Equal Population"
 
 msgid "plan_equivalence long description"
 msgstr ""
-"等人口スコアは、人口の最も大きい選挙区と最も小さい選挙区の人口差で決められます。"
-""
+"The Equipopulation score is the difference between the district with "
+"the highest population and the district with the lowest population."
 
 msgid "plan_hispvap_thresh short label"
 msgstr ""
@@ -790,18 +790,18 @@ msgid "plan_hispvap_thresh long description"
 msgstr ""
 
 msgid "plan_majority_minority short label"
-msgstr "マイノリティ多数選挙区"
+msgstr "Majority Minority District"
 
 msgid "plan_majority_minority label"
-msgstr "マイノリティ多数選挙区"
+msgstr "Majority Minority District"
 
 msgid "plan_majority_minority long description"
 msgstr ""
-"マイノリティ・グループの人口が（Thornburg V. Gingles, 478 U.S. 30, 49 (1986)に照らして"
-"「十分に大きく、また地理的に密集している地域において、マイノリティが単数定員区の多数を占める」場合は"
-"該当する計画案は投票権法を遵守しているものと見なされます。"
-""
-""
+"Compliance with the Voting Rights Act will be assumed if maps include "
+"a minority-majority district in any area where a minority group is (as"
+" described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) "
+"'sufficiently large and geographically compact to constitute a "
+"majority in a single-member district'."
 
 msgid "plan_majority_minority_blk short label"
 msgstr "黒人投票年齢人口多数(>50%)"
@@ -811,73 +811,70 @@ msgstr "黒人投票年齢人口多数(>50%)"
 
 msgid "plan_majority_minority_blk long description"
 msgstr ""
-"マイノリティ・グループの人口が（Thornburg V. Gingles, 478 U.S. 30, 49 (1986)に照らして"
-"「十分に大きく、また地理的に密集している地域において、マイノリティが単数定員区の多数を占める」場合は"
-"該当する計画案は投票権法を遵守しているものと見なされます。"
-""
-""
+"マイノリティ・グループの人口が（Thornburg V. Gingles, 478 U.S. 30, 49 "
+"(1986)に照らして「十分に大きく、また地理的に密集している地域において、マイノリティが単数定員区の多数を占める」場合は該当する計画案は投票権法を遵守しているものと見なされます。"
 
 msgid "plan_majority_minority_blk_congress short label"
-msgstr "黒人投票年齢人口多数(>50%)"
+msgstr "Black VAP Majority (>50%)"
 
 msgid "plan_majority_minority_blk_congress label"
-msgstr "黒人投票年齢人口多数(>50%)"
+msgstr "Black VAP Majority (>50%)"
 
 msgid "plan_majority_minority_blk_congress long description"
 msgstr ""
-"マイノリティ・グループの人口が（Thornburg V. Gingles, 478 U.S. 30, 49 (1986)に照らして"
-"「十分に大きく、また地理的に密集している地域において、マイノリティが単数定員区の多数を占める」場合は"
-"該当する計画案は投票権法を遵守しているものと見なされます。"
-""
-""
+"Compliance with the Voting Rights Act will be assumed if maps include "
+"a minority-majority district in any area where a minority group is (as"
+" described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) "
+"'sufficiently large and geographically compact to constitute a "
+"majority in a single-member district'."
 
 msgid "plan_majority_minority_blk_house short label"
-msgstr "黒人投票年齢人口多数(>50%)"
+msgstr "Black VAP Majority (>50%)"
 
 msgid "plan_majority_minority_blk_house label"
-msgstr "黒人投票年齢人口多数(>50%)"
+msgstr "Black VAP Majority (>50%)"
 
 msgid "plan_majority_minority_blk_house long description"
 msgstr ""
-"マイノリティ・グループの人口が（Thornburg V. Gingles, 478 U.S. 30, 49 (1986)に照らして"
-"「十分に大きく、また地理的に密集している地域において、マイノリティが単数定員区の多数を占める」場合は"
-"該当する計画案は投票権法を遵守しているものと見なされます。"
-""
-""
+"Compliance with the Voting Rights Act will be assumed if maps include "
+"a minority-majority district in any area where a minority group is (as"
+" described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) "
+"'sufficiently large and geographically compact to constitute a "
+"majority in a single-member district'."
 
 msgid "plan_majority_minority_blk_senate short label"
-msgstr "黒人投票年齢人口多数(>50%)"
+msgstr "Black VAP Majority (>50%)"
 
 msgid "plan_majority_minority_blk_senate label"
-msgstr "黒人投票年齢人口多数(>50%)"
+msgstr "Black VAP Majority (>50%)"
 
 msgid "plan_majority_minority_blk_senate long description"
 msgstr ""
-"マイノリティ・グループの人口が（Thornburg V. Gingles, 478 U.S. 30, 49 (1986)に照らして"
-"「十分に大きく、また地理的に密集している地域において、マイノリティが単数定員区の多数を占める」場合は"
-"該当する計画案は投票権法を遵守しているものと見なされます。"
-""
-""
+"Compliance with the Voting Rights Act will be assumed if maps include "
+"a minority-majority district in any area where a minority group is (as"
+" described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) "
+"'sufficiently large and geographically compact to constitute a "
+"majority in a single-member district'."
 
 msgid "plan_majority_minority_hisp short label"
-msgstr "ヒスパニック投票年齢人口多数(>50%)"
+msgstr "Hisp. VAP Majority (>50%)"
 
 msgid "plan_majority_minority_hisp label"
-msgstr "ヒスパニック投票年齢人口多数(>50%)"
+msgstr "Hisp. VAP Majority (>50%)"
 
 msgid "plan_majority_minority_hisp long description"
 msgstr ""
-"マイノリティ・グループの人口が（Thornburg V. Gingles, 478 U.S. 30, 49 (1986)に照らして"
-"「十分に大きく、また地理的に密集している地域において、マイノリティが単数定員区の多数を占める」場合は"
-"該当する計画案は投票権法を遵守しているものと見なされます。"
-""
-""
+"Compliance with the Voting Rights Act will be assumed if maps include "
+"a minority-majority district in any area where a minority group is (as"
+" described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) "
+"'sufficiently large and geographically compact to constitute a "
+"majority in a single-member district'."
 
 msgid "plan_major_minor short label"
-msgstr "マイノリティ多数"
+msgstr "Majority-Minority"
 
 msgid "plan_major_minor label"
-msgstr "マイノリティ多数"
+msgstr "Majority-Minority"
 
 msgid "plan_major_minor long description"
 msgstr ""
@@ -892,23 +889,23 @@ msgid "plan_poptot_inrange long description"
 msgstr ""
 
 msgid "plan_repfairness short label"
-msgstr "代表選出公平性"
+msgstr "Representational Fairness"
 
 msgid "plan_repfairness label"
-msgstr "代表選出公平性"
+msgstr "Representational Fairness"
 
 msgid "plan_repfairness long description"
 msgstr ""
-"代表選出公平性 is increased when the percentage of "
-"districts a party would likely win （拮抗率を決める「党派インデックス」に基づき）"
-" closely mirrors that party.s "
+"Representational fairness is increased when the percentage of "
+"districts a party would likely win (based upon the 'partisan index' "
+"used to determine Competitiveness) closely mirrors that party.s "
 "percentage of the statewide vote."
 
 msgid "plan_schwartzberg short label"
-msgstr "平均Compactness"
+msgstr "Average Compactness"
 
 msgid "plan_schwartzberg label"
-msgstr "平均Compactness"
+msgstr "Average Compactness"
 
 msgid "plan_schwartzberg long description"
 msgstr ""
@@ -918,10 +915,10 @@ msgstr ""
 "the district."
 
 msgid "plan_sum_equipop short label"
-msgstr "等人口"
+msgstr "Equal Population"
 
 msgid "plan_sum_equipop label"
-msgstr "等人口"
+msgstr "Equal Population"
 
 msgid "plan_sum_equipop long description"
 msgstr ""
@@ -954,46 +951,46 @@ msgid "report_score_compactness_sc long description"
 msgstr ""
 
 msgid "report_score_majmin_blk short label"
-msgstr "アフリカン・アメリカン投票年齢人口"
+msgstr "VAP African-American"
 
 msgid "report_score_majmin_blk label"
-msgstr "アフリカン・アメリカン投票年齢人口"
+msgstr "VAP African-American"
 
 msgid "report_score_majmin_blk long description"
 msgstr ""
 
 msgid "report_score_majmin_hisp short label"
-msgstr "ヒスパニック投票年齢人口"
+msgstr "VAP Hispanic/Latino"
 
 msgid "report_score_majmin_hisp label"
-msgstr "ヒスパニック投票年齢人口"
+msgstr "VAP Hispanic/Latino"
 
 msgid "report_score_majmin_hisp long description"
 msgstr ""
 
 msgid "report_score_party_dem short label"
-msgstr "民主党派"
+msgstr "Democratic"
 
 msgid "report_score_party_dem label"
-msgstr "民主党派"
+msgstr "Democratic"
 
 msgid "report_score_party_dem long description"
 msgstr ""
 
 msgid "report_score_party_rep short label"
-msgstr "共和党派"
+msgstr "Republican"
 
 msgid "report_score_party_rep label"
-msgstr "共和党派"
+msgstr "Republican"
 
 msgid "report_score_party_rep long description"
 msgstr ""
 
 msgid "report_score_total_population_congress short label"
-msgstr "総人口"
+msgstr "Total Population"
 
 msgid "report_score_total_population_congress label"
-msgstr "総人口"
+msgstr "Total Population"
 
 msgid "report_score_total_population_congress long description"
 msgstr ""
@@ -1008,163 +1005,163 @@ msgid "report_score_total_population_dc_council long description"
 msgstr ""
 
 msgid "report_score_total_population_house short label"
-msgstr "総人口"
+msgstr "Total Population"
 
 msgid "report_score_total_population_house label"
-msgstr "総人口"
+msgstr "Total Population"
 
 msgid "report_score_total_population_house long description"
 msgstr ""
 
 msgid "report_score_total_population_senate short label"
-msgstr "総人口"
+msgstr "Total Population"
 
 msgid "report_score_total_population_senate label"
-msgstr "総人口"
+msgstr "Total Population"
 
 msgid "report_score_total_population_senate long description"
 msgstr ""
 
 msgid "report_score_unassigned short label"
-msgstr "未割り当てブロック"
+msgstr "Unassigned Blocks"
 
 msgid "report_score_unassigned label"
-msgstr "未割り当てブロック"
+msgstr "Unassigned Blocks"
 
 msgid "report_score_unassigned long description"
 msgstr ""
 
 msgid "report_score_vap short label"
-msgstr "投票年齢人口"
+msgstr "Voting Age Population"
 
 msgid "report_score_vap label"
-msgstr "投票年齢人口"
+msgstr "Voting Age Population"
 
 msgid "report_score_vap long description"
 msgstr ""
 
 msgid "report_score_vapblk short label"
-msgstr "アフリカン・アメリカン投票年齢人口"
+msgstr "VAP African-American"
 
 msgid "report_score_vapblk label"
-msgstr "アフリカン・アメリカン投票年齢人口"
+msgstr "VAP African-American"
 
 msgid "report_score_vapblk long description"
 msgstr ""
 
 msgid "report_score_vaphisp short label"
-msgstr "ヒスパニック投票年齢人口"
+msgstr "VAP Hispanic/Latino"
 
 msgid "report_score_vaphisp label"
-msgstr "ヒスパニック投票年齢人口"
+msgstr "VAP Hispanic/Latino"
 
 msgid "report_score_vaphisp long description"
 msgstr ""
 
 msgid "panel_competitive_mine short label"
-msgstr "拮抗率"
+msgstr "Competitiveness"
 
 msgid "panel_competitive_mine label"
-msgstr "拮抗率"
+msgstr "Competitiveness"
 
 msgid "panel_competitive_mine long description"
 msgstr ""
 
 msgid "panel_rf_mine short label"
-msgstr "代表選出公平性"
+msgstr "Representational Fairness"
 
 msgid "panel_rf_mine label"
-msgstr "代表選出公平性"
+msgstr "Representational Fairness"
 
 msgid "panel_rf_mine long description"
 msgstr ""
 
 msgid "community_panel_comments short label"
-msgstr "計画コメント"
+msgstr "Plan Comments"
 
 msgid "community_panel_comments label"
-msgstr "計画コメント"
+msgstr "Plan Comments"
 
 msgid "community_panel_comments long description"
 msgstr ""
 
 msgid "congresional_panel_info short label"
-msgstr "基本情報"
+msgstr "Basic Information"
 
 msgid "congresional_panel_info label"
-msgstr "基本情報"
+msgstr "Basic Information"
 
 msgid "congresional_panel_info long description"
 msgstr ""
 
 msgid "congressional_panel_summary short label"
-msgstr "計画概要"
+msgstr "Plan Summary"
 
 msgid "congressional_panel_summary label"
-msgstr "計画概要"
+msgstr "Plan Summary"
 
 msgid "congressional_panel_summary long description"
 msgstr ""
 
 msgid "congressional_panel_demo short label"
-msgstr "人口統計"
+msgstr "Demographics"
 
 msgid "congressional_panel_demo label"
-msgstr "人口統計"
+msgstr "Demographics"
 
 msgid "congressional_panel_demo long description"
 msgstr ""
 
 msgid "house_panel_info short label"
-msgstr "基本情報"
+msgstr "Basic Information"
 
 msgid "house_panel_info label"
-msgstr "基本情報"
+msgstr "Basic Information"
 
 msgid "house_panel_info long description"
 msgstr ""
 
 msgid "house_panel_summary short label"
-msgstr "計画概要"
+msgstr "Plan Summary"
 
 msgid "house_panel_summary label"
-msgstr "計画概要"
+msgstr "Plan Summary"
 
 msgid "house_panel_summary long description"
 msgstr ""
 
 msgid "house_panel_demo short label"
-msgstr "人口統計"
+msgstr "Demographics"
 
 msgid "house_panel_demo label"
-msgstr "人口統計"
+msgstr "Demographics"
 
 msgid "house_panel_demo long description"
 msgstr ""
 
 msgid "senate_panel_info short label"
-msgstr "基本情報"
+msgstr "Basic Information"
 
 msgid "senate_panel_info label"
-msgstr "基本情報"
+msgstr "Basic Information"
 
 msgid "senate_panel_info long description"
 msgstr ""
 
 msgid "senate_panel_summary short label"
-msgstr "計画概要"
+msgstr "Plan Summary"
 
 msgid "senate_panel_summary label"
-msgstr "計画概要"
+msgstr "Plan Summary"
 
 msgid "senate_panel_summary long description"
 msgstr ""
 
 msgid "senate_panel_demo short label"
-msgstr "人口統計"
+msgstr "Demographics"
 
 msgid "senate_panel_demo label"
-msgstr "人口統計"
+msgstr "Demographics"
 
 msgid "senate_panel_demo long description"
 msgstr ""
@@ -1197,37 +1194,37 @@ msgid "dc_area_council_panel_demo long description"
 msgstr ""
 
 msgid "report_panel_population short label"
-msgstr "人口"
+msgstr "Population"
 
 msgid "report_panel_population label"
-msgstr "人口"
+msgstr "Population"
 
 msgid "report_panel_population long description"
 msgstr ""
 
 msgid "community_panel_demo short label"
-msgstr "人口統計"
+msgstr "Demographics"
 
 msgid "community_panel_demo label"
-msgstr "人口統計"
+msgstr "Demographics"
 
 msgid "community_panel_demo long description"
 msgstr ""
 
 msgid "community_panel_summary short label"
-msgstr "コミュニティ概要"
+msgstr "Community Summary"
 
 msgid "community_panel_summary label"
-msgstr "コミュニティ概要"
+msgstr "Community Summary"
 
 msgid "community_panel_summary long description"
 msgstr ""
 
 msgid "report_panel_majmin short label"
-msgstr "マイノリティ多数選挙区"
+msgstr "Majority Minority Districts"
 
 msgid "report_panel_majmin label"
-msgstr "マイノリティ多数選挙区"
+msgstr "Majority Minority Districts"
 
 msgid "report_panel_majmin long description"
 msgstr ""
@@ -1242,28 +1239,28 @@ msgid "report_panel_compactness long description"
 msgstr ""
 
 msgid "report_panel_party short label"
-msgstr "一党支配区"
+msgstr "Party-Controlled Districts"
 
 msgid "report_panel_party label"
-msgstr "一党支配区"
+msgstr "Party-Controlled Districts"
 
 msgid "report_panel_party long description"
 msgstr ""
 
 msgid "report_panel_spatial short label"
-msgstr "空間分析"
+msgstr "Spatial Analysis"
 
 msgid "report_panel_spatial label"
-msgstr "空間分析"
+msgstr "Spatial Analysis"
 
 msgid "report_panel_spatial long description"
 msgstr ""
 
 msgid "panel_equipop_all short label"
-msgstr "等人口"
+msgstr "Equipopulation"
 
 msgid "panel_equipop_all label"
-msgstr "等人口"
+msgstr "Equipopulation"
 
 msgid "panel_equipop_all long description"
 msgstr ""
@@ -1278,28 +1275,28 @@ msgid "panel_compact_all long description"
 msgstr ""
 
 msgid "panel_competitive_all short label"
-msgstr "拮抗率"
+msgstr "Competitiveness"
 
 msgid "panel_competitive_all label"
-msgstr "拮抗率"
+msgstr "Competitiveness"
 
 msgid "panel_competitive_all long description"
 msgstr ""
 
 msgid "panel_rf_all short label"
-msgstr "代表選出公平性"
+msgstr "Representational Fairness"
 
 msgid "panel_rf_all label"
-msgstr "代表選出公平性"
+msgstr "Representational Fairness"
 
 msgid "panel_rf_all long description"
 msgstr ""
 
 msgid "panel_equipop_mine short label"
-msgstr "等人口"
+msgstr "Equipopulation"
 
 msgid "panel_equipop_mine label"
-msgstr "等人口"
+msgstr "Equipopulation"
 
 msgid "panel_equipop_mine long description"
 msgstr ""
@@ -1317,187 +1314,187 @@ msgid "govdem short label"
 msgstr "% Dem Gov. '09, Two-Party"
 
 msgid "govdem label"
-msgstr "09年州知事民主党投票者"
+msgstr "Democratic Voters, Governor '09"
 
 msgid "govdem long description"
 msgstr ""
 
 msgid "vapblk short label"
-msgstr "黒人投票年齢人口"
+msgstr "Black VAP"
 
 msgid "vapblk label"
-msgstr "アフリカン・アメリカン　投票年齢人口"
+msgstr "Voting Age Population - African-American"
 
 msgid "vapblk long description"
 msgstr ""
 
 msgid "vaphisp short label"
-msgstr "ヒスパニック　投票年齢人口"
+msgstr "Hisp. VAP"
 
 msgid "vaphisp label"
-msgstr "ヒスパニック　投票年齢人口"
+msgstr "Voting Age Population - Hispanic/Latino"
 
 msgid "vaphisp long description"
 msgstr ""
 
 msgid "pophisp short label"
-msgstr "ヒスパニック"
+msgstr "Hispanic"
 
 msgid "pophisp label"
-msgstr "ヒスパニック／ラティーノ"
+msgstr "Hispanic or Latino"
 
 msgid "pophisp long description"
 msgstr ""
 
 msgid "popasn short label"
-msgstr "アジア系"
+msgstr "As Amer"
 
 msgid "popasn label"
-msgstr "アジア系アメリカ人"
+msgstr "Asian-American"
 
 msgid "popasn long description"
 msgstr ""
 
 msgid "popnam short label"
-msgstr "ネイティブ"
+msgstr "Nat Amer"
 
 msgid "popnam label"
-msgstr "ネイティブ・アメリカン"
+msgstr "Native American"
 
 msgid "popnam long description"
 msgstr ""
 
 msgid "poppild short label"
-msgstr "太平洋諸島系"
+msgstr "Pac Isldr"
 
 msgid "poppild label"
-msgstr "太平洋諸島系"
+msgstr "Pacific Islander"
 
 msgid "poppild long description"
 msgstr ""
 
 msgid "vap short label"
-msgstr "投票人口"
+msgstr "Voters"
 
 msgid "vap label"
-msgstr "投票年齢人口"
+msgstr "Voting Age Population"
 
 msgid "vap long description"
 msgstr ""
 
 msgid "vapwnh short label"
-msgstr "白人投票年齢"
+msgstr "Wht Votng Age"
 
 msgid "vapwnh label"
-msgstr "白人　投票年齢人口"
+msgstr "Voting Age Population - White"
 
 msgid "vapwnh long description"
 msgstr ""
 
 msgid "popblk short label"
-msgstr "黒人"
+msgstr "Black"
 
 msgid "popblk label"
-msgstr "アフリカンアメリカン"
+msgstr "African-American"
 
 msgid "popblk long description"
 msgstr ""
 
 msgid "popwnh short label"
-msgstr "白人"
+msgstr "White"
 
 msgid "popwnh label"
-msgstr "非ヒスパニック白人総計"
+msgstr "Total White Non-Hispanic"
 
 msgid "popwnh long description"
 msgstr ""
 
 msgid "vapasn short label"
-msgstr "アジア系投票年齢"
+msgstr "As Am Votng Age"
 
 msgid "vapasn label"
-msgstr "アジア系　投票年齢人口"
+msgstr "Voting Age Population - Asian-American"
 
 msgid "vapasn long description"
 msgstr ""
 
 msgid "vapnam short label"
-msgstr "ネイティブ投票年齢"
+msgstr "Nat Amer Votng Age"
 
 msgid "vapnam label"
-msgstr "ネイティブアメリカン　投票年齢人口"
+msgstr "Voting Age Population - Native American"
 
 msgid "vapnam long description"
 msgstr ""
 
 msgid "vappild short label"
-msgstr "太平洋諸島系投票年齢"
+msgstr "Pac Isldr Votng Age"
 
 msgid "vappild label"
-msgstr "太平洋諸島系　投票年齢人口"
+msgstr "Voting Age Population - Pacific Islander"
 
 msgid "vappild long description"
 msgstr ""
 
 msgid "presdem short label"
-msgstr "08年民主"
+msgstr "Democrat 08"
 
 msgid "presdem label"
-msgstr "民主党投票者"
+msgstr "Democratic Voters"
 
 msgid "presdem long description"
 msgstr ""
 
 msgid "presrep short label"
-msgstr "08年共和"
+msgstr "Republican 08"
 
 msgid "presrep label"
-msgstr "共和党投票者"
+msgstr "Republican Voters"
 
 msgid "presrep long description"
 msgstr ""
 
 msgid "poptot short label"
-msgstr "総人口"
+msgstr "Total Pop."
 
 msgid "poptot label"
-msgstr "人口総計"
+msgstr "Total Population"
 
 msgid "poptot long description"
 msgstr ""
 
 msgid "presoth short label"
-msgstr "08年その他"
+msgstr "Other 08"
 
 msgid "presoth label"
-msgstr "その他投票者"
+msgstr "Other Voters"
 
 msgid "presoth long description"
 msgstr ""
 
 msgid "govrep short label"
-msgstr "09年共和"
+msgstr "Republican 09"
 
 msgid "govrep label"
-msgstr "09年州知事共和党投票者"
+msgstr "Republican Voters, Governor '09"
 
 msgid "govrep long description"
 msgstr ""
 
 msgid "govoth short label"
-msgstr "09年その他候補者"
+msgstr "Other Cand 09"
 
 msgid "govoth label"
-msgstr "09年州知事その他候補者合計"
+msgstr "Sum All Other Candidates, Governor '09"
 
 msgid "govoth long description"
 msgstr ""
 
 msgid "govtot short label"
-msgstr "州知事"
+msgstr "Governor"
 
 msgid "govtot label"
-msgstr "09年州知事投票者総数"
+msgstr "Total Voter, Governor '09"
 
 msgid "govtot long description"
 msgstr ""
@@ -1510,13 +1507,7 @@ msgstr "全て同一境界内・下院"
 
 msgid "house_contiguity long description"
 msgstr ""
-"<p>この計画案は同一境界内の競技条件を満たしていません。"
-"</p><p>同一選挙区内の全ての地域が選挙区境界をまたがずにつながっていなければなりません。"
-"計画案内の全ての選挙区がこの同一境界内でなければなりません。"
-"バージニア州には長い海岸線があるので、海岸を挟んでの同一選挙区は認められます。"
-"同一選挙区内の複数の地区がある一点のみをもって接触している「一点境界」や"
-"「接触時点境界」は認められません。"
-"</p>"
+"<p>この計画案は同一境界内の競技条件を満たしていません。</p><p>同一選挙区内の全ての地域が選挙区境界をまたがずにつながっていなければなりません。計画案内の全ての選挙区がこの同一境界内でなければなりません。バージニア州には長い海岸線があるので、海岸を挟んでの同一選挙区は認められます。同一選挙区内の複数の地区がある一点のみをもって接触している「一点境界」や「接触時点境界」は認められません。</p>"
 
 msgid "house_majority_minority short label"
 msgstr "マイノリティ多数区・下院"
@@ -1571,9 +1562,8 @@ msgstr "等人口・連邦議会"
 
 msgid "congress_equipop long description"
 msgstr ""
-"<p>この計画案は等人口の競技条件を満たしていません。"
-"</p><p>各連邦議会選挙区の人口は"
-"727,366人 +/- 0.5%の範囲内でなければなりません。</p>"
+"<p>この計画案は等人口の競技条件を満たしていません。</p><p>各連邦議会選挙区の人口は727,366人 +/- "
+"0.5%の範囲内でなければなりません。</p>"
 
 msgid "congress_contiguity short label"
 msgstr "全て同一境界内・連邦議会"
@@ -1583,13 +1573,7 @@ msgstr "全て同一境界内・連邦議会"
 
 msgid "congress_contiguity long description"
 msgstr ""
-"<p>この計画案は同一境界内の競技条件を満たしていません。"
-"</p><p>同一選挙区内の全ての地域が選挙区境界をまたがずにつながっていなければなりません。"
-"計画案内の全ての選挙区がこの同一境界内でなければなりません。"
-"バージニア州には長い海岸線があるので、海岸を挟んでの同一選挙区は認められます。"
-"同一選挙区内の複数の地区がある一点のみをもって接触している「一点境界」や"
-"「接触時点境界」は認められません。"
-"</p>"
+"<p>この計画案は同一境界内の競技条件を満たしていません。</p><p>同一選挙区内の全ての地域が選挙区境界をまたがずにつながっていなければなりません。計画案内の全ての選挙区がこの同一境界内でなければなりません。バージニア州には長い海岸線があるので、海岸を挟んでの同一選挙区は認められます。同一選挙区内の複数の地区がある一点のみをもって接触している「一点境界」や「接触時点境界」は認められません。</p>"
 
 msgid "congress_majority_minority short label"
 msgstr "マイノリティ多数区・連邦議会"
@@ -1626,9 +1610,8 @@ msgstr "等人口・下院"
 
 msgid "house_equipop long description"
 msgstr ""
-"<p>この計画案は等人口の競技条件を満たしていません。"
-"</p><p>各州議会下院選挙区の人口は"
-"80,010人 +/- 5%の範囲内でなければなりません。</p>"
+"<p>この計画案は等人口の競技条件を満たしていません。</p><p>各州議会下院選挙区の人口は80,010人 +/- "
+"5%の範囲内でなければなりません。</p>"
 
 msgid "senate_equipop short label"
 msgstr "等人口・上院"
@@ -1638,9 +1621,8 @@ msgstr "等人口・上院"
 
 msgid "senate_equipop long description"
 msgstr ""
-"<p>この計画案は等人口の競技条件を満たしていません。"
-"</p><p>各州議会下院選挙区の人口は"
-"200,026人 +/- 5%の範囲内でなければなりません。</p>"
+"<p>この計画案は等人口の競技条件を満たしていません。</p><p>各州議会下院選挙区の人口は200,026人 +/- "
+"5%の範囲内でなければなりません。</p>"
 
 msgid "senate_contiguity short label"
 msgstr "全て同一境界内・上院"
@@ -1650,13 +1632,7 @@ msgstr "全て同一境界内・上院"
 
 msgid "senate_contiguity long description"
 msgstr ""
-"<p>この計画案は同一境界内の競技条件を満たしていません。"
-"</p><p>同一選挙区内の全ての地域が選挙区境界をまたがずにつながっていなければなりません。"
-"計画案内の全ての選挙区がこの同一境界内でなければなりません。"
-"バージニア州には長い海岸線があるので、海岸を挟んでの同一選挙区は認められます。"
-"同一選挙区内の複数の地区がある一点のみをもって接触している「一点境界」や"
-"「接触時点境界」は認められません。"
-"</p>"
+"<p>この計画案は同一境界内の競技条件を満たしていません。</p><p>同一選挙区内の全ての地域が選挙区境界をまたがずにつながっていなければなりません。計画案内の全ての選挙区がこの同一境界内でなければなりません。バージニア州には長い海岸線があるので、海岸を挟んでの同一選挙区は認められます。同一選挙区内の複数の地区がある一点のみをもって接触している「一点境界」や「接触時点境界」は認められません。</p>"
 
 msgid "senate_all_assigned short label"
 msgstr "全ブロック割り当て・上院"
@@ -1830,166 +1806,166 @@ msgid "have_you_heard_about_this_55_guy_lulz long description"
 msgstr "99have; you' heard\" about -- this 55 guy? lulz!"
 
 msgid "congress-equipop short label"
-msgstr "等人口・連邦議会"
+msgstr "Equipopulation - Congress"
 
 msgid "congress-equipop label"
-msgstr "等人口・連邦議会"
+msgstr "Equipopulation - Congress"
 
 msgid "congress-equipop long description"
 msgstr ""
-"<p>この計画案は等人口の競技条件を満たしていません。"
-"</p><p>各連邦議会選挙区の人口は"
-"727,366人 +/- 0.5%の範囲内でなければなりません。</p>"
+"<p>Your plan does not meet the competition criteria for "
+"Equipopulation:</p><p>The population of each Congressional district "
+"must be 727,366 +/- 0.5%.</p>"
 
 msgid "congress-contiguous short label"
-msgstr "全て同一境界内・連邦議会"
+msgstr "AllContiguous - Congress"
 
 msgid "congress-contiguous label"
-msgstr "全て同一境界内・連邦議会"
+msgstr "AllContiguous - Congress"
 
 msgid "congress-contiguous long description"
 msgstr ""
-"<p>この計画案は同一境界内の競技条件を満たしていません。"
-"</p><p>同一選挙区内の全ての地域が選挙区境界をまたがずにつながっていなければなりません。"
-"計画案内の全ての選挙区がこの同一境界内でなければなりません。"
-"バージニア州には長い海岸線があるので、海岸を挟んでの同一選挙区は認められます。"
-"同一選挙区内の複数の地区がある一点のみをもって接触している「一点境界」や"
-"「接触時点境界」は認められません。"
-"</p>"
+"<p>Your plan does not meet the competition criteria for "
+"Contiguity</p><p>Every part of a district must be reachable from every"
+" other part without crossing the district's borders. All districts "
+"within a plan must be contiguous. Water contiguity is permitted given "
+"Virginia's extensive coastal region. 'Point contiguity' or 'touch-"
+"point contiguity' where two sections of a district are connected at a "
+"single point is not permitted.</p>"
 
 msgid "congress-major-minor short label"
-msgstr "マイノリティ多数区・連邦議会"
+msgstr "MajorityMinority - Congress"
 
 msgid "congress-major-minor label"
-msgstr "マイノリティ多数区・連邦議会"
+msgstr "MajorityMinority - Congress"
 
 msgid "congress-major-minor long description"
 msgstr ""
 
 msgid "congress-district-count short label"
-msgstr "選挙区数・連邦議会"
+msgstr "CountDistricts - Congress"
 
 msgid "congress-district-count label"
-msgstr "選挙区数・連邦議会"
+msgstr "CountDistricts - Congress"
 
 msgid "congress-district-count long description"
 msgstr ""
 
 msgid "congress-assigned short label"
-msgstr "全ブロック割り当て・連邦議会"
+msgstr "AllBlocksAssigned - Congress"
 
 msgid "congress-assigned label"
-msgstr "全ブロック割り当て・連邦議会"
+msgstr "AllBlocksAssigned - Congress"
 
 msgid "congress-assigned long description"
 msgstr ""
 
 msgid "house-equipop short label"
-msgstr "等人口・下院"
+msgstr "Equipopulation - House"
 
 msgid "house-equipop label"
-msgstr "等人口・下院"
+msgstr "Equipopulation - House"
 
 msgid "house-equipop long description"
 msgstr ""
-"<p>この計画案は等人口の競技条件を満たしていません。"
-"</p><p>各州議会下院選挙区の人口は"
-"80,010人 +/- 5%の範囲内でなければなりません。</p>"
+"<p>Your plan does not meet the competition criteria for "
+"Equipopulation:</p><p>The population of each House of Delegates "
+"district must be 80,010 +/- 5%.</p>"
 
 msgid "house-contiguous short label"
-msgstr "全て同一境界内・下院"
+msgstr "AllContiguous - House"
 
 msgid "house-contiguous label"
-msgstr "全て同一境界内・下院"
+msgstr "AllContiguous - House"
 
 msgid "house-contiguous long description"
 msgstr ""
-"<p>この計画案は同一境界内の競技条件を満たしていません。"
-"</p><p>同一選挙区内の全ての地域が選挙区境界をまたがずにつながっていなければなりません。"
-"計画案内の全ての選挙区がこの同一境界内でなければなりません。"
-"バージニア州には長い海岸線があるので、海岸を挟んでの同一選挙区は認められます。"
-"同一選挙区内の複数の地区がある一点のみをもって接触している「一点境界」や"
-"「接触時点境界」は認められません。"
-"</p>"
+"<p>Your plan does not meet the competition criteria for "
+"Contiguity</p><p>Every part of a district must be reachable from every"
+" other part without crossing the district's borders. All districts "
+"within a plan must be contiguous. Water contiguity is permitted given "
+"Virginia's extensive coastal region. 'Point contiguity' or 'touch-"
+"point contiguity' where two sections of a district are connected at a "
+"single point is not permitted.</p>"
 
 msgid "house-major-minor short label"
-msgstr "マイノリティ多数区・下院"
+msgstr "MajorityMinority - House"
 
 msgid "house-major-minor label"
-msgstr "マイノリティ多数区・下院"
+msgstr "MajorityMinority - House"
 
 msgid "house-major-minor long description"
 msgstr ""
 
 msgid "house-district-count short label"
-msgstr "選挙区数・下院"
+msgstr "CountDistricts - House"
 
 msgid "house-district-count label"
-msgstr "選挙区数・下院"
+msgstr "CountDistricts - House"
 
 msgid "house-district-count long description"
 msgstr ""
 
 msgid "house-assigned short label"
-msgstr "全ブロック割り当て・下院"
+msgstr "AllBlocksAssigned - House"
 
 msgid "house-assigned label"
-msgstr "全ブロック割り当て・下院"
+msgstr "AllBlocksAssigned - House"
 
 msgid "house-assigned long description"
 msgstr ""
 
 msgid "senate-major-minor short label"
-msgstr "マイノリティ多数区・上院"
+msgstr "MajorityMinority - Senate"
 
 msgid "senate-major-minor label"
-msgstr "マイノリティ多数区・上院"
+msgstr "MajorityMinority - Senate"
 
 msgid "senate-major-minor long description"
 msgstr ""
 
 msgid "senate-district-count short label"
-msgstr "選挙区数・上院"
+msgstr "CountDistricts - Senate"
 
 msgid "senate-district-count label"
-msgstr "選挙区数・上院"
+msgstr "CountDistricts - Senate"
 
 msgid "senate-district-count long description"
 msgstr ""
 
 msgid "senate-equipop short label"
-msgstr "等人口・上院"
+msgstr "Equipopulation - Senate"
 
 msgid "senate-equipop label"
-msgstr "等人口・上院"
+msgstr "Equipopulation - Senate"
 
 msgid "senate-equipop long description"
 msgstr ""
-"<p>この計画案は等人口の競技条件を満たしていません。"
-"</p><p>各州議会下院選挙区の人口は"
-"200,026人 +/- 5%の範囲内でなければなりません。</p>"
+"<p>Your plan does not meet the competition criteria for "
+"Equipopulation:</p><p>The population of each House of Delegates "
+"district must be 200,026 +/- 5%.</p>"
 
 msgid "senate-contiguous short label"
-msgstr "全て同一境界内・上院"
+msgstr "AllContiguous - Senate"
 
 msgid "senate-contiguous label"
-msgstr "全て同一境界内・上院"
+msgstr "AllContiguous - Senate"
 
 msgid "senate-contiguous long description"
 msgstr ""
-"<p>この計画案は同一境界内の競技条件を満たしていません。"
-"</p><p>同一選挙区内の全ての地域が選挙区境界をまたがずにつながっていなければなりません。"
-"計画案内の全ての選挙区がこの同一境界内でなければなりません。"
-"バージニア州には長い海岸線があるので、海岸を挟んでの同一選挙区は認められます。"
-"同一選挙区内の複数の地区がある一点のみをもって接触している「一点境界」や"
-"「接触時点境界」は認められません。"
-"</p>"
+"<p>Your plan does not meet the competition criteria for "
+"Contiguity</p><p>Every part of a district must be reachable from every"
+" other part without crossing the district's borders. All districts "
+"within a plan must be contiguous. Water contiguity is permitted given "
+"Virginia's extensive coastal region. 'Point contiguity' or 'touch-"
+"point contiguity' where two sections of a district are connected at a "
+"single point is not permitted.</p>"
 
 msgid "senate-assigned short label"
-msgstr "全ブロック割り当て・上院"
+msgstr "AllBlocksAssigned - Senate"
 
 msgid "senate-assigned label"
-msgstr "全ブロック割り当て・上院"
+msgstr "AllBlocksAssigned - Senate"
 
 msgid "senate-assigned long description"
 msgstr ""
@@ -2002,3 +1978,21 @@ msgstr "DC首都圏"
 
 msgid "dc_area long description"
 msgstr "コロンビア特別区首都圏"
+
+msgid "community_sidebar_demo short label"
+msgstr "人口統計"
+
+msgid "community_sidebar_demo label"
+msgstr "人口統計"
+
+msgid "community_sidebar_demo long description"
+msgstr ""
+
+msgid "community_sidebar_comments short label"
+msgstr "コミュニティ・マップ"
+
+msgid "community_sidebar_comments label"
+msgstr "コミュニティ・マップ"
+
+msgid "community_sidebar_comments long description"
+msgstr ""

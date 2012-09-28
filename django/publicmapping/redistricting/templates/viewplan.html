@@ -156,7 +156,7 @@
             geolevel: {{ snap.geolevel }}, 
             level: '{{ snap.level }}',
             layer: '{{ snap.layer }}', 
-            short_label: '{{ snap.short_label }}',
+            long_description: '{{ snap.long_description }}',
             min_zoom: {{ snap.min_zoom }} 
         }{% if not forloop.last %},{% endif %}{% endfor %} ];
         // An array of demographic settings for the choropleth variations 
@@ -547,7 +547,7 @@
                             {% if not forloop.last %}                    
                             <div class="layer_choice_wrapper">
                                 <input id="geolevel.{{ snap.geolevel }}" class="layer_choice" type="checkbox" value="geolevel.{{ snap.geolevel }}" />
-                                <label for="geolevel.{{ snap.geolevel }}">{{ snap.short_label }}</label>
+                                <label for="geolevel.{{ snap.geolevel }}">{{ snap.long_description }}</label>
                             </div>                  
                             {% endif %}
                             {% endfor %}
@@ -984,7 +984,7 @@ Include the shared_districts markup if we're using the copy/paste tool
                   <option value="None">{% trans "None" %}</option>
                   {% for snap in snaplayers %}
                       <option value="geolevel.{{ snap.geolevel }}">
-                          {{ snap.short_label }}
+                          {{ snap.long_description }}
                       </option>
                   {% endfor %}
               </select>
@@ -1005,7 +1005,7 @@ Include the shared_districts markup if we're using the copy/paste tool
             <h2>{% if plan.is_community %}3{% else %}4{% endif %}. {% trans "Select Plan Type" %}</h2>
             <select id="ref_leg_selector" class="indented fillwidth">
                 {% for body in bodies %}
-                    <option value="{{ body.id }}">{{ body.name }}</option>
+                    <option value="{{ body.id }}">{{ body.get_long_description }}</option>
                 {% endfor %}
             </select>
 

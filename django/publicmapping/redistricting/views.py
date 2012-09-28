@@ -457,7 +457,7 @@ def commonplan(request, planid):
             'geolevel': level.id,
             'level': level.name,
             'layer': 'simple_' + level.name, 
-            'short_label': level.get_short_label(),
+            'long_description': level.get_long_description(),
             'min_zoom': level.min_zoom
         })
     default_selected = False
