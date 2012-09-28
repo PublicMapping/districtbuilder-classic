@@ -301,7 +301,7 @@ def copyplan(request, planid):
 @unique_session_or_json_redirect
 def scoreplan(request, planid):
     """
-    Validate a plan to allow for it to be shown in the leaaderboard
+    Validate a plan to allow for it to be shown in the leaderboard
 
     Parameters:
         request -- The HttpRequest, which includes the user.

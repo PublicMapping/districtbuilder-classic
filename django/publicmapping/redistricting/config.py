@@ -26,7 +26,7 @@ Author:
     Andrew Jennings, David Zwarg, Kenny Shepard
 """
 
-import os, hashlib, logging, httplib, string, base64, pprint, json, traceback, types
+import os, hashlib, logging, httplib, string, base64, json, traceback, types
 from datetime import datetime, timedelta, tzinfo
 from django.conf import settings
 from django.db.models import Model
@@ -56,7 +56,6 @@ class ModelHelper:
         try:
             id_args = { unique_id_field: name }
             current_object = a_model.objects.get(**id_args)
-            #print current_object
         # If it doesn't exist, just save it and return
         except ObjectDoesNotExist:
             new = a_model(**kwargs)
@@ -67,11 +66,8 @@ class ModelHelper:
         changed = False
         message = '%s matches database - no changes%s'
         for key in kwargs:
-            #print key
             current_value = current_object.__getattribute__(key)
-            #print current_value
             config_value = kwargs[key]
-            #print config_value
             if not (isinstance(current_value, types.StringTypes)) and not (isinstance(current_value, Model)):
                 config_value = type(current_value)(config_value)
             if current_value != config_value:
@@ -470,7 +466,6 @@ class ConfigImporter:
                     """
                     geolevel_node = self.store.get_geolevel(node.get('ref'))
                     geolevel_name = "%s_%s" % (region.get('id'), geolevel_node.get('id'))
-                    logging.debug('geolevel_name: %s', geolevel_name)
                     geolevel = Geolevel.objects.get(name=geolevel_name)
                     obj, created = LegislativeLevel.objects.get_or_create(
                         legislative_body=body,

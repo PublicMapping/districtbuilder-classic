@@ -176,7 +176,12 @@ class PlanAdmin(admin.ModelAdmin):
             # Reaggregate asynchronously
             reaggregate_plan.delay(plan.id)
 
-    actions = [reaggregate_selected_plans]
+    def validate_selected_plans(self, request, queryset):
+        for plan in queryset:
+            # Validate asynchronously
+            validate_plan.delay(plan.id)
+
+    actions = [reaggregate_selected_plans, validate_selected_plans]
 
 class SubjectAdmin(admin.ModelAdmin):
     """

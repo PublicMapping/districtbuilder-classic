@@ -1284,7 +1284,7 @@ def reaggregate_plan(plan_id):
     """
     Asynchronously reaggregate all computed characteristics for each district in the plan.
 
-    @param plan: The plan to reaggregate
+    @param plan_id: The plan to reaggregate
     @return: An integer count of the number of districts reaggregated
     """
     try:
@@ -1309,6 +1309,42 @@ def reaggregate_plan(plan_id):
         logger.debug('Reason:', ex)
 
         return None
+
+#
+# Validation tasks
+#
+@task
+def validate_plan(plan_id):
+    """
+    Asynchronously validate a plan.
+
+    @param plan_id: The plan_id to reaggregate
+    @return: A flag indicating if the plan is valid
+    """
+    try:
+        plan = Plan.objects.get(id=plan_id)
+    except Exception, ex:
+        logger.warn('Could not retrieve plan %d for validation.' % plan_id)
+        logger.debug('Reason:', ex)
+        return False
+
+    criterion = ValidationCriteria.objects.filter(legislative_body=plan.legislative_body)
+    is_valid = True 
+    for criteria in criterion:
+        score = None
+        try: 
+            score = ComputedPlanScore.compute(criteria.function, plan)
+        except Exception, ex:
+            logger.debug(traceback.format_exc())
+
+        if not score or not score['value']:
+            is_valid = False
+            break
+
+    plan.is_valid = is_valid
+    plan.save()
+
+    return is_valid
 
 
 @task
@@ -1825,6 +1861,11 @@ def clean_quarantined(upload_id, language=None):
     if not language is None:
         prev_lang = get_language()
         activate(language)
+
+    try:
+        Plan.objects.all().update(is_valid=False)
+    except Exception, ex:
+        logger.warn('Could not reset the is_valid flag on all plans.')
 
     status = {
         'task_id':None, 
