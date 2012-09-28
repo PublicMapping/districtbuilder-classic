@@ -1,11 +1,11 @@
 """
-Define context processors for this django project.
+Context processors for the DistrictBuilder web application.
 
 This file is part of The Public Mapping Project
 https://github.com/PublicMapping/
 
 License:
-    Copyright 2010 Micah Altman, Michael McDonald
+    Copyright 2010-2012 Micah Altman, Michael McDonald
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -35,6 +35,8 @@ def banner_image(request):
     Users will need to set a BANNER_IMAGE variable in settings.py that 
     points to the URL path to the banner image.  The banner image 
     defaults to '/static-media/images/banner-home.png'
+
+    @param request: The HttpRequest
     """
     context_dict = {}
     if 'BANNER_IMAGE' in settings.__members__:

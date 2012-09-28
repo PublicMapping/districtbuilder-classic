@@ -78,9 +78,9 @@ as reports and downloads) and cron jobs.
 
 	> git tag -l
 
-	This example switches to v2.0-rc.
+	This example switches to v2.0.
 	
-	> git checkout v2.0-rc
+	> git checkout v2.0
 
      b. If you want to contribute to the project, you should fork the github
 	repository and clone your fork.  You can offer pull requests with
