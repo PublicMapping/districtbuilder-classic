@@ -75,7 +75,7 @@ This file is part of The Public Mapping Project
 https://github.com/PublicMapping/
 
 License:
-    Copyright 2010 Micah Altman, Michael McDonald
+    Copyright 2010-2012 Micah Altman, Michael McDonald
 
     Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
     you may not use this file except in compliance with the License.
@@ -115,8 +115,41 @@ Author:
     <td width="15%" align="right" valign="top" class="summary">
       <span class="summary-type">&nbsp;</span>
     </td><td class="summary">
+        <a href="publicmapping.redistricting.models.BaseModel-class.html" class="summary-name">BaseModel</a><br />
+      A base class for models that have short labels, labels, and long 
+      descriptions.
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
         <a href="publicmapping.redistricting.models.Subject-class.html" class="summary-name">Subject</a><br />
       A classification of a set of Characteristics.
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="publicmapping.redistricting.models.ChoicesEnum-class.html" class="summary-name">ChoicesEnum</a><br />
+      Helper class for defining enumerated choices in a Model
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="publicmapping.redistricting.models.SubjectUpload-class.html" class="summary-name">SubjectUpload</a><br />
+      A set of uploaded subjects.
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="publicmapping.redistricting.models.SubjectStage-class.html" class="summary-name">SubjectStage</a><br />
+      A quarantine table for uploaded subjects.
     </td>
   </tr>
 <tr>
@@ -475,8 +508,94 @@ Author:
       
     </td>
   </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.models-module.html#configure_views" class="summary-sig-name">configure_views</a>()</span><br />
+      Create the spatial views for all the regions, geolevels and subjects.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#configure_views">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="get_featuretype_name"></a><span class="summary-sig-name">get_featuretype_name</span>(<span class="summary-sig-arg">geolevel_name</span>,
+        <span class="summary-sig-arg">subject_name</span>=<span class="summary-sig-default">None</span>)</span><br />
+      A uniform mechanism for generating featuretype names.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#get_featuretype_name">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+</table>
+<!-- ==================== VARIABLES ==================== -->
+<a name="section-Variables"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Variables</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Variables"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="logger"></a><span class="summary-name">logger</span> = <code title="logging.getLogger(__name__)">logging.getLogger(__name__)</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="I18N_CACHE"></a><span class="summary-name">I18N_CACHE</span> = <code title="{}">{}</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="publicmapping.redistricting.models-module.html#UploadedState" class="summary-name">UploadedState</a> = <code title="ChoicesEnum(UNKNOWN= ('NA', 'Not Available'), UPLOADING= ('UL', 'Uploa\
+ding'), CHECKING= ('CH', 'Checking'), DONE= ('OK', 'Done'), ERROR= ('E\
+R', 'Error'),)">ChoicesEnum(UNKNOWN= ('NA', 'Not Available'), <code class="variable-ellipsis">...</code></code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="publicmapping.redistricting.models-module.html#ProcessingState" class="summary-name">ProcessingState</a> = <code title="ChoicesEnum(UNKNOWN= (-1, 'Unknown'), READY= (0, 'Ready'), CREATING= (\
+1, 'Creating'), REAGGREGATING= (2, 'Reaggregating'), NEEDS_REAGG= (3, \
+'Needs reaggregation'),)">ChoicesEnum(UNKNOWN= (-1, 'Unknown'), READY=<code class="variable-ellipsis">...</code></code>
+    </td>
+  </tr>
 </table>
 <p class="indent-wrapped-lines"><b>Imports:</b>
+  <span title="celery.task.task">task</span>,
   <span title="django.core.exceptions.ValidationError">ValidationError</span>,
   <span title="django.contrib.gis.db.models">models</span>,
   <span title="django.contrib.gis.geos.MultiPolygon">MultiPolygon</span>,
@@ -499,9 +618,11 @@ Author:
   <span title="django.forms.ModelForm">ModelForm</span>,
   <span title="django.conf.settings">settings</span>,
   <span title="django.utils.simplejson">json</span>,
+  <span title="django.utils.translation">translation</span>,
   <span title="django.template.loader.render_to_string">render_to_string</span>,
   <span title="django.contrib.comments.models.Comment">Comment</span>,
   <span title="django.contrib.contenttypes.models.ContentType">ContentType</span>,
+  <span title="django.template.defaultfilters.title">title</span>,
   <a href="publicmapping.redistricting.calculators.Schwartzberg-class.html" title="publicmapping.redistricting.calculators.Schwartzberg">Schwartzberg</a>,
   <a href="publicmapping.redistricting.calculators.Contiguity-class.html" title="publicmapping.redistricting.calculators.Contiguity">Contiguity</a>,
   <a href="publicmapping.redistricting.calculators.SumValues-class.html" title="publicmapping.redistricting.calculators.SumValues">SumValues</a>,
@@ -535,12 +656,15 @@ Author:
   <span title="decimal.setcontext">setcontext</span>,
   <span title="decimal.Clamped">Clamped</span>,
   <span title="operator.attrgetter">attrgetter</span>,
+  <span title="rosetta.polib">polib</span>,
+  <span title="traceback.format_exc">format_exc</span>,
+  <span title="os">os</span>,
   <span title="sys">sys</span>,
   <span title="cPickle">cPickle</span>,
-  <span title="traceback">traceback</span>,
   <span title="types">types</span>,
   <span title="tagging">tagging</span>,
-  <span title="re">re</span>
+  <span title="re">re</span>,
+  <span title="logging">logging</span>
 </p><br />
 <!-- ==================== FUNCTION DETAILS ==================== -->
 <a name="section-FunctionDetails"></a>
@@ -774,6 +898,93 @@ Returns:
   </dl>
 </td></tr></table>
 </div>
+<a name="configure_views"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">configure_views</span>()</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#configure_views">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Create the spatial views for all the regions, geolevels and 
+  subjects.</p>
+  <p>This creates views in the database that are used to map the features 
+  at different geographic levels, and for different choropleth map 
+  visualizations. All parameters for creating the views are saved in the 
+  database at this point.</p>
+  <dl class="fields">
+    <dt>Decorators:</dt>
+    <dd><ul class="nomargin-top">
+        <li><code>@transaction.commit_manually</code></li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== VARIABLES DETAILS ==================== -->
+<a name="section-VariablesDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Variables Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-VariablesDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="UploadedState"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">UploadedState</h3>
+  
+  <dl class="fields">
+  </dl>
+  <dl class="fields">
+    <dt>Value:</dt>
+      <dd><table><tr><td><pre class="variable">
+ChoicesEnum(UNKNOWN= ('NA', 'Not Available'), UPLOADING= ('UL', 'Uploa<span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
+ding'), CHECKING= ('CH', 'Checking'), DONE= ('OK', 'Done'), ERROR= ('E<span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
+R', 'Error'),)
+</pre></td></tr></table>
+</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="ProcessingState"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">ProcessingState</h3>
+  
+  <dl class="fields">
+  </dl>
+  <dl class="fields">
+    <dt>Value:</dt>
+      <dd><table><tr><td><pre class="variable">
+ChoicesEnum(UNKNOWN= (-1, 'Unknown'), READY= (0, 'Ready'), CREATING= (<span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
+1, 'Creating'), REAGGREGATING= (2, 'Reaggregating'), NEEDS_REAGG= (3, <span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
+'Needs reaggregation'),)
+</pre></td></tr></table>
+</dd>
+  </dl>
+</td></tr></table>
+</div>
 <br />
 <!-- ==================== NAVIGATION BAR ==================== -->
 <table class="navbar" border="0" width="100%" cellpadding="0"
@@ -806,7 +1017,7 @@ Returns:
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">
-    Generated by Epydoc 3.0.1 on Thu Jan 12 09:54:03 2012
+    Generated by Epydoc 3.0.1 on Fri Sep 28 17:22:14 2012
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

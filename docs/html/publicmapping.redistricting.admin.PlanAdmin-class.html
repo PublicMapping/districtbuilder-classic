@@ -65,11 +65,14 @@
 <h1 class="epydoc">Class PlanAdmin</h1><p class="nomargin-top"><span class="codelink"><a href="publicmapping.redistricting.admin-pysrc.html#PlanAdmin">source&nbsp;code</a></span></p>
 <center>
 <center>  <map id="uml_class_diagram_for_publicma_7" name="uml_class_diagram_for_publicma_7">
-<area shape="rect" id="node6" href="publicmapping.redistricting.admin.PlanAdmin-class.html#inlines" title="publicmapping.redistricting.admin.PlanAdmin.inlines" alt="" coords="17,31,89,49"/>
-<area shape="rect" id="node6" href="publicmapping.redistricting.admin.PlanAdmin-class.html#list_display" title="publicmapping.redistricting.admin.PlanAdmin.list_display" alt="" coords="17,49,89,68"/>
-<area shape="rect" id="node6" href="publicmapping.redistricting.admin.PlanAdmin-class.html#list_filter" title="publicmapping.redistricting.admin.PlanAdmin.list_filter" alt="" coords="17,68,89,87"/>
-<area shape="rect" id="node6" href="publicmapping.redistricting.admin.PlanAdmin-class.html#ordering" title="publicmapping.redistricting.admin.PlanAdmin.ordering" alt="" coords="17,87,89,105"/>
-<area shape="rect" id="node1" href="publicmapping.redistricting.admin.PlanAdmin-class.html" title="Administrative setting for Plans." alt="" coords="5,6,101,119"/>
+<area shape="rect" id="node6" href="publicmapping.redistricting.admin.PlanAdmin-class.html#inlines" title="publicmapping.redistricting.admin.PlanAdmin.inlines" alt="" coords="17,31,324,49"/>
+<area shape="rect" id="node6" href="publicmapping.redistricting.admin.PlanAdmin-class.html#list_display" title="publicmapping.redistricting.admin.PlanAdmin.list_display" alt="" coords="17,49,324,68"/>
+<area shape="rect" id="node6" href="publicmapping.redistricting.admin.PlanAdmin-class.html#list_filter" title="publicmapping.redistricting.admin.PlanAdmin.list_filter" alt="" coords="17,68,324,87"/>
+<area shape="rect" id="node6" href="publicmapping.redistricting.admin.PlanAdmin-class.html#ordering" title="publicmapping.redistricting.admin.PlanAdmin.ordering" alt="" coords="17,87,324,105"/>
+<area shape="rect" id="node6" href="publicmapping.redistricting.admin.PlanAdmin-class.html#actions" title="publicmapping.redistricting.admin.PlanAdmin.actions" alt="" coords="17,105,324,124"/>
+<area shape="rect" id="node6" href="publicmapping.redistricting.admin.PlanAdmin-class.html#reaggregate_selected_plans" title="publicmapping.redistricting.admin.PlanAdmin.reaggregate_selected_plans" alt="" coords="17,127,324,145"/>
+<area shape="rect" id="node6" href="publicmapping.redistricting.admin.PlanAdmin-class.html#validate_selected_plans" title="publicmapping.redistricting.admin.PlanAdmin.validate_selected_plans" alt="" coords="17,145,324,164"/>
+<area shape="rect" id="node1" href="publicmapping.redistricting.admin.PlanAdmin-class.html" title="Administrative setting for Plans." alt="" coords="5,6,336,170"/>
 </map>
   <img src="uml_class_diagram_for_publicma_7.gif" alt='' usemap="#uml_class_diagram_for_publicma_7" ismap="ismap" class="graph-without-title" />
 </center>
@@ -79,6 +82,60 @@
   <p>Plans are collections of Districts. Admin views of plans display all 
   the districts that are in the plan.</p>
 
+<!-- ==================== INSTANCE METHODS ==================== -->
+<a name="section-InstanceMethods"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Instance Methods</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceMethods"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="reaggregate_selected_plans"></a><span class="summary-sig-name">reaggregate_selected_plans</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">request</span>,
+        <span class="summary-sig-arg">queryset</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.admin-pysrc.html#PlanAdmin.reaggregate_selected_plans">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="validate_selected_plans"></a><span class="summary-sig-name">validate_selected_plans</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">request</span>,
+        <span class="summary-sig-arg">queryset</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.admin-pysrc.html#PlanAdmin.validate_selected_plans">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+</table>
 <!-- ==================== CLASS VARIABLES ==================== -->
 <a name="section-ClassVariables"></a>
 <table class="summary" border="1" cellpadding="3"
@@ -108,7 +165,7 @@
       <span class="summary-type">&nbsp;</span>
     </td><td class="summary">
         <a href="publicmapping.redistricting.admin.PlanAdmin-class.html#list_display" class="summary-name">list_display</a> = <code title="'name', 'is_template', 'is_shared', 'owner', 'created', 'edited', 'is_\
-valid'">'name', 'is_template', 'is_shared', 'owner', 'c<code class="variable-ellipsis">...</code></code>
+valid', 'processing_state'">'name', 'is_template', 'is_shared', 'owner', 'c<code class="variable-ellipsis">...</code></code>
     </td>
   </tr>
 <tr>
@@ -116,7 +173,7 @@ valid'">'name', 'is_template', 'is_shared', 'owner', 'c<code class="variable-ell
       <span class="summary-type">&nbsp;</span>
     </td><td class="summary">
         <a href="publicmapping.redistricting.admin.PlanAdmin-class.html#list_filter" class="summary-name">list_filter</a> = <code title="'is_template', 'is_shared', 'is_valid', 'legislative_body', 'owner', '\
-is_valid'">'is_template', 'is_shared', 'is_valid', 'legisla<code class="variable-ellipsis">...</code></code>
+is_valid', 'processing_state'">'is_template', 'is_shared', 'is_valid', 'legisla<code class="variable-ellipsis">...</code></code>
     </td>
   </tr>
 <tr>
@@ -124,6 +181,13 @@ is_valid'">'is_template', 'is_shared', 'is_valid', 'legisla<code class="variable
       <span class="summary-type">&nbsp;</span>
     </td><td class="summary">
         <a name="ordering"></a><span class="summary-name">ordering</span> = <code title="'name',">'name',</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="actions"></a><span class="summary-name">actions</span> = <code title="[reaggregate_selected_plans, validate_selected_plans]">[reaggregate_selected_plans, validate_selected_plans]</code>
     </td>
   </tr>
 </table>
@@ -158,7 +222,7 @@ is_valid'">'is_template', 'is_shared', 'is_valid', 'legisla<code class="variable
     <dt>Value:</dt>
       <dd><table><tr><td><pre class="variable">
 'name', 'is_template', 'is_shared', 'owner', 'created', 'edited', 'is_<span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
-valid'
+valid', 'processing_state'
 </pre></td></tr></table>
 </dd>
   </dl>
@@ -177,7 +241,7 @@ valid'
     <dt>Value:</dt>
       <dd><table><tr><td><pre class="variable">
 'is_template', 'is_shared', 'is_valid', 'legislative_body', 'owner', '<span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
-is_valid'
+is_valid', 'processing_state'
 </pre></td></tr></table>
 </dd>
   </dl>
@@ -215,7 +279,7 @@ is_valid'
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">
-    Generated by Epydoc 3.0.1 on Thu Jan 12 09:54:04 2012
+    Generated by Epydoc 3.0.1 on Fri Sep 28 17:22:15 2012
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"
