@@ -29,16 +29,18 @@ from lxml.etree import parse, clear_error_log, XMLSchema, XMLSyntaxError, XMLSch
 class StoredConfig:
     """
     A class that is represented on disk by a configuration file. This class
-    provides methods of reading and writing the configuration file.
+    provides methods of reading the configuration file.
+
+    An example configuration file for DistrictBuilder is in the github repository:
+    U{https://github.com/PublicMapping/DistrictBuilder/blob/master/docs/config.dist.xml}
     """
 
     def __init__(self, data, schema=None):
         """
         Create a new StoredConfiguration on disk.
 
-        Parameters:
-            data -- An XML data document, optionally conforming to the schema.
-            schema -- Optional. An XSD schema document, describing the configuration.
+        @param data: An XML data document, optionally conforming to the schema.
+        @keyword schema: Optional. An XSD schema document, describing the configuration.
         """
         if schema is not None:
             if not os.path.exists(schema):
@@ -63,8 +65,7 @@ class StoredConfig:
         Validate the provided data file for correctness against the provided
         schema file.
 
-        Returns:
-           A flag indicating if the data validates against the schema. 
+        @return: A flag indicating if the data validates against the schema. 
         """
          
         # clear any previous xml errors
@@ -124,10 +125,9 @@ class StoredConfig:
         The django settings file receives database connection settings, etc from the 
         DistrictBuilder configuration file.
 
-        Parameters:
-            settings - The name of the settings file that should be merged. Currently
+        @param settings: The name of the settings file that should be merged. Currently
             supported settings are "settings.py" and "reporting_settings.py"
-        Returns:
+        @returns: A flag indicating if the merge was successful.
         """
         settings_in = open(settings+'.in','r')
         settings_out = open(settings,'w')
@@ -153,6 +153,12 @@ class StoredConfig:
 
 
     def _merge_common_settings(self, output):
+        """
+        Write common configuration settings to the output file.
+
+        @param output: A file like object.
+        @returns: A boolean flag indicating if writing settings succeeded.
+        """
         try:
             cfg = self.data.xpath('//Admin')[0]
             output.write("\nADMINS = (\n  ('%s',\n  '%s'),\n)" % (cfg.get('user'), cfg.get('email')))
@@ -200,6 +206,13 @@ class StoredConfig:
 
 
     def _merge_publicmapping_settings(self, output):
+        """
+        Write settings specific to the publicmapping django app to
+        a settings file.
+
+        @param output: A file like object.
+        @returns: A boolean flag indicating if writing settings succeeded.
+        """
         try:
             cfg = self.data.xpath('//Internationalization')[0]
             output.write("TIME_ZONE = '%s'\n" % cfg.get('timezone'))
@@ -350,6 +363,13 @@ class StoredConfig:
             return False
 
     def _merge_report_settings(self, output):
+        """
+        Write settings specific to the reporting django app to
+        a settings file.
+
+        @param output: A file like object.
+        @returns: A boolean flag indicating if writing settings succeeded.
+        """
         try:
             cfg = self.data.xpath('//Reporting')
             if cfg is not None:
@@ -377,8 +397,9 @@ class StoredConfig:
         """
         Get a node in the XML data.
 
-        Returns:
-            A single lxml.etree.Element object, or None if there are multiple or
+        @param node: The XPath to a node.
+        @keyword parent: If provided, the XPath may be relative to this node.
+        @returns: A single lxml.etree.Element object, or None if there are multiple or
             zero nodes found.
         """
         if self.data is None:
@@ -398,8 +419,9 @@ class StoredConfig:
         """
         Get a list of nodes from the XML data.
 
-        Returns:
-            A list of lxml.etree.Element objects.
+        @param node_filter: The XPath to a list of nodes.
+        @keyword parent: If provided, the XPath may be relative to this node.
+        @returns: A list of lxml.etree.Element objects.
         """
         if self.data is None:
             return None
@@ -412,192 +434,312 @@ class StoredConfig:
 
     def get_admin(self):
         """
-        Get the administrative user configuration node.
+        Get the administrative user configuration node. 
+        
+        Administrative configuration reference: U{https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-admin}
+
+        @returns: The administrative configuration node.
         """
         return self.get_node('//Project/Admin')
 
     def get_geolevel(self, idattr):
         """
         Get the geolevel configuration item by ID.
+
+        GeoLevel configuration reference: U{https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-geolevel}
+
+        @param idattr: The ID of the GeoLevel node.
+        @returns: The GeoLevel configuration node.
         """
         return self.get_node('/DistrictBuilder/GeoLevels/GeoLevel[@id="%s"]' % idattr)
 
     def get_regional_geolevel(self, rnode, idattr):
         """
         Get the regional geolevel by reference.
+
+        Region configuration reference: U{https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-region}
+
+        @param rnode: The Region node.
+        @param idattr: The ref ID of the GeoLevel node.
+        @returns: The GeoLevel configuration node.
         """
         return self.get_node('GeoLevels//GeoLevel[@ref="%s"]' % idattr, parent=rnode)
 
     def get_legislative_body(self, idattr):
         """
         Get the legislative body configuration item by ID.
+
+        LegislativeBody configuration reference: U{https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-legislativebody}
+
+        @param idattr: The ID of the LegislativeBody node.
+        @returns: The LegislativeBody node.
         """
         return self.get_node('//LegislativeBody[@id="%s"]' % idattr)
 
     def get_subject(self, idattr):
         """
         Get the subject configuration item by ID.
+
+        Subject configuration reference: U{https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-subject}
+
+        @param idattr: The ID of the Subject node.
+        @returns: The Subject node.
         """
         return self.get_node('//Subject[@id="%s"]' % idattr)
 
     def get_legislative_body_default_subject(self, lbody_node):
         """
         Get the default subject configuration for a legislative body.
+
+        @param lbody_node: The LegisLativeBody parent node.
+        @returns: The default subject node in a LegislativeBody.
         """
         return self.get_node('//Subjects/Subject[@default="true"]', parent=lbody_node)
 
     def get_top_regional_geolevel(self, rnode):
         """
         Get the top level geolevel configuration for a region.
+
+        @param rnode: The Region parent node.
+        @returns: The topmost GeoLevel node for a Region.
         """
         return self.get_node('GeoLevels/GeoLevel', parent=rnode)
 
     def get_score_panel(self, idattr):
         """
         Get the score panel configuration node.
+
+        ScorePanel configuration reference: U{https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-scorepanel}
+
+        @param idattr: The ID of the ScorePanel node.
+        @returns: The ScorePanel node.
         """
         return self.get_node('//ScorePanels/ScorePanel[@id="%s"]' % idattr)
 
     def get_score_function(self, idattr):
         """
         Get the score function configuration node.
+
+        ScoreFunction configuration reference: U{https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-scorefunction}
+
+        @param idattr: The ID of the ScoreFunction node.
+        @returns: The ScoreFunction node.
         """
         return self.get_node('//ScoreFunctions/ScoreFunction[@id="%s"]' % idattr)
 
     def get_criterion_score(self, crit_node):
         """
         Get the score for a given criterion from the XML data.
+
+        Score configuration reference: U{https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-criteria-score}
+
+        @param crit_node: The Criterion parent node.
+        @returns: The Score node.
         """
         return self.get_node('Score', parent=crit_node)
 
     def get_mapserver(self):
         """
         Get the map server configuration node.
+
+        MapServer configuration reference: U{https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-mapserver}
+
+        @returns: The MapServer configuration node.
         """
         return self.get_node('//MapServer')
 
     def get_database(self):
         """
         Get the database configuration node.
+
+        Database configuration reference: U{https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-database}
+
+        @returns: The Database configuration node.
         """
         return self.get_node('//Database')
 
     def filter_regions(self):
         """
         Get all the region configurations from the XML data.
+
+        @returns: A list of all the Region nodes.
         """
         return self.filter_nodes('/DistrictBuilder/Regions/Region')
 
     def filter_regional_geolevel(self, region_node):
         """
         Get all the geolevel configurations in a region from the XML data.
+
+        @param region_node: The Region parent node.
+        @returns: A list of all the GeoLevel nodes in a Region.
         """
         return self.filter_nodes('GeoLevels//GeoLevel', parent=region_node)
 
     def filter_regional_legislative_bodies(self, region_node):
         """
         Get all the legislative bodies in a region from the XML data.
+
+        @param region_node: The Region parent node.
+        @returns: A list of all the LegislativeBody nodes in a Region.
         """
         return self.filter_nodes('LegislativeBodies/LegislativeBody', parent=region_node)
 
     def filter_legislative_bodies(self):
         """
         Get all the legislative body configurations from the XML data.
+
+        LegislativeBody configuration reference: U{https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-legislativebody}
+
+        @returns: A list of all the LegislativeBody nodes.
         """
         return self.filter_nodes('//LegislativeBody[@id]')
 
     def filter_subjects(self):
         """
         Get all the subject configurations from the XML data.
+    
+        Subject configuration reference: U{https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-subject}
+
+        @returns: A list of all the Subject nodes.
         """
         return self.filter_nodes('//Subjects/Subject')
 
     def filter_geolevels(self):
         """
         Get all the geolevel configurations from the XML data.
+
+        GeoLevel configuration reference: U{https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-geolevel}
+
+        @returns: A list of all the GeoLevel nodes.
         """
         return self.filter_nodes('/DistrictBuilder/GeoLevels/GeoLevel')
 
     def filter_scoredisplays(self):
         """
         Get all the score display configurations from the XML data.
+
+        ScoreDisplay configuration reference: U{https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-scoredisplay}
+
+        @returns: A list of all the ScoreDisplay nodes.
         """
         return self.filter_nodes('//ScoreDisplays/ScoreDisplay')
 
     def filter_displayed_score_panels(self, disp_node):
         """
         Get all the score panels configured in a score display.
+
+        ScorePanel configuration reference: U{https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-scorepanel}
+
+        @param disp_node: The ScoreDisplay parent node.
+        @returns: A list of ScorePanel nodes in a ScoreDisplay.
         """
         return self.filter_nodes('ScorePanel', parent=disp_node)
 
     def filter_paneled_score_functions(self, pnl_node):
         """
         Get all the score functions configured in a score panel.
+
+        @param pnl_node: The ScorePanel parent node.
+        @returns: A list of all the referenced Score nodes in a ScorePanel.
         """
         return self.filter_nodes('Score', parent=pnl_node)
 
     def filter_score_functions(self):
         """
         Get all the score functions from the XML data.
+
+        ScoreFunction configuration reference: U{https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-scorefunction}
+
+        @returns: A list of all the ScoreFunction nodes.
         """
         return self.filter_nodes('//ScoreFunctions/ScoreFunction')
 
     def filter_criteria(self):
         """
         Get all the validation criteria from the XML data.
+
+        Validation configuration reference: U{https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-validation}
+
+        @returns: A list of all Criteria nodes in the validation.
         """
         return self.filter_nodes('//Validation/Criteria')
 
     def filter_criteria_criterion(self, crit_node):
         """
         Get all the criterion for a given criteria from the XML data.
+
+        @param crit_node: The Criteria parent node.
+        @returns: A list of Criterion nodes.
         """
         return self.filter_nodes('Criterion', parent=crit_node)
 
     def filter_function_legislative_bodies(self, fn_node):
         """
         Get all the legislative bodies for a given score function from the XML data.
+
+        @param fn_node: The ScoreFunction parent node.
+        @returns: A list of referenced LegislativeBody nodes.
         """
         return self.filter_nodes('LegislativeBody', parent=fn_node)
 
     def filter_function_arguments(self, fn_node):
         """
         Get all the score function arguments from the XML data.
+
+        @param fn_node: The ScoreFunction parent node.
+        @returns: A list of referenced Argument nodes.
         """
         return self.filter_nodes('Argument', parent=fn_node)
 
     def filter_function_subject_arguments(self, fn_node):
         """
         Get all the score function subject arguments from the XML data.
+
+        @param fn_node: The ScoreFunction parent node.
+        @returns: A list of referenced SubjectArgument nodes.
         """
         return self.filter_nodes('SubjectArgument', parent=fn_node)
 
     def filter_function_score_arguments(self, fn_node):
         """
         Get all the score function subject arguments from the XML data.
+
+        @param fn_node: The ScoreFunction parent node.
+        @returns: A list of referenced ScoreArgument nodes.
         """
         return self.filter_nodes('ScoreArgument', parent=fn_node)
 
     def filter_contiguity_overrides(self):
         """
         Get all the contiguity overrides from the XML data.
+
+        @returns: A list of all the ContiguityOverrid nodes.
         """
         return self.filter_nodes('//ContiguityOverrides/ContiguityOverride')
 
     def has_scoring(self):
         """
         Does the configuration contain any scoring nodes?
+
+        @returns: A boolean flag indicating if the configuration 
+            contains a Scoring node.
         """
         return not self.get_node('//Scoring') is None
 
     def has_validation(self):
         """
         Does the configuration contain any validation nodes?
+
+        @returns: A boolean flag indicating if the configuration 
+            contains a Validation node.
         """
         return not self.get_node('//Validation') is None
 
     def has_contiguity_overrides(self):
         """
         Does the configuration contain any contiguity override nodes?
+
+        @returns: A boolean flag indicating if the configuration 
+            contains a ContiguityOverrides node.
         """
         return not self.get_node('//ContiguityOverrides') is None
