@@ -63,7 +63,12 @@
 <!-- ==================== CLASS DESCRIPTION ==================== -->
 <h1 class="epydoc">Class StoredConfig</h1><p class="nomargin-top"><span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig">source&nbsp;code</a></span></p>
 <p>A class that is represented on disk by a configuration file. This 
-  class provides methods of reading and writing the configuration file.</p>
+  class provides methods of reading the configuration file.</p>
+  <p>An example configuration file for DistrictBuilder is in the github 
+  repository: <a 
+  href="https://github.com/PublicMapping/DistrictBuilder/blob/master/docs/config.dist.xml"
+  
+  target="_top">https://github.com/PublicMapping/DistrictBuilder/blob/master/docs/config.dist.xml</a></p>
 
 <!-- ==================== INSTANCE METHODS ==================== -->
 <a name="section-InstanceMethods"></a>
@@ -108,8 +113,8 @@
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
           <td><span class="summary-sig"><a href="publicmapping.redistricting.StoredConfig-class.html#validate" class="summary-sig-name">validate</a>(<span class="summary-sig-arg">self</span>)</span><br />
-      Validate the provided data file for correctness against the provided
-schema file.</td>
+      Validate the provided data file for correctness against the provided 
+      schema file.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig.validate">source&nbsp;code</a></span>
             
@@ -127,7 +132,8 @@ schema file.</td>
         <tr>
           <td><span class="summary-sig"><a href="publicmapping.redistricting.StoredConfig-class.html#merge_settings" class="summary-sig-name">merge_settings</a>(<span class="summary-sig-arg">self</span>,
         <span class="summary-sig-arg">settings</span>)</span><br />
-      Take the default settings from the input file, and write a django settings file.</td>
+      Take the default settings from the input file, and write a django 
+      settings file.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig.merge_settings">source&nbsp;code</a></span>
             
@@ -143,8 +149,9 @@ schema file.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="_merge_common_settings"></a><span class="summary-sig-name">_merge_common_settings</span>(<span class="summary-sig-arg">self</span>,
-        <span class="summary-sig-arg">output</span>)</span></td>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.StoredConfig-class.html#_merge_common_settings" class="summary-sig-name" onclick="show_private();">_merge_common_settings</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">output</span>)</span><br />
+      Write common configuration settings to the output file.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig._merge_common_settings">source&nbsp;code</a></span>
             
@@ -160,8 +167,10 @@ schema file.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="_merge_publicmapping_settings"></a><span class="summary-sig-name">_merge_publicmapping_settings</span>(<span class="summary-sig-arg">self</span>,
-        <span class="summary-sig-arg">output</span>)</span></td>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.StoredConfig-class.html#_merge_publicmapping_settings" class="summary-sig-name" onclick="show_private();">_merge_publicmapping_settings</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">output</span>)</span><br />
+      Write settings specific to the publicmapping django app to a settings
+      file.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig._merge_publicmapping_settings">source&nbsp;code</a></span>
             
@@ -177,8 +186,10 @@ schema file.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="_merge_report_settings"></a><span class="summary-sig-name">_merge_report_settings</span>(<span class="summary-sig-arg">self</span>,
-        <span class="summary-sig-arg">output</span>)</span></td>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.StoredConfig-class.html#_merge_report_settings" class="summary-sig-name" onclick="show_private();">_merge_report_settings</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">output</span>)</span><br />
+      Write settings specific to the reporting django app to a settings 
+      file.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig._merge_report_settings">source&nbsp;code</a></span>
             
@@ -232,7 +243,7 @@ schema file.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="get_admin"></a><span class="summary-sig-name">get_admin</span>(<span class="summary-sig-arg">self</span>)</span><br />
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.StoredConfig-class.html#get_admin" class="summary-sig-name">get_admin</a>(<span class="summary-sig-arg">self</span>)</span><br />
       Get the administrative user configuration node.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig.get_admin">source&nbsp;code</a></span>
@@ -249,7 +260,7 @@ schema file.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="get_geolevel"></a><span class="summary-sig-name">get_geolevel</span>(<span class="summary-sig-arg">self</span>,
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.StoredConfig-class.html#get_geolevel" class="summary-sig-name">get_geolevel</a>(<span class="summary-sig-arg">self</span>,
         <span class="summary-sig-arg">idattr</span>)</span><br />
       Get the geolevel configuration item by ID.</td>
           <td align="right" valign="top">
@@ -267,7 +278,7 @@ schema file.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="get_regional_geolevel"></a><span class="summary-sig-name">get_regional_geolevel</span>(<span class="summary-sig-arg">self</span>,
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.StoredConfig-class.html#get_regional_geolevel" class="summary-sig-name">get_regional_geolevel</a>(<span class="summary-sig-arg">self</span>,
         <span class="summary-sig-arg">rnode</span>,
         <span class="summary-sig-arg">idattr</span>)</span><br />
       Get the regional geolevel by reference.</td>
@@ -286,7 +297,7 @@ schema file.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="get_legislative_body"></a><span class="summary-sig-name">get_legislative_body</span>(<span class="summary-sig-arg">self</span>,
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.StoredConfig-class.html#get_legislative_body" class="summary-sig-name">get_legislative_body</a>(<span class="summary-sig-arg">self</span>,
         <span class="summary-sig-arg">idattr</span>)</span><br />
       Get the legislative body configuration item by ID.</td>
           <td align="right" valign="top">
@@ -304,7 +315,7 @@ schema file.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="get_subject"></a><span class="summary-sig-name">get_subject</span>(<span class="summary-sig-arg">self</span>,
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.StoredConfig-class.html#get_subject" class="summary-sig-name">get_subject</a>(<span class="summary-sig-arg">self</span>,
         <span class="summary-sig-arg">idattr</span>)</span><br />
       Get the subject configuration item by ID.</td>
           <td align="right" valign="top">
@@ -322,7 +333,7 @@ schema file.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="get_legislative_body_default_subject"></a><span class="summary-sig-name">get_legislative_body_default_subject</span>(<span class="summary-sig-arg">self</span>,
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.StoredConfig-class.html#get_legislative_body_default_subject" class="summary-sig-name">get_legislative_body_default_subject</a>(<span class="summary-sig-arg">self</span>,
         <span class="summary-sig-arg">lbody_node</span>)</span><br />
       Get the default subject configuration for a legislative body.</td>
           <td align="right" valign="top">
@@ -340,7 +351,7 @@ schema file.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="get_top_regional_geolevel"></a><span class="summary-sig-name">get_top_regional_geolevel</span>(<span class="summary-sig-arg">self</span>,
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.StoredConfig-class.html#get_top_regional_geolevel" class="summary-sig-name">get_top_regional_geolevel</a>(<span class="summary-sig-arg">self</span>,
         <span class="summary-sig-arg">rnode</span>)</span><br />
       Get the top level geolevel configuration for a region.</td>
           <td align="right" valign="top">
@@ -358,7 +369,7 @@ schema file.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="get_score_panel"></a><span class="summary-sig-name">get_score_panel</span>(<span class="summary-sig-arg">self</span>,
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.StoredConfig-class.html#get_score_panel" class="summary-sig-name">get_score_panel</a>(<span class="summary-sig-arg">self</span>,
         <span class="summary-sig-arg">idattr</span>)</span><br />
       Get the score panel configuration node.</td>
           <td align="right" valign="top">
@@ -376,7 +387,7 @@ schema file.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="get_score_function"></a><span class="summary-sig-name">get_score_function</span>(<span class="summary-sig-arg">self</span>,
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.StoredConfig-class.html#get_score_function" class="summary-sig-name">get_score_function</a>(<span class="summary-sig-arg">self</span>,
         <span class="summary-sig-arg">idattr</span>)</span><br />
       Get the score function configuration node.</td>
           <td align="right" valign="top">
@@ -394,7 +405,7 @@ schema file.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="get_criterion_score"></a><span class="summary-sig-name">get_criterion_score</span>(<span class="summary-sig-arg">self</span>,
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.StoredConfig-class.html#get_criterion_score" class="summary-sig-name">get_criterion_score</a>(<span class="summary-sig-arg">self</span>,
         <span class="summary-sig-arg">crit_node</span>)</span><br />
       Get the score for a given criterion from the XML data.</td>
           <td align="right" valign="top">
@@ -412,7 +423,7 @@ schema file.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="get_mapserver"></a><span class="summary-sig-name">get_mapserver</span>(<span class="summary-sig-arg">self</span>)</span><br />
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.StoredConfig-class.html#get_mapserver" class="summary-sig-name">get_mapserver</a>(<span class="summary-sig-arg">self</span>)</span><br />
       Get the map server configuration node.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig.get_mapserver">source&nbsp;code</a></span>
@@ -429,7 +440,7 @@ schema file.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="get_database"></a><span class="summary-sig-name">get_database</span>(<span class="summary-sig-arg">self</span>)</span><br />
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.StoredConfig-class.html#get_database" class="summary-sig-name">get_database</a>(<span class="summary-sig-arg">self</span>)</span><br />
       Get the database configuration node.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig.get_database">source&nbsp;code</a></span>
@@ -446,7 +457,7 @@ schema file.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="filter_regions"></a><span class="summary-sig-name">filter_regions</span>(<span class="summary-sig-arg">self</span>)</span><br />
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.StoredConfig-class.html#filter_regions" class="summary-sig-name">filter_regions</a>(<span class="summary-sig-arg">self</span>)</span><br />
       Get all the region configurations from the XML data.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig.filter_regions">source&nbsp;code</a></span>
@@ -463,7 +474,7 @@ schema file.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="filter_regional_geolevel"></a><span class="summary-sig-name">filter_regional_geolevel</span>(<span class="summary-sig-arg">self</span>,
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.StoredConfig-class.html#filter_regional_geolevel" class="summary-sig-name">filter_regional_geolevel</a>(<span class="summary-sig-arg">self</span>,
         <span class="summary-sig-arg">region_node</span>)</span><br />
       Get all the geolevel configurations in a region from the XML data.</td>
           <td align="right" valign="top">
@@ -481,7 +492,7 @@ schema file.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="filter_regional_legislative_bodies"></a><span class="summary-sig-name">filter_regional_legislative_bodies</span>(<span class="summary-sig-arg">self</span>,
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.StoredConfig-class.html#filter_regional_legislative_bodies" class="summary-sig-name">filter_regional_legislative_bodies</a>(<span class="summary-sig-arg">self</span>,
         <span class="summary-sig-arg">region_node</span>)</span><br />
       Get all the legislative bodies in a region from the XML data.</td>
           <td align="right" valign="top">
@@ -499,7 +510,7 @@ schema file.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="filter_legislative_bodies"></a><span class="summary-sig-name">filter_legislative_bodies</span>(<span class="summary-sig-arg">self</span>)</span><br />
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.StoredConfig-class.html#filter_legislative_bodies" class="summary-sig-name">filter_legislative_bodies</a>(<span class="summary-sig-arg">self</span>)</span><br />
       Get all the legislative body configurations from the XML data.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig.filter_legislative_bodies">source&nbsp;code</a></span>
@@ -516,7 +527,7 @@ schema file.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="filter_subjects"></a><span class="summary-sig-name">filter_subjects</span>(<span class="summary-sig-arg">self</span>)</span><br />
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.StoredConfig-class.html#filter_subjects" class="summary-sig-name">filter_subjects</a>(<span class="summary-sig-arg">self</span>)</span><br />
       Get all the subject configurations from the XML data.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig.filter_subjects">source&nbsp;code</a></span>
@@ -533,7 +544,7 @@ schema file.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="filter_geolevels"></a><span class="summary-sig-name">filter_geolevels</span>(<span class="summary-sig-arg">self</span>)</span><br />
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.StoredConfig-class.html#filter_geolevels" class="summary-sig-name">filter_geolevels</a>(<span class="summary-sig-arg">self</span>)</span><br />
       Get all the geolevel configurations from the XML data.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig.filter_geolevels">source&nbsp;code</a></span>
@@ -550,7 +561,7 @@ schema file.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="filter_scoredisplays"></a><span class="summary-sig-name">filter_scoredisplays</span>(<span class="summary-sig-arg">self</span>)</span><br />
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.StoredConfig-class.html#filter_scoredisplays" class="summary-sig-name">filter_scoredisplays</a>(<span class="summary-sig-arg">self</span>)</span><br />
       Get all the score display configurations from the XML data.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig.filter_scoredisplays">source&nbsp;code</a></span>
@@ -567,7 +578,7 @@ schema file.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="filter_displayed_score_panels"></a><span class="summary-sig-name">filter_displayed_score_panels</span>(<span class="summary-sig-arg">self</span>,
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.StoredConfig-class.html#filter_displayed_score_panels" class="summary-sig-name">filter_displayed_score_panels</a>(<span class="summary-sig-arg">self</span>,
         <span class="summary-sig-arg">disp_node</span>)</span><br />
       Get all the score panels configured in a score display.</td>
           <td align="right" valign="top">
@@ -585,7 +596,7 @@ schema file.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="filter_paneled_score_functions"></a><span class="summary-sig-name">filter_paneled_score_functions</span>(<span class="summary-sig-arg">self</span>,
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.StoredConfig-class.html#filter_paneled_score_functions" class="summary-sig-name">filter_paneled_score_functions</a>(<span class="summary-sig-arg">self</span>,
         <span class="summary-sig-arg">pnl_node</span>)</span><br />
       Get all the score functions configured in a score panel.</td>
           <td align="right" valign="top">
@@ -603,7 +614,7 @@ schema file.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="filter_score_functions"></a><span class="summary-sig-name">filter_score_functions</span>(<span class="summary-sig-arg">self</span>)</span><br />
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.StoredConfig-class.html#filter_score_functions" class="summary-sig-name">filter_score_functions</a>(<span class="summary-sig-arg">self</span>)</span><br />
       Get all the score functions from the XML data.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig.filter_score_functions">source&nbsp;code</a></span>
@@ -620,7 +631,7 @@ schema file.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="filter_criteria"></a><span class="summary-sig-name">filter_criteria</span>(<span class="summary-sig-arg">self</span>)</span><br />
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.StoredConfig-class.html#filter_criteria" class="summary-sig-name">filter_criteria</a>(<span class="summary-sig-arg">self</span>)</span><br />
       Get all the validation criteria from the XML data.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig.filter_criteria">source&nbsp;code</a></span>
@@ -637,7 +648,7 @@ schema file.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="filter_criteria_criterion"></a><span class="summary-sig-name">filter_criteria_criterion</span>(<span class="summary-sig-arg">self</span>,
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.StoredConfig-class.html#filter_criteria_criterion" class="summary-sig-name">filter_criteria_criterion</a>(<span class="summary-sig-arg">self</span>,
         <span class="summary-sig-arg">crit_node</span>)</span><br />
       Get all the criterion for a given criteria from the XML data.</td>
           <td align="right" valign="top">
@@ -655,7 +666,7 @@ schema file.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="filter_function_legislative_bodies"></a><span class="summary-sig-name">filter_function_legislative_bodies</span>(<span class="summary-sig-arg">self</span>,
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.StoredConfig-class.html#filter_function_legislative_bodies" class="summary-sig-name">filter_function_legislative_bodies</a>(<span class="summary-sig-arg">self</span>,
         <span class="summary-sig-arg">fn_node</span>)</span><br />
       Get all the legislative bodies for a given score function from the 
       XML data.</td>
@@ -674,7 +685,7 @@ schema file.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="filter_function_arguments"></a><span class="summary-sig-name">filter_function_arguments</span>(<span class="summary-sig-arg">self</span>,
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.StoredConfig-class.html#filter_function_arguments" class="summary-sig-name">filter_function_arguments</a>(<span class="summary-sig-arg">self</span>,
         <span class="summary-sig-arg">fn_node</span>)</span><br />
       Get all the score function arguments from the XML data.</td>
           <td align="right" valign="top">
@@ -692,7 +703,7 @@ schema file.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="filter_function_subject_arguments"></a><span class="summary-sig-name">filter_function_subject_arguments</span>(<span class="summary-sig-arg">self</span>,
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.StoredConfig-class.html#filter_function_subject_arguments" class="summary-sig-name">filter_function_subject_arguments</a>(<span class="summary-sig-arg">self</span>,
         <span class="summary-sig-arg">fn_node</span>)</span><br />
       Get all the score function subject arguments from the XML data.</td>
           <td align="right" valign="top">
@@ -710,7 +721,7 @@ schema file.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="filter_function_score_arguments"></a><span class="summary-sig-name">filter_function_score_arguments</span>(<span class="summary-sig-arg">self</span>,
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.StoredConfig-class.html#filter_function_score_arguments" class="summary-sig-name">filter_function_score_arguments</a>(<span class="summary-sig-arg">self</span>,
         <span class="summary-sig-arg">fn_node</span>)</span><br />
       Get all the score function subject arguments from the XML data.</td>
           <td align="right" valign="top">
@@ -728,7 +739,7 @@ schema file.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="filter_contiguity_overrides"></a><span class="summary-sig-name">filter_contiguity_overrides</span>(<span class="summary-sig-arg">self</span>)</span><br />
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.StoredConfig-class.html#filter_contiguity_overrides" class="summary-sig-name">filter_contiguity_overrides</a>(<span class="summary-sig-arg">self</span>)</span><br />
       Get all the contiguity overrides from the XML data.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig.filter_contiguity_overrides">source&nbsp;code</a></span>
@@ -745,7 +756,7 @@ schema file.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="has_scoring"></a><span class="summary-sig-name">has_scoring</span>(<span class="summary-sig-arg">self</span>)</span><br />
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.StoredConfig-class.html#has_scoring" class="summary-sig-name">has_scoring</a>(<span class="summary-sig-arg">self</span>)</span><br />
       Does the configuration contain any scoring nodes?</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig.has_scoring">source&nbsp;code</a></span>
@@ -762,7 +773,7 @@ schema file.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="has_validation"></a><span class="summary-sig-name">has_validation</span>(<span class="summary-sig-arg">self</span>)</span><br />
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.StoredConfig-class.html#has_validation" class="summary-sig-name">has_validation</a>(<span class="summary-sig-arg">self</span>)</span><br />
       Does the configuration contain any validation nodes?</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig.has_validation">source&nbsp;code</a></span>
@@ -779,7 +790,7 @@ schema file.</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="has_contiguity_overrides"></a><span class="summary-sig-name">has_contiguity_overrides</span>(<span class="summary-sig-arg">self</span>)</span><br />
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.StoredConfig-class.html#has_contiguity_overrides" class="summary-sig-name">has_contiguity_overrides</a>(<span class="summary-sig-arg">self</span>)</span><br />
       Does the configuration contain any contiguity override nodes?</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig.has_contiguity_overrides">source&nbsp;code</a></span>
@@ -826,16 +837,13 @@ schema file.</td>
     </td>
   </tr></table>
   
-  <pre class="literalblock">
-
-Create a new StoredConfiguration on disk.
-
-Parameters:
-    data -- An XML data document, optionally conforming to the schema.
-    schema -- Optional. An XSD schema document, describing the configuration.
-
-</pre>
+  <p>Create a new StoredConfiguration on disk.</p>
   <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>data</code></strong> - An XML data document, optionally conforming to the schema.</li>
+        <li><strong class="pname"><code>schema</code></strong> - Optional. An XSD schema document, describing the configuration.</li>
+    </ul></dd>
   </dl>
 </td></tr></table>
 </div>
@@ -853,16 +861,11 @@ Parameters:
     </td>
   </tr></table>
   
-  <pre class="literalblock">
-
-Validate the provided data file for correctness against the provided
-schema file.
-
-Returns:
-   A flag indicating if the data validates against the schema. 
-
-</pre>
+  <p>Validate the provided data file for correctness against the provided 
+  schema file.</p>
   <dl class="fields">
+    <dt>Returns:</dt>
+        <dd>A flag indicating if the data validates against the schema.</dd>
   </dl>
 </td></tr></table>
 </div>
@@ -881,19 +884,98 @@ Returns:
     </td>
   </tr></table>
   
-  <pre class="literalblock">
-
-Take the default settings from the input file, and write a django settings file.
-The django settings file receives database connection settings, etc from the 
-DistrictBuilder configuration file.
-
-Parameters:
-    settings - The name of the settings file that should be merged. Currently
-    supported settings are &quot;settings.py&quot; and &quot;reporting_settings.py&quot;
-Returns:
-
-</pre>
+  <p>Take the default settings from the input file, and write a django 
+  settings file. The django settings file receives database connection 
+  settings, etc from the DistrictBuilder configuration file.</p>
   <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>settings</code></strong> - The name of the settings file that should be merged. Currently 
+          supported settings are &quot;settings.py&quot; and 
+          &quot;reporting_settings.py&quot;</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>A flag indicating if the merge was successful.</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="_merge_common_settings"></a>
+<div class="private">
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">_merge_common_settings</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">output</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig._merge_common_settings">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Write common configuration settings to the output file.</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>output</code></strong> - A file like object.</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>A boolean flag indicating if writing settings succeeded.</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="_merge_publicmapping_settings"></a>
+<div class="private">
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">_merge_publicmapping_settings</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">output</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig._merge_publicmapping_settings">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Write settings specific to the publicmapping django app to a settings 
+  file.</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>output</code></strong> - A file like object.</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>A boolean flag indicating if writing settings succeeded.</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="_merge_report_settings"></a>
+<div class="private">
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">_merge_report_settings</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">output</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig._merge_report_settings">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Write settings specific to the reporting django app to a settings 
+  file.</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>output</code></strong> - A file like object.</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>A boolean flag indicating if writing settings succeeded.</dd>
   </dl>
 </td></tr></table>
 </div>
@@ -913,16 +995,16 @@ Returns:
     </td>
   </tr></table>
   
-  <pre class="literalblock">
-
-Get a node in the XML data.
-
-Returns:
-    A single lxml.etree.Element object, or None if there are multiple or
-    zero nodes found.
-
-</pre>
+  <p>Get a node in the XML data.</p>
   <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>node</code></strong> - The XPath to a node.</li>
+        <li><strong class="pname"><code>parent</code></strong> - If provided, the XPath may be relative to this node.</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>A single lxml.etree.Element object, or None if there are multiple
+          or zero nodes found.</dd>
   </dl>
 </td></tr></table>
 </div>
@@ -942,15 +1024,851 @@ Returns:
     </td>
   </tr></table>
   
-  <pre class="literalblock">
-
-Get a list of nodes from the XML data.
-
-Returns:
-    A list of lxml.etree.Element objects.
-
-</pre>
+  <p>Get a list of nodes from the XML data.</p>
   <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>node_filter</code></strong> - The XPath to a list of nodes.</li>
+        <li><strong class="pname"><code>parent</code></strong> - If provided, the XPath may be relative to this node.</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>A list of lxml.etree.Element objects.</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="get_admin"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">get_admin</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig.get_admin">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Get the administrative user configuration node.</p>
+  <p>Administrative configuration reference: <a 
+  href="https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-admin"
+  
+  target="_top">https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-admin</a></p>
+  <dl class="fields">
+    <dt>Returns:</dt>
+        <dd>The administrative configuration node.</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="get_geolevel"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">get_geolevel</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">idattr</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig.get_geolevel">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Get the geolevel configuration item by ID.</p>
+  <p>GeoLevel configuration reference: <a 
+  href="https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-geolevel"
+  
+  target="_top">https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-geolevel</a></p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>idattr</code></strong> - The ID of the GeoLevel node.</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>The GeoLevel configuration node.</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="get_regional_geolevel"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">get_regional_geolevel</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">rnode</span>,
+        <span class="sig-arg">idattr</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig.get_regional_geolevel">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Get the regional geolevel by reference.</p>
+  <p>Region configuration reference: <a 
+  href="https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-region"
+  
+  target="_top">https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-region</a></p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>rnode</code></strong> - The Region node.</li>
+        <li><strong class="pname"><code>idattr</code></strong> - The ref ID of the GeoLevel node.</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>The GeoLevel configuration node.</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="get_legislative_body"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">get_legislative_body</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">idattr</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig.get_legislative_body">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Get the legislative body configuration item by ID.</p>
+  <p>LegislativeBody configuration reference: <a 
+  href="https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-legislativebody"
+  
+  target="_top">https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-legislativebody</a></p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>idattr</code></strong> - The ID of the LegislativeBody node.</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>The LegislativeBody node.</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="get_subject"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">get_subject</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">idattr</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig.get_subject">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Get the subject configuration item by ID.</p>
+  <p>Subject configuration reference: <a 
+  href="https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-subject"
+  
+  target="_top">https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-subject</a></p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>idattr</code></strong> - The ID of the Subject node.</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>The Subject node.</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="get_legislative_body_default_subject"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">get_legislative_body_default_subject</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">lbody_node</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig.get_legislative_body_default_subject">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Get the default subject configuration for a legislative body.</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>lbody_node</code></strong> - The LegisLativeBody parent node.</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>The default subject node in a LegislativeBody.</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="get_top_regional_geolevel"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">get_top_regional_geolevel</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">rnode</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig.get_top_regional_geolevel">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Get the top level geolevel configuration for a region.</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>rnode</code></strong> - The Region parent node.</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>The topmost GeoLevel node for a Region.</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="get_score_panel"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">get_score_panel</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">idattr</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig.get_score_panel">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Get the score panel configuration node.</p>
+  <p>ScorePanel configuration reference: <a 
+  href="https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-scorepanel"
+  
+  target="_top">https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-scorepanel</a></p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>idattr</code></strong> - The ID of the ScorePanel node.</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>The ScorePanel node.</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="get_score_function"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">get_score_function</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">idattr</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig.get_score_function">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Get the score function configuration node.</p>
+  <p>ScoreFunction configuration reference: <a 
+  href="https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-scorefunction"
+  
+  target="_top">https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-scorefunction</a></p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>idattr</code></strong> - The ID of the ScoreFunction node.</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>The ScoreFunction node.</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="get_criterion_score"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">get_criterion_score</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">crit_node</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig.get_criterion_score">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Get the score for a given criterion from the XML data.</p>
+  <p>Score configuration reference: <a 
+  href="https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-criteria-score"
+  
+  target="_top">https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-criteria-score</a></p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>crit_node</code></strong> - The Criterion parent node.</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>The Score node.</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="get_mapserver"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">get_mapserver</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig.get_mapserver">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Get the map server configuration node.</p>
+  <p>MapServer configuration reference: <a 
+  href="https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-mapserver"
+  
+  target="_top">https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-mapserver</a></p>
+  <dl class="fields">
+    <dt>Returns:</dt>
+        <dd>The MapServer configuration node.</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="get_database"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">get_database</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig.get_database">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Get the database configuration node.</p>
+  <p>Database configuration reference: <a 
+  href="https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-database"
+  
+  target="_top">https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-database</a></p>
+  <dl class="fields">
+    <dt>Returns:</dt>
+        <dd>The Database configuration node.</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="filter_regions"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">filter_regions</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig.filter_regions">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Get all the region configurations from the XML data.</p>
+  <dl class="fields">
+    <dt>Returns:</dt>
+        <dd>A list of all the Region nodes.</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="filter_regional_geolevel"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">filter_regional_geolevel</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">region_node</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig.filter_regional_geolevel">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Get all the geolevel configurations in a region from the XML data.</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>region_node</code></strong> - The Region parent node.</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>A list of all the GeoLevel nodes in a Region.</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="filter_regional_legislative_bodies"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">filter_regional_legislative_bodies</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">region_node</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig.filter_regional_legislative_bodies">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Get all the legislative bodies in a region from the XML data.</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>region_node</code></strong> - The Region parent node.</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>A list of all the LegislativeBody nodes in a Region.</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="filter_legislative_bodies"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">filter_legislative_bodies</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig.filter_legislative_bodies">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Get all the legislative body configurations from the XML data.</p>
+  <p>LegislativeBody configuration reference: <a 
+  href="https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-legislativebody"
+  
+  target="_top">https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-legislativebody</a></p>
+  <dl class="fields">
+    <dt>Returns:</dt>
+        <dd>A list of all the LegislativeBody nodes.</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="filter_subjects"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">filter_subjects</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig.filter_subjects">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Get all the subject configurations from the XML data.</p>
+  <p>Subject configuration reference: <a 
+  href="https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-subject"
+  
+  target="_top">https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-subject</a></p>
+  <dl class="fields">
+    <dt>Returns:</dt>
+        <dd>A list of all the Subject nodes.</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="filter_geolevels"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">filter_geolevels</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig.filter_geolevels">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Get all the geolevel configurations from the XML data.</p>
+  <p>GeoLevel configuration reference: <a 
+  href="https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-geolevel"
+  
+  target="_top">https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-geolevel</a></p>
+  <dl class="fields">
+    <dt>Returns:</dt>
+        <dd>A list of all the GeoLevel nodes.</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="filter_scoredisplays"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">filter_scoredisplays</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig.filter_scoredisplays">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Get all the score display configurations from the XML data.</p>
+  <p>ScoreDisplay configuration reference: <a 
+  href="https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-scoredisplay"
+  
+  target="_top">https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-scoredisplay</a></p>
+  <dl class="fields">
+    <dt>Returns:</dt>
+        <dd>A list of all the ScoreDisplay nodes.</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="filter_displayed_score_panels"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">filter_displayed_score_panels</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">disp_node</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig.filter_displayed_score_panels">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Get all the score panels configured in a score display.</p>
+  <p>ScorePanel configuration reference: <a 
+  href="https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-scorepanel"
+  
+  target="_top">https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-scorepanel</a></p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>disp_node</code></strong> - The ScoreDisplay parent node.</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>A list of ScorePanel nodes in a ScoreDisplay.</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="filter_paneled_score_functions"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">filter_paneled_score_functions</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">pnl_node</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig.filter_paneled_score_functions">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Get all the score functions configured in a score panel.</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>pnl_node</code></strong> - The ScorePanel parent node.</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>A list of all the referenced Score nodes in a ScorePanel.</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="filter_score_functions"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">filter_score_functions</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig.filter_score_functions">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Get all the score functions from the XML data.</p>
+  <p>ScoreFunction configuration reference: <a 
+  href="https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-scorefunction"
+  
+  target="_top">https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-scorefunction</a></p>
+  <dl class="fields">
+    <dt>Returns:</dt>
+        <dd>A list of all the ScoreFunction nodes.</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="filter_criteria"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">filter_criteria</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig.filter_criteria">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Get all the validation criteria from the XML data.</p>
+  <p>Validation configuration reference: <a 
+  href="https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-validation"
+  
+  target="_top">https://github.com/PublicMapping/DistrictBuilder/wiki/Configuration#wiki-validation</a></p>
+  <dl class="fields">
+    <dt>Returns:</dt>
+        <dd>A list of all Criteria nodes in the validation.</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="filter_criteria_criterion"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">filter_criteria_criterion</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">crit_node</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig.filter_criteria_criterion">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Get all the criterion for a given criteria from the XML data.</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>crit_node</code></strong> - The Criteria parent node.</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>A list of Criterion nodes.</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="filter_function_legislative_bodies"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">filter_function_legislative_bodies</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">fn_node</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig.filter_function_legislative_bodies">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Get all the legislative bodies for a given score function from the XML
+  data.</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>fn_node</code></strong> - The ScoreFunction parent node.</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>A list of referenced LegislativeBody nodes.</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="filter_function_arguments"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">filter_function_arguments</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">fn_node</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig.filter_function_arguments">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Get all the score function arguments from the XML data.</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>fn_node</code></strong> - The ScoreFunction parent node.</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>A list of referenced Argument nodes.</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="filter_function_subject_arguments"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">filter_function_subject_arguments</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">fn_node</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig.filter_function_subject_arguments">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Get all the score function subject arguments from the XML data.</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>fn_node</code></strong> - The ScoreFunction parent node.</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>A list of referenced SubjectArgument nodes.</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="filter_function_score_arguments"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">filter_function_score_arguments</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">fn_node</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig.filter_function_score_arguments">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Get all the score function subject arguments from the XML data.</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>fn_node</code></strong> - The ScoreFunction parent node.</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>A list of referenced ScoreArgument nodes.</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="filter_contiguity_overrides"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">filter_contiguity_overrides</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig.filter_contiguity_overrides">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Get all the contiguity overrides from the XML data.</p>
+  <dl class="fields">
+    <dt>Returns:</dt>
+        <dd>A list of all the ContiguityOverrid nodes.</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="has_scoring"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">has_scoring</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig.has_scoring">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Does the configuration contain any scoring nodes?</p>
+  <dl class="fields">
+    <dt>Returns:</dt>
+        <dd>A boolean flag indicating if the configuration contains a Scoring
+          node.</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="has_validation"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">has_validation</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig.has_validation">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Does the configuration contain any validation nodes?</p>
+  <dl class="fields">
+    <dt>Returns:</dt>
+        <dd>A boolean flag indicating if the configuration contains a 
+          Validation node.</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="has_contiguity_overrides"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">has_contiguity_overrides</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting-pysrc.html#StoredConfig.has_contiguity_overrides">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Does the configuration contain any contiguity override nodes?</p>
+  <dl class="fields">
+    <dt>Returns:</dt>
+        <dd>A boolean flag indicating if the configuration contains a 
+          ContiguityOverrides node.</dd>
   </dl>
 </td></tr></table>
 </div>
@@ -986,7 +1904,7 @@ Returns:
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">
-    Generated by Epydoc 3.0.1 on Fri Sep 28 17:22:14 2012
+    Generated by Epydoc 3.0.1 on Mon Oct  1 16:33:45 2012
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

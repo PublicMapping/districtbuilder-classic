@@ -88,7 +88,7 @@
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="__init__"></a><span class="summary-sig-name">__init__</span>(<span class="summary-sig-arg">self</span>,
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.config.ConfigImporter-class.html#__init__" class="summary-sig-name">__init__</a>(<span class="summary-sig-arg">self</span>,
         <span class="summary-sig-arg">store</span>)</span><br />
       Create a new config importer, based on the stored config.</td>
           <td align="right" valign="top">
@@ -318,6 +318,31 @@
   </td>
 </tr>
 </table>
+<a name="__init__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__init__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">store</span>)</span>
+    <br /><em class="fname">(Constructor)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.config-pysrc.html#ConfigImporter.__init__">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Create a new config importer, based on the stored config.</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>store</code></strong> - The data store for the configuration.</li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
 <a name="import_superuser"></a>
 <div>
 <table class="details" border="1" cellpadding="3"
@@ -333,15 +358,14 @@
     </td>
   </tr></table>
   
-  <pre class="literalblock">
-
-Create the django superuser, based on the config.
-
-Returns:
-    A flag indicating if the import was successful.
-
-</pre>
+  <p>Create the django superuser, based on the config.</p>
   <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>force</code></strong> - Should the Admin settings be written if the model already exist?</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>A flag indicating if the import was successful.</dd>
   </dl>
 </td></tr></table>
 </div>
@@ -360,15 +384,14 @@ Returns:
     </td>
   </tr></table>
   
-  <pre class="literalblock">
-
-Create region models out of the configuration.
-
-Returns:
-    A flag indicating if the import was successful.
-
-</pre>
+  <p>Create region models out of the configuration.</p>
   <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>force</code></strong> - Should the Region settings be written if the model already exist?</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>A flag indicating if the import was successful.</dd>
   </dl>
 </td></tr></table>
 </div>
@@ -387,15 +410,15 @@ Returns:
     </td>
   </tr></table>
   
-  <pre class="literalblock">
-
-Create legislative body models out of the configuration.
-
-Returns:
-    A flag indicating if the import was successful.
-
-</pre>
+  <p>Create legislative body models out of the configuration.</p>
   <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>force</code></strong> - Should the LegislativeBody settings be written if the model 
+          already exist?</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>A flag indicating if the import was successful.</dd>
   </dl>
 </td></tr></table>
 </div>
@@ -414,15 +437,15 @@ Returns:
     </td>
   </tr></table>
   
-  <pre class="literalblock">
-
-Create subject models out of the configuration.
-
-Returns:
-    A flag indicating if the import was successful.
-
-</pre>
+  <p>Create subject models out of the configuration.</p>
   <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>force</code></strong> - Should the Subject settings be written if the model already 
+          exist?</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>A flag indicating if the import was successful.</dd>
   </dl>
 </td></tr></table>
 </div>
@@ -441,15 +464,15 @@ Returns:
     </td>
   </tr></table>
   
-  <pre class="literalblock">
-
-Create geolevel models out of the configuration.
-
-Returns:
-    A flag indicating if the import was successful.
-
-</pre>
+  <p>Create geolevel models out of the configuration.</p>
   <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>force</code></strong> - Should the GeoLevels settings be written if the model already 
+          exist?</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>A flag indicating if the import was successful.</dd>
   </dl>
 </td></tr></table>
 </div>
@@ -468,15 +491,15 @@ Returns:
     </td>
   </tr></table>
   
-  <pre class="literalblock">
-
-Map geolevels to regions.
-
-Returns:
-    A flag indicating if the import was successful.
-
-</pre>
+  <p>Map geolevels to regions.</p>
   <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>force</code></strong> - Should the Regional GeoLevel settings be written if the model 
+          already exist?</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>A flag indicating if the import was successful.</dd>
   </dl>
 </td></tr></table>
 </div>
@@ -495,17 +518,15 @@ Returns:
     </td>
   </tr></table>
   
-  <pre class="literalblock">
-
-Create the Scoring models.
-
-Scoring is currently optional. Import sections only if they are present.
-
-Returns:
-    A flag indicating if the import was successful.
-
-</pre>
+  <p>Create the Scoring models.</p>
   <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>force</code></strong> - Should the Scoring settings be written if the model already 
+          exist?</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>A flag indicating if the import was successful.</dd>
   </dl>
 </td></tr></table>
 </div>
@@ -525,15 +546,15 @@ Returns:
     </td>
   </tr></table>
   
-  <pre class="literalblock">
-
-Create the ScoreFunction models and child scores.
-
-Returns:
-    A newly created score function object.
-
-</pre>
+  <p>Create the ScoreFunction models and child scores.</p>
   <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>force</code></strong> - Should the ScoreFunction settings be written if the model already
+          exist?</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>A newly created score function object.</dd>
   </dl>
 </td></tr></table>
 </div>
@@ -554,15 +575,15 @@ Returns:
     </td>
   </tr></table>
   
-  <pre class="literalblock">
-
-Create the ScoreArgument models.
-
-Returns:
-    A flag indicating if the import was successful.
-
-</pre>
+  <p>Create the ScoreArgument models.</p>
   <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>force</code></strong> - Should the ScoreArgument settings be written if the model already
+          exist?</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>A flag indicating if the import was successful.</dd>
   </dl>
 </td></tr></table>
 </div>
@@ -580,15 +601,10 @@ Returns:
     </td>
   </tr></table>
   
-  <pre class="literalblock">
-
-Create the ContiguityOverride models. This is optional.
-
-Returns:
-    A flag indicating if the import was successful.
-
-</pre>
+  <p>Create the ContiguityOverride models. This is optional.</p>
   <dl class="fields">
+    <dt>Returns:</dt>
+        <dd>A flag indicating if the import was successful.</dd>
   </dl>
 </td></tr></table>
 </div>
@@ -624,7 +640,7 @@ Returns:
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">
-    Generated by Epydoc 3.0.1 on Fri Sep 28 17:22:17 2012
+    Generated by Epydoc 3.0.1 on Mon Oct  1 16:33:48 2012
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

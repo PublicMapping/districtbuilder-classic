@@ -89,7 +89,7 @@
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="__init__"></a><span class="summary-sig-name">__init__</span>(<span class="summary-sig-arg">self</span>,
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.config.SpatialUtils-class.html#__init__" class="summary-sig-name">__init__</a>(<span class="summary-sig-arg">self</span>,
         <span class="summary-sig-arg">store</span>=<span class="summary-sig-default">None</span>,
         <span class="summary-sig-arg">config</span>=<span class="summary-sig-default">None</span>)</span><br />
       Create a new spatial utility, based on the stored config.</td>
@@ -224,7 +224,7 @@
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="_read_config"></a><span class="summary-sig-name">_read_config</span>(<span class="summary-sig-arg">self</span>,
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.config.SpatialUtils-class.html#_read_config" class="summary-sig-name" onclick="show_private();">_read_config</a>(<span class="summary-sig-arg">self</span>,
         <span class="summary-sig-arg">url</span>,
         <span class="summary-sig-arg">msg</span>,
         <span class="summary-sig-arg">headers</span>=<span class="summary-sig-default">None</span>)</span><br />
@@ -244,7 +244,7 @@
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="create_style"></a><span class="summary-sig-name">create_style</span>(<span class="summary-sig-arg">self</span>,
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.config.SpatialUtils-class.html#create_style" class="summary-sig-name">create_style</a>(<span class="summary-sig-arg">self</span>,
         <span class="summary-sig-arg">subject_name</span>,
         <span class="summary-sig-arg">geolevel_name</span>,
         <span class="summary-sig-arg">style_name</span>,
@@ -267,9 +267,10 @@
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="_get_style"></a><span class="summary-sig-name">_get_style</span>(<span class="summary-sig-arg">self</span>,
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.config.SpatialUtils-class.html#_get_style" class="summary-sig-name" onclick="show_private();">_get_style</a>(<span class="summary-sig-arg">self</span>,
         <span class="summary-sig-arg">geolevel</span>,
-        <span class="summary-sig-arg">subject</span>)</span></td>
+        <span class="summary-sig-arg">subject</span>)</span><br />
+      Get an SLD file from the file system.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="publicmapping.redistricting.config-pysrc.html#SpatialUtils._get_style">source&nbsp;code</a></span>
             
@@ -322,7 +323,7 @@
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
-          <td><span class="summary-sig"><a name="feature_template"></a><span class="summary-sig-name">feature_template</span>(<span class="summary-sig-arg">name</span>,
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.config.SpatialUtils-class.html#feature_template" class="summary-sig-name">feature_template</a>(<span class="summary-sig-arg">name</span>,
         <span class="summary-sig-arg">title</span>=<span class="summary-sig-default">None</span>,
         <span class="summary-sig-arg">alias</span>=<span class="summary-sig-default">None</span>)</span><br />
       Return a common format for feature types.</td>
@@ -354,6 +355,36 @@
   </td>
 </tr>
 </table>
+<a name="__init__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__init__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">store</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">config</span>=<span class="sig-default">None</span>)</span>
+    <br /><em class="fname">(Constructor)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.config-pysrc.html#SpatialUtils.__init__">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Create a new spatial utility, based on the stored config.</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>store</code></strong> - Optional <a 
+          href="publicmapping.redistricting.StoredConfig-class.html" 
+          class="link">StoredConfig</a> that contains configuration 
+          settings.</li>
+        <li><strong class="pname"><code>config</code></strong> - Optional configuration settings.</li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
 <a name="purge_geoserver"></a>
 <div>
 <table class="details" border="1" cellpadding="3"
@@ -369,9 +400,12 @@
   </tr></table>
   
   <p>Remove any configured items in geoserver for the namespace.</p>
-  <p>This prevents conflicts in geowebcache when the datastore and 
-  featuretype is reconfigured without discarding the old featuretype.</p>
+  <p>This configuration step prevents conflicts in geowebcache when the 
+  datastore and featuretype is reconfigured without discarding the old 
+  featuretype.</p>
   <dl class="fields">
+    <dt>Returns:</dt>
+        <dd>A flag indicating if the configuration was purged successfully.</dd>
   </dl>
 </td></tr></table>
 </div>
@@ -389,17 +423,12 @@
     </td>
   </tr></table>
   
-  <pre class="literalblock">
-
-Configure all the components in Geoserver. This method configures the
-geoserver workspace, datastore, feature types, and styles. All 
-configuration steps get processed through the REST config.
-
-Returns:
-    A flag indicating if geoserver was configured correctly.
-
-</pre>
+  <p>Configure all the components in Geoserver. This method configures the 
+  geoserver workspace, datastore, feature types, and styles. All 
+  configuration steps get processed through the REST config.</p>
   <dl class="fields">
+    <dt>Returns:</dt>
+        <dd>A flag indicating if geoserver was configured correctly.</dd>
   </dl>
 </td></tr></table>
 </div>
@@ -420,9 +449,17 @@ Returns:
     </td>
   </tr></table>
   
-  <p>Create a featuretype. Assuming the datastore name is always 
-  'PostGIS'.</p>
+  <p>Create a featuretype.</p>
   <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>feature_type_name</code></strong> - The name of the feature type.</li>
+        <li><strong class="pname"><code>data_store_name</code></strong> - Optional. The name of the datastore. Defaults to 'PostGIS'</li>
+        <li><strong class="pname"><code>alias</code></strong> - Optional. The new feature type is an alias for this names feature
+          type.</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>A flag indicating if the feature type was successfully created.</dd>
   </dl>
 </td></tr></table>
 </div>
@@ -449,6 +486,47 @@ Returns:
   will create the object if it doesn't exist and log messages to the 
   configured logger.</p>
   <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>url</code></strong> - The URL of the resource.</li>
+        <li><strong class="pname"><code>name</code></strong> - The name of the resource.</li>
+        <li><strong class="pname"><code>dictionary</code></strong> - A dictionary of settings to the resource.</li>
+        <li><strong class="pname"><code>type_name</code></strong> - Optional. Name of the type, if different from the name.</li>
+        <li><strong class="pname"><code>update</code></strong> - Optional. Update the featuretype if it exists?</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>A flag indicating if the configuration call completed 
+          successfully.</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="feature_template"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">feature_template</span>(<span class="sig-arg">name</span>,
+        <span class="sig-arg">title</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">alias</span>=<span class="sig-default">None</span>)</span>
+    <br /><em class="fname">Static Method</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.config-pysrc.html#SpatialUtils.feature_template">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Return a common format for feature types.</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>name</code></strong> - The name of the feature type.</li>
+        <li><strong class="pname"><code>title</code></strong> - Optional. The title of the featuretype, defaults to name.</li>
+        <li><strong class="pname"><code>alias</code></strong> - Optional. The nativeName of the featuretype, defaults to name.</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>A dictionary of settings for all feature types.</dd>
   </dl>
 </td></tr></table>
 </div>
@@ -470,6 +548,8 @@ Returns:
   <p>Attempt to get a REST resource. If the resource exists, and can be 
   retrieved successfully, it will pass the check.</p>
   <dl class="fields">
+    <dt>Returns:</dt>
+        <dd>True if the resource exists and is readable.</dd>
   </dl>
 </td></tr></table>
 </div>
@@ -495,6 +575,107 @@ Returns:
   <p>Configure a REST resource. This issues an HTTP POST or PUT request to 
   configure or update the specified resource.</p>
   <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>method</code></strong> - The HTTP verb to use (GET, PUT, POST)</li>
+        <li><strong class="pname"><code>url</code></strong> - The URL to access.</li>
+        <li><strong class="pname"><code>data</code></strong> - The serialized data to send.</li>
+        <li><strong class="pname"><code>msg</code></strong> - The error message to report if something goes wrong.</li>
+        <li><strong class="pname"><code>headers</code></strong> - Optional. HTTP headers to include in the transaction.</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>True if the configuration succeeded.</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="_read_config"></a>
+<div class="private">
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">_read_config</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">url</span>,
+        <span class="sig-arg">msg</span>,
+        <span class="sig-arg">headers</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.config-pysrc.html#SpatialUtils._read_config">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Read a configured REST resource.</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>url</code></strong> - The URL to access.</li>
+        <li><strong class="pname"><code>msg</code></strong> - An error message to print if something goes wrong.</li>
+        <li><strong class="pname"><code>headers</code></strong> - Optional. HTTP headers to send with the request.</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>A dictionary loaded from a JSON response.</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="create_style"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">create_style</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">subject_name</span>,
+        <span class="sig-arg">geolevel_name</span>,
+        <span class="sig-arg">style_name</span>,
+        <span class="sig-arg">style_type</span>,
+        <span class="sig-arg">sld_content</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.config-pysrc.html#SpatialUtils.create_style">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Create a style for a layer, defaulting to 'polygon' for a polygon 
+  layer if the style file is not available.</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>subject_name</code></strong> - The name of the subject.</li>
+        <li><strong class="pname"><code>geolevel_name</code></strong> - The name of the geolevel.</li>
+        <li><strong class="pname"><code>style_name</code></strong> - The name of the style.</li>
+        <li><strong class="pname"><code>style_type</code></strong> - The type of the style.</li>
+        <li><strong class="pname"><code>sld_content</code></strong> - The content of the SLD.</li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="_get_style"></a>
+<div class="private">
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">_get_style</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">geolevel</span>,
+        <span class="sig-arg">subject</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.config-pysrc.html#SpatialUtils._get_style">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Get an SLD file from the file system.</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>geolevel</code></strong> - The geolevel name.</li>
+        <li><strong class="pname"><code>subject</code></strong> - The subject name.</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>The content of an SLD file on the filesystem.</dd>
   </dl>
 </td></tr></table>
 </div>
@@ -514,19 +695,18 @@ Returns:
     </td>
   </tr></table>
   
-  <pre class="literalblock">
-
-Perform a re-nesting of the geography in the geographic levels.
-
-Renesting the geometry works with Census Geography only that
-has treecodes.
-
-Parameters:
-    glconf - The configuration geolevel
-    subject - The subject to aggregate, default aggregates everything.
-
-</pre>
+  <p>Perform a re-nesting of the geography in the geographic levels.</p>
+  <p>Renesting the geometry works with Census Geography only that has 
+  treecodes.</p>
   <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>glconf</code></strong> - The configuration geolevel</li>
+        <li><strong class="pname"><code>subject</code></strong> - Optional. The subject to aggregate, default aggregates 
+          everything.</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>True when geolevel is completely renested.</dd>
   </dl>
 </td></tr></table>
 </div>
@@ -562,7 +742,7 @@ Parameters:
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">
-    Generated by Epydoc 3.0.1 on Fri Sep 28 17:22:17 2012
+    Generated by Epydoc 3.0.1 on Mon Oct  1 16:33:48 2012
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

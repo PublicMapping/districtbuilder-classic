@@ -5,6 +5,7 @@ publicmapping.redistricting	publicmapping.redistricting-module.html
 publicmapping.redistricting.admin	publicmapping.redistricting.admin-module.html
 publicmapping.redistricting.calculators	publicmapping.redistricting.calculators-module.html
 publicmapping.redistricting.config	publicmapping.redistricting.config-module.html
+publicmapping.redistricting.config.check_and_update	publicmapping.redistricting.config-module.html#check_and_update
 publicmapping.redistricting.config.logger	publicmapping.redistricting.config-module.html#logger
 publicmapping.redistricting.forms	publicmapping.redistricting.forms-module.html
 publicmapping.redistricting.management	publicmapping.redistricting.management-module.html
@@ -568,8 +569,6 @@ publicmapping.redistricting.config.ConfigImporter.import_subjects	publicmapping.
 publicmapping.redistricting.config.ConfigImporter.save	publicmapping.redistricting.config.ConfigImporter-class.html#save
 publicmapping.redistricting.config.ConfigImporter.__init__	publicmapping.redistricting.config.ConfigImporter-class.html#__init__
 publicmapping.redistricting.config.ConfigImporter.import_regions	publicmapping.redistricting.config.ConfigImporter-class.html#import_regions
-publicmapping.redistricting.config.ModelHelper	publicmapping.redistricting.config.ModelHelper-class.html
-publicmapping.redistricting.config.ModelHelper.check_and_update	publicmapping.redistricting.config.ModelHelper-class.html#check_and_update
 publicmapping.redistricting.config.PoUtils	publicmapping.redistricting.config.PoUtils-class.html
 publicmapping.redistricting.config.PoUtils.save	publicmapping.redistricting.config.PoUtils-class.html#save
 publicmapping.redistricting.config.PoUtils.add_or_update	publicmapping.redistricting.config.PoUtils-class.html#add_or_update
