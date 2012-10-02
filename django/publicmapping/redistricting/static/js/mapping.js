@@ -577,6 +577,7 @@ function mapinit(srs,maxExtent) {
     // a manual refresh, with no automatic reloading of district
     // boundaries except when explicitly loaded.
     var districtStrategy = new OpenLayers.Strategy.BBOX({ratio:2});
+    var refreshStrategy = new OpenLayers.Strategy.Refresh({force:true});
     var highlightStrategy = new OpenLayers.Strategy.BBOX({ratio:2});
 
     // The style for the districts. This serves as the base
@@ -709,7 +710,8 @@ function mapinit(srs,maxExtent) {
         'Current Plan',
         {
             strategies: [
-                districtStrategy
+                districtStrategy,
+                refreshStrategy
             ],
             protocol: new OpenLayers.Protocol.HTTP({
                 url: '/districtmapping/plan/' + PLAN_ID + '/district/versioned/',
@@ -902,7 +904,7 @@ function mapinit(srs,maxExtent) {
         $('#open_statistics_editor').trigger('refresh_tab');
         $('#map').trigger('resort_by_visibility', [true]);
         districtLayer.filter = getVersionAndSubjectFilters(olmap.getExtent());
-        districtLayer.strategies[0].update({force:true});
+        refreshStrategy.refresh();
         $('#map').trigger('draw_highlighted_districts');
     };
 
@@ -1609,7 +1611,7 @@ function mapinit(srs,maxExtent) {
                     },
                     success: function(data, textStatus, xhr) {
                         selection.removeFeatures(selection.features);
-                        districtLayer.strategies[0].update({force:true});
+                        refreshStrategy.refresh();
                     }
                 });
             }
@@ -2680,7 +2682,7 @@ function mapinit(srs,maxExtent) {
 
         if (olmap.center !== null) {
             districtLayer.filter = getVersionAndSubjectFilters(olmap.getExtent());
-            districtLayer.strategies[0].update({force:true});
+            refreshStrategy.refresh();
 
             // get a new set of filters, so we don't muddy the districtLayer
             var filter = getVersionAndSubjectFilters(olmap.getExtent());
@@ -2744,7 +2746,7 @@ function mapinit(srs,maxExtent) {
 
             if (!sameSubj) {
                 districtLayer.filter = getVersionAndSubjectFilters(olmap.getExtent());
-                districtLayer.strategies[0].update({force:true});
+                refreshStrategy.refresh();
             }
             else {
                 getMapStyles(visualize, dby.name);

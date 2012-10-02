@@ -49,7 +49,6 @@ from django.contrib import humanize
 from django.template import loader, Context as DjangoContext, RequestContext
 from django.utils import simplejson as json, translation
 from django.utils.translation import ugettext as _, ungettext as _n
-from django.views.decorators.cache import cache_control
 from django.template.defaultfilters import slugify, force_escape
 from django.utils.translation import ugettext as _
 from django.conf import settings
@@ -1584,7 +1583,6 @@ def setdistrictlock(request, planid, district_id):
     return HttpResponse(json.dumps(status), mimetype='application/json')
         
             
-@cache_control(private=True)
 @unique_session_or_json_redirect
 def getdistricts(request, planid):
     """
@@ -1639,7 +1637,6 @@ def getdistricts(request, planid):
     return HttpResponse(json.dumps(status), mimetype='application/json')
 
 
-@cache_control(private=True)
 def simple_district_versioned(request, planid, district_ids=None):
     """
     Emulate a WFS service for versioned districts.
@@ -1710,7 +1707,6 @@ def simple_district_versioned(request, planid, district_ids=None):
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
 
-@cache_control(private=True)
 def get_unlocked_simple_geometries(request,planid):
     """
     Emulate a WFS service for selecting unlocked geometries.

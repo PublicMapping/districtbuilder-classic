@@ -70,21 +70,21 @@ TEMPLATE_LOADERS = (
 
 # configure cache, according to guidelines for configuring django's
 # cache framework: http://docs.djangoproject.com/en/1.4/topics/cache
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'redistricting4ever',
-        'TIMEOUT': 600, # 10 minute timeout
-        'OPTIONS': {
-            'MAX_ENTRIES': 1000
-        }
-    }
-}
+#CACHES = {
+#    'default': {
+#        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+#        'LOCATION': 'redistricting4ever',
+#        'TIMEOUT': 600, # 10 minute timeout
+#        'OPTIONS': {
+#            'MAX_ENTRIES': 1000
+#        }
+#    }
+#}
 
 # Middleware classes. Please note that cache middleware MUST be placed in
 # the first and last positions of the middleware classes.  Order matters.
 MIDDLEWARE_CLASSES = (
-    'django.middleware.cache.UpdateCacheMiddleware',
+#    'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.gzip.GZipMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -92,7 +92,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.locale.LocaleMiddleware',
-    'django.middleware.cache.FetchFromCacheMiddleware',
+#    'django.middleware.cache.FetchFromCacheMiddleware',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
