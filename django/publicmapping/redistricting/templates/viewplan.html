@@ -32,7 +32,7 @@
 {% load i18n %}
 {% load compress %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="{{ language_code }}">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=8" />        
@@ -156,7 +156,7 @@
             geolevel: {{ snap.geolevel }}, 
             level: '{{ snap.level }}',
             layer: '{{ snap.layer }}', 
-            short_label: '{{ snap.short_label }}',
+            long_description: '{{ snap.long_description }}',
             min_zoom: {{ snap.min_zoom }} 
         }{% if not forloop.last %},{% endif %}{% endfor %} ];
         // An array of demographic settings for the choropleth variations 
@@ -239,7 +239,7 @@
         {% endif %}
       </ul>
       
-
+    {% csrf_token %}
 
     <div id="site_nav">
         <ul>
@@ -326,7 +326,7 @@
                 <select id="leg_selector_upload" name="legislativeBody">
                     <option value="">{% trans "Select a body" %}</option>
                     {% for body in bodies %}
-                        <option value="{{ body.id }}">{{ body.name }}</option>
+                        <option value="{{ body.id }}">{% if has_regions %}{{ body.region.get_label }} - {{ body.get_long_description }}{% else %}{{ body.get_long_description }}{% endif %}</option>
                     {% endfor %}
                 </select>
                 {% else %}
@@ -454,7 +454,9 @@
                   <button class="identify_map_tool btntoggle titletip" title="{% trans "Click on a geounit to see its demographic info." %}" >{% trans "Info" %}</button>
               </div>
             <div class="toolset_group toolset_group_lg">
-                  <button id="district_id_map_tool" title="{% trans "Click on a district to see its ID." %}" class="btntoggle titletip">{{ body_member_long_label|capfirst }}<br/>{% trans "Info" %}</button>
+                  <button id="district_id_map_tool" title="{% trans "Click on a district to see its ID." %}" class="btntoggle titletip"><br/>
+                    {% blocktrans with body_member_long_label|capfirst as district_label %}{{ district_label }} Info{% endblocktrans %}
+                </button>
               </div>
               <div class="toolset_group toolset_group_lg">
                 <button id="show_splits_button">{% trans "Show<br/>Splits" %}</button>
@@ -545,7 +547,7 @@
                             {% if not forloop.last %}                    
                             <div class="layer_choice_wrapper">
                                 <input id="geolevel.{{ snap.geolevel }}" class="layer_choice" type="checkbox" value="geolevel.{{ snap.geolevel }}" />
-                                <label for="geolevel.{{ snap.geolevel }}">{{ snap.short_label }}</label>
+                                <label for="geolevel.{{ snap.geolevel }}">{{ snap.long_description }}</label>
                             </div>                  
                             {% endif %}
                             {% endfor %}
@@ -708,7 +710,7 @@
             </div>
             <div id="options"></div>
 		    <div id="reportButtons">
-              <button id="btnPreviewReport">{% trans "Create and Preview Reports" %}</button>
+              <button id="btnPreviewReport">{% trans "Create and Preview New Report" %}</button>
             </div>
           </div>
           <div id="reportPreviewContainer">
@@ -762,7 +764,7 @@
                 </span>
                 <select id="legSelectorLeaderboards">
                     {% for body in leaderboard_bodies %}
-                        <option value="{{ body.id }}">{{ body.name }}</option>
+                        <option value="{{ body.id }}">{{ body.get_long_description }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -859,9 +861,12 @@
 
           {% endcomment %}
           <label>
-            {% if plan.is_community %}{% trans "Community Map" %}{% else %}{% trans "Plan" %}{% endif %}
-            {% trans "Name:" %}
-          </label> {{ plan.name|truncate:"40" }}
+            {% if plan.is_community %}
+                {% trans "Community Map Name:" %}
+            {% else %}
+                {% trans "Plan Name:" %}
+            {% endif %}
+          </label> {{ plan.name|truncatechars:40 }}
           {% else %}
           {% comment %}
 
@@ -938,7 +943,7 @@ Include the shared_districts markup if we're using the copy/paste tool
 
             {% endcomment %}
             <div class="dialog_step">
-              <h2>1. {% trans "Select" %} <span id="layer_type">Layer</span> {% trans "Thematic Map" %}</h2>
+              <h2>1. {% blocktrans with layer_type='<span id="layer_type">Layer</span>' %}Select {{ layer_type }} Thematic Map{% endblocktrans %}</h2>
               <select id="showby" class="indented fillwidth" autocomplete="off">
                   <option value="none">{% trans "None" %}</option>
                   {% for demo in demographics %}              
@@ -979,7 +984,7 @@ Include the shared_districts markup if we're using the copy/paste tool
                   <option value="None">{% trans "None" %}</option>
                   {% for snap in snaplayers %}
                       <option value="geolevel.{{ snap.geolevel }}">
-                          {{ snap.short_label }}
+                          {{ snap.long_description }}
                       </option>
                   {% endfor %}
               </select>
@@ -1000,7 +1005,7 @@ Include the shared_districts markup if we're using the copy/paste tool
             <h2>{% if plan.is_community %}3{% else %}4{% endif %}. {% trans "Select Plan Type" %}</h2>
             <select id="ref_leg_selector" class="indented fillwidth">
                 {% for body in bodies %}
-                    <option value="{{ body.id }}">{{ body.name }}</option>
+                    <option value="{{ body.id }}">{{ body.get_long_description }}</option>
                 {% endfor %}
             </select>
 
@@ -1032,7 +1037,7 @@ Include the shared_districts markup if we're using the copy/paste tool
                 referencePlansPager: $('#reference_plans_pager'),
                 referencePlansUrl: '/districtmapping/getplans/',
                 map: $('#map'),
-                csrfmiddlewaretoken: $('#csrfmiddlewaretoken')
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]')
             }).init();
         }, 1000);
     });
@@ -1045,7 +1050,8 @@ Include the shared_districts markup if we're using the copy/paste tool
 Include the stats editor if user can edit stats.
 
 {% endcomment %}
-<div id="stats_editor_container" class="stats_editor" title="Edit Statistics Sets">
+<div id="stats_editor_container" class="stats_editor"
+        title="{% trans "Edit Statistics Sets" %}" >
     <div id="stats_editor_instructions">
         <h3>{% blocktrans %}You can select up to three statistics at once to display in 
         the sidebar. Each set of three statistics will be saved in the dropdown 
@@ -1093,7 +1099,7 @@ Include the markup for the account management panel.
                 if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
                     // Only send the token to relative URLs i.e. locally.
                     xhr.setRequestHeader("X-CSRFToken",
-                                         $("#csrfmiddlewaretoken").val());
+                                         $("input[name=csrfmiddlewaretoken]").val());
                 }
             }
         });

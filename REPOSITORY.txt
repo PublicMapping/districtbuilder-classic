@@ -26,10 +26,6 @@ root/
   |
   |                 http://publicmapping.github.com/districtbuilder/docs/1.4/
   |
-  +- python/        Contains any auxiliary python code required for the
-  |                 application. This was used for custom tools during
-  |                 development, and is currently empty.
-  |
   +- sld/           Contains the style descriptors for the geographic
   |                 data served up by geoserver. These files are also
   |                 served up by the web application for display in the

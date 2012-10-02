@@ -218,7 +218,7 @@ printplan = function(options) {
                     var lblRule = new OpenLayers.Rule({
                         filter: lblFilter,
                         symbolizer: { Text: new OpenLayers.Symbolizer.Text({
-                            label:featureItem.attributes.name,
+                            label:featureItem.attributes.label,
                             fontFamily: ffam,
                             fontWeight: fwht,
                             fontSize: fsz,
@@ -318,7 +318,7 @@ printplan = function(options) {
 
         // POST all these items to the printing endpoint
         $(document.body).append('<form id="printForm" method="POST" action="../print/" target="_blank">' +
-            '<input type="hidden" name="csrfmiddlewaretoken" value="' + $('#csrfmiddlewaretoken').val() + '"/>' +
+            '<input type="hidden" name="csrfmiddlewaretoken" value="' + $('input[name=csrfmiddlewaretoken]').val() + '"/>' +
             '<input type="hidden" name="plan_id" value="' + PLAN_ID + '"/>' +
             '<input type="hidden" name="height" value="' + _options.height + '"/>' +
             '<input type="hidden" name="width" value="' + _options.width + '"/>' +

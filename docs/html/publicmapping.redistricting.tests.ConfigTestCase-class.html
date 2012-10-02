@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>publicmapping.redistricting.tests.ConfigTestCase</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="publicmapping-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a href="http://publicmapping.github.com/districtbuilder/">Publicmapping on GitHub</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="publicmapping-module.html">Package&nbsp;publicmapping</a> ::
+        <a href="publicmapping.redistricting-module.html">Package&nbsp;redistricting</a> ::
+        <a href="publicmapping.redistricting.tests-module.html">Module&nbsp;tests</a> ::
+        Class&nbsp;ConfigTestCase
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="publicmapping.redistricting.tests.ConfigTestCase-class.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS DESCRIPTION ==================== -->
+<h1 class="epydoc">Class ConfigTestCase</h1><p class="nomargin-top"><span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#ConfigTestCase">source&nbsp;code</a></span></p>
+<center>
+<center>  <map id="uml_class_diagram_for_publicma_83" name="uml_class_diagram_for_publicma_83">
+<area shape="rect" id="node130" href="publicmapping.redistricting.tests.ConfigTestCase-class.html#good_data_filename" title="publicmapping.redistricting.tests.ConfigTestCase.good_data_filename" alt="" coords="17,31,284,49"/>
+<area shape="rect" id="node130" href="publicmapping.redistricting.tests.ConfigTestCase-class.html#good_schema_filename" title="publicmapping.redistricting.tests.ConfigTestCase.good_schema_filename" alt="" coords="17,49,284,68"/>
+<area shape="rect" id="node130" href="publicmapping.redistricting.tests.ConfigTestCase-class.html#bad_data_filename" title="publicmapping.redistricting.tests.ConfigTestCase.bad_data_filename" alt="" coords="17,68,284,87"/>
+<area shape="rect" id="node130" href="publicmapping.redistricting.tests.ConfigTestCase-class.html#bad_schema_filename" title="publicmapping.redistricting.tests.ConfigTestCase.bad_schema_filename" alt="" coords="17,87,284,105"/>
+<area shape="rect" id="node130" href="publicmapping.redistricting.tests.ConfigTestCase-class.html#setUp" title="publicmapping.redistricting.tests.ConfigTestCase.setUp" alt="" coords="17,108,284,127"/>
+<area shape="rect" id="node130" href="publicmapping.redistricting.tests.ConfigTestCase-class.html#make_simple_schema" title="publicmapping.redistricting.tests.ConfigTestCase.make_simple_schema" alt="" coords="17,127,284,145"/>
+<area shape="rect" id="node130" href="publicmapping.redistricting.tests.ConfigTestCase-class.html#test_constructor_missing_schema" title="publicmapping.redistricting.tests.ConfigTestCase.test_constructor_missing_schema" alt="" coords="17,145,284,164"/>
+<area shape="rect" id="node130" href="publicmapping.redistricting.tests.ConfigTestCase-class.html#test_construct_missing_data" title="publicmapping.redistricting.tests.ConfigTestCase.test_construct_missing_data" alt="" coords="17,164,284,183"/>
+<area shape="rect" id="node130" href="publicmapping.redistricting.tests.ConfigTestCase-class.html#test_construct_okay" title="publicmapping.redistricting.tests.ConfigTestCase.test_construct_okay" alt="" coords="17,183,284,201"/>
+<area shape="rect" id="node130" href="publicmapping.redistricting.tests.ConfigTestCase-class.html#test_validation_schema_xml_parser" title="publicmapping.redistricting.tests.ConfigTestCase.test_validation_schema_xml_parser" alt="" coords="17,201,284,220"/>
+<area shape="rect" id="node130" href="publicmapping.redistricting.tests.ConfigTestCase-class.html#test_validation_schema_xml_wellformed" title="publicmapping.redistricting.tests.ConfigTestCase.test_validation_schema_xml_wellformed" alt="" coords="17,220,284,239"/>
+<area shape="rect" id="node130" href="publicmapping.redistricting.tests.ConfigTestCase-class.html#test_validation_schema_xml" title="publicmapping.redistricting.tests.ConfigTestCase.test_validation_schema_xml" alt="" coords="17,239,284,257"/>
+<area shape="rect" id="node130" href="publicmapping.redistricting.tests.ConfigTestCase-class.html#test_validation_data_xml_parser" title="publicmapping.redistricting.tests.ConfigTestCase.test_validation_data_xml_parser" alt="" coords="17,257,284,276"/>
+<area shape="rect" id="node130" href="publicmapping.redistricting.tests.ConfigTestCase-class.html#test_validation_data_xml_wellformed" title="publicmapping.redistricting.tests.ConfigTestCase.test_validation_data_xml_wellformed" alt="" coords="17,276,284,295"/>
+<area shape="rect" id="node130" href="publicmapping.redistricting.tests.ConfigTestCase-class.html#test_validation" title="publicmapping.redistricting.tests.ConfigTestCase.test_validation" alt="" coords="17,295,284,313"/>
+<area shape="rect" id="node1" href="publicmapping.redistricting.tests.ConfigTestCase-class.html" title="publicmapping.redistricting.tests.ConfigTestCase" alt="" coords="5,6,296,319"/>
+</map>
+  <img src="uml_class_diagram_for_publicma_83.gif" alt='' usemap="#uml_class_diagram_for_publicma_83" ismap="ismap" class="graph-without-title" />
+</center>
+</center>
+<hr />
+<!-- ==================== INSTANCE METHODS ==================== -->
+<a name="section-InstanceMethods"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Instance Methods</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceMethods"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="setUp"></a><span class="summary-sig-name">setUp</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#ConfigTestCase.setUp">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="make_simple_schema"></a><span class="summary-sig-name">make_simple_schema</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#ConfigTestCase.make_simple_schema">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_constructor_missing_schema"></a><span class="summary-sig-name">test_constructor_missing_schema</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#ConfigTestCase.test_constructor_missing_schema">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_construct_missing_data"></a><span class="summary-sig-name">test_construct_missing_data</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#ConfigTestCase.test_construct_missing_data">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_construct_okay"></a><span class="summary-sig-name">test_construct_okay</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#ConfigTestCase.test_construct_okay">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_validation_schema_xml_parser"></a><span class="summary-sig-name">test_validation_schema_xml_parser</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#ConfigTestCase.test_validation_schema_xml_parser">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_validation_schema_xml_wellformed"></a><span class="summary-sig-name">test_validation_schema_xml_wellformed</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#ConfigTestCase.test_validation_schema_xml_wellformed">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_validation_schema_xml"></a><span class="summary-sig-name">test_validation_schema_xml</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#ConfigTestCase.test_validation_schema_xml">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_validation_data_xml_parser"></a><span class="summary-sig-name">test_validation_data_xml_parser</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#ConfigTestCase.test_validation_data_xml_parser">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_validation_data_xml_wellformed"></a><span class="summary-sig-name">test_validation_data_xml_wellformed</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#ConfigTestCase.test_validation_data_xml_wellformed">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="test_validation"></a><span class="summary-sig-name">test_validation</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tests-pysrc.html#ConfigTestCase.test_validation">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS VARIABLES ==================== -->
+<a name="section-ClassVariables"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Class Variables</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-ClassVariables"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="good_data_filename"></a><span class="summary-name">good_data_filename</span> = <code title="'../../docs/config.dist.xml'">'../../docs/config.dist.xml'</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="good_schema_filename"></a><span class="summary-name">good_schema_filename</span> = <code title="'../../docs/config.xsd'">'../../docs/config.xsd'</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="bad_data_filename"></a><span class="summary-name">bad_data_filename</span> = <code title="'/tmp/bad_data.xsd'">'/tmp/bad_data.xsd'</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="bad_schema_filename"></a><span class="summary-name">bad_schema_filename</span> = <code title="'/tmp/bad_schema.xsd'">'/tmp/bad_schema.xsd'</code>
+    </td>
+  </tr>
+</table>
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="publicmapping-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a href="http://publicmapping.github.com/districtbuilder/">Publicmapping on GitHub</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Mon Oct  1 16:33:51 2012
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

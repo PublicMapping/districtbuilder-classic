@@ -73,7 +73,9 @@
                 <td></td>
                 <td>
                     <input id="agree" name="agree" type="checkbox"/>
-                    <label id="agreelabel" for="agree">{% trans "I have read the " %}<a href="#" onclick="$('#privacy').dialog('open');">{% trans "Terms of Use" %}</a> </label>
+                    <label id="agreelabel" for="agree">
+                        {% blocktrans %}I have read the <a href="#">Terms of Use</a>{% endblocktrans %}
+                    </label>
                 </td>
 
             </tr>

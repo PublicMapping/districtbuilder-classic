@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>publicmapping.redistricting.forms.SubjectUploadForm</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="publicmapping-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a href="http://publicmapping.github.com/districtbuilder/">Publicmapping on GitHub</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="publicmapping-module.html">Package&nbsp;publicmapping</a> ::
+        <a href="publicmapping.redistricting-module.html">Package&nbsp;redistricting</a> ::
+        <a href="publicmapping.redistricting.forms-module.html">Module&nbsp;forms</a> ::
+        Class&nbsp;SubjectUploadForm
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="publicmapping.redistricting.forms.SubjectUploadForm-class.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS DESCRIPTION ==================== -->
+<h1 class="epydoc">Class SubjectUploadForm</h1><p class="nomargin-top"><span class="codelink"><a href="publicmapping.redistricting.forms-pysrc.html#SubjectUploadForm">source&nbsp;code</a></span></p>
+<center>
+<center>  <map id="uml_class_diagram_for_publicma_42" name="uml_class_diagram_for_publicma_42">
+<area shape="rect" id="node66" href="publicmapping.redistricting.forms.SubjectUploadForm-class.html#subject_upload" title="publicmapping.redistricting.forms.SubjectUploadForm.subject_upload" alt="" coords="17,31,141,49"/>
+<area shape="rect" id="node66" href="publicmapping.redistricting.forms.SubjectUploadForm-class.html#uploaded_file" title="publicmapping.redistricting.forms.SubjectUploadForm.uploaded_file" alt="" coords="17,49,141,68"/>
+<area shape="rect" id="node66" href="publicmapping.redistricting.forms.SubjectUploadForm-class.html#processing_file" title="publicmapping.redistricting.forms.SubjectUploadForm.processing_file" alt="" coords="17,68,141,87"/>
+<area shape="rect" id="node66" href="publicmapping.redistricting.forms.SubjectUploadForm-class.html#subject_name" title="publicmapping.redistricting.forms.SubjectUploadForm.subject_name" alt="" coords="17,87,141,105"/>
+<area shape="rect" id="node66" href="publicmapping.redistricting.forms.SubjectUploadForm-class.html#force_overwrite" title="publicmapping.redistricting.forms.SubjectUploadForm.force_overwrite" alt="" coords="17,105,141,124"/>
+<area shape="rect" id="node66" href="publicmapping.redistricting.forms.SubjectUploadForm-class.html#task_uuid" title="publicmapping.redistricting.forms.SubjectUploadForm.task_uuid" alt="" coords="17,124,141,143"/>
+<area shape="rect" id="node66" href="publicmapping.redistricting.forms.SubjectUploadForm-class.html#ul_file" title="publicmapping.redistricting.forms.SubjectUploadForm.ul_file" alt="" coords="17,143,141,161"/>
+<area shape="rect" id="node66" href="publicmapping.redistricting.forms.SubjectUploadForm-class.html#ps_file" title="publicmapping.redistricting.forms.SubjectUploadForm.ps_file" alt="" coords="17,161,141,180"/>
+<area shape="rect" id="node66" href="publicmapping.redistricting.forms.SubjectUploadForm-class.html#temp_subject_name" title="publicmapping.redistricting.forms.SubjectUploadForm.temp_subject_name" alt="" coords="17,180,141,199"/>
+<area shape="rect" id="node66" href="publicmapping.redistricting.forms.SubjectUploadForm-class.html#temp_path_re" title="publicmapping.redistricting.forms.SubjectUploadForm.temp_path_re" alt="" coords="17,199,141,217"/>
+<area shape="rect" id="node66" href="publicmapping.redistricting.forms.SubjectUploadForm-class.html#dotdot_path_re" title="publicmapping.redistricting.forms.SubjectUploadForm.dotdot_path_re" alt="" coords="17,217,141,236"/>
+<area shape="rect" id="node66" href="publicmapping.redistricting.forms.SubjectUploadForm-class.html#clean" title="Check the validity of the form." alt="" coords="17,239,141,257"/>
+<area shape="rect" id="node1" href="publicmapping.redistricting.forms.SubjectUploadForm-class.html" title="A form that accepts a subject file for upload that contains new Subject data." alt="" coords="5,6,152,263"/>
+</map>
+  <img src="uml_class_diagram_for_publicma_42.gif" alt='' usemap="#uml_class_diagram_for_publicma_42" ismap="ismap" class="graph-without-title" />
+</center>
+</center>
+<hr />
+<p>A form that accepts a subject file for upload that contains new 
+  Subject data.</p>
+
+<!-- ==================== INSTANCE METHODS ==================== -->
+<a name="section-InstanceMethods"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Instance Methods</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceMethods"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.forms.SubjectUploadForm-class.html#clean" class="summary-sig-name">clean</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Check the validity of the form.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.forms-pysrc.html#SubjectUploadForm.clean">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="_clean_name"></a><span class="summary-sig-name">_clean_name</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">inputname</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.forms-pysrc.html#SubjectUploadForm._clean_name">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS VARIABLES ==================== -->
+<a name="section-ClassVariables"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Class Variables</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-ClassVariables"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="subject_upload"></a><span class="summary-name">subject_upload</span> = <code title="forms.FileField(required= False)">forms.FileField(required= False)</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="publicmapping.redistricting.forms.SubjectUploadForm-class.html#uploaded_file" class="summary-name">uploaded_file</a> = <code title="forms.CharField(required= False, widget= forms.HiddenInput)">forms.CharField(required= False, widget= forms<code class="variable-ellipsis">...</code></code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="publicmapping.redistricting.forms.SubjectUploadForm-class.html#processing_file" class="summary-name">processing_file</a> = <code title="forms.CharField(required= False, widget= forms.HiddenInput)">forms.CharField(required= False, widget= for<code class="variable-ellipsis">...</code></code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="publicmapping.redistricting.forms.SubjectUploadForm-class.html#subject_name" class="summary-name">subject_name</a> = <code title="forms.CharField(required= False, widget= forms.HiddenInput)">forms.CharField(required= False, widget= forms.<code class="variable-ellipsis">...</code></code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="publicmapping.redistricting.forms.SubjectUploadForm-class.html#force_overwrite" class="summary-name">force_overwrite</a> = <code title="forms.BooleanField(required= False, widget= forms.HiddenInput)">forms.BooleanField(required= False, widget= <code class="variable-ellipsis">...</code></code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="publicmapping.redistricting.forms.SubjectUploadForm-class.html#task_uuid" class="summary-name">task_uuid</a> = <code title="forms.CharField(required= False, widget= forms.HiddenInput)">forms.CharField(required= False, widget= forms.Hid<code class="variable-ellipsis">...</code></code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="ul_file"></a><span class="summary-name">ul_file</span> = <code title="None">None</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="ps_file"></a><span class="summary-name">ps_file</span> = <code title="None">None</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="temp_subject_name"></a><span class="summary-name">temp_subject_name</span> = <code title="''">''</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="temp_path_re"></a><span class="summary-name">temp_path_re</span> = <code title="re.compile('^\/tmp\/.*$')">re.compile('^\/tmp\/.*$')</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="dotdot_path_re"></a><span class="summary-name">dotdot_path_re</span> = <code title="re.compile('.*\.\..*')">re.compile('.*\.\..*')</code>
+    </td>
+  </tr>
+</table>
+<!-- ==================== METHOD DETAILS ==================== -->
+<a name="section-MethodDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Method Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-MethodDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="clean"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">clean</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.forms-pysrc.html#SubjectUploadForm.clean">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Check the validity of the form. If all immediate fields are present, 
+  this method kicks off a celery task to verify the counts of elements in 
+  the uploaded file.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== CLASS VARIABLE DETAILS ==================== -->
+<a name="section-ClassVariableDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Class Variable Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-ClassVariableDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="uploaded_file"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">uploaded_file</h3>
+  
+  <dl class="fields">
+  </dl>
+  <dl class="fields">
+    <dt>Value:</dt>
+      <dd><table><tr><td><pre class="variable">
+forms.CharField(required= False, widget= forms.HiddenInput)
+</pre></td></tr></table>
+</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="processing_file"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">processing_file</h3>
+  
+  <dl class="fields">
+  </dl>
+  <dl class="fields">
+    <dt>Value:</dt>
+      <dd><table><tr><td><pre class="variable">
+forms.CharField(required= False, widget= forms.HiddenInput)
+</pre></td></tr></table>
+</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="subject_name"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">subject_name</h3>
+  
+  <dl class="fields">
+  </dl>
+  <dl class="fields">
+    <dt>Value:</dt>
+      <dd><table><tr><td><pre class="variable">
+forms.CharField(required= False, widget= forms.HiddenInput)
+</pre></td></tr></table>
+</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="force_overwrite"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">force_overwrite</h3>
+  
+  <dl class="fields">
+  </dl>
+  <dl class="fields">
+    <dt>Value:</dt>
+      <dd><table><tr><td><pre class="variable">
+forms.BooleanField(required= False, widget= forms.HiddenInput)
+</pre></td></tr></table>
+</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="task_uuid"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">task_uuid</h3>
+  
+  <dl class="fields">
+  </dl>
+  <dl class="fields">
+    <dt>Value:</dt>
+      <dd><table><tr><td><pre class="variable">
+forms.CharField(required= False, widget= forms.HiddenInput)
+</pre></td></tr></table>
+</dd>
+  </dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="publicmapping-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a href="http://publicmapping.github.com/districtbuilder/">Publicmapping on GitHub</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Mon Oct  1 16:33:48 2012
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

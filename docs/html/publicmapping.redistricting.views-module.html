@@ -74,7 +74,7 @@ This file is part of The Public Mapping Project
 https://github.com/PublicMapping/
 
 License:
-    Copyright 2010 Micah Altman, Michael McDonald
+    Copyright 2010-2012 Micah Altman, Michael McDonald
 
     Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
     you may not use this file except in compliance with the License.
@@ -223,7 +223,7 @@ session.</td>
         <tr>
           <td><span class="summary-sig"><a href="publicmapping.redistricting.views-module.html#scoreplan" class="summary-sig-name">scoreplan</a>(<span class="summary-sig-arg">request</span>,
         <span class="summary-sig-arg">planid</span>)</span><br />
-      Validate a plan to allow for it to be shown in the leaaderboard</td>
+      Validate a plan to allow for it to be shown in the leaderboard</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="publicmapping.redistricting.views-pysrc.html#scoreplan">source&nbsp;code</a></span>
             
@@ -262,6 +262,23 @@ session.</td>
 and editing.</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="publicmapping.redistricting.views-pysrc.html#commonplan">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="is_plan_ready"></a><span class="summary-sig-name">is_plan_ready</span>(<span class="summary-sig-arg">planid</span>)</span><br />
+      Determines if a plan is in a Ready state</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.views-pysrc.html#is_plan_ready">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -517,6 +534,23 @@ plan into another plan</td>
       Find all splits between this plan and another plan</td>
           <td align="right" valign="top">
             <span class="codelink"><a href="publicmapping.redistricting.views-pysrc.html#get_splits">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="get_processing_status"></a><span class="summary-sig-name">get_processing_status</span>(<span class="summary-sig-arg">request</span>)</span><br />
+      Get the processing status for a list of plan ids</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.views-pysrc.html#get_processing_status">source&nbsp;code</a></span>
             
           </td>
         </tr>
@@ -876,6 +910,24 @@ plan into another plan</td>
     </td><td class="summary">
       <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.views-module.html#reaggregateplan" class="summary-sig-name">reaggregateplan</a>(<span class="summary-sig-arg">request</span>,
+        <span class="summary-sig-arg">planid</span>)</span><br />
+      Reaggregate a plan</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.views-pysrc.html#reaggregateplan">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
           <td><span class="summary-sig"><a name="get_health"></a><span class="summary-sig-name">get_health</span>(<span class="summary-sig-arg">request</span>)</span></td>
           <td align="right" valign="top">
             <span class="codelink"><a href="publicmapping.redistricting.views-pysrc.html#get_health">source&nbsp;code</a></span>
@@ -998,46 +1050,62 @@ plan into another plan</td>
         <a name="logger"></a><span class="summary-name">logger</span> = <code title="logging.getLogger(__name__)">logging.getLogger(__name__)</code>
     </td>
   </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="UNASSIGNED_DISTRICT_ID"></a><span class="summary-name">UNASSIGNED_DISTRICT_ID</span> = <code title="0">0</code>
+    </td>
+  </tr>
 </table>
 <p class="indent-wrapped-lines"><b>Imports:</b>
   <span title="django.http.urlencode">urlencode</span>,
   <span title="django.http.force_unicode">force_unicode</span>,
+  <span title="django.http.signing">signing</span>,
   <span title="django.http.HttpResponseNotFound">HttpResponseNotFound</span>,
-  <span title="django.http.BaseCookie">BaseCookie</span>,
+  <span title="django.http.HttpResponseForbidden">HttpResponseForbidden</span>,
   <span title="django.http.HttpResponseNotModified">HttpResponseNotModified</span>,
-  <span title="django.http.RESERVED_CHARS">RESERVED_CHARS</span>,
+  <span title="django.http.SimpleCookie">SimpleCookie</span>,
   <span title="django.http.HttpResponseNotAllowed">HttpResponseNotAllowed</span>,
   <span title="django.http.fix_IE_for_vary">fix_IE_for_vary</span>,
-  <span title="django.http.HttpResponseForbidden">HttpResponseForbidden</span>,
   <span title="django.http.HttpResponse">HttpResponse</span>,
+  <span title="django.http.timezone">timezone</span>,
   <span title="django.http.CompatCookie">CompatCookie</span>,
   <span title="django.http.MultiPartParser">MultiPartParser</span>,
   <span title="django.http.HttpRequest">HttpRequest</span>,
-  <span title="django.http.HttpResponseBadRequest">HttpResponseBadRequest</span>,
+  <span title="django.http.iri_to_uri">iri_to_uri</span>,
   <span title="django.http.QueryDict">QueryDict</span>,
   <span title="django.http.smart_str">smart_str</span>,
-  <span title="django.http.re">re</span>,
-  <span title="django.http.absolute_http_url_re">absolute_http_url_re</span>,
   <span title="django.http.ImmutableList">ImmutableList</span>,
+  <span title="django.http.absolute_http_url_re">absolute_http_url_re</span>,
+  <span title="django.http.cookie_date">cookie_date</span>,
+  <span title="django.http.re">re</span>,
+  <span title="django.http.Cookie">Cookie</span>,
+  <span title="django.http.get_host">get_host</span>,
+  <span title="django.http.UnreadablePostError">UnreadablePostError</span>,
   <span title="django.http.MultiValueDict">MultiValueDict</span>,
   <span title="django.http.urljoin">urljoin</span>,
   <span title="django.http.str_to_unicode">str_to_unicode</span>,
   <span title="django.http.BadHeaderError">BadHeaderError</span>,
   <span title="django.http.HttpResponseGone">HttpResponseGone</span>,
-  <span title="django.http.HttpResponseServerError">HttpResponseServerError</span>,
-  <span title="django.http.get_host">get_host</span>,
-  <span title="django.http.fix_location_header">fix_location_header</span>,
-  <span title="django.http.Http404">Http404</span>,
-  <span title="django.http.iri_to_uri">iri_to_uri</span>,
+  <span title="django.http.warnings">warnings</span>,
+  <span title="django.http.RAISE_ERROR">RAISE_ERROR</span>,
+  <span title="django.http.quote">quote</span>,
   <span title="django.http.HttpResponseRedirect">HttpResponseRedirect</span>,
+  <span title="django.http.build_request_repr">build_request_repr</span>,
+  <span title="django.http.HttpResponseBadRequest">HttpResponseBadRequest</span>,
+  <span title="django.http.Http404">Http404</span>,
+  <span title="django.http.HttpResponseServerError">HttpResponseServerError</span>,
+  <span title="django.http.HttpResponsePermanentRedirect">HttpResponsePermanentRedirect</span>,
+  <span title="django.http.fix_location_header">fix_location_header</span>,
   <span title="django.http.parse_qsl">parse_qsl</span>,
   <span title="django.http.conditional_content_removal">conditional_content_removal</span>,
+  <span title="django.http.Morsel">Morsel</span>,
   <span title="django.http.uploadhandler">uploadhandler</span>,
-  <span title="django.http.HttpResponsePermanentRedirect">HttpResponsePermanentRedirect</span>,
+  <span title="django.http.ImproperlyConfigured">ImproperlyConfigured</span>,
   <span title="django.http.fix_IE_for_attach">fix_IE_for_attach</span>,
   <span title="django.http.pformat">pformat</span>,
-  <span title="django.http.SimpleCookie">SimpleCookie</span>,
-  <span title="django.http.CookieError">CookieError</span>,
+  <span title="django.http.RESERVED_CHARS">RESERVED_CHARS</span>,
   <span title="django.http.parse_cookie">parse_cookie</span>,
   <span title="django.core.serializers">serializers</span>,
   <span title="django.core.exceptions.ValidationError">ValidationError</span>,
@@ -1080,10 +1148,14 @@ plan into another plan</td>
   <span title="django.contrib.humanize">humanize</span>,
   <span title="django.template.loader">loader</span>,
   <span title="django.template.Context">DjangoContext</span>,
+  <span title="django.template.RequestContext">RequestContext</span>,
   <span title="django.utils.simplejson">json</span>,
+  <span title="django.utils.translation">translation</span>,
+  <span title="django.utils.translation.ungettext">_n</span>,
   <span title="django.views.decorators.cache.cache_control">cache_control</span>,
   <span title="django.template.defaultfilters.slugify">slugify</span>,
   <span title="django.template.defaultfilters.force_escape">force_escape</span>,
+  <span title="django.utils.translation.ugettext">_</span>,
   <span title="django.conf.settings">settings</span>,
   <span title="tagging.utils.parse_tag_input">parse_tag_input</span>,
   <span title="tagging.models.Tag">Tag</span>,
@@ -1370,7 +1442,7 @@ Returns:
   
   <pre class="literalblock">
 
-Validate a plan to allow for it to be shown in the leaaderboard
+Validate a plan to allow for it to be shown in the leaderboard
 
 Parameters:
     request -- The HttpRequest, which includes the user.
@@ -2270,6 +2342,31 @@ Returns:
   </dl>
 </td></tr></table>
 </div>
+<a name="reaggregateplan"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">reaggregateplan</span>(<span class="sig-arg">request</span>,
+        <span class="sig-arg">planid</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.views-pysrc.html#reaggregateplan">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Reaggregate a plan</p>
+  <dl class="fields">
+    <dt>Decorators:</dt>
+    <dd><ul class="nomargin-top">
+        <li><code>@login_required</code></li>
+        <li><code>@unique_session_or_json_redirect</code></li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
 <a name="district_info"></a>
 <div>
 <table class="details" border="1" cellpadding="3"
@@ -2336,7 +2433,7 @@ Parameters:
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">
-    Generated by Epydoc 3.0.1 on Thu Jan 12 09:54:04 2012
+    Generated by Epydoc 3.0.1 on Mon Oct  1 16:33:45 2012
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

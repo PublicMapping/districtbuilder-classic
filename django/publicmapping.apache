@@ -1,5 +1,5 @@
 #
-#   Copyright 2010 Micah Altman, Michael McDonald
+#   Copyright 2010-2012 Micah Altman, Michael McDonald
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -64,8 +64,8 @@
             Allow from all
         </Directory>
 
-        Alias /data/ /projects/PublicMapping/local/
-        <Directory /projects/PublicMapping/local/>
+        Alias /data/ /projects/PublicMapping/local/data/
+        <Directory /projects/PublicMapping/local/data/>
             Options Indexes
             Order deny,allow
             Allow from all

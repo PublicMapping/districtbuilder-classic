@@ -214,6 +214,9 @@ div#register {
   color: #6a6a6a;
   font-weight: bold;
 }
+:lang(fr) .register-dialog {
+    width:475px !important;
+}
 div#forgotpass {
     display: none;
     font-size: 14px;

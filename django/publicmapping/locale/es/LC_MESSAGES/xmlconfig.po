@@ -13,49 +13,49 @@ msgstr ""
 "Language: es\n"
 
 msgid "default short label"
-msgstr "Default"
+msgstr "Por Defecto"
 
 msgid "default label"
-msgstr "Default"
+msgstr "Por Defecto"
 
 msgid "default long description"
-msgstr "The region serviced by DistrictBuilder."
+msgstr "La región atendida por DistrictBuilder."
 
 msgid "congress short label"
 msgstr "%(district_id)s"
 
 msgid "congress label"
-msgstr "District %(district_id)s"
+msgstr "Distrito %s"
 
 msgid "congress long description"
-msgstr "Congressional"
+msgstr "Del Congreso"
 
 msgid "house short label"
 msgstr "%(district_id)s"
 
 msgid "house label"
-msgstr "District %(district_id)s"
+msgstr "Distrito %s"
 
 msgid "house long description"
-msgstr "State House"
+msgstr "Casa de los delegados de Estado"
 
 msgid "senate short label"
 msgstr "%(district_id)s"
 
 msgid "senate label"
-msgstr "District %(district_id)s"
+msgstr "Distrito %s"
 
 msgid "senate long description"
-msgstr "State Senate"
+msgstr "Senado de Estado"
 
 msgid "community short label"
 msgstr "%(district_id)s"
 
 msgid "community label"
-msgstr "Community %(district_id)s"
+msgstr "Comunidad %s"
 
 msgid "community long description"
-msgstr "Community Map"
+msgstr "Mapa de Comunidad"
 
 msgid "va short label"
 msgstr "va"
@@ -64,522 +64,526 @@ msgid "va label"
 msgstr "Virginia"
 
 msgid "va long description"
-msgstr "The Commonwealth of Virginia"
+msgstr "El Estado de Virginia"
 
 msgid "dc short label"
 msgstr "dc"
 
 msgid "dc label"
-msgstr "DC Metro"
+msgstr "DC Metropolitana"
 
 msgid "dc long description"
-msgstr "The District of Columbia Metropolitan Area"
+msgstr "El Área Metropolitana del Distrito de Columbia"
 
 msgid "dc_area_council short label"
 msgstr "%(district_id)s"
 
 msgid "dc_area_council label"
-msgstr "District %(district_id)s"
+msgstr "Distrito %s"
 
 msgid "dc_area_council long description"
-msgstr "DC Planning Council"
+msgstr "Concejo de Planificación de DC"
 
 msgid "dc_community short label"
 msgstr "%(district_id)s"
 
 msgid "dc_community label"
-msgstr "Community %(district_id)s"
+msgstr "Comunidad %s"
 
 msgid "dc_community long description"
-msgstr "DC Community Map"
+msgstr "Mapa de Comunidad de DC"
 
 msgid "dc_vtd short label"
-msgstr ""
+msgstr "vtd"
 
 msgid "dc_vtd label"
-msgstr ""
+msgstr "VTD"
 
 msgid "dc_vtd long description"
-msgstr ""
+msgstr "VTD"
 
 msgid "dc_block short label"
-msgstr ""
+msgstr "cuadra"
 
 msgid "dc_block label"
-msgstr ""
+msgstr "Cuadra"
 
 msgid "dc_block long description"
-msgstr ""
+msgstr "Cuadra"
 
 msgid "county short label"
-msgstr "county"
+msgstr "condado"
 
 msgid "county label"
-msgstr "county"
+msgstr "Condado"
 
 msgid "county long description"
-msgstr ""
+msgstr "Condado"
 
 msgid "va_block short label"
-msgstr ""
+msgstr "cuadra"
 
 msgid "va_block label"
-msgstr ""
+msgstr "Cuadra"
 
 msgid "va_block long description"
-msgstr ""
+msgstr "Cuadra"
 
 msgid "va_vtd short label"
-msgstr ""
+msgstr "vtd"
 
 msgid "va_vtd label"
-msgstr ""
+msgstr "VTD"
 
 msgid "va_vtd long description"
-msgstr ""
+msgstr "VTD"
 
 msgid "va_county short label"
-msgstr ""
+msgstr "condado"
 
 msgid "va_county label"
-msgstr ""
+msgstr "condado"
 
 msgid "va_county long description"
-msgstr ""
+msgstr "Condado"
 
 msgid "vtd short label"
 msgstr "vtd"
 
 msgid "vtd label"
-msgstr "vtd"
+msgstr "VTD"
 
 msgid "vtd long description"
-msgstr ""
+msgstr "VTD"
 
 msgid "block short label"
-msgstr "block"
+msgstr "cyadra"
 
 msgid "block label"
-msgstr "block"
+msgstr "Cuadra"
 
 msgid "block long description"
-msgstr ""
+msgstr "Cuadra"
 
 msgid "congress_leader_all short label"
-msgstr "Congressional Leaderboard - All"
+msgstr "Tabla de Posiciones del Congreso - Todos"
 
 msgid "congress_leader_all label"
-msgstr "Congressional Leaderboard - All"
+msgstr "Tabla de Posiciones del Congreso - Todos"
 
 msgid "congress_leader_all long description"
 msgstr ""
 
 msgid "congress_leader_mine short label"
-msgstr "Congressional Leaderboard - Mine"
+msgstr "Tabla de Posiciones del Congreso - Mío"
 
 msgid "congress_leader_mine label"
-msgstr "Congressional Leaderboard - Mine"
+msgstr "Tabla de Posiciones del Congreso - Mío"
 
 msgid "congress_leader_mine long description"
 msgstr ""
 
 msgid "house_leader_all short label"
-msgstr "State House Leaderboard - All"
+msgstr "Tabla de Posiciones de la Casa de Delegados de Estado - Todos"
 
 msgid "house_leader_all label"
-msgstr "State House Leaderboard - All"
+msgstr "Tabla de Posiciones de la Casa de Delegados de Estado - Todos"
 
 msgid "house_leader_all long description"
 msgstr ""
 
 msgid "house_leader_mine short label"
-msgstr "State House Leaderboard - Mine"
+msgstr "Tabla de Posiciones de la Casa de Delegados de Estado - Mío"
 
 msgid "house_leader_mine label"
-msgstr "State House Leaderboard - Mine"
+msgstr "Tabla de Posiciones de la Casa de Delegados de Estado - Mío"
 
 msgid "house_leader_mine long description"
 msgstr ""
 
 msgid "senate_leader_all short label"
-msgstr "State Senate Leaderboard - All"
+msgstr "Tabla de Posiciones del Senado de Estado - Todos"
 
 msgid "senate_leader_all label"
-msgstr "State Senate Leaderboard - All"
+msgstr "Tabla de Posiciones del Senado de Estado - Todos"
 
 msgid "senate_leader_all long description"
 msgstr ""
 
 msgid "senate_leader_mine short label"
-msgstr "State Senate Leaderboard - Mine"
+msgstr "Tabla de Posiciones del Senado de Estado - Mío"
 
 msgid "senate_leader_mine label"
-msgstr "State Senate Leaderboard - Mine"
+msgstr "Tabla de Posiciones del Senado de Estado - Mío"
 
 msgid "senate_leader_mine long description"
 msgstr ""
 
 msgid "congress_sidebar_basic short label"
-msgstr "Basic Information"
+msgstr "Información Básica"
 
 msgid "congress_sidebar_basic label"
-msgstr "Basic Information"
+msgstr "Información Básica"
 
 msgid "congress_sidebar_basic long description"
 msgstr ""
 
 msgid "congress_sidebar_demo short label"
-msgstr "Demographics"
+msgstr "Demografía"
 
 msgid "congress_sidebar_demo label"
-msgstr "Demographics"
+msgstr "Demografía"
 
 msgid "congress_sidebar_demo long description"
 msgstr ""
 
 msgid "house_sidebar_basic short label"
-msgstr "Basic Information"
+msgstr "Información Básica"
 
 msgid "house_sidebar_basic label"
-msgstr "Basic Information"
+msgstr "Información Básica"
 
 msgid "house_sidebar_basic long description"
 msgstr ""
 
 msgid "house_sidebar_demo short label"
-msgstr "Demographics"
+msgstr "Demografía"
 
 msgid "house_sidebar_demo label"
-msgstr "Demographics"
+msgstr "Demografía"
 
 msgid "house_sidebar_demo long description"
 msgstr ""
 
 msgid "senate_sidebar_basic short label"
-msgstr "Basic Information"
+msgstr "Información Básica"
 
 msgid "senate_sidebar_basic label"
-msgstr "Basic Information"
+msgstr "Información Básica"
 
 msgid "senate_sidebar_basic long description"
 msgstr ""
 
 msgid "senate_sidebar_demo short label"
-msgstr "Demographics"
+msgstr "Demografía"
 
 msgid "senate_sidebar_demo label"
-msgstr "Demographics"
+msgstr "Demografía"
 
 msgid "senate_sidebar_demo long description"
 msgstr ""
 
 msgid "community_demo short label"
-msgstr "Demographics"
+msgstr "Demografía"
 
 msgid "community_demo label"
-msgstr "Demographics"
+msgstr "Demografía"
 
 msgid "community_demo long description"
 msgstr ""
 
 msgid "community_comments short label"
-msgstr "Community Mapping"
+msgstr "Mapeo de Comunidad"
 
 msgid "community_comments label"
-msgstr "Community Mapping"
+msgstr "Mapeo de Comunidad"
 
 msgid "community_comments long description"
 msgstr ""
 
 msgid "dc_area_sidebar_basic short label"
-msgstr "Basic Information"
+msgstr "Información Básica"
 
 msgid "dc_area_sidebar_basic label"
-msgstr "Basic Information"
+msgstr "Información Básica"
 
 msgid "dc_area_sidebar_basic long description"
 msgstr ""
 
 msgid "dc_area_sidebar_demo short label"
-msgstr "Demographics"
+msgstr "Demografía"
 
 msgid "dc_area_sidebar_demo label"
-msgstr "Demographics"
+msgstr "Demografía"
 
 msgid "dc_area_sidebar_demo long description"
 msgstr ""
 
 msgid "dc_community_sidebar_demo short label"
-msgstr "Demographics"
+msgstr "Demografía"
 
 msgid "dc_community_sidebar_demo label"
-msgstr "Demographics"
+msgstr "Demografía"
 
 msgid "dc_community_sidebar_demo long description"
 msgstr ""
 
 msgid "dc_community_sidebar_comments short label"
-msgstr "Community Mapping"
+msgstr "Mapeo de Comunidad"
 
 msgid "dc_community_sidebar_comments label"
-msgstr "Community Mapping"
+msgstr "Mapeo de Comunidad"
 
 msgid "dc_community_sidebar_comments long description"
 msgstr ""
 
 msgid "congress_reports short label"
-msgstr "Congressional Reports"
+msgstr "Informes Sobre el Congreso"
 
 msgid "congress_reports label"
-msgstr "Congressional Reports"
+msgstr "Informes Sobre el Congreso"
 
 msgid "congress_reports long description"
 msgstr ""
 
 msgid "senate_reports short label"
-msgstr "State Senate Reports"
+msgstr "Informes Sobre el Senado de Estado"
 
 msgid "senate_reports label"
-msgstr "State Senate Reports"
+msgstr "Informes Sobre el Senado de Estado"
 
 msgid "senate_reports long description"
 msgstr ""
 
 msgid "house_reports short label"
-msgstr "State House Reports"
+msgstr "Informes Sobre la Casa de Delegados de Estado"
 
 msgid "house_reports label"
-msgstr "State House Reports"
+msgstr "Informes Sobre la Casa de Delegados de Estado"
 
 msgid "house_reports long description"
 msgstr ""
 
 msgid "dc_area_reports short label"
-msgstr "DC Planning Council Reports"
+msgstr "Informes Sobre el Concejo de Planificación de DC"
 
 msgid "dc_area_reports label"
-msgstr "DC Planning Council Reports"
+msgstr "Informes Sobre el Concejo de Planificación de DC"
 
 msgid "dc_area_reports long description"
 msgstr ""
 
 msgid "a_congressional_population short label"
-msgstr "Tot Pop"
+msgstr "Pob. Tot"
 
 msgid "a_congressional_population label"
-msgstr "Tot Pop"
+msgstr "Pob. Tot"
 
 msgid "a_congressional_population long description"
-msgstr "Population interval calculator for congressional."
+msgstr "Calculadora de Intervalo de Población para el Congreso."
 
 msgid "a_congress_plan_count_districts short label"
-msgstr "Count Districts"
+msgstr "Contar Distritos"
 
 msgid "a_congress_plan_count_districts label"
-msgstr "Count Districts"
+msgstr "Contar Distritos"
 
 msgid "a_congress_plan_count_districts long description"
 msgstr ""
-"The number of districts in a Congressional redistricting plan must be "
-"11."
+"El Número de Distritos en un Plan de Redistribución de Distritos Debe "
+"Ser 11"
 
 msgid "a_congress_plan_equipopulation_summary short label"
-msgstr "Target Pop. (727,366)"
+msgstr "Pob. Objetivo (727,366)"
 
 msgid "a_congress_plan_equipopulation_summary label"
-msgstr "Target Pop. (727,366)"
+msgstr "Pob. Objetivo (727,366)"
 
 msgid "a_congress_plan_equipopulation_summary long description"
-msgstr ""
-"The population of each Congressional district must be 727,366 +/- "
-"0.5%."
+msgstr "La Población de Cada Distrito del Congreso Debe Ser 727,366 +/- 0.5%."
 
 msgid "a_congress_plan_equipopulation_validation short label"
-msgstr "Target Pop. (727,366)"
+msgstr "Pob. Objetivo (727,366)"
 
 msgid "a_congress_plan_equipopulation_validation label"
-msgstr "Target Pop. (727,366)"
+msgstr "Pob. Objetivo (727,366)"
 
 msgid "a_congress_plan_equipopulation_validation long description"
-msgstr ""
-"The population of each Congressional district must be 727,366 +/- "
-"0.5%."
+msgstr "La Población de Cada Distrito del Congreso Debe Ser 727,366 +/- 0.5%."
 
 msgid "a_dc_area_council_plan_equipopulation_summary short label"
-msgstr "Target Pop. (292,843)"
+msgstr "Pob. Objetivo (292,843)"
 
 msgid "a_dc_area_council_plan_equipopulation_summary label"
-msgstr "Target Pop. (292,843)"
+msgstr "Pob. Objetivo (292,843)"
 
 msgid "a_dc_area_council_plan_equipopulation_summary long description"
-msgstr "The population of each State Senate district must be 292,843 +/- 5%."
+msgstr ""
+"La Población de Cada Distrito del Senado de Estado Debe Ser 292,843 "
+"+/- 5%."
 
 msgid "a_dc_area_council_plan_equipopulation_validation short label"
-msgstr "Target Pop. (292,843)"
+msgstr "Pob. Objetivo (292,843)"
 
 msgid "a_dc_area_council_plan_equipopulation_validation label"
-msgstr "Target Pop. (292,843)"
+msgstr "Pob. Objetivo (292,843)"
 
 msgid "a_dc_area_council_plan_equipopulation_validation long description"
-msgstr "The population of each State Senate district must be 292,843 +/- 5%."
+msgstr ""
+"La Población de Cada Distrito del Senado de Estado Debe Ser 292,843 "
+"+/- 5%."
 
 msgid "a_dc_area_council_population short label"
-msgstr "Tot Pop"
+msgstr "Pob. Tot"
 
 msgid "a_dc_area_council_population label"
-msgstr "Tot Pop"
+msgstr "Pob. Tot"
 
 msgid "a_dc_area_council_population long description"
-msgstr "Population interval calculator for senate."
+msgstr "Calculadora de Intervalo de Población para el Senado."
 
 msgid "a_house_plan_count_districts short label"
-msgstr "Count Districts"
+msgstr "Contar Distritos"
 
 msgid "a_house_plan_count_districts label"
-msgstr "Count Districts"
+msgstr "Contar Distritos"
 
 msgid "a_house_plan_count_districts long description"
 msgstr ""
-"The number of districts in a House of Delegates redistricting plan "
-"must be 100."
+"El Número de Distritos en un Plan de Redistribución de Distritos de la"
+" Casa de Delegados Debe Ser 100."
 
 msgid "a_house_plan_equipopulation_summary short label"
-msgstr "Target Pop. (80,010)"
+msgstr "Pob. Objetivo (80,010)"
 
 msgid "a_house_plan_equipopulation_summary label"
-msgstr "Target Pop. (80,010)"
+msgstr "Pob. Objetivo (80,010)"
 
 msgid "a_house_plan_equipopulation_summary long description"
 msgstr ""
-"The population of each House of Delegates district must be 80,010 +/- "
-"5%."
+"La Población de Cada Distrito de la Casa de Delegados Debe Ser 80,010 "
+"+/- 5%."
 
 msgid "a_house_plan_equipopulation_validation short label"
-msgstr "Target Pop. (80,010)"
+msgstr "Pob. Objetivo (80,010)"
 
 msgid "a_house_plan_equipopulation_validation label"
-msgstr "Target Pop. (80,010)"
+msgstr "Pob. Objetivo (80,010)"
 
 msgid "a_house_plan_equipopulation_validation long description"
 msgstr ""
-"The population of each House of Delegates district must be 80,010 +/- "
-"5%."
+"La Población de Cada Distrito de la Casa de Delegados Debe Ser 80,010 "
+"+/- 5%."
 
 msgid "a_house_population short label"
-msgstr "Tot Pop"
+msgstr "Pob. Tot"
 
 msgid "a_house_population label"
-msgstr "Tot Pop"
+msgstr "Pob. Tot"
 
 msgid "a_house_population long description"
-msgstr "Population interval calculator for house."
+msgstr "Calculadora de Intervalo de Población para la Casa de Delegados"
 
 msgid "a_senate_plan_count_districts short label"
-msgstr "Count Districts"
+msgstr "Contar Distritos"
 
 msgid "a_senate_plan_count_districts label"
-msgstr "Count Districts"
+msgstr "Contar Distritos"
 
 msgid "a_senate_plan_count_districts long description"
 msgstr ""
-"The number of districts in a State Senate redistricting plan must be "
-"100."
+"El Número de Distritos en un Plan de Redistribución de Distritos del "
+"Senado de Estado Debe Ser 100."
 
 msgid "a_senate_plan_equipopulation_summary short label"
-msgstr "Target Pop. (200,026)"
+msgstr "Pob. Objetivo (200,026)"
 
 msgid "a_senate_plan_equipopulation_summary label"
-msgstr "Target Pop. (200,026)"
+msgstr "Pob. Objetivo (200,026)"
 
 msgid "a_senate_plan_equipopulation_summary long description"
-msgstr "The population of each State Senate district must be 200,026 +/- 5%."
+msgstr ""
+"La Población de Cada Distrito del Senado de Estado Debe Ser 200,026 "
+"+/- 5%."
 
 msgid "a_senate_plan_equipopulation_validation short label"
-msgstr "Target Pop. (200,026)"
+msgstr "Pob. Objetivo (200,026)"
 
 msgid "a_senate_plan_equipopulation_validation label"
-msgstr "Target Pop. (200,026)"
+msgstr "Pob. Objetivo (200,026)"
 
 msgid "a_senate_plan_equipopulation_validation long description"
-msgstr "The population of each State Senate district must be 200,026 +/- 5%."
+msgstr ""
+"La Población de Cada Distrito del Senado de Estado Debe Ser 200,026 "
+"+/- 5%."
 
 msgid "a_senate_population short label"
-msgstr "Tot Pop"
+msgstr "Pob. Tot"
 
 msgid "a_senate_population label"
-msgstr "Tot Pop"
+msgstr "Pob. Tot"
 
 msgid "a_senate_population long description"
-msgstr "Population interval calculator for senate."
+msgstr "Calculadora de Intervalo de Población para el Senado."
 
 msgid "b_plan_congress_noncontiguous short label"
-msgstr "Contiguous"
+msgstr "Contiguo"
 
 msgid "b_plan_congress_noncontiguous label"
-msgstr "Contiguous"
+msgstr "Contiguo"
 
 msgid "b_plan_congress_noncontiguous long description"
 msgstr ""
 
 msgid "b_plan_dc_area_council_noncontiguous short label"
-msgstr "Contiguous"
+msgstr "Contiguo"
 
 msgid "b_plan_dc_area_council_noncontiguous label"
-msgstr "Contiguous"
+msgstr "Contiguo"
 
 msgid "b_plan_dc_area_council_noncontiguous long description"
 msgstr ""
 
 msgid "b_plan_house_noncontiguous short label"
-msgstr "Contiguous"
+msgstr "Contiguo"
 
 msgid "b_plan_house_noncontiguous label"
-msgstr "Contiguous"
+msgstr "Contiguo"
 
 msgid "b_plan_house_noncontiguous long description"
 msgstr ""
 
 msgid "b_plan_senate_noncontiguous short label"
-msgstr "Contiguous"
+msgstr "Contiguo"
 
 msgid "b_plan_senate_noncontiguous label"
-msgstr "Contiguous"
+msgstr "Contiguo"
 
 msgid "b_plan_senate_noncontiguous long description"
 msgstr ""
 
 msgid "district_blkvap_percent short label"
-msgstr "Black VAP"
+msgstr "Negro VAP"
 
 msgid "district_blkvap_percent label"
-msgstr "Black VAP"
+msgstr "Negro VAP"
 
 msgid "district_blkvap_percent long description"
 msgstr ""
 
 msgid "district_blkvap_thresh short label"
-msgstr "Black VAP Threshold"
+msgstr "Límite Mínimo de Negro VAP"
 
 msgid "district_blkvap_thresh label"
-msgstr "Black VAP Threshold"
+msgstr "Límite Mínimo de Negro VAP"
 
 msgid "district_blkvap_thresh long description"
 msgstr ""
 
 msgid "district_comments short label"
-msgstr "Comments"
+msgstr "Comentarios"
 
 msgid "district_comments label"
-msgstr "Comments"
+msgstr "Comentarios"
 
 msgid "district_comments long description"
 msgstr ""
 
 msgid "district_contiguous short label"
-msgstr "Contiguous"
+msgstr "Contiguo"
 
 msgid "district_contiguous label"
-msgstr "Contiguous"
+msgstr "Contiguo"
 
 msgid "district_contiguous long description"
 msgstr ""
@@ -594,10 +598,10 @@ msgid "district_hispvap_percent long description"
 msgstr ""
 
 msgid "district_hispvap_thresh short label"
-msgstr "His. VAP Threshold"
+msgstr "Límite Mínimo de His. VAP"
 
 msgid "district_hispvap_thresh label"
-msgstr "His. VAP Threshold"
+msgstr "Límite Mínimo de His. VAP"
 
 msgid "district_hispvap_thresh long description"
 msgstr ""
@@ -621,19 +625,19 @@ msgid "district_mintot long description"
 msgstr ""
 
 msgid "district_poptot short label"
-msgstr "Total Population"
+msgstr "Población Total"
 
 msgid "district_poptot label"
-msgstr "Total Population"
+msgstr "Población Total"
 
 msgid "district_poptot long description"
 msgstr ""
 
 msgid "district_poptot_range short label"
-msgstr "Tot Pop Range"
+msgstr "Rango de Pob Tot"
 
 msgid "district_poptot_range label"
-msgstr "Tot Pop Range"
+msgstr "Rango de Pob Tot"
 
 msgid "district_poptot_range long description"
 msgstr ""
@@ -666,55 +670,56 @@ msgid "district_poptot_uitarget_senate long description"
 msgstr ""
 
 msgid "district_schwartzberg short label"
-msgstr "Compactness"
+msgstr "Compacidad"
 
 msgid "district_schwartzberg label"
-msgstr "Compactness"
+msgstr "Compacidad"
 
 msgid "district_schwartzberg long description"
 msgstr ""
 
 msgid "district_vap short label"
-msgstr "Voting Age Pop."
+msgstr "Pob. en Edad de Votar"
 
 msgid "district_vap label"
-msgstr "Voting Age Pop."
+msgstr "Pob. en Edad de Votar"
 
 msgid "district_vap long description"
 msgstr ""
 
 msgid "partisan_index short label"
-msgstr "Partisan Index"
+msgstr "Índice Partidista"
 
 msgid "partisan_index label"
-msgstr "Partisan Index"
+msgstr "Índice Partidista"
 
 msgid "partisan_index long description"
 msgstr ""
 
 msgid "plan_all_blocks_assigned short label"
-msgstr "All Blocks Assigned"
+msgstr "Todas las Cuadras Asignadas"
 
 msgid "plan_all_blocks_assigned label"
-msgstr "All Blocks Assigned"
+msgstr "Todas las Cuadras Asignadas"
 
 msgid "plan_all_blocks_assigned long description"
-msgstr "All blocks in the plan must be assigned."
+msgstr "Todas las cuadras en el plan deben ser asignadas."
 
 msgid "plan_all_contiguous short label"
-msgstr "All Contiguous"
+msgstr "Todos Contiguos"
 
 msgid "plan_all_contiguous label"
-msgstr "All Contiguous"
+msgstr "Todos Contiguos"
 
 msgid "plan_all_contiguous long description"
 msgstr ""
-"Contiguity means that every part of a district must be reachable from "
-"every other part without crossing the district's borders. All "
-"districts within a plan must be contiguous. Water contiguity is "
-"permitted given Virginia's extensive coastal region. 'Point "
-"contiguity' or 'touch-point contiguity' where two sections of a "
-"district are connected at a single point is not permitted."
+"Contigüidad significa que todas las partes de un distrito deben ser "
+"accesibles desde cualquier otra parte sin cruzar las fronteras del "
+"distrito. Todos los distritos dentro de un plan deben ser contiguos. "
+"La contigüidad del agua es permitida debido a la extensa región "
+"costera que posee Virginia. Contigüidad por punto o contigüidad por"
+" toque de punto donde dos secciones de un distrito están conectadas "
+"en un solo punto no está permitido."
 
 msgid "plan_all_equipop short label"
 msgstr ""
@@ -735,27 +740,26 @@ msgid "plan_blkvap_thresh long description"
 msgstr ""
 
 msgid "plan_competitiveness short label"
-msgstr "Competitiveness"
+msgstr "Competitividad"
 
 msgid "plan_competitiveness label"
-msgstr "Competitiveness"
+msgstr "Competitividad"
 
 msgid "plan_competitiveness long description"
 msgstr ""
-"Each plan's overall political competitiveness is determined by "
-"averaging each district.s 'partisan differential'.  The partisan "
-"differential of each district is calculated by subtracting the "
-"Democratic 'partisan index' from the Republican 'partisan "
-"index'.<br/><br/>'Heavily' competitive districts are districts with "
-"partisan differentials of less than or equal to 5%. 'Generally' "
-"competitive districts are districts with partisan differentials of "
-"greater than 5% but less than 10%."
+"La competitividad política de cada plan está determinada por un "
+"promedio de la diferencia partidista de cada distrito. Se calcula "
+"restando el índice partidista Demócrata del índice partidista "
+"Republicano. Los distritos muy competitivos son los distritos con "
+"diferencias partidistas de menor o igual a 5%. Distritos generalmente "
+"competitivos son los distritos con diferencias partidistas entre 5% y "
+"10%."
 
 msgid "plan_contiguous short label"
-msgstr "Contiguous"
+msgstr "Contiguo"
 
 msgid "plan_contiguous label"
-msgstr "Contiguous"
+msgstr "Contiguo"
 
 msgid "plan_contiguous long description"
 msgstr ""
@@ -770,15 +774,15 @@ msgid "plan_count_majmin long description"
 msgstr ""
 
 msgid "plan_equivalence short label"
-msgstr "Equal Population"
+msgstr "Población Igual"
 
 msgid "plan_equivalence label"
-msgstr "Equal Population"
+msgstr "Población Igual"
 
 msgid "plan_equivalence long description"
 msgstr ""
-"The Equipopulation score is the difference between the district with "
-"the highest population and the district with the lowest population."
+"La puntuación población-igual es la diferencia entre el distrito con "
+"mayor población y el distrito con menor población."
 
 msgid "plan_hispvap_thresh short label"
 msgstr ""
@@ -790,94 +794,100 @@ msgid "plan_hispvap_thresh long description"
 msgstr ""
 
 msgid "plan_majority_minority short label"
-msgstr "Majority Minority District"
+msgstr "Distrito de Mayoría Minoritaria"
 
 msgid "plan_majority_minority label"
-msgstr "Majority Minority District"
+msgstr "Distrito de Mayoría Minoritaria"
 
 msgid "plan_majority_minority long description"
 msgstr ""
-"Compliance with the Voting Rights Act will be assumed if maps include "
-"a minority-majority district in any area where a minority group is (as"
-" described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) "
-"'sufficiently large and geographically compact to constitute a "
-"majority in a single-member district'."
+"El cumplimento de la Ley de Derechos Electorales será asumido si los "
+"mapas incluyen un distrito de mayoría minoritaria en cualquier área en"
+" que un grupo minoritario es (como se describe en Thornberg V. "
+"Gingles, 478 EEUU 30, 49 (1986)) suficientemente grande y "
+"geográficamente compacto para constituir una mayoría en un distrito "
+"uninominal."
 
 msgid "plan_majority_minority_blk short label"
-msgstr "Black VAP Majority (>50%)"
+msgstr "VAP Mayoría de Negros (>50%)"
 
 msgid "plan_majority_minority_blk label"
-msgstr "Black VAP Majority (>50%)"
+msgstr "VAP Mayoría de Negros (>50%)"
 
 msgid "plan_majority_minority_blk long description"
 msgstr ""
-"Compliance with the Voting Rights Act will be assumed if maps include "
-"a minority-majority district in any area where a minority group is (as"
-" described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) "
-"'sufficiently large and geographically compact to constitute a "
-"majority in a single-member district'."
+"El cumplimento de la Ley de Derechos Electorales será asumido si los "
+"mapas incluyen un distrito de mayoría minoritaria en cualquier área en"
+" que un grupo minoritario es (como se describe en Thornberg V. "
+"Gingles, 478 EEUU 30, 49 (1986)) suficientemente grande y "
+"geográficamente compacto para constituir una mayoría en un distrito "
+"uninominal."
 
 msgid "plan_majority_minority_blk_congress short label"
-msgstr "Black VAP Majority (>50%)"
+msgstr "VAP Mayoría de Negros (>50%)"
 
 msgid "plan_majority_minority_blk_congress label"
-msgstr "Black VAP Majority (>50%)"
+msgstr "VAP Mayoría de Negros (>50%)"
 
 msgid "plan_majority_minority_blk_congress long description"
 msgstr ""
-"Compliance with the Voting Rights Act will be assumed if maps include "
-"a minority-majority district in any area where a minority group is (as"
-" described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) "
-"'sufficiently large and geographically compact to constitute a "
-"majority in a single-member district'."
+"El cumplimento de la Ley de Derechos Electorales será asumido si los "
+"mapas incluyen un distrito de mayoría minoritaria en cualquier área en"
+" que un grupo minoritario es (como se describe en Thornberg V. "
+"Gingles, 478 EEUU 30, 49 (1986)) suficientemente grande y "
+"geográficamente compacto para constituir una mayoría en un distrito "
+"uninominal."
 
 msgid "plan_majority_minority_blk_house short label"
-msgstr "Black VAP Majority (>50%)"
+msgstr "VAP Mayoría de Negros (>50%)"
 
 msgid "plan_majority_minority_blk_house label"
-msgstr "Black VAP Majority (>50%)"
+msgstr "VAP Mayoría de Negros (>50%)"
 
 msgid "plan_majority_minority_blk_house long description"
 msgstr ""
-"Compliance with the Voting Rights Act will be assumed if maps include "
-"a minority-majority district in any area where a minority group is (as"
-" described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) "
-"'sufficiently large and geographically compact to constitute a "
-"majority in a single-member district'."
+"El cumplimento de la Ley de Derechos Electorales será asumido si los "
+"mapas incluyen un distrito de mayoría minoritaria en cualquier área en"
+" que un grupo minoritario es (como se describe en Thornberg V. "
+"Gingles, 478 EEUU 30, 49 (1986)) suficientemente grande y "
+"geográficamente compacto para constituir una mayoría en un distrito "
+"uninominal."
 
 msgid "plan_majority_minority_blk_senate short label"
-msgstr "Black VAP Majority (>50%)"
+msgstr "VAP Mayoría de Negros (>50%)"
 
 msgid "plan_majority_minority_blk_senate label"
-msgstr "Black VAP Majority (>50%)"
+msgstr "VAP Mayoría de Negros (>50%)"
 
 msgid "plan_majority_minority_blk_senate long description"
 msgstr ""
-"Compliance with the Voting Rights Act will be assumed if maps include "
-"a minority-majority district in any area where a minority group is (as"
-" described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) "
-"'sufficiently large and geographically compact to constitute a "
-"majority in a single-member district'."
+"El cumplimento de la Ley de Derechos Electorales será asumido si los "
+"mapas incluyen un distrito de mayoría minoritaria en cualquier área en"
+" que un grupo minoritario es (como se describe en Thornberg V. "
+"Gingles, 478 EEUU 30, 49 (1986)) suficientemente grande y "
+"geográficamente compacto para constituir una mayoría en un distrito "
+"uninominal."
 
 msgid "plan_majority_minority_hisp short label"
-msgstr "Hisp. VAP Majority (>50%)"
+msgstr "VAP Mayoría de Hisp. (>50%)"
 
 msgid "plan_majority_minority_hisp label"
-msgstr "Hisp. VAP Majority (>50%)"
+msgstr "VAP Mayoría de Hisp. (>50%)"
 
 msgid "plan_majority_minority_hisp long description"
 msgstr ""
-"Compliance with the Voting Rights Act will be assumed if maps include "
-"a minority-majority district in any area where a minority group is (as"
-" described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) "
-"'sufficiently large and geographically compact to constitute a "
-"majority in a single-member district'."
+"El cumplimento de la Ley de Derechos Electorales será asumido si los "
+"mapas incluyen un distrito de mayoría minoritaria en cualquier área en"
+" que un grupo minoritario es (como se describe en Thornberg V. "
+"Gingles, 478 EEUU 30, 49 (1986)) suficientemente grande y "
+"geográficamente compacto para constituir una mayoría en un distrito "
+"uninominal."
 
 msgid "plan_major_minor short label"
-msgstr "Majority-Minority"
+msgstr "Mayoría-Minoría"
 
 msgid "plan_major_minor label"
-msgstr "Majority-Minority"
+msgstr "Mayoría-Minoría"
 
 msgid "plan_major_minor long description"
 msgstr ""
@@ -892,45 +902,44 @@ msgid "plan_poptot_inrange long description"
 msgstr ""
 
 msgid "plan_repfairness short label"
-msgstr "Representational Fairness"
+msgstr "Equidad de Representación"
 
 msgid "plan_repfairness label"
-msgstr "Representational Fairness"
+msgstr "Equidad de Representación"
 
 msgid "plan_repfairness long description"
 msgstr ""
-"Representational fairness is increased when the percentage of "
-"districts a party would likely win (based upon the 'partisan index' "
-"used to determine Competitiveness) closely mirrors that party.s "
-"percentage of the statewide vote."
+"La equidad de representación es mayor cuando el porcentaje de "
+"distritos que un partido generalmente ganaría (basado en el índice "
+"partidista usado en calcular la competitividad, refleja fielmente el "
+"porcentaje de los votos de ese mismo partido en todo el estado."
 
 msgid "plan_schwartzberg short label"
-msgstr "Average Compactness"
+msgstr "Compacidad Promedia"
 
 msgid "plan_schwartzberg label"
-msgstr "Average Compactness"
+msgstr "Compacidad Promedia"
 
 msgid "plan_schwartzberg long description"
 msgstr ""
-"The competition is using the 'Inverse Schwartzberg' compactness "
-"measure. This measure is a ratio of the circumference of the circle "
-"whose area is equal to the area of the district to the perimeter of "
-"the district."
+"El concurso utiliza la medida de compacidad Schwartzberg Inversa. "
+"Esta medida es una proporción de la circunferencía del círculo cuya "
+"área es igual al área del distrito y el perímetro del distrito."
 
 msgid "plan_sum_equipop short label"
-msgstr "Equal Population"
+msgstr "Población Igual"
 
 msgid "plan_sum_equipop label"
-msgstr "Equal Population"
+msgstr "Población Igual"
 
 msgid "plan_sum_equipop long description"
 msgstr ""
 
 msgid "report_score_compactness_lw short label"
-msgstr "Length/Width"
+msgstr "Longitud/Anchura"
 
 msgid "report_score_compactness_lw label"
-msgstr "Length/Width"
+msgstr "Longitud/Anchura"
 
 msgid "report_score_compactness_lw long description"
 msgstr ""
@@ -954,316 +963,316 @@ msgid "report_score_compactness_sc long description"
 msgstr ""
 
 msgid "report_score_majmin_blk short label"
-msgstr "VAP African-American"
+msgstr "VAP Afro-Americano"
 
 msgid "report_score_majmin_blk label"
-msgstr "VAP African-American"
+msgstr "VAP Afro-Americano"
 
 msgid "report_score_majmin_blk long description"
 msgstr ""
 
 msgid "report_score_majmin_hisp short label"
-msgstr "VAP Hispanic/Latino"
+msgstr "VAP Hispano/Latino"
 
 msgid "report_score_majmin_hisp label"
-msgstr "VAP Hispanic/Latino"
+msgstr "VAP Hispano/Latino"
 
 msgid "report_score_majmin_hisp long description"
 msgstr ""
 
 msgid "report_score_party_dem short label"
-msgstr "Democratic"
+msgstr "Demócrata"
 
 msgid "report_score_party_dem label"
-msgstr "Democratic"
+msgstr "Demócrata"
 
 msgid "report_score_party_dem long description"
 msgstr ""
 
 msgid "report_score_party_rep short label"
-msgstr "Republican"
+msgstr "Republicano"
 
 msgid "report_score_party_rep label"
-msgstr "Republican"
+msgstr "Republicano"
 
 msgid "report_score_party_rep long description"
 msgstr ""
 
 msgid "report_score_total_population_congress short label"
-msgstr "Total Population"
+msgstr "Población Igual"
 
 msgid "report_score_total_population_congress label"
-msgstr "Total Population"
+msgstr "Población Igual"
 
 msgid "report_score_total_population_congress long description"
 msgstr ""
 
 msgid "report_score_total_population_dc_council short label"
-msgstr "Total Population"
+msgstr "Población Igual"
 
 msgid "report_score_total_population_dc_council label"
-msgstr "Total Population"
+msgstr "Población Igual"
 
 msgid "report_score_total_population_dc_council long description"
 msgstr ""
 
 msgid "report_score_total_population_house short label"
-msgstr "Total Population"
+msgstr "Población Igual"
 
 msgid "report_score_total_population_house label"
-msgstr "Total Population"
+msgstr "Población Igual"
 
 msgid "report_score_total_population_house long description"
 msgstr ""
 
 msgid "report_score_total_population_senate short label"
-msgstr "Total Population"
+msgstr "Población Igual"
 
 msgid "report_score_total_population_senate label"
-msgstr "Total Population"
+msgstr "Población Igual"
 
 msgid "report_score_total_population_senate long description"
 msgstr ""
 
 msgid "report_score_unassigned short label"
-msgstr "Unassigned Blocks"
+msgstr "Cuadras sin Asignar"
 
 msgid "report_score_unassigned label"
-msgstr "Unassigned Blocks"
+msgstr "Cuadras sin Asignar"
 
 msgid "report_score_unassigned long description"
 msgstr ""
 
 msgid "report_score_vap short label"
-msgstr "Voting Age Population"
+msgstr "Población en Edad de Votar"
 
 msgid "report_score_vap label"
-msgstr "Voting Age Population"
+msgstr "Población en Edad de Votar"
 
 msgid "report_score_vap long description"
 msgstr ""
 
 msgid "report_score_vapblk short label"
-msgstr "VAP African-American"
+msgstr "VAP Afro-Americano"
 
 msgid "report_score_vapblk label"
-msgstr "VAP African-American"
+msgstr "VAP Afro-Americano"
 
 msgid "report_score_vapblk long description"
 msgstr ""
 
 msgid "report_score_vaphisp short label"
-msgstr "VAP Hispanic/Latino"
+msgstr "VAP Hispano/Latino"
 
 msgid "report_score_vaphisp label"
-msgstr "VAP Hispanic/Latino"
+msgstr "VAP Hispano/Latino"
 
 msgid "report_score_vaphisp long description"
 msgstr ""
 
 msgid "panel_competitive_mine short label"
-msgstr "Competitiveness"
+msgstr "Competitividad"
 
 msgid "panel_competitive_mine label"
-msgstr "Competitiveness"
+msgstr "Competitividad"
 
 msgid "panel_competitive_mine long description"
 msgstr ""
 
 msgid "panel_rf_mine short label"
-msgstr "Representational Fairness"
+msgstr "Equidad de Representación"
 
 msgid "panel_rf_mine label"
-msgstr "Representational Fairness"
+msgstr "Equidad de Representación"
 
 msgid "panel_rf_mine long description"
 msgstr ""
 
 msgid "community_panel_comments short label"
-msgstr "Plan Comments"
+msgstr "Comentarios sobre el Plan"
 
 msgid "community_panel_comments label"
-msgstr "Plan Comments"
+msgstr "Comentarios sobre el Plan"
 
 msgid "community_panel_comments long description"
 msgstr ""
 
 msgid "congresional_panel_info short label"
-msgstr "Basic Information"
+msgstr "Información Básica"
 
 msgid "congresional_panel_info label"
-msgstr "Basic Information"
+msgstr "Información Básica"
 
 msgid "congresional_panel_info long description"
 msgstr ""
 
 msgid "congressional_panel_summary short label"
-msgstr "Plan Summary"
+msgstr "Resumen del Plan"
 
 msgid "congressional_panel_summary label"
-msgstr "Plan Summary"
+msgstr "Resumen del Plan"
 
 msgid "congressional_panel_summary long description"
 msgstr ""
 
 msgid "congressional_panel_demo short label"
-msgstr "Demographics"
+msgstr "Demografía"
 
 msgid "congressional_panel_demo label"
-msgstr "Demographics"
+msgstr "Demografía"
 
 msgid "congressional_panel_demo long description"
 msgstr ""
 
 msgid "house_panel_info short label"
-msgstr "Basic Information"
+msgstr "Información Básica"
 
 msgid "house_panel_info label"
-msgstr "Basic Information"
+msgstr "Información Básica"
 
 msgid "house_panel_info long description"
 msgstr ""
 
 msgid "house_panel_summary short label"
-msgstr "Plan Summary"
+msgstr "Resumen del Plan"
 
 msgid "house_panel_summary label"
-msgstr "Plan Summary"
+msgstr "Resumen del Plan"
 
 msgid "house_panel_summary long description"
 msgstr ""
 
 msgid "house_panel_demo short label"
-msgstr "Demographics"
+msgstr "Demografía"
 
 msgid "house_panel_demo label"
-msgstr "Demographics"
+msgstr "Demografía"
 
 msgid "house_panel_demo long description"
 msgstr ""
 
 msgid "senate_panel_info short label"
-msgstr "Basic Information"
+msgstr "Información Básica"
 
 msgid "senate_panel_info label"
-msgstr "Basic Information"
+msgstr "Información Básica"
 
 msgid "senate_panel_info long description"
 msgstr ""
 
 msgid "senate_panel_summary short label"
-msgstr "Plan Summary"
+msgstr "Resumen del Plan"
 
 msgid "senate_panel_summary label"
-msgstr "Plan Summary"
+msgstr "Resumen del Plan"
 
 msgid "senate_panel_summary long description"
 msgstr ""
 
 msgid "senate_panel_demo short label"
-msgstr "Demographics"
+msgstr "Demografía"
 
 msgid "senate_panel_demo label"
-msgstr "Demographics"
+msgstr "Demografía"
 
 msgid "senate_panel_demo long description"
 msgstr ""
 
 msgid "dc_area_council_panel_info short label"
-msgstr "Basic Information"
+msgstr "Información Básica"
 
 msgid "dc_area_council_panel_info label"
-msgstr "Basic Information"
+msgstr "Información Básica"
 
 msgid "dc_area_council_panel_info long description"
 msgstr ""
 
 msgid "dc_area_council_panel_summary short label"
-msgstr "Plan Summary"
+msgstr "Resumen del Plan"
 
 msgid "dc_area_council_panel_summary label"
-msgstr "Plan Summary"
+msgstr "Resumen del Plan"
 
 msgid "dc_area_council_panel_summary long description"
 msgstr ""
 
 msgid "dc_area_council_panel_demo short label"
-msgstr "Demographics"
+msgstr "Demografía"
 
 msgid "dc_area_council_panel_demo label"
-msgstr "Demographics"
+msgstr "Demografía"
 
 msgid "dc_area_council_panel_demo long description"
 msgstr ""
 
 msgid "report_panel_population short label"
-msgstr "Population"
+msgstr "Población"
 
 msgid "report_panel_population label"
-msgstr "Population"
+msgstr "Población"
 
 msgid "report_panel_population long description"
 msgstr ""
 
 msgid "community_panel_demo short label"
-msgstr "Demographics"
+msgstr "Demografía"
 
 msgid "community_panel_demo label"
-msgstr "Demographics"
+msgstr "Demografía"
 
 msgid "community_panel_demo long description"
 msgstr ""
 
 msgid "community_panel_summary short label"
-msgstr "Community Summary"
+msgstr "Resumen de la Comunidad"
 
 msgid "community_panel_summary label"
-msgstr "Community Summary"
+msgstr "Resumen de la Comunidad"
 
 msgid "community_panel_summary long description"
 msgstr ""
 
 msgid "report_panel_majmin short label"
-msgstr "Majority Minority Districts"
+msgstr "Distritos de Mayoría Minoritaria"
 
 msgid "report_panel_majmin label"
-msgstr "Majority Minority Districts"
+msgstr "Distritos de Mayoría Minoritaria"
 
 msgid "report_panel_majmin long description"
 msgstr ""
 
 msgid "report_panel_compactness short label"
-msgstr "Compactness"
+msgstr "Compacidad"
 
 msgid "report_panel_compactness label"
-msgstr "Compactness"
+msgstr "Compacidad"
 
 msgid "report_panel_compactness long description"
 msgstr ""
 
 msgid "report_panel_party short label"
-msgstr "Party-Controlled Districts"
+msgstr "Distrito(s) Controlado(s) por un Partido"
 
 msgid "report_panel_party label"
-msgstr "Party-Controlled Districts"
+msgstr "Distrito(s) Controlado(s) por un Partido"
 
 msgid "report_panel_party long description"
 msgstr ""
 
 msgid "report_panel_spatial short label"
-msgstr "Spatial Analysis"
+msgstr "Análisis Espacial"
 
 msgid "report_panel_spatial label"
-msgstr "Spatial Analysis"
+msgstr "Análisis Espacial"
 
 msgid "report_panel_spatial long description"
 msgstr ""
 
 msgid "panel_equipop_all short label"
-msgstr "Equipopulation"
+msgstr "Población-Igual"
 
 msgid "panel_equipop_all label"
-msgstr "Equipopulation"
+msgstr "Población-Igual"
 
 msgid "panel_equipop_all long description"
 msgstr ""
@@ -1278,28 +1287,28 @@ msgid "panel_compact_all long description"
 msgstr ""
 
 msgid "panel_competitive_all short label"
-msgstr "Competitiveness"
+msgstr "Competitividad"
 
 msgid "panel_competitive_all label"
-msgstr "Competitiveness"
+msgstr "Competitividad"
 
 msgid "panel_competitive_all long description"
 msgstr ""
 
 msgid "panel_rf_all short label"
-msgstr "Representational Fairness"
+msgstr "Equidad de Representación"
 
 msgid "panel_rf_all label"
-msgstr "Representational Fairness"
+msgstr "Equidad de Representación"
 
 msgid "panel_rf_all long description"
 msgstr ""
 
 msgid "panel_equipop_mine short label"
-msgstr "Equipopulation"
+msgstr "Población-Igual"
 
 msgid "panel_equipop_mine label"
-msgstr "Equipopulation"
+msgstr "Población-Igual"
 
 msgid "panel_equipop_mine long description"
 msgstr ""
@@ -1503,328 +1512,325 @@ msgid "govtot long description"
 msgstr ""
 
 msgid "house_contiguity short label"
-msgstr "AllContiguous - House"
+msgstr "TodosContiguos - Casa"
 
 msgid "house_contiguity label"
-msgstr "AllContiguous - House"
+msgstr "TodosContiguos - Casa"
 
 msgid "house_contiguity long description"
 msgstr ""
-"<p>Your plan does not meet the competition criteria for "
-"Contiguity</p><p>Every part of a district must be reachable from every"
-" other part without crossing the district's borders. All districts "
-"within a plan must be contiguous. Water contiguity is permitted given "
-"Virginia's extensive coastal region. 'Point contiguity' or 'touch-"
-"point contiguity' where two sections of a district are connected at a "
-"single point is not permitted.</p>"
+"<p>Su plan no cumple con los criterios de concurso para "
+"contigüidad</p><p>Todos los distritos dentro de un plan deben ser "
+"contiguos. La contigüidad del agua es permitida debido a la extensa "
+"región costera que posee Virginia. Contigüidad por punto o "
+"contigüidad por toque de punto donde dos secciones de un distrito "
+"están conectadas en un solo punto no está permitido. </p>"
 
 msgid "house_majority_minority short label"
-msgstr "MajorityMinority - House"
+msgstr "MayoríaMinoría - Casa"
 
 msgid "house_majority_minority label"
-msgstr "MajorityMinority - House"
+msgstr "MayoríaMinoría - Casa"
 
 msgid "house_majority_minority long description"
 msgstr ""
 
 msgid "house_count_districts short label"
-msgstr "CountDistricts - House"
+msgstr "ContarDistritos - Casa"
 
 msgid "house_count_districts label"
-msgstr "CountDistricts - House"
+msgstr "ContarDistritos - Casa"
 
 msgid "house_count_districts long description"
 msgstr ""
 
 msgid "house_all_assigned short label"
-msgstr "AllBlocksAssigned - House"
+msgstr "TodasLasCuadrasAsignadas - Casa"
 
 msgid "house_all_assigned label"
-msgstr "AllBlocksAssigned - House"
+msgstr "TodasLasCuadrasAsignadas - Casa"
 
 msgid "house_all_assigned long description"
 msgstr ""
 
 msgid "senate_majority_minority short label"
-msgstr "MajorityMinority - Senate"
+msgstr "MayoríaMinoría - Senado"
 
 msgid "senate_majority_minority label"
-msgstr "MajorityMinority - Senate"
+msgstr "MayoríaMinoría - Senado"
 
 msgid "senate_majority_minority long description"
 msgstr ""
 
 msgid "senate_count_districts short label"
-msgstr "CountDistricts - Senate"
+msgstr "ContarDistritos - Senado"
 
 msgid "senate_count_districts label"
-msgstr "CountDistricts - Senate"
+msgstr "ContarDistritos - Senado"
 
 msgid "senate_count_districts long description"
 msgstr ""
 
 msgid "congress_equipop short label"
-msgstr "Equipopulation - Congress"
+msgstr "Población-Igual - Congreso"
 
 msgid "congress_equipop label"
-msgstr "Equipopulation - Congress"
+msgstr "Población-Igual - Congreso"
 
 msgid "congress_equipop long description"
 msgstr ""
-"<p>Your plan does not meet the competition criteria for "
-"Equipopulation:</p><p>The population of each Congressional district "
-"must be 727,366 +/- 0.5%.</p>"
+"<p>Su plan no cumple con los criterios del concurso para Población-"
+"Igual:</p><p>La población de cada distrito del Congreso debe ser "
+"727,366 +/- 0.5%.</p>"
 
 msgid "congress_contiguity short label"
-msgstr "AllContiguous - Congress"
+msgstr "TodosContiguos - Congreso"
 
 msgid "congress_contiguity label"
-msgstr "AllContiguous - Congress"
+msgstr "TodosContiguos - Congreso"
 
 msgid "congress_contiguity long description"
 msgstr ""
-"<p>Your plan does not meet the competition criteria for "
-"Contiguity</p><p>Every part of a district must be reachable from every"
-" other part without crossing the district's borders. All districts "
-"within a plan must be contiguous. Water contiguity is permitted given "
-"Virginia's extensive coastal region. 'Point contiguity' or 'touch-"
-"point contiguity' where two sections of a district are connected at a "
-"single point is not permitted.</p>"
+"<p>Su plan no cumple con los criterios de concurso para "
+"contigüidad</p><p>Todos los distritos dentro de un plan deben ser "
+"contiguos. La contigüidad del agua es permitida debido a la extensa "
+"región costera que posee Virginia. Contigüidad por punto o "
+"contigüidad por toque de punto donde dos secciones de un distrito "
+"están conectadas en un solo punto no está permitido. </p>"
 
 msgid "congress_majority_minority short label"
-msgstr "MajorityMinority - Congress"
+msgstr "MayoríaMinoría - Congreso"
 
 msgid "congress_majority_minority label"
-msgstr "MajorityMinority - Congress"
+msgstr "MayoríaMinoría - Congreso"
 
 msgid "congress_majority_minority long description"
 msgstr ""
 
 msgid "congress_count_districts short label"
-msgstr "CountDistricts - Congress"
+msgstr "ContarDistritos - Congreso"
 
 msgid "congress_count_districts label"
-msgstr "CountDistricts - Congress"
+msgstr "ContarDistritos - Congreso"
 
 msgid "congress_count_districts long description"
 msgstr ""
 
 msgid "congress_all_assigned short label"
-msgstr "AllBlocksAssigned - Congress"
+msgstr "TodasLasCuadrasAsignadas - Congreso"
 
 msgid "congress_all_assigned label"
-msgstr "AllBlocksAssigned - Congress"
+msgstr "TodasLasCuadrasAsignadas - Congreso"
 
 msgid "congress_all_assigned long description"
 msgstr ""
 
 msgid "house_equipop short label"
-msgstr "Equipopulation - House"
+msgstr "Población-Igual - Casa"
 
 msgid "house_equipop label"
-msgstr "Equipopulation - House"
+msgstr "Población-Igual - Casa"
 
 msgid "house_equipop long description"
 msgstr ""
-"<p>Your plan does not meet the competition criteria for "
-"Equipopulation:</p><p>The population of each House of Delegates "
-"district must be 80,010 +/- 5%.</p>"
+"<p>Su plan no cumple con los criterios del concurso para Población-"
+"Igual:</p><p>La población de cada distrito de la Casa de Delegados "
+"debe ser 80,010 +/- 5%.</p>"
 
 msgid "senate_equipop short label"
-msgstr "Equipopulation - Senate"
+msgstr "Población-Igual - Senado"
 
 msgid "senate_equipop label"
-msgstr "Equipopulation - Senate"
+msgstr "Población-Igual - Senado"
 
 msgid "senate_equipop long description"
 msgstr ""
-"<p>Your plan does not meet the competition criteria for "
-"Equipopulation:</p><p>The population of each House of Delegates "
-"district must be 200,026 +/- 5%.</p>"
+"<p>Su plan no cumple con los criterios del concurso para Población-"
+"Igual:</p><p>La población de cada distrito de la Casa de Delegados "
+"debe ser 80,010 +/- 5%.</p>"
 
 msgid "senate_contiguity short label"
-msgstr "AllContiguous - Senate"
+msgstr "TodosContiguos - Senado"
 
 msgid "senate_contiguity label"
-msgstr "AllContiguous - Senate"
+msgstr "TodosContiguos - Senado"
 
 msgid "senate_contiguity long description"
 msgstr ""
-"<p>Your plan does not meet the competition criteria for "
-"Contiguity</p><p>Every part of a district must be reachable from every"
-" other part without crossing the district's borders. All districts "
-"within a plan must be contiguous. Water contiguity is permitted given "
-"Virginia's extensive coastal region. 'Point contiguity' or 'touch-"
-"point contiguity' where two sections of a district are connected at a "
-"single point is not permitted.</p>"
+"<p>Su plan no cumple con los criterios de concurso para "
+"contigüidad</p><p>Todos los distritos dentro de un plan deben ser "
+"contiguos. La contigüidad del agua es permitida debido a la extensa "
+"región costera que posee Virginia. Contigüidad por punto o "
+"contigüidad por toque de punto donde dos secciones de un distrito "
+"están conectadas en un solo punto no está permitido. </p>"
 
 msgid "senate_all_assigned short label"
-msgstr "AllBlocksAssigned - Senate"
+msgstr "TodasLasCuadrasAsignadas - Senado"
 
 msgid "senate_all_assigned label"
-msgstr "AllBlocksAssigned - Senate"
+msgstr "TodasLasCuadrasAsignadas - Senado"
 
 msgid "senate_all_assigned long description"
 msgstr ""
 
 msgid " short label"
-msgstr "Demographics"
+msgstr "Demografía"
 
 msgid " label"
-msgstr "Demographics"
+msgstr "Demografía"
 
 msgid " long description"
 msgstr ""
 
 msgid "congress-leader-all short label"
-msgstr "Congressional Leaderboard - All"
+msgstr "Tabla de Posiciones del Congreso - Todos"
 
 msgid "congress-leader-all label"
-msgstr "Congressional Leaderboard - All"
+msgstr "Tabla de Posiciones del Congreso - Todos"
 
 msgid "congress-leader-all long description"
 msgstr ""
 
 msgid "congress-leader-mine short label"
-msgstr "Congressional Leaderboard - Mine"
+msgstr "Tabla de Posiciones del Congreso - Mío"
 
 msgid "congress-leader-mine label"
-msgstr "Congressional Leaderboard - Mine"
+msgstr "Tabla de Posiciones del Congreso - Mío"
 
 msgid "congress-leader-mine long description"
 msgstr ""
 
 msgid "house-leader-all short label"
-msgstr "State House Leaderboard - All"
+msgstr "Tabla de Posiciones de la Casa de Delegados de Estado - Todos"
 
 msgid "house-leader-all label"
-msgstr "State House Leaderboard - All"
+msgstr "Tabla de Posiciones de la Casa de Delegados de Estado - Todos"
 
 msgid "house-leader-all long description"
 msgstr ""
 
 msgid "house-leader-mine short label"
-msgstr "State House Leaderboard - Mine"
+msgstr "Tabla de Posiciones de la Casa de Delegados de Estado - Mío"
 
 msgid "house-leader-mine label"
-msgstr "State House Leaderboard - Mine"
+msgstr "Tabla de Posiciones de la Casa de Delegados de Estado - Mío"
 
 msgid "house-leader-mine long description"
 msgstr ""
 
 msgid "senate-leader-all short label"
-msgstr "State Senate Leaderboard - All"
+msgstr "Tabla de Posiciones del Senado de Estado - Todos"
 
 msgid "senate-leader-all label"
-msgstr "State Senate Leaderboard - All"
+msgstr "Tabla de Posiciones del Senado de Estado - Todos"
 
 msgid "senate-leader-all long description"
 msgstr ""
 
 msgid "senate-leader-mine short label"
-msgstr "State Senate Leaderboard - Mine"
+msgstr "Tabla de Posiciones del Senado de Estado - Mío"
 
 msgid "senate-leader-mine label"
-msgstr "State Senate Leaderboard - Mine"
+msgstr "Tabla de Posiciones del Senado de Estado - Mío"
 
 msgid "senate-leader-mine long description"
 msgstr ""
 
 msgid "congress-sidebar-basic short label"
-msgstr "Basic Information"
+msgstr "Información Básica"
 
 msgid "congress-sidebar-basic label"
-msgstr "Basic Information"
+msgstr "Información Básica"
 
 msgid "congress-sidebar-basic long description"
 msgstr ""
 
 msgid "congress-sidebar-demo short label"
-msgstr "Demographics"
+msgstr "Demografía"
 
 msgid "congress-sidebar-demo label"
-msgstr "Demographics"
+msgstr "Demografía"
 
 msgid "congress-sidebar-demo long description"
 msgstr ""
 
 msgid "house-sidebar-basic short label"
-msgstr "Basic Information"
+msgstr "Información Básica"
 
 msgid "house-sidebar-basic label"
-msgstr "Basic Information"
+msgstr "Información Básica"
 
 msgid "house-sidebar-basic long description"
 msgstr ""
 
 msgid "house-sidebar-demo short label"
-msgstr "Demographics"
+msgstr "Demografía"
 
 msgid "house-sidebar-demo label"
-msgstr "Demographics"
+msgstr "Demografía"
 
 msgid "house-sidebar-demo long description"
 msgstr ""
 
 msgid "senate-sidebar-basic short label"
-msgstr "Basic Information"
+msgstr "Información Básica"
 
 msgid "senate-sidebar-basic label"
-msgstr "Basic Information"
+msgstr "Información Básica"
 
 msgid "senate-sidebar-basic long description"
 msgstr ""
 
 msgid "senate-sidebar-demo short label"
-msgstr "Demographics"
+msgstr "Demografía"
 
 msgid "senate-sidebar-demo label"
-msgstr "Demographics"
+msgstr "Demografía"
 
 msgid "senate-sidebar-demo long description"
 msgstr ""
 
 msgid "community-sidebar-demo short label"
-msgstr "Demographics"
+msgstr "Demografía"
 
 msgid "community-sidebar-demo label"
-msgstr "Demographics"
+msgstr "Demografía"
 
 msgid "community-sidebar-demo long description"
 msgstr ""
 
 msgid "community-sidebar-comments short label"
-msgstr "Community Mapping"
+msgstr "Mapeo de Comunidad"
 
 msgid "community-sidebar-comments label"
-msgstr "Community Mapping"
+msgstr "Mapeo de Comunidad"
 
 msgid "community-sidebar-comments long description"
 msgstr ""
 
 msgid "congress-reports short label"
-msgstr "Congressional Reports"
+msgstr "Informes sobre el Congreso"
 
 msgid "congress-reports label"
-msgstr "Congressional Reports"
+msgstr "Informes sobre el Congreso"
 
 msgid "congress-reports long description"
 msgstr ""
 
 msgid "senate-reports short label"
-msgstr "State Senate Reports"
+msgstr "Informes sobre el Senado de Estado"
 
 msgid "senate-reports label"
-msgstr "State Senate Reports"
+msgstr "Informes sobre el Senado de Estado"
 
 msgid "senate-reports long description"
 msgstr ""
 
 msgid "house-reports short label"
-msgstr "State House Reports"
+msgstr "Informes sobre la Casa de Delegados de Estado"
 
 msgid "house-reports label"
-msgstr "State House Reports"
+msgstr "Informes sobre la Casa de Delegados de Estado"
 
 msgid "house-reports long description"
 msgstr ""
@@ -1839,166 +1845,163 @@ msgid "have_you_heard_about_this_55_guy_lulz long description"
 msgstr "99have; you' heard\" about -- this 55 guy? lulz!"
 
 msgid "congress-equipop short label"
-msgstr "Equipopulation - Congress"
+msgstr "Población-Igual - Congreso"
 
 msgid "congress-equipop label"
-msgstr "Equipopulation - Congress"
+msgstr "Población-Igual - Congreso"
 
 msgid "congress-equipop long description"
 msgstr ""
-"<p>Your plan does not meet the competition criteria for "
-"Equipopulation:</p><p>The population of each Congressional district "
-"must be 727,366 +/- 0.5%.</p>"
+"<p>Su plan no cumple con los criterios del concurso para Población-"
+"Igual:</p><p>La población de cada distrito del Congreso debe ser "
+"727,366 +/- 0.5%.</p>"
 
 msgid "congress-contiguous short label"
-msgstr "AllContiguous - Congress"
+msgstr "TodosContiguos - Congreso"
 
 msgid "congress-contiguous label"
-msgstr "AllContiguous - Congress"
+msgstr "TodosContiguos - Congreso"
 
 msgid "congress-contiguous long description"
 msgstr ""
-"<p>Your plan does not meet the competition criteria for "
-"Contiguity</p><p>Every part of a district must be reachable from every"
-" other part without crossing the district's borders. All districts "
-"within a plan must be contiguous. Water contiguity is permitted given "
-"Virginia's extensive coastal region. 'Point contiguity' or 'touch-"
-"point contiguity' where two sections of a district are connected at a "
-"single point is not permitted.</p>"
+"<p>Su plan no cumple con los criterios de concurso para "
+"contigüidad</p><p>Todos los distritos dentro de un plan deben ser "
+"contiguos. La contigüidad del agua es permitida debido a la extensa "
+"región costera que posee Virginia. Contigüidad por punto o "
+"contigüidad por toque de punto donde dos secciones de un distrito "
+"están conectadas en un solo punto no está permitido. </p>"
 
 msgid "congress-major-minor short label"
-msgstr "MajorityMinority - Congress"
+msgstr "MayoríaMinoría - Congreso"
 
 msgid "congress-major-minor label"
-msgstr "MajorityMinority - Congress"
+msgstr "MayoríaMinoría - Congreso"
 
 msgid "congress-major-minor long description"
 msgstr ""
 
 msgid "congress-district-count short label"
-msgstr "CountDistricts - Congress"
+msgstr "ContarDistritos - Congreso"
 
 msgid "congress-district-count label"
-msgstr "CountDistricts - Congress"
+msgstr "ContarDistritos - Congreso"
 
 msgid "congress-district-count long description"
 msgstr ""
 
 msgid "congress-assigned short label"
-msgstr "AllBlocksAssigned - Congress"
+msgstr "TodasLasCuadrasAsignadas - Congreso"
 
 msgid "congress-assigned label"
-msgstr "AllBlocksAssigned - Congress"
+msgstr "TodasLasCuadrasAsignadas - Congreso"
 
 msgid "congress-assigned long description"
 msgstr ""
 
 msgid "house-equipop short label"
-msgstr "Equipopulation - House"
+msgstr "Población-Igual - Casa"
 
 msgid "house-equipop label"
-msgstr "Equipopulation - House"
+msgstr "Población-Igual - Casa"
 
 msgid "house-equipop long description"
 msgstr ""
-"<p>Your plan does not meet the competition criteria for "
-"Equipopulation:</p><p>The population of each House of Delegates "
-"district must be 80,010 +/- 5%.</p>"
+"<p>Su plan no cumple con los criterios del concurso para Población-"
+"Igual:</p><p>La población de cada distrito de la Casa de Delegados "
+"debe ser 80,010 +/- 5%.</p>"
 
 msgid "house-contiguous short label"
-msgstr "AllContiguous - House"
+msgstr "TodosContiguos - Casa"
 
 msgid "house-contiguous label"
-msgstr "AllContiguous - House"
+msgstr "TodosContiguos - Casa"
 
 msgid "house-contiguous long description"
 msgstr ""
-"<p>Your plan does not meet the competition criteria for "
-"Contiguity</p><p>Every part of a district must be reachable from every"
-" other part without crossing the district's borders. All districts "
-"within a plan must be contiguous. Water contiguity is permitted given "
-"Virginia's extensive coastal region. 'Point contiguity' or 'touch-"
-"point contiguity' where two sections of a district are connected at a "
-"single point is not permitted.</p>"
+"<p>Su plan no cumple con los criterios de concurso para "
+"contigüidad</p><p>Todos los distritos dentro de un plan deben ser "
+"contiguos. La contigüidad del agua es permitida debido a la extensa "
+"región costera que posee Virginia. Contigüidad por punto o "
+"contigüidad por toque de punto donde dos secciones de un distrito "
+"están conectadas en un solo punto no está permitido. </p>"
 
 msgid "house-major-minor short label"
-msgstr "MajorityMinority - House"
+msgstr "MayoríaMinoría - Casa"
 
 msgid "house-major-minor label"
-msgstr "MajorityMinority - House"
+msgstr "MayoríaMinoría - Casa"
 
 msgid "house-major-minor long description"
 msgstr ""
 
 msgid "house-district-count short label"
-msgstr "CountDistricts - House"
+msgstr "ContarDistritos - Casa"
 
 msgid "house-district-count label"
-msgstr "CountDistricts - House"
+msgstr "ContarDistritos - Casa"
 
 msgid "house-district-count long description"
 msgstr ""
 
 msgid "house-assigned short label"
-msgstr "AllBlocksAssigned - House"
+msgstr "TodasLasCuadrasAsignadas - Casa"
 
 msgid "house-assigned label"
-msgstr "AllBlocksAssigned - House"
+msgstr "TodasLasCuadrasAsignadas - Casa"
 
 msgid "house-assigned long description"
 msgstr ""
 
 msgid "senate-major-minor short label"
-msgstr "MajorityMinority - Senate"
+msgstr "MayoríaMinoría - Senado"
 
 msgid "senate-major-minor label"
-msgstr "MajorityMinority - Senate"
+msgstr "MayoríaMinoría - Senado"
 
 msgid "senate-major-minor long description"
 msgstr ""
 
 msgid "senate-district-count short label"
-msgstr "CountDistricts - Senate"
+msgstr "ContarDistritos - Senado"
 
 msgid "senate-district-count label"
-msgstr "CountDistricts - Senate"
+msgstr "ContarDistritos - Senado"
 
 msgid "senate-district-count long description"
 msgstr ""
 
 msgid "senate-equipop short label"
-msgstr "Equipopulation - Senate"
+msgstr "Población-Igual - Senado"
 
 msgid "senate-equipop label"
-msgstr "Equipopulation - Senate"
+msgstr "Población-Igual - Senado"
 
 msgid "senate-equipop long description"
 msgstr ""
-"<p>Your plan does not meet the competition criteria for "
-"Equipopulation:</p><p>The population of each House of Delegates "
-"district must be 200,026 +/- 5%.</p>"
+"<p>Su plan no cumple con los criterios del concurso para Población-"
+"Igual:</p><p>La población de cada distrito de la Casa de Delegados "
+"debe ser 80,010 +/- 5%.</p>"
 
 msgid "senate-contiguous short label"
-msgstr "AllContiguous - Senate"
+msgstr "TodosContiguos - Senado"
 
 msgid "senate-contiguous label"
-msgstr "AllContiguous - Senate"
+msgstr "TodosContiguos - Senado"
 
 msgid "senate-contiguous long description"
 msgstr ""
-"<p>Your plan does not meet the competition criteria for "
-"Contiguity</p><p>Every part of a district must be reachable from every"
-" other part without crossing the district's borders. All districts "
-"within a plan must be contiguous. Water contiguity is permitted given "
-"Virginia's extensive coastal region. 'Point contiguity' or 'touch-"
-"point contiguity' where two sections of a district are connected at a "
-"single point is not permitted.</p>"
+"<p>Su plan no cumple con los criterios de concurso para "
+"contigüidad</p><p>Todos los distritos dentro de un plan deben ser "
+"contiguos. La contigüidad del agua es permitida debido a la extensa "
+"región costera que posee Virginia. Contigüidad por punto o "
+"contigüidad por toque de punto donde dos secciones de un distrito "
+"están conectadas en un solo punto no está permitido. </p>"
 
 msgid "senate-assigned short label"
-msgstr "AllBlocksAssigned - Senate"
+msgstr "TodasLasCuadrasAsignadas - Senado"
 
 msgid "senate-assigned label"
-msgstr "AllBlocksAssigned - Senate"
+msgstr "TodasLasCuadrasAsignadas - Senado"
 
 msgid "senate-assigned long description"
 msgstr ""
@@ -2011,3 +2014,22 @@ msgstr "DC Metro"
 
 msgid "dc_area long description"
 msgstr "The District of Columbia Metropolitan Area"
+
+msgid "community_sidebar_demo short label"
+msgstr "Demografía"
+
+msgid "community_sidebar_demo label"
+msgstr "Demografía"
+
+msgid "community_sidebar_demo long description"
+msgstr ""
+
+msgid "community_sidebar_comments short label"
+msgstr "Mapeo de Comunidad"
+
+msgid "community_sidebar_comments label"
+msgstr "Mapeo de Comunidad"
+
+msgid "community_sidebar_comments long description"
+msgstr ""
+

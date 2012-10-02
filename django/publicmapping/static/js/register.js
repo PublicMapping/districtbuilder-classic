@@ -31,6 +31,7 @@ $(function(){
     var dOptions = {
         autoOpen:false,
         width:425,
+        dialogClass:'register-dialog',
         modal:true,
         resizable: false
     };
@@ -163,7 +164,7 @@ $(function(){
                 firstname:$('#firstname').val(),
                 lastname:$('#lastname').val(),
                 organization:$('#organization').val(),
-                csrfmiddlewaretoken:$('#csrfmiddlewaretoken').val()
+                csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()
             },
             dataType:'json',
             type:'POST',
@@ -245,7 +246,7 @@ $(function(){
             data: {
                 username: $('#forgotusername').val(),
                 email: $('#forgotemail').val(),
-                csrfmiddlewaretoken: $('#csrfmiddlewaretoken').val()
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
             },
             dataType:'json',
             type:'POST',

@@ -9,7 +9,7 @@ This file is part of The Public Mapping Project
 https://github.com/PublicMapping/
 
 License:
-    Copyright 2010 Micah Altman, Michael McDonald
+    Copyright 2010-2012 Micah Altman, Michael McDonald
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -46,10 +46,9 @@ from django.contrib.gis.gdal import *
 from django.contrib.gis.gdal.libgdal import lgdal
 from django.contrib.sites.models import Site
 from django.contrib import humanize
-from django.template import loader, Context as DjangoContext
+from django.template import loader, Context as DjangoContext, RequestContext
 from django.utils import simplejson as json, translation
 from django.utils.translation import ugettext as _, ungettext as _n
-from django.views.decorators.cache import cache_control
 from django.template.defaultfilters import slugify, force_escape
 from django.utils.translation import ugettext as _
 from django.conf import settings
@@ -301,7 +300,7 @@ def copyplan(request, planid):
 @unique_session_or_json_redirect
 def scoreplan(request, planid):
     """
-    Validate a plan to allow for it to be shown in the leaaderboard
+    Validate a plan to allow for it to be shown in the leaderboard
 
     Parameters:
         request -- The HttpRequest, which includes the user.
@@ -412,8 +411,7 @@ def commonplan(request, planid):
             # used for generating groups of checkboxes on the evaluate tab.
             calculator_reports = []
             if settings.REPORTS_ENABLED == 'CALC':
-                report_displays = ScoreDisplay.objects.all()
-                report_displays = filter(lambda x:x.get_short_label()==(_('%(body_name)s Reports') % {'body_name':plan.legislative_body.get_long_description()}), report_displays)
+                report_displays = ScoreDisplay.objects.filter(name="%s_reports" % plan.legislative_body.name)
                 if len(report_displays) > 0:
                     calculator_reports = map(lambda p: {
                                 'title': p.__unicode__(),
@@ -458,7 +456,7 @@ def commonplan(request, planid):
             'geolevel': level.id,
             'level': level.name,
             'layer': 'simple_' + level.name, 
-            'short_label': level.get_short_label(),
+            'long_description': level.get_long_description(),
             'min_zoom': level.min_zoom
         })
     default_selected = False
@@ -505,7 +503,7 @@ def commonplan(request, planid):
     except:
         reporting_template = None
 
-    return {
+    return RequestContext(request, {
         'bodies': bodies,
         'has_regions': has_regions,
         'leaderboard_bodies': l_bodies,
@@ -540,7 +538,7 @@ def commonplan(request, planid):
         'plan_text': _("community map") if (plan and plan.is_community()) else _("plan"),
         'language_code': translation.get_language(),
         'LANGUAGES': settings.LANGUAGES # needed (as CAPS) for language chooser
-    }
+    })
 
 def is_plan_ready(planid):
     """
@@ -731,10 +729,10 @@ def printplan(request, planid):
 
         # render pg to a string
         t = loader.get_template('printplan.html')
-        page = StringIO.StringIO(t.render(DjangoContext(cfg)))
+        page = t.render(DjangoContext(cfg))
         result = StringIO.StringIO()
         
-        CreatePDF( page, result, show_error_as_pdf=True )
+        CreatePDF( page, result, show_error_as_pdf=True, encoding='UTF-8')
 
         response = HttpResponse(result.getvalue(), mimetype='application/pdf')
         response['Content-Disposition'] = 'attachment; filename=plan.pdf'
@@ -1081,8 +1079,11 @@ def newdistrict(request, planid):
                 # create a new district w/1 version higher
                 fixed = plan.add_geounits((district_id, district_short, district_long,), geounit_ids, geolevel, version)
 
-                # if there are comments or types, add them to the district
+                # if there are comments, types or multiple members, add them to the district
                 district = plan.district_set.filter(district_id=district_id,short_label=district_short,long_label=district_long)[0]
+                if plan.legislative_body.multi_members_allowed:
+                    district.num_members = plan.legislative_body.min_multi_district_members
+                    district.save()
                 ct = ContentType.objects.get(app_label='redistricting',model='district')
                 if 'comment' in request.POST and request.POST['comment'] != '':
                     comment = Comment(
@@ -1582,7 +1583,6 @@ def setdistrictlock(request, planid, district_id):
     return HttpResponse(json.dumps(status), mimetype='application/json')
         
             
-@cache_control(private=True)
 @unique_session_or_json_redirect
 def getdistricts(request, planid):
     """
@@ -1637,7 +1637,6 @@ def getdistricts(request, planid):
     return HttpResponse(json.dumps(status), mimetype='application/json')
 
 
-@cache_control(private=True)
 def simple_district_versioned(request, planid, district_ids=None):
     """
     Emulate a WFS service for versioned districts.
@@ -1708,7 +1707,6 @@ def simple_district_versioned(request, planid, district_ids=None):
     return HttpResponse(json.dumps(status),mimetype='application/json')
 
 
-@cache_control(private=True)
 def get_unlocked_simple_geometries(request,planid):
     """
     Emulate a WFS service for selecting unlocked geometries.
@@ -1829,9 +1827,11 @@ def get_statistics(request, planid):
     else:
         version = plan.version
 
-    # TODO: 'Demographics' is hardcoded as a panel title. Is there another way to designate a permanent display?
-    display = ScoreDisplay.objects.filter(legislative_body=plan.legislative_body)
-    display = filter(lambda x:x.get_short_label() == 'Demographics', display)[0]
+    try:
+        display = ScoreDisplay.objects.get(legislative_body=plan.legislative_body, name="%s_sidebar_demo" % plan.legislative_body.name)
+    except:
+        status['message'] = _('Unable to get Demographics ScoreDisplay')
+        status['exception'] = traceback.format_exc()
     
     if 'displayId' in request.REQUEST:
         try:
@@ -1952,13 +1952,10 @@ def getleaderboarddisplay(leg_body, owner_filter):
     """
     Returns the leaderboard ScoreDisplay given a legislative body and owner
     """
-    # TODO: 'Leaderboard' is hardcoded into the scoredisplay title
-    displays = ScoreDisplay.objects.all()
-    displays = filter(lambda x:(x.get_short_label()==\
-            _('%(legislative_body)s Leaderboard - %(owner_filter)s' % \
-            {'legislative_body': leg_body.get_long_description(), \
-            'owner_filter': owner_filter.title()})), displays)
-    return displays[0] if len(displays) > 0 else None
+    try:
+        return ScoreDisplay.objects.get(name="%s_leader_%s" % (leg_body.name, owner_filter))
+    except:
+        return None
 
 def getleaderboard(request):
     """
@@ -1981,7 +1978,7 @@ def getleaderboard(request):
 
     try :
         html = display.render(plans, request)
-        return HttpResponse(html, mimetype='text/plain')
+        return HttpResponse(html, mimetype='text/html; charset=utf-8')
     except Exception, ex:
         logger.warn('Leaderboard could not be fetched.')
         logger.debug('Reason: %s', ex)
@@ -2342,19 +2339,35 @@ def statistics_sets(request, planid):
         # Get the functions available for the users
         user_functions = ScoreFunction.objects.filter(selectable_bodies=plan.legislative_body).order_by('name')
         for f in user_functions:
-            if 'report' not in f.get_short_label().lower() and 'comments' not in f.get_short_label().lower():
+            if 'report' not in f.name.lower() and 'comments' not in f.name.lower():
                 scorefunctions.append({ 'id': f.id, 'name': force_escape(f.get_label()) })
         result['functions'] = scorefunctions
 
-        if not request.user.is_superuser:
-            # Get the admin displays
-            admin_displays = ScoreDisplay.objects.filter(
-                owner__is_superuser=True,
-                legislative_body=plan.legislative_body,
-                is_page=False).order_by('title')
-            for admin_display in admin_displays:
-                if 'reports' not in admin_display.cssclass:
-                    sets.append({ 'id': admin_display.id, 'name': force_escape(admin_display.__unicode__()), 'functions': [], 'mine':False })
+        
+        admin_display_names = [
+            "%s_sidebar_demo" % plan.legislative_body.name,
+        ]
+
+        if plan.legislative_body.is_community:
+            admin_display_names.append("%s_sidebar_comments" %
+                    plan.legislative_body.name)
+        else:
+            admin_display_names.append("%s_sidebar_basic" %
+                    plan.legislative_body.name)
+        # Get the admin displays
+        admin_displays = ScoreDisplay.objects.filter(
+            owner__is_superuser=True,
+            legislative_body=plan.legislative_body,
+            name__in=admin_display_names
+        )
+
+        for admin_display in admin_displays:
+            sets.append({ 
+                'id': admin_display.id,
+                'name': force_escape(admin_display.__unicode__()),
+                'functions': [],
+                'mine':False
+            })
 
         try:
             user_displays = ScoreDisplay.objects.filter(

@@ -52,10 +52,8 @@ MEDIA_URL = '/site-media/'
 # use a trailing slash
 STATIC_URL = '/static-media/'
 
-# URL prefix for admin media -- CSS, JavaScript and images. Make sure to 
-# use a trailing slash.
-# Examples: "http://foo.com/media/", "/media/".
-ADMIN_MEDIA_PREFIX = '/static-media/admin/'
+# django-rosetta still uses this, even if it's obsolete in 1.4
+ADMIN_MEDIA_PREFIX = STATIC_URL + 'admin/'
 
 # Sessions expire when browser is close
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
@@ -71,24 +69,29 @@ TEMPLATE_LOADERS = (
 )
 
 # configure cache, according to guidelines for configuring django's
-# cache framework: http://docs.djangoproject.com/en/1.0/topics/cache
-#CACHE_BACKEND = 'locmem:///?timeout=3600&max_entries=400'
-#CACHE_MIDDLEWARE_SECONDS = 3600
-#CACHE_MIDDLEWARE_KEY_PREFIX = ''
+# cache framework: http://docs.djangoproject.com/en/1.4/topics/cache
+#CACHES = {
+#    'default': {
+#        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+#        'LOCATION': 'redistricting4ever',
+#        'TIMEOUT': 600, # 10 minute timeout
+#        'OPTIONS': {
+#            'MAX_ENTRIES': 1000
+#        }
+#    }
+#}
 
 # Middleware classes. Please note that cache middleware MUST be placed in
 # the first and last positions of the middleware classes.  Order matters.
 MIDDLEWARE_CLASSES = (
 #    'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.gzip.GZipMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.contrib.csrf.middleware.CsrfMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-
-# Uncomment the following line to enable browser-level localization selection
-#    'django.middleware.locale.LocaleMiddleware',
-    
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
 #    'django.middleware.cache.FetchFromCacheMiddleware',
 )
 
@@ -109,8 +112,7 @@ ROOT_URLCONF = 'publicmapping.urls'
 import djcelery
 djcelery.setup_loader()
 
-BROKER_TRANSPORT = 'djkombu.transport.DatabaseTransport'
-CELERY_IMPORTS = ( 'redistricting.tasks', )
+BROKER_URL = 'django://'
 
 from datetime import timedelta
 CELERYBEAT_SCHEDULE = {
@@ -120,9 +122,6 @@ CELERYBEAT_SCHEDULE = {
         'args': None
     },
 }
-
-import django
-staticfiles = 'django.contrib.staticfiles' if django.VERSION[1] > 2 else 'staticfiles'
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -134,12 +133,11 @@ INSTALLED_APPS = (
     'django.contrib.gis',
     'django.contrib.comments',
     'djcelery',
-    'djkombu',
+    'djcelery.transport',
     'redistricting',
-    'publicmapping',
     'tagging',
     'rosetta',
-    staticfiles,
+    'django.contrib.staticfiles',
     'compressor',
 )
 
@@ -148,8 +146,8 @@ COMPRESS_ENABLED = not DEBUG
 COMPRESS_PARSER = 'compressor.parser.HtmlParser'
 
 STATICFILES_FINDERS = (
-    staticfiles + '.finders.FileSystemFinder',
-    staticfiles + '.finders.AppDirectoriesFinder',
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'compressor.finders.CompressorFinder',
 )
 
@@ -159,45 +157,31 @@ STATICFILES_FINDERS = (
 # Settings specific to The Public Mapping Project
 #
 
-# Use the GIS test runner for django tests, since we are using geo features
-TEST_RUNNER = 'django.contrib.gis.tests.run_tests'
-
-# The database template to use to create test databases
-POSTGIS_TEMPLATE='template_postgis'
-
 # This is the base url for the application, where the login page is
 LOGIN_URL = '/'
 
-# Enable logging for django 1.3 and 1.2
-if django.VERSION[1] > 2:
-    import sys
-    LOGGING = {
-        'version': 1,
-        'handlers': {
-            'default': {
-                'class': 'logging.StreamHandler',
-                'stream': sys.stderr
-            }
+# Where the user is redirected after login
+LOGIN_REDIRECT_URL = '/admin/'
+
+# Enable logging
+import sys
+LOGGING = {
+    'version': 1,
+    'handlers': {
+        'default': {
+            'class': 'logging.StreamHandler',
+            'stream': sys.stderr
+        }
+    },
+    'loggers': {
+        'django': {
+            'handlers':['default'],
+            'level': 'CRITICAL'
         },
-        'loggers': {
-            'django': {
-                'handlers':['default'],
-                'level': 'DEBUG' if DEBUG else 'WARNING'
-            },
-            'redistricting': {
-                'handlers':['default'],
-                'level': 'DEBUG' if DEBUG else 'WARNING'
-            }
+        'redistricting': {
+            'handlers':['default'],
+            'level': 'DEBUG' if DEBUG else 'WARNING'
         }
     }
-else:
-    import logging
-    logger = logging.getLogger()
-    stderr = logging.StreamHandler()
-    stderr.setFormatter(logging.Formatter())
-    logger.addHandler(stderr)
-    if DEBUG:
-        logger.setLevel(logging.DEBUG)
-    else:
-        logger.setLevel(logging.WARNING)
+}
 

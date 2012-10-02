@@ -1,5 +1,5 @@
 """
-Set up District Builder.
+Set up DistrictBuilder.
 
 This management command will examine the main configuration file for 
 correctness, import geographic levels, create spatial views, create 
@@ -41,19 +41,20 @@ from optparse import make_option
 from os.path import exists
 from lxml.etree import parse, XSLT
 from xml.dom import minidom
-from rpy2.robjects import r
 import redistricting
 from redistricting.models import *
 from redistricting.tasks import *
 from redistricting.config import *
 import traceback, logging
 
+logger = logging.getLogger()
+
 class Command(BaseCommand):
     """
-    Set up District Builder.
+    Set up DistrictBuilder.
     """
     args = '<config>'
-    help = 'Sets up District Builder based on the main XML configuration.'
+    help = 'Sets up DistrictBuilder based on the main XML configuration.'
     option_list = BaseCommand.option_list + (
         make_option('-c', '--config', dest="config",
             help="Use configuration file CONFIG", metavar="CONFIG"),
@@ -93,16 +94,11 @@ class Command(BaseCommand):
         """
         Setup the logging facility.
         """
-        level = logging.WARNING
         if verbosity > 1:
-            level = logging.DEBUG
+            logger.setLevel(logging.DEBUG)
         elif verbosity > 0:
-            level = logging.INFO
+            logger.setLevel(logging.INFO)
 
-        logging.basicConfig(level=level, format='%(message)s')
-        logging._srcfile = None
-        logging.logThreads = 0
-        logging.logProcesses = 0
 
     def handle(self, *args, **options):
         """
@@ -113,7 +109,7 @@ class Command(BaseCommand):
         translation.activate('en')
 
         if options.get('config') is None:
-            logging.warning("""
+            logger.warning("""
 ERROR:
 
     This management command requires the -c or --config option. This option
@@ -125,7 +121,7 @@ ERROR:
         try:
             store = redistricting.StoredConfig( options.get('config') )
         except Exception, ex:
-            logging.info("""
+            logger.info("""
 ERROR:
 
 The configuration file specified could not be parsed. Please check the
@@ -135,7 +131,7 @@ contents of the file and try again.
             sys.exit(1)
 
         if not store.validate():
-            logging.info("""
+            logger.info("""
 ERROR:
 
 The configuration file was not valid. Please check the contents of the
@@ -170,8 +166,8 @@ file and try again.
             all_ok = all_ok * self.import_prereq(config, force)
         except:
             all_ok = False
-            logging.info('Error importing configuration.')
-            logging.info(traceback.format_exc())
+            logger.info('Error importing configuration.')
+            logger.info(traceback.format_exc())
 
         # Create the utilities for spatial operations (renesting and geoserver)
         geoutil = SpatialUtils(store)
@@ -198,8 +194,8 @@ file and try again.
                             geoutil.renest_geolevel(geolevel)
         except:
             all_ok = False
-            logging.info('ERROR importing geolevels.')
-            logging.debug(traceback.format_exc())
+            logger.info('ERROR importing geolevels.')
+            logger.debug(traceback.format_exc())
          
 
         # Do this once after processing the geolevels
@@ -211,30 +207,30 @@ file and try again.
         if options.get("views"):
             # Create views based on the subjects and geolevels
             try:
-                SpatialUtils.configure_views()
+                configure_views()
             except:
-                logging.info(traceback.format_exc())
+                logger.info(traceback.format_exc())
                 all_ok = False
 
         if options.get("geoserver"):
             try:
                 all_ok = all_ok * geoutil.purge_geoserver()
                 if all_ok:
-                    logging.info("Geoserver configuration cleaned.")
+                    logger.info("Geoserver configuration cleaned.")
                     all_ok = all_ok * geoutil.configure_geoserver()
                 else:
-                    logging.info("Geoserver configuration could not be cleaned.")
+                    logger.info("Geoserver configuration could not be cleaned.")
             except:
-                logging.info('ERROR configuring geoserver.')
-                logging.info(traceback.format_exc())
+                logger.info('ERROR configuring geoserver.')
+                logger.info(traceback.format_exc())
                 all_ok = False
 
         if options.get("templates"):
             try:
                 self.create_template(store.data)
             except:
-                logging.info('ERROR creating templates.')
-                logging.debug(traceback.format_exc())
+                logger.info('ERROR creating templates.')
+                logger.debug(traceback.format_exc())
                 all_ok = False
        
         if options.get("static"):
@@ -248,8 +244,8 @@ file and try again.
             try:
                 self.create_report_templates(store.data)
             except:
-                logging.info('ERROR creating BARD template files.')
-                logging.debug(traceback.format_exc())
+                logger.info('ERROR creating BARD template files.')
+                logger.debug(traceback.format_exc())
                 all_ok = False
     
         if options.get("bard"):
@@ -363,7 +359,7 @@ ERROR:
 
         for h,shapefile in enumerate(config['shapefiles']):
             if not exists(shapefile.get('path')):
-                logging.info("""
+                logger.info("""
 ERROR:
 
     The filename specified by the configuration:
@@ -376,10 +372,10 @@ ERROR:
 
             ds = DataSource(shapefile.get('path'))
 
-            logging.debug('Importing from %s, %d of %d shapefiles...', ds, h+1, len(config['shapefiles']))
+            logger.debug('Importing from %s, %d of %d shapefiles...', ds, h+1, len(config['shapefiles']))
 
             lyr = ds[0]
-            logging.debug('%d objects in shapefile', len(lyr))
+            logger.debug('%d objects in shapefile', len(lyr))
 
             level = Geolevel.objects.get(name=config['geolevel'].lower()[:50])
             # Create the subjects we need
@@ -397,12 +393,12 @@ ERROR:
                 subject_objects['%s_by_id' % sub.name] = attr_name
 
             progress = 0.0
-            logging.debug('0% .. ')
+            logger.debug('0% .. ')
             for i,feat in enumerate(lyr):
                 
                 if (float(i) / len(lyr)) > (progress + 0.1):
                     progress += 0.1
-                    logging.debug('%2.0f%% .. ', progress * 100)
+                    logger.debug('%2.0f%% .. ', progress * 100)
 
                 levels = [level]
                 for region, filter_list in config['region_filters'].iteritems():
@@ -470,8 +466,8 @@ ERROR:
                         g.save()
 
                     except:
-                        logging.info('Failed to import geometry for feature %d', feat.fid)
-                        logging.debug(traceback.format_exc())
+                        logger.info('Failed to import geometry for feature %d', feat.fid)
+                        logger.debug(traceback.format_exc())
                         continue
                 else:
                     g = prefetch[0]
@@ -481,15 +477,15 @@ ERROR:
                 if not config['attributes']:
                     self.set_geounit_characteristic(g, subject_objects, feat)
 
-            logging.info('100%')
+            logger.info('100%')
 
         if config['attributes']:
             progress = 0
-            logging.info("Assigning subject values to imported geography...")
-            logging.info('0% .. ')
+            logger.info("Assigning subject values to imported geography...")
+            logger.info('0% .. ')
             for h,attrconfig in enumerate(config['attributes']):
                 if not exists(attrconfig.get('path')):
-                    logging.info("""
+                    logger.info("""
 ERROR:
 
     The filename specified by the configuration:
@@ -507,7 +503,7 @@ ERROR:
                 for i,feat in enumerate(lyr):
                     if (float(i) / len(lyr)) > (progress + 0.1):
                         progress += 0.1
-                        logging.info('%2.0f%% .. ', progress * 100)
+                        logger.info('%2.0f%% .. ', progress * 100)
 
                     gid = get_shape_treeid(attrconfig, feat)
                     g = Geounit.objects.filter(tree_code=gid)
@@ -515,7 +511,7 @@ ERROR:
                     if g.count() > 0:
                         self.set_geounit_characteristic(g[0], subject_objects, feat)
 
-            logging.info('100%')
+            logger.info('100%')
 
     def set_geounit_characteristic(self, g, subject_objects, feat):
         for attr, obj in subject_objects.iteritems():
@@ -524,7 +520,7 @@ ERROR:
             try:
                 value = Decimal(str(feat.get(attr))).quantize(Decimal('000000.0000', 'ROUND_DOWN'))
             except:
-                logging.info('No attribute "%s" on feature %d' , attr, feat.fid)
+                logger.info('No attribute "%s" on feature %d' , attr, feat.fid)
                 continue
             percentage = '0000.00000000'
             if obj.percentage_denominator:
@@ -545,8 +541,8 @@ ERROR:
             except:
                 c.number = '0.0'
                 c.save()
-                logging.info('Failed to set value "%s" to %d in feature "%s"', attr, feat.get(attr), g.name)
-                logging.debug(traceback.format_exc())
+                logger.info('Failed to set value "%s" to %d in feature "%s"', attr, feat.get(attr), g.name)
+                logger.debug(traceback.format_exc())
 
 
     def create_filter_functions(self, store):
@@ -593,7 +589,7 @@ ERROR:
         """
         admin = User.objects.filter(is_staff=True)
         if admin.count() == 0:
-            logging.info("Creating templates requires at least one admin user.")
+            logger.info("Creating templates requires at least one admin user.")
             return
 
         admin = admin[0]
@@ -603,7 +599,7 @@ ERROR:
             lbconfig = config.xpath('//LegislativeBody[@id="%s"]' % template.xpath('LegislativeBody')[0].get('ref'))[0]
             query = LegislativeBody.objects.filter(name=lbconfig.get('id')[:256])
             if query.count() == 0:
-                logging.info("LegislativeBody '%s' does not exist, skipping.", lbconfig.get('ref'))
+                logger.info("LegislativeBody '%s' does not exist, skipping.", lbconfig.get('ref'))
                 continue
             else:
                 legislative_body = query[0]
@@ -611,7 +607,7 @@ ERROR:
             plan_name = template.get('name')[:200]
             query = Plan.objects.filter(name=plan_name, legislative_body=legislative_body, owner=admin, is_template=True)
             if query.count() > 0:
-                logging.info("Plan '%s' exists, skipping.", plan_name)
+                logger.info("Plan '%s' exists, skipping.", plan_name)
                 continue
 
             fconfig = template.xpath('Blockfile')[0]
@@ -619,7 +615,7 @@ ERROR:
 
             DistrictIndexFile.index2plan( plan_name, legislative_body.id, path, owner=admin, template=True, purge=False, email=None)
 
-            logging.debug('Created template plan "%s"', plan_name)
+            logger.debug('Created template plan "%s"', plan_name)
 
         lbodies = config.xpath('//LegislativeBody[@id]')
         for lbody in lbodies:
@@ -627,9 +623,9 @@ ERROR:
             legislative_body = LegislativeBody.objects.get(name=lbody.get('id')[:256])
             plan,created = Plan.objects.get_or_create(name='Blank',legislative_body=legislative_body,owner=owner,is_template=True, processing_state=ProcessingState.READY)
             if created:
-                logging.debug('Created Plan named "Blank" for LegislativeBody "%s"', legislative_body.name)
+                logger.debug('Created Plan named "Blank" for LegislativeBody "%s"', legislative_body.name)
             else:
-                logging.debug('Plan named "Blank" for LegislativeBody "%s" already exists', legislative_body.name)
+                logger.debug('Plan named "Blank" for LegislativeBody "%s" already exists', legislative_body.name)
 
 
     def create_report_templates(self, config):
@@ -655,7 +651,7 @@ ERROR:
             body_id = body.get('id')
             body_name = body.get('name')[:256]
 
-            logging.info("Creating BARD reporting template for %s", body_name)
+            logger.info("Creating BARD reporting template for %s", body_name)
 
             body_name = body_name.lower()
             template_path = '%s/bard_%s.html' % (template_dir, body_name)
@@ -690,38 +686,40 @@ ERROR:
             srs = SpatialReference(3785)
 
         try:
+            # We don't need to install rpy unless we're doing this
+            from rpy2.robjects import r
             r.library('rgeos')
-            logging.debug("Loaded rgeos library.")
+            logger.debug("Loaded rgeos library.")
             r.library('BARD')
-            logging.debug("Loaded BARD library.")
+            logger.debug("Loaded BARD library.")
             sdf = r.readShapePoly(shapefile,proj4string=r.CRS(srs.proj))
-            logging.debug("Read shapefile '%s'.", shapefile)
+            logger.debug("Read shapefile '%s'.", shapefile)
 
             # The following lines perform the bard basemap computation
             # much faster, but require vast amounts of memory. Disabled
             # by default.
             #fib = r.poly_findInBoxGEOS(sdf)
-            #logging.debug("Created neighborhood index file.")
+            #logger.debug("Created neighborhood index file.")
             #nb = r.poly2nb(sdf,foundInBox=fib)
 
            # nb = r.poly2nb(sdf)
-           # logging.debug("Computed neighborhoods.")
+           # logger.debug("Computed neighborhoods.")
            # bardmap = r.spatialDataFrame2bardBasemap(sdf)
             bardmap = r.spatialDataFrame2bardBasemap(sdf,keepgeom=r(False))
 
 
-            logging.debug("Created bardmap.")
+            logger.debug("Created bardmap.")
             r.writeBardMap(bconfig.get('shape'), bardmap)
-            logging.debug("Wrote bardmap to disk.")
+            logger.debug("Wrote bardmap to disk.")
         except:
-            logging.info("""
+            logger.info("""
 ERROR:
 
 The BARD map could not be computed. Please check the configuration settings
 and try again.
 """)
-            logging.debug("The following traceback may provide more information:")
-            logging.debug(traceback.format_exc())
+            logger.debug("The following traceback may provide more information:")
+            logger.debug(traceback.format_exc())
             return False
         return True
 

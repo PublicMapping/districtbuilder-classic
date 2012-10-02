@@ -116,9 +116,6 @@ function createToolTipHeader() {
 
 function createMapTipDiv() {
     var tipDiv = createToolTipHeader();
-    for (i = 1; i < 4; i++) {
-        tipDiv.append($('<div />').text(gettext("Demographic ") + i + ":"));
-    }
     tipDiv.addClass('maptip');
     return tipDiv[0];
 }
@@ -580,6 +577,7 @@ function mapinit(srs,maxExtent) {
     // a manual refresh, with no automatic reloading of district
     // boundaries except when explicitly loaded.
     var districtStrategy = new OpenLayers.Strategy.BBOX({ratio:2});
+    var refreshStrategy = new OpenLayers.Strategy.Refresh({force:true});
     var highlightStrategy = new OpenLayers.Strategy.BBOX({ratio:2});
 
     // The style for the districts. This serves as the base
@@ -648,8 +646,8 @@ function mapinit(srs,maxExtent) {
         return { 
             layer: min_layer.layer, 
             level: min_layer.level,
-            name: min_layer.name,
-            display: min_layer.short_label, 
+            name: min_layer.level,
+            display: min_layer.long_description, 
             geolevel: min_layer.geolevel
         };
     }
@@ -712,7 +710,8 @@ function mapinit(srs,maxExtent) {
         'Current Plan',
         {
             strategies: [
-                districtStrategy
+                districtStrategy,
+                refreshStrategy
             ],
             protocol: new OpenLayers.Protocol.HTTP({
                 url: '/districtmapping/plan/' + PLAN_ID + '/district/versioned/',
@@ -849,7 +848,7 @@ function mapinit(srs,maxExtent) {
                     headers: {
                         "Content-Type": "application/x-www-form-urlencoded",
                         "X-Requested-With": "XMLHttpRequest",
-                        "X-CSRFToken": $('#csrfmiddlewaretoken').val()
+                        "X-CSRFToken": $('input[name=csrfmiddlewaretoken]').val()
                     }
                 });
                 return resp;
@@ -905,7 +904,7 @@ function mapinit(srs,maxExtent) {
         $('#open_statistics_editor').trigger('refresh_tab');
         $('#map').trigger('resort_by_visibility', [true]);
         districtLayer.filter = getVersionAndSubjectFilters(olmap.getExtent());
-        districtLayer.strategies[0].update({force:true});
+        refreshStrategy.refresh();
         $('#map').trigger('draw_highlighted_districts');
     };
 
@@ -1612,7 +1611,7 @@ function mapinit(srs,maxExtent) {
                     },
                     success: function(data, textStatus, xhr) {
                         selection.removeFeatures(selection.features);
-                        districtLayer.strategies[0].update({force:true});
+                        refreshStrategy.refresh();
                     }
                 });
             }
@@ -1738,6 +1737,11 @@ function mapinit(srs,maxExtent) {
             }
         }
 
+        tipdiv.style.display = 'none';
+
+        // Clear out the map tip div
+        $(tipdiv).find('.demographic').remove();
+ 
         // sort the characteristics alphabetically by label
         ctics = $(ctics).sort(function(a, b) { return a.lbl > b.lbl; });
 
@@ -1751,38 +1755,48 @@ function mapinit(srs,maxExtent) {
         var centroid = tipFeature.geometry.getCentroid();
         var lonlat = new OpenLayers.LonLat( centroid.x, centroid.y );
         var pixel = olmap.getPixelFromLonLat(lonlat);
-        tipdiv.style.display = 'block';
-        tipdiv.childNodes[0].childNodes[0].nodeValue = place;
+        $(tipdiv).find('h1').text(place);
         var select = $('#districtby')[0];
         var value = parseInt(tipFeature.attributes.number, 10);
 
-        var node = 2;
-        $(ctics).each(function(i, obj) {
-            try {
-                $(tipdiv.childNodes[node]).html(obj.lbl + ': ' + Math.round(obj.val).toLocaleString());
-                node ++;
-            } catch (exception) {
-                // too many characteristics
+        if (ctics.length > 0) {
+            $(ctics).each(function(i, obj) {
+                try {
+                    var demographic = $('<div class="demographic"/>').html(obj.lbl + ': ' + Math.round(obj.val).toLocaleString());
+                    $(tipdiv).append(demographic);
+                } catch (exception) {
+                    // too many characteristics
+                }
+            });
+
+            var halfWidth = tipdiv.clientWidth/2;
+            var halfHeight = tipdiv.clientHeight/2;
+            if (pixel.x < halfWidth) { 
+                pixel.x = halfWidth;
             }
-        });
+            else if (pixel.x > olmap.div.clientWidth - halfWidth) {
+                pixel.x = olmap.div.clientWidth - halfWidth;
+            }
+            if (pixel.y < halfHeight) {
+                pixel.y = halfHeight;
+            }
+            else if (pixel.y > (olmap.div.clientHeight-29) - halfHeight) {
+                pixel.y = (olmap.div.clientHeight-29) - halfHeight;
+            }
 
-        var halfWidth = tipdiv.clientWidth/2;
-        var halfHeight = tipdiv.clientHeight/2;
-        if (pixel.x < halfWidth) { 
-            pixel.x = halfWidth;
+            tipdiv.style.left = (pixel.x - halfWidth) + 'px';
+            tipdiv.style.top = (pixel.y - halfHeight) + 'px';
+            tipdiv.style.display = 'block';
+        } else {
+            $("<div>Couldn't retrieve demographic info for that geounit. " +
+                    "Please select another.</div>").dialog({
+                title: 'No demographics available',
+                resizable: false,
+                modal: true
+            });
         }
-        else if (pixel.x > olmap.div.clientWidth - halfWidth) {
-            pixel.x = olmap.div.clientWidth - halfWidth;
-        }
-        if (pixel.y < halfHeight) {
-            pixel.y = halfHeight;
-        }
-        else if (pixel.y > (olmap.div.clientHeight-29) - halfHeight) {
-            pixel.y = (olmap.div.clientHeight-29) - halfHeight;
-        }
+                
 
-        tipdiv.style.left = (pixel.x - halfWidth) + 'px';
-        tipdiv.style.top = (pixel.y - halfHeight) + 'px';
         if (tipdiv.pending) {
             clearTimeout(tipdiv.timeout);
             tipdiv.pending = false;
@@ -2668,7 +2682,7 @@ function mapinit(srs,maxExtent) {
 
         if (olmap.center !== null) {
             districtLayer.filter = getVersionAndSubjectFilters(olmap.getExtent());
-            districtLayer.strategies[0].update({force:true});
+            refreshStrategy.refresh();
 
             // get a new set of filters, so we don't muddy the districtLayer
             var filter = getVersionAndSubjectFilters(olmap.getExtent());
@@ -2732,7 +2746,7 @@ function mapinit(srs,maxExtent) {
 
             if (!sameSubj) {
                 districtLayer.filter = getVersionAndSubjectFilters(olmap.getExtent());
-                districtLayer.strategies[0].update({force:true});
+                refreshStrategy.refresh();
             }
             else {
                 getMapStyles(visualize, dby.name);

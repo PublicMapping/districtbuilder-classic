@@ -10,7 +10,7 @@ This file is part of The Public Mapping Project
 https://github.com/PublicMapping/
 
 License:
-    Copyright 2010 Micah Altman, Michael McDonald
+    Copyright 2010-2012 Micah Altman, Michael McDonald
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -52,6 +52,7 @@ from copy import copy
 from decimal import *
 from operator import attrgetter
 from rosetta import polib
+from traceback import format_exc
 import os, sys, cPickle, types, tagging, re, logging
 
 logger = logging.getLogger(__name__)
@@ -1384,7 +1385,10 @@ class Plan(models.Model):
         # Save the new district to the plan to start
         newshort = '' if slot == None else self.legislative_body.get_short_label() % {'district_id':slot}
         newlong = '' if slot == None else self.legislative_body.get_label() % {'district_id':slot}
-        pasted = District(short_label=newshort, long_label=newlong, plan=self, district_id = slot, geom=district.geom, simple = district.simple, version = new_version)
+        pasted = District(short_label = newshort, long_label = newlong,
+                plan = self,district_id = slot, geom = district.geom, 
+                simple = district.simple, version = new_version, 
+                num_members = district.num_members)
         pasted.save();
         if newshort  == '':
             pasted.short_label = self.legislative_body.get_short_label() % {'district_id':pasted.district_id}
@@ -2526,8 +2530,11 @@ class District(models.Model):
         else:
             index = 0
 
-        if name.startswith(prefix):
-            name = name[index:]
+        try:
+            if name.startswith(prefix):
+                name = name[index:]
+        except UnicodeDecodeError:
+            pass
         if name.isdigit():
             return '%03d' % int(name)
         return name 
@@ -3895,7 +3902,6 @@ def configure_views():
     
     sql = "CREATE OR REPLACE VIEW identify_geounit AS SELECT rg.id, rg.name, rgg.geolevel_id, rg.geom, rc.number, rc.percentage, rc.subject_id FROM redistricting_geounit rg JOIN redistricting_geounit_geolevel rgg ON rg.id = rgg.geounit_id JOIN redistricting_characteristic rc ON rg.id = rc.geounit_id;"
     cursor.execute(sql)
-    transaction.commit()
 
     logger.debug('Created identify_geounit view ...')
 
@@ -3907,22 +3913,44 @@ def configure_views():
         lbset = ','.join(map( lambda x:str(x.legislative_body_id), geolevel.legislativelevel_set.all()))
         sql = "CREATE OR REPLACE VIEW simple_district_%s AS SELECT rd.id, rd.district_id, rd.plan_id, st_geometryn(rd.simple, %d) AS geom, rp.legislative_body_id FROM publicmapping.redistricting_district as rd JOIN publicmapping.redistricting_plan as rp ON rd.plan_id = rp.id WHERE rp.legislative_body_id IN (%s);" % (geolevel.name, geolevel.id, lbset)
         cursor.execute(sql)
-        transaction.commit()
+        try:
+            transaction.commit()
+        except:
+            transaction.rollback()
+            logger.error('Failed to create simple_district_%s view',
+                geolevel.name)
+            logger.error(format_exc())
 
         logger.debug('Created simple_district_%s view ...', geolevel.name)
 
         sql = "CREATE OR REPLACE VIEW simple_%s AS SELECT rg.id, rg.name, rgg.geolevel_id, rg.simple as geom FROM redistricting_geounit rg JOIN redistricting_geounit_geolevel rgg ON rg.id = rgg.geounit_id WHERE rgg.geolevel_id = %%(geolevel_id)s;" % geolevel.name
         cursor.execute(sql, {'geolevel_id':geolevel.id})
-        transaction.commit()
+        try:
+            transaction.commit()
+        except:
+            transaction.rollback()
+            logger.error('Failed to create simple_%s view', geolevel.name)
+            logger.error(format_exc())
 
         logger.debug('Created simple_%s view ...', geolevel.name)
         
         for subject in Subject.objects.all():
             sql = "CREATE OR REPLACE VIEW %s AS SELECT rg.id, rg.name, rgg.geolevel_id, rg.geom, rc.number, rc.percentage FROM redistricting_geounit rg JOIN redistricting_geounit_geolevel rgg ON rg.id = rgg.geounit_id JOIN redistricting_characteristic rc ON rg.id = rc.geounit_id WHERE rc.subject_id = %%(subject_id)s AND rgg.geolevel_id = %%(geolevel_id)s;" % get_featuretype_name(geolevel.name, subject.name)
             cursor.execute(sql, {'subject_id':subject.id, 'geolevel_id':geolevel.id})
-            transaction.commit()
+            try:
+                transaction.commit()
+            except:
+                transaction.rollback()
+                logger.error('Failed to create %s view',
+                    get_featuretype_name(geolevel.name, subject.name))
+                logger.error(format_exc())
 
             logger.debug('Created %s view ...', get_featuretype_name(geolevel.name, subject.name))
+
+    try:
+        transaction.commit()
+    except:
+        transaction.rollback()
 
 def get_featuretype_name(geolevel_name, subject_name=None):
     """

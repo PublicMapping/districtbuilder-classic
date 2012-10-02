@@ -9,24 +9,23 @@ configure:
 
 Apache v 2.2
 Geoserver v 2.0.2
-Postgresql v 8.4 w/ PostGIS
-Python v 2.6
-Django v 1.3.0
+Postgresql v 9.1 w/ PostGIS
+Python v 2.7
+Django v 1.4
 
 On a debian-based system with aptitude installed, you can install most of
 the necessary software using the command:
 
 > sudo aptitude install apache2 libapache2-mod-wsgi python-dev \
-    python-django python-lxml python-gdal python-rpy2 \
-    python-psycopg2 python-setuptools postgresql-8.4-postgis \
-    sun-java6-jdk tomcat6 tomcat6-admin gettext
+    python-django python-lxml python-gdal python-rpy2 python-scipy \
+    python-psycopg2 python-setuptools postgresql-9.1-postgis \
+    tomcat6 tomcat6-admin gettext
 
 For python libraries that aren't in the ubuntu repositories, you can
 use pip (a replacement for easy_install) to get secondary python libraries,
 mostly used for background processes:
 
 > sudo easy_install pip
-> sudo pip install -r requirements.txt
 
 == Additional Packages==
 
@@ -53,8 +52,8 @@ as reports and downloads) and cron jobs.
  1. Check out the public mapping projects to the /projects directory of 
     your linux installation.
 
-    > sudo mkdir /projects
-    > cd /projects
+    > sudo mkdir -p /projects/PublicMapping
+    > cd /projects/PublicMapping
 
     You can download the PublicMapping source from the website or use git
     to grab the code
@@ -70,14 +69,18 @@ as reports and downloads) and cron jobs.
 	> git clone git://github.com/PublicMapping/DistrictBuilder.git
 	> cd DistrictBuilder
 
+	Install additional python library requirements.
+
+        > sudo pip install -r requirements.txt
+
 	You may want to switch to a stable tag rather than using the master 
 	branch.  You can see all the availale tags with.
 
 	> git tag -l
 
-	This example switches to v1.2.
+	This example switches to v2.0.
 	
-	> git checkout v1.2
+	> git checkout v2.0
 
      b. If you want to contribute to the project, you should fork the github
 	repository and clone your fork.  You can offer pull requests with
@@ -88,13 +91,21 @@ as reports and downloads) and cron jobs.
 	downloaded folder to DistrictBuilder to be consistent with the
 	rest of this README
     
- 2. Create a "local" directory next to the trunk - this is where your 
-    machine-specific settings, reports, and data will go:
+ 2. Create a "local" directory - this is where your machine-specific settings,
+    reports, and data will go:
 
     > sudo mkdir -p /projects/PublicMapping/local/reports
     > sudo chown www-data:www-data /projects/PublicMapping/local/reports
 
- 3. At this point, make sure that you have postgres and postgis 
+ 3. Allow write access by the web user to the locale message files,
+    if you are supporting more than one language. For each language,
+    run:
+
+    > sudo chown www-data:www-data /projects/PublicMapping/DistrictBuilder/django/publicmapping/locale/en/LC_MESSAGES/*o
+
+    Substitute "en" above for the language code that you will support.
+
+ 4. At this point, make sure that you have postgres and postgis 
     installed.
 
     You may need to run the postgis install script if you don't have a 
@@ -103,7 +114,7 @@ as reports and downloads) and cron jobs.
 
        http://postgis.refractions.net/docs/ch02.html
 
-    Note that the aptitude install above will not generate templates to 
+    Note that the aptitude install above will not generate templates. To 
     generate templates:
 
     > sudo su postgres 
@@ -113,7 +124,7 @@ as reports and downloads) and cron jobs.
     > psql -d template_postgis -f /usr/share/postgresql/8.4/contrib/postgis-1.5/spatial_ref_sys.sql 
     > exit
 
- 4. Once postgis is intalled, run the PublicMapping_db.sql script in 
+ 5. Once postgis is intalled, run the PublicMapping_db.sql script in 
     the sql directory:
 
     > sudo -u postgres psql -f /projects/PublicMapping/DistrictBuilder/sql/publicmapping_db.sql
@@ -122,7 +133,7 @@ as reports and downloads) and cron jobs.
     template, along with a publicmapping user role.  The publicmapping 
     user will be assigned all permissions and ownership on the db.
 
- 5. Make sure your pg_hba file in your postgres configuration allows 
+ 6. Make sure your pg_hba file in your postgres configuration allows 
     password-based authentication on the local machine:
 
     http://developer.postgresql.org/pgdocs/postgres/auth-pg-hba-conf.html
@@ -134,7 +145,7 @@ as reports and downloads) and cron jobs.
     Put that above the line that reads "local all all ident" so that 
     password authentication is allowed before user ident authentication
      
- 6. Download the datafile to /projects/PublicMapping/DistrictBuilder/data, and unzip into
+ 7. Download the datafile to /projects/PublicMapping/DistrictBuilder/data, and unzip into
     the import directory: /projects/local/data/:
 
     > cd /projects/PublicMapping/DistrictBuilder/data
@@ -145,14 +156,14 @@ as reports and downloads) and cron jobs.
     > sudo unzip /projects/PublicMapping/data/VA_data.zip
 
     *Note* that if you are loading spatial data for a coverage other than
-    the demonstration coverage over Ohio, you will need to ensure that the 
+    the demonstration coverage over Virginia, you will need to ensure that the 
     spatial reference of the data is "Web Auxiliary Sphere" or "Popular 
     Visualisation CRS / Mercator". The definition for all GIS software 
     packages is available here:
         
     http://spatialreference.org/ref/epsg/3785/
 
- 7. The code is distributed with a set of SLD files that create color, or
+ 8. The code is distributed with a set of SLD files that create color, or
     choropleth maps of Virginia geography. These SLD files are specific to
     the data and configuration that are distributed with the sample AMI.
     If you are using a different dataset, or modify the configuration, edit
@@ -173,15 +184,15 @@ as reports and downloads) and cron jobs.
 
     For more information about editing SLDs, see the wiki page:
 
-    https://sourceforge.net/apps/trac/PublicMapping/wiki/StyleLayerDescriptors
+    https://github.com/PublicMapping/DistrictBuilder/wiki/Style-Layer-Descriptors
 
- 8. Now we'll use the setup.py script to configure our application. Set the
+ 9. Now we'll use the setup.py script to configure our application. Set the
     script to be executable:
     
     > cd /projects/PublicMapping/DistrictBuilder/django/publicmapping
     > sudo chmod u+x setup.py
 
- 9. Run the setup script with the appropriate parameters - the parts of 
+10. Run the setup script with the appropriate parameters - the parts of 
     the app you want to set up, along with the path to an xsd and a 
     config.xml file.  
     
@@ -235,7 +246,7 @@ as reports and downloads) and cron jobs.
     * The importing and nesting must occur in the order of smallest 
     geography to largest geography.
 
-10. Django serves up SLD files to clients, and need this mime type added
+11. Django serves up SLD files to clients, and need this mime type added
     to the system's known mime types in order to serve the content
     properly.
 
@@ -243,12 +254,12 @@ as reports and downloads) and cron jobs.
     b. Find the line that starts with "application/xml"
     c. Add " sld" to the end of this line, after "xml xsl xsd"
 
-11. Now that you have the app configured and your data imported, you can 
+12. Now that you have the app configured and your data imported, you can 
     run the app using Django's testing server
      
     > python ./manage.py runserver
 
-12. You will see a notice that your server is running and you can access 
+13. You will see a notice that your server is running and you can access 
     your application at 127.0.0.1:8000  Enter that location into your 
     browser on the local machine and you should be able to use the 
     application.
@@ -332,7 +343,7 @@ as reports and downloads) and cron jobs.
 
  2. Download Geoserver in WAR (Web Archive) format from:
  
-        http://geoserver.org/display/GEOS/Stable
+        http://geoserver.org/display/GEOS/GeoServer+2.0.2
 
  3. Unzip the downloaded zip file so you can access the geoserver.war file.
 
@@ -350,20 +361,18 @@ as reports and downloads) and cron jobs.
         > cd /var/lib/tomcat6/webapps/geoserver/WEB-INF/lib
 
      b. Download the GeoServer REST Extension that matches your installed
-        version of GeoServer. As of this writing, the most recent stable
-        version of GeoServer is 2.0.2
+        version of GeoServer. 
 
         > sudo wget http://downloads.sourceforge.net/project/geoserver/GeoServer%20Extensions/2.0.2/geoserver-2.0.2-restconfig-plugin.zip
 
      c. Extract this plugin in the current folder (lib):
 
         > sudo unzip geoserver-2.0.2-restconfig-plugin.zip
-        > sudo chown tomcat6 restconfig*
-        > sudo chgrp tomcat6 restconfig*
+        > sudo chown tomcat6:tomcat6 restconfig*
 
      d. Restart tomcat to pick up the changes to the geoserver application:
      
-        > sudo /etc/init.d/tomcat6 restart
+        > sudo service tomcat6 restart
 
  6. Set the geowebcache directory to a non-default.  Otherwise your tiles 
     will be saved to /tmp and possibly disappear on reboot.  Add the 

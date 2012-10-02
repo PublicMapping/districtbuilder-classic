@@ -6,7 +6,7 @@ This file is part of The Public Mapping Project
 https://github.com/PublicMapping/
 
 License:
-    Copyright 2010 Micah Altman, Michael McDonald
+    Copyright 2010-2012 Micah Altman, Michael McDonald
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ Author:
 
 from celery.task import task
 from celery.task.http import HttpDispatchTask
+from codecs import open
 from django.core import management
 from django.contrib.comments.models import Comment
 from django.contrib.sessions.models import Session
@@ -40,11 +41,11 @@ from redistricting.models import *
 from redistricting.config import *
 from tagging.utils import parse_tag_input
 from tagging.models import Tag, TaggedItem
-import csv, time, zipfile, tempfile, os, sys, traceback, time
 from datetime import datetime
-import socket, urllib2, logging, re, inflect
 from lxml import etree, objectify
 from djsld import generator
+import csv, time, zipfile, tempfile, os, sys, traceback, time
+import socket, urllib2, logging, re
 
 # all for shapefile exports
 from glob import glob
@@ -356,8 +357,8 @@ class DistrictIndexFile():
                 new_geom = Geounit.objects.filter(guFilter).unionagg()
                 
                 # Create a new district and save it
-                short_label = community_labels[district_id] if is_community else legislative_body.get_short_label() % district_id 
-                long_label = community_labels[district_id] if is_community else legislative_body.get_label() % district_id
+                short_label = community_labels[district_id][:10] if is_community else legislative_body.get_short_label() % {'district_id':district_id }
+                long_label = community_labels[district_id][:256] if is_community else legislative_body.get_label() % {'district_id':district_id}
                 new_district = District(short_label=short_label,long_label=long_label,
                     district_id = district_id, plan=plan, num_members=num_members[district_id],
                     geom=enforce_multi(new_geom))
@@ -1195,8 +1196,7 @@ class CalculatorReport:
 
         try:
             # Render the report
-            display = ScoreDisplay.objects.all()
-            display = filter(lambda x:x.get_short_label()==_('%s Reports') % plan.legislative_body.get_long_description(), display)[0]
+            display = ScoreDisplay.objects.get(name='%s_reports' % plan.legislative_body.name)
             html = display.render(plan, request, function_ids=function_ids)
         except Exception as ex:
             logger.warn('Error creating calculator report')
@@ -1209,7 +1209,7 @@ class CalculatorReport:
         # Write it to file
         tempdir = settings.WEB_TEMP
         filename = '%s_p%d_v%d_%s' % (plan.owner.username, plan.id, plan.version, stamp)
-        htmlfile = open('%s/%s.html' % (tempdir, filename,),'w')
+        htmlfile = open('%s/%s.html' % (tempdir, filename,), mode='w', encoding='utf=8')
         htmlfile.write(html)
         htmlfile.close()
 
@@ -1284,20 +1284,67 @@ def reaggregate_plan(plan_id):
     """
     Asynchronously reaggregate all computed characteristics for each district in the plan.
 
-    @param plan: The plan to reaggregate
+    @param plan_id: The plan to reaggregate
     @return: An integer count of the number of districts reaggregated
     """
     try:
         plan = Plan.objects.get(id=plan_id)
     except Exception, ex:
-        logger.info('Could not retrieve plan %d for reaggregation.', plan_id)
+        logger.info('Could not retrieve plan %d for reaggregation.' % plan_id)
+        logger.debug('Reason:', ex)
+        return None
+
+    try:
+        count = plan.reaggregate()
+
+        logger.debug('Reaggregated %d districts.', count)
+
+        return count
+
+    except Exception, ex:
+        plan.processing_state = ProcessingState.NEEDS_REAGG
+        plan.save()
+
+        logger.warn('Could not reaggregate plan %d.' % plan_id)
         logger.debug('Reason:', ex)
 
-    count = plan.reaggregate()
+        return None
 
-    logger.debug('Reaggregated %d districts.', count)
+#
+# Validation tasks
+#
+@task
+def validate_plan(plan_id):
+    """
+    Asynchronously validate a plan.
 
-    return count
+    @param plan_id: The plan_id to reaggregate
+    @return: A flag indicating if the plan is valid
+    """
+    try:
+        plan = Plan.objects.get(id=plan_id)
+    except Exception, ex:
+        logger.warn('Could not retrieve plan %d for validation.' % plan_id)
+        logger.debug('Reason:', ex)
+        return False
+
+    criterion = ValidationCriteria.objects.filter(legislative_body=plan.legislative_body)
+    is_valid = True 
+    for criteria in criterion:
+        score = None
+        try: 
+            score = ComputedPlanScore.compute(criteria.function, plan)
+        except Exception, ex:
+            logger.debug(traceback.format_exc())
+
+        if not score or not score['value']:
+            is_valid = False
+            break
+
+    plan.is_valid = is_valid
+    plan.save()
+
+    return is_valid
 
 
 @task
@@ -1310,11 +1357,18 @@ def verify_count(upload_id, localstore, language):
 
     Parameters:
         upload_id - The id of the SubjectUpload record.
-        localstore - a temporary file that will get deleted when it is closed
+        localstore - a new subject file that remains when the task is complete
         language - Optional. If provided, translate the status messages
             into the specified language (if message files are complete).
     """
     reader = csv.DictReader(open(localstore,'r'))
+
+    if len(reader.fieldnames) < 2:
+        msg = _('There are missing columns in the uploaded Subject file')
+
+        return {'task_id':None, 'success':False, 'messages':[msg]}
+        
+
     upload = SubjectUpload.objects.get(id=upload_id)
     upload.subject_name = reader.fieldnames[1][0:50]
     upload.save()
@@ -1326,18 +1380,29 @@ def verify_count(upload_id, localstore, language):
     # insert upload_id, portable_id, number
     sql = 'INSERT INTO "%s" ("%s","%s","%s") VALUES (%%(upload_id)s, %%(geoid)s, %%(number)s)' % (SubjectStage._meta.db_table, SubjectStage._meta.fields[1].attname, SubjectStage._meta.fields[2].attname, SubjectStage._meta.fields[3].attname)
     args = []
-    for row in reader:
-        args.append( {'upload_id':upload.id, 'geoid':row[reader.fieldnames[0]].strip(), 'number':row[reader.fieldnames[1]].strip()} )
-        # django ORM takes about 320s for 280K geounits
-        #SubjectStage(upload=upload, portable_id=row[reader.fieldnames[0]],number=row[reader.fieldnames[1]]).save()
 
-    # direct access to db-api takes about 60s for 280K geounits
-    cursor = connection.cursor()
-    cursor.executemany(sql, tuple(args))
+    try:
+        for row in reader:
+            args.append( {'upload_id':upload.id, 'geoid':row[reader.fieldnames[0]].strip(), 'number':row[reader.fieldnames[1]].strip()} )
+            # django ORM takes about 320s for 280K geounits
+            #SubjectStage(upload=upload, portable_id=row[reader.fieldnames[0]],number=row[reader.fieldnames[1]]).save()
 
-    os.remove(localstore)
+        # direct access to db-api takes about 60s for 280K geounits
+        cursor = connection.cursor()
+        cursor.executemany(sql, tuple(args))
 
-    logger.debug('Bulk loaded CSV records into the staging area.')
+        logger.debug('Bulk loaded CSV records into the staging area.')
+    except AttributeError, aex:
+        msg = _('There are an incorrect number of columns in the uploaded '
+            'Subject file')
+
+        transaction.rollback()
+        return {'task_id':None, 'success':False, 'messages':[msg]}
+    except Exception, ex:
+        msg = _('Invalid data detected in the uploaded Subject file')
+
+        transaction.rollback()
+        return {'task_id':None, 'success':False, 'messages':[msg]}
 
     nlines = upload.subjectstage_set.all().count()
     geolevel, nunits = LegislativeLevel.get_basest_geolevel_and_count()
@@ -1423,7 +1488,6 @@ def verify_preload(upload_id, language=None):
         permanent_units[permanent_units.count()-1] == temp_units[temp_units.count()-1]
     msg = _('There are a correct number of geounits in the uploaded Subject file, ')
     if not ends_match:
-        p = inflect.engine()
         msg += _('but the geounits do not have the same portable ids as those in the database.')
 
     # python foo here: count the number of zipped items in the 
@@ -1431,9 +1495,8 @@ def verify_preload(upload_id, language=None):
     # thus counting the portable_ids that are not mutually shared
     aligned_units = len(filter(lambda x:x[0] == x[1], zip(permanent_units, temp_units)))
 
-    if nunits != aligned_units:
+    if ends_match and nunits != aligned_units:
         # The number of geounits in the uploaded file match, but there are some mismatches.
-        p = inflect.engine()
         mismatched = nunits - aligned_units
         msg += _n(
             'but %(count)d geounit does not match the geounits in the database.',
@@ -1450,11 +1513,15 @@ def verify_preload(upload_id, language=None):
         status = {'task_id':None, 'success':False, 'messages':[msg]}
 
     else:
-        # The next task will load the units into the characteristic table
-        task = copy_to_characteristics.delay(upload_id, language=language).task_id
+        try:
+            # The next task will load the units into the characteristic table
+            task = copy_to_characteristics.delay(upload_id, language=language).task_id
 
-        status = {'task_id':task, 'success':True, 'messages':[_('Copying records to characteristic table ...')]}
+            status = {'task_id':task, 'success':True, 'messages':[_('Copying records to characteristic table ...')]}
 
+        except:
+            logger.error("Couldn't copy characteristics: %s" %
+                traceback.format_exc())
     # reset the language back to the default
     if not prev_lang is None:
         activate(prev_lang)
@@ -1493,27 +1560,10 @@ def copy_to_characteristics(upload_id, language=None):
 
     # create a subject to hold these new values
     new_sort_key = Subject.objects.all().aggregate(Max('sort_key'))['sort_key__max'] + 1
-    clean_name = ''
-    try:
-        cmp1 = re.match(r'.+?([a-zA-Z_]+)', upload.subject_name).groups()[0]
-        cmp2 = re.findall(r'[\w]+', upload.subject_name)
-        clean_name = '_'.join([cmp1] + cmp2[1:]).lower()
-    except:
-        msg = _('The subject name contains invalid characters.')
-
-        logger.debug(msg)
-
-        upload.status = 'ER'
-        upload.save()
-        transaction.commit()
-
-        status = {'task_id':None, 'success':False, 'messages':[msg, _('Please correct the error and try again.')]}
-
-        # reset the translation to default
-        if not prev_lang is None:
-            activate(prev_lang)
-
-        return status
+     
+    # To create a clean name, replace all non-word characters with an
+    # underscore
+    clean_name = re.sub(r"\W", "_", upload.subject_name).lower()[:50]
 
     defaults = {
         'name':clean_name,
@@ -1528,21 +1578,24 @@ def copy_to_characteristics(upload_id, language=None):
     if created:
         logger.debug('Writing catalog entries for %s' % the_subject.name)
         for locale in [l[0] for l in settings.LANGUAGES]:
-            logger.debug('Writing catalog entry for %s' % locale)
-            po = PoUtils(locale)
-            po.add_or_update(
-                msgid=u'%s short label' % the_subject.name,
-                msgstr=upload.subject_name[0:25]
-            )
-            po.add_or_update(
-                msgid=u'%s label' % the_subject.name,
-                msgstr=upload.subject_name
-            )
-            po.add_or_update(
-                msgid=u'%s long description' % the_subject.name,
-                msgstr=''
-            )
-            po.save()
+            try:
+                logger.debug('Writing catalog entry for %s' % locale)
+                po = PoUtils(locale)
+                po.add_or_update(
+                    msgid=u'%s short label' % the_subject.name,
+                    msgstr=upload.subject_name[0:25]
+                )
+                po.add_or_update(
+                    msgid=u'%s label' % the_subject.name,
+                    msgstr=upload.subject_name
+                )
+                po.add_or_update(
+                    msgid=u'%s long description' % the_subject.name,
+                    msgstr=''
+                )
+                po.save()
+            except:
+                logger.error("Couldn't write catalog entries for %s" % locale)
            
     logger.debug('Using %ssubject "%s" for new Characteristic values.', 'new ' if created else '', the_subject.name)
 
@@ -1576,17 +1629,26 @@ def copy_to_characteristics(upload_id, language=None):
     )
 
     # Insert or update all the records into the characteristic table
-    cursor = connection.cursor()
-    cursor.executemany(sql, tuple(args))
+    try:
+        cursor = connection.cursor()
+        cursor.executemany(sql, tuple(args))
 
-    logger.debug('Loaded new Characteristic values for subject "%s"', the_subject.name)
+        transaction.commit()
+        logger.debug('Loaded new Characteristic values for subject "%s"', the_subject.name)
 
-    task = update_vacant_characteristics.delay(upload_id, created, language=language).task_id
 
-    transaction.commit()
+    except:
+        transaction.rollback()
 
-    status = {'task_id':task, 'success':True, 'messages':[_('Created characteristics, resetting computed characteristics...')]}
+    try:
+        task = update_vacant_characteristics.delay(upload_id, created, language=language).task_id
 
+        status = {'task_id':task, 'success':True, 'messages':[_('Created characteristics, resetting computed characteristics...')]}
+        transaction.commit()
+
+    except:
+        status = {'task_id':task, 'success':False, 'messages':[_('Not able to create task for update_vacant_characteristics.')]}
+        transaction.rollback()
     # reset the translation to default
     if not prev_lang is None:
         activate(prev_lang)
@@ -1804,6 +1866,11 @@ def clean_quarantined(upload_id, language=None):
     if not language is None:
         prev_lang = get_language()
         activate(language)
+
+    try:
+        Plan.objects.all().update(is_valid=False)
+    except Exception, ex:
+        logger.warn('Could not reset the is_valid flag on all plans.')
 
     status = {
         'task_id':None, 

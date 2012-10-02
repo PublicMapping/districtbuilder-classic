@@ -1,15 +1,14 @@
 """
-Django views used by the redistricting application.
+Django views used by the reporting application.
 
-The methods in redistricting.views define the views used to interact with
-the models in the redistricting application. Each method relates to one 
-type of output url. There are views that return GeoJSON, JSON, and HTML.
+The methods in views define the views used to interact with
+the reports in the redistricting application. 
 
 This file is part of The Public Mapping Project
 https://github.com/PublicMapping/
 
 License:
-    Copyright 2010 Micah Altman, Michael McDonald
+    Copyright 2010-2012 Micah Altman, Michael McDonald
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.

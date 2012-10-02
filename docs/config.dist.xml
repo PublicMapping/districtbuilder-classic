@@ -849,42 +849,42 @@
         </ScorePanels>
         
         <ScoreDisplays>
-            <ScoreDisplay id="congress-leader-all" legislativebodyref="congress" type="leaderboard" 
+            <ScoreDisplay id="congress_leader_all" legislativebodyref="congress" type="leaderboard" 
                 title="Congressional Leaderboard - All" cssclass="leaderboard congress">
                 <ScorePanel ref="panel_equipop_all" />
                 <ScorePanel ref="panel_compact_all" />
                 <ScorePanel ref="panel_competitive_all" />
                 <ScorePanel ref="panel_rf_all" />
             </ScoreDisplay>
-            <ScoreDisplay id="congress-leader-mine" legislativebodyref="congress" type="leaderboard" 
+            <ScoreDisplay id="congress_leader_mine" legislativebodyref="congress" type="leaderboard" 
                 title="Congressional Leaderboard - Mine" cssclass="leaderboard congress">
                 <ScorePanel ref="panel_equipop_mine" />
                 <ScorePanel ref="panel_compact_mine" />
                 <ScorePanel ref="panel_competitive_mine" />
                 <ScorePanel ref="panel_rf_mine" />
             </ScoreDisplay>
-            <ScoreDisplay id="house-leader-all" legislativebodyref="house" type="leaderboard" 
+            <ScoreDisplay id="house_leader_all" legislativebodyref="house" type="leaderboard" 
                 title="State House Leaderboard - All" cssclass="leaderboard house">
                 <ScorePanel ref="panel_equipop_all" />
                 <ScorePanel ref="panel_compact_all" />
                 <ScorePanel ref="panel_competitive_all" />
                 <ScorePanel ref="panel_rf_all" />
             </ScoreDisplay>
-            <ScoreDisplay id="house-leader-mine" legislativebodyref="house" type="leaderboard" 
+            <ScoreDisplay id="house_leader_mine" legislativebodyref="house" type="leaderboard" 
                 title="State House Leaderboard - Mine" cssclass="leaderboard house">
                 <ScorePanel ref="panel_equipop_mine" />
                 <ScorePanel ref="panel_compact_mine" />
                 <ScorePanel ref="panel_competitive_mine" />
                 <ScorePanel ref="panel_rf_mine" />
             </ScoreDisplay>
-            <ScoreDisplay id="senate-leader-all" legislativebodyref="senate" type="leaderboard" 
+            <ScoreDisplay id="senate_leader_all" legislativebodyref="senate" type="leaderboard" 
                 title="State Senate Leaderboard - All" cssclass="leaderboard senate">
                 <ScorePanel ref="panel_equipop_all" />
                 <ScorePanel ref="panel_compact_all" />
                 <ScorePanel ref="panel_competitive_all" />
                 <ScorePanel ref="panel_rf_all" />
             </ScoreDisplay>
-            <ScoreDisplay id="senate-leader-mine" legislativebodyref="senate" type="leaderboard" 
+            <ScoreDisplay id="senate_leader_mine" legislativebodyref="senate" type="leaderboard" 
                 title="State Senate Leaderboard - Mine" cssclass="leaderboard senate">
                 <ScorePanel ref="panel_equipop_mine" />
                 <ScorePanel ref="panel_compact_mine" />
@@ -893,48 +893,48 @@
             </ScoreDisplay>
 
              <!-- Sidebar configuration -->
-            <ScoreDisplay id="congress-sidebar-basic" legislativebodyref="congress" type="sidebar" title="Basic Information" cssclass="basic_information">
+            <ScoreDisplay id="congress_sidebar_basic" legislativebodyref="congress" type="sidebar" title="Basic Information" cssclass="basic_information">
                 <ScorePanel ref="congressional_panel_summary" />
                 <ScorePanel ref="congresional_panel_info" />
             </ScoreDisplay>
 
-            <ScoreDisplay id="congress-sidebar-demo" legislativebodyref="congress" type="sidebar" title="Demographics" cssclass="demographics">
+            <ScoreDisplay id="congress_sidebar_demo" legislativebodyref="congress" type="sidebar" title="Demographics" cssclass="demographics">
                 <ScorePanel ref="congressional_panel_summary" />
                 <ScorePanel ref="congressional_panel_demo" />
             </ScoreDisplay>
 
-            <ScoreDisplay id="house-sidebar-basic" legislativebodyref="house" type="sidebar" title="Basic Information" cssclass="basic_information">
+            <ScoreDisplay id="house_sidebar_basic" legislativebodyref="house" type="sidebar" title="Basic Information" cssclass="basic_information">
                 <ScorePanel ref="house_panel_summary" />
                 <ScorePanel ref="house_panel_info" />
             </ScoreDisplay>
 
-            <ScoreDisplay id="house-sidebar-demo" legislativebodyref="house" type="sidebar" title="Demographics" cssclass="demographics">
+            <ScoreDisplay id="house_sidebar_demo" legislativebodyref="house" type="sidebar" title="Demographics" cssclass="demographics">
                 <ScorePanel ref="house_panel_summary" />
                 <ScorePanel ref="house_panel_demo" />
             </ScoreDisplay>
 
-            <ScoreDisplay id="senate-sidebar-basic" legislativebodyref="senate" type="sidebar" title="Basic Information" cssclass="basic_information">
+            <ScoreDisplay id="senate_sidebar_basic" legislativebodyref="senate" type="sidebar" title="Basic Information" cssclass="basic_information">
                 <ScorePanel ref="senate_panel_summary" />
                 <ScorePanel ref="senate_panel_info" />
             </ScoreDisplay>
 
-            <ScoreDisplay id="senate-sidebar-demo" legislativebodyref="senate" type="sidebar" title="Demographics" cssclass="demographics">
+            <ScoreDisplay id="senate_sidebar_demo" legislativebodyref="senate" type="sidebar" title="Demographics" cssclass="demographics">
                 <ScorePanel ref="senate_panel_summary" />
                 <ScorePanel ref="senate_panel_demo" />
             </ScoreDisplay>
 
-            <ScoreDisplay id="community-sidebar-demo" legislativebodyref="community" type="sidebar" title="Demographics" cssclass="demographics">
+            <ScoreDisplay id="community_sidebar_demo" legislativebodyref="community" type="sidebar" title="Demographics" cssclass="demographics">
                 <ScorePanel ref="community_panel_summary" />
                 <ScorePanel ref="community_panel_demo" />
             </ScoreDisplay>
 
-            <ScoreDisplay id="community-sidebar-comments" legislativebodyref="community" type="sidebar" title="Community Mapping" cssclass="demographics">
+            <ScoreDisplay id="community_sidebar_comments" legislativebodyref="community" type="sidebar" title="Community Mapping" cssclass="demographics">
                 <ScorePanel ref="community_panel_summary" />
                 <ScorePanel ref="community_panel_comments" />
             </ScoreDisplay>
 
             <!-- Calculator Reports configuration -->
-            <ScoreDisplay id="congress-reports" legislativebodyref="congress" type="reports" 
+            <ScoreDisplay id="congress_reports" legislativebodyref="congress" type="reports" 
                 title="Congressional Reports" cssclass="reports congress">
                 <ScorePanel ref="report_panel_population" />
                 <ScorePanel ref="report_panel_majmin" />
@@ -943,7 +943,7 @@
                 <ScorePanel ref="report_panel_spatial" />
             </ScoreDisplay>
 
-            <ScoreDisplay id="senate-reports" legislativebodyref="senate" type="reports" 
+            <ScoreDisplay id="senate_reports" legislativebodyref="senate" type="reports" 
                 title="State Senate Reports" cssclass="reports senate">
                 <ScorePanel ref="report_panel_population" />
                 <ScorePanel ref="report_panel_majmin" />
@@ -952,7 +952,7 @@
                 <ScorePanel ref="report_panel_spatial" />
             </ScoreDisplay>
 
-            <ScoreDisplay id="house-reports" legislativebodyref="house" type="reports" 
+            <ScoreDisplay id="house_reports" legislativebodyref="house" type="reports" 
                 title="State House Reports" cssclass="reports house">
                 <ScorePanel ref="report_panel_population" />
                 <ScorePanel ref="report_panel_majmin" />
@@ -1039,7 +1039,7 @@
           
           -->
 
-          <Shapefile path="/projects/PublicMapping/data/tl_2010_51_block10_3785_join.shp">
+          <Shapefile path="/projects/PublicMapping/local/data/tl_2010_51_block10_3785_join.shp">
               <Fields>
                   <!-- 
 
@@ -1100,7 +1100,7 @@
           
           -->
           <Files>
-              <Geography path="/projects/PublicMapping/data/tl_2010_51_vtd10_3785.shp">
+              <Geography path="/projects/PublicMapping/local/data/tl_2010_51_vtd10_3785.shp">
                   <!-- 
 
                   Each Field item defines a field in the shapefile that
@@ -1154,7 +1154,7 @@
           
           -->
           <Files>
-              <Geography path="/projects/PublicMapping/data/tl_2010_51_county10_3785.shp">
+              <Geography path="/projects/PublicMapping/local/data/tl_2010_51_county10_3785.shp">
                   <!-- 
 
                   Each Field item defines a field in the shapefile that
@@ -1206,19 +1206,19 @@
             unit of geography, and 2) the district it belongs to.
             
             -->
-            <Blockfile path="/projects/PublicMapping/data/cd111_index.csv" />
+            <Blockfile path="/projects/PublicMapping/local/data/cd111_index.csv" />
         </Template>
         
         <Template name="State House">
             <LegislativeBody ref="house"/>
             
-            <Blockfile path="/projects/PublicMapping/data/sldl10_index.csv" />
+            <Blockfile path="/projects/PublicMapping/local/data/sldl10_index.csv" />
         </Template>
 
         <Template name="State Senate">
             <LegislativeBody ref="senate"/>
 
-            <Blockfile path="/projects/PublicMapping/data/sldu10_index.csv" />
+            <Blockfile path="/projects/PublicMapping/local/data/sldu10_index.csv" />
         </Template>
     </Templates>
     
@@ -1254,6 +1254,7 @@
             <Language code="en" label="English" />
             <Language code="fr" label="French" />
             <Language code="es" label="Spanish" />
+            <Language code="ja" label="Japanese" />
         </Internationalization>
         
         <!-- 
@@ -1335,7 +1336,7 @@
             <BardConfigs>
                 <BardConfig 
                     id="tenpercent"
-                    shape="/projects/PublicMapping/data/vablock_bard_save.Rdata" 
+                    shape="/projects/PublicMapping/local/data/vablock_bard_save.Rdata" 
                     temp="/projects/PublicMapping/local/reports"
                     transform="/projects/PublicMapping/DistrictBuilder/docs/bard_template.xslt">
                     <PopVars>
@@ -1368,7 +1369,7 @@
                 </BardConfig>
                 <BardConfig 
                     id="fivepercent"
-                    shape="/projects/PublicMapping/data/vablock_bard_save.Rdata" 
+                    shape="/projects/PublicMapping/local/data/vablock_bard_save.Rdata" 
                     temp="/projects/PublicMapping/local/reports"
                     transform="/projects/PublicMapping/DistrictBuilder/docs/bard_template.xslt">
                     <PopVars>

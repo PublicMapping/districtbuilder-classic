@@ -13,13 +13,13 @@ msgstr ""
 "Language: fr\n"
 
 msgid "default short label"
-msgstr "Default"
+msgstr "Par défaut"
 
 msgid "default label"
-msgstr "Default"
+msgstr "Par défaut"
 
 msgid "default long description"
-msgstr "The region serviced by DistrictBuilder."
+msgstr "La région desservie par DistrictBuilder."
 
 msgid "congress short label"
 msgstr "%(district_id)s"
@@ -94,76 +94,76 @@ msgid "dc_community long description"
 msgstr "DC Community Map"
 
 msgid "dc_vtd short label"
-msgstr ""
+msgstr "VTD"
 
 msgid "dc_vtd label"
-msgstr ""
+msgstr "VTD"
 
 msgid "dc_vtd long description"
-msgstr ""
+msgstr "Voter Tabulation Districts"
 
 msgid "dc_block short label"
-msgstr ""
+msgstr "block"
 
 msgid "dc_block label"
-msgstr ""
+msgstr "Block"
 
 msgid "dc_block long description"
-msgstr ""
+msgstr "Census Blocks"
 
 msgid "county short label"
 msgstr "county"
 
 msgid "county label"
-msgstr "county"
+msgstr "County"
 
 msgid "county long description"
-msgstr ""
+msgstr "Counties"
 
 msgid "va_block short label"
-msgstr ""
+msgstr "block"
 
 msgid "va_block label"
-msgstr ""
+msgstr "Block"
 
 msgid "va_block long description"
-msgstr ""
+msgstr "Census Blocks"
 
 msgid "va_vtd short label"
-msgstr ""
+msgstr "vtd"
 
 msgid "va_vtd label"
-msgstr ""
+msgstr "VTD"
 
 msgid "va_vtd long description"
-msgstr ""
+msgstr "Voter Tabulation Districts"
 
 msgid "va_county short label"
-msgstr ""
+msgstr "county"
 
 msgid "va_county label"
-msgstr ""
+msgstr "County"
 
 msgid "va_county long description"
-msgstr ""
+msgstr "Counties"
 
 msgid "vtd short label"
 msgstr "vtd"
 
 msgid "vtd label"
-msgstr "vtd"
+msgstr "VTD"
 
 msgid "vtd long description"
-msgstr ""
+msgstr "Voter Tabulation Districts"
 
 msgid "block short label"
 msgstr "block"
 
 msgid "block label"
-msgstr "block"
+msgstr "Block"
 
 msgid "block long description"
-msgstr ""
+msgstr "Census Blocks"
 
 msgid "congress_leader_all short label"
 msgstr "Congressional Leaderboard - All"
@@ -274,55 +274,55 @@ msgid "senate_sidebar_demo long description"
 msgstr ""
 
 msgid "community_demo short label"
-msgstr "Demographics"
+msgstr "Démographiques"
 
 msgid "community_demo label"
-msgstr "Demographics"
+msgstr "Démographiques"
 
 msgid "community_demo long description"
 msgstr ""
 
 msgid "community_comments short label"
-msgstr "Community Mapping"
+msgstr "Cartographie de la communauté"
 
 msgid "community_comments label"
-msgstr "Community Mapping"
+msgstr "Cartographie de la communauté"
 
 msgid "community_comments long description"
 msgstr ""
 
 msgid "dc_area_sidebar_basic short label"
-msgstr "Basic Information"
+msgstr "Informations de base"
 
 msgid "dc_area_sidebar_basic label"
-msgstr "Basic Information"
+msgstr "Informations de base"
 
 msgid "dc_area_sidebar_basic long description"
 msgstr ""
 
 msgid "dc_area_sidebar_demo short label"
-msgstr "Demographics"
+msgstr "Démographiques"
 
 msgid "dc_area_sidebar_demo label"
-msgstr "Demographics"
+msgstr "Démographiques"
 
 msgid "dc_area_sidebar_demo long description"
 msgstr ""
 
 msgid "dc_community_sidebar_demo short label"
-msgstr "Demographics"
+msgstr "Démographiques"
 
 msgid "dc_community_sidebar_demo label"
-msgstr "Demographics"
+msgstr "Démographiques"
 
 msgid "dc_community_sidebar_demo long description"
 msgstr ""
 
 msgid "dc_community_sidebar_comments short label"
-msgstr "Community Mapping"
+msgstr "Cartographie de la communauté"
 
 msgid "dc_community_sidebar_comments label"
-msgstr "Community Mapping"
+msgstr "Cartographie de la communauté"
 
 msgid "dc_community_sidebar_comments long description"
 msgstr ""
@@ -355,10 +355,10 @@ msgid "house_reports long description"
 msgstr ""
 
 msgid "dc_area_reports short label"
-msgstr "DC Planning Council Reports"
+msgstr "Rapports du conseil d'aménagement de DC"
 
 msgid "dc_area_reports label"
-msgstr "DC Planning Council Reports"
+msgstr "Rapports du conseil d'aménagement de DC"
 
 msgid "dc_area_reports long description"
 msgstr ""
@@ -406,31 +406,35 @@ msgstr ""
 "0.5%."
 
 msgid "a_dc_area_council_plan_equipopulation_summary short label"
-msgstr "Target Pop. (292,843)"
+msgstr "Pop. cible (292843)"
 
 msgid "a_dc_area_council_plan_equipopulation_summary label"
-msgstr "Target Pop. (292,843)"
+msgstr "Pop. cible (292843)"
 
 msgid "a_dc_area_council_plan_equipopulation_summary long description"
-msgstr "The population of each State Senate district must be 292,843 +/- 5%."
+msgstr ""
+"La population de chaque circonscription du Sénat de l'État doit être "
+"292843 +/-5 %."
 
 msgid "a_dc_area_council_plan_equipopulation_validation short label"
-msgstr "Target Pop. (292,843)"
+msgstr "Pop. cible (292843)"
 
 msgid "a_dc_area_council_plan_equipopulation_validation label"
-msgstr "Target Pop. (292,843)"
+msgstr "Pop. cible (292843)"
 
 msgid "a_dc_area_council_plan_equipopulation_validation long description"
-msgstr "The population of each State Senate district must be 292,843 +/- 5%."
+msgstr ""
+"La population de chaque circonscription du Sénat de l'État doit être "
+"292843 +/-5 %."
 
 msgid "a_dc_area_council_population short label"
-msgstr "Tot Pop"
+msgstr "Pop tot"
 
 msgid "a_dc_area_council_population label"
-msgstr "Tot Pop"
+msgstr "Pop tot"
 
 msgid "a_dc_area_council_population long description"
-msgstr "Population interval calculator for senate."
+msgstr "Calculatrice d'intervalle de la population pour le Sénat."
 
 msgid "a_house_plan_count_districts short label"
 msgstr "Count Districts"
@@ -522,10 +526,10 @@ msgid "b_plan_congress_noncontiguous long description"
 msgstr ""
 
 msgid "b_plan_dc_area_council_noncontiguous short label"
-msgstr "Contiguous"
+msgstr "Contigu"
 
 msgid "b_plan_dc_area_council_noncontiguous label"
-msgstr "Contiguous"
+msgstr "Contigu"
 
 msgid "b_plan_dc_area_council_noncontiguous long description"
 msgstr ""
@@ -804,18 +808,19 @@ msgstr ""
 "majority in a single-member district'."
 
 msgid "plan_majority_minority_blk short label"
-msgstr "Black VAP Majority (>50%)"
+msgstr "Majorité de VAP noire (>50%)"
 
 msgid "plan_majority_minority_blk label"
-msgstr "Black VAP Majority (>50%)"
+msgstr "Majorité de VAP noire (>50%)"
 
 msgid "plan_majority_minority_blk long description"
 msgstr ""
-"Compliance with the Voting Rights Act will be assumed if maps include "
-"a minority-majority district in any area where a minority group is (as"
-" described in Thornburg V. Gingles, 478 U.S. 30, 49 (1986)) "
-"'sufficiently large and geographically compact to constitute a "
-"majority in a single-member district'."
+"Le respect de la Loi des droits de vote sera supposé si les cartes "
+"comprennent une circonscription de minorité-majorité dans toutes zones"
+" où un groupe minoritaire est (comme décrit dans Thornburg V. Gingles,"
+" 478 U.S. 30, 49 (1986)) 'suffisamment grand et géographiquement "
+"compact pour constituer une majorité dans une circonscription "
+"uninominale'."
 
 msgid "plan_majority_minority_blk_congress short label"
 msgstr "Black VAP Majority (>50%)"
@@ -999,10 +1004,10 @@ msgid "report_score_total_population_congress long description"
 msgstr ""
 
 msgid "report_score_total_population_dc_council short label"
-msgstr "Total Population"
+msgstr "Population totale"
 
 msgid "report_score_total_population_dc_council label"
-msgstr "Total Population"
+msgstr "Population totale"
 
 msgid "report_score_total_population_dc_council long description"
 msgstr ""
@@ -1088,13 +1093,13 @@ msgstr "Plan Comments"
 msgid "community_panel_comments long description"
 msgstr ""
 
-msgid "congresional_panel_info short label"
-msgstr "Basic Information"
+msgid "congressional_panel_info short label"
+msgstr "Informations de base"
 
-msgid "congresional_panel_info label"
-msgstr "Basic Information"
+msgid "congressional_panel_info label"
+msgstr "Informations de base"
 
-msgid "congresional_panel_info long description"
+msgid "congressional_panel_info long description"
 msgstr ""
 
 msgid "congressional_panel_summary short label"
@@ -1170,28 +1175,28 @@ msgid "senate_panel_demo long description"
 msgstr ""
 
 msgid "dc_area_council_panel_info short label"
-msgstr "Basic Information"
+msgstr "Informations de base"
 
 msgid "dc_area_council_panel_info label"
-msgstr "Basic Information"
+msgstr "Informations de base"
 
 msgid "dc_area_council_panel_info long description"
 msgstr ""
 
 msgid "dc_area_council_panel_summary short label"
-msgstr "Plan Summary"
+msgstr "Plan SummaryRésumé du plan"
 
 msgid "dc_area_council_panel_summary label"
-msgstr "Plan Summary"
+msgstr "Résumé du plan"
 
 msgid "dc_area_council_panel_summary long description"
 msgstr ""
 
 msgid "dc_area_council_panel_demo short label"
-msgstr "Demographics"
+msgstr "Démographiques"
 
 msgid "dc_area_council_panel_demo label"
-msgstr "Demographics"
+msgstr "Démographiques"
 
 msgid "dc_area_council_panel_demo long description"
 msgstr ""
@@ -1503,340 +1508,337 @@ msgid "govtot long description"
 msgstr ""
 
 msgid "house_contiguity short label"
-msgstr "AllContiguous - House"
+msgstr "Tous contigus - Chambre"
 
 msgid "house_contiguity label"
-msgstr "AllContiguous - House"
+msgstr "Tous contigus - Chambre"
 
 msgid "house_contiguity long description"
 msgstr ""
-"<p>Your plan does not meet the competition criteria for "
-"Contiguity</p><p>Every part of a district must be reachable from every"
-" other part without crossing the district's borders. All districts "
-"within a plan must be contiguous. Water contiguity is permitted given "
-"Virginia's extensive coastal region. 'Point contiguity' or 'touch-"
-"point contiguity' where two sections of a district are connected at a "
-"single point is not permitted.</p>"
+"<p>Votre plan ne respecte pas les critères de concurrence de "
+"Contiguïté</p><p>Chaque partie d'une circonscription doit être "
+"accessible depuis toutes les autres parties sans quitter les "
+"frontières de la circonscription. Toutes les circonscriptions au sein "
+"d'un plan doivent être contiguës. La contiguïté de l'eau est  "
+"autorisée compte tenu de la vaste région côtière de la Virginie. "
+"'Point de contiguïté' ou 'point de contact de contiguïté' où deux "
+"sections d'une circonscription sont connectées à un seul point n'est "
+"pas autorisé.</p>"
 
 msgid "house_majority_minority short label"
-msgstr "MajorityMinority - House"
+msgstr "MajoritéMinorité - Chambre"
 
 msgid "house_majority_minority label"
-msgstr "MajorityMinority - House"
+msgstr "MajoritéMinorité - Chambre"
 
 msgid "house_majority_minority long description"
 msgstr ""
 
 msgid "house_count_districts short label"
-msgstr "CountDistricts - House"
+msgstr "Décompte des circonscriptions - Chambre"
 
 msgid "house_count_districts label"
-msgstr "CountDistricts - House"
+msgstr "Décompte des circonscriptions - Chambre"
 
 msgid "house_count_districts long description"
 msgstr ""
 
 msgid "house_all_assigned short label"
-msgstr "AllBlocksAssigned - House"
+msgstr "Tous les blocs attribués - Chambre"
 
 msgid "house_all_assigned label"
-msgstr "AllBlocksAssigned - House"
+msgstr "Tous les blocs attribués - Chambre"
 
 msgid "house_all_assigned long description"
 msgstr ""
 
 msgid "senate_majority_minority short label"
-msgstr "MajorityMinority - Senate"
+msgstr "MajoritéMinorité - Sénat"
 
 msgid "senate_majority_minority label"
-msgstr "MajorityMinority - Senate"
+msgstr "MajoritéMinorité - Sénat"
 
 msgid "senate_majority_minority long description"
 msgstr ""
 
 msgid "senate_count_districts short label"
-msgstr "CountDistricts - Senate"
+msgstr "Décompte des circonscriptions - Sénat"
 
 msgid "senate_count_districts label"
-msgstr "CountDistricts - Senate"
+msgstr "Décompte des circonscriptions - Sénat"
 
 msgid "senate_count_districts long description"
 msgstr ""
 
 msgid "congress_equipop short label"
-msgstr "Equipopulation - Congress"
+msgstr "Population-égale  - Congrès"
 
 msgid "congress_equipop label"
-msgstr "Equipopulation - Congress"
+msgstr "Population-égale  - Congrès"
 
 msgid "congress_equipop long description"
 msgstr ""
-"<p>Your plan does not meet the competition criteria for "
-"Equipopulation:</p><p>The population of each Congressional district "
-"must be 727,366 +/- 0.5%.</p>"
+"<p> votre plan ne respecte pas les critères de concurrence d'égalité "
+"de la population:</p><p>La population de chaque circonscription du "
+"Congrès doit être 727366 +/-0,5%.</p>"
 
 msgid "congress_contiguity short label"
-msgstr "AllContiguous - Congress"
+msgstr "Tous contigus - Congrès"
 
 msgid "congress_contiguity label"
-msgstr "AllContiguous - Congress"
+msgstr "Tous contigus - Congrès"
 
 msgid "congress_contiguity long description"
 msgstr ""
-"<p>Your plan does not meet the competition criteria for "
-"Contiguity</p><p>Every part of a district must be reachable from every"
-" other part without crossing the district's borders. All districts "
-"within a plan must be contiguous. Water contiguity is permitted given "
-"Virginia's extensive coastal region. 'Point contiguity' or 'touch-"
-"point contiguity' where two sections of a district are connected at a "
-"single point is not permitted.</p>"
+"<p>Votre plan ne respecte pas les critères de concurrence de "
+"Contiguïté</p><p>Chaque partie d'une circonscription doit être "
+"accessible depuis toutes les autres parties sans quitter les "
+"frontières de la circonscription. Toutes les circonscriptions au sein "
+"d'un plan doivent être contiguës. La contiguïté de l'eau est  "
+"autorisée compte tenu de la vaste région côtière de la Virginie. "
+"'Point de contiguïté' ou 'point de contact de contiguïté' où deux "
+"sections d'une circonscription sont connectées à un seul point n'est "
+"pas autorisé.</p>"
 
 msgid "congress_majority_minority short label"
-msgstr "MajorityMinority - Congress"
+msgstr "MajoritéMinorité - Congrès"
 
 msgid "congress_majority_minority label"
-msgstr "MajorityMinority - Congress"
+msgstr "MajoritéMinorité - Congrès"
 
 msgid "congress_majority_minority long description"
 msgstr ""
 
 msgid "congress_count_districts short label"
-msgstr "CountDistricts - Congress"
+msgstr "Décompte des circonscriptions - Congrès"
 
 msgid "congress_count_districts label"
-msgstr "CountDistricts - Congress"
+msgstr "Décompte des circonscriptions - Congrès"
 
 msgid "congress_count_districts long description"
 msgstr ""
 
 msgid "congress_all_assigned short label"
-msgstr "AllBlocksAssigned - Congress"
+msgstr "Tous les blocs attribués - Congrès"
 
 msgid "congress_all_assigned label"
-msgstr "AllBlocksAssigned - Congress"
+msgstr "Tous les blocs attribués - Congrès"
 
 msgid "congress_all_assigned long description"
 msgstr ""
 
 msgid "house_equipop short label"
-msgstr "Equipopulation - House"
+msgstr "Population-égale - Chambre"
 
 msgid "house_equipop label"
-msgstr "Equipopulation - House"
+msgstr "Population-égale - Chambre"
 
 msgid "house_equipop long description"
 msgstr ""
-"<p>Your plan does not meet the competition criteria for "
-"Equipopulation:</p><p>The population of each House of Delegates "
-"district must be 80,010 +/- 5%.</p>"
+"<p> votre plan ne respecte pas les critères de concurrence d'égalité "
+"de la population:</p><p>La population de chaque circonscription de la "
+"Chambre des délégués doit être 80010 +/-5%.</p>"
 
 msgid "senate_equipop short label"
-msgstr "Equipopulation - Senate"
+msgstr "Population-égale - Sénat"
 
 msgid "senate_equipop label"
-msgstr "Equipopulation - Senate"
+msgstr "Population-égale - Sénat"
 
 msgid "senate_equipop long description"
 msgstr ""
-"<p>Your plan does not meet the competition criteria for "
-"Equipopulation:</p><p>The population of each House of Delegates "
-"district must be 200,026 +/- 5%.</p>"
+"<p> votre plan ne respecte pas les critères de concurrence d'égalité "
+"de la population:</p><p>La population de chaque circonscription de la "
+"Chambre des délégués doit être 200026 +/-5%.</p>"
 
 msgid "senate_contiguity short label"
-msgstr "AllContiguous - Senate"
+msgstr "Tous contigus - Sénat"
 
 msgid "senate_contiguity label"
-msgstr "AllContiguous - Senate"
+msgstr "Tous contigus - Sénat"
 
 msgid "senate_contiguity long description"
 msgstr ""
-"<p>Your plan does not meet the competition criteria for "
-"Contiguity</p><p>Every part of a district must be reachable from every"
-" other part without crossing the district's borders. All districts "
-"within a plan must be contiguous. Water contiguity is permitted given "
-"Virginia's extensive coastal region. 'Point contiguity' or 'touch-"
-"point contiguity' where two sections of a district are connected at a "
-"single point is not permitted.</p>"
+"<p>Votre plan ne respecte pas les critères de concurrence de "
+"Contiguïté</p><p>Chaque partie d'une circonscription doit être "
+"accessible depuis toutes les autres parties sans quitter les "
+"frontières de la circonscription. Toutes les circonscriptions au sein "
+"d'un plan doivent être contiguës. La contiguïté de l'eau est  "
+"autorisée compte tenu de la vaste région côtière de la Virginie. "
+"'Point de contiguïté' ou 'point de contact de contiguïté' où deux "
+"sections d'une circonscription sont connectées à un seul point n'est "
+"pas autorisé.</p>"
 
 msgid "senate_all_assigned short label"
-msgstr "AllBlocksAssigned - Senate"
+msgstr "Tous les blocs attribués - Sénat"
 
 msgid "senate_all_assigned label"
-msgstr "AllBlocksAssigned - Senate"
+msgstr "Tous les blocs attribués - Sénat"
 
 msgid "senate_all_assigned long description"
 msgstr ""
 
 msgid " short label"
-msgstr "Demographics"
+msgstr "Démographiques"
 
 msgid " label"
-msgstr "Demographics"
+msgstr "Démographiques"
 
 msgid " long description"
 msgstr ""
 
 msgid "congress-leader-all short label"
-msgstr "Congressional Leaderboard - All"
+msgstr "Classement du Congrès - Tous"
 
 msgid "congress-leader-all label"
-msgstr "Congressional Leaderboard - All"
+msgstr "Classement du Congrès - Tous"
 
 msgid "congress-leader-all long description"
 msgstr ""
 
 msgid "congress-leader-mine short label"
-msgstr "Congressional Leaderboard - Mine"
+msgstr "Classement du Congrès - Mien"
 
 msgid "congress-leader-mine label"
-msgstr "Congressional Leaderboard - Mine"
+msgstr "Classement du Congrès - Mien"
 
 msgid "congress-leader-mine long description"
 msgstr ""
 
 msgid "house-leader-all short label"
-msgstr "State House Leaderboard - All"
+msgstr "Classement de la Chambre d'État - Tous"
 
 msgid "house-leader-all label"
-msgstr "State House Leaderboard - All"
+msgstr "Classement de la Chambre d'État - Tous"
 
 msgid "house-leader-all long description"
 msgstr ""
 
 msgid "house-leader-mine short label"
-msgstr "State House Leaderboard - Mine"
+msgstr "Classement de la Chambre d'État - Mien"
 
 msgid "house-leader-mine label"
-msgstr "State House Leaderboard - Mine"
+msgstr "Classement de la Chambre d'État - Mien"
 
 msgid "house-leader-mine long description"
 msgstr ""
 
 msgid "senate-leader-all short label"
-msgstr "State Senate Leaderboard - All"
+msgstr "Classement du Sénat de l'État - Tous"
 
 msgid "senate-leader-all label"
-msgstr "State Senate Leaderboard - All"
+msgstr "Classement du Sénat de l'État - Tous"
 
 msgid "senate-leader-all long description"
 msgstr ""
 
 msgid "senate-leader-mine short label"
-msgstr "State Senate Leaderboard - Mine"
+msgstr "Classement du Sénat de l'État - Mien"
 
 msgid "senate-leader-mine label"
-msgstr "State Senate Leaderboard - Mine"
+msgstr "Classement du Sénat de l'État - Mien"
 
 msgid "senate-leader-mine long description"
 msgstr ""
 
 msgid "congress-sidebar-basic short label"
-msgstr "Basic Information"
+msgstr "Informations de base"
 
 msgid "congress-sidebar-basic label"
-msgstr "Basic Information"
+msgstr "Informations de base"
 
 msgid "congress-sidebar-basic long description"
 msgstr ""
 
 msgid "congress-sidebar-demo short label"
-msgstr "Demographics"
+msgstr "Démographiques"
 
 msgid "congress-sidebar-demo label"
-msgstr "Demographics"
+msgstr "Démographiques"
 
 msgid "congress-sidebar-demo long description"
 msgstr ""
 
 msgid "house-sidebar-basic short label"
-msgstr "Basic Information"
+msgstr "Informations de base"
 
 msgid "house-sidebar-basic label"
-msgstr "Basic Information"
+msgstr "Informations de base"
 
 msgid "house-sidebar-basic long description"
 msgstr ""
 
 msgid "house-sidebar-demo short label"
-msgstr "Demographics"
+msgstr "Démographiques"
 
 msgid "house-sidebar-demo label"
-msgstr "Demographics"
+msgstr "Démographiques"
 
 msgid "house-sidebar-demo long description"
 msgstr ""
 
 msgid "senate-sidebar-basic short label"
-msgstr "Basic Information"
+msgstr "Informations de base"
 
 msgid "senate-sidebar-basic label"
-msgstr "Basic Information"
+msgstr "Informations de base"
 
 msgid "senate-sidebar-basic long description"
 msgstr ""
 
 msgid "senate-sidebar-demo short label"
-msgstr "Demographics"
+msgstr "Démographiques"
 
 msgid "senate-sidebar-demo label"
-msgstr "Demographics"
+msgstr "Démographiques"
 
 msgid "senate-sidebar-demo long description"
 msgstr ""
 
 msgid "community-sidebar-demo short label"
-msgstr "Demographics"
+msgstr "Démographiques"
 
 msgid "community-sidebar-demo label"
-msgstr "Demographics"
+msgstr "Démographiques"
 
 msgid "community-sidebar-demo long description"
 msgstr ""
 
 msgid "community-sidebar-comments short label"
-msgstr "Community Mapping"
+msgstr "Cartographie de la communauté"
 
 msgid "community-sidebar-comments label"
-msgstr "Community Mapping"
+msgstr "Cartographie de la communauté"
 
 msgid "community-sidebar-comments long description"
 msgstr ""
 
 msgid "congress-reports short label"
-msgstr "Congressional Reports"
+msgstr "Rapports du Congrès"
 
 msgid "congress-reports label"
-msgstr "Congressional Reports"
+msgstr "Rapports du Congrès"
 
 msgid "congress-reports long description"
 msgstr ""
 
 msgid "senate-reports short label"
-msgstr "State Senate Reports"
+msgstr "Rapports du Sénat de l'État"
 
 msgid "senate-reports label"
-msgstr "State Senate Reports"
+msgstr "Rapports du Sénat de l'État"
 
 msgid "senate-reports long description"
 msgstr ""
 
 msgid "house-reports short label"
-msgstr "State House Reports"
+msgstr "Rapports de la Chambre d'État"
 
 msgid "house-reports label"
-msgstr "State House Reports"
+msgstr "Rapports de la Chambre d'État"
 
 msgid "house-reports long description"
 msgstr ""
-
-msgid "have_you_heard_about_this_55_guy_lulz short label"
-msgstr "99have; you' heard\" about"
-
-msgid "have_you_heard_about_this_55_guy_lulz label"
-msgstr "99have; you' heard\" about -- this 55 guy? lulz!"
-
-msgid "have_you_heard_about_this_55_guy_lulz long description"
-msgstr "99have; you' heard\" about -- this 55 guy? lulz!"
 
 msgid "congress-equipop short label"
 msgstr "Equipopulation - Congress"
@@ -2004,10 +2006,37 @@ msgid "senate-assigned long description"
 msgstr ""
 
 msgid "dc_area short label"
-msgstr "dc"
+msgstr "DC"
 
 msgid "dc_area label"
-msgstr "DC Metro"
+msgstr "DC Métro"
 
 msgid "dc_area long description"
-msgstr "The District of Columbia Metropolitan Area"
+msgstr "Zone métropolitaine du District de Columbia"
+
+msgid "congresional_panel_info short label"
+msgstr "Basic Information"
+
+msgid "congresional_panel_info label"
+msgstr "Basic Information"
+
+msgid "congresional_panel_info long description"
+msgstr ""
+
+msgid "community_sidebar_demo short label"
+msgstr "Demographics"
+
+msgid "community_sidebar_demo label"
+msgstr "Demographics"
+
+msgid "community_sidebar_demo long description"
+msgstr ""
+
+msgid "community_sidebar_comments short label"
+msgstr "Community Mapping"
+
+msgid "community_sidebar_comments label"
+msgstr "Community Mapping"
+
+msgid "community_sidebar_comments long description"
+msgstr ""

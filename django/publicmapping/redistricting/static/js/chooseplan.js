@@ -359,7 +359,7 @@ chooseplan = function(options) {
                 if (!(/^http:.*/.test(this.p.url) || /^https:.*/.test(this.p.url))) {
                     // Only send the token to relative URLs i.e. locally.
                     xhr.setRequestHeader("X-CSRFToken",
-                                         $("#csrfmiddlewaretoken").val());
+                                         $("input[name=csrfmiddlewaretoken]").val());
                 }
             },
             loadComplete: function(data) {

@@ -63,16 +63,13 @@
 <h1 class="epydoc">Package redistricting</h1><p class="nomargin-top"><span class="codelink"><a href="publicmapping.redistricting-pysrc.html">source&nbsp;code</a></span></p>
 <pre class="literalblock">
 
-Define redistricting as a Python package.
-
-This file serves the purpose of defining a Python package for
-this folder. It is intentionally left empty.
+Redistricting django application and supporting classes.
 
 This file is part of The Public Mapping Project
 https://github.com/PublicMapping/
 
 License:
-    Copyright 2010 Micah Altman, Michael McDonald
+    Copyright 2010-2012 Micah Altman, Michael McDonald
  
     Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
     you may not use this file except in compliance with the License.
@@ -112,22 +109,29 @@ Author:
   <ul class="nomargin">
     <li> <strong class="uidlink"><a href="publicmapping.redistricting.admin-module.html">publicmapping.redistricting.admin</a></strong>: <em class="summary">Configure the appearance of the redistricting admin interface.</em>    </li>
     <li> <strong class="uidlink"><a href="publicmapping.redistricting.calculators-module.html">publicmapping.redistricting.calculators</a></strong>: <em class="summary">Define the calculators used for scoring in the redistricting app.</em>    </li>
+    <li> <strong class="uidlink"><a href="publicmapping.redistricting.config-module.html">publicmapping.redistricting.config</a></strong>: <em class="summary">Configuration module for DistrictBuilder</em>    </li>
+    <li> <strong class="uidlink"><a href="publicmapping.redistricting.forms-module.html">publicmapping.redistricting.forms</a></strong>: <em class="summary">Define the forms used by the redistricting app.</em>    </li>
     <li> <strong class="uidlink"><a href="publicmapping.redistricting.management-module.html">publicmapping.redistricting.management</a></strong>: <em class="summary">Define redistricting.management as a Python package.</em>
     <ul>
     <li> <strong class="uidlink"><a href="publicmapping.redistricting.management.commands-module.html">publicmapping.redistricting.management.commands</a></strong>: <em class="summary">Define redistricting.management.commands as a Python package.</em>
     <ul>
-    <li> <strong class="uidlink"><a href="publicmapping.redistricting.management.commands.exportplans-module.html">publicmapping.redistricting.management.commands.exportplans</a></strong>    </li>
-    <li> <strong class="uidlink"><a href="publicmapping.redistricting.management.commands.migrate_v925-module.html">publicmapping.redistricting.management.commands.migrate_v925</a></strong>: <em class="summary">Migrate a database from pre-svn-rev-925.</em>    </li>
-    <li> <strong class="uidlink"><a href="publicmapping.redistricting.management.commands.numusers-module.html">publicmapping.redistricting.management.commands.numusers</a></strong>    </li>
-    <li> <strong class="uidlink"><a href="publicmapping.redistricting.management.commands.reaggregate-module.html">publicmapping.redistricting.management.commands.reaggregate</a></strong>    </li>
-    <li> <strong class="uidlink"><a href="publicmapping.redistricting.management.commands.removescoreconfig-module.html">publicmapping.redistricting.management.commands.removescoreconfig</a></strong>    </li>
-    <li> <strong class="uidlink"><a href="publicmapping.redistricting.management.commands.setup-module.html">publicmapping.redistricting.management.commands.setup</a></strong>: <em class="summary">Set up District Builder.</em>    </li>
+    <li> <strong class="uidlink"><a href="publicmapping.redistricting.management.commands.database_i18n-module.html">publicmapping.redistricting.management.commands.database_i18n</a></strong>: <em class="summary">Install the internationalization messages for a running DistrictBuilder
+instance.</em>    </li>
+    <li> <strong class="uidlink"><a href="publicmapping.redistricting.management.commands.exportplans-module.html">publicmapping.redistricting.management.commands.exportplans</a></strong>: <em class="summary">A django management command to export plans.</em>    </li>
+    <li> <strong class="uidlink"><a href="publicmapping.redistricting.management.commands.makelanguagefiles-module.html">publicmapping.redistricting.management.commands.makelanguagefiles</a></strong>: <em class="summary">Collect internalionalization messages and compile the message files
+for use by the gettext library.</em>    </li>
+    <li> <strong class="uidlink"><a href="publicmapping.redistricting.management.commands.numusers-module.html">publicmapping.redistricting.management.commands.numusers</a></strong>: <em class="summary">Count the number of users of the DistrictBuilder application.</em>    </li>
+    <li> <strong class="uidlink"><a href="publicmapping.redistricting.management.commands.reaggregate-module.html">publicmapping.redistricting.management.commands.reaggregate</a></strong>: <em class="summary">Reaggregate one or more plans in the DistrictBuilder web application.</em>    </li>
+    <li> <strong class="uidlink"><a href="publicmapping.redistricting.management.commands.removescoreconfig-module.html">publicmapping.redistricting.management.commands.removescoreconfig</a></strong>: <em class="summary">Delete score configurations from the DistrictBuilder application.</em>    </li>
+    <li> <strong class="uidlink"><a href="publicmapping.redistricting.management.commands.setup-module.html">publicmapping.redistricting.management.commands.setup</a></strong>: <em class="summary">Set up DistrictBuilder.</em>    </li>
     </ul>
     </li>
     </ul>
     </li>
     <li> <strong class="uidlink"><a href="publicmapping.redistricting.models-module.html">publicmapping.redistricting.models</a></strong>: <em class="summary">Define the models used by the redistricting app.</em>    </li>
     <li> <strong class="uidlink"><a href="publicmapping.redistricting.reportcalculators-module.html">publicmapping.redistricting.reportcalculators</a></strong>: <em class="summary">Define the calculators used for calculator reports in the redistricting app.</em>    </li>
+    <li> <strong class="uidlink"><a href="publicmapping.redistricting.tasks-module.html">publicmapping.redistricting.tasks</a></strong>: <em class="summary">Utilities for the redistricting application: format conversion,
+useful database queries, etc.</em>    </li>
     <li> <strong class="uidlink"><a href="publicmapping.redistricting.templatetags-module.html">publicmapping.redistricting.templatetags</a></strong>: <em class="summary">Define the custom templatetags as a Python package.</em>
     <ul>
     <li> <strong class="uidlink"><a href="publicmapping.redistricting.templatetags.redistricting_extras-module.html">publicmapping.redistricting.templatetags.redistricting_extras</a></strong>: <em class="summary">Extra tags and templates used in the django 
@@ -135,13 +139,48 @@ templating system for the redistricting app.</em>    </li>
     </ul>
     </li>
     <li> <strong class="uidlink"><a href="publicmapping.redistricting.tests-module.html">publicmapping.redistricting.tests</a></strong>: <em class="summary">Define a set of tests for the redistricting app.</em>    </li>
-    <li> <strong class="uidlink"><a href="publicmapping.redistricting.utils-module.html">publicmapping.redistricting.utils</a></strong>: <em class="summary">Utilities for the redistricting application: format conversion,
-useful database queries, etc.</em>    </li>
     <li> <strong class="uidlink"><a href="publicmapping.redistricting.views-module.html">publicmapping.redistricting.views</a></strong>: <em class="summary">Django views used by the redistricting application.</em>    </li>
   </ul></td></tr>
 </table>
 
 <br />
+<!-- ==================== CLASSES ==================== -->
+<a name="section-Classes"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Classes</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Classes"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="publicmapping.redistricting.StoredConfig-class.html" class="summary-name">StoredConfig</a><br />
+      A class that is represented on disk by a configuration file.
+    </td>
+  </tr>
+</table>
+<p class="indent-wrapped-lines"><b>Imports:</b>
+  <span title="os">os</span>,
+  <span title="traceback">traceback</span>,
+  <span title="random">random</span>,
+  <span title="logging">logging</span>,
+  <span title="lxml.etree.parse">parse</span>,
+  <span title="lxml.etree.clear_error_log">clear_error_log</span>,
+  <span title="lxml.etree.XMLSchema">XMLSchema</span>,
+  <span title="lxml.etree.XMLSyntaxError">XMLSyntaxError</span>,
+  <span title="lxml.etree.XMLSchemaParseError">XMLSchemaParseError</span>
+</p><br />
 <!-- ==================== NAVIGATION BAR ==================== -->
 <table class="navbar" border="0" width="100%" cellpadding="0"
        bgcolor="#a0c0ff" cellspacing="0">
@@ -173,7 +212,7 @@ useful database queries, etc.</em>    </li>
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">
-    Generated by Epydoc 3.0.1 on Thu Jan 12 09:54:03 2012
+    Generated by Epydoc 3.0.1 on Mon Oct  1 16:33:45 2012
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

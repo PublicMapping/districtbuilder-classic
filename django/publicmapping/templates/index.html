@@ -30,7 +30,7 @@
 {% load i18n %}
 {% load compress %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="{{ language_code }}">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=8" />
@@ -123,7 +123,7 @@
             <li><a href="http://www.publicmapping.org/resources/state-resources/virginia">
                 {% trans "Virginia on the Public Mapping Project" %}</a></li>
             <li><a
-            href="https://s3.amazonaws.com/districtbuilderdata/VA_data.zip">
+            href="/data/">
                 {% trans "Virginia data" %}</a></li>
           </ul>
         </div>
@@ -154,6 +154,7 @@
 
         <div id="login">
           <form action="/accounts/login/" method="post">
+            {% csrf_token %}
             <input type="hidden" name="next" value="/districtmapping/plan/0/view/"/>
             <h3>{% trans "Log In" %}</h3>
 <input id="username" name="username"/>
@@ -308,7 +309,7 @@
       {% endcomment %}
       <div class="attribution">
         <!-- Keep this on one line to avoid an underscore in Chrome -->
-        <a target="_blank" href="http://www.districtbuilder.org"><img alt="{% trans "Powered By District Builder" %}" src="/static-media/images/db_sprite.png"></a>
+        <a target="_blank" href="http://www.districtbuilder.org"><img alt="{% trans "Powered By DistrictBuilder" %}" src="/static-media/images/db_sprite.png"></a>
         <br>
         <span id="poweredbytext">
           {% trans "A project of" %}
@@ -324,9 +325,8 @@
           <img border="0" src="http://sfx-images.mozilla.org/affiliates/Buttons/firefox3/110x32_get_ffx.png"
                alt="Spread Firefox Affiliate Button">
         </a>
-        <p> {% trans "We've designed the software to run on" %}
-          <a target="_blank" href="http://www.mozilla.com/?from=sfx&amp;uid=0&amp;t=306">Mozilla Firefox</a>
-          - {% trans "a free web browser" %}
+        <p> 
+            {% blocktrans with '<a target="_blank" href="http://www.mozilla.com/?from=sfx&amp;uid=0&amp;t=306">Mozilla Firefox</a>' as firefox_link %}We've designed the software to run on {{ firefox_link }} - a free web browser{% endblocktrans %}
         </p>
       </div>
     </div>

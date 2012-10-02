@@ -48,7 +48,7 @@ $(function(){
             url: $('#id_task_uuid').val() + '/status/',
             dataType: 'json',
             success: function(data, txtStatus, xhr) {
-                if (data.state == 'SUCCESS') {
+                if (data.state == 'SUCCESS' && data.info.success === true) {
                     $('#upload_status_messages').empty();
                     for (var i = 0; i < data.info.messages.length; i++) {
                         $('#upload_status_messages').append('<p>' + data.info.messages[i] + '</p>');
@@ -70,9 +70,10 @@ $(function(){
                         clearInterval(statusInterval);
                     }
                 }
-                else if (data.state == 'FAILURE') {
+                else if (data.state == 'FAILURE' ||
+                        (data.info && data.info.success === false)) {
                     $('#upload_status_messages').removeClass('loading');
-                    $('#upload_status_messages').append('<p>{% trans "Sorry! This processing step failed with the following error message: " %}' + data.info.message + '</p>');
+                    $('#upload_status_messages').append('<p>{% trans "Sorry! This processing step failed with the following error message: " %}' + data.info.messages[0] + '</p>');
                     $('#processing_continue').attr('disabled', false);
                     $('#processing_continue').val('{% trans "Retry" %}');
                     $('#processing_continue').click(function(){ window.location.href='../add/'; });
@@ -83,6 +84,9 @@ $(function(){
                 $('#upload_status_messages').removeClass('loading');
                 $('#upload_status_messages').empty();
                 $('#upload_status_messages').append('<p>{% trans "Could not retrieve task status." %}</p>');
+                $('#processing_continue').attr('disabled', false);
+                $('#processing_continue').val('{% trans "Retry" %}');
+                $('#processing_continue').click(function(){ window.location.href='../add/'; });
                 clearInterval(statusInterval);
             }
         });
@@ -136,7 +140,7 @@ $(function(){
     </div>
     <div id="step3" style="display:{% if is_processing %}block{% else %}none{% endif %};">
     <h2>{% trans "3. Verifying the uploaded Subject file" %}</h2>
-    <p>{% trans "Please wait while the uploaded Subject file is checked for consistency and alignment with the currently loaded data. This may take up to 15 minutes, so please wait until the process completes before leaving this page." %}</p>
+    <p>{% trans "Please wait while the uploaded Subject file is checked for consistency and alignment with the currently loaded data. This may take up to 1 hour on older hardware, so please wait until the process completes before leaving this page." %}</p>
     </div>
     <div id="step4" style="display:none;">
     <h2>{% trans "4. Configuring the settings for the uploaded Subject" %} </h2>

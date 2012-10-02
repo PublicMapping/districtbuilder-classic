@@ -10,7 +10,7 @@ This file is part of The Public Mapping Project
 https://github.com/PublicMapping/
 
 License:
-    Copyright 2010 Micah Altman, Michael McDonald
+    Copyright 2010-2012 Micah Altman, Michael McDonald
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -1756,6 +1756,11 @@ class MajorityMinority(CalculatorBase):
         version = kwargs['version'] if 'version' in kwargs else plan.version
         districts = plan.get_districts_at_version(version, include_geom=False)
 
+        if 'apply_num_members' in self.arg_dict:
+            apply_num_members = int(self.arg_dict['apply_num_members'][1]) == 1
+        else:
+            apply_num_members = False
+
         districtcount = 0
         for district in districts:
             pop = self.get_value('population', district)
@@ -1785,7 +1790,10 @@ class MajorityMinority(CalculatorBase):
                     break
 
             if exceeds:
-                districtcount += 1
+                if apply_num_members:
+                    districtcount += district.num_members
+                else:
+                    districtcount += 1
 
         self.result = { 'value': districtcount }
 

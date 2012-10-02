@@ -64,19 +64,22 @@
 <!-- ==================== CLASS DESCRIPTION ==================== -->
 <h1 class="epydoc">Class MultiMember</h1><p class="nomargin-top"><span class="codelink"><a href="publicmapping.redistricting.calculators-pysrc.html#MultiMember">source&nbsp;code</a></span></p>
 <center>
-<center>  <map id="uml_class_diagram_for_publicma_29" name="uml_class_diagram_for_publicma_29">
-<area shape="rect" id="node43" href="publicmapping.redistricting.calculators.CalculatorBase-class.html#result" title="publicmapping.redistricting.calculators.CalculatorBase.result" alt="" coords="17,31,257,49"/>
-<area shape="rect" id="node43" href="publicmapping.redistricting.calculators.CalculatorBase-class.html#arg_dict" title="publicmapping.redistricting.calculators.CalculatorBase.arg_dict" alt="" coords="17,49,257,68"/>
-<area shape="rect" id="node43" href="publicmapping.redistricting.calculators.CalculatorBase-class.html#__init__" title="Initialize the result and argument dictionary." alt="" coords="17,71,257,89"/>
-<area shape="rect" id="node43" href="publicmapping.redistricting.calculators.CalculatorBase-class.html#sortkey" title="Generate a key used to sort this calculator relative to all other &#160;calculators." alt="" coords="17,89,257,108"/>
-<area shape="rect" id="node43" href="publicmapping.redistricting.calculators.CalculatorBase-class.html#html" title="Generate a basic HTML representation of the result." alt="" coords="17,108,257,127"/>
-<area shape="rect" id="node43" href="publicmapping.redistricting.calculators.CalculatorBase-class.html#json" title="Generate a basic JSON representation of the result." alt="" coords="17,127,257,145"/>
-<area shape="rect" id="node43" href="publicmapping.redistricting.calculators.CalculatorBase-class.html#get_value" title="Get the value of an argument if it is a literal or a subject." alt="" coords="17,145,257,164"/>
-<area shape="rect" id="node1" href="publicmapping.redistricting.calculators.CalculatorBase-class.html" title="The base class for all calculators." alt="" coords="5,6,269,170"/>
-<area shape="rect" id="node42" href="publicmapping.redistricting.calculators.MultiMember-class.html#compute" title="Verify that multi&#45;member plans satisfy all parameters." alt="" coords="64,223,211,241"/>
-<area shape="rect" id="node2" href="publicmapping.redistricting.calculators.MultiMember-class.html" title="Verify that multi&#45;member plans satisfy all parameters." alt="" coords="52,190,223,247"/>
+<center>  <map id="uml_class_diagram_for_publicma_30" name="uml_class_diagram_for_publicma_30">
+<area shape="rect" id="node43" href="publicmapping.redistricting.calculators.MultiMember-class.html#compute" title="Verify that multi&#45;member plans satisfy all parameters." alt="" coords="64,279,208,297"/>
+<area shape="rect" id="node1" href="publicmapping.redistricting.calculators.MultiMember-class.html" title="Verify that multi&#45;member plans satisfy all parameters." alt="" coords="52,246,220,303"/>
+<area shape="rect" id="node44" href="publicmapping.redistricting.calculators.CalculatorBase-class.html#result" title="publicmapping.redistricting.calculators.CalculatorBase.result" alt="" coords="17,31,253,49"/>
+<area shape="rect" id="node44" href="publicmapping.redistricting.calculators.CalculatorBase-class.html#arg_dict" title="publicmapping.redistricting.calculators.CalculatorBase.arg_dict" alt="" coords="17,49,253,68"/>
+<area shape="rect" id="node44" href="publicmapping.redistricting.calculators.CalculatorBase-class.html#empty_html_result" title="In case of an empty result, return a span with the properly localized &#160;version of &#39;n/a&#39;" alt="" coords="17,68,253,87"/>
+<area shape="rect" id="node44" href="publicmapping.redistricting.calculators.CalculatorBase-class.html#__init__" title="Initialize the result and argument dictionary." alt="" coords="17,89,253,108"/>
+<area shape="rect" id="node44" href="publicmapping.redistricting.calculators.CalculatorBase-class.html#sortkey" title="Generate a key used to sort this calculator relative to all other &#160;calculators." alt="" coords="17,108,253,127"/>
+<area shape="rect" id="node44" href="publicmapping.redistricting.calculators.CalculatorBase-class.html#html" title="Generate a basic HTML representation of the result." alt="" coords="17,127,253,145"/>
+<area shape="rect" id="node44" href="publicmapping.redistricting.calculators.CalculatorBase-class.html#json" title="Generate a basic JSON representation of the result." alt="" coords="17,145,253,164"/>
+<area shape="rect" id="node44" href="publicmapping.redistricting.calculators.CalculatorBase-class.html#template" title="Generate a representation of the score using the django templating system &#160;and the calculator&#39;s result." alt="" coords="17,164,253,183"/>
+<area shape="rect" id="node44" href="publicmapping.redistricting.calculators.CalculatorBase-class.html#percentage" title="Return the calculator&#39;s result value as a properly localized percentage" alt="" coords="17,183,253,201"/>
+<area shape="rect" id="node44" href="publicmapping.redistricting.calculators.CalculatorBase-class.html#get_value" title="Get the value of an argument if it is a literal or a subject." alt="" coords="17,201,253,220"/>
+<area shape="rect" id="node2" href="publicmapping.redistricting.calculators.CalculatorBase-class.html" title="The base class for all calculators." alt="" coords="5,6,264,226"/>
 </map>
-  <img src="uml_class_diagram_for_publicma_29.gif" alt='' usemap="#uml_class_diagram_for_publicma_29" ismap="ismap" class="graph-without-title" />
+  <img src="uml_class_diagram_for_publicma_30.gif" alt='' usemap="#uml_class_diagram_for_publicma_30" ismap="ismap" class="graph-without-title" />
 </center>
 </center>
 <hr />
@@ -127,7 +130,23 @@
       <code><a href="publicmapping.redistricting.calculators.CalculatorBase-class.html#get_value">get_value</a></code>,
       <code><a href="publicmapping.redistricting.calculators.CalculatorBase-class.html#html">html</a></code>,
       <code><a href="publicmapping.redistricting.calculators.CalculatorBase-class.html#json">json</a></code>,
-      <code><a href="publicmapping.redistricting.calculators.CalculatorBase-class.html#sortkey">sortkey</a></code>
+      <code><a href="publicmapping.redistricting.calculators.CalculatorBase-class.html#percentage">percentage</a></code>,
+      <code><a href="publicmapping.redistricting.calculators.CalculatorBase-class.html#sortkey">sortkey</a></code>,
+      <code><a href="publicmapping.redistricting.calculators.CalculatorBase-class.html#template">template</a></code>
+      </p>
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__delattr__</code>,
+      <code>__format__</code>,
+      <code>__getattribute__</code>,
+      <code>__hash__</code>,
+      <code>__new__</code>,
+      <code>__reduce__</code>,
+      <code>__reduce_ex__</code>,
+      <code>__repr__</code>,
+      <code>__setattr__</code>,
+      <code>__sizeof__</code>,
+      <code>__str__</code>,
+      <code>__subclasshook__</code>
       </p>
     </td>
   </tr>
@@ -153,7 +172,33 @@
     <td colspan="2" class="summary">
     <p class="indent-wrapped-lines"><b>Inherited from <code><a href="publicmapping.redistricting.calculators.CalculatorBase-class.html">CalculatorBase</a></code></b>:
       <code><a href="publicmapping.redistricting.calculators.CalculatorBase-class.html#arg_dict">arg_dict</a></code>,
+      <code><a href="publicmapping.redistricting.calculators.CalculatorBase-class.html#empty_html_result">empty_html_result</a></code>,
       <code><a href="publicmapping.redistricting.calculators.CalculatorBase-class.html#result">result</a></code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== PROPERTIES ==================== -->
+<a name="section-Properties"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Properties</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Properties"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__class__</code>
       </p>
     </td>
   </tr>
@@ -239,7 +284,7 @@
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">
-    Generated by Epydoc 3.0.1 on Thu Jan 12 09:54:05 2012
+    Generated by Epydoc 3.0.1 on Mon Oct  1 16:33:47 2012
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

@@ -1,6 +1,6 @@
 DistrictBuilder   
 
-Copyright (C) 2010-2011 Micah Altman & Michael McDonald
+Copyright (C) 2010-2012 Micah Altman & Michael McDonald
 
 
 LICENSE

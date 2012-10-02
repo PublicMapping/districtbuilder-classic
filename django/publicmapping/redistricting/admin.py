@@ -10,7 +10,7 @@ This file is part of The Public Mapping Project
 https://github.com/PublicMapping/
 
 License:
-    Copyright 2010 Micah Altman, Michael McDonald
+    Copyright 2010-2012 Micah Altman, Michael McDonald
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -174,9 +174,14 @@ class PlanAdmin(admin.ModelAdmin):
             plan.save()
 
             # Reaggregate asynchronously
-            Plan.reaggregate_async.delay(plan)
+            reaggregate_plan.delay(plan.id)
 
-    actions = [reaggregate_selected_plans]
+    def validate_selected_plans(self, request, queryset):
+        for plan in queryset:
+            # Validate asynchronously
+            validate_plan.delay(plan.id)
+
+    actions = [reaggregate_selected_plans, validate_selected_plans]
 
 class SubjectAdmin(admin.ModelAdmin):
     """
@@ -191,7 +196,7 @@ class SubjectAdmin(admin.ModelAdmin):
     # the percentage denominator.
     list_display = ('name', 'sort_key', 'is_displayed','percentage_denominator',)
 
-    fields = ('name', 'percentage_denominator', 'is_displayed', 'sort_key', 'format_string', )
+    fields = ('name', 'percentage_denominator', 'is_displayed', 'sort_key', 'format_string', 'version',)
 
 
     # Enable filtering by the displayed flag
@@ -277,7 +282,7 @@ class SubjectAdmin(admin.ModelAdmin):
                 queryset.delete()
                 modeladmin.message_user(request, _('Successfully deleted %(count)d %(item)s') % {
                     'count': n, 
-                    'items': engine.plural('subject', n)
+                    'item': engine.plural('subject', n)
                 })
             # Return None to display the change list page again.
             return None
@@ -289,7 +294,6 @@ class SubjectAdmin(admin.ModelAdmin):
             "deletable_objects": queryset.all(),
             "queryset": queryset,
             "opts": opts,
-            "root_path": modeladmin.admin_site.root_path,
             "app_label": app_label,
             "action_checkbox_name": helpers.ACTION_CHECKBOX_NAME,
             "warned": warned

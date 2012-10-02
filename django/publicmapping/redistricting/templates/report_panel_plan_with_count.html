@@ -50,7 +50,7 @@
             {% endfor %}
             </tr>
             <tr class="report_score_row footer">
-              <td class="report_score_cell footer">Count</td>
+              <td class="report_score_cell footer">{% trans "Count" %}</td>
               {% for row in ps.score %}
                 <td class="report_score_cell footer right">
                     {{ row|count_report_row_elements }}

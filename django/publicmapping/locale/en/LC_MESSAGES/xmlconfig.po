@@ -94,76 +94,76 @@ msgid "dc_community long description"
 msgstr "DC Community Map"
 
 msgid "dc_vtd short label"
-msgstr ""
+msgstr "VTD"
 
 msgid "dc_vtd label"
-msgstr ""
+msgstr "Voter Tabulation District"
 
 msgid "dc_vtd long description"
-msgstr ""
+msgstr "Voter Tabulation Districts"
 
 msgid "dc_block short label"
-msgstr ""
+msgstr "Blocks"
 
 msgid "dc_block label"
-msgstr ""
+msgstr "Census Block"
 
 msgid "dc_block long description"
-msgstr ""
+msgstr "Census Blocks"
 
 msgid "county short label"
-msgstr "county"
+msgstr "County"
 
 msgid "county label"
-msgstr "county"
+msgstr "County"
 
 msgid "county long description"
-msgstr ""
+msgstr "Counties"
 
 msgid "va_block short label"
-msgstr ""
+msgstr "Block"
 
 msgid "va_block label"
-msgstr ""
+msgstr "Census Block"
 
 msgid "va_block long description"
-msgstr ""
+msgstr "Census Blocks"
 
 msgid "va_vtd short label"
-msgstr ""
+msgstr "VTD"
 
 msgid "va_vtd label"
-msgstr ""
+msgstr "Voter Tabulation District"
 
 msgid "va_vtd long description"
-msgstr ""
+msgstr "Voter Tabulation Districts"
 
 msgid "va_county short label"
-msgstr ""
+msgstr "County"
 
 msgid "va_county label"
-msgstr ""
+msgstr "County"
 
 msgid "va_county long description"
-msgstr ""
+msgstr "Counties"
 
 msgid "vtd short label"
-msgstr "vtd"
+msgstr "VTD"
 
 msgid "vtd label"
-msgstr "vtd"
+msgstr "Voter Tabulation District"
 
 msgid "vtd long description"
-msgstr ""
+msgstr "Voter Tabulation Districts"
 
 msgid "block short label"
-msgstr "block"
+msgstr "Block"
 
 msgid "block label"
-msgstr "block"
+msgstr "Census Block"
 
 msgid "block long description"
-msgstr ""
+msgstr "Census Blocks"
 
 msgid "congress_leader_all short label"
 msgstr "Congressional Leaderboard - All"
@@ -2002,3 +2002,21 @@ msgstr "DC Metro"
 
 msgid "dc_area long description"
 msgstr "The District of Columbia Metropolitan Area"
+
+msgid "community_sidebar_demo short label"
+msgstr "Demographics"
+
+msgid "community_sidebar_demo label"
+msgstr "Demographics"
+
+msgid "community_sidebar_demo long description"
+msgstr ""
+
+msgid "community_sidebar_comments short label"
+msgstr "Community Mapping"
+
+msgid "community_sidebar_comments label"
+msgstr "Community Mapping"
+
+msgid "community_sidebar_comments long description"
+msgstr ""

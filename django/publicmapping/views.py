@@ -5,7 +5,7 @@ This file is part of The Public Mapping Project
 https://github.com/PublicMapping/
 
 License:
-    Copyright 2010 Micah Altman, Michael McDonald
+    Copyright 2010-2012 Micah Altman, Michael McDonald
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -30,15 +30,15 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User, AnonymousUser
 from django.contrib.sessions.models import Session
 from django.contrib.auth.decorators import login_required
-from django.contrib.csrf.middleware import csrf_exempt
 from django.contrib.sites.models import Site
 from django.views.decorators.cache import cache_control
+from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponseRedirect, HttpResponse, HttpResponseNotFound
 from django.shortcuts import render_to_response
 from django.template import loader, Context, RequestContext
 from django.utils import simplejson as json
 from hashlib import sha1
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext as _, get_language
 
 # for proxy
 import urllib2
@@ -80,7 +80,8 @@ def index(request):
         'ga_account': settings.GA_ACCOUNT,
         'ga_domain': settings.GA_DOMAIN,
         'user': request.user,
-        'site': Site.objects.get_current()
+        'site': Site.objects.get_current(),
+        'language_code': get_language(),
     }, context_instance=RequestContext(request))
 
 

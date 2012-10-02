@@ -1,0 +1,4117 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-09-17 09:38-0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+
+#: static-media/CACHE/js/01ec5c663726.js:78
+#: static-media/CACHE/js/0813507fca4e.js:78
+#: static-media/CACHE/js/3eeee3706ebf.js:78
+#: static-media/CACHE/js/4bd62bdb2da4.js:78
+#: static-media/CACHE/js/6b79d088a188.js:78
+#: static-media/CACHE/js/8347635feab9.js:78
+#: static-media/CACHE/js/9e2f3acda32a.js:78
+#: static-media/CACHE/js/a7eed9cbce79.js:78
+#: static-media/CACHE/js/ab622b78184c.js:78
+#: static-media/CACHE/js/af1972b73435.js:78
+#: static-media/CACHE/js/b4775468438b.js:78
+#: static-media/CACHE/js/c02f606639b0.js:78
+#: static-media/CACHE/js/db7c2b1caabb.js:78
+#: static-media/CACHE/js/f9a5a40a526d.js:78
+#: static-media/CACHE/js/fb93b2a750fd.js:78
+#: static-media/CACHE/js/fef441dc0d83.js:78 static-media/js/ui.js:65
+msgid "Coming Soon..."
+msgstr "建設中です"
+
+#: static-media/CACHE/js/01ec5c663726.js:85
+#: static-media/CACHE/js/0813507fca4e.js:86
+#: static-media/CACHE/js/3eeee3706ebf.js:86
+#: static-media/CACHE/js/4bd62bdb2da4.js:85
+#: static-media/CACHE/js/6b79d088a188.js:85
+#: static-media/CACHE/js/8347635feab9.js:86
+#: static-media/CACHE/js/9e2f3acda32a.js:85
+#: static-media/CACHE/js/a7eed9cbce79.js:86
+#: static-media/CACHE/js/ab622b78184c.js:86
+#: static-media/CACHE/js/af1972b73435.js:85
+#: static-media/CACHE/js/b4775468438b.js:85
+#: static-media/CACHE/js/c02f606639b0.js:85
+#: static-media/CACHE/js/db7c2b1caabb.js:85
+#: static-media/CACHE/js/f9a5a40a526d.js:85
+#: static-media/CACHE/js/fb93b2a750fd.js:86
+#: static-media/CACHE/js/fef441dc0d83.js:85 static-media/js/ui.js:226
+#: static-media/js/ui.js.c:256
+msgid "Validation Failed"
+msgstr "検証失敗"
+
+#: static-media/CACHE/js/01ec5c663726.js:85
+#: static-media/CACHE/js/01ec5c663726.js:94
+#: static-media/CACHE/js/01ec5c663726.js:136
+#: static-media/CACHE/js/01ec5c663726.js:138
+#: static-media/CACHE/js/01ec5c663726.js:162
+#: static-media/CACHE/js/01ec5c663726.js:378
+#: static-media/CACHE/js/01ec5c663726.js:401
+#: static-media/CACHE/js/0813507fca4e.js:86
+#: static-media/CACHE/js/0813507fca4e.js:95
+#: static-media/CACHE/js/0813507fca4e.js:136
+#: static-media/CACHE/js/0813507fca4e.js:138
+#: static-media/CACHE/js/0813507fca4e.js:162
+#: static-media/CACHE/js/0813507fca4e.js:381
+#: static-media/CACHE/js/0813507fca4e.js:404
+#: static-media/CACHE/js/3eeee3706ebf.js:86
+#: static-media/CACHE/js/3eeee3706ebf.js:95
+#: static-media/CACHE/js/3eeee3706ebf.js:137
+#: static-media/CACHE/js/3eeee3706ebf.js:139
+#: static-media/CACHE/js/3eeee3706ebf.js:163
+#: static-media/CACHE/js/3eeee3706ebf.js:381
+#: static-media/CACHE/js/3eeee3706ebf.js:404
+#: static-media/CACHE/js/4bd62bdb2da4.js:85
+#: static-media/CACHE/js/4bd62bdb2da4.js:94
+#: static-media/CACHE/js/4bd62bdb2da4.js:136
+#: static-media/CACHE/js/4bd62bdb2da4.js:138
+#: static-media/CACHE/js/4bd62bdb2da4.js:162
+#: static-media/CACHE/js/4bd62bdb2da4.js:378
+#: static-media/CACHE/js/4bd62bdb2da4.js:401
+#: static-media/CACHE/js/6b79d088a188.js:85
+#: static-media/CACHE/js/6b79d088a188.js:94
+#: static-media/CACHE/js/6b79d088a188.js:136
+#: static-media/CACHE/js/6b79d088a188.js:138
+#: static-media/CACHE/js/6b79d088a188.js:162
+#: static-media/CACHE/js/6b79d088a188.js:378
+#: static-media/CACHE/js/6b79d088a188.js:401
+#: static-media/CACHE/js/8347635feab9.js:86
+#: static-media/CACHE/js/8347635feab9.js:95
+#: static-media/CACHE/js/8347635feab9.js:137
+#: static-media/CACHE/js/8347635feab9.js:139
+#: static-media/CACHE/js/8347635feab9.js:163
+#: static-media/CACHE/js/8347635feab9.js:381
+#: static-media/CACHE/js/8347635feab9.js:404
+#: static-media/CACHE/js/9e2f3acda32a.js:85
+#: static-media/CACHE/js/9e2f3acda32a.js:94
+#: static-media/CACHE/js/9e2f3acda32a.js:136
+#: static-media/CACHE/js/9e2f3acda32a.js:138
+#: static-media/CACHE/js/9e2f3acda32a.js:162
+#: static-media/CACHE/js/9e2f3acda32a.js:378
+#: static-media/CACHE/js/9e2f3acda32a.js:401
+#: static-media/CACHE/js/a7eed9cbce79.js:86
+#: static-media/CACHE/js/a7eed9cbce79.js:95
+#: static-media/CACHE/js/a7eed9cbce79.js:137
+#: static-media/CACHE/js/a7eed9cbce79.js:139
+#: static-media/CACHE/js/a7eed9cbce79.js:163
+#: static-media/CACHE/js/a7eed9cbce79.js:380
+#: static-media/CACHE/js/a7eed9cbce79.js:403
+#: static-media/CACHE/js/ab622b78184c.js:86
+#: static-media/CACHE/js/ab622b78184c.js:95
+#: static-media/CACHE/js/ab622b78184c.js:137
+#: static-media/CACHE/js/ab622b78184c.js:139
+#: static-media/CACHE/js/ab622b78184c.js:163
+#: static-media/CACHE/js/ab622b78184c.js:381
+#: static-media/CACHE/js/ab622b78184c.js:404
+#: static-media/CACHE/js/af1972b73435.js:85
+#: static-media/CACHE/js/af1972b73435.js:94
+#: static-media/CACHE/js/af1972b73435.js:136
+#: static-media/CACHE/js/af1972b73435.js:138
+#: static-media/CACHE/js/af1972b73435.js:162
+#: static-media/CACHE/js/af1972b73435.js:378
+#: static-media/CACHE/js/af1972b73435.js:401
+#: static-media/CACHE/js/b4775468438b.js:85
+#: static-media/CACHE/js/b4775468438b.js:94
+#: static-media/CACHE/js/b4775468438b.js:136
+#: static-media/CACHE/js/b4775468438b.js:138
+#: static-media/CACHE/js/b4775468438b.js:162
+#: static-media/CACHE/js/b4775468438b.js:378
+#: static-media/CACHE/js/b4775468438b.js:401
+#: static-media/CACHE/js/c02f606639b0.js:85
+#: static-media/CACHE/js/c02f606639b0.js:94
+#: static-media/CACHE/js/c02f606639b0.js:136
+#: static-media/CACHE/js/c02f606639b0.js:138
+#: static-media/CACHE/js/c02f606639b0.js:162
+#: static-media/CACHE/js/c02f606639b0.js:378
+#: static-media/CACHE/js/c02f606639b0.js:401
+#: static-media/CACHE/js/db7c2b1caabb.js:85
+#: static-media/CACHE/js/db7c2b1caabb.js:94
+#: static-media/CACHE/js/db7c2b1caabb.js:136
+#: static-media/CACHE/js/db7c2b1caabb.js:138
+#: static-media/CACHE/js/db7c2b1caabb.js:162
+#: static-media/CACHE/js/db7c2b1caabb.js:378
+#: static-media/CACHE/js/db7c2b1caabb.js:401
+#: static-media/CACHE/js/f9a5a40a526d.js:85
+#: static-media/CACHE/js/f9a5a40a526d.js:94
+#: static-media/CACHE/js/f9a5a40a526d.js:136
+#: static-media/CACHE/js/f9a5a40a526d.js:138
+#: static-media/CACHE/js/f9a5a40a526d.js:162
+#: static-media/CACHE/js/f9a5a40a526d.js:378
+#: static-media/CACHE/js/f9a5a40a526d.js:401
+#: static-media/CACHE/js/fb93b2a750fd.js:86
+#: static-media/CACHE/js/fb93b2a750fd.js:95
+#: static-media/CACHE/js/fb93b2a750fd.js:137
+#: static-media/CACHE/js/fb93b2a750fd.js:139
+#: static-media/CACHE/js/fb93b2a750fd.js:163
+#: static-media/CACHE/js/fb93b2a750fd.js:381
+#: static-media/CACHE/js/fb93b2a750fd.js:404
+#: static-media/CACHE/js/fef441dc0d83.js:85
+#: static-media/CACHE/js/fef441dc0d83.js:94
+#: static-media/CACHE/js/fef441dc0d83.js:136
+#: static-media/CACHE/js/fef441dc0d83.js:138
+#: static-media/CACHE/js/fef441dc0d83.js:162
+#: static-media/CACHE/js/fef441dc0d83.js:378
+#: static-media/CACHE/js/fef441dc0d83.js:401 static-media/js/mapping.js:479
+#: static-media/js/mapping.js.c:486 static-media/js/mapping.js:540
+#: static-media/js/mapping.js.c:547 static-media/js/mapping.js:1100
+#: static-media/js/register.js:197 static-media/js/register.js.c:205
+#: static-media/js/splitsreport.js:97 static-media/js/ui.js:231
+#: static-media/js/ui.js.c:263 static-media/js/ui.js:508
+msgid "Error"
+msgstr "エラー"
+
+#: static-media/CACHE/js/01ec5c663726.js:85
+#: static-media/CACHE/js/0813507fca4e.js:86
+#: static-media/CACHE/js/3eeee3706ebf.js:86
+#: static-media/CACHE/js/4bd62bdb2da4.js:85
+#: static-media/CACHE/js/6b79d088a188.js:85
+#: static-media/CACHE/js/8347635feab9.js:86
+#: static-media/CACHE/js/9e2f3acda32a.js:85
+#: static-media/CACHE/js/a7eed9cbce79.js:86
+#: static-media/CACHE/js/ab622b78184c.js:86
+#: static-media/CACHE/js/af1972b73435.js:85
+#: static-media/CACHE/js/b4775468438b.js:85
+#: static-media/CACHE/js/c02f606639b0.js:85
+#: static-media/CACHE/js/db7c2b1caabb.js:85
+#: static-media/CACHE/js/f9a5a40a526d.js:85
+#: static-media/CACHE/js/fb93b2a750fd.js:86
+#: static-media/CACHE/js/fef441dc0d83.js:85 static-media/js/ui.js:231
+#: static-media/js/ui.js.c:264
+msgid "Server error. Please try again later"
+msgstr "サーバーにエラーが発生しました。再度やり直してください。"
+
+#: static-media/CACHE/js/01ec5c663726.js:85
+#: static-media/CACHE/js/0813507fca4e.js:86
+#: static-media/CACHE/js/3eeee3706ebf.js:86
+#: static-media/CACHE/js/4bd62bdb2da4.js:85
+#: static-media/CACHE/js/6b79d088a188.js:85
+#: static-media/CACHE/js/8347635feab9.js:86
+#: static-media/CACHE/js/9e2f3acda32a.js:85
+#: static-media/CACHE/js/a7eed9cbce79.js:86
+#: static-media/CACHE/js/ab622b78184c.js:86
+#: static-media/CACHE/js/af1972b73435.js:85
+#: static-media/CACHE/js/b4775468438b.js:85
+#: static-media/CACHE/js/c02f606639b0.js:85
+#: static-media/CACHE/js/db7c2b1caabb.js:85
+#: static-media/CACHE/js/f9a5a40a526d.js:85
+#: static-media/CACHE/js/fb93b2a750fd.js:86
+#: static-media/CACHE/js/fef441dc0d83.js:85 static-media/js/ui.js:239
+msgid "Update Leaderboards<br/>with Working Plan"
+msgstr "スコアボードを<br/>現在の計画案で更新する"
+
+#: static-media/CACHE/js/01ec5c663726.js:86
+#: static-media/CACHE/js/0813507fca4e.js:87
+#: static-media/CACHE/js/3eeee3706ebf.js:87
+#: static-media/CACHE/js/4bd62bdb2da4.js:86
+#: static-media/CACHE/js/6b79d088a188.js:86
+#: static-media/CACHE/js/8347635feab9.js:87
+#: static-media/CACHE/js/9e2f3acda32a.js:86
+#: static-media/CACHE/js/a7eed9cbce79.js:87
+#: static-media/CACHE/js/ab622b78184c.js:87
+#: static-media/CACHE/js/af1972b73435.js:86
+#: static-media/CACHE/js/b4775468438b.js:86
+#: static-media/CACHE/js/c02f606639b0.js:86
+#: static-media/CACHE/js/db7c2b1caabb.js:86
+#: static-media/CACHE/js/f9a5a40a526d.js:86
+#: static-media/CACHE/js/fb93b2a750fd.js:87
+#: static-media/CACHE/js/fef441dc0d83.js:86 static-media/js/ui.js:271
+msgid "Download Scores<br/>as CSV"
+msgstr "スコアをCSV形式で<br/>ダウンロードする"
+
+#: static-media/CACHE/js/01ec5c663726.js:89
+#: static-media/CACHE/js/0813507fca4e.js:90
+#: static-media/CACHE/js/3eeee3706ebf.js:90
+#: static-media/CACHE/js/4bd62bdb2da4.js:89
+#: static-media/CACHE/js/6b79d088a188.js:89
+#: static-media/CACHE/js/8347635feab9.js:90
+#: static-media/CACHE/js/9e2f3acda32a.js:89
+#: static-media/CACHE/js/a7eed9cbce79.js:90
+#: static-media/CACHE/js/ab622b78184c.js:90
+#: static-media/CACHE/js/af1972b73435.js:89
+#: static-media/CACHE/js/b4775468438b.js:89
+#: static-media/CACHE/js/c02f606639b0.js:89
+#: static-media/CACHE/js/db7c2b1caabb.js:89
+#: static-media/CACHE/js/f9a5a40a526d.js:89
+#: static-media/CACHE/js/fb93b2a750fd.js:90
+#: static-media/CACHE/js/fef441dc0d83.js:89 static-media/js/ui.js:394
+msgid "Last Saved on %(day)s at %(hour)s:%(minute)s"
+msgstr "最終保存日 %(day)s %(hour)s:%(minute)s"
+
+#: static-media/CACHE/js/01ec5c663726.js:94
+#: static-media/CACHE/js/0813507fca4e.js:95
+#: static-media/CACHE/js/3eeee3706ebf.js:95
+#: static-media/CACHE/js/4bd62bdb2da4.js:94
+#: static-media/CACHE/js/6b79d088a188.js:94
+#: static-media/CACHE/js/8347635feab9.js:95
+#: static-media/CACHE/js/9e2f3acda32a.js:94
+#: static-media/CACHE/js/a7eed9cbce79.js:95
+#: static-media/CACHE/js/ab622b78184c.js:95
+#: static-media/CACHE/js/af1972b73435.js:94
+#: static-media/CACHE/js/b4775468438b.js:94
+#: static-media/CACHE/js/c02f606639b0.js:94
+#: static-media/CACHE/js/db7c2b1caabb.js:94
+#: static-media/CACHE/js/f9a5a40a526d.js:94
+#: static-media/CACHE/js/fb93b2a750fd.js:95
+#: static-media/CACHE/js/fef441dc0d83.js:94 static-media/js/ui.js:497
+msgid "Please Wait"
+msgstr "お待ちください"
+
+#: static-media/CACHE/js/01ec5c663726.js:94
+#: static-media/CACHE/js/0813507fca4e.js:95
+#: static-media/CACHE/js/3eeee3706ebf.js:95
+#: static-media/CACHE/js/4bd62bdb2da4.js:94
+#: static-media/CACHE/js/6b79d088a188.js:94
+#: static-media/CACHE/js/8347635feab9.js:95
+#: static-media/CACHE/js/9e2f3acda32a.js:94
+#: static-media/CACHE/js/a7eed9cbce79.js:95
+#: static-media/CACHE/js/ab622b78184c.js:95
+#: static-media/CACHE/js/af1972b73435.js:94
+#: static-media/CACHE/js/b4775468438b.js:94
+#: static-media/CACHE/js/c02f606639b0.js:94
+#: static-media/CACHE/js/db7c2b1caabb.js:94
+#: static-media/CACHE/js/f9a5a40a526d.js:94
+#: static-media/CACHE/js/fb93b2a750fd.js:95
+#: static-media/CACHE/js/fef441dc0d83.js:94 static-media/js/ui.js:497
+msgid "Publishing with the server"
+msgstr "サーバー上に公開しています"
+
+#: static-media/CACHE/js/01ec5c663726.js:94
+#: static-media/CACHE/js/0813507fca4e.js:95
+#: static-media/CACHE/js/3eeee3706ebf.js:95
+#: static-media/CACHE/js/4bd62bdb2da4.js:94
+#: static-media/CACHE/js/6b79d088a188.js:94
+#: static-media/CACHE/js/8347635feab9.js:95
+#: static-media/CACHE/js/9e2f3acda32a.js:94
+#: static-media/CACHE/js/a7eed9cbce79.js:95
+#: static-media/CACHE/js/ab622b78184c.js:95
+#: static-media/CACHE/js/af1972b73435.js:94
+#: static-media/CACHE/js/b4775468438b.js:94
+#: static-media/CACHE/js/c02f606639b0.js:94
+#: static-media/CACHE/js/db7c2b1caabb.js:94
+#: static-media/CACHE/js/f9a5a40a526d.js:94
+#: static-media/CACHE/js/fb93b2a750fd.js:95
+#: static-media/CACHE/js/fef441dc0d83.js:94 static-media/js/ui.js:508
+msgid "Please enter a new name to publish your plan."
+msgstr "計画案を公開するために新しい名前をつけてください"
+
+#: static-media/CACHE/js/01ec5c663726.js:95
+#: static-media/CACHE/js/0813507fca4e.js:96
+#: static-media/CACHE/js/3eeee3706ebf.js:96
+#: static-media/CACHE/js/4bd62bdb2da4.js:95
+#: static-media/CACHE/js/6b79d088a188.js:95
+#: static-media/CACHE/js/8347635feab9.js:96
+#: static-media/CACHE/js/9e2f3acda32a.js:95
+#: static-media/CACHE/js/a7eed9cbce79.js:96
+#: static-media/CACHE/js/ab622b78184c.js:96
+#: static-media/CACHE/js/af1972b73435.js:95
+#: static-media/CACHE/js/b4775468438b.js:95
+#: static-media/CACHE/js/c02f606639b0.js:95
+#: static-media/CACHE/js/db7c2b1caabb.js:95
+#: static-media/CACHE/js/f9a5a40a526d.js:95
+#: static-media/CACHE/js/fb93b2a750fd.js:96
+#: static-media/CACHE/js/fef441dc0d83.js:95 static-media/js/ui.js:520
+msgid "Oops!"
+msgstr "おぉっと。"
+
+#: static-media/CACHE/js/01ec5c663726.js:98
+#: static-media/CACHE/js/0813507fca4e.js:99
+#: static-media/CACHE/js/3eeee3706ebf.js:99
+#: static-media/CACHE/js/4bd62bdb2da4.js:98
+#: static-media/CACHE/js/6b79d088a188.js:98
+#: static-media/CACHE/js/8347635feab9.js:99
+#: static-media/CACHE/js/9e2f3acda32a.js:98
+#: static-media/CACHE/js/a7eed9cbce79.js:99
+#: static-media/CACHE/js/ab622b78184c.js:99
+#: static-media/CACHE/js/af1972b73435.js:98
+#: static-media/CACHE/js/b4775468438b.js:98
+#: static-media/CACHE/js/c02f606639b0.js:98
+#: static-media/CACHE/js/db7c2b1caabb.js:98
+#: static-media/CACHE/js/f9a5a40a526d.js:98
+#: static-media/CACHE/js/fb93b2a750fd.js:99
+#: static-media/CACHE/js/fef441dc0d83.js:98 static-media/js/ui.js:539
+msgid "Server Failure"
+msgstr "サーバーエラー"
+
+#: static-media/CACHE/js/01ec5c663726.js:98
+#: static-media/CACHE/js/0813507fca4e.js:99
+#: static-media/CACHE/js/3eeee3706ebf.js:99
+#: static-media/CACHE/js/4bd62bdb2da4.js:98
+#: static-media/CACHE/js/6b79d088a188.js:98
+#: static-media/CACHE/js/8347635feab9.js:99
+#: static-media/CACHE/js/9e2f3acda32a.js:98
+#: static-media/CACHE/js/a7eed9cbce79.js:99
+#: static-media/CACHE/js/ab622b78184c.js:99
+#: static-media/CACHE/js/af1972b73435.js:98
+#: static-media/CACHE/js/b4775468438b.js:98
+#: static-media/CACHE/js/c02f606639b0.js:98
+#: static-media/CACHE/js/db7c2b1caabb.js:98
+#: static-media/CACHE/js/f9a5a40a526d.js:98
+#: static-media/CACHE/js/fb93b2a750fd.js:99
+#: static-media/CACHE/js/fef441dc0d83.js:98 static-media/js/ui.js:539
+msgid "Sorry, we weren't able to contact the server.  Please try again later."
+msgstr ""
+"申し訳ありません。サーバーに接続できませんでした。再度やり直してください。"
+
+#: static-media/CACHE/js/01ec5c663726.js:114
+#: static-media/CACHE/js/0813507fca4e.js:115
+#: static-media/CACHE/js/3eeee3706ebf.js:115
+#: static-media/CACHE/js/4bd62bdb2da4.js:114
+#: static-media/CACHE/js/6b79d088a188.js:114
+#: static-media/CACHE/js/8347635feab9.js:115
+#: static-media/CACHE/js/9e2f3acda32a.js:114
+#: static-media/CACHE/js/a7eed9cbce79.js:115
+#: static-media/CACHE/js/ab622b78184c.js:115
+#: static-media/CACHE/js/af1972b73435.js:114
+#: static-media/CACHE/js/b4775468438b.js:114
+#: static-media/CACHE/js/c02f606639b0.js:114
+#: static-media/CACHE/js/db7c2b1caabb.js:114
+#: static-media/CACHE/js/f9a5a40a526d.js:114
+#: static-media/CACHE/js/fb93b2a750fd.js:115
+#: static-media/CACHE/js/fef441dc0d83.js:114 static-media/js/mapping.js:108
+msgid " Name"
+msgstr "名前"
+
+#: static-media/CACHE/js/01ec5c663726.js:115
+#: static-media/CACHE/js/3eeee3706ebf.js:116
+#: static-media/CACHE/js/4bd62bdb2da4.js:115
+#: static-media/CACHE/js/6b79d088a188.js:115
+#: static-media/CACHE/js/8347635feab9.js:116
+#: static-media/CACHE/js/9e2f3acda32a.js:115
+#: static-media/CACHE/js/a7eed9cbce79.js:116
+#: static-media/CACHE/js/ab622b78184c.js:116
+#: static-media/CACHE/js/af1972b73435.js:115
+#: static-media/CACHE/js/b4775468438b.js:115
+#: static-media/CACHE/js/c02f606639b0.js:115
+#: static-media/CACHE/js/db7c2b1caabb.js:115
+#: static-media/CACHE/js/f9a5a40a526d.js:115
+#: static-media/CACHE/js/fb93b2a750fd.js:116
+#: static-media/CACHE/js/fef441dc0d83.js:115
+msgid "Demographic "
+msgstr "人口情報"
+
+#: static-media/CACHE/js/01ec5c663726.js:132
+#: static-media/CACHE/js/0813507fca4e.js:132
+#: static-media/CACHE/js/3eeee3706ebf.js:133
+#: static-media/CACHE/js/4bd62bdb2da4.js:132
+#: static-media/CACHE/js/6b79d088a188.js:132
+#: static-media/CACHE/js/8347635feab9.js:133
+#: static-media/CACHE/js/9e2f3acda32a.js:132
+#: static-media/CACHE/js/a7eed9cbce79.js:133
+#: static-media/CACHE/js/ab622b78184c.js:133
+#: static-media/CACHE/js/af1972b73435.js:132
+#: static-media/CACHE/js/b4775468438b.js:132
+#: static-media/CACHE/js/c02f606639b0.js:132
+#: static-media/CACHE/js/db7c2b1caabb.js:132
+#: static-media/CACHE/js/f9a5a40a526d.js:132
+#: static-media/CACHE/js/fb93b2a750fd.js:133
+#: static-media/CACHE/js/fef441dc0d83.js:132 static-media/js/mapping.js:385
+msgid "Satellite"
+msgstr "航空写真"
+
+#: static-media/CACHE/js/01ec5c663726.js:132
+#: static-media/CACHE/js/0813507fca4e.js:132
+#: static-media/CACHE/js/3eeee3706ebf.js:133
+#: static-media/CACHE/js/4bd62bdb2da4.js:132
+#: static-media/CACHE/js/6b79d088a188.js:132
+#: static-media/CACHE/js/8347635feab9.js:133
+#: static-media/CACHE/js/9e2f3acda32a.js:132
+#: static-media/CACHE/js/a7eed9cbce79.js:133
+#: static-media/CACHE/js/ab622b78184c.js:133
+#: static-media/CACHE/js/af1972b73435.js:132
+#: static-media/CACHE/js/b4775468438b.js:132
+#: static-media/CACHE/js/c02f606639b0.js:132
+#: static-media/CACHE/js/db7c2b1caabb.js:132
+#: static-media/CACHE/js/f9a5a40a526d.js:132
+#: static-media/CACHE/js/fb93b2a750fd.js:133
+#: static-media/CACHE/js/fef441dc0d83.js:132 static-media/js/mapping.js:386
+msgid "Hybrid"
+msgstr "地図＋航空写真"
+
+#: static-media/CACHE/js/01ec5c663726.js:132
+#: static-media/CACHE/js/0813507fca4e.js:132
+#: static-media/CACHE/js/3eeee3706ebf.js:133
+#: static-media/CACHE/js/4bd62bdb2da4.js:132
+#: static-media/CACHE/js/6b79d088a188.js:132
+#: static-media/CACHE/js/8347635feab9.js:133
+#: static-media/CACHE/js/9e2f3acda32a.js:132
+#: static-media/CACHE/js/a7eed9cbce79.js:133
+#: static-media/CACHE/js/ab622b78184c.js:133
+#: static-media/CACHE/js/af1972b73435.js:132
+#: static-media/CACHE/js/b4775468438b.js:132
+#: static-media/CACHE/js/c02f606639b0.js:132
+#: static-media/CACHE/js/db7c2b1caabb.js:132
+#: static-media/CACHE/js/f9a5a40a526d.js:132
+#: static-media/CACHE/js/fb93b2a750fd.js:133
+#: static-media/CACHE/js/fef441dc0d83.js:132 static-media/js/mapping.js:387
+msgid "Road"
+msgstr "道路"
+
+#: static-media/CACHE/js/01ec5c663726.js:135
+#: static-media/CACHE/js/0813507fca4e.js:135
+#: static-media/CACHE/js/3eeee3706ebf.js:136
+#: static-media/CACHE/js/4bd62bdb2da4.js:135
+#: static-media/CACHE/js/6b79d088a188.js:135
+#: static-media/CACHE/js/8347635feab9.js:136
+#: static-media/CACHE/js/9e2f3acda32a.js:135
+#: static-media/CACHE/js/a7eed9cbce79.js:136
+#: static-media/CACHE/js/ab622b78184c.js:136
+#: static-media/CACHE/js/af1972b73435.js:135
+#: static-media/CACHE/js/b4775468438b.js:135
+#: static-media/CACHE/js/c02f606639b0.js:135
+#: static-media/CACHE/js/db7c2b1caabb.js:135
+#: static-media/CACHE/js/f9a5a40a526d.js:135
+#: static-media/CACHE/js/fb93b2a750fd.js:136
+#: static-media/CACHE/js/fef441dc0d83.js:135 static-media/js/mapping.js:438
+msgid "Map Transparency"
+msgstr "地図透過度"
+
+#: static-media/CACHE/js/01ec5c663726.js:135
+#: static-media/CACHE/js/0813507fca4e.js:135
+#: static-media/CACHE/js/3eeee3706ebf.js:136
+#: static-media/CACHE/js/4bd62bdb2da4.js:135
+#: static-media/CACHE/js/6b79d088a188.js:135
+#: static-media/CACHE/js/8347635feab9.js:136
+#: static-media/CACHE/js/9e2f3acda32a.js:135
+#: static-media/CACHE/js/a7eed9cbce79.js:136
+#: static-media/CACHE/js/ab622b78184c.js:136
+#: static-media/CACHE/js/af1972b73435.js:135
+#: static-media/CACHE/js/b4775468438b.js:135
+#: static-media/CACHE/js/c02f606639b0.js:135
+#: static-media/CACHE/js/db7c2b1caabb.js:135
+#: static-media/CACHE/js/f9a5a40a526d.js:135
+#: static-media/CACHE/js/fb93b2a750fd.js:136
+#: static-media/CACHE/js/fef441dc0d83.js:135 static-media/js/mapping.js:456
+msgid "Please wait. Fixing unassigned blocks. This may take a couple minutes."
+msgstr ""
+"未割り当てブロックを修復中です。お待ちください。これには数分かかることがあり"
+"ます。"
+
+#: static-media/CACHE/js/01ec5c663726.js:135
+#: static-media/CACHE/js/0813507fca4e.js:135
+#: static-media/CACHE/js/3eeee3706ebf.js:136
+#: static-media/CACHE/js/4bd62bdb2da4.js:135
+#: static-media/CACHE/js/6b79d088a188.js:135
+#: static-media/CACHE/js/8347635feab9.js:136
+#: static-media/CACHE/js/9e2f3acda32a.js:135
+#: static-media/CACHE/js/a7eed9cbce79.js:136
+#: static-media/CACHE/js/ab622b78184c.js:136
+#: static-media/CACHE/js/af1972b73435.js:135
+#: static-media/CACHE/js/b4775468438b.js:135
+#: static-media/CACHE/js/c02f606639b0.js:135
+#: static-media/CACHE/js/db7c2b1caabb.js:135
+#: static-media/CACHE/js/f9a5a40a526d.js:135
+#: static-media/CACHE/js/fb93b2a750fd.js:136
+#: static-media/CACHE/js/fef441dc0d83.js:135 static-media/js/mapping.js:459
+msgid "Fixing Unassigned"
+msgstr "未割り当てブロック修復中"
+
+#: static-media/CACHE/js/01ec5c663726.js:136
+#: static-media/CACHE/js/0813507fca4e.js:136
+#: static-media/CACHE/js/3eeee3706ebf.js:137
+#: static-media/CACHE/js/4bd62bdb2da4.js:136
+#: static-media/CACHE/js/6b79d088a188.js:136
+#: static-media/CACHE/js/8347635feab9.js:137
+#: static-media/CACHE/js/9e2f3acda32a.js:136
+#: static-media/CACHE/js/a7eed9cbce79.js:137
+#: static-media/CACHE/js/ab622b78184c.js:137
+#: static-media/CACHE/js/af1972b73435.js:136
+#: static-media/CACHE/js/b4775468438b.js:136
+#: static-media/CACHE/js/c02f606639b0.js:136
+#: static-media/CACHE/js/db7c2b1caabb.js:136
+#: static-media/CACHE/js/f9a5a40a526d.js:136
+#: static-media/CACHE/js/fb93b2a750fd.js:137
+#: static-media/CACHE/js/fef441dc0d83.js:136 static-media/js/mapping.js:479
+msgid "Success"
+msgstr "成功"
+
+#: static-media/CACHE/js/01ec5c663726.js:136
+#: static-media/CACHE/js/0813507fca4e.js:136
+#: static-media/CACHE/js/3eeee3706ebf.js:137
+#: static-media/CACHE/js/4bd62bdb2da4.js:136
+#: static-media/CACHE/js/6b79d088a188.js:136
+#: static-media/CACHE/js/8347635feab9.js:137
+#: static-media/CACHE/js/9e2f3acda32a.js:136
+#: static-media/CACHE/js/a7eed9cbce79.js:137
+#: static-media/CACHE/js/ab622b78184c.js:137
+#: static-media/CACHE/js/af1972b73435.js:136
+#: static-media/CACHE/js/b4775468438b.js:136
+#: static-media/CACHE/js/c02f606639b0.js:136
+#: static-media/CACHE/js/db7c2b1caabb.js:136
+#: static-media/CACHE/js/f9a5a40a526d.js:136
+#: static-media/CACHE/js/fb93b2a750fd.js:137
+#: static-media/CACHE/js/fef441dc0d83.js:136 static-media/js/mapping.js:485
+msgid "Error encountered while fixing unassigned"
+msgstr "未割り当て修復中にエラーが発生しました"
+
+#: static-media/CACHE/js/01ec5c663726.js:136
+#: static-media/CACHE/js/01ec5c663726.js:159
+#: static-media/CACHE/js/01ec5c663726.js:162
+#: static-media/CACHE/js/01ec5c663726.js:169
+#: static-media/CACHE/js/01ec5c663726.js:177
+#: static-media/CACHE/js/01ec5c663726.js:288
+#: static-media/CACHE/js/0813507fca4e.js:136
+#: static-media/CACHE/js/0813507fca4e.js:159
+#: static-media/CACHE/js/0813507fca4e.js:162
+#: static-media/CACHE/js/0813507fca4e.js:169
+#: static-media/CACHE/js/0813507fca4e.js:177
+#: static-media/CACHE/js/0813507fca4e.js:289
+#: static-media/CACHE/js/3eeee3706ebf.js:137
+#: static-media/CACHE/js/3eeee3706ebf.js:160
+#: static-media/CACHE/js/3eeee3706ebf.js:163
+#: static-media/CACHE/js/3eeee3706ebf.js:170
+#: static-media/CACHE/js/3eeee3706ebf.js:178
+#: static-media/CACHE/js/3eeee3706ebf.js:289
+#: static-media/CACHE/js/4bd62bdb2da4.js:136
+#: static-media/CACHE/js/4bd62bdb2da4.js:159
+#: static-media/CACHE/js/4bd62bdb2da4.js:162
+#: static-media/CACHE/js/4bd62bdb2da4.js:169
+#: static-media/CACHE/js/4bd62bdb2da4.js:177
+#: static-media/CACHE/js/4bd62bdb2da4.js:288
+#: static-media/CACHE/js/6b79d088a188.js:136
+#: static-media/CACHE/js/6b79d088a188.js:159
+#: static-media/CACHE/js/6b79d088a188.js:162
+#: static-media/CACHE/js/6b79d088a188.js:169
+#: static-media/CACHE/js/6b79d088a188.js:177
+#: static-media/CACHE/js/6b79d088a188.js:288
+#: static-media/CACHE/js/8347635feab9.js:137
+#: static-media/CACHE/js/8347635feab9.js:160
+#: static-media/CACHE/js/8347635feab9.js:163
+#: static-media/CACHE/js/8347635feab9.js:170
+#: static-media/CACHE/js/8347635feab9.js:178
+#: static-media/CACHE/js/8347635feab9.js:289
+#: static-media/CACHE/js/9e2f3acda32a.js:136
+#: static-media/CACHE/js/9e2f3acda32a.js:159
+#: static-media/CACHE/js/9e2f3acda32a.js:162
+#: static-media/CACHE/js/9e2f3acda32a.js:169
+#: static-media/CACHE/js/9e2f3acda32a.js:177
+#: static-media/CACHE/js/9e2f3acda32a.js:288
+#: static-media/CACHE/js/a7eed9cbce79.js:137
+#: static-media/CACHE/js/a7eed9cbce79.js:160
+#: static-media/CACHE/js/a7eed9cbce79.js:163
+#: static-media/CACHE/js/a7eed9cbce79.js:170
+#: static-media/CACHE/js/a7eed9cbce79.js:178
+#: static-media/CACHE/js/a7eed9cbce79.js:289
+#: static-media/CACHE/js/ab622b78184c.js:137
+#: static-media/CACHE/js/ab622b78184c.js:160
+#: static-media/CACHE/js/ab622b78184c.js:163
+#: static-media/CACHE/js/ab622b78184c.js:170
+#: static-media/CACHE/js/ab622b78184c.js:178
+#: static-media/CACHE/js/ab622b78184c.js:289
+#: static-media/CACHE/js/af1972b73435.js:136
+#: static-media/CACHE/js/af1972b73435.js:159
+#: static-media/CACHE/js/af1972b73435.js:162
+#: static-media/CACHE/js/af1972b73435.js:169
+#: static-media/CACHE/js/af1972b73435.js:177
+#: static-media/CACHE/js/af1972b73435.js:288
+#: static-media/CACHE/js/b4775468438b.js:136
+#: static-media/CACHE/js/b4775468438b.js:159
+#: static-media/CACHE/js/b4775468438b.js:162
+#: static-media/CACHE/js/b4775468438b.js:169
+#: static-media/CACHE/js/b4775468438b.js:177
+#: static-media/CACHE/js/b4775468438b.js:288
+#: static-media/CACHE/js/c02f606639b0.js:136
+#: static-media/CACHE/js/c02f606639b0.js:159
+#: static-media/CACHE/js/c02f606639b0.js:162
+#: static-media/CACHE/js/c02f606639b0.js:169
+#: static-media/CACHE/js/c02f606639b0.js:177
+#: static-media/CACHE/js/c02f606639b0.js:288
+#: static-media/CACHE/js/db7c2b1caabb.js:136
+#: static-media/CACHE/js/db7c2b1caabb.js:159
+#: static-media/CACHE/js/db7c2b1caabb.js:162
+#: static-media/CACHE/js/db7c2b1caabb.js:169
+#: static-media/CACHE/js/db7c2b1caabb.js:177
+#: static-media/CACHE/js/db7c2b1caabb.js:288
+#: static-media/CACHE/js/f9a5a40a526d.js:136
+#: static-media/CACHE/js/f9a5a40a526d.js:159
+#: static-media/CACHE/js/f9a5a40a526d.js:162
+#: static-media/CACHE/js/f9a5a40a526d.js:169
+#: static-media/CACHE/js/f9a5a40a526d.js:177
+#: static-media/CACHE/js/f9a5a40a526d.js:288
+#: static-media/CACHE/js/fb93b2a750fd.js:137
+#: static-media/CACHE/js/fb93b2a750fd.js:160
+#: static-media/CACHE/js/fb93b2a750fd.js:163
+#: static-media/CACHE/js/fb93b2a750fd.js:170
+#: static-media/CACHE/js/fb93b2a750fd.js:178
+#: static-media/CACHE/js/fb93b2a750fd.js:289
+#: static-media/CACHE/js/fef441dc0d83.js:136
+#: static-media/CACHE/js/fef441dc0d83.js:159
+#: static-media/CACHE/js/fef441dc0d83.js:162
+#: static-media/CACHE/js/fef441dc0d83.js:169
+#: static-media/CACHE/js/fef441dc0d83.js:177
+#: static-media/CACHE/js/fef441dc0d83.js:288 static-media/js/emailplan.js:116
+#: static-media/js/mapping.js:497 static-media/js/mapping.js.c:1049
+#: static-media/js/mapping.js:1092 static-media/js/mapping.js.c:1157
+#: static-media/js/mapping.js:1169 static-media/js/mapping.js.c:1305
+#: static-media/js/mapping.js:2980
+msgid "OK"
+msgstr "OK"
+
+#: static-media/CACHE/js/01ec5c663726.js:136
+#: static-media/CACHE/js/0813507fca4e.js:136
+#: static-media/CACHE/js/3eeee3706ebf.js:137
+#: static-media/CACHE/js/4bd62bdb2da4.js:136
+#: static-media/CACHE/js/6b79d088a188.js:136
+#: static-media/CACHE/js/8347635feab9.js:137
+#: static-media/CACHE/js/9e2f3acda32a.js:136
+#: static-media/CACHE/js/a7eed9cbce79.js:137
+#: static-media/CACHE/js/ab622b78184c.js:137
+#: static-media/CACHE/js/af1972b73435.js:136
+#: static-media/CACHE/js/b4775468438b.js:136
+#: static-media/CACHE/js/c02f606639b0.js:136
+#: static-media/CACHE/js/db7c2b1caabb.js:136
+#: static-media/CACHE/js/f9a5a40a526d.js:136
+#: static-media/CACHE/js/fb93b2a750fd.js:137
+#: static-media/CACHE/js/fef441dc0d83.js:136 static-media/js/mapping.js:501
+msgid "No reference layer selected."
+msgstr "参照レイヤーが選択されていません。"
+
+#: static-media/CACHE/js/01ec5c663726.js:136
+#: static-media/CACHE/js/01ec5c663726.js:395
+#: static-media/CACHE/js/01ec5c663726.js:396
+#: static-media/CACHE/js/01ec5c663726.js:398
+#: static-media/CACHE/js/01ec5c663726.js:401
+#: static-media/CACHE/js/0813507fca4e.js:136
+#: static-media/CACHE/js/0813507fca4e.js:398
+#: static-media/CACHE/js/0813507fca4e.js:399
+#: static-media/CACHE/js/0813507fca4e.js:401
+#: static-media/CACHE/js/0813507fca4e.js:404
+#: static-media/CACHE/js/3eeee3706ebf.js:137
+#: static-media/CACHE/js/3eeee3706ebf.js:398
+#: static-media/CACHE/js/3eeee3706ebf.js:399
+#: static-media/CACHE/js/3eeee3706ebf.js:401
+#: static-media/CACHE/js/3eeee3706ebf.js:404
+#: static-media/CACHE/js/4bd62bdb2da4.js:136
+#: static-media/CACHE/js/4bd62bdb2da4.js:395
+#: static-media/CACHE/js/4bd62bdb2da4.js:396
+#: static-media/CACHE/js/4bd62bdb2da4.js:398
+#: static-media/CACHE/js/4bd62bdb2da4.js:401
+#: static-media/CACHE/js/6b79d088a188.js:136
+#: static-media/CACHE/js/6b79d088a188.js:395
+#: static-media/CACHE/js/6b79d088a188.js:396
+#: static-media/CACHE/js/6b79d088a188.js:398
+#: static-media/CACHE/js/6b79d088a188.js:401
+#: static-media/CACHE/js/8347635feab9.js:137
+#: static-media/CACHE/js/8347635feab9.js:398
+#: static-media/CACHE/js/8347635feab9.js:399
+#: static-media/CACHE/js/8347635feab9.js:401
+#: static-media/CACHE/js/8347635feab9.js:404
+#: static-media/CACHE/js/9e2f3acda32a.js:136
+#: static-media/CACHE/js/9e2f3acda32a.js:395
+#: static-media/CACHE/js/9e2f3acda32a.js:396
+#: static-media/CACHE/js/9e2f3acda32a.js:398
+#: static-media/CACHE/js/9e2f3acda32a.js:401
+#: static-media/CACHE/js/a7eed9cbce79.js:137
+#: static-media/CACHE/js/a7eed9cbce79.js:397
+#: static-media/CACHE/js/a7eed9cbce79.js:398
+#: static-media/CACHE/js/a7eed9cbce79.js:400
+#: static-media/CACHE/js/a7eed9cbce79.js:403
+#: static-media/CACHE/js/ab622b78184c.js:137
+#: static-media/CACHE/js/ab622b78184c.js:398
+#: static-media/CACHE/js/ab622b78184c.js:399
+#: static-media/CACHE/js/ab622b78184c.js:401
+#: static-media/CACHE/js/ab622b78184c.js:404
+#: static-media/CACHE/js/af1972b73435.js:136
+#: static-media/CACHE/js/af1972b73435.js:395
+#: static-media/CACHE/js/af1972b73435.js:396
+#: static-media/CACHE/js/af1972b73435.js:398
+#: static-media/CACHE/js/af1972b73435.js:401
+#: static-media/CACHE/js/b4775468438b.js:136
+#: static-media/CACHE/js/b4775468438b.js:395
+#: static-media/CACHE/js/b4775468438b.js:396
+#: static-media/CACHE/js/b4775468438b.js:398
+#: static-media/CACHE/js/b4775468438b.js:401
+#: static-media/CACHE/js/c02f606639b0.js:136
+#: static-media/CACHE/js/c02f606639b0.js:395
+#: static-media/CACHE/js/c02f606639b0.js:396
+#: static-media/CACHE/js/c02f606639b0.js:398
+#: static-media/CACHE/js/c02f606639b0.js:401
+#: static-media/CACHE/js/db7c2b1caabb.js:136
+#: static-media/CACHE/js/db7c2b1caabb.js:395
+#: static-media/CACHE/js/db7c2b1caabb.js:396
+#: static-media/CACHE/js/db7c2b1caabb.js:398
+#: static-media/CACHE/js/db7c2b1caabb.js:401
+#: static-media/CACHE/js/f9a5a40a526d.js:136
+#: static-media/CACHE/js/f9a5a40a526d.js:395
+#: static-media/CACHE/js/f9a5a40a526d.js:396
+#: static-media/CACHE/js/f9a5a40a526d.js:398
+#: static-media/CACHE/js/f9a5a40a526d.js:401
+#: static-media/CACHE/js/fb93b2a750fd.js:137
+#: static-media/CACHE/js/fb93b2a750fd.js:398
+#: static-media/CACHE/js/fb93b2a750fd.js:399
+#: static-media/CACHE/js/fb93b2a750fd.js:401
+#: static-media/CACHE/js/fb93b2a750fd.js:404
+#: static-media/CACHE/js/fef441dc0d83.js:136
+#: static-media/CACHE/js/fef441dc0d83.js:395
+#: static-media/CACHE/js/fef441dc0d83.js:396
+#: static-media/CACHE/js/fef441dc0d83.js:398
+#: static-media/CACHE/js/fef441dc0d83.js:401 static-media/js/mapping.js:502
+#: static-media/js/splitsreport.js:109 static-media/js/statisticssets.js:338
+#: static-media/js/statisticssets.js:347 static-media/js/statisticssets.js:386
+msgid "Warning"
+msgstr "警告"
+
+#: static-media/CACHE/js/01ec5c663726.js:138
+#: static-media/CACHE/js/0813507fca4e.js:138
+#: static-media/CACHE/js/3eeee3706ebf.js:139
+#: static-media/CACHE/js/4bd62bdb2da4.js:138
+#: static-media/CACHE/js/6b79d088a188.js:138
+#: static-media/CACHE/js/8347635feab9.js:139
+#: static-media/CACHE/js/9e2f3acda32a.js:138
+#: static-media/CACHE/js/a7eed9cbce79.js:139
+#: static-media/CACHE/js/ab622b78184c.js:139
+#: static-media/CACHE/js/af1972b73435.js:138
+#: static-media/CACHE/js/b4775468438b.js:138
+#: static-media/CACHE/js/c02f606639b0.js:138
+#: static-media/CACHE/js/db7c2b1caabb.js:138
+#: static-media/CACHE/js/f9a5a40a526d.js:138
+#: static-media/CACHE/js/fb93b2a750fd.js:139
+#: static-media/CACHE/js/fef441dc0d83.js:138 static-media/js/mapping.js:515
+msgid "Please wait. Querying for splits."
+msgstr "境界線を問い合わせ中です。お待ちください。"
+
+#: static-media/CACHE/js/01ec5c663726.js:138
+#: static-media/CACHE/js/0813507fca4e.js:138
+#: static-media/CACHE/js/3eeee3706ebf.js:139
+#: static-media/CACHE/js/4bd62bdb2da4.js:138
+#: static-media/CACHE/js/6b79d088a188.js:138
+#: static-media/CACHE/js/8347635feab9.js:139
+#: static-media/CACHE/js/9e2f3acda32a.js:138
+#: static-media/CACHE/js/a7eed9cbce79.js:139
+#: static-media/CACHE/js/ab622b78184c.js:139
+#: static-media/CACHE/js/af1972b73435.js:138
+#: static-media/CACHE/js/b4775468438b.js:138
+#: static-media/CACHE/js/c02f606639b0.js:138
+#: static-media/CACHE/js/db7c2b1caabb.js:138
+#: static-media/CACHE/js/f9a5a40a526d.js:138
+#: static-media/CACHE/js/fb93b2a750fd.js:139
+#: static-media/CACHE/js/fef441dc0d83.js:138 static-media/js/mapping.js:519
+msgid "Finding Splits"
+msgstr "境界線を探しています"
+
+#: static-media/CACHE/js/01ec5c663726.js:138
+#: static-media/CACHE/js/0813507fca4e.js:138
+#: static-media/CACHE/js/3eeee3706ebf.js:139
+#: static-media/CACHE/js/4bd62bdb2da4.js:138
+#: static-media/CACHE/js/6b79d088a188.js:138
+#: static-media/CACHE/js/8347635feab9.js:139
+#: static-media/CACHE/js/9e2f3acda32a.js:138
+#: static-media/CACHE/js/a7eed9cbce79.js:139
+#: static-media/CACHE/js/ab622b78184c.js:139
+#: static-media/CACHE/js/af1972b73435.js:138
+#: static-media/CACHE/js/b4775468438b.js:138
+#: static-media/CACHE/js/c02f606639b0.js:138
+#: static-media/CACHE/js/db7c2b1caabb.js:138
+#: static-media/CACHE/js/f9a5a40a526d.js:138
+#: static-media/CACHE/js/fb93b2a750fd.js:139
+#: static-media/CACHE/js/fef441dc0d83.js:138 static-media/js/mapping.js:534
+msgid "This plan contains no splits."
+msgstr "この計画案には境界線はありません。"
+
+#: static-media/CACHE/js/01ec5c663726.js:138
+#: static-media/CACHE/js/0813507fca4e.js:138
+#: static-media/CACHE/js/3eeee3706ebf.js:139
+#: static-media/CACHE/js/4bd62bdb2da4.js:138
+#: static-media/CACHE/js/6b79d088a188.js:138
+#: static-media/CACHE/js/8347635feab9.js:139
+#: static-media/CACHE/js/9e2f3acda32a.js:138
+#: static-media/CACHE/js/a7eed9cbce79.js:139
+#: static-media/CACHE/js/ab622b78184c.js:139
+#: static-media/CACHE/js/af1972b73435.js:138
+#: static-media/CACHE/js/b4775468438b.js:138
+#: static-media/CACHE/js/c02f606639b0.js:138
+#: static-media/CACHE/js/db7c2b1caabb.js:138
+#: static-media/CACHE/js/f9a5a40a526d.js:138
+#: static-media/CACHE/js/fb93b2a750fd.js:139
+#: static-media/CACHE/js/fef441dc0d83.js:138 static-media/js/mapping.js:535
+msgid "No Splits Found"
+msgstr "境界線は見つかりませんでした"
+
+#: static-media/CACHE/js/01ec5c663726.js:138
+#: static-media/CACHE/js/0813507fca4e.js:138
+#: static-media/CACHE/js/3eeee3706ebf.js:139
+#: static-media/CACHE/js/4bd62bdb2da4.js:138
+#: static-media/CACHE/js/6b79d088a188.js:138
+#: static-media/CACHE/js/8347635feab9.js:139
+#: static-media/CACHE/js/9e2f3acda32a.js:138
+#: static-media/CACHE/js/a7eed9cbce79.js:139
+#: static-media/CACHE/js/ab622b78184c.js:139
+#: static-media/CACHE/js/af1972b73435.js:138
+#: static-media/CACHE/js/b4775468438b.js:138
+#: static-media/CACHE/js/c02f606639b0.js:138
+#: static-media/CACHE/js/db7c2b1caabb.js:138
+#: static-media/CACHE/js/f9a5a40a526d.js:138
+#: static-media/CACHE/js/fb93b2a750fd.js:139
+#: static-media/CACHE/js/fef441dc0d83.js:138 static-media/js/mapping.js:539
+#: static-media/js/mapping.js.c:546
+msgid "Error encountered while querying for splits: "
+msgstr "境界線問い合わせ中にエラーが発生しました: "
+
+#: static-media/CACHE/js/01ec5c663726.js:159
+#: static-media/CACHE/js/0813507fca4e.js:159
+#: static-media/CACHE/js/3eeee3706ebf.js:160
+#: static-media/CACHE/js/4bd62bdb2da4.js:159
+#: static-media/CACHE/js/6b79d088a188.js:159
+#: static-media/CACHE/js/8347635feab9.js:160
+#: static-media/CACHE/js/9e2f3acda32a.js:159
+#: static-media/CACHE/js/a7eed9cbce79.js:160
+#: static-media/CACHE/js/ab622b78184c.js:160
+#: static-media/CACHE/js/af1972b73435.js:159
+#: static-media/CACHE/js/b4775468438b.js:159
+#: static-media/CACHE/js/c02f606639b0.js:159
+#: static-media/CACHE/js/db7c2b1caabb.js:159
+#: static-media/CACHE/js/f9a5a40a526d.js:159
+#: static-media/CACHE/js/fb93b2a750fd.js:160
+#: static-media/CACHE/js/fef441dc0d83.js:159 static-media/js/mapping.js:1052
+msgid "Please wait until your previous changes have been accepted."
+msgstr "直前の変更が受け入れられるまでお待ちください。"
+
+#: static-media/CACHE/js/01ec5c663726.js:159
+#: static-media/CACHE/js/0813507fca4e.js:159
+#: static-media/CACHE/js/3eeee3706ebf.js:160
+#: static-media/CACHE/js/4bd62bdb2da4.js:159
+#: static-media/CACHE/js/6b79d088a188.js:159
+#: static-media/CACHE/js/8347635feab9.js:160
+#: static-media/CACHE/js/9e2f3acda32a.js:159
+#: static-media/CACHE/js/a7eed9cbce79.js:160
+#: static-media/CACHE/js/ab622b78184c.js:160
+#: static-media/CACHE/js/af1972b73435.js:159
+#: static-media/CACHE/js/b4775468438b.js:159
+#: static-media/CACHE/js/c02f606639b0.js:159
+#: static-media/CACHE/js/db7c2b1caabb.js:159
+#: static-media/CACHE/js/f9a5a40a526d.js:159
+#: static-media/CACHE/js/fb93b2a750fd.js:160
+#: static-media/CACHE/js/fef441dc0d83.js:159 static-media/js/mapping.js:1055
+msgid "Busy"
+msgstr "混雑中"
+
+#: static-media/CACHE/js/01ec5c663726.js:162
+#: static-media/CACHE/js/0813507fca4e.js:162
+#: static-media/CACHE/js/3eeee3706ebf.js:163
+#: static-media/CACHE/js/4bd62bdb2da4.js:162
+#: static-media/CACHE/js/6b79d088a188.js:162
+#: static-media/CACHE/js/8347635feab9.js:163
+#: static-media/CACHE/js/9e2f3acda32a.js:162
+#: static-media/CACHE/js/a7eed9cbce79.js:163
+#: static-media/CACHE/js/ab622b78184c.js:163
+#: static-media/CACHE/js/af1972b73435.js:162
+#: static-media/CACHE/js/b4775468438b.js:162
+#: static-media/CACHE/js/c02f606639b0.js:162
+#: static-media/CACHE/js/db7c2b1caabb.js:162
+#: static-media/CACHE/js/f9a5a40a526d.js:162
+#: static-media/CACHE/js/fb93b2a750fd.js:163
+#: static-media/CACHE/js/fef441dc0d83.js:162 static-media/js/mapping.js:1097
+msgid "No districts were updated"
+msgstr "どの選挙区も更新されませんでした"
+
+#: static-media/CACHE/js/01ec5c663726.js:169
+#: static-media/CACHE/js/0813507fca4e.js:169
+#: static-media/CACHE/js/3eeee3706ebf.js:170
+#: static-media/CACHE/js/4bd62bdb2da4.js:169
+#: static-media/CACHE/js/6b79d088a188.js:169
+#: static-media/CACHE/js/8347635feab9.js:170
+#: static-media/CACHE/js/9e2f3acda32a.js:169
+#: static-media/CACHE/js/a7eed9cbce79.js:170
+#: static-media/CACHE/js/ab622b78184c.js:170
+#: static-media/CACHE/js/af1972b73435.js:169
+#: static-media/CACHE/js/b4775468438b.js:169
+#: static-media/CACHE/js/c02f606639b0.js:169
+#: static-media/CACHE/js/db7c2b1caabb.js:169
+#: static-media/CACHE/js/f9a5a40a526d.js:169
+#: static-media/CACHE/js/fb93b2a750fd.js:170
+#: static-media/CACHE/js/fef441dc0d83.js:169 static-media/js/mapping.js:1160
+msgid ""
+"You cannot select that many features at once.\n"
+"\n"
+"Consider drawing a smaller area with the selection tool."
+msgstr ""
+"一度に沢山の機能を選択することはできません。\n"
+"\n"
+"選択ツールで小さな地域を描いてみてください。"
+
+#: static-media/CACHE/js/01ec5c663726.js:169
+#: static-media/CACHE/js/01ec5c663726.js:177
+#: static-media/CACHE/js/01ec5c663726.js:345
+#: static-media/CACHE/js/01ec5c663726.js:352
+#: static-media/CACHE/js/01ec5c663726.js:437
+#: static-media/CACHE/js/0813507fca4e.js:169
+#: static-media/CACHE/js/0813507fca4e.js:177
+#: static-media/CACHE/js/0813507fca4e.js:347
+#: static-media/CACHE/js/0813507fca4e.js:354
+#: static-media/CACHE/js/0813507fca4e.js:444
+#: static-media/CACHE/js/3eeee3706ebf.js:170
+#: static-media/CACHE/js/3eeee3706ebf.js:178
+#: static-media/CACHE/js/3eeee3706ebf.js:347
+#: static-media/CACHE/js/3eeee3706ebf.js:354
+#: static-media/CACHE/js/3eeee3706ebf.js:440
+#: static-media/CACHE/js/4bd62bdb2da4.js:169
+#: static-media/CACHE/js/4bd62bdb2da4.js:177
+#: static-media/CACHE/js/4bd62bdb2da4.js:345
+#: static-media/CACHE/js/4bd62bdb2da4.js:352
+#: static-media/CACHE/js/4bd62bdb2da4.js:437
+#: static-media/CACHE/js/6b79d088a188.js:169
+#: static-media/CACHE/js/6b79d088a188.js:177
+#: static-media/CACHE/js/6b79d088a188.js:345
+#: static-media/CACHE/js/6b79d088a188.js:352
+#: static-media/CACHE/js/6b79d088a188.js:437
+#: static-media/CACHE/js/8347635feab9.js:170
+#: static-media/CACHE/js/8347635feab9.js:178
+#: static-media/CACHE/js/8347635feab9.js:347
+#: static-media/CACHE/js/8347635feab9.js:354
+#: static-media/CACHE/js/8347635feab9.js:440
+#: static-media/CACHE/js/9e2f3acda32a.js:169
+#: static-media/CACHE/js/9e2f3acda32a.js:177
+#: static-media/CACHE/js/9e2f3acda32a.js:345
+#: static-media/CACHE/js/9e2f3acda32a.js:352
+#: static-media/CACHE/js/9e2f3acda32a.js:437
+#: static-media/CACHE/js/a7eed9cbce79.js:170
+#: static-media/CACHE/js/a7eed9cbce79.js:178
+#: static-media/CACHE/js/a7eed9cbce79.js:347
+#: static-media/CACHE/js/a7eed9cbce79.js:354
+#: static-media/CACHE/js/a7eed9cbce79.js:439
+#: static-media/CACHE/js/ab622b78184c.js:170
+#: static-media/CACHE/js/ab622b78184c.js:178
+#: static-media/CACHE/js/ab622b78184c.js:347
+#: static-media/CACHE/js/ab622b78184c.js:354
+#: static-media/CACHE/js/ab622b78184c.js:440
+#: static-media/CACHE/js/af1972b73435.js:169
+#: static-media/CACHE/js/af1972b73435.js:177
+#: static-media/CACHE/js/af1972b73435.js:345
+#: static-media/CACHE/js/af1972b73435.js:352
+#: static-media/CACHE/js/af1972b73435.js:437
+#: static-media/CACHE/js/b4775468438b.js:169
+#: static-media/CACHE/js/b4775468438b.js:177
+#: static-media/CACHE/js/b4775468438b.js:345
+#: static-media/CACHE/js/b4775468438b.js:352
+#: static-media/CACHE/js/b4775468438b.js:437
+#: static-media/CACHE/js/c02f606639b0.js:169
+#: static-media/CACHE/js/c02f606639b0.js:177
+#: static-media/CACHE/js/c02f606639b0.js:345
+#: static-media/CACHE/js/c02f606639b0.js:352
+#: static-media/CACHE/js/c02f606639b0.js:437
+#: static-media/CACHE/js/db7c2b1caabb.js:169
+#: static-media/CACHE/js/db7c2b1caabb.js:177
+#: static-media/CACHE/js/db7c2b1caabb.js:345
+#: static-media/CACHE/js/db7c2b1caabb.js:352
+#: static-media/CACHE/js/db7c2b1caabb.js:437
+#: static-media/CACHE/js/f9a5a40a526d.js:169
+#: static-media/CACHE/js/f9a5a40a526d.js:177
+#: static-media/CACHE/js/f9a5a40a526d.js:345
+#: static-media/CACHE/js/f9a5a40a526d.js:352
+#: static-media/CACHE/js/f9a5a40a526d.js:437
+#: static-media/CACHE/js/fb93b2a750fd.js:170
+#: static-media/CACHE/js/fb93b2a750fd.js:178
+#: static-media/CACHE/js/fb93b2a750fd.js:347
+#: static-media/CACHE/js/fb93b2a750fd.js:354
+#: static-media/CACHE/js/fb93b2a750fd.js:440
+#: static-media/CACHE/js/fef441dc0d83.js:169
+#: static-media/CACHE/js/fef441dc0d83.js:177
+#: static-media/CACHE/js/fef441dc0d83.js:345
+#: static-media/CACHE/js/fef441dc0d83.js:352
+#: static-media/CACHE/js/fef441dc0d83.js:437 static-media/js/mapping.js:1163
+#: static-media/js/mapping.js.c:1175 static-media/js/mapping.js:1323
+#: static-media/js/multimember.js:213 static-media/js/multimember.js.c:219
+#: static-media/js/reaggregator.js:185 static-media/js/shareddistricts.js:372
+#: static-media/js/shareddistricts.js:379
+msgid "Sorry"
+msgstr "申し訳ありません"
+
+#: static-media/CACHE/js/01ec5c663726.js:169
+#: static-media/CACHE/js/0813507fca4e.js:169
+#: static-media/CACHE/js/3eeee3706ebf.js:170
+#: static-media/CACHE/js/4bd62bdb2da4.js:169
+#: static-media/CACHE/js/6b79d088a188.js:169
+#: static-media/CACHE/js/8347635feab9.js:170
+#: static-media/CACHE/js/9e2f3acda32a.js:169
+#: static-media/CACHE/js/a7eed9cbce79.js:170
+#: static-media/CACHE/js/ab622b78184c.js:170
+#: static-media/CACHE/js/af1972b73435.js:169
+#: static-media/CACHE/js/b4775468438b.js:169
+#: static-media/CACHE/js/c02f606639b0.js:169
+#: static-media/CACHE/js/db7c2b1caabb.js:169
+#: static-media/CACHE/js/f9a5a40a526d.js:169
+#: static-media/CACHE/js/fb93b2a750fd.js:170
+#: static-media/CACHE/js/fef441dc0d83.js:169 static-media/js/mapping.js:1172
+msgid ""
+"You cannot select any more features.\n"
+"\n"
+"Consider assigning your current selection to a district first."
+msgstr ""
+"これ以上機能を選択できません。\n"
+"\n"
+"現在選択している機能を先に選挙区に割り当ててください。"
+
+#: static-media/CACHE/js/01ec5c663726.js:177
+#: static-media/CACHE/js/0813507fca4e.js:177
+#: static-media/CACHE/js/3eeee3706ebf.js:178
+#: static-media/CACHE/js/4bd62bdb2da4.js:177
+#: static-media/CACHE/js/6b79d088a188.js:177
+#: static-media/CACHE/js/8347635feab9.js:178
+#: static-media/CACHE/js/9e2f3acda32a.js:177
+#: static-media/CACHE/js/a7eed9cbce79.js:178
+#: static-media/CACHE/js/ab622b78184c.js:178
+#: static-media/CACHE/js/af1972b73435.js:177
+#: static-media/CACHE/js/b4775468438b.js:177
+#: static-media/CACHE/js/c02f606639b0.js:177
+#: static-media/CACHE/js/db7c2b1caabb.js:177
+#: static-media/CACHE/js/f9a5a40a526d.js:177
+#: static-media/CACHE/js/fb93b2a750fd.js:178
+#: static-media/CACHE/js/fef441dc0d83.js:177 static-media/js/mapping.js:1324
+msgid "Unable to combine districts: "
+msgstr "選挙区を統合できません: "
+
+#: static-media/CACHE/js/01ec5c663726.js:178
+#: static-media/CACHE/js/01ec5c663726.js:324
+#: static-media/CACHE/js/01ec5c663726.js:328
+#: static-media/CACHE/js/01ec5c663726.js:336
+#: static-media/CACHE/js/0813507fca4e.js:178
+#: static-media/CACHE/js/0813507fca4e.js:325
+#: static-media/CACHE/js/0813507fca4e.js:329
+#: static-media/CACHE/js/0813507fca4e.js:338
+#: static-media/CACHE/js/3eeee3706ebf.js:179
+#: static-media/CACHE/js/3eeee3706ebf.js:325
+#: static-media/CACHE/js/3eeee3706ebf.js:329
+#: static-media/CACHE/js/3eeee3706ebf.js:338
+#: static-media/CACHE/js/4bd62bdb2da4.js:178
+#: static-media/CACHE/js/4bd62bdb2da4.js:324
+#: static-media/CACHE/js/4bd62bdb2da4.js:328
+#: static-media/CACHE/js/4bd62bdb2da4.js:336
+#: static-media/CACHE/js/6b79d088a188.js:178
+#: static-media/CACHE/js/6b79d088a188.js:324
+#: static-media/CACHE/js/6b79d088a188.js:328
+#: static-media/CACHE/js/6b79d088a188.js:336
+#: static-media/CACHE/js/8347635feab9.js:179
+#: static-media/CACHE/js/8347635feab9.js:325
+#: static-media/CACHE/js/8347635feab9.js:329
+#: static-media/CACHE/js/8347635feab9.js:338
+#: static-media/CACHE/js/9e2f3acda32a.js:178
+#: static-media/CACHE/js/9e2f3acda32a.js:324
+#: static-media/CACHE/js/9e2f3acda32a.js:328
+#: static-media/CACHE/js/9e2f3acda32a.js:336
+#: static-media/CACHE/js/a7eed9cbce79.js:179
+#: static-media/CACHE/js/a7eed9cbce79.js:325
+#: static-media/CACHE/js/a7eed9cbce79.js:329
+#: static-media/CACHE/js/a7eed9cbce79.js:338
+#: static-media/CACHE/js/ab622b78184c.js:179
+#: static-media/CACHE/js/ab622b78184c.js:325
+#: static-media/CACHE/js/ab622b78184c.js:329
+#: static-media/CACHE/js/ab622b78184c.js:338
+#: static-media/CACHE/js/af1972b73435.js:178
+#: static-media/CACHE/js/af1972b73435.js:324
+#: static-media/CACHE/js/af1972b73435.js:328
+#: static-media/CACHE/js/af1972b73435.js:336
+#: static-media/CACHE/js/b4775468438b.js:178
+#: static-media/CACHE/js/b4775468438b.js:324
+#: static-media/CACHE/js/b4775468438b.js:328
+#: static-media/CACHE/js/b4775468438b.js:336
+#: static-media/CACHE/js/c02f606639b0.js:178
+#: static-media/CACHE/js/c02f606639b0.js:324
+#: static-media/CACHE/js/c02f606639b0.js:328
+#: static-media/CACHE/js/c02f606639b0.js:336
+#: static-media/CACHE/js/db7c2b1caabb.js:178
+#: static-media/CACHE/js/db7c2b1caabb.js:324
+#: static-media/CACHE/js/db7c2b1caabb.js:328
+#: static-media/CACHE/js/db7c2b1caabb.js:336
+#: static-media/CACHE/js/f9a5a40a526d.js:178
+#: static-media/CACHE/js/f9a5a40a526d.js:324
+#: static-media/CACHE/js/f9a5a40a526d.js:328
+#: static-media/CACHE/js/f9a5a40a526d.js:336
+#: static-media/CACHE/js/fb93b2a750fd.js:179
+#: static-media/CACHE/js/fb93b2a750fd.js:325
+#: static-media/CACHE/js/fb93b2a750fd.js:329
+#: static-media/CACHE/js/fb93b2a750fd.js:338
+#: static-media/CACHE/js/fef441dc0d83.js:178
+#: static-media/CACHE/js/fef441dc0d83.js:324
+#: static-media/CACHE/js/fef441dc0d83.js:328
+#: static-media/CACHE/js/fef441dc0d83.js:336 static-media/js/chooseplan.js:421
+#: static-media/js/chooseplan.js.c:487 static-media/js/chooseplan.js:663
+#: static-media/js/mapping.js:1334
+msgid "No"
+msgstr "いいえ"
+
+#: static-media/CACHE/js/01ec5c663726.js:178
+#: static-media/CACHE/js/0813507fca4e.js:178
+#: static-media/CACHE/js/3eeee3706ebf.js:179
+#: static-media/CACHE/js/4bd62bdb2da4.js:178
+#: static-media/CACHE/js/6b79d088a188.js:178
+#: static-media/CACHE/js/8347635feab9.js:179
+#: static-media/CACHE/js/9e2f3acda32a.js:178
+#: static-media/CACHE/js/a7eed9cbce79.js:179
+#: static-media/CACHE/js/ab622b78184c.js:179
+#: static-media/CACHE/js/af1972b73435.js:178
+#: static-media/CACHE/js/b4775468438b.js:178
+#: static-media/CACHE/js/c02f606639b0.js:178
+#: static-media/CACHE/js/db7c2b1caabb.js:178
+#: static-media/CACHE/js/f9a5a40a526d.js:178
+#: static-media/CACHE/js/fb93b2a750fd.js:179
+#: static-media/CACHE/js/fef441dc0d83.js:178 static-media/js/mapping.js:1338
+msgid "Would you like to unassign the geography in "
+msgstr "〜の中の地域の割り当てを外しますか"
+
+#: static-media/CACHE/js/01ec5c663726.js:186
+#: static-media/CACHE/js/0813507fca4e.js:186
+#: static-media/CACHE/js/3eeee3706ebf.js:187
+#: static-media/CACHE/js/4bd62bdb2da4.js:186
+#: static-media/CACHE/js/6b79d088a188.js:186
+#: static-media/CACHE/js/8347635feab9.js:187
+#: static-media/CACHE/js/9e2f3acda32a.js:186
+#: static-media/CACHE/js/a7eed9cbce79.js:187
+#: static-media/CACHE/js/ab622b78184c.js:187
+#: static-media/CACHE/js/af1972b73435.js:186
+#: static-media/CACHE/js/b4775468438b.js:186
+#: static-media/CACHE/js/c02f606639b0.js:186
+#: static-media/CACHE/js/db7c2b1caabb.js:186
+#: static-media/CACHE/js/f9a5a40a526d.js:186
+#: static-media/CACHE/js/fb93b2a750fd.js:187
+#: static-media/CACHE/js/fef441dc0d83.js:186 static-media/js/mapping.js:1421
+msgid "Sorry, your information could not be saved. Please try again later."
+msgstr ""
+"申し訳ありません。情報が保存されませんでした。後ほどやり直してください。"
+
+#: static-media/CACHE/js/01ec5c663726.js:226
+#: static-media/CACHE/js/0813507fca4e.js:227
+#: static-media/CACHE/js/3eeee3706ebf.js:227
+#: static-media/CACHE/js/4bd62bdb2da4.js:226
+#: static-media/CACHE/js/6b79d088a188.js:226
+#: static-media/CACHE/js/8347635feab9.js:227
+#: static-media/CACHE/js/9e2f3acda32a.js:226
+#: static-media/CACHE/js/a7eed9cbce79.js:227
+#: static-media/CACHE/js/ab622b78184c.js:227
+#: static-media/CACHE/js/af1972b73435.js:226
+#: static-media/CACHE/js/b4775468438b.js:226
+#: static-media/CACHE/js/c02f606639b0.js:226
+#: static-media/CACHE/js/db7c2b1caabb.js:226
+#: static-media/CACHE/js/f9a5a40a526d.js:226
+#: static-media/CACHE/js/fb93b2a750fd.js:227
+#: static-media/CACHE/js/fef441dc0d83.js:226 static-media/js/mapping.js:1954
+msgid "Select One"
+msgstr "単独選択"
+
+#: static-media/CACHE/js/01ec5c663726.js:226
+#: static-media/CACHE/js/0813507fca4e.js:227
+#: static-media/CACHE/js/3eeee3706ebf.js:227
+#: static-media/CACHE/js/4bd62bdb2da4.js:226
+#: static-media/CACHE/js/6b79d088a188.js:226
+#: static-media/CACHE/js/8347635feab9.js:227
+#: static-media/CACHE/js/9e2f3acda32a.js:226
+#: static-media/CACHE/js/a7eed9cbce79.js:227
+#: static-media/CACHE/js/ab622b78184c.js:227
+#: static-media/CACHE/js/af1972b73435.js:226
+#: static-media/CACHE/js/b4775468438b.js:226
+#: static-media/CACHE/js/c02f606639b0.js:226
+#: static-media/CACHE/js/db7c2b1caabb.js:226
+#: static-media/CACHE/js/f9a5a40a526d.js:226
+#: static-media/CACHE/js/fb93b2a750fd.js:227
+#: static-media/CACHE/js/fef441dc0d83.js:226 static-media/js/mapping.js:1955
+#: static-media/js/mapping.js.c:1969
+msgid "Unassigned"
+msgstr "未割り当て"
+
+#: static-media/CACHE/js/01ec5c663726.js:227
+#: static-media/CACHE/js/01ec5c663726.js:288
+#: static-media/CACHE/js/0813507fca4e.js:228
+#: static-media/CACHE/js/0813507fca4e.js:289
+#: static-media/CACHE/js/3eeee3706ebf.js:228
+#: static-media/CACHE/js/3eeee3706ebf.js:289
+#: static-media/CACHE/js/4bd62bdb2da4.js:227
+#: static-media/CACHE/js/4bd62bdb2da4.js:288
+#: static-media/CACHE/js/6b79d088a188.js:227
+#: static-media/CACHE/js/6b79d088a188.js:288
+#: static-media/CACHE/js/8347635feab9.js:228
+#: static-media/CACHE/js/8347635feab9.js:289
+#: static-media/CACHE/js/9e2f3acda32a.js:227
+#: static-media/CACHE/js/9e2f3acda32a.js:288
+#: static-media/CACHE/js/a7eed9cbce79.js:228
+#: static-media/CACHE/js/a7eed9cbce79.js:289
+#: static-media/CACHE/js/ab622b78184c.js:228
+#: static-media/CACHE/js/ab622b78184c.js:289
+#: static-media/CACHE/js/af1972b73435.js:227
+#: static-media/CACHE/js/af1972b73435.js:288
+#: static-media/CACHE/js/b4775468438b.js:227
+#: static-media/CACHE/js/b4775468438b.js:288
+#: static-media/CACHE/js/c02f606639b0.js:227
+#: static-media/CACHE/js/c02f606639b0.js:288
+#: static-media/CACHE/js/db7c2b1caabb.js:227
+#: static-media/CACHE/js/db7c2b1caabb.js:288
+#: static-media/CACHE/js/f9a5a40a526d.js:227
+#: static-media/CACHE/js/f9a5a40a526d.js:288
+#: static-media/CACHE/js/fb93b2a750fd.js:228
+#: static-media/CACHE/js/fb93b2a750fd.js:289
+#: static-media/CACHE/js/fef441dc0d83.js:227
+#: static-media/CACHE/js/fef441dc0d83.js:288 static-media/js/mapping.js:1978
+#: static-media/js/mapping.js.c:2999
+msgid "New "
+msgstr "新しい"
+
+#: static-media/CACHE/js/01ec5c663726.js:252
+#: static-media/CACHE/js/01ec5c663726.js:267
+#: static-media/CACHE/js/0813507fca4e.js:253
+#: static-media/CACHE/js/0813507fca4e.js:268
+#: static-media/CACHE/js/3eeee3706ebf.js:253
+#: static-media/CACHE/js/3eeee3706ebf.js:268
+#: static-media/CACHE/js/4bd62bdb2da4.js:252
+#: static-media/CACHE/js/4bd62bdb2da4.js:267
+#: static-media/CACHE/js/6b79d088a188.js:252
+#: static-media/CACHE/js/6b79d088a188.js:267
+#: static-media/CACHE/js/8347635feab9.js:253
+#: static-media/CACHE/js/8347635feab9.js:268
+#: static-media/CACHE/js/9e2f3acda32a.js:252
+#: static-media/CACHE/js/9e2f3acda32a.js:267
+#: static-media/CACHE/js/a7eed9cbce79.js:253
+#: static-media/CACHE/js/a7eed9cbce79.js:268
+#: static-media/CACHE/js/ab622b78184c.js:253
+#: static-media/CACHE/js/ab622b78184c.js:268
+#: static-media/CACHE/js/af1972b73435.js:252
+#: static-media/CACHE/js/af1972b73435.js:267
+#: static-media/CACHE/js/b4775468438b.js:252
+#: static-media/CACHE/js/b4775468438b.js:267
+#: static-media/CACHE/js/c02f606639b0.js:252
+#: static-media/CACHE/js/c02f606639b0.js:267
+#: static-media/CACHE/js/db7c2b1caabb.js:252
+#: static-media/CACHE/js/db7c2b1caabb.js:267
+#: static-media/CACHE/js/f9a5a40a526d.js:252
+#: static-media/CACHE/js/f9a5a40a526d.js:267
+#: static-media/CACHE/js/fb93b2a750fd.js:253
+#: static-media/CACHE/js/fb93b2a750fd.js:268
+#: static-media/CACHE/js/fef441dc0d83.js:252
+#: static-media/CACHE/js/fef441dc0d83.js:267 static-media/js/mapping.js:2538
+#: static-media/js/mapping.js.c:2724
+msgid "Contiguity"
+msgstr "同一境界内"
+
+#: static-media/CACHE/js/01ec5c663726.js:253
+#: static-media/CACHE/js/01ec5c663726.js:268
+#: static-media/CACHE/js/0813507fca4e.js:254
+#: static-media/CACHE/js/0813507fca4e.js:269
+#: static-media/CACHE/js/3eeee3706ebf.js:254
+#: static-media/CACHE/js/3eeee3706ebf.js:269
+#: static-media/CACHE/js/4bd62bdb2da4.js:253
+#: static-media/CACHE/js/4bd62bdb2da4.js:268
+#: static-media/CACHE/js/6b79d088a188.js:253
+#: static-media/CACHE/js/6b79d088a188.js:268
+#: static-media/CACHE/js/8347635feab9.js:254
+#: static-media/CACHE/js/8347635feab9.js:269
+#: static-media/CACHE/js/9e2f3acda32a.js:253
+#: static-media/CACHE/js/9e2f3acda32a.js:268
+#: static-media/CACHE/js/a7eed9cbce79.js:254
+#: static-media/CACHE/js/a7eed9cbce79.js:269
+#: static-media/CACHE/js/ab622b78184c.js:254
+#: static-media/CACHE/js/ab622b78184c.js:269
+#: static-media/CACHE/js/af1972b73435.js:253
+#: static-media/CACHE/js/af1972b73435.js:268
+#: static-media/CACHE/js/b4775468438b.js:253
+#: static-media/CACHE/js/b4775468438b.js:268
+#: static-media/CACHE/js/c02f606639b0.js:253
+#: static-media/CACHE/js/c02f606639b0.js:268
+#: static-media/CACHE/js/db7c2b1caabb.js:253
+#: static-media/CACHE/js/db7c2b1caabb.js:268
+#: static-media/CACHE/js/f9a5a40a526d.js:253
+#: static-media/CACHE/js/f9a5a40a526d.js:268
+#: static-media/CACHE/js/fb93b2a750fd.js:254
+#: static-media/CACHE/js/fb93b2a750fd.js:269
+#: static-media/CACHE/js/fef441dc0d83.js:253
+#: static-media/CACHE/js/fef441dc0d83.js:268 static-media/js/mapping.js:2542
+#: static-media/js/mapping.js.c:2727
+msgid "Compactness"
+msgstr ""
+
+#: static-media/CACHE/js/01ec5c663726.js:254
+#: static-media/CACHE/js/01ec5c663726.js:269
+#: static-media/CACHE/js/0813507fca4e.js:255
+#: static-media/CACHE/js/0813507fca4e.js:270
+#: static-media/CACHE/js/3eeee3706ebf.js:255
+#: static-media/CACHE/js/3eeee3706ebf.js:270
+#: static-media/CACHE/js/4bd62bdb2da4.js:254
+#: static-media/CACHE/js/4bd62bdb2da4.js:269
+#: static-media/CACHE/js/6b79d088a188.js:254
+#: static-media/CACHE/js/6b79d088a188.js:269
+#: static-media/CACHE/js/8347635feab9.js:255
+#: static-media/CACHE/js/8347635feab9.js:270
+#: static-media/CACHE/js/9e2f3acda32a.js:254
+#: static-media/CACHE/js/9e2f3acda32a.js:269
+#: static-media/CACHE/js/a7eed9cbce79.js:255
+#: static-media/CACHE/js/a7eed9cbce79.js:270
+#: static-media/CACHE/js/ab622b78184c.js:255
+#: static-media/CACHE/js/ab622b78184c.js:270
+#: static-media/CACHE/js/af1972b73435.js:254
+#: static-media/CACHE/js/af1972b73435.js:269
+#: static-media/CACHE/js/b4775468438b.js:254
+#: static-media/CACHE/js/b4775468438b.js:269
+#: static-media/CACHE/js/c02f606639b0.js:254
+#: static-media/CACHE/js/c02f606639b0.js:269
+#: static-media/CACHE/js/db7c2b1caabb.js:254
+#: static-media/CACHE/js/db7c2b1caabb.js:269
+#: static-media/CACHE/js/f9a5a40a526d.js:254
+#: static-media/CACHE/js/f9a5a40a526d.js:269
+#: static-media/CACHE/js/fb93b2a750fd.js:255
+#: static-media/CACHE/js/fb93b2a750fd.js:270
+#: static-media/CACHE/js/fef441dc0d83.js:254
+#: static-media/CACHE/js/fef441dc0d83.js:269 static-media/js/mapping.js:2546
+#: static-media/js/mapping.js.c:2730
+msgid "None"
+msgstr "なし"
+
+#: static-media/CACHE/js/01ec5c663726.js:259
+#: static-media/CACHE/js/0813507fca4e.js:260
+#: static-media/CACHE/js/3eeee3706ebf.js:260
+#: static-media/CACHE/js/4bd62bdb2da4.js:259
+#: static-media/CACHE/js/6b79d088a188.js:259
+#: static-media/CACHE/js/8347635feab9.js:260
+#: static-media/CACHE/js/9e2f3acda32a.js:259
+#: static-media/CACHE/js/a7eed9cbce79.js:260
+#: static-media/CACHE/js/ab622b78184c.js:260
+#: static-media/CACHE/js/af1972b73435.js:259
+#: static-media/CACHE/js/b4775468438b.js:259
+#: static-media/CACHE/js/c02f606639b0.js:259
+#: static-media/CACHE/js/db7c2b1caabb.js:259
+#: static-media/CACHE/js/f9a5a40a526d.js:259
+#: static-media/CACHE/js/fb93b2a750fd.js:260
+#: static-media/CACHE/js/fef441dc0d83.js:259 static-media/js/mapping.js:2618
+msgid "Boundary"
+msgstr "境界"
+
+#: static-media/CACHE/js/01ec5c663726.js:260
+#: static-media/CACHE/js/0813507fca4e.js:261
+#: static-media/CACHE/js/3eeee3706ebf.js:261
+#: static-media/CACHE/js/4bd62bdb2da4.js:260
+#: static-media/CACHE/js/6b79d088a188.js:260
+#: static-media/CACHE/js/8347635feab9.js:261
+#: static-media/CACHE/js/9e2f3acda32a.js:260
+#: static-media/CACHE/js/a7eed9cbce79.js:261
+#: static-media/CACHE/js/ab622b78184c.js:261
+#: static-media/CACHE/js/af1972b73435.js:260
+#: static-media/CACHE/js/b4775468438b.js:260
+#: static-media/CACHE/js/c02f606639b0.js:260
+#: static-media/CACHE/js/db7c2b1caabb.js:260
+#: static-media/CACHE/js/f9a5a40a526d.js:260
+#: static-media/CACHE/js/fb93b2a750fd.js:261
+#: static-media/CACHE/js/fef441dc0d83.js:260 static-media/js/mapping.js:2624
+msgid "Noncontiguous"
+msgstr "同一境界外"
+
+#: static-media/CACHE/js/01ec5c663726.js:260
+#: static-media/CACHE/js/0813507fca4e.js:261
+#: static-media/CACHE/js/3eeee3706ebf.js:261
+#: static-media/CACHE/js/4bd62bdb2da4.js:260
+#: static-media/CACHE/js/6b79d088a188.js:260
+#: static-media/CACHE/js/8347635feab9.js:261
+#: static-media/CACHE/js/9e2f3acda32a.js:260
+#: static-media/CACHE/js/a7eed9cbce79.js:261
+#: static-media/CACHE/js/ab622b78184c.js:261
+#: static-media/CACHE/js/af1972b73435.js:260
+#: static-media/CACHE/js/b4775468438b.js:260
+#: static-media/CACHE/js/c02f606639b0.js:260
+#: static-media/CACHE/js/db7c2b1caabb.js:260
+#: static-media/CACHE/js/f9a5a40a526d.js:260
+#: static-media/CACHE/js/fb93b2a750fd.js:261
+#: static-media/CACHE/js/fef441dc0d83.js:260 static-media/js/mapping.js:2626
+msgid "Contiguous"
+msgstr "同一境界内"
+
+#: static-media/CACHE/js/01ec5c663726.js:261
+#: static-media/CACHE/js/0813507fca4e.js:262
+#: static-media/CACHE/js/3eeee3706ebf.js:262
+#: static-media/CACHE/js/4bd62bdb2da4.js:261
+#: static-media/CACHE/js/6b79d088a188.js:261
+#: static-media/CACHE/js/8347635feab9.js:262
+#: static-media/CACHE/js/9e2f3acda32a.js:261
+#: static-media/CACHE/js/a7eed9cbce79.js:262
+#: static-media/CACHE/js/ab622b78184c.js:262
+#: static-media/CACHE/js/af1972b73435.js:261
+#: static-media/CACHE/js/b4775468438b.js:261
+#: static-media/CACHE/js/c02f606639b0.js:261
+#: static-media/CACHE/js/db7c2b1caabb.js:261
+#: static-media/CACHE/js/f9a5a40a526d.js:261
+#: static-media/CACHE/js/fb93b2a750fd.js:262
+#: static-media/CACHE/js/fef441dc0d83.js:261 static-media/js/mapping.js:2632
+msgid "Very Compact"
+msgstr ""
+
+#: static-media/CACHE/js/01ec5c663726.js:261
+#: static-media/CACHE/js/0813507fca4e.js:262
+#: static-media/CACHE/js/3eeee3706ebf.js:262
+#: static-media/CACHE/js/4bd62bdb2da4.js:261
+#: static-media/CACHE/js/6b79d088a188.js:261
+#: static-media/CACHE/js/8347635feab9.js:262
+#: static-media/CACHE/js/9e2f3acda32a.js:261
+#: static-media/CACHE/js/a7eed9cbce79.js:262
+#: static-media/CACHE/js/ab622b78184c.js:262
+#: static-media/CACHE/js/af1972b73435.js:261
+#: static-media/CACHE/js/b4775468438b.js:261
+#: static-media/CACHE/js/c02f606639b0.js:261
+#: static-media/CACHE/js/db7c2b1caabb.js:261
+#: static-media/CACHE/js/f9a5a40a526d.js:261
+#: static-media/CACHE/js/fb93b2a750fd.js:262
+#: static-media/CACHE/js/fef441dc0d83.js:261 static-media/js/mapping.js:2634
+msgid "Average"
+msgstr "平均的"
+
+#: static-media/CACHE/js/01ec5c663726.js:261
+#: static-media/CACHE/js/0813507fca4e.js:262
+#: static-media/CACHE/js/3eeee3706ebf.js:262
+#: static-media/CACHE/js/4bd62bdb2da4.js:261
+#: static-media/CACHE/js/6b79d088a188.js:261
+#: static-media/CACHE/js/8347635feab9.js:262
+#: static-media/CACHE/js/9e2f3acda32a.js:261
+#: static-media/CACHE/js/a7eed9cbce79.js:262
+#: static-media/CACHE/js/ab622b78184c.js:262
+#: static-media/CACHE/js/af1972b73435.js:261
+#: static-media/CACHE/js/b4775468438b.js:261
+#: static-media/CACHE/js/c02f606639b0.js:261
+#: static-media/CACHE/js/db7c2b1caabb.js:261
+#: static-media/CACHE/js/f9a5a40a526d.js:261
+#: static-media/CACHE/js/fb93b2a750fd.js:262
+#: static-media/CACHE/js/fef441dc0d83.js:261 static-media/js/mapping.js:2636
+msgid "Hardly Compact"
+msgstr ""
+
+#: static-media/CACHE/js/01ec5c663726.js:262
+#: static-media/CACHE/js/0813507fca4e.js:263
+#: static-media/CACHE/js/3eeee3706ebf.js:263
+#: static-media/CACHE/js/4bd62bdb2da4.js:262
+#: static-media/CACHE/js/6b79d088a188.js:262
+#: static-media/CACHE/js/8347635feab9.js:263
+#: static-media/CACHE/js/9e2f3acda32a.js:262
+#: static-media/CACHE/js/a7eed9cbce79.js:263
+#: static-media/CACHE/js/ab622b78184c.js:263
+#: static-media/CACHE/js/af1972b73435.js:262
+#: static-media/CACHE/js/b4775468438b.js:262
+#: static-media/CACHE/js/c02f606639b0.js:262
+#: static-media/CACHE/js/db7c2b1caabb.js:262
+#: static-media/CACHE/js/f9a5a40a526d.js:262
+#: static-media/CACHE/js/fb93b2a750fd.js:263
+#: static-media/CACHE/js/fef441dc0d83.js:262 static-media/js/mapping.js:2642
+msgid "Far Over Target"
+msgstr "目標数をはるかに超過"
+
+#: static-media/CACHE/js/01ec5c663726.js:262
+#: static-media/CACHE/js/0813507fca4e.js:263
+#: static-media/CACHE/js/3eeee3706ebf.js:263
+#: static-media/CACHE/js/4bd62bdb2da4.js:262
+#: static-media/CACHE/js/6b79d088a188.js:262
+#: static-media/CACHE/js/8347635feab9.js:263
+#: static-media/CACHE/js/9e2f3acda32a.js:262
+#: static-media/CACHE/js/a7eed9cbce79.js:263
+#: static-media/CACHE/js/ab622b78184c.js:263
+#: static-media/CACHE/js/af1972b73435.js:262
+#: static-media/CACHE/js/b4775468438b.js:262
+#: static-media/CACHE/js/c02f606639b0.js:262
+#: static-media/CACHE/js/db7c2b1caabb.js:262
+#: static-media/CACHE/js/f9a5a40a526d.js:262
+#: static-media/CACHE/js/fb93b2a750fd.js:263
+#: static-media/CACHE/js/fef441dc0d83.js:262 static-media/js/mapping.js:2644
+msgid "Over Target"
+msgstr "目標数超過"
+
+#: static-media/CACHE/js/01ec5c663726.js:262
+#: static-media/CACHE/js/0813507fca4e.js:263
+#: static-media/CACHE/js/3eeee3706ebf.js:263
+#: static-media/CACHE/js/4bd62bdb2da4.js:262
+#: static-media/CACHE/js/6b79d088a188.js:262
+#: static-media/CACHE/js/8347635feab9.js:263
+#: static-media/CACHE/js/9e2f3acda32a.js:262
+#: static-media/CACHE/js/a7eed9cbce79.js:263
+#: static-media/CACHE/js/ab622b78184c.js:263
+#: static-media/CACHE/js/af1972b73435.js:262
+#: static-media/CACHE/js/b4775468438b.js:262
+#: static-media/CACHE/js/c02f606639b0.js:262
+#: static-media/CACHE/js/db7c2b1caabb.js:262
+#: static-media/CACHE/js/f9a5a40a526d.js:262
+#: static-media/CACHE/js/fb93b2a750fd.js:263
+#: static-media/CACHE/js/fef441dc0d83.js:262 static-media/js/mapping.js:2646
+msgid "Within Target"
+msgstr "目標数範囲内"
+
+#: static-media/CACHE/js/01ec5c663726.js:262
+#: static-media/CACHE/js/0813507fca4e.js:263
+#: static-media/CACHE/js/3eeee3706ebf.js:263
+#: static-media/CACHE/js/4bd62bdb2da4.js:262
+#: static-media/CACHE/js/6b79d088a188.js:262
+#: static-media/CACHE/js/8347635feab9.js:263
+#: static-media/CACHE/js/9e2f3acda32a.js:262
+#: static-media/CACHE/js/a7eed9cbce79.js:263
+#: static-media/CACHE/js/ab622b78184c.js:263
+#: static-media/CACHE/js/af1972b73435.js:262
+#: static-media/CACHE/js/b4775468438b.js:262
+#: static-media/CACHE/js/c02f606639b0.js:262
+#: static-media/CACHE/js/db7c2b1caabb.js:262
+#: static-media/CACHE/js/f9a5a40a526d.js:262
+#: static-media/CACHE/js/fb93b2a750fd.js:263
+#: static-media/CACHE/js/fef441dc0d83.js:262 static-media/js/mapping.js:2648
+msgid "Under Target"
+msgstr "目標数に不足"
+
+#: static-media/CACHE/js/01ec5c663726.js:262
+#: static-media/CACHE/js/0813507fca4e.js:263
+#: static-media/CACHE/js/3eeee3706ebf.js:263
+#: static-media/CACHE/js/4bd62bdb2da4.js:262
+#: static-media/CACHE/js/6b79d088a188.js:262
+#: static-media/CACHE/js/8347635feab9.js:263
+#: static-media/CACHE/js/9e2f3acda32a.js:262
+#: static-media/CACHE/js/a7eed9cbce79.js:263
+#: static-media/CACHE/js/ab622b78184c.js:263
+#: static-media/CACHE/js/af1972b73435.js:262
+#: static-media/CACHE/js/b4775468438b.js:262
+#: static-media/CACHE/js/c02f606639b0.js:262
+#: static-media/CACHE/js/db7c2b1caabb.js:262
+#: static-media/CACHE/js/f9a5a40a526d.js:262
+#: static-media/CACHE/js/fb93b2a750fd.js:263
+#: static-media/CACHE/js/fef441dc0d83.js:262 static-media/js/mapping.js:2650
+msgid "Far Under Target"
+msgstr "目標数にかなり不足"
+
+#: static-media/CACHE/js/01ec5c663726.js:288
+#: static-media/CACHE/js/0813507fca4e.js:289
+#: static-media/CACHE/js/3eeee3706ebf.js:289
+#: static-media/CACHE/js/4bd62bdb2da4.js:288
+#: static-media/CACHE/js/6b79d088a188.js:288
+#: static-media/CACHE/js/8347635feab9.js:289
+#: static-media/CACHE/js/9e2f3acda32a.js:288
+#: static-media/CACHE/js/a7eed9cbce79.js:289
+#: static-media/CACHE/js/ab622b78184c.js:289
+#: static-media/CACHE/js/af1972b73435.js:288
+#: static-media/CACHE/js/b4775468438b.js:288
+#: static-media/CACHE/js/c02f606639b0.js:288
+#: static-media/CACHE/js/db7c2b1caabb.js:288
+#: static-media/CACHE/js/f9a5a40a526d.js:288
+#: static-media/CACHE/js/fb93b2a750fd.js:289
+#: static-media/CACHE/js/fef441dc0d83.js:288 static-media/js/mapping.js:2976
+msgid "Please select a name for the %(bml)s"
+msgstr "%(bml)sに名前をつけてください"
+
+#: static-media/CACHE/js/01ec5c663726.js:288
+#: static-media/CACHE/js/0813507fca4e.js:289
+#: static-media/CACHE/js/3eeee3706ebf.js:289
+#: static-media/CACHE/js/4bd62bdb2da4.js:288
+#: static-media/CACHE/js/6b79d088a188.js:288
+#: static-media/CACHE/js/8347635feab9.js:289
+#: static-media/CACHE/js/9e2f3acda32a.js:288
+#: static-media/CACHE/js/a7eed9cbce79.js:289
+#: static-media/CACHE/js/ab622b78184c.js:289
+#: static-media/CACHE/js/af1972b73435.js:288
+#: static-media/CACHE/js/b4775468438b.js:288
+#: static-media/CACHE/js/c02f606639b0.js:288
+#: static-media/CACHE/js/db7c2b1caabb.js:288
+#: static-media/CACHE/js/f9a5a40a526d.js:288
+#: static-media/CACHE/js/fb93b2a750fd.js:289
+#: static-media/CACHE/js/fef441dc0d83.js:288 static-media/js/mapping.js:2989
+msgid "Cancel"
+msgstr "キャンセル"
+
+#: static-media/CACHE/js/01ec5c663726.js:289
+#: static-media/CACHE/js/0813507fca4e.js:290
+#: static-media/CACHE/js/3eeee3706ebf.js:290
+#: static-media/CACHE/js/4bd62bdb2da4.js:289
+#: static-media/CACHE/js/6b79d088a188.js:289
+#: static-media/CACHE/js/8347635feab9.js:290
+#: static-media/CACHE/js/9e2f3acda32a.js:289
+#: static-media/CACHE/js/a7eed9cbce79.js:290
+#: static-media/CACHE/js/ab622b78184c.js:290
+#: static-media/CACHE/js/af1972b73435.js:289
+#: static-media/CACHE/js/b4775468438b.js:289
+#: static-media/CACHE/js/c02f606639b0.js:289
+#: static-media/CACHE/js/db7c2b1caabb.js:289
+#: static-media/CACHE/js/f9a5a40a526d.js:289
+#: static-media/CACHE/js/fb93b2a750fd.js:290
+#: static-media/CACHE/js/fef441dc0d83.js:289 static-media/js/mapping.js:3006
+msgid "Community Label"
+msgstr "コミュニティ名"
+
+#: static-media/CACHE/js/01ec5c663726.js:289
+#: static-media/CACHE/js/0813507fca4e.js:290
+#: static-media/CACHE/js/3eeee3706ebf.js:290
+#: static-media/CACHE/js/4bd62bdb2da4.js:289
+#: static-media/CACHE/js/6b79d088a188.js:289
+#: static-media/CACHE/js/8347635feab9.js:290
+#: static-media/CACHE/js/9e2f3acda32a.js:289
+#: static-media/CACHE/js/a7eed9cbce79.js:290
+#: static-media/CACHE/js/ab622b78184c.js:290
+#: static-media/CACHE/js/af1972b73435.js:289
+#: static-media/CACHE/js/b4775468438b.js:289
+#: static-media/CACHE/js/c02f606639b0.js:289
+#: static-media/CACHE/js/db7c2b1caabb.js:289
+#: static-media/CACHE/js/f9a5a40a526d.js:289
+#: static-media/CACHE/js/fb93b2a750fd.js:290
+#: static-media/CACHE/js/fef441dc0d83.js:289 static-media/js/mapping.js:3007
+msgid "Community Type"
+msgstr "コミュニティタイプ"
+
+#: static-media/CACHE/js/01ec5c663726.js:299
+#: static-media/CACHE/js/0813507fca4e.js:300
+#: static-media/CACHE/js/3eeee3706ebf.js:300
+#: static-media/CACHE/js/4bd62bdb2da4.js:299
+#: static-media/CACHE/js/6b79d088a188.js:299
+#: static-media/CACHE/js/8347635feab9.js:300
+#: static-media/CACHE/js/9e2f3acda32a.js:299
+#: static-media/CACHE/js/a7eed9cbce79.js:300
+#: static-media/CACHE/js/ab622b78184c.js:300
+#: static-media/CACHE/js/af1972b73435.js:299
+#: static-media/CACHE/js/b4775468438b.js:299
+#: static-media/CACHE/js/c02f606639b0.js:299
+#: static-media/CACHE/js/db7c2b1caabb.js:299
+#: static-media/CACHE/js/f9a5a40a526d.js:299
+#: static-media/CACHE/js/fb93b2a750fd.js:300
+#: static-media/CACHE/js/fef441dc0d83.js:299
+#: static-media/js/districtfile.js:120
+msgid "Download"
+msgstr "ダウンロード"
+
+#: static-media/CACHE/js/01ec5c663726.js:299
+#: static-media/CACHE/js/0813507fca4e.js:300
+#: static-media/CACHE/js/3eeee3706ebf.js:300
+#: static-media/CACHE/js/4bd62bdb2da4.js:299
+#: static-media/CACHE/js/6b79d088a188.js:299
+#: static-media/CACHE/js/8347635feab9.js:300
+#: static-media/CACHE/js/9e2f3acda32a.js:299
+#: static-media/CACHE/js/a7eed9cbce79.js:300
+#: static-media/CACHE/js/ab622b78184c.js:300
+#: static-media/CACHE/js/af1972b73435.js:299
+#: static-media/CACHE/js/b4775468438b.js:299
+#: static-media/CACHE/js/c02f606639b0.js:299
+#: static-media/CACHE/js/db7c2b1caabb.js:299
+#: static-media/CACHE/js/f9a5a40a526d.js:299
+#: static-media/CACHE/js/fb93b2a750fd.js:300
+#: static-media/CACHE/js/fef441dc0d83.js:299
+#: static-media/js/districtfile.js:133
+msgid "Request File"
+msgstr "ファイルのリクエスト"
+
+#: static-media/CACHE/js/01ec5c663726.js:300
+#: static-media/CACHE/js/0813507fca4e.js:301
+#: static-media/CACHE/js/3eeee3706ebf.js:301
+#: static-media/CACHE/js/4bd62bdb2da4.js:300
+#: static-media/CACHE/js/6b79d088a188.js:300
+#: static-media/CACHE/js/8347635feab9.js:301
+#: static-media/CACHE/js/9e2f3acda32a.js:300
+#: static-media/CACHE/js/a7eed9cbce79.js:301
+#: static-media/CACHE/js/ab622b78184c.js:301
+#: static-media/CACHE/js/af1972b73435.js:300
+#: static-media/CACHE/js/b4775468438b.js:300
+#: static-media/CACHE/js/c02f606639b0.js:300
+#: static-media/CACHE/js/db7c2b1caabb.js:300
+#: static-media/CACHE/js/f9a5a40a526d.js:300
+#: static-media/CACHE/js/fb93b2a750fd.js:301
+#: static-media/CACHE/js/fef441dc0d83.js:300
+#: static-media/js/districtfile.js:162
+msgid "Please wait. File is being created on the server"
+msgstr "サーバ上にファイルを作成中です。お待ちください。"
+
+#: static-media/CACHE/js/01ec5c663726.js:302
+#: static-media/CACHE/js/01ec5c663726.js:318
+#: static-media/CACHE/js/0813507fca4e.js:303
+#: static-media/CACHE/js/0813507fca4e.js:319
+#: static-media/CACHE/js/3eeee3706ebf.js:303
+#: static-media/CACHE/js/3eeee3706ebf.js:319
+#: static-media/CACHE/js/4bd62bdb2da4.js:302
+#: static-media/CACHE/js/4bd62bdb2da4.js:318
+#: static-media/CACHE/js/6b79d088a188.js:302
+#: static-media/CACHE/js/6b79d088a188.js:318
+#: static-media/CACHE/js/8347635feab9.js:303
+#: static-media/CACHE/js/8347635feab9.js:319
+#: static-media/CACHE/js/9e2f3acda32a.js:302
+#: static-media/CACHE/js/9e2f3acda32a.js:318
+#: static-media/CACHE/js/a7eed9cbce79.js:303
+#: static-media/CACHE/js/a7eed9cbce79.js:319
+#: static-media/CACHE/js/ab622b78184c.js:303
+#: static-media/CACHE/js/ab622b78184c.js:319
+#: static-media/CACHE/js/af1972b73435.js:302
+#: static-media/CACHE/js/af1972b73435.js:318
+#: static-media/CACHE/js/b4775468438b.js:302
+#: static-media/CACHE/js/b4775468438b.js:318
+#: static-media/CACHE/js/c02f606639b0.js:302
+#: static-media/CACHE/js/c02f606639b0.js:318
+#: static-media/CACHE/js/db7c2b1caabb.js:302
+#: static-media/CACHE/js/db7c2b1caabb.js:318
+#: static-media/CACHE/js/f9a5a40a526d.js:302
+#: static-media/CACHE/js/f9a5a40a526d.js:318
+#: static-media/CACHE/js/fb93b2a750fd.js:303
+#: static-media/CACHE/js/fb93b2a750fd.js:319
+#: static-media/CACHE/js/fef441dc0d83.js:302
+#: static-media/CACHE/js/fef441dc0d83.js:318 static-media/js/chooseplan.js:75
+#: static-media/js/chooseplan.js.c:245
+msgid "View Plan"
+msgstr "計画案を見る"
+
+#: static-media/CACHE/js/01ec5c663726.js:302
+#: static-media/CACHE/js/01ec5c663726.js:318
+#: static-media/CACHE/js/01ec5c663726.js:342
+#: static-media/CACHE/js/0813507fca4e.js:303
+#: static-media/CACHE/js/0813507fca4e.js:319
+#: static-media/CACHE/js/0813507fca4e.js:344
+#: static-media/CACHE/js/3eeee3706ebf.js:303
+#: static-media/CACHE/js/3eeee3706ebf.js:319
+#: static-media/CACHE/js/3eeee3706ebf.js:344
+#: static-media/CACHE/js/4bd62bdb2da4.js:302
+#: static-media/CACHE/js/4bd62bdb2da4.js:318
+#: static-media/CACHE/js/4bd62bdb2da4.js:342
+#: static-media/CACHE/js/6b79d088a188.js:302
+#: static-media/CACHE/js/6b79d088a188.js:318
+#: static-media/CACHE/js/6b79d088a188.js:342
+#: static-media/CACHE/js/8347635feab9.js:303
+#: static-media/CACHE/js/8347635feab9.js:319
+#: static-media/CACHE/js/8347635feab9.js:344
+#: static-media/CACHE/js/9e2f3acda32a.js:302
+#: static-media/CACHE/js/9e2f3acda32a.js:318
+#: static-media/CACHE/js/9e2f3acda32a.js:342
+#: static-media/CACHE/js/a7eed9cbce79.js:303
+#: static-media/CACHE/js/a7eed9cbce79.js:319
+#: static-media/CACHE/js/a7eed9cbce79.js:344
+#: static-media/CACHE/js/ab622b78184c.js:303
+#: static-media/CACHE/js/ab622b78184c.js:319
+#: static-media/CACHE/js/ab622b78184c.js:344
+#: static-media/CACHE/js/af1972b73435.js:302
+#: static-media/CACHE/js/af1972b73435.js:318
+#: static-media/CACHE/js/af1972b73435.js:342
+#: static-media/CACHE/js/b4775468438b.js:302
+#: static-media/CACHE/js/b4775468438b.js:318
+#: static-media/CACHE/js/b4775468438b.js:342
+#: static-media/CACHE/js/c02f606639b0.js:302
+#: static-media/CACHE/js/c02f606639b0.js:318
+#: static-media/CACHE/js/c02f606639b0.js:342
+#: static-media/CACHE/js/db7c2b1caabb.js:302
+#: static-media/CACHE/js/db7c2b1caabb.js:318
+#: static-media/CACHE/js/db7c2b1caabb.js:342
+#: static-media/CACHE/js/f9a5a40a526d.js:302
+#: static-media/CACHE/js/f9a5a40a526d.js:318
+#: static-media/CACHE/js/f9a5a40a526d.js:342
+#: static-media/CACHE/js/fb93b2a750fd.js:303
+#: static-media/CACHE/js/fb93b2a750fd.js:319
+#: static-media/CACHE/js/fb93b2a750fd.js:344
+#: static-media/CACHE/js/fef441dc0d83.js:302
+#: static-media/CACHE/js/fef441dc0d83.js:318
+#: static-media/CACHE/js/fef441dc0d83.js:342 static-media/js/chooseplan.js:75
+#: static-media/js/chooseplan.js.c:245 static-media/js/reaggregator.js:47
+msgid "Start Drawing"
+msgstr "境界線を描く"
+
+#: static-media/CACHE/js/01ec5c663726.js:302
+#: static-media/CACHE/js/0813507fca4e.js:303
+#: static-media/CACHE/js/3eeee3706ebf.js:303
+#: static-media/CACHE/js/4bd62bdb2da4.js:302
+#: static-media/CACHE/js/6b79d088a188.js:302
+#: static-media/CACHE/js/8347635feab9.js:303
+#: static-media/CACHE/js/9e2f3acda32a.js:302
+#: static-media/CACHE/js/a7eed9cbce79.js:303
+#: static-media/CACHE/js/ab622b78184c.js:303
+#: static-media/CACHE/js/af1972b73435.js:302
+#: static-media/CACHE/js/b4775468438b.js:302
+#: static-media/CACHE/js/c02f606639b0.js:302
+#: static-media/CACHE/js/db7c2b1caabb.js:302
+#: static-media/CACHE/js/f9a5a40a526d.js:302
+#: static-media/CACHE/js/fb93b2a750fd.js:303
+#: static-media/CACHE/js/fef441dc0d83.js:302 static-media/js/chooseplan.js:88
+msgid ""
+"Thanks! Your file has been uploaded, and your plan is being constructed. "
+"When your plan is completely constructed, you will receive an email from us."
+msgstr ""
+"ファイルがアップロードされました。計画案を作成しています。作成が完成次第、e"
+"メールにでお知らせします。"
+
+#: static-media/CACHE/js/01ec5c663726.js:302
+#: static-media/CACHE/js/0813507fca4e.js:303
+#: static-media/CACHE/js/3eeee3706ebf.js:303
+#: static-media/CACHE/js/4bd62bdb2da4.js:302
+#: static-media/CACHE/js/6b79d088a188.js:302
+#: static-media/CACHE/js/8347635feab9.js:303
+#: static-media/CACHE/js/9e2f3acda32a.js:302
+#: static-media/CACHE/js/a7eed9cbce79.js:303
+#: static-media/CACHE/js/ab622b78184c.js:303
+#: static-media/CACHE/js/af1972b73435.js:302
+#: static-media/CACHE/js/b4775468438b.js:302
+#: static-media/CACHE/js/c02f606639b0.js:302
+#: static-media/CACHE/js/db7c2b1caabb.js:302
+#: static-media/CACHE/js/f9a5a40a526d.js:302
+#: static-media/CACHE/js/fb93b2a750fd.js:303
+#: static-media/CACHE/js/fef441dc0d83.js:302 static-media/js/chooseplan.js:88
+msgid ""
+"We're sorry! Your file was transferred to us, but there was a problem "
+"converting it into a plan. Make sure the file is a zipped block equivalency "
+"file, and please try again."
+msgstr ""
+"申し訳ございません。ファイルはこちらに転送されましたが、計画案に変換する間に"
+"エラーが発生しました。ファイルが圧縮block equivalencyファイルであることを確認"
+"して、再度やり直してください。"
+
+#: static-media/CACHE/js/01ec5c663726.js:302
+#: static-media/CACHE/js/0813507fca4e.js:303
+#: static-media/CACHE/js/3eeee3706ebf.js:303
+#: static-media/CACHE/js/4bd62bdb2da4.js:302
+#: static-media/CACHE/js/6b79d088a188.js:302
+#: static-media/CACHE/js/8347635feab9.js:303
+#: static-media/CACHE/js/9e2f3acda32a.js:302
+#: static-media/CACHE/js/a7eed9cbce79.js:303
+#: static-media/CACHE/js/ab622b78184c.js:303
+#: static-media/CACHE/js/af1972b73435.js:302
+#: static-media/CACHE/js/b4775468438b.js:302
+#: static-media/CACHE/js/c02f606639b0.js:302
+#: static-media/CACHE/js/db7c2b1caabb.js:302
+#: static-media/CACHE/js/f9a5a40a526d.js:302
+#: static-media/CACHE/js/fb93b2a750fd.js:303
+#: static-media/CACHE/js/fef441dc0d83.js:302 static-media/js/chooseplan.js:89
+msgid "Uploaded"
+msgstr "アップロード完了"
+
+#: static-media/CACHE/js/01ec5c663726.js:304
+#: static-media/CACHE/js/01ec5c663726.js:344
+#: static-media/CACHE/js/0813507fca4e.js:305
+#: static-media/CACHE/js/0813507fca4e.js:346
+#: static-media/CACHE/js/3eeee3706ebf.js:305
+#: static-media/CACHE/js/3eeee3706ebf.js:346
+#: static-media/CACHE/js/4bd62bdb2da4.js:304
+#: static-media/CACHE/js/4bd62bdb2da4.js:344
+#: static-media/CACHE/js/6b79d088a188.js:304
+#: static-media/CACHE/js/6b79d088a188.js:344
+#: static-media/CACHE/js/8347635feab9.js:305
+#: static-media/CACHE/js/8347635feab9.js:346
+#: static-media/CACHE/js/9e2f3acda32a.js:304
+#: static-media/CACHE/js/9e2f3acda32a.js:344
+#: static-media/CACHE/js/a7eed9cbce79.js:305
+#: static-media/CACHE/js/a7eed9cbce79.js:346
+#: static-media/CACHE/js/ab622b78184c.js:305
+#: static-media/CACHE/js/ab622b78184c.js:346
+#: static-media/CACHE/js/af1972b73435.js:304
+#: static-media/CACHE/js/af1972b73435.js:344
+#: static-media/CACHE/js/b4775468438b.js:304
+#: static-media/CACHE/js/b4775468438b.js:344
+#: static-media/CACHE/js/c02f606639b0.js:304
+#: static-media/CACHE/js/c02f606639b0.js:344
+#: static-media/CACHE/js/db7c2b1caabb.js:304
+#: static-media/CACHE/js/db7c2b1caabb.js:344
+#: static-media/CACHE/js/f9a5a40a526d.js:304
+#: static-media/CACHE/js/f9a5a40a526d.js:344
+#: static-media/CACHE/js/fb93b2a750fd.js:305
+#: static-media/CACHE/js/fb93b2a750fd.js:346
+#: static-media/CACHE/js/fef441dc0d83.js:304
+#: static-media/CACHE/js/fef441dc0d83.js:344 static-media/js/chooseplan.js:130
+#: static-media/js/reaggregator.js:131
+msgid "Reaggregate"
+msgstr "再統合"
+
+#: static-media/CACHE/js/01ec5c663726.js:305
+#: static-media/CACHE/js/01ec5c663726.js:307
+#: static-media/CACHE/js/0813507fca4e.js:306
+#: static-media/CACHE/js/0813507fca4e.js:308
+#: static-media/CACHE/js/3eeee3706ebf.js:306
+#: static-media/CACHE/js/3eeee3706ebf.js:308
+#: static-media/CACHE/js/4bd62bdb2da4.js:305
+#: static-media/CACHE/js/4bd62bdb2da4.js:307
+#: static-media/CACHE/js/6b79d088a188.js:305
+#: static-media/CACHE/js/6b79d088a188.js:307
+#: static-media/CACHE/js/8347635feab9.js:306
+#: static-media/CACHE/js/8347635feab9.js:308
+#: static-media/CACHE/js/9e2f3acda32a.js:305
+#: static-media/CACHE/js/9e2f3acda32a.js:307
+#: static-media/CACHE/js/a7eed9cbce79.js:306
+#: static-media/CACHE/js/a7eed9cbce79.js:308
+#: static-media/CACHE/js/ab622b78184c.js:306
+#: static-media/CACHE/js/ab622b78184c.js:308
+#: static-media/CACHE/js/af1972b73435.js:305
+#: static-media/CACHE/js/af1972b73435.js:307
+#: static-media/CACHE/js/b4775468438b.js:305
+#: static-media/CACHE/js/b4775468438b.js:307
+#: static-media/CACHE/js/c02f606639b0.js:305
+#: static-media/CACHE/js/c02f606639b0.js:307
+#: static-media/CACHE/js/db7c2b1caabb.js:305
+#: static-media/CACHE/js/db7c2b1caabb.js:307
+#: static-media/CACHE/js/f9a5a40a526d.js:305
+#: static-media/CACHE/js/f9a5a40a526d.js:307
+#: static-media/CACHE/js/fb93b2a750fd.js:306
+#: static-media/CACHE/js/fb93b2a750fd.js:308
+#: static-media/CACHE/js/fef441dc0d83.js:305
+#: static-media/CACHE/js/fef441dc0d83.js:307 static-media/js/chooseplan.js:138
+#: static-media/js/chooseplan.js.c:147
+msgid "Choose a plan from the table first"
+msgstr "先に表から計画案を選んでください"
+
+#: static-media/CACHE/js/01ec5c663726.js:308
+#: static-media/CACHE/js/0813507fca4e.js:309
+#: static-media/CACHE/js/3eeee3706ebf.js:309
+#: static-media/CACHE/js/4bd62bdb2da4.js:308
+#: static-media/CACHE/js/6b79d088a188.js:308
+#: static-media/CACHE/js/8347635feab9.js:309
+#: static-media/CACHE/js/9e2f3acda32a.js:308
+#: static-media/CACHE/js/a7eed9cbce79.js:309
+#: static-media/CACHE/js/ab622b78184c.js:309
+#: static-media/CACHE/js/af1972b73435.js:308
+#: static-media/CACHE/js/b4775468438b.js:308
+#: static-media/CACHE/js/c02f606639b0.js:308
+#: static-media/CACHE/js/db7c2b1caabb.js:308
+#: static-media/CACHE/js/f9a5a40a526d.js:308
+#: static-media/CACHE/js/fb93b2a750fd.js:309
+#: static-media/CACHE/js/fef441dc0d83.js:308 static-media/js/chooseplan.js:155
+msgid "A name for the copied template is required"
+msgstr "コピーされたテンプレートに名前が必要です"
+
+#: static-media/CACHE/js/01ec5c663726.js:310
+#: static-media/CACHE/js/0813507fca4e.js:311
+#: static-media/CACHE/js/3eeee3706ebf.js:311
+#: static-media/CACHE/js/4bd62bdb2da4.js:310
+#: static-media/CACHE/js/6b79d088a188.js:310
+#: static-media/CACHE/js/8347635feab9.js:311
+#: static-media/CACHE/js/9e2f3acda32a.js:310
+#: static-media/CACHE/js/a7eed9cbce79.js:311
+#: static-media/CACHE/js/ab622b78184c.js:311
+#: static-media/CACHE/js/af1972b73435.js:310
+#: static-media/CACHE/js/b4775468438b.js:310
+#: static-media/CACHE/js/c02f606639b0.js:310
+#: static-media/CACHE/js/db7c2b1caabb.js:310
+#: static-media/CACHE/js/f9a5a40a526d.js:310
+#: static-media/CACHE/js/fb93b2a750fd.js:311
+#: static-media/CACHE/js/fef441dc0d83.js:310 static-media/js/chooseplan.js:167
+msgid "Please provide a valid email address."
+msgstr "有効なEメールアドレスを入力してください。"
+
+#: static-media/CACHE/js/01ec5c663726.js:311
+#: static-media/CACHE/js/0813507fca4e.js:312
+#: static-media/CACHE/js/3eeee3706ebf.js:312
+#: static-media/CACHE/js/4bd62bdb2da4.js:311
+#: static-media/CACHE/js/6b79d088a188.js:311
+#: static-media/CACHE/js/8347635feab9.js:312
+#: static-media/CACHE/js/9e2f3acda32a.js:311
+#: static-media/CACHE/js/a7eed9cbce79.js:312
+#: static-media/CACHE/js/ab622b78184c.js:312
+#: static-media/CACHE/js/af1972b73435.js:311
+#: static-media/CACHE/js/b4775468438b.js:311
+#: static-media/CACHE/js/c02f606639b0.js:311
+#: static-media/CACHE/js/db7c2b1caabb.js:311
+#: static-media/CACHE/js/f9a5a40a526d.js:311
+#: static-media/CACHE/js/fb93b2a750fd.js:312
+#: static-media/CACHE/js/fef441dc0d83.js:311 static-media/js/chooseplan.js:171
+msgid "Please provide a zipped district index file."
+msgstr "圧縮された選挙区インデックスファイルが必要です。"
+
+#: static-media/CACHE/js/01ec5c663726.js:312
+#: static-media/CACHE/js/0813507fca4e.js:313
+#: static-media/CACHE/js/3eeee3706ebf.js:313
+#: static-media/CACHE/js/4bd62bdb2da4.js:312
+#: static-media/CACHE/js/6b79d088a188.js:312
+#: static-media/CACHE/js/8347635feab9.js:313
+#: static-media/CACHE/js/9e2f3acda32a.js:312
+#: static-media/CACHE/js/a7eed9cbce79.js:313
+#: static-media/CACHE/js/ab622b78184c.js:313
+#: static-media/CACHE/js/af1972b73435.js:312
+#: static-media/CACHE/js/b4775468438b.js:312
+#: static-media/CACHE/js/c02f606639b0.js:312
+#: static-media/CACHE/js/db7c2b1caabb.js:312
+#: static-media/CACHE/js/f9a5a40a526d.js:312
+#: static-media/CACHE/js/fb93b2a750fd.js:313
+#: static-media/CACHE/js/fef441dc0d83.js:312 static-media/js/chooseplan.js:175
+msgid "You must select a legislative body from the dropdown in the upload form"
+msgstr ""
+"アップロード・フォームの中のドロップダインから議会の種類を選んでください。"
+
+#: static-media/CACHE/js/01ec5c663726.js:314
+#: static-media/CACHE/js/0813507fca4e.js:315
+#: static-media/CACHE/js/3eeee3706ebf.js:315
+#: static-media/CACHE/js/4bd62bdb2da4.js:314
+#: static-media/CACHE/js/6b79d088a188.js:314
+#: static-media/CACHE/js/8347635feab9.js:315
+#: static-media/CACHE/js/9e2f3acda32a.js:314
+#: static-media/CACHE/js/a7eed9cbce79.js:315
+#: static-media/CACHE/js/ab622b78184c.js:315
+#: static-media/CACHE/js/af1972b73435.js:314
+#: static-media/CACHE/js/b4775468438b.js:314
+#: static-media/CACHE/js/c02f606639b0.js:314
+#: static-media/CACHE/js/db7c2b1caabb.js:314
+#: static-media/CACHE/js/f9a5a40a526d.js:314
+#: static-media/CACHE/js/fb93b2a750fd.js:315
+#: static-media/CACHE/js/fef441dc0d83.js:314 static-media/js/chooseplan.js:188
+msgid "Creating New Plan..."
+msgstr "新しい計画案を作成中..."
+
+#: static-media/CACHE/js/01ec5c663726.js:314
+#: static-media/CACHE/js/0813507fca4e.js:315
+#: static-media/CACHE/js/3eeee3706ebf.js:315
+#: static-media/CACHE/js/4bd62bdb2da4.js:314
+#: static-media/CACHE/js/6b79d088a188.js:314
+#: static-media/CACHE/js/8347635feab9.js:315
+#: static-media/CACHE/js/9e2f3acda32a.js:314
+#: static-media/CACHE/js/a7eed9cbce79.js:315
+#: static-media/CACHE/js/ab622b78184c.js:315
+#: static-media/CACHE/js/af1972b73435.js:314
+#: static-media/CACHE/js/b4775468438b.js:314
+#: static-media/CACHE/js/c02f606639b0.js:314
+#: static-media/CACHE/js/db7c2b1caabb.js:314
+#: static-media/CACHE/js/f9a5a40a526d.js:314
+#: static-media/CACHE/js/fb93b2a750fd.js:315
+#: static-media/CACHE/js/fef441dc0d83.js:314 static-media/js/chooseplan.js:189
+msgid "Please standby while creating new plan ..."
+msgstr "計画案作成中。お待ちください ..."
+
+#: static-media/CACHE/js/01ec5c663726.js:318
+#: static-media/CACHE/js/0813507fca4e.js:319
+#: static-media/CACHE/js/3eeee3706ebf.js:319
+#: static-media/CACHE/js/4bd62bdb2da4.js:318
+#: static-media/CACHE/js/6b79d088a188.js:318
+#: static-media/CACHE/js/8347635feab9.js:319
+#: static-media/CACHE/js/9e2f3acda32a.js:318
+#: static-media/CACHE/js/a7eed9cbce79.js:319
+#: static-media/CACHE/js/ab622b78184c.js:319
+#: static-media/CACHE/js/af1972b73435.js:318
+#: static-media/CACHE/js/b4775468438b.js:318
+#: static-media/CACHE/js/c02f606639b0.js:318
+#: static-media/CACHE/js/db7c2b1caabb.js:318
+#: static-media/CACHE/js/f9a5a40a526d.js:318
+#: static-media/CACHE/js/fb93b2a750fd.js:319
+#: static-media/CACHE/js/fef441dc0d83.js:318 static-media/js/chooseplan.js:235
+msgid "Creation Error"
+msgstr "作成エラー"
+
+#: static-media/CACHE/js/01ec5c663726.js:318
+#: static-media/CACHE/js/0813507fca4e.js:319
+#: static-media/CACHE/js/3eeee3706ebf.js:319
+#: static-media/CACHE/js/4bd62bdb2da4.js:318
+#: static-media/CACHE/js/6b79d088a188.js:318
+#: static-media/CACHE/js/8347635feab9.js:319
+#: static-media/CACHE/js/9e2f3acda32a.js:318
+#: static-media/CACHE/js/a7eed9cbce79.js:319
+#: static-media/CACHE/js/ab622b78184c.js:319
+#: static-media/CACHE/js/af1972b73435.js:318
+#: static-media/CACHE/js/b4775468438b.js:318
+#: static-media/CACHE/js/c02f606639b0.js:318
+#: static-media/CACHE/js/db7c2b1caabb.js:318
+#: static-media/CACHE/js/f9a5a40a526d.js:318
+#: static-media/CACHE/js/fb93b2a750fd.js:319
+#: static-media/CACHE/js/fef441dc0d83.js:318 static-media/js/chooseplan.js:238
+msgid "Tip: "
+msgstr "ヒント: "
+
+#: static-media/CACHE/js/01ec5c663726.js:318
+#: static-media/CACHE/js/0813507fca4e.js:319
+#: static-media/CACHE/js/3eeee3706ebf.js:319
+#: static-media/CACHE/js/4bd62bdb2da4.js:318
+#: static-media/CACHE/js/6b79d088a188.js:318
+#: static-media/CACHE/js/8347635feab9.js:319
+#: static-media/CACHE/js/9e2f3acda32a.js:318
+#: static-media/CACHE/js/a7eed9cbce79.js:319
+#: static-media/CACHE/js/ab622b78184c.js:319
+#: static-media/CACHE/js/af1972b73435.js:318
+#: static-media/CACHE/js/b4775468438b.js:318
+#: static-media/CACHE/js/c02f606639b0.js:318
+#: static-media/CACHE/js/db7c2b1caabb.js:318
+#: static-media/CACHE/js/f9a5a40a526d.js:318
+#: static-media/CACHE/js/fb93b2a750fd.js:319
+#: static-media/CACHE/js/fef441dc0d83.js:318 static-media/js/chooseplan.js:239
+msgid "Make sure the new plan's name is unique."
+msgstr "新しい計画案の名前が他と重複していないか確認してください。"
+
+#: static-media/CACHE/js/01ec5c663726.js:323
+#: static-media/CACHE/js/01ec5c663726.js:344
+#: static-media/CACHE/js/0813507fca4e.js:324
+#: static-media/CACHE/js/0813507fca4e.js:346
+#: static-media/CACHE/js/3eeee3706ebf.js:324
+#: static-media/CACHE/js/3eeee3706ebf.js:346
+#: static-media/CACHE/js/4bd62bdb2da4.js:323
+#: static-media/CACHE/js/4bd62bdb2da4.js:344
+#: static-media/CACHE/js/6b79d088a188.js:323
+#: static-media/CACHE/js/6b79d088a188.js:344
+#: static-media/CACHE/js/8347635feab9.js:324
+#: static-media/CACHE/js/8347635feab9.js:346
+#: static-media/CACHE/js/9e2f3acda32a.js:323
+#: static-media/CACHE/js/9e2f3acda32a.js:344
+#: static-media/CACHE/js/a7eed9cbce79.js:324
+#: static-media/CACHE/js/a7eed9cbce79.js:346
+#: static-media/CACHE/js/ab622b78184c.js:324
+#: static-media/CACHE/js/ab622b78184c.js:346
+#: static-media/CACHE/js/af1972b73435.js:323
+#: static-media/CACHE/js/af1972b73435.js:344
+#: static-media/CACHE/js/b4775468438b.js:323
+#: static-media/CACHE/js/b4775468438b.js:344
+#: static-media/CACHE/js/c02f606639b0.js:323
+#: static-media/CACHE/js/c02f606639b0.js:344
+#: static-media/CACHE/js/db7c2b1caabb.js:323
+#: static-media/CACHE/js/db7c2b1caabb.js:344
+#: static-media/CACHE/js/f9a5a40a526d.js:323
+#: static-media/CACHE/js/f9a5a40a526d.js:344
+#: static-media/CACHE/js/fb93b2a750fd.js:324
+#: static-media/CACHE/js/fb93b2a750fd.js:346
+#: static-media/CACHE/js/fef441dc0d83.js:323
+#: static-media/CACHE/js/fef441dc0d83.js:344 static-media/js/chooseplan.js:306
+#: static-media/js/reaggregator.js:137
+msgid "Needs reaggregation"
+msgstr "再統合が必要です"
+
+#: static-media/CACHE/js/01ec5c663726.js:323
+#: static-media/CACHE/js/0813507fca4e.js:324
+#: static-media/CACHE/js/3eeee3706ebf.js:324
+#: static-media/CACHE/js/4bd62bdb2da4.js:323
+#: static-media/CACHE/js/6b79d088a188.js:323
+#: static-media/CACHE/js/8347635feab9.js:324
+#: static-media/CACHE/js/9e2f3acda32a.js:323
+#: static-media/CACHE/js/a7eed9cbce79.js:324
+#: static-media/CACHE/js/ab622b78184c.js:324
+#: static-media/CACHE/js/af1972b73435.js:323
+#: static-media/CACHE/js/b4775468438b.js:323
+#: static-media/CACHE/js/c02f606639b0.js:323
+#: static-media/CACHE/js/db7c2b1caabb.js:323
+#: static-media/CACHE/js/f9a5a40a526d.js:323
+#: static-media/CACHE/js/fb93b2a750fd.js:324
+#: static-media/CACHE/js/fef441dc0d83.js:323 static-media/js/chooseplan.js:309
+msgid "Reaggregating"
+msgstr "再統合中"
+
+#: static-media/CACHE/js/01ec5c663726.js:324
+#: static-media/CACHE/js/01ec5c663726.js:418
+#: static-media/CACHE/js/0813507fca4e.js:325
+#: static-media/CACHE/js/0813507fca4e.js:421
+#: static-media/CACHE/js/3eeee3706ebf.js:325
+#: static-media/CACHE/js/3eeee3706ebf.js:421
+#: static-media/CACHE/js/4bd62bdb2da4.js:324
+#: static-media/CACHE/js/4bd62bdb2da4.js:418
+#: static-media/CACHE/js/6b79d088a188.js:324
+#: static-media/CACHE/js/6b79d088a188.js:418
+#: static-media/CACHE/js/8347635feab9.js:325
+#: static-media/CACHE/js/8347635feab9.js:421
+#: static-media/CACHE/js/9e2f3acda32a.js:324
+#: static-media/CACHE/js/9e2f3acda32a.js:418
+#: static-media/CACHE/js/a7eed9cbce79.js:325
+#: static-media/CACHE/js/a7eed9cbce79.js:420
+#: static-media/CACHE/js/ab622b78184c.js:325
+#: static-media/CACHE/js/ab622b78184c.js:421
+#: static-media/CACHE/js/af1972b73435.js:324
+#: static-media/CACHE/js/af1972b73435.js:418
+#: static-media/CACHE/js/b4775468438b.js:324
+#: static-media/CACHE/js/b4775468438b.js:418
+#: static-media/CACHE/js/c02f606639b0.js:324
+#: static-media/CACHE/js/c02f606639b0.js:418
+#: static-media/CACHE/js/db7c2b1caabb.js:324
+#: static-media/CACHE/js/db7c2b1caabb.js:418
+#: static-media/CACHE/js/f9a5a40a526d.js:324
+#: static-media/CACHE/js/f9a5a40a526d.js:418
+#: static-media/CACHE/js/fb93b2a750fd.js:325
+#: static-media/CACHE/js/fb93b2a750fd.js:421
+#: static-media/CACHE/js/fef441dc0d83.js:324
+#: static-media/CACHE/js/fef441dc0d83.js:418 static-media/js/chooseplan.js:337
+#: static-media/js/layerchooser.js:171
+msgid "Plan Name"
+msgstr "計画案名"
+
+#: static-media/CACHE/js/01ec5c663726.js:324
+#: static-media/CACHE/js/01ec5c663726.js:347
+#: static-media/CACHE/js/0813507fca4e.js:325
+#: static-media/CACHE/js/0813507fca4e.js:349
+#: static-media/CACHE/js/3eeee3706ebf.js:325
+#: static-media/CACHE/js/3eeee3706ebf.js:349
+#: static-media/CACHE/js/4bd62bdb2da4.js:324
+#: static-media/CACHE/js/4bd62bdb2da4.js:347
+#: static-media/CACHE/js/6b79d088a188.js:324
+#: static-media/CACHE/js/6b79d088a188.js:347
+#: static-media/CACHE/js/8347635feab9.js:325
+#: static-media/CACHE/js/8347635feab9.js:349
+#: static-media/CACHE/js/9e2f3acda32a.js:324
+#: static-media/CACHE/js/9e2f3acda32a.js:347
+#: static-media/CACHE/js/a7eed9cbce79.js:325
+#: static-media/CACHE/js/a7eed9cbce79.js:349
+#: static-media/CACHE/js/ab622b78184c.js:325
+#: static-media/CACHE/js/ab622b78184c.js:349
+#: static-media/CACHE/js/af1972b73435.js:324
+#: static-media/CACHE/js/af1972b73435.js:347
+#: static-media/CACHE/js/b4775468438b.js:324
+#: static-media/CACHE/js/b4775468438b.js:347
+#: static-media/CACHE/js/c02f606639b0.js:324
+#: static-media/CACHE/js/c02f606639b0.js:347
+#: static-media/CACHE/js/db7c2b1caabb.js:324
+#: static-media/CACHE/js/db7c2b1caabb.js:347
+#: static-media/CACHE/js/f9a5a40a526d.js:324
+#: static-media/CACHE/js/f9a5a40a526d.js:347
+#: static-media/CACHE/js/fb93b2a750fd.js:325
+#: static-media/CACHE/js/fb93b2a750fd.js:349
+#: static-media/CACHE/js/fef441dc0d83.js:324
+#: static-media/CACHE/js/fef441dc0d83.js:347 static-media/js/chooseplan.js:338
+#: static-media/js/shareddistricts.js:141
+msgid "Author"
+msgstr "作成者"
+
+#: static-media/CACHE/js/01ec5c663726.js:324
+#: static-media/CACHE/js/01ec5c663726.js:347
+#: static-media/CACHE/js/0813507fca4e.js:325
+#: static-media/CACHE/js/0813507fca4e.js:349
+#: static-media/CACHE/js/3eeee3706ebf.js:325
+#: static-media/CACHE/js/3eeee3706ebf.js:349
+#: static-media/CACHE/js/4bd62bdb2da4.js:324
+#: static-media/CACHE/js/4bd62bdb2da4.js:347
+#: static-media/CACHE/js/6b79d088a188.js:324
+#: static-media/CACHE/js/6b79d088a188.js:347
+#: static-media/CACHE/js/8347635feab9.js:325
+#: static-media/CACHE/js/8347635feab9.js:349
+#: static-media/CACHE/js/9e2f3acda32a.js:324
+#: static-media/CACHE/js/9e2f3acda32a.js:347
+#: static-media/CACHE/js/a7eed9cbce79.js:325
+#: static-media/CACHE/js/a7eed9cbce79.js:349
+#: static-media/CACHE/js/ab622b78184c.js:325
+#: static-media/CACHE/js/ab622b78184c.js:349
+#: static-media/CACHE/js/af1972b73435.js:324
+#: static-media/CACHE/js/af1972b73435.js:347
+#: static-media/CACHE/js/b4775468438b.js:324
+#: static-media/CACHE/js/b4775468438b.js:347
+#: static-media/CACHE/js/c02f606639b0.js:324
+#: static-media/CACHE/js/c02f606639b0.js:347
+#: static-media/CACHE/js/db7c2b1caabb.js:324
+#: static-media/CACHE/js/db7c2b1caabb.js:347
+#: static-media/CACHE/js/f9a5a40a526d.js:324
+#: static-media/CACHE/js/f9a5a40a526d.js:347
+#: static-media/CACHE/js/fb93b2a750fd.js:325
+#: static-media/CACHE/js/fb93b2a750fd.js:349
+#: static-media/CACHE/js/fef441dc0d83.js:324
+#: static-media/CACHE/js/fef441dc0d83.js:347 static-media/js/chooseplan.js:339
+#: static-media/js/shareddistricts.js:143
+msgid "Description"
+msgstr "説明"
+
+#: static-media/CACHE/js/01ec5c663726.js:324
+#: static-media/CACHE/js/01ec5c663726.js:347
+#: static-media/CACHE/js/0813507fca4e.js:325
+#: static-media/CACHE/js/0813507fca4e.js:349
+#: static-media/CACHE/js/3eeee3706ebf.js:325
+#: static-media/CACHE/js/3eeee3706ebf.js:349
+#: static-media/CACHE/js/4bd62bdb2da4.js:324
+#: static-media/CACHE/js/4bd62bdb2da4.js:347
+#: static-media/CACHE/js/6b79d088a188.js:324
+#: static-media/CACHE/js/6b79d088a188.js:347
+#: static-media/CACHE/js/8347635feab9.js:325
+#: static-media/CACHE/js/8347635feab9.js:349
+#: static-media/CACHE/js/9e2f3acda32a.js:324
+#: static-media/CACHE/js/9e2f3acda32a.js:347
+#: static-media/CACHE/js/a7eed9cbce79.js:325
+#: static-media/CACHE/js/a7eed9cbce79.js:349
+#: static-media/CACHE/js/ab622b78184c.js:325
+#: static-media/CACHE/js/ab622b78184c.js:349
+#: static-media/CACHE/js/af1972b73435.js:324
+#: static-media/CACHE/js/af1972b73435.js:347
+#: static-media/CACHE/js/b4775468438b.js:324
+#: static-media/CACHE/js/b4775468438b.js:347
+#: static-media/CACHE/js/c02f606639b0.js:324
+#: static-media/CACHE/js/c02f606639b0.js:347
+#: static-media/CACHE/js/db7c2b1caabb.js:324
+#: static-media/CACHE/js/db7c2b1caabb.js:347
+#: static-media/CACHE/js/f9a5a40a526d.js:324
+#: static-media/CACHE/js/f9a5a40a526d.js:347
+#: static-media/CACHE/js/fb93b2a750fd.js:325
+#: static-media/CACHE/js/fb93b2a750fd.js:349
+#: static-media/CACHE/js/fef441dc0d83.js:324
+#: static-media/CACHE/js/fef441dc0d83.js:347 static-media/js/chooseplan.js:340
+#: static-media/js/shareddistricts.js:144
+msgid "Shared"
+msgstr "共有済"
+
+#: static-media/CACHE/js/01ec5c663726.js:324
+#: static-media/CACHE/js/01ec5c663726.js:347
+#: static-media/CACHE/js/0813507fca4e.js:325
+#: static-media/CACHE/js/0813507fca4e.js:349
+#: static-media/CACHE/js/3eeee3706ebf.js:325
+#: static-media/CACHE/js/3eeee3706ebf.js:349
+#: static-media/CACHE/js/4bd62bdb2da4.js:324
+#: static-media/CACHE/js/4bd62bdb2da4.js:347
+#: static-media/CACHE/js/6b79d088a188.js:324
+#: static-media/CACHE/js/6b79d088a188.js:347
+#: static-media/CACHE/js/8347635feab9.js:325
+#: static-media/CACHE/js/8347635feab9.js:349
+#: static-media/CACHE/js/9e2f3acda32a.js:324
+#: static-media/CACHE/js/9e2f3acda32a.js:347
+#: static-media/CACHE/js/a7eed9cbce79.js:325
+#: static-media/CACHE/js/a7eed9cbce79.js:349
+#: static-media/CACHE/js/ab622b78184c.js:325
+#: static-media/CACHE/js/ab622b78184c.js:349
+#: static-media/CACHE/js/af1972b73435.js:324
+#: static-media/CACHE/js/af1972b73435.js:347
+#: static-media/CACHE/js/b4775468438b.js:324
+#: static-media/CACHE/js/b4775468438b.js:347
+#: static-media/CACHE/js/c02f606639b0.js:324
+#: static-media/CACHE/js/c02f606639b0.js:347
+#: static-media/CACHE/js/db7c2b1caabb.js:324
+#: static-media/CACHE/js/db7c2b1caabb.js:347
+#: static-media/CACHE/js/f9a5a40a526d.js:324
+#: static-media/CACHE/js/f9a5a40a526d.js:347
+#: static-media/CACHE/js/fb93b2a750fd.js:325
+#: static-media/CACHE/js/fb93b2a750fd.js:349
+#: static-media/CACHE/js/fef441dc0d83.js:324
+#: static-media/CACHE/js/fef441dc0d83.js:347 static-media/js/chooseplan.js:341
+#: static-media/js/shareddistricts.js:145
+msgid "Last Edited"
+msgstr "最終更新日"
+
+#: static-media/CACHE/js/01ec5c663726.js:324
+#: static-media/CACHE/js/0813507fca4e.js:325
+#: static-media/CACHE/js/3eeee3706ebf.js:325
+#: static-media/CACHE/js/4bd62bdb2da4.js:324
+#: static-media/CACHE/js/6b79d088a188.js:324
+#: static-media/CACHE/js/8347635feab9.js:325
+#: static-media/CACHE/js/9e2f3acda32a.js:324
+#: static-media/CACHE/js/a7eed9cbce79.js:325
+#: static-media/CACHE/js/ab622b78184c.js:325
+#: static-media/CACHE/js/af1972b73435.js:324
+#: static-media/CACHE/js/b4775468438b.js:324
+#: static-media/CACHE/js/c02f606639b0.js:324
+#: static-media/CACHE/js/db7c2b1caabb.js:324
+#: static-media/CACHE/js/f9a5a40a526d.js:324
+#: static-media/CACHE/js/fb93b2a750fd.js:325
+#: static-media/CACHE/js/fef441dc0d83.js:324 static-media/js/chooseplan.js:342
+msgid "Delete"
+msgstr "削除"
+
+#: static-media/CACHE/js/01ec5c663726.js:324
+#: static-media/CACHE/js/01ec5c663726.js:347
+#: static-media/CACHE/js/0813507fca4e.js:325
+#: static-media/CACHE/js/0813507fca4e.js:349
+#: static-media/CACHE/js/3eeee3706ebf.js:325
+#: static-media/CACHE/js/3eeee3706ebf.js:349
+#: static-media/CACHE/js/4bd62bdb2da4.js:324
+#: static-media/CACHE/js/4bd62bdb2da4.js:347
+#: static-media/CACHE/js/6b79d088a188.js:324
+#: static-media/CACHE/js/6b79d088a188.js:347
+#: static-media/CACHE/js/8347635feab9.js:325
+#: static-media/CACHE/js/8347635feab9.js:349
+#: static-media/CACHE/js/9e2f3acda32a.js:324
+#: static-media/CACHE/js/9e2f3acda32a.js:347
+#: static-media/CACHE/js/a7eed9cbce79.js:325
+#: static-media/CACHE/js/a7eed9cbce79.js:349
+#: static-media/CACHE/js/ab622b78184c.js:325
+#: static-media/CACHE/js/ab622b78184c.js:349
+#: static-media/CACHE/js/af1972b73435.js:324
+#: static-media/CACHE/js/af1972b73435.js:347
+#: static-media/CACHE/js/b4775468438b.js:324
+#: static-media/CACHE/js/b4775468438b.js:347
+#: static-media/CACHE/js/c02f606639b0.js:324
+#: static-media/CACHE/js/c02f606639b0.js:347
+#: static-media/CACHE/js/db7c2b1caabb.js:324
+#: static-media/CACHE/js/db7c2b1caabb.js:347
+#: static-media/CACHE/js/f9a5a40a526d.js:324
+#: static-media/CACHE/js/f9a5a40a526d.js:347
+#: static-media/CACHE/js/fb93b2a750fd.js:325
+#: static-media/CACHE/js/fb93b2a750fd.js:349
+#: static-media/CACHE/js/fef441dc0d83.js:324
+#: static-media/CACHE/js/fef441dc0d83.js:347 static-media/js/chooseplan.js:343
+#: static-media/js/shareddistricts.js:146
+msgid "Edit"
+msgstr "編集"
+
+#: static-media/CACHE/js/01ec5c663726.js:324
+#: static-media/CACHE/js/01ec5c663726.js:347
+#: static-media/CACHE/js/0813507fca4e.js:325
+#: static-media/CACHE/js/0813507fca4e.js:349
+#: static-media/CACHE/js/3eeee3706ebf.js:325
+#: static-media/CACHE/js/3eeee3706ebf.js:349
+#: static-media/CACHE/js/4bd62bdb2da4.js:324
+#: static-media/CACHE/js/4bd62bdb2da4.js:347
+#: static-media/CACHE/js/6b79d088a188.js:324
+#: static-media/CACHE/js/6b79d088a188.js:347
+#: static-media/CACHE/js/8347635feab9.js:325
+#: static-media/CACHE/js/8347635feab9.js:349
+#: static-media/CACHE/js/9e2f3acda32a.js:324
+#: static-media/CACHE/js/9e2f3acda32a.js:347
+#: static-media/CACHE/js/a7eed9cbce79.js:325
+#: static-media/CACHE/js/a7eed9cbce79.js:349
+#: static-media/CACHE/js/ab622b78184c.js:325
+#: static-media/CACHE/js/ab622b78184c.js:349
+#: static-media/CACHE/js/af1972b73435.js:324
+#: static-media/CACHE/js/af1972b73435.js:347
+#: static-media/CACHE/js/b4775468438b.js:324
+#: static-media/CACHE/js/b4775468438b.js:347
+#: static-media/CACHE/js/c02f606639b0.js:324
+#: static-media/CACHE/js/c02f606639b0.js:347
+#: static-media/CACHE/js/db7c2b1caabb.js:324
+#: static-media/CACHE/js/db7c2b1caabb.js:347
+#: static-media/CACHE/js/f9a5a40a526d.js:324
+#: static-media/CACHE/js/f9a5a40a526d.js:347
+#: static-media/CACHE/js/fb93b2a750fd.js:325
+#: static-media/CACHE/js/fb93b2a750fd.js:349
+#: static-media/CACHE/js/fef441dc0d83.js:324
+#: static-media/CACHE/js/fef441dc0d83.js:347 static-media/js/chooseplan.js:344
+#: static-media/js/shareddistricts.js:147
+msgid "# Districts"
+msgstr "選挙区数"
+
+#: static-media/CACHE/js/01ec5c663726.js:324
+#: static-media/CACHE/js/0813507fca4e.js:325
+#: static-media/CACHE/js/3eeee3706ebf.js:325
+#: static-media/CACHE/js/4bd62bdb2da4.js:324
+#: static-media/CACHE/js/6b79d088a188.js:324
+#: static-media/CACHE/js/8347635feab9.js:325
+#: static-media/CACHE/js/9e2f3acda32a.js:324
+#: static-media/CACHE/js/a7eed9cbce79.js:325
+#: static-media/CACHE/js/ab622b78184c.js:325
+#: static-media/CACHE/js/af1972b73435.js:324
+#: static-media/CACHE/js/b4775468438b.js:324
+#: static-media/CACHE/js/c02f606639b0.js:324
+#: static-media/CACHE/js/db7c2b1caabb.js:324
+#: static-media/CACHE/js/f9a5a40a526d.js:324
+#: static-media/CACHE/js/fb93b2a750fd.js:325
+#: static-media/CACHE/js/fef441dc0d83.js:324 static-media/js/chooseplan.js:345
+msgid "State"
+msgstr "州"
+
+#: static-media/CACHE/js/01ec5c663726.js:324
+#: static-media/CACHE/js/0813507fca4e.js:325
+#: static-media/CACHE/js/3eeee3706ebf.js:325
+#: static-media/CACHE/js/4bd62bdb2da4.js:324
+#: static-media/CACHE/js/6b79d088a188.js:324
+#: static-media/CACHE/js/8347635feab9.js:325
+#: static-media/CACHE/js/9e2f3acda32a.js:324
+#: static-media/CACHE/js/a7eed9cbce79.js:325
+#: static-media/CACHE/js/ab622b78184c.js:325
+#: static-media/CACHE/js/af1972b73435.js:324
+#: static-media/CACHE/js/b4775468438b.js:324
+#: static-media/CACHE/js/c02f606639b0.js:324
+#: static-media/CACHE/js/db7c2b1caabb.js:324
+#: static-media/CACHE/js/f9a5a40a526d.js:324
+#: static-media/CACHE/js/fb93b2a750fd.js:325
+#: static-media/CACHE/js/fef441dc0d83.js:324 static-media/js/chooseplan.js:381
+msgid "Really delete plan: "
+msgstr "計画案を本当に削除しますか"
+
+#: static-media/CACHE/js/01ec5c663726.js:324
+#: static-media/CACHE/js/0813507fca4e.js:325
+#: static-media/CACHE/js/3eeee3706ebf.js:325
+#: static-media/CACHE/js/4bd62bdb2da4.js:324
+#: static-media/CACHE/js/6b79d088a188.js:324
+#: static-media/CACHE/js/8347635feab9.js:325
+#: static-media/CACHE/js/9e2f3acda32a.js:324
+#: static-media/CACHE/js/a7eed9cbce79.js:325
+#: static-media/CACHE/js/ab622b78184c.js:325
+#: static-media/CACHE/js/af1972b73435.js:324
+#: static-media/CACHE/js/b4775468438b.js:324
+#: static-media/CACHE/js/c02f606639b0.js:324
+#: static-media/CACHE/js/db7c2b1caabb.js:324
+#: static-media/CACHE/js/f9a5a40a526d.js:324
+#: static-media/CACHE/js/fb93b2a750fd.js:325
+#: static-media/CACHE/js/fef441dc0d83.js:324 static-media/js/chooseplan.js:384
+msgid "Delete Plan"
+msgstr "削除する"
+
+#: static-media/CACHE/js/01ec5c663726.js:324
+#: static-media/CACHE/js/01ec5c663726.js:328
+#: static-media/CACHE/js/01ec5c663726.js:336
+#: static-media/CACHE/js/0813507fca4e.js:325
+#: static-media/CACHE/js/0813507fca4e.js:329
+#: static-media/CACHE/js/0813507fca4e.js:338
+#: static-media/CACHE/js/3eeee3706ebf.js:325
+#: static-media/CACHE/js/3eeee3706ebf.js:329
+#: static-media/CACHE/js/3eeee3706ebf.js:338
+#: static-media/CACHE/js/4bd62bdb2da4.js:324
+#: static-media/CACHE/js/4bd62bdb2da4.js:328
+#: static-media/CACHE/js/4bd62bdb2da4.js:336
+#: static-media/CACHE/js/6b79d088a188.js:324
+#: static-media/CACHE/js/6b79d088a188.js:328
+#: static-media/CACHE/js/6b79d088a188.js:336
+#: static-media/CACHE/js/8347635feab9.js:325
+#: static-media/CACHE/js/8347635feab9.js:329
+#: static-media/CACHE/js/8347635feab9.js:338
+#: static-media/CACHE/js/9e2f3acda32a.js:324
+#: static-media/CACHE/js/9e2f3acda32a.js:328
+#: static-media/CACHE/js/9e2f3acda32a.js:336
+#: static-media/CACHE/js/a7eed9cbce79.js:325
+#: static-media/CACHE/js/a7eed9cbce79.js:329
+#: static-media/CACHE/js/a7eed9cbce79.js:338
+#: static-media/CACHE/js/ab622b78184c.js:325
+#: static-media/CACHE/js/ab622b78184c.js:329
+#: static-media/CACHE/js/ab622b78184c.js:338
+#: static-media/CACHE/js/af1972b73435.js:324
+#: static-media/CACHE/js/af1972b73435.js:328
+#: static-media/CACHE/js/af1972b73435.js:336
+#: static-media/CACHE/js/b4775468438b.js:324
+#: static-media/CACHE/js/b4775468438b.js:328
+#: static-media/CACHE/js/b4775468438b.js:336
+#: static-media/CACHE/js/c02f606639b0.js:324
+#: static-media/CACHE/js/c02f606639b0.js:328
+#: static-media/CACHE/js/c02f606639b0.js:336
+#: static-media/CACHE/js/db7c2b1caabb.js:324
+#: static-media/CACHE/js/db7c2b1caabb.js:328
+#: static-media/CACHE/js/db7c2b1caabb.js:336
+#: static-media/CACHE/js/f9a5a40a526d.js:324
+#: static-media/CACHE/js/f9a5a40a526d.js:328
+#: static-media/CACHE/js/f9a5a40a526d.js:336
+#: static-media/CACHE/js/fb93b2a750fd.js:325
+#: static-media/CACHE/js/fb93b2a750fd.js:329
+#: static-media/CACHE/js/fb93b2a750fd.js:338
+#: static-media/CACHE/js/fef441dc0d83.js:324
+#: static-media/CACHE/js/fef441dc0d83.js:328
+#: static-media/CACHE/js/fef441dc0d83.js:336 static-media/js/chooseplan.js:386
+#: static-media/js/chooseplan.js.c:489 static-media/js/chooseplan.js:665
+msgid "Yes"
+msgstr "はい"
+
+#: static-media/CACHE/js/01ec5c663726.js:324
+#: static-media/CACHE/js/0813507fca4e.js:325
+#: static-media/CACHE/js/3eeee3706ebf.js:325
+#: static-media/CACHE/js/4bd62bdb2da4.js:324
+#: static-media/CACHE/js/6b79d088a188.js:324
+#: static-media/CACHE/js/8347635feab9.js:325
+#: static-media/CACHE/js/9e2f3acda32a.js:324
+#: static-media/CACHE/js/a7eed9cbce79.js:325
+#: static-media/CACHE/js/ab622b78184c.js:325
+#: static-media/CACHE/js/af1972b73435.js:324
+#: static-media/CACHE/js/b4775468438b.js:324
+#: static-media/CACHE/js/c02f606639b0.js:324
+#: static-media/CACHE/js/db7c2b1caabb.js:324
+#: static-media/CACHE/js/f9a5a40a526d.js:324
+#: static-media/CACHE/js/fb93b2a750fd.js:325
+#: static-media/CACHE/js/fef441dc0d83.js:324 static-media/js/chooseplan.js:390
+msgid "Please wait. Deleting plan."
+msgstr "計画案削除中。お待ちください。"
+
+#: static-media/CACHE/js/01ec5c663726.js:324
+#: static-media/CACHE/js/0813507fca4e.js:325
+#: static-media/CACHE/js/3eeee3706ebf.js:325
+#: static-media/CACHE/js/4bd62bdb2da4.js:324
+#: static-media/CACHE/js/6b79d088a188.js:324
+#: static-media/CACHE/js/8347635feab9.js:325
+#: static-media/CACHE/js/9e2f3acda32a.js:324
+#: static-media/CACHE/js/a7eed9cbce79.js:325
+#: static-media/CACHE/js/ab622b78184c.js:325
+#: static-media/CACHE/js/af1972b73435.js:324
+#: static-media/CACHE/js/b4775468438b.js:324
+#: static-media/CACHE/js/c02f606639b0.js:324
+#: static-media/CACHE/js/db7c2b1caabb.js:324
+#: static-media/CACHE/js/f9a5a40a526d.js:324
+#: static-media/CACHE/js/fb93b2a750fd.js:325
+#: static-media/CACHE/js/fef441dc0d83.js:324 static-media/js/chooseplan.js:391
+msgid "Deleting Plan"
+msgstr "計画案削除中。"
+
+#: static-media/CACHE/js/01ec5c663726.js:324
+#: static-media/CACHE/js/0813507fca4e.js:325
+#: static-media/CACHE/js/3eeee3706ebf.js:325
+#: static-media/CACHE/js/4bd62bdb2da4.js:324
+#: static-media/CACHE/js/6b79d088a188.js:324
+#: static-media/CACHE/js/8347635feab9.js:325
+#: static-media/CACHE/js/9e2f3acda32a.js:324
+#: static-media/CACHE/js/a7eed9cbce79.js:325
+#: static-media/CACHE/js/ab622b78184c.js:325
+#: static-media/CACHE/js/af1972b73435.js:324
+#: static-media/CACHE/js/b4775468438b.js:324
+#: static-media/CACHE/js/c02f606639b0.js:324
+#: static-media/CACHE/js/db7c2b1caabb.js:324
+#: static-media/CACHE/js/f9a5a40a526d.js:324
+#: static-media/CACHE/js/fb93b2a750fd.js:325
+#: static-media/CACHE/js/fef441dc0d83.js:324 static-media/js/chooseplan.js:406
+#: static-media/js/chooseplan.js.c:415
+msgid "Error Deleting Plan"
+msgstr ""
+
+#: static-media/CACHE/js/01ec5c663726.js:324
+#: static-media/CACHE/js/0813507fca4e.js:325
+#: static-media/CACHE/js/3eeee3706ebf.js:325
+#: static-media/CACHE/js/4bd62bdb2da4.js:324
+#: static-media/CACHE/js/6b79d088a188.js:324
+#: static-media/CACHE/js/8347635feab9.js:325
+#: static-media/CACHE/js/9e2f3acda32a.js:324
+#: static-media/CACHE/js/a7eed9cbce79.js:325
+#: static-media/CACHE/js/ab622b78184c.js:325
+#: static-media/CACHE/js/af1972b73435.js:324
+#: static-media/CACHE/js/b4775468438b.js:324
+#: static-media/CACHE/js/c02f606639b0.js:324
+#: static-media/CACHE/js/db7c2b1caabb.js:324
+#: static-media/CACHE/js/f9a5a40a526d.js:324
+#: static-media/CACHE/js/fb93b2a750fd.js:325
+#: static-media/CACHE/js/fef441dc0d83.js:324 static-media/js/chooseplan.js:416
+msgid "Please try again later."
+msgstr ""
+
+#: static-media/CACHE/js/01ec5c663726.js:324
+#: static-media/CACHE/js/01ec5c663726.js:334
+#: static-media/CACHE/js/01ec5c663726.js:347
+#: static-media/CACHE/js/01ec5c663726.js:418
+#: static-media/CACHE/js/0813507fca4e.js:325
+#: static-media/CACHE/js/0813507fca4e.js:335
+#: static-media/CACHE/js/0813507fca4e.js:336
+#: static-media/CACHE/js/0813507fca4e.js:349
+#: static-media/CACHE/js/0813507fca4e.js:421
+#: static-media/CACHE/js/3eeee3706ebf.js:325
+#: static-media/CACHE/js/3eeee3706ebf.js:335
+#: static-media/CACHE/js/3eeee3706ebf.js:336
+#: static-media/CACHE/js/3eeee3706ebf.js:349
+#: static-media/CACHE/js/3eeee3706ebf.js:421
+#: static-media/CACHE/js/4bd62bdb2da4.js:324
+#: static-media/CACHE/js/4bd62bdb2da4.js:334
+#: static-media/CACHE/js/4bd62bdb2da4.js:347
+#: static-media/CACHE/js/4bd62bdb2da4.js:418
+#: static-media/CACHE/js/6b79d088a188.js:324
+#: static-media/CACHE/js/6b79d088a188.js:334
+#: static-media/CACHE/js/6b79d088a188.js:347
+#: static-media/CACHE/js/6b79d088a188.js:418
+#: static-media/CACHE/js/8347635feab9.js:325
+#: static-media/CACHE/js/8347635feab9.js:335
+#: static-media/CACHE/js/8347635feab9.js:336
+#: static-media/CACHE/js/8347635feab9.js:349
+#: static-media/CACHE/js/8347635feab9.js:421
+#: static-media/CACHE/js/9e2f3acda32a.js:324
+#: static-media/CACHE/js/9e2f3acda32a.js:334
+#: static-media/CACHE/js/9e2f3acda32a.js:347
+#: static-media/CACHE/js/9e2f3acda32a.js:418
+#: static-media/CACHE/js/a7eed9cbce79.js:325
+#: static-media/CACHE/js/a7eed9cbce79.js:335
+#: static-media/CACHE/js/a7eed9cbce79.js:336
+#: static-media/CACHE/js/a7eed9cbce79.js:349
+#: static-media/CACHE/js/a7eed9cbce79.js:420
+#: static-media/CACHE/js/ab622b78184c.js:325
+#: static-media/CACHE/js/ab622b78184c.js:335
+#: static-media/CACHE/js/ab622b78184c.js:336
+#: static-media/CACHE/js/ab622b78184c.js:349
+#: static-media/CACHE/js/ab622b78184c.js:421
+#: static-media/CACHE/js/af1972b73435.js:324
+#: static-media/CACHE/js/af1972b73435.js:334
+#: static-media/CACHE/js/af1972b73435.js:347
+#: static-media/CACHE/js/af1972b73435.js:418
+#: static-media/CACHE/js/b4775468438b.js:324
+#: static-media/CACHE/js/b4775468438b.js:334
+#: static-media/CACHE/js/b4775468438b.js:347
+#: static-media/CACHE/js/b4775468438b.js:418
+#: static-media/CACHE/js/c02f606639b0.js:324
+#: static-media/CACHE/js/c02f606639b0.js:334
+#: static-media/CACHE/js/c02f606639b0.js:347
+#: static-media/CACHE/js/c02f606639b0.js:418
+#: static-media/CACHE/js/db7c2b1caabb.js:324
+#: static-media/CACHE/js/db7c2b1caabb.js:334
+#: static-media/CACHE/js/db7c2b1caabb.js:347
+#: static-media/CACHE/js/db7c2b1caabb.js:418
+#: static-media/CACHE/js/f9a5a40a526d.js:324
+#: static-media/CACHE/js/f9a5a40a526d.js:334
+#: static-media/CACHE/js/f9a5a40a526d.js:347
+#: static-media/CACHE/js/f9a5a40a526d.js:418
+#: static-media/CACHE/js/fb93b2a750fd.js:325
+#: static-media/CACHE/js/fb93b2a750fd.js:335
+#: static-media/CACHE/js/fb93b2a750fd.js:336
+#: static-media/CACHE/js/fb93b2a750fd.js:349
+#: static-media/CACHE/js/fb93b2a750fd.js:421
+#: static-media/CACHE/js/fef441dc0d83.js:324
+#: static-media/CACHE/js/fef441dc0d83.js:334
+#: static-media/CACHE/js/fef441dc0d83.js:347
+#: static-media/CACHE/js/fef441dc0d83.js:418 static-media/js/chooseplan.js:430
+#: static-media/js/chooseplan.js.c:562 static-media/js/chooseplan.js:591
+#: static-media/js/chooseplan.js.c:594 static-media/js/chooseplan.js:602
+#: static-media/js/chooseplan.js.c:608 static-media/js/layerchooser.js:190
+#: static-media/js/shareddistricts.js:171
+msgid "Search"
+msgstr "検索"
+
+#: static-media/CACHE/js/01ec5c663726.js:324
+#: static-media/CACHE/js/01ec5c663726.js:347
+#: static-media/CACHE/js/01ec5c663726.js:418
+#: static-media/CACHE/js/0813507fca4e.js:325
+#: static-media/CACHE/js/0813507fca4e.js:349
+#: static-media/CACHE/js/0813507fca4e.js:421
+#: static-media/CACHE/js/3eeee3706ebf.js:325
+#: static-media/CACHE/js/3eeee3706ebf.js:349
+#: static-media/CACHE/js/3eeee3706ebf.js:421
+#: static-media/CACHE/js/4bd62bdb2da4.js:324
+#: static-media/CACHE/js/4bd62bdb2da4.js:347
+#: static-media/CACHE/js/4bd62bdb2da4.js:418
+#: static-media/CACHE/js/6b79d088a188.js:324
+#: static-media/CACHE/js/6b79d088a188.js:347
+#: static-media/CACHE/js/6b79d088a188.js:418
+#: static-media/CACHE/js/8347635feab9.js:325
+#: static-media/CACHE/js/8347635feab9.js:349
+#: static-media/CACHE/js/8347635feab9.js:421
+#: static-media/CACHE/js/9e2f3acda32a.js:324
+#: static-media/CACHE/js/9e2f3acda32a.js:347
+#: static-media/CACHE/js/9e2f3acda32a.js:418
+#: static-media/CACHE/js/a7eed9cbce79.js:325
+#: static-media/CACHE/js/a7eed9cbce79.js:349
+#: static-media/CACHE/js/a7eed9cbce79.js:420
+#: static-media/CACHE/js/ab622b78184c.js:325
+#: static-media/CACHE/js/ab622b78184c.js:349
+#: static-media/CACHE/js/ab622b78184c.js:421
+#: static-media/CACHE/js/af1972b73435.js:324
+#: static-media/CACHE/js/af1972b73435.js:347
+#: static-media/CACHE/js/af1972b73435.js:418
+#: static-media/CACHE/js/b4775468438b.js:324
+#: static-media/CACHE/js/b4775468438b.js:347
+#: static-media/CACHE/js/b4775468438b.js:418
+#: static-media/CACHE/js/c02f606639b0.js:324
+#: static-media/CACHE/js/c02f606639b0.js:347
+#: static-media/CACHE/js/c02f606639b0.js:418
+#: static-media/CACHE/js/db7c2b1caabb.js:324
+#: static-media/CACHE/js/db7c2b1caabb.js:347
+#: static-media/CACHE/js/db7c2b1caabb.js:418
+#: static-media/CACHE/js/f9a5a40a526d.js:324
+#: static-media/CACHE/js/f9a5a40a526d.js:347
+#: static-media/CACHE/js/f9a5a40a526d.js:418
+#: static-media/CACHE/js/fb93b2a750fd.js:325
+#: static-media/CACHE/js/fb93b2a750fd.js:349
+#: static-media/CACHE/js/fb93b2a750fd.js:421
+#: static-media/CACHE/js/fef441dc0d83.js:324
+#: static-media/CACHE/js/fef441dc0d83.js:347
+#: static-media/CACHE/js/fef441dc0d83.js:418 static-media/js/chooseplan.js:430
+#: static-media/js/layerchooser.js:190 static-media/js/shareddistricts.js:171
+msgid "Clear Search"
+msgstr "検索クリア"
+
+#: static-media/CACHE/js/01ec5c663726.js:331
+#: static-media/CACHE/js/0813507fca4e.js:332
+#: static-media/CACHE/js/3eeee3706ebf.js:332
+#: static-media/CACHE/js/4bd62bdb2da4.js:331
+#: static-media/CACHE/js/6b79d088a188.js:331
+#: static-media/CACHE/js/8347635feab9.js:332
+#: static-media/CACHE/js/9e2f3acda32a.js:331
+#: static-media/CACHE/js/a7eed9cbce79.js:332
+#: static-media/CACHE/js/ab622b78184c.js:332
+#: static-media/CACHE/js/af1972b73435.js:331
+#: static-media/CACHE/js/b4775468438b.js:331
+#: static-media/CACHE/js/c02f606639b0.js:331
+#: static-media/CACHE/js/db7c2b1caabb.js:331
+#: static-media/CACHE/js/f9a5a40a526d.js:331
+#: static-media/CACHE/js/fb93b2a750fd.js:332
+#: static-media/CACHE/js/fef441dc0d83.js:331 static-media/js/chooseplan.js:515
+msgid "Error Saving Details"
+msgstr "詳細保存エラー"
+
+#: static-media/CACHE/js/01ec5c663726.js:339
+#: static-media/CACHE/js/0813507fca4e.js:341
+#: static-media/CACHE/js/3eeee3706ebf.js:341
+#: static-media/CACHE/js/4bd62bdb2da4.js:339
+#: static-media/CACHE/js/6b79d088a188.js:339
+#: static-media/CACHE/js/8347635feab9.js:341
+#: static-media/CACHE/js/9e2f3acda32a.js:339
+#: static-media/CACHE/js/a7eed9cbce79.js:341
+#: static-media/CACHE/js/ab622b78184c.js:341
+#: static-media/CACHE/js/af1972b73435.js:339
+#: static-media/CACHE/js/b4775468438b.js:339
+#: static-media/CACHE/js/c02f606639b0.js:339
+#: static-media/CACHE/js/db7c2b1caabb.js:339
+#: static-media/CACHE/js/f9a5a40a526d.js:339
+#: static-media/CACHE/js/fb93b2a750fd.js:341
+#: static-media/CACHE/js/fef441dc0d83.js:339 static-media/js/chooseplan.js:717
+msgid "Upload Plan"
+msgstr "計画案のアップロード"
+
+#: static-media/CACHE/js/01ec5c663726.js:339
+#: static-media/CACHE/js/0813507fca4e.js:341
+#: static-media/CACHE/js/3eeee3706ebf.js:341
+#: static-media/CACHE/js/4bd62bdb2da4.js:339
+#: static-media/CACHE/js/6b79d088a188.js:339
+#: static-media/CACHE/js/8347635feab9.js:341
+#: static-media/CACHE/js/9e2f3acda32a.js:339
+#: static-media/CACHE/js/a7eed9cbce79.js:341
+#: static-media/CACHE/js/ab622b78184c.js:341
+#: static-media/CACHE/js/af1972b73435.js:339
+#: static-media/CACHE/js/b4775468438b.js:339
+#: static-media/CACHE/js/c02f606639b0.js:339
+#: static-media/CACHE/js/db7c2b1caabb.js:339
+#: static-media/CACHE/js/f9a5a40a526d.js:339
+#: static-media/CACHE/js/fb93b2a750fd.js:341
+#: static-media/CACHE/js/fef441dc0d83.js:339 static-media/js/chooseplan.js:746
+msgid "Click the button to view the map as a guest"
+msgstr "ゲストとして地図を見るにはここをクリックしてください"
+
+#: static-media/CACHE/js/01ec5c663726.js:344
+#: static-media/CACHE/js/0813507fca4e.js:346
+#: static-media/CACHE/js/3eeee3706ebf.js:346
+#: static-media/CACHE/js/4bd62bdb2da4.js:344
+#: static-media/CACHE/js/6b79d088a188.js:344
+#: static-media/CACHE/js/8347635feab9.js:346
+#: static-media/CACHE/js/9e2f3acda32a.js:344
+#: static-media/CACHE/js/a7eed9cbce79.js:346
+#: static-media/CACHE/js/ab622b78184c.js:346
+#: static-media/CACHE/js/af1972b73435.js:344
+#: static-media/CACHE/js/b4775468438b.js:344
+#: static-media/CACHE/js/c02f606639b0.js:344
+#: static-media/CACHE/js/db7c2b1caabb.js:344
+#: static-media/CACHE/js/f9a5a40a526d.js:344
+#: static-media/CACHE/js/fb93b2a750fd.js:346
+#: static-media/CACHE/js/fef441dc0d83.js:344
+#: static-media/js/reaggregator.js:133
+msgid ""
+"Data in the system has changed. This plan needs to be reaggregated before it "
+"can be used. Click the button to begin reaggregation. This will run in the "
+"background, and the status will be updated when completed. Feel free to use "
+"the rest of the system in the meantime."
+msgstr ""
+"システム内のデータが変更されました。この計画案を使用する前に再統合する必要が"
+"あります。再統合を開始するにはこのボタンをクリックしてください。再統合はバッ"
+"クグラウンドで実行されます。再統合が完了するとステータスが更新されます。実行"
+"中もシステムの他の部分を利用することができます。"
+
+#: static-media/CACHE/js/01ec5c663726.js:344
+#: static-media/CACHE/js/0813507fca4e.js:346
+#: static-media/CACHE/js/3eeee3706ebf.js:346
+#: static-media/CACHE/js/4bd62bdb2da4.js:344
+#: static-media/CACHE/js/6b79d088a188.js:344
+#: static-media/CACHE/js/8347635feab9.js:346
+#: static-media/CACHE/js/9e2f3acda32a.js:344
+#: static-media/CACHE/js/a7eed9cbce79.js:346
+#: static-media/CACHE/js/ab622b78184c.js:346
+#: static-media/CACHE/js/af1972b73435.js:344
+#: static-media/CACHE/js/b4775468438b.js:344
+#: static-media/CACHE/js/c02f606639b0.js:344
+#: static-media/CACHE/js/db7c2b1caabb.js:344
+#: static-media/CACHE/js/f9a5a40a526d.js:344
+#: static-media/CACHE/js/fb93b2a750fd.js:346
+#: static-media/CACHE/js/fef441dc0d83.js:344
+#: static-media/js/reaggregator.js:139
+msgid ""
+"Data in the system has changed. The owner of this plan needs to reaggregate "
+"it before it can be used. The status of the plan will be updated when "
+"reaggregation has completed."
+msgstr ""
+"システム内のデータが変更されました。この計画案の所有者は、使用の前に再統合を"
+"する必要があります。再統合が完了すると、計画案のステータスが更新されます。"
+
+#: static-media/CACHE/js/01ec5c663726.js:345
+#: static-media/CACHE/js/0813507fca4e.js:347
+#: static-media/CACHE/js/3eeee3706ebf.js:347
+#: static-media/CACHE/js/4bd62bdb2da4.js:345
+#: static-media/CACHE/js/6b79d088a188.js:345
+#: static-media/CACHE/js/8347635feab9.js:347
+#: static-media/CACHE/js/9e2f3acda32a.js:345
+#: static-media/CACHE/js/a7eed9cbce79.js:347
+#: static-media/CACHE/js/ab622b78184c.js:347
+#: static-media/CACHE/js/af1972b73435.js:345
+#: static-media/CACHE/js/b4775468438b.js:345
+#: static-media/CACHE/js/c02f606639b0.js:345
+#: static-media/CACHE/js/db7c2b1caabb.js:345
+#: static-media/CACHE/js/f9a5a40a526d.js:345
+#: static-media/CACHE/js/fb93b2a750fd.js:347
+#: static-media/CACHE/js/fef441dc0d83.js:345
+#: static-media/js/reaggregator.js:146
+msgid "Reaggregation in progress"
+msgstr "再統合実行中"
+
+#: static-media/CACHE/js/01ec5c663726.js:345
+#: static-media/CACHE/js/0813507fca4e.js:347
+#: static-media/CACHE/js/3eeee3706ebf.js:347
+#: static-media/CACHE/js/4bd62bdb2da4.js:345
+#: static-media/CACHE/js/6b79d088a188.js:345
+#: static-media/CACHE/js/8347635feab9.js:347
+#: static-media/CACHE/js/9e2f3acda32a.js:345
+#: static-media/CACHE/js/a7eed9cbce79.js:347
+#: static-media/CACHE/js/ab622b78184c.js:347
+#: static-media/CACHE/js/af1972b73435.js:345
+#: static-media/CACHE/js/b4775468438b.js:345
+#: static-media/CACHE/js/c02f606639b0.js:345
+#: static-media/CACHE/js/db7c2b1caabb.js:345
+#: static-media/CACHE/js/f9a5a40a526d.js:345
+#: static-media/CACHE/js/fb93b2a750fd.js:347
+#: static-media/CACHE/js/fef441dc0d83.js:345
+#: static-media/js/reaggregator.js:148
+msgid ""
+"Data in the system has changed, and this plan is currently reaggregating to "
+"reflect these changes. The plan will not be available until reaggregation "
+"has completed."
+msgstr ""
+"システム内のデータが変更されたので、この計画案は変更を反映するために再統合中"
+"です。再統合が完了するまで、この計画案を使用することはできません。"
+
+#: static-media/CACHE/js/01ec5c663726.js:345
+#: static-media/CACHE/js/0813507fca4e.js:347
+#: static-media/CACHE/js/3eeee3706ebf.js:347
+#: static-media/CACHE/js/4bd62bdb2da4.js:345
+#: static-media/CACHE/js/6b79d088a188.js:345
+#: static-media/CACHE/js/8347635feab9.js:347
+#: static-media/CACHE/js/9e2f3acda32a.js:345
+#: static-media/CACHE/js/a7eed9cbce79.js:347
+#: static-media/CACHE/js/ab622b78184c.js:347
+#: static-media/CACHE/js/af1972b73435.js:345
+#: static-media/CACHE/js/b4775468438b.js:345
+#: static-media/CACHE/js/c02f606639b0.js:345
+#: static-media/CACHE/js/db7c2b1caabb.js:345
+#: static-media/CACHE/js/f9a5a40a526d.js:345
+#: static-media/CACHE/js/fb93b2a750fd.js:347
+#: static-media/CACHE/js/fef441dc0d83.js:345
+#: static-media/js/reaggregator.js:159
+msgid "Unknown state"
+msgstr "ステータス不明"
+
+#: static-media/CACHE/js/01ec5c663726.js:345
+#: static-media/CACHE/js/0813507fca4e.js:347
+#: static-media/CACHE/js/3eeee3706ebf.js:347
+#: static-media/CACHE/js/4bd62bdb2da4.js:345
+#: static-media/CACHE/js/6b79d088a188.js:345
+#: static-media/CACHE/js/8347635feab9.js:347
+#: static-media/CACHE/js/9e2f3acda32a.js:345
+#: static-media/CACHE/js/a7eed9cbce79.js:347
+#: static-media/CACHE/js/ab622b78184c.js:347
+#: static-media/CACHE/js/af1972b73435.js:345
+#: static-media/CACHE/js/b4775468438b.js:345
+#: static-media/CACHE/js/c02f606639b0.js:345
+#: static-media/CACHE/js/db7c2b1caabb.js:345
+#: static-media/CACHE/js/f9a5a40a526d.js:345
+#: static-media/CACHE/js/fb93b2a750fd.js:347
+#: static-media/CACHE/js/fef441dc0d83.js:345
+#: static-media/js/reaggregator.js:186
+msgid "Error reaggregating plan"
+msgstr "計画案再統合エラー"
+
+#: static-media/CACHE/js/01ec5c663726.js:347
+#: static-media/CACHE/js/0813507fca4e.js:349
+#: static-media/CACHE/js/3eeee3706ebf.js:349
+#: static-media/CACHE/js/4bd62bdb2da4.js:347
+#: static-media/CACHE/js/6b79d088a188.js:347
+#: static-media/CACHE/js/8347635feab9.js:349
+#: static-media/CACHE/js/9e2f3acda32a.js:347
+#: static-media/CACHE/js/a7eed9cbce79.js:349
+#: static-media/CACHE/js/ab622b78184c.js:349
+#: static-media/CACHE/js/af1972b73435.js:347
+#: static-media/CACHE/js/b4775468438b.js:347
+#: static-media/CACHE/js/c02f606639b0.js:347
+#: static-media/CACHE/js/db7c2b1caabb.js:347
+#: static-media/CACHE/js/f9a5a40a526d.js:347
+#: static-media/CACHE/js/fb93b2a750fd.js:349
+#: static-media/CACHE/js/fef441dc0d83.js:347
+#: static-media/js/shareddistricts.js:60
+msgid "Copy and Paste %(bodyMembersCap)s"
+msgstr "%(bodyMembersCap)sをコピーしてペースト"
+
+#: static-media/CACHE/js/01ec5c663726.js:347
+#: static-media/CACHE/js/0813507fca4e.js:349
+#: static-media/CACHE/js/3eeee3706ebf.js:349
+#: static-media/CACHE/js/4bd62bdb2da4.js:347
+#: static-media/CACHE/js/6b79d088a188.js:347
+#: static-media/CACHE/js/8347635feab9.js:349
+#: static-media/CACHE/js/9e2f3acda32a.js:347
+#: static-media/CACHE/js/a7eed9cbce79.js:349
+#: static-media/CACHE/js/ab622b78184c.js:349
+#: static-media/CACHE/js/af1972b73435.js:347
+#: static-media/CACHE/js/b4775468438b.js:347
+#: static-media/CACHE/js/c02f606639b0.js:347
+#: static-media/CACHE/js/db7c2b1caabb.js:347
+#: static-media/CACHE/js/f9a5a40a526d.js:347
+#: static-media/CACHE/js/fb93b2a750fd.js:349
+#: static-media/CACHE/js/fef441dc0d83.js:347
+#: static-media/js/shareddistricts.js:142
+msgid "Plan"
+msgstr "計画案"
+
+#: static-media/CACHE/js/01ec5c663726.js:347
+#: static-media/CACHE/js/0813507fca4e.js:349
+#: static-media/CACHE/js/3eeee3706ebf.js:349
+#: static-media/CACHE/js/4bd62bdb2da4.js:347
+#: static-media/CACHE/js/6b79d088a188.js:347
+#: static-media/CACHE/js/8347635feab9.js:349
+#: static-media/CACHE/js/9e2f3acda32a.js:347
+#: static-media/CACHE/js/a7eed9cbce79.js:349
+#: static-media/CACHE/js/ab622b78184c.js:349
+#: static-media/CACHE/js/af1972b73435.js:347
+#: static-media/CACHE/js/b4775468438b.js:347
+#: static-media/CACHE/js/c02f606639b0.js:347
+#: static-media/CACHE/js/db7c2b1caabb.js:347
+#: static-media/CACHE/js/f9a5a40a526d.js:347
+#: static-media/CACHE/js/fb93b2a750fd.js:349
+#: static-media/CACHE/js/fef441dc0d83.js:347
+#: static-media/js/shareddistricts.js:199
+msgid "%(bodyMemberLongCap)s Name"
+msgstr "%(bodyMemberLongCap)s名"
+
+#: static-media/CACHE/js/01ec5c663726.js:347
+#: static-media/CACHE/js/0813507fca4e.js:349
+#: static-media/CACHE/js/3eeee3706ebf.js:349
+#: static-media/CACHE/js/4bd62bdb2da4.js:347
+#: static-media/CACHE/js/6b79d088a188.js:347
+#: static-media/CACHE/js/8347635feab9.js:349
+#: static-media/CACHE/js/9e2f3acda32a.js:347
+#: static-media/CACHE/js/a7eed9cbce79.js:349
+#: static-media/CACHE/js/ab622b78184c.js:349
+#: static-media/CACHE/js/af1972b73435.js:347
+#: static-media/CACHE/js/b4775468438b.js:347
+#: static-media/CACHE/js/c02f606639b0.js:347
+#: static-media/CACHE/js/db7c2b1caabb.js:347
+#: static-media/CACHE/js/f9a5a40a526d.js:347
+#: static-media/CACHE/js/fb93b2a750fd.js:349
+#: static-media/CACHE/js/fef441dc0d83.js:347
+#: static-media/js/shareddistricts.js:298
+msgid "Maximum %(bodyMembers)s Reached"
+msgstr "%(bodyMembers)sの人数制限に達しました"
+
+#: static-media/CACHE/js/01ec5c663726.js:347
+#: static-media/CACHE/js/0813507fca4e.js:349
+#: static-media/CACHE/js/3eeee3706ebf.js:349
+#: static-media/CACHE/js/4bd62bdb2da4.js:347
+#: static-media/CACHE/js/6b79d088a188.js:347
+#: static-media/CACHE/js/8347635feab9.js:349
+#: static-media/CACHE/js/9e2f3acda32a.js:347
+#: static-media/CACHE/js/a7eed9cbce79.js:349
+#: static-media/CACHE/js/ab622b78184c.js:349
+#: static-media/CACHE/js/af1972b73435.js:347
+#: static-media/CACHE/js/b4775468438b.js:347
+#: static-media/CACHE/js/c02f606639b0.js:347
+#: static-media/CACHE/js/db7c2b1caabb.js:347
+#: static-media/CACHE/js/f9a5a40a526d.js:347
+#: static-media/CACHE/js/fb93b2a750fd.js:349
+#: static-media/CACHE/js/fef441dc0d83.js:347
+#: static-media/js/shareddistricts.js:299
+msgid ""
+"Your plan is at maximum capacity. Please delete a %(bodyMemberLong)s to "
+"enable pasting."
+msgstr ""
+"あなたの計画案はキャパシティの最高限度に達しました。 %(bodyMemberLong)sを削除"
+"するとペーストが可能になります。"
+
+#: static-media/CACHE/js/01ec5c663726.js:347
+#: static-media/CACHE/js/0813507fca4e.js:349
+#: static-media/CACHE/js/3eeee3706ebf.js:349
+#: static-media/CACHE/js/4bd62bdb2da4.js:347
+#: static-media/CACHE/js/6b79d088a188.js:347
+#: static-media/CACHE/js/8347635feab9.js:349
+#: static-media/CACHE/js/9e2f3acda32a.js:347
+#: static-media/CACHE/js/a7eed9cbce79.js:349
+#: static-media/CACHE/js/ab622b78184c.js:349
+#: static-media/CACHE/js/af1972b73435.js:347
+#: static-media/CACHE/js/b4775468438b.js:347
+#: static-media/CACHE/js/c02f606639b0.js:347
+#: static-media/CACHE/js/db7c2b1caabb.js:347
+#: static-media/CACHE/js/f9a5a40a526d.js:347
+#: static-media/CACHE/js/fb93b2a750fd.js:349
+#: static-media/CACHE/js/fef441dc0d83.js:347
+#: static-media/js/shareddistricts.js:309
+msgid "2. Remove %(num_available_districts)s before submitting"
+msgstr "2. 提出する前に%(num_available_districts)sを削除する"
+
+#: static-media/CACHE/js/01ec5c663726.js:347
+#: static-media/CACHE/js/0813507fca4e.js:349
+#: static-media/CACHE/js/3eeee3706ebf.js:349
+#: static-media/CACHE/js/4bd62bdb2da4.js:347
+#: static-media/CACHE/js/6b79d088a188.js:347
+#: static-media/CACHE/js/8347635feab9.js:349
+#: static-media/CACHE/js/9e2f3acda32a.js:347
+#: static-media/CACHE/js/a7eed9cbce79.js:349
+#: static-media/CACHE/js/ab622b78184c.js:349
+#: static-media/CACHE/js/af1972b73435.js:347
+#: static-media/CACHE/js/b4775468438b.js:347
+#: static-media/CACHE/js/c02f606639b0.js:347
+#: static-media/CACHE/js/db7c2b1caabb.js:347
+#: static-media/CACHE/js/f9a5a40a526d.js:347
+#: static-media/CACHE/js/fb93b2a750fd.js:349
+#: static-media/CACHE/js/fef441dc0d83.js:347
+#: static-media/js/shareddistricts.js:313
+msgid "2. Check your selections"
+msgstr "2. 選択を確認する"
+
+#: static-media/CACHE/js/01ec5c663726.js:347
+#: static-media/CACHE/js/0813507fca4e.js:349
+#: static-media/CACHE/js/3eeee3706ebf.js:349
+#: static-media/CACHE/js/4bd62bdb2da4.js:347
+#: static-media/CACHE/js/6b79d088a188.js:347
+#: static-media/CACHE/js/8347635feab9.js:349
+#: static-media/CACHE/js/9e2f3acda32a.js:347
+#: static-media/CACHE/js/a7eed9cbce79.js:349
+#: static-media/CACHE/js/ab622b78184c.js:349
+#: static-media/CACHE/js/af1972b73435.js:347
+#: static-media/CACHE/js/b4775468438b.js:347
+#: static-media/CACHE/js/c02f606639b0.js:347
+#: static-media/CACHE/js/db7c2b1caabb.js:347
+#: static-media/CACHE/js/f9a5a40a526d.js:347
+#: static-media/CACHE/js/fb93b2a750fd.js:349
+#: static-media/CACHE/js/fef441dc0d83.js:347
+#: static-media/js/shareddistricts.js:318
+msgid "2. Select a %(bodyMemberLong)s to copy"
+msgstr "2. %(bodyMemberLong)sを選択してコピー"
+
+#: static-media/CACHE/js/01ec5c663726.js:348
+#: static-media/CACHE/js/0813507fca4e.js:350
+#: static-media/CACHE/js/3eeee3706ebf.js:350
+#: static-media/CACHE/js/4bd62bdb2da4.js:348
+#: static-media/CACHE/js/6b79d088a188.js:348
+#: static-media/CACHE/js/8347635feab9.js:350
+#: static-media/CACHE/js/9e2f3acda32a.js:348
+#: static-media/CACHE/js/a7eed9cbce79.js:350
+#: static-media/CACHE/js/ab622b78184c.js:350
+#: static-media/CACHE/js/af1972b73435.js:348
+#: static-media/CACHE/js/b4775468438b.js:348
+#: static-media/CACHE/js/c02f606639b0.js:348
+#: static-media/CACHE/js/db7c2b1caabb.js:348
+#: static-media/CACHE/js/f9a5a40a526d.js:348
+#: static-media/CACHE/js/fb93b2a750fd.js:350
+#: static-media/CACHE/js/fef441dc0d83.js:348
+#: static-media/js/shareddistricts.js:322
+msgid "2. Select a %(bodyMemberLong)s"
+msgstr "2. %(bodyMemberLong)sを選択"
+
+#: static-media/CACHE/js/01ec5c663726.js:349
+#: static-media/CACHE/js/0813507fca4e.js:351
+#: static-media/CACHE/js/3eeee3706ebf.js:351
+#: static-media/CACHE/js/4bd62bdb2da4.js:349
+#: static-media/CACHE/js/6b79d088a188.js:349
+#: static-media/CACHE/js/8347635feab9.js:351
+#: static-media/CACHE/js/9e2f3acda32a.js:349
+#: static-media/CACHE/js/a7eed9cbce79.js:351
+#: static-media/CACHE/js/ab622b78184c.js:351
+#: static-media/CACHE/js/af1972b73435.js:349
+#: static-media/CACHE/js/b4775468438b.js:349
+#: static-media/CACHE/js/c02f606639b0.js:349
+#: static-media/CACHE/js/db7c2b1caabb.js:349
+#: static-media/CACHE/js/f9a5a40a526d.js:349
+#: static-media/CACHE/js/fb93b2a750fd.js:351
+#: static-media/CACHE/js/fef441dc0d83.js:349
+#: static-media/js/shareddistricts.js:329
+msgid "2. Select up to %(available_districts)s %(bodyMembers)s to copy"
+msgstr "2. %(bodyMembers)sを%(available_districts)s個まで選択してコピー"
+
+#: static-media/CACHE/js/01ec5c663726.js:350
+#: static-media/CACHE/js/0813507fca4e.js:352
+#: static-media/CACHE/js/3eeee3706ebf.js:352
+#: static-media/CACHE/js/4bd62bdb2da4.js:350
+#: static-media/CACHE/js/6b79d088a188.js:350
+#: static-media/CACHE/js/8347635feab9.js:352
+#: static-media/CACHE/js/9e2f3acda32a.js:350
+#: static-media/CACHE/js/a7eed9cbce79.js:352
+#: static-media/CACHE/js/ab622b78184c.js:352
+#: static-media/CACHE/js/af1972b73435.js:350
+#: static-media/CACHE/js/b4775468438b.js:350
+#: static-media/CACHE/js/c02f606639b0.js:350
+#: static-media/CACHE/js/db7c2b1caabb.js:350
+#: static-media/CACHE/js/f9a5a40a526d.js:350
+#: static-media/CACHE/js/fb93b2a750fd.js:352
+#: static-media/CACHE/js/fef441dc0d83.js:350
+#: static-media/js/shareddistricts.js:336
+msgid "2. Select %(bodyMembers)s"
+msgstr "2. %(bodyMembers)sを選択"
+
+#: static-media/CACHE/js/01ec5c663726.js:352
+#: static-media/CACHE/js/0813507fca4e.js:354
+#: static-media/CACHE/js/3eeee3706ebf.js:354
+#: static-media/CACHE/js/4bd62bdb2da4.js:352
+#: static-media/CACHE/js/6b79d088a188.js:352
+#: static-media/CACHE/js/8347635feab9.js:354
+#: static-media/CACHE/js/9e2f3acda32a.js:352
+#: static-media/CACHE/js/a7eed9cbce79.js:354
+#: static-media/CACHE/js/ab622b78184c.js:354
+#: static-media/CACHE/js/af1972b73435.js:352
+#: static-media/CACHE/js/b4775468438b.js:352
+#: static-media/CACHE/js/c02f606639b0.js:352
+#: static-media/CACHE/js/db7c2b1caabb.js:352
+#: static-media/CACHE/js/f9a5a40a526d.js:352
+#: static-media/CACHE/js/fb93b2a750fd.js:354
+#: static-media/CACHE/js/fef441dc0d83.js:352
+#: static-media/js/shareddistricts.js:373
+#: static-media/js/shareddistricts.js:380
+msgid "Unable to paste %(bodyMembers)s"
+msgstr "%(bodyMembers)sをペーストすることができません"
+
+#: static-media/CACHE/js/01ec5c663726.js:357
+#: static-media/CACHE/js/0813507fca4e.js:359
+#: static-media/CACHE/js/3eeee3706ebf.js:359
+#: static-media/CACHE/js/4bd62bdb2da4.js:357
+#: static-media/CACHE/js/6b79d088a188.js:357
+#: static-media/CACHE/js/8347635feab9.js:359
+#: static-media/CACHE/js/9e2f3acda32a.js:357
+#: static-media/CACHE/js/a7eed9cbce79.js:359
+#: static-media/CACHE/js/ab622b78184c.js:359
+#: static-media/CACHE/js/af1972b73435.js:357
+#: static-media/CACHE/js/b4775468438b.js:357
+#: static-media/CACHE/js/c02f606639b0.js:357
+#: static-media/CACHE/js/db7c2b1caabb.js:357
+#: static-media/CACHE/js/f9a5a40a526d.js:357
+#: static-media/CACHE/js/fb93b2a750fd.js:359
+#: static-media/CACHE/js/fef441dc0d83.js:357 static-media/js/reports.js:148
+msgid "Please select one or more reports to be generated."
+msgstr "作成するレポートを選択してください。"
+
+#: static-media/CACHE/js/01ec5c663726.js:358
+#: static-media/CACHE/js/0813507fca4e.js:360
+#: static-media/CACHE/js/3eeee3706ebf.js:360
+#: static-media/CACHE/js/4bd62bdb2da4.js:358
+#: static-media/CACHE/js/6b79d088a188.js:358
+#: static-media/CACHE/js/8347635feab9.js:360
+#: static-media/CACHE/js/9e2f3acda32a.js:358
+#: static-media/CACHE/js/a7eed9cbce79.js:360
+#: static-media/CACHE/js/ab622b78184c.js:360
+#: static-media/CACHE/js/af1972b73435.js:358
+#: static-media/CACHE/js/b4775468438b.js:358
+#: static-media/CACHE/js/c02f606639b0.js:358
+#: static-media/CACHE/js/db7c2b1caabb.js:358
+#: static-media/CACHE/js/f9a5a40a526d.js:358
+#: static-media/CACHE/js/fb93b2a750fd.js:360
+#: static-media/CACHE/js/fef441dc0d83.js:358 static-media/js/reports.js:156
+msgid "Generating Report"
+msgstr "レポート作成中"
+
+#: static-media/CACHE/js/01ec5c663726.js:358
+#: static-media/CACHE/js/0813507fca4e.js:360
+#: static-media/CACHE/js/3eeee3706ebf.js:360
+#: static-media/CACHE/js/4bd62bdb2da4.js:358
+#: static-media/CACHE/js/6b79d088a188.js:358
+#: static-media/CACHE/js/8347635feab9.js:360
+#: static-media/CACHE/js/9e2f3acda32a.js:358
+#: static-media/CACHE/js/a7eed9cbce79.js:360
+#: static-media/CACHE/js/ab622b78184c.js:360
+#: static-media/CACHE/js/af1972b73435.js:358
+#: static-media/CACHE/js/b4775468438b.js:358
+#: static-media/CACHE/js/c02f606639b0.js:358
+#: static-media/CACHE/js/db7c2b1caabb.js:358
+#: static-media/CACHE/js/f9a5a40a526d.js:358
+#: static-media/CACHE/js/fb93b2a750fd.js:360
+#: static-media/CACHE/js/fef441dc0d83.js:358 static-media/js/reports.js:157
+msgid "You may use the rest of the application while the report is building."
+msgstr ""
+"レポートを作成している間、アプリケーションの他の部分は利用することができま"
+"す。"
+
+#: static-media/CACHE/js/01ec5c663726.js:358
+#: static-media/CACHE/js/0813507fca4e.js:360
+#: static-media/CACHE/js/3eeee3706ebf.js:360
+#: static-media/CACHE/js/4bd62bdb2da4.js:358
+#: static-media/CACHE/js/6b79d088a188.js:358
+#: static-media/CACHE/js/8347635feab9.js:360
+#: static-media/CACHE/js/9e2f3acda32a.js:358
+#: static-media/CACHE/js/a7eed9cbce79.js:360
+#: static-media/CACHE/js/ab622b78184c.js:360
+#: static-media/CACHE/js/af1972b73435.js:358
+#: static-media/CACHE/js/b4775468438b.js:358
+#: static-media/CACHE/js/c02f606639b0.js:358
+#: static-media/CACHE/js/db7c2b1caabb.js:358
+#: static-media/CACHE/js/f9a5a40a526d.js:358
+#: static-media/CACHE/js/fb93b2a750fd.js:360
+#: static-media/CACHE/js/fef441dc0d83.js:358 static-media/js/reports.js:158
+msgid "A preview of your report will appear in this space when it is ready."
+msgstr "レポート作成が完了すると、ここにプレビューが表示されます。"
+
+#: static-media/CACHE/js/01ec5c663726.js:359
+#: static-media/CACHE/js/0813507fca4e.js:361
+#: static-media/CACHE/js/3eeee3706ebf.js:361
+#: static-media/CACHE/js/4bd62bdb2da4.js:359
+#: static-media/CACHE/js/6b79d088a188.js:359
+#: static-media/CACHE/js/8347635feab9.js:361
+#: static-media/CACHE/js/9e2f3acda32a.js:359
+#: static-media/CACHE/js/a7eed9cbce79.js:361
+#: static-media/CACHE/js/ab622b78184c.js:361
+#: static-media/CACHE/js/af1972b73435.js:359
+#: static-media/CACHE/js/b4775468438b.js:359
+#: static-media/CACHE/js/c02f606639b0.js:359
+#: static-media/CACHE/js/db7c2b1caabb.js:359
+#: static-media/CACHE/js/f9a5a40a526d.js:359
+#: static-media/CACHE/js/fb93b2a750fd.js:361
+#: static-media/CACHE/js/fef441dc0d83.js:359 static-media/js/reports.js:177
+msgid "Report Error"
+msgstr "レポートエラー"
+
+#: static-media/CACHE/js/01ec5c663726.js:359
+#: static-media/CACHE/js/0813507fca4e.js:361
+#: static-media/CACHE/js/3eeee3706ebf.js:361
+#: static-media/CACHE/js/4bd62bdb2da4.js:359
+#: static-media/CACHE/js/6b79d088a188.js:359
+#: static-media/CACHE/js/8347635feab9.js:361
+#: static-media/CACHE/js/9e2f3acda32a.js:359
+#: static-media/CACHE/js/a7eed9cbce79.js:361
+#: static-media/CACHE/js/ab622b78184c.js:361
+#: static-media/CACHE/js/af1972b73435.js:359
+#: static-media/CACHE/js/b4775468438b.js:359
+#: static-media/CACHE/js/c02f606639b0.js:359
+#: static-media/CACHE/js/db7c2b1caabb.js:359
+#: static-media/CACHE/js/f9a5a40a526d.js:359
+#: static-media/CACHE/js/fb93b2a750fd.js:361
+#: static-media/CACHE/js/fef441dc0d83.js:359 static-media/js/reports.js:178
+msgid "Sorry, this report cannot be previewed."
+msgstr "申し訳ありません。このレポートのプレビューは表示できません。"
+
+#: static-media/CACHE/js/01ec5c663726.js:361
+#: static-media/CACHE/js/0813507fca4e.js:363
+#: static-media/CACHE/js/3eeee3706ebf.js:363
+#: static-media/CACHE/js/4bd62bdb2da4.js:361
+#: static-media/CACHE/js/6b79d088a188.js:361
+#: static-media/CACHE/js/8347635feab9.js:363
+#: static-media/CACHE/js/9e2f3acda32a.js:361
+#: static-media/CACHE/js/a7eed9cbce79.js:363
+#: static-media/CACHE/js/ab622b78184c.js:363
+#: static-media/CACHE/js/af1972b73435.js:361
+#: static-media/CACHE/js/b4775468438b.js:361
+#: static-media/CACHE/js/c02f606639b0.js:361
+#: static-media/CACHE/js/db7c2b1caabb.js:361
+#: static-media/CACHE/js/f9a5a40a526d.js:361
+#: static-media/CACHE/js/fb93b2a750fd.js:363
+#: static-media/CACHE/js/fef441dc0d83.js:361 static-media/js/reports.js:209
+msgid "Connection Failed"
+msgstr "接続失敗"
+
+#: static-media/CACHE/js/01ec5c663726.js:361
+#: static-media/CACHE/js/0813507fca4e.js:363
+#: static-media/CACHE/js/3eeee3706ebf.js:363
+#: static-media/CACHE/js/4bd62bdb2da4.js:361
+#: static-media/CACHE/js/6b79d088a188.js:361
+#: static-media/CACHE/js/8347635feab9.js:363
+#: static-media/CACHE/js/9e2f3acda32a.js:361
+#: static-media/CACHE/js/a7eed9cbce79.js:363
+#: static-media/CACHE/js/ab622b78184c.js:363
+#: static-media/CACHE/js/af1972b73435.js:361
+#: static-media/CACHE/js/b4775468438b.js:361
+#: static-media/CACHE/js/c02f606639b0.js:361
+#: static-media/CACHE/js/db7c2b1caabb.js:361
+#: static-media/CACHE/js/f9a5a40a526d.js:361
+#: static-media/CACHE/js/fb93b2a750fd.js:363
+#: static-media/CACHE/js/fef441dc0d83.js:361 static-media/js/reports.js:210
+msgid ""
+"There was a problem checking your report status. You can resume checking by "
+"clicking on the \"Create and Preview Report\" button."
+msgstr ""
+"レポートのステータス確認に問題が生じました。「レポートを作成してプレビューを"
+"表示」ボタンをクリックして再度実行することができます。"
+
+#: static-media/CACHE/js/01ec5c663726.js:364
+#: static-media/CACHE/js/3eeee3706ebf.js:366
+#: static-media/CACHE/js/4bd62bdb2da4.js:364
+#: static-media/CACHE/js/6b79d088a188.js:364
+#: static-media/CACHE/js/8347635feab9.js:366
+#: static-media/CACHE/js/9e2f3acda32a.js:364
+#: static-media/CACHE/js/a7eed9cbce79.js:366
+#: static-media/CACHE/js/af1972b73435.js:364
+#: static-media/CACHE/js/b4775468438b.js:364
+#: static-media/CACHE/js/c02f606639b0.js:364
+#: static-media/CACHE/js/db7c2b1caabb.js:364
+#: static-media/CACHE/js/f9a5a40a526d.js:364
+#: static-media/CACHE/js/fef441dc0d83.js:364
+#, fuzzy
+msgid "Open report in a new window"
+msgstr "現在のレポートを新しいウィンドウで表示する"
+
+#: static-media/CACHE/js/01ec5c663726.js:365
+#: static-media/CACHE/js/0813507fca4e.js:367
+#: static-media/CACHE/js/3eeee3706ebf.js:367
+#: static-media/CACHE/js/4bd62bdb2da4.js:365
+#: static-media/CACHE/js/6b79d088a188.js:365
+#: static-media/CACHE/js/8347635feab9.js:367
+#: static-media/CACHE/js/9e2f3acda32a.js:365
+#: static-media/CACHE/js/a7eed9cbce79.js:367
+#: static-media/CACHE/js/ab622b78184c.js:367
+#: static-media/CACHE/js/af1972b73435.js:365
+#: static-media/CACHE/js/b4775468438b.js:365
+#: static-media/CACHE/js/c02f606639b0.js:365
+#: static-media/CACHE/js/db7c2b1caabb.js:365
+#: static-media/CACHE/js/f9a5a40a526d.js:365
+#: static-media/CACHE/js/fb93b2a750fd.js:367
+#: static-media/CACHE/js/fef441dc0d83.js:365 static-media/js/register.js:40
+msgid "Terms of Use"
+msgstr "利用規約"
+
+#: static-media/CACHE/js/01ec5c663726.js:365
+#: static-media/CACHE/js/0813507fca4e.js:367
+#: static-media/CACHE/js/3eeee3706ebf.js:367
+#: static-media/CACHE/js/4bd62bdb2da4.js:365
+#: static-media/CACHE/js/6b79d088a188.js:365
+#: static-media/CACHE/js/8347635feab9.js:367
+#: static-media/CACHE/js/9e2f3acda32a.js:365
+#: static-media/CACHE/js/a7eed9cbce79.js:367
+#: static-media/CACHE/js/ab622b78184c.js:367
+#: static-media/CACHE/js/af1972b73435.js:365
+#: static-media/CACHE/js/b4775468438b.js:365
+#: static-media/CACHE/js/c02f606639b0.js:365
+#: static-media/CACHE/js/db7c2b1caabb.js:365
+#: static-media/CACHE/js/f9a5a40a526d.js:365
+#: static-media/CACHE/js/fb93b2a750fd.js:367
+#: static-media/CACHE/js/fef441dc0d83.js:365 static-media/js/register.js:41
+msgid "Forgot Password"
+msgstr "パスワードを忘れたら"
+
+#: static-media/CACHE/js/01ec5c663726.js:365
+#: static-media/CACHE/js/0813507fca4e.js:367
+#: static-media/CACHE/js/3eeee3706ebf.js:367
+#: static-media/CACHE/js/4bd62bdb2da4.js:365
+#: static-media/CACHE/js/6b79d088a188.js:365
+#: static-media/CACHE/js/8347635feab9.js:367
+#: static-media/CACHE/js/9e2f3acda32a.js:365
+#: static-media/CACHE/js/a7eed9cbce79.js:367
+#: static-media/CACHE/js/ab622b78184c.js:367
+#: static-media/CACHE/js/af1972b73435.js:365
+#: static-media/CACHE/js/b4775468438b.js:365
+#: static-media/CACHE/js/c02f606639b0.js:365
+#: static-media/CACHE/js/db7c2b1caabb.js:365
+#: static-media/CACHE/js/f9a5a40a526d.js:365
+#: static-media/CACHE/js/fb93b2a750fd.js:367
+#: static-media/CACHE/js/fef441dc0d83.js:365 static-media/js/register.js:42
+msgid "Duplicate Session"
+msgstr "セッションを複写する"
+
+#: static-media/CACHE/js/01ec5c663726.js:365
+#: static-media/CACHE/js/0813507fca4e.js:367
+#: static-media/CACHE/js/3eeee3706ebf.js:367
+#: static-media/CACHE/js/4bd62bdb2da4.js:365
+#: static-media/CACHE/js/6b79d088a188.js:365
+#: static-media/CACHE/js/8347635feab9.js:367
+#: static-media/CACHE/js/9e2f3acda32a.js:365
+#: static-media/CACHE/js/a7eed9cbce79.js:367
+#: static-media/CACHE/js/ab622b78184c.js:367
+#: static-media/CACHE/js/af1972b73435.js:365
+#: static-media/CACHE/js/b4775468438b.js:365
+#: static-media/CACHE/js/c02f606639b0.js:365
+#: static-media/CACHE/js/db7c2b1caabb.js:365
+#: static-media/CACHE/js/f9a5a40a526d.js:365
+#: static-media/CACHE/js/fb93b2a750fd.js:367
+#: static-media/CACHE/js/fef441dc0d83.js:365 static-media/js/register.js:43
+msgid "Maximum Users Exceeded"
+msgstr "利用可能ユーザ数を超過しています"
+
+#: static-media/CACHE/js/01ec5c663726.js:365
+#: static-media/CACHE/js/0813507fca4e.js:367
+#: static-media/CACHE/js/3eeee3706ebf.js:367
+#: static-media/CACHE/js/4bd62bdb2da4.js:365
+#: static-media/CACHE/js/6b79d088a188.js:365
+#: static-media/CACHE/js/8347635feab9.js:367
+#: static-media/CACHE/js/9e2f3acda32a.js:365
+#: static-media/CACHE/js/a7eed9cbce79.js:367
+#: static-media/CACHE/js/ab622b78184c.js:367
+#: static-media/CACHE/js/af1972b73435.js:365
+#: static-media/CACHE/js/b4775468438b.js:365
+#: static-media/CACHE/js/c02f606639b0.js:365
+#: static-media/CACHE/js/db7c2b1caabb.js:365
+#: static-media/CACHE/js/f9a5a40a526d.js:365
+#: static-media/CACHE/js/fb93b2a750fd.js:367
+#: static-media/CACHE/js/fef441dc0d83.js:365 static-media/js/register.js:50
+msgid ""
+"Sorry, registration is not available at this time.  Please try logging in "
+"anonymously or coming back later"
+msgstr ""
+"申し訳ありません。現在は登録を受け付けておりません。登録せずにログインする"
+"か、再度やり直してください。"
+
+#: static-media/CACHE/js/01ec5c663726.js:365
+#: static-media/CACHE/js/0813507fca4e.js:367
+#: static-media/CACHE/js/3eeee3706ebf.js:367
+#: static-media/CACHE/js/4bd62bdb2da4.js:365
+#: static-media/CACHE/js/6b79d088a188.js:365
+#: static-media/CACHE/js/8347635feab9.js:367
+#: static-media/CACHE/js/9e2f3acda32a.js:365
+#: static-media/CACHE/js/a7eed9cbce79.js:367
+#: static-media/CACHE/js/ab622b78184c.js:367
+#: static-media/CACHE/js/af1972b73435.js:365
+#: static-media/CACHE/js/b4775468438b.js:365
+#: static-media/CACHE/js/c02f606639b0.js:365
+#: static-media/CACHE/js/db7c2b1caabb.js:365
+#: static-media/CACHE/js/f9a5a40a526d.js:365
+#: static-media/CACHE/js/fb93b2a750fd.js:367
+#: static-media/CACHE/js/fef441dc0d83.js:365 static-media/js/register.js:52
+msgid "Signup Unavailable"
+msgstr "登録受付停止中"
+
+#: static-media/CACHE/js/01ec5c663726.js:378
+#: static-media/CACHE/js/0813507fca4e.js:381
+#: static-media/CACHE/js/3eeee3706ebf.js:381
+#: static-media/CACHE/js/4bd62bdb2da4.js:378
+#: static-media/CACHE/js/6b79d088a188.js:378
+#: static-media/CACHE/js/8347635feab9.js:381
+#: static-media/CACHE/js/9e2f3acda32a.js:378
+#: static-media/CACHE/js/a7eed9cbce79.js:380
+#: static-media/CACHE/js/ab622b78184c.js:381
+#: static-media/CACHE/js/af1972b73435.js:378
+#: static-media/CACHE/js/b4775468438b.js:378
+#: static-media/CACHE/js/c02f606639b0.js:378
+#: static-media/CACHE/js/db7c2b1caabb.js:378
+#: static-media/CACHE/js/f9a5a40a526d.js:378
+#: static-media/CACHE/js/fb93b2a750fd.js:381
+#: static-media/CACHE/js/fef441dc0d83.js:378 static-media/js/register.js:178
+msgid "You've been registered for the public mapping project."
+msgstr "公共選挙区再編プロジェクトへの登録が完了しました。"
+
+#: static-media/CACHE/js/01ec5c663726.js:378
+#: static-media/CACHE/js/0813507fca4e.js:381
+#: static-media/CACHE/js/3eeee3706ebf.js:381
+#: static-media/CACHE/js/4bd62bdb2da4.js:378
+#: static-media/CACHE/js/6b79d088a188.js:378
+#: static-media/CACHE/js/8347635feab9.js:381
+#: static-media/CACHE/js/9e2f3acda32a.js:378
+#: static-media/CACHE/js/a7eed9cbce79.js:380
+#: static-media/CACHE/js/ab622b78184c.js:381
+#: static-media/CACHE/js/af1972b73435.js:378
+#: static-media/CACHE/js/b4775468438b.js:378
+#: static-media/CACHE/js/c02f606639b0.js:378
+#: static-media/CACHE/js/db7c2b1caabb.js:378
+#: static-media/CACHE/js/f9a5a40a526d.js:378
+#: static-media/CACHE/js/fb93b2a750fd.js:381
+#: static-media/CACHE/js/fef441dc0d83.js:378 static-media/js/register.js:181
+msgid "Success!"
+msgstr "成功しました！"
+
+#: static-media/CACHE/js/01ec5c663726.js:378
+#: static-media/CACHE/js/0813507fca4e.js:381
+#: static-media/CACHE/js/3eeee3706ebf.js:381
+#: static-media/CACHE/js/4bd62bdb2da4.js:378
+#: static-media/CACHE/js/6b79d088a188.js:378
+#: static-media/CACHE/js/8347635feab9.js:381
+#: static-media/CACHE/js/9e2f3acda32a.js:378
+#: static-media/CACHE/js/a7eed9cbce79.js:380
+#: static-media/CACHE/js/ab622b78184c.js:381
+#: static-media/CACHE/js/af1972b73435.js:378
+#: static-media/CACHE/js/b4775468438b.js:378
+#: static-media/CACHE/js/c02f606639b0.js:378
+#: static-media/CACHE/js/db7c2b1caabb.js:378
+#: static-media/CACHE/js/f9a5a40a526d.js:378
+#: static-media/CACHE/js/fb93b2a750fd.js:381
+#: static-media/CACHE/js/fef441dc0d83.js:378 static-media/js/register.js:183
+msgid "Start Mapping"
+msgstr "再編を開始する"
+
+#: static-media/CACHE/js/01ec5c663726.js:378
+#: static-media/CACHE/js/0813507fca4e.js:381
+#: static-media/CACHE/js/3eeee3706ebf.js:381
+#: static-media/CACHE/js/4bd62bdb2da4.js:378
+#: static-media/CACHE/js/6b79d088a188.js:378
+#: static-media/CACHE/js/8347635feab9.js:381
+#: static-media/CACHE/js/9e2f3acda32a.js:378
+#: static-media/CACHE/js/a7eed9cbce79.js:380
+#: static-media/CACHE/js/ab622b78184c.js:381
+#: static-media/CACHE/js/af1972b73435.js:378
+#: static-media/CACHE/js/b4775468438b.js:378
+#: static-media/CACHE/js/c02f606639b0.js:378
+#: static-media/CACHE/js/db7c2b1caabb.js:378
+#: static-media/CACHE/js/f9a5a40a526d.js:378
+#: static-media/CACHE/js/fb93b2a750fd.js:381
+#: static-media/CACHE/js/fef441dc0d83.js:378 static-media/js/register.js:196
+msgid "User Name already exists. Please choose another one."
+msgstr "このユーザ名は既に利用されています。他のユーザ名を選んでください。"
+
+#: static-media/CACHE/js/01ec5c663726.js:378
+#: static-media/CACHE/js/0813507fca4e.js:381
+#: static-media/CACHE/js/3eeee3706ebf.js:381
+#: static-media/CACHE/js/4bd62bdb2da4.js:378
+#: static-media/CACHE/js/6b79d088a188.js:378
+#: static-media/CACHE/js/8347635feab9.js:381
+#: static-media/CACHE/js/9e2f3acda32a.js:378
+#: static-media/CACHE/js/a7eed9cbce79.js:380
+#: static-media/CACHE/js/ab622b78184c.js:381
+#: static-media/CACHE/js/af1972b73435.js:378
+#: static-media/CACHE/js/b4775468438b.js:378
+#: static-media/CACHE/js/c02f606639b0.js:378
+#: static-media/CACHE/js/db7c2b1caabb.js:378
+#: static-media/CACHE/js/f9a5a40a526d.js:378
+#: static-media/CACHE/js/fb93b2a750fd.js:381
+#: static-media/CACHE/js/fef441dc0d83.js:378 static-media/js/register.js:204
+msgid ""
+"Email already exists. Enter another one, or use the password retrieval form"
+msgstr ""
+"このEメールは既に登録されています。他のEメールアドレスを入力するか、パスワー"
+"ド回復フォームを利用してください。"
+
+#: static-media/CACHE/js/01ec5c663726.js:380
+#: static-media/CACHE/js/0813507fca4e.js:383
+#: static-media/CACHE/js/3eeee3706ebf.js:383
+#: static-media/CACHE/js/4bd62bdb2da4.js:380
+#: static-media/CACHE/js/6b79d088a188.js:380
+#: static-media/CACHE/js/8347635feab9.js:383
+#: static-media/CACHE/js/9e2f3acda32a.js:380
+#: static-media/CACHE/js/a7eed9cbce79.js:382
+#: static-media/CACHE/js/ab622b78184c.js:383
+#: static-media/CACHE/js/af1972b73435.js:380
+#: static-media/CACHE/js/b4775468438b.js:380
+#: static-media/CACHE/js/c02f606639b0.js:380
+#: static-media/CACHE/js/db7c2b1caabb.js:380
+#: static-media/CACHE/js/f9a5a40a526d.js:380
+#: static-media/CACHE/js/fb93b2a750fd.js:383
+#: static-media/CACHE/js/fef441dc0d83.js:380 static-media/js/register.js:242
+msgid "Please Wait..."
+msgstr "お待ちください..."
+
+#: static-media/CACHE/js/01ec5c663726.js:383
+#: static-media/CACHE/js/0813507fca4e.js:386
+#: static-media/CACHE/js/3eeee3706ebf.js:386
+#: static-media/CACHE/js/4bd62bdb2da4.js:383
+#: static-media/CACHE/js/6b79d088a188.js:383
+#: static-media/CACHE/js/8347635feab9.js:386
+#: static-media/CACHE/js/9e2f3acda32a.js:383
+#: static-media/CACHE/js/a7eed9cbce79.js:385
+#: static-media/CACHE/js/ab622b78184c.js:386
+#: static-media/CACHE/js/af1972b73435.js:383
+#: static-media/CACHE/js/b4775468438b.js:383
+#: static-media/CACHE/js/c02f606639b0.js:383
+#: static-media/CACHE/js/db7c2b1caabb.js:383
+#: static-media/CACHE/js/f9a5a40a526d.js:383
+#: static-media/CACHE/js/fb93b2a750fd.js:386
+#: static-media/CACHE/js/fef441dc0d83.js:383 static-media/js/register.js:312
+msgid "You entered an incorrect user name or password"
+msgstr "ユーザ名かパスワードが間違っています"
+
+#: static-media/CACHE/js/01ec5c663726.js:383
+#: static-media/CACHE/js/0813507fca4e.js:386
+#: static-media/CACHE/js/3eeee3706ebf.js:386
+#: static-media/CACHE/js/4bd62bdb2da4.js:383
+#: static-media/CACHE/js/6b79d088a188.js:383
+#: static-media/CACHE/js/8347635feab9.js:386
+#: static-media/CACHE/js/9e2f3acda32a.js:383
+#: static-media/CACHE/js/a7eed9cbce79.js:385
+#: static-media/CACHE/js/ab622b78184c.js:386
+#: static-media/CACHE/js/af1972b73435.js:383
+#: static-media/CACHE/js/b4775468438b.js:383
+#: static-media/CACHE/js/c02f606639b0.js:383
+#: static-media/CACHE/js/db7c2b1caabb.js:383
+#: static-media/CACHE/js/f9a5a40a526d.js:383
+#: static-media/CACHE/js/fb93b2a750fd.js:386
+#: static-media/CACHE/js/fef441dc0d83.js:383 static-media/js/register.js:316
+msgid "Login Error"
+msgstr "ログインエラー"
+
+#: static-media/CACHE/js/01ec5c663726.js:383
+#: static-media/CACHE/js/0813507fca4e.js:386
+#: static-media/CACHE/js/3eeee3706ebf.js:386
+#: static-media/CACHE/js/4bd62bdb2da4.js:383
+#: static-media/CACHE/js/6b79d088a188.js:383
+#: static-media/CACHE/js/8347635feab9.js:386
+#: static-media/CACHE/js/9e2f3acda32a.js:383
+#: static-media/CACHE/js/a7eed9cbce79.js:385
+#: static-media/CACHE/js/ab622b78184c.js:386
+#: static-media/CACHE/js/af1972b73435.js:383
+#: static-media/CACHE/js/b4775468438b.js:383
+#: static-media/CACHE/js/c02f606639b0.js:383
+#: static-media/CACHE/js/db7c2b1caabb.js:383
+#: static-media/CACHE/js/f9a5a40a526d.js:383
+#: static-media/CACHE/js/fb93b2a750fd.js:386
+#: static-media/CACHE/js/fef441dc0d83.js:383 static-media/js/register.js:365
+msgid "Logged Off"
+msgstr "ログアウト完了"
+
+#: static-media/CACHE/js/01ec5c663726.js:383
+#: static-media/CACHE/js/0813507fca4e.js:386
+#: static-media/CACHE/js/3eeee3706ebf.js:386
+#: static-media/CACHE/js/4bd62bdb2da4.js:383
+#: static-media/CACHE/js/6b79d088a188.js:383
+#: static-media/CACHE/js/8347635feab9.js:386
+#: static-media/CACHE/js/9e2f3acda32a.js:383
+#: static-media/CACHE/js/a7eed9cbce79.js:385
+#: static-media/CACHE/js/ab622b78184c.js:386
+#: static-media/CACHE/js/af1972b73435.js:383
+#: static-media/CACHE/js/b4775468438b.js:383
+#: static-media/CACHE/js/c02f606639b0.js:383
+#: static-media/CACHE/js/db7c2b1caabb.js:383
+#: static-media/CACHE/js/f9a5a40a526d.js:383
+#: static-media/CACHE/js/fb93b2a750fd.js:386
+#: static-media/CACHE/js/fef441dc0d83.js:383 static-media/js/register.js:366
+msgid ""
+"You have been logged off by another browser. This happens sometimes if you "
+"attempt to access the application from two different locations."
+msgstr ""
+"他のブラウザで既にログアウトしています。これは、別々の場所からアプリケーショ"
+"ンに接続しようとすると起きることがあります。"
+
+#: static-media/CACHE/js/01ec5c663726.js:383
+#: static-media/CACHE/js/0813507fca4e.js:386
+#: static-media/CACHE/js/3eeee3706ebf.js:386
+#: static-media/CACHE/js/4bd62bdb2da4.js:383
+#: static-media/CACHE/js/6b79d088a188.js:383
+#: static-media/CACHE/js/8347635feab9.js:386
+#: static-media/CACHE/js/9e2f3acda32a.js:383
+#: static-media/CACHE/js/a7eed9cbce79.js:385
+#: static-media/CACHE/js/ab622b78184c.js:386
+#: static-media/CACHE/js/af1972b73435.js:383
+#: static-media/CACHE/js/b4775468438b.js:383
+#: static-media/CACHE/js/c02f606639b0.js:383
+#: static-media/CACHE/js/db7c2b1caabb.js:383
+#: static-media/CACHE/js/f9a5a40a526d.js:383
+#: static-media/CACHE/js/fb93b2a750fd.js:386
+#: static-media/CACHE/js/fef441dc0d83.js:383 static-media/js/register.js:367
+msgid "Please log in again"
+msgstr "再度ログインしてください"
+
+#: static-media/CACHE/js/01ec5c663726.js:389
+#: static-media/CACHE/js/0813507fca4e.js:392
+#: static-media/CACHE/js/3eeee3706ebf.js:392
+#: static-media/CACHE/js/4bd62bdb2da4.js:389
+#: static-media/CACHE/js/6b79d088a188.js:389
+#: static-media/CACHE/js/8347635feab9.js:392
+#: static-media/CACHE/js/9e2f3acda32a.js:389
+#: static-media/CACHE/js/a7eed9cbce79.js:391
+#: static-media/CACHE/js/ab622b78184c.js:392
+#: static-media/CACHE/js/af1972b73435.js:389
+#: static-media/CACHE/js/b4775468438b.js:389
+#: static-media/CACHE/js/c02f606639b0.js:389
+#: static-media/CACHE/js/db7c2b1caabb.js:389
+#: static-media/CACHE/js/f9a5a40a526d.js:389
+#: static-media/CACHE/js/fb93b2a750fd.js:392
+#: static-media/CACHE/js/fef441dc0d83.js:389
+#: static-media/js/statisticssets.js:165
+msgid "Loading Statistics..."
+msgstr "統計を読み込んでいます..."
+
+#: static-media/CACHE/js/01ec5c663726.js:395
+#: static-media/CACHE/js/0813507fca4e.js:398
+#: static-media/CACHE/js/3eeee3706ebf.js:398
+#: static-media/CACHE/js/4bd62bdb2da4.js:395
+#: static-media/CACHE/js/6b79d088a188.js:395
+#: static-media/CACHE/js/8347635feab9.js:398
+#: static-media/CACHE/js/9e2f3acda32a.js:395
+#: static-media/CACHE/js/a7eed9cbce79.js:397
+#: static-media/CACHE/js/ab622b78184c.js:398
+#: static-media/CACHE/js/af1972b73435.js:395
+#: static-media/CACHE/js/b4775468438b.js:395
+#: static-media/CACHE/js/c02f606639b0.js:395
+#: static-media/CACHE/js/db7c2b1caabb.js:395
+#: static-media/CACHE/js/f9a5a40a526d.js:395
+#: static-media/CACHE/js/fb93b2a750fd.js:398
+#: static-media/CACHE/js/fef441dc0d83.js:395
+#: static-media/js/statisticssets.js:337
+msgid "Please select 3 or fewer statistics."
+msgstr "選択する統計は３つ以下にしてください。"
+
+#: static-media/CACHE/js/01ec5c663726.js:396
+#: static-media/CACHE/js/0813507fca4e.js:399
+#: static-media/CACHE/js/3eeee3706ebf.js:399
+#: static-media/CACHE/js/4bd62bdb2da4.js:396
+#: static-media/CACHE/js/6b79d088a188.js:396
+#: static-media/CACHE/js/8347635feab9.js:399
+#: static-media/CACHE/js/9e2f3acda32a.js:396
+#: static-media/CACHE/js/a7eed9cbce79.js:398
+#: static-media/CACHE/js/ab622b78184c.js:399
+#: static-media/CACHE/js/af1972b73435.js:396
+#: static-media/CACHE/js/b4775468438b.js:396
+#: static-media/CACHE/js/c02f606639b0.js:396
+#: static-media/CACHE/js/db7c2b1caabb.js:396
+#: static-media/CACHE/js/f9a5a40a526d.js:396
+#: static-media/CACHE/js/fb93b2a750fd.js:399
+#: static-media/CACHE/js/fef441dc0d83.js:396
+#: static-media/js/statisticssets.js:346
+msgid "Please name your statistics set."
+msgstr "統計セットに名前をつけてください。"
+
+#: static-media/CACHE/js/01ec5c663726.js:399
+#: static-media/CACHE/js/0813507fca4e.js:402
+#: static-media/CACHE/js/3eeee3706ebf.js:402
+#: static-media/CACHE/js/4bd62bdb2da4.js:399
+#: static-media/CACHE/js/6b79d088a188.js:399
+#: static-media/CACHE/js/8347635feab9.js:402
+#: static-media/CACHE/js/9e2f3acda32a.js:399
+#: static-media/CACHE/js/a7eed9cbce79.js:401
+#: static-media/CACHE/js/ab622b78184c.js:402
+#: static-media/CACHE/js/af1972b73435.js:399
+#: static-media/CACHE/js/b4775468438b.js:399
+#: static-media/CACHE/js/c02f606639b0.js:399
+#: static-media/CACHE/js/db7c2b1caabb.js:399
+#: static-media/CACHE/js/f9a5a40a526d.js:399
+#: static-media/CACHE/js/fb93b2a750fd.js:402
+#: static-media/CACHE/js/fef441dc0d83.js:399
+#: static-media/js/statisticssets.js:392
+msgid "Please select 1-3 statistics to save in the named set."
+msgstr "このセットに保存する統計を１〜３つまで選んでください。"
+
+#: static-media/CACHE/js/01ec5c663726.js:399
+#: static-media/CACHE/js/0813507fca4e.js:402
+#: static-media/CACHE/js/3eeee3706ebf.js:402
+#: static-media/CACHE/js/4bd62bdb2da4.js:399
+#: static-media/CACHE/js/6b79d088a188.js:399
+#: static-media/CACHE/js/8347635feab9.js:402
+#: static-media/CACHE/js/9e2f3acda32a.js:399
+#: static-media/CACHE/js/a7eed9cbce79.js:401
+#: static-media/CACHE/js/ab622b78184c.js:402
+#: static-media/CACHE/js/af1972b73435.js:399
+#: static-media/CACHE/js/b4775468438b.js:399
+#: static-media/CACHE/js/c02f606639b0.js:399
+#: static-media/CACHE/js/db7c2b1caabb.js:399
+#: static-media/CACHE/js/f9a5a40a526d.js:399
+#: static-media/CACHE/js/fb93b2a750fd.js:402
+#: static-media/CACHE/js/fef441dc0d83.js:399
+#: static-media/js/statisticssets.js:393
+msgid "Incomplete"
+msgstr "未完了"
+
+#: static-media/CACHE/js/01ec5c663726.js:401
+#: static-media/CACHE/js/0813507fca4e.js:404
+#: static-media/CACHE/js/3eeee3706ebf.js:404
+#: static-media/CACHE/js/4bd62bdb2da4.js:401
+#: static-media/CACHE/js/6b79d088a188.js:401
+#: static-media/CACHE/js/8347635feab9.js:404
+#: static-media/CACHE/js/9e2f3acda32a.js:401
+#: static-media/CACHE/js/a7eed9cbce79.js:403
+#: static-media/CACHE/js/ab622b78184c.js:404
+#: static-media/CACHE/js/af1972b73435.js:401
+#: static-media/CACHE/js/b4775468438b.js:401
+#: static-media/CACHE/js/c02f606639b0.js:401
+#: static-media/CACHE/js/db7c2b1caabb.js:401
+#: static-media/CACHE/js/f9a5a40a526d.js:401
+#: static-media/CACHE/js/fb93b2a750fd.js:404
+#: static-media/CACHE/js/fef441dc0d83.js:401
+#: static-media/js/splitsreport.js:51
+msgid "Splits Report"
+msgstr "境界線レポート"
+
+#: static-media/CACHE/js/01ec5c663726.js:401
+#: static-media/CACHE/js/0813507fca4e.js:404
+#: static-media/CACHE/js/3eeee3706ebf.js:404
+#: static-media/CACHE/js/4bd62bdb2da4.js:401
+#: static-media/CACHE/js/6b79d088a188.js:401
+#: static-media/CACHE/js/8347635feab9.js:404
+#: static-media/CACHE/js/9e2f3acda32a.js:401
+#: static-media/CACHE/js/a7eed9cbce79.js:403
+#: static-media/CACHE/js/ab622b78184c.js:404
+#: static-media/CACHE/js/af1972b73435.js:401
+#: static-media/CACHE/js/b4775468438b.js:401
+#: static-media/CACHE/js/c02f606639b0.js:401
+#: static-media/CACHE/js/db7c2b1caabb.js:401
+#: static-media/CACHE/js/f9a5a40a526d.js:401
+#: static-media/CACHE/js/fb93b2a750fd.js:404
+#: static-media/CACHE/js/fef441dc0d83.js:401
+#: static-media/js/splitsreport.js:69
+msgid "Please wait. Retrieving splits report."
+msgstr "境界線レポートを取得しています。お待ちください。"
+
+#: static-media/CACHE/js/01ec5c663726.js:401
+#: static-media/CACHE/js/0813507fca4e.js:404
+#: static-media/CACHE/js/3eeee3706ebf.js:404
+#: static-media/CACHE/js/4bd62bdb2da4.js:401
+#: static-media/CACHE/js/6b79d088a188.js:401
+#: static-media/CACHE/js/8347635feab9.js:404
+#: static-media/CACHE/js/9e2f3acda32a.js:401
+#: static-media/CACHE/js/a7eed9cbce79.js:403
+#: static-media/CACHE/js/ab622b78184c.js:404
+#: static-media/CACHE/js/af1972b73435.js:401
+#: static-media/CACHE/js/b4775468438b.js:401
+#: static-media/CACHE/js/c02f606639b0.js:401
+#: static-media/CACHE/js/db7c2b1caabb.js:401
+#: static-media/CACHE/js/f9a5a40a526d.js:401
+#: static-media/CACHE/js/fb93b2a750fd.js:404
+#: static-media/CACHE/js/fef441dc0d83.js:401
+#: static-media/js/splitsreport.js:72
+msgid "Retrieving Splits Report"
+msgstr "境界線レポート取得中"
+
+#: static-media/CACHE/js/01ec5c663726.js:401
+#: static-media/CACHE/js/0813507fca4e.js:404
+#: static-media/CACHE/js/3eeee3706ebf.js:404
+#: static-media/CACHE/js/4bd62bdb2da4.js:401
+#: static-media/CACHE/js/6b79d088a188.js:401
+#: static-media/CACHE/js/8347635feab9.js:404
+#: static-media/CACHE/js/9e2f3acda32a.js:401
+#: static-media/CACHE/js/a7eed9cbce79.js:403
+#: static-media/CACHE/js/ab622b78184c.js:404
+#: static-media/CACHE/js/af1972b73435.js:401
+#: static-media/CACHE/js/b4775468438b.js:401
+#: static-media/CACHE/js/c02f606639b0.js:401
+#: static-media/CACHE/js/db7c2b1caabb.js:401
+#: static-media/CACHE/js/f9a5a40a526d.js:401
+#: static-media/CACHE/js/fb93b2a750fd.js:404
+#: static-media/CACHE/js/fef441dc0d83.js:401
+#: static-media/js/splitsreport.js:94
+msgid "Error encountered while retrieving splits report: "
+msgstr "境界線レポートの取得中にエラーが発生しました: "
+
+#: static-media/CACHE/js/01ec5c663726.js:401
+#: static-media/CACHE/js/0813507fca4e.js:404
+#: static-media/CACHE/js/3eeee3706ebf.js:404
+#: static-media/CACHE/js/4bd62bdb2da4.js:401
+#: static-media/CACHE/js/6b79d088a188.js:401
+#: static-media/CACHE/js/8347635feab9.js:404
+#: static-media/CACHE/js/9e2f3acda32a.js:401
+#: static-media/CACHE/js/a7eed9cbce79.js:403
+#: static-media/CACHE/js/ab622b78184c.js:404
+#: static-media/CACHE/js/af1972b73435.js:401
+#: static-media/CACHE/js/b4775468438b.js:401
+#: static-media/CACHE/js/c02f606639b0.js:401
+#: static-media/CACHE/js/db7c2b1caabb.js:401
+#: static-media/CACHE/js/f9a5a40a526d.js:401
+#: static-media/CACHE/js/fb93b2a750fd.js:404
+#: static-media/CACHE/js/fef441dc0d83.js:401
+#: static-media/js/splitsreport.js:108
+msgid "Please select either 1, 2, or 3 layers for comparison."
+msgstr "比較するレイヤーを１〜３つまで選んでください"
+
+#: static-media/CACHE/js/01ec5c663726.js:416
+#: static-media/CACHE/js/0813507fca4e.js:419
+#: static-media/CACHE/js/3eeee3706ebf.js:419
+#: static-media/CACHE/js/4bd62bdb2da4.js:416
+#: static-media/CACHE/js/6b79d088a188.js:416
+#: static-media/CACHE/js/8347635feab9.js:419
+#: static-media/CACHE/js/9e2f3acda32a.js:416
+#: static-media/CACHE/js/a7eed9cbce79.js:418
+#: static-media/CACHE/js/ab622b78184c.js:419
+#: static-media/CACHE/js/af1972b73435.js:416
+#: static-media/CACHE/js/b4775468438b.js:416
+#: static-media/CACHE/js/c02f606639b0.js:416
+#: static-media/CACHE/js/db7c2b1caabb.js:416
+#: static-media/CACHE/js/f9a5a40a526d.js:416
+#: static-media/CACHE/js/fb93b2a750fd.js:419
+#: static-media/CACHE/js/fef441dc0d83.js:416
+#: static-media/js/layerchooser.js:59
+msgid "Choose Map Layers"
+msgstr "地図レイヤーを選択"
+
+#: static-media/CACHE/js/01ec5c663726.js:418
+#: static-media/CACHE/js/0813507fca4e.js:421
+#: static-media/CACHE/js/3eeee3706ebf.js:421
+#: static-media/CACHE/js/4bd62bdb2da4.js:418
+#: static-media/CACHE/js/6b79d088a188.js:418
+#: static-media/CACHE/js/8347635feab9.js:421
+#: static-media/CACHE/js/9e2f3acda32a.js:418
+#: static-media/CACHE/js/a7eed9cbce79.js:420
+#: static-media/CACHE/js/ab622b78184c.js:421
+#: static-media/CACHE/js/af1972b73435.js:418
+#: static-media/CACHE/js/b4775468438b.js:418
+#: static-media/CACHE/js/c02f606639b0.js:418
+#: static-media/CACHE/js/db7c2b1caabb.js:418
+#: static-media/CACHE/js/f9a5a40a526d.js:418
+#: static-media/CACHE/js/fb93b2a750fd.js:421
+#: static-media/CACHE/js/fef441dc0d83.js:418
+#: static-media/js/layerchooser.js:170
+msgid "User Name"
+msgstr "ユーザ名"
+
+#: static-media/CACHE/js/01ec5c663726.js:430
+#: static-media/CACHE/js/0813507fca4e.js:433
+#: static-media/CACHE/js/3eeee3706ebf.js:433
+#: static-media/CACHE/js/4bd62bdb2da4.js:430
+#: static-media/CACHE/js/6b79d088a188.js:430
+#: static-media/CACHE/js/8347635feab9.js:433
+#: static-media/CACHE/js/9e2f3acda32a.js:430
+#: static-media/CACHE/js/a7eed9cbce79.js:432
+#: static-media/CACHE/js/ab622b78184c.js:433
+#: static-media/CACHE/js/af1972b73435.js:430
+#: static-media/CACHE/js/b4775468438b.js:430
+#: static-media/CACHE/js/c02f606639b0.js:430
+#: static-media/CACHE/js/db7c2b1caabb.js:430
+#: static-media/CACHE/js/f9a5a40a526d.js:430
+#: static-media/CACHE/js/fb93b2a750fd.js:433
+#: static-media/CACHE/js/fef441dc0d83.js:430 static-media/js/multimember.js:59
+msgid "Set Multi-Member Districts"
+msgstr "複数定員区を設定する"
+
+#: static-media/CACHE/js/01ec5c663726.js:437
+#: static-media/CACHE/js/0813507fca4e.js:444
+#: static-media/CACHE/js/3eeee3706ebf.js:440
+#: static-media/CACHE/js/4bd62bdb2da4.js:437
+#: static-media/CACHE/js/6b79d088a188.js:437
+#: static-media/CACHE/js/8347635feab9.js:440
+#: static-media/CACHE/js/9e2f3acda32a.js:437
+#: static-media/CACHE/js/a7eed9cbce79.js:439
+#: static-media/CACHE/js/ab622b78184c.js:440
+#: static-media/CACHE/js/af1972b73435.js:437
+#: static-media/CACHE/js/b4775468438b.js:437
+#: static-media/CACHE/js/c02f606639b0.js:437
+#: static-media/CACHE/js/db7c2b1caabb.js:437
+#: static-media/CACHE/js/f9a5a40a526d.js:437
+#: static-media/CACHE/js/fb93b2a750fd.js:440
+#: static-media/CACHE/js/fef441dc0d83.js:437
+#: static-media/js/multimember.js:214
+msgid "Unable to assign representatives:"
+msgstr "代表者を割り当てられませんでした:"
+
+#: static-media/CACHE/js/01ec5c663726.js:437
+#: static-media/CACHE/js/0813507fca4e.js:444
+#: static-media/CACHE/js/3eeee3706ebf.js:440
+#: static-media/CACHE/js/4bd62bdb2da4.js:437
+#: static-media/CACHE/js/6b79d088a188.js:437
+#: static-media/CACHE/js/8347635feab9.js:440
+#: static-media/CACHE/js/9e2f3acda32a.js:437
+#: static-media/CACHE/js/a7eed9cbce79.js:439
+#: static-media/CACHE/js/ab622b78184c.js:440
+#: static-media/CACHE/js/af1972b73435.js:437
+#: static-media/CACHE/js/b4775468438b.js:437
+#: static-media/CACHE/js/c02f606639b0.js:437
+#: static-media/CACHE/js/db7c2b1caabb.js:437
+#: static-media/CACHE/js/f9a5a40a526d.js:437
+#: static-media/CACHE/js/fb93b2a750fd.js:440
+#: static-media/CACHE/js/fef441dc0d83.js:437
+#: static-media/js/multimember.js:220
+msgid "Unable to assign representatives"
+msgstr "代表者を割り当てられませんでした"
+
+#: static-media/CACHE/js/01ec5c663726.js:437
+#: static-media/CACHE/js/0813507fca4e.js:444
+#: static-media/CACHE/js/3eeee3706ebf.js:440
+#: static-media/CACHE/js/4bd62bdb2da4.js:437
+#: static-media/CACHE/js/6b79d088a188.js:437
+#: static-media/CACHE/js/8347635feab9.js:440
+#: static-media/CACHE/js/9e2f3acda32a.js:437
+#: static-media/CACHE/js/a7eed9cbce79.js:439
+#: static-media/CACHE/js/ab622b78184c.js:440
+#: static-media/CACHE/js/af1972b73435.js:437
+#: static-media/CACHE/js/b4775468438b.js:437
+#: static-media/CACHE/js/c02f606639b0.js:437
+#: static-media/CACHE/js/db7c2b1caabb.js:437
+#: static-media/CACHE/js/f9a5a40a526d.js:437
+#: static-media/CACHE/js/fb93b2a750fd.js:440
+#: static-media/CACHE/js/fef441dc0d83.js:437
+#: static-media/js/multimember.js:264
+msgid "District"
+msgstr "選挙区"
+
+#: static-media/CACHE/js/01ec5c663726.js:437
+#: static-media/CACHE/js/0813507fca4e.js:444
+#: static-media/CACHE/js/3eeee3706ebf.js:440
+#: static-media/CACHE/js/4bd62bdb2da4.js:437
+#: static-media/CACHE/js/6b79d088a188.js:437
+#: static-media/CACHE/js/8347635feab9.js:440
+#: static-media/CACHE/js/9e2f3acda32a.js:437
+#: static-media/CACHE/js/a7eed9cbce79.js:439
+#: static-media/CACHE/js/ab622b78184c.js:440
+#: static-media/CACHE/js/af1972b73435.js:437
+#: static-media/CACHE/js/b4775468438b.js:437
+#: static-media/CACHE/js/c02f606639b0.js:437
+#: static-media/CACHE/js/db7c2b1caabb.js:437
+#: static-media/CACHE/js/f9a5a40a526d.js:437
+#: static-media/CACHE/js/fb93b2a750fd.js:440
+#: static-media/CACHE/js/fef441dc0d83.js:437
+#: static-media/js/multimember.js:264
+msgid "District ID"
+msgstr "選挙区ID"
+
+#: static-media/CACHE/js/01ec5c663726.js:437
+#: static-media/CACHE/js/0813507fca4e.js:444
+#: static-media/CACHE/js/3eeee3706ebf.js:440
+#: static-media/CACHE/js/4bd62bdb2da4.js:437
+#: static-media/CACHE/js/6b79d088a188.js:437
+#: static-media/CACHE/js/8347635feab9.js:440
+#: static-media/CACHE/js/9e2f3acda32a.js:437
+#: static-media/CACHE/js/a7eed9cbce79.js:439
+#: static-media/CACHE/js/ab622b78184c.js:440
+#: static-media/CACHE/js/af1972b73435.js:437
+#: static-media/CACHE/js/b4775468438b.js:437
+#: static-media/CACHE/js/c02f606639b0.js:437
+#: static-media/CACHE/js/db7c2b1caabb.js:437
+#: static-media/CACHE/js/f9a5a40a526d.js:437
+#: static-media/CACHE/js/fb93b2a750fd.js:440
+#: static-media/CACHE/js/fef441dc0d83.js:437
+#: static-media/js/multimember.js:264
+msgid "# Members"
+msgstr "定員"
+
+#: static-media/CACHE/js/0813507fca4e.js:83
+#: static-media/CACHE/js/3eeee3706ebf.js:83
+#: static-media/CACHE/js/8347635feab9.js:83
+#: static-media/CACHE/js/a7eed9cbce79.js:83
+#: static-media/CACHE/js/ab622b78184c.js:83
+#: static-media/CACHE/js/fb93b2a750fd.js:83 static-media/js/ui.js:154
+msgid ""
+"No plans have been submitted for this leaderboard. Please check back later."
+msgstr ""
+"このスコアボードには計画案が提出されていません。しばらくしてから再度確認して"
+"ください。"
+
+#: static-media/CACHE/js/0813507fca4e.js:335
+#: static-media/CACHE/js/3eeee3706ebf.js:335
+#: static-media/CACHE/js/8347635feab9.js:335
+#: static-media/CACHE/js/a7eed9cbce79.js:335
+#: static-media/CACHE/js/ab622b78184c.js:335
+#: static-media/CACHE/js/fb93b2a750fd.js:335 static-media/js/chooseplan.js:581
+msgid "Current Filter: "
+msgstr "現在の絞り込み条件: "
+
+#: static-media/CACHE/js/0813507fca4e.js:366
+#: static-media/CACHE/js/ab622b78184c.js:366
+#: static-media/CACHE/js/fb93b2a750fd.js:366 static-media/js/reports.js:364
+msgid "Open Current Report in New Window"
+msgstr "現在のレポートを新しいウィンドウで表示する"
+
+#: static-media/js/emailplan.js:42
+msgid "Submit Final Plan to Contest"
+msgstr "最終計画案をコンテストに提出する"
+
+#: static-media/js/emailplan.js:99
+msgid "Please wait. Emailing plan."
+msgstr "計画案を送信中です。お待ちください。"
+
+#: static-media/js/emailplan.js:100 static-media/js/emailplan.js.c:112
+msgid "Emailing Plan"
+msgstr "計画案送信中"
+
+#: static-media/js/emailplan.js:113
+msgid ""
+"Your plan is in the process of being submitted. You will receive a "
+"confirmation email once it has completed successfully. This may take a few "
+"minutes."
+msgstr ""
+"計画案は提出途上にあります。提出に成功すると確認のEメールが送られます。これに"
+"は数分かかることがあります。"
+
+#: static-media/js/emailplan.js:123 static-media/js/emailplan.js.c:132
+msgid "Error Emailing Plan"
+msgstr "計画案送信エラー"
+
+#: static-media/js/emailplan.js:133
+msgid "Please try again later"
+msgstr "後ほどやり直してください"

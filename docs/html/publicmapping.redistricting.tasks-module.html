@@ -1,0 +1,847 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>publicmapping.redistricting.tasks</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="publicmapping-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a href="http://publicmapping.github.com/districtbuilder/">Publicmapping on GitHub</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="publicmapping-module.html">Package&nbsp;publicmapping</a> ::
+        <a href="publicmapping.redistricting-module.html">Package&nbsp;redistricting</a> ::
+        Module&nbsp;tasks
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="publicmapping.redistricting.tasks-module.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== MODULE DESCRIPTION ==================== -->
+<h1 class="epydoc">Module tasks</h1><p class="nomargin-top"><span class="codelink"><a href="publicmapping.redistricting.tasks-pysrc.html">source&nbsp;code</a></span></p>
+<pre class="literalblock">
+
+Utilities for the redistricting application: format conversion,
+useful database queries, etc.
+
+This file is part of The Public Mapping Project
+https://github.com/PublicMapping/
+
+License:
+    Copyright 2010-2012 Micah Altman, Michael McDonald
+
+    Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+Author: 
+    Andrew Jennings, David Zwarg
+
+</pre>
+
+<!-- ==================== CLASSES ==================== -->
+<a name="section-Classes"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Classes</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Classes"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="publicmapping.redistricting.tasks.DistrictFile-class.html" class="summary-name">DistrictFile</a><br />
+      A utility class that can check exported file status.
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="publicmapping.redistricting.tasks.DistrictIndexFile-class.html" class="summary-name">DistrictIndexFile</a><br />
+      The publicmapping projects supports users importing and exporting 
+        their plans to district index files.
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="publicmapping.redistricting.tasks.DistrictShapeFile-class.html" class="summary-name">DistrictShapeFile</a><br />
+      The publicmapping projects supports users exporting their plans to 
+        shape files.
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="publicmapping.redistricting.tasks.PlanReport-class.html" class="summary-name">PlanReport</a><br />
+      A collection of static methods that assist in asynchronous report 
+        generation.
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="publicmapping.redistricting.tasks.CalculatorReport-class.html" class="summary-name">CalculatorReport</a><br />
+      A collection of static methods that assist in asynchronous report 
+        generation for calculator-based reports.
+    </td>
+  </tr>
+</table>
+<!-- ==================== FUNCTIONS ==================== -->
+<a name="section-Functions"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Functions</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Functions"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.tasks-module.html#cleanup" class="summary-sig-name">cleanup</a>()</span><br />
+      Clean out all the old sessions.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tasks-pysrc.html#cleanup">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.tasks-module.html#reaggregate_plan" class="summary-sig-name">reaggregate_plan</a>(<span class="summary-sig-arg">plan_id</span>)</span><br />
+      Asynchronously reaggregate all computed characteristics for each 
+      district in the plan.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tasks-pysrc.html#reaggregate_plan">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.tasks-module.html#validate_plan" class="summary-sig-name">validate_plan</a>(<span class="summary-sig-arg">plan_id</span>)</span><br />
+      Asynchronously validate a plan.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tasks-pysrc.html#validate_plan">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.tasks-module.html#verify_count" class="summary-sig-name">verify_count</a>(<span class="summary-sig-arg">upload_id</span>,
+        <span class="summary-sig-arg">localstore</span>,
+        <span class="summary-sig-arg">language</span>)</span><br />
+      Initialize the verification process by counting the number of geounits
+in the uploaded file.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tasks-pysrc.html#verify_count">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.tasks-module.html#verify_preload" class="summary-sig-name">verify_preload</a>(<span class="summary-sig-arg">upload_id</span>,
+        <span class="summary-sig-arg">language</span>=<span class="summary-sig-default">None</span>)</span><br />
+      Continue the verification process by counting the number of geounits
+in the uploaded file and compare it to the number of geounits in the
+basest geolevel.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tasks-pysrc.html#verify_preload">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.tasks-module.html#copy_to_characteristics" class="summary-sig-name">copy_to_characteristics</a>(<span class="summary-sig-arg">upload_id</span>,
+        <span class="summary-sig-arg">language</span>=<span class="summary-sig-default">None</span>)</span><br />
+      Continue the verification process by copying the holding records for
+the subject into the characteristic table.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tasks-pysrc.html#copy_to_characteristics">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.tasks-module.html#update_vacant_characteristics" class="summary-sig-name">update_vacant_characteristics</a>(<span class="summary-sig-arg">upload_id</span>,
+        <span class="summary-sig-arg">new_subj</span>,
+        <span class="summary-sig-arg">language</span>=<span class="summary-sig-default">None</span>)</span><br />
+      Update the values for the ComputedCharacteristics.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tasks-pysrc.html#update_vacant_characteristics">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.tasks-module.html#renest_uploaded_subject" class="summary-sig-name">renest_uploaded_subject</a>(<span class="summary-sig-arg">upload_id</span>,
+        <span class="summary-sig-arg">language</span>=<span class="summary-sig-default">None</span>)</span><br />
+      Renest all higher level geographies for the uploaded subject.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tasks-pysrc.html#renest_uploaded_subject">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.tasks-module.html#create_views_and_styles" class="summary-sig-name">create_views_and_styles</a>(<span class="summary-sig-arg">upload_id</span>,
+        <span class="summary-sig-arg">language</span>=<span class="summary-sig-default">None</span>)</span><br />
+      Create the spatial views required for visualizing the subject data on the map.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tasks-pysrc.html#create_views_and_styles">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.tasks-module.html#clean_quarantined" class="summary-sig-name">clean_quarantined</a>(<span class="summary-sig-arg">upload_id</span>,
+        <span class="summary-sig-arg">language</span>=<span class="summary-sig-default">None</span>)</span><br />
+      Remove all temporary characteristics in the quarantine area for
+the given upload.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tasks-pysrc.html#clean_quarantined">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+</table>
+<!-- ==================== VARIABLES ==================== -->
+<a name="section-Variables"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Variables</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Variables"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="logger"></a><span class="summary-name">logger</span> = <code title="logging.getLogger(__name__)">logging.getLogger(__name__)</code>
+    </td>
+  </tr>
+</table>
+<p class="indent-wrapped-lines"><b>Imports:</b>
+  <span title="celery.task.task">task</span>,
+  <span title="celery.task.http.HttpDispatchTask">HttpDispatchTask</span>,
+  <span title="codecs.open">open</span>,
+  <span title="django.core.management">management</span>,
+  <span title="django.contrib.comments.models.Comment">Comment</span>,
+  <span title="django.contrib.sessions.models.Session">Session</span>,
+  <span title="django.contrib.sites.models.Site">Site</span>,
+  <span title="django.core.mail.send_mail">send_mail</span>,
+  <span title="django.core.mail.mail_admins">mail_admins</span>,
+  <span title="django.core.mail.EmailMessage">EmailMessage</span>,
+  <span title="django.template.loader">loader</span>,
+  <span title="django.template.Context">DjangoContext</span>,
+  <span title="django.db.connection">connection</span>,
+  <span title="django.db.transaction">transaction</span>,
+  <span title="django.db.models.Sum">Sum</span>,
+  <span title="django.db.models.Min">Min</span>,
+  <span title="django.db.models.Max">Max</span>,
+  <span title="django.db.models.Avg">Avg</span>,
+  <span title="django.conf.settings">settings</span>,
+  <span title="django.utils.translation.ugettext">_</span>,
+  <span title="django.utils.translation.ungettext">_n</span>,
+  <span title="django.utils.translation.get_language">get_language</span>,
+  <span title="django.utils.translation.activate">activate</span>,
+  <span title="tagging.utils.parse_tag_input">parse_tag_input</span>,
+  <span title="tagging.models.Tag">Tag</span>,
+  <span title="tagging.models.TaggedItem">TaggedItem</span>,
+  <span title="datetime.datetime">datetime</span>,
+  <span title="lxml.etree">etree</span>,
+  <span title="lxml.objectify">objectify</span>,
+  <span title="djsld.generator">generator</span>,
+  <span title="csv">csv</span>,
+  <span title="zipfile">zipfile</span>,
+  <span title="tempfile">tempfile</span>,
+  <span title="os">os</span>,
+  <span title="sys">sys</span>,
+  <span title="traceback">traceback</span>,
+  <span title="time">time</span>,
+  <span title="socket">socket</span>,
+  <span title="urllib2">urllib2</span>,
+  <span title="logging">logging</span>,
+  <span title="re">re</span>,
+  <span title="glob.glob">glob</span>,
+  <span title="django.contrib.gis.gdal.gdal_version">gdal_version</span>,
+  <span title="django.contrib.gis.gdal.Envelope">Envelope</span>,
+  <span title="django.contrib.gis.gdal.OGRGeomType">OGRGeomType</span>,
+  <span title="django.contrib.gis.gdal.OGRException">OGRException</span>,
+  <span title="django.contrib.gis.gdal.Driver">Driver</span>,
+  <span title="django.contrib.gis.gdal.check_err">check_err</span>,
+  <span title="django.contrib.gis.gdal.GEOJSON">GEOJSON</span>,
+  <span title="django.contrib.gis.gdal.SpatialReference">SpatialReference</span>,
+  <span title="django.contrib.gis.gdal.HAS_GDAL">HAS_GDAL</span>,
+  <span title="django.contrib.gis.gdal.SRSException">SRSException</span>,
+  <span title="django.contrib.gis.gdal.GDAL_VERSION">GDAL_VERSION</span>,
+  <span title="django.contrib.gis.gdal.OGRIndexError">OGRIndexError</span>,
+  <span title="django.contrib.gis.gdal.DataSource">DataSource</span>,
+  <span title="django.contrib.gis.gdal.OGRGeometry">OGRGeometry</span>,
+  <span title="django.contrib.gis.gdal.gdal_release_date">gdal_release_date</span>,
+  <span title="django.contrib.gis.gdal.CoordTransform">CoordTransform</span>,
+  <span title="django.contrib.gis.gdal.gdal_full_version">gdal_full_version</span>,
+  <span title="django.contrib.gis.gdal.libgdal.lgdal">lgdal</span>,
+  <span title="ctypes.c_double">c_double</span>
+</p><br />
+<!-- ==================== FUNCTION DETAILS ==================== -->
+<a name="section-FunctionDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Function Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-FunctionDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="cleanup"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">cleanup</span>()</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.tasks-pysrc.html#cleanup">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Clean out all the old sessions.</p>
+  <p>Old sessions are sessions whose expiration date is in the past.</p>
+  <dl class="fields">
+    <dt>Decorators:</dt>
+    <dd><ul class="nomargin-top">
+        <li><code>@task</code></li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="reaggregate_plan"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">reaggregate_plan</span>(<span class="sig-arg">plan_id</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.tasks-pysrc.html#reaggregate_plan">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Asynchronously reaggregate all computed characteristics for each 
+  district in the plan.</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>plan_id</code></strong> - The plan to reaggregate</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>An integer count of the number of districts reaggregated</dd>
+    <dt>Decorators:</dt>
+    <dd><ul class="nomargin-top">
+        <li><code>@task</code></li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="validate_plan"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">validate_plan</span>(<span class="sig-arg">plan_id</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.tasks-pysrc.html#validate_plan">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Asynchronously validate a plan.</p>
+  <dl class="fields">
+    <dt>Parameters:</dt>
+    <dd><ul class="nomargin-top">
+        <li><strong class="pname"><code>plan_id</code></strong> - The plan_id to reaggregate</li>
+    </ul></dd>
+    <dt>Returns:</dt>
+        <dd>A flag indicating if the plan is valid</dd>
+    <dt>Decorators:</dt>
+    <dd><ul class="nomargin-top">
+        <li><code>@task</code></li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="verify_count"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">verify_count</span>(<span class="sig-arg">upload_id</span>,
+        <span class="sig-arg">localstore</span>,
+        <span class="sig-arg">language</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.tasks-pysrc.html#verify_count">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Initialize the verification process by counting the number of geounits
+in the uploaded file. After this step completes, the verify_preload
+method is called.
+
+Parameters:
+    upload_id - The id of the SubjectUpload record.
+    localstore - a new subject file that remains when the task is complete
+    language - Optional. If provided, translate the status messages
+        into the specified language (if message files are complete).
+
+</pre>
+  <dl class="fields">
+    <dt>Decorators:</dt>
+    <dd><ul class="nomargin-top">
+        <li><code>@task</code></li>
+        <li><code>@transaction.commit_manually</code></li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="verify_preload"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">verify_preload</span>(<span class="sig-arg">upload_id</span>,
+        <span class="sig-arg">language</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.tasks-pysrc.html#verify_preload">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Continue the verification process by counting the number of geounits
+in the uploaded file and compare it to the number of geounits in the
+basest geolevel. After this step completes, the copy_to_characteristics
+method is called.
+
+Parameters:
+    upload_id - The id of the SubjectUpload record.
+    language - Optional. If provided, translate the status messages
+        into the specified language (if message files are complete).
+
+</pre>
+  <dl class="fields">
+    <dt>Decorators:</dt>
+    <dd><ul class="nomargin-top">
+        <li><code>@task</code></li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="copy_to_characteristics"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">copy_to_characteristics</span>(<span class="sig-arg">upload_id</span>,
+        <span class="sig-arg">language</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.tasks-pysrc.html#copy_to_characteristics">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Continue the verification process by copying the holding records for
+the subject into the characteristic table. This is the last step before
+user intervention for Subject metadata input.
+
+Parameters:
+    upload_id - The id of the SubjectUpload record.
+    language - Optional. If provided, translate the status messages
+        into the specified language (if message files are complete).
+
+</pre>
+  <dl class="fields">
+    <dt>Decorators:</dt>
+    <dd><ul class="nomargin-top">
+        <li><code>@task</code></li>
+        <li><code>@transaction.commit_manually</code></li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="update_vacant_characteristics"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">update_vacant_characteristics</span>(<span class="sig-arg">upload_id</span>,
+        <span class="sig-arg">new_subj</span>,
+        <span class="sig-arg">language</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.tasks-pysrc.html#update_vacant_characteristics">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Update the values for the ComputedCharacteristics. This method
+does not precompute them, just adds dummy values for new subjects.
+For existing subjects, the current ComputedCharacteristics are
+untouched. For new and existing subjects, all plans are marked
+as needing reaggregation.
+
+Parameters:
+    upload_id - The id of the SubjectUpload record.
+    new_subj -
+    language - Optional. If provided, translate the status messages
+        into the specified language (if message files are complete).
+
+</pre>
+  <dl class="fields">
+    <dt>Decorators:</dt>
+    <dd><ul class="nomargin-top">
+        <li><code>@task</code></li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="renest_uploaded_subject"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">renest_uploaded_subject</span>(<span class="sig-arg">upload_id</span>,
+        <span class="sig-arg">language</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.tasks-pysrc.html#renest_uploaded_subject">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Renest all higher level geographies for the uploaded subject.
+
+Parameters:
+    upload_id - The id of the SubjectUpload record.
+    language - Optional. If provided, translate the status messages
+        into the specified language (if message files are complete).
+
+</pre>
+  <dl class="fields">
+    <dt>Decorators:</dt>
+    <dd><ul class="nomargin-top">
+        <li><code>@task</code></li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="create_views_and_styles"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">create_views_and_styles</span>(<span class="sig-arg">upload_id</span>,
+        <span class="sig-arg">language</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.tasks-pysrc.html#create_views_and_styles">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Create the spatial views required for visualizing the subject data on the map.
+
+Parameters:
+    upload_id - The id of the SubjectUpload record.
+    language - Optional. If provided, translate the status messages
+        into the specified language (if message files are complete).
+
+</pre>
+  <dl class="fields">
+    <dt>Decorators:</dt>
+    <dd><ul class="nomargin-top">
+        <li><code>@task</code></li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="clean_quarantined"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">clean_quarantined</span>(<span class="sig-arg">upload_id</span>,
+        <span class="sig-arg">language</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.tasks-pysrc.html#clean_quarantined">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Remove all temporary characteristics in the quarantine area for
+the given upload.
+
+Parameters:
+    upload_id - The id of the SubjectUpload record.
+    language - Optional. If provided, translate the status messages
+        into the specified language (if message files are complete).
+
+</pre>
+  <dl class="fields">
+    <dt>Decorators:</dt>
+    <dd><ul class="nomargin-top">
+        <li><code>@task</code></li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="publicmapping-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a href="http://publicmapping.github.com/districtbuilder/">Publicmapping on GitHub</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Mon Oct  1 16:33:45 2012
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

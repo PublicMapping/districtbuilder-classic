@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>publicmapping.redistricting.tasks.DistrictIndexFile</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="publicmapping-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a href="http://publicmapping.github.com/districtbuilder/">Publicmapping on GitHub</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="publicmapping-module.html">Package&nbsp;publicmapping</a> ::
+        <a href="publicmapping.redistricting-module.html">Package&nbsp;redistricting</a> ::
+        <a href="publicmapping.redistricting.tasks-module.html">Module&nbsp;tasks</a> ::
+        Class&nbsp;DistrictIndexFile
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="publicmapping.redistricting.tasks.DistrictIndexFile-class.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS DESCRIPTION ==================== -->
+<h1 class="epydoc">Class DistrictIndexFile</h1><p class="nomargin-top"><span class="codelink"><a href="publicmapping.redistricting.tasks-pysrc.html#DistrictIndexFile">source&nbsp;code</a></span></p>
+<p>The publicmapping projects supports users importing and exporting 
+  their plans to district index files.  These two-column, csv-formatted 
+  files list all of the base geounits in a plan and to which district they 
+  belong.</p>
+  <p>These files may be uploaded or downloaded in .zip format. The files 
+  should not contain a header row - rows which do not contain a portable id
+  from the database will be ignored.</p>
+
+<!-- ==================== STATIC METHODS ==================== -->
+<a name="section-StaticMethods"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Static Methods</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-StaticMethods"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.tasks.DistrictIndexFile-class.html#index2plan" class="summary-sig-name">index2plan</a>(<span class="summary-sig-arg">name</span>,
+        <span class="summary-sig-arg">body</span>,
+        <span class="summary-sig-arg">filename</span>,
+        <span class="summary-sig-arg">owner</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">template</span>=<span class="summary-sig-default">False</span>,
+        <span class="summary-sig-arg">purge</span>=<span class="summary-sig-default">False</span>,
+        <span class="summary-sig-arg">email</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">language</span>=<span class="summary-sig-default">None</span>)</span><br />
+      Imports a plan using a district index file in csv format.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tasks-pysrc.html#DistrictIndexFile.index2plan">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.tasks.DistrictIndexFile-class.html#plan2index" class="summary-sig-name">plan2index</a>(<span class="summary-sig-arg">plan</span>)</span><br />
+      Gets a zipped copy of the district index file for the
+given plan.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tasks-pysrc.html#DistrictIndexFile.plan2index">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.tasks.DistrictIndexFile-class.html#emailfile" class="summary-sig-name">emailfile</a>(<span class="summary-sig-arg">plan</span>,
+        <span class="summary-sig-arg">user</span>,
+        <span class="summary-sig-arg">post</span>,
+        <span class="summary-sig-arg">language</span>=<span class="summary-sig-default">None</span>)</span><br />
+      Email an archived district index file to a user.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.tasks-pysrc.html#DistrictIndexFile.emailfile">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+</table>
+<!-- ==================== METHOD DETAILS ==================== -->
+<a name="section-MethodDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Method Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-MethodDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="index2plan"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">index2plan</span>(<span class="sig-arg">name</span>,
+        <span class="sig-arg">body</span>,
+        <span class="sig-arg">filename</span>,
+        <span class="sig-arg">owner</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">template</span>=<span class="sig-default">False</span>,
+        <span class="sig-arg">purge</span>=<span class="sig-default">False</span>,
+        <span class="sig-arg">email</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">language</span>=<span class="sig-default">None</span>)</span>
+    <br /><em class="fname">Static Method</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.tasks-pysrc.html#DistrictIndexFile.index2plan">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Imports a plan using a district index file in csv format. 
+There should be only two columns: a CODE matching the 
+portable ids of geounits and a DISTRICT integer
+representing the district to which the geounit should belong.
+
+Parameters:
+    name - The name of the Plan.
+    filename - The path to the district index file.
+    owner - Optional. The user who owns this plan. If not 
+        specified, defaults to the system admin.
+    template - Optional. A flag indicating that this new plan
+        is a template that other users can instantiate.
+    purge - Optional. A flag indicating that the index file that
+        was converted should be disposed.
+    email - Optional. If provided, feedback should be directed
+        through email, otherwise, output to the console.
+    language - Optional. If provided, the task output will be
+        translated to this language (provided message files have
+        been completed).
+
+</pre>
+  <dl class="fields">
+    <dt>Decorators:</dt>
+    <dd><ul class="nomargin-top">
+        <li><code>@task</code></li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="plan2index"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">plan2index</span>(<span class="sig-arg">plan</span>)</span>
+    <br /><em class="fname">Static Method</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.tasks-pysrc.html#DistrictIndexFile.plan2index">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Gets a zipped copy of the district index file for the
+given plan.
+
+Parameters:
+    plan - The plan for which to get an index file
+
+Returns:
+    A file object representing the zipped index file
+
+</pre>
+  <dl class="fields">
+    <dt>Decorators:</dt>
+    <dd><ul class="nomargin-top">
+        <li><code>@task</code></li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="emailfile"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">emailfile</span>(<span class="sig-arg">plan</span>,
+        <span class="sig-arg">user</span>,
+        <span class="sig-arg">post</span>,
+        <span class="sig-arg">language</span>=<span class="sig-default">None</span>)</span>
+    <br /><em class="fname">Static Method</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.tasks-pysrc.html#DistrictIndexFile.emailfile">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Email an archived district index file to a user.
+
+Parameters:
+    plan - The plan to export and mail.
+    user - The user requesting the plan.
+    post - The request context.
+    language - Optional. If provided, translate the email contents to
+        the specified language (if message files are complete).
+
+</pre>
+  <dl class="fields">
+    <dt>Decorators:</dt>
+    <dd><ul class="nomargin-top">
+        <li><code>@task</code></li>
+    </ul></dd>
+  </dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="publicmapping-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a href="http://publicmapping.github.com/districtbuilder/">Publicmapping on GitHub</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Mon Oct  1 16:33:50 2012
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

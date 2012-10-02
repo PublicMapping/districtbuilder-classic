@@ -161,7 +161,7 @@ shareddistricts = function(options) {
                     if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
                         // Only send the token to relative URLs i.e. locally.
                         xhr.setRequestHeader("X-CSRFToken",
-                                             $("#csrfmiddlewaretoken").val());
+                                             $("input[name=csrfmiddlewaretoken]").val());
                     }
                 }
             }
@@ -216,7 +216,7 @@ shareddistricts = function(options) {
                     if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
                         // Only send the token to relative URLs i.e. locally.
                         xhr.setRequestHeader("X-CSRFToken",
-                                             $("#csrfmiddlewaretoken").val());
+                                             $("input[name=csrfmiddlewaretoken]").val());
                     }
                 }
             }

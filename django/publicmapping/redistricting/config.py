@@ -8,7 +8,7 @@ This file is part of The Public Mapping Project
 https://github.com/PublicMapping/
 
 License:
-    Copyright 2010-2011 Micah Altman, Michael McDonald
+    Copyright 2010-2012 Micah Altman, Michael McDonald
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ Author:
     Andrew Jennings, David Zwarg, Kenny Shepard
 """
 
-import os, hashlib, logging, httplib, string, base64, pprint, json, traceback, types
+import os, hashlib, logging, httplib, string, base64, json, traceback, types
 from datetime import datetime, timedelta, tzinfo
 from django.conf import settings
 from django.db.models import Model
@@ -38,53 +38,51 @@ from rosetta import polib
 
 logger = logging.getLogger(__name__)
 
-class ModelHelper:
-    @staticmethod
-    def check_and_update(a_model, unique_id_field='name', overwrite=False, **kwargs):
-        """
-        Check whether an object exists with the given name in the database. If the 
-        object exists and "overwrite" is True, overwrite the object.  If "overwrite"
-        is false, don't overwrite.  If the object doesn't exist, it is always created.
+def check_and_update(a_model, unique_id_field='name', overwrite=False, **kwargs):
+    """
+    Check whether an object exists with the given name in the database. If the 
+    object exists and "overwrite" is True, overwrite the object.  If "overwrite"
+    is false, don't overwrite.  If the object doesn't exist, it is always created.
 
-        This method returns a tuple - the object in the DB after any changes are made,
-        whether the object had to be created, whether the given attributes were consistent
-        with what was in the database, and a message to return indicating any changes.
-        """
-        name = kwargs[unique_id_field]
-        object_name = '%s %s' % (a_model.__name__, name)
-        # Get the model if it exists
-        try:
-            id_args = { unique_id_field: name }
-            current_object = a_model.objects.get(**id_args)
-            #print current_object
-        # If it doesn't exist, just save it and return
-        except ObjectDoesNotExist:
-            new = a_model(**kwargs)
-            new.save()
-            return new, True, False, '%s created' % object_name
-        # If it exists, track any changes and overwrite if requested
-        different = []
-        changed = False
-        message = '%s matches database - no changes%s'
-        for key in kwargs:
-            #print key
-            current_value = current_object.__getattribute__(key)
-            #print current_value
-            config_value = kwargs[key]
-            #print config_value
-            if not (isinstance(current_value, types.StringTypes)) and not (isinstance(current_value, Model)):
-                config_value = type(current_value)(config_value)
-            if current_value != config_value:
-                if overwrite:
-                    current_object.__setattr__(key, config_value)
-                    changed = True
-                    message = 'UPDATED %s; CHANGED attribute(s) "%s"'
-                else:
-                    message = 'Didn\'t change %s; attribute(s) "%s" differ(s) from database configuration.\n\tWARNING: Sync your config file to your app configuration or use the -f switch with setup to force changes'
-                different.append(key)
-        if overwrite and changed:
-            current_object.save()
-        return current_object, False, len(different) > 0, message % (object_name, ', '.join(different))
+    @param a_model: A model class.
+    @param unique_id_field: The field name that is unique.
+    @keyword overwrite: Should the new object be overwritten?
+    @returns: tuple - the object in the DB after any changes are made,
+        whether the object had to be created, 
+        whether the given attributes were consistent with what was in the database, 
+        a message to return indicating any changes.
+    """
+    name = kwargs[unique_id_field]
+    object_name = '%s %s' % (a_model.__name__, name)
+    # Get the model if it exists
+    try:
+        id_args = { unique_id_field: name }
+        current_object = a_model.objects.get(**id_args)
+    # If it doesn't exist, just save it and return
+    except ObjectDoesNotExist:
+        new = a_model(**kwargs)
+        new.save()
+        return new, True, False, '%s created' % object_name
+    # If it exists, track any changes and overwrite if requested
+    different = []
+    changed = False
+    message = '%s matches database - no changes%s'
+    for key in kwargs:
+        current_value = current_object.__getattribute__(key)
+        config_value = kwargs[key]
+        if not (isinstance(current_value, types.StringTypes)) and not (isinstance(current_value, Model)):
+            config_value = type(current_value)(config_value)
+        if current_value != config_value:
+            if overwrite:
+                current_object.__setattr__(key, config_value)
+                changed = True
+                message = 'UPDATED %s; CHANGED attribute(s) "%s"'
+            else:
+                message = 'Didn\'t change %s; attribute(s) "%s" differ(s) from database configuration.\n\tWARNING: Sync your config file to your app configuration or use the -f switch with setup to force changes'
+            different.append(key)
+    if overwrite and changed:
+        current_object.save()
+    return current_object, False, len(different) > 0, message % (object_name, ', '.join(different))
 
 
 class Utils:
@@ -98,8 +96,7 @@ class Utils:
         """
         Delete any sessions that exist in the django database.
 
-        Returns:
-            A flag indicating if the sessions were deleted successfully.
+        @returns: A flag indicating if the sessions were deleted successfully.
         """
         qset = Session.objects.all()
 
@@ -121,6 +118,8 @@ class ConfigImporter:
     def __init__(self, store):
         """
         Create a new config importer, based on the stored config.
+
+        @param store: The data store for the configuration.
         """
         self.store = store
 
@@ -140,8 +139,8 @@ class ConfigImporter:
         """
         Create the django superuser, based on the config.
 
-        Returns:
-            A flag indicating if the import was successful.
+        @param force: Should the Admin settings be written if the model already exist?
+        @returns: A flag indicating if the import was successful.
         """
         try:
             admcfg = self.store.get_admin()
@@ -155,7 +154,7 @@ class ConfigImporter:
                 'email':admcfg.get('email')[:75]
             }
 
-            admin, created, changed, message = ModelHelper.check_and_update(User, unique_id_field='username', overwrite=force, **admin_attributes)
+            admin, created, changed, message = check_and_update(User, unique_id_field='username', overwrite=force, **admin_attributes)
 
             if changed and not force:
                 logger.info(message)
@@ -180,8 +179,8 @@ class ConfigImporter:
         """
         Create region models out of the configuration.
 
-        Returns:
-            A flag indicating if the import was successful.
+        @param force: Should the Region settings be written if the model already exist?
+        @returns: A flag indicating if the import was successful.
         """
         regions = self.store.filter_regions()
         for region in regions:
@@ -190,7 +189,7 @@ class ConfigImporter:
                 'sort_key': region.get('sort_key')
             }
 
-            obj, created, changed, message = ModelHelper.check_and_update(Region, overwrite=force, **attributes)
+            obj, created, changed, message = check_and_update(Region, overwrite=force, **attributes)
 
             for locale in [l[0] for l in settings.LANGUAGES]:
                 po = self.poutils[locale]
@@ -218,8 +217,8 @@ class ConfigImporter:
         """
         Create legislative body models out of the configuration.
 
-        Returns:
-            A flag indicating if the import was successful.
+        @param force: Should the LegislativeBody settings be written if the model already exist?
+        @returns: A flag indicating if the import was successful.
         """
         bodies = self.store.filter_legislative_bodies()
         for body in bodies:
@@ -238,7 +237,7 @@ class ConfigImporter:
                 region_name = body_by_region[0].getparent().getparent().get('id')
             attributes['region'] = Region.objects.get(name=region_name)
 
-            obj, created, changed, message = ModelHelper.check_and_update(LegislativeBody, overwrite=force, **attributes)
+            obj, created, changed, message = check_and_update(LegislativeBody, overwrite=force, **attributes)
 
             for locale in [l[0] for l in settings.LANGUAGES]:
                 po = self.poutils[locale]
@@ -294,8 +293,8 @@ class ConfigImporter:
         """
         Create subject models out of the configuration.
 
-        Returns:
-            A flag indicating if the import was successful.
+        @param force: Should the Subject settings be written if the model already exist?
+        @returns: A flag indicating if the import was successful.
         """
         subjs = self.store.filter_subjects()
         for subj in subjs:
@@ -308,7 +307,7 @@ class ConfigImporter:
                 'sort_key': subj.get('sortkey')
             }
                 
-            obj, created, changed, message = ModelHelper.check_and_update(Subject, overwrite=force, **attributes)
+            obj, created, changed, message = check_and_update(Subject, overwrite=force, **attributes)
 
             for locale in [l[0] for l in settings.LANGUAGES]:
                 po = self.poutils[locale]
@@ -359,8 +358,8 @@ class ConfigImporter:
         """
         Create geolevel models out of the configuration.
 
-        Returns:
-            A flag indicating if the import was successful.
+        @param force: Should the GeoLevels settings be written if the model already exist?
+        @returns: A flag indicating if the import was successful.
         """
 
         # Note that geolevels may be added in any order, but the geounits
@@ -374,7 +373,7 @@ class ConfigImporter:
                 'tolerance': geolevel.get('tolerance')
             }
             
-            glvl, created, changed, message = ModelHelper.check_and_update(Geolevel, overwrite=force, **attributes)
+            glvl, created, changed, message = check_and_update(Geolevel, overwrite=force, **attributes)
     
             for locale in [l[0] for l in settings.LANGUAGES]:
                 po = self.poutils[locale]
@@ -402,8 +401,8 @@ class ConfigImporter:
         """
         Map geolevels to regions.
 
-        Returns:
-            A flag indicating if the import was successful.
+        @param force: Should the Regional GeoLevel settings be written if the model already exist?
+        @returns: A flag indicating if the import was successful.
         """
         regions = self.store.filter_regions()
         for region in regions:
@@ -426,7 +425,7 @@ class ConfigImporter:
                     'min_zoom': geolevel_obj.min_zoom - zero_zoom,
                     'tolerance': geolevel_obj.tolerance
                 }
-                obj, created, changed, message = ModelHelper.check_and_update(Geolevel, overwrite=force, **attributes)
+                obj, created, changed, message = check_and_update(Geolevel, overwrite=force, **attributes)
 
                 for locale in [l[0] for l in settings.LANGUAGES]:
                     po = self.poutils[locale]
@@ -470,7 +469,6 @@ class ConfigImporter:
                     """
                     geolevel_node = self.store.get_geolevel(node.get('ref'))
                     geolevel_name = "%s_%s" % (region.get('id'), geolevel_node.get('id'))
-                    logging.debug('geolevel_name: %s', geolevel_name)
                     geolevel = Geolevel.objects.get(name=geolevel_name)
                     obj, created = LegislativeLevel.objects.get_or_create(
                         legislative_body=body,
@@ -496,10 +494,8 @@ class ConfigImporter:
         """
         Create the Scoring models.
 
-        Scoring is currently optional. Import sections only if they are present.
-
-        Returns:
-            A flag indicating if the import was successful.
+        @param force: Should the Scoring settings be written if the model already exist?
+        @returns: A flag indicating if the import was successful.
         """
         result = True
         if not self.store.has_scoring():
@@ -633,7 +629,7 @@ class ConfigImporter:
                     'function': sf_obj,
                     'legislative_body': lb
                 }
-                crit_obj, created, changed, message = ModelHelper.check_and_update(ValidationCriteria, overwrite=force, **attributes)
+                crit_obj, created, changed, message = check_and_update(ValidationCriteria, overwrite=force, **attributes)
 
                 for locale in [l[0] for l in settings.LANGUAGES]:
                     po = self.poutils[locale]
@@ -661,15 +657,15 @@ class ConfigImporter:
         """
         Create the ScoreFunction models and child scores.
 
-        Returns:
-            A newly created score function object.
+        @param force: Should the ScoreFunction settings be written if the model already exist?
+        @returns: A newly created score function object.
         """
         attributes = {
             'calculator': node.get('calculator')[:500],
             'name': node.get('id')[:50],
             'is_planscore': node.get('type') == 'plan'
         }
-        fn_obj, created, changed, message = ModelHelper.check_and_update(ScoreFunction, overwrite=force, **attributes)
+        fn_obj, created, changed, message = check_and_update(ScoreFunction, overwrite=force, **attributes)
 
         for locale in [l[0] for l in settings.LANGUAGES]:
             po = self.poutils[locale]
@@ -706,8 +702,8 @@ class ConfigImporter:
         """
         Create the ScoreArgument models.
 
-        Returns:
-            A flag indicating if the import was successful.
+        @param force: Should the ScoreArgument settings be written if the model already exist?
+        @returns: A flag indicating if the import was successful.
         """
         # Import arguments for this score function
         for arg in self.store.filter_function_arguments(node):
@@ -794,8 +790,7 @@ class ConfigImporter:
         """
         Create the ContiguityOverride models. This is optional.
 
-        Returns:
-            A flag indicating if the import was successful.
+        @returns: A flag indicating if the import was successful.
         """
         # Remove previous contiguity overrides
         ContiguityOverride.objects.all().delete()
@@ -837,6 +832,9 @@ class SpatialUtils:
     def __init__(self, store=None, config=None):
         """
         Create a new spatial utility, based on the stored config.
+
+        @keyword store: Optional L{StoredConfig} that contains configuration settings.
+        @keyword config: Optional configuration settings.
         """
         if not store is None:
             self.store = store
@@ -893,8 +891,11 @@ class SpatialUtils:
         """
         Remove any configured items in geoserver for the namespace.
 
-        This prevents conflicts in geowebcache when the datastore and
-        featuretype is reconfigured without discarding the old featuretype.
+        This configuration step prevents conflicts in geowebcache 
+        when the datastore and featuretype is reconfigured without 
+        discarding the old featuretype.
+
+        @returns: A flag indicating if the configuration was purged successfully.
         """
         # get the workspace 
         ws_cfg = self._read_config('/geoserver/rest/workspaces/%s.json' % self.ns, 'Could not get workspace %s.' % self.ns)
@@ -964,7 +965,6 @@ class SpatialUtils:
                     logger.debug("Deleted style %s", st_cfg['name'])
 
         return True
-            
 
     def configure_geoserver(self):
         """
@@ -972,8 +972,7 @@ class SpatialUtils:
         geoserver workspace, datastore, feature types, and styles. All 
         configuration steps get processed through the REST config.
 
-        Returns:
-            A flag indicating if geoserver was configured correctly.
+        @returns: A flag indicating if geoserver was configured correctly.
         """
         try:
             srid = Geounit.objects.all()[0].geom.srid
@@ -1039,7 +1038,7 @@ class SpatialUtils:
                 self.create_style(subject.name, geolevel.name, '%s:%s' % (self.ns, featuretype_name,), 'none')
 
                 # Create boundary layer, based on geographic boundaries
-                featuretype_name = '%s_boundaries' % geolevel.name,
+                featuretype_name = '%s_boundaries' % geolevel.name
                 self.create_featuretype(
                     featuretype_name, alias=get_featuretype_name(geolevel.name, subject.name)
                 )
@@ -1056,7 +1055,12 @@ class SpatialUtils:
 
     def create_featuretype(self, feature_type_name, data_store_name='PostGIS', alias=None):
         """
-        Create a featuretype. Assuming the datastore name is always 'PostGIS'.
+        Create a featuretype.
+
+        @param feature_type_name: The name of the feature type.
+        @keyword data_store_name: Optional. The name of the datastore. Defaults to 'PostGIS'
+        @keyword alias: Optional. The new feature type is an alias for this names feature type.
+        @returns: A flag indicating if the feature type was successfully created.
         """
         feature_type_url = '/geoserver/rest/workspaces/%s/datastores/%s/featuretypes' % (self.ns, data_store_name)
 
@@ -1068,6 +1072,13 @@ class SpatialUtils:
         This method will check geoserver for the existence of an object.
         It will create the object if it doesn't exist and log messages
         to the configured logger.
+
+        @param url: The URL of the resource.
+        @param name: The name of the resource.
+        @param dictionary: A dictionary of settings to the resource.
+        @keyword type_name: Optional. Name of the type, if different from the name.
+        @keyword update: Optional. Update the featuretype if it exists?
+        @returns: A flag indicating if the configuration call completed successfully.
         """
         verbose_name = '%s:%s' % ('Geoserver object' if type_name is None else type_name, name)
         if self._rest_check('%s/%s.json' % (url, name)):
@@ -1090,6 +1101,11 @@ class SpatialUtils:
     def feature_template(name, title=None, alias=None):
         """
         Return a common format for feature types.
+
+        @param name: The name of the feature type.
+        @keyword title: Optional. The title of the featuretype, defaults to name.
+        @keyword alias: Optional. The nativeName of the featuretype, defaults to name.
+        @returns: A dictionary of settings for all feature types.
         """
         nativeName = name
         if not alias is None:
@@ -1116,6 +1132,8 @@ class SpatialUtils:
         """
         Attempt to get a REST resource. If the resource exists, and can
         be retrieved successfully, it will pass the check.
+
+        @returns: True if the resource exists and is readable.
         """
         try:
             conn = httplib.HTTPConnection(self.host, self.port)
@@ -1132,6 +1150,13 @@ class SpatialUtils:
         """
         Configure a REST resource. This issues an HTTP POST or PUT request
         to configure or update the specified resource.
+
+        @param method: The HTTP verb to use (GET, PUT, POST)
+        @param url: The URL to access.
+        @param data: The serialized data to send.
+        @param msg: The error message to report if something goes wrong.
+        @keyword headers: Optional. HTTP headers to include in the transaction.
+        @returns: True if the configuration succeeded.
         """
         if headers is None:
             headers = self.headers['default']
@@ -1166,6 +1191,11 @@ ERROR:
     def _read_config(self, url, msg, headers=None):
         """
         Read a configured REST resource.
+
+        @param url: The URL to access.
+        @param msg: An error message to print if something goes wrong.
+        @keyword headers: Optional. HTTP headers to send with the request.
+        @returns: A dictionary loaded from a JSON response.
         """
         if headers is None:
             headers = self.headers['default']
@@ -1183,7 +1213,7 @@ ERROR:
 
         %s
 
-        Please chece the configuration settings, and try again.
+        Please check the configuration settings, and try again.
 """, msg)
                 return None
 
@@ -1201,6 +1231,12 @@ ERROR:
         """
         Create a style for a layer, defaulting to 'polygon' for a polygon
         layer if the style file is not available.
+
+        @param subject_name: The name of the subject.
+        @param geolevel_name: The name of the geolevel.
+        @param style_name: The name of the style.
+        @param style_type: The type of the style.
+        @keyword sld_content: The content of the SLD.
         """
 
         if not style_type:
@@ -1261,6 +1297,13 @@ ERROR:
             logger.debug("Assigned style '%s' to layer '%s'.", style_name, layer_name)
 
     def _get_style(self, geolevel, subject):
+        """
+        Get an SLD file from the file system.
+
+        @param geolevel: The geolevel name.
+        @param subject: The subject name.
+        @returns: The content of an SLD file on the filesystem.
+        """
         if not geolevel:
             path = '%s/%s:%s.sld' % (self.styledir, self.ns, subject)
         else:
@@ -1293,9 +1336,9 @@ WARNING:
         Renesting the geometry works with Census Geography only that
         has treecodes.
 
-        Parameters:
-            glconf - The configuration geolevel
-            subject - The subject to aggregate, default aggregates everything.
+        @param glconf: The configuration geolevel
+        @keyword subject: Optional. The subject to aggregate, default aggregates everything.
+        @returns: True when geolevel is completely renested.
         """
         parent = None
 
@@ -1310,7 +1353,7 @@ WARNING:
        
             # Get the parent node
             parent = llevel.getparent()
-            while parent.getparent().tag != 'GeoLevels':
+            while parent.getparent() is not None and parent.getparent().tag != 'GeoLevels':
                 # Find the parent node (the geographic THIS geolevel should
                 # match after renesting) by traveling up the nested GeoLevel
                 # nodes until we get to the top.
@@ -1330,7 +1373,14 @@ WARNING:
 
 
 class PoUtils:
+    """
+    Utility class to manage translation strings in xmlconfig files.
+    """
     def __init__(self, locale):
+        """
+        Create a new utility object for a specific locale.
+        """
+
         self.popath = 'locale/%(locale)s/LC_MESSAGES/xmlconfig.po' % {'locale':locale}
         self.mopath = 'locale/%(locale)s/LC_MESSAGES/xmlconfig.mo' % {'locale':locale}
         if os.path.exists(self.popath):
@@ -1358,6 +1408,9 @@ class PoUtils:
     def add_or_update(self, msgid='', msgstr=''):
         """
         Add a POEntry to the .po file, or update it if it already exists.
+
+        @keyword msgid: The .po msgid
+        @keyword msgstr: The .po msgstr
         """
         entry = self.pofile.find(msgid)
         if entry is None:
@@ -1367,6 +1420,9 @@ class PoUtils:
             entry.msgstr = msgstr
 
     def save(self):
+        """
+        Save the .po file, and compile the .mo file.
+        """
         logger.debug('Saving file %(po)s.', {'po':self.popath})
         self.pofile.save(self.popath)
 

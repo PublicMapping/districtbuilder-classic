@@ -64,17 +64,22 @@
 <!-- ==================== CLASS DESCRIPTION ==================== -->
 <h1 class="epydoc">Class Geolevel</h1><p class="nomargin-top"><span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#Geolevel">source&nbsp;code</a></span></p>
 <center>
-<center>  <map id="uml_class_diagram_for_publicma_52" name="uml_class_diagram_for_publicma_52">
-<area shape="rect" id="node82" href="publicmapping.redistricting.models.Geolevel-class.html#name" title="publicmapping.redistricting.models.Geolevel.name" alt="" coords="17,31,127,49"/>
-<area shape="rect" id="node82" href="publicmapping.redistricting.models.Geolevel-class.html#label" title="publicmapping.redistricting.models.Geolevel.label" alt="" coords="17,49,127,68"/>
-<area shape="rect" id="node82" href="publicmapping.redistricting.models.Geolevel-class.html#min_zoom" title="publicmapping.redistricting.models.Geolevel.min_zoom" alt="" coords="17,68,127,87"/>
-<area shape="rect" id="node82" href="publicmapping.redistricting.models.Geolevel-class.html#sort_key" title="publicmapping.redistricting.models.Geolevel.sort_key" alt="" coords="17,87,127,105"/>
-<area shape="rect" id="node82" href="publicmapping.redistricting.models.Geolevel-class.html#tolerance" title="publicmapping.redistricting.models.Geolevel.tolerance" alt="" coords="17,105,127,124"/>
-<area shape="rect" id="node82" href="publicmapping.redistricting.models.Geolevel.Meta-class.html" title="Additional information about the Subject model." alt="" coords="17,124,127,143"/>
-<area shape="rect" id="node82" href="publicmapping.redistricting.models.Geolevel-class.html#__unicode__" title="Represent the Geolevel as a unicode string." alt="" coords="17,145,127,164"/>
-<area shape="rect" id="node1" href="publicmapping.redistricting.models.Geolevel-class.html" title="A geographic classification for Geounits." alt="" coords="5,6,139,170"/>
+<center>  <map id="uml_class_diagram_for_publicma_58" name="uml_class_diagram_for_publicma_58">
+<area shape="rect" id="node89" href="publicmapping.redistricting.models.Geolevel-class.html#name" title="publicmapping.redistricting.models.Geolevel.name" alt="" coords="17,164,300,183"/>
+<area shape="rect" id="node89" href="publicmapping.redistricting.models.Geolevel-class.html#min_zoom" title="publicmapping.redistricting.models.Geolevel.min_zoom" alt="" coords="17,183,300,201"/>
+<area shape="rect" id="node89" href="publicmapping.redistricting.models.Geolevel-class.html#sort_key" title="publicmapping.redistricting.models.Geolevel.sort_key" alt="" coords="17,201,300,220"/>
+<area shape="rect" id="node89" href="publicmapping.redistricting.models.Geolevel-class.html#tolerance" title="publicmapping.redistricting.models.Geolevel.tolerance" alt="" coords="17,220,300,239"/>
+<area shape="rect" id="node89" href="publicmapping.redistricting.models.Geolevel.Meta-class.html" title="Additional information about the Subject model." alt="" coords="17,239,300,257"/>
+<area shape="rect" id="node89" href="publicmapping.redistricting.models.Geolevel-class.html#__unicode__" title="Represent the Geolevel as a unicode string." alt="" coords="17,260,300,279"/>
+<area shape="rect" id="node89" href="publicmapping.redistricting.models.Geolevel-class.html#renest" title="Renest all geounits in this geolevel, based on the parent (smaller!) geography in the parent." alt="" coords="17,279,300,297"/>
+<area shape="rect" id="node1" href="publicmapping.redistricting.models.Geolevel-class.html" title="A geographic classification for Geounits." alt="" coords="5,139,312,303"/>
+<area shape="rect" id="node90" href="publicmapping.redistricting.models.BaseModel-class.html#__init__" title="Initialize the message file cache." alt="" coords="69,39,247,57"/>
+<area shape="rect" id="node90" href="publicmapping.redistricting.models.BaseModel-class.html#get_short_label" title="Get the short label (a.k.a." alt="" coords="69,57,247,76"/>
+<area shape="rect" id="node90" href="publicmapping.redistricting.models.BaseModel-class.html#get_label" title="Get the label of the object." alt="" coords="69,76,247,95"/>
+<area shape="rect" id="node90" href="publicmapping.redistricting.models.BaseModel-class.html#get_long_description" title="Get the description of the object." alt="" coords="69,95,247,113"/>
+<area shape="rect" id="node2" href="publicmapping.redistricting.models.BaseModel-class.html" title="A base class for models that have short labels, labels, and long descriptions." alt="" coords="57,6,257,119"/>
 </map>
-  <img src="uml_class_diagram_for_publicma_52.gif" alt='' usemap="#uml_class_diagram_for_publicma_52" ismap="ismap" class="graph-without-title" />
+  <img src="uml_class_diagram_for_publicma_58.gif" alt='' usemap="#uml_class_diagram_for_publicma_58" ismap="ismap" class="graph-without-title" />
 </center>
 </center>
 <hr />
@@ -143,6 +148,37 @@
       
     </td>
   </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="publicmapping.redistricting.models.Geolevel-class.html#renest" class="summary-sig-name">renest</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">parent</span>,
+        <span class="summary-sig-arg">subject</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">spatial</span>=<span class="summary-sig-default">True</span>)</span><br />
+      Renest all geounits in this geolevel, based on the parent (smaller!)
+geography in the parent.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#Geolevel.renest">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="publicmapping.redistricting.models.BaseModel-class.html">BaseModel</a></code></b>:
+      <code><a href="publicmapping.redistricting.models.BaseModel-class.html#__init__">__init__</a></code>,
+      <code><a href="publicmapping.redistricting.models.BaseModel-class.html#get_label">get_label</a></code>,
+      <code><a href="publicmapping.redistricting.models.BaseModel-class.html#get_long_description">get_long_description</a></code>,
+      <code><a href="publicmapping.redistricting.models.BaseModel-class.html#get_short_label">get_short_label</a></code>
+      </p>
+    </td>
+  </tr>
 </table>
 <!-- ==================== CLASS VARIABLES ==================== -->
 <a name="section-ClassVariables"></a>
@@ -166,13 +202,6 @@
       <span class="summary-type">&nbsp;</span>
     </td><td class="summary">
         <a name="name"></a><span class="summary-name">name</span> = <code title="models.CharField(max_length= 50)">models.CharField(max_length= 50)</code>
-    </td>
-  </tr>
-<tr>
-    <td width="15%" align="right" valign="top" class="summary">
-      <span class="summary-type">&nbsp;</span>
-    </td><td class="summary">
-        <a name="label"></a><span class="summary-name">label</span> = <code title="models.CharField(max_length= 20)">models.CharField(max_length= 20)</code>
     </td>
   </tr>
 <tr>
@@ -235,6 +264,40 @@
   </dl>
 </td></tr></table>
 </div>
+<a name="renest"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">renest</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">parent</span>,
+        <span class="sig-arg">subject</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">spatial</span>=<span class="sig-default">True</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="publicmapping.redistricting.models-pysrc.html#Geolevel.renest">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+
+Renest all geounits in this geolevel, based on the parent (smaller!)
+geography in the parent.
+
+Parameters:
+    parent -- The smaller geographic areas that comprise this geography.
+    subject -- The subject to aggregate. Optional. If omitted, i
+        aggregate all subjects.
+    spatial -- A flag indicating that the spatial aggregates should be
+        computed as well as the numerical aggregates.
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
 <br />
 <!-- ==================== NAVIGATION BAR ==================== -->
 <table class="navbar" border="0" width="100%" cellpadding="0"
@@ -267,7 +330,7 @@
 <table border="0" cellpadding="0" cellspacing="0" width="100%%">
   <tr>
     <td align="left" class="footer">
-    Generated by Epydoc 3.0.1 on Thu Jan 12 09:54:07 2012
+    Generated by Epydoc 3.0.1 on Mon Oct  1 16:33:49 2012
     </td>
     <td align="right" class="footer">
       <a target="mainFrame" href="http://epydoc.sourceforge.net"

@@ -38,10 +38,15 @@
       {% endblock %}
       
       {% block toolset_tabs %}
+        {% with district_label=body_member_long_label|capfirst %}
           <ul class="mapping_tabs">
             <li><a href="#toolset_draw">{% trans "Map Editing" %}</a></li>
-            <li><a href="#toolset_district">{{ body_member_long_label|capfirst }} {% trans "Tools" %}</a></li>
+            <li><a href="#toolset_district">
+                {% blocktrans %}{{ district_label }} Tools{% endblocktrans %}
+                </a>
+            </li>
           </ul>  
+        {% endwith %}
       {% endblock %}
       
       
@@ -55,25 +60,27 @@
           </div>
          </div>
        
+
+    {% with district_label=body_member_long_label|capfirst %}
         <div class="toolset_group toolset_group_lg">
           <div>
-            <button id="single_drawing_tool" title="{% blocktrans %}Single {{ body_member_long_label }} select; +Shift to select multiple {{ body_members}}{% endblocktrans %}" class="btntoggle titletip" >{% trans "Single" %}<br/>{% trans "Select" %}</button>
-            <button id="rectangle_drawing_tool" title="{% trans "Select by rectangle" %}" class="btntoggle titletip" >{% trans "Rectangle" %}<br/>{% trans "Select" %}</button>
+            <button id="single_drawing_tool" title="{% blocktrans %}Single {{ body_member_long_label }} select; +Shift to select multiple {{ body_members}}{% endblocktrans %}" class="btntoggle titletip" >{% blocktrans %}Single<br/>Select{% endblocktrans %}</button>
+            <button id="rectangle_drawing_tool" title="{% trans "Select by rectangle" %}" class="btntoggle titletip" >{% blocktrans %}Rectangle<br/>Select{% endblocktrans %}</button>
             <button id="polygon_drawing_tool" title="{% trans "Select by drawing a polygon" %}" class="btntoggle titletip">{% trans "Polygon" %}<br/>{% trans "Select" %}</button>
           </div>
         </div>  
         <div class="toolset_group toolset_group_lg">
           <div>
-            <button id="anchor_tool" class="titletip" title="{% blocktrans %}Enable anchor mode, then select a {{ body_member_long_label }} name to repeatedly assign areas to a {{ body_member_long_label }}{% endblocktrans %}">{% trans "Anchor" %}<br/>{{ body_member_long_label|capfirst }}</button>
+            <button id="anchor_tool" class="titletip" title="{% blocktrans %}Enable anchor mode, then select a {{ body_member_long_label }} name to repeatedly assign areas to a {{ body_member_long_label }}{% endblocktrans %}">{% blocktrans with body_member_long_label|capfirst as district_label %}Anchor<br/>{{ district_label }}{% endblocktrans %}</button>
             <div class="button_group" id="control_assign_district">
-              <label>{% trans "Assign to" %} {{ body_member_long_label|capfirst }}</label><br/>
+              <label>{% blocktrans with body_member_long_label|capfirst as district_label %}Assign to {{ district_label }}{% endblocktrans %}</label><br/>
               <select id="assign_district" class="titletip" title="{% blocktrans %}Assign {{ body_members }} currently selected on map by choosing a {{ body_member_long_label }} name from drop down list{% endblocktrans %}">
               <option value="-1">-- {% trans "Select One" %} --</option>
               {% for d in districts %}
                   <option value="{{ d.district_id }}">{{ d.long_label }}</option>
               {% endfor %}
               {% ifnotequal max_dists districts|length %}
-                  <option value="new">{% trans "New" %} {{ body_member_long_label|capfirst }}</option>
+                  <option value="new">{% blocktrans with body_member_long_label|capfirst as district_label %}New {{ district_label }}{% endblocktrans %}</option>
               {% endifnotequal %}
             </select>
             </div>
@@ -86,7 +93,10 @@
             <button id="fix_unassigned_button" class="titletip" title="{% blocktrans %}Perform automated resolution of minor unassigned geographies{% endblocktrans %}">{% blocktrans %}Fix<br/>Unassigned{% endblocktrans %}</button>
           </div>
           {% endif %}
+
           
+    {% comment %}End of district_label var{% endcomment %}
+    {% endwith %}
             {% comment %}
             
             This hidden div is used to style the locked districts.
@@ -101,15 +111,22 @@
       {% endblock toolset_draw %}
 
       {% block toolset_district %}
+      {% with district_label=body_member_long_label|capfirst %}
       <div class="toolset" id="toolset_district">
         <div class="toolset_group">
           <button class="navigate_map_tool active btntoggle toggle">{% trans "Pan" %}</button><br/>
-          <button class=" identify_map_tool btntoggle titletip" title="{% trans "Click on a geounit to see its demographic info." %}">{% trans "Info" %}</button>
+          <button class="identify_map_tool btntoggle titletip" title="{% trans "Click on a geounit to see its demographic info." %}">{% trans "Info" %}</button>
         </div>
         <div class="toolset_group toolset_group_lg">
-            <button id="lock_district_map_tool" title="{% blocktrans %}Click on a {{ body_member_long_label }} to lock or unlock it.{% endblocktrans %}" class="btntoggle titletip">{% trans "Lock" %}<br/>{{ body_member_long_label|capfirst }}</button> 
-            <button id="district_id_map_tool" title="{% blocktrans %}Click on a {{ body_member_long_label }} to see its ID.{% endblocktrans %}" class="btntoggle titletip">{{ body_member_long_label|capfirst }}<br/>{% trans "Info" %}</button> 
-            <button id="district_select_tool" title="{% blocktrans %}Unassign all the units in a {{ body_member_long_label }}{% endblocktrans %}" class="btntoggle titletip">{% trans "Unassign" %}<br/>{{ body_member_long_label|capfirst }}</button>
+            <button id="lock_district_map_tool" title="{% blocktrans %}Click on a {{ body_member_long_label }} to lock or unlock it.{% endblocktrans %}" class="btntoggle titletip">
+                {% blocktrans %}Lock<br />{{ district_label }}{% endblocktrans %}
+            </button>
+            <button id="district_id_map_tool" title="{% blocktrans %}Click on a {{ body_member_long_label }} to see its ID.{% endblocktrans %}" class="btntoggle titletip">
+                {% blocktrans %}{{ district_label }}<br />Info{% endblocktrans %}
+            </button>
+            <button id="district_select_tool" title="{% blocktrans %}Unassign all the units in a {{ body_member_long_label }}{% endblocktrans %}" class="btntoggle titletip">
+                {% blocktrans %}Unassign<br/>{{ district_label }}{% endblocktrans %}
+            </button>
             <button id="copy_paste_tool" title="{% blocktrans %}Copy a {{ body_member_long_label }} from another {{ plan_text }}{% endblocktrans %}" class="titletip">{% blocktrans %}Copy and</br>Paste{% endblocktrans %}</button>
         </div>
 
@@ -125,9 +142,7 @@
         </div>
         <div class="clear"></div>
       </div>
-          
-                    
-
+      {% endwith %}
       {% endblock %}
       
         {% block share_panel %}
@@ -175,7 +190,7 @@
                 </ol>
                 </p>
             </div>
-            <button id="btnVerifyAndSubmit">{% trans "Verify and Post Plan to Leaderboards" %}</button>            
+            <button id="btnVerifyAndSubmit">{% trans "Verify and Submit Plan to Leaderboards" %}</button>            
         </div>
         {% endif %}
     {% endblock %}
@@ -347,10 +362,12 @@
             <tr>
                 <td colspan="2" id="disclaimer_text_column">
                     {% blocktrans %}
-                    By submitting a plan for consideration, you are agreeing to have the plan
-                    published in local news media outlets and presented to City Council. Unless
-                    you request otherwise, the project partners will attempt to include attribution
-                    (your name or team name) for the plan whenever feasible.
+                    By submitting a plan for consideration, you are agreeing
+                    to have your plan published in local news media outlets
+                    and have it presented to a legislative body. Unless
+                    you request otherwise, the project partners will attempt
+                    to include attribution (your name or team name) for the
+                    plan whenever feasible.
                     {% endblocktrans %}
                 </td>
             </tr>
