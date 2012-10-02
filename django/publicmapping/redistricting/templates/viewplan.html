@@ -764,7 +764,7 @@
                 </span>
                 <select id="legSelectorLeaderboards">
                     {% for body in leaderboard_bodies %}
-                        <option value="{{ body.id }}">{{ body.name }}</option>
+                        <option value="{{ body.id }}">{{ body.get_long_description }}</option>
                     {% endfor %}
                 </select>
             </div>
