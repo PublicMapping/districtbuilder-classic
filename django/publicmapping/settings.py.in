@@ -30,7 +30,7 @@ Author:
 
 # Django settings for publicmapping project.
 
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 SITE_ID = 1
 

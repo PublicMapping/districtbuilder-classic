@@ -389,13 +389,13 @@ def commonplan(request, planid):
         max_dists = plan.legislative_body.max_districts
         body_member_short_label = plan.legislative_body.get_short_label()
         body_member_long_label = plan.legislative_body.get_label()
-        body_name = plan.legislative_body.get_short_label()
+        body_members = plan.legislative_body.get_members_label()
         reporting_template = 'bard_%s.html' % plan.legislative_body.name if not plan.is_community() else None
        
-        index = body_member_short_label.find('%')
+        index = body_member_short_label.find('%(district_id)s')
         if index >= 0:
             body_member_short_label = body_member_short_label[0:index]
-        index = body_member_long_label.find('%')
+        index = body_member_long_label.find('%(district_id)s')
         if index >= 0:
             body_member_long_label = body_member_long_label[0:index]
         if not editable and not can_view(request.user, plan):
@@ -431,7 +431,7 @@ def commonplan(request, planid):
         max_dists = 0
         body_member_short_label = ''
         body_member_long_label = _('District') + ' '
-        body_name = None
+        body_members = _n('district','districts',2)
         reporting_template = None
         tags = []
         calculator_reports = []
@@ -525,9 +525,9 @@ def commonplan(request, planid):
         'max_dists': max_dists + 1,
         'ga_account': settings.GA_ACCOUNT,
         'ga_domain': settings.GA_DOMAIN,
-        'body_member_short_label': short_label, # i18n, plz
-        'body_member_long_label': long_label,   # i18n, plz
-        'body_members': inflect.engine().plural(long_label),  # i18n, plz
+        'body_member_short_label': short_label, 
+        'body_member_long_label': long_label,
+        'body_members': body_members,
         'reporting_template': reporting_template,
         'study_area_extent': study_area_extent,
         'has_leaderboard' : len(ScoreDisplay.objects.filter(is_page=True)) > 0,

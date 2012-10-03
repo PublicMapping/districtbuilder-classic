@@ -7,17 +7,17 @@
             definitions later), a name, and a label for plan items 
             ("District" for Congressional, etc) -->
         <LegislativeBody id="congress" name="Congressional" short_label="%(district_id)s" 
-            long_label="District %(district_id)s" maxdistricts="11" sort_key="1"/>
+            long_label="District %(district_id)s" maxdistricts="11" sort_key="1" members="Districts"/>
         <LegislativeBody id="house" name="State House" short_label="%(district_id)s" 
-            long_label="District %(district_id)s" maxdistricts="100" sort_key="2"/>
+            long_label="District %(district_id)s" maxdistricts="100" sort_key="2" members="Districts"/>
         <LegislativeBody id="senate" name="State Senate" short_label="%(district_id)s"
-            long_label="District %(district_id)s" maxdistricts="40" sort_key="3"/>
+            long_label="District %(district_id)s" maxdistricts="40" sort_key="3" members="Districts"/>
         <LegislativeBody id="community" name="Community Map" short_label="%(district_id)s"
-            long_label="Community %(district_id)s" maxdistricts="999" is_community="true" sort_key="4"/>
+            long_label="Community %(district_id)s" maxdistricts="999" is_community="true" sort_key="4" members="Communities"/>
         <LegislativeBody id="dc_area_council" name="DC Planning Council" short_label="%(district_id)s"
-            long_label="District %(district_id)s" maxdistricts="5" sort_key="5"/>
+            long_label="District %(district_id)s" maxdistricts="5" sort_key="5" members="Districts"/>
         <LegislativeBody id="dc_community" name="DC Community Map" short_label="%(district_id)s"
-            long_label="Community %(district_id)s" maxdistricts="999" is_community="true" sort_key="6"/>
+            long_label="Community %(district_id)s" maxdistricts="999" is_community="true" sort_key="6" members="Communities"/>
     </LegislativeBodies>
 
     <!-- Define Regions as aggregations of smaller geographic units. -->

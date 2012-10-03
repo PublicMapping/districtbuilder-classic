@@ -195,15 +195,18 @@ class ConfigImporter:
                 po = self.poutils[locale]
                 po.add_or_update(
                     msgid=u'%s short label' % attributes['name'],
-                    msgstr=region.get('name') or ''
+                    msgstr=region.get('name') or '',
+                    occurs=[(os.path.abspath(self.store.datafile), region.sourceline,)]
                 )
                 po.add_or_update(
                     msgid=u'%s label' % attributes['name'],
-                    msgstr=region.get('label') or ''
+                    msgstr=region.get('label') or '',
+                    occurs=[(os.path.abspath(self.store.datafile), region.sourceline,)]
                 )
                 po.add_or_update(
                     msgid=u'%s long description' % attributes['name'],
-                    msgstr=region.get('description') or ''
+                    msgstr=region.get('description') or '',
+                    occurs=[(os.path.abspath(self.store.datafile), region.sourceline,)]
                 )
 
             if changed and not force:
@@ -243,15 +246,23 @@ class ConfigImporter:
                 po = self.poutils[locale]
                 po.add_or_update(
                     msgid=u'%s short label' % attributes['name'],
-                    msgstr=body.get('short_label') or '%(district_id)s'
+                    msgstr=body.get('short_label') or '%(district_id)s',
+                    occurs=[(os.path.abspath(self.store.datafile), body.sourceline,)]
                 )
                 po.add_or_update(
                     msgid=u'%s label' % attributes['name'],
-                    msgstr=body.get('long_label') or '%(district_id)s'
+                    msgstr=body.get('long_label') or '%(district_id)s',
+                    occurs=[(os.path.abspath(self.store.datafile), body.sourceline,)]
                 )
                 po.add_or_update(
                     msgid=u'%s long description' % attributes['name'],
-                    msgstr=body.get('name')
+                    msgstr=body.get('name'),
+                    occurs=[(os.path.abspath(self.store.datafile), body.sourceline,)]
+                )
+                po.add_or_update(
+                    msgid=u'%s members' % attributes['name'],
+                    msgstr=body.get('members'),
+                    occurs=[(os.path.abspath(self.store.datafile), body.sourceline,)]
                 )
 
             if changed and not force:
@@ -313,15 +324,18 @@ class ConfigImporter:
                 po = self.poutils[locale]
                 po.add_or_update(
                     msgid=u'%s short label' % attributes['name'],
-                    msgstr=subj.get('short_name') or ''
+                    msgstr=subj.get('short_name') or '',
+                    occurs=[(os.path.abspath(self.store.datafile), subj.sourceline,)]
                 )
                 po.add_or_update(
                     msgid=u'%s label' % attributes['name'],
-                    msgstr=subj.get('name') or ''
+                    msgstr=subj.get('name') or '',
+                    occurs=[(os.path.abspath(self.store.datafile), subj.sourceline,)]
                 )
                 po.add_or_update(
                     msgid=u'%s long description' % attributes['name'],
-                    msgstr=''
+                    msgstr='',
+                    occurs=[(os.path.abspath(self.store.datafile), subj.sourceline,)]
                 )
 
             if changed and not force:
@@ -379,15 +393,18 @@ class ConfigImporter:
                 po = self.poutils[locale]
                 po.add_or_update(
                     msgid=u'%s short label' % attributes['name'],
-                    msgstr=geolevel.get('name') or ''
+                    msgstr=geolevel.get('name') or '',
+                    occurs=[(os.path.abspath(self.store.datafile), geolevel.sourceline,)]
                 )
                 po.add_or_update(
                     msgid=u'%s label' % attributes['name'],
-                    msgstr=geolevel.get('label') or ''
+                    msgstr=geolevel.get('label') or '',
+                    occurs=[(os.path.abspath(self.store.datafile), geolevel.sourceline,)]
                 )
                 po.add_or_update(
                     msgid=u'%s long description' % attributes['name'],
-                    msgstr=''
+                    msgstr='',
+                    occurs=[(os.path.abspath(self.store.datafile), geolevel.sourceline,)]
                 )
 
             if changed and not force:
@@ -431,15 +448,18 @@ class ConfigImporter:
                     po = self.poutils[locale]
                     po.add_or_update(
                         msgid=u'%s short label' % attributes['name'],
-                        msgstr=geolevel.get('name') or ''
+                        msgstr=geolevel.get('name') or '',
+                        occurs=[(os.path.abspath(self.store.datafile), geolevel.sourceline,)]
                     )
                     po.add_or_update(
                         msgid=u'%s label' % attributes['name'],
-                        msgstr=geolevel.get('label') or ''
+                        msgstr=geolevel.get('label') or '',
+                        occurs=[(os.path.abspath(self.store.datafile), geolevel.sourceline,)]
                     )
                     po.add_or_update(
                         msgid=u'%s long description' % attributes['name'],
-                        msgstr=''
+                        msgstr='',
+                        occurs=[(os.path.abspath(self.store.datafile), geolevel.sourceline,)]
                     )
 
                 if changed and not force:
@@ -525,15 +545,18 @@ class ConfigImporter:
                 po = self.poutils[locale]
                 po.add_or_update(
                     msgid=u'%s short label' % sd.get('id'),
-                    msgstr=sd.get('title') or ''
+                    msgstr=sd.get('title') or '',
+                    occurs=[(os.path.abspath(self.store.datafile), sd.sourceline,)]
                 )
                 po.add_or_update(
                     msgid=u'%s label' % sd.get('id'),
-                    msgstr=sd.get('title') or ''
+                    msgstr=sd.get('title') or '',
+                    occurs=[(os.path.abspath(self.store.datafile), sd.sourceline,)]
                 )
                 po.add_or_update(
                     msgid=u'%s long description' % sd.get('id'),
-                    msgstr=''
+                    msgstr='',
+                    occurs=[(os.path.abspath(self.store.datafile), sd.sourceline,)]
                 )
 
 
@@ -580,15 +603,18 @@ class ConfigImporter:
                     po = self.poutils[locale]
                     po.add_or_update(
                         msgid=u'%s short label' % sp_obj.name,
-                        msgstr=sp.get('title') or ''
+                        msgstr=sp.get('title') or '',
+                        occurs=[(os.path.abspath(self.store.datafile), sp.sourceline,)]
                     )
                     po.add_or_update(
                         msgid=u'%s label' % sp_obj.name,
-                        msgstr=sp.get('title') or ''
+                        msgstr=sp.get('title') or '',
+                        occurs=[(os.path.abspath(self.store.datafile), sp.sourceline,)]
                     )
                     po.add_or_update(
                         msgid=u'%s long description' % sp_obj.name,
-                        msgstr=''
+                        msgstr='',
+                        occurs=[(os.path.abspath(self.store.datafile), sp.sourceline,)]
                     )
 
                 # Import score functions for this score panel
@@ -635,15 +661,18 @@ class ConfigImporter:
                     po = self.poutils[locale]
                     po.add_or_update(
                         msgid=u'%s short label' % attributes['name'],
-                        msgstr=crit.get('name') or ''
+                        msgstr=crit.get('name') or '',
+                        occurs=[(os.path.abspath(self.store.datafile), crit.sourceline,)]
                     )
                     po.add_or_update(
                         msgid=u'%s label' % attributes['name'],
-                        msgstr=crit.get('name') or ''
+                        msgstr=crit.get('name') or '',
+                        occurs=[(os.path.abspath(self.store.datafile), crit.sourceline,)]
                     )
                     po.add_or_update(
                         msgid=u'%s long description' % attributes['name'],
-                        msgstr=crit.get('description') or ''
+                        msgstr=crit.get('description') or '',
+                        occurs=[(os.path.abspath(self.store.datafile), crit.sourceline,)]
                     )
 
                 if changed and not force:
@@ -671,15 +700,18 @@ class ConfigImporter:
             po = self.poutils[locale]
             po.add_or_update(
                 msgid=u'%s short label' % attributes['name'],
-                msgstr=node.get('label') or ''
+                msgstr=node.get('label') or '',
+                occurs=[(os.path.abspath(self.store.datafile), node.sourceline,)]
             )
             po.add_or_update(
                 msgid=u'%s label' % attributes['name'],
-                msgstr=node.get('label') or ''
+                msgstr=node.get('label') or '',
+                occurs=[(os.path.abspath(self.store.datafile), node.sourceline,)]
             )
             po.add_or_update(
                 msgid=u'%s long description' % attributes['name'],
-                msgstr=node.get('description') or ''
+                msgstr=node.get('description') or '',
+                occurs=[(os.path.abspath(self.store.datafile), node.sourceline,)]
             )
 
         lbodies = []
@@ -1405,7 +1437,7 @@ class PoUtils:
                 'Content-Transfer-Encoding': '8bit'
             }
 
-    def add_or_update(self, msgid='', msgstr=''):
+    def add_or_update(self, msgid='', msgstr='', occurs=[]):
         """
         Add a POEntry to the .po file, or update it if it already exists.
 
@@ -1414,10 +1446,11 @@ class PoUtils:
         """
         entry = self.pofile.find(msgid)
         if entry is None:
-            entry = polib.POEntry(msgid=msgid, msgstr=msgstr)
+            entry = polib.POEntry(msgid=msgid, msgstr=msgstr, occurrences=occurs)
             self.pofile.append(entry)
         else:
             entry.msgstr = msgstr
+            entry.occurences = occurs
 
     def save(self):
         """

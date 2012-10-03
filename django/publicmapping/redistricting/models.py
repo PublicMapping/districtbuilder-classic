@@ -328,6 +328,18 @@ class LegislativeBody(BaseModel):
     # The region that this LegislativeBody applies to.
     region = models.ForeignKey(Region)
 
+    def get_members_label(self):
+        """  
+        Get the label for this legislative body's members.
+        """
+        msgid = u'%s members' % self.name
+        try: 
+            lang = translation.get_language()
+            return I18N_CACHE[lang].find(msgid).msgstr
+        except Exception, ex:
+            logger.debug('Cannot find msgid %s, fallback to msgid', msgid)
+            return msgid
+
     def get_default_subject(self):
         """
         Get the default subject for display. This is related to the
