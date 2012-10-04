@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-08-01 16:57-0400\n"
+"POT-Creation-Date: 2012-10-04 13:01-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,470 +17,506 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: static-media/js/chooseplan.js:75 static-media/js/chooseplan.js.c:245
+#: redistricting/static/js/chooseplan.js:75
+#: redistricting/static/js/chooseplan.js:245
 msgid "View Plan"
 msgstr ""
 
-#: static-media/js/chooseplan.js:75 static-media/js/chooseplan.js.c:245
-#: static-media/js/reaggregator.js:47
+#: redistricting/static/js/chooseplan.js:75
+#: redistricting/static/js/chooseplan.js:245
+#: redistricting/static/js/reaggregator.js:47
 msgid "Start Drawing"
 msgstr ""
 
-#: static-media/js/chooseplan.js:88
+#: redistricting/static/js/chooseplan.js:88
 msgid ""
 "Thanks! Your file has been uploaded, and your plan is being constructed. "
 "When your plan is completely constructed, you will receive an email from us."
 msgstr ""
 
-#: static-media/js/chooseplan.js:88
+#: redistricting/static/js/chooseplan.js:88
 msgid ""
 "We're sorry! Your file was transferred to us, but there was a problem "
 "converting it into a plan. Make sure the file is a zipped block equivalency "
 "file, and please try again."
 msgstr ""
 
-#: static-media/js/chooseplan.js:89
+#: redistricting/static/js/chooseplan.js:89
 msgid "Uploaded"
 msgstr ""
 
-#: static-media/js/chooseplan.js:130 static-media/js/reaggregator.js:131
+#: redistricting/static/js/chooseplan.js:130
+#: redistricting/static/js/reaggregator.js:135
 msgid "Reaggregate"
 msgstr ""
 
-#: static-media/js/chooseplan.js:138 static-media/js/chooseplan.js.c:147
+#: redistricting/static/js/chooseplan.js:138
+#: redistricting/static/js/chooseplan.js:147
 msgid "Choose a plan from the table first"
 msgstr ""
 
-#: static-media/js/chooseplan.js:155
+#: redistricting/static/js/chooseplan.js:155
 msgid "A name for the copied template is required"
 msgstr ""
 
-#: static-media/js/chooseplan.js:167
+#: redistricting/static/js/chooseplan.js:167
 msgid "Please provide a valid email address."
 msgstr ""
 
-#: static-media/js/chooseplan.js:171
+#: redistricting/static/js/chooseplan.js:171
 msgid "Please provide a zipped district index file."
 msgstr ""
 
-#: static-media/js/chooseplan.js:175
+#: redistricting/static/js/chooseplan.js:175
 msgid "You must select a legislative body from the dropdown in the upload form"
 msgstr ""
 
-#: static-media/js/chooseplan.js:188
+#: redistricting/static/js/chooseplan.js:188
 msgid "Creating New Plan..."
 msgstr ""
 
-#: static-media/js/chooseplan.js:189
+#: redistricting/static/js/chooseplan.js:189
 msgid "Please standby while creating new plan ..."
 msgstr ""
 
-#: static-media/js/chooseplan.js:235
+#: redistricting/static/js/chooseplan.js:235
 msgid "Creation Error"
 msgstr ""
 
-#: static-media/js/chooseplan.js:238
+#: redistricting/static/js/chooseplan.js:238
 msgid "Tip: "
 msgstr ""
 
-#: static-media/js/chooseplan.js:239
+#: redistricting/static/js/chooseplan.js:239
 msgid "Make sure the new plan's name is unique."
 msgstr ""
 
-#: static-media/js/chooseplan.js:306 static-media/js/reaggregator.js:137
+#: redistricting/static/js/chooseplan.js:306
+#: redistricting/static/js/reaggregator.js:141
 msgid "Needs reaggregation"
 msgstr ""
 
-#: static-media/js/chooseplan.js:309
+#: redistricting/static/js/chooseplan.js:309
 msgid "Reaggregating"
 msgstr ""
 
-#: static-media/js/chooseplan.js:337 static-media/js/layerchooser.js:171
+#: redistricting/static/js/chooseplan.js:337
+#: redistricting/static/js/layerchooser.js:171
 msgid "Plan Name"
 msgstr ""
 
-#: static-media/js/chooseplan.js:338 static-media/js/shareddistricts.js:141
+#: redistricting/static/js/chooseplan.js:338
+#: redistricting/static/js/shareddistricts.js:141
 msgid "Author"
 msgstr ""
 
-#: static-media/js/chooseplan.js:339 static-media/js/shareddistricts.js:143
+#: redistricting/static/js/chooseplan.js:339
+#: redistricting/static/js/shareddistricts.js:143
 msgid "Description"
 msgstr ""
 
-#: static-media/js/chooseplan.js:340 static-media/js/shareddistricts.js:144
+#: redistricting/static/js/chooseplan.js:340
+#: redistricting/static/js/shareddistricts.js:144
 msgid "Shared"
 msgstr ""
 
-#: static-media/js/chooseplan.js:341 static-media/js/shareddistricts.js:145
+#: redistricting/static/js/chooseplan.js:341
+#: redistricting/static/js/shareddistricts.js:145
 msgid "Last Edited"
 msgstr ""
 
-#: static-media/js/chooseplan.js:342
+#: redistricting/static/js/chooseplan.js:342
 msgid "Delete"
 msgstr ""
 
-#: static-media/js/chooseplan.js:343 static-media/js/shareddistricts.js:146
+#: redistricting/static/js/chooseplan.js:343
+#: redistricting/static/js/shareddistricts.js:146
 msgid "Edit"
 msgstr ""
 
-#: static-media/js/chooseplan.js:344 static-media/js/shareddistricts.js:147
+#: redistricting/static/js/chooseplan.js:344
+#: redistricting/static/js/shareddistricts.js:147
 msgid "# Districts"
 msgstr ""
 
-#: static-media/js/chooseplan.js:345
+#: redistricting/static/js/chooseplan.js:345
 msgid "State"
 msgstr ""
 
-#: static-media/js/chooseplan.js:381
+#: redistricting/static/js/chooseplan.js:381
 msgid "Really delete plan: "
 msgstr ""
 
-#: static-media/js/chooseplan.js:384
+#: redistricting/static/js/chooseplan.js:384
 msgid "Delete Plan"
 msgstr ""
 
-#: static-media/js/chooseplan.js:386 static-media/js/chooseplan.js.c:489
-#: static-media/js/chooseplan.js:665
+#: redistricting/static/js/chooseplan.js:386
+#: redistricting/static/js/chooseplan.js:489
+#: redistricting/static/js/chooseplan.js:665
 msgid "Yes"
 msgstr ""
 
-#: static-media/js/chooseplan.js:390
+#: redistricting/static/js/chooseplan.js:390
 msgid "Please wait. Deleting plan."
 msgstr ""
 
-#: static-media/js/chooseplan.js:391
+#: redistricting/static/js/chooseplan.js:391
 msgid "Deleting Plan"
 msgstr ""
 
-#: static-media/js/chooseplan.js:406 static-media/js/chooseplan.js.c:415
+#: redistricting/static/js/chooseplan.js:406
+#: redistricting/static/js/chooseplan.js:415
 msgid "Error Deleting Plan"
 msgstr ""
 
-#: static-media/js/chooseplan.js:416
+#: redistricting/static/js/chooseplan.js:416
 msgid "Please try again later."
 msgstr ""
 
-#: static-media/js/chooseplan.js:421 static-media/js/chooseplan.js.c:487
-#: static-media/js/chooseplan.js:663 static-media/js/mapping.js:1337
+#: redistricting/static/js/chooseplan.js:421
+#: redistricting/static/js/chooseplan.js:487
+#: redistricting/static/js/chooseplan.js:663
+#: redistricting/static/js/mapping.js:1336
 msgid "No"
 msgstr ""
 
-#: static-media/js/chooseplan.js:430 static-media/js/chooseplan.js.c:562
-#: static-media/js/chooseplan.js:591 static-media/js/chooseplan.js.c:594
-#: static-media/js/chooseplan.js:602 static-media/js/chooseplan.js.c:608
-#: static-media/js/layerchooser.js:190 static-media/js/shareddistricts.js:171
+#: redistricting/static/js/chooseplan.js:430
+#: redistricting/static/js/chooseplan.js:562
+#: redistricting/static/js/chooseplan.js:591
+#: redistricting/static/js/chooseplan.js:594
+#: redistricting/static/js/chooseplan.js:602
+#: redistricting/static/js/chooseplan.js:608
+#: redistricting/static/js/layerchooser.js:190
+#: redistricting/static/js/shareddistricts.js:171
 msgid "Search"
 msgstr ""
 
-#: static-media/js/chooseplan.js:430 static-media/js/layerchooser.js:190
-#: static-media/js/shareddistricts.js:171
+#: redistricting/static/js/chooseplan.js:430
+#: redistricting/static/js/layerchooser.js:190
+#: redistricting/static/js/shareddistricts.js:171
 msgid "Clear Search"
 msgstr ""
 
-#: static-media/js/chooseplan.js:515
+#: redistricting/static/js/chooseplan.js:515
 msgid "Error Saving Details"
 msgstr ""
 
-#: static-media/js/chooseplan.js:581
+#: redistricting/static/js/chooseplan.js:581
 msgid "Current Filter: "
 msgstr ""
 
-#: static-media/js/chooseplan.js:717
+#: redistricting/static/js/chooseplan.js:717
 msgid "Upload Plan"
 msgstr ""
 
-#: static-media/js/chooseplan.js:746
+#: redistricting/static/js/chooseplan.js:746
 msgid "Click the button to view the map as a guest"
 msgstr ""
 
-#: static-media/js/districtfile.js:120
+#: redistricting/static/js/districtfile.js:120
 msgid "Download"
 msgstr ""
 
-#: static-media/js/districtfile.js:133
+#: redistricting/static/js/districtfile.js:133
 msgid "Request File"
 msgstr ""
 
-#: static-media/js/districtfile.js:162
+#: redistricting/static/js/districtfile.js:162
 msgid "Please wait. File is being created on the server"
 msgstr ""
 
-#: static-media/js/emailplan.js:42
+#: redistricting/static/js/emailplan.js:42
 msgid "Submit Final Plan to Contest"
 msgstr ""
 
-#: static-media/js/emailplan.js:99
+#: redistricting/static/js/emailplan.js:99
 msgid "Please wait. Emailing plan."
 msgstr ""
 
-#: static-media/js/emailplan.js:100 static-media/js/emailplan.js.c:112
+#: redistricting/static/js/emailplan.js:100
+#: redistricting/static/js/emailplan.js:112
 msgid "Emailing Plan"
 msgstr ""
 
-#: static-media/js/emailplan.js:113
+#: redistricting/static/js/emailplan.js:113
 msgid ""
 "Your plan is in the process of being submitted. You will receive a "
 "confirmation email once it has completed successfully. This may take a few "
 "minutes."
 msgstr ""
 
-#: static-media/js/emailplan.js:116 static-media/js/mapping.js:500
-#: static-media/js/mapping.js.c:1052 static-media/js/mapping.js:1095
-#: static-media/js/mapping.js.c:1160 static-media/js/mapping.js:1172
-#: static-media/js/mapping.js.c:1308 static-media/js/mapping.js:2968
+#: redistricting/static/js/emailplan.js:116
+#: redistricting/static/js/mapping.js:497
+#: redistricting/static/js/mapping.js:1051
+#: redistricting/static/js/mapping.js:1094
+#: redistricting/static/js/mapping.js:1159
+#: redistricting/static/js/mapping.js:1171
+#: redistricting/static/js/mapping.js:1307
+#: redistricting/static/js/mapping.js:2982
 msgid "OK"
 msgstr ""
 
-#: static-media/js/emailplan.js:123 static-media/js/emailplan.js.c:132
+#: redistricting/static/js/emailplan.js:123
+#: redistricting/static/js/emailplan.js:132
 msgid "Error Emailing Plan"
 msgstr ""
 
-#: static-media/js/emailplan.js:133
+#: redistricting/static/js/emailplan.js:133
 msgid "Please try again later"
 msgstr ""
 
-#: static-media/js/layerchooser.js:59
+#: redistricting/static/js/layerchooser.js:59
 msgid "Choose Map Layers"
 msgstr ""
 
-#: static-media/js/layerchooser.js:170
+#: redistricting/static/js/layerchooser.js:170
 msgid "User Name"
 msgstr ""
 
-#: static-media/js/mapping.js:108
+#: redistricting/static/js/mapping.js:108
 msgid " Name"
 msgstr ""
 
-#: static-media/js/mapping.js:120
-msgid "Demographic "
-msgstr ""
-
-#: static-media/js/mapping.js:388
+#: redistricting/static/js/mapping.js:385
 msgid "Satellite"
 msgstr ""
 
-#: static-media/js/mapping.js:389
+#: redistricting/static/js/mapping.js:386
 msgid "Hybrid"
 msgstr ""
 
-#: static-media/js/mapping.js:390
+#: redistricting/static/js/mapping.js:387
 msgid "Road"
 msgstr ""
 
-#: static-media/js/mapping.js:441
+#: redistricting/static/js/mapping.js:438
 msgid "Map Transparency"
 msgstr ""
 
-#: static-media/js/mapping.js:459
+#: redistricting/static/js/mapping.js:456
 msgid "Please wait. Fixing unassigned blocks. This may take a couple minutes."
 msgstr ""
 
-#: static-media/js/mapping.js:462
+#: redistricting/static/js/mapping.js:459
 msgid "Fixing Unassigned"
 msgstr ""
 
-#: static-media/js/mapping.js:482
+#: redistricting/static/js/mapping.js:479
 msgid "Success"
 msgstr ""
 
-#: static-media/js/mapping.js:482 static-media/js/mapping.js.c:489
-#: static-media/js/mapping.js:543 static-media/js/mapping.js.c:550
-#: static-media/js/mapping.js:1103 static-media/js/register.js:197
-#: static-media/js/register.js.c:205 static-media/js/splitsreport.js:97
-#: static-media/js/ui.js:231 static-media/js/ui.js.c:263
-#: static-media/js/ui.js:508
+#: redistricting/static/js/mapping.js:479
+#: redistricting/static/js/mapping.js:486
+#: redistricting/static/js/mapping.js:540
+#: redistricting/static/js/mapping.js:547
+#: redistricting/static/js/mapping.js:1102
+#: redistricting/static/js/splitsreport.js:97 static/js/register.js:197
+#: static/js/register.js.c:205 static/js/ui.js:231 static/js/ui.js.c:263
+#: static/js/ui.js.c:508
 msgid "Error"
 msgstr ""
 
-#: static-media/js/mapping.js:488
+#: redistricting/static/js/mapping.js:485
 msgid "Error encountered while fixing unassigned"
 msgstr ""
 
-#: static-media/js/mapping.js:504
+#: redistricting/static/js/mapping.js:501
 msgid "No reference layer selected."
 msgstr ""
 
-#: static-media/js/mapping.js:505 static-media/js/splitsreport.js:109
-#: static-media/js/statisticssets.js:338 static-media/js/statisticssets.js:347
-#: static-media/js/statisticssets.js:386
+#: redistricting/static/js/mapping.js:502
+#: redistricting/static/js/splitsreport.js:109
+#: redistricting/static/js/statisticssets.js:338
+#: redistricting/static/js/statisticssets.js:347
+#: redistricting/static/js/statisticssets.js:386
 msgid "Warning"
 msgstr ""
 
-#: static-media/js/mapping.js:518
+#: redistricting/static/js/mapping.js:515
 msgid "Please wait. Querying for splits."
 msgstr ""
 
-#: static-media/js/mapping.js:522
+#: redistricting/static/js/mapping.js:519
 msgid "Finding Splits"
 msgstr ""
 
-#: static-media/js/mapping.js:537
+#: redistricting/static/js/mapping.js:534
 msgid "This plan contains no splits."
 msgstr ""
 
-#: static-media/js/mapping.js:538
+#: redistricting/static/js/mapping.js:535
 msgid "No Splits Found"
 msgstr ""
 
-#: static-media/js/mapping.js:542 static-media/js/mapping.js.c:549
+#: redistricting/static/js/mapping.js:539
+#: redistricting/static/js/mapping.js:546
 msgid "Error encountered while querying for splits: "
 msgstr ""
 
-#: static-media/js/mapping.js:1055
+#: redistricting/static/js/mapping.js:1054
 msgid "Please wait until your previous changes have been accepted."
 msgstr ""
 
-#: static-media/js/mapping.js:1058
+#: redistricting/static/js/mapping.js:1057
 msgid "Busy"
 msgstr ""
 
-#: static-media/js/mapping.js:1100
+#: redistricting/static/js/mapping.js:1099
 msgid "No districts were updated"
 msgstr ""
 
-#: static-media/js/mapping.js:1163
+#: redistricting/static/js/mapping.js:1162
 msgid ""
 "You cannot select that many features at once.\n"
 "\n"
 "Consider drawing a smaller area with the selection tool."
 msgstr ""
 
-#: static-media/js/mapping.js:1166 static-media/js/mapping.js.c:1178
-#: static-media/js/mapping.js:1326 static-media/js/multimember.js:200
-#: static-media/js/multimember.js.c:206 static-media/js/reaggregator.js:185
-#: static-media/js/shareddistricts.js:372
-#: static-media/js/shareddistricts.js:379
+#: redistricting/static/js/mapping.js:1165
+#: redistricting/static/js/mapping.js:1177
+#: redistricting/static/js/mapping.js:1325
+#: redistricting/static/js/multimember.js:213
+#: redistricting/static/js/multimember.js:219
+#: redistricting/static/js/reaggregator.js:192
+#: redistricting/static/js/shareddistricts.js:372
+#: redistricting/static/js/shareddistricts.js:379
 msgid "Sorry"
 msgstr ""
 
-#: static-media/js/mapping.js:1175
+#: redistricting/static/js/mapping.js:1174
 msgid ""
 "You cannot select any more features.\n"
 "\n"
 "Consider assigning your current selection to a district first."
 msgstr ""
 
-#: static-media/js/mapping.js:1327
+#: redistricting/static/js/mapping.js:1326
 msgid "Unable to combine districts: "
 msgstr ""
 
-#: static-media/js/mapping.js:1341
+#: redistricting/static/js/mapping.js:1340
 msgid "Would you like to unassign the geography in "
 msgstr ""
 
-#: static-media/js/mapping.js:1424
+#: redistricting/static/js/mapping.js:1423
 msgid "Sorry, your information could not be saved. Please try again later."
 msgstr ""
 
-#: static-media/js/mapping.js:1942
+#: redistricting/static/js/mapping.js:1956
 msgid "Select One"
 msgstr ""
 
-#: static-media/js/mapping.js:1943 static-media/js/mapping.js.c:1957
+#: redistricting/static/js/mapping.js:1957
+#: redistricting/static/js/mapping.js:1971
 msgid "Unassigned"
 msgstr ""
 
-#: static-media/js/mapping.js:1966 static-media/js/mapping.js.c:2987
+#: redistricting/static/js/mapping.js:1980
+#: redistricting/static/js/mapping.js:3001
 msgid "New "
 msgstr ""
 
-#: static-media/js/mapping.js:2526 static-media/js/mapping.js.c:2712
+#: redistricting/static/js/mapping.js:2540
+#: redistricting/static/js/mapping.js:2726
 msgid "Contiguity"
 msgstr ""
 
-#: static-media/js/mapping.js:2530 static-media/js/mapping.js.c:2715
+#: redistricting/static/js/mapping.js:2544
+#: redistricting/static/js/mapping.js:2729
 msgid "Compactness"
 msgstr ""
 
-#: static-media/js/mapping.js:2534 static-media/js/mapping.js.c:2718
+#: redistricting/static/js/mapping.js:2548
+#: redistricting/static/js/mapping.js:2732
 msgid "None"
 msgstr ""
 
-#: static-media/js/mapping.js:2606
+#: redistricting/static/js/mapping.js:2620
 msgid "Boundary"
 msgstr ""
 
-#: static-media/js/mapping.js:2612
+#: redistricting/static/js/mapping.js:2626
 msgid "Noncontiguous"
 msgstr ""
 
-#: static-media/js/mapping.js:2614
+#: redistricting/static/js/mapping.js:2628
 msgid "Contiguous"
 msgstr ""
 
-#: static-media/js/mapping.js:2620
+#: redistricting/static/js/mapping.js:2634
 msgid "Very Compact"
 msgstr ""
 
-#: static-media/js/mapping.js:2622
+#: redistricting/static/js/mapping.js:2636
 msgid "Average"
 msgstr ""
 
-#: static-media/js/mapping.js:2624
+#: redistricting/static/js/mapping.js:2638
 msgid "Hardly Compact"
 msgstr ""
 
-#: static-media/js/mapping.js:2630
+#: redistricting/static/js/mapping.js:2644
 msgid "Far Over Target"
 msgstr ""
 
-#: static-media/js/mapping.js:2632
+#: redistricting/static/js/mapping.js:2646
 msgid "Over Target"
 msgstr ""
 
-#: static-media/js/mapping.js:2634
+#: redistricting/static/js/mapping.js:2648
 msgid "Within Target"
 msgstr ""
 
-#: static-media/js/mapping.js:2636
+#: redistricting/static/js/mapping.js:2650
 msgid "Under Target"
 msgstr ""
 
-#: static-media/js/mapping.js:2638
+#: redistricting/static/js/mapping.js:2652
 msgid "Far Under Target"
 msgstr ""
 
-#: static-media/js/mapping.js:2964
+#: redistricting/static/js/mapping.js:2978
 msgid "Please select a name for the %(bml)s"
 msgstr ""
 
-#: static-media/js/mapping.js:2977
+#: redistricting/static/js/mapping.js:2991
 msgid "Cancel"
 msgstr ""
 
-#: static-media/js/mapping.js:2994
+#: redistricting/static/js/mapping.js:3008
 msgid "Community Label"
 msgstr ""
 
-#: static-media/js/mapping.js:2995
+#: redistricting/static/js/mapping.js:3009
 msgid "Community Type"
 msgstr ""
 
-#: static-media/js/multimember.js:59
+#: redistricting/static/js/multimember.js:59
 msgid "Set Multi-Member Districts"
 msgstr ""
 
-#: static-media/js/multimember.js:201
+#: redistricting/static/js/multimember.js:214
 msgid "Unable to assign representatives:"
 msgstr ""
 
-#: static-media/js/multimember.js:207
+#: redistricting/static/js/multimember.js:220
 msgid "Unable to assign representatives"
 msgstr ""
 
-#: static-media/js/multimember.js:252
+#: redistricting/static/js/multimember.js:264
 msgid "District"
 msgstr ""
 
-#: static-media/js/multimember.js:252
+#: redistricting/static/js/multimember.js:264
 msgid "District ID"
 msgstr ""
 
-#: static-media/js/multimember.js:252
+#: redistricting/static/js/multimember.js:264
 msgid "# Members"
 msgstr ""
 
-#: static-media/js/reaggregator.js:133
+#: redistricting/static/js/reaggregator.js:137
 msgid ""
 "Data in the system has changed. This plan needs to be reaggregated before it "
 "can be used. Click the button to begin reaggregation. This will run in the "
@@ -488,283 +524,283 @@ msgid ""
 "the rest of the system in the meantime."
 msgstr ""
 
-#: static-media/js/reaggregator.js:139
+#: redistricting/static/js/reaggregator.js:143
 msgid ""
 "Data in the system has changed. The owner of this plan needs to reaggregate "
 "it before it can be used. The status of the plan will be updated when "
 "reaggregation has completed."
 msgstr ""
 
-#: static-media/js/reaggregator.js:146
+#: redistricting/static/js/reaggregator.js:151
 msgid "Reaggregation in progress"
 msgstr ""
 
-#: static-media/js/reaggregator.js:148
+#: redistricting/static/js/reaggregator.js:153
 msgid ""
 "Data in the system has changed, and this plan is currently reaggregating to "
 "reflect these changes. The plan will not be available until reaggregation "
 "has completed."
 msgstr ""
 
-#: static-media/js/reaggregator.js:159
+#: redistricting/static/js/reaggregator.js:166
 msgid "Unknown state"
 msgstr ""
 
-#: static-media/js/reaggregator.js:186
+#: redistricting/static/js/reaggregator.js:193
 msgid "Error reaggregating plan"
 msgstr ""
 
-#: static-media/js/register.js:40
-msgid "Terms of Use"
-msgstr ""
-
-#: static-media/js/register.js:41
-msgid "Forgot Password"
-msgstr ""
-
-#: static-media/js/register.js:42
-msgid "Duplicate Session"
-msgstr ""
-
-#: static-media/js/register.js:43
-msgid "Maximum Users Exceeded"
-msgstr ""
-
-#: static-media/js/register.js:50
-msgid ""
-"Sorry, registration is not available at this time.  Please try logging in "
-"anonymously or coming back later"
-msgstr ""
-
-#: static-media/js/register.js:52
-msgid "Signup Unavailable"
-msgstr ""
-
-#: static-media/js/register.js:178
-msgid "You've been registered for the public mapping project."
-msgstr ""
-
-#: static-media/js/register.js:181
-msgid "Success!"
-msgstr ""
-
-#: static-media/js/register.js:183
-msgid "Start Mapping"
-msgstr ""
-
-#: static-media/js/register.js:196
-msgid "User Name already exists. Please choose another one."
-msgstr ""
-
-#: static-media/js/register.js:204
-msgid ""
-"Email already exists. Enter another one, or use the password retrieval form"
-msgstr ""
-
-#: static-media/js/register.js:242
-msgid "Please Wait..."
-msgstr ""
-
-#: static-media/js/register.js:312
-msgid "You entered an incorrect user name or password"
-msgstr ""
-
-#: static-media/js/register.js:316
-msgid "Login Error"
-msgstr ""
-
-#: static-media/js/register.js:365
-msgid "Logged Off"
-msgstr ""
-
-#: static-media/js/register.js:366
-msgid ""
-"You have been logged off by another browser. This happens sometimes if you "
-"attempt to access the application from two different locations."
-msgstr ""
-
-#: static-media/js/register.js:367
-msgid "Please log in again"
-msgstr ""
-
-#: static-media/js/reports.js:148
+#: redistricting/static/js/reports.js:148
 msgid "Please select one or more reports to be generated."
 msgstr ""
 
-#: static-media/js/reports.js:156
+#: redistricting/static/js/reports.js:156
 msgid "Generating Report"
 msgstr ""
 
-#: static-media/js/reports.js:157
+#: redistricting/static/js/reports.js:157
 msgid "You may use the rest of the application while the report is building."
 msgstr ""
 
-#: static-media/js/reports.js:158
+#: redistricting/static/js/reports.js:158
 msgid "A preview of your report will appear in this space when it is ready."
 msgstr ""
 
-#: static-media/js/reports.js:177
+#: redistricting/static/js/reports.js:177
 msgid "Report Error"
 msgstr ""
 
-#: static-media/js/reports.js:178
+#: redistricting/static/js/reports.js:178
 msgid "Sorry, this report cannot be previewed."
 msgstr ""
 
-#: static-media/js/reports.js:209
+#: redistricting/static/js/reports.js:209
 msgid "Connection Failed"
 msgstr ""
 
-#: static-media/js/reports.js:210
+#: redistricting/static/js/reports.js:210
 msgid ""
 "There was a problem checking your report status. You can resume checking by "
 "clicking on the \"Create and Preview Report\" button."
 msgstr ""
 
-#: static-media/js/reports.js:364
+#: redistricting/static/js/reports.js:364
 msgid "Open Current Report in New Window"
 msgstr ""
 
-#: static-media/js/shareddistricts.js:60
+#: redistricting/static/js/shareddistricts.js:60
 msgid "Copy and Paste %(bodyMembersCap)s"
 msgstr ""
 
-#: static-media/js/shareddistricts.js:142
+#: redistricting/static/js/shareddistricts.js:142
 msgid "Plan"
 msgstr ""
 
-#: static-media/js/shareddistricts.js:199
+#: redistricting/static/js/shareddistricts.js:199
 msgid "%(bodyMemberLongCap)s Name"
 msgstr ""
 
-#: static-media/js/shareddistricts.js:298
+#: redistricting/static/js/shareddistricts.js:298
 msgid "Maximum %(bodyMembers)s Reached"
 msgstr ""
 
-#: static-media/js/shareddistricts.js:299
+#: redistricting/static/js/shareddistricts.js:299
 msgid ""
 "Your plan is at maximum capacity. Please delete a %(bodyMemberLong)s to "
 "enable pasting."
 msgstr ""
 
-#: static-media/js/shareddistricts.js:309
+#: redistricting/static/js/shareddistricts.js:309
 msgid "2. Remove %(num_available_districts)s before submitting"
 msgstr ""
 
-#: static-media/js/shareddistricts.js:313
+#: redistricting/static/js/shareddistricts.js:313
 msgid "2. Check your selections"
 msgstr ""
 
-#: static-media/js/shareddistricts.js:318
+#: redistricting/static/js/shareddistricts.js:318
 msgid "2. Select a %(bodyMemberLong)s to copy"
 msgstr ""
 
-#: static-media/js/shareddistricts.js:322
+#: redistricting/static/js/shareddistricts.js:322
 msgid "2. Select a %(bodyMemberLong)s"
 msgstr ""
 
-#: static-media/js/shareddistricts.js:329
+#: redistricting/static/js/shareddistricts.js:329
 msgid "2. Select up to %(available_districts)s %(bodyMembers)s to copy"
 msgstr ""
 
-#: static-media/js/shareddistricts.js:336
+#: redistricting/static/js/shareddistricts.js:336
 msgid "2. Select %(bodyMembers)s"
 msgstr ""
 
-#: static-media/js/shareddistricts.js:373
-#: static-media/js/shareddistricts.js:380
+#: redistricting/static/js/shareddistricts.js:373
+#: redistricting/static/js/shareddistricts.js:380
 msgid "Unable to paste %(bodyMembers)s"
 msgstr ""
 
-#: static-media/js/splitsreport.js:51
+#: redistricting/static/js/splitsreport.js:51
 msgid "Splits Report"
 msgstr ""
 
-#: static-media/js/splitsreport.js:69
+#: redistricting/static/js/splitsreport.js:69
 msgid "Please wait. Retrieving splits report."
 msgstr ""
 
-#: static-media/js/splitsreport.js:72
+#: redistricting/static/js/splitsreport.js:72
 msgid "Retrieving Splits Report"
 msgstr ""
 
-#: static-media/js/splitsreport.js:94
+#: redistricting/static/js/splitsreport.js:94
 msgid "Error encountered while retrieving splits report: "
 msgstr ""
 
-#: static-media/js/splitsreport.js:108
+#: redistricting/static/js/splitsreport.js:108
 msgid "Please select either 1, 2, or 3 layers for comparison."
 msgstr ""
 
-#: static-media/js/statisticssets.js:165
+#: redistricting/static/js/statisticssets.js:165
 msgid "Loading Statistics..."
 msgstr ""
 
-#: static-media/js/statisticssets.js:337
+#: redistricting/static/js/statisticssets.js:337
 msgid "Please select 3 or fewer statistics."
 msgstr ""
 
-#: static-media/js/statisticssets.js:346
+#: redistricting/static/js/statisticssets.js:346
 msgid "Please name your statistics set."
 msgstr ""
 
-#: static-media/js/statisticssets.js:392
+#: redistricting/static/js/statisticssets.js:392
 msgid "Please select 1-3 statistics to save in the named set."
 msgstr ""
 
-#: static-media/js/statisticssets.js:393
+#: redistricting/static/js/statisticssets.js:393
 msgid "Incomplete"
 msgstr ""
 
-#: static-media/js/ui.js:65
+#: static/js/register.js:40
+msgid "Terms of Use"
+msgstr ""
+
+#: static/js/register.js:41
+msgid "Forgot Password"
+msgstr ""
+
+#: static/js/register.js:42
+msgid "Duplicate Session"
+msgstr ""
+
+#: static/js/register.js:43
+msgid "Maximum Users Exceeded"
+msgstr ""
+
+#: static/js/register.js:50
+msgid ""
+"Sorry, registration is not available at this time.  Please try logging in "
+"anonymously or coming back later"
+msgstr ""
+
+#: static/js/register.js:52
+msgid "Signup Unavailable"
+msgstr ""
+
+#: static/js/register.js:178
+msgid "You've been registered for the public mapping project."
+msgstr ""
+
+#: static/js/register.js:181
+msgid "Success!"
+msgstr ""
+
+#: static/js/register.js:183
+msgid "Start Mapping"
+msgstr ""
+
+#: static/js/register.js:196
+msgid "User Name already exists. Please choose another one."
+msgstr ""
+
+#: static/js/register.js:204
+msgid ""
+"Email already exists. Enter another one, or use the password retrieval form"
+msgstr ""
+
+#: static/js/register.js:242
+msgid "Please Wait..."
+msgstr ""
+
+#: static/js/register.js:312
+msgid "You entered an incorrect user name or password"
+msgstr ""
+
+#: static/js/register.js:316
+msgid "Login Error"
+msgstr ""
+
+#: static/js/register.js:365
+msgid "Logged Off"
+msgstr ""
+
+#: static/js/register.js:366
+msgid ""
+"You have been logged off by another browser. This happens sometimes if you "
+"attempt to access the application from two different locations."
+msgstr ""
+
+#: static/js/register.js:367
+msgid "Please log in again"
+msgstr ""
+
+#: static/js/ui.js:65
 msgid "Coming Soon..."
 msgstr ""
 
-#: static-media/js/ui.js:154
+#: static/js/ui.js:154
 msgid ""
 "No plans have been submitted for this leaderboard. Please check back later."
 msgstr ""
 
-#: static-media/js/ui.js:226 static-media/js/ui.js.c:256
+#: static/js/ui.js:226 static/js/ui.js.c:256
 msgid "Validation Failed"
 msgstr ""
 
-#: static-media/js/ui.js:231 static-media/js/ui.js.c:264
+#: static/js/ui.js:231 static/js/ui.js.c:264
 msgid "Server error. Please try again later"
 msgstr ""
 
-#: static-media/js/ui.js:239
+#: static/js/ui.js:239
 msgid "Update Leaderboards<br/>with Working Plan"
 msgstr ""
 
-#: static-media/js/ui.js:271
+#: static/js/ui.js:271
 msgid "Download Scores<br/>as CSV"
 msgstr ""
 
-#: static-media/js/ui.js:394
+#: static/js/ui.js:394
 msgid "Last Saved on %(day)s at %(hour)s:%(minute)s"
 msgstr ""
 
-#: static-media/js/ui.js:497
+#: static/js/ui.js:497
 msgid "Please Wait"
 msgstr ""
 
-#: static-media/js/ui.js:497
+#: static/js/ui.js:497
 msgid "Publishing with the server"
 msgstr ""
 
-#: static-media/js/ui.js:508
+#: static/js/ui.js:508
 msgid "Please enter a new name to publish your plan."
 msgstr ""
 
-#: static-media/js/ui.js:520
+#: static/js/ui.js:520
 msgid "Oops!"
 msgstr ""
 
-#: static-media/js/ui.js:539
+#: static/js/ui.js:539
 msgid "Server Failure"
 msgstr ""
 
-#: static-media/js/ui.js:539
+#: static/js/ui.js:539
 msgid "Sorry, we weren't able to contact the server.  Please try again later."
 msgstr ""

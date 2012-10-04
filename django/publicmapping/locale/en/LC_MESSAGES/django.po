@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-08-01 16:57-0400\n"
+"POT-Creation-Date: 2012-10-04 12:58-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,17 +21,17 @@ msgstr ""
 msgid "Your Password Reset Request"
 msgstr ""
 
-#: redistricting/admin.py:278
+#: redistricting/admin.py:283
 #, python-format
 msgid "Successfully deleted %(count)d %(item)s"
 msgstr ""
 
-#: redistricting/admin.py:303
+#: redistricting/admin.py:307
 #, python-format
 msgid "Delete selected %(verbose_name_plural)s"
 msgstr ""
 
-#: redistricting/admin.py:390
+#: redistricting/admin.py:394
 msgid "No task with that id."
 msgstr ""
 
@@ -39,12 +39,12 @@ msgstr ""
 #: redistricting/calculators.py:342 redistricting/calculators.py:562
 #: redistricting/calculators.py:630 redistricting/calculators.py:699
 #: redistricting/calculators.py:1404 redistricting/calculators.py:1486
-#: redistricting/calculators.py:2033
+#: redistricting/calculators.py:2041
 msgid "n/a"
 msgstr ""
 
 #: redistricting/calculators.py:1118 redistricting/calculators.py:1208
-#: redistricting/calculators.py:1701 redistricting/calculators.py:1798
+#: redistricting/calculators.py:1701 redistricting/calculators.py:1806
 #, python-format
 msgid "%(value)d (of %(target)s)"
 msgstr ""
@@ -61,18 +61,18 @@ msgstr ""
 msgid "Balanced"
 msgstr ""
 
-#: redistricting/calculators.py:2189
+#: redistricting/calculators.py:2197
 #, python-format
 msgid "Total %(district_type_a)s which split a %(district_type_b)s: %(result)d"
 msgstr ""
 
-#: redistricting/calculators.py:2192
+#: redistricting/calculators.py:2200
 #, python-format
 msgid ""
 "Total %(district_type_a)s splitting \"%(district_type_b)s\": %(result)d</div>"
 msgstr ""
 
-#: redistricting/calculators.py:2196
+#: redistricting/calculators.py:2204
 msgid "Total number of splits"
 msgstr ""
 
@@ -80,23 +80,31 @@ msgstr ""
 msgid "Could not store uploaded Subject template."
 msgstr ""
 
-#: redistricting/forms.py:127
+#: redistricting/forms.py:111
+msgid "The uploaded file is missing subject data."
+msgstr ""
+
+#: redistricting/forms.py:118
+msgid "The new subject name could not be determined."
+msgstr ""
+
+#: redistricting/forms.py:136
 msgid "Uploaded file cannot be found."
 msgstr ""
 
-#: redistricting/forms.py:129
+#: redistricting/forms.py:138
 msgid "Uploaded file is required."
 msgstr ""
 
-#: redistricting/forms.py:144
+#: redistricting/forms.py:153
 msgid "Please specify a unique subject name."
 msgstr ""
 
-#: redistricting/forms.py:145
+#: redistricting/forms.py:154
 msgid "Check this box to overwrite the existing subject with the same name."
 msgstr ""
 
-#: redistricting/forms.py:186
+#: redistricting/forms.py:195
 msgid "Uploaded file contains an invalid subject name."
 msgstr ""
 
@@ -180,277 +188,281 @@ msgstr ""
 msgid "Error creating calculator report."
 msgstr ""
 
-#: redistricting/tasks.py:1352
-msgid ""
-"There are an incorrect number of geounits in the uploaded Subject file. "
+#: redistricting/tasks.py:1367
+msgid "There are missing columns in the uploaded Subject file"
 msgstr ""
 
-#: redistricting/tasks.py:1381
-msgid "Verifying consistency of uploaded geounits ..."
+#: redistricting/tasks.py:1396
+msgid "There are an incorrect number of columns in the uploaded Subject file"
 msgstr ""
 
 #: redistricting/tasks.py:1402
 msgid "Invalid data detected in the uploaded Subject file"
 msgstr ""
 
-#: redistricting/tasks.py:1422
+#: redistricting/tasks.py:1419
+msgid ""
+"There are an incorrect number of geounits in the uploaded Subject file. "
+msgstr ""
+
+#: redistricting/tasks.py:1448
+msgid "Verifying consistency of uploaded geounits ..."
+msgstr ""
+
+#: redistricting/tasks.py:1489
 msgid "There are a correct number of geounits in the uploaded Subject file, "
 msgstr ""
 
-#: redistricting/tasks.py:1425
+#: redistricting/tasks.py:1491
 msgid ""
 "but the geounits do not have the same portable ids as those in the database."
 msgstr ""
 
-#: redistricting/tasks.py:1454
+#: redistricting/tasks.py:1520
 msgid "Copying records to characteristic table ..."
 msgstr ""
 
-#: redistricting/tasks.py:1500
-msgid "The subject name contains invalid characters."
-msgstr ""
-
-#: redistricting/tasks.py:1508
-msgid "Please correct the error and try again."
-msgstr ""
-
-#: redistricting/tasks.py:1589
+#: redistricting/tasks.py:1646
 msgid "Created characteristics, resetting computed characteristics..."
 msgstr ""
 
-#: redistricting/tasks.py:1652
+#: redistricting/tasks.py:1650
+msgid "Not able to create task for update_vacant_characteristics."
+msgstr ""
+
+#: redistricting/tasks.py:1713
 msgid "Reset computed characteristics, renesting foundation geographies..."
 msgstr ""
 
-#: redistricting/tasks.py:1706
+#: redistricting/tasks.py:1767
 msgid "Renested foundation geographies, creating spatial views and styles..."
 msgstr ""
 
-#: redistricting/tasks.py:1770
+#: redistricting/tasks.py:1831
 msgid "Created spatial views and styles, cleaning quarantined data..."
 msgstr ""
 
-#: redistricting/tasks.py:1813
+#: redistricting/tasks.py:1879
 #, python-format
 msgid "Upload complete. Subject \"%(subject_name)s\" added."
 msgstr ""
 
-#: redistricting/views.py:140
+#: redistricting/views.py:139
 msgid "The current user may only have one session open at a time."
 msgstr ""
 
-#: redistricting/views.py:215
+#: redistricting/views.py:214
 #, python-format
 msgid "User %(user)s doesn't have permission to unload this plan"
 msgstr ""
 
-#: redistricting/views.py:252
+#: redistricting/views.py:251
 #, python-format
 msgid "User %(username)s doesn't have permission to copy this model"
 msgstr ""
 
-#: redistricting/views.py:265
+#: redistricting/views.py:264
 msgid "You already have a plan named that. Please pick a unique name."
 msgstr ""
 
-#: redistricting/views.py:287
+#: redistricting/views.py:286
 msgid "Could not save district copies"
 msgstr ""
 
-#: redistricting/views.py:333
+#: redistricting/views.py:332
 msgid "Validation successful"
 msgstr ""
 
-#: redistricting/views.py:434
+#: redistricting/views.py:433
 msgid "District"
 msgstr ""
 
-#: redistricting/views.py:539
+#: redistricting/views.py:538
 msgid "community map"
 msgstr ""
 
-#: redistricting/views.py:539
+#: redistricting/views.py:538
 msgid "plan"
 msgstr ""
 
-#: redistricting/views.py:773
+#: redistricting/views.py:772
 msgid "Couldn't save new plan"
 msgstr ""
 
-#: redistricting/views.py:881 redistricting/views.py:967
-#: redistricting/views.py:1147 redistricting/views.py:1209
-#: redistricting/views.py:1276 redistricting/views.py:1329
-#: redistricting/views.py:1375
+#: redistricting/views.py:880 redistricting/views.py:966
+#: redistricting/views.py:1149 redistricting/views.py:1211
+#: redistricting/views.py:1278 redistricting/views.py:1331
+#: redistricting/views.py:1377
 msgid "No plan with the given id"
 msgstr ""
 
-#: redistricting/views.py:885 redistricting/views.py:971
-#: redistricting/views.py:1379 redistricting/views.py:1391
+#: redistricting/views.py:884 redistricting/views.py:970
+#: redistricting/views.py:1381 redistricting/views.py:1393
 msgid "User can't view the given plan"
 msgstr ""
 
-#: redistricting/views.py:889
+#: redistricting/views.py:888
 msgid "Reports functionality is turned off."
 msgstr ""
 
-#: redistricting/views.py:894 redistricting/views.py:975
+#: redistricting/views.py:893 redistricting/views.py:974
 msgid "Information for report wasn't sent via POST"
 msgstr ""
 
-#: redistricting/views.py:905 redistricting/views.py:992
+#: redistricting/views.py:904 redistricting/views.py:991
 msgid "Plan report is ready."
 msgstr ""
 
-#: redistricting/views.py:913 redistricting/views.py:1000
+#: redistricting/views.py:912 redistricting/views.py:999
 msgid "Report is building."
 msgstr ""
 
-#: redistricting/views.py:921 redistricting/views.py:1008
+#: redistricting/views.py:920 redistricting/views.py:1007
 msgid "Report generation started."
 msgstr ""
 
-#: redistricting/views.py:941 redistricting/views.py:1017
+#: redistricting/views.py:940 redistricting/views.py:1016
 msgid "Unrecognized status when checking report status."
 msgstr ""
 
-#: redistricting/views.py:1108
+#: redistricting/views.py:1110
 msgid "Created 1 new district"
 msgstr ""
 
-#: redistricting/views.py:1114
+#: redistricting/views.py:1116
 msgid "Reached Max districts already"
 msgstr ""
 
-#: redistricting/views.py:1118
+#: redistricting/views.py:1120
 msgid "Couldn't save new district."
 msgstr ""
 
-#: redistricting/views.py:1120
+#: redistricting/views.py:1122
 msgid "Must specify name, geolevel, and geounit ids for new district."
 msgstr ""
 
-#: redistricting/views.py:1151 redistricting/views.py:1213
-#: redistricting/views.py:1280 redistricting/views.py:1333
+#: redistricting/views.py:1153 redistricting/views.py:1215
+#: redistricting/views.py:1282 redistricting/views.py:1335
 msgid "User can't edit the given plan"
 msgstr ""
 
-#: redistricting/views.py:1157
+#: redistricting/views.py:1159
 msgid "No districts selected to add to the given plan"
 msgstr ""
 
-#: redistricting/views.py:1162
+#: redistricting/views.py:1164
 #, python-format
 msgid "Going to merge %(number_of_merged_districts)d districts"
 msgstr ""
 
-#: redistricting/views.py:1170
+#: redistricting/views.py:1172
 #, python-format
 msgid "Tried to merge too many districts; %(allowed_districts)d slots left"
 msgstr ""
 
-#: redistricting/views.py:1178
+#: redistricting/views.py:1180
 #, python-format
 msgid "Merged %(num_merged_districts)d districts"
 msgstr ""
 
-#: redistricting/views.py:1220
+#: redistricting/views.py:1222
 msgid "Multi-members not allowed for this legislative body"
 msgstr ""
 
-#: redistricting/views.py:1252
+#: redistricting/views.py:1254
 #, python-format
 msgid "Modified members for %(num_districts)d districts"
 msgstr ""
 
-#: redistricting/views.py:1300
+#: redistricting/views.py:1302
 msgid "Can't combine locked districts"
 msgstr ""
 
-#: redistricting/views.py:1307
+#: redistricting/views.py:1309
 msgid "Successfully combined districts"
 msgstr ""
 
-#: redistricting/views.py:1310
+#: redistricting/views.py:1312
 msgid "Could not combine districts"
 msgstr ""
 
-#: redistricting/views.py:1343
+#: redistricting/views.py:1345
 msgid "Could not fix unassigned"
 msgstr ""
 
-#: redistricting/views.py:1388
+#: redistricting/views.py:1390
 msgid "No other plan with the given id"
 msgstr ""
 
-#: redistricting/views.py:1399
+#: redistricting/views.py:1401
 #, python-format
 msgid "othertype not supported: %(other)s"
 msgstr ""
 
-#: redistricting/views.py:1402
+#: redistricting/views.py:1404
 msgid "split"
 msgstr ""
 
-#: redistricting/views.py:1405
+#: redistricting/views.py:1407
 #, python-format
 msgid "Found %(num_splits)d %(split_word)s"
 msgstr ""
 
-#: redistricting/views.py:1411
+#: redistricting/views.py:1413
 msgid "Could not query for splits"
 msgstr ""
 
-#: redistricting/views.py:1424
+#: redistricting/views.py:1426
 msgid "No planIds provided"
 msgstr ""
 
-#: redistricting/views.py:1444
+#: redistricting/views.py:1446
 msgid "Plan does not exist."
 msgstr ""
 
-#: redistricting/views.py:1454
+#: redistricting/views.py:1456
 msgid "No layers were provided."
 msgstr ""
 
-#: redistricting/views.py:1508 redistricting/views.py:1527
+#: redistricting/views.py:1510 redistricting/views.py:1529
 msgid "Could not add units to district."
 msgstr ""
 
-#: redistricting/views.py:1519
+#: redistricting/views.py:1521
 #, python-format
 msgid "Updated %(num_fixed_districts)d districts"
 msgstr ""
 
-#: redistricting/views.py:1532
+#: redistricting/views.py:1534
 msgid "Geounits weren't found in a district."
 msgstr ""
 
-#: redistricting/views.py:1561
+#: redistricting/views.py:1563
 msgid "Must include lock parameter."
 msgstr ""
 
-#: redistricting/views.py:1563
+#: redistricting/views.py:1565
 msgid "Must include version parameter."
 msgstr ""
 
-#: redistricting/views.py:1569
+#: redistricting/views.py:1571
 msgid "Plan or district does not exist."
 msgstr ""
 
-#: redistricting/views.py:1578
+#: redistricting/views.py:1580
 #, python-format
 msgid "District successfully %(locked_state)s"
 msgstr ""
 
-#: redistricting/views.py:1579
+#: redistricting/views.py:1581
 msgid "locked"
 msgstr ""
 
-#: redistricting/views.py:1579
+#: redistricting/views.py:1581
 msgid "unlocked"
 msgstr ""
 
-#: redistricting/views.py:1634
+#: redistricting/views.py:1635
 msgid "No plan exists with that ID."
 msgstr ""
 
@@ -462,163 +474,163 @@ msgstr ""
 msgid "Query failed."
 msgstr ""
 
-#: redistricting/views.py:1803
+#: redistricting/views.py:1802
 msgid "Geometry is required."
 msgstr ""
 
-#: redistricting/views.py:1807
+#: redistricting/views.py:1806
 msgid "Invalid plan."
 msgstr ""
 
-#: redistricting/views.py:1820
+#: redistricting/views.py:1819
 msgid "Couldn't get geography info from the server. No plan with the given id."
 msgstr ""
 
-#: redistricting/views.py:1834
+#: redistricting/views.py:1833
 msgid "Unable to get Demographics ScoreDisplay"
 msgstr ""
 
-#: redistricting/views.py:1841
+#: redistricting/views.py:1840
 msgid "Unable to get Personalized ScoreDisplay"
 msgstr ""
 
-#: redistricting/views.py:1852
+#: redistricting/views.py:1851
 msgid "Couldn't render display tab."
 msgstr ""
 
-#: redistricting/views.py:1884
+#: redistricting/views.py:1883
 msgid "Failed to get file status"
 msgstr ""
 
-#: redistricting/views.py:1916
+#: redistricting/views.py:1915
 msgid "File is not yet ready. Please try again in a few minutes"
 msgstr ""
 
-#: redistricting/views.py:1939
+#: redistricting/views.py:1938
 msgid "Task submitted"
 msgstr ""
 
-#: redistricting/views.py:1976
+#: redistricting/views.py:1975
 msgid "No display configured"
 msgstr ""
 
-#: redistricting/views.py:2076
+#: redistricting/views.py:2075
 msgid "Unknown filter method."
 msgstr ""
 
-#: redistricting/views.py:2198
+#: redistricting/views.py:2197
 msgid "Must declare planId, name and description"
 msgstr ""
 
-#: redistricting/views.py:2211
+#: redistricting/views.py:2210
 msgid "Updated plan attributes"
 msgstr ""
 
-#: redistricting/views.py:2213
+#: redistricting/views.py:2212
 msgid "Failed to save the changes to your plan"
 msgstr ""
 
-#: redistricting/views.py:2218
+#: redistricting/views.py:2217
 msgid "Cannot edit a plan you don't own."
 msgstr ""
 
-#: redistricting/views.py:2234 redistricting/views.py:2266
+#: redistricting/views.py:2233 redistricting/views.py:2265
 msgid "Must declare planId"
 msgstr ""
 
-#: redistricting/views.py:2242
+#: redistricting/views.py:2241
 msgid "Deleted plan"
 msgstr ""
 
-#: redistricting/views.py:2244
+#: redistricting/views.py:2243
 msgid "Failed to delete plan"
 msgstr ""
 
-#: redistricting/views.py:2249
+#: redistricting/views.py:2248
 msgid "Cannot delete a plan you don't own."
 msgstr ""
 
-#: redistricting/views.py:2280
+#: redistricting/views.py:2279
 msgid "Reaggregating plan"
 msgstr ""
 
-#: redistricting/views.py:2282
+#: redistricting/views.py:2281
 msgid "Failed to reaggregate plan"
 msgstr ""
 
-#: redistricting/views.py:2287
+#: redistricting/views.py:2286
 msgid "Cannot reaggregate a plan you don't own."
 msgstr ""
 
-#: redistricting/views.py:2308
+#: redistricting/views.py:2307
 #, python-format
 msgid "Health retrieved at %(time)s\n"
 msgstr ""
 
-#: redistricting/views.py:2309
+#: redistricting/views.py:2308
 #, python-format
 msgid "%(plan_count)d plans in database\n"
 msgstr ""
 
-#: redistricting/views.py:2311
+#: redistricting/views.py:2310
 #, python-format
 msgid "%(session_count)d sessions in use out of %(session_limit)s\n"
 msgstr ""
 
-#: redistricting/views.py:2314
+#: redistricting/views.py:2313
 #, python-format
 msgid "%(num_users)d active users over the last 10 minutes\n"
 msgstr ""
 
-#: redistricting/views.py:2317
+#: redistricting/views.py:2316
 #, python-format
 msgid "%(mb_free)s MB of disk space free\n"
 msgstr ""
 
-#: redistricting/views.py:2319
+#: redistricting/views.py:2318
 #, python-format
 msgid ""
 "Memory Usage:\n"
 "%(mem_free)s\n"
 msgstr ""
 
-#: redistricting/views.py:2323
+#: redistricting/views.py:2322
 #, python-format
 msgid ""
 "ERROR! Couldn't get health:\n"
 "%s"
 msgstr ""
 
-#: redistricting/views.py:2331
+#: redistricting/views.py:2330
 msgid "No plan with that ID exists."
 msgstr ""
 
-#: redistricting/views.py:2379
+#: redistricting/views.py:2384
 #, python-format
 msgid "No functions for %(panel)s"
 msgstr ""
 
-#: redistricting/views.py:2383
+#: redistricting/views.py:2388
 #, python-format
 msgid "No user displays for %(user)s"
 msgstr ""
 
-#: redistricting/views.py:2402
+#: redistricting/views.py:2407
 msgid "Couldn't delete personalized scoredisplay"
 msgstr ""
 
-#: redistricting/views.py:2444
+#: redistricting/views.py:2449
 #, python-format
 msgid ""
 "Each user is limited to %(limit)d statistics sets. Please delete one or edit "
 "an existing set."
 msgstr ""
 
-#: redistricting/views.py:2454
+#: redistricting/views.py:2459
 msgid "Didn't get functions in POST parameter"
 msgstr ""
 
-#: redistricting/views.py:2487
+#: redistricting/views.py:2492
 msgid "No plan with that ID was found."
 msgstr ""
 
@@ -763,11 +775,7 @@ msgid "Select by drawing a polygon"
 msgstr ""
 
 #: redistricting/templates/editplan.html:69
-msgid "Polygon"
-msgstr ""
-
-#: redistricting/templates/editplan.html:69
-msgid "Select"
+msgid "Polygon<br/>Select"
 msgstr ""
 
 #: redistricting/templates/editplan.html:74
@@ -2344,7 +2352,7 @@ msgstr ""
 #: templates/admin/auth/user/change_password.orig.html:11
 #: templates/admin/redistricting/subject/add_form.html:49
 #: templates/admin/redistricting/subject/delete_selected_confirmation.html:37
-#: templates/admin/redistricting/subject/upload_form.html:118
+#: templates/admin/redistricting/subject/upload_form.html:119
 #: templates/registration/password_change_form.orig.html:35
 msgid "Home"
 msgstr ""
@@ -2382,12 +2390,12 @@ msgid "Download Subject template"
 msgstr ""
 
 #: templates/admin/redistricting/subject/add_form.html:52
-#: templates/admin/redistricting/subject/upload_form.html:121
+#: templates/admin/redistricting/subject/upload_form.html:122
 msgid "Add"
 msgstr ""
 
 #: templates/admin/redistricting/subject/add_form.html:60
-#: templates/admin/redistricting/subject/upload_form.html:129
+#: templates/admin/redistricting/subject/upload_form.html:130
 msgid ""
 "A Subject in DistrictBuilder has relationships with many objects in the "
 "application. For this reason, adding a Subject requires a few extra steps. "
@@ -2395,12 +2403,12 @@ msgid ""
 msgstr ""
 
 #: templates/admin/redistricting/subject/add_form.html:62
-#: templates/admin/redistricting/subject/upload_form.html:131
+#: templates/admin/redistricting/subject/upload_form.html:132
 msgid "Downloading a Subject template file (CSV)"
 msgstr ""
 
 #: templates/admin/redistricting/subject/add_form.html:63
-#: templates/admin/redistricting/subject/upload_form.html:132
+#: templates/admin/redistricting/subject/upload_form.html:133
 msgid "Uploading a complete Subject file (CSV)"
 msgstr ""
 
@@ -2409,7 +2417,7 @@ msgid "Verifying the upload Subject file."
 msgstr ""
 
 #: templates/admin/redistricting/subject/add_form.html:65
-#: templates/admin/redistricting/subject/upload_form.html:134
+#: templates/admin/redistricting/subject/upload_form.html:135
 msgid "Configuring the settings for the uploaded Subject."
 msgstr ""
 
@@ -2512,7 +2520,7 @@ msgid ""
 msgstr ""
 
 #: templates/admin/redistricting/subject/upload_form.html:33
-#: templates/admin/redistricting/subject/upload_form.html:125
+#: templates/admin/redistricting/subject/upload_form.html:126
 msgid "Upload Subject template"
 msgstr ""
 
@@ -2521,38 +2529,38 @@ msgid ""
 "Subject ingest successful! Press \"Continue\" to edit the Subject details."
 msgstr ""
 
-#: templates/admin/redistricting/subject/upload_form.html:75
+#: templates/admin/redistricting/subject/upload_form.html:76
 msgid "Sorry! This processing step failed with the following error message: "
 msgstr ""
 
-#: templates/admin/redistricting/subject/upload_form.html:77
-#: templates/admin/redistricting/subject/upload_form.html:87
+#: templates/admin/redistricting/subject/upload_form.html:78
+#: templates/admin/redistricting/subject/upload_form.html:88
 msgid "Retry"
 msgstr ""
 
-#: templates/admin/redistricting/subject/upload_form.html:85
+#: templates/admin/redistricting/subject/upload_form.html:86
 msgid "Could not retrieve task status."
 msgstr ""
 
-#: templates/admin/redistricting/subject/upload_form.html:133
+#: templates/admin/redistricting/subject/upload_form.html:134
 msgid "Verifying the uploaded Subject file."
 msgstr ""
 
-#: templates/admin/redistricting/subject/upload_form.html:137
+#: templates/admin/redistricting/subject/upload_form.html:138
 msgid "2. Uploading a complete Subject file"
 msgstr ""
 
-#: templates/admin/redistricting/subject/upload_form.html:138
+#: templates/admin/redistricting/subject/upload_form.html:139
 msgid ""
 "Using the file field below, please select the populated Subject template "
 "file, and upload the Subject template file with the 'Upload' button below."
 msgstr ""
 
-#: templates/admin/redistricting/subject/upload_form.html:141
+#: templates/admin/redistricting/subject/upload_form.html:142
 msgid "3. Verifying the uploaded Subject file"
 msgstr ""
 
-#: templates/admin/redistricting/subject/upload_form.html:142
+#: templates/admin/redistricting/subject/upload_form.html:143
 msgid ""
 "Please wait while the uploaded Subject file is checked for consistency and "
 "alignment with the currently loaded data. This may take up to 1 hour on "
@@ -2560,25 +2568,25 @@ msgid ""
 "this page."
 msgstr ""
 
-#: templates/admin/redistricting/subject/upload_form.html:145
+#: templates/admin/redistricting/subject/upload_form.html:146
 msgid "4. Configuring the settings for the uploaded Subject"
 msgstr ""
 
-#: templates/admin/redistricting/subject/upload_form.html:146
+#: templates/admin/redistricting/subject/upload_form.html:147
 msgid ""
 "The verification steps are complete, you may proceed to the Subject change "
 "form to complete filling in the Subject details."
 msgstr ""
 
-#: templates/admin/redistricting/subject/upload_form.html:155
+#: templates/admin/redistricting/subject/upload_form.html:156
 msgid "Verifying counts of uploaded subjects..."
 msgstr ""
 
-#: templates/admin/redistricting/subject/upload_form.html:157
+#: templates/admin/redistricting/subject/upload_form.html:158
 msgid "Please Wait ..."
 msgstr ""
 
-#: templates/admin/redistricting/subject/upload_form.html:159
+#: templates/admin/redistricting/subject/upload_form.html:160
 msgid "Upload"
 msgstr ""
 
