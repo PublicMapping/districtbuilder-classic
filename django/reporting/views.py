@@ -27,7 +27,7 @@ Author:
 """
 
 from django.http import *
-from django.utils import simplejson as json
+from django.utils import simplejson as json, translation
 from django.views.decorators.csrf import csrf_exempt
 from django.core.cache import cache
 from rpy2 import robjects
@@ -341,6 +341,7 @@ ratioVars =
         # Write to a temp file so that the reports-checker doesn't see it early
         robjects.r.assign('tempfiledir', tempfile.gettempdir())
         robjects.r.assign('filename', basename)
+        robjects.r.assign('locale', translation.get_language())
         robjects.r('report = HTMLInitFile(tempfiledir, filename=filename, BackGroundColor="#BBBBEE", Title="Plan Analysis")')
         robjects.r('HTML.title("Plan Analysis", HR=2, file=report)')
         robjects.r("""PMPreport( bardplan, file=report, 
@@ -351,7 +352,8 @@ ratioVars =
             repCompactness=repCompactness, 
             repCompactnessExtra=repCompactnessExtra,
             repSpatial=repSpatial, 
-            repSpatialExtra=repSpatialExtra)""")
+            repSpatialExtra=repSpatialExtra,
+            locale=locale)""")
         robjects.r('HTMLEndFile()')
 
         # Now move the report back to the reports directory dir
