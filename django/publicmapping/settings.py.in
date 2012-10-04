@@ -139,6 +139,7 @@ INSTALLED_APPS = (
     'rosetta',
     'django.contrib.staticfiles',
     'compressor',
+    'publicmapping', # needed for i18n
 )
 
 # Compressor settings

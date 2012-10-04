@@ -2364,7 +2364,7 @@ def statistics_sets(request, planid):
         for admin_display in admin_displays:
             sets.append({ 
                 'id': admin_display.id,
-                'name': force_escape(admin_display.__unicode__()),
+                'name': force_escape(admin_display.get_label()),
                 'functions': [],
                 'mine':False
             })

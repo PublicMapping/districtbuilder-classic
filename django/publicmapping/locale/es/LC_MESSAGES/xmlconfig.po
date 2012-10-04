@@ -27,7 +27,7 @@ msgstr "%(district_id)s"
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:10
 msgid "congress label"
-msgstr "Distrito %s"
+msgstr "Distrito %(district_id)s"
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:10
 msgid "congress long description"
@@ -43,7 +43,7 @@ msgstr "%(district_id)s"
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:12
 msgid "house label"
-msgstr "Distrito %s"
+msgstr "Distrito %(district_id)s"
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:12
 msgid "house long description"
@@ -59,7 +59,7 @@ msgstr "%(district_id)s"
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:14
 msgid "senate label"
-msgstr "Distrito %s"
+msgstr "Distrito %(district_id)s"
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:14
 msgid "senate long description"
@@ -75,7 +75,7 @@ msgstr "%(district_id)s"
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:16
 msgid "community label"
-msgstr "Comunidad %s"
+msgstr "Comunidad %(district_id)s"
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:16
 msgid "community long description"
@@ -115,7 +115,7 @@ msgstr "%(district_id)s"
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:18
 msgid "dc_area_council label"
-msgstr "Distrito %s"
+msgstr "Distrito %(district_id)s"
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:18
 msgid "dc_area_council long description"
@@ -131,7 +131,7 @@ msgstr "%(district_id)s"
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:20
 msgid "dc_community label"
-msgstr "Comunidad %s"
+msgstr "Comunidad %(district_id)s"
 
 #: /projects/PublicMapping/DistrictBuilder/docs/config.xml:20
 msgid "dc_community long description"

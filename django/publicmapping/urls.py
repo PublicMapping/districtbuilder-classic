@@ -33,7 +33,8 @@ from django.contrib import admin
 admin.autodiscover()
 
 js_info_dict = { 
-    'packages': ('publicmapping',), 
+    'domain': 'djangojs',
+    'packages': ('publicmapping','redistricting',), 
 } 
 
 urlpatterns = patterns('',
