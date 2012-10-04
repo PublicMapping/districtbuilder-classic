@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-09-17 09:38-0400\n"
+"POT-Creation-Date: 2012-10-04 13:07-0400\n"
 "PO-Revision-Date: 2012-06-07 14:20\n"
 "Language: Japanese\n"
 "MIME-Version: 1.0\n"
@@ -19,17 +19,17 @@ msgstr ""
 msgid "Your Password Reset Request"
 msgstr "パスワードのリセット申請"
 
-#: redistricting/admin.py:278
+#: redistricting/admin.py:283
 #, python-format
 msgid "Successfully deleted %(count)d %(item)s"
 msgstr "%(count)d %(item)sは削除されました。"
 
-#: redistricting/admin.py:302
+#: redistricting/admin.py:307
 #, python-format
 msgid "Delete selected %(verbose_name_plural)s"
 msgstr "選択した%(verbose_name_plural)sを削除する"
 
-#: redistricting/admin.py:389
+#: redistricting/admin.py:394
 msgid "No task with that id."
 msgstr "そのIDに該当するタスクはありません。"
 
@@ -78,23 +78,33 @@ msgstr "境界線総数"
 msgid "Could not store uploaded Subject template."
 msgstr "アップロードされたSubjectテンプレートを保存できませんでした。"
 
-#: redistricting/forms.py:127
+#: redistricting/forms.py:111
+#, fuzzy
+msgid "The uploaded file is missing subject data."
+msgstr "アップロードされたファイルの中に無効なsubject名があります。"
+
+#: redistricting/forms.py:118
+#, fuzzy
+msgid "The new subject name could not be determined."
+msgstr "subject名に使用できない文字が含まれています。"
+
+#: redistricting/forms.py:136
 msgid "Uploaded file cannot be found."
 msgstr "アップロードされたファイルが見つかりません。"
 
-#: redistricting/forms.py:129
+#: redistricting/forms.py:138
 msgid "Uploaded file is required."
 msgstr "ファイルのアップロードが必要です。"
 
-#: redistricting/forms.py:144
+#: redistricting/forms.py:153
 msgid "Please specify a unique subject name."
 msgstr "固有の名前を決めてください。"
 
-#: redistricting/forms.py:145
+#: redistricting/forms.py:154
 msgid "Check this box to overwrite the existing subject with the same name."
 msgstr "同じ名前で上書き保存する"
 
-#: redistricting/forms.py:186
+#: redistricting/forms.py:195
 msgid "Uploaded file contains an invalid subject name."
 msgstr "アップロードされたファイルの中に無効なsubject名があります。"
 
@@ -180,414 +190,419 @@ msgstr "計画案を提出しました"
 msgid "Error creating calculator report."
 msgstr "計算レポートの作成中にエラーが発生しました。"
 
-#: redistricting/tasks.py:1342
+#: redistricting/tasks.py:1367
+#, fuzzy
+msgid "There are missing columns in the uploaded Subject file"
+msgstr "アップロードされたSubjectファイル内の地域単位の数が正しくありません。"
+
+#: redistricting/tasks.py:1396
 #, fuzzy
 msgid "There are an incorrect number of columns in the uploaded Subject file"
 msgstr "アップロードされたSubjectファイル内の地域単位の数が正しくありません。"
-
-#: redistricting/tasks.py:1360
-msgid ""
-"There are an incorrect number of geounits in the uploaded Subject file. "
-msgstr "アップロードされたSubjectファイル内の地域単位の数が正しくありません。"
-
-#: redistricting/tasks.py:1389
-msgid "Verifying consistency of uploaded geounits ..."
-msgstr "アップロードされた地域単位の整合性を確認しています ..."
 
 #: redistricting/tasks.py:1402
 msgid "Invalid data detected in the uploaded Subject file"
 msgstr ""
 
-#: redistricting/tasks.py:1430
+#: redistricting/tasks.py:1419
+msgid ""
+"There are an incorrect number of geounits in the uploaded Subject file. "
+msgstr "アップロードされたSubjectファイル内の地域単位の数が正しくありません。"
+
+#: redistricting/tasks.py:1448
+msgid "Verifying consistency of uploaded geounits ..."
+msgstr "アップロードされた地域単位の整合性を確認しています ..."
+
+#: redistricting/tasks.py:1489
 msgid "There are a correct number of geounits in the uploaded Subject file, "
 msgstr "アップロードされたSubjectファイル内の地域単位数が一致しました。"
 
-#: redistricting/tasks.py:1432
+#: redistricting/tasks.py:1491
 msgid ""
 "but the geounits do not have the same portable ids as those in the database."
 msgstr "地域単位のポータブルIDとデータベース内のポータブルIDが一致しません。"
 
-#: redistricting/tasks.py:1461
+#: redistricting/tasks.py:1520
 msgid "Copying records to characteristic table ..."
 msgstr "記録をcharacteristic表にコピーしています ..."
 
-#: redistricting/tasks.py:1587
+#: redistricting/tasks.py:1646
 msgid "Created characteristics, resetting computed characteristics..."
 msgstr ""
 "Characteristicsを作成しました。計算されたcharacteristicsをリセットしていま"
 "す..."
 
-#: redistricting/tasks.py:1591
+#: redistricting/tasks.py:1650
 msgid "Not able to create task for update_vacant_characteristics."
 msgstr ""
 
-#: redistricting/tasks.py:1654
+#: redistricting/tasks.py:1713
 msgid "Reset computed characteristics, renesting foundation geographies..."
 msgstr ""
 "計算されたcharacteristicsはリセットされました。renesting geografías base..."
 
-#: redistricting/tasks.py:1708
+#: redistricting/tasks.py:1767
 msgid "Renested foundation geographies, creating spatial views and styles..."
 msgstr "Renested geografías base。空間ビューとスタイルを作成しています..."
 
-#: redistricting/tasks.py:1772
+#: redistricting/tasks.py:1831
 msgid "Created spatial views and styles, cleaning quarantined data..."
 msgstr ""
 "空間ビューとスタイルを作成しました。quarantineされたデータを削除しています..."
 
-#: redistricting/tasks.py:1815
+#: redistricting/tasks.py:1879
 #, python-format
 msgid "Upload complete. Subject \"%(subject_name)s\" added."
 msgstr ""
 "アップロードが完了しました。Subject \"%(subject_name)s\"が追加されました。"
 
-#: redistricting/views.py:140
+#: redistricting/views.py:139
 msgid "The current user may only have one session open at a time."
 msgstr "現在のユーザは複数のセッションを同時に開くことはできません。"
 
-#: redistricting/views.py:215
+#: redistricting/views.py:214
 #, python-format
 msgid "User %(user)s doesn't have permission to unload this plan"
 msgstr "ユーザ%(user)sはこの計画案をアンロードすることはできません。"
 
-#: redistricting/views.py:252
+#: redistricting/views.py:251
 #, python-format
 msgid "User %(username)s doesn't have permission to copy this model"
 msgstr "ユーザ%(username)sはこのモデルをコピーすることはできません。"
 
-#: redistricting/views.py:265
+#: redistricting/views.py:264
 msgid "You already have a plan named that. Please pick a unique name."
 msgstr "同じ名前の計画案が既にあります。別の名前をつけてください。"
 
-#: redistricting/views.py:287
+#: redistricting/views.py:286
 msgid "Could not save district copies"
 msgstr "選挙区のコピーを保存できませんでした。"
 
-#: redistricting/views.py:333
+#: redistricting/views.py:332
 msgid "Validation successful"
 msgstr "検証に成功しました"
 
-#: redistricting/views.py:434
+#: redistricting/views.py:433
 msgid "District"
 msgstr "選挙区"
 
-#: redistricting/views.py:539
+#: redistricting/views.py:538
 msgid "community map"
 msgstr "地域マップ"
 
-#: redistricting/views.py:539
+#: redistricting/views.py:538
 msgid "plan"
 msgstr "計画案"
 
-#: redistricting/views.py:773
+#: redistricting/views.py:772
 msgid "Couldn't save new plan"
 msgstr "新しい計画案を保存できませんでした"
 
-#: redistricting/views.py:881 redistricting/views.py:967
-#: redistricting/views.py:1150 redistricting/views.py:1212
-#: redistricting/views.py:1279 redistricting/views.py:1332
-#: redistricting/views.py:1378
+#: redistricting/views.py:880 redistricting/views.py:966
+#: redistricting/views.py:1149 redistricting/views.py:1211
+#: redistricting/views.py:1278 redistricting/views.py:1331
+#: redistricting/views.py:1377
 msgid "No plan with the given id"
 msgstr "指定されたIDの計画案は存在しません"
 
-#: redistricting/views.py:885 redistricting/views.py:971
-#: redistricting/views.py:1382 redistricting/views.py:1394
+#: redistricting/views.py:884 redistricting/views.py:970
+#: redistricting/views.py:1381 redistricting/views.py:1393
 msgid "User can't view the given plan"
 msgstr "指定された計画案を見ることはできません"
 
-#: redistricting/views.py:889
+#: redistricting/views.py:888
 msgid "Reports functionality is turned off."
 msgstr "レポート機能が解除されています。"
 
-#: redistricting/views.py:894 redistricting/views.py:975
+#: redistricting/views.py:893 redistricting/views.py:974
 msgid "Information for report wasn't sent via POST"
 msgstr "レポート情報がPOSTから送られませんでした"
 
-#: redistricting/views.py:905 redistricting/views.py:992
+#: redistricting/views.py:904 redistricting/views.py:991
 msgid "Plan report is ready."
 msgstr "計画案レポートの準備ができました。"
 
-#: redistricting/views.py:913 redistricting/views.py:1000
+#: redistricting/views.py:912 redistricting/views.py:999
 msgid "Report is building."
 msgstr "レポートを構築中です。"
 
-#: redistricting/views.py:921 redistricting/views.py:1008
+#: redistricting/views.py:920 redistricting/views.py:1007
 msgid "Report generation started."
 msgstr "レポート作成を開始しました"
 
-#: redistricting/views.py:941 redistricting/views.py:1017
+#: redistricting/views.py:940 redistricting/views.py:1016
 msgid "Unrecognized status when checking report status."
 msgstr ""
 
-#: redistricting/views.py:1111
+#: redistricting/views.py:1110
 msgid "Created 1 new district"
 msgstr "新しい選挙区を作成しました"
 
-#: redistricting/views.py:1117
+#: redistricting/views.py:1116
 msgid "Reached Max districts already"
 msgstr "選挙区数の上限に達しています"
 
-#: redistricting/views.py:1121
+#: redistricting/views.py:1120
 msgid "Couldn't save new district."
 msgstr "新しい選挙区を保存できませんでした。"
 
-#: redistricting/views.py:1123
+#: redistricting/views.py:1122
 msgid "Must specify name, geolevel, and geounit ids for new district."
 msgstr "新しい選挙区の名前、地域レベル、地域単位を指定してください。"
 
-#: redistricting/views.py:1154 redistricting/views.py:1216
-#: redistricting/views.py:1283 redistricting/views.py:1336
+#: redistricting/views.py:1153 redistricting/views.py:1215
+#: redistricting/views.py:1282 redistricting/views.py:1335
 msgid "User can't edit the given plan"
 msgstr "この計画案は編集することができません"
 
-#: redistricting/views.py:1160
+#: redistricting/views.py:1159
 msgid "No districts selected to add to the given plan"
 msgstr "新しい計画案に追加する選挙区が選択されていません"
 
-#: redistricting/views.py:1165
+#: redistricting/views.py:1164
 #, python-format
 msgid "Going to merge %(number_of_merged_districts)d districts"
 msgstr "%(number_of_merged_districts)d個の選挙区を統合します"
 
-#: redistricting/views.py:1173
+#: redistricting/views.py:1172
 #, python-format
 msgid "Tried to merge too many districts; %(allowed_districts)d slots left"
 msgstr ""
 "統合しようとした選挙区が多すぎます。%(allowed_districts)d個分のスロットが残っ"
 "ています。"
 
-#: redistricting/views.py:1181
+#: redistricting/views.py:1180
 #, python-format
 msgid "Merged %(num_merged_districts)d districts"
 msgstr "%(num_merged_districts)d個の選挙区を統合しました"
 
-#: redistricting/views.py:1223
+#: redistricting/views.py:1222
 msgid "Multi-members not allowed for this legislative body"
 msgstr "この議会は複数定員区にすることはできません"
 
-#: redistricting/views.py:1255
+#: redistricting/views.py:1254
 #, python-format
 msgid "Modified members for %(num_districts)d districts"
 msgstr "%(num_districts)d個の選挙区の議員を変更しました"
 
-#: redistricting/views.py:1303
+#: redistricting/views.py:1302
 msgid "Can't combine locked districts"
 msgstr "ロックされた選挙区を統合することはできません"
 
-#: redistricting/views.py:1310
+#: redistricting/views.py:1309
 msgid "Successfully combined districts"
 msgstr "選挙区の統合に成功しました"
 
-#: redistricting/views.py:1313
+#: redistricting/views.py:1312
 msgid "Could not combine districts"
 msgstr "選挙区を統合できませんでした"
 
-#: redistricting/views.py:1346
+#: redistricting/views.py:1345
 msgid "Could not fix unassigned"
 msgstr "未配置地域の修復ができませんでした"
 
-#: redistricting/views.py:1391
+#: redistricting/views.py:1390
 msgid "No other plan with the given id"
 msgstr "指定されたIDの計画案は他にありません。"
 
-#: redistricting/views.py:1402
+#: redistricting/views.py:1401
 #, python-format
 msgid "othertype not supported: %(other)s"
 msgstr "othertypeはサポートされていません: %(other)s"
 
-#: redistricting/views.py:1405
+#: redistricting/views.py:1404
 msgid "split"
 msgstr "分割"
 
-#: redistricting/views.py:1408
+#: redistricting/views.py:1407
 #, python-format
 msgid "Found %(num_splits)d %(split_word)s"
 msgstr "%(num_splits)d個の%(split_word)sが見つかりました"
 
-#: redistricting/views.py:1414
+#: redistricting/views.py:1413
 msgid "Could not query for splits"
 msgstr "分割の問い合わせができませんでした"
 
-#: redistricting/views.py:1427
+#: redistricting/views.py:1426
 msgid "No planIds provided"
 msgstr "計画案IDが指定されていません"
 
-#: redistricting/views.py:1447
+#: redistricting/views.py:1446
 msgid "Plan does not exist."
 msgstr "計画案が存在しません。"
 
-#: redistricting/views.py:1457
+#: redistricting/views.py:1456
 msgid "No layers were provided."
 msgstr "layerが指定されていません。"
 
-#: redistricting/views.py:1511 redistricting/views.py:1530
+#: redistricting/views.py:1510 redistricting/views.py:1529
 msgid "Could not add units to district."
 msgstr "地域単位を選挙区に追加できませんでした。"
 
-#: redistricting/views.py:1522
+#: redistricting/views.py:1521
 #, python-format
 msgid "Updated %(num_fixed_districts)d districts"
 msgstr "%(num_fixed_districts)d個の選挙区を更新しました"
 
-#: redistricting/views.py:1535
+#: redistricting/views.py:1534
 msgid "Geounits weren't found in a district."
 msgstr "選挙区内に地域単位が見つかりませんでした。"
 
-#: redistricting/views.py:1564
+#: redistricting/views.py:1563
 msgid "Must include lock parameter."
 msgstr "lock parameterを組み込んでください。"
 
-#: redistricting/views.py:1566
+#: redistricting/views.py:1565
 msgid "Must include version parameter."
 msgstr "version parameterを組み込んでください。"
 
-#: redistricting/views.py:1572
+#: redistricting/views.py:1571
 msgid "Plan or district does not exist."
 msgstr "計画案か選挙区が存在しません。"
 
-#: redistricting/views.py:1581
+#: redistricting/views.py:1580
 #, python-format
 msgid "District successfully %(locked_state)s"
 msgstr ""
 
-#: redistricting/views.py:1582
+#: redistricting/views.py:1581
 msgid "locked"
 msgstr "ロックされました"
 
-#: redistricting/views.py:1582
+#: redistricting/views.py:1581
 msgid "unlocked"
 msgstr "ロックを解除しました"
 
-#: redistricting/views.py:1637
+#: redistricting/views.py:1635
 msgid "No plan exists with that ID."
 msgstr "そのIDの計画案は存在しません。"
 
-#: redistricting/views.py:1705
+#: redistricting/views.py:1702
 msgid "Subject for districts is required."
 msgstr "選挙区のSubjectが必要です。"
 
-#: redistricting/views.py:1708
+#: redistricting/views.py:1705
 msgid "Query failed."
 msgstr "クエリーに失敗しました。"
 
-#: redistricting/views.py:1806
+#: redistricting/views.py:1802
 msgid "Geometry is required."
 msgstr "Geometryが必要です。"
 
-#: redistricting/views.py:1810
+#: redistricting/views.py:1806
 msgid "Invalid plan."
 msgstr "無効な計画案です。"
 
-#: redistricting/views.py:1823
+#: redistricting/views.py:1819
 msgid "Couldn't get geography info from the server. No plan with the given id."
 msgstr ""
 "サーバーから地域情報が取得できませんでした。指定されたIDの計画案はありませ"
 "ん。"
 
-#: redistricting/views.py:1837
+#: redistricting/views.py:1833
 #, fuzzy
 msgid "Unable to get Demographics ScoreDisplay"
 msgstr "Personalized ScoreDisplayを取得できません。"
 
-#: redistricting/views.py:1844
+#: redistricting/views.py:1840
 msgid "Unable to get Personalized ScoreDisplay"
 msgstr "Personalized ScoreDisplayを取得できません。"
 
-#: redistricting/views.py:1855
+#: redistricting/views.py:1851
 msgid "Couldn't render display tab."
 msgstr "display tabが作成できませんでした。"
 
-#: redistricting/views.py:1887
+#: redistricting/views.py:1883
 msgid "Failed to get file status"
 msgstr "ファイルステータスを取得できませんでした"
 
-#: redistricting/views.py:1919
+#: redistricting/views.py:1915
 msgid "File is not yet ready. Please try again in a few minutes"
 msgstr "ファイルが準備できていません。しばらくしてやり直してください。"
 
-#: redistricting/views.py:1942
+#: redistricting/views.py:1938
 msgid "Task submitted"
 msgstr "タスクを提出しました。"
 
-#: redistricting/views.py:1979
+#: redistricting/views.py:1975
 msgid "No display configured"
 msgstr "ディスプレイが設定されていません"
 
-#: redistricting/views.py:2079
+#: redistricting/views.py:2075
 msgid "Unknown filter method."
 msgstr "検索条件が不明です。"
 
-#: redistricting/views.py:2201
+#: redistricting/views.py:2197
 msgid "Must declare planId, name and description"
 msgstr "計画案IDと名前、説明の記入が必要です"
 
-#: redistricting/views.py:2214
+#: redistricting/views.py:2210
 msgid "Updated plan attributes"
 msgstr "計画案の属性を更新しました"
 
-#: redistricting/views.py:2216
+#: redistricting/views.py:2212
 msgid "Failed to save the changes to your plan"
 msgstr "計画案への変更を保存できませんでした"
 
-#: redistricting/views.py:2221
+#: redistricting/views.py:2217
 msgid "Cannot edit a plan you don't own."
 msgstr "他のユーザの計画案は編集できません。"
 
-#: redistricting/views.py:2237 redistricting/views.py:2269
+#: redistricting/views.py:2233 redistricting/views.py:2265
 msgid "Must declare planId"
 msgstr "計画案IDの指定が必要です"
 
-#: redistricting/views.py:2245
+#: redistricting/views.py:2241
 msgid "Deleted plan"
 msgstr "計画案を削除しました"
 
-#: redistricting/views.py:2247
+#: redistricting/views.py:2243
 msgid "Failed to delete plan"
 msgstr "計画案が削除できませんでした"
 
-#: redistricting/views.py:2252
+#: redistricting/views.py:2248
 msgid "Cannot delete a plan you don't own."
 msgstr "他のユーザの計画案は削除できません。"
 
-#: redistricting/views.py:2283
+#: redistricting/views.py:2279
 msgid "Reaggregating plan"
 msgstr "計画案を再統合しています"
 
-#: redistricting/views.py:2285
+#: redistricting/views.py:2281
 msgid "Failed to reaggregate plan"
 msgstr "計画案の再統合に失敗しました"
 
-#: redistricting/views.py:2290
+#: redistricting/views.py:2286
 msgid "Cannot reaggregate a plan you don't own."
 msgstr "他のユーザの計画案は再統合できません"
 
-#: redistricting/views.py:2311
+#: redistricting/views.py:2307
 #, python-format
 msgid "Health retrieved at %(time)s\n"
 msgstr "プログラム状況取得時刻: %(time)s\n"
 
-#: redistricting/views.py:2312
+#: redistricting/views.py:2308
 #, python-format
 msgid "%(plan_count)d plans in database\n"
 msgstr "データベースには%(plan_count)d個の計画案があります\n"
 
-#: redistricting/views.py:2314
+#: redistricting/views.py:2310
 #, python-format
 msgid "%(session_count)d sessions in use out of %(session_limit)s\n"
 msgstr ""
 "%(session_limit)s個のうち%(session_count)d個のセッションを利用中です。\n"
 
-#: redistricting/views.py:2317
+#: redistricting/views.py:2313
 #, python-format
 msgid "%(num_users)d active users over the last 10 minutes\n"
 msgstr "最新10分間内のｱｸﾃｨﾌﾞﾕｰｻﾞｰ数: %(num_users)d人\n"
 
-#: redistricting/views.py:2320
+#: redistricting/views.py:2316
 #, python-format
 msgid "%(mb_free)s MB of disk space free\n"
 msgstr "空ﾃﾞｨｽｸｽﾍﾟｰｽ: %(mb_free)s MB\n"
 
-#: redistricting/views.py:2322
+#: redistricting/views.py:2318
 #, python-format
 msgid ""
 "Memory Usage:\n"
@@ -596,7 +611,7 @@ msgstr ""
 "メモリ使用量:\n"
 "%(mem_free)s\n"
 
-#: redistricting/views.py:2326
+#: redistricting/views.py:2322
 #, python-format
 msgid ""
 "ERROR! Couldn't get health:\n"
@@ -605,25 +620,25 @@ msgstr ""
 "エラー！プログラム状況が取得できませんでした:\n"
 "%s"
 
-#: redistricting/views.py:2334
+#: redistricting/views.py:2330
 msgid "No plan with that ID exists."
 msgstr "そのIDの計画案はありません。"
 
-#: redistricting/views.py:2388
+#: redistricting/views.py:2384
 #, python-format
 msgid "No functions for %(panel)s"
 msgstr "%(panel)sの機能はありません"
 
-#: redistricting/views.py:2392
+#: redistricting/views.py:2388
 #, python-format
 msgid "No user displays for %(user)s"
 msgstr "%(user)sのﾕｰｻﾞｰﾃﾞｨｽﾌﾟﾚｲはありません"
 
-#: redistricting/views.py:2411
+#: redistricting/views.py:2407
 msgid "Couldn't delete personalized scoredisplay"
 msgstr "個人用のscoredisplayを削除できませんした"
 
-#: redistricting/views.py:2453
+#: redistricting/views.py:2449
 #, python-format
 msgid ""
 "Each user is limited to %(limit)d statistics sets. Please delete one or edit "
@@ -632,11 +647,11 @@ msgstr ""
 "ユーザ１名につき%(limit)d個までの統計しか使えません。削除をするか現存する統計"
 "を編集してください。"
 
-#: redistricting/views.py:2463
+#: redistricting/views.py:2459
 msgid "Didn't get functions in POST parameter"
 msgstr "POST parameterの機能を取得できませんでした"
 
-#: redistricting/views.py:2496
+#: redistricting/views.py:2492
 msgid "No plan with that ID was found."
 msgstr "そのIDの計画案は見つかりませんでした。"
 
@@ -788,12 +803,8 @@ msgid "Select by drawing a polygon"
 msgstr "多角形を描いて選択"
 
 #: redistricting/templates/editplan.html:69
-msgid "Polygon"
-msgstr "多角形"
-
-#: redistricting/templates/editplan.html:69
-msgid "Select"
-msgstr "選択"
+msgid "Polygon<br/>Select"
+msgstr "多角範囲<br/>選択"
 
 #: redistricting/templates/editplan.html:74
 #, python-format
@@ -2818,8 +2829,11 @@ msgstr "新しいパスワード"
 msgid "Change my password"
 msgstr "パスワードを変更する"
 
-#~ msgid "The subject name contains invalid characters."
-#~ msgstr "subject名に使用できない文字が含まれています。"
+#~ msgid "Polygon"
+#~ msgstr "多角形"
+
+#~ msgid "Select"
+#~ msgstr "選択"
 
 #~ msgid "Please correct the error and try again."
 #~ msgstr "エラーを直してもう一度やり直してください。"
@@ -2850,9 +2864,6 @@ msgstr "パスワードを変更する"
 
 #~ msgid "%(legislative_body)s Leaderboard - %(owner_filter)s"
 #~ msgstr "%(legislative_body)sのｽｺｱﾎﾞｰﾄﾞ - %(owner_filter)s"
-
-#~ msgid "Polygon<br/>Select"
-#~ msgstr "多角範囲<br/>選択"
 
 #~ msgid "Assign to"
 #~ msgstr "に割り当てる"
