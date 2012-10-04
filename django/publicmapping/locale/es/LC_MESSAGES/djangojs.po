@@ -20,9 +20,8 @@ msgstr ""
 
 #: redistricting/static/js/chooseplan.js:75
 #: redistricting/static/js/chooseplan.js:245
-#, fuzzy
 msgid "View Plan"
-msgstr "Plan"
+msgstr "Visualizar Plan"
 
 #: redistricting/static/js/chooseplan.js:75
 #: redistricting/static/js/chooseplan.js:245
