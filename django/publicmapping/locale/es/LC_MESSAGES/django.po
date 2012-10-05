@@ -2162,7 +2162,7 @@ msgstr "Acerca de"
 
 #: templates/index.html:98
 msgid "Support"
-msgstr "Apoyo"
+msgstr "Ayuda"
 
 #: templates/index.html:116
 msgid "About the Public Mapping Project"
