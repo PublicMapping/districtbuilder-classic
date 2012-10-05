@@ -2558,7 +2558,7 @@ msgstr "Hemos diseñado el software para funcionar en"
 
 #: templates/language_chooser.html:33
 msgid "Language"
-msgstr "Lenguaje"
+msgstr "Idioma"
 
 #: templates/admin/base_site.html:34
 msgid "Redistricting site admin"
