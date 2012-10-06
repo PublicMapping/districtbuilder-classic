@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-04 13:07-0400\n"
+"POT-Creation-Date: 2012-10-06 00:43-0400\n"
 "PO-Revision-Date: 2011-11-29 14:20\n"
 "Last-Translator: Admin User <ajennings+saigon@azavea.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -79,6 +79,26 @@ msgstr ""
 #: redistricting/calculators.py:2204
 msgid "Total number of splits"
 msgstr "Número total de separaciones"
+
+#: redistricting/config.py:1210 redistricting/templates/viewplan.html:664
+msgid "Far Over Target"
+msgstr "Muy por Encima del Objetivo"
+
+#: redistricting/config.py:1212 redistricting/templates/viewplan.html:668
+msgid "Over Target"
+msgstr "Por Encima del objetivo"
+
+#: redistricting/config.py:1214
+msgid "Meets Target"
+msgstr "Cumple con el Objetivo"
+
+#: redistricting/config.py:1216 redistricting/templates/viewplan.html:676
+msgid "Under Target"
+msgstr "Por Debajo del Objetivo"
+
+#: redistricting/config.py:1218 redistricting/templates/viewplan.html:680
+msgid "Far Under Target"
+msgstr "Muy por Debajo del Objetivo"
 
 #: redistricting/forms.py:95
 msgid "Could not store uploaded Subject template."
@@ -256,12 +276,12 @@ msgid "Renested foundation geographies, creating spatial views and styles..."
 msgstr ""
 "Se recreó geografías de la base, creando vistas espaciales y estilos..."
 
-#: redistricting/tasks.py:1831
+#: redistricting/tasks.py:1832
 msgid "Created spatial views and styles, cleaning quarantined data..."
 msgstr ""
 "Se creó vistas espaciales y estilos, limpiando los datos en cuarentena..."
 
-#: redistricting/tasks.py:1879
+#: redistricting/tasks.py:1880
 #, python-format
 msgid "Upload complete. Subject \"%(subject_name)s\" added."
 msgstr "Carga completa. Tema \"%(subject_name)s\" añadido."
@@ -1649,9 +1669,10 @@ msgid "Map Tools"
 msgstr "Herramientas de Mapeo"
 
 #: redistricting/templates/viewplan.html:469
-msgid "Click on a district to see its ID."
+#, python-format
+msgid "Click on a %(district_label)s to see its ID."
 msgstr ""
-"Haga clic en un %(body_member_long_label)s  para ver su identificación."
+"Haga clic en un %(district_label)s  para ver su identificación."
 
 #: redistricting/templates/viewplan.html:470
 #, python-format
@@ -1734,25 +1755,9 @@ msgstr "Leyenda del Mapa"
 msgid "Total Population"
 msgstr "Población Total"
 
-#: redistricting/templates/viewplan.html:664
-msgid "Far Over Target"
-msgstr "Muy por Encima del Objetivo"
-
-#: redistricting/templates/viewplan.html:668
-msgid "Over Target"
-msgstr "Por Encima del objetivo"
-
 #: redistricting/templates/viewplan.html:672
 msgid "Within Target"
 msgstr "Cumple con el Objetivo"
-
-#: redistricting/templates/viewplan.html:676
-msgid "Under Target"
-msgstr "Por Debajo del Objetivo"
-
-#: redistricting/templates/viewplan.html:680
-msgid "Far Under Target"
-msgstr "Muy por Debajo del Objetivo"
 
 #: redistricting/templates/viewplan.html:690
 msgid "Locked For Editing"
