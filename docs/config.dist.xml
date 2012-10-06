@@ -279,6 +279,7 @@
                 <Argument name="target" value="727366" />
                 <Argument name="bound1" value=".005" />
                 <Argument name="bound2" value=".01" />
+                <LegislativeBody ref="congress" />
             </ScoreFunction>
 
             <ScoreFunction id="a_house_population" type="district"
@@ -289,6 +290,7 @@
                 <Argument name="target" value="80010" />
                 <Argument name="bound1" value=".005" />
                 <Argument name="bound2" value=".01" />
+                <LegislativeBody ref="house" />
             </ScoreFunction>
 
             <ScoreFunction id="a_senate_population" type="district"
@@ -299,6 +301,7 @@
                 <Argument name="target" value="200026" />
                 <Argument name="bound1" value=".005" />
                 <Argument name="bound2" value=".01" />
+                <LegislativeBody ref="senate" />
             </ScoreFunction>
 
             <!-- leaderboard functions -->

@@ -3969,6 +3969,6 @@ def get_featuretype_name(geolevel_name, subject_name=None):
     A uniform mechanism for generating featuretype names.
     """
     if subject_name is None:
-        return 'demo_%s' % geolevel_name
+        return 'demo_%s_none' % geolevel_name
     else:
         return 'demo_%s_%s' % (geolevel_name, subject_name)

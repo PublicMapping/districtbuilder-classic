@@ -29,12 +29,15 @@ Author:
 import os, hashlib, logging, httplib, string, base64, json, traceback, types
 from datetime import datetime, timedelta, tzinfo
 from django.conf import settings
-from django.db.models import Model
+from django.db.models import Model, Avg
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.sessions.models import Session
 from django.contrib.auth.models import User
+from django.utils.translation import ugettext as _
 from models import *
 from rosetta import polib
+from djsld import generator
+import sld
 
 logger = logging.getLogger(__name__)
 
@@ -958,23 +961,23 @@ class SpatialUtils:
 
         for ft_cfg in fts_cfg['featureTypes']['featureType']:
             # Delete the layer
-            if not self._rest_config('DELETE', '/geoserver/rest/layers/%s.json' % ft_cfg['name'], None, 'Could not delete layer %s' % (ft_cfg['name'],)):
+            if not self._rest_config('DELETE', '/geoserver/rest/layers/%s.json' % ft_cfg['name']):
                 logger.debug("Could not delete layer %s", ft_cfg['name'])
                 continue
 
             # Delete the feature type
-            if not self._rest_config('DELETE', ft_cfg['href'], None, 'Could not delete feature type %s' % (ft_cfg['name'],)):
-                logger.debug("Could not delete feature type '%s'", ft_cfg['name'])
-            else:
+            if self._rest_config('DELETE', ft_cfg['href']):
                 logger.debug("Deleted feature type '%s'", ft_cfg['name'])
+            else:
+                logger.debug("Could not delete feature type '%s'", ft_cfg['name'])
 
         # now that the data store is empty, delete it
-        if not self._rest_config('DELETE', wsds_cfg['dataStores']['dataStore'][0]['href'], None, 'Could not delete datastore %s' % wsds_cfg['dataStores']['dataStore'][0]['name']):
+        if not self._rest_config('DELETE', wsds_cfg['dataStores']['dataStore'][0]['href']):
             logger.debug("Could not delete datastore %s", wsds_cfg['dataStores']['dataStore'][0]['name'])
             return False
 
         # now that the workspace is empty, delete it
-        if not self._rest_config('DELETE', '/geoserver/rest/workspaces/%s.json' % self.ns, None, 'Could not delete workspace %s' % self.ns):
+        if not self._rest_config('DELETE', '/geoserver/rest/workspaces/%s.json' % self.ns):
             logger.debug("Could not delete workspace %s", self.ns)
             return False
 
@@ -991,7 +994,7 @@ class SpatialUtils:
                     continue
 
                 # Delete the style
-                if not self._rest_config('DELETE', st_cfg['href'], None, 'Could not delete style %s' % st_cfg['name']):
+                if not self._rest_config('DELETE', st_cfg['href']):
                     logger.debug("Could not delete style %s", st_cfg['name'])
                 else:
                     logger.debug("Deleted style %s", st_cfg['name'])
@@ -1015,7 +1018,11 @@ class SpatialUtils:
         # Create our namespace
         namespace_url = '/geoserver/rest/namespaces'
         namespace_obj = { 'namespace': { 'prefix': self.ns, 'uri': self.nshref } }
-        self._check_spatial_resource(namespace_url, self.ns, namespace_obj, 'Namespace')
+        if self._check_spatial_resource(namespace_url, self.ns, namespace_obj):
+            logger.debug('Created namespace "%s"' % self.ns)
+        else:
+            logger.warn('Could not create Namespace')
+            return
 
         # Create our DataStore
         if self.store is None:
@@ -1043,20 +1050,33 @@ class SpatialUtils:
             }
         }
 
-        self._check_spatial_resource(data_store_url, data_store_name, data_store_obj, 'Data Store')
+        if self._check_spatial_resource(data_store_url, data_store_name, data_store_obj):
+            logger.debug('Created datastore "%s"' % data_store_name)
+        else:
+            logger.warn('Could not create Datastore')
+            return
 
         # Create the feature types and their styles
 
-        self.create_featuretype('identify_geounit')
-        self.create_style('simple_district', None, '%s:simple_district' % self.ns, None)
+        if self.create_featuretype('identify_geounit'):
+            logger.debug('Created feature type "identify_geounit"')
+        else:
+            logger.warn('Could not create "identify_geounit" feature type')
 
         for geolevel in Geolevel.objects.all():
             if geolevel.legislativelevel_set.all().count() == 0:
                 # Skip 'abstract' geolevels if regions are configured
                 continue
+            
+            if self.create_featuretype('simple_%s' % geolevel.name):
+                logger.debug('Created "simple_%s" feature type' % geolevel.name)
+            else:
+                logger.warn('Could not create "simple_%s" feature type' % geolevel.name)
 
-            self.create_featuretype('simple_%s' % geolevel.name)
-            self.create_featuretype('simple_district_%s' % geolevel.name)
+            if self.create_featuretype('simple_district_%s' % geolevel.name):
+                logger.debug('Created "simple_district_%s" feature type' % geolevel.name)
+            else:
+                logger.warn('Colud not create "simple_district_%s" feature type' % geolevel.name)
 
             all_subjects = Subject.objects.all().order_by('sort_key') 
             if all_subjects.count() > 0:
@@ -1064,21 +1084,174 @@ class SpatialUtils:
 
                 # Create NONE demographic layer, based on first subject
                 featuretype_name = get_featuretype_name(geolevel.name)
-                self.create_featuretype(
-                    featuretype_name, alias=get_featuretype_name(geolevel.name, subject.name)
-                )
-                self.create_style(subject.name, geolevel.name, '%s:%s' % (self.ns, featuretype_name,), 'none')
+                if self.create_featuretype(featuretype_name, alias=get_featuretype_name(geolevel.name, subject.name)):
+                    logger.debug('Created "%s" feature type' % featuretype_name)
+                else:
+                    logger.warn('Could not create "%s" feature type' % featuretype_name)
+
+                if self.create_style(featuretype_name):
+                    logger.debug('Created "%s" style' % featuretype_name)
+                else:
+                    logger.warn('Could not create style for "%s"' % featuretype_name)
+
+                try:
+                    sld_content = SpatialUtils.generate_style(geolevel, geolevel.geounit_set.all(), 1, layername='none')
+
+                    self.write_style(geolevel.name + '_none', sld_content)
+                except Exception, ex:
+                    logger.error(traceback.format_exc())
+
+
+                if self.set_style(featuretype_name, sld_content):
+                    logger.debug('Set "%s" style' % featuretype_name)
+                else:
+                    logger.warn('Could not set "%s" style' % featuretype_name)
+
+                if self.assign_style(featuretype_name, featuretype_name):
+                    logger.debug('Assigned style for "%s"' % featuretype_name)
+                else:
+                    logger.warn('Could not assign style for "%s"' % featuretype_name)
 
                 # Create boundary layer, based on geographic boundaries
                 featuretype_name = '%s_boundaries' % geolevel.name
-                self.create_featuretype(
-                    featuretype_name, alias=get_featuretype_name(geolevel.name, subject.name)
-                )
-                self.create_style(subject.name, geolevel.name, '%s:%s' % (self.ns, featuretype_name,), 'boundaries')
+                if self.create_featuretype(featuretype_name, alias=get_featuretype_name(geolevel.name, subject.name)):
+                    logger.debug('Created "%s" feature type' % featuretype_name)
+                else:
+                    logger.warn('Could not create "%s" feature type' % featuretype_name)
 
+                if self.create_style(featuretype_name):
+                    logger.debug('Created "%s" style' % featuretype_name)
+                else:
+                    logger.warn('Could not create "%s" style' % featuretype_name)
+
+                try:
+                    sld_content = SpatialUtils.generate_style(geolevel, geolevel.geounit_set.all(), 1, layername='boundary')
+
+                    self.write_style(geolevel.name + '_boundaries', sld_content)
+                except Exception, ex:
+                    logger.error(traceback.format_exc())
+
+                if self.set_style(featuretype_name, sld_content):
+                    logger.debug('Set "%s" style' % featuretype_name)
+                else:
+                    logger.warn('Could not set "%s" style' % featuretype_name)
+
+                if self.assign_style(featuretype_name, featuretype_name):
+                    logger.debug('Assigned style for "%s"' % featuretype_name)
+                else:
+                    logger.warn('Could not assign style for "%s"' % featuretype_name)
+            
             for subject in all_subjects:
-                self.create_featuretype(get_featuretype_name(geolevel.name, subject.name))
-                self.create_style(subject.name, geolevel.name, None, None)
+                featuretype_name = get_featuretype_name(geolevel.name, subject.name)
+
+                if self.create_featuretype(featuretype_name):
+                    logger.debug('Created "%s" feature type' % featuretype_name)
+                else:
+                    logger.warn('Could not create "%s" feature type' % featuretype_name)
+
+                if self.create_style(featuretype_name):
+                    logger.debug('Created "%s" style' % featuretype_name)
+                else:
+                    logger.warn('Could not create "%s" style' % featuretype_name)
+
+                try:
+                    sld_content = SpatialUtils.generate_style(geolevel, geolevel.geounit_set.all(), 5, subject=subject)
+
+                    self.write_style(geolevel.name + '_' + subject.name, sld_content)
+                except Exception, ex:
+                    logger.error(traceback.format_exc())
+
+                if self.set_style(featuretype_name, sld_content):
+                    logger.debug('Set "%s" style' % featuretype_name)
+                else:
+                    logger.warn('Could not set "%s" style' % featuretype_name)
+
+                if self.assign_style(featuretype_name, featuretype_name):
+                    logger.debug('Assigned "%s" style' % featuretype_name)
+                else:
+                    logger.warn('Could not assign "%s" style' % featuretype_name)
+            
+        # map all the legislative body / geolevels combos
+        ngeolevels_map = []
+        for lbody in LegislativeBody.objects.all():
+            geolevels = lbody.get_geolevels()
+            # list by # of geolevels, and the first geolevel
+            ngeolevels_map.append((len(geolevels), lbody, geolevels[0],))
+        # sorf by the # of geolevels
+        ngeolevels_map.sort(lambda x,y:cmp(y[0],x[0]))
+
+        # get the first (most # of geolevels)
+        lbody = ngeolevels_map[0][1]
+        geolevel = ngeolevels_map[0][2]
+
+        # create simple_district as an alias to the largest geolevel (e.g. counties)
+        if self.create_featuretype('simple_district', alias='simple_district_%s' % geolevel.name):
+            logger.debug('Created "simple_district" feature type')
+        else:
+            logger.warn('Could not create "simple_district" feature type')
+
+        if self.assign_style('simple_district', 'polygon'):
+            logger.debug('Assigned style "polygon" to feature type')
+        else:
+            logger.warn('Could not assign "polygon" style to simple_district')
+
+        try:
+            # add the district intervals
+            intervals = self.store.filter_nodes('//ScoreFunction[@calculator="publicmapping.redistricting.calculators.Interval"]')
+            for interval in intervals:
+                subject_name = interval.xpath('SubjectArgument')[0].get('ref')
+                lbody_name = interval.xpath('LegislativeBody')[0].get('ref')
+                interval_avg = float(interval.xpath('Argument[@name="target"]')[0].get('value'))
+                interval_bnd1 = float(interval.xpath('Argument[@name="bound1"]')[0].get('value'))
+                interval_bnd2 = float(interval.xpath('Argument[@name="bound2"]')[0].get('value'))
+
+                intervals = [
+                    (interval_avg + interval_avg * interval_bnd2, None, 
+                        _('Far Over Target'), {'fill':'#ebb95e', 'fill-opacity':'0.3'}),
+                    (interval_avg + interval_avg * interval_bnd1, interval_avg + interval_avg * interval_bnd2, 
+                        _('Over Target'), {'fill':'#ead3a7', 'fill-opacity':'0.3'}),
+                    (interval_avg - interval_avg * interval_bnd1, interval_avg + interval_avg * interval_bnd1, 
+                        _('Meets Target'), {'fill':'#eeeeee', 'fill-opacity':'0.1'}),
+                    (interval_avg - interval_avg * interval_bnd2, interval_avg - interval_avg * interval_bnd1,
+                        _('Under Target'), {'fill':'#a2d5d0', 'fill-opacity':'0.3'}),
+                    (None, interval_avg - interval_avg * interval_bnd2,
+                        _('Far Under Target'), {'fill':'#0aac98', 'fill-opacity':'0.3'})]
+
+                doc = sld.StyledLayerDescriptor()
+                fts = doc.create_namedlayer(subject_name).create_userstyle().create_featuretypestyle()
+
+                for interval in intervals:
+                    imin, imax, ititle, ifill = interval
+                    rule = fts.create_rule(ititle, sld.PolygonSymbolizer)
+                    if imin is None:
+                        rule.create_filter('number', '<', str(int(round(imax))))
+                    elif imax is None:
+                        rule.create_filter('number', '>=', str(int(round(imin))))
+                    else:
+                        f1 = sld.Filter(rule)
+                        f1.PropertyIsGreaterThanOrEqualTo = sld.PropertyCriterion(f1, 'PropertyIsGreaterThanOrEqualTo')
+                        f1.PropertyIsGreaterThanOrEqualTo.PropertyName = 'number'
+                        f1.PropertyIsGreaterThanOrEqualTo.Literal = str(int(round(imin)))
+
+                        f2 = sld.Filter(rule)
+                        f2.PropertyIsLessThan = sld.PropertyCriterion(f2, 'PropertyIsLessThan')
+                        f2.PropertyIsLessThan.PropertyName = 'number'
+                        f2.PropertyIsLessThan.Literal = str(int(round(imax)))
+
+                        rule.Filter = f1 + f2
+
+                    ps = rule.PolygonSymbolizer
+                    ps.Fill.CssParameters[0].Value = ifill['fill']
+                    ps.Fill.create_cssparameter('fill-opacity', ifill['fill-opacity'])
+                    ps.Stroke.CssParameters[0].Value = '#fdb913'
+                    ps.Stroke.CssParameters[1].Value = '2'
+                    ps.Stroke.create_cssparameter('stroke-opacity', '1')
+
+                self.write_style(lbody_name + '_' + subject_name, doc.as_sld(pretty_print=True))
+
+        except Exception, ex:
+            logger.debug(traceback.format_exc())
+            logger.warn('LegislativeBody intervals are not configured.')
 
         logger.info("Geoserver configuration complete.")
 
@@ -1097,13 +1270,12 @@ class SpatialUtils:
         feature_type_url = '/geoserver/rest/workspaces/%s/datastores/%s/featuretypes' % (self.ns, data_store_name)
 
         feature_type_obj = SpatialUtils.feature_template(feature_type_name, alias=alias)
-        self._check_spatial_resource(feature_type_url, feature_type_name, feature_type_obj, 'Feature Type')
+        return self._check_spatial_resource(feature_type_url, feature_type_name, feature_type_obj)
 
-    def _check_spatial_resource(self, url, name, dictionary, type_name=None, update=False):
+    def _check_spatial_resource(self, url, name, dictionary, update=False):
         """ 
         This method will check geoserver for the existence of an object.
-        It will create the object if it doesn't exist and log messages
-        to the configured logger.
+        It will create the object if it doesn't exist.
 
         @param url: The URL of the resource.
         @param name: The name of the resource.
@@ -1112,19 +1284,14 @@ class SpatialUtils:
         @keyword update: Optional. Update the featuretype if it exists?
         @returns: A flag indicating if the configuration call completed successfully.
         """
-        verbose_name = '%s:%s' % ('Geoserver object' if type_name is None else type_name, name)
         if self._rest_check('%s/%s.json' % (url, name)):
-            logger.debug("%s already exists", verbose_name)
             if update:
-                if not self._rest_config( 'PUT', url, json.dumps(dictionary), 'Could not create %s' % (verbose_name,)):
-                    logger.info("%s couldn't be updated.", verbose_name)
+                if not self._rest_config( 'PUT', url, data=json.dumps(dictionary)):
                     return False
                 
         else:
-            if not self._rest_config( 'POST', url, json.dumps(dictionary), 'Could not create %s' % (verbose_name,)):
+            if not self._rest_config( 'POST', url, data=json.dumps(dictionary)):
                 return False
-
-            logger.debug('Created %s', verbose_name)
 
         return True
 
@@ -1178,7 +1345,7 @@ class SpatialUtils:
             # HTTP 400, 500 errors are also considered exceptions by the httplib
             return False
 
-    def _rest_config(self, method, url, data, msg, headers=None):
+    def _rest_config(self, method, url, data=None, headers=None):
         """
         Configure a REST resource. This issues an HTTP POST or PUT request
         to configure or update the specified resource.
@@ -1199,23 +1366,11 @@ class SpatialUtils:
             rsp.read() # and discard
             conn.close()
             if rsp.status != 201 and rsp.status != 200:
-                logger.info("""
-ERROR:
-
-        Could not configure geoserver: 
-
-        %s 
-
-        Please check the configuration settings, and try again.
-""", msg)
-                logger.debug("        HTTP Status: %d", rsp.status)
+                logger.debug('HTTP Status: %d, %s %s' % (rsp.status, method, url,))
+                logger.debug(data)
                 return False
         except Exception, ex:
-            logger.info("""
-ERROR:
-
-        Exception thrown while configuring geoserver.
-""", ex)
+            logger.debug(ex)
             return False
 
         return True
@@ -1238,82 +1393,106 @@ ERROR:
             response = rsp.read() # and discard
             conn.close()
             if rsp.status != 201 and rsp.status != 200:
-                logger.info("""
-ERROR:
-
-        Could not fetch geoserver configuration:
-
-        %s
-
-        Please check the configuration settings, and try again.
-""", msg)
                 return None
 
             return json.loads(response)
         except Exception, ex:
-            logger.info("""
-ERROR:
-
-        Exception thrown while fetching geoserver configuration.
-""")
-            logger.debug(traceback.format_exc())
             return None
 
-    def create_style(self, subject_name, geolevel_name, style_name, style_type, sld_content=None):
+    def create_style(self, featuretype):
         """
-        Create a style for a layer, defaulting to 'polygon' for a polygon
-        layer if the style file is not available.
+        Check Geoserver to see if a named style exists. Creates the style if it doesn't already exist.
 
-        @param subject_name: The name of the subject.
-        @param geolevel_name: The name of the geolevel.
-        @param style_name: The name of the style.
-        @param style_type: The type of the style.
-        @keyword sld_content: The content of the SLD.
+        @returns: True if the object exists or was created. False on error.
         """
-
-        if not style_type:
-            style_type = subject_name
-
-        if not style_name:
-            layer_name = '%s:demo_%s_%s' % (self.ns, geolevel_name, subject_name)
-            style_name = layer_name
-        else:
-            layer_name = style_name
-
+        nsfeaturetype = '%s:%s' % (self.ns, featuretype,)
         style_obj = { 'style': {
-            'name': layer_name,
-            'filename': '%s.sld' % layer_name
+            'name': nsfeaturetype,
+            'filename': '%s.sld' % nsfeaturetype
         } }
 
-        # Get the SLD file
-        if sld_content is None:
-            sld_content = self._get_style(geolevel_name, style_type)
-            if sld_content is None:
-                from_file = False
-            else:
-                from_file = True
+        # Create the styles for the demographic layers
+        style_url = '/geoserver/rest/styles'
+
+        # Get or create the spatial style
+        return self._check_spatial_resource(style_url, nsfeaturetype, style_obj)
+
+
+    @staticmethod
+    def generate_style(geolevel, qset, nclasses, subject=None, layername=None):
+        """
+        Generate SLD content for a queryset. This uses quantile classification
+        for nclasses classes, using the 'Greys' colorbrewer palette, on an inverted
+        gradient. The queryset is assumed to be all the geounits in a geolevel.
+        The subject is an instance of the Subject model.
+        """
+        if subject:
+            qset = qset.filter(characteristic__subject=subject)
+            us_title = subject.get_short_label()
         else:
-            from_file = False
+            us_title = layername
+            
+        qset = qset.annotate(Avg('characteristic__number'))
 
-        if sld_content is None:
-            logger.debug('No style file found for %s', layer_name)
-            style_name = 'polygon'
-        else:
-            # Create the styles for the demographic layers
-            style_url = '/geoserver/rest/styles'
+        doc = generator.as_quantiles(qset, 'characteristic__number__avg', nclasses, propertyname='number',
+            userstyletitle=us_title, colorbrewername='Greys', invertgradient=False)
 
-            # Create the style object on the geoserver
-            self._check_spatial_resource(style_url, style_name, style_obj, 'Map Style')
+        if not subject and nclasses == 1:
+            # remove any fill if subject is missing
+            fill = doc._node.xpath('//sld:Fill', namespaces=doc._nsmap)[0]
+            fill.getparent().remove(fill)
+        
+            if layername:
+                # set the name of the layer
+                name = doc._node.xpath('//sld:Name', namespaces=doc._nsmap)[0]
+                name.text = layername
+        
+                # set the title of the user style
+                name = doc._node.xpath('//sld:UserStyle/sld:Title', namespaces=doc._nsmap)[0]
+                name.text = geolevel.get_long_description()
+        
+                # set the title of the rule
+                name = doc._node.xpath('//sld:Rule/sld:Title', namespaces=doc._nsmap)[0]
+                name.text = 'Boundary'
 
-            # Update the style with the sld file contents
+                if layername == 'boundary':
+                    stroke = doc._node.xpath('//sld:Stroke', namespaces=doc._nsmap)[0]
+                    node = stroke.xpath('//sld:CssParameter[@name="stroke-width"]', namespaces=doc._nsmap)[0]
+                    node.text = '3'
 
-            msg = 'Could not upload style %s' % (("file %s.sld" % style_name) if from_file else style_name)
-            if self._rest_config( 'PUT', '/geoserver/rest/styles/%s' % style_name, \
-                sld_content, msg, headers=self.headers['sld']):
-                if from_file:
-                    logger.debug("Uploaded '%s.sld' file.", style_name)
-                else:
-                    logger.debug("Uploaded '%s' style.", style_name)
+                    node = stroke.xpath('//sld:CssParameter[@name="stroke"]', namespaces=doc._nsmap)[0]
+                    node.text = '#2BB673'
+
+                    strokeopacity = {'name':'stroke-opacity'}
+                    node = stroke.makeelement('{%s}CssParameter' % doc._nsmap['sld'], attrib=strokeopacity, nsmap=doc._nsmap)
+                    node.text = '0.45'
+
+                    stroke.append(node)
+
+
+        return doc.as_sld()
+
+
+    def set_style(self, featuretype, sld_content):
+        """
+        Assign SLD content to a style already in Geoserver.
+
+        @returns: True if the named style was configured properly
+        """
+        # Configure the named style
+        return self._rest_config( 'PUT', '/geoserver/rest/styles/%s:%s' % (self.ns, featuretype,), 
+            data=sld_content, headers=self.headers['sld'])
+
+
+    def assign_style(self, featuretype, style_name):
+        """
+        Assign a configured style to a configured layer.
+
+        @keyword featuretype: The type of the feature.
+        @keyword style_name: The name of the style.
+        """
+        if not style_name == 'polygon':
+            style_name = '%s:%s' % (self.ns, style_name)
 
         # Apply the uploaded style to the demographic layers
         layer = { 'layer' : {
@@ -1323,42 +1502,29 @@ ERROR:
             'enabled': True
         } }
 
+        if self._rest_config( 'PUT', '/geoserver/rest/layers/%s:%s' % (self.ns, featuretype,), data=json.dumps(layer)):
+            return True
         
-        if self._rest_config( 'PUT', '/geoserver/rest/layers/%s' % layer_name, \
-            json.dumps(layer), "Could not assign style to layer '%s'." % layer_name):
-            logger.debug("Assigned style '%s' to layer '%s'.", style_name, layer_name)
+        return False
 
-    def _get_style(self, geolevel, subject):
-        """
-        Get an SLD file from the file system.
 
-        @param geolevel: The geolevel name.
-        @param subject: The subject name.
-        @returns: The content of an SLD file on the filesystem.
+    def write_style(self, name, body):
         """
-        if not geolevel:
-            path = '%s/%s:%s.sld' % (self.styledir, self.ns, subject)
-        else:
-            path = '%s/%s:%s_%s.sld' % (self.styledir, self.ns, geolevel, subject) 
+        Write the contents of an SLD to the file system in the location
+        specified by the SLD_ROOT setting.
+        """
+        dest = '%s%s:%s.sld' % (settings.SLD_ROOT, self.ns, name,)
         try:
-            stylefile = open(path)
-            sld = stylefile.read()
-            stylefile.close()
+            sld = open(dest, 'w')
+            sld.write(body)
+            sld.close()
 
-            return sld
-        except:
-            logger.debug("""
-WARNING:
+            logger.debug('Saved "%s" style file' % dest)
 
-        The style file:
-        
-        %s
-        
-        could not be loaded. Please confirm that the
-        style files are named according to the "geolevel_subject.sld"
-        convention, and try again.
-""", path)
-            return None
+            return True
+        except Exception, ex:
+            logger.warn('Could not save "%s" style' % dest)
+            return False
 
 
     def renest_geolevel(self, glconf, subject=None):

@@ -1817,7 +1817,8 @@ def create_views_and_styles(upload_id, language=None):
         logger.debug('Generated SLD content, creating featuretype.')
 
         geoutil.create_featuretype(get_featuretype_name(geolevel.name, subject.name))
-        geoutil.create_style(subject.name, geolevel.name, None, None, sld_content=sld_body.as_sld(pretty_print=True))
+        geoutil.create_style(subject_name=subject.name, geolevel_name=geolevel.name, 
+            sld_content=sld_body.as_sld(pretty_print=True))
 
         logger.debug('Created featuretype and style for %s, %s', geolevel.name, subject.name)
 
