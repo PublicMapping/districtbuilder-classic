@@ -2178,7 +2178,7 @@ msgstr "Guía Rápida de Inicio"
 
 #: templates/index.html:120
 msgid "Redistricting Resources"
-msgstr "Recursos de la Redistribución de Distritos"
+msgstr "Recursos sobre la Redistritación"
 
 #: templates/index.html:122
 msgid "About this DistrictBuilder instance"
