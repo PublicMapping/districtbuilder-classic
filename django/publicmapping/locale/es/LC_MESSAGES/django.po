@@ -150,19 +150,19 @@ msgstr "El archivo comprimido debe contener un archivo con valores separados por
 
 #: redistricting/tasks.py:249
 msgid "Unexpected error during zip file processing"
-msgstr "Error inesperado mientras se procesa archivo comprimido"
+msgstr "Error inesperado al procesar el archivo comprimido"
 
 #: redistricting/tasks.py:283
 msgid "Plan couldn't be created. Be sure the plan name is unique."
-msgstr "Plan no pudo ser creado. Asegúrese que el nombre del plan sea único."
+msgstr "El plan no pudo ser creado. Asegúrese que el nombre del plan sea único."
 
 #: redistricting/tasks.py:331
 msgid "Did not import row:"
-msgstr "No se pudo importar fila:"
+msgstr "No se pudo importar la fila:"
 
 #: redistricting/tasks.py:387
 msgid "Unable to create district"
-msgstr "Incapaz de crear distrito"
+msgstr "Incapaz de crear el distrito"
 
 #: redistricting/tasks.py:424
 #, python-format
@@ -177,39 +177,39 @@ msgstr ""
 #, python-format
 msgid "Competition submission (user: %(username)s, planid: %(plan_id)d)"
 msgstr ""
-"Presentación de concurso de (usuario: %(username)s, planid: %(plan_id)d)"
+"Envío de la presentación de concurso de (usuario: %(username)s, planid: %(plan_id)d)"
 
 #: redistricting/tasks.py:548
 msgid "Plan submitted successfully"
-msgstr "Plan fue presentado satisfactoramente"
+msgstr "El plan fue enviado satisfactoramente"
 
 #: redistricting/tasks.py:1204
 msgid "Error creating calculator report."
-msgstr "Error al crear informe de cálculo."
+msgstr "Error al crear el informe de la calculadora."
 
 #: redistricting/tasks.py:1352
 msgid ""
 "There are an incorrect number of geounits in the uploaded Subject file. "
-msgstr "Hay un número incorrecto de geounidades en el archivo cargado."
+msgstr ""
+"Hay un número incorrecto de geounidades en el archivo cargado."
 
 #: redistricting/tasks.py:1381
-msgid "Verifying consistency of uploaded geounits ..."
-msgstr "Verificando consistencia de los geounidades subidos ..."
+msgid "Verifying consistency of uploaded geounits..."
+msgstr "Verificando la consistencia de los geounidades cargadas..."
 
 #: redistricting/tasks.py:1402
 msgid "Invalid data detected in the uploaded Subject file"
-msgstr ""
+msgstr "Datos inválidos detectados en el archivo cargado"
 
 #: redistricting/tasks.py:1422
 msgid "There are a correct number of geounits in the uploaded Subject file, "
-msgstr "Hay un número adecuado de geounidades en el archivo subido, "
+msgstr "Hay un número adecuado de geounidades en el archivo cargado, "
 
 #: redistricting/tasks.py:1425
 msgid ""
-"but the geounits do not have the same portable ids as those in the database."
+"but the geounits do not have the same portable id's as those in the database."
 msgstr ""
-"pero las geounidades no tienen las mismas identificaciones portables que los "
-"de la base de datos."
+"pero las geounidades no tienen las mismas identificaciones que aquellas que se encuentran en la base de datos."
 
 #: redistricting/tasks.py:1454
 msgid "Copying records to characteristic table ..."
@@ -217,31 +217,31 @@ msgstr "Copiando los archivos a la tabla de características ..."
 
 #: redistricting/tasks.py:1500
 msgid "The subject name contains invalid characters."
-msgstr "El nombre de tema contiene caracteres inválidos."
+msgstr "El nombre del tema contiene caracteres inválidos."
 
 #: redistricting/tasks.py:1508
 msgid "Please correct the error and try again."
-msgstr "Por favor, corrija el error y vuelva a intentarlo."
+msgstr "Por favor corrija el error y vuelva a intentarlo."
 
 #: redistricting/tasks.py:1589
 msgid "Created characteristics, resetting computed characteristics..."
 msgstr ""
-"Se crearon caracteristicas, restableciendo características calculadas..."
+"Se crearon las características, restableciendo las características calculadas..."
 
 #: redistricting/tasks.py:1652
 msgid "Reset computed characteristics, renesting foundation geographies..."
 msgstr ""
-"Se restableció características calculadas, recreando geografías de la base..."
+"Se restablecieron las características calculadas, recreando la geografía base..."
 
 #: redistricting/tasks.py:1706
 msgid "Renested foundation geographies, creating spatial views and styles..."
 msgstr ""
-"Se recreó geografías de la base, creando vistas espaciales y estilos..."
+"Se recreó la geografía base, creando vistas espaciales y estilos..."
 
 #: redistricting/tasks.py:1770
 msgid "Created spatial views and styles, cleaning quarantined data..."
 msgstr ""
-"Se creó vistas espaciales y estilos, limpiando los datos en cuarentena..."
+"Se crearon las vistas espaciales y los estilos, limpiando los datos en cuarentena..."
 
 #: redistricting/tasks.py:1813
 #, python-format
@@ -255,22 +255,21 @@ msgstr "El usuario actual sólo puede tener una sesión abierta a la vez."
 #: redistricting/views.py:215
 #, python-format
 msgid "User %(user)s doesn't have permission to unload this plan"
-msgstr "Usuario %(user)s no tiene permiso para descargar este plan"
+msgstr "El usuario %(user)s no tiene permiso para descargar este plan"
 
 #: redistricting/views.py:252
 #, python-format
 msgid "User %(username)s doesn't have permission to copy this model"
-msgstr "Usuario %(username)s no tiene permiso para copiar este modelo"
+msgstr "El usuario %(username)s no tiene permiso para copiar este modelo"
 
 #: redistricting/views.py:265
 msgid "You already have a plan named that. Please pick a unique name."
 msgstr ""
-"Usted ya tiene un plan con ese nombre. Por favor, elija un nombre quesea "
-"único."
+"Usted ya tiene un plan con ese nombre. Por favor elija un nombre distinto"
 
 #: redistricting/views.py:287
 msgid "Could not save district copies"
-msgstr "No se pudieron guardar copias de distritos"
+msgstr "No se pudieron guardar las copias de los distritos"
 
 #: redistricting/views.py:333
 msgid "Validation successful"
@@ -282,7 +281,7 @@ msgstr "Distritos"
 
 #: redistricting/views.py:539
 msgid "community map"
-msgstr "mapa de comunidad"
+msgstr "mapa comunitario"
 
 #: redistricting/views.py:539
 msgid "plan"
@@ -290,23 +289,23 @@ msgstr "plan"
 
 #: redistricting/views.py:773
 msgid "Couldn't save new plan"
-msgstr "No se pudo guardar el nuevo plan"
+msgstr "No se pudo guardar el plan nuevo"
 
 #: redistricting/views.py:881 redistricting/views.py:967
 #: redistricting/views.py:1147 redistricting/views.py:1209
 #: redistricting/views.py:1276 redistricting/views.py:1329
 #: redistricting/views.py:1375
 msgid "No plan with the given id"
-msgstr "No existe un plan bajo la identificación proporcionada"
+msgstr "No existe un plan con la identificación proporcionada"
 
 #: redistricting/views.py:885 redistricting/views.py:971
 #: redistricting/views.py:1379 redistricting/views.py:1391
 msgid "User can't view the given plan"
-msgstr "Usuario no puede visualizar este plan"
+msgstr "El usuario no puede visualizar este plan"
 
 #: redistricting/views.py:889
 msgid "Reports functionality is turned off."
-msgstr "La funcionalidad de informes se encuentra apagada."
+msgstr "La función de los informes se encuentra apagada."
 
 #: redistricting/views.py:894 redistricting/views.py:975
 msgid "Information for report wasn't sent via POST"
