@@ -305,19 +305,19 @@ msgstr "El usuario no puede visualizar este plan"
 
 #: redistricting/views.py:889
 msgid "Reports functionality is turned off."
-msgstr "La función de los informes se encuentra apagada."
+msgstr "La función de informes se encuentra apagada."
 
 #: redistricting/views.py:894 redistricting/views.py:975
 msgid "Information for report wasn't sent via POST"
-msgstr "La información para el informe no fue enviado por POST"
+msgstr "La información para el informe no fue enviada vía POST"
 
 #: redistricting/views.py:905 redistricting/views.py:992
 msgid "Plan report is ready."
-msgstr "Informe de plan está listo."
+msgstr "El informe del plan está listo."
 
 #: redistricting/views.py:913 redistricting/views.py:1000
 msgid "Report is building."
-msgstr "Informe está en construcción"
+msgstr "El informe está en construcción"
 
 #: redistricting/views.py:921 redistricting/views.py:1008
 msgid "Report generation started."
@@ -325,7 +325,7 @@ msgstr "El informe se empezó a generar."
 
 #: redistricting/views.py:941 redistricting/views.py:1017
 msgid "Unrecognized status when checking report status."
-msgstr "Estado desconocido al revisar estado de informe."
+msgstr "Estado desconocido al revisar el estado del informe."
 
 #: redistricting/views.py:1108
 msgid "Created 1 new district"
@@ -333,22 +333,21 @@ msgstr "Se creó 1 nuevo distrito"
 
 #: redistricting/views.py:1114
 msgid "Reached Max districts already"
-msgstr "Ya alcanzó el número máximo de distritos"
+msgstr "Número máximo de distritos alcanzado"
 
 #: redistricting/views.py:1118
 msgid "Couldn't save new district."
-msgstr "No se pudo guardar nuevo distrito."
+msgstr "No se pudo guardar el nuevo distrito."
 
 #: redistricting/views.py:1120
 msgid "Must specify name, geolevel, and geounit ids for new district."
 msgstr ""
-"Se debe espicificar identificaciones de nombre, geocapa, y geounidad para el "
-"nuevo distrito."
+"Debe espicificar las identificaciones del nombre, geonivel, y geounidad para el nuevo distrito."
 
 #: redistricting/views.py:1151 redistricting/views.py:1213
 #: redistricting/views.py:1280 redistricting/views.py:1333
 msgid "User can't edit the given plan"
-msgstr "Usuario no puede editar este plan"
+msgstr "El usuario no puede editar este plan"
 
 #: redistricting/views.py:1157
 msgid "No districts selected to add to the given plan"
@@ -363,8 +362,7 @@ msgstr "Se fusionarán %(number_of_merged_districts)d distritos"
 #, python-format
 msgid "Tried to merge too many districts; %(allowed_districts)d slots left"
 msgstr ""
-"Se intentó fusionar demasiado distritos; %(allowed_districts)d espacios "
-"vacios"
+"Se intentaron fusionar demasiado distritos; %(allowed_districts)d espacios vacios"
 
 #: redistricting/views.py:1178
 #, python-format
@@ -374,7 +372,7 @@ msgstr "Se fusionaron %(num_merged_districts)d distritos"
 #: redistricting/views.py:1220
 msgid "Multi-members not allowed for this legislative body"
 msgstr ""
-"Distritos plurinomionales no son permitidos para este cuerpo legislativo"
+"Los distritos plurinomionales no son permitidos para este cuerpo legislativo"
 
 #: redistricting/views.py:1252
 #, python-format
@@ -399,7 +397,7 @@ msgstr "No se pudieron arreglar los no asignados"
 
 #: redistricting/views.py:1388
 msgid "No other plan with the given id"
-msgstr "No existe otro plan bajo la identificación proporcionada"
+msgstr "No existe otro plan con la identificación proporcionada"
 
 #: redistricting/views.py:1399
 #, python-format
@@ -408,24 +406,24 @@ msgstr "othertype no compatible: %(other)s"
 
 #: redistricting/views.py:1402
 msgid "split"
-msgstr "separación"
+msgstr "separar"
 
 #: redistricting/views.py:1405
 #, python-format
 msgid "Found %(num_splits)d %(split_word)s"
-msgstr "Se encontró %(num_splits)d %(split_word)s"
+msgstr "Se encontraron %(num_splits)d %(split_word)s"
 
 #: redistricting/views.py:1411
 msgid "Could not query for splits"
-msgstr "No se pudo preguntar por separaciones"
+msgstr "No se pudo realizar la consulta de las separaciones"
 
 #: redistricting/views.py:1424
 msgid "No planIds provided"
-msgstr "No se proporcionó ninguna planId"
+msgstr "No se proporcionó ningún planId"
 
 #: redistricting/views.py:1444
 msgid "Plan does not exist."
-msgstr "Plan no existe."
+msgstr "El plan no existe."
 
 #: redistricting/views.py:1454
 msgid "No layers were provided."
@@ -438,7 +436,7 @@ msgstr "No se pudo añadir unidades al distrito"
 #: redistricting/views.py:1519
 #, python-format
 msgid "Updated %(num_fixed_districts)d districts"
-msgstr "Se actualizó %(num_fixed_districts)d distritos"
+msgstr "Se actualizaron %(num_fixed_districts)d distritos"
 
 #: redistricting/views.py:1532
 msgid "Geounits weren't found in a district."
@@ -446,20 +444,20 @@ msgstr "No se encontraron geounidades en un distrito"
 
 #: redistricting/views.py:1561
 msgid "Must include lock parameter."
-msgstr "Se tiene que incluir parámetro de bloqueo."
+msgstr "Se tiene que incluir el parámetro de bloqueo."
 
 #: redistricting/views.py:1563
 msgid "Must include version parameter."
-msgstr "Se tiene que incluir parámetro de versión."
+msgstr "Se tiene que incluir el parámetro de la versión."
 
 #: redistricting/views.py:1569
 msgid "Plan or district does not exist."
-msgstr "El plan o distrito no existen."
+msgstr "El plan o el distrito no existen."
 
 #: redistricting/views.py:1578
 #, python-format
 msgid "District successfully %(locked_state)s"
-msgstr "Distrito satisfactoriamente %(locked_state)s"
+msgstr "El distrito satisfactoriamente %(locked_state)s"
 
 #: redistricting/views.py:1579
 msgid "locked"
@@ -475,11 +473,11 @@ msgstr "No existe un plan con esa identificación"
 
 #: redistricting/views.py:1702
 msgid "Subject for districts is required."
-msgstr "Se requiere un tema para distritos"
+msgstr "Se requiere un tema para los distritos"
 
 #: redistricting/views.py:1705
 msgid "Query failed."
-msgstr "Pregunta falló."
+msgstr "La consulta falló."
 
 #: redistricting/views.py:1803
 msgid "Geometry is required."
@@ -492,16 +490,15 @@ msgstr "Plan inválido."
 #: redistricting/views.py:1820
 msgid "Couldn't get geography info from the server. No plan with the given id."
 msgstr ""
-"No se pudo obtener infomación geográfica desde el servidor. No existe un "
-"plan con la identificación proporcionada."
+"No se pudo obtener la infomación geográfica desde el servidor. No existe un plan con la identificación proporcionada."
 
 #: redistricting/views.py:1834
 msgid "Unable to get Demographics ScoreDisplay"
-msgstr "No se pudo obtener ScoreDisplay personalizado"
+msgstr "No se pudo obtener el ScoreDisplay personalizado"
 
 #: redistricting/views.py:1841
 msgid "Unable to get Personalized ScoreDisplay"
-msgstr "No se pudo obtener ScoreDisplay personalizado"
+msgstr "No se pudo obtener el ScoreDisplay personalizado"
 
 #: redistricting/views.py:1852
 msgid "Couldn't render display tab."
@@ -509,12 +506,12 @@ msgstr "No se pudo pasar a la pestaña de visualización."
 
 #: redistricting/views.py:1884
 msgid "Failed to get file status"
-msgstr "No se pudo obtener estado del archivo"
+msgstr "No se pudo obtener el estado del archivo"
 
 #: redistricting/views.py:1916
 msgid "File is not yet ready. Please try again in a few minutes"
 msgstr ""
-"El archivo no está listo aún. Por favor vuelva a intentarlo en unos minutos"
+"El archivo no está listo. Por favor vuelva a intentarlo en unos minutos"
 
 #: redistricting/views.py:1939
 msgid "Task submitted"
