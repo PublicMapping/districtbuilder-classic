@@ -20,7 +20,7 @@ msgstr ""
 
 #: views.py:267
 msgid "Your Password Reset Request"
-msgstr "Su Pedido de Restauración de contraseña"
+msgstr "Su solicitud de restauración de contraseña"
 
 #: redistricting/admin.py:278
 #, python-format
@@ -82,7 +82,7 @@ msgstr "Número total de separaciones"
 
 #: redistricting/forms.py:95
 msgid "Could not store uploaded Subject template."
-msgstr "No se pudo guardar el modelo subido."
+msgstr "No se pudo guardar el modelo cargado."
 
 #: redistricting/forms.py:127
 msgid "Uploaded file cannot be found."
@@ -90,7 +90,7 @@ msgstr "No se pudo encontrar el archivo cargado."
 
 #: redistricting/forms.py:129
 msgid "Uploaded file is required."
-msgstr "Se necesita el archivo cargado."
+msgstr "Se requiere el archivo cargado."
 
 #: redistricting/forms.py:144
 msgid "Please specify a unique subject name."
@@ -98,9 +98,7 @@ msgstr "Por favor, especifique un nombre de tema único."
 
 #: redistricting/forms.py:145
 msgid "Check this box to overwrite the existing subject with the same name."
-msgstr ""
-"Marque esta casilla si desea sobrescribir el tema ya existente con el mismo "
-"nombre."
+msgstr "Marque esta casilla si desea reescribir el tema ya existente con el mismo nombre."
 
 #: redistricting/forms.py:186
 msgid "Uploaded file contains an invalid subject name."
@@ -109,7 +107,7 @@ msgstr "El archivo cargado contiene un nombre de tema inválido."
 #: redistricting/reportcalculators.py:51 redistricting/reportcalculators.py:94
 #: redistricting/reportcalculators.py:118
 msgid "DistrictID"
-msgstr "Identificación de Distrito"
+msgstr "Identificación del distrito"
 
 #: redistricting/reportcalculators.py:52
 #: redistricting/reportcalculators.py:119
