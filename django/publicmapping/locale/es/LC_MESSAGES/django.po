@@ -94,11 +94,11 @@ msgstr "Se requiere el archivo cargado."
 
 #: redistricting/forms.py:144
 msgid "Please specify a unique subject name."
-msgstr "Por favor, especifique un nombre de tema único."
+msgstr "Por favor especifique un nombre de tema único."
 
 #: redistricting/forms.py:145
 msgid "Check this box to overwrite the existing subject with the same name."
-msgstr "Marque esta casilla si desea reescribir el tema ya existente con el mismo nombre."
+msgstr "Marque esta casilla si desea sobrescribir el tema ya existente con el mismo nombre."
 
 #: redistricting/forms.py:186
 msgid "Uploaded file contains an invalid subject name."
@@ -117,7 +117,7 @@ msgstr "Población"
 
 #: redistricting/reportcalculators.py:64
 msgid "Within Target Range"
-msgstr "Dentro del rango de objectivo"
+msgstr "Dentro del rango permitido"
 
 #: redistricting/reportcalculators.py:95
 #: redistricting/templates/viewplan.html:997
@@ -130,15 +130,15 @@ msgstr "Proporción"
 
 #: redistricting/tasks.py:162
 msgid "Problem importing your uploaded file."
-msgstr "Problema al importar su archivo subido."
+msgstr "Problema al importar el archivo cargado."
 
 #: redistricting/tasks.py:163
 msgid "Upload and import plan confirmation."
-msgstr "Subir e importar confirmación del plan."
+msgstr "Cargar e importar la confirmación del plan."
 
 #: redistricting/tasks.py:164
 msgid "Problem importing user uploaded file."
-msgstr "Problema al importar archivo subido del usuario."
+msgstr "Problema al importar el archivo cargado por el usuario."
 
 #: redistricting/tasks.py:183
 msgid "The zip file contains too many files"
@@ -146,7 +146,7 @@ msgstr "El archivo comprimido contiene demasiados archivos"
 
 #: redistricting/tasks.py:207
 msgid "The zip file must contain a comma separated value (.csv) file."
-msgstr "El archivo comprimido debe contener un archivo de csv."
+msgstr "El archivo comprimido debe contener un archivo con valores separados por coma (.csv)."
 
 #: redistricting/tasks.py:249
 msgid "Unexpected error during zip file processing"
