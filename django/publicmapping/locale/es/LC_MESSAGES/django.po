@@ -2174,7 +2174,7 @@ msgstr "Preguntas Frecuentes"
 
 #: templates/index.html:119
 msgid "Quick Start Guide"
-msgstr "Guía Rapida de Inicio"
+msgstr "Guía Rápida de Inicio"
 
 #: templates/index.html:120
 msgid "Redistricting Resources"
