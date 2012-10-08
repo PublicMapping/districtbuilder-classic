@@ -490,7 +490,8 @@ msgstr "Plan inválido."
 #: redistricting/views.py:1820
 msgid "Couldn't get geography info from the server. No plan with the given id."
 msgstr ""
-"No se pudo obtener la infomación geográfica desde el servidor. No existe un plan con la identificación proporcionada."
+"No se pudo obtener la infomación geográfica desde el servidor. " 
+"No existe un plan con la identificación proporcionada."
 
 #: redistricting/views.py:1834
 msgid "Unable to get Demographics ScoreDisplay"
@@ -519,23 +520,23 @@ msgstr "Tarea presentada"
 
 #: redistricting/views.py:1976
 msgid "No display configured"
-msgstr "No hay visualización configurada"
+msgstr "No está configurada la visualización"
 
 #: redistricting/views.py:2076
 msgid "Unknown filter method."
-msgstr "Método de filtro desconocido."
+msgstr "Método de Filtro desconocido."
 
 #: redistricting/views.py:2198
 msgid "Must declare planId, name and description"
-msgstr "Se debe declarar planId, nombre, y descripción"
+msgstr "Se debe declarar el planId, el nombre y la descripción"
 
 #: redistricting/views.py:2211
 msgid "Updated plan attributes"
-msgstr "Se actualizó atributos de plan"
+msgstr "Se actualizaron los atributos del plan"
 
 #: redistricting/views.py:2213
 msgid "Failed to save the changes to your plan"
-msgstr "Falla al guardar los cambios hechos a su plan"
+msgstr "Se produjo un error al guardar los cambios hechos a su plan"
 
 #: redistricting/views.py:2218
 msgid "Cannot edit a plan you don't own."
@@ -543,15 +544,15 @@ msgstr "No puede editar un plan que no es suyo."
 
 #: redistricting/views.py:2234 redistricting/views.py:2266
 msgid "Must declare planId"
-msgstr "Se debe declarar planId"
+msgstr "Se debe establecer el planId"
 
 #: redistricting/views.py:2242
 msgid "Deleted plan"
-msgstr "Se eliminó plan"
+msgstr "Se eliminó el plan"
 
 #: redistricting/views.py:2244
 msgid "Failed to delete plan"
-msgstr "Falla al eliminar plan"
+msgstr "Se prdujo un error al eliminar el plan"
 
 #: redistricting/views.py:2249
 msgid "Cannot delete a plan you don't own."
@@ -559,20 +560,20 @@ msgstr "No puede eliminar un plan que no es suyo."
 
 #: redistricting/views.py:2280
 msgid "Reaggregating plan"
-msgstr "Reagregando plan"
+msgstr "Agregando nuevamente el plan"
 
 #: redistricting/views.py:2282
 msgid "Failed to reaggregate plan"
-msgstr "Falló en reagregar plan"
+msgstr "Se produjo un error al agregar nuevamnete el plan"
 
 #: redistricting/views.py:2287
 msgid "Cannot reaggregate a plan you don't own."
-msgstr "No puede reagregar un plan que no es suyo."
+msgstr "No puede agregar nuevamnete un plan que no es suyo."
 
 #: redistricting/views.py:2308
 #, python-format
 msgid "Health retrieved at %(time)s\n"
-msgstr "Salud obtenida el %(time)s\n"
+msgstr "Salud obtenida en %(time)s\n"
 
 #: redistricting/views.py:2309
 #, python-format
@@ -600,7 +601,7 @@ msgid ""
 "Memory Usage:\n"
 "%(mem_free)s\n"
 msgstr ""
-"Uso de Memoria:\n"
+"Uso de memoria:\n"
 "%(mem_free)s\n"
 
 #: redistricting/views.py:2323
@@ -614,7 +615,7 @@ msgstr ""
 
 #: redistricting/views.py:2331
 msgid "No plan with that ID exists."
-msgstr "No existe un plan bajo esa identificación."
+msgstr "No existe un plan con esa identificación."
 
 #: redistricting/views.py:2379
 #, python-format
@@ -624,24 +625,24 @@ msgstr "No hay funciones para %(panel)s"
 #: redistricting/views.py:2383
 #, python-format
 msgid "No user displays for %(user)s"
-msgstr "No hay visualizaciones de usuario para %(user)s"
+msgstr "No hay visualizaciones disponibles para el usuario %(user)s"
 
 #: redistricting/views.py:2402
 msgid "Couldn't delete personalized scoredisplay"
-msgstr "No se pudo eliminar personalizado scoredisplay"
+msgstr "No se pudo eliminar el scoredisplay personalizado"
 
 #: redistricting/views.py:2444
 #, python-format
 msgid ""
-"Each user is limited to %(limit)d statistics sets. Please delete one or edit "
-"an existing set."
+"Each user is limited to %(limit)d statistics sets. "
+"Please delete one or edit an existing set."
 msgstr ""
-"Cada usuario está limitado a %(limit)d conjuntos de estadísticas. Por favor, "
-"elimine uno o edite un conjunto ya existente."
+"Cada usuario está limitado a %(limit)d conjuntos de estadísticas. " 
+"Por favor elimine uno o edite un conjunto ya existente."
 
 #: redistricting/views.py:2454
 msgid "Didn't get functions in POST parameter"
-msgstr "No se obtuvo funciones en parámetro POST"
+msgstr "No se obtuvieron las funciones en el parámetro POST"
 
 #: redistricting/views.py:2487
 msgid "No plan with that ID was found."
@@ -661,7 +662,7 @@ msgid ""
 "trouble.  The plan may have been imported."
 msgstr ""
 "Este usuario intentó cargar un archivo que contiene un plan, pero se "
-"presentaron algunos problemas. El plan puede haber sido importado."
+"presentaron algunos problemas. El plan puede haber sido importado con anterioridad."
 
 #: redistricting/templates/admin.email:22
 msgid "Plan name"
@@ -701,11 +702,11 @@ msgstr "Muy por encima del objetivo"
 
 #: redistricting/templates/basic_information.html:74
 msgid "Over target"
-msgstr "Sobre el objetivo"
+msgstr "Por encima del objetivo"
 
 #: redistricting/templates/basic_information.html:75
 msgid "Meets target"
-msgstr "Cumple con los objetivos"
+msgstr "Cumple con el objetivo"
 
 #: redistricting/templates/basic_information.html:76
 msgid "Under target"
@@ -743,7 +744,7 @@ msgstr "Rehacer"
 
 #: redistricting/templates/editplan.html:43
 msgid "Map Editing"
-msgstr "Edición de mapas"
+msgstr "Edición del mapa"
 
 #: redistricting/templates/editplan.html:45
 #, python-format
@@ -760,7 +761,7 @@ msgstr "Deslizar"
 #: redistricting/templates/editplan.html:120
 #: redistricting/templates/viewplan.html:466
 msgid "Click on a geounit to see its demographic info."
-msgstr "Haga clic sobre una geounit para ver su información demográfica."
+msgstr "Haga clic sobre una geounidad para ver su información demográfica."
 
 #: redistricting/templates/editplan.html:59
 #: redistricting/templates/editplan.html:120
@@ -774,7 +775,7 @@ msgid ""
 "Single %(body_member_long_label)s select; +Shift to select multiple "
 "%(body_members)s"
 msgstr ""
-"Selección única de %(body_member_long_label)s; + Mayús para seleccionar "
+"Selección única de %(body_member_long_label)s; +Shift para seleccionar "
 "múltiples %(body_members)s"
 
 #: redistricting/templates/editplan.html:67
@@ -807,8 +808,8 @@ msgid ""
 "Enable anchor mode, then select a %(body_member_long_label)s name to "
 "repeatedly assign areas to a %(body_member_long_label)s"
 msgstr ""
-"Active modo de anclaje, luego seleccione un nombre para asignar "
-"repetidamente áreas a un %(body_member_long_label)s"
+"Active el modo de anclaje, luego seleccione un nombre de %(body_member_long_label)s "
+"para asignar repetidamente áreas al %(body_member_long_label)s"
 
 #: redistricting/templates/editplan.html:74
 #, python-format
@@ -826,8 +827,8 @@ msgid ""
 "Assign %(body_members)s currently selected on map by choosing a "
 "%(body_member_long_label)s name from drop down list"
 msgstr ""
-"Asignar %(body_members)s  actualmente seleccionado en el mapa mediante la "
-"elección de un nombre de %(body_member_long_label)s de la lista desplegable"
+"Asigne el %(body_members)s actualmente seleccionado en el mapa al seleccionar "
+"un nombre de un %(body_member_long_label)s de la lista desplegable"
 
 #: redistricting/templates/editplan.html:78
 msgid "Select One"
@@ -841,15 +842,15 @@ msgstr "Nuevo %(district_label)s"
 #: redistricting/templates/editplan.html:87
 #, python-format
 msgid ""
-"Select areas on the map then drag them to into a %(body_member_long_label)s "
+"Select areas on the map then drag them into a %(body_member_long_label)s "
 "for reassignment"
 msgstr ""
 "Seleccione las áreas en el mapa y arrástrelas a un "
-"%(body_member_long_label)s  para ser reasignadas"
+"%(body_member_long_label)s para ser reasignadas"
 
 #: redistricting/templates/editplan.html:87
 msgid "Click and<br/>Drag"
-msgstr "Hacer clic y <br/> Arrastrar"
+msgstr "Hacer clic y<br/>arrastrar"
 
 #: redistricting/templates/editplan.html:93
 msgid "Perform automated resolution of minor unassigned geographies"
@@ -857,7 +858,7 @@ msgstr "Realizar la resolución automatizada de geografías menores sin asignar"
 
 #: redistricting/templates/editplan.html:93
 msgid "Fix<br/>Unassigned"
-msgstr "Arreglar <br/> Sin asignar"
+msgstr "Arreglar<br/>sin asignar"
 
 #: redistricting/templates/editplan.html:123
 #, python-format
@@ -867,14 +868,15 @@ msgstr ""
 
 #: redistricting/templates/editplan.html:124
 #, python-format
-msgid "Lock<br />%(district_label)s"
+msgid "Lock<br/>%(district_label)s"
 msgstr "Anclar<br/>%(district_label)s"
 
 #: redistricting/templates/editplan.html:126
 #, python-format
-msgid "Click on a %(body_member_long_label)s to see its ID."
+msgid ""
+"Click on a %(body_member_long_label)s to see its ID."
 msgstr ""
-"Haga clic en un %(body_member_long_label)s  para ver su identificación."
+"Haga clic en un %(body_member_long_label)s para ver su identificación."
 
 #: redistricting/templates/editplan.html:127
 #, python-format
