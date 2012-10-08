@@ -2186,7 +2186,7 @@ msgstr "Acerca de esta versión de DistrictBuilder"
 
 #: templates/index.html:125
 msgid "Virginia on the Public Mapping Project"
-msgstr "Virginia en el Proyecto de Mapeo Público"
+msgstr "Proyecto de Mapeo Público en Virginia"
 
 #: templates/index.html:128
 msgid "Virginia data"
