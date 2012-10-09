@@ -1011,19 +1011,19 @@ msgid ""
 "plan with other users. Your plan title and user name will simply show up in "
 "the top ten lists (if your plan ranks in the top ten)."
 msgstr ""
-"Mediante la verificación de su plan, usted <strong><em>no</em></strong> está "
-"compartiendo su plan con otros usuarios. El título de su plan y el nombre de "
-"usuario simplemente se mostrarán en las listas de los 10 mejores (si su plan "
-"se encuentra entre los diez primeros)."
+"Al verificar su plan, usted <strong><em>no</em></strong> está "
+"compartiéndolo con otros usuarios. El título de su plan y el nombre de "
+"usuario se mostrarán en las listas de los 10 mejores (en el caso de que su plan "
+"se encuentra entre los primeros diez lugares)."
 
 #: redistricting/templates/editplan.html:187
 msgid "How to verify and submit your plan:"
-msgstr "Cómo verificar y presentar su plan:"
+msgstr "Cómo verificar y enviar su plan:"
 
 #: redistricting/templates/editplan.html:189
 msgid "Click the \"Verify and Submit to Leaderboards\" button."
 msgstr ""
-"Haga clic en el botón \"Verificar y Presentar a la Tabla de Posiciones\"."
+"Haga clic en el botón \"Verificar y enviar a la tabla de posiciones\"."
 
 #: redistricting/templates/editplan.html:190
 msgid "If verified, you will be taken to the Leaderboard page."
@@ -1034,8 +1034,8 @@ msgid ""
 "Check the leaderboards to see if your plan ranks in any of the top ten score "
 "types."
 msgstr ""
-"Revise las tablas de posiciones para ver si su plan se encuentra en alguna "
-"de las tablas que contienen las diez primera posiciones."
+"Revise las tablas de posiciones para ver si su plan se encuentra dentro de " 
+"los diez primeros lugares en alguna de las tablas."
 
 #: redistricting/templates/editplan.html:206
 msgid ""
@@ -1044,8 +1044,8 @@ msgid ""
 "community unassign tool."
 msgstr ""
 "Elija las comunidades para pegarlas en su mapa. Un mapa puede contener "
-"cualquier número de comunidades. Si desea eliminar comunidades de su mapa, "
-"use la herramienta de cancelar la asignación de la comunidad."
+"un número ilimitado de comunidades. Si desea eliminar comunidades de su mapa, "
+"use la herramienta para cancelar la asignación de la comunidad."
 
 #: redistricting/templates/editplan.html:208
 msgid ""
@@ -1056,10 +1056,10 @@ msgid ""
 "tool."
 msgstr ""
 "Elija los distritos para pegar en su plan. Un plan tiene un número máximo de "
-"distritos permitidos por ley. Si desea pegar  distritos en un plan, usted "
-"debe tener menos distritos en su plan que el máximo permitido. Si desea "
-"eliminar distritos de su plan, utilice la herramienta de cancelar la "
-"asignación del distrito."
+"distritos permitidos por ley. Si desea pegar distritos en un plan, el número "
+"de distritos en su plan debe ser menor que el máximo permitido. Si desea eliminar"
+"distritos de su plan, utilice la herramienta para cancelar la asignación del distrito."
+
 
 #: redistricting/templates/editplan.html:212
 #, python-format
@@ -1081,23 +1081,23 @@ msgstr ""
 #, python-format
 msgid "3. Paste selected %(body_member_long_label)s into working %(plan_text)s"
 msgstr ""
-"3. Pegar %(body_member_long_label)s seleccionados en %(plan_text)s de trabajo"
+"3. Pegar los %(body_member_long_label)s seleccionados en un %(plan_text)s de trabajo"
 
 #: redistricting/templates/editplan.html:265
 msgid ""
 "Click on a row to edit the number of members for the selected district. "
-"Press ENTER to complete editing a district."
+"Press ENTER to complete editing of a district."
 msgstr ""
-"Haga clic en una fila para editar el número de miembros para el distrito "
-"seleccionado. Pulse ENTRAR para completar la edición de un distrito."
+"Haga clic en una fila para editar el número de miembros en el distrito "
+"seleccionado. Oprima ENTRAR para completar la edición de un distrito."
 
 #: redistricting/templates/editplan.html:269
 msgid ""
 "When all desired edits are made, press the Save button to save all changes "
 "to the database."
 msgstr ""
-"Cuando se hayan realizado todas las ediciones deseadas, pulse el botón "
-"Guardar para guardar todos los cambios en la base de datos."
+"Cuando se hayan realizado todas las ediciones deseadas, oprima el botón "
+"Guardar para respaldar todos los cambios realizados en la base de datos."
 
 #: redistricting/templates/editplan.html:273
 msgid "Target # of representatives:"
