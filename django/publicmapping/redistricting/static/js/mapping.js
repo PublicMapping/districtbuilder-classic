@@ -2665,10 +2665,7 @@ function mapinit(srs,maxExtent) {
         var newOpts = getControl.protocol.options;
         var show = getShowBy();
         var snap = getSnapLayer();
-        var layername = NAMESPACE + ':demo_' + snap.level;
-        if (show != 'none') {
-            layername += '_' + show;
-        }
+        var layername = NAMESPACE + ':demo_' + snap.level + '_' + show;
         var layers = olmap.getLayersByName(layername);
 
         newOpts.featureType = snap.layer;
@@ -2704,10 +2701,7 @@ function mapinit(srs,maxExtent) {
     $('#showby').change(function(evt){
         var snap = getSnapLayer();
         var show = evt.target.value;
-        var layername = NAMESPACE + ':demo_' + snap.name;
-        if (show != 'none') {
-            layername += '_' + show;
-        }
+        var layername = NAMESPACE + ':demo_' + snap.name + '_' + show;
 
         var layers = olmap.getLayersByName(layername);
         setThematicLayer(layers[0]);

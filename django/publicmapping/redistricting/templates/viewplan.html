@@ -169,7 +169,7 @@
             isdisplayed: {{ demo.isdisplayed }} }{% if not forloop.last %},{% endif %} {% endfor %} ];
         var MAP_LAYERS = []; 
         for (var i = 0; i < SNAP_LAYERS.length; i++) { 
-            MAP_LAYERS.push( NAMESPACE + ':demo_' + SNAP_LAYERS[i].level );
+            MAP_LAYERS.push( NAMESPACE + ':demo_' + SNAP_LAYERS[i].level + '_none' );
             for (var j = 0; j < DEMOGRAPHICS.length; j++) {
                 MAP_LAYERS.push( NAMESPACE + ':demo_' + SNAP_LAYERS[i].level + '_' + DEMOGRAPHICS[j].value );
             }
@@ -177,8 +177,6 @@
         // The maximum number of districts that can exist in this plan.
         var MAX_DISTRICTS = parseInt('{{ max_dists }}'.replace(',','').replace('.','').replace(' ',''), 10);
         // The name of a 'district' in this plan, could be "District ", etc
-        /* TODO: These variables may be able to be removed with full i18n support. */
-        var BODY_MEMBER_SHORT = '{{ body_member_short_label }}';
         var BODY_MEMBER_LONG = '{{ body_member_long_label }}';
         var BODY_MEMBERS = '{{ body_members }}';
         var LEGISLATIVE_BODY = '{{ plan.legislative_body.name|lower }}';

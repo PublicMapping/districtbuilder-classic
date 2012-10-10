@@ -1437,6 +1437,12 @@ class SpatialUtils:
         doc = generator.as_quantiles(qset, 'characteristic__number__avg', nclasses, propertyname='number',
             userstyletitle=us_title, colorbrewername='Greys', invertgradient=False)
 
+        # set the width of the borders to 0.25 by default
+        strokes = doc._node.xpath('//sld:Stroke', namespaces=doc._nsmap)
+        for stroke in strokes:
+            node = stroke.xpath('sld:CssParameter[@name="stroke-width"]', namespaces=doc._nsmap)[0]
+            node.text = '0.25'
+
         if not subject and nclasses == 1:
             # remove any fill if subject is missing
             fill = doc._node.xpath('//sld:Fill', namespaces=doc._nsmap)[0]
@@ -1457,10 +1463,10 @@ class SpatialUtils:
 
                 if layername == 'boundary':
                     stroke = doc._node.xpath('//sld:Stroke', namespaces=doc._nsmap)[0]
-                    node = stroke.xpath('//sld:CssParameter[@name="stroke-width"]', namespaces=doc._nsmap)[0]
+                    node = stroke.xpath('sld:CssParameter[@name="stroke-width"]', namespaces=doc._nsmap)[0]
                     node.text = '3'
 
-                    node = stroke.xpath('//sld:CssParameter[@name="stroke"]', namespaces=doc._nsmap)[0]
+                    node = stroke.xpath('sld:CssParameter[@name="stroke"]', namespaces=doc._nsmap)[0]
                     node.text = '#2BB673'
 
                     strokeopacity = {'name':'stroke-opacity'}
